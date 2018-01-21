@@ -51,16 +51,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 	protected $SQL;
 
 
-//	public static function getPlayers($gameAccountIDArray,$forceUpdate = false) {
-//		global $CACHE_PLAYERS;
-//		$playerArray = array();
-//		if(!$forceUpdate) {
-//			foreach($gameAccountIDArray as $gameAccountID) {
-//				$playerArray[$gameAccountID['Account ID']] = $CACHE_PLAYERS[$gameAccountID['Game ID'].$gameAccountID['Account ID']];
-//			}
-//		}
-//	}
-
 	public static function refreshCache() {
 		foreach(self::$CACHE_PLAYERS as $gameID => &$gamePlayers) {
 			foreach($gamePlayers as $accountID => &$player) {
@@ -94,11 +84,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 	public static function &getSectorPlayers($gameID,$sectorID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(TIME-TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
+			$db->query('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(TIME-TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
 			while($db->nextRecord()) {
 				$accountID = $db->getInt('account_id');
-				$players[$accountID] =& self::getPlayer($accountID,$gameID,$forceUpdate);
+				$players[$accountID] =& self::getPlayer($db->getRow(), $gameID, $forceUpdate);
 			}
 			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] =& $players;
 		}
@@ -108,11 +98,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 	public static function &getPlanetPlayers($gameID,$sectorID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID])) {
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
+			$db->query('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
 			while($db->nextRecord()) {
 				$accountID = $db->getField('account_id');
-				$players[$accountID] =& self::getPlayer($accountID,$gameID,$forceUpdate);
+				$players[$accountID] =& self::getPlayer($db->getRow(), $gameID, $forceUpdate);
 			}
 			self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] =& $players;
 		}
@@ -122,24 +112,27 @@ class SmrPlayer extends AbstractSmrPlayer {
 	public static function &getAlliancePlayers($gameID,$allianceID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID])) {
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT account_id FROM player WHERE alliance_id = ' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) .' ORDER BY experience DESC');
+			$db->query('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) .' ORDER BY experience DESC');
 			$players = array();
 			while($db->nextRecord()) {
 				$accountID = $db->getInt('account_id');
-				$players[$accountID] =& self::getPlayer($accountID,$gameID);
+				$players[$accountID] =& self::getPlayer($db->getRow(), $gameID, $forceUpdate);
 			}
 			self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID] =& $players;
 		}
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
-	public static function &getPlayer($accountIDOrResultArray,$gameID,$forceUpdate = false) {
-		if($forceUpdate || is_array($accountIDOrResultArray) || !isset(self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray])) {
+	public static function &getPlayer(&$accountIDOrResultArray, $gameID, $forceUpdate = false) {
+		$accountID = is_array($accountIDOrResultArray) ?
+		             $accountIDOrResultArray['account_id'] :
+		             $accountIDOrResultArray;
+		if ($forceUpdate || !isset(self::$CACHE_PLAYERS[$gameID][$accountID])) {
 			$p = new SmrPlayer($gameID,$accountIDOrResultArray);
 			self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] =& $p;
 			return self::$CACHE_PLAYERS[$gameID][$p->getAccountID()];
 		}
-		return self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray];
+		return self::$CACHE_PLAYERS[$gameID][$accountID];
 	}
 
 	public static function &getPlayerByPlayerID($playerID,$gameID,$forceUpdate = false) {
