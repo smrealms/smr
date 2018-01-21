@@ -1,20 +1,25 @@
+<table>
+	<tr>
+		<th>Action</th>
+		<th>Category</th>
+		<th>Description</th>
+		<th>Count</th>
+	</th><?php
+	foreach ($CategoryTable as $Category => $Info) { ?>
+		<tr<?php if ($Info['Selected']) { echo ' class="bold"'; } ?>>
+			<td class="center"><a href="<?php echo $Info['HREF']; ?>">View</a></td>
+			<td><?php echo $Category; ?></td>
+			<td><?php echo $Info['Description']; ?></td>
+			<td class="center"><?php echo $Info['Count']; ?></td>
+		</tr><?php
+	} ?>
+</table>
+
 <?php
-if(!$ShowCurrent) {
-	?><p><a href="<?php echo Globals::getFeatureRequestHREF(); ?>">View New Requests (<?php echo $CurrentTotal; ?>)</a></p><?php
-}
-if($Status != 'Opened' || $ShowCurrent) {
-	?><p><a href="<?php echo $ShowOldFeaturesHref; ?>">View All Open Requests (<?php echo $OldTotal; ?>)</a></p><?php
-}
-if($Status != 'Implemented') {
-	?><p><a href="<?php echo $ViewImplementedFeaturesHref; ?>">View Implemented Requests (<?php echo $PreviousImplementedTotal; ?>)</a></p><?php
-}
-if($Status != 'Rejected') {
-	?><p><a href="<?php echo $ShowRejectedFeaturesHref; ?>">View Rejected Requests (<?php echo $RejectedTotal; ?>)</a></p><?php
-}
 if(isset($FeatureRequests)) { ?>
 	<form name="FeatureRequestVoteForm" method="POST" action="<?php echo $FeatureRequestVoteFormHREF; ?>">
 		<div align="right"><?php
-			if($Status == 'Opened') { ?>
+			if ($CanVote) { ?>
 				<input type="submit" name="action" value="Vote"><?php
 			} ?>
 		</div><br />
@@ -26,7 +31,7 @@ if(isset($FeatureRequests)) { ?>
 				<th width="30">Votes (Fav/Yes/No)</th>
 				<th>Feature</th>
 				<th>Comments</th><?php
-				if($Status == 'Opened') { ?>
+				if ($CanVote) { ?>
 					<th width="20">Favourite</th>
 					<th width="20">Yes</th>
 					<th width="20">No</th><?php
@@ -43,7 +48,7 @@ if(isset($FeatureRequests)) { ?>
 					<td><span class="bold green"><?php echo $FeatureRequest['Votes']['FAVOURITE']; ?></span> / <span class="green"><?php echo $FeatureRequest['Votes']['YES'] + $FeatureRequest['Votes']['FAVOURITE']; ?></span> / <span class="red"><?php echo $FeatureRequest['Votes']['NO']; ?></span></td>
 					<td class="left"><?php echo bbifyMessage($FeatureRequest['Message']); ?></td>
 					<td class="shrink noWrap top"><a href="<?php echo $FeatureRequest['CommentsHREF']; ?>">View (<?php echo $FeatureRequest['Comments']; ?>)</a></td><?php
-					if($Status == 'Opened') { ?>
+					if ($CanVote) { ?>
 						<td><input type="radio" name="favourite" value="<?php echo $FeatureRequest['RequestID']; ?>"<?php if($FeatureRequest['VotedFor'] == 'FAVOURITE') { ?> checked="checked"<?php } ?>></td>
 						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="YES"<?php if($FeatureRequest['VotedFor'] == 'YES' || $FeatureRequest['VotedFor'] == 'FAVOURITE') { ?> checked="checked"<?php } ?>></td>
 						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="NO"<?php if($FeatureRequest['VotedFor'] == 'NO') { ?> checked="checked"<?php } ?>></td><?php
@@ -58,13 +63,14 @@ if(isset($FeatureRequests)) { ?>
 			if($FeatureModerator) { ?>&nbsp;
 				<select name="status">
 					<option disabled selected value style="display:none"> -- Select Status -- </option>
+					<option value="Accepted">Accepted</option>
 					<option value="Implemented">Implemented</option>
 					<option value="Rejected">Rejected</option>
 					<option value="Opened">Open</option>
 					<option value="Deleted">Delete</option>
 				</select>&nbsp;<input type="submit" name="action" value="Set Status"><?php
 			}
-			if($Status == 'Opened') { ?>
+			if ($CanVote) { ?>
 				<input type="submit" name="action" value="Vote"><?php
 			} ?>
 		</div><br />
@@ -74,7 +80,7 @@ if(isset($FeatureRequests)) { ?>
 	<form name="FeatureRequestForm" method="POST" action="<?php echo $FeatureRequestFormHREF; ?>">
 		<table>
 			<tr>
-				<td align="center">Please describe the feature here:</td>
+				<td align="center">Please describe your requested feature here:</td>
 			</tr>
 			<tr>
 				<td align="center"><textarea spellcheck="true" name="feature" id="InputFields" maxlength="500"></textarea></td>

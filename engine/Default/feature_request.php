@@ -3,43 +3,44 @@ if (!Globals::isFeatureRequestOpen()) {
 	create_error('Feature requests are currently not being accepted.');
 }
 
-$template->assign('PageTopic','Feature Request');
-
-if(!isset($var['Status'])) {
-	SmrSession::updateVar('Status', 'Opened');
+if (!isset($var['category'])) {
+	SmrSession::updateVar('category', 'New');
 }
+$thisStatus = statusFromCategory($var['category']);
 
-$container = $var;
-$container['Status'] = 'Implemented';
-$template->assign('ViewImplementedFeaturesHref',SmrSession::getNewHREF($container));
+$template->assign('PageTopic', 'Feature Requests - ' . $var['category']);
 
-$container = $var;
-$container['Status'] = 'Opened';
-$container['ShowOld'] = true;
-$template->assign('ShowOldFeaturesHref',SmrSession::getNewHREF($container));
+// Feature Requests show up as new for this many days
+define('NEW_REQUEST_DAYS', 30);
 
-$container = $var;
-$container['Status'] = 'Rejected';
-$template->assign('ShowRejectedFeaturesHref',SmrSession::getNewHREF($container));
+$requestCategories = array(
+	'New' => 'Open requests made within the past ' . NEW_REQUEST_DAYS . ' days',
+	'All Open' => 'All requests that remain open for voting',
+	'Accepted' => 'Features planned for future implementation',
+	'Implemented' => 'Features that have already been implemented',
+	'Rejected' => 'Features that are not planned for implementation',
+);
 
-$showCurrent = (!isset($var['ShowOld']) || $var['ShowOld']!==true) && $var['Status']=='Opened';
-$template->assign('ShowCurrent',$showCurrent);
-$template->assign('Status',$var['Status']);
-
-if($var['Status'] != 'Implemented') {
-	$template->assign('PreviousImplementedTotal', getFeaturesCount('Implemented'));
+$categoryTable = array();
+foreach ($requestCategories as $category => $description) {
+	$status = statusFromCategory($category);
+	
+	$container = $var;
+	$container['category'] = $category;
+	$categoryTable[$category] = array(
+		'Selected' => $category == $var['category'],
+		'HREF' => SmrSession::getNewHREF($container),
+		'Count' => getFeaturesCount($status, ($category == 'New') ? NEW_REQUEST_DAYS : false),
+		'Description' => $description
+	);
 }
-if($var['Status'] != 'Opened' || !$showCurrent) {
-	$template->assign('CurrentTotal', getFeaturesCount('Opened', true));
-}
-if($var['Status'] != 'Opened' || $showCurrent) {
-	$template->assign('OldTotal', getFeaturesCount('Opened'));
-}
-if($var['Status'] != 'Rejected') {
-	$template->assign('RejectedTotal', getFeaturesCount('Rejected'));
-}
+$template->assignByRef('CategoryTable', $categoryTable);
 
-if($var['Status'] == 'Opened') {
+// Can the players vote for features on the current page?
+$canVote = $thisStatus == 'Opened';
+$template->assign('CanVote', $canVote);
+
+if ($canVote) {
 	$featureVotes = array();
 	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
 	while($db->nextRecord())
@@ -49,8 +50,8 @@ $db->query('SELECT * ' .
 			'FROM feature_request ' .
 			'JOIN feature_request_comments super USING(feature_request_id) ' .
 			'WHERE comment_id = 1 ' .
-			'AND status = ' . $db->escapeString($var['Status']) .
-			($showCurrent?' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME-14*86400) .')':'') .
+			'AND status = ' . $db->escapeString($thisStatus) .
+			($var['category'] == 'New' ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME - NEW_REQUEST_DAYS*86400) .')':'') .
 			' ORDER BY (SELECT MAX(posting_time) FROM feature_request_comments WHERE feature_request_id = super.feature_request_id) DESC');
 if ($db->getNumRows() > 0) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
@@ -72,7 +73,7 @@ if ($db->getNumRows() > 0) {
 		if($featureModerator)
 			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getInt('poster_id'));
 		
-		if($var['Status'] == 'Opened') {
+		if ($canVote) {
 			$db2->query('SELECT COUNT(*), vote_type
 						FROM account_votes_for_feature
 						WHERE feature_request_id=' . $db2->escapeNumber($featureRequestID) . '
@@ -95,7 +96,11 @@ if ($db->getNumRows() > 0) {
 
 $template->assign('FeatureRequestFormHREF',SmrSession::getNewHREF(create_container('feature_request_processing.php', '')));
 
-function getFeaturesCount($status, $onlyCurrent = false) {
+function statusFromCategory($category) {
+	return ($category == 'New' || $category == 'All Open') ? 'Opened' : $category;
+}
+
+function getFeaturesCount($status, $daysNew = false) {
 	global $db;
 	$db->query('
 		SELECT COUNT(*) AS count
@@ -103,7 +108,7 @@ function getFeaturesCount($status, $onlyCurrent = false) {
 		JOIN feature_request_comments super USING(feature_request_id)
 		WHERE comment_id = 1
 		AND status = ' . $db->escapeString($status) .
-		($onlyCurrent?' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME-14*86400) .')':'')
+		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME - $daysNew*86400) .')':'')
 	);
 	$db->nextRecord();
 	return $db->getInt('count');
