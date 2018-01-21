@@ -2,9 +2,9 @@ Each Space Merchant Realms round requires you to create a new Trader.<br />
 To do this you must choose a name for yourself and select your race.<br />
 
 <br /><?php
-if($Game['GameDescription']) { ?>
+if ($Game->getDescription()) { ?>
 	<h2>Round Description</h2>
-	<p><?php echo bbifyMessage($Game['GameDescription']); ?></p><?php
+	<p><?php echo bbifyMessage($Game->getDescription()); ?></p><?php
 }?>
 
 <table class="standard">
@@ -19,14 +19,14 @@ if($Game['GameDescription']) { ?>
 		<th>Alliance Max Vets</th>
 	</tr>
 	<tr class="center">
-		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT,$Game['StartDate']); ?></td>
-		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT,$Game['StartTurnsDate']); ?></td>
-		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT,$Game['EndDate']); ?></td>
-		<td><?php echo $Game['MaxTurns']; ?></td>
-		<td><?php echo $Game['StartTurnHours']; ?></td>
-		<td><?php echo $Game['GameMaxPlayers']; ?></td>
-		<td><?php echo $Game['AllianceMaxPlayers']; ?></td>
-		<td><?php echo $Game['AllianceMaxVets']; ?></td>
+		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT,$Game->getStartDate()); ?></td>
+		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT,$Game->getStartTurnsDate()); ?></td>
+		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT,$Game->getEndDate()); ?></td>
+		<td><?php echo $Game->getMaxTurns(); ?></td>
+		<td><?php echo $Game->getStartTurnHours(); ?></td>
+		<td><?php echo $Game->getMaxPlayers(); ?></td>
+		<td><?php echo $Game->getAllianceMaxPlayers(); ?></td>
+		<td><?php echo $Game->getAllianceMaxVets(); ?></td>
 	</tr>
 </table><br/>
 <table class="standard">
@@ -38,11 +38,11 @@ if($Game['GameDescription']) { ?>
 		<th>Starting Credits</th>
 	</tr>
 	<tr class="center">
-		<td><?php echo $Game['GameType']; ?></td>
-		<td><?php echo $Game['Speed']; ?></td>
-		<td><?php echo $Game['GameCreditsRequired']; ?></td>
-		<td><?php echo $Game['IgnoreStats']?'Yes':'No'; ?></td>
-		<td><?php echo number_format($Game['StartingCredits']); ?></td>
+		<td><?php echo $Game->getGameType(); ?></td>
+		<td><?php echo $Game->getGameSpeed(); ?></td>
+		<td><?php echo $Game->getCreditsNeeded(); ?></td>
+		<td><?php echo $Game->isIgnoreStats() ? 'Yes' : 'No'; ?></td>
+		<td><?php echo number_format($Game->getStartingCredits()); ?></td>
 	</tr>
 </table><br />
 

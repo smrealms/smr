@@ -244,50 +244,12 @@ class Globals {
 	}
 
 	public static function isValidGame($gameID) {
-		return self::getGameInfo($gameID)!==false;
-	}
-
-	public static function &getGameInfo($gameID = false) {
-		if($gameID===false) {
-			self::initialiseDatabase();
-			self::$db->query('SELECT game_id FROM game ORDER BY end_date DESC');
-			$allGames = array();
-			while(self::$db->nextRecord()) {
-				$allGames[self::$db->getInt('game_id')] = self::getGameInfo(self::$db->getInt('game_id'));
-			}
-			return $allGames;
-		}
 		try {
-			$gameID = (int)$gameID;
-			$game =& SmrGame::getGame($gameID);
-			$gameInfo = array(
-					'ID' => $game->getGameID(),
-					'Speed' => $game->getGameSpeed(),
-					'GameType' => $game->getGameType(),
-					'GameName' => $game->getName(),
-					'GameDescription' => $game->getDescription(),
-					'StartDate' => $game->getStartDate(),
-					'StartTurnsDate' => $game->getStartTurnsDate(),
-					'EndDate' => $game->getEndDate(),
-					'MaxTurns' => $game->getMaxTurns(),
-					'StartTurnHours' => $game->getStartTurnHours(),
-					'GameMaxPlayers' => $game->getMaxPlayers(),
-					'GameCreditsRequired' => $game->getCreditsNeeded(),
-					'AllianceMaxPlayers' => $game->getAllianceMaxPlayers(),
-					'AllianceMaxVets' => $game->getAllianceMaxVets(),
-					'IgnoreStats' => $game->isIgnoreStats(),
-					'StartingCredits' => $game->getStartingCredits()
-					);
+			SmrGame::getGame($gameID);
+			return true;
+		} catch (GameNotFoundException $e) {
+			return false;
 		}
-		catch (Exception $e) {
-			if(stripos($e->getMessage(),'No such game')!==false) {
-				$gameInfo = false;
-			}
-			else {
-				throw $e;
-			}
-		}
-		return $gameInfo;
 	}
 
 	public static function getGameDescription($gameID) {

@@ -4,9 +4,9 @@ if (!isset($MessageGameID)) { ?>
 		<p>Please select a game:</p>
 		<select name="game_id" size="1" id="InputFields">
 			<option value="20000">Send to All Players</option><?php
-			foreach($Games as &$Game) {
-				?><option value="<?php echo $Game['ID']; ?>"><?php echo $Game['GameName']; ?></option><?php
-			} unset($Game); ?>
+			foreach ($ActiveGames as $Game) {
+				?><option value="<?php echo $Game->getGameID(); ?>"><?php echo $Game->getDisplayName(); ?></option><?php
+			} ?>
 		</select>&nbsp;&nbsp;
 		<input type="submit" name="action" value="Select" id="InputFields" />
 	</form><?php

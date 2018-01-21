@@ -89,7 +89,15 @@ else {
 $template->assign('ResetFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
 
 
-if ($curr_account!==false) {
+if ($curr_account===false) {
+	$games = array();
+	$db->query('SELECT game_id FROM game ORDER BY end_date DESC');
+	while ($db->nextRecord()) {
+		$games[] = SmrGame::getGame($db->getInt('game_id'));
+	}
+	$template->assignByRef('Games', $games);
+}
+else {
 	$editingPlayers = array();
 	$db->query('SELECT game_id FROM player WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY game_id ASC');
 	while ($db->nextRecord()) {
