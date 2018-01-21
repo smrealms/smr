@@ -20,6 +20,7 @@ abstract class AbstractSmrPlayer {
 	protected $lastSectorID;
 	protected $newbieTurns;
 	protected $dead;
+	protected $npc;
 	protected $startDead;
 	protected $landedOnPlanet;
 	protected $lastShieldUpdate;
@@ -159,7 +160,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function isNPC() {
-		return $this->getAccount()->isNPC();
+		return $this->npc;
 	}
 
 	public function isDraftLeader() {

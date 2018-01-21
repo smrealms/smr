@@ -171,6 +171,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->fleed						= $result['fleed']=='TRUE';
 			$this->attackColour					= (string) $result['attack_warning'];
 			$this->dead							= $result['dead']=='TRUE';
+			$this->npc							= $result['npc']=='TRUE';
 			$this->startDead					= $this->dead;
 			$this->landedOnPlanet				= $result['land_on_planet']=='TRUE';
 			$this->kicked						= $result['kicked']=='TRUE';
