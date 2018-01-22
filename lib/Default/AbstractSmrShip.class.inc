@@ -22,7 +22,7 @@ abstract class AbstractSmrShip {
 
 	protected $hasChangedWeapons = false;
 	protected $hasChangedCargo = false;
-	protected $hasChangedHardware = false;
+	protected $hasChangedHardware = array();
 
 	public static function &getBaseShip($gameTypeID,$shipTypeID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID])) {
@@ -334,12 +334,11 @@ abstract class AbstractSmrShip {
 	}
 
 	public function removeAllHardware() {
-		foreach($this->hardware as &$hardware) {
-			$hardware = 0;
+		foreach (array_keys($this->hardware) as $hardwareTypeID) {
+			$this->setHardware($hardwareTypeID, 0);
 		}
 		$this->decloak();
 		$this->disableIllusion();
-		$this->hasChangedHardware = true;
 	}
 
 	public function getPod($isNewbie = false) {
@@ -507,7 +506,7 @@ abstract class AbstractSmrShip {
 		if($this->getHardware($hardwareTypeID) == $amount)
 			return;
 		$this->hardware[$hardwareTypeID] = $amount;
-		$this->hasChangedHardware = true;
+		$this->hasChangedHardware[$hardwareTypeID] = true;
 	}
 
 	public function increaseHardware($hardwareTypeID,$amount) {
@@ -524,7 +523,7 @@ abstract class AbstractSmrShip {
 		if($this->getOldHardware($hardwareTypeID) == $amount)
 			return;
 		$this->oldHardware[$hardwareTypeID] = $amount;
-		$this->hasChangedHardware = true;
+		$this->hasChangedHardware[$hardwareTypeID] = true;
 	}
 
 	public function hasMaxHardware($hardwareTypeID) {
