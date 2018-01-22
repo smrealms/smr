@@ -431,6 +431,10 @@ abstract class AbstractSmrPlayer {
 		return $level_name;
 	}
 
+	public function getMaxLevel() {
+		return max(array_keys(Globals::getLevelRequirements()));
+	}
+
 	public function getPlayerID() {
 		return $this->playerID;
 	}
