@@ -741,6 +741,10 @@ class SmrPort {
 	public function getLevel() {
 		return $this->level;
 	}
+
+	public function getMaxLevel() {
+		return self::MAX_LEVEL;
+	}
 	
 	public function getLastUpdate() {
 		return $this->lastUpdate;
