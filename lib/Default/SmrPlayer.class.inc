@@ -1333,6 +1333,12 @@ class SmrPlayer extends AbstractSmrPlayer {
 							VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', -1, ' . $this->db->escapeNumber($this->getAllianceID()) . ', 1)');
 		}
 
+		$this->increaseHOF($return['DeadExp'], array('Dying','Experience','Lost'), HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], array('Dying','Forces','Experience Lost'), HOF_PUBLIC);
+		$this->increaseHOF($return['LostCredits'], array('Dying','Forces','Money Lost'), HOF_PUBLIC);
+		$this->increaseHOF($this->getShip()->getCost(), array('Dying','Forces','Cost Of Ships Lost'), HOF_PUBLIC);
+		$this->increaseHOF(1, array('Dying','Forces','Deaths'), HOF_PUBLIC);
+
 		$this->killPlayer($forces->getSectorID());
 		return $return;
 	}
@@ -1357,6 +1363,12 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->decreaseExperience($return['DeadExp']);
 
 		$return['LostCredits'] = $this->getCredits();
+
+		$this->increaseHOF($return['DeadExp'], array('Dying','Experience','Lost'), HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], array('Dying','Ports','Experience Lost'), HOF_PUBLIC);
+		$this->increaseHOF($return['LostCredits'], array('Dying','Ports','Money Lost'), HOF_PUBLIC);
+		$this->increaseHOF($this->getShip()->getCost(), array('Dying','Ports','Cost Of Ships Lost'), HOF_PUBLIC);
+		$this->increaseHOF(1, array('Dying','Ports','Deaths'), HOF_PUBLIC);
 
 		$this->killPlayer($port->getSectorID());
 		return $return;
@@ -1384,6 +1396,12 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->decreaseExperience($return['DeadExp']);
 
 		$return['LostCredits'] = $this->getCredits();
+
+		$this->increaseHOF($return['DeadExp'], array('Dying','Experience','Lost'), HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], array('Dying','Planets','Experience Lost'), HOF_PUBLIC);
+		$this->increaseHOF($return['LostCredits'], array('Dying','Planets','Money Lost'), HOF_PUBLIC);
+		$this->increaseHOF($this->getShip()->getCost(), array('Dying','Planets','Cost Of Ships Lost'), HOF_PUBLIC);
+		$this->increaseHOF(1, array('Dying','Planets','Deaths'), HOF_PUBLIC);
 
 		$this->killPlayer($planet->getSectorID());
 		return $return;
