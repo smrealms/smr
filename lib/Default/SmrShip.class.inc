@@ -120,25 +120,20 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	function updateHardware() {
-		if (!empty($this->hasChangedHardware)) {
-			$this->db->lockTable('ship_has_hardware');
-			
-			// write hardware info only for hardware that has changed
-			foreach ($this->hasChangedHardware as $hardwareTypeID => $hasChanged) {
-				if (!$hasChanged) {
-					continue;
-				}
-				$amount = $this->getHardware($hardwareTypeID);
-				if ($amount > 0) {
-					$this->db->query('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($hardwareTypeID) . ', ' . $this->db->escapeNumber($amount) . ', ' . $this->db->escapeNumber($this->getOldHardware($hardwareTypeID)) . ')');
-				}
-				else {
-					$this->db->query('DELETE FROM ship_has_hardware WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID));
-				}
+		// write hardware info only for hardware that has changed
+		foreach ($this->hasChangedHardware as $hardwareTypeID => $hasChanged) {
+			if (!$hasChanged) {
+				continue;
 			}
-			$this->db->unlock();
-			$this->hasChangedHardware = array();
+			$amount = $this->getHardware($hardwareTypeID);
+			if ($amount > 0) {
+				$this->db->query('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($hardwareTypeID) . ', ' . $this->db->escapeNumber($amount) . ', ' . $this->db->escapeNumber($this->getOldHardware($hardwareTypeID)) . ')');
+			}
+			else {
+				$this->db->query('DELETE FROM ship_has_hardware WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID));
+			}
 		}
+		$this->hasChangedHardware = array();
 	}
 	
 	function updateWeapon() {
