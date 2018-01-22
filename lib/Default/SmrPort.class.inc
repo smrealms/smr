@@ -1238,7 +1238,7 @@ class SmrPort {
 	}
 
 	public function razePort(AbstractSmrPlayer &$killer) {
-		$credits = $this->getCredits() * self::RAZE_MONEY_PERCENT / 100;
+		$credits = floor($this->getCredits() * self::RAZE_MONEY_PERCENT / 100);
 		if($this->payout($killer, $credits, 'Razed')) {
 			$this->doDowngrade();
 		}
