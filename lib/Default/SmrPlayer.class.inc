@@ -1850,13 +1850,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 				// get the course back
 				$this->plottedCourse = unserialize($this->db->getField('course'));
 				$endSectorID = $this->plottedCourse->getEndSectorID();
-				if($endSectorID != $this->getSectorID() && $this->plottedCourse->isInPath($this->getSectorID())) { //Current sector is in the path, we have jumped along it somehow so lets replot from our cur
-					$this->plottedCourse =& Plotter::findDistanceToX(SmrSector::getSector($this->getGameID(),$endSectorID), $this->getSector(), true);
-					if($this->plottedCourse === false) {
-						throw new Exception('For some reason we could not replot from "'.$this->getSectorID().'" to "'.$endSectorID);
-					}
-					$this->plottedCourse->removeStart();
-					$this->setPlottedCourse($this->plottedCourse);
+				if ($endSectorID != $this->getSectorID() && $this->isPartOfCourse($this->getSector())) {
+					// Current sector is in the path, we have jumped along it somehow
+					$this->setPlottedCourse($this->plottedCourse->skipToSector($this->getSectorID()));
 				}
 			}
 			else
@@ -1873,8 +1869,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				(account_id, game_id, course)
 				VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeBinary(serialize($this->plottedCourse)) . ')');
 		else if($hadPlottedCourse) {
-			$this->plottedCourse = false;
-			$this->db->query('DELETE FROM player_plotted_course WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			$this->deletePlottedCourse();
 		}
 	}
 

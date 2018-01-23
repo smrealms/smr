@@ -34,6 +34,61 @@ class Plotter {
 		}
 	}
 
+	/**
+	 * Returns the shortest path from $sector to $x as a Distance object.
+	 * The path is guaranteed reversible ($x -> $sector == $sector -> $x), which
+	 * is not true for findDistanceToX. If $x is not a SmrSector, then this
+	 * function does 2x the work.
+	 */
+	public static function findReversiblePathToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExplored=null, AbstractSmrPlayer $player=null) {
+		if ($x instanceof SmrSector) {
+
+			// To ensure reversibility, always plot lowest to highest.
+			$reverse = $sector->getSectorID() > $x->getSectorID();
+			if ($reverse) {
+				$start = $x;
+				$end = $sector;
+			} else {
+				$start = $sector;
+				$end = $x;
+			}
+			$path = Plotter::findDistanceToX($end, $start, $useFirst,
+			                                 isset($needsToHaveBeenExploredBy) ? $needsToHavebeenExploredBy : null,
+			                                 isset($player) ? $player : null);
+			if ($path===false) {
+				create_error('Unable to plot from '.$sector->getSectorID().' to '.$x->getSectorID().'.');
+			}
+			// Reverse if we plotted $x -> $sector (since we want $sector -> $x)
+			if ($reverse) {
+				$path->reversePath();
+			}
+
+		} else {
+
+			// At this point we don't know what sector $x will be at
+			$path = Plotter::findDistanceToX($x, $sector, $useFirst,
+			                                 isset($needsToHaveBeenExploredBy) ? $needsToHavebeenExploredBy : null,
+			                                 isset($player) ? $player : null);
+			if ($path===false) {
+				create_error('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
+			}
+			// Now that we know where $x is, make sure path is reversible
+			// (i.e. start sector < end sector)
+			if ($path->getEndSectorID() < $sector->getSectorID()) {
+				$path =& Plotter::findDistanceToX($sector, $path->getEndSector(), true);
+				$path->reversePath();
+			}
+
+		}
+		return $path;
+	}
+
+	/**
+	 * Returns the shortest path from $sector to $x as a Distance object.
+	 * $x can be any type implemented by SmrSector::hasX or the string 'Distance'.
+	 * The resulting path prefers neighbors in their order in SmrSector->links,
+	 * (i.e. up, down, left, right).
+	 */
 	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, AbstractSmrPlayer $player=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000) {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE-1;
 
@@ -52,7 +107,7 @@ class Plotter {
 		//Warps first as a slight optimisation due to how visitedSectors is set.
 		if($checkSector->hasWarp()===true) {
 			$d = new Distance($gameID,$checkSector->getSectorID());
-			$d->addWarpToPath($checkSector->getWarp());
+			$d->addWarpToPath($checkSector->getWarp(), $checkSector->getSectorID());
 			$distanceQ[$warpAddIndex][] = $d;
 		}
 		foreach ($checkSector->getLinks() as $nextSector) {
@@ -96,7 +151,7 @@ class Plotter {
 					if($checkSector->hasWarp()===true) {
 						if (!isset($visitedSectors[$checkSector->getWarp()])) {
 							$cloneDistance = clone($distance);
-							$cloneDistance->addWarpToPath($checkSector->getWarp());
+							$cloneDistance->addWarpToPath($checkSector->getWarp(), $checkSector->getSectorID());
 							$distanceQ[$warpAddIndex][] = $cloneDistance;
 						}
 					}
@@ -143,6 +198,7 @@ class Distance {
 	private $distance = -1; //First sector added will be the start and a distance of 0
 	private $numWarps = 0;
 	private $path = array();
+	private $warpMap = array();
 
 	public function __construct($gameID,$_startSectorId) {
 		$this->gameID = $gameID;
@@ -154,14 +210,6 @@ class Distance {
 //		$this->numWarps = $_numWarps;
 //		$this->path = $_path;
 //	}
-
-	public function setDistance($_distance) {
-		$this->distance = $_distance;
-	}
-
-	public function setNumWarps($_numWarps) {
-		$this->numWarps = $_numWarps;
-	}
 
 	protected function incrementDistance() {
 		$this->distance++;
@@ -182,10 +230,6 @@ class Distance {
 	public function getNumWarps() {
 		return $this->numWarps;
 	}
-
-//	public function clone() {
-//		return new Distance($this->distance, $this->numWarps, clone($this->path));
-//	}
 
 	public function getTurns() {
 		return $this->distance * TURNS_PER_SECTOR + $this->numWarps * TURNS_PER_WARP;
@@ -228,8 +272,10 @@ class Distance {
 		return $this->path;
 	}
 	
+	// NOTE: this assumes 2-way warps
 	public function reversePath() {
 		$this->path = array_reverse($this->path);
+		$this->warpMap = array_flip($this->warpMap);
 	}
 
 	/**
@@ -241,9 +287,10 @@ class Distance {
 		$this->path[] = $nextSector;
 	}
 	
-	public function addWarpToPath($nextSector) {
+	public function addWarpToPath($sectorAfterWarp, $sectorBeforeWarp) {
 		$this->incrementNumWarps();
-		$this->path[] = $nextSector;
+		$this->path[] = $sectorAfterWarp;
+		$this->warpMap[$sectorBeforeWarp] = $sectorAfterWarp;
 	}
 	
 	public function getNextOnPath() {
@@ -265,20 +312,23 @@ class Distance {
 	public function isInPath($sectorID) {
 		return in_array($sectorID,$this->getPath());
 	}
+
+	/**
+	 * If the given sector is in the path, then return the segment
+	 * of the path that comes after the given sector.
+	 */
+	public function skipToSector($sectorID) {
+		$position = array_search($sectorID, $this->path);
+		if ($position !== false) {
+			// The resulting path does not include sectorID, i.e. (sectorID,end]
+			$this->path = array_slice($this->path, $position + 1);
+			$this->numWarps = count(array_intersect($this->path, array_values($this->warpMap)));
+			$this->distance = count($this->path) - $this->numWarps;
+			return $this;
+		} else {
+			throw new Exception('Cannot skip to sector not in path!');
+		}
+	}
 }
-//$d = new Distance(1);
-//$d->addToPath(3);
-//$d2 = clone($d);
-//$d2->addWarpToPath(6);
-//var_dump($d);
-//var_dump($d2);
 
-//$x = 1;
-
-//$x = Globals::getGood(1);
-//$x['TransactionType'] = 'Sell';
-
-//$x =& SmrSector::getSector(1,2);
-//var_dump($x);
-//var_dump(Plotter::findDistanceToX($x, SmrSector::getSector(1,1), 0, 2000, 500,true));
 ?>

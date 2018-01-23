@@ -7,6 +7,7 @@ if($sector->getWarp() == $var['target_sector'])
 	$turns = TURNS_PER_WARP;
 else
 	$turns = TURNS_PER_SECTOR;
+
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	//update plot
@@ -15,9 +16,11 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 		if ($path->getNextOnPath() == $var['target_sector']) {
 			$path->followPath($sector->getWarp() == $var['target_sector']);
 			$player->setPlottedCourse($path);
+		} elseif ($path->isInPath($var['target_sector'])) {
+			// Did we re-enter the course down the line?
+			$path->skipToSector($var['target_sector']);
+			$player->setPlottedCourse($path);
 		}
-		else
-			$player->deletePlottedCourse();
 	}
 	
 	//make them pop on CPL
@@ -30,6 +33,7 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$sector->markVisited($player);
 	forward(create_container('skeleton.php', $var['target_page']));
 }
+
 $action = '';
 if(isset($_REQUEST['action'])) {
 	$action = $_REQUEST['action'];
@@ -83,9 +87,11 @@ if ($player->hasPlottedCourse()) {
 	if ($path->getNextOnPath() == $var['target_sector']) {
 		$path->followPath($sector->getWarp() == $var['target_sector']);
 		$player->setPlottedCourse($path);
+	} elseif ($path->isInPath($var['target_sector'])) {
+		// Did we re-enter the course down the line?
+		$path->skipToSector($var['target_sector']);
+		$player->setPlottedCourse($path);
 	}
-	else
-		$player->deletePlottedCourse();
 }
 
 // log action
