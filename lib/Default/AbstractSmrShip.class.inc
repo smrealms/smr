@@ -982,6 +982,19 @@ abstract class AbstractSmrShip {
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
 		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Port','Damage Done'), HOF_PUBLIC);
 //		$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in SmrPortt::attackedBy()
+
+		// Change alignment if we reach a damage threshold.
+		// Increase if player and port races are at war; decrease otherwise.
+		if ($results['TotalDamage'] >= SmrPort::DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE) {
+			$relations = Globals::getRaceRelations($thisPlayer->getGameID(), $thisPlayer->getRaceID());
+			if ($relations[$port->getRaceID()] <= -300) {
+				$thisPlayer->increaseAlignment(1);
+				$thisPlayer->increaseHOF(1, array('Combat','Port','Alignment','Gain'), HOF_PUBLIC);
+			} else {
+				$thisPlayer->decreaseAlignment(1);
+				$thisPlayer->increaseHOF(1, array('Combat','Port','Alignment','Loss'), HOF_PUBLIC);
+			}
+		}
 		return $results;
 	}
 

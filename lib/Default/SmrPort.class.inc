@@ -3,13 +3,13 @@ class SmrPort {
 	protected static $CACHE_PORTS = array();
 	protected static $CACHE_CACHED_PORTS = array();
 	
-	const NUMBER_OF_PORT_WEAPONS = 6;
-	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325;
+	const DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE = 300; // single player
+	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325; // all attackers
 	const CHANCE_TO_DOWNGRADE = 1;
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
-	const BASE_CDS = 1000;
-	const CDS_PER_LEVEL = 70;
+	const BASE_CDS = 500;
+	const CDS_PER_LEVEL = 125;
 	const CDS_PER_TEN_MIL_CREDITS = 25;
 	const BASE_DEFENCES = 500;
 	const DEFENCES_PER_LEVEL = 700;
@@ -625,7 +625,7 @@ class SmrPort {
 	}
 
 	public function setCreditsToDefault() {
-		$this->setCredits(3000000 + $this->getLevel()*1500000 + pow($this->getLevel(), 2) * 300000);
+		$this->setCredits(2100000 + $this->getLevel()*1600000 + pow($this->getLevel(), 2) * 300000);
 	}
 
 	public function setCredits($credits) {
@@ -783,7 +783,7 @@ class SmrPort {
 	}
 
 	public function getNumWeapons() {
-		return self::NUMBER_OF_PORT_WEAPONS;
+		return $this->getLevel() + 3;
 	}
 
 	public function &getWeapons() {
@@ -1261,7 +1261,7 @@ class SmrPort {
 		if ($killer->hasAlliance()) $news .= 'the members of <span class="yellow">' . $killer->getAllianceBBLink() . '</span>';
 		else $news .= $killer->getBBLink();
 		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
-		// Trigger gets an alignment change and a bounty if port is taken
+		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ',$return['KillerBounty']);
 		$killer->increaseHOF($return['KillerBounty'],array('Combat','Port','Bounties','Gained'), HOF_PUBLIC);
@@ -1270,18 +1270,6 @@ class SmrPort {
 			$return['KillerRelations'] = 45;
 			$killer->decreaseRelations($return['KillerRelations'],$this->getRaceID());
 			$killer->increaseHOF($return['KillerRelations'],array('Combat','Port','Relation','Loss'), HOF_PUBLIC);
-		}
-		// also we change alignment
-		$relations = Globals::getRaceRelations($killer->getGameID(),$killer->getRaceID());
-		if ($relations[$this->getRaceID()] < -299) {
-			$return['KillerAlign'] = $this->getLevel() * 2;
-			$killer->increaseAlignment($return['KillerAlign']);
-			$killer->increaseHOF($return['KillerAlign'],array('Combat','Port','Alignment','Gain'), HOF_PUBLIC);
-		}
-		else {
-			$return['KillerAlign'] = -$this->getLevel() * 2;
-			$killer->decreaseAlignment(-$return['KillerAlign']);
-			$killer->increaseHOF(-$return['KillerAlign'],array('Combat','Port','Alignment','Loss'), HOF_PUBLIC);
 		}
 		
 		return $return;

@@ -23,7 +23,7 @@ if(isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons'
 		if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
 		if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
 		
-		echo $CombatPort->getDisplayName() ?> fires a <?php echo $ShootingWeapon->getName() ?> at <?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
+		echo $CombatPort->getDisplayName() ?> fires an <?php echo $ShootingWeapon->getName() ?> at <?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if(!$ActualDamage['TargetAlreadyDead']) {
 			if(!$ShotHit) {
 				?> and misses<?php

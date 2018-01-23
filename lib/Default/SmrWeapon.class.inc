@@ -148,7 +148,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	
 	public function getModifiedPortAccuracy(SmrPort &$port) {
 		$modifiedAccuracy = $this->getBaseAccuracy();
-		$modifiedAccuracy *= $port->getLevel();
 		return $modifiedAccuracy;
 	}
 	
