@@ -233,7 +233,7 @@ if(USE_COMPATIBILITY) {
 				$container['body'] = 'games_previous.php';
 
 				$games['Previous'][$index]['PreviousGameLink'] = SmrSession::getNewHREF($container);
-				$container['body'] = 'hall_of_fame_new.php';
+				$container['body'] = 'games_previous_hof.php';
 				$games['Previous'][$index]['PreviousGameHOFLink'] = SmrSession::getNewHREF($container);
 				$container['body'] = 'games_previous_news.php';
 				$games['Previous'][$index]['PreviousGameNewsLink'] = SmrSession::getNewHREF($container);
