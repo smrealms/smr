@@ -28,17 +28,22 @@ if (count($Planets) > 0) { ?>
 					<td class="sort_owner noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
 					<td class="sort_sector center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getName(); ?></a>)</td>
 
-					<td class="sort_credits center"><?php echo number_format($Planet->getCredits()); ?></td>
-					<td class="sort_bonds center"><?php echo number_format($Planet->getBonds()); ?></td>
-					<td class="sort_interest center"><?php echo $Planet->getInterestRate() * 100; ?>%</td>
 					<?php
-					if ($Planet->getBonds() > 0) {
-						$matureTime = $Planet->getMaturity() - TIME; ?>
-						<td class="sort_mature center noWrap" data-sort_mature="<?php echo $matureTime; ?>">
-							<?php echo format_time($matureTime, true); ?>
-						</td><?php
+					if ($Planet->getOptions('FINANCE')) { ?>
+						<td class="sort_credits center"><?php echo number_format($Planet->getCredits()); ?></td>
+						<td class="sort_bonds center"><?php echo number_format($Planet->getBonds()); ?></td>
+						<td class="sort_interest center"><?php echo $Planet->getInterestRate() * 100; ?>%</td>
+						<?php
+						if ($Planet->getBonds() > 0) {
+							$matureTime = $Planet->getMaturity() - TIME; ?>
+							<td class="sort_mature center noWrap" data-sort_mature="<?php echo $matureTime; ?>">
+								<?php echo format_time($matureTime, true); ?>
+							</td><?php
+						} else { ?>
+							<td></td><?php
+						}
 					} else { ?>
-						<td></td><?php
+						<td colspan="4">This planet has no economic infrastructure!</td><?php
 					} ?>
 				</tr><?php
 			} ?>
