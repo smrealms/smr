@@ -382,11 +382,11 @@ class Globals {
 		return self::$AVAILABLE_LINKS['CurrentPlayers'] = SmrSession::getNewHREF(create_container('skeleton.php','current_players.php'));
 	}
 
-	public function getTradeHREF() {
+	public static function getTradeHREF() {
 		return self::$AVAILABLE_LINKS['EnterPort'] = SmrSession::getNewHREF(create_container('skeleton.php', 'shop_goods.php'));
 	}
 
-	public function getAttackTraderHREF($accountID) {
+	public static function getAttackTraderHREF($accountID) {
 		$container = create_container('skeleton.php','trader_attack_processing.php');
 		$container['target'] = $accountID;
 		return self::$AVAILABLE_LINKS['AttackTrader'] = SmrSession::getNewHREF($container);
