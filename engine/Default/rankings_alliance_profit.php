@@ -32,7 +32,7 @@ if ($player->hasAlliance()) {
 				WHERE (
 					t.amount > us.amount
 					OR (
-						t.amount = us.amount
+						COALESCE(t.amount,0) = COALESCE(us.amount,0)
 						AND alliance_name <= ' . $db->escapeString($player->getAllianceName()) . '
 					)
 				)');
