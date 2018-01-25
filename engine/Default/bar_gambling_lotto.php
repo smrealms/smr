@@ -4,15 +4,7 @@ checkForLottoWinner($player->getGameID());
 $lottoInfo = getLottoInfo($player->getGameID());
 
 //find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
-$days = floor($lottoInfo['TimeRemaining'] / 60 / 60 / 24);
-$lottoInfo['TimeRemaining'] -= $days * 60 * 60 * 24;
-$hours = floor($lottoInfo['TimeRemaining'] / 60 / 60);
-$lottoInfo['TimeRemaining'] -= $hours * 60 * 60;
-$mins = floor($lottoInfo['TimeRemaining'] / 60);
-$lottoInfo['TimeRemaining'] -= $mins * 60;
-$secs = $lottoInfo['TimeRemaining'];
-$lottoInfo['TimeRemaining'] = '<b>'.$days.' Days, '.$hours.' Hours, '.$mins.' Minutes, and '.$secs.' Seconds</b>';
-$PHP_OUTPUT.=('<br /><div align="center">Currently '.$lottoInfo['TimeRemaining'].' remain until the winning ticket');
+$PHP_OUTPUT.=('<br /><div align="center">Currently <b>'.format_time($lottoInfo['TimeRemaining']).'</b> remain until the winning ticket');
 $PHP_OUTPUT.=(' is drawn, and the prize is $' . number_format($lottoInfo['Prize']) . '.<br /><br />');
 $PHP_OUTPUT.=('Ahhhh so your interested in the lotto huh?  ');
 $PHP_OUTPUT.=('Well here is how it works.  First you will need to buy a ticket, ');
