@@ -2,10 +2,11 @@
 
 function checkForLottoWinner($gameID) {
 	global $db;
-	//we we check for a lotto winner...
+	// we check for a lotto winner...
 	$db->lockTable('player_has_ticket');
 	$lottoInfo = getLottoInfo($gameID);
 	$lottoWon = false;
+
 	if ($lottoInfo['TimeRemaining'] <= 0) {
 		//we need to pick a winner
 		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$db->escapeNumber($gameID).' AND time > 0 ORDER BY rand() LIMIT 1');
@@ -13,22 +14,23 @@ function checkForLottoWinner($gameID) {
 			$winner_id = $db->getField('account_id');
 			$time = $db->getField('time');
 		}
-		$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$db->escapeNumber($gameID));
+
+		// Any unclaimed prizes get merged into this prize
+		$db->query('SELECT SUM(prize) FROM player_has_ticket WHERE time = 0 AND game_id = '.$db->escapeNumber($gameID));
 		if ($db->nextRecord()) {
-			$lottoInfo['Prize'] += $db->getField('prize');
-			$db->query('DELETE FROM player_has_ticket WHERE time = 0 AND game_id = '.$db->escapeNumber($gameID));
+			$lottoInfo['Prize'] += $db->getField('SUM(prize)');
 		}
-		$db->query('UPDATE player_has_ticket
-					SET time = 0, prize = '.$db->escapeNumber($lottoInfo['Prize']).'
-					WHERE time = '.$db->escapeNumber($time).'
-						AND account_id = '.$db->escapeNumber($winner_id).'
-						AND game_id = '.$db->escapeNumber($gameID));
-		//delete losers
-		$db->query('DELETE FROM player_has_ticket WHERE time > 0 AND game_id = '.$db->escapeNumber($gameID));
+
+		// Delete all tickets and re-insert the winning ticket
+		$db->query('DELETE FROM player_has_ticket WHERE game_id = '.$db->escapeNumber($gameID));
+		$db->query('INSERT INTO player_has_ticket (game_id, account_id, time, prize) '
+		           .'VALUES ('.$db->escapeNumber($gameID).','.$db->escapeNumber($winner_id).',\'0\','.$db->escapeNumber($lottoInfo['Prize']).')');
+
 		//get around locked table problem
 		$lottoWon = true;
 	}
 	$db->unlock();
+
 	if ($lottoWon === true) {
 		// create news msg
 		$winner =& SmrPlayer::getPlayer($winner_id, $gameID);
