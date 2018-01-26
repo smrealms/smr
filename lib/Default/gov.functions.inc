@@ -6,7 +6,8 @@ function displayBountyList(&$PHP_OUTPUT,$type,$claimableBy) {
 	$db->query('SELECT * FROM bounty WHERE game_id = '.$db->escapeNumber(SmrSession::$game_id).' AND type ='.$db->escapeString($type).' AND claimer_id = '.$db->escapeNumber($claimableBy).' ORDER BY amount DESC');
 	$PHP_OUTPUT.=('<p>&nbsp;</p>');
 	if ($db->getNumRows()) {
-		$PHP_OUTPUT.=('<div align="center">'.($claimableBy==0?'Most Wanted by Federal Government':'Claimable Bounties').'</div><br />');
+		$wantedBy = $type == 'HQ' ? 'Federal Government' : 'Underground';
+		$PHP_OUTPUT.=('<div align="center">'.($claimableBy==0 ? 'Most wanted by the '.$wantedBy : 'Claimable Bounties').'</div><br />');
 		$PHP_OUTPUT.=create_table();
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<th>Player Name</th>');
