@@ -14,8 +14,7 @@ while ($db->nextRecord()) {
 	$message .= '<div align="center">You have claimed <span class="red">$' . number_format($prize) . '</span>!<br /></div><br />';
 	$db->query('DELETE FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND prize = ' . $db->escapeNumber($prize) . ' AND time = 0 LIMIT 1');
-	$news_message = '<span class="yellow">'.$player->getPlayerName().'</span> has won the lotto!  The jackpot was ' . number_format($prize) . '.  <span class="yellow">'.$player->getPlayerName().'</span> can report to any bar to claim his prize!';
-	$db->query('DELETE FROM news WHERE news_message = ' . $db->escapeString($news_message) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$db->escapeNumber($player->getGameID()));
 }
 //offer another drink and such
 $container=create_container('skeleton.php','bar_main.php');
