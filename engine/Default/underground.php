@@ -17,6 +17,8 @@ $template->assign('PageTopic','Underground Headquarters');
 require_once(get_file_loc('menu.inc'));
 create_ug_menu();
 
+$PHP_OUTPUT .= '<p>The location appears to be abandoned, until a group of heavily-armed figures advance from the shadows.</p>';
+
 require_once(get_file_loc('gov.functions.inc'));
 displayBountyList($PHP_OUTPUT,'UG',0);
 displayBountyList($PHP_OUTPUT,'UG',$player->getAccountID());
