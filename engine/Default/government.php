@@ -14,7 +14,7 @@ if(!$location->isHQ()) {
 $raceID = $location->getRaceID();
 
 // are we at war?
-if ($player->getRelation($raceID) <= -300) {
+if ($player->getRelation($raceID) <= RELATIONS_WAR) {
 	create_error('We are at WAR with your race! Get outta here before I call the guards!');
 }
 
@@ -30,7 +30,7 @@ if ($raceID != RACE_NEUTRAL) {
 	$raceRelations =& Globals::getRaceRelations($player->getGameID(), $raceID);
 	$PHP_OUTPUT.=('We are at WAR with<br /><br />');
 	foreach($raceRelations as $otherRaceID => $relation) {
-		if ($relation <= -300) {
+		if ($relation <= RELATIONS_WAR) {
 			$PHP_OUTPUT.=('<span class="red">The '.$races[$otherRaceID]['Race Name'].'<br /></span>');
 		}
 	}

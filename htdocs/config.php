@@ -189,6 +189,8 @@ define('ALIGN_FED_PROTECTION', 0);
 define('MAX_GLOBAL_RELATIONS', 500);
 define('MIN_GLOBAL_RELATIONS', -500);
 define('MIN_RELATIONS', -1000);
+define('RELATIONS_WAR', -300);
+define('RELATIONS_PEACE', 300);
 
 /*
  * HoF

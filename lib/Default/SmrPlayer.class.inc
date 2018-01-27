@@ -1171,7 +1171,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$relation = $relations[$this->getRaceID()];
 
 		$alignChangePerRelation = 0.1;
-		if($relation >= 300 || $relation <= -300)
+		if($relation >= RELATIONS_PEACE || $relation <= RELATIONS_WAR)
 			$alignChangePerRelation = 0.04;
 
 		$return['KillerAlign'] = -$relation * $alignChangePerRelation; //Lose relations when killing a peaceful race
@@ -1182,7 +1182,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$killer->decreaseAlignment(-$return['KillerAlign']);
 		}
 		// War setting gives them military pay
-		if($relation <= -300) {
+		if($relation <= RELATIONS_WAR) {
 			$killer->increaseMilitaryPayment(-floor($relation * 100 * (pow($return['KillerExp']/2,0.25))));
 		}
 

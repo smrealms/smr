@@ -8,7 +8,7 @@ function checkPortTradeable(&$port,&$player) {
 	if(!$port->exists())
 		return 'There is no port in this sector!';
 	
-	if($player->getRelation($port->getRaceID()) <= -300)
+	if($player->getRelation($port->getRaceID()) <= RELATIONS_WAR)
 		return 'We will not trade with our enemies!';
 	
 	if($port->getReinforceTime() > TIME)

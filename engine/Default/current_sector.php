@@ -151,7 +151,7 @@ if (!empty($var['traded_xp']) ||
 
 if($sector->hasPort()) {
 	$port =& $sector->getPort();
-	$template->assign('PortIsAtWar',$player->getRelation($port->getRaceID()) < -300);
+	$template->assign('PortIsAtWar',$player->getRelation($port->getRaceID()) < RELATIONS_WAR);
 }
 
 function checkForForceRefreshMessage(&$msg) {

@@ -19,10 +19,10 @@ $neutralRaces = array();
 $warRaces = array();
 foreach ($RACES as $otherRaceID => $raceInfo) {
 	if($otherRaceID != RACE_NEUTRAL && $raceID != $otherRaceID) {
-		if($raceRelations[$otherRaceID] >= 300) {
+		if($raceRelations[$otherRaceID] >= RELATIONS_PEACE) {
 			$peaceRaces[$otherRaceID] = $raceInfo;
 		}
-		else if($raceRelations[$otherRaceID] <= -300) {
+		else if($raceRelations[$otherRaceID] <= RELATIONS_WAR) {
 			$warRaces[$otherRaceID] = $raceInfo;
 		}
 		else {
