@@ -4,7 +4,7 @@ $message = '';
 //check if we really are a winner
 $db->query('SELECT * FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND time = 0');
-while ($db->nextRecord()) {
+if ($db->nextRecord()) {
 	$prize = $db->getInt('prize');
 	$NHLAmount = ($prize - 1000000) / 9;
 	$db->query('UPDATE player SET bank = bank + ' . $db->escapeNumber($NHLAmount) . ' WHERE account_id = ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
