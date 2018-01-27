@@ -519,7 +519,7 @@ elseif ($type == 'list') {
 }
 elseif ($type == 'compare_log') {
 	$list = preg_split('/[,]+[\s]/', $variable);
-	$db->query('SELECT ip.* FROM account_has_ip JOIN account USING(account_id) WHERE login IN (' . $db->escapeArray($list) . ') ORDER BY ip');
+	$db->query('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login IN (' . $db->escapeArray($list) . ') ORDER BY ip');
 	$container = create_container('account_close.php');
 	$PHP_OUTPUT.=('<center>Listing all IPs for logins '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
