@@ -32,7 +32,7 @@ if ($player->hasAlliance()) {
 				WHERE (
 					t.amount > us.amount
 					OR (
-						t.amount = us.amount
+						COALESCE(t.amount,0) = COALESCE(us.amount,0)
 						AND alliance_name <= ' . $db->escapeString($player->getAllianceName()) . '
 					)
 				)');
@@ -62,7 +62,7 @@ $db->query('SELECT alliance_id, SUM(amount) amount
 			GROUP BY alliance_id, alliance_name
 			ORDER BY amount DESC, alliance_name
 			LIMIT ' . $lowerLimit . ', ' . ($var['MaxRank'] - $lowerLimit));
-$template->assignByRef('FilteredRankings', Rankings::collectAllianceRankings($db, $player, 0));
+$template->assignByRef('FilteredRankings', Rankings::collectAllianceRankings($db, $player, $lowerLimit));
 
 $template->assign('FilterRankingsHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_alliance_experience.php')));
 ?>
