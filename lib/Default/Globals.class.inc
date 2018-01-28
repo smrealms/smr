@@ -591,23 +591,19 @@ class Globals {
 	}
 
 	public static function getBarBuyDrinkHREF() {
-		$container = create_container('skeleton.php', 'bar_main.php');
-		$container['script'] = 'bar_buy_drink_processing.php';
+		$container = create_container('bar_buy_drink_processing.php');
 		$container['action'] = 'drink';
 		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarBuyWaterHREF() {
-		$container = create_container('skeleton.php', 'bar_main.php');
-		$container['script'] = 'bar_buy_drink_processing.php';
+		$container = create_container('bar_buy_drink_processing.php');
 		$container['action'] = 'water';
 		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarLottoClaimHREF() {
-		$container = create_container('skeleton.php', 'bar_main.php');
-		$container['script'] = 'bar_lotto_claim.php';
-		$container['action'] = 'lotto_claim';
+		$container = create_container('bar_lotto_claim.php');
 		return SmrSession::getNewHREF($container);
 	}
 
