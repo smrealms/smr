@@ -62,7 +62,7 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 				$WeaponDamage =& $Drones['WeaponDamage'];
 				$TargetPlayer =& $Drones['TargetPlayer'];
 				$DamageTypes = 0;
-				if($ActualDamage['NumMines'] > 0){ $DamageTypes = $DamageTypes+1; }
+				if($ActualDamage['NumMines'] > $WeaponDamage['Kamikaze']) { $DamageTypes = $DamageTypes+1; }
 				if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
 				if($ActualDamage['NumSDs'] > 0){ $DamageTypes = $DamageTypes+1; }
 				echo $ShootingPlayer->getDisplayName();
@@ -90,21 +90,14 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 							}
 							else {
 								?> of which <span class="cds"><?php echo $WeaponDamage['Kamikaze'] ?></span> kamikaze against <span class="red"><?php echo $WeaponDamage['Kamikaze'] ?></span> mines<?php
-								if($WeaponDamage['Kamikaze'] != $ActualDamage['NumMines']) {
+								if($DamageTypes > 0) {
 									?> whilst the others destroy <?php
 								}
 							}
-							if($WeaponDamage['Kamikaze'] != $ActualDamage['NumMines'] && $ActualDamage['NumMines'] > 0) {
+							if($ActualDamage['NumMines'] > $WeaponDamage['Kamikaze']) {
 								?><span class="red"><?php echo number_format($ActualDamage['NumMines']) ?></span> mines<?php
-								if($WeaponDamage['Kamikaze'] != $ActualDamage['NumMines'] && $ActualDamage['NumMines'] > 0) {
-									$this->doDamageTypeReductionDisplay($DamageTypes);
-								}
-								else if($DamageTypes > 1) {
-									?> whilst the others destroy <?php
-									$DamageTypes = $DamageTypes-1;
-								}
+								$this->doDamageTypeReductionDisplay($DamageTypes);
 							}
-							
 							if($ActualDamage['NumCDs'] > 0) {
 								?><span class="red"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
 								$this->doDamageTypeReductionDisplay($DamageTypes);
