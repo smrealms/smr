@@ -28,7 +28,7 @@ if ($action == 'process') {
 	$db->nextRecord();
 	$num = $db->getInt('num');
 	$message=('<div align=center>Thanks for your purchase and good luck!!!  You currently');
-	$message.=(' own '.$num.' tickets!</div><br />');
+	$message.=(' own '.$num.' '.pluralise('ticket', $num).'!</div><br />');
 
 	$container=create_container('skeleton.php','bar_main.php');
 	$container['script']='bar_opening.php';
