@@ -7,17 +7,19 @@
 		<th>Amount to Trade</th>
 		<th>Action</th>
 	</tr><?php
-	$BoughtGoods =& $ThisPort->getVisibleGoodsBought($ThisPlayer);
-	foreach($BoughtGoods as &$Good) { ?>
-		<form method="POST" action="<?php echo $ThisPort->getLootGoodHREF($Good); ?>">
+	$BoughtGoodIDs =& $ThisPort->getVisibleGoodsBought($ThisPlayer);
+	foreach ($BoughtGoodIDs as $GoodID) {
+		$Good = Globals::getGood($GoodID);
+		$Amount = $ThisPort->getGoodAmount($GoodID); ?>
+		<form method="POST" action="<?php echo $ThisPort->getLootGoodHREF($GoodID); ?>">
 			<tr>
 				<td><?php echo $Good['Name']; ?></td>
-				<td><?php echo $Good['Amount']; ?></td>
+				<td><?php echo $Amount; ?></td>
 				<td><?php echo $Good['BasePrice']; ?></td>
 				<td><?php echo $ThisShip->getCargo($Good['ID']); ?></td>
-				<td><input type="number" name="amount" value="<?php echo min($Good['Amount'], $ThisShip->getCargoHolds()); ?>" size="4" id="InputFields" class="center"></td>
+				<td><input type="number" name="amount" value="<?php echo min($Amount, $ThisShip->getCargoHolds()); ?>" size="4" id="InputFields" class="center"></td>
 				<td><input type="submit" name="action" value="Loot" id="InputFields" /></td>
 			</tr>
 		</form><?php
-	} unset($Good); ?>
+	} ?>
 </table>

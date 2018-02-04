@@ -22,7 +22,7 @@ function testDistances($gameID)
 		foreach($galaxySectors as &$galaxySector)
 		{
 			if($galaxySector->hasPort())
-				$galaxySector->getPort()->getGoods();
+				$galaxySector->getPort();
 		} unset($galaxySector);
 	} unset($galaxySectors);
 	//Test plotters
@@ -34,22 +34,23 @@ function testDistances($gameID)
 		{
 			if($galaxySector->hasPort())
 			{
-				$goods =& $galaxySector->getPort()->getGoods();
-				foreach($goods as &$good)
+				$goodIDs =& $galaxySector->getPort()->getAllGoodIDs();
+				foreach($goodIDs as $goodID)
 				{
+					$transaction = $galaxySector->getPort->getGoodTransaction($goodID);
 					$time = microtime(true);
-					$newDI = getGoodDistanceNew($galaxySector,$good['ID'],$good['TransactionType']);
+					$newDI = getGoodDistanceNew($galaxySector,$goodID,$transaction);
 					$newTime += microtime(true) - $time;
 					
 					$time = microtime(true);
-					$oldDI = getGoodDistanceOld($galaxySector,$good['ID'],$good['TransactionType']);
+					$oldDI = getGoodDistanceOld($galaxySector,$goodID,$transaction);
 					$oldTime += microtime(true) - $time;
 					
 					if($newDI!=$oldDI)
 					{
-						echo 'Difference, new: '.$newDI.', old:'.$oldDI.', sector:'.$galaxySector->getSectorID().', good:'.$good['ID'].EOL;
+						echo 'Difference, new: '.$newDI.', old:'.$oldDI.', sector:'.$galaxySector->getSectorID().', good:'.$goodID.EOL;
 					}
-				} unset($good);
+				}
 			}
 		} unset($galaxySector);
 	} unset($galaxySectors);
