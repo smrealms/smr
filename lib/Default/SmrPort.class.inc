@@ -31,7 +31,6 @@ class SmrPort {
 	protected $gameID;
 	protected $sectorID;
 	protected $raceID;
-	protected $lastUpdate;
 	protected $shields;
 	protected $combatDrones;
 	protected $armour;
@@ -44,6 +43,7 @@ class SmrPort {
 
 	protected $goodIDs = array('All' => array(), 'Sell' => array(), 'Buy' => array());
 	protected $goodAmounts;
+	protected $goodAmountsChanged = array();
 	protected $goodDistances;
 	protected $goods;   // DEPRECATED!
 	
@@ -121,7 +121,6 @@ class SmrPort {
 		if ($this->db->nextRecord()) {
 			$this->gameID = $this->db->getInt('game_id');
 			$this->sectorID = $this->db->getInt('sector_id');
-			$this->lastUpdate = $this->db->getInt('last_update');
 			$this->shields = $this->db->getInt('shields');
 			$this->combatDrones = $this->db->getInt('combat_drones');
 			$this->armour = $this->db->getInt('armour');
@@ -141,7 +140,6 @@ class SmrPort {
 			$this->isNew = true;
 			$this->gameID = $gameID;
 			$this->sectorID = $sectorID;
-			$this->lastUpdate = 0;
 			$this->shields = 0;
 			$this->combatDrones = 0;
 			$this->armour = 0;
@@ -182,12 +180,26 @@ class SmrPort {
 		}
 	}
 	
-	private function restockGood($goodID, $secondsSinceRefresh) {
+	/**
+	 * Used for the automatic resupplying of all goods over time
+	 */
+	private function restockGood($goodID, $secondsSinceLastUpdate) {
+		if ($secondsSinceLastUpdate <= 0) {
+			return;
+		}
+
 		$goodClass = Globals::getGood($goodID)['Class'];
 		$refreshPerHour = self::$BASE_REFRESH_PER_HOUR[$goodClass] * Globals::getGameSpeed($this->getGameID());
 		$refreshPerSec = $refreshPerHour / 3600;
-		$amountToAdd = floor($secondsSinceRefresh * $refreshPerSec);
-		$this->increaseGoodAmount($goodID, $amountToAdd);
+		$amountToAdd = floor($secondsSinceLastUpdate * $refreshPerSec);
+
+		// We will not save automatic resupplying in the database,
+		// because the stock can be correctly recalculated based on the
+		// last_update time. We will only do the update for player actions
+		// that affect the stock. This avoids many unnecessary db queries.
+		$doUpdateDB = false;
+		$amount = $this->getGoodAmount($goodID);
+		$this->setGoodAmount($goodID, $amount+$amountToAdd, $doUpdateDB);
 		
 		return round($amountToAdd / $refreshPerSec);
 	}
@@ -198,11 +210,7 @@ class SmrPort {
 			throw new Exception('Cannot call getGoods on cached port');
 		}
 		if (empty($this->goodIDs['All'])) {
-			$secondsSinceRefresh = max(0, TIME - $this->lastUpdate);
-				
 			$this->db->query('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC');
-			
-			$timeRefreshed = $secondsSinceRefresh;
 			while ($this->db->nextRecord()) {
 				$goodID = $this->db->getInt('good_id');
 				$transactionType = $this->db->getField('transaction_type');
@@ -210,10 +218,9 @@ class SmrPort {
 				$this->goodIDs[$transactionType][] = $goodID;
 				$this->goodIDs['All'][] = $goodID;
 
-				$timeRefreshed = min($timeRefreshed, $this->restockGood($goodID, $secondsSinceRefresh));
+				$secondsSinceLastUpdate = TIME - $this->db->getInt('last_update');
+				$this->restockGood($goodID, $secondsSinceLastUpdate);
 			}
-			$this->lastUpdate += $timeRefreshed;
-			$this->db->query('UPDATE port SET last_update = ' . $this->db->escapeNumber($this->lastUpdate) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 		}
 	}
 
@@ -309,7 +316,7 @@ class SmrPort {
 		return in_array($goodID, $this->goodIDs[$type]);
 	}
 	
-	public function setGoodAmount($goodID,$amount) {
+	private function setGoodAmount($goodID, $amount, $doUpdate=true) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
 		// The new amount must be between 0 and the max for this good
@@ -317,6 +324,11 @@ class SmrPort {
 		if($this->getGoodAmount($goodID) == $amount)
 			return;
 		$this->goodAmounts[$goodID] = $amount;
+
+		if ($doUpdate) {
+			// This goodID will be changed in the db during `update()`
+			$this->goodAmountsChanged[$goodID] = true;
+		}
 	}
 	
 	public function getGoodAmount($goodID) {
@@ -339,6 +351,9 @@ class SmrPort {
 		$this->setGoodAmount($goodID,$this->getGoodAmount($goodID) - $amount);
 	}
 	
+	/**
+	 * Adds extra stock to goods in the tier above a good that was traded
+	 */
 	protected function refreshGoods($classTraded,$amountTraded) {
 		$refreshAmount = round($amountTraded * self::REFRESH_PER_GOOD);
 		//refresh goods that need it
@@ -455,7 +470,7 @@ class SmrPort {
 
 		$this->goodAmounts[$goodID] = Globals::getGood($goodID)['Max'];
 		$this->cacheIsValid = false;
-		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($this->getGoodAmount($goodID)) . ')');
+		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount, last_update) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($this->getGoodAmount($goodID)) . ',' . $this->db->escapeNumber(TIME) . ')');
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
 	
@@ -743,10 +758,6 @@ class SmrPort {
 
 	public function getMaxLevel() {
 		return self::MAX_LEVEL;
-	}
-	
-	public function getLastUpdate() {
-		return $this->lastUpdate;
 	}
 	
 	public function getShields() {
@@ -1084,7 +1095,6 @@ class SmrPort {
 		if($this->hasChanged) {
 			if($this->isNew===false) {
 				$this->db->query('UPDATE port SET experience = ' . $this->db->escapeNumber($this->getExperience()) .
-								', last_update = ' . $this->db->escapeNumber($this->getLastUpdate()) .
 								', shields = ' . $this->db->escapeNumber($this->getShields()) .
 								', armour = ' . $this->db->escapeNumber($this->getArmour()) .
 								', combat_drones = ' . $this->db->escapeNumber($this->getCDs()) .
@@ -1098,12 +1108,11 @@ class SmrPort {
 								AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' LIMIT 1');
 			}
 			else {
-				$this->db->query('INSERT INTO port (game_id,sector_id,experience,last_update,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)
+				$this->db->query('INSERT INTO port (game_id,sector_id,experience,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)
 								values
 								(' . $this->db->escapeNumber($this->getGameID()) .
 								',' . $this->db->escapeNumber($this->getSectorID()) .
 								',' . $this->db->escapeNumber($this->getExperience()) .
-								',' . $this->db->escapeNumber($this->getLastUpdate()) .
 								',' . $this->db->escapeNumber($this->getShields()) .
 								',' . $this->db->escapeNumber($this->getArmour()) .
 								',' . $this->db->escapeNumber($this->getCDs()) .
@@ -1118,14 +1127,12 @@ class SmrPort {
 			$this->hasChanged=false;
 		}
 
-		// Update the port good amounts
-		if (isset($this->goodAmounts)) {
-			foreach ($this->goodAmounts as $goodID => $amount) {
-				$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . '
-									WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
-										AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . '
-										AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
-			}
+		// Update the port good amounts if they have been changed
+		// (Note: `restockGoods` alone does not trigger this)
+		foreach ($this->goodAmountsChanged as $goodID => $doUpdate) {
+			if (!$doUpdate) { continue; }
+			$amount = $this->getGoodAmount($goodID);
+			$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(TIME) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
 		}
 	}
 	
