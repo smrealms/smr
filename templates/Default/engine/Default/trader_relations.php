@@ -1,26 +1,18 @@
 <div align="center">
-	<table width="60%" class="standard">
+	<table width="50%" class="standard">
 		<tr>
-			<th valign="top" width="50%">Relations (Global)</th>
-			<th valign="top" width="50%">Relations (Personal)</th>
-		</tr>
-		<tr>
-			<td valign="top" width="50%">
-				<p><?php
-					foreach ($PoliticalRelations as $raceName => $relation) {
-						print($raceName . ' : ' . get_colored_text($relation, $relation));
-						?><br /><?php
-					} ?>
-				</p>
-			</td>
-			<td valign="top">
-				<p><?php
-					foreach ($PersonalRelations as $raceName => $relation) {
-						print($raceName . ' : ' . get_colored_text($relation, $relation));
-						?><br /><?php
-					} ?>
-				</p>
-			</td>
-		</tr>
+			<th width="31%">Race</th>
+			<th width="23%">Political Relations</th>
+			<th width="23%">Personal Relations</th>
+			<th width="23%">Total</th>
+		</tr><?php
+		foreach (array_keys($PoliticalRelations) as $Race) { ?>
+			<tr>
+				<td><?php echo $Race; ?></td>
+				<td class="center"><?php echo get_colored_text($PoliticalRelations[$Race]); ?></td>
+				<td class="center"><?php echo get_colored_text($PersonalRelations[$Race]); ?></td>
+				<td class="center"><?php echo get_colored_text($PoliticalRelations[$Race] + $PersonalRelations[$Race]); ?></td>
+			</tr><?php
+		} ?>
 	</table>
 </div>
