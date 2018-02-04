@@ -35,24 +35,32 @@ require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
 // check max on that stack
+$at_max = false;
 if ($forces->getMines() + $change_mines > 50) {
 	$change_mines = 50 - $forces->getMines();
-//	create_error('This stack can only take up to 50 mines!');
+	$at_max = $change_mines == 0;
 }
 
 if ($forces->getCDs() + $change_combat_drones > 50) {
 	$change_combat_drones = 50 - $forces->getCDs();
-//	create_error('This stack can only take up to 50 combat drones!');
+	$at_max = $change_combat_drones == 0;
 }
 
 if ($forces->getSDs() + $change_scout_drones > 5) {
 	$change_scout_drones = 5 - $forces->getSDs();
-//	create_error('This stack can only take up to 5 scout drones!');
+	$at_max = $change_scout_drones == 0;
 }
 
 // Check if the delta is 0 after applying the caps, in case by applying the caps we actually changed it to 0.
-if ($change_mines == 0 && $change_combat_drones == 0 && $change_scout_drones == 0)
-	create_error('You want to add/remove 0 forces?');
+if ($change_mines == 0 && $change_combat_drones == 0 && $change_scout_drones == 0) {
+	if ($at_max) {
+		// If no forces added only because the stack is full
+		create_error('This stack can\'t hold any more of those forces!');
+	} else {
+		// If drop == take
+		create_error('You want to add/remove 0 forces?');
+	}
+}
 
 // combat drones
 if ($change_combat_drones != 0) {
