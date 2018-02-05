@@ -1,21 +1,17 @@
 <?php
 $template->assign('PageTopic','Dump Cargo');
 
-$db->query('SELECT * FROM ship_has_cargo JOIN good USING(good_id)
-			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-				AND game_id = ' . $db->escapeNumber($player->getGameID()));
-
-if ($db->getNumRows()) {
+if ($ship->hasCargo()) {
 
 	$goods = array();
-	while ($db->nextRecord()) {
+	foreach ($ship->getCargo() as $goodID => $amount) {
 		$container = create_container('cargo_dump_processing.php');
-		$container['good_id'] = $db->getInt('good_id');
+		$container['good_id'] = $goodID;
 
 		$goods[] = array(
-			'image' => Globals::getGood($db->getInt('good_id'))['ImageLink'],
-			'name' => $db->getField('good_name'),
-			'amount' => $db->getInt('amount'),
+			'image' => Globals::getGood($goodID)['ImageLink'],
+			'name' => Globals::getGood($goodID)['Name'],
+			'amount' => $amount,
 			'dump_href' => SmrSession::getNewHREF($container),
 		);
 	}
