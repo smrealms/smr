@@ -8,8 +8,8 @@ class SmrPort {
 	const CHANCE_TO_DOWNGRADE = 1;
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
-	const BASE_CDS = 500;
-	const CDS_PER_LEVEL = 125;
+	const BASE_CDS = 725;
+	const CDS_PER_LEVEL = 100;
 	const CDS_PER_TEN_MIL_CREDITS = 25;
 	const BASE_DEFENCES = 500;
 	const DEFENCES_PER_LEVEL = 700;
@@ -637,7 +637,7 @@ class SmrPort {
 	}
 
 	public function setCreditsToDefault() {
-		$this->setCredits(2100000 + $this->getLevel()*1600000 + pow($this->getLevel(), 2) * 300000);
+		$this->setCredits(2700000 + $this->getLevel()*1500000 + pow($this->getLevel(), 2) * 300000);
 	}
 
 	public function setCredits($credits) {
