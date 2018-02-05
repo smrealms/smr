@@ -7,10 +7,9 @@ function get_turns_message($player) {
 	$msg = $player->getPlayerName() . " has $turns/" . $player->getMaxTurns() . " turns.";
 
 	// Calculate time to max turns if under the max
-	if ($turns < $player->getMaxTurns()) {
-		$ship = $player->getShip(true);
-		$maxTime = ceil(($player->getMaxTurns() - $turns) * 3600 / $ship->getRealSpeed());
-		$msg .= " At max turns in " . format_time($maxTime, true) . ".";
+	$timeToMax = $player->getTimeUntilMaxTurns(time(), true);
+	if ($timeToMax > 0) {
+		$msg .= " At max turns in " . format_time($timeToMax, true) . ".";
 	}
 
 	return $msg;

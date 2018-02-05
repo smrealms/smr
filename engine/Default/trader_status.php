@@ -90,7 +90,11 @@ $PHP_OUTPUT.= '<br />Speed: ';
 $PHP_OUTPUT.= $ship->getRealSpeed();
 $PHP_OUTPUT.= ' turns/hour<br />Max: ';
 $PHP_OUTPUT.= $player->getMaxTurns();
-$PHP_OUTPUT.= ' turns<br /><br />';
+$PHP_OUTPUT.= ' turns<br />';
+
+// Max turns countdown clock
+$timeToMax = $player->getTimeUntilMaxTurns(TIME);
+$PHP_OUTPUT .= 'At max turns in <span id="max_turns">' . format_time($timeToMax, true) . '</span>.<br /><br />';
 
 $container['body'] = 'configure_hardware.php';
 $PHP_OUTPUT.= create_link($container, '<span class="yellow bold">Supported Hardware</span>');
