@@ -598,6 +598,19 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $this->originalMaintenance;
 	}
 
+	/**
+	 * Calculate the time in seconds between the given time and when the
+	 * player will be at max turns.
+	 */
+	public function getTimeUntilMaxTurns($time, $forceUpdate=false) {
+		$timeDiff = $time - $this->getLastTurnUpdate();
+		$turnsDiff = $this->getMaxTurns() - $this->getTurns();
+		$ship = $this->getShip($forceUpdate);
+		$maxTurnsTime = ceil(($turnsDiff * 3600 / $ship->getRealSpeed())) - $timeDiff;
+		// If already at max turns, return 0
+		return max(0, $maxTurnsTime);
+	}
+
 	// Turns only update when player is active.
 	// Calculate turns gained between given time and the last turn update
 	public function getTurnsGained($time, $forceUpdate=false) {
