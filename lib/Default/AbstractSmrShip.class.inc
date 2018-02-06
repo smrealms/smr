@@ -753,6 +753,9 @@ abstract class AbstractSmrShip {
 			return;
 		$this->cargo[$goodID] = $amount;
 		$this->hasChangedCargo = true;
+		// Sort cargo by goodID to make sure it shows up in the correct order
+		// before the next page is loaded.
+		ksort($this->cargo);
 	}
 
 	public function decreaseCargo($goodID,$amount) {
