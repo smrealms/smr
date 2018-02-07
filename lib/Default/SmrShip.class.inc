@@ -110,10 +110,14 @@ class SmrShip extends AbstractSmrShip {
 		if($this->hasChangedCargo === true) {
 			// write cargo info
 			foreach ($this->getCargo() as $id => $amount) {
-				if ($amount > 0)
+				if ($amount > 0) {
 					$this->db->query('REPLACE INTO ship_has_cargo (account_id, game_id, good_id, amount) VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($id) . ', ' . $this->db->escapeNumber($amount) . ')');
-				else
+				} else {
 					$this->db->query('DELETE FROM ship_has_cargo WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND good_id = ' . $this->db->escapeNumber($id) . ' LIMIT 1');
+					// Unset now to omit displaying this good with 0 amount
+					// before the next page is loaded.
+					unset($this->cargo[$id]);
+				}
 			}
 			$this->hasChangedCargo = false;
 		}
