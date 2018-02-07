@@ -523,15 +523,13 @@ class SmrPort {
 			throw new Exception('Cannot downgrade a cached port!');
 
 		switch($this->level) {
-			case 1: // we don't want to downgrade a level 1 port
-//				for($i=0;$i<3;$i++) { // Add 3 goods for upgrading to level 1
-//					do {
-//						$newGood = array_shift($GOODS);
-//					} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
-//					if($count == 0)
-//						break;
-//					$this->removePortGood($newGood['ID'],);
-//				}
+			case 1:
+				// Replace one class 1 good with another
+				$this->selectAndRemoveGood(1);
+				$newGood = $this->selectAndAddGood(1);
+				// Set new good to 0 supply
+				// (since other goods are set to 0 when port is destroyed)
+				$this->setGoodAmount($newGood['ID'], 0);
 			break;
 			
 			case 2:
@@ -554,7 +552,11 @@ class SmrPort {
 			default: // We don't want to add goods.
 			break;
 		}
-		$this->decreaseLevel(1);
+
+		// Don't make the port level 0
+		if ($this->level > 1) {
+			$this->decreaseLevel(1);
+		}
 		$this->setUpgrade(0);
 	}
 	
