@@ -3,10 +3,10 @@ if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
 $planet =& $player->getSectorPlanet();
 $action = $_REQUEST['action'];
-$amount = $_REQUEST['amount'];
 
 // Player has requested a planetary fund transaction
 if ($action == 'Deposit' || $action == 'Withdraw') {
+	$amount = $_REQUEST['amount'];
 	if (!is_numeric($amount))
 		create_error('Numbers only please!');
 
