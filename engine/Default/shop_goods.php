@@ -9,7 +9,6 @@ $tradeable = checkPortTradeable($port,$player);
 if($tradeable!==true)
 	create_error($tradeable);
 
-$portRelations = Globals::getRaceRelations($player->getGameID(),$port->getRaceID());
 $relations = $player->getRelation($port->getRaceID());
 
 // topic

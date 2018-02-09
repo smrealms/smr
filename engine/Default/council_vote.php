@@ -23,19 +23,17 @@ if ($db->nextRecord()) {
 }
 
 $voteRelations = array();
-$playerRaceGlobalRelations = Globals::getRaceRelations($player->getGameID(),$player->getRaceID());
+$globalRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
 $races =& Globals::getRaces();
 foreach($races as $raceID => $raceInfo) {
 	if($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID())
 		continue;
 	$container = create_container('council_vote_processing.php', '', array('race_id' => $raceID));
-	$otherRaceGlobalRelations = Globals::getRaceRelations($player->getGameID(),$raceID);
 	$voteRelations[$raceID] = array(
 		'HREF' => SmrSession::getNewHREF($container),
 		'Increased' => $votedForRace == $raceID && $votedFor == 'INC',
 		'Decreased' => $votedForRace == $raceID && $votedFor == 'DEC',
-		'RelationToThem' => $playerRaceGlobalRelations[$raceID],
-		'RelationToUs' => $otherRaceGlobalRelations[$player->getRaceID()]
+		'Relations' => $globalRelations[$raceID],
 	);
 }
 $template->assign('VoteRelations', $voteRelations);

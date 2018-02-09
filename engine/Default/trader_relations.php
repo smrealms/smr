@@ -8,9 +8,9 @@ $politicalRelations = array();
 $personalRelations = array();
 
 $RACES =& Globals::getRaces();
+$globalRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
 foreach($RACES as $raceID => $race) {
-	$otherRaceRelations = Globals::getRaceRelations($player->getGameID(),$raceID);
-	$politicalRelations[$race['Race Name']] = $otherRaceRelations[$player->getRaceID()];
+	$politicalRelations[$race['Race Name']] = $globalRelations[$raceID];
 	$personalRelations[$race['Race Name']] = $player->getPureRelation($raceID);
 }
 $template->assign('PoliticalRelations', $politicalRelations);

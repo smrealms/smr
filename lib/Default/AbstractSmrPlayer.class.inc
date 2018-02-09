@@ -621,6 +621,9 @@ abstract class AbstractSmrPlayer {
 		return $this->pureRelations;
 	}
 
+	/**
+	 * Get personal relations with a race
+	 */
 	public function getPureRelation($raceID) {
 		$rels = $this->getPureRelations();
 		return $rels[$raceID];
@@ -632,16 +635,17 @@ abstract class AbstractSmrPlayer {
 			$RACES = Globals::getRaces();
 			$raceRelations =& Globals::getRaceRelations($this->getGameID(),$this->getRaceID());
 			$pureRels = $this->getPureRelations(); // make sure they're initialised.
-//			$stats = $this->getStats(); // make sure they're initialised.
 			$this->relations = array();
 			foreach ($RACES as $raceID => $raceName) {
-				$raceRelations =& Globals::getRaceRelations($this->getGameID(), $raceID);
-				$this->relations[$raceID] = round($pureRels[$raceID] + $raceRelations[$this->getRaceID()]);// + $stats['Relations'] / 2);
+				$this->relations[$raceID] = $pureRels[$raceID] + $raceRelations[$raceID];
 			}
 		}
 		return $this->relations;
 	}
 
+	/**
+	 * Get total relations with a race (personal + political)
+	 */
 	public function getRelation($raceID) {
 		$rels = $this->getRelations();
 		return $rels[$raceID];
