@@ -32,7 +32,7 @@ while ($db->nextRecord()) {
 		$went_live = 'never';
 	}
 
-	$PHP_OUTPUT.=('<b><small>'.$version.' ('.$went_live.'):</small></b>');
+	$PHP_OUTPUT.=('<b>'.$version.' ('.$went_live.'):</b>');
 
 	$PHP_OUTPUT.=('<ul>');
 
@@ -41,7 +41,7 @@ while ($db->nextRecord()) {
 				WHERE version_id = ' . $db2->escapeNumber($version_id) . '
 				ORDER BY changelog_id');
 	while ($db2->nextRecord()) {
-		$PHP_OUTPUT.=('<li>' . $db2->getField('change_title') . '<br /><small>' . $db2->getField('change_message') . '</small></li>');
+		$PHP_OUTPUT.=('<li><span style="font-size:125%;color:greenyellow;">' . $db2->getField('change_title') . '</span><br />' . $db2->getField('change_message') . '<br /><br /></li>');
 	}
 
 	$PHP_OUTPUT.=('</ul><br />');
