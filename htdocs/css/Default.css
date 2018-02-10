@@ -2,7 +2,9 @@
 
 html, body {
 	height: 100%; /* fallback for older browsers */
+	width: 100%;  /* fallback for older browsers */
 	height: calc(100% - 10px); /* Account for padding to fix persistent vertical scrollbar */
+	width: calc(100vw - 34px); /* Prevent centered content shifting when scrollbar appears */
 }
 body {
 	font-family: Arial, Sans-Serif;
