@@ -1,3 +1,5 @@
+[![Dependency Status](https://www.versioneye.com/user/projects/5a8159ee0fb24f70e29a4c04/badge.svg)](https://www.versioneye.com/user/projects/5a8159ee0fb24f70e29a4c04)
+
 # Installation with docker
 
 ## Building an SMR docker image
