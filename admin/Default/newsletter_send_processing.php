@@ -1,16 +1,10 @@
 <?php
 
 // mailer
-require(LIB . 'External/phpMailer/class.phpmailer.php');
-
-$mail = new PHPMailer();
-$mail->From				= 'newsletter@smrealms.de';
-$mail->FromName			= 'SMR Team';
-
-//$mail->ConfirmReadingTo       = 'newsletter-read@smrealms.de';
+$mail = new \PHPMailer\PHPMailer\PHPMailer();
+$mail->setFrom('newsletter@smrealms.de', 'SMR Team');
 
 $mail->Encoding = 'base64';
-$mail->WordWrap = 72;
 
 $mail->Subject = $_REQUEST['subject'];
 
@@ -27,7 +21,7 @@ function set_mail_body(&$mail, $newsletterHtml, $newsletterText, $salutation) {
 
 	// Set the body text, giving preference to HTML
 	if(!empty($newsletterHtml)) {
-		$mail->MsgHTML($newsletterHtml);
+		$mail->msgHTML($newsletterHtml);
 		if(!empty($newsletterText)) {
 			$mail->AltBody = $newsletterText;
 		}
@@ -79,10 +73,10 @@ if($_REQUEST['to_email']=='*') {
 		echo '['.$account_id.'] Preparing mail for '.$to_name.' ('.$to_email.')... ';
 
 		// set a bounce address we can process later
-		$mail->AddReplyTo('bounce_' . $account_id . '@smrealms.de', 'SMR Support');
-		$mail->AddAddress($to_email, $to_name);
+		$mail->addReplyTo('bounce_' . $account_id . '@smrealms.de', 'SMR Support');
+		$mail->addAddress($to_email, $to_name);
 
-		if(!$mail->Send()) {
+		if (!$mail->send()) {
 			echo 'error.'.EOL . $mail->ErrorInfo;
 			exit;
 		}
@@ -94,8 +88,8 @@ if($_REQUEST['to_email']=='*') {
 		}
 
 		// Clear all addresses for next loop
-		$mail->ClearReplyTos();
-		$mail->ClearAddresses();
+		$mail->clearReplyTos();
+		$mail->clearAddresses();
 	}
 
 	echo '<br />Done! Total '.$sent.' mails sent.';
@@ -104,10 +98,13 @@ if($_REQUEST['to_email']=='*') {
 }
 else {
 
-	$mail->AddReplyTo('support@smrealms.de', 'SMR Support');
-	$mail->AddAddress($_REQUEST['to_email'], $_REQUEST['to_email']);
+	$mail->addReplyTo('support@smrealms.de', 'SMR Support');
+	$mail->addAddress($_REQUEST['to_email'], $_REQUEST['to_email']);
 
-	$mail->Send();
+	if (!$mail->send()) {
+		echo 'error.'.EOL . $mail->ErrorInfo;
+		exit;
+	}
 }
 
 forward(create_container('skeleton.php', 'newsletter_send.php'))
