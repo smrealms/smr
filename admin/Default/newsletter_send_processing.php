@@ -6,12 +6,9 @@ require(LIB . 'External/phpMailer/class.phpmailer.php');
 $mail = new PHPMailer();
 $mail->From				= 'newsletter@smrealms.de';
 $mail->FromName			= 'SMR Team';
-$mail->Maile			= 'smtp';
-$mail->SMTPKeepAlive	= true;
 
 //$mail->ConfirmReadingTo       = 'newsletter-read@smrealms.de';
 
-$mail->AddReplyTo('support@smrealms.de', 'SMR Support');
 $mail->Encoding = 'base64';
 $mail->WordWrap = 72;
 
@@ -72,7 +69,6 @@ if($_REQUEST['to_email']=='*') {
 
 		if(!$mail->Send()) {
 			echo 'error.'.EOL . $mail->ErrorInfo;
-			$mail->SmtpClose();
 			ob_flush();
 			exit;
 		}
@@ -86,18 +82,16 @@ if($_REQUEST['to_email']=='*') {
 
 	}
 
-	$mail->SmtpClose();
-
 	echo 'Total '.$total.' mails sent.'.EOL;
 	release_lock();
 	exit();
 }
 else {
 
+	$mail->AddReplyTo('support@smrealms.de', 'SMR Support');
 	$mail->AddAddress($_REQUEST['to_email'], $_REQUEST['to_email']);
 
 	$mail->Send();
-	$mail->SmtpClose();
 }
 
 forward(create_container('skeleton.php', 'newsletter_send.php'))
