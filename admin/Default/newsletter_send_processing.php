@@ -11,7 +11,7 @@ $mail->SMTPKeepAlive	= true;
 
 //$mail->ConfirmReadingTo       = 'newsletter-read@smrealms.de';
 
-$mail->AddReplyTo('newsletter@smrealms.de', 'SMR Support');
+$mail->AddReplyTo('support@smrealms.de', 'SMR Support');
 $mail->Encoding = 'base64';
 $mail->WordWrap = 72;
 
@@ -67,7 +67,7 @@ if($_REQUEST['to_email']=='*') {
 		echo $account_id.'. Preparing mail for '.$to_name.' <'.$to_email.'>... ';
 
 		// set a bounce address we can process later
-		$mail->From = 'bounce_' . $account_id . '@smrealms.de';
+		$mail->AddReplyTo('bounce_' . $account_id . '@smrealms.de', 'SMR Support');
 		$mail->AddAddress($to_email, $to_name);
 
 		if(!$mail->Send()) {
