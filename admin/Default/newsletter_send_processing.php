@@ -56,6 +56,11 @@ if($_REQUEST['to_email']=='*') {
 	// counter
 	$sent = 0;
 
+	// Depending on the total number of accounts, this may take a while.
+	// Give PHP an unlimited time to send (ignored if PHP is compiled with
+	// --enable-safe-mode). However, you may hit a browser or HTTP timeout.
+	set_time_limit(0);
+
 	while ($db->nextRecord()) {
 		// get account data
 		$account_id	= $db->getField('account_id');
