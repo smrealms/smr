@@ -44,14 +44,16 @@ set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text'],
               $_REQUEST['salutation']);
 
 if($_REQUEST['to_email']=='*') {
-	$db->query('SELECT account_id, email, first_name, last_name FROM account WHERE validated="TRUE" AND email NOT IN ("noone@smrealms.de","NPC@smrealms.de") AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
-	$total = $db->getNumRows();
+	// Send the newsletter to all players.
+	// Disable output buffering here so we can monitor the progress.
+	header('X-Accel-Buffering: no');    // disable Nginx output buffering
+	ob_implicit_flush(true);    // instruct PHP to flush after every output call
+	ob_end_flush();     // turn off PHP output buffering
 
-	// Start output buffer to display progress
-	ob_implicit_flush(true);
-	ob_start();
+	$db->query('SELECT account_id, email, first_name, last_name FROM account WHERE validated="TRUE" AND email NOT IN ("noone@smrealms.de","NPC@smrealms.de") AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
+
+	$total = $db->getNumRows();
 	echo 'Will send ' . $total . ' mails...<br /><br />';
-	ob_flush();
 
 	// counter
 	$sent = 0;
@@ -82,7 +84,6 @@ if($_REQUEST['to_email']=='*') {
 
 		if(!$mail->Send()) {
 			echo 'error.'.EOL . $mail->ErrorInfo;
-			ob_flush();
 			exit;
 		}
 
@@ -90,7 +91,6 @@ if($_REQUEST['to_email']=='*') {
 		echo 'sent.<br />';
 		if (($sent % 10) == 0) {
 			echo 'Sent '. $sent . ' of ' . $total . ' mails.<br /><br />';
-			ob_flush();
 		}
 
 		// Clear all addresses for next loop
