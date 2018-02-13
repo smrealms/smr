@@ -44,10 +44,23 @@ set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text'],
               $_REQUEST['salutation']);
 
 if($_REQUEST['to_email']=='*') {
-	// counter
-	$total = 0;
+	$db->query('SELECT account_id, email, first_name, last_name FROM account WHERE validated="TRUE" AND email NOT IN ("noone@smrealms.de","NPC@smrealms.de") AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
+	$total = $db->getNumRows();
 
-    $db->query('SELECT account_id, email, first_name, last_name FROM account WHERE validated="TRUE" AND email NOT IN ("noone@smrealms.de","NPC@smrealms.de") AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
+	// Start output buffer to display progress
+	ob_implicit_flush(true);
+	ob_start();
+	echo 'Will send ' . $total . ' mails...<br /><br />';
+	ob_flush();
+
+	// counter
+	$sent = 0;
+
+	// Depending on the total number of accounts, this may take a while.
+	// Give PHP an unlimited time to send (ignored if PHP is compiled with
+	// --enable-safe-mode). However, you may hit a browser or HTTP timeout.
+	set_time_limit(0);
+
 	while ($db->nextRecord()) {
 		// get account data
 		$account_id	= $db->getField('account_id');
@@ -61,7 +74,7 @@ if($_REQUEST['to_email']=='*') {
 		}
 
 		// debug output
-		echo $account_id.'. Preparing mail for '.$to_name.' <'.$to_email.'>... ';
+		echo '['.$account_id.'] Preparing mail for '.$to_name.' ('.$to_email.')... ';
 
 		// set a bounce address we can process later
 		$mail->AddReplyTo('bounce_' . $account_id . '@smrealms.de', 'SMR Support');
@@ -72,17 +85,20 @@ if($_REQUEST['to_email']=='*') {
 			ob_flush();
 			exit;
 		}
-		else
-			echo 'sent.'.EOL;
 
-		$total++;
+		$sent++;
+		echo 'sent.<br />';
+		if (($sent % 10) == 0) {
+			echo 'Sent '. $sent . ' of ' . $total . ' mails.<br /><br />';
+			ob_flush();
+		}
 
 		// Clear all addresses for next loop
+		$mail->ClearReplyTos();
 		$mail->ClearAddresses();
-
 	}
 
-	echo 'Total '.$total.' mails sent.'.EOL;
+	echo '<br />Done! Total '.$sent.' mails sent.';
 	release_lock();
 	exit();
 }
