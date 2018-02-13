@@ -89,8 +89,8 @@ if($_REQUEST['to_email']=='*') {
 		}
 
 		// Clear all addresses for next loop
+		$mail->ClearReplyTos();
 		$mail->ClearAddresses();
-
 	}
 
 	echo '<br />Done! Total '.$sent.' mails sent.';
