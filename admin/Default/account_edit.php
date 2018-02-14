@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Edit Account');
 
-$account_id = SmrSession::getRequestVar('account_id', 0);
+$account_id = SmrSession::getRequestVar('account_id', '');
 $player_name = SmrSession::getRequestVar('player_name', '');
 SmrSession::getRequestVar('login', '');
 SmrSession::getRequestVar('val_code', '');
@@ -15,7 +15,9 @@ elseif(!isset($var['SearchGameID'])) {
 	SmrSession::updateVar('SearchGameID', 0);
 }
 
-if(!empty($account_id) && !is_numeric($account_id)) {
+if (empty($account_id)) {
+	$account_id = 0;
+} elseif (!is_numeric($account_id)) {
 	create_error('Account ID must be a number.');
 }
 
