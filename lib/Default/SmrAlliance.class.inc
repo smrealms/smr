@@ -33,7 +33,7 @@ class SmrAlliance {
 
 	public static function getAllianceByDiscordChannel($channel, $forceUpdate=false) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT alliance_id, game_id FROM alliance WHERE discord_channel = '.$db->escapeString($channel).' ORDER BY game_id DESC LIMIT 1');
+		$db->query('SELECT alliance_id, game_id FROM alliance JOIN game USING(game_id) WHERE discord_channel = '.$db->escapeString($channel).' AND game.end_date > '.$db->escapeNumber(time()).' ORDER BY game_id DESC LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAlliance($db->getInt('alliance_id'), $db->getInt('game_id'), $forceUpdate);
 		} else {
