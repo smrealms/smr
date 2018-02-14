@@ -8,7 +8,8 @@ if ($action == 'YES') {
 	}
 
 	// will this alliance be empty if we leave? (means one member right now)
-	if ($alliance->getNumMembers() == 1) {
+	// Don't delete the Newbie Help Alliance!
+	if ($alliance->getNumMembers() == 1 && $alliance->getAllianceID() != NHA_ID) {
 		// Retain the alliance, but delete some auxilliary info
 		$db->query('DELETE FROM alliance_bank_transactions
 		            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
