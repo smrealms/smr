@@ -1,4 +1,6 @@
 [![Dependency Status](https://www.versioneye.com/user/projects/5a8159ee0fb24f70e29a4c04/badge.svg)](https://www.versioneye.com/user/projects/5a8159ee0fb24f70e29a4c04)
+[![Travis Build](https://travis-ci.org/smrealms/smr.svg?branch=master)](https://travis-ci.org/smrealms/smr)
+[![Docker Build](https://img.shields.io/docker/build/smrealms/smr.svg)](https://cloud.docker.com/swarm/smrealms/repository/docker/smrealms/smr)
 
 # Installation with docker
 
