@@ -16,7 +16,7 @@ abstract class AbstractSmrShip {
 
 	protected $cargo;
 
-	protected $weapons;
+	protected $weapons = array();
 
 	protected $illusionShip;
 
