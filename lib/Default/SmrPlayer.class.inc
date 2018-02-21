@@ -1116,18 +1116,16 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$newCredits = 100000;
 		$this->setCredits($newCredits);
 
-		// speed for pod
-		$new_speed = 7;
-
-		// adapt turns
-		$this->setTurns(round($this->turns / $old_speed * $new_speed),100);
-
 		$this->setSectorID($this->getHome());
 		$this->increaseDeaths(1);
 		$this->setLandedOnPlanet(false);
 		$this->setDead(true);
 		$this->setNewbieWarning(true);
 		$this->getShip()->getPod($this->getAccount()->isNewbie());
+
+		// Update turns due to ship change
+		$new_speed = $this->getShip()->getSpeed();
+		$this->setTurns(round($this->turns / $old_speed * $new_speed),100);
 	}
 
 	public function getHome() {
