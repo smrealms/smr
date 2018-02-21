@@ -117,7 +117,7 @@ $last_turn_update = SmrGame::getGame($gameID)->getStartTurnsDate();
 
 //// newbie leaders need to put into there alliances
 if (SmrSession::$account_id == ACCOUNT_ID_NHL) {
-	$alliance_id = 302;
+	$alliance_id = NHA_ID;
 }
 else {
 	$alliance_id = 0;
