@@ -38,7 +38,6 @@ if ($db->getNumRows() > 0) {
 
 		// creates a new player object
 		$curr_player =& SmrPlayer::getPlayer(SmrSession::$account_id, $game_id);
-		$curr_ship =& $curr_player->getShip();
 
 		// update turns for this game
 		$curr_player->updateTurns();
