@@ -1419,15 +1419,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $return;
 	}
 
-	function changeShip(SmrShip &$ship,$shipID) {
-		$this->db->query('DELETE FROM player_has_goods WHERE '.$this->SQL.' LIMIT 1');
-		decloak($ship);
-		$this->db->query('DELETE FROM player_has_illusion WHERE '.$this->SQL.' LIMIT 1');
-		$this->setShipID($shipID);
-		$ship = get_ship($this);
-		checkShipForExcess($ship,$this);
-	}
-
 	public function save() {
 		if($this->hasChanged === true) {
 			$this->db->query('UPDATE player SET player_name='.$this->db->escapeString($this->playerName).
