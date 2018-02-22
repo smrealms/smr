@@ -383,19 +383,25 @@ function sleepNPC() {
 	usleep(mt_rand(MIN_SLEEP_TIME,MAX_SLEEP_TIME)); //Sleep for a random time
 }
 
+// Releases an NPC when it is done working
+function releaseNPC($login) {
+	if (empty($login)) {
+		debug('releaseNPC: no login specified to release');
+	} else {
+		$db = new SmrMySqlDatabase();
+		$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($login));
+		if ($db->getChangedRows()>0) {
+			debug('Released NPC: '.$login);
+		} else {
+			debug('Failed to release NPC: '.$login);
+		}
+	}
+}
+
 function exitNPC() {
 	global $NPC_LOGIN;
 	debug('Exiting NPC script.');
-	if($NPC_LOGIN!==null) {
-		$db = new SmrMySqlDatabase();
-		$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($NPC_LOGIN['Login']));
-		if($db->getChangedRows()>0)
-			debug('Unlocked NPC: '.$NPC_LOGIN['Login']);
-		else
-			debug('Failed to unlock NPC: '.$NPC_LOGIN['Login']);
-	}
-	else
-		debug('NPC_LOGIN is null.');
+	releaseNPC($NPC_LOGIN['Login']);
 	release_lock();
 	exit;
 }
@@ -409,19 +415,16 @@ function changeNPCLogin() {
 	
 	$actions=-1;
 	$GLOBALS['TRADE_ROUTE'] = null;
-	$db = new SmrMySqlDatabase();
-	$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($NPC_LOGIN['Login']));
-	if($db->getChangedRows()>0)
-		debug('Unlocked NPC: '.$NPC_LOGIN['Login']);
-	else
-		debug('Failed to unlock NPC: '.$NPC_LOGIN['Login']);
 
+	// Release previous NPC, if any
+	releaseNPC($NPC_LOGIN['Login']);
 	$NPC_LOGIN = null;
 
 	// We chose a new NPC, we don't care what we were doing beforehand.
 	$previousContainer = null;
 	
 	debug('Choosing new NPC');
+	$db = new SmrMySqlDatabase();
 	$db2 = new SmrMySqlDatabase();
 	$db->query('SELECT login, npc.player_name, alliance_name
 				FROM npc_logins npc
