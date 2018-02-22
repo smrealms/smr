@@ -537,18 +537,20 @@ function tradeGoods($goodID,AbstractSmrPlayer &$player,SmrPort &$port) {
 	$ship =& $player->getShip();
 	$relations = $player->getRelation($port->getRaceID());
 
-	$portGood = $port->getGood($goodID);
+	$transaction = $port->getGoodTransaction($goodID);
 	
-	if($portGood['TransactionType'] == 'Buy')
+	if ($transaction == 'Buy') {
 		$amount = $ship->getEmptyHolds();
-	else
+	} else {
 		$amount = $ship->getCargo($goodID);
+	}
 
-	$idealPrice = $port->getIdealPrice($goodID, $portGood['TransactionType'], $amount, $relations);
-	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $portGood['TransactionType']);
+	$idealPrice = $port->getIdealPrice($goodID, $transaction, $amount, $relations);
+	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
 	
 	return create_container('shop_goods_processing.php','',array('offered_price'=>$offeredPrice,'ideal_price'=>$idealPrice,'amount'=>$amount,'good_id'=>$goodID,'bargain_price'=>$offeredPrice));
 }
+
 function dumpCargo(&$player) {
 	$ship =& $player->getShip();
 	$cargo =& $ship->getCargo();
@@ -559,6 +561,7 @@ function dumpCargo(&$player) {
 		}
 	}
 }
+
 function plotToSector(&$player,$sectorID) {
 	return create_container('course_plot_processing.php','',array('from'=>$player->getSectorID(),'to'=>$sectorID));
 }
