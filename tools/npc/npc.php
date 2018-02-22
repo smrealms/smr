@@ -34,7 +34,7 @@ try {
 	}
 	define('OVERRIDE_FORWARD',true);
 	
-	define('NPCScript',true);
+	define('NPC_SCRIPT', true);
 	
 	require_once(get_file_loc('smr.inc'));
 	require_once(get_file_loc('SmrAccount.class.inc'));
@@ -112,7 +112,8 @@ try {
 }
 catch(Exception $e) {
 	logException($e);
-	exit;
+	// Try to shut down cleanly
+	exitNPC();
 }
 		
 function NPCStuff() {
