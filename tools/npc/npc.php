@@ -3,6 +3,9 @@
 // Use this exception to help override container forwarding for NPC's
 class ForwardException extends Exception {}
 
+// UOPZ overrides exit by default, which we don't want
+uopz_allow_exit(true);
+
 try {
 	echo '<pre>';
 	// global config
@@ -370,8 +373,8 @@ function processContainer($container) {
 	$previousContainer = $container;
 	debug('Executing container',$container);
  	//Redefine MICRO_TIME and TIME, the rest of the game expects them to be the single point in time that the script is executing, with it being redefined for each page load - unfortunately NPCs are one consistent script so we have to do a hack and redefine it (or change every instance of the TIME constant.
- 	runkit_constant_redefine('MICRO_TIME', microtime());
-	runkit_constant_redefine('TIME', (int)microtimeSec(MICRO_TIME));
+	uopz_redefine('MICRO_TIME', microtime());
+	uopz_redefine('TIME', (int)microtimeSec(MICRO_TIME));
 	resetContainer($container);
 	do_voodoo();
 }

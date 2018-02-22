@@ -1,4 +1,4 @@
-FROM php:5.6-cli
+FROM php:7.2-cli
 RUN apt-get update \
 	&& apt-get install -y git \
 	&& rm -rf /var/lib/apt/lists/* \
@@ -7,10 +7,9 @@ RUN apt-get update \
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# runkit is needed to use NPC's
-RUN pear channel-discover zenovich.github.io/pear \
-	&& pecl install zenovich/runkit-1.0.4 \
-	&& docker-php-ext-enable runkit
+# Install an extension for redefining constants
+RUN pecl install uopz-5.0.2 \
+	&& docker-php-ext-enable uopz
 
 # Install SMR-related dependencies
 WORKDIR /smr

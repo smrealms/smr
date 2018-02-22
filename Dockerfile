@@ -16,7 +16,7 @@ RUN rm -rf node_modules
 
 #---------------------------
 
-FROM php:5.6-apache
+FROM php:7.2-apache
 RUN apt-get update \
 	&& apt-get install -y libcurl4-openssl-dev git sendmail \
 	&& rm -rf /var/lib/apt/lists/* \
