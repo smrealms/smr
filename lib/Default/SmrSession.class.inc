@@ -177,9 +177,6 @@ class SmrSession {
 			}
 		}
 
-		define('MICRO_TIME', microtime());
-		define('TIME', (int)microtimeSec(MICRO_TIME));
-
 		if(class_exists('SmrMySqlDatabase',false))
 			$db = new SmrMySqlDatabase();
 	}

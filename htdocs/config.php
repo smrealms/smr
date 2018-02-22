@@ -1,6 +1,9 @@
 <?php
 @date_default_timezone_set(@date_default_timezone_get());
 
+define('MICRO_TIME', microtime());
+define('TIME', (int)microtimeSec(MICRO_TIME));
+
 // Repository paths
 define('ROOT', __DIR__ . '/../');
 define('LIB', ROOT.'lib/');
