@@ -3,45 +3,41 @@
 // Use this exception to help override container forwarding for NPC's
 class ForwardException extends Exception {}
 
+function overrideForward($container) {
+	global $forwardedContainer;
+	$forwardedContainer = $container;
+	if($container['body']=='error.php') {
+		// We hit a create_error - this shouldn't happen for an NPC often,
+		// for now we want to throw an exception for it for testing.
+		debug('Hit an error');
+		throw new Exception($container['message']);
+	}
+	// We have to throw the exception to get back up the stack,
+	// otherwise we quickly hit problems of overflowing the stack.
+	throw new ForwardException;
+}
+define('OVERRIDE_FORWARD', true);
+
+// Must be defined before anything that might throw an exception
+define('NPC_SCRIPT', true);
+
 // UOPZ overrides exit by default, which we don't want
 uopz_allow_exit(true);
 
-try {
-	echo '<pre>';
-	// global config
-	require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
-	// bot config
-	require_once(CONFIG . 'npc/config.specific.php');
-	// needed libs
-	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
-	require_once(LIB . 'Default/Globals.class.inc');
+// global config
+require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
+// bot config
+require_once(CONFIG . 'npc/config.specific.php');
+// needed libs
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
+require_once(LIB . 'Default/Globals.class.inc');
+require_once(get_file_loc('smr.inc'));
+require_once(get_file_loc('SmrAccount.class.inc'));
+require_once(get_file_loc('Plotter.class.inc'));
+require_once(get_file_loc('RouteGenerator.class.inc'));
+require_once(get_file_loc('shop_goods.inc'));
 
-	$db = new SmrMySqlDatabase();
-	
-	debug('Script started');
-	define('SCRIPT_ID', $db->getInsertID());
-	$db->query('UPDATE npc_logs SET script_id='.SCRIPT_ID.' WHERE log_id='.SCRIPT_ID);
-
-	function overrideForward($container) {
-		global $forwardedContainer;
-		$forwardedContainer = $container;
-		if($container['body']=='error.php') { //We hit a create_error - this shouldn't happen for an NPC often, for now we want to throw an exception for it for testing.
-			debug('Hit an error');
-			throw new Exception($container['message']);
-		}
-		//We have to throw the exception to get back up the stack, otherwise we quickly hit problems of overflowing the stack.
-		throw new ForwardException;
-	}
-	define('OVERRIDE_FORWARD',true);
-	
-	define('NPC_SCRIPT', true);
-	
-	require_once(get_file_loc('smr.inc'));
-	require_once(get_file_loc('SmrAccount.class.inc'));
-
-	$NPC_LOGINS_USED = array('');
-
-	$SHIP_UPGRADE_PATH = array(
+define('SHIP_UPGRADE_PATH', array(
 		2 => array( //Alskant
 			SHIP_TYPE_TRADE_MASTER,
 			SHIP_TYPE_TRIP_MAKER,
@@ -86,14 +82,20 @@ try {
 			SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 			SHIP_TYPE_REDEEMER
 		)
-	);
+	)
+);
+
+
+try {
+	$db = new SmrMySqlDatabase();
+	debug('Script started');
+
+	define('SCRIPT_ID', $db->getInsertID());
+	$db->query('UPDATE npc_logs SET script_id='.SCRIPT_ID.' WHERE log_id='.SCRIPT_ID);
+
+	$NPC_LOGINS_USED = array('');
 
 	$HIDDEN_PLAYERS = array();
-
-
-	require_once(get_file_loc('Plotter.class.inc'));
-	require_once(get_file_loc('RouteGenerator.class.inc'));
-	require_once(get_file_loc('shop_goods.inc'));
 
 	// Make sure NPC's have been set up in the database
 	$db = new SmrMySqlDatabase();
@@ -115,13 +117,14 @@ catch(Exception $e) {
 	// Try to shut down cleanly
 	exitNPC();
 }
-		
+
+
 function NPCStuff() {
 	global $actions,$var,$previousContainer,$underAttack,$NPC_LOGIN,$db;
 	
 	$underAttack = false;
 	$actions=-1;
-//	for($i=0;$i<40;$i++)
+
 	while(true) {
 		$actions++;
 		try {
@@ -259,7 +262,6 @@ function NPCStuff() {
 							else {
 								//Move to next route or fed.
 								if(($TRADE_ROUTE =& changeRoute($TRADE_ROUTES))===false) {
-//									var_dump($TRADE_ROUTES);
 									debug('Changing Route Failed');
 									processContainer(plotToFed($player));
 								}
@@ -292,7 +294,6 @@ function NPCStuff() {
 						else {
 							//Move to next route or fed.
 							if(($TRADE_ROUTE =& changeRoute($TRADE_ROUTES))===false) {
-//								var_dump($TRADE_ROUTES);
 								debug('Changing Route Failed');
 								processContainer(plotToFed($player));
 							}
@@ -597,9 +598,7 @@ function moveToSector(&$player,$targetSector) {
 }
 
 function checkForShipUpgrade(AbstractSmrPlayer &$player) {
-	global $SHIP_UPGRADE_PATH;
-	
-	foreach($SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
+	foreach(SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
 		if($player->getShipTypeID()==$upgradeShipID) //We can't upgrade, only downgrade.
 			return false;
 		if($upgradeShipID == SHIP_TYPE_NEWBIE_MERCHANT_VESSEL) //We can't actually buy the NMV, we just don't want to downgrade from it if we have it.
