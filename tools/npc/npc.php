@@ -730,6 +730,12 @@ function &findRoutes(&$player) {
 		unset($allSectors);
 		SmrPort::clearCache();
 		SmrSector::clearCache();
+
+		if (count($routesMerged) == 0) {
+			debug('Could not find any routes! Try another NPC.');
+			changeNPCLogin();
+		}
+
 		$db->query('INSERT INTO route_cache ' .
 				'(game_id, max_ports, goods_allowed, races_allowed, start_sector_id, end_sector_id, routes_for_port, max_distance, routes)' .
 				' VALUES ('.$db->escapeNumber($player->getGameID()).', '.$db->escapeNumber($maxNumberOfPorts).', '.$db->escapeObject($tradeGoods).', '.$db->escapeObject($tradeRaces).', '.$db->escapeNumber($startSectorID).', '.$db->escapeNumber($endSectorID).', '.$db->escapeNumber($routesForPort).', '.$db->escapeNumber($maxDistance).', '.$db->escapeObject($routesMerged,true).')');
