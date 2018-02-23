@@ -13,8 +13,9 @@
 			?><span class="red">You have been destroyed.</span><?php
 		}
 		else { ?>
-			<span class="yellow">You have destroyed the port.</span><?php
-		} ?><br />
+			<span class="yellow">You have breached the port defenses.</span><?php
+		} ?>
+		<br /><br />
 		<div class="buttonA"><?php
 			if($OverrideDeath) { ?>
 				<a href="<?php echo Globals::getPodScreenHREF() ?>" class="buttonA">Let there be pod</a><?php
