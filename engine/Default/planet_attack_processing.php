@@ -79,10 +79,9 @@ $logId = $db->getInsertID();
 // Send notification to planet owners
 $planetAttackMessage = 'Reports from the surface of '.$planet->getDisplayName().' confirm that it is under <span class="red">attack</span>! [combatlog='.$logId.']';
 if($planetOwner->hasAlliance()) {
-	$db->query('SELECT account_id FROM player WHERE game_id=' . $planetOwner->getGameID() .
-			' AND alliance_id=' . $planetOwner->getAllianceID()); //No limit in case they are over limit - ie NHA
-	while ($db->nextRecord())
-		SmrPlayer::sendMessageFromPlanet($planet->getGameID(),$db->getField('account_id'),$planetAttackMessage);
+	foreach ($planetOwner->getAlliance()->getMemberIDs() as $allyAccountID) {
+		SmrPlayer::sendMessageFromPlanet($planet->getGameID(), $allyAccountID, $planetAttackMessage);
+	}
 }
 else
 	SmrPlayer::sendMessageFromPlanet($planet->getGameID(),$planetOwner->getAccountID(),$planetAttackMessage);
