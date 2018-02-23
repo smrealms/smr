@@ -3,45 +3,41 @@
 // Use this exception to help override container forwarding for NPC's
 class ForwardException extends Exception {}
 
+function overrideForward($container) {
+	global $forwardedContainer;
+	$forwardedContainer = $container;
+	if($container['body']=='error.php') {
+		// We hit a create_error - this shouldn't happen for an NPC often,
+		// for now we want to throw an exception for it for testing.
+		debug('Hit an error');
+		throw new Exception($container['message']);
+	}
+	// We have to throw the exception to get back up the stack,
+	// otherwise we quickly hit problems of overflowing the stack.
+	throw new ForwardException;
+}
+define('OVERRIDE_FORWARD', true);
+
+// Must be defined before anything that might throw an exception
+define('NPC_SCRIPT', true);
+
 // UOPZ overrides exit by default, which we don't want
 uopz_allow_exit(true);
 
-try {
-	echo '<pre>';
-	// global config
-	require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
-	// bot config
-	require_once(CONFIG . 'npc/config.specific.php');
-	// needed libs
-	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
-	require_once(LIB . 'Default/Globals.class.inc');
+// global config
+require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
+// bot config
+require_once(CONFIG . 'npc/config.specific.php');
+// needed libs
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
+require_once(LIB . 'Default/Globals.class.inc');
+require_once(get_file_loc('smr.inc'));
+require_once(get_file_loc('SmrAccount.class.inc'));
+require_once(get_file_loc('Plotter.class.inc'));
+require_once(get_file_loc('RouteGenerator.class.inc'));
+require_once(get_file_loc('shop_goods.inc'));
 
-	$db = new SmrMySqlDatabase();
-	
-	debug('Script started');
-	define('SCRIPT_ID', $db->getInsertID());
-	$db->query('UPDATE npc_logs SET script_id='.SCRIPT_ID.' WHERE log_id='.SCRIPT_ID);
-
-	function overrideForward($container) {
-		global $forwardedContainer;
-		$forwardedContainer = $container;
-		if($container['body']=='error.php') { //We hit a create_error - this shouldn't happen for an NPC often, for now we want to throw an exception for it for testing.
-			debug('Hit an error');
-			throw new Exception($container['message']);
-		}
-		//We have to throw the exception to get back up the stack, otherwise we quickly hit problems of overflowing the stack.
-		throw new ForwardException;
-	}
-	define('OVERRIDE_FORWARD',true);
-	
-	define('NPCScript',true);
-	
-	require_once(get_file_loc('smr.inc'));
-	require_once(get_file_loc('SmrAccount.class.inc'));
-
-	$NPC_LOGINS_USED = array('');
-
-	$SHIP_UPGRADE_PATH = array(
+define('SHIP_UPGRADE_PATH', array(
 		2 => array( //Alskant
 			SHIP_TYPE_TRADE_MASTER,
 			SHIP_TYPE_TRIP_MAKER,
@@ -86,14 +82,20 @@ try {
 			SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 			SHIP_TYPE_REDEEMER
 		)
-	);
+	)
+);
+
+
+try {
+	$db = new SmrMySqlDatabase();
+	debug('Script started');
+
+	define('SCRIPT_ID', $db->getInsertID());
+	$db->query('UPDATE npc_logs SET script_id='.SCRIPT_ID.' WHERE log_id='.SCRIPT_ID);
+
+	$NPC_LOGINS_USED = array('');
 
 	$HIDDEN_PLAYERS = array();
-
-
-	require_once(get_file_loc('Plotter.class.inc'));
-	require_once(get_file_loc('RouteGenerator.class.inc'));
-	require_once(get_file_loc('shop_goods.inc'));
 
 	// Make sure NPC's have been set up in the database
 	$db = new SmrMySqlDatabase();
@@ -112,15 +114,17 @@ try {
 }
 catch(Exception $e) {
 	logException($e);
-	exit;
+	// Try to shut down cleanly
+	exitNPC();
 }
-		
+
+
 function NPCStuff() {
 	global $actions,$var,$previousContainer,$underAttack,$NPC_LOGIN,$db;
 	
 	$underAttack = false;
 	$actions=-1;
-//	for($i=0;$i<40;$i++)
+
 	while(true) {
 		$actions++;
 		try {
@@ -258,7 +262,6 @@ function NPCStuff() {
 							else {
 								//Move to next route or fed.
 								if(($TRADE_ROUTE =& changeRoute($TRADE_ROUTES))===false) {
-//									var_dump($TRADE_ROUTES);
 									debug('Changing Route Failed');
 									processContainer(plotToFed($player));
 								}
@@ -291,7 +294,6 @@ function NPCStuff() {
 						else {
 							//Move to next route or fed.
 							if(($TRADE_ROUTE =& changeRoute($TRADE_ROUTES))===false) {
-//								var_dump($TRADE_ROUTES);
 								debug('Changing Route Failed');
 								processContainer(plotToFed($player));
 							}
@@ -383,19 +385,25 @@ function sleepNPC() {
 	usleep(mt_rand(MIN_SLEEP_TIME,MAX_SLEEP_TIME)); //Sleep for a random time
 }
 
+// Releases an NPC when it is done working
+function releaseNPC($login) {
+	if (empty($login)) {
+		debug('releaseNPC: no login specified to release');
+	} else {
+		$db = new SmrMySqlDatabase();
+		$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($login));
+		if ($db->getChangedRows()>0) {
+			debug('Released NPC: '.$login);
+		} else {
+			debug('Failed to release NPC: '.$login);
+		}
+	}
+}
+
 function exitNPC() {
 	global $NPC_LOGIN;
 	debug('Exiting NPC script.');
-	if($NPC_LOGIN!==null) {
-		$db = new SmrMySqlDatabase();
-		$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($NPC_LOGIN['Login']));
-		if($db->getChangedRows()>0)
-			debug('Unlocked NPC: '.$NPC_LOGIN['Login']);
-		else
-			debug('Failed to unlock NPC: '.$NPC_LOGIN['Login']);
-	}
-	else
-		debug('NPC_LOGIN is null.');
+	releaseNPC($NPC_LOGIN['Login']);
 	release_lock();
 	exit;
 }
@@ -409,19 +417,16 @@ function changeNPCLogin() {
 	
 	$actions=-1;
 	$GLOBALS['TRADE_ROUTE'] = null;
-	$db = new SmrMySqlDatabase();
-	$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($NPC_LOGIN['Login']));
-	if($db->getChangedRows()>0)
-		debug('Unlocked NPC: '.$NPC_LOGIN['Login']);
-	else
-		debug('Failed to unlock NPC: '.$NPC_LOGIN['Login']);
 
+	// Release previous NPC, if any
+	releaseNPC($NPC_LOGIN['Login']);
 	$NPC_LOGIN = null;
 
 	// We chose a new NPC, we don't care what we were doing beforehand.
 	$previousContainer = null;
 	
 	debug('Choosing new NPC');
+	$db = new SmrMySqlDatabase();
 	$db2 = new SmrMySqlDatabase();
 	$db->query('SELECT login, npc.player_name, alliance_name
 				FROM npc_logins npc
@@ -532,18 +537,20 @@ function tradeGoods($goodID,AbstractSmrPlayer &$player,SmrPort &$port) {
 	$ship =& $player->getShip();
 	$relations = $player->getRelation($port->getRaceID());
 
-	$portGood = $port->getGood($goodID);
+	$transaction = $port->getGoodTransaction($goodID);
 	
-	if($portGood['TransactionType'] == 'Buy')
+	if ($transaction == 'Buy') {
 		$amount = $ship->getEmptyHolds();
-	else
+	} else {
 		$amount = $ship->getCargo($goodID);
+	}
 
-	$idealPrice = $port->getIdealPrice($goodID, $portGood['TransactionType'], $amount, $relations);
-	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $portGood['TransactionType']);
+	$idealPrice = $port->getIdealPrice($goodID, $transaction, $amount, $relations);
+	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
 	
 	return create_container('shop_goods_processing.php','',array('offered_price'=>$offeredPrice,'ideal_price'=>$idealPrice,'amount'=>$amount,'good_id'=>$goodID,'bargain_price'=>$offeredPrice));
 }
+
 function dumpCargo(&$player) {
 	$ship =& $player->getShip();
 	$cargo =& $ship->getCargo();
@@ -554,6 +561,7 @@ function dumpCargo(&$player) {
 		}
 	}
 }
+
 function plotToSector(&$player,$sectorID) {
 	return create_container('course_plot_processing.php','',array('from'=>$player->getSectorID(),'to'=>$sectorID));
 }
@@ -593,9 +601,7 @@ function moveToSector(&$player,$targetSector) {
 }
 
 function checkForShipUpgrade(AbstractSmrPlayer &$player) {
-	global $SHIP_UPGRADE_PATH;
-	
-	foreach($SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
+	foreach(SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
 		if($player->getShipTypeID()==$upgradeShipID) //We can't upgrade, only downgrade.
 			return false;
 		if($upgradeShipID == SHIP_TYPE_NEWBIE_MERCHANT_VESSEL) //We can't actually buy the NMV, we just don't want to downgrade from it if we have it.
@@ -727,6 +733,12 @@ function &findRoutes(&$player) {
 		unset($allSectors);
 		SmrPort::clearCache();
 		SmrSector::clearCache();
+
+		if (count($routesMerged) == 0) {
+			debug('Could not find any routes! Try another NPC.');
+			changeNPCLogin();
+		}
+
 		$db->query('INSERT INTO route_cache ' .
 				'(game_id, max_ports, goods_allowed, races_allowed, start_sector_id, end_sector_id, routes_for_port, max_distance, routes)' .
 				' VALUES ('.$db->escapeNumber($player->getGameID()).', '.$db->escapeNumber($maxNumberOfPorts).', '.$db->escapeObject($tradeGoods).', '.$db->escapeObject($tradeRaces).', '.$db->escapeNumber($startSectorID).', '.$db->escapeNumber($endSectorID).', '.$db->escapeNumber($routesForPort).', '.$db->escapeNumber($maxDistance).', '.$db->escapeObject($routesMerged,true).')');

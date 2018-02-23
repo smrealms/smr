@@ -4,9 +4,7 @@ function logException(Exception $e) {
 	$errorType = 'Error';
 	$message='';
 	$currMySQLError='';
-	if(defined('NPC_SCRIPT')) {
-		$message .= 'Script: '.SCRIPT_ID.EOL.EOL.'-----------'.EOL.EOL;
-	}
+
 	if(is_object($account)) {
 		$message .= 'Login: '.$account->getLogin().EOL.EOL.'-----------'.EOL.EOL.
 			'Account ID: '.$account->getAccountID().EOL.EOL.'-----------'.EOL.EOL.
@@ -37,25 +35,10 @@ function logException(Exception $e) {
 		$message .= 'Trace: ' . $ee->getTraceAsString();
 	}
 
-	if(defined('NPC_SCRIPT')) {
-		global $NPC_LOGIN;
-		try {
-			$db = new SmrMySqlDatabase();
-			$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($NPC_LOGIN['Login']));
-			if($db->getChangedRows()>0)
-				debug('Unlocked NPC: '.$NPC_LOGIN['Login']);
-			else
-				debug('Failed to unlock NPC: '.$NPC_LOGIN['Login']);
-		}
-		catch(Exception $ee) {
-			$message .= EOL.EOL.'-----------'.EOL.EOL.
-						'Releasing NPC Failed' .EOL.
-						'Message: ' . $ee->getMessage() .EOL.EOL;
-			if($currMySQLError!=$db->getError()) {
-				$message .= 'MySQL Error MSG: '.$db->getError().EOL.EOL;
-			}
-			$message .= 'Trace: ' . $ee->getTraceAsString();
-		}
+	if (defined('NPC_SCRIPT')) {
+		$message = 'Script: '.SCRIPT_ID.EOL.EOL.'-----------'.EOL.EOL.$message;
+		var_dump($message);
+		return;
 	}
 
 	if(ENABLE_DEBUG) {

@@ -3,7 +3,7 @@
 // trim input now
 $player_name = trim($_REQUEST['player_name']);
 
-if(!defined('NPCScript')&&strpos($player_name,'NPC')===0)
+if(!defined('NPC_SCRIPT') && strpos($player_name,'NPC')===0)
 	create_error('Player names cannot begin with "NPC".');
 
 $limited_char = 0;
@@ -136,7 +136,7 @@ else {
 
 // insert into player table.
 $db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_turn_update, last_cpl_action, last_active, newbie_turns, npc)
-			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escape_string($player_name, true) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', '.$db->escapeNumber($last_turn_update).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPCScript')) . ')');
+			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escape_string($player_name, true) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', '.$db->escapeNumber($last_turn_update).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ')');
 
 $db->unlock();
 

@@ -15,7 +15,7 @@ try {
 	define('SCRIPT_ID', $db->getInsertID());
 	$db->query('UPDATE npc_logs SET script_id='.SCRIPT_ID.' WHERE log_id='.SCRIPT_ID);
 
-	define('NPCScript',true);
+	define('NPC_SCRIPT', true);
 
 	$descriptorSpec = array(
 		0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
