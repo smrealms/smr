@@ -6,6 +6,7 @@ class SmrAlliance {
 	protected static $CACHE_ALLIANCES = array();
 
 	protected $db;
+	protected $SQL;
 
 	protected $gameID;
 	protected $allianceID;
@@ -56,11 +57,10 @@ class SmrAlliance {
 
 		$this->allianceID = $allianceID;
 		$this->gameID = $gameID;
+		$this->SQL = 'alliance_id=' . $this->db->escapeNumber($allianceID) . ' AND game_id=' . $this->db->escapeNumber($gameID);
 
 		if ($allianceID != 0) {
-			$this->db->query('SELECT * FROM alliance
-								WHERE game_id = '.$this->db->escapeNumber($this->gameID).'
-								AND alliance_id = '.$this->db->escapeNumber($this->allianceID));
+			$this->db->query('SELECT * FROM alliance WHERE ' . $this->SQL);
 			$this->db->nextRecord();
 			$this->allianceName		= stripslashes($this->db->getField('alliance_name'));
 			$this->password			= stripslashes($this->db->getField('alliance_password'));
@@ -136,7 +136,7 @@ class SmrAlliance {
 
 	public function getIrcChannel() {
 		if(!isset($this->ircChannel)) {
-			$this->db->query('SELECT channel FROM irc_alliance_has_channel WHERE alliance_id = ' . $this->db->escapeNumber($this->getAllianceID()) .' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1;');
+			$this->db->query('SELECT channel FROM irc_alliance_has_channel WHERE ' . $this->SQL);
 			if($this->db->nextRecord()) {
 				$this->ircChannel = $this->db->getField('channel');
 			}
@@ -162,7 +162,7 @@ class SmrAlliance {
 			$this->db->query('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($ircChannel) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ');');
 		}
 		else {
-			$this->db->query('DELETE FROM irc_alliance_has_channel WHERE alliance_id = ' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ';');
+			$this->db->query('DELETE FROM irc_alliance_has_channel WHERE ' . $this->SQL);
 		}
 		$this->ircChannel = $ircChannel;
 	}
@@ -252,7 +252,7 @@ class SmrAlliance {
 			if($this->getNumMembers()<$maxVets) {
 				return true;
 			}
-			$this->db->query('SELECT status FROM player_joined_alliance WHERE account_id='.$this->db->escapeNumber($player->getAccountID()).' AND game_id='.$this->db->escapeNumber($player->getGameID()).' AND alliance_id='.$this->db->escapeNumber($this->getAllianceID()));
+			$this->db->query('SELECT status FROM player_joined_alliance WHERE account_id='.$this->db->escapeNumber($player->getAccountID()).' AND '.$this->SQL);
 			if($this->db->nextRecord()) {
 				if($this->db->getField('status')=='NEWBIE') {
 					return true;
@@ -261,9 +261,7 @@ class SmrAlliance {
 			$this->db->query('SELECT COUNT(*) AS num_orig_vets
 							FROM player_joined_alliance
 							JOIN player USING (account_id, alliance_id, game_id)
-							WHERE game_id='.$this->db->escapeNumber($player->getGameID()).'
-							AND alliance_id='.$this->db->escapeNumber($this->getAllianceID()).'
-							AND status=\'VETERAN\'');
+							WHERE ' . $this->SQL . ' AND status=\'VETERAN\'');
 			if(!$this->db->nextRecord() || $this->db->getInt('num_orig_vets') < $maxVets) {
 				return true;
 			}
@@ -296,13 +294,12 @@ class SmrAlliance {
 								discord_server = '.$this->db->escapeString($this->discordServer).',
 								discord_channel = '.$this->db->escapeString($this->discordChannel).',
 								leader_id = '.$this->db->escapeNumber($this->leaderID).'
-							WHERE alliance_id = '.$this->db->escapeNumber($this->allianceID).'
-								AND game_id = '.$this->db->escapeNumber($this->gameID));
+							WHERE ' . $this->SQL);
 	}
 
 	function getMemberIDs() {
 		if(!isset($this->memberList)) {
-			$this->db->query('SELECT * FROM player WHERE alliance_id = '.$this->db->escapeNumber($this->allianceID).' AND game_id = '.$this->db->escapeNumber($this->gameID));
+			$this->db->query('SELECT account_id FROM player WHERE ' . $this->SQL);
 
 			//we have the list of players put them in an array now
 			$this->memberList = array();
@@ -319,9 +316,7 @@ class SmrAlliance {
 		$this->db->query('SELECT account_id
 						FROM active_session
 						JOIN player USING(account_id, game_id)
-						WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . '
-							AND alliance_id = ' . $this->db->escapeNumber($this->allianceID) . '
-							AND last_accessed >= ' . $this->db->escapeNumber(TIME - 600));
+						WHERE '.$this->SQL.' AND last_accessed >= ' . $this->db->escapeNumber(TIME - 600));
 		
 		while($this->db->nextRecord()) {
 			$activeIDs[] = $this->db->getInt('account_id');
