@@ -25,15 +25,6 @@ if($player->forceNAPAlliance($planetOwner)) {
 	create_error('You have a planet NAP, you cannot attack this planet!');
 }
 
-if ($planet->isDestroyed()) {
-	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$db->escapeNumber($planet->getSectorID()).' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	$planet->removeClaimed();
-	$planet->removePassword();
-	$container=create_container('skeleton.php','planet_attack.php');
-	$container['sector_id'] = $planet->getSectorID();
-	forward($container);
-}
-
 // take the turns
 $player->takeTurns(3,0);
 
@@ -76,15 +67,25 @@ $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->g
 unserialize($serializedResults); //because of references we have to undo this.
 $logId = $db->getInsertID();
 
+if ($planet->isDestroyed()) {
+	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$db->escapeNumber($planet->getSectorID()).' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	$planet->removeClaimed();
+	$planet->removePassword();
+
+	// Prepare message for planet owners
+	$planetAttackMessage = 'The defenses of '.$planet->getDisplayName().' have been breached. The planet is lost! [combatlog='.$logId.']';
+} else {
+	$planetAttackMessage = 'Reports from the surface of '.$planet->getDisplayName().' confirm that it is under <span class="red">attack</span>! [combatlog='.$logId.']';
+}
+
 // Send notification to planet owners
-$planetAttackMessage = 'Reports from the surface of '.$planet->getDisplayName().' confirm that it is under <span class="red">attack</span>! [combatlog='.$logId.']';
 if($planetOwner->hasAlliance()) {
 	foreach ($planetOwner->getAlliance()->getMemberIDs() as $allyAccountID) {
 		SmrPlayer::sendMessageFromPlanet($planet->getGameID(), $allyAccountID, $planetAttackMessage);
 	}
-}
-else
+} else {
 	SmrPlayer::sendMessageFromPlanet($planet->getGameID(),$planetOwner->getAccountID(),$planetAttackMessage);
+}
 
 // Update sector messages for attackers
 foreach($attackers as &$attacker) {
@@ -92,9 +93,7 @@ foreach($attackers as &$attacker) {
 		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ',' . $db->escapeString('[ATTACK_RESULTS]'.$logId) . ')');
 } unset($attacker);
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'planet_attack.php';
+$container = create_container('skeleton.php', 'planet_attack.php');
 $container['sector_id'] = $planet->getSectorID();
 
 // If they died on the shot they get to see the results
