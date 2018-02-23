@@ -302,7 +302,7 @@ class SmrAlliance {
 
 	function getMemberIDs() {
 		if(!isset($this->memberList)) {
-			$this->db->query('SELECT * FROM player WHERE alliance_id = '.$this->db->escapeNumber($this->allianceID).' AND game_id = '.$this->db->escapeNumber($this->gameID));
+			$this->db->query('SELECT account_id FROM player WHERE alliance_id = '.$this->db->escapeNumber($this->allianceID).' AND game_id = '.$this->db->escapeNumber($this->gameID));
 
 			//we have the list of players put them in an array now
 			$this->memberList = array();
