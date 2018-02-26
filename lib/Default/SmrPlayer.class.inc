@@ -65,8 +65,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	public static function savePlayers() {
-		foreach(self::$CACHE_PLAYERS as &$gamePlayers) {
-			foreach($gamePlayers as &$player) {
+		foreach(self::$CACHE_PLAYERS as $gamePlayers) {
+			foreach($gamePlayers as $player) {
 				$player->save();
 			}
 		}
@@ -74,7 +74,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	public static function &getSectorPlayersByAlliances($gameID,$sectorID, array $allianceIDs, $forceUpdate = false) {
 		$players = self::getSectorPlayers($gameID,$sectorID,$forceUpdate); // Don't use & as we do an unset
-		foreach($players as $accountID => &$player) {
+		foreach($players as $accountID => $player) {
 			if(!in_array($player->getAllianceID(),$allianceIDs))
 				unset($players[$accountID]);
 		}
@@ -88,9 +88,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$players = array();
 			while($db->nextRecord()) {
 				$accountID = $db->getInt('account_id');
-				$players[$accountID] =& self::getPlayer($db->getRow(), $gameID, $forceUpdate);
+				$players[$accountID] = self::getPlayer($db->getRow(), $gameID, $forceUpdate);
 			}
-			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] =& $players;
+			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] = $players;
 		}
 		return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID];
 	}
@@ -102,9 +102,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$players = array();
 			while($db->nextRecord()) {
 				$accountID = $db->getField('account_id');
-				$players[$accountID] =& self::getPlayer($db->getRow(), $gameID, $forceUpdate);
+				$players[$accountID] = self::getPlayer($db->getRow(), $gameID, $forceUpdate);
 			}
-			self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] =& $players;
+			self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] = $players;
 		}
 		return self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID];
 	}
@@ -116,21 +116,20 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$players = array();
 			while($db->nextRecord()) {
 				$accountID = $db->getInt('account_id');
-				$players[$accountID] =& self::getPlayer($db->getRow(), $gameID, $forceUpdate);
+				$players[$accountID] = self::getPlayer($db->getRow(), $gameID, $forceUpdate);
 			}
-			self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID] =& $players;
+			self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID] = $players;
 		}
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
-	public static function &getPlayer(&$accountIDOrResultArray, $gameID, $forceUpdate = false) {
+	public static function &getPlayer($accountIDOrResultArray, $gameID, $forceUpdate = false) {
 		$accountID = is_array($accountIDOrResultArray) ?
 		             $accountIDOrResultArray['account_id'] :
 		             $accountIDOrResultArray;
 		if ($forceUpdate || !isset(self::$CACHE_PLAYERS[$gameID][$accountID])) {
 			$p = new SmrPlayer($gameID,$accountIDOrResultArray);
-			self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] =& $p;
-			return self::$CACHE_PLAYERS[$gameID][$p->getAccountID()];
+			self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] = $p;
 		}
 		return self::$CACHE_PLAYERS[$gameID][$accountID];
 	}
@@ -143,12 +142,12 @@ class SmrPlayer extends AbstractSmrPlayer {
 		throw new PlayerNotFoundException('Player ID not found.');
 	}
 
-	protected function __construct($gameID,&$accountIDOrResultArray) {
+	protected function __construct($gameID, $accountIDOrResultArray) {
 		parent::__construct();
 		$this->db = new SmrMySqlDatabase();
 		$result=false;
 		if (is_array($accountIDOrResultArray))
-			$result =& $accountIDOrResultArray;
+			$result = $accountIDOrResultArray;
 		else {
 			$this->db->query('SELECT * FROM player WHERE account_id = ' . $this->db->escapeNumber($accountIDOrResultArray) . ' AND game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
 			$this->db->nextRecord();
@@ -425,12 +424,12 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	public function setSectorID($sectorID) {
 		require_once('SmrPort.class.inc');
-		$port =& SmrPort::getPort($this->getGameID(),$this->getSectorID());
+		$port = SmrPort::getPort($this->getGameID(),$this->getSectorID());
 		$port->addCachePort($this->getAccountID()); //Add port of sector we were just in, to make sure it is left totally up to date.
 
 		parent::setSectorID($sectorID);
 
-		$port =& SmrPort::getPort($this->getGameID(),$sectorID);
+		$port = SmrPort::getPort($this->getGameID(),$sectorID);
 		$port->addCachePort($this->getAccountID()); //Add the port of sector we are now in.
 	}
 
@@ -630,7 +629,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		// do we have at least one turn to give?
 		if ($extraTurns > 0) {
 			// recalc the time to avoid errors
-			$ship =& $this->getShip();
+			$ship = $this->getShip();
 			$newLastTurnUpdate = $this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $ship->getRealSpeed());
 
 			$startTurnsDate = $this->getGame()->getStartTurnsDate();
@@ -1089,7 +1088,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	public function killPlayer($sectorID) {
-		$sector =& SmrSector::getSector($this->getGameID(),$sectorID);
+		$sector = SmrSector::getSector($this->getGameID(),$sectorID);
 		//msg taken care of in trader_att_proc.php
 		// forget plotted course
 		$this->deletePlottedCourse();
@@ -1306,7 +1305,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	public function &killPlayerByForces(SmrForce &$forces) {
 		$return = array();
-		$owner =& $forces->getOwner();
+		$owner = $forces->getOwner();
 		// send a message to the person who died
 		self::sendMessageFromFedClerk($this->getGameID(), $owner->getAccountID(), 'Your forces <span class="red">DESTROYED </span>'.$this->getBBLink().' in sector '.Globals::getSectorBBLink($forces->getSectorID()));
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by '.$owner->getBBLink().'\'s forces in sector '.Globals::getSectorBBLink($this->getSectorID()));
@@ -1386,7 +1385,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	public function &killPlayerByPlanet(SmrPlanet &$planet) {
 		$return = array();
 		// send a message to the person who died
-		$planetOwner =& $planet->getOwner();
+		$planetOwner = $planet->getOwner();
 		self::sendMessageFromFedClerk($this->getGameID(), $planetOwner->getAccountID(), 'Your planet <span class="red">DESTROYED</span>&nbsp;'.$this->getBBLink().' in sector '.Globals::getSectorBBLink($planet->getSectorID()));
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by the planetary defenses of '.$planet->getDisplayName());
 
@@ -1596,7 +1595,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	public function isPresident() {
-		$president =& Council::getPresident($this->getGameID(),$this->getRaceID());
+		$president = Council::getPresident($this->getGameID(),$this->getRaceID());
 		return is_object($president)&&$this->equals($president);
 	}
 
@@ -1681,9 +1680,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		switch ($messageTypeID) {
 			case MSG_PLAYER:
-				$receiverAccount =& SmrAccount::getAccount($receiverID);
+				$receiverAccount = SmrAccount::getAccount($receiverID);
 				if($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isLoggedIn()) {
-					$senderPlayer =& SmrPlayer::getPlayer($senderID, $gameID);
+					$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
 					$mail = new \PHPMailer\PHPMailer\PHPMailer();
 					$mail->Subject = 'Message Notification';
 					$mail->setFrom('notifications@smrealms.de', 'SMR Notifications');

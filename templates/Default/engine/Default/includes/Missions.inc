@@ -4,9 +4,9 @@ if(isset($MissionMessage)) { ?>
 	echo $MissionMessage;
 }
 
-$AvailableMissions =& $ThisPlayer->getAvailableMissions();
+$AvailableMissions = $ThisPlayer->getAvailableMissions();
 if(count($AvailableMissions) > 0) {
-	foreach($AvailableMissions as $MissionID => &$AvailableMission) { ?>
+	foreach($AvailableMissions as $MissionID => $AvailableMission) { ?>
 		<span class="green">New Mission: </span><?php
 		echo bbifyMessage($AvailableMission['Steps'][0]['Text']); ?><br/><br/>
 		<div class="buttonA"><a href="<?php echo Globals::getAcceptMissionHREF($MissionID); ?>" class="buttonA">&nbsp;Accept&nbsp;</a></div><br/><?php
@@ -14,9 +14,9 @@ if(count($AvailableMissions) > 0) {
 }
 
 
-$Missions =& $ThisPlayer->getActiveMissions();
+$Missions = $ThisPlayer->getActiveMissions();
 if(count($Missions) > 0) {
-	foreach($Missions as $MissionID => &$Mission) {
+	foreach($Missions as $MissionID => $Mission) {
 		if(in_array($MissionID, $UnreadMissions)) { ?>
 			<span class="green">Task Complete: </span><?php
 			echo bbifyMessage($Mission['Task']['Text']); ?><br/><?php

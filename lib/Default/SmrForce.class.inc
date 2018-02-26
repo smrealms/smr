@@ -42,9 +42,9 @@ class SmrForce {
 	}
 
 	public static function saveForces() {
-		foreach(self::$CACHE_FORCES as &$gameForces) {
-			foreach($gameForces as &$gameSectorForces) {
-				foreach($gameSectorForces as &$forces) {
+		foreach(self::$CACHE_FORCES as $gameForces) {
+			foreach($gameForces as $gameSectorForces) {
+				foreach($gameSectorForces as $forces) {
 					$forces->update();
 				}
 			}
@@ -59,21 +59,21 @@ class SmrForce {
 			$forces = array();
 			while($db->nextRecord()) {
 				$ownerID = $db->getInt('owner_id');
-				$forces[$ownerID] =& self::getForce($db->getRow(), $sectorID, $ownerID, $forceUpdate);
+				$forces[$ownerID] = self::getForce($db->getRow(), $sectorID, $ownerID, $forceUpdate);
 			}
-			self::$CACHE_SECTOR_FORCES[$gameID][$sectorID] =& $forces;
+			self::$CACHE_SECTOR_FORCES[$gameID][$sectorID] = $forces;
 		}
 		return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID];
 	}
 
-	public static function &getForce(&$gameIDOrResultArray, $sectorID, $ownerID, $forceUpdate = false) {
+	public static function &getForce($gameIDOrResultArray, $sectorID, $ownerID, $forceUpdate = false) {
 		$gameID = is_array($gameIDOrResultArray) ?
 		          $gameIDOrResultArray['game_id'] :
 		          $gameIDOrResultArray;
 		if($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID,$sectorID));
 			$p = new SmrForce($gameIDOrResultArray, $sectorID, $ownerID);
-			self::$CACHE_FORCES[$gameID][$sectorID][$ownerID] =& $p;
+			self::$CACHE_FORCES[$gameID][$sectorID][$ownerID] = $p;
 		}
 		return self::$CACHE_FORCES[$gameID][$sectorID][$ownerID];
 	}
@@ -93,10 +93,10 @@ class SmrForce {
 		}
 	}
 
-	protected function __construct(&$gameIDOrResultArray, $sectorID, $ownerID) {
+	protected function __construct($gameIDOrResultArray, $sectorID, $ownerID) {
 		$this->db = new SmrMySqlDatabase();
 		if (is_array($gameIDOrResultArray)) {
-			$result =& $gameIDOrResultArray;
+			$result = $gameIDOrResultArray;
 			$this->gameID = $result['game_id'];
 		} else {
 			$this->db->query('SELECT * FROM sector_has_forces
@@ -355,7 +355,7 @@ class SmrForce {
 		if(!$this->hasSDs() && !$skipCheck) {
 			return;
 		}
-		$owner =& $this->getOwner();
+		$owner = $this->getOwner();
 		if(!$playerPinging->sameAlliance($owner)) {
 			$playerPinging->sendMessage($owner->getAccountID(), MSG_SCOUT, $pingMessage,false);
 		}
