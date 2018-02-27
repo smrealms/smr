@@ -223,7 +223,6 @@ $account->log(LOG_TYPE_FORCES, $change_combat_drones.' combat drones, '.$change_
 
 $forces->updateExpire();
 $forces->update(); // Needs to be in db to show up on CS instantly when querying sector forces
-$ship->removeUnderAttack();
 
 forward(create_container('skeleton.php', 'current_sector.php'));
 
