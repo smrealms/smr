@@ -29,6 +29,7 @@ abstract class AbstractSmrPlayer {
 	protected $credits;
 	protected $alignment;
 	protected $experience;
+	protected $level;
 	protected $allianceID;
 	protected $shipID;
 	protected $kills;
@@ -353,6 +354,10 @@ abstract class AbstractSmrPlayer {
 			$experience = MAX_EXPERIENCE;
 		$this->experience = $experience;
 		$this->hasChanged=true;
+
+		// Since exp has changed, invalidate the player level so that it can
+		// be recomputed next time it is queried (in case it has changed).
+		$this->level = null;
 	}
 
 	public function increaseCredits($credits) {
@@ -414,13 +419,22 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged=true;
 	}
 
+	/**
+	 * Returns the numerical level of the player (e.g. 1-50).
+	 */
 	public function getLevelID() {
-		$LEVELS_REQUIREMENTS =& Globals::getLevelRequirements();
-		foreach ($LEVELS_REQUIREMENTS as $level_id => $require) {
-			if ($this->getExperience() >= $require['Requirement']) continue;
-			return $level_id - 1;
+		// The level is cached for performance reasons unless `setExperience`
+		// is called and the player's experience changes.
+		if ($this->level === null) {
+			$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
+			foreach ($LEVELS_REQUIREMENTS as $level_id => $require) {
+				if ($this->getExperience() >= $require['Requirement']) continue;
+				$this->level = $level_id - 1;
+				return $this->level;
+			}
+			$this->level = max(array_keys($LEVELS_REQUIREMENTS));
 		}
-		return max(array_keys($LEVELS_REQUIREMENTS));
+		return $this->level;
 	}
 
 	public function getLevelName() {
