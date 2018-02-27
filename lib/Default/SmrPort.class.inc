@@ -396,6 +396,10 @@ class SmrPort {
 		return $upgrades;
 	}
 	
+	/**
+	 * This function should only be used in universe creation to set
+	 * ports to a specific level.
+	 */
 	public function upgradeToLevel($level) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot upgrade a cached port!');
