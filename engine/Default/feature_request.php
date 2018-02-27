@@ -14,7 +14,7 @@ $template->assign('PageTopic', 'Feature Requests - ' . $var['category']);
 define('NEW_REQUEST_DAYS', 30);
 
 $requestCategories = array(
-	'New' => 'Open requests made within the past ' . NEW_REQUEST_DAYS . ' days',
+	'New' => 'Open requests active within the past ' . NEW_REQUEST_DAYS . ' days',
 	'All Open' => 'All requests that remain open for voting',
 	'Accepted' => 'Features planned for future implementation',
 	'Implemented' => 'Features that have already been implemented',
