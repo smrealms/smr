@@ -45,7 +45,6 @@ class SmrPort {
 	protected $goodAmounts;
 	protected $goodAmountsChanged = array();
 	protected $goodDistances;
-	protected $goods;   // DEPRECATED!
 	
 	protected $cachedVersion = false;
 	protected $cachedTime = TIME;
@@ -1069,15 +1068,6 @@ class SmrPort {
 	public function __wakeup() {
 		$this->cachedVersion = true;
 		$this->db = new SmrMySqlDatabase();
-
-		// DEPRECATED: this is for unserializing old SmrPort data.
-		// Remove after game 117 ends.
-		if (isset($this->goods)) {
-			$this->goodIDs = array();
-			foreach ($this->goods as $transaction => $goods) {
-				$this->goodIDs[$transaction] = array_keys($goods);
-			}
-		}
 	}
 	
 	public function update() {
