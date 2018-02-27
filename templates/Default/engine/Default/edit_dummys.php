@@ -18,8 +18,8 @@
 				<input type="text" name="dummy_name" value="<?php echo $DummyPlayer->getPlayerName() ?>" />
 				Level
 				<select name="level">
-					<?php foreach($Levels as $Level) {
-						?><option value="<?php echo $Level['Requirement']; ?>"<?php if($Level['ID']==$DummyPlayer->getLevelID()){ ?> selected="selected"<?php } ?>><?php echo $Level['ID']; ?></option><?php
+					<?php foreach($Levels as $LevelID => $Level) {
+						?><option value="<?php echo $Level['Requirement']; ?>"<?php if($LevelID==$DummyPlayer->getLevelID()){ ?> selected="selected"<?php } ?>><?php echo $LevelID; ?></option><?php
 					} ?>
 				</select>
 				Ship:

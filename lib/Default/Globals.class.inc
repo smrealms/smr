@@ -113,7 +113,6 @@ class Globals {
 			self::$db->query('SELECT * FROM level ORDER BY level_id ASC');
 			while (self::$db->nextRecord()) {
 				self::$LEVEL_REQUIREMENTS[self::$db->getInt('level_id')] = array(
-																				'ID' => self::$db->getInt('level_id'),
 																				'Name' => self::$db->getField('level_name'),
 																				'Requirement' => self::$db->getInt('requirement')
 																				);
