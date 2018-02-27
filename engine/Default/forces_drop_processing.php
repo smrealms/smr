@@ -62,7 +62,15 @@ if ($change_mines == 0 && $change_combat_drones == 0 && $change_scout_drones == 
 	}
 }
 
-// combat drones
+// NOTE: we do all error checking first, because any forces we remove from
+// the ship will vanish if we hit an error afterwards. This is because we
+// don't update the force stack expire time until the end of this script.
+// Force stacks without an updated expire time are automatically removed.
+//
+// We don't make the expire time update part of every force change internally
+// because those functions are used to remove forces via combat (which isn't
+// supposed to update the expire time).
+
 if ($change_combat_drones != 0) {
 	// we can't take more forces than are in sector
 	if ($forces->getCDs() + $change_combat_drones < 0) {
@@ -75,15 +83,6 @@ if ($change_combat_drones != 0) {
 
 	if ($ship->getCDs() - $change_combat_drones < 0) {
 		create_error('You can\'t drop more combat drones than you carry!');
-	}
-
-	if($change_combat_drones>0) {
-		$ship->decreaseCDs($change_combat_drones,true);
-		$forces->addCDs($change_combat_drones);
-	}
-	else {
-		$ship->increaseCDs(-$change_combat_drones,true);
-		$forces->takeCDs(-$change_combat_drones);
 	}
 }
 
@@ -100,15 +99,6 @@ if ($change_scout_drones != 0) {
 	if ($ship->getSDs() - $change_scout_drones < 0) {
 		create_error('You can\'t drop more scout drones than you carry!');
 	}
-
-	if($change_scout_drones>0) {
-		$ship->decreaseSDs($change_scout_drones);
-		$forces->addSDs($change_scout_drones);
-	}
-	else {
-		$ship->increaseSDs(-$change_scout_drones);
-		$forces->takeSDs(-$change_scout_drones);
-	}
 }
 
 if ($change_mines != 0) {
@@ -124,7 +114,33 @@ if ($change_mines != 0) {
 	if ($ship->getMines() - $change_mines < 0) {
 		create_error('You can\'t drop more mines than you carry!');
 	}
+}
 
+// All error checking is done, so now update the ship/force
+
+if ($change_combat_drones != 0) {
+	if($change_combat_drones>0) {
+		$ship->decreaseCDs($change_combat_drones,true);
+		$forces->addCDs($change_combat_drones);
+	}
+	else {
+		$ship->increaseCDs(-$change_combat_drones,true);
+		$forces->takeCDs(-$change_combat_drones);
+	}
+}
+
+if ($change_scout_drones != 0) {
+	if($change_scout_drones>0) {
+		$ship->decreaseSDs($change_scout_drones);
+		$forces->addSDs($change_scout_drones);
+	}
+	else {
+		$ship->increaseSDs(-$change_scout_drones);
+		$forces->takeSDs(-$change_scout_drones);
+	}
+}
+
+if ($change_mines != 0) {
 	if($change_mines>0) {
 		$ship->decreaseMines($change_mines);
 		$forces->addMines($change_mines);
