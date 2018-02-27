@@ -378,7 +378,7 @@ class SmrForce {
 									'owner_id = '.$this->db->escapeNumber($this->ownerID));
 				$this->isNew=true;
 			}
-			else {
+			else if ($this->hasChanged) {
 				$this->db->query('UPDATE sector_has_forces SET combat_drones = '.$this->db->escapeNumber($this->combatDrones).', scout_drones = ' . $this->db->escapeNumber($this->scoutDrones) . ', mines = ' . $this->db->escapeNumber($this->mines) . ', expire_time = ' . $this->db->escapeNumber($this->expire) . '
 									WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . ' AND sector_id = ' . $this->db->escapeNumber($this->sectorID) . ' AND owner_id = ' . $this->db->escapeNumber($this->ownerID) . ' LIMIT 1 ');
 			}
@@ -388,6 +388,8 @@ class SmrForce {
 								VALUES('.$this->db->escapeNumber($this->gameID).', '.$this->db->escapeNumber($this->sectorID).', '.$this->db->escapeNumber($this->ownerID).', '.$this->db->escapeNumber($this->combatDrones).', '.$this->db->escapeNumber($this->scoutDrones).', '.$this->db->escapeNumber($this->mines).', '.$this->db->escapeNumber($this->expire).')');
 			$this->isNew=false;
 		}
+		// This instance is now in sync with the database
+		$this->hasChanged = false;
 	}
 
 	public function getExamineDropForcesHREF() {
