@@ -78,8 +78,8 @@ else {
 	$db->query('SELECT * FROM closing_reason');
 	while ($db->nextRecord()) {
 		$reason = $db->getField('reason');
-		if (strlen($reason) > 50) {
-			$reason = substr($reason, 0, 75) . '...';
+		if (strlen($reason) > 61) {
+			$reason = substr($reason, 0, 61) . '...';
 		}
 		$banReasons[$db->getInt('reason_id')] = $reason;
 	}
