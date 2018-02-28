@@ -26,15 +26,12 @@
 
 								<h1>FORGOT YOUR PASSWORD?</h1>
 
-								For security reasons, please enter the Username and Email that your account is registered to:
+								Please enter the e-mail address associated with your account:
+								<br /><br />
 
 								<form action="resend_password_processing.php" method="POST">
 									<div align="center">
 										<table border="0">
-											<tr>
-												<th align="right">Username:</th>
-												<td><input type="text" name="login" id="InputFields"></td>
-											</tr>
 											<tr>
 												<th align="right">Email:</th>
 												<td><input type="email" name="email" id="InputFields"></td>
