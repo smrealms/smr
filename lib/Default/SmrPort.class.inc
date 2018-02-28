@@ -862,20 +862,6 @@ class SmrPort {
 		return $this->isNew===false||$this->hasChanged===true;
 	}
 	
-	public function addCredits($credits,$portIsSelling=false) {
-		if($portIsSelling===true)
-			$this->addUpgrade($credits);
-		$this->setCredits($this->credits + $credits);
-	}
-	
-	public function addUpgrade($upgrade) {
-		$this->setUpgrade($this->upgrade + $upgrade);
-	}
-	
-	public function addExperience($exp) {
-		$this->setExperience($this->experience + $exp);
-	}
-	
 	public function decreaseShields($number) {
 		$this->setShields($this->getShields() - $number);
 	}
