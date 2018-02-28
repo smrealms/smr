@@ -10,8 +10,8 @@ while ($db->nextRecord()) {
 if(count($loginNews)>0)
 	$template->assign('LoginNews',$loginNews);
 
-
-$db->query('SELECT count(*) AS active_sessions FROM active_session WHERE account_id!=0 AND last_accessed > '.$db->escapeNumber(TIME - SmrSession::TIME_BEFORE_EXPIRY));
+// Users can have a session for each open game, so only count unique accounts
+$db->query('SELECT count(DISTINCT account_id) AS active_sessions FROM active_session WHERE account_id!=0 AND last_accessed > '.$db->escapeNumber(TIME - SmrSession::TIME_BEFORE_EXPIRY));
 $db->nextRecord();
 $template->assign('ActiveSessions',$db->getField('active_sessions'));
 

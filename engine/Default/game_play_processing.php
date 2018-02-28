@@ -1,7 +1,7 @@
 <?php
 
 // register game_id
-SmrSession::$game_id = $var['game_id'];
+SmrSession::updateGame($var['game_id']);
 
 $player =& SmrPlayer::getPlayer(SmrSession::$account_id, $var['game_id']);
 $player->updateLastCPLAction();
