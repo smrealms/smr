@@ -6,6 +6,7 @@ $curr_account =& SmrAccount::getAccount($account_id);
 // request
 $donation = $_REQUEST['donation'];
 $smr_credit = $_REQUEST['smr_credit'];
+$closeByRequest = $_REQUEST['close_by_request'];
 $reopenType = $_REQUEST['reopen_type'];
 $choise = $_REQUEST['choise'];
 $reason_pre_select = $_REQUEST['reason_pre_select'];
@@ -38,6 +39,26 @@ if(!empty($_REQUEST['grant_credits'])&&is_numeric($_REQUEST['grant_credits'])) {
 		$msg .= 'and ';
 	$msg .= 'added ' . $_REQUEST['grant_credits'] . ' reward credits';
 }
+
+if ($closeByRequest) {
+	// Make sure the special closing reason exists
+	$db->query('SELECT reason_id FROM closing_reason WHERE reason='.$db->escapeString(CLOSE_ACCOUNT_BY_REQUEST_REASON));
+	if ($db->nextRecord()) {
+		$reasonID = $db->getInt('reason_id');
+	} else {
+		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escapeString(CLOSE_ACCOUNT_BY_REQUEST_REASON).')');
+		$reasonID = $db->getInsertID();
+	}
+
+	$closeByRequestNote = $_REQUEST['close_by_request_note'];
+	if (empty($closeByRequestNote)) {
+		$closeByRequestNote = CLOSE_ACCOUNT_BY_REQUEST_REASON;
+	}
+
+	$curr_account->banAccount(0, $account, $reasonID, $closeByRequestNote);
+	$msg .= 'added ' . CLOSE_ACCOUNT_BY_REQUEST_REASON . ' ban ';
+}
+
 if ($choise == 'reopen') {
 	if($reopenType=='account') {
 		//do we have points

@@ -130,6 +130,22 @@
 					<td><hr noshade style="height:1px; border:1px solid white;"></td>
 				</tr>
 
+				<tr>
+					<td align="right" valign="top" class="bold">Close by User Request:</td>
+					<td>
+						Users will be able to re-open their account by themselves if this
+						account<br />closing method is used. It is useful if, e.g., they do not
+						want to receive<br />any more newsletters.<br />
+						<p><input type="checkbox" name="close_by_request" />Close account</p>
+						<p>Note (optional): <input type="text" name="close_by_request_note" id="InputFields" /></p>
+					</td>
+				</tr>
+
+				<tr>
+					<td>&nbsp;</td>
+					<td><hr noshade style="height:1px; border:1px solid white;"></td>
+				</tr>
+
 				<script type="text/javascript">
 					function go() {
 						var val = window.document.form_acc.reason_pre_select.value;

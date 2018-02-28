@@ -143,7 +143,7 @@ try {
 			header('Location: '.URL.'/email.php');
 			exit;
 		}
-		else {
+		else if ($disabled['Reason'] != CLOSE_ACCOUNT_BY_REQUEST_REASON) {
 			header('Location: '.URL.'/disabled.php');
 			exit;
 		}

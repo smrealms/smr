@@ -41,6 +41,7 @@ try {
 	// overwrite database class to use our db
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(LIB . 'Default/Globals.class.inc');
+	require_once(get_file_loc('smr.inc'));
 
 	
 	// new db object
@@ -105,13 +106,21 @@ try {
 			header('Location: '.URL.'/email.php');
 			exit;
 		}
+		else if ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
+			if (isset($var['do_reopen_account'])) {
+				// The user has requested to reopen their account
+				$account->unbanAccount($account);
+			} else {
+				$container = create_container('skeleton.php', 'reopen_account.php');
+				forward($container);
+			}
+		}
 		else {
 			header('Location: '.URL.'/disabled.php');
 			exit;
 		}
 	}
 	
-	require_once(get_file_loc('smr.inc'));
 	do_voodoo();
 }
 catch(Exception $e) {
