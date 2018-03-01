@@ -27,11 +27,9 @@ class Council {
 			$i=1;
 			self::$db->query('SELECT account_id, alignment
 								FROM player
-								JOIN account USING(account_id)
-								LEFT JOIN npc_logins ON account.login = npc_logins.login
 								WHERE game_id = ' . self::$db->escapeNumber($gameID) . '
 									AND race_id = ' . self::$db->escapeNumber($raceID) . '
-									AND npc_logins.player_name IS NULL
+									AND npc = \'FALSE\'
 								ORDER by experience DESC
 								LIMIT ' . MAX_COUNCIL_MEMBERS);
 			while(self::$db->nextRecord()) {
