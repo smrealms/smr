@@ -266,6 +266,17 @@ class SmrSession {
 		self::$db->query('UPDATE active_session SET game_id=' . self::$db->escapeNumber(self::$game_id) . ' WHERE session_id=' . self::$db->escapeString(self::$session_id));
 	}
 
+	/**
+	 * Updates the `account_id` attribute of the session.
+	 */
+	public static function updateAccount($accountID) {
+		if (self::$account_id == $accountID) {
+			return;
+		}
+		self::$account_id = $accountID;
+		self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ' WHERE session_id=' . self::$db->escapeString(self::$session_id));
+	}
+
 	public static function updateSN() {
 		self::$db = new SmrSessionMySqlDatabase();
 		if(!USING_AJAX)

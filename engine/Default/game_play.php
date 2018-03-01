@@ -8,8 +8,40 @@ if (isset($var['msg'])) {
 	$template->assign('Message',$var['msg']);
 }
 
+// ***************************************
+// ** Accounts
+// ***************************************
+
+if (isset($var['switch_account_id'])) {
+	// Override default account (and do sanity checks)
+	$account = $account->getLinkedAccount($var['switch_account_id']);
+	SmrSession::updateAccount($account->getAccountID());
+}
+
+// Get linked accounts (order the current account first, for simplicity)
+$linkedAccounts = $account->getLinkedAccountList();
+if (key($linkedAccounts) != $account->getAccountID()) {
+	$linkedAccounts = array_reverse($linkedAccounts);
+}
+$template->assign('AccountLabels', array_values($linkedAccounts));
+
+if (count($linkedAccounts) == SmrAccount::MAX_LINKED_ACCOUNTS) {
+	end($linkedAccounts);
+	$otherAccountID = key($linkedAccounts);
+	$switchContainer = create_container('skeleton.php', 'game_play.php');
+	$switchContainer['switch_account_id'] = $otherAccountID;
+} else {
+	$switchContainer = create_container('skeleton.php', 'switch_account_create.php');
+}
+$template->assign('SwitchAccountHREF', SmrSession::getNewHREF($switchContainer));
+
+
 $template->assign('UserRankingLink',SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_view.php')));
 $template->assign('UserRankName',$account->getRankName());
+
+// ***************************************
+// ** Play Game
+// ***************************************
 
 $games = array();
 $games['Play'] = array();

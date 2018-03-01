@@ -3,6 +3,8 @@ abstract class AbstractSmrAccount {
 	const USER_RANKINGS_EACH_STAT_POW = .9;
 	const USER_RANKINGS_TOTAL_SCORE_POW = .3;
 	const USER_RANKINGS_RANK_BOUNDARY = 5.2;
+	const MAX_LINKED_ACCOUNTS = 2;
+
 	protected static $USER_RANKINGS_SCORE = array(
 		// [Stat, a, b]
 		// Used as: pow(Stat * a, USER_RANKINGS_EACH_STAT_POW) * b
@@ -35,6 +37,7 @@ abstract class AbstractSmrAccount {
 	protected $db;
 
 	protected $account_id;
+	protected $login_id;
 	protected $login;
 	protected $password;
 	protected $email;
@@ -91,7 +94,7 @@ abstract class AbstractSmrAccount {
 
 	public static function &getAccountByName($login,$forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT account_id FROM account WHERE login = '.$db->escapeString($login).' LIMIT 1');
+		$db->query('SELECT account_id FROM account JOIN account_link_login USING (login_id) WHERE login = '.$db->escapeString($login).' LIMIT 1');
 		if($db->nextRecord())
 			return self::getAccount($db->getField('account_id'),$forceUpdate);
 		$return = null;
@@ -110,7 +113,7 @@ abstract class AbstractSmrAccount {
 
 	public static function &getAccountByHofName($hofName,$forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT account_id FROM account WHERE hof_name = '.$db->escapeString($hofName).' LIMIT 1');
+		$db->query('SELECT account_id FROM account JOIN account_link_login USING (login_id) WHERE hof_name = '.$db->escapeString($hofName).' LIMIT 1');
 		if($db->nextRecord())
 			return self::getAccount($db->getField('account_id'),$forceUpdate);
 		$return = null;
@@ -119,7 +122,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountByDiscordId($id, $forceUpdate=false) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT account_id FROM account where discord_id = '.$db->escapeString($id).' LIMIT 1');
+		$db->query('SELECT account_id FROM account JOIN account_link_login USING (login_id) where discord_id = '.$db->escapeString($id).' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAccount($db->getField('account_id'), $forceUpdate);
 		} else {
@@ -129,7 +132,7 @@ abstract class AbstractSmrAccount {
 
 	public static function &getAccountByIrcNick($nick, $forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT account_id FROM account WHERE irc_nick = '.$db->escapeString($nick).' LIMIT 1');
+		$db->query('SELECT account_id FROM account JOIN account_link_login USING (login_id) WHERE irc_nick = '.$db->escapeString($nick).' LIMIT 1');
 		if($db->nextRecord())
 			return self::getAccount($db->getField('account_id'), $forceUpdate);
 		$return = null;
@@ -138,7 +141,7 @@ abstract class AbstractSmrAccount {
 
 	public static function &findAccountByIrcNick($nick, $forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT account_id FROM account WHERE irc_nick LIKE '.$db->escapeString($nick).' LIMIT 2');
+		$db->query('SELECT account_id FROM account JOIN account_link_login USING (login_id) WHERE irc_nick LIKE '.$db->escapeString($nick).' LIMIT 2');
 		if($db->getNumRows() > 1) {
 			$return = true;
 			return $return;
@@ -181,12 +184,13 @@ abstract class AbstractSmrAccount {
 
 	function __construct($accountID) {
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM account WHERE account_id = '.$this->db->escapeNumber($accountID).' LIMIT 1');
+		$this->db->query('SELECT * FROM account JOIN account_link_login USING (login_id) WHERE account_id = '.$this->db->escapeNumber($accountID).' LIMIT 1');
 
 		if ($this->db->nextRecord()) {
 			$row = $this->db->getRow();
 			$this->account_id		= $row['account_id'];
 
+			$this->login_id = $row['login_id'];
 			$this->login			= $row['login'];
 			$this->password			= $row['password'];
 			$this->email			= $row['email'];
@@ -308,7 +312,7 @@ abstract class AbstractSmrAccount {
 			', friendly_colour = ' . $this->db->escapeString($this->friendlyColour, true, true).
 			', neutral_colour = ' . $this->db->escapeString($this->neutralColour, true, true).
 			', enemy_colour = ' . $this->db->escapeString($this->enemyColour, true, true).
-			' WHERE account_id = '.$this->db->escapeNumber($this->account_id).' LIMIT 1');
+			' WHERE login_id = '.$this->db->escapeNumber($this->login_id).' LIMIT 1');
 		$this->hasChanged = false;
 	}
 
@@ -749,6 +753,10 @@ abstract class AbstractSmrAccount {
 		}
 		$db = new SmrMySqlDatabase();
 		return false;
+	}
+
+	public function getLoginID() {
+		return $this->login_id;
 	}
 
 	public function getLogin() {
@@ -1301,6 +1309,36 @@ abstract class AbstractSmrAccount {
 	public function getPersonalHofHREF() {
 		return SmrSession::getNewHREF(create_container('skeleton.php','hall_of_fame_player_detail.php',array('account_id' => $this->getAccountID())));
 	}
-}
 
+	/**
+	 * Return an array of account_ids associated with this login.
+	 * We assume that each login has only MAX_LINKED_ACCOUNTS accounts and
+	 * that the smallest ID (created first) is the primary account_id.
+	 */
+	public function getLinkedAccountList() {
+		$this->db->query('SELECT account_id FROM account_link_login WHERE login_id='.$this->db->escapeNumber($this->getLoginID()).' ORDER BY account_id ASC LIMIT '.$this->db->escapeNumber(self::MAX_LINKED_ACCOUNTS));
+		$result = array();
+		while ($this->db->nextRecord()) {
+			$name = count($result) == 0 ? 'Main' : 'Multi';
+			$result[$this->db->getInt('account_id')] = $name;
+		}
+		return $result;
+	}
+
+	/**
+	 * Returns another account that is linked to this login.
+	 */
+	public function getLinkedAccount($accountID) {
+		if ($accountID == $this->getAccountID()) {
+			return $this;
+		}
+		$linkedAccounts = $this->getLinkedAccountList();
+		if (isset($linkedAccounts[$accountID])) {
+			return $this::getAccount($accountID);
+		} else {
+			throw new Exception('No linked account with ID: ' . $accountID);
+		}
+	}
+
+}
 ?>
