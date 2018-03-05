@@ -658,6 +658,10 @@ abstract class AbstractSmrShip {
 		$this->setHardware(HARDWARE_COMBAT,$amount);
 	}
 
+	/**
+	 * Decreases the ship CDs. Use $updateOldAmount=true to prevent
+	 * this change from triggering `isUnderAttack`.
+	 */
 	public function decreaseCDs($amount,$updateOldAmount=false) {
 		$this->setCDs($this->getCDs()-$amount,$updateOldAmount);
 	}
