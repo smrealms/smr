@@ -93,14 +93,6 @@ class SmrPort {
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
 
-	public static function &createPort($gameID,$sectorID) {
-		if(!isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
-			$p = new SmrPort($gameID,$sectorID);
-			self::$CACHE_PORTS[$gameID][$sectorID] =& $p;
-		}
-		return self::$CACHE_PORTS[$gameID][$sectorID];
-	}
-	
 	public static function savePorts() {
 		foreach(self::$CACHE_PORTS as &$gamePorts) {
 			foreach($gamePorts as &$port) {

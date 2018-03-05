@@ -234,7 +234,7 @@ elseif ($submit == 'Create Ports and Mines') {
 				if($numRacePorts[$raceID]==0)
 					unset($numRacePorts[$raceID]);
 					
-				$port =& $galSector->createPort();
+				$port =& $galSector->getPort();
 				$port->setRaceID($raceID);
 				$port->upgradeToLevel($i);
 				$port->setCreditsToDefault();
@@ -305,12 +305,7 @@ elseif ($submit == 'Edit Sector') {
 	}
 	//update port
 	if ($_POST['port_level'] > 0) {
-		if(!$sector->hasPort()) {
-			$port =& $sector->createPort();
-		}
-		else {
-			$port =& $sector->getPort();
-		}
+		$port =& $sector->getPort();
 		if ($port->getLevel()!=$_POST['port_level']) {
 			$port->upgradeToLevel($_POST['port_level']);
 			$port->setCreditsToDefault();

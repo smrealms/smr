@@ -602,10 +602,6 @@ class SmrSector {
 		return SmrPort::getPort($this->getGameID(),$this->getSectorID());
 	}
 
-	public function &createPort() {
-		return SmrPort::createPort($this->getGameID(),$this->getSectorID());
-	}
-
 	public function removePort() {
 		SmrPort::removePort($this->getGameID(),$this->getSectorID());
 	}
