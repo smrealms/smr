@@ -13,15 +13,12 @@ try {
 
 
 	// get this user from db
-	$login = $_REQUEST['login'];
-	// creates a new user account object
-	$account =& SmrAccount::getAccountByName($login);
 	$email = $_REQUEST['email'];
-	if ($account==null || $account->getEmail() != $email) {
+	$account = SmrAccount::getAccountByEmail($email);
+	if ($account==null) {
 		// unknown user
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode('User does not exist'));
+		header('Location: '.URL.'/error.php?msg=' . rawurlencode('The specified e-mail address is not registered!'));
 		exit;
-
 	}
 
 	$account->generatePasswordReset();
@@ -30,7 +27,8 @@ try {
 	// send email with password to user
 	mail($email, 'Space Merchant Realms Password',
 		 'A user from ' . getIpAddress() . ' requested to reset your password!'.EOL.EOL.
-		 '   Your password reset code is: ' . $account->getPasswordReset().EOL.
+		 '   Your game login is: ' . $account->getLogin().EOL.
+		 '   Your password reset code is: ' . $account->getPasswordReset().EOL.EOL.
 		 '   You can use this url: '.$resetURL .EOL.EOL.
 		 'The Space Merchant Realms server is on the web at '.URL.'/',
 		 'From: support@smrealms.de');

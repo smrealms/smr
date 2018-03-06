@@ -98,6 +98,16 @@ abstract class AbstractSmrAccount {
 		return $return;
 	}
 
+	public static function getAccountByEmail($email, $forceUpdate=false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT account_id FROM account WHERE email = '.$db->escapeString($email).' LIMIT 1');
+		if ($db->nextRecord()) {
+			return self::getAccount($db->getInt('account_id'), $forceUpdate);
+		} else {
+			return null;
+		}
+	}
+
 	public static function &getAccountByHofName($hofName,$forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM account WHERE hof_name = '.$db->escapeString($hofName).' LIMIT 1');
