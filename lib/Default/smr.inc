@@ -525,14 +525,12 @@ function do_voodoo() {
 			$account->log(LOG_TYPE_GAME_ENTERING, 'Player left game '.SmrSession::$game_id);
 
 		// reset game id
-		SmrSession::$game_id = 0;
-		SmrSession::update();
+		SmrSession::updateGame(0);
 
 		forward(create_container('skeleton.php', 'game_play.php', $var));
 	}
 	else if($var['url'] == 'logoff_preprocessing.php') {
-		SmrSession::$game_id = 0;
-		SmrSession::update();
+		SmrSession::updateGame(0);
 
 		// log?
 		$account->log(LOG_TYPE_LOGIN, 'logged off from '.getIpAddress());

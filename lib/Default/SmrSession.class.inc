@@ -245,12 +245,25 @@ class SmrSession {
 					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn='.self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
 		}
 		else {
-			self::$db->query('DELETE FROM active_session WHERE account_id = ' . self::$db->escapeNumber(self::$account_id) . ' LIMIT 1');
+			self::$db->query('DELETE FROM active_session WHERE account_id = ' . self::$db->escapeNumber(self::$account_id) . ' AND game_id = ' . self::$db->escapeNumber(self::$game_id));
 			self::$db->query('INSERT INTO active_session (session_id, account_id, old_account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(TIME) . ',' . self::$db->escapeBinary($compressed) . ')');
 			self::$generate = false;
 		}
 		// This takes us back to the standard database if we had to change it.
 		$db = new SmrMySqlDatabase();
+	}
+
+	/**
+	 * Updates the `game_id` attribute of the session and deletes any other
+	 * active sessions in this game for this account.
+	 */
+	public static function updateGame($gameID) {
+		if (self::$game_id == $gameID) {
+			return;
+		}
+		self::$game_id = $gameID;
+		self::$db->query('DELETE FROM active_session WHERE account_id = ' . self::$db->escapeNumber(self::$account_id) . ' AND game_id = ' . self::$game_id);
+		self::$db->query('UPDATE active_session SET game_id=' . self::$db->escapeNumber(self::$game_id) . ' WHERE session_id=' . self::$db->escapeString(self::$session_id));
 	}
 
 	public static function updateSN() {
