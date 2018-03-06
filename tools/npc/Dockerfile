@@ -1,15 +1,16 @@
-FROM php:7.2-cli
-RUN apt-get update \
-	&& apt-get install -y git \
-	&& rm -rf /var/lib/apt/lists/* \
-	&& docker-php-ext-install mysqli
+FROM php:7.2-cli-alpine
+
+RUN docker-php-ext-install mysqli
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install an extension for redefining constants
-RUN pecl install uopz-5.0.2 \
-	&& docker-php-ext-enable uopz
+# (The .build-deps package group is needed to run `pecl install`)
+RUN apk add --no-cache --virtual .build-deps pcre-dev ${PHPIZE_DEPS} \
+	&& pecl install uopz-5.0.2 \
+	&& docker-php-ext-enable uopz \
+	&& apk del .build-deps
 
 # Install SMR-related dependencies
 WORKDIR /smr
