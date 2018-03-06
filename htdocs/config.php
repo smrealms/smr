@@ -348,6 +348,8 @@ define('NUM_RACES', 8);
 
 define('TIME_BEFORE_INACTIVE', 259200); // 3 days.
 
+define('CLOSE_ACCOUNT_BY_REQUEST_REASON', 'User Request');
+
 define('ACCURACY_STAT_FACTOR', 0.04);
 define('INCREASED_ACC_GADGET_FACTOR', 0.15);
 define('INCREASED_MAN_GADGET_FACTOR', 0.15);
