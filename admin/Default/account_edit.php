@@ -78,8 +78,8 @@ else {
 	$db->query('SELECT * FROM closing_reason');
 	while ($db->nextRecord()) {
 		$reason = $db->getField('reason');
-		if (strlen($reason) > 50) {
-			$reason = substr($reason, 0, 75) . '...';
+		if (strlen($reason) > 61) {
+			$reason = substr($reason, 0, 61) . '...';
 		}
 		$banReasons[$db->getInt('reason_id')] = $reason;
 	}
@@ -89,8 +89,9 @@ else {
 	$db->query('SELECT * FROM account_has_closing_history WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY time DESC');
 	while ($db->nextRecord()) {
 		// if an admin did it we get his/her name
+		$admin_id = $db->getInt('admin_id');
 		if ($admin_id > 0) {
-			$admin = SmrAccount::getAccount($db->getInt('admin_id'))->getLogin();
+			$admin = SmrAccount::getAccount($admin_id)->getLogin();
 		}
 		else {
 			$admin = 'System';
