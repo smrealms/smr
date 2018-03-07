@@ -84,7 +84,7 @@ if (!isset ($var['folder_id'])) {
 
 	$container = create_container('skeleton.php','message_blacklist.php');
 	$container['folder_id'] = $message_type_id;
-	$template->assignByRef('ManageBlacklistLink', SmrSession::getNewHREF($container));
+	$template->assign('ManageBlacklistLink', SmrSession::getNewHREF($container));
 }
 else {
 	$whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
@@ -251,21 +251,21 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 	$message = array ();
 
 	$sender = false;
-	$senderName =& getMessagePlayer($sender_id,$player->getGameID(),$type);
+	$senderName = getMessagePlayer($sender_id,$player->getGameID(),$type);
 	if ($senderName instanceof SmrPlayer) {
-		$sender =& $senderName;
+		$sender = $senderName;
 		unset($senderName);
 		$replace = explode('?', $message_text);
 		foreach ($replace as $key => $timea) {
 			if ($sender_id > 0 && $timea != '' && ($final = strtotime($timea)) !== false) { //WARNING: Expects PHP 5.1.0 or later
-				$send_acc = & $sender->getAccount();
+				$send_acc = $sender->getAccount();
 				$final += ($account->getOffset() * 3600 - $send_acc->getOffset() * 3600);
 				$message_text = str_replace('?' . $timea . '?', date(DATE_FULL_SHORT, $final), $message_text);
 			}
 		}
 		$container = create_container('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $sender->getPlayerID();
-		$senderName =& create_link($container, $sender->getDisplayName());
+		$senderName = create_link($container, $sender->getDisplayName());
 	}
 
 	$container = create_container('skeleton.php', 'message_notify_confirm.php');
@@ -281,14 +281,14 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 		$container['receiver'] = $sender->getAccountID();
 		$message['ReplyHref'] = SmrSession::getNewHREF($container);
 
-		$message['Sender'] = & $sender;
+		$message['Sender'] = $sender;
 	}
 
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;
 	$message['SenderDisplayName'] = $senderName;
 
-	$receiver = & SmrPlayer::getPlayer($receiver_id, $player->getGameID());
+	$receiver = SmrPlayer::getPlayer($receiver_id, $player->getGameID());
 	if ($sentMessage && is_object($receiver)) {
 		$container = create_container('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $receiver->getPlayerID();
@@ -297,6 +297,6 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 
 	$message['Unread'] = $msg_read == 'FALSE';
 	$message['SendTime'] = date(DATE_FULL_SHORT, $send_time);
-	$messageBox['Messages'][] = & $message;
+	$messageBox['Messages'][] = $message;
 }
 ?>
