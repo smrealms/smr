@@ -1,4 +1,4 @@
-FROM php:7.1 as builder
+FROM php:7.2-cli as builder
 
 # Install phpDox - https://github.com/theseer/phpdox
 # - dependency: XSL
