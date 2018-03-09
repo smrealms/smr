@@ -125,7 +125,7 @@ if(isset($XType)) { ?>
 	foreach($StoredDestinations as $SD) { ?>
 		<div class="draggableObject savedDestination"
 			style="top:<?php echo $SD['OffsetTop']; ?>px; left:<?php echo $SD['OffsetLeft']; ?>px"
-			data-sector-id="<?php echo $SD['SectorID']; ?> ">
+			data-sector-id="<?php echo $SD['SectorID']; ?>">
 			<a href="javascript:processCourse(<?php echo $SD['SectorID'];?>)"> <?php echo $SD['Label']; ?></a>
 			<a href="javascript:processRemove(<?php echo $SD['SectorID'];?>)"> <img src="images/silk/cross.png" width="16" height="16" alt="X" title="Delete Saved Sector"/></a>
 		</div><?php
