@@ -149,20 +149,20 @@ function xmlify($str) {
 function bbifyMessage($message, $noLinks=false) {
 	static $bbParser;
 	if(!isset($bbParser)) {
-		require_once(LIB.'External/BBCode/nbbc.php');
-		$bbParser = new BBCode();
+		$bbParser = new \Nbbc\BBCode();
 		$bbParser->SetEnableSmileys(false);
 		$bbParser->RemoveRule('wiki');
 		$bbParser->RemoveRule('img');
 		$bbParser->SetURLTarget('_blank');
 		$bbParser->SetURLTargetable('override');
+		$bbParser->setEscapeContent(false); // don't escape HTML, needed for News etc.
 		$smrRule = array(
-				'mode' => BBCODE_MODE_CALLBACK,
+				'mode' => \Nbbc\BBCode::BBCODE_MODE_CALLBACK,
 				'method' => 'smrBBCode',
 				'class' => 'link',
 				'allow_in' => Array('listitem', 'block', 'columns', 'inline'),
-				'end_tag' => BBCODE_PROHIBIT,
-				'content' => BBCODE_PROHIBIT,
+				'end_tag' => \Nbbc\BBCode::BBCODE_PROHIBIT,
+				'content' => \Nbbc\BBCode::BBCODE_PROHIBIT,
 			);
 		$bbParser->AddRule('combatlog',$smrRule);
 		$bbParser->AddRule('player',$smrRule);
