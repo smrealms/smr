@@ -123,25 +123,9 @@ if (isset($var['errorMsg'])) $template->assign('ErrorMessage', $var['errorMsg'])
 // *
 // *******************************************
 
-//You have sold 300 units of Luxury Items for 1738500 credits. For your excellent trading skills you receive 220 experience points!
-if (!empty($var['traded_xp']) ||
-	!empty($var['traded_amount']) ||
-	!empty($var['traded_good']) ||
-	!empty($var['traded_credits'])) {
-
-	$tradeMessage = 'You have just ' . $var['traded_transaction'] . ' <span class="yellow">' .
-		$var['traded_amount'] . '</span> units of <span class="yellow">' . $var['traded_good'] .
-		'</span> for <span class="creds">' . $var['traded_credits'] . '</span> credits.<br />';
-
-	if ($var['traded_xp'] > 0) {
-		$tradeMessage .= 'Your excellent trading skills have gained you <span class="exp">' . $var['traded_xp'] . ' </span> experience points!<br />';
-	}
-
-	$tradeMessage .= '<br />';
-
-	$template->assign('TradeMessage',$tradeMessage);
+if (!empty($var['trade_msg'])) {
+	$template->assign('TradeMessage', $var['trade_msg']);
 }
-
 
 // *******************************************
 // *

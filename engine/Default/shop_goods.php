@@ -22,23 +22,13 @@ $PHP_OUTPUT.=('Your relations with them are ' . get_colored_text($relations, $re
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 $account->log(LOG_TYPE_TRADING, 'Player examines port', $player->getSectorID());
+
 //The player is sent here after trading and sees this if his offer is accepted.
-//You have bought/sold 300 units of Luxury Items for 1738500 credits. For your excellent trading skills you receive 220 experience points!
-if (!empty($var['traded_xp']) ||
-	!empty($var['traded_amount']) ||
-	!empty($var['traded_good']) ||
-	!empty($var['traded_credits']) ||
-	!empty($var['traded_transaction'])) {
-
-	$PHP_OUTPUT.=('<p>You have just ' . $var['traded_transaction'] . ' <span class="yellow">' . $var['traded_amount'] . '</span> units ');
-	$PHP_OUTPUT.=('of <span class="yellow">' . $var['traded_good'] . '</span> for ');
-	$PHP_OUTPUT.=('<span class="creds">' . $var['traded_credits'] . '</span> credits.<br />');
-	if ($var['traded_xp'] > 0)
-		$PHP_OUTPUT.=('<p>For your excellent trading skills you have gained <span class="exp">' . $var['traded_xp'] . '</span> experience points!</p>');
-
-// test if we are searched. (but only if we hadn't a previous trade here
+if (!empty($var['trade_msg'])) {
+	$PHP_OUTPUT .= $var['trade_msg'];
 }
 elseif ($player->getLastPort() != $player->getSectorID()) {
+	// test if we are searched, but only if we hadn't a previous trade here
 
 	$base_chance = 15;
 	if ($port->hasGood(5))

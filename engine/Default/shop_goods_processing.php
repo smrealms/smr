@@ -77,14 +77,8 @@ if (!empty($bargain_price) &&
 	// if offered equals ideal we get a problem (division by zero)
 	$gained_exp = round($port->calculateExperiencePercent($ideal_price,$offered_price,$bargain_price,$transaction) * $base_xp);
 
-	//will use these variables in current sector and port after successful trade
-	$container['traded_xp'] = $gained_exp;
-	$container['traded_amount'] = $amount;
-	$container['traded_good'] = $good_name;
-	$container['traded_credits'] = $bargain_price;
-
 	if ($transaction == 'Buy') {
-		$container['traded_transaction'] = 'bought';
+		$msg_transaction = 'bought';
 		$ship->increaseCargo($good_id,$amount);
 		$player->decreaseCredits($bargain_price);
 		$player->increaseHOF($amount,array('Trade','Goods','Bought'), HOF_ALLIANCE);
@@ -96,8 +90,7 @@ if (!empty($bargain_price) &&
 
 	}
 	elseif ($transaction == 'Sell') {
-
-		$container['traded_transaction'] = 'sold';
+		$msg_transaction = 'sold';
 		$ship->decreaseCargo($good_id,$amount);
 		$player->increaseCredits($bargain_price);
 		$player->increaseHOF($amount,array('Trade','Goods','Sold'), HOF_ALLIANCE);
@@ -118,6 +111,19 @@ if (!empty($bargain_price) &&
 	if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
 		$player->increaseRelationsByTrade($amount,$port->getRaceID());
 	}
+
+	//will use these variables in current sector and port after successful trade
+	$tradeMessage = 'You have just '.$msg_transaction.' <span class="yellow">'.$amount.'</span> '.pluralise('unit', $amount).' of <span class="yellow">'.$good_name.'</span>';
+	if ($bargain_price > 0) {
+		$tradeMessage .= ' for <span class="creds">'.$bargain_price.'</span> '.pluralise('credit', $bargain_price);
+	}
+	$tradeMessage .= '.<br />';
+	if ($gained_exp > 0) {
+		$tradeMessage .= 'Your excellent trading skills have earned you <span class="exp">'.$gained_exp.' </span> experience '.pluralise('point', $gained_exp).'!<br />';
+	}
+	$tradeMessage .= '<br />';
+
+	$container['trade_msg'] = $tradeMessage;
 
 	if ($ship->getEmptyHolds() == 0)
 		$container['body'] = 'current_sector.php';
