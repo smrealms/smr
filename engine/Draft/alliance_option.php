@@ -1,9 +1,15 @@
 <?php
+
 require(ENGINE.'Default/alliance_option.php');
 
-if($player->isDraftLeader()) {
-	$PHP_OUTPUT.= '<br /><br /><b><big>';
-	$PHP_OUTPUT.=create_link(create_container('skeleton.php', 'alliance_pick.php',array('alliance_id'=>$alliance->getAllianceID())),'Pick Members');
-	$PHP_OUTPUT.= '</big></b><br />Pick alliance members.';
+if ($player->isDraftLeader()) {
+	$container['body'] = 'alliance_pick.php';
+	$links[] = array(
+		'link' => create_link($container, 'Pick Members'),
+		'text' => 'Draft players into your alliance.',
+	);
 }
+
+$template->assign('Links', $links);
+
 ?>
