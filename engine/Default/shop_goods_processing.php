@@ -60,10 +60,18 @@ $offered_price = $var['offered_price'];
 if ($ideal_price == 0 || $offered_price == 0)
 	create_error('Port calculation error...buy more goods.');
 
+if ($_REQUEST['action'] == 'Steal') {
+	if (!$ship->isUnderground()) {
+		create_error('You are not allowed to steal goods!');
+	}
+	$transaction = $_REQUEST['action'];
+}
+
 // can we accept the current price?
-if (!empty($bargain_price) &&
-	(($transaction == 'Buy' && $bargain_price >= $ideal_price) ||
-	($transaction == 'Sell' && $bargain_price <= $ideal_price))) {
+if ($transaction == 'Steal' ||
+	(!empty($bargain_price) &&
+	 (($transaction == 'Buy' && $bargain_price >= $ideal_price) ||
+	  ($transaction == 'Sell' && $bargain_price <= $ideal_price)))) {
 
 	// the url we going to
 	$container = create_container('skeleton.php');
@@ -85,9 +93,7 @@ if (!empty($bargain_price) &&
 		$player->increaseHOF($gained_exp,array('Trade','Experience','Buying'), HOF_PUBLIC);
 		$player->decreaseHOF($bargain_price,array('Trade','Money','Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price,array('Trade','Money','Buying'), HOF_PUBLIC);
-
 		$port->buyGoods($portGood,$amount,$ideal_price,$bargain_price,$gained_exp);
-
 	}
 	elseif ($transaction == 'Sell') {
 		$msg_transaction = 'sold';
@@ -99,6 +105,16 @@ if (!empty($bargain_price) &&
 		$player->increaseHOF($bargain_price,array('Trade','Money','Selling'), HOF_PUBLIC);
 		$port->sellGoods($portGood,$amount,$ideal_price,$bargain_price,$gained_exp);
 	}
+	elseif ($transaction == 'Steal') {
+		$msg_transaction = 'stolen';
+		$bargain_price = 0;
+		$gained_exp = round($base_xp);
+		$ship->increaseCargo($good_id,$amount);
+		$player->increaseHOF($amount, array('Trade','Goods','Stolen'), HOF_ALLIANCE);
+		$player->increaseHOF($gained_exp, array('Trade','Experience','Stealing'), HOF_PUBLIC);
+		$port->buyGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
+	}
+
 	$player->increaseHOF($gained_exp,array('Trade','Experience','Total'), HOF_PUBLIC);
 	$player->increaseHOF(1,array('Trade','Results','Success'), HOF_PUBLIC);
 
@@ -119,7 +135,8 @@ if (!empty($bargain_price) &&
 	}
 	$tradeMessage .= '.<br />';
 	if ($gained_exp > 0) {
-		$tradeMessage .= 'Your excellent trading skills have earned you <span class="exp">'.$gained_exp.' </span> experience '.pluralise('point', $gained_exp).'!<br />';
+		$skill = $transaction == 'Steal' ? 'thievery' : 'trading';
+		$tradeMessage .= 'Your excellent '.$skill.' skills have earned you <span class="exp">'.$gained_exp.' </span> experience '.pluralise('point', $gained_exp).'!<br />';
 	}
 	$tradeMessage .= '<br />';
 
