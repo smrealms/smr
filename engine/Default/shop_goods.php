@@ -48,8 +48,9 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 	if ($port->hasGood(12))
 		$base_chance -= 4;
 
-	if ($ship->getShipTypeID() == 23 || $ship->getShipTypeID() == 24 || $ship->getShipTypeID() == 25)
+	if ($ship->isUnderground()) {
 		$base_chance -= 4;
+	}
 
 	$rand = mt_rand(1, 100);
 	if ($rand <= $base_chance) {
