@@ -20,15 +20,8 @@ if (isset($close)) {
 $first = $_REQUEST['first'];
 if (isset($first)) {
 
-	$val = 'Match list:';
-	$a = 0;
 	$same_ip = $_REQUEST['same_ip'];
-	foreach ($same_ip as $account_id) {
-		if ($a > 0)
-			$val .= ',';
-		$val .= $db->escapeString($account_id);
-		$a++;
-	}
+	$val = 'Match list:' . implode(',', $same_ip);
 	foreach ($same_ip as $account_id) {
 		//never expire
 		$bannedAccount =& SmrAccount::getAccount($account_id);
