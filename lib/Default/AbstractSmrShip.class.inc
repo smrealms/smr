@@ -901,6 +901,10 @@ abstract class AbstractSmrShip {
 		return $this->getShipTypeID() == 20 || $this->getShipTypeID() == 21 || $this->getShipTypeID() == 22;
 	}
 
+	public function isUnderground() {
+		return $this->getShipTypeID() == 23 || $this->getShipTypeID() == 24 || $this->getShipTypeID() == 25;
+	}
+
 	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer) {
 		return $this->shootPlayers(array(&$targetPlayer));
 	}
