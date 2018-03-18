@@ -31,7 +31,6 @@ require_once('config.inc');
 				<h1>Create Login</h1>
 				<p align='justify'>
 					Creating multiple logins is not allowed.
-					<a href='https://wiki.smrealms.de/rules' target="_blank" style='font-weight:bold;'>Click HERE</a> for more information.
 				</p>
 
 				<form action='login_create_processing.php' method='POST'>

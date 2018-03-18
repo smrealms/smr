@@ -6,6 +6,12 @@ if(isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 } ?>
 
+
+<b class="yellow">Accounts</b><br />
+You are on your <?php echo $AccountLabels[0]; ?> account.
+<a href="<?php echo $SwitchAccountHREF; ?>">[Switch to <?php echo $AccountLabels[1]; ?>]</a>
+<br /><br />
+
 <a href="<?php echo $ThisAccount->getUserRankingHREF(); ?>"><b class="yellow">Rankings</b></a>
 <br />You are ranked as <?php $this->doAn($ThisAccount->getRankName()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<br /><br />
 

@@ -75,6 +75,7 @@ try {
 			}
 
 			$db->query('SELECT account_id,old_account_id FROM account ' .
+			           'JOIN account_link_login USING (login_id) ' .
 					   'WHERE login = '.$db->escapeString($login).' AND ' .
 							 'password = '.$db->escapeString(md5($password)).' LIMIT 1');
 			if ($db->nextRecord()) {
