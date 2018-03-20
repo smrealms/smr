@@ -63,6 +63,7 @@ else {
 		$db->query('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
 			WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
 			GROUP BY transaction');
+		$playerTrans = array('Deposit' => 0, 'Payment' => 0);
 		while($db->nextRecord()) {
 			$playerTrans[$db->getField('transaction')] = $db->getInt('total');
 		}
