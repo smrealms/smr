@@ -116,6 +116,7 @@ try {
 	$template->assign('Title', 'Galaxy Map');
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
+	$template->assign('FontSize', $account->getFontSize() - 20);
 	$template->assignByRef('ThisGalaxy',$galaxy);
 	$template->assignByRef('ThisAccount',$account);
 	$template->assignByRef('GameGalaxies',SmrGalaxy::getGameGalaxies($player->getGameID()));
