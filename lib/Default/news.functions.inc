@@ -1,8 +1,7 @@
 <?php
 function doBreakingNewsAssign($gameID,&$template) {
 	$db = new SmrMySqlDatabase();
-	$db->query('DELETE FROM news WHERE time < '.$db->escapeNumber(TIME - 86400).' AND type = \'breaking\'');
-	$db->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($gameID).' AND type = \'breaking\' ORDER BY time DESC LIMIT 1');
+	$db->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($gameID).' AND type = \'breaking\' AND time > '.$db->escapeNumber(TIME - TIME_FOR_BREAKING_NEWS).' ORDER BY time DESC LIMIT 1');
 	if ($db->nextRecord()) {
 		$template->assign('BreakingNews',array('Time' => $db->getField('time'), 'Message' => bbifyMessage($db->getField('news_message'))));
 	}

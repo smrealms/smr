@@ -22,7 +22,7 @@ doLottoNewsAssign($gameID,$template);
 
 $template->assign('ViewNewsFormHref',SmrSession::getNewHREF(create_container('skeleton.php','news_read.php',array('GameID'=>$var['GameID']))));
 
-$db->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($gameID).' AND type != \'breaking\' ORDER BY news_id DESC LIMIT ' . ($min_news - 1) . ', ' . ($max_news - $min_news + 1));
+$db->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($gameID).' AND type != \'lotto\' ORDER BY news_id DESC LIMIT ' . ($min_news - 1) . ', ' . ($max_news - $min_news + 1));
 if ($db->getNumRows()) {
 	$NewsItems = array();
 	while ($db->nextRecord()) {
