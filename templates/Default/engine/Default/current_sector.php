@@ -31,10 +31,10 @@
 						$this->includeTemplate('includes/ForceFullCombatResults.inc',array('FullForceCombatResults'=>$AttackResults,'MinimalDisplay'=>true));
 					}
 					else if($AttackResultsType=='PORT') {
-						$this->includeTemplate('includes/PortFullCombatResults.inc',array('FullPortCombatResults'=>$AttackResults,'MinimalDisplay'=>true));
+						$this->includeTemplate('includes/PortFullCombatResults.inc',array('FullPortCombatResults'=>$AttackResults,'MinimalDisplay'=>true,'AlreadyDestroyed'=>false));
 					}
 					else if($AttackResultsType=='PLANET') {
-						$this->includeTemplate('includes/PlanetFullCombatResults.inc',array('FullPlanetCombatResults'=>$AttackResults,'MinimalDisplay'=>true));
+						$this->includeTemplate('includes/PlanetFullCombatResults.inc',array('FullPlanetCombatResults'=>$AttackResults,'MinimalDisplay'=>true,'AlreadyDestroyed'=>false));
 					} ?><br /><?php
 				}
 				if(isset($VarMessage)) {
