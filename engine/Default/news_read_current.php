@@ -14,7 +14,7 @@ doLottoNewsAssign($gameID,$template);
 if(!isset($var['LastNewsUpdate']))
 	SmrSession::updateVar('LastNewsUpdate',$player->getLastNewsUpdate());
 
-$db->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($gameID).' AND time > '.$db->escapeNumber($var['LastNewsUpdate']).' AND type = \'regular\' ORDER BY news_id DESC');
+$db->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($gameID).' AND time > '.$db->escapeNumber($var['LastNewsUpdate']).' AND type != \'lotto\' ORDER BY news_id DESC');
 $player->updateLastNewsUpdate();
 
 if ($db->getNumRows()) {
