@@ -132,6 +132,9 @@ if (!empty($boughtGoods)) {
 		$PHP_OUTPUT.=('" size="4" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td>');
 		$PHP_OUTPUT.=create_submit('Buy');
+		if ($ship->isUnderground()) {
+			$PHP_OUTPUT.=create_submit('Steal');
+		}
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('</tr>');
 		
