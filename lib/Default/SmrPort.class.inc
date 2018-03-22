@@ -96,14 +96,14 @@ class SmrPort {
 	public static function &createPort($gameID,$sectorID) {
 		if(!isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			$p = new SmrPort($gameID,$sectorID);
-			self::$CACHE_PORTS[$gameID][$sectorID] =& $p;
+			self::$CACHE_PORTS[$gameID][$sectorID] = $p;
 		}
 		return self::$CACHE_PORTS[$gameID][$sectorID];
 	}
 	
 	public static function savePorts() {
-		foreach(self::$CACHE_PORTS as &$gamePorts) {
-			foreach($gamePorts as &$port) {
+		foreach(self::$CACHE_PORTS as $gamePorts) {
+			foreach($gamePorts as $port) {
 				$port->update();
 			}
 		}
@@ -510,7 +510,7 @@ class SmrPort {
 		shuffle($goodIDs);
 
 		foreach ($goodIDs as $goodID) {
-			$good =& Globals::getGood($goodID);
+			$good = Globals::getGood($goodID);
 			if ($good['Class'] == $goodClass) {
 				$this->removePortGood($good['ID']);
 				return;
@@ -566,11 +566,11 @@ class SmrPort {
 			throw new Exception('Cannot attack a cached port!');
 			
 		$trigger->increaseHOF(1,array('Combat','Port','Number Of Triggers'), HOF_PUBLIC);
-		foreach ($attackers as &$attacker) {
+		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1,array('Combat','Port','Number Of Attacks'), HOF_PUBLIC);
 			$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES
 							(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
-		} unset($attacker);
+		}
 		if (!$this->isUnderAttack()) {
 	
 			//5 mins per port level
@@ -806,7 +806,7 @@ class SmrPort {
 	public function &getWeapons() {
 		$weapons = array();
 		for ($i=0; $i<$this->getNumWeapons(); ++$i) {
-			$weapons[$i] =& SmrWeapon::getWeapon(Globals::getGameType($this->getGameID()),WEAPON_PORT_TURRET);
+			$weapons[$i] = SmrWeapon::getWeapon(Globals::getGameType($this->getGameID()),WEAPON_PORT_TURRET);
 		}
 		return $weapons;
 	}
@@ -876,7 +876,7 @@ class SmrPort {
 //		echo 'Good:'.$goodID.',Dist::'.$dist.',Type:'.$transactionType.',NumGoods:'.$numGoods.',Relations:'.$relations.',';
 		if($relations>1000)
 			$relations=1000;
-		$good =& $this->getGood($goodID);
+		$good = $this->getGood($goodID);
 		$base = $good['BasePrice'];
 		$maxSupply = $good['Max'];
 		$supply = $this->getGoodAmount($goodID);
@@ -990,8 +990,8 @@ class SmrPort {
 	}
 	public function updateSectorPlayersCache() {
 		$accountIDs = array();
-		$sectorPlayers =& $this->getSector()->getPlayers();
-		foreach($sectorPlayers as &$sectorPlayer) {
+		$sectorPlayers = $this->getSector()->getPlayers();
+		foreach($sectorPlayers as $sectorPlayer) {
 			$accountIDs[] = $sectorPlayer->getAccountID();
 		}
 		$this->addCachePorts($accountIDs);
@@ -1123,19 +1123,19 @@ class SmrPort {
 	
 	public function &shootPlayers(array &$targetPlayers) {
 		$results = array('Port' => &$this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
-		foreach($targetPlayers as &$targetPlayer) {
+		foreach($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
-		} unset($targetPlayer);
+		}
 		if($this->isDestroyed()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
 		}
 		$results['DeadBeforeShot'] = false;
-		$weapons =& $this->getWeapons();
-		foreach($weapons as $orderID => &$weapon) {
+		$weapons = $this->getWeapons();
+		foreach($weapons as $orderID => $weapon) {
 			do {
-				$targetPlayer =& $targetPlayers[array_rand($targetPlayers)];
+				$targetPlayer = $targetPlayers[array_rand($targetPlayers)];
 			} while($results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] > min($results['TotalShotsPerTargetPlayer']));
 			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPort($this, $targetPlayer);
 			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()]++;
@@ -1212,7 +1212,7 @@ class SmrPort {
 		$attackers = array();
 		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
 		while ($this->db->nextRecord()) {
-			$attackers[] =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
+			$attackers[] = SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
 		}
 		return $attackers;
 	}
@@ -1220,7 +1220,7 @@ class SmrPort {
 	protected function creditCurrentAttackersForKill() {
 		//get all players involved for HoF
 		$attackers = $this->getAttackersToCredit();
-		foreach($attackers as &$attacker) {
+		foreach($attackers as $attacker) {
 			$attacker->increaseHOF($this->db->getInt('level'),array('Combat','Port','Levels Raided'), HOF_PUBLIC);
 			$attacker->increaseHOF(1,array('Combat','Port','Total Raided'), HOF_PUBLIC);
 		}
@@ -1233,7 +1233,7 @@ class SmrPort {
 		$killer->increaseCredits($credits);
 		$killer->increaseHOF($credits, array('Combat','Port','Money','Gained'), HOF_PUBLIC);
 		$attackers = $this->getAttackersToCredit();
-		foreach($attackers as &$attacker) {
+		foreach($attackers as $attacker) {
 			$attacker->increaseHOF(1, array('Combat','Port',$payoutType), HOF_PUBLIC);
 		}
 		$this->setCredits(0);
