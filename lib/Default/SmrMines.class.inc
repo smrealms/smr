@@ -41,8 +41,8 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	
 		if(self::TOTAL_ENEMY_MINES_MODIFIER > 0) {
 			$enemyMines = 0;
-			$enemyForces =& $forces->getSector()->getEnemyForces($targetPlayer);
-			foreach($enemyForces as &$enemyForce) {
+			$enemyForces = $forces->getSector()->getEnemyForces($targetPlayer);
+			foreach($enemyForces as $enemyForce) {
 				$enemyMines += $enemyForce->getMines();
 			}
 			$modifiedAccuracy += $enemyMines / self::TOTAL_ENEMY_MINES_MODIFIER;
