@@ -303,8 +303,19 @@ a.buttonA  {
 	white-space: nowrap;
 }
 
+/* Galaxy Map */
+div.gal_map_header {
+	padding-left: 15px;
+	position: fixed;
+	top: 0;
+	z-index: 100; /*Overlay header on galaxy map*/
+	color: white; /*Ensure text can be seen in all templates*/
+}
+div.gal_map_main {
+	margin-top: 8em; /*Space for fixed-position header relative to font size*/
+}
 
-/* LM */
+/* Local Map */
 table.lmt {
 	border-collapse: separate;
 	border-spacing: 6px;
