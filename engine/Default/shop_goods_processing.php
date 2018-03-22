@@ -65,6 +65,21 @@ if ($_REQUEST['action'] == 'Steal') {
 		create_error('You are not allowed to steal goods!');
 	}
 	$transaction = $_REQUEST['action'];
+
+	// Small chance to get caught stealing
+	$catchChancePercent = $port->getMaxLevel() - $port->getLevel() + 1;
+	if (rand(1, 100) <= $catchChancePercent) {
+		$fine = $ideal_price * ($port->getLevel() + 1);
+		// Don't take the trader all the way to 0 credits
+		$newCredits = max(5000, $player->getCredits() - $fine);
+		$player->setCredits($newCredits);
+		$player->decreaseAlignment(5);
+
+		$fineMessage = '<span class="red">A Federation patrol caught you loading stolen goods onto your ship!<br />The stolen goods have been confiscated and you have been fined '.number_format($fine).' credits.</span><br /><br />';
+		$container = create_container('skeleton.php', 'shop_goods.php');
+		$container['trade_msg'] = $fineMessage;
+		forward($container);
+	}
 }
 
 // can we accept the current price?
