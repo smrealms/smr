@@ -201,12 +201,12 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function hasFederalProtection() {
-		$sector =& SmrSector::getSector($this->getGameID(),$this->getSectorID());
+		$sector = SmrSector::getSector($this->getGameID(),$this->getSectorID());
 		if (!$sector->offersFederalProtection()) {
 			return false;
 		}
 
-		$ship =& $this->getShip();
+		$ship = $this->getShip();
 		if ($ship->hasIllegalGoods())
 			return false;
 
@@ -224,7 +224,7 @@ abstract class AbstractSmrPlayer {
 	public function canBeProtectedByRace($raceID) {
 		if(!isset($this->canFed)) {
 			$this->canFed = array();
-			$RACES =& Globals::getRaces();
+			$RACES = Globals::getRaces();
 			foreach($RACES as $raceID2 => $raceName) {
 				$this->canFed[$raceID2] = $this->getRelation($raceID2) >= ALIGN_FED_PROTECTION;
 			}
@@ -647,7 +647,7 @@ abstract class AbstractSmrPlayer {
 		if(!isset($this->relations)) {
 			//get relations
 			$RACES = Globals::getRaces();
-			$raceRelations =& Globals::getRaceRelations($this->getGameID(),$this->getRaceID());
+			$raceRelations = Globals::getRaceRelations($this->getGameID(),$this->getRaceID());
 			$pureRels = $this->getPureRelations(); // make sure they're initialised.
 			$this->relations = array();
 			foreach ($RACES as $raceID => $raceName) {
@@ -1133,7 +1133,7 @@ abstract class AbstractSmrPlayer {
 			if($realX === false) {
 				throw new Exception('Invalid PickSector definition in mission: ' . $missionID);
 			}
-			$path =& Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
+			$path = Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
 			if($path === false) {
 				throw new Exception('Cannot find location: ' . $missionID);
 			}
