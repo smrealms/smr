@@ -131,7 +131,7 @@ if ($CanJoin === true) { ?>
 }
 else if($CanJoin !== false) { ?>
 	<br /><?php
-	echo $canJoin;
+	echo $CanJoin;
 }
 ?>
 
