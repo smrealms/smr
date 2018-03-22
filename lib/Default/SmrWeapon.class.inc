@@ -22,7 +22,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		if($forceUpdate || !isset(self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID])) {
 			$w = new SmrWeapon($gameTypeID,$weaponTypeID);
 			if($w->getName()!='')
-				self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID] =& $w;
+				self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID] = $w;
 			else
 				self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID] = false;
 		}
@@ -34,7 +34,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		$db->query('SELECT weapon_type_id FROM weapon_type');
 		$weapons=array();
 		while($db->nextRecord()) {
-			$weapons[] =& self::getWeapon($gameTypeID,$db->getInt('weapon_type_id'),$forceUpdate);
+			$weapons[] = self::getWeapon($gameTypeID,$db->getInt('weapon_type_id'),$forceUpdate);
 		}
 		return $weapons;
 	}
@@ -137,8 +137,8 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		if ($targetPlayer->isGadgetEquipped('Increased Maneuverability'))
 			$modifiedAccuracy -= $this->getBaseAccuracy() * INCREASED_MAN_GADGET_FACTOR/100;
 		
-		$weaponShip =& $weaponPlayer->getShip();
-		$targetShip =& $targetPlayer->getShip();
+		$weaponShip = $weaponPlayer->getShip();
+		$targetShip = $targetPlayer->getShip();
 		$mrDiff = $targetShip->getMR() - $weaponShip->getMR();
 		if($mrDiff > 0)
 			$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff/MR_FACTOR)/100;
