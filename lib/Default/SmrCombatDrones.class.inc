@@ -82,8 +82,8 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy += ($random + mt_rand($weaponPlayer->getLevelID() / 2,$weaponPlayer->getLevelID()) - ($targetPlayer->getLevelID() - $weaponPlayer->getLevelID())/3)/1.5;
 
-		$weaponShip =& $weaponPlayer->getShip();
-		$targetShip =& $targetPlayer->getShip();
+		$weaponShip = $weaponPlayer->getShip();
+		$targetShip = $targetPlayer->getShip();
 		$mrDiff = $targetShip->getMR() - $weaponShip->getMR();
 		if($mrDiff > 0)
 			$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff/MR_FACTOR)/100;
