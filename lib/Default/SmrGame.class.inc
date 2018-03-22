@@ -36,13 +36,13 @@ class SmrGame {
 	public static function &getGame($gameID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID);
-			self::$CACHE_GAMES[$gameID] =& $g;
+			self::$CACHE_GAMES[$gameID] = $g;
 		}
 		return self::$CACHE_GAMES[$gameID];
 	}
 
 	public static function saveGames() {
-		foreach(self::$CACHE_GAMES as &$game) {
+		foreach(self::$CACHE_GAMES as $game) {
 			$game->save();
 		}
 	}
@@ -50,7 +50,7 @@ class SmrGame {
 	public static function &createGame($gameID) {
 		if(!isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID,true);
-			self::$CACHE_GAMES[$gameID] =& $g;
+			self::$CACHE_GAMES[$gameID] = $g;
 		}
 		return self::$CACHE_GAMES[$gameID];
 	}
