@@ -47,9 +47,9 @@ class SmrSector {
 			$sectors = array();
 			while($db->nextRecord()) {
 				$sectorID = $db->getInt('sector_id');
-				$sectors[$sectorID] =& self::getSector($gameID,$sectorID,$forceUpdate);
+				$sectors[$sectorID] = self::getSector($gameID,$sectorID,$forceUpdate);
 			}
-			self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID] =& $sectors;
+			self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID] = $sectors;
 		}
 		return self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID];
 	}
@@ -61,9 +61,9 @@ class SmrSector {
 			$sectors = array();
 			while($db->nextRecord()) {
 				$sectorID = $db->getInt('sector_id');
-				$sectors[$sectorID] =& self::getSector($gameID,$sectorID,$forceUpdate);
+				$sectors[$sectorID] = self::getSector($gameID,$sectorID,$forceUpdate);
 			}
-			self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID] =& $sectors;
+			self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID] = $sectors;
 		}
 		return self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID];
 	}
@@ -81,8 +81,8 @@ class SmrSector {
 	}
 
 	public static function saveSectors() {
-		foreach(self::$CACHE_SECTORS as &$gameSectors) {
-			foreach($gameSectors as &$sector) {
+		foreach(self::$CACHE_SECTORS as $gameSectors) {
+			foreach($gameSectors as $sector) {
 				$sector->update();
 			}
 		}
@@ -91,7 +91,7 @@ class SmrSector {
 	public static function &createSector($gameID,$sectorID) {
 		if(!isset(self::$CACHE_SECTORS[$gameID][$sectorID])) {
 			$s = new SmrSector($gameID,$sectorID,true);
-			self::$CACHE_SECTORS[$gameID][$sectorID] =& $s;
+			self::$CACHE_SECTORS[$gameID][$sectorID] = $s;
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
@@ -183,8 +183,8 @@ class SmrSector {
 	}
 
 	function hasWeaponShop() {
-		$locations =& $this->getLocations();
-		foreach($locations as &$location) {
+		$locations = $this->getLocations();
+		foreach($locations as $location) {
 			if($location->isWeaponSold())
 				return true;
 		}
@@ -192,8 +192,8 @@ class SmrSector {
 	}
 
 	function hasHQ() {
-		$locations =& $this->getLocations();
-		foreach($locations as &$location) {
+		$locations = $this->getLocations();
+		foreach($locations as $location) {
 			if($location->isHQ())
 				return true;
 		}
@@ -201,8 +201,8 @@ class SmrSector {
 	}
 
 	function hasUG() {
-		$locations =& $this->getLocations();
-		foreach($locations as &$location) {
+		$locations = $this->getLocations();
+		foreach($locations as $location) {
 			if($location->isUG())
 				return true;
 		}
@@ -210,8 +210,8 @@ class SmrSector {
 	}
 
 	function hasShipShop() {
-		$locations =& $this->getLocations();
-		foreach($locations as &$location) {
+		$locations = $this->getLocations();
+		foreach($locations as $location) {
 			if($location->isShipSold())
 				return true;
 		}
@@ -219,8 +219,8 @@ class SmrSector {
 	}
 
 	function offersFederalProtection() {
-		$locations =& $this->getLocations();
-		foreach($locations as &$location) {
+		$locations = $this->getLocations();
+		foreach($locations as $location) {
 			if($location->isFed())
 				return true;
 		}
@@ -229,8 +229,8 @@ class SmrSector {
 
 	public function getFedRaceIDs() {
 		$raceIDs = array();
-		$locations =& $this->getLocations();
-		foreach($locations as &$location) {
+		$locations = $this->getLocations();
+		foreach($locations as $location) {
 			if($location->isFed())
 				$raceIDs[$location->getRaceID()] = $location->getRaceID();
 		}
@@ -238,8 +238,8 @@ class SmrSector {
 	}
 
 	function hasBar() {
-		$locations =& $this->getLocations();
-		foreach($locations as &$location) {
+		$locations = $this->getLocations();
+		foreach($locations as $location) {
 			if($location->isBar())
 				return true;
 		}
@@ -247,8 +247,8 @@ class SmrSector {
 	}
 
 	function hasHardwareShop() {
-		$locations =& $this->getLocations();
-		foreach($locations as &$location) {
+		$locations = $this->getLocations();
+		foreach($locations as $location) {
 			if($location->isHardwareSold())
 				return true;
 		}
@@ -256,8 +256,8 @@ class SmrSector {
 	}
 
 	function hasBank() {
-		$locations =& $this->getLocations();
-		foreach($locations as &$location) {
+		$locations = $this->getLocations();
+		foreach($locations as $location) {
 			if($location->isBank())
 				return true;
 		}
@@ -280,10 +280,10 @@ class SmrSector {
 		}
 		$message .= ' sector ' . Globals::getSectorBBLink($this->getSectorID());
 
-		$forces =& $this->getForces();
-		foreach($forces as &$force) {
+		$forces = $this->getForces();
+		foreach($forces as $force) {
 			$force->ping($message,$player);
-		} unset($force);
+		}
 	}
 
 	function leavingSector(AbstractSmrPlayer &$player, $movementType) {
@@ -303,22 +303,22 @@ class SmrSector {
 		$message .= ' sector ' . Globals::getSectorBBLink($this->getSectorID());
 
 		// iterate over all scout drones in sector
-		$forces =& $this->getForces();
-		foreach($forces as &$force) {
+		$forces = $this->getForces();
+		foreach($forces as $force) {
 			$force->ping($message,$player);
-		} unset($force);
+		}
 		$this->db->query('UPDATE sector_has_forces SET refresher = 0 WHERE ' . $this->SQL . '
 								AND refresher = ' . $this->db->escapeNumber($player->getAccountID()));
 	}
 
 	function diedHere(AbstractSmrPlayer &$player) {
 		// iterate over all scout drones in sector
-		$forces =& $this->getForces();
-		foreach($forces as &$force) {
+		$forces = $this->getForces();
+		foreach($forces as $force) {
 			// send scout messages to user
 			$message = 'Your forces have spotted that ' . $player->getBBLink() . ' has been <span class="red">DESTROYED</span> in sector ' . Globals::getSectorBBLink($this->sectorID);
 			$force->ping($message,$player);
-		} unset($force);
+		}
 	}
 
 	public function getGameID() {
@@ -368,7 +368,7 @@ class SmrSector {
 	public function getNeighbourID($dir) {
 		if($this->hasLink($dir))
 			return $this->getLink($dir);
-		$galaxy =& $this->getGalaxy();
+		$galaxy = $this->getGalaxy();
 		$neighbour = $this->getSectorID();
 		switch($dir) {
 			case 'Up':
@@ -623,7 +623,7 @@ class SmrSector {
 	}
 
 	public function hasAnyLocationsWithAction() {
-		$locations =& SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID());
+		$locations = SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID());
 		$hasAction = false;
 		foreach($locations as $location) {
 			if($location->hasAction())
@@ -633,12 +633,12 @@ class SmrSector {
 	}
 
 	public function hasLocation($locationTypeID=false) {
-		$locations =& $this->getLocations();
+		$locations = $this->getLocations();
 		if(count($locations) == 0)
 			return false;
 		if($locationTypeID==false)
 			return true;
-		foreach($locations as &$location) {
+		foreach($locations as $location) {
 			if($location->getTypeID()==$locationTypeID)
 				return true;
 		}
@@ -683,11 +683,11 @@ class SmrSector {
 	public function hasEnemyForces(AbstractSmrPlayer &$player=null) {
 		if($player == null || !$this->hasForces())
 			return false;
-		$forces =& $this->getForces();
-		foreach($forces as &$force) {
+		$forces = $this->getForces();
+		foreach($forces as $force) {
 			if(!$player->forceNAPAlliance($force->getOwner()))
 				return true;
-		} unset($force);
+		}
 		return false;
 	}
 
@@ -695,22 +695,22 @@ class SmrSector {
 		$enemyForces = array();
 		if(!$this->hasForces())
 			return $enemyForces;
-		$forces =& $this->getForces();
-		foreach($forces as &$force) {
+		$forces = $this->getForces();
+		foreach($forces as $force) {
 			if(!$player->forceNAPAlliance($force->getOwner()))
-				$enemyForces[] =& $force;
-		} unset($force);
+				$enemyForces[] = $force;
+		}
 		return $enemyForces;
 	}
 
 	public function hasFriendlyForces(AbstractSmrPlayer &$player=null) {
 		if($player == null || !$this->hasForces())
 			return false;
-		$forces =& $this->getForces();
-		foreach($forces as &$force) {
+		$forces = $this->getForces();
+		foreach($forces as $force) {
 			if($player->forceNAPAlliance($force->getOwner()))
 				return true;
-		} unset($force);
+		}
 		return false;
 	}
 
@@ -718,11 +718,11 @@ class SmrSector {
 		$friendlyForces = array();
 		if(!$this->hasForces())
 			return $friendlyForces;
-		$forces =& $this->getForces();
-		foreach($forces as &$force) {
+		$forces = $this->getForces();
+		foreach($forces as $force) {
 			if($player->forceNAPAlliance($force->getOwner()))
-				$friendlyForces[] =& $force;
-		} unset($force);
+				$friendlyForces[] = $force;
+		}
 		return $friendlyForces;
 	}
 
@@ -752,53 +752,53 @@ class SmrSector {
 	public function hasEnemyTraders(AbstractSmrPlayer &$player=null) {
 		if($player == null || !$this->hasOtherTraders($player))
 			return false;
-		$otherPlayers =& $this->getOtherTraders($player);
-		foreach($otherPlayers as &$otherPlayer) {
+		$otherPlayers = $this->getOtherTraders($player);
+		foreach($otherPlayers as $otherPlayer) {
 			if(!$player->traderNAPAlliance($otherPlayer) 
 				&& !$otherPlayer->hasNewbieTurns()
 				&& !$otherPlayer->hasFederalProtection()) {
 				return true;
 			}
-		} unset($otherPlayer);
+		}
 		return false;
 	}
 
 	public function hasFriendlyTraders(AbstractSmrPlayer &$player=null) {
 		if($player == null || !$this->hasOtherTraders($player))
 			return false;
-		$otherPlayers =& $this->getOtherTraders($player);
-		foreach($otherPlayers as &$otherPlayer) {
+		$otherPlayers = $this->getOtherTraders($player);
+		foreach($otherPlayers as $otherPlayer) {
 			if($player->traderNAPAlliance($otherPlayer))
 				return true;
-		} unset($otherPlayer);
+		}
 		return false;
 	}
 	
 	public function hasProtectedTraders(AbstractSmrPlayer &$player=null) {
 		if($player == null || !$this->hasOtherTraders($player))
 			return false;
-		$otherPlayers =& $this->getOtherTraders($player);
-		foreach($otherPlayers as &$otherPlayer) {
+		$otherPlayers = $this->getOtherTraders($player);
+		foreach($otherPlayers as $otherPlayer) {
 			if(!$player->traderNAPAlliance($otherPlayer) 
 				&& ($otherPlayer->hasNewbieTurns() || $otherPlayer->hasFederalProtection())) {
 				return true;
 			}
-		} unset($otherPlayer);
+		}
 		return false;
 	}
 
 	public function &getFightingTradersAgainstForces(AbstractSmrPlayer &$attackingPlayer, SmrForce &$defendingForces) {
-		$forceOwner =& $defendingForces->getOwner();
+		$forceOwner = $defendingForces->getOwner();
 		if($attackingPlayer->forceNAPAlliance($forceOwner)) {
 			throw new Exception('The trader has a force NAP.');
 		}
 		$fightingPlayers = array();
-		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
+		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
 		if(count($alliancePlayers) > 0) {
 			foreach($alliancePlayers as $accountID => $player) {
 				if($player->canFight()) {
 					if($attackingPlayer->traderAttackForceAlliance($player) && !$player->forceNAPAlliance($forceOwner))
-						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+						$fightingPlayers[$accountID] = $alliancePlayers[$accountID];
 				}
 			}
 		}
@@ -807,12 +807,12 @@ class SmrSector {
 
 	public function &getFightingTradersAgainstPort(AbstractSmrPlayer &$attackingPlayer, SmrPort &$defendingPort) {
 		$fightingPlayers = array();
-		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
+		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
 		if(count($alliancePlayers) > 0)
 			foreach($alliancePlayers as $accountID => $player) {
 				if($player->canFight()) {
 					if($attackingPlayer->traderAttackPortAlliance($player))
-						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+						$fightingPlayers[$accountID] = $alliancePlayers[$accountID];
 				}
 			}
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, MAXIMUM_PORT_FLEET_SIZE);
@@ -820,13 +820,13 @@ class SmrSector {
 
 	public function &getFightingTradersAgainstPlanet(AbstractSmrPlayer &$attackingPlayer, SmrPlanet &$defendingPlanet) {
 		$fightingPlayers = array();
-		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
+		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
 		if(count($alliancePlayers) > 0) {
-			$planetOwner =& $defendingPlanet->getOwner();
+			$planetOwner = $defendingPlanet->getOwner();
 			foreach($alliancePlayers as $accountID => $player) {
 				if($player->canFight()) {
 					if($attackingPlayer->traderAttackPlanetAlliance($player) && !$planetOwner->planetNAPAlliance($player))
-						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+						$fightingPlayers[$accountID] = $alliancePlayers[$accountID];
 				}
 			}
 		}
@@ -837,27 +837,27 @@ class SmrSector {
 		if($attackingPlayer->traderNAPAlliance($defendingPlayer))
 			throw new Exception('These traders are NAPed.');
 		$fightingPlayers = array('Attackers' => array(), 'Defenders' => array());
-		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()));
+		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()));
 		$attackers = array();
 		$defenders = array();
 		if(count($alliancePlayers) > 0)
 			foreach($alliancePlayers as $accountID => $player) {
 				if($player->canFight()) {
 					if($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player))
-						$attackers[] =& $alliancePlayers[$accountID];
+						$attackers[] = $alliancePlayers[$accountID];
 					else if($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player) && ($checkForCloak===false || $attackingPlayer->canSee($player)))
-						$defenders[] =& $alliancePlayers[$accountID];
+						$defenders[] = $alliancePlayers[$accountID];
 				}
 			}
-		$attackers =& self::limitFightingTraders($attackers, $attackingPlayer, MAXIMUM_PVP_FLEET_SIZE);
+		$attackers = self::limitFightingTraders($attackers, $attackingPlayer, MAXIMUM_PVP_FLEET_SIZE);
 		shuffle($attackers);
-		foreach($attackers as &$attacker) {
-			$fightingPlayers['Attackers'][$attacker->getAccountID()] =& $attacker;
+		foreach($attackers as $attacker) {
+			$fightingPlayers['Attackers'][$attacker->getAccountID()] = $attacker;
 		}
-		$defenders =& self::limitFightingTraders($defenders,$defendingPlayer, MAXIMUM_PVP_FLEET_SIZE);
+		$defenders = self::limitFightingTraders($defenders,$defendingPlayer, MAXIMUM_PVP_FLEET_SIZE);
 		shuffle($defenders);
-		foreach($defenders as &$defender) {
-			$fightingPlayers['Defenders'][$defender->getAccountID()] =& $defender;
+		foreach($defenders as $defender) {
+			$fightingPlayers['Defenders'][$defender->getAccountID()] = $defender;
 		}
 		return $fightingPlayers;
 	}
@@ -879,14 +879,14 @@ class SmrSector {
 
 	public function &getPotentialFightingTraders(AbstractSmrPlayer &$attackingPlayer) {
 		$fightingPlayers = array();
-		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
+		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
 		if(count($alliancePlayers) > 0)
-			foreach($alliancePlayers as $accountID => &$player) {
+			foreach($alliancePlayers as $accountID => $player) {
 				if($player->canFight()) {
 					if($attackingPlayer->traderAttackTraderAlliance($player))
-						$fightingPlayers['Attackers'][$accountID] =& $player;
+						$fightingPlayers['Attackers'][$accountID] = $player;
 				}
-			} unset($player);
+			}
 		return $fightingPlayers;
 	}
 
@@ -967,8 +967,8 @@ class SmrSector {
 
 		if($x instanceof SmrWeapon || (is_array($x) && ($x['Type']=='Ship'||$x['Type']=='Hardware')) || (is_string($x) && ($x=='Bank'||$x=='Bar'||$x=='Fed'||$x=='SafeFed'||$x=='HQ'||$x=='UG'||$x=='Hardware'||$x=='Ship'||$x=='Weapon'))) //Check if it's possible for location to have X, hacky but nice performance gains
 			if ($this->hasLocation()) {
-				$locations =& $this->getLocations();
-				foreach ($locations as &$l) {
+				$locations = $this->getLocations();
+				foreach ($locations as $l) {
 					if ($l->hasX($x,$player))
 						return true;
 				}
