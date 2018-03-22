@@ -58,8 +58,8 @@ class SmrPlanet {
 	}
 
 	public static function savePlanets() {
-		foreach(self::$CACHE_PLANETS as &$gamePlanets) {
-			foreach($gamePlanets as &$planet) {
+		foreach(self::$CACHE_PLANETS as $gamePlanets) {
+			foreach($gamePlanets as $planet) {
 				$planet->update();
 			}
 		}
@@ -68,7 +68,7 @@ class SmrPlanet {
 	public static function &getPlanet($gameID,$sectorID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
 			$p = new SmrPlanet($gameID,$sectorID);
-			self::$CACHE_PLANETS[$gameID][$sectorID] =& $p;
+			self::$CACHE_PLANETS[$gameID][$sectorID] = $p;
 		}
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
@@ -682,7 +682,7 @@ class SmrPlanet {
 			while($this->db->nextRecord()) {
 				if($this->db->getInt('time_complete') <= TIME) {
 					$expGain = $this->getConstructionExp($this->db->getInt('construction_id'));
-					$player =& SmrPlayer::getPlayer($this->db->getInt('constructor_id'),$this->getGameID());
+					$player = SmrPlayer::getPlayer($this->db->getInt('constructor_id'),$this->getGameID());
 					$player->increaseHOF(1,array('Planet','Buildings','Built'), HOF_ALLIANCE);
 					$player->increaseExperience($expGain);
 					$player->increaseHOF($expGain,array('Planet','Buildings','Experience'), HOF_ALLIANCE);
@@ -942,7 +942,7 @@ class SmrPlanet {
 
 	function accuracy() {
 		if($this->hasWeapons()) {
-			$weapons =& $this->getWeapons();
+			$weapons = $this->getWeapons();
 			return $weapons[0]->getModifiedPlanetAccuracy($this);
 		}
 		return 0;
@@ -966,7 +966,7 @@ class SmrPlanet {
 		if($this->getBuilding($constructionID) >= $this->getMaxBuildings($constructionID)) {
 			return 'This planet has reached the maximum buildings of that type.';
 		}
-		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
+		$PLANET_BUILDINGS = Globals::getPlanetBuildings();
 		if($constructor->getCredits() < $PLANET_BUILDINGS[$constructionID]['Credit Cost'][$this->getTypeID()]) {
 			return 'You do not have enough credits.';
 		}
@@ -1004,7 +1004,7 @@ class SmrPlanet {
 		if(($message = $this->canBuild($constructor, $constructionID)) !== true) {
 			throw new Exception('Unable to start building: '.$message);
 		}
-		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
+		$PLANET_BUILDINGS = Globals::getPlanetBuildings();
 		$constructor->decreaseCredits($PLANET_BUILDINGS[$constructionID]['Credit Cost'][$this->getTypeID()]);
 		// take the goods that are needed
 		foreach($PLANET_BUILDINGS[$constructionID]['Goods'] as $goodID => $amount) {
@@ -1116,7 +1116,7 @@ class SmrPlanet {
 		$this->db->query('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $this->db->escapeNumber($trigger->getGameID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_BEFORE_REPLACING_BREAKING_NEWS) . ' LIMIT 1');
 		if ($this->db->getNumRows()==0) {
 			if (count($attackers) >= 5) {
-				$owner =& $this->getOwner();
+				$owner = $this->getOwner();
 				$text = count($attackers) . ' members of '.$trigger->getAllianceBBLink().' have been spotted attacking ' .
 					$this->getDisplayName() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()) . '. The planet is owned by ' . $owner->getBBLink();
 				if ($owner->hasAlliance()) {
@@ -1155,29 +1155,29 @@ class SmrPlanet {
 	public function hasEnemyTraders(AbstractSmrPlayer &$player) {
 		if(!$this->hasOtherTraders($player))
 			return false;
-		$otherPlayers =& $this->getOtherTraders($player);
-		foreach($otherPlayers as &$otherPlayer) {
+		$otherPlayers = $this->getOtherTraders($player);
+		foreach($otherPlayers as $otherPlayer) {
 			if(!$player->traderNAPAlliance($otherPlayer))
 				return true;
-		} unset($otherPlayer);
+		}
 		return false;
 	}
 
 	public function hasFriendlyTraders(AbstractSmrPlayer &$player) {
 		if(!$this->hasOtherTraders($player))
 			return false;
-		$otherPlayers =& $this->getOtherTraders($player);
-		foreach($otherPlayers as &$otherPlayer) {
+		$otherPlayers = $this->getOtherTraders($player);
+		foreach($otherPlayers as $otherPlayer) {
 			if($player->traderNAPAlliance($otherPlayer))
 				return true;
-		} unset($otherPlayer);
+		}
 		return false;
 	}
 
 	public function &getWeapons() {
 		$weapons = array();
 		for($i=0;$i<$this->getBuilding(PLANET_TURRET);++$i) {
-			$weapons[$i] =& SmrWeapon::getWeapon(Globals::getGameType($this->getGameID()),WEAPON_PLANET_TURRET);
+			$weapons[$i] = SmrWeapon::getWeapon(Globals::getGameType($this->getGameID()),WEAPON_PLANET_TURRET);
 		}
 		return $weapons;
 	}
@@ -1192,16 +1192,16 @@ class SmrPlanet {
 
 	public function &shootPlayers(array &$targetPlayers) {
 		$results = array('Planet' => &$this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
-		foreach($targetPlayers as &$targetPlayer) {
+		foreach($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
-		} unset($targetPlayer);
+		}
 		if($this->isDestroyed()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
 		}
 		$results['DeadBeforeShot'] = false;
-		$weapons =& $this->getWeapons();
-		foreach($weapons as $orderID => &$weapon) {
+		$weapons = $this->getWeapons();
+		foreach($weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPlanet($this, $targetPlayers[array_rand($targetPlayers)]);
 			if($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
@@ -1343,7 +1343,7 @@ class SmrPlanet {
 		//get all players involved for HoF
 		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_BUST));
 		while ($this->db->nextRecord()) {
-			$currPlayer =& SmrPlayer::getPlayer($this->db->getInt('account_id'),$this->getGameID());
+			$currPlayer = SmrPlayer::getPlayer($this->db->getInt('account_id'),$this->getGameID());
 			$currPlayer->increaseHOF($this->db->getInt('level'),array('Combat','Planet','Levels'), HOF_PUBLIC);
 			$currPlayer->increaseHOF(1,array('Combat','Planet','Completed'), HOF_PUBLIC);
 		}
