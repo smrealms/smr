@@ -199,8 +199,6 @@ class SmrPort {
 		$doUpdateDB = false;
 		$amount = $this->getGoodAmount($goodID);
 		$this->setGoodAmount($goodID, $amount+$amountToAdd, $doUpdateDB);
-		
-		return round($amountToAdd / $refreshPerSec);
 	}
 	
 	// Sets the class members that identify port trade goods
