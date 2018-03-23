@@ -57,8 +57,7 @@ else {
 	//code for the game goes in here
 
 	$db2 = new $var['HistoryDatabase']();
-	$db2->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, type, ' .
-				'DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game_name, speed, game_id ' .
+	$db2->query('SELECT start_date, type, end_date, game_name, speed, game_id ' .
 				'FROM game WHERE game_id = '.$db->escapeNumber($game_id));
 	$PHP_OUTPUT.=create_table();
 	$db2->nextRecord();
