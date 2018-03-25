@@ -46,22 +46,21 @@ function logException(Exception $e) {
 		exit;
 	}
 
+	$mail = new \PHPMailer\PHPMailer\PHPMailer();
+	$mail->Subject = 'Automatic Bug Report';
+	$mail->setFrom('bugs@smrealms.de');
+	$mail->Body = $message;
+	$mail->addAddress('bugs@smrealms.de');
 	try {
 		if(is_object($player) && method_exists($player,'sendMessageToBox'))
 			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
 		else if(is_object($account) && method_exists($account,'sendMessageToBox'))
 			$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
 		else
-			mail('bugs@smrealms.de',
-			 'Automatic Bug Report',
-			 $message,
-			 'From: bugs@smrealms.de');
+			$mail->send();
 	}
 	catch(Exception $e) {
-		mail('bugs@smrealms.de',
-		 'Automatic Bug Report',
-		 $message,
-		 'From: bugs@smrealms.de');
+		$mail->send();
 	}
 	return $errorType;
 }

@@ -24,14 +24,20 @@ try {
 	$account->generatePasswordReset();
 
 	$resetURL = URL.'/reset_password.php?login='.$account->getLogin().'&resetcode='.$account->getPasswordReset();
-	// send email with password to user
-	mail($email, 'Space Merchant Realms Password',
+	$emailMessage =
 		 'A user from ' . getIpAddress() . ' requested to reset your password!'.EOL.EOL.
 		 '   Your game login is: ' . $account->getLogin().EOL.
 		 '   Your password reset code is: ' . $account->getPasswordReset().EOL.EOL.
 		 '   You can use this url: '.$resetURL .EOL.EOL.
-		 'The Space Merchant Realms server is on the web at '.URL.'/',
-		 'From: support@smrealms.de');
+		 'The Space Merchant Realms server is on the web at '.URL.'/';
+
+	// send email with password to user
+	$mail = new \PHPMailer\PHPMailer\PHPMailer();
+	$mail->Subject = 'Space Merchant Realms Password';
+	$mail->setFrom('support@smrealms.de', 'SMR Support');
+	$mail->msgHTML(nl2br($emailMessage));
+	$mail->addAddress($account->getEmail(), $account->getHofName());
+	$mail->send();
 
 	header('Location: '.URL.'/reset_password.php');
 	exit;
