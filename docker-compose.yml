@@ -20,14 +20,14 @@ services:
 
     smr:
         extends: smr-common
-        # Links cannot be defined in extended services (i.e. smr-common)
-        links:
+        # depends_on cannot be defined in extended services (i.e. smr-common)
+        depends_on:
             - mysql
 
     smr-dev:
         extends: smr-common
-        # Links cannot be defined in extended services (i.e. smr-common)
-        links:
+        # depends_on cannot be defined in extended services (i.e. smr-common)
+        depends_on:
             - mysql
         volumes:
             # Mount the source code instead of copying it.
@@ -40,7 +40,7 @@ services:
     flyway:
         image: boxfuse/flyway:latest-alpine
         command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live -user=smr -password=${MYSQL_PASSWORD} migrate
-        links:
+        depends_on:
             - mysql
         volumes:
             - ./db/patches:/flyway/sql:ro
@@ -68,8 +68,10 @@ services:
         # Publish to port 8080
         ports:
             - 8080:80
-        links:
-            - mysql:db
+        environment:
+            PMA_HOST: mysql
+        depends_on:
+            - mysql
 
     discord:
         build:
