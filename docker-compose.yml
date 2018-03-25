@@ -77,6 +77,8 @@ services:
         build:
             context: .
             dockerfile: ./tools/discord/Dockerfile
+        depends_on:
+            - mysql
         volumes:
             - ./config:/smr/config
 
@@ -84,6 +86,8 @@ services:
         build:
             context: .
             dockerfile: ./tools/irc/Dockerfile
+        depends_on:
+            - mysql
         volumes:
             - ./config:/smr/config
 
@@ -91,6 +95,8 @@ services:
         build:
             context: .
             dockerfile: ./tools/npc/Dockerfile
+        depends_on:
+            - mysql
         volumes:
             - ./config:/smr/config
 
