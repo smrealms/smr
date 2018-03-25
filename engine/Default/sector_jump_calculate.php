@@ -9,6 +9,7 @@ $jumpInfo = $player->getJumpInfo($targetSector);
 
 $template->assign('Target', $targetSector->getSectorID());
 $template->assign('TurnCost', $jumpInfo['turn_cost']);
+$template->assign('MaxMisjump', $jumpInfo['max_misjump']);
 
 $container = create_container('sector_jump_processing.php');
 $container['target'] = $targetSector->getSectorID();

@@ -3,6 +3,13 @@ Within moments, the onboard computer dictates the report in a reassuringly confi
 
 <br /><br />
 It will cost <span class="red"><?php echo $TurnCost; ?></span> turns to jump to Sector #<?php echo $Target; ?>.
+<?php
+if ($MaxMisjump > 0) { ?>
+	There is a possibility to misjump up to <? echo $MaxMisjump . ' ' . pluralise('sector', $MaxMisjump); ?>.<?php
+} else { ?>
+	There is no possibility to misjump.<?php
+} ?>
+
 
 <br /><br />
 <div class="center">
