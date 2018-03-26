@@ -18,9 +18,9 @@ RUN rm -rf node_modules
 
 FROM php:7.2-apache
 RUN apt-get update \
-	&& apt-get install -y libcurl4-openssl-dev git sendmail \
+	&& apt-get install -y zip unzip sendmail \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& docker-php-ext-install curl json mysqli
+	&& docker-php-ext-install mysqli
 
 # Use the production php.ini unless PHP_DEBUG=1 (defaults to 0)
 ARG PHP_DEBUG=0
