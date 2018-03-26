@@ -46,7 +46,7 @@ function logException(Exception $e) {
 		exit;
 	}
 
-	$mail = new \PHPMailer\PHPMailer\PHPMailer();
+	$mail = setupMailer();
 	$mail->Subject = 'Automatic Bug Report';
 	$mail->setFrom('bugs@smrealms.de');
 	$mail->Body = $message;

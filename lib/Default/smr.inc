@@ -7,6 +7,15 @@ require_once(get_file_loc('SmrShip.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 require_once(get_file_loc('Sorter.class.inc'));
 
+function setupMailer() {
+	$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+	if (!empty(SMTP_HOSTNAME)) {
+		$mail->isSMTP();
+		$mail->Host = SMTP_HOSTNAME;
+	}
+	return $mail;
+}
+
 function htmliseMessage($message) {
 	$message = htmlentities($message,ENT_COMPAT,'utf-8');
 	$message = str_replace('&lt;br /&gt;','<br />',$message);

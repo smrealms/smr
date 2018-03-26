@@ -32,7 +32,7 @@ try {
 		 'The Space Merchant Realms server is on the web at '.URL.'/';
 
 	// send email with password to user
-	$mail = new \PHPMailer\PHPMailer\PHPMailer();
+	$mail = setupMailer();
 	$mail->Subject = 'Space Merchant Realms Password';
 	$mail->setFrom('support@smrealms.de', 'SMR Support');
 	$mail->msgHTML(nl2br($emailMessage));

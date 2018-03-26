@@ -23,7 +23,7 @@ if ($var['task'] == 'reset_image') {
 	// get his email address and send the mail
 	$receiver = SmrAccount::getAccount($account_id);
 	if (!empty($receiver->getEmail())) {
-		$mail = new \PHPMailer\PHPMailer\PHPMailer();
+		$mail = setupMailer();
 		$mail->Subject = 'SMR Photo Album Notification';
 		$mail->setFrom('album@smrealms.de', 'SMR Photo Album');
 		$mail->msgHTML(nl2br($email_txt));

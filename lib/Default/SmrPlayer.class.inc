@@ -1683,7 +1683,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				$receiverAccount = SmrAccount::getAccount($receiverID);
 				if($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isLoggedIn()) {
 					$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
-					$mail = new \PHPMailer\PHPMailer\PHPMailer();
+					$mail = setupMailer();
 					$mail->Subject = 'Message Notification';
 					$mail->setFrom('notifications@smrealms.de', 'SMR Notifications');
 					$bbifiedMessage = 'From: ' . $senderPlayer->getDisplayName() . ' Date: ' . date($receiverAccount->getShortDateFormat().' '.$receiverAccount->getShortTimeFormat(),TIME) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message,true);

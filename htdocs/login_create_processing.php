@@ -197,7 +197,7 @@ try {
 		'The Space Merchant Realms server is on the web at '.URL.'/'.EOL .
 		'Please verify within the next 7 days or your account will be automatically deleted.';
 
-	$mail = new \PHPMailer\PHPMailer\PHPMailer();
+	$mail = setupMailer();
 	$mail->Subject = 'New Space Merchant Realms Account';
 	$mail->setFrom('support@smrealms.de', 'SMR Support');
 	$mail->msgHTML(nl2br($emailMessage));

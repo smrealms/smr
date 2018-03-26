@@ -56,7 +56,7 @@ else if ($action == 'Save and resend validation code') {
 		'The Space Merchant Realms server is on the web at '.URL.'/.'.EOL.
 		'Please verify within the next 7 days or your account will be automatically deleted.';
 
-	$mail = new \PHPMailer\PHPMailer\PHPMailer();
+	$mail = setupMailer();
 	$mail->Subject = 'Your validation code!';
 	$mail->setFrom('support@smrealms.de', 'SMR Support');
 	$mail->msgHTML(nl2br($emailMessage));

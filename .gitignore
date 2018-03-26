@@ -19,6 +19,9 @@
 # /htdocs/
 /htdocs/upload
 
+# DKIM private keys
+/opendkim/*.private
+
 /sys$command
 
 /newsletters

@@ -23,12 +23,14 @@ services:
         # depends_on cannot be defined in extended services (i.e. smr-common)
         depends_on:
             - mysql
+            - smtp
 
     smr-dev:
         extends: smr-common
         # depends_on cannot be defined in extended services (i.e. smr-common)
         depends_on:
             - mysql
+            - smtp
         volumes:
             # Mount the source code instead of copying it.
             - ./admin:/smr/admin
@@ -36,6 +38,14 @@ services:
             - ./htdocs:/smr/htdocs
             - ./lib:/smr/lib
             - ./templates:/smr/templates
+
+    smtp:
+        image: hemberger/postfix-relay
+        environment:
+            - OPENDKIM_DOMAINS=smrealms.de
+            - OPENDKIM_SELECTOR=key1
+        volumes:
+            - ./opendkim:/etc/opendkim/keys/smrealms.de
 
     flyway:
         image: boxfuse/flyway:latest-alpine

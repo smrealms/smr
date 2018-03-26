@@ -4,7 +4,7 @@ $receiver = $_REQUEST['receiver'];
 $subject = $_REQUEST['subject'];
 $msg = $_REQUEST['msg'];
 
-$mail = new \PHPMailer\PHPMailer\PHPMailer();
+$mail = setupMailer();
 $mail->Subject = $subject;
 $mail->setFrom($account->getEmail(), $account->getHofName());
 $mail->Body =

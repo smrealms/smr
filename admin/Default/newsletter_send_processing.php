@@ -1,7 +1,7 @@
 <?php
 
 // mailer
-$mail = new \PHPMailer\PHPMailer\PHPMailer();
+$mail = setupMailer();
 $mail->setFrom('newsletter@smrealms.de', 'SMR Team');
 
 $mail->Encoding = 'base64';
