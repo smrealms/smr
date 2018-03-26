@@ -40,7 +40,7 @@ class Plotter {
 	 * is not true for findDistanceToX. If $x is not a SmrSector, then this
 	 * function does 2x the work.
 	 */
-	public static function findReversiblePathToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExplored=null, AbstractSmrPlayer $player=null) {
+	public static function findReversiblePathToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, AbstractSmrPlayer $player=null) {
 		if ($x instanceof SmrSector) {
 
 			// To ensure reversibility, always plot lowest to highest.
@@ -52,9 +52,7 @@ class Plotter {
 				$start = $sector;
 				$end = $x;
 			}
-			$path = Plotter::findDistanceToX($end, $start, $useFirst,
-			                                 isset($needsToHaveBeenExploredBy) ? $needsToHavebeenExploredBy : null,
-			                                 isset($player) ? $player : null);
+			$path = Plotter::findDistanceToX($end, $start, $useFirst, $needsToHaveBeenExploredBy, $player);
 			if ($path===false) {
 				create_error('Unable to plot from '.$sector->getSectorID().' to '.$x->getSectorID().'.');
 			}
@@ -66,9 +64,7 @@ class Plotter {
 		} else {
 
 			// At this point we don't know what sector $x will be at
-			$path = Plotter::findDistanceToX($x, $sector, $useFirst,
-			                                 isset($needsToHaveBeenExploredBy) ? $needsToHavebeenExploredBy : null,
-			                                 isset($player) ? $player : null);
+			$path = Plotter::findDistanceToX($x, $sector, $useFirst, $needsToHaveBeenExploredBy, $player);
 			if ($path===false) {
 				create_error('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
 			}
