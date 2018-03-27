@@ -25,9 +25,9 @@ class SmrGalaxy {
 			$galaxies = array();
 			while($db->nextRecord()) {
 				$galaxyID = $db->getField('galaxy_id');
-				$galaxies[$galaxyID] =& self::getGalaxy($gameID,$galaxyID,$forceUpdate);
+				$galaxies[$galaxyID] = self::getGalaxy($gameID,$galaxyID,$forceUpdate);
 			}
-			self::$CACHE_GAME_GALAXIES[$gameID] =& $galaxies;
+			self::$CACHE_GAME_GALAXIES[$gameID] = $galaxies;
 		}
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
@@ -35,14 +35,14 @@ class SmrGalaxy {
 	public static function &getGalaxy($gameID,$galaxyID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new SmrGalaxy($gameID,$galaxyID);
-			self::$CACHE_GALAXIES[$gameID][$galaxyID] =& $g;
+			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
 		}
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
 	}
 	
 	public static function saveGalaxies() {
-		foreach(self::$CACHE_GALAXIES as &$gameGalaxies) {
-			foreach($gameGalaxies as &$galaxy) {
+		foreach(self::$CACHE_GALAXIES as $gameGalaxies) {
+			foreach($gameGalaxies as $galaxy) {
 				$galaxy->save();
 			}
 		}
@@ -51,7 +51,7 @@ class SmrGalaxy {
 	public static function &createGalaxy($gameID,$galaxyID) {
 		if(!isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new SmrGalaxy($gameID,$galaxyID,true);
-			self::$CACHE_GALAXIES[$gameID][$galaxyID] =& $g;
+			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
 		}
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
 	}
@@ -160,7 +160,7 @@ class SmrGalaxy {
 		if($this->startSector === false) {
 			$this->startSector = 1;
 			if ($this->getGalaxyID() != 1) {
-				$galaxies =& SmrGalaxy::getGameGalaxies($this->getGameID());
+				$galaxies = SmrGalaxy::getGameGalaxies($this->getGameID());
 				for ($i=1;$i < $this->getGalaxyID();$i++) {
 					$this->startSector += $galaxies[$i]->getSize();
 				}
@@ -214,7 +214,7 @@ class SmrGalaxy {
 		
 		$sectorID = $this->getStartSector();
 		for ($i = 0; $i < $this->getSize(); $i++) {
-			$sector =& SmrSector::createSector($this->gameID, $sectorID);
+			$sector = SmrSector::createSector($this->gameID, $sectorID);
 			$sector->setGalaxyID($this->getGalaxyID());
 			$sector->update(); //Have to save sectors after creating them
 			$sectorID++;
@@ -223,16 +223,16 @@ class SmrGalaxy {
 		while ($problem) {
 			$problem = false;
 		
-			$galSectors =& SmrSector::getGalaxySectors($this->getGameID(),$this->getGalaxyID());
-			foreach($galSectors as &$galSector) {
+			$galSectors = SmrSector::getGalaxySectors($this->getGameID(),$this->getGalaxyID());
+			foreach($galSectors as $galSector) {
 				foreach($linkDirs as $linkDir) {
 					$galSector->disableLink($linkDir);
 				}
-			} unset($galSector);
+			}
 			$sectorID = $this->getStartSector();
 			for ($row = 1; $row <= $this->getHeight(); $row++) {
 				for ($col = 1; $col <= $this->getWidth(); $col++) {
-					$sector =& SmrSector::getSector($this->gameID,$sectorID);
+					$sector = SmrSector::getSector($this->gameID,$sectorID);
 					foreach($linkDirs as $linkDir) {
 						if (mt_rand(1,100) <= $connectivity) {
 							$sector->enableLink($linkDir);

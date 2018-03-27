@@ -30,7 +30,7 @@ abstract class AbstractSmrShip {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$db->escapeNumber($shipTypeID).' LIMIT 1'); //TODO add game type id
 			if($db->nextRecord())
-				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] =& self::buildBaseShip($db);
+				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] = self::buildBaseShip($db);
 			else
 				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] = false;
 		}
@@ -114,7 +114,7 @@ abstract class AbstractSmrShip {
 		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC'); //TODO add game type id
 		while($db->nextRecord()) {
 			if(!isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')])) {
-				self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')] =& self::buildBaseShip($db);
+				self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')] = self::buildBaseShip($db);
 			}
 		}
 		return self::$CACHE_BASE_SHIPS[$gameTypeID];
@@ -127,7 +127,7 @@ abstract class AbstractSmrShip {
 	}
 
 	protected function regenerateBaseShip() {
-		$this->baseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->gameID),$this->player->getShipTypeID());
+		$this->baseShip = AbstractSmrShip::getBaseShip(Globals::getGameType($this->gameID),$this->player->getShipTypeID());
 		$this->checkForExcess();
 	}
 
@@ -253,9 +253,9 @@ abstract class AbstractSmrShip {
 
 	public function &addWeapon($weaponTypeID) {
 		if($this->hasOpenWeaponSlots() && $this->hasRemainingPower()) {
-			$weapon =& SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
+			$weapon = SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
 			if($this->getRemainingPower()>=$weapon->getPowerLevel()) {
-				$this->weapons[count($this->weapons)] =& $weapon;
+				$this->weapons[count($this->weapons)] = $weapon;
 				$this->hasChangedWeapons = true;
 				return $weapon;
 			}
@@ -275,9 +275,9 @@ abstract class AbstractSmrShip {
 			$this->weapons[count($this->weapons)-1] =& $temp;
 		}
 		else {
-			$temp =& $this->weapons[$replacement];
-			$this->weapons[$replacement] =& $this->weapons[$orderID];
-			$this->weapons[$orderID] =& $temp;
+			$temp = $this->weapons[$replacement];
+			$this->weapons[$replacement] = $this->weapons[$orderID];
+			$this->weapons[$orderID] = $temp;
 		}
 		$this->hasChangedWeapons = true;
 	}
@@ -293,9 +293,9 @@ abstract class AbstractSmrShip {
 			$this->weapons[0] =& $temp;
 		}
 		else {
-			$temp =& $this->weapons[$replacement];
-			$this->weapons[$replacement] =& $this->weapons[$orderID];
-			$this->weapons[$orderID] =& $temp;
+			$temp = $this->weapons[$replacement];
+			$this->weapons[$replacement] = $this->weapons[$orderID];
+			$this->weapons[$orderID] = $temp;
 		}
 		$this->hasChangedWeapons = true;
 	}
@@ -466,7 +466,7 @@ abstract class AbstractSmrShip {
 	}
 
 	public function getCostToUpgrade($upgradeShipID) {
-		$upgadeBaseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()),$upgradeShipID);
+		$upgadeBaseShip = AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()),$upgradeShipID);
 		return $upgadeBaseShip['Cost'] - floor($this->getCost() * SHIP_REFUND_PERCENT);
 	}
 
@@ -475,7 +475,7 @@ abstract class AbstractSmrShip {
 	}
 
 	protected function getCostToUNOAgainstShip($shipID) {
-		$baseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()),$shipID);
+		$baseShip = AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()),$shipID);
 		$cost = 0;
 		$hardwareTypes = array(HARDWARE_SHIELDS, HARDWARE_ARMOUR, HARDWARE_CARGO);
 		foreach($hardwareTypes as $hardwareTypeID) {
@@ -855,7 +855,7 @@ abstract class AbstractSmrShip {
 	public function getTotalShieldDamage() {
 		$weapons = $this->getWeapons();
 		$shieldDamage = 0;
-		foreach($weapons as &$weapon) {
+		foreach($weapons as $weapon) {
 			$shieldDamage+=$weapon->getShieldDamage();
 		}
 		return $shieldDamage;
@@ -864,7 +864,7 @@ abstract class AbstractSmrShip {
 	public function getTotalArmourDamage() {
 		$weapons = $this->getWeapons();
 		$armourDamage = 0;
-		foreach($weapons as &$weapon) {
+		foreach($weapons as $weapon) {
 			$armourDamage+=$weapon->getArmourDamage();
 		}
 		return $armourDamage;
@@ -910,14 +910,14 @@ abstract class AbstractSmrShip {
 	}
 
 	public function &shootPlayers(array &$targetPlayers) {
-		$thisPlayer =& $this->getPlayer();
+		$thisPlayer = $this->getPlayer();
 		$results = array('Player' => &$thisPlayer, 'TotalDamage' => 0);
 		if($thisPlayer->isDead()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
 		}
 		$results['DeadBeforeShot'] = false;
-		foreach($this->weapons as $orderID => &$weapon) {
+		foreach($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] =& $weapon->shootPlayer($thisPlayer, $targetPlayers[array_rand($targetPlayers)]);
 			if($results['Weapons'][$orderID]['Hit'])
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
@@ -934,14 +934,14 @@ abstract class AbstractSmrShip {
 	}
 
 	public function &shootForces(SmrForce &$forces) {
-		$thisPlayer =& $this->getPlayer();
+		$thisPlayer = $this->getPlayer();
 		$results = array('Player' => &$thisPlayer, 'TotalDamage' => 0);
 		if($thisPlayer->isDead()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
 		}
 		$results['DeadBeforeShot'] = false;
-		foreach($this->weapons as $orderID => &$weapon) {
+		foreach($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] =& $weapon->shootForces($thisPlayer, $forces);
 			if($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
@@ -973,14 +973,14 @@ abstract class AbstractSmrShip {
 	}
 
 	public function &shootPort(SmrPort &$port) {
-		$thisPlayer =& $this->getPlayer();
+		$thisPlayer = $this->getPlayer();
 		$results = array('Player' => &$thisPlayer, 'TotalDamage' => 0);
 		if($thisPlayer->isDead()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
 		}
 		$results['DeadBeforeShot'] = false;
-		foreach($this->weapons as $orderID => &$weapon) {
+		foreach($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] =& $weapon->shootPort($thisPlayer, $port);
 			if($results['Weapons'][$orderID]['Hit'])
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
@@ -1010,14 +1010,14 @@ abstract class AbstractSmrShip {
 	}
 
 	public function &shootPlanet(SmrPlanet &$planet, $delayed) {
-		$thisPlayer =& $this->getPlayer();
+		$thisPlayer = $this->getPlayer();
 		$results = array('Player' => &$thisPlayer, 'TotalDamage' => 0);
 		if($thisPlayer->isDead()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
 		}
 		$results['DeadBeforeShot'] = false;
-		foreach($this->weapons as $orderID => &$weapon) {
+		foreach($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] =& $weapon->shootPlanet($thisPlayer, $planet, $delayed);
 			if($results['Weapons'][$orderID]['Hit'])
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];

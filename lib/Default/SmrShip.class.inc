@@ -22,8 +22,8 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	public static function saveShips() {
-		foreach(self::$CACHE_SHIPS as &$gameShips) {
-			foreach($gameShips as &$ship) {
+		foreach(self::$CACHE_SHIPS as $gameShips) {
+			foreach($gameShips as $ship) {
 				$ship->updateHardware();
 				$ship->updateWeapon();
 				$ship->updateCargo();
@@ -35,7 +35,7 @@ class SmrShip extends AbstractSmrShip {
 	public static function &getShip(AbstractSmrPlayer &$player,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()])) {
 			$s = new SmrShip($player);
-			self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()] =& $s;
+			self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()] = $s;
 		}
 		return self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()];
 	}
@@ -59,7 +59,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->weapons = array();
 		// generate list of weapon names the user transports
 		while ($this->db->nextRecord()) {
-			$this->weapons[$this->db->getInt('order_id')] =& SmrWeapon::getWeapon($this->gameID,$this->db->getInt('weapon_type_id'));
+			$this->weapons[$this->db->getInt('order_id')] = SmrWeapon::getWeapon($this->gameID,$this->db->getInt('weapon_type_id'));
 		}
 		$this->checkForExcessWeapons();
 	}
@@ -146,7 +146,7 @@ class SmrShip extends AbstractSmrShip {
 			$this->db->query('DELETE FROM ship_has_weapon
 								WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
 								AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
-			foreach ($this->weapons as $orderID => &$weapon) {
+			foreach ($this->weapons as $orderID => $weapon) {
 				$this->db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id)
 								VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($orderID) . ', ' . $this->db->escapeNumber($weapon->getWeaponTypeID()) . ')');
 			}

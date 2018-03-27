@@ -27,9 +27,9 @@ class SmrLocation {
 			$db->query('SELECT location_type_id FROM location_type ORDER BY location_type_id');
 			$locations = array();
 			while($db->nextRecord()) {
-				$locations[$db->getField('location_type_id')] =& SmrLocation::getLocation($db->getField('location_type_id'));
+				$locations[$db->getField('location_type_id')] = SmrLocation::getLocation($db->getField('location_type_id'));
 			}
-			self::$CACHE_ALL_LOCATIONS =& $locations;
+			self::$CACHE_ALL_LOCATIONS = $locations;
 		}
 		return self::$CACHE_ALL_LOCATIONS;
 	}
@@ -41,10 +41,10 @@ class SmrLocation {
 			$locations = array();
 			$i=0;
 			while($db->nextRecord()) {
-				$locations[$i] =& self::getLocation($db->getField('location_type_id'));
+				$locations[$i] = self::getLocation($db->getField('location_type_id'));
 				$i++;
 			}
-			self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] =& $locations;
+			self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = $locations;
 		}
 		return self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID];
 	}
@@ -52,7 +52,7 @@ class SmrLocation {
 	public static function &getLocation($locationTypeID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
 			$p = new SmrLocation($locationTypeID);
-			self::$CACHE_LOCATIONS[$locationTypeID] =& $p;
+			self::$CACHE_LOCATIONS[$locationTypeID] = $p;
 		}
 		return self::$CACHE_LOCATIONS[$locationTypeID];
 	}
@@ -259,7 +259,7 @@ class SmrLocation {
 			$this->shipsSold = array();
 			$this->db->query('SELECT * FROM location_sells_ships WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
 			while($this->db->nextRecord()) {
-				$this->shipsSold[$this->db->getInt('ship_type_id')] =& AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id), $this->db->getInt('ship_type_id'));
+				$this->shipsSold[$this->db->getInt('ship_type_id')] = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id), $this->db->getInt('ship_type_id'));
 			}
 		}
 		return $this->shipsSold;
@@ -276,11 +276,11 @@ class SmrLocation {
 		if($this->isShipSold($shipTypeID))
 			return;
 		require_once(get_file_loc('AbstractSmrShip.class.inc'));
-		$ship =& AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$shipTypeID);
+		$ship = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$shipTypeID);
 		if($ship===false)
 			throw new Exception('Invalid ship type id given');
 		$this->db->query('INSERT INTO location_sells_ships (location_type_id,ship_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($shipTypeID) . ')');
-		$this->shipsSold[$shipTypeID] =& $ship;
+		$this->shipsSold[$shipTypeID] = $ship;
 	}
 	
 	public function removeShipSold($shipTypeID) {
@@ -296,7 +296,7 @@ class SmrLocation {
 			$this->weaponsSold = array();
 			$this->db->query('SELECT * FROM location_sells_weapons WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
 			while($this->db->nextRecord())
-				$this->weaponsSold[$this->db->getInt('weapon_type_id')] =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$this->db->getInt('weapon_type_id'));
+				$this->weaponsSold[$this->db->getInt('weapon_type_id')] = SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$this->db->getInt('weapon_type_id'));
 		}
 		return $this->weaponsSold;
 	}
@@ -312,11 +312,11 @@ class SmrLocation {
 		if($this->isWeaponSold($weaponTypeID))
 			return;
 		require_once(get_file_loc('SmrWeapon.class.inc'));
-		$weapon =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$weaponTypeID);
+		$weapon = SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$weaponTypeID);
 		if($weapon===false)
 			throw new Exception('Invalid weapon type id given');
 		$this->db->query('INSERT INTO location_sells_weapons (location_type_id,weapon_type_id) values (' . $this->db->escapeNumber($this->getTypeID()). ',' . $this->db->escapeNumber($weaponTypeID) . ')');
-		$this->weaponsSold[$weaponTypeID] =& $weapon;
+		$this->weaponsSold[$weaponTypeID] = $weapon;
 	}
 	
 	public function removeWeaponSold($weaponTypeID) {
@@ -330,14 +330,14 @@ class SmrLocation {
 		$linkedLocations = array();
 		if($this->isHQ()) {
 			if($this->getTypeID()==LOCATION_TYPE_FEDERAL_HQ) {
-				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_BEACON);
-				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_MINT);
+				$linkedLocations[] = SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_BEACON);
+				$linkedLocations[] = SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_MINT);
 			}
 			else {
 				$raceID = $this->getRaceID();
-				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_BEACONS+$raceID);
-				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHIPS+$raceID);
-				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHOPS+$raceID);
+				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_BEACONS+$raceID);
+				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHIPS+$raceID);
+				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHOPS+$raceID);
 			}
 		}
 		return $linkedLocations;
