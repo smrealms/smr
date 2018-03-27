@@ -192,10 +192,17 @@ try {
 	$account->updateIP();
 
 	// send email with validation code to user
-	mail($email, 'New Space Merchant Realms User',
-				 'Your validation code is: '.$account->getValidationCode().EOL.'The Space Merchant Realms server is on the web at '.URL.'/'.EOL .
-				 'Please verify within the next 7 days or your account will be automatically deleted.',
-				 'From: support@smrealms.de');
+	$emailMessage =
+		'Your validation code is: '.$account->getValidationCode().EOL.
+		'The Space Merchant Realms server is on the web at '.URL.'/'.EOL .
+		'Please verify within the next 7 days or your account will be automatically deleted.';
+
+	$mail = setupMailer();
+	$mail->Subject = 'New Space Merchant Realms Account';
+	$mail->setFrom('support@smrealms.de', 'SMR Support');
+	$mail->msgHTML(nl2br($emailMessage));
+	$mail->addAddress($account->getEmail(), $account->getHofName());
+	$mail->send();
 
 	// remember when we sent validation code
 	$db->query('INSERT INTO notification (notification_type, account_id, time) ' .

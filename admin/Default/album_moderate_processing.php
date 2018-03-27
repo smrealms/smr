@@ -1,24 +1,5 @@
 <?php
 
-function send_html_mail($from_name, $from_email, $to_email, $subject, $body) {
-
-	$headers  = 'From: '.$from_name.'<'.$from_email.'>'.EOL;
-	$headers .= 'X-Sender: '.$from_email.EOL;
-	$headers .= 'X-Mailer: PHP'.EOL; //mailer
-	$headers .= 'X-Priority: 3'.EOL; //1 UrgentMessage, 3 Normal
-	$headers .= 'Return-Path: '.$from_email.EOL;
-	$headers .= 'Content-Type: text/html; charset=iso-8859-1'.EOL;
-
-	$message = '<!DOCTYPE html>'.EOL;
-	$message .= '<HTML><BODY>'.EOL;
-	$message .= wordwrap($body, 72);
-	$message .= '</BODY></HTML>';
-
-	// send the mail
-	mail($to_email, $subject, $message, $headers, '-f '.$from_email);
-
-}
-
 // get account_id from session
 $account_id = $var['account_id'];
 $email_txt = $_REQUEST['email_txt'];
@@ -40,9 +21,15 @@ if ($var['task'] == 'reset_image') {
 	$db->unlock();
 
 	// get his email address and send the mail
-	$db->query('SELECT email FROM account WHERE account_id = '.$db->escapeNumber($account_id));
-	if ($db->nextRecord())
-		send_html_mail('SMR Photo Album', 'pics@smrealms.de', $db->getField('email'), 'SMR Photo Album Notification', nl2br($email_txt));
+	$receiver = SmrAccount::getAccount($account_id);
+	if (!empty($receiver->getEmail())) {
+		$mail = setupMailer();
+		$mail->Subject = 'SMR Photo Album Notification';
+		$mail->setFrom('album@smrealms.de', 'SMR Photo Album');
+		$mail->msgHTML(nl2br($email_txt));
+		$mail->addAddress($receiver->getEmail(), $receiver->getHofName());
+		$mail->send();
+	}
 
 } else if ($var['task'] == 'reset_location')
 	$db->query('UPDATE album SET location = \'\' WHERE account_id = '.$db->escapeNumber($account_id));

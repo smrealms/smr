@@ -4,12 +4,15 @@ $receiver = $_REQUEST['receiver'];
 $subject = $_REQUEST['subject'];
 $msg = $_REQUEST['msg'];
 
-mail($receiver,
-	$subject,
+$mail = setupMailer();
+$mail->Subject = $subject;
+$mail->setFrom($account->getEmail(), $account->getHofName());
+$mail->Body =
 	'Login:'.EOL.'------'.EOL.$account->getLogin().EOL.EOL .
 	'Account ID:'.EOL.'-----------'.EOL.$account->getAccountID().EOL.EOL .
 	'Message:'.EOL.'------------'.EOL.$msg,
-	'From: '.$account->getEmail());
+$mail->addAddress($receiver);
+$mail->send();
 
 $container = array();
 $container['url'] = 'skeleton.php';

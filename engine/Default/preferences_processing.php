@@ -50,13 +50,18 @@ else if ($action == 'Save and resend validation code') {
 	$db->query('REPLACE INTO notification (notification_type, account_id, time)
 				VALUES(\'validation_code\', '.$db->escapeNumber($account->getAccountID()).', ' . $db->escapeNumber(TIME) . ')');
 
-	mail($email, 'Your validation code!',
+	$emailMessage =
 		'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.
 		'   Your new validation code is: '.$account->getValidationCode().EOL.EOL.
 		'The Space Merchant Realms server is on the web at '.URL.'/.'.EOL.
-		'You\'ll find a quick how-to-play here <a href="' . WIKI_URL . '/game-guide">SMR Wiki: Game Guide</a>'.EOL.
-		'Please verify within the next 7 days or your account will be automatically deleted.',
-		'From: support@smrealms.de');
+		'Please verify within the next 7 days or your account will be automatically deleted.';
+
+	$mail = setupMailer();
+	$mail->Subject = 'Your validation code!';
+	$mail->setFrom('support@smrealms.de', 'SMR Support');
+	$mail->msgHTML(nl2br($emailMessage));
+	$mail->addAddress($account->getEmail(), $account->getHofName());
+	$mail->send();
 
 	// get rid of that email permission
 	$db->query('DELETE FROM account_is_closed

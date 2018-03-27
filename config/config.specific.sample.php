@@ -21,6 +21,10 @@ define('TWITTER_CONSUMER_SECRET','');
 
 define('ENABLE_NPCS_CHESS', false);
 
+// Set to empty string if using a local mailserver.
+// Use the default value if using the provided docker-compose orchestration.
+define('SMTP_HOSTNAME', 'smtp');
+
 $COMPATIBILITY_DATABASES = array();
 //	array(
 //		'Game' => array(
