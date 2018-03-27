@@ -6,7 +6,7 @@ class SmrPlanet {
 	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 70;
 	const CHANCE_TO_DOWNGRADE = 15;
 	const TIME_TO_CREDIT_BUST = 10800; // 3 hours
-	const TIME_BEFORE_REPLACING_BREAKING_NEWS = 600; // 10 minutes
+	const TIME_BEFORE_REPLACING_BREAKING_NEWS = 1800; // 30 minutes
 
 	protected $maxBuildings;
 
@@ -1113,10 +1113,12 @@ class SmrPlanet {
 					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
 
-		$this->db->query('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $this->db->escapeNumber($trigger->getGameID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_BEFORE_REPLACING_BREAKING_NEWS) . ' LIMIT 1');
+		// Add each unique attack to news unless it was already added recently.
+		// Note: Attack uniqueness determined by planet owner.
+		$owner = $this->getOwner();
+		$this->db->query('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $this->db->escapeNumber($trigger->getGameID()) . ' AND dead_id=' . $this->db->escapeNumber($owner->getAccountID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_BEFORE_REPLACING_BREAKING_NEWS) . ' LIMIT 1');
 		if ($this->db->getNumRows()==0) {
 			if (count($attackers) >= 5) {
-				$owner = $this->getOwner();
 				$text = count($attackers) . ' members of '.$trigger->getAllianceBBLink().' have been spotted attacking ' .
 					$this->getDisplayName() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()) . '. The planet is owned by ' . $owner->getBBLink();
 				if ($owner->hasAlliance()) {
