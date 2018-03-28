@@ -1,5 +1,5 @@
 <?php
-@date_default_timezone_set(@date_default_timezone_get());
+ini_set('date.timezone', 'CET');
 
 define('MICRO_TIME', microtime());
 define('TIME', (int)microtimeSec(MICRO_TIME));
