@@ -8,10 +8,18 @@
 			foreach($MapSector as &$Sector) {
 				$isCurrentSector = !$UniGen && $ThisSector->equals($Sector);
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
+				$isSeedlistSector = !$UniGen && isset($ShowSeedlistSectors) && $ShowSeedlistSectors && $MapPlayer->getAlliance()->isInSeedlist($Sector);
 				$isVisited = $Sector->isVisited($MapPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax">
 					<div class="lm_sector galaxy<?php echo $Sector->getGalaxyID();
-						if($isCurrentSector){ ?> currentSeclm<?php }else if($isLinkedSector){ ?> connectSeclm<?php }else if($isVisited){ ?> normalSeclm<?php }else{ ?> normalSeclmu<?php } ?>"><?php
+						if ($isSeedlistSector){
+							if ($isCurrentSector){ ?> currentSeclm_seedlist<?php } else { ?> lm_seedlist<?php }
+						}
+						if ($isCurrentSector){ ?> currentSeclm<?php
+						} else if($isLinkedSector){ ?> connectSeclm<?php
+						} else if($isVisited){ ?> normalSeclm<?php
+						} else{ ?> normalSeclmu<?php } ?>"><?php
+
 						if($isVisited) {
 							if(isset($ToggleLink)) {
 								$ToggleLink['sector_id'] = $Sector->getSectorID();
@@ -94,7 +102,10 @@
 							</div><?php
 						}
 						$CanScanSector = $UniGen || ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
-						if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $Sector->hasFriendlyForces($MapPlayer) || $Sector->hasFriendlyTraders($MapPlayer)) { ?>
+						$ShowFriendlyForces = !$UniGen && isset($HideAlliedForces) && $HideAlliedForces ?
+						                      $Sector->hasPlayerForces($MapPlayer) :
+						                      $Sector->hasFriendlyForces($MapPlayer);
+						if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $ShowFriendlyForces || $Sector->hasFriendlyTraders($MapPlayer)) { ?>
 							<div class="lmtf"><?php
 								if(!$UniGen) {
 									if($CanScanSector && $Sector->hasEnemyTraders($MapPlayer)) {
@@ -111,7 +122,7 @@
 									if($CanScanSector && $Sector->hasEnemyForces($MapPlayer)) {
 										?><img class="enemyBack" title="Enemy Forces" alt="Enemy Forces" src="images/forces.png" width="13" height="16"/><?php
 									}
-									if($Sector->hasFriendlyForces($MapPlayer)) {
+									if ($ShowFriendlyForces) {
 										?><img class="friendlyBack" title="Friendly Forces" alt="Friendly Forces" src="images/forces.png" width="13" height="16"/><?php
 									}
 									/*?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php*/

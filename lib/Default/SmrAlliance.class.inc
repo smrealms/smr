@@ -24,6 +24,7 @@ class SmrAlliance {
 	protected $ircChannel;
 
 	protected $memberList;
+	protected $seedlist;
 
 	public static function &getAlliance($allianceID,$gameID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
@@ -344,6 +345,27 @@ class SmrAlliance {
 			$planets[] = $planet;
 		}
 		return $planets;
+	}
+
+	/**
+	 * Return array of sector_id for sectors in the alliance seedlist.
+	 */
+	public function getSeedlist() {
+		if (!isset($this->seedlist)) {
+			$this->db->query('SELECT sector_id FROM alliance_has_seedlist WHERE ' . $this->SQL);
+			$this->seedlist = array();
+			while ($this->db->nextRecord()) {
+				$this->seedlist[] = $this->db->getInt('sector_id');
+			}
+		}
+		return $this->seedlist;
+	}
+
+	/**
+	 * Is the given sector in the alliance seedlist?
+	 */
+	public function isInSeedlist(SmrSector $sector) {
+		return in_array($sector->getSectorID(), $this->getSeedlist());
 	}
 
 }

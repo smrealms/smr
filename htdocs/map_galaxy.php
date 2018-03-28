@@ -69,6 +69,25 @@ try {
 	// create account object
 	$account =& $player->getAccount();
 	
+	// Create a session to store temporary display options
+	// Garbage collect here often, since the page is slow anyways (see map_local.php)
+	if (!session_start(['gc_probability' => 10, 'gc_maxlifetime' => 86400])) {
+		throw new Exception('Failed to start session');
+	}
+
+	// Set temporary options
+	if ($player->hasAlliance()) {
+		if (isset($_POST['change_settings'])) {
+			$_SESSION['show_seedlist_sectors'] = isset($_POST['show_seedlist_sectors']);
+			$_SESSION['hide_allied_forces'] = isset($_POST['hide_allied_forces']);
+		}
+		$showSeedlistSectors = isset($_SESSION['show_seedlist_sectors']) ? $_SESSION['show_seedlist_sectors'] : false;
+		$hideAlliedForces = isset($_SESSION['hide_allied_forces']) ? $_SESSION['hide_allied_forces'] : false;
+		$template->assign('ShowSeedlistSectors', $showSeedlistSectors);
+		$template->assign('HideAlliedForces', $hideAlliedForces);
+		$template->assign('CheckboxFormHREF', ''); // Submit to same page
+	}
+
 	if (!isset($galaxyID) && !isset($sectorID)) {
 		$galaxy =& SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$player->getSectorID());
 	}
