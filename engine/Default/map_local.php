@@ -10,7 +10,10 @@ if($player->isLandedOnPlanet())
 	create_error('You are on a planet!');
 
 // Create a session to store temporary display options
-session_start();
+// Do not garbage collect here for best performance (see map_galaxy.php).
+if (!session_start(['gc_probability' => 0, 'gc_maxlifetime' => 86400])) {
+	throw new Exception('Failed to start session');
+}
 
 // Set temporary options
 if ($player->hasAlliance()) {

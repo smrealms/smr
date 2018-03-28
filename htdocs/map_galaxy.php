@@ -70,7 +70,10 @@ try {
 	$account =& $player->getAccount();
 	
 	// Create a session to store temporary display options
-	session_start();
+	// Garbage collect here often, since the page is slow anyways (see map_local.php)
+	if (!session_start(['gc_probability' => 10, 'gc_maxlifetime' => 86400])) {
+		throw new Exception('Failed to start session');
+	}
 
 	// Set temporary options
 	if ($player->hasAlliance()) {
