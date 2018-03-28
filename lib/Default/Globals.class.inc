@@ -700,9 +700,6 @@ function get_file_loc($fileName, $overrideGameDir = false) {
 			$gameDir = $storedDir;
 		} else $gameDir = 'Default/';
 	}
-	if($gameDir=='1.2/') {
-		$gameDir='Default/';
-	}
 
 	$startPaths = array(ENGINE, LIB, ADMIN);
 	$midPaths = array($gameDir, 'Default/');
