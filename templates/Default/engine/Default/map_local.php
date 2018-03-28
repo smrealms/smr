@@ -7,4 +7,7 @@
 	<a id="status" onClick="toggleM();">Mouse Zoom is <?php if($isZoomOn){ ?>On<?php }else{ ?>Off<?php } ?>.  Click to toggle.</a>
 </div><br />
 
-<?php $this->includeTemplate('includes/SectorMap.inc'); ?>
+<?php
+$this->includeTemplate('includes/SectorMap.inc');
+$this->includeTemplate('includes/SectorMapOptions.inc');
+?>

@@ -316,6 +316,27 @@ div.gal_map_main {
 }
 
 /* Local Map */
+div.lm_seedlist {
+	background-image:
+		repeating-linear-gradient(
+			45deg,
+			transparent,
+			transparent 8%,
+			#00f 10%,
+			#00f 13%
+		);
+}
+div.currentSeclm_seedlist {
+	background-image:
+		url('../../images/currentsector.png'),
+		repeating-linear-gradient(
+			45deg,
+			transparent,
+			transparent 8%,
+			#00f 10%,
+			#00f 13%
+		);
+}
 table.lmt {
 	border-collapse: separate;
 	border-spacing: 6px;

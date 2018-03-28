@@ -703,6 +703,18 @@ class SmrSector {
 		return $enemyForces;
 	}
 
+	/**
+	 * Returns true if any forces in this sector belong to $player.
+	 */
+	public function hasPlayerForces(AbstractSmrPlayer $player) {
+		foreach ($this->getForces() as $force) {
+			if ($player->getAccountID() == $force->getOwnerID()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public function hasFriendlyForces(AbstractSmrPlayer &$player=null) {
 		if($player == null || !$this->hasForces())
 			return false;
