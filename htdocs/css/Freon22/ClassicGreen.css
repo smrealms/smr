@@ -188,25 +188,27 @@ ul.boxy li {
 }
 
 /* LM */
-.connectSeclm {
+.currentSeclm, .connectSeclm, .normalSeclm {
+	color: #00AA00;
+}
+.connectSeclmu, .normalSeclmu {
+	color: yellow;
+	background-color: black;
+}
+.connectSeclm, .currentSeclm {
 	background-color: #33784B;
 }
-.connectSeclm:hover {
-	background-color: #14645F;
+.connectSeclmu {
+	box-shadow: 0px 0px 0px 4px #33784B inset;
 }
-.currentSeclm {
-	background: url('../../images/currentsector.png');
-	_background: none; /* Disable transparent image for IE6 as it can't handle it */
-	background-color:#33784B;
+.connectSeclm:hover, .connectSeclmu:hover {
+	background-color: #14645F;
 }
 .currentSeclm:hover {
 	background-color:#337975;
 }
 .normalSeclm {
 	background-color: #0B4C1C;
-}
-.normalSeclmu {
-	background-color: #000000;
 }
 
 /* wep drop down */

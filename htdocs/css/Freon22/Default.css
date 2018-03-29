@@ -241,26 +241,27 @@ table.csForces th.header {
 }
 
 /* LM */
-.connectSeclm {
+.currentSeclm, .connectSeclm, .normalSeclm {
+	color: #F2A648;
+}
+.connectSeclmu, .normalSeclmu {
+	color: yellow;
+	background-color: black;
+}
+.connectSeclm, .currentSeclm {
 	background-color: #7B5121;
 }
-.connectSeclm:hover {
-	background-color: #6B6131;
+.connectSeclmu {
+	box-shadow: 0px 0px 0px 4px #7B5121 inset;
 }
-.currentSeclm {
-	background: url('../../images/currentsector.png');
-	_background: none; /* Disable transparent image for IE6 as it can't handle it */
-	background-color:#7B5121;
+.connectSeclm:hover, .connectSeclmu:hover {
+	background-color: #6B6131;
 }
 .currentSeclm:hover {
 	background-color: #8B7131;
 }
-
 .normalSeclm {
 	background-color: #3E2911;
-}
-.normalSeclmu {
-	background-color: #000;
 }
 
 /* Starry background */

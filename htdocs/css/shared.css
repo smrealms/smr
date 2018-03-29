@@ -319,6 +319,9 @@ div.gal_map_main {
 }
 
 /* Local Map */
+.currentSeclm {
+	background-image: url('../../images/currentsector.png');
+}
 div.lm_seedlist {
 	background-image:
 		repeating-linear-gradient(
