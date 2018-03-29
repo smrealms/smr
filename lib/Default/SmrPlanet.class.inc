@@ -1112,7 +1112,7 @@ class SmrPlanet {
 	}
 
 	public function &shootPlayers(array $targetPlayers) {
-		$results = array('Planet' => $this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
+		$results = array('Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => array());
 		foreach($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 		}

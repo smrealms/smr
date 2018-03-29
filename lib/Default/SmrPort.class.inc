@@ -1122,7 +1122,7 @@ class SmrPort {
 	}
 	
 	public function &shootPlayers(array $targetPlayers) {
-		$results = array('Port' => $this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
+		$results = array('Port' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => array());
 		foreach($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
