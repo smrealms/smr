@@ -22,15 +22,15 @@ class WeightedRandom {
 		return self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID];
 	}
 
-	public static function &getWeightedRandomForPlayer(AbstractSmrPlayer &$player, $type, $typeID, $forceUpdate = false) {
+	public static function &getWeightedRandomForPlayer(AbstractSmrPlayer $player, $type, $typeID, $forceUpdate = false) {
 		return self::getWeightedRandom($player->getGameID(), $player->getAccountID(), $type, $typeID, $forceUpdate);
 	}
 	
 	public static function saveWeightedRandoms() {
-		foreach(self::$CACHE_RANDOMS as &$gameRandoms) {
-			foreach($gameRandoms as &$accountRandoms) {
-				foreach($accountRandoms as &$typeRandoms) {
-					foreach($typeRandoms as &$random) {
+		foreach(self::$CACHE_RANDOMS as $gameRandoms) {
+			foreach($gameRandoms as $accountRandoms) {
+				foreach($accountRandoms as $typeRandoms) {
+					foreach($typeRandoms as $random) {
 						$random->update();
 					}
 				}

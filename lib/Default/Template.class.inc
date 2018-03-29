@@ -281,7 +281,7 @@ class Template {
 		}
 	}
 	
-	protected function &convertHtmlToAjaxXml(&$str,$returnXml) {
+	protected function &convertHtmlToAjaxXml($str,$returnXml) {
 		if(empty($str)) {
 			return '';
 		}

@@ -32,7 +32,7 @@ class Globals {
 		return self::$AVAILABLE_LINKS;
 	}
 
-	public static function canAccessPage($pageName, AbstractSmrPlayer &$player, array $extraInfo) {
+	public static function canAccessPage($pageName, AbstractSmrPlayer $player, array $extraInfo) {
 		switch($pageName) {
 			case 'AllianceMOTD':
 				if($player->getAllianceID() != $extraInfo['AllianceID']) {

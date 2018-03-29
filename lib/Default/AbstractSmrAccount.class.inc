@@ -168,7 +168,7 @@ abstract class AbstractSmrAccount {
 		return self::getAccountByName($login);
 	}
 
-	public static function getUserScoreCaseStatement(&$db) {
+	public static function getUserScoreCaseStatement($db) {
 		$userRankingTypes = array();
 		$case = 'FLOOR(SUM(CASE type ';
 		foreach(self::$USER_RANKINGS_SCORE as $userRankingScore) {
@@ -437,7 +437,7 @@ abstract class AbstractSmrAccount {
 		return $this->score;
 	}
 
-	public function &getIndividualScores(SmrPlayer &$player = null) {
+	public function &getIndividualScores(SmrPlayer $player = null) {
 		$gameID=0;
 		if($player!=null)
 			$gameID = $player->getGameID();
@@ -526,7 +526,7 @@ abstract class AbstractSmrAccount {
 			$credits+=$rewardCredits;
 			$rewardCredits=0;
 		}
-		if($this->credits==0&&$this->rewardCredits==0)
+		if($this->credits==0 && $this->rewardCredits==0)
 			$this->db->query('REPLACE INTO account_has_credits (account_id, credits_left, reward_credits) VALUES('.$this->db->escapeNumber($this->getAccountID()).', '.$this->db->escapeNumber($credits).','.$this->db->escapeNumber($rewardCredits).')');
 		else
 			$this->db->query('UPDATE account_has_credits SET credits_left='.$this->db->escapeNumber($credits).', reward_credits='.$this->db->escapeNumber($rewardCredits).' WHERE '.$this->SQL.' LIMIT 1');
@@ -547,7 +547,7 @@ abstract class AbstractSmrAccount {
 	public function setSmrCredits($credits) {
 		if($this->getSmrCredits()==$credits)
 			return;
-		if($this->credits==0&&$this->rewardCredits==0)
+		if($this->credits==0 && $this->rewardCredits==0)
 			$this->db->query('REPLACE INTO account_has_credits (account_id, credits_left) VALUES('.$this->db->escapeNumber($this->getAccountID()).', '.$this->db->escapeNumber($credits).')');
 		else
 			$this->db->query('UPDATE account_has_credits SET credits_left='.$this->db->escapeNumber($credits).' WHERE '.$this->SQL.' LIMIT 1');
@@ -575,7 +575,7 @@ abstract class AbstractSmrAccount {
 	public function setSmrRewardCredits($credits) {
 		if($this->getSmrRewardCredits()==$credits)
 			return;
-		if($this->credits==0&&$this->rewardCredits==0)
+		if($this->credits==0 && $this->rewardCredits==0)
 			$this->db->query('REPLACE INTO account_has_credits (account_id, reward_credits) VALUES('.$this->db->escapeNumber($this->getAccountID()).', '.$this->db->escapeNumber($credits).')');
 		else
 			$this->db->query('UPDATE account_has_credits SET reward_credits='.$this->db->escapeNumber($credits).' WHERE '.$this->SQL.' LIMIT 1');
@@ -1172,7 +1172,7 @@ abstract class AbstractSmrAccount {
 			$this->setPoints($this->getPoints()-$numPoints,$lastUpdate);
 	}
 
-	public function addPoints($numPoints,SmrAccount &$admin,$reasonID,$suspicion) {
+	public function addPoints($numPoints,SmrAccount $admin,$reasonID,$suspicion) {
 		//do we have points
 		$this->setPoints($this->getPoints() + $numPoints,TIME);
 		$totalPoints = $this->getPoints();
@@ -1232,7 +1232,7 @@ abstract class AbstractSmrAccount {
 		$this->hasChanged = true;
 	}
 
-	public function banAccount($expireTime,SmrAccount &$admin,$reasonID,$suspicion,$removeExceptions = false) {
+	public function banAccount($expireTime,SmrAccount $admin,$reasonID,$suspicion,$removeExceptions = false) {
 		$this->db->query('REPLACE INTO account_is_closed
 					(account_id, reason_id, suspicion, expires)
 					VALUES('.$this->db->escapeNumber($this->getAccountID()).', '.$this->db->escapeNumber($reasonID).', '.$this->db->escapeString($suspicion).', '.$this->db->escapeNumber($expireTime).')');
@@ -1261,7 +1261,7 @@ abstract class AbstractSmrAccount {
 			$this->db->query('DELETE FROM account_exceptions WHERE ' . $this->SQL);
 	}
 
-	public function unbanAccount(SmrAccount &$admin = null,$currException=false) {
+	public function unbanAccount(SmrAccount $admin = null,$currException=false) {
 		$adminID = 0;
 		if($admin!==null)
 			$adminID = $admin->getAccountID();

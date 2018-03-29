@@ -491,7 +491,7 @@ abstract class AbstractSmrPlayer {
 		return Globals::getRaceName($this->getRaceID());
 	}
 
-	public static function getColouredRaceNameOrDefault($otherRaceID, AbstractSmrPlayer &$player = null, $linked = false) {
+	public static function getColouredRaceNameOrDefault($otherRaceID, AbstractSmrPlayer $player = null, $linked = false) {
 		$relations = 0;
 		if($player !== null) {
 			$relations = $player->getRelation($otherRaceID);
@@ -680,23 +680,23 @@ abstract class AbstractSmrPlayer {
 		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 475))));
 	}
 
-	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer) {
+	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
 		return $this->getShip()->shootPlayer($targetPlayer);
 	}
 
-	public function &shootForces(SmrForce &$forces) {
+	public function &shootForces(SmrForce $forces) {
 		return $this->getShip()->shootForces($forces);
 	}
 
-	public function &shootPort(SmrPort &$port) {
+	public function &shootPort(SmrPort $port) {
 		return $this->getShip()->shootPort($port);
 	}
 
-	public function &shootPlanet(SmrPlanet &$planet, $delayed) {
+	public function &shootPlanet(SmrPlanet $planet, $delayed) {
 		return $this->getShip()->shootPlanet($planet, $delayed);
 	}
 
-	public function &shootPlayers(array &$targetPlayers) {
+	public function &shootPlayers(array $targetPlayers) {
 		return $this->getShip()->shootPlayers($targetPlayers);
 	}
 
@@ -950,10 +950,10 @@ abstract class AbstractSmrPlayer {
 	}
 
 	abstract public function killPlayer($sectorID);
-	abstract public function &killPlayerByPlayer(AbstractSmrPlayer &$killer);
-	abstract public function &killPlayerByForces(SmrForce &$forces);
-	abstract public function &killPlayerByPort(SmrPort &$port);
-	abstract public function &killPlayerByPlanet(SmrPlanet &$planet);
+	abstract public function &killPlayerByPlayer(AbstractSmrPlayer $killer);
+	abstract public function &killPlayerByForces(SmrForce $forces);
+	abstract public function &killPlayerByPort(SmrPort $port);
+	abstract public function &killPlayerByPlanet(SmrPlanet $planet);
 	abstract public function getHome();
 
 
@@ -1300,8 +1300,8 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function canSeeAny(array &$otherPlayerArray) {
-		foreach($otherPlayerArray as &$otherPlayer) {
+	public function canSeeAny(array $otherPlayerArray) {
+		foreach($otherPlayerArray as $otherPlayer) {
 			if($this->canSee($otherPlayer)) {
 				return true;
 			}
@@ -1309,7 +1309,7 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	public function canSee(AbstractSmrPlayer &$otherPlayer) {
+	public function canSee(AbstractSmrPlayer $otherPlayer) {
 		if(!$otherPlayer->getShip()->isCloaked())
 			return true;
 		if($this->sameAlliance($otherPlayer))
@@ -1319,51 +1319,51 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	public function equals(AbstractSmrPlayer &$otherPlayer = null) {
-		return $otherPlayer!==null && $this->getAccountID()==$otherPlayer->getAccountID()&&$this->getGameID()==$otherPlayer->getGameID();
+	public function equals(AbstractSmrPlayer $otherPlayer = null) {
+		return $otherPlayer!==null && $this->getAccountID()==$otherPlayer->getAccountID() && $this->getGameID()==$otherPlayer->getGameID();
 	}
 
-	public function sameAlliance(AbstractSmrPlayer &$otherPlayer = null) {
-		return $otherPlayer != null && ($this->equals($otherPlayer) || ($this->hasAlliance()&&$this->getAllianceID()==$otherPlayer->getAllianceID()));
+	public function sameAlliance(AbstractSmrPlayer $otherPlayer = null) {
+		return $otherPlayer != null && ($this->equals($otherPlayer) || ($this->hasAlliance() && $this->getAllianceID()==$otherPlayer->getAllianceID()));
 	}
 
-	public function sharedForceAlliance(AbstractSmrPlayer &$otherPlayer = null) {
+	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer = null) {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function forceNAPAlliance(AbstractSmrPlayer &$otherPlayer = null) {
+	public function forceNAPAlliance(AbstractSmrPlayer $otherPlayer = null) {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function planetNAPAlliance(AbstractSmrPlayer &$otherPlayer = null) {
+	public function planetNAPAlliance(AbstractSmrPlayer $otherPlayer = null) {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderNAPAlliance(AbstractSmrPlayer &$otherPlayer = null) {
+	public function traderNAPAlliance(AbstractSmrPlayer $otherPlayer = null) {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderMAPAlliance(AbstractSmrPlayer &$otherPlayer = null) {
+	public function traderMAPAlliance(AbstractSmrPlayer $otherPlayer = null) {
 		return $this->traderAttackTraderAlliance($otherPlayer) && $this->traderDefendTraderAlliance($otherPlayer);
 	}
 
-	public function traderAttackTraderAlliance(AbstractSmrPlayer &$otherPlayer = null) {
+	public function traderAttackTraderAlliance(AbstractSmrPlayer $otherPlayer = null) {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderDefendTraderAlliance(AbstractSmrPlayer &$otherPlayer = null) {
+	public function traderDefendTraderAlliance(AbstractSmrPlayer $otherPlayer = null) {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackForceAlliance(AbstractSmrPlayer &$otherPlayer = null) {
+	public function traderAttackForceAlliance(AbstractSmrPlayer $otherPlayer = null) {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackPortAlliance(AbstractSmrPlayer &$otherPlayer = null) {
+	public function traderAttackPortAlliance(AbstractSmrPlayer $otherPlayer = null) {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackPlanetAlliance(AbstractSmrPlayer &$otherPlayer = null) {
+	public function traderAttackPlanetAlliance(AbstractSmrPlayer $otherPlayer = null) {
 		return $this->sameAlliance($otherPlayer);
 	}
 

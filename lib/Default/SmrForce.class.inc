@@ -78,7 +78,7 @@ class SmrForce {
 		return self::$CACHE_FORCES[$gameID][$sectorID][$ownerID];
 	}
 
-	public static function tidyUpForces(SmrGalaxy &$galaxyToTidy) {
+	public static function tidyUpForces(SmrGalaxy $galaxyToTidy) {
 		if(!isset(self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()])) {
 			self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()] = true;
 			$db = new SmrMySqlDatabase();
@@ -308,7 +308,7 @@ class SmrForce {
 		return $this->getGalaxy()->getMaxForceTime();
 	}
 
-	public function getBumpTurnCost(AbstractSmrShip &$ship) {
+	public function getBumpTurnCost(AbstractSmrShip $ship) {
 		$mines = $this->getMines();
 		if($mines <= 1) {
 			return 0;
@@ -328,7 +328,7 @@ class SmrForce {
 		return $turns;
 	}
 
-	public function getAttackTurnCost(AbstractSmrShip &$ship) {
+	public function getAttackTurnCost(AbstractSmrShip $ship) {
 		if($ship->isFederal() || $ship->hasDCS()) {
 			return 2;
 		}
@@ -351,7 +351,7 @@ class SmrForce {
 		return $this->sectorID;
 	}
 
-	public function ping($pingMessage, AbstractSmrPlayer &$playerPinging, $skipCheck=false) {
+	public function ping($pingMessage, AbstractSmrPlayer $playerPinging, $skipCheck=false) {
 		if(!$this->hasSDs() && !$skipCheck) {
 			return;
 		}
@@ -463,11 +463,11 @@ class SmrForce {
 		return SmrSession::getNewHREF($container);
 	}
 
-	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer,$minesAreAttacker) {
+	public function &shootPlayer(AbstractSmrPlayer $targetPlayer,$minesAreAttacker) {
 		return $this->shootPlayers(array($targetPlayer),$minesAreAttacker);
 	}
 
-	public function &shootPlayers(array &$targetPlayers,$minesAreAttacker) {
+	public function &shootPlayers(array $targetPlayers,$minesAreAttacker) {
 		$results = array('TotalDamage' => 0);
 		if(!$this->exists()) {
 			$results['DeadBeforeShot'] = true;
@@ -555,7 +555,7 @@ class SmrForce {
 		return $actualDamage*SD_ARMOUR;
 	}
 
-	public function &killForcesByPlayer(AbstractSmrPlayer &$killer) {
+	public function &killForcesByPlayer(AbstractSmrPlayer $killer) {
 		$return = array();
 		return $return;
 	}

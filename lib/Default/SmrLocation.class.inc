@@ -355,11 +355,11 @@ class SmrLocation {
 		return SmrSession::getNewHREF($container);
 	}
 	
-	public function equals(SmrLocation &$otherLocation) {
+	public function equals(SmrLocation $otherLocation) {
 		return $this->getTypeID()==$otherLocation->getTypeID();
 	}
 
-	public function hasX(/*Object*/ &$x, AbstractSmrPlayer &$player=null) {
+	public function hasX(/*Object*/ $x, AbstractSmrPlayer $player=null) {
 		if ($x instanceof SmrWeapon) {
 			return $this->isWeaponSold($x->getWeaponTypeID());
 		}

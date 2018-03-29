@@ -235,7 +235,7 @@ class SmrAlliance {
 		$this->description=nl2br(htmlspecialchars($description));
 	}
 
-	public function canJoinAlliance(SmrPlayer &$player) {
+	public function canJoinAlliance(SmrPlayer $player) {
 		if($player->hasAlliance()) {
 			return false;
 		}
