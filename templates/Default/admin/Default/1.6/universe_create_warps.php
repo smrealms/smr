@@ -5,7 +5,7 @@ Working on Galaxy : <?php echo $Galaxy->getName(); ?> (<?php echo $Galaxy->getGa
 		foreach ($Galaxies as $eachGalaxy) { ?>
 			<tr>
 				<td class="right"><?php echo $eachGalaxy->getName(); ?></td>
-				<td><input type="number" value="<?php echo isset($Warps[$eachGalaxy->getGalaxyID()]) ? $Warps[$eachGalaxy->getGalaxyID()] : '0'; ?>" size="5" name="warp<?php echo $eachGalaxy->getGalaxyID(); ?>"></td>
+				<td><input type="number" value="<?php echo $Warps[$eachGalaxy->getGalaxyID()]; ?>" size="5" name="warp<?php echo $eachGalaxy->getGalaxyID(); ?>"></td>
 			</tr><?php
 		} ?>
 		<tr>

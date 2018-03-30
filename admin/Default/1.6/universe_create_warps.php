@@ -4,8 +4,14 @@ require_once(get_file_loc('SmrGalaxy.class.inc'));
 $galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $galSectors =& $galaxy->getSectors();
-//get totals
+
+// Initialize warps array
 $warps = array();
+foreach ($galaxies as $otherGalaxy) {
+	$warps[$otherGalaxy->getGalaxyID()] = 0;
+}
+
+//get totals
 foreach ($galSectors as &$galSector) {
 	if($galSector->hasWarp()) {
 		$otherGalaxyID = $galSector->getWarpSector()->getGalaxyID();
