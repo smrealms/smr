@@ -130,6 +130,16 @@ tr.topRow {
 	padding: 5px;
 	margin: 0px 0px 10px 0px;
 }
+.footer_right {
+	text-align: right;
+	font-size: xx-small;
+}
+.footer_left {
+	text-align: left;
+	font-size: xx-small;
+	width: 60%;
+	float: left;
+}
 
 /* ****************************************************
  This starts the borders for the right info area
@@ -158,11 +168,6 @@ div.rightInfoShip a {
 }
 .wep1 {
 	white-space:normal;
-}
-.copyright {
-	text-align: right;
-	font-size: xx-small;
-	padding: 10px;
 }
 .messages {
 	font-size: .6em;
