@@ -124,17 +124,11 @@
 							}
 							$this->includeTemplate($TemplateBody); ?>
 						</div>
-						<div style="width:60%; float: left;" class="left">
+						<div class="footer_left">
 							<?php $this->includeTemplate('includes/VoteLinks.inc'); ?>
 						</div>
-						<div class="copyright">
-							SMR <?php echo $Version; ?>&copy;2007-<?php echo $CurrentYear; ?> Page and SMR
-							<br />
-							Kindly Hosted by FeM
-							<br />
-							Script runtime: <span id="rt"><?php echo $ScriptRuntime; ?></span> seconds
-							<br />
-							<a href="imprint.html">[Imprint]</a>
+						<div class="footer_right">
+							<?php $this->includeTemplate('includes/copyright.inc'); ?>
 						</div>
 					</td>
 				</tr>
