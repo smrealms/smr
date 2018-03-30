@@ -31,10 +31,7 @@ if ($db->getNumRows() > 0) {
 
 		$container = create_container('game_play_processing.php');
 		$container['game_id'] = $game_id;
-		if($games['Play'][$game_id]['Type'] == '1.2')
-			$games['Play'][$game_id]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
-		else
-			$games['Play'][$game_id]['PlayGameLink'] = SmrSession::getNewHREF($container);
+		$games['Play'][$game_id]['PlayGameLink'] = SmrSession::getNewHREF($container);
 
 		// creates a new player object
 		$curr_player =& SmrPlayer::getPlayer(SmrSession::$account_id, $game_id);
@@ -67,70 +64,9 @@ if ($db->getNumRows() > 0) {
 	}
 }
 
-// CLASSIC COMPATIBILITY
-if(false&&USE_COMPATIBILITY) {
-	foreach(Globals::getCompatibilityDatabases('Game') as $databaseClassName => $databaseInfo) {
-		require_once(get_file_loc($databaseClassName.'.class.inc'));
-		$db = new $databaseClassName();
-		$db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game.game_id as game_id, game_name, game_speed, game_type
-					FROM game JOIN player USING (game_id)
-					WHERE account_id = '.$db->escapeNumber(SmrSession::$old_account_id).'
-						AND end_date >= ' . $db->escapeNumber(TIME) . '
-					ORDER BY start_date DESC');
-		if ($db->getNumRows() > 0) {
-			require_once(get_file_loc('smr_player.inc',$databaseInfo['GameType']));
-			require_once(get_file_loc('smr_ship.inc',$databaseInfo['GameType']));
-			while ($db->nextRecord()) {
-				$game_id = $db->getField('game_id');
-				$index = $databaseClassName.$game_id;
-				$games['Play'][$index]['ID'] = $game_id;
-				$games['Play'][$index]['Name'] = $db->getField('game_name');
-				$games['Play'][$index]['Type'] = $db->getField('game_type');
-				$games['Play'][$index]['EndDate'] = $db->getField('end_date');
-				$games['Play'][$index]['Speed'] = $db->getField('game_speed');
-				$games['Play'][$index]['Type'] = $db->getField('game_type');
-
-				$container = array();
-				$container['game_id'] = $game_id;
-				$container['url'] = 'game_play_processing.php';
-				$games['Play'][$index]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
-
-				// creates a new player object
-				$curr_player = new SMR_PLAYER(SmrSession::$old_account_id, $game_id);
-				$curr_ship = new SMR_SHIP(SmrSession::$old_account_id, $game_id);
-
-				// update turns for this game
-				$curr_player->update_turns($curr_ship->speed);
-
-				// generate list of game_id that this player is joined
-				$game_id_list[] = $game_id;
-
-				$db2 = new $databaseClassName();
-				$db2->query('SELECT count(*) as num_playing FROM player
-							WHERE last_active >= ' . $db->escapeNumber(TIME - 600) . '
-								AND game_id = '.$db->escapeNumber($game_id));
-				$db2->nextRecord();
-				$games['Play'][$index]['NumberPlaying'] = $db2->getField('num_playing');
-
-				// create a container that will hold next url and additional variables.
-
-				$container_game = array();
-				$container_game['url'] = 'skeleton.php';
-				$container_game['body'] = 'game_stats.php';
-				$container_game['game_id'] = $game_id;
-				$games['Play'][$index]['GameStatsLink'] = SmrSession::getNewHREF($container_game);
-				$games['Play'][$index]['Maintenance'] = $curr_player->turns;
-				$games['Play'][$index]['LastActive'] = format_time(TIME-$curr_player->last_active,TRUE);
-				$games['Play'][$index]['LastMovement'] = format_time(TIME-$curr_player->last_active,TRUE);
-
-			}
-		}
-	}
-	$db = new SmrMySqlDatabase();
-}
 if(empty($games['Play']))
 	unset($games['Play']);
-//End Compat
+
 
 if (count($game_id_list) > 0) {
 	$db->query('SELECT start_date, end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed
