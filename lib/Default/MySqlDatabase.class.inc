@@ -242,11 +242,6 @@ abstract class MySqlDatabase implements Database {
 	
 	//below this is purely for compatibility reasons
 	
-	function free() {
-		unset($this->dbRecord);
-		$this->dbResult->free_result();
-	}
-	
 	function escape_string($string, $transfer_html=false) {
 		
 		if(is_array($string)) {
@@ -263,23 +258,5 @@ abstract class MySqlDatabase implements Database {
 			return '\'' . self::$dbConn->real_escape_string($string) . '\'';
 		}
 	}
-	
-	//below is for Classic compatibility
-	
-	function next_record() { return $this->nextRecord(); }
-	
-	function f($name) { return $this->getField($name); }
-	
-	function fetch_row() { return $this->getRow(); }
-	
-	function lock($table) { $this->lockTable($table); }
-	
-	function nf() { return $this->getNumRows(); }
-	
-	function insert_id() { return $this->getInsertID(); }
-	
-	function p($name) { return $this->getField($name); }
-	
-	function np() { return $this->getNumRows(); }
 }
 ?>

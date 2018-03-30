@@ -16,8 +16,6 @@ interface Database {
 	
 	public function getInsertID();
 	
-	// function free();
-	
 	public function escapeString($string,$quotes=true,$nullable=false);
 	
 	public function escapeBoolean($bool);
