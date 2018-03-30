@@ -650,8 +650,6 @@ function do_voodoo() {
 		$template->assign('ExtraCSSLink',$account->getCssLink());
 	}
 	doSkeletionAssigns($template,$player,$ship,$sector,$db,$account);
-	$time_elapsed = microtimeDiff(microtime(),MICRO_TIME);
-	$template->assign('ScriptRuntime', number_format($time_elapsed,3));
 
 	if(isset($var['DisableAjax']) && $var['DisableAjax']===true) {
 		$template->assign('AJAX_ENABLE_REFRESH',false);
