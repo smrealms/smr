@@ -85,19 +85,6 @@ class Globals {
 				while($db2->nextRecord()) {
 					$PLANET_BUILDINGS[$buildingID]['Goods'][$db2->getInt('good_id')] = $db2->getInt('amount');
 				}
-//				global $PLANET_RESEARCH;
-//				$PLANET_BUILDINGS[$buildingID]['Research'] = array();
-//				$researchResult = query('SELECT * FROM planet_building_research_required WHERE construction_id=' . $buildingID);
-//				while($researchRow = next_record($researchResult)) {
-//					$PLANET_BUILDINGS[$buildingID]['Research'][$PLANET_RESEARCH[$researchRow['research_id']]['Name']] = $researchRow['amount'];
-//				}
-
-//				$PLANET_BUILDINGS[$buildingID]['Unlocks'] = array();
-//				$unlocksResult = query('SELECT * FROM planet_building_unlocks WHERE construction_id=' . $buildingID);
-//				while($unlocksRow = next_record($unlocksResult)) {
-//					$PLANET_BUILDINGS[$buildingID]['Unlocks'][$unlocksRow['unlock_id']] = $unlocksRow['amount'];
-//				}
-
 			}
 			self::$PLANET_BUILDINGS =& $PLANET_BUILDINGS;
 		}

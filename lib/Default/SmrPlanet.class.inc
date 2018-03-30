@@ -113,62 +113,6 @@ class SmrPlanet {
 	protected function __construct($gameID,$sectorID,$create=false) {
 		$this->db = new SmrMySqlDatabase();
 
-
-		//	if ($result = next_record($sql)) {
-		//		global $PLANET_TYPES, $PLANET_RESEARCH, $GOODS, $PRIMARY_BUILDINGS;
-		//		$PLANET_BUILDINGS = Globals::getPlanetBuildings();
-		//		//get rev planet buildings
-		//		foreach ($PLANET_BUILDINGS as $building_id => $build_arr) $rev_build[$build_arr['Name']] = $building_id;
-		//
-		//
-		//		$planet['Gal ID']					= $result['gal_id'];
-		//		$planet['Last Interest Check']		= $result['last_interest_check'];
-		//		$planet['Assets Frozen Until']		= $result['assets_frozen_until'];
-		//		$planet['Population']				= $result['population'];
-		//		$planet['Last Population Update']	= $result['last_population_update'];
-		//		$planet['Last Cargo Update']		= $result['last_cargo_update'];
-		//		$planet['Type ID']					= $result['planet_type'];
-		//		$planet['Area']						= $result['area'];
-		//		$planet['Metals']					= $result['metals'];
-		//		$planet['Energy']					= $result['energy'];
-		//		$planet['Shields Stored']			= $result['shields_storage'];
-		//		$planet['Combat Drones Stored']		= $result['combat_drones_storage'];
-		//		$planet['Next Destroy']				= $result['next_destroy'];
-		//		$planet['Defined']					= FALSE;
-		//		$planet['Research Points']			= 16;
-		//		$planet['Current Research'] 		= array();
-		//
-		//		//these will be adjusted later on in the function
-		//		$planet['Area Available'] = $planet['Area'];
-		//		$planet['Metals Available'] = $planet['Metals'];
-		//		$planet['Energy Available'] = $planet['Energy'];
-		//
-		//		//get the possible buildings we can build, this is updated lower in the function
-		//		$planet['Building Types Available'] = array();
-		//		foreach($PLANET_BUILDINGS as $buildingID => $building)
-		//			$planet['Building Types Available'][$buildingID] = 0;
-		//		checkForPopIncrease($planet);
-		//
-		//		getOwnerInfo($planet);
-		//		getGalaxyPlanets($planet);
-		//
-		//		getThisPlanetInfo($planet,$rev_build);
-		//
-		//
-		//		//get the benefits
-		//		$planet['Shield Recovery'] = $planet['Galaxy Buildings'][$rev_build['Shield Relay']] * 100;
-		//		$planet['Drone Recovery'] = $planet['Galaxy Buildings'][$rev_build['Drone Control Tower']] * 20;
-		//		//TODO: Get drone delay (30-45 min for lvl 70 is avg, 10 mins for lvl 25)
-		//
-		//
-		//		checkForInterest($planet,$rev_build);
-		//	}
-		//	else {
-		//		return FALSE;
-		//	}
-		//	return $planet;
-
-
 		$this->db->query('SELECT * FROM planet WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID));
 		if ($this->db->nextRecord()) {
 			$this->sectorID			= $this->db->getInt('sector_id');
@@ -715,21 +659,6 @@ class SmrPlanet {
 			return $this->maxBuildings[$buildingTypeID];
 		}
 		return 0;
-		//			global $PRIMARY_BUILDINGS;
-		//			$PLANET_BUILDINGS = Globals::getPlanetBuildings();
-		//				if (isset($PRIMARY_BUILDINGS[$building_type_id]))
-		//					$planet['Defined'] = TRUE;
-		//
-		//					if (isset($PLANET_BUILDINGS[$building_type_id]['Unlocks'])) {
-		//						foreach ($PLANET_BUILDINGS[$building_type_id]['Unlocks'] as $building_id => $max_amount)
-		//							$planet['Building Types Available'][$building_id] += $max_amount;
-		//					}
-		//
-		//					//define planet
-		//					if (isset($PRIMARY_BUILDINGS[$building_type_id])) {
-		//						$planet['Type ID'] = $PRIMARY_BUILDINGS[$building_type_id];
-		//						query('UPDATE planet SET planet_type = ' . $planet['Type ID'] . ' WHERE '.$planet['SQL'].' LIMIT 1');
-		//					}
 	}
 	
 	public function setMaxBuildings() {
