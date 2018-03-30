@@ -167,7 +167,7 @@ abstract class AbstractSmrPlayer {
 	public function isDraftLeader() {
 		if(!isset($this->draftLeader)) {
 			$this->draftLeader = false;
-			$this->db->query('SELECT 1 FROM draft_leaders WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
+			$this->db->query('SELECT 1 FROM draft_leaders WHERE ' . $this->SQL . ' LIMIT 1');
 			if ($this->db->nextRecord()) {
 				$this->draftLeader = true;
 			}
@@ -178,7 +178,7 @@ abstract class AbstractSmrPlayer {
 	public function getGPWriter() {
 		if(!isset($this->gpWriter)) {
 			$this->gpWriter = false;
-			$this->db->query('SELECT position FROM galactic_post_writer WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND account_id = ' . $this->db->escapeNumber($this->getAccountID()));
+			$this->db->query('SELECT position FROM galactic_post_writer WHERE ' . $this->SQL);
 			if ($this->db->nextRecord()) {
 				$this->gpWriter = $this->db->getField('position');
 			}
@@ -229,9 +229,7 @@ abstract class AbstractSmrPlayer {
 				$this->canFed[$raceID2] = $this->getRelation($raceID2) >= ALIGN_FED_PROTECTION;
 			}
 			$this->db->query('SELECT race_id, allowed FROM player_can_fed
-								WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
-									AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
-									AND expiry > ' . $this->db->escapeNumber(TIME) . ';');
+								WHERE ' . $this->SQL . ' AND expiry > ' . $this->db->escapeNumber(TIME));
 			while($this->db->nextRecord()) {
 				$this->canFed[$this->db->getInt('race_id')] = $this->db->getBoolean('allowed');
 			}
@@ -559,8 +557,7 @@ abstract class AbstractSmrPlayer {
 			$this->allianceRoles[$allianceID] = 0;
 			$this->db->query('SELECT role_id
 						FROM player_has_alliance_role
-						WHERE account_id=' . $this->db->escapeNumber($this->getAccountID()) . '
-						AND game_id=' . $this->db->escapeNumber($this->getGameID()) . '
+						WHERE ' . $this->SQL . '
 						AND alliance_id=' . $this->db->escapeNumber($allianceID) . '
 						LIMIT 1');
 			if ($this->db->nextRecord()) {
