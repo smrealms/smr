@@ -34,6 +34,7 @@ if (isset($Message)) {
 				Warps will be placed randomly in the galaxies, with these exceptions:
 				<ul>
 					<li>Only one warp per sector</li>
+					<li>No warps in sectors with Federal Beacons</li>
 				</ul>
 				<span class="bold">Note:</span> When you press "Create Warps" this will rearrange all current warps.
 				To add new warps without rearranging everything use the edit sector feature.

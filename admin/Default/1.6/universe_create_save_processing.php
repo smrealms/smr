@@ -156,12 +156,16 @@ elseif ($submit == 'Create Warps') {
 			for ($i=1; $i<=$numWarps; $i++) {
 				$galSector =& $galSectors[array_rand($galSectors)];
 				//only 1 warp per sector
-				while($galSector->hasWarp()) $galSector =& $galSectors[array_rand($galSectors)];
+				while ($galSector->hasWarp() || $galSector->offersFederalProtection()) {
+					$galSector =& $galSectors[array_rand($galSectors)];
+				}
 				//get other side
 				$otherSectors =& $eachGalaxy->getSectors();
 				$otherSector =& $otherSectors[array_rand($otherSectors)];
 				//make sure it does not go to itself
-				while($otherSector->hasWarp() || $otherSector->equals($galSector)) $otherSector =& $otherSectors[array_rand($otherSectors)];
+				while ($otherSector->hasWarp() || $otherSector->offersFederalProtection() || $otherSector->equals($galSector)) {
+					$otherSector =& $otherSectors[array_rand($otherSectors)];
+				}
 				$galSector->setWarp($otherSector);
 			}
 		}
