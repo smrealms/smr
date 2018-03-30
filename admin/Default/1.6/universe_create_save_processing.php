@@ -147,8 +147,13 @@ elseif ($submit == 'Create Warps') {
 	foreach ($galaxies as &$eachGalaxy) {
 		//do we have a warp to this gal?
 		if (isset($_POST['warp' . $eachGalaxy->getGalaxyID()])) {
+			// Sanity check the number
+			$numWarps = $_POST['warp' . $eachGalaxy->getGalaxyID()];
+			if ($numWarps > 10) {
+				create_error('Specify no more than 10 warps between two galaxies!');
+			}
 			//iterate for each warp to this gal
-			for ($i=1;$i<=$_POST['warp' . $eachGalaxy->getGalaxyID()];$i++) {
+			for ($i=1; $i<=$numWarps; $i++) {
 				$galSector =& $galSectors[array_rand($galSectors)];
 				//only 1 warp per sector
 				while($galSector->hasWarp()) $galSector =& $galSectors[array_rand($galSectors)];
