@@ -73,6 +73,7 @@ abstract class AbstractSmrAccount {
 	protected $friendlyColour;
 	protected $neutralColour;
 	protected $enemyColour;
+	protected $SQL;
 
 	protected $npc;
 
@@ -181,7 +182,8 @@ abstract class AbstractSmrAccount {
 
 	function __construct($accountID) {
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM account WHERE account_id = '.$this->db->escapeNumber($accountID).' LIMIT 1');
+		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID);
+		$this->db->query('SELECT * FROM account WHERE '.$this->SQL.' LIMIT 1');
 
 		if ($this->db->nextRecord()) {
 			$row = $this->db->getRow();
@@ -251,7 +253,7 @@ abstract class AbstractSmrAccount {
 
 	public function isDisabled() {
 		$this->db->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
-			'WHERE account_id = '.$this->db->escapeNumber($this->account_id).' LIMIT 1');
+			'WHERE '.$this->SQL.' LIMIT 1');
 		if ($this->db->nextRecord()) {
 			// get the expire time
 			$expireTime = $this->db->getInt('expires');
@@ -273,7 +275,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function isSmsBlacklisted() {
-		$this->db->query('SELECT reason FROM account_sms_blacklist WHERE account_id = ' . $this->db->escapeNumber($this->account_id) . ' LIMIT 1');
+		$this->db->query('SELECT reason FROM account_sms_blacklist WHERE ' . $this->SQL . ' LIMIT 1');
 		if ($this->db->nextRecord())
 			return $this->db->getField('reason');
 		else
@@ -308,7 +310,7 @@ abstract class AbstractSmrAccount {
 			', friendly_colour = ' . $this->db->escapeString($this->friendlyColour, true, true).
 			', neutral_colour = ' . $this->db->escapeString($this->neutralColour, true, true).
 			', enemy_colour = ' . $this->db->escapeString($this->enemyColour, true, true).
-			' WHERE account_id = '.$this->db->escapeNumber($this->account_id).' LIMIT 1');
+			' WHERE '.$this->SQL.' LIMIT 1');
 		$this->hasChanged = false;
 	}
 
@@ -318,14 +320,13 @@ abstract class AbstractSmrAccount {
 
 		// more than 50 elements in it?
 
-		$this->db->query('SELECT account_id,time,ip FROM account_has_ip WHERE account_id = '.$this->db->escapeNumber($this->account_id).' ORDER BY time ASC');
+		$this->db->query('SELECT time,ip FROM account_has_ip WHERE '.$this->SQL.' ORDER BY time ASC');
 		if ($this->db->getNumRows() > 50 && $this->db->nextRecord()) {
-			$delete_id = $this->db->getField('account_id');
 			$delete_time = $this->db->getField('time');
 			$delete_ip = $this->db->getField('ip');
 
 			$this->db->query('DELETE FROM account_has_ip
-				WHERE account_id = '.$this->db->escapeNumber($delete_id).' AND
+				WHERE '.$this->SQL.' AND
 				time = '.$this->db->escapeNumber($delete_time).' AND
 				ip = '.$this->db->escapeString($delete_ip));
 		}
@@ -388,7 +389,7 @@ abstract class AbstractSmrAccount {
 	protected function getHOFData() {
 		if(!isset($this->HOF)) {
 			//Get Player HOF
-			$this->db->query('SELECT type,sum(amount) as amount FROM player_hof WHERE account_id=' . $this->db->escapeNumber($this->getAccountID()).' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = '.$this->db->escapeBoolean(false).') GROUP BY type');
+			$this->db->query('SELECT type,sum(amount) as amount FROM player_hof WHERE ' . $this->SQL . ' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = \'FALSE\') GROUP BY type');
 			$this->HOF = array();
 			while($this->db->nextRecord()) {
 				$hof =& $this->HOF;
@@ -498,7 +499,7 @@ abstract class AbstractSmrAccount {
 		if(!isset($this->credits)||!isset($this->rewardCredits)) {
 			$this->credits = 0;
 			$this->rewardCredits = 0;
-			$this->db->query('SELECT * FROM account_has_credits WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+			$this->db->query('SELECT * FROM account_has_credits WHERE '.$this->SQL.' LIMIT 1');
 			if ($this->db->nextRecord()) {
 				$this->credits = $this->db->getInt('credits_left');
 				$this->rewardCredits = $this->db->getInt('reward_credits');
@@ -528,7 +529,7 @@ abstract class AbstractSmrAccount {
 		if($this->credits==0&&$this->rewardCredits==0)
 			$this->db->query('REPLACE INTO account_has_credits (account_id, credits_left, reward_credits) VALUES('.$this->db->escapeNumber($this->getAccountID()).', '.$this->db->escapeNumber($credits).','.$this->db->escapeNumber($rewardCredits).')');
 		else
-			$this->db->query('UPDATE account_has_credits SET credits_left='.$this->db->escapeNumber($credits).', reward_credits='.$this->db->escapeNumber($rewardCredits).' WHERE account_id='.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+			$this->db->query('UPDATE account_has_credits SET credits_left='.$this->db->escapeNumber($credits).', reward_credits='.$this->db->escapeNumber($rewardCredits).' WHERE '.$this->SQL.' LIMIT 1');
 		$this->credits=$credits;
 		$this->rewardCredits=$rewardCredits;
 	}
@@ -549,7 +550,7 @@ abstract class AbstractSmrAccount {
 		if($this->credits==0&&$this->rewardCredits==0)
 			$this->db->query('REPLACE INTO account_has_credits (account_id, credits_left) VALUES('.$this->db->escapeNumber($this->getAccountID()).', '.$this->db->escapeNumber($credits).')');
 		else
-			$this->db->query('UPDATE account_has_credits SET credits_left='.$this->db->escapeNumber($credits).' WHERE account_id='.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+			$this->db->query('UPDATE account_has_credits SET credits_left='.$this->db->escapeNumber($credits).' WHERE '.$this->SQL.' LIMIT 1');
 		$this->credits=$credits;
 	}
 
@@ -577,7 +578,7 @@ abstract class AbstractSmrAccount {
 		if($this->credits==0&&$this->rewardCredits==0)
 			$this->db->query('REPLACE INTO account_has_credits (account_id, reward_credits) VALUES('.$this->db->escapeNumber($this->getAccountID()).', '.$this->db->escapeNumber($credits).')');
 		else
-			$this->db->query('UPDATE account_has_credits SET reward_credits='.$this->db->escapeNumber($credits).' WHERE account_id='.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+			$this->db->query('UPDATE account_has_credits SET reward_credits='.$this->db->escapeNumber($credits).' WHERE '.$this->SQL.' LIMIT 1');
 		$this->rewardCredits=$credits;
 	}
 
@@ -665,13 +666,6 @@ abstract class AbstractSmrAccount {
 				while($db->nextRecord())
 					$db2->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$db2->escapeNumber($this->getAccountID()).', ' . $db2->escapeNumber($db->getInt('time')) . ' , '.$db2->escapeNumber($db->getInt('amount')).')');
 
-
-//				$db = new $databaseClassName();
-//				$db->query('SELECT permission_id FROM account_has_permission ' .
-//						'WHERE account_id = '.$db->escapeNumber($accountID));
-//				$db2 = new SmrMySqlDatabase();
-//				while($db->nextRecord())
-//					$db2->query('INSERT IGNORE INTO account_has_permission (account_id, permission_id) VALUES ('.$db2->escapeNumber($this->getAccountID()).', ' . $db2->escapeNumber($db->getInt('permission_id')).')');
 
 				//Warning: Column name should be escaped somehow.
 				$this->db->query('UPDATE account SET `'.$databaseInfo['Column'].'` = ' . $this->db->escapeNumber($accountID) . ' WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
@@ -811,7 +805,7 @@ abstract class AbstractSmrAccount {
 			return;
 		if(!in_array($template,array_keys(Globals::getAvailableTemplates())))
 			throw new Exception('Template not allowed: '.$template);
-		$this->db->query('UPDATE account SET template = ' . $this->db->escapeString($template) . ' WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+		$this->db->query('UPDATE account SET template = ' . $this->db->escapeString($template) . ' WHERE '.$this->SQL.' LIMIT 1');
 		$this->template = $template;
 		$colourSchemes = Globals::getAvailableColourSchemes($template);
 		$this->setColourScheme($colourSchemes[0]);
@@ -1121,9 +1115,7 @@ abstract class AbstractSmrAccount {
 	public function getPermissions() {
 		if(!isset($this->permissions)) {
 			$this->permissions = array();
-			$this->db->query('SELECT permission_id
-						FROM account_has_permission
-						WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()));
+			$this->db->query('SELECT permission_id FROM account_has_permission WHERE ' . $this->SQL);
 			while($this->db->nextRecord()) {
 				$this->permissions[$this->db->getInt('permission_id')] = true;
 			}
@@ -1143,7 +1135,7 @@ abstract class AbstractSmrAccount {
 		if(!isset($this->points)) {
 			$this->points=0;
 			$this->db->lockTable('account_has_points');
-			$this->db->query('SELECT * FROM account_has_points WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+			$this->db->query('SELECT * FROM account_has_points WHERE '.$this->SQL.' LIMIT 1');
 			if($this->db->nextRecord()) {
 				$this->points=$this->db->getInt('points');
 				$lastUpdate = $this->db->getInt('last_update');
@@ -1169,9 +1161,9 @@ abstract class AbstractSmrAccount {
 		if ($this->points==0)
 			$this->db->query('INSERT INTO account_has_points (account_id, points, last_update) VALUES ('.$this->db->escapeNumber($this->getAccountID()).', '.$this->db->escapeNumber($numPoints).', '.$this->db->escapeNumber($lastUpdate?$lastUpdate:TIME).')');
 		else if($numPoints<=0)
-			$this->db->query('DELETE FROM account_has_points WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+			$this->db->query('DELETE FROM account_has_points WHERE '.$this->SQL.' LIMIT 1');
 		else
-			$this->db->query('UPDATE account_has_points SET points = '.$this->db->escapeNumber($numPoints).($lastUpdate ? ', last_update = '.$this->db->escapeNumber(TIME) : '').' WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+			$this->db->query('UPDATE account_has_points SET points = '.$this->db->escapeNumber($numPoints).($lastUpdate ? ', last_update = '.$this->db->escapeNumber(TIME) : '').' WHERE '.$this->SQL.' LIMIT 1');
 		$this->points=$numPoints;
 	}
 
@@ -1245,19 +1237,19 @@ abstract class AbstractSmrAccount {
 					(account_id, reason_id, suspicion, expires)
 					VALUES('.$this->db->escapeNumber($this->getAccountID()).', '.$this->db->escapeNumber($reasonID).', '.$this->db->escapeString($suspicion).', '.$this->db->escapeNumber($expireTime).')');
 		$this->db->lockTable('active_session');
-		$this->db->query('DELETE FROM active_session WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+		$this->db->query('DELETE FROM active_session WHERE '.$this->SQL.' LIMIT 1');
 		$this->db->unlock();
 
 		$this->db->query('INSERT INTO account_has_closing_history
 						(account_id, time, admin_id, action)
 						VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($admin->getAccountID()) . ', ' . $this->db->escapeString('Closed') . ');');
 		$this->db->query('UPDATE player SET newbie_turns = 1
-						WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+						WHERE ' . $this->SQL . '
 						AND newbie_turns = 0
 						AND land_on_planet = ' . $this->db->escapeBoolean(false));
 
 		$this->db->query('SELECT game_id FROM game JOIN player USING (game_id)
-						WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+						WHERE ' . $this->SQL . '
 						AND end_date >= ' . $this->db->escapeNumber(TIME));
 		while ($this->db->nextRecord()) {
 			$player =& SmrPlayer::getPlayer($this->getAccountID(), $this->db->getInt('game_id'));
@@ -1266,20 +1258,18 @@ abstract class AbstractSmrAccount {
 		}
 		$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account closed by ' . $admin->getLogin() . '.');
 		if($removeExceptions!==false)
-			$this->db->query('DELETE FROM account_exceptions WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()));
+			$this->db->query('DELETE FROM account_exceptions WHERE ' . $this->SQL);
 	}
 
 	public function unbanAccount(SmrAccount &$admin = null,$currException=false) {
 		$adminID = 0;
 		if($admin!==null)
 			$adminID = $admin->getAccountID();
-		$this->db->query('DELETE FROM account_is_closed
-					 	WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
+		$this->db->query('DELETE FROM account_is_closed WHERE ' . $this->SQL . ' LIMIT 1');
 		$this->db->query('INSERT INTO account_has_closing_history
 						(account_id, time, admin_id, action)
 						VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($adminID) . ', ' . $this->db->escapeString('Opened') . ')');
-		$this->db->query('UPDATE player SET last_turn_update = GREATEST(' . $this->db->escapeNumber(TIME) . ', last_turn_update)
-							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()));
+		$this->db->query('UPDATE player SET last_turn_update = GREATEST(' . $this->db->escapeNumber(TIME) . ', last_turn_update) WHERE ' . $this->SQL);
 		if($admin!==null)
 			$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account reopened by ' . $admin->getLogin() . '.');
 		else
