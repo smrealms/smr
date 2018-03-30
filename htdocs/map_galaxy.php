@@ -143,6 +143,10 @@ try {
 	$template->assignByRef('MapSectors',$mapSectors);
 	$template->assignByRef('ThisShip',$player->getShip());
 	$template->assignByRef('ThisPlayer',$player);
+
+	// AJAX updates are not set up for the galaxy map at this time
+	$template->assign('AJAX_ENABLE_REFRESH', false);
+
 	$template->display('GalaxyMap.inc');
 }
 catch(Exception $e) {
