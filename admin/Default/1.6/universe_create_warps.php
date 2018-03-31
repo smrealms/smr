@@ -1,45 +1,61 @@
 <?php
 require_once(get_file_loc('SmrGalaxy.class.inc'));
 
-if (isset($var['gal_on'])) $gal_on = $var['gal_on'];
-else $PHP_OUTPUT.= 'Gal_on not found!!';
+if (isset($var['message'])) {
+	$template->assign('Message', $var['message']);
+	SmrSession::updateVar('message', null); // Only show message once
+}
 
 $galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $galSectors =& $galaxy->getSectors();
-//get totals
-foreach ($galSectors as &$galSector) {
-	if($galSector->hasWarp()) {
-		$otherGalaxyID = $galSector->getWarpSector()->getGalaxyID();
-		if($otherGalaxyID==$galaxy->getGalaxyID())
-			$warps[$otherGalaxyID]+=0.5;
-		else
-			$warps[$otherGalaxyID]++;
+
+$template->assign('PageTopic', 'Warps for Galaxy : '.$galaxy->getName().' ('.$galaxy->getGalaxyID().')');
+
+
+// Initialize warps array
+$warps = array();
+foreach ($galaxies as $gal1) {
+	$warps[$gal1->getGalaxyID()] = array();
+	foreach ($galaxies as $gal2) {
+		$warps[$gal1->getGalaxyID()][$gal2->getGalaxyID()] = 0;
 	}
 }
 
-//universe_create_warps.php
+//get totals
+$db->query('SELECT * FROM warp WHERE game_id='.$db->escapeNumber($var['game_id']));
+while ($db->nextRecord()) {
+	$warp1 = SmrSector::getSector($db->getInt('game_id'), $db->getInt('sector_id_1'));
+	$warp2 = SmrSector::getSector($db->getInt('game_id'), $db->getInt('sector_id_2'));
+	if ($warp1->getGalaxyID() == $warp2->getGalaxyID()) {
+		$warps[$warp1->getGalaxyID()][$warp2->getGalaxyID()]++;
+	} else {
+		$warps[$warp1->getGalaxyID()][$warp2->getGalaxyID()]++;
+		$warps[$warp2->getGalaxyID()][$warp1->getGalaxyID()]++;
+	}
+}
+
+// Get links to other pages
+$container = create_container('skeleton.php', '1.6/universe_create_warps.php');
+$container['game_id'] = $var['game_id'];
+$galLinks = array();
+foreach ($galaxies as $gal) {
+	$container['gal_on'] = $gal->getGalaxyID();
+	$galLinks[$gal->getGalaxyID()] = SmrSession::getNewHREF($container);
+}
+$template->assign('GalLinks', $galLinks);
+
 $container = $var;
 $container['url'] = '1.6/universe_create_save_processing.php';
-$container['body'] = '1.6/universe_create_sectors.php';
-$PHP_OUTPUT.= create_echo_form($container);
-$PHP_OUTPUT.= 'Working on Galaxy : ' . $galaxy->getName() . ' (' . $galaxy->getGalaxyID() . ')<br />';
-$PHP_OUTPUT.= '<table class="standard">';
-foreach ($galaxies as &$eachGalaxy) {
-	$PHP_OUTPUT.= '<tr><td class="right">' . $eachGalaxy->getName() . '</td><td>';
-	$PHP_OUTPUT.= '<input type="number" value="';
-	if (isset($warps[$eachGalaxy->getGalaxyID()])) $PHP_OUTPUT.= $warps[$eachGalaxy->getGalaxyID()];
-	else $PHP_OUTPUT.= '0';
-	$PHP_OUTPUT.= '" size="5" name="warp' . $eachGalaxy->getGalaxyID() . '"></td></tr>';
-}
-$PHP_OUTPUT.= '<tr><td colspan="2" class="center"><input type="submit" name="submit" value="Create Warps">';
+$container['body'] = '1.6/universe_create_warps.php';
+$template->assign('SubmitHREF', SmrSession::getNewHREF($container));
+
 $container = $var;
 $container['body'] = '1.6/universe_create_sectors.php';
-$PHP_OUTPUT.= '<br /><br /><a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Cancel</a>';
-$PHP_OUTPUT.= '</td></tr></table></form>';
+$template->assign('CancelHREF', SmrSession::getNewHREF($container));
 
-$PHP_OUTPUT.= '<span class="small">Note: When you press "Create Warps" this will rearrange all current warps.<br />';
-$PHP_OUTPUT.= 'To add new warps without rearranging everything use the edit sector feature.';
-$PHP_OUTPUT.= 'Keep in mind this removes both sides of the warp, so 2 gals are changed for each warp.</span>';
+$template->assign('Galaxy', $galaxy);
+$template->assign('Galaxies', $galaxies);
+$template->assign('Warps', $warps);
 
 ?>
