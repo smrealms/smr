@@ -6,8 +6,8 @@ require_once(get_file_loc('DummyShip.class.inc'));
 require_once(get_file_loc('SmrWeapon.class.inc'));
 //TODO add game type id
 $template->assign('CombatSimLink',SmrSession::getNewHREF(create_container('skeleton.php','combat_simulator.php')));
-$template->assignByRef('BaseShips',AbstractSmrShip::getAllBaseShips(0));
-$template->assignByRef('Weapons',SmrWeapon::getAllWeapons(0));
+$template->assign('BaseShips',AbstractSmrShip::getAllBaseShips(0));
+$template->assign('Weapons',SmrWeapon::getAllWeapons(0));
 
 $template->assign('EditDummysLink',SmrSession::getNewHREF(create_container('skeleton.php','edit_dummys.php')));
 
@@ -31,10 +31,10 @@ if(isset($_REQUEST['save_dummy'])) {
 }
 
 
-$template->assignByRef('DummyPlayer',$dummyPlayer);
-$template->assignByRef('DummyShip',$dummyShip);
-$template->assignByRef('ShipWeapons',$dummyShip->getWeapons());
-$template->assignByRef('Levels',Globals::getLevelRequirements());
+$template->assign('DummyPlayer',$dummyPlayer);
+$template->assign('DummyShip',$dummyShip);
+$template->assign('ShipWeapons',$dummyShip->getWeapons());
+$template->assign('Levels',Globals::getLevelRequirements());
 
 
 

@@ -7,7 +7,7 @@ if (!isset($var['alliance_id'])) {
 }
 
 $alliance =& SmrAlliance::getAlliance($var['alliance_id'],$player->getGameID());
-$template->assignByRef('Alliance', $alliance);
+$template->assign('Alliance', $alliance);
 
 $template->assign('PageTopic', $alliance->getAllianceName(false, true));
 require_once(get_file_loc('menu.inc'));
@@ -30,7 +30,7 @@ if ($showRoles) {
 	while ($db->nextRecord()) {
 		$roles[$db->getInt('role_id')] = $db->getField('role');
 	}
-	$template->assignByRef('Roles', $roles);
+	$template->assign('Roles', $roles);
 
 	$container=create_container('alliance_roles_save_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
@@ -65,7 +65,7 @@ $allowed = $db->nextRecord();
 $template->assign('CanChangeRoles', $allowed);
 
 $alliancePlayers =& SmrPlayer::getAlliancePlayers($player->getGameID(),$alliance->getAllianceID());
-$template->assignByRef('AlliancePlayers', $alliancePlayers);
+$template->assign('AlliancePlayers', $alliancePlayers);
 
 if ($alliance->getAllianceID() == $player->getAllianceID()) {
 	// Alliance members get to see active/inactive status of members

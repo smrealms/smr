@@ -28,7 +28,7 @@ $template->assign('OurRank', $ourRank);
 $totalPlayers = $player->getGame()->getTotalPlayers();
 
 $db->query('SELECT p.account_id, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $profitTypeEscaped . ' WHERE p.game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, player_name ASC LIMIT 10');
-$template->assignByRef('Rankings', Rankings::collectRankings($db, $player, 0));
+$template->assign('Rankings', Rankings::collectRankings($db, $player, 0));
 
 Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
 
@@ -36,5 +36,5 @@ $template->assign('FilterRankingsHREF', SmrSession::getNewHREF(create_container(
 
 $lowerLimit = $var['MinRank'] - 1;
 $db->query('SELECT p.account_id, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $profitTypeEscaped . ' WHERE p.game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, player_name ASC LIMIT ' . $lowerLimit . ', ' . ($var['MaxRank'] - $lowerLimit));
-$template->assignByRef('FilteredRankings', Rankings::collectRankings($db, $player, $lowerLimit));
+$template->assign('FilteredRankings', Rankings::collectRankings($db, $player, $lowerLimit));
 ?>

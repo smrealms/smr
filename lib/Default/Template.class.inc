@@ -19,15 +19,11 @@ class Template {
 	}
 	
 	public function assign($var, $value) {
-		$this->data[$var] =& $value;
+		$this->data[$var] = $value;
 	}
 	
 	public function unassign($var) {
 		unset($this->data[$var]);
-	}
-	
-	public function assignByRef($var, &$value) {
-		$this->data[$var] =& $value;
 	}
 	
 	public function display($templateName,$forAjax=false, $xmlResponse=false) {
@@ -122,14 +118,12 @@ class Template {
 		if($this->nestedIncludes > 15) {
 			throw new Exception('Nested more than 15 template includes, is something wrong?');
 		}
-		foreach($this->data as $key => &$value) {
-			$$key=&$value;
-			unset($value);
+		foreach ($this->data as $key => $value) {
+			$$key = $value;
 		}
 		if($assignVars!==null) {
-			foreach($assignVars as $key => &$value) {
-				$$key=&$value;
-				unset($value);
+			foreach ($assignVars as $key => $value) {
+				$$key = $value;
 			}
 		}
 		$this->nestedIncludes++;

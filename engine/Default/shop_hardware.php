@@ -15,7 +15,7 @@ if ($location->isHardwareSold()) {
 		$container['hardware_id'] = $hardwareTypeID;
 		$hardwareSold[$hardwareTypeID]['HREF'] = SmrSession::getNewHREF($container);
 	}
-	$template->assignByRef('HardwareSold', $hardwareSold);
+	$template->assign('HardwareSold', $hardwareSold);
 }
 
 ?>

@@ -80,7 +80,7 @@ if (!isset ($var['folder_id'])) {
 	$messageBox['DeleteHref'] = SmrSession::getNewHREF($container);
 	$messageBoxes[] = $messageBox;
 
-	$template->assignByRef('MessageBoxes', $messageBoxes);
+	$template->assign('MessageBoxes', $messageBoxes);
 
 	$container = create_container('skeleton.php','message_blacklist.php');
 	$container['folder_id'] = $message_type_id;
@@ -185,7 +185,7 @@ else {
 		$db->query('UPDATE message SET msg_read = \'TRUE\'
 					WHERE message_type_id = ' . $db->escapeNumber($var['folder_id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
 	}
-	$template->assignByRef('MessageBox', $messageBox);
+	$template->assign('MessageBox', $messageBox);
 }
 
 function displayScouts(&$db, &$messageBox, &$player, $read, $group) {

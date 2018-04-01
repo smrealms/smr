@@ -23,7 +23,7 @@ $template->assign('OurRank', $ourRank);
 $totalPlayers = $player->getGame()->getTotalPlayers();
 
 $db->query('SELECT account_id, deaths amount FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY deaths DESC, player_name LIMIT 10');
-$template->assignByRef('Rankings', Rankings::collectRankings($db, $player, 0));
+$template->assign('Rankings', Rankings::collectRankings($db, $player, 0));
 
 Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
 
@@ -31,5 +31,5 @@ $template->assign('FilterRankingsHREF', SmrSession::getNewHREF(create_container(
 
 $lowerLimit = $var['MinRank'] - 1;
 $db->query('SELECT account_id, deaths amount FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY deaths DESC, player_name LIMIT ' . $lowerLimit . ', ' . ($var['MaxRank'] - $lowerLimit));
-$template->assignByRef('FilteredRankings', Rankings::collectRankings($db, $player, $lowerLimit));
+$template->assign('FilteredRankings', Rankings::collectRankings($db, $player, $lowerLimit));
 ?>

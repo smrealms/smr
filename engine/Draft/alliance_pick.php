@@ -7,7 +7,7 @@ create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 // Get the current teams
 require_once('alliance_pick.inc');
 $teams = get_draft_teams($player->getGameID());
-$template->assignByRef('Teams', $teams);
+$template->assign('Teams', $teams);
 
 // Add information about current player
 $template->assign('PlayerID', $player->getPlayerID());
@@ -22,7 +22,7 @@ while($db->nextRecord()) {
 						'HREF' => SmrSession::getNewHREF(create_container('alliance_pick_processing.php','',array('PickedAccountID'=>$pickPlayer->getAccountID()))));
 }
 
-$template->assignByRef('PickPlayers', $players);
+$template->assign('PickPlayers', $players);
 
 // Get the draft history
 $history = array();
@@ -35,5 +35,5 @@ while ($db->nextRecord()) {
 	                   'Time'   => $db->getInt('time'));
 }
 
-$template->assignByRef('History', $history);
+$template->assign('History', $history);
 ?>

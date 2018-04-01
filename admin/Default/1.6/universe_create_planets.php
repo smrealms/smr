@@ -7,7 +7,7 @@ $db->query('SELECT * FROM planet_type');
 while ($db->nextRecord()) {
 	$allowedTypes[$db->getInt('planet_type_id')] = $db->getField('planet_type_name');
 }
-$template->assignByRef('AllowedTypes', $allowedTypes);
+$template->assign('AllowedTypes', $allowedTypes);
 
 // Initialize all planet counts to zero
 $numberOfPlanets = array();
@@ -24,8 +24,8 @@ foreach ($galSectors as &$galSector) {
 	}
 }
 
-$template->assignByRef('Galaxy', $galaxy);
-$template->assignByRef('NumberOfPlanets', $numberOfPlanets);
+$template->assign('Galaxy', $galaxy);
+$template->assign('NumberOfPlanets', $numberOfPlanets);
 
 $numberOfNpcPlanets = (isset($planet_info['NPC']) ? $planet_info['NPC'] : 0);
 $template->assign('NumberOfNpcPlanets', $numberOfNpcPlanets);

@@ -13,7 +13,7 @@ if (empty($gameID)) {
 	while ($db->nextRecord()) {
 		$activeGames[] = SmrGame::getGame($db->getInt('game_id'));
 	}
-	$template->assignByRef('ActiveGames', $activeGames);
+	$template->assign('ActiveGames', $activeGames);
 }
 else {
 	$container = create_container('admin_message_send_processing.php');
@@ -28,7 +28,7 @@ else {
 		while ($db->nextRecord()) {
 			$gamePlayers[]= array('AccountID' => $db->getField('account_id'), 'PlayerID' => $db->getField('player_id'), 'Name' => $db->getField('player_name'));
 		}
-		$template->assignByRef('GamePlayers',$gamePlayers);
+		$template->assign('GamePlayers',$gamePlayers);
 	}
 	if(isset($var['preview'])) {
 		$template->assign('Preview', $var['preview']);

@@ -1,7 +1,7 @@
 <?php
 require_once(get_file_loc('ChessGame.class.inc'));
 $chessGame =& ChessGame::getChessGame($var['ChessGameID']);
-$template->assignByRef('ChessGame',$chessGame);
+$template->assign('ChessGame',$chessGame);
 if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQUEST['toX']) && is_numeric($_REQUEST['toY'])) {
 	$x = $_REQUEST['x'];
 	$y = $_REQUEST['y'];

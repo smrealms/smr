@@ -1,4 +1,4 @@
 <?php
 $template->assign('PageTopic','Weapon Dealer');
-$template->assignByRef('ThisLocation', SmrLocation::getLocation($var['LocationID']));
+$template->assign('ThisLocation', SmrLocation::getLocation($var['LocationID']));
 ?>

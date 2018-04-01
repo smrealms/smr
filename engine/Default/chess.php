@@ -15,7 +15,7 @@ $db->query('SELECT player_id, player.player_name FROM player JOIN account USING(
 while ($db->nextRecord()) {
 	$players[$db->getInt('player_id')] = $db->getField('player_name');
 }
-$template->assignByRef('PlayerList',$players);
+$template->assign('PlayerList',$players);
 
 if(ENABLE_NPCS_CHESS) {
 	$npcs = array();
@@ -23,7 +23,7 @@ if(ENABLE_NPCS_CHESS) {
 	while ($db->nextRecord()) {
 		$npcs[$db->getInt('player_id')] = $db->getField('player_name');
 	}
-	$template->assignByRef('NPCList',$npcs);
+	$template->assign('NPCList',$npcs);
 }
 
 ?>
