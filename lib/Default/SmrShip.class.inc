@@ -25,9 +25,6 @@ class SmrShip extends AbstractSmrShip {
 	public static function saveShips() {
 		foreach(self::$CACHE_SHIPS as $gameShips) {
 			foreach($gameShips as $ship) {
-				$ship->updateHardware();
-				$ship->updateWeapon();
-				$ship->updateCargo();
 				$ship->update();
 			}
 		}
@@ -151,11 +148,11 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	function update() {
-		
-		// write ship infos
-		$this->db->query('UPDATE player SET ship_type_id = ' . $this->db->escapeNumber($this->getShipTypeID()) . '
-						WHERE ' . $this->SQL);
-		
+		$this->updateHardware();
+		$this->updateWeapon();
+		$this->updateCargo();
+		// note: SmrShip::setShipTypeID updates the SmrPlayer only
+		$this->getPlayer()->update();
 	}
 	
 	function checkPowerLevel($powerLevel) {
