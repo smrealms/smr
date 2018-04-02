@@ -241,14 +241,9 @@ while ($db->nextRecord()) {
 	if ($db->getField('link_left') > 0)
 		echo ('W');
 	echo (',');
-	$db2->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND sector_id_1 = '.$id);
+	$db2->query('SELECT warp FROM sector WHERE warp != 0 AND game_id = '.$game_id.' AND sector_id = '.$id);
 	if ($db2->nextRecord()) {
-		$warp = $db2->getField('sector_id_2');
-		echo ($warp);
-	}
-	$db2->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND sector_id_2 = '.$id);
-	if ($db2->nextRecord()) {
-		$warp = $db2->getField('sector_id_1');
+		$warp = $db2->getField('warp');
 		echo ($warp);
 	}
 	echo (',');

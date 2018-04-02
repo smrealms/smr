@@ -343,7 +343,6 @@ if ($action == 'Yes') {
 	$smr_db_sql[] = 'DELETE FROM ship_has_illusion WHERE game_id = '.$game_id;
 	$smr_db_sql[] = 'DELETE FROM ship_has_weapon WHERE game_id = '.$game_id;
 	$smr_db_sql[] = 'DELETE FROM ship_is_cloaked WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM warp WHERE game_id = '.$game_id;
 	$smr_db_sql[] = 'UPDATE game SET end_date='.TIME.' WHERE game_id = '.$game_id.' AND end_date > '.TIME; // Do not delete game placeholder, just make sure game is finished
 	$smr_db_sql[] = 'UPDATE active_session SET game_id = 0 WHERE game_id = '.$game_id;
 
