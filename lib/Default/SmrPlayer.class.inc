@@ -1682,11 +1682,15 @@ class SmrPlayer extends AbstractSmrPlayer {
 			case MSG_PLAYER:
 				$receiverAccount = SmrAccount::getAccount($receiverID);
 				if($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isLoggedIn()) {
-					$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
+					require_once(get_file_loc('message.functions.inc'));
+					$sender = getMessagePlayer($senderID, $gameID, $messageTypeID);
+					if ($sender instanceof SmrPlayer) {
+						$sender = $sender->getDisplayName();
+					}
 					$mail = setupMailer();
 					$mail->Subject = 'Message Notification';
 					$mail->setFrom('notifications@smrealms.de', 'SMR Notifications');
-					$bbifiedMessage = 'From: ' . $senderPlayer->getDisplayName() . ' Date: ' . date($receiverAccount->getShortDateFormat().' '.$receiverAccount->getShortTimeFormat(),TIME) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message,true);
+					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getShortDateFormat().' '.$receiverAccount->getShortTimeFormat(),TIME) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message,true);
 					$mail->msgHTML($bbifiedMessage);
 					$mail->AltBody = strip_tags($bbifiedMessage);
 					$mail->addAddress($receiverAccount->getEmail(), $receiverAccount->getHofName());
