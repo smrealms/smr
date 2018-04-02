@@ -446,14 +446,14 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$alliance = $this->getAlliance();
 		if($kickedBy != null) {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
-			$this->actionTaken('PlayerKicked', array('Alliance' => &$alliance, 'Player' => &$kickedBy));
-			$kickedBy->actionTaken('KickPlayer', array('Alliance' => &$alliance, 'Player' => &$this));
+			$this->actionTaken('PlayerKicked', array('Alliance' => $alliance, 'Player' => $kickedBy));
+			$kickedBy->actionTaken('KickPlayer', array('Alliance' => $alliance, 'Player' => $this));
 		}
 		else if($this->isAllianceLeader()) {
-			$this->actionTaken('DisbandAlliance', array('Alliance' => &$alliance));
+			$this->actionTaken('DisbandAlliance', array('Alliance' => $alliance));
 		}
 		else {
-			$this->actionTaken('LeaveAlliance', array('Alliance' => &$alliance));
+			$this->actionTaken('LeaveAlliance', array('Alliance' => $alliance));
 			if ($alliance->getLeaderID() != 0 && $alliance->getLeaderID() != ACCOUNT_ID_NHL) {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I left your alliance!', false);
 			}
@@ -474,7 +474,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		if (!$this->isAllianceLeader())
 			$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
 		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', 2,' . $this->db->escapeNumber($alliance->getAllianceID()) . ')');
-		$this->actionTaken('JoinAlliance', array('Alliance' => &$alliance));
+		$this->actionTaken('JoinAlliance', array('Alliance' => $alliance));
 	}
 
 	function getAllianceJoinable() {
@@ -1139,7 +1139,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			return 1;
 	}
 
-	public function &killPlayerByPlayer(AbstractSmrPlayer &$killer) {
+	public function &killPlayerByPlayer(AbstractSmrPlayer $killer) {
 		$return = array();
 		$msg = $this->getBBLink();
 
@@ -1303,7 +1303,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function &killPlayerByForces(SmrForce &$forces) {
+	public function &killPlayerByForces(SmrForce $forces) {
 		$return = array();
 		$owner = $forces->getOwner();
 		// send a message to the person who died
@@ -1350,7 +1350,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function &killPlayerByPort(SmrPort &$port) {
+	public function &killPlayerByPort(SmrPort $port) {
 		$return = array();
 		// send a message to the person who died
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by the defenses of '.$port->getDisplayName());
@@ -1382,7 +1382,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function &killPlayerByPlanet(SmrPlanet &$planet) {
+	public function &killPlayerByPlanet(SmrPlanet $planet) {
 		$return = array();
 		// send a message to the person who died
 		$planetOwner = $planet->getOwner();
@@ -1596,7 +1596,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	public function isPresident() {
 		$president = Council::getPresident($this->getGameID(),$this->getRaceID());
-		return is_object($president)&&$this->equals($president);
+		return is_object($president) && $this->equals($president);
 	}
 
 	public function isOnCouncil() {
@@ -1872,7 +1872,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $this->getPlottedCourse()!==false;
 	}
 
-	public function isPartOfCourse(&$sectorOrSectorID) {
+	public function isPartOfCourse($sectorOrSectorID) {
 		if(!$this->hasPlottedCourse())
 			return false;
 		if($sectorOrSectorID instanceof SmrSector )

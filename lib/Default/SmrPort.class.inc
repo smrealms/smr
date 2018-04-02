@@ -221,7 +221,7 @@ class SmrPort {
 		}
 	}
 
-	private function getVisibleGoods($transaction, AbstractSmrPlayer &$player=null) {
+	private function getVisibleGoods($transaction, AbstractSmrPlayer $player=null) {
 		$goodIDs = $this->goodIDs[$transaction];
 		if ($player == null) {
 			return $goodIDs;
@@ -237,14 +237,14 @@ class SmrPort {
 	/**
 	 * Get IDs of goods that can be sold by $player to the port
 	 */
-	public function getVisibleGoodsSold(AbstractSmrPlayer &$player=null) {
+	public function getVisibleGoodsSold(AbstractSmrPlayer $player=null) {
 		return $this->getVisibleGoods('Sell', $player);
 	}
 
 	/**
 	 * Get IDs of goods that can be bought by $player from the port
 	 */
-	public function getVisibleGoodsBought(AbstractSmrPlayer &$player=null) {
+	public function getVisibleGoodsBought(AbstractSmrPlayer $player=null) {
 		return $this->getVisibleGoods('Buy', $player);
 	}
 	
@@ -332,7 +332,7 @@ class SmrPort {
 		return $this->goodAmounts[$goodID];
 	}
 	
-	public function decreaseGood(array &$good,$amount,$doRefresh) {
+	public function decreaseGood(array $good,$amount,$doRefresh) {
 		$this->setGoodAmount($good['ID'],$this->getGoodAmount($good['ID']) - $amount);
 		if($doRefresh===true) {
 			//get id of goods to replenish
@@ -363,7 +363,7 @@ class SmrPort {
 		}
 	}
 
-	protected function tradeGoods(array &$good, $goodsTraded, $exp) {
+	protected function tradeGoods(array $good, $goodsTraded, $exp) {
 		$goodsTradedMoney = $goodsTraded * self::GOODS_TRADED_MONEY_MULTIPLIER;
 		$this->increaseUpgrade($goodsTradedMoney);
 		$this->increaseCredits($goodsTradedMoney);
@@ -371,13 +371,13 @@ class SmrPort {
 		$this->decreaseGood($good,$goodsTraded,true);
 	}
 	
-	public function buyGoods(array &$good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
+	public function buyGoods(array $good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 		$this->increaseUpgrade(min(max($idealPrice, $goodsTraded * 1000), $bargainPrice));
 		$this->increaseCredits($bargainPrice);
 	}
 	
-	public function sellGoods(array &$good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
+	public function sellGoods(array $good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 	}
 	
@@ -853,7 +853,7 @@ class SmrPort {
 	}
 	
 	public function isDestroyed() {
-		return ($this->getArmour()<1&&$this->isUnderAttack());
+		return ($this->getArmour()<1 && $this->isUnderAttack());
 	}
 	
 	public function exists() {
@@ -1117,12 +1117,12 @@ class SmrPort {
 	}
 	
 	
-	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer) {
+	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
 		return $this->shootPlayers(array($targetPlayer));
 	}
 	
-	public function &shootPlayers(array &$targetPlayers) {
-		$results = array('Port' => &$this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
+	public function &shootPlayers(array $targetPlayers) {
+		$results = array('Port' => $this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
 		foreach($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
@@ -1226,7 +1226,7 @@ class SmrPort {
 		}
 	}
 
-	protected function payout(AbstractSmrPlayer &$killer, $credits, $payoutType) {
+	protected function payout(AbstractSmrPlayer $killer, $credits, $payoutType) {
 		if($this->getCredits() == 0) {
 			return false;
 		}
@@ -1240,7 +1240,7 @@ class SmrPort {
 		return true;
 	}
 
-	public function razePort(AbstractSmrPlayer &$killer) {
+	public function razePort(AbstractSmrPlayer $killer) {
 		$credits = floor($this->getCredits() * self::RAZE_MONEY_PERCENT / 100);
 		if($this->payout($killer, $credits, 'Razed')) {
 			$this->doDowngrade();
@@ -1248,13 +1248,13 @@ class SmrPort {
 		return $credits;
 	}
 
-	public function lootPort(AbstractSmrPlayer &$killer) {
+	public function lootPort(AbstractSmrPlayer $killer) {
 		$credits = $this->getCredits();
 		$this->payout($killer, $credits, 'Looted');
 		return $credits;
 	}
 	
-	public function &killPortByPlayer(AbstractSmrPlayer &$killer) {
+	public function &killPortByPlayer(AbstractSmrPlayer $killer) {
 		$return = array();
 
 		// Port is destroyed, so empty the port of all trade goods
@@ -1283,7 +1283,7 @@ class SmrPort {
 		return $return;
 	}
 
-	public function hasX(/*Object*/ &$x) {
+	public function hasX(/*Object*/ $x) {
 		if (is_array($x) && $x['Type']=='Good') { // instanceof Good) - No Good class yet, so array is the best we can do
 			if(isset($x['ID']))
 				return $this->hasGood($x['ID'],isset($x['TransactionType'])?$x['TransactionType']:false);

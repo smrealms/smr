@@ -4,7 +4,7 @@ require_once('AbstractSmrShip.class.inc');
 class DummyShip extends AbstractSmrShip {
 	protected static $CACHED_DUMMY_SHIPS;
 	
-	public function __construct(AbstractSmrPlayer &$player) {
+	public function __construct(AbstractSmrPlayer $player) {
 		parent::__construct($player);
 		
 		$this->weapons = array();
@@ -24,8 +24,8 @@ class DummyShip extends AbstractSmrShip {
 		}
 	}
 	
-	public function regenerate(AbstractSmrPlayer &$player) {
-		$this->player =& $player;
+	public function regenerate(AbstractSmrPlayer $player) {
+		$this->player = $player;
 		$this->regenerateBaseShip();
 		$this->doFullUNO();
 //		for($i=0;$i<$this->getHardpoints();++$i) {
@@ -63,7 +63,7 @@ class DummyShip extends AbstractSmrShip {
 		unserialize($cache);
 	}
 	
-	public static function &getCachedDummyShip(AbstractSmrPlayer &$player) {
+	public static function &getCachedDummyShip(AbstractSmrPlayer $player) {
 		if(!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT info FROM cached_dummys

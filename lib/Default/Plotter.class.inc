@@ -85,10 +85,10 @@ class Plotter {
 	 * The resulting path prefers neighbors in their order in SmrSector->links,
 	 * (i.e. up, down, left, right).
 	 */
-	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, AbstractSmrPlayer $player=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000) {
+	public static function &findDistanceToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, AbstractSmrPlayer $player=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000) {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE-1;
 
-		$checkSector =& $sector;
+		$checkSector = $sector;
 		$gameID = $sector->getGameID();
 		$distances = array();
 		$sectorsTravelled = 0;
@@ -133,7 +133,7 @@ class Plotter {
 				$visitedSectors[$checkSectorID] = true; // This is here for warps, because they are delayed visits if we set this before the actual visit we'll get sectors marked as visited long before they are actually visited - causes problems when it's quicker to walk to the warp exit than to warp there.
 																// We still need to mark walked sectors as visited before we go to each one otherwise we get a huge number of paths being checked twice (up then left, left then up are essentially the same but if we set up-left as visited only when we actually check it then it gets queued up twice - nasty)
 				if ($checkSectorID >= $lowLimit && $checkSectorID <= $highLimit) {
-					$checkSector =& SmrSector::getSector($gameID,$checkSectorID);
+					$checkSector = SmrSector::getSector($gameID,$checkSectorID);
 					if($x=='Distance') {
 						$distances[$sectorsTravelled][$checkSector->getSectorID()] = $distance;
 					}
@@ -170,21 +170,21 @@ class Plotter {
 		return $distances;
 	}
 	
-	public static function &calculatePortToPortDistances(array &$sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function &calculatePortToPortDistances(array $sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		$distances = array();
-		foreach($sectors as &$sec) {
+		foreach($sectors as $sec) {
 			if ($sec !== null) {
 				if ($sec->getSectorID() >= $lowLimit && $sec->getSectorID() <= $highLimit) {
 					if ($sec->hasPort()===true) {
-						$distances[$sec->getSectorID()] =& self::findDistanceToOtherPorts($sec, $distanceLimit, $lowLimit, $highLimit);
+						$distances[$sec->getSectorID()] = self::findDistanceToOtherPorts($sec, $distanceLimit, $lowLimit, $highLimit);
 					}
 				}
 			}
-		} unset($sec);
+		}
 		return $distances;
 	}
 
-	public static function &findDistanceToOtherPorts(SmrSector &$sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function &findDistanceToOtherPorts(SmrSector $sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		return self::findDistanceToX('Port', $sector, false, null, null, $distanceLimit, $lowLimit, $highLimit, $distanceLimit);
 	}
 }
@@ -253,7 +253,7 @@ class Distance {
 		return $this->path[0];
 	}
 
-	public function compareTo(Distance &$d) {
+	public function compareTo(Distance $d) {
 		if ($this->equals($d)===true)
 			return 0;
 		else if ($d->getTurns() > $this->getTurns())

@@ -878,7 +878,7 @@ class SmrPlanet {
 		return count($this->getCurrentlyBuilding()) > 0;
 	}
 
-	function canBuild(AbstractSmrPlayer &$constructor, $constructionID) {
+	function canBuild(AbstractSmrPlayer $constructor, $constructionID) {
 		if($this->hasCurrentlyBuilding()) {
 			return 'There is already a building in progress!';
 		}
@@ -919,7 +919,7 @@ class SmrPlanet {
 		return $constructionTime;
 	}
 	
-	function startBuilding(AbstractSmrPlayer &$constructor, $constructionID) {
+	function startBuilding(AbstractSmrPlayer $constructor, $constructionID) {
 		if(($message = $this->canBuild($constructor, $constructionID)) !== true) {
 			throw new Exception('Unable to start building: '.$message);
 		}
@@ -1063,17 +1063,17 @@ class SmrPlanet {
 		return count($this->getPlayers()) > 0;
 	}
 
-	public function &getOtherTraders(AbstractSmrPlayer &$player) {
+	public function &getOtherTraders(AbstractSmrPlayer $player) {
 		$players = SmrPlayer::getPlanetPlayers($this->getGameID(),$this->getSectorID()); //Do not use & because we unset something and only want that in what we return
 		unset($players[$player->getAccountID()]);
 		return $players;
 	}
 
-	public function hasOtherTraders(AbstractSmrPlayer &$player) {
+	public function hasOtherTraders(AbstractSmrPlayer $player) {
 		return count($this->getOtherTraders($player)) > 0;
 	}
 
-	public function hasEnemyTraders(AbstractSmrPlayer &$player) {
+	public function hasEnemyTraders(AbstractSmrPlayer $player) {
 		if(!$this->hasOtherTraders($player))
 			return false;
 		$otherPlayers = $this->getOtherTraders($player);
@@ -1084,7 +1084,7 @@ class SmrPlanet {
 		return false;
 	}
 
-	public function hasFriendlyTraders(AbstractSmrPlayer &$player) {
+	public function hasFriendlyTraders(AbstractSmrPlayer $player) {
 		if(!$this->hasOtherTraders($player))
 			return false;
 		$otherPlayers = $this->getOtherTraders($player);
@@ -1107,12 +1107,12 @@ class SmrPlanet {
 		return count($this->getWeapons())>0;
 	}
 
-	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer) {
+	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
 		return $this->shootPlayers(array($targetPlayer));
 	}
 
-	public function &shootPlayers(array &$targetPlayers) {
-		$results = array('Planet' => &$this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
+	public function &shootPlayers(array $targetPlayers) {
+		$results = array('Planet' => $this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
 		foreach($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 		}
@@ -1271,7 +1271,7 @@ class SmrPlanet {
 		$this->db->query('DELETE FROM player_attacks_planet WHERE ' . $this->SQL);
 	}
 
-	public function &killPlanetByPlayer(AbstractSmrPlayer &$killer) {
+	public function &killPlanetByPlayer(AbstractSmrPlayer $killer) {
 		$return = array();
 		$this->creditCurrentAttackersForKill();
 
