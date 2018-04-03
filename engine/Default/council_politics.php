@@ -31,8 +31,8 @@ foreach ($RACES as $otherRaceID => $raceInfo) {
 	}
 }
 
-$template->assignByRef('PeaceRaces', $peaceRaces);
-$template->assignByRef('NeutralRaces', $neutralRaces);
-$template->assignByRef('WarRaces', $warRaces);
+$template->assign('PeaceRaces', $peaceRaces);
+$template->assign('NeutralRaces', $neutralRaces);
+$template->assign('WarRaces', $warRaces);
 
 ?>

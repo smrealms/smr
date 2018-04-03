@@ -11,11 +11,11 @@ $template->assign('NotifyReplyFormHref',SmrSession::getNewHREF($container));
 $offender =& getMessagePlayer($var['offender'],$var['game_id']);
 $offended =& getMessagePlayer($var['offended'],$var['game_id']);
 if(is_object($offender))
-	$template->assignByRef('OffenderAccount', SmrAccount::getAccount($var['offender']));
+	$template->assign('OffenderAccount', SmrAccount::getAccount($var['offender']));
 if(is_object($offended))
-	$template->assignByRef('OffendedAccount', SmrAccount::getAccount($var['offended']));
-$template->assignByRef('Offender', $offender);
-$template->assignByRef('Offended', $offended);
+	$template->assign('OffendedAccount', SmrAccount::getAccount($var['offended']));
+$template->assign('Offender', $offender);
+$template->assign('Offended', $offended);
 
 if(isset($var['PreviewOffender']))
 	$template->assign('PreviewOffender', $var['PreviewOffender']);

@@ -114,7 +114,7 @@ if ($db->getNumRows() > 0) {
 		$threads[$j]['ViewHref'] = SmrSession::getNewHREF($container);
 	}
 }
-$template->assignByRef('Threads',$threads);
+$template->assign('Threads',$threads);
 
 if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$container = create_container('alliance_message_add_processing.php');

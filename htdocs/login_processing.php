@@ -57,7 +57,7 @@ try {
 				else {
 					session_start(); //Pass the data in a standard session as we don't want to initialise a normal one.
 					$_SESSION['socialLogin'] =& $socialLogin;
-					$template->assignByRef('SocialLogin',$socialLogin);
+					$template->assign('SocialLogin',$socialLogin);
 					$template->display('socialRegister.inc');
 					exit;
 				}

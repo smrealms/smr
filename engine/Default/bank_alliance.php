@@ -36,7 +36,7 @@ if($db->getNumRows() > 0) {
 		}
 	}
 }
-$template->assignByRef('AlliedAllianceBanks', $alliedAllianceBanks);
+$template->assign('AlliedAllianceBanks', $alliedAllianceBanks);
 
 $db->query('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
 			WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
@@ -137,7 +137,7 @@ if ($db->getNumRows() > 0) {
 			'Exempt' => $db->getInt('exempt') == 1
 		);
 	}
-	$template->assignByRef('BankTransactions', $bankTransactions);
+	$template->assign('BankTransactions', $bankTransactions);
 
 	$template->assign('MinValue', $minValue);
 	$template->assign('MaxValue', $maxValue);
@@ -150,7 +150,7 @@ if ($db->getNumRows() > 0) {
 	$container['maxVal'] = $maxValue;
 	$template->assign('ExemptTransactionsFormHREF',SmrSession::getNewHREF($container));
 
-	$template->assignByRef('Alliance', $alliance);
+	$template->assign('Alliance', $alliance);
 }
 
 $container=create_container('skeleton.php', 'bank_report.php');

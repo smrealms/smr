@@ -7,7 +7,7 @@ if($player->isLandedOnPlanet()) {
 
 $sector =& $player->getSector();
 
-$template->assignByRef('ThisSector',$sector);
+$template->assign('ThisSector',$sector);
 $template->assign('SpaceView',true);
 
 $template->assign('PageTopic','Current Sector: ' . $player->getSectorID() . ' (' .$sector->getGalaxyName() . ')');
@@ -46,7 +46,7 @@ foreach($links as $key => $linkArray) {
 	}
 }
 
-$template->assignByRef('Sectors',$links);
+$template->assign('Sectors',$links);
 
 doTickerAssigns($template, $player, $db);
 
@@ -169,7 +169,7 @@ function checkForAttackMessage(&$msg) {
 				if($player->getSectorID()==$db->getField('sector_id')) {
 					$results = unserialize(gzuncompress($db->getField('result')));
 					$template->assign('AttackResultsType',$db->getField('type'));
-					$template->assignByRef('AttackResults',$results);
+					$template->assign('AttackResults',$results);
 				}
 			}
 		}

@@ -641,11 +641,11 @@ function do_voodoo() {
 
 	$template->assign('TemplateBody',$var['body']);
 	if (SmrSession::$game_id > 0) {
-		$template->assignByRef('ThisSector',$sector);
-		$template->assignByRef('ThisPlayer',$player);
-		$template->assignByRef('ThisShip',$ship);
+		$template->assign('ThisSector',$sector);
+		$template->assign('ThisPlayer',$player);
+		$template->assign('ThisShip',$ship);
 	}
-	$template->assignByRef('ThisAccount',$account);
+	$template->assign('ThisAccount',$account);
 	if($account->getCssLink()!=null) {
 		$template->assign('ExtraCSSLink',$account->getCssLink());
 	}

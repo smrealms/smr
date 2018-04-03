@@ -19,8 +19,8 @@ $role_id = $player->getAllianceRole($alliance->getAllianceID());
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 $db->nextRecord();
 
-$template->assignByRef('Form', $form);
-$template->assignByRef('Alliance', $alliance);
+$template->assign('Form', $form);
+$template->assign('Alliance', $alliance);
 
 $template->assign('CanChangeDescription', $db->getBoolean('change_mod') || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION));
 $template->assign('CanChangePassword', $db->getBoolean('change_pass'));

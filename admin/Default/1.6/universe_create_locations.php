@@ -17,10 +17,10 @@ foreach ($galSectors as &$sector) {
 		$totalLocs[$sectorLocation->getTypeID()]++;
 	} unset($sectorLocation);
 } unset($sector);
-$template->assignByRef('TotalLocs', $totalLocs);
+$template->assign('TotalLocs', $totalLocs);
 
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
-$template->assignByRef('Galaxy', $galaxy);
+$template->assign('Galaxy', $galaxy);
 
 // Though we expect a location to be only in one category, it is possible to
 // edit a location in the Admin Tools so that it is in two or more categories.
@@ -87,8 +87,8 @@ foreach ($locations as &$location) {
 
 	$locText[$location->getTypeID()] = $location->getName() . $extra;
 } unset($location);
-$template->assignByRef('LocText', $locText);
-$template->assignByRef('LocTypes', $categories->locTypes);
+$template->assign('LocText', $locText);
+$template->assign('LocTypes', $categories->locTypes);
 
 // Form to make location changes
 $container = create_container('1.6/universe_create_save_processing.php',

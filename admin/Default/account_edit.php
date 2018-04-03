@@ -49,7 +49,7 @@ $db->query('SELECT account_id FROM account WHERE account_id = '.$db->escapeNumbe
 									   'validation_code LIKE ' . $db->escape_string($var['val_code']));
 if ($db->nextRecord()) {
 	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
-	$template->assignByRef('EditingAccount', $curr_account);
+	$template->assign('EditingAccount', $curr_account);
 	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('account_edit_processing.php', '', array('account_id' => $curr_account->getAccountID()))));
 }
 else {
@@ -64,7 +64,7 @@ if ($curr_account===false) {
 	while ($db->nextRecord()) {
 		$games[] = SmrGame::getGame($db->getInt('game_id'));
 	}
-	$template->assignByRef('Games', $games);
+	$template->assign('Games', $games);
 }
 else {
 	$editingPlayers = array();

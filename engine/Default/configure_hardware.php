@@ -23,7 +23,7 @@ if ($ship->hasIllusion()) {
 	while ($db->nextRecord()) {
 		$ships[$db->getField('ship_type_id')] = $db->getField('ship_name');
 	}
-	$template->assignByRef('IllusionShips',$ships);
+	$template->assign('IllusionShips',$ships);
 	$container['action'] = 'Disable Illusion';
 	$template->assign('DisableIllusionHref',SmrSession::getNewHREF($container));
 }

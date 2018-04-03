@@ -84,7 +84,7 @@ if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) 
 	$container['thread_index'] = $thread_index;
 	$thread['CreateThreadReplyFormHref'] = SmrSession::getNewHREF($container);
 }
-$template->assignByRef('Thread',$thread);
+$template->assign('Thread',$thread);
 if(isset($var['preview'])) {
 	$template->assign('Preview', $var['preview']);
 }

@@ -1,8 +1,8 @@
 <?php
 $results = unserialize($var['results']);
-$template->assignByRef('TraderCombatResults',$results);
+$template->assign('TraderCombatResults',$results);
 if($var['target'])
-	$template->assignByRef('Target',SmrPlayer::getPlayer($var['target'],$player->getGameID()));
+	$template->assign('Target',SmrPlayer::getPlayer($var['target'],$player->getGameID()));
 if(isset($var['override_death']))
 	$template->assign('OverrideDeath',true);
 else

@@ -22,6 +22,6 @@ while ($db->nextRecord()) {
 	$messageBox['BuyHref'] = SmrSession::getNewHREF($container);
 	$messageBoxes[] = $messageBox;
 }
-$template->assignByRef('MessageBoxes', $messageBoxes);
+$template->assign('MessageBoxes', $messageBoxes);
 
 ?>

@@ -27,10 +27,10 @@ for ($i=0;$i<$galaxy->getHeight();$i++) {
 }
 
 
-$template->assignByRef('Galaxy', $galaxy);
-$template->assignByRef('Galaxies', $galaxies);
-$template->assignByRef('MapSectors',$mapSectors);
-$template->assignByRef('Message',$var['message']);
+$template->assign('Galaxy', $galaxy);
+$template->assign('Galaxies', $galaxies);
+$template->assign('MapSectors',$mapSectors);
+$template->assign('Message',$var['message']);
 SmrSession::updateVar('message',null); // Only show message once
 
 if (isset($_REQUEST['connect']) && $_REQUEST['connect'] > 0) {

@@ -28,7 +28,7 @@ if(isset($_POST['attackers']))
 
 for(;$i<=10;++$i)
 	$attackers[$i] = null;
-$template->assignByRef('Attackers',$attackers);
+$template->assign('Attackers',$attackers);
 
 $i=1;
 $realDefenders = array();
@@ -50,7 +50,7 @@ if(isset($_POST['defenders']))
 	
 for(;$i<=10;++$i)
 	$defenders[$i] = null;
-$template->assignByRef('Defenders',$defenders);
+$template->assign('Defenders',$defenders);
 
 $template->assign('Duplicates',$duplicates);
 
@@ -89,6 +89,6 @@ function runAnAttack($realAttackers,$realDefenders) {
 		$results['Defenders']['Traders'][]  =& $playerResults;
 		$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
 	} unset($teamPlayer);
-	$template->assignByRef('TraderCombatResults',$results);
+	$template->assign('TraderCombatResults',$results);
 }
 ?>

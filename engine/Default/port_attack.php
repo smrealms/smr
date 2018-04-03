@@ -2,7 +2,7 @@
 require_once(get_file_loc('SmrPort.class.inc'));
 if(isset($var['results'])) {
 	$results = unserialize($var['results']);
-	$template->assignByRef('FullPortCombatResults',$results);
+	$template->assign('FullPortCombatResults',$results);
 	$template->assign('AlreadyDestroyed',false);
 }
 else
@@ -13,5 +13,5 @@ if(isset($var['override_death']))
 	$template->assign('OverrideDeath',true);
 else
 	$template->assign('OverrideDeath',false);
-$template->assignByRef('Port',$sector->getPort());
+$template->assign('Port',$sector->getPort());
 ?>

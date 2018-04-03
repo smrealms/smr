@@ -24,5 +24,5 @@ if ($canEditStartedGames) {
 while ($db->nextRecord()) {
 	$games[] = SmrGame::getGame($db->getInt('game_id'));
 }
-$template->assignByRef('EditGames',$games);
+$template->assign('EditGames',$games);
 ?>

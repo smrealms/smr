@@ -10,7 +10,7 @@ transfer('receiver');
 $template->assign('MessageSendFormHref',SmrSession::getNewHREF($container));
 
 if (!empty($var['receiver']))
-	$template->assignByRef('Receiver', SmrPlayer::getPlayer($var['receiver'], $player->getGameID()));
+	$template->assign('Receiver', SmrPlayer::getPlayer($var['receiver'], $player->getGameID()));
 else
 	$template->assign('Receiver', 'All Online');
 if(isset($var['preview']))

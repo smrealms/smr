@@ -48,7 +48,7 @@ while ($db->nextRecord()) {
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$allianceRoles[$roleID]['HREF'] = SmrSession::getNewHREF($container);
 }
-$template->assignByRef('AllianceRoles',$allianceRoles);
+$template->assign('AllianceRoles',$allianceRoles);
 $container = create_container('alliance_roles_processing.php');
 $container['alliance_id'] = $alliance->getAllianceID();
 

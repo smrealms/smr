@@ -86,6 +86,6 @@ for ($i=0;$i<$span&&$i<$galaxy->getHeight();$i++) {
 		$mapSectors[$i][$j] =& $thisSec;
 	}
 }
-$template->assignByRef('MapSectors',$mapSectors);
+$template->assign('MapSectors',$mapSectors);
 
 ?>

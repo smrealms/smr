@@ -33,7 +33,7 @@ if($db->nextRecord()) {
 	$template->assign('CombatLogTimestamp',date(DATE_FULL_SHORT,$db->getField('timestamp')));
 	$results = unserialize(gzuncompress($db->getField('result')));
 	$template->assign('CombatResultsType',$db->getField('type'));
-	$template->assignByRef('CombatResults',$results);
+	$template->assign('CombatResults',$results);
 }
 else {
 	create_error('Combat log not found');

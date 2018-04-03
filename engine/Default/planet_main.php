@@ -17,7 +17,7 @@ if (isset($var['msg'])) {
 	$template->assign('Msg', bbifyMessage($var['msg']));
 }
 
-$template->assignByRef('ThisPlanet',$planet);
+$template->assign('ThisPlanet',$planet);
 
 doTickerAssigns($template, $player, $db);
 

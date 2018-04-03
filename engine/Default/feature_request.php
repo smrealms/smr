@@ -34,7 +34,7 @@ foreach ($requestCategories as $category => $description) {
 		'Description' => $description
 	);
 }
-$template->assignByRef('CategoryTable', $categoryTable);
+$template->assign('CategoryTable', $categoryTable);
 
 // Can the players vote for features on the current page?
 $canVote = $thisStatus == 'Opened';
@@ -91,7 +91,7 @@ if ($db->getNumRows() > 0) {
 		$commentsContainer['RequestID'] = $featureRequestID;
 		$featureRequests[$featureRequestID]['CommentsHREF'] = SmrSession::getNewHREF($commentsContainer);
 	}
-	$template->assignByRef('FeatureRequests',$featureRequests);
+	$template->assign('FeatureRequests',$featureRequests);
 }
 
 $template->assign('FeatureRequestFormHREF',SmrSession::getNewHREF(create_container('feature_request_processing.php', '')));

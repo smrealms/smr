@@ -35,7 +35,7 @@ if ($db->getNumRows() > 0) {
 		if($featureModerator || !$db->getBoolean('anonymous'))
 			$featureRequestComments[$commentID]['PosterAccount'] =& SmrAccount::getAccount($db->getField('poster_id'));
 	}
-	$template->assignByRef('Comments', $featureRequestComments);
+	$template->assign('Comments', $featureRequestComments);
 }
 
 $container = $var;

@@ -136,13 +136,13 @@ try {
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 	$template->assign('FontSize', $account->getFontSize() - 20);
-	$template->assignByRef('ThisGalaxy',$galaxy);
-	$template->assignByRef('ThisAccount',$account);
-	$template->assignByRef('GameGalaxies',SmrGalaxy::getGameGalaxies($player->getGameID()));
-	$template->assignByRef('ThisSector',$player->getSector());
-	$template->assignByRef('MapSectors',$mapSectors);
-	$template->assignByRef('ThisShip',$player->getShip());
-	$template->assignByRef('ThisPlayer',$player);
+	$template->assign('ThisGalaxy',$galaxy);
+	$template->assign('ThisAccount',$account);
+	$template->assign('GameGalaxies',SmrGalaxy::getGameGalaxies($player->getGameID()));
+	$template->assign('ThisSector',$player->getSector());
+	$template->assign('MapSectors',$mapSectors);
+	$template->assign('ThisShip',$player->getShip());
+	$template->assign('ThisPlayer',$player);
 
 	// AJAX updates are not set up for the galaxy map at this time
 	$template->assign('AJAX_ENABLE_REFRESH', false);

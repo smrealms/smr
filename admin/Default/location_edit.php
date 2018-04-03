@@ -31,9 +31,9 @@ if(isset($var['location_type_id'])) {
 	}
 	
 	
-	$template->assignByRef('Location',$location);
-	$template->assignByRef('Ships',AbstractSmrShip::getAllBaseShips($var['game_type_id']));
-	$template->assignByRef('Weapons',SmrWeapon::getAllWeapons($var['game_type_id']));
+	$template->assign('Location',$location);
+	$template->assign('Ships',AbstractSmrShip::getAllBaseShips($var['game_type_id']));
+	$template->assign('Weapons',SmrWeapon::getAllWeapons($var['game_type_id']));
 	
 	
 	$db->query('SELECT * FROM hardware_type');
@@ -42,9 +42,9 @@ if(isset($var['location_type_id'])) {
 		$hardware[$db->getField('hardware_type_id')] = array('ID' => $db->getField('hardware_type_id'),
 														'Name' => $db->getField('hardware_name'));
 	}
-	$template->assignByRef('AllHardware',$hardware);
+	$template->assign('AllHardware',$hardware);
 }
 else {
-	$template->assignByRef('Locations',SmrLocation::getAllLocations());
+	$template->assign('Locations',SmrLocation::getAllLocations());
 }
 ?>

@@ -2,7 +2,7 @@
 
 $game = SmrGame::getGame($var['game_id']);
 
-$template->assignByRef('Game',$game);
+$template->assign('Game',$game);
 
 // do we need credits for this game?
 if ($game->getCreditsNeeded() > 0) {

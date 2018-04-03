@@ -28,10 +28,10 @@ if ($db->getNumRows()) {
 	$db->query('SELECT log_type_id FROM log_type');
 	while ($db->nextRecord())
 		$logTypes[] = $db->getInt('log_type_id');
-	$template->assignByRef('LogTypes', $logTypes);
+	$template->assign('LogTypes', $logTypes);
 
 	$template->assign('LogConsoleFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_console_detail.php')));
 	$template->assign('AnonAccessHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_anonymous_account.php')));
 }
-$template->assignByRef('LoggedAccounts',$loggedAccounts);
+$template->assign('LoggedAccounts',$loggedAccounts);
 ?>

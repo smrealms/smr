@@ -23,5 +23,5 @@ $transferAccounts = array();
 		$transferAccounts[$db->getField('account_id')] = $db->getField('hof_name');
 	}
 //}
-$template->assignByRef('TransferAccounts',$transferAccounts);
+$template->assign('TransferAccounts',$transferAccounts);
 ?>
