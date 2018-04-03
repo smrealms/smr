@@ -187,7 +187,7 @@ function bbifyMessage($message, $noLinks=false) {
 	return $message;
 }
 
-function enableProtectionDependantRefresh(&$template,&$player) {
+function enableProtectionDependantRefresh($template, $player) {
 	$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
 	if ($player->hasNewbieTurns()||$player->isLandedOnPlanet()||$player->hasFederalProtection())
 		$ajaxRefresh=AJAX_DEFAULT_REFRESH_TIME;
@@ -649,7 +649,7 @@ function do_voodoo() {
 	if($account->getCssLink()!=null) {
 		$template->assign('ExtraCSSLink',$account->getCssLink());
 	}
-	doSkeletionAssigns($template,$player,$ship,$sector,$db,$account);
+	doSkeletonAssigns($template,$player,$ship,$sector,$db,$account);
 
 	if(isset($var['DisableAjax']) && $var['DisableAjax']===true) {
 		$template->assign('AJAX_ENABLE_REFRESH',false);
@@ -716,7 +716,7 @@ function release_lock() {
 	$lock = false;
 }
 
-function doTickerAssigns(&$template,&$player,&$db) {
+function doTickerAssigns($template, $player, $db) {
 	//any ticker news?
 	if($player->hasTickers()) {
 		$ticker = array();
@@ -749,7 +749,7 @@ function doTickerAssigns(&$template,&$player,&$db) {
 	}
 }
 
-function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) {
+function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account) {
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 
