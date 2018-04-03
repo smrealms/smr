@@ -25,9 +25,17 @@ function shared_channel_msg_op_info($player) {
 			$msg = $player->getPlayerName() . ' has not signed up for this one.';
 		}
 
-		// get turn count at op time
-		$opTurns = $player->getTurns() + $player->getTurnsGained($opTime, true);
-		if ($opTurns > $player->getMaxTurns()) {
+		// note: `getTurns` only gives turns at last access time
+		$turnsAtLastAccess = $player->getTurns();
+		$turnsGainedUntilNow = $player->getTurnsGained(time(), true);
+		$turnsGainedUntilOp = $player->getTurnsGained($opTime, true);
+		$turnsGainedFromNowToOp = $turnsGainedUntilOp - $turnsGainedUntilNow;
+
+		// We may already have already reached the turn cap
+		$currentTurns = min($player->getMaxTurns(), $turnsAtLastAccess + $turnsGainedUntilNow);
+		$opTurns = $currentTurns + $turnsGainedFromNowToOp;
+
+		if ($opTurns >= $player->getMaxTurns()) {
 			$msg .= ' They will have max turns by then. If they do not move they\'ll waste ' . ($opTurns - $player->getMaxTurns()) . ' turns.';
 		} else {
 			$msg .= ' They will have ' . $opTurns . ' turns by then.';
