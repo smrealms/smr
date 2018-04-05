@@ -9,7 +9,10 @@ function server_ping($fp, $rdata)
 
 		$server = $msg[1];
 
-		echo_r('[PING] from ' . $server);
+		// This message is very spammy
+		if (defined('IRC_BOT_VERBOSE_PING') && IRC_BOT_VERBOSE_PING) {
+			echo_r('[PING] from ' . $server);
+		}
 
 		fputs($fp, 'PONG ' . $server . EOL);
 		return true;
