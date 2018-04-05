@@ -5,10 +5,15 @@ WORKDIR /smr/
 # See https://github.com/hollandben/grunt-cache-bust/issues/236
 RUN npm i --save grunt grunt-contrib-uglify grunt-contrib-cssmin grunt-cache-bust@1.4.1
 
-# Copy the SMR source code
-COPY . .
+# Copy the SMR source code directories
+COPY admin admin
+COPY engine engine
+COPY htdocs htdocs
+COPY lib lib
+COPY templates templates
 
 # Perform CSS/JS minification and cache busting
+COPY Gruntfile.js .
 RUN npx grunt
 
 # Remove local grunt install so it is not copied to the next build stage
@@ -46,3 +51,8 @@ RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
 
 # Make the upload directory writable by the apache user
 RUN chown www-data ./htdocs/upload
+
+# Store the git commit hash of the repo in the final image
+COPY .git/HEAD .git/HEAD
+COPY .git/refs .git/refs
+RUN cat .git/$(cat .git/HEAD | awk '{print $2}') > git-commit

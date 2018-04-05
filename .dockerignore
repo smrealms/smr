@@ -1,8 +1,5 @@
 # Files to ignore when building Docker image
 
-# Git data directory
-.git
-
 # Committed files that are not needed in the build
 docker-compose.yml
 README.md
