@@ -30,8 +30,11 @@ for ($i=0;$i<$galaxy->getHeight();$i++) {
 $template->assign('Galaxy', $galaxy);
 $template->assign('Galaxies', $galaxies);
 $template->assign('MapSectors',$mapSectors);
-$template->assign('Message',$var['message']);
-SmrSession::updateVar('message',null); // Only show message once
+
+if (isset($var['message'])) {
+	$template->assign('Message',$var['message']);
+	SmrSession::updateVar('message',null); // Only show message once
+}
 
 if (isset($_REQUEST['connect']) && $_REQUEST['connect'] > 0) {
 	SmrSession::updateVar('conn',$_REQUEST['connect']);
