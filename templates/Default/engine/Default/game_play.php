@@ -13,15 +13,14 @@ if(isset($Message)) {
 	if(isset($Games['Play'])) { ?>
 		<table class="standard">
 			<tr>
-				<th align="center">&nbsp;</th>
-				<th align="center">Game Name</th>
-				<th align="center">Turns</th>
-				<th align="center">Playing</th>
-				<th align="center">Last Active</th>
-				<th align="center">Last Movement</th>
-				<th align="center">End Date</th>
-				<th align="center">Game Type</th>
-				<th align="center">Game Speed</th>
+				<th>&nbsp;</th>
+				<th>Game Name</th>
+				<th>Turns</th>
+				<th>Playing</th>
+				<th>Last Movement</th>
+				<th>End Date</th>
+				<th>Game Type</th>
+				<th>Game Speed</th>
 			</tr><?php
 			foreach($Games['Play'] as $Game) { ?>
 				<tr>
@@ -32,13 +31,12 @@ if(isset($Message)) {
 					</td>
 					<td width="35%"><a href="<?php echo $Game['GameStatsLink']; ?>"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</a></td>
 
-					<td><?php echo $Game['Maintenance']; ?></td>
-					<td><?php echo $Game['NumberPlaying']; ?></td>
-					<td><?php echo $Game['LastActive']; ?></td>
+					<td class="center"><?php echo $Game['Maintenance']; ?></td>
+					<td class="center"><?php echo $Game['NumberPlaying']; ?></td>
 					<td><?php echo $Game['LastMovement']; ?></td>
 					<td class="noWrap"><?php echo $Game['EndDate']; ?></td>
-					<td><?php echo $Game['Type']; ?></td>
-					<td><?php echo $Game['Speed']; ?></td>
+					<td class="center"><?php echo $Game['Type']; ?></td>
+					<td class="center"><?php echo $Game['Speed']; ?></td>
 				</tr><?php
 			} ?>
 		</table><br />
@@ -65,11 +63,11 @@ if (isset($Voting)) {
 	if(isset($Games['Join'])) { ?>
 		<table class="standard">
 			<tr>
-				<th align="center">&nbsp;</th>
+				<th>&nbsp;</th>
 				<th width="150">Game Name</th>
 				<th>Start Date</th>
 				<th>End Date</th>
-				<th>Max Players</th>
+				<th>Players</th>
 				<th>Type</th>
 				<th>Game Speed</th>
 				<th>Credits Needed</th>
@@ -82,10 +80,10 @@ if (isset($Voting)) {
 					<td width="35%"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</td>
 					<td class="noWrap"><?php echo $Game['StartDate']; ?></td>
 					<td class="noWrap"><?php echo $Game['EndDate']; ?></td>
-					<td><?php echo $Game['MaxPlayers']; ?></td>
-					<td><?php echo $Game['Type']; ?></td>
-					<td><?php echo $Game['Speed']; ?></td>
-					<td><?php echo $Game['Credits']; ?></td>
+					<td class="center"><?php echo $Game['Players']; ?></td>
+					<td class="center"><?php echo $Game['Type']; ?></td>
+					<td class="center"><?php echo $Game['Speed']; ?></td>
+					<td class="center"><?php echo $Game['Credits']; ?></td>
 				</tr>
 			<?php } ?>
 		</table><?php
@@ -122,10 +120,10 @@ if (isset($Voting)) {
 					<td width="35%"><?php if(isset($Game['PreviousGameLink'])){ ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if(isset($Game['PreviousGameLink'])){ ?></a><?php } ?></td>
 					<td><?php echo $Game['StartDate'] ?></td>
 					<td><?php echo $Game['EndDate'] ?></td>
-					<td><?php echo $Game['Speed'] ?></td>
-					<td><a href="<?php echo $Game['PreviousGameHOFLink']; ?>">Hall Of Fame</a></td>
-					<td><a href="<?php echo $Game['PreviousGameNewsLink']; ?>">Game News</a></td>
-					<td><?php if(isset($Game['PreviousGameStatsLink'])){ ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Game Stats</a><?php } ?></td>
+					<td class="center"><?php echo $Game['Speed'] ?></td>
+					<td class="center"><a href="<?php echo $Game['PreviousGameHOFLink']; ?>">Hall Of Fame</a></td>
+					<td class="center"><a href="<?php echo $Game['PreviousGameNewsLink']; ?>">Game News</a></td>
+					<td class="center"><?php if(isset($Game['PreviousGameStatsLink'])){ ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Game Stats</a><?php } ?></td>
 				</tr>
 			<?php } ?>
 		</table><?php
