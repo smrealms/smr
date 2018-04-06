@@ -11,12 +11,17 @@ if (isset($var['msg'])) {
 $template->assign('UserRankingLink',SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_view.php')));
 $template->assign('UserRankName',$account->getRankName());
 
+// ***************************************
+// ** Play Games
+// ***************************************
+
 $games = array();
 $games['Play'] = array();
 $game_id_list = array();
 $db->query('SELECT end_date, game_id, game_name, game_speed, game_type
 			FROM game JOIN player USING (game_id)
 			WHERE account_id = '.$db->escapeNumber(SmrSession::$account_id).'
+				AND enabled = \'TRUE\'
 				AND end_date >= ' . $db->escapeNumber(TIME) . '
 			ORDER BY start_date DESC');
 if ($db->getNumRows() > 0) {
@@ -68,6 +73,10 @@ if(empty($games['Play']))
 	unset($games['Play']);
 
 
+// ***************************************
+// ** Join Games
+// ***************************************
+
 if (count($game_id_list) > 0) {
 	$db->query('SELECT start_date, end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed
 				FROM game
@@ -83,10 +92,6 @@ else {
 					AND enabled = ' . $db->escapeBoolean(true) . '
 				ORDER BY start_date DESC');
 }
-
-// ***************************************
-// ** Join Games
-// ***************************************
 
 // are there any results?
 if ($db->getNumRows() > 0) {
@@ -120,7 +125,7 @@ $games['Previous'] = array();
 
 //New previous games
 $db->query('SELECT start_date, end_date, game_name, game_speed, game_id ' .
-		'FROM game WHERE end_date < '.$db->escapeNumber(TIME).' ORDER BY game_id DESC');
+		'FROM game WHERE enabled = \'TRUE\' AND end_date < '.$db->escapeNumber(TIME).' ORDER BY game_id DESC');
 if ($db->getNumRows()) {
 	while ($db->nextRecord()) {
 		$game_id = $db->getField('game_id');
