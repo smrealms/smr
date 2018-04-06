@@ -13,7 +13,7 @@ function &getMessagePlayer($accountID, $gameID, $messageType = false) {
 		$return = '<span class="yellow">Casino</span>';
 	else if($accountID==ACCOUNT_ID_FED_CLERK)
 		$return = '<span class="yellow">Federal Clerk</span>';
-	else if($accountID==ACCOUNT_ID_OP_ANNOUNCE)
+	else if($accountID==ACCOUNT_ID_OP_ANNOUNCE || $accountID==ACCOUNT_ID_ALLIANCE_COMMAND)
 		$return = '<span class="green">Alliance Command</span>';
 	else {
 		$RACES =& Globals::getRaces();
