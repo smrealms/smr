@@ -61,8 +61,12 @@ try {
 	// * g e t   S e s s i o n
 	// *
 	// ********************************
+
+	// Require to define `get_file_loc` here
+	require_once(LIB . 'Default/Globals.class.inc');
+
 	$sn = $_REQUEST['sn'];
-		
+
 	// check if we got a sn number with our url
 	if (empty($sn)) {
 		if(!USING_AJAX) {
@@ -90,11 +94,11 @@ try {
 	if($overrideGameID == 0) $overrideGameID = SmrSession::$game_id;
 
 	// Must not call `get_file_loc` until after we have set $overrideGameID
-	require_once(LIB . 'Default/Globals.class.inc');
+	// (Unless we're exiting immediately with an error, as above)
 	require_once(get_file_loc('smr.inc'));
 	require_once(get_file_loc('SmrAccount.class.inc'));
 
-	$account =& SmrAccount::getAccount(SmrSession::$account_id);
+	$account = SmrAccount::getAccount(SmrSession::$account_id);
 	// get reason for disabled user
 	if(($disabled = $account->isDisabled())!==false) {
 		// save session (incase we forward)
