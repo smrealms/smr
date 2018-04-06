@@ -28,6 +28,10 @@ while ($db->nextRecord()) {
 	$warp1 = SmrSector::getSector($var['game_id'], $db->getInt('sector_id'));
 	$warp2 = SmrSector::getSector($var['game_id'], $db->getInt('warp'));
 	if ($warp1->getGalaxyID() == $warp2->getGalaxyID()) {
+		// For warps within the same galaxy, even though there will be two
+		// sectors with warps, we still consider this as "one warp" (pair).
+		// Since we're looping over all sectors, we'll hit this twice for each
+		// same-galaxy warp pair, so only add 0.5 to avoid double counting.
 		$warps[$warp1->getGalaxyID()][$warp2->getGalaxyID()] += 0.5;
 	} else {
 		$warps[$warp1->getGalaxyID()][$warp2->getGalaxyID()]++;
