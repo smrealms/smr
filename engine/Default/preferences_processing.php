@@ -217,11 +217,14 @@ else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQU
 }
 else if ($action == 'Change CSS Options') {
 	$account->setCssLink($_REQUEST['csslink']);
-	$account->setDefaultCSSEnabled($_REQUEST['defaultcss']!='No');
-	if(isset($_REQUEST['template']))
-		$account->setTemplate($_REQUEST['template']);
-	if(isset($_REQUEST['colour_scheme'])&&in_array($_REQUEST['colour_scheme'],Globals::getAvailableColourSchemes($account->getTemplate())))
-		$account->setColourScheme($_REQUEST['colour_scheme']);
+	if ($_REQUEST['template'] == 'None') {
+		$account->setDefaultCSSEnabled(false);
+	} else {
+		$account->setDefaultCSSEnabled(true);
+		list($cssTemplate, $cssColourScheme) = explode(' - ', $_REQUEST['template']);
+		$account->setTemplate($cssTemplate);
+		$account->setColourScheme($cssColourScheme);
+	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
 }
 else if ($action == 'Change Kamikaze Setting') {
