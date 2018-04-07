@@ -334,7 +334,7 @@ if(isset($GameID)) { ?>
 		</tr>
 
 		<tr>
-			<td>Font size</td>
+			<td>Font size:</td>
 			<td><input type="number" size="4" name="fontsize" value="<?php echo $ThisAccount->getFontSize(); ?>" /> Minimum font size is 50%</td>
 		</tr>
 	
@@ -348,57 +348,39 @@ if(isset($GameID)) { ?>
 		</tr>
 
 		<tr>
-			<td>Change CSS Link</td>
-			<td>
-				<input type="url" size="50" name="csslink" value="<?php echo htmlspecialchars($ThisAccount->getCssLink()); ?>"><br />
-			</td>
-		</tr>
-
-		<tr>
-			<td></td>
-			<td>
-				You should only change this if you know what you're doing.<br />
-				If trying to link to a local file you may have to change your browser's security settings.
-				For a (somewhat) commented css file to work from look at: <a href="<?php echo URL; ?>/originalCSS/Default.css"><?php echo URL; ?>/originalCSS/Default.css</a><br />
-			</td>
-		</tr>
-
-		<tr>
-			<td>Enable Default CSS</td>
-			<td>
-				Yes: <input type="radio" name="defaultcss" id="InputFields" value="Yes"<?php if($ThisAccount->isDefaultCSSEnabled()){ ?> checked="checked"<?php } ?> /><br />
-				No: <input type="radio" name="defaultcss" id="InputFields" value="No"<?php if(!$ThisAccount->isDefaultCSSEnabled()){ ?> checked="checked"<?php } ?> /><br />
-				This specifies whether the default stylesheet (Currently: <a href="<?php echo DEFAULT_CSS; ?>"><?php echo DEFAULT_CSS; ?></a>) should be loaded.<br />
-			</td>
-		</tr>
-		
-		<tr>
-			<td>Template</td>
+			<td>CSS Template:</td>
 			<td>
 				<select name="template" id="InputFields"><?php
 					foreach(Globals::getAvailableTemplates() as $AvailableTemplate => $ColourSchemes) {
-						?><option value="<?php echo $AvailableTemplate; ?>"<?php if($ThisAccount->getTemplate()==$AvailableTemplate){ ?>selected="selected"<?php } ?>><?php echo $AvailableTemplate; ?></option><?php
+						foreach ($ColourSchemes as $ColourScheme) {
+							$selected = ($ThisAccount->getTemplate() == $AvailableTemplate &&
+							             $ThisAccount->getColourScheme() == $ColourScheme &&
+							             $ThisAccount->isDefaultCSSEnabled()) ? 'selected' : '';
+							$name = $AvailableTemplate . ' - ' . $ColourScheme;
+							?><option value="<?php echo $name; ?>" <?php echo $selected; ?>><?php echo $name; ?></option><?php
+						}
 					} ?>
+					<option value="None" <?php if (!$ThisAccount->isDefaultCSSEnabled()) { echo 'selected'; } ?>>None</option>
 				</select>
 			</td>
 		</tr>
+
 		<tr>
-			<td>Colour Scheme</td>
+			<td class="top">Add CSS Link:</td>
 			<td>
-				<select name="colour_scheme" id="InputFields"><?php
-					foreach(Globals::getAvailableColourSchemes($ThisAccount->getTemplate()) as $ColourScheme) {
-						?><option value="<?php echo $ColourScheme; ?>"<?php if($ThisAccount->getColourScheme()==$ColourScheme){ ?>selected="selected"<?php } ?>><?php echo $ColourScheme; ?></option><?php
-					} ?>
-				</select> - This only shows colour schemes available for the current template, if you are changing templates then save the change first to see the colour schemes for the new template.
+				<input type="url" size="50" name="csslink" value="<?php echo htmlspecialchars($ThisAccount->getCssLink()); ?>"><br />
+				Specifies a CSS file to load in addition to the CSS Template.<br />
+				If trying to link to a local file you may have to change your browser's security settings.<br />
+				Warning: only add a CSS link if you know what you're doing!
 			</td>
 		</tr>
-		
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Change CSS Options" id="InputFields" /></td>
 		</tr>
 	</table>
-	
+	<br />
 	
 	<table>
 		<tr>
