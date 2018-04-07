@@ -17,21 +17,15 @@ else {
 	$account->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest '.$xType.': '.$X.'.', $player->getSectorID());
 }
 
-
-$container = create_container('skeleton.php', 'course_plot_result.php');
-
 $sector =& $player->getSector();
 if($sector->hasX($realX,$player))
 	create_error('Current sector has what you\'re looking for!');
 
 $path = Plotter::findReversiblePathToX($realX, $sector, true, $player, $player);
 
-$container['Distance'] = serialize($path);
-
-$path->removeStart();
-if ($sector->isLinked($path->getNextOnPath())&&$path->getTotalSectors()>0) {
-	$player->setPlottedCourse($path);
-}
+// Forward to do common processing of path
+$container = create_container('skeleton.php', 'course_plot_result.php');
+$container['Distance'] = $path;
 forward($container);
 
 ?>
