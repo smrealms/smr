@@ -22,6 +22,7 @@ class SmrAlliance {
 	protected $discordServer;
 	protected $discordChannel;
 	protected $ircChannel;
+	protected $flagshipID;
 
 	protected $memberList;
 	protected $seedlist;
@@ -74,6 +75,7 @@ class SmrAlliance {
 			$this->imgSrc			= $this->db->getField('img_src');
 			$this->discordServer	= $this->db->getField('discord_server');
 			$this->discordChannel	= $this->db->getField('discord_channel');
+			$this->flagshipID = $this->db->getInt('flagship_id');
 
 			if (empty($this->kills)) {
 				$this->kills = 0;
@@ -235,6 +237,28 @@ class SmrAlliance {
 		$this->description=nl2br(htmlspecialchars($description));
 	}
 
+	public function hasFlagship() {
+		return $this->flagshipID != 0;
+	}
+
+	/**
+	 * Get account ID of the player designated as the alliance flagship.
+	 * Returns 0 if no flagship.
+	 */
+	public function getFlagshipID() {
+		return $this->flagshipID;
+	}
+
+	/**
+	 * Designate a player as the alliance flagship by their account ID.
+	 */
+	public function setFlagshipID($accountID) {
+		if ($this->flagshipID == $accountID) {
+			return;
+		}
+		$this->flagshipID = $accountID;
+	}
+
 	public function canJoinAlliance(SmrPlayer $player) {
 		if($player->hasAlliance()) {
 			return false;
@@ -294,6 +318,7 @@ class SmrAlliance {
 								alliance_deaths = '.$this->db->escapeNumber($this->deaths).',
 								discord_server = '.$this->db->escapeString($this->discordServer).',
 								discord_channel = '.$this->db->escapeString($this->discordChannel).',
+								flagship_id = '.$this->db->escapeNumber($this->flagshipID).',
 								leader_id = '.$this->db->escapeNumber($this->leaderID).'
 							WHERE ' . $this->SQL);
 	}

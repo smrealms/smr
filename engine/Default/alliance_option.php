@@ -77,7 +77,7 @@ if ($player->isAllianceLeader()) {
 	$container['body'] = 'alliance_set_op.php';
 	$links[] = array(
 		'link' => create_link($container, 'Schedule Operation'),
-		'text' => 'Schedule and manage the next alliance operation.',
+		'text' => 'Schedule and manage the next alliance operation and designate an alliance flagship.',
 	);
 }
 

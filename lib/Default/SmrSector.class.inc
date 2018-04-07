@@ -795,7 +795,23 @@ class SmrSector {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Is the $player's alliance flagship in this sector?
+	 */
+	public function hasAllianceFlagship(AbstractSmrPlayer $player=null) {
+		if (is_null($player) || !$player->hasAlliance() || !$player->getAlliance()->hasFlagship()) {
+			return false;
+		}
+		$flagshipID = $player->getAlliance()->getFlagshipID();
+		foreach ($this->getPlayers() as $sectorPlayer) {
+			if ($sectorPlayer->getAccountID() == $flagshipID) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public function hasProtectedTraders(AbstractSmrPlayer $player=null) {
 		if($player == null || !$this->hasOtherTraders($player))
 			return false;
