@@ -64,7 +64,7 @@ $db->query('SELECT 1 FROM alliance_has_roles WHERE alliance_id = ' . $db->escape
 $allowed = $db->nextRecord();
 $template->assign('CanChangeRoles', $allowed);
 
-$alliancePlayers =& SmrPlayer::getAlliancePlayers($player->getGameID(),$alliance->getAllianceID());
+$alliancePlayers = $alliance->getMembers();
 $template->assign('AlliancePlayers', $alliancePlayers);
 
 if ($alliance->getAllianceID() == $player->getAllianceID()) {

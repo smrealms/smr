@@ -298,6 +298,13 @@ class SmrAlliance {
 							WHERE ' . $this->SQL);
 	}
 
+	/**
+	 * Returns the members of this alliance as an array of SmrPlayer objects.
+	 */
+	function getMembers() {
+		return SmrPlayer::getAlliancePlayers($this->getGameID(), $this->getAllianceID());
+	}
+
 	function getMemberIDs() {
 		if(!isset($this->memberList)) {
 			$this->db->query('SELECT account_id FROM player WHERE ' . $this->SQL);
