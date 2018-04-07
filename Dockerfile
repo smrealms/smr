@@ -25,7 +25,7 @@ FROM php:7.2-apache
 RUN apt-get update \
 	&& apt-get install -y zip unzip \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& docker-php-ext-install mysqli
+	&& docker-php-ext-install mysqli opcache
 
 # Use the production php.ini unless PHP_DEBUG=1 (defaults to 0)
 ARG PHP_DEBUG=0
