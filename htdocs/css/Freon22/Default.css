@@ -221,7 +221,8 @@ div.secNavBox a:hover {
    color: #F2A648;
 }
 .unvisited {
-   color: #FF0;
+	background-color: black;
+	color: yellow;
 }
 
 /*Used for CS */
