@@ -29,7 +29,7 @@ if (isset($Message)) {
 			</form>
 		</td>
 
-		<td style="vertical-align:top">
+		<td class="top">
 			<div style="margin-left:10px">
 				Warps will be placed randomly in the galaxies, with these exceptions:
 				<ul>

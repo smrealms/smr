@@ -41,7 +41,7 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 		<tr><th width="50%">Attacker</th><th width="50%">Defender</th></tr>
 		<tr><?php
 			foreach ($fightingPlayers as $fleet) {
-				?><td style="vertical-align:top;"><?php
+				?><td class="top"><?php
 				if (is_array($fleet)) {
 					foreach ($fleet as &$fleetPlayer) {
 						$fleetShip =& $fleetPlayer->getShip();

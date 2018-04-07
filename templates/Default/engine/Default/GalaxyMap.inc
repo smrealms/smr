@@ -20,7 +20,7 @@
 			<p>Map of the known <b><big><?php echo $ThisGalaxy->getName(); ?></big></b> galaxy.</p>
 			<table cellspacing="0" cellpadding="0">
 				<tr>
-					<td class="nopad" style="vertical-align:top">
+					<td class="nopad top">
 						<form name="GalaxyMapForm" method="GET">
 							<label for="galaxy_id">Switch galaxy</label>&nbsp;
 							<select name="galaxy_id" id="galaxy_id" onchange="this.form.submit()"><?php
@@ -40,7 +40,7 @@
 							<input type="submit" value="View" />
 						</form>
 					</td>
-					<td style="vertical-align:bottom">
+					<td class="bottom">
 						<?php $this->includeTemplate('includes/SectorMapOptions.inc'); ?>
 					</td>
 				</tr>
