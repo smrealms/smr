@@ -1,32 +1,19 @@
 <?php
-require_once(get_file_loc('Plotter.class.inc'));
-$sector =& $player->getSector();
+// Load the Distance object to do the common processing
+// for both "Conventional" and "Plot To Nearest".
+$path = $var['Distance'];
 
-$template->assign('PageTopic','Plot A Course');
-
-require_once(get_file_loc('menu.inc'));
-create_nav_menu($template, $player);
-
-$path = unserialize($var['Distance']);
-
-$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" style="width:100%;border:none"><tr><td style="padding:0px;vertical-align:top">';
-$PHP_OUTPUT.=('The plotted course is ' . $path->getTotalSectors() . ' sectors long and '.$path->getTurns().' turns.');
-$PHP_OUTPUT.= '</td><td style="padding:0px;vertical-align:top;width:32em">';
-
-// get the array back
-
-$full = (implode(' - ', $path->getPath()));
-
-// throw start sector away
-// it's useless for the route
+// Throw start sector away (it's useless for the route),
+// but save the full path in case we end up needing to display it.
+$fullPath = implode(' - ', $path->getPath());
 $path->removeStart();
 
 // now get the sector we are going to but don't remove it (sector_move_processing does it)
 $next_sector = $path->getNextOnPath();
 
-if ($sector->isLinked($next_sector)) {
+if ($player->getSector()->isLinked($next_sector)) {
 
-	// save this to db (if we still have something
+	// save this to db (if we still have something)
 	if ($path->getTotalSectors()>0) {
 		$player->setPlottedCourse($path);
 	}
@@ -38,7 +25,11 @@ if ($sector->isLinked($next_sector)) {
 	}
 }
 
-$PHP_OUTPUT.= '</td></tr></table><br /><h2>Plotted Course</h2><br />';
-$PHP_OUTPUT.= $full;
+$template->assign('PageTopic', 'Plot A Course');
+require_once(get_file_loc('menu.inc'));
+create_nav_menu($template, $player);
+
+$template->assign('Path', $path);
+$template->assign('FullPath', $fullPath);
 
 ?>

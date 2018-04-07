@@ -34,18 +34,12 @@ if($startExists===false || $targetExists===false)
 
 $account->log(LOG_TYPE_MOVEMENT, 'Player plots to '.$target.'.', $player->getSectorID());
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'course_plot_result.php';
-
 require_once(get_file_loc('Plotter.class.inc'));
 $path = Plotter::findReversiblePathToX(SmrSector::getSector($player->getGameID(), $target), SmrSector::getSector($player->getGameID(), $start), true);
-$container['Distance'] = serialize($path);
 
-$path->removeStart();
-if ($sector->isLinked($path->getNextOnPath())&&$path->getTotalSectors()>0) {
-	$player->setPlottedCourse($path);
-}
+// Forward to do common processing of path
+$container = create_container('skeleton.php', 'course_plot_result.php');
+$container['Distance'] = $path;
 forward($container);
 
 ?>
