@@ -1,5 +1,5 @@
 <?php
 
-define('DISCORD_TOKEN', 'YOUR_TOKEN_HERE');
+const DISCORD_TOKEN = 'YOUR_TOKEN_HERE';
 
 ?>

@@ -3,8 +3,8 @@ if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
-define('WITHDRAW',0);
-define('DEPOSIT',1);
+const WITHDRAW = 0;
+const DEPOSIT = 1;
 
 $template->assign('PageTopic','Alliance Bank Report');
 

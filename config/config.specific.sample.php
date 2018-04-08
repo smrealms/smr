@@ -1,29 +1,29 @@
 <?php
-define('USE_COMPATIBILITY',false);
+const USE_COMPATIBILITY = false;
 
-define('URL','http://localhost');
+const URL = 'http://localhost';
 
-define('ENABLE_DEBUG', true); // This is useful for debugging on dev machines.
-define('ENABLE_BETA', false);
-define('ACCOUNT_ID_PAGE',1403); //BETA, used for removing newbie turn
+const ENABLE_DEBUG = true; // This is useful for debugging on dev machines.
+const ENABLE_BETA = false;
+const ACCOUNT_ID_PAGE = 1403; //BETA, used for removing newbie turn
 
-define('RECAPTCHA_PUBLIC','');
-define('RECAPTCHA_PRIVATE','');
+const RECAPTCHA_PUBLIC = '';
+const RECAPTCHA_PRIVATE = '';
 
-define('SMS_DEBUG', '1');
-define('SMS_GATEWAY_KEY','');
+const SMS_DEBUG = '1';
+const SMS_GATEWAY_KEY = '';
 
-define('FACEBOOK_APP_ID','');
-define('FACEBOOK_APP_SECRET','');
+const FACEBOOK_APP_ID = '';
+const FACEBOOK_APP_SECRET = '';
 
-define('TWITTER_CONSUMER_KEY','');
-define('TWITTER_CONSUMER_SECRET','');
+const TWITTER_CONSUMER_KEY = '';
+const TWITTER_CONSUMER_SECRET = '';
 
-define('ENABLE_NPCS_CHESS', false);
+const ENABLE_NPCS_CHESS = false;
 
 // Set to empty string if using a local mailserver.
 // Use the default value if using the provided docker-compose orchestration.
-define('SMTP_HOSTNAME', 'smtp');
+const SMTP_HOSTNAME = 'smtp';
 
 $COMPATIBILITY_DATABASES = array();
 //	array(

@@ -8,74 +8,74 @@ require(get_file_loc('planet_limit.php'));
 define ('MAXIMUM_FLEET_SIZE',$limit);
 
 //result info
-define('SHIELD_DMG_DONE', 0);
-define('DRONE_DMG_DONE', 1);
-define('ARMOUR_DMG_DONE', 2);
-define('DRONES_FIRED', 3);
-define('RESULT_OF_WEAPON', 4);
-define('DRONES_HIT_BEHIND_SHIELDS',5);
-define('TARGET',6);
+const SHIELD_DMG_DONE = 0;
+const DRONE_DMG_DONE = 1;
+const ARMOUR_DMG_DONE = 2;
+const DRONES_FIRED = 3;
+const RESULT_OF_WEAPON = 4;
+const DRONES_HIT_BEHIND_SHIELDS = 5;
+const TARGET = 6;
 
 //result[4]
-define('NORMAL_HIT', 0);
-define('SHIELD_ON_DRONES',1);
-define('ARMOUR_ON_SHIELD',2);
-define('PLANET_DEAD',3);
-define('FINAL_HIT',4);
-define('WEAPON_MISS',5);
-define('ALREADY_DEAD',6);
+const NORMAL_HIT = 0;
+const SHIELD_ON_DRONES = 1;
+const ARMOUR_ON_SHIELD = 2;
+const PLANET_DEAD = 3;
+const FINAL_HIT = 4;
+const WEAPON_MISS = 5;
+const ALREADY_DEAD = 6;
 
 //player array info
-define('PLAYER_ID', 0);
-define('PLAYER_NAME', 1);
-define('ALLIANCE_ID',2);
-define('RACE_ID', 3);
-define('CREDITS', 4);
-define('TURNS', 5);
-define('ALIGNMENT', 6);
-define('SHIP_ID', 7);
-define('EXPERIENCE', 8);
-define('LEVEL', 9);
-define('SHIELDS', 10);
-define('ARMOUR', 11);
-define('DRONES', 12);
-define('DRONES_ORIGINAL', 13);
-define('DCS', 14);
-define('WEAPONS', 15);
-define('RESULTS', 16);
-define('EXPERIENCE_GAINED', 17);
-define('KILLER', 18); 
-define('TOTAL_DAMAGE',19);
-define('PERSONAL_DISPLAY', 20);
+const PLAYER_ID = 0;
+const PLAYER_NAME = 1;
+const ALLIANCE_ID = 2;
+const RACE_ID = 3;
+const CREDITS = 4;
+const TURNS = 5;
+const ALIGNMENT = 6;
+const SHIP_ID = 7;
+const EXPERIENCE = 8;
+const LEVEL = 9;
+const SHIELDS = 10;
+const ARMOUR = 11;
+const DRONES = 12;
+const DRONES_ORIGINAL = 13;
+const DCS = 14;
+const WEAPONS = 15;
+const RESULTS = 16;
+const EXPERIENCE_GAINED = 17;
+const KILLER = 18;
+const TOTAL_DAMAGE = 19;
+const PERSONAL_DISPLAY = 20;
 
 //weapon array info
-define('WEAPON_NAME', 0);
-define('SHIELD_DAMAGE', 1);
-define('ARMOUR_DAMAGE', 2);
-define('ACCURACY', 3);
+const WEAPON_NAME = 0;
+const SHIELD_DAMAGE = 1;
+const ARMOUR_DAMAGE = 2;
+const ACCURACY = 3;
 
 //planet array info
-define('PLANET_SHIELDS', 0);
-define('PLANET_DRONES', 1);
-define('GENERATORS', 2);
-define('HANGARS', 3);
-define('TURRETS', 4);
-define('PLANET_LEVEL',5);
-define('PLANET_RESULTS',6);
-define('OWNER',7);
-define('PLANET_NAME',8);
+const PLANET_SHIELDS = 0;
+const PLANET_DRONES = 1;
+const GENERATORS = 2;
+const HANGARS = 3;
+const TURRETS = 4;
+const PLANET_LEVEL = 5;
+const PLANET_RESULTS = 6;
+const OWNER = 7;
+const PLANET_NAME = 8;
 
 //more general
 define('TIME', time());
 define('MESSAGE_EXPIRES', TIME + 259200);
 
 //final results info
-define('PLANET_DISPLAY',0);
-define('PLAYER_DISPLAY',1);
-define('TOTAL_PLAYER_DMG',2);
-define('TOTAL_PLANET_DMG',3);
-define('DMG_TO_PLAYER',4);
-define('DEBUG',0);
+const PLANET_DISPLAY = 0;
+const PLAYER_DISPLAY = 1;
+const TOTAL_PLAYER_DMG = 2;
+const TOTAL_PLANET_DMG = 3;
+const DMG_TO_PLAYER = 4;
+const DEBUG = 0;
 function getPlanetArray() {
 	if (DEBUG) $PHP_OUTPUT.=('Entered planet array<br>');
 	global $db, $session, $player, $account;
@@ -132,10 +132,10 @@ function getPlayerArray() {
 		(int)$db->f('experience'),
 		0,0,0,0,0,false,array(),array(),0,0,0
 	);
-	
+
 	//get treaty info
 	$helperAlliances = array($player->getAllianceID());
-	$db->query('SELECT * FROM alliance_treaties 
+	$db->query('SELECT * FROM alliance_treaties
 				WHERE game_id = '.$player->getGameID().'
 				AND (alliance_id_1 = '.$player->getAllianceID().' OR alliance_id_2 = '.$player->getAllianceID().')
 				AND raid_assist = 1 AND official = \'TRUE\'');
@@ -145,7 +145,7 @@ function getPlayerArray() {
 	}
 	if($player->getAllianceID()) {
 		$query = '
-		SELECT 
+		SELECT
 		player.account_id as account_id,
 		player.player_id as player_id,
 		player.player_name as player_name,
@@ -158,8 +158,8 @@ function getPlayerArray() {
 		player.alliance_id as alliance_id
 		FROM player WHERE player.sector_id=' . $player->getSectorID() . '
 			AND player.account_id!=' . SmrSession::$account_id . '
-			AND player.game_id=' . SmrSession::$game_id . ' 
-			AND player.land_on_planet=\'FALSE\' 
+			AND player.game_id=' . SmrSession::$game_id . '
+			AND player.land_on_planet=\'FALSE\'
 			AND player.newbie_turns=0
 			AND player.last_active>' .  (TIME - 259200);
 
@@ -187,12 +187,12 @@ function getPlayerArray() {
 	while($db->next_record()) {
 		$levels[$db->f('level_id')] = $db->f('requirement');
 	}
-	
+
 	$num_players = count($players);
 	$player_ids = array_keys($players);
 	$num_levels = count($levels);
 	$level_ids = array_keys($levels);
-	
+
 	for($i=0;$i<$num_players;++$i) {
 		for($j=0;$j<$num_levels;++$j) {
 			if($levels[$level_ids[$j]] <= $players[$player_ids[$i]][EXPERIENCE]) {
@@ -201,12 +201,12 @@ function getPlayerArray() {
 			}
 		}
 	}
-	
+
 	// Everyone involved gets decloaked if they fire or not
 	$db->query('DELETE FROM ship_is_cloaked WHERE account_id IN (' . implode(',',$player_ids) . ') AND game_id=' . SmrSession::$game_id);
-	
+
 	return $players;
-	
+
 }
 function build_ships($ship_ids) {
 	if (DEBUG) $PHP_OUTPUT.=('Build Ships<br>');
@@ -223,7 +223,7 @@ function build_hqs(&$races) {
 	// We know that race HQs have a location id of 101 + race_id
 	$temp = array();
 	foreach($races as $race_id) {
-		$temp[] = $race_id + 101; 
+		$temp[] = $race_id + 101;
 	}
 	$db->query('SELECT location_type_id,sector_id FROM location WHERE location_type_id IN (' . implode($temp,',') . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . count($temp));
 	while($db->next_record()) {
@@ -235,16 +235,16 @@ function getHardware(&$players) {
 	if (DEBUG) $PHP_OUTPUT.=('Get Hardware<br>');
 	global $db, $session, $player, $account;
 	$players_in = implode(',',array_keys($players));
-	
+
 	$db->query('SELECT account_id,weapon_type_id FROM ship_has_weapon WHERE account_id IN (' . $players_in . ') AND game_id=' . SmrSession::$game_id . ' ORDER BY order_id ASC');
 	$weapons = array();
 	while($db->next_record()) {
 		$weapons[] = $db->f('weapon_type_id');
 		$players[$db->f('account_id')][WEAPONS][] = (int)$db->f('weapon_type_id');
 	}
-	
+
 	$db->query('SELECT hardware_type_id,account_id,amount FROM ship_has_hardware WHERE account_id IN (' . $players_in . ') AND (hardware_type_id=' . HARDWARE_SHIELDS . ' OR hardware_type_id=' . HARDWARE_ARMOUR . ' OR hardware_type_id=' . HARDWARE_COMBAT . ' OR hardware_type_id=' . HARDWARE_DCS . ') AND game_id=' . SmrSession::$game_id);
-	
+
 	while($db->next_record()) {
 		switch($db->f('hardware_type_id')) {
 			case(HARDWARE_SHIELDS):
@@ -277,7 +277,7 @@ function getWeapons($weapon_ids) {
 	$weapons = array();
 	if (!sizeof($weapon_ids)) return $weapons;
 	$db->query('SELECT weapon_type_id,weapon_name,shield_damage,armour_damage,accuracy FROM weapon_type WHERE weapon_type_id IN (' . implode(',',$weapon_ids) . ') LIMIT ' . count($weapon_ids));
-	
+
 	while($db->next_record()) {
 		$weapons[$db->f('weapon_type_id')] = array(
 												$db->f('weapon_name'),
@@ -285,16 +285,16 @@ function getWeapons($weapon_ids) {
 												(int)round($db->f('armour_damage') / 5),
 												(int)$db->f('accuracy')
 												);
-	}	
+	}
 	return $weapons;
 }
 function getFleet(&$players,&$weapons) {
 	if (DEBUG) $PHP_OUTPUT.=('Get Fleet<br>');
 	global $db,$session,$player;
-	
+
 	$player_ids = array_keys($players);
 	$fleet = array();
-		
+
 	// Is there a fed beacon in the sector?
 	$db->query('SELECT
 	location_type_id
@@ -309,7 +309,7 @@ function getFleet(&$players,&$weapons) {
 		$have_beacon = TRUE;
 
 		$db->query('SELECT account_id FROM ship_has_cargo WHERE good_id IN (5,9,12) AND game_id=' . SmrSession::$game_id . ' AND account_id IN (' . implode(',',$player_ids) . ')');
-		
+
 		while($db->next_record()) {
 			$illegal_goods[$db->f('account_id')] = TRUE;
 		}
@@ -338,7 +338,7 @@ function getFleet(&$players,&$weapons) {
 			}
 			else {
 				$fleet[] = $account_id;
-			}				
+			}
 		}
 	}
 
@@ -366,7 +366,7 @@ function getFleet(&$players,&$weapons) {
 
 	// Shuffle for random firing order
 	shuffle($fleet);
-	
+
 	return $fleet;
 }
 function protected_rating($account_id,&$players,&$weapons) {
@@ -524,17 +524,17 @@ function fleetFires(&$attackers, &$planet, &$players, &$weapons) {
 function playerFires($attacker, &$planet, &$players, &$weapons) {
 	if (DEBUG) $PHP_OUTPUT.=('Player fires<br>');
 	global $db,$session,$player;
-	
+
 	$num_weapons = count($players[$attacker][WEAPONS]);
 	// Process each weapon in turn
 	for($i=0;$i<$num_weapons;++$i) {
 		$result = playerFiresWeapon($players[$attacker][WEAPONS][$i],$attacker,$planet,$players,$weapons);
-		
+
 		// Take the appropriate damage from the planet
 		$planet[PLANET_SHIELDS] -= $result[SHIELD_DMG_DONE];
 		$planet[PLANET_DRONES] -= floor($result[DRONE_DMG_DONE] / 3);
 		$planet[PLANET_DRONES] -= floor($result[DRONES_HIT_BEHIND_SHIELDS] / 12);
-		
+
 		$players[$attacker][RESULTS][] = $result;
 
 		// Did they kill somebody?
@@ -544,7 +544,7 @@ function playerFires($attacker, &$planet, &$players, &$weapons) {
 			$db->query('UPDATE planet SET owner_id = 0, password = \'\' WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
 		}
 	}
-	
+
 }
 
 function playerFiresWeapon($weapon,$attacker,&$planet,&$players,&$weapons) {
@@ -596,7 +596,7 @@ function playerFiresWeapon($weapon,$attacker,&$planet,&$players,&$weapons) {
 		$result[RESULT_OF_WEAPON] = PLANET_DEAD;
 		return $result;
 	}
-	
+
 	// Try to hit shields
 	if($planet[PLANET_SHIELDS] != 0 ) {
 		// Does the weapon do shield damage?
@@ -688,7 +688,7 @@ function playerFiresWeapon($weapon,$attacker,&$planet,&$players,&$weapons) {
 		$potential_damage = $weapons[$weapon][ARMOUR_DAMAGE];
 	}
 	return $result;
-	
+
 }
 function processNews($fleet, $planet) {
 	if (DEBUG) $PHP_OUTPUT.=('News Process<br>');
@@ -713,7 +713,7 @@ function processNews($fleet, $planet) {
 			$db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($text).', \'breaking\','.$player->getAccountID().','.$player->getAllianceID().','.$planet[OWNER].','.$allianceID.')');
 		}
 	}
-	
+
 }
 function hofTracker($players, $planet) {
 	if (DEBUG) $PHP_OUTPUT.=('Tracking HoF<br>');
@@ -838,9 +838,9 @@ function processResults($players, $planet, $fleet, $weapons) {
 		$traderDisplay .= '<br />' . $players[$accId][PLAYER_NAME] . ' does a total of <span class="red">'.$totalTraderDamage.'</span> damage.<br />';
 		//append this display to the overal display.
 		$playerDisplay .= $traderDisplay . '<br />';
-		$traderDisplay = '<span style="color:yellow;font-variant:small-caps">' . $planet[PLANET_NAME] . '</span>\'s defenses ' . 
-							'do a total of <span class="red">'.$totalPlanetDamage.'</span> damage. <span class="red">' . 
-							$results[DMG_TO_PLAYER][$accId] . '</span> of which hit you.<br /><br />' . $traderDisplay . 
+		$traderDisplay = '<span style="color:yellow;font-variant:small-caps">' . $planet[PLANET_NAME] . '</span>\'s defenses ' .
+							'do a total of <span class="red">'.$totalPlanetDamage.'</span> damage. <span class="red">' .
+							$results[DMG_TO_PLAYER][$accId] . '</span> of which hit you.<br /><br />' . $traderDisplay .
 							'You have gained <span class="blue">' . round($totalTraderDamage * .25) . '</span> experience.';
 		if ($accId != $player->getAccountID())
 			$db->query('REPLACE INTO sector_message (account_id, game_id, message) VALUES ('.$accId.', '.$player->getGameID().', ' . $db->escape_string($traderDisplay) . ')');
@@ -854,7 +854,7 @@ function processResults($players, $planet, $fleet, $weapons) {
 	$hqs = array();
 	foreach ($players as $accId => $playerArray) {
 		if ($playerArray[SHIELDS] == 0 && $playerArray[ARMOUR] == 0) {
-			$temp[] = $accId;			
+			$temp[] = $accId;
 			$ships[] = $players[$accId][SHIP_ID];
 			$hqs[] = $players[$accId][RACE_ID];
 		} else {
@@ -884,14 +884,14 @@ function podPlayers($IDArray, $ships, $hqs, $planet, $players) {
 		$sectorId = $hqs[$players[$accId][RACE_ID]];
 		$insurance = ceil($ships[$players[$accId][SHIP_ID]][0] * 0.25);
 		if($insurance < 5000) $insurance = 5000;
-		$db->query('UPDATE player SET ship_type_id = 69, turns = $turns, newbie_turns = 100, ' . 
-					'deaths = deaths + 1, dead = \'TRUE\', sector_id = '.$sectorId.', credits = '.$insurance.', experience = '.$newExp.' ' . 
+		$db->query('UPDATE player SET ship_type_id = 69, turns = $turns, newbie_turns = 100, ' .
+					'deaths = deaths + 1, dead = \'TRUE\', sector_id = '.$sectorId.', credits = '.$insurance.', experience = '.$newExp.' ' .
 					'WHERE game_id = '.$player->getGameID().' AND account_id = '.$accId);
-					
+
 		$currPlayer =& SmrPlayer::getPlayer($accId,SmrSession::$game_id,true);
 		$currPlayer->increaseHOF(1,array('Dying','Deaths'));
 		$currPlayer->update();
-		
+
 		$db->query('UPDATE ship_has_hardware SET amount=50 WHERE (hardware_type_id=1 OR hardware_type_id=2) AND account_id=' . $accId . ' AND game_id=' . $player->getGameID() . ' LIMIT 2');
 		$db->query('DELETE FROM ship_has_hardware WHERE hardware_type_id=4 AND account_id=' . $accId . ' AND game_id=' . $player->getGameID() . ' LIMIT 1');
 		$msg = $players[$accId][PLAYER_NAME];
@@ -904,14 +904,14 @@ function podPlayers($IDArray, $ships, $hqs, $planet, $players) {
 				else $msg .= $ship_names[$accId];
 			} else $msg .= strip_tags($ship_names[$accId], '<img>');
 		}
-		
+
 		$msg .= ' was destroyed by ';
 		$msg .= '<span style="color:yellow;font-variant:small-caps">' . $planet[PLANET_NAME] . '</span>\'s planetary defenses';
 	 	$msg .= ' in Sector&nbsp#' . $player->getSectorID();
 		$db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($msg).','.$currPlayer->getAccountID().','.$currPlayer->getAllianceID().')');
-		
+
 		$killer_id = $planet[OWNER];
-		
+
 		$temp = 'You were <span class="red">DESTROYED</span> by <span style="color:yellow;font-variant:small-caps">' . $planet[PLANET_NAME] . '</span>\'s planetary defenses in sector <span class="blue">#' . $player->getSectorID() . '</span>';
 		$msg = '(' . SmrSession::$game_id . ',' . $accId . ',2,' . $db->escape_string($temp) . ',' . $killer_id . ',' . TIME . ',\'FALSE\',' . MESSAGE_EXPIRES . ')';
 		$db->query('INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) VALUES '.$msg);
@@ -1039,7 +1039,7 @@ function planetDowngrade(&$results, &$planet) {
 					//if no hangars we fall through
 				case 4:
 				case 5:
-				case 6:	
+				case 6:
 					//destroy a gen
 					if ($planet[GENERATORS] > 0) {
 					    $results[PLAYER_DISPLAY] .= '<br />This team destroys <span style ="color:red;">1</span> generator.';
@@ -1058,11 +1058,11 @@ function planetDowngrade(&$results, &$planet) {
     }
     $db->query('UPDATE planet SET shields = ' . $planet[PLANET_SHIELDS] . ', drones = ' . $planet[PLANET_DRONES] .
     			' WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
-	$db->query('UPDATE planet_has_construction SET amount = ' . $planet[TURRETS] . ' WHERE construction_id = 3 AND ' . 
+	$db->query('UPDATE planet_has_construction SET amount = ' . $planet[TURRETS] . ' WHERE construction_id = 3 AND ' .
 				'sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
-	$db->query('UPDATE planet_has_construction SET amount = ' . $planet[HANGARS] . ' WHERE construction_id = 2 AND ' . 
+	$db->query('UPDATE planet_has_construction SET amount = ' . $planet[HANGARS] . ' WHERE construction_id = 2 AND ' .
 				'sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
-	$db->query('UPDATE planet_has_construction SET amount = ' . $planet[GENERATORS] . ' WHERE construction_id = 1 AND ' . 
+	$db->query('UPDATE planet_has_construction SET amount = ' . $planet[GENERATORS] . ' WHERE construction_id = 1 AND ' .
 				'sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
 }
 function doLog($results) {

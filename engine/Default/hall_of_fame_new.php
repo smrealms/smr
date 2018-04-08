@@ -24,8 +24,8 @@ $PHP_OUTPUT.='Welcome to the Hall of Fame ' . $account->getHofName() . '!<br />T
 
 $db->query('SELECT type FROM hof_visibility WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
 //$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . (isset($var['game_id']) ? ' AND game_id='.$db->escapeNumber($var['game_id']) : '').' ORDER BY type');
-define('DONATION_NAME','Money Donated To SMR');
-define('USER_SCORE_NAME','User Score');
+const DONATION_NAME = 'Money Donated To SMR';
+const USER_SCORE_NAME = 'User Score';
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
 while($db->nextRecord()) {
 	$hof =& $hofTypes;

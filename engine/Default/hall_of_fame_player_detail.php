@@ -32,8 +32,8 @@ else if(isset($hofPlayer) && $hofPlayer->sameAlliance($player)) {
 }
 $db->query('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') ORDER BY type');
 //$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') AND account_id='.$account_id . (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
-define('DONATION_NAME','Money Donated To SMR');
-define('USER_SCORE_NAME','User Score');
+const DONATION_NAME = 'Money Donated To SMR';
+const USER_SCORE_NAME = 'User Score';
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
 while($db->nextRecord()) {
 	$hof =& $hofTypes;
@@ -51,7 +51,7 @@ $PHP_OUTPUT.= '<table class="standard" align="center">';
 
 if(!isset($var['view'])) {
 	$PHP_OUTPUT.=('<tr><th>Category</th><th width="60%">Subcategory</th></tr>');
-	
+
 	foreach($hofTypes as $type => $value) {
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td>'.$type.'</td>');
@@ -65,14 +65,14 @@ if(!isset($var['view'])) {
 			foreach($value as $subType => $subTypeValue) {
 				++$i;
 				$container['view'] = $subType;
-				
+
 				$rankType = $container['type'];
 				$rankType[] = $subType;
 				$rank = getHofRank($subType,$rankType,$account->getAccountID(),$game_id,$db);
 				$rankMsg='';
 				if($rank['Rank']!=0)
 					$rankMsg = ' (#' . $rank['Rank'] .')';
-				
+
 				$PHP_OUTPUT.=create_submit_link($container,$subType.$rankMsg);
 				$PHP_OUTPUT.=('&nbsp;');
 				if ($i % 3 == 0) $PHP_OUTPUT.=('<br />');
@@ -88,22 +88,22 @@ if(!isset($var['view'])) {
 }
 else {
 	$PHP_OUTPUT.=('<tr><th>Rank</th><th>Player</th><th>Total</th></tr>');
-	
+
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];
 
 	$hofRank = getHofRank($var['view'],$viewType,$account_id,$game_id,$db);
-	
+
 	if($account->getAccountID() != $account_id) {
 		//current player's score.
 		$playerRank = getHofRank($var['view'],$viewType,$account->getAccountID(),$game_id,$db);
-		
+
 		//display in order
 		if($playerRank['Rank']<$hofRank)
 			$PHP_OUTPUT .= displayHOFRow($playerRank['Rank'],$account->getAccountID(),$playerRank['Amount']);
 		else
 			$PHP_OUTPUT .= displayHOFRow($hofRank['Rank'],$account_id,$hofRank['Amount']);
-		
+
 		if($playerRank['Rank']>$hofRank)
 			$PHP_OUTPUT .= displayHOFRow($playerRank['Rank'],$account->getAccountID(),$playerRank['Amount']);
 		else
