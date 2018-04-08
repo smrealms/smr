@@ -170,6 +170,7 @@ elseif ($submit == 'Create Warps') {
 			}
 		}
 	} unset($eachGalaxy);
+	SmrSector::saveSectors();
 	$var['message'] = '<span class="green">Success</span> : Succesfully added warps.';
 }
 elseif ($submit == 'Create Planets') {
@@ -347,13 +348,17 @@ elseif ($submit == 'Edit Sector') {
 	foreach($locationsToAdd as &$locationToAdd) {
 		addLocationToSector($locationToAdd,$sector);
 	}
-	if($sector->hasWarp() && $sector->getWarp()!=$_POST['warp']) {
-		$sector->getWarpSector()->removeWarp();
-		$sector->removeWarp();
-	}
 	if ($_POST['warp'] > 0) {
-		//add warp to other side
-		$sector->setWarp(SmrSector::getSector($var['game_id'],$_POST['warp']));
+		$warp = SmrSector::getSector($var['game_id'], $_POST['warp']);
+		if ($sector->equals($warp)) {
+			create_error('We do not allow any sector to warp to itself!');
+		}
+		// Removing warps first may do extra work, but is logically simpler
+		$warp->removeWarp();
+		$sector->removeWarp();
+		$sector->setWarp($warp);
+	} else {
+		$sector->removeWarp();
 	}
 	$var['message'] = '<span class="green">Success</span> : Succesfully edited sector.';
 	SmrSector::saveSectors();

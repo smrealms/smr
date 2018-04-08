@@ -120,22 +120,14 @@ class SmrSector {
 			if($this->db->getField('link_right'))
 				$this->links['Right'] = $this->db->getInt('link_right');
 
-
-			$this->db->query('SELECT * FROM warp
-								WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . '
-								AND (
-									sector_id_1 = ' . $this->db->escapeNumber($this->sectorID) . '
-									OR sector_id_2 = ' . $this->db->escapeNumber($this->sectorID) . ')');
-			if ($this->db->nextRecord())
-				$this->warp = ($this->db->getInt('sector_id_1') == $this->sectorID) ? $this->db->getInt('sector_id_2') : $this->db->getInt('sector_id_1');
-			else
-				$this->warp = 0;
+			$this->warp = $this->db->getInt('warp');
 		}
 		else if($create) {
 			$this->gameID		= (int)$gameID;
 			$this->sectorID		= (int)$sectorID;
 			$this->battles		= 0;
 			$this->links = array();
+			$this->warp = 0;
 			$this->isNew		= true;
 			return;
 		}
@@ -153,10 +145,11 @@ class SmrSector {
 									', link_right=' . $this->db->escapeNumber($this->getLinkRight()) .
 									', link_down=' . $this->db->escapeNumber($this->getLinkDown()) .
 									', link_left=' . $this->db->escapeNumber($this->getLinkLeft()) .
+									', warp=' . $this->db->escapeNumber($this->getWarp()) .
 								' WHERE ' . $this->SQL . ' LIMIT 1');
 			}
 			else {
-				$this->db->query('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right)
+				$this->db->query('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right,warp)
 								values
 								(' . $this->db->escapeNumber($this->getSectorID()) .
 								',' . $this->db->escapeNumber($this->getGameID()) .
@@ -165,6 +158,7 @@ class SmrSector {
 								',' . $this->db->escapeNumber($this->getLinkDown()) .
 								',' . $this->db->escapeNumber($this->getLinkLeft()) .
 								',' . $this->db->escapeNumber($this->getLinkRight()) .
+								',' . $this->db->escapeNumber($this->getWarp()) .
 								')');
 				$this->isNew=false;
 			}
@@ -540,6 +534,9 @@ class SmrSector {
 		$this->setLink('Right',$linkID);
 	}
 
+	/**
+	 * Returns the warp sector if the sector has a warp; returns 0 otherwise.
+	 */
 	public function getWarp() {
 		return $this->warp;
 	}
@@ -552,41 +549,54 @@ class SmrSector {
 		return $this->getWarp()!=0;
 	}
 
-	public function setWarp(SmrSector $warp,$justThisObjectData=false) {
-		if($justThisObjectData===false) {
-			if($this->hasWarp()) {
-				//Update both possible combinations for the warp
-				$this->db->query('UPDATE warp SET sector_id_1 = ' . $this->db->escapeNumber($warp->getSectorID()) . '
-									WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . '
-										AND sector_id_1 = ' . $this->db->escapeNumber($this->getWarp()) . '
-										AND sector_id_2 = ' . $this->db->escapeNumber($this->getSectorID()) . ' LIMIT 1');
-				$this->db->query('UPDATE warp SET sector_id_2 = ' . $this->db->escapeNumber($warp->getSectorID()) . '
-									WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . '
-										AND sector_id_1 = ' . $this->db->escapeNumber($this->getSectorID()) . '
-										AND sector_id_2 = ' . $this->db->escapeNumber($this->getWarp()) . ' LIMIT 1');
-			}
-			else {
-				//Only need to enter once
-				$this->db->query('INSERT INTO warp (game_id,sector_id_1,sector_id_2)values(' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($warp->getSectorID()) . ')');
-			}
-			$warp->setWarp($this,true);
+	/**
+	 * Set the warp sector for both $this and $warp to ensure
+	 * a consistent 2-way warp.
+	 */
+	public function setWarp(SmrSector $warp) {
+		if ($this->getWarp() == $warp->getSectorID() &&
+		    $warp->getWarp() == $this->getSectorID()) {
+			// Warps are already set correctly!
+			return;
 		}
+
+		if ($this->equals($warp)) {
+			throw new Exception('Sector must not warp to itself!');
+		}
+
+		if (($warp->hasWarp() && $warp->getWarp() != $this->getSectorID()) ||
+		    ($this->hasWarp() && $this->getWarp() != $warp->getSectorID())) {
+			throw new Exception('One of the sectors already has a warp!');
+		}
+
 		$this->warp = $warp->getSectorID();
+		$this->hasChanged = true;
+
+		if ($warp->getWarp() != $this->getSectorID()) {
+			// Set the other side if needed
+			$warp->setWarp($this);
+		}
 	}
 
+	/**
+	 * Remove the warp sector for both sides of the warp.
+	 */
 	public function removeWarp() {
-		if($this->hasWarp()) {
-			//Update both possible combinations for the warp
-			$this->db->query('DELETE FROM warp
-								WHERE (
-									sector_id_1 = ' . $this->db->escapeNumber($this->getWarp()) . '
-									AND sector_id_2 = ' . $this->db->escapeNumber($this->getSectorID()) . '
-								) OR (
-									sector_id_1 = ' . $this->db->escapeNumber($this->getSectorID()) . '
-									AND sector_id_2 = ' . $this->db->escapeNumber($this->getWarp()) . '
-								) LIMIT 1');
+		if (!$this->hasWarp()) {
+			return;
 		}
+
+		$warp = $this->getWarpSector();
+		if ($warp->hasWarp() && $warp->getWarp() != $this->getSectorID()) {
+			throw new Exception('Warp sectors do not match');
+		}
+
 		$this->warp = 0;
+		$this->hasChanged = true;
+
+		if ($warp->hasWarp()) {
+			$warp->removeWarp();
+		}
 	}
 
 	public function hasMine() {
