@@ -71,7 +71,7 @@ class Globals {
 				$PLANET_BUILDINGS[$buildingID]['Build Time'] = array();
 				$PLANET_BUILDINGS[$buildingID]['ExpGain'] = array();
 				$PLANET_BUILDINGS[$buildingID]['Max Amount'] = array();
-				
+
 				$db2->query('SELECT * FROM planet_can_build WHERE construction_id=' . self::$db->escapeNumber($buildingID));
 				while($db2->nextRecord()) {
 					$PLANET_BUILDINGS[$buildingID]['Credit Cost'][$db2->getInt('planet_type_id')] = $db2->getInt('cost_credit');
@@ -121,7 +121,7 @@ class Globals {
 																'Race Name' => self::$db->getField('race_name'),
 																'Description' => self::$db->getField('race_description'),
 																'ImageLink' => 'images/race/race' . self::$db->getInt('race_id') . '.jpg',
-																'ImageHeadLink' => 'images/race/head/race' . self::$db->getInt('race_id') . '.jpg',															
+																'ImageHeadLink' => 'images/race/head/race' . self::$db->getInt('race_id') . '.jpg',
 																'ImageGraphLink' => 'images/race/graph/race' . self::$db->getInt('race_id') . '.gif',
 																);
 			}
@@ -133,22 +133,22 @@ class Globals {
 		$races =& Globals::getRaces();
 		return $races[$raceID]['Race Name'];
 	}
-	
+
 	public static function getRaceImage($raceID) {
 		$races =& Globals::getRaces();
 		return $races[$raceID]['ImageLink'];
 		}
-	
+
 	public static function getRaceHeadImage($raceID) {
 		$races =& Globals::getRaces();
 		return $races[$raceID]['ImageHeadLink'];
 		}
-		
+
 	public static function getRaceGraphImage($raceID) {
 		$races =& Globals::getRaces();
 		return $races[$raceID]['ImageGraphLink'];
-		}		
-		
+		}
+
 	public static function getColouredRaceNameForRace($raceID, $gameID, $fromRaceID, $linked = true) {
 		$raceRelations =& Globals::getRaceRelations($gameID, $fromRaceID);
 		return self::getColouredRaceName($raceID, $raceRelations[$raceID], $linked);
@@ -675,7 +675,7 @@ class Globals {
 	}
 }
 
-function get_file_loc($fileName, $overrideGameDir = false) {
+function get_file_loc($fileName) {
 	global $overrideGameID;
 	static $storedDir;
 	if(isset($storedDir)) {
@@ -690,10 +690,6 @@ function get_file_loc($fileName, $overrideGameDir = false) {
 
 	$startPaths = array(ENGINE, LIB, ADMIN);
 	$midPaths = array($gameDir, 'Default/');
-	if ($overrideGameDir !== false) {
-		if($overrideGameDir[strlen($overrideGameDir)]!='/') $overrideGameDir .= '/';
-		array_unshift($overrideGameDir);
-	}
 	foreach($midPaths as $midPath) {
 		foreach($startPaths as $startPath) {
 			$filePath = $startPath . $midPath . $fileName;
