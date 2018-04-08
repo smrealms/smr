@@ -63,7 +63,6 @@ if ($db->getNumRows() > 0) {
 		$container_game['game_id'] = $game_id;
 		$games['Play'][$game_id]['GameStatsLink'] = SmrSession::getNewHREF($container_game);
 		$games['Play'][$game_id]['Maintenance'] = $curr_player->getTurns();
-		$games['Play'][$game_id]['LastActive'] = format_time(TIME-$curr_player->getLastCPLAction(),TRUE);
 		$games['Play'][$game_id]['LastMovement'] = format_time(TIME-$curr_player->getLastActive(),TRUE);
 
 	}
@@ -99,11 +98,12 @@ if ($db->getNumRows() > 0) {
 	// iterate over the resultset
 	while ($db->nextRecord()) {
 		$game_id = $db->getField('game_id');
+		$game = SmrGame::getGame($game_id);
 		$games['Join'][$game_id]['ID'] = $game_id;
 		$games['Join'][$game_id]['Name'] = $db->getField('game_name');
 		$games['Join'][$game_id]['StartDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('start_date'));
 		$games['Join'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('end_date'));
-		$games['Join'][$game_id]['MaxPlayers'] = $db->getField('max_players');
+		$games['Join'][$game_id]['Players'] = $game->getTotalPlayers();
 		$games['Join'][$game_id]['Type'] = $db->getField('game_type');
 		$games['Join'][$game_id]['Speed'] = $db->getField('game_speed');
 		$games['Join'][$game_id]['Credits'] = $db->getField('credits_needed');
