@@ -12,7 +12,7 @@
 <?php $DummyShip =& $DummyPlayer->getShip(); ?>
 <table>
 	<tr>
-		<td style="vertical-align:top">
+		<td class="top">
 			<span class="underline"><?php echo $DummyPlayer->getPlayerName(); ?></span><br /><br />
 			<form action="<?php echo $EditDummysLink; ?>" method="POST">
 				<input type="text" name="dummy_name" value="<?php echo $DummyPlayer->getPlayerName() ?>" />
@@ -50,7 +50,7 @@
 				<input type="submit" name="save_dummy" value="Save Dummy" />
 			</form>
 		</td>
-		<td style="vertical-align:top">
+		<td class="top">
 			<span class="underline">Current Details</span>
 				<br />Level: <?php echo $DummyPlayer->getLevelID(); ?><br />
 				Ship: <?php echo $DummyShip->getName(); ?> (<?php echo $DummyShip->getAttackRating() ?>/<?php echo $DummyShip->getDefenseRating(); ?>)<br />

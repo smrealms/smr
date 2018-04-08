@@ -1,9 +1,9 @@
 <table class="fullwidth" style="border:none">
 	<tr>
-		<td style="padding:0px;vertical-align:top"><?php
+		<td class="top nopad"><?php
 			$this->includeTemplate('includes/SectorNavigation.inc'); ?>
 		</td>
-		<td style="padding:0px;vertical-align:top;width:32em;"><?php
+		<td class="top nopad" style="width:32em;"><?php
 			$this->includeTemplate('includes/PlottedCourse.inc');
 			$this->includeTemplate('includes/Ticker.inc');
 			$this->includeTemplate('includes/Missions.inc'); ?>

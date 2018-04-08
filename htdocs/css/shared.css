@@ -167,6 +167,12 @@ div.secNavBox div.move_warp {
 .center {
 	text-align: center;
 }
+.top {
+	vertical-align: top;
+}
+.bottom {
+	vertical-align: bottom;
+}
 table.center, table.centered {
 	margin:auto;
 }
@@ -182,9 +188,6 @@ table.center, table.centered {
 }
 .shrink {
 	width: 1%;
-}
-.top {
-	vertical-align: top;
 }
 .blank {
 	margin: 0px;

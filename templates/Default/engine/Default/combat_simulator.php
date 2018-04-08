@@ -5,13 +5,13 @@
 <form action="<?php echo $CombatSimHREF ?>" method="POST">
 	<table>
 		<tr>
-			<td style="vertical-align:top">
+			<td class="top">
 				Attackers<br />
 				<?php $this->includeTemplate('includes/CombatSimTeamDetails.inc',array('Team'=>$Attackers, 'MemberDescription'=>'Attacker', 'MemberInputName'=>'attackers')); ?>
 			</td>
 		</tr>
 		<tr>
-			<td style="vertical-align:top">
+			<td class="top">
 				Defenders<br />
 				<?php $this->includeTemplate('includes/CombatSimTeamDetails.inc',array('Team'=>$Defenders, 'MemberDescription'=>'Defender', 'MemberInputName'=>'defenders')); ?>
 			</td>
