@@ -1,9 +1,9 @@
 <?php
-require_once(get_file_loc('SmrPlayer.class.inc'));
-require_once(get_file_loc('SmrLocation.class.inc'));
-require_once(get_file_loc('SmrPlanet.class.inc'));
-require_once(get_file_loc('SmrPort.class.inc'));
-require_once(get_file_loc('SmrGalaxy.class.inc'));
+require_once('SmrPlayer.class.inc');
+require_once('SmrLocation.class.inc');
+require_once('SmrPlanet.class.inc');
+require_once('SmrPort.class.inc');
+require_once('SmrGalaxy.class.inc');
 
 // Exception thrown when a sector cannot be found in the database
 class SectorNotFoundException extends Exception {}
