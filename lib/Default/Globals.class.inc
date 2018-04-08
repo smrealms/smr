@@ -678,6 +678,7 @@ class Globals {
 function get_file_loc($fileName) {
 	global $overrideGameID;
 	static $storedDir;
+	static $cache = array();
 	if(isset($storedDir)) {
 		$gameDir = $storedDir;
 	}
@@ -688,18 +689,25 @@ function get_file_loc($fileName) {
 		} else $gameDir = 'Default/';
 	}
 
+	$cacheKey = $gameDir . $fileName;
+	if (isset($cache[$cacheKey])) {
+		return $cache[$cacheKey];
+	}
+
 	$startPaths = array(ENGINE, LIB, ADMIN);
 	$midPaths = array($gameDir, 'Default/');
 	foreach($midPaths as $midPath) {
 		foreach($startPaths as $startPath) {
 			$filePath = $startPath . $midPath . $fileName;
 			if(is_file($filePath) && is_readable($filePath)) {
+				$cache[$cacheKey] = $filePath;
 				return $filePath;
 			}
 		}
 	}
 	$filePath = WWW . $fileName;
 	if(is_file($filePath) && is_readable($filePath)) {
+		$cache[$cacheKey] = $filePath;
 		return WWW . $fileName;
 	}
 
