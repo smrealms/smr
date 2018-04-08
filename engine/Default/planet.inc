@@ -7,6 +7,7 @@ if (!$player->isLandedOnPlanet()) {
 		// Auto-click current sector with javascript to avoid issues with ajax
 		// updates when the display page changes.
 		$container = create_container('skeleton.php', 'current_sector.php');
+		$container['msg'] = '<span class="yellow">WARNING</span>: You have been ejected from the planet!';
 		$currentSectorHREF = SmrSession::getNewHREF($container);
 		$template->addJavascriptForAjax('EVAL', "location.href = '$currentSectorHREF'");
 		forward($container);
