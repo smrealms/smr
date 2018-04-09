@@ -10,4 +10,3 @@ if($player->hasAlliance()) {
 	}
 }
 $template->assign('AutoChannels', $autoChannels);
-?>

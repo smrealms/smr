@@ -380,5 +380,3 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 //	return $this_weapon;
 //}
 }
-
-?>

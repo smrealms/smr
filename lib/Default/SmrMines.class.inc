@@ -141,5 +141,3 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		return $return;
 	}
 }
-
-?>

@@ -23,5 +23,3 @@ $template->assign('PageTopic', 'Planet : '.$planet->getName().' [Sector #'.$play
 
 require_once(get_file_loc('menu.inc'));
 create_planet_menu($planet);
-
-?>

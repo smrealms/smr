@@ -7,4 +7,3 @@ if (!isset($notify_id)) {
 $db->query('DELETE FROM message_notify WHERE notify_id IN (' . $db->escapeArray($notify_id) . ')');
 
 forward(create_container('skeleton.php', 'notify_view.php'));
-?>

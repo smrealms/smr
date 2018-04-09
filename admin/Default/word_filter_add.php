@@ -31,5 +31,3 @@ $db->query('INSERT INTO word_filter(word_value,word_replacement) VALUES (' . $db
 
 $container['error'] = 2;
 forward($container);
-
-?>

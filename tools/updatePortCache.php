@@ -10,5 +10,3 @@ while ($db->nextRecord()) {
 	SmrPort::getCachedPort($db->getInt('game_id'),$db->getInt('sector_id'),$db->getInt('account_id'))->addCachePort($db->getInt('account_id'));
 	SmrPort::clearCache();
 }
-
-?>

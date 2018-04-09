@@ -19,5 +19,3 @@ if ($disabled['Reason'] != CLOSE_ACCOUNT_BY_REQUEST_REASON) {
 $container = create_container('skeleton.php', 'game_play.php');
 $container['do_reopen_account'] = true;
 $template->assign('ReopenLink', SmrSession::getNewHREF($container));
-
-?>

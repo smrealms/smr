@@ -105,5 +105,3 @@ function private_msg_weapon($fp, $rdata) {
 	return false;
 
 }
-
-?>

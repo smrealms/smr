@@ -51,5 +51,3 @@ while ($db->nextRecord()) {
 }
 
 forward(create_container('skeleton.php', 'alliance_roster.php'));
-
-?>

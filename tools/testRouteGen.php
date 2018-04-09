@@ -56,4 +56,3 @@ foreach($allRoutes as $routeType)
 	var_dump($c);
 }
 /**/
-?>

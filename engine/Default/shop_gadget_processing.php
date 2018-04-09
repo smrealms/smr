@@ -23,4 +23,3 @@ if($THIS_PLAYER->addGadget($var['gad_id'])) {
 	$error .= get_status_message('green','Success','We have obtained the gadget!');
 }
 query('COMMIT;');
-?>

@@ -138,6 +138,3 @@ function channel_msg_sd_list($fp, $rdata, $account, $player)
 	}
 
 }
-
-
-?>

@@ -201,5 +201,3 @@ if (isset($var['alliance_id'])) {
 	else $PHP_OUTPUT.=($main_alliance->getAllianceName().' has no deaths!');
 	$PHP_OUTPUT.=('</td></tr></table>');
 }
-
-?>

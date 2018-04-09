@@ -15,5 +15,3 @@ foreach($RACES as $raceID => $race) {
 }
 $template->assign('PoliticalRelations', $politicalRelations);
 $template->assign('PersonalRelations', $personalRelations);
-
-?>

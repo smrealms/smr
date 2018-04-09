@@ -164,5 +164,3 @@ while ($db->nextRecord()) {
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Change Race');
 $PHP_OUTPUT.=('</form>');
-
-?>

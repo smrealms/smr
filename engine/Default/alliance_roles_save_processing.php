@@ -10,5 +10,3 @@ if(count($_REQUEST['role']) > 0) {
 $container=create_container('skeleton.php','alliance_roster.php');
 $container['action'] = 'Show Alliance Roles';
 forward($container);
-
-?>

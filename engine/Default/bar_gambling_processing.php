@@ -535,4 +535,3 @@ elseif ($action == 'blackjack') {
 	$container['DisableAjax'] = true;
 	forward($container);
 }
-?>

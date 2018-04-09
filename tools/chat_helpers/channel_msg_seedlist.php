@@ -112,5 +112,3 @@ function shared_channel_msg_seedlist_del($player, $sectors) {
 
 	return array('The specified sectors have been removed from the seedlist.');
 }
-
-?>

@@ -74,5 +74,3 @@ foreach ($STAT_INCREASE_TYPES as $upgrade_id => $upgrade_array) {
 }
 
 $PHP_OUTPUT.= '</table>';
-
-?>

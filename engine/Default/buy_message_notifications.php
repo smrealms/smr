@@ -23,5 +23,3 @@ while ($db->nextRecord()) {
 	$messageBoxes[] = $messageBox;
 }
 $template->assign('MessageBoxes', $messageBoxes);
-
-?>

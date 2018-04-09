@@ -13,5 +13,3 @@ $db->query('SELECT sector_id FROM planet WHERE game_id=' . $db->escapeNumber($pl
 if ($db->nextRecord()) {
 	$template->assign('PlayerPlanet', $db->getInt('sector_id'));
 }
-
-?>

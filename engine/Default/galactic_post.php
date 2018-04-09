@@ -58,5 +58,3 @@ if ($player->isGPEditor()) {
 	$PHP_OUTPUT.=('<span class="blue">If you wish to edit an article you must first view it.</span>');
 	$PHP_OUTPUT.=('<br /><br />');
 }
-
-?>

@@ -61,4 +61,3 @@ else {
 		$template->assign('Messages', $messages);
 	}
 }
-?>

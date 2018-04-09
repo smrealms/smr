@@ -104,5 +104,3 @@ function user_nick($fp, $rdata)
 	return false;
 
 }
-
-?>

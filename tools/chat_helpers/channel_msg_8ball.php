@@ -26,5 +26,3 @@ function shared_channel_msg_8ball() {
 
 	return $answers[rand(0, count($answers) - 1)];
 }
-
-?>

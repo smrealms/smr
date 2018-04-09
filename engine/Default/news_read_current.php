@@ -24,5 +24,3 @@ if ($db->getNumRows()) {
 	}
 	$template->assign('NewsItems',$NewsItems);
 }
-
-?>

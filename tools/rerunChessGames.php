@@ -28,5 +28,3 @@ function echoChessMoves($game) {
 	}
 	echo EOL;
 }
-
-?>

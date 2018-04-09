@@ -15,5 +15,3 @@ if (!empty($_REQUEST['validation_code'])) {
 $container = create_container('login_check_processing.php');
 $container['CheckType'] = 'Announcements';
 forward($container);
-
-?>

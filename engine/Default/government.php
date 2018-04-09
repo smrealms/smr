@@ -50,4 +50,3 @@ if ($player->getAlignment() > ALIGNMENT_EVIL && $player->getAlignment() <= ALIGN
 	$PHP_OUTPUT.=('</form>');
 }
 $PHP_OUTPUT.='</div>';
-?>

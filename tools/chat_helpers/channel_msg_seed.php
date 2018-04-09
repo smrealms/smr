@@ -48,5 +48,3 @@ function shared_channel_msg_seed($player) {
 
   return $result;
 }
-
-?>

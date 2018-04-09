@@ -10,4 +10,3 @@ class SmrClassicMySqlDatabase extends MySqlDatabase {
 		                    self::$port, self::$socket);
 	}
 }
-?>

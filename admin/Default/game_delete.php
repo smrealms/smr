@@ -28,5 +28,3 @@ $PHP_OUTPUT.=('</select>');
 $PHP_OUTPUT.=('&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Delete');
 $PHP_OUTPUT.=('</form>');
-
-?>

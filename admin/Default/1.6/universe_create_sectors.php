@@ -85,5 +85,3 @@ if ($var['gal_on'] < count($galaxies)) {
 	$container['gal_on']++;
 	$template->assign('NextGalaxyHREF', SmrSession::getNewHREF($container));
 }
-
-?>

@@ -60,5 +60,3 @@ $template->assign('CancelHREF', SmrSession::getNewHREF($container));
 $template->assign('Galaxy', $galaxy);
 $template->assign('Galaxies', $galaxies);
 $template->assign('Warps', $warps);
-
-?>

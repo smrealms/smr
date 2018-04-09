@@ -114,5 +114,3 @@ else {
 }
 
 $PHP_OUTPUT.=('</table></div>');
-
-?>

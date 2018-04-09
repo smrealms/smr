@@ -11,4 +11,3 @@ if(!USING_AJAX) {
 	else $container['body'] = 'current_sector.php';
 	forward($container);
 }
-?>

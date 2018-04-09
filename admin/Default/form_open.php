@@ -25,5 +25,3 @@ else
 	$PHP_OUTPUT.= 'red">CLOSED';
 $PHP_OUTPUT.= '</span></p>';
 $PHP_OUTPUT.=create_link($container, '<b>'.(Globals::isFeatureRequestOpen() ? 'Close' : 'Open') . ' Application Form</b>');
-
-?>

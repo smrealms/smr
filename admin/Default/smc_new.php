@@ -297,5 +297,3 @@ while ($db->nextRecord()) {
 	echo (EOL);
 		
 }
-
-?>

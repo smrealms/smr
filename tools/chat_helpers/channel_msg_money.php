@@ -34,4 +34,3 @@ function shared_channel_msg_money($player) {
 
 	return $result;
 }
-?>

@@ -38,4 +38,3 @@ $db->query('SELECT alliance_id, alliance_kills amount FROM alliance
 $template->assign('FilteredRankings', Rankings::collectAllianceRankings($db, $player, $lowerLimit));
 
 $template->assign('FilterRankingsHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_alliance_kills.php')));
-?>

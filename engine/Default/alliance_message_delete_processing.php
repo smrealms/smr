@@ -23,4 +23,3 @@ else {
 				AND thread_id = ' . $db->escapeNumber($var['thread_id']));
 	forward(create_container('skeleton.php', 'alliance_message.php'));
 }
-?>

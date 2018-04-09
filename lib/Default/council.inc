@@ -249,5 +249,3 @@ function checkPacts($race_id_1) {
 						AND race_id_2 = '.$db2->escapeNumber($race_id_1));
 	}
 }
-
-?>

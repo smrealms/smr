@@ -11,5 +11,3 @@ if (!empty($_POST['game_id'])) {
 
 forward(create_container('skeleton.php', 'enable_game.php',
                          array('processing_msg' => $msg)));
-
-?>

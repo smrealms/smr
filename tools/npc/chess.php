@@ -93,4 +93,3 @@ function debug($message, $debugObject = null) {
 	echo date('Y-m-d H:i:s - ').$message.($debugObject!==null?EOL.var_export($debugObject,true):'').EOL;
 	$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES ('.(defined('SCRIPT_ID')?SCRIPT_ID:0).', '.(is_object($account)?$account->getAccountID():0).',NOW(),'.$db->escapeString($message).','.$db->escapeString(var_export($debugObject,true)).','.$db->escapeString(var_export($var,true)).')');
 }
-?>

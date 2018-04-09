@@ -36,5 +36,3 @@ while ($db->nextRecord()) {
 	                        'href' => SmrSession::getNewHREF($container));
 }
 $template->assign('PastEditions', $pastEditions);
-
-?>

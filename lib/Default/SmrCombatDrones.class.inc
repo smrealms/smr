@@ -311,5 +311,3 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $this->doPlanetDamageToPlayer($return, $forces, $targetPlayer);
 	}
 }
-
-?>

@@ -51,5 +51,3 @@ function shared_channel_msg_op_info($player) {
 
 	return $result;
 }
-
-?>

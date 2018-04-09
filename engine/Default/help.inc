@@ -168,5 +168,3 @@ function get_numbering($topic_id) {
 		return get_numbering($up_topic_id) . $order_id . '. ';
 	}
 }
-
-?>

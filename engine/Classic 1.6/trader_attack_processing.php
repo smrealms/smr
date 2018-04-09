@@ -1275,5 +1275,3 @@ SmrPlayer::refreshCache();
 SmrShip::refreshCache();
 
 forward($container);
-
-?>

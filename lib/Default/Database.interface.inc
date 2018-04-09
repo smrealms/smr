@@ -20,4 +20,3 @@ interface Database {
 	
 	public function escapeBoolean($bool);
 }
-?>

@@ -213,5 +213,3 @@ if($action != 5) {
 	}
 	$PHP_OUTPUT.= '</div>';
 }
-
-?>

@@ -32,4 +32,3 @@ if($var['CheckType'] == 'Updates') {
 }
 
 forward(create_container('logged_in.php'));
-?>

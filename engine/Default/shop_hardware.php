@@ -17,5 +17,3 @@ if ($location->isHardwareSold()) {
 	}
 	$template->assign('HardwareSold', $hardwareSold);
 }
-
-?>

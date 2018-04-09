@@ -94,5 +94,3 @@ $PHP_OUTPUT.=create_submit('Select Another User');
 $PHP_OUTPUT.=('</p>');
 
 $PHP_OUTPUT.=('</form>');
-
-?>

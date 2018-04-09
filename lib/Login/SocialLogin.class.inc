@@ -144,5 +144,3 @@ class SocialLogin {
 		return $this->email;
 	}
 }
-
-?>

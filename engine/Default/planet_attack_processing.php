@@ -103,4 +103,3 @@ if($player->isDead()) {
 
 $container['results'] = $serializedResults;
 forward($container);
-?>

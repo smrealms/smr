@@ -42,5 +42,3 @@ function &getMessagePlayer($accountID, $gameID, $messageType = false) {
 	}
 	return $return;
 }
-
-?>

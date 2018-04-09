@@ -32,5 +32,4 @@ if ($db->nextRecord()) {
 	$template->assign('AlbumEntry',$albumEntry);
 }
 
-$template->assign('AlbumEditHref',SmrSession::getNewHREF(create_container('album_edit_processing.php', '')))
-?>
+$template->assign('AlbumEditHref',SmrSession::getNewHREF(create_container('album_edit_processing.php', '')));

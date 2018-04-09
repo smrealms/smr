@@ -19,5 +19,3 @@ if(in_array($shipID, $bannedShips)) {
 }
 
 require(ENGINE.'Default/shop_ship_processing.php');
-
-?>

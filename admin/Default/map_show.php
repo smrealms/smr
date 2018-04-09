@@ -41,5 +41,3 @@ else {
 	$PHP_OUTPUT .= create_submit('Select');
 	$PHP_OUTPUT .= ('</form>');
 }
-
-?>

@@ -25,5 +25,3 @@ if(ENABLE_NPCS_CHESS) {
 	}
 	$template->assign('NPCList',$npcs);
 }
-
-?>

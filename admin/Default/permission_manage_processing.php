@@ -17,5 +17,3 @@ if ($_REQUEST['action'] == 'Change') {
 }
 
 forward(create_container('skeleton.php', 'permission_manage.php'));
-
-?>

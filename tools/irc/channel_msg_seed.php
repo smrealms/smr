@@ -89,5 +89,3 @@ function channel_msg_seedlist_del($fp, $rdata, $account, $player)
 
 	return false;
 }
-
-?>

@@ -299,4 +299,3 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 	$message['SendTime'] = date(DATE_FULL_SHORT, $send_time);
 	$messageBox['Messages'][] = $message;
 }
-?>

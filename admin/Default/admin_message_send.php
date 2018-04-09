@@ -35,4 +35,3 @@ else {
 		$template->assign('ExpireTime', $var['expire']);
 	}
 }
-?>

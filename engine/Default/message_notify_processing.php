@@ -26,4 +26,3 @@ $db->query('INSERT INTO message_notify
 			VALUES ('.$notify_id.', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->getField('sender_id') . ', ' . $db->getField('account_id') . ', ' . $db->escape_string($db->getField('message_text')) . ', ' . $var['sent_time'] . ', ' . $var['notified_time'] . ')');
 
 forward(create_container('skeleton.php', 'message_view.php'));
-?>

@@ -203,5 +203,3 @@ if($race_id == RACE_ALSKANT) { // Give Alskants 250 personal relations to start.
 	}
 }
 forward(create_container('skeleton.php', 'game_play.php'));
-
-?>

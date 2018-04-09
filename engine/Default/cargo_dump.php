@@ -18,5 +18,3 @@ if ($ship->hasCargo()) {
 
 	$template->assign('Goods', $goods);
 }
-
-?>

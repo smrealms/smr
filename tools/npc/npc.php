@@ -745,4 +745,3 @@ function &findRoutes(&$player) {
 		return $routesMerged;
 	}
 }
-?>

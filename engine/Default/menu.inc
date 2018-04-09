@@ -413,4 +413,3 @@ function create_hof_menu() {
 	create_menu($menu_items);
 
 }
-?>

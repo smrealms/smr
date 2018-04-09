@@ -14,5 +14,3 @@ $playerMessage = 'You are now the leader of [alliance='.$player->getAllianceID()
 $player->sendMessageFromAllianceCommand($leader_id, $playerMessage);
 
 forward(create_container('skeleton.php', 'alliance_roster.php'));
-
-?>

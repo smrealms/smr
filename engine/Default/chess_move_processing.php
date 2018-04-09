@@ -52,4 +52,3 @@ else {
 
 $var = SmrSession::retrieveVar(SmrSession::$lastSN);
 do_voodoo();
-?>

@@ -79,5 +79,3 @@ $PHP_OUTPUT.= '</form>';
 
 $PHP_OUTPUT.= '<span class="small">Note: When you press "Create Ports and Mines" this will rearrange all current ports and mines.<br />';
 $PHP_OUTPUT.= 'To add new ports and mines without rearranging everything use the edit sector feature.</span>';
-
-?>

@@ -560,4 +560,3 @@ class SmrForce {
 		return $return;
 	}
 }
-?>

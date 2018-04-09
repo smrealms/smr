@@ -31,5 +31,3 @@ create_nav_menu($template, $player);
 
 $template->assign('Path', $path);
 $template->assign('FullPath', $fullPath);
-
-?>

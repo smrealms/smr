@@ -35,5 +35,3 @@ $PHP_OUTPUT.= '</table><br />';
 $container = create_container('login_check_processing.php');
 $container['CheckType'] = 'Updates';
 $PHP_OUTPUT .= create_button($container, 'Continue');
-
-?>

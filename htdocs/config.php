@@ -418,4 +418,3 @@ $links = array('Register' => 'login_create.php',
 					'ResetPassword' => 'resend_password.php');
 $template->assign('Links',$links);
 $template->assign('AJAX_ENABLE_REFRESH',AJAX_DEFAULT_REFRESH_TIME);
-?>

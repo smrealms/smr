@@ -46,4 +46,3 @@ if (isset($var['id'])) {
 	$PHP_OUTPUT.=create_submit('Reject');
 	$PHP_OUTPUT.=('</form>');
 }
-?>

@@ -17,5 +17,3 @@ create_council_menu($raceID);
 modifyRelations($raceID);
 
 checkPacts($raceID);
-
-?>

@@ -1139,5 +1139,3 @@ abstract class AbstractSmrShip {
 		return $this->upgradeShipHREF;
 	}
 }
-
-?>

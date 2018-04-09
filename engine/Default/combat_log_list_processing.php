@@ -53,5 +53,3 @@ else if ($submitAction == 'View') {
 	$container['current_log'] = 0;
 	forward($container);
 }
-
-?>

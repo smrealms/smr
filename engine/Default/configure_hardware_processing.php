@@ -27,5 +27,3 @@ elseif ($var['action'] == 'Disable Illusion') {
 
 $container = create_container('skeleton.php', 'current_sector.php');
 forward($container);
-
-?>

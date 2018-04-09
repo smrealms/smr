@@ -47,5 +47,3 @@ elseif ($action == 'VETO') {
 }
 
 forward(create_container('skeleton.php', 'council_vote.php'));
-
-?>

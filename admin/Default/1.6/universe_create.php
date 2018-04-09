@@ -25,4 +25,3 @@ while ($db->nextRecord()) {
 	$games[] = SmrGame::getGame($db->getInt('game_id'));
 }
 $template->assign('EditGames',$games);
-?>

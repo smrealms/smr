@@ -11,5 +11,3 @@ elseif ($action == 'Open') {
 }
 
 forward(create_container('skeleton.php', 'admin_tools.php'));
-
-?>

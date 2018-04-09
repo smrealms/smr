@@ -15,4 +15,3 @@ trait SmrMySqlSecrets {
 	//private static $dbName_SmrClassicHistory = 'smr_classic_history';
 	//private static $dbName_SmrClassic = 'smr_live';
 }
-?>

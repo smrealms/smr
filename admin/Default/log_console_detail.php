@@ -199,5 +199,3 @@ $container = create_container('skeleton.php', 'log_console.php');
 $container['account_ids'] = $account_ids;
 $PHP_OUTPUT.=create_link($container, '<b>&lt; Back</b>');
 $PHP_OUTPUT.=('</p>');
-
-?>

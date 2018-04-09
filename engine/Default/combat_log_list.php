@@ -130,5 +130,3 @@ if($db->getNumRows() > 0) {
 	}
 }
 $template->assign('Logs', $logs);
-
-?>

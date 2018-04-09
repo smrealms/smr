@@ -10,4 +10,3 @@ class SmrSessionMySqlDatabase extends MySqlDatabase {
 		                    self::$port, self::$socket);
 	}
 }
-?>

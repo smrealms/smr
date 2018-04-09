@@ -14,4 +14,3 @@ if(isset($var['override_death']))
 else
 	$template->assign('OverrideDeath',false);
 $template->assign('Port',$sector->getPort());
-?>

@@ -1080,5 +1080,3 @@ SmrShip::refreshCache();
 SmrPort::refreshCache();
 
 forward($container);
-
-?>

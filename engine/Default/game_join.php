@@ -81,5 +81,3 @@ if(count($races) > 1) {
 	$races[$raceKey]['Selected'] = true;
 }
 $template->assign('Races',$races);
-
-?>

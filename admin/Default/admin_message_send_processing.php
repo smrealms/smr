@@ -31,6 +31,4 @@ if (!empty($account_id) || $game_id == 20000) {
 
 $container = create_container('skeleton.php', 'admin_tools.php');
 $container['msg'] = $msg;
-forward($container)
-
-?>
+forward($container);

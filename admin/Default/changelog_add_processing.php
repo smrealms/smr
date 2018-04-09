@@ -25,5 +25,3 @@ $db->query('INSERT INTO changelog
 $db->unlock();
 
 forward(create_container('skeleton.php', 'changelog.php'));
-
-?>

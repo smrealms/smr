@@ -16,5 +16,3 @@ transfer('order');
 transfer('item');
 
 forward($container);
-
-?>

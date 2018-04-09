@@ -134,4 +134,3 @@ foreach ($types as $checkName => $displayInfo) {
 $PHP_OUTPUT.=('<tr><td colspan="2">');
 $PHP_OUTPUT.=($form['submit']);
 $PHP_OUTPUT.=('</td></tr></table></form></div>');
-?>

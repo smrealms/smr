@@ -118,4 +118,3 @@ function doUNO(&$player,&$ship) {
 		$ship->setHardware($key,$max);
 	}
 }
-?>

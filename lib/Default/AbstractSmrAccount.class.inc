@@ -1290,5 +1290,3 @@ abstract class AbstractSmrAccount {
 		return SmrSession::getNewHREF(create_container('skeleton.php','hall_of_fame_player_detail.php',array('account_id' => $this->getAccountID())));
 	}
 }
-
-?>

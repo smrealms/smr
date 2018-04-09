@@ -34,5 +34,3 @@ function channel_msg_ship($fp, $rdata) {
 	return false;
 
 }
-
-?>

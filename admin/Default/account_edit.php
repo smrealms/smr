@@ -128,5 +128,3 @@ if (isset($var['errorMsg'])) {
 if (isset($var['msg'])) {
 	$template->assign('Message', $var['msg']);
 }
-
-?>

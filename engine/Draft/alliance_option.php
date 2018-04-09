@@ -11,5 +11,3 @@ if ($player->isDraftLeader()) {
 }
 
 $template->assign('Links', $links);
-
-?>

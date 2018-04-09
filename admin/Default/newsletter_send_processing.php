@@ -107,6 +107,4 @@ else {
 	}
 }
 
-forward(create_container('skeleton.php', 'newsletter_send.php'))
-
-?>
+forward(create_container('skeleton.php', 'newsletter_send.php'));

@@ -20,5 +20,3 @@ $db->query('INSERT INTO galactic_post_applications (game_id, account_id, descrip
 $container = create_container('skeleton.php', 'current_sector.php');
 $container['msg'] = 'Thank you for your application.  It has been sent to the main editor and he will let you know if you have been accepted.';
 forward($container);
-
-?>

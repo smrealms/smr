@@ -63,5 +63,3 @@ function channel_msg_rank($fp, $rdata) {
 	return false;
 
 }
-
-?>

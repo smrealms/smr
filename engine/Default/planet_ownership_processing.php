@@ -37,5 +37,3 @@ else if ($action == 'Set Password') {
 }
 
 forward(create_container('skeleton.php', 'planet_ownership.php'));
-
-?>

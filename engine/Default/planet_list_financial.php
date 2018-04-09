@@ -22,5 +22,3 @@ $template->assign('CanViewBonds', $viewBonds);
 
 require_once('planet_list.inc');
 planet_list_common($var['alliance_id'], $viewBonds);
-
-?>

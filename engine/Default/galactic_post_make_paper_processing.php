@@ -12,5 +12,3 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'galactic_post_view_article.php';
 forward($container);
-
-?>

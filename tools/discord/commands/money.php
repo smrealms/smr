@@ -14,5 +14,3 @@ $fn_money = function ($message) {
 };
 
 $discord->registerCommand('money', mysql_cleanup($fn_money), ['description' => 'Get alliance financial status']);
-
-?>

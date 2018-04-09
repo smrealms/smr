@@ -34,5 +34,3 @@ else {
 }
 
 forward($container);
-
-?>

@@ -35,5 +35,3 @@ $player->setLandedOnPlanet(true);
 $player->takeTurns(1,1);
 $account->log(LOG_TYPE_MOVEMENT, 'Player lands at planet', $player->getSectorID());
 forward(create_container('skeleton.php', 'planet_main.php'));
-
-?>

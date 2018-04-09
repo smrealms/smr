@@ -13,5 +13,4 @@ if (strlen($message) > 255) {
 // put the msg into the database
 $db->query('INSERT INTO announcement (time, admin_id, msg) VALUES('.$db->escapeNumber(TIME).', '.$db->escapeNumber(SmrSession::$account_id).', '.$db->escapeString($message).')');
 
-forward(create_container('skeleton.php', 'admin_tools.php'))
-?>
+forward(create_container('skeleton.php', 'admin_tools.php'));

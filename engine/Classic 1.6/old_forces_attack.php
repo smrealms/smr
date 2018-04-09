@@ -35,5 +35,3 @@ if ($var['continue'] == 'yes') {
 	$PHP_OUTPUT.=('</form>');
 
 }
-
-?>

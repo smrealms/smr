@@ -91,4 +91,3 @@ function runAnAttack($realAttackers,$realDefenders) {
 	} unset($teamPlayer);
 	$template->assign('TraderCombatResults',$results);
 }
-?>

@@ -44,5 +44,3 @@ $PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'bar_read_wall.ph
 $PHP_OUTPUT.=('<textarea spellcheck="true" name="wall" id="InputFieldsText"></textarea><br /><br />');
 $PHP_OUTPUT.=create_submit('Write it');
 $PHP_OUTPUT.=('</form>');
-
-?>

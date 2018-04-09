@@ -407,5 +407,3 @@ function channel_msg_help($fp, $rdata)
 	return false;
 
 }
-
-?>

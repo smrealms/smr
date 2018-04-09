@@ -82,5 +82,3 @@ if (isset($var['id'])) {
 		$PHP_OUTPUT.=('<small><br />note: breaking news is in the news section.</small>');
 	}
 }
-
-?>

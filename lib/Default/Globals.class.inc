@@ -708,4 +708,3 @@ function get_file_loc($fileName) {
 	//We haven't matched on anything
 	throw new Exception('Cannot match given filename: ' . $fileName);
 }
-?>

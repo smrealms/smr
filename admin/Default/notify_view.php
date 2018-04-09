@@ -76,5 +76,3 @@ if ($db->getNumRows()) {
 
 } else
 	$PHP_OUTPUT.=('There are no reported Messages.');
-
-?>

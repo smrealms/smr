@@ -89,5 +89,3 @@ else {
 }
 $PHP_OUTPUT.=('</div>');
 $db = new SmrMySqlDatabase();
-
-?>

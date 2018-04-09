@@ -25,5 +25,3 @@ foreach ($accountIDs as $accountID) {
 }
 
 forward(create_container('skeleton.php', 'alliance_roster.php'));
-
-?>

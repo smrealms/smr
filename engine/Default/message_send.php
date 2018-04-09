@@ -15,4 +15,3 @@ else
 	$template->assign('Receiver', 'All Online');
 if(isset($var['preview']))
 	$template->assign('Preview', $var['preview']);
-?>

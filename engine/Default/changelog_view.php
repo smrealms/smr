@@ -47,5 +47,3 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.=('</ul><br />');
 }
 $PHP_OUTPUT.='</div>';
-
-?>

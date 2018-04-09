@@ -40,5 +40,3 @@ echo ('<tr><td align="center">Hunting - '.$hunt.'</td></tr>');
 echo ('<tr><td align="center">Utility - '.$util.'</td></tr>');
 echo ('</table>');*/
 echo ('</body>');
-
-?>

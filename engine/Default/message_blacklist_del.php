@@ -24,5 +24,3 @@ foreach($_REQUEST['entry_ids'] as $entry_id) {
 $db = new SmrMySqlDatabase();
 $db->query('DELETE FROM message_blacklist WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND entry_id IN (' . $db->escapeArray($entry_ids) . ')');
 forward($container);
-
-?>

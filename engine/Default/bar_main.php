@@ -41,5 +41,3 @@ require_once(get_file_loc($script));
 if($script == 'bar_opening.php') {
 	$template->assign('IncludeScript',$script);
 }
-
-?>

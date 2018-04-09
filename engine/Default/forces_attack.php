@@ -10,4 +10,3 @@ if(isset($var['override_death']))
 	$template->assign('OverrideDeath',true);
 else
 	$template->assign('OverrideDeath',false);
-?>

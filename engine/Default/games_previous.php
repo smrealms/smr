@@ -199,4 +199,3 @@ else {
 $PHP_OUTPUT.=('</div>');
 //to stop errors on the following scripts
 $db = new SmrMySqlDatabase();
-?>

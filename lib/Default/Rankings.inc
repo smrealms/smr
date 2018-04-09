@@ -86,5 +86,3 @@ class Rankings {
 		$template->assign('TotalRanks', $totalRanks);
 	}
 }
-
-?>

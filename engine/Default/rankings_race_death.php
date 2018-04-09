@@ -34,5 +34,3 @@ while ($db->nextRecord()) {
 
 $PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</div>');
-
-?>

@@ -30,5 +30,3 @@ if($var['continue'] && !isset($var['override_death'])) {
 	$PHP_OUTPUT.=create_button(create_container('skeleton.php', 'port_loot.php'), 'Loot the port');
 	$PHP_OUTPUT.= '</div>';
 }
-
-?>

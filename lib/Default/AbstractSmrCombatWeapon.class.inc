@@ -144,5 +144,3 @@ abstract class AbstractSmrCombatWeapon {
 	abstract public function &shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer);
 	abstract public function &shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer);
 }
-
-?>

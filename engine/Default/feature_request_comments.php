@@ -42,4 +42,3 @@ $container = $var;
 $container['url'] = 'feature_request_comment_processing.php';
 unset($container['body']);
 $template->assign('FeatureRequestCommentFormHREF',SmrSession::getNewHREF($container));
-?>

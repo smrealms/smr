@@ -29,5 +29,3 @@ $db->query(
 	'INSERT INTO account_sms_response ' .
 	'(message_id, message, from) ' .
 	'VALUES (' . $db->escapeNumber($message_id) . ', ' . $db->escapeString($message) . ', ' . $db->escapeString($from) . ')');
-
-?>

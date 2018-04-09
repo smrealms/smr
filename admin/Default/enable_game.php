@@ -19,5 +19,3 @@ $template->assign('DisabledGames', $disabledGames);
 // Create the link to the processing file
 $linkContainer = create_container('enable_game_processing.php', '');
 $template->assign('EnableGameHREF', SmrSession::getNewHREF($linkContainer));
-
-?>

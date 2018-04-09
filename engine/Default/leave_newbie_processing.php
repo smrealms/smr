@@ -7,5 +7,3 @@ if ($action == 'Yes!') {
 
 $account->log(LOG_TYPE_MOVEMENT, 'Player drops newbie turns.', $player->getSectorID());
 forward(create_container('skeleton.php', 'current_sector.php'));
-
-?>

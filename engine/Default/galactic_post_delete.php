@@ -20,4 +20,3 @@ else {
 
 $container = create_container('skeleton.php', 'galactic_post.php');
 forward($container);
-?>

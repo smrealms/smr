@@ -44,5 +44,3 @@ elseif ($action == 'Confirm') {
 }
 
 forward(create_container('skeleton.php', 'planet_financial.php'));
-
-?>

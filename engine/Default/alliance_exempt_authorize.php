@@ -35,4 +35,3 @@ if ($db->getNumRows()) {
 else {
 	$PHP_OUTPUT.=('<div align="center">Nothing to authorize.</div>');
 }
-?>

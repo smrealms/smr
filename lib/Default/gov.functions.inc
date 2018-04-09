@@ -27,4 +27,3 @@ function displayBountyList(&$PHP_OUTPUT,$type,$claimableBy) {
 		$PHP_OUTPUT.=('</table>');
 	}
 }
-?>

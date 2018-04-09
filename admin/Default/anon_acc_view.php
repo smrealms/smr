@@ -49,5 +49,3 @@ else {
 	} else $PHP_OUTPUT.=('Account '.$acc.' in game '.$game.' does NOT exist!');
 
 }
-
-?>

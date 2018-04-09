@@ -18,5 +18,3 @@ if ($var['can_get_turns'] == true) {
 }
 
 forward($container);
-
-?>

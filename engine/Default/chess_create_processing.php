@@ -6,4 +6,3 @@ if(!is_numeric($_REQUEST['player_id'])) {
 ChessGame::insertNewGame(TIME, null, $player, SmrPlayer::getPlayerByPlayerID($_REQUEST['player_id'],$player->getGameID()));
 
 forward(create_container('skeleton.php','chess.php'));
-?>

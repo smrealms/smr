@@ -124,5 +124,3 @@ function get_bargain_price() {
 
 	return $price;
 }
-
-?>

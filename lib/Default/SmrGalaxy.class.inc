@@ -274,4 +274,3 @@ class SmrGalaxy {
 		return $otherGalaxy->getGalaxyID() == $this->getGalaxyID() && $otherGalaxy->getGameID() == $this->getGameID();
 	}
 }
-?>

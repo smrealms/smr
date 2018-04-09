@@ -32,5 +32,3 @@ $PHP_OUTPUT.=('<tr><td>Smr Credits:</td><td><input type="number" name="smrcredit
 
 $PHP_OUTPUT.=('<br /><br />');
 $PHP_OUTPUT.=create_submit('Place');
-
-?>

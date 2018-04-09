@@ -403,4 +403,3 @@ class SmrLocation {
 		return false;
 	}
 }
-?>

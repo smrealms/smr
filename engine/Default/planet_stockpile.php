@@ -22,5 +22,3 @@ foreach (Globals::getGoods() as $goodID => $good) {
 }
 
 $template->assign('GoodInfo', $goodInfo);
-
-?>

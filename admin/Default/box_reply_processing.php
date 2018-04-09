@@ -20,5 +20,3 @@ if(!empty($message)) {
 	}
 }
 forward(create_container('skeleton.php', 'box_view.php'));
-
-?>

@@ -202,5 +202,3 @@ function php_link_check($url, $r = FALSE) {
 		return $http;
 	}
 }
-
-?>

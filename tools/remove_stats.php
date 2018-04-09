@@ -77,5 +77,3 @@ while ($db->nextRecord())
 				'WHERE account_id = ' . $db->getField('account_id') . ' LIMIT 1;'.EOL);
 
 }
-
-?>

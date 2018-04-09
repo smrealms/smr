@@ -56,5 +56,3 @@ if (sizeof($this_shop_sells) > 0) {
 else {
 	$PHP_OUTPUT.= 'We\'ve got nothing for you here! Get outta here!<br />';
 }
-
-?>

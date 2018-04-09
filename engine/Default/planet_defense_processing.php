@@ -117,5 +117,3 @@ else
 $ship->removeUnderAttack();
 
 forward(create_container('skeleton.php', 'planet_defense.php'));
-
-?>

@@ -15,5 +15,3 @@ function doLottoNewsAssign($gameID,&$template) {
 		 $template->assign('LottoNews',array('Time' => $db->getField('time'), 'Message' => bbifyMessage($db->getField('news_message'))));
 	}
 }
-
-?>

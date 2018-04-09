@@ -83,5 +83,3 @@ function notice_nickserv_unknown_user($fp, $rdata)
 	return false;
 
 }
-
-?>

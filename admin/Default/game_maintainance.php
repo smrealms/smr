@@ -100,6 +100,3 @@ if (!file_exists($file_name)) {
 // message table stuff
 //
 ///////////////////////////////////////////
-
-
-?>

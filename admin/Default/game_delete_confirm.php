@@ -34,5 +34,3 @@ if ($db->nextRecord()) {
 	$PHP_OUTPUT.=('</form>');
 
 }
-
-?>

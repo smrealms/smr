@@ -15,5 +15,3 @@ $port->update();
 $container = create_container('skeleton.php', 'current_sector.php');
 $container['msg'] = 'You have taken <span class="creds">' . number_format($credits) . '</span> from the port.';
 forward($container);
-
-?>

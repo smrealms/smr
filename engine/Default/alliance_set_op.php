@@ -26,5 +26,3 @@ if ($db->nextRecord()) {
 }
 
 $template->assign('OpProcessingHREF', SmrSession::getNewHREF($container));
-
-?>

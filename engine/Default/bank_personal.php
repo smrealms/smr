@@ -38,5 +38,3 @@ $PHP_OUTPUT.= '&nbsp;&nbsp;';
 $PHP_OUTPUT.= $form['submit']['Withdraw'];
 
 $PHP_OUTPUT.= '</form>';
-
-?>

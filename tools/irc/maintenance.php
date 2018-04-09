@@ -93,5 +93,3 @@ function check_events($fp)
 
 	}
 }
-
-?>

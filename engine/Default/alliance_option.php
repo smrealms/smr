@@ -82,4 +82,3 @@ if ($player->isAllianceLeader()) {
 }
 
 $template->assign('Links', $links);
-?>

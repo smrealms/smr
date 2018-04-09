@@ -17,5 +17,3 @@ $db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id,
 $db->query('INSERT INTO account_votes_for_feature VALUES('.$db->escapeNumber(SmrSession::$account_id).', '.$db->escapeNumber($featureRequestID).',\'YES\')');
 
 forward(create_container('skeleton.php', 'feature_request.php'));
-
-?>

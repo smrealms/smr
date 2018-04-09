@@ -153,5 +153,3 @@ function checkMissionRequirements(&$values, array &$mission, AbstractSmrPlayer &
 	}
 	return true;
 }
-
-?>

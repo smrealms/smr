@@ -71,5 +71,3 @@ $PHP_OUTPUT.=('<p>&nbsp;</p>');
 $PHP_OUTPUT.=('<p>');
 $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'log_console.php'), '<b>&lt; Back</b>');
 $PHP_OUTPUT.=('</p>');
-
-?>

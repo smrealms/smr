@@ -21,5 +21,3 @@ foreach($_REQUEST['word_ids'] as $word_id) {
 
 $db->query('DELETE FROM word_filter WHERE word_id IN (' . $db->escapeArray($word_ids) . ')');
 forward($container);
- 
-?>

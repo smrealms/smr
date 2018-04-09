@@ -15,4 +15,3 @@ $account->log(LOG_TYPE_GAME_ENTERING, 'Player entered game '.SmrSession::$game_i
 
 $container = create_container('skeleton.php', 'current_sector.php');
 forward($container);
-?>

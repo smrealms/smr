@@ -52,5 +52,3 @@ else {
 }
 
 forward(create_container('skeleton.php', 'bank_personal.php'));
-
-?>

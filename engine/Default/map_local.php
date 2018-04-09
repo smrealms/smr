@@ -87,5 +87,3 @@ for ($i=0;$i<$span&&$i<$galaxy->getHeight();$i++) {
 	}
 }
 $template->assign('MapSectors',$mapSectors);
-
-?>

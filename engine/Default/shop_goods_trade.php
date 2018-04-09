@@ -79,5 +79,3 @@ $PHP_OUTPUT.=('<br /><br />');
 $PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'current_sector.php'));
 $PHP_OUTPUT.=create_submit('Leave Port');
 $PHP_OUTPUT.=('</form>');
-
-?>

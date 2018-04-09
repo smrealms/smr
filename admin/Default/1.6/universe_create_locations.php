@@ -98,5 +98,3 @@ $template->assign('CreateLocationsFormHREF', SmrSession::getNewHREF($container))
 // HREF to cancel and return to the previous page
 $container = create_container('skeleton.php', '1.6/universe_create_sectors.php', $var);
 $template->assign('CancelHREF', SmrSession::getNewHREF($container));
-
-?>

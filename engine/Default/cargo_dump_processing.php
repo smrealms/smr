@@ -79,5 +79,3 @@ $ship->decreaseCargo($good_id,$amount);
 $player->increaseHOF($amount,array('Trade','Goods', 'Jettisoned'), HOF_ALLIANCE);
 
 forward($container);
-
-?>

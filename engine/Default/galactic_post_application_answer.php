@@ -13,5 +13,3 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'galactic_post_view_applications.php';
 forward($container);
-
-?>

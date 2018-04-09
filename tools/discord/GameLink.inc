@@ -69,5 +69,3 @@ class GameLink
 		$this->valid = true;
 	}
 }
-
-?>

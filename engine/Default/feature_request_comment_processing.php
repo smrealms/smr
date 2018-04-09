@@ -11,5 +11,3 @@ $container = $var;
 $container['url'] = 'skeleton.php';
 $container['body'] = 'feature_request_comments.php';
 forward($container);
-
-?>

@@ -10,5 +10,3 @@ $template->assign('HandoverHREF', SmrSession::getNewHREF($container));
 
 $template->assign('AlliancePlayers', $alliance->getMembers());
 $template->assign('ThisPlayer', $player);
-
-?>

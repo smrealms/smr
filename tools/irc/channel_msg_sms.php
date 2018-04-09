@@ -188,5 +188,3 @@ function channel_msg_sms_send($fp, $rdata, $account, $player)
 	return false;
 
 }
-
-?>

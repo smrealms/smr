@@ -66,5 +66,3 @@ else {
 	$PHP_OUTPUT.=create_submit('Buy the map');
 	$PHP_OUTPUT.=('</form></div>');
 }
-
-?>

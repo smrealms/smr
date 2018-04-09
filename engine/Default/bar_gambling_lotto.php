@@ -19,4 +19,3 @@ $container['script'] = 'bar_gambling_processing.php';
 $container['action'] = 'process';
 $PHP_OUTPUT.=create_button($container,'Buy a Ticket ($1,000,000)');
 $PHP_OUTPUT.=('</div>');
-?>

@@ -71,5 +71,3 @@ else {
 	$PHP_OUTPUT.=create_submit('Continue');
 	$PHP_OUTPUT.=('</form>');
 }
-
-?>

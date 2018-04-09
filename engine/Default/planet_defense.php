@@ -11,5 +11,3 @@ $template->assign('TransferCDsHref',SmrSession::getNewHREF($container));
 
 $container['type_id'] = 2;
 $template->assign('TransferArmourHref',SmrSession::getNewHREF($container));
-
-?>
