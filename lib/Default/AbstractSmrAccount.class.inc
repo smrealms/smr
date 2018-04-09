@@ -827,14 +827,12 @@ abstract class AbstractSmrAccount {
 
 	// gets the CSS URL based on the template name specified in preferences
 	public function getCssUrl() {
-		global $CSS_URLS;
-		return $CSS_URLS[$this->getTemplate()];
+		return CSS_URLS[$this->getTemplate()];
 	}
 
 	// gets the CSS_COLOUR URL based on the template and color scheme specified in preferences
 	public function getCssColourUrl() {
-		global $CSS_COLOUR_URLS;
-		return $CSS_COLOUR_URLS[$this->getTemplate()][$this->getColourScheme()];
+		return CSS_COLOUR_URLS[$this->getTemplate()][$this->getColourScheme()];
 	}
 
 	public function getHofName($linked=false) {

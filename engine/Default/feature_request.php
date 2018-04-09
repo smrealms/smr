@@ -11,7 +11,7 @@ $thisStatus = statusFromCategory($var['category']);
 $template->assign('PageTopic', 'Feature Requests - ' . $var['category']);
 
 // Feature Requests show up as new for this many days
-define('NEW_REQUEST_DAYS', 30);
+const NEW_REQUEST_DAYS = 30;
 
 $requestCategories = array(
 	'New' => 'Open requests active within the past ' . NEW_REQUEST_DAYS . ' days',
@@ -24,7 +24,7 @@ $requestCategories = array(
 $categoryTable = array();
 foreach ($requestCategories as $category => $description) {
 	$status = statusFromCategory($category);
-	
+
 	$container = $var;
 	$container['category'] = $category;
 	$categoryTable[$category] = array(
@@ -72,7 +72,7 @@ if ($db->getNumRows() > 0) {
 		);
 		if($featureModerator)
 			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getInt('poster_id'));
-		
+
 		if ($canVote) {
 			$db2->query('SELECT COUNT(*), vote_type
 						FROM account_votes_for_feature
