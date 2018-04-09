@@ -42,5 +42,3 @@ function planet_list_common($allianceId, $getPlanets) {
 		$template->assign('AllPlanets', $allPlanets);
 	}
 }
-
-?>

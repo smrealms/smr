@@ -14,5 +14,3 @@ $db->query('CREATE TABLE player_has_stats_cache (PRIMARY KEY (game_id,account_id
 
 $db->query('DROP TABLE IF EXISTS account_has_stats_cache');
 $db->query('CREATE TABLE account_has_stats_cache (PRIMARY KEY (account_id)) SELECT * FROM account_has_stats');
-
-?>

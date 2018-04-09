@@ -70,5 +70,3 @@ $PHP_OUTPUT.= '
 ';
 $PHP_OUTPUT.= $form['submit'];
 $PHP_OUTPUT.= '</form>';
-
-?>

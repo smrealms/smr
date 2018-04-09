@@ -55,4 +55,3 @@ if (SmrSession::$game_id != 0) {
 	}
 }
 $PHP_OUTPUT.='<br /><br />Note: The total score will be lower than the sum of the individual scores as the points you get for each action is reduced as you do it more (people who are good at all parts of the game get more points than someone who is only good at one part).';
-?>

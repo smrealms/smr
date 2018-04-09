@@ -25,5 +25,3 @@ if (!$db->getNumRows()) {
 	$PHP_OUTPUT.=('</form>');
 
 }
-
-?>

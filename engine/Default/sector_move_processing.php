@@ -156,4 +156,3 @@ if ($mine_owner_id) {
 
 // otherwise
 forward(create_container('skeleton.php', $var['target_page']));
-?>

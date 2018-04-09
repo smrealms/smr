@@ -27,4 +27,3 @@ elseif ($action == 'Ban' || $action == 'Ban and remove exception') {
 	}
 }
 forward(create_container('skeleton.php', 'admin_tools.php'));
-?>

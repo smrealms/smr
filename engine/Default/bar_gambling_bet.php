@@ -29,5 +29,3 @@ $PHP_OUTPUT.=('<h1>THE PLAY</h1>The dealer deals two cards to you and two cards 
 $PHP_OUTPUT.=('After you have drawn, the dealer\'s remaining card is exposed. Under SMR rules, a dealer with a total less than 17 must "hit" (take a card); with 17 or more, dealer must stand.<br /><br />');
 $PHP_OUTPUT.=('If dealer "busts" by going over 21, any players still in the game win. Otherwise, players with totals higher than the dealer win, while players with totals less than the dealer lose. In case of a tie, or "push" the player\'s bet is returned (no money changes hands).<br /><br />');
 $PHP_OUTPUT.=('If your or the dealer\'s first two cards total 21 (an ace and a 10 or face card), the holding is known as a blackjack. A player with blackjack is paid extra--two and a half times the original bet--unless dealer also has blackjack, in which case the player loses.<br /><br />');
-
-?>

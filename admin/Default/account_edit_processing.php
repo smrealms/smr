@@ -252,5 +252,3 @@ $container['msg'] = $msg.' for the account of '.$curr_account->getLogin().' '.$e
 
 $curr_account->update();
 forward($container);
-
-?>

@@ -258,4 +258,3 @@ function channel_op_notification($fp, $rdata, $nick, $channel) {
 
 	return true;
 }
-?>

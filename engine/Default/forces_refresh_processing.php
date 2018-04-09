@@ -5,5 +5,3 @@ $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var
 $forces->updateExpire();
 
 forward(create_container('skeleton.php', 'current_sector.php'));
-
-?>

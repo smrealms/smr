@@ -1,5 +1,3 @@
 <?php
 
 include('planet.inc');
-
-?>

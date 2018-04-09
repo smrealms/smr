@@ -12,5 +12,3 @@ $db->query('UPDATE album
 			WHERE account_id = ' . $db->escapeNumber($var['album_id']));
 
 forward(create_container('skeleton.php', 'album_approve.php'));
-
-?>

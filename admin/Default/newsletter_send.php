@@ -22,4 +22,3 @@ if ($db->nextRecord()) {
 
 // Create the form for the populated processing container
 $template->assign('ProcessingForm', create_echo_form($processingContainer));
-?>

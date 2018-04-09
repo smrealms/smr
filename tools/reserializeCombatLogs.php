@@ -27,5 +27,3 @@ $db->query('SELECT result,log_id FROM combat_logs');
 while($db->nextRecord()) {
 	$db2->query('UPDATE combat_logs SET result='.$db2->escapeBinary(gzcompress(serialize(unserialize(gzuncompress($db->getField('result')))))).' WHERE log_id='.$db->getField('log_id'));
 }
-
-?>

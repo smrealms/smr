@@ -6,5 +6,3 @@ $fn_invite = function ($message) use ($discord) {
 };
 
 $discord->registerCommand('invite', $fn_invite, ['description' => 'Invite Autopilot to join your server!']);
-
-?>

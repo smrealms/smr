@@ -5,5 +5,3 @@ if($account->isVeteran()) {
 }
 
 require_once(ENGINE . 'Default/game_join.php');
-
-?>

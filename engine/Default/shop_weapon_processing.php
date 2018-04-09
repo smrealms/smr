@@ -57,5 +57,3 @@ else {
 $container = create_container('skeleton.php', 'shop_weapon.php');
 transfer('LocationID');
 forward($container);
-
-?>

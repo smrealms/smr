@@ -14,5 +14,3 @@ while ($db->nextRecord()) {
 	$forces[] = SmrForce::getForce($player->getGameID(), $db->getField('sector_id'), $db->getField('owner_id'));
 }
 $template->assign('Forces', $forces);
-
-?>

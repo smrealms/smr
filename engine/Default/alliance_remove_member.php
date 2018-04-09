@@ -50,4 +50,3 @@ else {
 }
 
 $PHP_OUTPUT.= '</div>';
-?>

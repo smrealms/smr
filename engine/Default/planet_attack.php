@@ -13,4 +13,3 @@ if(isset($var['override_death']))
 else
 	$template->assign('OverrideDeath',false);
 $template->assign('Planet',SmrPlanet::getPlanet($player->getGameID(),$var['sector_id']));
-?>

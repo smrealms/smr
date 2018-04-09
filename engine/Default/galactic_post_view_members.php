@@ -39,4 +39,3 @@ if ($db->getNumRows()) {
 	$PHP_OUTPUT.=('</table>');
 
 }
-?>

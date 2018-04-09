@@ -10,5 +10,3 @@ $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<input type="text" name="title" id="InputFields" class="center" style="width:525;"><br /><br />');
 $PHP_OUTPUT.=create_submit('Make the paper');
 $PHP_OUTPUT.=('</form>');
-
-?>

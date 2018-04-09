@@ -54,4 +54,3 @@ $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<input type="number" name="align" value="'.$player->getAlignment().'">&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Set Align to Amount');
 $PHP_OUTPUT.=('</form>');
-?>

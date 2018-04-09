@@ -8,5 +8,3 @@ if ($db->nextRecord()) {
 	$winningTicket = $db->getInt('prize');
 }
 $template->assign('WinningTicket',$winningTicket);
-
-?>

@@ -20,6 +20,3 @@ function query_command($fp, $rdata)
 
 	return false;
 }
-
-
-?>

@@ -26,4 +26,3 @@ if(isset($var['PreviewOffended']))
 	$template->assign('PreviewOffended', $var['PreviewOffended']);
 if(isset($var['OffendedBanPoints']))
 	$template->assign('OffendedBanPoints', $var['OffendedBanPoints']);
-?>

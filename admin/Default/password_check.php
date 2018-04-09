@@ -66,5 +66,3 @@ if ($db->getNumRows() > 0) {
 }
 else
 	$PHP_OUTPUT.=('No double passwords!');
-
-?>

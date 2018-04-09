@@ -23,5 +23,3 @@ elseif ($action == 'Cancel') {
 }
 
 forward(create_container('skeleton.php', 'planet_construction.php'));
-
-?>

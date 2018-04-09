@@ -65,5 +65,3 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</form>');
-
-?>

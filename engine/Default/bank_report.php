@@ -103,5 +103,3 @@ else {
 	$PHP_OUTPUT.=('</div>');
 }
 $PHP_OUTPUT.=($text);
-
-?>

@@ -616,4 +616,3 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('<input type=hidden name=first value="first"></form></center>');
 
 }
-?>

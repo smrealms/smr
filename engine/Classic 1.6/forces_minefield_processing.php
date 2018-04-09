@@ -390,5 +390,3 @@ $container['force_msg'] = $force_msg;
 $container['attacker_total_msg'] = $attacker_total_msg;
 $container['owner_id'] = $owner_id;
 forward($container);
-
-?>

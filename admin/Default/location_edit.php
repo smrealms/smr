@@ -47,4 +47,3 @@ if(isset($var['location_type_id'])) {
 else {
 	$template->assign('Locations',SmrLocation::getAllLocations());
 }
-?>

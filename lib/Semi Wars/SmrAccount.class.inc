@@ -6,5 +6,3 @@ class SmrAccount extends AbstractSmrAccount {
 		$this->veteran = true;
 	}
 }
-
-?>

@@ -11,5 +11,3 @@ $fn_seed = function ($message) {
 };
 
 $discord->registerCommand('seed', mysql_cleanup($fn_seed), ['description' => 'List sectors with missing seeds']);
-
-?>

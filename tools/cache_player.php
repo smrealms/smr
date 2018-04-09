@@ -74,6 +74,3 @@ function send_irc_message($message) {
 	$data = @$data['1'];
 	return (@$data['0'] === '1' ? 1 : 0);
 }
-
-
-?>

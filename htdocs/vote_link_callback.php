@@ -49,5 +49,3 @@ if ($db->nextRecord()) {
 	$player->save();
 	release_lock();
 }
-
-?>

@@ -39,4 +39,3 @@ $template->assign('Levels',Globals::getLevelRequirements());
 
 
 $template->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
-?>

@@ -32,5 +32,3 @@ function channel_action_slap($fp, $rdata)
 	}
 
 }
-
-?>

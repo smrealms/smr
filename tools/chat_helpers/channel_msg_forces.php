@@ -65,5 +65,3 @@ function shared_channel_msg_forces($player, $option) {
 		return array('Your alliance does not own any forces in these sectors.');
 	}
 }
-
-?>

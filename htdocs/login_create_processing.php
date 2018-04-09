@@ -219,4 +219,3 @@ try {
 catch(Exception $e) {
 	handleException($e);
 }
-?>

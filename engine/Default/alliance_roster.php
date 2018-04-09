@@ -87,5 +87,3 @@ if ($canJoin === true) {
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$template->assign('JoinHREF', SmrSession::getNewHREF($container));
 }
-
-?>

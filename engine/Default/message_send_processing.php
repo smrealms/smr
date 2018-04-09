@@ -43,5 +43,3 @@ if(isset($var['alliance_id'])) {
 }
 $container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
 forward($container);
-
-?>

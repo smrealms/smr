@@ -18,5 +18,3 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'ship_check.php';
 forward($container);
-
-?>

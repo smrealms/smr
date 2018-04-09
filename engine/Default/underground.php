@@ -30,4 +30,3 @@ if ($player->getAlignment() < ALIGNMENT_GOOD && $player->getAlignment() >= ALIGN
 	$PHP_OUTPUT.=create_submit('Become a gang member');
 	$PHP_OUTPUT.=('</form>');
 }
-?>

@@ -23,4 +23,3 @@ if(isset($var['Preview'])) {
 	$template->assign('Preview', $var['Preview']);
 }
 $template->assign('SubmitArticleHref',SmrSession::getNewHREF($container));
-?>

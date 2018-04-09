@@ -17,5 +17,3 @@ if ($db->getNumRows()) {
 	}
 	$template->assign('AdminPermissions',$adminPermissions);
 }
-
-?>

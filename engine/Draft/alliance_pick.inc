@@ -39,5 +39,3 @@ function get_draft_teams($gameId) {
 
   return $teams;
 }
-
-?>

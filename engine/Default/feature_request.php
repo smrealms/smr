@@ -113,4 +113,3 @@ function getFeaturesCount($status, $daysNew = false) {
 	$db->nextRecord();
 	return $db->getInt('count');
 }
-?>

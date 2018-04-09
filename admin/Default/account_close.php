@@ -101,4 +101,3 @@ if (isset($var['continue'])) {
 	$container['msg'] = $msg;
 }
 forward($container);
-?>

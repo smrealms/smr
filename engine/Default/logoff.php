@@ -9,5 +9,3 @@ SmrSession::destroy();
 $msg = 'You have successfully logged off!';
 header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 exit;
-
-?>

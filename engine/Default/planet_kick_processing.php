@@ -15,5 +15,3 @@ $planetPlayer->setKicked(true);
 $planetPlayer->update();
 
 forward(create_container('skeleton.php', 'planet_main.php'));
-
-?>

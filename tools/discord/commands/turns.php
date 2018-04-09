@@ -35,5 +35,3 @@ $fn_turns_all = function ($message) {
 $cmd_turns = $discord->registerCommand('turns', mysql_cleanup($fn_turns), ['description' => 'Get current turns']);
 
 $cmd_turns->registerSubCommand('all', mysql_cleanup($fn_turns_all), ['description' => 'Get current turns for all players whose info is shared with you']);
-
-?>

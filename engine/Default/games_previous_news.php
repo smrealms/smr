@@ -26,5 +26,3 @@ while ($db2->nextRecord()) {
 $PHP_OUTPUT.=('</table></div>');
 
 $db = new SmrMySqlDatabase();
-
-?>

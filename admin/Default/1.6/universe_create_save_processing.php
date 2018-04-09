@@ -723,5 +723,3 @@ function createGame($gameID) {
 	It is important to note that weakly defended planets should NOT be considered safe parking spots.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 24, 1, '.$db->escapeString($text).', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
 }
-
-?>

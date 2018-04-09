@@ -259,4 +259,3 @@ abstract class MySqlDatabase implements Database {
 		}
 	}
 }
-?>

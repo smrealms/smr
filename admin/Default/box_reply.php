@@ -12,4 +12,3 @@ if(isset($var['Preview']))
 	$template->assign('Preview', $var['Preview']);
 if(isset($var['BanPoints']))
 	$template->assign('BanPoints', $var['BanPoints']);
-?>

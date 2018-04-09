@@ -50,5 +50,3 @@ $planet->update();
 $ship->updateCargo();
 
 forward(create_container('skeleton.php', 'planet_stockpile.php'));
-
-?>

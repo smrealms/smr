@@ -22,5 +22,3 @@ while ($db->nextRecord()) {
 $PHP_OUTPUT.=('</ul>');
 if (!$db->getNumRows())
 	$PHP_OUTPUT.=('This paper has no articles');
-
-?>

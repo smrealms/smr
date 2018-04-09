@@ -106,5 +106,3 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 		return $return;
 	}
 }
-
-?>

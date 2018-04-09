@@ -87,5 +87,3 @@ if ($count_last_active > 0) {
 
 $template->assign('AllRows', $allRows);
 $template->assign('ThisPlayer', $player);
-
-?>

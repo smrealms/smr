@@ -105,5 +105,3 @@ function channel_part($fp, $rdata)
 	return false;
 
 }
-
-?>

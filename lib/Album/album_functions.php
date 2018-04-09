@@ -299,5 +299,3 @@ function get_album_nick($album_id) {
 AddHandler catch-all-handler .php
 Action catch-all-handler /home/mrspock/smrealms.de/beta/www/album/index.php
 */
-
-?>

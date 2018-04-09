@@ -190,5 +190,3 @@ function server_msg_401($fp, $rdata)
 	return false;
 
 }
-
-?>

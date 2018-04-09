@@ -84,4 +84,3 @@ if (1 == 1) {
 }
 $PHP_OUTPUT.=create_submit('Disable');
 $PHP_OUTPUT.=('</form>');
-?>

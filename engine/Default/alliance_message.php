@@ -131,4 +131,3 @@ if(isset($var['topic'])) {
 if(isset($var['AllianceEyesOnly'])) {
 	$template->assign('AllianceEyesOnly', $var['AllianceEyesOnly']);
 }
-?>

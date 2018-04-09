@@ -63,5 +63,3 @@ else {
 	$PHP_OUTPUT.=('There is no current edition of the Galactic Post for this game.');
 
 }
-
-?>

@@ -41,5 +41,3 @@ if (isset($var['processing_msg'])) {
 // Pass entire $var so the processing file knows the selected game
 $linkContainer = create_container('manage_draft_leaders_processing.php', '', $var);
 $template->assign('ProcessingHREF', SmrSession::getNewHREF($linkContainer));
-
-?>

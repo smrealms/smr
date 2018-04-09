@@ -18,5 +18,3 @@ $PHP_OUTPUT.=('<textarea spellcheck="true" name="message" id="InputFields"></tex
 $PHP_OUTPUT.=('<br /><br />');
 $PHP_OUTPUT.=create_submit('Apply');
 $PHP_OUTPUT.=('</form>');
-
-?>

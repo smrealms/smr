@@ -1436,4 +1436,3 @@ abstract class AbstractSmrPlayer {
 		return SmrSession::getNewHREF($container);
 	}
 }
-?>

@@ -33,5 +33,3 @@ if ($ship->hasJump()) {
 	$container['target_page'] = 'current_sector.php';
 	$template->assign('JumpDriveFormLink',SmrSession::getNewHREF($container));
 }
-
-?>

@@ -15,4 +15,3 @@ switch($result) {
 }
 
 forward($container);
-?>

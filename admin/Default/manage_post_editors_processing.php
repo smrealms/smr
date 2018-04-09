@@ -46,5 +46,3 @@ if (!empty($msg)) {
 
 // Pass entire $var so that the selected game remains selected
 forward(create_container('skeleton.php', 'manage_post_editors.php', $var));
-
-?>

@@ -160,6 +160,3 @@ $message .= '</div>';
 $container=create_container('skeleton.php','current_sector.php');
 $container['msg'] = $message;
 forward($container);
-
-
-?>

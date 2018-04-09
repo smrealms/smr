@@ -238,5 +238,3 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'announcements.php';
 $container['view_all'] = 'yes';
 $template->assign('OldAnnouncementsLink',SmrSession::getNewHREF($container));
-
-?>

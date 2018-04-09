@@ -18,5 +18,3 @@ if(!is_object($player)) {
 }
 
 forward($container);
-
-?>

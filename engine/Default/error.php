@@ -16,4 +16,3 @@ else {
 	$PHP_OUTPUT.=('<p><small>If it was a DB Error, press back and try again, or logoff and log back on.</small></p>');
 	$PHP_OUTPUT.=('<p><small>If the error was unrecognizable, please notify the administrators.</small></p>');
 }
-?>

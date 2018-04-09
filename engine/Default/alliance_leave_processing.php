@@ -35,5 +35,3 @@ if ($action == 'YES') {
 
 $container = create_container('skeleton.php', 'current_sector.php');
 forward($container);
-
-?>

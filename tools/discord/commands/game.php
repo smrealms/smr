@@ -11,5 +11,3 @@ $fn_game = function ($message) {
 };
 
 $discord->registerCommand('game', mysql_cleanup($fn_game), ['description' => 'Get name of game linked to this channel']);
-
-?>

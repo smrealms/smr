@@ -17,5 +17,3 @@ foreach (array('HQ', 'UG') as $type) {
 
 $template->assign('AllClaims', array($player->getClaimableBounties('HQ'),
                                      $player->getClaimableBounties('UG')));
-
-?>

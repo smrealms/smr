@@ -27,5 +27,3 @@ if(isset($_POST['note_id'])) {
 }
 
 forward(create_container('skeleton.php', 'trader_status.php'));
-
-?>

@@ -311,5 +311,3 @@ if (!isset($number)) {
 	$PHP_OUTPUT.=('</td></tr>');
 	$PHP_OUTPUT.=('</table>');
 } //end else
-
-?>

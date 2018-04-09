@@ -138,4 +138,3 @@ if($mineOwnerID) {
 }
 
 forward(create_container('skeleton.php', $var['target_page']));
-?>

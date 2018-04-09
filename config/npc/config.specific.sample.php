@@ -13,4 +13,3 @@ const UCI_CHESS_ENGINE = '/path/to/UCI_CHESS_ENGINE'; // Stockfish works: http:/
 const UCI_TIME_PER_MOVE_MS = 2000;
 const UCI_SLEEP_BETWEEN_CYCLES_US = 2000000;
 const UCI_HASH_SIZE_MB = 512;
-?>

@@ -9,5 +9,3 @@ $db->query('INSERT INTO galactic_post_paper_content (game_id, paper_id, article_
 //we now have that article in the paper
 $container = create_container('skeleton.php', 'galactic_post_view_article.php');
 forward($container);
-
-?>

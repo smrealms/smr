@@ -29,4 +29,3 @@ switch($type){
 $container = create_container('skeleton.php', 'course_plot.php');
 
 forward($container);
-?>

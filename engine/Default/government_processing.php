@@ -16,5 +16,3 @@ elseif ($_REQUEST['action'] == 'Become a gang member') {
 }
 
 forward(create_container('skeleton.php', 'current_sector.php'));
-
-?>

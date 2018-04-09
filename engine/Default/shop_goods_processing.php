@@ -183,5 +183,3 @@ if (!isset($container['number_of_bargains'])||$container['number_of_bargains'] !
 
 // go to next page
 forward($container);
-
-?>

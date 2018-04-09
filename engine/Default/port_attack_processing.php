@@ -107,4 +107,3 @@ forward($container);
 //				'(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAllianceID()) . ', '.$thread_id.', '.$reply_id.', '.$db->escapeString($text).', ACCOUNT_ID_PORT, ' . TIME . ')');
 //	}
 //}
-?>

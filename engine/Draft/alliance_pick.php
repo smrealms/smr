@@ -36,4 +36,3 @@ while ($db->nextRecord()) {
 }
 
 $template->assign('History', $history);
-?>

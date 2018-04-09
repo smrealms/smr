@@ -68,4 +68,3 @@ function allianceTopTen($gameID, $field) {
 
 $template->assign('AllianceExpRankings', allianceTopTen($gameID, 'experience'));
 $template->assign('AllianceKillRankings', allianceTopTen($gameID, 'kills'));
-?>

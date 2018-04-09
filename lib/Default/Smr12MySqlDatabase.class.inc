@@ -10,4 +10,3 @@ class Smr12MySqlDatabase extends MySqlDatabase {
 		                    self::$port, self::$socket);
 	}
 }
-?>

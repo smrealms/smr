@@ -37,4 +37,3 @@ function compile_files($dir,$exts=array('*.php'))
 }
  
 compile_files('/home/page/SMR',array('*.inc','*.php'));
-?>

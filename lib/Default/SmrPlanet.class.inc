@@ -1282,5 +1282,3 @@ class SmrPlanet {
 		return $return;
 	}
 }
-
-?>

@@ -310,5 +310,3 @@ else if ($action == 'Update Colours') {
 }
 
 forward($container);
-
-?>

@@ -12,5 +12,3 @@ $db->query('UPDATE galactic_post_paper SET online_since=' . $db->escapeNumber(TI
 //all done lets send back to the main GP page.
 $container = create_container('skeleton.php', 'galactic_post.php');
 forward($container);
-
-?>

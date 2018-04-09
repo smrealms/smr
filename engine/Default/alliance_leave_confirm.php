@@ -14,5 +14,3 @@ $PHP_OUTPUT.=create_button($container,'Yes!');
 $container['action'] = 'NO';
 $PHP_OUTPUT.= '&nbsp;&nbsp;&nbsp;';
 $PHP_OUTPUT.=create_button($container,'No!');
-
-?>

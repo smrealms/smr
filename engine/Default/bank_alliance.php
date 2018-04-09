@@ -160,5 +160,3 @@ $template->assign('BankReportHREF', SmrSession::getNewHREF($container));
 $container=create_container('bank_alliance_processing.php');
 $container['alliance_id'] = $alliance->getAllianceID();
 $template->assign('BankTransactionFormHREF', SmrSession::getNewHREF($container));
-
-?>

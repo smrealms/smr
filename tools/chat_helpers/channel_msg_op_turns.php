@@ -42,5 +42,3 @@ function shared_channel_msg_op_turns($player) {
 	}
 	return $output;
 }
-
-?>

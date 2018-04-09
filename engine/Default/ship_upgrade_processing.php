@@ -72,5 +72,3 @@ elseif ($_REQUEST['submit'] == 'Add') {
 	addBenefit($THIS_SHIP,$var['upgrade_id']);
 	query('INSERT INTO player_bought (time, game_id, account_id, type, type_id) VALUES ('.TIME.','.$GAME_ID.','.$ACCOUNT_ID.',\'Upgrade\','.$var['upgrade_id'].')');
 }
-
-?>

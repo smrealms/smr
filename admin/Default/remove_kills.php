@@ -17,4 +17,3 @@ create_error('Don\'t use this');
 //	$done++;
 //}
 //$PHP_OUTPUT.=('<br /><br />Done '.$done);
-?>

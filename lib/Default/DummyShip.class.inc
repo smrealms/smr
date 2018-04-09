@@ -101,4 +101,3 @@ class DummyShip extends AbstractSmrShip {
 	public function __wakeup() {
 	}
 }
-?>

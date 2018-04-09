@@ -225,5 +225,3 @@ $forces->updateExpire();
 $forces->update(); // Needs to be in db to show up on CS instantly when querying sector forces
 
 forward(create_container('skeleton.php', 'current_sector.php'));
-
-?>

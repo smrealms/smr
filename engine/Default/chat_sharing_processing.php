@@ -40,5 +40,3 @@ if (isset($_POST['remove_share_from'])) {
 }
 
 forward(create_container('skeleton.php', 'chat_sharing.php'));
-
-?>

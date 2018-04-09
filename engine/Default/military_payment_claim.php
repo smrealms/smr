@@ -30,5 +30,3 @@ if(!isset($var['ClaimText'])) {
 }
 
 $PHP_OUTPUT .= $var['ClaimText'];
-
-?>

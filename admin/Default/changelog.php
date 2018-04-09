@@ -91,5 +91,3 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.=('</ul>');
 
 }
-
-?>

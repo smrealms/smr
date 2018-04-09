@@ -58,5 +58,3 @@ else {
 $container = create_container('skeleton.php', 'album_moderate.php');
 transfer('account_id');
 forward($container);
-
-?>

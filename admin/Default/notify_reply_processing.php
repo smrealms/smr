@@ -42,5 +42,3 @@ if (isset($offendedReply) && $offendedReply != '') {
 	}
 }
 forward(create_container('skeleton.php', 'notify_view.php'));
-
-?>

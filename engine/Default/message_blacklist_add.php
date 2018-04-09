@@ -38,6 +38,3 @@ $db->query('INSERT INTO message_blacklist (game_id,account_id,blacklisted_id) VA
 
 $container['error'] = 3;
 forward($container);
-
-
-?>

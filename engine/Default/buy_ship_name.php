@@ -9,4 +9,3 @@ if(isset($var['Preview'])) {
 else {
 	$template->assign('ShipNameFormHref',SmrSession::getNewHREF(create_container('skeleton.php','buy_ship_name_processing.php')));
 }
-?>

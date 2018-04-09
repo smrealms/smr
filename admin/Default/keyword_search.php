@@ -175,5 +175,3 @@ else {
 	$PHP_OUTPUT.=create_submit('Add To Exception Table');
 	$PHP_OUTPUT.=('</a></form>');
 }
-
-?>

@@ -5,4 +5,3 @@ if($player->isDraftLeader()) {
 else {
 	create_error('You cannot create an alliance in a draft game.');
 }
-?>

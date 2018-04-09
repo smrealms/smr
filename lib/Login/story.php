@@ -36,4 +36,3 @@ $template->assign('Story', $story);
 //	}
 //	$template->assign('Story', $templateStory);
 //}
-?>

@@ -33,5 +33,3 @@ $pickedPlayer->update();
 $db->query('INSERT INTO draft_history (game_id, leader_account_id, picked_account_id, time) VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($pickedPlayer->getAccountID()) . ', ' . $db->escapeNumber(TIME) . ')');
 
 forward(create_container('skeleton.php', 'alliance_pick.php'));
-
-?>

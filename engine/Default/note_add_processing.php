@@ -25,4 +25,3 @@ if(isset($_REQUEST['note'])) {
 }
 
 forward(create_container('skeleton.php', 'trader_status.php'));
-?>

@@ -34,4 +34,3 @@ if ($db->getNumRows()) {
 	$template->assign('AnonAccessHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_anonymous_account.php')));
 }
 $template->assign('LoggedAccounts',$loggedAccounts);
-?>

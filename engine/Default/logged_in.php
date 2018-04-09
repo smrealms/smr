@@ -11,5 +11,3 @@ if (SmrSession::$game_id > 0) {
 }
 
 forward($container);
-
-?>

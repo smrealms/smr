@@ -50,4 +50,3 @@ else if($_REQUEST['action']=='Set Status') {
 
 	forward(create_container('skeleton.php', 'feature_request.php'));
 }
-?>

@@ -24,4 +24,3 @@ $transferAccounts = array();
 	}
 //}
 $template->assign('TransferAccounts',$transferAccounts);
-?>

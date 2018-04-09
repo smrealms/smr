@@ -14,4 +14,3 @@ if(isset($var['Form'])) {
 	if(isset($_REQUEST['weapon_reorder']) && is_array($_REQUEST['weapon_reorder']))
 		$ship->setWeaponLocations($_REQUEST['weapon_reorder']);
 }
-?>

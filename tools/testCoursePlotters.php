@@ -69,4 +69,3 @@ function getPlotDistanceOld(SmrSector &$sector,SmrSector &$target)
 	unset($plotter);
 	return $return;
 }
-?>

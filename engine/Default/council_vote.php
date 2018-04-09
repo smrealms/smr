@@ -91,5 +91,3 @@ if ($db->getNumRows() > 0) {
 	}
 }
 $template->assign('VoteTreaties', $voteTreaties);
-
-?>

@@ -84,5 +84,3 @@ function ctcp_ping($fp, $rdata)
 	return false;
 
 }
-
-?>

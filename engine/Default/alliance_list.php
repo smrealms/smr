@@ -45,4 +45,3 @@ while ($db->nextRecord()) {
 	);
 }
 $template->assign('Alliances', $alliances);
-?>

@@ -37,5 +37,3 @@ else {
 	$PHP_OUTPUT.=create_button($container, 'Current Sector');
 	$PHP_OUTPUT.= '</div>';
 }
-
-?>

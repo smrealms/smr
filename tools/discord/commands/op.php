@@ -39,5 +39,3 @@ $cmd_op = $discord->registerCommand('op', mysql_cleanup($fn_op), ['description' 
 $cmd_op->registerSubCommand('list', mysql_cleanup($fn_op_list), ['description' => 'Get the op attendee list']);
 
 $cmd_op->registerSubCommand('turns', mysql_cleanup($fn_op_turns), ['description' => 'Get the turns of op attendees']);
-
-?>

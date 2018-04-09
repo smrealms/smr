@@ -67,5 +67,3 @@ if (!empty($discordServer)) {
 }
 
 $PHP_OUTPUT.= '</div>';
-
-?>

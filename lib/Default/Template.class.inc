@@ -335,4 +335,3 @@ class Template {
 		$this->ignoreMiddle = true;
 	}
 }
-?>

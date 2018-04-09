@@ -924,4 +924,3 @@ class ChessGame {
 		return SmrSession::getNewHREF(create_container('skeleton.php','chess_resign_processing.php',array('ChessGameID' => $this->chessGameID)));
 	}
 }
-?>

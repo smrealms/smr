@@ -12,4 +12,3 @@ $template->assign('Receiver', 'Whole Alliance');
 if(isset($var['preview'])) {
 	$template->assign('Preview', $var['preview']);
 }
-?>

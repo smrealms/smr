@@ -34,5 +34,3 @@ foreach ($RACES as $otherRaceID => $raceInfo) {
 $template->assign('PeaceRaces', $peaceRaces);
 $template->assign('NeutralRaces', $neutralRaces);
 $template->assign('WarRaces', $warRaces);
-
-?>

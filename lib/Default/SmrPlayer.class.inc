@@ -2006,4 +2006,3 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return false;
 	}
 }
-?>

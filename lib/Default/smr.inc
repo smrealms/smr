@@ -1124,4 +1124,3 @@ function number_colour_format($number,$justSign = false) {
 	$formatted .= '</span>';
 	return $formatted;
 }
-?>

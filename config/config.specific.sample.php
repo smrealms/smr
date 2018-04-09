@@ -46,4 +46,3 @@ const COMPATIBILITY_DATABASES = array();
 //			)
 //		)
 //	);
-?>

@@ -203,4 +203,3 @@ require_once('config.php');
 //			'Type' => array(4)
 //		)
 //	);
-?>

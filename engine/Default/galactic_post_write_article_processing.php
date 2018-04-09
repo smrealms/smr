@@ -37,4 +37,3 @@ else {
 	$db->query('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(TIME) . ' WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
 	forward(create_container('skeleton.php', 'galactic_post_read.php'));
 }
-?>

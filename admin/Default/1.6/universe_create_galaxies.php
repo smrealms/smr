@@ -24,5 +24,3 @@
 //		include($GAME_FILES . '/error.php');
 //	}
 //}
-
-?>

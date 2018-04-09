@@ -34,5 +34,3 @@ if (isset($var['ship_id'])) {
 
 	$template->assign('CompareShip',$compareShip);
 }
-
-?>

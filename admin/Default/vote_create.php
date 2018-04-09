@@ -20,4 +20,3 @@ if(isset($var['PreviewOption']))
 	$template->assign('PreviewOption', $var['PreviewOption']);
 if(isset($var['VoteID']))
 	$template->assign('VoteID', $var['VoteID']);
-?>

@@ -30,5 +30,3 @@ $ship->updateCargo();
 $port->decreaseGoodAmount($good_id,$amount);
 $port->update();
 forward($container);
-
-?>

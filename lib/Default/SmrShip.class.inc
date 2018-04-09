@@ -247,5 +247,3 @@ class SmrShip extends AbstractSmrShip {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'ship_upgrade.php'));
 	}
 }
-
-?>

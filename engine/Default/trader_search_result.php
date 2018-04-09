@@ -203,5 +203,3 @@ if (empty($player_id)) {
 }
 if ($count == 0)
 	$PHP_OUTPUT.=('No Trader found!');
-
-?>

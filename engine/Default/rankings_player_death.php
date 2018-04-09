@@ -32,4 +32,3 @@ $template->assign('FilterRankingsHREF', SmrSession::getNewHREF(create_container(
 $lowerLimit = $var['MinRank'] - 1;
 $db->query('SELECT account_id, deaths amount FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY deaths DESC, player_name LIMIT ' . $lowerLimit . ', ' . ($var['MaxRank'] - $lowerLimit));
 $template->assign('FilteredRankings', Rankings::collectRankings($db, $player, $lowerLimit));
-?>

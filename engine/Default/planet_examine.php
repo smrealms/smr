@@ -28,4 +28,3 @@ if(!$planetLand) {
 	$planetLand = $db->nextRecord();
 }
 $template->assign('PlanetLand', $planetLand);
-?>

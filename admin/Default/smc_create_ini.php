@@ -31,5 +31,3 @@ while ($db->nextRecord()) {
 	else
 		echo ($sector.'=1'.EOL);
 }
-
-?>

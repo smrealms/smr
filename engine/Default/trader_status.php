@@ -162,5 +162,3 @@ $PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 </table><br />';
 $PHP_OUTPUT.= $form['submit'];
 $PHP_OUTPUT.= '<small>&nbsp;&nbsp;&nbsp;Maximum note length is 1000 characters</small><br /></form>';
-
-?>

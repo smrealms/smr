@@ -8,5 +8,3 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'message_view.php';
 forward($container);
-
-?>

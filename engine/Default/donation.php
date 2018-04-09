@@ -53,5 +53,3 @@ if ($donations < $total_price) {
 
 $PHP_OUTPUT.=('</div>');
 */
-
-?>

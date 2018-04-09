@@ -20,5 +20,3 @@ $PHP_OUTPUT.=create_submit('Yes');
 $PHP_OUTPUT.=('&nbsp;');
 $PHP_OUTPUT.=create_submit('No');
 $PHP_OUTPUT.=('</form>');
-
-?>

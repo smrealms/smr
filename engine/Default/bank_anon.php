@@ -307,5 +307,3 @@ if (isset($account_num)) {
 
 	$PHP_OUTPUT.= '</form>';
 }
-
-?>

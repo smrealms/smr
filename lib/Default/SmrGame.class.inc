@@ -351,5 +351,3 @@ class SmrGame {
 		return $this->getName() . " (" . $this->getGameID() . ")";
 	}
 }
-
-?>

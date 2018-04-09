@@ -86,4 +86,3 @@ while ($db->nextRecord()) {
 
 $PHP_OUTPUT.=create_submit('Close Accounts');
 $PHP_OUTPUT.=('</form>');
-?>

@@ -27,5 +27,3 @@ $path = Plotter::findReversiblePathToX($realX, $sector, true, $player, $player);
 $container = create_container('skeleton.php', 'course_plot_result.php');
 $container['Distance'] = $path;
 forward($container);
-
-?>

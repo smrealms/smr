@@ -50,5 +50,3 @@ $account->log(LOG_TYPE_HARDWARE, 'Buys a '.$ship->getName().' for '.$cost.' cred
 $container = create_container('skeleton.php', 'current_sector.php');
 transfer('LocationID');
 forward($container);
-
-?>

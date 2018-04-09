@@ -6,4 +6,3 @@ $db->nextRecord();
 $template->assign('MaxAccountID',$db->getInt('max_account_id'));
 
 $template->assign('IpFormHref',SmrSession::getNewHREF(create_container('skeleton.php','ip_view_results.php')));
-?>

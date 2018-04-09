@@ -22,5 +22,3 @@ function mysql_cleanup(callable $func) {
 
 	return $func_wrapper;
 }
-
-?>

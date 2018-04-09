@@ -92,5 +92,3 @@ else
 $PHP_OUTPUT.= '<a href="'.$scanSector->getScanSectorHREF().'" class="submitStyle">Rescan ' . $scanSector->getSectorID() . '</a>&nbsp;';
 $PHP_OUTPUT.= '<a href="'.$scanSector->getCurrentSectorHREF().'" class="submitStyle">Enter ' . $scanSector->getSectorID() . ' ('.$turns.')</a>';
 $PHP_OUTPUT.=('</form></p>');
-
-?>

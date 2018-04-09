@@ -27,5 +27,3 @@ else {
 	$container['body'] = 'alliance_exempt_authorize.php';
 }
 forward($container);
-
-?>

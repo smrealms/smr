@@ -44,5 +44,3 @@ $PHP_OUTPUT.=('</form><br />');
 $PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'bar_talk_bartender.php'));
 $PHP_OUTPUT.=create_submit('Talk to bartender');
 $PHP_OUTPUT.=('</form>');
-
-?>

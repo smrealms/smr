@@ -998,5 +998,3 @@ class SmrSector {
 		return false;
 	}
 }
-
-?>

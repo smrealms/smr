@@ -69,4 +69,3 @@ $template->assign('CreateRole', array(
 	'ExemptWithdrawals' => false,
 	'SendAllianceMessage' => false,
 	'ViewBondsInPlanetList' => false));
-?>

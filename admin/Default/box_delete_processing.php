@@ -13,4 +13,3 @@ else if ($action == 'All Messages') {
 	$db->query('DELETE FROM message_boxes WHERE box_type_id = '.$db->escapeNumber($var['box_type_id']));
 }
 forward(create_container('skeleton.php', 'box_view.php'));
-?>

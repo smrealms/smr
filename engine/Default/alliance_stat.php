@@ -26,6 +26,3 @@ $template->assign('CanChangeDescription', $db->getBoolean('change_mod') || $acco
 $template->assign('CanChangePassword', $db->getBoolean('change_pass'));
 $template->assign('CanChangeChatChannel', $player->isAllianceLeader());
 $template->assign('CanChangeMOTD', $db->getBoolean('change_mod'));
-
-
-?>

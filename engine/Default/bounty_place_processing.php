@@ -57,5 +57,3 @@ $player->update();
 $account->update();
 $placed->update();
 forward($container);
-
-?>

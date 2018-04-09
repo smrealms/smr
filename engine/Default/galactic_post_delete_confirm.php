@@ -52,5 +52,3 @@ else {
 	$PHP_OUTPUT.=create_submit('No');
 	$PHP_OUTPUT.=('</form>');
 }
-
-?>

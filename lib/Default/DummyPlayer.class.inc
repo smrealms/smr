@@ -307,4 +307,3 @@ class DummyPlayer extends AbstractSmrPlayer {
 		return $dummyNames;
 	}
 }
-?>

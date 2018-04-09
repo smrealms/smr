@@ -42,5 +42,3 @@ $account->log(LOG_TYPE_HARDWARE, 'Player Buys '.$amount.' '.$hardware_name, $pla
 $container = create_container('skeleton.php', 'shop_hardware.php');
 transfer('LocationID');
 forward($container);
-
-?>

@@ -123,4 +123,3 @@
     if ($table) @mysql_free_result($id);
     return $res;
   }
-?>

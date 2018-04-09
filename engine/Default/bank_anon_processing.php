@@ -80,5 +80,3 @@ $container = create_container('skeleton.php', 'bank_anon.php');
 $container['AccountNumber'] = $account_num;
 $container['allowed'] = 'yes';
 forward($container);
-
-?>

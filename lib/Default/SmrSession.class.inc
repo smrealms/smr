@@ -431,4 +431,3 @@ class SmrSession {
 }
 
 SmrSession::init();
-?>

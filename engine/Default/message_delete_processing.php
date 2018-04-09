@@ -50,5 +50,3 @@ else {
 }
 
 forward(create_container('skeleton.php', 'message_view.php'));
-
-?>

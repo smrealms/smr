@@ -30,5 +30,3 @@ $db->query(
 	'INSERT INTO account_sms_dlr ' .
 	'(message_id, send_time, receive_time, status) ' .
 	'VALUES (' . $db->escapeNumber($message_id) . ', ' . $db->escapeNumber($send_time) . ', ' . $db->escapeNumber($receive_time) . ', ' . $db->escapeString($status) . ')');
-
-?>

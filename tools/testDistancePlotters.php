@@ -174,4 +174,3 @@ function getGoodDistanceOld(SmrSector &$sector, $goodID, $transaction)
 
 	return $good_distance;
 }
-?>

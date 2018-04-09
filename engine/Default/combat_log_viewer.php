@@ -38,5 +38,3 @@ if($db->nextRecord()) {
 else {
 	create_error('Combat log not found');
 }
-
-?>

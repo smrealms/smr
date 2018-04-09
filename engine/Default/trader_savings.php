@@ -50,4 +50,3 @@ $db->nextRecord();
 $winningTickets = $db->getInt('count(*)');
 if ($winningTickets > 0)
 	$PHP_OUTPUT.=('<br /><br />You currently own '.$winningTickets.' winning tickets.  You should go to the bar to claim your prize.');
-?>

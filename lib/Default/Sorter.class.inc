@@ -48,4 +48,3 @@ class Sorter {
 		uasort($array, array(__CLASS__, 'cmpNumMethod'));
 	}
 }
-?>

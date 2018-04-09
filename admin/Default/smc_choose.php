@@ -53,4 +53,3 @@ $PHP_OUTPUT.=('</form>');
 //$PHP_OUTPUT.=('&nbsp;&nbsp;');
 //$PHP_OUTPUT.=create_submit('Create New SMC File');
 //$PHP_OUTPUT.=('</form>');
-?>

@@ -51,5 +51,3 @@ $template->assign('ShareFrom', $shareFrom);
 $template->assign('ShareTo', $shareTo);
 
 $template->assign('ProcessingHREF', SmrSession::getNewHREF(create_container('chat_sharing_processing.php', '', array('share_to_ids' => array_keys($shareTo)))));
-
-?>

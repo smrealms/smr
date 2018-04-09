@@ -18,5 +18,3 @@ $db->getField('account_id') . ' AND game_id = 22');
 }
 
 //$db->query('UPDATE player_has_stats SET experience_traded = 0 WHERE game_id = 22');
-
-?>

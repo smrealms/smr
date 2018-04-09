@@ -54,6 +54,3 @@ if ($db->getNumRows()) {
 } else
 	$PHP_OUTPUT.=('No overpowered ships!');
 $PHP_OUTPUT.=('</p>');
-
-
-?>

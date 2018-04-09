@@ -15,5 +15,3 @@ $container = create_container('sector_jump_processing.php');
 $container['target'] = $targetSector->getSectorID();
 $container['target_page'] = 'current_sector.php';
 $template->assign('JumpProcessingHREF', SmrSession::getNewHREF($container));
-
-?>
