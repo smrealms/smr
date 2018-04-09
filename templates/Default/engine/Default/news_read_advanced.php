@@ -55,7 +55,9 @@
 		</table>
 	</form>
 	<br /><br /><br /><?php
-	echo $PHP_OUTPUT;
+	if (isset($ResultsFor)) { ?>
+		Returning results for <?php echo $ResultsFor; ?>.<br /><?php
+	}
 
 	if(isset($NewsItems) && count($NewsItems) > 0) { ?>
 		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />

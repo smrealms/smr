@@ -49,7 +49,7 @@ else $submit_value = 'Default';
 if ($submit_value == 'Search For Player') {
 	if (isset($_REQUEST['playerName'])) $p_name = $_REQUEST['playerName'];
 	else $p_name = $var['playerName'];
-	$PHP_OUTPUT .= 'Returning Results for ' . $p_name . '.<br />';
+	$template->assign('ResultsFor', $p_name);
 	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%'.$p_name.'%') . ' AND game_id = ' . $db->escapeNumber($gameID).' LIMIT 3');
 	$IDs = array(0);
 	while($db->nextRecord()) {
@@ -61,11 +61,11 @@ elseif ($submit_value == 'Search For Alliance') {
 	if (isset($_REQUEST['allianceID'])) SmrSession::updateVar('AllianceID',$_REQUEST['allianceID']);
 	if(!isset($var['AllianceID'])) create_error('No alliance was specified!');
 	$allianceID = $var['AllianceID'];
-	$PHP_OUTPUT .= 'Returning Results for ' . $newsAlliances[$allianceID]['Name'] . '.<br />';
+	$template->assign('ResultsFor', $newsAlliances[$allianceID]['Name']);
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != '.$db->escapeNumber(ACCOUNT_ID_PORT).') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != '.$db->escapeNumber(ACCOUNT_ID_PORT).')) ORDER BY news_id DESC');
 }
 elseif ($submit_value == 'Search For Players') {
-	$PHP_OUTPUT .= 'Returning Results for ' . $_REQUEST['player1'] . ' vs. ' . $_REQUEST['player2'] . '<br />';
+	$template->assign('ResultsFor', $_REQUEST['player1'] . ' vs. ' . $_REQUEST['player2']);
 	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%'.$_REQUEST['player1'].'%') . ' AND game_id = ' . $db->escapeNumber($gameID).' LIMIT 3');
 	$IDs = array(0);
 	while($db->nextRecord()) {
@@ -85,7 +85,7 @@ elseif ($submit_value == 'Search For Players') {
 					) ORDER BY news_id DESC');
 }
 elseif ($submit_value == 'Search For Alliances') {
-	$PHP_OUTPUT .= 'Returning Results for ' . $newsAlliances[$_REQUEST['alliance1']]['Name'] . ' vs. ' . $newsAlliances[$_REQUEST['alliance2']]['Name'] . '<br />';
+	$template->assign('ResultsFor', $newsAlliances[$_REQUEST['alliance1']]['Name'] . ' vs. ' . $newsAlliances[$_REQUEST['alliance2']]['Name']);
 	$db->query('SELECT * FROM news
 				WHERE game_id = ' . $db->escapeNumber($gameID) . '
 					AND (
