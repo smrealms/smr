@@ -23,9 +23,10 @@ function htmliseMessage($message) {
 }
 
 function parseBoolean($check) {
+	// Only negative strings are not implicitly converted to the correct bool
 	if(is_string($check) && (strcasecmp($check,'NO') == 0 || strcasecmp($check,'FALSE')==0))
-		return true;
-	return (bool)$tagParams['showalliance'];
+		return false;
+	return (bool)$check;
 }
 
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
@@ -49,10 +50,11 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if ($action == BBCODE_CHECK) {
 					return true;
 				}
+				$showAlliance = isset($tagParams['showalliance']) ? parseBoolean($tagParams['showalliance']) : false;
 				if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
 				}
-				return $bbPlayer->getDisplayName(parseBoolean($tagParams['showalliance']));
+				return $bbPlayer->getDisplayName($showAlliance);
 			break;
 			case 'alliance':
 				$db = new SmrMySqlDatabase();
