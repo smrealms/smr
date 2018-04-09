@@ -232,7 +232,7 @@ const MESSAGES_PER_PAGE = 50;
  * Credit features
  */
 
-$MESSAGES_PER_CREDIT = array(
+const MESSAGES_PER_CREDIT = array(
 	MSG_GLOBAL => 20,
 	MSG_PLAYER => 20,
 	MSG_PLANET => 10,

@@ -16,7 +16,7 @@ while ($db->nextRecord()) {
 	$messageBox['Name'] = $db->getField('message_type_name');
 	
 	$messageBox['MessagesRemaining'] = $account->getMessageNotifications($messageTypeID);
-	$messageBox['MessagesPerCredit'] = $MESSAGES_PER_CREDIT[$messageTypeID];
+	$messageBox['MessagesPerCredit'] = MESSAGES_PER_CREDIT[$messageTypeID];
 	
 	$container['MessageTypeID'] = $messageTypeID;
 	$messageBox['BuyHref'] = SmrSession::getNewHREF($container);
