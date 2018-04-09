@@ -375,11 +375,11 @@ const TEMPLATES_DIR = ROOT . 'templates/';
 
 // These CSS URLs must be hard-coded here so that grunt-cache-bust
 // can replace them with the hashed filenames.
-$CSS_URLS = array(
+const CSS_URLS = array(
 	'Default' => 'css/Default.css',
 	'Freon22' => 'css/Freon22.css',
 );
-$CSS_COLOUR_URLS = array(
+const CSS_COLOUR_URLS = array(
 	'Default' => array(
 		'Default' => 'css/Default/Default.css',
 	),
@@ -391,8 +391,8 @@ $CSS_COLOUR_URLS = array(
 	),
 );
 
-define('DEFAULT_CSS', $CSS_URLS['Default']);
-define('DEFAULT_CSS_COLOUR', $CSS_COLOUR_URLS['Default']['Default']);
+const DEFAULT_CSS = CSS_URLS['Default'];
+const DEFAULT_CSS_COLOUR = CSS_COLOUR_URLS['Default']['Default'];
 
 const AJAX_DEFAULT_REFRESH_TIME = 1500;
 const AJAX_UNPROTECTED_REFRESH_TIME = 800;
