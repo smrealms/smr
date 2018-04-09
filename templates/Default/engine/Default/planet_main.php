@@ -83,25 +83,25 @@ if (isset($Msg)) {
 				</tr>
 				<?php if ($ThisPlanet->getBuilding(PLANET_GENERATOR) > 0) { ?>
 				<tr>
-					<td><img id="shields" src="images/shields.png"  width="16" height="16" alt="" title="Shields"/>&nbsp;Shields</td>
+					<td><img src="images/shields.png"  width="16" height="16" alt="" title="Shields"/>&nbsp;Shields</td>
 					<td align="center"><span id="planetShields"><?php echo $ThisPlanet->getShields(); ?></span> / <span id="planetMaxShields"><?php echo $ThisPlanet->getMaxShields(); ?></span></td>
 					<td>&nbsp;</td>
 				</tr>
 				<?php } if ($ThisPlanet->getBuilding(PLANET_HANGAR) > 0) { ?>
 				<tr>
-					<td><img id="cds" src="images/cd.png"  width="16" height="16" alt="" title="Combat Drones"/>&nbsp;Combat Drones</td>
+					<td><img src="images/cd.png"  width="16" height="16" alt="" title="Combat Drones"/>&nbsp;Combat Drones</td>
 					<td align="center"><span id="planetCDs"><?php echo $ThisPlanet->getCDs(); ?></span> / <span id="planetMaxCDs"><?php echo $ThisPlanet->getMaxCDs(); ?></span></td>
 					<td align="center">100 %</td>
 				</tr>
 				<?php } if ($ThisPlanet->getBuilding(PLANET_BUNKER) > 0) { ?>
 				<tr>
-					<td><img id="turret" src="images/armour.png"  width="16" height="16" alt="" title="Armour"/>&nbsp;Armour</td>
+					<td><img src="images/armour.png"  width="16" height="16" alt="" title="Armour"/>&nbsp;Armour</td>
 					<td align="center"><span id="planetArmour"><?php echo $ThisPlanet->getArmour(); ?></span> / <span id="planetMaxArmour"><?php echo $ThisPlanet->getMaxArmour(); ?></span></td>
 					<td align="center">&nbsp;</td>
 				</tr>
 				<?php }	if ($ThisPlanet->getBuilding(PLANET_TURRET) > 0) { ?>
 				<tr>
-					<td><img id="turret" src="images/turrets.png"  width="16" height="16" alt="" title="Turret"/>&nbsp;Turrets</td>
+					<td><img src="images/turrets.png"  width="16" height="16" alt="" title="Turret"/>&nbsp;Turrets</td>
 					<td align="center"><span id="planetTurrets2"><?php echo $ThisPlanet->getBuilding(PLANET_TURRET); ?></span> / <?php echo $ThisPlanet->getMaxBuildings(PLANET_TURRET); ?></td>
 					<td align="center"><span id="planetAcc"><?php echo number_format($ThisPlanet->accuracy(), 2); ?></span> %</td>
 				</tr>
