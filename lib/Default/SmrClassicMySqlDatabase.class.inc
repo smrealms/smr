@@ -5,7 +5,7 @@ require_once(CONFIG . 'SmrMySqlSecrets.inc');
 
 class SmrClassicMySqlDatabase extends MySqlDatabase {
 	use SmrMySqlSecrets;
-	public function SmrClassicMySqlDatabase() {
+	public function __construct() {
 		parent::__construct(self::$host, self::$user, self::$password, self::$dbName_SmrClassic,
 		                    self::$port, self::$socket);
 	}
