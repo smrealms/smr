@@ -23,9 +23,10 @@ function htmliseMessage($message) {
 }
 
 function parseBoolean($check) {
+	// Only negative strings are not implicitly converted to the correct bool
 	if(is_string($check) && (strcasecmp($check,'NO') == 0 || strcasecmp($check,'FALSE')==0))
-		return true;
-	return (bool)$tagParams['showalliance'];
+		return false;
+	return (bool)$check;
 }
 
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
@@ -34,7 +35,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 		switch($tagName) {
 			case 'combatlog':
 				$logID = (is_numeric($default)) ? $default : $tagParams['id'];
-				if ($action == BBCODE_CHECK) {
+				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
 				$container = create_container('combat_log_viewer_verify.php');
@@ -46,13 +47,14 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if(!is_numeric($playerID))
 					$playerID = $tagParams['id'];
 				$bbPlayer =& SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
-				if ($action == BBCODE_CHECK) {
+				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
+				$showAlliance = isset($tagParams['showalliance']) ? parseBoolean($tagParams['showalliance']) : false;
 				if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
 				}
-				return $bbPlayer->getDisplayName(parseBoolean($tagParams['showalliance']));
+				return $bbPlayer->getDisplayName($showAlliance);
 			break;
 			case 'alliance':
 				$db = new SmrMySqlDatabase();
@@ -60,7 +62,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if(!is_numeric($allianceID))
 					$allianceID = $tagParams['id'];
 				$alliance =& SmrAlliance::getAlliance($allianceID, $overrideGameID);
-				if ($action == BBCODE_CHECK) {
+				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
 
@@ -81,7 +83,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				foreach($RACES as $raceID => $raceInfo) {
 					if((is_numeric($raceNameID) && $raceNameID == $raceID)
 						|| $raceNameID == $raceInfo['Race Name']) {
-						if ($action == BBCODE_CHECK) {
+						if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 							return true;
 						}
 						$linked = $disableBBLinks===false && $overrideGameID==SmrSession::$game_id;
@@ -91,7 +93,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'servertimetouser':
 				$timeString = $default;
-				if ($action == BBCODE_CHECK) {
+				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
 				if ($timeString != '' && ($time = strtotime($timeString)) !== false) {
@@ -104,7 +106,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$chessGameID = $default;
 				require_once(get_file_loc('ChessGame.class.inc'));
 				$chessGame =& ChessGame::getChessGame($chessGameID);
-				if ($action == BBCODE_CHECK) {
+				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
 				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
@@ -113,7 +115,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			case 'sector':
 				$sectorID = $default;
 
-				if ($action == BBCODE_CHECK) {
+				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
 
@@ -135,7 +137,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 	}
 	catch (Exception $e) {
 	}
-	if ($action == BBCODE_CHECK) {
+	if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 		return false;
 	}
 	return htmlspecialchars($params['_tag']) . $tagContent . htmlspecialchars($params['_endtag']);
