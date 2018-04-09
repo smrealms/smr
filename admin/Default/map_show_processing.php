@@ -27,4 +27,4 @@ if (!empty($account_id)) {
 
 }
 
-forward(create_container('skeleton.php', 'admin_tools.php'))
+forward(create_container('skeleton.php', 'admin_tools.php'));

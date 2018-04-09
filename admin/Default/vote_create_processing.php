@@ -37,4 +37,4 @@ else if($_REQUEST['action'] == 'Add Option') {
 	// put the msg into the database
 	$db->query('INSERT INTO voting_options (vote_id, text) VALUES('.$db->escapeNumber($_REQUEST['vote']).','.$db->escapeString($option).')');
 }
-forward(create_container('skeleton.php', 'vote_create.php'))
+forward(create_container('skeleton.php', 'vote_create.php'));
