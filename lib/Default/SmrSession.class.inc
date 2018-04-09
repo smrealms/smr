@@ -193,7 +193,11 @@ class SmrSession {
 			self::$var = @unserialize(@gzuncompress(self::$db->getField('session_var')));
 			self::$commonIDs	= array();
 			self::$lastSN = self::$db->getField('last_sn');
-			self::$previousAjaxReturns = @unserialize(@gzuncompress(self::$db->getField('ajax_returns')));
+			// We may not have ajax_returns if ajax was disabled
+			$ajaxReturns = self::$db->getField('ajax_returns');
+			if (!empty($ajaxReturns)) {
+				self::$previousAjaxReturns = unserialize(gzuncompress($ajaxReturns));
+			}
 			if(!is_array(self::$var)) {
 				self::$account_id	= 0;
 				self::$old_account_id	= 0;
