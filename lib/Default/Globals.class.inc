@@ -17,8 +17,6 @@ class Globals {
 	protected static $AVAILABLE_LINKS = array();
 	protected static $db = null;
 
-	private static $compatibilityDatabases;
-
 	private function __construct() {
 	}
 
@@ -664,14 +662,10 @@ class Globals {
 	}
 
 	public static function getCompatibilityDatabases($dbType = false) {
-		if(!isset(self::$compatibilityDatabases)) {
-			global $COMPATIBILITY_DATABASES;
-			self::$compatibilityDatabases = $COMPATIBILITY_DATABASES;
-		}
 		if($dbType===false) {
-			return self::$compatibilityDatabases;
+			return COMPATIBILITY_DATABASES;
 		}
-		return self::$compatibilityDatabases[$dbType];
+		return COMPATIBILITY_DATABASES[$dbType];
 	}
 }
 

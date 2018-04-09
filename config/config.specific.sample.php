@@ -25,7 +25,7 @@ const ENABLE_NPCS_CHESS = false;
 // Use the default value if using the provided docker-compose orchestration.
 const SMTP_HOSTNAME = 'smtp';
 
-$COMPATIBILITY_DATABASES = array();
+const COMPATIBILITY_DATABASES = array();
 //	array(
 //		'Game' => array(
 //			'SmrClassicMySqlDatabase' => array(
