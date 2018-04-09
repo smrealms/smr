@@ -9,7 +9,8 @@ if (!$player->isLandedOnPlanet()) {
 		$container = create_container('skeleton.php', 'current_sector.php');
 		$container['msg'] = '<span class="yellow">WARNING</span>: You have been ejected from the planet!';
 		$currentSectorHREF = SmrSession::getNewHREF($container);
-		$template->addJavascriptForAjax('EVAL', "location.href = '$currentSectorHREF'");
+		// json_encode the HREF as a safety precaution
+		$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($currentSectorHREF));
 		forward($container);
 	} else {
 		create_error('You are not on a planet!');
