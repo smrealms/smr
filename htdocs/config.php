@@ -13,6 +13,7 @@ const UPLOAD = WWW.'upload/';
 const ADMIN = ROOT.'admin/';
 const TOOLS = ROOT.'tools/';
 const CONFIG = ROOT.'config/';
+const TEMPLATES_DIR = ROOT . 'templates/';
 
 // Define server-specific constants
 require_once(CONFIG . 'config.specific.php');
@@ -41,12 +42,12 @@ const TIME_FOR_WAR_VOTE_FED_SAFETY = 259200; //3 days
 const TIME_MAP_BUY_WAIT = 259200; //3 days
 const TIME_FOR_BREAKING_NEWS = 86400; //1 day
 const VOTE_BONUS_TURNS_TIME = 1800; //30 mins
+const BOND_TIME = 172800; //48 hours
 
 const MAX_IMAGE_SIZE = 30; //in kb
 const MAX_IMAGE_WIDTH = 200;
 const MAX_IMAGE_HEIGHT = 30;
 
-const IRC_BOT_SOCKET = '/tmp/ircbot.sock';
 const MULTI_CHECKING_COOKIE_VERSION = 'v3';
 
 const WIKI_URL = 'http://wiki.smrealms.de';
@@ -313,16 +314,6 @@ const HARDWARE_JUMP = 10;
 const HARDWARE_DCS = 11;
 
 /*
- * Planet definitions
- */
-const GENERATOR = 1;
-const HANGAR = 1;
-const BUNKER = 1;
-const TURRET = 1;
-
-const BOND_TIME = 172800;
-
-/*
  * Miscellaneous definitions
  */
 
@@ -370,8 +361,6 @@ const SHIP_REFUND_PERCENT = .75;
 const WEAPON_REFUND_PERCENT = .5;
 
 const EOL = "\n";
-
-const TEMPLATES_DIR = ROOT . 'templates/';
 
 // These CSS URLs must be hard-coded here so that grunt-cache-bust
 // can replace them with the hashed filenames.
