@@ -16,7 +16,7 @@ class SmrPort {
 	const DEFENCES_PER_TEN_MIL_CREDITS = 250;
 	const BARGAIN_LENIENCY_PERCENT = 0.01;
 	const MAX_LEVEL = 9;
-	private static $BASE_REFRESH_PER_HOUR = array(
+	const BASE_REFRESH_PER_HOUR = array(
 		'1' => 150,
 		'2' => 110,
 		'3' => 70
@@ -188,7 +188,7 @@ class SmrPort {
 		}
 
 		$goodClass = Globals::getGood($goodID)['Class'];
-		$refreshPerHour = self::$BASE_REFRESH_PER_HOUR[$goodClass] * Globals::getGameSpeed($this->getGameID());
+		$refreshPerHour = self::BASE_REFRESH_PER_HOUR[$goodClass] * Globals::getGameSpeed($this->getGameID());
 		$refreshPerSec = $refreshPerHour / 3600;
 		$amountToAdd = floor($secondsSinceLastUpdate * $refreshPerSec);
 
