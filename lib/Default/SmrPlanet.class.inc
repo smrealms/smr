@@ -6,7 +6,7 @@ class SmrPlanet {
 	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 70;
 	const CHANCE_TO_DOWNGRADE = 15;
 	const TIME_TO_CREDIT_BUST = 10800; // 3 hours
-	const TIME_BEFORE_REPLACING_BREAKING_NEWS = 1800; // 30 minutes
+	const TIME_ATTACK_NEWS_COOLDOWN = 3600; // 1 hour
 
 	protected $maxBuildings;
 
@@ -1035,7 +1035,7 @@ class SmrPlanet {
 		// Add each unique attack to news unless it was already added recently.
 		// Note: Attack uniqueness determined by planet owner.
 		$owner = $this->getOwner();
-		$this->db->query('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $this->db->escapeNumber($trigger->getGameID()) . ' AND dead_id=' . $this->db->escapeNumber($owner->getAccountID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_BEFORE_REPLACING_BREAKING_NEWS) . ' LIMIT 1');
+		$this->db->query('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $this->db->escapeNumber($trigger->getGameID()) . ' AND dead_id=' . $this->db->escapeNumber($owner->getAccountID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_ATTACK_NEWS_COOLDOWN) . ' LIMIT 1');
 		if ($this->db->getNumRows()==0) {
 			if (count($attackers) >= 5) {
 				$text = count($attackers) . ' members of '.$trigger->getAllianceBBLink().' have been spotted attacking ' .
