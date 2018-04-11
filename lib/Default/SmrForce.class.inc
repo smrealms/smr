@@ -10,7 +10,7 @@ class SmrForce {
 	const TIME_PERCENT_PER_SCOUT = 0.02; // 1/50th
 	const TIME_PERCENT_PER_COMBAT = 0.02; // 1/50th
 	const TIME_PERCENT_PER_MINE = 0.02; // 1/50th
-	const REFRESH_ALL_TIME_PER_STACK = 2; // 2 seconds
+	const REFRESH_ALL_TIME_PER_STACK = 1; // 1 second
 
 	protected static $refreshAllHREF;
 
