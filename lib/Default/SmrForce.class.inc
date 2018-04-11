@@ -393,6 +393,13 @@ class SmrForce {
 		$this->hasChanged = false;
 	}
 
+	/**
+	 * Update the table fields associated with using Refresh All
+	 */
+	public function updateRefreshAll(SmrPlayer $player, $refreshTime) {
+		$this->db->query('UPDATE sector_has_forces SET refresh_at=' . $this->db->escapeNumber($refreshTime) . ', refresher=' . $this->db->escapeNumber($player->getAccountID()) . ' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND owner_id=' . $this->db->escapeNumber($this->getOwnerID()) . ' LIMIT 1');
+	}
+
 	public function getExamineDropForcesHREF() {
 		$container = create_container('skeleton.php', 'forces_drop.php');
 		$container['owner_id']	= $this->getOwnerID();
