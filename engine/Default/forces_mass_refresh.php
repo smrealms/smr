@@ -21,14 +21,14 @@ if($player->hasAlliance()) {
 	$time = TIME;
 	$db2 = new SmrMySqlDatabase();
 	while ($db->nextRecord()) {
-		$time += 2;
+		$time += SmrForce::REFRESH_ALL_TIME_PER_STACK;
 		$db2->query('UPDATE sector_has_forces SET refresh_at=' . $db2->escapeNumber($time) . ', refresher=' . $db2->escapeNumber($player->getAccountID()) . '
 					WHERE game_id = ' . $db2->escapeNumber($player->getGameID()) . '
 						AND sector_id = ' . $db2->escapeNumber($player->getSectorID()) . ' AND owner_id=' . $db2->escapeNumber($db->getInt('account_id')) . ' LIMIT 1');
 	}
 }
 else {
-	$db->query('UPDATE sector_has_forces SET refresh_at=' . $db->escapeNumber(TIME+2).', refresher=' . $db->escapeNumber($player->getAccountID()) . '
+	$db->query('UPDATE sector_has_forces SET refresh_at=' . $db->escapeNumber(TIME + SmrForce::REFRESH_ALL_TIME_PER_STACK).', refresher=' . $db->escapeNumber($player->getAccountID()) . '
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND owner_id=' . $db->escapeNumber($db->getInt('account_id')) . ' LIMIT 1');
 }
