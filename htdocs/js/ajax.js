@@ -151,11 +151,17 @@ var exec = function(s) {
 			}
 		};
 	};
+	// Prevent further click actions after a link is clicked.
+	// This is skipped if the link has a "target" attribute specified.
 	$(function() {
 		$('a[href]:not([target])').click(function(e) {
-			// If this isn't the left mouse button then don't try to stop further clicks.
-			// This is useful because it means we do not disable on a middle click (new tab).
+			// Did we click the link with the left mouse button?
+			// We don't want to trigger this on right/middle clicks.
 			if(e.which !== 1) {
+				return;
+			}
+			// Don't trigger if clicked link has a no-op href attribute.
+			if (this.href === 'javascript:void(0)') {
 				return;
 			}
 			if(linkFollowed !== true) {
