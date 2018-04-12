@@ -226,7 +226,8 @@ div.secNavBox a:hover {
 	color: #6699FF;
 }
 .unvisited {
-   color: #FF0;
+	background-color: black;
+	color: yellow;
 }
 
 /*Used for CS */
@@ -246,34 +247,30 @@ table.csForces th.header {
 }
 
 /* LM */
-.connectSeclm {
+.currentSeclm, .connectSeclm, .normalSeclm {
+	color: #6699FF;
+}
+.connectSeclmu, .normalSeclmu {
+	color: yellow;
+	background-color: black;
+}
+.currentSeclm, .connectSeclm {
 	background-color: #1154A6;
+}
+.connectSeclmu, .connectSeclm, .normalSeclm {
 	/* for IE */
 	filter: alpha(opacity=70);
 	/* CSS3 standard */
 	opacity: 0.7;
 }
-.connectSeclm:hover {
+.connectSeclmu {
+	box-shadow: 0px 0px 0px 4px #1154A6 inset;
+}
+.connectSeclmu:hover, .connectSeclm:hover, .currentSeclm:hover {
 	background-color: #1138A6;
 }
-.currentSeclm {
-	background: url('../../images/currentsector.png');
-	_background: none; /* Disable transparent image for IE6 as it can't handle it */
-	background-color: #1154A6;
-}
-.currentSeclm:hover {
-	background-color: #1138A6;
-}
-
 .normalSeclm {
 	background-color: #000048;
-	 /* for IE */
-	filter: alpha(opacity=70);
-	/* CSS3 standard */
-	opacity: 0.7;
-}
-.normalSeclmu {
-	background-color: #000;
 }
 
 /* Starry background */

@@ -16,6 +16,7 @@
 							if ($isCurrentSector){ ?> currentSeclm_seedlist<?php } else { ?> lm_seedlist<?php }
 						}
 						if ($isCurrentSector){ ?> currentSeclm<?php
+						} else if($isLinkedSector && !$isVisited) { ?> connectSeclmu<?php
 						} else if($isLinkedSector){ ?> connectSeclm<?php
 						} else if($isVisited){ ?> normalSeclm<?php
 						} else{ ?> normalSeclmu<?php } ?>"><?php
@@ -129,7 +130,7 @@
 								} ?>
 							</div><?php
 						} ?>
-						<div class="lmsector <?php if($isVisited){ ?>visited<?php }else{ ?>unvisited<?php } ?>"><?php echo $Sector->getSectorID(); ?></div><?php
+						<div class="lmsector"><?php echo $Sector->getSectorID(); ?></div><?php
 						if($UniGen) {
 							$UniGen['sector_id'] = $Sector->getSectorID(); ?>
 							<a class="move_hack" href="<?php echo SmrSession::getNewHREF($UniGen); ?>"></a><?php
