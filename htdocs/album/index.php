@@ -15,7 +15,8 @@ try {
 	<!DOCTYPE html>
 	<html>
 	<head>
-	<link rel="stylesheet" type="text/css" href="<?php echo URL;?>/css/classic.css">
+	<link rel="stylesheet" type="text/css" href="/css/Default.css">
+	<link rel="stylesheet" type="text/css" href="/css/Default/Default.css">
 	<title>Space Merchant Realms - Photo Album</title>
 	<meta http-equiv="pragma" content="no-cache">
 	</head>
