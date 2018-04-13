@@ -26,3 +26,22 @@ if (!empty($OpDate)) { ?>
 	</form><?php
 }
 ?>
+
+<br /><br />
+<h2>Alliance Flagship</h2>
+<p>The Flagship's location <img src="images/flagship2.png" /> will be visible to all alliance members on the Local Map.</p>
+<form method="POST" action="<?php echo $FlagshipHREF; ?>">
+	<select name="flagship_id" id="InputFields" size="1">
+		<option value="0">-- None --</option>
+		<?php
+		foreach ($AlliancePlayers as $alliancePlayer) {
+			$selected = $alliancePlayer->getAccountID() == $FlagshipID ? 'selected' : '';
+			?>
+			<option value="<?php echo $alliancePlayer->getAccountID(); ?>" <?php echo $selected; ?>>
+				<?php echo $alliancePlayer->getDisplayName(); ?>
+			</option><?php
+		} ?>
+	</select>
+	<br /><br />
+	<input type="submit" name="action" id="InputFields" value="Designate Flagship" />
+</form>

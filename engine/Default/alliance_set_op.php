@@ -26,3 +26,11 @@ if ($db->nextRecord()) {
 }
 
 $template->assign('OpProcessingHREF', SmrSession::getNewHREF($container));
+
+
+// Stuff for designating a flagship
+$template->assign('FlagshipID', $alliance->getFlagshipID());
+$template->assign('AlliancePlayers', $alliance->getMembers());
+
+$container = create_container('alliance_set_flagship_processing.php');
+$template->assign('FlagshipHREF', SmrSession::getNewHREF($container));
