@@ -27,7 +27,15 @@ class Template {
 	}
 	
 	public function display($templateName,$forAjax=false, $xmlResponse=false) {
-		@ob_clean();
+		// If we already started output buffering before calling `display`,
+		// we may have unwanted content in the buffer that we need to remove
+		// before we send the Content-Type headers below.
+		// Skip this for debug builds to help discover offending output.
+		if (!ENABLE_DEBUG) {
+			if (ob_get_length() > 0) {
+				ob_clean();
+			}
+		}
 		ob_start();
 		$this->includeTemplate($templateName);
 		$this->captures[$this->currentCaptureID].=ob_get_clean();
