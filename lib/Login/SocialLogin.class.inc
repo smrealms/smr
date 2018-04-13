@@ -99,7 +99,7 @@ class SocialLogin {
 
 		if($loginType == self::FACEBOOK) {
 			$helper = self::getFacebookObj()->getRedirectLoginHelper();
-			$accessToken = $helper->getAccessToken();
+			$accessToken = $helper->getAccessToken(self::getRedirectUrl($loginType));
 			$response = self::getFacebookObj()->get('/me?fields=first_name,last_name,email', $accessToken);
 			$userInfo = $response->getGraphUser();
 			$this->userID = $userInfo->getId();
