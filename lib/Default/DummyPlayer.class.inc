@@ -39,7 +39,6 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$this->bank						= 0;
 		$this->zoom						= 0;
 		
-		$this->stats = array();
 		$this->gadgets = array();
 		$this->pureRelations = array();
 		$this->bounties = array();
@@ -51,9 +50,6 @@ class DummyPlayer extends AbstractSmrPlayer {
 	
 	public function getPastMaintCredit() {
 		return 0;
-	}
-	
-	protected function getStatsData() {
 	}
 	
 	protected function getGadgetsData() {

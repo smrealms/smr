@@ -167,8 +167,6 @@ if (!empty($delete)) {
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM bounty
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM force_refresh
-						WHERE owner_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM galactic_post_applications
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM galactic_post_article
@@ -185,8 +183,6 @@ if (!empty($delete)) {
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('UPDATE planet SET owner_id=0,planet_name=\'\',password=\'\',shields=0,drones=0,credits=0,bonds=0
 						WHERE owner_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM planet_attack
-						WHERE trigger_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM player_attacks_planet
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM player_attacks_port
@@ -204,8 +200,6 @@ if (!empty($delete)) {
 			$db->query('DELETE FROM player_has_ticket
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM player_has_unread_messages
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_is_president
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM player_plotted_course
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
@@ -230,8 +224,6 @@ if (!empty($delete)) {
 			$db->query('DELETE FROM ship_is_cloaked
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM player
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_has_stats
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 
 			$db->query('UPDATE account_has_stats SET games_joined=games_joined-1

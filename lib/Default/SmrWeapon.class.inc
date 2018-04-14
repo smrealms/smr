@@ -107,7 +107,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	
 	public function getModifiedAccuracy(AbstractSmrPlayer $weaponPlayer) {
 		$modifiedAccuracy = $this->getBaseAccuracy();
-		$modifiedAccuracy += $this->getBaseAccuracy() * ($weaponPlayer->getStat('Accuracy') * ACCURACY_STAT_FACTOR)/100;
 		$modifiedAccuracy += $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($weaponPlayer);
 		if ($weaponPlayer->isGadgetEquipped('Increased Accuracy'))
 			$modifiedAccuracy += $this->getBaseAccuracy() * INCREASED_ACC_GADGET_FACTOR/100;
@@ -177,10 +176,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			$damage['Shield'] += $this->getShieldDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
 			$damage['Armour'] += $this->getArmourDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
 		}
-		//increase for weapon damage stat
-		$damage['MaxDamage'] += $this->getMaxDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
-		$damage['Shield'] += $this->getShieldDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
-		$damage['Armour'] += $this->getArmourDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
 		return $damage;
 	}
 	
@@ -326,57 +321,4 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $this->doPlanetDamageToPlayer($return,$planet, $targetPlayer);
 	}
 	
-//private function get_weapon($weaponPlayer,$weaponShip, $weapon_id, $purpose = 'Normal',$targetPlayer=null,$targetShip=null) {
-//	//this will be used in the future to display more accurate info for the person using the weapon
-//	global TIME,$GAME_ID, $WEAPONS, $ACCURACY_MOD, $WEAPON_DAMAGE_MOD, $BOMBARDMENT_MOD, $GADGETS, $INCREASED_ACC, $INCREASED_MAN, $INCREASED_DAMAGE_GADGET_VALUE, $WEAPON_RESTRICTIONS,$INCREASED_PLANET_DAMAGE_GADGET_VALUE;
-//
-//	//get the weapon restrictions
-//	$res_rev = array();
-//	foreach ($WEAPON_RESTRICTIONS as $res_id => $res_name) $res_rev[$res_name] = $res_id;
-//
-//	//get base weapon
-//	$this_weapon = $WEAPONS[$weapon_id];
-//
-//	//check for special restrictions/abilities
-//	if (in_array($res_rev['Raiding Damage Only'],$this_weapon['Restriction'])) $this_weapon['Raid Only'] = 'TRUE';
-//	else $this_weapon['Raid Only'] = 'FALSE';
-//	if (in_array($res_rev['May Damage Fleet'],$this_weapon['Restriction'])) $this_weapon['May Damage Fleet'] = 'TRUE';
-//	else $this_weapon['May Damage Fleet'] = 'FALSE';
-//
-//	//Determine New Damage
-//	//do they have the raid damage gadget and are raiding?
-//	if (gadget_equipped($weaponPlayer,'Weapon Accelerator') && ($purpose == 'PortRaid' || $purpose == 'PlanetRaid')) {
-//		$this_weapon['Shield Damage'] *= $INCREASED_PLANET_DAMAGE_GADGET_VALUE;
-//		$this_weapon['Armour Damage'] *= $INCREASED_PLANET_DAMAGE_GADGET_VALUE;
-//	}
-//	//increase for raid damage stat if they are raiding
-//	if ($purpose == 'PortRaid' || $purpose == 'PlanetRaid') {
-//		$this_weapon['Shield Damage'] *= 1 + ($BOMBARDMENT_MOD * $weaponPlayer->getStat('Bombardment')) / 100;
-//		$this_weapon['Armour Damage'] *= 1 + ($BOMBARDMENT_MOD * $weaponPlayer->getStat('Bombardment')) / 100;
-//	}
-//	//get diminishing returns for attacking
-//	$diminishing=1;
-//	if($purpose == 'PlanetRaid') {
-//		global $REPAIR_BEFORE_DIMINISHING_PLANET_RAID;
-//		$diminishing = 1 - ($weaponPlayer->getPastMaint() / $REPAIR_BEFORE_DIMINISHING_PLANET_RAID);
-//	}
-//	else if($purpose == 'PortRaid') {
-//		global $REPAIR_BEFORE_DIMINISHING_PORT_RAID;
-//		$diminishing = 1 - ($weaponPlayer->getPastMaint() / $REPAIR_BEFORE_DIMINISHING_PORT_RAID);
-//	}
-//	else if($purpose == 'Forces') {
-//		global $REPAIR_BEFORE_DIMINISHING_FORCE_ATTACK;
-//		$diminishing = 1 - ($weaponPlayer->getPastMaint() / $REPAIR_BEFORE_DIMINISHING_FORCE_ATTACK);
-//	}
-//	else if($purpose == 'Normal') {
-//		$REPAIR_BEFORE_DIMINISHING_ATTACK = $weaponShip['Speed'] * 25 + 475;
-//		$diminishing = 1 - ($weaponPlayer->getPastMaint() / $REPAIR_BEFORE_DIMINISHING_ATTACK);
-//	}
-//	if ($diminishing <= 0) $diminishing = 0.00001;
-//	$this_weapon['Shield Damage'] = ceil($diminishing * $this_weapon['Shield Damage']);
-//	$this_weapon['Armour Damage'] = ceil($diminishing * $this_weapon['Armour Damage']);
-//
-//
-//	return $this_weapon;
-//}
 }

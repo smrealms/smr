@@ -172,8 +172,6 @@ for ($i = $min_sector; $i <= $max_sector; $i++) {
 
 	$db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES (' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($i).')');
 }
-$db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES (' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ')');
-
 
 
 // update stats
