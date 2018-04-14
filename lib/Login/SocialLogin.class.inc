@@ -1,6 +1,11 @@
 <?php
 
 class SocialLogin {
+	// Define `loginType` constants to avoid string typos
+	const FACEBOOK = 'Facebook';
+	const TWITTER = 'Twitter';
+	const GOOGLE = 'Google';
+
 	private $valid = false;
 	private $loginType = null;
 	private $userID = null;
@@ -42,12 +47,20 @@ class SocialLogin {
 		return self::$twitter;
 	}
 
-	public static function &getOpenIdObj() {
+	private static function &getOpenIdObj() {
 		if(self::$openID==null) {
 			require_once(LIB.'External/OpenID/openid.php');
 			self::$openID = new LightOpenID();
 		}
 		return self::$openID;
+	}
+
+	/**
+	 * Returns the URL that the social platform will redirect to
+	 * after authentication.
+	 */
+	private static function getRedirectUrl($loginType) {
+		return URL . '/login_processing.php?loginType=' . $loginType;
 	}
 
 	public static function getFacebookLoginUrl() {
@@ -57,7 +70,7 @@ class SocialLogin {
 		}
 		$helper = self::getFacebookObj()->getRedirectLoginHelper();
 		$permissions = ['email'];
-		$loginUrl = $helper->GetLoginUrl(URL . '/login_processing.php?loginType=Facebook', $permissions);
+		$loginUrl = $helper->GetLoginUrl(self::getRedirectUrl(self::FACEBOOK), $permissions);
 		return $loginUrl;
 	}
 
@@ -66,7 +79,7 @@ class SocialLogin {
 			session_start();
 		}
 		self::getTwitterObj()->token = null;
-		$_SESSION['TwitterToken'] = self::getTwitterObj()->getRequestToken(URL.'/login_processing.php?loginType=Twitter');
+		$_SESSION['TwitterToken'] = self::getTwitterObj()->getRequestToken(self::getRedirectUrl(self::TWITTER));
 		return self::getTwitterObj()->getAuthorizeURL($_SESSION['TwitterToken']);
 	}
 
@@ -76,29 +89,28 @@ class SocialLogin {
 		}
 		$openID =& self::getOpenIdObj();
 		$openID->required = array('contact/email','namePerson/first','namePerson/last');
-		$openID->returnUrl = URL.'/login_processing.php?loginType='.$loginType;
+		$openID->returnUrl = self::getRedirectUrl($loginType);
 		$openID->identity = self::$OPEN_ID_IDENTITIES[$loginType];
 		return $openID->authUrl();
 	}
 
 	public function __construct($loginType) {
+		$this->loginType = $loginType;
 
-		if($loginType=='Facebook') {
+		if($loginType == self::FACEBOOK) {
 			$helper = self::getFacebookObj()->getRedirectLoginHelper();
-			$accessToken = $helper->getAccessToken();
+			$accessToken = $helper->getAccessToken(self::getRedirectUrl($loginType));
 			$response = self::getFacebookObj()->get('/me?fields=first_name,last_name,email', $accessToken);
 			$userInfo = $response->getGraphUser();
-			$this->loginType = $loginType;
 			$this->userID = $userInfo->getId();
 			$this->email = $userInfo->getEmail();
 			$this->firstName = $userInfo->getFirstName();
 			$this->lastName = $userInfo->getLastName();
 			$this->valid = true;
 		}
-		else if($loginType == 'Twitter') {
+		else if($loginType == self::TWITTER) {
 			self::getTwitterObj()->getAccessToken($_REQUEST['oauth_verifier']);
 			if(self::getTwitterObj()->http_code == 200) {
-				$this->loginType=$loginType;
 
 				$userInfo = self::getTwitterObj()->get('account/verify_credentials');
 				$this->userID=$userInfo->id_str;
@@ -113,10 +125,9 @@ class SocialLogin {
 				$this->valid = true;
 			}
 		}
-		else if($loginType == 'Google') {
+		else if($loginType == self::GOOGLE) {
 			if(self::getOpenIdObj()->validate()) {
 				if(strripos(self::getOpenIdObj()->identity, self::$OPEN_ID_IDENTITIES[$loginType]) === 0) {
-					$this->loginType=$loginType;
 					$this->userID=self::getOpenIdObj()->identity;
 					$userInfo = self::getOpenIdObj()->getAttributes();
 					$this->email=$userInfo['contact/email'];
