@@ -61,12 +61,6 @@
 						<tr>
 							<td colspan="2">&nbsp;</td>
 						</tr>
-						<?php //BETA
-	//					<tr>
-	//						<td width="27%">Beta Key:</td>
-	//						<td width="73%"><input type="text" name="beta_key" size="20" maxlength="50" id="InputFields"></td>
-	//					</tr>
-						?>
 						<tr>
 							<td width="27%">User name:</td>
 							<td width="73%"><input type="text" name="login" size="20" maxlength="32" id="InputFields"></td>

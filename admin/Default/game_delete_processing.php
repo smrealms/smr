@@ -181,7 +181,6 @@ if ($action == 'Yes') {
 	}
 
 	$smr_db_sql[] = 'DELETE FROM planet WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM planet_attack WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM planet_is_building WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM planet_has_cargo WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM planet_has_building WHERE game_id = '.$db->escapeNumber($game_id);
@@ -226,56 +225,6 @@ if ($action == 'Yes') {
 	}
 
 	$smr_db_sql[] = 'DELETE FROM player WHERE game_id = '.$db->escapeNumber($game_id);
-
-	if ($save) {
-
-		$db->query('SELECT * FROM player_has_stats WHERE game_id = '.$db->escapeNumber($game_id));
-
-		while ($db->nextRecord()) {
-
-			// get info we want
-			$acc_id = $db->getField('account_id');
-			$planet_busts = $db->getField('planet_busts');
-			$planet_bust_levels = $db->getField('planet_bust_levels');
-			$port_raids = $db->getField('port_raids');
-			$port_raid_levels = $db->getField('port_raid_levels');
-			$sectors_explored = $db->getField('sectors_explored');
-			$deaths = $db->getField('deaths');
-			$kills = $db->getField('kills');
-			$goods_traded = $db->getField('goods_traded');
-			$experience_traded = $db->getField('experience_traded');
-			$bounties_claimed = $db->getField('bounties_claimed');
-			$bounty_amount_claimed = $db->getField('bounty_amount_claimed');
-			$military_claimed = $db->getField('military_claimed');
-			$bounty_amount_on = $db->getField('bounty_amount_on');
-			$player_damage = $db->getField('player_damage');
-			$port_damage = $db->getField('port_damage');
-			$planet_damage = $db->getField('planet_damage');
-			$turns_used = $db->getField('turns_used');
-			$kill_exp = $db->getField('kill_exp');
-			$traders_killed_exp = $db->getField('traders_killed_exp');
-			$blackjack_win = $db->getField('blackjack_win');
-			$blackjack_lose = $db->getField('blackjack_lose');
-			$lotto = $db->getField('lotto');
-			$drinks = $db->getField('drinks');
-			$trade_profit = $db->getField('trade_profit');
-			$trade_sales = $db->getField('trade_sales');
-			$mines = $db->getField('mines');
-			$cds = $db->getField('combat_drones');
-			$sds = $db->getField('scout_drones');
-			$money_gained = $db->getField('money_gained');
-			$killed_ships = $db->getField('killed_ships');
-			$died_ships = $db->getField('died_ships');
-
-			// insert into history db
-			$history_db_sql[] = 'INSERT INTO player_has_stats (account_id,game_id,planet_busts,planet_bust_levels,port_raids,port_raid_levels,sectors_explored,deaths,kills,goods_traded,experience_traded,bounties_claimed,bounty_amount_claimed,military_claimed,bounty_amount_on,player_damage,port_damage,planet_damage,turns_used,kill_exp,traders_killed_exp,blackjack_win,blackjack_lose,lotto,drinks,trade_profit,trade_sales,mines,combat_drones,scout_drones,money_gained,killed_ships,died_ships) ' .
-								'VALUES ('.$acc_id.','.$game_id.','.$planet_busts.','.$planet_bust_levels.','.$port_raids.','.$port_raid_levels.','.$sectors_explored.','.$deaths.','.$kills.','.$goods_traded.','.$experience_traded.','.$bounties_claimed.','.$bounty_amount_claimed.','.$military_claimed.','.$bounty_amount_on.','.$player_damage.','.$port_damage.','.$planet_damage.','.$turns_used.','.$kill_exp.','.$traders_killed_exp.','.$blackjack_win.','.$blackjack_lose.','.$lotto.','.$drinks.','.$trade_profit.','.$trade_sales.','.$mines.','.$cds.','.$sds.','.$money_gained.','.$killed_ships.','.$died_ships.')';
-
-		}
-
-	}
-
-	$smr_db_sql[] = 'DELETE FROM player_has_stats WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM bounty WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM player_has_ticker WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM player_has_ticket WHERE game_id = '.$db->escapeNumber($game_id);
@@ -283,7 +232,6 @@ if ($action == 'Yes') {
 	$smr_db_sql[] = 'DELETE FROM player_has_drinks WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM player_has_relation WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM player_has_unread_messages WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_is_president WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM player_plotted_course WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM player_read_thread WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM player_visited_port WHERE game_id = '.$db->escapeNumber($game_id);
@@ -292,7 +240,6 @@ if ($action == 'Yes') {
 	$smr_db_sql[] = 'DELETE FROM player_votes_relation WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM plot_cache WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM port WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM port_attack_times WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM port_has_goods WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM race_has_relation WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM race_has_voting WHERE game_id = '.$db->escapeNumber($game_id);
