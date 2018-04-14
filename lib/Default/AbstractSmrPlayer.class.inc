@@ -590,17 +590,6 @@ abstract class AbstractSmrPlayer {
 		return $pastMaint;
 	}
 
-	protected abstract function getStatsData();
-	public function getStats() {
-		$this->getStatsData();
-		return $this->stats;
-	}
-
-	public function getStat($name) {
-		$stats = $this->getStats();
-		return isset($stats[$name]) ? $stats[$name] : 0;
-	}
-
 	protected abstract function getGadgetsData();
 	public function getGadgets() {
 		$this->getGadgetsData();

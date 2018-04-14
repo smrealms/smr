@@ -107,7 +107,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	
 	public function getModifiedAccuracy(AbstractSmrPlayer $weaponPlayer) {
 		$modifiedAccuracy = $this->getBaseAccuracy();
-		$modifiedAccuracy += $this->getBaseAccuracy() * ($weaponPlayer->getStat('Accuracy') * ACCURACY_STAT_FACTOR)/100;
 		$modifiedAccuracy += $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($weaponPlayer);
 		if ($weaponPlayer->isGadgetEquipped('Increased Accuracy'))
 			$modifiedAccuracy += $this->getBaseAccuracy() * INCREASED_ACC_GADGET_FACTOR/100;
@@ -177,10 +176,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			$damage['Shield'] += $this->getShieldDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
 			$damage['Armour'] += $this->getArmourDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
 		}
-		//increase for weapon damage stat
-		$damage['MaxDamage'] += $this->getMaxDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
-		$damage['Shield'] += $this->getShieldDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
-		$damage['Armour'] += $this->getArmourDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
 		return $damage;
 	}
 	

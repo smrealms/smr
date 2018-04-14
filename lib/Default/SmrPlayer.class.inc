@@ -332,8 +332,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 //			case 'Ship Size':
 //				return $this->getShipSize();
 
-			case 'Stats':
-				return $this->getStats();
 			case 'Erebus Knowledge':
 				return $this->getKnowledge('Erebus');
 			case 'Nyx Knowledge':
@@ -763,28 +761,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->db->query('REPLACE INTO player_repaired (account_id, game_id, time, amount, source) VALUES (' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeNumber($amount) . ',' . $this->db->escapeString($type) . ')');
 		$this->giveTurns($amount*10);
 		$this->pastMaintBought+=$amount;
-	}
-
-	protected function getStatsData() {
-		if(!isset($this->stats)) {
-//			//initialize stats
-//			global $STATS;
-//			foreach ($STATS as $stat_name => $statArray)
-//				$temp_stats[$statArray['ID']] = 0;
-//			$this->db->query('SELECT stat_type_id, amount FROM player_has_special WHERE ' . $this->SQL . ' LIMIT ' . sizeof($STATS));
-//			while ($this->db->nextRecord())
-//				$temp_stats[$this->db->getField('stat_type_id')] = $this->db->getField('amount');
-			//put stats in a more user friendly form
-			$this->stats = array();
-//			foreach ($STATS as $stat_name => $statArray)
-//				$this->stats[$stat_name] = $temp_stats[$statArray['ID']];
-		}
-	}
-
-	function deleteStats() {
-		$this->getStats();
-		$this->db->query('DELETE FROM player_has_special WHERE '.$this->SQL.' LIMIT '.count($this->stats));
-		unset($this->stats);
 	}
 
 	protected function getPureRelationsData() {

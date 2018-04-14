@@ -1125,7 +1125,6 @@ abstract class AbstractSmrShip {
 								+$this->getCDs()/5
 							)
 						)
-//						+ $player->getStat('Maneuverability') * $MANEUV_MOD
 					);
 	}
 
