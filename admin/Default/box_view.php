@@ -35,26 +35,35 @@ else {
 			$messages[$messageID] = array(
 				'ID' => $messageID
 			);
-			$senderAccount =& SmrAccount::getAccount($db->getField('sender_id'));
-			$senderName = $senderAccount->getLogin().' ('.$senderAccount->getAccountID().')';
-			if ($validGame) {
-				$senderPlayer =& SmrPlayer::getPlayer($senderAccount->getAccountID(), $gameID);
-				if($senderAccount->getLogin() != $senderPlayer->getPlayerName()) {
-					$senderName .= ' a.k.a ' . $senderPlayer->getPlayerName();
-				}
+
+			$senderID = $db->getInt('sender_id');
+			if ($senderID == 0) {
+				$senderName = 'User not logged in';
+			} else {
+				$senderAccount = SmrAccount::getAccount($senderID);
+				$senderName = $senderAccount->getLogin().' ('.$senderID.')';
+				if ($validGame) {
+					$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
+					if($senderAccount->getLogin() != $senderPlayer->getPlayerName()) {
+						$senderName .= ' a.k.a ' . $senderPlayer->getPlayerName();
+					}
 				
-				$container = create_container('skeleton.php', 'box_reply.php');
-				$container['sender_id'] = $senderAccount->getAccountID();
-				$container['game_id'] = $gameID;
-				$messages[$messageID]['ReplyHREF'] = SmrSession::getNewHREF($container);
+					$container = create_container('skeleton.php', 'box_reply.php');
+					$container['sender_id'] = $senderID;
+					$container['game_id'] = $gameID;
+					$messages[$messageID]['ReplyHREF'] = SmrSession::getNewHREF($container);
+				}
 			}
 			$messages[$messageID]['SenderName'] = $senderName;
-			if (!$validGame) {
+
+			if ($gameID == 0) {
+				$messages[$messageID]['GameName'] = 'No game selected';
+			} elseif (!$validGame) {
 				$messages[$messageID]['GameName'] = 'Game no longer exists';
-			}
-			else {
+			} else {
 				$messages[$messageID]['GameName'] = Globals::getGameName($gameID);
 			}
+
 			$messages[$messageID]['SendTime'] = date(DATE_FULL_SHORT, $db->getField('send_time'));
 			$messages[$messageID]['Message'] = bbifyMessage(htmliseMessage($db->getField('message_text')));
 		}

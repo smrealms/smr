@@ -1,7 +1,7 @@
 <?php
 function logException(Exception $e) {
 	global $account,$var,$player;
-	$errorType = 'Error';
+	$errorType = 'Unexpected Game Error!';
 	$message='';
 	$currMySQLError='';
 
@@ -46,27 +46,39 @@ function logException(Exception $e) {
 		exit;
 	}
 
+	// Send error message to the in-game auto bugs mailbox
+	if (is_object($player) && method_exists($player,'sendMessageToBox')) {
+		$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
+	} elseif (is_object($account) && method_exists($account,'sendMessageToBox')) {
+		// Will be logged without a game_id
+		$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
+	} else {
+		// Will be logged without a game_id or sender_id
+		SmrAccount::doMessageSendingToBox(0, BOX_BUGS_AUTO, $message, 0);
+	}
+
+	// Send error message to e-mail so that we have a permanent record
 	$mail = setupMailer();
 	$mail->Subject = 'Automatic Bug Report';
 	$mail->setFrom('bugs@smrealms.de');
 	$mail->Body = $message;
 	$mail->addAddress('bugs@smrealms.de');
-	try {
-		if(is_object($player) && method_exists($player,'sendMessageToBox'))
-			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
-		else if(is_object($account) && method_exists($account,'sendMessageToBox'))
-			$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
-		else
-			$mail->send();
-	}
-	catch(Exception $e) {
-		$mail->send();
-	}
+	$mail->send();
+
 	return $errorType;
 }
 
 function handleException(Exception $e) {
-	$errorType = logException($e);
+	// The real error message may display sensitive information, so we
+	// need to catch any exceptions that are thrown while logging the error.
+	try {
+		$errorType = logException($e);
+	} catch (Exception $e) {
+		$errorType = 'This error cannot be automatically reported. Please notify an admin!';
+	}
+
+	// If this is an ajax update, we don't really have a way to redirect
+	// to an error page at this time, so we just quit.
 	if(!defined('USING_AJAX')||!USING_AJAX)
 		header('location: ' . URL . '/error.php?msg='.urlencode($errorType));
 	exit;
