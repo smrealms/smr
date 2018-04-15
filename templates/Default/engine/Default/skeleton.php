@@ -38,6 +38,7 @@
 				<td class="r0">
 					<div id="right_panel">
 						<?php $this->includeTemplate('includes/RightPanelPlayer.inc'); ?>
+						<br />
 						<?php $this->includeTemplate('includes/RightPanelShip.inc'); ?>
 					</div>
 				</td>
