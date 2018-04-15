@@ -1570,6 +1570,13 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $bounties;
 	}
 
+	/**
+	 * Has this player been designated as the alliance flagship?
+	 */
+	public function isFlagship() {
+		return $this->hasAlliance() && $this->getAlliance()->getFlagshipID() == $this->getAccountID();
+	}
+
 	public function isPresident() {
 		$president = Council::getPresident($this->getGameID(),$this->getRaceID());
 		return is_object($president) && $this->equals($president);

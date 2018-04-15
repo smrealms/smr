@@ -1,5 +1,10 @@
 <?php
 if(isset($GameID)) { ?>
+	<span id="flagship"><?php
+	if ($ThisPlayer->isFlagship()) {
+		?><img title="Alliance Flagship" alt="Alliance Flagship" src="images/flagship.png" width="16" height="12" />&nbsp;<span style="color:#06F">Flagship</span><br /><?php
+	}
+	?></span>
 	<a href="ship_list.php" target="shipList">
 		<span id="ship_name"><?php /*<a href="<?php echo $ThisShip->getUpgradeShipHREF(); ?>">*/ ?>
 			<span class="yellow bold"><?php echo $ThisShip->getName(); ?></span><?php /*</a>*/ ?>

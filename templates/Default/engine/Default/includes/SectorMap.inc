@@ -115,7 +115,7 @@
 									if($CanScanSector && $Sector->hasProtectedTraders($MapPlayer)) {
 										?><img class="neutralBack" title="Protected Trader" alt="Protected Trader" src="images/trader.png" width="13" height="16"/><?php
 									}
-									if ($Sector->hasAllianceFlagship($MapPlayer)) {
+									if ($Sector->hasAllianceFlagship($MapPlayer) && !$MapPlayer->isFlagship()) {
 										?><img class="friendlyBack" title="Alliance Flagship" alt="Alliance Flagship" src="images/flagship.png" width="16" height="16" /><?php
 									}
 									if($Sector->hasFriendlyTraders($MapPlayer)) {
