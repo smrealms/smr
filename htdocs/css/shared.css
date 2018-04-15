@@ -328,8 +328,8 @@ div.lm_seedlist {
 			45deg,
 			transparent,
 			transparent 8%,
-			#00f 10%,
-			#00f 13%
+			rgba(0,0,255,0.5) 10%,
+			rgba(0,0,255,0.5) 13%
 		);
 }
 div.currentSeclm_seedlist {
@@ -339,8 +339,8 @@ div.currentSeclm_seedlist {
 			45deg,
 			transparent,
 			transparent 8%,
-			#00f 10%,
-			#00f 13%
+			rgba(0,0,255,0.5) 10%,
+			rgba(0,0,255,0.5) 13%
 		);
 }
 table.lmt {
