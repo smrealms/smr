@@ -29,7 +29,9 @@ else { ?>
 			<table width="100%" class="standard"><?php
 				foreach($Messages as $Message) { ?>
 					<tr>
-						<td><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>"></td>
+						<td class="shrink">
+							<input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>">
+						</td>
 						<td class="noWrap">From: <?php
 							if(isset($Message['ReplyHREF'])) {
 								?><a href="<?php echo $Message['ReplyHREF']; ?>"><?php
