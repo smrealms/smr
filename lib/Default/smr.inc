@@ -325,10 +325,19 @@ function create_submit_style($value, $style) {
 }
 
 function create_error($message) {
-	if(USING_AJAX)
-		throw new Exception('No errors should be created when using AJAX as nothing should have changed from the last time the page loaded: ' . $message);
 	$container = create_container('skeleton.php','error.php');
 	$container['message'] = $message;
+	if (USING_AJAX) {
+		// To avoid the page just not refreshing when an error is encountered
+		// during ajax updates, use javascript to auto-redirect to the
+		// appropriate error page.
+		global $template;
+		if (is_object($template) && method_exists($template, 'addJavascriptForAjax')) {
+			$errorHREF = SmrSession::getNewHREF($container);
+			// json_encode the HREF as a safety precaution
+			$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($errorHREF));
+		}
+	}
 	forward($container);
 }
 
