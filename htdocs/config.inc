@@ -1,7 +1,7 @@
 <?php
 function logException(Exception $e) {
 	global $account,$var,$player;
-	$errorType = 'Error';
+	$errorType = 'Unexpected Game Error!';
 	$message='';
 	$currMySQLError='';
 
