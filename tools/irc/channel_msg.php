@@ -68,7 +68,7 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 
 function channel_msg_with_registration($fp, $rdata)
 {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd|sms)\s/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd)\s/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -114,11 +114,6 @@ function channel_msg_with_registration($fp, $rdata)
 		if (channel_msg_sd_del($fp, $rdata, $account, $player))
 			return true;
 		if (channel_msg_sd_list($fp, $rdata, $account, $player))
-			return true;
-
-		if (channel_msg_sms_search($fp, $rdata, $account, $player))
-			return true;
-		if (channel_msg_sms_send($fp, $rdata, $account, $player))
 			return true;
 
 	}
@@ -350,7 +345,6 @@ function channel_msg_help($fp, $rdata)
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seed                    Displays a list of sectors you have not yet seeded' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !op                      Command to manage OPs' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !sd                      Command to manage supply/demands for ports' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !sms                     Command to send sms text messages to player' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !money                   Displays the funds the alliance owns' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !forces [Galaxy]         Will tell you when forces will expire. Can be used without parameters.' . EOL);
 

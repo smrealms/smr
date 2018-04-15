@@ -183,20 +183,6 @@ if(isset($GameID)) { ?>
 		<tr><td colspan="2">&nbsp;</td></tr>
 
 		<tr>
-			<td>Cell phone:</td>
-			<td><input type="tel" name="cell_phone" value="<?php echo htmlspecialchars($ThisAccount->getCellPhone()); ?>" id="InputFields" size="50" /></td>
-		</tr>
-
-		<tr>
-			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change cell phone" id="InputFields" /></td>
-		</tr>
-
-		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-		
-		<tr>
 			<td>Hall of Fame Name:</td>
 			<td><input type="text" name="HoF_name" value="<?php echo htmlspecialchars($ThisAccount->getHofName()); ?>" id="InputFields" size="50" /></td>
 		</tr>
