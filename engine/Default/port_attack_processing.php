@@ -77,33 +77,3 @@ if($player->isDead()) {
 
 $container['results'] = $serializedResults;
 forward($container);
-
-
-//function sendReport($results, $port) {
-//	if (DEBUG) $PHP_OUTPUT.=('Sending Reports<br />');
-//	global $player, $db;
-//	$mainText = 'From the reports we have been able to gather the following information:<br /><br />';
-//	$mainText .= $results[PORT_DISPLAY] . '<br />' . $results[PLAYER_DISPLAY];
-//	if ($player->hasAlliance()) {
-//		$topic = 'Port Siege Report Sector '.$player->getSectorID();
-//		$text = 'Reports have come in from the space above <span class="yellow">Port ' . $player->getSectorID() . '</span> and have confirmed our <span class="red">siege</span>!<br />';
-//		$text .= $mainText;
-//		$thread_id = 0;
-//		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND topic = '.$db->escapeString($topic).' LIMIT 1');
-//		if ($db->nextRecord()) $thread_id = $db->getField('thread_id');
-//		if ($thread_id == 0) {
-//			$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY thread_id DESC LIMIT 1');
-//			if ($db->nextRecord())
-//				$thread_id = $db->getField('thread_id') + 1;
-//			else $thread_id = 1;
-//			$db->query('INSERT INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ' .
-//						'(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAllianceID()) . ', '.$thread_id.', '.$db->escapeString($topic).')');
-//		}
-//		$db->query('SELECT * FROM alliance_thread WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' .
-//					'thread_id = '.$thread_id.' ORDER BY reply_id DESC LIMIT 1');
-//		if ($db->nextRecord()) $reply_id = $db->getField('reply_id') + 1;
-//		else $reply_id = 1;
-//		$db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES ' .
-//				'(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAllianceID()) . ', '.$thread_id.', '.$reply_id.', '.$db->escapeString($text).', ACCOUNT_ID_PORT, ' . TIME . ')');
-//	}
-//}
