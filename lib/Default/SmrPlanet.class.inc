@@ -128,7 +128,6 @@ class SmrPlanet {
 			$this->typeID 			= $this->db->getInt('planet_type_id');
 			
 			$this->updateTypeInfo();
-			$this->getOptions();
 			$this->getStockpile();
 			$this->getBuildings();
 			$this->getCurrentlyBuilding();
@@ -737,28 +736,37 @@ class SmrPlanet {
 		return $this->typeInfo['planet_max_landed'];
 	}
 
+	/**
+	 * Specifies which menu options the planet has.
+	 */
 	public function getOptions($option=false) {
-
-		if(!isset($this->canOptions)) {
-			// initialize options menu array
-			$this->canOptions = array();
-			// get options from db
-			$this->db->query('SELECT * FROM planet_type_has_section WHERE planet_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
-			// adding options to array
-			while ($this->db->nextRecord()) {
-				$this->canOptions[$this->db->getField('planet_section')] = true;	
-			}
-		}	
-
-		if ($option) {
-			if (isset ($this->canOptions[$option])) {
-				return $this->canOptions[$option];
-			}
-			return false;
+		$this->setOptions(); // Make sure the data is populated
+		if ($option === false) {
+			return $this->canOptions;
 		}
-		return $this->canOptions;
+		// We do not set options that are unavailable
+		return isset($this->canOptions[$option]);
 	}
-	
+
+	/**
+	 * Populate the `canOptions` attribute from the `planet_type_has_section` database table.
+	 */
+	private function setOptions() {
+		if (isset($this->canOptions)) {
+			return;
+		}
+		// Cache the options for this type of planet
+		static $OPTIONS = array();
+		if (!isset($OPTIONS[$this->getTypeID()])) {
+			$this->db->query('SELECT * FROM planet_type_has_section WHERE planet_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
+			while ($this->db->nextRecord()) {
+				$OPTIONS[$this->getTypeID()][$this->db->getField('planet_section')] = true;
+			}
+		}
+		// Set the options for this planet instance
+		$this->canOptions = $OPTIONS[$this->getTypeID()];
+	}
+
 	public function doDelayedUpdates() {
 		$this->setShields($this->getShields(true));
 		$this->delayedShieldsDelta = 0;
