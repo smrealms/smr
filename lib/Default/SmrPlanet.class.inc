@@ -130,7 +130,6 @@ class SmrPlanet {
 			$this->updateTypeInfo();
 			$this->getOptions();
 			$this->getStockpile();
-			$this->setMaxBuildings();
 			$this->getBuildings();
 			$this->getCurrentlyBuilding();
 			$this->calculateInterest();
@@ -641,26 +640,31 @@ class SmrPlanet {
 	}
 
 	public function getMaxBuildings($buildingTypeID=false) {
-		if (!isset($this->maxBuildings)) {
-			$this->setMaxBuildings();
-		}
+		// Make sure the data is populated
+		$this->setMaxBuildings();
 		if($buildingTypeID===false) {
 			return $this->maxBuildings;
 		}
-		
-		if (isset($this->maxBuildings[$buildingTypeID])) {
-			return $this->maxBuildings[$buildingTypeID];
-		}
-		return 0;
+		return $this->maxBuildings[$buildingTypeID];
 	}
 	
-	public function setMaxBuildings() {
-		$this->maxBuildings = array();
-
-		$this->db->query('SELECT construction_id, max_amount FROM planet_can_build WHERE planet_type_id='.$this->getTypeID());
-		while ($this->db->nextRecord()) {
-			$this->maxBuildings[$this->db->getInt('construction_id')] = $this->db->getInt('max_amount');
+	/**
+	 * Populates the `maxBuildings` attribute from the `planet_can_build` database table.
+	 */
+	private function setMaxBuildings() {
+		if (isset($this->maxBuildings)) {
+			return;
 		}
+		// Cache the max buildings for this type of planet
+		static $MAX_BUILDINGS = array();
+		if (!isset($MAX_BUILDINGS[$this->getTypeID()])) {
+			$this->db->query('SELECT construction_id, max_amount FROM planet_can_build WHERE planet_type_id='.$this->getTypeID());
+			while ($this->db->nextRecord()) {
+				$MAX_BUILDINGS[$this->getTypeID()][$this->db->getInt('construction_id')] = $this->db->getInt('max_amount');
+			}
+		}
+		// Set the max buildings for this planet instance
+		$this->maxBuildings = $MAX_BUILDINGS[$this->getTypeID()];
 	}
 	
 	
