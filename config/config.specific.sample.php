@@ -10,9 +10,6 @@ const ACCOUNT_ID_PAGE = 1403; //BETA, used for removing newbie turn
 const RECAPTCHA_PUBLIC = '';
 const RECAPTCHA_PRIVATE = '';
 
-const SMS_DEBUG = '1';
-const SMS_GATEWAY_KEY = '';
-
 const FACEBOOK_APP_ID = '';
 const FACEBOOK_APP_SECRET = '';
 
