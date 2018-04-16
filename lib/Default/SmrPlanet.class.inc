@@ -645,7 +645,7 @@ class SmrPlanet {
 			$this->setMaxBuildings();
 		}
 		if($buildingTypeID===false) {
-			return $this->$maxBuildings;
+			return $this->maxBuildings;
 		}
 		
 		if (isset($this->maxBuildings[$buildingTypeID])) {
