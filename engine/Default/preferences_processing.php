@@ -15,7 +15,6 @@ $retype_password = $_REQUEST['retype_password'];
 $HoF_name = trim($_REQUEST['HoF_name']);
 $discordId = trim($_REQUEST['discord_id']);
 $ircNick = trim($_REQUEST['irc_nick']);
-$cellPhone = trim($_REQUEST['cell_phone']);
 $friendlyColour = $_REQUEST['friendly_color'];
 $neutralColour = $_REQUEST['neutral_color'];
 $enemyColour = $_REQUEST['enemy_color'];
@@ -156,24 +155,6 @@ elseif ($action == 'Change IRC Nick') {
 		$account->setIrcNick($ircNick);
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your irc nick.';
 
-	}
-
-}
-elseif ($action == 'Change cell phone') {
-
-	if (empty($cellPhone) || $cellPhone == '') {
-		// delete cell phone
-		$account->setCellPhone(null);
-		$container['msg'] = '<span class="green">SUCCESS: </span>You have deleted your cell phone number.';
-	} else {
-
-		// validate number
-		if (preg_match('/^\+[0-9]{3,24}$/', $cellPhone) == 0)
-			create_error('Cell phone numbers must be given in the international format, eg: +15551234567 (For details see this link: http://www.ehow.com/how_5547899_write-phone-number-international-format.html)');
-
-		// and save cell phone
-		$account->setCellPhone($cellPhone);
-		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your cell phone number.';
 	}
 
 }

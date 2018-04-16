@@ -71,7 +71,6 @@ require_once(TOOLS . 'irc/channel_msg.php');
 require_once(TOOLS . 'irc/channel_msg_op.php');
 require_once(TOOLS . 'irc/channel_msg_sd.php');
 require_once(TOOLS . 'irc/channel_msg_seed.php');
-require_once(TOOLS . 'irc/channel_msg_sms.php');
 require_once(TOOLS . 'irc/maintenance.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_money.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_op_info.php');
@@ -182,10 +181,7 @@ function readFromStream($fp) {
 	}
 
 	// we simply do some poll stuff here
-	check_planet_builds($fp);
 	check_events($fp);
-	check_sms_dlr($fp);
-	check_sms_response($fp);
 
 	if (strlen($rdata) == 0) {
 		return false;
@@ -253,8 +249,6 @@ function readFromStream($fp) {
 	if (channel_msg_seen($fp, $rdata))
 		return;
 	if (channel_msg_sd($fp, $rdata))
-		return;
-	if (channel_msg_sms($fp, $rdata))
 		return;
 
 	// channel msg (!xyz) with registration

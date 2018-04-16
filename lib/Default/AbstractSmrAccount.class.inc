@@ -40,7 +40,6 @@ abstract class AbstractSmrAccount {
 	protected $email;
 	protected $first_name;
 	protected $validated;
-	protected $cellPhone;
 	protected $validation_code;
 	protected $last_login;
 	protected $hofName;
@@ -137,20 +136,6 @@ abstract class AbstractSmrAccount {
 		return $return;
 	}
 
-	public static function &findAccountByIrcNick($nick, $forceUpdate = false) {
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT account_id FROM account WHERE irc_nick LIKE '.$db->escapeString($nick).' LIMIT 2');
-		if($db->getNumRows() > 1) {
-			$return = true;
-			return $return;
-		} elseif($db->nextRecord()) {
-			return self::getAccount($db->getField('account_id'), $forceUpdate);
-		} else{
-			$return = null;
-			return $return;
-		}
-	}
-
 	public static function &createAccount($login,$password,$email,$first_name,$last_name,$timez,$referral) {
 		if($referral!=0) {
 			try {
@@ -197,7 +182,6 @@ abstract class AbstractSmrAccount {
 
 			$this->last_login		= $row['last_login'];
 			$this->validation_code 	= $row['validation_code'];
-			$this->cellPhone		= $row['cell_phone'];
 			$this->veteran			= $this->db->getBoolean('veteran');
 			$this->logging			= $this->db->getBoolean('logging');
 			$this->offset			= $row['offset'];
@@ -274,14 +258,6 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function isSmsBlacklisted() {
-		$this->db->query('SELECT reason FROM account_sms_blacklist WHERE ' . $this->SQL . ' LIMIT 1');
-		if ($this->db->nextRecord())
-			return $this->db->getField('reason');
-		else
-			return false;
-	}
-
 	function update() {
 		$this->db->query('UPDATE account SET email = '.$this->db->escapeString($this->email).
 			', validation_code = '.$this->db->escapeString($this->validation_code).
@@ -306,7 +282,6 @@ abstract class AbstractSmrAccount {
 			', colour_scheme = ' . $this->db->escapeString($this->colourScheme).
 			', fontsize = ' . $this->db->escapeNumber($this->fontSize).
 			', css_link = ' . $this->db->escapeString($this->cssLink,true,true).
-			', cell_phone = ' . $this->db->escapeString($this->cellPhone, true, true).
 			', friendly_colour = ' . $this->db->escapeString($this->friendlyColour, true, true).
 			', neutral_colour = ' . $this->db->escapeString($this->neutralColour, true, true).
 			', enemy_colour = ' . $this->db->escapeString($this->enemyColour, true, true).
@@ -926,18 +901,6 @@ abstract class AbstractSmrAccount {
 
 	public function isValidated() {
 		return $this->validated;
-	}
-
-	public function getCellPhone() {
-		return $this->cellPhone;
-	}
-
-	public function setCellPhone($cell) {
-		if($this->cellPhone==$cell)
-			return;
-		$this->cellPhone = $cell;
-		$this->hasChanged = true;
-		$this->update();
 	}
 
 	protected function getPassword() {
