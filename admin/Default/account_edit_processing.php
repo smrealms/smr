@@ -173,8 +173,6 @@ if (!empty($delete)) {
 						WHERE writer_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM galactic_post_writer
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM kills
-						WHERE (dead_id=' . $db->escapeNumber($account_id) . ' OR killer_id=' . $db->escapeNumber($account_id) .') AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM message
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM message_notify
