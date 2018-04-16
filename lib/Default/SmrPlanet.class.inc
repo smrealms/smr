@@ -824,15 +824,7 @@ class SmrPlanet {
 	}
 	
 	function getMaxLevel() {
-		$level = 0;
-		$level += $this->maxBuildings[PLANET_GENERATOR];
-		$level += $this->maxBuildings[PLANET_HANGAR];
-		$level += $this->maxBuildings[PLANET_BUNKER];
-		$level += $this->maxBuildings[PLANET_TURRET];
-		//foreach ($this->maxBuildings as $id => $amount) {
-		//	$level += $amount/3;
-		//}
-		return ($level / 3);
+		return array_sum($this->getMaxBuildings())/3;
 	}
 
 	function accuracy() {
