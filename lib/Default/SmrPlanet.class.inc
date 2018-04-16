@@ -128,8 +128,6 @@ class SmrPlanet {
 			$this->typeID 			= $this->db->getInt('planet_type_id');
 			
 			$this->updateTypeInfo();
-			$this->getStockpile();
-			$this->getBuildings();
 			$this->getCurrentlyBuilding();
 			$this->calculateInterest();
 		}
@@ -680,7 +678,7 @@ class SmrPlanet {
 		
 		//trim buildings first
 		$this->setMaxBuildings();
-		foreach ($this->buildings as $id => $amt) {
+		foreach ($this->getBuildings() as $id => $amt) {
 			if ($this->getMaxBuildings($id) < $amt) {
 				$this->destroyBuilding($id,$amt - $this->getMaxBuildings($id));
 			}
