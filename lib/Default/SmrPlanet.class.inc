@@ -820,7 +820,7 @@ class SmrPlanet {
 	}
 
 	function getLevel() {
-		return ($this->getBuilding(PLANET_GENERATOR) + $this->getBuilding(PLANET_HANGAR) + $this->getBuilding(PLANET_BUNKER) + $this->getBuilding(PLANET_TURRET)) / 3;
+		return array_sum($this->getBuildings())/3;
 	}
 	
 	function getMaxLevel() {
