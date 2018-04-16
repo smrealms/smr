@@ -26,8 +26,6 @@ function planet_list_common($allianceId, $getPlanets) {
 		if ($playerOnly || $player->getAllianceID() == $allianceId) {
 			$playerPlanet = $player->getPlanet();
 			if ($playerPlanet !== false) {
-				// Update planet properties to make sure list is self-consistent
-				$playerPlanet->getCurrentlyBuilding();
 				$template->assign('PlayerPlanet', $playerPlanet);
 			}
 		}

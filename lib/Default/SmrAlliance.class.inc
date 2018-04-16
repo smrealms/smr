@@ -371,10 +371,7 @@ class SmrAlliance {
 		');
 		$planets = array();
 		while ($this->db->nextRecord()) {
-			$planet = SmrPlanet::getPlanet($this->gameID, $this->db->getInt('sector_id'));
-			// Call to make sure planet properties are up-to-date.
-			$planet->getCurrentlyBuilding();
-			$planets[] = $planet;
+			$planets[] = SmrPlanet::getPlanet($this->gameID, $this->db->getInt('sector_id'));
 		}
 		return $planets;
 	}

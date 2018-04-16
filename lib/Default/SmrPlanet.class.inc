@@ -128,7 +128,6 @@ class SmrPlanet {
 			$this->typeID 			= $this->db->getInt('planet_type_id');
 			
 			$this->updateTypeInfo();
-			$this->getCurrentlyBuilding();
 			$this->calculateInterest();
 		}
 		//		else if($create) {
@@ -564,6 +563,9 @@ class SmrPlanet {
 			while ($this->db->nextRecord()) {
 				$this->buildings[$this->db->getInt('construction_id')] = $this->db->getInt('amount');
 			}
+
+			// Update building counts if construction has finished
+			$this->getCurrentlyBuilding();
 		}
 		return $this->buildings;
 	}
@@ -613,23 +615,34 @@ class SmrPlanet {
 
 			$this->db->query('SELECT * FROM planet_is_building WHERE ' . $this->SQL);
 			while($this->db->nextRecord()) {
-				if($this->db->getInt('time_complete') <= TIME) {
-					$expGain = $this->getConstructionExp($this->db->getInt('construction_id'));
-					$player = SmrPlayer::getPlayer($this->db->getInt('constructor_id'),$this->getGameID());
-					$player->increaseHOF(1,array('Planet','Buildings','Built'), HOF_ALLIANCE);
+				$this->currentlyBuilding[$this->db->getInt('building_slot_id')] = array(
+					'BuildingSlotID' => $this->db->getInt('building_slot_id'),
+					'ConstructionID' => $this->db->getInt('construction_id'),
+					'ConstructorID' => $this->db->getInt('constructor_id'),
+					'Finishes' => $this->db->getInt('time_complete'),
+					'TimeRemaining' => $this->db->getInt('time_complete') - TIME,
+				);
+			}
+
+			// Check if construction has completed
+			foreach ($this->currentlyBuilding as $id => $building) {
+				if ($building['TimeRemaining'] <= 0) {
+					unset($this->currentlyBuilding[$id]);
+					$expGain = $this->getConstructionExp($building['ConstructionID']);
+					$player = SmrPlayer::getPlayer($building['ConstructorID'], $this->getGameID());
+					$player->increaseHOF(1, array('Planet','Buildings','Built'), HOF_ALLIANCE);
 					$player->increaseExperience($expGain);
-					$player->increaseHOF($expGain,array('Planet','Buildings','Experience'), HOF_ALLIANCE);
-					$this->hasStoppedBuilding[] = $this->db->getInt('building_slot_id');
-					$this->increaseBuilding($this->db->getInt('construction_id'), 1);
-				}
-				else {
-					$this->currentlyBuilding[$this->db->getInt('building_slot_id')] = array(
-						'BuildingSlotID' => $this->db->getInt('building_slot_id'),
-						'ConstructionID' => $this->db->getInt('construction_id'),
-						'ConstructorID' => $this->db->getInt('constructor_id'),
-						'Finishes' => $this->db->getInt('time_complete'),
-						'TimeRemaining' => $this->db->getInt('time_complete') - TIME
-					);
+					$player->increaseHOF($expGain, array('Planet','Buildings','Experience'), HOF_ALLIANCE);
+					$this->hasStoppedBuilding[] = $building['BuildingSlotID'];
+					$this->increaseBuilding($building['ConstructionID'], 1);
+
+					// WARNING: The above modifications to the player/planet are dangerous because
+					// they may not be part of the current sector lock. But since they might not be,
+					// we may as well just update now to avoid either a) needing to remember to call
+					// this explicitly in all appropriate engine files or b) inconsistent exp display
+					// if this is called during the template display only and therefore unsaved.
+					$player->update();
+					$this->update();
 				}
 			}
 		}
@@ -923,10 +936,9 @@ class SmrPlanet {
 	}
 
 	function stopBuilding($constructionID) {
-		$currentlyBuilding = $this->getCurrentlyBuilding();
 		$matchingBuilding = false;
 		$latestFinish = 0;
-		foreach($currentlyBuilding as $key => $building) {
+		foreach($this->getCurrentlyBuilding() as $key => $building) {
 			if($building['ConstructionID'] == $constructionID && $building['Finishes'] > $latestFinish) {
 				$latestFinish = $building['Finishes'];
 				$matchingBuilding = $building;
