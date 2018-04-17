@@ -2,9 +2,14 @@
 require_once('SmrSessionMySqlDatabase.class.inc');
 if(!defined('USING_AJAX'))
 	define('USING_AJAX',false);
+
 class SmrSession {
 	const ALWAYS_AVAILABLE = 999999;
 	const TIME_BEFORE_EXPIRY = 3600;
+
+	// Defines the number of pages that can be loaded after
+	// this page before the links on this page become invalid
+	// (i.e. before you get a back button error).
 	private static $URL_DEFAULT_REMAINING_PAGE_LOADS = array(
 			'alliance_broadcast.php' => self::ALWAYS_AVAILABLE,
 			'alliance_forces.php' => self::ALWAYS_AVAILABLE,
@@ -90,6 +95,7 @@ class SmrSession {
 			'alliance_message_delete_processing.php' => self::ALWAYS_AVAILABLE,
 			'alliance_pick_processing.php' => self::ALWAYS_AVAILABLE,
 			'chess_move_processing.php' => self::ALWAYS_AVAILABLE,
+			'combat_log_viewer_verify.php' => self::ALWAYS_AVAILABLE,
 			'toggle_processing.php' => self::ALWAYS_AVAILABLE,
 			//Admin pages
 			'account_edit.php' => self::ALWAYS_AVAILABLE,
@@ -101,6 +107,8 @@ class SmrSession {
 			'form_open.php' => self::ALWAYS_AVAILABLE,
 			'ip_view_results.php' => self::ALWAYS_AVAILABLE,
 			'ip_view.php' => self::ALWAYS_AVAILABLE,
+			'info.php' => self::ALWAYS_AVAILABLE,
+			'info_proc.php' => self::ALWAYS_AVAILABLE,
 			'password_check.php' => self::ALWAYS_AVAILABLE,
 			'permission_manage.php' => self::ALWAYS_AVAILABLE,
 			'word_filter.php' => self::ALWAYS_AVAILABLE,
