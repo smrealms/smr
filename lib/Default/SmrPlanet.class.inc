@@ -601,14 +601,6 @@ class SmrPlanet {
 		$this->setBuilding($buildingTypeID,$this->getBuilding($buildingTypeID)-$number);
 	}
 
-	public function getTotalBuildings() {
-		$totalBuildings = 0;
-		foreach($this->getBuildings() as $building) {
-			$totalBuildings += $building;
-		}
-		return $totalBuildings;
-	}
-
 	function getCurrentlyBuilding() {
 		if(!isset($this->currentlyBuilding)) {
 			$this->currentlyBuilding = array();
