@@ -335,12 +335,7 @@ class SmrPlanet {
 	}
 
 	public function setShields($shields) {
-		if($shields<0) {
-			$shields=0;
-		}
-		if ($shields > $this->getMaxShields()) {
-			$shields = $this->getMaxShields();
-		}
+		$shields = max(0, min($shields, $this->getMaxShields()));
 		if($this->shields == $shields) {
 			return;
 		}
@@ -385,12 +380,7 @@ class SmrPlanet {
 	}
 
 	public function setArmour($armour) {
-		if($armour<0) {
-			$armour=0;
-		}
-		if ($armour > $this->getMaxArmour()) {
-			$armour = $this->getMaxArmour();
-		}
+		$armour = max(0, min($armour, $this->getMaxArmour()));
 		if($this->armour == $armour) {
 			return;
 		}
@@ -435,12 +425,7 @@ class SmrPlanet {
 	}
 
 	public function setCDs($combatDrones) {
-		if($combatDrones<0) {
-			$combatDrones=0;
-		}
-		if ($combatDrones > $this->getMaxCDs()) {
-			$combatDrones = $this->getMaxCDs();
-		}
+		$combatDrones = max(0, min($combatDrones, $this->getMaxCDs()));
 		if($this->drones == $combatDrones) {
 			return;
 		}
