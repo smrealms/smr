@@ -64,8 +64,7 @@ class SmrPlanet {
 
 	public static function &getPlanet($gameID,$sectorID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
-			$p = new SmrPlanet($gameID,$sectorID);
-			self::$CACHE_PLANETS[$gameID][$sectorID] = $p;
+			self::$CACHE_PLANETS[$gameID][$sectorID] = new SmrPlanet($gameID, $sectorID);
 		}
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
@@ -83,11 +82,6 @@ class SmrPlanet {
 				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ', ' . $db->escapeNumber($type) . ')');
 		}
 		return self::getPlanet($gameID,$sectorID,true);
-		//		if(!isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
-		//			$p = new SmrPlanet($gameID,$sectorID,true);
-		//			self::$CACHE_PLANETS[$gameID][$sectorID] =& $p;
-		//		}
-		//		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
 
 	public static function removePlanet($gameID,$sectorID) {
@@ -107,7 +101,7 @@ class SmrPlanet {
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
 
-	protected function __construct($gameID,$sectorID,$create=false) {
+	protected function __construct($gameID, $sectorID) {
 		$this->db = new SmrMySqlDatabase();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
@@ -130,15 +124,6 @@ class SmrPlanet {
 			$this->updateTypeInfo();
 			$this->calculateInterest();
 		}
-		//		else if($create) {
-		//			$this->gameID		= (int)$gameID;
-		//			$this->sectorID		= (int)$sectorID;
-		//			$this->isNew		= true;
-		//			return;
-		//		}
-		//		else {
-		//			throw new Exception('No such sector: '.$gameID.'-'.$sectorID);
-		//		}
 	}
 
 	public function getInterestRate() {
