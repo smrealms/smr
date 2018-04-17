@@ -33,6 +33,7 @@ class SmrPlanet {
 	
 	protected $canOptions;
 	protected $hasChanged = false;
+	protected $hasChangedFinancial = false;  // for credits, bond, maturity
 	protected $hasChangedStockpile = false;
 	protected $hasChangedBuildings = array();
 	protected $hasStoppedBuilding = array();
@@ -172,9 +173,6 @@ class SmrPlanet {
 
 			// reset maturity
 			$this->setMaturity(0);
-
-			// update planet
-			$this->update();
 		}
 	}
 
@@ -183,9 +181,7 @@ class SmrPlanet {
 	}
 
 	public function bond() {
-		if($this->getMaturity() > 0) {
-			$this->calculateInterest(true);
-		}
+		$this->calculateInterest(true);
 
 		// add it to bond
 		$this->increaseBonds($this->getCredits());
@@ -257,7 +253,7 @@ class SmrPlanet {
 			throw new Exception('You cannot set negative credits.');
 		}
 		$this->credits = $num;
-		$this->hasChanged = true;
+		$this->hasChangedFinancial = true;
 	}
 
 	public function increaseCredits($num) {
@@ -286,7 +282,7 @@ class SmrPlanet {
 			throw new Exception('You cannot set negative maturity.');
 		}
 		$this->maturity = $num;
-		$this->hasChanged = true;
+		$this->hasChangedFinancial = true;
 	}
 
 	public function getBonds() {
@@ -301,7 +297,7 @@ class SmrPlanet {
 			throw new Exception('You cannot set negative bonds.');
 		}
 		$this->bonds = $num;
-		$this->hasChanged = true;
+		$this->hasChangedFinancial = true;
 	}
 	
 	public function increaseBonds($num) {
@@ -770,17 +766,27 @@ class SmrPlanet {
 		}
 		$this->doDelayedUpdates();
 		if($this->hasChanged) {
-			$this->db->query('UPDATE planet SET owner_id = ' . $this->db->escapeNumber($this->ownerID) . ',
+			$this->db->query('UPDATE planet SET
+									owner_id = ' . $this->db->escapeNumber($this->ownerID) . ',
 									password = '.$this->db->escapeString($this->password) .',
 									planet_name = ' . $this->db->escapeString($this->planetName) . ',
 									shields = ' . $this->db->escapeNumber($this->shields) . ',
 									armour = ' . $this->db->escapeNumber($this->armour) . ',
-									drones = ' . $this->db->escapeNumber($this->drones) . ',
+									drones = ' . $this->db->escapeNumber($this->drones) . '
+								WHERE ' . $this->SQL);
+			$this->hasChanged = false;
+		}
+
+		// Separate update for financial since these can be modified by looking
+		// at the planet list (i.e. you might not have sector lock and could
+		// cause a race condition with events happening in the planet sector).
+		if ($this->hasChangedFinancial) {
+			$this->db->query('UPDATE planet SET
 									credits = ' . $this->db->escapeNumber($this->credits) . ',
 									bonds = ' . $this->db->escapeNumber($this->bonds) . ',
 									maturity = ' . $this->db->escapeNumber($this->maturity) . '
 								WHERE ' . $this->SQL);
-			$this->hasChanged = false;
+			$this->hasChangedFinancial = false;
 		}
 
 		if($this->hasChangedStockpile) {
