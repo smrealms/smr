@@ -7,8 +7,6 @@ if (!isset ($var['folder_id'])) {
 
 	$db2 = new SmrMySqlDatabase();
 
-	require_once(get_file_loc('council.inc'));
-
 	$db->query('SELECT 1 FROM message
 				WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_POLITICAL) . '
