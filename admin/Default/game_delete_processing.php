@@ -124,7 +124,6 @@ if ($action == 'Yes') {
 
 	}
 
-	$smr_db_sql[] = 'DELETE FROM kills WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM location WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM mb_exceptions WHERE value LIKE '.$db->escapeString($game_id.'%');
 	$smr_db_sql[] = 'DELETE FROM message WHERE game_id = '.$db->escapeNumber($game_id);
