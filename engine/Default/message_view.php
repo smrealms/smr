@@ -252,15 +252,6 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 	$senderName = getMessagePlayer($sender_id,$player->getGameID(),$type);
 	if ($senderName instanceof SmrPlayer) {
 		$sender = $senderName;
-		unset($senderName);
-		$replace = explode('?', $message_text);
-		foreach ($replace as $key => $timea) {
-			if ($sender_id > 0 && $timea != '' && ($final = strtotime($timea)) !== false) { //WARNING: Expects PHP 5.1.0 or later
-				$send_acc = $sender->getAccount();
-				$final += ($account->getOffset() * 3600 - $send_acc->getOffset() * 3600);
-				$message_text = str_replace('?' . $timea . '?', date(DATE_FULL_SHORT, $final), $message_text);
-			}
-		}
 		$container = create_container('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $sender->getPlayerID();
 		$senderName = create_link($container, $sender->getDisplayName());
