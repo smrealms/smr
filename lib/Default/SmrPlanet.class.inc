@@ -641,14 +641,18 @@ class SmrPlanet {
 	}
 	
 	public function setTypeID($num) {
+		if (isset($this->typeID) && $this->typeID == $num) {
+			return;
+		}
 		$this->typeID = $num;
 		$this->db->query('UPDATE planet SET planet_type_id = '.$this->db->escapeNumber($num).' WHERE '.$this->SQL);
-			
-		//this will allow get to load new set from db
+
+		// delete typeID-specific cached data that may have been loaded
 		unset($this->menuOptions);
+		unset($this->typeInfo);
+		unset($this->maxBuildings);
 		
 		//trim buildings first
-		$this->initMaxBuildings();
 		foreach ($this->getBuildings() as $id => $amt) {
 			if ($this->getMaxBuildings($id) < $amt) {
 				$this->destroyBuilding($id,$amt - $this->getMaxBuildings($id));
@@ -658,7 +662,6 @@ class SmrPlanet {
 		//trim excess defenses
 		$this->checkForExcessDefense();
 		
-		$this->getMenuOptions();
 		$this->initTypeInfo();
 		$this->hasChanged = true;
 		$this->update();
