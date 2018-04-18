@@ -31,7 +31,7 @@ class SmrPlanet {
 	protected $typeID;
 	protected $typeInfo;
 	
-	protected $canOptions;
+	protected $menuOptions;
 	protected $hasChanged = false;
 	protected $hasChangedFinancial = false;  // for credits, bond, maturity
 	protected $hasChangedStockpile = false;
@@ -122,8 +122,8 @@ class SmrPlanet {
 			$this->inhabitableTime	= $this->db->getInt('inhabitable_time');
 			$this->typeID 			= $this->db->getInt('planet_type_id');
 			
-			$this->updateTypeInfo();
-			$this->calculateInterest();
+			$this->initTypeInfo();
+			$this->checkBondMaturity();
 		}
 	}
 
@@ -155,7 +155,7 @@ class SmrPlanet {
 		}
 	}
 
-	public function calculateInterest($partial = false) {
+	public function checkBondMaturity($partial = false) {
 		if ($this->getMaturity() > 0 && ($partial === true || $this->getMaturity() < TIME)) {
 			// calc the interest for the time
 			$interest = $this->getBonds() * $this->getInterestRate();
@@ -181,7 +181,7 @@ class SmrPlanet {
 	}
 
 	public function bond() {
-		$this->calculateInterest(true);
+		$this->checkBondMaturity(true);
 
 		// add it to bond
 		$this->increaseBonds($this->getCredits());
@@ -609,7 +609,7 @@ class SmrPlanet {
 
 	public function getMaxBuildings($buildingTypeID=false) {
 		// Make sure the data is populated
-		$this->setMaxBuildings();
+		$this->initMaxBuildings();
 		if($buildingTypeID===false) {
 			return $this->maxBuildings;
 		}
@@ -619,7 +619,7 @@ class SmrPlanet {
 	/**
 	 * Populates the `maxBuildings` attribute from the `planet_can_build` database table.
 	 */
-	private function setMaxBuildings() {
+	private function initMaxBuildings() {
 		if (isset($this->maxBuildings)) {
 			return;
 		}
@@ -645,10 +645,10 @@ class SmrPlanet {
 		$this->db->query('UPDATE planet SET planet_type_id = '.$this->db->escapeNumber($num).' WHERE '.$this->SQL);
 			
 		//this will allow get to load new set from db
-		unset($this->canOptions);
+		unset($this->menuOptions);
 		
 		//trim buildings first
-		$this->setMaxBuildings();
+		$this->initMaxBuildings();
 		foreach ($this->getBuildings() as $id => $amt) {
 			if ($this->getMaxBuildings($id) < $amt) {
 				$this->destroyBuilding($id,$amt - $this->getMaxBuildings($id));
@@ -658,8 +658,8 @@ class SmrPlanet {
 		//trim excess defenses
 		$this->checkForExcessDefense();
 		
-		$this->getOptions();
-		$this->updateTypeInfo();
+		$this->getMenuOptions();
+		$this->initTypeInfo();
 		$this->hasChanged = true;
 		$this->update();
 	}
@@ -667,7 +667,7 @@ class SmrPlanet {
 	/**
 	 * Populates the `typeInfo` attribute from the `planet_type` database table.
 	 */
-	private function updateTypeInfo() {
+	private function initTypeInfo() {
 		if (isset($this->typeInfo)) {
 			return;
 		}
@@ -708,20 +708,20 @@ class SmrPlanet {
 	/**
 	 * Specifies which menu options the planet has.
 	 */
-	public function getOptions($option=false) {
-		$this->setOptions(); // Make sure the data is populated
+	public function hasMenuOptions($option=false) {
+		$this->initMenuOptions(); // Make sure the data is populated
 		if ($option === false) {
-			return $this->canOptions;
+			return $this->menuOptions;
 		}
 		// We do not set options that are unavailable
-		return isset($this->canOptions[$option]);
+		return isset($this->menuOptions[$option]);
 	}
 
 	/**
-	 * Populate the `canOptions` attribute from the `planet_type_has_section` database table.
+	 * Populate the `menuOptions` attribute from the `planet_type_has_section` database table.
 	 */
-	private function setOptions() {
-		if (isset($this->canOptions)) {
+	private function initMenuOptions() {
+		if (isset($this->menuOptions)) {
 			return;
 		}
 		// Cache the options for this type of planet
@@ -733,7 +733,7 @@ class SmrPlanet {
 			}
 		}
 		// Set the options for this planet instance
-		$this->canOptions = $OPTIONS[$this->getTypeID()];
+		$this->menuOptions = $OPTIONS[$this->getTypeID()];
 	}
 
 	public function doDelayedUpdates() {

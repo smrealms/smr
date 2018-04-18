@@ -138,19 +138,19 @@ function create_planet_menu($planet) {
 	
 	$menu_array = array();
 	$menu_array[] = array('Link'=>Globals::getPlanetMainHREF(),'Text'=>'Planet Main');
-	if ($planet->getOptions('CONSTRUCTION')) {
+	if ($planet->hasMenuOptions('CONSTRUCTION')) {
 		$menu_array[] = array('Link'=>Globals::getPlanetConstructionHREF(),'Text'=>'Construction');
 	}
-	if ($planet->getOptions('DEFENSE')) {
+	if ($planet->hasMenuOptions('DEFENSE')) {
 		$menu_array[] = array('Link'=>Globals::getPlanetDefensesHREF(),'Text'=>'Defense');
 	}
-	if ($planet->getOptions('OWNERSHIP')) {
+	if ($planet->hasMenuOptions('OWNERSHIP')) {
 		$menu_array[] = array('Link'=>Globals::getPlanetOwnershipHREF(),'Text'=>'Ownership');
 	}
-	if ($planet->getOptions('STOCKPILE')) {
+	if ($planet->hasMenuOptions('STOCKPILE')) {
 		$menu_array[] = array('Link'=>Globals::getPlanetStockpileHREF(),'Text'=>'Stockpile');
 	}
-	if ($planet->getOptions('FINANCE')) {
+	if ($planet->hasMenuOptions('FINANCE')) {
 		$menu_array[] = array('Link'=>Globals::getPlanetFinancesHREF(),'Text'=>'Financial');
 	}
 	
