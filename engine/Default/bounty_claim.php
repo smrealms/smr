@@ -3,7 +3,7 @@ $sector =& $player->getSector();
 
 $template->assign('PageTopic','Bounty Payout');
 
-require_once(get_file_loc('menu.inc'));
+require_once(get_file_loc('menu_hq.inc'));
 if ($sector->hasHQ()) {
 	create_hq_menu();
 	$bounties = $player->getClaimableBounties('HQ');

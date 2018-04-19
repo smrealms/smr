@@ -14,7 +14,7 @@ if(!$location->isUG()) {
 
 $template->assign('PageTopic','Underground Headquarters');
 
-require_once(get_file_loc('menu.inc'));
+require_once(get_file_loc('menu_hq.inc'));
 create_ug_menu();
 
 $PHP_OUTPUT .= '<p>The location appears to be abandoned, until a group of heavily-armed figures advance from the shadows.</p>';
