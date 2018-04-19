@@ -303,42 +303,6 @@ function create_bank_menu() {
 
 }
 
-function create_hq_menu() {
-	global $var;
-	$menu_items = array();
-	$container = create_container('skeleton.php');
-	$container['LocationID'] = $var['LocationID'];
-
-	$container['body'] = 'government.php';
-	$menu_items[] = create_link($container, 'Government','nav');
-
-	$container['body'] = 'military_payment_claim.php';
-	$menu_items[] = create_link($container, 'Claim Military Payment','nav');
-
-	$container['body'] = 'bounty_claim.php';
-	$menu_items[] = create_link($container, 'Claim Bounty','nav');
-
-	$container['body'] = 'bounty_place.php';
-	$menu_items[] = create_link($container, 'Place a Bounty','nav');
-
-	create_menu($menu_items);
-}
-
-function create_ug_menu() {
-	global $var;
-	$menu_items = array();
-	$container = create_container('skeleton.php');
-	$container['LocationID'] = $var['LocationID'];
-	$container['body'] = 'underground.php';
-	$menu_items[] = create_link($container, 'Underground', 'nav');
-	$container['body'] = 'bounty_claim.php';
-	$menu_items[] = create_link($container, 'Claim Bounty', 'nav');
-	$container['body'] = 'bounty_place.php';
-	$menu_items[] = create_link($container, 'Place a Bounty', 'nav');
-
-	create_menu($menu_items);
-}
-
 function create_council_menu($race_id) {
 	global $player;
 
@@ -392,24 +356,4 @@ function create_nav_menu(&$template, &$player) {
 		$menuItems[] = array('Link'=>Globals::getLocalMapHREF(),'Text'=>'Local Map');
 	$menuItems[] = array('Link'=>'map_galaxy.php" target="gal_map','Text'=>'Galaxy Map');
 	$template->assign('MenuItems', $menuItems);
-}
-
-function create_hof_menu() {
-
-	$menu_items[] = create_link(create_container('skeleton.php', 'hall_of_fame.php'),
-													'Hall of Fame Main','nav');
-
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'hall_of_fame.php';
-
-	$container['type'] = 'Newbie';
-	$menu_items[] = create_link($container, 'Newbie Stats','nav');
-	$container['type'] = 'Veteran';
-	$menu_items[] = create_link($container, 'Veteran Stats','nav');
-	$container['type'] = 'Semi War';
-	$menu_items[] = create_link($container, 'Special Game Stats','nav');
-
-	create_menu($menu_items);
-
 }

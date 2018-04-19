@@ -44,7 +44,7 @@ if ((empty($amount) && empty($smrCredits)) || empty($playerID)) {
 
 $template->assign('PageTopic','Placing a bounty');
 
-require_once(get_file_loc('menu.inc'));
+require_once(get_file_loc('menu_hq.inc'));
 if ($sector->hasHQ()) {
 	create_hq_menu();
 }
