@@ -357,23 +357,3 @@ function create_nav_menu(&$template, &$player) {
 	$menuItems[] = array('Link'=>'map_galaxy.php" target="gal_map','Text'=>'Galaxy Map');
 	$template->assign('MenuItems', $menuItems);
 }
-
-function create_hof_menu() {
-
-	$menu_items[] = create_link(create_container('skeleton.php', 'hall_of_fame.php'),
-													'Hall of Fame Main','nav');
-
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'hall_of_fame.php';
-
-	$container['type'] = 'Newbie';
-	$menu_items[] = create_link($container, 'Newbie Stats','nav');
-	$container['type'] = 'Veteran';
-	$menu_items[] = create_link($container, 'Veteran Stats','nav');
-	$container['type'] = 'Semi War';
-	$menu_items[] = create_link($container, 'Special Game Stats','nav');
-
-	create_menu($menu_items);
-
-}
