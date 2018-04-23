@@ -1025,10 +1025,6 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account) {
 
 	$template->assign('Version',$version);
 	$template->assign('CurrentYear',date('Y',TIME));
-//	$launch = mktime(0,0,0,3,12,2008);
-//	$now = TIME;
-//	if ($launch - $now > 0)
-//		echo '<br />SMR 1.5 Launch in ' . format_time($launch - $now, TRUE) . '</span>!';
 }
 
 function format_time($seconds, $short=false) {
