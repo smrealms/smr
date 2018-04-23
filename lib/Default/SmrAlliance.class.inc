@@ -261,7 +261,7 @@ class SmrAlliance {
 
 	public function canJoinAlliance(SmrPlayer $player) {
 		if($player->hasAlliance()) {
-			return false;
+			return 'You are already in an alliance!';
 		}
 		if($this->getPassword()=='*') {
 			return 'This alliance is not currently accepting new recruits.';
