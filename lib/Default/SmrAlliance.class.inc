@@ -260,6 +260,9 @@ class SmrAlliance {
 	}
 
 	public function canJoinAlliance(SmrPlayer $player) {
+		if (!$player->getAccount()->isValidated()) {
+			return 'You cannot join an alliance until you validate your account.';
+		}
 		if($player->hasAlliance()) {
 			return 'You are already in an alliance!';
 		}
