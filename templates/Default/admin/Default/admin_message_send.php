@@ -24,6 +24,8 @@ else {
 					?><option value="<?php echo $GamePlayer['AccountID']; ?>"><?php echo $GamePlayer['Name']; ?> (<?php echo $GamePlayer['PlayerID']; ?>)</option><?php
 				} ?>
 				</select><br /><br /><?php
+			} else { ?>
+				All Players<?php
 			} ?>
 		</p>
 		<textarea spellcheck="true" name="message" id="InputFields"><?php if(isset($Preview)) { echo $Preview; } ?></textarea><br />

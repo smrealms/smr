@@ -18,8 +18,8 @@ if (!empty($account_id) || $game_id == 20000) {
 		SmrPlayer::sendMessageFromAdmin($game_id, $account_id, $message,$expire);
 	}
 	else {
-		//send to all players
-		$db->query('SELECT game_id,account_id FROM player');
+		//send to all players in games that haven't ended yet
+		$db->query('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_date > ' . $db->escapeNumber(TIME));
 		while ($db->nextRecord()) {
 			SmrPlayer::sendMessageFromAdmin($db->getField('game_id'), $db->getField('account_id'), $message,$expire);
 		}
