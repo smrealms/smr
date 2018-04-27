@@ -31,6 +31,13 @@ $db->nextRecord();
 $container['url'] = 'skeleton.php';
 $container['alliance_id'] = $alliance->getAllianceID();
 
+if ($db->getBoolean('change_pass')) {
+	$container['body'] = 'alliance_invite_player.php';
+	$links[] = array(
+		'link' => create_link($container, 'Invite Player'),
+		'text' => 'Invite a player to the alliance.',
+	);
+}
 if ($db->getBoolean('remove_member')) {
 	$container['body'] = 'alliance_remove_member.php';
 	$links[] = array(

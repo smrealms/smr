@@ -80,7 +80,9 @@ if ($alliance->getAllianceID() == $player->getAllianceID()) {
 	$template->assign('ToggleRolesHREF', SmrSession::getNewHREF($container));
 }
 
-$canJoin = $alliance->canJoinAlliance($player);
+// If the player is already in an alliance, we don't want to print
+// any messages, so we simply omit the "join alliance" section.
+$canJoin = $player->hasAlliance() ? false : $alliance->canJoinAlliance($player);
 $template->assign('CanJoin', $canJoin);
 if ($canJoin === true) {
 	$container = create_container('alliance_join_processing.php');

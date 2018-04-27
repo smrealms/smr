@@ -259,9 +259,12 @@ class SmrAlliance {
 		$this->flagshipID = $accountID;
 	}
 
-	public function canJoinAlliance(SmrPlayer $player) {
-		if($player->hasAlliance()) {
-			return false;
+	public function canJoinAlliance(SmrPlayer $player, $doAllianceCheck=true) {
+		if (!$player->getAccount()->isValidated()) {
+			return 'You cannot join an alliance until you validate your account.';
+		}
+		if ($doAllianceCheck && $player->hasAlliance()) {
+			return 'You are already in an alliance!';
 		}
 		if($this->getPassword()=='*') {
 			return 'This alliance is not currently accepting new recruits.';

@@ -132,7 +132,15 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 
 				return $sectorTag;
-
+			break;
+			case 'join_alliance':
+				$alliance = SmrAlliance::getAlliance($default, $overrideGameID);
+				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
+					return true;
+				}
+				$container = create_container('alliance_invite_accept.php');
+				$container['alliance_id'] = $alliance->getAllianceID();
+				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">&nbsp;Join ' . $alliance->getAllianceName() . '&nbsp;</a></div>';
 			break;
 		}
 	}
@@ -174,6 +182,7 @@ function bbifyMessage($message, $noLinks=false) {
 		$bbParser->AddRule('servertimetouser',$smrRule);
 		$bbParser->AddRule('chess',$smrRule);
 		$bbParser->AddRule('sector',$smrRule);
+		$bbParser->addRule('join_alliance',$smrRule);
 	}
 	global $disableBBLinks;
 	if($noLinks===true)

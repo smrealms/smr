@@ -473,6 +473,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
 		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', 2,' . $this->db->escapeNumber($alliance->getAllianceID()) . ')');
 		$this->actionTaken('JoinAlliance', array('Alliance' => $alliance));
+
+		// Joining an alliance cancels all open invitations
+		$this->db->query('DELETE FROM alliance_invites_player WHERE ' . $this->SQL);
 	}
 
 	function getAllianceJoinable() {
@@ -1712,7 +1715,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->sendMessage($this->getAccountID(), MSG_GLOBAL, $message, $canBeIgnored, false);
 	}
 
-	public function sendMessage($receiverID, $messageTypeID, $message, $canBeIgnored = true, $unread = true) {
+	public function sendMessage($receiverID, $messageTypeID, $message, $canBeIgnored = true, $unread = true, $expires = false, $senderDelete = false) {
 		//get expire time
 		if($canBeIgnored) {
 			if($this->getAccount()->isMailBanned())
@@ -1725,37 +1728,46 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		$message = word_filter($message);
 
-		switch ($messageTypeID) {
-			case MSG_GLOBAL: //We don't send globals to the box here or it gets done loads of times.
-				$expires = 3600; // 1h
-			break;
-			case MSG_PLAYER:
-				$expires = 86400 * 31;
-			break;
-			case MSG_PLANET:
-				$expires = 86400 * 7;
-			break;
-			case MSG_SCOUT:
-				$expires = 86400 * 3;
-			break;
-			case MSG_POLITICAL:
-				$expires = 86400 * 31;
-			break;
-			case MSG_ALLIANCE:
-				$expires = 86400 * 31;
-			break;
-			case MSG_ADMIN:
-				$expires = 86400 * 365;
-			break;
-			case MSG_CASINO:
-				$expires = 86400 * 31;
-			break;
-			default:
-				$expires = 86400 * 7;
+		// If expires not specified, use default based on message type
+		if ($expires === false) {
+			switch ($messageTypeID) {
+				case MSG_GLOBAL: //We don't send globals to the box here or it gets done loads of times.
+					$expires = 3600; // 1h
+				break;
+				case MSG_PLAYER:
+					$expires = 86400 * 31;
+				break;
+				case MSG_PLANET:
+					$expires = 86400 * 7;
+				break;
+				case MSG_SCOUT:
+					$expires = 86400 * 3;
+				break;
+				case MSG_POLITICAL:
+					$expires = 86400 * 31;
+				break;
+				case MSG_ALLIANCE:
+					$expires = 86400 * 31;
+				break;
+				case MSG_ADMIN:
+					$expires = 86400 * 365;
+				break;
+				case MSG_CASINO:
+					$expires = 86400 * 31;
+				break;
+				default:
+					$expires = 86400 * 7;
+			}
+			$expires += TIME;
 		}
-		$expires += TIME;
+
+		// Do not put scout messages in the sender's sent box
+		if ($messageTypeID == MSG_SCOUT) {
+			$senderDelete = true;
+		}
+
 		// send him the message
-		self::doMessageSending($this->getAccountID(),$receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $messageTypeID == MSG_SCOUT, $unread);
+		self::doMessageSending($this->getAccountID(),$receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $senderDelete, $unread);
 	}
 
 	public function sendMessageFromOpAnnounce($receiverID, $message, $expires=false) {
