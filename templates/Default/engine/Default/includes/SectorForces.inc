@@ -59,14 +59,7 @@
 								?><span class="red">WAR</span><?php
 							} ?>
 						</td>
-						<td><?php
-//							if($SharedForceAlliance) {
-								echo $Owner->getLinkedDisplayName();
-//							}
-//							else {
-//								<span class="red">UNKNOWN</span>
-//							} ?>
-						</td>
+						<td><?php echo $Owner->getLinkedDisplayName(); ?></td>
 						<td align="center" class="shrink center">
 							
 							<div class="buttonA">
