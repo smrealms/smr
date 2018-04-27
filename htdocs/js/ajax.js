@@ -191,4 +191,8 @@ var exec = function(s) {
 		$('.wep1:hidden').fadeToggle(600);
 		$.get(link);
 	};
+
+	window.toggleScoutGroup = function(senderID) {
+		$('#group'+senderID).toggle();
+	};
 })();

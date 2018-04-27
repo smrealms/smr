@@ -70,7 +70,7 @@ else {
 		} ?>
 		<table class="standard fullwidth"><?php
 			if(isset($MessageBox['Messages'])) {
-				foreach($MessageBox['Messages'] as &$Message) { ?>
+				foreach($MessageBox['Messages'] as $Message) { ?>
 					<tr>
 						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>" /><?php if($Message['Unread']) { ?>*<?php } ?></td>
 						<td class="noWrap" width="100%"><?php
@@ -81,9 +81,9 @@ else {
 								?>From: <?php echo $Message['SenderDisplayName'];
 							} ?>
 						</td>
-						<td class="noWrap"<?php if(!isset($Message['Sender'])) { ?> colspan="4"<?php } ?>>Date: <?php echo $Message['SendTime']; ?></td>
+						<td class="noWrap"<?php if(!isset($Message['ReplyHref'])) { ?> colspan="4"<?php } ?>>Date: <?php echo $Message['SendTime']; ?></td>
 						<?php
-						if (isset($Message['Sender'])) { ?>
+						if (isset($Message['ReplyHref'])) { ?>
 							<td>
 								<a href="<?php echo $Message['ReportHref']; ?>"><img src="images/report.png" width="16" height="16" border="0" align="right" title="Report this message to an admin" /></a>
 							</td>
@@ -96,10 +96,30 @@ else {
 						} ?>
 					</tr>
 					<tr>
-						<td colspan="6"><?php echo bbifyMessage($Message['Text']); ?></td>
-					</tr>
-					<?php
-				} unset($Message);
+						<td colspan="6"><?php
+							echo bbifyMessage($Message['Text']);
+							if (isset($MessageBox['GroupedMessages'])) {
+								$SubMessages = $MessageBox['GroupedMessages'][$Message['SenderID']]['Messages']; ?>
+								<br />
+								<a id="toggle-recent<?php echo $Message['SenderID']; ?>" href="javascript:toggleScoutGroup(<?php echo $Message['SenderID']; ?>)" target="_blank">
+									Show/Hide Recent (<?php echo count($SubMessages); ?>)
+								</a>
+								<table id="group<?php echo $Message['SenderID']; ?>" class="standard fullwidth" style="display:none;margin:5px 0 2px 0;"><?php
+									foreach ($SubMessages as $SubMessage) { ?>
+										<tr>
+											<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $SubMessage['ID']; ?>" /><?php if($SubMessage['Unread']) { ?>*<?php } ?></td>
+											<td class="noWrap" width="100%">From: <?php echo $SubMessage['SenderDisplayName']; ?></td>
+											<td class="noWrap" colspan="4">Date: <?php echo $SubMessage['SendTime']; ?></td>
+										</tr>
+										<tr>
+											<td colspan="6"><?php echo bbifyMessage($SubMessage['Text']); ?></td>
+										</tr><?php
+									} ?>
+								</table><?php
+							} ?>
+						</td>
+					</tr><?php
+				}
 			} ?>
 		</table>
 

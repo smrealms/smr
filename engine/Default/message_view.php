@@ -7,8 +7,6 @@ if (!isset ($var['folder_id'])) {
 
 	$db2 = new SmrMySqlDatabase();
 
-	require_once(get_file_loc('council.inc'));
-
 	$db->query('SELECT 1 FROM message
 				WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_POLITICAL) . '
@@ -162,23 +160,21 @@ else {
 	$messageBox['NumberMessages'] = $db->getNumRows();
 	$messageBox['Messages'] = array ();
 
-	if ($var['folder_id'] == MSG_SCOUT && !isset ($var['show_all'])) {
+	// Group scout messages if they wouldn't fit on a single page
+	if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMessages'] > MESSAGES_PER_PAGE) {
 		// get rid of all old scout messages (>48h)
 		$db->query('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(TIME) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
 
-		if ($messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT || $messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT) {
-			$dispContainer = create_container('skeleton.php', 'message_view.php');
-			$dispContainer['folder_id'] = MSG_SCOUT;
-			$dispContainer['show_all'] = true;
-			$messageBox['ShowAllHref'] = SmrSession::getNewHREF($dispContainer);
-		}
-		$db2 = new SmrMySqlDatabase();
-		displayScouts($db2, $messageBox, $player, false, $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
-		displayScouts($db2, $messageBox, $player, true, $messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
+		$dispContainer = create_container('skeleton.php', 'message_view.php');
+		$dispContainer['folder_id'] = MSG_SCOUT;
+		$dispContainer['show_all'] = true;
+		$messageBox['ShowAllHref'] = SmrSession::getNewHREF($dispContainer);
+
+		displayScouts($messageBox, $player);
 	}
 	else {
 		while ($db->nextRecord()) {
-			displayMessage($messageBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), $db->getField('message_text'), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id'], $var['folder_id'] == 0);
+			displayMessage($messageBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), $db->getField('message_text'), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id']);
 		}
 	}
 	if (!USING_AJAX) {
@@ -188,46 +184,52 @@ else {
 	$template->assign('MessageBox', $messageBox);
 }
 
-function displayScouts(&$db, &$messageBox, &$player, $read, $group) {
-	if ($group) {
-		//here we group new messages
-		$query = 'SELECT alignment, player_id, sender_id, player_name AS sender, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, msg_read
+function displayScouts(&$messageBox, $player) {
+	// Generate the group messages
+	$db = new SmrMySqlDatabase();
+	$db->query('SELECT alignment, player_id, sender_id, player_name AS sender, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
 					FROM message
 					JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
 					WHERE message.account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND player.game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
 					AND receiver_delete = ' . $db->escapeBoolean(false) . '
-					AND msg_read = ' . $db->escapeBoolean($read) . '
-					GROUP BY sender_id, msg_read
-					ORDER BY send_time DESC';
+					GROUP BY sender_id
+					ORDER BY last DESC');
 
-		$db->query($query);
-		while ($db->nextRecord()) {
-			//display grouped stuff (allow for deletion)
-			$playerName = get_colored_text($db->getField('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getField('player_id') . ')');
-			$message = 'Your forces have spotted ' . $playerName . ' passing your forces ' . $db->getField('number') . ' times.';
-			displayGrouped($messageBox, $playerName, $db->getField('player_id'), $db->getField('sender_id'), $message, $db->getField('first'), $db->getField('last'), $db->getField('msg_read') == 'FALSE');
-		}
+	while ($db->nextRecord()) {
+		$senderName = get_colored_text($db->getField('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getField('player_id') . ')');
+		$totalUnread = $db->getInt('total_unread');
+		$message = 'Your forces have spotted ' . $senderName . ' passing your forces ' . $db->getField('number') . ' ' . pluralise('time', $db->getField('number'));
+		$message .= ($totalUnread > 0) ? ' (' . $totalUnread . ' unread).' : '.';
+		displayGrouped($messageBox, $senderName, $db->getField('player_id'), $db->getField('sender_id'), $message, $db->getField('first'), $db->getField('last'), $totalUnread > 0);
 	}
-	else {
-		//not enough to group, display separately
-		$query = 'SELECT message_id, account_id, sender_id, message_text, send_time, msg_read
+
+	// Now display individual messages in each group
+	// Perform a single query to minimize query overhead
+	$db->query('SELECT message_id, account_id, sender_id, message_text, send_time, msg_read
 					FROM message
 					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
 					AND receiver_delete = ' . $db->escapeBoolean(false) . '
-					AND msg_read = ' . $db->escapeBoolean($read) . '
-					ORDER BY send_time DESC';
-		$db->query($query);
-		while ($db->nextRecord()) {
-			displayMessage($messageBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), MSG_SCOUT);
+					ORDER BY send_time DESC');
+	while ($db->nextRecord()) {
+		$groupBox =& $messageBox['GroupedMessages'][$db->getInt('sender_id')];
+		// Limit the number of messages in each group
+		if (!isset($groupBox['Messages']) || count($groupBox['Messages']) < MESSAGE_SCOUT_GROUP_LIMIT) {
+			displayMessage($groupBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), MSG_SCOUT);
 		}
 	}
+
+	// In the default view (groups), we're always displaying all messages
+	$messageBox['NumberMessages'] = $db->getNumRows();
+	global $template;
+	$template->unassign('NextPageHREF');
 }
 
 function displayGrouped(&$messageBox, $playerName, $player_id, $sender_id, $message_text, $first, $last, $star) {
+	// Define a unique array so we can delete grouped messages
 	$array = array (
 		$sender_id,
 		$first,
@@ -239,63 +241,57 @@ function displayGrouped(&$messageBox, $playerName, $player_id, $sender_id, $mess
 	$message['Unread'] = $star;
 	$container = create_container('skeleton.php', 'trader_search_result.php');
 	$container['player_id'] = $player_id;
+	$message['SenderID'] = $sender_id;
 	$message['SenderDisplayName'] = create_link($container, $playerName);
 	$message['SendTime'] = date(DATE_FULL_SHORT, $first) . " - " . date(DATE_FULL_SHORT, $last);
 	$message['Text'] = $message_text;
 	$messageBox['Messages'][] = $message;
 }
-function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $message_text, $send_time, $msg_read, $type, $sentMessage = false) {
-	require_once(get_file_loc('message.functions.inc'));
-	global $player, $account;
+
+function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $message_text, $send_time, $msg_read, $type) {
+	global $player;
 
 	$message = array ();
-
-	$sender = false;
-	$senderName = getMessagePlayer($sender_id,$player->getGameID(),$type);
-	if ($senderName instanceof SmrPlayer) {
-		$sender = $senderName;
-		unset($senderName);
-		$replace = explode('?', $message_text);
-		foreach ($replace as $key => $timea) {
-			if ($sender_id > 0 && $timea != '' && ($final = strtotime($timea)) !== false) { //WARNING: Expects PHP 5.1.0 or later
-				$send_acc = $sender->getAccount();
-				$final += ($account->getOffset() * 3600 - $send_acc->getOffset() * 3600);
-				$message_text = str_replace('?' . $timea . '?', date(DATE_FULL_SHORT, $final), $message_text);
-			}
-		}
-		$container = create_container('skeleton.php', 'trader_search_result.php');
-		$container['player_id'] = $sender->getPlayerID();
-		$senderName = create_link($container, $sender->getDisplayName());
-	}
-
-	$container = create_container('skeleton.php', 'message_notify_confirm.php');
-	$container['message_id'] = $message_id;
-	$container['sent_time'] = $send_time;
-	$message['ReportHref'] = SmrSession::getNewHREF($container);
-	if (is_object($sender)) {
-		$container = create_container('skeleton.php', 'message_blacklist_add.php');
-		$container['account_id'] = $sender_id;
-		$message['BlacklistHref'] = SmrSession::getNewHREF($container);
-
-		$container = create_container('skeleton.php', 'message_send.php');
-		$container['receiver'] = $sender->getAccountID();
-		$message['ReplyHref'] = SmrSession::getNewHREF($container);
-
-		$message['Sender'] = $sender;
-	}
-
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;
-	$message['SenderDisplayName'] = $senderName;
+	$message['Unread'] = $msg_read == 'FALSE';
+	$message['SendTime'] = date(DATE_FULL_SHORT, $send_time);
 
-	$receiver = SmrPlayer::getPlayer($receiver_id, $player->getGameID());
-	if ($sentMessage && is_object($receiver)) {
+	require_once(get_file_loc('message.functions.inc'));
+	$sender = getMessagePlayer($sender_id, $player->getGameID(), $type);
+	if ($sender instanceof SmrPlayer) {
+		$message['Sender'] = $sender;
+		$container = create_container('skeleton.php', 'trader_search_result.php');
+		$container['player_id'] = $sender->getPlayerID();
+		$message['SenderDisplayName'] = create_link($container, $sender->getDisplayName());
+
+		// Add actions that we can take on messages sent by players.
+		// Scout messages are always procedural and don't need these options.
+		if ($type != MSG_SCOUT) {
+			$container = create_container('skeleton.php', 'message_notify_confirm.php');
+			$container['message_id'] = $message_id;
+			$container['sent_time'] = $send_time;
+			$message['ReportHref'] = SmrSession::getNewHREF($container);
+
+			$container = create_container('skeleton.php', 'message_blacklist_add.php');
+			$container['account_id'] = $sender_id;
+			$message['BlacklistHref'] = SmrSession::getNewHREF($container);
+
+			$container = create_container('skeleton.php', 'message_send.php');
+			$container['receiver'] = $sender->getAccountID();
+			$message['ReplyHref'] = SmrSession::getNewHREF($container);
+		}
+	} else {
+		$message['SenderDisplayName'] = $sender;
+	}
+
+	if ($type == MSG_SENT) {
+		$receiver = SmrPlayer::getPlayer($receiver_id, $player->getGameID());
 		$container = create_container('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $receiver->getPlayerID();
 		$message['ReceiverDisplayName'] = create_link($container, $receiver->getDisplayName());
 	}
 
-	$message['Unread'] = $msg_read == 'FALSE';
-	$message['SendTime'] = date(DATE_FULL_SHORT, $send_time);
+	// Append the message to this box
 	$messageBox['Messages'][] = $message;
 }
