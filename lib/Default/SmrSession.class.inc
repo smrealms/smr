@@ -38,7 +38,6 @@ class SmrSession {
 			'donation.php' => self::ALWAYS_AVAILABLE,
 			'feature_request_comments.php' => self::ALWAYS_AVAILABLE,
 			'feature_request.php' => self::ALWAYS_AVAILABLE,
-			'forces_examine.php' => self::ALWAYS_AVAILABLE,
 			'forces_list.php' => self::ALWAYS_AVAILABLE,
 			'forces_mass_refresh.php' => self::ALWAYS_AVAILABLE,
 			'government.php' => 1,

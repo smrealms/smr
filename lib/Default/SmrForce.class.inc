@@ -406,12 +406,6 @@ class SmrForce {
 		return SmrSession::getNewHREF($container);
 	}
 
-	public function getExamineAttackForcesHREF() {
-		$container = create_container('skeleton.php', 'forces_examine.php');
-		$container['owner_id']	= $this->getOwnerID();
-		return SmrSession::getNewHREF($container);
-	}
-
 	public function getAttackForcesHREF() {
 		$container = create_container('forces_attack_processing.php');
 		$container['action'] = 'attack';

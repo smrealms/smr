@@ -60,22 +60,18 @@
 							} ?>
 						</td>
 						<td><?php echo $Owner->getLinkedDisplayName(); ?></td>
-						<td align="center" class="shrink center">
-							
-							<div class="buttonA">
-								<a href="<?php
-									if($SharedForceAlliance) {
-										echo $Force->getExamineDropForcesHREF();
-									}
-									else {
-										echo $Force->getExamineAttackForcesHREF();
-									} ?>" class="buttonA<?php if(!$SharedForceAlliance){ ?> enemyExamine<?php } ?>"> Examine </a>
-							</div><?php
-							if($SharedForceAlliance) { ?>
-								<br />
-								<br />
+						<td align="center" class="shrink center"><?php
+							if ($SharedForceAlliance) { ?>
 								<div class="buttonA">
-									<a href="<?php echo $Force->getRefreshHREF() ?>" class="buttonA"> Refresh </a>
+									<a class="buttonA" href="<?php echo $Force->getExamineDropForcesHREF(); ?>"> Examine </a>
+								</div>
+								<br /><br />
+								<div class="buttonA">
+									<a href="<?php echo $Force->getRefreshHREF(); ?>" class="buttonA"> Refresh </a>
+								</div><?php
+							} else { ?>
+								<div class="buttonA">
+									<a class="buttonA enemyExamine" href="<?php echo $Force->getAttackForcesHREF(); ?>"> Attack (<?php echo $Force->getAttackTurnCost($ThisShip); ?>) </a>
 								</div><?php
 							} ?>
 						</td>
