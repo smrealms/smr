@@ -51,6 +51,7 @@ if ($player->getTurns() < $turns)
 if (!$sector->isLinked($var['target_sector']))
 	create_error('You cannot move to that sector!');
 
+// If you bump into mines in the sector you are trying to leave...
 if ($player->getLastSectorID() != $var['target_sector']) {
 	$sectorForces =& $sector->getForces();
 	Sorter::sortByNumMethod($sectorForces,'getMines',true);
@@ -138,6 +139,7 @@ foreach($sectorForces as &$forces) {
 	}
 } unset($forces);
 
+// If you bump into mines while entering the target sector...
 if ($mine_owner_id) {
 	if ($player->hasNewbieTurns()) {
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
