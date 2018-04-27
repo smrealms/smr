@@ -12,7 +12,7 @@ else
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	//update plot
 	if ($player->hasPlottedCourse()) {
-		$path =& $player->getPlottedCourse();
+		$path = $player->getPlottedCourse();
 		if ($path->getNextOnPath() == $var['target_sector']) {
 			$path->followPath($sector->getWarp() == $var['target_sector']);
 			$player->setPlottedCourse($path);
@@ -53,15 +53,15 @@ if (!$sector->isLinked($var['target_sector']))
 
 // If you bump into mines in the sector you are trying to leave...
 if ($player->getLastSectorID() != $var['target_sector']) {
-	$sectorForces =& $sector->getForces();
+	$sectorForces = $sector->getForces();
 	Sorter::sortByNumMethod($sectorForces,'getMines',true);
 	$mine_owner_id = false;
-	foreach($sectorForces as &$forces) {
+	foreach ($sectorForces as $forces) {
 		if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
 			$mine_owner_id = $forces->getOwnerID();
 			break;
 		}
-	} unset($forces);
+	}
 	// set last sector
 	$player->setLastSectorID($var['target_sector']);
 	
@@ -84,7 +84,7 @@ if ($player->getLastSectorID() != $var['target_sector']) {
 
 // check if this came from a plotted course from db
 if ($player->hasPlottedCourse()) {
-	$path =& $player->getPlottedCourse();
+	$path = $player->getPlottedCourse();
 	if ($path->getNextOnPath() == $var['target_sector']) {
 		$path->followPath($sector->getWarp() == $var['target_sector']);
 		$player->setPlottedCourse($path);
@@ -96,8 +96,8 @@ if ($player->hasPlottedCourse()) {
 }
 
 // log action
-$targetSector =& SmrSector::getSector($player->getGameID(), $var['target_sector']);
-$player->actionTaken('WalkSector', array('Sector' => &$targetSector));
+$targetSector = SmrSector::getSector($player->getGameID(), $var['target_sector']);
+$player->actionTaken('WalkSector', array('Sector' => $targetSector));
 
 // send scout msg
 $sector->leavingSector($player,MOVEMENT_WALK);
@@ -129,15 +129,15 @@ $sector->markVisited($player);
 // send scout msgs
 $sector->enteringSector($player,MOVEMENT_WALK);
 
-$sectorForces =& $sector->getForces();
+$sectorForces = $sector->getForces();
 $mine_owner_id = false;
 Sorter::sortByNumMethod($sectorForces,'getMines',true);
-foreach($sectorForces as &$forces) {
+foreach ($sectorForces as $forces) {
 	if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
 		$mine_owner_id = $forces->getOwnerID();
 		break;
 	}
-} unset($forces);
+}
 
 // If you bump into mines while entering the target sector...
 if ($mine_owner_id) {
