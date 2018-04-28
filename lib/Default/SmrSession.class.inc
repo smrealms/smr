@@ -5,7 +5,7 @@ if(!defined('USING_AJAX'))
 class SmrSession {
 	const ALWAYS_AVAILABLE = 999999;
 	const TIME_BEFORE_EXPIRY = 3600;
-	private static $URL_DEFAULT_REMAINING_PAGE_LOADS = array(
+	private const URL_DEFAULT_REMAINING_PAGE_LOADS = array(
 			'alliance_broadcast.php' => self::ALWAYS_AVAILABLE,
 			'alliance_forces.php' => self::ALWAYS_AVAILABLE,
 			'alliance_list.php' => self::ALWAYS_AVAILABLE,
@@ -113,7 +113,7 @@ class SmrSession {
 			'universe_create_warps.php' => self::ALWAYS_AVAILABLE
 		);
 
-	private static $URL_LOAD_DELAY = array(
+	private const URL_LOAD_DELAY = array(
 		'configure_hardware.php' => .4,
 		'forces_drop.php' => .4,
 		'forces_drop_processing.php' => .5,
@@ -165,7 +165,7 @@ class SmrSession {
 		if(!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']])) {
 			$var = self::$var[$_REQUEST['sn']];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
-			$loadDelay = isset(self::$URL_LOAD_DELAY[$currentPage]) ? self::$URL_LOAD_DELAY[$currentPage] : 0;
+			$loadDelay = isset(self::URL_LOAD_DELAY[$currentPage]) ? self::URL_LOAD_DELAY[$currentPage] : 0;
 			$initialTimeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime']);
 			while(($timeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime'])) < $loadDelay) {
 				$sleepTime = round(($loadDelay-$timeBetweenLoads)*1000000);
@@ -370,7 +370,7 @@ class SmrSession {
 		}
 		if(!isset($container['RemainingPageLoads'])) {
 			$pageURL = $container['url'] == 'skeleton.php' ? $container['body'] : $container['url'];
-			$container['RemainingPageLoads'] = isset(self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL]) ? self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] : 1; // Allow refreshing
+			$container['RemainingPageLoads'] = isset(self::URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL]) ? self::URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] : 1; // Allow refreshing
 		}
 
 		if($sn === false) {
