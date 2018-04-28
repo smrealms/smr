@@ -60,13 +60,7 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forces' => array(),
 				'Forced' => $bump);
 
-$sector =& $player->getSector();
-if ($bump) {
-	//When hitting mines by bumping only the current player attacks/gets hit.
-	$attackers = array(&$player);
-} else {
-	$attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
-}
+$attackers = $player->getSector()->getFightingTradersAgainstForces($player, $bump);
 
 //decloak all attackers
 foreach($attackers as &$attacker) {
