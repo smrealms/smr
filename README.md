@@ -77,7 +77,7 @@ docker logs -f smr
 These list the known dependencies, there may be more - please update if you find any!
 
 ### Core
-* PHP 5.4+
+* PHP 7.1+
 * MySQL 5.5
 
 ### PHP Extensions
