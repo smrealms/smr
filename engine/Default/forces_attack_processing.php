@@ -1,4 +1,8 @@
 <?php
+require_once(get_file_loc('SmrForce.class.inc'));
+$forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
+$forceOwner = $forces->getOwner();
+
 if ($player->hasNewbieTurns())
 	create_error('You are under newbie protection!');
 if($player->hasFederalProtection())
@@ -7,9 +11,10 @@ if($player->isLandedOnPlanet())
 	create_error('You cannot attack forces whilst on a planet!');
 if(!$player->canFight())
 	create_error('You are not allowed to fight!');
-
-require_once(get_file_loc('SmrForce.class.inc'));
-$forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
+if (!$ship->hasWeapons() && !$ship->hasCDs())
+	create_error('You cannot attack without weapons!');
+if ($player->forceNAPAlliance($forceOwner))
+	create_error('You cannot attack allied forces!');
 
 // The attack is processed slightly differently if the attacker bumped into mines
 // when moving into sector
@@ -30,11 +35,6 @@ if ($bump) {
 	if ($player->getTurns() < $forces->getAttackTurnCost($ship))
 		create_error('You do not have enough turns to attack these forces!');
 }
-
-$forceOwner =& $forces->getOwner();
-
-if($player->forceNAPAlliance($forceOwner))
-	create_error('You have a force NAP, you cannot attack these forces!');
 
 // take the turns
 if ($bump) {
@@ -60,13 +60,7 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forces' => array(),
 				'Forced' => $bump);
 
-$sector =& $player->getSector();
-if ($bump) {
-	//When hitting mines by bumping only the current player attacks/gets hit.
-	$attackers = array(&$player);
-} else {
-	$attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
-}
+$attackers = $player->getSector()->getFightingTradersAgainstForces($player, $bump);
 
 //decloak all attackers
 foreach($attackers as &$attacker) {

@@ -14,7 +14,8 @@
 		}
 		else {
 			?><span class="yellow">You have destroyed the forces.</span><?php
-		} ?><br />
+		} ?>
+		<br /><br />
 		<div class="buttonA"><?php
 		if($OverrideDeath) {
 			?><a href="<?php echo Globals::getPodScreenHREF() ?>" class="buttonA">Let there be pod</a><?php
