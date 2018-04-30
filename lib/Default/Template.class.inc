@@ -288,42 +288,65 @@ class Template {
 			return '';
 		}
 
+		// To get inner html, we need to construct a separate DOMDocument.
+		// See PHP Bug #76285.
+		$getInnerHTML = function (DOMNode $node) {
+			$dom = new DOMDocument();
+			$dom->formatOutput = false;
+			foreach ($node->childNodes as $child) {
+				$dom->appendChild($dom->importNode($child, true));
+			}
+			// Trim to remove trailing newlines
+			return trim($dom->saveHTML());
+		};
+
 		$xml='';
-		$html = phpQuery::newDocument($str);
-		$searches = array('span[id]','.ajax');
-		foreach($searches as $search) {
-			$spans = $html->find($search);
-			foreach($spans as $span) {
-				$id = $span->getAttribute('id');
-				$inner = pq($span)->html();
+		$dom = new DOMDocument();
+		@$dom->loadHTML($str);
+		$xpath = new DOMXpath($dom);
+		$ajaxSelectors = array('//span[@id]', '//*[contains(@class,"ajax")]');
+		foreach ($ajaxSelectors as $selector) {
+			$matchNodes = $xpath->query($selector);
+			foreach ($matchNodes as $node) {
+				$id = $node->getAttribute('id');
+				$inner = $getInnerHTML($node);
 				if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml) {
 					$xml.= '<'.$id.'>'.xmlify($inner). '</'.$id.'>';
 				}
 			}
 		}
+
 		if(!$this->ignoreMiddle) {
-			$doAjaxMiddle=true;
-			$searches = array('div#middle_panel span[id]','div#middle_panel .ajax');
-			foreach($searches as $search) {
-				$spans = $html->find($search);
-				if(count($spans) > 0) {
-					$doAjaxMiddle=false;
+			$mid = $dom->getElementById('middle_panel');
+
+			$doAjaxMiddle = true;
+			if ($mid === null) {
+				// Skip if there is no middle_panel.
+				$doAjaxMiddle = false;
+			} else {
+				// Skip if middle_panel has ajax-enabled children.
+				$domMid = new DOMDocument();
+				$domMid->appendChild($domMid->importNode($mid, true));
+				$xpathMid = new DOMXpath($domMid);
+				foreach ($ajaxSelectors as $selector) {
+					if (count($xpathMid->query($selector)) > 0) {
+						$doAjaxMiddle = false;
+						break;
+					}
 				}
 			}
+
 			if($doAjaxMiddle) {
-				$mid=$html->find('div#middle_panel');
-				if(count($mid) > 0) {
-					$mid=$mid->get(0);
-					$inner = pq($mid)->html();
-					if(!$this->checkDisableAJAX($inner)) {
-						$id = $mid->getAttribute('id');
-						if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml) {
-							$xml .= '<'.$id.'>'.xmlify($inner).'</'.$id.'>';
-						}
+				$inner = $getInnerHTML($mid);
+				if(!$this->checkDisableAJAX($inner)) {
+					$id = $mid->getAttribute('id');
+					if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml) {
+						$xml .= '<'.$id.'>'.xmlify($inner).'</'.$id.'>';
 					}
 				}
 			}
 		}
+
 		$js = '';
 		foreach($this->ajaxJS as $varName => $JSON) {
 			if(!SmrSession::addAjaxReturns('JS:'.$varName,$JSON) && $returnXml) {
