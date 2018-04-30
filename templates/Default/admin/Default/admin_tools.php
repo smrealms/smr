@@ -13,12 +13,10 @@ if(isset($AdminPermissions)) { ?>
 		<ul><?php
 		foreach ($Permissions as $Permission) { ?>
 			<li><?php
-				if($Permission['PermissionLink']!==false) {
-					?><a href="<?php echo $Permission['PermissionLink']; ?>"><?php
-				}
-				echo $Permission['Name'];
-				if($Permission['PermissionLink']!==false) {
-					?></a><?php
+				if ($Permission['PermissionLink'] !== false) { ?>
+					<a href="<?php echo $Permission['PermissionLink']; ?>"><?php echo $Permission['Name']; ?></a><?php
+				} else { ?>
+					<i><?php echo $Permission['Name']; ?></i><?php
 				} ?>
 			</li><?php
 		} ?>
