@@ -41,10 +41,6 @@ if (empty($admin_id)) {
 	$processingHREF = SmrSession::getNewHREF($container);
 	$template->assign('ProcessingHREF', $processingHREF);
 
-	$permissions = [];
-	$db->query('SELECT permission_id, permission_name FROM permission');
-	while ($db->nextRecord()) {
-		$permissions[$db->getInt('permission_id')] = $db->getField('permission_name');
-	}
-	$template->assign('Permissions', $permissions);
+	require_once(LIB . 'Default/AdminPermissions.class.inc');
+	$template->assign('Permissions', AdminPermissions::getPermissionList());
 }
