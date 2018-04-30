@@ -9,6 +9,9 @@
 # /.settings/
 /.settings/
 
+# Docker-compose environment variable file
+/.env
+
 # /config/
 /config/config.specific.php
 /config/SmrMySqlSecrets.inc
