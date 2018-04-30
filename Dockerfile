@@ -36,6 +36,9 @@ RUN [ "$PHP_DEBUG" = "1" ] && echo "Using development php.ini" || \
 		&& cp /usr/src/php/php.ini-production /usr/local/etc/php/php.ini; \
 	}
 
+# Disable apache access logging (error logging is still enabled)
+RUN sed -i 's|CustomLog.*|CustomLog /dev/null common|' /etc/apache2/sites-enabled/000-default.conf
+
 # Disable apache .htaccess files (suggested optimization)
 RUN sed -i 's/AllowOverride All/AllowOverride None/g' /etc/apache2/conf-enabled/docker-php.conf
 
