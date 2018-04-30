@@ -10,8 +10,9 @@ if (isset($var['msg'])) {
 
 $adminPermissions = [];
 foreach (array_keys($account->getPermissions()) as $permissionID) {
-	list($name, $link) = AdminPermissions::getPermissionInfo($permissionID);
-	$adminPermissions[] = [
+	list($name, $link, $categoryID) = AdminPermissions::getPermissionInfo($permissionID);
+	$categoryName = AdminPermissions::getCategoryName($categoryID);
+	$adminPermissions[$categoryName][] = [
 		'PermissionLink' => empty($link) ? false : SmrSession::getNewHREF(create_container('skeleton.php', $link)),
 		'Name' => $name,
 	];
