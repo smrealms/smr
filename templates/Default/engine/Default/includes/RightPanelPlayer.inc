@@ -10,19 +10,7 @@ if(isset($GameID)) { ?>
 	<br />
 	Race : <a href="<?php echo Globals::getCouncilHREF($ThisPlayer->getRaceID()); ?>"><?php echo $ThisPlayer->getColouredRaceName($ThisPlayer->getRaceID()); ?></a><br />
 	Turns : <span id="turns">
-		<span class="<?php
-			switch($ThisPlayer->getTurnsLevel()) {
-				case 'NONE':
-				case 'LOW':
-					echo 'red';
-				break;
-				case 'MEDIUM':
-					echo 'yellow';
-				break;
-				default:
-					echo 'green';
-			}
-			?>"><?php
+		<span class="<?php echo $ThisPlayer->getTurnsColor(); ?>"><?php
 				echo $ThisPlayer->getTurns() .'/'.$ThisPlayer->getMaxTurns();
 			?></span>
 		</span><br />

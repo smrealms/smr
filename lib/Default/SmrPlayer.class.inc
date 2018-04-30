@@ -1637,6 +1637,23 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return 'HIGH';
 	}
 
+	/**
+	 * Returns the CSS class color to use when displaying the player's turns
+	 */
+	public function getTurnsColor() {
+		switch($this->getTurnsLevel()) {
+			case 'NONE':
+			case 'LOW':
+				return 'red';
+			break;
+			case 'MEDIUM':
+				return 'yellow';
+			break;
+			default:
+				return 'green';
+		}
+	}
+
 	public function update() {
 		$this->save();
 	}
