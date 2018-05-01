@@ -1,4 +1,5 @@
 <?php
+require_once(get_file_loc('message.functions.inc'));
 
 if(isset($var['Message'])) {
 	$template->assign('Message',$var['Message']);
@@ -8,12 +9,13 @@ $template->assign('PageTopic','Message Notifications');
 
 $container = create_container('buy_message_notifications_processing.php');
 
-$db->query('SELECT * FROM message_type WHERE message_type_id = ' . $db->escapeNumber(MSG_PLAYER) . ' ORDER BY message_type_id');
+// Presently only player messages are eligible for notifications
+$notifyTypeIDs = array(MSG_PLAYER);
+
 $messageBoxes = array ();
-while ($db->nextRecord()) {
-	$messageTypeID = $db->getInt('message_type_id');
+foreach ($notifyTypeIDs as $messageTypeID) {
 	$messageBox = array();
-	$messageBox['Name'] = $db->getField('message_type_name');
+	$messageBox['Name'] = getMessageTypeNames($messageTypeID);
 	
 	$messageBox['MessagesRemaining'] = $account->getMessageNotifications($messageTypeID);
 	$messageBox['MessagesPerCredit'] = MESSAGES_PER_CREDIT[$messageTypeID];

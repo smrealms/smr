@@ -3,20 +3,22 @@
 $template->assign('PageTopic','Viewing Message Boxes');
 
 if(!isset($var['box_type_id'])) {
-	$db->query('SELECT count(message_id), box_type_name, box_type_id
-				FROM message_box_types
-				LEFT JOIN message_boxes USING(box_type_id)
-				GROUP BY box_type_id, box_type_name');
 	$container = create_container('skeleton.php', 'box_view.php');
 	$boxes = array();
-	while($db->nextRecord()) {
-		$boxTypeID = $db->getInt('box_type_id');
+	require_once(get_file_loc('message.functions.inc'));
+	foreach (getAdminBoxNames() as $boxTypeID => $boxName) {
 		$container['box_type_id'] = $boxTypeID;
 		$boxes[$boxTypeID] = array(
 			'ViewHREF' => SmrSession::getNewHREF($container),
-			'BoxName' => $db->getField('box_type_name'),
-			'TotalMessages' => $db->getField('count(message_id)')
+			'BoxName' => $boxName,
+			'TotalMessages' => 0,
 		);
+	}
+	$db->query('SELECT count(message_id), box_type_id
+				FROM message_boxes
+				GROUP BY box_type_id');
+	while($db->nextRecord()) {
+		$boxes[$db->getInt('box_type_id')]['TotalMessages'] = $db->getInt('count(message_id)');
 	}
 	$template->assign('Boxes', $boxes);
 }
