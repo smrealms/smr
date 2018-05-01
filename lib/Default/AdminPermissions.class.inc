@@ -1,0 +1,74 @@
+<?php
+
+class AdminPermissions {
+
+	// The array keys must not be changed because they are referred to
+	// in the `account_has_permission` database table.
+	// Info is [Permission Name, Page to Link, Category].
+	private const PERMISSION_TABLE = [
+		1  => ['Manage Admin Permissions', 'permission_manage.php', 3],
+		3  => ['Game Open/Close', 'game_status.php', 3],
+		4  => ['Delete Game', 'game_delete.php', 5],
+		5  => ['Create Announcement', 'announcement_create.php', 3],
+		6  => ['Send Message', 'admin_message_send.php', 3],
+		7  => ['View Reported Messages', 'notify_view.php', 1],
+		8  => ['Edit Account', 'account_edit.php', 1],
+		9  => ['Multi Tools', 'ip_view.php', 1],
+		10 => ['Check Passwords', 'password_check.php', 1],
+		11 => ['Check Info', 'info.php', 1],
+		12 => ['Cheating Ship Check', 'ship_check.php', 1],
+		13 => ['Show Map to User', 'map_show.php', 4],
+		14 => ['Create SMC File', 'smc_choose.php', 4],
+		15 => ['Search for Keywords', 'keyword_search.php', 1],
+		16 => ['Log Console', 'log_console.php', 1],
+		17 => ['Send Newsletter', 'newsletter_send.php', 3],
+		18 => ['Form Access', 'form_open.php', 3],
+		19 => ['Approve Photo Album', 'album_approve.php', 2],
+		20 => ['Moderate Photo Album', 'album_moderate.php', 2],
+		21 => ['Manage ChangeLog', 'changelog.php', 3],
+		22 => ['Anon Account View', 'anon_acc_view.php', 1],
+		23 => ['Word Filter', 'word_filter.php', 1],
+		24 => ['Combat Simulator', 'combat_simulator.php', 4],
+		25 => ['Edit Locations', 'location_edit.php', 4],
+		26 => ['View Message Boxes', 'box_view.php', 1],
+		27 => ['Can Moderate Feature Requests', '', 2],
+		28 => ['Can Edit Alliance Descriptions', '', 1],
+		30 => ['1.6 Universe Generator', '1.6/universe_create.php', 5],
+		31 => ['Create Vote', 'vote_create.php', 3],
+		32 => ['Can Edit Started Games', '', 5],
+		33 => ['Enable Games', 'enable_game.php', 5],
+		34 => ['Manage Galactic Post Editors', 'manage_post_editors.php', 5],
+		35 => ['Manage Draft Leaders', 'manage_draft_leaders.php', 5],
+	];
+
+	private const PERMISSION_CATEGORIES = [
+		1 => 'Monitor Players',
+		2 => 'Community Services',
+		3 => 'Administrative',
+		4 => 'Miscellaneous',
+		5 => 'Manage Games',
+	];
+
+	/**
+	 * Returns the info for the admin permission with the given ID.
+	 */
+	static function getPermissionInfo($permissionID) {
+		return self::PERMISSION_TABLE[$permissionID];
+	}
+
+	/**
+	 * Returns a list of all permissions with ID keys and name values.
+	 */
+	static function getPermissionList() {
+		$result = [];
+		foreach (self::PERMISSION_TABLE as $permissionID => $info) {
+			$result[$permissionID] = $info[0];
+		}
+		return $result;
+	}
+
+	static function getCategoryName($categoryID) {
+		return self::PERMISSION_CATEGORIES[$categoryID];
+	}
+
+}
