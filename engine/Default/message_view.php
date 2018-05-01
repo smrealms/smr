@@ -1,4 +1,5 @@
 <?php
+require_once(get_file_loc('message.functions.inc'));
 require_once(get_file_loc('menu.inc'));
 create_message_menu();
 
@@ -13,19 +14,13 @@ if (!isset ($var['folder_id'])) {
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND receiver_delete = ' . $db->escapeBoolean(false) . '
 				LIMIT 1');
-	if ($db->getNumRows() || $player->isOnCouncil()) {
-		$db->query('SELECT * FROM message_type
-					ORDER BY message_type_id');
-	}
-	else {
-		$db->query('SELECT * FROM message_type
-					WHERE message_type_id != ' . $db->escapeNumber(MSG_POLITICAL) . '
-					ORDER BY message_type_id');
-	}
+	$showPoliticalBox = $db->getNumRows() > 0 || $player->isOnCouncil();
 	$messageBoxes = array ();
-	while ($db->nextRecord()) {
-		$message_type_id = $db->getField('message_type_id');
-		$messageBox['Name'] = $db->getField('message_type_name');
+	foreach (getMessageTypeNames() as $message_type_id => $message_type_name) {
+		if (!$showPoliticalBox && $message_type_id == MSG_POLITICAL) {
+			continue;
+		}
+		$messageBox['Name'] = $message_type_name;
 
 		// do we have unread msges in that folder?
 		$db2->query('SELECT 1 FROM message
@@ -134,13 +129,8 @@ else {
 
 	if ($var['folder_id'] == MSG_SENT) {
 		$messageBox['Name'] = 'Sent Messages';
-	}
-	else {
-		$db->query('SELECT * FROM message_type
-					WHERE message_type_id = ' . $var['folder_id']);
-		if ($db->nextRecord()) {
-			$messageBox['Name'] = $db->getField('message_type_name');
-		}
+	} else {
+		$messageBox['Name'] = getMessageTypeNames($var['folder_id']);
 	}
 	$template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
@@ -257,7 +247,6 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 	$message['Unread'] = $msg_read == 'FALSE';
 	$message['SendTime'] = date(DATE_FULL_SHORT, $send_time);
 
-	require_once(get_file_loc('message.functions.inc'));
 	$sender = getMessagePlayer($sender_id, $player->getGameID(), $type);
 	if ($sender instanceof SmrPlayer) {
 		$message['Sender'] = $sender;

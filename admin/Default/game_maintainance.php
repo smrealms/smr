@@ -78,7 +78,6 @@ $db->query('OPTIMIZE TABLE
 	`mb_keywords`,
 	`message`,
 	`message_notify`,
-	`message_type`,
 	`multi_checking_cookie`,
 	`news`,
 	`newsletter`,

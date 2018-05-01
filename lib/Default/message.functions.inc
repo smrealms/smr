@@ -1,5 +1,30 @@
 <?php
 
+function getMessageTypeNames($typeID = false) {
+	$typeNames = [
+		MSG_GLOBAL => 'Global Messages',
+		MSG_PLAYER => 'Player Messages',
+		MSG_PLANET => 'Planet Messages',
+		MSG_SCOUT => 'Scout Messages',
+		MSG_POLITICAL => 'Political Messages',
+		MSG_ALLIANCE => 'Alliance Messages',
+		MSG_ADMIN => 'Admin Messages',
+		MSG_CASINO => 'Casino Messages',
+	];
+	return $typeID === false ? $typeNames : $typeNames[$typeID];
+}
+
+function getAdminBoxNames() {
+	return [
+		BOX_BUGS_AUTO => 'Automatic Bug Reports',
+		BOX_BUGS_REPORTED => 'Player Bug Reports',
+		BOX_GLOBALS => 'Global Messages',
+		BOX_ALLIANCE_DESCRIPTIONS => 'Alliance Descriptions',
+		BOX_BETA_APPLICATIONS => 'Beta Applications',
+		BOX_ALBUM_COMMENTS => 'Photo Album Comments',
+	];
+}
+
 function &getMessagePlayer($accountID, $gameID, $messageType = false) {
 	if($accountID==ACCOUNT_ID_PORT)
 		$return = '<span class="yellow">Port Defenses</span>';
