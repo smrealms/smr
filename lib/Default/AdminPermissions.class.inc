@@ -18,7 +18,6 @@ class AdminPermissions {
 		11 => ['Check Info', 'info.php', 1],
 		12 => ['Cheating Ship Check', 'ship_check.php', 1],
 		13 => ['Show Map to User', 'map_show.php', 4],
-		14 => ['Create SMC File', 'smc_choose.php', 4],
 		15 => ['Search for Keywords', 'keyword_search.php', 1],
 		16 => ['Log Console', 'log_console.php', 1],
 		17 => ['Send Newsletter', 'newsletter_send.php', 3],
