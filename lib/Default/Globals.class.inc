@@ -10,7 +10,6 @@ class Globals {
 	protected static $GOODS = null;
 	protected static $HARDWARE_TYPES = null;
 	protected static $GAMES = array();
-	protected static $BETA_OPEN = null;
 	protected static $FEATURE_REQUEST_OPEN = null;
 	protected static $RACE_RELATIONS = array();
 	protected static $USER_RANKINGS = null;
@@ -291,17 +290,6 @@ class Globals {
 		return SmrGame::getGame($gameID)->getStartingCredits();
 	}
 
-	public static function isBetaOpen() {
-		if(self::$BETA_OPEN == null) {
-			self::initialiseDatabase();
-			self::$db->query('SELECT open FROM open_forms WHERE type=\'BETA\'');
-			self::$db->nextRecord();
-
-			self::$BETA_OPEN = self::$db->getField('open') == 'TRUE';
-		}
-		return self::$BETA_OPEN;
-	}
-
 	public static function isFeatureRequestOpen() {
 		if(self::$FEATURE_REQUEST_OPEN == null) {
 			self::initialiseDatabase();
@@ -346,10 +334,6 @@ class Globals {
 		return self::$USER_RANKINGS;
 	}
 
-	public static function getBetaApplyHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'beta_apply.php'));
-	}
-
 	public static function getFeatureRequestHREF() {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'feature_request.php'));
 	}
@@ -384,7 +368,7 @@ class Globals {
 		return SmrSession::getNewHREF(create_container('skeleton.php','beta_functions.php'));
 	}
 
-	public static function getBugReportProcessingHREF() { //BETA
+	public static function getBugReportProcessingHREF() {
 		return SmrSession::getNewHREF(create_container('bug_report_processing.php'));
 	}
 
