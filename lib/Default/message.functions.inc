@@ -20,7 +20,6 @@ function getAdminBoxNames() {
 		BOX_BUGS_REPORTED => 'Player Bug Reports',
 		BOX_GLOBALS => 'Global Messages',
 		BOX_ALLIANCE_DESCRIPTIONS => 'Alliance Descriptions',
-		BOX_BETA_APPLICATIONS => 'Beta Applications',
 		BOX_ALBUM_COMMENTS => 'Photo Album Comments',
 	];
 }

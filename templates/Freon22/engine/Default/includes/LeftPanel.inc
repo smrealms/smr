@@ -58,9 +58,6 @@ if(isset($GameID)) { ?>
 	<a class="leftNav" href="album/" target="album">View Album</a><br /><br /><?php
 	if(Globals::isFeatureRequestOpen()) {
 		?><a class="leftNav" href="<?php echo Globals::getFeatureRequestHREF(); ?>">Request A Feature</a><br /><?php
-	}
-	if(isset($GameID) && Globals::isBetaOpen()) {
-		?><a class="leftNav" href="<?php echo Globals::getBetaApplyHREF(); ?>">Apply For Beta</a><br /><?php
 	} ?>
 	<a class="leftNav" href="<?php echo $ReportABugLink; ?>">Report A Bug</a><br />
 	<a class="leftNav" href="<?php echo $ContactFormLink; ?>">Contact Form</a><br />
