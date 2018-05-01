@@ -7,7 +7,7 @@ class AdminPermissions {
 	// Info is [Permission Name, Page to Link, Category].
 	private const PERMISSION_TABLE = [
 		1  => ['Manage Admin Permissions', 'permission_manage.php', 3],
-		3  => ['Game Open/Close', 'game_status.php', 3],
+		3  => ['Server Open/Close', 'game_status.php', 3],
 		4  => ['Delete Game', 'game_delete.php', 5],
 		5  => ['Create Announcement', 'announcement_create.php', 3],
 		6  => ['Send Message', 'admin_message_send.php', 3],
