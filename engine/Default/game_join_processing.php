@@ -51,12 +51,6 @@ if ($credits > 0) {
 	$account->decreaseTotalSmrCredits($credits);
 }
 
-// check if hof entry is there
-$db->query('SELECT 1 FROM account_has_stats WHERE account_id = '.$db->escapeNumber(SmrSession::$account_id) . ' LIMIT 1');
-if (!$db->nextRecord()) {
-	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$db->escapeNumber($account->getAccountID()).', ' . $db->escape_string($account->getLogin(), true) . ')');
-}
-
 // put him in a sector with a hq
 $hq_id = $race_id + 101;
 $db->query('SELECT * FROM location JOIN sector USING(game_id, sector_id) ' .
@@ -158,12 +152,7 @@ $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
 // Mark the player's start sector as visited
 SmrSector::getSector($gameID, $home_sector_id)->markVisited($player);
 
-// update stats
-$db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
-
-// is this our first game?
-$db->query('SELECT * FROM account_has_stats WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
-if ($db->nextRecord() && $db->getInt('games_joined') == 1) {
+if ($account->isNewbie()) {
 	//we are a newb set our alliance to be Newbie Help Allaince
 	$player->joinAlliance(NHA_ID);
 

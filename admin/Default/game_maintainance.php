@@ -29,7 +29,6 @@ $db->query('OPTIMIZE TABLE
 	`account_has_logs`,
 	`account_has_permission`,
 	`account_has_points`,
-	`account_has_stats`,
 	`account_is_closed`,
 	`active_session`,
 	`album`,
