@@ -63,9 +63,6 @@ else {
 	$home_sector_id = 1;
 }
 
-// get rank_id
-$rank_id = $account->getRank();
-
 // for newbie and beginner another ship, more shields and armour
 if ($account->isNewbie()) {
 	$startingNewbieTurns = STARTING_NEWBIE_TURNS_NEWBIE;
