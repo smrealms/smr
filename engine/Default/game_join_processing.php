@@ -140,39 +140,23 @@ $db->query('INSERT INTO player (account_id, game_id, player_id, player_name, rac
 
 $db->unlock();
 
-// give the player shields
-$db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount)
-			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', 1, '.$db->escapeNumber($amount_shields).', '.$db->escapeNumber($amount_shields).')');
-// give the player armour
-$db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount)
-			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', 2, '.$db->escapeNumber($amount_armour).', '.$db->escapeNumber($amount_armour).')');
-// give the player cargo hold
-$db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount)
-			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', 3, 40, 40)');
-// give the player weapons
-$db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id)
-			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', 0, 46)');
+$player = SmrPlayer::getPlayer(SmrSession::$account_id, $gameID);
 
-// insert the huge amount of sectors into the database :)
-$db->query('SELECT MIN(sector_id), MAX(sector_id)
-			FROM sector
-			WHERE game_id = ' . $db->escapeNumber($gameID));
-if (!$db->nextRecord()) {
-	create_error('This game doesn\'t have any sectors');
-}
+// Equip the ship
+$ship = $player->getShip();
+$ship->setShields($amount_shields, true);
+$ship->setArmour($amount_armour, true);
+$ship->setCargoHolds(40);
+$ship->addWeapon(46);  // Laser
 
-$min_sector = $db->getInt('MIN(sector_id)');
-$max_sector = $db->getInt('MAX(sector_id)');
+// The `player_visited_sector` table holds *unvisited* sectors, so that once
+// all sectors are visited (the majority of the game), the table is empty.
+$db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
+            SELECT ' . $db->escapeNumber(SmrSession::$account_id) . ', game_id, sector_id
+              FROM sector WHERE game_id = ' . $db->escapeNumber($gameID));
 
-for ($i = $min_sector; $i <= $max_sector; $i++) {
-	//if this is our home sector we dont add it.
-	if ($i == $home_sector_id) {
-		continue;
-	}
-
-	$db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES (' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($i).')');
-}
-
+// Mark the player's start sector as visited
+SmrSector::getSector($gameID, $home_sector_id)->markVisited($player);
 
 // update stats
 $db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
@@ -181,8 +165,8 @@ $db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE a
 $db->query('SELECT * FROM account_has_stats WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
 if ($db->nextRecord() && $db->getInt('games_joined') == 1) {
 	//we are a newb set our alliance to be Newbie Help Allaince
-	$db->query('UPDATE player SET alliance_id = '.$db->escapeNumber(NHA_ID).' WHERE account_id = '.$db->escapeNumber($account->getAccountID()).' AND game_id = '.$db->escapeNumber($gameID));
-	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$db->escapeNumber($gameID).', '.$db->escapeNumber($account->getAccountID()).', 2,'.$db->escapeNumber(NHA_ID).')');
+	$player->joinAlliance(NHA_ID);
+
 	//we need to send them some messages
 	$message = 'Welcome to Space Merchant Realms, this message is to get you underway with information to start you off in the game. All newbie and beginner rated player are placed into a teaching alliance run by a Veteran player who is experienced enough to answer all your questions and give you a helping hand at learning the basics of the game.<br /><br />
 	Apart from your leader (denoted with a star on your alliance roster) there are various other ways to get information and help. Newbie helpers are players in Blue marked on the Current Players List which you can view by clicking the link on the left-hand side of the screen that says "Current Players". Also you can visit the SMR Wiki via a link on the left which gives detailed information on all aspects fo the game.<br /><br />
@@ -194,10 +178,14 @@ if ($db->nextRecord() && $db->getInt('games_joined') == 1) {
 }
 
 if($race_id == RACE_ALSKANT) { // Give Alskants 250 personal relations to start.
-	$player =& SmrPlayer::getPlayer($account->getAccountID(), $gameID);
 	$RACES =& Globals::getRaces();
 	foreach($RACES as $raceID => $raceInfo) {
 		$player->setRelations(250, $raceID);
 	}
 }
+
+// We aren't in a game yet, so updates are not done automatically here
+$player->update();
+$ship->update();
+
 forward(create_container('skeleton.php', 'game_play.php'));
