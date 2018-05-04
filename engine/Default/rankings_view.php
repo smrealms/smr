@@ -1,7 +1,5 @@
 <?php
 
-$rank_id = $account->getRank();
-
 $template->assign('PageTopic','Extended User Rankings');
 require_once(get_file_loc('menu.inc'));
 if (SmrSession::$game_id != 0)
@@ -9,16 +7,12 @@ if (SmrSession::$game_id != 0)
 
 $PHP_OUTPUT.=('You have a score of <span class="red">'.number_format($account->getScore()).'</span>.<br /><br />');
 $PHP_OUTPUT.=('You are ranked as a <font size="4" color="greenyellow">'.$account->getRankName().'</font> player.<p><br />');
-$db->query('SELECT * FROM user_rankings ORDER BY rank');
-$i = 0;
-while ($db->nextRecord()) {
-	if ($i > 0)
-		$PHP_OUTPUT.=('<br />');
-	$PHP_OUTPUT.= $db->getField('rank_name') . ' - ';
-	$PHP_OUTPUT.= ceil(pow((max(0,$db->getField('rank')-1))*SmrAccount::USER_RANKINGS_RANK_BOUNDARY,1/SmrAccount::USER_RANKINGS_TOTAL_SCORE_POW)) . ' points.';
-	$i++;
+foreach (Globals::getUserRanking() as $rankID => $rankName) {
+	$PHP_OUTPUT.= $rankName . ' - ';
+	$PHP_OUTPUT.= ceil(pow((max(0,$rankID-1))*SmrAccount::USER_RANKINGS_RANK_BOUNDARY,1/SmrAccount::USER_RANKINGS_TOTAL_SCORE_POW)) . ' points.';
+	$PHP_OUTPUT.=('<br />');
 }
-$PHP_OUTPUT.=('<br /><br />');
+$PHP_OUTPUT.=('<br />');
 $individualScores =& $account->getIndividualScores();
 $PHP_OUTPUT.=('<b>Extended Scores</b><br />');
 foreach($individualScores as $statScore) {
