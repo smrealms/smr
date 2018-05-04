@@ -7,10 +7,6 @@ require_once(get_file_loc('menu.inc'));
 if (SmrSession::$game_id != 0)
 	create_trader_menu();
 
-$db->query('SELECT * FROM rankings WHERE rankings_id = '.$rank_id);
-if ($db->nextRecord())
-	$rank_name = $db->getField('rankings_name');
-
 $PHP_OUTPUT.=('You have a score of <span class="red">'.number_format($account->getScore()).'</span>.<br /><br />');
 $PHP_OUTPUT.=('You are ranked as a <font size="4" color="greenyellow">'.$account->getRankName().'</font> player.<p><br />');
 $db->query('SELECT * FROM user_rankings ORDER BY rank');

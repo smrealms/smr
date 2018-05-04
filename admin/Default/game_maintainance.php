@@ -112,7 +112,6 @@ $db->query('OPTIMIZE TABLE
 	`race`,
 	`race_has_relation`,
 	`race_has_voting`,
-	`rankings`,
 	`sector`,
 	`sector_has_forces`,
 	`ship_has_cargo`,
