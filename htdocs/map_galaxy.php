@@ -42,6 +42,7 @@ try {
 		$sectorID = $_REQUEST['sector_id'];
 		if(!is_numeric($sectorID)) {
 			header('location: ' . URL . '/error.php?msg=Sector id was not a number.');
+			exit;
 		}
 		try {
 			$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id, $sectorID);
@@ -54,6 +55,7 @@ try {
 		$galaxyID = $_REQUEST['galaxy_id'];
 		if(!is_numeric($galaxyID)) {
 			header('location: ' . URL . '/error.php?msg=Galaxy id was not a number.');
+			exit;
 		}
 		try {
 			$galaxy =& SmrGalaxy::getGalaxy(SmrSession::$game_id,$galaxyID);
