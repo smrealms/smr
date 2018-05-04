@@ -86,25 +86,6 @@ $PHP_OUTPUT.=('<input type="number" name="align" value="'.$player->getAlignment(
 $PHP_OUTPUT.=create_submit('Set Align to Amount');
 $PHP_OUTPUT.=('</form>');
 
-$db->query('SELECT kills, experience_traded
-			FROM account_has_stats
-			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
-if ($db->nextRecord()) {
-	//Set kills
-	$container['func'] = 'Kills';
-	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type="number" name="kills" value="' . $db->getInt('kills') . '">&nbsp;&nbsp;');
-	$PHP_OUTPUT.=create_submit('Set Kills to Amount');
-	$PHP_OUTPUT.=('</form>');
-
-	//Set traded xp
-	$container['func'] = 'Traded_XP';
-	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type=number name="traded_xp" value="' . $db->getInt('experience_traded') . '">&nbsp;&nbsp;');
-	$PHP_OUTPUT.=create_submit('Set Traded XP to Amount');
-	$PHP_OUTPUT.=('</form>');
-}
-
 $PHP_OUTPUT.=('<br />Note: This sets your hardware not adds it. Also, if u have more than 1 JD,scanner,etc they may function incorrectly<br />');
 //add any type of hardware
 $container['func'] = 'Hard_add';

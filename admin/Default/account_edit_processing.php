@@ -224,9 +224,6 @@ if (!empty($delete)) {
 			$db->query('DELETE FROM player
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 
-			$db->query('UPDATE account_has_stats SET games_joined=games_joined-1
-						WHERE account_id=' . $db->escapeNumber($account_id));
-
 			$db->query('UPDATE active_session SET game_id=0
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id) .' LIMIT 1');
 

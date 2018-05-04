@@ -208,9 +208,6 @@ try {
 	$db->query('INSERT INTO notification (notification_type, account_id, time) ' .
 								  'VALUES(\'validation_code\', '.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber(TIME) . ')');
 
-	// insert into the account stats table
-	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escape_string($account->getLogin()) . ')');
-
 	$container = create_container('login_processing.php');
 	$container['login'] = $login;
 	$container['password'] = $password;

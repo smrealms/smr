@@ -70,14 +70,6 @@ elseif ($var['func'] == 'Align') {
 	$align=max(-500, min(500, (int)$_REQUEST['align']));
 	$player->setAlignment($align);
 }
-elseif ($var['func'] == 'Kills') {
-	$kills = (int)$_REQUEST['kills'];
-	$db->query('UPDATE account_has_stats SET kills = ' . $db->escapeNumber($kills) . ' WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
-}
-elseif ($var['func'] == 'Traded_XP') {
-	$traded_xp = (int)$_REQUEST['traded_xp'];
-	$db->query('UPDATE account_has_stats SET experience_traded = '.$db->escapeNumber($traded_xp).' WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
-}
 elseif ($var['func'] == 'RemWeapon') {
 	$ship->removeAllWeapons();
 }
