@@ -3,7 +3,7 @@ abstract class AbstractSmrAccount {
 	const USER_RANKINGS_EACH_STAT_POW = .9;
 	const USER_RANKINGS_TOTAL_SCORE_POW = .3;
 	const USER_RANKINGS_RANK_BOUNDARY = 5.2;
-	protected static $USER_RANKINGS_SCORE = array(
+	protected const USER_RANKINGS_SCORE = array(
 		// [Stat, a, b]
 		// Used as: pow(Stat * a, USER_RANKINGS_EACH_STAT_POW) * b
 		array(array('Trade','Experience','Total'),.1,0.5),
@@ -12,7 +12,7 @@ abstract class AbstractSmrAccount {
 		);
 
 	protected static $CACHE_ACCOUNTS = array();
-	protected static $DEFAULT_HOTKEYS = array(
+	protected const DEFAULT_HOTKEYS = array(
 		'MoveUp' => array('w','up'),
 		'ScanUp' => array('shift+w','shift+up'),
 		'MoveLeft' => array('a','left'),
@@ -79,7 +79,7 @@ abstract class AbstractSmrAccount {
 	protected $hasChanged;
 
 	public static function getDefaultHotkeys() {
-		return self::$DEFAULT_HOTKEYS;
+		return self::DEFAULT_HOTKEYS;
 	}
 
 	public static function &getAccount($accountID,$forceUpdate = false) {
@@ -156,7 +156,7 @@ abstract class AbstractSmrAccount {
 	public static function getUserScoreCaseStatement($db) {
 		$userRankingTypes = array();
 		$case = 'FLOOR(SUM(CASE type ';
-		foreach(self::$USER_RANKINGS_SCORE as $userRankingScore) {
+		foreach(self::USER_RANKINGS_SCORE as $userRankingScore) {
 			$userRankingType = $db->escapeArray($userRankingScore[0],false,false,':',false);
 			$userRankingTypes[] = $userRankingType;
 			$case.= ' WHEN '.$db->escapeString($userRankingType).' THEN POW(amount*'.$userRankingScore[1].','.SmrAccount::USER_RANKINGS_EACH_STAT_POW.')*'.$userRankingScore[2];
@@ -202,7 +202,7 @@ abstract class AbstractSmrAccount {
 
 			$this->messageNotifications = $this->db->getObject('message_notifications');
 			$this->hotkeys = $this->db->getObject('hotkeys');
-			foreach(self::$DEFAULT_HOTKEYS as $hotkey => $binding) {
+			foreach(self::DEFAULT_HOTKEYS as $hotkey => $binding) {
 				if(!isset($this->hotkeys[$hotkey])) {
 					$this->hotkeys[$hotkey] = $binding;
 				}
@@ -418,7 +418,7 @@ abstract class AbstractSmrAccount {
 			$gameID = $player->getGameID();
 		if(!isset($this->individualScores[$gameID])) {
 			$this->individualScores[$gameID] = array();
-			foreach(self::$USER_RANKINGS_SCORE as $statScore) {
+			foreach(self::USER_RANKINGS_SCORE as $statScore) {
 				if($player==null)
 					$stat = $this->getHOF($statScore[0]);
 				else
