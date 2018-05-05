@@ -37,7 +37,7 @@ require_once(get_file_loc('Plotter.class.inc'));
 require_once(get_file_loc('RouteGenerator.class.inc'));
 require_once(get_file_loc('shop_goods.inc'));
 
-const 'SHIP_UPGRADE_PATH' = array(
+const SHIP_UPGRADE_PATH = array(
 	2 => array( //Alskant
 		SHIP_TYPE_TRADE_MASTER,
 		SHIP_TYPE_TRIP_MAKER,

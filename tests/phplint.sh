@@ -15,7 +15,7 @@ do
         echo "$RESULTS"
         ERROR="true"
     fi
-done < <(find $ROOT -type f -name "*.php" -o -name "*.inc" -print0)
+done < <(find $ROOT -type f \( -name "*.php" -o -name "*.inc" \) -print0)
 
 if [[ "$ERROR" == "true" ]] ; then
     exit 1
