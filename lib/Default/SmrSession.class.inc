@@ -5,6 +5,10 @@ if(!defined('USING_AJAX'))
 class SmrSession {
 	const ALWAYS_AVAILABLE = 999999;
 	const TIME_BEFORE_EXPIRY = 3600;
+
+	// Defines the number of pages that can be loaded after
+	// this page before the links on this page become invalid
+	// (i.e. before you get a back button error).
 	private const URL_DEFAULT_REMAINING_PAGE_LOADS = array(
 			'alliance_broadcast.php' => self::ALWAYS_AVAILABLE,
 			'alliance_forces.php' => self::ALWAYS_AVAILABLE,
