@@ -1,6 +1,8 @@
 <?php
 if($_REQUEST['action']=='Vote') {
-//	$db->query('DELETE FROM account_votes_for_feature WHERE account_id='.SmrSession::$account_id);
+	if ($account->getAccountID() == ACCOUNT_ID_NHL) {
+		create_error('This account is not allowed to cast a vote!');
+	}
 	if(is_array($_REQUEST['vote'])) {
 		$query = 'REPLACE INTO account_votes_for_feature VALUES ';
 		foreach($_REQUEST['vote'] as $requestID => $vote) {
