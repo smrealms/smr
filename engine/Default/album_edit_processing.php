@@ -63,14 +63,14 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 		create_error('Image is higher than 500 pixels!');
 	}
 
-	if (!move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . SmrSession::$account_id)) {
+	if (!move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $account->getAccountID())) {
 		create_error('Failed to upload image!');
 	}
 }
 
 
 // check if we had a album entry so far
-$db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber(SmrSession::$account_id));
+$db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 if ($db->nextRecord()) {
 	if ($noPicture == false) {
 		$comment = '<span class="green">*** Picture changed</span>';
@@ -88,7 +88,7 @@ if ($db->nextRecord()) {
 					last_changed = ' . $db->escapeNumber(TIME) . ',
 					approved = \'TBC\',
 					disabled = \'FALSE\'
-				WHERE account_id = ' . $db->escapeNumber(SmrSession::$account_id) . ' LIMIT 1');
+				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
 }
 else {
 	// if he didn't upload a picture before
@@ -101,14 +101,14 @@ else {
 
 	// add album entry
 	$db->query('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved)
-				VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeString($location) . ', ' . $db->escapeString($email) . ', ' . $db->escapeString($website) . ', ' . $db->escapeNumber($day) . ', ' . $db->escapeNumber($month) . ', ' . $db->escapeNumber($year) . ', ' . $db->escapeString($other) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ', \'TBC\')');
+				VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($location) . ', ' . $db->escapeString($email) . ', ' . $db->escapeString($website) . ', ' . $db->escapeNumber($day) . ', ' . $db->escapeNumber($month) . ', ' . $db->escapeNumber($year) . ', ' . $db->escapeString($other) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ', \'TBC\')');
 }
 
 if (!empty($comment)) {
 	// check if we have comments for this album already
 	$db->lockTable('album_has_comments');
 
-	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.$db->escapeNumber(SmrSession::$account_id));
+	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.$db->escapeNumber($account->getAccountID()));
 	if ($db->nextRecord()) {
 		$comment_id = $db->getField('MAX(comment_id)') + 1;
 	}

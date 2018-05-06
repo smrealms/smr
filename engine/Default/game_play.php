@@ -20,7 +20,7 @@ $games['Play'] = array();
 $game_id_list = array();
 $db->query('SELECT end_date, game_id, game_name, game_speed, game_type
 			FROM game JOIN player USING (game_id)
-			WHERE account_id = '.$db->escapeNumber(SmrSession::$account_id).'
+			WHERE account_id = '.$db->escapeNumber($account->getAccountID()).'
 				AND enabled = \'TRUE\'
 				AND end_date >= ' . $db->escapeNumber(TIME) . '
 			ORDER BY start_date DESC');
@@ -39,7 +39,7 @@ if ($db->getNumRows() > 0) {
 		$games['Play'][$game_id]['PlayGameLink'] = SmrSession::getNewHREF($container);
 
 		// creates a new player object
-		$curr_player =& SmrPlayer::getPlayer(SmrSession::$account_id, $game_id);
+		$curr_player = SmrPlayer::getPlayer($account->getAccountID(), $game_id);
 
 		// update turns for this game
 		$curr_player->updateTurns();

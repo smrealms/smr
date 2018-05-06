@@ -42,7 +42,7 @@ $template->assign('CanVote', $canVote);
 
 if ($canVote) {
 	$featureVotes = array();
-	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
+	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.$account->getAccountID());
 	while($db->nextRecord())
 		$featureVotes[$db->getInt('feature_request_id')] = $db->getField('vote_type');
 }

@@ -6,12 +6,12 @@ if($_REQUEST['action']=='Vote') {
 	if(is_array($_REQUEST['vote'])) {
 		$query = 'REPLACE INTO account_votes_for_feature VALUES ';
 		foreach($_REQUEST['vote'] as $requestID => $vote) {
-			$query.='('.$db->escapeNumber(SmrSession::$account_id).', '.$db->escapeNumber($requestID).','.$db->escapeString($vote).'),';
+			$query.='('.$db->escapeNumber($account->getAccountID()).', '.$db->escapeNumber($requestID).','.$db->escapeString($vote).'),';
 		}
 		$db->query(substr($query,0,-1));
 	}
 	if(!empty($_REQUEST['favourite']) && is_numeric($_REQUEST['favourite']))
-		$db->query('REPLACE INTO account_votes_for_feature VALUES('.$db->escapeNumber(SmrSession::$account_id).', '.$db->escapeNumber($_REQUEST['favourite']).',\'FAVOURITE\')');
+		$db->query('REPLACE INTO account_votes_for_feature VALUES('.$db->escapeNumber($account->getAccountID()).', '.$db->escapeNumber($_REQUEST['favourite']).',\'FAVOURITE\')');
 
 	forward(create_container('skeleton.php', 'feature_request.php'));
 }
@@ -47,7 +47,7 @@ else if($_REQUEST['action']=='Set Status') {
 			WHERE feature_request_id IN (' . $db->escapeArray($_REQUEST['set_status_ids']) . ')');
 	foreach($_REQUEST['set_status_ids'] as $featureID) {
 		$db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text)
-					VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
+					VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber($account->getAccountID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
 	}
 
 	forward(create_container('skeleton.php', 'feature_request.php'));
