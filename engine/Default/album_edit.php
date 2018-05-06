@@ -1,7 +1,7 @@
 <?php
 $template->assign('PageTopic','Edit Photo');
 
-$db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber(SmrSession::$account_id));
+$db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 if ($db->nextRecord()) {
 	$albumEntry['Location'] = stripslashes($db->getField('location'));
 	$albumEntry['Email'] = stripslashes($db->getField('email'));
@@ -25,8 +25,8 @@ if ($db->nextRecord()) {
 		$albumEntry['Status']=('<a href="album/?'.$account->getHofName().'" class="dgreen">Online</a>');
 	}
 		
-	if(is_readable(UPLOAD . SmrSession::$account_id)) {
-		$albumEntry['Image'] = URL.'/upload/'.SmrSession::$account_id;
+	if(is_readable(UPLOAD . $account->getAccountID())) {
+		$albumEntry['Image'] = URL.'/upload/'.$account->getAccountID();
 	}
 	
 	$template->assign('AlbumEntry',$albumEntry);

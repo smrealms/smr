@@ -3,7 +3,7 @@
 // register game_id
 SmrSession::updateGame($var['game_id']);
 
-$player =& SmrPlayer::getPlayer(SmrSession::$account_id, $var['game_id']);
+$player = SmrPlayer::getPlayer($account->getAccountID(), $var['game_id']);
 $player->updateLastCPLAction();
 
 // get rid of old plotted course

@@ -107,7 +107,7 @@ else {
 $last_turn_update = SmrGame::getGame($gameID)->getStartTurnsDate();
 
 //// newbie leaders need to put into there alliances
-if (SmrSession::$account_id == ACCOUNT_ID_NHL) {
+if ($account->getAccountID() == ACCOUNT_ID_NHL) {
 	$alliance_id = NHA_ID;
 }
 else {
@@ -127,11 +127,11 @@ else {
 
 // insert into player table.
 $db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_turn_update, last_cpl_action, last_active, newbie_turns, npc)
-			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escape_string($player_name, true) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', '.$db->escapeNumber($last_turn_update).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ')');
+			VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escape_string($player_name, true) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', '.$db->escapeNumber($last_turn_update).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ')');
 
 $db->unlock();
 
-$player = SmrPlayer::getPlayer(SmrSession::$account_id, $gameID);
+$player = SmrPlayer::getPlayer($account->getAccountID(), $gameID);
 
 // Equip the ship
 $ship = $player->getShip();
@@ -143,7 +143,7 @@ $ship->addWeapon(46);  // Laser
 // The `player_visited_sector` table holds *unvisited* sectors, so that once
 // all sectors are visited (the majority of the game), the table is empty.
 $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
-            SELECT ' . $db->escapeNumber(SmrSession::$account_id) . ', game_id, sector_id
+            SELECT ' . $db->escapeNumber($account->getAccountID()) . ', game_id, sector_id
               FROM sector WHERE game_id = ' . $db->escapeNumber($gameID));
 
 // Mark the player's start sector as visited
