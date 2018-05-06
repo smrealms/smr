@@ -1,11 +1,8 @@
 <?php
 
-//////////////////////////////////////////////////
-//
-//	Script:		vote_processing.php
-//	Purpose:	Registers Votes
-//
-//////////////////////////////////////////////////
+if ($account->getAccountID() == ACCOUNT_ID_NHL) {
+	create_error('This account is not allowed to cast a vote!');
+}
 
 if (!is_numeric($_REQUEST['vote']))
 	create_error('You must choose an option.');
