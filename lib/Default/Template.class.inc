@@ -297,7 +297,7 @@ class Template {
 				$dom->appendChild($dom->importNode($child, true));
 			}
 			// Trim to remove trailing newlines
-			return trim($dom->saveHTML());
+			return trim(@$dom->saveHTML());
 		};
 
 		$xml='';
