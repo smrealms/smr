@@ -1,12 +1,17 @@
-<p>&nbsp;</p>
+<?php
+if (!empty($EmptyResult)) { ?>
+	<p><span class="bold red">No trader found that matches your search!</span></p><?php
+} ?>
 
+<p>
 <form method="POST" action="<?php echo $TraderSearchHREF; ?>">
-	<span style="font-size:75%;">Player name:</span><br />
+	Player name:<br />
 	<input type="text" name="player_name" id="InputFields" style="width:150px">&nbsp;<input type="submit" name="action" value="Search" id="InputFields" />
 
-	<p>&nbsp;</p>
+	<br /><br /><br />
 
-	<span style="font-size:75%;">Player ID:</span><br />
+	Player ID:<br />
 	<input type="number" name="player_id" id="InputFields" style="width:50px">&nbsp;<input type="submit" name="action" value="Search" id="InputFields" />
 
 </form>
+</p>
