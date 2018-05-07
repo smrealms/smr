@@ -88,3 +88,9 @@ if (!empty($similarPlayers)) {
 	}
 	$template->assign('SimilarPlayersLinks', $similarPlayersLinks);
 }
+
+if (empty($resultPlayer) && empty($similarPlayers)) {
+	$container = create_container('skeleton.php', 'trader_search.php');
+	$container['empty_result'] = true;
+	forward($container);
+}

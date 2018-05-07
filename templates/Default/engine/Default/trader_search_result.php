@@ -1,7 +1,4 @@
 <?php
-if (!isset($ResultPlayerLinks) && !isset($SimilarPlayersLinks)) {
-	echo "No trader found matching your search!";
-}
 
 function DisplayResult(array $Links, SmrPlayer $Player) { ?>
 	<table class="standard" width="88%">
