@@ -60,18 +60,17 @@
 							} ?>
 						</td>
 						<td><?php echo $Owner->getLinkedDisplayName(); ?></td>
-						<td align="center" class="shrink center"><?php
+						<td class="shrink noWrap center"><?php
 							if ($SharedForceAlliance) { ?>
 								<div class="buttonA">
-									<a class="buttonA" href="<?php echo $Force->getExamineDropForcesHREF(); ?>"> Examine </a>
+									<a class="buttonA" href="<?php echo $Force->getExamineDropForcesHREF(); ?>">&nbsp;Examine&nbsp;</a>
 								</div>
-								<br /><br />
 								<div class="buttonA">
-									<a href="<?php echo $Force->getRefreshHREF(); ?>" class="buttonA"> Refresh </a>
+									<a href="<?php echo $Force->getRefreshHREF(); ?>" class="buttonA">&nbsp;Refresh&nbsp;</a>
 								</div><?php
 							} else { ?>
 								<div class="buttonA">
-									<a class="buttonA enemyExamine" href="<?php echo $Force->getAttackForcesHREF(); ?>"> Attack (<?php echo $Force->getAttackTurnCost($ThisShip); ?>) </a>
+									<a class="buttonA enemyExamine" href="<?php echo $Force->getAttackForcesHREF(); ?>">&nbsp;Attack (<?php echo $Force->getAttackTurnCost($ThisShip); ?>)&nbsp;</a>
 								</div><?php
 							} ?>
 						</td>
@@ -80,7 +79,7 @@
 				if($RefreshAny) { ?>
 					<tr>
 						<td class="center" colspan="6">
-							<div class="buttonA"><a href="<?php echo $Force->getRefreshAllHREF() ?>" class="buttonA"> Refresh All </a></div>
+							<div class="buttonA"><a href="<?php echo $Force->getRefreshAllHREF() ?>" class="buttonA">&nbsp;Refresh All&nbsp;</a></div>
 						</td>
 					</tr><?php
 				} ?>
