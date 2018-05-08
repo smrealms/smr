@@ -10,13 +10,12 @@ foreach ($locations as &$location) {
 }
 
 // Determine the current amount of each location
-$galSectors =& SmrSector::getGalaxySectors($var['game_id'],$var['gal_on']);
-foreach ($galSectors as &$sector) {
-	$sectorLocations =& $sector->getLocations();
-	foreach ($sectorLocations as &$sectorLocation) {
+$galSectors = SmrSector::getGalaxySectors($var['game_id'],$var['gal_on']);
+foreach ($galSectors as $galSector) {
+	foreach ($galSector->getLocations() as $sectorLocation) {
 		$totalLocs[$sectorLocation->getTypeID()]++;
-	} unset($sectorLocation);
-} unset($sector);
+	}
+}
 $template->assign('TotalLocs', $totalLocs);
 
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
