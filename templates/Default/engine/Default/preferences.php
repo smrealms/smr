@@ -3,7 +3,7 @@ if (isset($Reason)) {
 	?><p><big><span class="bold red"><?php echo $Reason; ?></span></big></p><?php
 }
 
-if(USE_COMPATIBILITY && !$ThisAccount->hasAllOldAccountIDs()) { ?>
+if (Globals::useCompatibilityDatabases() && !$ThisAccount->hasAllOldAccountIDs()) { ?>
 	<form id="LinkOldAccountForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<table>
 			<tr>

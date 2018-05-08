@@ -148,42 +148,40 @@ if ($db->getNumRows()) {
 	}
 }
 
-if(USE_COMPATIBILITY) {
-	foreach(Globals::getCompatibilityDatabases('History') as $databaseClassName => $databaseInfo) {
-		require_once(get_file_loc($databaseClassName.'.class.inc'));
-		//Old previous games
-		$historyDB = new $databaseClassName();
-		$historyDB->query('SELECT start_date, end_date, game_name, speed, game_id
-							FROM game ORDER BY game_id DESC');
-		if ($historyDB->getNumRows()) {
-			while ($historyDB->nextRecord()) {
-				$game_id = $historyDB->getField('game_id');
-				$index = $databaseClassName.$game_id;
-				$games['Previous'][$index]['ID'] = $game_id;
-				$games['Previous'][$index]['Name'] = $historyDB->getField('game_name');
-				$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT,$historyDB->getField('start_date'));
-				$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT,$historyDB->getField('end_date'));
-				$games['Previous'][$index]['Speed'] = $historyDB->getField('speed');
-				// create a container that will hold next url and additional variables.
-				$container = array();
-				$container['url'] = 'skeleton.php';
-				$container['game_id'] = $game_id;
-				$container['HistoryDatabase'] = $databaseClassName;
-				$container['game_name'] = $games['Previous'][$index]['Name'];
-				$container['body'] = 'games_previous.php';
+foreach (Globals::getHistoryDatabases() as $databaseClassName) {
+	require_once(get_file_loc($databaseClassName.'.class.inc'));
+	//Old previous games
+	$historyDB = new $databaseClassName();
+	$historyDB->query('SELECT start_date, end_date, game_name, speed, game_id
+						FROM game ORDER BY game_id DESC');
+	if ($historyDB->getNumRows()) {
+		while ($historyDB->nextRecord()) {
+			$game_id = $historyDB->getField('game_id');
+			$index = $databaseClassName.$game_id;
+			$games['Previous'][$index]['ID'] = $game_id;
+			$games['Previous'][$index]['Name'] = $historyDB->getField('game_name');
+			$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT,$historyDB->getField('start_date'));
+			$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT,$historyDB->getField('end_date'));
+			$games['Previous'][$index]['Speed'] = $historyDB->getField('speed');
+			// create a container that will hold next url and additional variables.
+			$container = array();
+			$container['url'] = 'skeleton.php';
+			$container['game_id'] = $game_id;
+			$container['HistoryDatabase'] = $databaseClassName;
+			$container['game_name'] = $games['Previous'][$index]['Name'];
 
-				$games['Previous'][$index]['PreviousGameLink'] = SmrSession::getNewHREF($container);
-				$container['body'] = 'games_previous_hof.php';
-				$games['Previous'][$index]['PreviousGameHOFLink'] = SmrSession::getNewHREF($container);
-				$container['body'] = 'games_previous_news.php';
-				$games['Previous'][$index]['PreviousGameNewsLink'] = SmrSession::getNewHREF($container);
-				$container['body'] = 'games_previous_detail.php';
-				$games['Previous'][$index]['PreviousGameStatsLink'] = SmrSession::getNewHREF($container);
-			}
+			$container['body'] = 'games_previous.php';
+			$games['Previous'][$index]['PreviousGameLink'] = SmrSession::getNewHREF($container);
+			$container['body'] = 'games_previous_hof.php';
+			$games['Previous'][$index]['PreviousGameHOFLink'] = SmrSession::getNewHREF($container);
+			$container['body'] = 'games_previous_news.php';
+			$games['Previous'][$index]['PreviousGameNewsLink'] = SmrSession::getNewHREF($container);
+			$container['body'] = 'games_previous_detail.php';
+			$games['Previous'][$index]['PreviousGameStatsLink'] = SmrSession::getNewHREF($container);
 		}
 	}
-	$db = new SmrMySqlDatabase(); // restore database
 }
+$db = new SmrMySqlDatabase(); // restore database
 
 $template->assign('Games',$games);
 
