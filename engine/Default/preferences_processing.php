@@ -19,7 +19,7 @@ $friendlyColour = $_REQUEST['friendly_color'];
 $neutralColour = $_REQUEST['neutral_color'];
 $enemyColour = $_REQUEST['enemy_color'];
 
-if (USE_COMPATIBILITY && $action == 'Link Account') {
+if (Globals::useCompatibilityDatabases() && $action == 'Link Account') {
 	if(!$account->linkAccount($_REQUEST['oldAccountLogin'],$_REQUEST['oldAccountPassword'])) {
 		create_error('There is no old account with that username/password.');
 	}

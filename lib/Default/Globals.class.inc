@@ -645,11 +645,28 @@ class Globals {
 		return $templates[$templateName];
 	}
 
-	public static function getCompatibilityDatabases($dbType = false) {
-		if($dbType===false) {
-			return COMPATIBILITY_DATABASES;
+	/**
+	 * Returns an array of history database class names for which we
+	 * have ancient saved game data.
+	 */
+	public static function getHistoryDatabases() {
+		if (defined('HISTORY_DATABASES')) {
+			return HISTORY_DATABASES;
+		} else {
+			return array();
 		}
-		return COMPATIBILITY_DATABASES[$dbType];
+	}
+
+	public static function useCompatibilityDatabases() {
+		return defined('COMPATIBILITY_DATABASES');
+	}
+
+	public static function getCompatibilityDatabases() {
+		if (defined('COMPATIBILITY_DATABASES')) {
+			return COMPATIBILITY_DATABASES;
+		} else {
+			return array();
+		}
 	}
 }
 

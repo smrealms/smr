@@ -1,6 +1,4 @@
 <?php
-const USE_COMPATIBILITY = false;
-
 const URL = 'http://localhost';
 
 const ENABLE_DEBUG = true; // This is useful for debugging on dev machines.
@@ -22,24 +20,20 @@ const ENABLE_NPCS_CHESS = false;
 // Use the default value if using the provided docker-compose orchestration.
 const SMTP_HOSTNAME = 'smtp';
 
-const COMPATIBILITY_DATABASES = array();
+//const COMPATIBILITY_DATABASES =
 //	array(
-//		'Game' => array(
 //			'SmrClassicMySqlDatabase' => array(
-//				'GameType' => '1.2',
-//				'Column' => 'old_account_id'
-//			),
-//			'Smr12MySqlDatabase' => array(
-//				'GameType' => '1.2',
-//				'Column' => 'old_account_id2'
-//			)
+//			'GameType' => '1.2',
+//			'Column' => 'old_account_id'
 //		),
-//		'History' => array(
-//			'SmrClassicHistoryMySqlDatabase' => array(
-//				'GameType' => '1.2'
-//			),
-//			'Smr12HistoryMySqlDatabase' => array(
-//				'GameType' => '1.2'
-//			)
+//		'Smr12MySqlDatabase' => array(
+//			'GameType' => '1.2',
+//			'Column' => 'old_account_id2'
 //		)
+//	);
+
+//const HISTORY_DATABASES =
+//	array(
+//		'SmrClassicHistoryMySqlDatabase',
+//		'Smr12HistoryMySqlDatabase',
 //	);

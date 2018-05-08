@@ -208,8 +208,8 @@ abstract class AbstractSmrAccount {
 				}
 			}
 
-			if(USE_COMPATIBILITY) {
-				foreach(Globals::getCompatibilityDatabases('Game') as $databaseName => $databaseInfo) {
+			if (Globals::useCompatibilityDatabases()) {
+				foreach (Globals::getCompatibilityDatabases() as $databaseName => $databaseInfo) {
 					$this->oldAccountIDs[$databaseName] = $row[$databaseInfo['Column']];
 				}
 			}
@@ -612,7 +612,7 @@ abstract class AbstractSmrAccount {
 
 	public function linkAccount($login,$pass) {
 		$result = false;
-		foreach(Globals::getCompatibilityDatabases('Game') as $databaseClassName => $databaseInfo) {
+		foreach (Globals::getCompatibilityDatabases() as $databaseClassName => $databaseInfo) {
 			if($this->hasOldAccountID($databaseClassName))
 				continue;
 			require_once(get_file_loc($databaseClassName.'.class.inc'));
@@ -662,7 +662,7 @@ abstract class AbstractSmrAccount {
 		$db->query('SELECT * FROM account WHERE login = '.$db->escapeString($login).' LIMIT 1');
 		if($db->nextRecord())
 			return false;
-		foreach(Globals::getCompatibilityDatabases('Game') as $databaseClassName => $databaseInfo) {
+		foreach (Globals::getCompatibilityDatabases() as $databaseClassName => $databaseInfo) {
 			require_once(get_file_loc($databaseClassName.'.class.inc'));
 			$db2 = new $databaseClassName();
 			$db2->query('SELECT * FROM account
