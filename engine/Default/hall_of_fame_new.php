@@ -1,6 +1,6 @@
 <?php
 require_once(get_file_loc('hof.functions.inc'));
-$game_id =null;
+$game_id = null;
 if (isset($var['game_id'])) $game_id = $var['game_id'];
 $base = array();
 
@@ -16,14 +16,13 @@ $PHP_OUTPUT.=('<div class="center">');
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'hall_of_fame_player_detail.php';
-if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
+if (isset($game_id)) $container['game_id'] = $game_id;
 $PHP_OUTPUT.='Welcome to the Hall of Fame ' . $account->getHofName() . '!<br />The Hall of Fame is a comprehensive '.
 			'list of player accomplishments.  Here you can view how players rank in many different '.
 			'aspects of the game rather than just kills, deaths, and experience with the rankings system.<br />'.
 				create_link($container,'You can also view your Personal Hall of Fame here.').'<br /><br />';
 
 $db->query('SELECT type FROM hof_visibility WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
-//$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . (isset($var['game_id']) ? ' AND game_id='.$db->escapeNumber($var['game_id']) : '').' ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';
 const USER_SCORE_NAME = 'User Score';
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
@@ -38,7 +37,7 @@ while($db->nextRecord()) {
 	}
 	$hof = true;
 }
-$PHP_OUTPUT .= buildBreadcrumb($var,$hofTypes,isset($var['game_id'])?'Current HoF':'Global HoF');
+$PHP_OUTPUT .= buildBreadcrumb($var,$hofTypes,isset($game_id)?'Current HoF':'Global HoF');
 $PHP_OUTPUT.= '<table class="standard" align="center">';
 
 if(!isset($var['view'])) {
@@ -90,7 +89,7 @@ else {
 	$PHP_OUTPUT.=('<tr><th>Rank</th><th>Player</th><th>Total</th></tr>');
 
 
-	$gameIDSql = ' AND game_id '.(isset($var['game_id']) ? '= ' . $db->escapeNumber($var['game_id']) : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
+	$gameIDSql = ' AND game_id '.(isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
 
 	$vis = HOF_PUBLIC;
 	$rank=1;
@@ -123,7 +122,7 @@ else {
 			$amount = $db->getField('amount');
 		}
 		else if($vis==HOF_ALLIANCE) {
-			$rankInfo = getHofRank($var['view'], $viewType, $db->getField('account_id'), $var['game_id'], $db2);
+			$rankInfo = getHofRank($var['view'], $viewType, $db->getField('account_id'), $game_id, $db2);
 			$amount = $rankInfo['Amount'];
 		}
 		else {
@@ -132,7 +131,7 @@ else {
 		$PHP_OUTPUT .= displayHOFRow($rank++, $accountID, $amount);
 	}
 	if(!$foundMe) {
-		$rank = getHofRank($var['view'],$viewType,$account->getAccountID(),$var['game_id'],$db);
+		$rank = getHofRank($var['view'],$viewType,$account->getAccountID(),$game_id,$db);
 		$PHP_OUTPUT .= displayHOFRow($rank['Rank'],$account->getAccountID(),$rank['Amount']);
 	}
 }
