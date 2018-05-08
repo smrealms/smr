@@ -220,18 +220,33 @@ $link = SmrSession::getNewHREF($container);
 ## Global variables
 All pages are called with the following variables available (there may be more)
 
+### $db
+This is a global instance of the SmrMySqlDatabase class. It can be used for
+database queries anywhere, but be careful to avoid using it in two places
+simultaneously (doing so will cause database errors).
+
 ### $var
 $var contains all information passed using the $container from the previous page.
 This *can* be assigned to, but only using SmrSession::updateVar($name, $value)
 
+### $template
+The global instance of the Template class should be the _only_ instance, and
+it is used to assign variables for display processing.
+
 ### $account
-For any page loaded whilst logged in this contains the current SmrAccount object and should not be assigned to.
+This contains the current SmrAccount object and should not be assigned to.
 
 ### $player
-For any page loaded whilst within a game this contains the current SmrPlayer object and should not be assigned to.
+_[Scope: in game]_ This contains the current SmrPlayer object and should
+not be assigned to.
 
 ### $ship
-For any page loaded whilst within a game this contains the current SmrShip object and should not be assigned to.
+_[Scope: in game]_ This contains the current SmrShip object and should not be
+assigned to.
+
+### $sector
+_[Scope: in game]_ This contains the current SmrSector object and should not
+be assigned to.
 
 
 ## Request variables
