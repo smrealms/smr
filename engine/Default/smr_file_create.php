@@ -155,6 +155,10 @@ foreach ($galaxies as $galaxy) {
 			$file .= substr($forcesString,0,-1) . EOL;
 		}
 	}
+	SmrPort::clearCache();
+	SmrForce::clearCache();
+	SmrPlanet::clearCache();
+	SmrSector::clearCache();
 }
 
 $size = strlen($file);
