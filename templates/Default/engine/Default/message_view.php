@@ -101,9 +101,9 @@ else {
 							if (isset($MessageBox['GroupedMessages'])) {
 								$SubMessages = $MessageBox['GroupedMessages'][$Message['SenderID']]['Messages']; ?>
 								<br />
-								<a id="toggle-recent<?php echo $Message['SenderID']; ?>" href="javascript:toggleScoutGroup(<?php echo $Message['SenderID']; ?>)" target="_blank">
+								<div class="shrink noWrap pointer" id="toggle-recent<?php echo $Message['SenderID']; ?>" onclick="toggleScoutGroup(<?php echo $Message['SenderID']; ?>);">
 									Show/Hide Recent (<?php echo count($SubMessages); ?>)
-								</a>
+								</div>
 								<table id="group<?php echo $Message['SenderID']; ?>" class="standard fullwidth" style="display:none;margin:5px 0 2px 0;"><?php
 									foreach ($SubMessages as $SubMessage) { ?>
 										<tr>
