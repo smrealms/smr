@@ -1165,7 +1165,9 @@ abstract class AbstractSmrPlayer {
 		else {
 			$currentStep = $MISSIONS[$missionID]['Steps'][$mission['On Step']];
 			$currentStep['Text'] = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$mission['Sector'],$mission['Starting Sector'],$this->playerName),$currentStep['Text']);
-			$currentStep['Task'] = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$mission['Sector'],$mission['Starting Sector'],$this->playerName),$currentStep['Task']);
+			if (isset($currentStep['Task'])) {
+				$currentStep['Task'] = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$mission['Sector'],$mission['Starting Sector'],$this->playerName),$currentStep['Task']);
+			}
 			if (isset($currentStep['Level'])) {
 				$currentStep['Level'] = str_replace('<Player Level>',$this->levelID,$currentStep['Level']);
 			}
