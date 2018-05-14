@@ -115,11 +115,7 @@ else {
 	$log_notes = array_unique($log_notes);
 
 	// flattens array
-	foreach ($log_notes as $note) {
-		if ($flat_notes)
-			$flat_notes .= EOL;
-		$flat_notes .= $note;
-	}
+	$flat_notes = join(EOL, $log_notes);
 
 	$PHP_OUTPUT.=('<textarea spellcheck="true" name="notes" style="width:300px; height:200px;" id="InputFields">'.$flat_notes.'</textarea>');
 	$PHP_OUTPUT.=('</form>');
