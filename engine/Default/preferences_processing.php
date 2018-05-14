@@ -8,16 +8,6 @@ else {
 	$container['body'] = 'game_play.php';
 }
 $action = $_REQUEST['action'];
-$email = $_REQUEST['email'];
-$new_password = $_REQUEST['new_password'];
-$old_password = $_REQUEST['old_password'];
-$retype_password = $_REQUEST['retype_password'];
-$HoF_name = trim($_REQUEST['HoF_name']);
-$discordId = trim($_REQUEST['discord_id']);
-$ircNick = trim($_REQUEST['irc_nick']);
-$friendlyColour = $_REQUEST['friendly_color'];
-$neutralColour = $_REQUEST['neutral_color'];
-$enemyColour = $_REQUEST['enemy_color'];
 
 if (Globals::useCompatibilityDatabases() && $action == 'Link Account') {
 	if(!$account->linkAccount($_REQUEST['oldAccountLogin'],$_REQUEST['oldAccountPassword'])) {
@@ -26,6 +16,8 @@ if (Globals::useCompatibilityDatabases() && $action == 'Link Account') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have linked your old account.';
 }
 else if ($action == 'Save and resend validation code') {
+	$email = $_REQUEST['email'];
+
 	// get user and host for the provided address
 	list($user, $host) = explode('@', $email);
 
@@ -71,6 +63,10 @@ else if ($action == 'Save and resend validation code') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
 }
 elseif ($action == 'Change Password') {
+	$new_password = $_REQUEST['new_password'];
+	$old_password = $_REQUEST['old_password'];
+	$retype_password = $_REQUEST['retype_password'];
+
 	if (empty($new_password))
 		create_error('You must enter a non empty password!');
 
@@ -87,6 +83,8 @@ elseif ($action == 'Change Password') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your password.';
 }
 elseif ($action == 'Change Name') {
+	$HoF_name = trim($_REQUEST['HoF_name']);
+
 	$limited_char = 0;
 	for ($i = 0; $i < strlen($HoF_name); $i++) {
 		// disallow certain ascii chars
@@ -120,6 +118,8 @@ elseif ($action == 'Change Name') {
 }
 
 elseif ($action == 'Change Discord ID') {
+	$discordId = trim($_REQUEST['discord_id']);
+
 	if (empty($discordId)) {
 		$account->setDiscordId(null);
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have deleted your Discord User ID.';
@@ -135,6 +135,8 @@ elseif ($action == 'Change Discord ID') {
 }
 
 elseif ($action == 'Change IRC Nick') {
+	$ircNick = trim($_REQUEST['irc_nick']);
+
 	for ($i = 0; $i < strlen($ircNick); $i++) {
 		// disallow certain ascii chars (and whitespace!)
 		if (ord($ircNick[$i]) < 33 || ord($ircNick[$i]) > 127)
@@ -278,6 +280,10 @@ else if (strpos(trim($action),'Alter Player')===0) {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 }
 else if ($action == 'Update Colours') {
+	$friendlyColour = $_REQUEST['friendly_color'];
+	$neutralColour = $_REQUEST['neutral_color'];
+	$enemyColour = $_REQUEST['enemy_color'];
+
 	if (strlen($friendlyColour) == 6) {
 		$account->setFriendlyColour($friendlyColour);
 	}
