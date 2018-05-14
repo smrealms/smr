@@ -23,7 +23,7 @@ if (!is_array($account_ids) || count($account_ids) == 0)
 	$PHP_OUTPUT.=create_error('You have to select the log files you want to view/delete!');
 $account_list = $db->escapeArray($account_ids);
 
-$action = $_REQUEST['action'];
+$action = SmrSession::getRequestVar('action');
 if ($action == 'Delete') {
 
 	// get rid of all entries
