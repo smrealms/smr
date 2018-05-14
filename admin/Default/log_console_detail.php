@@ -101,7 +101,6 @@ else {
 	transfer('item');
 	$PHP_OUTPUT.=create_echo_form($container);
 
-	$PHP_OUTPUT.=('<input type="hidden" name="account_ids" value="'.$account_ids.'">');
 	$PHP_OUTPUT.=create_submit('Save');
 	$PHP_OUTPUT.=('<br /><br />');
 
