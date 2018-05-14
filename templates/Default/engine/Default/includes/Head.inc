@@ -1,5 +1,5 @@
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-<title><?php echo $Title; ?> <?php if(isset($GameName)) echo $GameName; ?></title>
+<title><?php echo $Title; ?><?php if(isset($GameName)) echo ": $GameName"; ?></title>
 <meta http-equiv="pragma" content="no-cache" /><?php
 if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled()) { ?>
 	<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>" />
