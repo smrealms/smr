@@ -54,6 +54,7 @@ $container['alliance_id'] = $alliance->getAllianceID();
 
 $template->assign('CreateRole', array(
 	'HREF' => SmrSession::getNewHREF($container),
+	'RoleID' => '',
 	'Name' => '',
 	'CreatingRole' => true,
 	'EditingRole' => true,
