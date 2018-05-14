@@ -1,24 +1,27 @@
 <?php
 $alliance_id = isset($var['alliance_id']) ? $var['alliance_id'] : $player->getAllianceID();
 
-if ($_REQUEST['unlimited']) $withPerDay = ALLIANCE_BANK_UNLIMITED;
+// Checkbox inputs only post if they are checked
+$unlimited = isset($_REQUEST['unlimited']);
+$positiveBalance = isset($_REQUEST['positive']);
+$changePass = isset($_REQUEST['changePW']);
+$removeMember = isset($_REQUEST['removeMember']);
+$changeMOD = isset($_REQUEST['changeMoD']);
+$changeRoles = isset($_REQUEST['changeRoles']) || (isset($var['role_id']) && $var['role_id'] == 1); //Leader can always change roles.
+$planetAccess = isset($_REQUEST['planets']);
+$mbMessages = isset($_REQUEST['mbMessages']);
+$exemptWith = isset($_REQUEST['exemptWithdrawals']);
+$sendAllMsg = isset($_REQUEST['sendAllMsg']);
+$viewBonds = isset($_REQUEST['viewBonds']);
+
+if ($unlimited) $withPerDay = ALLIANCE_BANK_UNLIMITED;
 else $withPerDay = $_REQUEST['maxWith'];
 if (!is_numeric($withPerDay) || ($withPerDay < 0 && $withPerDay != ALLIANCE_BANK_UNLIMITED)) {
 	create_error('You must enter a number for max withdrawals per 24 hours.');
 }
-$positiveBalance = (bool)$_REQUEST['positive'];
 if($withPerDay == ALLIANCE_BANK_UNLIMITED && $positiveBalance) {
 	create_error('You cannot have both unlimited withdrawals and a positive balance limit.');
 }
-$changePass = (bool)$_REQUEST['changePW'];
-$removeMember = (bool)$_REQUEST['removeMember'];
-$changeMOD = (bool)$_REQUEST['changeMoD'];
-$changeRoles = (bool)((isset($var['role_id']) && $var['role_id'] == 1) || $_REQUEST['changeRoles']); //Leader can always change roles.
-$planetAccess = (bool)$_REQUEST['planets'];
-$mbMessages = (bool)$_REQUEST['mbMessages'];
-$exemptWith = (bool)$_REQUEST['exemptWithdrawals'];
-$sendAllMsg = (bool)$_REQUEST['sendAllMsg'];
-$viewBonds = (bool)$_REQUEST['viewBonds'];
 
 // with empty role the user wants to create a new entry
 if (!isset($var['role_id'])) {

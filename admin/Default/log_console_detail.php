@@ -23,7 +23,7 @@ if (!is_array($account_ids) || count($account_ids) == 0)
 	$PHP_OUTPUT.=create_error('You have to select the log files you want to view/delete!');
 $account_list = $db->escapeArray($account_ids);
 
-$action = $_REQUEST['action'];
+$action = SmrSession::getRequestVar('action');
 if ($action == 'Delete') {
 
 	// get rid of all entries
@@ -101,7 +101,6 @@ else {
 	transfer('item');
 	$PHP_OUTPUT.=create_echo_form($container);
 
-	$PHP_OUTPUT.=('<input type="hidden" name="account_ids" value="'.$account_ids.'">');
 	$PHP_OUTPUT.=create_submit('Save');
 	$PHP_OUTPUT.=('<br /><br />');
 
@@ -116,11 +115,7 @@ else {
 	$log_notes = array_unique($log_notes);
 
 	// flattens array
-	foreach ($log_notes as $note) {
-		if ($flat_notes)
-			$flat_notes .= EOL;
-		$flat_notes .= $note;
-	}
+	$flat_notes = join(EOL, $log_notes);
 
 	$PHP_OUTPUT.=('<textarea spellcheck="true" name="notes" style="width:300px; height:200px;" id="InputFields">'.$flat_notes.'</textarea>');
 	$PHP_OUTPUT.=('</form>');
