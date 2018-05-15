@@ -1,6 +1,7 @@
 <?php
-$action = $_REQUEST['action'];
-if ($action == 'Marked Messages') {
+
+// If not deleting marked messages, we are deleting entire folders
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Marked Messages') {
 	$message_id = $_REQUEST['message_id'];
 	if (!isset($message_id))
 		create_error('You must choose the messages you want to delete.');
