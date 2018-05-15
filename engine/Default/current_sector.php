@@ -62,18 +62,22 @@ $template->assign('UnreadMissions', $var['UnreadMissions']);
 // *
 // *******************************************
 $turnsMessage = '';
-switch($player->getTurnsLevel()) {
-	case 'NONE':
-		$turnsMessage = '<span class="red">WARNING</span>: You have run out of turns!';
-	break;
-	case 'LOW':
-		$turnsMessage = '<span class="red">WARNING</span>: You are almost out of turns!';
-	break;
-	case 'MEDIUM':
-		$turnsMessage = '<span class="yellow">WARNING</span>: You are running out of turns!';
-	break;
+$game = SmrGame::getGame($player->getGameID());
+if ($game->getStartTurnsDate() > TIME) {
+	$turnsMessage = 'Turns will be given when the game starts in ' . format_time($game->getStartTurnsDate() - TIME) . '!';
+} else {
+	switch($player->getTurnsLevel()) {
+		case 'NONE':
+			$turnsMessage = '<span class="red">WARNING</span>: You have run out of turns!';
+		break;
+		case 'LOW':
+			$turnsMessage = '<span class="red">WARNING</span>: You are almost out of turns!';
+		break;
+		case 'MEDIUM':
+			$turnsMessage = '<span class="yellow">WARNING</span>: You are running out of turns!';
+		break;
+	}
 }
-
 $template->assign('TurnsMessage',$turnsMessage);
 
 $protectionMessage = '';
