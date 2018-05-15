@@ -22,11 +22,11 @@ if ($_REQUEST['action'] == 'Change') {
 	if (in_array(PERMISSION_DISPLAY_ADMIN_TAG, $_POST['permission_ids'])) {
 		// This might overwrite an existing unrelated tag.
 		$tag = '<span class="blue">Admin</span>';
-		$db->query('REPLACE INTO cpl_tag (account_id, tag) VALUES ('.$db->escapeNumber($var['admin_id']).','.$db->escapeString($tag).')');
+		$db->query('REPLACE INTO cpl_tag (account_id, tag, custom) VALUES ('.$db->escapeNumber($var['admin_id']).','.$db->escapeString($tag).',0)');
 	} elseif ($hadAdminTag) {
 		// Only delete the tag if they previously had an admin tag;
 		// otherwise we might accidentally delete an unrelated tag.
-		$db->query('DELETE FROM cpl_tag WHERE account_id='.$db->escapeNumber($var['admin_id']));
+		$db->query('DELETE FROM cpl_tag WHERE custom=0 AND account_id='.$db->escapeNumber($var['admin_id']));
 	}
 }
 
