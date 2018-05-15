@@ -72,12 +72,12 @@ if ($count_last_active > 0) {
 		$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
 		$db2->query('SELECT * FROM cpl_tag WHERE account_id = ' . $db2->escapeNumber($curr_player->getAccountID()) . ' ORDER BY custom DESC');
 		while ($db2->nextRecord()) {
-			if ($db2->getField('custom')) {
-				$name = $db2->getField('tag') . ' ' . $curr_player->getDisplayName();
-				if ($db2->getField('custom_rank')) $name .= ' (' . $db2->getField('custom_rank') . ')';
-				else $name .= ' (' . $curr_player->getLevelName() . ')';
+			if (!empty($db2->getField('custom_rank'))) {
+				$name = $db2->getField('custom_rank') . ' ' . $curr_player->getDisplayName();
 			}
-			else $name .= ' ' . $db2->getField('tag');
+			if (!empty($db2->getField('tag'))) {
+				$name .= ' ' . $db2->getField('tag');
+			}
 		}
 		$row['name_link'] = create_link($container, $name);
 

@@ -38,6 +38,7 @@ class AdminPermissions {
 		33 => ['Enable Games', 'enable_game.php', 5],
 		34 => ['Manage Galactic Post Editors', 'manage_post_editors.php', 5],
 		35 => ['Manage Draft Leaders', 'manage_draft_leaders.php', 5],
+		36 => ['Display Admin Tag', '', 2],
 	];
 
 	private const PERMISSION_CATEGORIES = [
