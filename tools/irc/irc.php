@@ -134,6 +134,9 @@ while ($running) {
 			stream_set_blocking($fp, true);
 			while (!feof($fp)) {
 				readFromStream($fp);
+				// Close database connection between calls to avoid
+				// stale or timed out server errors.
+				$db->close();
 			}
 			fclose($fp); // close socket
 
