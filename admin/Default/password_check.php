@@ -2,6 +2,8 @@
 
 $template->assign('PageTopic','Password Checker');
 
+$action = SmrSession::getRequestVar('action');
+
 // create account object
 $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();
