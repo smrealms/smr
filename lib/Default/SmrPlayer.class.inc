@@ -1857,7 +1857,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 							WHERE '.$this->SQL.' AND message_type_id = ' . $this->db->escapeNumber($messageTypeID));
 	}
 
-	public function &getPlottedCourse() {
+	public function getPlottedCourse() {
 		if(!isset($this->plottedCourse)) {
 			require_once(get_file_loc('Plotter.class.inc'));
 			// check if we have a course plotted
