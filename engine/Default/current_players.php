@@ -52,8 +52,7 @@ if ($count_last_active > 0) {
 	while ($db->nextRecord()) {
 		$row = array();
 
-		$accountID = $db->getField('account_id');
-		$curr_player =& SmrPlayer::getPlayer($accountID, $player->getGameID());
+		$curr_player = SmrPlayer::getPlayer($db->getRow(), $player->getGameID());
 		$row['player'] = $curr_player;
 
 		// How should we style the row for this player?
