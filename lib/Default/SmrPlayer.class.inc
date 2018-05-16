@@ -1888,9 +1888,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $this->plottedCourse;
 	}
 
-	public function setPlottedCourse(Distance &$plottedCourse) {
+	public function setPlottedCourse(Distance $plottedCourse) {
 		$hadPlottedCourse = $this->hasPlottedCourse();
-		$this->plottedCourse =& $plottedCourse;
+		$this->plottedCourse = $plottedCourse;
 		if ($this->plottedCourse->getTotalSectors()>0)
 			$this->db->query('REPLACE INTO player_plotted_course
 				(account_id, game_id, course)
