@@ -1877,8 +1877,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 			if ($this->plottedCourse->getNextOnPath() == $this->getSectorID()) {
 				// We have walked into the next sector of the course
-				$usedWarp = $this->getSector()->hasWarp() && $this->getSector()->getWarp() == $this->lastSectorID;
-				$this->plottedCourse->followPath($usedWarp);
+				$this->plottedCourse->followPath();
 				$this->setPlottedCourse($this->plottedCourse);
 			} elseif ($this->plottedCourse->isInPath($this->getSectorID())) {
 				// We have skipped to some later sector in the course
