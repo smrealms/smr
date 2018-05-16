@@ -43,6 +43,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 //	protected $changedStats;
 	protected $mining;
 	protected $plottedCourse;
+	protected $plottedCourseFrom;
 	protected $nameChanged;
 	protected $combatDronesKamikazeOnMines;
 
@@ -1865,14 +1866,25 @@ class SmrPlayer extends AbstractSmrPlayer {
 			if ($this->db->nextRecord()) {
 				// get the course back
 				$this->plottedCourse = unserialize($this->db->getField('course'));
-				$endSectorID = $this->plottedCourse->getEndSectorID();
-				if ($endSectorID != $this->getSectorID() && $this->isPartOfCourse($this->getSector())) {
-					// Current sector is in the path, we have jumped along it somehow
-					$this->setPlottedCourse($this->plottedCourse->skipToSector($this->getSectorID()));
-				}
-			}
-			else
+			} else {
 				$this->plottedCourse = false;
+			}
+		}
+
+		// Update the plotted course if we have moved since the last query
+		if ($this->plottedCourse !== false && (!isset($this->plottedCourseFrom) || $this->plottedCourseFrom != $this->getSectorID())) {
+			$this->plottedCourseFrom = $this->getSectorID();
+
+			if ($this->plottedCourse->getNextOnPath() == $this->getSectorID()) {
+				// We have walked into the next sector of the course
+				$usedWarp = $this->getSector()->hasWarp() && $this->getSector()->getWarp() == $this->lastSectorID;
+				$this->plottedCourse->followPath($usedWarp);
+				$this->setPlottedCourse($this->plottedCourse);
+			} elseif ($this->plottedCourse->isInPath($this->getSectorID())) {
+				// We have skipped to some later sector in the course
+				$this->plottedCourse->skipToSector($this->getSectorID());
+				$this->setPlottedCourse($this->plottedCourse);
+			}
 		}
 		return $this->plottedCourse;
 	}

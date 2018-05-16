@@ -100,15 +100,6 @@ acquire_lock($player->getSectorID());
 // get new sector object
 $sector =& $player->getSector();
 
-// If we have jumped into a future of our plotted course, update!
-if ($player->hasPlottedCourse()) {
-	$path = $player->getPlottedCourse();
-	if ($path->isInPath($sector->getSectorID())) {
-		$path->skipToSector($sector->getSectorID());
-		$player->setPlottedCourse($path);
-	}
-}
-
 // make current sector visible to him
 $sector->markVisited($player);
 
