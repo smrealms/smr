@@ -17,19 +17,19 @@ if ($ThisShip->hasScanner()) {
 		<tr>
 		<tr>
 			<td>Shields</td>
-			<td align="center"><?php echo $Port->getShields(); ?></td>
+			<td id="port_shields" class="center ajax"><?php echo $Port->getShields(); ?></td>
 		</tr>
 		<tr>
 			<td>Combat Drones</td>
-			<td align="center"><?php echo $Port->getCDs(); ?></td>
+			<td id="port_cds" class="center ajax"><?php echo $Port->getCDs(); ?></td>
 		</tr>
 		<tr>
 			<td>Armour</td>
-			<td align="center"><?php echo $Port->getArmour(); ?></td>
+			<td id="port_armour" class="center ajax"><?php echo $Port->getArmour(); ?></td>
 		</tr>
 		<tr>
 			<td>Turrets</td>
-			<td align="center"><?php echo $Port->getNumWeapons(); ?></td>
+			<td id="port_turrets" class="center ajax"><?php echo $Port->getNumWeapons(); ?></td>
 		</tr>
 	</table>
 	<br /><?php
@@ -43,3 +43,12 @@ Are you sure you want to attack this port?<br /><br />
 <div class="buttonA">
 	<a class="buttonA" href="<?php echo Globals::getCurrentSectorHREF(); ?>">&nbsp;No&nbsp;</a>
 </div>
+
+<br /><br />
+<span id="reinforce" class="red"><?php
+if ($Port->isUnderAttack()) { ?>
+	The port is under attack and has activated its distress beacon!<br />
+	Federal reinforcements will arrive to defend the port in
+	<?php echo format_time($Port->getReinforceTime() - TIME) . '.';
+}
+?></span>
