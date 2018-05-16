@@ -75,6 +75,7 @@ const BUYER_RESTRICTION_PLANET = 5;
  */
 const ALIGNMENT_GOOD = 100;
 const ALIGNMENT_EVIL = -100;
+const ALIGNMENT_PRESIDENT = 150;
 
 /*
  * Log types

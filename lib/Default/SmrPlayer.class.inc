@@ -1581,8 +1581,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	public function isPresident() {
-		$president = Council::getPresident($this->getGameID(),$this->getRaceID());
-		return is_object($president) && $this->equals($president);
+		return Council::getPresidentID($this->getGameID(), $this->getRaceID()) == $this->getAccountID();
 	}
 
 	public function isOnCouncil() {

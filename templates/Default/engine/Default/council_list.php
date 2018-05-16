@@ -1,8 +1,9 @@
 <div align="center">
 	<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 	<h3>President</h3><br/><?php
-	$President =& Council::getPresident($ThisPlayer->getGameID(),$RaceID);
-	if ($President !== false) { ?>
+	$PresidentID = Council::getPresidentID($ThisPlayer->getGameID(), $RaceID);
+	if ($PresidentID !== false) {
+		$President = SmrPlayer::getPlayer($PresidentID, $ThisPlayer->getGameID()); ?>
 		<table class="standard" width="75%">
 			<thead>
 				<tr>
