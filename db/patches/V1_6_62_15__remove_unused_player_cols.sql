@@ -11,3 +11,5 @@ ALTER TABLE player DROP COLUMN stunned,
                    DROP COLUMN kicked,
                    DROP COLUMN last_shield_update,
                    DROP COLUMN fleed;
+
+ALTER TABLE player DROP COLUMN last_ship_mod;

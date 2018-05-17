@@ -22,7 +22,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	protected $originalMaintenance;
 	protected $lastTurnUpdate;
-	protected $lastShipMod;
 	protected $lastNewsUpdate;
 	protected $attackColour;
 //	protected $pastKnowledge;
@@ -160,7 +159,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->originalMaintenance			= $this->turns;
 			$this->lastTurnUpdate				= (int) $result['last_turn_update'];
 			$this->newbieTurns					= (int) $result['newbie_turns'];
-			$this->lastShipMod					= (int) $result['last_ship_mod'];
 			$this->lastNewsUpdate				= (int) $result['last_news_update'];
 			$this->attackColour					= (string) $result['attack_warning'];
 			$this->dead							= $result['dead']=='TRUE';
@@ -276,8 +274,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->lastPort;
 			case 'Last News':
 				return $this->lastNewsUpdate;
-			case 'Last Ship Mod':
-				return $this->lastShipMod;
 			case 'Default Zoom':
 				return $this->zoom;
 //			case 'Default Zoom Toggle':
@@ -655,18 +651,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->lastTurnUpdate=$time;
 		$this->hasChanged=true;
 //		$sql = $this->db->query('UPDATE player SET last_turn_update = ' . $this->lastTurnUpdate . ' WHERE '. $this->SQL . ' LIMIT 1');
-	}
-
-	function getLastShipMod() {
-		return $this->lastShipMod;
-	}
-
-	function setLastShipMod($time) {
-		if($this->lastShipMod == $time)
-			return;
-		$this->lastShipMod = $time;
-		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET last_ship_mod = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
 	function getPastMaintBought() {
@@ -1345,7 +1329,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', turns='.$this->db->escapeNumber($this->turns).
 				', last_turn_update='.$this->db->escapeNumber($this->lastTurnUpdate).
 				', newbie_turns='.$this->db->escapeNumber($this->newbieTurns).
-				', last_ship_mod='.$this->db->escapeNumber($this->lastShipMod).
 				', last_news_update='.$this->db->escapeNumber($this->lastNewsUpdate).
 				', attack_warning='.$this->db->escapeString($this->attackColour).
 				', dead='.$this->db->escapeBoolean($this->dead).

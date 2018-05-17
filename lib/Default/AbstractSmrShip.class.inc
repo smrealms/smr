@@ -870,33 +870,6 @@ abstract class AbstractSmrShip {
 		return $armourDamage;
 	}
 
-	public function getTotalUpgradeSpace() {
-		//TODO
-		return 0;
-	}
-
-	public function getUsedUpgradeSpace() {
-		//TODO
-		return 0;
-	}
-
-	public function getFreeUpgradeSpace() {
-		return $this->getTotalUpgradeSpace()-$this->getUsedUpgradeSpace();
-	}
-
-	public function getLastDowngrade() {
-		return 0;
-	}
-
-	public function canDowngrade() {
-		return $this->getRemainingDowngradeWait() <= 0;
-	}
-
-	public function getRemainingDowngradeWait() {
-		$downgradeWait = 24 * 3600;
-		return $this->getLastDowngrade() - (TIME - $downgradeWait);
-	}
-
 	public function isFederal() {
 		return $this->getShipTypeID() == 20 || $this->getShipTypeID() == 21 || $this->getShipTypeID() == 22;
 	}
@@ -1128,13 +1101,4 @@ abstract class AbstractSmrShip {
 					);
 	}
 
-	public function getUpgradeShipHREF() {
-		if(!isset($this->upgradeShipHREF)) {
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'ship_upgrade.php';
-			$this->upgradeShipHREF = SmrSession::getNewHREF($container);
-		}
-		return $this->upgradeShipHREF;
-	}
 }
