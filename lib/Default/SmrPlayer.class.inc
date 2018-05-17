@@ -159,7 +159,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->attackColour					= (string) $result['attack_warning'];
 			$this->dead							= $result['dead']=='TRUE';
 			$this->npc							= $result['npc']=='TRUE';
-			$this->startDead					= $this->dead;
 			$this->landedOnPlanet				= $result['land_on_planet']=='TRUE';
 			$this->lastActive					= (int) $result['last_active'];
 			$this->lastCPLAction				= (int) $result['last_cpl_action'];

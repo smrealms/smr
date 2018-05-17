@@ -21,7 +21,6 @@ abstract class AbstractSmrPlayer {
 	protected $newbieTurns;
 	protected $dead;
 	protected $npc;
-	protected $startDead;
 	protected $landedOnPlanet;
 	protected $lastActive;
 	protected $raceID;
@@ -227,10 +226,6 @@ abstract class AbstractSmrPlayer {
 
 	public function canFight() {
 		return !$this->hasNewbieTurns() && !$this->isDead() && !$this->hasFederalProtection();
-	}
-
-	public function getStartDead() {
-		return $this->startDead;
 	}
 
 	public function setDead($bool) {

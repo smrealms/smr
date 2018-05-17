@@ -16,7 +16,6 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$this->newbieTurns				= 0;
 		$this->lastNewsUpdate			= 0;
 		$this->dead						= false;
-		$this->startDead				= $this->dead;
 		$this->landedOnPlanet			= false;
 		$this->lastActive				= 0;
 		$this->lastCPLAction			= 0;
