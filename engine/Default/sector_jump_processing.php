@@ -87,8 +87,6 @@ $player->takeTurns($turnsToJump,$turnsToJump);
 // log action
 $account->log(LOG_TYPE_MOVEMENT, 'Jumps to sector: '.$target.' but hits: '.$player->getSectorID(), $sector->getSectorID());
 
-//$player->sector_change();
-//$player->detected = 'false';
 $player->update();
 
 // We need to release the lock on our old sector

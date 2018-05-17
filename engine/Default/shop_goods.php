@@ -92,8 +92,6 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 	}
 }
 $player->setLastPort($player->getSectorID());
-//update controlled in db
-$player->controlled = $player->getSectorID();
 $boughtGoods = $port->getVisibleGoodsBought($player);
 if (!empty($boughtGoods)) {
 	$PHP_OUTPUT.=('<h2>The port sells you the following:</h2>');
