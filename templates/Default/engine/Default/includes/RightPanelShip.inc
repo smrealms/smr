@@ -6,8 +6,8 @@ if(isset($GameID)) { ?>
 	}
 	?></span>
 	<a href="ship_list.php" target="shipList">
-		<span id="ship_name"><?php /*<a href="<?php echo $ThisShip->getUpgradeShipHREF(); ?>">*/ ?>
-			<span class="yellow bold"><?php echo $ThisShip->getName(); ?></span><?php /*</a>*/ ?>
+		<span id="ship_name">
+			<span class="yellow bold"><?php echo $ThisShip->getName(); ?></span>
 		</span>
 	</a><br />
 	<?php

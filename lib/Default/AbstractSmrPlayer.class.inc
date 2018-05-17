@@ -21,9 +21,7 @@ abstract class AbstractSmrPlayer {
 	protected $newbieTurns;
 	protected $dead;
 	protected $npc;
-	protected $startDead;
 	protected $landedOnPlanet;
-	protected $lastShieldUpdate;
 	protected $lastActive;
 	protected $raceID;
 	protected $credits;
@@ -34,8 +32,6 @@ abstract class AbstractSmrPlayer {
 	protected $shipID;
 	protected $kills;
 	protected $deaths;
-	protected $goods;
-	protected $goodsExpGained;
 	protected $gadgets;
 	protected $stats;
 	protected $pastMaintBought;
@@ -101,17 +97,6 @@ abstract class AbstractSmrPlayer {
 		if($this->shipID == $shipID)
 			return;
 		$this->shipID=$shipID;
-		$this->hasChanged=true;
-	}
-
-	public function getLastShieldUpdate() {
-		return $this->lastShieldUpdate;
-	}
-
-	public function setLastShieldUpdate($time) {
-		if($this->lastShieldUpdate == $time)
-			return;
-		$this->lastShieldUpdate=$time;
 		$this->hasChanged=true;
 	}
 
@@ -239,10 +224,6 @@ abstract class AbstractSmrPlayer {
 
 	public function canFight() {
 		return !$this->hasNewbieTurns() && !$this->isDead() && !$this->hasFederalProtection();
-	}
-
-	public function getStartDead() {
-		return $this->startDead;
 	}
 
 	public function setDead($bool) {

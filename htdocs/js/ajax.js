@@ -124,22 +124,6 @@ var exec = function(s) {
 		}
 	};
 
-	/*
-	function sendMessage() {
-		var msgBox = document.getElementById('messageBox');
-		$.get('/Webtech/SendMessage', {msg: msgBox.value}, updateChatCallback, 'xml');
-		msgBox.value = '';
-	};
-
-	function updateChat() {
-		$.get('/Webtech/UpdateChat', updateChatCallback, 'xml');
-	};
-
-	function updateChatCallback(data) {
-		document.getElementById('chat').innerHTML = getTextElem(data, 'CHAT');
-	};
-	*/
-
 
 	//Globals
 	window.startRefresh = function(_refreshSpeed) {

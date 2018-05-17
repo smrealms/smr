@@ -11,7 +11,6 @@ $message = 'You have been kicked from ' . $planet->getName() . ' in ' . Globals:
 $player->sendMessage($planetPlayer->getAccountID(), MSG_PLAYER, $message, false);
 
 $planetPlayer->setLandedOnPlanet(false);
-$planetPlayer->setKicked(true);
 $planetPlayer->update();
 
 forward(create_container('skeleton.php', 'planet_main.php'));
