@@ -293,12 +293,13 @@ class Distance {
 		return $this->path[0];
 	}
 	
-	public function followPath($isWarp=false) {
-		if($isWarp===false)
-			$this->distance--;
-		else
+	public function followPath() {
+		$nextSectorID = array_shift($this->path);
+		if (in_array($nextSectorID, array_values($this->warpMap))) {
 			$this->numWarps--;
-		return array_shift($this->path);
+		} else {
+			$this->distance--;
+		}
 	}
 	
 	public function removeStart() {

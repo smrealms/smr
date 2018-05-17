@@ -34,6 +34,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	protected $ignoreGlobals;
 	protected $mining;
 	protected $plottedCourse;
+	protected $plottedCourseFrom;
 	protected $nameChanged;
 	protected $combatDronesKamikazeOnMines;
 
@@ -1677,7 +1678,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 							WHERE '.$this->SQL.' AND message_type_id = ' . $this->db->escapeNumber($messageTypeID));
 	}
 
-	public function &getPlottedCourse() {
+	public function getPlottedCourse() {
 		if(!isset($this->plottedCourse)) {
 			require_once(get_file_loc('Plotter.class.inc'));
 			// check if we have a course plotted
@@ -1686,21 +1687,31 @@ class SmrPlayer extends AbstractSmrPlayer {
 			if ($this->db->nextRecord()) {
 				// get the course back
 				$this->plottedCourse = unserialize($this->db->getField('course'));
-				$endSectorID = $this->plottedCourse->getEndSectorID();
-				if ($endSectorID != $this->getSectorID() && $this->isPartOfCourse($this->getSector())) {
-					// Current sector is in the path, we have jumped along it somehow
-					$this->setPlottedCourse($this->plottedCourse->skipToSector($this->getSectorID()));
-				}
-			}
-			else
+			} else {
 				$this->plottedCourse = false;
+			}
+		}
+
+		// Update the plotted course if we have moved since the last query
+		if ($this->plottedCourse !== false && (!isset($this->plottedCourseFrom) || $this->plottedCourseFrom != $this->getSectorID())) {
+			$this->plottedCourseFrom = $this->getSectorID();
+
+			if ($this->plottedCourse->getNextOnPath() == $this->getSectorID()) {
+				// We have walked into the next sector of the course
+				$this->plottedCourse->followPath();
+				$this->setPlottedCourse($this->plottedCourse);
+			} elseif ($this->plottedCourse->isInPath($this->getSectorID())) {
+				// We have skipped to some later sector in the course
+				$this->plottedCourse->skipToSector($this->getSectorID());
+				$this->setPlottedCourse($this->plottedCourse);
+			}
 		}
 		return $this->plottedCourse;
 	}
 
-	public function setPlottedCourse(Distance &$plottedCourse) {
+	public function setPlottedCourse(Distance $plottedCourse) {
 		$hadPlottedCourse = $this->hasPlottedCourse();
-		$this->plottedCourse =& $plottedCourse;
+		$this->plottedCourse = $plottedCourse;
 		if ($this->plottedCourse->getTotalSectors()>0)
 			$this->db->query('REPLACE INTO player_plotted_course
 				(account_id, game_id, course)

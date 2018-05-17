@@ -12,11 +12,7 @@ $path->removeStart();
 $next_sector = $path->getNextOnPath();
 
 if ($player->getSector()->isLinked($next_sector)) {
-
-	// save this to db (if we still have something)
-	if ($path->getTotalSectors()>0) {
 		$player->setPlottedCourse($path);
-	}
 
 	if (!$player->isLandedOnPlanet()) {
 		// If the course can immediately be followed, display it on the current sector page

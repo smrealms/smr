@@ -10,19 +10,6 @@ else
 
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-	//update plot
-	if ($player->hasPlottedCourse()) {
-		$path = $player->getPlottedCourse();
-		if ($path->getNextOnPath() == $var['target_sector']) {
-			$path->followPath($sector->getWarp() == $var['target_sector']);
-			$player->setPlottedCourse($path);
-		} elseif ($path->isInPath($var['target_sector'])) {
-			// Did we re-enter the course down the line?
-			$path->skipToSector($var['target_sector']);
-			$player->setPlottedCourse($path);
-		}
-	}
-	
 	//make them pop on CPL
 	$player->updateLastCPLAction();
 	$player->setSectorID($var['target_sector']);
@@ -79,19 +66,6 @@ if ($player->getLastSectorID() != $var['target_sector']) {
 			$container['owner_id'] = $mine_owner_id;
 			forward($container);
 		}
-	}
-}
-
-// check if this came from a plotted course from db
-if ($player->hasPlottedCourse()) {
-	$path = $player->getPlottedCourse();
-	if ($path->getNextOnPath() == $var['target_sector']) {
-		$path->followPath($sector->getWarp() == $var['target_sector']);
-		$player->setPlottedCourse($path);
-	} elseif ($path->isInPath($var['target_sector'])) {
-		// Did we re-enter the course down the line?
-		$path->skipToSector($var['target_sector']);
-		$player->setPlottedCourse($path);
 	}
 }
 
