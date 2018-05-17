@@ -17,7 +17,7 @@
 				foreach($Players as &$Player) {
 					if(!($PlayersContainer instanceof SmrSector) || $ThisPlayer->canSee($Player)) {
 						$Ship =& $Player->getShip();?>
-						<tr<?php if($Player->getAccount()->isNewbie()) { ?> class="newbie"<?php } ?>>
+						<tr<?php if($Player->hasNewbieStatus()) { ?> class="newbie"<?php } ?>>
 							<td>
 								<?php echo $Player->getLinkedDisplayName(); ?>
 							</td>

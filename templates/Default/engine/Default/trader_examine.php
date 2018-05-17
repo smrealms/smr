@@ -45,7 +45,7 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 				if (is_array($fleet)) {
 					foreach ($fleet as &$fleetPlayer) {
 						$fleetShip =& $fleetPlayer->getShip();
-						if($fleetPlayer->getAccount()->isNewbie()) { ?><span class="newbie"><?php }
+						if ($fleetPlayer->hasNewbieStatus()) { ?><span class="newbie"><?php }
 						echo $fleetPlayer->getLevelName(); ?><br /><?php
 						echo $fleetPlayer->getDisplayName() ?><br />
 						Race: <?php echo $fleetPlayer->getRaceName() ?><br />
@@ -59,7 +59,7 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 							Hard Points: <?php echo $fleetShip->getNumWeapons() ?><br />
 							Combat Drones: <?php echo $fleetShip->getCDsLow() . '-' . $fleetShip->getCDsHigh() ?><br /><?php
 						}
-						if($fleetPlayer->getAccount()->isNewbie()) { ?></span><?php } ?>
+						if ($fleetPlayer->hasNewbieStatus()) { ?></span><?php } ?>
 						<br /><br /><?php
 					}
 				}

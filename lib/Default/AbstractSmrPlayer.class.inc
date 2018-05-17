@@ -21,6 +21,7 @@ abstract class AbstractSmrPlayer {
 	protected $newbieTurns;
 	protected $dead;
 	protected $npc;
+	protected $newbieStatus;
 	protected $landedOnPlanet;
 	protected $lastActive;
 	protected $raceID;
@@ -147,6 +148,25 @@ abstract class AbstractSmrPlayer {
 
 	public function isNPC() {
 		return $this->npc;
+	}
+
+	/**
+	 * Does the player have Newbie status?
+	 */
+	public function hasNewbieStatus() {
+		return $this->newbieStatus;
+	}
+
+	/**
+	 * Update the player's newbie status if it has changed.
+	 * This function queries the account, so use sparingly.
+	 */
+	public function updateNewbieStatus() {
+		$accountNewbieStatus = !$this->getAccount()->isVeteran();
+		if ($this->newbieStatus != $accountNewbieStatus) {
+			$this->newbieStatus = $accountNewbieStatus;
+			$this->hasChanged = true;
+		}
 	}
 
 	public function isDraftLeader() {
@@ -511,9 +531,11 @@ abstract class AbstractSmrPlayer {
 		if($this->allianceID == $ID)
 			return;
 		$this->allianceID=$ID;
-		if($this->allianceID!=0)
+		if ($this->allianceID != 0) {
+			$status = $this->hasNewbieStatus() ? 'NEWBIE' : 'VETERAN';
 			$this->db->query('INSERT IGNORE INTO player_joined_alliance (account_id,game_id,alliance_id,status) ' .
-				'VALUES ('.$this->db->escapeNumber($this->getAccountID()).','.$this->db->escapeNumber($this->getGameID()).','.$this->db->escapeNumber($this->getAllianceID()).','.$this->db->escapeString($this->getAccount()->isVeteran()?'VETERAN':'NEWBIE').')');
+				'VALUES ('.$this->db->escapeNumber($this->getAccountID()).','.$this->db->escapeNumber($this->getGameID()).','.$this->db->escapeNumber($this->getAllianceID()).','.$this->db->escapeString($status).')');
+		}
 		$this->hasChanged=true;
 	}
 

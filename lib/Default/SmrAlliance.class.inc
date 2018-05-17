@@ -273,7 +273,7 @@ class SmrAlliance {
 			return 'You cannot join another alliance for '.format_time($player->getAllianceJoinable()-TIME).'.';
 		}
 		if($this->getNumMembers()<Globals::getAllianceMaxPlayers($this->getGameID())) {
-			if(!$player->getAccount()->isVeteran()) {
+			if ($player->hasNewbieStatus()) {
 				return true;
 			}
 			$maxVets = Globals::getAllianceMaxVets($this->getGameID());
@@ -299,8 +299,8 @@ class SmrAlliance {
 
 	public function getNumVeterans() {
 		$numVeterans=0;
-		foreach($this->getMemberIDs() as $memberID) {
-			if(SmrAccount::getAccount($memberID)->isVeteran()) {
+		foreach ($this->getMembers() as $player) {
+			if (!$player->hasNewbieStatus()) {
 				$numVeterans++;
 			}
 		}

@@ -59,7 +59,7 @@ if ($count_last_active > 0) {
 		$class='';
 		if ($player->equals($curr_player))
 			$class .= 'bold';
-		if ($curr_player->getAccount()->isNewbie())
+		if ($curr_player->hasNewbieStatus())
 			$class.= ' newbie';
 		if ($class!='')
 			$class = ' class="'.trim($class).'"';

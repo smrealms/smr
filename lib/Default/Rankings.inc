@@ -40,7 +40,7 @@ class Rankings {
 			if ($player->equals($currentPlayer)) {
 				$class .= 'bold';
 			}
-			if($currentPlayer->getAccount()->isNewbie()) {
+			if($currentPlayer->hasNewbieStatus()) {
 				$class.= ' newbie';
 			}
 			if($class!='') {
