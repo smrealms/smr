@@ -1,8 +1,8 @@
 <?php
 require_once(get_file_loc('SmrPlayer.class.inc'));
 class Council {
-	protected static $RACE_COUNCIL = array();
-	protected static $RACE_PRESIDENTS = array();
+	protected static $COUNCILS = array();
+	protected static $PRESIDENTS = array();
 	protected static $db = null;
 
 	private function __construct() {
@@ -13,19 +13,16 @@ class Council {
 			self::$db = new SmrMySqlDatabase();
 	}
 
+	/**
+	 * Returns an array of Account ID's of the Council for this race.
+	 */
 	public static function &getRaceCouncil($gameID,$raceID) {
-		if(!isset(self::$RACE_COUNCIL[$gameID])) {
-			self::$RACE_COUNCIL[$gameID] = array();
-			self::$RACE_PRESIDENTS[$gameID] = array();
-		}
-
-		if(!isset(self::$RACE_COUNCIL[$gameID][$raceID])) {
+		if (!isset(self::$COUNCILS[$gameID][$raceID])) {
 			self::initialiseDatabase();
-			self::$RACE_COUNCIL[$gameID][$raceID] = array();
-			self::$RACE_PRESIDENTS[$gameID][$raceID] = false;
+			self::$COUNCILS[$gameID][$raceID] = array();
 
 			$i=1;
-			self::$db->query('SELECT account_id, alignment
+			self::$db->query('SELECT account_id
 								FROM player
 								WHERE game_id = ' . self::$db->escapeNumber($gameID) . '
 									AND race_id = ' . self::$db->escapeNumber($raceID) . '
@@ -33,22 +30,29 @@ class Council {
 								ORDER by experience DESC
 								LIMIT ' . MAX_COUNCIL_MEMBERS);
 			while(self::$db->nextRecord()) {
-				self::$RACE_COUNCIL[$gameID][$raceID][$i] = self::$db->getField('account_id');
-				if(self::$RACE_PRESIDENTS[$gameID][$raceID]==false && self::$db->getField('alignment')>=150) {
-					self::$RACE_PRESIDENTS[$gameID][$raceID] = self::$db->getField('account_id');
-				}
+				self::$COUNCILS[$gameID][$raceID][$i] = self::$db->getField('account_id');
 				$i++;
 			}
 		}
-		return self::$RACE_COUNCIL[$gameID][$raceID];
+		return self::$COUNCILS[$gameID][$raceID];
 	}
 
-	public static function &getPresident($gameID,$raceID) {
-		self::getRaceCouncil($gameID,$raceID);
-		if(isset(self::$RACE_PRESIDENTS[$gameID][$raceID])&&self::$RACE_PRESIDENTS[$gameID][$raceID]!==false&&is_numeric(self::$RACE_PRESIDENTS[$gameID][$raceID])) {
-			self::$RACE_PRESIDENTS[$gameID][$raceID] = SmrPlayer::getPlayer(self::$RACE_PRESIDENTS[$gameID][$raceID],$gameID);
+	/**
+	 * Returns the Account ID of the President for this race (or false if no President).
+	 */
+	public static function getPresidentID($gameID, $raceID) {
+		if (!isset(self::$PRESIDENTS[$gameID][$raceID])) {
+			self::initialiseDatabase();
+			self::$db->query('SELECT account_id FROM player
+			                  WHERE game_id = ' . self::$db->escapeNumber($gameID) . '
+			                    AND race_id = ' . self::$db->escapeNumber($raceID) . '
+			                    AND alignment >= ' . self::$db->escapeNumber(ALIGNMENT_PRESIDENT) . '
+			                    AND npc = \'FALSE\'
+			                  ORDER BY experience DESC
+			                  LIMIT 1');
+			self::$PRESIDENTS[$gameID][$raceID] = self::$db->nextRecord() ? self::$db->getInt('account_id') : false;
 		}
-		return self::$RACE_PRESIDENTS[$gameID][$raceID];
+		return self::$PRESIDENTS[$gameID][$raceID];
 	}
 
 	public static function isOnCouncil($gameID,$raceID,$accountID) {
