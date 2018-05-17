@@ -722,45 +722,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $this->customShipName;
 	}
 
-//	protected function getGoodsInfo() {
-//		if(!isset($this->goods) || !isset($this->goodsExpGained)) {
-//			//Get Player Goods
-//			global $GOODS;
-//			$this->goods = array();
-//			$this->goodsExpGained = array();
-//			foreach ($GOODS as $good_id => $good_name) {
-//				$this->goods[$good_id] = 0;
-//				$this->goodsExpGained[$good_id] = 0;
-//			}
-//			$this->db->query('SELECT good_id,amount,exp_gained FROM player_has_goods WHERE ' . $this->SQL);
-//			while ($this->db->nextRecord()) {
-//				$this->goods[$this->db->getField('good_id')] = $this->db->getField('amount');
-//				$this->goodsExpGained[$this->db->getField('good_id')] = $this->db->getField('exp_gained');
-//			}
-//		}
-//	}
-//
-//	function getGoods() {
-//		if(!isset($this->goods)) {
-//			$this->getGoodsInfo();
-//		}
-//		return $this->goods;
-//	}
-//	function getGood($goodID) {
-//		$goods = $this->getGoods();
-//		return $goods[$goodID];
-//	}
-//	function getGoodsExpGained() {
-//		if(!isset($this->goodsExpGained)) {
-//			$this->getGoodsInfo();
-//		}
-//		return $this->goodsExpGained;
-//	}
-//	function getGoodExpGained($goodID) {
-//		$goodsExp = $this->getGoodsExpGained();
-//		return $goodsExp[$goodID];
-//	}
-
 	protected function getGadgetsData() {
 		if(!isset($this->gadgets)) {
 			//Get Player Gadgets

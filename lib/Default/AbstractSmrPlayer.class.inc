@@ -32,8 +32,6 @@ abstract class AbstractSmrPlayer {
 	protected $shipID;
 	protected $kills;
 	protected $deaths;
-	protected $goods;
-	protected $goodsExpGained;
 	protected $gadgets;
 	protected $stats;
 	protected $pastMaintBought;
