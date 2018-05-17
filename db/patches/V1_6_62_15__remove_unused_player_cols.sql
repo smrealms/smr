@@ -5,3 +5,9 @@ ALTER TABLE player DROP COLUMN controlled,
                    DROP COLUMN detected,
                    DROP COLUMN zoom_on,
                    DROP COLUMN out_of_game;
+
+ALTER TABLE player DROP COLUMN stunned,
+                   DROP COLUMN government_help,
+                   DROP COLUMN kicked,
+                   DROP COLUMN last_shield_update,
+                   DROP COLUMN fleed;

@@ -24,12 +24,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 	protected $lastTurnUpdate;
 	protected $lastShipMod;
 	protected $lastNewsUpdate;
-	protected $stunned;
-	protected $fleed;
 	protected $attackColour;
-	protected $kicked;
 //	protected $pastKnowledge;
-	protected $governmentHelp;
 	protected $allianceJoinable;
 	protected $lastPort;
 	protected $bank;
@@ -166,15 +162,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->newbieTurns					= (int) $result['newbie_turns'];
 			$this->lastShipMod					= (int) $result['last_ship_mod'];
 			$this->lastNewsUpdate				= (int) $result['last_news_update'];
-			$this->stunned						= (int) $result['stunned'];
-			$this->fleed						= $result['fleed']=='TRUE';
 			$this->attackColour					= (string) $result['attack_warning'];
 			$this->dead							= $result['dead']=='TRUE';
 			$this->npc							= $result['npc']=='TRUE';
 			$this->startDead					= $this->dead;
 			$this->landedOnPlanet				= $result['land_on_planet']=='TRUE';
-			$this->kicked						= $result['kicked']=='TRUE';
-			$this->lastShieldUpdate				= (int) $result['last_shield_update'];
 			$this->lastActive					= (int) $result['last_active'];
 			$this->lastCPLAction				= (int) $result['last_cpl_action'];
 			$this->raceID						= (int) $result['race_id'];
@@ -183,7 +175,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->alignment					= (int) $result['alignment'];
 			$this->militaryPayment				= (int) $result['military_payment'];
 //			$this->pastKnowledge = $result['past_knowledge'];
-			$this->governmentHelp				= (int) $result['government_help'];
 			$this->allianceID					= (int) $result['alliance_id'];
 			$this->allianceJoinable				= (int) $result['alliance_join'];
 			$this->shipID						= (int) $result['ship_type_id'];
@@ -257,8 +248,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->playerID;
 			case 'Land On Planet':
 				return $this->landedOnPlanet;
-			case 'Kicked':
-				return $this->kicked;
 			case 'Newbie Turns':
 				return $this->newbieTurns;
 			case 'Race ID':
@@ -275,8 +264,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->alignment;
 //			case 'Past Knowledge':
 //				return $this->pastKnowledge;
-			case 'Government Help':
-				return $this->governmentHelp;
 			case 'Alliance ID':
 				return $this->allianceID;
 			case 'Alliance Joinable':
@@ -307,12 +294,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->lastActive;
 			case 'Last CPL Action':
 				return $this->lastCPLAction;
-			case 'Last Shield Regen':
-				return $this->lastShieldUpdate;
-			case 'Stunned':
-				return $this->stunned;
-			case 'Fleed':
-				return $this->fleed;
 			case 'Attack Colour':
 				return $this->attackWarning;
 //			case 'Chat':
@@ -352,42 +333,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 	public function &getAccount() {
 		require_once(get_file_loc('SmrAccount.class.inc'));
 		return SmrAccount::getAccount($this->getAccountID());
-	}
-
-	public function getKicked() {
-		return $this->kicked;
-	}
-
-	public function setKicked($bool) {
-		if($this->kicked == $bool)
-			return;
-		$this->kicked=$bool;
-		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET kicked = '.$this->db->escapeBoolean($bool).' WHERE ' . $this->SQL . ' LIMIT 1');
-	}
-
-	function getStunned() {
-		return $this->stunned;
-	}
-
-	function setStunned($time) {
-		if($this->stunned == $time)
-			return;
-		$this->stunned=$time;
-		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET stunned = ' . $this->stunned . ' WHERE ' . $this->SQL . ' LIMIT 1');
-	}
-
-	function getFleed() {
-		return $this->fleed;
-	}
-
-	function setFleed($bool) {
-		if($this->fleed == $bool)
-			return;
-		$this->fleed=$bool;
-		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET fleed='.$this->db->escapeBoolean($bool).' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
 	function getZoom() {
@@ -548,10 +493,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	function updateLastNewsUpdate() {
 		$this->setLastNewsUpdate(TIME);
-	}
-
-	function getGovernmentHelp() {
-		return $this->governmentHelp;
 	}
 
 //	function getPastKnowledge() {
@@ -1406,13 +1347,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', newbie_turns='.$this->db->escapeNumber($this->newbieTurns).
 				', last_ship_mod='.$this->db->escapeNumber($this->lastShipMod).
 				', last_news_update='.$this->db->escapeNumber($this->lastNewsUpdate).
-				', stunned='.$this->db->escapeString($this->stunned).
-				', fleed='.$this->db->escapeBoolean($this->fleed).
 				', attack_warning='.$this->db->escapeString($this->attackColour).
 				', dead='.$this->db->escapeBoolean($this->dead).
 				', land_on_planet='.$this->db->escapeBoolean($this->landedOnPlanet).
-				', kicked='.$this->db->escapeBoolean($this->kicked).
-				', last_shield_update='.$this->db->escapeNumber($this->lastShieldUpdate).
 				', last_active='.$this->db->escapeNumber($this->lastActive).
 				', last_cpl_action='.$this->db->escapeNumber($this->lastCPLAction).
 				', race_id='.$this->db->escapeNumber($this->raceID).
@@ -1421,7 +1358,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', alignment='.$this->db->escapeNumber($this->alignment).
 				', military_payment='.$this->db->escapeString($this->militaryPayment).
 //				', past_knowledge='.$this->db->escapeString($this->pastKnowledge).
-				', government_help='.$this->db->escapeString($this->governmentHelp).
 				', alliance_id='.$this->db->escapeNumber($this->allianceID).
 				', alliance_join='.$this->db->escapeNumber($this->allianceJoinable).
 				', ship_type_id='.$this->db->escapeNumber($this->shipID).

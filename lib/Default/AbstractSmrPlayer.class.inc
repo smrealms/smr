@@ -23,7 +23,6 @@ abstract class AbstractSmrPlayer {
 	protected $npc;
 	protected $startDead;
 	protected $landedOnPlanet;
-	protected $lastShieldUpdate;
 	protected $lastActive;
 	protected $raceID;
 	protected $credits;
@@ -101,17 +100,6 @@ abstract class AbstractSmrPlayer {
 		if($this->shipID == $shipID)
 			return;
 		$this->shipID=$shipID;
-		$this->hasChanged=true;
-	}
-
-	public function getLastShieldUpdate() {
-		return $this->lastShieldUpdate;
-	}
-
-	public function setLastShieldUpdate($time) {
-		if($this->lastShieldUpdate == $time)
-			return;
-		$this->lastShieldUpdate=$time;
 		$this->hasChanged=true;
 	}
 
