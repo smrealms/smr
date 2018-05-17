@@ -29,12 +29,12 @@ class Rankings {
 		return $rankings;
 	}
 
-	public static function &collectRankings(SmrMySqlDatabase &$db, AbstractSmrPlayer &$player, $rank) {
+	public static function &collectRankings(SmrMySqlDatabase &$db, AbstractSmrPlayer $player, $rank) {
 		$rankings = array();
 		while ($db->nextRecord()) {
 			// increase rank counter
 			$rank++;
-			$currentPlayer =& SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID());
+			$currentPlayer = SmrPlayer::getPlayer($db->getRow(), $player->getGameID());
 
 			$class='';
 			if ($player->equals($currentPlayer)) {
@@ -49,7 +49,7 @@ class Rankings {
 
 			$rankings[$rank] = array(
 				'Rank' => $rank,
-				'Player' => &$currentPlayer,
+				'Player' => $currentPlayer,
 				'Class' => $class,
 				'Value' => $db->getInt('amount')
 			);

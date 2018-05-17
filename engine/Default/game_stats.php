@@ -22,25 +22,23 @@ if ($db->nextRecord()) {
 	$template->assign('TotalAlliances',$db->getField('num_alliance'));
 }
 
-$db->query('SELECT account_id FROM player WHERE game_id = '.$gameID.' ORDER BY experience DESC LIMIT 10');
+$db->query('SELECT * FROM player WHERE game_id = '.$gameID.' ORDER BY experience DESC LIMIT 10');
 if ($db->getNumRows() > 0) {
 	$rank = 0;
 	$expRankings = array();
 	while ($db->nextRecord()) {
-		++$rank;
-		$expRankings[$rank] =& SmrPlayer::getPlayer($db->getField('account_id'), $gameID);
+		$expRankings[++$rank] = SmrPlayer::getPlayer($db->getRow(), $gameID);
 	}
 	$template->assign('ExperienceRankings',$expRankings);
 }
 
 
-$db->query('SELECT account_id FROM player WHERE game_id = '.$gameID.' ORDER BY kills DESC LIMIT 10');
+$db->query('SELECT * FROM player WHERE game_id = '.$gameID.' ORDER BY kills DESC LIMIT 10');
 if ($db->getNumRows() > 0) {
 	$rank = 0;
 	$killRankings = array();
 	while ($db->nextRecord()) {
-		++$rank;
-		$killRankings[$rank] =& SmrPlayer::getPlayer($db->getField('account_id'), $gameID);
+		$killRankings[++$rank] = SmrPlayer::getPlayer($db->getRow(), $gameID);
 	}
 	$template->assign('KillRankings',$killRankings);
 }
