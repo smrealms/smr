@@ -33,7 +33,7 @@ if (!isset($var['OrderID'])) {
 		create_error('You can\'t buy evil weapons!');
 	} else if ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_GOOD && $player->getAlignment() < ALIGNMENT_GOOD) {
 		create_error('You can\'t buy good weapons!');
-	} else if ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_NEWBIE && !$player->getAccount()->isNewbie()) {
+	} else if ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_NEWBIE && !$player->hasNewbieStatus()) {
 		create_error('You can\'t buy newbie weapons!');
 	}
 

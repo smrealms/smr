@@ -238,11 +238,11 @@
 
 				<tr>
 					<td align="right" valign="top" class="bold">Forced Veteran:</td>
-					<td><input type="radio" name="veteran_status" value="TRUE"<?php if($EditingAccount->isVeteranBumped()) { ?> checked="checked"<?php } ?>>Yes</td>
+					<td><input type="radio" name="veteran_status" value="TRUE"<?php if($EditingAccount->isVeteranForced()) { ?> checked="checked"<?php } ?>>Yes</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td><input type="radio" name="veteran_status" value="FALSE"<?php if(!$EditingAccount->isVeteranBumped()) { ?> checked="checked"<?php } ?>>No</td>
+					<td><input type="radio" name="veteran_status" value="FALSE"<?php if(!$EditingAccount->isVeteranForced()) { ?> checked="checked"<?php } ?>>No</td>
 				</tr>
 
 				<tr>

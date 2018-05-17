@@ -457,28 +457,6 @@ function makeBold($value) {
 		return '';
 }
 
-//function different_level($rank1, $rank2, $forced_vet1, $forced_vet2) {
-//
-//	return false;
-//	// we are newbie, he vet
-//	if ($rank1 < FLEDGLING && $rank2 > BEGINNER && $forced_vet1 == 'FALSE')
-//		return true;
-//
-//	// we are vet, he newbie
-//	if ($rank1 > BEGINNER && $rank2 < FLEDGLING && $forced_vet2 == 'FALSE')
-//		return true;
-//
-//	// we are a forces vet, he newbie
-//	if ($forced_vet1 == 'TRUE' && $rank2 < FLEDGLING && $forced_vet2 == 'FALSE')
-//		return true;
-//
-//	// we newbie, he forced vet
-//	if ($rank1 < FLEDGLING && $forced_vet2 == 'TRUE' && $forced_vet1 == 'FALSE')
-//		return true;
-//	return false;
-//
-//}
-
 function word_filter($string) {
 	static $words;
 

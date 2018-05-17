@@ -159,6 +159,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->attackColour					= (string) $result['attack_warning'];
 			$this->dead							= $result['dead']=='TRUE';
 			$this->npc							= $result['npc']=='TRUE';
+			$this->newbieStatus					= $result['newbie_status'] == 'TRUE';
 			$this->landedOnPlanet				= $result['land_on_planet']=='TRUE';
 			$this->lastActive					= (int) $result['last_active'];
 			$this->lastCPLAction				= (int) $result['last_cpl_action'];
@@ -928,7 +929,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->setLandedOnPlanet(false);
 		$this->setDead(true);
 		$this->setNewbieWarning(true);
-		$this->getShip()->getPod($this->getAccount()->isNewbie());
+		$this->getShip()->getPod($this->hasNewbieStatus());
 
 		// Update turns due to ship change
 		$new_speed = $this->getShip()->getSpeed();
@@ -1076,7 +1077,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 			$killer->increaseHOF($return['BountyGained']['Amount'],array('Killing','Money','Bounty Gained'), HOF_PUBLIC);
 
-			if($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->getAccount()->isNewbie() && $killer->getAccount()->isVeteran()) { //Newbie kill
+			if($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus()) { //Newbie kill
 				$killer->increaseHOF(1,array('Killing','Newbie Kills'), HOF_PUBLIC);
 			}
 			else {
@@ -1236,6 +1237,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', last_news_update='.$this->db->escapeNumber($this->lastNewsUpdate).
 				', attack_warning='.$this->db->escapeString($this->attackColour).
 				', dead='.$this->db->escapeBoolean($this->dead).
+				', newbie_status='.$this->db->escapeBoolean($this->newbieStatus).
 				', land_on_planet='.$this->db->escapeBoolean($this->landedOnPlanet).
 				', last_active='.$this->db->escapeNumber($this->lastActive).
 				', last_cpl_action='.$this->db->escapeNumber($this->lastCPLAction).

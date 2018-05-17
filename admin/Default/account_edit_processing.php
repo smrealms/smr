@@ -103,7 +103,7 @@ else if ($points > 0 || $mailBan > 0) {
 	}
 }
 
-if ($veteran_status != $curr_account->isVeteranBumped()) {
+if ($veteran_status != $curr_account->isVeteranForced()) {
 
 	$db->query('UPDATE account SET veteran = '.$db->escapeString($veteran_status).' WHERE account_id = '.$db->escapeNumber($account_id));
 	$msg .= 'set the veteran status to '.$db->escapeString($veteran_status).' ';

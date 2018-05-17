@@ -64,7 +64,8 @@ else {
 }
 
 // for newbie and beginner another ship, more shields and armour
-if ($account->isNewbie()) {
+$isNewbie = !$account->isVeteran();
+if ($isNewbie) {
 	$startingNewbieTurns = STARTING_NEWBIE_TURNS_NEWBIE;
 	$ship_id = SHIP_TYPE_NEWBIE_MERCHANT_VESSEL;
 	$amount_shields = 75;
@@ -126,8 +127,8 @@ else {
 }
 
 // insert into player table.
-$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_turn_update, last_cpl_action, last_active, newbie_turns, npc)
-			VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escape_string($player_name, true) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', '.$db->escapeNumber($last_turn_update).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ')');
+$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_turn_update, last_cpl_action, last_active, newbie_turns, npc, newbie_status)
+			VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escape_string($player_name, true) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', '.$db->escapeNumber($last_turn_update).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ',' . $db->escapeBoolean($isNewbie) . ')');
 
 $db->unlock();
 
@@ -149,7 +150,7 @@ $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
 // Mark the player's start sector as visited
 SmrSector::getSector($gameID, $home_sector_id)->markVisited($player);
 
-if ($account->isNewbie()) {
+if ($isNewbie) {
 	//we are a newb set our alliance to be Newbie Help Allaince
 	$player->joinAlliance(NHA_ID);
 

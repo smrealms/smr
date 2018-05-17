@@ -45,7 +45,7 @@ abstract class AbstractSmrAccount {
 	protected $hofName;
 	protected $discordId;
 	protected $ircNick;
-	protected $veteran;
+	protected $veteranForced;
 	protected $logging;
 	protected $offset;
 	protected $images;
@@ -182,7 +182,7 @@ abstract class AbstractSmrAccount {
 
 			$this->last_login		= $row['last_login'];
 			$this->validation_code 	= $row['validation_code'];
-			$this->veteran			= $this->db->getBoolean('veteran');
+			$this->veteranForced	= $this->db->getBoolean('veteran');
 			$this->logging			= $this->db->getBoolean('logging');
 			$this->offset			= $row['offset'];
 			$this->images			= $row['images'];
@@ -339,18 +339,14 @@ abstract class AbstractSmrAccount {
 		return $this->logging;
 	}
 
-	public function isVeteranBumped() {
-		return $this->veteran;
+	public function isVeteranForced() {
+		return $this->veteranForced;
 	}
 
 	public function isVeteran() {
 		// Use maxRankAchieved to avoid a database call to get user stats.
 		// This saves a lot of time on the CPL, Rankings, Rosters, etc.
-		return $this->isVeteranBumped() || $this->maxRankAchieved >= FLEDGLING;
-	}
-
-	public function isNewbie() {
-		return !$this->isVeteran();
+		return $this->isVeteranForced() || $this->maxRankAchieved >= FLEDGLING;
 	}
 
 	public function isNPC() {

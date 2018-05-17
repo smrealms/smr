@@ -41,7 +41,7 @@ if ($alliance->getNumMembers() < $game->getAllianceMaxPlayers()) {
 			// Don't display players we've already invited
 			continue;
 		}
-		if ($alliance->getNumVeterans() < $game->getAllianceMaxVets() || !$invitePlayer->getAccount()->isVeteran()) {
+		if ($alliance->getNumVeterans() < $game->getAllianceMaxVets() || $invitePlayer->hasNewbieStatus()) {
 			$invitePlayers[] = $invitePlayer;
 		}
 	}

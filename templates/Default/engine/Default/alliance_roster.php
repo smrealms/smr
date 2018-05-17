@@ -58,7 +58,7 @@ if ($ShowRoles) { ?>
 				if ($ThisPlayer->equals($AlliancePlayer)) {
 					$Class .= ' bold';
 				}
-				if($AlliancePlayer->getAccount()->isNewbie()) {
+				if ($AlliancePlayer->hasNewbieStatus()) {
 					$Class.= ' newbie';
 				} ?>
 				<tr id="player-<?php echo $AlliancePlayer->getPlayerID(); ?>" class="ajax<?php echo $Class; ?>">
