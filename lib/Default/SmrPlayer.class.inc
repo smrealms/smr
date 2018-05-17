@@ -29,13 +29,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 	protected $lastPort;
 	protected $bank;
 	protected $zoom;
-//	protected $zoomOn;
-//	protected $chat;
-//	protected $chatPosition;
 	protected $displayMissions;
 	protected $displayWeapons;
 	protected $ignoreGlobals;
-//	protected $changedStats;
 	protected $mining;
 	protected $plottedCourse;
 	protected $nameChanged;
@@ -181,9 +177,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->lastPort						= (int) $result['last_port'];
 			$this->bank							= (int) $result['bank'];
 			$this->zoom							= (int) $result['zoom'];
-//			$this->zoomOn = $result['zoom_on']=='TRUE';
-//			$this->chat = $result['chat'];
-//			$this->chatPosition = $result['chat_position'];
 			$this->displayMissions				= $result['display_missions']=='TRUE';
 			$this->displayWeapons				= $result['display_weapons']=='TRUE';
 			$this->forceDropMessages			= $result['force_drop_messages']=='TRUE';
@@ -191,7 +184,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->newbieWarning				= $result['newbie_warning']=='TRUE';
 			$this->nameChanged					= $result['name_changed']=='TRUE';
 			$this->combatDronesKamikazeOnMines	= $result['combat_drones_kamikaze_on_mines']=='TRUE';
-//			$this->changedStats = $result['changed_stats'];
 
 			$this->SQL = 'account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID);
 		}
@@ -276,8 +268,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->lastNewsUpdate;
 			case 'Default Zoom':
 				return $this->zoom;
-//			case 'Default Zoom Toggle':
-//				return $this->zoomOn;
 			case 'Bank':
 				return $this->bank;
 			case 'Maintenance':
@@ -292,10 +282,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->lastCPLAction;
 			case 'Attack Colour':
 				return $this->attackWarning;
-//			case 'Chat':
-//				return $this->chat;
-//			case 'Chat Position':
-//				return $this->chatPosition;
 			case 'Display Missions':
 				return $this->displayMissions;
 			case 'Ignore Global':
@@ -306,8 +292,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->getDisplayName();
 			case 'Span Colour':
 				return $this->getSpanColour();
-//			case 'Ship Size':
-//				return $this->getShipSize();
 
 			case 'Erebus Knowledge':
 				return $this->getKnowledge('Erebus');
@@ -356,10 +340,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 			throw new Exception('Trying to decrease negative zoom.');
 		$this->setZoom($this->getZoom()-$zoom);
 	}
-
-//	function isZoomOn() {
-//		return $this->zoomOn;
-//	}
 
 	public function setSectorID($sectorID) {
 		require_once('SmrPort.class.inc');
@@ -493,42 +473,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 //	function getPastKnowledge() {
 //		return $this->pastKnowledge;
-//	}
-
-//	function getChangedStats() {
-//		return $this->changedStats;
-//	}
-//
-//	function setChangedStats($boolStr) {
-//		if($this->changedStats == $boolStr)
-//			return;
-//		$this->changedStats=$boolStr;
-//		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET changed_stats = '.$this->db->escapeString($boolStr).' WHERE '.$this->SQL.' LIMIT 1');
-//	}
-
-//	function getChat() {
-//		return $this->chat;
-//	}
-//
-//	function setChat($chat) {
-//		if($this->chat == $chat)
-//			return;
-//		$this->chat=$chat;
-//		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET chat = ' . $this->db->escapeString($chat) . ' WHERE ' . $this->SQL . ' LIMIT 1');
-//	}
-//
-//	function getChatPosition() {
-//		return $this->chatPosition;
-//	}
-//
-//	function setChatPosition($chatPosition) {
-//		if($this->chatPosition == $chatPosition)
-//			return;
-//		$this->chatPosition=$chatPosition;
-//		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET chat_position = ' . $this->db->escapeString($chatPosition) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 //	}
 
 	function getOriginalMaintenance() {
@@ -1349,13 +1293,10 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', last_port='.$this->db->escapeNumber($this->lastPort).
 				', bank='.$this->db->escapeNumber($this->bank).
 				', zoom='.$this->db->escapeString($this->zoom).
-//				', chat='.$this->db->escapeString($this->chat).
-//				', chat_position='.$this->db->escapeString($this->chatPosition).
 				', display_missions='.$this->db->escapeBoolean($this->displayMissions).
 				', display_weapons='.$this->db->escapeBoolean($this->displayWeapons).
 				', force_drop_messages='.$this->db->escapeBoolean($this->forceDropMessages).
 				', ignore_globals='.$this->db->escapeBoolean($this->ignoreGlobals).
-//				', changed_stats='.$this->db->escapeString($this->changedStats).
 				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning).
 				', name_changed = ' . $this->db->escapeBoolean($this->nameChanged).
 				', combat_drones_kamikaze_on_mines = ' . $this->db->escapeBoolean($this->combatDronesKamikazeOnMines).
