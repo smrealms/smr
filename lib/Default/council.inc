@@ -77,9 +77,9 @@ function modifyRelations($race_id_1) {
 		$action		= $db->getField('action');
 
 		if ($action == 'INC')
-			$relation_modifier = 10;
+			$relation_modifier = RELATIONS_VOTE_CHANGE;
 		else
-			$relation_modifier = -10;
+			$relation_modifier = -RELATIONS_VOTE_CHANGE;
 
 		$db2->query('SELECT * FROM race_has_relation ' .
 					'WHERE race_id_1 = ' . $db2->escapeNumber($race_id_1) . '
