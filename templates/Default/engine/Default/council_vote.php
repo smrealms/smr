@@ -49,7 +49,7 @@ if (!$VoteTreaties) { ?>
 <div class="center bold">Diplomatic Relations</div><br />
 <div class="center standard">
 	Each council member is entitled to one vote daily.<br />
-	Each vote counts for +/-<?php echo RELATIONS_VOTE_CHANGE; ?> that race.<br />
+	Each vote counts for +/-<?php echo RELATIONS_VOTE_CHANGE; ?> with that race.<br />
 	Results are updated at 00:00 daily.
 </div><br />
 
