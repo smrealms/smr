@@ -39,5 +39,5 @@ $path = Plotter::findReversiblePathToX(SmrSector::getSector($player->getGameID()
 
 // Forward to do common processing of path
 $container = create_container('skeleton.php', 'course_plot_result.php');
-$container['Distance'] = $path;
+$container['Distance'] = serialize($path);
 forward($container);
