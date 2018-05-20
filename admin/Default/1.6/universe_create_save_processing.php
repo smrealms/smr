@@ -442,9 +442,6 @@ function addLocationToSector(SmrLocation &$location,SmrSector &$sector) {
 
 function createGame($gameID) {
 	$db = new SmrMySqlDatabase();
-	$db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`) VALUES
-			(1,' . $db->escapeNumber($gameID) . ',\'Game Admins\',\'One Alliance to Rule Them All\',\'*\',1,\'We are the Admins!\')');
-			
 	// Newbie Help Alliance
 	
 	$db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`) VALUES
