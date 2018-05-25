@@ -8,8 +8,7 @@ Without an armada behind you, the outcome may not be pleasant.
 <br /><br />
 
 <?php
-if ($ThisShip->hasScanner()) {
-	$Port = $ThisSector->getPort(); ?>
+if ($ThisShip->hasScanner()) { ?>
 	<table class="standard">
 		<tr>
 			<th>Port</th>
