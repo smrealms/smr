@@ -42,7 +42,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db) {
 				$rank['Amount'] = '-'; //Show a - rather than 0 when hidden due to alliance restrictions so that it is clearer.
 			}
 		}
-		catch(Exception $e) {
+		catch(PlayerNotFoundException $e) {
 			$rank['Amount'] = '-';
 		}
 		if($rank['Amount'] == '-' && !isset($gameID)) {
@@ -77,7 +77,7 @@ function displayHOFRow($rank,$accountID,$amount) {
 		try {
 			$hofPlayer =& SmrPlayer::getPlayer($accountID,$var['game_id']);
 		}
-		catch(Exception $e) {
+		catch(PlayerNotFoundException $e) {
 			$hofAccount =& SmrAccount::getAccount($accountID);
 		}
 	}
