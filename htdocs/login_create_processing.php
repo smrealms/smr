@@ -173,8 +173,8 @@ try {
 	try {
 		$account =& SmrAccount::createAccount($login,$password,$email,$first_name,$last_name,$timez,$referral);
 	}
-	catch(Exception $e) {
-		$msg = 'Invalid referral id!';
+	catch(AccountNotFoundException $e) {
+		$msg = 'Invalid referral account ID!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
