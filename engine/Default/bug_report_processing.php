@@ -11,17 +11,24 @@ $message = 'Login: '.$account->getLogin().EOL.EOL.'-----------'.EOL.EOL.
 	'Description: '.$description.EOL.EOL.'-----------'.EOL.EOL.
 	'Steps to repeat: '.$steps.EOL.EOL.'-----------'.EOL.EOL.
 	'Error Message: '.$error_msg;
-	
-//mail('bugs@smrealms.de',
-//	$new_sub,
-//	$message,
-//	'From: '.$account->getEmail());
 
 if(is_object($player)) {
 	$player->sendMessageToBox(BOX_BUGS_REPORTED, $message);
 }
 else {
 	$account->sendMessageToBox(BOX_BUGS_REPORTED, $message);
+}
+
+// Send report to e-mail so that we have a permanent record
+if (!empty(BUG_REPORT_TO_ADDRESSES)) {
+	$mail = setupMailer();
+	$mail->Subject = 'Player Bug Report';
+	$mail->setFrom('bugs@smrealms.de');
+	$mail->Body = $message;
+	foreach (BUG_REPORT_TO_ADDRESSES as $toAddress) {
+		$mail->addAddress($toAddress);
+	}
+	$mail->send();
 }
 
 $container = array();
