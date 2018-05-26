@@ -42,7 +42,7 @@ function logException(Throwable $e) {
 	}
 
 	if(ENABLE_DEBUG) {
-		var_dump($message);
+		echo nl2br($message);
 		exit;
 	}
 
