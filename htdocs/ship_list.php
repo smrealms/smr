@@ -224,7 +224,7 @@ try {
 	} ?>
 	</table></div></div><?php
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }
 

@@ -1,5 +1,5 @@
 <?php
-function logException(Exception $e) {
+function logException(Throwable $e) {
 	global $account,$var,$player;
 	$errorType = 'Unexpected Game Error!';
 	$message='';
@@ -25,7 +25,7 @@ function logException(Exception $e) {
 		if(function_exists('release_lock'))
 			release_lock(); //Try to release lock so they can carry on normally
 	}
-	catch(Exception $ee) {
+	catch(Throwable $ee) {
 		$message .= EOL.EOL.'-----------'.EOL.EOL.
 					'Releasing Lock Failed' .EOL.
 					'Message: ' . $ee->getMessage() .EOL.EOL;
@@ -68,12 +68,12 @@ function logException(Exception $e) {
 	return $errorType;
 }
 
-function handleException(Exception $e) {
+function handleException(Throwable $e) {
 	// The real error message may display sensitive information, so we
 	// need to catch any exceptions that are thrown while logging the error.
 	try {
 		$errorType = logException($e);
-	} catch (Exception $e) {
+	} catch (Throwable $e) {
 		$errorType = 'This error cannot be automatically reported. Please notify an admin!';
 	}
 

@@ -250,6 +250,6 @@ try {
 	header('Location: '.$href);
 	exit;
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }

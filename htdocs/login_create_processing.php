@@ -213,6 +213,6 @@ try {
 	$container['password'] = $password;
 	forwardURL($container);
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }

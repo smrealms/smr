@@ -151,6 +151,6 @@ try {
 
 	$template->display('GalaxyMap.inc');
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }

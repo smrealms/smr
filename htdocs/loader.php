@@ -124,6 +124,6 @@ try {
 	
 	do_voodoo();
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }
