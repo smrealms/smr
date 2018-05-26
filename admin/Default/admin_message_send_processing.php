@@ -10,12 +10,19 @@ if($_REQUEST['action'] == 'Preview message') {
 	forward($container);
 }
 
-$account_id = $_REQUEST['account_id'];
 $game_id = $var['SendGameID'];
-if (!empty($account_id) || $game_id == 20000) {
+if (isset($_REQUEST['account_id']) || $game_id == 20000) {
+	if (!is_numeric($expire)) {
+		create_error('Expire time must be numeric!');
+	}
+	if ($expire < 0) {
+		create_error('Expire time cannot be negative!');
+	}
+	// When expire==0, message will not expire
 	if ($expire > 0) $expire = ($expire * 3600) + TIME;
+
 	if ($game_id != 20000) {
-		SmrPlayer::sendMessageFromAdmin($game_id, $account_id, $message,$expire);
+		SmrPlayer::sendMessageFromAdmin($game_id, $_REQUEST['account_id'], $message,$expire);
 	}
 	else {
 		//send to all players in games that haven't ended yet

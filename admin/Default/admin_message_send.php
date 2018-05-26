@@ -20,7 +20,7 @@ else {
 	$container['SendGameID'] = $gameID;
 	$template->assign('AdminMessageSendFormHref',SmrSession::getNewHREF($container));
 	$template->assign('MessageGameID',$gameID);
-	$template->assign('ExpireTime', 1);
+	$template->assign('ExpireTime', 0.5);
 
 	if ($gameID != 20000) {
 		$gamePlayers = array();
