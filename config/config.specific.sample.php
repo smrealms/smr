@@ -20,6 +20,9 @@ const ENABLE_NPCS_CHESS = false;
 // Use the default value if using the provided docker-compose orchestration.
 const SMTP_HOSTNAME = 'smtp';
 
+// E-mail addresses to receive bug reports
+const BUG_REPORT_TO_ADDRESSES = ['bugs@smrealms.de'];
+
 //const COMPATIBILITY_DATABASES =
 //	array(
 //			'SmrClassicMySqlDatabase' => array(
