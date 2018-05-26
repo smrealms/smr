@@ -12,7 +12,7 @@ $action = $_POST['submit'];
 
 try {
 	$selected_player = SmrPlayer::getPlayerByPlayerID($player_id, $game_id);
-} catch (Exception $e) {
+} catch (PlayerNotFoundException $e) {
 	$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 	SmrSession::updateVar('processing_msg', $msg);
 	forward(create_container('skeleton.php', 'manage_post_editors.php', $var));

@@ -190,7 +190,7 @@ try {
 
 
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }
 

@@ -48,6 +48,6 @@ try {
 	
 	header('Location: '.URL.'/login.php');
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }

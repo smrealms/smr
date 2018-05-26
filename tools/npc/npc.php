@@ -111,7 +111,7 @@ try {
 
 	NPCStuff();
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	logException($e);
 	// Try to shut down cleanly
 	exitNPC();

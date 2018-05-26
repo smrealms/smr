@@ -42,6 +42,6 @@ try {
 	require_once(LIB . 'Login/loginSmarty.php');
 
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }

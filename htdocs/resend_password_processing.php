@@ -43,6 +43,6 @@ try {
 	exit;
 
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }

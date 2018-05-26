@@ -89,7 +89,7 @@ try {
 	else
 		main_page();
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }
 ?>

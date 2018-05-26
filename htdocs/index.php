@@ -4,6 +4,6 @@ try {
 	header('Location: '.URL.'/login.php');
 	exit;
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }

@@ -50,7 +50,7 @@ try {
 	</body>
 	</html><?php
 }
-catch(Exception $e) {
+catch(Throwable $e) {
 	handleException($e);
 }
 ?>

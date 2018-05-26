@@ -1,4 +1,8 @@
 <?php
+
+// Exception thrown when an account cannot be found in the database
+class AccountNotFoundException extends Exception {}
+
 abstract class AbstractSmrAccount {
 	const USER_RANKINGS_EACH_STAT_POW = .9;
 	const USER_RANKINGS_TOTAL_SCORE_POW = .3;
@@ -138,12 +142,8 @@ abstract class AbstractSmrAccount {
 
 	public static function &createAccount($login,$password,$email,$first_name,$last_name,$timez,$referral) {
 		if($referral!=0) {
-			try {
-				SmrAccount::getAccount($referral);
-			}
-			catch(Exception $e) {
-				throw new Exception('Referral account does not exist: '.$e->getMessage());
-			}
+			// Will throw if referral account doesn't exist
+			SmrAccount::getAccount($referral);
 		}
 		$db = new SmrMySqlDatabase();
 		$db->query('INSERT INTO account (login, password, email, first_name, last_name, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
@@ -231,7 +231,7 @@ abstract class AbstractSmrAccount {
 				$this->hofName=$this->login;
 		}
 		else {
-			throw new Exception('This account does not exist!');
+			throw new AccountNotFoundException('This account does not exist!');
 		}
 	}
 
