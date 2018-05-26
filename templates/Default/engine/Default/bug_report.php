@@ -1,16 +1,12 @@
-<span style="font-size:75%;">All information you can see on this page will be sent via email to the developer team!<br />
-Be as accurate as possible with your bug description.</span>
+All information on this page will be sent to the admin team.<br />
+Be as accurate as possible with your bug description.
+<p><i>Thank you for helping to improve the game!</i></p>
 
 <form method="POST" action="<?php echo Globals::getBugReportProcessingHREF(); ?>">
 	<table>
 		<tr>
 			<td class="bold">Login:</td>
 			<td><?php echo $ThisAccount->getLogin(); ?></td>
-		</tr>
-
-		<tr>
-			<td class="bold">eMail:</td>
-			<td><?php echo $ThisAccount->getEmail(); ?></td>
 		</tr>
 
 		<tr>
