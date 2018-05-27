@@ -1,12 +1,6 @@
 <?php
 try {
 
-	// ********************************
-	// *
-	// * I n c l u d e s   h e r e
-	// *
-	// ********************************
-
 	require_once('config.inc');
 
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
@@ -25,6 +19,28 @@ try {
 		session_start();
 		if(!$_SESSION['socialLogin']) {
 			$msg = 'Tried a social registration without having a social session.';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
+	}
+
+	//Check the captcha if it's a standard registration.
+	if (!$socialLogin && !empty(RECAPTCHA_PRIVATE)) {
+		if (!isset($_POST['g-recaptcha-response'])) {
+			$msg = 'Please make sure to complete the recaptcha!';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
+
+		$reCaptcha = new \ReCaptcha\ReCaptcha(RECAPTCHA_PRIVATE);
+		// Was there a reCAPTCHA response?
+		$resp = $reCaptcha->verify(
+			$_POST['g-recaptcha-response'],
+			$_SERVER['REMOTE_ADDR']
+		);
+
+		if (!$resp->isSuccess()) {
+			$msg = 'Invalid captcha!';
 			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
@@ -148,22 +164,6 @@ try {
 		$msg = 'Referral ID must be a number if entered!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
-	}
-
-	//Check the captcha if it's a standard registration.
-	if(!$socialLogin && strlen(RECAPTCHA_PRIVATE) > 0) {
-		$reCaptcha = new \ReCaptcha\ReCaptcha(RECAPTCHA_PRIVATE);
-		// Was there a reCAPTCHA response?
-		$resp = $reCaptcha->verify(
-			$_POST['g-recaptcha-response'],
-			$_SERVER['REMOTE_ADDR']
-		);
-
-		if (!$resp->isSuccess()) {
-			$msg = 'Invalid captcha!';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
 	}
 
 	// create account
