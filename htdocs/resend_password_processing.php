@@ -2,7 +2,7 @@
 try {
 
 	if (empty($_REQUEST['email'])) {
-		header('Location: error.php?msg=' . rawurlencode('You must specify an e-mail address!'));
+		header('Location: /error.php?msg=' . rawurlencode('You must specify an e-mail address!'));
 		exit;
 	}
 
@@ -14,7 +14,7 @@ try {
 	$account = SmrAccount::getAccountByEmail($_REQUEST['email']);
 	if ($account==null) {
 		// unknown user
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode('The specified e-mail address is not registered!'));
+		header('Location: /error.php?msg=' . rawurlencode('The specified e-mail address is not registered!'));
 		exit;
 	}
 
@@ -36,7 +36,7 @@ try {
 	$mail->addAddress($account->getEmail(), $account->getHofName());
 	$mail->send();
 
-	header('Location: '.URL.'/reset_password.php');
+	header('Location: /reset_password.php');
 	exit;
 
 }

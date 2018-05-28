@@ -669,7 +669,7 @@ abstract class AbstractSmrAccount {
 				$db->query('SELECT * FROM account WHERE `'.$databaseInfo['Column'].'` = '.$db->escapeNumber($db2->getInt('account_id')).' LIMIT 1');
 				if($db->nextRecord()) {
 					$msg = 'The specified old account is already linked to a 1.6 account.';
-					header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+					header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				}
 
 				$db3 = new $databaseClassName();
@@ -682,11 +682,11 @@ abstract class AbstractSmrAccount {
 						// save session (incase we forward)
 						SmrSession::update();
 						if ($db3->getField('reason') == 'Invalid eMail') {
-							header('Location: '.URL.'/email.php');
+							header('Location: /email.php');
 							exit;
 						}
 						else {
-							header('Location: '.URL.'/disabled.php');
+							header('Location: /disabled.php');
 							exit;
 						}
 					}

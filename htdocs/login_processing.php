@@ -29,7 +29,7 @@ try {
 			$socialLogin = new SocialLogin($_REQUEST['loginType']);
 			if(!$socialLogin->isValid()) {
 				$msg = 'Error validating login.';
-				header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
 			}
 			$loginType = $socialLogin->getLoginType();
@@ -70,7 +70,7 @@ try {
 			// has the user submitted empty fields
 			if (empty($login) || empty($password)) {
 				$msg = 'Please enter login and password!';
-				header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
 			}
 
@@ -85,13 +85,13 @@ try {
 			elseif (Globals::useCompatibilityDatabases()) {
 				if(!SmrAccount::upgradeAccount($login,$password)) {
 					$msg = 'Password is incorrect!';
-					header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+					header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 					exit;
 				}
 			}
 			else {
 				$msg = 'Password is incorrect!';
-				header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
 			}
 		}
@@ -112,7 +112,7 @@ try {
 		$socialLogin = isset($_REQUEST['social']);
 		if($socialLogin && (!$_SESSION['socialLogin'])) {
 			$msg = 'Tried a social login link without having a social session.';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),$_SESSION['socialLogin']->getUserID());
@@ -123,7 +123,7 @@ try {
 	if ($db->nextRecord()) {
 		// allow admins to access it
 		if (!$account->hasPermission(PERMISSION_GAME_OPEN_CLOSE)) {
-			header('Location: '.URL.'/offline.php');
+			header('Location: /offline.php');
 			exit;
 		}
 	}
@@ -140,11 +140,11 @@ try {
 		// save session (incase we forward)
 		SmrSession::update();
 		if ($disabled['Reason'] == 'Invalid eMail') {
-			header('Location: '.URL.'/email.php');
+			header('Location: /email.php');
 			exit;
 		}
 		else if ($disabled['Reason'] != CLOSE_ACCOUNT_BY_REQUEST_REASON) {
-			header('Location: '.URL.'/disabled.php');
+			header('Location: /disabled.php');
 			exit;
 		}
 	}
