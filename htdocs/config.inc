@@ -83,7 +83,7 @@ function handleException(Throwable $e) {
 	// If this is an ajax update, we don't really have a way to redirect
 	// to an error page at this time, so we just quit.
 	if(!defined('USING_AJAX')||!USING_AJAX)
-		header('location: ' . URL . '/error.php?msg='.urlencode($errorType));
+		header('location: /error.php?msg='.urlencode($errorType));
 	exit;
 }
 

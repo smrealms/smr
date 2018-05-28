@@ -10,7 +10,7 @@ try {
 
 	if (SmrSession::$account_id > 0) {
 		$msg = 'You\'re already logged in! Creating multis is against the rules!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 	$socialLogin = isset($_REQUEST['socialReg']);
@@ -19,7 +19,7 @@ try {
 		session_start();
 		if(!$_SESSION['socialLogin']) {
 			$msg = 'Tried a social registration without having a social session.';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 	}
@@ -28,7 +28,7 @@ try {
 	if (!$socialLogin && !empty(RECAPTCHA_PRIVATE)) {
 		if (!isset($_POST['g-recaptcha-response'])) {
 			$msg = 'Please make sure to complete the recaptcha!';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 
@@ -41,7 +41,7 @@ try {
 
 		if (!$resp->isSuccess()) {
 			$msg = 'Invalid captcha!';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 	}
@@ -52,36 +52,36 @@ try {
 	$password = trim($_REQUEST['password']);
 	if (strstr($login, '\'') || strstr($password, '\'')) {
 		$msg = 'Illegal character in login or password detected! Don\'t use the apostrophe.';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 	if(strpos($login,'NPC')===0) {
 		$msg = 'Login names cannot begin with "NPC".';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 	if (isset($_REQUEST['agreement']) && empty($_REQUEST['agreement'])) {
 		$msg = 'You must accept the agreement!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 
 	if (empty($login)) {
 		$msg = 'Login name is missing!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 
 	if (!$socialLogin && empty($password)) {
 		$msg = 'Password is missing!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 
 	$pass_verify = $_REQUEST['pass_verify'];
 	if ($password != $pass_verify) {
 		$msg = 'The passwords you entered do not match.';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 
@@ -89,20 +89,20 @@ try {
 		$email = trim($_REQUEST['email']);
 		if (empty($email)) {
 			$msg = 'Email address is missing!';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 
 		if (strstr($email, ' ')) {
 			$msg = 'The email is invalid! It cannot contain any spaces.';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 
 		$email_verify = $_REQUEST['email_verify'];
 		if ($email != $email_verify) {
 			$msg = 'The eMail addresses you entered do not match.';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 
@@ -112,7 +112,7 @@ try {
 		// check if the host got a MX or at least an A entry
 		if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
 			$msg = 'This is not a valid email address! The domain '.$host.' does not exist.';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 	}
@@ -125,28 +125,28 @@ try {
 		$first_name = $_REQUEST['first_name'];
 		if (empty($first_name)) {
 			$msg = 'First name is missing!';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 
 		$last_name = $_REQUEST['last_name'];
 		if (empty($last_name)) {
 			$msg = 'Last name is missing!';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 	}
 
 	if ($login == $password) {
 		$msg = 'Your chosen password is invalid!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 
 	$db->query('SELECT * FROM account WHERE login = '.$db->escapeString($login));
 	if ($db->getNumRows() > 0) {
 		$msg = 'This user name is already registered.';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 
@@ -154,7 +154,7 @@ try {
 	$db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email));
 	if ($db->getNumRows() > 0) {
 		$msg = 'This email address is already registered.';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 
@@ -162,7 +162,7 @@ try {
 
 	if (!is_numeric($referral)) {
 		$msg = 'Referral ID must be a number if entered!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 
@@ -175,7 +175,7 @@ try {
 	}
 	catch(AccountNotFoundException $e) {
 		$msg = 'Invalid referral account ID!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 	$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give $2 worth of "reward" credits for joining.

@@ -1,9 +1,4 @@
 <?php
-try {
-	require_once('config.inc');
-	header('Location: '.URL.'/login.php');
-	exit;
-}
-catch(Throwable $e) {
-	handleException($e);
-}
+
+header('Location: /login.php');
+exit;

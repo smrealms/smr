@@ -52,7 +52,7 @@ try {
 	//exit;
 	// do we have a session?
 	if (SmrSession::$account_id == 0) {
-		header('Location: '.URL.'/login.php');
+		header('Location: /login.php');
 		exit;
 	}
 
@@ -104,7 +104,7 @@ try {
 		// save session (incase we forward)
 		SmrSession::update();
 		if ($disabled['Reason'] == 'Invalid eMail') {
-			header('Location: '.URL.'/email.php');
+			header('Location: /email.php');
 			exit;
 		}
 		else if ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
@@ -117,7 +117,7 @@ try {
 			}
 		}
 		else {
-			header('Location: '.URL.'/disabled.php');
+			header('Location: /disabled.php');
 			exit;
 		}
 	}

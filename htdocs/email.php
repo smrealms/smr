@@ -8,7 +8,7 @@ try {
 
 	// do we have a session?
 	if (SmrSession::$account_id == 0) {
-		header('Location: '.URL.'/login.php');
+		header('Location: /login.php');
 		exit;
 	}
 

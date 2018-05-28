@@ -33,7 +33,7 @@ try {
 	// do we have a session?
 	if (SmrSession::$account_id == 0 || SmrSession::$game_id == 0) {
 	
-		header('Location: '.URL.'/login.php');
+		header('Location: /login.php');
 		exit;
 	
 	}
@@ -41,27 +41,27 @@ try {
 	if(isset($_REQUEST['sector_id'])) {
 		$sectorID = $_REQUEST['sector_id'];
 		if(!is_numeric($sectorID)) {
-			header('location: ' . URL . '/error.php?msg=Sector id was not a number.');
+			header('location: /error.php?msg=Sector ID was not a number.');
 			exit;
 		}
 		try {
 			$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id, $sectorID);
 		} catch (SectorNotFoundException $e) {
-			header('location: ' . URL . '/error.php?msg=Invalid sector id');
+			header('location: /error.php?msg=Invalid sector ID');
 			exit;
 		}
 	}
 	else if(isset($_REQUEST['galaxy_id'])) {
 		$galaxyID = $_REQUEST['galaxy_id'];
 		if(!is_numeric($galaxyID)) {
-			header('location: ' . URL . '/error.php?msg=Galaxy id was not a number.');
+			header('location: /error.php?msg=Galaxy ID was not a number.');
 			exit;
 		}
 		try {
 			$galaxy =& SmrGalaxy::getGalaxy(SmrSession::$game_id,$galaxyID);
 		}
 		catch(Exception $e) {
-			header('location: ' . URL . '/error.php?msg=Invalid galaxy id');
+			header('location: /error.php?msg=Invalid galaxy ID');
 			exit;
 		}
 	}
