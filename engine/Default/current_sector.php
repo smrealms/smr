@@ -5,9 +5,6 @@ if($player->isLandedOnPlanet()) {
 	forward(create_container('skeleton.php', 'planet_main.php', $var));
 }
 
-$sector =& $player->getSector();
-
-$template->assign('ThisSector',$sector);
 $template->assign('SpaceView',true);
 
 $template->assign('PageTopic','Current Sector: ' . $player->getSectorID() . ' (' .$sector->getGalaxyName() . ')');
