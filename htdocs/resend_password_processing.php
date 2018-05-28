@@ -1,20 +1,17 @@
 <?php
 try {
 
-	// ********************************
-	// *
-	// * I n c l u d e s   h e r e
-	// *
-	// ********************************
+	if (empty($_REQUEST['email'])) {
+		header('Location: error.php?msg=' . rawurlencode('You must specify an e-mail address!'));
+		exit;
+	}
 
 	require_once('config.inc');
 	require_once(LIB . 'Default/smr.inc');
 	require_once(get_file_loc('SmrAccount.class.inc'));
 
-
 	// get this user from db
-	$email = $_REQUEST['email'];
-	$account = SmrAccount::getAccountByEmail($email);
+	$account = SmrAccount::getAccountByEmail($_REQUEST['email']);
 	if ($account==null) {
 		// unknown user
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode('The specified e-mail address is not registered!'));
