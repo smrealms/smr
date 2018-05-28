@@ -295,7 +295,7 @@ class Distance {
 	
 	public function followPath() {
 		$nextSectorID = array_shift($this->path);
-		if (in_array($nextSectorID, array_values($this->warpMap))) {
+		if (in_array($nextSectorID, $this->warpMap)) {
 			$this->numWarps--;
 		} else {
 			$this->distance--;
