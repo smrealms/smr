@@ -178,11 +178,12 @@ elseif ($action == 'blackjack') {
 		return $return;
 	}
 
-	function check_for_win($comp, $play) {
-		//TODO: Hack to prevent an error, fix it
-		global $player_card;
+	function check_for_win($ai_card, $player_card) {
+		$comp = get_value($ai_card);
+		$play = get_value($player_card);
+
 		//does the player win
-		if (sizeof($player_card) == 2 && get_value($player_card) == 21) {
+		if (sizeof($player_card) == 2 && $play == 21) {
 			return 'bj';
 		}
 		elseif ($play > $comp && $comp <= 21 && $play <= 21) {
@@ -358,7 +359,7 @@ elseif ($action == 'blackjack') {
 				}
 			}
 		}
-		$win = check_for_win(get_value($ai_card), get_value($player_card));
+		$win = check_for_win($ai_card, $player_card);
 		if ($win == 'yes' || $win == 'bj') {
 			$message.=('<div align=center><h1><span class="red">You Win</span></h1></div>');
 		}
@@ -404,7 +405,7 @@ elseif ($action == 'blackjack') {
 	$message.=('<div align=center>You have a total of ' . get_value($player_card) . ' </div><br />');
 	//check for win
 	if ($do == 'STAY') {
-		$win = check_for_win(get_value($ai_card), get_value($player_card));
+		$win = check_for_win($ai_card, $player_card);
 	}
 	$message.=('<div align=center>');
 	if (get_value($player_card) > 21) {
