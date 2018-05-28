@@ -23,6 +23,13 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db) {
 		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$db->escapeNumber($accountID).$gameIDSql.' GROUP BY account_id LIMIT 1');
 	}
 
+	// What we will show for the amount:
+	// * Game specified:
+	//  - Ally: real amount
+	//  - Enemy: "-"
+	// * No game specified (All Time HoF):
+	//  - Current player: real total amount
+	//  - Other Player: total amount from completed games
 	$realAmount = 0;
 	if($db->nextRecord()) {
 		if($db->getField('amount')!=null) {
@@ -33,19 +40,16 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db) {
 		$rank['Amount'] = $realAmount;
 	}
 	else if($vis==HOF_ALLIANCE&&$account->getAccountID()!=$accountID) {
-		try {
-			$hofPlayer =& SmrPlayer::getPlayer($accountID, $gameID);
-			if($hofPlayer->sameAlliance($player)) {
+		if (isset($gameID)) {
+			$hofPlayer = SmrPlayer::getPlayer($accountID, $gameID);
+			// Only show the real amount if player is in your alliance.
+			if ($hofPlayer->sameAlliance($player)) {
 				$rank['Amount'] = $realAmount;
+			} else {
+				$rank['Amount'] = '-';
 			}
-			else {
-				$rank['Amount'] = '-'; //Show a - rather than 0 when hidden due to alliance restrictions so that it is clearer.
-			}
-		}
-		catch(PlayerNotFoundException $e) {
-			$rank['Amount'] = '-';
-		}
-		if($rank['Amount'] == '-' && !isset($gameID)) {
+		} else {
+			$rank['Amount'] = 0; //default
 			$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.' AND game_id IN (SELECT game_id FROM game WHERE end_date < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).') GROUP BY account_id LIMIT 1');
 			if($db->nextRecord()) {
 				if($db->getField('amount')!=null) {
