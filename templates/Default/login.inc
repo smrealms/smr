@@ -161,7 +161,7 @@
 								<tr>
 									<td>
 										<img src="images/login/regLeft.png" width="30" height="11"  alt="">
-										<a href="<?php echo $Links['Register'] ?>">
+										<a href="login_create.php">
 											<img src="images/login/register.png" width="83" height="11" alt="Register">
 										</a>
 										<a href="resend_password.php">
