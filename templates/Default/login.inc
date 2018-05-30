@@ -160,7 +160,14 @@
 							<table class="collapsed">
 								<tr>
 									<td>
-										<img src="images/login/regLeft.png" width="30" height="11"  alt=""><a href="<?php echo $Links['Register'] ?>"><img src="images/login/register.png" width="83" height="11" alt="Register"></a><a href="resend_password.php"><img src="images/login/pw_reset.png" width="127" height="11"  alt="Reset Password"></a><img src="images/login/regRight.png" width="18" height="11" alt="">
+										<img src="images/login/regLeft.png" width="30" height="11"  alt="">
+										<a href="<?php echo $Links['Register'] ?>">
+											<img src="images/login/register.png" width="83" height="11" alt="Register">
+										</a>
+										<a href="resend_password.php">
+											<img src="images/login/pw_reset.png" width="127" height="11" alt="Reset Password">
+										</a>
+										<img src="images/login/regRight.png" width="18" height="11" alt="">
 									</td>
 								</tr>
 								<tr>
