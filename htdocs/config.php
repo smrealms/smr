@@ -393,14 +393,10 @@ require_once(LIB . 'Default/SmrSession.class.inc');
 require_once(LIB . 'Default/Template.class.inc');
 $template = new Template();
 $GLOBALS['template'] =& $template;
-//	$template->assign('links',$db->_LINKS);
-//	$template->assign('javaScriptFiles',$db->_JS);
+
 $template->assign('URL',URL);
 $template->assign('CSSLink',DEFAULT_CSS);
 $template->assign('CSSColourLink',DEFAULT_CSS_COLOUR);
 $template->assign('Title', 'Space Merchant Realms');
 
-$links = array('Register' => 'login_create.php',
-					'ResetPassword' => 'resend_password.php');
-$template->assign('Links',$links);
 $template->assign('AJAX_ENABLE_REFRESH',AJAX_DEFAULT_REFRESH_TIME);
