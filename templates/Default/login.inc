@@ -191,15 +191,14 @@
 					<td class="center" style="padding: 3px; width: 200px;">
 						<span style="font-size: 14px;">Or login with:</span>
 						<span style="font-size: 3px;"><br /><br />
-							<?php require_once(LIB.'Login/SocialLogin.class.inc'); ?>
-							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getFacebookLoginUrl()); ?>">
+							<a style="display: inline;margin:10px;" href="login_social_processing.php?type=facebook">
 								<img alt="Facebook Login" src="images/login/facebook.png" width="65" height="22">
 							</a><br /><br />
 							<?php /*
-							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getOpenIdLoginUrl('Google')); ?>">
+							<a style="display: inline;margin:10px;" href="login_social_processing.php?type=google">
 								<img alt="Google Login" src="images/login/google.png" width="32" height="32">
 							</a>
-							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getTwitterLoginUrl()); ?>">
+							<a style="display: inline;margin:10px;" href="login_social_processing.php?type=twitter">
 								<img alt="Twitter Login" src="images/login/twitter.png">
 							</a>
 							*/ ?>
