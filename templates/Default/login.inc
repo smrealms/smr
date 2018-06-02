@@ -195,15 +195,14 @@
 							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getFacebookLoginUrl()); ?>">
 								<img alt="Facebook Login" src="images/login/facebook.png" width="65" height="22">
 							</a><br /><br />
-							<!-- <a style="display: inline;margin:10px;" href="<?php /* echo str_replace('&', '&amp;', SocialLogin::getOpenIdLoginUrl('Google')); */ ?>">
-								<img alt="Google Login" src="images/login/google.png" width="32" height="32">
-							</a>-->
 							<?php /*
-							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getTwitterLoginUrl()); ?>">
-								<img alt="Twiiter Login" src="images/login/twitter.png">
+							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getOpenIdLoginUrl('Google')); ?>">
+								<img alt="Google Login" src="images/login/google.png" width="32" height="32">
 							</a>
-							*/
-							?>
+							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getTwitterLoginUrl()); ?>">
+								<img alt="Twitter Login" src="images/login/twitter.png">
+							</a>
+							*/ ?>
 						</span>
 					</td>
 					<td style="width:470px"><?php
