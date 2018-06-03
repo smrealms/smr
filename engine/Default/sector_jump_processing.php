@@ -1,6 +1,5 @@
 <?php
 
-$sector =& $player->getSector();
 if (isset($_REQUEST['target'])) $target = trim($_REQUEST['target']);
 else $target = $var['target'];
 

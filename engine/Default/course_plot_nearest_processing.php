@@ -17,7 +17,6 @@ else {
 	$account->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest '.$xType.': '.$X.'.', $player->getSectorID());
 }
 
-$sector =& $player->getSector();
 if($sector->hasX($realX,$player))
 	create_error('Current sector has what you\'re looking for!');
 

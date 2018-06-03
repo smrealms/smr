@@ -39,7 +39,6 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forces' => array(),
 				'Forced' => false);
 
-$sector =& $player->getSector();
 $attackers =& $sector->getFightingTradersAgainstPlanet($player, $planet);
 
 $planet->attackedBy($player,$attackers);

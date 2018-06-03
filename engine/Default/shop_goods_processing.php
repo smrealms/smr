@@ -15,7 +15,6 @@ $good_name = Globals::getGoodName($good_id);
 if ($player->getTurns() == 0)
 	create_error('You don\'t have enough turns to trade.');
 
-$sector =& $player->getSector();
 // get rid of those bugs when we die...there is no port at the home sector
 if (!$sector->hasPort())
 	create_error('I can\'t see a port in this sector. Can you?');

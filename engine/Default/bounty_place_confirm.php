@@ -1,5 +1,4 @@
 <?php
-$sector =& $player->getSector();
 
 // get request variables
 if(isset($_REQUEST['amount'])) {

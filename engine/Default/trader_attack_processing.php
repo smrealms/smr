@@ -26,10 +26,8 @@ $targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
 	else if($targetPlayer->hasFederalProtection())
 		create_error('Target is under federal protection.');
 
-$sector =& $player->getSector();
 $fightingPlayers =& $sector->getFightingTraders($player,$targetPlayer);
 
-	
 //decloak all fighters
 foreach($fightingPlayers as &$teamPlayers) {
 	foreach($teamPlayers as &$teamPlayer) {

@@ -13,7 +13,6 @@ if(!$ship->hasWeapons() && !$ship->hasCDs())
 if(!$player->canFight())
 	create_error('You are not allowed to fight!');
 
-$sector =& $player->getSector();
 $port =& $sector->getPort();
 
 if(!$port->exists())
