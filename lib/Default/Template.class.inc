@@ -39,10 +39,7 @@ class Template {
 		ob_start();
 		$this->includeTemplate($templateName);
 		$this->captures[$this->currentCaptureID].=ob_get_clean();
-		$output='';
-		foreach($this->captures as $captured) {
-			$output.=$captured;
-		}
+		$output = join('', $this->captures);
 		$this->trimWhiteSpace($output);
 		if($forAjax) {
 			header('Content-Type: text/xml; charset=utf-8');

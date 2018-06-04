@@ -4,10 +4,7 @@ function get_album_nick($album_id) {
 	if ($album_id == 0)
 		return 'System';
 
-	$album = new SmrMySqlDatabase();
-
-	$account =& SmrAccount::getAccount($album_id);
-	return $account->getHofName();
+	return SmrAccount::getAccount($album_id)->getHofName();
 }
 
 $template->assign('PageTopic','Approve Album Entries');
