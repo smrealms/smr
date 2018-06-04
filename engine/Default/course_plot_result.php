@@ -7,12 +7,9 @@ $path = unserialize($var['Distance']);
 // Throw start sector away (it's useless for the route),
 // but save the full path in case we end up needing to display it.
 $fullPath = implode(' - ', $path->getPath());
-$path->removeStart();
+$startSectorID = $path->removeStart();
 
-// now get the sector we are going to but don't remove it (sector_move_processing does it)
-$next_sector = $path->getNextOnPath();
-
-if ($player->getSector()->isLinked($next_sector)) {
+if ($player->getSectorID() == $startSectorID) {
 	$player->setPlottedCourse($path);
 
 	if (!$player->isLandedOnPlanet()) {
