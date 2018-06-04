@@ -246,13 +246,6 @@ class Distance {
 		return SmrSector::getSector($this->gameID,$this->getEndSectorID());
 	}
 
-	/**
-	 * @return the startSectorId
-	 */
-	public function getStartSectorId() {
-		return $this->path[0];
-	}
-
 	public function compareTo(Distance $d) {
 		if ($this->equals($d)===true)
 			return 0;
