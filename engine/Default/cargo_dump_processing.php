@@ -26,7 +26,6 @@ if ($amount > $ship->getCargo($good_id)) {
 	create_error('You can\'t dump more than you have.');
 }
 
-$sector =& $player->getSector();
 if ($sector->offersFederalProtection()) {
 	create_error('You can\'t dump cargo in a Federal Sector!');
 }

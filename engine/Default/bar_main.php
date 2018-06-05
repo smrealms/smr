@@ -1,5 +1,4 @@
 <?php
-$sector =& $player->getSector();
 
 //first check if there is a bar here
 if (!$sector->hasBar()) {

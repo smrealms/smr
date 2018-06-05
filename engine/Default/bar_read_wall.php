@@ -1,5 +1,4 @@
 <?php
-$sector =& $player->getSector();
 
 $template->assign('PageTopic','Reading The Wall');
 

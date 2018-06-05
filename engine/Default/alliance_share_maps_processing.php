@@ -1,6 +1,5 @@
 <?php
 require_once(get_file_loc('SmrPort.class.inc'));
-$sector =& $player->getSector();
 
 $alliance_ids = array();
 
