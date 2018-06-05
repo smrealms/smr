@@ -63,12 +63,12 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 $attackers = $player->getSector()->getFightingTradersAgainstForces($player, $bump);
 
 //decloak all attackers
-foreach($attackers as &$attacker) {
+foreach ($attackers as $attacker) {
 	$attacker->getShip()->decloak();
 	if (!$bump) {
 		$attacker->setLastSectorID(0);
 	}
-} unset($attacker);
+}
 
 // If mines are bumped, the forces shoot first. Otherwise player shoots first.
 if ($bump) {
@@ -76,11 +76,11 @@ if ($bump) {
 }
 
 $results['Attackers'] = array('TotalDamage' => 0);
-foreach($attackers as &$attacker) {
+foreach ($attackers as $attacker) {
 	$playerResults =& $attacker->shootForces($forces);
 	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
-} unset($attacker);
+}
 
 if (!$bump) {
 	$results['Forces'] =& $forces->shootPlayers($attackers, $bump);

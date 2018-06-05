@@ -7,7 +7,7 @@ if (count($ShipsSold) > 0 ) { ?>
 			<th>Cost</th>
 			<th>Action</th>
 		</tr><?php
-		foreach($ShipsSold as &$ShipSold) { ?>
+		foreach ($ShipsSold as $ShipSold) { ?>
 			<tr>
 				<td><?php echo $ShipSold['Name']; ?></td>
 				<td><?php echo $ShipSold['Cost']; ?></td>
@@ -17,7 +17,7 @@ if (count($ShipsSold) > 0 ) { ?>
 					</div>
 				</td>
 			</tr><?php
-		} unset($ShipSold);
+		}
 	?></table><?php
 }
 else {

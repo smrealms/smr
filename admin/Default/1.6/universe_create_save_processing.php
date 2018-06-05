@@ -73,10 +73,10 @@ else if ($submit=='Create Galaxies') {
 		$galaxy->setMaxForceTime($_POST['forces' . $i] * 3600);
 	}
 	SmrGalaxy::saveGalaxies();
-	$galaxies =& SmrGalaxy::getGameGalaxies($var['game_id'],true);
-	foreach($galaxies as &$galaxy) {
+	$galaxies = SmrGalaxy::getGameGalaxies($var['game_id'],true);
+	foreach ($galaxies as $galaxy) {
 		$galaxy->generateSectors();
-	} unset($galaxy);
+	}
 	SmrSector::saveSectors();
 	$var['message'] = '<span class="green">Success</span> : Succesfully created galaxies.';
 }

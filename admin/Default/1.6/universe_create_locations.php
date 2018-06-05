@@ -1,11 +1,11 @@
 <?php
 require_once(get_file_loc('SmrGalaxy.class.inc'));
 
-$locations =& SmrLocation::getAllLocations();
+$locations = SmrLocation::getAllLocations();
 
 // Initialize all location counts to zero
 $totalLocs = array();
-foreach ($locations as &$location) {
+foreach ($locations as $location) {
 	$totalLocs[$location->getTypeID()] = 0;
 }
 
@@ -46,28 +46,25 @@ class Categories {
 // Set any extra information to be displayed with each location
 $locText = array();
 $categories = new Categories();
-foreach ($locations as &$location) {
+foreach ($locations as $location) {
 	$extra = '<span class="small"><br />';
 	if ($location->isWeaponSold()) {
 		$extra .= $categories->addLoc($location->getTypeID(), 'Weapons');
-		$weaponsSold =& $location->getWeaponsSold();
-		foreach($weaponsSold as &$weapon) {
+		foreach ($location->getWeaponsSold() as $weapon) {
 			$extra .= $weapon->getName() . '&nbsp;&nbsp;&nbsp;(' . $weapon->getShieldDamage() . '/' . $weapon->getArmourDamage() . '/' . $weapon->getBaseAccuracy() . ')<br />';
-		} unset($weapon);
+		}
 	}
 	if ($location->isShipSold()) {
 		$extra .= $categories->addLoc($location->getTypeID(), 'Ships');
-		$shipsSold =& $location->getShipsSold();
-		foreach ($shipsSold as &$shipSold) {
+		foreach ($location->getShipsSold() as $shipSold) {
 			$extra .= $shipSold['Name'] . '<br />';
-		} unset($shipSold);
+		}
 	}
 	if ($location->isHardwareSold()) {
 		$extra .= $categories->addLoc($location->getTypeID(), 'Hardware');
-		$hardwareSold =& $location->getHardwareSold();
-		foreach ($hardwareSold as &$hardware) {
+		foreach ($location->getHardwareSold() as $hardware) {
 			$extra .= $hardware['Name'] . '<br />';
-		} unset($hardware);
+		}
 	}
 	if ($location->isBar()) {
 		$extra .= $categories->addLoc($location->getTypeID(), 'Bars');
@@ -85,7 +82,7 @@ foreach ($locations as &$location) {
 	$extra .= '</span>';
 
 	$locText[$location->getTypeID()] = $location->getName() . $extra;
-} unset($location);
+}
 $template->assign('LocText', $locText);
 $template->assign('LocTypes', $categories->locTypes);
 

@@ -39,20 +39,20 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forces' => array(),
 				'Forced' => false);
 
-$attackers =& $sector->getFightingTradersAgainstPlanet($player, $planet);
+$attackers = $sector->getFightingTradersAgainstPlanet($player, $planet);
 
 $planet->attackedBy($player,$attackers);
 
 //decloak all attackers
-foreach($attackers as &$attacker) {
+foreach ($attackers as $attacker) {
 	$attacker->getShip()->decloak();
-} unset($attacker);
+}
 
-foreach($attackers as &$attacker) {
+foreach ($attackers as $attacker) {
 	$playerResults =& $attacker->shootPlanet($planet, false);
 	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
-} unset($attacker);
+}
 $results['Attackers']['Downgrades'] = $planet->checkForDowngrade($results['Attackers']['TotalDamage']);
 $results['Planet'] =& $planet->shootPlayers($attackers);
 
@@ -87,10 +87,10 @@ if($planetOwner->hasAlliance()) {
 }
 
 // Update sector messages for attackers
-foreach($attackers as &$attacker) {
+foreach ($attackers as $attacker) {
 	if(!$player->equals($attacker))
 		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ',' . $db->escapeString('[ATTACK_RESULTS]'.$logId) . ')');
-} unset($attacker);
+}
 
 $container = create_container('skeleton.php', 'planet_attack.php');
 $container['sector_id'] = $planet->getSectorID();

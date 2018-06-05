@@ -26,14 +26,14 @@ $targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
 	else if($targetPlayer->hasFederalProtection())
 		create_error('Target is under federal protection.');
 
-$fightingPlayers =& $sector->getFightingTraders($player,$targetPlayer);
+$fightingPlayers = $sector->getFightingTraders($player,$targetPlayer);
 
 //decloak all fighters
-foreach($fightingPlayers as &$teamPlayers) {
-	foreach($teamPlayers as &$teamPlayer) {
+foreach ($fightingPlayers as $teamPlayers) {
+	foreach ($teamPlayers as $teamPlayer) {
 		$teamPlayer->getShip()->decloak();
-	} unset($teamPlayer);
-} unset($teamPlayers);
+	}
+}
 
 // Take off the 3 turns for attacking
 $player->takeTurns(3);
@@ -41,16 +41,16 @@ $player->update();
 
 $results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0),
 				'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
-foreach($fightingPlayers['Attackers'] as $accountID => &$teamPlayer) {
+foreach ($fightingPlayers['Attackers'] as $accountID => $teamPlayer) {
 	$playerResults =& $teamPlayer->shootPlayers($fightingPlayers['Defenders']);
 	$results['Attackers']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
-} unset($teamPlayer);
-foreach($fightingPlayers['Defenders'] as $accountID => &$teamPlayer) {
+}
+foreach ($fightingPlayers['Defenders'] as $accountID => $teamPlayer) {
 	$playerResults =& $teamPlayer->shootPlayers($fightingPlayers['Attackers']);
 	$results['Defenders']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
 	$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
-} unset($teamPlayer);
+}
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 $account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'].' and the other team does '.$results['Defenders']['TotalDamage'], $sector->getSectorID());

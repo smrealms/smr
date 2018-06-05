@@ -21,13 +21,13 @@ if ($start == $target)
 
 $startExists = false;
 $targetExists = false;
-$galaxies =& SmrGalaxy::getGameGalaxies($player->getGameID());
-foreach($galaxies as &$galaxy) {
+$galaxies = SmrGalaxy::getGameGalaxies($player->getGameID());
+foreach ($galaxies as $galaxy) {
 	if($galaxy->contains($start))
 		$startExists = true;
 	if($galaxy->contains($target))
 		$targetExists = true;
-} unset($galaxy);
+}
 
 if($startExists===false || $targetExists===false)
 	create_error('The sectors have to exist!');
