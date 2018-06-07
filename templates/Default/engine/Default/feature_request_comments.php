@@ -6,7 +6,7 @@ if(isset($Comments)) { ?>
 			<th>Comment</th>
 			<th>Time</th>
 		</tr><?php
-		foreach($Comments as &$Comment) { ?>
+		foreach ($Comments as $Comment) { ?>
 			<tr class="center">
 				<td class="shrink noWrap top"><?php
 				if($Comment['Anonymous']) {
@@ -21,7 +21,7 @@ if(isset($Comments)) { ?>
 				<td class="left"><?php echo bbifyMessage($Comment['Message']); ?></td>
 				<td class="shrink noWrap top"><?php echo $Comment['Time']; ?></td>
 			</tr><?php
-		} unset($Comment); ?>
+		} ?>
 	</table><?php
 }
 

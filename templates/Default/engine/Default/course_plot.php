@@ -32,24 +32,24 @@ if(isset($XType)) { ?>
 		<select name="X" id="InputFields" onchange="this.form.submit()"><?php
 			switch($XType) {
 				case 'Technology':
-					$Hardwares =& Globals::getHardwareTypes();
-					foreach($Hardwares as &$Hardware) {
+					$Hardwares = Globals::getHardwareTypes();
+					foreach ($Hardwares as $Hardware) {
 						?><option value="<?php echo $Hardware['ID']; ?>"><?php echo $Hardware['Name']; ?></option><?php
-					} unset($Hardware);
+					}
 				break;
 				case 'Ships':
-					$Ships =& AbstractSmrShip::getAllBaseShips(Globals::getGameType($ThisPlayer->getGameID()));
+					$Ships = AbstractSmrShip::getAllBaseShips(Globals::getGameType($ThisPlayer->getGameID()));
 					Sorter::sortByNumElement($Ships, 'Name');
-					foreach($Ships as &$Ship) {
+					foreach ($Ships as $Ship) {
 						?><option value="<?php echo $Ship['ShipTypeID']; ?>"><?php echo $Ship['Name']; ?></option><?php
-					} unset($Ship);
+					}
 				break;
 				case 'Weapons':
-					$Weapons =& SmrWeapon::getAllWeapons(Globals::getGameType($ThisPlayer->getGameID()));
+					$Weapons = SmrWeapon::getAllWeapons(Globals::getGameType($ThisPlayer->getGameID()));
 					Sorter::sortByNumMethod($Weapons, 'getName');
-					foreach($Weapons as &$Weapon) {
+					foreach ($Weapons as $Weapon) {
 						?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?></option><?php
-					} unset($Weapon);
+					}
 				break;
 				case 'Locations':
 					?><option value="Bank">Any Bank</option>
@@ -61,11 +61,11 @@ if(isset($XType)) { ?>
 					<option value="Hardware">Any Hardware Shop</option>
 					<option value="Ship">Any Ship Shop</option>
 					<option value="Weapon">Any Weapon Shop</option><?php
-					$Locations =& SmrLocation::getAllLocations();
+					$Locations = SmrLocation::getAllLocations();
 					Sorter::sortByNumMethod($Locations, 'getName');
-					foreach($Locations as &$Location) {
+					foreach ($Locations as $Location) {
 						?><option value="<?php echo $Location->getTypeID(); ?>"><?php echo $Location->getName(); ?></option><?php
-					} unset($Location);
+					}
 				break;
 				case 'Sell Goods':
 				case 'Buy Goods':
@@ -75,10 +75,10 @@ if(isset($XType)) { ?>
 					}
 				break;
 				case 'Galaxies':
-					$Galaxies =& SmrGalaxy::getGameGalaxies($ThisPlayer->getGameID());
-					foreach($Galaxies as &$Galaxy) {
+					$Galaxies = SmrGalaxy::getGameGalaxies($ThisPlayer->getGameID());
+					foreach ($Galaxies as $Galaxy) {
 						?><option value="<?php echo $Galaxy->getGalaxyID(); ?>"><?php echo $Galaxy->getName(); ?></option><?php
-					} unset($Galaxy);
+					}
 				break;
 				default:
 			} ?>

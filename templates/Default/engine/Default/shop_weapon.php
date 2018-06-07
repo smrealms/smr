@@ -15,8 +15,7 @@ if ($ThisLocation->isWeaponSold()) { ?>
 		</thead>
 
 		<tbody class="list"><?php
-			$WeaponsSold =& $ThisLocation->getWeaponsSold();
-			foreach($WeaponsSold as &$Weapon) { ?>
+			foreach ($ThisLocation->getWeaponsSold() as $Weapon) { ?>
 				<tr>
 					<td class="sort_name"><?php echo $Weapon->getName(); ?></td>
 					<td class="sort_shield"><?php echo $Weapon->getShieldDamage(); ?></td>
@@ -28,7 +27,7 @@ if ($ThisLocation->isWeaponSold()) { ?>
 					<td><a href="<?php echo $Weapon->getBuyHREF($ThisLocation); ?>" class="submitStyle">Buy</a></td>
 					</td>
 				</tr><?php
-			} unset($Weapon);?>
+			} ?>
 		</tbody>
 	</table>
 
@@ -53,13 +52,12 @@ if ($ThisShip->hasWeapons()) { ?>
 			<th>Cash</th>
 			<th>Action</th>
 		</tr><?php
-		$ShipWeapons =& $ThisShip->getWeapons();
-		foreach ($ShipWeapons as $OrderID => &$Weapon) { ?>
+		foreach ($ThisShip->getWeapons() as $OrderID => $Weapon) { ?>
 			<tr class="center">
 				<td><?php echo $Weapon->getName(); ?></td>
 				<td><?php echo number_format(floor($Weapon->getCost() * WEAPON_REFUND_PERCENT)); ?></td>
 				<td><a href="<?php echo $Weapon->getSellHREF($ThisLocation, $OrderID); ?>" class="submitStyle">Sell</a></td>
 			</tr><?php
-		} unset($Weapon); ?>
+		} ?>
 	</table><?php
 } ?>

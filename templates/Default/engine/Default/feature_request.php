@@ -40,7 +40,7 @@ if(isset($FeatureRequests)) { ?>
 					?><th width="20">&nbsp;</th><?php
 				} ?>
 			</tr><?php
-			foreach($FeatureRequests as &$FeatureRequest) { ?>
+			foreach ($FeatureRequests as $FeatureRequest) { ?>
 				<tr class="center"><?php
 					if($FeatureModerator) {
 						?><td><?php echo $FeatureRequest['RequestAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['RequestAccount']->getAccountID(); ?>)</td><?php
@@ -57,7 +57,7 @@ if(isset($FeatureRequests)) { ?>
 						?><td valign="middle" align="center"><input type="checkbox" name="set_status_ids[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php
 					} ?>
 				</tr><?php
-			} unset($FeatureRequest); ?>
+			} ?>
 		</table>
 		<div align="right"><?php
 			if($FeatureModerator) { ?>&nbsp;

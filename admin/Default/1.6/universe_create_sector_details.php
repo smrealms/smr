@@ -44,27 +44,25 @@ for ($i=1;$i<=9;$i++) {
 }
 $PHP_OUTPUT.= '</select>';
 $PHP_OUTPUT.= '<select name="port_race">';
-$races =& Globals::getRaces();
-foreach ($races as &$race) {
+foreach (Globals::getRaces() as $race) {
 	$PHP_OUTPUT.= '<option value="' . $race['Race ID'] . '"';
 	if ($sector->hasPort() && $sector->getPort()->getRaceID() == $race['Race ID']) $PHP_OUTPUT.= 'selected';
 	$PHP_OUTPUT.= '>' . $race['Race Name'] . '</option>';
-} unset($race);
+}
 $PHP_OUTPUT.= '</select>';
 //goods determined randomly to sway admin abuse
 $PHP_OUTPUT.= '<br /><br />';
-$locations =& SmrLocation::getAllLocations();
 $sectorLocations =& $sector->getLocations();
 for ($i=0;$i<UNI_GEN_LOCATION_SLOTS;$i++) {
 	$PHP_OUTPUT.= 'Location ' . ($i + 1) . ': <select name="loc_type' . $i . '">';
 	$PHP_OUTPUT.= '<option value="0">No Location</option>';
-	foreach ($locations as &$location) {
+	foreach (SmrLocation::getAllLocations() as $location) {
 		$PHP_OUTPUT.= '<option value="' . $location->getTypeID() . '"';
 		if (isset($sectorLocations[$i]) && $sectorLocations[$i]->equals($location)) {
 			$PHP_OUTPUT.= 'selected';
 		}
 		$PHP_OUTPUT.= '>' . $location->getName() . '</option>';
-	} unset($location);
+	}
 	$PHP_OUTPUT.= '</select><br />';
 }
 

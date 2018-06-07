@@ -38,7 +38,7 @@ if(	isset($PrevThread) || isset($NextThread) ) { ?>
 				?><th></th><?php
 			} ?>
 		</tr><?php
-		foreach($Thread['Replies'] as &$Reply) { ?>
+		foreach ($Thread['Replies'] as $Reply) { ?>
 			<tr>
 				<td class="shrink noWrap top"><?php echo $Reply['Sender']; ?></td>
 				<td><?php echo bbifyMessage($Reply['Message']); ?></td>
@@ -47,7 +47,7 @@ if(	isset($PrevThread) || isset($NextThread) ) { ?>
 					?><td class="shrink noWrap top"><a href="<?php echo $Reply['DeleteHref']; ?>"><img src="images/silk/cross.png" width="16" height="16" alt="Delete" title="Delete Post"/></a></td><?php
 				} ?>
 			</tr><?php
-		} unset($Reply); ?>
+		} ?>
 	</table>
 </div><?php
 if(isset($Thread['CreateThreadReplyFormHref'])) { ?>

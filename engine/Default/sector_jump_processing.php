@@ -41,12 +41,11 @@ if (isset($_POST['action']) && $_POST['action'] == 'Calculate Turn Cost') {
 }
 
 if ($sector->hasForces()) {
-	$sectorForces =& $sector->getForces();
-	foreach($sectorForces as &$forces) {
+	foreach ($sector->getForces() as $forces) {
 		if($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
 			create_error('You cannot jump when there are hostile mines in the sector!');
 		}
-	} unset($forces);
+	}
 }
 
 // create sector object for target sector
@@ -103,14 +102,13 @@ $sector->markVisited($player);
 // send scout msg
 $sector->enteringSector($player,MOVEMENT_JUMP);
 
-$sectorForces =& $sector->getForces();
 $mineOwnerID = false;
-foreach($sectorForces as &$forces) {
+foreach ($sector->getForces() as $forces) {
 	if(!$mineOwnerID && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
 		$mineOwnerID = $forces->getOwnerID();
 		break;
 	}
-} unset($forces);
+}
 if($mineOwnerID) {
 	if ($player->hasNewbieTurns()) {
 		$container = create_container('skeleton.php', 'current_sector.php');

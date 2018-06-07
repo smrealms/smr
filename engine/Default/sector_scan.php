@@ -15,17 +15,15 @@ $friendly_vessel = 0;
 $enemy_vessel = 0;
 
 // iterate over all forces in the target sector
-$scanSectorAllForces =& $scanSector->getForces();
-foreach ($scanSectorAllForces as &$scanSectorForces) {
+foreach ($scanSector->getForces() as $scanSectorForces) {
 	// decide if it's a friendly or enemy stack
 	if ($player->sameAlliance($scanSectorForces->getOwner()))
 		$friendly_forces += $scanSectorForces->getMines() * 3 + $scanSectorForces->getCDs() * 2 + $scanSectorForces->getSDs();
 	else
 		$enemy_forces += $scanSectorForces->getMines() * 3 + $scanSectorForces->getCDs() * 2 + $scanSectorForces->getSDs();
-} unset($scanSectorForces);
+}
 
-$scanSectorPlayers =& $scanSector->getOtherTraders($player);
-foreach($scanSectorPlayers as &$scanSectorPlayer) {
+foreach ($scanSector->getOtherTraders($player) as $scanSectorPlayer) {
 	$scanSectorShip =& $scanSectorPlayer->getShip();
 
 	// he's a friend if he's in our alliance (and we are not in a 0 alliance
@@ -33,7 +31,7 @@ foreach($scanSectorPlayers as &$scanSectorPlayer) {
 		$friendly_vessel += $scanSectorShip->getAttackRating();
 	else
 		$enemy_vessel += $scanSectorShip->getDefenseRating() * 10;
-} unset($scanSectorPlayer);
+}
 
 $PHP_OUTPUT.=('<p>');
 $PHP_OUTPUT.=('<table class="standard">');

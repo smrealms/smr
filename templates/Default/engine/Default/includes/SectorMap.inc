@@ -3,9 +3,9 @@
 	$UniGen = isset($UniGen) ? $UniGen : false;
 	$MapPlayer = $UniGen ? null : $ThisPlayer;
 	$MovementTypes = array('Up','Left','Right','Down');
-	foreach($MapSectors as &$MapSector) { ?>
+	foreach ($MapSectors as $MapSector) { ?>
 		<tr><?php
-			foreach($MapSector as &$Sector) {
+			foreach ($MapSector as $Sector) {
 				$isCurrentSector = !$UniGen && $ThisSector->equals($Sector);
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
 				$isSeedlistSector = !$UniGen && isset($ShowSeedlistSectors) && $ShowSeedlistSectors && $MapPlayer->getAlliance()->isInSeedlist($Sector);
@@ -149,11 +149,11 @@
 						} ?>
 					</div>
 				</td><?php
-			} unset($Sector); ?>
+			} ?>
 		</tr><?php
 		//A little hacky but clearing these caches for each row of gal map drastically reduces total memory usage, and these caches should never be needed after this point either.
 		SmrPort::clearCache();
 		SmrForce::clearCache();
 		SmrPlanet::clearCache();
-	} unset($MapSector); ?>
+	} ?>
 </table>
