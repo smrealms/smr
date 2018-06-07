@@ -40,8 +40,7 @@ function &getMessagePlayer($accountID, $gameID, $messageType = false) {
 	else if($accountID==ACCOUNT_ID_OP_ANNOUNCE || $accountID==ACCOUNT_ID_ALLIANCE_COMMAND)
 		$return = '<span class="green">Alliance Command</span>';
 	else {
-		$RACES =& Globals::getRaces();
-		foreach($RACES as $raceID => &$raceInfo) {
+		foreach (Globals::getRaces() as $raceID => $raceInfo) {
 			if($accountID==ACCOUNT_ID_GROUP_RACES+$raceID) {
 				$return = '<span class="yellow">'.$raceInfo['Race Name'].' Government</span>';
 				return $return;

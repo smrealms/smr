@@ -8,7 +8,7 @@ if ($action == 'Reopen and Add Exception' || $action == 'Reopen without Exceptio
 		create_error('Please check the boxes next to the names you wish to open.');
 	
 	foreach ($account_id as $id) {
-		$bannedAccount =& SmrAccount::getAccount($id);
+		$bannedAccount = SmrAccount::getAccount($id);
 		if ($action == 'Reopen and Add Exception') {
 			$curr_exception = $exception[$id];
 			$bannedAccount->unbanAccount($account,$curr_exception);
@@ -22,7 +22,7 @@ elseif ($action == 'Ban' || $action == 'Ban and remove exception') {
 	$bancheck = $_REQUEST['bancheck'];
 	foreach ($bancheck as $id) {
 		//never expire
-		$bannedAccount =& SmrAccount::getAccount($id);
+		$bannedAccount = SmrAccount::getAccount($id);
 		$bannedAccount->banAccount(0,$account,2,$ban[$id],$action == 'Ban and remove exception');
 	}
 }

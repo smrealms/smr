@@ -101,7 +101,7 @@ if (!isset($number) && !isset($var['number'])) {
 						while ($db3->nextRecord()) {
 
 							//we have a match the other way
-							$curr_acc =& SmrAccount::getAccount($db3->getField('account_id'));
+							$curr_acc = SmrAccount::getAccount($db3->getField('account_id'));
 							$id = $curr_acc->getAccountID();
 							$match_sec = $curr_acc->getLogin();
 							if (!in_array($match_sec, $names)) {
@@ -134,7 +134,7 @@ if (!isset($number) && !isset($var['number'])) {
 
 					if (isset($match) && $match != '') {
 
-						$curr_acc =& SmrAccount::getAccountByName($match);
+						$curr_acc = SmrAccount::getAccountByName($match);
 						$id = $curr_acc->getAccountID();
 
 					}

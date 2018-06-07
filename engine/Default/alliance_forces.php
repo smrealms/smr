@@ -3,7 +3,7 @@ if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 }
 
-$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('PageTopic', $alliance->getAllianceName(false, true));
 require_once(get_file_loc('menu.inc'));
 create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
@@ -18,7 +18,7 @@ WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 AND expire_time >= ' . $db->escapeNumber(TIME));
 
-$hardwareTypes =& Globals::getHardwareTypes();
+$hardwareTypes = Globals::getHardwareTypes();
 
 $total = array();
 $totalCost = array();

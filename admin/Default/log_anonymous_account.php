@@ -48,7 +48,7 @@ while ($db->nextRecord()) {
 		$PHP_OUTPUT.=('<ul>');
 	}
 
-	$curr_account =& SmrAccount::getAccount($db->getInt('account_id'));
+	$curr_account = SmrAccount::getAccount($db->getInt('account_id'));
 
 	$transaction_id = $db->getInt('transaction_id');
 

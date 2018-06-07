@@ -3,7 +3,7 @@
 require_once(LIB . 'Default/shop_goods.inc');
 
 // create object from port we can work with
-$port =& $player->getSectorPort();
+$port = $player->getSectorPort();
 
 $tradeable = checkPortTradeable($port,$player);
 if($tradeable!==true)
@@ -110,7 +110,7 @@ if (!empty($boughtGoods)) {
 
 	foreach ($boughtGoods as $goodID) {
 		$amount = $port->getGoodAmount($goodID);
-		$good =& Globals::getGood($goodID);
+		$good = Globals::getGood($goodID);
 		$container['good_id'] = $good['ID'];
 		
 		$PHP_OUTPUT.=create_echo_form($container);
@@ -165,7 +165,7 @@ if (!empty($soldGoods)) {
 
 	foreach ($soldGoods as $goodID) {
 		$amount = $port->getGoodAmount($goodID);
-		$good =& Globals::getGood($goodID);
+		$good = Globals::getGood($goodID);
 		$container['good_id'] = $good['ID'];
 		$PHP_OUTPUT.=create_echo_form($container);
 

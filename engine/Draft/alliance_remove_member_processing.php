@@ -14,7 +14,7 @@ if(in_array($player->getAccountID(), $accountIDs)) {
 }
 
 foreach ($accountIDs as $accountID) {
-	$currPlayer =& SmrPlayer::getPlayer($accountID, $player->getGameID());
+	$currPlayer = SmrPlayer::getPlayer($accountID, $player->getGameID());
 	if(!$player->sameAlliance($currPlayer)) {
 		throw new Exception('Cannot kick someone from another alliance!');
 	}

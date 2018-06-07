@@ -23,7 +23,7 @@ if (empty($message)) {
 	$message = 'No reason specified';
 }
 
-$alliance =& SmrAlliance::getAlliance($alliance_id, $player->getGameID());
+$alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
 $action = $_REQUEST['action'];
 if ($action == 'Deposit') {
 	if ($player->getCredits() < $amount) {

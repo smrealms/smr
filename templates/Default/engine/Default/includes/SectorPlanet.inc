@@ -1,6 +1,6 @@
 <?php
 if($ThisSector->hasPlanet()) {
-	$Planet =& $ThisSector->getPlanet(); ?>
+	$Planet = $ThisSector->getPlanet(); ?>
 	<table class="standard csl">
 		<tr>
 			<th>Planet</th>

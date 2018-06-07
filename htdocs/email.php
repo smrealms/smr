@@ -13,7 +13,7 @@ try {
 	}
 
 	// get account
-	$account =& SmrAccount::getAccount(SmrSession::$account_id);
+	$account = SmrAccount::getAccount(SmrSession::$account_id);
 
 ?>
 <!DOCTYPE html>

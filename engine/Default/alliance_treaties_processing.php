@@ -43,7 +43,7 @@ if (isset($var['accept'])) {
 	$container['alliance_id'] = $alliance_id_1;
 	forward($container);
 }
-$alliance1 =& SmrAlliance::getAlliance($alliance_id_1, $player->getGameID());
+$alliance1 = SmrAlliance::getAlliance($alliance_id_1, $player->getGameID());
 if (isset($_REQUEST['proposedAlliance'])) {
 	$alliance_id_2 = $_REQUEST['proposedAlliance'];
 	$db->query('SELECT alliance_id_1, alliance_id_2, game_id FROM alliance_treaties WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_1 = '.$alliance_id_2.') AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));

@@ -9,7 +9,7 @@ class Rankings {
 		while ($db->nextRecord()) {
 			// increase rank counter
 			$rank++;
-			$currentAlliance =& SmrAlliance::getAlliance($db->getInt('alliance_id'), $player->getGameID());
+			$currentAlliance = SmrAlliance::getAlliance($db->getInt('alliance_id'), $player->getGameID());
 
 			$class = '';
 			if ($player->getAllianceID() == $currentAlliance->getAllianceID()) {
@@ -21,7 +21,7 @@ class Rankings {
 
 			$rankings[$rank] = array(
 				'Rank' => $rank,
-				'Alliance' => &$currentAlliance,
+				'Alliance' => $currentAlliance,
 				'Class' => $class,
 				'Value' => $db->getInt('amount')
 			);

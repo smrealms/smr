@@ -9,16 +9,16 @@ function get_draft_teams($gameId) {
 	// Get team leader, alliance, and alliance size
 	$teams = array();
 	while ($db->nextRecord()) {
-		$leader =& SmrPlayer::getPlayer($db->getInt('account_id'), $gameId);
-		$alliance =& $leader->getAlliance();
+		$leader = SmrPlayer::getPlayer($db->getInt('account_id'), $gameId);
+		$alliance = $leader->getAlliance();
 		if (!$leader->hasAlliance() || $alliance->getAllianceID() == NHA_ID) {
 			// Special case for leaders who haven't made their own alliance yet,
 			// or are still in the Newbie Help Alliance.
-			$teams[$leader->getAccountId()] = array('Leader'   => &$leader,
+			$teams[$leader->getAccountId()] = array('Leader'   => $leader,
 			                                        'Size'     => 0);
 		} else {
-			$teams[$leader->getAccountId()] = array('Leader'   => &$leader,
-			                                        'Alliance' => &$alliance,
+			$teams[$leader->getAccountId()] = array('Leader'   => $leader,
+			                                        'Alliance' => $alliance,
 			                                        'Size'     => $alliance->getNumMembers());
 		}
 	}

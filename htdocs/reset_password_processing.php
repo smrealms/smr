@@ -35,7 +35,7 @@ try {
 	}
 	
 	// creates a new user account object
-	$account =& SmrAccount::getAccountByName($login);
+	$account = SmrAccount::getAccountByName($login);
 	$passwordReset = $_REQUEST['password_reset'];
 	if ($account==null || empty($passwordReset) || $account->getPasswordReset() != $passwordReset) {
 		// unknown user

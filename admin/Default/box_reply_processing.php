@@ -15,7 +15,7 @@ if(!empty($message)) {
 	//do we have points?
 	if ($_REQUEST['BanPoints']) {
 		$suspicion = 'Inappropriate Actions';
-		$senderAccount =& SmrAccount::getAccount($var['sender_id']);
+		$senderAccount = SmrAccount::getAccount($var['sender_id']);
 		$senderAccount->addPoints($_REQUEST['BanPoints'],$account,7,$suspicion);
 	}
 }

@@ -11,7 +11,7 @@ if ($amount <= 0)
 	create_error('You must actually enter an amount > 0!');
 
 // get a planet from the sector where the player is in
-$planet =& $player->getSectorPlanet();
+$planet = $player->getSectorPlanet();
 $action = $_REQUEST['action'];
 // transfer to ship
 if ($action == 'Ship') {

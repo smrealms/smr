@@ -4,8 +4,7 @@ require_once(get_file_loc('SmrGalaxy.class.inc'));
 if (isset($var['gal_on'])) $gal_on = $var['gal_on'];
 else $PHP_OUTPUT.= 'Gal_on not found!!';
 
-$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
-$galSectors =& $galaxy->getSectors();
+$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 //get totals
 $total = array();
 $totalPorts = array();
@@ -18,7 +17,7 @@ for ($i=1;$i<=9;$i++) {
 for ($i=1;$i<=20;$i++) {
 	$totalMines[$i] = 0;
 }
-foreach ($galSectors as &$galSector) {
+foreach ($galaxy->getSectors() as $galSector) {
 	if($galSector->hasPort()) {
 		$totalPorts[$galSector->getPort()->getLevel()]++;
 		$total['Ports']++;
@@ -52,8 +51,7 @@ $PHP_OUTPUT.= '</table>';
 $PHP_OUTPUT.= '</td><td class="center">';
 $PHP_OUTPUT.= '<table class="standard"><tr><th colspan="2">Port Race % Distribution</th></tr>';
 
-$races =& Globals::getRaces();
-foreach ($races as &$race) {
+foreach (Globals::getRaces() as $race) {
 	$PHP_OUTPUT.= '<tr><td class="right">' . $race['Race Name'] . '</td><td><input type="number" size="5" name="race' . $race['Race ID'] . '" value="0" onFocus="startRaceCalc();" onBlur="stopRaceCalc();"></td></tr>';
 }
 $PHP_OUTPUT.= '<tr><td class="right">Total</td><td><input type="number" size="5" name="racedist" value="0"></td></tr>';

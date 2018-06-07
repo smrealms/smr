@@ -5,7 +5,7 @@ if(!$sector->isLinked($var['target_sector']) && $sector->getSectorID() != $var['
 }
 
 // initialize vars
-$scanSector =& SmrSector::getSector($player->getGameID(), $var['target_sector']);
+$scanSector = SmrSector::getSector($player->getGameID(), $var['target_sector']);
 
 $template->assign('PageTopic','Sector Scan of #'.$scanSector->getSectorID().' ('.$scanSector->getGalaxyName().')');
 
@@ -24,7 +24,7 @@ foreach ($scanSector->getForces() as $scanSectorForces) {
 }
 
 foreach ($scanSector->getOtherTraders($player) as $scanSectorPlayer) {
-	$scanSectorShip =& $scanSectorPlayer->getShip();
+	$scanSectorShip = $scanSectorPlayer->getShip();
 
 	// he's a friend if he's in our alliance (and we are not in a 0 alliance
 	if ($player->traderMAPAlliance($scanSectorPlayer))

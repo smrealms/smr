@@ -48,7 +48,7 @@ try {
 					   'WHERE email = '.$db->escapeString($socialLogin->getEmail()).' LIMIT 1');
 				}
 				if ($socialLogin->getEmail()!=null && $db->nextRecord()) { //Email already has an account so let's link.
-					$account =& SmrAccount::getAccount($db->getField('account_id'));
+					$account = SmrAccount::getAccount($db->getField('account_id'));
 					$account->addAuthMethod($socialLogin->getLoginType(),$socialLogin->getUserID());
 					$account->setValidated(true);
 					SmrSession::$account_id = $db->getField('account_id');
@@ -104,7 +104,7 @@ try {
 	// ********************************
 
 	// get this user from db
-	$account =& SmrAccount::getAccount(SmrSession::$account_id);
+	$account = SmrAccount::getAccount(SmrSession::$account_id);
 
 	if(isset($_REQUEST['social'])) {
 		require_once(LIB.'Login/SocialLogin.class.inc');

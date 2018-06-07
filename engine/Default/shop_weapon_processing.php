@@ -3,10 +3,10 @@ if(!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
 
-$weapon =& SmrWeapon::getWeapon($player->getGameID(), $var['WeaponTypeID']);
+$weapon = SmrWeapon::getWeapon($player->getGameID(), $var['WeaponTypeID']);
 // Are we buying?
 if (!isset($var['OrderID'])) {
-	$location =& SmrLocation::getLocation($var['LocationID']);
+	$location = SmrLocation::getLocation($var['LocationID']);
 	if(!$location->isWeaponSold($var['WeaponTypeID'])) {
 		create_error('We do not sell that weapon here!');
 	}
@@ -41,7 +41,7 @@ if (!isset($var['OrderID'])) {
 	$player->decreaseCredits($weapon->getCost());
 
 	// add the weapon to the users ship
-	$weapon =& $ship->addWeapon($weapon->getWeaponTypeID());
+	$ship->addWeapon($weapon->getWeaponTypeID());
 	$account->log(LOG_TYPE_HARDWARE, 'Player Buys a '.$weapon->getName(), $player->getSectorID());
 }
 else {

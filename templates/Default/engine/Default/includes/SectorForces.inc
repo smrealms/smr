@@ -17,7 +17,7 @@
 					<th>Option</th>
 				</tr><?php
 				foreach($Forces as $Force) {
-					$Owner =& $Force->getOwner();
+					$Owner = $Force->getOwner();
 					$SharedForceAlliance = $Owner->sharedForceAlliance($ThisPlayer);
 					if($SharedForceAlliance) {
 						$RefreshAny = true;

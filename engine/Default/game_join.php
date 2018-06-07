@@ -24,10 +24,9 @@ if (TIME > $game->getEndDate())
 
 $template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
 
-$raceInfo =& Globals::getRaces();
 $raceDescriptions='';
 $first = true;
-foreach($raceInfo as $race) {
+foreach (Globals::getRaces() as $race) {
 	if ($first) {
 		$raceDescriptions.=('\'' . str_replace('\'','\\\'"',$race['Description']) . '\'');
 		$first = false;

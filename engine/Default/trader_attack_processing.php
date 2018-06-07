@@ -11,7 +11,7 @@ if($player->getTurns() < 3)
 if(!$player->canFight())
 	create_error('You are not allowed to fight!');
 
-$targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
+$targetPlayer = SmrPlayer::getPlayer($var['target'],$player->getGameID());
 
 	if($player->traderNAPAlliance($targetPlayer))
 		create_error('Your alliance does not allow you to attack this trader.');

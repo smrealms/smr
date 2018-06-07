@@ -32,7 +32,7 @@ if ($sector->hasLocation())
 	create_error('You can\'t drop forces in a sector with a location!');
 
 require_once(get_file_loc('SmrForce.class.inc'));
-$forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
+$forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
 // check max on that stack
 $at_max = false;

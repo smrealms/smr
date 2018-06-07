@@ -3,7 +3,7 @@ if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 }
 
-$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 
 Globals::canAccessPage('AllianceMOTD', $player, array('AllianceID' => $alliance->getAllianceID()));
 

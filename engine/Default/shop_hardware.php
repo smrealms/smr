@@ -6,7 +6,7 @@ if(!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
 
-$location =& SmrLocation::getLocation($var['LocationID']);
+$location = SmrLocation::getLocation($var['LocationID']);
 if ($location->isHardwareSold()) {
 	$hardwareSold = $location->getHardwareSold();
 	foreach ($hardwareSold as $hardwareTypeID => $hardware) {

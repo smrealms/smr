@@ -28,7 +28,7 @@ try {
 		create_error_offline('Picture ID has to be positive!');
 
 	require_once(get_file_loc('SmrAccount.class.inc'));
-	$account =& SmrAccount::getAccount(SmrSession::$account_id);
+	$account = SmrAccount::getAccount(SmrSession::$account_id);
 
 	if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {
 		if(!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM))

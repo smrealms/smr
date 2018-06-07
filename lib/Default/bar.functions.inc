@@ -33,7 +33,7 @@ function checkForLottoWinner($gameID) {
 
 	if ($lottoWon === true) {
 		// create news msg
-		$winner =& SmrPlayer::getPlayer($winner_id, $gameID);
+		$winner = SmrPlayer::getPlayer($winner_id, $gameID);
 		$winner->increaseHOF($lottoInfo['Prize'],array('Bar','Lotto','Money','Winnings'), HOF_PUBLIC);
 		$winner->increaseHOF(1,array('Bar','Lotto','Results','Wins'), HOF_PUBLIC);
 		$news_message = '<span class="yellow">'.$winner->getPlayerName().'</span> has won the lotto! The jackpot was ' . number_format($lottoInfo['Prize']) . '. <span class="yellow">'.$winner->getPlayerName().'</span> can report to any bar to claim their prize before the next drawing!';

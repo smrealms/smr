@@ -127,27 +127,23 @@ class Globals {
 	}
 
 	public static function getRaceName($raceID) {
-		$races =& Globals::getRaces();
-		return $races[$raceID]['Race Name'];
+		return Globals::getRaces()[$raceID]['Race Name'];
 	}
 
 	public static function getRaceImage($raceID) {
-		$races =& Globals::getRaces();
-		return $races[$raceID]['ImageLink'];
+		return Globals::getRaces()[$raceID]['ImageLink'];
 		}
 
 	public static function getRaceHeadImage($raceID) {
-		$races =& Globals::getRaces();
-		return $races[$raceID]['ImageHeadLink'];
+		return Globals::getRaces()[$raceID]['ImageHeadLink'];
 		}
 
 	public static function getRaceGraphImage($raceID) {
-		$races =& Globals::getRaces();
-		return $races[$raceID]['ImageGraphLink'];
+		return Globals::getRaces()[$raceID]['ImageGraphLink'];
 		}
 
 	public static function getColouredRaceNameForRace($raceID, $gameID, $fromRaceID, $linked = true) {
-		$raceRelations =& Globals::getRaceRelations($gameID, $fromRaceID);
+		$raceRelations = Globals::getRaceRelations($gameID, $fromRaceID);
 		return self::getColouredRaceName($raceID, $raceRelations[$raceID], $linked);
 	}
 
@@ -183,15 +179,13 @@ class Globals {
 		return self::$GOODS;
 	}
 	public static function &getGood($goodID) {
-		$goods =& self::getGoods();
-		return $goods[$goodID];
+		return Globals::getGoods()[$goodID];
 	}
 	public static function getGoodName($goodID) {
 		if($goodID==GOOD_NOTHING) {
 			return 'Nothing';
 		}
-		$goods =& self::getGoods();
-		return $goods[$goodID]['Name'];
+		return Globals::getGoods()[$goodID]['Name'];
 	}
 
 	public static function &getHardwareTypes($hardwareTypeID=false) {
@@ -217,13 +211,11 @@ class Globals {
 	}
 
 	public static function getHardwareName($hardwareTypeID) {
-		$hardware =& self::getHardwareTypes();
-		return $hardware[$hardwareTypeID]['Name'];
+		return Globals::getHardwareTypes()[$hardwareTypeID]['Name'];
 	}
 
 	public static function getHardwareCost($hardwareTypeID) {
-		$hardware =& self::getHardwareTypes();
-		return $hardware[$hardwareTypeID]['Cost'];
+		return Globals::getHardwareTypes()[$hardwareTypeID]['Cost'];
 	}
 
 	public static function isValidGame($gameID) {
@@ -309,7 +301,7 @@ class Globals {
 		if(!isset(self::$RACE_RELATIONS[$gameID][$raceID])) {
 			self::initialiseDatabase();
 			//get relations
-			$RACES =& Globals::getRaces();
+			$RACES = Globals::getRaces();
 			self::$RACE_RELATIONS[$gameID][$raceID] = array();
 			foreach ($RACES as $otherRaceID => $raceArray) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;

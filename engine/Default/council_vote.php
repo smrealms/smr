@@ -24,8 +24,7 @@ if ($db->nextRecord()) {
 
 $voteRelations = array();
 $globalRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
-$races =& Globals::getRaces();
-foreach($races as $raceID => $raceInfo) {
+foreach (Globals::getRaces() as $raceID => $raceInfo) {
 	if($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID())
 		continue;
 	$container = create_container('council_vote_processing.php', '', array('race_id' => $raceID));

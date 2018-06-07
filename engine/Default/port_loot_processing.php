@@ -9,8 +9,8 @@ $amount = floor($amount);
 if ($amount <= 0)
 	create_error('You must enter an amount > 0!');
 
-$port =& $player->getSectorPort();
-$good =& $port->getGood($good_id);
+$port = $player->getSectorPort();
+$good = $port->getGood($good_id);
 // check if there are enough left at port
 if ($good['Amount'] < $amount)
    create_error('There isnt that much to loot.');

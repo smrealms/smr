@@ -48,7 +48,7 @@ $db->query('SELECT account_id FROM account WHERE account_id = '.$db->escapeNumbe
 									   'hof_name LIKE ' . $db->escapeString($var['hofname']) . ' OR ' .
 									   'validation_code LIKE ' . $db->escape_string($var['val_code']));
 if ($db->nextRecord()) {
-	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
+	$curr_account = SmrAccount::getAccount($db->getField('account_id'));
 	$template->assign('EditingAccount', $curr_account);
 	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('account_edit_processing.php', '', array('account_id' => $curr_account->getAccountID()))));
 }
@@ -70,7 +70,7 @@ else {
 	$editingPlayers = array();
 	$db->query('SELECT game_id FROM player WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY game_id ASC');
 	while ($db->nextRecord()) {
-		$editingPlayers[] =& SmrPlayer::getPlayer($curr_account->getAccountID(), $db->getInt('game_id'));
+		$editingPlayers[] = SmrPlayer::getPlayer($curr_account->getAccountID(), $db->getInt('game_id'));
 	}
 	$template->assign('EditingPlayers', $editingPlayers);
 

@@ -18,7 +18,7 @@ if ($player->getTurns() == 0)
 // get rid of those bugs when we die...there is no port at the home sector
 if (!$sector->hasPort())
 	create_error('I can\'t see a port in this sector. Can you?');
-$port =& $sector->getPort();
+$port = $sector->getPort();
 
 // check if the player has the right relations to trade at the current port
 if ($player->getRelation($port->getRaceID()) < RELATIONS_WAR)

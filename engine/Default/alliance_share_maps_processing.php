@@ -45,7 +45,7 @@ $db->query('SELECT sector_id
 			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
 while ($db->nextRecord()) {
-	$cachedPort =& SmrPort::getCachedPort($player->getGameID(),$db->getInt('sector_id'),$player->getAccountID());
+	$cachedPort = SmrPort::getCachedPort($player->getGameID(),$db->getInt('sector_id'),$player->getAccountID());
 	$cachedPort->addCachePorts($alliance_ids);
 }
 

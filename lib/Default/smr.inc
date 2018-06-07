@@ -47,7 +47,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$playerID = $default;
 				if(!is_numeric($playerID))
 					$playerID = $tagParams['id'];
-				$bbPlayer =& SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
+				$bbPlayer = SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
@@ -62,7 +62,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$allianceID = $default;
 				if(!is_numeric($allianceID))
 					$allianceID = $tagParams['id'];
-				$alliance =& SmrAlliance::getAlliance($allianceID, $overrideGameID);
+				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
@@ -80,8 +80,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'race':
 				$raceNameID = $default;
-				$RACES =& Globals::getRaces();
-				foreach($RACES as $raceID => $raceInfo) {
+				foreach (Globals::getRaces() as $raceID => $raceInfo) {
 					if((is_numeric($raceNameID) && $raceNameID == $raceID)
 						|| $raceNameID == $raceInfo['Race Name']) {
 						if ($action == \Nbbc\BBCode::BBCODE_CHECK) {

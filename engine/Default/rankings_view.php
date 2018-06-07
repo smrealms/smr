@@ -13,7 +13,7 @@ foreach (Globals::getUserRanking() as $rankID => $rankName) {
 	$PHP_OUTPUT.=('<br />');
 }
 $PHP_OUTPUT.=('<br />');
-$individualScores =& $account->getIndividualScores();
+$individualScores = $account->getIndividualScores();
 $PHP_OUTPUT.=('<b>Extended Scores</b><br />');
 foreach($individualScores as $statScore) {
 	$first=true;
@@ -31,7 +31,7 @@ if (SmrSession::$game_id != 0) {
 	//current game stats
 	$PHP_OUTPUT.=('<br /><br />');
 	$PHP_OUTPUT.=('<b>Current Game Extended Stats</b><br />');
-	$individualScores =& $account->getIndividualScores($player);
+	$individualScores = $account->getIndividualScores($player);
 	foreach($individualScores as $statScore) {
 		$first=true;
 		foreach($statScore['Stat'] as $stat) {

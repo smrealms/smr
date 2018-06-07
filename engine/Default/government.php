@@ -7,7 +7,7 @@ if ($player->getAlignment() <= ALIGNMENT_EVIL) {
 if(!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
-$location =& SmrLocation::getLocation($var['LocationID']);
+$location = SmrLocation::getLocation($var['LocationID']);
 if(!$location->isHQ()) {
 	create_error('There is no headquarters. Obviously.');
 }
@@ -26,8 +26,8 @@ create_hq_menu();
 
 $PHP_OUTPUT.='<div align="center">';
 if ($raceID != RACE_NEUTRAL) {
-	$races =& Globals::getRaces();
-	$raceRelations =& Globals::getRaceRelations($player->getGameID(), $raceID);
+	$races = Globals::getRaces();
+	$raceRelations = Globals::getRaceRelations($player->getGameID(), $raceID);
 	$PHP_OUTPUT.=('We are at WAR with<br /><br />');
 	foreach($raceRelations as $otherRaceID => $relation) {
 		if ($relation <= RELATIONS_WAR) {

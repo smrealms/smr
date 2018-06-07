@@ -49,7 +49,7 @@ if ($sector->hasForces()) {
 }
 
 // create sector object for target sector
-$targetSector =& SmrSector::getSector($player->getGameID(), $target);
+$targetSector = SmrSector::getSector($player->getGameID(), $target);
 
 $jumpInfo = $player->getJumpInfo($targetSector);
 $turnsToJump = $jumpInfo['turn_cost'];

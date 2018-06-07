@@ -1,7 +1,7 @@
 <?php
 $action = $var['action'];
 if ($action == 'YES') {
-	$alliance =& $player->getAlliance();
+	$alliance = $player->getAlliance();
 
 	if ($player->isAllianceLeader() && $alliance->getNumMembers() > 1) {
 		create_error('You are the leader! You must hand over leadership first!');

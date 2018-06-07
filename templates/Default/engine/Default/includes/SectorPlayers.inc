@@ -1,6 +1,6 @@
 <div id="players_cs" class="ajax"><?php
 	if($PlayersContainer->hasOtherTraders($ThisPlayer)) {
-		$Players =& $PlayersContainer->getOtherTraders($ThisPlayer);
+		$Players = $PlayersContainer->getOtherTraders($ThisPlayer);
 		if(!($PlayersContainer instanceof SmrSector) || $ThisPlayer->canSeeAny($Players)) { ?>
 			<table class="standard fullwidth csShips">
 				<tr>
@@ -14,9 +14,9 @@
 					<th>Option</th>
 				</tr>
 				<?php
-				foreach($Players as &$Player) {
+				foreach($Players as $Player) {
 					if(!($PlayersContainer instanceof SmrSector) || $ThisPlayer->canSee($Player)) {
-						$Ship =& $Player->getShip();?>
+						$Ship = $Player->getShip();?>
 						<tr<?php if($Player->hasNewbieStatus()) { ?> class="newbie"<?php } ?>>
 							<td>
 								<?php echo $Player->getLinkedDisplayName(); ?>

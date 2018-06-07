@@ -20,7 +20,7 @@ function checkPortTradeable(&$port,&$player) {
 function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price,&$container) {
 	global $var, $player;
 
-	$port =& $player->getSectorPort();
+	$port = $player->getSectorPort();
 	
 	// increase current number of tries
 	$container['number_of_bargains'] = isset($var['number_of_bargains']) ? $var['number_of_bargains'] + 1 : 1;
