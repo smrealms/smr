@@ -1073,10 +1073,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getActiveMissions() {
-		global $MISSIONS;
 		$missions = $this->getMissions();
 		foreach($missions as $missionID => $mission) {
-			if($mission['On Step'] >= count($MISSIONS[$missionID]['Steps'])) {
+			if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
 				unset($missions[$missionID]);
 			}
 		}
@@ -1114,9 +1113,8 @@ abstract class AbstractSmrPlayer {
 	}
 
 	private function setupMissionStep($missionID) {
-		global $MISSIONS;
 		$mission =& $this->missions[$missionID];
-		$step = $MISSIONS[$missionID]['Steps'][$mission['On Step']];
+		$step = MISSIONS[$missionID]['Steps'][$mission['On Step']];
 		if(isset($step['PickSector'])) {
 			$realX = Plotter::getX($step['PickSector']['Type'], $step['PickSector']['X'], $this->getGameID());
 			if($realX === false) {
@@ -1157,16 +1155,15 @@ abstract class AbstractSmrPlayer {
 	}
 
 	function rebuildMission($missionID) {
-		global $MISSIONS;
 		$mission = $this->missions[$missionID];
-		$this->missions[$missionID]['Name'] = $MISSIONS[$missionID]['Name'];
+		$this->missions[$missionID]['Name'] = MISSIONS[$missionID]['Name'];
 
-		if($mission['On Step'] >= count($MISSIONS[$missionID]['Steps'])) {
+		if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
 			// If we have completed this mission just use false to indicate no current task.
 			$currentStep = false;
 		}
 		else {
-			$currentStep = $MISSIONS[$missionID]['Steps'][$mission['On Step']];
+			$currentStep = MISSIONS[$missionID]['Steps'][$mission['On Step']];
 			$currentStep['Text'] = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$mission['Sector'],$mission['Starting Sector'],$this->playerName),$currentStep['Text']);
 			if (isset($currentStep['Task'])) {
 				$currentStep['Task'] = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$mission['Sector'],$mission['Starting Sector'],$this->playerName),$currentStep['Task']);
@@ -1205,7 +1202,6 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function claimMissionReward($missionID) {
-		global $MISSIONS;
 		$this->getMissions();
 		$mission =& $this->missions[$missionID];
 		if($mission === false) {
@@ -1227,7 +1223,7 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 		$rewardText = $mission['Task']['Rewards']['Text'];
-		if($mission['On Step'] < count($MISSIONS[$missionID]['Steps'])) {
+		if ($mission['On Step'] < count(MISSIONS[$missionID]['Steps'])) {
 			// If we haven't finished the mission yet then 
 			$this->setupMissionStep($missionID);
 		}
@@ -1237,9 +1233,8 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getAvailableMissions() {
-		global $MISSIONS;
 		$availableMissions = array();
-		foreach($MISSIONS as $missionID => $mission) {
+		foreach (MISSIONS as $missionID => $mission) {
 			if($this->hasMission($missionID)) {
 				continue;
 			}
@@ -1255,9 +1250,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function actionTaken($actionID, array $values) {
-		global $MISSION_ACTIONS;
-		if(!in_array($actionID,$MISSION_ACTIONS))
+		if (!in_array($actionID, MISSION_ACTIONS)) {
 			throw new Exception('Unknown action: ' . $actionID);
+		}
 // TODO: Reenable this once tested.		if($this->getAccount()->isLoggingEnabled())
 			switch($actionID) {
 				case 'WalkSector':

@@ -1,6 +1,6 @@
 <?php
 
-$MISSION_ACTIONS = array(
+const MISSION_ACTIONS = array(
 	'LeaveSector',
 	'EnterSector',
 	'WalkSector',
@@ -45,8 +45,10 @@ Replacements:
 ^ = partial implementaion
 	Visit - done for 'Bar'
 */
-$MISSIONS = array(
-	array(
+
+// NOTE: Array keys are the mission ID and should not be changed!
+const MISSIONS = array(
+	0 => array(
 		'Name' => 'Drunk Guy',
 		'Offerer' => 'Drunk',
 		'Time Limit' => 0,
@@ -111,9 +113,6 @@ $MISSIONS = array(
 		)
 	)
 );
-foreach($MISSIONS as $id => &$mission) {
-	$mission['ID'] = $id;
-} unset($mission);
 
 function checkMissionRequirements(&$values, array &$mission, AbstractSmrPlayer &$player, array &$requirements = null) {
 	if($requirements == null) {
