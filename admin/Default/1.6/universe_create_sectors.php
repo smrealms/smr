@@ -8,24 +8,7 @@ if (!isset($var['gal_on'])) SmrSession::updateVar('gal_on', 1);
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
 
-$topLeft =& SmrSector::getSector($var['game_id'], $galaxy->getStartSector());
-$mapSectors = array();
-$leftMostSec =& $topLeft;
-for ($i=0;$i<$galaxy->getHeight();$i++) {
-	$mapSectors[$i] = array();
-	//new row
-	if ($i!=0) $leftMostSec =& $leftMostSec->getNeighbourSector('Down');
-
-	//get left most sector for this row
-	$thisSec =& $leftMostSec;
-	//iterate through the columns
-	for ($j=0;$j<$galaxy->getWidth();$j++) {
-		//new sector
-		if ($j!=0) $thisSec =& $thisSec->getNeighbourSector('Right');
-		$mapSectors[$i][$j] =& $thisSec;
-	}
-}
-
+$mapSectors = $galaxy->getMapSectors();
 
 $template->assign('Galaxy', $galaxy);
 $template->assign('Galaxies', $galaxies);

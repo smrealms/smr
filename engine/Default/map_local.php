@@ -41,7 +41,6 @@ if(isset($var['Dir'])) {
 		$player->increaseZoom(1);
 	}
 }
-$dist = $player->getZoom();
 
 $template->assign('isZoomOn',$zoomOn);
 
@@ -56,34 +55,10 @@ $container['Dir'] = 'Up';
 $container['rid'] = 'zoom_up';
 $template->assign('ZoomUpLink',SmrSession::getNewHREF($container));
 
-$span = 1 + ($dist * 2);
 
-$topLeft =& $player->getSector();
-$galaxy =& $topLeft->getGalaxy();
+$galaxy = $player->getSector()->getGalaxy();
 
 $template->assign('GalaxyName',$galaxy->getName());
 
-//figure out what should be the top left and bottom right
-//go left then up
-for ($i=0;$i<$dist&&$i<(int)($galaxy->getWidth()/2);$i++)
-	$topLeft =& $topLeft->getNeighbourSector('Left');
-for ($i=0;$i<$dist&&$i<(int)($galaxy->getHeight()/2);$i++)
-	$topLeft =& $topLeft->getNeighbourSector('Up');
-
-$mapSectors = array();
-$leftMostSec =& $topLeft;
-for ($i=0;$i<$span&&$i<$galaxy->getHeight();$i++) {
-	$mapSectors[$i] = array();
-	//new row
-	if ($i!=0) $leftMostSec =& $leftMostSec->getNeighbourSector('Down');
-	
-	//get left most sector for this row
-	$thisSec =& $leftMostSec;
-	//iterate through the columns
-	for ($j=0;$j<$span&&$j<$galaxy->getWidth();$j++) {
-		//new sector
-		if ($j!=0) $thisSec =& $thisSec->getNeighbourSector('Right');
-		$mapSectors[$i][$j] =& $thisSec;
-	}
-}
+$mapSectors = $galaxy->getMapSectors($player->getSectorID(), $player->getZoom());
 $template->assign('MapSectors',$mapSectors);
