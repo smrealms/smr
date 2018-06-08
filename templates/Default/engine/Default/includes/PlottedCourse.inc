@@ -15,7 +15,7 @@ if($ThisPlayer->hasPlottedCourse()) {
 			<td class="top right"><?php
 				if ($ThisSector->isLinked($NextSector->getSectorID())) { ?>
 					<div class="buttonA">
-						<a class="buttonA" href="<?php echo $NextSector->getCurrentSectorHREF(); ?>">&nbsp; Follow Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>) &nbsp;</a>
+						<a class="buttonA" href="<?php echo $NextSector->getCurrentSectorMoveHREF(); ?>">&nbsp; Follow Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>) &nbsp;</a>
 					</div><?php
 					if($ThisShip->hasScanner()) { ?>
 						<br /><br />
