@@ -180,7 +180,41 @@ class SmrGalaxy {
 	public function &getSectors() {
 		return SmrSector::getGalaxySectors($this->getGameID(), $this->getGalaxyID());
 	}
-	
+
+	/**
+	 * Returns a 2D array of sectors in the galaxy.
+	 * If $centerSectorID is specified, it will be in the center of the array.
+	 * If $dist is also specified, only include sectors $dist away from center.
+	 */
+	public function getMapSectors($centerSectorID=false, $dist=false) {
+		if ($centerSectorID === false) {
+			$topLeft = SmrSector::getSector($this->getGameID(), $this->getStartSector());
+		} else {
+			$topLeft = SmrSector::getSector($this->getGameID(), $centerSectorID);
+			// go left then up
+			for ($i=0; (!$dist || $i<$dist) && $i<floor($this->getWidth()/2); $i++) {
+				$topLeft = $topLeft->getNeighbourSector('Left');
+			}
+			for ($i=0; (!$dist || $i<$dist) && $i<floor($this->getHeight()/2); $i++) {
+				$topLeft = $topLeft->getNeighbourSector('Up');
+			}
+		}
+
+		$mapSectors = array();
+		for ($i=0; (!$dist || $i<2*$dist+1) && $i<$this->getHeight(); $i++) {
+			$mapSectors[$i] = array();
+			// get left most sector for this row
+			$rowLeft = $i == 0 ? $topLeft : $rowLeft->getNeighbourSector('Down');
+
+			// iterate through the columns
+			for ($j=0; (!$dist || $j<2*$dist+1) && $j<$this->getWidth(); $j++) {
+				$nextSec = $j == 0 ? $rowLeft : $nextSec->getNeighbourSector('Right');
+				$mapSectors[$i][$j] = $nextSec;
+			}
+		}
+		return $mapSectors;
+	}
+
 	public function getGalaxyType() {
 		return $this->galaxyType;
 	}

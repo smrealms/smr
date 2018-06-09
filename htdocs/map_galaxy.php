@@ -92,44 +92,16 @@ try {
 
 	if (!isset($galaxyID) && !isset($sectorID)) {
 		$galaxy =& SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$player->getSectorID());
-	}
-	
-	
-	if(isset($sectorID) || $account->isCenterGalaxyMapOnPlayer()) {
-		if(isset($sectorID))
-			$topLeft =& SmrSector::getSector($player->getGameID(),$sectorID);
-		else
-			$topLeft =& $player->getSector();
-		
-		if(!$galaxy->contains($topLeft->getSectorID()))
-			$topLeft =& SmrSector::getSector($player->getGameID(),$galaxy->getStartSector());
-		else {
-			$template->assign('FocusSector', $topLeft->getSectorID());
-			//go left then up
-			for ($i=0;$i<floor($galaxy->getWidth()/2);$i++)
-				$topLeft =& $topLeft->getNeighbourSector('Left');
-			for ($i=0;$i<floor($galaxy->getHeight()/2);$i++)
-				$topLeft =& $topLeft->getNeighbourSector('Up');
+		if ($account->isCenterGalaxyMapOnPlayer()) {
+			$sectorID = $player->getSectorID();
 		}
 	}
-	else
-		$topLeft =& SmrSector::getSector($player->getGameID(), $galaxy->getStartSector());
-	
-	$mapSectors = array();
-	$leftMostSec =& $topLeft;
-	for ($i=0;$i<$galaxy->getHeight();$i++) {
-		$mapSectors[$i] = array();
-		//new row
-		if ($i!=0) $leftMostSec =& $leftMostSec->getNeighbourSector('Down');
-		
-		//get left most sector for this row
-		$thisSec =& $leftMostSec;
-		//iterate through the columns
-		for ($j=0;$j<$galaxy->getWidth();$j++) {
-			//new sector
-			if ($j!=0) $thisSec =& $thisSec->getNeighbourSector('Right');
-			$mapSectors[$i][$j] =& $thisSec;
-		}
+
+	if (isset($sectorID)) {
+		$template->assign('FocusSector', $sectorID);
+		$mapSectors = $galaxy->getMapSectors($sectorID);
+	} else {
+		$mapSectors = $galaxy->getMapSectors();
 	}
 	
 	if($account->getCssLink()!=null)
