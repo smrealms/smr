@@ -952,11 +952,11 @@ class SmrSector {
 		return $this->visited[$player->getAccountID()];
 	}
 
-	public function getLocalMapHREF() {
+	public function getLocalMapMoveHREF() {
 		return Globals::getSectorMoveHREF($this->getSectorID(), 'map_local.php');
 	}
 
-	public function getCurrentSectorHREF() {
+	public function getCurrentSectorMoveHREF() {
 		return Globals::getCurrentSectorMoveHREF($this->getSectorID());
 	}
 
