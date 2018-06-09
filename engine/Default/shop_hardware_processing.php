@@ -1,4 +1,5 @@
 <?php
+$action = $_REQUEST['action'];
 $amount = $_REQUEST['amount'];
 if (!is_numeric($amount))
 	create_error('Numbers only please');
@@ -14,30 +15,47 @@ $cost = Globals::getHardwareCost($hardware_id);
 if ($amount <= 0)
 	create_error('You must actually enter an amount greater than zero!');
 
-// do we have enough cash?
-if ($player->getCredits() < $cost * $amount)
-	create_error('You don\'t have enough credits to buy '.$amount.' items!');
+if ($action == 'Buy') {
+	// do we have enough cash?
+	if ($player->getCredits() < $cost * $amount) {
+		create_error('You don\'t have enough credits to buy '.$amount.' items!');
+	}
 
-// chec for max. we can hold!
-if ($amount > $ship->getMaxHardware($hardware_id) - $ship->getHardware($hardware_id))
-	create_error('You can\'t buy more '.$hardware_name.' than you can transport!');
+	// chec for max. we can hold!
+	if ($amount > $ship->getMaxHardware($hardware_id) - $ship->getHardware($hardware_id)) {
+		create_error('You can\'t buy more '.$hardware_name.' than you can transport!');
+	}
 
-// take the money from the user
-$player->decreaseCredits($cost * $amount);
+	$player->decreaseCredits($cost * $amount);
+	$ship->increaseHardware($hardware_id, $amount);
+
+	//HoF
+	if ($hardware_id == HARDWARE_COMBAT) $player->increaseHOF($amount,array('Forces','Bought','Combat Drones'), HOF_ALLIANCE);
+	if ($hardware_id == HARDWARE_SCOUT) $player->increaseHOF($amount,array('Forces','Bought','Scout Drones'), HOF_ALLIANCE);
+	if ($hardware_id == HARDWARE_MINE) $player->increaseHOF($amount,array('Forces','Bought','Mines'), HOF_ALLIANCE);
+}
+else if ($action == 'Sell') {
+	// We only allow selling combat drones
+	if ($hardware_id != HARDWARE_COMBAT) {
+		throw new Exception('This item cannot be sold!');
+	}
+
+	// Make sure we have the specified amount to sell
+	if ($amount > $ship->getCDs()) {
+		create_error('You can\'t sell more '.$hardware_name.' than you have aboard your ship!');
+	}
+
+	$player->increaseCredits(round($cost * CDS_REFUND_PERCENT) * $amount);
+	$ship->decreaseCDs($amount, true);  // 2nd arg avoids under attack warning
+}
+else {
+	throw new Exception('Action must be either Buy or Sell.');
+}
+
+$account->log(LOG_TYPE_HARDWARE, 'Player '.$action.'s '.$amount.' '.$hardware_name, $player->getSectorID());
+
 $player->update();
-
-// now adjust add to ship
-$ship->increaseHardware($hardware_id,$amount);
 $ship->updateHardware();
-
-$ship->removeUnderAttack();
-
-//HoF
-if ($hardware_id == 4) $player->increaseHOF($amount,array('Forces','Bought','Combat Drones'), HOF_ALLIANCE);
-if ($hardware_id == 5) $player->increaseHOF($amount,array('Forces','Bought','Scout Drones'), HOF_ALLIANCE);
-if ($hardware_id == 6) $player->increaseHOF($amount,array('Forces','Bought','Mines'), HOF_ALLIANCE);
-
-$account->log(LOG_TYPE_HARDWARE, 'Player Buys '.$amount.' '.$hardware_name, $player->getSectorID());
 
 $container = create_container('skeleton.php', 'shop_hardware.php');
 transfer('LocationID');
