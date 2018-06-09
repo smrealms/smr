@@ -27,7 +27,7 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 
 	if (isset($var['overall_number_of_bargains'])) {
 		// lose relations for bad bargain
-		if ($port->getRaceID() > 1 || $player->getRaceID() == 2) {
+		if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
 			$player->decreaseRelationsByTrade($amount,$port->getRaceID());
 		}
 		$player->increaseHOF(1,array('Trade','Results','Fail'), HOF_PUBLIC);
@@ -37,15 +37,8 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 		// does we have enough of it?
 		if ($container['number_of_bargains'] > $container['overall_number_of_bargains']) {
 			// change relation for non neutral ports
-			if ($port->getRaceID() > 1 || $player->getRaceID() == 2) {
+			if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
 				$player->decreaseRelationsByTrade($amount,$port->getRaceID());
-
-				/*what the hell is this doing here Spock??? ;)
-				//any player can just go to a port and make their - 500 personal align go to 0
-				if ($player->relations[$port->getRaceID()] < 0)
-					$player->relations[$port->getRaceID()] = 0;
-				*/
-
 			}
 			$player->increaseHOF(1,array('Trade','Results','Epic Fail'), HOF_PUBLIC);
 			create_error('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');

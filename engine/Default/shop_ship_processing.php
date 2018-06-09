@@ -15,7 +15,7 @@ if ($newShip['AlignRestriction'] == BUYER_RESTRICTION_EVIL && $player->getAlignm
 if ($newShip['AlignRestriction'] == BUYER_RESTRICTION_GOOD && $player->getAlignment() < ALIGNMENT_GOOD)
 	create_error('You can\'t buy federal ships!');
 
-if ($newShip['RaceID'] != 1 && $player->getRaceID() != $newShip['RaceID'])
+if ($newShip['RaceID'] != RACE_NEUTRAL && $player->getRaceID() != $newShip['RaceID'])
 	create_error('You can\'t buy other race\'s ships!');
 
 /*if ($player->getAccountID() == 101)
