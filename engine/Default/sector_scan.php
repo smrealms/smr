@@ -33,53 +33,10 @@ foreach ($scanSector->getOtherTraders($player) as $scanSectorPlayer) {
 		$enemy_vessel += $scanSectorShip->getDefenseRating() * 10;
 }
 
-$PHP_OUTPUT.=('<p>');
-$PHP_OUTPUT.=('<table class="standard">');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<th>&nbsp;</th>');
-$PHP_OUTPUT.=('<th align="center">Scan Results</th>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td>Friendly vessels</td>');
-$PHP_OUTPUT.=('<td align="center">'.$friendly_vessel.'</td>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td>Enemy vessels</td>');
-$PHP_OUTPUT.=('<td align="center">'.$enemy_vessel.'</td>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td>Friendly forces</td>');
-$PHP_OUTPUT.=('<td align="center">'.$friendly_forces.'</td>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td>Enemy forces</td>');
-$PHP_OUTPUT.=('<td align="center">'.$enemy_forces.'</td>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('</table>');
-$PHP_OUTPUT.=('</p>');
-
-$PHP_OUTPUT.=('<p>');
-$PHP_OUTPUT.=('<table class="standard">');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td>Planet</td>');
-$PHP_OUTPUT.=('<td>');
-if ($scanSector->hasPlanet()) $PHP_OUTPUT.=('Yes'); else $PHP_OUTPUT.=('No');
-$PHP_OUTPUT.=('</td>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td>Port</td>');
-$PHP_OUTPUT.=('<td>');
-if ($scanSector->hasPort()) $PHP_OUTPUT.=('Yes'); else $PHP_OUTPUT.=('No');
-$PHP_OUTPUT.=('</td>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td>Location</td>');
-$PHP_OUTPUT.=('<td>');
-if ($scanSector->hasLocation()) $PHP_OUTPUT.=('Yes'); else $PHP_OUTPUT.=('No');
-$PHP_OUTPUT.=('</td>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('</table>');
-$PHP_OUTPUT.=('</p><br />');
+$template->assign('FriendlyVessel', $friendly_vessel);
+$template->assign('FriendlyForces', $friendly_forces);
+$template->assign('EnemyVessel', $enemy_vessel);
+$template->assign('EnemyForces', $enemy_forces);
 
 // is it a warp or a normal move?
 if ($sector->getWarp() == $var['target_sector'])
@@ -87,6 +44,5 @@ if ($sector->getWarp() == $var['target_sector'])
 else
 	$turns = TURNS_PER_SECTOR;
 
-$PHP_OUTPUT.= '<a href="'.$scanSector->getScanSectorHREF().'" class="submitStyle">Rescan ' . $scanSector->getSectorID() . '</a>&nbsp;';
-$PHP_OUTPUT.= '<a href="'.$scanSector->getCurrentSectorMoveHREF().'" class="submitStyle">Enter ' . $scanSector->getSectorID() . ' ('.$turns.')</a>';
-$PHP_OUTPUT.=('</form></p>');
+$template->assign('ScanSector', $scanSector);
+$template->assign('Turns', $turns);
