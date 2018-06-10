@@ -11,8 +11,6 @@ if($player->isLandedOnPlanet())
 	create_error('You cannot attack forces whilst on a planet!');
 if(!$player->canFight())
 	create_error('You are not allowed to fight!');
-if (!$ship->hasWeapons() && !$ship->hasCDs())
-	create_error('You cannot attack without weapons!');
 if ($player->forceNAPAlliance($forceOwner))
 	create_error('You cannot attack allied forces!');
 
@@ -34,6 +32,8 @@ if ($bump) {
 		create_error('These forces no longer exist.');
 	if ($player->getTurns() < $forces->getAttackTurnCost($ship))
 		create_error('You do not have enough turns to attack these forces!');
+	if (!$ship->hasWeapons() && !$ship->hasCDs())
+		create_error('You cannot attack without weapons!');
 }
 
 // take the turns
