@@ -96,7 +96,6 @@ class SmrSession {
 			'toggle_processing.php' => self::ALWAYS_AVAILABLE,
 			//Admin pages
 			'account_edit.php' => self::ALWAYS_AVAILABLE,
-			'account_ip_view_result.php' => self::ALWAYS_AVAILABLE,
 			'album_moderate.php' => self::ALWAYS_AVAILABLE,
 			'box_view.php' => self::ALWAYS_AVAILABLE,
 			'changelog.php' => self::ALWAYS_AVAILABLE,
