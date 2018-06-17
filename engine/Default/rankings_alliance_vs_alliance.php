@@ -36,8 +36,6 @@ foreach ($alliance_vs as $key => $id) {
 	// get current alliance
 	$curr_alliance_id = $id;
 	if ($id > 0) {
-		$db->query('SELECT 1 FROM player WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-		$out = $db2->getNumRows() == 0;
 
 		$PHP_OUTPUT.=('<td width=15% valign="top"');
 		if ($player->getAllianceID() == $curr_alliance_id)
@@ -72,13 +70,11 @@ foreach ($alliance_vs as $key => $id) {
 	$curr_id = $id;
 	if ($id > 0) {
 		$curr_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
-		$db2->query('SELECT 1 FROM player WHERE alliance_id = ' . $db2->escapeNumber($curr_id) . ' AND game_id = ' . $db2->escapeNumber($player->getGameID()) . ' LIMIT 1');
-		$out = $db2->nextRecord();
 
 		$PHP_OUTPUT.=('<td width=10% valign="top"');
 		if ($player->getAllianceID() == $curr_alliance->getAllianceID())
 			$PHP_OUTPUT.=(' class="bold"');
-		if ($out)
+		if ($curr_alliance->hasDisbanded())
 			$PHP_OUTPUT.=(' class="red"');
 		$PHP_OUTPUT.=('>');
 		$container1['alliance_id']	= $curr_alliance->getAllianceID();
@@ -94,13 +90,13 @@ foreach ($alliance_vs as $key => $id) {
 	}
 
 	foreach ($alliance_vs as $key => $id) {
-		$db2->query('SELECT 1 FROM player WHERE alliance_id = ' . $db2->escapeNumber($id) . ' AND game_id = ' . $db2->escapeNumber($player->getGameID()) . ' LIMIT 1');
-		if ($db2->nextRecord() == 0) $out2 = TRUE;
-		else $out2 = FALSE;
+		$row_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
+		$showRed = $curr_alliance->hasDisbanded() || $row_alliance->hasDisbanded();
+		$showBold = $curr_id == $player->getAllianceID() || $id == $player->getAllianceID();
 		if ($curr_id == $id && $id != 0) {
-			if (($out || $out2))
+			if ($showRed)
 				$PHP_OUTPUT.=('<td class="red">-');
-			elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID())
+			elseif ($showBold)
 				$PHP_OUTPUT.=('<td class="bold">-');
 			else $PHP_OUTPUT.=('<td>-');
 		}
@@ -109,24 +105,17 @@ foreach ($alliance_vs as $key => $id) {
 						WHERE alliance_id_2 = ' . $db2->escapeNumber($curr_id) . '
 							AND alliance_id_1 = ' . $db2->escapeNumber($id) . '
 							AND game_id = ' . $db2->escapeNumber($player->getGameID()));
+			$PHP_OUTPUT.=('<td');
+			if ($showRed && $showBold)
+				$PHP_OUTPUT.=(' class="bold red"');
+			elseif ($showRed)
+				$PHP_OUTPUT.=(' class="red"');
+			elseif ($showBold)
+				$PHP_OUTPUT.=(' class="bold"');
+			$PHP_OUTPUT.=('>');
 			if ($db2->nextRecord()) {
-				$PHP_OUTPUT.=('<td');
-				if (($out || $out2) && ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()))
-					$PHP_OUTPUT.=(' class="bold red"');
-				elseif ($out || $out2)
-					$PHP_OUTPUT.=(' class="red"');
-				elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()) $PHP_OUTPUT.=(' class="bold"');
-				$PHP_OUTPUT.=('>');
 				$PHP_OUTPUT.= $db2->getField('kills');
-			}
-			else {
-				$PHP_OUTPUT.=('<td');
-				if (($out || $out2) && ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()))
-					$PHP_OUTPUT.=(' class="bold red"');
-				elseif ($out || $out2)
-					$PHP_OUTPUT.=(' class="red"');
-				elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()) $PHP_OUTPUT.=(' class="bold"');
-				$PHP_OUTPUT.=('>');
+			} else {
 				$PHP_OUTPUT.=('0');
 			}
 		}
