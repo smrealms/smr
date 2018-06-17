@@ -68,6 +68,7 @@ $PHP_OUTPUT.=('</tr>');
 foreach ($alliance_vs as $key => $id) {
 	$PHP_OUTPUT.=('<tr>');
 	// get current alliance
+	$container1 = create_container('skeleton.php', 'rankings_alliance_vs_alliance.php');
 	$curr_id = $id;
 	if ($id > 0) {
 		$curr_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
@@ -80,18 +81,12 @@ foreach ($alliance_vs as $key => $id) {
 		if ($out)
 			$PHP_OUTPUT.=(' class="red"');
 		$PHP_OUTPUT.=('>');
-		$container1 = array();
-		$container1['url']			= 'skeleton.php';
-		$container1['body']		= 'rankings_alliance_vs_alliance.php';
 		$container1['alliance_id']	= $curr_alliance->getAllianceID();
 		$PHP_OUTPUT.=create_link($container1, $curr_alliance->getAllianceName());
 		//$PHP_OUTPUT.=('.$db->escapeString($curr_alliance->getAllianceName()');
 		$PHP_OUTPUT.=('</td>');
 	}
 	else {
-		$container1 = array();
-		$container1['url']			= 'skeleton.php';
-		$container1['body']		= 'rankings_alliance_vs_alliance.php';
 		$container1['alliance_id']	= 0;
 		$PHP_OUTPUT.=('<td width=10% valign="top">');
 		$PHP_OUTPUT.=create_link($container1, 'None');
