@@ -29,7 +29,7 @@ if (!empty($OpDate)) { ?>
 
 <br /><br />
 <h2>Alliance Flagship</h2>
-<p>The Flagship's location <img src="images/flagship2.png" /> will be visible to all alliance members on the Local Map.</p>
+<p>The Flagship's location <img src="images/flagship.png" /> will be visible to all alliance members on the Local Map.</p>
 <form method="POST" action="<?php echo $FlagshipHREF; ?>">
 	<select name="flagship_id" id="InputFields" size="1">
 		<option value="0">-- None --</option>
