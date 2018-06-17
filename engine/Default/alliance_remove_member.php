@@ -32,7 +32,7 @@ if ($db->getNumRows() != 0) {
 			$diff = 864000 + max(-864000, $db->getInt('last_cpl_action') - TIME);
 			$lastActive = get_colored_text_range($diff, 864000, date(DATE_FULL_SHORT, $db->getInt('last_cpl_action')));
 
-			$PHP_OUTPUT.= '<tr><td>'.$db->getField('player_name').'('.$db->getInt('player_id').')</td>';
+			$PHP_OUTPUT.= '<tr><td>'.$db->getField('player_name').' ('.$db->getInt('player_id').')</td>';
 			$PHP_OUTPUT.= '<td class="shrink noWrap center">';
 			$PHP_OUTPUT.= $lastActive;
 			$PHP_OUTPUT.= '</td><td class="shrink center">';
