@@ -27,7 +27,6 @@ if (empty($alliancer)) {
 	$alliance_vs = array();
 	$db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY alliance_kills DESC, alliance_name LIMIT 5');
 	while ($db->nextRecord()) $alliance_vs[] = $db->getField('alliance_id');
-	//$PHP_OUTPUT.=('empty '.$alliancer);
 
 } else $alliance_vs = $alliancer;
 $alliance_vs[] = 0;
@@ -41,11 +40,6 @@ foreach ($alliance_vs as $key => $id) {
 		if ($player->getAllianceID() == $curr_alliance_id)
 			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>');
-		/*$container = array();
-		$container['url']			= 'skeleton.php';
-		$container['body']			= 'alliance_roster.php';
-		$container['alliance_id']	= $curr_alliance_id;
-		$PHP_OUTPUT.=create_link($container, '.$db->escapeString($curr_alliance->getAllianceName()');*/
 		$PHP_OUTPUT.=('<select name="alliancer[]" id="InputFields" style="width:105">');
 		$db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_name');
 		while ($db->nextRecord()) {
@@ -58,11 +52,9 @@ foreach ($alliance_vs as $key => $id) {
 		$PHP_OUTPUT.='</select>';
 		$PHP_OUTPUT.=('</td>');
 	}
-	//$alliance_vs[] = $curr_alliance_id;
 }
 $PHP_OUTPUT.=('<td width=10% valign="top">None</td>');
 $PHP_OUTPUT.=('</tr>');
-//$db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY alliance_kills DESC, alliance_name LIMIT 5');
 foreach ($alliance_vs as $key => $id) {
 	$PHP_OUTPUT.=('<tr>');
 	// get current alliance
@@ -79,7 +71,6 @@ foreach ($alliance_vs as $key => $id) {
 		$PHP_OUTPUT.=('>');
 		$container1['alliance_id']	= $curr_alliance->getAllianceID();
 		$PHP_OUTPUT.=create_link($container1, $curr_alliance->getAllianceName());
-		//$PHP_OUTPUT.=('.$db->escapeString($curr_alliance->getAllianceName()');
 		$PHP_OUTPUT.=('</td>');
 	}
 	else {
