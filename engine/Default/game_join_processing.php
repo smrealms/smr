@@ -163,8 +163,7 @@ if ($isNewbie) {
 }
 
 if($race_id == RACE_ALSKANT) { // Give Alskants 250 personal relations to start.
-	$RACES =& Globals::getRaces();
-	foreach($RACES as $raceID => $raceInfo) {
+	foreach (Globals::getRaces() as $raceID => $raceInfo) {
 		$player->setRelations(250, $raceID);
 	}
 }

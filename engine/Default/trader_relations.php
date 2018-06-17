@@ -7,9 +7,8 @@ create_trader_menu();
 $politicalRelations = array();
 $personalRelations = array();
 
-$RACES =& Globals::getRaces();
 $globalRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
-foreach($RACES as $raceID => $race) {
+foreach (Globals::getRaces() as $raceID => $race) {
 	$politicalRelations[$race['Race Name']] = $globalRelations[$raceID];
 	$personalRelations[$race['Race Name']] = $player->getPureRelation($raceID);
 }

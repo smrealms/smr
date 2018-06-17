@@ -6,9 +6,8 @@ if (isset($var['message'])) {
 	SmrSession::updateVar('message', null); // Only show message once
 }
 
-$galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
-$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
-$galSectors =& $galaxy->getSectors();
+$galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
+$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 
 $template->assign('PageTopic', 'Warps for Galaxy : '.$galaxy->getName().' ('.$galaxy->getGalaxyID().')');
 

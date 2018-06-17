@@ -701,7 +701,7 @@ abstract class AbstractSmrAccount {
 							$db->escapeString($db2->getField('images')).','.$db->escapeString($db2->getField('fontsize')+20).','.$db->escapeNumber(0).','.$db->escapeString($db2->getField('login')).','.$db->escapeString($db2->getField('validated')).')');
 
 				// creates a new user account object
-				$account =& SmrAccount::getAccountByName($db2->getField('login'));
+				$account = SmrAccount::getAccountByName($db2->getField('login'));
 				$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give 2 "reward" credits for joining.
 				SmrSession::$account_id = $account->getAccountID();
 
@@ -1207,7 +1207,7 @@ abstract class AbstractSmrAccount {
 						WHERE ' . $this->SQL . '
 						AND end_date >= ' . $this->db->escapeNumber(TIME));
 		while ($this->db->nextRecord()) {
-			$player =& SmrPlayer::getPlayer($this->getAccountID(), $this->db->getInt('game_id'));
+			$player = SmrPlayer::getPlayer($this->getAccountID(), $this->db->getInt('game_id'));
 			$player->updateTurns();
 			$player->update();
 		}

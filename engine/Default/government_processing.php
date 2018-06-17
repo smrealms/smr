@@ -1,5 +1,5 @@
 <?php
-$location =& SmrLocation::getLocation($var['LocationID']);
+$location = SmrLocation::getLocation($var['LocationID']);
 if ($_REQUEST['action'] == 'Become a deputy') {
 	if(!$location->isHQ()) {
 		create_error('You have to be at a HQ to become a deputy.');

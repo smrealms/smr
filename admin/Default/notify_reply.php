@@ -8,12 +8,12 @@ transfer('game_id');
 transfer('offended');
 transfer('offender');
 $template->assign('NotifyReplyFormHref',SmrSession::getNewHREF($container));
-$offender =& getMessagePlayer($var['offender'],$var['game_id']);
-$offended =& getMessagePlayer($var['offended'],$var['game_id']);
+$offender = getMessagePlayer($var['offender'],$var['game_id']);
+$offended = getMessagePlayer($var['offended'],$var['game_id']);
 if(is_object($offender))
-	$template->assign('OffenderAccount', SmrAccount::getAccount($var['offender']));
+	$template->assign('OffenderAccount', $offender->getAccount());
 if(is_object($offended))
-	$template->assign('OffendedAccount', SmrAccount::getAccount($var['offended']));
+	$template->assign('OffendedAccount', $offended->getAccount());
 $template->assign('Offender', $offender);
 $template->assign('Offended', $offended);
 

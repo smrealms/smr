@@ -5,7 +5,7 @@ $template->assign('ViewAllLocationsLink',SmrSession::getNewHREF(create_container
 require_once(get_file_loc('SmrLocation.class.inc'));
 
 if(isset($var['location_type_id'])) {
-	$location =& SmrLocation::getLocation($var['location_type_id']);
+	$location = SmrLocation::getLocation($var['location_type_id']);
 	if(isset($_REQUEST['save'])) {
 		if($_REQUEST['add_ship_id']!=0)
 			$location->addShipSold($_REQUEST['add_ship_id']);

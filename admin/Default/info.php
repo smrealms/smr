@@ -78,14 +78,14 @@ if (!isset($number)) {
 				//Entered via ip search
 				$PHP_OUTPUT.=('<td>User closed in big IP Search or Edit Account matching ');
 				//this is who they initially match
-				$curr_account =& SmrAccount::getAccount($info);
+				$curr_account = SmrAccount::getAccount($info);
 				$PHP_OUTPUT.=($curr_account->getLogin());
 				$listed[] = $info;
 				//who matches them
 				$db2->query('SELECT * FROM account_is_closed WHERE suspicion = ' . $db->escapeString('Match:'.$account->getAccountID()));
 				while ($db2->nextRecord()) {
 
-					$curr_account =& SmrAccount::getAccount($db2->getField('account_id'));
+					$curr_account = SmrAccount::getAccount($db2->getField('account_id'));
 					$PHP_OUTPUT.=(', '.$curr_account->getLogin());
 					$listed[] = $db2->getField('account_id');
 					//add this acc to the search one
@@ -104,7 +104,7 @@ if (!isset($number)) {
 					$db2->query('SELECT * FROM account_is_closed WHERE suspicion = ' . $db->escapeString('Match:'.$info).' AND account_id != '.$db->escapeNumber($id));
 					while ($db2->nextRecord()) {
 
-						$curr_account =& SmrAccount::getAccount($db2->getField('account_id'));
+						$curr_account = SmrAccount::getAccount($db2->getField('account_id'));
 						if (!in_array($db2->getField('account_id'),$listed)) $PHP_OUTPUT.=(', '.$curr_account->getLogin());
 						$listed[] = $db2->getField('account_id');
 						//add this acc to the search one
@@ -115,7 +115,7 @@ if (!isset($number)) {
 					$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($info).' AND account_id != '.$db->escapeNumber($id));
 					while ($db2->nextRecord()) {
 
-						$curr_account =& SmrAccount::getAccount($db2->getField('account_id'));
+						$curr_account = SmrAccount::getAccount($db2->getField('account_id'));
 						if (!in_array($db2->getField('account_id'),$listed)) $PHP_OUTPUT.=(', '.$curr_account->getLogin());
 						$listed[] = $db2->getField('account_id');
 						//get this accs match
@@ -160,7 +160,7 @@ if (!isset($number)) {
 				$size = sizeof($users);
 				foreach ($users as $key => $value) {
 
-					$curr_account =& SmrAccount::getAccount($value);
+					$curr_account = SmrAccount::getAccount($value);
 					if ($curr_account->getAccountID() != $id) {
 
 						$PHP_OUTPUT.=($curr_account->getLogin());

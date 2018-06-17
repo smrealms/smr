@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Examine Planet');
 
-$planet =& $player->getSectorPlanet();
+$planet = $player->getSectorPlanet();
 $template->assign('ThisPlanet', $planet);
 
 $planetLand = 

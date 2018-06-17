@@ -1,6 +1,6 @@
 <?php
 
-$sector =& SmrSector::getSector($var['game_id'],$var['sector_id']);
+$sector = SmrSector::getSector($var['game_id'],$var['sector_id']);
 $container = $var;
 $container['url'] = '1.6/universe_create_save_processing.php';
 $container['body'] = '1.6/universe_create_sectors.php';
@@ -52,7 +52,7 @@ foreach (Globals::getRaces() as $race) {
 $PHP_OUTPUT.= '</select>';
 //goods determined randomly to sway admin abuse
 $PHP_OUTPUT.= '<br /><br />';
-$sectorLocations =& $sector->getLocations();
+$sectorLocations = $sector->getLocations();
 for ($i=0;$i<UNI_GEN_LOCATION_SLOTS;$i++) {
 	$PHP_OUTPUT.= 'Location ' . ($i + 1) . ': <select name="loc_type' . $i . '">';
 	$PHP_OUTPUT.= '<option value="0">No Location</option>';
@@ -73,7 +73,7 @@ $PHP_OUTPUT.= '<tr><td width="5%" class="center">&nbsp;</td><td width="90%" clas
 if ($sector->hasLinkDown()) $PHP_OUTPUT.= ' checked';
 $PHP_OUTPUT.= '></td><td width="5%" class="center">Warp:<br /><input type="number" size="5" name="warp" value="';
 if ($sector->hasWarp()) {
-	$warpSector=& $sector->getWarpSector();
+	$warpSector = $sector->getWarpSector();
 	$PHP_OUTPUT.= $warpSector->getSectorID();
 	$warpGal = $warpSector->getGalaxyName();
 }

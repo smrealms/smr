@@ -1,6 +1,6 @@
 <div id="sector_port" class="ajax">
 	<?php if($ThisSector->hasPort()) {
-		$Port =& $ThisSector->getPort(); ?>
+		$Port = $ThisSector->getPort(); ?>
 		<table class="standard csl">
 			<tr>
 				<th colspan="2">Port</th>

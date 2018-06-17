@@ -50,7 +50,7 @@ if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 }
 
-$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getInt('alliance_id') . ')');
 require_once(get_file_loc('menu.inc'));
 create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());

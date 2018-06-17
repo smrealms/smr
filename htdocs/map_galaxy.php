@@ -58,7 +58,7 @@ try {
 			exit;
 		}
 		try {
-			$galaxy =& SmrGalaxy::getGalaxy(SmrSession::$game_id,$galaxyID);
+			$galaxy = SmrGalaxy::getGalaxy(SmrSession::$game_id,$galaxyID);
 		}
 		catch(Exception $e) {
 			header('location: /error.php?msg=Invalid galaxy ID');
@@ -66,10 +66,10 @@ try {
 		}
 	}
 	
-	$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
+	$player = SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 	
 	// create account object
-	$account =& $player->getAccount();
+	$account = $player->getAccount();
 	
 	// Create a session to store temporary display options
 	// Garbage collect here often, since the page is slow anyways (see map_local.php)
@@ -91,7 +91,7 @@ try {
 	}
 
 	if (!isset($galaxyID) && !isset($sectorID)) {
-		$galaxy =& SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$player->getSectorID());
+		$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$player->getSectorID());
 		if ($account->isCenterGalaxyMapOnPlayer()) {
 			$sectorID = $player->getSectorID();
 		}

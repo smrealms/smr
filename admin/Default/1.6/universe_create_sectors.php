@@ -5,8 +5,8 @@ if (!isset($var['game_id'])) SmrSession::updateVar('game_id', $_REQUEST['game_id
 if (!isset($var['gal_on'])) SmrSession::updateVar('gal_on', 1);
 
 //generate sector array
-$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
-$galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
+$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
+$galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 
 $mapSectors = $galaxy->getMapSectors();
 

@@ -291,8 +291,7 @@ function get_album_nick($album_id) {
 	if ($album_id == 0)
 		return 'System';
 
-	$account =& SmrAccount::getAccount($album_id);
-	return $account->getHofName();
+	return SmrAccount::getAccount($album_id)->getHofName();
 }
 
 /*

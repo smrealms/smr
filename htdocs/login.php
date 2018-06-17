@@ -24,7 +24,7 @@ try {
 	
 	if (SmrSession::$account_id > 0) {
 		// creates a new user account object
-		$account =& SmrAccount::getAccount(SmrSession::$account_id);
+		$account = SmrAccount::getAccount(SmrSession::$account_id);
 	
 		// update last login column
 		$account->updateLastLogin();

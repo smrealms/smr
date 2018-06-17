@@ -22,12 +22,12 @@ while ($db->nextRecord()) {
 	$db2->query('SELECT * FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($db->getInt('article_id')));
 	if (!$db2->nextRecord()) {
 		$title = stripslashes($db->getField('title'));
-		$writter =& SmrPlayer::getPlayer($db->getField('writer_id'), $player->getGameID());
+		$writer = SmrPlayer::getPlayer($db->getField('writer_id'), $player->getGameID());
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'galactic_post_view_article.php';
 		$container['id'] = $db->getField('article_id');
-		$PHP_OUTPUT.=create_link($container, '<span class="yellow">'.$title.'</span> written by '.$writter->getPlayerName());
+		$PHP_OUTPUT.=create_link($container, '<span class="yellow">'.$title.'</span> written by '.$writer->getPlayerName());
 		$PHP_OUTPUT.=('<br />');
 	}
 }

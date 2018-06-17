@@ -1,7 +1,7 @@
 <?php
 
 // Get the player we're attacking
-$targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
+$targetPlayer = SmrPlayer::getPlayer($var['target'],$player->getGameID());
 
 if($targetPlayer->isDead()) {
 	$container=create_container('skeleton.php', 'current_sector.php');
@@ -11,5 +11,4 @@ if($targetPlayer->isDead()) {
 
 
 $template->assign('PageTopic','Examine Ship');
-// should we display a attack button
 $template->assign('TargetPlayer',$targetPlayer);

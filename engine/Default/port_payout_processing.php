@@ -1,5 +1,5 @@
 <?php
-$port =& $player->getSectorPort();
+$port = $player->getSectorPort();
 switch($var['PayoutType']) {
 	case 'Raze':
 		$credits = $port->razePort($player);

@@ -15,7 +15,7 @@ $teams = get_draft_teams($player->getGameID());
 if(!$teams[$player->getAccountID()]['CanPick']) {
 	create_error('You have to wait for others to pick first.');
 }
-$pickedPlayer =& SmrPlayer::getPlayer($var['PickedAccountID'], $player->getGameID());
+$pickedPlayer = SmrPlayer::getPlayer($var['PickedAccountID'], $player->getGameID());
 
 if($pickedPlayer->hasAlliance()) {
 	if($pickedPlayer->getAllianceID()==NHA_ID) {

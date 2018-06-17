@@ -52,7 +52,7 @@ else {
 }
 
 // get this guy from db
-$bounty_guy =& SmrPlayer::getPlayerByPlayerID($playerID, $player->getGameID());
+$bounty_guy = SmrPlayer::getPlayerByPlayerID($playerID, $player->getGameID());
 
 $PHP_OUTPUT.=('Are you sure you want to place a <span class="creds">' . number_format($amount) .
 	'</span> credits and <span class="yellow">' . number_format($smrCredits) .

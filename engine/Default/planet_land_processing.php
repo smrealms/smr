@@ -15,7 +15,7 @@ if($player->hasNewbieTurns()) {
 }
 
 //check to make sure the planet isn't full!
-$planet =& $player->getSectorPlanet();
+$planet = $player->getSectorPlanet();
 if($planet->getMaxLanded() != 0 && $planet->getMaxLanded() <= $planet->countPlayers()) {
 	create_error('You cannot land because the planet is full!');
 }

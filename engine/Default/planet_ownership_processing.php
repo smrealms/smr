@@ -2,7 +2,7 @@
 if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
 // get a planet from the sector where the player is in
-$planet =& $player->getSectorPlanet();
+$planet = $player->getSectorPlanet();
 $action = $_REQUEST['action'];
 $password = isset($_REQUEST['password'])?$_REQUEST['password']:'';
 

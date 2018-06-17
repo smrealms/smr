@@ -18,7 +18,7 @@ foreach ($galSectors as $galSector) {
 }
 $template->assign('TotalLocs', $totalLocs);
 
-$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
+$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $template->assign('Galaxy', $galaxy);
 
 // Though we expect a location to be only in one category, it is possible to

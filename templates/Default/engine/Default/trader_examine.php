@@ -24,7 +24,7 @@ else if($TargetPlayer->hasFederalProtection()) {
 }
 else {
 	$canAttack=true;
-	$fightingPlayers =& $ThisSector->getFightingTraders($ThisPlayer,$TargetPlayer, true);
+	$fightingPlayers = $ThisSector->getFightingTraders($ThisPlayer,$TargetPlayer, true);
 	if(count($fightingPlayers['Defenders'])>0) {
 		?><p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (3)</a></p><?php
 	}
@@ -33,8 +33,8 @@ else {
 	}
 }
 if(!$canAttack)
-	$fightingPlayers =& $ThisSector->getPotentialFightingTraders($ThisPlayer);
-$fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
+	$fightingPlayers = $ThisSector->getPotentialFightingTraders($ThisPlayer);
+$fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] = $ThisPlayer;
 ?>
 <div align="center">
 	<table class="standard" width="95%">
@@ -43,8 +43,8 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 			foreach ($fightingPlayers as $fleet) {
 				?><td class="top"><?php
 				if (is_array($fleet)) {
-					foreach ($fleet as &$fleetPlayer) {
-						$fleetShip =& $fleetPlayer->getShip();
+					foreach ($fleet as $fleetPlayer) {
+						$fleetShip = $fleetPlayer->getShip();
 						if ($fleetPlayer->hasNewbieStatus()) { ?><span class="newbie"><?php }
 						echo $fleetPlayer->getLevelName(); ?><br /><?php
 						echo $fleetPlayer->getDisplayName() ?><br />

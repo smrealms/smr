@@ -9,13 +9,13 @@ $action = $_REQUEST['action'];
 if ($action == 'Reopen and add to exceptions') {
 	foreach ($account_id as $id) {
 		$curr_exception = $exception[$id];
-		$bannedAccount =& SmrAccount::getAccount($id);
+		$bannedAccount = SmrAccount::getAccount($id);
 		$bannedAccount->unbanAccount($account,$curr_exception);
 	}
 }
 else {
 	foreach ($account_id as $id) {
-		$bannedAccount =& SmrAccount::getAccount($id);
+		$bannedAccount = SmrAccount::getAccount($id);
 		$bannedAccount->unbanAccount($account);
 	}
 }

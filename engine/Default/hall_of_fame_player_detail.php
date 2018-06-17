@@ -11,7 +11,7 @@ $base = array();
 
 if(isset($var['game_id'])) {
 	try {
-		$hofPlayer =& SmrPlayer::getPlayer($account_id,$var['game_id']);
+		$hofPlayer = SmrPlayer::getPlayer($account_id,$var['game_id']);
 	}
 	catch(PlayerNotFoundException $e) {
 		create_error('That player has not yet joined this game.');

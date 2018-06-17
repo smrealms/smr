@@ -15,7 +15,7 @@ if (isset($var['process'])) {
 	}
 	
 	//get start sector
-	$galaxy =& SmrGalaxy::getGalaxy($player->getGameID(),$galaxyID);
+	$galaxy = SmrGalaxy::getGalaxy($player->getGameID(),$galaxyID);
 	$low = $galaxy->getStartSector();
 	//get end sector
 	$high = $galaxy->getEndSector();

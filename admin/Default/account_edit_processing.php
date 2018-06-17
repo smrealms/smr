@@ -1,7 +1,7 @@
 <?php
 
 $account_id = $var['account_id'];
-$curr_account =& SmrAccount::getAccount($account_id);
+$curr_account = SmrAccount::getAccount($account_id);
 
 // request
 $donation = $_REQUEST['donation'];

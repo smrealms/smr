@@ -71,7 +71,7 @@ if ($db->getNumRows() > 0) {
 								'VotedFor' => isset($featureVotes[$featureRequestID]) ? $featureVotes[$featureRequestID] : false
 		);
 		if($featureModerator)
-			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getInt('poster_id'));
+			$featureRequests[$featureRequestID]['RequestAccount'] = SmrAccount::getAccount($db->getInt('poster_id'));
 
 		if ($canVote) {
 			$db2->query('SELECT COUNT(*), vote_type

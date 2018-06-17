@@ -11,7 +11,7 @@ if (isset($close)) {
 
 		$val = 'Match list:';
 		$val .= $value;
-		$bannedAccount =& SmrAccount::getAccount($key);
+		$bannedAccount = SmrAccount::getAccount($key);
 		$bannedAccount->banAccount($expire_time,$account,2,$val);
 		$amount++;
 	}
@@ -24,7 +24,7 @@ if (isset($first)) {
 	$val = 'Match list:' . implode(',', $same_ip);
 	foreach ($same_ip as $account_id) {
 		//never expire
-		$bannedAccount =& SmrAccount::getAccount($account_id);
+		$bannedAccount = SmrAccount::getAccount($account_id);
 		$bannedAccount->banAccount(0,$account,2,$val);
 	}
 	forward(create_container('skeleton.php', 'admin_tools.php'));
@@ -33,7 +33,7 @@ if (isset($first)) {
 $second = $_REQUEST['second'];
 if (isset($second)) {
 	//never expire
-	$bannedAccount =& SmrAccount::getAccount($second);
+	$bannedAccount = SmrAccount::getAccount($second);
 	$bannedAccount->banAccount(0,$account,2,'Auto:By Admin');
 }
 $action = $_REQUEST['action'];
@@ -72,7 +72,7 @@ if (isset($disable_id)) {
 		}
 
 		//never expire
-		$bannedAccount =& SmrAccount::getAccount($id);
+		$bannedAccount = SmrAccount::getAccount($id);
 		$bannedAccount->banAccount(0,$account,2,$reason);
 	}
 }

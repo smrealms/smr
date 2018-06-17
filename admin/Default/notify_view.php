@@ -18,12 +18,12 @@ if ($db->getNumRows()) {
 		$notify_id = $db->getField('notify_id');
 		$PHP_OUTPUT.=('<td><input type="checkbox" name="notify_id[]" value="'.$notify_id.'"></td>');
 		$gameID = $db->getField('game_id');
-		$sender =& getMessagePlayer($db->getField('from_id'),$gameID);
-		$receiver =& getMessagePlayer($db->getField('to_id'),$gameID);
+		$sender = getMessagePlayer($db->getField('from_id'),$gameID);
+		$receiver = getMessagePlayer($db->getField('to_id'),$gameID);
 		if(is_object($sender))
-			$sender_acc = SmrAccount::getAccount($db->getField('from_id'));
+			$sender_acc = $sender->getAccount();
 		if(is_object($receiver))
-			$receiver_acc = SmrAccount::getAccount($db->getField('to_id'));
+			$receiver_acc = $receiver->getAccount();
 	
 		$container = create_container('skeleton.php','notify_reply.php');
 		$container['offender'] = $db->getField('from_id');

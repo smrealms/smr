@@ -10,7 +10,7 @@ try {
 	$db = new SmrMySqlDatabase();
 
 	if (SmrSession::$account_id > 0) {
-		$account =& SmrAccount::getAccount(SmrSession::$account_id);
+		$account = SmrAccount::getAccount(SmrSession::$account_id);
 		$disabled = $account->isDisabled();
 		if ($disabled !== false) {
 			$reason = $disabled['Reason'];

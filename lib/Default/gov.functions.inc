@@ -16,7 +16,7 @@ function displayBountyList(&$PHP_OUTPUT,$type,$claimableBy) {
 		$PHP_OUTPUT.=('</tr>');
 
 		while ($db->nextRecord()) {
-			$bountyPlayer =& SmrPlayer::getPlayer($db->getField('account_id'),SmrSession::$game_id);
+			$bountyPlayer = SmrPlayer::getPlayer($db->getField('account_id'),SmrSession::$game_id);
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td align="center">'.$bountyPlayer->getLinkedDisplayName().'</td>');
 			$PHP_OUTPUT.=('<td align="center"><span class="creds"> ' . number_format($db->getField('amount')) . ' </span></td>');

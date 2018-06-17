@@ -1,7 +1,7 @@
 <?php
 if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
-$planet =& $player->getSectorPlanet();
+$planet = $player->getSectorPlanet();
 $action = $_REQUEST['action'];
 
 // Player has requested a planetary fund transaction

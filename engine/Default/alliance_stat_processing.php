@@ -34,7 +34,7 @@ if (isset($password) && $password == '') {
 	create_error('You cannot set an empty password!');
 }
 
-$alliance =& SmrAlliance::getAlliance($alliance_id, $player->getGameID());
+$alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
 if (isset($password)) {
 	$alliance->setPassword($password);
 }

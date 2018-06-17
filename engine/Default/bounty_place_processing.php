@@ -4,7 +4,7 @@ if(!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
 
-$location =& SmrLocation::getLocation($var['LocationID']);
+$location = SmrLocation::getLocation($var['LocationID']);
 $container = create_container('skeleton.php');
 transfer('LocationID');
 if ($location->isHQ()) {
@@ -45,7 +45,7 @@ $player->increaseHOF($smrCredits,array('Bounties','Placed','SMR Credits'), HOF_P
 $player->increaseHOF($amount,array('Bounties','Placed','Money'), HOF_PUBLIC);
 $player->increaseHOF(1,array('Bounties','Placed','Number'), HOF_PUBLIC);
 
-$placed =& SmrPlayer::getPlayer($account_id, $player->getGameID());
+$placed = SmrPlayer::getPlayer($account_id, $player->getGameID());
 $placed->increaseCurrentBountyAmount($type,$amount);
 $placed->increaseCurrentBountySmrCredits($type,$smrCredits);
 $placed->increaseHOF($smrCredits,array('Bounties','Received','SMR Credits'), HOF_PUBLIC);

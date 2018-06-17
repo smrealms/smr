@@ -24,7 +24,7 @@ if (isset($offenderReply) && $offenderReply != '') {
 	//do we have points?
 	if ($_REQUEST['offenderBanPoints']) {
 		$suspicion = 'Inappropriate In-Game Message';
-		$offenderAccount =& SmrAccount::getAccount($var['offender']);
+		$offenderAccount = SmrAccount::getAccount($var['offender']);
 		$offenderAccount->addPoints($_REQUEST['offenderBanPoints'],$account,7,$suspicion);
 	}
 }
@@ -37,7 +37,7 @@ if (isset($offendedReply) && $offendedReply != '') {
 	//do we have points?
 	if ($_REQUEST['offendedBanPoints']) {
 		$suspicion = 'Inappropriate In-Game Message';
-		$offenderAccount =& SmrAccount::getAccount($var['offended']);
+		$offenderAccount = SmrAccount::getAccount($var['offended']);
 		$offenderAccount->addPoints($_REQUEST['offendedBanPoints'],$account,7,$suspicion);
 	}
 }

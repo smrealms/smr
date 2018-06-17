@@ -26,7 +26,7 @@ if (count($Planets) > 0) { ?>
 			</tr>
 		</thead>
 		<tbody class="list"><?php
-			foreach($Planets as &$Planet) { ?>
+			foreach ($Planets as $Planet) { ?>
 				<tr id="planet-<?php echo $Planet->getSectorID(); ?>" class="ajax">
 					<td class="image noWrap">
 						<img class="tooltip" id="planet_image" src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename().': '.$Planet->getTypeDescription(); ?>" /></td>
@@ -56,7 +56,7 @@ if (count($Planets) > 0) { ?>
 					</td>
 					<td class="build noWrap center"><?php
 						if ($Planet->hasCurrentlyBuilding()) {
-							$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
+							$PLANET_BUILDINGS = Globals::getPlanetBuildings();
 							foreach($Planet->getCurrentlyBuilding() as $Building) {
 								echo $PLANET_BUILDINGS[$Building['ConstructionID']]['Name']; ?><br /><?php
 								echo format_time($Building['TimeRemaining'], true);

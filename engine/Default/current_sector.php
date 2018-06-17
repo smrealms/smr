@@ -135,7 +135,7 @@ if (!empty($var['trade_msg'])) {
 // *******************************************
 
 if($sector->hasPort()) {
-	$port =& $sector->getPort();
+	$port = $sector->getPort();
 	$template->assign('PortIsAtWar',$player->getRelation($port->getRaceID()) < RELATIONS_WAR);
 }
 

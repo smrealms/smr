@@ -165,7 +165,7 @@ elseif ($action == 'Yes') {
 	$amount = $var['amount'];
 
 	// create his account
-	$his_account =& SmrAccount::getAccount($account_id);
+	$his_account = SmrAccount::getAccount($account_id);
 
 	// take from us
 	$account->decreaseSmrCredits($amount);

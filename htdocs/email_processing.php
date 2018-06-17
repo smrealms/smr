@@ -15,7 +15,7 @@ try {
 	}
 
 	// get account
-	$account =& SmrAccount::getAccount(SmrSession::$account_id);
+	$account = SmrAccount::getAccount(SmrSession::$account_id);
 
 	if ($_POST['email'] != $_POST['email_verify']) {
 		$msg = 'The eMail addresses you entered do not match!';

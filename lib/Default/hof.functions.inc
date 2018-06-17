@@ -79,14 +79,14 @@ function displayHOFRow($rank,$accountID,$amount) {
 	global $account,$player,$var;
 	if(isset($var['game_id']) && Globals::isValidGame($var['game_id'])) {
 		try {
-			$hofPlayer =& SmrPlayer::getPlayer($accountID,$var['game_id']);
+			$hofPlayer = SmrPlayer::getPlayer($accountID,$var['game_id']);
 		}
 		catch(PlayerNotFoundException $e) {
-			$hofAccount =& SmrAccount::getAccount($accountID);
+			$hofAccount = SmrAccount::getAccount($accountID);
 		}
 	}
 	else {
-		$hofAccount =& SmrAccount::getAccount($accountID);
+		$hofAccount = SmrAccount::getAccount($accountID);
 	}
 	$bold = '';
 	if ($accountID == $account->getAccountID()) {

@@ -2,10 +2,10 @@
 $template->assign('PageTopic','Negotiate Price');
 require_once(LIB . 'Default/shop_goods.inc');
 // creates needed objects
-$port =& $player->getSectorPort();
+$port = $player->getSectorPort();
 // get values from request
 $good_id = $var['good_id'];
-$portGood =& $port->getGood($good_id);
+$portGood = $port->getGood($good_id);
 $transaction = $port->getGoodTransaction($good_id);
 
 if ($var['bargain_price'] > 0) {

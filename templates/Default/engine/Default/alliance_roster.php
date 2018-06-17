@@ -52,7 +52,7 @@ if ($ShowRoles) { ?>
 		</thead>
 		<tbody class="list"><?php
 			$Count = 1;
-			foreach($AlliancePlayers as &$AlliancePlayer) {
+			foreach ($AlliancePlayers as $AlliancePlayer) {
 				$Class = '';
 				// check if this guy is the current guy
 				if ($ThisPlayer->equals($AlliancePlayer)) {

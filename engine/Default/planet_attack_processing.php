@@ -13,13 +13,13 @@ if(!$ship->hasWeapons() && !$ship->hasCDs())
 if(!$player->canFight())
 	create_error('You are not allowed to fight!');
 
-$planet =& $player->getSectorPlanet();
+$planet = $player->getSectorPlanet();
 if(!$planet->exists())
 	create_error('This planet does not exist.');
 if(!$planet->isClaimed())
 	create_error('This planet is not claimed.');
 
-$planetOwner =& $planet->getOwner();
+$planetOwner = $planet->getOwner();
 
 if($player->forceNAPAlliance($planetOwner)) {
 	create_error('You have a planet NAP, you cannot attack this planet!');
