@@ -1,4 +1,4 @@
-<?php if(!$Locations) {
+<?php if (!isset($Locations)) {
 	?><a href="<?php echo $ViewAllLocationsLink; ?>">View All Locations</a><br /><br />
 	<form action="<?php echo $Location->getEditHREF(); ?>" method="POST"><?php
 } ?>
@@ -17,7 +17,7 @@
 		<th>Weapons</th>
 		<th>Edit</th>
 	</tr><?php
-if($Locations) {
+if (isset($Locations)) {
 	$this->includeTemplate('includes/ViewLocations.inc',array('Locations'=>$Locations));
 }
 else { ?>
@@ -100,6 +100,6 @@ else { ?>
 } ?>
 </table>
 <?php
-if(!$Locations) {
+if (!isset($Locations)) {
 	?></form><?php
 } ?>
