@@ -28,13 +28,12 @@ if (empty($alliancer)) {
 } else $alliance_vs = $alliancer;
 $alliance_vs[] = 0;
 
-foreach ($alliance_vs as $key => $id) {
+foreach ($alliance_vs as $curr_id) {
 	// get current alliance
-	$curr_alliance_id = $id;
-	if ($id > 0) {
+	if ($curr_id > 0) {
 
 		$PHP_OUTPUT.=('<td width=15% valign="top"');
-		if ($player->getAllianceID() == $curr_alliance_id)
+		if ($player->getAllianceID() == $curr_id)
 			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>');
 		$PHP_OUTPUT.=('<select name="alliancer[]" id="InputFields" style="width:105">');
@@ -42,7 +41,7 @@ foreach ($alliance_vs as $key => $id) {
 		while ($db->nextRecord()) {
 			$curr_alliance = SmrAlliance::getAlliance($db->getField('alliance_id'), $player->getGameID());
 			$PHP_OUTPUT.=('<option value=' . $db->getField('alliance_id'));
-			if ($id == $db->getField('alliance_id'))
+			if ($curr_id == $db->getField('alliance_id'))
 				$PHP_OUTPUT.=(' selected');
 			$PHP_OUTPUT.=('>' . $curr_alliance->getAllianceName() . '</option>');
 		}
@@ -52,13 +51,14 @@ foreach ($alliance_vs as $key => $id) {
 }
 $PHP_OUTPUT.=('<td width=10% valign="top">None</td>');
 $PHP_OUTPUT.=('</tr>');
-foreach ($alliance_vs as $key => $id) {
+
+foreach ($alliance_vs as $curr_id) {
 	$PHP_OUTPUT.=('<tr>');
 	// get current alliance
+	$curr_alliance = SmrAlliance::getAlliance($curr_id, $player->getGameID());
 	$container1 = create_container('skeleton.php', 'rankings_alliance_vs_alliance.php');
-	$curr_id = $id;
-	if ($id > 0) {
-		$curr_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
+	$container1['alliance_id'] = $curr_alliance->getAllianceID();
+	if ($curr_id > 0) {
 
 		$PHP_OUTPUT.=('<td width=10% valign="top"');
 		if ($player->getAllianceID() == $curr_alliance->getAllianceID())
@@ -66,20 +66,19 @@ foreach ($alliance_vs as $key => $id) {
 		if ($curr_alliance->hasDisbanded())
 			$PHP_OUTPUT.=(' class="red"');
 		$PHP_OUTPUT.=('>');
-		$container1['alliance_id']	= $curr_alliance->getAllianceID();
 		$PHP_OUTPUT.=create_link($container1, $curr_alliance->getAllianceName());
 		$PHP_OUTPUT.=('</td>');
 	}
 	else {
-		$container1['alliance_id']	= 0;
 		$PHP_OUTPUT.=('<td width=10% valign="top">');
 		$PHP_OUTPUT.=create_link($container1, 'None');
 		$PHP_OUTPUT.=('</td>');
 	}
 
-	foreach ($alliance_vs as $key => $id) {
+	foreach ($alliance_vs as $id) {
 		$row_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
-		$showRed = $curr_alliance->hasDisbanded() || $row_alliance->hasDisbanded();
+		$showRed = ($curr_alliance->getAllianceID() != 0 && $curr_alliance->hasDisbanded()) ||
+		           ($row_alliance->getAllianceID() != 0 && $row_alliance->hasDisbanded());
 		$showBold = $curr_id == $player->getAllianceID() || $id == $player->getAllianceID();
 		if ($curr_id == $id && $id != 0) {
 			if ($showRed)
