@@ -11,101 +11,88 @@ $container['body'] = 'rankings_alliance_vs_alliance.php';
 
 $PHP_OUTPUT.=create_echo_form($container);
 
-if (isset($_REQUEST['alliancer'])) {
-	SmrSession::updateVar('alliancer',$_REQUEST['alliancer']);
-	$alliancer = $var['alliancer'];
-}
+$alliancer = SmrSession::getRequestVar('alliancer');
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the rankings of alliances vs other alliances<br />');
 $PHP_OUTPUT.=('Click on an alliances name for more detailed death stats.</p>');
 
-$PHP_OUTPUT.=('<table class="standard" width="95%">');
+$PHP_OUTPUT.=('<table class="standard shrink">');
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<th rowspan="9">Killed</th><th colspan="8">Killers</th></tr><tr><td></td>');
-if (empty($alliancer)) {
-	$alliance_vs = array();
-	$db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY alliance_kills DESC, alliance_name LIMIT 5');
-	while ($db->nextRecord()) $alliance_vs[] = $db->getField('alliance_id');
-	//$PHP_OUTPUT.=('empty '.$alliancer);
+$PHP_OUTPUT.=('<td rowspan="2" colspan="2"></td><th colspan="6">Killers</th></tr><tr>');
 
-} else $alliance_vs = $alliancer;
+// Get list of alliances that have kills or deaths
+$activeAlliances = [];
+$db->query('SELECT alliance_id FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_kills DESC, alliance_name');
+while ($db->nextRecord()) {
+	$activeAlliances[] = $db->getField('alliance_id');
+}
+
+// Get list of alliances to display (max of 5)
+// These must be a subset of the active alliances
+if (empty($alliancer)) {
+	$alliance_vs = array_slice($activeAlliances, 0, 5);
+} else {
+	$alliance_vs = $alliancer;
+}
 $alliance_vs[] = 0;
 
-foreach ($alliance_vs as $key => $id) {
+foreach ($alliance_vs as $curr_id) {
 	// get current alliance
-	$curr_alliance_id = $id;
-	if ($id > 0) {
-		$db->query('SELECT 1 FROM player WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-		$out = $db2->getNumRows() == 0;
+	if ($curr_id > 0) {
 
 		$PHP_OUTPUT.=('<td width=15% valign="top"');
-		if ($player->getAllianceID() == $curr_alliance_id)
+		if ($player->getAllianceID() == $curr_id)
 			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>');
-		/*$container = array();
-		$container['url']			= 'skeleton.php';
-		$container['body']			= 'alliance_roster.php';
-		$container['alliance_id']	= $curr_alliance_id;
-		$PHP_OUTPUT.=create_link($container, '.$db->escapeString($curr_alliance->getAllianceName()');*/
 		$PHP_OUTPUT.=('<select name="alliancer[]" id="InputFields" style="width:105">');
-		$db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_name');
-		while ($db->nextRecord()) {
-			$curr_alliance = SmrAlliance::getAlliance($db->getField('alliance_id'), $player->getGameID());
-			$PHP_OUTPUT.=('<option value=' . $db->getField('alliance_id'));
-			if ($id == $db->getField('alliance_id'))
+		foreach ($activeAlliances as $activeID) {
+			$curr_alliance = SmrAlliance::getAlliance($activeID, $player->getGameID());
+			$PHP_OUTPUT.=('<option value=' . $activeID);
+			if ($curr_id == $activeID)
 				$PHP_OUTPUT.=(' selected');
 			$PHP_OUTPUT.=('>' . $curr_alliance->getAllianceName() . '</option>');
 		}
 		$PHP_OUTPUT.='</select>';
 		$PHP_OUTPUT.=('</td>');
 	}
-	//$alliance_vs[] = $curr_alliance_id;
 }
 $PHP_OUTPUT.=('<td width=10% valign="top">None</td>');
 $PHP_OUTPUT.=('</tr>');
-//$db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY alliance_kills DESC, alliance_name LIMIT 5');
-foreach ($alliance_vs as $key => $id) {
+$PHP_OUTPUT.=('<tr><th rowspan="6">Killed</th></tr>');
+
+foreach ($alliance_vs as $curr_id) {
 	$PHP_OUTPUT.=('<tr>');
 	// get current alliance
-	$curr_id = $id;
-	if ($id > 0) {
-		$curr_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
-		$db2->query('SELECT 1 FROM player WHERE alliance_id = ' . $db2->escapeNumber($curr_id) . ' AND game_id = ' . $db2->escapeNumber($player->getGameID()) . ' LIMIT 1');
-		$out = $db2->nextRecord();
+	$curr_alliance = SmrAlliance::getAlliance($curr_id, $player->getGameID());
+	$container1 = create_container('skeleton.php', 'rankings_alliance_vs_alliance.php');
+	$container1['alliance_id'] = $curr_alliance->getAllianceID();
+	if ($curr_id > 0) {
 
 		$PHP_OUTPUT.=('<td width=10% valign="top"');
 		if ($player->getAllianceID() == $curr_alliance->getAllianceID())
 			$PHP_OUTPUT.=(' class="bold"');
-		if ($out)
+		if ($curr_alliance->hasDisbanded())
 			$PHP_OUTPUT.=(' class="red"');
 		$PHP_OUTPUT.=('>');
-		$container1 = array();
-		$container1['url']			= 'skeleton.php';
-		$container1['body']		= 'rankings_alliance_vs_alliance.php';
-		$container1['alliance_id']	= $curr_alliance->getAllianceID();
 		$PHP_OUTPUT.=create_link($container1, $curr_alliance->getAllianceName());
-		//$PHP_OUTPUT.=('.$db->escapeString($curr_alliance->getAllianceName()');
 		$PHP_OUTPUT.=('</td>');
 	}
 	else {
-		$container1 = array();
-		$container1['url']			= 'skeleton.php';
-		$container1['body']		= 'rankings_alliance_vs_alliance.php';
-		$container1['alliance_id']	= 0;
 		$PHP_OUTPUT.=('<td width=10% valign="top">');
 		$PHP_OUTPUT.=create_link($container1, 'None');
 		$PHP_OUTPUT.=('</td>');
 	}
 
-	foreach ($alliance_vs as $key => $id) {
-		$db2->query('SELECT 1 FROM player WHERE alliance_id = ' . $db2->escapeNumber($id) . ' AND game_id = ' . $db2->escapeNumber($player->getGameID()) . ' LIMIT 1');
-		if ($db2->nextRecord() == 0) $out2 = TRUE;
-		else $out2 = FALSE;
+	foreach ($alliance_vs as $id) {
+		$row_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
+		$showRed = ($curr_alliance->getAllianceID() != 0 && $curr_alliance->hasDisbanded()) ||
+		           ($row_alliance->getAllianceID() != 0 && $row_alliance->hasDisbanded());
+		$showBold = $curr_id == $player->getAllianceID() || $id == $player->getAllianceID();
 		if ($curr_id == $id && $id != 0) {
-			if (($out || $out2))
+			if ($showRed)
 				$PHP_OUTPUT.=('<td class="red">-');
-			elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID())
+			elseif ($showBold)
 				$PHP_OUTPUT.=('<td class="bold">-');
 			else $PHP_OUTPUT.=('<td>-');
 		}
@@ -114,24 +101,17 @@ foreach ($alliance_vs as $key => $id) {
 						WHERE alliance_id_2 = ' . $db2->escapeNumber($curr_id) . '
 							AND alliance_id_1 = ' . $db2->escapeNumber($id) . '
 							AND game_id = ' . $db2->escapeNumber($player->getGameID()));
+			$PHP_OUTPUT.=('<td');
+			if ($showRed && $showBold)
+				$PHP_OUTPUT.=(' class="bold red"');
+			elseif ($showRed)
+				$PHP_OUTPUT.=(' class="red"');
+			elseif ($showBold)
+				$PHP_OUTPUT.=(' class="bold"');
+			$PHP_OUTPUT.=('>');
 			if ($db2->nextRecord()) {
-				$PHP_OUTPUT.=('<td');
-				if (($out || $out2) && ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()))
-					$PHP_OUTPUT.=(' class="bold red"');
-				elseif ($out || $out2)
-					$PHP_OUTPUT.=(' class="red"');
-				elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()) $PHP_OUTPUT.=(' class="bold"');
-				$PHP_OUTPUT.=('>');
 				$PHP_OUTPUT.= $db2->getField('kills');
-			}
-			else {
-				$PHP_OUTPUT.=('<td');
-				if (($out || $out2) && ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()))
-					$PHP_OUTPUT.=(' class="bold red"');
-				elseif ($out || $out2)
-					$PHP_OUTPUT.=(' class="red"');
-				elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()) $PHP_OUTPUT.=(' class="bold"');
-				$PHP_OUTPUT.=('>');
+			} else {
 				$PHP_OUTPUT.=('0');
 			}
 		}
@@ -150,11 +130,12 @@ $PHP_OUTPUT.=('</div>');
 if (isset($var['alliance_id'])) {
 	$PHP_OUTPUT.=('<table align="center"><tr><td width="45%" align="center" valign="top">');
 	$main_alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+	$mainName = $main_alliance->getAllianceID() == 0 ? 'No Alliance' : $main_alliance->getAllianceName();
 	$db->query('SELECT * FROM alliance_vs_alliance
 				WHERE alliance_id_1 = '.$db->escapeNumber($var['alliance_id']) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY kills DESC');
 	if ($db->getNumRows() > 0) {
-		$PHP_OUTPUT.=('<div align="center">Kills for '.$main_alliance->getAllianceName());
+		$PHP_OUTPUT.=('<div align="center">Kills for '.$mainName);
 		$PHP_OUTPUT.=('<table class="standard"><tr><th align=center>Alliance Name</th>');
 		$PHP_OUTPUT.=('<th align="center">Amount</th></tr>');
 		while ($db->nextRecord()) {
@@ -173,13 +154,13 @@ if (isset($var['alliance_id'])) {
 		}
 		$PHP_OUTPUT.=('</table>');
 	}
-	else $PHP_OUTPUT.=($main_alliance->getAllianceName().' has no kills!');
+	else $PHP_OUTPUT.=($mainName.' has no kills!');
 	$PHP_OUTPUT.=('</td><td width="10%">&nbsp;</td><td width="45%" align="center" valign="top">');
 	$db->query('SELECT * FROM alliance_vs_alliance
 				WHERE alliance_id_2 = '.$db->escapeNumber($var['alliance_id']) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY kills DESC');
 	if ($db->getNumRows() > 0) {
-		$PHP_OUTPUT.=('<div align="center">Deaths for '.$main_alliance->getAllianceName());
+		$PHP_OUTPUT.=('<div align="center">Deaths for '.$mainName);
 		$PHP_OUTPUT.=('<table class="standard"><tr><th align=center>Alliance Name</th>');
 		$PHP_OUTPUT.=('<th align="center">Amount</th></tr>');
 		while ($db->nextRecord()) {
