@@ -17,15 +17,24 @@ $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the rankings of alliances vs other alliances<br />');
 $PHP_OUTPUT.=('Click on an alliances name for more detailed death stats.</p>');
 
-$PHP_OUTPUT.=('<table class="standard" width="95%">');
+$PHP_OUTPUT.=('<table class="standard shrink">');
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<th rowspan="9">Killed</th><th colspan="8">Killers</th></tr><tr><td></td>');
-if (empty($alliancer)) {
-	$alliance_vs = array();
-	$db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY alliance_kills DESC, alliance_name LIMIT 5');
-	while ($db->nextRecord()) $alliance_vs[] = $db->getField('alliance_id');
+$PHP_OUTPUT.=('<td rowspan="2" colspan="2"></td><th colspan="6">Killers</th></tr><tr>');
 
-} else $alliance_vs = $alliancer;
+// Get list of alliances that have kills or deaths
+$activeAlliances = [];
+$db->query('SELECT alliance_id FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_kills DESC, alliance_name');
+while ($db->nextRecord()) {
+	$activeAlliances[] = $db->getField('alliance_id');
+}
+
+// Get list of alliances to display (max of 5)
+// These must be a subset of the active alliances
+if (empty($alliancer)) {
+	$alliance_vs = array_slice($activeAlliances, 0, 5);
+} else {
+	$alliance_vs = $alliancer;
+}
 $alliance_vs[] = 0;
 
 foreach ($alliance_vs as $curr_id) {
@@ -37,11 +46,10 @@ foreach ($alliance_vs as $curr_id) {
 			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>');
 		$PHP_OUTPUT.=('<select name="alliancer[]" id="InputFields" style="width:105">');
-		$db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_name');
-		while ($db->nextRecord()) {
-			$curr_alliance = SmrAlliance::getAlliance($db->getField('alliance_id'), $player->getGameID());
-			$PHP_OUTPUT.=('<option value=' . $db->getField('alliance_id'));
-			if ($curr_id == $db->getField('alliance_id'))
+		foreach ($activeAlliances as $activeID) {
+			$curr_alliance = SmrAlliance::getAlliance($activeID, $player->getGameID());
+			$PHP_OUTPUT.=('<option value=' . $activeID);
+			if ($curr_id == $activeID)
 				$PHP_OUTPUT.=(' selected');
 			$PHP_OUTPUT.=('>' . $curr_alliance->getAllianceName() . '</option>');
 		}
@@ -51,6 +59,7 @@ foreach ($alliance_vs as $curr_id) {
 }
 $PHP_OUTPUT.=('<td width=10% valign="top">None</td>');
 $PHP_OUTPUT.=('</tr>');
+$PHP_OUTPUT.=('<tr><th rowspan="6">Killed</th></tr>');
 
 foreach ($alliance_vs as $curr_id) {
 	$PHP_OUTPUT.=('<tr>');
