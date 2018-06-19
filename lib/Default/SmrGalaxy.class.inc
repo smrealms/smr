@@ -292,7 +292,20 @@ class SmrGalaxy {
 		}
 		return $problemTimes <= 350;
 	}
-	
+
+	/**
+	 * Returns the sector connectivity of the galaxy as a percent.
+	 */
+	public function getConnectivity() {
+		$totalLinks = 0;
+		foreach ($this->getSectors() as $galSector) {
+			$totalLinks += $galSector->getNumberOfLinks();
+		}
+		// There are 4 possible links per sector
+		$connectivity = 100 * $totalLinks / (4 * $this->getSize());
+		return $connectivity;
+	}
+
 	public function contains($sectorID) {
 		if($sectorID instanceof SmrSector) {
 			return $sectorID->getGalaxyID()==$this->getGalaxyID();
