@@ -97,6 +97,7 @@ try {
 		}
 	}
 
+	$galaxy->getSectors(); //optimized call to cache all sectors first
 	if (isset($sectorID)) {
 		$template->assign('FocusSector', $sectorID);
 		$mapSectors = $galaxy->getMapSectors($sectorID);
