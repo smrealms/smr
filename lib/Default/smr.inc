@@ -205,13 +205,6 @@ function enableProtectionDependantRefresh($template, $player) {
 	$template->assign('AJAX_ENABLE_REFRESH',$ajaxRefresh);
 }
 
-function hardware_is_mining_drone($hardwareTypeID) {
-//	if ($hardware == 'Rundown Mining Drones' || $hardware == 'Simple Mining Drones' || $hardware == 'Basic Mining Drones' || $hardware == 'Advanced Mining Drones' || $hardware == 'Elite Mining Drones')
-//		return TRUE;
-//	else
-		return FALSE;
-}
-
 function has_beta_privilege($priv = '', $acc = 0) {
 	//PAGE
 	return false;

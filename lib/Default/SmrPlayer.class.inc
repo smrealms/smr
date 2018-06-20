@@ -32,7 +32,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 	protected $displayMissions;
 	protected $displayWeapons;
 	protected $ignoreGlobals;
-	protected $mining;
 	protected $plottedCourse;
 	protected $plottedCourseFrom;
 	protected $nameChanged;
@@ -823,49 +822,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 			break;
 			default:
 				throw new Exception('Invalid gadget attribute: '.$key);
-		}
-	}
-
-	function getMining($mineID=false) {
-		if(!isset($this->mining)) {
-			//Get Player Mining Info
-			$this->mining = array();
-			$this->db->query('SELECT mine_id, level, type, started, amount, starting_amount
-							FROM player_is_mining
-							JOIN sector_has_mining USING(game_id, mine_id)
-							WHERE sector_id = ' . $this->db->escapeNumber($this->sectorID) . '
-								AND ' . $this->SQL . ' LIMIT 1');
-			while ($this->db->nextRecord()) {
-				$this->mining[$this->db->getInt('mine_id')] = array('Level' => $this->db->getInt('level'),
-																	'Started' => $this->db->getInt('started'),
-																	'Amount' => $this->db->getInt('amount'),
-																	'Type' => $this->db->getField('type'),
-																	'Starting Amount' => $this->db->getInt('starting_amount'));
-			}
-		}
-		if($mineID===false)
-			return $this->mining;
-		if(isset($this->mining[$mineID]))
-			return $this->mining[$mineID];
-		return false;
-	}
-
-	function updateMiningStarted($mineID,$time) {
-		$this->getMining();
-		$this->mining[$mineID]['Started'] = $time;
-		$this->db->query('UPDATE player_is_mining SET started = ' . $this->db->escapeNumber($time) . ' WHERE ' . $this->SQL . ' AND mine_id = ' . $this->db->escapeNumber($mineID) . ' LIMIT 1');
-	}
-
-	function deleteMining($mineID=false) {
-		$this->getMining();
-		if($mineID===false) {
-			$this->db->query('DELETE FROM player_is_mining WHERE '.$this->SQL . ' LIMIT ' . count($this->getMining()));
-			$this->mining=array();
-		}
-		else if(isset($this->mining[$mineID])) {
-
-			unset($this->mining[$mineID]);
-			$this->db->query('DELETE FROM player_is_mining WHERE '.$this->SQL.' AND mine_id='.$this->db->escapeNumber($mineID).' LIMIT 1');
 		}
 	}
 

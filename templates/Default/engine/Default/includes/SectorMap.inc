@@ -84,7 +84,7 @@
 								</div><?php
 							}
 						}
-						if(($isVisited && ($Sector->hasWarp() || $Sector->hasMine())) || (!$UniGen && ($MapPlayer->isPartOfCourse($Sector) || ($MapPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
+						if(($isVisited && $Sector->hasWarp()) || (!$UniGen && ($MapPlayer->isPartOfCourse($Sector) || ($MapPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
 							<div class="lmp"><?php
 								if(!$UniGen && ($MapPlayer->isPartOfCourse($Sector) || ($MapPlayer->hasPlottedCourse()&&$isCurrentSector))) {
 									?><img title="Course" alt="Course" src="images/plot_icon.gif" width="16" height="16"/><?php
@@ -95,9 +95,6 @@
 										else if($isCurrentSector){ ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapMoveHREF(); ?>"><?php } ?>
 											<img title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxyName(); ?>)" alt="Warp to #<?php echo $Sector->getWarp(); ?>" src="images/warp.png" width="16" height="16" /><?php
 										if($isCurrentSector || $GalaxyMap){ ?></a><?php }
-									}
-									if($Sector->hasMine()) {
-										?><img src="images/asteroid.gif" width="16" height="16" alt="Mining Available Here" title="Mining Available Here" /><?php
 									}
 								} ?>
 							</div><?php
