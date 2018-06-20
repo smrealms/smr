@@ -11,8 +11,8 @@ $rank = 1;
 $topTen = [];
 while ($db->nextRecord()) {
 	// get current player
-	$curr_sector = SmrSector::getSector($player->getGameID(), $db->getField('sector_id'));
-	$topTen[$rank++] = $curr_sector;
+	$sectorID = $db->getField('sector_id');
+	$topTen[$rank++] = SmrSector::getSector($player->getGameID(), $sectorID, false, $db);
 }
 $template->assign('TopTen', $topTen);
 
@@ -40,9 +40,7 @@ if ($max_rank > $total_sector)
 $template->assign('MinRank', $min_rank);
 $template->assign('MaxRank', $max_rank);
 
-$container = array();
-$container['url']		= 'skeleton.php';
-$container['body']		= 'rankings_sector_kill.php';
+$container = create_container('skeleton.php', 'rankings_sector_kill.php');
 $container['min_rank']	= $min_rank;
 $container['max_rank']	= $max_rank;
 $template->assign('SubmitHREF', SmrSession::getNewHREF($container));
@@ -53,7 +51,7 @@ $rank = $min_rank;
 $topCustom = [];
 while ($db->nextRecord()) {
 	// get current player
-	$curr_sector = SmrSector::getSector($player->getGameID(), $db->getField('sector_id'));
-	$topCustom[$rank++] = $curr_sector;
+	$sectorID = $db->getField('sector_id');
+	$topCustom[$rank++] = SmrSector::getSector($player->getGameID(), $sectorID, false, $db);
 }
 $template->assign('TopCustom', $topCustom);
