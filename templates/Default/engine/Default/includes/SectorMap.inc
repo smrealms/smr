@@ -102,13 +102,13 @@
 								} ?>
 							</div><?php
 						}
-						$CanScanSector = $UniGen || ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
-						$ShowFriendlyForces = !$UniGen && isset($HideAlliedForces) && $HideAlliedForces ?
-						                      $Sector->hasPlayerForces($MapPlayer) :
-						                      $Sector->hasFriendlyForces($MapPlayer);
-						if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $ShowFriendlyForces || $Sector->hasFriendlyTraders($MapPlayer)) { ?>
-							<div class="lmtf"><?php
-								if(!$UniGen) {
+						if (!$UniGen) {
+							$CanScanSector = ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
+							$ShowFriendlyForces = isset($HideAlliedForces) && $HideAlliedForces ?
+							                      $Sector->hasPlayerForces($MapPlayer) :
+							                      $Sector->hasFriendlyForces($MapPlayer);
+							if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $ShowFriendlyForces || $Sector->hasFriendlyTraders($MapPlayer)) { ?>
+								<div class="lmtf"><?php
 									if($CanScanSector && $Sector->hasEnemyTraders($MapPlayer)) {
 										?><img class="enemyBack" title="Enemy Trader" alt="Enemy Trader" src="images/trader.png" width="13" height="16"/><?php
 									}
@@ -121,17 +121,16 @@
 									if($Sector->hasFriendlyTraders($MapPlayer)) {
 										?><img class="friendlyBack" title="Friendly Trader" alt="Friendly Trader" src="images/trader.png" width="13" height="16"/><?php
 									}
-								}
-								if($Sector->hasForces()) {
-									if($CanScanSector && $Sector->hasEnemyForces($MapPlayer)) {
-										?><img class="enemyBack" title="Enemy Forces" alt="Enemy Forces" src="images/forces.png" width="13" height="16"/><?php
-									}
-									if ($ShowFriendlyForces) {
-										?><img class="friendlyBack" title="Friendly Forces" alt="Friendly Forces" src="images/forces.png" width="13" height="16"/><?php
-									}
-									/*?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php*/
-								} ?>
-							</div><?php
+									if($Sector->hasForces()) {
+										if($CanScanSector && $Sector->hasEnemyForces($MapPlayer)) {
+											?><img class="enemyBack" title="Enemy Forces" alt="Enemy Forces" src="images/forces.png" width="13" height="16"/><?php
+										}
+										if ($ShowFriendlyForces) {
+											?><img class="friendlyBack" title="Friendly Forces" alt="Friendly Forces" src="images/forces.png" width="13" height="16"/><?php
+										}
+									} ?>
+								</div><?php
+							}
 						} ?>
 						<div class="lmsector"><?php echo $Sector->getSectorID(); ?></div><?php
 						if($UniGen) {
