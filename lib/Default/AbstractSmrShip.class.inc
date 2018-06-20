@@ -113,8 +113,8 @@ abstract class AbstractSmrShip {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC'); //TODO add game type id
 		while($db->nextRecord()) {
-			if(!isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')])) {
-				self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')] = self::buildBaseShip($db);
+			if(!isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getInt('ship_type_id')])) {
+				self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getInt('ship_type_id')] = self::buildBaseShip($db);
 			}
 		}
 		return self::$CACHE_BASE_SHIPS[$gameTypeID];
