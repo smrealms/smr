@@ -43,11 +43,11 @@ class SmrSector {
 	public static function &getGalaxySectors($gameID,$galaxyID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID])) {
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT sector_id FROM sector WHERE game_id = ' . $db->escapeNumber($gameID) .' AND galaxy_id=' . $db->escapeNumber($galaxyID) . ' ORDER BY sector_id ASC');
+			$db->query('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($gameID) .' AND galaxy_id=' . $db->escapeNumber($galaxyID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
 			while($db->nextRecord()) {
 				$sectorID = $db->getInt('sector_id');
-				$sectors[$sectorID] = self::getSector($gameID,$sectorID,$forceUpdate);
+				$sectors[$sectorID] = self::getSector($gameID, $sectorID, $forceUpdate, $db);
 			}
 			self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID] = $sectors;
 		}
@@ -57,20 +57,20 @@ class SmrSector {
 	public static function &getLocationSectors($gameID,$locationTypeID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID])) {
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT sector_id FROM location WHERE location_type_id = ' . $db->escapeNumber($locationTypeID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY sector_id ASC');
+			$db->query('SELECT * FROM location JOIN sector USING (game_id, sector_id) WHERE location_type_id = ' . $db->escapeNumber($locationTypeID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
 			while($db->nextRecord()) {
 				$sectorID = $db->getInt('sector_id');
-				$sectors[$sectorID] = self::getSector($gameID,$sectorID,$forceUpdate);
+				$sectors[$sectorID] = self::getSector($gameID, $sectorID, $forceUpdate, $db);
 			}
 			self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID] = $sectors;
 		}
 		return self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID];
 	}
 
-	public static function &getSector($gameID,$sectorID,$forceUpdate = false) {
+	public static function &getSector($gameID, $sectorID, $forceUpdate=false, $db=null) {
 		if(!isset(self::$CACHE_SECTORS[$gameID][$sectorID]) || $forceUpdate) {
-			self::$CACHE_SECTORS[$gameID][$sectorID] = new SmrSector($gameID,$sectorID);
+			self::$CACHE_SECTORS[$gameID][$sectorID] = new SmrSector($gameID, $sectorID, false, $db);
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
@@ -96,35 +96,42 @@ class SmrSector {
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
 
-	protected function __construct($gameID, $sectorID,$create=false) {
+	protected function __construct($gameID, $sectorID, $create=false, $db=null) {
 		$this->db = new SmrMySqlDatabase();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
-		$this->db->query('SELECT * FROM sector WHERE ' . $this->SQL . ' LIMIT 1');
-		if($this->db->nextRecord()) {
-			$this->sectorID		= $this->db->getInt('sector_id');
-			$this->gameID		= $this->db->getInt('game_id');
-			$this->galaxyID		= $this->db->getInt('galaxy_id');
-			$this->battles		= $this->db->getInt('battles');
+		// Do we already have a database query for this sector?
+		if (isset($db)) {
+			$sectorExists = true;
+		} else {
+			$db = $this->db;
+			$db->query('SELECT * FROM sector WHERE ' . $this->SQL . ' LIMIT 1');
+			$sectorExists = $db->nextRecord();
+		}
+
+		$this->gameID = (int) $gameID;
+		$this->sectorID = (int) $sectorID;
+
+		if ($sectorExists) {
+			$this->galaxyID = $db->getInt('galaxy_id');
+			$this->battles = $db->getInt('battles');
 
 			$this->links = array();
-			if($this->db->getField('link_up'))
-				$this->links['Up'] = $this->db->getInt('link_up');
-
-			if($this->db->getField('link_down'))
-				$this->links['Down'] = $this->db->getInt('link_down');
-
-			if($this->db->getField('link_left'))
-				$this->links['Left'] = $this->db->getInt('link_left');
-
-			if($this->db->getField('link_right'))
-				$this->links['Right'] = $this->db->getInt('link_right');
-
-			$this->warp = $this->db->getInt('warp');
+			if ($db->getField('link_up')) {
+				$this->links['Up'] = $db->getInt('link_up');
+			}
+			if ($db->getField('link_down')) {
+				$this->links['Down'] = $db->getInt('link_down');
+			}
+			if ($db->getField('link_left')) {
+				$this->links['Left'] = $db->getInt('link_left');
+			}
+			if ($db->getField('link_right')) {
+				$this->links['Right'] = $db->getInt('link_right');
+			}
+			$this->warp = $db->getInt('warp');
 		}
 		else if($create) {
-			$this->gameID		= (int)$gameID;
-			$this->sectorID		= (int)$sectorID;
 			$this->battles		= 0;
 			$this->links = array();
 			$this->warp = 0;
