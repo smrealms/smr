@@ -8,6 +8,10 @@ if (!isset($var['gal_on'])) SmrSession::updateVar('gal_on', 1);
 $galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 
+$connectivity = round($galaxy->getConnectivity());
+$template->assign('ActualConnectivity', $connectivity);
+
+// Call this after all sectors have been cached in an efficient way.
 $mapSectors = $galaxy->getMapSectors();
 
 $template->assign('Galaxy', $galaxy);
@@ -25,7 +29,7 @@ if (isset($_REQUEST['connect']) && $_REQUEST['connect'] > 0) {
 else if (!isset($var['conn'])) {
 	SmrSession::updateVar('conn',100);
 }
-$template->assign('Connectivity', $var['conn']);
+$template->assign('RequestedConnectivity', $var['conn']);
 
 
 $container = $var;

@@ -11,12 +11,14 @@
 			<th>Type</th>
 			<th>Size</th>
 			<th>Max Force Time</th>
+			<th>Connectivity</th>
 		</tr>
 		<tr>
 			<td><?php echo $Galaxy->getName(); ?></td>
 			<td><?php echo $Galaxy->getGalaxyType(); ?></td>
 			<td><?php echo $Galaxy->getWidth(); ?> x <?php echo $Galaxy->getHeight(); ?></td>
 			<td><?php echo $Galaxy->getMaxForceTime() / 3600; ?> hours</td>
+			<td><?php echo $ActualConnectivity; ?>%</td>
 		</tr>
 	</table>
 	<br />
@@ -38,7 +40,7 @@
 		<td>
 			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
 				Connection Percent<br />
-				<input type="number" name="connect" value="<?php echo $Connectivity; ?>" size="3"><br />
+				<input type="number" name="connect" value="<?php echo $RequestedConnectivity; ?>" size="3"><br />
 				<input type="submit" name="submit" value="Redo Connections">
 			</form>
 		</td>
