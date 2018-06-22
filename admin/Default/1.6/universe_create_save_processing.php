@@ -197,7 +197,7 @@ elseif ($submit == 'Create Planets') {
 	}
 	$var['message'] = '<span class="green">Success</span> : Succesfully added planets.';
 }
-elseif ($submit == 'Create Ports and Mines') {
+elseif ($submit == 'Create Ports') {
 	$totalPorts=0;
 	for ($i=1;$i<=9;$i++) {
 		$totalPorts+=$_REQUEST['port' . $i];
@@ -248,21 +248,6 @@ elseif ($submit == 'Create Ports and Mines') {
 		}
 		SmrPort::savePorts();
 		$var['message'] = '<span class="green">Success</span> : Succesfully added ports.';
-//		//iterate through levels 1-20 for mines
-//		for ($i=1;$i<=20;$i++) {
-//			//iterate once for each port of this level
-//			for ($j=1;$j<=$_POST['mine' . $i];$j++) {
-//				//get a sector for this mine
-//				$sector = mt_rand($start, $end);
-//				//check if this sector is valid, if not then get a new one
-//				while ((is_array($loc_info[$sector]) && in_array($FED_BEACON,$loc_info[$sector])) || isset($updateMine[$sector])) $sector = mt_rand($start, $end);
-//				if (mt_rand(1,2) == 1) $type = 'Asteroid';
-//				else $type = 'Colony';
-//				$amount = 26700 * (mt_rand(5,11) / 10) / (pow($i,0.69) / 1.5);
-//				//add to the array
-//				$updateMine[$sector] = array('Level' => $i, 'Type' => $type, 'Amount' => $amount);
-//			}
-//		}
 	}
 	else {
 		$var['message'] = '<span class="red">Error: Your port race distribution must equal 100!</span>';

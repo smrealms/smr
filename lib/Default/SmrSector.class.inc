@@ -607,11 +607,6 @@ class SmrSector {
 		}
 	}
 
-	public function hasMine() {
-		//TODO
-		return false;
-	}
-
 	public function hasPort() {
 		return $this->getPort()->exists();
 	}

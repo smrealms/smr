@@ -133,7 +133,6 @@ abstract class AbstractSmrShip {
 
 	public function checkForExcess() {
 		$this->checkForExcessHardware();
-		$this->checkForExcessMiningDrones();
 		$this->checkForExcessWeapons();
 		$this->checkForExcessCargo();
 	}
@@ -158,30 +157,10 @@ abstract class AbstractSmrShip {
 		}
 	}
 
-	public function checkForExcessMiningDrones() {
-		$drones = $this->getMiningDrones();
-		$totalDrones = array_sum($drones);
-		if ($totalDrones > $this->getMaxMiningDrones()) {
-			$remove = array();
-			$need_to_lose = $totalDrones - $this->getMaxMiningDrones();
-			foreach ($drones as $type => $amount) {
-				if ($amount > $need_to_lose)
-					$remove[$type] = $need_to_lose;
-				else
-					$remove[$type] = $amount;
-				$need_to_lose -= $remove[$type];
-			}
-			foreach ($remove as $type => $amount) {
-				$this->decreaseMiningDrones($type,$amount);
-			}
-		}
-	}
-
 	public function checkForExcessHardware() {
 		//check hardware to see if anything needs to be removed
 		if(is_array($hardware = $this->getHardware()))
 			foreach ($hardware as $hardwareTypeID => $amount) {
-				if (hardware_is_mining_drone($hardwareTypeID)) continue;
 				if ($amount > ($max=$this->getMaxHardware($hardwareTypeID))) {
 					$this->setHardware($hardwareTypeID,$max,true);
 				}
@@ -789,22 +768,6 @@ abstract class AbstractSmrShip {
 	public function getMaxCargoHolds() {
 		return $this->getMaxHardware(HARDWARE_CARGO);
 	}
-
-
-	public function getMaxMiningDrones() {
-		return $this->getMaxHardware(HARDWARE_CARGO);
-	}
-
-	public function getMiningDrones() {
-		$miningDrones = array();
-		if(is_array($hardware = $this->getHardware()))
-			foreach ($hardware as $hardwareTypeID => $amount) {
-				if(hardware_is_mining_drone($hardwareTypeID))
-					$hardwareTypeID[$hardwareTypeID] = $hardwareTypeID;
-			}
-		return $miningDrones;
-	}
-
 
 	public function isUnderAttack() {
 		return $this->hasLostShields() || $this->hasLostArmour() || $this->hasLostCDs();
