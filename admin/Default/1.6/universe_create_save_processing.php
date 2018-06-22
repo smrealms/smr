@@ -81,7 +81,7 @@ else if ($submit=='Create Galaxies') {
 }
 else if ($submit=='Redo Connections') {
 	$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
-	if(!$galaxy->generateSectors($_REQUEST['connect']))
+	if(!$galaxy->setConnectivity($_REQUEST['connect']))
 		$var['message'] = '<span class="red">Error</span> : Regenerating connections failed.';
 	else
 		$var['message'] = '<span class="green">Success</span> : Regenerated connections.';

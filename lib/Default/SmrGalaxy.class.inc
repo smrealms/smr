@@ -239,13 +239,7 @@ class SmrGalaxy {
 		$this->hasChanged = true;
 	}
 	
-	public function generateSectors($connectivity = 100) {
-		if($connectivity < 1) {
-			$connectivity = 1;
-		}
-		$problem = true;
-		$problemTimes = 0;
-		
+	public function generateSectors() {
 		$sectorID = $this->getStartSector();
 		for ($i = 0; $i < $this->getSize(); $i++) {
 			$sector = SmrSector::createSector($this->gameID, $sectorID);
@@ -253,39 +247,42 @@ class SmrGalaxy {
 			$sector->update(); //Have to save sectors after creating them
 			$sectorID++;
 		}
-		$linkDirs = array('Up','Down','Left','Right');
+		$this->setConnectivity(100);
+	}
+
+	/**
+	 * Randomly set the connections between all galaxy sectors.
+	 * $connectivity = (average) percent of connections to enable.
+	 */
+	public function setConnectivity($connectivity) {
+		// Only set down/right, otherwise we double-hit every link
+		$linkDirs = array('Down','Right');
+
+		$problem = true;
+		$problemTimes = 0;
 		while ($problem) {
 			$problem = false;
 		
-			$galSectors = SmrSector::getGalaxySectors($this->getGameID(),$this->getGalaxyID());
-			foreach($galSectors as $galSector) {
+			foreach ($this->getSectors() as $galSector) {
 				foreach($linkDirs as $linkDir) {
-					$galSector->disableLink($linkDir);
-				}
-			}
-			$sectorID = $this->getStartSector();
-			for ($row = 1; $row <= $this->getHeight(); $row++) {
-				for ($col = 1; $col <= $this->getWidth(); $col++) {
-					$sector = SmrSector::getSector($this->gameID,$sectorID);
-					foreach($linkDirs as $linkDir) {
-						if (mt_rand(1,100) <= $connectivity) {
-							$sector->enableLink($linkDir);
-						}
+					if (mt_rand(1,100) <= $connectivity) {
+						$galSector->enableLink($linkDir);
+					} else {
+						$galSector->disableLink($linkDir);
 					}
-					$sectorID++;
 				}
 			}
-			
-			$sectorID = $this->getStartSector();
-			if($this->getSize() > 1) { //1 sector gal will have no connections but that's not a problem.
-				for ($i = 0; $i < $this->getSize(); $i++) {
-					if(SmrSector::getSector($this->getGameID(), $sectorID)->getNumberOfConnections() == 0) {
-						$problem=true;
+
+			// Try again if any sector has 0 connections (except 1-sector gals)
+			if ($this->getSize() > 1) {
+				foreach ($this->getSectors() as $galSector) {
+					if ($galSector->getNumberOfConnections() == 0) {
+						$problem = true;
 						break;
 					}
-					$sectorID++;
 				}
 			}
+
 			if ($problem && $problemTimes++ > 350) {
 				$connectivity = 100;
 			}
