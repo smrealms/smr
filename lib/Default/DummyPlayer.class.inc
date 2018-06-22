@@ -91,17 +91,13 @@ class DummyPlayer extends AbstractSmrPlayer {
 		// adapt turns
 //		$this->setTurns(round($this->turns / $old_speed * $new_speed),100);
 
-		$this->setSectorID($this->getHome());
+		$this->setSectorID(1);
 		$this->increaseDeaths(1);
 		$this->setLandedOnPlanet(false);
 		$this->setDead(true);
 //		$this->setNewbieWarning(true);
 		$this->getShip()->getPod();
 		
-	}
-	
-	public function getHome() {
-		return 1;
 	}
 	
 	public function setAllianceID($ID) {
