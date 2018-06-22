@@ -76,6 +76,7 @@ class SmrSector {
 	}
 
 	public static function clearCache() {
+		self::$CACHE_LOCATION_SECTORS = array();
 		self::$CACHE_GALAXY_SECTORS = array();
 		self::$CACHE_SECTORS = array();
 	}
