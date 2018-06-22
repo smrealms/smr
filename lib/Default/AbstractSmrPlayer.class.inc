@@ -946,7 +946,6 @@ abstract class AbstractSmrPlayer {
 	abstract public function &killPlayerByForces(SmrForce $forces);
 	abstract public function &killPlayerByPort(SmrPort $port);
 	abstract public function &killPlayerByPlanet(SmrPlanet $planet);
-	abstract public function getHome();
 
 
 	public function getTurns() {

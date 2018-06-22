@@ -925,7 +925,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$newCredits = 100000;
 		$this->setCredits($newCredits);
 
-		$this->setSectorID($this->getHome());
+		$this->setSectorID($this::getHome($this->getGameID(), $this->getRaceID()));
 		$this->increaseDeaths(1);
 		$this->setLandedOnPlanet(false);
 		$this->setDead(true);
@@ -937,16 +937,16 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->setTurns(round($this->turns / $old_speed * $new_speed),100);
 	}
 
-	public function getHome() {
+	static public function getHome($gameID, $raceID) {
 		// get his home sector
-		$hq_id = GOVERNMENT + $this->getRaceID();
-		$this->db->query('SELECT sector_id FROM location JOIN sector USING(game_id, sector_id)
-							WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
-							AND location_type_id = ' . $this->db->escapeNumber($hq_id) . ' LIMIT 1');
-		if ($this->db->nextRecord())
-			return $this->db->getInt('sector_id');
-		else
+		$hq_id = GOVERNMENT + $raceID;
+		$raceHqSectors = SmrSector::getLocationSectors($gameID, $hq_id);
+		if (!empty($raceHqSectors)) {
+			// If race has multiple HQ's for some reason, use the first one
+			return key($raceHqSectors);
+		} else {
 			return 1;
+		}
 	}
 
 	public function &killPlayerByPlayer(AbstractSmrPlayer $killer) {

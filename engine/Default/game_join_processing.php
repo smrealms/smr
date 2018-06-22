@@ -52,16 +52,7 @@ if ($credits > 0) {
 }
 
 // put him in a sector with a hq
-$hq_id = $race_id + 101;
-$db->query('SELECT * FROM location JOIN sector USING(game_id, sector_id) ' .
-		'WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ' .
-		'location_type_id = '.$db->escapeNumber($hq_id));
-if ($db->nextRecord()) {
-	$home_sector_id = $db->getInt('sector_id');
-}
-else {
-	$home_sector_id = 1;
-}
+$home_sector_id = SmrPlayer::getHome($gameID, $race_id);
 
 // for newbie and beginner another ship, more shields and armour
 $isNewbie = !$account->isVeteran();
@@ -148,7 +139,7 @@ $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
               FROM sector WHERE game_id = ' . $db->escapeNumber($gameID));
 
 // Mark the player's start sector as visited
-SmrSector::getSector($gameID, $home_sector_id)->markVisited($player);
+$player->getSector()->markVisited($player);
 
 if ($isNewbie) {
 	//we are a newb set our alliance to be Newbie Help Allaince
