@@ -87,16 +87,13 @@ class SmrPlanet {
 
 	public static function removePlanet($gameID,$sectorID) {
 		$db = new SmrMySqlDatabase();
-		$db->query('DELETE FROM planet
-					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM planet_has_cargo
-					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM planet_has_building
-					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM planet_is_building
-					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID);
+		$db->query('DELETE FROM planet WHERE ' . $SQL);
+		$db->query('DELETE FROM planet_has_cargo WHERE ' . $SQL);
+		$db->query('DELETE FROM planet_has_building WHERE ' . $SQL);
+		$db->query('DELETE FROM planet_is_building WHERE ' . $SQL);
 		//kick everyone from planet
-		$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id = ' . $db->escapeNumber($gameID));
+		$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE ' . $SQL);
 
 		self::$CACHE_PLANETS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
