@@ -25,10 +25,11 @@ class SmrLocation {
 	public static function &getAllLocations($forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT location_type_id FROM location_type ORDER BY location_type_id');
+			$db->query('SELECT * FROM location_type ORDER BY location_type_id');
 			$locations = array();
 			while($db->nextRecord()) {
-				$locations[$db->getField('location_type_id')] = SmrLocation::getLocation($db->getField('location_type_id'));
+				$locationTypeID = $db->getInt('location_type_id');
+				$locations[$locationTypeID] = SmrLocation::getLocation($locationTypeID, $forceUpdate, $db);
 			}
 			self::$CACHE_ALL_LOCATIONS = $locations;
 		}
@@ -38,33 +39,41 @@ class SmrLocation {
 	public static function &getSectorLocations($gameID,$sectorID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT location_type_id FROM location WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
+			$db->query('SELECT * FROM location JOIN location_type USING (location_type_id) WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
 			$locations = array();
 			while($db->nextRecord()) {
-				$locations[] = self::getLocation($db->getField('location_type_id'));
+				$locationTypeID = $db->getInt('location_type_id');
+				$locations[] = self::getLocation($locationTypeID, $forceUpdate, $db);
 			}
 			self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = $locations;
 		}
 		return self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID];
 	}
 	
-	public static function &getLocation($locationTypeID,$forceUpdate = false) {
+	public static function &getLocation($locationTypeID, $forceUpdate=false, $db=null) {
 		if($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
-			self::$CACHE_LOCATIONS[$locationTypeID] = new SmrLocation($locationTypeID);
+			self::$CACHE_LOCATIONS[$locationTypeID] = new SmrLocation($locationTypeID, $db);
 		}
 		return self::$CACHE_LOCATIONS[$locationTypeID];
 	}
 	
-	protected function __construct($locationTypeID) {
+	protected function __construct($locationTypeID, $db=null) {
 		$this->db = new SmrMySqlDatabase();
 		$this->SQL = 'location_type_id = ' . $this->db->escapeNumber($locationTypeID);
-		$this->db->query('SELECT location_type_id,location_name,location_processor,location_image FROM location_type WHERE ' . $this->SQL . ' LIMIT 1');
-		
-		if($this->db->nextRecord()) {
-			$this->typeID = $this->db->getField('location_type_id');
-			$this->name = $this->db->getField('location_name');
-			$this->processor = $this->db->getField('location_processor');
-			$this->image = $this->db->getField('location_image');
+
+		if (isset($db)) {
+			$locationExists = true;
+		} else {
+			$db = $this->db;
+			$db->query('SELECT * FROM location_type WHERE ' . $this->SQL . ' LIMIT 1');
+			$locationExists = $db->nextRecord();
+		}
+
+		if ($locationExists) {
+			$this->typeID = $db->getInt('location_type_id');
+			$this->name = $db->getField('location_name');
+			$this->processor = $db->getField('location_processor');
+			$this->image = $db->getField('location_image');
 		}
 		else {
 			throw new Exception('Cannot find location: '.$locationTypeID);
