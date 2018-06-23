@@ -4,6 +4,7 @@ class SmrGalaxy {
 	protected static $CACHE_GAME_GALAXIES = array();
 	
 	protected $db;
+	protected $SQL;
 
 	protected $gameID;
 	protected $galaxyID;
@@ -58,13 +59,14 @@ class SmrGalaxy {
 	
 	protected function __construct($gameID, $galaxyID, $create=false, $db=null) {
 		$this->db = new SmrMySqlDatabase();
+		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
+		              AND galaxy_id = ' . $this->db->escapeNumber($galaxyID);
 
 		if (isset($db)) {
 			$this->isNew = false;
 		} else {
 			$db = $this->db;
-			$db->query('SELECT * FROM game_galaxy WHERE game_id = ' . $this->db->escapeNumber($gameID) . '
-							AND galaxy_id = ' . $this->db->escapeNumber($galaxyID) . ' LIMIT 1');
+			$db->query('SELECT * FROM game_galaxy WHERE ' . $this->SQL);
 			$this->isNew = !$db->nextRecord();
 		}
 
@@ -89,8 +91,7 @@ class SmrGalaxy {
 										', height = ' . $this->db->escapeNumber($this->getHeight()) .
 										', galaxy_type = ' . $this->db->escapeString($this->getGalaxyType()) .
 										', max_force_time = ' . $this->db->escapeNumber($this->getMaxForceTime()) .
-									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) .
-										' AND galaxy_id = ' . $this->db->escapeNumber($this->getGalaxyID()) . ' LIMIT 1');
+									' WHERE ' . $this->SQL);
 			}
 			else {
 				$this->db->query('INSERT INTO game_galaxy (game_id,galaxy_id,galaxy_name,width,height,galaxy_type,max_force_time)
