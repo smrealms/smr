@@ -1,4 +1,5 @@
 <?php
+
 require_once(get_file_loc('SmrPlayer.class.inc'));
 class SmrPlanet {
 	protected static $CACHE_PLANETS = array();
@@ -63,9 +64,9 @@ class SmrPlanet {
 		}
 	}
 
-	public static function &getPlanet($gameID,$sectorID,$forceUpdate = false) {
+	public static function &getPlanet($gameID, $sectorID, $forceUpdate=false, $db=null) {
 		if($forceUpdate || !isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
-			self::$CACHE_PLANETS[$gameID][$sectorID] = new SmrPlanet($gameID, $sectorID);
+			self::$CACHE_PLANETS[$gameID][$sectorID] = new SmrPlanet($gameID, $sectorID, $db);
 		}
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
@@ -99,25 +100,32 @@ class SmrPlanet {
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
 
-	protected function __construct($gameID, $sectorID) {
+	protected function __construct($gameID, $sectorID, $db=null) {
 		$this->db = new SmrMySqlDatabase();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
-		$this->db->query('SELECT * FROM planet WHERE ' . $this->SQL);
-		if ($this->db->nextRecord()) {
-			$this->sectorID			= $this->db->getInt('sector_id');
-			$this->gameID			= $this->db->getInt('game_id');
-			$this->planetName		= stripslashes($this->db->getField('planet_name'));
-			$this->ownerID			= $this->db->getInt('owner_id');
-			$this->password			= $this->db->getField('password');
-			$this->shields			= $this->db->getInt('shields');
-			$this->armour 			= $this->db->getInt('armour');
-			$this->drones			= $this->db->getInt('drones');
-			$this->credits			= $this->db->getInt('credits');
-			$this->bonds			= $this->db->getInt('bonds');
-			$this->maturity			= $this->db->getInt('maturity');
-			$this->inhabitableTime	= $this->db->getInt('inhabitable_time');
-			$this->typeID 			= $this->db->getInt('planet_type_id');
+		if (isset($db)) {
+			$planetExists = true;
+		} else {
+			$db = $this->db;
+			$db->query('SELECT * FROM planet WHERE ' . $this->SQL);
+			$planetExists = $db->nextRecord();
+		}
+
+		if ($planetExists) {
+			$this->gameID = (int) $gameID;
+			$this->sectorID = (int) $sectorID;
+			$this->planetName = stripslashes($db->getField('planet_name'));
+			$this->ownerID = $db->getInt('owner_id');
+			$this->password = $db->getField('password');
+			$this->shields = $db->getInt('shields');
+			$this->armour = $db->getInt('armour');
+			$this->drones = $db->getInt('drones');
+			$this->credits = $db->getInt('credits');
+			$this->bonds = $db->getInt('bonds');
+			$this->maturity = $db->getInt('maturity');
+			$this->inhabitableTime = $db->getInt('inhabitable_time');
+			$this->typeID = $db->getInt('planet_type_id');
 			
 			$this->initTypeInfo();
 			$this->checkBondMaturity();
