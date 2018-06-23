@@ -15,6 +15,7 @@ class SmrForce {
 	protected static $refreshAllHREF;
 
 	protected $db;
+	protected $SQL;
 
 	protected $ownerID;
 	protected $sectorID;
@@ -93,15 +94,15 @@ class SmrForce {
 
 	protected function __construct($gameID, $sectorID, $ownerID, $db=null) {
 		$this->db = new SmrMySqlDatabase();
+		$this->SQL = 'game_id = '.$this->db->escapeNumber($gameID).'
+		              AND sector_id = '.$this->db->escapeNumber($sectorID).'
+		              AND owner_id = '.$this->db->escapeNumber($ownerID);
 
 		if (isset($db)) {
 			$this->isNew = false;
 		} else {
 			$db = $this->db;
-			$this->db->query('SELECT * FROM sector_has_forces
-							WHERE game_id = '.$this->db->escapeNumber($gameID).'
-								AND sector_id = '.$this->db->escapeNumber($sectorID).'
-								AND owner_id = '.$this->db->escapeNumber($ownerID).' LIMIT 1');
+			$this->db->query('SELECT * FROM sector_has_forces WHERE ' . $this->SQL);
 			$this->isNew = !$db->nextRecord();
 		}
 
@@ -366,15 +367,11 @@ class SmrForce {
 	public function update() {
 		if(!$this->isNew) {
 			if (!$this->exists()) {
-				$this->db->query('DELETE FROM sector_has_forces ' .
-							 'WHERE game_id = '.$this->db->escapeNumber($this->gameID).' AND ' .
-									'sector_id = '.$this->db->escapeNumber($this->sectorID).' AND ' .
-									'owner_id = '.$this->db->escapeNumber($this->ownerID));
+				$this->db->query('DELETE FROM sector_has_forces WHERE ' . $this->SQL);
 				$this->isNew=true;
 			}
 			else if ($this->hasChanged) {
-				$this->db->query('UPDATE sector_has_forces SET combat_drones = '.$this->db->escapeNumber($this->combatDrones).', scout_drones = ' . $this->db->escapeNumber($this->scoutDrones) . ', mines = ' . $this->db->escapeNumber($this->mines) . ', expire_time = ' . $this->db->escapeNumber($this->expire) . '
-									WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . ' AND sector_id = ' . $this->db->escapeNumber($this->sectorID) . ' AND owner_id = ' . $this->db->escapeNumber($this->ownerID) . ' LIMIT 1 ');
+				$this->db->query('UPDATE sector_has_forces SET combat_drones = '.$this->db->escapeNumber($this->combatDrones).', scout_drones = ' . $this->db->escapeNumber($this->scoutDrones) . ', mines = ' . $this->db->escapeNumber($this->mines) . ', expire_time = ' . $this->db->escapeNumber($this->expire) . ' WHERE ' . $this->SQL);
 			}
 		}
 		else if($this->exists()) {
@@ -390,7 +387,7 @@ class SmrForce {
 	 * Update the table fields associated with using Refresh All
 	 */
 	public function updateRefreshAll(SmrPlayer $player, $refreshTime) {
-		$this->db->query('UPDATE sector_has_forces SET refresh_at=' . $this->db->escapeNumber($refreshTime) . ', refresher=' . $this->db->escapeNumber($player->getAccountID()) . ' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND owner_id=' . $this->db->escapeNumber($this->getOwnerID()) . ' LIMIT 1');
+		$this->db->query('UPDATE sector_has_forces SET refresh_at=' . $this->db->escapeNumber($refreshTime) . ', refresher=' . $this->db->escapeNumber($player->getAccountID()) . ' WHERE ' . $this->SQL);
 	}
 
 	public function getExamineDropForcesHREF() {
