@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','View Forces');
 
-$db->query('SELECT sector_id, owner_id
+$db->query('SELECT *
 			FROM sector_has_forces
 			WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
@@ -11,6 +11,6 @@ $db->query('SELECT sector_id, owner_id
 
 $forces = array();
 while ($db->nextRecord()) {
-	$forces[] = SmrForce::getForce($player->getGameID(), $db->getField('sector_id'), $db->getField('owner_id'));
+	$forces[] = SmrForce::getForce($player->getGameID(), $db->getField('sector_id'), $db->getField('owner_id'), false, $db);
 }
 $template->assign('Forces', $forces);
