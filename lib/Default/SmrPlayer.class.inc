@@ -264,10 +264,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->zoom;
 			case 'Bank':
 				return $this->bank;
-			case 'Maintenance':
 			case 'Turns':
 				return $this->turns;
-			case 'Last Maintenance Update':
 			case 'Last Turn Update':
 				return $this->lastTurnUpdate;
 			case 'Last Active':
@@ -585,44 +583,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->lastTurnUpdate=$time;
 		$this->hasChanged=true;
 //		$sql = $this->db->query('UPDATE player SET last_turn_update = ' . $this->lastTurnUpdate . ' WHERE '. $this->SQL . ' LIMIT 1');
-	}
-
-	function getPastMaintBought() {
-		if(!isset($this->pastMaintBought)) {
-			//get past maint
-			$this->db->query('DELETE FROM player_repaired WHERE time < ' . $this->db->escapeNumber(TIME - 3600 * 20));
-			$this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE ' . $this->SQL . ' AND amount > 0 LIMIT 1');
-			if ($this->db->nextRecord()) {
-				$this->pastMaintBought = $this->db->getInt('sum');
-			}
-			else {
-				$this->pastMaintBought = 0;
-			}
-		}
-		return $this->pastMaintBought;
-	}
-
-	function getPastMaintCredit() {
-		if(!isset($this->pastMaintCredit)) {
-			//get past maint
-			$this->db->query('DELETE FROM player_repaired WHERE time < ' . $this->db->escapeNumber(TIME - 3600 * 20));
-			$this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE '.$this->SQL.' AND amount < 0 LIMIT 1');
-			if ($this->db->nextRecord()) $this->pastMaintCredit = $this->db->getInt('sum');
-			else $this->pastMaintCredit = 0;
-		}
-		return $this->pastMaintCredit;
-	}
-
-	function removePastMaint() {
-		$this->pastMaint=0;
-		$this->db->query('DELETE FROM player_repaired WHERE '.$this->SQL);
-	}
-
-	function addPastMaintBought($amount,$type='Normal') {
-		$this->getPastMaintBought();
-		$this->db->query('REPLACE INTO player_repaired (account_id, game_id, time, amount, source) VALUES (' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeNumber($amount) . ',' . $this->db->escapeString($type) . ')');
-		$this->giveTurns($amount*10);
-		$this->pastMaintBought+=$amount;
 	}
 
 	protected function getPureRelationsData() {

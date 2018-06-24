@@ -35,8 +35,6 @@ abstract class AbstractSmrPlayer {
 	protected $deaths;
 	protected $gadgets;
 	protected $stats;
-	protected $pastMaintBought;
-	protected $pastMaintCredit;
 	protected $pureRelations;
 	protected $relations;
 	protected $militaryPayment;
@@ -585,14 +583,6 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged=true;
 	}
 
-	public abstract function getPastMaintBought();
-	public abstract function getPastMaintCredit();
-	public function getPastMaint() {
-		$pastMaint = $this->getPastMaintBought()+$this->getPastMaintCredit();
-		if ($pastMaint < 0) return 0;
-		return $pastMaint;
-	}
-
 	protected abstract function getGadgetsData();
 	public function getGadgets() {
 		$this->getGadgetsData();
@@ -655,22 +645,6 @@ abstract class AbstractSmrPlayer {
 	}
 
 	abstract public function &getShip();
-
-	public function getDiminishingPortAttack() {
-		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 450))));
-	}
-
-	public function getDiminishingPlanetAttack() {
-		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 450))));
-	}
-
-	public function getDiminishingForceAttack() {
-		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 900))));
-	}
-
-	public function getDiminishingTraderAttack() {
-		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 475))));
-	}
 
 	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
 		return $this->getShip()->shootPlayer($targetPlayer);
@@ -979,9 +953,6 @@ abstract class AbstractSmrPlayer {
 		if ($this->newbieTurns < 0)
 			$this->newbieTurns = 0;
 
-		if (has_privilege('Unlimited Maintenance'))
-			$this->turns = $this->getMaxTurns();
-
 		$this->hasChanged=true;
 		if($updateLastActive === true) {
 			$this->setLastActive(TIME);
@@ -989,16 +960,15 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function takeTurns($take, $noob = 0,$updateLastActive = true) { // taking maint counts as activity by default
+	public function takeTurns($take, $noob = 0, $updateLastActive = true) {
 		if($take < 0 || $noob < 0)
 			throw new Exception('Trying to take negative turns.');
 		$take = ceil($take);
-		$new_maint = $this->getTurns() - $take;
+		$new_turns = $this->getTurns() - $take;
 		$newbiesTaken = min($this->getNewbieTurns(),$noob);
 		$new_noob = $this->getNewbieTurns() - $noob;
 
-		if(!has_beta_privilege('No SC Loss'))
-			$this->setTurns($new_maint,$new_noob,$updateLastActive);
+		$this->setTurns($new_turns, $new_noob, $updateLastActive);
 		$this->increaseHOF($take,array('Movement','Turns Used','Since Last Death'), HOF_ALLIANCE);
 		$this->increaseHOF($take,array('Movement','Turns Used','Total'), HOF_ALLIANCE);
 		$this->increaseHOF($newbiesTaken,array('Movement','Turns Used','Newbie'), HOF_ALLIANCE);

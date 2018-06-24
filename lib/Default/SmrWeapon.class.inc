@@ -183,11 +183,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		if(!$this->canShootForces()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		$damage =& $this->getModifiedDamage($weaponPlayer);
-		
-		$diminishing = $weaponPlayer->getDiminishingForceAttack();
-		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
-		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
-		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 		return $damage;
 	}
 	
@@ -195,11 +190,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		if(!$this->canShootPorts()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		$damage =& $this->getModifiedDamage($weaponPlayer);
-		
-		$diminishing = $weaponPlayer->getDiminishingPortAttack();
-		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
-		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
-		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 		return $damage;
 	}
 	
@@ -208,14 +198,11 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		$damage =& $this->getModifiedDamage($weaponPlayer);
 		
-		$damage['MaxDamage'] /= 5;
-		$damage['Shield'] /= 5;
-		$damage['Armour'] /= 5;
+		$planetMod = self::PLANET_DAMAGE_MOD;
+		$damage['MaxDamage'] = ceil($damage['MaxDamage'] * $planetMod);
+		$damage['Shield'] = ceil($damage['Shield'] * $planetMod);
+		$damage['Armour'] = ceil($damage['Armour'] * $planetMod);
 		
-		$diminishing = $weaponPlayer->getDiminishingPlanetAttack();
-		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
-		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
-		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 		return $damage;
 	}
 	
@@ -230,11 +217,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			return $return;
 		}
 		$damage =& $this->getModifiedDamage($weaponPlayer);
-		
-		$diminishing = $weaponPlayer->getDiminishingTraderAttack();
-		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
-		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
-		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 		return $damage;
 	}
 	

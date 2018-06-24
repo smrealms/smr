@@ -35,14 +35,6 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$this->bounties = array();
 	}
 	
-	public function getPastMaintBought() {
-		return 0;
-	}
-	
-	public function getPastMaintCredit() {
-		return 0;
-	}
-	
 	protected function getGadgetsData() {
 	}
 	

@@ -31,7 +31,7 @@ if(isset($Message)) {
 					</td>
 					<td width="35%"><a href="<?php echo $Game['GameStatsLink']; ?>"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</a></td>
 
-					<td class="center"><?php echo $Game['Maintenance']; ?></td>
+					<td class="center"><?php echo $Game['Turns']; ?></td>
 					<td class="center"><?php echo $Game['NumberPlaying']; ?></td>
 					<td><?php echo $Game['LastMovement']; ?></td>
 					<td class="noWrap"><?php echo $Game['EndDate']; ?></td>
