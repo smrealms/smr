@@ -220,10 +220,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $results;
 	}
 
-	public function getSQL() {
-		return $this->SQL;
-	}
-
 	function get($bit) {
 		switch($bit) {
 			case 'Sector ID':
