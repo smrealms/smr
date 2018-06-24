@@ -20,7 +20,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	protected $tickers;
 
-	protected $originalMaintenance;
 	protected $lastTurnUpdate;
 	protected $lastNewsUpdate;
 	protected $attackColour;
@@ -152,7 +151,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->sectorID						= (int) $result['sector_id'];
 			$this->lastSectorID					= (int) $result['last_sector_id'];
 			$this->turns						= (int) $result['turns'];
-			$this->originalMaintenance			= $this->turns;
 			$this->lastTurnUpdate				= (int) $result['last_turn_update'];
 			$this->newbieTurns					= (int) $result['newbie_turns'];
 			$this->lastNewsUpdate				= (int) $result['last_news_update'];
@@ -474,10 +472,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 //	function getPastKnowledge() {
 //		return $this->pastKnowledge;
 //	}
-
-	function getOriginalMaintenance() {
-		return $this->originalMaintenance;
-	}
 
 	/**
 	 * Calculate the time in seconds between the given time and when the

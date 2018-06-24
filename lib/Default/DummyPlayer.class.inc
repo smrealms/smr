@@ -11,8 +11,6 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$this->sectorID					= 0;
 		$this->lastSectorID				= 0;
 		$this->turns					= 1000;
-		$this->originalMaintenance		= $this->turns;
-		$this->lastMaintenanceUpdate	= 0;
 		$this->newbieTurns				= 0;
 		$this->lastNewsUpdate			= 0;
 		$this->dead						= false;
