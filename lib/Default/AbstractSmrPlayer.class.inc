@@ -376,8 +376,6 @@ abstract class AbstractSmrPlayer {
 	public function setCredits($credits) {
 		if($this->credits == $credits)
 			return;
-		if (has_privilege('Money Doesn\'t Matter',$this->accountID)) 
-			return;
 		if($credits < 0)
 			throw new Exception('Trying to set negative credits.');
 		if($credits > MAX_MONEY)
@@ -939,14 +937,8 @@ abstract class AbstractSmrPlayer {
 		if($this->turns == $turns && ($this->newbieTurns == $newNoob || $newNoob==false) && !$updateLastActive)
 			return;
 
-		$this->turns = $turns;
-
-		if(!has_beta_privilege('No SC Change')) {
-			if ($this->turns < 0)
-				$this->turns = 0;
-			if ($this->turns > $this->getMaxTurns())
-				$this->turns = $this->getMaxTurns();
-		}
+		// Make sure turns are in range [0, MaxTurns]
+		$this->turns = max(0, min($turns, $this->getMaxTurns()));
 
 		if($newNoob !== false)
 			$this->newbieTurns = $newNoob;
@@ -979,8 +971,7 @@ abstract class AbstractSmrPlayer {
 			throw new Exception('Trying to give negative turns.');
 		$give = floor($give);
 
-		if(!has_beta_privilege('No SC Gain'))
-			$this->setTurns($this->getTurns() + $give,$this->getNewbieTurns() + $noob,$updateLastActive);
+		$this->setTurns($this->getTurns() + $give, $this->getNewbieTurns() + $noob, $updateLastActive);
 	}
 
 	public function getLastActive() {

@@ -437,7 +437,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 	function setBank($credits) {
 		if($this->bank == $credits)
 			return;
-		if (has_privilege('Money Doesn\'t Matter',$this->accountID)) return;
 		if($credits < 0)
 			throw new Exception('Trying to set negative credits.');
 		if($credits > MAX_MONEY)
