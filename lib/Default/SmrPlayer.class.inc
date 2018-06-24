@@ -14,12 +14,10 @@ class SmrPlayer extends AbstractSmrPlayer {
 	protected static $CACHE_PLAYERS = array();
 
 	protected $db;
+	protected $SQL;
 
 	protected $newbieWarning;
-
-
 	protected $tickers;
-
 	protected $lastTurnUpdate;
 	protected $lastNewsUpdate;
 	protected $attackColour;
@@ -35,10 +33,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	protected $plottedCourseFrom;
 	protected $nameChanged;
 	protected $combatDronesKamikazeOnMines;
-
 	protected $customShipName;
-
-	protected $SQL;
 
 
 	public static function refreshCache() {
@@ -78,7 +73,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$players = array();
 			while($db->nextRecord()) {
 				$accountID = $db->getInt('account_id');
-				$players[$accountID] = self::getPlayer($db->getRow(), $gameID, $forceUpdate);
+				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $db);
 			}
 			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] = $players;
 		}
@@ -92,7 +87,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$players = array();
 			while($db->nextRecord()) {
 				$accountID = $db->getField('account_id');
-				$players[$accountID] = self::getPlayer($db->getRow(), $gameID, $forceUpdate);
+				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $db);
 			}
 			self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] = $players;
 		}
@@ -106,20 +101,16 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$players = array();
 			while($db->nextRecord()) {
 				$accountID = $db->getInt('account_id');
-				$players[$accountID] = self::getPlayer($db->getRow(), $gameID, $forceUpdate);
+				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $db);
 			}
 			self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID] = $players;
 		}
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
-	public static function &getPlayer($accountIDOrResultArray, $gameID, $forceUpdate = false) {
-		$accountID = is_array($accountIDOrResultArray) ?
-		             $accountIDOrResultArray['account_id'] :
-		             $accountIDOrResultArray;
+	public static function &getPlayer($accountID, $gameID, $forceUpdate=false, $db=null) {
 		if ($forceUpdate || !isset(self::$CACHE_PLAYERS[$gameID][$accountID])) {
-			$p = new SmrPlayer($gameID,$accountIDOrResultArray);
-			self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] = $p;
+			self::$CACHE_PLAYERS[$gameID][$accountID] = new SmrPlayer($gameID, $accountID, $db);
 		}
 		return self::$CACHE_PLAYERS[$gameID][$accountID];
 	}
@@ -127,66 +118,66 @@ class SmrPlayer extends AbstractSmrPlayer {
 	public static function &getPlayerByPlayerID($playerID,$gameID,$forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($gameID).' AND player_id = '.$db->escapeNumber($playerID).' LIMIT 1');
-		if($db->nextRecord())
-			return self::getPlayer($db->getRow(), $gameID, $forceUpdate);
+		if ($db->nextRecord()) {
+			return self::getPlayer($db->getInt('account_id'), $gameID, $forceUpdate, $db);
+		}
 		throw new PlayerNotFoundException('Player ID not found.');
 	}
 
-	protected function __construct($gameID, $accountIDOrResultArray) {
+	protected function __construct($gameID, $accountID, $db=null) {
 		parent::__construct();
 		$this->db = new SmrMySqlDatabase();
-		$result=false;
-		if (is_array($accountIDOrResultArray))
-			$result = $accountIDOrResultArray;
-		else {
-			$this->db->query('SELECT * FROM player WHERE account_id = ' . $this->db->escapeNumber($accountIDOrResultArray) . ' AND game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
-			$this->db->nextRecord();
-			$result = $this->db->getRow();
-		}
-		if($result) {
-			$this->accountID					= (int) $result['account_id'];
-			$this->gameID						= (int) $result['game_id'];
-			$this->playerName					= (string) $result['player_name'];
-			$this->playerID						= (int) $result['player_id'];
-			$this->sectorID						= (int) $result['sector_id'];
-			$this->lastSectorID					= (int) $result['last_sector_id'];
-			$this->turns						= (int) $result['turns'];
-			$this->lastTurnUpdate				= (int) $result['last_turn_update'];
-			$this->newbieTurns					= (int) $result['newbie_turns'];
-			$this->lastNewsUpdate				= (int) $result['last_news_update'];
-			$this->attackColour					= (string) $result['attack_warning'];
-			$this->dead							= $result['dead']=='TRUE';
-			$this->npc							= $result['npc']=='TRUE';
-			$this->newbieStatus					= $result['newbie_status'] == 'TRUE';
-			$this->landedOnPlanet				= $result['land_on_planet']=='TRUE';
-			$this->lastActive					= (int) $result['last_active'];
-			$this->lastCPLAction				= (int) $result['last_cpl_action'];
-			$this->raceID						= (int) $result['race_id'];
-			$this->credits						= (int) $result['credits'];
-			$this->experience					= (int) $result['experience'];
-			$this->alignment					= (int) $result['alignment'];
-			$this->militaryPayment				= (int) $result['military_payment'];
-//			$this->pastKnowledge = $result['past_knowledge'];
-			$this->allianceID					= (int) $result['alliance_id'];
-			$this->allianceJoinable				= (int) $result['alliance_join'];
-			$this->shipID						= (int) $result['ship_type_id'];
-			$this->kills						= (int) $result['kills'];
-			$this->deaths						= (int) $result['deaths'];
-			$this->lastPort						= (int) $result['last_port'];
-			$this->bank							= (int) $result['bank'];
-			$this->zoom							= (int) $result['zoom'];
-			$this->displayMissions				= $result['display_missions']=='TRUE';
-			$this->displayWeapons				= $result['display_weapons']=='TRUE';
-			$this->forceDropMessages			= $result['force_drop_messages']=='TRUE';
-			$this->ignoreGlobals				= $result['ignore_globals']=='TRUE';
-			$this->newbieWarning				= $result['newbie_warning']=='TRUE';
-			$this->nameChanged					= $result['name_changed']=='TRUE';
-			$this->combatDronesKamikazeOnMines	= $result['combat_drones_kamikaze_on_mines']=='TRUE';
+		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
-			$this->SQL = 'account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID);
+		if (isset($db)) {
+			$playerExists = true;
+		} else {
+			$db = $this->db;
+			$this->db->query('SELECT * FROM player WHERE ' . $this->SQL . ' LIMIT 1');
+			$playerExists = $db->nextRecord();
+		}
+
+		if ($playerExists) {
+			$this->accountID = (int) $accountID;
+			$this->gameID = (int) $gameID;
+			$this->playerName = $db->getField('player_name');
+			$this->playerID = $db->getInt('player_id');
+			$this->sectorID = $db->getInt('sector_id');
+			$this->lastSectorID = $db->getInt('last_sector_id');
+			$this->turns = $db->getInt('turns');
+			$this->lastTurnUpdate = $db->getInt('last_turn_update');
+			$this->newbieTurns = $db->getInt('newbie_turns');
+			$this->lastNewsUpdate = $db->getInt('last_news_update');
+			$this->attackColour = $db->getField('attack_warning');
+			$this->dead = $db->getBoolean('dead');
+			$this->npc = $db->getBoolean('npc');
+			$this->newbieStatus = $db->getBoolean('newbie_status');
+			$this->landedOnPlanet = $db->getBoolean('land_on_planet');
+			$this->lastActive = $db->getInt('last_active');
+			$this->lastCPLAction = $db->getInt('last_cpl_action');
+			$this->raceID = $db->getInt('race_id');
+			$this->credits = $db->getInt('credits');
+			$this->experience = $db->getInt('experience');
+			$this->alignment = $db->getInt('alignment');
+			$this->militaryPayment = $db->getInt('military_payment');
+			$this->allianceID = $db->getInt('alliance_id');
+			$this->allianceJoinable = $db->getInt('alliance_join');
+			$this->shipID = $db->getInt('ship_type_id');
+			$this->kills = $db->getInt('kills');
+			$this->deaths = $db->getInt('deaths');
+			$this->lastPort = $db->getInt('last_port');
+			$this->bank = $db->getInt('bank');
+			$this->zoom = $db->getInt('zoom');
+			$this->displayMissions = $db->getBoolean('display_missions');
+			$this->displayWeapons = $db->getBoolean('display_weapons');
+			$this->forceDropMessages = $db->getBoolean('force_drop_messages');
+			$this->ignoreGlobals = $db->getBoolean('ignore_globals');
+			$this->newbieWarning = $db->getBoolean('newbie_warning');
+			$this->nameChanged = $db->getBoolean('name_changed');
+			$this->combatDronesKamikazeOnMines = $db->getBoolean('combat_drones_kamikaze_on_mines');
 		}
 		else {
-			throw new PlayerNotFoundException('Invalid accountID: '.$accountIDOrResultArray . ' OR gameID:'.$gameID);
+			throw new PlayerNotFoundException('Invalid accountID: '.$accountID. ' OR gameID:'.$gameID);
 		}
 	}
 
