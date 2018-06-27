@@ -50,14 +50,14 @@ class SmrShip extends AbstractSmrShip {
 	
 	protected function loadWeapon() {
 		// determine weapon
-		$this->db->query('SELECT order_id,weapon_type_id FROM ship_has_weapon
+		$this->db->query('SELECT weapon_type.*, order_id FROM ship_has_weapon JOIN weapon_type USING (weapon_type_id)
 							WHERE ' . $this->SQL .'
 							ORDER BY order_id LIMIT ' . $this->db->escapeNumber($this->getHardpoints()));
 		
 		$this->weapons = array();
 		// generate list of weapon names the user transports
 		while ($this->db->nextRecord()) {
-			$this->weapons[$this->db->getInt('order_id')] = SmrWeapon::getWeapon($this->gameID,$this->db->getInt('weapon_type_id'));
+			$this->weapons[$this->db->getInt('order_id')] = SmrWeapon::getWeapon($this->gameID, $this->db->getInt('weapon_type_id'), false, $this->db);
 		}
 		$this->checkForExcessWeapons();
 	}

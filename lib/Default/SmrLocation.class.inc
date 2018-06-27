@@ -302,9 +302,9 @@ class SmrLocation {
 		if(!isset($this->weaponsSold)) {
 			require_once(get_file_loc('SmrWeapon.class.inc'));
 			$this->weaponsSold = array();
-			$this->db->query('SELECT * FROM location_sells_weapons WHERE ' . $this->SQL);
+			$this->db->query('SELECT * FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
 			while($this->db->nextRecord())
-				$this->weaponsSold[$this->db->getInt('weapon_type_id')] = SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$this->db->getInt('weapon_type_id'));
+				$this->weaponsSold[$this->db->getInt('weapon_type_id')] = SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$this->db->getInt('weapon_type_id'), false, $this->db);
 		}
 		return $this->weaponsSold;
 	}
