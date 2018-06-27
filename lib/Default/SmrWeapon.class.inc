@@ -21,7 +21,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	public static function &getWeapon($gameTypeID,$weaponTypeID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID])) {
 			$w = new SmrWeapon($gameTypeID,$weaponTypeID);
-			if($w->getName()!='')
+			if ($w->exists())
 				self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID] = $w;
 			else
 				self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID] = false;
@@ -60,6 +60,10 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			$this->raidWeapon = false;
 			$this->maxDamage = max($this->shieldDamage,$this->armourDamage);
 		}
+	}
+
+	public function exists() {
+		return !empty($this->name);
 	}
 
 	public function getBuyHREF(SmrLocation $location) {
