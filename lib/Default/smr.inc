@@ -205,47 +205,6 @@ function enableProtectionDependantRefresh($template, $player) {
 	$template->assign('AJAX_ENABLE_REFRESH',$ajaxRefresh);
 }
 
-function has_beta_privilege($priv = '', $acc = 0) {
-	//PAGE
-	return false;
-	global $PRIVILEGES, $ACCOUNT_ID,$BETA_CONSTANTS,$USE_BETA_CONSTANTS;
-	if($USE_BETA_CONSTANTS !== true)
-		return false;
-	if ($acc == 0) $acc = $ACCOUNT_ID;
-	switch($priv) {
-		case 'Create Universe':
-			if(isset($BETA_CONSTANTS['Anyone Create Games']) && $BETA_CONSTANTS['Anyone Create Games']===true)
-			return true;
-	}
-
-	if(isset($BETA_CONSTANTS[$priv])) {
-		if ($BETA_CONSTANTS[$priv] === true) return true;
-		if (is_array($BETA_CONSTANTS[$priv]) && in_array($acc, $BETA_CONSTANTS[$priv])) return true;
-	}
-	if (!isset($BETA_CONSTANTS['Privileges'][$acc])) return false; //means they have no privs
-	if ($priv == '') return true; //means they have some kind of priv
-	if(!isset($PRIVILEGES[$priv]))
-		return false;
-	if (in_array($PRIVILEGES[$priv], $BETA_CONSTANTS['Privileges'][$acc])) return true; //specific priv allowed
-	return false;
-}
-
-function has_privilege($priv = '', $acc = 0) {
-	//PAGE
-	return false;
-	//if ($priv == 'Always Join Alliances') return TRUE;
-	//if ($priv == 'See Location') return TRUE;
-	//if ($priv == 'Money Doesn\'t Matter') return TRUE;
-	global $ADMINS, $PRIVILEGES, $ACCOUNT_ID;
-	if ($acc == 0) $acc = $ACCOUNT_ID;
-	if(has_beta_privilege($priv,$acc))
-		return true;
-	if (!isset($ADMINS[$acc])) return FALSE; //means they have no privs
-	if ($priv == '') return TRUE; //means they have some kind of priv
-	if (in_array($PRIVILEGES[$priv], $ADMINS[$acc])) return TRUE; //specific priv allowed
-	return FALSE;
-}
-
 function create_echo_error($message) {
 
 	$return=('<h1>ERROR</h1>');
