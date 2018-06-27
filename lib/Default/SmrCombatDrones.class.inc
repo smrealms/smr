@@ -141,11 +141,6 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
 		
-		$diminishing = $weaponPlayer->getDiminishingForceAttack();
-		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
-		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
-		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
-		
 		$damage['Launched'] += $damage['Kamikaze'];
 		$damage['MaxDamage'] += $damage['Kamikaze'] * MINE_ARMOUR;
 		$damage['Shield'] += $damage['Kamikaze'] * MINE_ARMOUR;
@@ -159,15 +154,10 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		$damage =& $this->getModifiedDamage();
 		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPort($weaponPlayer,$port) / 100);
-		$damage['MaxDamage'] = $damage['Launched'] * $damage['MaxDamage'];
-		$damage['Shield'] = $damage['Launched'] * $damage['Shield'];
-		$damage['Armour'] = $damage['Launched'] * $damage['Armour'];
+		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
+		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
+		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
 		
-		$diminishing = $weaponPlayer->getDiminishingPortAttack();
-		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
-		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
-		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
-			
 		return $damage;
 	}
 	
@@ -176,19 +166,11 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		$damage =& $this->getModifiedDamage();
 		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPlanet($weaponPlayer,$planet) / 100);
-		$damage['MaxDamage'] = $damage['Launched'] * $damage['MaxDamage'];
-		$damage['Shield'] = $damage['Launched'] * $damage['Shield'];
-		$damage['Armour'] = $damage['Launched'] * $damage['Armour'];
+		$planetMod = self::PLANET_DAMAGE_MOD;
+		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage'] * $planetMod);
+		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield'] * $planetMod);
+		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour'] * $planetMod);
 		
-		$damage['MaxDamage'] /= 5;
-		$damage['Shield'] /= 5;
-		$damage['Armour'] /= 5;
-		
-		$diminishing = $weaponPlayer->getDiminishingPlanetAttack();
-		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
-		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
-		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
-			
 		return $damage;
 	}
 	
@@ -198,10 +180,6 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			return $return;
 		}
 		$damage =& $this->getModifiedDamage();
-		$diminishing = $weaponPlayer->getDiminishingTraderAttack();
-		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
-		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
-		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 		if($targetPlayer->getShip()->hasDCS()) {
 			$damage['MaxDamage'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
 			$damage['Shield'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;

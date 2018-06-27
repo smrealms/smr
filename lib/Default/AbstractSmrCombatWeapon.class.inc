@@ -2,6 +2,11 @@
 require_once('AbstractSmrPlayer.class.inc');
 require_once('SmrForce.class.inc');
 abstract class AbstractSmrCombatWeapon {
+	/**
+	 * Reduce the damage done to planets by this factor
+	 */
+	const PLANET_DAMAGE_MOD = 0.2;
+
 	protected $gameTypeID;
 	protected $name;
 	protected $raceID;

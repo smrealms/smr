@@ -62,7 +62,7 @@ if ($db->getNumRows() > 0) {
 		$container_game['body'] = 'game_stats.php';
 		$container_game['game_id'] = $game_id;
 		$games['Play'][$game_id]['GameStatsLink'] = SmrSession::getNewHREF($container_game);
-		$games['Play'][$game_id]['Maintenance'] = $curr_player->getTurns();
+		$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
 		$games['Play'][$game_id]['LastMovement'] = format_time(TIME-$curr_player->getLastActive(),TRUE);
 
 	}
