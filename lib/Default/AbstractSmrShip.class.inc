@@ -232,7 +232,7 @@ abstract class AbstractSmrShip {
 
 	public function &addWeapon($weaponTypeID) {
 		if($this->hasOpenWeaponSlots() && $this->hasRemainingPower()) {
-			$weapon = SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
+			$weapon = SmrWeapon::getWeapon($weaponTypeID);
 			if($this->getRemainingPower()>=$weapon->getPowerLevel()) {
 				$this->weapons[count($this->weapons)] = $weapon;
 				$this->hasChangedWeapons = true;

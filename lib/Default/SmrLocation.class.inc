@@ -304,7 +304,7 @@ class SmrLocation {
 			$this->weaponsSold = array();
 			$this->db->query('SELECT * FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
 			while($this->db->nextRecord())
-				$this->weaponsSold[$this->db->getInt('weapon_type_id')] = SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$this->db->getInt('weapon_type_id'), false, $this->db);
+				$this->weaponsSold[$this->db->getInt('weapon_type_id')] = SmrWeapon::getWeapon($this->db->getInt('weapon_type_id'), false, $this->db);
 		}
 		return $this->weaponsSold;
 	}
@@ -320,7 +320,7 @@ class SmrLocation {
 		if($this->isWeaponSold($weaponTypeID))
 			return;
 		require_once(get_file_loc('SmrWeapon.class.inc'));
-		$weapon = SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$weaponTypeID);
+		$weapon = SmrWeapon::getWeapon($weaponTypeID);
 		if($weapon===false)
 			throw new Exception('Invalid weapon type id given');
 		$this->db->query('INSERT INTO location_sells_weapons (location_type_id,weapon_type_id) values (' . $this->db->escapeNumber($this->getTypeID()). ',' . $this->db->escapeNumber($weaponTypeID) . ')');

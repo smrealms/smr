@@ -11,7 +11,7 @@ class Plotter {
 			case 'Ships':
 				return AbstractSmrShip::getBaseShip(Globals::getGameType($gameID),$X);
 			case 'Weapons':
-				return SmrWeapon::getWeapon(Globals::getGameType($gameID),$X);
+				return SmrWeapon::getWeapon($X);
 			case 'Locations':
 				if(is_numeric($X)) {
 					return SmrLocation::getLocation($X);

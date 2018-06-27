@@ -30,7 +30,7 @@ class DummyShip extends AbstractSmrShip {
 		$this->doFullUNO();
 //		for($i=0;$i<$this->getHardpoints();++$i) {
 //			if(!isset($this->weapons[$i]))
-//				$this->weapons[$i] = SmrWeapon::getWeapon($player->getGameID(),1);
+//				$this->weapons[$i] = SmrWeapon::getWeapon(1);
 //		}
 		$this->checkForExcessWeapons();
 	}

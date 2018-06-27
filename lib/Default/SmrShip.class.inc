@@ -57,7 +57,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->weapons = array();
 		// generate list of weapon names the user transports
 		while ($this->db->nextRecord()) {
-			$this->weapons[$this->db->getInt('order_id')] = SmrWeapon::getWeapon($this->gameID, $this->db->getInt('weapon_type_id'), false, $this->db);
+			$this->weapons[$this->db->getInt('order_id')] = SmrWeapon::getWeapon($this->db->getInt('weapon_type_id'), false, $this->db);
 		}
 		$this->checkForExcessWeapons();
 	}
