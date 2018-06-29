@@ -94,8 +94,8 @@ elseif ($submit == 'Jump To Galaxy') {
 	$var['gal_on'] = (int)$_REQUEST['jumpgal'];
 }
 elseif ($submit == 'Toggle Link') {
-	$sector = SmrSector::getSector($var['game_id'],$var['sector_id']);
-	$sector->toggleLink($var['dir']);
+	$linkSector = SmrSector::getSector($var['game_id'],$var['sector_id']);
+	$linkSector->toggleLink($var['dir']);
 	SmrSector::saveSectors();
 }
 elseif ($submit == 'Modify Sector') {
@@ -111,20 +111,20 @@ elseif ($submit == 'Modify Sector') {
 }
 elseif ($submit == 'Create Locations') {
 	$galSectors = SmrSector::getGalaxySectors($var['game_id'],$var['gal_on']);
-	foreach ($galSectors as $sector) {
-		$sector->removeAllLocations();
+	foreach ($galSectors as $galSector) {
+		$galSector->removeAllLocations();
 	}
 	foreach (SmrLocation::getAllLocations() as $location) {
 		if (isset($_POST['loc' . $location->getTypeID()])) {
 			for ($i=0;$i<$_POST['loc' . $location->getTypeID()];$i++) {
-				$sector = $galSectors[array_rand($galSectors)]; //get random sector from start of gal to end of gal
+				$randSector = $galSectors[array_rand($galSectors)]; //get random sector from start of gal to end of gal
 				//4 per sector max locs and no locations inside fed
 				
-				while (!checkSectorAllowedForLoc($sector,$location)) {
-					$sector = $galSectors[array_rand($galSectors)]; //get valid sector
+				while (!checkSectorAllowedForLoc($randSector, $location)) {
+					$randSector = $galSectors[array_rand($galSectors)]; //get valid sector
 				}
 				
-				addLocationToSector($location,$sector);
+				addLocationToSector($location, $randSector);
 			}
 		}
 	}
@@ -254,34 +254,34 @@ elseif ($submit == 'Create Ports') {
 	}
 }
 elseif ($submit == 'Edit Sector') {
-	$sector = SmrSector::getSector($var['game_id'],$var['sector_id']);
+	$editSector = SmrSector::getSector($var['game_id'],$var['sector_id']);
 
 	//update connections
 	if (isset($_POST['up']))
-		$sector->enableLink('Up');
+		$editSector->enableLink('Up');
 	else
-		$sector->disableLink('Up');
+		$editSector->disableLink('Up');
 	if (isset($_POST['down']))
-		$sector->enableLink('Down');
+		$editSector->enableLink('Down');
 	else
-		$sector->disableLink('Down');
+		$editSector->disableLink('Down');
 	if (isset($_POST['left']))
-		$sector->enableLink('Left');
+		$editSector->enableLink('Left');
 	else
-		$sector->disableLink('Left');
+		$editSector->disableLink('Left');
 	if (isset($_POST['right']))
-		$sector->enableLink('Right');
+		$editSector->enableLink('Right');
 	else
-		$sector->disableLink('Right');
+		$editSector->disableLink('Right');
 	//update planet
 	if ($_POST['plan_type'] != '0') {
-		if (!$sector->hasPlanet()) {
-			$sector->createPlanet($_POST['plan_type']);
+		if (!$editSector->hasPlanet()) {
+			$editSector->createPlanet($_POST['plan_type']);
 		}
 		else {
-			$type = $sector->getPlanet()->getTypeID();
+			$type = $editSector->getPlanet()->getTypeID();
 			if ($_POST['plan_type'] != $type) {
-				$sector->getPlanet()->setTypeID($_POST['plan_type']);
+				$editSector->getPlanet()->setTypeID($_POST['plan_type']);
 			}
 		}
 	}
@@ -292,15 +292,15 @@ elseif ($submit == 'Edit Sector') {
 //		$GAL_PLANETS[$this_sec]['Owner Type'] = 'NPC';
 //	}
 	else {
-		$sector->removePlanet();
+		$editSector->removePlanet();
 	}
 	//update port
 	if ($_POST['port_level'] > 0) {
-		if(!$sector->hasPort()) {
-			$port = $sector->createPort();
+		if(!$editSector->hasPort()) {
+			$port = $editSector->createPort();
 		}
 		else {
-			$port = $sector->getPort();
+			$port = $editSector->getPort();
 		}
 		if ($port->getLevel()!=$_POST['port_level']) {
 			$port->upgradeToLevel($_POST['port_level']);
@@ -308,7 +308,7 @@ elseif ($submit == 'Edit Sector') {
 		}
 		$port->setRaceID($_POST['port_race']);
 		$port->update();
-	} else $sector->removePort();
+	} else $editSector->removePort();
 	//update locations
 	
 	$locationsToAdd = array();
@@ -316,30 +316,30 @@ elseif ($submit == 'Edit Sector') {
 	for($x=0;$x<UNI_GEN_LOCATION_SLOTS;$x++) {
 		if ($_POST['loc_type'.$x] != 0) {
 			$locationToAdd = SmrLocation::getLocation($_POST['loc_type'.$x]);
-			if($sector->hasLocation($locationToAdd->getTypeID()))
+			if($editSector->hasLocation($locationToAdd->getTypeID()))
 				$locationsToKeep[] = $locationToAdd;
 			else
 				$locationsToAdd[] = $locationToAdd;
 		}
 	}
-	$sector->removeAllLocations();
+	$editSector->removeAllLocations();
 	foreach($locationsToKeep as $locationToAdd) {
-		$sector->addLocation($locationToAdd);
+		$editSector->addLocation($locationToAdd);
 	}
 	foreach($locationsToAdd as $locationToAdd) {
-		addLocationToSector($locationToAdd,$sector);
+		addLocationToSector($locationToAdd,$editSector);
 	}
 	if ($_POST['warp'] > 0) {
 		$warp = SmrSector::getSector($var['game_id'], $_POST['warp']);
-		if ($sector->equals($warp)) {
+		if ($editSector->equals($warp)) {
 			create_error('We do not allow any sector to warp to itself!');
 		}
 		// Removing warps first may do extra work, but is logically simpler
 		$warp->removeWarp();
-		$sector->removeWarp();
-		$sector->setWarp($warp);
+		$editSector->removeWarp();
+		$editSector->setWarp($warp);
 	} else {
-		$sector->removeWarp();
+		$editSector->removeWarp();
 	}
 	$var['message'] = '<span class="green">Success</span> : Succesfully edited sector.';
 	SmrSector::saveSectors();
