@@ -35,7 +35,7 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 	
 	//now adapt turns
 	$player->setTurns($player->getTurns() * ($speed / $ship->getSpeed()));
-	doUNO($player,$ship);
+	doUNO($ship);
 }
 elseif ($var['func'] == 'Weapon') {
 	$weapon_id = $_REQUEST['weapon_id'];
@@ -45,7 +45,7 @@ elseif ($var['func'] == 'Weapon') {
 	}
 }
 elseif ($var['func'] == 'Uno') {
-	doUNO($player,$ship);
+	doUNO($ship);
 }
 elseif ($var['func'] == 'Warp') {
 	$sector_to = trim($_REQUEST['sector_to']);
@@ -103,9 +103,10 @@ elseif ($var['func'] == 'Race_Relations') {
 $container = create_container('skeleton.php', $var['body']);
 forward($container);
 
-function doUNO(&$player,&$ship) {
+function doUNO($ship) {
 	$maxHardware = $ship->getMaxHardware();
 	foreach($maxHardware as $key => $max) {
 		$ship->setHardware($key,$max);
 	}
+	$ship->removeUnderAttack();
 }
