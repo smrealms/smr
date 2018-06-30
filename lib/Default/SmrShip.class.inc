@@ -44,11 +44,14 @@ class SmrShip extends AbstractSmrShip {
 		$this->SQL = 'account_id='.$this->db->escapeNumber($this->getAccountID()).' AND game_id='.$this->db->escapeNumber($this->getGameID());
 		
 		$this->loadHardware();
-		$this->loadWeapon();
+		$this->loadWeapons();
 		$this->loadCargo();
 	}
 	
-	protected function loadWeapon() {
+	/**
+	 * Initialize the weapons onboard this ship.
+	 */
+	protected function loadWeapons() {
 		// determine weapon
 		$this->db->query('SELECT weapon_type.*, order_id FROM ship_has_weapon JOIN weapon_type USING (weapon_type_id)
 							WHERE ' . $this->SQL .'
