@@ -77,18 +77,12 @@ class SmrPort {
 
 	public static function removePort($gameID,$sectorID) {
 		$db = new SmrMySqlDatabase();
-		$db->query('DELETE FROM port
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-					AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM port_has_goods
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-					AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM player_visited_port
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-					AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM player_attacks_port
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-					AND sector_id = ' . $db->escapeNumber($sectorID));
+		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
+		        AND sector_id = ' . $db->escapeNumber($sectorID);
+		$db->query('DELETE FROM port WHERE ' . $SQL);
+		$db->query('DELETE FROM port_has_goods WHERE ' . $SQL);
+		$db->query('DELETE FROM player_visited_port WHERE ' . $SQL);
+		$db->query('DELETE FROM player_attacks_port WHERE ' . $SQL);
 		self::$CACHE_PORTS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
