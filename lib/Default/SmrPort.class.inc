@@ -68,9 +68,9 @@ class SmrPort {
 		self::$CACHE_CACHED_PORTS = array();
 	}
 
-	public static function &getPort($gameID,$sectorID,$forceUpdate = false) {
+	public static function &getPort($gameID, $sectorID, $forceUpdate=false, $db=null) {
 		if($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
-			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID,$sectorID);
+			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID, $sectorID, $db);
 		}
 		return self::$CACHE_PORTS[$gameID][$sectorID];
 	}
@@ -107,32 +107,37 @@ class SmrPort {
 		return ($cargo / 13) * $distance;
 	}
 	
-	protected function __construct($gameID,$sectorID) {
+	protected function __construct($gameID, $sectorID, $db=null) {
 		$this->db = new SmrMySqlDatabase();
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
-		$this->db->query('SELECT * FROM port WHERE ' . $this->SQL . ' LIMIT 1');
-		if ($this->db->nextRecord()) {
-			$this->gameID = $this->db->getInt('game_id');
-			$this->sectorID = $this->db->getInt('sector_id');
-			$this->shields = $this->db->getInt('shields');
-			$this->combatDrones = $this->db->getInt('combat_drones');
-			$this->armour = $this->db->getInt('armour');
-			$this->reinforceTime = $this->db->getInt('reinforce_time');
-			$this->attackStarted = $this->db->getInt('attack_started');
-			$this->raceID = $this->db->getInt('race_id');
-			$this->level = $this->db->getInt('level');
-			$this->credits = $this->db->getInt('credits');
-			$this->upgrade = $this->db->getInt('upgrade');
-			$this->experience = $this->db->getInt('experience');
+
+		if (isset($db)) {
+			$this->isNew = false;
+		} else {
+			$db = $this->db;
+			$db->query('SELECT * FROM port WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->isNew = !$db->nextRecord();
+		}
+
+		$this->gameID = (int) $gameID;
+		$this->sectorID = (int) $sectorID;
+		if (!$this->isNew) {
+			$this->shields = $db->getInt('shields');
+			$this->combatDrones = $db->getInt('combat_drones');
+			$this->armour = $db->getInt('armour');
+			$this->reinforceTime = $db->getInt('reinforce_time');
+			$this->attackStarted = $db->getInt('attack_started');
+			$this->raceID = $db->getInt('race_id');
+			$this->level = $db->getInt('level');
+			$this->credits = $db->getInt('credits');
+			$this->upgrade = $db->getInt('upgrade');
+			$this->experience = $db->getInt('experience');
 			
 			$this->checkDefenses();
 			$this->getGoods();
 			$this->checkForUpgrade();
 		}
 		else {
-			$this->isNew = true;
-			$this->gameID = $gameID;
-			$this->sectorID = $sectorID;
 			$this->shields = 0;
 			$this->combatDrones = 0;
 			$this->armour = 0;
