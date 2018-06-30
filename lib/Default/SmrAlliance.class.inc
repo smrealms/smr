@@ -365,7 +365,7 @@ class SmrAlliance {
 	 * Return all planets owned by members of this alliance.
 	 */
 	public function getPlanets() {
-		$this->db->query('SELECT planet.sector_id
+		$this->db->query('SELECT planet.*
 			FROM player
 			JOIN planet ON player.game_id = planet.game_id AND player.account_id = planet.owner_id
 			WHERE player.game_id=' . $this->db->escapeNumber($this->gameID) . '
@@ -374,7 +374,7 @@ class SmrAlliance {
 		');
 		$planets = array();
 		while ($this->db->nextRecord()) {
-			$planets[] = SmrPlanet::getPlanet($this->gameID, $this->db->getInt('sector_id'));
+			$planets[] = SmrPlanet::getPlanet($this->gameID, $this->db->getInt('sector_id'), false, $this->db);
 		}
 		return $planets;
 	}

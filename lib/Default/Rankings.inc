@@ -34,7 +34,7 @@ class Rankings {
 		while ($db->nextRecord()) {
 			// increase rank counter
 			$rank++;
-			$currentPlayer = SmrPlayer::getPlayer($db->getRow(), $player->getGameID());
+			$currentPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
 
 			$class='';
 			if ($player->equals($currentPlayer)) {

@@ -18,48 +18,57 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			self::$db = new SmrMySqlDatabase();
 	}
 
-	public static function &getWeapon($gameTypeID,$weaponTypeID,$forceUpdate = false) {
-		if($forceUpdate || !isset(self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID])) {
-			$w = new SmrWeapon($gameTypeID,$weaponTypeID);
-			if($w->getName()!='')
-				self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID] = $w;
+	public static function &getWeapon($weaponTypeID, $forceUpdate=false, $db=null) {
+		if($forceUpdate || !isset(self::$CACHE_WEAPONS[$weaponTypeID])) {
+			$w = new SmrWeapon($weaponTypeID, $db);
+			if ($w->exists())
+				self::$CACHE_WEAPONS[$weaponTypeID] = $w;
 			else
-				self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID] = false;
+				self::$CACHE_WEAPONS[$weaponTypeID] = false;
 		}
-		return self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID];
+		return self::$CACHE_WEAPONS[$weaponTypeID];
 	}
 
-	public static function &getAllWeapons($gameTypeID,$forceUpdate = false) {
+	public static function &getAllWeapons($forceUpdate=false) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT weapon_type_id FROM weapon_type');
+		$db->query('SELECT * FROM weapon_type');
 		$weapons=array();
 		while($db->nextRecord()) {
-			$weapons[] = self::getWeapon($gameTypeID,$db->getInt('weapon_type_id'),$forceUpdate);
+			$weapons[] = self::getWeapon($db->getInt('weapon_type_id'), $forceUpdate, $db);
 		}
 		return $weapons;
 	}
 	
-	protected function __construct($gameTypeID,$weaponTypeID) {
-		self::initialiseDatabase();
+	protected function __construct($weaponTypeID, $db=null) {
 		
-		$this->gameTypeID = $gameTypeID;
 		$this->weaponTypeID = $weaponTypeID;
-			
-		self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armour_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . self::$db->escapeNumber($weaponTypeID) . ' LIMIT 1');
 		
-		if(self::$db->nextRecord()) {
-			$this->name = self::$db->getField('weapon_name');
-			$this->raceID = self::$db->getInt('race_id');
-			$this->cost = self::$db->getInt('cost');
-			$this->shieldDamage = self::$db->getInt('shield_damage');
-			$this->armourDamage = self::$db->getInt('armour_damage');
-			$this->accuracy = self::$db->getInt('accuracy');
-			$this->powerLevel = self::$db->getInt('power_level');
-			$this->buyerRestriction = self::$db->getInt('buyer_restriction');
+		if (isset($db)) {
+			$weaponExists = true;
+		} else {
+			self::initialiseDatabase();
+			$db = self::$db;
+			self::$db->query('SELECT * FROM weapon_type WHERE weapon_type_id = ' . $db->escapeNumber($weaponTypeID) . ' LIMIT 1');
+			$weaponExists = $db->nextRecord();
+		}
+
+		if ($weaponExists) {
+			$this->name = $db->getField('weapon_name');
+			$this->raceID = $db->getInt('race_id');
+			$this->cost = $db->getInt('cost');
+			$this->shieldDamage = $db->getInt('shield_damage');
+			$this->armourDamage = $db->getInt('armour_damage');
+			$this->accuracy = $db->getInt('accuracy');
+			$this->powerLevel = $db->getInt('power_level');
+			$this->buyerRestriction = $db->getInt('buyer_restriction');
 			$this->damageRollover = false;
 			$this->raidWeapon = false;
 			$this->maxDamage = max($this->shieldDamage,$this->armourDamage);
 		}
+	}
+
+	public function exists() {
+		return !empty($this->name);
 	}
 
 	public function getBuyHREF(SmrLocation $location) {

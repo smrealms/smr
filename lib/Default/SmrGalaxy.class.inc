@@ -4,6 +4,7 @@ class SmrGalaxy {
 	protected static $CACHE_GAME_GALAXIES = array();
 	
 	protected $db;
+	protected $SQL;
 
 	protected $gameID;
 	protected $galaxyID;
@@ -21,20 +22,20 @@ class SmrGalaxy {
 	public static function &getGameGalaxies($gameID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT galaxy_id FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) .' ORDER BY galaxy_id ASC');
+			$db->query('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) .' ORDER BY galaxy_id ASC');
 			$galaxies = array();
 			while($db->nextRecord()) {
 				$galaxyID = $db->getField('galaxy_id');
-				$galaxies[$galaxyID] = self::getGalaxy($gameID,$galaxyID,$forceUpdate);
+				$galaxies[$galaxyID] = self::getGalaxy($gameID, $galaxyID, $forceUpdate, $db);
 			}
 			self::$CACHE_GAME_GALAXIES[$gameID] = $galaxies;
 		}
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
 
-	public static function &getGalaxy($gameID,$galaxyID,$forceUpdate = false) {
+	public static function &getGalaxy($gameID, $galaxyID, $forceUpdate=false, $db=null) {
 		if($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
-			$g = new SmrGalaxy($gameID,$galaxyID);
+			$g = new SmrGalaxy($gameID, $galaxyID, false, $db);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
 		}
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
@@ -56,27 +57,28 @@ class SmrGalaxy {
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
 	}
 	
-	protected function __construct($gameID, $galaxyID,$create=false) {
+	protected function __construct($gameID, $galaxyID, $create=false, $db=null) {
 		$this->db = new SmrMySqlDatabase();
+		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
+		              AND galaxy_id = ' . $this->db->escapeNumber($galaxyID);
 
-		$this->db->query('SELECT * FROM game_galaxy WHERE game_id = ' . $this->db->escapeNumber($gameID) . '
-							AND galaxy_id = ' . $this->db->escapeNumber($galaxyID) . ' LIMIT 1');
-		if($this->db->nextRecord()) {
-			$this->gameID		= $this->db->getInt('game_id');
-			$this->galaxyID		= $this->db->getInt('galaxy_id');
-			$this->name			= $this->db->getField('galaxy_name');
-			$this->width		= $this->db->getInt('width');
-			$this->height		= $this->db->getInt('height');
-			$this->galaxyType	= $this->db->getField('galaxy_type');
-			$this->maxForceTime	= $this->db->getInt('max_force_time');
+		if (isset($db)) {
+			$this->isNew = false;
+		} else {
+			$db = $this->db;
+			$db->query('SELECT * FROM game_galaxy WHERE ' . $this->SQL);
+			$this->isNew = !$db->nextRecord();
 		}
-		else if($create===true) {
-			$this->gameID		= (int)$gameID;
-			$this->galaxyID		= (int)$galaxyID;
-			$this->isNew		= true;
-			$this->maxForceTime	= 0;
-		}
-		else {
+
+		$this->gameID = (int) $gameID;
+		$this->galaxyID = (int) $galaxyID;
+		if (!$this->isNew) {
+			$this->name = $db->getField('galaxy_name');
+			$this->width = $db->getInt('width');
+			$this->height = $db->getInt('height');
+			$this->galaxyType = $db->getField('galaxy_type');
+			$this->maxForceTime = $db->getInt('max_force_time');
+		} elseif ($create === false) {
 			throw new Exception('No such galaxy: '.$gameID.'-'.$galaxyID);
 		}
 	}
@@ -89,8 +91,7 @@ class SmrGalaxy {
 										', height = ' . $this->db->escapeNumber($this->getHeight()) .
 										', galaxy_type = ' . $this->db->escapeString($this->getGalaxyType()) .
 										', max_force_time = ' . $this->db->escapeNumber($this->getMaxForceTime()) .
-									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) .
-										' AND galaxy_id = ' . $this->db->escapeNumber($this->getGalaxyID()) . ' LIMIT 1');
+									' WHERE ' . $this->SQL);
 			}
 			else {
 				$this->db->query('INSERT INTO game_galaxy (game_id,galaxy_id,galaxy_name,width,height,galaxy_type,max_force_time)

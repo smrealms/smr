@@ -806,7 +806,7 @@ class SmrPort {
 	public function &getWeapons() {
 		$weapons = array();
 		for ($i=0; $i<$this->getNumWeapons(); ++$i) {
-			$weapons[$i] = SmrWeapon::getWeapon(Globals::getGameType($this->getGameID()),WEAPON_PORT_TURRET);
+			$weapons[$i] = SmrWeapon::getWeapon(WEAPON_PORT_TURRET);
 		}
 		return $weapons;
 	}

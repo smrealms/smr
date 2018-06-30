@@ -3,7 +3,7 @@ if(!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
 
-$weapon = SmrWeapon::getWeapon($player->getGameID(), $var['WeaponTypeID']);
+$weapon = SmrWeapon::getWeapon($var['WeaponTypeID']);
 // Are we buying?
 if (!isset($var['OrderID'])) {
 	$location = SmrLocation::getLocation($var['LocationID']);

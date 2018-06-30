@@ -22,7 +22,7 @@ if (!empty($player_id)) {
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND player_name = ' . $db->escapeString($player_name) . ' LIMIT 1');
 	if ($db->nextRecord()) {
-		$resultPlayer = SmrPlayer::getPlayer($db->getRow(), $player->getGameID());
+		$resultPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
 	}
 
 	$db->query('SELECT * FROM player
@@ -32,7 +32,7 @@ if (!empty($player_id)) {
 				ORDER BY player_name LIMIT 5');
 	$similarPlayers = array();
 	while ($db->nextRecord()) {
-		$similarPlayers[] = SmrPlayer::getPlayer($db->getRow(), $player->getGameID());
+		$similarPlayers[] = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
 	}
 }
 
