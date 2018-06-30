@@ -37,9 +37,10 @@ if (isset($var['process'])) {
 	
 	require_once(get_file_loc('SmrPort.class.inc'));
 	// add port infos
-	$db->query('SELECT sector_id FROM port WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND sector_id >= ' . $db->escapeNumber($low) . ' ORDER BY sector_id');
+	$db->query('SELECT * FROM port WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND sector_id >= ' . $db->escapeNumber($low));
 	while ($db->nextRecord()) {
-		SmrPort::getPort($player->getGameID(),$db->getField('sector_id'))->addCachePort($player->getAccountID());
+		$port = SmrPort::getPort($player->getGameID(), $db->getField('sector_id'), false, $db);
+		$port->addCachePort($player->getAccountID());
 	}
 	
 	$container=create_container('skeleton.php','bar_main.php');
