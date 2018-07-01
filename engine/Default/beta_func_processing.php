@@ -8,9 +8,10 @@ if ($var['func'] == 'Map') {
 	$db->query('DELETE FROM player_visited_sector WHERE account_id = ' . $db->escapeNumber($account_id) . ' AND game_id = ' . $db->escapeNumber($game_id));
 
 	// add port infos
-	$db->query('SELECT sector_id FROM port WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY sector_id');
+	$db->query('SELECT * FROM port WHERE game_id = ' . $db->escapeNumber($game_id));
 	while ($db->nextRecord()) {
-		SmrPort::getPort($game_id,$db->getField('sector_id'))->addCachePort($account_id);
+		$port = SmrPort::getPort($game_id, $db->getField('sector_id'), false, $db);
+		$port->addCachePort($account_id);
 	}
 
 }
