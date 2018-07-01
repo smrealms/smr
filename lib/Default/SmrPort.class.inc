@@ -77,18 +77,12 @@ class SmrPort {
 
 	public static function removePort($gameID,$sectorID) {
 		$db = new SmrMySqlDatabase();
-		$db->query('DELETE FROM port
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-					AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM port_has_goods
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-					AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM player_visited_port
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-					AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM player_attacks_port
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-					AND sector_id = ' . $db->escapeNumber($sectorID));
+		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
+		        AND sector_id = ' . $db->escapeNumber($sectorID);
+		$db->query('DELETE FROM port WHERE ' . $SQL);
+		$db->query('DELETE FROM port_has_goods WHERE ' . $SQL);
+		$db->query('DELETE FROM player_visited_port WHERE ' . $SQL);
+		$db->query('DELETE FROM player_attacks_port WHERE ' . $SQL);
 		self::$CACHE_PORTS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
@@ -175,7 +169,7 @@ class SmrPort {
 			if($this->getCredits() == 0) {
 				$this->setCreditsToDefault();
 			}
-			$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			$this->db->query('DELETE FROM player_attacks_port WHERE '.$this->SQL);
 		}
 	}
 	
@@ -1017,6 +1011,7 @@ class SmrPort {
 						(game_id, sector_id, port_info_hash, port_info)
 						VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $cacheHash . ', ' . $cache.')');
 
+			// We can't use the SQL member here because CachePorts don't have it
 			$this->db->query('UPDATE player_visited_port SET visited=' . $this->db->escapeNumber($this->getCachedTime()) . ', port_info_hash=' . $cacheHash . ' WHERE visited<=' . $this->db->escapeNumber($this->getCachedTime()) . ' AND account_id IN (' . $this->db->escapeArray($accountIDs) . ') AND sector_id=' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT ' . count($accountIDs));
 
 			unset($cache);
@@ -1084,8 +1079,7 @@ class SmrPort {
 								', reinforce_time = ' . $this->db->escapeNumber($this->getReinforceTime()) .
 								', attack_started = ' . $this->db->escapeNumber($this->getAttackStarted()) .
 								', race_id = ' . $this->db->escapeNumber($this->getRaceID()) . '
-								WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
-								AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' LIMIT 1');
+								WHERE ' . $this->SQL . ' LIMIT 1');
 			}
 			else {
 				$this->db->query('INSERT INTO port (game_id,sector_id,experience,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)
@@ -1210,7 +1204,7 @@ class SmrPort {
 	protected function &getAttackersToCredit() {
 		//get all players involved for HoF
 		$attackers = array();
-		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
+		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
 		while ($this->db->nextRecord()) {
 			$attackers[] = SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
 		}
