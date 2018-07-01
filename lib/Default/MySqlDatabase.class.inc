@@ -141,10 +141,7 @@ abstract class MySqlDatabase implements Database {
 				return $this->escapeBoolean($escape,$quotes);
 		}
 		if(is_numeric($escape)) {
-			if($autoQuotes)
-				return $this->escapeNumber($escape);
-			else
-				return $this->escapeNumber($escape,$quotes);
+			return $this->escapeNumber($escape);
 		}
 		if(is_string($escape)) {
 			if($autoQuotes)
@@ -204,11 +201,14 @@ abstract class MySqlDatabase implements Database {
 		return $string;
 	}
 	
-	public function escapeNumber($num,$quotes=false) {
-		if(is_numeric($num))
-			return $this->escapeString($num,$quotes);
-		else
+	public function escapeNumber($num) {
+		// Numbers need not be quoted in MySQL queries, so if we know $num is
+		// numeric, we can simply return its value (no quoting or escaping).
+		if (is_numeric($num)) {
+			return $num;
+		} else {
 			throw new Exception('Not a number! ('.$num.')');
+		}
 	}
 	
 	public function escapeMicrotime($microtime,$quotes=false) {
