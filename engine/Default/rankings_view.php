@@ -16,14 +16,7 @@ $PHP_OUTPUT.=('<br />');
 $individualScores = $account->getIndividualScores();
 $PHP_OUTPUT.=('<b>Extended Scores</b><br />');
 foreach($individualScores as $statScore) {
-	$first=true;
-	foreach($statScore['Stat'] as $stat) {
-		if($first)
-			$first=false;
-		else
-			$PHP_OUTPUT.=' - ';
-		$PHP_OUTPUT.=$stat;
-	}
+	$PHP_OUTPUT .= join(' - ', $statScore['Stat']);
 	$PHP_OUTPUT.=(', has a stat of '.number_format($account->getHOF($statScore['Stat'])).' and a score of ' . number_format(round($statScore['Score'])).' (roughly)<br />');
 }
 
@@ -33,14 +26,7 @@ if (SmrSession::$game_id != 0) {
 	$PHP_OUTPUT.=('<b>Current Game Extended Stats</b><br />');
 	$individualScores = $account->getIndividualScores($player);
 	foreach($individualScores as $statScore) {
-		$first=true;
-		foreach($statScore['Stat'] as $stat) {
-			if($first)
-				$first=false;
-			else
-				$PHP_OUTPUT.=' - ';
-			$PHP_OUTPUT.=$stat;
-		}
+		$PHP_OUTPUT .= join(' - ', $statScore['Stat']);
 		$PHP_OUTPUT.=(', has a stat of '.number_format($player->getHOF($statScore['Stat'])).' and a score of ' . number_format(round($statScore['Score'])).' (roughly)<br />');
 	}
 }
