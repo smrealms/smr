@@ -18,35 +18,30 @@ if ($player->getRelation($raceID) <= RELATIONS_WAR) {
 	create_error('We are at WAR with your race! Get outta here before I call the guards!');
 }
 
-$template->assign('PageTopic','Federal Headquarters');
+$template->assign('PageTopic', $location->getName());
 
 // header menu
 require_once(get_file_loc('menu_hq.inc'));
 create_hq_menu();
 
-$PHP_OUTPUT.='<div align="center">';
+$warRaces = [];
 if ($raceID != RACE_NEUTRAL) {
 	$races = Globals::getRaces();
 	$raceRelations = Globals::getRaceRelations($player->getGameID(), $raceID);
-	$PHP_OUTPUT.=('We are at WAR with<br /><br />');
 	foreach($raceRelations as $otherRaceID => $relation) {
 		if ($relation <= RELATIONS_WAR) {
-			$PHP_OUTPUT.=('<span class="red">The '.$races[$otherRaceID]['Race Name'].'<br /></span>');
+			$warRaces[] = $races[$otherRaceID]['Race Name'];
 		}
 	}
-	$PHP_OUTPUT.=('<br />The government will PAY for the destruction of their ships!');
 }
+$template->assign('WarRaces', $warRaces);
 
 require_once(get_file_loc('gov.functions.inc'));
-displayBountyList($PHP_OUTPUT,'HQ',0);
-displayBountyList($PHP_OUTPUT,'HQ',$player->getAccountID());
-
+$template->assign('AllBounties', getBounties('HQ'));
+$template->assign('MyBounties', $player->getClaimableBounties('HQ'));
 
 if ($player->getAlignment() > ALIGNMENT_EVIL && $player->getAlignment() <= ALIGNMENT_GOOD) {
 	$container = create_container('government_processing.php');
 	transfer('LocationID');
-	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=create_submit('Become a deputy');
-	$PHP_OUTPUT.=('</form>');
+	$template->assign('JoinHREF', SmrSession::getNewHREF($container));
 }
-$PHP_OUTPUT.='</div>';
