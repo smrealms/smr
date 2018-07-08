@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Returns a list of all bounties for given location $type.
+ * Returns a list of all active (not claimable) bounties for given location $type.
  */
 function getBounties($type) {
 	$db = new SmrMySqlDatabase();
