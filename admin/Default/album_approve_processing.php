@@ -1,11 +1,6 @@
 <?php
 
-if ($_REQUEST['action'] == 'Approve') {
-	$approved = 'YES';
-}
-else {
-	$approved = 'NO';
-}
+$approved = $var['approved'] ? 'YES' : 'NO';
 
 $db->query('UPDATE album
 			SET approved = '.$db->escapeString($approved).'
