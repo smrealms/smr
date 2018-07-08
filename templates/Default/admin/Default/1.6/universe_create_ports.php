@@ -12,7 +12,7 @@
 					foreach ($TotalPorts as $Level => $Count) { ?>
 						<tr>
 							<td class="right">Level <?php echo $Level; ?></td>
-							<td><input type="number" value="<?php echo $Count; ?>" size="5" name="port<?php echo $Level; ?>" onFocus="startCalc();" onBlur="stopCalc();"></td>
+							<td><input type="number" value="<?php echo $Count; ?>" size="5" name="port<?php echo $Level; ?>" onInput="levelCalc();"></td>
 						</tr><?php
 					} ?>
 					<tr>
@@ -31,7 +31,7 @@
 					foreach (Globals::getRaces() as $race) { ?>
 						<tr>
 							<td class="right"><?php echo $race['Race Name']; ?></td>
-							<td><input type="number" size="5" name="race<?php echo $race['Race ID']; ?>" value="0" onFocus="startRaceCalc();" onBlur="stopRaceCalc();"></td>
+							<td><input type="number" size="5" name="race<?php echo $race['Race ID']; ?>" value="0" onInput="raceCalc();"></td>
 						</tr><?php
 					} ?>
 					<tr>
