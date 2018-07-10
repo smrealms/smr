@@ -1,29 +1,18 @@
 <?php
 
-
-function displayBountyList(&$PHP_OUTPUT,$type,$claimableBy) {
+/**
+ * Returns a list of all active (not claimable) bounties for given location $type.
+ */
+function getBounties($type) {
 	$db = new SmrMySqlDatabase();
-	$db->query('SELECT * FROM bounty WHERE game_id = '.$db->escapeNumber(SmrSession::$game_id).' AND type ='.$db->escapeString($type).' AND claimer_id = '.$db->escapeNumber($claimableBy).' ORDER BY amount DESC');
-	$PHP_OUTPUT.=('<p>&nbsp;</p>');
-	if ($db->getNumRows()) {
-		$wantedBy = $type == 'HQ' ? 'Federal Government' : 'Underground';
-		$PHP_OUTPUT.=('<div align="center">'.($claimableBy==0 ? 'Most wanted by the '.$wantedBy : 'Claimable Bounties').'</div><br />');
-		$PHP_OUTPUT.=create_table();
-		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<th>Player Name</th>');
-		$PHP_OUTPUT.=('<th>Bounty Amount (Credits)</th>');
-		$PHP_OUTPUT.=('<th>Bounty Amount (SMR credits)</th>');
-		$PHP_OUTPUT.=('</tr>');
-
-		while ($db->nextRecord()) {
-			$bountyPlayer = SmrPlayer::getPlayer($db->getField('account_id'),SmrSession::$game_id);
-			$PHP_OUTPUT.=('<tr>');
-			$PHP_OUTPUT.=('<td align="center">'.$bountyPlayer->getLinkedDisplayName().'</td>');
-			$PHP_OUTPUT.=('<td align="center"><span class="creds"> ' . number_format($db->getField('amount')) . ' </span></td>');
-			$PHP_OUTPUT.=('<td align="center"><span class="red"> ' . number_format($db->getField('smr_credits')) . ' </span></td>');
-			$PHP_OUTPUT.=('</tr>');
-
-		}
-		$PHP_OUTPUT.=('</table>');
+	$db->query('SELECT * FROM bounty WHERE game_id = '.$db->escapeNumber(SmrSession::$game_id).' AND type ='.$db->escapeString($type).' AND claimer_id = 0 ORDER BY amount DESC');
+	$bounties = [];
+	while ($db->nextRecord()) {
+		$bounties[] = [
+			'player' => SmrPlayer::getPlayer($db->getInt('account_id'), SmrSession::$game_id),
+			'credits' => $db->getInt('amount'),
+			'smr_credits' => $db->getInt('smr_credits')
+		];
 	}
+	return $bounties;
 }
