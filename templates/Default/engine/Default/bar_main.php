@@ -1,5 +1,5 @@
 <?php
-if(isset($IncludeScript)) {
+if (empty($PHP_OUTPUT)) {
 	$this->includeTemplate($IncludeScript);
 }
 else {

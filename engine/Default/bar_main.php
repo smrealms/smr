@@ -37,6 +37,4 @@ $db->query('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(TIM
 //include bar part
 require_once(get_file_loc($script));
 
-if($script == 'bar_opening.php') {
-	$template->assign('IncludeScript',$script);
-}
+$template->assign('IncludeScript',$script);
