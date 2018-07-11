@@ -36,8 +36,8 @@ if (isset($var['process'])) {
 }
 else {
 	//they can buy the ticker...first we need to find out what they want
-	$tickers = $player->getTickers();
-	foreach($tickers as $ticker) {
+	$tickers = [];
+	foreach ($player->getTickers() as $ticker) {
 		$type = $ticker['Type'];
 		if ($ticker['Type'] == 'NEWS') {
 			$type = 'News Ticker';
@@ -48,26 +48,12 @@ else {
 		if ($ticker['Type'] == 'BLOCK') {
 			$type = 'Scout Message Blocker';
 		}
-		$left = $ticker['Expires'] - TIME;
-		$days = floor($left / 86400);
-		$left -= $days * 86400;
-		$hours = floor($left / 3600);
-		$left -= $hours * 3600;
-		$mins = floor($left / 60);
-		$left -= $mins * 60;
-		$remain = $days.' Days, '.$hours.' Hours, '.$mins.' Minutes, '.$left.' Seconds';
-		$PHP_OUTPUT.=('You own a '.$type.' for another '.$remain.'.<br />');
-//		if ($type == 'News Ticker') $PHP_OUTPUT.=('Note: If you select Scout Message Ticker you will lose your Current News Ticker<br />');
-//		if ($type == 'Scout Message Ticker') $PHP_OUTPUT.=('Note: If you select Current News Ticker you will lose your Scout Message Ticker<br />');
+		$tickers[$type] = $ticker['Expires'] - TIME;
 	}
-	$PHP_OUTPUT.=('Great idea!  So what do you want us to configure your system to do?<br />');
+	$template->assign('Tickers', $tickers);
+
 	$container = create_container('skeleton.php', 'bar_main.php');
 	$container['script'] = 'bar_ticker_buy.php';
 	$container['process'] = 'yes';
-	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type="radio" name="type" value="SCOUT">Send Scout Messages<br />');
-	$PHP_OUTPUT.=('<input type="radio" name="type" value="NEWS">Send Recent News<br />');
-	$PHP_OUTPUT.=('<input type="radio" name="type" value="BLOCK">Block Scout Message Tickers<br /><small>This will only block messages to tickers, it will not completely block scout messages</small><br />');
-	$PHP_OUTPUT.=create_submit('Continue');
-	$PHP_OUTPUT.=('</form>');
+	$template->assign('BuyHREF', SmrSession::getNewHREF($container));
 }
