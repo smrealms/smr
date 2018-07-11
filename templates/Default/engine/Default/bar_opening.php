@@ -1,4 +1,11 @@
 <?php echo $Message; ?>
+
+<p>What can I do for ya?</p>
+<div class="buttonA">
+	<a class="buttonA" href="<?php echo $GossipHREF; ?>">&nbsp;Talk to Bartender&nbsp;</a>
+</div>
+<br /><br />
+
 <h2>Drinks</h2><br />
 Wanna buy a drink? I got some good stuff! Just what you need after a hard day's hunting.<br /><br />
 
@@ -8,12 +15,6 @@ Wanna buy a drink? I got some good stuff! Just what you need after a hard day's 
 <div class="buttonA">
 	<a class="buttonA" href="<?php echo Globals::getBarBuyWaterHREF(); ?>">&nbsp;Buy some water ($10)&nbsp;</a>
 </div>
-
-<?php
-//$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'bar_talk_bartender.php'));
-//$PHP_OUTPUT.=create_submit('Talk to bartender');
-//$PHP_OUTPUT.=('</form>');
-?>
 
 <br />
 <br />
