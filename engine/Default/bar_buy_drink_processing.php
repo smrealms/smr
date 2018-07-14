@@ -10,7 +10,7 @@ $player->decreaseCredits(10);
 
 if (isset($var['action']) && $var['action'] != 'drink') {
 	$drinkName = 'water';
-	$message.= 'You ask the bartender for some water and you quickly down it.<br />You dont feel quite so intoxicated anymore.<br />';
+	$message.= 'You ask the bartender for some water and you quickly down it.<br />You don\'t feel quite so intoxicated anymore.<br />';
 	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
 	$player->increaseHOF(1,array('Bar','Drinks', 'Water'), HOF_PUBLIC);
 }
@@ -67,15 +67,11 @@ else {
 	$db->nextRecord();
 	$num_drinks = $db->getInt('count(*)');
 	//display woozy message
-	$message.= '<br />You feel a little W';
-	for ($i = 1; $i <= $num_drinks; ++$i) {
-		$message.= 'oO';
-	}
-	$message.= 'zy<br />';
+	$message.= '<br />You feel a little W'.str_repeat('oO', $num_drinks).'zy<br />';
 }
 
 $player->actionTaken('BuyDrink', array(
-	'Sector' => &$sector,
+	'Sector' => $sector,
 	'Drink' => $drinkName
 ));
 
