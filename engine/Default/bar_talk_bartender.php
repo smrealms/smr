@@ -10,6 +10,7 @@ if (isset($_REQUEST['gossip_tell'])) {
 	}
 
 	$db->query('INSERT INTO bar_tender (game_id, message_id, message) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($amount) . ',  ' . $db->escapeString($_REQUEST['gossip_tell']) . ' )');
+	SmrAccount::doMessageSendingToBox($player->getAccountID(), BOX_BARTENDER, $_REQUEST['gossip_tell'], $player->getGameID());
 
 	SmrSession::updateVar('Message', 'Huh, that\'s news to me...<br /><br />Got anything else to tell me?');
 }
