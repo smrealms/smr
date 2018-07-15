@@ -165,6 +165,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->shipID = $db->getInt('ship_type_id');
 			$this->kills = $db->getInt('kills');
 			$this->deaths = $db->getInt('deaths');
+			$this->assists = $db->getInt('assists');
 			$this->lastPort = $db->getInt('last_port');
 			$this->bank = $db->getInt('bank');
 			$this->zoom = $db->getInt('zoom');
@@ -1149,6 +1150,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', ship_type_id='.$this->db->escapeNumber($this->shipID).
 				', kills='.$this->db->escapeNumber($this->kills).
 				', deaths='.$this->db->escapeNumber($this->deaths).
+				', assists='.$this->db->escapeNumber($this->assists).
 				', last_port='.$this->db->escapeNumber($this->lastPort).
 				', bank='.$this->db->escapeNumber($this->bank).
 				', zoom='.$this->db->escapeString($this->zoom).
