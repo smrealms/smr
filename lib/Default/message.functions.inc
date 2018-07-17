@@ -21,6 +21,7 @@ function getAdminBoxNames() {
 		BOX_GLOBALS => 'Global Messages',
 		BOX_ALLIANCE_DESCRIPTIONS => 'Alliance Descriptions',
 		BOX_ALBUM_COMMENTS => 'Photo Album Comments',
+		BOX_BARTENDER => 'Bartender Gossip',
 	];
 }
 
