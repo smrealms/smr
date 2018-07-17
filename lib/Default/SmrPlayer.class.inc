@@ -1747,4 +1747,31 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 		return false;
 	}
+
+	function getExperienceRank() {
+		return $this->computeRanking('experience', $this->getExperience());
+	}
+	function getKillsRank() {
+		return $this->computeRanking('kills', $this->getKills());
+	}
+	function getDeathsRank() {
+		return $this->computeRanking('deaths', $this->getDeaths());
+	}
+	function getAssistsRank() {
+		return $this->computeRanking('assists', $this->getAssists());
+	}
+	private function computeRanking($dbField, $playerAmount) {
+		$this->db->query('SELECT count(*) FROM player
+			WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+			AND (
+				'.$dbField.' > '.$this->db->escapeNumber($playerAmount).'
+				OR (
+					'.$dbField.' = '.$this->db->escapeNumber($playerAmount).'
+					AND player_name <= ' . $this->db->escapeString($this->getPlayerName()) . '
+				)
+			)');
+		$this->db->nextRecord();
+		$rank = $this->db->getInt('count(*)');
+		return $rank;
+	}
 }

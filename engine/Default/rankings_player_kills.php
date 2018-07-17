@@ -7,17 +7,7 @@ require_once(get_file_loc('menu.inc'));
 create_ranking_menu(0, 2);
 
 // what rank are we?
-$db->query('SELECT count(*) FROM player
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-			AND (
-				kills > '.$db->escapeNumber($player->getKills()).'
-				OR (
-					kills = '.$db->escapeNumber($player->getKills()).'
-					AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . '
-				)
-			)');
-$db->nextRecord();
-$ourRank = $db->getInt('count(*)');
+$ourRank = $player->getKillsRank();
 $template->assign('OurRank', $ourRank);
 
 $totalPlayers = $player->getGame()->getTotalPlayers();
