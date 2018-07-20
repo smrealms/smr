@@ -33,6 +33,7 @@ abstract class AbstractSmrPlayer {
 	protected $shipID;
 	protected $kills;
 	protected $deaths;
+	protected $assists;
 	protected $gadgets;
 	protected $stats;
 	protected $pureRelations;
@@ -283,6 +284,18 @@ abstract class AbstractSmrPlayer {
 			return;
 		$this->deaths = $deaths;
 		$this->hasChanged=true;
+	}
+
+	public function getAssists() {
+		return $this->assists;
+	}
+
+	public function increaseAssists($assists) {
+		if ($assists < 1) {
+			throw new Exception('Must increase by a positive number.');
+		}
+		$this->assists += $assists;
+		$this->hasChanged = true;
 	}
 
 	public function getAlignment() {

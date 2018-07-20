@@ -39,18 +39,32 @@ foreach ($fightingPlayers as $teamPlayers) {
 $player->takeTurns(3);
 $player->update();
 
+function teamAttack(&$results, $fightingPlayers, $attack, $defend) {
+	foreach ($fightingPlayers[$attack] as $accountID => $teamPlayer) {
+		$playerResults =& $teamPlayer->shootPlayers($fightingPlayers[$defend]);
+		$results[$attack]['Traders'][$teamPlayer->getAccountID()] =& $playerResults;
+		$results[$attack]['TotalDamage'] += $playerResults['TotalDamage'];
+
+		// Award assists (if there are multiple attackers)
+		if (count($fightingPlayers[$attack]) > 1) {
+			foreach ($playerResults['Weapons'] as $weaponResults) {
+				if (isset($weaponResults['KillResults'])) {
+					foreach ($fightingPlayers[$attack] as $assistPlayer) {
+						if (!$assistPlayer->equals($teamPlayer)) {
+							$assistPlayer->increaseAssists(1);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 $results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0),
 				'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
-foreach ($fightingPlayers['Attackers'] as $accountID => $teamPlayer) {
-	$playerResults =& $teamPlayer->shootPlayers($fightingPlayers['Defenders']);
-	$results['Attackers']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
-	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
-}
-foreach ($fightingPlayers['Defenders'] as $accountID => $teamPlayer) {
-	$playerResults =& $teamPlayer->shootPlayers($fightingPlayers['Attackers']);
-	$results['Defenders']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
-	$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
-}
+teamAttack($results, $fightingPlayers, 'Attackers', 'Defenders');
+teamAttack($results, $fightingPlayers, 'Defenders', 'Attackers');
+
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 $account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'].' and the other team does '.$results['Defenders']['TotalDamage'], $sector->getSectorID());
