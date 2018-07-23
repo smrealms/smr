@@ -666,7 +666,7 @@ class AbstractSmrPort {
 	public function setUpgrade($upgrade) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
-		if($this->getLevel() == self::MAX_LEVEL) {
+		if($this->getLevel() == $this->getMaxLevel()) {
 			$upgrade = 0;
 		}
 		if($this->upgrade == $upgrade)
@@ -759,7 +759,8 @@ class AbstractSmrPort {
 	}
 
 	public function getMaxLevel() {
-		return self::MAX_LEVEL;
+		// Hunter Wars redefines this, so use lazy static binding
+		return static::MAX_LEVEL;
 	}
 	
 	public function getShields() {
