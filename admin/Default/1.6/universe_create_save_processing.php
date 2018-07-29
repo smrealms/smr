@@ -181,13 +181,7 @@ elseif ($submit == 'Create Planets') {
 	}
 //	$numberOfNpcPlanets = $_POST['NPC'];
 
-	$allowedTypeIDs = array();
-	$db->query('SELECT planet_type_id FROM planet_type');
-	while ($db->nextRecord()) {
-		$allowedTypeIDs[] = $db->getInt('planet_type_id');
-	}
-
-	foreach ($allowedTypeIDs as $planetTypeID) {
+	foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $planetTypeID) {
 		$numberOfPlanets = $_POST['type' . $planetTypeID];
 		for ($i=1;$i<=$numberOfPlanets;$i++) {
 			$galSector = $galSectors[array_rand($galSectors)];

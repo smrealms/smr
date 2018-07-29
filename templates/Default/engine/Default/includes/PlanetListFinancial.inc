@@ -29,7 +29,7 @@ if (count($Planets) > 0) { ?>
 					<td class="sort_sector center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getName(); ?></a>)</td>
 
 					<?php
-					if ($Planet->hasMenuOptions('FINANCE')) { ?>
+					if ($Planet->hasMenuOption('FINANCE')) { ?>
 						<td class="sort_credits center"><?php echo number_format($Planet->getCredits()); ?></td>
 						<td class="sort_bonds center"><?php echo number_format($Planet->getBonds()); ?></td>
 						<td class="sort_interest center"><?php echo $Planet->getInterestRate() * 100; ?>%</td>

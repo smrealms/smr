@@ -25,11 +25,8 @@ if ($editSector->hasPlanet()) {
 	$selectedType = $editSector->getPlanet()->getTypeID();
 }
 
-$db->query('SELECT * FROM planet_type');
-while ($db->nextRecord()) {
-	$type = $db->getInt('planet_type_id');
-	$PHP_OUTPUT.= '<option value="'.$type.'"'.($type == $selectedType ? ' selected' : '').'>'.$db->getField('planet_type_name').'</option>';
-
+foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $type) {
+	$PHP_OUTPUT.= '<option value="'.$type.'"'.($type == $selectedType ? ' selected' : '').'>'.SmrPlanetType::getTypeInfo($type)->name().'</option>';
 }
 //$PHP_OUTPUT.= '<option value="Uninhab"' . ($editSector->hasPlanet() ? ' selected' : '') . '>Uninhabitable Planet</option>';
 //$PHP_OUTPUT.= '<option value="NPC"' . ($planet_type == 'NPC' ? ' selected' : '') . '>NPC Planet</option>';
