@@ -36,6 +36,12 @@ class SmrPlanetStructureType {
 			GOODS_FOOD => 35,
 			GOODS_CIRCUITRY => 15,
 		],
+		PLANET_WEAPON_MOUNT => [
+			GOODS_WOOD => 20,
+			GOODS_FOOD => 15,
+			GOODS_MACHINERY => 10,
+			GOODS_SLAVES => 5,
+		],
 	];
 
 	/**
@@ -65,6 +71,12 @@ class SmrPlanetStructureType {
 			'image' => 'turret.png',
 			'tooltip' => 'Turrets fire heavy laser beams. They can destroy either 250 shields or 250 armour.',
 			'summary' => 'Builds a turret capable of dealing 250 damage to enemy ships when fired on',
+		],
+		PLANET_WEAPON_MOUNT => [
+			'name' => 'Weapon Mount',
+			'image' => 'turret.png',
+			'tooltip' => 'Weapon mounts can be fitted with ship weapons.',
+			'summary' => 'Builds a weapon mount capable of being fitted with ship weapons',
 		],
 	];
 

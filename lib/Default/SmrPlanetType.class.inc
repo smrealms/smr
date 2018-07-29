@@ -23,6 +23,7 @@ abstract class SmrPlanetType {
 		2 => 'AridPlanet',
 		3 => 'DwarfPlanet',
 		4 => 'DefenseWorld',
+		5 => 'ProtoPlanet',
 	];
 
 	/**
@@ -141,6 +142,35 @@ class DwarfPlanet extends SmrPlanetType {
 	function description()  { return "A smaller than usual planet, with no native life present."; }
 	function maxAttackers() { return 5; }
 	function maxLanded()    { return self::MAX_LANDED_UNLIMITED; }
+	function menuOptions()  { return self::DEFAULT_MENU_OPTIONS; }
+}
+
+class ProtoPlanet extends SmrPlanetType {
+	const STRUCTURES = [
+		PLANET_HANGAR => [
+			'max_amount' => 40,
+			'base_time' => 21600,
+			'credit_cost' => 100000,
+			'exp_gain' => 180,
+		],
+		PLANET_BUNKER => [
+			'max_amount' => 20,
+			'base_time' => 10800,
+			'credit_cost' => 50000,
+			'exp_gain' => 90,
+		],
+		PLANET_WEAPON_MOUNT => [
+			'max_amount' => 20,
+			'base_time' => 32400,
+			'credit_cost' => 500000,
+			'exp_gain' => 270,
+		],
+	];
+	function name()         { return "Protoplanet"; }
+	function imageLink()    { return "images/planet5.png"; }
+	function description()  { return "A developing planet, not yet able to support the infrastructure of advanced technologies."; }
+	function maxAttackers() { return 5; }
+	function maxLanded()    { return 5; }
 	function menuOptions()  { return self::DEFAULT_MENU_OPTIONS; }
 }
 

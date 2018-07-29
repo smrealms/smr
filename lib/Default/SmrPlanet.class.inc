@@ -29,12 +29,14 @@ class SmrPlanet {
 	protected $buildings;
 	protected $inhabitableTime;
 	protected $currentlyBuilding;
+	protected $mountedWeapons;
 	protected $typeID;
 	protected $typeInfo;
 	
 	protected $hasChanged = false;
 	protected $hasChangedFinancial = false;  // for credits, bond, maturity
 	protected $hasChangedStockpile = false;
+	protected $hasChangedWeapons = array();
 	protected $hasChangedBuildings = array();
 	protected $hasStoppedBuilding = array();
 	protected $isNew = false;
@@ -328,6 +330,10 @@ class SmrPlanet {
 		if ($this->getArmour() > $this->getMaxArmour()) {
 				$this->setArmour($this->getMaxArmour());
 		}
+		while (count($this->getMountedWeapons()) > $this->getMaxMountedWeapons()) {
+			$maxOrderID = max(array_keys($this->getMountedWeapons()));
+			$this->removeMountedWeapon($maxOrderID);
+		}
 	}
 
 	public function getShields($delayed = false) {
@@ -463,6 +469,37 @@ class SmrPlanet {
 
 	public function getMaxCDs() {
 		return $this->getBuilding(PLANET_HANGAR) * PLANET_HANGAR_DRONES;
+	}
+
+	public function getMountedWeapons() {
+		if (!isset($this->mountedWeapons)) {
+			$this->mountedWeapons = [];
+			if ($this->hasBuilding(PLANET_WEAPON_MOUNT)) {
+				$this->db->query('SELECT weapon_type.*, order_id FROM planet_has_weapon JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
+				while ($this->db->nextRecord()) {
+					$weaponTypeID = $this->db->getInt('weapon_type_id');
+					$orderID = $this->db->getInt('order_id');
+					$this->mountedWeapons[$orderID] = SmrWeapon::getWeapon($weaponTypeID, false, $this->db);
+				}
+			}
+		}
+		return $this->mountedWeapons;
+	}
+
+	public function addMountedWeapon($weaponTypeID, $orderID) {
+		$this->getMountedWeapons(); // Make sure array is initialized
+		$this->mountedWeapons[$orderID] = SmrWeapon::getWeapon($weaponTypeID);
+		$this->hasChangedWeapons[$orderID] = true;
+	}
+
+	public function removeMountedWeapon($orderID) {
+		$this->getMountedWeapons(); // Make sure array is initialized
+		unset($this->mountedWeapons[$orderID]);
+		$this->hasChangedWeapons[$orderID] = true;
+	}
+
+	public function getMaxMountedWeapons() {
+		return $this->getBuilding(PLANET_WEAPON_MOUNT);
 	}
 
 	public function isDestroyed($delayed = false) {
@@ -728,6 +765,15 @@ class SmrPlanet {
 			}
 		}
 
+		if ($this->hasChangedWeapons) {
+			foreach (array_keys($this->hasChangedWeapons) as $orderID) {
+				if (isset($this->mountedWeapons[$orderID])) {
+					$this->db->query('INSERT INTO planet_has_weapon (game_id, sector_id, order_id, weapon_type_id) VALUES ('.$this->db->escapeNumber($this->getGameID()).','.$this->db->escapeNumber($this->getSectorID()).','.$this->db->escapeNumber($orderID).','.$this->db->escapeNumber($this->mountedWeapons[$orderID]->getWeaponTypeID()).')');
+				} else {
+					$this->db->query('DELETE FROM planet_has_weapon WHERE '.$this->SQL.' AND order_id='.$this->db->escapeNumber($orderID));
+				}
+			}
+		}
 
 		if(count($this->hasStoppedBuilding)>0) {
 			$this->db->query('DELETE FROM planet_is_building WHERE ' . $this->SQL . '
@@ -993,9 +1039,9 @@ class SmrPlanet {
 	}
 
 	public function &getWeapons() {
-		$weapons = array();
-		for($i=0;$i<$this->getBuilding(PLANET_TURRET);++$i) {
-			$weapons[$i] = SmrWeapon::getWeapon(WEAPON_PLANET_TURRET);
+		$weapons = $this->getMountedWeapons();
+		for($i=0; $i<$this->getBuilding(PLANET_TURRET); ++$i) {
+			$weapons[] = SmrWeapon::getWeapon(WEAPON_PLANET_TURRET);
 		}
 		return $weapons;
 	}
@@ -1038,7 +1084,7 @@ class SmrPlanet {
 	function &checkForDowngrade($damage) {
 		$results = '';
 		// Chance of planetary structure damage = For every 70 damage there is a 15% chance of destroying a structure.
-		// Turrets have a 1 in 6 chance of being destroyed
+		// Turrets/Weapon Mounts have a 1 in 6 chance of being destroyed
 		// Hangers have a 2 in 6 chance of being destroyed
 		// Generators/Bunkers 3 in 6 chance of being destroyed
 		//iterate over all chances
@@ -1054,7 +1100,12 @@ class SmrPlanet {
 							$this->destroyBuilding(PLANET_TURRET, 1);
 							break;
 						}
-						//if no turrets we fall through
+						//if no turrets try weapon mounts
+						if ($this->hasBuilding(PLANET_WEAPON_MOUNT)) {
+							$results .= 'This team destroys <span style = "color:red;">1</span> weapon mount.<br />';
+							$this->destroyBuilding(PLANET_WEAPON_MOUNT, 1);
+							break;
+						}
 					case 2:
 					case 3:
 						//destroy a hangar
