@@ -1146,7 +1146,7 @@ class SmrPlanet {
 						}
 						//if no gens try bunker
 						if ($this->hasBuilding(PLANET_BUNKER)) {
-							$results .= 'This team destroys <span style ="color:red;">1</span> generator.<br />';
+							$results .= 'This team destroys <span style ="color:red;">1</span> bunker.<br />';
 							$this->destroyBuilding(PLANET_BUNKER, 1);
 							$this->checkForExcessDefense();
 							break;
