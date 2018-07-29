@@ -109,6 +109,22 @@ const RACE_WQHUMAN = 8;
 const RACE_NIJARIN = 9;
 
 /*
+ * Trade goods
+ */
+const GOODS_WOOD = 1;
+const GOODS_FOOD = 2;
+const GOODS_ORE = 3;
+const GOODS_PRECIOUS_METALS = 4;
+const GOODS_SLAVES = 5;
+const GOODS_TEXTILES = 6;
+const GOODS_MACHINERY = 7;
+const GOODS_CIRCUITRY = 8;
+const GOODS_WEAPONS = 9;
+const GOODS_COMPUTERS = 10;
+const GOODS_LUXURY_ITEMS = 11;
+const GOODS_NARCOTICS = 12;
+
+/*
  * Ship types
  */
 
