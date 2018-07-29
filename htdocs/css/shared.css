@@ -137,6 +137,9 @@ div.secNavBox div.move_warp {
 	font-weight: bold;
 	color: blue;
 }
+.hide {
+	display: none;
+}
 .bold {
 	font-weight: bold;
 }

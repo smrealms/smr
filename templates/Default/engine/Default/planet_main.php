@@ -79,6 +79,12 @@ if (isset($Msg)) {
 					<td align="center"><span id="planetTurrets2"><?php echo $ThisPlanet->getBuilding(PLANET_TURRET); ?></span> / <?php echo $ThisPlanet->getMaxBuildings(PLANET_TURRET); ?></td>
 					<td align="center"><span id="planetAcc"><?php echo number_format($ThisPlanet->accuracy(), 2); ?></span> %</td>
 				</tr>
+				<?php }	if ($ThisPlanet->hasBuilding(PLANET_WEAPON_MOUNT)) { ?>
+				<tr>
+					<td><img src="images/weapon_shop.png"  width="16" height="16" alt="" title="Weapon"/>&nbsp;Mounted Weapons</td>
+					<td align="center"><span id="planetWeapons"><?php echo count($ThisPlanet->getMountedWeapons()); ?></span> / <?php echo $ThisPlanet->getBuilding(PLANET_WEAPON_MOUNT); ?></td>
+					<td align="center">&nbsp;</td>
+				</tr>
 				<?php } ?>
 				</table>
 			<?php } ?>
