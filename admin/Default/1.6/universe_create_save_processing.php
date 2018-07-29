@@ -199,7 +199,7 @@ elseif ($submit == 'Create Planets') {
 }
 elseif ($submit == 'Create Ports') {
 	$totalPorts=0;
-	for ($i=1;$i<=9;$i++) {
+	for ($i=1; $i<=SmrPort::MAX_LEVEL; $i++) {
 		$totalPorts+=$_REQUEST['port' . $i];
 	}
 	$totalRaceDist=0;
@@ -227,7 +227,7 @@ elseif ($submit == 'Create Ports') {
 			$assignedPorts++;
 		}
 		//iterate through levels 1-9 port
-		for ($i=1;$i<=9;$i++) {
+		for ($i=1; $i<=SmrPort::MAX_LEVEL; $i++) {
 			//iterate once for each port of this level
 			for ($j=0;$j<$_REQUEST['port' . $i];$j++) {
 				//get a sector for this port
