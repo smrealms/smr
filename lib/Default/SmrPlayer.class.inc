@@ -326,7 +326,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	public function setSectorID($sectorID) {
-		require_once('SmrPort.class.inc');
+		require_once(get_file_loc('SmrPort.class.inc'));
 		$port = SmrPort::getPort($this->getGameID(),$this->getSectorID());
 		$port->addCachePort($this->getAccountID()); //Add port of sector we were just in, to make sure it is left totally up to date.
 
