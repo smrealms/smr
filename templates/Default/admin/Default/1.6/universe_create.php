@@ -86,8 +86,8 @@ if (count($EditGames) == 0) { ?>
 		<td class="right">Game Type</td>
 		<td>
 			<select name="game_type" id="InputFields"><?php
-			foreach($GameTypes as $GameType) {
-				?><option value="<?php echo htmlspecialchars($GameType); ?>"><?php echo $GameType; ?></option><?php
+			foreach($GameTypes as $GameTypeID => $GameType) {
+				?><option value="<?php echo $GameTypeID; ?>"><?php echo $GameType; ?></option><?php
 			} ?>
 			</select>
 		</td>

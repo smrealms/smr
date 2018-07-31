@@ -19,7 +19,7 @@ class SmrGame {
 	protected $maxPlayers;
 	protected $maxTurns;
 	protected $startTurns;
-	protected $gameType;
+	protected $gameTypeID;
 	protected $creditsNeeded;
 	protected $gameSpeed;
 	protected $enabled;
@@ -32,6 +32,19 @@ class SmrGame {
 
 	protected $hasChanged = false;
 	protected $isNew = false;
+
+	const GAME_TYPE_DEFAULT = 0;
+	const GAME_TYPE_SEMI_WARS = 4;
+	const GAME_TYPE_DRAFT = 5;
+	const GAME_TYPE_FFA = 6;
+	const GAME_TYPE_NEWBIE = 7;
+	const GAME_TYPES = [
+		self::GAME_TYPE_DEFAULT => 'Default',
+		self::GAME_TYPE_SEMI_WARS => 'Semi Wars',
+		self::GAME_TYPE_DRAFT => 'Draft',
+		self::GAME_TYPE_FFA => 'FFA',
+		self::GAME_TYPE_NEWBIE => 'Newbie',
+	];
 
 	public static function &getGame($gameID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
@@ -69,7 +82,7 @@ class SmrGame {
 			$this->maxPlayers			= $this->db->getInt('max_players');
 			$this->maxTurns				= $this->db->getInt('max_turns');
 			$this->startTurnHours		= $this->db->getInt('start_turns');
-			$this->gameType				= $this->db->getField('game_type');
+			$this->gameTypeID			= $this->db->getInt('game_type');
 			$this->creditsNeeded		= $this->db->getInt('credits_needed');
 			$this->gameSpeed			= $this->db->getReal('game_speed');
 			$this->enabled				= $this->db->getBoolean('enabled');
@@ -99,7 +112,7 @@ class SmrGame {
 										', max_players = ' . $this->db->escapeNumber($this->getMaxPlayers()) .
 										', max_turns = ' . $this->db->escapeNumber($this->getMaxTurns()) .
 										', start_turns = ' . $this->db->escapeNumber($this->getStartTurnHours()) .
-										', game_type = ' . $this->db->escapeString($this->getGameType()) .
+										', game_type = ' . $this->db->escapeNumber($this->gameTypeID) .
 										', credits_needed = ' . $this->db->escapeNumber($this->getCreditsNeeded()) .
 										', game_speed = ' . $this->db->escapeNumber($this->getGameSpeed()) .
 										', enabled = ' . $this->db->escapeBoolean($this->isEnabled()) .
@@ -121,7 +134,7 @@ class SmrGame {
 										',' . $this->db->escapeNumber($this->getMaxPlayers()) .
 										',' . $this->db->escapeNumber($this->getMaxTurns()) .
 										',' . $this->db->escapeNumber($this->getStartTurnHours()) .
-										',' . $this->db->escapeString($this->getGameType()) .
+										',' . $this->db->escapeNumber($this->gameTypeID) .
 										',' . $this->db->escapeNumber($this->getCreditsNeeded()) .
 										',' . $this->db->escapeNumber($this->getGameSpeed()) .
 										',' . $this->db->escapeBoolean($this->isEnabled()) .
@@ -234,14 +247,14 @@ class SmrGame {
 	}
 
 	public function getGameType() {
-		return $this->gameType;
+		return self::GAME_TYPES[$this->gameTypeID];
 	}
 
-	public function setGameType($gameType) {
-		if($this->gameType==$gameType) {
+	public function setGameTypeID($gameTypeID) {
+		if ($this->gameTypeID == $gameTypeID) {
 			return;
 		}
-		$this->gameType=$gameType;
+		$this->gameTypeID = $gameTypeID;
 		$this->hasChanged=true;
 	}
 

@@ -29,10 +29,9 @@ if ($db->getNumRows() > 0) {
 		$game_id = $db->getField('game_id');
 		$games['Play'][$game_id]['ID'] = $game_id;
 		$games['Play'][$game_id]['Name'] = $db->getField('game_name');
-		$games['Play'][$game_id]['Type'] = $db->getField('game_type');
+		$games['Play'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getInt('game_type')];
 		$games['Play'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('end_date'));
 		$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');
-		$games['Play'][$game_id]['Type'] = $db->getField('game_type');
 
 		$container = create_container('game_play_processing.php');
 		$container['game_id'] = $game_id;
@@ -104,7 +103,7 @@ if ($db->getNumRows() > 0) {
 		$games['Join'][$game_id]['StartDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('start_date'));
 		$games['Join'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('end_date'));
 		$games['Join'][$game_id]['Players'] = $game->getTotalPlayers();
-		$games['Join'][$game_id]['Type'] = $db->getField('game_type');
+		$games['Join'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getInt('game_type')];
 		$games['Join'][$game_id]['Speed'] = $db->getField('game_speed');
 		$games['Join'][$game_id]['Credits'] = $db->getField('credits_needed');
 		// create a container that will hold next url and additional variables.
