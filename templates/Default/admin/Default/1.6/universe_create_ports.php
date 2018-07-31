@@ -12,7 +12,7 @@
 					foreach ($TotalPorts as $Level => $Count) { ?>
 						<tr>
 							<td class="right">Level <?php echo $Level; ?></td>
-							<td><input type="number" value="<?php echo $Count; ?>" size="5" name="port<?php echo $Level; ?>" onInput="levelCalc();"></td>
+							<td><input type="number" value="<?php echo $Count; ?>" size="5" name="port<?php echo $Level; ?>" onInput="levelCalc(<?php echo SmrPort::MAX_LEVEL; ?>);"></td>
 						</tr><?php
 					} ?>
 					<tr>
