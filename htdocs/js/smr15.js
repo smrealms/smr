@@ -17,8 +17,8 @@
 	};
 
 	// Recalculate total number of ports, summing over level
-	window.levelCalc = function() {
-		doCalc('port', 9, 'total');
+	window.levelCalc = function(maxPortLevel) {
+		doCalc('port', maxPortLevel, 'total');
 	};
 
 	// Recalculate sum of port race percentages
