@@ -37,7 +37,7 @@ $PHP_OUTPUT.= '</select><br /><br />';
 
 $PHP_OUTPUT.= 'Port: <select name="port_level">';
 $PHP_OUTPUT.= '<option value="0">No Port</option>';
-for ($i=1;$i<=9;$i++) {
+for ($i=1; $i<=SmrPort::MAX_LEVEL; $i++) {
 	$PHP_OUTPUT.= '<option value="' . $i . '"';
 	if ($editSector->hasPort() && $editSector->getPort()->getLevel() == $i) $PHP_OUTPUT.= 'selected';
 	$PHP_OUTPUT.= '>Level ' . $i . '</option>';
