@@ -10,11 +10,15 @@ $transaction = $port->getGoodTransaction($good_id);
 
 // Has the player failed a bargain?
 if ($var['bargain_price'] > 0) {
+	$bargain_price = $var['bargain_price'];
+
 	if ($transaction == 'Sell') {
 		$template->assign('OfferToo', 'high');
 	} elseif ($transaction == 'Buy') {
 		$template->assign('OfferToo', 'low');
 	}
+} else {
+	$bargain_price = $var['offered_price'];
 }
 
 if ($transaction == 'Sell') {
@@ -32,7 +36,7 @@ transfer('number_of_bargains');
 transfer('overall_number_of_bargains');
 $template->assign('BargainHREF', SmrSession::getNewHREF($container));
 
-$template->assign('BargainPrice', $var['bargain_price']);
+$template->assign('BargainPrice', $bargain_price);
 $template->assign('OfferedPrice', $var['offered_price']);
 $template->assign('Transaction', $transaction);
 $template->assign('Good', $portGood);
