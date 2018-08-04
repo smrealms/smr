@@ -165,6 +165,12 @@ class ProtoPlanet extends SmrPlanetType {
 			'credit_cost' => 500000,
 			'exp_gain' => 270,
 		],
+		PLANET_RADAR => [
+			'max_amount' => 10,
+			'base_time' => 64800,
+			'credit_cost' => 3000000,
+			'exp_gain' => 540,
+		],
 	];
 	function name()         { return "Protoplanet"; }
 	function imageLink()    { return "images/planet5.png"; }

@@ -863,6 +863,13 @@ class SmrPlanet {
 		return 0;
 	}
 
+	/**
+	 * Returns the accuracy bonus for mounted weaons (as a percent)
+	 */
+	function getAccuracyBonus() {
+		return 5 * $this->getBuilding(PLANET_RADAR);
+	}
+
 	function getRemainingStockpile($id) {
 		return 600 - $this->getStockpile($id);
 	}
@@ -884,6 +891,11 @@ class SmrPlanet {
 		$cost = $this->getStructureTypes($constructionID)->creditCost();
 		if ($constructor->getCredits() < $cost) {
 			return 'You do not have enough credits.';
+		}
+		foreach ($this->getStructureTypes($constructionID)->hardwareCost() as $hardwareID) {
+			if (!$constructor->getShip()->getHardware($hardwareID)) {
+				return 'You do not have the hardware needed for this type of building!';
+			}
 		}
 		// take the goods that are needed
 		foreach ($this->getStructureTypes($constructionID)->goods() as $goodID => $amount) {
@@ -923,6 +935,9 @@ class SmrPlanet {
 		// take the goods that are needed
 		foreach ($this->getStructureTypes($constructionID)->goods() as $goodID => $amount) {
 			$this->decreaseStockpile($goodID,$amount);
+		}
+		foreach ($this->getStructureTypes($constructionID)->hardwareCost() as $hardwareID) {
+			$constructor->getShip()->setHardware($hardwareID, 0);
 		}
 	
 		// gets the time for the buildings

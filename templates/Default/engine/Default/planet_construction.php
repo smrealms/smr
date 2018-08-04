@@ -33,7 +33,7 @@ You are currently building: <?php
 						<span class="red"><?php echo $Amount; ?>-<?php echo $Goods[$GoodID]['Name'];?>, </span><?php
 					}
 					else {
-						echo $Amount; ?>-<?php echo $Goods[$GoodID]['Name']; ?>,<?php
+						echo $Amount; ?>-<?php echo $Goods[$GoodID]['Name']; ?>, <?php
 					}
 				}
 
@@ -41,6 +41,16 @@ You are currently building: <?php
 					<span class="red"><?php echo number_format($Structure->creditCost()); ?>-credits, </span><?php
 				} else {
 					echo number_format($Structure->creditCost()); ?>-credits, <?php
+				}
+
+				foreach ($Structure->hardwareCost() as $hardwareID) {
+					if ($hardwareID == HARDWARE_SCANNER) {
+						if (!$ThisShip->hasScanner()) { ?>
+							<span class="red">1-Scanner, </span><?php
+						} else {
+							?>1-Scanner, <?php
+						}
+					}
 				}
 
 				echo format_time($ThisPlanet->getConstructionTime($StructureID)); ?>

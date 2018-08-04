@@ -167,7 +167,11 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	
 	public function getModifiedPlanetAccuracy(SmrPlanet $planet) {
 		$modifiedAccuracy = $this->getBaseAccuracy();
-		$modifiedAccuracy += $planet->getLevel() / 2;
+		if ($this->getWeaponTypeID() == WEAPON_PLANET_TURRET) {
+			$modifiedAccuracy += $planet->getLevel() / 2;
+		} else {
+			$modifiedAccuracy += $planet->getAccuracyBonus();
+		}
 		return $modifiedAccuracy;
 	}
 	

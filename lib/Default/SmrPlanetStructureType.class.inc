@@ -42,6 +42,11 @@ class SmrPlanetStructureType {
 			GOODS_MACHINERY => 10,
 			GOODS_SLAVES => 5,
 		],
+		PLANET_RADAR => [
+			GOODS_WOOD => 100,
+			GOODS_MACHINERY => 75,
+			GOODS_CIRCUITRY => 150,
+		],
 	];
 
 	/**
@@ -78,6 +83,13 @@ class SmrPlanetStructureType {
 			'tooltip' => 'Weapon mounts can be fitted with ship weapons.',
 			'summary' => 'Builds a weapon mount capable of being retrofitted with ship weapons',
 		],
+		PLANET_RADAR => [
+			'name' => 'Radar Station',
+			'image' => 'radar.png',
+			'tooltip' => 'Radar stations track hostile ships. Each station makes mounted weapons 5% more accurate.',
+			'summary' => 'Builds a radar that tracks hostile ships, making weapons 5% more accurate',
+			'hardware_cost' => [HARDWARE_SCANNER],
+		],
 	];
 
 	// Functions that do not require the planet type to be known
@@ -87,6 +99,13 @@ class SmrPlanetStructureType {
 	function tooltip() { return self::INFO[$this->ID]['tooltip']; }
 	function summary() { return self::INFO[$this->ID]['summary']; }
 	function goods() { return self::GOODS[$this->ID]; }
+	function hardwareCost() {
+		if (isset(self::INFO[$this->ID]['hardware_cost'])) {
+			return self::INFO[$this->ID]['hardware_cost'];
+		} else {
+			return [];
+		}
+	}
 
 	// Functions that require the planet type to be known
 	function maxAmount() { return $this->planetTypeInfo['max_amount']; }

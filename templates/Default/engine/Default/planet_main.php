@@ -83,7 +83,7 @@ if (isset($Msg)) {
 				<tr>
 					<td><img src="images/weapon_shop.png"  width="16" height="16" alt="" title="Weapon"/>&nbsp;Mounted Weapons</td>
 					<td align="center"><span id="planetWeapons"><?php echo count($ThisPlanet->getMountedWeapons()); ?></span> / <?php echo $ThisPlanet->getBuilding(PLANET_WEAPON_MOUNT); ?></td>
-					<td align="center">&nbsp;</td>
+					<td align="center">+<?php echo $ThisPlanet->getAccuracyBonus(); ?>%</td>
 				</tr>
 				<?php } ?>
 				</table>
