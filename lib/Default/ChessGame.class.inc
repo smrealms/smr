@@ -833,12 +833,12 @@ class ChessGame {
 						SET end_time=' . $this->db->escapeNumber(TIME) . ', winner_id=' . $this->db->escapeNumber($this->winner) . '
 						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 		$winnerColour = $this->getColourForAccountID($accountID);
-		$winningPlayer =& $this->getColourPlayer($winnerColour);
-		$losingPlayer =& $this->getColourPlayer(self::getOtherColour($winnerColour));
+		$winningPlayer = $this->getColourPlayer($winnerColour);
+		$losingPlayer = $this->getColourPlayer(self::getOtherColour($winnerColour));
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 		$winningPlayer->increaseHOF(1, array($chessType,'Games','Won'), HOF_PUBLIC);
 		$losingPlayer->increaseHOF(1, array($chessType,'Games','Lost'), HOF_PUBLIC);
-		return array('Winner' => &$winningPlayer, 'Loser' => $losingPlayer);
+		return array('Winner' => $winningPlayer, 'Loser' => $losingPlayer);
 	}
 
 	public function &getHasMoved() {
@@ -908,7 +908,7 @@ class ChessGame {
 		else {
 			$loserColour = $this->getColourForAccountID($accountID);
 			$winnerAccountID = $this->getColourID(self::getOtherColour($loserColour));
-			$results =& $this->setWinner($winnerAccountID);
+			$results = $this->setWinner($winnerAccountID);
 			$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 			$results['Loser']->increaseHOF(1, array($chessType,'Games','Resigned'), HOF_PUBLIC);
 			SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getPlayerID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
