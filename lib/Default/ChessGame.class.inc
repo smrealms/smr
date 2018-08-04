@@ -911,7 +911,7 @@ class ChessGame {
 			$results =& $this->setWinner($winnerAccountID);
 			$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 			$results['Loser']->increaseHOF(1, array($chessType,'Games','Resigned'), HOF_PUBLIC);
-			SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getGameID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
+			SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getPlayerID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
 			return 0;
 		}
 	}
