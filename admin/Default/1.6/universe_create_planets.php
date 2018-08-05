@@ -3,9 +3,8 @@ require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 // Get a list of all available planet types
 $allowedTypes = array();
-$db->query('SELECT * FROM planet_type');
-while ($db->nextRecord()) {
-	$allowedTypes[$db->getInt('planet_type_id')] = $db->getField('planet_type_name');
+foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $PlanetTypeID) {
+	$allowedTypes[$PlanetTypeID] = SmrPlanetType::getTypeInfo($PlanetTypeID)->name();
 }
 $template->assign('AllowedTypes', $allowedTypes);
 

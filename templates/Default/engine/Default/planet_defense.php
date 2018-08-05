@@ -51,4 +51,38 @@
 	<?php } ?>
 
 </table>
-<?php } ?>
+<?php }
+
+if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
+	<p>You can uninstall weapons from your ship and mount them on the planet. Once mounted, a weapon cannot be removed without destroying it.</p>
+	<table class="standard">
+		<tr>
+			<th>Order</th>
+			<th>Weapon</th>
+			<th>Action</th>
+		</tr><?php
+		$weapons = $ThisPlanet->getMountedWeapons();
+		for ($i=0; $i<$ThisPlanet->getMaxMountedWeapons(); ++$i) { ?>
+			<form method="POST" action="<?php echo $WeaponProcessingHREF; ?>">
+				<input type="hidden" name="planet_order" value="<?php echo $i; ?>" />
+				<tr>
+					<td class="center"><?php echo $i + 1; ?></td><?php
+					if (isset($weapons[$i])) { ?>
+						<td><?php echo $weapons[$i]->getName(); ?>
+						<td><input type="submit" name="action" value="Destroy" /></td><?php
+					} else { ?>
+						<td>
+							<select required name="ship_order" id="InputFields"><?php
+								foreach ($ThisShip->getWeapons() as $orderID => $weapon) { ?>
+									<option value="<?php echo $orderID; ?>"><?php echo $weapon->getName(); ?></option><?php
+								} ?>
+								<option disabled selected value="">Select Weapon</option>
+							</select>
+						</td>
+						<td><input type="submit" name="action" value="Transfer" /></td><?php
+					} ?>
+				</tr>
+			</form><?php
+		} ?>
+	</table><?php
+} ?>

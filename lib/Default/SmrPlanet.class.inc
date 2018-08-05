@@ -1,6 +1,8 @@
 <?php
 
 require_once(get_file_loc('SmrPlayer.class.inc'));
+require_once(get_file_loc('SmrPlanetType.class.inc'));
+
 class SmrPlanet {
 	protected static $CACHE_PLANETS = array();
 
@@ -8,8 +10,6 @@ class SmrPlanet {
 	const CHANCE_TO_DOWNGRADE = 15;
 	const TIME_TO_CREDIT_BUST = 10800; // 3 hours
 	const TIME_ATTACK_NEWS_COOLDOWN = 3600; // 1 hour
-
-	protected $maxBuildings;
 
 	protected $db;
 	protected $SQL;
@@ -29,13 +29,14 @@ class SmrPlanet {
 	protected $buildings;
 	protected $inhabitableTime;
 	protected $currentlyBuilding;
+	protected $mountedWeapons;
 	protected $typeID;
 	protected $typeInfo;
 	
-	protected $menuOptions;
 	protected $hasChanged = false;
 	protected $hasChangedFinancial = false;  // for credits, bond, maturity
 	protected $hasChangedStockpile = false;
+	protected $hasChangedWeapons = array();
 	protected $hasChangedBuildings = array();
 	protected $hasStoppedBuilding = array();
 	protected $isNew = false;
@@ -127,7 +128,7 @@ class SmrPlanet {
 			$this->inhabitableTime = $db->getInt('inhabitable_time');
 			$this->typeID = $db->getInt('planet_type_id');
 			
-			$this->initTypeInfo();
+			$this->typeInfo = SmrPlanetType::getTypeInfo($this->getTypeID());
 			$this->checkBondMaturity();
 		}
 	}
@@ -329,6 +330,10 @@ class SmrPlanet {
 		if ($this->getArmour() > $this->getMaxArmour()) {
 				$this->setArmour($this->getMaxArmour());
 		}
+		while (count($this->getMountedWeapons()) > $this->getMaxMountedWeapons()) {
+			$maxOrderID = max(array_keys($this->getMountedWeapons()));
+			$this->removeMountedWeapon($maxOrderID);
+		}
 	}
 
 	public function getShields($delayed = false) {
@@ -464,6 +469,37 @@ class SmrPlanet {
 
 	public function getMaxCDs() {
 		return $this->getBuilding(PLANET_HANGAR) * PLANET_HANGAR_DRONES;
+	}
+
+	public function getMountedWeapons() {
+		if (!isset($this->mountedWeapons)) {
+			$this->mountedWeapons = [];
+			if ($this->hasBuilding(PLANET_WEAPON_MOUNT)) {
+				$this->db->query('SELECT weapon_type.*, order_id FROM planet_has_weapon JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
+				while ($this->db->nextRecord()) {
+					$weaponTypeID = $this->db->getInt('weapon_type_id');
+					$orderID = $this->db->getInt('order_id');
+					$this->mountedWeapons[$orderID] = SmrWeapon::getWeapon($weaponTypeID, false, $this->db);
+				}
+			}
+		}
+		return $this->mountedWeapons;
+	}
+
+	public function addMountedWeapon($weaponTypeID, $orderID) {
+		$this->getMountedWeapons(); // Make sure array is initialized
+		$this->mountedWeapons[$orderID] = SmrWeapon::getWeapon($weaponTypeID);
+		$this->hasChangedWeapons[$orderID] = true;
+	}
+
+	public function removeMountedWeapon($orderID) {
+		$this->getMountedWeapons(); // Make sure array is initialized
+		unset($this->mountedWeapons[$orderID]);
+		$this->hasChangedWeapons[$orderID] = true;
+	}
+
+	public function getMaxMountedWeapons() {
+		return $this->getBuilding(PLANET_WEAPON_MOUNT);
 	}
 
 	public function isDestroyed($delayed = false) {
@@ -613,33 +649,11 @@ class SmrPlanet {
 	}
 
 	public function getMaxBuildings($buildingTypeID=false) {
-		// Make sure the data is populated
-		$this->initMaxBuildings();
 		if($buildingTypeID===false) {
-			return $this->maxBuildings;
+			return array_column($this->typeInfo::STRUCTURES, 'max_amount');
 		}
-		return $this->maxBuildings[$buildingTypeID];
+		return $this->getStructureTypes($buildingTypeID)->maxAmount();
 	}
-	
-	/**
-	 * Populates the `maxBuildings` attribute from the `planet_can_build` database table.
-	 */
-	private function initMaxBuildings() {
-		if (isset($this->maxBuildings)) {
-			return;
-		}
-		// Cache the max buildings for this type of planet
-		static $MAX_BUILDINGS = array();
-		if (!isset($MAX_BUILDINGS[$this->getTypeID()])) {
-			$this->db->query('SELECT construction_id, max_amount FROM planet_can_build WHERE planet_type_id='.$this->getTypeID());
-			while ($this->db->nextRecord()) {
-				$MAX_BUILDINGS[$this->getTypeID()][$this->db->getInt('construction_id')] = $this->db->getInt('max_amount');
-			}
-		}
-		// Set the max buildings for this planet instance
-		$this->maxBuildings = $MAX_BUILDINGS[$this->getTypeID()];
-	}
-	
 	
 	public function getTypeID() {
 		return $this->typeID;
@@ -651,11 +665,7 @@ class SmrPlanet {
 		}
 		$this->typeID = $num;
 		$this->db->query('UPDATE planet SET planet_type_id = '.$this->db->escapeNumber($num).' WHERE '.$this->SQL);
-
-		// delete typeID-specific cached data that may have been loaded
-		unset($this->menuOptions);
-		unset($this->typeInfo);
-		unset($this->maxBuildings);
+		$this->typeInfo = SmrPlanetType::getTypeInfo($this->getTypeID());
 		
 		//trim buildings first
 		foreach ($this->getBuildings() as $id => $amt) {
@@ -667,81 +677,40 @@ class SmrPlanet {
 		//trim excess defenses
 		$this->checkForExcessDefense();
 		
-		$this->initTypeInfo();
 		$this->hasChanged = true;
 		$this->update();
 	}
 	
-	/**
-	 * Populates the `typeInfo` attribute from the `planet_type` database table.
-	 */
-	private function initTypeInfo() {
-		if (isset($this->typeInfo)) {
-			return;
-		}
-		// Cache the type info for this type of planet
-		static $TYPE_INFO = array();
-		if (!isset($TYPE_INFO[$this->getTypeID()])) {
-			$this->db->query('SELECT * FROM planet_type WHERE planet_type_id = ' . $this->getTypeID());
-			if ($this->db->nextRecord()) {
-				$TYPE_INFO[$this->getTypeID()] = $this->db->getRow();
-			} else {
-				throw new Exception('Planet type not found: ' . $this->getTypeID());
-			}
-		}
-		// Set the type info for this planet instance
-		$this->typeInfo = $TYPE_INFO[$this->getTypeID()];
-	}
-
 	public function getTypeImage() {
-		return $this->typeInfo['planet_image_link'];
+		return $this->typeInfo->imageLink();
 	}
 
 	public function getTypeName() {
-		return $this->typeInfo['planet_type_name'];
+		return $this->typeInfo->name();
 	}
 
 	public function getTypeDescription() {
-		return $this->typeInfo['planet_type_description'];
+		return $this->typeInfo->description();
 	}
 
 	public function getMaxAttackers() {
-		return $this->typeInfo['planet_max_attackers'];
+		return $this->typeInfo->maxAttackers();
 	}
 
 	public function getMaxLanded() {
-		return $this->typeInfo['planet_max_landed'];
+		return $this->typeInfo->maxLanded();
+	}
+
+	public function getStructureTypes($structureID=false) {
+		return $this->typeInfo->structureTypes($structureID);
 	}
 
 	/**
 	 * Specifies which menu options the planet has.
 	 */
-	public function hasMenuOptions($option=false) {
-		$this->initMenuOptions(); // Make sure the data is populated
-		if ($option === false) {
-			return $this->menuOptions;
-		}
+	public function hasMenuOption($option) {
 		// We do not set options that are unavailable
-		return isset($this->menuOptions[$option]);
-	}
-
-	/**
-	 * Populate the `menuOptions` attribute from the `planet_type_has_section` database table.
-	 */
-	private function initMenuOptions() {
-		if (isset($this->menuOptions)) {
-			return;
-		}
-		// Cache the options for this type of planet
-		static $OPTIONS = array();
-		if (!isset($OPTIONS[$this->getTypeID()])) {
-			$this->db->query('SELECT * FROM planet_type_has_section WHERE planet_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
-			while ($this->db->nextRecord()) {
-				$OPTIONS[$this->getTypeID()][$this->db->getField('planet_section')] = true;
-			}
-		}
-		// Set the options for this planet instance
-		$this->menuOptions = $OPTIONS[$this->getTypeID()];
+		return in_array($option, $this->typeInfo->menuOptions());
 	}
 
 	public function doDelayedUpdates() {
@@ -796,6 +765,15 @@ class SmrPlanet {
 			}
 		}
 
+		if ($this->hasChangedWeapons) {
+			foreach (array_keys($this->hasChangedWeapons) as $orderID) {
+				if (isset($this->mountedWeapons[$orderID])) {
+					$this->db->query('INSERT INTO planet_has_weapon (game_id, sector_id, order_id, weapon_type_id) VALUES ('.$this->db->escapeNumber($this->getGameID()).','.$this->db->escapeNumber($this->getSectorID()).','.$this->db->escapeNumber($orderID).','.$this->db->escapeNumber($this->mountedWeapons[$orderID]->getWeaponTypeID()).')');
+				} else {
+					$this->db->query('DELETE FROM planet_has_weapon WHERE '.$this->SQL.' AND order_id='.$this->db->escapeNumber($orderID));
+				}
+			}
+		}
 
 		if(count($this->hasStoppedBuilding)>0) {
 			$this->db->query('DELETE FROM planet_is_building WHERE ' . $this->SQL . '
@@ -852,12 +830,12 @@ class SmrPlanet {
 		if($this->getBuilding($constructionID) >= $this->getMaxBuildings($constructionID)) {
 			return 'This planet has reached the maximum buildings of that type.';
 		}
-		$PLANET_BUILDINGS = Globals::getPlanetBuildings();
-		if($constructor->getCredits() < $PLANET_BUILDINGS[$constructionID]['Credit Cost'][$this->getTypeID()]) {
+		$cost = $this->getStructureTypes($constructionID)->creditCost();
+		if ($constructor->getCredits() < $cost) {
 			return 'You do not have enough credits.';
 		}
 		// take the goods that are needed
-		foreach($PLANET_BUILDINGS[$constructionID]['Goods'] as $goodID => $amount) {
+		foreach ($this->getStructureTypes($constructionID)->goods() as $goodID => $amount) {
 			if ($this->getStockpile($goodID) < $amount) {
 				return 'There are not enough goods available.';
 			}
@@ -875,13 +853,13 @@ class SmrPlanet {
 
 	// Amount of exp gained to build the next building of this type
 	function getConstructionExp($constructionID) {
-		$expGain = Globals::getPlanetBuildings()[$constructionID]['ExpGain'][$this->getTypeID()];
+		$expGain = $this->getStructureTypes($constructionID)->expGain();
 		return $expGain;
 	}
 
 	// Amount of time (in seconds) to build the next building of this type
 	function getConstructionTime($constructionID) {
-		$baseTime = Globals::getPlanetBuildings()[$constructionID]['Build Time'][$this->getTypeID()];
+		$baseTime = $this->getStructureTypes($constructionID)->baseTime();
 		$constructionTime = ceil($baseTime * $this->getCompletionModifier($constructionID) / Globals::getGameSpeed($this->getGameID()));
 		return $constructionTime;
 	}
@@ -890,10 +868,9 @@ class SmrPlanet {
 		if(($message = $this->canBuild($constructor, $constructionID)) !== true) {
 			throw new Exception('Unable to start building: '.$message);
 		}
-		$PLANET_BUILDINGS = Globals::getPlanetBuildings();
-		$constructor->decreaseCredits($PLANET_BUILDINGS[$constructionID]['Credit Cost'][$this->getTypeID()]);
+		$constructor->decreaseCredits($this->getStructureTypes($constructionID)->creditCost());
 		// take the goods that are needed
-		foreach($PLANET_BUILDINGS[$constructionID]['Goods'] as $goodID => $amount) {
+		foreach ($this->getStructureTypes($constructionID)->goods() as $goodID => $amount) {
 			$this->decreaseStockpile($goodID,$amount);
 		}
 	
@@ -968,16 +945,16 @@ class SmrPlanet {
 		return SmrSession::getNewHREF(create_container('planet_attack_processing.php'));
 	}
 
-	public function getBuildHREF($planetBuilding) {
+	public function getBuildHREF($structureID) {
 		$container = create_container('planet_construction_processing.php');
-		$container['construction_id'] = $planetBuilding['ConstructionID'];
+		$container['construction_id'] = $structureID;
 		$container['action'] = 'Build';
 		return SmrSession::getNewHREF($container);
 	}
 
-	public function getCancelHREF($planetBuilding) {
+	public function getCancelHREF($structureID) {
 		$container = create_container('planet_construction_processing.php');
-		$container['construction_id'] = $planetBuilding['ConstructionID'];
+		$container['construction_id'] = $structureID;
 		$container['action'] = 'Cancel';
 		return SmrSession::getNewHREF($container);
 	}
@@ -1062,9 +1039,9 @@ class SmrPlanet {
 	}
 
 	public function &getWeapons() {
-		$weapons = array();
-		for($i=0;$i<$this->getBuilding(PLANET_TURRET);++$i) {
-			$weapons[$i] = SmrWeapon::getWeapon(WEAPON_PLANET_TURRET);
+		$weapons = $this->getMountedWeapons();
+		for($i=0; $i<$this->getBuilding(PLANET_TURRET); ++$i) {
+			$weapons[] = SmrWeapon::getWeapon(WEAPON_PLANET_TURRET);
 		}
 		return $weapons;
 	}
@@ -1107,7 +1084,7 @@ class SmrPlanet {
 	function &checkForDowngrade($damage) {
 		$results = '';
 		// Chance of planetary structure damage = For every 70 damage there is a 15% chance of destroying a structure.
-		// Turrets have a 1 in 6 chance of being destroyed
+		// Turrets/Weapon Mounts have a 1 in 6 chance of being destroyed
 		// Hangers have a 2 in 6 chance of being destroyed
 		// Generators/Bunkers 3 in 6 chance of being destroyed
 		//iterate over all chances
@@ -1123,7 +1100,12 @@ class SmrPlanet {
 							$this->destroyBuilding(PLANET_TURRET, 1);
 							break;
 						}
-						//if no turrets we fall through
+						//if no turrets try weapon mounts
+						if ($this->hasBuilding(PLANET_WEAPON_MOUNT)) {
+							$results .= 'This team destroys <span style = "color:red;">1</span> weapon mount.<br />';
+							$this->destroyBuilding(PLANET_WEAPON_MOUNT, 1);
+							break;
+						}
 					case 2:
 					case 3:
 						//destroy a hangar

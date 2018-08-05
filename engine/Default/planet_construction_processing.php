@@ -12,8 +12,7 @@ if ($action == 'Build') {
 	$planet->startBuilding($player,$var['construction_id']);
 	$player->increaseHOF(1,array('Planet','Buildings','Started'), HOF_ALLIANCE);
 
-	$PLANET_BUILDINGS = Globals::getPlanetBuildings();
-	$account->log(LOG_TYPE_PLANETS, 'Player starts a '.$PLANET_BUILDINGS[$var['construction_id']]['Name'].' on planet.', $player->getSectorID());
+	$account->log(LOG_TYPE_PLANETS, 'Player starts a '.$planet->getStructureTypes($var['construction_id'])->name().' on planet.', $player->getSectorID());
 
 }
 elseif ($action == 'Cancel') {

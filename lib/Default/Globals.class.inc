@@ -4,7 +4,6 @@ require_once('SmrMySqlDatabase.class.inc');
 require_once('SmrGame.class.inc');
 class Globals {
 	protected static $HIDDEN_PLAYERS = null;
-	protected static $PLANET_BUILDINGS = null;
 	protected static $LEVEL_REQUIREMENTS = null;
 	protected static $RACES = null;
 	protected static $GOODS = null;
@@ -50,42 +49,6 @@ class Globals {
 			}
 		}
 		return self::$HIDDEN_PLAYERS;
-	}
-
-	public static function &getPlanetBuildings() {
-		if(self::$PLANET_BUILDINGS==null) {
-			self::initialiseDatabase();
-			$db2 = new SmrMySqlDatabase();
-			$PLANET_BUILDINGS = array();
-			self::$db->query('SELECT * FROM planet_construction');
-			while(self::$db->nextRecord()) {
-				$buildingID = self::$db->getField('construction_id');
-				$PLANET_BUILDINGS[$buildingID]['ConstructionID'] = $buildingID;
-				$PLANET_BUILDINGS[$buildingID]['Name'] = self::$db->getField('construction_name');
-				$PLANET_BUILDINGS[$buildingID]['Description'] = self::$db->getField('construction_description');
-				$PLANET_BUILDINGS[$buildingID]['Image'] = self::$db->getField('construction_image');
-				$PLANET_BUILDINGS[$buildingID]['Credit Cost'] = array();
-				$PLANET_BUILDINGS[$buildingID]['Build Time'] = array();
-				$PLANET_BUILDINGS[$buildingID]['ExpGain'] = array();
-				$PLANET_BUILDINGS[$buildingID]['Max Amount'] = array();
-
-				$db2->query('SELECT * FROM planet_can_build WHERE construction_id=' . self::$db->escapeNumber($buildingID));
-				while($db2->nextRecord()) {
-					$PLANET_BUILDINGS[$buildingID]['Credit Cost'][$db2->getInt('planet_type_id')] = $db2->getInt('cost_credit');
-					$PLANET_BUILDINGS[$buildingID]['Build Time'][$db2->getInt('planet_type_id')] = $db2->getInt('cost_time');
-					$PLANET_BUILDINGS[$buildingID]['ExpGain'][$db2->getInt('planet_type_id')] = $db2->getInt('exp_gain');
-					$PLANET_BUILDINGS[$buildingID]['Max Amount'][$db2->getInt('planet_type_id')] = $db2->getInt('max_amount');
-				}
-
-				$PLANET_BUILDINGS[$buildingID]['Goods'] = array();
-				$db2->query('SELECT * FROM planet_cost_good WHERE construction_id=' . self::$db->escapeNumber($buildingID));
-				while($db2->nextRecord()) {
-					$PLANET_BUILDINGS[$buildingID]['Goods'][$db2->getInt('good_id')] = $db2->getInt('amount');
-				}
-			}
-			self::$PLANET_BUILDINGS =& $PLANET_BUILDINGS;
-		}
-		return self::$PLANET_BUILDINGS;
 	}
 
 	public static function &getLevelRequirements() {
