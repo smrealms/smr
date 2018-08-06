@@ -1,3 +1,6 @@
+button, input[type=submit] {
+	cursor: pointer;
+}
 th {
 	font-size: 110%;
 	text-align: center;
