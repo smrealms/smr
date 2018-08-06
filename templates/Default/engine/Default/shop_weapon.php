@@ -49,12 +49,14 @@ if ($ThisShip->hasWeapons()) { ?>
 	<table class="standard">
 		<tr class="center">
 			<th>Name</th>
-			<th>Cash</th>
+			<th>Power<br />Level</th>
+			<th>Credits</th>
 			<th>Action</th>
 		</tr><?php
 		foreach ($ThisShip->getWeapons() as $OrderID => $Weapon) { ?>
 			<tr class="center">
 				<td><?php echo $Weapon->getName(); ?></td>
+				<td><?php echo $Weapon->getPowerLevel(); ?></td>
 				<td><?php echo number_format(floor($Weapon->getCost() * WEAPON_REFUND_PERCENT)); ?></td>
 				<td><a href="<?php echo $Weapon->getSellHREF($ThisLocation, $OrderID); ?>" class="submitStyle">Sell</a></td>
 			</tr><?php
