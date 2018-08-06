@@ -1,5 +1,7 @@
 <?php
-$template->assign('PageTopic','Ship Dealer');
+
+$location = SmrLocation::getLocation($var['LocationID']);
+$template->assign('PageTopic', $location->getName());
 
 $shipsSold = $location->getShipsSold();
 if ($shipsSold) {
