@@ -756,6 +756,10 @@ class SmrPlanet {
 		return $this->typeInfo->structureTypes($structureID);
 	}
 
+	public function hasStructureType($structureID) {
+		return isset($this->getStructureTypes()[$structureID]);
+	}
+
 	/**
 	 * Specifies which menu options the planet has.
 	 */

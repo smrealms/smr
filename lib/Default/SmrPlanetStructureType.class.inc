@@ -52,7 +52,7 @@ class SmrPlanetStructureType {
 	/**
 	 * Information to display about each structure type.
 	 */
-	const INFO = [
+	private const INFO = [
 		PLANET_GENERATOR => [
 			'name' => 'Generator',
 			'image' => 'generator.png',
@@ -91,6 +91,13 @@ class SmrPlanetStructureType {
 			'hardware_cost' => [HARDWARE_SCANNER],
 		],
 	];
+
+	/**
+	 * Return a list of possible planet structure types
+	 */
+	static function getTypes() {
+		return array_keys(self::INFO);
+	}
 
 	// Functions that do not require the planet type to be known
 	function structureID() { return $this->ID; }
