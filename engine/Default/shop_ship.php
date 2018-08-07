@@ -1,9 +1,28 @@
 <?php
+$template->assign('PageTopic','Ship Dealer');
 
-$db->query('SELECT ship_type_id FROM location
-			JOIN location_sells_ships USING (location_type_id)
-			WHERE sector_id = ' . $db->escapeNumber($player->getSectorID()) . '
-				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND location_type_id = '.$db->escapeNumber($var['LocationID']));
+$shipsSold = $location->getShipsSold();
+if ($shipsSold) {
+	$container = create_container('skeleton.php','shop_ship.php');
+	transfer('LocationID');
 
-include('shop_ship.inc');
+	foreach (array_keys($shipsSold) as $shipTypeID) {
+		$container['ship_id'] = $shipTypeID;
+		$shipsSoldHREF[$shipTypeID] = SmrSession::getNewHREF($container);
+	}
+}
+$template->assign('ShipsSold',$shipsSold);
+$template->assign('ShipsSoldHREF',$shipsSoldHREF);
+
+if (isset($var['ship_id'])) {
+	$compareShip = $shipsSold[$var['ship_id']];
+	$compareShip['RealSpeed'] = $compareShip['Speed'] * Globals::getGameSpeed($player->getGameID());
+	$compareShip['Turns'] = round($player->getTurns()*$compareShip['Speed']/$ship->getSpeed());
+
+	$container = create_container('shop_ship_processing.php');
+	transfer('LocationID');
+	transfer('ship_id');
+	$compareShip['BuyHREF'] = SmrSession::getNewHREF($container);
+
+	$template->assign('CompareShip',$compareShip);
+}
