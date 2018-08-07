@@ -51,7 +51,7 @@ if (count($Planets) > 0) { ?>
 							}
 						}
 						if ($Supply === false) {
-							?>none<?php
+							?>None<?php
 						} ?>
 					</td>
 					<td class="build noWrap center"><?php
