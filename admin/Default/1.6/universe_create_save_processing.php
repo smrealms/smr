@@ -256,23 +256,6 @@ elseif ($submit == 'Create Ports') {
 elseif ($submit == 'Edit Sector') {
 	$editSector = SmrSector::getSector($var['game_id'],$var['sector_id']);
 
-	//update connections
-	if (isset($_POST['up']))
-		$editSector->enableLink('Up');
-	else
-		$editSector->disableLink('Up');
-	if (isset($_POST['down']))
-		$editSector->enableLink('Down');
-	else
-		$editSector->disableLink('Down');
-	if (isset($_POST['left']))
-		$editSector->enableLink('Left');
-	else
-		$editSector->disableLink('Left');
-	if (isset($_POST['right']))
-		$editSector->enableLink('Right');
-	else
-		$editSector->disableLink('Right');
 	//update planet
 	if ($_POST['plan_type'] != '0') {
 		if (!$editSector->hasPlanet()) {

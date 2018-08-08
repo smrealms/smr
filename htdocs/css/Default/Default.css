@@ -70,27 +70,6 @@ table.standard {
 table.standard td, table.standard th {
 	border: 1px solid #0B8D35;
 }
-.create td, th {
-	border: 0px solid #0b8d35;
-}
-table.create {
-	border: 0px solid #0B8D35;
-}
-td.border_left {
-	border-left-width: 3px;
-}
-td.border_right {
-	border-right-width: 3px;
-}
-td.border_bottom {
-	border-bottom-width: 3px;
-}
-td.border_top {
-	border-top-width: 3px;
-}
-td.has_port {
-	background-color: gray;
-}
 table.nobord td {
 	border: none;
 }
