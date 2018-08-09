@@ -49,6 +49,10 @@
 					<td align="left"><input type="checkbox" name="sendAllMsg"<?php if ($Role['SendAllianceMessage']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
+					<td class="left">Operations Leader</td>
+					<td class="left"><input type="checkbox" name="opLeader" alt="Can schedule operations and designate the flagship" <?php if ($Role['OpLeader']){ ?> checked="checked"<?php } ?></td>
+				</tr>
+				<tr>
 					<td align="left">View Bonds In Planet List</td>
 					<td align="left"><input type="checkbox" name="viewBonds"<?php if ($Role['ViewBondsInPlanetList']){ ?> checked="checked"<?php } ?>></td>
 				</tr><?php

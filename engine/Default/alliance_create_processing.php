@@ -66,9 +66,10 @@ $planetAccess = TRUE;
 $exemptWith = TRUE;
 $mbMessages = TRUE;
 $sendAllMsg = TRUE;
+$opLeader = TRUE;
 $viewBonds = TRUE;
-$db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, view_bonds) ' .
-			'VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', 1, \'Leader\', ' . $db->escapeNumber($withPerDay) . ', '.$db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', '.$db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeString($sendAllMsg) . ', ' . $db->escapeBoolean($viewBonds) . ')');
+$db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds) ' .
+			'VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', 1, \'Leader\', ' . $db->escapeNumber($withPerDay) . ', '.$db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', '.$db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeString($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 switch ($perms) {
 	case 'full':
 		//do nothing, perms already set above.
@@ -83,6 +84,7 @@ switch ($perms) {
 		$exemptWith = FALSE;
 		$mbMessages = FALSE;
 		$sendAllMsg = FALSE;
+		$opLeader = FALSE;
 		$viewBonds = FALSE;
 	break;
 	case 'basic':
@@ -95,10 +97,11 @@ switch ($perms) {
 		$exemptWith = FALSE;
 		$mbMessages = FALSE;
 		$sendAllMsg = FALSE;
+		$opLeader = FALSE;
 		$viewBonds = FALSE;
 	break;
 }
-$db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, view_bonds) ' .
-			'VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', 2, \'New Member\', ' . $db->escapeNumber($withPerDay) . ', '.$db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', '.$db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeString($sendAllMsg) . ', ' . $db->escapeBoolean($viewBonds) . ')');
+$db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds) ' .
+			'VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', 2, \'New Member\', ' . $db->escapeNumber($withPerDay) . ', '.$db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', '.$db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeString($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 $db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', 1,' . $db->escapeNumber($alliance_id) . ')');
 forward(create_container('skeleton.php', 'alliance_roster.php'));

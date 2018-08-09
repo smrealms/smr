@@ -80,7 +80,7 @@ if ($db->getBoolean('treaty_entry')) {
 		'text' => 'Negotitate treaties with other alliances.',
 	);
 }
-if ($player->isAllianceLeader()) {
+if ($db->getBoolean('op_leader')) {
 	$container['body'] = 'alliance_set_op.php';
 	$links[] = array(
 		'link' => create_link($container, 'Schedule Operation'),
