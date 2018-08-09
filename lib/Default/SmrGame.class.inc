@@ -34,12 +34,14 @@ class SmrGame {
 	protected $isNew = false;
 
 	const GAME_TYPE_DEFAULT = 0;
+	const GAME_TYPE_HUNTER_WARS = 3;
 	const GAME_TYPE_SEMI_WARS = 4;
 	const GAME_TYPE_DRAFT = 5;
 	const GAME_TYPE_FFA = 6;
 	const GAME_TYPE_NEWBIE = 7;
 	const GAME_TYPES = [
 		self::GAME_TYPE_DEFAULT => 'Default',
+		self::GAME_TYPE_HUNTER_WARS => 'Hunter Wars',
 		self::GAME_TYPE_SEMI_WARS => 'Semi Wars',
 		self::GAME_TYPE_DRAFT => 'Draft',
 		self::GAME_TYPE_FFA => 'FFA',

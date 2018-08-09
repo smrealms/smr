@@ -6,6 +6,8 @@ require_once('SmrForce.class.inc');
 abstract class AbstractSmrShip {
 	protected static $CACHE_BASE_SHIPS = array();
 
+	const SHIP_CLASS_RAIDER = 3;
+
 	protected $player;
 
 	protected $gameID;
