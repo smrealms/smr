@@ -1019,3 +1019,34 @@ function number_colour_format($number,$justSign = false) {
 	$formatted .= '</span>';
 	return $formatted;
 }
+
+
+/**
+ * Randomly choose an array key weighted by the array values.
+ * Probabilities are relative to the total weight. For example:
+ *
+ * array(
+ *    'A' => 1, // 10% chance
+ *    'B' => 3, // 30% chance
+ *    'C' => 6, // 60% chance
+ * );
+ */
+function getWeightedRandom($choices) {
+	// Normalize the weights so that their sum is much larger than 1.
+	$maxWeight = max($choices);
+	foreach ($choices as $key => &$weight) {
+		$weight = round($weight * 1000/$maxWeight);
+	} unset($weight);
+
+	// Generate a random number that is lower than the sum of the weights.
+	$rand = rand(1, array_sum($choices));
+
+	// Subtract weights from the random number until it is negative,
+	// then return the key associated with that weight.
+	foreach ($choices as $key => $weight) {
+		$rand -= $weight;
+		if ($rand <= 0) {
+			return $key;
+		}
+	}
+}
