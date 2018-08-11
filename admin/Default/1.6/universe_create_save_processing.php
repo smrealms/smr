@@ -206,7 +206,7 @@ elseif ($submit == 'Create Ports') {
 		if($numRacePorts[$race['Race ID']]==0)
 			unset($numRacePorts[$race['Race ID']]);
 	}
-	if ($totalRaceDist == 100) {
+	if ($totalRaceDist == 100 || $totalPorts == 0) {
 		$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 		$galSectors = $galaxy->getSectors();
 		foreach ($galSectors as $galSector) {

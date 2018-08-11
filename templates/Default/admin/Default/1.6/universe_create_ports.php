@@ -19,6 +19,13 @@
 						<th class="right">Total</th>
 						<td><input type="number" disabled="disabled" size="5" name="total" value="<?php echo $Total['Ports']; ?>"></td>
 					</tr>
+					<tr>
+						<td class="center" colspan="2">
+							<div class="buttonA">
+								<a class="buttonA" onClick="setZero(<?php echo SmrPort::MAX_LEVEL; ?>);">&nbsp;Set All Zero&nbsp;</a>
+							</div>
+						</td>
+					</tr>
 				</table>
 			</td>
 
