@@ -13,7 +13,7 @@
 				<td align="left">Unlimited:<input type="checkbox" name="unlimited"<?php if ($Role['WithdrawalLimit'] == ALLIANCE_BANK_UNLIMITED){ ?> checked="checked"<?php } ?>></td>
 			</tr>
 			<tr>
-				<td align="left">Positive Balance:<input type="checkbox" name="positive" alt="Members must deposit more than they withdraw."<?php if ($Role['PositiveBalance']){ ?> checked="checked"<?php } ?>></td>
+				<td align="left">Positive Balance:<input type="checkbox" name="positive" title="Members must deposit more than they withdraw"<?php if ($Role['PositiveBalance']){ ?> checked="checked"<?php } ?>></td>
 			</tr><?php
 			if (!$Role['TreatyCreated']) { ?>
 				<tr>
@@ -42,11 +42,15 @@
 				</tr>
 				<tr>
 					<td align="left">Exempt Withdrawals</td>
-					<td align="left"><input type="checkbox" name="exemptWithdrawals" alt="This user can mark withdrawals from the alliance account as 'for the alliance' instead of 'for the individual'"<?php if ($Role['ExemptWithdrawals']){ ?> checked="checked"<?php } ?>></td>
+					<td align="left"><input type="checkbox" name="exemptWithdrawals" title="This user can mark withdrawals from the alliance account as 'for the alliance' instead of 'for the individual'"<?php if ($Role['ExemptWithdrawals']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
 					<td align="left">Send Alliance Message</td>
 					<td align="left"><input type="checkbox" name="sendAllMsg"<?php if ($Role['SendAllianceMessage']){ ?> checked="checked"<?php } ?>></td>
+				</tr>
+				<tr>
+					<td class="left">Operations Leader</td>
+					<td class="left"><input type="checkbox" name="opLeader" title="Can schedule operations and designate the flagship" <?php if ($Role['OpLeader']){ ?> checked="checked"<?php } ?></td>
 				</tr>
 				<tr>
 					<td align="left">View Bonds In Planet List</td>

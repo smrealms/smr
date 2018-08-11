@@ -34,6 +34,7 @@ while ($db->nextRecord()) {
 		$allianceRoles[$roleID]['ModerateMessageboard'] = $db->getBoolean('mb_messages');
 		$allianceRoles[$roleID]['ExemptWithdrawals'] = $db->getBoolean('exempt_with');
 		$allianceRoles[$roleID]['SendAllianceMessage'] = $db->getBoolean('send_alliance_msg');
+		$allianceRoles[$roleID]['OpLeader'] = $db->getBoolean('op_leader');
 		$allianceRoles[$roleID]['ViewBondsInPlanetList'] = $db->getBoolean('view_bonds');
 	}
 	else {
@@ -69,4 +70,5 @@ $template->assign('CreateRole', array(
 	'ModerateMessageboard' => false,
 	'ExemptWithdrawals' => false,
 	'SendAllianceMessage' => false,
+	'OpLeader' => false,
 	'ViewBondsInPlanetList' => false));

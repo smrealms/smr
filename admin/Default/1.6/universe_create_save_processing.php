@@ -380,35 +380,12 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector) {
 
 function createGame($gameID) {
 	$db = new SmrMySqlDatabase();
-	// Newbie Help Alliance
-	
+
+	// create the Newbie Help Alliance
 	$db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`) VALUES
 				(' . $db->escapeNumber(NHA_ID) . ',' . $db->escapeNumber($gameID) . ',\'Newbie Help Alliance\',\'Newbie Help Alliance\',\'*\',' . $db->escapeNumber(ACCOUNT_ID_NHL) . ',\'Alliance message board includes tips and FAQs.\')');
-	$withPerDay = ALLIANCE_BANK_UNLIMITED;
-	$removeMember = TRUE;
-	$changePass = TRUE;
-	$changeMOD = TRUE;
-	$changeRoles = TRUE;
-	$planetAccess = TRUE;
-	$exemptWith = TRUE;
-	$mbMessages = TRUE;
-	$sendAllMsg = TRUE;
-	$viewBonds = TRUE;
-	$db->query('REPLACE INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, view_bonds)
-				VALUES (' . $db->escapeNumber(NHA_ID) . ', ' . $db->escapeNumber($gameID) . ', 1, \'Leader\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($viewBonds) . ')');
-	$withPerDay = ALLIANCE_BANK_UNLIMITED;
-	$removeMember = FALSE;
-	$changePass = FALSE;
-	$changeMOD = FALSE;
-	$changeRoles = FALSE;
-	$planetAccess = TRUE;
-	$exemptWith = FALSE;
-	$mbMessages = FALSE;
-	$sendAllMsg = FALSE;
-	$viewBonds = FALSE;
-	$db->query('REPLACE INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, view_bonds) ' .
-				'VALUES (' . $db->escapeNumber(NHA_ID) . ', ' . $db->escapeNumber($gameID) . ', 2, \'New Member\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember).', '.$db->escapeBoolean($changePass).', '.$db->escapeBoolean($changeMOD).', '.$db->escapeBoolean($changeRoles).', '.$db->escapeBoolean($planetAccess).', '.$db->escapeBoolean($exemptWith).', '.$db->escapeBoolean($mbMessages).', '.$db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($viewBonds) . ')');
-	$db->query('REPLACE INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', 1,' . $db->escapeNumber(NHA_ID) . ')');
+
+	SmrAlliance::getAlliance(NHA_ID, $gameID)->createDefaultRoles();
 	
 	// NHA default topics
 	
