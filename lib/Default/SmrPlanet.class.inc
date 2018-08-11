@@ -331,12 +331,12 @@ class SmrPlanet {
 				$this->setArmour($this->getMaxArmour());
 		}
 		// Remove a random (0-indexed) mounted weapon, if over max mount slots
-		while (max(array_keys($this->getMountedWeapons())) >= $this->getMaxMountedWeapons()) {
-			$removeKey = array_rand($this->getMountedWeapons());
-			$this->removeMountedWeapon($removeKey);
+		while ($this->getMountedWeapons() && max(array_keys($this->getMountedWeapons())) >= $this->getMaxMountedWeapons()) {
+			$removeID = array_rand($this->getMountedWeapons());
+			$this->removeMountedWeapon($removeID);
 			foreach ($this->getMountedWeapons() as $orderID => $weapon) {
-				if ($orderID > $removeKey) {
-					$this->moveMountedWeaponUp($OrderID);
+				if ($orderID > $removeID) {
+					$this->moveMountedWeaponUp($orderID);
 				}
 			}
 		}
@@ -1153,63 +1153,24 @@ class SmrPlanet {
 
 	function &checkForDowngrade($damage) {
 		$results = '';
-		// Chance of planetary structure damage = For every 70 damage there is a 15% chance of destroying a structure.
-		// Turrets/Weapon Mounts have a 1 in 6 chance of being destroyed
-		// Hangers have a 2 in 6 chance of being destroyed
-		// Generators/Bunkers 3 in 6 chance of being destroyed
-		//iterate over all chances
+		// For every 70 damage there is a 15% chance of destroying a structure.
+		// Which structure is destroyed depends on the ratio of buildings and
+		// the time it takes to build them.
 		for ($i = 0; $damage > self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE; $damage-=self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE) {
+			// Stop if the planet has no more buildlings
+			if ($this->getLevel() == 0) {
+				break;
+			}
 			//15% chance to destroy something
 			if (mt_rand(1, 100) <= self::CHANCE_TO_DOWNGRADE) {
-				$rand = mt_rand(1, 6);
-				switch ($rand) {
-					case 1:
-						//destroy a turret
-						if ($this->hasBuilding(PLANET_TURRET)) {
-							$results .= 'This team destroys <span style = "color:red;">1</span> turret.<br />';
-							$this->destroyBuilding(PLANET_TURRET, 1);
-							break;
-						}
-						//if no turrets try weapon mounts
-						if ($this->hasBuilding(PLANET_WEAPON_MOUNT)) {
-							$results .= 'This team destroys <span style = "color:red;">1</span> weapon mount.<br />';
-							$this->destroyBuilding(PLANET_WEAPON_MOUNT, 1);
-							break;
-						}
-					case 2:
-					case 3:
-						//destroy a hangar
-						if ($this->hasBuilding(PLANET_HANGAR)) {
-							$results .= 'This team destroys <span style ="color:red;">1</span> hangar.<br />';
-							$this->destroyBuilding(PLANET_HANGAR, 1);
-							$this->checkForExcessDefense();
-							break;
-						}
-						//if no hangars we fall through
-					case 4:
-					case 5:
-					case 6:
-						//destroy a gen
-						if ($this->hasBuilding(PLANET_GENERATOR)) {
-							$results .= 'This team destroys <span style ="color:red;">1</span> generator.<br />';
-							$this->destroyBuilding(PLANET_GENERATOR, 1);
-							$this->checkForExcessDefense();
-							break;
-						}
-						//if no gens try bunker
-						if ($this->hasBuilding(PLANET_BUNKER)) {
-							$results .= 'This team destroys <span style ="color:red;">1</span> bunker.<br />';
-							$this->destroyBuilding(PLANET_BUNKER, 1);
-							$this->checkForExcessDefense();
-							break;
-						}
-						
-						//if no bunker then we fall through
-					default:
-						//very rare that we will not have a gen to destroy.
-						$results .= 'A planetary structure barely survived the onslaught.<br />';
-					break;
+				$chanceFactors = [];
+				foreach ($this->getStructureTypes() as $structureID => $structure) {
+					$chanceFactors[$structureID] = ($this->getBuilding($structureID) / $this->getMaxBuildings($structureID)) / $structure->baseTime();
 				}
+				$destroyID = getWeightedRandom($chanceFactors);
+				$this->destroyBuilding($destroyID, 1);
+				$this->checkForExcessDefense();
+				$results .= 'This team destroys <span class="red">1</span> '.$this->getStructureTypes($destroyID)->name().'.<br />';
 			}
 		}
 		return $results;
