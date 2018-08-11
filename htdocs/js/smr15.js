@@ -26,6 +26,16 @@
 		doCalc('race', 9, 'racedist');
 	};
 
+	// Set the total number of ports to zero
+	window.setZero = function(maxPortLevel) {
+		var df = document.FORM;
+		for (var i=1; i<=maxPortLevel; i++) {
+			df['port'+i].value = 0;
+		}
+		df.total.value = 0;
+	};
+
+	// Set the port race distribution to be equal
 	window.setEven = function() {
 		var i = 2, df=document.FORM;
 		df.race1.value = 12;
