@@ -162,13 +162,13 @@ class ProtoPlanet extends SmrPlanetType {
 		PLANET_WEAPON_MOUNT => [
 			'max_amount' => 20,
 			'base_time' => 32400,
-			'credit_cost' => 500000,
+			'credit_cost' => 300000,
 			'exp_gain' => 270,
 		],
 		PLANET_RADAR => [
 			'max_amount' => 10,
 			'base_time' => 64800,
-			'credit_cost' => 3000000,
+			'credit_cost' => 1000000,
 			'exp_gain' => 540,
 		],
 	];
