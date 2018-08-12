@@ -172,6 +172,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->displayMissions = $db->getBoolean('display_missions');
 			$this->displayWeapons = $db->getBoolean('display_weapons');
 			$this->forceDropMessages = $db->getBoolean('force_drop_messages');
+			$this->groupScoutMessages = $db->getField('group_scout_messages');
 			$this->ignoreGlobals = $db->getBoolean('ignore_globals');
 			$this->newbieWarning = $db->getBoolean('newbie_warning');
 			$this->nameChanged = $db->getBoolean('name_changed');
@@ -562,6 +563,28 @@ class SmrPlayer extends AbstractSmrPlayer {
 			return;
 		$this->forceDropMessages=$bool;
 		$this->hasChanged=true;
+	}
+
+	function getScoutMessageGroupLimit() {
+		if ($this->groupScoutMessages == 'ALWAYS') {
+			return 0;
+		} elseif ($this->groupScoutMessages == 'AUTO') {
+			return MESSAGES_PER_PAGE;
+		} elseif ($this->groupScoutMessages == 'NEVER') {
+			return PHP_INT_MAX;
+		}
+	}
+
+	function getGroupScoutMessages() {
+		return $this->groupScoutMessages;
+	}
+
+	function setGroupScoutMessages($setting) {
+		if ($this->groupScoutMessages == $setting) {
+			return;
+		}
+		$this->groupScoutMessages = $setting;
+		$this->hasChanged = true;
 	}
 
 	function getLastTurnUpdate() {
@@ -1157,6 +1180,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', display_missions='.$this->db->escapeBoolean($this->displayMissions).
 				', display_weapons='.$this->db->escapeBoolean($this->displayWeapons).
 				', force_drop_messages='.$this->db->escapeBoolean($this->forceDropMessages).
+				', group_scout_messages='.$this->db->escapeString($this->groupScoutMessages).
 				', ignore_globals='.$this->db->escapeBoolean($this->ignoreGlobals).
 				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning).
 				', name_changed = ' . $this->db->escapeBoolean($this->nameChanged).

@@ -134,8 +134,10 @@ else {
 	}
 	$template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
-	if ($messageBox['Type'] == MSG_GLOBAL) {
-		$template->assign('IgnoreGlobalsFormHref', SmrSession::getNewHREF(create_container('message_global_ignore.php')));
+	if ($messageBox['Type'] == MSG_GLOBAL || $messageBox['Type'] == MSG_SCOUT) {
+		$container = create_container('message_preference_processing.php');
+		transfer('folder_id');
+		$template->assign('PreferencesFormHREF', SmrSession::getNewHREF($container));
 	}
 
 	$container = create_container('message_delete_processing.php');
@@ -151,7 +153,7 @@ else {
 	$messageBox['Messages'] = array ();
 
 	// Group scout messages if they wouldn't fit on a single page
-	if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMessages'] > MESSAGES_PER_PAGE) {
+	if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
 		// get rid of all old scout messages (>48h)
 		$db->query('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(TIME) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
 

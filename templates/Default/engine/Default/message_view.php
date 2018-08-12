@@ -35,9 +35,18 @@ if (isset($MessageBoxes)) { ?>
 }
 else {
 	if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
-		<form name="IgnoreGlobalsForm" method="POST" action="<?php echo $IgnoreGlobalsFormHref; ?>">
+		<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 			<div align="center">Ignore global messages?&nbsp;&nbsp;
-				<input type="submit" name="action" value="Yes" id="InputFields"<?php if ($ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />&nbsp;<input type="submit" name="action" value="No" id="InputFields"<?php if (!$ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />
+				<input type="submit" name="ignore_globals" value="Yes" id="InputFields"<?php if ($ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />&nbsp;
+				<input type="submit" name="ignore_globals" value="No" id="InputFields"<?php if (!$ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />
+			</div>
+		</form><?php
+	} elseif ($MessageBox['Type'] == MSG_SCOUT) { ?>
+		<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
+			<div class="center">Group scout messages?&nbsp;&nbsp;
+				<input type="submit" name="group_scouts" value="Never" <?php if ($ThisPlayer->getGroupScoutMessages() == 'NEVER') { ?> style="background-color:green;" <?php } ?> />&nbsp;
+				<input type="submit" name="group_scouts" value="Auto" <?php if ($ThisPlayer->getGroupScoutMessages() == 'AUTO') { ?> style="background-color:green;" <?php } ?> />&nbsp;
+				<input type="submit" name="group_scouts" value="Always" <?php if ($ThisPlayer->getGroupScoutMessages() == 'ALWAYS') { ?> style="background-color:green;" <?php } ?> />
 			</div>
 		</form><?php
 	} ?>
