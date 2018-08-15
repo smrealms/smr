@@ -82,6 +82,20 @@ if(isset($GameID)) { ?>
 				<td>&nbsp;</td>
 				<td><input type="submit" name="action" value=" Alter Player <?php if($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?>" id="InputFields" /></td>
 			</tr>
+
+			<tr>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td>Chat Sharing:</td>
+				<td><div class="buttonA"><a href="<?php echo $ChatSharingHREF; ?>" class="buttonA">&nbsp;Manage Chat Sharing Settings&nbsp;</a></div></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>These settings specify who you share your game information with in supported chat services.</td>
+			<tr>
+
 		</table>
 	</form>
 	<br /><?php
@@ -192,19 +206,6 @@ if(isset($GameID)) { ?>
 			<td><input type="submit" name="action" value="Change Name" id="InputFields" /></td>
 		</tr>
 	
-		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-
-		<tr>
-			<td>Chat Sharing:</td>
-			<td><div class="buttonA"><a href="<?php echo $ChatSharingHREF; ?>" class="buttonA">&nbsp;Manage Chat Sharing Settings&nbsp;</a></div></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>These settings specify who you share your game information with in supported chat services.</td>
-		<tr>
-
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
