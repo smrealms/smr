@@ -231,7 +231,6 @@ class SmrSession {
 			self::$old_account_id	= 0;
 			self::$game_id		= 0;
 			self::$var			= array();
-			self::$game_id		= 0;
 			self::$commonIDs	= array();
 		}
 	}
