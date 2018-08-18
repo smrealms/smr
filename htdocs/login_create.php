@@ -64,10 +64,6 @@ require_once('config.inc');
 						<td width='73%'><input type='email' name='email' size='50' maxlength='128' id='InputFields'></td>
 					</tr>
 					<tr>
-						<td width='27%'>Verify E-Mail Address:</td>
-						<td width='73%'><input type='email' name='email_verify' size='50' maxlength='128' id='InputFields'></td>
-					</tr>
-					<tr>
 						<td width='27%'>Local Time:</td>
 						<td width='73%'>
 							<select name="timez" id="InputFields"><?php

@@ -99,13 +99,6 @@ try {
 			exit;
 		}
 
-		$email_verify = $_REQUEST['email_verify'];
-		if ($email != $email_verify) {
-			$msg = 'The eMail addresses you entered do not match.';
-			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
-
 		// get user and host for the provided address
 		list($user, $host) = explode('@', $email);
 
