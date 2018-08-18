@@ -1,5 +1,3 @@
-<h1>VALIDATION REMINDER</h1><br />
-
 <form name="FORM" method="POST" action="<?php echo $ValidateFormHref ?>">
 
 <?php
@@ -7,14 +5,14 @@ if(isset($Message)) {
 	echo $Message; ?><br /><?php
 } ?>
 
-<p>Welcome <?php echo $ThisAccount->getFirstName() ?></p>
 <p>
 	Thank you for trying out Space Merchant Realms! We hope that you are enjoying the game. However,
-	in order for you to experience the full features of the game, you need to validate your login.
-	When you first created your login, you should have received an email confirmation which includes
-	your validation code. If you have not received this email, please verify that you gave us the
-	correct address by going to the user preferences page. If the address is incorrect, please edit
-	it and a new validation code will be sent to you.
+	in order for you to experience the full features of the game, you need to validate your e-mail address.
+	When you first created your account, a validation code was sent to: <b><?php echo $ThisAccount->getEmail(); ?></b>.
+</p>
+<p>
+	If this address is incorrect, please edit it in your <a href="<?php echo $PreferencesLink; ?>"><u>Preferences</u></a> and a new validation code will be sent to you.
+	Otherwise, if you have not received an e-mail yet, please contact an admin for help.
 </p>
 <p>
 	The following restrictions are placed on users who have not validated their account:

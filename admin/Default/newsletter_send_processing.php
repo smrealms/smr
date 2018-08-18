@@ -44,7 +44,7 @@ if($_REQUEST['to_email']=='*') {
 	ob_implicit_flush(true);    // instruct PHP to flush after every output call
 	ob_end_flush();     // turn off PHP output buffering
 
-	$db->query('SELECT account_id, email, first_name, last_name FROM account WHERE validated="TRUE" AND email NOT IN ("noone@smrealms.de","NPC@smrealms.de") AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
+	$db->query('SELECT account_id, email, login FROM account WHERE validated="TRUE" AND email NOT IN ("noone@smrealms.de","NPC@smrealms.de") AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
 
 	$total = $db->getNumRows();
 	echo 'Will send ' . $total . ' mails...<br /><br />';
@@ -61,7 +61,7 @@ if($_REQUEST['to_email']=='*') {
 		// get account data
 		$account_id	= $db->getField('account_id');
 		$to_email	= $db->getField('email');
-		$to_name	= $db->getField('first_name') . ' ' . $db->getField('last_name');
+		$to_name	= $db->getField('login');
 
 		// Reset the message body with personalized salutation, if requested
 		if ($_REQUEST['salutation']) {

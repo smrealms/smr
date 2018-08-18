@@ -39,28 +39,17 @@
 				</form>
 				<br/>
 
-				<h1>Or Create Login</h1>
-				<p align="justify">
-					Creating multiple logins will not be tolerated. If we discover someone playing with several
-					logins, then all of them will be deleted. We have implemented architecture elements to help
-					us detect this. There will be no toleration for multis! If an player is caught using a multi
-					that player's accounts WILL be deleted without ANY warning.<br />
-					<a href="http://smrcnn.smrealms.de/viewtopic.php?t=382" style="font-weight:bold;">Click HERE</a> for more information.
+				<h1>Or Create New Login</h1>
+				<p align='justify'>
+					Creating multiple logins is not allowed.
+					<a href='https://wiki.smrealms.de/rules' target="_blank" style='font-weight:bold;'>Click HERE</a> for more information.
 				</p>
 
+
+				<p class="red">Personal information is confidential and will not be sold to third parties.</p>
 				<form action="login_create_processing.php?socialReg=1" method="POST">
-					<div align="center" style="color:red;">*** Any personal information is confidential and will not be sold to third parties. ***</div>
 
 					<table border="0" cellspacing="0" cellpadding="1">
-						<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr>
-							<th colspan="2">Game Information</th>
-						</tr>
-						<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
 						<tr>
 							<td width="27%">User name:</td>
 							<td width="73%"><input type="text" name="login" size="20" maxlength="32" id="InputFields"></td>
@@ -103,15 +92,10 @@
 						</tr>
 					</table>
 
-					<p>&nbsp;</p>
-
-					<div align="center" style="font-size:80%;">
-						I have read and accepted the User Agreement above,<br />
-						made sure all information submitted is correct,<br />
-						and understand that my account can be closed or deleted<br />
-						with no warning should it contain<br />
-						invalid or false information.<br /><br />
-						<input type="checkbox" name="agreement" value="checkbox">
+					<div style='font-size:80%;'>
+						<input type='checkbox' name='agreement' value='checkbox'>
+						I have read and accept the
+						<a href='https://wiki.smrealms.de/rules' target="_blank" style='font-weight:bold;'>Terms of Use</a>.
 					</div>
 
 					<p><input type="submit" name="create_login" value="Create Login"></p>
