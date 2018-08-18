@@ -10,8 +10,6 @@ class SocialLogin {
 	private $loginType = null;
 	private $userID = null;
 	private $email = null;
-	private $firstName = null;
-	private $lastName = null;
 	private static $facebook=null;
 	private static $twitter=null;
 	private static $openID=null;
@@ -88,7 +86,7 @@ class SocialLogin {
 			throw new Exception('OpenID does not exist for login type: '.$loginType);
 		}
 		$openID =& self::getOpenIdObj();
-		$openID->required = array('contact/email','namePerson/first','namePerson/last');
+		$openID->required = array('contact/email');
 		$openID->returnUrl = self::getRedirectUrl($loginType);
 		$openID->identity = self::$OPEN_ID_IDENTITIES[$loginType];
 		return $openID->authUrl();
@@ -100,12 +98,10 @@ class SocialLogin {
 		if($loginType == self::FACEBOOK) {
 			$helper = self::getFacebookObj()->getRedirectLoginHelper();
 			$accessToken = $helper->getAccessToken(self::getRedirectUrl($loginType));
-			$response = self::getFacebookObj()->get('/me?fields=first_name,last_name,email', $accessToken);
+			$response = self::getFacebookObj()->get('/me?fields=email', $accessToken);
 			$userInfo = $response->getGraphUser();
 			$this->userID = $userInfo->getId();
 			$this->email = $userInfo->getEmail();
-			$this->firstName = $userInfo->getFirstName();
-			$this->lastName = $userInfo->getLastName();
 			$this->valid = true;
 		}
 		else if($loginType == self::TWITTER) {
@@ -114,14 +110,6 @@ class SocialLogin {
 
 				$userInfo = self::getTwitterObj()->get('account/verify_credentials');
 				$this->userID=$userInfo->id_str;
-				$spaceIndex = strpos($userInfo->name, ' ');
-				if($spaceIndex===false) {
-					$this->firstName=$userInfo->name;
-				}
-				else {
-					$this->firstName=substr($userInfo->name, 0, $spaceIndex);
-					$this->lastName=substr($userInfo->name, $spaceIndex);
-				}
 				$this->valid = true;
 			}
 		}
@@ -131,8 +119,6 @@ class SocialLogin {
 					$this->userID=self::getOpenIdObj()->identity;
 					$userInfo = self::getOpenIdObj()->getAttributes();
 					$this->email=$userInfo['contact/email'];
-					$this->firstName=$userInfo['namePerson/first'];
-					$this->lastName=$userInfo['namePerson/last'];
 					$this->valid = true;
 				}
 			}

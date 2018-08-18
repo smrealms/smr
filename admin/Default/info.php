@@ -58,13 +58,10 @@ if (!isset($number)) {
 		if ($db->nextRecord()) {
 
 			$PHP_OUTPUT.=('<tr>');
-			$aname = $db->getField('first_name');
 			$login_name = $db->getField('login');
-			$aname .= '&nbsp;';
-			$aname .= $db->getField('last_name');
 			$email = $db->getField('email');
 			$id = $db->getField('account_id');
-			$PHP_OUTPUT.=('<td align="center">'.$aname.'<br />'.$name.'<br />Account:'.$id.'</td>');
+			$PHP_OUTPUT.=('<td align="center">'.$name.'<br />Account:'.$id.'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$email.'</td>');
 			//check who they match...first find out the method.
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db2->escapeNumber($id));

@@ -120,23 +120,6 @@ try {
 		$email = $_SESSION['socialLogin']->getEmail();
 	}
 
-
-	if(!$socialLogin) {
-		$first_name = $_REQUEST['first_name'];
-		if (empty($first_name)) {
-			$msg = 'First name is missing!';
-			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
-
-		$last_name = $_REQUEST['last_name'];
-		if (empty($last_name)) {
-			$msg = 'Last name is missing!';
-			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
-	}
-
 	if ($login == $password) {
 		$msg = 'Your chosen password is invalid!';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -171,7 +154,7 @@ try {
 
 	// creates a new user account object
 	try {
-		$account = SmrAccount::createAccount($login,$password,$email,$first_name,$last_name,$timez,$referral);
+		$account = SmrAccount::createAccount($login, $password, $email, $timez, $referral);
 	}
 	catch(AccountNotFoundException $e) {
 		$msg = 'Invalid referral account ID!';

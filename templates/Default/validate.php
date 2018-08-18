@@ -7,7 +7,6 @@ if(isset($Message)) {
 	echo $Message; ?><br /><?php
 } ?>
 
-<p>Welcome <?php echo $ThisAccount->getFirstName() ?></p>
 <p>
 	Thank you for trying out Space Merchant Realms! We hope that you are enjoying the game. However,
 	in order for you to experience the full features of the game, you need to validate your login.

@@ -83,23 +83,6 @@ require_once('config.inc');
 						<td width='73%'><input type='text' name='referral_id' size='10' maxlength='20' id='InputFields'<?php if(isset($_REQUEST['ref'])){ echo 'value="'.htmlspecialchars($_REQUEST['ref']).'"'; }?>></td>
 					</tr>
 					<tr>
-						<td colspan='2'>&nbsp;</td>
-					</tr>
-					<tr>
-						<th colspan='2'>User Information</th>
-					</tr>
-					<tr>
-						<td colspan='2'>&nbsp;</td>
-					</tr>
-					<tr>
-						<td width='27%'>First Name:</td>
-						<td width='73%'><input type='text' name='first_name' size='20' maxlength='50' id='InputFields'></td>
-					</tr>
-					<tr>
-						<td width='27%'>Last Name:</td>
-						<td width='73%'><input type='text' name='last_name' size='20' maxlength='50' id='InputFields'></td>
-					</tr>
-					<tr>
 						<td colspan='2'><div class="g-recaptcha" data-sitekey="<?php echo RECAPTCHA_PUBLIC; ?>"></div></td>
 					</tr>
 					</table>
