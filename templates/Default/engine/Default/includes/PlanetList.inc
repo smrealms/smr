@@ -60,9 +60,8 @@ if (count($Planets) > 0) { ?>
 					</td>
 					<td class="build noWrap center"><?php
 						if ($Planet->hasCurrentlyBuilding()) {
-							$PLANET_BUILDINGS = Globals::getPlanetBuildings();
 							foreach($Planet->getCurrentlyBuilding() as $Building) {
-								echo $PLANET_BUILDINGS[$Building['ConstructionID']]['Name']; ?><br /><?php
+								echo $Planet->getStructureTypes($Building['ConstructionID'])->name(); ?><br /><?php
 								echo format_time($Building['TimeRemaining'], true);
 							}
 						}
