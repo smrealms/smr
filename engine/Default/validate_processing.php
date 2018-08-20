@@ -1,9 +1,12 @@
 <?php
 
-if (!empty($_REQUEST['validation_code'])) {
-	// is this our validation code?
-	if ($account->getValidationCode() != $_REQUEST['validation_code'])
-		create_error('The validation code you entered is incorrect.');
+// Only skip validation check if we explicitly chose to validate later
+if ($_REQUEST['action'] != "I'll validate later.") {
+	if ($account->getValidationCode() != $_REQUEST['validation_code']) {
+		$container = create_container('skeleton.php', 'validate.php');
+		$container['msg'] = '<span class="red">The validation code you entered is incorrect!</span>';
+		forward($container);
+	}
 
 	$account->setValidated(true);
 
