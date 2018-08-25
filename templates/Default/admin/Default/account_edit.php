@@ -147,12 +147,28 @@
 				</tr>
 
 				<tr>
-					<td align="right" valign="top" class="bold">Close by User Request:</td>
+					<td align="right" valign="top" class="bold">Close Account:</td>
 					<td>
-						Users will be able to re-open their account by themselves if this
-						account<br />closing method is used. It is useful if, e.g., they do not
-						want to receive<br />any more newsletters.<br />
-						<p><input type="checkbox" name="close_by_request" />Close account</p>
+						<table>
+							<tr>
+								<td><input type="radio" name="special_close" value="<?php echo CLOSE_ACCOUNT_BY_REQUEST_REASON; ?>"></td>
+								<td>
+									<b>Close by User Request</b><br />
+									Users will be able to re-open their account by themselves if this
+									account closing method is used. It is useful if, e.g., they do not
+									want to receive any more newsletters.
+								</td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="special_close" value="<?php echo CLOSE_ACCOUNT_INVALID_EMAIL_REASON; ?>"></td>
+								<td>
+									<b>Close due to Invalid E-mail</b><br />
+									Use this if the e-mail address for this account no longer exists,
+									e.g. if we get a newsletter bounce. Users can re-open their account
+									by providing a new e-mail address.
+								</td>
+							</tr>
+						</table>
 						<p>Note (optional): <input type="text" name="close_by_request_note" id="InputFields" /></p>
 					</td>
 				</tr>
