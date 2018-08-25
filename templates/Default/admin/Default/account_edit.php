@@ -61,6 +61,22 @@
 				<tr>
 				<td align="right" class="bold">Points:</td>
 				<td><?php echo $EditingAccount->getPoints(); ?></td>
+				</tr>
+				<tr>
+					<td class="top right bold">Status:</td>
+					<td><?php
+						if ($Disabled) { ?>
+							<span class="red">CLOSED</span> (<?php echo $Disabled['Reason']; ?>)<br />
+							The account is set to <?php
+							if ($Disabled['Time'] > 0) { ?>
+								reopen on <?php echo date(DEFAULT_DATE_FULL_LONG, $Disabled['Time']); ?>.<?php
+							} else { ?>
+								never reopen.</p><?php
+							}
+						} else { ?>
+							<span class="green">OPEN</span><?php
+						} ?>
+					</td>
 				</tr><?php
 			} ?>
 
@@ -169,7 +185,6 @@
 							<input type="radio" name="choise" value="pre_select">
 							<select name="reason_pre_select" onchange="go()">
 								<option value="0">[Please Select]</option><?php
-								$Disabled = $EditingAccount->isDisabled();
 								foreach($BanReasons as $ReasonID => $BanReason) { ?>
 									<option value="<?php echo $ReasonID; ?>"<?php if($Disabled !== false && $ReasonID == $Disabled['ReasonID']) { ?> selected="selected"<?php } ?>><?php echo $BanReason; ?></option><?php
 								} ?>
@@ -182,16 +197,7 @@
 						<p><input type="radio" name="choise" value="reopen">Reopen!</p>
 						<p><input type="text" name="suspicion" id="InputFields" disabled="disabled" style="width:400px;" value="For Multi Closings Only"></p>
 						<p>Mail ban: <input type="number" name="mailban" id="InputFields" class="center" style="width:30px;"> days</p>
-						<p>Points: <input type="number" name="points" id="InputFields" class="center" style="width:30px;"> points</p><?php
-						if ($Disabled !== false) {
-							echo $Disabled['Reason'];
-							if ($Disabled['Time'] > 0) { ?>
-								<p>The account is set to reopen on <?php echo date(DEFAULT_DATE_FULL_LONG, $Disabled['Time']); ?>.</p><?php
-							}
-							else { ?>
-								<p>The account is set to never reopen.</p><?php
-							}
-						} ?>
+						<p>Points: <input type="number" name="points" id="InputFields" class="center" style="width:30px;"> points</p>
 					</td>
 				</tr>
 
