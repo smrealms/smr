@@ -678,7 +678,7 @@ abstract class AbstractSmrAccount {
 						SmrSession::$old_account_id = $db2->getInt('account_id');
 						// save session (incase we forward)
 						SmrSession::update();
-						if ($db3->getField('reason') == 'Invalid eMail') {
+						if ($db3->getField('reason') == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
 							header('Location: /email.php');
 							exit;
 						}

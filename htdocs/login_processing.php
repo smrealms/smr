@@ -139,7 +139,7 @@ try {
 	if(($disabled = $account->isDisabled())!==false) {
 		// save session (incase we forward)
 		SmrSession::update();
-		if ($disabled['Reason'] == 'Invalid eMail') {
+		if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
 			header('Location: /email.php');
 			exit;
 		}
