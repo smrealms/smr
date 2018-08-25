@@ -18,45 +18,7 @@ if (Globals::useCompatibilityDatabases() && $action == 'Link Account') {
 else if ($action == 'Save and resend validation code') {
 	$email = $_REQUEST['email'];
 
-	// get user and host for the provided address
-	list($user, $host) = explode('@', $email);
-
-	// check if the host got a MX or at least an A entry
-	if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A'))
-		create_error('This is not a valid email address! The domain '.$db->escapeString($host).' does not exist.');
-
-	if (strstr($email, ' '))
-		create_error('The eMail is invalid! It cannot contain any spaces.');
-
-	$db->query('SELECT 1 FROM account WHERE email = '.$db->escapeString($email).' and account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-	if ($db->getNumRows() > 0)
-		create_error('This eMail address is already registered.');
-
-	$account->setEmail($email);
-	$account->setValidationCode(substr(SmrSession::$session_id, 0, 10));
-	$account->setValidated(false);
-	$account->update();
-
-	// remember when we sent validation code
-	$db->query('REPLACE INTO notification (notification_type, account_id, time)
-				VALUES(\'validation_code\', '.$db->escapeNumber($account->getAccountID()).', ' . $db->escapeNumber(TIME) . ')');
-
-	$emailMessage =
-		'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.
-		'   Your new validation code is: '.$account->getValidationCode().EOL.EOL.
-		'The Space Merchant Realms server is on the web at '.URL.'/.'.EOL.
-		'Please verify within the next 7 days or your account will be automatically deleted.';
-
-	$mail = setupMailer();
-	$mail->Subject = 'Your validation code!';
-	$mail->setFrom('support@smrealms.de', 'SMR Support');
-	$mail->msgHTML(nl2br($emailMessage));
-	$mail->addAddress($account->getEmail(), $account->getHofName());
-	$mail->send();
-
-	// get rid of that email permission
-	$db->query('DELETE FROM account_is_closed
-				WHERE account_id = '.$db->escapeNumber($account->getAccountID()).' AND reason_id = 1');
+	$account->changeEmail($_REQUEST['email']);
 
 	// overwrite container
 	$container['body'] = 'validate.php';

@@ -104,8 +104,12 @@ try {
 		// save session (incase we forward)
 		SmrSession::update();
 		if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
-			header('Location: /email.php');
-			exit;
+			if (isset($var['do_reopen_account'])) {
+				// The user has attempted to re-validate their e-mail
+				forward(create_container('invalid_email_processing.php'));
+			} else {
+				forward(create_container('skeleton.php', 'invalid_email.php'));
+			}
 		}
 		else if ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
 			if (isset($var['do_reopen_account'])) {
