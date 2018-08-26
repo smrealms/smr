@@ -6,7 +6,6 @@ $curr_account = SmrAccount::getAccount($account_id);
 // request
 $donation = $_REQUEST['donation'];
 $smr_credit = $_REQUEST['smr_credit'];
-$reopenType = $_REQUEST['reopen_type'];
 $choise = $_REQUEST['choise'];
 $reason_pre_select = $_REQUEST['reason_pre_select'];
 $reason_msg = $_REQUEST['reason_msg'];
@@ -15,7 +14,6 @@ $logging_status = $_REQUEST['logging_status']=='TRUE';
 $except = $_REQUEST['exception_add'];
 $names = $_REQUEST['player_name'];
 $points = intval($_REQUEST['points']);
-$mailBan = intval($_REQUEST['mailban']);
 $delete = $_REQUEST['delete'];
 
 $msg = 'You ';
@@ -60,22 +58,14 @@ if (!empty($_POST['special_close'])) {
 }
 
 if ($choise == 'reopen') {
-	if($reopenType=='account') {
-		//do we have points
-		$curr_account->removePoints($points);
-		$curr_account->unbanAccount($account);
-		if (strlen($msg) > 9)
-			$msg .= 'and ';
-		$msg .= 'reopened ';
-	}
-	else if($reopenType=='mail') {
-		$account->setMailBanned(TIME);
-		if (strlen($msg) > 9)
-			$msg .= 'and ';
-		$msg .= 'removed mailban ';
-	}
+	//do we have points
+	$curr_account->removePoints($points);
+	$curr_account->unbanAccount($account);
+	if (strlen($msg) > 9)
+		$msg .= 'and ';
+	$msg .= 'reopened account ';
 }
-else if ($points > 0 || $mailBan > 0) {
+else if ($points > 0) {
 	if ($choise == 'individual') {
 		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escape_string($reason_msg) . ')');
 		$reason_id = $db->getInsertID();
@@ -83,23 +73,37 @@ else if ($points > 0 || $mailBan > 0) {
 	else {
 		$reason_id = $reason_pre_select;
 	}
-	$expire_msg='';
-	if($mailBan > 0) {
-		$curr_account->setMailBanned(TIME+$mailBan*86400);
-		$expire_msg .= 'for '.$mailBan.' days (mail)';
-		if (strlen($msg) > 9)
-			$msg .= 'and ';
-		$msg .= 'mail banned ';
-	}
 
-	if($points > 0 && ($bannedDays = $curr_account->addPoints($points,$account,$reason_id,$_REQUEST['suspicion']))!==false) {
-		if ($bannedDays > 0)
-			$expire_msg .= 'for '.$bannedDays.' days(account)';
-		else
-			$expire_msg .= 'forever!(account)';
+	$bannedDays = $curr_account->addPoints($points,$account,$reason_id,$_REQUEST['suspicion']);
+	if (strlen($msg) > 9)
+		$msg .= 'and ';
+	$msg .= 'added '.$points.' ban points ';
+
+	if ($bannedDays !== false) {
+		if ($bannedDays > 0) {
+			$expire_msg = 'for '.$bannedDays.' days';
+		} else {
+			$expire_msg = 'indefinitely';
+		}
 		if (strlen($msg) > 9)
 			$msg .= 'and ';
-		$msg .= 'closed ';
+		$msg .= 'and closed ' . $expire_msg . ' ';
+	}
+}
+
+if (!empty($_POST['mailban'])) {
+	$mailban = $_POST['mailban'];
+	if ($mailban == 'remove') {
+		$curr_account->setMailBanned(TIME);
+		if (strlen($msg) > 9)
+			$msg .= 'and ';
+		$msg .= 'removed mailban ';
+	} elseif ($mailban == 'add_days') {
+		$days = $_POST['mailban_days'];
+		$curr_account->increaseMailBanned($days*86400);
+		if (strlen($msg) > 9)
+			$msg .= 'and ';
+		$msg .= 'mail banned for '.$days.' days ';
 	}
 }
 
@@ -235,7 +239,7 @@ if (!empty($delete)) {
 
 //get his login name
 $container = create_container('skeleton.php', 'account_edit.php');
-$container['msg'] = $msg.' for the account of '.$curr_account->getLogin().' '.$expire_msg;
+$container['msg'] = $msg.' for the account of '.$curr_account->getLogin();
 
 $curr_account->update();
 forward($container);

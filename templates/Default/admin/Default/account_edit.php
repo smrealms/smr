@@ -182,24 +182,23 @@
 					function go() {
 						var val = window.document.form_acc.reason_pre_select.value;
 						if (val == 2) {
-							alert("Please use the following syntax when you enter the multi closing info: 'Match list:1+5+7' Thanks");
+							alert("Please use the following syntax when you enter the multi closing suspicion: 'Match list:1+5+7' Thanks");
 							window.document.form_acc.suspicion.value = 'Match list:';
 							window.document.form_acc.suspicion.disabled = false;
 							window.document.form_acc.suspicion.focus();
 						} else {
-							window.document.form_acc.suspicion.value = 'For Multi Closings Only';
+							window.document.form_acc.suspicion.value = 'Use for multi closings only';
 							window.document.form_acc.suspicion.disabled = true;
 						}
 						window.document.form_acc.choise[0].checked = true;
 					}
 				</script>
 				<tr>
-					<td align="right" valign="top" class="bold">Close Reason:</td>
+					<td align="right" valign="top" class="bold">Ban Points:</td>
 					<td>
-						<p>Reopen type:<input type="radio" name="reopen_type" value="account">Account close <input type="radio" name="reopen_type" value="mail">Mail ban</p>
 						<p>
 							<input type="radio" name="choise" value="pre_select">
-							<select name="reason_pre_select" onchange="go()">
+							Existing Reason: <select name="reason_pre_select" onchange="go()">
 								<option value="0">[Please Select]</option><?php
 								foreach($BanReasons as $ReasonID => $BanReason) { ?>
 									<option value="<?php echo $ReasonID; ?>"<?php if($Disabled !== false && $ReasonID == $Disabled['ReasonID']) { ?> selected="selected"<?php } ?>><?php echo $BanReason; ?></option><?php
@@ -208,12 +207,33 @@
 						</p>
 						<p>
 							<input type="radio" name="choise" value="individual">
-							<input type="text" name="reason_msg" id="InputFields" style="width:400px;">
+							New Reason: <input type="text" name="reason_msg" id="InputFields" style="width:400px;">
 						</p>
-						<p><input type="radio" name="choise" value="reopen">Reopen!</p>
-						<p><input type="text" name="suspicion" id="InputFields" disabled="disabled" style="width:400px;" value="For Multi Closings Only"></p>
-						<p>Mail ban: <input type="number" name="mailban" id="InputFields" class="center" style="width:30px;"> days</p>
-						<p>Points: <input type="number" name="points" id="InputFields" class="center" style="width:30px;"> points</p>
+						<p><input type="radio" name="choise" value="reopen"> Reopen! (Will remove ban points, if specified)</p>
+						<p>Suspicion: <input type="text" name="suspicion" id="InputFields" disabled="disabled" style="width:300px;" value="Use for multi closings only"></p>
+						<p>Ban Points: <input type="number" name="points" id="InputFields" class="center" style="width:40px;"> points</p>
+					</td>
+				</tr>
+
+				<tr>
+					<td>&nbsp;</td>
+					<td><hr noshade style="height:1px; border:1px solid white;"></td>
+				</tr>
+
+				<tr>
+					<td class="right bold">Mail ban:</td>
+					<td>
+						Current mail ban: <?php
+						if ($EditingAccount->isMailBanned()) { ?>
+							<span class="red">For <?php echo format_time($EditingAccount->getMailBanned() - TIME); ?></span><?php
+						} else { ?>
+							<span class="green">None</span><?php
+						} ?>
+						<br /><br />
+						<input type="radio" name="mailban" value="add_days" />
+						Increase mail ban by <input type="number" name="mailban_days" class="InputFields center" style="width:40px" /> days
+						<br />
+						<input type="radio" name="mailban" value="remove" /> Remove mail ban
 					</td>
 				</tr>
 
