@@ -6,7 +6,7 @@ $curr_account = SmrAccount::getAccount($account_id);
 // request
 $donation = $_REQUEST['donation'];
 $smr_credit = $_REQUEST['smr_credit'];
-$choise = $_REQUEST['choise'];
+$choise = isset($_POST['choise']) ? $_POST['choise'] : '';
 $reason_pre_select = $_REQUEST['reason_pre_select'];
 $reason_msg = $_REQUEST['reason_msg'];
 $veteran_status = $_REQUEST['veteran_status']=='TRUE';
@@ -70,7 +70,8 @@ else if ($points > 0) {
 		$reason_id = $reason_pre_select;
 	}
 
-	$bannedDays = $curr_account->addPoints($points,$account,$reason_id,$_REQUEST['suspicion']);
+	$suspicion = isset($_POST['suspicion']) ? $_POST['suspicion'] : '';
+	$bannedDays = $curr_account->addPoints($points, $account, $reason_id, $suspicion);
 	$actions[] = 'added '.$points.' ban points';
 
 	if ($bannedDays !== false) {
