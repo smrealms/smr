@@ -116,13 +116,11 @@ try {
 				// The user has requested to reopen their account
 				$account->unbanAccount($account);
 			} else {
-				$container = create_container('skeleton.php', 'reopen_account.php');
-				forward($container);
+				forward(create_container('skeleton.php', 'reopen_account.php'));
 			}
 		}
 		else {
-			header('Location: /disabled.php');
-			exit;
+			forward(create_container('disabled.php'));
 		}
 	}
 	

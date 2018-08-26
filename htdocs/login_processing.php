@@ -141,8 +141,7 @@ try {
 		SmrSession::update();
 		if (($disabled['Reason'] != CLOSE_ACCOUNT_INVALID_EMAIL_REASON) &&
 		    ($disabled['Reason'] != CLOSE_ACCOUNT_BY_REQUEST_REASON)) {
-			header('Location: /disabled.php');
-			exit;
+			forward(create_container('disabled.php'));
 		}
 	}
 
