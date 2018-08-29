@@ -170,8 +170,7 @@ try {
 	// send email with validation code to user
 	$emailMessage =
 		'Your validation code is: '.$account->getValidationCode().EOL.
-		'The Space Merchant Realms server is on the web at '.URL.'/'.EOL .
-		'Please verify within the next 7 days or your account will be automatically deleted.';
+		'The Space Merchant Realms server is on the web at '.URL;
 
 	$mail = setupMailer();
 	$mail->Subject = 'New Space Merchant Realms Account';

@@ -678,7 +678,7 @@ abstract class AbstractSmrAccount {
 						SmrSession::$old_account_id = $db2->getInt('account_id');
 						// save session (incase we forward)
 						SmrSession::update();
-						if ($db3->getField('reason') == 'Invalid eMail') {
+						if ($db3->getField('reason') == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
 							header('Location: /email.php');
 							exit;
 						}
@@ -725,6 +725,55 @@ abstract class AbstractSmrAccount {
 		$this->email = $email;
 		$this->hasChanged = true;
 		$this->update();
+	}
+
+	/**
+	 * Change e-mail address, unvalidate the account, and resend validation code
+	 */
+	public function changeEmail($email) {
+		// get user and host for the provided address
+		list($user, $host) = explode('@', $email);
+
+		// check if the host got a MX or at least an A entry
+		if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
+			create_error('This is not a valid email address! The domain '.$host.' does not exist.');
+		}
+
+		if (strstr($email, ' ')) {
+			create_error('The email is invalid! It cannot contain any spaces.');
+		}
+
+		$this->db->query('SELECT 1 FROM account WHERE email = '.$this->db->escapeString($email).' and account_id != ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
+		if ($this->db->getNumRows() > 0) {
+			create_error('This email address is already registered.');
+		}
+
+		$this->setEmail($email);
+		$this->setValidationCode(substr(SmrSession::$session_id, 0, 10));
+		$this->setValidated(false);
+
+		// remember when we sent validation code
+		$this->db->query('REPLACE INTO notification (notification_type, account_id, time)
+				VALUES(\'validation_code\', '.$this->db->escapeNumber($this->getAccountID()).', ' . $this->db->escapeNumber(TIME) . ')');
+
+		$emailMessage =
+			'You changed your email address registered with SMR and need to revalidate now!'.EOL.EOL.
+			'   Your new validation code is: '.$this->getValidationCode().EOL.EOL.
+			'The Space Merchant Realms server is on the web at '.URL;
+
+		$mail = setupMailer();
+		$mail->Subject = 'Your validation code!';
+		$mail->setFrom('support@smrealms.de', 'SMR Support');
+		$mail->msgHTML(nl2br($emailMessage));
+		$mail->addAddress($this->getEmail(), $this->getHofName());
+		$mail->send();
+
+		// Remove an "Invalid email" ban (may or may not have one)
+		if ($disabled = $this->isDisabled()) {
+			if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
+				$this->unbanAccount($this);
+			}
+		}
 	}
 
 	public function getOffset() {

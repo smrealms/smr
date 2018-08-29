@@ -74,6 +74,8 @@ else {
 	}
 	$template->assign('EditingPlayers', $editingPlayers);
 
+	$template->assign('Disabled', $curr_account->isDisabled());
+
 	$banReasons = array();
 	$db->query('SELECT * FROM closing_reason');
 	while ($db->nextRecord()) {

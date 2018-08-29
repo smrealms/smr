@@ -6,9 +6,7 @@ $curr_account = SmrAccount::getAccount($account_id);
 // request
 $donation = $_REQUEST['donation'];
 $smr_credit = $_REQUEST['smr_credit'];
-$closeByRequest = $_REQUEST['close_by_request'];
-$reopenType = $_REQUEST['reopen_type'];
-$choise = $_REQUEST['choise'];
+$choise = isset($_POST['choise']) ? $_POST['choise'] : '';
 $reason_pre_select = $_REQUEST['reason_pre_select'];
 $reason_msg = $_REQUEST['reason_msg'];
 $veteran_status = $_REQUEST['veteran_status']=='TRUE';
@@ -16,10 +14,9 @@ $logging_status = $_REQUEST['logging_status']=='TRUE';
 $except = $_REQUEST['exception_add'];
 $names = $_REQUEST['player_name'];
 $points = intval($_REQUEST['points']);
-$mailBan = intval($_REQUEST['mailban']);
 $delete = $_REQUEST['delete'];
 
-$msg = 'You ';
+$actions = [];
 
 if (!empty($donation)) {
 	// add entry to account donated table
@@ -30,52 +27,41 @@ if (!empty($donation)) {
 		$curr_account->increaseSmrCredits($donation * CREDITS_PER_DOLLAR);
 	}
 
-	$msg .= 'added $'.$donation;
-
+	$actions[] = 'added $'.$donation;
 }
+
 if(!empty($_REQUEST['grant_credits'])&&is_numeric($_REQUEST['grant_credits'])) {
 	$curr_account->increaseSmrRewardCredits($_REQUEST['grant_credits']);
-	if (strlen($msg) > 9)
-		$msg .= 'and ';
-	$msg .= 'added ' . $_REQUEST['grant_credits'] . ' reward credits';
+	$actions[] = 'added ' . $_REQUEST['grant_credits'] . ' reward credits';
 }
 
-if ($closeByRequest) {
+if (!empty($_POST['special_close'])) {
+	$specialClose = $_POST['special_close'];
 	// Make sure the special closing reason exists
-	$db->query('SELECT reason_id FROM closing_reason WHERE reason='.$db->escapeString(CLOSE_ACCOUNT_BY_REQUEST_REASON));
+	$db->query('SELECT reason_id FROM closing_reason WHERE reason='.$db->escapeString($specialClose));
 	if ($db->nextRecord()) {
 		$reasonID = $db->getInt('reason_id');
 	} else {
-		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escapeString(CLOSE_ACCOUNT_BY_REQUEST_REASON).')');
+		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escapeString($specialClose).')');
 		$reasonID = $db->getInsertID();
 	}
 
 	$closeByRequestNote = $_REQUEST['close_by_request_note'];
 	if (empty($closeByRequestNote)) {
-		$closeByRequestNote = CLOSE_ACCOUNT_BY_REQUEST_REASON;
+		$closeByRequestNote = $specialClose;
 	}
 
 	$curr_account->banAccount(0, $account, $reasonID, $closeByRequestNote);
-	$msg .= 'added ' . CLOSE_ACCOUNT_BY_REQUEST_REASON . ' ban ';
+	$actions[] = 'added ' . $specialClose . ' ban';
 }
 
 if ($choise == 'reopen') {
-	if($reopenType=='account') {
-		//do we have points
-		$curr_account->removePoints($points);
-		$curr_account->unbanAccount($account);
-		if (strlen($msg) > 9)
-			$msg .= 'and ';
-		$msg .= 'reopened ';
-	}
-	else if($reopenType=='mail') {
-		$account->setMailBanned(TIME);
-		if (strlen($msg) > 9)
-			$msg .= 'and ';
-		$msg .= 'removed mailban ';
-	}
+	//do we have points
+	$curr_account->removePoints($points);
+	$curr_account->unbanAccount($account);
+	$actions[] = 'reopened account and removed '.$points.' points';
 }
-else if ($points > 0 || $mailBan > 0) {
+else if ($points > 0) {
 	if ($choise == 'individual') {
 		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escape_string($reason_msg) . ')');
 		$reason_id = $db->getInsertID();
@@ -83,42 +69,46 @@ else if ($points > 0 || $mailBan > 0) {
 	else {
 		$reason_id = $reason_pre_select;
 	}
-	$expire_msg='';
-	if($mailBan > 0) {
-		$curr_account->setMailBanned(TIME+$mailBan*86400);
-		$expire_msg .= 'for '.$mailBan.' days (mail)';
-		if (strlen($msg) > 9)
-			$msg .= 'and ';
-		$msg .= 'mail banned ';
-	}
 
-	if($points > 0 && ($bannedDays = $curr_account->addPoints($points,$account,$reason_id,$_REQUEST['suspicion']))!==false) {
-		if ($bannedDays > 0)
-			$expire_msg .= 'for '.$bannedDays.' days(account)';
-		else
-			$expire_msg .= 'forever!(account)';
-		if (strlen($msg) > 9)
-			$msg .= 'and ';
-		$msg .= 'closed ';
+	$suspicion = isset($_POST['suspicion']) ? $_POST['suspicion'] : '';
+	$bannedDays = $curr_account->addPoints($points, $account, $reason_id, $suspicion);
+	$actions[] = 'added '.$points.' ban points';
+
+	if ($bannedDays !== false) {
+		if ($bannedDays > 0) {
+			$expire_msg = 'for '.$bannedDays.' days';
+		} else {
+			$expire_msg = 'indefinitely';
+		}
+		$actions[] = 'closed ' . $expire_msg;
+	}
+}
+
+if (!empty($_POST['mailban'])) {
+	$mailban = $_POST['mailban'];
+	if ($mailban == 'remove') {
+		$curr_account->setMailBanned(TIME);
+		$actions[] = 'removed mailban';
+	} elseif ($mailban == 'add_days') {
+		$days = $_POST['mailban_days'];
+		$curr_account->increaseMailBanned($days*86400);
+		$actions[] = 'mail banned for '.$days.' days';
 	}
 }
 
 if ($veteran_status != $curr_account->isVeteranForced()) {
-
 	$db->query('UPDATE account SET veteran = '.$db->escapeString($veteran_status).' WHERE account_id = '.$db->escapeNumber($account_id));
-	$msg .= 'set the veteran status to '.$db->escapeString($veteran_status).' ';
-
+	$actions[] = 'set the veteran status to '.$db->escapeString($veteran_status);
 }
 
 if ($logging_status != $curr_account->isLoggingEnabled()) {
 	$curr_account->setLoggingEnabled($logging_status);
-	$msg .= 'set the logging status to '.$logging_status.' ';
+	$actions[] = 'set the logging status to '.$logging_status;
 }
+
 if ($except != 'Add An Exception' && $except != '') {
-
 	$db->query('INSERT INTO account_exceptions (account_id, reason) VALUES ('.$db->escapeNumber($account_id).', '.$db->escapeString($except).')');
-	$msg .= 'added the exception '.$except.' ';
-
+	$actions[] = 'added the exception '.$except;
 }
 
 if (!empty($names))
@@ -132,9 +122,9 @@ if (!empty($names))
 				$player_id = $db->getInt('player_id');
 
 				$db->query('UPDATE player SET player_name = ' . $db->escape_string($new_name, FALSE) . ' WHERE game_id = '.$db->escapeNumber($game_id).' AND account_id = '.$db->escapeNumber($account_id));
-				$msg .= 'changed players name to '.$new_name.' ';
-				//insert news message
+				$actions[] = 'changed players name to '.$new_name;
 
+				//insert news message
 				$news = '<span class="blue">ADMIN</span> Please be advised that <span class="yellow">' . $old_name . '(' . $player_id . ')</span> has had their name changed to <span class="yellow">' . $new_name . '(' . $player_id . ')</span>';
 
 				$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escape_string($news, FALSE) . ','.$db->escapeNumber($game_id).')');
@@ -150,14 +140,14 @@ if (!empty($delete)) {
 			$db->query('SELECT * FROM alliance_bank_transactions WHERE payee_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id) . ' LIMIT 1');
 			if($db->getNumRows() != 0){
 				// Can't delete
-				$msg .= 'player has made alliance transaction ';
+				$actions[] = 'player has made alliance transaction';
 				continue;
 			}
 			// Check anon accounts for transactions
 			$db->query('SELECT * FROM anon_bank_transactions WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id) . ' LIMIT 1');
 			if($db->getNumRows() != 0){
 				// Can't delete
-				$msg .= 'player has made anonymous transaction ';
+				$actions[] = 'player has made anonymous transaction';
 				continue;
 			}
 
@@ -227,7 +217,7 @@ if (!empty($delete)) {
 			$db->query('UPDATE active_session SET game_id=0
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id) .' LIMIT 1');
 
-			$msg .= 'deleted player from game '.$game_id.' ';
+			$actions[] = 'deleted player from game '.$game_id;
 		}
 	}
 
@@ -235,7 +225,7 @@ if (!empty($delete)) {
 
 //get his login name
 $container = create_container('skeleton.php', 'account_edit.php');
-$container['msg'] = $msg.' for the account of '.$curr_account->getLogin().' '.$expire_msg;
+$container['msg'] = 'You '.join(' and ', $actions).' for the account of '.$curr_account->getLogin().'.';
 
 $curr_account->update();
 forward($container);
