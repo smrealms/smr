@@ -1,4 +1,7 @@
-<div>Get <b><u>FREE TURNS</u></b> for voting if you see the star, available <span id="v"><?php echo $TimeToNextVote ?></span>.</div>
+<?php
+if (SmrSession::$game_id != 0) { ?>
+	<div>Get <b><u>FREE TURNS</u></b> for voting if you see the star, available <span id="v"><?php echo $TimeToNextVote ?></span>.</div><?php
+} ?>
 <span id="vote_links"><?php
 	foreach ($VoteSites as $VoteSite) { ?>
 		<a href='<?php echo $VoteSite['url']; ?>' target="_blank">

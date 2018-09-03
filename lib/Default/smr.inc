@@ -887,18 +887,16 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account) {
 
 	// ------- VOTING --------
 	$voteSites = array();
-	$voteWait = array();
 	foreach (VoteSite::getAllSites() as $site) {
 		$voteSites[] = array(
 			'img' => $site->getLinkImg($account->getAccountID(), SmrSession::$game_id),
 			'url' => $site->getLinkUrl($account->getAccountID(), SmrSession::$game_id),
 		);
-		$voteWait[] = $site->getTimeUntilFreeTurns($account->getAccountID());
 	}
 	$template->assign('VoteSites', $voteSites);
 
 	// Determine the minimum time until the next vote across all sites
-	$minVoteWait = min($voteWait);
+	$minVoteWait = VoteSite::getMinTimeUntilFreeTurns($account->getAccountID());
 	if ($minVoteWait <= 0) {
 		$template->assign('TimeToNextVote', 'now');
 	} else {
