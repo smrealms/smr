@@ -31,6 +31,10 @@ class VoteSite {
 					return "$baseUrl&votedef=$accountId,$gameId,$linkId";
 				},
 			),
+			5 => array(
+				'img_default' => 'pbbg.png',
+				'url_base' => 'https://pbbg.com/games/space-merchant-realms',
+			),
 		);
 	}
 
@@ -52,7 +56,9 @@ class VoteSite {
 	public static function getMinTimeUntilFreeTurns($accountID) {
 		$minWait = [];
 		foreach (self::getAllSites() as $site) {
-			$minWait[] = $site->getTimeUntilFreeTurns($accountID);
+			if ($site->givesFreeTurns()) {
+				$minWait[] = $site->getTimeUntilFreeTurns($accountID);
+			}
 		}
 		return min($minWait);
 	}
@@ -63,10 +69,22 @@ class VoteSite {
 	}
 
 	/**
+	 * Does this VoteSite have a voting callback that can be used
+	 * to award free turns?
+	 */
+	public function givesFreeTurns() {
+		return isset($this->data['img_star']);
+	}
+
+	/**
 	 * Time until the account can get free turns from voting at this site.
 	 * If the time is 0, this site is eligible for free turns.
 	 */
 	public function getTimeUntilFreeTurns($accountID) {
+		if (!$this->givesFreeTurns()) {
+			throw new Exception('This vote site cannot award free turns!');
+		}
+
 		static $WAIT_TIMES;
 		if (!isset($WAIT_TIMES)) {
 			$WAIT_TIMES = array(); // ensure this is set
@@ -91,7 +109,7 @@ class VoteSite {
 	 * Returns the image to display for this voting site.
 	 */
 	public function getLinkImg($accountID, $gameID) {
-		if ($gameID !=0 && $this->getTimeUntilFreeTurns($accountID) <= 0) {
+		if ($this->givesFreeTurns() && $gameID != 0 && $this->getTimeUntilFreeTurns($accountID) <= 0) {
 			return $this->data['img_star'];
 		} else {
 			return $this->data['img_default'];
@@ -103,7 +121,7 @@ class VoteSite {
 	 */
 	public function getLinkUrl($accountID, $gameID) {
 		$baseUrl = $this->data['url_base'];
-		if ($gameID != 0 && $this->getTimeUntilFreeTurns($accountID) <= 0) {
+		if ($this->givesFreeTurns() && $gameID != 0 && $this->getTimeUntilFreeTurns($accountID) <= 0) {
 			$container = create_container('vote_link.php');
 			$container['link_id'] = $this->linkID;
 			$container['can_get_turns'] = true;
