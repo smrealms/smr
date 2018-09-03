@@ -74,7 +74,8 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 				<th>Reorder</th>
 				<th>Weapon</th>
 				<th>Damage</th>
-				<th>Accuracy</th>
+				<th>Base<br />Accuracy</th>
+				<th>Power<br />Level</th>
 				<th>Action</th>
 			</tr><?php
 			$weapons = $ThisPlanet->getMountedWeapons();
@@ -93,6 +94,7 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 						<td class="left"><?php echo $weapons[$i]->getName(); ?></td>
 						<td><?php echo $weapons[$i]->getShieldDamage() . ' / ' . $weapons[$i]->getArmourDamage(); ?></td>
 						<td><?php echo $weapons[$i]->getBaseAccuracy(); ?>%</td>
+						<td><?php echo $weapons[$i]->getPowerLevel(); ?></td>
 						<td><button class="InputFields" type="submit" name="destroy" value="<?php echo $i; ?>">Destroy</button></td><?php
 					} else { ?>
 						<td class="left">
@@ -117,6 +119,12 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 								} ?>
 							</div>
 						</td>
+						<td>
+							<div class="weapon-info<?php echo $i; ?>"><?php
+								foreach ($ThisShip->getWeapons() as $orderID => $weapon) { ?>
+									<div class="weapon<?php echo $i.'-'.$orderID; ?> hide"><?php echo $weapon->getPowerLevel(); ?></div><?php
+								} ?>
+							</div>
 						<td><button class="InputFields" type="submit" name="transfer" value="<?php echo $i; ?>">Transfer</button></td><?php
 					} ?>
 				</tr><?php
