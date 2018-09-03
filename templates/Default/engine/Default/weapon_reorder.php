@@ -5,22 +5,22 @@ if($ThisShip->hasWeapons()) { ?>
 		<noscript><p>It has been detected that you do not have javascript or that it is disabled, you will have to use the arrows to reorder your weapons</p></noscript>
 		
 		<form method="POST" action="<?php echo Globals::getWeaponReorderHREF(0,'Form'); ?>">
-			<table id="weapon_reorder" class="standard">
+			<table id="weapon_reorder" class="standard center">
 			<tr nodrag="true" nodrop="true">
-			<th align="center">Weapon Name</th>
-			<th align="center">Shield Damage</th>
-			<th align="center">Armour Damage</th>
-			<th align="center">Power Level</th>
-			<th align="center">Accuracy</th>
-			<th align="center">Action</th>
+			<th>Weapon Name</th>
+			<th>Shield<br />Damage</th>
+			<th>Armour<br />Damage</th>
+			<th>Accuracy</th>
+			<th>Power<br />Level</th>
+			<th>Action</th>
 			</tr><?php
 			foreach($ThisShip->getWeapons() as $OrderID => $Weapon) { ?>
 				<tr>
-					<td><?php echo $Weapon->getName() ?></td>
-					<td align="center"><?php echo $Weapon->getShieldDamage() ?></td>
-					<td align="center"><?php echo $Weapon->getArmourDamage() ?></td>
+					<td class="left"><?php echo $Weapon->getName() ?></td>
+					<td><?php echo $Weapon->getShieldDamage() ?></td>
+					<td><?php echo $Weapon->getArmourDamage() ?></td>
+					<td><?php echo $Weapon->getBaseAccuracy() ?>%</td>
 					<td><?php echo $Weapon->getPowerLevel() ?></td>
-					<td><?php echo $Weapon->getBaseAccuracy() ?></td>
 					<td><input type="hidden" name="weapon_reorder[]" value="<?php echo $OrderID ?>" />
 						<noscript><a href="<?php echo Globals::getWeaponReorderHREF($OrderID,'Up') ?>"></noscript><?php
 						if($OrderID > 0) { ?>
