@@ -4,11 +4,11 @@ if ($ThisLocation->isWeaponSold()) { ?>
 		<thead>
 			<tr>
 				<th class="sort" data-sort="sort_name">Name</th>
-				<th class="sort" data-sort="sort_shield">Shield Damage</th>
-				<th class="sort" data-sort="sort_armor">Armour Damage</th>
+				<th class="sort shrink" data-sort="sort_shield">Shield Damage</th>
+				<th class="sort shrink" data-sort="sort_armor">Armour Damage</th>
 				<th class="sort" data-sort="sort_acc">Accuracy</th>
 				<th class="sort" data-sort="sort_race">Race</th>
-				<th class="sort" data-sort="sort_power">Power Level</th>
+				<th class="sort shrink" data-sort="sort_power">Power Level</th>
 				<th class="sort" data-sort="sort_cost">Cost</th>
 				<th>Action</th>
 			</tr>
@@ -20,8 +20,8 @@ if ($ThisLocation->isWeaponSold()) { ?>
 					<td class="sort_name"><?php echo $Weapon->getName(); ?></td>
 					<td class="sort_shield"><?php echo $Weapon->getShieldDamage(); ?></td>
 					<td class="sort_armor"><?php echo $Weapon->getArmourDamage(); ?></td>
-					<td class="sort_acc"><?php echo $Weapon->getBaseAccuracy(); ?></td>
-					<td class="sort_race"><?php echo $Weapon->getRaceName(); ?></td>
+					<td class="sort_acc"><?php echo $Weapon->getBaseAccuracy(); ?>%</td>
+					<td class="sort_race"><?php echo $ThisPlayer->getColouredRaceName($Weapon->getRaceID()); ?></td>
 					<td class="sort_power"><?php echo $Weapon->getPowerLevel(); ?></td>
 					<td class="sort_cost"><?php echo $Weapon->getCost(); ?></td>
 					<td><a href="<?php echo $Weapon->getBuyHREF($ThisLocation); ?>" class="submitStyle">Buy</a></td>
