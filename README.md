@@ -1,145 +1,57 @@
-[![Dependency Status](https://www.versioneye.com/user/projects/5a8159ee0fb24f70e29a4c04/badge.svg)](https://www.versioneye.com/user/projects/5a8159ee0fb24f70e29a4c04)
 [![Travis Build](https://travis-ci.org/smrealms/smr.svg?branch=master)](https://travis-ci.org/smrealms/smr)
 [![Docker Build](https://img.shields.io/docker/build/smrealms/smr.svg)](https://cloud.docker.com/swarm/smrealms/repository/docker/smrealms/smr)
 
-# Installation with docker
-
-## Building an SMR docker image
-```
-docker build --tag smrealms/smr .
-```
-
-## Running a mysql server via docker (optional)
-
-### Start the mysql server
-```
-docker run \
-	--name='smr-mysql' \
-	--env='MYSQL_RANDOM_ROOT_PASSWORD=yes' \
-	--env='MYSQL_USER=smr' \
-	--env='MYSQL_PASSWORD=smr' \
-	--env='MYSQL_DATABASE=smr_live' \
-	--detach \
-	mysql:5.5
-```
-### Populate the mysql server
-```
-docker run \
-	--rm \
-	--link='smr-mysql' \
-	--volume="$(pwd)/db/patches:/flyway/sql:ro" \
-	boxfuse/flyway:latest-alpine \
-	-url='jdbc:mysql://smr-mysql/smr_live' \
-	-user='smr' \
-	-password='smr' \
-	migrate
-```
-
-## Running SMR via docker
-
-You must change the paths to filled in config files, see the config section below for more info
-
-For production
-```
-docker run \
-	--name="smr" \
-	--link='smr-mysql' \
-	--publish='80:80' \
-	--volume="/path/to/config:/smr/config:ro" \
-	--detach \
-	smrealms/smr
-```
-For development (will automatically pick up source changes)
-```
-docker run \
-	--name="smr" \
-	--link='smr-mysql' \
-	--publish='80:80' \
-	--volume="$(pwd)/admin:/smr/admin" \
-	--volume="$(pwd)/engine:/smr/engine" \
-	--volume="$(pwd)/htdocs:/smr/htdocs" \
-	--volume="$(pwd)/lib:/smr/lib" \
-	--volume="$(pwd)/templates:/smr/templates" \
-	--volume="$(pwd)/config:/smr/config:ro" \
-	--detach \
-	smrealms/smr
-```
-
-## Viewing logs via docker
-
-```
-docker logs -f smr
-```
-
-# Installation natively
+# Installation
 
 ## Dependencies
-These list the known dependencies, there may be more - please update if you find any!
+Make sure the following software is installed:
+* docker
+* docker-compose
 
-### Core
-* PHP 7.1+
-* MySQL 5.5
 
-### PHP Extensions
-* MySQL http://php.net/manual/en/book.mysql.php
-* cURL (Facebook login): http://php.net/manual/en/book.curl.php
-* JSON (Facebook login): http://php.net/manual/en/book.json.php
-* runkit (NPCs): http://php.net/manual/en/book.runkit.php
+## Populate the mysql database
+First, you must write a `.env` file with the following format:
+```bash
+# Variables needed by docker-compose.yml
+MYSQL_ROOT_PASSWORD=chooseapassword
+MYSQL_PASSWORD=chooseapassword
+MYSQL_HOST=chooseahost  # must be unique on each network
+```
 
+To initialize the database or update it with new patches, run:
+```
+docker-compose run --rm flyway
+```
+
+To modify the database, add a file called `V<VERSION_NUMBER>__<NAME>.sql` into
+`db/patches` and rerun the command.
 
 ## Config files
-Currently it is required to create installation specific copies of the following files:
+Create installation-specific copies of the following files:
 
-* config/config.specific.sample.php -> config/config.specific.php
-* config/SmrMySqlSecrets.sample.inc -> config/SmrMySqlSecrets.inc
+* `config/config.specific.sample.php` &rarr; `config/config.specific.php`
+* `config/SmrMySqlSecrets.sample.inc` &rarr; `config/SmrMySqlSecrets.inc`
 
-For "Caretaker" functionality:
-* config/irc/config.specific.sample.php -> config/irc/config.specific.php
+For "Caretaker" (IRC) or "Autopilot" (Discord) functionality:
+* `config/irc/config.specific.sample.php` &rarr; `config/irc/config.specific.php`
+* `config/discord/config.specific.sample.php` &rarr; `config/irc/config.specific.php`
 
-For npc:
-* config/npc/config.specific.sample.php -> config/npc/config.specific.php
+For NPC's:
+* `config/npc/config.specific.sample.php` &rarr; `config/npc/config.specific.php`
 
-For these files the sample version should provide good hints on what info is required, there are also other sample files but these are generally not required (read: only for supporting old 1.2 databases, you're unlikely to have one of those lying about ;) )
+The sample versions have sensible defaults, but update the copies as necessary.
 
 
-## Filesystem permissions
-SMR requires write access to htdocs/upload.
+## Start up the services
+Then you can start up the persistent services
+```
+docker-compose up --build -d smr
+```
 
-## Database
-SMR is using [Flyway](http://flywaydb.org) to deploy database patches.
-
-1. Download and untar Flyway
-
-    ```bash
-    wget http://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/3.0/flyway-commandline-3.0.tar.gz && tar -xvzf flyway-commandline-3.0.tar.gz -C /opt
-    ```
-
-2. Set the following options in /opt/flyway-3.0/conf/flyway.properties
-    ```bash
-    flyway.url=jdbc:mysql://localhost/smr_live
-    flyway.user=smr
-    flyway.password=YOUR_DATABASE_PASSWORD
-    ```
-
-3. Download the Java MySQL Connector from http://www.mysql.de/downloads/connector/j
-
-4. Unzip it and put the jar into /opt/flyway-3.0/jars
-
-5. Point sql folder to SMR patches
-
-    ```
-    cd /opt/flyway-3.0 && rm -Rf sql && ln -s <GIT_ROOT_PATH>/db/patches sql
-    ```
-
-6. Initialize database `./flyway.sh init` which automatically creates the needed database tables and initializes the version
-
-7. Run all patches `./flyway.sh migrate`
-
-If you start with an existing database you need to follow above steps 1 to 5 and initialize the database with the following command:
-`./flyway.sh -initialVersion=1.6.39 init` which would mean that your current database equals the one from SMR 1.6.39. From this point on you can use `./flyway.sh migrate` to update to latest database.
-After creating a user account I would recommend inserting a row into the permission table corresponding to the account you created and with a permission_id of 1 in order to give yourself admin permissions.
-
-In case you need to change database with a new version put a file called `V<VERSION_NUMBER>__NAME.sql` into db/patches folder. One version can have multiple patches.
+For development, it may be desirable to automatically pick up source code changes without rebuilding the docker image. Simply use the `smr-dev` service instead of `smr`, i.e.:
+```
+docker-compose up --build -d smr-dev
+```
 
 
 # Runtime
