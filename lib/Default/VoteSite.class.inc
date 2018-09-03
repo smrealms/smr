@@ -45,6 +45,18 @@ class VoteSite {
 		return $ALL_SITES;
 	}
 
+	/**
+	 * Returns the earliest time (in seconds) until free turns
+	 * are available across all voting sites.
+	 */
+	public static function getMinTimeUntilFreeTurns($accountID) {
+		$minWait = [];
+		foreach (self::getAllSites() as $site) {
+			$minWait[] = $site->getTimeUntilFreeTurns($accountID);
+		}
+		return min($minWait);
+	}
+
 	function __construct($linkID, $siteData) {
 		$this->linkID = $linkID;
 		$this->data = $siteData;
