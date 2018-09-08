@@ -1048,3 +1048,14 @@ function getWeightedRandom($choices) {
 		}
 	}
 }
+
+/**
+ * Generate a cryptographically strong random string of a specified length.
+ * Lengths must be multiples of 2.
+ */
+function random_string($length) {
+	if ($length % 2 != 0) {
+		throw new Exception('Length must be a multiple of 2!');
+	}
+	return bin2hex(random_bytes($length/2));
+}
