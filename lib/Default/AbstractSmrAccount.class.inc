@@ -967,7 +967,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function generatePasswordReset() {
-		$this->setPasswordReset(md5($this->getEmail().$this->getPassword().$this->getPasswordReset()));
+		$this->setPasswordReset(random_string(32));
 	}
 
 	public function getPasswordReset() {
