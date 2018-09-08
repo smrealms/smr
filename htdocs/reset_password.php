@@ -44,7 +44,7 @@
 														<td><input name="password" type="password" id="InputFields" /></td>
 												</tr>
 												<tr>
-														<th align="right">Reset New Password:</th>
+														<th align="right">Verify New Password:</th>
 														<td><input name="pass_verify" type="password" id="InputFields" /></td>
 												</tr>
 											</table>
