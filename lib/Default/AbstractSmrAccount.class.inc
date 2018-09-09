@@ -147,7 +147,7 @@ abstract class AbstractSmrAccount {
 		$db = new SmrMySqlDatabase();
 		$db->query('INSERT INTO account (login, password, email, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
 			$db->escape_string($login) . ', ' . $db->escape_string(md5($password)) . ', ' . $db->escape_string($email) . ', ' .
-			$db->escape_string(substr(SmrSession::$session_id, 0, 10)) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($timez) . ',' . $db->escapeNumber($referral).','.$db->escapeString($login).')');
+			$db->escape_string(random_string(10)) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($timez) . ',' . $db->escapeNumber($referral).','.$db->escapeString($login).')');
 		return self::getAccountByName($login);
 	}
 
@@ -743,7 +743,7 @@ abstract class AbstractSmrAccount {
 		}
 
 		$this->setEmail($email);
-		$this->setValidationCode(substr(SmrSession::$session_id, 0, 10));
+		$this->setValidationCode(random_string(10));
 		$this->setValidated(false);
 
 		// remember when we sent validation code
@@ -912,7 +912,7 @@ abstract class AbstractSmrAccount {
 		return $this->validation_code;
 	}
 
-	public function setValidationCode($code) {
+	protected function setValidationCode($code) {
 		if($this->validation_code == $code)
 			return;
 		$this->validation_code=$code;
@@ -967,7 +967,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function generatePasswordReset() {
-		$this->setPasswordReset(md5($this->getEmail().$this->getPassword().$this->getPasswordReset()));
+		$this->setPasswordReset(random_string(32));
 	}
 
 	public function getPasswordReset() {
