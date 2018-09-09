@@ -163,7 +163,7 @@ if(isset($GameID)) { ?>
 		</tr>
 		
 		<tr>
-			<td>Old Password:</td>
+			<td>Current Password:</td>
 			<td><input type="password" name="old_password" id="InputFields" size="25" /></td>
 		</tr>
 		
@@ -173,7 +173,7 @@ if(isset($GameID)) { ?>
 		</tr>
 		
 		<tr>
-			<td>Retype Password:</td>
+			<td>Verify New Password:</td>
 			<td><input type="password" name="retype_password" id="InputFields" size="25" /></td>
 		</tr>
 		
