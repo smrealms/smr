@@ -6,12 +6,6 @@ try {
 	
 	
 	$password = $_REQUEST['password'];
-	if (strstr($password, '\'')) {
-		$msg = 'Illegal character in password detected! Don\'t use the apostrophe.';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
-	}
-	
 	if (empty($password)) {
 		$msg = 'Password is missing!';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -25,11 +19,9 @@ try {
 		exit;
 	}
 	
-	
-	// get this user from db
 	$login = $_REQUEST['login'];
 	if ($login == $password) {
-		$msg = 'Your chosen password is invalid!';
+		$msg = 'Your password cannot be the same as your login!';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
