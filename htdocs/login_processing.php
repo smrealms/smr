@@ -34,17 +34,16 @@ try {
 			}
 			$loginType = $socialLogin->getLoginType();
 			$authKey = $socialLogin->getUserID();
-			$db->query('SELECT account_id,old_account_id FROM account JOIN account_auth USING(account_id)
+			$db->query('SELECT account_id FROM account JOIN account_auth USING(account_id)
 						WHERE login_type = '.$db->escapeString($loginType).'
 						   AND auth_key = '.$db->escapeString($authKey).' LIMIT 1');
 			if ($db->nextRecord()) {
 				// register session
 				SmrSession::$account_id = $db->getInt('account_id');
-				SmrSession::$old_account_id = $db->getInt('old_account_id');
 			}
 			else {
 				if($socialLogin->getEmail()!=null) {
-					$db->query('SELECT account_id,old_account_id FROM account ' .
+					$db->query('SELECT account_id FROM account ' .
 					   'WHERE email = '.$db->escapeString($socialLogin->getEmail()).' LIMIT 1');
 				}
 				if ($socialLogin->getEmail()!=null && $db->nextRecord()) { //Email already has an account so let's link.
@@ -52,7 +51,6 @@ try {
 					$account->addAuthMethod($socialLogin->getLoginType(),$socialLogin->getUserID());
 					$account->setValidated(true);
 					SmrSession::$account_id = $db->getField('account_id');
-					SmrSession::$old_account_id = $db->getField('old_account_id');
 				}
 				else {
 					session_start(); //Pass the data in a standard session as we don't want to initialise a normal one.
@@ -74,13 +72,12 @@ try {
 				exit;
 			}
 
-			$db->query('SELECT account_id,old_account_id FROM account ' .
+			$db->query('SELECT account_id FROM account ' .
 					   'WHERE login = '.$db->escapeString($login).' AND ' .
 							 'password = '.$db->escapeString(md5($password)).' LIMIT 1');
 			if ($db->nextRecord()) {
 				// register session
 				SmrSession::$account_id = $db->getField('account_id');
-				SmrSession::$old_account_id = $db->getField('old_account_id');
 			}
 			elseif (Globals::useCompatibilityDatabases()) {
 				if(!SmrAccount::upgradeAccount($login,$password)) {

@@ -640,9 +640,6 @@ abstract class AbstractSmrAccount {
 				$this->increaseSmrCredits($credits);
 				$this->oldAccountIDs[$databaseClassName] = $accountID;
 
-				// register session
-				SmrSession::$old_account_id = $accountID;
-
 				$result = true;
 			}
 		}
@@ -675,9 +672,6 @@ abstract class AbstractSmrAccount {
 				if ($db3->nextRecord()) {
 					$expire_time = $db3->getInt('expires');
 					if(!($expire_time > 0 && $expire_time < TIME)) {
-						SmrSession::$old_account_id = $db2->getInt('account_id');
-						// save session (incase we forward)
-						SmrSession::update();
 						if ($db3->getField('reason') == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
 							header('Location: /email.php');
 							exit;
