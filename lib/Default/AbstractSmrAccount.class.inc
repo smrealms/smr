@@ -942,7 +942,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function checkPassword($password) {
-		return $this->getPassword()==$password;
+		return $this->getPassword() == md5($password);
 	}
 
 	public function setPassword($password) {
