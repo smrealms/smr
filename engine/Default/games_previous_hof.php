@@ -1,11 +1,10 @@
 <?php
 
-// NOTE: this is only for compatibility database games
+// NOTE: this is only for history database games
 
 // Get old account ID's
 $db = new SmrMySqlDatabase();
-$oldDbName = str_replace('History', '', $var['HistoryDatabase']);
-$oldAccountId = $account->getOldAccountID($oldDbName);
+$oldAccountId = $account->getOldAccountID($var['HistoryDatabase']);
 
 require_once(get_file_loc($var['HistoryDatabase'].'.class.inc'));
 $db = new $var['HistoryDatabase']();

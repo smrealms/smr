@@ -79,13 +79,6 @@ try {
 				// register session
 				SmrSession::$account_id = $db->getField('account_id');
 			}
-			elseif (Globals::useCompatibilityDatabases()) {
-				if(!SmrAccount::upgradeAccount($login,$password)) {
-					$msg = 'Password is incorrect!';
-					header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-					exit;
-				}
-			}
 			else {
 				$msg = 'Password is incorrect!';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
