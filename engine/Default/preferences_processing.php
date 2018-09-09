@@ -32,7 +32,7 @@ elseif ($action == 'Change Password') {
 	if (empty($new_password))
 		create_error('You must enter a non empty password!');
 
-	if ($account->checkPassword($old_password))
+	if (!$account->checkPassword($old_password))
 		create_error('Your current password is wrong!');
 
 	if ($new_password != $retype_password)
