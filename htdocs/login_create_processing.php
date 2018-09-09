@@ -50,8 +50,8 @@ try {
 	$db = new SmrMySqlDatabase();
 	$login = trim($_REQUEST['login']);
 	$password = trim($_REQUEST['password']);
-	if (strstr($login, '\'') || strstr($password, '\'')) {
-		$msg = 'Illegal character in login or password detected! Don\'t use the apostrophe.';
+	if (strstr($login, '\'')) {
+		$msg = 'Illegal character in login detected! Don\'t use the apostrophe.';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
@@ -114,7 +114,7 @@ try {
 	}
 
 	if ($login == $password) {
-		$msg = 'Your chosen password is invalid!';
+		$msg = 'Your login and password cannot be the same!';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
