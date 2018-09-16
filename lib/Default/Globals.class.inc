@@ -601,8 +601,9 @@ class Globals {
 	}
 
 	/**
-	 * Returns an array of history database class names for which we
-	 * have ancient saved game data.
+	 * Returns an array of history databases for which we have ancient saved
+	 * game data. Array keys are database class names and values are the
+	 * columns in the `account` table with the linked historical account ID's.
 	 */
 	public static function getHistoryDatabases() {
 		if (defined('HISTORY_DATABASES')) {
@@ -612,17 +613,6 @@ class Globals {
 		}
 	}
 
-	public static function useCompatibilityDatabases() {
-		return defined('COMPATIBILITY_DATABASES');
-	}
-
-	public static function getCompatibilityDatabases() {
-		if (defined('COMPATIBILITY_DATABASES')) {
-			return COMPATIBILITY_DATABASES;
-		} else {
-			return array();
-		}
-	}
 }
 
 function get_file_loc($fileName) {

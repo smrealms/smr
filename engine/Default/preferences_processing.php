@@ -9,13 +9,7 @@ else {
 }
 $action = $_REQUEST['action'];
 
-if (Globals::useCompatibilityDatabases() && $action == 'Link Account') {
-	if(!$account->linkAccount($_REQUEST['oldAccountLogin'],$_REQUEST['oldAccountPassword'])) {
-		create_error('There is no old account with that username/password.');
-	}
-	$container['msg'] = '<span class="green">SUCCESS: </span>You have linked your old account.';
-}
-else if ($action == 'Save and resend validation code') {
+if ($action == 'Save and resend validation code') {
 	$email = $_REQUEST['email'];
 
 	$account->changeEmail($_REQUEST['email']);

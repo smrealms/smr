@@ -23,20 +23,8 @@ const SMTP_HOSTNAME = 'smtp';
 // E-mail addresses to receive bug reports
 const BUG_REPORT_TO_ADDRESSES = ['bugs@smrealms.de'];
 
-//const COMPATIBILITY_DATABASES =
-//	array(
-//			'SmrClassicMySqlDatabase' => array(
-//			'GameType' => '1.2',
-//			'Column' => 'old_account_id'
-//		),
-//		'Smr12MySqlDatabase' => array(
-//			'GameType' => '1.2',
-//			'Column' => 'old_account_id2'
-//		)
-//	);
-
 //const HISTORY_DATABASES =
 //	array(
-//		'SmrClassicHistoryMySqlDatabase',
-//		'Smr12HistoryMySqlDatabase',
+//		'SmrClassicHistoryMySqlDatabase' => 'old_account_id',
+//		'Smr12HistoryMySqlDatabase' => 'old_account_id2',
 //	);

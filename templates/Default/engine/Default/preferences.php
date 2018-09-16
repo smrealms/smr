@@ -3,31 +3,6 @@ if (isset($Reason)) {
 	?><p><big><span class="bold red"><?php echo $Reason; ?></span></big></p><?php
 }
 
-if (Globals::useCompatibilityDatabases() && !$ThisAccount->hasAllOldAccountIDs()) { ?>
-	<form id="LinkOldAccountForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
-		<table>
-			<tr>
-				<th colspan="2">Link Old Account</th>
-			</tr>
-			
-			<tr>
-				<td>Login:</td>
-				<td><input type="text" name="oldAccountLogin"/></td>
-			</tr>
-			
-			<tr>
-				<td>Password:</td>
-				<td><input type="password" name="oldAccountPassword"/></td>
-			</tr>
-			
-			<tr>
-				<td></td>
-				<td><input type="submit" name="action" value="Link Account" id="InputFields" /></td>
-			</tr>
-		</table>
-	</form><?php
-}
-
 if(isset($GameID)) { ?>
 	<form class="standard" id="GamePreferencesForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<table>

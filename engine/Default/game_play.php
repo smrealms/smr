@@ -147,7 +147,7 @@ if ($db->getNumRows()) {
 	}
 }
 
-foreach (Globals::getHistoryDatabases() as $databaseClassName) {
+foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
 	require_once(get_file_loc($databaseClassName.'.class.inc'));
 	//Old previous games
 	$historyDB = new $databaseClassName();
