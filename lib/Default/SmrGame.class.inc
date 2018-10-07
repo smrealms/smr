@@ -18,7 +18,7 @@ class SmrGame {
 	protected $endDate;
 	protected $maxPlayers;
 	protected $maxTurns;
-	protected $startTurns;
+	protected $startTurnHours;
 	protected $gameTypeID;
 	protected $creditsNeeded;
 	protected $gameSpeed;
@@ -285,11 +285,11 @@ class SmrGame {
 	}
 
 	public function isEnabled() {
-		return $this->gameSpeed;
+		return $this->enabled;
 	}
 
 	public function setEnabled($bool) {
-		if($this->enabled==$bool) {
+		if($this->enabled === $bool) {
 			return;
 		}
 		$this->enabled=$bool;
@@ -301,7 +301,7 @@ class SmrGame {
 	}
 
 	public function setIgnoreStats($bool) {
-		if($this->ignoreStats==$bool) {
+		if($this->ignoreStats === $bool) {
 			return;
 		}
 		$this->ignoreStats=$bool;
