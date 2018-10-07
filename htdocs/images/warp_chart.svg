@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="svg64"
+   width="160"
+   height="160"
+   viewBox="0 0 160 160"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata70">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs68" />
+  <g
+     id="g76"
+     transform="translate(-5.2332039,36.656789)">
+    <circle
+       style="fill:#000;stroke:#fff;stroke-width:6;"
+       id="circ1"
+       cx="49.59901"
+       cy="-8.1203756"
+       r="19.274036" />
+    <circle
+       style="fill:#000;stroke:#fff;stroke-width:6;"
+       id="circ2"
+       cx="123.78256"
+       cy="2.2807992"
+       r="11.174816" />
+    <circle
+       style="fill:#000;stroke:#fff;stroke-width:6;"
+       id="circ3"
+       cx="79.599068"
+       cy="44.74509"
+       r="14.957062" />
+    <circle
+       style="fill:#000;stroke:#fff;stroke-width:6;"
+       id="circ4"
+       cx="142.52188"
+       cy="45.776615"
+       r="19.274036" />
+    <circle
+       style="fill:#000;stroke:#fff;stroke-width:6;"
+       id="circ5"
+       cx="28.194921"
+       cy="75.862648"
+       r="19.274036" />
+    <circle
+       style="fill:#000;stroke:#fff;stroke-width:6;"
+       id="circ6"
+       cx="20.802351"
+       cy="28.928434"
+       r="11.174816" />
+    <circle
+       style="fill:#000;stroke:#fff;stroke-width:6;"
+       id="circ7"
+       cx="96.275345"
+       cy="102.85413"
+       r="11.174816" />
+    <path
+       style="fill:none;stroke:#fff;stroke-width:6;"
+       d="M 89.333431,33.389496 114.79381,8.9197958"
+       id="path1"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#circ3"
+       inkscape:connection-end="#circ2" />
+    <path
+       style="fill:none;stroke:#fff;stroke-width:6;"
+       d="M 65.778139,39.027181 31.932698,29.922562"
+       id="path2"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#circ3"
+       inkscape:connection-end="#circ6" />
+    <path
+       style="fill:none;stroke:#fff;stroke-width:6;"
+       d="m 94.452359,42.988588 28.935091,0.474347"
+       id="path3"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#circ3"
+       inkscape:connection-end="#circ4" />
+    <path
+       style="fill:none;stroke:#fff;stroke-width:6;"
+       d="m 84.252372,58.959684 9.474516,33.014268"
+       id="path4"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#circ3"
+       inkscape:connection-end="#circ7" />
+    <path
+       style="fill:none;stroke:#fff;stroke-width:6;"
+       d="M 66.001782,50.976223 43.731808,64.457376"
+       id="path5"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#circ3"
+       inkscape:connection-end="#circ5" />
+    <path
+       style="fill:none;stroke:#fff;stroke-width:6;"
+       d="M 59.957544,8.1332137 73.091758,31.278047"
+       id="path6"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#circ3"
+       inkscape:connection-end="#circ1" />
+  </g>
+</svg>
