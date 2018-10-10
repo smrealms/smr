@@ -1,12 +1,3 @@
-<?php
-//get information
-$link=array();
-$link['url'] = 'skeleton.php';
-$link['body'] = '/1.6/universe_create_galaxies.php';
-$link['nogid'] = TRUE;
-$link['valid_for'] = -10;
-create_echo_form($link);
-?>
 
 <h1>Edit Existing Games</h1>
 <?php

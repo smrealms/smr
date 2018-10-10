@@ -31,7 +31,7 @@ class AdminPermissions {
 		26 => ['View Message Boxes', 'box_view.php', 1],
 		27 => ['Can Moderate Feature Requests', '', 2],
 		28 => ['Can Edit Alliance Descriptions', '', 1],
-		30 => ['1.6 Universe Generator', '1.6/universe_create.php', 5],
+		30 => ['1.6 Universe Generator', '1.6/game_create.php', 5],
 		31 => ['Create Vote', 'vote_create.php', 3],
 		32 => ['Can Edit Started Games', '', 5],
 		33 => ['Enable Games', 'enable_game.php', 5],

@@ -6,10 +6,10 @@ $template->assign('DefaultEnd',$defaultEnd);
 $template->assign('GameTypes', SmrGame::GAME_TYPES);
 
 //get information
-$container=create_container('1.6/universe_create_save_processing.php','1.6/universe_create_galaxies.php');
+$container = create_container('1.6/game_create_processing.php');
 $template->assign('CreateGalaxiesHREF',SmrSession::getNewHREF($container));
 
-$container['body'] = '1.6/universe_create_sectors.php';
+$container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
 $template->assign('EditGameHREF',SmrSession::getNewHREF($container));
 
 $canEditStartedGames = $account->hasPermission(PERMISSION_EDIT_STARTED_GAMES);
