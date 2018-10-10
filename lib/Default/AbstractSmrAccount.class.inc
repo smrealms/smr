@@ -40,7 +40,7 @@ abstract class AbstractSmrAccount {
 
 	protected $account_id;
 	protected $login;
-	protected $password;
+	protected $passwordHash;
 	protected $email;
 	protected $validated;
 	protected $validation_code;
@@ -145,8 +145,9 @@ abstract class AbstractSmrAccount {
 			SmrAccount::getAccount($referral);
 		}
 		$db = new SmrMySqlDatabase();
+		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 		$db->query('INSERT INTO account (login, password, email, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
-			$db->escape_string($login) . ', ' . $db->escape_string(md5($password)) . ', ' . $db->escape_string($email) . ', ' .
+			$db->escape_string($login) . ', ' . $db->escape_string($passwordHash) . ', ' . $db->escape_string($email) . ', ' .
 			$db->escape_string(random_string(10)) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($timez) . ',' . $db->escapeNumber($referral).','.$db->escapeString($login).')');
 		return self::getAccountByName($login);
 	}
@@ -173,7 +174,7 @@ abstract class AbstractSmrAccount {
 			$this->account_id		= $row['account_id'];
 
 			$this->login			= $row['login'];
-			$this->password			= $row['password'];
+			$this->passwordHash		= $row['password'];
 			$this->email			= $row['email'];
 			$this->validated		= $this->db->getBoolean('validated');
 
@@ -257,7 +258,7 @@ abstract class AbstractSmrAccount {
 		$this->db->query('UPDATE account SET email = '.$this->db->escapeString($this->email).
 			', validation_code = '.$this->db->escapeString($this->validation_code).
 			', validated = '.$this->db->escapeBoolean($this->validated).
-			', password = '.$this->db->escapeString($this->password).
+			', password = '.$this->db->escapeString($this->passwordHash).
 			', images = '.$this->db->escapeString($this->images).
 			', password_reset = '.$this->db->escapeString($this->passwordReset).
 			', use_ajax='.$this->db->escapeBoolean($this->useAJAX).
@@ -821,25 +822,45 @@ abstract class AbstractSmrAccount {
 		return $this->validated;
 	}
 
-	protected function getPassword() {
-		return $this->password;
-	}
-
 	public function isLoggedIn() {
 		$this->db->query('SELECT 1 FROM active_session WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
 		return $this->db->nextRecord();
 	}
 
+	/**
+	 * Check if the given (plain-text) password is correct.
+	 * Updates the password hash if necessary.
+	 */
 	public function checkPassword($password) {
-		return $this->getPassword() == md5($password);
+		// New (safe) password hashes will start with a $, but accounts logging
+		// in for the first time since the transition from md5 will still have
+		// hex-only hashes.
+		if (strpos($this->passwordHash, '$') === 0) {
+			$result = password_verify($password, $this->passwordHash);
+		} else {
+			$result = $this->passwordHash === md5($password);
+		}
+
+		// If password is correct, but hash algorithm has changed, update the hash.
+		// This will also update any obsolete md5 password hashes.
+		if ($result && password_needs_rehash($this->passwordHash, PASSWORD_DEFAULT)) {
+			$this->setPassword($password);
+		}
+
+		return $result;
 	}
 
+	/**
+	 * Set the (plain-text) password for this account.
+	 */
 	public function setPassword($password) {
-		$password = md5($password);
-		if($this->password == $password)
+		$hash = password_hash($password, PASSWORD_DEFAULT);
+		if ($this->passwordHash === $hash) {
 			return;
-		$this->password = $password;
+		}
+		$this->passwordHash = $hash;
 		$this->generatePasswordReset();
+		$this->hasChanged = true;
 		$this->update();
 	}
 

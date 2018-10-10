@@ -72,12 +72,9 @@ try {
 				exit;
 			}
 
-			$db->query('SELECT account_id FROM account ' .
-					   'WHERE login = '.$db->escapeString($login).' AND ' .
-							 'password = '.$db->escapeString(md5($password)).' LIMIT 1');
-			if ($db->nextRecord()) {
-				// register session
-				SmrSession::$account_id = $db->getField('account_id');
+			$account = SmrAccount::getAccountByName($login);
+			if (is_object($account) && $account->checkPassword($password)) {
+				SmrSession::$account_id = $account->getAccountID();
 			}
 			else {
 				$msg = 'Password is incorrect!';

@@ -103,7 +103,6 @@ class SmrSession {
 			'form_open.php' => self::ALWAYS_AVAILABLE,
 			'ip_view_results.php' => self::ALWAYS_AVAILABLE,
 			'ip_view.php' => self::ALWAYS_AVAILABLE,
-			'password_check.php' => self::ALWAYS_AVAILABLE,
 			'permission_manage.php' => self::ALWAYS_AVAILABLE,
 			'word_filter.php' => self::ALWAYS_AVAILABLE,
 			//Uni gen

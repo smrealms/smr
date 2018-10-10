@@ -14,7 +14,6 @@ class AdminPermissions {
 		7  => ['View Reported Messages', 'notify_view.php', 1],
 		8  => ['Edit Account', 'account_edit.php', 1],
 		9  => ['Multi Tools', 'ip_view.php', 1],
-		10 => ['Check Passwords', 'password_check.php', 1],
 		11 => ['Check Info', 'info.php', 1],
 		12 => ['Cheating Ship Check', 'ship_check.php', 1],
 		13 => ['Show Map to User', 'map_show.php', 4],
