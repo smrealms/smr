@@ -1,8 +1,5 @@
 <?php
 
-$defaultEnd = TIME + (2*31*86400); //3 months 
-$template->assign('DefaultEnd',$defaultEnd);
-
 $template->assign('GameTypes', SmrGame::GAME_TYPES);
 
 //get information
@@ -14,6 +11,25 @@ $template->assign('EditGameHREF',SmrSession::getNewHREF($container));
 
 $canEditStartedGames = $account->hasPermission(PERMISSION_EDIT_STARTED_GAMES);
 $template->assign('CanEditStartedGames', $canEditStartedGames);
+
+$defaultGame = [
+	'name' => '',
+	'description' => '',
+	'speed' => 1.5,
+	'maxTurns' => DEFAULT_MAX_TURNS,
+	'startTurnHours' => DEFAULT_START_TURN_HOURS,
+	'maxPlayers' => 5000,
+	'numGalaxies' => 12,
+	'startDate' => date('d/m/Y', TIME),
+	'startTurnsDate' => '',
+	'endDate' => date('d/m/Y', TIME + (2 * 31 * 86400)), // 3 months
+	'smrCredits' => 0,
+	'allianceMax' => 25,
+	'allianceMaxVets' => 15,
+	'startCredits' => 100000,
+	'ignoreStats' => false,
+];
+$template->assign('Game', $defaultGame);
 
 $games = array();
 if ($canEditStartedGames) {
