@@ -78,7 +78,6 @@ table.center {
 	border-spacing: 0px;
 	border-collapse: collapse;
 	padding: 0px;
-	margin: 0px;
 	font-size: 0px;
 }
 input.uncollapse {
@@ -86,4 +85,8 @@ input.uncollapse {
 }
 table.nobord {
 	border: 0px;
+}
+.hide {
+	/* hide element but preserve page layout (note: "visibility" didn't work) */
+	opacity: 0;
 }
