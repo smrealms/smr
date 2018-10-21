@@ -40,11 +40,11 @@
 				<h4 style="margin-bottom: 0px;"><?php echo $Message ?></h4><?php
 			} ?>
 
-			<table class="center nobord" style="width:770px; border-spacing:20px; padding:10px">
+			<table class="center nobord" style="width:690px; border-spacing:30px;">
 				<tr>
-					<td style="width:300px">
+					<td>
 						<form action="login_processing.php" method="post">
-							<table class="collapsed">
+							<table class="collapsed center">
 								<tr>
 									<td colspan="3">
 										<img src="images/login/login_top.png" width="258" height="43" alt="">
@@ -68,7 +68,7 @@
 									</td>
 								</tr>
 							</table>
-							<table class="collapsed">
+							<table class="collapsed center">
 								<tr>
 									<td>
 										<img src="images/login/regLeft.png" width="30" height="11"  alt="">
@@ -98,13 +98,14 @@
 								</tr>
 							</table>
 						</form>
-					</td>
-					<td class="center" style="padding: 3px; width: 200px;">
+
+						<br />
 						<span style="font-size: 14px;">Or login with:</span>
-						<span style="font-size: 3px;"><br /><br />
-							<a style="display: inline;margin:10px;" href="login_social_processing.php?type=facebook">
-								<img alt="Facebook Login" src="images/login/facebook.png" width="65" height="22">
-							</a><br /><br />
+						<br />
+						<span>
+							<a href="login_social_processing.php?type=facebook">
+								<img style="padding-top:5px;" alt="Facebook Login" src="images/login/facebook.png" width="65" height="22">
+							</a>
 							<?php /*
 							<a style="display: inline;margin:10px;" href="login_social_processing.php?type=google">
 								<img alt="Google Login" src="images/login/google.png" width="32" height="32">
@@ -115,51 +116,30 @@
 							*/ ?>
 						</span>
 					</td>
-					<td style="width:470px"><?php
-						if(isset($LoginNews)) { ?>
-							<table class="standard">
-							<tr><th>Date</th><th>Announcements</th></tr><?php
-							foreach($LoginNews as $News) { ?>
-								<tr>
-									<td>
-										<span class="small"><?php
-											if($News['Recent']){ ?> * <?php }
-											echo $News['Time'] ?>
-										</span>
-									</td>
-									<td>
-										<span class="small"><?php echo bbifyMessage($News['Message']);
-											if($News['AdminName']) { ?>
-												<br /><br />- <?php echo $News['AdminName'];
-											} ?>
-										</span>
-									</td>
-								</tr><?php
-							} ?>
-							</table><?php
-						} ?>
+					<td id="twitter-feed" class="hide" style="height:256px;width:90%;">
+						<a class="twitter-timeline" data-dnt="true" data-height="250" data-theme="dark" data-chrome="transparent nofooter noheader noborders" href="https://twitter.com/SMRealms?ref_src=twsrc%5Etfw"></a>
+						<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 					</td>
 				</tr>
+			</table><?php
 
-				<tr>
-					<td class="center" colspan="3">
-						Players Online Now: <?php echo $ActiveSessions; ?><br /><br /><?php
-						if(isset($GameNews)) { ?>
-							<table class="standard" style="width:100%"><tr><th class="center">Time</th><th class="center">Recent News</th></tr><?php
-								foreach($GameNews as $News) { ?>
-									<tr>
-										<td><?php
-											echo $News['Date']; ?><br /><?php
-											echo $News['Time']; ?>
-										</td>
-										<td><?php echo $News['Message']; ?></td>
-									</tr><?php
-								} ?>
-							</table><?php
-						} ?>
-					</td>
-				</tr>
-			</table>
+			if(isset($GameNews)) { ?>
+				<table class="standard center" style="width:730px;">
+					<tr>
+						<th>Time</th>
+						<th>Recent News</th>
+					</tr><?php
+					foreach($GameNews as $News) { ?>
+						<tr>
+							<td><?php
+								echo $News['Date']; ?><br /><?php
+								echo $News['Time']; ?>
+							</td>
+							<td><?php echo $News['Message']; ?></td>
+						</tr><?php
+					} ?>
+				</table><?php
+			} ?>
 
 			<br /><?php
 
@@ -181,5 +161,9 @@
 			<br /><br />
 			<span class="small"><a href="imprint.html">[Imprint]</a></span>
 		</div>
+
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="js/login.js"></script>
+
 	</body>
 </html>
