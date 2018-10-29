@@ -19,7 +19,6 @@ $defaultGame = [
 	'maxTurns' => DEFAULT_MAX_TURNS,
 	'startTurnHours' => DEFAULT_START_TURN_HOURS,
 	'maxPlayers' => 5000,
-	'numGalaxies' => 12,
 	'startDate' => date('d/m/Y', TIME),
 	'startTurnsDate' => '',
 	'endDate' => date('d/m/Y', TIME + (2 * 31 * 86400)), // 3 months

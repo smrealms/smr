@@ -62,7 +62,6 @@ foreach (Globals::getRaces() as $race) {
 
 createNHA($game->getGameID()); //do the alliances/message stuff
 
-$container['num_gals'] = $_REQUEST['num_gals'];
 $container['game_id'] = $game->getGameID();
 $container['message'] = '<span class="green">Success</span> : Succesfully created game.';
 forward($container);

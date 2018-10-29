@@ -55,10 +55,6 @@ if (count($EditGames) == 0) { ?>
 		<td><input type="number" size="6" name="max_players" value="<?php echo $Game['maxPlayers']; ?>"></td>
 	</tr>
 	<tr>
-		<td class="right">Number of Galaxies</td>
-		<td><input type="number" size="5" name="num_gals" value="<?php echo $Game['numGalaxies']; ?>"></td>
-	</tr>
-	<tr>
 		<td class="right">Start Date (DD/MM/YYYY)</td>
 		<td><input type="text" size="20" name="game_start" value="<?php echo $Game['startDate']; ?>"></td>
 	</tr>
