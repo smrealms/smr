@@ -35,3 +35,10 @@
 		<tr><td class="center" colspan="6"><input type="submit" value="Create Galaxies" name="submit"></td>
 	</table>
 </form>
+
+<br /><br />
+<form method="POST" enctype="multipart/form-data" action="<?php echo $UploadSmrFileHREF; ?>">
+	Or generate the universe from a SMR file:<br />
+	<input type="file" name="smr_file" />&nbsp;
+	<input type="submit" value="Upload SMR File" name="submit" />
+</form>

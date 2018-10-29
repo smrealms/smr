@@ -176,8 +176,3 @@ echo $file;
 
 release_lock();
 exit;
-
-
-function inify($text) {
-	return str_replace(',','',html_entity_decode($text));
-}
