@@ -61,11 +61,15 @@ foreach ($data as $key => $vals) {
 		$port->setCreditsToDefault();
 		// SMR file indicates the port action Buys/Sells,
 		// but SmrPort::addPortGood uses the player action.
-		foreach (explode(',', $vals['Buys']) as $goodID) {
-			$port->addPortGood($goodID, 'Sell');
+		if (isset($vals['Buys'])) {
+			foreach (explode(',', $vals['Buys']) as $goodID) {
+				$port->addPortGood($goodID, 'Sell');
+			}
 		}
-		foreach (explode(',', $vals['Sells']) as $goodID) {
-			$port->addPortGood($goodID, 'Buy');
+		if (isset($vals['Sells'])) {
+			foreach (explode(',', $vals['Sells']) as $goodID) {
+				$port->addPortGood($goodID, 'Buy');
+			}
 		}
 	}
 
