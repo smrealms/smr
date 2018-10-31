@@ -156,6 +156,10 @@ function xmlify($str) {
 	return $xml;
 }
 
+function inify($text) {
+	return str_replace(',', '', html_entity_decode($text));
+}
+
 function bbifyMessage($message, $noLinks=false) {
 	static $bbParser;
 	if(!isset($bbParser)) {

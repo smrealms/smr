@@ -456,8 +456,14 @@ class AbstractSmrPort {
 //		return round(exp($this->getLevel()/1.7)+3)*1000000;
 		return $this->getLevel() * 1000000;
 	}
-	
-	protected function addPortGood($goodID,$type) {
+
+	/**
+	 * Add good with given ID to the port, with transaction $type
+	 * as either "Buy" or "Sell", meaning the player buys or sells.
+	 * NOTE: make sure to adjust the port level appropriately if
+	 * calling this function directly.
+	 */
+	public function addPortGood($goodID,$type) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
 		if(!is_numeric($goodID))
@@ -473,8 +479,13 @@ class AbstractSmrPort {
 		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount, last_update) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($this->getGoodAmount($goodID)) . ',' . $this->db->escapeNumber(TIME) . ')');
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
-	
-	protected function removePortGood($goodID) {
+
+	/**
+	 * Remove good with given ID from the port.
+	 * NOTE: make sure to adjust the port level appropriately if
+	 * calling this function directly.
+	 */
+	public function removePortGood($goodID) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
 		if (($key = array_search($goodID, $this->goodIDs['All'])) !== false) {
