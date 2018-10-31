@@ -9,7 +9,7 @@ if(isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false)
 else
 	$adminCreate = false;
 
-$file = ';SMR1.6 Sectors File v 1.03
+$file = ';SMR1.6 Sectors File v 1.04
 [Races]
 ; Name = ID' . EOL;
 foreach (Globals::getRaces() as $race) {
@@ -105,7 +105,7 @@ Name='.inify(Globals::getGameName($gameID)).'
 ';
 $galaxies = SmrGalaxy::getGameGalaxies($gameID);
 foreach ($galaxies as $galaxy) {
-	$file .= $galaxy->getGalaxyID() . '=' . $galaxy->getWidth() . ',' . $galaxy->getHeight() . ',' . $galaxy->getGalaxyType() . ',' . inify($galaxy->getName()) . EOL;
+	$file .= $galaxy->getGalaxyID() . '=' . $galaxy->getWidth() . ',' . $galaxy->getHeight() . ',' . $galaxy->getGalaxyType() . ',' . inify($galaxy->getName()) . ',' . $galaxy->getMaxForceTime() . EOL;
 }
 
 
