@@ -92,36 +92,7 @@ if(isset($XType)) { ?>
 <h2>Stored destinations</h2>
 Add new destinations below. Stored destinations can be organized by dragging.
 
-<script type="text/javascript">
-	function processCourse(sectorID) {
-		var plotCourseForm = document.getElementById('plotCourseForm');
-		plotCourseForm.to.value = sectorID;
-		plotCourseForm.submit();
-	}
-
-	function processRemove(sectorID) {
-		var manageDestination = document.getElementById('manageDestination');
-		manageDestination.sectorId.value = sectorID;
-		manageDestination.type.value = 'delete';
-		manageDestination.submit();
-	}
-
-	$(function() {
-		$('.draggableObject').draggable({ containment: 'parent' });
-		$('#droppableObject').droppable({
-			drop: function(event, ui) {
-				var manageDestination = document.getElementById('manageDestination'),
-					sectorID = ui.draggable.data('sector-id'),
-					pos = ui.draggable.position();
-				manageDestination.sectorId.value = sectorID;
-				manageDestination.offsetTop.value = pos.top;
-				manageDestination.offsetLeft.value = pos.left;
-				manageDestination.type.value = 'move';
-				manageDestination.submit();
-			}
-		});
-	});
-</script>
+<script src="js/course_plot.js"></script>
 <div id="droppableObject" class="savedDestinationArea"><?php
 	foreach($StoredDestinations as $SD) { ?>
 		<div class="draggableObject savedDestination"
