@@ -16,7 +16,7 @@
 	<body>
 		<div class="center">
 			<p class="collapsed">
-				<img src="images/login/smr_banner_16.png" width="769" height="132" alt=""><br />
+				<img src="images/login/smr_banner.gif" width="769" height="132" alt=""><br />
 				<img src="images/login/bottom_left.gif" width="7" height="11" alt="">
 
 				<!-- small header menu -->
