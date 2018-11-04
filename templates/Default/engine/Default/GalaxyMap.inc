@@ -23,7 +23,7 @@
 					<td class="nopad top">
 						<form name="GalaxyMapForm" method="GET">
 							<label for="galaxy_id">Switch galaxy</label>&nbsp;
-							<select name="galaxy_id" id="galaxy_id" onchange="this.form.submit()"><?php
+							<select name="galaxy_id" id="galaxy_id" class="InputFields" onchange="this.form.submit()"><?php
 								foreach ($GameGalaxies as $GameGalaxy) {
 									$GalaxyID = $GameGalaxy->getGalaxyID(); ?>
 									<option value="<?php echo $GalaxyID; ?>"<?php if($ThisGalaxy->equals($GameGalaxy)){ ?> selected="selected"<?php } ?>>
