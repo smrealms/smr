@@ -17,13 +17,21 @@
 	
 	<body>
 		<div class="gal_map_header">
-			<p>Map of the known <b><big><?php echo $ThisGalaxy->getName(); ?></big></b> galaxy.</p>
 			<table cellspacing="0" cellpadding="0">
 				<tr>
-					<td class="nopad top">
+					<td>Map of the known <b><big><?php echo $ThisGalaxy->getName(); ?></big></b> galaxy.</td>
+					<td>
+						&thinsp;
+						<a href="map_warps.php">
+							<img src="images/warp_chart.svg" height="24px" width="24px" style="vertical-align: middle;" />&thinsp;Open warp chart
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="top">
 						<form name="GalaxyMapForm" method="GET">
 							<label for="galaxy_id">Switch galaxy</label>&nbsp;
-							<select name="galaxy_id" id="galaxy_id" onchange="this.form.submit()"><?php
+							<select name="galaxy_id" id="galaxy_id" class="InputFields" onchange="this.form.submit()"><?php
 								foreach ($GameGalaxies as $GameGalaxy) {
 									$GalaxyID = $GameGalaxy->getGalaxyID(); ?>
 									<option value="<?php echo $GalaxyID; ?>"<?php if($ThisGalaxy->equals($GameGalaxy)){ ?> selected="selected"<?php } ?>>
