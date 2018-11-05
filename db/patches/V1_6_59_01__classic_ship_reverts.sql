@@ -206,7 +206,7 @@ UPDATE ship_type SET cost=2074860, hardpoint=2 WHERE ship_type_id = 65;
 UPDATE ship_type_support_hardware SET max_amount = 425 WHERE ship_type_id = 65 AND hardware_type_id = 1;
 UPDATE ship_type_support_hardware SET max_amount = 550 WHERE ship_type_id = 65 AND hardware_type_id = 2;
 
---Blockade Runner speed to 9, HP to 3, Cargo Holds to 175
+-- Blockade Runner speed to 9, HP to 3, Cargo Holds to 175
 UPDATE ship_type SET speed=9, hardpoint=3 WHERE ship_type_id = 66;
 UPDATE ship_type_support_hardware SET max_amount = 175 WHERE ship_type_id = 66 AND hardware_type_id = 3;
 
