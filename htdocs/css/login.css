@@ -44,10 +44,6 @@ a {
 	margin:0px;
 }
 
-a:hover {
-	background:#0A4E1D;
-}
-
 a.header {
 	color:#80C870;
 }
@@ -89,4 +85,74 @@ table.nobord {
 .hide {
 	/* hide element but preserve page layout (note: "visibility" didn't work) */
 	opacity: 0;
+}
+
+/* AD-MONO webfont */
+@font-face {
+    font-family: 'AD-MONO';
+    src: url('fonts/AD-MONO.ttf.woff') format('woff'),
+         url('fonts/AD-MONO.ttf.svg#AD-MONO') format('svg'),
+         url('fonts/AD-MONO.ttf.eot'),
+         url('fonts/AD-MONO.ttf.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Small menu is right above the main menu */
+div#small_menu {
+	position: relative;
+	margin: auto;
+	font-family: 'AD-MONO';
+	font-size: 9px;
+	white-space: nowrap;
+	letter-spacing: 2px;
+	width: 769px;
+	height: 11px;
+}
+
+div#small_menu div {
+	transform: scaleY(0.8);
+	position: absolute;
+	top: 0px;
+}
+
+div#small_menu_1 {
+	left: 100px;
+}
+
+div#small_menu_2 {
+	left: 160px;
+}
+
+div#small_menu div a {
+	color: #022113;
+	text-shadow: 0.5px 0 0 currentColor, 1px 1px 7px currentColor;
+}
+
+/* Main menu is the main links under the banner */
+ul#main_menu {
+	background-image: url('/images/login/bg.gif');
+	margin: auto;
+	padding: 0;
+	list-style-type: none;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 769px;
+	height: 35px;
+}
+
+ul#main_menu li {
+	display: inline-block;
+	transform: scaleY(0.6);
+}
+
+ul#main_menu li a {
+	color: #0e471e;
+	text-shadow: 0.5px 0 0 currentColor, 1px 1px 7px currentColor;
+	font-family: 'AD-MONO';
+	font-variant: small-caps;
+	font-size: 30px;
+	text-decoration: none;
+	padding: 0 18px 0 18px; /* top right bottom left */
+	margin: 0px;
 }
