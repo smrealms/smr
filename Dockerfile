@@ -30,10 +30,8 @@ RUN apt-get update \
 # Use the production php.ini unless PHP_DEBUG=1 (defaults to 0)
 ARG PHP_DEBUG=0
 RUN [ "$PHP_DEBUG" = "1" ] && echo "Using development php.ini" || \
-	{ echo "Using production php.ini" \
-		&& mkdir /usr/src/php \
-		&& tar --file /usr/src/php.tar.xz --extract --strip-components=1 --directory /usr/src/php \
-		&& cp /usr/src/php/php.ini-production /usr/local/etc/php/php.ini; \
+	{ echo "Using production php.ini" && \
+	  tar -xOvf /usr/src/php.tar.xz --wildcards */php.ini-production > /usr/local/etc/php/php.ini; \
 	}
 
 # Disable apache access logging (error logging is still enabled)
