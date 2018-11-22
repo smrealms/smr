@@ -118,7 +118,18 @@ services:
         ports:
             - "8081:80"
 
+    # Web interface for managing Docker services
+    portainer:
+        image: portainer/portainer
+        ports:
+            - "9000:9000"
+        command: -H unix:///var/run/docker.sock
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - portainer_data:/data
+
 # We want persistent, anonymous data volumes
 volumes:
     smr_upload:
     smr_mysql_data:
+    portainer_data:
