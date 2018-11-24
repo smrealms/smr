@@ -133,7 +133,6 @@ class SmrSession {
 	public static $account_id;
 	public static $game_id;
 	public static $last_accessed;
-	public static $fast_forward;
 	public static $var;
 	public static $commonIDs;
 	public static $generate;
