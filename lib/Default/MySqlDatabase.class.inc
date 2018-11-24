@@ -229,33 +229,5 @@ abstract class MySqlDatabase implements Database {
 			return $this->escapeBinary(gzcompress(serialize($object)));
 		return $this->escapeString(serialize($object),$quotes,$nullable);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//below this is purely for compatibility reasons
-	
-	function escape_string($string, $transfer_html=false) {
-		
-		if(is_array($string)) {
-			$escapedString = '';
-			foreach($string as $value) {
-				$escapedString .= $this->escape_string($value, $transfer_html) .',';
-			}
-			return substr($escapedString,0,-1);
-		}
-		
-		if ($transfer_html) {
-			return '\'' . self::$dbConn->real_escape_string(htmlentities($string,ENT_COMPAT,'utf-8')) . '\'';
-		} else {
-			return '\'' . self::$dbConn->real_escape_string($string) . '\'';
-		}
-	}
+
 }

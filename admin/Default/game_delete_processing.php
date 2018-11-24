@@ -58,7 +58,7 @@ if ($action == 'Yes') {
 			$deaths = $db->getInt('alliance_deaths');
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO alliance (game_id, alliance_id, leader_id, kills, deaths, alliance_name, mines, cds, sds) ' .
-								'VALUES ('.$db->escapeNumber($game_id).', '.$db->escapeNumber($id).', '.$db->escapeNumber($leader).', '.$db->escapeNumber($kills).', '.$db->escapeNumber($deaths).', ' . $db->escape_string($name,FALSE) . ', '.$db->escapeNumber($mines).', '.$db->escapeNumber($cds).', '.$db->escapeNumber($sds).')';
+								'VALUES ('.$db->escapeNumber($game_id).', '.$db->escapeNumber($id).', '.$db->escapeNumber($leader).', '.$db->escapeNumber($kills).', '.$db->escapeNumber($deaths).', ' . $db->escapeString($name) . ', '.$db->escapeNumber($mines).', '.$db->escapeNumber($cds).', '.$db->escapeNumber($sds).')';
 
 		}
 
@@ -118,7 +118,7 @@ if ($action == 'Yes') {
 
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO game (game_id, end_date, start_date, game_name, speed, type) VALUES ' .
-								'('.$db->escapeNumber($game_id).', '.$end.', '.$start.', ' . $db->escape_string($name,FALSE) . ', '.$speed.', '.$db->escapeString($type).')';
+								'('.$db->escapeNumber($game_id).', '.$end.', '.$start.', ' . $db->escapeString($name) . ', '.$speed.', '.$db->escapeString($type).')';
 
 		}
 
@@ -141,7 +141,7 @@ if ($action == 'Yes') {
 			$msg = $db->getField('news_message');
 
 			// insert into history db
-			$history_db_sql[] = 'INSERT INTO news (game_id, news_id, time, message) VALUES ('.$game_id.', '.$id.', '.$time.', ' . $db->escape_string($msg,FALSE) . ')';
+			$history_db_sql[] = 'INSERT INTO news (game_id, news_id, time, message) VALUES ('.$game_id.', '.$id.', '.$time.', ' . $db->escapeString($msg) . ')';
 			$id++;
 
 		}
@@ -217,7 +217,7 @@ if ($action == 'Yes') {
 
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO player (account_id, game_id, player_name, player_id, experience, ship, race, alignment, alliance_id, kills, deaths, bounty, bounty_cred, ship_name) ' .
-								'VALUES ('.$acc_id.', '.$game_id.', ' . $db->escape_string($name,FALSE) . ', '.$id.', '.$exp.', '.$ship.', '.$race.', '.$align.', '.$alli.', '.$kills.', '.$deaths.', '.$amount.','.$smrCredits.', ' . $db->escape_string($ship_name,FALSE) . ')';
+								'VALUES ('.$acc_id.', '.$game_id.', ' . $db->escapeString($name) . ', '.$id.', '.$exp.', '.$ship.', '.$race.', '.$align.', '.$alli.', '.$kills.', '.$deaths.', '.$amount.','.$smrCredits.', ' . $db->escapeString($ship_name) . ')';
 
 		}
 

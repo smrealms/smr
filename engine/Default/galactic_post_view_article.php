@@ -5,7 +5,7 @@ create_galactic_post_menu();
 $db2 = new SmrMySqlDatabase();
 if (isset($var['news'])) {
 	$db->query('INSERT INTO news (game_id, time, news_message, type) ' .
-		'VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escape_string($var['news'], false) . ', \'BREAKING\')');
+		'VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeString($var['news']) . ', \'BREAKING\')');
 	// avoid multiple insertion on ajax updates
 	SmrSession::updateVar('news', null);
 	SmrSession::updateVar('added_to_breaking_news', true);

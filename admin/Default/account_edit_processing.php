@@ -63,7 +63,7 @@ if ($choise == 'reopen') {
 }
 else if ($points > 0) {
 	if ($choise == 'individual') {
-		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escape_string($reason_msg) . ')');
+		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escapeString($reason_msg) . ')');
 		$reason_id = $db->getInsertID();
 	}
 	else {
@@ -114,17 +114,23 @@ if ($except != 'Add An Exception' && $except != '') {
 if (!empty($names))
 	foreach ($names as $game_id => $new_name) {
 		if(!empty($new_name)) {
-			$db->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game_id).' AND player_name = ' . $db->escape_string($new_name, FALSE));
+			// Escape html elements so the name displays correctly
+			$new_name = htmlentities($new_name);
+
+			$db->query('SELECT account_id FROM player WHERE game_id = '.$db->escapeNumber($game_id).' AND player_name = ' . $db->escapeString($new_name));
 			if (!$db->nextRecord()) {
 				$editPlayer = SmrPlayer::getPlayer($account_id, $game_id);
 				$editPlayer->setPlayerName($new_name);
+				$editPlayer->update();
 
 				$actions[] = 'changed players name to '.$new_name;
 
 				//insert news message
 				$news = '<span class="blue">ADMIN</span> Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
 
-				$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escape_string($news, FALSE) . ','.$db->escapeNumber($game_id).')');
+				$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ','.$db->escapeNumber($game_id).')');
+			} else if ($db->getInt('account_id') != $account_id) {
+				$actions[] = 'have NOT changed players name to '.$new_name.' (already taken)';
 			}
 		}
 

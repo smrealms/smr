@@ -43,10 +43,10 @@ if (!empty($player_name) && !is_array($player_name)) {
 
 // get account from db
 $db->query('SELECT account_id FROM account WHERE account_id = '.$db->escapeNumber($account_id).' OR ' .
-									   'login LIKE ' . $db->escape_string($var['login']) . ' OR ' .
-									   'email LIKE ' . $db->escape_string($var['email']) . ' OR ' .
+									   'login LIKE ' . $db->escapeString($var['login']) . ' OR ' .
+									   'email LIKE ' . $db->escapeString($var['email']) . ' OR ' .
 									   'hof_name LIKE ' . $db->escapeString($var['hofname']) . ' OR ' .
-									   'validation_code LIKE ' . $db->escape_string($var['val_code']));
+									   'validation_code LIKE ' . $db->escapeString($var['val_code']));
 if ($db->nextRecord()) {
 	$curr_account = SmrAccount::getAccount($db->getField('account_id'));
 	$template->assign('EditingAccount', $curr_account);

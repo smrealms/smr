@@ -195,7 +195,7 @@ function checkPacts($race_id_1) {
 				// get news message
 				$news = 'The [race='.$race_id_1.'] have declared <span class="red">WAR</span> on the [race='.$race_id_2.']';
 				$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
-							'('.$db2->escapeNumber($player->getGameID()).', '.$db2->escapeNumber(TIME).', ' . $db2->escape_string($news, false) . ')');
+							'('.$db2->escapeNumber($player->getGameID()).', '.$db2->escapeNumber(TIME).', ' . $db2->escapeString($news) . ')');
 			}
 			elseif ($type == 'PEACE') {
 				// get 'yes' votes
@@ -230,7 +230,7 @@ function checkPacts($race_id_1) {
 					//get news message
 					$news = 'The [race='.$race_id_1.'] have signed a <span class="dgreen">PEACE</span> treaty with the [race='.$race_id_2.']';
 					$db2->query('INSERT INTO news (game_id, time, news_message) VALUES
-								('.$db2->escapeNumber($player->getGameID()).', '.$db2->escapeNumber(TIME).', ' . $db2->escape_string($news, false) . ')');
+								('.$db2->escapeNumber($player->getGameID()).', '.$db2->escapeNumber(TIME).', ' . $db2->escapeString($news) . ')');
 				}
 			}
 		}

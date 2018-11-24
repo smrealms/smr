@@ -54,7 +54,8 @@ else {
 		$role_id = $player->getAllianceRole($alliance_id);
 		$query = 'role_id = ' . $db->escapeNumber($role_id);
 	} else {
-		$query = 'role = ' . $db->escape_string($player->getAllianceName());
+		// Alliance treaties create new roles with alliance names
+		$query = 'role = ' . $db->escapeString($player->getAllianceName());
 	}
 	$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' . $query);
 	$db->nextRecord();

@@ -65,7 +65,7 @@ elseif ($action == 'Change Name') {
 	if (empty($HoF_name) || $HoF_name == '') create_error('You Hall of Fame name must contain characters!');
 
 	//no duplicates
-	$db->query('SELECT * FROM account WHERE hof_name = ' . $db->escape_string($HoF_name, true) . ' AND account_id != '.$db->escapeNumber($account->getAccountID()).' LIMIT 1');
+	$db->query('SELECT * FROM account WHERE hof_name = ' . $db->escapeString($HoF_name) . ' AND account_id != '.$db->escapeNumber($account->getAccountID()).' LIMIT 1');
 	if ($db->nextRecord()) create_error('Someone is already using that name!');
 
 	// set the HoF name in account stat
@@ -106,7 +106,7 @@ elseif ($action == 'Change IRC Nick') {
 	} else {
 
 		// no duplicates
-		$db->query('SELECT * FROM account WHERE irc_nick = ' . $db->escape_string($ircNick, true) . ' AND account_id != '.$db->escapeNumber($account->getAccountID()).' LIMIT 1');
+		$db->query('SELECT * FROM account WHERE irc_nick = ' . $db->escapeString($ircNick) . ' AND account_id != '.$db->escapeNumber($account->getAccountID()).' LIMIT 1');
 		if ($db->nextRecord()) create_error('Someone is already using that nick!');
 
 		// save irc nick in db and set message
@@ -212,6 +212,9 @@ else if (strpos(trim($action),'Alter Player')===0) {
 	if (empty($player_name))
 		create_error('You must enter a player name!');
 
+	// Escape html elements so the name displays correctly
+	$player_name = htmlentities($player_name);
+
 	// Check if name is in use.
 	// The player_name field has case-insensitive collation, so check against ID
 	// to allow player to change the case of their name.
@@ -232,7 +235,7 @@ else if (strpos(trim($action),'Alter Player')===0) {
 	$player->setPlayerNameByPlayer($player_name);
 
 	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink() . '</span>';
-	$db->query('INSERT INTO news (time, news_message, game_id, dead_id,dead_alliance) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escape_string($news, FALSE) . ',' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ')');
+	$db->query('INSERT INTO news (time, news_message, game_id, dead_id,dead_alliance) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 }
 else if ($action == 'Update Colours') {

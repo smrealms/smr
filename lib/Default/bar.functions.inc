@@ -41,7 +41,7 @@ function checkForLottoWinner($gameID) {
 		$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$db->escapeNumber($gameID));
 		$db->query('INSERT INTO news
 					(game_id, time, news_message, type, dead_id, dead_alliance)
-					VALUES ('.$db->escapeNumber($gameID).', ' . $db->escapeNumber(TIME) . ', ' . $db->escape_string($news_message, false) . ',\'lotto\','.$db->escapeNumber($winner->getAccountID()).','.$db->escapeNumber($winner->getAllianceID()).')');
+					VALUES ('.$db->escapeNumber($gameID).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeString($news_message) . ',\'lotto\','.$db->escapeNumber($winner->getAccountID()).','.$db->escapeNumber($winner->getAllianceID()).')');
 	}
 }
 

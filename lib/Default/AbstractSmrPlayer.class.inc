@@ -14,7 +14,7 @@ abstract class AbstractSmrPlayer {
 
 	protected $accountID;
 	protected $gameID;
-	protected $playerName;
+	protected $playerName; // This is escaped with htmlentities in the db
 	protected $playerID;
 	protected $sectorID;
 	protected $lastSectorID;
