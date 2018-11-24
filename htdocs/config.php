@@ -43,6 +43,7 @@ const TIME_MAP_BUY_WAIT = 259200; //3 days
 const TIME_FOR_BREAKING_NEWS = 86400; //1 day
 const VOTE_BONUS_TURNS_TIME = 1800; //30 mins
 const BOND_TIME = 172800; //48 hours
+const TIME_LOTTO = 172800; //2 days
 
 const MAX_IMAGE_SIZE = 30; //in kb
 const MAX_IMAGE_WIDTH = 200;

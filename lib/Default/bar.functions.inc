@@ -57,5 +57,5 @@ function getLottoInfo($gameID) {
 		$firstBuy = $db->getField('time');
 	}
 	//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
-	return array('Prize' => $amount, 'TimeRemaining' => $firstBuy + 2 * 86400 - TIME);
+	return array('Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - TIME);
 }
