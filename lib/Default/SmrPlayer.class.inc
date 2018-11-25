@@ -655,7 +655,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID) . ',' . $this->db->escapeNumber($this->pureRelations[$raceID]) . ')');
 	}
 
-	public function setPlayerName($playerName) {
+	/**
+	 * Use this method when the player is changing their own name.
+	 * This will flag the player as having used their free name change.
+	 */
+	public function setPlayerNameByPlayer($playerName) {
 		$this->playerName=$playerName;
 		$this->setNameChanged(true);
 		$this->hasChanged=true;

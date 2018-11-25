@@ -186,9 +186,7 @@ else if (strpos(trim($action),'Alter Player')===0) {
 	// trim input now
 	$player_name = trim($_POST['PlayerName']);
 
-	$old_name = $player->getPlayerName();
-
-	if($old_name == $player_name) {
+	if ($player->getPlayerName() == $player_name) {
 		create_error('Your player already has that name!');
 	}
 
@@ -229,7 +227,9 @@ else if (strpos(trim($action),'Alter Player')===0) {
 		$account->decreaseTotalSmrCredits(CREDITS_PER_NAME_CHANGE);
 	}
 
-	$player->setPlayerName($player_name);
+	$old_name = $player->getDisplayName();
+
+	$player->setPlayerNameByPlayer($player_name);
 
 	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink() . '</span>';
 	$db->query('INSERT INTO news (time, news_message, game_id, dead_id,dead_alliance) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escape_string($news, FALSE) . ',' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ')');

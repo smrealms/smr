@@ -116,16 +116,13 @@ if (!empty($names))
 		if(!empty($new_name)) {
 			$db->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game_id).' AND player_name = ' . $db->escape_string($new_name, FALSE));
 			if (!$db->nextRecord()) {
-				$db->query('SELECT player_name, player_id FROM player WHERE game_id='.$db->escapeNumber($game_id).' AND account_id = '.$db->escapeNumber($account_id).' LIMIT 1');
-				$db->nextRecord();
-				$old_name = $db->getField('player_name');
-				$player_id = $db->getInt('player_id');
+				$editPlayer = SmrPlayer::getPlayer($account_id, $game_id);
+				$editPlayer->setPlayerName($new_name);
 
-				$db->query('UPDATE player SET player_name = ' . $db->escape_string($new_name, FALSE) . ' WHERE game_id = '.$db->escapeNumber($game_id).' AND account_id = '.$db->escapeNumber($account_id));
 				$actions[] = 'changed players name to '.$new_name;
 
 				//insert news message
-				$news = '<span class="blue">ADMIN</span> Please be advised that <span class="yellow">' . $old_name . '(' . $player_id . ')</span> has had their name changed to <span class="yellow">' . $new_name . '(' . $player_id . ')</span>';
+				$news = '<span class="blue">ADMIN</span> Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
 
 				$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escape_string($news, FALSE) . ','.$db->escapeNumber($game_id).')');
 			}
