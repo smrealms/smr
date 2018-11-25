@@ -135,6 +135,19 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
+	public static function getAccountBySocialLogin(SocialLogin $social, $forceUpdate=false) {
+		if (!$social->isValid()) { return null; }
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT account_id FROM account JOIN account_auth USING(account_id)
+		            WHERE login_type = '.$db->escapeString($social->getLoginType()).'
+		              AND auth_key = '.$db->escapeString($social->getUserID()).' LIMIT 1');
+		if ($db->nextRecord()) {
+			return self::getAccount($db->getInt('account_id'), $forceUpdate);
+		} else {
+			return null;
+		}
+	}
+
 	public static function createAccount($login, $password, $email, $timez, $referral) {
 		if($referral!=0) {
 			// Will throw if referral account doesn't exist

@@ -32,33 +32,26 @@ try {
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
 			}
-			$loginType = $socialLogin->getLoginType();
-			$authKey = $socialLogin->getUserID();
-			$db->query('SELECT account_id FROM account JOIN account_auth USING(account_id)
-						WHERE login_type = '.$db->escapeString($loginType).'
-						   AND auth_key = '.$db->escapeString($authKey).' LIMIT 1');
-			if ($db->nextRecord()) {
-				// register session
-				SmrSession::$account_id = $db->getInt('account_id');
-			}
-			else {
-				if($socialLogin->getEmail()!=null) {
-					$db->query('SELECT account_id FROM account ' .
-					   'WHERE email = '.$db->escapeString($socialLogin->getEmail()).' LIMIT 1');
+			$account = SmrAccount::getAccountBySocialLogin($socialLogin);
+			if (!is_null($account)) {
+				// register session and continue to login
+				SmrSession::$account_id = $account->getAccountID();
+			} else {
+				// Let them create an account or link to existing
+				if (session_status() === PHP_SESSION_NONE) {
+					session_start();
 				}
-				if ($socialLogin->getEmail()!=null && $db->nextRecord()) { //Email already has an account so let's link.
-					$account = SmrAccount::getAccount($db->getField('account_id'));
-					$account->addAuthMethod($socialLogin->getLoginType(),$socialLogin->getUserID());
-					$account->setValidated(true);
-					SmrSession::$account_id = $db->getField('account_id');
+				$_SESSION['socialLogin'] = $socialLogin;
+				$template->assign('SocialLogin',$socialLogin);
+				// Pre-populate the login field if an account with this email exists.
+				// (Also disable creating a new account because they would just get
+				// an "Email already registered" error anyway.)
+				$account = SmrAccount::getAccountByEmail($socialLogin->getEmail());
+				if (!is_null($account)) {
+					$template->assign('MatchingLogin', $account->getLogin());
 				}
-				else {
-					session_start(); //Pass the data in a standard session as we don't want to initialise a normal one.
-					$_SESSION['socialLogin'] =& $socialLogin;
-					$template->assign('SocialLogin',$socialLogin);
-					$template->display('socialRegister.inc');
-					exit;
-				}
+				$template->display('socialRegister.inc');
+				exit;
 			}
 		}
 		else {
@@ -93,16 +86,17 @@ try {
 	// get this user from db
 	$account = SmrAccount::getAccount(SmrSession::$account_id);
 
+	// If linking a social login to an existing account
 	if(isset($_REQUEST['social'])) {
 		require_once(LIB.'Login/SocialLogin.class.inc');
 		session_start();
-		$socialLogin = isset($_REQUEST['social']);
-		if($socialLogin && (!$_SESSION['socialLogin'])) {
+		if (!isset($_SESSION['socialLogin'])) {
 			$msg = 'Tried a social login link without having a social session.';
 			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
-		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),$_SESSION['socialLogin']->getUserID());
+		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),
+		                        $_SESSION['socialLogin']->getUserID());
 		session_destroy();
 	}
 

@@ -89,7 +89,7 @@ try {
 	// 1. non-social account creation
 	// 2. social account creation without an associated e-mail
 	// In these two cases, we still need to validate the input address.
-	if(!$socialLogin || $_SESSION['socialLogin']->getEmail() == null) {
+	if (!$socialLogin || empty($_SESSION['socialLogin']->getEmail())) {
 		$email = trim($_REQUEST['email']);
 		$validatedBySocial = false;
 	} else {
@@ -133,8 +133,7 @@ try {
 	}
 
 
-	$db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email));
-	if ($db->getNumRows() > 0) {
+	if (SmrAccount::getAccountByEmail($email) != null) {
 		$msg = 'This email address is already registered.';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
