@@ -85,32 +85,38 @@ try {
 		exit;
 	}
 
+	// The user inputs an e-mail address in two scenarios:
+	// 1. non-social account creation
+	// 2. social account creation without an associated e-mail
+	// In these two cases, we still need to validate the input address.
 	if(!$socialLogin || $_SESSION['socialLogin']->getEmail() == null) {
 		$email = trim($_REQUEST['email']);
-		if (empty($email)) {
-			$msg = 'Email address is missing!';
-			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
-
-		if (strstr($email, ' ')) {
-			$msg = 'The email is invalid! It cannot contain any spaces.';
-			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
-
-		// get user and host for the provided address
-		list($user, $host) = explode('@', $email);
-
-		// check if the host got a MX or at least an A entry
-		if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
-			$msg = 'This is not a valid email address! The domain '.$host.' does not exist.';
-			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
-	}
-	else {
+		$validatedBySocial = false;
+	} else {
 		$email = $_SESSION['socialLogin']->getEmail();
+		$validatedBySocial = true;
+	}
+
+	if (empty($email)) {
+		$msg = 'Email address is missing!';
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		exit;
+	}
+
+	if (strstr($email, ' ')) {
+		$msg = 'The email is invalid! It cannot contain any spaces.';
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		exit;
+	}
+
+	// get user and host for the provided address
+	list($user, $host) = explode('@', $email);
+
+	// check if the host got a MX or at least an A entry
+	if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
+		$msg = 'This is not a valid email address! The domain '.$host.' does not exist.';
+		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		exit;
 	}
 
 	if ($login == $password) {
@@ -156,8 +162,11 @@ try {
 	}
 	$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give $2 worth of "reward" credits for joining.
 	if($socialLogin) {
-		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),$_SESSION['socialLogin']->getUserID());
-		$account->setValidated(true);
+		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),
+		                        $_SESSION['socialLogin']->getUserID());
+		if ($validatedBySocial) {
+			$account->setValidated(true);
+		}
 		session_destroy();
 	}
 
@@ -167,21 +176,23 @@ try {
 	// save ip
 	$account->updateIP();
 
-	// send email with validation code to user
-	$emailMessage =
-		'Your validation code is: '.$account->getValidationCode().EOL.
-		'The Space Merchant Realms server is on the web at '.URL;
+	if (!$account->isValidated()) {
+		// send email with validation code to user
+		$emailMessage =
+			'Your validation code is: '.$account->getValidationCode().EOL.
+			'The Space Merchant Realms server is on the web at '.URL;
 
-	$mail = setupMailer();
-	$mail->Subject = 'New Space Merchant Realms Account';
-	$mail->setFrom('support@smrealms.de', 'SMR Support');
-	$mail->msgHTML(nl2br($emailMessage));
-	$mail->addAddress($account->getEmail(), $account->getHofName());
-	$mail->send();
+		$mail = setupMailer();
+		$mail->Subject = 'New Space Merchant Realms Account';
+		$mail->setFrom('support@smrealms.de', 'SMR Support');
+		$mail->msgHTML(nl2br($emailMessage));
+		$mail->addAddress($account->getEmail(), $account->getHofName());
+		$mail->send();
 
-	// remember when we sent validation code
-	$db->query('INSERT INTO notification (notification_type, account_id, time) ' .
-								  'VALUES(\'validation_code\', '.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber(TIME) . ')');
+		// remember when we sent validation code
+		$db->query('INSERT INTO notification (notification_type, account_id, time) ' .
+		           'VALUES(\'validation_code\', '.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber(TIME) . ')');
+	}
 
 	$container = create_container('login_processing.php');
 	$container['login'] = $login;
