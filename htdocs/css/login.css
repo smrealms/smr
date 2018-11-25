@@ -156,3 +156,12 @@ ul#main_menu li a {
 	padding: 0 18px 0 18px; /* top right bottom left */
 	margin: 0px;
 }
+
+/* Social login buttons */
+.btn-social {
+	display: inline-block;
+	margin: 7px;
+}
+.btn-social img {
+	vertical-align: top;
+}

@@ -3,6 +3,7 @@
     "description": "SMR",
     "license": "AGPL-3.0",
     "require": {
+        "abraham/twitteroauth": "*",
         "ext-curl": "*",
         "ext-json": "^1.0.0",
         "ext-mysqli": "*",
