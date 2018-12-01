@@ -20,9 +20,10 @@ class Council {
 		if (!isset(self::$COUNCILS[$gameID][$raceID])) {
 			self::initialiseDatabase();
 			self::$COUNCILS[$gameID][$raceID] = array();
+			self::$PRESIDENTS[$gameID][$raceID] = false;
 
 			$i=1;
-			self::$db->query('SELECT account_id
+			self::$db->query('SELECT account_id, alignment
 								FROM player
 								WHERE game_id = ' . self::$db->escapeNumber($gameID) . '
 									AND race_id = ' . self::$db->escapeNumber($raceID) . '
@@ -30,8 +31,15 @@ class Council {
 								ORDER by experience DESC
 								LIMIT ' . MAX_COUNCIL_MEMBERS);
 			while(self::$db->nextRecord()) {
-				self::$COUNCILS[$gameID][$raceID][$i] = self::$db->getField('account_id');
-				$i++;
+				// Add this player to the council
+				self::$COUNCILS[$gameID][$raceID][$i++] = self::$db->getInt('account_id');
+
+				// Determine if this player is also the president
+				if (self::$PRESIDENTS[$gameID][$raceID] === false) {
+					if (self::$db->getInt('alignment') >= ALIGNMENT_PRESIDENT) {
+						self::$PRESIDENTS[$gameID][$raceID] = self::$db->getInt('account_id');
+					}
+				}
 			}
 		}
 		return self::$COUNCILS[$gameID][$raceID];
@@ -43,14 +51,7 @@ class Council {
 	public static function getPresidentID($gameID, $raceID) {
 		if (!isset(self::$PRESIDENTS[$gameID][$raceID])) {
 			self::initialiseDatabase();
-			self::$db->query('SELECT account_id FROM player
-			                  WHERE game_id = ' . self::$db->escapeNumber($gameID) . '
-			                    AND race_id = ' . self::$db->escapeNumber($raceID) . '
-			                    AND alignment >= ' . self::$db->escapeNumber(ALIGNMENT_PRESIDENT) . '
-			                    AND npc = \'FALSE\'
-			                  ORDER BY experience DESC
-			                  LIMIT 1');
-			self::$PRESIDENTS[$gameID][$raceID] = self::$db->nextRecord() ? self::$db->getInt('account_id') : false;
+			self::getRaceCouncil($gameID, $raceID); // determines the president
 		}
 		return self::$PRESIDENTS[$gameID][$raceID];
 	}
