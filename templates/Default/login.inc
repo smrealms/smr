@@ -17,22 +17,28 @@
 		<div class="center">
 			<p class="collapsed">
 				<img src="images/login/smr_banner.gif" width="769" height="132" alt=""><br />
-				<img src="images/login/bottom_left.gif" width="7" height="11" alt="">
 
 				<!-- small header menu -->
-				<a href=""><img src="images/login/home.png" width="55" height="11" alt="Home"></a>
-				<img src="images/login/site_map.png" width="87" height="11" alt="Site Map">
-				<a href="mailto:support@smrealms.de" target="_blank"><img src="images/login/contact.png" width="80" height="11" alt="Contact"></a>
-
-				<img src="images/login/bottom_right.png" width="540" height="11" alt=""><br />
+				<div id="small_menu">
+					<img src="images/login/bottom_left.gif" width="7" height="11" alt="">
+					<img src="images/login/bottom_center.png" width="222" height="11" alt="">
+					<div id="small_menu_1">
+						<a href="">(Home)</a>
+					</div>
+					<div id="small_menu_2">
+						<a href="mailto:support@smrealms.de" target="_blank">(Contact)</a>
+					</div>
+					<img src="images/login/bottom_right.png" width="540" height="11" alt="">
+				</div>
 
 				<!-- header menu -->
-				<a href="<?php echo WIKI_URL; ?>/tutorials#video-tutorials" target="vid"><img src="images/login/video.png" width="166" height="29" alt="Video Tutorials"></a>
-				<a href="<?php echo WIKI_URL; ?>" target="manu"><img src="images/login/manual2.png" width="129" height="29" alt="Wiki"></a>
-				<a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" width="128" height="29" alt="Web Board"></a>
-				<a href="album" target="ml"><img src="images/login/sml.png" width="166" height="29" alt="Merchant Library"></a>
-				<a href="cgi-bin/awstats.pl" target="stat"><img src="images/login/stats2.png" width="180" height="29" alt="Site Statistics"></a>
-				<br />
+				<ul id="main_menu">
+					<li><a href="https://discord.me/smrealms" target="discord">Discord</a></li>
+					<li><a href="<?php echo WIKI_URL; ?>" target="manu">Game&nbsp;Guide</a></li>
+					<li><a href="https://smrcnn.smrealms.de" target="board">Forums</a></li>
+					<li><a href="<?php echo WIKI_URL; ?>/tutorials#video-tutorials" target="vid">Video&nbsp;Tutorials</a></li>
+					<li><a href="album" target="ml">Merchant&nbsp;Album</a></li>
+				</ul>
 			</p>
 			<?php
 
