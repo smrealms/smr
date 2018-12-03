@@ -92,7 +92,8 @@ abstract class AbstractSmrAccount {
 		return self::$CACHE_ACCOUNTS[$accountID];
 	}
 
-	public static function &getAccountByName($login,$forceUpdate = false) {
+	public static function getAccountByName($login, $forceUpdate = false) {
+		if (empty($login)) { return null; }
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM account WHERE login = '.$db->escapeString($login).' LIMIT 1');
 		if($db->nextRecord())
@@ -102,6 +103,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public static function getAccountByEmail($email, $forceUpdate=false) {
+		if (empty($email)) { return null; }
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM account WHERE email = '.$db->escapeString($email).' LIMIT 1');
 		if ($db->nextRecord()) {
@@ -111,16 +113,8 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public static function &getAccountByHofName($hofName,$forceUpdate = false) {
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT account_id FROM account WHERE hof_name = '.$db->escapeString($hofName).' LIMIT 1');
-		if($db->nextRecord())
-			return self::getAccount($db->getField('account_id'),$forceUpdate);
-		$return = null;
-		return $return;
-	}
-
 	public static function getAccountByDiscordId($id, $forceUpdate=false) {
+		if (empty($id)) { return null; }
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM account where discord_id = '.$db->escapeString($id).' LIMIT 1');
 		if ($db->nextRecord()) {
@@ -130,16 +124,18 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public static function &getAccountByIrcNick($nick, $forceUpdate = false) {
+	public static function getAccountByIrcNick($nick, $forceUpdate = false) {
+		if (empty($nick)) { return null; }
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM account WHERE irc_nick = '.$db->escapeString($nick).' LIMIT 1');
-		if($db->nextRecord())
+		if ($db->nextRecord()) {
 			return self::getAccount($db->getField('account_id'), $forceUpdate);
-		$return = null;
-		return $return;
+		} else {
+			return null;
+		}
 	}
 
-	public static function &createAccount($login, $password, $email, $timez, $referral) {
+	public static function createAccount($login, $password, $email, $timez, $referral) {
 		if($referral!=0) {
 			// Will throw if referral account doesn't exist
 			SmrAccount::getAccount($referral);
