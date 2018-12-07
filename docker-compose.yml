@@ -4,34 +4,48 @@
 #   MYSQL_HOST=chooseahost
 #   PHP_DEBUG=1 or 0
 
-version: '2'
+version: '3.7'
+
+networks:
+    frontend:
+        name: frontend
+        external: false
+    backend:
+        name: backend
+        external: false
+
+# Base configuration for `smr` (production) and `smr-dev` (testing).
+x-smr-common: &smr-common
+    build:
+        context: .
+        args:
+            - PHP_DEBUG=${PHP_DEBUG}
+    networks:
+        - frontend
+        - backend
+    labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=frontend"
+        - "traefik.backend=smr"
+        - "traefik.frontend.passHostHeader=true"
+        - "traefik.frontend.rule=PathPrefix:/"
+        - "traefik.port=80"
+    depends_on:
+        - mysql
+        - smtp
+    volumes:
+        - smr_upload:/smr/htdocs/upload
+        - ./config:/smr/config:ro
+
 services:
-    smr-common:
-        # Base configuration for `smr` (production) and `smr-dev` (testing).
-        build:
-            context: .
-            args:
-                - PHP_DEBUG=${PHP_DEBUG}
-        ports:
-            - "80:80"
+    smr:
+        << : *smr-common
+
+    smr-dev:
+        << : *smr-common
         volumes:
             - smr_upload:/smr/htdocs/upload
             - ./config:/smr/config:ro
-
-    smr:
-        extends: smr-common
-        # depends_on cannot be defined in extended services (i.e. smr-common)
-        depends_on:
-            - mysql
-            - smtp
-
-    smr-dev:
-        extends: smr-common
-        # depends_on cannot be defined in extended services (i.e. smr-common)
-        depends_on:
-            - mysql
-            - smtp
-        volumes:
             # Mount the source code instead of copying it.
             - ./admin:/smr/admin
             - ./engine:/smr/engine
@@ -41,15 +55,23 @@ services:
 
     smtp:
         image: hemberger/postfix-relay
+        networks:
+            - backend
         environment:
             - OPENDKIM_DOMAINS=smrealms.de
             - OPENDKIM_SELECTOR=key1
+        labels:
+            - "traefik.enable=false"
         volumes:
             - ./opendkim:/etc/opendkim/keys/smrealms.de
 
     flyway:
         image: boxfuse/flyway:latest-alpine
         command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live -user=smr -password=${MYSQL_PASSWORD} migrate
+        networks:
+            - backend
+        labels:
+            - "traefik.enable=false"
         depends_on:
             - mysql
         volumes:
@@ -58,6 +80,8 @@ services:
     mysql:
         image: mysql:5.7
         container_name: ${MYSQL_HOST}
+        networks:
+            - backend
         # By using the default image, we must expose the secrets in
         # the runtime environment (because we can't specify build args).
         environment:
@@ -67,6 +91,8 @@ services:
             MYSQL_DATABASE:      smr_live
         volumes:
             - smr_mysql_data:/var/lib/mysql
+        labels:
+            - "traefik.enable=false"
         # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
         # which is incompatible with the way the SMR database is used.
         # Therefore, we override CMD to omit this sql mode.
@@ -75,11 +101,18 @@ services:
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
-        # Publish to port 8080
-        ports:
-            - 8080:80
+        networks:
+            - frontend
+            - backend
         environment:
             PMA_HOST: mysql
+        labels:
+            - "traefik.enable=true"
+            - "traefik.docker.network=frontend"
+            - "traefik.backend=phpmyadmin"
+            - "traefik.frontend.passHostHeader=true"
+            - "traefik.frontend.rule=PathPrefixStrip:/phpmyadmin/;AddPrefix:/"
+            - "traefik.port=80"
         depends_on:
             - mysql
 
@@ -87,6 +120,10 @@ services:
         build:
             context: .
             dockerfile: ./tools/discord/Dockerfile
+        networks:
+            - backend
+        labels:
+            - "traefik.enable=false"
         depends_on:
             - mysql
         volumes:
@@ -96,6 +133,10 @@ services:
         build:
             context: .
             dockerfile: ./tools/irc/Dockerfile
+        networks:
+            - backend
+        labels:
+            - "traefik.enable=false"
         depends_on:
             - mysql
         volumes:
@@ -105,24 +146,54 @@ services:
         build:
             context: .
             dockerfile: ./tools/npc/Dockerfile
+        networks:
+            - backend
+        labels:
+            - "traefik.enable=false"
         depends_on:
             - mysql
         volumes:
             - ./config:/smr/config
+
+    traefik:
+        image: traefik:latest
+        networks:
+            - frontend
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./traefik/traefik.toml:/etc/traefik/traefik.toml
+        labels:
+            - "traefik.enable=true"
+            - "traefik.backend=traefik-dashboard"
+            - "traefik.docker.network=frontend"
+            - "traefik.frontend.passHostHeader=true"
+            - "traefik.frontend.rule=PathPrefixStrip:/traefik"
+            - "traefik.port=8080"
+        ports:
+            - "80:80"
+            - "443:443"
 
     # Generate rich API documentation of the SMR source code.
     api-docs:
         build:
             context: .
             dockerfile: ./docs/Dockerfile
-        ports:
-            - "8081:80"
+        networks:
+            - frontend
+        labels:
+            - "traefik.enable=true"
+            - "traefik.frontend.rule=PathPrefixStrip:/api"
+            - "traefik.port=80"
 
     # Web interface for managing Docker services
     portainer:
         image: portainer/portainer
-        ports:
-            - "9000:9000"
+        networks:
+            - frontend
+        labels:
+            - "traefik.enable=true"
+            - "traefik.frontend.rule=PathPrefixStrip:/docker/;AddPrefix:/"
+            - "traefik.port=9000"
         command: -H unix:///var/run/docker.sock
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock

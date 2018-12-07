@@ -45,12 +45,12 @@ The sample versions have sensible defaults, but update the copies as necessary.
 ## Start up the services
 Then you can start up the persistent services
 ```
-docker-compose up --build -d smr
+docker-compose up --build -d traefik smr
 ```
 
 For development, it may be desirable to automatically pick up source code changes without rebuilding the docker image. Simply use the `smr-dev` service instead of `smr`, i.e.:
 ```
-docker-compose up --build -d smr-dev
+docker-compose up --build -d traefik smr-dev
 ```
 
 

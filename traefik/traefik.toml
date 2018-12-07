@@ -1,0 +1,23 @@
+logLevel = "INFO"
+
+defaultEntryPoints = ["http","https"]
+
+[entryPoints]
+
+  [entryPoints.http]
+    address = ":80"
+
+  [entryPoints.https]
+    address = ":443"
+
+    [entryPoints.https.tls]
+
+# We need this for the /traefik/dashboard to work
+[api]
+
+[docker]
+  exposedByDefault = false
+
+[traefikLog]
+
+[accessLog]
