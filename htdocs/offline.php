@@ -13,7 +13,7 @@ try {
 	if ($db->nextRecord()) {
 		$template->assign('Message','Space Merchant Realms is currently <strong>OFF-LINE</strong>.<br />'.$db->getField('reason'));
 	}
-	else header('Location: '.URL);
+	else header('Location: /');
 	
 	require_once(LIB . 'Login/loginSmarty.php');
 }

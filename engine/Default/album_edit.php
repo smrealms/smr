@@ -26,7 +26,7 @@ if ($db->nextRecord()) {
 	}
 		
 	if(is_readable(UPLOAD . $account->getAccountID())) {
-		$albumEntry['Image'] = URL.'/upload/'.$account->getAccountID();
+		$albumEntry['Image'] = '/upload/'.$account->getAccountID();
 	}
 	
 	$template->assign('AlbumEntry',$albumEntry);

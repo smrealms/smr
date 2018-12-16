@@ -219,7 +219,7 @@ function album_entry($album_id) {
 		echo('</form>');
 	}
 	else
-		echo('<p>Please <a href="/login.php?return_page='.URL.'/album/?' . urlencode($nick) . '"><u>login</u></a> if you want comment on this picture!</p>');
+		echo('<p>Please <a href="/login.php?return_page=/album/?' . urlencode($nick) . '"><u>login</u></a> if you want comment on this picture!</p>');
 
 	echo('</td>');
 	echo('</tr>');

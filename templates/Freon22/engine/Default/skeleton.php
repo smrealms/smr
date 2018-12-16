@@ -48,7 +48,7 @@
 										</td>
 										<td>
 											<div class="topcenterTwo noWrap">
-												Level: <a class="nav" href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements"><span id="lvl"><?php echo $ThisPlayer->getLevelID(); ?></span></a>
+												Level: <a class="nav" href="/level_requirements.php" target="levelRequirements"><span id="lvl"><?php echo $ThisPlayer->getLevelID(); ?></span></a>
 												<br />
 												Next Level: <?php
 													$NextLevelExperience = number_format($ThisPlayer->getNextLevelExperience());

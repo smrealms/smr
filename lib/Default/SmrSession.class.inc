@@ -405,7 +405,7 @@ class SmrSession {
 	public static function getNewHREF($container, $forceFullURL=false) {
 		$sn = self::addLink($container) . (isset($container['AJAX']) && $container['AJAX'] == true ? '&ajax=1':'');
 		if($forceFullURL===true||stripos($_SERVER['REQUEST_URI'],'loader.php')===false)
-			return URL.'/loader.php?sn=' . $sn;
+			return '/loader.php?sn=' . $sn;
 		else
 			return '?sn=' . $sn;
 	}
