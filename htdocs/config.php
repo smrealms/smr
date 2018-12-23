@@ -420,6 +420,14 @@ $GLOBALS['template'] =& $template;
 $template->assign('URL',URL);
 $template->assign('CSSLink',DEFAULT_CSS);
 $template->assign('CSSColourLink',DEFAULT_CSS_COLOUR);
-$template->assign('Title', 'Space Merchant Realms');
+
+// Change the browser title based on the server config
+$prefix = '';
+if (ENABLE_DEBUG) {
+	$prefix = 'DEV: ';
+} elseif (ENABLE_BETA) {
+	$prefix = 'BETA: ';
+}
+$template->assign('Title', $prefix . 'Space Merchant Realms');
 
 $template->assign('AJAX_ENABLE_REFRESH',AJAX_DEFAULT_REFRESH_TIME);
