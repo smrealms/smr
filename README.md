@@ -16,6 +16,7 @@ First, you must write a `.env` file with the following format:
 MYSQL_ROOT_PASSWORD=chooseapassword
 MYSQL_PASSWORD=chooseapassword
 MYSQL_HOST=chooseahost  # must be unique on each network
+SMR_HOST=chooseahost
 ```
 
 To initialize the database or update it with new patches, run:

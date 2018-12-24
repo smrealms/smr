@@ -20,13 +20,14 @@ x-smr-common: &smr-common
         context: .
         args:
             - PHP_DEBUG=${PHP_DEBUG}
+    container_name: ${SMR_HOST}
     networks:
         - frontend
         - backend
     labels:
         - "traefik.enable=true"
         - "traefik.docker.network=frontend"
-        - "traefik.backend=smr"
+        - "traefik.backend=${SMR_HOST}"
         - "traefik.frontend.passHostHeader=true"
         - "traefik.frontend.rule=PathPrefix:/"
         - "traefik.port=80"
