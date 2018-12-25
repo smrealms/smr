@@ -101,7 +101,7 @@
 						</div>
 
 						<p><input type="submit" name="create_login" value="Create Login"></p>
-					</form><?
+					</form><?php
 				} ?>
 
 			</td>
