@@ -263,6 +263,9 @@ class SmrAlliance {
 		if (!$player->getAccount()->isValidated()) {
 			return 'You cannot join an alliance until you validate your account.';
 		}
+		if ($this->hasDisbanded()) {
+			return 'This alliance has disbanded!';
+		}
 		if ($doAllianceCheck && $player->hasAlliance()) {
 			return 'You are already in an alliance!';
 		}
