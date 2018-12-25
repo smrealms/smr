@@ -3,7 +3,6 @@
 $db2 = new SmrMySqlDatabase();
 $account_id = $_REQUEST['account_id'];
 if (!empty($account_id)) {
-	require_once(get_file_loc('SmrPort.class.inc'));
 	$game_id = $var['game_id'];
 	if($account_id=='all') {
 		$account_id=array();

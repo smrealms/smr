@@ -1,6 +1,5 @@
 <?php
-require_once('AbstractSmrPlayer.class.inc');
-require_once('SmrForce.class.inc');
+
 abstract class AbstractSmrCombatWeapon {
 	/**
 	 * Reduce the damage done to planets by this factor

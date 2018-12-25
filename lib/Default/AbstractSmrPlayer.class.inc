@@ -1,10 +1,5 @@
 <?php
-require_once('SmrShip.class.inc');
-require_once('SmrForce.class.inc');
-require_once('SmrGame.class.inc');
-require_once('SmrAlliance.class.inc');
 require_once('missions.inc');
-require_once(get_file_loc('Plotter.class.inc'));
 
 abstract class AbstractSmrPlayer {
 	protected $db;

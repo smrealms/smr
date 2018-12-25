@@ -41,6 +41,5 @@ if (empty($admin_id)) {
 	$processingHREF = SmrSession::getNewHREF($container);
 	$template->assign('ProcessingHREF', $processingHREF);
 
-	require_once(LIB . 'Default/AdminPermissions.class.inc');
 	$template->assign('Permissions', AdminPermissions::getPermissionList());
 }

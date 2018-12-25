@@ -1,5 +1,4 @@
 <?php
-require_once('AbstractSmrShip.class.inc');
 
 class DummyShip extends AbstractSmrShip {
 	protected static $CACHED_DUMMY_SHIPS;

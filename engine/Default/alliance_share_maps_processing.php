@@ -1,5 +1,4 @@
 <?php
-require_once(get_file_loc('SmrPort.class.inc'));
 
 $alliance_ids = array();
 

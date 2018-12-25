@@ -39,7 +39,6 @@ try {
 	$lock=false;
 
 	// new db object
-	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	$db = new SmrMySqlDatabase();
 	
 	// ********************************
@@ -61,9 +60,6 @@ try {
 	// * g e t   S e s s i o n
 	// *
 	// ********************************
-
-	// Require to define `get_file_loc` here
-	require_once(LIB . 'Default/Globals.class.inc');
 
 	$sn = $_REQUEST['sn'];
 
@@ -87,16 +83,16 @@ try {
 			exit;
 	}
 	
-	//used for include if we need a spec game script outside of the game
+	// Determine where to load game scripts from (in case we need a special
+	// game script from outside the current SmrSession game).
+	// Must not call `get_file_loc` until after we have set $overrideGameID
+	// (unless we're exiting immediately with an error, as above).
 	$overrideGameID = 0;
 	if (isset($var['game_id']) && is_numeric($var['game_id'])) $overrideGameID = $var['game_id'];
 	if ($overrideGameID == 0 && isset($var['GameID']) && is_numeric($var['GameID'])) $overrideGameID = $var['GameID'];
 	if($overrideGameID == 0) $overrideGameID = SmrSession::$game_id;
 
-	// Must not call `get_file_loc` until after we have set $overrideGameID
-	// (Unless we're exiting immediately with an error, as above)
 	require_once(get_file_loc('smr.inc'));
-	require_once(get_file_loc('SmrAccount.class.inc'));
 
 	$account = SmrAccount::getAccount(SmrSession::$account_id);
 	// get reason for disabled user

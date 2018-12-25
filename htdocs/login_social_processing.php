@@ -12,7 +12,6 @@ try {
 		// immediately forwards to the social login URL after it is generated.
 
 		require_once('config.inc');
-		require_once(LIB . 'Login/SocialLogin.class.inc');
 		if ($type == 'facebook') {
 			$url = SocialLogin::getFacebookLoginUrl();
 		} elseif ($type == 'twitter') {

@@ -11,12 +11,16 @@ function logException(Throwable $e) {
 			'E-Mail: '.$account->getEmail().EOL.EOL.'-----------'.EOL.EOL;
 	}
 	$message .= 'Error Message: '. $e .EOL.EOL.'-----------'.EOL.EOL;
-	require_once(LIB . '/Default/SmrMySqlDatabase.class.inc');
-	$db = new SmrMySqlDatabase();
-	if($currMySQLError = $db->getError()) {
-		$errorType = 'Database Error';
-		$message .= 'MySQL Error MSG: '.$db->getError().EOL.EOL.'-----------'.EOL.EOL;
+
+	// Only check database if it was already loaded (do not try to autoload)
+	if (class_exists('SmrMySqlDatabase', false)) {
+		$db = new SmrMySqlDatabase();
+		if($currMySQLError = $db->getError()) {
+			$errorType = 'Database Error';
+			$message .= 'MySQL Error MSG: '.$db->getError().EOL.EOL.'-----------'.EOL.EOL;
+		}
 	}
+
 	$message .=
 		'$var: '.var_export($var,true).EOL.EOL.'-----------'.EOL.EOL.
 		'USING_AJAX: '.(defined('USING_AJAX')?var_export(USING_AJAX,true):'undefined');
@@ -124,8 +128,32 @@ function explodeElement($delimiter, $string, $index) {
 	return $arr[$index];
 }
 
-require_once(__DIR__ . '/../vendor/autoload.php');
+// Defines all constants
 require_once('config.php');
+
+// Set up vendor and class autoloaders
+require_once(ROOT . 'vendor/autoload.php');
+require_once(LIB . 'autoload.inc');
+spl_autoload_register('get_class_loc');
+
+// Initialize the template
+$template = new Template();
+$GLOBALS['template'] =& $template;
+
+$template->assign('URL', URL);
+$template->assign('CSSLink', DEFAULT_CSS);
+$template->assign('CSSColourLink', DEFAULT_CSS_COLOUR);
+$template->assign('AJAX_ENABLE_REFRESH', AJAX_DEFAULT_REFRESH_TIME);
+
+// Change the browser title based on the server config
+$prefix = '';
+if (ENABLE_DEBUG) {
+	$prefix = 'DEV: ';
+} elseif (ENABLE_BETA) {
+	$prefix = 'BETA: ';
+}
+$template->assign('Title', $prefix . 'Space Merchant Realms');
+
 
 //	//num races
 //	$NUM_RACES = 8;

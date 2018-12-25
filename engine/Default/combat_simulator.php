@@ -1,8 +1,6 @@
 <?php
 $template->assign('PageTopic','Combat Simulator');
 
-require_once(get_file_loc('DummyPlayer.class.inc'));
-
 $template->assign('EditDummysLink',SmrSession::getNewHREF(create_container('skeleton.php','edit_dummys.php')));
 $template->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 

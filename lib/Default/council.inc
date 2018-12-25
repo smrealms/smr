@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('SmrPlayer.class.inc'));
+
 class Council {
 	protected static $COUNCILS = array();
 	protected static $PRESIDENTS = array();

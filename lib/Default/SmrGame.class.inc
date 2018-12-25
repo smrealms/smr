@@ -3,8 +3,6 @@
 // Exception thrown when a game cannot be found in the database
 class GameNotFoundException extends Exception {}
 
-require_once('SmrGalaxy.class.inc');
-
 class SmrGame {
 	protected static $CACHE_GAMES = array();
 

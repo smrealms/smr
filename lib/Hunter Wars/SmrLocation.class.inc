@@ -1,10 +1,9 @@
 <?php
-require_once(get_file_loc('AbstractSmrLocation.class.inc'));
+
 class SmrLocation extends AbstractSmrLocation {
 
 	public function &getShipsSold() {
 		if(!isset($this->shipsSold)) {
-			require_once(get_file_loc('SmrShip.class.inc'));
 			$this->shipsSold = array();
 			$this->db->query('SELECT * FROM location_sells_ships
 			                  JOIN ship_type USING (ship_type_id)

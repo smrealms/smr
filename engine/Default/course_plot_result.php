@@ -1,7 +1,6 @@
 <?php
 // Load the Distance object to do the common processing
 // for both "Conventional" and "Plot To Nearest".
-require_once(get_file_loc('Plotter.class.inc'));
 $path = unserialize($var['Distance']);
 
 // Throw start sector away (it's useless for the route),

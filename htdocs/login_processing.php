@@ -1,18 +1,8 @@
 <?php
 try {
 
-	// ********************************
-	// *
-	// * I n c l u d e s
-	// *
-	// ********************************
-
 	require_once('config.inc');
 	require_once(LIB . 'Default/smr.inc');
-	require_once(get_file_loc('SmrMySqlDatabase.class.inc'));
-	require_once(get_file_loc('SmrAccount.class.inc'));
-	require_once(get_file_loc('SmrSession.class.inc'));
-
 
 	$db = new SmrMySqlDatabase();
 	$db2 = new SmrMySqlDatabase();
@@ -25,7 +15,6 @@ try {
 
 	if (SmrSession::$account_id == 0) {
 		if(isset($_REQUEST['loginType'])) {
-			require_once(LIB.'Login/SocialLogin.class.inc');
 			$socialLogin = new SocialLogin($_REQUEST['loginType']);
 			if(!$socialLogin->isValid()) {
 				$msg = 'Error validating login.';
@@ -88,7 +77,6 @@ try {
 
 	// If linking a social login to an existing account
 	if(isset($_REQUEST['social'])) {
-		require_once(LIB.'Login/SocialLogin.class.inc');
 		session_start();
 		if (!isset($_SESSION['socialLogin'])) {
 			$msg = 'Tried a social login link without having a social session.';

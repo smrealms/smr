@@ -1,7 +1,5 @@
 <?php
 
-require_once(get_file_loc('SmrAccount.class.inc'));
-
 function main_page() {
 	// database object
 	$db = new SmrMySqlDatabase();

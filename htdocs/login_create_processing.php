@@ -2,11 +2,7 @@
 try {
 
 	require_once('config.inc');
-
-	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(LIB . 'Default/smr.inc');
-	require_once(get_file_loc('SmrSession.class.inc'));
-	require_once(get_file_loc('SmrAccount.class.inc'));
 
 	if (SmrSession::$account_id > 0) {
 		$msg = 'You\'re already logged in! Creating multis is against the rules!';
@@ -15,7 +11,6 @@ try {
 	}
 	$socialLogin = isset($_REQUEST['socialReg']);
 	if($socialLogin) {
-		require_once(LIB.'Login/SocialLogin.class.inc');
 		session_start();
 		if(!$_SESSION['socialLogin']) {
 			$msg = 'Tried a social registration without having a social session.';

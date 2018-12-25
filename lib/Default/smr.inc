@@ -1,13 +1,5 @@
 <?php
 
-require_once(LIB . '/Default/Globals.class.inc');
-require_once(LIB . '/Default/VoteSite.class.inc');
-require_once(get_file_loc('SmrPlayer.class.inc'));
-require_once(get_file_loc('SmrAccount.class.inc'));
-require_once(get_file_loc('SmrShip.class.inc'));
-require_once(get_file_loc('SmrSector.class.inc'));
-require_once(get_file_loc('Sorter.class.inc'));
-
 function setupMailer() {
 	$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 	if (!empty(SMTP_HOSTNAME)) {
@@ -104,7 +96,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'chess':
 				$chessGameID = $default;
-				require_once(get_file_loc('ChessGame.class.inc'));
 				$chessGame =& ChessGame::getChessGame($chessGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
@@ -416,7 +407,6 @@ function word_filter($string) {
 	static $words;
 
 	if(!is_array($words)) {
-		require_once(LIB . '/Default/SmrMySqlDatabase.class.inc');
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT word_value, word_replacement FROM word_filter');
 		$words = array();

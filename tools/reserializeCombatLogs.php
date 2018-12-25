@@ -1,9 +1,6 @@
 <?php
 
 require_once('../htdocs/config.inc');
-require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
-require_once(LIB . 'Default/Globals.class.inc');
-require_once(LIB . 'Default/SmrPlayer.class.inc');
 
 $db = new SmrMySqlDatabase();
 $db2 = new SmrMySqlDatabase();

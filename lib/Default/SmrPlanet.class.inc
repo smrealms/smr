@@ -1,8 +1,5 @@
 <?php
 
-require_once(get_file_loc('SmrPlayer.class.inc'));
-require_once(get_file_loc('SmrPlanetType.class.inc'));
-
 class SmrPlanet {
 	protected static $CACHE_PLANETS = array();
 
@@ -74,7 +71,6 @@ class SmrPlanet {
 
 	public static function &createPlanet($gameID,$sectorID,$type=1) {
 		if(!self::getPlanet($gameID,$sectorID)->exists()) {
-			require_once(get_file_loc('SmrGame.class.inc'));
 			$minTime = max(SmrGame::getGame($gameID)->getStartDate(),
 			               SmrGame::getGame($gameID)->getStartTurnsDate());
 			$inhabitableTime = $minTime + pow(mt_rand(45, 85), 3);

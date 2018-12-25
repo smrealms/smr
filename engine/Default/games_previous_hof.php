@@ -6,7 +6,6 @@
 $db = new SmrMySqlDatabase();
 $oldAccountId = $account->getOldAccountID($var['HistoryDatabase']);
 
-require_once(get_file_loc($var['HistoryDatabase'].'.class.inc'));
 $db = new $var['HistoryDatabase']();
 
 $gameId = $var['game_id'];

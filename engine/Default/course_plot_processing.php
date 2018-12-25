@@ -34,7 +34,6 @@ if($startExists===false || $targetExists===false)
 
 $account->log(LOG_TYPE_MOVEMENT, 'Player plots to '.$target.'.', $player->getSectorID());
 
-require_once(get_file_loc('Plotter.class.inc'));
 $path = Plotter::findReversiblePathToX(SmrSector::getSector($player->getGameID(), $target), SmrSector::getSector($player->getGameID(), $start), true);
 
 // Forward to do common processing of path

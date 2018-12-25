@@ -148,7 +148,6 @@ if ($db->getNumRows()) {
 }
 
 foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
-	require_once(get_file_loc($databaseClassName.'.class.inc'));
 	//Old previous games
 	$historyDB = new $databaseClassName();
 	$historyDB->query('SELECT start_date, end_date, game_name, speed, game_id

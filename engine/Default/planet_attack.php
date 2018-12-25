@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('SmrPlanet.class.inc'));
+
 if(isset($var['results'])) {
 	$results = unserialize($var['results']);
 	$template->assign('FullPlanetCombatResults',$results);

@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('SmrSector.class.inc'));
+
 class Plotter {
 	public function __construct() {
 	}

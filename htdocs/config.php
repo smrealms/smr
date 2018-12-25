@@ -412,22 +412,3 @@ const LOCK_DURATION = 10; // The max time for a lock to last before timing out.
 const LOCK_BUFFER = 3; // The minimum time that must be remaining on the lock duration for the lock to be valid.
 
 define('USING_AJAX',isset($_REQUEST['ajax'])&&$_REQUEST['ajax']==1);
-require_once(LIB . 'Default/SmrSession.class.inc');
-require_once(LIB . 'Default/Template.class.inc');
-$template = new Template();
-$GLOBALS['template'] =& $template;
-
-$template->assign('URL',URL);
-$template->assign('CSSLink',DEFAULT_CSS);
-$template->assign('CSSColourLink',DEFAULT_CSS_COLOUR);
-
-// Change the browser title based on the server config
-$prefix = '';
-if (ENABLE_DEBUG) {
-	$prefix = 'DEV: ';
-} elseif (ENABLE_BETA) {
-	$prefix = 'BETA: ';
-}
-$template->assign('Title', $prefix . 'Space Merchant Realms');
-
-$template->assign('AJAX_ENABLE_REFRESH',AJAX_DEFAULT_REFRESH_TIME);

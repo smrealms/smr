@@ -1,8 +1,5 @@
 <?php
 
-require_once('Plotter.class.inc');
-require_once(get_file_loc('SmrSector.class.inc'));
-
 const ROUTE_GEN_USE_RELATIONS_FACTOR = false;
 
 class RouteGenerator {

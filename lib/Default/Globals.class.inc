@@ -1,7 +1,5 @@
 <?php
-require_once('SmrSession.class.inc');
-require_once('SmrMySqlDatabase.class.inc');
-require_once('SmrGame.class.inc');
+
 class Globals {
 	protected static $HIDDEN_PLAYERS = null;
 	protected static $LEVEL_REQUIREMENTS = null;
@@ -613,44 +611,4 @@ class Globals {
 		}
 	}
 
-}
-
-function get_file_loc($fileName) {
-	global $overrideGameID;
-	static $storedDir;
-	static $cache = array();
-	if(isset($storedDir)) {
-		$gameDir = $storedDir;
-	}
-	else {
-		if ($overrideGameID > 0) {
-			$storedDir = Globals::getGameType($overrideGameID) . '/';
-			$gameDir = $storedDir;
-		} else $gameDir = 'Default/';
-	}
-
-	$cacheKey = $gameDir . $fileName;
-	if (isset($cache[$cacheKey])) {
-		return $cache[$cacheKey];
-	}
-
-	$startPaths = array(ENGINE, LIB, ADMIN);
-	$midPaths = array($gameDir, 'Default/');
-	foreach($midPaths as $midPath) {
-		foreach($startPaths as $startPath) {
-			$filePath = $startPath . $midPath . $fileName;
-			if(is_file($filePath) && is_readable($filePath)) {
-				$cache[$cacheKey] = $filePath;
-				return $filePath;
-			}
-		}
-	}
-	$filePath = WWW . $fileName;
-	if(is_file($filePath) && is_readable($filePath)) {
-		$cache[$cacheKey] = $filePath;
-		return WWW . $fileName;
-	}
-
-	//We haven't matched on anything
-	throw new Exception('Cannot match given filename: ' . $fileName);
 }

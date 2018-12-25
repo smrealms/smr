@@ -2,8 +2,6 @@
 
 $template->assign('ViewAllLocationsLink',SmrSession::getNewHREF(create_container('skeleton.php','location_edit.php')));
 
-require_once(get_file_loc('SmrLocation.class.inc'));
-
 if(isset($var['location_type_id'])) {
 	$location = SmrLocation::getLocation($var['location_type_id']);
 	if(isset($_REQUEST['save'])) {

@@ -1,7 +1,6 @@
 <?php
 try {
 	require_once('config.inc');
-	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(LIB . 'Default/smr.inc');
 	require_once(ENGINE . 'Default/help.inc');
 

@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('ChessGame.class.inc'));
+
 if(!is_numeric($_REQUEST['player_id'])) {
 	create_error('You must select a player.');
 }

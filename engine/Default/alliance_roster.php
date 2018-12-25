@@ -1,7 +1,5 @@
 <?php
 
-require_once(get_file_loc('SmrAlliance.class.inc'));
-
 if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 }

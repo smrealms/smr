@@ -1,9 +1,5 @@
 <?php
-require_once('AbstractSmrShip.class.inc');
 
-require_once('SmrPlayer.class.inc');
-require_once('SmrWeapon.class.inc');
-require_once('SmrCombatDrones.class.inc');
 class SmrShip extends AbstractSmrShip {
 	protected static $CACHE_SHIPS = array();
 	

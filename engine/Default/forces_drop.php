@@ -10,7 +10,6 @@ else {
 	$owner_id = $player->getAccountID();
 }
 
-require_once(get_file_loc('SmrForce.class.inc'));
 $forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $owner_id);
 
 $container = array();

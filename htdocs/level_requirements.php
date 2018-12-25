@@ -1,7 +1,6 @@
 <?php
 try {
 	require_once('config.inc');
-	require_once(LIB . 'Default/Globals.class.inc');
 ?>
 
 <!DOCTYPE html>

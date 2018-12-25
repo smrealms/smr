@@ -29,12 +29,7 @@ require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
 // bot config
 require_once(CONFIG . 'npc/config.specific.php');
 // needed libs
-require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
-require_once(LIB . 'Default/Globals.class.inc');
 require_once(get_file_loc('smr.inc'));
-require_once(get_file_loc('SmrAccount.class.inc'));
-require_once(get_file_loc('Plotter.class.inc'));
-require_once(get_file_loc('RouteGenerator.class.inc'));
 require_once(get_file_loc('shop_goods.inc'));
 
 const SHIP_UPGRADE_PATH = array(

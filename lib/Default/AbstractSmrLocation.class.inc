@@ -263,7 +263,6 @@ class AbstractSmrLocation {
 	
 	public function &getShipsSold() {
 		if(!isset($this->shipsSold)) {
-			require_once(get_file_loc('AbstractSmrShip.class.inc'));
 			$this->shipsSold = array();
 			$this->db->query('SELECT * FROM location_sells_ships WHERE ' . $this->SQL);
 			while($this->db->nextRecord()) {
@@ -283,7 +282,6 @@ class AbstractSmrLocation {
 	public function addShipSold($shipTypeID) {
 		if($this->isShipSold($shipTypeID))
 			return;
-		require_once(get_file_loc('AbstractSmrShip.class.inc'));
 		$ship = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$shipTypeID);
 		if($ship===false)
 			throw new Exception('Invalid ship type id given');
@@ -300,7 +298,6 @@ class AbstractSmrLocation {
 	
 	public function &getWeaponsSold() {
 		if(!isset($this->weaponsSold)) {
-			require_once(get_file_loc('SmrWeapon.class.inc'));
 			$this->weaponsSold = array();
 			$this->db->query('SELECT * FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
 			while($this->db->nextRecord())
@@ -319,7 +316,6 @@ class AbstractSmrLocation {
 	public function addWeaponSold($weaponTypeID) {
 		if($this->isWeaponSold($weaponTypeID))
 			return;
-		require_once(get_file_loc('SmrWeapon.class.inc'));
 		$weapon = SmrWeapon::getWeapon($weaponTypeID);
 		if($weapon===false)
 			throw new Exception('Invalid weapon type id given');

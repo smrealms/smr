@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc($var['HistoryDatabase'].'.class.inc'));
+
 //games_previous_news.php
 if (isset($_REQUEST['min'])) $min = $_REQUEST['min'];
 else $min = 1;

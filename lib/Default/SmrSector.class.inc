@@ -1,9 +1,4 @@
 <?php
-require_once(get_file_loc('SmrPlayer.class.inc'));
-require_once(get_file_loc('SmrLocation.class.inc'));
-require_once(get_file_loc('SmrPlanet.class.inc'));
-require_once(get_file_loc('SmrPort.class.inc'));
-require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 // Exception thrown when a sector cannot be found in the database
 class SectorNotFoundException extends Exception {}
@@ -752,7 +747,6 @@ class SmrSector {
 	}
 
 	public function &getForces() {
-		require_once(get_file_loc('SmrForce.class.inc'));
 		return SmrForce::getSectorForces($this->getGameID(),$this->getSectorID());
 	}
 

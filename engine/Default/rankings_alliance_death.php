@@ -1,6 +1,5 @@
 <?php
 $template->assign('PageTopic','Alliance Death Rankings');
-require_once(get_file_loc('Rankings.inc'));
 require_once(get_file_loc('menu.inc'));
 create_ranking_menu(1, 3);
 

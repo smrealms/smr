@@ -1,6 +1,4 @@
 <?php
-require_once('AbstractSmrCombatWeapon.class.inc');
-require_once('WeightedRandom.class.inc');
 
 class SmrWeapon extends AbstractSmrCombatWeapon {
 	protected static $CACHE_WEAPONS = array();

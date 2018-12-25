@@ -1,5 +1,5 @@
 <?php
-require_once('AbstractSmrCombatWeapon.class.inc');
+
 class SmrMines extends AbstractSmrCombatWeapon {
 	const TOTAL_ENEMY_MINES_MODIFIER = 25;
 	const FED_SHIP_DAMAGE_MODIFIER = .5;

@@ -35,7 +35,6 @@ if (isset($var['process'])) {
 	$db->query('DELETE FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	//start section
 	
-	require_once(get_file_loc('SmrPort.class.inc'));
 	// add port infos
 	$db->query('SELECT * FROM port WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND sector_id >= ' . $db->escapeNumber($low));
 	while ($db->nextRecord()) {

@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('SmrPlayer.class.inc'));
+
 class SmrForce {
 	protected static $CACHE_FORCES = array();
 	protected static $CACHE_SECTOR_FORCES = array();
@@ -468,14 +468,12 @@ class SmrForce {
 		$results['DeadBeforeShot'] = false;
 
 		if($this->hasMines()) {
-			require_once(get_file_loc('SmrMines.class.inc'));
 			$thisMines = new SmrMines($this->getGameID(),$this->getMines());
 			$results['Results']['Mines'] =& $thisMines->shootPlayerAsForce($this, $targetPlayers[array_rand($targetPlayers)],$minesAreAttacker);
 			$results['TotalDamage'] += $results['Results']['Mines']['ActualDamage']['TotalDamage'];
 		}
 
 		if($this->hasCDs()) {
-			require_once(get_file_loc('SmrCombatDrones.class.inc'));
 			$thisCDs = new SmrCombatDrones($this->getGameID(),$this->getCDs());
 			$results['Results']['Drones'] =& $thisCDs->shootPlayerAsForce($this, $targetPlayers[array_rand($targetPlayers)]);
 			$results['TotalDamage'] += $results['Results']['Drones']['ActualDamage']['TotalDamage'];
@@ -483,7 +481,6 @@ class SmrForce {
 
 		if(!$minesAreAttacker) {
 			if($this->hasSDs()) {
-				require_once(get_file_loc('SmrScoutDrones.class.inc'));
 				$thisSDs = new SmrScoutDrones($this->getGameID(),$this->getSDs());
 				$results['Results']['Scouts'] =& $thisSDs->shootPlayerAsForce($this, $targetPlayers[array_rand($targetPlayers)]);
 				$results['TotalDamage'] += $results['Results']['Scouts']['ActualDamage']['TotalDamage'];

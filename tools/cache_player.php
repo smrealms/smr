@@ -17,9 +17,6 @@ query('OPTIMIZE TABLE `active_session`');
 // config file
 require( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
-// overwrite database class to use our db
-require( LIB . 'Default/SmrMySqlDatabase.class.inc' );
-
 // new db object
 $player = new SmrMySqlDatabase();
 $cache = new SmrMySqlDatabase();

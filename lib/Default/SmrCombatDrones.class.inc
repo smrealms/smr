@@ -1,6 +1,5 @@
 <?php
-require_once('AbstractSmrCombatWeapon.class.inc');
-require_once('AbstractSmrPlayer.class.inc');
+
 class SmrCombatDrones extends AbstractSmrCombatWeapon {
 	const MAX_CDS_RAND = 54;
 	protected $numberOfCDs;

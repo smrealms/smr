@@ -1,9 +1,6 @@
 <?php
 $template->assign('PageTopic','Edit Dummys');
 
-require_once(get_file_loc('DummyPlayer.class.inc'));
-require_once(get_file_loc('DummyShip.class.inc'));
-require_once(get_file_loc('SmrWeapon.class.inc'));
 //TODO add game type id
 $template->assign('CombatSimLink',SmrSession::getNewHREF(create_container('skeleton.php','combat_simulator.php')));
 $template->assign('BaseShips',AbstractSmrShip::getAllBaseShips(0));

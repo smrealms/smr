@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('SmrSector.class.inc'));
+
 $template->assign('PageTopic','Sector Death Rankings');
 
 require_once(get_file_loc('menu.inc'));

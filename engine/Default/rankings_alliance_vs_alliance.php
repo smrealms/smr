@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('SmrAlliance.class.inc'));
+
 $template->assign('PageTopic','Alliance VS Alliance Rankings');
 
 require_once(get_file_loc('menu.inc'));

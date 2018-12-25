@@ -4,8 +4,6 @@
 //config file
 require( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
-require(LIB . 'Default/SmrMySqlDatabase.class.inc');
-
 $db = new SmrMySqlDatabase();
 $db2 = new SmrMySqlDatabase();
 
