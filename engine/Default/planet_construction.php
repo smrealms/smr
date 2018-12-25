@@ -1,5 +1,5 @@
 <?php
 
-include('planet.inc');
+require('planet.inc');
 
 $template->assign('Goods', Globals::getGoods());

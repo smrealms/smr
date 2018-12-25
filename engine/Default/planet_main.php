@@ -1,6 +1,6 @@
 <?php
 
-include('planet.inc');
+require('planet.inc');
 
 //echo the dump cargo message or other message.
 if (isset($var['errorMsg'])) {

@@ -6,8 +6,8 @@ $db2 = new SmrMySqlDatabase();
 $last_id = 0;   // history initialization
 
 //another script for comp share
-if ($type == 'comp_share') include(get_file_loc('comp_share.php'));
-elseif ($type == 'all_acc') include(get_file_loc('list_all.php'));
+if ($type == 'comp_share') require(get_file_loc('comp_share.php'));
+elseif ($type == 'all_acc') require(get_file_loc('list_all.php'));
 elseif ($type == 'list') {
 	//=========================================================
 	// List all IPs

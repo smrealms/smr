@@ -562,10 +562,10 @@ function do_voodoo() {
 	if($var['body']) {
 		$PHP_OUTPUT = '';
 		if($var['body']=='error.php'||$var['body']=='bar_main.php') { // infinite includes for error/bar pages
-			include(get_file_loc($var['body']));
+			require(get_file_loc($var['body']));
 		}
 		else {
-			include_once(get_file_loc($var['body']));
+			require_once(get_file_loc($var['body']));
 		}
 
 		if($PHP_OUTPUT!='')

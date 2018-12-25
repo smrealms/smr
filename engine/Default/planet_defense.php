@@ -1,6 +1,6 @@
 <?php
 
-include('planet.inc');
+require('planet.inc');
 
 $container = create_container('planet_defense_processing.php');
 $container['type_id'] = 1;
