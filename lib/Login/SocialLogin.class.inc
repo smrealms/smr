@@ -11,18 +11,13 @@ class SocialLogin {
 	private $userID = null;
 	private $email = null;
 	private static $facebook=null;
-	private static $twitter=null;
 	private static $openID=null;
 	private static $OPEN_ID_IDENTITIES = array();
 
-	private static function &getFacebookObj() {
-
-		if(self::$facebook==null) {
-			if(!isset($_SESSION)) {
-				session_start();
-			}
+	private static function getFacebookObj() {
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
 		}
-
 		if(self::$facebook==null) {
 			self::$facebook = new Facebook\Facebook([
 				'app_id' => FACEBOOK_APP_ID,
@@ -30,22 +25,19 @@ class SocialLogin {
 				'default_graph_version' => 'v2.12'
 			]);
 		}
-
 		return self::$facebook;
 	}
 
-	private static function &getTwitterObj() {
-		if(self::$twitter==null) {
-			if(!isset($_SESSION)) {
-				session_start();
-			}
-			require_once(LIB.'External/Twitter/twitteroauth.php');
-			self::$twitter = new TwitterOAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, isset($_SESSION['TwitterToken']['oauth_token'])?$_SESSION['TwitterToken']['oauth_token']:null, isset($_SESSION['TwitterToken']['oauth_token_secret'])?$_SESSION['TwitterToken']['oauth_token_secret']:null);
-		}
-		return self::$twitter;
+	private static function getTwitterObj($token=null) {
+		return new Abraham\TwitterOAuth\TwitterOAuth(
+			TWITTER_CONSUMER_KEY,
+			TWITTER_CONSUMER_SECRET,
+			is_null($token) ? null : $token['oauth_token'],
+			is_null($token) ? null : $token['oauth_token_secret']
+		);
 	}
 
-	private static function &getOpenIdObj() {
+	private static function getOpenIdObj() {
 		if(self::$openID==null) {
 			require_once(LIB.'External/OpenID/openid.php');
 			self::$openID = new LightOpenID();
@@ -68,24 +60,29 @@ class SocialLogin {
 		}
 		$helper = self::getFacebookObj()->getRedirectLoginHelper();
 		$permissions = ['email'];
-		$loginUrl = $helper->GetLoginUrl(self::getRedirectUrl(self::FACEBOOK), $permissions);
-		return $loginUrl;
+		return $helper->GetLoginUrl(self::getRedirectUrl(self::FACEBOOK), $permissions);
 	}
 
 	public static function getTwitterLoginUrl() {
-		if(!isset($_SESSION)) {
+		if (empty(TWITTER_CONSUMER_KEY)) {
+			// No twitter app specified. Continuing would throw an exception.
+			return;
+		}
+		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
-		self::getTwitterObj()->token = null;
-		$_SESSION['TwitterToken'] = self::getTwitterObj()->getRequestToken(self::getRedirectUrl(self::TWITTER));
-		return self::getTwitterObj()->getAuthorizeURL($_SESSION['TwitterToken']);
+		$auth = self::getTwitterObj();
+		$params = ['oauth_callback' => self::getRedirectUrl(self::TWITTER)];
+		$_SESSION['TwitterToken'] = $auth->oauth('oauth/request_token', $params);
+		// 'authenticate' asks for permission only once ('authorize' is every time)
+		return $auth->url('oauth/authenticate', $_SESSION['TwitterToken']);
 	}
 
 	public static function getOpenIdLoginUrl($loginType) {
 		if(!isset(self::$OPEN_ID_IDENTITIES[$loginType])) {
 			throw new Exception('OpenID does not exist for login type: '.$loginType);
 		}
-		$openID =& self::getOpenIdObj();
+		$openID = self::getOpenIdObj();
 		$openID->required = array('contact/email');
 		$openID->returnUrl = self::getRedirectUrl($loginType);
 		$openID->identity = self::$OPEN_ID_IDENTITIES[$loginType];
@@ -105,11 +102,20 @@ class SocialLogin {
 			$this->valid = true;
 		}
 		else if($loginType == self::TWITTER) {
-			self::getTwitterObj()->getAccessToken($_REQUEST['oauth_verifier']);
-			if(self::getTwitterObj()->http_code == 200) {
-
-				$userInfo = self::getTwitterObj()->get('account/verify_credentials');
-				$this->userID=$userInfo->id_str;
+			if (session_status() === PHP_SESSION_NONE) {
+				session_start();
+			}
+			if ($_SESSION['TwitterToken']['oauth_token'] != $_REQUEST['oauth_token']) {
+				create_error('Unexpected token received from Twitter');
+			}
+			$helper = self::getTwitterObj($_SESSION['TwitterToken']);
+			$accessToken = $helper->oauth('oauth/access_token',
+			                              ['oauth_verifier' => $_REQUEST['oauth_verifier']]);
+			$auth = self::getTwitterObj($accessToken);
+			$userInfo = $auth->get('account/verify_credentials', ['include_email' => 'true']);
+			if ($auth->getLastHttpCode() == 200) {
+				$this->userID = $userInfo->id_str;
+				$this->email = $userInfo->email;
 				$this->valid = true;
 			}
 		}
