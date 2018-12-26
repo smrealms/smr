@@ -5,8 +5,7 @@ if (!isset($var['alliance_id'])) {
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('PageTopic', $alliance->getAllianceName(false, true));
-require_once(get_file_loc('menu.inc'));
-create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 // Create an array of links with descriptions
 $links = array();

@@ -52,8 +52,8 @@ if (!isset($var['alliance_id'])) {
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getInt('alliance_id') . ')');
-require_once(get_file_loc('menu.inc'));
-create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
+
 $db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY alliance_name');
 while ($db->nextRecord()) {
 	$temp[$db->getInt('alliance_id')] = stripslashes($db->getField('alliance_name'));

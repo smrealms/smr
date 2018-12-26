@@ -212,12 +212,7 @@ function create_echo_error($message) {
 
 function create_menu($menu) {
 	global $template;
-	$return = '<span class="noWrap">';
-	foreach ($menu as $number => $entry) {
-		if ($number > 0) $return .= '</span> | <span class="noWrap">';
-		$return .= $entry;
-	}
-	$return .= '</span>';
+	$return = '<span class="noWrap">' . implode('</span> | <span class="noWrap">', $menu) . '</span>';
 	$template->unassign('MenuItems');
 	$template->assign('MenuBar',$return);
 }

@@ -39,8 +39,7 @@ else {
 }
 $template->assign('PageTopic',$topic);
 
-require_once(get_file_loc('menu.inc'));
-create_bank_menu();
+Menu::bank();
 
 if (isset($var['make'])) {
 	$PHP_OUTPUT.= 'Hello ' . $player->getPlayerName();

@@ -1,8 +1,7 @@
 <?php
 
 $template->assign('PageTopic','Galactic Post');
-require_once(get_file_loc('menu.inc'));
-create_galactic_post_menu();
+Menu::galactic_post();
 
 $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();

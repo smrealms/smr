@@ -5,12 +5,11 @@ if (!$player->isOnCouncil()) {
 }
 
 require_once(get_file_loc('council.inc'));
-require_once(get_file_loc('menu.inc'));
 
 $template->assign('PageTopic','Ruling Council Of '.$player->getRaceName());
 
 
-create_council_menu($player->getRaceID());
+Menu::council($player->getRaceID());
 
 // determine for what we voted
 $db->query('SELECT * FROM player_votes_relation

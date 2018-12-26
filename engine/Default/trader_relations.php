@@ -1,8 +1,7 @@
 <?php
 $template->assign('PageTopic','Trader Relations');
 
-require_once(get_file_loc('menu.inc'));
-create_trader_menu();
+Menu::trader();
 
 $politicalRelations = array();
 $personalRelations = array();

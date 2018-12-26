@@ -21,5 +21,4 @@ $planet = $player->getSectorPlanet();
 $template->assign('ThisPlanet', $planet);
 $template->assign('PageTopic', 'Planet : '.$planet->getName().' [Sector #'.$player->getSectorID().']');
 
-require_once(get_file_loc('menu.inc'));
-create_planet_menu($planet);
+Menu::planet($planet);

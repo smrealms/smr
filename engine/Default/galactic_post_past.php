@@ -1,8 +1,7 @@
 <?php
 
-require_once(get_file_loc('menu.inc'));
-create_galactic_post_menu();
 $template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
+Menu::galactic_post();
 
 // View past editions of current game by default
 if (isset($_POST['game_id'])) {

@@ -2,8 +2,7 @@
 
 $template->assign('PageTopic','Reading The Wall');
 
-require_once(get_file_loc('menu.inc'));
-create_bar_menu();
+Menu::bar();
 
 $db->query('SELECT message_id FROM bar_wall WHERE sector_id = ' . $db->escapeNumber($sector->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY message_id DESC');
 if ($db->nextRecord()) {

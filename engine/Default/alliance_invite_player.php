@@ -4,8 +4,7 @@ $alliance = $player->getAlliance();
 $game = $player->getGame();
 
 $template->assign('PageTopic', $alliance->getAllianceName(false, true));
-require_once(get_file_loc('menu.inc'));
-create_alliance_menu($alliance->getAllianceID(), $alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 // Remove any expired invitations
 $db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(TIME));

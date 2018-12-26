@@ -67,8 +67,8 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$modRead = isset($_REQUEST['modRead']);
 	//get confirmation
 	$template->assign('PageTopic', $alliance1->getAllianceName(false, true));
-	require_once(get_file_loc('menu.inc'));
-	create_alliance_menu($alliance1->getAllianceID(),$alliance1->getLeaderID());
+	Menu::alliance($alliance1->getAllianceID(), $alliance1->getLeaderID());
+
 	$PHP_OUTPUT.=('<br /><br /');
 	$PHP_OUTPUT.=('<div align="center">Are you sure you want to offer a treaty to <span class="yellow">');
 	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($alliance_id_2) . ' LIMIT 1');

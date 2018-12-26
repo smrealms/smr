@@ -1,7 +1,6 @@
 <?php
 
-require_once(get_file_loc('menu.inc'));
-create_planet_list_menu($var['alliance_id'], 1);
+Menu::planet_list($var['alliance_id'], 1);
 
 // Determine if the player can view bonds on the planet list.
 // Player can always see them if not in an alliance.

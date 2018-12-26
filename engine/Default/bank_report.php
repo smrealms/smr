@@ -8,8 +8,7 @@ const DEPOSIT = 1;
 
 $template->assign('PageTopic','Alliance Bank Report');
 
-require_once(get_file_loc('menu.inc'));
-create_bank_menu();
+Menu::bank();
 
 //get all transactions
 $db->query('SELECT * FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));

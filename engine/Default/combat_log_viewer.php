@@ -1,8 +1,7 @@
 <?php
 
 $template->assign('PageTopic','Combat Logs');
-require_once(get_file_loc('menu.inc'));
-create_combat_log_menu();
+Menu::combat_log();
 
 if(!isset($var['log_ids']) && !isset($var['current_log'])) {
 	create_error('You must select a combat log to view');

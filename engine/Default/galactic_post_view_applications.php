@@ -1,8 +1,8 @@
 <?php
 
 $template->assign('PageTopic','Viewing Applications');
-require_once(get_file_loc('menu.inc'));
-create_galactic_post_menu();
+Menu::galactic_post();
+
 $db->query('SELECT * FROM galactic_post_applications WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($db->getNumRows()) {
 	$PHP_OUTPUT.=('You have received an application from the following players (click name to view description)<br />');

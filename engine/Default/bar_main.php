@@ -25,10 +25,9 @@ else {
 	$template->assign('PageTopic','Welcome to this bar');
 }
 
-require_once(get_file_loc('menu.inc'));
 global $BAR_SCRIPTS_USED; // HACKY
 if(!is_array($BAR_SCRIPTS_USED)||!in_array($script,$BAR_SCRIPTS_USED)) {
-	create_bar_menu();
+	Menu::bar();
 	$BAR_SCRIPTS_USED[] = $script;
 }
 //get rid of drinks older than 30 mins

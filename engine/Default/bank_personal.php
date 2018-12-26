@@ -13,8 +13,7 @@ if (!$account->isValidated()) {
 
 $template->assign('PageTopic','Bank');
 
-require_once(get_file_loc('menu.inc'));
-create_bank_menu();
+Menu::bank();
 
 $PHP_OUTPUT.= 'Hello ' . $player->getPlayerName();
 $PHP_OUTPUT.= '<br /><br />';

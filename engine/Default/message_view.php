@@ -1,7 +1,6 @@
 <?php
 require_once(get_file_loc('message.functions.inc'));
-require_once(get_file_loc('menu.inc'));
-create_message_menu();
+Menu::messages();
 
 if (!isset ($var['folder_id'])) {
 	$template->assign('PageTopic', 'View Messages');

@@ -5,11 +5,10 @@ if(!$player->isPresident()) {
 }
 
 require_once(get_file_loc('council.inc'));
-require_once(get_file_loc('menu.inc'));
 
 $template->assign('PageTopic','Ruling Council Of '.$player->getRaceName());
 
-create_council_menu($player->getRaceID());
+Menu::council($player->getRaceID());
 
 $voteRaces = array();
 $RACES = Globals::getRaces();

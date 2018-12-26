@@ -2,8 +2,7 @@
 
 $template->assign('PageTopic','Experience Rankings');
 
-require_once(get_file_loc('menu.inc'));
-create_ranking_menu(0, 0);
+Menu::rankings(0, 0);
 
 // what rank are we?
 $ourRank = $player->getExperienceRank();

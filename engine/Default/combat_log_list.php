@@ -1,8 +1,7 @@
 <?php
 
 $template->assign('PageTopic','Combat Logs');
-require_once(get_file_loc('menu.inc'));
-create_combat_log_menu();
+Menu::combat_log();
 
 // Do we have a message from the processing page?
 if (isset($var['message'])) {
