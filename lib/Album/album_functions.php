@@ -12,15 +12,15 @@ function main_page() {
 	// news
 	echo('<p><u>Space Merchant Realms Photo Album Rules</u>');
 	echo('<ol>');
-	echo('<li>500 x 500 maximum pixel size only.</li>');
-	echo('<li>Only .JPG or .GIF files will be accepted.</li>');
-	echo('<li>NO derogatory or vulgar pictures will be accepted.</li>');
-	echo('<li>ALL pictures MUST depict the real you. No anime, fictitional, or otherwise \'fake\' pictures are allowed.</li>');
-	echo('<li>Please watch your language while posting within the album. Same general rules apply here as they do in the SMR chat room.</li>');
+	echo('<li>500 x 500 pixel maximum photo size.</li>');
+	echo('<li>Only .jpg, .png, or .gif files will be accepted.</li>');
+	echo('<li>No derogatory or vulgar pictures will be accepted.</li>');
+	echo('<li>Pictures MUST depict the real you. No anime, fictional, or otherwise \'fake\' pictures are allowed.</li>');
+	echo('<li>Please watch your language while posting within the album. Same general rules apply here as in SMR chat rooms.</li>');
 	echo('<li>Please respect all members in this area. Treat them as you would want to be treated. Do not post cruel or otherwise unneeded comments about someone or their property.</li>');
-	echo('<li>You must be logged into your account to post within this album, therefore if you break any of these rules your account may be subject to disablement. Prolonged periods will incur if you break any of these rules more than once.</li>');
+	echo('<li>You must be logged into your account to post within this album. Therefore, if you break any of these rules, your account may be subject to disablement.</li>');
 	echo('</ol>');
-	echo('<small><b>Please Note:</b> Your warning is written here. You will not be warned beyond this point. It will be a 24 hour disablement beyond this warning the first time you break a rule. (IF you break a rule)</small>');
+	echo('<small><b>Please Note:</b> This is your only warning! All rule violations (even first time offenders) will be subject to a 1-day ban. Repeat offenders may incur longer bans.</small>');
 	echo('</p>');
 
 	echo('<p>&nbsp;</p>');
