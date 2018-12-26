@@ -4,11 +4,7 @@ if (!$player->isOnCouncil()) {
 	create_error('You have to be on the council in order to vote.');
 }
 
-require_once(get_file_loc('council.inc'));
-
 $template->assign('PageTopic','Ruling Council Of '.$player->getRaceName());
-
-
 Menu::council($player->getRaceID());
 
 // determine for what we voted

@@ -1,7 +1,5 @@
 <?php
 
-require_once(get_file_loc('council.inc'));
-
 if (!isset($var['race_id'])) {
 	SmrSession::updateVar('race_id',$player->getRaceID());
 }
@@ -13,6 +11,6 @@ $template->assign('RaceID', $raceID);
 Menu::council($raceID);
 
 // check for relations here
+require_once(get_file_loc('council.inc'));
 modifyRelations($raceID);
-
 checkPacts($raceID);

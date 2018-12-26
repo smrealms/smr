@@ -38,7 +38,6 @@ if ($type == 'PEACE') {
 
 // Send vote announcement to members of the player's council (war votes)
 // or both races' councils (peace votes).
-require_once(get_file_loc('council.inc'));
 $councilMembers = Council::getRaceCouncil($player->getGameID(),
                                           $player->getRaceID());
 if ($type == 'PEACE') {

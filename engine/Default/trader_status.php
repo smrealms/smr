@@ -40,8 +40,6 @@ $container['body'] = 'council_list.php';
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Politics</span><a href="' . WIKI_URL . '/game-guide/politics" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>');
 $PHP_OUTPUT.= '<br />';
 
-require_once(get_file_loc('council.inc'));
-
 if($player->isOnCouncil()) {
 	if($player->isPresident()) {
 		$PHP_OUTPUT.= 'You are the <span class="red">President</span> of the ruling council.';

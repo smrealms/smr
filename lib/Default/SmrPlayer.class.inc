@@ -3,7 +3,6 @@
 // Exception thrown when a player cannot be found in the database
 class PlayerNotFoundException extends Exception {}
 
-require_once(get_file_loc('council.inc'));
 class SmrPlayer extends AbstractSmrPlayer {
 	const TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;
 	const TIME_FOR_ALLIANCE_SWITCH = 0;
