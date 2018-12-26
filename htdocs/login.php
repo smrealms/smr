@@ -28,8 +28,8 @@ try {
 	
 	if(isset($_REQUEST['msg']))
 		$template->assign('Message',htmlentities(trim($_REQUEST['msg']),ENT_COMPAT,'utf-8'));
-		
-	require_once(LIB . 'Login/loginSmarty.php');
+
+	require_once(ENGINE . 'Default/login.inc');
 
 }
 catch(Throwable $e) {

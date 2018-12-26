@@ -12,7 +12,7 @@ try {
 	}
 	else header('Location: /');
 	
-	require_once(LIB . 'Login/loginSmarty.php');
+	require_once(ENGINE . 'Default/login.inc');
 }
 catch(Throwable $e) {
 	handleException($e);

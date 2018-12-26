@@ -17,4 +17,4 @@ if ($disabled === false) {
 SmrSession::destroy();
 
 $template->assign('Message', $msg);
-require_once(LIB . 'Login/loginSmarty.php');
+require_once(ENGINE . 'Default/login.inc');

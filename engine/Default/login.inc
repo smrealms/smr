@@ -12,6 +12,6 @@ unset($overrideGameID);
 if(count($gameNews)>0)
 	$template->assign('GameNews',$gameNews);
 
-require_once('story.php');
+require_once('login_story.inc');
 
 $template->display('login.inc');
