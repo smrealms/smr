@@ -1,7 +1,5 @@
 <?php
 
-require_once(get_file_loc('SmrAlliance.class.inc'));
-
 if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 }
@@ -10,8 +8,7 @@ $alliance = SmrAlliance::getAlliance($var['alliance_id'],$player->getGameID());
 $template->assign('Alliance', $alliance);
 
 $template->assign('PageTopic', $alliance->getAllianceName(false, true));
-require_once(get_file_loc('menu.inc'));
-create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 $varAction = isset($var['action']) ? $var['action'] : '';
 // Does anyone actually use these?

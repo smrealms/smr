@@ -1,9 +1,8 @@
 <?php
-require_once(get_file_loc('SmrAlliance.class.inc'));
+
 $template->assign('PageTopic','Alliance VS Alliance Rankings');
 
-require_once(get_file_loc('menu.inc'));
-create_ranking_menu(1, 4);
+Menu::rankings(1, 4);
 $db2 = new SmrMySqlDatabase();
 $container = array();
 $container['url'] = 'skeleton.php';

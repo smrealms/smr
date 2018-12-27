@@ -1,5 +1,4 @@
 <?php
-require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 // Get a list of all available planet types
 $allowedTypes = array();

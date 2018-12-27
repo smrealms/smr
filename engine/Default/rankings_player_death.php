@@ -2,9 +2,7 @@
 
 $template->assign('PageTopic','Death Rankings');
 
-require_once(get_file_loc('Rankings.inc'));
-require_once(get_file_loc('menu.inc'));
-create_ranking_menu(0, 3);
+Menu::rankings(0, 3);
 
 // what rank are we?
 $ourRank = $player->getDeathsRank();

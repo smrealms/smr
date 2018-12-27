@@ -2,9 +2,7 @@
 
 $template->assign('PageTopic','Kill Rankings');
 
-require_once(get_file_loc('Rankings.inc'));
-require_once(get_file_loc('menu.inc'));
-create_ranking_menu(0, 2);
+Menu::rankings(0, 2);
 
 // what rank are we?
 $ourRank = $player->getKillsRank();

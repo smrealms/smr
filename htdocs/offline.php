@@ -3,9 +3,6 @@ try {
 	// includes
 	require_once('config.inc');
 	require_once(LIB . 'Default/smr.inc');
-	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
-	require_once(get_file_loc('SmrAccount.class.inc'));
-	require_once(get_file_loc('SmrSession.class.inc'));
 	
 	$db = new SmrMySqlDatabase();
 	
@@ -15,7 +12,7 @@ try {
 	}
 	else header('Location: /');
 	
-	require_once(LIB . 'Login/loginSmarty.php');
+	require_once(ENGINE . 'Default/login.inc');
 }
 catch(Throwable $e) {
 	handleException($e);

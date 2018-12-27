@@ -5,9 +5,6 @@ try {
 	require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
 	// bot config
 	require_once(CONFIG . 'npc/config.specific.php');
-	// needed libs
-	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
-	require_once(LIB . 'Default/Globals.class.inc');
 
 	$db = new SmrMySqlDatabase();
 
@@ -49,7 +46,6 @@ try {
 	writeToEngine('ucinewgame', false);
 	SmrSession::$game_id = NPC_GAME_ID;
 
-	require_once(get_file_loc('ChessGame.class.inc'));
 	while(true) {
 		//Redefine MICRO_TIME and TIME, the rest of the game expects them to be the single point in time that the script is executing, with it being redefined for each page load - unfortunately NPCs are one consistent script so we have to do a hack and redefine it (or change every instance of the TIME constant).
 		runkit_constant_redefine('MICRO_TIME', microtime());

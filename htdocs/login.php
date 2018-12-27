@@ -2,18 +2,8 @@
 
 try {
 	
-	// ********************************
-	// *
-	// * I n c l u d e s   h e r e
-	// *
-	// ********************************
-	
 	require_once('config.inc');
-	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(LIB . 'Default/smr.inc');
-	require_once(get_file_loc('SmrSession.class.inc'));
-	require_once(get_file_loc('SmrAccount.class.inc'));
-	
 	
 	// ********************************
 	// *
@@ -38,8 +28,8 @@ try {
 	
 	if(isset($_REQUEST['msg']))
 		$template->assign('Message',htmlentities(trim($_REQUEST['msg']),ENT_COMPAT,'utf-8'));
-		
-	require_once(LIB . 'Login/loginSmarty.php');
+
+	require_once(ENGINE . 'Default/login.inc');
 
 }
 catch(Throwable $e) {

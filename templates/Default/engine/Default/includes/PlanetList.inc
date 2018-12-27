@@ -1,5 +1,4 @@
 <?php
-require_once(get_file_loc('SmrPlanetStructureType.class.inc'));
 
 if (count($Planets) > 0) { ?>
 	<table id="planet-list" class="standard inset">

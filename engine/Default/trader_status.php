@@ -1,8 +1,7 @@
 <?php
 $template->assign('PageTopic','Trader Status');
 
-require_once(get_file_loc('menu.inc'));
-create_trader_menu();
+Menu::trader();
 
 $container=array();
 $container['url'] = 'skeleton.php';
@@ -40,8 +39,6 @@ $PHP_OUTPUT.= '<br />';
 $container['body'] = 'council_list.php';
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Politics</span><a href="' . WIKI_URL . '/game-guide/politics" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>');
 $PHP_OUTPUT.= '<br />';
-
-require_once(get_file_loc('council.inc'));
 
 if($player->isOnCouncil()) {
 	if($player->isPresident()) {

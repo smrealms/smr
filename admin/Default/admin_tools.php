@@ -1,5 +1,4 @@
 <?php
-require_once(LIB . 'Default/AdminPermissions.class.inc');
 
 if(isset($var['errorMsg'])) {
 	$template->assign('ErrorMessage',$var['errorMsg']);

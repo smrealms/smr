@@ -1,7 +1,6 @@
 <?php
 // Load the Distance object to do the common processing
 // for both "Conventional" and "Plot To Nearest".
-require_once(get_file_loc('Plotter.class.inc'));
 $path = unserialize($var['Distance']);
 
 // Throw start sector away (it's useless for the route),
@@ -20,8 +19,7 @@ if ($player->getSectorID() == $startSectorID) {
 }
 
 $template->assign('PageTopic', 'Plot A Course');
-require_once(get_file_loc('menu.inc'));
-create_nav_menu($template, $player);
+Menu::navigation($template, $player);
 
 $template->assign('Path', $path);
 $template->assign('FullPath', $fullPath);

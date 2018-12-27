@@ -1,8 +1,7 @@
 <?php
 
 $template->assign('PageTopic', 'Jump Drive');
-require_once(get_file_loc('menu.inc'));
-create_nav_menu($template, $player);
+Menu::navigation($template, $player);
 
 $targetSector = SmrSector::getSector($player->getGameID(), $var['target']);
 $jumpInfo = $player->getJumpInfo($targetSector);

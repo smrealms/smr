@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc($var['HistoryDatabase'].'.class.inc'));
+
 $game_name = $var['game_name'];
 $game_id = $var['game_id'];
 $template->assign('PageTopic',$game_name.' - Extended Stats');

@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc($var['HistoryDatabase'].'.class.inc'));
+
 //offer a back button
 $container = create_container('skeleton.php', 'games_previous.php');
 $container['HistoryDatabase'] = $var['HistoryDatabase'];

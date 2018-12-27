@@ -1,8 +1,5 @@
 <?php
 require_once('../htdocs/config.inc');
-require_once(LIB . 'Default/Globals.class.inc');
-
-require_once(get_file_loc('ChessGame.class.inc'));
 
 SmrSession::$game_id = 44;
 

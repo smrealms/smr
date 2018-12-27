@@ -1,6 +1,6 @@
 <?php
 
-include('planet.inc');
+require('planet.inc');
 
 $goodInfo = array();
 foreach (Globals::getGoods() as $goodID => $good) {

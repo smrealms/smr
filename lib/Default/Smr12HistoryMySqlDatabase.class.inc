@@ -1,6 +1,5 @@
 <?php
 
-require_once('MySqlDatabase.class.inc');
 require_once(CONFIG . 'SmrMySqlSecrets.inc');
 
 class Smr12HistoryMySqlDatabase extends MySqlDatabase {

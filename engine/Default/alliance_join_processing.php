@@ -1,7 +1,5 @@
 <?php
 
-require_once(get_file_loc('SmrAlliance.class.inc'));
-
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 
 $canJoin = $alliance->canJoinAlliance($player);

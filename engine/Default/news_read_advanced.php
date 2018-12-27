@@ -5,8 +5,7 @@ $gameID = $var['GameID'];
 $basicContainer = array('GameID'=>$gameID);
 
 $template->assign('PageTopic','Advanced News');
-require_once(get_file_loc('menu.inc'));
-create_news_menu($template);
+Menu::news($template);
 
 //$db->query('
 //SELECT alliance_id, alliance_name

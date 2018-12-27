@@ -1,5 +1,4 @@
 <?php
-require_once(get_file_loc('Plotter.class.inc'));
 
 function checkPortTradeable(&$port,&$player) {
 	if($port->getSectorID()!=$player->getSectorID())

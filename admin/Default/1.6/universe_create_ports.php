@@ -1,5 +1,4 @@
 <?php
-require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 if (!isset($var['gal_on'])) {
 	throw Exception('Gal_on not found!');

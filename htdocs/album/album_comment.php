@@ -8,9 +8,6 @@ function create_error_offline($msg) {
 try {
 	require_once('../config.inc');
 	require_once(LIB . 'Default/smr.inc');
-	require_once(get_file_loc('SmrMySqlDatabase.class.inc'));
-	require_once(get_file_loc('SmrSession.class.inc'));
-
 	require_once(LIB . 'Album/album_functions.php');
 
 	if (SmrSession::$account_id == 0)
@@ -27,7 +24,6 @@ try {
 	if ($album_id < 1)
 		create_error_offline('Picture ID has to be positive!');
 
-	require_once(get_file_loc('SmrAccount.class.inc'));
 	$account = SmrAccount::getAccount(SmrSession::$account_id);
 
 	if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {

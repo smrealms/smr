@@ -1,5 +1,4 @@
 <?php
-require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 if (!isset($var['game_id'])) SmrSession::updateVar('game_id', $_REQUEST['game_id']);
 if (!isset($var['gal_on'])) SmrSession::updateVar('gal_on', 1);

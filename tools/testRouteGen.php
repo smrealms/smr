@@ -10,9 +10,6 @@ for($i=0;$i<100000;$i++)
 var_dump(number_format(memory_get_usage()));
 /**/
 require_once('../htdocs/config.inc');
-require_once(LIB . 'Default/Globals.class.inc');
-require_once(get_file_loc('RouteGenerator.class.inc'));
-require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 $gameID = 108;
 

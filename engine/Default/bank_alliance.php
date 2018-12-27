@@ -18,8 +18,7 @@ if (!isset($var['alliance_id'])) {
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('PageTopic','Bank');
 
-require_once(get_file_loc('menu.inc'));
-create_bank_menu();
+Menu::bank();
 
 $db->query('SELECT * FROM alliance_treaties WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND (alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')

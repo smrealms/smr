@@ -1,5 +1,4 @@
 <?php
-require_once('MySqlDatabase.class.inc');
 require_once(CONFIG . 'SmrMySqlSecrets.inc');
 
 class SmrSessionMySqlDatabase extends MySqlDatabase {

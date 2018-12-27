@@ -2,9 +2,7 @@
 <?php
 
 //config file
-include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
-
-include(LIB . 'Default/SmrMySqlDatabase.class.inc');
+require( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
 $db = new SmrMySqlDatabase();
 $db2 = new SmrMySqlDatabase();

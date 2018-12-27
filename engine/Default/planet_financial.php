@@ -1,3 +1,3 @@
 <?php
 
-include('planet.inc');
+require('planet.inc');

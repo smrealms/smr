@@ -3,8 +3,6 @@
 // Exception thrown when a player cannot be found in the database
 class PlayerNotFoundException extends Exception {}
 
-require_once(get_file_loc('AbstractSmrPlayer.class.inc'));
-require_once(get_file_loc('council.inc'));
 class SmrPlayer extends AbstractSmrPlayer {
 	const TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;
 	const TIME_FOR_ALLIANCE_SWITCH = 0;
@@ -296,7 +294,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	public function &getAccount() {
-		require_once(get_file_loc('SmrAccount.class.inc'));
 		return SmrAccount::getAccount($this->getAccountID());
 	}
 
@@ -327,7 +324,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	public function setSectorID($sectorID) {
-		require_once(get_file_loc('SmrPort.class.inc'));
 		$port = SmrPort::getPort($this->getGameID(),$this->getSectorID());
 		$port->addCachePort($this->getAccountID()); //Add port of sector we were just in, to make sure it is left totally up to date.
 
@@ -1606,7 +1602,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	public function getPlottedCourse() {
 		if(!isset($this->plottedCourse)) {
-			require_once(get_file_loc('Plotter.class.inc'));
 			// check if we have a course plotted
 			$this->db->query('SELECT course FROM player_plotted_course WHERE ' . $this->SQL . ' LIMIT 1');
 
@@ -1668,7 +1663,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	// Computes the turn cost and max misjump between current and target sector
 	public function getJumpInfo(SmrSector $targetSector) {
-		require_once(get_file_loc('Plotter.class.inc'));
 		$path = Plotter::findDistanceToX($targetSector, $this->getSector(), true);
 		if ($path===false) {
 			create_error('Unable to plot from '.$this->getSectorID().' to '.$targetSector->getSectorID().'.');

@@ -3,7 +3,6 @@ if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
-require_once(get_file_loc('SmrAlliance.class.inc'));
 if (isset($_REQUEST['password'])) {
 	$password = trim($_REQUEST['password']);
 }

@@ -1,13 +1,5 @@
 <?php
 
-require_once(LIB . '/Default/Globals.class.inc');
-require_once(LIB . '/Default/VoteSite.class.inc');
-require_once(get_file_loc('SmrPlayer.class.inc'));
-require_once(get_file_loc('SmrAccount.class.inc'));
-require_once(get_file_loc('SmrShip.class.inc'));
-require_once(get_file_loc('SmrSector.class.inc'));
-require_once(get_file_loc('Sorter.class.inc'));
-
 function setupMailer() {
 	$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 	if (!empty(SMTP_HOSTNAME)) {
@@ -104,7 +96,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'chess':
 				$chessGameID = $default;
-				require_once(get_file_loc('ChessGame.class.inc'));
 				$chessGame =& ChessGame::getChessGame($chessGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
@@ -221,12 +212,7 @@ function create_echo_error($message) {
 
 function create_menu($menu) {
 	global $template;
-	$return = '<span class="noWrap">';
-	foreach ($menu as $number => $entry) {
-		if ($number > 0) $return .= '</span> | <span class="noWrap">';
-		$return .= $entry;
-	}
-	$return .= '</span>';
+	$return = '<span class="noWrap">' . implode('</span> | <span class="noWrap">', $menu) . '</span>';
 	$template->unassign('MenuItems');
 	$template->assign('MenuBar',$return);
 }
@@ -416,7 +402,6 @@ function word_filter($string) {
 	static $words;
 
 	if(!is_array($words)) {
-		require_once(LIB . '/Default/SmrMySqlDatabase.class.inc');
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT word_value, word_replacement FROM word_filter');
 		$words = array();
@@ -562,10 +547,10 @@ function do_voodoo() {
 	if($var['body']) {
 		$PHP_OUTPUT = '';
 		if($var['body']=='error.php'||$var['body']=='bar_main.php') { // infinite includes for error/bar pages
-			include(get_file_loc($var['body']));
+			require(get_file_loc($var['body']));
 		}
 		else {
-			include_once(get_file_loc($var['body']));
+			require_once(get_file_loc($var['body']));
 		}
 
 		if($PHP_OUTPUT!='')

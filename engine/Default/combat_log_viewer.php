@@ -1,8 +1,7 @@
 <?php
 
 $template->assign('PageTopic','Combat Logs');
-require_once(get_file_loc('menu.inc'));
-create_combat_log_menu();
+Menu::combat_log();
 
 if(!isset($var['log_ids']) && !isset($var['current_log'])) {
 	create_error('You must select a combat log to view');
@@ -23,9 +22,6 @@ if($var['current_log'] < count($container['log_ids']) - 1) {
 
 // Set properties for the current display page
 $display_id = $var['log_ids'][$var['current_log']];
-//These are required in case we unzip these classes.
-require_once(get_file_loc('SmrPort.class.inc'));
-require_once(get_file_loc('SmrPlanet.class.inc'));
 $db->query('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($display_id) . ' LIMIT 1');
 
 if($db->nextRecord()) {

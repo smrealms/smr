@@ -1,5 +1,4 @@
 <?php
-require_once(get_file_loc('Plotter.class.inc'));
 
 if(isset($var['RealX'])) {
 	$realX = $var['RealX'];

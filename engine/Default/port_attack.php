@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('SmrPort.class.inc'));
+
 if(isset($var['results'])) {
 	$results = unserialize($var['results']);
 	$template->assign('FullPortCombatResults',$results);

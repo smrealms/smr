@@ -8,8 +8,7 @@ $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 Globals::canAccessPage('AllianceMOTD', $player, array('AllianceID' => $alliance->getAllianceID()));
 
 $template->assign('PageTopic', $alliance->getAllianceName(false, true));
-require_once(get_file_loc('menu.inc'));
-create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 $PHP_OUTPUT.= '<div align="center">';
 

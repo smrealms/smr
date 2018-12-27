@@ -4,8 +4,7 @@ $raceName = Globals::getRaceName($var['race_id']);
 
 $template->assign('PageTopic','Send message to ruling council of the '.$raceName);
 
-require_once(get_file_loc('menu.inc'));
-create_message_menu();
+Menu::messages();
 
 $PHP_OUTPUT.=('<p>');
 

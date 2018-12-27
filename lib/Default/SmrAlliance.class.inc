@@ -1,6 +1,4 @@
 <?php
-require_once(get_file_loc('SmrAccount.class.inc'));
-require_once(get_file_loc('SmrPlayer.class.inc'));
 
 class SmrAlliance {
 	protected static $CACHE_ALLIANCES = array();

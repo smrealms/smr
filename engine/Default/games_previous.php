@@ -1,6 +1,5 @@
 <?php
 
-require_once(get_file_loc($var['HistoryDatabase'].'.class.inc'));
 $PHP_OUTPUT.=('<div class="center">');
 
 //topic

@@ -2,8 +2,7 @@
 
 $template->assign('PageTopic','Bounties');
 
-require_once(get_file_loc('menu.inc'));
-create_trader_menu();
+Menu::trader();
 
 foreach (array('HQ', 'UG') as $type) {
 	if ($player->hasCurrentBounty($type)) {

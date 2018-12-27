@@ -1,5 +1,4 @@
 <?php
-require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 $locations = SmrLocation::getAllLocations();
 

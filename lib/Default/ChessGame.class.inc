@@ -1,6 +1,4 @@
 <?php
-require_once(get_file_loc('SmrPlayer.class.inc'));
-require_once(get_file_loc('ChessPiece.class.inc'));
 /**
  * @author Page
  *

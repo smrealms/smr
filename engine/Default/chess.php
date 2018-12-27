@@ -1,5 +1,4 @@
 <?php
-require_once(get_file_loc('ChessGame.class.inc'));
 
 $chessGames =& ChessGame::getOngoingAccountGames($player->getAccountID());
 $template->assign('ChessGames', $chessGames);

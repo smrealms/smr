@@ -1,13 +1,6 @@
 <?php
 try {
-	// ********************************
-	// *
-	// * I n c l u d e s   h e r e
-	// *
-	// ********************************
-
 	require_once('config.inc');
-	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 	$db = new SmrMySqlDatabase();
 	?>

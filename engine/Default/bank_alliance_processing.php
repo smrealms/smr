@@ -4,7 +4,6 @@ if (!isset($var['alliance_id'])) {
 }
 $alliance_id = $var['alliance_id'];
 
-require_once(get_file_loc('SmrAlliance.class.inc'));
 $amount = $_REQUEST['amount'];
 // check for numbers
 if (!is_numeric($amount)) {

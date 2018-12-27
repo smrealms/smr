@@ -1,8 +1,7 @@
 <?php
-require_once(get_file_loc('SmrPlayer.class.inc'));
+
 class Rankings {
-	private function __construct() {
-	}
+	private function __construct() {}
 
 	public static function &collectAllianceRankings(SmrMySqlDatabase &$db, AbstractSmrPlayer &$player, $rank) {
 		$rankings = array();

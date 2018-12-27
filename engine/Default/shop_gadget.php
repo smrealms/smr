@@ -9,7 +9,7 @@
 
 if (!in_array($var['loc_id'], $SECTOR[$THIS_PLAYER->getSectorID()]['Locations'])) {
 	$error .= get_status_message('red','Error','That shop does not exist in this sector!');
-	include($GAME_FILES . '/error.php');
+	require($GAME_FILES . '/error.php');
 	return;
 }
 

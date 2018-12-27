@@ -1,7 +1,5 @@
 <?php
 
-require_once(get_file_loc('SmrPlanetStructureType.class.inc'));
-
 /**
  * Defines intrinsic properties of planet types.
  */

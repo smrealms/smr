@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('ChessGame.class.inc'));
+
 $chessGame =& ChessGame::getChessGame($var['ChessGameID']);
 $result = $chessGame->resign($player->getAccountID());
 

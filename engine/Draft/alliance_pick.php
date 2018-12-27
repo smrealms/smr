@@ -1,8 +1,7 @@
 <?php
 $alliance = $player->getAlliance();
 $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
-require_once(get_file_loc('menu.inc'));
-create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 // Get the current teams
 require_once('alliance_pick.inc');

@@ -2,8 +2,7 @@
 
 $template->assign('PageTopic','Anonymous accounts for '.$player->getPlayerName());
 
-require_once(get_file_loc('menu.inc'));
-create_trader_menu();
+Menu::trader();
 
 $PHP_OUTPUT.=('<br /><br />');
 $db->query('SELECT * FROM anon_bank WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));

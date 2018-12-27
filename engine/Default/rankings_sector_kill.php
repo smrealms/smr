@@ -1,9 +1,8 @@
 <?php
-require_once(get_file_loc('SmrSector.class.inc'));
+
 $template->assign('PageTopic','Sector Death Rankings');
 
-require_once(get_file_loc('menu.inc'));
-create_ranking_menu(3,0);
+Menu::rankings(3,0);
 
 $db->query('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY battles DESC, sector_id LIMIT 10');
 

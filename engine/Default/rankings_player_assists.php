@@ -2,9 +2,7 @@
 
 $template->assign('PageTopic', 'Assist Rankings');
 
-require_once(get_file_loc('Rankings.inc'));
-require_once(get_file_loc('menu.inc'));
-create_ranking_menu(0, 4);
+Menu::rankings(0, 4);
 
 // what rank are we?
 $ourRank = $player->getAssistsRank();

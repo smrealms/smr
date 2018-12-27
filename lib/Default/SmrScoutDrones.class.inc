@@ -1,5 +1,4 @@
 <?php
-require_once('AbstractSmrCombatWeapon.class.inc');
 
 class SmrScoutDrones extends AbstractSmrCombatWeapon {
 	protected $numberOfSDs;

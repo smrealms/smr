@@ -1,8 +1,6 @@
 <?php
 $template->assign('PageTopic','Alliance Profit Rankings');
-require_once(get_file_loc('Rankings.inc'));
-require_once(get_file_loc('menu.inc'));
-create_ranking_menu(1, 1);
+Menu::rankings(1, 1);
 
 $db->query('SELECT count(*) FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()));

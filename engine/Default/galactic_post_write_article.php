@@ -1,7 +1,6 @@
 <?php
 
-require_once(get_file_loc('menu.inc'));
-create_galactic_post_menu();
+Menu::galactic_post();
 $container = create_container('galactic_post_write_article_processing.php');
 
 if(isset($var['id'])) {
