@@ -21,8 +21,6 @@ while ($db->nextRecord()) {
 }
 $template->assign('Announcements', $announcements);
 
-$PHP_OUTPUT.= '</table><br />';
-
 $container = create_container('login_check_processing.php');
 $container['CheckType'] = 'Updates';
 $template->assign('ContinueHREF', SmrSession::getNewHREF($container));
