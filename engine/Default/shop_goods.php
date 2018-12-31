@@ -31,11 +31,11 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 	// test if we are searched, but only if we hadn't a previous trade here
 
 	$base_chance = 15;
-	if ($port->hasGood(5))
+	if ($port->hasGood(GOODS_SLAVES))
 		$base_chance -= 4;
-	if ($port->hasGood(9))
+	if ($port->hasGood(GOODS_WEAPONS))
 		$base_chance -= 4;
-	if ($port->hasGood(12))
+	if ($port->hasGood(GOODS_NARCOTICS))
 		$base_chance -= 4;
 
 	if ($ship->isUnderground()) {
@@ -45,16 +45,17 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 	$rand = mt_rand(1, 100);
 	if ($rand <= $base_chance) {
 		$player->increaseHOF(1,array('Trade','Search','Total'), HOF_PUBLIC);
-		if ($ship->hasCargo(5) || $ship->hasCargo(9) || $ship->hasCargo(12)) {
+		if ($ship->hasIllegalGoods()) {
 			$player->increaseHOF(1,array('Trade','Search','Caught','Number Of Times'), HOF_PUBLIC);
 			//find the fine
 			//get base for ports that dont happen to trade that good
 			$query = new SmrMySqlDatabase();
 			$GOODS = Globals::getGoods();
-			$fine = $totalFine = $port->getLevel() * (($ship->getCargo(5) * $GOODS[5]['BasePrice']) +
-									($ship->getCargo(9) * $GOODS[9]['BasePrice']) +
-									($ship->getCargo(12) * $GOODS[12]['BasePrice']));
-			$player->increaseHOF($ship->getCargo(5)+$ship->getCargo(9)+$ship->getCargo(12),array('Trade','Search','Caught','Goods Confiscated'), HOF_PUBLIC);
+			$fine = $totalFine = $port->getLevel() *
+			    (($ship->getCargo(GOODS_SLAVES) * $GOODS[GOODS_SLAVES]['BasePrice']) +
+			     ($ship->getCargo(GOODS_WEAPONS) * $GOODS[GOODS_WEAPONS]['BasePrice']) +
+			     ($ship->getCargo(GOODS_NARCOTICS) * $GOODS[GOODS_NARCOTICS]['BasePrice']));
+			$player->increaseHOF($ship->getCargo(GOODS_SLAVES) + $ship->getCargo(GOODS_WEAPONS) + $ship->getCargo(GOODS_NARCOTICS), array('Trade','Search','Caught','Goods Confiscated'), HOF_PUBLIC);
 			$player->increaseHOF($totalFine,array('Trade','Search','Caught','Amount Fined'), HOF_PUBLIC);
 			if($fine > $player->getCredits()) {
 				$fine -= $player->getCredits();
@@ -77,9 +78,9 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 			//lose align and the good your carrying along with money
 			$player->decreaseAlignment(5);
 
-			$ship->setCargo(5,0);
-			$ship->setCargo(9,0);
-			$ship->setCargo(12,0);
+			$ship->setCargo(GOODS_SLAVES, 0);
+			$ship->setCargo(GOODS_WEAPONS, 0);
+			$ship->setCargo(GOODS_NARCOTICS, 0);
 			$account->log(LOG_TYPE_TRADING, 'Player gets caught with illegals', $player->getSectorID());
 
 		}

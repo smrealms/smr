@@ -187,7 +187,7 @@ abstract class AbstractSmrShip {
 	}
 
 	public function hasIllegalGoods() {
-		return $this->hasCargo(5) || $this->hasCargo(9) || $this->hasCargo(12);
+		return $this->hasCargo(GOODS_SLAVES) || $this->hasCargo(GOODS_WEAPONS) || $this->hasCargo(GOODS_NARCOTICS);
 	}
 
 	public function getDisplayAttackRating(AbstractSmrPlayer $player) {
