@@ -395,7 +395,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	function getRankName() {
-		$rankings = GLOBALS::getUserRanking();
+		$rankings = Globals::getUserRanking();
 		if(isset($rankings[$this->getRank()]))
 			return $rankings[$this->getRank()];
 		else
