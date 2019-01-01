@@ -84,6 +84,13 @@ class SmrAlliance {
 		}
 	}
 
+	/**
+	 * Returns true if the alliance ID is associated with allianceless players.
+	 */
+	public function isNone() {
+		return $this->allianceID == 0;
+	}
+
 	public function getAllianceID() {
 		return $this->allianceID;
 	}
