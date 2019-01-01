@@ -1009,14 +1009,13 @@ class SmrPlayer extends AbstractSmrPlayer {
 					$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($killer->getGameID()) . ' LIMIT 1');
 				}
 
-				if($this->hasAlliance() && $killer->hasAlliance()) {
-					$this->db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND alliance_id_2=' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
-					if($this->db->nextRecord()) {
-						$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND alliance_id_2=' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
-					}
-					else {
-						$this->db->query('INSERT INTO alliance_vs_alliance VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',1)');
-					}
+				// alliance vs. alliance stats
+				$this->db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND alliance_id_2=' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
+				if($this->db->nextRecord()) {
+					$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND alliance_id_2=' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
+				}
+				else {
+					$this->db->query('INSERT INTO alliance_vs_alliance VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',1)');
 				}
 			}
 		}
