@@ -2,7 +2,7 @@
 
 if (empty($var['message']) || $var['message'] == '') $var['message'] = 'File not found';
 
-if (SmrSession::$game_id > 0 && is_object($player) && $lock) {
+if (SmrSession::hasGame() && is_object($player) && $lock) {
 	$container = create_container('skeleton.php', 'current_sector.php');
 	$errorMsg = '<span class="red bold">ERROR:</span> ' . $var['message'];
 	$container['errorMsg'] = $errorMsg;

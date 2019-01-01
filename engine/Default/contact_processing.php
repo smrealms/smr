@@ -16,7 +16,7 @@ $mail->send();
 
 $container = array();
 $container['url'] = 'skeleton.php';
-if (SmrSession::$game_id > 0) {
+if (SmrSession::hasGame()) {
 	$container['body'] = 'current_sector.php';
 }
 else {

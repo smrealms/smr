@@ -1,7 +1,7 @@
 <?php
 require_once('../htdocs/config.inc');
 
-SmrSession::$game_id = 44;
+SmrSession::updateGame(44);
 
 $db = new SmrMySqlDatabase();
 $db->query('DELETE FROM player_hof WHERE type LIKE \'Chess%\'');

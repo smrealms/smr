@@ -74,8 +74,8 @@ class Template {
 			$templateDir .= 'Default/';
 		}
 
-		if (SmrSession::$game_id > 0) {
-			$gameDir = Globals::getGameType(SmrSession::$game_id) . '/';
+		if (SmrSession::hasGame()) {
+			$gameDir = Globals::getGameType(SmrSession::getGameID()) . '/';
 		}
 		else {
 			$gameDir = 'Default/';

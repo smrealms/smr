@@ -3,7 +3,7 @@ try {
 	require_once('config.inc');
 
 	// Require that we are logged and have joined a game
-	if (SmrSession::$account_id == 0 || SmrSession::$game_id == 0) {
+	if (SmrSession::$account_id == 0 || !SmrSession::hasGame()) {
 		header('Location: /login.php');
 		exit;
 	}
@@ -18,7 +18,7 @@ try {
 	$links = [];
 
 	// The d3 graph nodes are the galaxies
-	$gameID = SmrSession::$game_id;
+	$gameID = SmrSession::getGameID();
 	foreach (SmrGalaxy::getGameGalaxies($gameID) as $galaxy) {
 		$nodes[] = [
 			'name' => $galaxy->getName(),

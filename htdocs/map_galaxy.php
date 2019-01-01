@@ -18,7 +18,7 @@ try {
 	
 	
 	// do we have a session?
-	if (SmrSession::$account_id == 0 || SmrSession::$game_id == 0) {
+	if (SmrSession::$account_id == 0 || !SmrSession::hasGame()) {
 	
 		header('Location: /login.php');
 		exit;
@@ -32,7 +32,7 @@ try {
 			exit;
 		}
 		try {
-			$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id, $sectorID);
+			$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::getGameID(), $sectorID);
 		} catch (SectorNotFoundException $e) {
 			header('location: /error.php?msg=Invalid sector ID');
 			exit;
@@ -45,7 +45,7 @@ try {
 			exit;
 		}
 		try {
-			$galaxy = SmrGalaxy::getGalaxy(SmrSession::$game_id,$galaxyID);
+			$galaxy = SmrGalaxy::getGalaxy(SmrSession::getGameID(), $galaxyID);
 		}
 		catch(Exception $e) {
 			header('location: /error.php?msg=Invalid galaxy ID');
@@ -53,7 +53,7 @@ try {
 		}
 	}
 	
-	$player = SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
+	$player = SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::getGameID());
 	
 	// create account object
 	$account = $player->getAccount();
@@ -78,7 +78,7 @@ try {
 	}
 
 	if (!isset($galaxyID) && !isset($sectorID)) {
-		$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$player->getSectorID());
+		$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::getGameID(), $player->getSectorID());
 		if ($account->isCenterGalaxyMapOnPlayer()) {
 			$sectorID = $player->getSectorID();
 		}

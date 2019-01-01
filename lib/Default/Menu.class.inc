@@ -274,8 +274,9 @@ class Menu {
 	static function news(&$template) {
 		global $var;
 		$menuItems = array();
-		if(SmrSession::$game_id==$var['GameID'])
+		if (SmrSession::getGameID() == $var['GameID']) {
 			$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'news_read_current.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Current News');
+		}
 		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'news_read.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Latest News');
 		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'news_read_advanced.php',array('GameID'=>$var['GameID']))),'Text'=>'Advanced News');
 

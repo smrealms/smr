@@ -125,11 +125,11 @@ function NPCStuff() {
 			$TRADE_ROUTE =& $GLOBALS['TRADE_ROUTE'];
 			debug('Action #'.$actions);
 
-			SmrSession::$game_id = NPC_GAME_ID;
+			SmrSession::updateGame(NPC_GAME_ID);
 
 			debug('Getting player for account id: '.SmrSession::$account_id);
 			//We have to reload player on each loop
-			$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id, true);
+			$player = SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::getGameID(), true);
 			$player->updateTurns();
 
 			if($actions==0) {
@@ -141,7 +141,7 @@ function NPCStuff() {
 						processContainer(leaveAlliance());
 
 					// figure out if the selected alliance already exist
-					$db->query('SELECT alliance_id FROM alliance WHERE alliance_name='.$db->escapeString($NPC_LOGIN['AllianceName']).' AND game_id='.$db->escapeNumber(SmrSession::$game_id));
+					$db->query('SELECT alliance_id FROM alliance WHERE alliance_name='.$db->escapeString($NPC_LOGIN['AllianceName']).' AND game_id='.$db->escapeNumber(SmrSession::getGameID()));
 					if ($db->nextRecord()) {
 						processContainer(joinAlliance($db->getField('alliance_id'),'*--NPCS--*'));
 					}
@@ -463,9 +463,9 @@ function changeNPCLogin() {
 	//Auto-create player if need be.
 	$db->query('SELECT 1 FROM player WHERE account_id = '.$account->getAccountID().' AND game_id = '.NPC_GAME_ID.' LIMIT 1');
 	if(!$db->nextRecord()) {
-		SmrSession::$game_id = 0; //Have to be out of game to join game.
+		SmrSession::updateGame(0); //Have to be out of game to join game.
 		debug('Auto-creating player: '.$account->getLogin());
-		processContainer(joinGame(SmrSession::$game_id,$NPC_LOGIN['PlayerName']));
+		processContainer(joinGame(SmrSession::getGameID(), $NPC_LOGIN['PlayerName']));
 	}
 
 	throw new ForwardException;

@@ -752,7 +752,7 @@ class ChessGame {
 	}
 
 	public function getGameID() {
-		return SmrSession::$game_id;
+		return SmrSession::getGameID();
 //		return $this->gameID;
 	}
 
