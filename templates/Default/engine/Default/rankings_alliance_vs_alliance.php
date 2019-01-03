@@ -1,18 +1,29 @@
 <div class="center">
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
-	<p>Here are the rankings of alliances vs other alliances<br />
-	Click on an alliances name for more detailed death stats.</p>
+	<p>Here are the rankings of alliances vs other alliances.<br />
+	Click on an alliances name for more detailed stats.</p>
 
-	<table class="standard shrink">
+	<table class="standard center shrink">
 		<tr>
 			<td rowspan="2" colspan="2"></td>
-			<th colspan="5">Killers</th>
+			<th colspan="5">Deaths</th>
 		</tr>
 
 		<tr><?php
 			foreach ($AllianceVs as $data) { ?>
-				<td width=15% valign="top" <?php echo $data['Style']; ?>>
-					<select name="alliancer[]" id="InputFields" style="width:105"><?php
+				<td class="shrink">
+					<a <?php echo $data['Style']; ?> href="<?php echo $data['DetailsHREF']; ?>"><?php echo $data['Name']; ?></a>
+				</td><?php
+			} ?>
+		</tr>
+
+		<tr>
+			<th rowspan="6">Kills</th>
+		</tr><?php
+		foreach ($AllianceVs as $data) { ?>
+			<tr>
+				<td <?php echo $data['Style']; ?>>
+					<select name="alliancer[]" id="InputFields" style="width:155px"><?php
 						foreach ($ActiveAlliances as $activeID) {
 							$curr_alliance = SmrAlliance::getAlliance($activeID, $ThisPlayer->getGameID());
 							$attr = ($data['ID'] == $activeID) ? 'selected' : ''; ?>
@@ -21,19 +32,8 @@
 						<option value="0" <?php echo ($data['ID'] == 0) ? 'selected' : ''; ?>>No Alliance</option>
 					</select>
 				</td><?php
-			} ?>
-		</tr>
-
-		<tr>
-			<th rowspan="6">Killed</th>
-		</tr><?php
-		foreach ($AllianceVs as $data) { ?>
-			<tr>
-				<td width=10% valign="top">
-					<a <?php echo $data['Style']; ?> href="<?php echo $data['DetailsHREF']; ?>"><?php echo $data['Name']; ?></a>
-				</td><?php
 				foreach ($AllianceVs as $data2) {
-					$dataTable = $AllianceVsTable[$data['ID']][$data2['ID']]; ?>
+					$dataTable = $AllianceVsTable[$data2['ID']][$data['ID']]; ?>
 					<td <?php echo $dataTable['Style']; ?>><?php echo $dataTable['Value']; ?></td><?php
 				} ?>
 			</tr><?php

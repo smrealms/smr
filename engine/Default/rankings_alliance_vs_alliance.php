@@ -56,7 +56,7 @@ foreach ($alliance_vs_ids as $curr_id) {
 		$showBold = $curr_id == $player->getAllianceID() || $id == $player->getAllianceID();
 		$style = '';
 		if ($curr_id == $id && !$row_alliance->isNone()) {
-			$value = '-';
+			$value = '--';
 			if ($showRed) {
 				$style = 'class="red"';
 			} elseif ($showBold) {
