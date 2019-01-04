@@ -33,7 +33,7 @@ var exec = function(s) {
 		clearTimeout(updateRefreshTimeout);
 		disableStartAJAX=true;
 		ajaxRunning = false;
-		if(xmlHttpRefresh!==null) {
+		if (xmlHttpRefresh !== undefined) {
 			xmlHttpRefresh.abort();
 		}
 	};
