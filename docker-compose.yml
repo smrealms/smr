@@ -100,19 +100,20 @@ services:
         command: ["mysqld", "--sql-mode=NO_ENGINE_SUBSTITUTION"]
 
 
-    phpmyadmin:
+    pma:
         image: phpmyadmin/phpmyadmin
         networks:
             - frontend
             - backend
         environment:
             PMA_HOST: mysql
+            PMA_ABSOLUTE_URI: /pma/
         labels:
             - "traefik.enable=true"
             - "traefik.docker.network=frontend"
-            - "traefik.backend=phpmyadmin"
+            - "traefik.backend=pma"
             - "traefik.frontend.passHostHeader=true"
-            - "traefik.frontend.rule=PathPrefixStrip:/phpmyadmin/;AddPrefix:/"
+            - "traefik.frontend.rule=PathPrefixStrip:/pma/"
             - "traefik.port=80"
         depends_on:
             - mysql
