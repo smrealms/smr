@@ -335,6 +335,13 @@ const HARDWARE_JUMP = 10;
 const HARDWARE_DCS = 11;
 
 /*
+ * Special Alliance vs. Alliance categories
+ */
+const ALLIANCE_VS_FORCES = -1;
+const ALLIANCE_VS_PLANETS = -2;
+const ALLIANCE_VS_PORTS = -3;
+
+/*
  * Miscellaneous definitions
  */
 

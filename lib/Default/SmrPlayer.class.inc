@@ -869,6 +869,16 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
+	public function incrementAllianceVsKills($otherID) {
+		$values = [$this->getGameID(), $this->getAllianceID(), $otherID, 1];
+		$this->db->query('INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) VALUES (' . $this->db->escapeArray($values) . ') ON DUPLICATE KEY UPDATE kills = kills + 1');
+	}
+
+	public function incrementAllianceVsDeaths($otherID) {
+		$values = [$this->getGameID(), $otherID, $this->getAllianceID(), 1];
+		$this->db->query('INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) VALUES (' . $this->db->escapeArray($values) . ') ON DUPLICATE KEY UPDATE kills = kills + 1');
+	}
+
 	public function &killPlayerByPlayer(AbstractSmrPlayer $killer) {
 		$return = array();
 		$msg = $this->getBBLink();
@@ -1009,15 +1019,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 					$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($killer->getGameID()) . ' LIMIT 1');
 				}
 
-				if($this->hasAlliance() && $killer->hasAlliance()) {
-					$this->db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND alliance_id_2=' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
-					if($this->db->nextRecord()) {
-						$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND alliance_id_2=' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
-					}
-					else {
-						$this->db->query('INSERT INTO alliance_vs_alliance VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',1)');
-					}
-				}
+				// alliance vs. alliance stats
+				$this->incrementAllianceVsDeaths($killer->getAllianceID());
 			}
 		}
 
@@ -1057,18 +1060,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		$return['LostCredits'] = $this->getCredits();
 
-		$this->db->query('SELECT * FROM alliance_vs_alliance
-						WHERE alliance_id_1 = -1 AND alliance_id_2 = ' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
-		if ($this->db->nextRecord()) {
-			$this->db->query('UPDATE alliance_vs_alliance SET kills = kills + 1
-							WHERE alliance_id_1 = -1
-								AND alliance_id_2 = ' . $this->db->escapeNumber($this->getAllianceID()) . '
-								AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
-		}
-		else {
-			$this->db->query('REPLACE INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills)
-							VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', -1, ' . $this->db->escapeNumber($this->getAllianceID()) . ', 1)');
-		}
+		// alliance vs. alliance stats
+		$this->incrementAllianceVsDeaths(ALLIANCE_VS_FORCES);
+		$owner->incrementAllianceVsKills(ALLIANCE_VS_FORCES);
 
 		$this->increaseHOF($return['DeadExp'], array('Dying','Experience','Lost'), HOF_PUBLIC);
 		$this->increaseHOF($return['DeadExp'], array('Dying','Forces','Experience Lost'), HOF_PUBLIC);
@@ -1101,6 +1095,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->decreaseExperience($return['DeadExp']);
 
 		$return['LostCredits'] = $this->getCredits();
+
+		// alliance vs. alliance stats
+		$this->incrementAllianceVsDeaths(ALLIANCE_VS_PORTS);
 
 		$this->increaseHOF($return['DeadExp'], array('Dying','Experience','Lost'), HOF_PUBLIC);
 		$this->increaseHOF($return['DeadExp'], array('Dying','Ports','Experience Lost'), HOF_PUBLIC);
@@ -1135,6 +1132,10 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->decreaseExperience($return['DeadExp']);
 
 		$return['LostCredits'] = $this->getCredits();
+
+		// alliance vs. alliance stats
+		$this->incrementAllianceVsDeaths(ALLIANCE_VS_PLANETS);
+		$planetOwner->incrementAllianceVsKills(ALLIANCE_VS_PLANETS);
 
 		$this->increaseHOF($return['DeadExp'], array('Dying','Experience','Lost'), HOF_PUBLIC);
 		$this->increaseHOF($return['DeadExp'], array('Dying','Planets','Experience Lost'), HOF_PUBLIC);
