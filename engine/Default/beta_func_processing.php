@@ -17,13 +17,6 @@ if ($var['func'] == 'Map') {
 elseif ($var['func'] == 'Money') {
 	$player->setCredits(50000000);
 }
-elseif ($var['func'] == 'PageNewb') {
-	if(!defined('ACCOUNT_ID_PAGE')) {
-		create_error('You\'re so mean! Go pick on someone else!');
-	}
-	$page = SmrPlayer::getPlayer(ACCOUNT_ID_PAGE,$player->getGameID());
-	$page->setNewbieTurns(0);
-}
 elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_id'] != 68) {
 	$ship_id = (int)$_REQUEST['ship_id'];
 	
@@ -75,7 +68,8 @@ elseif ($var['func'] == 'RemWeapon') {
 elseif ($var['func'] == 'Hard_add') {
 	$type_hard = (int)$_REQUEST['type_hard'];
 	$amount_hard = (int)$_REQUEST['amount_hard'];
-	$db->query('REPLACE INTO ship_has_hardware (account_id,game_id,hardware_type_id,amount,old_amount) VALUES (' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($type_hard) . ',' . $db->escapeNumber($amount_hard) . ',' . $db->escapeNumber($amount_hard) . ')');
+	$ship->setHardware($type_hard, $amount_hard);
+	$ship->removeUnderAttack();
 }
 elseif ($var['func'] == 'Relations') {
 	$amount = (int)$_REQUEST['amount'];

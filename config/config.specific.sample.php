@@ -3,7 +3,6 @@ const URL = 'http://localhost';
 
 const ENABLE_DEBUG = true; // This is useful for debugging on dev machines.
 const ENABLE_BETA = false;
-const ACCOUNT_ID_PAGE = 1403; //BETA, used for removing newbie turn
 
 const RECAPTCHA_PUBLIC = '';
 const RECAPTCHA_PRIVATE = '';
