@@ -13,27 +13,27 @@ if(isset($GameID)) { ?>
 			<tr>
 				<td>Combat drones kamikaze on mines</td>
 				<td>
-					Yes: <input type="radio" name="kamikaze" id="InputFields" value="Yes"<?php if($ThisPlayer->isCombatDronesKamikazeOnMines()){ ?> checked="checked"<?php } ?> /><br />
-					No: <input type="radio" name="kamikaze" id="InputFields" value="No"<?php if(!$ThisPlayer->isCombatDronesKamikazeOnMines()){ ?> checked="checked"<?php } ?> />
+					Yes: <input type="radio" name="kamikaze" value="Yes"<?php if($ThisPlayer->isCombatDronesKamikazeOnMines()){ ?> checked="checked"<?php } ?> /><br />
+					No: <input type="radio" name="kamikaze" value="No"<?php if(!$ThisPlayer->isCombatDronesKamikazeOnMines()){ ?> checked="checked"<?php } ?> />
 				</td>
 			</tr>
 	
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" name="action" value="Change Kamikaze Setting" id="InputFields" /></td>
+				<td><input type="submit" name="action" value="Change Kamikaze Setting" class="InputFields" /></td>
 			</tr>
 	
 			<tr>
 				<td>Receive force change messages</td>
 				<td>
-					Yes: <input type="radio" name="forceDropMessages" id="InputFields" value="Yes"<?php if($ThisPlayer->isForceDropMessages()){ ?> checked="checked"<?php } ?> /><br />
-					No: <input type="radio" name="forceDropMessages" id="InputFields" value="No"<?php if(!$ThisPlayer->isForceDropMessages()){ ?> checked="checked"<?php } ?> />
+					Yes: <input type="radio" name="forceDropMessages" value="Yes"<?php if($ThisPlayer->isForceDropMessages()){ ?> checked="checked"<?php } ?> /><br />
+					No: <input type="radio" name="forceDropMessages" value="No"<?php if(!$ThisPlayer->isForceDropMessages()){ ?> checked="checked"<?php } ?> />
 				</td>
 			</tr>
 	
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" name="action" value="Change Message Setting" id="InputFields" /></td>
+				<td><input type="submit" name="action" value="Change Message Setting" class="InputFields" /></td>
 			</tr>
 	
 			<tr>
@@ -55,7 +55,7 @@ if(isset($GameID)) { ?>
 	
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" name="action" value=" Alter Player <?php if($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?>" id="InputFields" /></td>
+				<td><input type="submit" name="action" value=" Alter Player <?php if($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?>" class="InputFields" /></td>
 			</tr>
 
 			<tr>
@@ -115,70 +115,70 @@ if(isset($GameID)) { ?>
 			<td>Friendly Colour:</td>
 			<td><div id="friendlyColorSelector">
 				<div class="preview" style="background-color: #<?php echo $ThisAccount->getFriendlyColour(); ?>"></div>
-				<input type="hidden" name="friendly_color" id="InputFields" value="<?php echo $ThisAccount->getFriendlyColour(); ?>"/></div></td>
+				<input type="hidden" name="friendly_color" value="<?php echo $ThisAccount->getFriendlyColour(); ?>"/></div></td>
 		</tr>
 		
 		<tr>
 			<td>Neutral Colour:</td>
 			<td><div id="neutralColorSelector">
 				<div class="preview" style="background-color: #<?php echo $ThisAccount->getNeutralColour(); ?>"></div>
-				<input type="hidden" name="neutral_color" id="InputFields" value="<?php echo $ThisAccount->getNeutralColour(); ?>"/></div></td>
+				<input type="hidden" name="neutral_color" value="<?php echo $ThisAccount->getNeutralColour(); ?>"/></div></td>
 		</tr>
 		
 		<tr>
 			<td>Enemy Colour:</td>
 			<td><div id="enemyColorSelector">
 				<div class="preview" style="background-color: #<?php echo $ThisAccount->getEnemyColour(); ?>"></div>
-				<input type="hidden" name="enemy_color" id="InputFields" value="<?php echo $ThisAccount->getEnemyColour(); ?>"/></div></td>
+				<input type="hidden" name="enemy_color" value="<?php echo $ThisAccount->getEnemyColour(); ?>"/></div></td>
 		</tr>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Update Colours" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Update Colours" class="InputFields" /></td>
 		</tr>
 		
 		<tr>
 			<td>Current Password:</td>
-			<td><input type="password" name="old_password" id="InputFields" size="25" /></td>
+			<td><input type="password" name="old_password" class="InputFields" size="25" /></td>
 		</tr>
 		
 		<tr>
 			<td>New Password:</td>
-			<td><input type="password" name="new_password" id="InputFields" size="25" /></td>
+			<td><input type="password" name="new_password" class="InputFields" size="25" /></td>
 		</tr>
 		
 		<tr>
 			<td>Verify New Password:</td>
-			<td><input type="password" name="retype_password" id="InputFields" size="25" /></td>
+			<td><input type="password" name="retype_password" class="InputFields" size="25" /></td>
 		</tr>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Password" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Password" class="InputFields" /></td>
 		</tr>
 		
 		<tr><td colspan="2">&nbsp;</td></tr>
 		
 		<tr>
 			<td>Email address:</td>
-			<td><input type="email" name="email" value="<?php echo htmlspecialchars($ThisAccount->getEmail()); ?>" id="InputFields" size="50" /></td>
+			<td><input type="email" name="email" value="<?php echo htmlspecialchars($ThisAccount->getEmail()); ?>" class="InputFields" size="50" /></td>
 		</tr>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Save and resend validation code" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Save and resend validation code" class="InputFields" /></td>
 		</tr>
 	
 		<tr><td colspan="2">&nbsp;</td></tr>
 
 		<tr>
 			<td>Hall of Fame Name:</td>
-			<td><input type="text" name="HoF_name" value="<?php echo htmlspecialchars($ThisAccount->getHofName()); ?>" id="InputFields" size="50" /></td>
+			<td><input type="text" name="HoF_name" value="<?php echo htmlspecialchars($ThisAccount->getHofName()); ?>" class="InputFields" size="50" /></td>
 		</tr>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Name" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Name" class="InputFields" /></td>
 		</tr>
 	
 		<tr>
@@ -187,22 +187,22 @@ if(isset($GameID)) { ?>
 
 		<tr>
 			<td>Discord User ID:</td>
-			<td><input type="text" name="discord_id" value="<?php echo htmlspecialchars($ThisAccount->getDiscordId()); ?>" id="InputFields" size=50 /></td>
+			<td><input type="text" name="discord_id" value="<?php echo htmlspecialchars($ThisAccount->getDiscordId()); ?>" class="InputFields" size=50 /></td>
 		</tr>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Discord ID" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Discord ID" class="InputFields" /></td>
 		</tr>
 
 		<tr>
 			<td>IRC Nick:</td>
-			<td><input type="text" name="irc_nick" value="<?php echo htmlspecialchars($ThisAccount->getIrcNick()); ?>" id="InputFields" size="50" /></td>
+			<td><input type="text" name="irc_nick" value="<?php echo htmlspecialchars($ThisAccount->getIrcNick()); ?>" class="InputFields" size="50" /></td>
 		</tr>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change IRC Nick" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change IRC Nick" class="InputFields" /></td>
 		</tr>
 
 		<tr>
@@ -212,7 +212,7 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Timezone:</td>
 			<td>
-				<select name="timez" id="InputFields"><?php
+				<select name="timez" class="InputFields"><?php
 				$time = TIME;
 				$offset = $ThisAccount->getOffset();
 				for ($i = -12; $i<= 11; $i++) {
@@ -224,7 +224,7 @@ if(isset($GameID)) { ?>
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Timezone" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Timezone" class="InputFields" /></td>
 		</tr>
 	
 		<tr>
@@ -233,17 +233,17 @@ if(isset($GameID)) { ?>
 	
 		<tr>
 			<td>Date Format:</td>
-			<td><input type="text" name="dateformat" value="<?php echo htmlspecialchars($ThisAccount->getShortDateFormat()); ?>" id="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_DATE_SHORT; ?>')</td>
+			<td><input type="text" name="dateformat" value="<?php echo htmlspecialchars($ThisAccount->getShortDateFormat()); ?>" class="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_DATE_SHORT; ?>')</td>
 		</tr>
 	
 		<tr>
 			<td>Time Format:</td>
-			<td><input type="text" name="timeformat" value="<?php echo htmlspecialchars($ThisAccount->getShortTimeFormat()); ?>" id="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_TIME_SHORT; ?>')</td>
+			<td><input type="text" name="timeformat" value="<?php echo htmlspecialchars($ThisAccount->getShortTimeFormat()); ?>" class="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_TIME_SHORT; ?>')</td>
 		</tr>
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Date Formats" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Date Formats" class="InputFields" /></td>
 		</tr>
 	
 		<tr>
@@ -264,14 +264,14 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Display Ship Images:</td>
 			<td>
-				Yes: <input type="radio" name="images" id="InputFields" value="Yes"<?php if($ThisAccount->isDisplayShipImages()){ ?> checked="checked"<?php } ?> /><br />
-				No: <input type="radio" name="images" id="InputFields" value="No"<?php if(!$ThisAccount->isDisplayShipImages()){ ?> checked="checked"<?php } ?> /><br />
+				Yes: <input type="radio" name="images" value="Yes"<?php if($ThisAccount->isDisplayShipImages()){ ?> checked="checked"<?php } ?> /><br />
+				No: <input type="radio" name="images" value="No"<?php if(!$ThisAccount->isDisplayShipImages()){ ?> checked="checked"<?php } ?> /><br />
 			</td>
 		</tr>
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Images" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Images" class="InputFields" /></td>
 		</tr>
 		
 		<tr>
@@ -281,14 +281,14 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Center Galaxy Map On Player:</td>
 			<td>
-				Yes: <input type="radio" name="centergalmap" id="InputFields" value="Yes"<?php if($ThisAccount->isCenterGalaxyMapOnPlayer()){ ?> checked="checked"<?php } ?> /><br />
-				No: <input type="radio" name="centergalmap" id="InputFields" value="No"<?php if(!$ThisAccount->isCenterGalaxyMapOnPlayer()){ ?> checked="checked"<?php } ?> /><br />
+				Yes: <input type="radio" name="centergalmap" value="Yes"<?php if($ThisAccount->isCenterGalaxyMapOnPlayer()){ ?> checked="checked"<?php } ?> /><br />
+				No: <input type="radio" name="centergalmap" value="No"<?php if(!$ThisAccount->isCenterGalaxyMapOnPlayer()){ ?> checked="checked"<?php } ?> /><br />
 			</td>
 		</tr>
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Centering" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Centering" class="InputFields" /></td>
 		</tr>
 	
 		<tr>
@@ -302,7 +302,7 @@ if(isset($GameID)) { ?>
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Size" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Size" class="InputFields" /></td>
 		</tr>
 	
 		<tr>
@@ -312,7 +312,7 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>CSS Template:</td>
 			<td>
-				<select name="template" id="InputFields"><?php
+				<select name="template" class="InputFields"><?php
 					foreach(Globals::getAvailableTemplates() as $AvailableTemplate => $ColourSchemes) {
 						foreach ($ColourSchemes as $ColourScheme) {
 							$selected = ($ThisAccount->getTemplate() == $AvailableTemplate &&
@@ -339,7 +339,7 @@ if(isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change CSS Options" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change CSS Options" class="InputFields" /></td>
 		</tr>
 	</table>
 	<br />
@@ -405,7 +405,7 @@ if(isset($GameID)) { ?>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Save Hotkeys" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Save Hotkeys" class="InputFields" /></td>
 		</tr>
 	</table>
 </form><br />
@@ -418,8 +418,8 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Transfer Credits:</td>
 			<td>
-				<input type="number" name="amount" id="InputFields" style="width:50px;" class="center" /> credits to <?php if(!isset($GameID)){ ?>the account with HoF name of <?php } ?>
-				<select name="account_id" id="InputFields"><?php
+				<input type="number" name="amount" class="InputFields center" style="width:50px;" /> credits to <?php if(!isset($GameID)){ ?>the account with HoF name of <?php } ?>
+				<select name="account_id" class="InputFields"><?php
 					foreach($TransferAccounts as $AccID => $AccOrPlayerName) {
 						?><option value="<?php echo $AccID; ?>"><?php echo $AccOrPlayerName; ?></option><?php
 					} ?>
@@ -429,7 +429,7 @@ if(isset($GameID)) { ?>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Transfer" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Transfer" class="InputFields" /></td>
 		</tr>
 	</table>
 </form>
