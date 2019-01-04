@@ -1,6 +1,6 @@
 <table class="standard" width="95%">
 	<tr>
-		<th>Rank</th>
+		<th class="shrink">Rank</th>
 		<th>Player</th>
 		<th>Race</th>
 		<th>Alliance</th>

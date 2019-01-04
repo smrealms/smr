@@ -1,6 +1,6 @@
 <table class="standard" width="95%">
 	<tr>
-		<th>Rank</th>
+		<th class="shrink">Rank</th>
 		<th>Alliance</th>
 		<th>Total <?php echo $RankingStat; ?></th>
 		<th>Average <?php echo $RankingStat; ?></th>
