@@ -29,7 +29,7 @@ x-smr-common: &smr-common
         - "traefik.docker.network=frontend"
         - "traefik.backend=${SMR_HOST}"
         - "traefik.frontend.passHostHeader=true"
-        - "traefik.frontend.rule=PathPrefix:/"
+        - "traefik.frontend.rule=${SMR_RULE:-PathPrefix:/}"
         - "traefik.port=80"
     depends_on:
         - mysql
