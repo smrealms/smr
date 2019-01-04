@@ -106,9 +106,9 @@ while ($db->nextRecord()) {
 		$alliance_name = $killer_alliance->getAllianceName();
 	}
 	elseif ($id == 0) $alliance_name = 'No Alliance';
-	elseif ($id == -1) $alliance_name = '<span class="yellow">Forces</span>';
-	elseif ($id == -2) $alliance_name = '<span class="yellow">Planets</span>';
-	elseif ($id == -3) $alliance_name = '<span class="yellow">Ports</span>';
+	elseif ($id == ALLIANCE_VS_FORCES) $alliance_name = '<span class="yellow">Forces</span>';
+	elseif ($id == ALLIANCE_VS_PLANETS) $alliance_name = '<span class="yellow">Planets</span>';
+	elseif ($id == ALLIANCE_VS_PORTS) $alliance_name = '<span class="yellow">Ports</span>';
 
 	$kills[] = [
 		'Name' => $alliance_name,
@@ -128,9 +128,9 @@ while ($db->nextRecord()) {
 		$alliance_name = $killer_alliance->getAllianceName();
 	}
 	elseif ($id == 0) $alliance_name = 'No Alliance';
-	elseif ($id == -1) $alliance_name = '<span class="yellow">Forces</span>';
-	elseif ($id == -2) $alliance_name = '<span class="yellow">Planets</span>';
-	elseif ($id == -3) $alliance_name = '<span class="yellow">Ports</span>';
+	elseif ($id == ALLIANCE_VS_FORCES) $alliance_name = '<span class="yellow">Forces</span>';
+	elseif ($id == ALLIANCE_VS_PLANETS) $alliance_name = '<span class="yellow">Planets</span>';
+	elseif ($id == ALLIANCE_VS_PORTS) $alliance_name = '<span class="yellow">Ports</span>';
 
 	$deaths[] = [
 		'Name' => $alliance_name,

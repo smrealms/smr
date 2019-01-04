@@ -1061,8 +1061,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return['LostCredits'] = $this->getCredits();
 
 		// alliance vs. alliance stats
-		$this->incrementAllianceVsDeaths(-1);
-		$owner->incrementAllianceVsKills(-1);
+		$this->incrementAllianceVsDeaths(ALLIANCE_VS_FORCES);
+		$owner->incrementAllianceVsKills(ALLIANCE_VS_FORCES);
 
 		$this->increaseHOF($return['DeadExp'], array('Dying','Experience','Lost'), HOF_PUBLIC);
 		$this->increaseHOF($return['DeadExp'], array('Dying','Forces','Experience Lost'), HOF_PUBLIC);
@@ -1097,7 +1097,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return['LostCredits'] = $this->getCredits();
 
 		// alliance vs. alliance stats
-		$this->incrementAllianceVsDeaths(-3);
+		$this->incrementAllianceVsDeaths(ALLIANCE_VS_PORTS);
 
 		$this->increaseHOF($return['DeadExp'], array('Dying','Experience','Lost'), HOF_PUBLIC);
 		$this->increaseHOF($return['DeadExp'], array('Dying','Ports','Experience Lost'), HOF_PUBLIC);
@@ -1134,8 +1134,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return['LostCredits'] = $this->getCredits();
 
 		// alliance vs. alliance stats
-		$this->incrementAllianceVsDeaths(-2);
-		$planetOwner->incrementAllianceVsKills(-2);
+		$this->incrementAllianceVsDeaths(ALLIANCE_VS_PLANETS);
+		$planetOwner->incrementAllianceVsKills(ALLIANCE_VS_PLANETS);
 
 		$this->increaseHOF($return['DeadExp'], array('Dying','Experience','Lost'), HOF_PUBLIC);
 		$this->increaseHOF($return['DeadExp'], array('Dying','Planets','Experience Lost'), HOF_PUBLIC);
