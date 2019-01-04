@@ -266,7 +266,7 @@ class AbstractSmrLocation {
 			$this->shipsSold = array();
 			$this->db->query('SELECT * FROM location_sells_ships WHERE ' . $this->SQL);
 			while($this->db->nextRecord()) {
-				$this->shipsSold[$this->db->getInt('ship_type_id')] = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id), $this->db->getInt('ship_type_id'));
+				$this->shipsSold[$this->db->getInt('ship_type_id')] = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::getGameID()), $this->db->getInt('ship_type_id'));
 			}
 		}
 		return $this->shipsSold;
@@ -282,7 +282,7 @@ class AbstractSmrLocation {
 	public function addShipSold($shipTypeID) {
 		if($this->isShipSold($shipTypeID))
 			return;
-		$ship = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$shipTypeID);
+		$ship = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::getGameID()), $shipTypeID);
 		if($ship===false)
 			throw new Exception('Invalid ship type id given');
 		$this->db->query('INSERT INTO location_sells_ships (location_type_id,ship_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($shipTypeID) . ')');

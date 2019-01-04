@@ -12,7 +12,7 @@ class SmrLocation extends AbstractSmrLocation {
 			                    AND ship_type_id != ' . $this->db->escapeNumber(SHIP_TYPE_PLANETARY_SUPER_FREIGHTER));
 			while($this->db->nextRecord()) {
 				$shipTypeID = $this->db->getInt('ship_type_id');
-				$this->shipsSold[$shipTypeID] = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id), $shipTypeID);
+				$this->shipsSold[$shipTypeID] = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::getGameID()), $shipTypeID);
 			}
 		}
 		return $this->shipsSold;

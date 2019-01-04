@@ -131,7 +131,7 @@ class SmrSession {
 
 	public static $session_id;
 	public static $account_id;
-	public static $game_id;
+	private static $game_id;
 	public static $last_accessed;
 	public static $var;
 	public static $commonIDs;
@@ -250,6 +250,20 @@ class SmrSession {
 		}
 		// This takes us back to the standard database if we had to change it.
 		$db = new SmrMySqlDatabase();
+	}
+
+	/**
+	 * Returns the Game ID associated with the session.
+	 */
+	public static function getGameID() {
+		return self::$game_id;
+	}
+
+	/**
+	 * Returns true if the session is inside a game, false otherwise.
+	 */
+	public static function hasGame() {
+		return self::$game_id != 0;
 	}
 
 	/**

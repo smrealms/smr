@@ -90,7 +90,7 @@ try {
 	$overrideGameID = 0;
 	if (isset($var['game_id']) && is_numeric($var['game_id'])) $overrideGameID = $var['game_id'];
 	if ($overrideGameID == 0 && isset($var['GameID']) && is_numeric($var['GameID'])) $overrideGameID = $var['GameID'];
-	if($overrideGameID == 0) $overrideGameID = SmrSession::$game_id;
+	if($overrideGameID == 0) $overrideGameID = SmrSession::getGameID();
 
 	require_once(get_file_loc('smr.inc'));
 

@@ -1,8 +1,9 @@
 <?php
 
 $template->assign('PageTopic','Extended User Rankings');
-if (SmrSession::$game_id != 0)
+if (SmrSession::hasGame()) {
 	Menu::trader();
+}
 
 $PHP_OUTPUT.=('You have a score of <span class="red">'.number_format($account->getScore()).'</span>.<br /><br />');
 $PHP_OUTPUT.=('You are ranked as a <font size="4" color="greenyellow">'.$account->getRankName().'</font> player.<p><br />');
@@ -19,7 +20,7 @@ foreach($individualScores as $statScore) {
 	$PHP_OUTPUT.=(', has a stat of '.number_format($account->getHOF($statScore['Stat'])).' and a score of ' . number_format(round($statScore['Score'])).' (roughly)<br />');
 }
 
-if (SmrSession::$game_id != 0) {
+if (SmrSession::hasGame()) {
 	//current game stats
 	$PHP_OUTPUT.=('<br /><br />');
 	$PHP_OUTPUT.=('<b>Current Game Extended Stats</b><br />');
