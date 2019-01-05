@@ -3,145 +3,90 @@ if(!ENABLE_BETA) {
 	create_error('Beta functions are disabled.');
 }
 
-$template->assign('PageTopic','Beta things');
-
-$PHP_OUTPUT.=('<span class="bold red">BIG WARNING! Be reasonable with he things you load to your ship! NEVER, i repeat NEVER (and it means NEVER) load more on a ship than suppossed to be on. NEVER give you more relation than 500. NEVER put you in a sector that doesn\'t exist! Don\'t say you haven\'t been warned! I WILL NOT fix your trader if you did!</span><br /><br />');
+$template->assign('PageTopic', 'Beta Functions');
 
 // container for all links
 $container = create_container('beta_func_processing.php', 'beta_functions.php');
 
-//first lets let them map all
+// let them map all
 $container['func'] = 'Map';
-$PHP_OUTPUT.=create_link($container,'Map all');
-$PHP_OUTPUT.=('<br />');
+$template->assign('MapHREF', SmrSession::getNewHREF($container));
 
-//next let them get money
+// let them get money
 $container['func'] = 'Money';
-$PHP_OUTPUT.=create_link($container,'Load up the $$!!');
-$PHP_OUTPUT.=('<br />');
-$container['func'] = 'PageNewb';
-$PHP_OUTPUT.=create_link($container,'Remove Page\'s newbie turns!!');
-$PHP_OUTPUT.=('<br />');
+$template->assign('MoneyHREF', SmrSession::getNewHREF($container));
 
 //next time for ship
 $container['func'] = 'Ship';
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<select name="ship_id">');
+$template->assign('ShipHREF', SmrSession::getNewHREF($container));
+$shipList = [];
 $db->query('SELECT * FROM ship_type ORDER BY ship_name');
 while ($db->nextRecord()) {
-	$PHP_OUTPUT.=('<option value="' . $db->getInt('ship_type_id') . '">' . $db->getField('ship_name') . '</option>');
+	$shipList[] = [
+		'ID' => $db->getInt('ship_type_id'),
+		'Name' => $db->getField('ship_name'),
+	];
 }
-$PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
-$PHP_OUTPUT.=create_submit('Change Ship');
-$PHP_OUTPUT.=('</form>');
-$PHP_OUTPUT.=('<br />');
+$template->assign('ShipList', $shipList);
 
 //next weapons
 $container['func'] = 'Weapon';
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('Amount:&nbsp;&nbsp;<input type="text" name="amount" value="1"><br />');
-$PHP_OUTPUT.=('<select name="weapon_id">');
+$template->assign('AddWeaponHREF', SmrSession::getNewHREF($container));
+$weaponList = [];
 $db->query('SELECT * FROM weapon_type ORDER BY weapon_name');
 while ($db->nextRecord()) {
-	$PHP_OUTPUT.=('<option value="' . $db->getInt('weapon_type_id') . '">' . $db->getField('weapon_name') . '</option>');
+	$weaponList[] = [
+		'ID' => $db->getInt('weapon_type_id'),
+		'Name' => $db->getField('weapon_name'),
+	];
 }
-$PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
-$PHP_OUTPUT.=create_submit('Add Weapon(s)');
-$PHP_OUTPUT.=('</form>');
+$template->assign('WeaponList', $weaponList);
 
 //Remove Weapons
 $container['func'] = 'RemWeapon';
-$PHP_OUTPUT.=create_link($container,'Remove Weapons');
-$PHP_OUTPUT.=('<br />');
+$template->assign('RemoveWeaponsHREF', SmrSession::getNewHREF($container));
 
 //allow to get full hardware
 $container['func'] = 'Uno';
-$PHP_OUTPUT.=create_link($container, 'Get Full Hardware');
+$template->assign('UnoHREF', SmrSession::getNewHREF($container));
 
-//move whereever u want
+//move whereever you want
 $container['func'] = 'Warp';
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="number" name="sector_to" value="'.$player->getSectorID().'">&nbsp;&nbsp;');
-$PHP_OUTPUT.=create_submit('Warp to Sector');
-$PHP_OUTPUT.=('</form>');
+$template->assign('WarpHREF', SmrSession::getNewHREF($container));
 
 //set turns
 $container['func'] = 'Turns';
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="number" name="turns" value="'.$player->getTurns().'">&nbsp;&nbsp;');
-$PHP_OUTPUT.=create_submit('Set Turns');
-$PHP_OUTPUT.=('</form>');
+$template->assign('TurnsHREF', SmrSession::getNewHREF($container));
 
 //set experience
 $container['func'] = 'Exp';
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="number" name="exp" value="'.$player->getExperience().'">&nbsp;&nbsp;');
-$PHP_OUTPUT.=create_submit('Set Exp to Amount');
-$PHP_OUTPUT.=('</form>');
+$template->assign('ExperienceHREF', SmrSession::getNewHREF($container));
 
 //Set alignment
 $container['func'] = 'Align';
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="number" name="align" value="'.$player->getAlignment().'">&nbsp;&nbsp;');
-$PHP_OUTPUT.=create_submit('Set Align to Amount');
-$PHP_OUTPUT.=('</form>');
+$template->assign('AlignmentHREF', SmrSession::getNewHREF($container));
 
-$PHP_OUTPUT.=('<br />Note: This sets your hardware not adds it. Also, if u have more than 1 JD,scanner,etc they may function incorrectly<br />');
 //add any type of hardware
 $container['func'] = 'Hard_add';
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="number" name="amount_hard" value="0"><br />');
-$PHP_OUTPUT.=('<select name="type_hard">');
+$template->assign('HardwareHREF', SmrSession::getNewHREF($container));
+$hardware = [];
 $db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
 while ($db->nextRecord()) {
-	$id = $db->getInt('hardware_type_id');
-	$name = $db->getField('hardware_name');
-	$PHP_OUTPUT.=('<option value="'.$id.'">'.$name.'</option>');
+	$hardware[] = [
+		'ID' => $db->getInt('hardware_type_id'),
+		'Name' => $db->getField('hardware_name'),
+	];
 }
-$PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
-$PHP_OUTPUT.=create_submit('Set hardware');
-$PHP_OUTPUT.=('</form>');
-$PHP_OUTPUT.=('<br />Modify Personal Relations <small>note: DO NOT make this less than -500 or greater than 500!</small><br />');
+$template->assign('Hardware', $hardware);
 
 //change personal relations
 $container['func'] = 'Relations';
-$db->query('SELECT * FROM race WHERE race_id > 1 ORDER BY race_id');
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<select name=race>');
-while ($db->nextRecord()) {
-	$PHP_OUTPUT.=('<option value="' . $db->getInt('race_id') . '">' . $db->getField('race_name') . '</option>');
-}
-$PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
-$PHP_OUTPUT.=('<input type="number" name="amount" value="0">');
-$PHP_OUTPUT.=create_submit('Change Relations');
-$PHP_OUTPUT.=('</form>');
-
-$PHP_OUTPUT.=('<br />Modify Racial Relations <small>note: DO NOT make this less than -500 or greater than 500!</small><br />');
+$template->assign('PersonalRelationsHREF', SmrSession::getNewHREF($container));
 
 //change race relations
 $container['func'] = 'Race_Relations';
-$db->query('SELECT * FROM race WHERE race_id > 1 ORDER BY race_id');
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<select name="race">');
-while ($db->nextRecord()) {
-	$PHP_OUTPUT.=('<option value="' . $db->getField('race_id') . '">' . $db->getField('race_name') . '</option>');
-}
-$PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
-$PHP_OUTPUT.=('<input type="number" name="amount" value="0">');
-$PHP_OUTPUT.=create_submit('Change Relations');
-$PHP_OUTPUT.=('</form>');
-
-
-$PHP_OUTPUT.=('<br />Modify Race<br />');
+$template->assign('RaceRelationsHREF', SmrSession::getNewHREF($container));
 
 //change race
 $container['func'] = 'Race';
-$db->query('SELECT * FROM race WHERE race_id > 1 ORDER BY race_id');
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<select name="race">');
-while ($db->nextRecord()) {
-	$PHP_OUTPUT.=('<option value="' . $db->getField('race_id') . '">' . $db->getField('race_name') . '</option>');
-}
-$PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
-$PHP_OUTPUT.=create_submit('Change Race');
-$PHP_OUTPUT.=('</form>');
+$template->assign('ChangeRaceHREF', SmrSession::getNewHREF($container));
