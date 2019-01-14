@@ -25,6 +25,9 @@
 # DKIM private keys
 /opendkim/*.private
 
+# Docker data volumes
+/vol_*
+
 /sys$command
 
 /newsletters

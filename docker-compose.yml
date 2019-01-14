@@ -35,7 +35,7 @@ x-smr-common: &smr-common
         - mysql
         - smtp
     volumes:
-        - smr_upload:/smr/htdocs/upload
+        - ./vol_upload:/smr/htdocs/upload
         - ./config:/smr/config:ro
 
 services:
@@ -45,7 +45,7 @@ services:
     smr-dev:
         << : *smr-common
         volumes:
-            - smr_upload:/smr/htdocs/upload
+            - ./vol_upload:/smr/htdocs/upload
             - ./config:/smr/config:ro
             # Mount the source code instead of copying it.
             - ./admin:/smr/admin
@@ -91,7 +91,7 @@ services:
             MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
             MYSQL_DATABASE:      smr_live
         volumes:
-            - smr_mysql_data:/var/lib/mysql
+            - ./vol_db:/var/lib/mysql
         labels:
             - "traefik.enable=false"
         # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
@@ -203,6 +203,4 @@ services:
 
 # We want persistent, anonymous data volumes
 volumes:
-    smr_upload:
-    smr_mysql_data:
     portainer_data:
