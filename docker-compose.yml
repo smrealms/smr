@@ -194,13 +194,12 @@ services:
             - frontend
         labels:
             - "traefik.enable=true"
-            - "traefik.frontend.rule=PathPrefixStrip:/docker/;AddPrefix:/"
+            - "traefik.backend=portainer"
+            - "traefik.docker.network=frontend"
+            - "traefik.frontend.passHostHeader=true"
+            - "traefik.frontend.rule=PathPrefixStrip:/docker"
             - "traefik.port=9000"
         command: -H unix:///var/run/docker.sock
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - portainer_data:/data
-
-# We want persistent, anonymous data volumes
-volumes:
-    portainer_data:
+            - ./vol_portainer:/data
