@@ -44,7 +44,11 @@ function logException(Throwable $e) {
 		return;
 	}
 
+	// Unconditionally send error message to the log
+	error_log($message);
+
 	if(ENABLE_DEBUG) {
+		// Display error message on the page and then exit
 		echo nl2br($message);
 		exit;
 	}
