@@ -66,6 +66,10 @@ try {
 		}
 	}
 
+	// this sn identifies our container later
+	$href = SmrSession::getNewHREF(create_container('login_check_processing.php'), true);
+	SmrSession::update();
+
 	// ********************************
 	// *
 	// * G a m e   O p e n
@@ -197,9 +201,6 @@ try {
 
 	}
 
-	// this sn identifies our container later
-	$href = SmrSession::getNewHREF(create_container('login_check_processing.php'), true);
-	SmrSession::update();
 	//get rid of expired messages
 	$db2->query('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < '.$db->escapeNumber(TIME).' AND expire_time != 0');
 	// Mark message as read if it was sent to self as a mass mail.
