@@ -366,8 +366,6 @@ const UNI_GEN_LOCATION_SLOTS = 9;
 
 const NHA_ID = 302;
 
-const NUM_RACES = 8;
-
 const TIME_BEFORE_INACTIVE = 259200; // 3 days.
 
 const CLOSE_ACCOUNT_BY_REQUEST_REASON = 'User Request';
