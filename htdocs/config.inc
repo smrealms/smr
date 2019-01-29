@@ -127,11 +127,6 @@ function microtimeMSec($microtime) {
 	}
 }
 
-function explodeElement($delimiter, $string, $index) {
-	$arr = explode($delimiter, $string, $index+1);
-	return $arr[$index];
-}
-
 // Defines all constants
 require_once('config.php');
 
