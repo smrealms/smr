@@ -1,8 +1,8 @@
 <?php
 ini_set('date.timezone', 'UTC');
 
-define('MICRO_TIME', microtime());
-define('TIME', (int)microtimeSec(MICRO_TIME));
+define('MICRO_TIME', microtime(true));
+define('TIME', intval(MICRO_TIME));
 
 // Repository paths
 const ROOT =  __DIR__ . '/../';

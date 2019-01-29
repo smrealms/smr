@@ -87,7 +87,7 @@ abstract class MySqlDatabase implements Database {
 				throw new Exception('Field is not an escaped microtime ('.$data.')');
 			}
 		}
-		return '0.'.$msec.'00 '.$sec;
+		return "$sec.$msec";
 	}
 	
 	public function getObject($name,$compressed=false) {
@@ -212,7 +212,9 @@ abstract class MySqlDatabase implements Database {
 	}
 	
 	public function escapeMicrotime($microtime,$quotes=false) {
-		return $this->escapeString(microtimeSec($microtime).microtimeMSec($microtime),$quotes);
+		$sec_str = sprintf('%010d', $microtime);
+		$usec_str = sprintf('%06d', fmod($microtime,1) * 1E6);
+		return $this->escapeString($sec_str . $usec_str, $quotes);
 	}
 	
 	public function escapeBoolean($bool,$quotes=true) {

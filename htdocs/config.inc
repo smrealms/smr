@@ -104,29 +104,6 @@ function dumpMemDiff($msg) {
 	ob_start();
 }
 
-function microtimeDiff($m1,$m2) {
-	$t1 = explode(' ', $m1);
-	$t2 = explode(' ', $m2);
-	return $t1[1] + $t1[0] - ($t2[1] + $t2[0]);
-}
-
-function microtimeSec($microtime) {
-	if (strlen($microtime) == 21) {
-		return substr($microtime,11);
-	} else {
-		throw new Exception('Not a microtime! ('.$microtime.')');
-	}
-}
-
-function microtimeMSec($microtime) {
-	if (strlen($microtime) == 21) {
-		// Do not cast to int, because the substring can begin with '0'
-		return substr($microtime,2,6);
-	} else {
-		throw new Exception('Not a microtime! ('.$microtime.')');
-	}
-}
-
 // Defines all constants
 require_once('config.php');
 
