@@ -1,5 +1,9 @@
 <?php
 
+// This file defines more than just one class, which is not handled by
+// the autoloader. So we must include it explicitly.
+require_once('SmrPlanetType.class.inc');
+
 class SmrPlanet {
 	protected static $CACHE_PLANETS = array();
 
