@@ -1,136 +1,46 @@
 <?php
-//treaty info
-$types = array	(
-	'assistTrader' => array	(
-		'Assist - Trader Attacks',
-		'Assist your ally in attacking traders.'
-	),
-	'assistRaids' => array	(
-		'Assist - Planet & Port Attacks',
-		'Assist your ally in attacking planets and ports.'
-	),
-	'defendTrader' => array	(
-		'Defend - Trader Attacks',
-		'Defend your ally when they are attacked.'
-	),
-	'napTrader' => array	(
-		'Non Aggression - Traders',
-		'Cease Fire against Traders.'
-	),
-	'napPlanets' => array(
-		'Non Aggression - Planets',
-		'Cease Fire against Planets.'
-	),
-	'napForces' => array(
-		'Non Aggression - Forces',
-		'Cease Fire against Forces. Also allows refreshing of allied forces.'
-	),
-	'aaAccess' => array(
-		'Alliance Account Access',
-		'Restrictions can be set in the roles section.'
-	),
-	'mbRead' => array(
-		'Message Board Read Rights',
-		'Allow your ally to read your message board.'
-	),
-	'mbWrite' => array(
-		'Message Board Write Rights',
-		'Allow your ally to post on your message board.'
-	),
-	'modRead' => array(
-		'Message of the Day Read Rights',
-		'Allow your ally to read your message of the day.'
-	),
-	'planetLand' => array(
-		'Planet Landing Rights',
-		'Allow your ally to land on your planets.'
-	)
-);
-if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id',$player->getAllianceID());
-}
 
-$alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
-$template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getInt('alliance_id') . ')');
+$template->assign('PageTopic', 'Alliance Treaties');
+$alliance = $player->getAlliance();
 Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
+$alliances = [];
 $db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY alliance_name');
 while ($db->nextRecord()) {
-	$temp[$db->getInt('alliance_id')] = stripslashes($db->getField('alliance_name'));
+	$alliances[$db->getInt('alliance_id')] = stripslashes($db->getField('alliance_name'));
 }
-$PHP_OUTPUT.=('<div align="center">');
+$template->assign('Alliances', $alliances);
+
 if (isset($var['message'])) {
-	$PHP_OUTPUT.=($var['message'] . '<br />');
+	$template->assign('Message', $var['message']);
 }
-$PHP_OUTPUT.=('<br /><br />');
+
+$offers = [];
 $db->query('SELECT * FROM alliance_treaties WHERE alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND official = \'FALSE\'');
 while ($db->nextRecord()) {
-	$template->assign('PageTopic','Treaty Offers');
-	$PHP_OUTPUT.=('Treaty offer from <span class="yellow">');
-	$PHP_OUTPUT.=($temp[$db->getInt('alliance_id_1')]);
-	$PHP_OUTPUT.=('</span>. Terms as follows:<br /><ul>');
-	if ($db->getBoolean('trader_assist')) {
-		$PHP_OUTPUT.=('<li>Assist - Trader Attacks</li>');
+	$offerTerms = [];
+	foreach (array_keys(SmrTreaty::TYPES) as $term) {
+		if ($db->getBoolean($term)) {
+			$offerTerms[] = $term;
+		}
 	}
-	if ($db->getBoolean('trader_defend')) {
-		$PHP_OUTPUT.=('<li>Defend - Trader Attacks</li>');
-	}
-	if ($db->getBoolean('trader_nap')) {
-		$PHP_OUTPUT.=('<li>Non Aggression - Traders</li>');
-	}
-	if ($db->getBoolean('raid_assist')) {
-		$PHP_OUTPUT.=('<li>Assist - Planet & Port Attacks</li>');
-	}
-	if ($db->getBoolean('planet_nap')) {
-		$PHP_OUTPUT.=('<li>Non Aggression - Planets</li>');
-	}
-	if ($db->getBoolean('forces_nap')) {
-		$PHP_OUTPUT.=('<li>Non Aggression - Forces</li>');
-	}
-	if ($db->getBoolean('aa_access')) {
-		$PHP_OUTPUT.=('<li>Alliance Account Access</li>');
-	}
-	if ($db->getBoolean('mb_read')) {
-		$PHP_OUTPUT.=('<li>Message Board Read Rights</li>');
-	}
-	if ($db->getBoolean('mb_write')) {
-		$PHP_OUTPUT.=('<li>Message Board Write Rights</li>');
-	}
-	if ($db->getBoolean('mod_read')) {
-		$PHP_OUTPUT.=('<li>Message of the Day Read Rights</li>');
-	}
-	if ($db->getBoolean('planet_land')) {
-		$PHP_OUTPUT.=('<li>Planet Landing Rights</li>');
-	}
-	$PHP_OUTPUT.=('</ul>');
+	$otherAllianceID = $db->getInt('alliance_id_1');
 	$container=create_container('alliance_treaties_processing.php','');
-	$container['alliance_id'] = $alliance->getAllianceID();
-	$container['alliance_id_1'] = $db->getField('alliance_id_1');
-	$container['aa'] = $db->getField('aa_access');
-	$container['alliance_name'] = $temp[$db->getField('alliance_id_1')];
+	$container['alliance_id_1'] = $otherAllianceID;
+	$container['aa_access'] = $db->getField('aa_access');
 	$container['accept'] = true;
-	$PHP_OUTPUT.=create_button($container,'Accept');
+	$acceptHREF = SmrSession::getNewHREF($container);
 	$container['accept'] = false;
-	$PHP_OUTPUT.=('&nbsp;');
-	$PHP_OUTPUT.=create_button($container,'Reject');
-	$PHP_OUTPUT.=('<br /><br />');
+	$rejectHREF = SmrSession::getNewHREF($container);
+
+	$offers[] = [
+		'Alliance' => SmrAlliance::getAlliance($otherAllianceID, $player->getGameID()),
+		'Terms' => $offerTerms,
+		'AcceptHREF' => $acceptHREF,
+		'RejectHREF' => $rejectHREF,
+	];
 }
-$template->assign('PageTopic','Offer A Treaty');
-$PHP_OUTPUT.=('Select the alliance you wish to offer a treaty.<br /><small>Note: Treaties require 24 hours to be canceled once in effect</small><br />');
-$container=create_container('skeleton.php', 'alliance_treaties_processing.php');
-$container['alliance_id'] = $alliance->getAllianceID();
-$form = create_form($container,'Send the Offer');
-$PHP_OUTPUT.= $form['form'];
-$PHP_OUTPUT.=('<select name="proposedAlliance" id="InputFields">');
-foreach ($temp as $allId => $allName) {
-	$PHP_OUTPUT.=('<option value="'.$allId.'">'.$allName.'</option>');
-}
-$PHP_OUTPUT.=('</select');
-$PHP_OUTPUT.=('<br />Choose the treaty terms<br />');
-$PHP_OUTPUT.=create_table();
-foreach ($types as $checkName => $displayInfo) {
-	$PHP_OUTPUT.=('<tr><td>' . $displayInfo[0] . '<br /><small>' . $displayInfo[1] . '</small></td><td><input type="checkbox" name="' . $checkName . '"></td></tr>');
-}
-$PHP_OUTPUT.=('<tr><td colspan="2">');
-$PHP_OUTPUT.=($form['submit']);
-$PHP_OUTPUT.=('</td></tr></table></form></div>');
+$template->assign('Offers', $offers);
+
+$container = create_container('skeleton.php', 'alliance_treaties_confirm.php');
+$template->assign('SendOfferHREF', SmrSession::getNewHREF($container));
