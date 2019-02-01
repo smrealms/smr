@@ -236,7 +236,7 @@ abstract class AbstractSmrAccount {
 				$this->hofName=$this->login;
 		}
 		else {
-			throw new AccountNotFoundException('This account does not exist!');
+			throw new AccountNotFoundException('Account ID '.$accountID.' does not exist!');
 		}
 	}
 
