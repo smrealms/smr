@@ -90,3 +90,14 @@ $template->assign('RaceRelationsHREF', SmrSession::getNewHREF($container));
 //change race
 $container['func'] = 'Race';
 $template->assign('ChangeRaceHREF', SmrSession::getNewHREF($container));
+
+if ($sector->hasPlanet()) {
+	$container['func'] = 'planet_buildings';
+	$template->assign('MaxBuildingsHREF', SmrSession::getNewHREF($container));
+
+	$container['func'] = 'planet_defenses';
+	$template->assign('MaxDefensesHREF', SmrSession::getNewHREF($container));
+
+	$container['func'] = 'planet_stockpile';
+	$template->assign('MaxStockpileHREF', SmrSession::getNewHREF($container));
+}

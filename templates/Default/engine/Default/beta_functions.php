@@ -96,3 +96,12 @@
 	</select>&nbsp;&nbsp;
 	<input type="submit" value="Change Race" />
 </form>
+
+<?php
+if ($ThisSector->hasPlanet()) { ?>
+	<br /><br />
+	<h2>Modify Planet</h2>
+	<p><a href="<?php echo $MaxBuildingsHREF; ?>">Set buildings to max</a></p>
+	<p><a href="<?php echo $MaxDefensesHREF; ?>">Set defenses to max</a></p>
+	<p><a href="<?php echo $MaxStockpileHREF; ?>">Set stockpile to max</a></p><?php
+} ?>

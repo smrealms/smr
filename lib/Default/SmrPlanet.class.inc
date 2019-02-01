@@ -7,6 +7,7 @@ class SmrPlanet {
 	const CHANCE_TO_DOWNGRADE = 15;
 	const TIME_TO_CREDIT_BUST = 10800; // 3 hours
 	const TIME_ATTACK_NEWS_COOLDOWN = 3600; // 1 hour
+	const MAX_STOCKPILE = 600;
 
 	protected $db;
 	protected $SQL;
@@ -697,7 +698,9 @@ class SmrPlanet {
 
 	public function getMaxBuildings($buildingTypeID=false) {
 		if($buildingTypeID===false) {
-			return array_column($this->typeInfo::STRUCTURES, 'max_amount');
+			$structs = $this->typeInfo::STRUCTURES;
+			return array_combine(array_keys($structs),
+			                     array_column($structs, 'max_amount'));
 		}
 		return $this->getStructureTypes($buildingTypeID)->maxAmount();
 	}
@@ -871,7 +874,7 @@ class SmrPlanet {
 	}
 
 	function getRemainingStockpile($id) {
-		return 600 - $this->getStockpile($id);
+		return self::MAX_STOCKPILE - $this->getStockpile($id);
 	}
 
 	/**

@@ -94,6 +94,25 @@ elseif ($var['func'] == 'Race_Relations') {
 	}
 	$player->setRaceID($race);
 }
+elseif ($var['func'] == 'planet_buildings') {
+	$planet = $sector->getPlanet();
+	foreach ($planet->getMaxBuildings() as $id => $amount) {
+		$planet->setBuilding($id, $amount);
+	}
+}
+elseif ($var['func'] == 'planet_defenses') {
+	$planet = $sector->getPlanet();
+	$planet->setShields($planet->getMaxShields());
+	$planet->setCDs($planet->getMaxCDs());
+	$planet->setArmour($planet->getMaxArmour());
+}
+elseif ($var['func'] == 'planet_stockpile') {
+	$planet = $sector->getPlanet();
+	foreach (Globals::getGoods() as $goodID => $good) {
+		$planet->setStockpile($goodID, SmrPlanet::MAX_STOCKPILE);
+	}
+}
+
 $container = create_container('skeleton.php', $var['body']);
 forward($container);
 
