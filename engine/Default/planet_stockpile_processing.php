@@ -38,7 +38,7 @@ elseif ($action == 'Planet') {
 
 	// do we want to transfer more than the planet can hold?
 	if ($amount > $planet->getRemainingStockpile($var['good_id']))
-		create_error('You can only put 600 per item at planet!');
+		create_error('This planet cannot store more than '.SmrPlanet::MAX_STOCKPILE.' of each good!');
 
 	// now transfer
 	$planet->increaseStockpile($var['good_id'],$amount);
