@@ -698,7 +698,9 @@ class SmrPlanet {
 
 	public function getMaxBuildings($buildingTypeID=false) {
 		if($buildingTypeID===false) {
-			return array_column($this->typeInfo::STRUCTURES, 'max_amount');
+			$structs = $this->typeInfo::STRUCTURES;
+			return array_combine(array_keys($structs),
+			                     array_column($structs, 'max_amount'));
 		}
 		return $this->getStructureTypes($buildingTypeID)->maxAmount();
 	}
