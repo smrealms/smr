@@ -54,6 +54,7 @@
 	</tr>
 </table>
 
+<br />
 <div align="center"><?php
 	if (!$PlanetLand) { ?>
 		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getAttackHREF(); ?>">Attack Planet (3)</a></div><?php
