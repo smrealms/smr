@@ -130,7 +130,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				$container = create_container('alliance_invite_accept.php');
 				$container['alliance_id'] = $alliance->getAllianceID();
-				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">&nbsp;Join ' . $alliance->getAllianceName() . '&nbsp;</a></div>';
+				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">Join ' . $alliance->getAllianceName() . '</a></div>';
 			break;
 		}
 	}
@@ -244,7 +244,7 @@ function create_header_link($container, $text) {
 
 
 function create_button($container,$text) {
-	return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container). '">&nbsp;' . $text . '&nbsp;</a></div>';
+	return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container). '">' . $text . '</a></div>';
 }
 
 function create_form($container,$actions) {

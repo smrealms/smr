@@ -75,7 +75,7 @@ else {
 		</table><?php
 		
 		if (isset($MessageBox['ShowAllHref'])) {
-			?><div class="buttonA"><a class="buttonA" href="<?php echo $MessageBox['ShowAllHref'] ?>">&nbsp;Show all Messages&nbsp;</a></div><br /><br /><?php
+			?><div class="buttonA"><a class="buttonA" href="<?php echo $MessageBox['ShowAllHref'] ?>">Show all Messages</a></div><br /><br /><?php
 		} ?>
 		<table class="standard fullwidth"><?php
 			if(isset($MessageBox['Messages'])) {

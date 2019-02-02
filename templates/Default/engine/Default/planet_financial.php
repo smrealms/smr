@@ -36,6 +36,6 @@ if (!$ThisPlanet->isClaimed()) {
 // Allow the player to bond if the planet is claimed
 if ($ThisPlanet->isClaimed()) { ?>
 	<div class="buttonA">
-		<a id="bondFunds" class="buttonA" href="<?php echo $ThisPlanet->getBondConfirmationHREF(); ?>">&nbsp;Bond Funds&nbsp;</a>
+		<a id="bondFunds" class="buttonA" href="<?php echo $ThisPlanet->getBondConfirmationHREF(); ?>">Bond Funds</a>
 	</div>&nbsp; <?php
 } ?>

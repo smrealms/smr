@@ -9,7 +9,7 @@ if(count($AvailableMissions) > 0) {
 	foreach($AvailableMissions as $MissionID => $AvailableMission) { ?>
 		<span class="green">New Mission: </span><?php
 		echo bbifyMessage($AvailableMission['Steps'][0]['Text']); ?><br/><br/>
-		<div class="buttonA"><a href="<?php echo Globals::getAcceptMissionHREF($MissionID); ?>" class="buttonA">&nbsp;Accept&nbsp;</a></div><br/><?php
+		<div class="buttonA"><a href="<?php echo Globals::getAcceptMissionHREF($MissionID); ?>" class="buttonA">Accept</a></div><br/><?php
 	}
 }
 
@@ -23,7 +23,7 @@ if(count($Missions) > 0) {
 		}
 		if($Mission['Task']['Step'] == 'Claim') { ?>
 			<span class="green">Claim Reward: </span>
-			<div class="buttonA"><a href="<?php echo Globals::getClaimMissionRewardHREF($MissionID); ?>" class="buttonA">&nbsp;Claim Reward&nbsp;</a></div><br/><?php
+			<div class="buttonA"><a href="<?php echo Globals::getClaimMissionRewardHREF($MissionID); ?>" class="buttonA">Claim Reward</a></div><br/><?php
 		}
 		else { ?>
 			<span class="green">Current Task: </span><?php

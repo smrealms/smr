@@ -15,7 +15,7 @@ if($ThisSector->hasLocation()) { ?>
 				</td><?php
 				if($Location->hasAction()) { ?>
 					<td class="shrink noWrap">
-						<div class="buttonA"><a class="buttonA" href="<?php echo $Location->getExamineHREF(); ?>">&nbsp;Examine&nbsp;</a></div>
+						<div class="buttonA"><a class="buttonA" href="<?php echo $Location->getExamineHREF(); ?>">Examine</a></div>
 					</td><?php
 				} ?>
 			</tr><?php

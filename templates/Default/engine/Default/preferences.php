@@ -64,7 +64,7 @@ if(isset($GameID)) { ?>
 
 			<tr>
 				<td>Chat Sharing:</td>
-				<td><div class="buttonA"><a href="<?php echo $ChatSharingHREF; ?>" class="buttonA">&nbsp;Manage Chat Sharing Settings&nbsp;</a></div></td>
+				<td><div class="buttonA"><a href="<?php echo $ChatSharingHREF; ?>" class="buttonA">Manage Chat Sharing Settings</a></div></td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>

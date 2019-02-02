@@ -1,6 +1,6 @@
 <div align="center"><?php
 	if (!$ThisPlayer->hasAlliance()) { ?>
-		<div class="buttonA"><a class="buttonA" href="<?php echo $CreateAllianceHREF; ?>">&nbsp;Create your own alliance!&nbsp;</a></div>
+		<div class="buttonA"><a class="buttonA" href="<?php echo $CreateAllianceHREF; ?>">Create your own alliance!</a></div>
 		<br /><br /><?php
 	}
 	if (count($Alliances) > 0) { ?>

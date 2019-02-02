@@ -22,7 +22,7 @@
 					<tr>
 						<td class="center" colspan="2">
 							<div class="buttonA">
-								<a class="buttonA" onClick="setZero(<?php echo SmrPort::MAX_LEVEL; ?>);">&nbsp;Set All Zero&nbsp;</a>
+								<a class="buttonA" onClick="setZero(<?php echo SmrPort::MAX_LEVEL; ?>);">Set All Zero</a>
 							</div>
 						</td>
 					</tr>
@@ -48,7 +48,7 @@
 					<tr>
 						<td class="center" colspan="2">
 							<div class="buttonA">
-								<a class="buttonA" onClick="setEven();">&nbsp;Set All Equal&nbsp;</a>
+								<a class="buttonA" onClick="setEven();">Set All Equal</a>
 							</div>
 						</td>
 					</tr>

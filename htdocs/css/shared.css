@@ -310,6 +310,7 @@ a.buttonA  {
 	border: 2px solid;
 	color: #FFFFFF;
 	white-space: nowrap;
+	padding: 0 0.37em 0 0.37em;
 }
 
 /* Galaxy Map */

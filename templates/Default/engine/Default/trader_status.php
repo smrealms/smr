@@ -11,7 +11,7 @@
 			if ($ThisPlayer->hasNewbieTurns()) { ?>
 				You are under <span class="green">NEWBIE</span> protection.<br /><br />
 				<div class="buttonA">
-					<a class="buttonA" href="<?php echo $LeaveNewbieHREF; ?>">&nbsp;Leave Newbie Protection&nbsp;</a>
+					<a class="buttonA" href="<?php echo $LeaveNewbieHREF; ?>">Leave Newbie Protection</a>
 				</div>
 			<?php
 			} else if ($ThisPlayer->hasFederalProtection()) { ?>

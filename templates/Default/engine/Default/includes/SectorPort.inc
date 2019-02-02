@@ -36,11 +36,11 @@
 					}
 					else { ?>
 						<div class="buttonA">
-							<a class="buttonA" href="<?php echo Globals::getTradeHREF() ?>">&nbsp;Trade&nbsp;</a>
+							<a class="buttonA" href="<?php echo Globals::getTradeHREF() ?>">Trade</a>
 						</div><?php
 					} ?>&nbsp;
 					<div class="buttonA">
-						<a class="buttonA" href="<?php echo $Port->getRaidWarningHREF() ?>">&nbsp;Raid&nbsp;</a>
+						<a class="buttonA" href="<?php echo $Port->getRaidWarningHREF() ?>">Raid</a>
 					</div>
 				</td>
 			</tr>

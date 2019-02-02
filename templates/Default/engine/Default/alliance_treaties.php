@@ -15,9 +15,9 @@
 		</ul>
 		<br />
 		<div class="buttonA">
-			<a class="buttonA" href="<?php echo $Offer['AcceptHREF']; ?>">&nbsp;Accept&nbsp;</a>
+			<a class="buttonA" href="<?php echo $Offer['AcceptHREF']; ?>">Accept</a>
 			&nbsp;&nbsp;
-			<a class="buttonA" href="<?php echo $Offer['RejectHREF']; ?>">&nbsp;Reject&nbsp;</a>
+			<a class="buttonA" href="<?php echo $Offer['RejectHREF']; ?>">Reject</a>
 		</div>
 		<br /><br /><?php
 	} ?>

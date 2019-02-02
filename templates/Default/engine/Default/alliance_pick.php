@@ -47,7 +47,7 @@ if(count($PickPlayers)>0) { ?>
 			<tr>
 				<td class="center"><?php
 				if ($CanPick) { ?>
-					<div class="buttonA"><a class="buttonA" href="<?php echo $PickPlayer['HREF'] ?>">&nbsp;Pick&nbsp;</a></div><?php
+					<div class="buttonA"><a class="buttonA" href="<?php echo $PickPlayer['HREF'] ?>">Pick</a></div><?php
 				} ?>
 				</td>
 				<td>

@@ -37,10 +37,10 @@ if ($ThisShip->hasScanner()) { ?>
 Are you sure you want to attack this port?<br /><br />
 
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo $PortAttackHREF; ?>">&nbsp;Yes&nbsp;</a>
+	<a class="buttonA" href="<?php echo $PortAttackHREF; ?>">Yes</a>
 </div>&nbsp;
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo Globals::getCurrentSectorHREF(); ?>">&nbsp;No&nbsp;</a>
+	<a class="buttonA" href="<?php echo Globals::getCurrentSectorHREF(); ?>">No</a>
 </div>
 
 <br /><br />

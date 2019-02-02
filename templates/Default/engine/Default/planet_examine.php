@@ -56,10 +56,10 @@
 
 <div align="center"><?php
 	if (!$PlanetLand) { ?>
-		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getAttackHREF(); ?>">&nbsp;Attack Planet (3)&nbsp;</a></div><?php
+		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getAttackHREF(); ?>">Attack Planet (3)</a></div><?php
 	}
 	elseif ($ThisPlanet->isInhabitable()) { ?>
-		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getLandHREF(); ?>">&nbsp;Land on Planet (1)&nbsp;</a></div><?php
+		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getLandHREF(); ?>">Land on Planet (1)</a></div><?php
 	}
 	else { ?>
 		The planet is <span class="uninhab">uninhabitable</span> at this time.<?php

@@ -5,7 +5,7 @@ if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()
 else { ?>
 	<?php
 	if ($ThisShip->hasCloak()) { ?>
-		<b>Cloaking Device:</b>&nbsp;&nbsp;&nbsp;&nbsp;<div class="buttonA"><a class="buttonA" href="<?php echo $ToggleCloakHREF; ?>">&nbsp;<?php if ($ThisShip->isCloaked()){ ?>Disable<?php }else{ ?>Enable(<?php echo TURNS_TO_CLOAK; ?>)<?php } ?>&nbsp;</a></div>
+		<b>Cloaking Device:</b>&nbsp;&nbsp;&nbsp;&nbsp;<div class="buttonA"><a class="buttonA" href="<?php echo $ToggleCloakHREF; ?>"><?php if ($ThisShip->isCloaked()){ ?>Disable<?php }else{ ?>Enable(<?php echo TURNS_TO_CLOAK; ?>)<?php } ?></a></div>
 		<br /><br />
 		<?php
 	}
@@ -31,7 +31,7 @@ else { ?>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td><input type="submit" name="action" value="Set Illusion" id="InputFields" />&nbsp;&nbsp;&nbsp;&nbsp;<div class="buttonA"><a class="buttonA" href="<?php echo $DisableIllusionHref;?>">&nbsp;Disable Illusion&nbsp;</a></div></td>
+					<td><input type="submit" name="action" value="Set Illusion" id="InputFields" />&nbsp;&nbsp;&nbsp;&nbsp;<div class="buttonA"><a class="buttonA" href="<?php echo $DisableIllusionHref;?>">Disable Illusion</a></div></td>
 				</tr>
 			</table>
 		</form><?php

@@ -30,7 +30,7 @@ if ($Alliance->hasImageURL()) { ?>
 <?php
 if (isset($EditHREF)) { ?>
 	<div class="buttonA">
-		<a class="buttonA" href="<?php echo $EditHREF; ?>">&nbsp;Edit&nbsp;</a>
+		<a class="buttonA" href="<?php echo $EditHREF; ?>">Edit</a>
 	</div><?php
 }
 

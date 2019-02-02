@@ -3,7 +3,7 @@
 <div align="center"><?php
 	if(isset($Target)) { ?>
 		<div class="buttonA">
-			<a href="<?php echo $Target->getAttackTraderHREF(); ?>" class="buttonA">Continue&nbsp;Attack</a>
+			<a href="<?php echo $Target->getAttackTraderHREF(); ?>" class="buttonA">Continue Attack</a>
 		</div><?php
 	}
 	else { ?>

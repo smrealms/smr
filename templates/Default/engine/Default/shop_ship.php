@@ -13,7 +13,7 @@ if (count($ShipsSold) > 0 ) { ?>
 				<td><?php echo $ShipSold['Cost']; ?></td>
 				<td>
 					<div class="buttonA">
-						<a class="buttonA" href="<?php echo $ShipsSoldHREF[$ShipSold['ShipTypeID']];?>">&nbsp;View Details&nbsp;</a>
+						<a class="buttonA" href="<?php echo $ShipsSoldHREF[$ShipSold['ShipTypeID']];?>">View Details</a>
 					</div>
 				</td>
 			</tr><?php
@@ -143,7 +143,7 @@ if (isset($CompareShip)) { ?>
 		<tr>
 			<td class="right" colspan="2">
 				<div class="buttonA">
-					<a class="buttonA" href="<?php echo $CompareShip['BuyHREF'];?>">&nbsp;Buy&nbsp;</a>
+					<a class="buttonA" href="<?php echo $CompareShip['BuyHREF'];?>">Buy</a>
 				</div>
 			</td>
 		</tr>
