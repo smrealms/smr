@@ -14,7 +14,7 @@ if($ThisSector->hasLocation()) { ?>
 					<img align="left"src="<?php echo $Location->getImage(); ?>" width="16" height="16" alt="<?php echo $Location->getName(); ?>" title="<?php echo $Location->getName(); ?>" />&nbsp;<?php echo $Location->getName(); ?>
 				</td><?php
 				if($Location->hasAction()) { ?>
-					<td class="shrink noWrap">
+					<td class="shrink noWrap center">
 						<div class="buttonA"><a class="buttonA" href="<?php echo $Location->getExamineHREF(); ?>">Examine</a></div>
 					</td><?php
 				} ?>
