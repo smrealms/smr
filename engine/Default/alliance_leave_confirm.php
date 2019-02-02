@@ -4,12 +4,9 @@ $alliance = $player->getAlliance();
 $template->assign('PageTopic', $alliance->getAllianceName(false, true));
 Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
-$PHP_OUTPUT.= 'Do you really want to leave this alliance?<br /><br />';
-
 $container = create_container('alliance_leave_processing.php');
 $container['action'] = 'YES';
+$template->assign('YesHREF', SmrSession::getNewHREF($container));
 
-$PHP_OUTPUT.=create_button($container,'Yes!');
 $container['action'] = 'NO';
-$PHP_OUTPUT.= '&nbsp;&nbsp;&nbsp;';
-$PHP_OUTPUT.=create_button($container,'No!');
+$template->assign('NoHREF', SmrSession::getNewHREF($container));
