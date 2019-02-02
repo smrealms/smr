@@ -200,25 +200,11 @@ function enableProtectionDependantRefresh($template, $player) {
 	$template->assign('AJAX_ENABLE_REFRESH',$ajaxRefresh);
 }
 
-function create_echo_error($message) {
-
-	$return=('<h1>ERROR</h1>');
-	$return.=('<p><b><big>'.$message.'</big></b></p>');
-	$return.=('<br /><br /><br />');
-	$return.=('<p><small>If the error was caused by something you entered, press back and try again.</small></p>');
-	$return.=('<p><small>If it was a DB Error, press back and try again, or logoff and log back on.</small></p>');
-	$return.=('<p><small>If the error was unrecognizable, please notify the administrators.</small></p>');
-}
-
 function create_menu($menu) {
 	global $template;
 	$return = '<span class="noWrap">' . implode('</span> | <span class="noWrap">', $menu) . '</span>';
 	$template->unassign('MenuItems');
 	$template->assign('MenuBar',$return);
-}
-
-function create_topic($topic) {
-	return '<h1>' . strtoupper($topic) . '</h1><br />';
 }
 
 function create_table() {
@@ -236,12 +222,6 @@ function create_form_name($container, $name) {
 function create_form_parameter($container, $param) {
 	return '<form '.$param.' method="POST" action="'.SmrSession::getNewHREF($container).'">';
 }
-
-function create_header_link($container, $text) {
-	return '<a class="header" href="' . SmrSession::getNewHREF($container) . '">' . $text . '</a>';
-}
-
-
 
 function create_button($container,$text) {
 	return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container). '">' . $text . '</a></div>';
@@ -269,10 +249,6 @@ function create_form($container,$actions) {
 
 function create_submit($value) {
 	return ('<input type="submit" name="action" value="'.htmlspecialchars($value).'" id="InputFields" />');
-}
-
-function create_submit_style($value, $style) {
-	return ('<input type="submit" name="action" value="'.htmlspecialchars($value).'" id="InputFields" style="'.$style.'" />');
 }
 
 function create_error($message) {
@@ -389,13 +365,6 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 
 function get_colored_text($value, $text = null, $type='Game', $return_type = 'Normal') {
 	return get_colored_text_range($value, 300, $text, -300, $type, $return_type);
-}
-
-function makeBold($value) {
-	if ($value)
-		return ' style="font-weight:bold;"';
-	else
-		return '';
 }
 
 function word_filter($string) {
