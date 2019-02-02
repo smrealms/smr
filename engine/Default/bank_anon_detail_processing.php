@@ -6,7 +6,7 @@ if (!isset($action) || ($action != 'Deposit' && $action != 'Withdraw')) {
 $amount = $_REQUEST['amount'];
 // only whole numbers allowed
 $amount = floor($amount);
-$account_num = $var['AccountNumber'];
+$account_num = $var['account_num'];
 // no negative amounts are allowed
 if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');
@@ -28,17 +28,6 @@ if ($action == 'Deposit') {
 	$db->query('INSERT INTO anon_bank_transactions (account_id, game_id, anon_id, transaction_id, transaction, amount, time) ' .
 							'VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($account_num) . ', ' . $db->escapeNumber($trans_id) . ', \'Deposit\', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber(TIME) . ')');
 	$db->query('UPDATE anon_bank SET amount = amount + ' . $db->escapeNumber($amount) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
-	$db->query('SELECT amount FROM anon_bank WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
-	$db->nextRecord();
-	$total = $db->getInt('amount');
-	//too much money?
-//	if ($total > 4294967295) {
-//
-//		$overflow = $total - 4294967295;
-//		$db->query('UPDATE anon_bank SET amount = amount - ' . $db->escapeNumber($overflow) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
-//		$player->increaseCredits($overflow);
-//
-//	}
 	$player->update();
 
 	// log action
@@ -60,23 +49,13 @@ else {
 				VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($account_num) . ', ' . $db->escapeNumber($trans_id) . ', \'Payment\', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber(TIME) . ')');
 	$db->query('UPDATE anon_bank SET amount = amount - ' . $db->escapeNumber($amount) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
 	$player->increaseCredits($amount);
-	$db->query('SELECT amount FROM anon_bank WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
-	$db->nextRecord();
-	$total = $db->getInt('amount');
-	//too much money?
-//	if ($player->getCredits() > 4294967295) {
-//		$overflow = $player->getCredits() - 4294967295;
-//		$db->query('UPDATE anon_bank SET amount = amount + ' . $db->escapeNumber($overflow) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
-//		$player->decreaseCredits($overflow);
-//
-//	}
 	$player->update();
 
 	// log action
 	$account->log(LOG_TYPE_BANK, 'Takes '.$amount.' credits from anonymous account #'.$account_num, $player->getSectorID());
 }
 
-$container = create_container('skeleton.php', 'bank_anon.php');
-$container['AccountNumber'] = $account_num;
+$container = create_container('skeleton.php', 'bank_anon_detail.php');
+$container['account_num'] = $account_num;
 $container['allowed'] = 'yes';
 forward($container);
