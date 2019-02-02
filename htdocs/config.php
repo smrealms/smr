@@ -1,8 +1,8 @@
 <?php
 ini_set('date.timezone', 'UTC');
 
-define('MICRO_TIME', microtime());
-define('TIME', (int)microtimeSec(MICRO_TIME));
+define('MICRO_TIME', microtime(true));
+define('TIME', intval(MICRO_TIME));
 
 // Repository paths
 const ROOT =  __DIR__ . '/../';
@@ -365,8 +365,6 @@ const ALLIANCE_BANK_UNLIMITED = -1;
 const UNI_GEN_LOCATION_SLOTS = 9;
 
 const NHA_ID = 302;
-
-const NUM_RACES = 8;
 
 const TIME_BEFORE_INACTIVE = 259200; // 3 days.
 

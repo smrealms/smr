@@ -165,8 +165,8 @@ class SmrSession {
 			$var = self::$var[$_REQUEST['sn']];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
 			$loadDelay = isset(self::URL_LOAD_DELAY[$currentPage]) ? self::URL_LOAD_DELAY[$currentPage] : 0;
-			$initialTimeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime']);
-			while(($timeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime'])) < $loadDelay) {
+			$initialTimeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
+			while(($timeBetweenLoads = microtime(true) - $var['PreviousRequestTime']) < $loadDelay) {
 				$sleepTime = round(($loadDelay-$timeBetweenLoads)*1000000);
 			//	echo 'Sleeping for: ' . $sleepTime . 'us';
 				usleep($sleepTime);

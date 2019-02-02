@@ -173,8 +173,9 @@ else {
 		// generate style string
 		$style = ' style="color:' . $colors[$account_id] . ';"';
 
+		$date = DateTime::createFromFormat("U.u", $microtime);
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td'.$style.'>' . date(DATE_FULL_SHORT, microtimeSec($microtime)) . ' ' . microtimeMSec($microtime) . 'us</td>');
+		$PHP_OUTPUT.=('<td'.$style.'>' . $date->format('Y-m-d H:i:s.u') . '</td>');
 
 		$db2->query('SELECT * FROM log_type WHERE log_type_id = '.$db2->escapeNumber($log_type_id));
 		if ($db2->nextRecord())
