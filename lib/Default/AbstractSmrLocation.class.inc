@@ -43,7 +43,7 @@ class AbstractSmrLocation {
 			$locations = array();
 			while($db->nextRecord()) {
 				$locationTypeID = $db->getInt('location_type_id');
-				$locations[] = self::getLocation($locationTypeID, $forceUpdate, $db);
+				$locations[$locationTypeID] = self::getLocation($locationTypeID, $forceUpdate, $db);
 			}
 			self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = $locations;
 		}
