@@ -1,26 +1,12 @@
 <?php
 
 // get request variables
-if(isset($_REQUEST['amount'])) {
-	SmrSession::updateVar('BountyAmount',empty($_REQUEST['amount'])?0:$_REQUEST['amount']);
-}
-if(isset($_REQUEST['smrcredits'])) {
-	SmrSession::updateVar('BountySmrCredits',empty($_REQUEST['smrcredits'])?0:$_REQUEST['smrcredits']);
-}
-if(isset($_REQUEST['player_id'])) {
-	SmrSession::updateVar('BountyPlayerID',$_REQUEST['player_id']);
-}
-
-$amount = $var['BountyAmount'];
-$smrCredits = $var['BountySmrCredits'];
-$playerID = $var['BountyPlayerID'];
+$amount = SmrSession::getRequestVar('amount');
+$smrCredits = SmrSession::getRequestVar('smrcredits');
+$playerID = SmrSession::getRequestVar('player_id');
 
 if ($playerID == '0') {
 	create_error('Uhhh...who is [Please Select]?');
-}
-
-if (!is_numeric($amount)||!is_numeric($smrCredits)) {
-	create_error('Numbers only please!');
 }
 
 $amount = round($amount);
@@ -54,18 +40,13 @@ else {
 // get this guy from db
 $bounty_guy = SmrPlayer::getPlayerByPlayerID($playerID, $player->getGameID());
 
-$PHP_OUTPUT.=('Are you sure you want to place a <span class="creds">' . number_format($amount) .
-	'</span> credits and <span class="yellow">' . number_format($smrCredits) .
-	'</span> SMR credits bounty on '.$bounty_guy->getLinkedDisplayName().'?');
+$template->assign('Amount', number_format($amount));
+$template->assign('SmrCredits', number_format($smrCredits));
+$template->assign('BountyPlayer', $bounty_guy->getLinkedDisplayName());
 
 $container = create_container('bounty_place_processing.php');
 $container['account_id'] = $bounty_guy->getAccountID();
 $container['amount'] = $amount;
 $container['SmrCredits'] = $smrCredits;
 transfer('LocationID');
-
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=create_submit('Yes');
-$PHP_OUTPUT.=('&nbsp;&nbsp;');
-$PHP_OUTPUT.=create_submit('No');
-$PHP_OUTPUT.=('</form>');
+$template->assign('ProcessingHREF', SmrSession::getNewHREF($container));
