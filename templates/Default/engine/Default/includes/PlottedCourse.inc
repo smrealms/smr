@@ -15,22 +15,22 @@ if($ThisPlayer->hasPlottedCourse()) {
 			<td class="top right"><?php
 				if ($ThisSector->isLinked($NextSector->getSectorID())) { ?>
 					<div class="buttonA">
-						<a class="buttonA" href="<?php echo $NextSector->getCurrentSectorMoveHREF(); ?>">&nbsp; Follow Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>) &nbsp;</a>
+						<a class="buttonA" href="<?php echo $NextSector->getCurrentSectorMoveHREF(); ?>">Follow Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>)</a>
 					</div><?php
 					if($ThisShip->hasScanner()) { ?>
 						<br /><br />
 						<div class="buttonA">
-							<a class="buttonA" href="<?php echo $NextSector->getScanSectorHREF(); ?>">&nbsp; Scan Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>) &nbsp;</a>
+							<a class="buttonA" href="<?php echo $NextSector->getScanSectorHREF(); ?>">Scan Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>)</a>
 						</div><?php
 					}
 				} else { ?>
 					<div class="buttonA">
-						<a class="buttonA" href="<?php echo $ReplotCourseHREF; ?>">&nbsp; Replot Course to #<?php echo $PlottedCourse->getEndSectorID(); ?> &nbsp;</a>
+						<a class="buttonA" href="<?php echo $ReplotCourseHREF; ?>">Replot Course to #<?php echo $PlottedCourse->getEndSectorID(); ?></a>
 					</div><?php
 				} ?>
 				<br /><br />
 				<div class="buttonA">
-					<a class="buttonA" href="<?php echo $CancelCourseHREF; ?>">&nbsp; Cancel Course &nbsp;</a>
+					<a class="buttonA" href="<?php echo $CancelCourseHREF; ?>">Cancel Course</a>
 				</div>
 			</td>
 		</tr>

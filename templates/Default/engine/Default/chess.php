@@ -36,7 +36,7 @@ if(isset($CreateGameMessage)) {
 				} ?>
 			</td>
 			<td>
-				<div class="buttonA"><a class="buttonA" href="<?php echo $ChessGame->getPlayGameHREF(); ?>">&nbsp;Play&nbsp;</a></div>
+				<div class="buttonA"><a class="buttonA" href="<?php echo $ChessGame->getPlayGameHREF(); ?>">Play</a></div>
 			</td>
 		</tr><?php
 	} ?>

@@ -16,7 +16,7 @@ if (!empty($OpDate)) { ?>
 		</tr>
 	</table>
 	<br />
-	<div class="buttonA"><a class="buttonA" href="<?php echo $OpProcessingHREF; ?>">&nbsp;Cancel&nbsp;</a></div>
+	<div class="buttonA"><a class="buttonA" href="<?php echo $OpProcessingHREF; ?>">Cancel</a></div>
 	<?php
 } else { ?>
 	<p>Schedule the next alliance operation:<br><small>Enter the date in server time (example: Dec 12 18:30)</small></p>

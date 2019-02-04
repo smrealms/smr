@@ -26,7 +26,7 @@ foreach($Locations as $Location) { ?>
 	</td>
 	<td>
 		<div class="buttonA">
-			<a href="<?php echo $Location->getEditHREF() ?>" class="buttonA"> Edit </a>
+			<a href="<?php echo $Location->getEditHREF() ?>" class="buttonA">Edit</a>
 		</div>
 	</td>
 </tr><?php

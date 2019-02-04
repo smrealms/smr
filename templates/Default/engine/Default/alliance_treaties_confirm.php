@@ -12,8 +12,8 @@
 	</ul>
 	<br />
 	<div class="buttonA">
-		<a class="buttonA" href="<?php echo $YesHREF; ?>">&nbsp;Yes&nbsp;</a>
+		<a class="buttonA" href="<?php echo $YesHREF; ?>">Yes</a>
 		&nbsp;&nbsp;
-		<a class="buttonA" href="<?php echo $NoHREF; ?>">&nbsp;No&nbsp;</a>
+		<a class="buttonA" href="<?php echo $NoHREF; ?>">No</a>
 	</div>
 </div>

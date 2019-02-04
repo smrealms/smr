@@ -22,7 +22,7 @@ if($ThisSector->hasPlanet()) {
 			</td>
 			<td class="center noWrap shrink">
 				<div class="buttonA">
-					<a class="buttonA" href="<?php echo $Planet->getExamineHREF() ?>">&nbsp;Examine&nbsp;</a>
+					<a class="buttonA" href="<?php echo $Planet->getExamineHREF() ?>">Examine</a>
 				</div>
 			</td>
 		</tr>

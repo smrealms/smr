@@ -4,5 +4,5 @@ Welcome back to <b>Space Merchant Realms</b>!
 To re-open it, simply click the button below.</p>
 
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo $ReopenLink; ?>">&nbsp;Yes, re-open it!&nbsp;</a>
+	<a class="buttonA" href="<?php echo $ReopenLink; ?>">Yes, re-open it!</a>
 </div>

@@ -11,6 +11,6 @@
 	If you win you can claim your prize at any bar!
 	<br /><br />
 	<div class="buttonA">
-		<a class="buttonA" href="<?php echo $BuyTicketHREF; ?>">&nbsp;Buy a Ticket ($1,000,000)&nbsp;</a>
+		<a class="buttonA" href="<?php echo $BuyTicketHREF; ?>">Buy a Ticket ($1,000,000)</a>
 	</div>
 </div>

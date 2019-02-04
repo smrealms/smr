@@ -4,7 +4,7 @@
 	<br /><br />
 
 	<div class="buttonA">
-		<a class="buttonA" href="<?php echo Globals::getSendGlobalMessageHREF(); ?>">&nbsp;Send Global Message&nbsp;</a>
+		<a class="buttonA" href="<?php echo Globals::getSendGlobalMessageHREF(); ?>">Send Global Message</a>
 	</div>
 	<br /><br />
 

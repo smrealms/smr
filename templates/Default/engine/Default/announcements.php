@@ -20,5 +20,5 @@
 <br />
 
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo $ContinueHREF; ?>">&nbsp;Continue&nbsp;</a>
+	<a class="buttonA" href="<?php echo $ContinueHREF; ?>">Continue</a>
 </div>

@@ -5,7 +5,7 @@ You are currently building: <?php
 			<br /><?php
 			echo $ThisPlanet->getStructureTypes($Building['ConstructionID'])->name(); ?> which will finish in <?php echo format_time($Building['TimeRemaining']); ?>
 			<br /><br />
-			<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getCancelHREF($Building['ConstructionID']); ?>">&nbsp;Cancel&nbsp;</a></div><?php
+			<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getCancelHREF($Building['ConstructionID']); ?>">Cancel</a></div><?php
 		}
 	}
 	else { ?>
@@ -57,7 +57,7 @@ You are currently building: <?php
 		</td>
 			<td><?php
 				if ($ThisPlanet->canBuild($ThisPlayer, $StructureID)===true) { ?>
-					<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getBuildHREF($StructureID); ?>">&nbsp;Build&nbsp;</a></div><?php
+					<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getBuildHREF($StructureID); ?>">Build</a></div><?php
 				} else { ?>
 					&nbsp;<?php
 				} ?>
