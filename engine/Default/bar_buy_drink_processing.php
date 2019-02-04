@@ -1,7 +1,6 @@
 <?php
 
 $message = '<div align=center>';
-$template->assign('PageTopic','Drinking');
 
 if ($player->getCredits() < 10) {
 	create_error('Come back when you get some money!');
@@ -93,6 +92,6 @@ $player->increaseHOF(1,array('Bar','Drinks', 'Total'), HOF_PUBLIC);
 $message.= '</div>';
 
 $container=create_container('skeleton.php','bar_main.php');
-$container['script']='bar_opening.php';
+transfer('LocationID');
 $container['message'] = $message;
 forward($container);

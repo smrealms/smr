@@ -506,65 +506,23 @@ class Globals {
 	}
 
 	public static function getBarMainHREF() {
+		global $var;
 		$container = create_container('skeleton.php', 'bar_main.php');
-		$container['script'] = 'bar_opening.php';
-		return SmrSession::getNewHREF($container);
-	}
-
-	public static function getBarBuyDrinkHREF() {
-		$container = create_container('bar_buy_drink_processing.php');
-		$container['action'] = 'drink';
-		return SmrSession::getNewHREF($container);
-	}
-
-	public static function getBarBuyWaterHREF() {
-		$container = create_container('bar_buy_drink_processing.php');
-		$container['action'] = 'water';
-		return SmrSession::getNewHREF($container);
-	}
-
-	public static function getBarLottoClaimHREF() {
-		$container = create_container('bar_lotto_claim.php');
+		$container['LocationID'] = $var['LocationID'];
 		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarLottoPlayHREF() {
-		$container = create_container('skeleton.php', 'bar_main.php');
-		$container['script'] = 'bar_gambling_lotto.php';
-		$container['action'] = 'lotto';
+		global $var;
+		$container = create_container('skeleton.php', 'bar_lotto_buy.php');
+		$container['LocationID'] = $var['LocationID'];
 		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarBlackjackHREF() {
-		$container = create_container('skeleton.php', 'bar_main.php');
-		$container['script'] = 'bar_gambling_bet.php';
-		$container['action'] = 'blackjack';
-		return SmrSession::getNewHREF($container);
-	}
-
-	public static function getBarTickerHREF() {
-		$container = create_container('skeleton.php', 'bar_main.php');
-		$container['script'] = 'bar_ticker_buy.php';
-		$container['action'] = 'system';
-		return SmrSession::getNewHREF($container);
-	}
-
-	public static function getBuyTickerHREF() {
-		$container = create_container('skeleton.php', 'bar_ticker_buy.php');
-		$container['action'] = 'system';
-		return SmrSession::getNewHREF($container);
-	}
-
-	public static function getBarGalMapHREF() {
-		$container = create_container('skeleton.php', 'bar_main.php');
-		$container['script'] = 'bar_galmap_buy.php';
-		$container['action'] = 'map';
-		return SmrSession::getNewHREF($container);
-	}
-
-	public static function getBuyGalMapHREF() {
-		$container = create_container('skeleton.php', 'bar_galmap_buy.php');
-		$container['action'] = 'map';
+		global $var;
+		$container = create_container('skeleton.php', 'bar_gambling_bet.php');
+		$container['LocationID'] = $var['LocationID'];
 		return SmrSession::getNewHREF($container);
 	}
 

@@ -43,14 +43,18 @@ if (isset($var['process'])) {
 	}
 	
 	$container=create_container('skeleton.php','bar_main.php');
-	$container['script']='bar_opening.php';
+	transfer('LocationID');
 	$container['message'] = '<div align="center">Galaxy maps have been added. Enjoy!</div><br />';
 	forward($container);
 }
 else {
+	// This is a display page!
+	$template->assign('PageTopic', 'Buy Galaxy Maps');
+	Menu::bar();
+
 	//find what gal they want
-	$container = create_container('skeleton.php', 'bar_main.php');
-	$container['script'] = 'bar_galmap_buy.php';
+	$container = create_container('skeleton.php', 'bar_galmap_buy.php');
+	transfer('LocationID');
 	$container['process'] = true;
 	$template->assign('BuyHREF', SmrSession::getNewHREF($container));
 }

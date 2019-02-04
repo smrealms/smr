@@ -18,6 +18,5 @@ if ($db->nextRecord()) {
 }
 //offer another drink and such
 $container=create_container('skeleton.php','bar_main.php');
-$container['script']='bar_opening.php';
 $container['message'] = $message;
 forward($container);

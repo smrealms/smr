@@ -1,5 +1,8 @@
 <?php
 
+$template->assign('PageTopic', 'Talk to Bartender');
+Menu::bar();
+
 // We don't save this in session because we only want to insert once
 if (isset($_REQUEST['gossip_tell'])) {
 	$db->query('SELECT message_id FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY message_id DESC LIMIT 1');
@@ -29,6 +32,6 @@ if (!isset($var['Message'])) {
 }
 $template->assign('Message', $message);
 
-$container = create_container('skeleton.php', 'bar_main.php');
-$container['script'] = 'bar_talk_bartender.php';
+$container = create_container('skeleton.php', 'bar_talk_bartender.php');
+transfer('LocationID');
 $template->assign('GossipHREF', SmrSession::getNewHREF($container));
