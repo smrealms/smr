@@ -75,12 +75,10 @@ var exec = function(s) {
 				$('#'+e.tagName).html($(e).text());
 			}
 		});
-		if(all.length !== 0) {
-			refreshReady = true;
-			if(ajaxRunning === true) {
-				clearTimeout(updateRefreshTimeout);
-				updateRefreshTimeout = setTimeout(updateRefreshRequest, refreshSpeed);
-			}
+		refreshReady = true;
+		if(ajaxRunning === true) {
+			clearTimeout(updateRefreshTimeout);
+			updateRefreshTimeout = setTimeout(updateRefreshRequest, refreshSpeed);
 		}
 	};
 
