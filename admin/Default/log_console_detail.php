@@ -3,166 +3,98 @@
 $template->assign('PageTopic','Log Console - Detail');
 
 // get the account_ids from last form
-if (isset($_REQUEST['account_ids']))
-	SmrSession::updateVar('account_ids',$_REQUEST['account_ids']);
-$account_ids = $var['account_ids'];
+$account_ids = SmrSession::getRequestVar('account_ids');
 
 // get the account_ids from last form
-if (isset($_REQUEST['log_type_ids']))
-	SmrSession::updateVar('log_type_ids',$_REQUEST['log_type_ids']);
-$log_type_ids = $var['log_type_ids'];
-
-// initialize order items
-if (!isset($var['item']))
-	$var['item'] = 'microtime';
-if (!isset($var['order']))
-	$var['order'] = 'ASC';
+$log_type_ids = SmrSession::getRequestVar('log_type_ids');
 
 // nothing marked?
-if (!is_array($account_ids) || count($account_ids) == 0)
-	$PHP_OUTPUT.=create_error('You have to select the log files you want to view/delete!');
+if (!is_array($account_ids) || count($account_ids) == 0) {
+	create_error('You have to select the log files you want to view/delete!');
+}
 $account_list = $db->escapeArray($account_ids);
 
 $action = SmrSession::getRequestVar('action');
+$template->assign('Action', $action);
 if ($action == 'Delete') {
 
 	// get rid of all entries
 	$db->query('DELETE FROM account_has_logs WHERE account_id IN ('.$account_list.')');
 	$db->query('DELETE FROM log_has_notes WHERE account_id IN ('.$account_list.')');
 
-	$PHP_OUTPUT.=('Operation was completed successfully!');
 }
 else {
-	// a second db object
-	$db2 = new SmrMySqlDatabase();
-
-	// predefine a color array
+	// *********************************
+	// * C o l o r   L e g e n d
+	// *********************************
 	$avail_colors = array('#FFFFFF', '#00FF00', '#FF3377', '#0099FF',
 	                      '#FF0000', '#0000FF');
 
 	// now assign each account id a color
-	for ($i = 0; $i < count($account_ids); $i++) {
-		// get current id
-		$curr_account_id = $account_ids[$i];
-
+	$colors = [];
+	foreach ($account_ids as $i => $id) {
 		// assign it a color
-		$colors[$curr_account_id] = $avail_colors[$i % count($avail_colors)];
+		$color = $avail_colors[$i % count($avail_colors)];
+
+		$db->query('SELECT login FROM account WHERE account_id = ' . $db->escapeNumber($id));
+		if ($db->nextRecord()) {
+			$colors[$id] = [
+				'name' => $db->getField('login'),
+				'color' => $color,
+			];
+		}
 	}
-
-	$PHP_OUTPUT.=('<table>');
-	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td valign="top" width="50%">');
-
-	$PHP_OUTPUT.=('<p>Show the following types:</p>');
+	$template->assign('Colors', $colors);
 
 	// *********************************
-	// *
 	// * L o g   T y p e s
-	// *
 	// *********************************
 	$container = create_container('skeleton.php', 'log_console_detail.php');
 	$container['account_ids'] = $account_ids;
-	transfer('order');
-	transfer('item');
-	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=create_submit('Update');
-	$PHP_OUTPUT.=('<br /><br />');
+	$template->assign('UpdateHREF', SmrSession::getNewHREF($container));
 
-	$log_type_id_list = array(0);
+	$logTypes = [];
 	$db->query('SELECT * FROM log_type');
 	while ($db->nextRecord()) {
-		$PHP_OUTPUT.=('<input type="checkbox" name="log_type_ids[' . $db->getInt('log_type_id') . ']"');
-		if ($log_type_ids[$db->getInt('log_type_id')]) {
-			$PHP_OUTPUT.=(' checked');
-			$log_type_id_list[] = $db->getField('log_type_id');
-
-		}
-		$PHP_OUTPUT.=('>' . $db->getField('log_type_entry') . '<br />');
+		$logTypes[$db->getInt('log_type_id')] = $db->getField('log_type_entry');
 	}
-	$PHP_OUTPUT.=('</form>');
+	$template->assign('LogTypes', $logTypes);
 
-	$PHP_OUTPUT.=('</td>');
-	$PHP_OUTPUT.=('<td valign="top" width="50%">');
+	$log_type_id_list = array(0);
+	foreach ($logTypes as $id => $entry) {
+		if (isset($log_type_ids[$id])) {
+			$log_type_id_list[] = $id;
+		}
+	}
+	$template->assign('LogTypesChecked', $log_type_id_list);
 
 	// *********************************
-	// *
 	// * N o t e s
-	// *
 	// *********************************
-	if (count($account_ids) == 1)
-		$PHP_OUTPUT.=('<p>Change the notes for this user:</p>');
-	else
-		$PHP_OUTPUT.=('<p>Change the notes for these users:</p>');
-
 	$container = create_container('log_notes_processing.php', '');
 	$container['account_ids'] = $account_ids;
 	$container['log_type_ids'] = $log_type_ids;
-	transfer('order');
-	transfer('item');
-	$PHP_OUTPUT.=create_echo_form($container);
-
-	$PHP_OUTPUT.=create_submit('Save');
-	$PHP_OUTPUT.=('<br /><br />');
-
-	$log_notes = array();
+	$template->assign('SaveHREF', SmrSession::getNewHREF($container));
 
 	// get notes from db
+	$log_notes = array();
 	$db->query('SELECT * FROM log_has_notes WHERE account_id IN ('.$account_list.')');
-	while ($db->nextRecord())
+	while ($db->nextRecord()) {
 		$log_notes[] = $db->getField('notes');
+	}
 
 	// get rid of double values
 	$log_notes = array_unique($log_notes);
 
 	// flattens array
 	$flat_notes = join(EOL, $log_notes);
-
-	$PHP_OUTPUT.=('<textarea spellcheck="true" name="notes" style="width:300px; height:200px;" id="InputFields">'.$flat_notes.'</textarea>');
-	$PHP_OUTPUT.=('</form>');
-
-	$PHP_OUTPUT.=('</td>');
-	$PHP_OUTPUT.=('</tr>');
-	$PHP_OUTPUT.=('</table>');
+	$template->assign('FlatNotes', $flat_notes);
 
 	// *********************************
-	// *
-	// * C o l o r   L e g e n d
-	// *
-	// *********************************
-	$PHP_OUTPUT.=('Following colors will be used:');
-	$PHP_OUTPUT.=('<ul>');
-	foreach ($colors as $id => $color) {
-		$db->query('SELECT login FROM account WHERE account_id = ' . $db->escapeNumber($id));
-		if ($db->nextRecord())
-			$PHP_OUTPUT.=('<li style="color:'.$color.';">' . $db->getField('login') . '</li>');
-	}
-	$PHP_OUTPUT.=('</ul>');
-
-	// *********************************
-	// *
 	// * L o g   T a b l e
-	// *
 	// *********************************
-	$PHP_OUTPUT.=('<table class="standard" width="100%">');
-	$PHP_OUTPUT.=('<tr>');
-
-	$container = create_container('skeleton.php', 'log_console_detail.php');
-	$container['account_ids'] = $account_ids;
-	$container['log_type_ids'] = $log_type_ids;
-	if ($var['order'] == 'ASC')
-		$container['order'] = 'DESC';
-	else
-		$container['order'] = 'ASC';
-
-	$container['item'] = 'microtime';
-	$PHP_OUTPUT.=create_link($container, '<th style="cursor:hand;">Time</th>');
-	$PHP_OUTPUT.=('<th>Log Type</th>');
-	$container['item'] = 'sector_id';
-	$PHP_OUTPUT.=create_link($container, '<th style="cursor:hand;">Sector</th>');
-	$PHP_OUTPUT.=('<th>Message</th>');
-	$PHP_OUTPUT.=('</tr>');
-
-	$db->query('SELECT * FROM account_has_logs WHERE account_id IN ('.$account_list.') AND log_type_id IN ('.$db->escapeArray($log_type_id_list).') ORDER BY ' . $var['item'] . ' ' . $var['order']);
+	$logs = [];
+	$db->query('SELECT * FROM account_has_logs WHERE account_id IN ('.$account_list.') AND log_type_id IN ('.$db->escapeArray($log_type_id_list).') ORDER BY microtime DESC');
 	while ($db->nextRecord()) {
 		$account_id		= $db->getInt('account_id');
 		$microtime		= $db->getMicrotime('microtime', true); //fix value length errors
@@ -170,28 +102,19 @@ else {
 		$log_type_id	= $db->getInt('log_type_id');
 		$sector_id		= $db->getInt('sector_id');
 
-		// generate style string
-		$style = ' style="color:' . $colors[$account_id] . ';"';
+		$date = DateTime::createFromFormat("U.u", $microtime)->format('Y-m-d H:i:s.u');
 
-		$date = DateTime::createFromFormat("U.u", $microtime);
-		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td'.$style.'>' . $date->format('Y-m-d H:i:s.u') . '</td>');
-
-		$db2->query('SELECT * FROM log_type WHERE log_type_id = '.$db2->escapeNumber($log_type_id));
-		if ($db2->nextRecord())
-			$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db2->getField('log_type_entry') . '</td>');
-		else
-			$PHP_OUTPUT.=('<td align="center"'.$style.'>unknown</td>');
-
-		$PHP_OUTPUT.=('<td align="center"'.$style.'>'.$sector_id.'</td>');
-		$PHP_OUTPUT.=('<td'.$style.'>'.$message.'</td>');
-		$PHP_OUTPUT.=('</tr>');
+		$logs[] = [
+			'date' => $date,
+			'type' => $logTypes[$log_type_id],
+			'sectorID' => $sector_id,
+			'message' => $message,
+			'color' => $colors[$account_id]['color'],
+		];
 	}
-	$PHP_OUTPUT.=('</table>');
+	$template->assign('Logs', $logs);
 }
 
-$PHP_OUTPUT.=('<p>');
 $container = create_container('skeleton.php', 'log_console.php');
 $container['account_ids'] = $account_ids;
-$PHP_OUTPUT.=create_link($container, '<b>&lt; Back</b>');
-$PHP_OUTPUT.=('</p>');
+$template->assign('BackHREF', SmrSession::getNewHREF($container));

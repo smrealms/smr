@@ -12,7 +12,5 @@ foreach ($var['account_ids'] as $account_id) {
 $container = create_container('skeleton.php', 'log_console_detail.php');
 transfer('account_ids');
 transfer('log_type_ids');
-transfer('order');
-transfer('item');
 
 forward($container);
