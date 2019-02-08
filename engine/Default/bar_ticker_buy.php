@@ -30,11 +30,15 @@ if (isset($var['process'])) {
 	$account->decreaseTotalSmrCredits(CREDITS_PER_TICKER);
 	//offer another drink and such
 	$container=create_container('skeleton.php','bar_main.php');
-	$container['script']='bar_opening.php';
+	transfer('LocationID');
 	$container['message'] = '<div align="center">Your system has been added.  Enjoy!</div><br />';
 	forward($container);
 }
 else {
+	// This is a display page!
+	$template->assign('PageTopic', 'Buy System');
+	Menu::bar();
+
 	//they can buy the ticker...first we need to find out what they want
 	$tickers = [];
 	foreach ($player->getTickers() as $ticker) {
@@ -52,8 +56,8 @@ else {
 	}
 	$template->assign('Tickers', $tickers);
 
-	$container = create_container('skeleton.php', 'bar_main.php');
-	$container['script'] = 'bar_ticker_buy.php';
+	$container = create_container('skeleton.php', 'bar_ticker_buy.php');
+	transfer('LocationID');
 	$container['process'] = 'yes';
 	$template->assign('BuyHREF', SmrSession::getNewHREF($container));
 }

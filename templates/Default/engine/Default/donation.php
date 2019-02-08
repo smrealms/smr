@@ -42,12 +42,3 @@ if(isset($GameID)) { ?>
 		<a class="buttonA" href="<?php echo Globals::getBuyShipNameHref(); ?>">Customize Ship Name (<?php echo min(CREDITS_PER_TEXT_SHIP_NAME, CREDITS_PER_HTML_SHIP_NAME, CREDITS_PER_SHIP_LOGO); ?>-<?php echo max(CREDITS_PER_TEXT_SHIP_NAME, CREDITS_PER_HTML_SHIP_NAME, CREDITS_PER_SHIP_LOGO); ?> SMR Credits)</a>
 	</div><?php
 }
-/*
-if(isset($GameID)) { ?>
-	<h2>Maps</h2><br />
-	New intelligence has just come in! We now have full maps of EVERY galaxy!  We are willing to sell you the newest maps of each galaxy for <?php echo CREDITS_PER_GAL_MAP; ?> SMR credits each!<br />
-	<br />
-	<div class="buttonA">
-		<a class="buttonA" href="<?php echo Globals::getBuyGalMapHREF(); ?>">Buy a Galaxy Map (<?php echo CREDITS_PER_GAL_MAP; ?> SMR Credits)</a>
-	</div><br /><br /><?php
-} */ ?>

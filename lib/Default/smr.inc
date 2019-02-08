@@ -516,7 +516,7 @@ function do_voodoo() {
 	}
 	if($var['body']) {
 		$PHP_OUTPUT = '';
-		if($var['body']=='error.php'||$var['body']=='bar_main.php') { // infinite includes for error/bar pages
+		if ($var['body']=='error.php') { // infinite includes for error pages
 			require(get_file_loc($var['body']));
 		}
 		else {

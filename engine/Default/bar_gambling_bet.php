@@ -1,4 +1,8 @@
 <?php
+
+$template->assign('PageTopic', 'BlackJack');
+Menu::bar();
+
 if(isset($var['message'])) {
 	$template->assign('Message', $var['message']);
 	return;
@@ -14,7 +18,6 @@ if ($player->hasNewbieTurns()) {
 $template->assign('MaxBet', $maxBet);
 $template->assign('MaxBetMsg', $maxBetMsg);
 
-$container = create_container('skeleton.php', 'bar_main.php');
-$container['script'] = 'bar_gambling_processing.php';
-$container['action'] = 'blackjack';
+$container = create_container('bar_gambling_processing.php');
+transfer('LocationID');
 $template->assign('PlayHREF', SmrSession::getNewHREF($container));
