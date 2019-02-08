@@ -27,13 +27,6 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& docker-php-ext-install mysqli opcache
 
-# Use the production php.ini unless PHP_DEBUG=1 (defaults to 0)
-ARG PHP_DEBUG=0
-RUN [ "$PHP_DEBUG" = "1" ] && echo "Using development php.ini" || \
-	{ echo "Using production php.ini" && \
-	  tar -xOvf /usr/src/php.tar.xz php-$PHP_VERSION/php.ini-production > /usr/local/etc/php/php.ini; \
-	}
-
 # Disable apache access logging (error logging is still enabled)
 RUN sed -i 's|CustomLog.*|CustomLog /dev/null common|' /etc/apache2/sites-enabled/000-default.conf
 
@@ -46,6 +39,13 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY composer.json .
 RUN composer install --no-interaction
+
+# Use the production php.ini unless PHP_DEBUG=1 (defaults to 0)
+ARG PHP_DEBUG=0
+RUN [ "$PHP_DEBUG" = "1" ] && echo "Using development php.ini" || \
+	{ echo "Using production php.ini" && \
+	  tar -xOvf /usr/src/php.tar.xz php-$PHP_VERSION/php.ini-production > /usr/local/etc/php/php.ini; \
+	}
 
 COPY --from=builder /smr .
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
