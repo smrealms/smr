@@ -34,9 +34,6 @@
 		if (val == "compare_log") {
 			window.document.form_ip.variable.value = 'Enter login names here separated by commas (ie Azool, MrSpock, Jedi Oscar)';
 		}
-		if (val == "all_acc") {
-			window.document.form_ip.variable.value = 'Enter Starting Account ID, Ending Account ID Currently: <?php echo $MaxAccountID; ?> (ie 5,50)';
-		}
 		if (val == "comp_share") {
 			window.document.form_ip.variable.value = 'Have a Nice Day :) (p.s. click the button)';
 		}
@@ -56,10 +53,9 @@ Please select the type of IP search you would like.<br />
 		<option value="wild_ip">Wildcard IP Search</option>
 		<option value="wild_host">Wildcard Host Search</option>
 		<option value="comp_share">Computer Sharing</option>
-		<option value="all_acc">List all Accounts</option>
-		<option value="request">Want more? Request it from Azool</option>
-	</select><br />
-	<input type="text" size="64" value="Enter how many IPs per page" name="variable" id="InputFields"><br />
+	</select><br /><br />
+	<input type="text" size="64" value="Press continue to proceed" name="variable" id="InputFields">
+	<br /><br />
 	<input type="submit" name="action" value="Continue" id="InputFields" />
 </form>
 <script type="text/javascript">
