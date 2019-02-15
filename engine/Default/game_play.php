@@ -221,12 +221,6 @@ if($db->getNumRows()>0) {
 }
 
 // ***************************************
-// ** Donation Link
-// ***************************************
-
-$template->assign('DonateLink', SmrSession::getNewHREF(create_container('skeleton.php', 'donation.php')));
-
-// ***************************************
 // ** Announcements View
 // ***************************************
 $container = array();
