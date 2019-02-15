@@ -2,50 +2,37 @@
 
 //view anon acct activity.
 $template->assign('PageTopic','View Anonymous Account Info');
+
+$container = create_container('skeleton.php', 'anon_acc_view.php');
+$template->assign('AnonViewHREF', SmrSession::getNewHREF($container));
+
+$anonID = SmrSession::getRequestVar('anon_account');
+$gameID = SmrSession::getRequestVar('view_game_id');
+$haveIDs = (!empty($anonID) && !empty($gameID));
+
 //do we have an acct?
-if (empty($_REQUEST['anon_account'])||empty($_REQUEST['game_id'])) {
-
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'anon_acc_view.php';
-	$PHP_OUTPUT.=('What account would you like to view?<br />');
-	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('Account ID: <input type="number" name="anon_account" /><br />');
-	$PHP_OUTPUT.=('Game ID: <input type="number" name="game_id" /><br />');
-	$PHP_OUTPUT.=create_submit('Continue');
-	$PHP_OUTPUT.=('</form>');
-
-}
-else {
-	//db object
-	$db2 = new SmrMySqlDatabase();
-	//split the name
-	$acc = $_REQUEST['anon_account'];
-	$game = $_REQUEST['game_id'];
-	//get account info
+if ($haveIDs) {
 	$db->query('SELECT *
 				FROM anon_bank_transactions
-				WHERE anon_id = '.$db->escapeNumber($acc).'
-					AND game_id = '.$db->escapeNumber($game).'
+				JOIN player USING(account_id, game_id)
+				WHERE anon_id = '.$db->escapeNumber($anonID).'
+					AND game_id = '.$db->escapeNumber($gameID).'
 				ORDER BY transaction_id');
-	if ($db->getNumRows() > 0) {
-		$PHP_OUTPUT.="<p>Transactions from Anonymous Account $acc in Game $game</p>";
-		$PHP_OUTPUT.= create_table();
-		$PHP_OUTPUT.=('<tr><th align=center>Player Name</th><th align=center>Type</th><th align=center>Amount</th></tr>');
-		while ($db->nextRecord()) {
-			$db2->query('SELECT player_name FROM player WHERE account_id=' . $db2->escapeNumber($db->getInt('account_id')) . ' AND game_id=' . $db2->escapeNumber($game));
-			$db2->nextRecord();
-			$PHP_OUTPUT.=('<tr><td align=center>');
-			$PHP_OUTPUT.=$db2->getField('player_name');
-			$PHP_OUTPUT.=('</td><td align=center>');
-			$PHP_OUTPUT.=$db->getField('transaction');
-			$PHP_OUTPUT.=('</td><td align=center>');
-			$PHP_OUTPUT.=$db->getField('amount');
-			$PHP_OUTPUT.=('</td></tr>');
+	$rows = [];
+	while ($db->nextRecord()) {
+		$rows[] = [
+			'player_name' => $db->getField('player_name'),
+			'transaction' => $db->getField('transaction'),
+			'amount' => $db->getField('amount'),
+		];
+	}
+	$template->assign('Rows', $rows);
+	$template->assign('AnonID', $anonID);
+	$template->assign('ViewGameID', $gameID);
 
-		}
-		$PHP_OUTPUT.=('</table>');
 
-	} else $PHP_OUTPUT.=('Account '.$acc.' in game '.$game.' does NOT exist!');
-
+	if (!$rows) {
+		$message = '<p><span class="red">Anon account #'.$anonID.' in Game '.$gameID.' does NOT exist!</span></p>';
+		$template->assign('Message', $message);
+	}
 }
