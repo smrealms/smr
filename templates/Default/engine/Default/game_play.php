@@ -43,21 +43,7 @@ if(isset($Message)) {
 		<br /><?php
 	} ?>
 </div>
-		
-<h1><a href="<?php echo $VotingHref; ?>">Voting</a></h1><?php
-if (isset($Voting)) {
-	?>Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
-	foreach($Voting as $Vote) {
-		?><br /><br />
-		<form name="FORM" method="POST" action="<?php echo $Vote['HREF'] ?>">
-			<span class="bold"><?php echo bbifyMessage($Vote['Question']); ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
-			foreach($Vote['Options'] as $VoteOption) { ?>
-				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbifyMessage($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
-			} ?>
-			<input type="submit" name="submit" value="Vote!"><br /><br />
-		</form><?php
-	}
-} ?><br />
+
 <h1>Join Game</h1>
 <div id="joinGames" class="ajax"><?php
 	if(isset($Games['Join'])) { ?>
@@ -92,12 +78,25 @@ if (isset($Voting)) {
 		?><p>You have joined all open games.</p><?php
 	} ?>
 </div>
+
 <br />
 <br />
-<h1>Donate Money</h1>
-<p>
-	<a href="<?php echo $DonateLink; ?>"><img src="images/donation.png" border="0" alt="donate" /></a>
-</p>
+<h1><a href="<?php echo $VotingHref; ?>">Voting</a></h1><?php
+if (isset($Voting)) {
+	?>Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
+	foreach($Voting as $Vote) {
+		?><br /><br />
+		<form name="FORM" method="POST" action="<?php echo $Vote['HREF'] ?>">
+			<span class="bold"><?php echo bbifyMessage($Vote['Question']); ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
+			foreach($Vote['Options'] as $VoteOption) { ?>
+				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbifyMessage($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
+			} ?>
+			<input type="submit" name="submit" value="Vote!"><br />
+		</form><?php
+	}
+} ?>
+
+<br />
 <br />
 <h1><a href="<?php echo $OldAnnouncementsLink; ?>">View Old Announcements</a></h1>
 <br />
