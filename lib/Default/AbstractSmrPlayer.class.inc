@@ -236,8 +236,15 @@ abstract class AbstractSmrPlayer {
 		return $this->canFed[$raceID];
 	}
 
+	/**
+	 * Returns a boolean identifying if the player can currently
+	 * participate in battles.
+	 */
 	public function canFight() {
-		return !$this->hasNewbieTurns() && !$this->isDead() && !$this->hasFederalProtection();
+		return !($this->hasNewbieTurns() ||
+		         $this->isDead() ||
+		         $this->isLandedOnPlanet() ||
+		         $this->hasFederalProtection());
 	}
 
 	public function setDead($bool) {
