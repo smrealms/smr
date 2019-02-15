@@ -13,6 +13,7 @@ if (isset($ContinueHREF)) {
 
 <div class="login_scroll"><?php
 	foreach ($Versions as $data) { ?>
+		<br />
 		<b><?php echo $data['version']; ?> (<?php echo $data['went_live']; ?>):</b>
 
 		<ul><?php
@@ -22,7 +23,6 @@ if (isset($ContinueHREF)) {
 					<br /><?php echo $change['message']; ?><br /><br />
 				</li><?php
 			} ?>
-		</ul>
-		<br /><?php
+		</ul><?php
 	} ?>
 </div>
