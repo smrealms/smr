@@ -137,16 +137,17 @@ elseif ($submit == 'Create Ports') {
 	for ($i=1; $i<=SmrPort::MAX_LEVEL; $i++) {
 		$totalPorts+=$_REQUEST['port' . $i];
 	}
+
 	$totalRaceDist=0;
-	$assignedPorts=0;
 	$numRacePorts = array();
 	foreach (Globals::getRaces() as $race) {
-		$totalRaceDist+=$_REQUEST['race' . $race['Race ID']];
-		$numRacePorts[$race['Race ID']] = ceil($_REQUEST['race' . $race['Race ID']] / 100 * $totalPorts);
-		$assignedPorts+=$numRacePorts[$race['Race ID']];
-		if($numRacePorts[$race['Race ID']]==0)
-			unset($numRacePorts[$race['Race ID']]);
+		$racePercent = $_REQUEST['race' . $race['Race ID']];
+		if (!empty($racePercent)) {
+			$totalRaceDist += $racePercent;
+			$numRacePorts[$race['Race ID']] = ceil($racePercent / 100 * $totalPorts);
+		}
 	}
+	$assignedPorts = array_sum($numRacePorts);
 	if ($totalRaceDist == 100 || $totalPorts == 0) {
 		$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 		$galSectors = $galaxy->getSectors();
