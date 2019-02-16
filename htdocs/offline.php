@@ -8,10 +8,12 @@ try {
 	
 	$db->query('SELECT * FROM game_disable');
 	if ($db->nextRecord()) {
-		$template->assign('Message','Space Merchant Realms is currently <strong>OFF-LINE</strong>.<br />'.$db->getField('reason'));
+		$template->assign('Message', '<span class="red">Space Merchant Realms is temporarily offline.<br />'.$db->getField('reason').'</span>');
 	}
-	else header('Location: /');
-	
+
+	// We need to destroy the session so that the login page doesn't
+	// redirect to the in-game loader (bypassing the server closure).
+	SmrSession::destroy();
 	require_once(ENGINE . 'Default/login.inc');
 }
 catch(Throwable $e) {
