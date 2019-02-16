@@ -23,7 +23,7 @@
 					<img src="images/login/bottom_left.gif" width="7" height="11" alt="">
 					<img src="images/login/bottom_center.png" width="222" height="11" alt="">
 					<div id="small_menu_1">
-						<a href="">(Home)</a>
+						<a href="/">(Home)</a>
 					</div>
 					<div id="small_menu_2">
 						<a href="mailto:support@smrealms.de" target="_blank">(Contact)</a>
