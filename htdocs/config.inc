@@ -85,6 +85,7 @@ function handleException(Throwable $e) {
 	try {
 		$errorType = logException($e);
 	} catch (Throwable $e) {
+		error_log($e);
 		$errorType = 'This error cannot be automatically reported. Please notify an admin!';
 	}
 
