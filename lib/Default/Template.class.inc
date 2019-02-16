@@ -19,7 +19,12 @@ class Template {
 	}
 	
 	public function assign($var, $value) {
-		$this->data[$var] = $value;
+		if (!isset($this->data[$var])) {
+			$this->data[$var] = $value;
+		} else {
+			$prev_value = $this->data[$var];
+			throw new Exception("Cannot re-assign '$var' from '$prev_value' to '$value'!");
+		}
 	}
 	
 	public function unassign($var) {

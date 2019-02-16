@@ -91,10 +91,13 @@ try {
 	} else {
 		$mapSectors = $galaxy->getMapSectors();
 	}
-	
+
+	// Unset the default template page title so we can rename it
+	$template->unassign('Title');
+	$template->assign('Title', 'Galaxy Map');
+
 	if($account->getCssLink()!=null)
 		$template->assign('ExtraCSSLink',$account->getCssLink());
-	$template->assign('Title', 'Galaxy Map');
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 	$template->assign('FontSize', $account->getFontSize() - 20);

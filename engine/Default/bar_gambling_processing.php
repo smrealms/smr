@@ -473,5 +473,5 @@ elseif ($val1 == 21) {
 $container=create_container('skeleton.php','bar_gambling_bet.php');
 transfer('LocationID');
 $container['message'] = $message;
-$container['DisableAjax'] = true;
+$container['AllowAjax'] = false;
 forward($container);

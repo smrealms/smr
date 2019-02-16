@@ -193,13 +193,6 @@ function bbifyMessage($message, $noLinks=false) {
 	return $message;
 }
 
-function enableProtectionDependantRefresh($template, $player) {
-	$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
-	if ($player->hasNewbieTurns()||$player->isLandedOnPlanet()||$player->hasFederalProtection())
-		$ajaxRefresh=AJAX_DEFAULT_REFRESH_TIME;
-	$template->assign('AJAX_ENABLE_REFRESH',$ajaxRefresh);
-}
-
 function create_menu($menu) {
 	global $template;
 	$return = '<span class="noWrap">' . implode('</span> | <span class="noWrap">', $menu) . '</span>';
@@ -494,7 +487,6 @@ function do_voodoo() {
 		if($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death'])) {
 			forward(create_container('death_processing.php'));
 		}
-		enableProtectionDependantRefresh($template,$player);
 
 		$ship	=& $player->getShip();
 		$GLOBALS['ship'] =& $ship;
@@ -560,9 +552,20 @@ function do_voodoo() {
 	}
 	doSkeletonAssigns($template,$player,$ship,$sector,$db,$account);
 
-	if(isset($var['DisableAjax']) && $var['DisableAjax']===true) {
-		$template->assign('AJAX_ENABLE_REFRESH',false);
+	// Set ajax refresh time
+	$ajaxRefresh = $var['AllowAjax'] ?? true; // hack for bar_gambling_processing.php
+	if (!$account->isUseAJAX()) {
+		$ajaxRefresh = false;
 	}
+	if ($ajaxRefresh) {
+		// If we can refresh, specify the refresh interval in millisecs
+		if (SmrSession::hasGame() && $player->canFight()) {
+			$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
+		} else {
+			$ajaxRefresh = AJAX_DEFAULT_REFRESH_TIME;
+		}
+	}
+	$template->assign('AJAX_ENABLE_REFRESH', $ajaxRefresh);
 
 	$template->display($var['url'], USING_AJAX);
 
@@ -662,11 +665,8 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account) {
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 
-	$template->assign('FontSize',$account->getFontSize());
+	$template->assign('FontSize', $account->getFontSize() - 20);
 	$template->assign('timeDisplay',date(DATE_FULL_SHORT_SPLIT,TIME));
-	if(!$account->isUseAJAX()) {
-		$template->assign('AJAX_ENABLE_REFRESH',false);
-	}
 
 	$container = create_container('skeleton.php');
 

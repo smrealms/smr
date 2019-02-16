@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head><?php
-		$this->assign('FontSize', $FontSize-20);
 		$this->includeTemplate('includes/Head.inc'); ?>
 	</head>
 	<body>

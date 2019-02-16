@@ -1,6 +1,5 @@
 <?php
 
-$template->assign('PageTopic','Galactic Post');
 Menu::galactic_post();
 
 $db2 = new SmrMySqlDatabase();
@@ -59,6 +58,6 @@ if (!empty($var['paper_id'])) {
 	$PHP_OUTPUT.=('</table>');
 }
 else {
+	$template->assign('PageTopic','Galactic Post');
 	$PHP_OUTPUT.=('There is no current edition of the Galactic Post for this game.');
-
 }
