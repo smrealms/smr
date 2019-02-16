@@ -25,8 +25,12 @@ class Template {
 	public function unassign($var) {
 		unset($this->data[$var]);
 	}
-	
-	public function display($templateName,$forAjax=false, $xmlResponse=false) {
+
+	/**
+	 * Displays the template HTML. Stores any ajax-enabled elements for future
+	 * comparison, and outputs modified elements in XML for ajax if requested.
+	 */
+	public function display($templateName, $outputXml=false) {
 		// If we already started output buffering before calling `display`,
 		// we may have unwanted content in the buffer that we need to remove
 		// before we send the Content-Type headers below.
@@ -41,25 +45,25 @@ class Template {
 		$this->captures[$this->currentCaptureID].=ob_get_clean();
 		$output = join('', $this->captures);
 		$this->trimWhiteSpace($output);
-		if($forAjax) {
+
+		if ($outputXml) {
 			header('Content-Type: text/xml; charset=utf-8');
-		}
-		else {
+		} else {
 			header('Content-Type: text/html; charset=utf-8');
 		}
-		if($forAjax || $this->data['AJAX_ENABLE_REFRESH']) {
+
+		$ajaxEnabled = ($this->data['AJAX_ENABLE_REFRESH'] ?? false) !== false;
+		if ($ajaxEnabled) {
 			$ajaxXml =& $this->convertHtmlToAjaxXml($output,USING_AJAX);
-			if($forAjax) {
+			if ($outputXml) {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$ajaxXml='<all>'.$ajaxXml.'</all>';
 				echo $ajaxXml;
-			}
-			else {
+			} else {
 				echo $output;
 			}
 			SmrSession::saveAjaxReturns();
-		}
-		else {
+		} else {
 			echo $output;
 		}
 	}
