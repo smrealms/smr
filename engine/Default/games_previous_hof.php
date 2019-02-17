@@ -8,7 +8,7 @@ $oldAccountId = $account->getOldAccountID($var['HistoryDatabase']);
 
 $db = new $var['HistoryDatabase']();
 
-$gameId = $var['game_id'];
+$gameId = $var['view_game_id'];
 $gameName = $var['game_name'];
 
 $template->assign('PageTopic', 'Hall of Fame : ' . $gameName);

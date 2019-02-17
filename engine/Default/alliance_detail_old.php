@@ -4,10 +4,10 @@
 $container = create_container('skeleton.php', 'games_previous.php');
 $container['HistoryDatabase'] = $var['HistoryDatabase'];
 $db = new $var['HistoryDatabase']();
-$db->query('SELECT * FROM game WHERE game_id = '.$db->escapeNumber($var['game_id']));
+$db->query('SELECT * FROM game WHERE game_id = '.$db->escapeNumber($var['view_game_id']));
 $db->nextRecord();
 $game_id = $db->getField('game_id');
-$container['game_id'] = $game_id;
+$container['view_game_id'] = $game_id;
 $container['game_name'] = $db->getField('game_name');
 
 //get alliance members

@@ -3,11 +3,11 @@
 $PHP_OUTPUT.=('<div class="center">');
 
 //topic
-if (!isset($var['game_name']) || !isset($var['game_id'])) {
+if (!isset($var['game_name']) || !isset($var['view_game_id'])) {
 	create_error('No game specified!');
 }
 $game_name = $var['game_name'];
-$game_id = $var['game_id'];
+$game_id = $var['view_game_id'];
 $topic = 'Game '.$var['game_name'];
 $template->assign('PageTopic','Viewing Old SMR '.$topic);
 
@@ -111,7 +111,7 @@ if ($db2->getNumRows()) {
 	$PHP_OUTPUT.=('<table class="standard"><tr><th>Rank</th><th>Alliance</th><th>Experience</th></tr>');
 	$container = create_container('skeleton.php', 'alliance_detail_old.php');
 	$container['HistoryDatabase'] = $var['HistoryDatabase'];
-	$container['game_id'] = $game_id;
+	$container['view_game_id'] = $game_id;
 	while ($db2->nextRecord()) {
 		$exp = $db2->getField('exp');
 		$alliance = stripslashes($db2->getField('alliance_name'));
@@ -134,7 +134,7 @@ if ($db2->getNumRows()) {
 	$PHP_OUTPUT.=('<table class="standard"><tr><th>Rank</th><th>Alliance</th><th>Kills</th></tr>');
 	$container = create_container('skeleton.php', 'alliance_detail_old.php');
 	$container['HistoryDatabase'] = $var['HistoryDatabase'];
-	$container['game_id'] = $game_id;
+	$container['view_game_id'] = $game_id;
 	while ($db2->nextRecord()) {
 		$kill = $db2->getField('kills');
 		$alliance = stripslashes($db2->getField('alliance_name'));

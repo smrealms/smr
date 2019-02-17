@@ -1,7 +1,7 @@
 <?php
 
 $game_name = $var['game_name'];
-$game_id = $var['game_id'];
+$game_id = $var['view_game_id'];
 $template->assign('PageTopic',$game_name.' - Extended Stats');
 
 if (isset($_REQUEST['action'])) $action = $_REQUEST['action'];
@@ -10,7 +10,7 @@ if (empty($action)) {
 	$PHP_OUTPUT.=('Click a link to view those stats.<br /><br />');
 	$container = create_container('skeleton.php','games_previous.php');
 	$container['HistoryDatabase'] = $var['HistoryDatabase'];
-	$container['game_id'] = $game_id;
+	$container['view_game_id'] = $game_id;
 	$container['game_name'] = $game_name;
 	$PHP_OUTPUT.=create_link($container, '<b>Basic Game Stats</b>');
 	$PHP_OUTPUT.=('<br />');
@@ -47,7 +47,7 @@ else {
 
 		$container = create_container('skeleton.php', 'games_previous_detail.php');
 		$container['HistoryDatabase'] = $var['HistoryDatabase'];
-		$container['game_id'] = $game_id;
+		$container['view_game_id'] = $game_id;
 		$container['game_name'] = $game_name;
 		$PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
 		$PHP_OUTPUT.=create_table();
@@ -65,14 +65,14 @@ else {
 		$db = new $var['HistoryDatabase']();
 		$container = create_container('skeleton.php','games_previous_detail.php');
 		$container['HistoryDatabase'] = $var['HistoryDatabase'];
-		$container['game_id'] = $game_id;
+		$container['view_game_id'] = $game_id;
 		$container['game_name'] = $game_name;
 		$PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
 		$PHP_OUTPUT.=create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Alliance ID</th><th align=center>'.$dis.'</th></tr>');
 		$container = create_container('skeleton.php', 'alliance_detail_old.php');
 		$container['HistoryDatabase'] = $var['HistoryDatabase'];
-		$container['game_id'] = $game_id;
+		$container['view_game_id'] = $game_id;
 		while ($db2->nextRecord()) {
 			$alliance_id = $db2->getField('alliance_id');
 			$db->query('SELECT * FROM alliance WHERE alliance_id = '.$db->escapeNumber($alliance_id).' AND game_id = '.$db->escapeNumber($game_id));
