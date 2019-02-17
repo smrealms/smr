@@ -12,6 +12,7 @@ $gameId = $var['view_game_id'];
 $gameName = $var['game_name'];
 
 $template->assign('PageTopic', 'Hall of Fame : ' . $gameName);
+Menu::history_games(2);
 
 $PHP_OUTPUT .= '<div align="center">';
 

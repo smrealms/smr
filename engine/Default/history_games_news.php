@@ -1,5 +1,8 @@
 <?php
 
+$template->assign('PageTopic', 'Game News : '.$var['game_name']);
+Menu::history_games(3);
+
 if (isset($_REQUEST['min'])) $min = $_REQUEST['min'];
 else $min = 1;
 if (isset($_REQUEST['max'])) $max = $_REQUEST['max'];
@@ -8,6 +11,7 @@ $game_id = $var['view_game_id'];
 $container = create_container('skeleton.php', 'history_games_news.php');
 $container['HistoryDatabase'] = $var['HistoryDatabase'];
 $container['view_game_id'] = $game_id;
+$container['game_name'] = $var['game_name'];
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<div align=center>Show News<br />Min:<input type="number" id="Inputfields" value="'.$min.'" name="min" size="5"> - Max:<input type="number" id="Inputfields" value="'.$max.'" name="max" size="5"><br />');
 $PHP_OUTPUT.=create_submit('Show');

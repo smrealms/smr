@@ -92,6 +92,30 @@ class Menu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
+	static function history_games($selected_index) {
+		global $template, $var;
+		$menuItems = [];
+		$container = create_container('skeleton.php', 'history_games.php');
+		$container['HistoryDatabase'] = $var['HistoryDatabase'];
+		$container['view_game_id'] = $var['view_game_id'];
+		$container['game_name'] = $var['game_name'];
+		$menuItems[] = ['Link' => SmrSession::getNewHREF($container),
+		                'Text' => 'Game Details'];
+		$container['body'] = 'history_games_detail.php';
+		$menuItems[] = ['Link' => SmrSession::getNewHREF($container),
+		                'Text' => 'Extended Stats'];
+		$container['body'] = 'history_games_hof.php';
+		$menuItems[] = ['Link' => SmrSession::getNewHREF($container),
+		                'Text' => 'Hall of Fame'];
+		$container['body'] = 'history_games_news.php';
+		$menuItems[] = ['Link' => SmrSession::getNewHREF($container),
+		                'Text' => 'Game News'];
+		// make the selected index bold
+		$boldItem =& $menuItems[$selected_index]['Text'];
+		$boldItem = '<b>' . $boldItem . '</b>';
+		$template->assign('MenuItems', $menuItems);
+	}
+
 	static function messages() {
 		global $player, $template;
 		$menuItems = array();

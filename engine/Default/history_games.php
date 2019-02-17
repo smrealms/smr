@@ -10,7 +10,7 @@ $game_name = $var['game_name'];
 $game_id = $var['view_game_id'];
 $topic = 'Game '.$var['game_name'];
 $template->assign('PageTopic','Viewing Old SMR '.$topic);
-
+Menu::history_games(0);
 
 $db2 = new $var['HistoryDatabase']();
 $db2->query('SELECT start_date, type, end_date, game_name, speed, game_id ' .
@@ -102,6 +102,12 @@ $PHP_OUTPUT.='
 <tr><td>Top 10 Alliances in Experience</td><td>Top 10 Alliances in Kills</td></tr>
 <tr>
 <td class="top">';
+
+$container = create_container('skeleton.php', 'history_alliance_detail.php');
+$container['HistoryDatabase'] = $var['HistoryDatabase'];
+$container['view_game_id'] = $game_id;
+$container['selected_index'] = 0;
+
 $rank = 0;
 //now for the alliance stuff
 $db2->query('SELECT SUM(experience) as exp, alliance_name, alliance_id
@@ -109,9 +115,6 @@ $db2->query('SELECT SUM(experience) as exp, alliance_name, alliance_id
 			WHERE game_id = '.$db->escapeNumber($game_id).' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
 if ($db2->getNumRows()) {
 	$PHP_OUTPUT.=('<table class="standard"><tr><th>Rank</th><th>Alliance</th><th>Experience</th></tr>');
-	$container = create_container('skeleton.php', 'history_alliance_detail.php');
-	$container['HistoryDatabase'] = $var['HistoryDatabase'];
-	$container['view_game_id'] = $game_id;
 	while ($db2->nextRecord()) {
 		$exp = $db2->getField('exp');
 		$alliance = stripslashes($db2->getField('alliance_name'));
@@ -132,9 +135,6 @@ $rank = 0;
 $db2->query('SELECT kills, alliance_name, alliance_id FROM alliance WHERE game_id = '.$db->escapeNumber($game_id).' ORDER BY kills DESC LIMIT 10');
 if ($db2->getNumRows()) {
 	$PHP_OUTPUT.=('<table class="standard"><tr><th>Rank</th><th>Alliance</th><th>Kills</th></tr>');
-	$container = create_container('skeleton.php', 'history_alliance_detail.php');
-	$container['HistoryDatabase'] = $var['HistoryDatabase'];
-	$container['view_game_id'] = $game_id;
 	while ($db2->nextRecord()) {
 		$kill = $db2->getField('kills');
 		$alliance = stripslashes($db2->getField('alliance_name'));

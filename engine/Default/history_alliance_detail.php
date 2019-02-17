@@ -1,5 +1,7 @@
 <?php
 
+Menu::history_games($var['selected_index']);
+
 //offer a back button
 $container = create_container('skeleton.php', 'history_games.php');
 $container['HistoryDatabase'] = $var['HistoryDatabase'];

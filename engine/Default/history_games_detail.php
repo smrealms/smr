@@ -3,8 +3,9 @@
 $game_name = $var['game_name'];
 $game_id = $var['view_game_id'];
 $template->assign('PageTopic',$game_name.' - Extended Stats');
+Menu::history_games(1);
 
-if (isset($_REQUEST['action'])) $action = $_REQUEST['action'];
+$action = SmrSession::getRequestVar('action');
 $PHP_OUTPUT.=('<div align=center>');
 if (empty($action)) {
 	$PHP_OUTPUT.=('Click a link to view those stats.<br /><br />');
@@ -73,6 +74,7 @@ else {
 		$container = create_container('skeleton.php', 'history_alliance_detail.php');
 		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$container['view_game_id'] = $game_id;
+		$container['selected_index'] = 1;
 		while ($db2->nextRecord()) {
 			$alliance_id = $db2->getField('alliance_id');
 			$db->query('SELECT * FROM alliance WHERE alliance_id = '.$db->escapeNumber($alliance_id).' AND game_id = '.$db->escapeNumber($game_id));
