@@ -1,6 +1,6 @@
 <?php
 function logException(Throwable $e) {
-	global $account,$var,$player;
+	global $account,$var,$player,$db;
 	$errorType = 'Unexpected Game Error!';
 	$message='';
 	$currMySQLError='';
@@ -13,8 +13,7 @@ function logException(Throwable $e) {
 	$message .= 'Error Message: '. $e .EOL.EOL.'-----------'.EOL.EOL;
 
 	// Only check database if it was already loaded (do not try to autoload)
-	if (class_exists('SmrMySqlDatabase', false)) {
-		$db = new SmrMySqlDatabase();
+	if (class_exists('MySqlDatabase', false) && ($db instanceof MySqlDatabase)) {
 		if($currMySQLError = $db->getError()) {
 			$errorType = 'Database Error';
 			$message .= 'MySQL Error MSG: '.$db->getError().EOL.EOL.'-----------'.EOL.EOL;
