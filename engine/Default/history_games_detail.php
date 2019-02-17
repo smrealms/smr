@@ -8,13 +8,13 @@ if (isset($_REQUEST['action'])) $action = $_REQUEST['action'];
 $PHP_OUTPUT.=('<div align=center>');
 if (empty($action)) {
 	$PHP_OUTPUT.=('Click a link to view those stats.<br /><br />');
-	$container = create_container('skeleton.php','games_previous.php');
+	$container = create_container('skeleton.php','history_games.php');
 	$container['HistoryDatabase'] = $var['HistoryDatabase'];
 	$container['view_game_id'] = $game_id;
 	$container['game_name'] = $game_name;
 	$PHP_OUTPUT.=create_link($container, '<b>Basic Game Stats</b>');
 	$PHP_OUTPUT.=('<br />');
-	$container['body'] = 'games_previous_detail.php';
+	$container['body'] = 'history_games_detail.php';
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=create_submit('Top Mined Sectors');
 	$PHP_OUTPUT.=('<br />');
@@ -45,7 +45,7 @@ else {
 	if (empty($gr)) {
 		$db2->query('SELECT '.$sql.' as val, sector_id FROM '.$from.' WHERE game_id = '.$db->escapeNumber($game_id).' '.$gr.' ORDER BY '.$sql.' DESC LIMIT 30');
 
-		$container = create_container('skeleton.php', 'games_previous_detail.php');
+		$container = create_container('skeleton.php', 'history_games_detail.php');
 		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$container['view_game_id'] = $game_id;
 		$container['game_name'] = $game_name;
@@ -63,14 +63,14 @@ else {
 		$sql = 'SELECT alliance_id, '.$sql.' as val FROM '.$from.' WHERE game_id = '.$db->escapeNumber($game_id).' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC LIMIT 30';
 		$db2->query($sql);
 		$db = new $var['HistoryDatabase']();
-		$container = create_container('skeleton.php','games_previous_detail.php');
+		$container = create_container('skeleton.php','history_games_detail.php');
 		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$container['view_game_id'] = $game_id;
 		$container['game_name'] = $game_name;
 		$PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
 		$PHP_OUTPUT.=create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Alliance ID</th><th align=center>'.$dis.'</th></tr>');
-		$container = create_container('skeleton.php', 'alliance_detail_old.php');
+		$container = create_container('skeleton.php', 'history_alliance_detail.php');
 		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$container['view_game_id'] = $game_id;
 		while ($db2->nextRecord()) {

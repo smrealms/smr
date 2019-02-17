@@ -1,12 +1,11 @@
 <?php
 
-//games_previous_news.php
 if (isset($_REQUEST['min'])) $min = $_REQUEST['min'];
 else $min = 1;
 if (isset($_REQUEST['max'])) $max = $_REQUEST['max'];
 else $max = 50;
 $game_id = $var['view_game_id'];
-$container = create_container('skeleton.php', 'games_previous_news.php');
+$container = create_container('skeleton.php', 'history_games_news.php');
 $container['HistoryDatabase'] = $var['HistoryDatabase'];
 $container['view_game_id'] = $game_id;
 $PHP_OUTPUT.=create_echo_form($container);

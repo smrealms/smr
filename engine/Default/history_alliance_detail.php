@@ -1,7 +1,7 @@
 <?php
 
 //offer a back button
-$container = create_container('skeleton.php', 'games_previous.php');
+$container = create_container('skeleton.php', 'history_games.php');
 $container['HistoryDatabase'] = $var['HistoryDatabase'];
 $db = new $var['HistoryDatabase']();
 $db->query('SELECT * FROM game WHERE game_id = '.$db->escapeNumber($var['view_game_id']));

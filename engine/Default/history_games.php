@@ -109,7 +109,7 @@ $db2->query('SELECT SUM(experience) as exp, alliance_name, alliance_id
 			WHERE game_id = '.$db->escapeNumber($game_id).' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
 if ($db2->getNumRows()) {
 	$PHP_OUTPUT.=('<table class="standard"><tr><th>Rank</th><th>Alliance</th><th>Experience</th></tr>');
-	$container = create_container('skeleton.php', 'alliance_detail_old.php');
+	$container = create_container('skeleton.php', 'history_alliance_detail.php');
 	$container['HistoryDatabase'] = $var['HistoryDatabase'];
 	$container['view_game_id'] = $game_id;
 	while ($db2->nextRecord()) {
@@ -132,7 +132,7 @@ $rank = 0;
 $db2->query('SELECT kills, alliance_name, alliance_id FROM alliance WHERE game_id = '.$db->escapeNumber($game_id).' ORDER BY kills DESC LIMIT 10');
 if ($db2->getNumRows()) {
 	$PHP_OUTPUT.=('<table class="standard"><tr><th>Rank</th><th>Alliance</th><th>Kills</th></tr>');
-	$container = create_container('skeleton.php', 'alliance_detail_old.php');
+	$container = create_container('skeleton.php', 'history_alliance_detail.php');
 	$container['HistoryDatabase'] = $var['HistoryDatabase'];
 	$container['view_game_id'] = $game_id;
 	while ($db2->nextRecord()) {
