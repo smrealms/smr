@@ -3,48 +3,31 @@
 Menu::history_games($var['selected_index']);
 
 //offer a back button
-$container = create_container('skeleton.php', 'history_games.php');
-$container['HistoryDatabase'] = $var['HistoryDatabase'];
-$db = new $var['HistoryDatabase']();
-$db->query('SELECT * FROM game WHERE game_id = '.$db->escapeNumber($var['view_game_id']));
-$db->nextRecord();
-$game_id = $db->getField('game_id');
-$container['view_game_id'] = $game_id;
-$container['game_name'] = $db->getField('game_name');
+$container = $var;
+$container['body'] = 'history_games.php';
+$template->assign('BackHREF', SmrSession::getNewHREF($container));
 
-//get alliance members
+$game_id = $var['view_game_id'];
 $id = $var['alliance_id'];
-//$PHP_OUTPUT.=($game_id.','. $id);
+$db = new $var['HistoryDatabase']();
 $db->query('SELECT * FROM alliance WHERE alliance_id = '.$db->escapeNumber($id).' AND game_id = '.$db->escapeNumber($game_id));
 $db->nextRecord();
-$PHP_OUTPUT.=('<div align=center>');
-$PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
 $template->assign('PageTopic','Alliance Roster - ' . stripslashes($db->getField('alliance_name')));
 
-$PHP_OUTPUT.= '
-<table class="standard">
-	<tr>
-		<th>Player Name</th>
-		<th>Experience</th>
-		<th>Alignment</th>
-		<th>Race</th>
-		<th>Kills</th>
-		<th>Deaths</th>
-		<th>Bounty</th>
-	</tr>
-';
-
+//get alliance members
 $db->query('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY experience DESC');
+$players = [];
 while ($db->nextRecord()) {
-	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="center">' . $db->getField('player_name') . '</td>');
-	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('experience')) . '</td>');
-	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('alignment')) . '</td>');
-	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('race')) . '</td>');
-	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('kills')) . '</td>');
-	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('deaths')) . '</td>');
-	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('bounty')) . '</td>');
-	$PHP_OUTPUT.=('</tr>');
+	$players[] = [
+		'player_name' => $db->getField('player_name'),
+		'experience' => number_format($db->getInt('experience')),
+		'alignment' => number_format($db->getInt('alignment')),
+		'race' => number_format($db->getInt('race')),
+		'kills' => number_format($db->getInt('kills')),
+		'deaths' => number_format($db->getInt('deaths')),
+		'bounty' => number_format($db->getInt('bounty')),
+	];
 }
-$PHP_OUTPUT.=('</table></div>');
+$template->assign('Players', $players);
+
 $db = new SmrMySqlDatabase();

@@ -2,24 +2,14 @@
 
 // NOTE: this is only for history database games
 
-// Get old account ID's
-$db = new SmrMySqlDatabase();
-$oldAccountId = $account->getOldAccountID($var['HistoryDatabase']);
-
 $db = new $var['HistoryDatabase']();
 
-$gameId = $var['view_game_id'];
-$gameName = $var['game_name'];
-
-$template->assign('PageTopic', 'Hall of Fame : ' . $gameName);
+$template->assign('PageTopic', 'Hall of Fame : ' . $var['game_name']);
 Menu::history_games(2);
-
-$PHP_OUTPUT .= '<div align="center">';
 
 if (!isset($var['stat'])) {
 	// Display a list of stats available to view
 	$db->query('SHOW COLUMNS FROM player_has_stats');
-	$PHP_OUTPUT .= create_table();
 	while ($db->nextRecord()) {
 		$stat = $db->getField('Field');
 		if ($stat == 'account_id' || $stat == 'game_id') {
@@ -29,37 +19,31 @@ if (!isset($var['stat'])) {
 		$container = $var;
 		$container['stat'] = $stat;
 		$container['stat_display'] = $statDisplay;
-		$PHP_OUTPUT .= '<tr><td class="center">' . create_link($container, $statDisplay) . '</td></tr>';
+		$links[] = create_link($container, $statDisplay);
 	}
-	$PHP_OUTPUT .= '</table>';
+	$template->assign('Links', $links);
 }
 else {
 	// Link back to overview page
 	$container = $var;
 	unset($container['stat']);
 	unset($container['stat_display']);
-	$PHP_OUTPUT .= create_link($container, '&lt;&lt;Back');
+	$template->assign('BackHREF', SmrSession::getNewHREF($container));
+
+	$template->assign('StatName', $var['stat_display']);
 
 	// Rankings display
-	$PHP_OUTPUT .= '<br /><br /><h2>Rankings: ' . $var['stat_display'] . '</h2>';
-	$db->query('SELECT * FROM player_has_stats s INNER JOIN player p ON (p.account_id = s.account_id AND p.game_id = s.game_id) WHERE s.game_id=' . $db->escapeNumber($gameId) . ' ORDER BY s.' . $var['stat'] . ' DESC LIMIT 25');
-	if ($db->getNumRows() > 0) {
-		$PHP_OUTPUT .= create_table();
-		$rank = 1;
-		while ($db->nextRecord()) {
-			$boldClass = $db->getInt('account_id') == $oldAccountId ? 'class="bold"' : '';
-			$PHP_OUTPUT .= '<tr ' . $boldClass . '>';
-			$PHP_OUTPUT .= '<td class="center">' . $rank++ . '</td>';
-			$PHP_OUTPUT .= '<td>' . stripslashes($db->getField('player_name')) . '</td>';
-			$PHP_OUTPUT .= '<td class="center">' . $db->getInt($var['stat']) . '</td>';
-			$PHP_OUTPUT .= '</tr>';
-		}
-		$PHP_OUTPUT .= '</table>';
-	} else {
-		$PHP_OUTPUT .= 'We apologize, but this stat does not exist for this game!';
+	$oldAccountId = $account->getOldAccountID($var['HistoryDatabase']);
+	$db->query('SELECT * FROM player_has_stats JOIN player USING(account_id, game_id) WHERE game_id=' . $db->escapeNumber($var['view_game_id']) . ' ORDER BY player_has_stats.' . $var['stat'] . ' DESC LIMIT 25');
+	$rankings = [];
+	while ($db->nextRecord()) {
+		$rankings[] = [
+			'bold' => $db->getInt('account_id') == $oldAccountId ? 'class="bold"' : '',
+			'name' => stripslashes($db->getField('player_name')),
+			'stat' => $db->getInt($var['stat']),
+		];
 	}
+	$template->assign('Rankings', $rankings);
 }
-
-$PHP_OUTPUT .= '</div>';
 
 $db = new SmrMySqlDatabase();
