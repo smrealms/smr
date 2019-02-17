@@ -164,17 +164,17 @@ foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
 			// create a container that will hold next url and additional variables.
 			$container = array();
 			$container['url'] = 'skeleton.php';
-			$container['game_id'] = $game_id;
+			$container['view_game_id'] = $game_id;
 			$container['HistoryDatabase'] = $databaseClassName;
 			$container['game_name'] = $games['Previous'][$index]['Name'];
 
-			$container['body'] = 'games_previous.php';
+			$container['body'] = 'history_games.php';
 			$games['Previous'][$index]['PreviousGameLink'] = SmrSession::getNewHREF($container);
-			$container['body'] = 'games_previous_hof.php';
+			$container['body'] = 'history_games_hof.php';
 			$games['Previous'][$index]['PreviousGameHOFLink'] = SmrSession::getNewHREF($container);
-			$container['body'] = 'games_previous_news.php';
+			$container['body'] = 'history_games_news.php';
 			$games['Previous'][$index]['PreviousGameNewsLink'] = SmrSession::getNewHREF($container);
-			$container['body'] = 'games_previous_detail.php';
+			$container['body'] = 'history_games_detail.php';
 			$games['Previous'][$index]['PreviousGameStatsLink'] = SmrSession::getNewHREF($container);
 		}
 	}
