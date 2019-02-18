@@ -5,18 +5,19 @@
 
 ## Dependencies
 Make sure the following software is installed:
-* docker
-* docker-compose
+* docker (version 18.06.0+)
+* docker-compose (version 1.22.0+)
 
 
 ## Populate the mysql database
-First, you must write a `.env` file with the following format:
+First, you must create a file `.env` with the following content:
 ```bash
 # Variables needed by docker-compose.yml
+# NOTE: all host names must be unique (e.g. `smr-mysql` and `smr-game`)
 MYSQL_ROOT_PASSWORD=chooseapassword
 MYSQL_PASSWORD=chooseapassword
-MYSQL_HOST=chooseahost  # must be unique on each network
-SMR_HOST=chooseahost
+MYSQL_HOST=smr-mysql
+SMR_HOST=smr-game
 ```
 
 To initialize the database or update it with new patches, run:
@@ -35,12 +36,13 @@ Create installation-specific copies of the following files:
 
 For "Caretaker" (IRC) or "Autopilot" (Discord) functionality:
 * `config/irc/config.specific.sample.php` &rarr; `config/irc/config.specific.php`
-* `config/discord/config.specific.sample.php` &rarr; `config/irc/config.specific.php`
+* `config/discord/config.specific.sample.php` &rarr; `config/discord/config.specific.php`
 
 For NPC's:
 * `config/npc/config.specific.sample.php` &rarr; `config/npc/config.specific.php`
 
-The sample versions have sensible defaults, but update the copies as necessary.
+The sample versions have sensible defaults, but update the copies as necessary,
+as some configuration options depend on the contents of the `.env` file.
 
 
 ## Start up the services
@@ -58,8 +60,16 @@ docker-compose up --build -d traefik smr-dev
 # Runtime
 
 ## Permissions
-In order to create an admin account you should first create a standard account via the register form, then add an entry to the "account_has_permission" table for the "account_id" of the created account and "permission_id" 1 (which is the permission to manage admin permissions).
-Once you have added this entry the account should now have an "Admin Tools" link on the left whilst logged in, which will allow you to assign any extra permissions to yourself and others.
+In order to create an admin account you should first create a standard account
+via the register form, then run the following command to give that account
+admin permissions:
+
+```bash
+db/init_admin.sh
+```
+
+The account should now have an "Admin Tools" link on the left whilst logged in,
+which will allow you to assign any extra permissions to yourself and others.
 
 ## Creating a Game
 To create a game you will have to have assigned yourself the "1.6 Universe Generator" and then access this link via the admin tools to create the game.
