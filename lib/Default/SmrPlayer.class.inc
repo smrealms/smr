@@ -371,8 +371,16 @@ class SmrPlayer extends AbstractSmrPlayer {
 	function joinAlliance($allianceID) {
 		$this->setAllianceID($allianceID);
 		$alliance = $this->getAlliance();
-		if (!$this->isAllianceLeader())
-			$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
+
+		if (!$this->isAllianceLeader()) {
+			// Do not throw an exception if the NHL account doesn't exist.
+			try {
+				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
+			} catch (AccountNotFoundException $e) {
+				if ($alliance->getLeaderID() != ACCOUNT_ID_NHL) throw $e;
+			}
+		}
+
 		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', 2,' . $this->db->escapeNumber($alliance->getAllianceID()) . ')');
 		$this->actionTaken('JoinAlliance', array('Alliance' => $alliance));
 
