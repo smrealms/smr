@@ -440,15 +440,6 @@ function do_voodoo() {
 
 		forward(create_container('skeleton.php', 'game_play.php', $var));
 	}
-	else if($var['url'] == 'logoff_preprocessing.php') {
-		SmrSession::updateGame(0);
-
-		// log?
-		$account->log(LOG_TYPE_LOGIN, 'logged off from '.getIpAddress());
-		$container = create_container('skeleton.php', 'logoff.php');
-		$container['logoff'] = 'yes';
-		forward($container);
-	}
 
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::hasGame()) {
@@ -709,14 +700,14 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account) {
 		$template->assign('CurrentHallOfFameLink',SmrSession::getNewHREF($container));
 	}
 
-	if (SmrSession::$account_id > 0 && empty($var['logoff'])) {
+	if (SmrSession::$account_id > 0) {
 		$container = create_container('skeleton.php', 'hall_of_fame_new.php');
 		$template->assign('HallOfFameLink',SmrSession::getNewHREF($container));
 
 		$template->assign('AccountID',SmrSession::$account_id);
 		$template->assign('PlayGameLink',SmrSession::getNewHREF(create_container('game_play_preprocessing.php')));
 
-		$template->assign('LogoutLink',SmrSession::getNewHREF(create_container('logoff_preprocessing.php')));
+		$template->assign('LogoutLink',SmrSession::getNewHREF(create_container('logoff.php')));
 	}
 
 	$container = create_container('skeleton.php', 'preferences.php');
