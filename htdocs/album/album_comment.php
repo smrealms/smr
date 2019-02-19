@@ -33,8 +33,6 @@ try {
 		$container['account_id'] = $album_id;
 
 		forward($container);
-		exit;
-
 	}
 
 	$db = new SmrMySqlDatabase();

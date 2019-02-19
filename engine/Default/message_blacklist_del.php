@@ -7,14 +7,12 @@ $container['body'] = 'message_blacklist.php';
 if(!isset($_REQUEST['entry_ids']) || !is_array($_REQUEST['entry_ids'])) {
 	$container['error'] = 4;	
 	forward($container);
-	exit;
 }
 
 foreach($_REQUEST['entry_ids'] as $entry_id) {
 	if(!is_numeric($entry_id)) {
 		$container['error'] = 5;	
 		forward($container);
-		exit;
 	}
 	else {
 		$entry_ids[] = $entry_id;

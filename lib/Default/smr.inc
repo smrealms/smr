@@ -594,7 +594,6 @@ function acquire_lock($sector) {
 				release_lock();
 				$locksFailed[$sector] = true;
 				create_error('Multiple actions cannot be performed at the same time!');
-				exit;
 			}
 
 			usleep(25000 * $locksInQueue);
