@@ -249,7 +249,7 @@ class Globals {
 			self::$db->query('SELECT open FROM open_forms WHERE type=\'FEATURE\'');
 			self::$db->nextRecord();
 
-			self::$FEATURE_REQUEST_OPEN = self::$db->getField('open') == 'TRUE';
+			self::$FEATURE_REQUEST_OPEN = self::$db->getBoolean('open');
 		}
 		return self::$FEATURE_REQUEST_OPEN;
 	}
