@@ -2,9 +2,6 @@
 
 Menu::galactic_post();
 
-$db2 = new SmrMySqlDatabase();
-$db3 = new SmrMySqlDatabase();
-
 if (!empty($var['paper_id'])) {
 	if (!isset($var['game_id'])) {
 		create_error('Must specify a game ID!');
@@ -14,50 +11,38 @@ if (!empty($var['paper_id'])) {
 	if (isset($var['back']) && $var['back']) {
 		$container = create_container('skeleton.php', 'galactic_post_past.php');
 		$container['game_id'] = $var['game_id'];
-		$PHP_OUTPUT .= create_link($container, '<b>&lt;&lt;Back</b>');
+		$template->assign('BackHREF', SmrSession::getNewHREF($container));
 	}
 
-	$db2->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = '.$var['paper_id']);
-	$db2->nextRecord();
-	$paper_name = bbifyMessage($db2->getField('title'));
-
+	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = '.$var['paper_id']);
+	$db->nextRecord();
+	$paper_name = bbifyMessage($db->getField('title'));
 	$template->assign('PageTopic','Reading <i>Galactic Post</i> Edition : '.$paper_name);
-	$db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$db2->escapeNumber($var['paper_id']).' AND game_id = '.$db2->escapeNumber($var['game_id']));
-	$even = $db2->getNumRows() % 2 == 0;
-	$curr_position = 0;
-	$PHP_OUTPUT.=('<table align="center" spacepadding="20" cellspacing="20">');
-	$amount = $db2->getNumRows();
-	if ($even === false) {
-		$amount += 1;
+
+	//now get the articles in this paper.
+	$db->query('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING(game_id, article_id) WHERE paper_id = '.$db->escapeNumber($var['paper_id']).' AND game_id = '.$db->escapeNumber($var['game_id']));
+
+	$articles = [];
+	while ($db->nextRecord()) {
+		$articles[] = [
+			'title' => $db->getField('title'),
+			'text' => $db->getField('text'),
+		];
 	}
-	while ($curr_position < $amount) {
-		$curr_position += 1;
-		if ($even === false && $db2->getNumRows() + 1 == $curr_position) {
-			$PHP_OUTPUT.=('<td>&nbsp;</td>');
-			continue;
-		}
-		$db2->nextRecord();
-		//now we have the articles in this paper.
-		$db3->query('SELECT * FROM galactic_post_article WHERE game_id = '.$db3->escapeNumber($var['game_id']).' AND article_id = '.$db3->escapeNumber($db2->getField('article_id')).' LIMIT 1');
-		$db3->nextRecord();
 
-		if ($curr_position % 2 == 1) {
-			//it is odd so we need a new row
-			$PHP_OUTPUT.=('<tr>');
-		}
+	// Determine the layout of the articles on the page
+	$articleLayout = [];
+	$row = 0;
+	foreach ($articles as $i => $article) {
+		$articleLayout[$row][] = $article;
 
-		$PHP_OUTPUT.=('<td align=center valign=top width=50%>');
-		$PHP_OUTPUT.=('<font size="6">'.bbifyMessage($db3->getField('title')).'</font><br /><br /><br />');
-		$PHP_OUTPUT.=('<div align="justify">'.bbifyMessage($db3->getField('text')).'</div><br /><br /><br />');
-		$PHP_OUTPUT.=('</td>');
-		if (floor($curr_position / 2) == $curr_position / 2) {
-			//we have an even article so we need to close the row
-			$PHP_OUTPUT.=('</tr>');
+		// start a new row every 2 articles
+		if ($i % 2 == 1) {
+			$row++;
 		}
 	}
-	$PHP_OUTPUT.=('</table>');
+	$template->assign('ArticleLayout', $articleLayout);
 }
 else {
 	$template->assign('PageTopic','Galactic Post');
-	$PHP_OUTPUT.=('There is no current edition of the Galactic Post for this game.');
 }
