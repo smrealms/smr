@@ -38,11 +38,6 @@ while ($db->nextRecord()) {
 	}
 	else {
 		$container = create_container('skeleton.php', 'alliance_roles.php');
-		$form = create_form($container,'Edit');
-		$PHP_OUTPUT.= $form['form'];
-		$PHP_OUTPUT.= '<input type="text" name="role" value="' . htmlspecialchars($db->getField('role')) . '" maxlength="32">&nbsp;&nbsp;';
-		$PHP_OUTPUT.= $form['submit'];
-		$PHP_OUTPUT.= '</form><br />';
 	}
 	$container['role_id'] = $roleID;
 	$container['alliance_id'] = $alliance->getAllianceID();
