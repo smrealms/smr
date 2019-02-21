@@ -22,8 +22,8 @@ class Template {
 		if (!isset($this->data[$var])) {
 			$this->data[$var] = $value;
 		} else {
-			$prev_value = $this->data[$var];
-			throw new Exception("Cannot re-assign '$var' from '$prev_value' to '$value'!");
+			// We insist that template variables not change once they are set
+			throw new Exception("Cannot re-assign template variable '$var'!");
 		}
 	}
 	
