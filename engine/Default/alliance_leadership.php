@@ -8,4 +8,3 @@ $container = create_container('alliance_leadership_processing.php');
 $template->assign('HandoverHREF', SmrSession::getNewHREF($container));
 
 $template->assign('AlliancePlayers', $alliance->getMembers());
-$template->assign('ThisPlayer', $player);
