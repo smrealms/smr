@@ -1,7 +1,7 @@
 <?php
 
-if (!isset($var['game_id'])) SmrSession::updateVar('game_id', $_REQUEST['game_id']);
-if (!isset($var['gal_on'])) SmrSession::updateVar('gal_on', 1);
+SmrSession::getRequestVar('game_id');
+SmrSession::getRequestVar('gal_on', 1);
 
 $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 if (empty($galaxies)) {
@@ -36,14 +36,12 @@ else if (!isset($var['conn'])) {
 }
 $template->assign('RequestedConnectivity', $var['conn']);
 
-
 $container = $var;
+$template->assign('JumpGalaxyHREF', SmrSession::getNewHref($container));
+
 $container['url'] = '1.6/universe_create_save_processing.php';
 $container['body'] = '1.6/universe_create_sectors.php';
 $template->assign('SubmitChangesHREF', SmrSession::getNewHref($container));
-
-$container['submit'] = 'Jump To Galaxy';
-$template->assign('JumpGalaxyHREF', SmrSession::getNewHref($container));
 
 $container['submit'] = 'Toggle Link';
 $template->assign('ToggleLink', $container);
