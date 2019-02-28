@@ -15,14 +15,11 @@ if ($db->nextRecord()) {
 	$newID = 1;
 }
 
-// Get the start dates
-list($day,$month,$year) = explode("/",$_REQUEST['game_start']);
-$start = mktime(0,0,0,$month,$day,$year);
-$gameStartTurns = empty($_REQUEST['game_start_turns']) ? $_REQUEST['game_start'] : $_REQUEST['game_start_turns'];
-list($day,$month,$year) = explode("/",$gameStartTurns);
-$gameStartTurns = mktime(0,0,0,$month,$day,$year);
-list($day,$month,$year) = explode("/",$_REQUEST['game_end']);
-$end = mktime(0,0,0,$month,$day,$year);
+// Get the dates
+$start = DateTime::createFromFormat('d/m/Y', $_REQUEST['game_start']);
+$startTurns = empty($_REQUEST['game_start_turns']) ? $start :
+              DateTime::createFromFormat('d/m/Y', $_REQUEST['game_start_turns']);
+$end = DateTime::createFromFormat('d/m/Y', $_REQUEST['game_end']);
 
 $game = SmrGame::createGame($newID);
 $game->setName($_REQUEST['game_name']);
@@ -33,9 +30,9 @@ $game->setStartTurnHours($_REQUEST['start_turns']);
 $game->setMaxPlayers($_REQUEST['max_players']);
 $game->setAllianceMaxPlayers($_REQUEST['alliance_max_players']);
 $game->setAllianceMaxVets($_REQUEST['alliance_max_vets']);
-$game->setStartDate($start);
-$game->setStartTurnsDate($gameStartTurns);
-$game->setEndDate($end);
+$game->setStartDate($start->getTimestamp());
+$game->setStartTurnsDate($startTurns->getTimestamp());
+$game->setEndDate($end->getTimestamp());
 $game->setGameSpeed($_REQUEST['game_speed']);
 $game->setIgnoreStats($_REQUEST['ignore_stats'] == 'Yes');
 $game->setStartingCredits($_REQUEST['starting_credits']);

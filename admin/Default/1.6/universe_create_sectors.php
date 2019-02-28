@@ -64,3 +64,7 @@ $container['body'] = '1.6/universe_create_warps.php';
 $template->assign('ModifyWarpsHREF',SmrSession::getNewHREF($container));
 
 $template->assign('SMRFileHREF',Globals::getSmrFileCreateHREF($var['game_id']));
+
+$container = create_container('skeleton.php', '1.6/game_edit.php');
+transfer('game_id');
+$template->assign('EditGameDetailsHREF', SmrSession::getNewHREF($container));
