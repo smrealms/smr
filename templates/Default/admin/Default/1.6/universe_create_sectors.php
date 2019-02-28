@@ -49,14 +49,7 @@
 			<a href="<?php echo $ModifyPlanetsHREF; ?>" class="submitStyle">Modify Planets</a><br /><br />
 			<a href="<?php echo $ModifyPortsHREF; ?>" class="submitStyle">Modify Ports</a><br /><br />
 			<a href="<?php echo $ModifyWarpsHREF; ?>" class="submitStyle">Modify Warps</a><br /><br />
-			<a href="<?php echo $SMRFileHREF; ?>" class="submitStyle" target="_self">Create SMR file</a><br /><br />
-			<br /><?php
-			if (isset($PreviousGalaxyHREF)) { ?>
-				<a href="<?php echo $PreviousGalaxyHREF; ?>" class="submitStyle">Previous Galaxy</a><br /><br /><?php
-			}
-			if (isset($NextGalaxyHREF)) { ?>
-				<a href="<?php echo $NextGalaxyHREF; ?>" class="submitStyle">Next Galaxy</a><br /><?php
-			} ?>
+			<a href="<?php echo $SMRFileHREF; ?>" class="submitStyle" target="_self">Create SMR file</a>
 		</td>
 		<td>
 			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">

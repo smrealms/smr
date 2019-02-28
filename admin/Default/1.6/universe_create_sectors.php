@@ -64,14 +64,3 @@ $container['body'] = '1.6/universe_create_warps.php';
 $template->assign('ModifyWarpsHREF',SmrSession::getNewHREF($container));
 
 $template->assign('SMRFileHREF',Globals::getSmrFileCreateHREF($var['game_id']));
-
-if ($var['gal_on'] > 1) {
-	$container = $var;
-	$container['gal_on']--;
-	$template->assign('PreviousGalaxyHREF', SmrSession::getNewHREF($container));
-}
-if ($var['gal_on'] < count($galaxies)) {
-	$container = $var;
-	$container['gal_on']++;
-	$template->assign('NextGalaxyHREF', SmrSession::getNewHREF($container));
-}
