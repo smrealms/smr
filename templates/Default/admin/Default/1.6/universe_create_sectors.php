@@ -3,10 +3,9 @@
 		echo $Message; ?><br /><br /><?php
 	} ?>
 
-	Working on Galaxy <?php echo $Galaxy->getGalaxyID(); ?>/<?php echo count($Galaxies); ?><br />
-
 	<table align="center" class="standard">
 		<tr>
+			<th>ID</th>
 			<th>Name</th>
 			<th>Type</th>
 			<th>Size</th>
@@ -14,6 +13,7 @@
 			<th>Connectivity</th>
 		</tr>
 		<tr>
+			<td><?php echo $Galaxy->getGalaxyID(); ?> / <?php echo count($Galaxies); ?></td>
 			<td><?php echo $Galaxy->getName(); ?></td>
 			<td><?php echo $Galaxy->getGalaxyType(); ?></td>
 			<td><?php echo $Galaxy->getWidth(); ?> x <?php echo $Galaxy->getHeight(); ?></td>
