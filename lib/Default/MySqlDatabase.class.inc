@@ -1,14 +1,19 @@
 <?php
+require_once(CONFIG . 'SmrMySqlSecrets.inc');
 
 abstract class MySqlDatabase {
+	// add configuration static members via traits
+	use SmrMySqlSecrets;
+
 	protected static $dbConn;
 	protected static $selectedDbName;
 	protected $dbResult = null;
 	protected $dbRecord = null;
 	
-	public function __construct($host, $user, $password, $dbName, $port, $socket) {
+	public function __construct($dbName) {
 		if(!self::$dbConn) {
-			self::$dbConn = new mysqli($host, $user, $password, $dbName, $port, $socket);
+			self::$dbConn = new mysqli(self::$host, self::$user, self::$password,
+			                           $dbName, self::$port, self::$socket);
 			if (self::$dbConn->connect_errno) {
 				$this->error('Connection failed: ' . self::$dbConn->connect_error);
 			}
