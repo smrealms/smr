@@ -1,7 +1,5 @@
 <?php
 
-$template->assign('GameTypes', SmrGame::GAME_TYPES);
-
 //get information
 $container = create_container('1.6/game_create_processing.php');
 $template->assign('CreateGalaxiesHREF',SmrSession::getNewHREF($container));
@@ -23,12 +21,14 @@ $defaultGame = [
 	'startTurnsDate' => '',
 	'endDate' => date('d/m/Y', TIME + (2 * 31 * 86400)), // 3 months
 	'smrCredits' => 0,
+	'gameType' => 'Default',
 	'allianceMax' => 25,
 	'allianceMaxVets' => 15,
 	'startCredits' => 100000,
 	'ignoreStats' => false,
 ];
 $template->assign('Game', $defaultGame);
+$template->assign('SubmitValue', 'Create Game');
 
 $games = array();
 if ($canEditStartedGames) {

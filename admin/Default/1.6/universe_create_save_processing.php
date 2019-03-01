@@ -28,12 +28,6 @@ else if ($submit=='Redo Connections') {
 		$var['message'] = '<span class="green">Success</span> : Regenerated connections.';
 	SmrSector::saveSectors();
 }
-elseif ($submit == 'Jump To Galaxy') {
-	if(!is_numeric($_REQUEST['jumpgal'])) {
-		create_error('New galaxy must be a number.');
-	}
-	$var['gal_on'] = (int)$_REQUEST['jumpgal'];
-}
 elseif ($submit == 'Toggle Link') {
 	$linkSector = SmrSector::getSector($var['game_id'],$var['sector_id']);
 	$linkSector->toggleLink($var['dir']);
