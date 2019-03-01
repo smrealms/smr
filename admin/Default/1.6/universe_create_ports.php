@@ -1,7 +1,7 @@
 <?php
 
 if (!isset($var['gal_on'])) {
-	throw Exception('Gal_on not found!');
+	throw new Exception('Gal_on not found!');
 }
 
 $galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);

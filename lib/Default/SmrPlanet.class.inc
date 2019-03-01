@@ -512,7 +512,7 @@ class SmrPlanet {
 	public function moveMountedWeaponUp($orderID) {
 		$this->getMountedWeapons(); // Make sure array is initialized
 		if ($orderID == 0) {
-			throw Exception('Cannot move this weapon up!');
+			throw new Exception('Cannot move this weapon up!');
 		}
 		if (isset($this->mountedWeapons[$orderID-1])) {
 			$previousWeapon = $this->mountedWeapons[$orderID-1];
@@ -534,7 +534,7 @@ class SmrPlanet {
 	public function moveMountedWeaponDown($orderID) {
 		$this->getMountedWeapons(); // Make sure array is initialized
 		if ($orderID == $this->getMaxMountedWeapons()-1) {
-			throw Exception('Cannot move this weapon down!');
+			throw new Exception('Cannot move this weapon down!');
 		}
 		if (isset($this->mountedWeapons[$orderID+1])) {
 			$nextWeapon = $this->mountedWeapons[$orderID+1];
