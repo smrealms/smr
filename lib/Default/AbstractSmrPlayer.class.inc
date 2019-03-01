@@ -581,10 +581,6 @@ abstract class AbstractSmrPlayer {
 		return $this->allianceRoles[$allianceID];
 	}
 
-	public function getSpanColour() {
-		return get_colored_name('NA', $this->alignment, 'Game', 'Colour');
-	}
-
 	public function isCombatDronesKamikazeOnMines() {
 		return $this->combatDronesKamikazeOnMines;
 	}
