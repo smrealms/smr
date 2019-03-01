@@ -36,7 +36,7 @@ abstract class AbstractSmrShip {
 		return self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID];
 	}
 
-	protected static function &buildBaseShip(Database $db) {
+	protected static function &buildBaseShip(MySqlDatabase $db) {
 		$ship = array();
 		$ship['Type']				= 'Ship';
 		$ship['Name']				= $db->getField('ship_name');

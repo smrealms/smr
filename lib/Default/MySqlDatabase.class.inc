@@ -1,6 +1,6 @@
 <?php
-require_once('Database.interface.inc');
-abstract class MySqlDatabase implements Database {
+
+abstract class MySqlDatabase {
 	protected static $errorAlreadyTriggered=false;
 	protected static $dbConn;
 	protected static $selectedDbName;
