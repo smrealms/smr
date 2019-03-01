@@ -143,7 +143,9 @@ class SmrSession {
 	protected static $ajaxReturns=array();
 
 	public static function init() {
-		self::$db = new SmrSessionMySqlDatabase();
+		// Initialize the db connector here, since `init` is always called
+		self::$db = new SmrMySqlDatabase();
+
 		// now try the cookie
 		if (isset($_COOKIE['session_id'])) {
 			self::$session_id = $_COOKIE['session_id'];
@@ -175,9 +177,6 @@ class SmrSession {
 				self::$db->query('INSERT INTO debug VALUES (' . self::$db->escapeString('Delay: ' . $currentPage) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber($initialTimeBetweenLoads) . ',' . self::$db->escapeNumber($timeBetweenLoads) . ')');
 			}
 		}
-
-		if(class_exists('SmrMySqlDatabase',false))
-			$db = new SmrMySqlDatabase();
 	}
 
 	public static function fetchVarInfo() {
@@ -230,7 +229,6 @@ class SmrSession {
 	}
 
 	public static function update() {
-		self::$db = new SmrSessionMySqlDatabase();
 		foreach(self::$var as $key => &$value) {
 			if ($value['RemainingPageLoads'] <= 0) {
 				//This link was valid this load but will not be in the future, removing it now saves database space and data transfer.
@@ -248,8 +246,6 @@ class SmrSession {
 			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(TIME) . ',' . self::$db->escapeBinary($compressed) . ')');
 			self::$generate = false;
 		}
-		// This takes us back to the standard database if we had to change it.
-		$db = new SmrMySqlDatabase();
 	}
 
 	/**
@@ -280,20 +276,16 @@ class SmrSession {
 	}
 
 	public static function updateSN() {
-		self::$db = new SmrSessionMySqlDatabase();
 		if(!USING_AJAX)
 			self::$db->query('UPDATE active_session SET last_sn='.self::$db->escapeString(self::$SN).
 				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
-		new SmrMySqlDatabase();
 	}
 
 	public static function destroy() {
-		self::$db = new SmrSessionMySqlDatabase();
 		self::$db->query('UPDATE active_session SET account_id=0,game_id=0,session_var=\'\',ajax_returns=\'\' WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		self::$session_id = '';
 		self::$account_id = 0;
 		self::$game_id = 0;
-		$db = new SmrMySqlDatabase();
 	}
 
 	public static function retrieveVar($sn) {
