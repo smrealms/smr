@@ -4,8 +4,13 @@
 docker-compose.yml
 README.md
 
-# Configuration files will be bind-mounted
+# Ignore directories that will be volume-mounted
 config
+opendkim
+vol_*
+
+# Ignore the database backup directory
+backup
 
 # Products from composer install
 vendor
@@ -13,6 +18,3 @@ composer.lock
 
 # docker-compose environment variable file
 .env
-
-# Docker data volumes
-vol_*
