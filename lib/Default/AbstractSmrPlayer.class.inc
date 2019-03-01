@@ -1140,7 +1140,7 @@ abstract class AbstractSmrPlayer {
 				$currentStep['Task'] = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$mission['Sector'],$mission['Starting Sector'],$this->playerName),$currentStep['Task']);
 			}
 			if (isset($currentStep['Level'])) {
-				$currentStep['Level'] = str_replace('<Player Level>',$this->levelID,$currentStep['Level']);
+				$currentStep['Level'] = str_replace('<Player Level>', $this->getLevelID(), $currentStep['Level']);
 			}
 			else {
 				$currentStep['Level'] = 0;
