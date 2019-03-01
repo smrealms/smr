@@ -1,7 +1,6 @@
 <?php
 
 abstract class MySqlDatabase {
-	protected static $errorAlreadyTriggered=false;
 	protected static $dbConn;
 	protected static $selectedDbName;
 	protected $dbResult = null;
