@@ -409,8 +409,9 @@ function do_voodoo() {
 	if(!defined('AJAX_CONTAINER')) {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
 	}
-	if(!AJAX_CONTAINER && USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
+	if(!AJAX_CONTAINER && USING_AJAX && SmrSession::hasChangedSN()) {
 		exit;
+	}
 //	ob_clean();
 
 	foreach ($GLOBALS as $key => $value) {
@@ -462,7 +463,7 @@ function do_voodoo() {
 				}
 				//Refetch var info in case it changed between grabbing lock.
 				SmrSession::fetchVarInfo();
-				if (!($var = SmrSession::retrieveVar(SmrSession::$SN))) {
+				if (!($var = SmrSession::retrieveVar())) {
 					if (ENABLE_DEBUG) {
 						$db->query('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber(SmrSession::$account_id) . ',0,0)');
 					}

@@ -129,15 +129,15 @@ class SmrSession {
 
 	protected static $db;
 
-	public static $session_id;
-	public static $account_id;
+	private static $session_id;
 	private static $game_id;
+	private static $var;
+	private static $commonIDs;
+	private static $generate;
+	private static $SN;
+	private static $lastSN;
+	public static $account_id;
 	public static $last_accessed;
-	public static $var;
-	public static $commonIDs;
-	public static $generate;
-	public static $SN;
-	public static $lastSN;
 
 	protected static $previousAjaxReturns;
 	protected static $ajaxReturns=array();
@@ -275,7 +275,14 @@ class SmrSession {
 		self::$db->query('UPDATE active_session SET game_id=' . self::$db->escapeNumber(self::$game_id) . ' WHERE session_id=' . self::$db->escapeString(self::$session_id));
 	}
 
-	public static function updateSN() {
+	/**
+	 * Returns true if the current SN is different than the previous SN.
+	 */
+	public static function hasChangedSN() {
+		return self::$SN != self::$lastSN;
+	}
+
+	private static function updateSN() {
 		if(!USING_AJAX)
 			self::$db->query('UPDATE active_session SET last_sn='.self::$db->escapeString(self::$SN).
 				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
@@ -288,9 +295,17 @@ class SmrSession {
 		self::$game_id = 0;
 	}
 
-	public static function retrieveVar($sn) {
-		if(!isset(self::$var[$sn]) || empty(self::$var[$sn]))
+	/**
+	 * Retrieve the session var for the page given by $sn.
+	 * If $sn is not specified, use the current page (i.e. self::$SN).
+	 */
+	public static function retrieveVar($sn=null) {
+		if (is_null($sn)) {
+			$sn = self::$SN;
+		}
+		if (empty(self::$var[$sn])) {
 			return false;
+		}
 		self::$SN = $sn;
 		SmrSession::updateSN();
 		if(isset(self::$var[$sn]['body']) && isset(self::$var[$sn]['CommonID'])) {
