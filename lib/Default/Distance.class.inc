@@ -55,14 +55,6 @@ class Distance {
 		return SmrSector::getSector($this->gameID,$this->getEndSectorID());
 	}
 
-	public function compareTo(Distance $d) {
-		if ($this->equals($d)===true)
-			return 0;
-		else if ($d->getTurns() > $this->getTurns())
-			return -1;
-		return 1;
-	}
-
 	/**
 	 * @return array
 	 */
