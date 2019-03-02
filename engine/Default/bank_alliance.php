@@ -48,22 +48,20 @@ while($db->nextRecord()) {
 if ($alliance->getAllianceID() == $player->getAllianceID()) {
 	$role_id = $player->getAllianceRole($alliance->getAllianceID());
 	$query = 'role_id = ' . $db->escapeNumber($role_id);
-}
-else {
+} else {
 	$query = 'role = ' . $db->escapeString($player->getAllianceName());
 }
+
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND ' . $query);
 $db->nextRecord();
 $template->assign('CanExempt', $db->getBoolean('exempt_with'));
 $withdrawalPerDay = $db->getInt('with_per_day');
+
 if($db->getBoolean('positive_balance')) {
 	$template->assign('PositiveWithdrawal', $withdrawalPerDay + $playerTrans['Deposit'] - $playerTrans['Payment']);
-}
-else if($withdrawalPerDay == ALLIANCE_BANK_UNLIMITED) {
+} else if($withdrawalPerDay == ALLIANCE_BANK_UNLIMITED) {
 	$template->assign('UnlimitedWithdrawal', true);
-}
-else {
-	$template->assign('WithdrawalPerDay', $withdrawalPerDay);
+} else {
 	$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
 				AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . $db->escapeNumber(TIME - 86400));
 	if ($db->nextRecord()) {
@@ -73,6 +71,7 @@ else {
 	$template->assign('RemainingWithdrawal', $withdrawalPerDay - $totalWithdrawn);
 	$template->assign('TotalWithdrawn', $totalWithdrawn);
 }
+
 if (isset($_REQUEST['maxValue'])) {
 	SmrSession::updateVar('maxValue',$_REQUEST['maxValue']);
 }
