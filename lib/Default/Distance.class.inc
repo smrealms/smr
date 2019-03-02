@@ -45,7 +45,7 @@ class Distance {
 	}
 
 	/**
-	 * @return the endSectorId
+	 * @return integer
 	 */
 	public function getEndSectorID() {
 		return $this->path[count($this->path)-1];
@@ -64,7 +64,7 @@ class Distance {
 	}
 
 	/**
-	 * @return the path
+	 * @return array
 	 */
 	public function getPath() {
 		return $this->path;
@@ -77,8 +77,7 @@ class Distance {
 	}
 
 	/**
-	 * @param path
-	 *		the path to set
+	 * @param integer $nextSector
 	 */
 	public function addToPath($nextSector) {
 		$this->incrementDistance();
