@@ -8,6 +8,8 @@ if ($player->isDraftLeader()) {
 		'link' => create_link($container, 'Pick Members'),
 		'text' => 'Draft players into your alliance.',
 	);
-}
 
-$template->assign('Links', $links);
+	// Reset Links with the added Draft option
+	$template->unassign('Links');
+	$template->assign('Links', $links);
+}
