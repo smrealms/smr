@@ -9,7 +9,7 @@ class SmrSector {
 	protected static $CACHE_LOCATION_SECTORS = array();
 
 	protected $db;
-
+	protected $SQL;
 
 	protected $gameID;
 	protected $sectorID;

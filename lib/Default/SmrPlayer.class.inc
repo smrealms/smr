@@ -273,8 +273,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->getLevelID();
 			case 'Display Name':
 				return $this->getDisplayName();
-			case 'Span Colour':
-				return $this->getSpanColour();
 
 			case 'Erebus Knowledge':
 				return $this->getKnowledge('Erebus');

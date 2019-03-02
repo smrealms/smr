@@ -120,28 +120,6 @@ class SmrForce {
 	public function exists() {
 		return ($this->hasCDs()||$this->hasSDs()||$this->hasMines())&&!$this->hasExpired();
 	}
-	public function getTypeID() {
-		return $this->typeID;
-	}
-
-	public function getName() {
-		return $this->name;
-	}
-
-	public function getProcessor() {
-		return $this->processor;
-	}
-
-	public function getImage() {
-		return $this->image;
-	}
-
-	public function getHREF() {
-		if(!isset($this->HREF)) {
-			$this->HREF = SmrSession::getNewHREF(create_container('skeleton.php', $this->getProcessor()));
-		}
-		return $this->HREF;
-	}
 
 	public function canAcceptCDs() {
 		return $this->getCDs()<50;

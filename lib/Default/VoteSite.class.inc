@@ -5,6 +5,9 @@
  */
 class VoteSite {
 
+	private $linkID;
+	private $data;
+
 	// MPOGD no longer exists
 	//1 => array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'base_url' => 'http://www.mpogd.com/games/game.asp?ID=1145'),
 	// OMGN no longer do voting - the link actually just redirects to archive site.
