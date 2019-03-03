@@ -95,6 +95,15 @@ function handleException(Throwable $e) {
 	exit;
 }
 
+function setupMailer() {
+	$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+	if (!empty(SMTP_HOSTNAME)) {
+		$mail->isSMTP();
+		$mail->Host = SMTP_HOSTNAME;
+	}
+	return $mail;
+}
+
 function dumpMemDiff($msg) {
 	static $memory;
 	@ob_end_clean();
