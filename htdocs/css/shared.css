@@ -498,8 +498,8 @@ table.chess {
 	width: 44px;
 	height: 44px;
 	color: black;
-	background-color: #47525D;
-	border-color: #47525D;
+	background-color: #999;
+	border-color: #999;
 }
 
 .chess td.lastMove {
