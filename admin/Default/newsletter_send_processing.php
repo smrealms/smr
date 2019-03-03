@@ -41,7 +41,7 @@ if($_REQUEST['to_email']=='*') {
 	// Send the newsletter to all players.
 	// Disable output buffering here so we can monitor the progress.
 	header('X-Accel-Buffering: no');    // disable Nginx output buffering
-	ob_implicit_flush(true);    // instruct PHP to flush after every output call
+	ob_implicit_flush();    // instruct PHP to flush after every output call
 	ob_end_flush();     // turn off PHP output buffering
 
 	$db->query('SELECT account_id, email, login FROM account WHERE validated="TRUE" AND email NOT IN ("noone@smrealms.de","NPC@smrealms.de") AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
