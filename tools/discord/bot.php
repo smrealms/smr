@@ -11,7 +11,11 @@ error_reporting(E_ALL);
 $discord = new Discord\DiscordCommandClient([
 	'token' => DISCORD_TOKEN,
 	'prefix' => defined('COMMAND_PREFIX') ? COMMAND_PREFIX : '.',
-	'discordOptions' => (['loggerLevel' => 'INFO']),
+	'discordOptions' => [
+		'loggerLevel' => 'INFO',
+		// See https://github.com/teamreflex/DiscordPHP/issues/242
+		'disabledEvents' => ['PRESENCE_UPDATE'],
+	],
 ]);
 
 // Register commands
