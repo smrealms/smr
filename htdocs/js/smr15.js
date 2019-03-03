@@ -1,8 +1,8 @@
 (function() {
 "use strict";
 
-	var intervalCalc, intervalM, intervalRace, doCalc, calc, calcM, raceCalc;
-	
+	var doCalc;
+
 	window.voteSite = function(url,snUrl) {
 		window.open(url);
 		window.location=snUrl;

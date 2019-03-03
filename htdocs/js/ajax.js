@@ -55,7 +55,7 @@ var exec = function(s) {
 
 
 	updateRefresh = function(data) {
-		var all = $('all > *', data).each(function(i, e) {
+		$('all > *', data).each(function(i, e) {
 			if(e.tagName === 'JS') {
 				$(e.childNodes).each(function(i, e) {
 					if(e.tagName === 'EVAL') {
