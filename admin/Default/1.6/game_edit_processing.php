@@ -1,10 +1,10 @@
 <?php
 
-// Get the dates
-$start = DateTime::createFromFormat('d/m/Y', $_REQUEST['game_start']);
+// Get the dates ("|" sets hr/min/sec to 0)
+$start = DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_start']);
 $startTurns = empty($_REQUEST['game_start_turns']) ? $start :
-              DateTime::createFromFormat('d/m/Y', $_REQUEST['game_start_turns']);
-$end = DateTime::createFromFormat('d/m/Y', $_REQUEST['game_end']);
+              DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_start_turns']);
+$end = DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_end']);
 
 $game = SmrGame::createGame($var['game_id']);
 $game->setName($_REQUEST['game_name']);
