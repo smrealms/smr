@@ -120,8 +120,3 @@ require_once('config.php');
 require_once(ROOT . 'vendor/autoload.php');
 require_once(LIB . 'autoload.inc');
 spl_autoload_register('get_class_loc');
-
-// Initialize the template
-$template = new Template();
-$GLOBALS['template'] =& $template;
-

@@ -396,7 +396,7 @@ function getIpAddress() {
 
 // This function is a hack around the old style http forward mechanism
 function do_voodoo() {
-	global $lock, $var, $template, $account;
+	global $lock, $var;
 	if(!defined('AJAX_CONTAINER')) {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
 	}
@@ -485,6 +485,10 @@ function do_voodoo() {
 			$var['url'] != 'newbie_warning_processing.php')
 			forward(create_container('newbie_warning_processing.php'));
 	}
+
+	// Initialize the template
+	$template = new Template();
+	$GLOBALS['template'] =& $template;
 
 	if($var['url'] != 'skeleton.php') {
 		require(get_file_loc($var['url']));

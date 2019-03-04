@@ -6,6 +6,7 @@ try {
 	
 	$db = new SmrMySqlDatabase();
 	
+	$template = new Template();
 	$db->query('SELECT * FROM game_disable');
 	if ($db->nextRecord()) {
 		$template->assign('Message', '<span class="red">Space Merchant Realms is temporarily offline.<br />'.$db->getField('reason').'</span>');
