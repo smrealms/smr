@@ -8,11 +8,14 @@ if (!empty($TradeMsg)) {
 }
 if ($SearchedByFeds) {
 	if ($IllegalsFound) { ?>
-		<span class="red">The Federation searched your ship and illegal goods were found!</span><br />
-		<span class="red">All illegal goods have been removed from your ship and you have been fined <?php echo number_format($TotalFine); ?> credits</span><?php
+		<span class="red">
+			The Federation searched your ship and illegal goods were found!<br />
+			All illegal goods have been removed from your ship and you have been fined <?php echo number_format($TotalFine); ?> credits.
+		</span><?php
 	} else { ?>
 		<span class="blue">The Federation searched your ship and no illegal goods where found!</span><?php
-	}
+	} ?>
+	<br /><br /><?php
 }
 
 if ($BoughtGoods) { ?>

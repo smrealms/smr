@@ -55,6 +55,8 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 			     ($ship->getCargo(GOODS_NARCOTICS) * $GOODS[GOODS_NARCOTICS]['BasePrice']));
 			$player->increaseHOF($ship->getCargo(GOODS_SLAVES) + $ship->getCargo(GOODS_WEAPONS) + $ship->getCargo(GOODS_NARCOTICS), array('Trade','Search','Caught','Goods Confiscated'), HOF_PUBLIC);
 			$player->increaseHOF($totalFine,array('Trade','Search','Caught','Amount Fined'), HOF_PUBLIC);
+			$template->assign('TotalFine', $totalFine);
+
 			if($fine > $player->getCredits()) {
 				$fine -= $player->getCredits();
 				$player->decreaseCredits($player->getCredits());
