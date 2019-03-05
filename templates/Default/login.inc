@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?php echo $Title; ?></title>
+		<title><?php echo PAGE_TITLE; ?></title>
 		<link rel="stylesheet" href="css/login.css" />
 		<!--[if IE]>
 		<style>
