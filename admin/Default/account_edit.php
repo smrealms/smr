@@ -14,48 +14,45 @@ if(isset($_REQUEST['game_id'])) {
 elseif(!isset($var['SearchGameID'])) {
 	SmrSession::updateVar('SearchGameID', 0);
 }
-
-if (empty($account_id)) {
-	$account_id = 0;
-} elseif (!is_numeric($account_id)) {
-	create_error('Account ID must be a number.');
-}
+$action = SmrSession::getRequestVar('action', false);
 
 // create account object
 $curr_account = false;
 
-if (!empty($player_name) && !is_array($player_name)) {
-	$gameIDClause = $var['SearchGameID'] != 0 ? ' AND game_id = ' . $db->escapeNumber($var['SearchGameID']) . ' ': '';
-	$db->query('SELECT account_id FROM player
-				WHERE player_name = ' . $db->escapeString($player_name) . $gameIDClause . '
-				ORDER BY game_id DESC LIMIT 1');
-	if ($db->nextRecord()) {
-		$account_id = $db->getInt('account_id');
-	}
-	else {
-		$db->query('SELECT * FROM player
-					WHERE player_name LIKE ' . $db->escapeString($player_name . '%') . $gameIDClause);
+if ($action == "Search") {
+	if (!empty($player_name)) {
+		$gameIDClause = $var['SearchGameID'] != 0 ? ' AND game_id = ' . $db->escapeNumber($var['SearchGameID']) . ' ': '';
+		$db->query('SELECT account_id FROM player
+					WHERE player_name = ' . $db->escapeString($player_name) . $gameIDClause . '
+					ORDER BY game_id DESC LIMIT 1');
 		if ($db->nextRecord()) {
 			$account_id = $db->getInt('account_id');
 		}
+		else {
+			$db->query('SELECT * FROM player
+						WHERE player_name LIKE ' . $db->escapeString($player_name . '%') . $gameIDClause);
+			if ($db->nextRecord()) {
+				$account_id = $db->getInt('account_id');
+			}
+		}
 	}
-}
 
-// get account from db
-$db->query('SELECT account_id FROM account WHERE account_id = '.$db->escapeNumber($account_id).' OR ' .
+	if (empty($account_id)) {
+		$account_id = 0;
+	}
+
+	// get account from db
+	$db->query('SELECT account_id FROM account WHERE account_id = '.$db->escapeNumber($account_id).' OR ' .
 									   'login LIKE ' . $db->escapeString($var['login']) . ' OR ' .
 									   'email LIKE ' . $db->escapeString($var['email']) . ' OR ' .
 									   'hof_name LIKE ' . $db->escapeString($var['hofname']) . ' OR ' .
 									   'validation_code LIKE ' . $db->escapeString($var['val_code']));
-if ($db->nextRecord()) {
-	$curr_account = SmrAccount::getAccount($db->getField('account_id'));
-	$template->assign('EditingAccount', $curr_account);
-	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('account_edit_processing.php', '', array('account_id' => $curr_account->getAccountID()))));
+	if ($db->nextRecord()) {
+		$curr_account = SmrAccount::getAccount($db->getField('account_id'));
+	} else {
+		SmrSession::updateVar('errorMsg', 'No matching accounts were found!');
+	}
 }
-else {
-	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
-}
-$template->assign('ResetFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
 
 
 if ($curr_account===false) {
@@ -65,8 +62,13 @@ if ($curr_account===false) {
 		$games[] = SmrGame::getGame($db->getInt('game_id'));
 	}
 	$template->assign('Games', $games);
+	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
 }
 else {
+	$template->assign('EditingAccount', $curr_account);
+	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('account_edit_processing.php', '', array('account_id' => $curr_account->getAccountID()))));
+	$template->assign('ResetFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
+
 	$editingPlayers = array();
 	$db->query('SELECT game_id FROM player WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY game_id ASC');
 	while ($db->nextRecord()) {
