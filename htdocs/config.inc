@@ -125,11 +125,3 @@ spl_autoload_register('get_class_loc');
 $template = new Template();
 $GLOBALS['template'] =& $template;
 
-// Change the browser title based on the server config
-$prefix = '';
-if (ENABLE_DEBUG) {
-	$prefix = 'DEV: ';
-} elseif (ENABLE_BETA) {
-	$prefix = 'BETA: ';
-}
-$template->assign('Title', $prefix . 'Space Merchant Realms');

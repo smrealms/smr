@@ -23,6 +23,9 @@ if (ENABLE_DEBUG) {
 	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 }
 
+// Change the browser title based on the server config
+const PAGE_TITLE = (ENABLE_DEBUG ? 'DEV: ' : (ENABLE_BETA ? 'BETA: ' : '')) . 'Space Merchant Realms';
+
 const ACCOUNT_ID_PORT = 65535;
 const ACCOUNT_ID_ADMIN = 65534;
 const ACCOUNT_ID_PLANET = 65533;

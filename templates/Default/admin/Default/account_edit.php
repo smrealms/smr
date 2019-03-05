@@ -367,8 +367,8 @@
 </form><?php
 
 if(isset($ErrorMessage)) { ?>
-	<div align="center"><?php echo $ErrorMessage; ?></div><?php
+	<div class="center red"><?php echo $ErrorMessage; ?></div><?php
 }
 if(isset($Message)) { ?>
-	<div align="center"><?php echo $Message; ?></div><?php
+	<div class="center"><?php echo $Message; ?></div><?php
 } ?>
