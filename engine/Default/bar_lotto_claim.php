@@ -18,5 +18,6 @@ if ($db->nextRecord()) {
 }
 //offer another drink and such
 $container=create_container('skeleton.php','bar_main.php');
+transfer('LocationID');
 $container['message'] = $message;
 forward($container);
