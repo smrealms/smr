@@ -2,8 +2,6 @@
 
 class Template {
 	private $data = array();
-//	protected $ajax = array();
-//	protected $currentAjaxID=false;
 	private $captures=array('');
 	private $currentCaptureID=0;
 	private $ignoreMiddle=false;
@@ -157,31 +155,6 @@ class Template {
 		$this->currentCaptureID--;
 		return $captured;
 	}
-	
-//	protected function startAJAXCapture($id) {
-//		if($this->currentAjaxID!==false) {
-//			throw new Exception('Already capturing for AJAX');
-//		}
-//		$this->currentAjaxID=$id;
-//		$this->startCapture();
-//	}
-//
-//	protected function &storeAJAXCapture() {
-//		if($this->currentAjaxID===false) {
-//			throw new Exception('Not capturing for AJAX');
-//		}
-//		$this->ajax[$this->currentAjaxID] = $this->stopCapture();
-//		echo $this->ajax[$this->currentAjaxID];
-//		$this->currentAjaxID=false;
-//	}
-//
-//	protected function echoAjaxXml() {
-//		foreach($this->ajax as $element => $content) {
-//			if(trim($content)!='') {
-//				echo '<'.$element.'>'.xmlify($this->trimWhiteSpace($content)).'</'.$element.'>';
-//			}
-//		}
-//	}
 	
 	protected function checkDisableAJAX($html) {
 		return preg_match('/<input'.'[^>]*'.'[^(submit)(hidden)(image)]'.'[^>]*'.'>/i', $html)!=0;
