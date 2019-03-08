@@ -11,9 +11,6 @@ class Template {
 	private $ajaxJS = array();
 	protected $jsAlerts = array();
 	
-	public function __construct() {
-	}
-	
 	public function hasTemplateVar($var) {
 		return isset($this->data[$var]);
 	}
