@@ -1,6 +1,6 @@
 <?php
 
-$chessGames =& ChessGame::getOngoingAccountGames($player->getAccountID());
+$chessGames = ChessGame::getOngoingAccountGames($player->getAccountID());
 $template->assign('ChessGames', $chessGames);
 
 $playersChallenged = array($player->getAccountID() => true);

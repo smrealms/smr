@@ -101,15 +101,14 @@ class RouteGenerator {
 				if ($goods[GOOD_NOTHING]===true)
 					$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $races[$raceID], $sectors[$targetSectorId]->getPort()->getRaceID(), 0, 0, $distance, GOOD_NOTHING);
 
-				$gameGoods = Globals::getGoods();
-				foreach($gameGoods as $goodId => &$value) {
+				foreach (Globals::getGoods() as $goodId => $value) {
 					if ($goods[$goodId]===true) {
 						if ($sectors[$currentSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_SELLS &&
 						    $sectors[$targetSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_BUYS) {
 							$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $races[$raceID], $sectors[$targetSectorId]->getPort()->getRaceID(), $sectors[$currentSectorId]->getPort()->getGoodDistance($goodId), $sectors[$targetSectorId]->getPort()->getGoodDistance($goodId), $distance, $goodId);
 						}
 					}
-				} unset($value);
+				}
 			} unset($distance);
 			$routes[$sectors[$currentSectorId]->getSectorID()] = $rl;
 		} unset($d);
@@ -128,8 +127,7 @@ class RouteGenerator {
 				if($routesForPort!==-1 && $currentSectorId !== $routesForPort && $targetSectorId !== $routesForPort)
 					continue;
 
-				$gameGoods =& Globals::getGoods();
-				foreach($gameGoods as $goodId => &$value) {
+				foreach (Globals::getGoods() as $goodId => $value) {
 					if ($goods[$goodId]===true) {
 						if ($sectors[$currentSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_SELLS &&
 						    $sectors[$targetSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_BUYS) {
@@ -140,7 +138,7 @@ class RouteGenerator {
 							self::addMoneyRoute($mpr);
 						}
 					}
-				} unset($value);
+				}
 			} unset($distance);
 		} unset($d);
 		$allRoutes = array();

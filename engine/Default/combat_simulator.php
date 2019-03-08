@@ -77,15 +77,15 @@ function runAnAttack($realAttackers,$realDefenders) {
 	global $template;
 	$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0), 
 					'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
-	foreach($realAttackers as $accountID => &$teamPlayer) {
+	foreach ($realAttackers as $accountID => $teamPlayer) {
 		$playerResults =& $teamPlayer->shootPlayers($realDefenders);
 		$results['Attackers']['Traders'][] =& $playerResults;
 		$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
-	} unset($teamPlayer);
-	foreach($realDefenders as $accountID => &$teamPlayer) {
+	}
+	foreach ($realDefenders as $accountID => $teamPlayer) {
 		$playerResults =& $teamPlayer->shootPlayers($realAttackers);
 		$results['Defenders']['Traders'][]  =& $playerResults;
 		$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
-	} unset($teamPlayer);
+	}
 	$template->assign('TraderCombatResults',$results);
 }

@@ -11,7 +11,7 @@ if ($db->getNumRows()) {
 else
 	$PHP_OUTPUT.=('You have no applications to view at the current time.');
 while ($db->nextRecord()) {
-	$appliee =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
+	$appliee = SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
@@ -30,7 +30,7 @@ if (isset($var['id'])) {
 	$db->query('SELECT * FROM galactic_post_applications WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = '.$db->escapeNumber($var['id']));
 	$db->nextRecord();
 	$desc = stripslashes($db->getField('description'));
-	$applie =& SmrPlayer::getPlayer($var['id'], $player->getGameID());
+	$applie = SmrPlayer::getPlayer($var['id'], $player->getGameID());
 	$PHP_OUTPUT.=('Name : '.$applie->getPlayerName().'<br />');
 	$PHP_OUTPUT.=('Have you written for some kind of newspaper before? ' . $db->getField('written_before'));
 	$PHP_OUTPUT.=('<br />');

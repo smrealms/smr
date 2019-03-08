@@ -101,5 +101,5 @@ if (isset($Msg)) {
 	<input type="submit" name="action" value="Launch" class="InputFields"/>
 </form>
 <br /><?php
-$this->includeTemplate('includes/SectorPlayers.inc',array('PlayersContainer'=>&$ThisPlanet));
+$this->includeTemplate('includes/SectorPlayers.inc',array('PlayersContainer'=>$ThisPlanet));
 ?>

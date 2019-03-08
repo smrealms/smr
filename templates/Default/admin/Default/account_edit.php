@@ -91,8 +91,8 @@
 							if(count($EditingPlayers)) { ?>
 								<a onclick="$('#accountPlayers').fadeToggle(600);">Show/Hide</a>
 								<table id="accountPlayers" style="display:none"><?php
-									foreach($EditingPlayers as &$CurrentPlayer) {
-										$CurrentShip =& $CurrentPlayer->getShip(); ?>
+									foreach ($EditingPlayers as $CurrentPlayer) {
+										$CurrentShip = $CurrentPlayer->getShip(); ?>
 										<tr>
 											<td align="right">Game ID:</td>
 											<td><?php echo $CurrentPlayer->getGameID(); ?></td>

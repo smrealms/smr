@@ -18,6 +18,6 @@
 		if (!$PlayerOnly) { ?>
 			<?php echo $Alliance->getAllianceName(true); ?> currently has <span id="numplanets"><?php echo count($AllPlanets); ?></span> <?php echo pluralise('planet', count($AllPlanets)); ?> in the universe!<br /><br /><?php
 		}
-		$this->includeTemplate($ExtraInclude, array('Planets'=>&$AllPlanets));
+		$this->includeTemplate($ExtraInclude, array('Planets'=>$AllPlanets));
 	} ?>
 </div>

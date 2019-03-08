@@ -87,7 +87,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'chess':
 				$chessGameID = $default;
-				$chessGame =& ChessGame::getChessGame($chessGameID);
+				$chessGame = ChessGame::getChessGame($chessGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}

@@ -13,12 +13,10 @@ require_once('../htdocs/config.inc');
 
 $gameID = 108;
 
-$galaxies =& SmrGalaxy::getGameGalaxies($gameID);
 $allSectors = array();
-foreach($galaxies as &$galaxy)
-{
+foreach (SmrGalaxy::getGameGalaxies($gameID) as $galaxy) {
 	$allSectors = $allSectors + $galaxy->getSectors();
-} unset($galaxy);
+}
 
 $maxNumberOfPorts = 2;
 $goods = array(true,true,true,true,false,false,false,false,false,false,false,false,false);

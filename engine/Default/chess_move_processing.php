@@ -1,6 +1,6 @@
 <?php
 
-$chessGame =& ChessGame::getChessGame($var['ChessGameID']);
+$chessGame = ChessGame::getChessGame($var['ChessGameID']);
 $template->assign('ChessGame',$chessGame);
 if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQUEST['toX']) && is_numeric($_REQUEST['toY'])) {
 	$x = $_REQUEST['x'];

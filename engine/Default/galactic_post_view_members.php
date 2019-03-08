@@ -21,7 +21,7 @@ if ($db->getNumRows()) {
 
 	while ($db->nextRecord()) {
 
-		$curr_writter =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
+		$curr_writter = SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 		$time = $db->getField('last_wrote');
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center">'.$curr_writter->getPlayerName().'</td>');

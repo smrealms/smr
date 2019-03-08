@@ -94,7 +94,7 @@ release_lock();
 acquire_lock($player->getSectorID());
 
 // get new sector object
-$sector =& $player->getSector();
+$sector = $player->getSector();
 
 // make current sector visible to him
 $sector->markVisited($player);

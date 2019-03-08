@@ -11,8 +11,8 @@ if(isset($CreateGameMessage)) {
 	foreach($ChessGames as $ChessGame) { ?>
 		<tr>
 			<td><?php
-				$WhitePlayer =& $ChessGame->getWhitePlayer();
-				$BlackPlayer =& $ChessGame->getBlackPlayer();
+				$WhitePlayer = $ChessGame->getWhitePlayer();
+				$BlackPlayer = $ChessGame->getBlackPlayer();
 				if($WhitePlayer == null) {
 					?>Unknown<?php
 				}
@@ -27,7 +27,7 @@ if(isset($CreateGameMessage)) {
 				} ?>
 			</td>
 			<td><?php
-				$CurrentTurnPlayer =& $ChessGame->getCurrentTurnPlayer();
+				$CurrentTurnPlayer = $ChessGame->getCurrentTurnPlayer();
 				if($CurrentTurnPlayer == null) {
 					?>Unknown<?php
 				}

@@ -23,7 +23,7 @@
 		<td>
 			<form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
 				<select name="gal_on" onchange="this.form.submit()"><?php
-					foreach($Galaxies as &$CurrentGalaxy) { ?>
+					foreach($Galaxies as $CurrentGalaxy) { ?>
 						<option value="<?php echo $CurrentGalaxy->getGalaxyID(); ?>"<?php if($CurrentGalaxy->equals($Galaxy)) { ?> selected="SELECTED"<?php } ?>><?php
 							echo $CurrentGalaxy->getName(); ?>
 						</option><?php

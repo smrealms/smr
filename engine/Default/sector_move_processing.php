@@ -16,7 +16,7 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$player->update();
 					
 	// get new sector object
-	$sector =& $player->getSector();
+	$sector = $player->getSector();
 	$sector->markVisited($player);
 	forward(create_container('skeleton.php', $var['target_page']));
 }
@@ -89,7 +89,7 @@ release_lock();
 acquire_lock($var['target_sector']);
 
 // get new sector object
-$sector =& $player->getSector();
+$sector = $player->getSector();
 
 //add that the player explored here if it hasnt been explored...for HoF
 if (!$sector->isVisited($player)) {

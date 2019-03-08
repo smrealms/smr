@@ -7,7 +7,7 @@
 		<th>Amount to Trade</th>
 		<th>Action</th>
 	</tr><?php
-	$BoughtGoodIDs =& $ThisPort->getVisibleGoodsBought($ThisPlayer);
+	$BoughtGoodIDs = $ThisPort->getVisibleGoodsBought($ThisPlayer);
 	foreach ($BoughtGoodIDs as $GoodID) {
 		$Good = Globals::getGood($GoodID);
 		$Amount = $ThisPort->getGoodAmount($GoodID); ?>
