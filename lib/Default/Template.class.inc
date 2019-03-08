@@ -8,7 +8,14 @@ class Template {
 	private $nestedIncludes = 0;
 	private $ajaxJS = array();
 	protected $jsAlerts = array();
-	
+	private $displayCalled = false;
+
+	public function __destruct() {
+		if (!$this->displayCalled && !empty($this->data)) {
+			error_log('Template destroyed before displaying the following assigned keys: ' . join(', ', array_keys($this->data)));
+		}
+	}
+
 	public function hasTemplateVar($var) {
 		return isset($this->data[$var]);
 	}
@@ -66,6 +73,9 @@ class Template {
 		} else {
 			echo $output;
 		}
+
+		// Record that display was called for error-checking in dtor
+		$this->displayCalled = true;
 	}
 	
 	
