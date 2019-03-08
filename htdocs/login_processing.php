@@ -31,6 +31,7 @@ try {
 					session_start();
 				}
 				$_SESSION['socialLogin'] = $socialLogin;
+				$template = new Template();
 				$template->assign('SocialLogin',$socialLogin);
 				// Pre-populate the login field if an account with this email exists.
 				// (Also disable creating a new account because they would just get
