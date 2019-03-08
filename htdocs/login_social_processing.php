@@ -16,8 +16,6 @@ try {
 			$url = SocialLogin::getFacebookLoginUrl();
 		} elseif ($type == 'twitter') {
 			$url = SocialLogin::getTwitterLoginUrl();
-		} elseif ($type == 'google') {
-			$url = SocialLogin::getOpenIdLoginUrl('Google');
 		} else {
 			throw new Exception('Unknown social login type');
 		}
