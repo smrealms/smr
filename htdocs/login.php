@@ -26,6 +26,7 @@ try {
 		exit;
 	}
 	
+	$template = new Template();
 	if(isset($_REQUEST['msg']))
 		$template->assign('Message',htmlentities(trim($_REQUEST['msg']),ENT_COMPAT,'utf-8'));
 

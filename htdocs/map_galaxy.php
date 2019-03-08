@@ -64,6 +64,9 @@ try {
 		throw new Exception('Failed to start session');
 	}
 
+	// Initialize the template
+	$template = new Template();
+
 	// Set temporary options
 	if ($player->hasAlliance()) {
 		if (isset($_POST['change_settings'])) {
@@ -92,8 +95,6 @@ try {
 		$mapSectors = $galaxy->getMapSectors();
 	}
 
-	// Unset the default template page title so we can rename it
-	$template->unassign('Title');
 	$template->assign('Title', 'Galaxy Map');
 
 	if($account->getCssLink()!=null)
