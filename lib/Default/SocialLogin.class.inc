@@ -4,15 +4,12 @@ class SocialLogin {
 	// Define `loginType` constants to avoid string typos
 	const FACEBOOK = 'Facebook';
 	const TWITTER = 'Twitter';
-	const GOOGLE = 'Google';
 
 	private $valid = false;
 	private $loginType = null;
 	private $userID = null;
 	private $email = null;
 	private static $facebook=null;
-	private static $openID=null;
-	private static $OPEN_ID_IDENTITIES = array();
 
 	private static function getFacebookObj() {
 		if (session_status() === PHP_SESSION_NONE) {
@@ -35,14 +32,6 @@ class SocialLogin {
 			is_null($token) ? null : $token['oauth_token'],
 			is_null($token) ? null : $token['oauth_token_secret']
 		);
-	}
-
-	private static function getOpenIdObj() {
-		if(self::$openID==null) {
-			require_once(LIB.'External/OpenID/openid.php');
-			self::$openID = new LightOpenID();
-		}
-		return self::$openID;
 	}
 
 	/**
@@ -78,17 +67,6 @@ class SocialLogin {
 		return $auth->url('oauth/authenticate', $_SESSION['TwitterToken']);
 	}
 
-	public static function getOpenIdLoginUrl($loginType) {
-		if(!isset(self::$OPEN_ID_IDENTITIES[$loginType])) {
-			throw new Exception('OpenID does not exist for login type: '.$loginType);
-		}
-		$openID = self::getOpenIdObj();
-		$openID->required = array('contact/email');
-		$openID->returnUrl = self::getRedirectUrl($loginType);
-		$openID->identity = self::$OPEN_ID_IDENTITIES[$loginType];
-		return $openID->authUrl();
-	}
-
 	public function __construct($loginType) {
 		$this->loginType = $loginType;
 
@@ -117,16 +95,6 @@ class SocialLogin {
 				$this->userID = $userInfo->id_str;
 				$this->email = $userInfo->email;
 				$this->valid = true;
-			}
-		}
-		else if($loginType == self::GOOGLE) {
-			if(self::getOpenIdObj()->validate()) {
-				if(strripos(self::getOpenIdObj()->identity, self::$OPEN_ID_IDENTITIES[$loginType]) === 0) {
-					$this->userID=self::getOpenIdObj()->identity;
-					$userInfo = self::getOpenIdObj()->getAttributes();
-					$this->email=$userInfo['contact/email'];
-					$this->valid = true;
-				}
 			}
 		}
 	}
