@@ -236,7 +236,7 @@ abstract class AbstractSmrShip {
 		if($this->hasOpenWeaponSlots() && $this->hasRemainingPower()) {
 			$weapon = SmrWeapon::getWeapon($weaponTypeID);
 			if($this->getRemainingPower()>=$weapon->getPowerLevel()) {
-				$this->weapons[count($this->weapons)] = $weapon;
+				array_push($this->weapons, $weapon);
 				$this->hasChangedWeapons = true;
 				return $weapon;
 			}
@@ -249,13 +249,10 @@ abstract class AbstractSmrShip {
 		$replacement = $orderID - 1;
 		if($replacement < 0) {
 			// Shift everything up by one and put the selected weapon at the bottom
-			$temp =& $this->weapons[$orderID];
-			for($i=1;$i<count($this->weapons);++$i) {
-				$this->weapons[$i-1] =& $this->weapons[$i]; //If we go above the bounds of the array it will keep on going due to assign by ref. Hence $i-1 =& $i not $i =& $i+1
-			}
-			$this->weapons[count($this->weapons)-1] =& $temp;
+			array_push($this->weapons, array_shift($this->weapons));
 		}
 		else {
+			// Swap the selected weapon with the one above it
 			$temp = $this->weapons[$replacement];
 			$this->weapons[$replacement] = $this->weapons[$orderID];
 			$this->weapons[$orderID] = $temp;
@@ -267,13 +264,10 @@ abstract class AbstractSmrShip {
 		$replacement = $orderID + 1;
 		if($replacement >= count($this->weapons)) {
 			// Shift everything down by one and put the selected weapon at the top
-			$temp =& $this->weapons[count($this->weapons)-1];
-			for($i=count($this->weapons)-1;$i>0;--$i) {
-				$this->weapons[$i] =& $this->weapons[$i-1];
-			}
-			$this->weapons[0] =& $temp;
+			array_unshift($this->weapons, array_pop($this->weapons));
 		}
 		else {
+			// Swap the selected weapon with the one below it
 			$temp = $this->weapons[$replacement];
 			$this->weapons[$replacement] = $this->weapons[$orderID];
 			$this->weapons[$orderID] = $temp;
@@ -294,10 +288,9 @@ abstract class AbstractSmrShip {
 	}
 
 	public function removeWeapon($orderID) {
-		// Shift everything after the removed weapon up by one and put the selected weapon at the bottom
-		for($i=$orderID+1;$i<count($this->weapons);++$i) {
-			$this->weapons[$i-1] =& $this->weapons[$i]; //If we go above the bounds of the array it will keep on going due to assign by ref. Hence $i-1 =& $i not $i =& $i+1
-		} unset($this->weapons[count($this->weapons)-1]);
+		// Remove the specified weapon, then reindex the array
+		unset($this->weapons[$orderID]);
+		$this->weapons = array_values($this->weapons);
 		$this->hasChangedWeapons = true;
 	}
 
