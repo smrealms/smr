@@ -31,15 +31,15 @@ try {
 	// ********************************
 	
 	// We want these to be already defined as globals
-	$player=null;
-	$ship=null;
-	$sector=null;
-	$container=null;
-	$var=null;
-	$lock=false;
-
-	// new db object
+	$account = null;
+	$player = null;
+	$ship = null;
+	$sector = null;
+	$container = null;
+	$var = null;
+	$lock = false;
 	$db = new SmrMySqlDatabase();
+	$template = null;
 	
 	// ********************************
 	// *

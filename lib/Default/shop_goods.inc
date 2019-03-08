@@ -68,7 +68,7 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 }
 
 function get_amount() {
-	global $var, $_REQUEST;
+	global $var;
 
 	// retrieve amount
 	if (isset($var['amount']))
@@ -93,7 +93,7 @@ function get_amount() {
 }
 
 function get_bargain_price() {
-	global $_REQUEST,$var;
+	global $var;
 
 	// we get it from form
 	if (isset($_REQUEST['bargain_price']))

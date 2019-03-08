@@ -394,9 +394,14 @@ function getIpAddress() {
     }
 }
 
-// This function is a hack around the old style http forward mechanism
+/**
+ * This function is a hack around the old style http forward mechanism.
+ * It is also responsible for setting most of the global variables
+ * (see loader.php for the initialization of the globals).
+ */
 function do_voodoo() {
-	global $lock, $var;
+	global $lock, $var, $container, $player, $ship, $sector, $account, $db, $template;
+
 	if(!defined('AJAX_CONTAINER')) {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
 	}
@@ -405,21 +410,13 @@ function do_voodoo() {
 	}
 //	ob_clean();
 
-	foreach ($GLOBALS as $key => $value) {
-		$$key = &$GLOBALS[$key];
-	}
 	// create account object
-	$account =& SmrAccount::getAccount(SmrSession::$account_id);
-	$GLOBALS['account'] =& $account;
+	$account = SmrAccount::getAccount(SmrSession::$account_id);
 
 	if(!defined('DATE_DATE_SHORT')) define('DATE_DATE_SHORT',$account->getShortDateFormat());
 	if(!defined('DATE_TIME_SHORT')) define('DATE_TIME_SHORT',$account->getShortTimeFormat());
 	if(!defined('DATE_FULL_SHORT')) define('DATE_FULL_SHORT',DATE_DATE_SHORT.' '.DATE_TIME_SHORT);
 	if(!defined('DATE_FULL_SHORT_SPLIT')) define('DATE_FULL_SHORT_SPLIT',DATE_DATE_SHORT.'\<b\r /\>'.DATE_TIME_SHORT);
-
-
-	$db = new SmrMySqlDatabase();
-	$GLOBALS['db'] =& $db;
 
 	if($var['url'] == 'game_play_preprocessing.php') { // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
 		SmrSession::clearLinks();
@@ -464,18 +461,14 @@ function do_voodoo() {
 		}
 
 		// Now that they've acquire a lock we can move on
-		$player =& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::getGameID());
-		$GLOBALS['player'] =& $player;
+		$player = SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::getGameID());
 
 		if($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death'])) {
 			forward(create_container('death_processing.php'));
 		}
 
-		$ship	=& $player->getShip();
-		$GLOBALS['ship'] =& $ship;
-
-		$sector	=& $player->getSector();
-		$GLOBALS['sector'] =& $sector;
+		$ship = $player->getShip();
+		$sector = $player->getSector();
 
 		// update turns on that player
 		$player->updateTurns();
@@ -488,7 +481,6 @@ function do_voodoo() {
 
 	// Initialize the template
 	$template = new Template();
-	$GLOBALS['template'] =& $template;
 
 	if($var['url'] != 'skeleton.php') {
 		require(get_file_loc($var['url']));
