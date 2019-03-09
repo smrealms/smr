@@ -8,9 +8,6 @@ SmrSession::getRequestVar('password');
 SmrSession::getRequestVar('maxValue');
 SmrSession::getRequestVar('minValue');
 
-$template->assign('PageTopic', 'Anonymous Account #'.$account_num);
-Menu::bank();
-
 $db->query('SELECT *
 			FROM anon_bank
 			WHERE anon_id=' . $db->escapeNumber($account_num) . '
@@ -101,3 +98,6 @@ if ($db->getNumRows() > 0) {
 $container = create_container('bank_anon_detail_processing.php');
 $container['account_num'] = $account_num;
 $template->assign('TransactionHREF', SmrSession::getNewHREF($container));
+
+$template->assign('PageTopic', 'Anonymous Account #'.$account_num);
+Menu::bank();

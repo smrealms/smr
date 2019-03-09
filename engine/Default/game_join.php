@@ -2,8 +2,6 @@
 
 $game = SmrGame::getGame($var['game_id']);
 
-$template->assign('Game',$game);
-
 // do we need credits for this game?
 if ($game->getCreditsNeeded() > 0) {
 	// do we have enough
@@ -23,6 +21,7 @@ if (TIME > $game->getEndDate())
 	create_error('You want to join a game that is already over?');
 
 $template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
+$template->assign('Game', $game);
 
 $raceDescriptions='';
 $first = true;
