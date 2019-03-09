@@ -302,16 +302,6 @@ if ($do != 'STAY' && get_value($player_card) != 21) {
 }
 
 if ($do == 'STAY' || get_value($player_card) == 21) {
-	$db->query('SELECT * FROM blackjack WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND account_id = ' . $db->escapeNumber($player->getAccountID()));
-	if ($db->nextRecord()) {
-		$old_card = $db->getObject('last_hand');
-		if ($old_card == $player_card) {
-			create_error('You can\'t keep the same cards twice! Note:Next time your account will be logged!');
-		}
-	}
-	$db->query('REPLACE INTO blackjack (game_id, account_id, last_hand) VALUES
-				(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeObject($player_card) . ')');
 	//heres the Banks cards
 	$i = 1;
 
