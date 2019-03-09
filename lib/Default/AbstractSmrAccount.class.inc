@@ -67,9 +67,12 @@ abstract class AbstractSmrAccount {
 	protected $oldAccountIDs = array();
 	protected $maxRankAchieved;
 	protected $referrerID;
+	protected $credits;       // SMR credits
+	protected $rewardCredits; // SMR reward credits
 	protected $dateShort;
 	protected $timeShort;
 	protected $template;
+	protected $colourScheme;
 	protected $hotkeys = array();
 	protected $permissions;
 	protected $friendlyColour;
@@ -173,7 +176,7 @@ abstract class AbstractSmrAccount {
 		return array('CASE'=>$case,'IN'=>$db->escapeArray($userRankingTypes));
 	}
 
-	function __construct($accountID) {
+	protected function __construct($accountID) {
 		$this->db = new SmrMySqlDatabase();
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID);
 		$this->db->query('SELECT * FROM account WHERE '.$this->SQL.' LIMIT 1');
@@ -263,7 +266,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	function update() {
+	public function update() {
 		$this->db->query('UPDATE account SET email = '.$this->db->escapeString($this->email).
 			', validation_code = '.$this->db->escapeString($this->validation_code).
 			', validated = '.$this->db->escapeBoolean($this->validated).
@@ -294,7 +297,7 @@ abstract class AbstractSmrAccount {
 		$this->hasChanged = false;
 	}
 
-	function updateIP() {
+	public function updateIP() {
 		$curr_ip = getIpAddress();
 		$this->log(LOG_TYPE_LOGIN, 'logged in from '.$curr_ip);
 
@@ -394,7 +397,7 @@ abstract class AbstractSmrAccount {
 		return $hof;
 	}
 
-	function getRankName() {
+	public function getRankName() {
 		$rankings = Globals::getUserRanking();
 		if(isset($rankings[$this->getRank()]))
 			return $rankings[$this->getRank()];
@@ -463,7 +466,7 @@ abstract class AbstractSmrAccount {
 		return SmrAccount::getAccount($this->getReferrerID());
 	}
 
-	function log($log_type_id, $msg, $sector_id = 0) {
+	public function log($log_type_id, $msg, $sector_id = 0) {
 		if ($this->isLoggingEnabled()) {
 			$this->db->query('INSERT INTO account_has_logs ' .
 				'(account_id, microtime, log_type_id, message, sector_id) ' .
