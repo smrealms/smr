@@ -2,114 +2,35 @@
 
 // blackjack
 $message='';
-//num of decks and cards
-$decks = 1;
-$max_cards = 52 * $decks;
 
-//commonly used functions for bj
-function draw_card($decks,$curr_cards) {
-	//get a card to give this person
-	//get real values of $curr_cards (1-52)
-	$real_cards = array();
-	//find the values of the currently used cards of the deck
-	foreach ($curr_cards as $key => $value) {
-		list($first, $second, $third) = explode('-', $value);
-		if ($first == 'A') {
-			$first = 1;
-		}
-		elseif ($first == 'J') {
-			$first = 11;
-		}
-		elseif ($first == 'Q') {
-			$first = 12;
-		}
-		elseif ($first == 'K') {
-			$first = 13;
-		}
-		if ($second == 'hearts') {
-			$second = 1;
-		}
-		elseif ($second == 'clubs') {
-			$second = 2;
-		}
-		elseif ($second == 'diamonds') {
-			$second = 3;
-		}
-		elseif ($second == 'spades') {
-			$second = 4;
-		}
-		if (empty($third)) {
-			$third = 1;
-		}
-		$real_cards[] = ($first + (13 * ($second - 1))) * $third;
-	}
+$max_cards = PlayingCard::MAX_CARDS;
 
-	$max = 52 * $decks;
-	//1=ace of H, 13=king of H, 14=ace of C, 26=king of C
-	//27=ace of D, 39=king of D, 40=ace of S, 52=king of S
-	$result = mt_rand(1,$max);
+/**
+ * Draw a valid card given the cards that are already drawn.
+ */
+function draw_card($currCards) {
+	$newCard = new PlayingCard();
 	//no cards twice
-	while (in_array($result, $real_cards)) $result = mt_rand(1,$max);
-	$down = 1;
-	while ($result > 52) {
-		$result -= 52;
-		$down += 1;
+	while (in_array($newCard, $currCards)) {
+		$newCard = new PlayingCard();
 	}
-
-	//get it in the format we want it.
-	$suit = ceil($result / 13);
-	$result -= (($suit - 1) * 13);
-	if ($suit == 1) {
-		$suit = 'hearts';
-	}
-	elseif ($suit == 2) {
-		$suit = 'clubs';
-	}
-	elseif ($suit == 3) {
-		$suit = 'diamonds';
-	}
-	elseif ($suit == 4) {
-		$suit = 'spades';
-	}
-	if ($result == 1) {
-		$result = 'A';
-	}
-	elseif ($result == 11) {
-		$result = 'J';
-	}
-	elseif ($result == 12) {
-		$result = 'Q';
-	}
-	elseif ($result == 13) {
-		$result = 'K';
-	}
-	$result = $result.'-'.$suit.'-'.$down;
-	return $result;
+	return $newCard;
 }
 
+/**
+ * Get the total value of a deck.
+ */
 function get_value($deck) {
 	//this function used to find the value of a player's/bank's cards
 	//if this is just one card push it into an array so we can run the func
 	if (!is_array($deck)) $deck = array($deck);
 	$curr_aces = 0;
 	$return_val = 0;
-	foreach ($deck as $key => $card_val) {
-		//get total value of cards
-		list($first, $second) = explode('-', $card_val);
-		if ($first == 'A') {
-			$first = 11;
+	foreach ($deck as $card) {
+		if ($card->isAce()) {
 			$curr_aces += 1;
 		}
-		elseif ($first == 'J') {
-			$first = 10;
-		}
-		elseif ($first == 'Q') {
-			$first = 10;
-		}
-		elseif ($first == 'K') {
-			$first = 10;
-		}
-		$return_val += $first;
+		$return_val += $card->getValue();
 	}
 	while ($return_val > 21 && $curr_aces > 0) {
 		//if we have aces and > 21 score we subtract to make it a 1 instead of 11
@@ -123,19 +44,22 @@ function create_card($card, $show) {
 	//only display what the card really is if they want to
 	$card_height = 100;
 	$card_width = 125;
-	list($first, $second) = explode('-', $card);
+
+	$suit = $card->getSuitName();
+	$card_name = $card->getRankName();
+
 	$return=('<td>');
 	//lets try and echo cards
 	$return.=('<table style="border:1px solid green"><tr><td><table><tr><td valign=top align=left height='.$card_height.' width='.$card_width.'>');
 	if ($show) {
-		$return.=('<h1>'.$first.'<img src="images/'.$second.'.gif"></h1></td></tr>');
+		$return.=('<h1>'.$card_name.'<img src="images/'.$suit.'.gif"></h1></td></tr>');
 	}
 	else {
 		$return.=('</td></tr>');
 	}
 	$return.=('<tr><td valign=bottom align=right height='.$card_height.' width='.$card_width.'>');
 	if ($show) {
-		$return.=('<h1><img src="images/'.$second.'.gif">'.$first.'</h1></td></tr></table>');
+		$return.=('<h1><img src="images/'.$suit.'.gif">'.$card_name.'</h1></td></tr></table>');
 	}
 	else {
 		$return.=('</td></tr></table>');
@@ -209,25 +133,25 @@ if ($do == 'nothing') {
 	if (empty($cards)) {
 		$cards = array();
 	}
-	$player_curr_card = draw_card($decks,$cards);
+	$player_curr_card = draw_card($cards);
 	$player_card[] = $player_curr_card;
 	$cards[] = $player_curr_card;
 	if (sizeof($cards) >= $max_cards) {
 		$cards = array();
 	}
-	$ai_curr_card = draw_card($decks,$cards);
+	$ai_curr_card = draw_card($cards);
 	$ai_card[] = $ai_curr_card;
 	$cards[] = $ai_curr_card;
 	if (sizeof($cards) >= $max_cards) {
 		$cards = array();
 	}
-	$player_curr_card = draw_card($decks,$cards);
+	$player_curr_card = draw_card($cards);
 	$player_card[] = $player_curr_card;
 	$cards[] = $player_curr_card;
 	if (sizeof($cards) >= $max_cards) {
 		$cards = array();
 	}
-	$ai_curr_card = draw_card($decks,$cards);
+	$ai_curr_card = draw_card($cards);
 	$ai_card[] = $ai_curr_card;
 	$cards[] = $ai_curr_card;
 	if (sizeof($cards) >= $max_cards) {
@@ -248,7 +172,7 @@ if (isset($var['player_card'])) {
 	$play_val = $var['player_val'];
 }
 if ($do == 'HIT') {
-	$player_curr_card = draw_card($decks,$cards);
+	$player_curr_card = draw_card($cards);
 	$player_card[] = $player_curr_card;
 	$cards[] = $player_curr_card;
 	if (sizeof($cards) >= $max_cards) {
@@ -302,22 +226,12 @@ if ($do != 'STAY' && get_value($player_card) != 21) {
 }
 
 if ($do == 'STAY' || get_value($player_card) == 21) {
-	$db->query('SELECT * FROM blackjack WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND account_id = ' . $db->escapeNumber($player->getAccountID()));
-	if ($db->nextRecord()) {
-		$old_card = $db->getObject('last_hand');
-		if ($old_card == $player_card) {
-			create_error('You can\'t keep the same cards twice! Note:Next time your account will be logged!');
-		}
-	}
-	$db->query('REPLACE INTO blackjack (game_id, account_id, last_hand) VALUES
-				(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeObject($player_card) . ')');
 	//heres the Banks cards
 	$i = 1;
 
 	if (!(sizeof($player_card) == 2 && get_value($player_card) == 21)) {
 		while (get_value($ai_card) < 17) {
-			$ai_curr_card = draw_card($decks,$cards);
+			$ai_curr_card = draw_card($cards);
 			$ai_card[] = $ai_curr_card;
 			$cards[] = $ai_curr_card;
 			if (sizeof($cards) >= $max_cards) {
