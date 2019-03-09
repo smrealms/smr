@@ -1,9 +1,5 @@
 <?php
 
-$template->assign('PageTopic', 'Search Trader Results');
-
-$template->assign('Player', $player);
-
 $player_id = SmrSession::getRequestVar('player_id');
 $player_name = SmrSession::getRequestVar('player_name');
 if (!is_numeric($player_id) && !empty($player_id)) {
@@ -76,6 +72,12 @@ function playerLinks(SmrPlayer $curr_player) {
 	return $result;
 }
 
+if (empty($resultPlayer) && empty($similarPlayers)) {
+	$container = create_container('skeleton.php', 'trader_search.php');
+	$container['empty_result'] = true;
+	forward($container);
+}
+
 if (!empty($resultPlayer)) {
 	$resultPlayerLinks = playerLinks($resultPlayer);
 	$template->assign('ResultPlayerLinks', $resultPlayerLinks);
@@ -89,8 +91,5 @@ if (!empty($similarPlayers)) {
 	$template->assign('SimilarPlayersLinks', $similarPlayersLinks);
 }
 
-if (empty($resultPlayer) && empty($similarPlayers)) {
-	$container = create_container('skeleton.php', 'trader_search.php');
-	$container['empty_result'] = true;
-	forward($container);
-}
+$template->assign('PageTopic', 'Search Trader Results');
+$template->assign('Player', $player);

@@ -1,11 +1,21 @@
 <?php
 
-$template->assign('PageTopic','Combat Logs');
-Menu::combat_log();
-
 if(!isset($var['log_ids']) && !isset($var['current_log'])) {
 	create_error('You must select a combat log to view');
 }
+
+// Set properties for the current display page
+$display_id = $var['log_ids'][$var['current_log']];
+$db->query('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($display_id) . ' LIMIT 1');
+
+if (!$db->nextRecord()) {
+	create_error('Combat log not found');
+}
+$template->assign('CombatLogSector',$db->getField('sector_id'));
+$template->assign('CombatLogTimestamp',date(DATE_FULL_SHORT,$db->getField('timestamp')));
+$results = unserialize(gzuncompress($db->getField('result')));
+$template->assign('CombatResultsType',$db->getField('type'));
+$template->assign('CombatResults',$results);
 
 // Create a container for the next/previous log.
 // We initialize it with the current $var, then modify it to set
@@ -20,17 +30,5 @@ if($var['current_log'] < count($container['log_ids']) - 1) {
 	$template->assign('NextLogHREF',SmrSession::getNewHREF($container));
 }
 
-// Set properties for the current display page
-$display_id = $var['log_ids'][$var['current_log']];
-$db->query('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($display_id) . ' LIMIT 1');
-
-if($db->nextRecord()) {
-	$template->assign('CombatLogSector',$db->getField('sector_id'));
-	$template->assign('CombatLogTimestamp',date(DATE_FULL_SHORT,$db->getField('timestamp')));
-	$results = unserialize(gzuncompress($db->getField('result')));
-	$template->assign('CombatResultsType',$db->getField('type'));
-	$template->assign('CombatResults',$results);
-}
-else {
-	create_error('Combat log not found');
-}
+$template->assign('PageTopic', 'Combat Logs');
+Menu::combat_log();

@@ -4,7 +4,6 @@ require_once(LIB . 'Default/shop_goods.inc');
 
 // create object from port we can work with
 $port = $player->getSectorPort();
-$template->assign('Port', $port);
 
 $tradeable = checkPortTradeable($port,$player);
 if($tradeable!==true)
@@ -12,6 +11,7 @@ if($tradeable!==true)
 
 // topic
 $template->assign('PageTopic','Port In Sector #'.$player->getSectorID());
+$template->assign('Port', $port);
 
 $container = create_container('skeleton.php', 'council_list.php');
 $container['race_id'] = $port->getRaceID();

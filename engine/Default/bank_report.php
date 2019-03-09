@@ -6,10 +6,6 @@ $alliance_id = $var['alliance_id'];
 const WITHDRAW = 0;
 const DEPOSIT = 1;
 
-$template->assign('PageTopic','Alliance Bank Report');
-
-Menu::bank();
-
 //get all transactions
 $db->query('SELECT * FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 if (!$db->getNumRows()) {
@@ -102,3 +98,6 @@ else {
 	$PHP_OUTPUT.=('</div>');
 }
 $PHP_OUTPUT.=($text);
+
+$template->assign('PageTopic', 'Alliance Bank Report');
+Menu::bank();

@@ -1,10 +1,10 @@
 <?php
 
-$template->assign('PageTopic','Hardware Shop');
-
 if(!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
+
+$template->assign('PageTopic', 'Hardware Shop');
 
 $location = SmrLocation::getLocation($var['LocationID']);
 if ($location->isHardwareSold()) {

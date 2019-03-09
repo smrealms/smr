@@ -1,8 +1,5 @@
 <?php
 
-$template->assign('PageTopic','Report a Message');
-Menu::messages();
-
 if(!isset($var['notified_time']))
 	SmrSession::updateVar('notified_time',TIME);
 
@@ -23,3 +20,6 @@ transfer('message_id');
 transfer('sent_time');
 transfer('notified_time');
 $template->assign('ProcessingHREF', SmrSession::getNewHREF($container));
+
+$template->assign('PageTopic', 'Report a Message');
+Menu::messages();
