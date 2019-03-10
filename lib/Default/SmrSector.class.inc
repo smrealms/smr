@@ -691,8 +691,7 @@ class SmrSector {
 	public function hasEnemyForces(AbstractSmrPlayer $player=null) {
 		if($player == null || !$this->hasForces())
 			return false;
-		$forces = $this->getForces();
-		foreach($forces as $force) {
+		foreach ($this->getForces() as $force) {
 			if(!$player->forceNAPAlliance($force->getOwner()))
 				return true;
 		}
@@ -701,10 +700,7 @@ class SmrSector {
 
 	public function &getEnemyForces(AbstractSmrPlayer $player) {
 		$enemyForces = array();
-		if(!$this->hasForces())
-			return $enemyForces;
-		$forces = $this->getForces();
-		foreach($forces as $force) {
+		foreach ($this->getForces() as $force) {
 			if(!$player->forceNAPAlliance($force->getOwner()))
 				$enemyForces[] = $force;
 		}
@@ -726,8 +722,7 @@ class SmrSector {
 	public function hasFriendlyForces(AbstractSmrPlayer $player=null) {
 		if($player == null || !$this->hasForces())
 			return false;
-		$forces = $this->getForces();
-		foreach($forces as $force) {
+		foreach ($this->getForces() as $force) {
 			if($player->forceNAPAlliance($force->getOwner()))
 				return true;
 		}
@@ -736,10 +731,7 @@ class SmrSector {
 
 	public function &getFriendlyForces(AbstractSmrPlayer $player) {
 		$friendlyForces = array();
-		if(!$this->hasForces())
-			return $friendlyForces;
-		$forces = $this->getForces();
-		foreach($forces as $force) {
+		foreach ($this->getForces() as $force) {
 			if($player->forceNAPAlliance($force->getOwner()))
 				$friendlyForces[] = $force;
 		}
