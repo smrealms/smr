@@ -34,10 +34,10 @@
 										<table border="0">
 											<tr>
 												<th align="right">Email:</th>
-												<td><input type="email" name="email" id="InputFields"></td>
+												<td><input type="email" name="email" class="InputFields"></td>
 											</tr>
 										</table>
-										<p><input type="submit" value="Resend my password" id="InputFields"></p>
+										<p><input type="submit" value="Resend my password" class="InputFields"></p>
 									</div>
 								</form>
 

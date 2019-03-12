@@ -27,7 +27,7 @@ h3 {
 }
 /* ----- End Heading styles ----- */
 /* ---------------------------- */
-#InputFields, .InputFields {
+.InputFields {
 	font: inherit;
 }
 .submitStyle:link {

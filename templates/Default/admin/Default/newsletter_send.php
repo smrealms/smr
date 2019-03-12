@@ -7,16 +7,16 @@ if (!isset($NewsletterId)) { ?>
 
 	<?php echo $ProcessingForm; ?>
 	<p>Set the subject of the newsletter mail (the default is recommended).</p>
-	<input type="text" name="subject" value="<?php echo $DefaultSubject; ?>" id="InputFields" size="35">
+	<input type="text" name="subject" value="<?php echo $DefaultSubject; ?>" class="InputFields" size="35">
 
 	<p>Choose a salutation for the newsletter (e.g. "Hello Players,"). If sending to<br />
 	all players, specify only the greeting (e.g. "Hello") to prefix the account name.<br />
 	If left empty, no salutation will be added.</p>
-	<input type="text" name="salutation" value="Hello" id="InputFields" size="35">
+	<input type="text" name="salutation" value="Hello" class="InputFields" size="35">
 
 	<p>Enter a recipient address (* for all players).<br />
 	Please send to yourself first to verify that everything displays as intended.</p>
-	<input type="text" name="to_email" value="<?php echo htmlspecialchars($CurrentEmail); ?>" id="InputFields" size="35">
+	<input type="text" name="to_email" value="<?php echo htmlspecialchars($CurrentEmail); ?>" class="InputFields" size="35">
 
 	<p><?php echo create_submit('Send'); ?></p>
 	</form>

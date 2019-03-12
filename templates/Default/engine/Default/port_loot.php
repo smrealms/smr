@@ -17,8 +17,8 @@
 				<td><?php echo $Amount; ?></td>
 				<td><?php echo $Good['BasePrice']; ?></td>
 				<td><?php echo $ThisShip->getCargo($Good['ID']); ?></td>
-				<td><input type="number" name="amount" value="<?php echo min($Amount, $ThisShip->getCargoHolds()); ?>" size="4" id="InputFields" class="center"></td>
-				<td><input type="submit" name="action" value="Loot" id="InputFields" /></td>
+				<td><input type="number" name="amount" value="<?php echo min($Amount, $ThisShip->getCargoHolds()); ?>" size="4" class="InputFields center"></td>
+				<td><input type="submit" name="action" value="Loot" class="InputFields" /></td>
 			</tr>
 		</form><?php
 	} ?>

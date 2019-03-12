@@ -2,7 +2,7 @@
 <form name="VoteForm" method="POST" action="<?php echo $VoteFormHREF; ?>">
 	Question: <input type="text" name="question" class="InputFields" value="<?php if(isset($PreviewVote)) { echo htmlspecialchars($PreviewVote); } ?>" /><br />
 	Days to end: <input type="number" name="days" class="InputFields" value="<?php if(isset($Days)) { echo htmlspecialchars($Days); } ?>" /><br />
-	<input type="submit" name="action" value="Create Vote" class="InputFields" />&nbsp;<input type="submit" name="action" value="Preview Vote" id="InputFields" /><br /><br />
+	<input type="submit" name="action" value="Create Vote" class="InputFields" />&nbsp;<input type="submit" name="action" value="Preview Vote" class="InputFields" /><br /><br />
 
 	<?php if(isset($PreviewOption)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($PreviewOption); ?></td></tr></table><?php } ?>
 	Vote: <select id="vote" name="vote"><?php
@@ -11,5 +11,5 @@
 		} ?>
 	</select><br />
 	Option: <input type="text" name="option" class="InputFields" value="<?php if(isset($PreviewOption)) { echo htmlspecialchars($PreviewOption); } ?>" /><br />
-	<input type="submit" name="action" value="Add Option" class="InputFields" />&nbsp;<input type="submit" name="action" value="Preview Option" id="InputFields" />
+	<input type="submit" name="action" value="Add Option" class="InputFields" />&nbsp;<input type="submit" name="action" value="Preview Option" class="InputFields" />
 </form>

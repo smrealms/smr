@@ -7,8 +7,8 @@ if (isset($Message)) {
 <div class=center>
 	How much do you want to bet? <?php $MaxBetMsg; ?><br />
 	<form method="POST" action="<?php echo $PlayHREF; ?>">
-		<input type="number" value="<?php echo $MaxBet; ?>" name="bet" id="InputFields" style="width:100px;" class="center">&nbsp;&nbsp;&nbsp;
-		<input type="submit" name="action" id="InputFields" value="Play the Game" />
+		<input type="number" value="<?php echo $MaxBet; ?>" name="bet" class="InputFields center" style="width:100px;">&nbsp;&nbsp;&nbsp;
+		<input type="submit" name="action" class="InputFields" value="Play the Game" />
 	</form>
 </div>
 

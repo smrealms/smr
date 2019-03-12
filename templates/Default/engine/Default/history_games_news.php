@@ -1,6 +1,6 @@
 <div class="center">
 	<form method="POST" action="<?php echo $ShowHREF; ?>">
-			Show News<br />Min:&nbsp;<input type="number" id="Inputfields" value="<?php echo $Min; ?>" name="min" size="5"> - Max:&nbsp;<input type="number" id="Inputfields" value="<?php echo $Max; ?>" name="max" size="5"><br />
+			Show News<br />Min:&nbsp;<input type="number" class="Inputfields" value="<?php echo $Min; ?>" name="min" size="5"> - Max:&nbsp;<input type="number" class="Inputfields" value="<?php echo $Max; ?>" name="max" size="5"><br />
 		<input type="submit" name="action" value="Show" />
 	</form>
 

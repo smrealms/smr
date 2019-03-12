@@ -1,6 +1,6 @@
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
 	Select the player you want to add the bounty to<br />
-	<select name="player_id" size="1" id="InputFields">
+	<select name="player_id" size="1" class="InputFields">
 		<option value="0">[Please Select]</option>
 
 		<?php
@@ -14,11 +14,11 @@
 	<table class="standardnobord">
 		<tr>
 			<td>Credits:</td>
-			<td><input type="number" name="amount" maxlength="10" size="10" id="InputFields"></td>
+			<td><input type="number" name="amount" maxlength="10" size="10" class="InputFields"></td>
 		</tr>
 		<tr>
 			<td>Smr Credits:</td>
-			<td><input type="number" name="smrcredits" maxlength="10" size="10" id="InputFields"></td>
+			<td><input type="number" name="smrcredits" maxlength="10" size="10" class="InputFields"></td>
 		</tr>
 	</table>
 

@@ -18,11 +18,11 @@ if (isset($OfferToo)) { ?>
 Note: In order to maximize your experience you have to bargain with the port owner, unless you have maximum relations (1000) with that race, which gives full experience without the need to bargain.</p>
 
 <form name="FORM" method="POST" action="<?php echo $BargainHREF; ?>">
-	<input type="number" name="bargain_price" value="<?php echo $BargainPrice; ?>" id="InputFields" class="center" style="width:75;vertical-align:middle;">&nbsp;
+	<input type="number" name="bargain_price" value="<?php echo $BargainPrice; ?>" class="InputFields center" style="width:75;vertical-align:middle;">&nbsp;
 	<!-- all needed information to calculate the ideal price -->
 	<!-- Trade.Amount:Good.BasePrice:Good.Distance:Port.Good.Amount:Port.Good.Max:Relations:Port.Level -->
 	<!-- (<?php echo join(':', $TradeCalcInfo); ?>)-->
-	<input type="submit" name="action" id="InputFields" value="Bargain (1)" />
+	<input type="submit" name="action" class="InputFields" value="Bargain (1)" />
 </form>
 
 <script type="text/javascript">

@@ -27,7 +27,7 @@ if (count($InvitePlayers) == 0) { ?>
 	<p>Select a player to invite to your alliance:</p>
 
 	<form method="POST" action="<?php echo $InviteHREF; ?>">
-		<select name="account_id" id="InputFields" size="1">
+		<select name="account_id" class="InputFields" size="1">
 			<?php
 			foreach ($InvitePlayers as $InvitePlayer) { ?>
 				<option value="<?php echo $InvitePlayer->getAccountID(); ?>">
@@ -41,7 +41,7 @@ if (count($InvitePlayers) == 0) { ?>
 		<p>Days until invitation expires:</p>
 		<input type="number" name="expire_days" value="7" />
 		<br /><br />
-		<input type="submit" name="action" id="InputFields" value="Invite Player" />
+		<input type="submit" name="action" class="InputFields" value="Invite Player" />
 	</form><?php
 } ?>
 

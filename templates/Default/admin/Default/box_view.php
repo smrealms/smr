@@ -17,9 +17,9 @@ else { ?>
 	<a href="<?php echo $BackHREF; ?>">Back</a><br /><?php
 	if (isset($Messages)) { ?>
 		<form method="POST" action="<?php echo $DeleteHREF; ?>">
-			<input type="submit" name="action" value="Delete" id="InputFields" />
+			<input type="submit" name="action" value="Delete" class="InputFields" />
 			&nbsp;
-			<select name="action" size="1" id="InputFields">
+			<select name="action" size="1" class="InputFields">
 				<option>Marked Messages</option>
 				<option>All Messages</option>
 			</select>

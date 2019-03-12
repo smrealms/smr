@@ -7,7 +7,7 @@
 			</td>
 			<td class="center">
 				<h2>Alliance Search</h2>
-				<select name="allianceID" id="InputFields">
+				<select name="allianceID" class="InputFields">
 					<option value="-1">Select an alliance</option><?php
 					if(isset($NewsAlliances) && count($NewsAlliances)>0) {
 						foreach($NewsAlliances as $NewsAlliance) {
@@ -31,7 +31,7 @@
 				</td>
 				<td class="center">
 					<h2>Alliance Vs Alliance Search</h2>
-					<select name="alliance1" id="InputFields">
+					<select name="alliance1" class="InputFields">
 						<option value="-1">Select an alliance</option><?php
 						if(isset($NewsAlliances) && count($NewsAlliances)>0) {
 							foreach($NewsAlliances as $NewsAlliance) {
@@ -40,7 +40,7 @@
 						} ?>
 					</select>
 						vs.
-					<select name="alliance2" id="InputFields">
+					<select name="alliance2" class="InputFields">
 						<option value="-1">Select an alliance</option><?php
 						if(isset($NewsAlliances) && count($NewsAlliances)>0) {
 							foreach($NewsAlliances as $NewsAlliance) {

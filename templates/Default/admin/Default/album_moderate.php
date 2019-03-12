@@ -40,7 +40,7 @@ if (empty($Entry)) {
 				<td style="font-size:75%;">
 					You can edit the text that will be sent<br />
 					to that user as an email if you reset his picture!<br /><br />
-					<textarea spellcheck="true" name="email_txt" id="InputFields" style="width:300;height:200;"><?php echo $DisableEmail; ?></textarea>
+					<textarea spellcheck="true" name="email_txt" class="InputFields" style="width:300;height:200;"><?php echo $DisableEmail; ?></textarea>
 				</td>
 			</form>
 		</tr>

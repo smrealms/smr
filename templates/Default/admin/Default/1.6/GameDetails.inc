@@ -42,7 +42,7 @@
 	<tr>
 		<td class="right">Game Type</td>
 		<td>
-			<select name="game_type" id="InputFields"><?php
+			<select name="game_type" class="InputFields"><?php
 			foreach (SmrGame::GAME_TYPES as $GameTypeID => $GameType) {
 				?><option value="<?php echo $GameTypeID; ?>" <?php if ($GameType == $Game['gameType']) echo 'selected'; ?>><?php echo $GameType; ?></option><?php
 			} ?>
@@ -64,8 +64,8 @@
 	<tr>
 		<td class="right">Ignore Stats</td>
 		<td>
-			Yes: <input type="radio" name="ignore_stats" id="InputFields" value="Yes" <?php if ($Game['ignoreStats']) { echo "checked"; } ?> /><br />
-			No: <input type="radio" name="ignore_stats" id="InputFields" value="No" <?php if (!$Game['ignoreStats']) { echo "checked"; } ?> /><br />
+			Yes: <input type="radio" name="ignore_stats" class="InputFields" value="Yes" <?php if ($Game['ignoreStats']) { echo "checked"; } ?> /><br />
+			No: <input type="radio" name="ignore_stats" class="InputFields" value="No" <?php if (!$Game['ignoreStats']) { echo "checked"; } ?> /><br />
 		</td>
 	</tr>
 	<tr>

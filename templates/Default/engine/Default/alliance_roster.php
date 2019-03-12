@@ -79,7 +79,7 @@ if ($ShowRoles) { ?>
 						<td class="role"><?php
 							$PlayerRole = $AlliancePlayer->getAllianceRole();
 							if ($CanChangeRoles && $AlliancePlayer->getAccountID() != $Alliance->getLeaderID()) { ?>
-								<select name="role[<?php echo $AlliancePlayer->getAccountID(); ?>]" id="InputFields"><?php
+								<select name="role[<?php echo $AlliancePlayer->getAccountID(); ?>]" class="InputFields"><?php
 									foreach ($Roles as $RoleID => $Role) { ?>
 										<option value="<?php echo $RoleID; ?>"<?php
 										if ($RoleID == $PlayerRole) { ?>

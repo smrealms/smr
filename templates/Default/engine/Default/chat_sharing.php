@@ -30,16 +30,16 @@ is in your alliance.</p>
 			<td><?php echo $share['All Games']; ?></td>
 			<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 				<input type="hidden" name="game_id" value="<?php echo $share['Game ID']; ?>" />
-				<td><button type="submit" name="remove_share_to" value="<?php echo $accountId ?>" id="InputFields" style="width:65px">Remove</button></td>
+				<td><button type="submit" name="remove_share_to" value="<?php echo $accountId ?>" class="InputFields" style="width:65px">Remove</button></td>
 			</form>
 		</tr><?php
 	} ?>
 	<tr>
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-			<td><input class="center" type="number" name="add_player_id" id="InputFields" style="width:60px" /></td>
+			<td><input class="InputFields center" type="number" name="add_player_id" style="width:60px" /></td>
 			<td>&nbsp;</td>
 			<td class="center"><input type="checkbox" name="all_games"/></td>
-			<td><button type="submit" name="add" id="InputFields" style="width:65px">Add</button></td>
+			<td><button type="submit" name="add" class="InputFields" style="width:65px">Add</button></td>
 		<form>
 	</tr>
 </table>
@@ -60,7 +60,7 @@ if ($ShareFrom) { ?>
 				<td><?php echo $share['All Games']; ?></td>
 				<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 					<input type="hidden" name="game_id" value="<?php echo $share['Game ID']; ?>" />
-					<td><button type="submit" name="remove_share_from" value="<?php echo $accountId ?>" id="InputFields" style="width:65px">Remove</button></td>
+					<td><button type="submit" name="remove_share_from" value="<?php echo $accountId ?>" class="InputFields" style="width:65px">Remove</button></td>
 				</form>
 			</tr><?php
 		} ?>

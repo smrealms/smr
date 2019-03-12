@@ -17,10 +17,10 @@ if (empty($Goods)) { ?>
 				<tr>
 					<td><img src="<?php echo $good['image']; ?>" width="13" height="16" title="<?php echo $good['name']; ?>" />&nbsp;<?php echo $good['name']; ?></td>
 					<td class="center">
-						<input type="number" name="amount" value="<?php echo $good['amount']; ?>" maxlength="5" size="5" id="InputFields" class="center" />
+						<input type="number" name="amount" value="<?php echo $good['amount']; ?>" maxlength="5" size="5" class="InputFields center" />
 					</td>
 					<td class="center">
-						<input type="submit" name="action" value="Dump (1)" id="InputFields" />
+						<input type="submit" name="action" value="Dump (1)" class="InputFields" />
 					</td>
 				</tr>
 			</form><?php

@@ -28,11 +28,11 @@
 					<table border="0" cellspacing="0" cellpadding="1">
 						<tr>
 							<td width="27%">User name:</td>
-							<td width="73%"><input type="text" name="login" size="20" maxlength="32" id="InputFields" value="<?php if (isset($MatchingLogin)) { echo $MatchingLogin; } ?>"></td>
+							<td width="73%"><input type="text" name="login" size="20" maxlength="32" class="InputFields" value="<?php if (isset($MatchingLogin)) { echo $MatchingLogin; } ?>"></td>
 						</tr>
 						<tr>
 							<td width="27%">Password:</td>
-							<td width="73%"><input type="password" name="password" size="20" maxlength="32" id="InputFields"></td>
+							<td width="73%"><input type="password" name="password" size="20" maxlength="32" class="InputFields"></td>
 						</tr>
 					</table>
 					<p><input type="submit" name="link_login" value="Link Login"></p>
@@ -54,30 +54,30 @@
 						<table border="0" cellspacing="0" cellpadding="1">
 							<tr>
 								<td width="27%">User name:</td>
-								<td width="73%"><input type="text" name="login" size="20" maxlength="32" id="InputFields"></td>
+								<td width="73%"><input type="text" name="login" size="20" maxlength="32" class="InputFields"></td>
 							</tr>
 						<tr>
 							<td width="27%">Password (Optional):</td>
-							<td width="73%"><input type="password" name="password" size="20" maxlength="32" id="InputFields"></td>
+							<td width="73%"><input type="password" name="password" size="20" maxlength="32" class="InputFields"></td>
 							</tr>
 							<tr>
 								<td width="27%">Verify (Optional):</td>
-								<td width="73%"><input type="password" name="pass_verify" size="20" maxlength="32" id="InputFields"></td>
+								<td width="73%"><input type="password" name="pass_verify" size="20" maxlength="32" class="InputFields"></td>
 							</tr><?php
 							if (empty($SocialLogin->getEmail())) { ?>
 								<tr>
 									<td width="27%">Email:</td>
-									<td width="73%"><input type="email" name="email" size="20" maxlength="32" id="InputFields"></td>
+									<td width="73%"><input type="email" name="email" size="20" maxlength="32" class="InputFields"></td>
 								</tr>
 								<tr>
 									<td width="27%">Verify Email:</td>
-									<td width="73%"><input type="email" name="email_verify" size="20" maxlength="32" id="InputFields"></td>
+									<td width="73%"><input type="email" name="email_verify" size="20" maxlength="32" class="InputFields"></td>
 								</tr><?php
 							} ?>
 							<tr>
 								<td width="27%">Local Time:</td>
 								<td width="73%">
-									<select name="timez" id="InputFields">
+									<select name="timez" class="InputFields">
 										<?php
 										$time = TIME;
 											for ($i = -12; $i<= 11; $i++) echo('<option value="'.$i.'">' . date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600));
@@ -87,7 +87,7 @@
 							</tr>
 							<tr>
 								<td width="27%">Referral ID (Optional):</td>
-								<td width="73%"><input type="number" name="referral_id" size="10" maxlength="20" id="InputFields"<?php if(isset($_REQUEST['ref'])){ echo 'value="'.htmlspecialchars($_REQUEST['ref']).'"'; }?>></td>
+								<td width="73%"><input type="number" name="referral_id" size="10" maxlength="20" class="InputFields"<?php if(isset($_REQUEST['ref'])){ echo 'value="'.htmlspecialchars($_REQUEST['ref']).'"'; }?>></td>
 							</tr>
 							<tr>
 								<td colspan="2">&nbsp;</td>

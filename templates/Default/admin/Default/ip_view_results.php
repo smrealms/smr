@@ -27,11 +27,11 @@ if ($type == 'comp_share') {
 						if ($Row['matches']) { ?>
 							<td><span class="red">Yes</span></td>
 							<td><input type=checkbox name="disable_id[]" value="<?php echo $Row['account_id']; ?>" <?php echo $Row['checked']; ?>></td>
-							<td><input type=text name="suspicion[<?php echo $Row['account_id']; ?>]" value="<?php echo $Row['suspicion']; ?>" id="InputFields"></td><?php
+							<td><input type=text name="suspicion[<?php echo $Row['account_id']; ?>]" value="<?php echo $Row['suspicion']; ?>" class="InputFields"></td><?php
 						} else { ?>
 							<td></td>
 							<td><input type=checkbox name="disable_id[]" value="<?php echo $Row['account_id']; ?>"></td>
-							<td><input type=text name="suspicion2[<?php echo $Row['account_id']; ?>]" id="InputFields"></td><?php
+							<td><input type=text name="suspicion2[<?php echo $Row['account_id']; ?>]" class="InputFields"></td><?php
 						} ?>
 						<td><?php echo $Row['close_reason']; ?></td>
 					</tr><?php

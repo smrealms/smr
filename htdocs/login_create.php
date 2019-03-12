@@ -40,24 +40,24 @@ require_once('config.inc');
 					<table border='0' cellspacing='0' cellpadding='1'>
 					<tr>
 						<td width='27%'>User name:</td>
-						<td width='73%'><input type='text' name='login' size='20' maxlength='32' id='InputFields'></td>
+						<td width='73%'><input type='text' name='login' size='20' maxlength='32' class="InputFields"></td>
 					</tr>
 					<tr>
 						<td width='27%'>Password:</td>
-						<td width='73%'><input type='password' name='password' size='20' maxlength='32' id='InputFields'></td>
+						<td width='73%'><input type='password' name='password' size='20' maxlength='32' class="InputFields"></td>
 					</tr>
 					<tr>
 						<td width='27%'>Verify Password:</td>
-						<td width='73%'><input type='password' name='pass_verify' size='20' maxlength='32' id='InputFields'></td>
+						<td width='73%'><input type='password' name='pass_verify' size='20' maxlength='32' class="InputFields"></td>
 					</tr>
 					<tr>
 						<td width='27%'>E-Mail Address:</td>
-						<td width='73%'><input type='email' name='email' size='50' maxlength='128' id='InputFields'></td>
+						<td width='73%'><input type='email' name='email' size='50' maxlength='128' class="InputFields"></td>
 					</tr>
 					<tr>
 						<td width='27%'>Local Time:</td>
 						<td width='73%'>
-							<select name="timez" id="InputFields"><?php
+							<select name="timez" class="InputFields"><?php
 								$time = TIME;
 								for ($i = -12; $i<= 11; $i++) {
 									?><option value="<?php echo $i; ?>"><?php echo date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600); ?></option><?php
@@ -67,7 +67,7 @@ require_once('config.inc');
 					</tr>
 					<tr>
 						<td width='27%'>Referral ID (Optional):</td>
-						<td width='73%'><input type='text' name='referral_id' size='10' maxlength='20' id='InputFields'<?php if(isset($_REQUEST['ref'])){ echo 'value="'.htmlspecialchars($_REQUEST['ref']).'"'; }?>></td>
+						<td width='73%'><input type='text' name='referral_id' size='10' maxlength='20' class="InputFields" <?php if(isset($_REQUEST['ref'])){ echo 'value="'.htmlspecialchars($_REQUEST['ref']).'"'; }?>></td>
 					</tr>
 					<tr>
 						<td colspan='2'><div class="g-recaptcha" data-sitekey="<?php echo RECAPTCHA_PUBLIC; ?>"></div></td>
