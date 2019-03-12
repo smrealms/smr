@@ -51,9 +51,6 @@ h3 {
 	padding: 0px 8px;
 	display: inline-table; /* Fixes the problems with vertical overlap in FF, but not IE :( */
 }
-#InputFieldsText {
-	font: inherit;
-}
 /* ------------------------------------ */
 #help_content {
 	margin: 10px 20px 50px 20px;
