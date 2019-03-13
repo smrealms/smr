@@ -15,7 +15,7 @@
 
 	<body>
 		<div class="center">
-			<p class="collapsed">
+			<div class="collapsed">
 				<img src="images/login/smr_banner.gif" width="769" height="132" alt=""><br />
 
 				<!-- small header menu -->
@@ -39,7 +39,7 @@
 					<li><a href="<?php echo WIKI_URL; ?>/tutorials#video-tutorials" target="vid">Video&nbsp;Tutorials</a></li>
 					<li><a href="album" target="ml">Merchant&nbsp;Album</a></li>
 				</ul>
-			</p>
+			</div>
 			<?php
 
 			if(isset($Message)) { ?>
