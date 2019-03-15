@@ -822,13 +822,13 @@ class SmrSector {
 	public function &getFightingTradersAgainstPort(AbstractSmrPlayer $attackingPlayer, SmrPort $defendingPort) {
 		$fightingPlayers = array();
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
-		if(count($alliancePlayers) > 0)
-			foreach($alliancePlayers as $accountID => $player) {
-				if($player->canFight()) {
-					if($attackingPlayer->traderAttackPortAlliance($player))
-						$fightingPlayers[$accountID] = $alliancePlayers[$accountID];
+		foreach ($alliancePlayers as $accountID => $player) {
+			if ($player->canFight()) {
+				if ($attackingPlayer->traderAttackPortAlliance($player)) {
+					$fightingPlayers[$accountID] = $alliancePlayers[$accountID];
 				}
 			}
+		}
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, MAXIMUM_PORT_FLEET_SIZE);
 	}
 
@@ -854,15 +854,15 @@ class SmrSector {
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()));
 		$attackers = array();
 		$defenders = array();
-		if(count($alliancePlayers) > 0)
-			foreach($alliancePlayers as $accountID => $player) {
-				if($player->canFight()) {
-					if($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player))
-						$attackers[] = $alliancePlayers[$accountID];
-					else if($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player) && ($checkForCloak===false || $attackingPlayer->canSee($player)))
-						$defenders[] = $alliancePlayers[$accountID];
+		foreach ($alliancePlayers as $accountID => $player) {
+			if ($player->canFight()) {
+				if ($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player)) {
+					$attackers[] = $alliancePlayers[$accountID];
+				} else if ($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player) && ($checkForCloak===false || $attackingPlayer->canSee($player))) {
+					$defenders[] = $alliancePlayers[$accountID];
 				}
 			}
+		}
 		$attackers = self::limitFightingTraders($attackers, $attackingPlayer, MAXIMUM_PVP_FLEET_SIZE);
 		shuffle($attackers);
 		foreach($attackers as $attacker) {
@@ -894,13 +894,13 @@ class SmrSector {
 	public function &getPotentialFightingTraders(AbstractSmrPlayer $attackingPlayer) {
 		$fightingPlayers = array();
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
-		if(count($alliancePlayers) > 0)
-			foreach($alliancePlayers as $accountID => $player) {
-				if($player->canFight()) {
-					if($attackingPlayer->traderAttackTraderAlliance($player))
-						$fightingPlayers['Attackers'][$accountID] = $player;
+		foreach ($alliancePlayers as $accountID => $player) {
+			if ($player->canFight()) {
+				if ($attackingPlayer->traderAttackTraderAlliance($player)) {
+					$fightingPlayers['Attackers'][$accountID] = $player;
 				}
 			}
+		}
 		return $fightingPlayers;
 	}
 
@@ -979,14 +979,14 @@ class SmrSector {
 				if ($this->getPort()->hasX($x))
 					return true;
 
-		if($x instanceof SmrWeapon || (is_array($x) && ($x['Type']=='Ship'||$x['Type']=='Hardware')) || (is_string($x) && ($x=='Bank'||$x=='Bar'||$x=='Fed'||$x=='SafeFed'||$x=='HQ'||$x=='UG'||$x=='Hardware'||$x=='Ship'||$x=='Weapon'))) //Check if it's possible for location to have X, hacky but nice performance gains
-			if ($this->hasLocation()) {
-				$locations = $this->getLocations();
-				foreach ($locations as $l) {
-					if ($l->hasX($x,$player))
-						return true;
+		//Check if it's possible for location to have X, hacky but nice performance gains
+		if ($x instanceof SmrWeapon || (is_array($x) && ($x['Type']=='Ship'||$x['Type']=='Hardware')) || (is_string($x) && ($x=='Bank'||$x=='Bar'||$x=='Fed'||$x=='SafeFed'||$x=='HQ'||$x=='UG'||$x=='Hardware'||$x=='Ship'||$x=='Weapon'))) {
+			foreach ($this->getLocations() as $loc) {
+				if ($loc->hasX($x, $player)) {
+					return true;
 				}
 			}
+		}
 		return false;
 	}
 }
