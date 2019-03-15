@@ -1,7 +1,7 @@
 <?php
 
 $shipID = $var['ship_id'];
-$newShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$shipID);
+$newShip = AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$shipID);
 $cost = $ship->getCostToUpgrade($shipID);
 
 // trade master 33

@@ -5,7 +5,7 @@
 		<th>Members</th>
 		<th>Pick</th>
 	</tr><?php
-	foreach ($Teams as &$Team) {
+	foreach ($Teams as $Team) {
 		// boldface this row if it is the current player's alliance
 		$Class = ($Team['Leader']->getPlayerID() == $PlayerID) ? "bold" : ""; ?>
 		<tr class="<?php echo $Class; ?>">
@@ -43,7 +43,7 @@ if(count($PickPlayers)>0) { ?>
 			<th>HoF Name</th>
 			<th>User Score</th>
 		</tr><?php
-		foreach($PickPlayers as &$PickPlayer) { ?>
+		foreach($PickPlayers as $PickPlayer) { ?>
 			<tr>
 				<td class="center"><?php
 				if ($CanPick) { ?>
@@ -84,7 +84,7 @@ if (count($History) > 0) { ?>
 			<th>HoF Name</th>
 			<th>User Score</th>
 		</tr><?php
-		foreach(array_reverse($History, true) as $i => &$Pick) { ?>
+		foreach(array_reverse($History, true) as $i => $Pick) { ?>
 			<tr>
 				<td class="center"><?php echo $i+1; ?></td>
 				<td><?php echo $Pick['Leader']->getPlayerName(); ?></td>

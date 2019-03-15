@@ -179,7 +179,7 @@ function NPCStuff() {
 				&&($fedContainer==null?$fedContainer = plotToFed($player,true):$fedContainer)!==true) { //We're under attack and need to plot course to fed.
 				// Get the lock, remove under attack and update.
 				acquire_lock($player->getSectorID());
-				$ship =& $player->getShip(true);
+				$ship = $player->getShip(true);
 				$ship->removeUnderAttack();
 				$ship->updateHardware();
 				release_lock();
@@ -215,7 +215,7 @@ function NPCStuff() {
 					debug('We are in fed, time to switch to another NPC.');
 					changeNPCLogin();
 				}
-				$ship =& $player->getShip();
+				$ship = $player->getShip();
 				processContainer(plotToFed($player,!$ship->hasMaxShields()||!$ship->hasMaxArmour()||!$ship->hasMaxCargoHolds()));
 			}
 			else if(($container = checkForShipUpgrade($player))!==false) { //We have money and are at a uno, let's uno!
@@ -240,12 +240,12 @@ function NPCStuff() {
 						$sellRoute =& $forwardRoute;
 					}
 
-					$ship =& $player->getShip();
+					$ship = $player->getShip();
 					if($ship->getUsedHolds()>0) {
 						if($ship->hasCargo($sellRoute->getGoodID())) { //Sell goods
 							$goodID = $sellRoute->getGoodID();
 
-							$port =& $player->getSector()->getPort();
+							$port = $player->getSector()->getPort();
 							$tradeable = checkPortTradeable($port,$player);
 
 							if($tradeable===true && $port->getGoodAmount($goodID)>=$ship->getCargo($sellRoute->getGoodID())) { //TODO: Sell what we can rather than forcing sell all at once?
@@ -278,7 +278,7 @@ function NPCStuff() {
 					else { //Buy goods
 						$goodID = $buyRoute->getGoodID();
 
-						$port =& $player->getSector()->getPort();
+						$port = $player->getSector()->getPort();
 						$tradeable = checkPortTradeable($port,$player);
 
 						if($tradeable===true && $port->getGoodAmount($goodID)>=$ship->getEmptyHolds()) { //Buy goods
@@ -474,10 +474,10 @@ function changeNPCLogin() {
 function canWeUNO(AbstractSmrPlayer &$player, $oppurtunisticOnly) {
 	if($player->getCredits()<MINUMUM_RESERVE_CREDITS)
 		return false;
-	$ship =& $player->getShip();
+	$ship = $player->getShip();
 	if($ship->hasMaxShields()&&$ship->hasMaxArmour()&&$ship->hasMaxCargoHolds())
 		return false;
-	$sector =& $player->getSector();
+	$sector = $player->getSector();
 
 	// We buy armour in preference to shields as it's cheaper.
 	// We buy cargo holds last if we have no newbie turns because we'd rather not die
@@ -485,10 +485,9 @@ function canWeUNO(AbstractSmrPlayer &$player, $oppurtunisticOnly) {
 
 	$amount = 0;
 
-	$locations =& $sector->getLocations();
-	foreach($locations as &$location) {
+	foreach ($sector->getLocations() as $location) {
 		if($location->isHardwareSold()) {
-			$hardwareSold =& $location->getHardwareSold();
+			$hardwareSold = $location->getHardwareSold();
 			if($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardwareSold[HARDWARE_CARGO]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost(HARDWARE_CARGO))) > 0) { // Buy cargo holds first if we have plenty of newbie turns left.
 				$hardwareID = HARDWARE_CARGO;
 			}
@@ -528,7 +527,7 @@ function doUNO($hardwareID,$amount) {
 
 function tradeGoods($goodID,AbstractSmrPlayer &$player,SmrPort &$port) {
 	sleepNPC(); //We have an extra sleep at port to make the NPC more vulnerable.
-	$ship =& $player->getShip();
+	$ship = $player->getShip();
 	$relations = $player->getRelation($port->getRaceID());
 
 	$transaction = $port->getGoodTransaction($goodID);
@@ -546,8 +545,8 @@ function tradeGoods($goodID,AbstractSmrPlayer &$player,SmrPort &$port) {
 }
 
 function dumpCargo(&$player) {
-	$ship =& $player->getShip();
-	$cargo =& $ship->getCargo();
+	$ship = $player->getShip();
+	$cargo = $ship->getCargo();
 	debug('Ship Cargo',$cargo);
 	foreach($cargo as $goodID => $amount) {
 		if($amount > 0) {
@@ -667,24 +666,20 @@ function leaveAlliance() {
 function &findRoutes(&$player) {
 	debug('Finding Routes');
 
-	$galaxies =& SmrGalaxy::getGameGalaxies($player->getGameID());
-
 	$tradeGoods = array(GOOD_NOTHING => false);
-	$goods =& Globals::getGoods();
-	foreach($goods as $goodID => &$good) {
+	foreach (Globals::getGoods() as $goodID => $good) {
 		if($player->meetsAlignmentRestriction($good['AlignRestriction']))
 			$tradeGoods[$goodID] = true;
 		else
 			$tradeGoods[$goodID] = false;
-	} unset($good);
+	}
 	$tradeRaces = array();
-	$races =& Globals::getRaces();
-	foreach($races as $raceID => &$race) {
+	foreach (Globals::getRaces() as $raceID => $race) {
 		$tradeRaces[$raceID] = false;
-	} unset($race);
+	}
 	$tradeRaces[$player->getRaceID()] = true;
 
-	$galaxy =& $player->getSector()->getGalaxy();
+	$galaxy = $player->getSector()->getGalaxy();
 
 	$maxNumberOfPorts = 2;
 	$routesForPort=-1;
@@ -704,9 +699,9 @@ function &findRoutes(&$player) {
 	else {
 		debug('Generating Routes');
 		$allSectors = array();
-		foreach($galaxies as &$galaxy) {
+		foreach (SmrGalaxy::getGameGalaxies($player->getGameID()) as $galaxy) {
 			$allSectors += $galaxy->getSectors(); //Merge arrays
-		} unset($galaxy);
+		}
 
 		$distances =& Plotter::calculatePortToPortDistances($allSectors,$maxDistance,$startSectorID,$endSectorID);
 

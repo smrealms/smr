@@ -56,7 +56,7 @@ if (!empty($BankTransactions)) { ?>
 						?><th class="shrink noWrap">Make Exempt</th><?php
 					} ?>
 				</tr><?php
-				foreach($BankTransactions as $TransactionID => &$BankTransaction) { ?>
+				foreach($BankTransactions as $TransactionID => $BankTransaction) { ?>
 					<tr>
 						<td class="center"><?php echo number_format($TransactionID); ?></td>
 						<td class="center noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $BankTransaction['Time']); ?></td>

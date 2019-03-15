@@ -19,7 +19,7 @@ if (count($LoggedAccounts)>0) { ?>
 				<th>Notes</th>
 			</tr><?php
 	
-			foreach($LoggedAccounts as &$LoggedAccount) { ?>
+			foreach($LoggedAccounts as $LoggedAccount) { ?>
 				<tr>
 					<td valign="top"><?php echo $LoggedAccount['Login']; ?></td>
 					<td valign="top" align="center"><?php echo $LoggedAccount['TotalEntries']; ?></td>

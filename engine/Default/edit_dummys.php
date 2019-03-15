@@ -8,8 +8,8 @@ $template->assign('Weapons',SmrWeapon::getAllWeapons(0));
 
 $template->assign('EditDummysLink',SmrSession::getNewHREF(create_container('skeleton.php','edit_dummys.php')));
 
-$dummyPlayer =& DummyPlayer::getCachedDummyPlayer($_REQUEST['dummy_name']);
-$dummyShip =& $dummyPlayer->getShip();
+$dummyPlayer = DummyPlayer::getCachedDummyPlayer($_REQUEST['dummy_name']);
+$dummyShip = $dummyPlayer->getShip();
 
 if(isset($_REQUEST['save_dummy'])) {
 	$dummyPlayer->setPlayerName($_REQUEST['dummy_name']);

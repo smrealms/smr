@@ -1,5 +1,5 @@
 <p>It is currently <span id="turn"><?php
-	$CurrentTurnPlayer =& $ChessGame->getCurrentTurnPlayer();
+	$CurrentTurnPlayer = $ChessGame->getCurrentTurnPlayer();
 	if($CurrentTurnPlayer == null) {
 		?>Unknown<?php
 	}

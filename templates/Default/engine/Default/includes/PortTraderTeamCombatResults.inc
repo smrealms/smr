@@ -67,7 +67,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 				} ?>.
 				<br /><?php
 				if($ActualDamage['KillingShot']) {
-					$this->includeTemplate('includes/PortKillMessage.inc',array('KillResults'=>$WeaponResults['KillResults'],'TargetPort'=>&$TargetPort,'ShootingPlayer'=>&$ShootingPlayer));
+					$this->includeTemplate('includes/PortKillMessage.inc',array('KillResults'=>$WeaponResults['KillResults'],'TargetPort'=>$TargetPort,'ShootingPlayer'=>$ShootingPlayer));
 				}
 			}
 		}
@@ -127,7 +127,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 			} ?>.
 			<br /><?php
 			if($ActualDamage['KillingShot']) {
-				$this->includeTemplate('includes/PortKillMessage.inc',array('KillResults'=>&$Drones['KillResults'],'TargetPort'=>&$TargetPort,'ShootingPlayer'=>&$ShootingPlayer));
+				$this->includeTemplate('includes/PortKillMessage.inc',array('KillResults'=>$Drones['KillResults'],'TargetPort'=>$TargetPort,'ShootingPlayer'=>$ShootingPlayer));
 			}
 		}
 	}

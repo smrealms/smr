@@ -1,6 +1,6 @@
 <div id="sector_forces" class="ajax"><?php
 	if($ThisSector->hasForces()) {
-		$Forces =& $ThisSector->getForces();
+		$Forces = $ThisSector->getForces();
 		Sorter::sortByNumMethod($Forces,'getExpire');
 		$RefreshAny = false; ?>
 		<table class="standard fullwidth csForces">

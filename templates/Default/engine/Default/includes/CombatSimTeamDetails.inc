@@ -15,12 +15,12 @@
 		<td>
 			<span class="underline">Current Details</span><?php
 				if($Dummy) {
-					$Ship =& $Dummy->getShip();
-					$ShipWeapons =& $Ship->getWeapons(); ?>
+					$Ship = $Dummy->getShip();
+					$ShipWeapons = $Ship->getWeapons(); ?>
 					<br />Level: <?php echo $Dummy->getLevelID(); ?><br />
 					Ship: <?php echo $Ship->getName(); ?> (<?php echo $Ship->getAttackRating(); ?>/<?php echo $Ship->getDefenseRating(); ?>)<br />
 					DCS: <?php if($Ship->hasDCS()){ ?>Yes<?php }else{ ?>No<?php } ?><br />
-					Weapons: <?php foreach($ShipWeapons as &$ShipWeapon){ ?>* <?php echo $ShipWeapon->getName(); ?><br /><?php }
+					Weapons: <?php foreach($ShipWeapons as $ShipWeapon){ ?>* <?php echo $ShipWeapon->getName(); ?><br /><?php }
 				}
 				else{ ?>No Dummy<?php } ?>
 		</td>

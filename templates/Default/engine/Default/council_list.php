@@ -45,7 +45,7 @@
 			</thead>
 			<tbody class="list"><?php
 				foreach($CouncilMembers as $Ranking => $AccountID) {
-					$CouncilPlayer =& SmrPlayer::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
+					$CouncilPlayer = SmrPlayer::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
 					<tr id="player-<?php echo $CouncilPlayer->getPlayerID(); ?>" class="ajax<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> bold<?php } ?>">
 						<td class="right"><?php echo $Ranking; ?></td>
 						<td class="name"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
@@ -64,8 +64,7 @@
 <br /><br />
 
 <b>View Council For:</b><br /><?php
-$Races =& Globals::getRaces();
-foreach($Races as $RaceID => $RaceInfo) {
+foreach (Globals::getRaces() as $RaceID => $RaceInfo) {
 	if($RaceID != RACE_NEUTRAL) { ?>
 		<span class="smallFont"><?php
 			echo $ThisPlayer->getColouredRaceName($RaceID, true); ?>

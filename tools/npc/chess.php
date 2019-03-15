@@ -51,8 +51,7 @@ try {
 		runkit_constant_redefine('MICRO_TIME', microtime(true));
 		runkit_constant_redefine('TIME', intval(MICRO_TIME));
 
-		$chessGames =& ChessGame::getNPCMoveGames(true);
-		foreach($chessGames as &$chessGame) {
+		foreach (ChessGame::getNPCMoveGames(true) as $chessGame) {
 			debug('Looking at game: ' . $chessGame->getChessGameID());
 			writeToEngine('position fen ' . $chessGame->getFENString(), false);
 			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() == ChessGame::PLAYER_WHITE ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);

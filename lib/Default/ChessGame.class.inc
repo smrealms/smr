@@ -33,9 +33,9 @@ class ChessGame {
 					WHERE end_time > ' . TIME . ' OR end_time IS NULL;');
 		$games = array();
 		while($db->nextRecord()) {
-			$game =& self::getChessGame($db->getInt('chess_game_id'), $forceUpdate);
+			$game = self::getChessGame($db->getInt('chess_game_id'), $forceUpdate);
 			if($game->getCurrentTurnAccount()->isNPC()) {
-				$games[] =& $game;
+				$games[] = $game;
 			}
 		}
 		return $games;
@@ -46,7 +46,7 @@ class ChessGame {
 		$db->query('SELECT chess_game_id FROM chess_game WHERE (black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ') AND (end_time > ' . TIME . ' OR end_time IS NULL);');
 		$games = array();
 		while($db->nextRecord()) {
-			$games[] =& self::getChessGame($db->getInt('chess_game_id'));
+			$games[] = self::getChessGame($db->getInt('chess_game_id'));
 		}
 		return $games;
 	}
@@ -56,7 +56,7 @@ class ChessGame {
 		$db->query('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');
 		$games = array();
 		while($db->nextRecord()) {
-			$games[] =& self::getChessGame($db->getInt('chess_game_id'));
+			$games[] = self::getChessGame($db->getInt('chess_game_id'));
 		}
 		return $games;
 	}
@@ -642,7 +642,7 @@ class ChessGame {
 		if($this->getCurrentTurnAccountID() != $forAccountID) {
 			return 4;
 		}
-		$lastTurnPlayer =& $this->getCurrentTurnPlayer();
+		$lastTurnPlayer = $this->getCurrentTurnPlayer();
 		$this->getBoard();
 		$p = $this->board[$y][$x];
 		if($p == null || $p->colour != $this->getColourForAccountID($forAccountID)) {
@@ -653,7 +653,7 @@ class ChessGame {
 		foreach($moves as $move) {
 			if($move[0]==$toX && $move[1]==$toY) {
 				$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
-				$currentPlayer =& $this->getCurrentTurnPlayer();
+				$currentPlayer = $this->getCurrentTurnPlayer();
 
 				$moveInfo = ChessGame::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY, $pawnPromotionPiece);
 
@@ -689,7 +689,7 @@ class ChessGame {
 					return 3;
 				}
 
-				$otherPlayer =& $this->getCurrentTurnPlayer();
+				$otherPlayer = $this->getCurrentTurnPlayer();
 				if($moveInfo['PawnPromotion'] !== false) {
 					$piecePromotedSymbol = $p->getPieceSymbol();
 					$currentPlayer->increaseHOF(1, array($chessType,'Moves','Own Pawns Promoted','Total'), HOF_PUBLIC);

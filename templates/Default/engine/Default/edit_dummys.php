@@ -9,7 +9,7 @@
 	</select><br />
 	<input type="submit" value="Select Dummy" />
 </form>
-<?php $DummyShip =& $DummyPlayer->getShip(); ?>
+<?php $DummyShip = $DummyPlayer->getShip(); ?>
 <table>
 	<tr>
 		<td class="top">
@@ -33,7 +33,7 @@
 					Weapon: <?php echo $OrderID+1; ?>
 					<select name="weapons[]">
 						<option value="0">None</option><?php
-						foreach($Weapons as &$Weapon) {
+						foreach($Weapons as $Weapon) {
 							?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"<?php if($Weapon->getWeaponTypeID()==$ShipWeapon->getWeaponTypeID()){ ?> selected="selected"<?php } ?>><?php echo $Weapon->getName(); ?> (dmg: <?php echo $Weapon->getShieldDamage(); ?>/<?php echo $Weapon->getArmourDamage(); ?> acc: <?php echo $Weapon->getBaseAccuracy(); ?>% lvl:<?php echo $Weapon->getPowerLevel(); ?>)</option><?php
 						} ?>
 					</select><br /><?php
@@ -42,7 +42,7 @@
 					Weapon: <?php echo $OrderID+1; ?>
 					<select name="weapons[]">
 						<option value="0">None</option><?php
-						foreach($Weapons as &$Weapon) {
+						foreach($Weapons as $Weapon) {
 							?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?> (dmg: <?php echo $Weapon->getShieldDamage(); ?>/<?php echo $Weapon->getArmourDamage(); ?> acc: <?php echo $Weapon->getBaseAccuracy(); ?>% lvl:<?php echo $Weapon->getPowerLevel(); ?>)</option><?php
 						} ?>
 					</select><br /><?php
