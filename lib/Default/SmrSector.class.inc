@@ -139,7 +139,7 @@ class SmrSector {
 		}
 	}
 
-	function update() {
+	public function update() {
 		if($this->hasChanged) {
 			if($this->isNew===false) {
 				$this->db->query('UPDATE sector SET battles = ' . $this->db->escapeNumber($this->getBattles()) .
@@ -168,7 +168,7 @@ class SmrSector {
 		}
 	}
 
-	function markVisited(AbstractSmrPlayer $player) {
+	public function markVisited(AbstractSmrPlayer $player) {
 		if($this->hasPort())
 			$this->getPort()->addCachePort($player->getAccountID());
 
@@ -179,7 +179,7 @@ class SmrSector {
 		$this->visited[$player->getAccountID()]=true;
 	}
 
-	function hasWeaponShop() {
+	public function hasWeaponShop() {
 		foreach ($this->getLocations() as $location) {
 			if($location->isWeaponSold())
 				return true;
@@ -187,7 +187,7 @@ class SmrSector {
 		return false;
 	}
 
-	function hasHQ() {
+	public function hasHQ() {
 		foreach ($this->getLocations() as $location) {
 			if($location->isHQ())
 				return true;
@@ -195,7 +195,7 @@ class SmrSector {
 		return false;
 	}
 
-	function hasUG() {
+	public function hasUG() {
 		foreach ($this->getLocations() as $location) {
 			if($location->isUG())
 				return true;
@@ -203,7 +203,7 @@ class SmrSector {
 		return false;
 	}
 
-	function hasShipShop() {
+	public function hasShipShop() {
 		foreach ($this->getLocations() as $location) {
 			if($location->isShipSold())
 				return true;
@@ -211,7 +211,7 @@ class SmrSector {
 		return false;
 	}
 
-	function offersFederalProtection() {
+	public function offersFederalProtection() {
 		foreach ($this->getLocations() as $location) {
 			if($location->isFed())
 				return true;
@@ -228,7 +228,7 @@ class SmrSector {
 		return $raceIDs;
 	}
 
-	function hasBar() {
+	public function hasBar() {
 		foreach ($this->getLocations() as $location) {
 			if($location->isBar())
 				return true;
@@ -236,7 +236,7 @@ class SmrSector {
 		return false;
 	}
 
-	function hasHardwareShop() {
+	public function hasHardwareShop() {
 		foreach ($this->getLocations() as $location) {
 			if($location->isHardwareSold())
 				return true;
@@ -244,7 +244,7 @@ class SmrSector {
 		return false;
 	}
 
-	function hasBank() {
+	public function hasBank() {
 		foreach ($this->getLocations() as $location) {
 			if($location->isBank())
 				return true;
@@ -252,7 +252,7 @@ class SmrSector {
 		return false;
 	}
 
-	function enteringSector(AbstractSmrPlayer $player, $movementType) {
+	public function enteringSector(AbstractSmrPlayer $player, $movementType) {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
 		switch($movementType) {
@@ -274,7 +274,7 @@ class SmrSector {
 		}
 	}
 
-	function leavingSector(AbstractSmrPlayer $player, $movementType) {
+	public function leavingSector(AbstractSmrPlayer $player, $movementType) {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
 		switch($movementType) {
@@ -298,7 +298,7 @@ class SmrSector {
 								AND refresher = ' . $this->db->escapeNumber($player->getAccountID()));
 	}
 
-	function diedHere(AbstractSmrPlayer $player) {
+	public function diedHere(AbstractSmrPlayer $player) {
 		// iterate over all scout drones in sector
 		foreach ($this->getForces() as $force) {
 			// send scout messages to user
@@ -912,11 +912,11 @@ class SmrSector {
 		$this->setBattles($this->battles+$amount);
 	}
 
-	function equals(SmrSector $otherSector) {
+	public function equals(SmrSector $otherSector) {
 		return $otherSector->getSectorID()==$this->getSectorID() && $otherSector->getGameID()==$this->getGameID();
 	}
 
-	function isLinkedSector(SmrSector $otherSector) {
+	public function isLinkedSector(SmrSector $otherSector) {
 		return $otherSector->getGameID()==$this->getGameID() && $this->isLinked($otherSector->getSectorID());
 	}
 
