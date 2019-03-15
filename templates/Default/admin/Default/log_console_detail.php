@@ -23,7 +23,7 @@ if ($Action == 'Delete') { ?>
 				<form method="POST" action="<?php echo $SaveHREF; ?>">
 					<input type="submit" name="action" value="Save" />
 					<br /><br />
-					<textarea spellcheck="true" name="notes" style="width:300px; height:200px;" id="InputFields"><?php echo $FlatNotes; ?></textarea>
+					<textarea spellcheck="true" name="notes" style="width:300px; height:200px;" class="InputFields"><?php echo $FlatNotes; ?></textarea>
 				</form>
 			</td>
 		</tr>

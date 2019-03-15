@@ -5,8 +5,8 @@
 	<?php $this->includeTemplate('includes/PlayerRankingsList.inc', array('RankingStat' => $RankingStat, 'Rankings' => $Rankings)); ?>
 	<form method="POST" action="<?php echo $FilterRankingsHREF; ?>">
 		<p>
-			<input type="number" name="min_rank" value="<?php echo $MinRank; ?>" size="3" id="InputFields" class="center">&nbsp;-&nbsp;<input type="number" name="max_rank" value="<?php echo $MaxRank; ?>" size="3" id="InputFields" class="center">&nbsp;
-			<input type="submit" name="action" value="Show" id="InputFields" />
+			<input type="number" name="min_rank" value="<?php echo $MinRank; ?>" size="3" class="InputFields center">&nbsp;-&nbsp;<input type="number" name="max_rank" value="<?php echo $MaxRank; ?>" size="3" class="InputFields center">&nbsp;
+			<input type="submit" name="action" value="Show" class="InputFields" />
 		</p>
 	</form>
 	<?php $this->includeTemplate('includes/PlayerRankingsList.inc', array('RankingStat' => $RankingStat, 'Rankings' => $FilteredRankings)); ?>

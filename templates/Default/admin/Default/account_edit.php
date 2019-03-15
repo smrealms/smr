@@ -8,7 +8,7 @@
 						echo $EditingAccount->getAccountID();
 					}
 					else { ?>
-						<input type="number" name="account_id" id="InputFields" size="5"><?php
+						<input type="number" name="account_id" class="InputFields" size="5"><?php
 					} ?>
 				</td>
 			</tr>
@@ -19,7 +19,7 @@
 						echo $EditingAccount->getLogin();
 					}
 					else { ?>
-						<input type="text" name="login" id="InputFields" size="20"><?php
+						<input type="text" name="login" class="InputFields" size="20"><?php
 					} ?>
 				</td>
 			</tr>
@@ -30,7 +30,7 @@
 						echo $EditingAccount->getValidationCode();
 					}
 					else { ?>
-						<input type="text" name="val_code" id="InputFields" size="20"><?php
+						<input type="text" name="val_code" class="InputFields" size="20"><?php
 					} ?>
 				</td>
 			</tr>
@@ -41,7 +41,7 @@
 						echo $EditingAccount->getEmail();
 					}
 					else { ?>
-						<input type="email" name="email" id="InputFields" size="20"><?php
+						<input type="email" name="email" class="InputFields" size="20"><?php
 					} ?>
 				</td>
 			</tr>
@@ -52,7 +52,7 @@
 						echo $EditingAccount->getHofName();
 					}
 					else { ?>
-						<input type="text" name="hofname" id="InputFields" size="20"><?php
+						<input type="text" name="hofname" class="InputFields" size="20"><?php
 					} ?>
 				</td>
 			</tr><?php
@@ -129,7 +129,7 @@
 
 				<tr>
 					<td align="right" valign="top" class="bold">Donation:</td>
-					<td><input type="number" name="donation" size="5" id="InputFields" class="center">$</td>
+					<td><input type="number" name="donation" size="5" class="InputFields center">$</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -138,7 +138,7 @@
 
 				<tr>
 					<td align="right" valign="top" class="bold">Grant Reward SMR Credits:</td>
-					<td><input type="number" name="grant_credits" size="5" id="InputFields" class="center"> Credits</td>
+					<td><input type="number" name="grant_credits" size="5" class="InputFields center"> Credits</td>
 				</tr>
 
 				<tr>
@@ -169,7 +169,7 @@
 								</td>
 							</tr>
 						</table>
-						<p>Note (optional): <input type="text" name="close_by_request_note" id="InputFields" /></p>
+						<p>Note (optional): <input type="text" name="close_by_request_note" class="InputFields" /></p>
 					</td>
 				</tr>
 
@@ -207,11 +207,11 @@
 						</p>
 						<p>
 							<input type="radio" name="choise" value="individual">
-							New Reason: <input type="text" name="reason_msg" id="InputFields" style="width:400px;">
+							New Reason: <input type="text" name="reason_msg" class="InputFields" style="width:400px;">
 						</p>
 						<p><input type="radio" name="choise" value="reopen"> Reopen! (Will remove ban points, if specified)</p>
-						<p>Suspicion: <input type="text" name="suspicion" id="InputFields" disabled="disabled" style="width:300px;" value="Use for multi closings only"></p>
-						<p>Ban Points: <input type="number" name="points" id="InputFields" class="center" style="width:40px;"> points</p>
+						<p>Suspicion: <input type="text" name="suspicion" class="InputFields" disabled="disabled" style="width:300px;" value="Use for multi closings only"></p>
+						<p>Ban Points: <input type="number" name="points" class="InputFields center" style="width:40px;"> points</p>
 					</td>
 				</tr>
 
@@ -329,12 +329,12 @@
 			else { ?>
 				<tr>
 					<td align="right" class="bold">Player Name:</td>
-					<td><input type="text" name="player_name" id="InputFields" size="20"></td>
+					<td><input type="text" name="player_name" class="InputFields" size="20"></td>
 				</tr>
 				<tr>
 					<td align="right" class="bold">Game:</td>
 					<td>
-						<select name="game_id" size="1" id="InputFields">
+						<select name="game_id" size="1" class="InputFields">
 							<option value="0">All Games</option><?php
 							foreach ($Games as $Game) {
 								?><option value="<?php echo $Game->getGameID(); ?>"><?php echo $Game->getDisplayName(); ?></option><?php
@@ -351,10 +351,10 @@
 	<tr>
 		<td><?php
 			if(isset($EditingAccount)) { ?>
-				<input type="submit" name="action" value="Edit Account" id="InputFields" /><?php
+				<input type="submit" name="action" value="Edit Account" class="InputFields" /><?php
 			}
 			else { ?>
-				<input type="submit" name="action" value="Search" id="InputFields" /><?php
+				<input type="submit" name="action" value="Search" class="InputFields" /><?php
 			} ?>
 		</td><?php
 

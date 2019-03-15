@@ -16,9 +16,9 @@
 			<td align="center"><img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="60" height="64" /><br /><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
 			<td align="center">
 				<form method="POST" action="<?php echo $FormHref; ?>">
-					<input type="submit" name="action" value="Peace" id="InputFields" />
+					<input type="submit" name="action" value="Peace" class="InputFields" />
 					&nbsp;
-					<input type="submit" name="action" value="War" id="InputFields" />
+					<input type="submit" name="action" value="War" class="InputFields" />
 				</form>
 			</td>
 		</tr><?php

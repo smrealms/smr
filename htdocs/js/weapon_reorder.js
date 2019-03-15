@@ -147,7 +147,7 @@ var table = document.getElementById('weapon_reorder');
 var tableDnD = new TableDnD();
 tableDnD.init(table);
 
-moveRow=function(cell, move) {
+function moveRow(cell, move) {
 	var currentRow = cell.parentNode;
 	var currentRowID = false;
 	var rows = currentRow.parentNode.rows;

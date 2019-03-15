@@ -288,7 +288,7 @@ class Template {
 
 		$xml='';
 		$dom = new DOMDocument();
-		@$dom->loadHTML($str);
+		$dom->loadHTML($str);
 		$xpath = new DOMXpath($dom);
 		$ajaxSelectors = array('//span[@id]', '//*[contains(@class,"ajax")]');
 		foreach ($ajaxSelectors as $selector) {

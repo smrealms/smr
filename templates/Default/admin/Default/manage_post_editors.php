@@ -20,7 +20,7 @@ if (empty($ActiveGames)) {
 
 	Player ID:&nbsp;
 	<form method="POST" action="<?php echo $PostEditorHREF; ?>">
-		<input type="number" name="player_id" id="InputFields" class="center">
+		<input type="number" name="player_id" class="InputFields center">
 		<br />
 		<input type="submit" name="submit" value="Assign">&nbsp;
 		<input type="submit" name="submit" value="Remove">

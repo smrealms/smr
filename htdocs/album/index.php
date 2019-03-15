@@ -116,8 +116,8 @@ catch(Throwable $e) {
 <td valign="top" align="center">
 <form action="search_processing.php">
 Quick Search:<br />
-<input type="text" name="nick" size="10" id="InputFields"><br />
-<input type="submit" value="Search" id="InputFields">
+<input type="text" name="nick" size="10" class="InputFields"><br />
+<input type="submit" value="Search" class="InputFields">
 </form>
 
 </td>

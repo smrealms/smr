@@ -3,8 +3,8 @@
 <div align="center">View News entries</div><br />
 <form name="ViewNewsForm" method="POST" action="<?php echo $ViewNewsFormHref; ?>">
 	<div align="center">
-		<input type="text" name="min_news" value="1" size="3" id="InputFields" class="center">&nbsp;-&nbsp;<input type="text" name="max_news" value="50" size="3" id="InputFields" class="center">&nbsp;<br />
-		<input type="submit" name="action" value="View" id="InputFields" />
+		<input type="text" name="min_news" value="1" size="3" class="InputFields center">&nbsp;-&nbsp;<input type="text" name="max_news" value="50" size="3" class="InputFields center">&nbsp;<br />
+		<input type="submit" name="action" value="View" class="InputFields" />
 	</div>
 </form>
 

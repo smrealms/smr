@@ -23,7 +23,7 @@
 				<td><input class="center" type="number" min="1" max="100" value="15" name="width<?php echo $i; ?>"></td>
 				<td><input class="center" type="number" min="1" max="100" value="15" name="height<?php echo $i; ?>"></td>
 				<td>
-					<select name="type<?php echo $i; ?>" id="InputFields"><?php
+					<select name="type<?php echo $i; ?>" class="InputFields"><?php
 					foreach($GalaxyTypes as $GalaxyType) {
 						?><option value="<?php echo htmlspecialchars($GalaxyType); ?>"><?php echo $GalaxyType; ?></option><?php
 					} ?>

@@ -23,18 +23,18 @@ questions to the admin team of Space Merchant Realms!</p>
 
 		<tr>
 			<td class="bold">Subject:</td>
-			<td><input type="text" name="subject" id="InputFields" style="width:500px;"></td>
+			<td><input type="text" name="subject" class="InputFields" style="width:500px;"></td>
 		</tr>
 
 		<tr>
 			<td class="bold" valign="top">Message:</td>
-			<td><textarea spellcheck="true" id="InputFields" name="msg" style="width:500px;height:300px;"></textarea></td>
+			<td><textarea spellcheck="true" class="InputFields" name="msg" style="width:500px;height:300px;"></textarea></td>
 		</tr>
 
 		<tr>
 			<td></td>
 			<td>
-				<input type="submit" name="action" value="Submit" id="InputFields" />
+				<input type="submit" name="action" value="Submit" class="InputFields" />
 			</td>
 		</tr>
 

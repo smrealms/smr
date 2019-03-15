@@ -23,10 +23,10 @@ if (empty($GoodInfo)) { ?>
 					<td><?php echo $info['Name']; ?></td>
 					<td class="center"><?php echo $info['ShipAmount']; ?></td>
 					<td class="center"><?php echo $info['PlanetAmount']; ?></td>
-					<td><input type="number" name="amount" value="<?php echo $info['DefaultAmount']; ?>" id="InputFields" size="4" class="center"/></td>
+					<td><input type="number" name="amount" value="<?php echo $info['DefaultAmount']; ?>" class="InputFields center" size="4" /></td>
 					<td class="center">
-						<input type="submit" name="action" value="Ship" id="InputFields" />&thinsp;
-						<input type="submit" name="action" value="Planet" id="InputFields" />
+						<input type="submit" name="action" value="Ship" class="InputFields" />&thinsp;
+						<input type="submit" name="action" value="Planet" class="InputFields" />
 					</td>
 				</tr>
 			</form><?php

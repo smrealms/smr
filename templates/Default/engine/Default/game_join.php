@@ -99,7 +99,7 @@ if ($Game->getDescription()) { ?>
 					<tr>
 						<td align="right"><b>Race:</b>&nbsp;</td>
 						<td>
-						<select name="race_id" id="InputFields" size="1" OnChange="go();">
+						<select name="race_id" class="InputFields" size="1" OnChange="go();">
 							<?php /*<option value="1">[please select]</option> */
 							foreach($Races as $Race) {
 								?><option value="<?php echo $Race['ID']; if($Race['Selected']){ ?>" selected="selected<?php } ?>"><?php echo $Race['Name']; ?> (<?php echo $Race['NumberOfPlayers']; ?> Traders)<?php

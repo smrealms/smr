@@ -17,7 +17,7 @@ else { ?>
 				<tr>
 					<td>Ship:</td>
 					<td>
-						<select name="ship_id" size="1" id="InputFields"><?php
+						<select name="ship_id" size="1" class="InputFields"><?php
 							$CurrentShipID = $ThisShip->hasActiveIllusion() ? $ThisShip->getIllusionShipID() : $ThisShip->getShipTypeID();
 							foreach($IllusionShips as $ShipTypeID => $ShipName) {
 								?><option value="<?php echo $ShipTypeID; ?>"<?php if($CurrentShipID==$ShipTypeID){ ?> selected="selected"<?php } ?>><?php echo $ShipName; ?></option><?php
@@ -27,11 +27,11 @@ else { ?>
 				</tr>
 				<tr>
 					<td>Attack/Defense</td>
-					<td><input type="number" id="InputFields" name="attack" value="<?php if($ThisShip->hasActiveIllusion()){ echo $ThisShip->getIllusionAttack(); }else{ ?>0<?php } ?>" size="4" class="center">&nbsp;/&nbsp;<input type="number" id="InputFields" name="defense" value="<?php if($ThisShip->hasActiveIllusion()){ echo $ThisShip->getIllusionDefense(); }else{ ?>0<?php } ?>" size="4" class="center"></td>
+					<td><input type="number" class="InputFields center" name="attack" value="<?php if($ThisShip->hasActiveIllusion()){ echo $ThisShip->getIllusionAttack(); }else{ ?>0<?php } ?>" size="4">&nbsp;/&nbsp;<input type="number" class="InputFields center" name="defense" value="<?php if($ThisShip->hasActiveIllusion()){ echo $ThisShip->getIllusionDefense(); }else{ ?>0<?php } ?>" size="4"></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td><input type="submit" name="action" value="Set Illusion" id="InputFields" />&nbsp;&nbsp;&nbsp;&nbsp;<div class="buttonA"><a class="buttonA" href="<?php echo $DisableIllusionHref;?>">Disable Illusion</a></div></td>
+					<td><input type="submit" name="action" value="Set Illusion" class="InputFields" />&nbsp;&nbsp;&nbsp;&nbsp;<div class="buttonA"><a class="buttonA" href="<?php echo $DisableIllusionHref;?>">Disable Illusion</a></div></td>
 				</tr>
 			</table>
 		</form><?php

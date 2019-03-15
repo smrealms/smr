@@ -9,7 +9,7 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'game_delete_confirm.php';
 $PHP_OUTPUT.=create_echo_form($container);
 
-$PHP_OUTPUT.=('<select name="game_id" id="InputFields">');
+$PHP_OUTPUT.=('<select name="game_id" class="InputFields">');
 $PHP_OUTPUT.=('<option value=None selected>[Select the game]</option>');
 
 $db->query('SELECT * FROM game');
