@@ -321,8 +321,7 @@ class Menu {
 
 function create_sub_menu($menu, $active_level1, $active_level2) {
 	global $template;
-	$return = ('<p>');
-	$return .= ('<table class="bar1">');
+	$return = ('<table class="bar1">');
 	$return .= ('<tr>');
 	$return .= ('<td>');
 	$return .= ('<table class="fullwidth">');
@@ -384,7 +383,6 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 	$return .= ('</td>');
 	$return .= ('</tr>');
 	$return .= ('</table>');
-	$return .= ('</p>');
 	$template->unassign('MenuItems');
 	$template->unassign('MenuBar');
 	$template->assign('SubMenuBar',$return);

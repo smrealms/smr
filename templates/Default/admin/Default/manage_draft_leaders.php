@@ -35,12 +35,13 @@ if (empty($ActiveGames)) {
 	if (empty($CurrentLeaders)) {
 		echo "<p>No current Draft Leaders for this game!</p>";
 	} else { ?>
-		<p>Current Draft Leaders:
+		<br />
+		Current Draft Leaders:
 		<ul><?php
 		foreach($CurrentLeaders as $Leader) {
 			echo "<li>$Leader</li>";
 		} ?>
-		</ul></p><?php
+		</ul><?php
 	}
 
 }
