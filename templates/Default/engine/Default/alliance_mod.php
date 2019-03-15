@@ -36,7 +36,7 @@ if (isset($EditHREF)) { ?>
 
 if (!empty($DiscordServer)) { ?>
 	<br /><br />
-	<iframe src="https://discordapp.com/widget?id=<?php echo $DiscordServer; ?>&theme=dark" width="350" height="375" allowtransparency="true" frameborder="0"></iframe>
+	<iframe src="https://discordapp.com/widget?id=<?php echo $DiscordServer; ?>&amp;theme=dark" width="350" height="375" allowtransparency="true" frameborder="0"></iframe>
 	<?php
 } ?>
 
