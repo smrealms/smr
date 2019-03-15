@@ -4,7 +4,7 @@
 		<th>Category</th>
 		<th>Description</th>
 		<th>Count</th>
-	</th><?php
+	</tr><?php
 	foreach ($CategoryTable as $Category => $Info) { ?>
 		<tr<?php if ($Info['Selected']) { echo ' class="bold"'; } ?>>
 			<td class="center"><a href="<?php echo $Info['HREF']; ?>">View</a></td>
