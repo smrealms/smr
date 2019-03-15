@@ -180,8 +180,7 @@ class SmrSector {
 	}
 
 	function hasWeaponShop() {
-		$locations = $this->getLocations();
-		foreach($locations as $location) {
+		foreach ($this->getLocations() as $location) {
 			if($location->isWeaponSold())
 				return true;
 		}
@@ -189,8 +188,7 @@ class SmrSector {
 	}
 
 	function hasHQ() {
-		$locations = $this->getLocations();
-		foreach($locations as $location) {
+		foreach ($this->getLocations() as $location) {
 			if($location->isHQ())
 				return true;
 		}
@@ -198,8 +196,7 @@ class SmrSector {
 	}
 
 	function hasUG() {
-		$locations = $this->getLocations();
-		foreach($locations as $location) {
+		foreach ($this->getLocations() as $location) {
 			if($location->isUG())
 				return true;
 		}
@@ -207,8 +204,7 @@ class SmrSector {
 	}
 
 	function hasShipShop() {
-		$locations = $this->getLocations();
-		foreach($locations as $location) {
+		foreach ($this->getLocations() as $location) {
 			if($location->isShipSold())
 				return true;
 		}
@@ -216,8 +212,7 @@ class SmrSector {
 	}
 
 	function offersFederalProtection() {
-		$locations = $this->getLocations();
-		foreach($locations as $location) {
+		foreach ($this->getLocations() as $location) {
 			if($location->isFed())
 				return true;
 		}
@@ -226,8 +221,7 @@ class SmrSector {
 
 	public function getFedRaceIDs() {
 		$raceIDs = array();
-		$locations = $this->getLocations();
-		foreach($locations as $location) {
+		foreach ($this->getLocations() as $location) {
 			if($location->isFed())
 				$raceIDs[$location->getRaceID()] = $location->getRaceID();
 		}
@@ -235,8 +229,7 @@ class SmrSector {
 	}
 
 	function hasBar() {
-		$locations = $this->getLocations();
-		foreach($locations as $location) {
+		foreach ($this->getLocations() as $location) {
 			if($location->isBar())
 				return true;
 		}
@@ -244,8 +237,7 @@ class SmrSector {
 	}
 
 	function hasHardwareShop() {
-		$locations = $this->getLocations();
-		foreach($locations as $location) {
+		foreach ($this->getLocations() as $location) {
 			if($location->isHardwareSold())
 				return true;
 		}
@@ -253,8 +245,7 @@ class SmrSector {
 	}
 
 	function hasBank() {
-		$locations = $this->getLocations();
-		foreach($locations as $location) {
+		foreach ($this->getLocations() as $location) {
 			if($location->isBank())
 				return true;
 		}
@@ -300,8 +291,7 @@ class SmrSector {
 		$message .= ' sector ' . Globals::getSectorBBLink($this->getSectorID());
 
 		// iterate over all scout drones in sector
-		$forces = $this->getForces();
-		foreach($forces as $force) {
+		foreach ($this->getForces() as $force) {
 			$force->ping($message,$player);
 		}
 		$this->db->query('UPDATE sector_has_forces SET refresher = 0 WHERE ' . $this->SQL . '
@@ -310,8 +300,7 @@ class SmrSector {
 
 	function diedHere(AbstractSmrPlayer $player) {
 		// iterate over all scout drones in sector
-		$forces = $this->getForces();
-		foreach($forces as $force) {
+		foreach ($this->getForces() as $force) {
 			// send scout messages to user
 			$message = 'Your forces have spotted that ' . $player->getBBLink() . ' has been <span class="red">DESTROYED</span> in sector ' . Globals::getSectorBBLink($this->sectorID);
 			$force->ping($message,$player);
