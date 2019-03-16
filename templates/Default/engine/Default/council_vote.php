@@ -1,7 +1,7 @@
 <a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 
 <div class="center bold">Diplomatic Treaties</div><br />
-<div class="center standard">
+<div class="center">
 	Each council member is granted one vote per treaty.<br />
 	Presidents have the right to veto (remove) the vote on any treaty.<br />
 	Peace treaties must pass in both racial councils.
@@ -9,7 +9,7 @@
 
 <?php
 if (!$VoteTreaties) { ?>
-	<div class="center standard"><i>There are no treaties to vote on at this time.</i></span>
+	<div class="center"><i>There are no treaties to vote on at this time.</i></div>
 <?php
 } else { ?>
 	<table class="standard" align="center" width="65%">
