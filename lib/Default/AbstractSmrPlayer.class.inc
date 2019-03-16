@@ -478,7 +478,7 @@ abstract class AbstractSmrPlayer {
 			$return .= ' <span class="npcColour">[NPC]</span>';
 		}
 		if($includeAlliance) {
-			$return.= ' (' . $this->getAllianceName() . '</a>' . ')';
+			$return.= ' (' . $this->getAllianceName() . ')';
 		}
 		return $return;
 	}
