@@ -2,6 +2,7 @@
 	<p>This planet cannot yet store any shields, combat drones, or armour.</p>
 <?php } else { ?>	
 
+<br />
 <table class="standard">
 	<tr>
 		<th>Type</th>
