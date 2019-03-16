@@ -1,6 +1,6 @@
 <?php
 if (isset($Reason)) {
-	?><p><big><span class="bold red"><?php echo $Reason; ?></span></big></p><?php
+	?><p><span class="big bold red"><?php echo $Reason; ?></span></p><?php
 }
 
 if(isset($GameID)) { ?>

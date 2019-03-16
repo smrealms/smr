@@ -2,25 +2,25 @@
 $canAttack=false;
 
 if($ThisPlayer->hasNewbieTurns()) {
-	?><p><big class="green">You are under newbie protection!</big></p><?php
+	?><p class="big green">You are under newbie protection!</p><?php
 }
 else if($TargetPlayer->hasNewbieTurns()) {
-	?><p><big class="green">Your target is under newbie protection!</big></p><?php
+	?><p class="big green">Your target is under newbie protection!</p><?php
 }
 else if($ThisPlayer->sameAlliance($TargetPlayer)) {
-	?><p><big class="blue">This is your alliancemate.</big></p><?php
+	?><p class="big blue">This is your alliancemate.</p><?php
 }
 else if(!$ThisShip->canAttack()) {
-	?><p><big class="red">You ready your weapons, you take aim, you...realise you have no weapons.</big></p><?php
+	?><p class="big red">You ready your weapons, you take aim, you...realise you have no weapons.</p><?php
 }
 else if($ThisPlayer->traderNAPAlliance($TargetPlayer)) {
-	?><p><big class="blue">This is your ally.</big></p><?php
+	?><p class="big blue">This is your ally.</p><?php
 }
 else if($ThisPlayer->hasFederalProtection()) {
-	?><p><big class="blue">You are under federal protection! That wouldn't be fair.</big></p><?php
+	?><p class="big blue">You are under federal protection! That wouldn't be fair.</p><?php
 }
 else if($TargetPlayer->hasFederalProtection()) {
-	?><p><big class="blue">Your target is under federal protection!</big></p><?php
+	?><p class="big blue">Your target is under federal protection!</p><?php
 }
 else {
 	$canAttack=true;
@@ -29,7 +29,7 @@ else {
 		?><p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (3)</a></p><?php
 	}
 	else {
-		?><p><big class="red">You have no targets!</big></p><?php
+		?><p class="big red">You have no targets!</p><?php
 	}
 }
 if(!$canAttack)

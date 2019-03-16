@@ -3,7 +3,7 @@ if(isset($GameID)) { ?>
 	<span id="attack_area"><?php if($UnderAttack) { ?><p class="attack_warning">You Are Under Attack!</p><script>triggerAttackBlink('3B1111');</script><?php } ?></span><?php
 	$this->includeTemplate('includes/UnreadMessages.inc'); ?>
 	<a href="level_requirements.php" target="levelRequirements"><span id="lvlName"><?php echo $ThisPlayer->getLevelName(); ?></span></a><br />
-	<big><a href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a></big><br /><?php
+	<a class="big" href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a><br /><?php
 	if(isset($PlayerInvisible)) { ?>
 		<span class="smallFont smallCaps red">INVISIBLE</span><br /><?php
 	} ?>

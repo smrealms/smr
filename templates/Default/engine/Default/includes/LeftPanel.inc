@@ -3,18 +3,17 @@
 </span><br />
 <br /><?php
 if(isset($GameID)) {
-	?><big><?php
 	// Use the current sector link for Planet Main to enable the hotkey
 	if ($ThisPlayer->isLandedOnPlanet()) { ?>
-		<a class="bold" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Planet Main</a><br /><?php
+		<a class="big bold" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Planet Main</a><br /><?php
 	} else { ?>
-		<a class="bold" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Current Sector</a><br />
-		<a class="bold" href="<?php echo Globals::getLocalMapHREF(); ?>">Local Map</a><br /><?php
+		<a class="big bold" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Current Sector</a><br />
+		<a class="big bold" href="<?php echo Globals::getLocalMapHREF(); ?>">Local Map</a><br /><?php
 	}
 	if(isset($PlotCourseLink)) {
-		?><a class="bold" href="<?php echo $PlotCourseLink; ?>">Plot A Course</a><br /><?php
+		?><a class="big bold" href="<?php echo $PlotCourseLink; ?>">Plot A Course</a><br /><?php
 	}
-	?></big>
+	?>
 	<a href="map_galaxy.php" target="gal_map">Galaxy Map</a><br />
 	<br />
 	<a href="<?php echo $TraderLink; ?>">Trader</a><br />

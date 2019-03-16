@@ -7,7 +7,7 @@ if (isset($ContinueHREF)) {
 		<a class="buttonA" href="<?php echo $ContinueHREF; ?>">Continue</a>
 	</div>
 	<br /><br />
-	<big>Here are the updates that have gone live since your last visit, enjoy!</big>
+	<span class="big">Here are the updates that have gone live since your last visit, enjoy!</span>
 	<br /><br /><?php
 } ?>
 
