@@ -11,7 +11,7 @@ else if(!$MinimalDisplay) {
 ?><br /><?php
 if(!$MinimalDisplay) { ?>
 	<br />
-	<img src="images/portAttack.jpg" width="480px" height="330px" alt="Port Attack" title="Port Attack"><br /><?php
+	<img src="images/portAttack.jpg" width="480" height="330" alt="Port Attack" title="Port Attack"><br /><?php
 }
 if(!$AlreadyDestroyed) {
 	if(!$MinimalDisplay) { ?>
