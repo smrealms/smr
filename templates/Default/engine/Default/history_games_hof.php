@@ -1,9 +1,9 @@
 <?php
 if (isset($Links)) { ?>
 	<table class="center standard">
-		<tr><th>Categories</th></td><?php
+		<tr><th>Categories</th></tr><?php
 		foreach ($Links as $link) { ?>
-			<tr><td class="center"><?php echo $link; ?></td></tr><?php
+			<tr><td><?php echo $link; ?></td></tr><?php
 		} ?>
 	</table><?php
 }

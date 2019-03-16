@@ -14,8 +14,10 @@ is in your alliance.</p>
 	<li>Remove information shared by other players</li>
 	<li>Decide if you want to share for all games or just the current game</li>
 </ul>
+<br />
 
-<p><h2>Players you're sharing with:</h2></p>
+<h2>Players you're sharing with:</h2>
+<br />
 <table class="standard">
 	<tr class="center">
 		<th>Player ID</th>
@@ -43,8 +45,11 @@ is in your alliance.</p>
 		<form>
 	</tr>
 </table>
+<br />
+<br />
 
-<p><h2>Players sharing with you:</h2></p><?php
+<h2>Players sharing with you:</h2>
+<br /><?php
 if ($ShareFrom) { ?>
 	<table class="standard">
 		<tr class="center">
@@ -66,5 +71,5 @@ if ($ShareFrom) { ?>
 		} ?>
 	</table><?php
 } else { ?>
-	<p>None</p><?php
+	None<?php
 } ?>

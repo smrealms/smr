@@ -8,7 +8,7 @@ if(isset($Boxes)) { ?>
 		foreach($Boxes as $Box) { ?>
 			<tr>
 				<td><a href="<?php echo $Box['ViewHREF']; ?>"><?php echo $Box['BoxName']; ?></a></td>
-				<td><?php echo $Box['TotalMessages']; ?></a></td>
+				<td><?php echo $Box['TotalMessages']; ?></td>
 			</tr><?php
 		} ?>
 	</table><?php
