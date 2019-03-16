@@ -11,7 +11,7 @@ foreach ($LocTypes as $category => $LocIDs) { ?>
 <br />
 Click a category heading to toggle its display.
 
-<style type="text/css">
+<style>
 	tr.collapsible:hover {
 		cursor:pointer;
 	}

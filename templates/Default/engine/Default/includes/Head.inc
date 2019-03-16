@@ -8,7 +8,7 @@ if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled()) { ?>
 if(isset($ExtraCSSLink)) {
 	?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>" /><?php
 } ?>
-<style type="text/css">
+<style>
 	body {
 		font-size:<?php echo $FontSize; ?>%;
 	}<?php
