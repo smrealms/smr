@@ -14,7 +14,7 @@
 	<?php if ($ThisPlanet->getMaxShields() > 0) { ?>
 	<form name="TransferShieldsForm" method="POST" action="<?php echo $TransferShieldsHref; ?>">
 		<tr>
-			<td><img id="shields" src="images/shields.png"  width="16" height="16" alt="" title="Shields"/>Shields</td>
+			<td><img src="images/shields.png"  width="16" height="16" alt="" title="Shields"/>Shields</td>
 			<td align="center"><?php echo $ThisShip->getShields(); ?></td>
 			<td align="center"><?php echo $ThisPlanet->getShields(); ?></td>
 			<td align="center"><input type="number" name="amount" value="<?php echo min($ThisShip->getShields(),$ThisPlanet->getMaxShields()-$ThisPlanet->getShields()); ?>" class="InputFields center" size="4"></td>
@@ -26,7 +26,7 @@
 	<?php } if ($ThisPlanet->getMaxCDs() > 0) { ?>
 	<form name="TransferCDsForm" method="POST" action="<?php echo $TransferCDsHref; ?>">
 		<tr>
-			<td><img id="cds" src="images/cd.png"  width="16" height="16" alt="" title="Combat Drones"/>Combat Drones</td>
+			<td><img src="images/cd.png"  width="16" height="16" alt="" title="Combat Drones"/>Combat Drones</td>
 			<td align="center"><?php echo $ThisShip->getCDs(); ?></td>
 			<td align="center"><?php echo $ThisPlanet->getCDs(); ?></td>
 			<td align="center"><input type="number" name="amount" value="<?php echo min($ThisShip->getCDs(),$ThisPlanet->getMaxCDs()-$ThisPlanet->getCDs()); ?>" class="InputFields center" size="4"></td>
@@ -39,7 +39,7 @@
 	<?php if ($ThisPlanet->getMaxArmour() > 0) { ?>
 	<form name="TransferArmourForm" method="POST" action="<?php echo $TransferArmourHref; ?>">
 		<tr>
-			<td><img id="turret" src="images/armour.png"  width="16" height="16" alt="" title="Armour"/>Armour</td>
+			<td><img src="images/armour.png"  width="16" height="16" alt="" title="Armour"/>Armour</td>
 			<td align="center"><?php echo $ThisShip->getArmour(); ?></td>
 			<td align="center"><?php echo $ThisPlanet->getArmour(); ?></td>
 			<td align="center"><input type="number" name="amount" value="<?php echo min($ThisShip->getArmour()-1,$ThisPlanet->getMaxArmour()-($ThisPlanet->getArmour())); ?>" class="InputFields center" size="4"></td>
