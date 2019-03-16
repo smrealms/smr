@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script>
 	function go() {
 		var val = window.document.form_ip.type.value;
 		if (val == "search") {
@@ -58,7 +58,7 @@ Please select the type of IP search you would like.<br />
 	<br /><br />
 	<input type="submit" name="action" value="Continue" class="InputFields" />
 </form>
-<script type="text/javascript">
+<script>
 	window.document.form_ip.variable.select();
 	window.document.form_ip.variable.focus();
 </script>

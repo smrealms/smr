@@ -1,6 +1,6 @@
 <?php
 if (isset($HardwareSold)) { ?>
-	<script type="text/javascript">
+	<script>
 		function recalcOnKeyUp(transaction, hardwareTypeID, cost) {
 			var form = document.getElementById(transaction + hardwareTypeID);
 			form.total.value = form.amount.value * cost;

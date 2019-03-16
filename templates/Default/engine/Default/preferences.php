@@ -434,4 +434,4 @@ if(isset($GameID)) { ?>
 	</table>
 </form>
 
-<script type="text/javascript" src="js/colorpicker.js"></script>
+<script src="js/colorpicker.js"></script>
