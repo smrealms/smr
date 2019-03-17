@@ -1,13 +1,17 @@
 <?php
 
 class SmrTreaty {
+	/**
+	 * For each treaty type (as given by the columns in the alliance_treaties
+	 * database table), provides an array with a display title and description.
+	 */
 	const TYPES = [
 		'trader_assist' => array(
 			'Assist - Trader Attacks',
 			'Assist your ally in attacking traders.'
 		),
 		'raid_assist' => array(
-			'Assist - Planet & Port Attacks',
+			'Assist - Planet &amp; Port Attacks',
 			'Assist your ally in attacking planets and ports.'
 		),
 		'trader_defend' => array(

@@ -80,7 +80,7 @@ if(isset($GameID)) { ?>
 			<a href="<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>" onclick="this.href='javascript:void(0)';">
 				Show/Hide (<?php echo $ThisShip->getNumWeapons(); ?>)<br />
 			</a>
-			<span class="wep1"<?php if(!$ThisPlayer->isDisplayWeapons()){ ?>style="display: none;"<?php } ?>><?php
+			<span class="wep1"<?php if(!$ThisPlayer->isDisplayWeapons()){ ?> style="display: none;"<?php } ?>><?php
 				foreach ($ThisShip->getWeapons() as $Weapon) {
 					echo $Weapon->getName(); ?><br /><?php
 				} ?>

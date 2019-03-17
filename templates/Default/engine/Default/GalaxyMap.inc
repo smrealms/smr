@@ -23,7 +23,7 @@
 					<td>
 						&thinsp;
 						<a href="map_warps.php">
-							<img src="images/warp_chart.svg" height="24px" width="24px" style="vertical-align: middle;" />&thinsp;Open warp chart
+							<img src="images/warp_chart.svg" height="24" width="24" style="vertical-align: middle;" />&thinsp;Open warp chart
 						</a>
 					</td>
 				</tr>

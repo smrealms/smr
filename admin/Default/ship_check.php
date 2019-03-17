@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Ship Integrity Check');
 
-$PHP_OUTPUT.=('<p>');
+$PHP_OUTPUT.=('<br />');
 $db->query('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware, hardware_type ' .
 		   'WHERE ship_type_support_hardware.ship_type_id = player.ship_type_id AND ' .
 				 'player.account_id = ship_has_hardware.account_id AND ' .
@@ -28,24 +28,24 @@ if ($db->getNumRows()) {
 		$amount = $db->getField('amount');
 		$max_amount = $db->getField('max_amount');
 
-		$container = array();
-		$container['url'] = 'ship_check_processing.php';
-		$container['account_id'] = $db->getField('account_id');
-		$container['hardware'] = $db->getField('hardware_type_id');
-		$container['game_id'] = $db->getField('game_id');
-		$container['max_amount'] = $max_amount;
-		$PHP_OUTPUT.=create_echo_form($container);
-
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td>'.$player_name.'</td>');
 		$PHP_OUTPUT.=('<td>'.$type.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$amount.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$max_amount.'</td>');
 		$PHP_OUTPUT.=('<td align="center">');
+
+		$container = create_container('ship_check_processing.php');
+		$container['account_id'] = $db->getField('account_id');
+		$container['hardware'] = $db->getField('hardware_type_id');
+		$container['game_id'] = $db->getField('game_id');
+		$container['max_amount'] = $max_amount;
+		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=create_submit('Fix');
+		$PHP_OUTPUT.=('</form>');
+
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('</tr>');
-		$PHP_OUTPUT.=('</form>');
 
 	}
 
@@ -53,4 +53,3 @@ if ($db->getNumRows()) {
 
 } else
 	$PHP_OUTPUT.=('No overpowered ships!');
-$PHP_OUTPUT.=('</p>');

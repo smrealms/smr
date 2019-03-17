@@ -25,7 +25,9 @@
 						</div>
 					</td>
 				<td style="padding-right:1px;border-left:none;" class="right bottom">
-					<img height="<?php echo $Port->getUpgradePercent()*32; ?>" width="6px" style="border:2px solid #000000;border-bottom:none;" src="images/green.gif" alt="Upgrade" title="Upgrade" /><img height="<?php echo $Port->getCreditsPercent()*32; ?>" width="6px" style="border:2px solid #000000;border-bottom:none;" src="images/blue.gif" alt="Credits" title="Credits" /><img height="<?php echo $Port->getReinforcePercent()*32; ?>" width="6px" style="border:2px solid #000000;border-bottom:none;" src="images/red.gif" alt="Defense" title="Defense" />
+					<img height="<?php echo $Port->getUpgradePercent()*32; ?>" width="6" style="border:2px solid #000000;border-bottom:none;" src="images/green.gif" alt="Upgrade" title="Upgrade" />
+					<img height="<?php echo $Port->getCreditsPercent()*32; ?>" width="6" style="border:2px solid #000000;border-bottom:none;" src="images/blue.gif" alt="Credits" title="Credits" />
+					<img height="<?php echo $Port->getReinforcePercent()*32; ?>" width="6" style="border:2px solid #000000;border-bottom:none;" src="images/red.gif" alt="Defense" title="Defense" />
 				</td>
 				<td class="center shrink noWrap"><?php
 					if($Port->isUnderAttack()) {

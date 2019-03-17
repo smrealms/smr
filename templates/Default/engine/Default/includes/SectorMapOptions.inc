@@ -10,8 +10,8 @@ if (isset($CheckboxFormHREF)) { ?>
 				<td><input name="show_seedlist_sectors" onchange="this.form.submit()" type="checkbox" <?php if ($ShowSeedlistSectors) { ?>checked<?php }; ?> /></td>
 				<td>Show seedlist sectors</td>
 			</tr>
-			<input type=hidden name="change_settings" />
 		</table>
+		<input type=hidden name="change_settings" />
 	</form><?php
 }
 ?>
