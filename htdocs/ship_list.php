@@ -180,8 +180,8 @@ function buildRestriction() {
 	$restrict = '<br><select id="restrictPick" name="restrict" onchange="restrictPickf()">'
 	.'<option value="All">All</option>'
 	.'<option value="">None</option>'
-	."<option value='<font color=\"green\">Good</font>'>Good</option>"
-	."<option value='<font color=\"red\">Evil</font>' style=\"color: red;\">Evil</option></select>";
+	.'<option class="dgreen" value="Good">Good</option>'
+	.'<option class="red" value="Evil">Evil</option></select>';
 	
 	return $restrict;
 
@@ -208,9 +208,9 @@ function buildShipStats($db) {
 	$stat[] = $db->getInt('speed');
 	$stat[] = $db->getInt('hardpoint');
 	if ($db->getField('buyer_restriction') == BUYER_RESTRICTION_GOOD)
-		$restriction = '<font color="green">Good</font>';
+		$restriction = '<span class="dgreen">Good</span>';
 	elseif ($db->getField('buyer_restriction') == BUYER_RESTRICTION_EVIL)
-		$restriction = '<font color="red">Evil</font>';
+		$restriction = '<span class="red">Evil</span>';
 	else
 		$restriction = '';
 	$stat[] = $restriction;
