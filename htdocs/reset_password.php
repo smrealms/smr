@@ -19,7 +19,7 @@
 			<tr>
 				<td width="100">&nbsp;</td>
 				<td width="1" bgcolor="#0B8D35"></td>
-				<td align="left" valign="top" width="600" bgcolor="#06240E">
+				<td valign="top" width="600" bgcolor="#06240E">
 					<table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
 					<tr>
 						<td valign="top">
@@ -29,22 +29,22 @@
 							For security reasons, please enter your username and the password reset code you requested:
 
 							<form action="reset_password_processing.php" method="POST">
-									<div align="center">
-											<table border="0">
+									<div class="center">
+											<table class="center" border="0">
 												<tr>
-														<th align="right">Username:</th>
+														<th class="right">Username:</th>
 														<td><input name="login" type="text" class="InputFields" value="<?php echo isset($_REQUEST['login']) ? htmlspecialchars($_REQUEST['login']) : ''; ?>" /></td>
 												</tr>
 												<tr>
-														<th align="right">Password Reset Code:</th>
+														<th class="right">Password Reset Code:</th>
 														<td><input name="password_reset" type="text" class="InputFields" value="<?php echo isset($_REQUEST['resetcode']) ? htmlspecialchars($_REQUEST['resetcode']) : ''; ?>" /></td>
 												</tr>
 												<tr>
-														<th align="right">New Password:</th>
+														<th class="right">New Password:</th>
 														<td><input name="password" type="password" class="InputFields" /></td>
 												</tr>
 												<tr>
-														<th align="right">Verify New Password:</th>
+														<th class="right">Verify New Password:</th>
 														<td><input name="pass_verify" type="password" class="InputFields" /></td>
 												</tr>
 											</table>

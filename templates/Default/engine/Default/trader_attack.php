@@ -1,6 +1,6 @@
 <?php $this->includeTemplate('includes/TraderFullCombatResults.inc'); ?><br />
 <br />
-<div align="center"><?php
+<div class="center"><?php
 	if(isset($Target)) { ?>
 		<div class="buttonA">
 			<a href="<?php echo $Target->getAttackTraderHREF(); ?>" class="buttonA">Continue Attack</a>

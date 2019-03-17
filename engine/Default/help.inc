@@ -78,7 +78,7 @@ function echo_nav($topic_id) {
 		}
 		echo ('</th>');
 
-		echo ('<th width="100%" align="center" validn="middle" style="font-size:18pt;font-weight:bold;">' . get_numbering($topic_id) . $topic.'</th>');
+		echo ('<th width="100%" class="center" validn="middle" style="font-size:18pt;font-weight:bold;">' . get_numbering($topic_id) . $topic.'</th>');
 		echo ('<th width="32"><a href="/manual_toc.php"><img src="/images/help/contents.jpg" width="32" height="32" border="0"></a></th>');
 
 		echo ('</tr>');
@@ -125,7 +125,7 @@ function echo_subsection($topic_id) {
 	// check if there are subsections
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$db->escapeNumber($topic_id).' ORDER BY order_id');
 	if ($db->getNumRows()) {
-		echo ('<hr noshade width="75%" size="1" align="center"/>');
+		echo ('<hr noshade width="75%" size="1" class="center"/>');
 		echo ('<div id="help_menu">');
 		echo ('<h2>Subsections:</h2>');
 

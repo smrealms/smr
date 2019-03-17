@@ -1,5 +1,5 @@
 <br />
-<div align="center">
+<div class="center">
 	<?php echo $Summary; ?>
 	<br /><br />
 
@@ -10,7 +10,7 @@
 
 	<?php
 	if (!empty($AllRows)) { ?>
-		<table id="cpl" class="standard" width="95%">
+		<table id="cpl" class="center standard" width="95%">
 			<thead>
 				<tr>
 					<th class="sort" data-sort="sort_name">Player</th>
@@ -23,8 +23,8 @@
 			<tbody class="list"><?php
 				foreach ($AllRows as $Row) { ?>
 					<tr <?php echo $Row['tr_class']; ?>>
-						<td class="sort_name" data-name="<?php echo strip_tags($Row['player']->getPlayerName()); ?>" valign="top"><?php echo $Row['name_link']; ?></td>
-						<td class="sort_race center">
+						<td class="sort_name left" data-name="<?php echo strip_tags($Row['player']->getPlayerName()); ?>" valign="top"><?php echo $Row['name_link']; ?></td>
+						<td class="sort_race">
 							<?php echo $ThisPlayer->getColouredRaceName($Row['player']->getRaceID(), true); ?>
 						</td>
 						<td class="sort_alliance"><?php echo $Row['player']->getAllianceName(true); ?></td>

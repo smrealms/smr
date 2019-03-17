@@ -1,4 +1,4 @@
-<table class="standard" width="45%">
+<table class="standard center" width="45%">
 	<tr>
 		<th class="shrink">Rank</th>
 		<th>Sector</th>
@@ -6,19 +6,19 @@
 	</tr><?php
 	foreach ($Rankings as $Rank => $RankSector) { ?>
 		<tr>
-			<td class="center<?php
+			<td class="<?php
 				if ($ThisPlayer->getSectorID() == $RankSector->getSectorID()) {
 					echo ' bold';
 				} ?>"><?php echo $Rank; ?>
 			</td>
 
-			<td class="center<?php
+			<td class="<?php
 				if ($ThisPlayer->getSectorID() == $RankSector->getSectorID()) {
 					echo ' bold';
 				} ?>"><?php echo $RankSector->getSectorID(); ?>
 			</td>
 
-			<td class="center<?php
+			<td class="<?php
 				if ($ThisPlayer->getSectorID() == $RankSector->getSectorID()) {
 					echo ' bold';
 				} ?>"><?php echo $RankSector->getBattles(); ?>

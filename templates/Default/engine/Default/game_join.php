@@ -90,12 +90,12 @@ if ($Game->getDescription()) { ?>
 				<p>Now it is time for you to create your Trader and begin your quest for riches, fame and glory! Where will your destiny take you?</p>
 				<table>
 					<tr>
-						<td align="right"><b>Name:</b>&nbsp;</td>
+						<td class="right"><b>Name:</b>&nbsp;</td>
 						<td><input type="text" name="player_name" maxlength="32" class="InputFields"<?php if(!isset($JoinGameFormHref)){ ?>disabled="disabled"<?php } ?>></td>
 						<td rowspan="4" class="standard"><img id="race_image" name="race_image" src="images/race/race1.gif" alt="Please select a race."></td>
 					</tr>
 					<tr>
-						<td align="right"><b>Race:</b>&nbsp;</td>
+						<td class="right"><b>Race:</b>&nbsp;</td>
 						<td>
 						<select name="race_id" class="InputFields" size="1" OnChange="go();">
 							<?php /*<option value="1">[please select]</option> */
@@ -107,7 +107,7 @@ if ($Game->getDescription()) { ?>
 					</tr>
 					
 					<tr>
-						<td align="right">&nbsp;</td>
+						<td>&nbsp;</td>
 						<td><?php
 						if(isset($JoinGameFormHref)) {
 							?><input type="submit" name="action" value="Create Player" class="InputFields" /><?php
@@ -129,21 +129,20 @@ if ($Game->getDescription()) { ?>
 		</tr>
 
 		<tr>
-			<td align=center>
-				<table>
+			<td>
+				<table class="center">
 					<tr>
-						<td align=center colspan=4 class="center">Trading</td>
+						<td colspan="3">Trading</td>
 					</tr>
 					<tr>
-						<td align=left>Combat<br />
-						Strength</td>
-						<td align=center colspan=2>
-							<img width="440" height="440" border="0" name="graph" id="graphframe" src="images/race/graph/graph1.gif" alt="Race overview" />
+						<td>Combat<br />Strength</td>
+						<td>
+							<img width="440" height="440" border="0" id="graphframe" src="images/race/graph/graph1.gif" alt="Race overview" />
 						</td>
-						<td align=right>Hunting</td>
+						<td>Hunting</td>
 					</tr>
 					<tr>
-						<td align=center colspan=4 class="center">Utility</td>
+						<td colspan="3">Utility</td>
 					</tr>
 				</table>
 			</td>

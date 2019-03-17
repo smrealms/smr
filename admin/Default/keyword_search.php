@@ -57,31 +57,31 @@ while ($db->nextRecord()) {
 			$PHP_OUTPUT.=('<a href=#button1>Goto Exception Button/Personal Messages Start</a>');
 			$PHP_OUTPUT.= create_table();
 			$PHP_OUTPUT.=('<tr>');
-			$PHP_OUTPUT.=('<th align=center>Game ID</th>');
-			$PHP_OUTPUT.=('<th align=center>Alliance ID</th>');
-			$PHP_OUTPUT.=('<th align=center>Thread ID</th>');
-			$PHP_OUTPUT.=('<th align=center>Reply ID</th>');
-			$PHP_OUTPUT.=('<th align=center>Sender ID</th>');
-			$PHP_OUTPUT.=('<th align=center>Bad text</th>');
-			$PHP_OUTPUT.=('<th align=center>Ignore</th>');
+			$PHP_OUTPUT.=('<th>Game ID</th>');
+			$PHP_OUTPUT.=('<th>Alliance ID</th>');
+			$PHP_OUTPUT.=('<th>Thread ID</th>');
+			$PHP_OUTPUT.=('<th>Reply ID</th>');
+			$PHP_OUTPUT.=('<th>Sender ID</th>');
+			$PHP_OUTPUT.=('<th>Bad text</th>');
+			$PHP_OUTPUT.=('<th>Ignore</th>');
 			$PHP_OUTPUT.=('</tr>');
 		}
 
 		//lets echo this message
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align=center>'.$game_id.'</td>');
-		$PHP_OUTPUT.=('<td align=center>'.$alliance_id.'</td>');
-		$PHP_OUTPUT.=('<td align=center>'.$thread_id.'</td>');
-		$PHP_OUTPUT.=('<td align=center>'.$reply_id.'</td>');
+		$PHP_OUTPUT.=('<td class="center">'.$game_id.'</td>');
+		$PHP_OUTPUT.=('<td class="center">'.$alliance_id.'</td>');
+		$PHP_OUTPUT.=('<td class="center">'.$thread_id.'</td>');
+		$PHP_OUTPUT.=('<td class="center">'.$reply_id.'</td>');
 		//make sure we check for Word, WORD, and word...after phpv5 use str_ireplace
 		$array = array();
 		$array[] = ucfirst($word);
 		$array[] = strtoupper($word);
 		$array[] = strtolower($word);
 		$bad = str_replace($array, '<b><span class="red">'.$word.'</span></b>', $db->escapeString($bad));
-		$PHP_OUTPUT.=('<td align=center>' . $db2->getField('sender_id') . '</td>');
-		$PHP_OUTPUT.=('<td align=center>'.$bad.'</td>');
-		$PHP_OUTPUT.=('<td align=center><input type=checkbox name=alliance[] value='.$array_filler.'></td>');
+		$PHP_OUTPUT.=('<td class="center">' . $db2->getField('sender_id') . '</td>');
+		$PHP_OUTPUT.=('<td class="center">'.$bad.'</td>');
+		$PHP_OUTPUT.=('<td class="center"><input type=checkbox name=alliance[] value='.$array_filler.'></td>');
 		$PHP_OUTPUT.=('</tr>');
 		//update count
 		$count += 1;
@@ -142,24 +142,24 @@ while ($db->nextRecord()) {
 			$PHP_OUTPUT.=('<a href=#button2>Goto Exception Button</a>');
 			$PHP_OUTPUT.= create_table();
 			$PHP_OUTPUT.=('<tr>');
-			$PHP_OUTPUT.=('<th align=center>Game ID</th>');
-			$PHP_OUTPUT.=('<th align=center>Sender ID</th>');
-			$PHP_OUTPUT.=('<th align=center>Bad text</th>');
-			$PHP_OUTPUT.=('<th align=center>Ignore</th>');
+			$PHP_OUTPUT.=('<th>Game ID</th>');
+			$PHP_OUTPUT.=('<th>Sender ID</th>');
+			$PHP_OUTPUT.=('<th>Bad text</th>');
+			$PHP_OUTPUT.=('<th>Ignore</th>');
 			$PHP_OUTPUT.=('</tr>');
 		}
 
 		//lets echo this message
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align=center>' . $db2->getField('game_id') . '</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $db2->getField('sender_id') . '</td>');
+		$PHP_OUTPUT.=('<td class="center">' . $db2->getField('game_id') . '</td>');
+		$PHP_OUTPUT.=('<td class="center">' . $db2->getField('sender_id') . '</td>');
 		$array = array();
 		$array[] = ucfirst($word);
 		$array[] = strtoupper($word);
 		$array[] = strtolower($word);
 		$bad = str_replace($array, '<b><span class="red">'.$word.'</span></b>', $db->escapeString($bad));
-		$PHP_OUTPUT.=('<td align=center>'.$bad.'</td>');
-		$PHP_OUTPUT.=('<td align=center><input type=checkbox name=personal[] value='.$msg_id.'></td>');
+		$PHP_OUTPUT.=('<td class="center">'.$bad.'</td>');
+		$PHP_OUTPUT.=('<td class="center"><input type=checkbox name=personal[] value='.$msg_id.'></td>');
 		$PHP_OUTPUT.=('</tr>');
 		//update count
 		$count += 1;

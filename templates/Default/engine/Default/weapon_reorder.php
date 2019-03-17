@@ -1,6 +1,6 @@
 <?php
 if($ThisShip->hasWeapons()) { ?>
-	<div align="center">
+	<div class="center">
 		<p>To reorder your weapons simply drag and drop them into the desired order.</p>
 		<noscript><p>It has been detected that you do not have javascript or that it is disabled, you will have to use the arrows to reorder your weapons</p></noscript>
 		

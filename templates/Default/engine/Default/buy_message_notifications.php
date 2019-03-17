@@ -21,7 +21,7 @@ if (isset($MessageBoxes)) { ?>
 				<td>
 					<?php echo $MessageBox['Name']; ?>
 				</td>
-				<td align="center" class="yellow"><?php echo $MessageBox['MessagesRemaining']; ?></td>
+				<td class="center yellow"><?php echo $MessageBox['MessagesRemaining']; ?></td>
 				<td>
 					<div class="buttonA">
 						<a class="buttonA" href="<?php echo $MessageBox['BuyHref']; ?>">Buy <?php echo $MessageBox['MessagesPerCredit']; ?> Messages (1 SMR Credit)</a>

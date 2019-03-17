@@ -31,9 +31,9 @@ if ($db->getNumRows()) {
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td>'.$player_name.'</td>');
 		$PHP_OUTPUT.=('<td>'.$type.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$amount.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$max_amount.'</td>');
-		$PHP_OUTPUT.=('<td align="center">');
+		$PHP_OUTPUT.=('<td class="center">'.$amount.'</td>');
+		$PHP_OUTPUT.=('<td class="center">'.$max_amount.'</td>');
+		$PHP_OUTPUT.=('<td class="center">');
 
 		$container = create_container('ship_check_processing.php');
 		$container['account_id'] = $db->getField('account_id');

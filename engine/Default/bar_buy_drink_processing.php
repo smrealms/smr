@@ -1,6 +1,6 @@
 <?php
 
-$message = '<div align=center>';
+$message = '<div class="center">';
 
 if ($player->getCredits() < 10) {
 	create_error('Come back when you get some money!');

@@ -1,11 +1,9 @@
 <?php $this->includeTemplate('includes/ForceFullCombatResults.inc'); ?><br />
 <br />
-<div align="center"><?php
+<div class="center"><?php
 	if(isset($Target)) { ?>
-		<div style="width:50%">
-			<div class="buttonA">
-				<a href="<?php echo $Target->getAttackForcesHREF() ?>" class="buttonA">Continue Attack (<?php echo $Target->getAttackTurnCost($ThisShip); ?>)</a>
-			</div>
+		<div class="buttonA">
+			<a href="<?php echo $Target->getAttackForcesHREF() ?>" class="buttonA">Continue Attack (<?php echo $Target->getAttackTurnCost($ThisShip); ?>)</a>
 		</div><?php
 	}
 	else {

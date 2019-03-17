@@ -47,7 +47,7 @@ while($db->nextRecord()) {
 	$hof = true;
 }
 $PHP_OUTPUT .= buildBreadcrumb($var,$hofTypes,'Personal HoF');
-$PHP_OUTPUT.= '<table class="standard" align="center">';
+$PHP_OUTPUT.= '<table class="standard centered">';
 
 if(!isset($var['view'])) {
 	$PHP_OUTPUT.=('<tr><th>Category</th><th width="60%">Subcategory</th></tr>');

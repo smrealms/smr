@@ -28,7 +28,7 @@ if(isset($Message)) {
 	Enter validation code:&nbsp;&nbsp;
 	<input type="text" name="validation_code" maxlength="10" size="10" class="InputFields center">
 </p>
-<p align="center">
+<p class="center">
 	<input type="submit" name="action" value="Validate me now!" class="InputFields">
 	&nbsp;&nbsp;
 	<input type="submit" name="action" value="I'll validate later." class="InputFields">

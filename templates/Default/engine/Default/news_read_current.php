@@ -2,13 +2,13 @@
 $this->includeTemplate('includes/CommonNews.inc');
 
 if(isset($NewsItems) && count($NewsItems) > 0) { ?>
-	<div align="center">
+	<div class="center">
 		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 	</div>
 	<table class="standard">
 		<tr>
-			<th class="center">Time</th>
-			<th class="center">News</th>
+			<th>Time</th>
+			<th>News</th>
 		</tr>
 		<?php
 		foreach($NewsItems as $NewsItem) { ?>

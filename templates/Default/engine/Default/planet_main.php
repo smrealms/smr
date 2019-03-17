@@ -12,12 +12,12 @@ if (isset($Msg)) {
 
 	<tr>
 		<td>
-			<img align="left" src="<?php echo $ThisPlanet->getTypeImage()?>" width="16" height="16" alt="Planet" title="<?php echo $ThisPlanet->getTypeName(); ?>" /> 
+			<img class="bottom" src="<?php echo $ThisPlanet->getTypeImage()?>" width="16" height="16" alt="Planet" title="<?php echo $ThisPlanet->getTypeName(); ?>" /> 
 			&nbsp;<b><?php echo $ThisPlanet->getTypeName() ?>:</b> <?php echo $ThisPlanet->getTypeDescription(); ?>
+			<a href="<?php echo WIKI_URL; ?>/game-guide/locations#planets" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a>
 		</td>
 	<tr>
 		<td style="width:50%">
-			<a href="<?php echo WIKI_URL; ?>/game-guide/locations#planets" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a>
 			<table class="standard">
 				<tr>
 					<th width="145">&nbsp;</th>
@@ -27,8 +27,8 @@ if (isset($Msg)) {
 				
 				<tr>
 					<td>Planet Level</td>
-					<td align="center"><span id="planetLevel"><?php echo number_format($ThisPlanet->getLevel(),2); ?></span></td>
-					<td align="center"><?php echo number_format($ThisPlanet->getMaxLevel(),2); ?></td>
+					<td class="center"><span id="planetLevel"><?php echo number_format($ThisPlanet->getLevel(),2); ?></span></td>
+					<td class="center"><?php echo number_format($ThisPlanet->getMaxLevel(),2); ?></td>
 				</tr>
 			</table>
 			<br />
@@ -42,8 +42,8 @@ if (isset($Msg)) {
 				<tr>
 					<td><img class="tooltip" id="tip<?php echo $StructureID; ?>" src="images/<?php echo $Structure->image(); ?>" width="16" height="16" alt="" title="<?php echo $Structure->tooltip(); ?>" />
 						<label for="tip<?php echo $StructureID; ?>">&nbsp;<?php echo $Structure->name(); ?></td>
-					<td align="center"><span id="planetStructure<?php echo $StructureID; ?>"><?php echo $ThisPlanet->getBuilding($StructureID); ?></span></td>
-					<td align="center"><?php echo $ThisPlanet->getMaxBuildings($StructureID); ?></td>
+					<td class="center"><span id="planetStructure<?php echo $StructureID; ?>"><?php echo $ThisPlanet->getBuilding($StructureID); ?></span></td>
+					<td class="center"><?php echo $ThisPlanet->getMaxBuildings($StructureID); ?></td>
 				</tr><?php
 				} ?>
 			</table>
@@ -58,32 +58,32 @@ if (isset($Msg)) {
 				<?php if ($ThisPlanet->hasBuilding(PLANET_GENERATOR)) { ?>
 				<tr>
 					<td><img src="images/shields.png"  width="16" height="16" alt="" title="Shields"/>&nbsp;Shields</td>
-					<td align="center"><span id="planetShields"><?php echo $ThisPlanet->getShields(); ?></span> / <span id="planetMaxShields"><?php echo $ThisPlanet->getMaxShields(); ?></span></td>
+					<td class="center"><span id="planetShields"><?php echo $ThisPlanet->getShields(); ?></span> / <span id="planetMaxShields"><?php echo $ThisPlanet->getMaxShields(); ?></span></td>
 					<td>&nbsp;</td>
 				</tr>
 				<?php } if ($ThisPlanet->hasBuilding(PLANET_HANGAR)) { ?>
 				<tr>
 					<td><img src="images/cd.png"  width="16" height="16" alt="" title="Combat Drones"/>&nbsp;Combat Drones</td>
-					<td align="center"><span id="planetCDs"><?php echo $ThisPlanet->getCDs(); ?></span> / <span id="planetMaxCDs"><?php echo $ThisPlanet->getMaxCDs(); ?></span></td>
-					<td align="center">100 %</td>
+					<td class="center"><span id="planetCDs"><?php echo $ThisPlanet->getCDs(); ?></span> / <span id="planetMaxCDs"><?php echo $ThisPlanet->getMaxCDs(); ?></span></td>
+					<td class="center">100 %</td>
 				</tr>
 				<?php } if ($ThisPlanet->hasBuilding(PLANET_BUNKER)) { ?>
 				<tr>
 					<td><img src="images/armour.png"  width="16" height="16" alt="" title="Armour"/>&nbsp;Armour</td>
-					<td align="center"><span id="planetArmour"><?php echo $ThisPlanet->getArmour(); ?></span> / <span id="planetMaxArmour"><?php echo $ThisPlanet->getMaxArmour(); ?></span></td>
-					<td align="center">&nbsp;</td>
+					<td class="center"><span id="planetArmour"><?php echo $ThisPlanet->getArmour(); ?></span> / <span id="planetMaxArmour"><?php echo $ThisPlanet->getMaxArmour(); ?></span></td>
+					<td class="center">&nbsp;</td>
 				</tr>
 				<?php }	if ($ThisPlanet->hasBuilding(PLANET_TURRET)) { ?>
 				<tr>
 					<td><img src="images/turrets.png"  width="16" height="16" alt="" title="Turret"/>&nbsp;Turrets</td>
-					<td align="center"><span id="planetTurrets2"><?php echo $ThisPlanet->getBuilding(PLANET_TURRET); ?></span> / <?php echo $ThisPlanet->getMaxBuildings(PLANET_TURRET); ?></td>
-					<td align="center"><span id="planetAcc"><?php echo number_format($ThisPlanet->accuracy(), 2); ?></span> %</td>
+					<td class="center"><span id="planetTurrets2"><?php echo $ThisPlanet->getBuilding(PLANET_TURRET); ?></span> / <?php echo $ThisPlanet->getMaxBuildings(PLANET_TURRET); ?></td>
+					<td class="center"><span id="planetAcc"><?php echo number_format($ThisPlanet->accuracy(), 2); ?></span> %</td>
 				</tr>
 				<?php }	if ($ThisPlanet->hasBuilding(PLANET_WEAPON_MOUNT)) { ?>
 				<tr>
 					<td><img src="images/weapon_shop.png"  width="16" height="16" alt="" title="Weapon"/>&nbsp;Mounted Weapons</td>
-					<td align="center"><span id="planetWeapons"><?php echo count($ThisPlanet->getMountedWeapons()); ?></span> / <?php echo $ThisPlanet->getBuilding(PLANET_WEAPON_MOUNT); ?></td>
-					<td align="center">+<?php echo $ThisPlanet->getAccuracyBonus(); ?>%</td>
+					<td class="center"><span id="planetWeapons"><?php echo count($ThisPlanet->getMountedWeapons()); ?></span> / <?php echo $ThisPlanet->getBuilding(PLANET_WEAPON_MOUNT); ?></td>
+					<td class="center">+<?php echo $ThisPlanet->getAccuracyBonus(); ?>%</td>
 				</tr>
 				<?php } ?>
 				</table>

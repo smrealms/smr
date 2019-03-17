@@ -1,6 +1,6 @@
-<div align="center"><?php
+<div class="center"><?php
 	if(isset($Preview)) { ?>
-		<div align="center">If you ship is found to use HTML inappropriately you may be banned.
+		<div class="center">If you ship is found to use HTML inappropriately you may be banned.
 		  Inappropriate HTML includes but is not limited to something that can either cause display errors or cause functionality of the game to stop.  Also it is your responsibility to make sure ALL HTML tags that need to be closed are closed!<br />
 			Preview:<br />
 			<?php echo $Preview; ?>

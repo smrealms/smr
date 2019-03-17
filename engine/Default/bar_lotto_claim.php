@@ -11,7 +11,7 @@ if ($db->nextRecord()) {
 	$player->increaseCredits($prize);
 	$player->increaseHOF($prize,array('Bar','Lotto','Money','Claimed'), HOF_PUBLIC);
 	$player->increaseHOF(1,array('Bar','Lotto','Results','Claims'), HOF_PUBLIC);
-	$message .= '<div align="center">You have claimed <span class="red">$' . number_format($prize) . '</span>!<br /></div><br />';
+	$message .= '<div class="center">You have claimed <span class="red">$' . number_format($prize) . '</span>!<br /></div><br />';
 	$db->query('DELETE FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND prize = ' . $db->escapeNumber($prize) . ' AND time = 0 LIMIT 1');
 	$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$db->escapeNumber($player->getGameID()));

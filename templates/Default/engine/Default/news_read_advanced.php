@@ -1,4 +1,4 @@
-<div align="center">
+<div class="center">
 	<form name="AdvancedNewsForm" method="POST" action="<?php echo $AdvancedNewsFormHref; ?>">
 		<table class="standardnobord fullwidth"><tr>
 			<td class="center">
@@ -63,8 +63,8 @@
 		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 		<table class="standard">
 			<tr>
-				<th class="center">Time</th>
-				<th class="center">News</th>
+				<th>Time</th>
+				<th>News</th>
 			</tr>
 			<?php
 			foreach($NewsItems as $NewsItem) { ?>

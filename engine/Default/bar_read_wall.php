@@ -19,8 +19,8 @@ $db->query('SELECT * FROM bar_wall WHERE game_id = ' . $db->escapeNumber($player
 if ($db->getNumRows()) {
 	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<th align="center">Time written</th>');
-	$PHP_OUTPUT.=('<th align="center">Message</th>');
+	$PHP_OUTPUT.=('<th>Time written</th>');
+	$PHP_OUTPUT.=('<th>Message</th>');
 	$PHP_OUTPUT.=('</tr>');
 
 	while ($db->nextRecord()) {
@@ -28,8 +28,8 @@ if ($db->getNumRows()) {
 		$message_on_wall = $db->getField('message');
 
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center"><b> ' . date(DATE_FULL_SHORT, $time) . ' </b></td>');
-		$PHP_OUTPUT.=('<td align="center"><b>'.$message_on_wall.'</b></td>');
+		$PHP_OUTPUT.=('<td class="center"><b> ' . date(DATE_FULL_SHORT, $time) . ' </b></td>');
+		$PHP_OUTPUT.=('<td class="center"><b>'.$message_on_wall.'</b></td>');
 		$PHP_OUTPUT.=('</tr>');
 	}
 	$PHP_OUTPUT.=('</table>');

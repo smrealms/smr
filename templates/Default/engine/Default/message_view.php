@@ -36,7 +36,7 @@ if (isset($MessageBoxes)) { ?>
 else {
 	if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 		<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
-			<div align="center">Ignore global messages?&nbsp;&nbsp;
+			<div class="center">Ignore global messages?&nbsp;&nbsp;
 				<input type="submit" name="ignore_globals" value="Yes" class="InputFields"<?php if ($ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />&nbsp;
 				<input type="submit" name="ignore_globals" value="No" class="InputFields"<?php if (!$ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />
 			</div>
@@ -94,7 +94,7 @@ else {
 						<?php
 						if (isset($Message['ReplyHref'])) { ?>
 							<td>
-								<a href="<?php echo $Message['ReportHref']; ?>"><img src="images/report.png" width="16" height="16" border="0" align="right" title="Report this message to an admin" /></a>
+								<a href="<?php echo $Message['ReportHref']; ?>"><img class="bottom" src="images/report.png" width="16" height="16" border="0" title="Report this message to an admin" /></a>
 							</td>
 							<td>
 								<a href="<?php echo $Message['BlacklistHref']; ?>">Blacklist Player</a>

@@ -23,13 +23,13 @@ require_once('config.inc');
 <tr>
 	<td width='135'>&nbsp;</td>
 	<td width='1' bgcolor='#0B8D35'></td>
-	<td align='left' valign='top' width='600' bgcolor='#06240E'>
+	<td valign='top' width='600' bgcolor='#06240E'>
 		<table width='100%' height='100%' border='0' cellspacing='5' cellpadding='5'>
 		<tr>
 			<td valign='top'>
 
 				<h1>Create Login</h1>
-				<p align='justify'>
+				<p>
 					Creating multiple logins is not allowed.
 					<a href='https://wiki.smrealms.de/rules' target="_blank" style='font-weight:bold;'>Click HERE</a> for more information.
 				</p>

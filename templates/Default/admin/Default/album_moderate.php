@@ -20,7 +20,7 @@ if (empty($Entry)) {
 	<a href="<?php echo $ModerateHREF; ?>">&lt;&lt; Back</a>
 	<table class="nobord" cellpadding="5" cellspacing="0">
 		<tr>
-			<td align="center" colspan="3">
+			<td colspan="3">
 				<span style="font-size:150%;"><b>Album&nbsp;Nickname:</b> <?php echo $Entry['nickname']; ?></span>
 			</td>
 		</tr>

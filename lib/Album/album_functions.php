@@ -96,9 +96,9 @@ function album_entry($album_id) {
 	// get this user's nick
 	$nick = get_album_nick($album_id);
 
-	echo('<table border="0" align="center" cellpadding="5" cellspacing="0">');
+	echo('<table border="0" cellpadding="5" cellspacing="0">');
 	echo('<tr>');
-	echo('<td style="text-align: center;" colspan="2">');
+	echo('<td colspan="2">');
 	echo '<div style="margin-left: auto; margin-right: auto; width: 50%">';
 	echo('<table style="width: 100%">');
 	echo('<tr>');
@@ -109,13 +109,13 @@ function album_entry($album_id) {
 					approved = \'YES\'
 				ORDER BY hof_name DESC
 				LIMIT 1');
-	echo '<td style="text-align: center; width: 30%" valign="middle">';
+	echo '<td class="center" style="width: 30%" valign="middle">';
 	if ($db->nextRecord()) {
 		$priv_nick = $db->getField('hof_name');
 		echo '<a href="?' . urlencode($priv_nick) . '"><img src="/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;';
 	}
 	echo '</td>';
-	echo('<td style="text-align: center;" valign="middle"><span style="font-size:150%;">'.$nick.'</span><br /><span style="font-size:75%;">Views: '.$page_views.'</span></td>');
+	echo('<td class="center" valign="middle"><span style="font-size:150%;">'.$nick.'</span><br /><span style="font-size:75%;">Views: '.$page_views.'</span></td>');
 
 	$db->query('SELECT hof_name
 				FROM album JOIN account USING(account_id)
@@ -123,7 +123,7 @@ function album_entry($album_id) {
 					approved = \'YES\'
 				ORDER BY hof_name
 				LIMIT 1');
-	echo '<td style="text-align: center; width: 30%" valign="middle">';
+	echo '<td class="center" style="width: 30%" valign="middle">';
 	if ($db->nextRecord()) {
 		$next_nick = $db->getField('hof_name');
 		echo '&nbsp;&nbsp;&nbsp;<a href="?' . urlencode($next_nick) . '"><img src="/images/album/fwd.jpg" alt="'.$next_nick.'" border="0"></a>';
@@ -136,7 +136,7 @@ function album_entry($album_id) {
 	echo('</td>');
 	echo('</tr>');
 	echo('<tr>');
-	echo('<td colspan="2" align="center" valign="middle">');
+	echo('<td colspan="2" class="center" valign="middle">');
 
 	if ($disabled == false)
 		echo('<img src="../upload/'.$album_id.'">');
@@ -149,13 +149,13 @@ function album_entry($album_id) {
 	if (empty($location))
 		$location = 'N/A';
 	echo('<tr>');
-	echo('<td align="right" width="10%" style="font-weight:bold;">Location:</td><td>'.$location.'</td>');
+	echo('<td class="right bold" width="10%">Location:</td><td>'.$location.'</td>');
 	echo('</tr>');
 
 	if (empty($email))
 		$email = 'N/A';
 	echo('<tr>');
-	echo('<td align="right" width="10%" style="font-weight:bold;">eMail:</td><td>'.$email.'</td>');
+	echo('<td class="right bold" width="10%">E-mail:</td><td>'.$email.'</td>');
 	echo('</tr>');
 
 	if (empty($website))
@@ -163,7 +163,7 @@ function album_entry($album_id) {
 	else
 		$website = '<a href="'.$website.'" target="_new">'.$website.'</a>';
 	echo('<tr>');
-	echo('<td align="right" width="10%" style="font-weight:bold;">Website:</td><td>'.$website.'</td>');
+	echo('<td class="right bold" width="10%">Website:</td><td>'.$website.'</td>');
 	echo('</tr>');
 
 	echo('<tr>');
@@ -173,13 +173,13 @@ function album_entry($album_id) {
 		$birthdate = 'Year '.$year;
 	if (empty($birthdate))
 		$birthdate = 'N/A';
-	echo('<td align="right" width="10%" style="font-weight:bold;">Birthdate:</td><td>'.$birthdate.'</td>');
+	echo('<td class="right bold" width="10%">Birthdate:</td><td>'.$birthdate.'</td>');
 	echo('</tr>');
 
 	if (empty($other))
 		$other = 'N/A';
 	echo('<tr>');
-	echo('<td align="right" valign="top" width="10%" style="font-weight:bold;">Other&nbsp;Info:<br /><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td>'.$other.'</td>');
+	echo('<td class="right bold" valign="top" width="10%">Other&nbsp;Info:</td><td>'.$other.'</td>');
 	echo('</tr>');
 
 	echo('<tr>');
@@ -230,12 +230,12 @@ function search_result($album_ids) {
 	// list of all first letter nicks
 	create_link_list();
 
-	echo('<div align="center" style="font-size:125%;">Please make a selection!</div>');
+	echo('<div class="center big">Please make a selection!</div>');
 
-	echo('<table border="0" align="center" cellpadding="5" cellspacing="0">');
+	echo('<table border="0" class="center" cellpadding="5" cellspacing="0">');
 
 	$count = 0;
-	echo('<tr><td width="25%" valign="top">');
+	echo('<tr><td class="left" width="25%" valign="top">');
 
 	foreach ($album_ids as $album_id) {
 		$count++;
@@ -252,7 +252,7 @@ function search_result($album_ids) {
 }
 
 function create_link_list() {
-	echo('<div align="center" style="font-size:80%;">[ ');
+	echo('<div class="center" style="font-size:80%;">[ ');
 	echo('<a href="?%">All</a> | ');
 	echo('<a href="?A">A</a> | ');
 	echo('<a href="?B">B</a> | ');
@@ -280,7 +280,7 @@ function create_link_list() {
 	echo('<a href="?X">X</a> | ');
 	echo('<a href="?Y">Y</a> | ');
 	echo('<a href="?Z">Z</a> ]</div>');
-	echo('<hr align="center">');
+	echo('<hr class="center">');
 }
 
 

@@ -10,5 +10,5 @@ else {
 	}
 }
 $container = create_container('skeleton.php', 'keyword_search.php');
-$container['msg'] = '<div align=center><span class="red"><b>Added Exceptions</b></span></div>';
+$container['msg'] = '<div class="center"><span class="red"><b>Added Exceptions</b></span></div>';
 forward($container);

@@ -1,4 +1,4 @@
-<table class="standard" width="95%">
+<table class="standard center" width="95%">
 	<tr>
 		<th class="shrink">Rank</th>
 		<th>Alliance</th>
@@ -8,11 +8,11 @@
 	</tr><?php
 	foreach($Rankings as $Ranking) { ?>
 		<tr<?php echo $Ranking['Class']; ?>>
-			<td class="top center"><?php echo $Ranking['Rank']; ?></td>
-			<td class="top"><?php echo $Ranking['Alliance']->getAllianceName(true); ?></td>
-			<td class="top center"><?php echo number_format($Ranking['Value']); ?></td>
-			<td class="top center"><?php echo number_format($Ranking['Value'] / max(1, $Ranking['Alliance']->getNumMembers())); ?></td>
-			<td class="top center"><?php echo $Ranking['Alliance']->getNumMembers(); ?></td>
+			<td class="top"><?php echo $Ranking['Rank']; ?></td>
+			<td class="top left"><?php echo $Ranking['Alliance']->getAllianceName(true); ?></td>
+			<td class="top"><?php echo number_format($Ranking['Value']); ?></td>
+			<td class="top"><?php echo number_format($Ranking['Value'] / max(1, $Ranking['Alliance']->getNumMembers())); ?></td>
+			<td class="top"><?php echo $Ranking['Alliance']->getNumMembers(); ?></td>
 		</tr><?php
 	} ?>
 </table>

@@ -1,4 +1,4 @@
-<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
+<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 
 <div class="center bold">Diplomatic Treaties</div><br />
 <div class="center">
@@ -12,7 +12,7 @@ if (!$VoteTreaties) { ?>
 	<div class="center"><i>There are no treaties to vote on at this time.</i></div>
 <?php
 } else { ?>
-	<table class="standard" align="center" width="65%">
+	<table class="standard center" width="65%">
 		<tr>
 			<th>Race</th>
 			<th>Treaty</th>
@@ -23,9 +23,9 @@ if (!$VoteTreaties) { ?>
 
 	foreach($VoteTreaties as $RaceID => $VoteInfo) { ?>
 		<tr>
-			<td align="center"><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
-			<td align="center"><?php echo $VoteInfo['Type']; ?></td>
-			<td class="noWrap" align="center">
+			<td><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
+			<td><?php echo $VoteInfo['Type']; ?></td>
+			<td class="noWrap">
 				<form method="POST" action="<?php echo $VoteInfo['HREF']; ?>">
 					<input type="submit" name="action" value="Yes" class="InputFields"<?php if($VoteInfo['For']){ ?> style="background-color:green"<?php } ?> />
 					&nbsp;
@@ -36,8 +36,8 @@ if (!$VoteTreaties) { ?>
 					} ?>
 				</form>
 			</td>
-			<td align="center"><?php echo $VoteInfo['YesVotes']; ?> / <?php echo $VoteInfo['NoVotes']; ?></td>
-			<td class="noWrap" align="center"><?php echo date(DATE_FULL_SHORT_SPLIT, $VoteInfo['EndTime']); ?></td>
+			<td><?php echo $VoteInfo['YesVotes']; ?> / <?php echo $VoteInfo['NoVotes']; ?></td>
+			<td class="noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $VoteInfo['EndTime']); ?></td>
 		</tr><?php
 	} ?>
 	</table><?php
@@ -53,7 +53,7 @@ if (!$VoteTreaties) { ?>
 	Results are updated at 00:00 daily.
 </div><br />
 
-<table class="standard" align="center" width="75%">
+<table class="standard center" width="75%">
 	<tr>
 		<th>Race</th>
 		<th>Vote</th>
@@ -62,20 +62,20 @@ if (!$VoteTreaties) { ?>
 
 	foreach($VoteRelations as $RaceID => $VoteInfo) { ?>
 		<tr>
-			<td align="center">
+			<td>
 				<a href="<?php echo Globals::getCouncilHREF($RaceID); ?>">
 					<img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="60" height="64" /><br /><?php
 					echo $ThisPlayer->getColouredRaceName($RaceID); ?>
 				</a>
 			</td>
-			<td align="center">
+			<td>
 				<form method="POST" action="<?php echo $VoteInfo['HREF']; ?>">
 					<input type="submit" name="action" value="Increase" class="InputFields"<?php if($VoteInfo['Increased']){ ?> style="background-color:green"<?php } ?> />
 					&nbsp;
 					<input type="submit" name="action" value="Decrease" class="InputFields"<?php if($VoteInfo['Decreased']){ ?> style="background-color:green"<?php } ?> />
 				</form>
 			</td>
-			<td align="center"><?php echo get_colored_text($VoteInfo['Relations']); ?></td>
+			<td><?php echo get_colored_text($VoteInfo['Relations']); ?></td>
 		</tr><?php
 	} ?>
 </table>

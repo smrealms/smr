@@ -1,6 +1,6 @@
 <?php
 if (!$CanViewBonds) { ?>
-	<div align="center">
+	<div class="center">
 		You do not have permission to view planet financials!
 	</div><?php
 } else {

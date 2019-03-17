@@ -8,7 +8,7 @@ if($ThisSector->hasPlanet()) {
 		</tr>
 		<tr>
 			<td>
-				<img align="left" src="<?php echo $Planet->getTypeImage()?>" width="16" height="16" alt="Planet" title="<?php echo $Planet->getTypeName() ?>" />
+				<img class="bottom" src="<?php echo $Planet->getTypeImage()?>" width="16" height="16" alt="Planet" title="<?php echo $Planet->getTypeName() ?>" />
 				&nbsp;<?php echo $Planet->getName() ?>&nbsp;
 				<?php echo $Planet->getTypeName() ?>&nbsp;
 				<?php if($Planet->isInhabitable()) { ?>

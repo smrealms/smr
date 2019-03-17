@@ -22,8 +22,8 @@ if (count($LoggedAccounts)>0) { ?>
 			foreach($LoggedAccounts as $LoggedAccount) { ?>
 				<tr>
 					<td valign="top"><?php echo $LoggedAccount['Login']; ?></td>
-					<td valign="top" align="center"><?php echo $LoggedAccount['TotalEntries']; ?></td>
-					<td valign="middle" align="center"><input type="checkbox" name="account_ids[]" value="<?php echo $LoggedAccount['AccountID']; ?>"<?php if($LoggedAccount['Checked']){ ?> checked="checked"<?php } ?>></td>
+					<td valign="top" class="center"><?php echo $LoggedAccount['TotalEntries']; ?></td>
+					<td valign="middle" class="center"><input type="checkbox" name="account_ids[]" value="<?php echo $LoggedAccount['AccountID']; ?>"<?php if($LoggedAccount['Checked']){ ?> checked="checked"<?php } ?>></td>
 					<td><?php echo $LoggedAccount['Notes']; ?></td>
 				</tr><?php
 			} ?>
