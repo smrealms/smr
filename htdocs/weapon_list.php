@@ -4,7 +4,7 @@ try {
 	
 	$db = new SmrMySqlDatabase();
 	
-	echo ('<!DOCTYPE html');
+	echo ('<!DOCTYPE html>');
 	
 	echo ('<html>');
 	echo ('<head>');
