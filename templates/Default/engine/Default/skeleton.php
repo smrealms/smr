@@ -49,6 +49,7 @@
 				<td class="footer_right">
 					<?php $this->includeTemplate('includes/copyright.inc'); ?>
 				</td>
+				<td></td>
 			</tr>
 		</table>
 		<?php $this->includeTemplate('includes/EndingJavascript.inc'); ?>
