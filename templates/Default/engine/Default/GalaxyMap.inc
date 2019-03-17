@@ -19,7 +19,7 @@
 		<div class="gal_map_header">
 			<table cellspacing="0" cellpadding="0">
 				<tr>
-					<td>Map of the known <b><big><?php echo $ThisGalaxy->getName(); ?></big></b> galaxy.</td>
+					<td>Map of the known <span class="big bold"><?php echo $ThisGalaxy->getName(); ?></span> galaxy.</td>
 					<td>
 						&thinsp;
 						<a href="map_warps.php">

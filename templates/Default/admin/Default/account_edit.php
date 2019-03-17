@@ -177,7 +177,7 @@
 				<td><hr noshade style="height:1px; border:1px solid white;"></td>
 			</tr>
 
-			<script type="text/javascript">
+			<script>
 				function go() {
 					var val = window.document.form_acc.reason_pre_select.value;
 					if (val == 2) {

@@ -22,7 +22,7 @@ $port = $sector->getPort();
 
 // check if the player has the right relations to trade at the current port
 if ($player->getRelation($port->getRaceID()) < RELATIONS_WAR)
-	create_error('This port refuses to trade with you because you are at <big><span class="bold red">WAR!</span></big>');
+	create_error('This port refuses to trade with you because you are at <span class="big bold red">WAR!</span>');
 
 // does the port actually buy or sell this good?
 $transaction = $port->getGoodTransaction($good_id);

@@ -153,7 +153,7 @@ if ($Game->getDescription()) { ?>
 	</table>
 </form>
 
-<script type="text/javascript">
+<script>
 var	desc = new Array(<?php echo $RaceDescriptions; ?>);
 function go() {
 	var race_id = document.forms[0].race_id.options[document.forms[0].race_id.selectedIndex].value;

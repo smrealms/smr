@@ -45,7 +45,7 @@ if (isset($Message)) {
 </table>
 <br />
 
-<style type="text/css">
+<style>
 p.vert {
 	writing-mode: tb-rl;
 	padding: 1px;

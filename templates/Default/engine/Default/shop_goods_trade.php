@@ -25,7 +25,7 @@ Note: In order to maximize your experience you have to bargain with the port own
 	<input type="submit" name="action" class="InputFields" value="Bargain (1)" />
 </form>
 
-<script type="text/javascript">
+<script>
 	window.document.FORM.bargain_price.select();
 	window.document.FORM.bargain_price.focus();
 </script>

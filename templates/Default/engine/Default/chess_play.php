@@ -55,7 +55,8 @@
 		</td>
 	</tr>
 </table>
-<script type="text/javascript" ><?php
+
+<script><?php
 	$AvailableMoves = array_pad(array(), count($Board), array());
 	foreach($Board as $Y => $Row) {
 		foreach($Row as $X => $Cell) {
