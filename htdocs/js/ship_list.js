@@ -57,16 +57,18 @@ function applyFilter() {
 	for (var i=1; i < table.rows.length; i++) {
 		var show = true;
 		for (var j=0; j < table.rows[i].cells.length; j++) {
-			if (window.filter[j] == "All")
+			if (window.filter[j] == "All") {
 				continue;
+			}
 			if (table.rows[i].cells[j].innerHTML != window.filter[j]) {
 				show = false;
 				break;
 			}
 		}
-		if (show)
+		if (show) {
 			table.rows[i].style.display="";
-		else
+		} else {
 			table.rows[i].style.display="none";
+		}
 	}
 }
