@@ -10,12 +10,12 @@ Array.prototype.in_array = function(p_val) {
 //JS code by Astax to foster filtering the results
 
 //Use window variable to store filter values, this is kinda like a JS equivellent of global
-window.filter = new Array("All", "All", "All", "All", "All", "All", "All", "All", "All", "All");
+window.filter = ["All", "All", "All", "All", "All", "All", "All", "All", "All", "All"];
 
 //reset all check boxes
 function resetBoxes() {
 	var toggle = document.getElementById("raceform");
-	for (i = 0; i < toggle.races.length; i++) {
+	for (var i = 0; i < toggle.races.length; i++) {
 		toggle.races[i].checked = true;
 	}
 }
@@ -42,8 +42,8 @@ function filterSelect(selectId, filterId) {
 
 function raceToggle() {
 	var toggle = document.getElementById("raceform");
-	window.filter[1] = new Array();
-	for (i = 0; i < toggle.races.length; i++) {
+	window.filter[1] = [];
+	for (var i = 0; i < toggle.races.length; i++) {
 		if (toggle.races[i].checked) {
 			window.filter[1].push(toggle.races[i].value);
 		}
@@ -59,7 +59,7 @@ function applyFilter() {
 			if (window.filter[j] == "All") {
 				continue;
 			}
-			if( Object.prototype.toString.call( window.filter[j] ) === '[object Array]' ) {
+			if (Array.isArray(window.filter[j])) {
 				if (!window.filter[j].in_array(table.rows[i].cells[j].innerHTML)) {
 					show = false;
 					break;
