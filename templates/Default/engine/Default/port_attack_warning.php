@@ -13,7 +13,7 @@ if ($ThisShip->hasScanner()) { ?>
 		<tr>
 			<th>Port</th>
 			<th>Scan Results</th>
-		<tr>
+		</tr>
 		<tr>
 			<td>Shields</td>
 			<td id="port_shields" class="center ajax"><?php echo $Port->getShields(); ?></td>
