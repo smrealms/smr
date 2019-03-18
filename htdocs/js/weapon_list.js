@@ -28,7 +28,7 @@ function powerPickf() {
 	filterSelect("powerPick", 6);
 }
 
-function restrictPickf() {0
+function restrictPickf() {
 	filterSelect("restrictPick", 7);
 }
 
