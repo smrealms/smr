@@ -125,14 +125,8 @@ if (!empty($comment)) {
 	$db->unlock();
 }
 
-$container = create_container('skeleton.php');
-if (SmrSession::hasGame()) {
-	$container['body'] = 'current_sector.php';
-}
-else {
-	$container['body'] = 'game_play.php';
-}
-
+$container = create_container('skeleton.php', 'album_edit.php');
+$container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
 forward($container);
 
 function php_link_check($url, $r = FALSE) {

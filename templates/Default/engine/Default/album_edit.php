@@ -56,5 +56,14 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 				<input type="submit" name="action" value="Submit" class="InputFields" />&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="Delete Entry" class="InputFields" />
 			</td>
 		</tr>
+
+		<?php
+		if (isset($SuccessMsg)) { ?>
+			<tr>
+				<td></td>
+				<td><p class="green"><?php echo $SuccessMsg; ?></p></td>
+			</tr><?php
+		} ?>
+
 	</table>
 </form>
