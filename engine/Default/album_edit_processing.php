@@ -47,9 +47,12 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 	$noPicture = false;
 	// get dimensions
 	$size = getimagesize($_FILES['photo']['tmp_name']);
+	if (!isset($size)) {
+		create_error('Uploaded file must be an image!');
+	}
 
-	// check if we really have a jpg
-	if ($size[2] < 1 || $size[2] > 3) {
+	$allowed_types = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG];
+	if (!in_array($size[2], $allowed_types)) {
 		create_error('Only gif, jpg or png-image allowed!');
 	}
 
@@ -122,14 +125,8 @@ if (!empty($comment)) {
 	$db->unlock();
 }
 
-$container = create_container('skeleton.php');
-if (SmrSession::hasGame()) {
-	$container['body'] = 'current_sector.php';
-}
-else {
-	$container['body'] = 'game_play.php';
-}
-
+$container = create_container('skeleton.php', 'album_edit.php');
+$container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
 forward($container);
 
 function php_link_check($url, $r = FALSE) {

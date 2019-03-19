@@ -20,7 +20,7 @@
 			<br />
 			<input type="submit" name="action" value="Include HTML (<?php echo CREDITS_PER_HTML_SHIP_NAME; ?> SMR Credits)" class="InputFields" /><br />
 			<br />
-			Image: <input type="file" name="photo" accept="image/jpeg" class="InputFields" style="width:40%;"><br />
+			Image: <input type="file" name="photo" accept="image/jpeg, image/png" class="InputFields" style="width:40%;"><br />
 			<br />
 			<input type="submit" name="action" value="Paint a logo (<?php echo CREDITS_PER_SHIP_LOGO; ?> SMR Credits)" class="InputFields" />
 		</form><?php

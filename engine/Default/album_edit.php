@@ -33,3 +33,7 @@ if ($db->nextRecord()) {
 }
 
 $template->assign('AlbumEditHref',SmrSession::getNewHREF(create_container('album_edit_processing.php', '')));
+
+if (isset($var['SuccessMsg'])) {
+	$template->assign('SuccessMsg', $var['SuccessMsg']);
+}

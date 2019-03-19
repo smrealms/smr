@@ -29,8 +29,13 @@ if(!isset($var['ShipName'])) {
 		if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 			// get dimensions
 			$size = getimagesize($_FILES['photo']['tmp_name']);
+			if (!isset($size)) {
+				create_error('Uploaded file must be an image!');
+			}
+
 			// check if we really have a jpg
-			if($size[2] != IMG_JPG && $size[2] != IMG_PNG && $size[2] != IMG_GIF) {
+			$allowed_types = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG];
+			if (!in_array($size[2], $allowed_types)) {
 				create_error('Only gif, jpg or png-image allowed! s = '.$size[2]);
 			}
 
@@ -49,7 +54,9 @@ if(!isset($var['ShipName'])) {
 
 			$filename = $player->getAccountID() . 'logo' . $player->getGameID();
 			$name = '<img style="padding:3px;" src="upload/' . $filename . '"><br />';
-			move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $filename);
+			if (!move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $filename)) {
+				create_error('Failed to upload file');
+			}
 			$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name)
 						VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($name) . ')');
 			$account->decreaseTotalSmrCredits($cred_cost);
