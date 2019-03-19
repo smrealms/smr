@@ -212,7 +212,7 @@ if ($do != 'STAY' && get_value($player_card) != 21) {
 		}
 	}
 
-	$message.=('</td></tr></table>');
+	$message.=('</tr></table>');
 	if (get_value($ai_card) == 21 && sizeof($ai_card) == 2) {
 		$message.=('<div align=center>Bank has BLACKJACK!</div><br />');
 		$win = 'no';
@@ -258,7 +258,7 @@ if ($do == 'STAY' || get_value($player_card) == 21) {
 		$message.=create_card($value, TRUE);
 		$i++;
 	}
-	$message.=('</td></tr></table><div align=center>');
+	$message.=('</tr></table><div align=center>');
 	if (get_value($ai_card) > 21) {
 		$message.=('Bank <span class="red"><b>BUSTED</b></span><br /><br />');
 	}
@@ -280,7 +280,7 @@ foreach ($player_card as $key => $value) {
 	$message.=create_card($value, TRUE);
 	$i++;
 }
-$message.=('</td></tr></table>');
+$message.=('</tr></table>');
 
 $message.=('<div align=center>You have a total of ' . get_value($player_card) . ' </div><br />');
 //check for win

@@ -85,7 +85,7 @@ if (isset($CompareShip)) { ?>
 			<td><?php echo $ThisPlayer->getTurns() ?></td>
 			<td><?php echo $CompareShip['Turns']; ?></td>
 			<td><?php echo number_colour_format($CompareShip['Turns'] - $ThisPlayer->getTurns()); ?></td>
-		</td>
+		</tr>
 		<tr>
 			<td>Scanner</td>
 			<td><?php if($ThisShip->canHaveScanner()) { ?>+<?php } else { ?>-<?php } ?></td>

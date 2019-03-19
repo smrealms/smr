@@ -25,7 +25,6 @@ if ($ThisLocation->isWeaponSold()) { ?>
 					<td class="sort_power"><?php echo $Weapon->getPowerLevel(); ?></td>
 					<td class="sort_cost"><?php echo $Weapon->getCost(); ?></td>
 					<td><a href="<?php echo $Weapon->getBuyHREF($ThisLocation); ?>" class="submitStyle">Buy</a></td>
-					</td>
 				</tr><?php
 			} ?>
 		</tbody>
