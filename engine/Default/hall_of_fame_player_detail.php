@@ -54,7 +54,15 @@ if(!isset($var['view'])) {
 
 	foreach($hofTypes as $type => $value) {
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td>'.$type.'</td>');
+		// Make each category a link to view the subcategory page
+		$container = $var;
+		$container['view'] = $type;
+		if (!isset($var['type'])) {
+			$container['type'] = array();
+		}
+		$PHP_OUTPUT.=('<td>'.create_link($container, $type).'</td>');
+
+		// Make the subcategory buttons
 		$container = $var;
 		if (!isset($var['type']))
 			$container['type'] = array();
