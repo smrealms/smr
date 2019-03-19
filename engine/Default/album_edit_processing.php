@@ -47,9 +47,12 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 	$noPicture = false;
 	// get dimensions
 	$size = getimagesize($_FILES['photo']['tmp_name']);
+	if (!isset($size)) {
+		create_error('Uploaded file must be an image!');
+	}
 
-	// check if we really have a jpg
-	if ($size[2] < 1 || $size[2] > 3) {
+	$allowed_types = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG];
+	if (!in_array($size[2], $allowed_types)) {
 		create_error('Only gif, jpg or png-image allowed!');
 	}
 

@@ -46,7 +46,7 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 			<td align="right" valign="top" class="bold">Image:</td>
 			<td>
 				<?php if(isset($AlbumEntry) && isset($AlbumEntry['Image'])) { ?><img src="<?php echo $AlbumEntry['Image']; ?>"><br /><?php } ?>
-				<input type="file" name="photo" accept="image/jpeg" class="InputFields" style="width:303px;" >
+				<input type="file" name="photo" accept="image/jpeg, image/png" class="InputFields" style="width:303px;" >
 			</td>
 		</tr>
 		
