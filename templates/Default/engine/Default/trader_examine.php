@@ -37,7 +37,7 @@ if(!$canAttack)
 $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] = $ThisPlayer;
 ?>
 
-<table class="standard centered" width="95%">
+<table class="standard centered inset">
 	<tr><th width="50%">Attacker</th><th width="50%">Defender</th></tr>
 	<tr><?php
 		foreach ($fightingPlayers as $fleet) {

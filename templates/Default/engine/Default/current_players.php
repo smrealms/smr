@@ -10,7 +10,7 @@
 
 	<?php
 	if (!empty($AllRows)) { ?>
-		<table id="cpl" class="center standard" width="95%">
+		<table id="cpl" class="center standard inset">
 			<thead>
 				<tr>
 					<th class="sort" data-sort="sort_name">Player</th>

@@ -1,5 +1,5 @@
 <p class="center">Here are the rankings of the races by their experience</p>
-<table class="standard center" width="95%">
+<table class="standard center inset">
 	<tr>
 		<th class="shrink">Rank</th>
 		<th>Race</th>

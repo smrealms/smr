@@ -1,4 +1,4 @@
-<table class="standard center" width="95%">
+<table class="standard center inset">
 	<tr>
 		<th class="shrink">Rank</th>
 		<th>Player</th>
