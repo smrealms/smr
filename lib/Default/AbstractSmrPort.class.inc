@@ -932,30 +932,27 @@ class AbstractSmrPort {
 	}
 	
 	public function calculateExperiencePercent($idealPrice,$offerPrice,$bargainPrice,$transactionType) {
-		if(($transactionType == 'Sell' && $bargainPrice < $offerPrice) || ($transactionType == 'Buy' && $bargainPrice > $offerPrice))
+		if (($transactionType == 'Sell' && $bargainPrice < $offerPrice) ||
+		    ($transactionType == 'Buy' && $bargainPrice > $offerPrice)) {
 			return 0;
+		}
 		if ($bargainPrice == $idealPrice || $transactionType == 'Steal') {
 			// Stealing always gives full exp
 			return 1;
 		}
+
 		$bargainLeniency = min($idealPrice*self::BARGAIN_LENIENCY_PERCENT,abs($idealPrice-$bargainPrice));
-		if ($transactionType == 'Sell')
+		if ($transactionType == 'Sell') {
 			$bargainLeniency = -$bargainLeniency;
+		}
 		$bargainPrice -= $bargainLeniency;
 		
-		$val = ($idealPrice-$bargainPrice)/($idealPrice-$this->getOfferPrice($idealPrice,0,$transactionType));
-//			if ($transactionType == 'Sell' && $val>0)
-//				$val=1;
-//			else if($transactionType == 'Buy' && $val<0)
-//				$val=1;
-		$val=abs($val);
-		if($val>1)
-			$val=1;
-		$expPercent = pow(1-$val,15);
-		if($expPercent>1)
-			$expPercent=1;
-		else if($expPercent<0)
-			$expPercent=0;
+		$offerPriceNoRelations = $this->getOfferPrice($idealPrice, 0, $transactionType);
+		$val = abs(($idealPrice - $bargainPrice) / ($idealPrice - $offerPriceNoRelations));
+		if ($val >= 1) {
+			return 0;
+		}
+		$expPercent = max(0, min(1, pow(1-$val,15)));
 		return $expPercent;
 	}
 	
