@@ -928,8 +928,10 @@ class AbstractSmrPort {
 	public function calculateExperiencePercent($idealPrice,$offerPrice,$bargainPrice,$transactionType) {
 		if(($transactionType == 'Sell' && $bargainPrice < $offerPrice) || ($transactionType == 'Buy' && $bargainPrice > $offerPrice))
 			return 0;
-		if ($bargainPrice == $idealPrice)
+		if ($bargainPrice == $idealPrice || $transactionType == 'Steal') {
+			// Stealing always gives full exp
 			return 1;
+		}
 		$bargainLeniency = min($idealPrice*self::BARGAIN_LENIENCY_PERCENT,abs($idealPrice-$bargainPrice));
 		if ($transactionType == 'Sell')
 			$bargainLeniency = -$bargainLeniency;
