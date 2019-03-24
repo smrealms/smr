@@ -71,6 +71,7 @@
 
 			<a href="<?php echo $BountiesHREF; ?>">
 				<span class="yellow bold">Bounties</span>
+			</a>
 			<a href="<?php echo WIKI_URL; ?>/game-guide/locations#headquarters" target="_blank">
 				<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Bounties"/>
 			</a>
@@ -152,8 +153,10 @@
 <form class="standard" method="POST" action="<?php echo $NoteAddHREF; ?>">
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
-			Enter text in the box below to create a new note.<br />(examples:  trade routes, weapon locations, key alliance related locations)
-			<td><textarea spellcheck="true" name="note"></textarea></td>
+			<td>
+				Enter text in the box below to create a new note.<br />(examples:  trade routes, weapon locations, key alliance related locations)
+				<textarea spellcheck="true" name="note"></textarea>
+			</td>
 		</tr>
 	</table>
 	<br />

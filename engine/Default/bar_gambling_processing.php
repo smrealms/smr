@@ -185,8 +185,9 @@ if ($do == 'HIT') {
 if ($do != 'STAY' && get_value($player_card) != 21) {
 	//heres the AIs cards
 	$i = 1;
-	if (get_value($ai_card) == 21 && sizeof($ai_card) == 2) {
-		$message.=('<div align="center"><h1><span class="red">Bank Wins</span></h1></div>');
+	if ((get_value($ai_card) == 21 && sizeof($ai_card) == 2) ||
+	    (get_value($player_card) > 21 && get_value($ai_card) <= 21)) {
+		$message.=('<h1 class="red center">Bank Wins</h1>');
 	}
 	$message.=('<div align="center">Bank\'s Cards are</div><br /><table align="center"><tr>');
 	foreach ($ai_card as $key => $value) {
@@ -241,13 +242,13 @@ if ($do == 'STAY' || get_value($player_card) == 21) {
 	}
 	$win = check_for_win($ai_card, $player_card);
 	if ($win == 'yes' || $win == 'bj') {
-		$message.=('<div align=center><h1><span class="red">You Win</span></h1></div>');
+		$message.=('<h1 class="green center">You Win</h1>');
 	}
 	elseif ($win == 'tie') {
-		$message.=('<div align=center><h1><span class="red">TIE Game</span></h1></div>');
+		$message.=('<h1 class="yellow center">TIE Game</h1>');
 	}
 	else {
-		$message.=('<div align=center><h1><span class="red">Bank Wins</span></h1></div>');
+		$message.=('<h1 class="red center">Bank Wins</h1>');
 	}
 	$message.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
 	foreach ($ai_card as $key => $value) {

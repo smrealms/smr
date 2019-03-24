@@ -1,6 +1,6 @@
 <?php
 
-if ($ShowRoles) { ?>
+if ($ShowRoles && $CanChangeRoles) { ?>
 	<form class="standard" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>"><?php
 } ?>
 
