@@ -952,7 +952,7 @@ class AbstractSmrPort {
 		if ($val >= 1) {
 			return 0;
 		}
-		$expPercent = max(0, min(1, pow(1-$val,15)));
+		$expPercent = max(0, min(1, pow(1-$val,13)));
 		return $expPercent;
 	}
 	
