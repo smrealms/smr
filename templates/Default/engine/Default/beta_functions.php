@@ -64,8 +64,7 @@
 <form method="POST" action="<?php echo $PersonalRelationsHREF; ?>">
 	<input type="number" name="amount" value="0" style="width:75px" />&nbsp;
 	<select name="race" class="InputFields"><?php
-		foreach (Globals::getRaces() as $race) {
-			if ($race['Race ID'] == RACE_NEUTRAL) continue; ?>
+		foreach (Globals::getRaces() as $race) { ?>
 			<option value="<?php echo $race['Race ID']; ?>"><?php echo $race['Race Name']; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
