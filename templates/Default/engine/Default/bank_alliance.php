@@ -24,9 +24,9 @@ else { ?>
 
 // only if we have at least one result
 if (!empty($BankTransactions)) { ?>
-	<div align="center">
+	<div class="center">
 		<form class="standard" method="POST" action="<?php echo $FilterTransactionsFormHREF; ?>">
-			<table cellspacing="5" cellpadding="0" class="nobord">
+			<table cellspacing="5" cellpadding="0" class="nobord center">
 				<tr>
 					<td>
 						<input class="center" type="number" name="minValue" size="3" value="<?php echo $MinValue; ?>">
@@ -44,7 +44,7 @@ if (!empty($BankTransactions)) { ?>
 		if($CanExempt) {
 			?><form class="standard" method="POST" action="<?php echo $ExemptTransactionsFormHREF; ?>"><?php
 		} ?>
-			<table class="standard inset">
+			<table class="standard inset center">
 				<tr>
 					<th class="shrink">#</th>
 					<th class="shrink">Date</th>
@@ -58,19 +58,19 @@ if (!empty($BankTransactions)) { ?>
 				</tr><?php
 				foreach($BankTransactions as $TransactionID => $BankTransaction) { ?>
 					<tr>
-						<td class="center"><?php echo number_format($TransactionID); ?></td>
-						<td class="center noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $BankTransaction['Time']); ?></td>
-						<td><?php
+						<td><?php echo number_format($TransactionID); ?></td>
+						<td class="noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $BankTransaction['Time']); ?></td>
+						<td class="left"><?php
 							if($BankTransaction['Exempt']) {
 								?>Alliance Funds c/o<br /><?php
 							}
 							echo $BankTransaction['Player']->getLinkedDisplayName(); ?>
 						</td>
-						<td><?php echo $BankTransaction['Reason']; ?></td>
-						<td class="center"><?php if(is_numeric($BankTransaction['Withdrawal'])){ echo number_format($BankTransaction['Withdrawal']); }else{ ?>&nbsp;<?php } ?></td>
-						<td class="center"><?php if(is_numeric($BankTransaction['Deposit'])){ echo number_format($BankTransaction['Deposit']); }else{ ?>&nbsp;<?php } ?></td><?php
+						<td class="left"><?php echo $BankTransaction['Reason']; ?></td>
+						<td><?php if(is_numeric($BankTransaction['Withdrawal'])){ echo number_format($BankTransaction['Withdrawal']); }else{ ?>&nbsp;<?php } ?></td>
+						<td><?php if(is_numeric($BankTransaction['Deposit'])){ echo number_format($BankTransaction['Deposit']); }else{ ?>&nbsp;<?php } ?></td><?php
 						if ($CanExempt) { ?>
-							<td class="center"><input type="checkbox" name="exempt[<?php echo $TransactionID; ?>]" value="true"<?php if($BankTransaction['Exempt']){ ?> checked="checked"<?php } ?>></td><?php
+							<td><input type="checkbox" name="exempt[<?php echo $TransactionID; ?>]" value="true"<?php if($BankTransaction['Exempt']){ ?> checked="checked"<?php } ?>></td><?php
 						} ?>
 					</tr><?php
 				} ?>
@@ -87,7 +87,7 @@ if (!empty($BankTransactions)) { ?>
 		} ?>
 	</div>
 	
-	<div align="center">
+	<div class="center">
 		<div class="buttonA">
 			<a class="buttonA" href="<?php echo $BankReportHREF; ?>">View Bank Report</a>
 		</div>

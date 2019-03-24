@@ -326,9 +326,9 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 	$return .= ('<td>');
 	$return .= ('<table class="fullwidth">');
 	$return .= ('<tr class="bar1">');
-	$return .= ('<td align="center">');
+	$return .= ('<td>');
 
-	$return .= ('<table>');
+	$return .= ('<table class="center">');
 	$return .= ('<tr>');
 	foreach ($menu as $number => $entry) {
 		// insert spacer
@@ -342,7 +342,7 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 			$active = '';
 
 		// echo entry itself
-		$return .= ('<td align="center"'.$active.'> ' . $entry['entry'] . '</td>');
+		$return .= ('<td '.$active.'> ' . $entry['entry'] . '</td>');
 
 	}
 	$return .= ('</tr>');

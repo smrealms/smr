@@ -19,8 +19,7 @@
 <?php
 if ($OwnedAnon) { ?>
 	<br /><h2>Your accounts</h2><br />
-	<div align=center>
-	<table class="standard inset">
+	<table class="standard inset center">
 		<tr>
 			<th>ID</th>
 			<th>Password</th>
@@ -30,8 +29,8 @@ if ($OwnedAnon) { ?>
 		</tr><?php
 		foreach ($OwnedAnon as $anon) { ?>
 			<tr>
-				<td class="shrink center"><?php echo $anon['anon_id']; ?></td>
-				<td><?php echo $anon['password']; ?></td>
+				<td class="shrink"><?php echo $anon['anon_id']; ?></td>
+				<td class="left"><?php echo $anon['password']; ?></td>
 				<td class="shrink noWrap"><?php echo $anon['last_transaction']; ?></td>
 				<td class="right shrink"><?php echo $anon['amount']; ?></td>
 				<td class="button">
@@ -42,7 +41,6 @@ if ($OwnedAnon) { ?>
 			</tr><?php
 		} ?>
 	</table>
-	</div>
 	<br /><br /><?php
 } ?>
 

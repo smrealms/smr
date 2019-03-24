@@ -19,7 +19,7 @@
 			<tr>
 				<td width="100">&nbsp;</td>
 				<td width="1" bgcolor="#0B8D35"></td>
-				<td align="left" valign="top" width="600" bgcolor="#06240E">
+				<td valign="top" width="600" bgcolor="#06240E">
 					<table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
 						<tr>
 							<td valign="top">
@@ -30,10 +30,10 @@
 								<br /><br />
 
 								<form action="resend_password_processing.php" method="POST">
-									<div align="center">
-										<table border="0">
+									<div class="center">
+										<table class="center" border="0">
 											<tr>
-												<th align="right">Email:</th>
+												<th class="right">Email:</th>
 												<td><input type="email" name="email" class="InputFields"></td>
 											</tr>
 										</table>

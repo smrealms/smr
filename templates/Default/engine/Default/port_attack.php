@@ -1,11 +1,9 @@
 <?php $this->includeTemplate('includes/PortFullCombatResults.inc'); ?><br />
 <br />
-<div align="center"><?php
+<div class="center"><?php
 	if(!$OverrideDeath && !$Port->isDestroyed()) { ?>
-		<div style="width:50%">
-			<div class="buttonA">
-				<a href="<?php echo $Port->getAttackHREF() ?>" class="buttonA">Continue Attack</a>
-			</div>
+		<div class="buttonA">
+			<a href="<?php echo $Port->getAttackHREF() ?>" class="buttonA">Continue Attack</a>
 		</div><?php
 	}
 	else {

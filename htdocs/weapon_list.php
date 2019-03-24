@@ -59,44 +59,44 @@ try {
 	echo ('<div id="main" style="width:810px; margin-left:auto; margin-right:auto;">');
 	echo (buildRaceBox($db));	
 	$db->query('SELECT * FROM weapon_type JOIN race USING(race_id) ORDER BY '.$order_by.' '.$seq);
-	echo ('<table id="table" class="standard">');
+	echo ('<table id="table" class="standard center">');
 	echo ('<tr>');
-	echo ('<th align="center" style="width: 240px;"><a href="?order=weapon_name&amp;seq='.$seq.'"><span style=color:#80C870;>Weapon Name</span></a></th>');
-	echo ('<th align="center" style="width: 90px;"><a href="?order=race_name&amp;seq='.$seq.'"><span style=color:#80C870;>Race</span></a>'.$race.'</th>');
-	echo ('<th align="center" style="width: 64px;"><a href="?order=cost&amp;seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
-	echo ('<th align="center" style="width: 74px;"><a href="?order=shield_damage&amp;seq='.$seq.'"><span style=color:#80C870;>Shield<br>Damage</span></a></th>');
-	echo ('<th align="center" style="width: 74px;"><a href="?order=armour_damage&amp;seq='.$seq.'"><span style=color:#80C870;>Armour<br>Damage</span></a></th>');
-	echo ('<th align="center" style="width: 85px;"><a href="?order=accuracy&amp;seq='.$seq.'"><span style=color:#80C870;>Accuracy<br>%</span></a></th>');
-	echo ('<th align="center" style="width: 51px;"><a href="?order=power_level&amp;seq='.$seq.'"><span style=color:#80C870;>Level</span></a>'.$power.'</th>');
-	echo ('<th align="center" style="width: 92px;"><a href="?order=buyer_restriction&amp;seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a>'.$restrict.'</th>');
+	echo ('<th style="width: 240px;"><a href="?order=weapon_name&amp;seq='.$seq.'"><span style=color:#80C870;>Weapon Name</span></a></th>');
+	echo ('<th style="width: 90px;"><a href="?order=race_name&amp;seq='.$seq.'"><span style=color:#80C870;>Race</span></a>'.$race.'</th>');
+	echo ('<th style="width: 64px;"><a href="?order=cost&amp;seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
+	echo ('<th style="width: 74px;"><a href="?order=shield_damage&amp;seq='.$seq.'"><span style=color:#80C870;>Shield<br>Damage</span></a></th>');
+	echo ('<th style="width: 74px;"><a href="?order=armour_damage&amp;seq='.$seq.'"><span style=color:#80C870;>Armour<br>Damage</span></a></th>');
+	echo ('<th style="width: 85px;"><a href="?order=accuracy&amp;seq='.$seq.'"><span style=color:#80C870;>Accuracy<br>%</span></a></th>');
+	echo ('<th style="width: 51px;"><a href="?order=power_level&amp;seq='.$seq.'"><span style=color:#80C870;>Level</span></a>'.$power.'</th>');
+	echo ('<th style="width: 92px;"><a href="?order=buyer_restriction&amp;seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a>'.$restrict.'</th>');
 	echo ('</tr>');
 	while ($db->nextRecord()) {
 		echo ('<tr>');
-		echo ('<td align="center">'.$db->getField('weapon_name').'</td>');
-		echo ('<td align="center" class="race'.$db->getInt('race_id').'">'.$db->getField('race_name').'</td>');
-		echo ('<td align="center">'.number_format($db->getInt('cost')).'</td>');
-		echo ('<td align="center">'.$db->getInt('shield_damage').'</td>');
-		echo ('<td align="center">'.$db->getInt('armour_damage').'</td>');
-		echo ('<td align="center">'.$db->getInt('accuracy').'</td>');
-		echo ('<td align="center">'.$db->getInt('power_level').'</td>');
+		echo ('<td>'.$db->getField('weapon_name').'</td>');
+		echo ('<td class="race'.$db->getInt('race_id').'">'.$db->getField('race_name').'</td>');
+		echo ('<td>'.number_format($db->getInt('cost')).'</td>');
+		echo ('<td>'.$db->getInt('shield_damage').'</td>');
+		echo ('<td>'.$db->getInt('armour_damage').'</td>');
+		echo ('<td>'.$db->getInt('accuracy').'</td>');
+		echo ('<td>'.$db->getInt('power_level').'</td>');
 		switch($db->getInt('buyer_restriction')) {
 			case BUYER_RESTRICTION_GOOD:
-				echo ('<td align="center" style="color: green;">Good</td>');
+				echo ('<td style="color: green;">Good</td>');
 			break;
 			case BUYER_RESTRICTION_EVIL:
-				echo ('<td align="center" style="color: red;">Evil</td>');
+				echo ('<td style="color: red;">Evil</td>');
 			break;
 			case BUYER_RESTRICTION_NEWBIE:
-				echo ('<td align="center" style="color: #06F;">Newbie</td>');
+				echo ('<td style="color: #06F;">Newbie</td>');
 			break;
 			case BUYER_RESTRICTION_PORT:
-				echo ('<td align="center" style="color: yellow;">Port</td>');
+				echo ('<td style="color: yellow;">Port</td>');
 			break;
 			case BUYER_RESTRICTION_PLANET:
-				echo ('<td align="center" style="color: yellow;">Planet</td>');
+				echo ('<td style="color: yellow;">Planet</td>');
 			break;
 			default:
-				echo ('<td align="center">-</td>');
+				echo ('<td>-</td>');
 		}
 		echo ('</tr>');
 	}
@@ -134,7 +134,7 @@ function buildRestriction() {
 }
 
 function buildRaceBox($db) {
-	$racebox = '<form id="raceform" name="raceform" align="center" style="text-align:center;">';
+	$racebox = '<form id="raceform" name="raceform" style="text-align:center;">';
 	$db->query('SELECT race_id, race_name FROM race ORDER BY race_name');
 	while ($db->nextRecord()) {
 		$raceID = $db->getInt('race_id');

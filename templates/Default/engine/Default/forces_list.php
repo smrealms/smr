@@ -5,11 +5,10 @@ if (empty($Forces)) { ?>
 		<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Forces"/>
 	</a><?php
 } else { ?>
+	<a href="<?php echo WIKI_URL; ?>/game-guide/forces" target="_blank">
+		<img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Forces"/>
+	</a><br />
 	<table id="forces-list" class="standard inset">
-		<a href="<?php echo WIKI_URL; ?>/game-guide/forces" target="_blank">
-			<img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Forces"/>
-		</a><br />
-
 		<thead>
 		<tr>
 			<th class="sort shrink" data-sort="sort_sector">Sector ID</th>

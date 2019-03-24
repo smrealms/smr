@@ -1,5 +1,4 @@
-
-<div align="center"><?php
+<div class="center"><?php
 	if (count($TraderPlanets) > 0) {
 		$this->includeTemplate('includes/PlanetList.inc',array('Planets'=>$TraderPlanets));
 	}

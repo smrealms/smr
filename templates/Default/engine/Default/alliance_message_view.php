@@ -26,10 +26,10 @@ if(	isset($PrevThread) || isset($NextThread) ) { ?>
 } ?>
 
 <h2>Messages</h2>
-<div align="center"><?php
+<div><?php
 	if($Thread['AllianceEyesOnly']) { ?><br />Note: This topic is for alliance eyes only.<?php } ?>
 	<br />
-	<table class="standard inset">
+	<table class="standard inset centered">
 		<tr>
 			<th>Author</th>
 			<th>Message</th>

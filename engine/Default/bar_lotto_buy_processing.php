@@ -23,7 +23,7 @@ $db->query('SELECT count(*) as num FROM player_has_ticket WHERE game_id = ' . $d
 	AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND time > 0 GROUP BY account_id');
 $db->nextRecord();
 $num = $db->getInt('num');
-$message=('<div align=center>Thanks for your purchase and good luck!  You currently');
+$message=('<div class="center">Thanks for your purchase and good luck!  You currently');
 $message.=(' own '.$num.' '.pluralise('ticket', $num).'!</div><br />');
 
 $container=create_container('skeleton.php','bar_main.php');

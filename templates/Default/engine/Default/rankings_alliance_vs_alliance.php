@@ -45,9 +45,9 @@
 </form>
 </div>
 
-<table align="center">
+<table class="center">
 	<tr>
-		<td width="45%" class="center top"><?php
+		<td width="45%" class="top"><?php
 			if ($Kills) { ?>
 				<p>Kills for <?php echo $DetailsName; ?></p>
 				<table class="standard center">
@@ -68,7 +68,7 @@
 		</td>
 
 		<td width="10%">&nbsp;</td>
-		<td width="45%" class="center top"><?php
+		<td width="45%" class="top"><?php
 			if ($Deaths) { ?>
 				<p>Deaths for <?php echo $DetailsName; ?></p>
 				<table class="standard center">

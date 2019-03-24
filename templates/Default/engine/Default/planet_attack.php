@@ -1,11 +1,9 @@
 <?php $this->includeTemplate('includes/PlanetFullCombatResults.inc'); ?><br />
 <br />
-<div align="center"><?php
+<div class="center"><?php
 if(!$OverrideDeath && !$Planet->isDestroyed()) { ?>
-	<div style="width:50%">
-		<div class="buttonA">
-			<a href="<?php echo $Planet->getAttackHREF() ?>" class="buttonA">Continue Attack</a>
-		</div>
+	<div class="buttonA">
+		<a href="<?php echo $Planet->getAttackHREF() ?>" class="buttonA">Continue Attack</a>
 	</div><?php
 }
 else {

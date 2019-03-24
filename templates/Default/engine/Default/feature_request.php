@@ -18,7 +18,7 @@
 <?php
 if(isset($FeatureRequests)) { ?>
 	<form name="FeatureRequestVoteForm" method="POST" action="<?php echo $FeatureRequestVoteFormHREF; ?>">
-		<div align="right"><?php
+		<div class="right"><?php
 			if ($CanVote) { ?>
 				<input type="submit" name="action" value="Vote"><?php
 			} ?>
@@ -54,12 +54,12 @@ if(isset($FeatureRequests)) { ?>
 						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="NO"<?php if($FeatureRequest['VotedFor'] == 'NO') { ?> checked="checked"<?php } ?>></td><?php
 					}
 					if($FeatureModerator) {
-						?><td valign="middle" align="center"><input type="checkbox" name="set_status_ids[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php
+						?><td valign="middle" class="center"><input type="checkbox" name="set_status_ids[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php
 					} ?>
 				</tr><?php
 			} ?>
 		</table>
-		<div align="right"><?php
+		<div class="right"><?php
 			if($FeatureModerator) { ?>&nbsp;
 				<select name="status">
 					<option disabled selected value style="display:none"> -- Select Status -- </option>
@@ -81,16 +81,16 @@ if(isset($FeatureRequests)) { ?>
 <form name="FeatureRequestForm" method="POST" action="<?php echo $FeatureRequestFormHREF; ?>">
 	<table>
 		<tr>
-			<td align="center">Please describe your requested feature here:</td>
+			<td class="center">Please describe your requested feature here:</td>
 		</tr>
 		<tr>
-			<td align="center"><textarea spellcheck="true" name="feature" class="InputFields" maxlength="500"></textarea></td>
+			<td class="center"><textarea spellcheck="true" name="feature" class="InputFields" maxlength="500"></textarea></td>
 		</tr>
 		<tr>
-			<td align="center">Anonymous: <input name="anon" class="InputFields" type="checkbox" checked="checked"/></td>
+			<td class="center">Anonymous: <input name="anon" class="InputFields" type="checkbox" checked="checked"/></td>
 		</tr>
 		<tr>
-			<td align="center"><input type="submit" name="action" value="Submit New Feature" class="InputFields"></td>
+			<td class="center"><input type="submit" name="action" value="Submit New Feature" class="InputFields"></td>
 		</tr>
 	</table>
 </form>

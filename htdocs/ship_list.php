@@ -107,36 +107,36 @@ try {
 	?>
 	<div id="container" style="padding: 0;">
 	<div style="width:1400px; margin-left:auto; margin-right:auto;">
-	<table id="table" class="standard">
+	<table id="table" class="center standard">
 		<?php /*<tr style="position:fixed">*/ ?>
 		<tr >
-			<th align="center"><a href="?order=ship_name&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Ship Name</span></a></th>
-			<th align="center"><a href="?order=race_name&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Race</span></a>
+			<th><a href="?order=ship_name&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Ship Name</span></a></th>
+			<th><a href="?order=race_name&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Race</span></a>
 				<?php echo $race ?></th>
-			<th align="center">Class<?php echo $class; ?></th>
-			<th align="center"><a href="?order=cost&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Cost</span></a></th>
-			<th align="center"><a href="?order=speed&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Speed</span></a>
+			<th>Class<?php echo $class; ?></th>
+			<th><a href="?order=cost&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Cost</span></a></th>
+			<th><a href="?order=speed&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Speed</span></a>
 				<?php echo $speed ?></th>
-			<th align="center"><a href="?order=hardpoint&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Hardpoints</span></a>
+			<th><a href="?order=hardpoint&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Hardpoints</span></a>
 				<?php echo $hardpoint ?></th>
-			<th align="center"><a href="?order=buyer_restriction&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Restriction</span></a>
+			<th><a href="?order=buyer_restriction&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Restriction</span></a>
 				<?php echo $restrict ?></th><?php
-/*			<th align="center"><a href="?order=lvl_needed&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Level Needed(Semi War)</span></a></th>*/ ?>
-			<th align="center"><a href="?hardwarea=1&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Shields</span></a></th>
-			<th align="center"><a href="?hardwarea=2&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Armour</span></a></th>
-			<th align="center"><a href="?hardwarea=3&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Cargo</span></a></th>
-			<th align="center"><a href="?hardwarea=4&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Drones</span></a></th>
-			<th align="center"><a href="?hardwarea=5&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Scouts</span></a></th>
-			<th align="center"><a href="?hardwarea=6&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Mines</span></a></th>
-			<th align="center"><a href="?hardwarea=7&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Scanner</span></a>
+/*			<th><a href="?order=lvl_needed&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Level Needed(Semi War)</span></a></th>*/ ?>
+			<th><a href="?hardwarea=1&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Shields</span></a></th>
+			<th><a href="?hardwarea=2&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Armour</span></a></th>
+			<th><a href="?hardwarea=3&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Cargo</span></a></th>
+			<th><a href="?hardwarea=4&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Drones</span></a></th>
+			<th><a href="?hardwarea=5&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Scouts</span></a></th>
+			<th><a href="?hardwarea=6&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Mines</span></a></th>
+			<th><a href="?hardwarea=7&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Scanner</span></a>
 				<?php echo $scanner ?></th>
-			<th align="center"><a href="?hardwarea=8&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Cloak</span></a>
+			<th><a href="?hardwarea=8&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Cloak</span></a>
 				<?php echo $cloak ?></th>
-			<th align="center"><a href="?hardwarea=9&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Illusion</span></a>
+			<th><a href="?hardwarea=9&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Illusion</span></a>
 				<?php echo $illusion ?></th>
-			<th align="center"><a href="?hardwarea=10&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Jump</span></a>
+			<th><a href="?hardwarea=10&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Jump</span></a>
 				<?php echo $jump ?></th>
-			<th align="center"><a href="?hardwarea=11&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Scrambler</span></a>
+			<th><a href="?hardwarea=11&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Scrambler</span></a>
 				<?php echo $scramble ?></th>
 		</tr><?php
 	$search = array("'", " ", ",", "<", ">", "\"");
@@ -148,7 +148,7 @@ try {
 				$class = 'class="' . $value[0] . '"';
 				$value = $value[1];
 			}
-			echo ('<td align="center" '.$class.'>'.$value.'</td>');
+			echo ('<td '.$class.'>'.$value.'</td>');
 		}
 		echo ('</tr>');
 	} ?>

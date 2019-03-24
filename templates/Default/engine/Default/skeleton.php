@@ -4,7 +4,7 @@
 		$this->includeTemplate('includes/Head.inc'); ?>
 	</head>
 	<body>
-		<table class="m" align="center">
+		<table class="m centered">
 			<tr>
 				<td class="l0" rowspan="2">
 					<div class="l1">

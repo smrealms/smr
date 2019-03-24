@@ -44,7 +44,7 @@ if (isset($var['process'])) {
 	
 	$container=create_container('skeleton.php','bar_main.php');
 	transfer('LocationID');
-	$container['message'] = '<div align="center">Galaxy maps have been added. Enjoy!</div><br />';
+	$container['message'] = '<div class="center">Galaxy maps have been added. Enjoy!</div><br />';
 	forward($container);
 }
 else {

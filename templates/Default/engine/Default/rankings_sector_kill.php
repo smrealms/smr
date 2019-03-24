@@ -1,4 +1,4 @@
-<div align="center">
+<div class="center">
 	<p>Here are the most deadly Sectors!</p>
 	<?php $this->includeTemplate('includes/SectorKillList.inc', array('Rankings' => $TopTen)); ?>
 

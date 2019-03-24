@@ -3,7 +3,7 @@ if(isset($Message)) {?>
 	<div class="center"><?php echo $Message; ?></div><br /><?php
 } ?>
 
-<div align="center"><?php
+<div class="center"><?php
 	$NumLogs = count($Logs);
 	if($NumLogs > 0) { ?>
 		There <span id="total-logs"><?php echo pluralise('is', $TotalLogs), ' ', $TotalLogs, ' ', $LogType, pluralise(' log', $NumLogs); ?></span> available for viewing of which <?php echo $NumLogs, ' ', pluralise('is', $NumLogs); ?> being shown.<br /><br />
@@ -32,7 +32,7 @@ if(isset($Message)) {?>
 				</tr>
 			</table>
 			<br /><br />
-			<table id="logs-list" class="standard fullwidth">
+			<table id="logs-list" class="standard inset centered">
 				<thead>
 					<tr>
 						<th class="shrink">View</th>

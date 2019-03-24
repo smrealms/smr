@@ -50,14 +50,14 @@ function create_card($card, $show) {
 
 	$return=('<td>');
 	//lets try and echo cards
-	$return.=('<table style="border:1px solid green"><tr><td><table><tr><td valign=top align=left height='.$card_height.' width='.$card_width.'>');
+	$return.=('<table style="border:1px solid green"><tr><td><table><tr><td valign=top class="left" height='.$card_height.' width='.$card_width.'>');
 	if ($show) {
 		$return.=('<h1>'.$card_name.'<img src="images/'.$suit.'.gif"></h1></td></tr>');
 	}
 	else {
 		$return.=('</td></tr>');
 	}
-	$return.=('<tr><td valign=bottom align=right height='.$card_height.' width='.$card_width.'>');
+	$return.=('<tr><td valign=bottom class="right" height='.$card_height.' width='.$card_width.'>');
 	if ($show) {
 		$return.=('<h1><img src="images/'.$suit.'.gif">'.$card_name.'</h1></td></tr></table>');
 	}
@@ -189,7 +189,7 @@ if ($do != 'STAY' && get_value($player_card) != 21) {
 	    (get_value($player_card) > 21 && get_value($ai_card) <= 21)) {
 		$message.=('<h1 class="red center">Bank Wins</h1>');
 	}
-	$message.=('<div align="center">Bank\'s Cards are</div><br /><table align="center"><tr>');
+	$message.=('<div class="center">Bank\'s Cards are</div><br /><table class="center"><tr>');
 	foreach ($ai_card as $key => $value) {
 		if ($key == 0) {
 			//do we need a new row?
@@ -215,14 +215,14 @@ if ($do != 'STAY' && get_value($player_card) != 21) {
 
 	$message.=('</tr></table>');
 	if (get_value($ai_card) == 21 && sizeof($ai_card) == 2) {
-		$message.=('<div align=center>Bank has BLACKJACK!</div><br />');
+		$message.=('<div class="center">Bank has BLACKJACK!</div><br />');
 		$win = 'no';
 	}
 	elseif (get_value($player_card) >= 21) {
-		$message.=('<div align=center>Bank has ' . get_value($ai_card) . '</div><br /><br />');
+		$message.=('<div class="center">Bank has ' . get_value($ai_card) . '</div><br />');
 	}
 	else {
-		$message.=('<div align=center>Bank has at least '.$ai_val.'</div><br />');
+		$message.=('<div class="center">Bank has at least '.$ai_val.'</div><br />');
 	}
 }
 
@@ -250,7 +250,7 @@ if ($do == 'STAY' || get_value($player_card) == 21) {
 	else {
 		$message.=('<h1 class="red center">Bank Wins</h1>');
 	}
-	$message.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
+	$message.=('<div class="center">Bank\'s Cards are</div><br /><table class="center"><tr>');
 	foreach ($ai_card as $key => $value) {
 		//now row?
 		if ($i == 4 || $i == 7 || $i == 10) {
@@ -259,7 +259,7 @@ if ($do == 'STAY' || get_value($player_card) == 21) {
 		$message.=create_card($value, TRUE);
 		$i++;
 	}
-	$message.=('</tr></table><div align=center>');
+	$message.=('</tr></table><div class="center">');
 	if (get_value($ai_card) > 21) {
 		$message.=('Bank <span class="red"><b>BUSTED</b></span><br /><br />');
 	}
@@ -273,7 +273,7 @@ $i = 1;
 
 $val1 = get_value($player_card);
 
-$message.=('<div align=center>Your Cards are</div><br /><table align=center><tr>');
+$message.=('<div class="center">Your Cards are</div><br /><table class="center"><tr>');
 foreach ($player_card as $key => $value) {
 	if ($i == 4 || $i == 7 || $i == 10) {
 		$message.=('</tr><tr>');
@@ -283,7 +283,7 @@ foreach ($player_card as $key => $value) {
 }
 $message.=('</tr></table>');
 
-$message.=('<div align=center>You have a total of ' . get_value($player_card) . ' </div><br />');
+$message.=('<div class="center">You have a total of ' . get_value($player_card) . ' </div><br />');
 //check for win
 if ($do == 'STAY') {
 	$win = check_for_win($ai_card, $player_card);
@@ -294,7 +294,7 @@ transfer('LocationID');
 $container['cards'] = $cards;
 $container['bet'] = $bet;
 
-$message.=('<div align=center>');
+$message.=('<div class="center">');
 if (get_value($player_card) > 21) {
 	$message.=('You have <span class="red"><b>BUSTED</b></span>');
 	$player->increaseHOF($bet,array('Blackjack','Money','Lost'), HOF_PUBLIC);

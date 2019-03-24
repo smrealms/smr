@@ -144,9 +144,7 @@
 	</table>
 
 	<br />
-	<div align="center>">
-		<input class="submit" type="submit" name="action" value="Delete Selected" />
-	</div>
+	<input class="submit" type="submit" name="action" value="Delete Selected" />
 </form>
 <br />
 

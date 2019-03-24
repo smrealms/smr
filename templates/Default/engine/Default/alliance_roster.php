@@ -5,7 +5,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 } ?>
 
 
-<div align="center">
+<div class="center">
 	<div id="alliance-desc" class="ajax"><?php
 		echo bbifyMessage($Alliance->getDescription()); ?>
 	</div><?php
@@ -17,7 +17,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 
 	<br />
 
-	<table class="standard inset">
+	<table class="standard inset center">
 		<tr>
 			<th>Alliance Name</th>
 			<th>Total Experience</th>
@@ -25,17 +25,17 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 			<th>Members</th>
 		</tr>
 		<tr id="alliance-info" class="ajax bold">
-			<td><?php echo $Alliance->getAllianceName(); ?></td>
-			<td class="center shrink"><?php echo number_format($AllianceExp); ?></td>
-			<td class="center shrink"><?php echo number_format($AllianceAverageExp); ?></td>
-			<td class="center shrink"><?php echo number_format($Alliance->getNumMembers()); ?></td>
+			<td class="left"><?php echo $Alliance->getAllianceName(); ?></td>
+			<td class="shrink"><?php echo number_format($AllianceExp); ?></td>
+			<td class="shrink"><?php echo number_format($AllianceAverageExp); ?></td>
+			<td class="shrink"><?php echo number_format($Alliance->getNumMembers()); ?></td>
 		</tr>
 	</table>
 	<br />
 
 	<h2>Current Members</h2><br />
 
-	<table id="alliance-roster" class="standard fullwidth">
+	<table id="alliance-roster" class="standard fullwidth center">
 		<thead>
 			<tr>
 				<th class="shrink">&nbsp;</th>
@@ -62,17 +62,17 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 					$Class.= ' newbie';
 				} ?>
 				<tr id="player-<?php echo $AlliancePlayer->getPlayerID(); ?>" class="ajax<?php echo $Class; ?>">
-					<td class="center"><?php
+					<td><?php
 						if ($AlliancePlayer->getAccountID() == $Alliance->getLeaderID()) { ?>*<?php }
 						echo $Count++; ?>
 					</td>
-					<td class="name"><?php
+					<td class="left name"><?php
 						echo $AlliancePlayer->getLevelName(); ?>&nbsp;<?php echo $AlliancePlayer->getLinkedDisplayName(false); ?>
 					</td>
-					<td class="center race"><?php
+					<td class="race"><?php
 						echo $ThisPlayer->getColouredRaceName($AlliancePlayer->getRaceID()); ?>
 					</td>
-					<td class="center experience"><?php
+					<td class="experience"><?php
 						echo number_format($AlliancePlayer->getExperience()); ?>
 					</td><?php
 					if ($ShowRoles) { ?>

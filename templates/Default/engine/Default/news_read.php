@@ -1,8 +1,8 @@
 <?php $this->includeTemplate('includes/CommonNews.inc'); ?>
 
-<div align="center">View News entries</div><br />
+<div class="center">View News entries</div><br />
 <form name="ViewNewsForm" method="POST" action="<?php echo $ViewNewsFormHref; ?>">
-	<div align="center">
+	<div class="center">
 		<input type="text" name="min_news" value="1" size="3" class="InputFields center">&nbsp;-&nbsp;<input type="text" name="max_news" value="50" size="3" class="InputFields center">&nbsp;<br />
 		<input type="submit" name="action" value="View" class="InputFields" />
 	</div>
@@ -11,7 +11,7 @@
 <?php
 if(isset($NewsItems) && count($NewsItems) > 0) { ?>
 	<br />
-	<div align="center">
+	<div class="center">
 		Showing <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 	</div>
 	<table class="standard">

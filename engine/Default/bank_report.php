@@ -35,7 +35,7 @@ while ($db->nextRecord()) {
 }
 
 //format it this way so its easy to send to the alliance MB if requested.
-$text = '<table class="nobord" cellspacing="1" align="center">';
+$text = '<table class="nobord centered" cellspacing="1">';
 $text .= '<tr><th>Player</th><th>Deposits</th><th>Withdrawals</th><th>Total</th></tr>';
 $balance = 0;
 foreach ($totals as $accId => $total) {
@@ -61,7 +61,7 @@ foreach ($totals as $accId => $total) {
 	$text .= '</tr>';
 }
 $text .= '</table>';
-$text = '<div align="center"><br />Ending Balance: ' . number_format($balance) . '</div><br />' . $text;
+$text = '<div class="center"><br />Ending Balance: ' . number_format($balance) . '</div><br />' . $text;
 
 $container=create_container('skeleton.php', 'bank_report.php');
 $container['alliance_id'] = $alliance_id;
@@ -90,10 +90,10 @@ if (isset($var['text'])) {
 		$db->query('DELETE FROM player_read_thread WHERE thread_id = ' . $db->escapeNumber($thread_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($alliance_id));
 	}
 
-	$PHP_OUTPUT.=('<div align="center">A statement has been sent to the alliance.</div><br />');
+	$PHP_OUTPUT.=('<div class="center">A statement has been sent to the alliance.</div><br />');
 }
 else {
-	$PHP_OUTPUT.=('<div align="center">');
+	$PHP_OUTPUT.=('<div class="center">');
 	$PHP_OUTPUT.=create_button($container,'Send Report to Alliance');
 	$PHP_OUTPUT.=('</div>');
 }

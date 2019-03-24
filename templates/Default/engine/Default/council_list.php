@@ -1,10 +1,10 @@
-<div align="center">
-	<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
+<div class="center">
+	<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 	<h3>President</h3><br/><?php
 	$PresidentID = Council::getPresidentID($ThisPlayer->getGameID(), $RaceID);
 	if ($PresidentID !== false) {
 		$President = SmrPlayer::getPlayer($PresidentID, $ThisPlayer->getGameID()); ?>
-		<table class="standard" width="75%">
+		<table class="center standard" width="75%">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -15,8 +15,8 @@
 			</thead>
 			<tbody id="president" class="ajax">
 				<tr>
-					<td>President <?php echo $President->getLinkedDisplayName(false); ?></td>
-					<td class="center"><?php echo $ThisPlayer->getColouredRaceName($President->getRaceID(), true); ?></td>
+					<td class="left">President <?php echo $President->getLinkedDisplayName(false); ?></td>
+					<td><?php echo $ThisPlayer->getColouredRaceName($President->getRaceID(), true); ?></td>
 					<td><?php echo $President->getAllianceName(true); ?></td>
 					<td class="right"><?php echo number_format($President->getExperience()); ?></td>
 				</tr>
@@ -33,7 +33,7 @@
 	<h3>Council Members</h3><br /><?php
 	$CouncilMembers = Council::getRaceCouncil($ThisPlayer->getGameID(), $RaceID);
 	if(count($CouncilMembers) > 0) { ?>
-		<table id="council-members" class="standard" width="85%">
+		<table id="council-members" class="center standard" width="85%">
 			<thead>
 				<tr>
 					<th>&nbsp;</th>
@@ -47,9 +47,9 @@
 				foreach($CouncilMembers as $Ranking => $AccountID) {
 					$CouncilPlayer = SmrPlayer::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
 					<tr id="player-<?php echo $CouncilPlayer->getPlayerID(); ?>" class="ajax<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> bold<?php } ?>">
-						<td class="right"><?php echo $Ranking; ?></td>
-						<td class="name"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
-						<td class="center"><?php echo $ThisPlayer->getColouredRaceName($CouncilPlayer->getRaceID(), true); ?></td>
+						<td><?php echo $Ranking; ?></td>
+						<td class="left name"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
+						<td><?php echo $ThisPlayer->getColouredRaceName($CouncilPlayer->getRaceID(), true); ?></td>
 						<td class="alliance"><?php echo $CouncilPlayer->getAllianceName(true); ?></td>
 						<td class="experience right"><?php echo number_format($CouncilPlayer->getExperience()); ?></td>
 					</tr><?php

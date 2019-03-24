@@ -90,10 +90,10 @@ function displayHOFRow($rank,$accountID,$amount) {
 	}
 	$bold = '';
 	if ($accountID == $account->getAccountID()) {
-		$bold = ' class="bold"';
+		$bold = 'class="bold"';
 	}
 	$return=('<tr>');
-	$return.=('<td align="center"'.$bold.'>' . $rank . '</td>');
+	$return.=('<td '.$bold.'>' . $rank . '</td>');
 
 	$container = create_container('skeleton.php','hall_of_fame_player_detail.php');
 	$container['account_id'] = $accountID;
@@ -106,15 +106,15 @@ function displayHOFRow($rank,$accountID,$amount) {
 		$container['sending_page'] = 'personal_hof';
 	}
 	if(isset($hofPlayer) && is_object($hofPlayer)) {
-		$return.=('<td align="center"'.$bold.'>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
+		$return.=('<td '.$bold.'>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
 	}
 	else if(isset($hofAccount) && is_object($hofAccount)) {
-		$return.=('<td align="center"'.$bold.'>'.create_link($container, $hofAccount->getHofName()) .'</td>');
+		$return.=('<td '.$bold.'>'.create_link($container, $hofAccount->getHofName()) .'</td>');
 	}
 	else {
-		$return.=('<td align="center"'.$bold.'>Unknown</td>');
+		$return.=('<td '.$bold.'>Unknown</td>');
 	}
-	$return.=('<td align="center"'.$bold.'>' . $amount . '</td>');
+	$return.=('<td '.$bold.'>' . $amount . '</td>');
 	$return.=('</tr>');
 	return $return;
 }

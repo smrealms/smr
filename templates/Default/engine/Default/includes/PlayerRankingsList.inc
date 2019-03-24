@@ -1,4 +1,4 @@
-<table class="standard" width="95%">
+<table class="standard center" width="95%">
 	<tr>
 		<th class="shrink">Rank</th>
 		<th>Player</th>
@@ -8,8 +8,8 @@
 	</tr><?php
 	foreach($Rankings as $Ranking) { ?>
 		<tr<?php echo $Ranking['Class']; ?>>
-			<td class="top center"><?php echo $Ranking['Rank']; ?></td>
-			<td class="top"><?php echo $Ranking['Player']->getLevelName(); ?> <?php echo $Ranking['Player']->getLinkedDisplayName(false); ?></td>
+			<td class="top"><?php echo $Ranking['Rank']; ?></td>
+			<td class="top left"><?php echo $Ranking['Player']->getLevelName(); ?> <?php echo $Ranking['Player']->getLinkedDisplayName(false); ?></td>
 			<td class="top"><?php echo $ThisPlayer->getColouredRaceName($Ranking['Player']->getRaceID(), true); ?></td>
 			<td class="top"><?php echo $Ranking['Player']->getAllianceName(true); ?></td>
 			<td class="top right"><?php echo number_format($Ranking['Value']); ?></td>

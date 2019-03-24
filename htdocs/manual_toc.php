@@ -31,7 +31,7 @@ try {
 							<th width="32">
 								<img src="/images/help/empty.jpg" width="32" height="32">
 							</th>
-							<th width="100%" align="center" valign="middle" style="font-size:18pt;font-weight:bold;">Table of Content</th>
+							<th width="100%" class="center" valign="middle" style="font-size:18pt;font-weight:bold;">Table of Content</th>
 							<th width="32"><a href="/manual_toc.php"><img src="/images/help/contents.jpg" width="32" height="32" border="0"></a></th>
 						</tr>
 					</table>
@@ -57,7 +57,7 @@ try {
 							<th width="32">
 								<img src="/images/help/empty.jpg" width="32" height="32">
 							</th>
-							<th width="100%" align="center" valign="middle" style="font-size:18pt;font-weight:bold;">Table of Content</th>
+							<th width="100%" class="center" valign="middle" style="font-size:18pt;font-weight:bold;">Table of Content</th>
 							<th width="32"><a href="/manual_toc.php"><img src="/images/help/contents.jpg" width="32" height="32" border="0"></a></th>
 						</tr>
 					</table>

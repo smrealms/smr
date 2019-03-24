@@ -1,5 +1,5 @@
 <br />
-<div align="center">
+<div class="center">
 	Are you sure you want to offer a treaty to <span class="yellow"><?php echo $AllianceName; ?></span> with the following conditions?
 	<br />
 

@@ -1,7 +1,7 @@
 <form name="form_acc" method="POST" action="<?php echo $EditFormHREF; ?>">
 	<table cellpadding="3" border="0">
 		<tr>
-			<td align="right" class="bold">Account ID:</td>
+			<td class="right bold">Account ID:</td>
 			<td><?php
 				if(isset($EditingAccount)) {
 					echo $EditingAccount->getAccountID();
@@ -12,7 +12,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" class="bold">Login:</td>
+			<td class="right bold">Login:</td>
 			<td><?php
 				if(isset($EditingAccount)) {
 					echo $EditingAccount->getLogin();
@@ -23,7 +23,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" class="bold">Validation Code:</td>
+			<td class="right bold">Validation Code:</td>
 			<td><?php
 				if(isset($EditingAccount)) {
 					echo $EditingAccount->getValidationCode();
@@ -34,7 +34,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" class="bold">Email:</td>
+			<td class="right bold">Email:</td>
 			<td><?php
 				if(isset($EditingAccount)) {
 					echo $EditingAccount->getEmail();
@@ -45,7 +45,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" class="bold">HoF Name:</td>
+			<td class="right bold">HoF Name:</td>
 			<td><?php
 				if(isset($EditingAccount)) {
 					echo $EditingAccount->getHofName();
@@ -58,7 +58,7 @@
 
 		if(isset($EditingAccount)) { ?>
 			<tr>
-			<td align="right" class="bold">Points:</td>
+			<td class="right bold">Points:</td>
 			<td><?php echo $EditingAccount->getPoints(); ?></td>
 			</tr>
 			<tr>
@@ -85,7 +85,7 @@
 
 		if(isset($EditingAccount)) { ?>
 			<tr>
-				<td align="right" valign="top" class="bold">Player:</td>
+				<td valign="top" class="right bold">Player:</td>
 					<td><?php
 						if(count($EditingPlayers)) { ?>
 							<a onclick="$('#accountPlayers').fadeToggle(600);">Show/Hide</a>
@@ -93,19 +93,19 @@
 								foreach ($EditingPlayers as $CurrentPlayer) {
 									$CurrentShip = $CurrentPlayer->getShip(); ?>
 									<tr>
-										<td align="right">Game ID:</td>
+										<td class="right">Game ID:</td>
 										<td><?php echo $CurrentPlayer->getGameID(); ?></td>
 									</tr>
 									<tr>
-										<td align="right">Name:</td>
+										<td class="right">Name:</td>
 										<td><input type=text name=player_name[<?php echo $CurrentPlayer->getGameID(); ?>] value="<?php echo $CurrentPlayer->getPlayerName(); ?>" />(<?php echo $CurrentPlayer->getPlayerID(); ?>)</td>
 									</tr>
 									<tr>
-										<td align="right">Experience:</td>
+										<td class="right">Experience:</td>
 										<td><?php echo number_format($CurrentPlayer->getExperience()); ?></td>
 									</tr>
 									<tr>
-										<td align="right">Ship:</td>
+										<td class="right">Ship:</td>
 										<td><?php echo $CurrentShip->getName(); ?> (<?php echo $CurrentShip->getAttackRating(); ?>/<?php echo $CurrentShip->getDefenseRating(); ?>)</td>
 									</tr>
 									<tr>
@@ -127,7 +127,7 @@
 			</tr>
 
 			<tr>
-				<td align="right" valign="top" class="bold">Donation:</td>
+				<td valign="top" class="right bold">Donation:</td>
 				<td><input type="number" name="donation" size="5" class="InputFields center">$</td>
 			</tr>
 			<tr>
@@ -136,7 +136,7 @@
 			</tr>
 
 			<tr>
-				<td align="right" valign="top" class="bold">Grant Reward SMR Credits:</td>
+				<td valign="top" class="right bold">Grant Reward SMR Credits:</td>
 				<td><input type="number" name="grant_credits" size="5" class="InputFields center"> Credits</td>
 			</tr>
 
@@ -146,7 +146,7 @@
 			</tr>
 
 			<tr>
-				<td align="right" valign="top" class="bold">Close Account:</td>
+				<td valign="top" class="right bold">Close Account:</td>
 				<td>
 					<table>
 						<tr>
@@ -193,7 +193,7 @@
 				}
 			</script>
 			<tr>
-				<td align="right" valign="top" class="bold">Ban Points:</td>
+				<td valign="top" class="right bold">Ban Points:</td>
 				<td>
 					<p>
 						<input type="radio" name="choise" value="pre_select">
@@ -242,7 +242,7 @@
 			</tr>
 
 			<tr>
-				<td align="right" valign="top" class="bold">Closing History:</td>
+				<td valign="top" class="right bold">Closing History:</td>
 				<td><?php
 					if(count($ClosingHistory) > 0) {
 						foreach($ClosingHistory as $Action) {
@@ -261,7 +261,7 @@
 			</tr>
 
 			<tr>
-				<td align="right" valign="top" class="bold">Exception:</td>
+				<td valign="top" class="right bold">Exception:</td>
 				<td><?php
 					if (isset($Exception)) {
 						echo $Exception;
@@ -278,7 +278,7 @@
 			</tr>
 
 			<tr>
-				<td align="right" valign="top" class="bold">Forced Veteran:</td>
+				<td valign="top" class="right bold">Forced Veteran:</td>
 				<td><input type="radio" name="veteran_status" value="TRUE"<?php if($EditingAccount->isVeteranForced()) { ?> checked="checked"<?php } ?>>Yes</td>
 			</tr>
 			<tr>
@@ -292,7 +292,7 @@
 			</tr>
 
 			<tr>
-				<td align="right" valign="top" class="bold">Logging:</td>
+				<td valign="top" class="right bold">Logging:</td>
 				<td><input type="radio" name="logging_status" value="TRUE"<?php if($EditingAccount->isLoggingEnabled()) { ?> checked="checked"<?php } ?>>Yes</td>
 			</tr>
 			<tr>
@@ -306,7 +306,7 @@
 			</tr>
 
 			<tr>
-				<td align="right" valign="top" class="bold">Last IP's:</td>
+				<td valign="top" class="right bold">Last IP's:</td>
 				<td><?php
 					if(count($RecentIPs) > 0) { ?>
 						<a onclick="$('#recentIPs').fadeToggle(600);">Show/Hide</a>
@@ -327,11 +327,11 @@
 		}
 		else { ?>
 			<tr>
-				<td align="right" class="bold">Player Name:</td>
+				<td class="right bold">Player Name:</td>
 				<td><input type="text" name="player_name" class="InputFields" size="20"></td>
 			</tr>
 			<tr>
-				<td align="right" class="bold">Game:</td>
+				<td class="right bold">Game:</td>
 				<td>
 					<select name="game_id" size="1" class="InputFields">
 						<option value="0">All Games</option><?php

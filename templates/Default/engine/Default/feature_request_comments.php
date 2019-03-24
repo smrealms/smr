@@ -27,7 +27,7 @@ if(isset($Comments)) { ?>
 
 if ($FeatureModerator) { ?>
 	<form name="FeatureRequestStatusForm" method="POST" action="<?php echo $FeatureRequestStatusFormHREF; ?>">
-		<div align="right">&nbsp;
+		<div class="right">&nbsp;
 			<select name="status">
 				<option disabled selected value style="display:none"> -- Select Status -- </option>
 				<option value="Accepted">Accepted</option>
@@ -38,23 +38,24 @@ if ($FeatureModerator) { ?>
 			</select>&nbsp;
 			<input type="hidden" name="set_status_ids[]" value="<?php echo $FeatureRequestId; ?>" />
 			<input type="submit" name="action" value="Set Status" />
-		</div><br />
+		</div>
 	</form><?php
 } ?>
 
+<br />
 <form name="FeatureRequestCommentForm" method="POST" action="<?php echo $FeatureRequestCommentFormHREF; ?>">
 	<table>
 		<tr>
-			<td align="center">Comment:</td>
+			<td class="center">Comment:</td>
 		</tr>
 		<tr>
-			<td align="center"><textarea spellcheck="true" name="comment" class="InputFields"></textarea></td>
+			<td class="center"><textarea spellcheck="true" name="comment" class="InputFields"></textarea></td>
 		</tr>
 		<tr>
-			<td align="center">Anonymous: <input name="anon" class="InputFields" type="checkbox" checked="checked"/></td>
+			<td class="center">Anonymous: <input name="anon" class="InputFields" type="checkbox" checked="checked"/></td>
 		</tr>
 		<tr>
-			<td align="center"><input type="submit" name="action" value="Add Comment" class="InputFields"></td>
+			<td class="center"><input type="submit" name="action" value="Add Comment" class="InputFields"></td>
 		</tr>
 	</table>
 </form>

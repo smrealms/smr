@@ -18,9 +18,9 @@ try {
 	</head>
 	<body>
 	
-	<table width="850" border="0" align="center" cellpadding="0" cellspacing="0" >
+	<table class="center" width="850" border="0" cellpadding="0" cellspacing="0" >
 	<tr>
-	<td align="center" colspan="2"><h1>Space Merchant Realms - Photo Album</h1></td>
+	<td colspan="2"></td>
 	</tr>
 	<tr>
 	<td>
@@ -29,12 +29,13 @@ try {
 	<td>
 	
 	<table cellspacing="0" cellpadding="0" border="0" width="700">
+	<tr><td class="center" colspan="3"><h1>Space Merchant Realms - Photo Album</h1></td></tr>
 	<tr>
 	<td colspan="3" height="1" bgcolor="#0B8D35"></td>
 	</tr>
 	<tr>
 	<td width="1" bgcolor="#0B8D35"></td>
-	<td align="left" valign="top" bgcolor="#06240E">
+	<td class="left" valign="top" bgcolor="#06240E">
 	<table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
 	<tr>
 	<td valign="top">
@@ -110,10 +111,10 @@ catch(Throwable $e) {
 </tr>
 <tr>
 <td width="1" bgcolor="#0B8D35"></td>
-<td align="left" valign="top" bgcolor="#06240E">
+<td valign="top" bgcolor="#06240E">
 <table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
 <tr>
-<td valign="top" align="center">
+<td valign="top" class="center">
 <form action="search_processing.php">
 Quick Search:<br />
 <input type="text" name="nick" size="10" class="InputFields"><br />

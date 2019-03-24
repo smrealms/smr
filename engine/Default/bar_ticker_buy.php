@@ -31,7 +31,7 @@ if (isset($var['process'])) {
 	//offer another drink and such
 	$container=create_container('skeleton.php','bar_main.php');
 	transfer('LocationID');
-	$container['message'] = '<div align="center">Your system has been added.  Enjoy!</div><br />';
+	$container['message'] = '<div class="center">Your system has been added.  Enjoy!</div><br />';
 	forward($container);
 }
 else {
