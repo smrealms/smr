@@ -56,19 +56,14 @@ foreach ($totals as $accId => $total) {
 }
 $text .= '</table>';
 $text = '<div class="center"><br />Ending Balance: ' . number_format($balance) . '</div><br />' . $text;
+$template->assign('BankReport', $text);
 
-if (isset($var['sent_report'])) {
-	$PHP_OUTPUT.=('<div class="center">A statement has been sent to the alliance.</div><br />');
-}
-else {
+if (!isset($var['sent_report'])) {
 	$container=create_container('bank_report_processing.php');
 	$container['alliance_id'] = $alliance_id;
 	$container['text'] = $text;
-	$PHP_OUTPUT.=('<div class="center">');
-	$PHP_OUTPUT.=create_button($container,'Send Report to Alliance');
-	$PHP_OUTPUT.=('</div>');
+	$template->assign('SendReportHREF', SmrSession::getNewHREF($container));
 }
-$PHP_OUTPUT.=($text);
 
 $template->assign('PageTopic', 'Alliance Bank Report');
 Menu::bank();
