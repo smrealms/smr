@@ -121,8 +121,6 @@ if ($transaction == 'Steal' ||
 	}
 	elseif ($transaction == 'Steal') {
 		$msg_transaction = 'stolen';
-		$bargain_price = 0;
-		$gained_exp = round($base_xp);
 		$ship->increaseCargo($good_id,$amount);
 		$player->increaseHOF($amount, array('Trade','Goods','Stolen'), HOF_ALLIANCE);
 		$player->increaseHOF($gained_exp, array('Trade','Experience','Stealing'), HOF_PUBLIC);
