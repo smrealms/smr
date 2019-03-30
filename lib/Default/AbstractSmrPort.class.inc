@@ -884,22 +884,28 @@ class AbstractSmrPort {
 	}
 	
 	public function getIdealPrice($goodID, $transactionType, $numGoods, $relations) {
-//		echo 'Good:'.$goodID.',Dist::'.$dist.',Type:'.$transactionType.',NumGoods:'.$numGoods.',Relations:'.$relations.',';
-		if($relations>1000)
-			$relations=1000;
+		$relations = min(1000, $relations);  // no effect for higher relations
 		$good = $this->getGood($goodID);
-		$base = $good['BasePrice'];
+		$base = $good['BasePrice'] * $numGoods;
 		$maxSupply = $good['Max'];
 		$supply = $this->getGoodAmount($goodID);
 		$dist = $this->getGoodDistance($goodID);
 	
-//		$relations_factor_buy = 2-(($relations + 500) / 1500);
-//		$relations_factor_sell = ($relations + 500) / 1500;
-		if($transactionType == 'Sell')
-			$idealPrice = round($numGoods * $base * 0.6 * (pow($dist + .5, 1.8)) * (2.5-($supply / $maxSupply)) * (($relations + 350) / 8415) );
-		else if($transactionType == 'Buy')
-			$idealPrice = round($numGoods * $base * 0.7 * pow($dist, 1.84) * (2.5-($supply / $maxSupply)) * (2-($relations + 50) / 850) * (($relations + 350) / 1500) / 38.56 * (1 + (10 - $this->getLevel()) / 50));
-		return $idealPrice;
+		$distFactor = pow($dist, 1.3);
+		if ($transactionType == 'Sell') {
+			// Trader sells
+			$supplyFactor = 1 + ($supply / $maxSupply);
+			$relationsFactor = 1 + 2 * ($relations / 1000);
+			$scale = 0.08;
+		} else if($transactionType == 'Buy') {
+			// Trader buys
+			$supplyFactor = 2 - ($supply / $maxSupply);
+			$relationsFactor = 3 - 2 * ($relations / 1000);
+			$scale = 0.03;
+		} else {
+			throw new Exception('Unknown transaction type');
+		}
+		return round($base * $scale * $distFactor * $supplyFactor * $relationsFactor);
 	}
 	
 	public function getOfferPrice($idealPrice, $relations, $transactionType) {
@@ -926,30 +932,27 @@ class AbstractSmrPort {
 	}
 	
 	public function calculateExperiencePercent($idealPrice,$offerPrice,$bargainPrice,$transactionType) {
-		if(($transactionType == 'Sell' && $bargainPrice < $offerPrice) || ($transactionType == 'Buy' && $bargainPrice > $offerPrice))
+		if (($transactionType == 'Sell' && $bargainPrice < $offerPrice) ||
+		    ($transactionType == 'Buy' && $bargainPrice > $offerPrice)) {
 			return 0;
+		}
 		if ($bargainPrice == $idealPrice || $transactionType == 'Steal') {
 			// Stealing always gives full exp
 			return 1;
 		}
+
 		$bargainLeniency = min($idealPrice*self::BARGAIN_LENIENCY_PERCENT,abs($idealPrice-$bargainPrice));
-		if ($transactionType == 'Sell')
+		if ($transactionType == 'Sell') {
 			$bargainLeniency = -$bargainLeniency;
+		}
 		$bargainPrice -= $bargainLeniency;
 		
-		$val = ($idealPrice-$bargainPrice)/($idealPrice-$this->getOfferPrice($idealPrice,0,$transactionType));
-//			if ($transactionType == 'Sell' && $val>0)
-//				$val=1;
-//			else if($transactionType == 'Buy' && $val<0)
-//				$val=1;
-		$val=abs($val);
-		if($val>1)
-			$val=1;
-		$expPercent = pow(1-$val,15);
-		if($expPercent>1)
-			$expPercent=1;
-		else if($expPercent<0)
-			$expPercent=0;
+		$offerPriceNoRelations = $this->getOfferPrice($idealPrice, 0, $transactionType);
+		$val = abs(($idealPrice - $bargainPrice) / ($idealPrice - $offerPriceNoRelations));
+		if ($val >= 1) {
+			return 0;
+		}
+		$expPercent = max(0, min(1, pow(1-$val,13)));
 		return $expPercent;
 	}
 	
