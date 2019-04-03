@@ -13,6 +13,12 @@ function parseBoolean($check) {
 	return (bool)$check;
 }
 
+function linkCombatLog($logID) {
+	$container = create_container('combat_log_viewer_verify.php');
+	$container['log_id'] = $logID;
+	return '<a href="' . SmrSession::getNewHREF($container) . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
+}
+
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
 	global $overrideGameID, $disableBBLinks, $player, $account, $var;
 	try {
@@ -22,9 +28,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
-				$container = create_container('combat_log_viewer_verify.php');
-				$container['log_id'] = $logID;
-				return '<a href="' . SmrSession::getNewHREF($container) . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
+				return linkCombatLog($logID);
 			break;
 			case 'player':
 				$playerID = $default;

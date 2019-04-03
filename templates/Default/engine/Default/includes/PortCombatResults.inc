@@ -8,7 +8,7 @@ if($MinimalDisplay) {
 	}
 	else {
 		?> does no damage this round<?php
-	} ?>.<?php
+	} ?>. <?php echo $AttackLogLink;
 	return;
 }
 if(isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons'])) {

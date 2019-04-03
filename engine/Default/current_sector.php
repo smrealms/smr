@@ -162,6 +162,7 @@ function checkForAttackMessage(&$msg) {
 	$contains = 0;
 	$msg = str_replace('[ATTACK_RESULTS]','',$msg,$contains);
 	if($contains>0) {
+		// $msg now contains only the log_id, if there is one
 		SmrSession::updateVar('AttackMessage','[ATTACK_RESULTS]'.$msg);
 		if(!$template->hasTemplateVar('AttackResults')) {
 			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');
@@ -170,6 +171,7 @@ function checkForAttackMessage(&$msg) {
 					$results = unserialize(gzuncompress($db->getField('result')));
 					$template->assign('AttackResultsType',$db->getField('type'));
 					$template->assign('AttackResults',$results);
+					$template->assign('AttackLogLink', linkCombatLog($msg));
 				}
 			}
 		}
