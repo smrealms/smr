@@ -45,7 +45,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				return $bbPlayer->getDisplayName($showAlliance);
 			break;
 			case 'alliance':
-				$db = new SmrMySqlDatabase();
 				$allianceID = $default;
 				if(!is_numeric($allianceID))
 					$allianceID = $tagParams['id'];
