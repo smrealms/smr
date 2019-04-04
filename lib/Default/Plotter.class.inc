@@ -1,8 +1,6 @@
 <?php
 
 class Plotter {
-	public function __construct() {
-	}
 
 	public static function getX($xType, $X, $gameID, $player=null) {
 		switch($xType) {
