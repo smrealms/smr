@@ -230,7 +230,6 @@ class AbstractSmrPort {
 				return $player->meetsAlignmentRestriction($good['AlignRestriction']);
 			});
 		}
-		return $visibleGoods;
 	}
 
 	/**

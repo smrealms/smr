@@ -1,8 +1,8 @@
 <?php
 
-if (count($player->getMissions()) >= 3)
-	create_error('red','Error','You can only have 3 missions at a time.');
-
+if (count($player->getMissions()) >= 3) {
+	create_error('You can only have up to 3 missions at a time.');
+}
 
 $player->addMission($var['MissionID']);
 

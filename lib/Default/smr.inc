@@ -45,7 +45,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				return $bbPlayer->getDisplayName($showAlliance);
 			break;
 			case 'alliance':
-				$db = new SmrMySqlDatabase();
 				$allianceID = $default;
 				if(!is_numeric($allianceID))
 					$allianceID = $tagParams['id'];
@@ -616,9 +615,7 @@ function doTickerAssigns($template, $player, $db) {
 		$ticker = array();
 		$max = TIME - 60;
 		if($player->hasTicker('NEWS')) {
-			$text = '';
 			//get recent news (5 mins)
-
 			$db->query('SELECT time,news_message FROM news WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time >= '.$max.' ORDER BY time DESC LIMIT 4');
 			while($db->nextRecord()) {
 				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getField('time')),

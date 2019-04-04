@@ -449,7 +449,7 @@ function changeNPCLogin() {
 
 	if(SmrAccount::getAccountByName($NPC_LOGIN['Login'])==null) {
 		debug('Creating account for: '.$NPC_LOGIN['Login']);
-		$account = SmrAccount::createAccount($NPC_LOGIN['Login'],'','NPC@smrealms.de','NPC','NPC',0,0);
+		$account = SmrAccount::createAccount($NPC_LOGIN['Login'],'','NPC@smrealms.de',0,0);
 		$account->setValidated(true);
 	}
 	else {
@@ -652,9 +652,13 @@ function joinAlliance($allianceID,$password) {
 
 function createAlliance($allianceName,$password) {
 	debug('Creating alliance: '.$allianceName);
-	$_REQUEST['name'] = $allianceName;
-	$_REQUEST['password'] = $password;
-	$_REQUEST['perms'] = 'full';
+	$_REQUEST = [
+		'name' => $allianceName,
+		'password' => $password,
+		'Perms' => 'full',
+		'description' => '',
+		'recruit' => 'no',
+	];
 	return create_container('alliance_create_processing.php');
 }
 
