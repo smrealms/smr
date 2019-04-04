@@ -4,7 +4,7 @@
     "license": "AGPL-3.0",
     "require": {
         "ext-mysqli": "*",
-        "php": "~7.2",
+        "php": "~7.3",
         "team-reflex/discord-php": "*"
     }
 }
