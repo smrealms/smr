@@ -549,11 +549,16 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $this->displayWeapons;
 	}
 
+	/**
+	 * Should weapons be displayed in the right panel?
+	 * This updates the player database directly because it is used with AJAX,
+	 * which does not acquire a sector lock.
+	 */
 	function setDisplayWeapons($bool) {
 		if($this->displayWeapons == $bool)
 			return;
 		$this->displayWeapons=$bool;
-		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET display_weapons=' . $this->db->escapeBoolean($this->displayWeapons) . ' WHERE ' . $this->SQL);
 	}
 
 	function isForceDropMessages() {
@@ -1185,7 +1190,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', bank='.$this->db->escapeNumber($this->bank).
 				', zoom='.$this->db->escapeString($this->zoom).
 				', display_missions='.$this->db->escapeBoolean($this->displayMissions).
-				', display_weapons='.$this->db->escapeBoolean($this->displayWeapons).
 				', force_drop_messages='.$this->db->escapeBoolean($this->forceDropMessages).
 				', group_scout_messages='.$this->db->escapeString($this->groupScoutMessages).
 				', ignore_globals='.$this->db->escapeBoolean($this->ignoreGlobals).
