@@ -9,29 +9,11 @@ Make sure the following software is installed:
 * docker (version 18.06.0+)
 * docker-compose (version 1.22.0+)
 
+## Setup
+First, you will need to clone this repository. Then inside the clone, you
+will need to create installation-specific copies of the following files:
 
-## Populate the mysql database
-First, you must create a file `.env` with the following content:
-```bash
-# Variables needed by docker-compose.yml
-# NOTE: all host names must be unique (e.g. `smr-mysql` and `smr-game`)
-MYSQL_ROOT_PASSWORD=chooseapassword
-MYSQL_PASSWORD=chooseapassword
-MYSQL_HOST=smr-mysql
-SMR_HOST=smr-game
-```
-
-To initialize the database or update it with new patches, run:
-```
-docker-compose run --rm flyway
-```
-
-To modify the database, add a file called `V<VERSION_NUMBER>__<NAME>.sql` into
-`db/patches` and rerun the command.
-
-## Config files
-Create installation-specific copies of the following files:
-
+* `.env.sample` &rarr; `.env`
 * `config/config.specific.sample.php` &rarr; `config/config.specific.php`
 * `config/SmrMySqlSecrets.sample.inc` &rarr; `config/SmrMySqlSecrets.inc`
 
@@ -42,12 +24,26 @@ For "Caretaker" (IRC) or "Autopilot" (Discord) functionality:
 For NPC's:
 * `config/npc/config.specific.sample.php` &rarr; `config/npc/config.specific.php`
 
-The sample versions have sensible defaults, but update the copies as necessary,
-as some configuration options depend on the contents of the `.env` file.
+The sample versions have sensible defaults, but update the copies as necessary.
+The options must be consistent between the various configuration files.
 
+## Populate the mysql database
+To initialize the database or update it with new patches, run:
+```
+docker-compose run --rm flyway
+```
+
+To modify the database, add a file called `V<VERSION_NUMBER>__<NAME>.sql` into
+`db/patches` and rerun the command.
+
+You can optionally start up [phpMyAdmin](https://www.phpmyadmin.net/) to
+inspect your mysql database in a web browser at `http://localhost/pma/`:
+```
+docker-compose up --build -d pma
+```
 
 ## Start up the services
-Then you can start up the persistent services
+Then you can start up the persistent game services
 ```
 docker-compose up --build -d traefik smr
 ```
