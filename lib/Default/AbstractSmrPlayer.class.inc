@@ -1390,9 +1390,10 @@ abstract class AbstractSmrPlayer {
 		return Globals::getAllianceRosterHREF($this->getAllianceID());
 	}
 
-	public function getToggleWeaponHidingHREF() {
+	public function getToggleWeaponHidingHREF($ajax=false) {
 		$container = create_container('skeleton.php','toggle_processing.php');
 		$container['toggle'] = 'WeaponHiding';
+		$container['AJAX'] = $ajax;
 		return SmrSession::getNewHREF($container);
 	}
 }

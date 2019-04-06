@@ -76,7 +76,7 @@ if(isset($GameID)) { ?>
 	Empty : <?php echo $ThisShip->getEmptyHolds(); ?><br /><br />
 	<a href="<?php echo $WeaponReorderLink; ?>"><span class="bold">Weapons</span></a>&nbsp;<a href="weapon_list.php" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Weapon List" title="Weapon List"/></a><br /><?php
 	if($ThisShip->hasWeapons()) { ?>
-		<div class="wep_drop1" id="hide-show" onclick="toggleWepD('<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>');">
+		<div class="wep_drop1" id="hide-show" onclick="toggleWepD('<?php echo $ThisPlayer->getToggleWeaponHidingHREF(true); ?>');">
 			<a href="<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>" onclick="this.href='javascript:void(0)';">
 				Show/Hide (<?php echo $ThisShip->getNumWeapons(); ?>)<br />
 			</a>
