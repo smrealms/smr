@@ -177,7 +177,7 @@ var exec = function(s) {
 		"use strict";
 		$('.wep1:visible').slideToggle(600);
 		$('.wep1:hidden').fadeToggle(600);
-		$.get(link);
+		$.get(link, {ajax: 1});
 	};
 
 	window.toggleScoutGroup = function(senderID) {
