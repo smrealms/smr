@@ -38,8 +38,8 @@ var exec = function(s) {
 		}
 	};
 
-	getURLParameter = function(paramName) {
-		var paramValue = false, href = location.href, paramDetail;
+	getURLParameter = function(paramName, href) {
+		var paramValue = false, paramDetail;
 		if ( href.indexOf("?") > -1 ) {
 			var i, paramListStr = href.substr(href.indexOf("?")), paramList = paramListStr.split("&");
 			for ( i = 0; i < paramList.length; i++ ) {
@@ -99,6 +99,7 @@ var exec = function(s) {
 		data.toX = e.data('x');
 		data.toY = e.data('y');
 		$.get(submitMoveHREF, data, function(data, textStatus, jqXHR) {
+				sn = getURLParameter('sn', submitMoveHREF);
 				highlightMoves();
 				updateRefresh(data, textStatus, jqXHR);
 			}, 'xml');
@@ -133,7 +134,7 @@ var exec = function(s) {
 			return;
 		}
 		refreshSpeed = _refreshSpeed;
-		sn = getURLParameter('sn');
+		sn = getURLParameter('sn', location.href);
 		if(sn===false) {
 			return;
 		}
