@@ -818,7 +818,7 @@ class ChessGame {
 	}
 
 	public function hasEnded() {
-		return $this->endDate != 0 && $this->endDate < TIME;
+		return $this->endDate != 0 && $this->endDate <= TIME;
 	}
 
 	public function getWinner() {
@@ -827,6 +827,7 @@ class ChessGame {
 
 	public function setWinner($accountID) {
 		$this->winner = $accountID;
+		$this->endDate = TIME;
 		$this->db->query('UPDATE chess_game
 						SET end_time=' . $this->db->escapeNumber(TIME) . ', winner_id=' . $this->db->escapeNumber($this->winner) . '
 						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
