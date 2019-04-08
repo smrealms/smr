@@ -549,7 +549,7 @@ function do_voodoo() {
 	}
 	$template->assign('AJAX_ENABLE_REFRESH', $ajaxRefresh);
 
-	$template->display($var['url'], USING_AJAX);
+	$template->display($var['url'], USING_AJAX || AJAX_CONTAINER);
 
 	SmrSession::update();
 

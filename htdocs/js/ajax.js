@@ -4,7 +4,7 @@ var exec = function(s) {
 };
 (function() {
 	"use strict";
-	var bindOne, updateRefreshTimeout, refreshSpeed, ajaxRunning = true, refreshReady = true, disableStartAJAX=true, xmlHttpRefresh, sn, updateRefresh, updateRefreshRequest, stopAJAX, getURLParameter;
+	var bindOne, updateRefreshTimeout, refreshSpeed, ajaxRunning = true, refreshReady = true, disableStartAJAX=true, xmlHttpRefresh, sn, updateRefresh, updateRefreshRequest, stopAJAX;
 
 	bindOne = function(func, arg) {
 		return function() {
@@ -38,21 +38,17 @@ var exec = function(s) {
 		}
 	};
 
-	getURLParameter = function(paramName) {
-		var paramValue = false, href = location.href, paramDetail;
+	function getURLParameter(paramName, href) {
 		if ( href.indexOf("?") > -1 ) {
-			var i, paramListStr = href.substr(href.indexOf("?")), paramList = paramListStr.split("&");
-			for ( i = 0; i < paramList.length; i++ ) {
+			var paramList = href.substr(href.indexOf("?")).split("&");
+			for (var i = 0; i < paramList.length; i++) {
 				if (paramList[i].toUpperCase().indexOf(paramName.toUpperCase() + "=") > -1 ) {
-					paramDetail = paramList[i].split("=");
-					paramValue = paramDetail[1];
-					break;
+					return paramList[i].split("=")[1];
 				}
 			}
 		}
-		return paramValue;
-	};
-
+		return false;
+	}
 
 	updateRefresh = function(data) {
 		$('all > *', data).each(function(i, e) {
@@ -99,6 +95,7 @@ var exec = function(s) {
 		data.toX = e.data('x');
 		data.toY = e.data('y');
 		$.get(submitMoveHREF, data, function(data, textStatus, jqXHR) {
+				sn = getURLParameter('sn', submitMoveHREF);
 				highlightMoves();
 				updateRefresh(data, textStatus, jqXHR);
 			}, 'xml');
@@ -133,7 +130,7 @@ var exec = function(s) {
 			return;
 		}
 		refreshSpeed = _refreshSpeed;
-		sn = getURLParameter('sn');
+		sn = getURLParameter('sn', location.href);
 		if(sn===false) {
 			return;
 		}
@@ -177,7 +174,7 @@ var exec = function(s) {
 		"use strict";
 		$('.wep1:visible').slideToggle(600);
 		$('.wep1:hidden').fadeToggle(600);
-		$.get(link);
+		$.get(link, {ajax: 1});
 	};
 
 	window.toggleScoutGroup = function(senderID) {

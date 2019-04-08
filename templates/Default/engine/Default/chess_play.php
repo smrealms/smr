@@ -47,7 +47,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td></td>
+		<td id="chessMsg" class="ajax"><p><?php echo $MoveMessage; ?></p></td>
 		<td id="chessButtons" class="ajax"><?php
 			if(!$ChessGame->hasEnded() && $ChessGame->getColourForAccountID($ThisPlayer->getAccountID())) {
 				?><div class="buttonA"><a class="buttonA" href="<?php echo $ChessGame->getResignHREF(); ?>"><?php if(count($ChessGame->getMoves()) < 2) { ?>Cancel Game<?php } else { ?>Resign<?php } ?></a></div><?php
@@ -71,11 +71,8 @@
 				}
 			}
 		}
-	}
-	if(isset($MoveMessage)) {
-		$this->addJavascriptAlert($MoveMessage);
 	} ?>
-	var submitMoveHREF = '<?php echo $ChessMoveHREF; ?>',
+	var submitMoveHREF = <?php echo $this->addJavascriptForAjax('submitMoveHREF', $ChessMoveHREF); ?>,
 		availableMoves = <?php echo $this->addJavascriptForAjax('availableMoves', $AvailableMoves); ?>;<?php
 	$LastMove = $ChessGame->getLastMove();
 	if($LastMove != null) {

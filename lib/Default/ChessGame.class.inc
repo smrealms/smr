@@ -185,16 +185,6 @@ class ChessGame {
 				$pieceTakenID = $this->db->getField('piece_taken') == null ? null : $this->db->getInt('piece_taken');
 				$this->moves[] = $this->createMove($this->db->getInt('piece_id'), $this->db->getInt('start_x'), $this->db->getInt('start_y'), $this->db->getInt('end_x'), $this->db->getInt('end_y'), $pieceTakenID, $this->db->getField('checked'), $this->db->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK, $this->db->getField('castling'), $this->db->getBoolean('en_passant'), $this->db->getInt('promote_piece_id'));
 				$mate = $this->db->getField('checked') == 'MATE';
-				$this->lastMove = array(
-						'From' => array(
-							'X' => $this->db->getInt('start_x'),
-							'Y' => $this->db->getInt('start_y')
-						),
-						'To' => array(
-							'X' => $this->db->getInt('end_x'),
-							'Y' => $this->db->getInt('end_y')
-						)
-					);
 			}
 			if(!$mate && $this->hasEnded()) {
 				if($this->getWinner() != 0) {
@@ -397,7 +387,13 @@ class ChessGame {
 		}
 	}
 
-	public function createMove($pieceID, $startX, $startY, $endX, $endY, $pieceTaken, $checking, $playerColour, $castling, $enPassant, $promotionPieceID) {
+	private function createMove($pieceID, $startX, $startY, $endX, $endY, $pieceTaken, $checking, $playerColour, $castling, $enPassant, $promotionPieceID) {
+		// This move will be set as the most recent move
+		$this->lastMove = [
+			'From' => ['X' => $startX, 'Y' => $startY],
+			'To'   => ['X' => $endX,   'Y' => $endY],
+		];
+
 		$otherPlayerColour = self::getOtherColour($playerColour);
 		if($pieceID == ChessPiece::KING) {
 			$this->hasMoved[$playerColour][ChessPiece::KING] = true;
@@ -818,7 +814,7 @@ class ChessGame {
 	}
 
 	public function hasEnded() {
-		return $this->endDate != 0 && $this->endDate < TIME;
+		return $this->endDate != 0 && $this->endDate <= TIME;
 	}
 
 	public function getWinner() {
@@ -827,6 +823,7 @@ class ChessGame {
 
 	public function setWinner($accountID) {
 		$this->winner = $accountID;
+		$this->endDate = TIME;
 		$this->db->query('UPDATE chess_game
 						SET end_time=' . $this->db->escapeNumber(TIME) . ', winner_id=' . $this->db->escapeNumber($this->winner) . '
 						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
