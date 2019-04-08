@@ -4,7 +4,7 @@ var exec = function(s) {
 };
 (function() {
 	"use strict";
-	var bindOne, updateRefreshTimeout, refreshSpeed, ajaxRunning = true, refreshReady = true, disableStartAJAX=true, xmlHttpRefresh, sn, updateRefresh, updateRefreshRequest, stopAJAX, getURLParameter;
+	var bindOne, updateRefreshTimeout, refreshSpeed, ajaxRunning = true, refreshReady = true, disableStartAJAX=true, xmlHttpRefresh, sn, updateRefresh, updateRefreshRequest, stopAJAX;
 
 	bindOne = function(func, arg) {
 		return function() {
@@ -38,21 +38,17 @@ var exec = function(s) {
 		}
 	};
 
-	getURLParameter = function(paramName, href) {
-		var paramValue = false, paramDetail;
+	function getURLParameter(paramName, href) {
 		if ( href.indexOf("?") > -1 ) {
-			var i, paramListStr = href.substr(href.indexOf("?")), paramList = paramListStr.split("&");
-			for ( i = 0; i < paramList.length; i++ ) {
+			var paramList = href.substr(href.indexOf("?")).split("&");
+			for (var i = 0; i < paramList.length; i++) {
 				if (paramList[i].toUpperCase().indexOf(paramName.toUpperCase() + "=") > -1 ) {
-					paramDetail = paramList[i].split("=");
-					paramValue = paramDetail[1];
-					break;
+					return paramList[i].split("=")[1];
 				}
 			}
 		}
-		return paramValue;
-	};
-
+		return false;
+	}
 
 	updateRefresh = function(data) {
 		$('all > *', data).each(function(i, e) {
