@@ -5,6 +5,12 @@ abstract class AbstractSmrShip {
 
 	const SHIP_CLASS_RAIDER = 3;
 
+	// Player exp gained for each point of damage done
+	const EXP_PER_DAMAGE_PLAYER = 0.25;
+	const EXP_PER_DAMAGE_PLANET = 0.5;
+	const EXP_PER_DAMAGE_PORT   = 0.1;
+	const EXP_PER_DAMAGE_FORCE  = 0.05;
+
 	protected $player;
 
 	protected $gameID;
@@ -858,7 +864,7 @@ abstract class AbstractSmrShip {
 			$results['Drones'] =& $thisCDs->shootPlayer($thisPlayer, $targetPlayers[array_rand($targetPlayers)]);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage']/4)); // 1/4 weapon damage to exp.
+		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
 		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Player','Damage Done'), HOF_PUBLIC);
 		$thisPlayer->increaseHOF(1,array('Combat','Player','Shots'), HOF_PUBLIC);
 		return $results;
@@ -897,7 +903,7 @@ abstract class AbstractSmrShip {
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['SDs'],array('Combat','Forces','Scout Drones','Damage Done'), HOF_PUBLIC);
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines']+$results['Drones']['ActualDamage']['NumCDs']+$results['Drones']['ActualDamage']['NumSDs'],array('Combat','Forces','Killed'), HOF_PUBLIC);
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
+		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_FORCE));
 		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Forces','Damage Done'), HOF_PUBLIC);
 		$thisPlayer->increaseHOF(1,array('Combat','Forces','Shots'), HOF_PUBLIC);
 		return $results;
@@ -921,7 +927,7 @@ abstract class AbstractSmrShip {
 			$results['Drones'] =& $thisCDs->shootPort($thisPlayer, $port);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
+		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_PORT));
 		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Port','Damage Done'), HOF_PUBLIC);
 //		$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in SmrPortt::attackedBy()
 
@@ -958,7 +964,7 @@ abstract class AbstractSmrShip {
 			$results['Drones'] =& $thisCDs->shootPlanet($thisPlayer, $planet, $delayed);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
+		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLANET));
 		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Planet','Damage Done'), HOF_PUBLIC);
 //		$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots')); //in SmrPlanet::attackedBy()
 		return $results;
