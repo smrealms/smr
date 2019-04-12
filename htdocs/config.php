@@ -20,7 +20,7 @@ require_once(CONFIG . 'config.specific.php');
 
 if (ENABLE_DEBUG) {
 	// Warn about everything when in debug mode
-	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+	error_reporting(E_ALL);
 }
 
 // Change the browser title based on the server config
