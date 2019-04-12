@@ -1,10 +1,8 @@
 Welcome <?php echo $ThisPlayer->getPlayerName(); ?>, your position is <i>Editor</i><br /><br />
 <b>EDITOR OPTIONS</b>
 <ul>
-	<li><a href="<?php echo $ViewApplicationsHREF; ?>">View the applications</a></li>
 	<li><a href="<?php echo $ViewArticlesHREF; ?>">View the articles</a></li>
 	<li><a href="<?php echo $MakePaperHREF; ?>">Make a paper</a></li>
-	<li><a href="<?php echo $ViewWritersHREF; ?>">View writers</a></li>
 </ul>
 <br /><?php
 if (!empty($Papers)) { ?>

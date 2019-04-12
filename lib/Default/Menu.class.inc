@@ -81,11 +81,7 @@ class Menu {
 		$menuItems = array();
 		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('galactic_post_current.php')),'Text'=>'Current Edition');
 		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_past.php')),'Text'=>'Past Editions');
-		if ($player->isGPWriter()) {
-			$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
-		} else {
-			$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
-		}
+		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
 		if ($player->isGPEditor()) {
 			$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post.php')),'Text'=>'Editor Options');
 		}
