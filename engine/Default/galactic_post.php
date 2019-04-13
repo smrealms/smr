@@ -7,16 +7,12 @@ if (!$player->isGPEditor()) {
 $template->assign('PageTopic','Galactic Post');
 Menu::galactic_post();
 
-	$db2 = new SmrMySqlDatabase();
+$db2 = new SmrMySqlDatabase();
 
-$container = create_container('skeleton.php', 'galactic_post_view_applications.php');
-$template->assign('ViewApplicationsHREF', SmrSession::getNewHREF($container));
-$container['body'] = 'galactic_post_view_article.php';
+$container = create_container('skeleton.php', 'galactic_post_view_article.php');
 $template->assign('ViewArticlesHREF', SmrSession::getNewHREF($container));
 $container['body'] = 'galactic_post_make_paper.php';
 $template->assign('MakePaperHREF', SmrSession::getNewHREF($container));
-$container['body'] = 'galactic_post_view_members.php';
-$template->assign('ViewWritersHREF', SmrSession::getNewHREF($container));
 
 $db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 $papers = [];

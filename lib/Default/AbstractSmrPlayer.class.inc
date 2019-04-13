@@ -189,12 +189,6 @@ abstract class AbstractSmrPlayer {
 		return $this->getGPWriter() == 'editor';
 	}
 
-	public function isGPWriter() {
-//		return $this->isGPEditor() || $this->getGPWriter() == 'writer';
-		// Lets always allow people to write for the GP? The less hoops to jump through the more writers we'll have surely?
-		return true;
-	}
-
 	public function getSafeAttackRating() {
 		return max(0, min(8, $this->getAlignment() / 150 + 4));
 	}
