@@ -18,7 +18,7 @@ else {
 
 if ($action == 'Yes') {
 	// get game id
-    $game_id = $var['game_id'];
+	$game_id = $var['delete_game_id'];
 
 	if ($save) {
 		$db->query('SELECT * FROM alliance WHERE game_id = '.$db->escapeNumber($game_id));

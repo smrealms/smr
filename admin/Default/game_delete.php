@@ -2,29 +2,17 @@
 
 $template->assign('PageTopic','Deleting A Game');
 
-$PHP_OUTPUT.=('<p>What game do you want to delete?</p>');
+$container = create_container('skeleton.php', 'game_delete_confirm.php');
+$template->assign('ConfirmHREF', SmrSession::getNewHREF($container));
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'game_delete_confirm.php';
-$PHP_OUTPUT.=create_echo_form($container);
-
-$PHP_OUTPUT.=('<select name="game_id" class="InputFields">');
-$PHP_OUTPUT.=('<option value=None selected>[Select the game]</option>');
-
-$db->query('SELECT * FROM game');
-while($db->nextRecord()) {
-
-	//check to see if it needs to be deleted
-	$id_game = $db->getField('game_id');
+$db->query('SELECT game_id, game_name FROM game ORDER BY game_id DESC');
+$games = [];
+while ($db->nextRecord()) {
 	$name = $db->getField('game_name');
-	$display = "($id_game) $name";
-
-	$PHP_OUTPUT.=('<option value="'.$id_game.'">'.$display.'</option>');
-
+	$game_id = $db->getInt('game_id');
+	$games[] = [
+		'game_id' => $game_id,
+		'display' => '('.$game_id.') '.$name,
+	];
 }
-$PHP_OUTPUT.=('</select>');
-
-$PHP_OUTPUT.=('&nbsp;&nbsp;');
-$PHP_OUTPUT.=create_submit('Delete');
-$PHP_OUTPUT.=('</form>');
+$template->assign('Games', $games);
