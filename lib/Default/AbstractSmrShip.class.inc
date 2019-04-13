@@ -848,7 +848,7 @@ abstract class AbstractSmrShip {
 
 	public function &shootPlayers(array $targetPlayers) {
 		$thisPlayer = $this->getPlayer();
-		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0);
+		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []);
 		if($thisPlayer->isDead()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
@@ -872,7 +872,7 @@ abstract class AbstractSmrShip {
 
 	public function &shootForces(SmrForce $forces) {
 		$thisPlayer = $this->getPlayer();
-		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0);
+		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []);
 		if($thisPlayer->isDead()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
@@ -911,7 +911,7 @@ abstract class AbstractSmrShip {
 
 	public function &shootPort(SmrPort $port) {
 		$thisPlayer = $this->getPlayer();
-		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0);
+		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []);
 		if($thisPlayer->isDead()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
@@ -948,7 +948,7 @@ abstract class AbstractSmrShip {
 
 	public function &shootPlanet(SmrPlanet $planet, $delayed) {
 		$thisPlayer = $this->getPlayer();
-		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0);
+		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []);
 		if($thisPlayer->isDead()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
