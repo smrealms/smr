@@ -70,9 +70,12 @@ function getHofRank($view,$viewType,$accountID,$gameID) {
 	}
 
 	// What we will show for the amount:
-	// * Game specified:
+	// * Live game:
 	//  - Ally: real amount
 	//  - Enemy: "-"
+	// * Ended game:
+	//  - Ally: real amount
+	//  - Enemy: real amount
 	// * No game specified (All Time HoF):
 	//  - Current player: real total amount
 	//  - Other Player: total amount from completed games
@@ -84,12 +87,12 @@ function getHofRank($view,$viewType,$accountID,$gameID) {
 	}
 	if($vis==HOF_PUBLIC || $account->getAccountID()==$accountID) {
 		$rank['Amount'] = $realAmount;
-	}
-	else if($vis==HOF_ALLIANCE&&$account->getAccountID()!=$accountID) {
+	} else if ($vis == HOF_ALLIANCE) {
 		if (isset($gameID)) {
 			$hofPlayer = SmrPlayer::getPlayer($accountID, $gameID);
-			// Only show the real amount if player is in your alliance.
-			if ($hofPlayer->sameAlliance($player)) {
+			$hofGame = SmrGame::getGame($gameID);
+			// Show the real amount if player is in your alliance or game has ended.
+			if ($hofPlayer->sameAlliance($player) || $hofGame->hasEnded()) {
 				$rank['Amount'] = $realAmount;
 			} else {
 				$rank['Amount'] = '-';
