@@ -35,7 +35,7 @@ while($db->nextRecord()) {
 $template->assign('Breadcrumb', buildBreadcrumb($var,$hofTypes,isset($game_id)?'Current HoF':'Global HoF'));
 
 if(!isset($var['view'])) {
-	$categories = getHofCategories($hofTypes, $game_id);
+	$categories = getHofCategories($hofTypes, $game_id, $account->getAccountID());
 	$template->assign('Categories', $categories);
 }
 else {

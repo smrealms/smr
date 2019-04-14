@@ -1,7 +1,7 @@
 <?php
 
-function getHofCategories($hofTypes, $game_id) {
-	global $account, $var;
+function getHofCategories($hofTypes, $game_id, $account_id) {
+	global $var;
 	$categories = [];
 	foreach ($hofTypes as $type => $value) {
 		// Make each category a link to view the subcategory page
@@ -24,7 +24,7 @@ function getHofCategories($hofTypes, $game_id) {
 				$container['view'] = $subType;
 				$rankType = $container['type'];
 				$rankType[] = $subType;
-				$rank = getHofRank($subType, $rankType, $account->getAccountID(), $game_id);
+				$rank = getHofRank($subType, $rankType, $account_id, $game_id);
 				$rankMsg = '';
 				if ($rank['Rank'] != 0) {
 					$rankMsg = ' (#' . $rank['Rank'] .')';
@@ -33,7 +33,7 @@ function getHofCategories($hofTypes, $game_id) {
 			}
 		} else {
 			unset($container['view']);
-			$rank = getHofRank($type, $container['type'], $account->getAccountID(), $game_id);
+			$rank = getHofRank($type, $container['type'], $account_id, $game_id);
 			$subcategories[] = create_submit_link($container, 'View (#' . $rank['Rank'] .')');
 		}
 
