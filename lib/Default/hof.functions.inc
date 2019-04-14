@@ -178,7 +178,7 @@ function buildBreadcrumb(&$var,&$hofTypes,$hofName) {
 			else {
 				$typeList[] = $type;
 			}
-			$viewing .= ' -&gt; ';
+			$viewing .= ' &rarr; ';
 			$container = $var;
 			$container['type'] = $typeList;
 			unset($container['view']);
@@ -188,7 +188,7 @@ function buildBreadcrumb(&$var,&$hofTypes,$hofName) {
 		}
 	}
 	if(isset($var['view'])) {
-		$viewing .= ' -&gt; ';
+		$viewing .= ' &rarr; ';
 		if(is_array($hofTypes[$var['view']])) {
 			$typeList[] = $var['view'];
 			$var['type'] = $typeList;
