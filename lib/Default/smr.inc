@@ -489,16 +489,11 @@ function do_voodoo() {
 		require(get_file_loc($var['url']));
 	}
 	if($var['body']) {
-		$PHP_OUTPUT = '';
 		if ($var['body']=='error.php') { // infinite includes for error pages
 			require(get_file_loc($var['body']));
-		}
-		else {
+		} else {
 			require_once(get_file_loc($var['body']));
 		}
-
-		if($PHP_OUTPUT!='')
-			$template->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
 
 	if (SmrSession::hasGame()) {
