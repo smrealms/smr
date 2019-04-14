@@ -2,7 +2,6 @@
 require_once(get_file_loc('hof.functions.inc'));
 $game_id = null;
 if (isset($var['game_id'])) $game_id = $var['game_id'];
-$base = array();
 
 if (empty($game_id)) {
 	$topic = 'All Time Hall of Fame';
@@ -11,16 +10,12 @@ else {
 	$topic = Globals::getGameName($game_id).' Hall of Fame';
 }
 $template->assign('PageTopic',$topic);
-$PHP_OUTPUT.=('<div class="center">');
 
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'hall_of_fame_player_detail.php';
 if (isset($game_id)) $container['game_id'] = $game_id;
-$PHP_OUTPUT.='Welcome to the Hall of Fame ' . $account->getHofName() . '!<br />The Hall of Fame is a comprehensive '.
-			'list of player accomplishments.  Here you can view how players rank in many different '.
-			'aspects of the game rather than just kills, deaths, and experience with the rankings system.<br />'.
-				create_link($container,'You can also view your Personal Hall of Fame here.').'<br /><br />';
+$template->assign('PersonalHofHREF', SmrSession::getNewHREF($container));
 
 $db->query('SELECT type FROM hof_visibility WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';
@@ -37,58 +32,13 @@ while($db->nextRecord()) {
 	}
 	$hof = true;
 }
-$PHP_OUTPUT .= buildBreadcrumb($var,$hofTypes,isset($game_id)?'Current HoF':'Global HoF');
-$PHP_OUTPUT.= '<table class="standard centered">';
+$template->assign('Breadcrumb', buildBreadcrumb($var,$hofTypes,isset($game_id)?'Current HoF':'Global HoF'));
 
 if(!isset($var['view'])) {
-	$PHP_OUTPUT.=('<tr><th>Category</th><th width="60%">Subcategory</th></tr>');
-
-	foreach($hofTypes as $type => $value) {
-		$PHP_OUTPUT.=('<tr>');
-		// Make each category a link to view the subcategory page
-		$container = $var;
-		$container['view'] = $type;
-		if (!isset($var['type'])) {
-			$container['type'] = array();
-		}
-		$PHP_OUTPUT.=('<td>'.create_link($container, $type).'</td>');
-
-		// Make the subcategory buttons
-		$container = $var;
-		if (!isset($var['type']))
-			$container['type'] = array();
-		$container['type'][] = $type;
-		$PHP_OUTPUT.=('<td valign="middle">');
-		$i=0;
-		if(is_array($value)) {
-			foreach($value as $subType => $subTypeValue) {
-				++$i;
-				$container['view'] = $subType;
-
-				$rankType = $container['type'];
-				$rankType[] = $subType;
-				$rank = getHofRank($subType,$rankType,$account->getAccountID(),$game_id,$db);
-				$rankMsg='';
-				if($rank['Rank']!=0)
-					$rankMsg = ' (#' . $rank['Rank'] .')';
-
-				$PHP_OUTPUT.=create_submit_link($container,$subType.$rankMsg);
-				$PHP_OUTPUT.=('&nbsp;');
-				if ($i % 3 == 0) $PHP_OUTPUT.=('<br />');
-			}
-		}
-		else {
-			unset($container['view']);
-			$rank = getHofRank($type,$container['type'],$account->getAccountID(),$game_id,$db);
-			$PHP_OUTPUT.=create_submit_link($container,'View (#' . $rank['Rank'] .')');
-		}
-		$PHP_OUTPUT.=('</td></tr>');
-	}
+	$categories = getHofCategories($hofTypes, $game_id);
+	$template->assign('Categories', $categories);
 }
 else {
-	$PHP_OUTPUT.=('<tr><th>Rank</th><th>Player</th><th>Total</th></tr>');
-
-
 	$gameIDSql = ' AND game_id '.(isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
 
 	$vis = HOF_PUBLIC;
@@ -111,7 +61,7 @@ else {
 		}
 		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id ORDER BY amount DESC LIMIT 25');
 	}
-	$db2 = new SmrMySqlDatabase();
+	$rows = [];
 	while($db->nextRecord()) {
 		$accountID = $db->getField('account_id');
 		if($accountID == $account->getAccountID()) {
@@ -122,18 +72,17 @@ else {
 			$amount = $db->getField('amount');
 		}
 		else if($vis==HOF_ALLIANCE) {
-			$rankInfo = getHofRank($var['view'], $viewType, $db->getField('account_id'), $game_id, $db2);
+			$rankInfo = getHofRank($var['view'], $viewType, $db->getField('account_id'), $game_id);
 			$amount = $rankInfo['Amount'];
 		}
 		else {
 			$amount = '-';
 		}
-		$PHP_OUTPUT .= displayHOFRow($rank++, $accountID, $amount);
+		$rows[] = displayHOFRow($rank++, $accountID, $amount);
 	}
 	if(!$foundMe) {
-		$rank = getHofRank($var['view'],$viewType,$account->getAccountID(),$game_id,$db);
-		$PHP_OUTPUT .= displayHOFRow($rank['Rank'],$account->getAccountID(),$rank['Amount']);
+		$rank = getHofRank($var['view'],$viewType,$account->getAccountID(),$game_id);
+		$rows[] = displayHOFRow($rank['Rank'], $account->getAccountID(), $rank['Amount']);
 	}
+	$template->assign('Rows', $rows);
 }
-
-$PHP_OUTPUT.=('</table></div>');

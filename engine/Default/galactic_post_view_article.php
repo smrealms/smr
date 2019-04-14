@@ -2,7 +2,6 @@
 $template->assign('PageTopic','Viewing Articles');
 Menu::galactic_post();
 
-$db2 = new SmrMySqlDatabase();
 if (isset($var['news'])) {
 	$db->query('INSERT INTO news (game_id, time, news_message, type) ' .
 		'VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeString($var['news']) . ', \'BREAKING\')');
@@ -10,75 +9,69 @@ if (isset($var['news'])) {
 	SmrSession::updateVar('news', null);
 	SmrSession::updateVar('added_to_breaking_news', true);
 }
-$db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-if ($db->getNumRows()) {
-	$PHP_OUTPUT.=('It is your responsibility to make sure ALL HTML tags are closed!<br />');
-	$PHP_OUTPUT.=('You have the following articles to view.<br /><br />');
-}
-else
-	$PHP_OUTPUT.=('There are no articles to view');
 
+// Get the articles that are not already in a paper
+$articles = [];
+$db->query('SELECT * FROM galactic_post_article WHERE article_id NOT IN (SELECT article_id FROM galactic_post_paper_content) AND game_id = ' . $db->escapeNumber($player->getGameID()));
 while ($db->nextRecord()) {
-	$db2->query('SELECT * FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($db->getInt('article_id')));
-	if (!$db2->nextRecord()) {
-		$title = stripslashes($db->getField('title'));
-		$writer = SmrPlayer::getPlayer($db->getField('writer_id'), $player->getGameID());
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'galactic_post_view_article.php';
-		$container['id'] = $db->getField('article_id');
-		$PHP_OUTPUT.=create_link($container, '<span class="yellow">'.$title.'</span> written by '.$writer->getPlayerName());
-		$PHP_OUTPUT.=('<br />');
-	}
+	$title = stripslashes($db->getField('title'));
+	$writer = SmrPlayer::getPlayer($db->getField('writer_id'), $player->getGameID());
+	$container = create_container('skeleton.php', 'galactic_post_view_article.php');
+	$container['id'] = $db->getField('article_id');
+	$articles[] = [
+		'title' => $title,
+		'writer' => $writer->getPlayerName(),
+		'link' => SmrSession::getNewHREF($container),
+	];
 }
-$PHP_OUTPUT.=('<br /><br />');
+$template->assign('Articles', $articles);
+
+// Details about a selected article
 if (isset($var['id'])) {
 	$db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = '.$db->escapeNumber($var['id']));
 	$db->nextRecord();
-	$title = stripslashes($db->getField('title'));
-	$message = stripslashes($db->getField('text'));
-	$PHP_OUTPUT.=($title);
-	$PHP_OUTPUT.=('<br /><br />'.$message.'<br />');
-	$PHP_OUTPUT.=('<br />');
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'galactic_post_write_article.php';
+
+	$container = create_container('skeleton.php', 'galactic_post_write_article.php');
 	transfer('id');
-	$PHP_OUTPUT.=create_link($container, '<b>Edit this article</b>');
-	$PHP_OUTPUT.=('<br />');
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'galactic_post_delete_confirm.php';
+	$editHREF = SmrSession::getNewHREF($container);
+
+	$container = create_container('skeleton.php', 'galactic_post_delete_confirm.php');
 	$container['article'] = 'yes';
 	transfer('id');
-	$PHP_OUTPUT.=create_link($container, '<b>Delete This article</b>');
-	$PHP_OUTPUT.=('<br /><br />');
-	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-	$container = array();
-	$container['url'] = 'galactic_post_add_article_to_paper.php';
+	$deleteHREF = SmrSession::getNewHREF($container);
+
+	$selectedArticle = [
+		'title' => stripslashes($db->getField('title')),
+		'text' => stripslashes($db->getField('text')),
+		'editHREF' => $editHREF,
+		'deleteHREF' => $deleteHREF,
+	];
+	$template->assign('SelectedArticle', $selectedArticle);
+
+	$container = create_container('galactic_post_add_article_to_paper.php');
 	transfer('id');
-	if (!$db->getNumRows()) {
-		$PHP_OUTPUT.=('You have no papers made that you can add an article to. ');
-		$PHP_OUTPUT.=create_link(create_container('skeleton.php', 'galactic_post_make_paper.php'), '<b>Click Here</b>');
-		$PHP_OUTPUT.=(' to make a new one.<br />');
-	}
+	$papers = [];
+	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 	while ($db->nextRecord()) {
-		$paper_title = $db->getField('title');
-		$paper_id = $db->getField('paper_id');
-		$container['paper_id'] = $paper_id;
-		$PHP_OUTPUT.=create_link($container, '<b>Add this article to '.$paper_title.'!</b>');
-		$PHP_OUTPUT.=('<br />');
+		$container['paper_id'] = $db->getField('paper_id');
+		$papers[] = [
+			'title' => $db->getField('title'),
+			'addHREF' => SmrSession::getNewHREF($container),
+		];
+	}
+	$template->assign('Papers', $papers);
+
+	if (empty($papers)) {
+		$container = create_container('skeleton.php', 'galactic_post_make_paper.php');
+		$template->assign('MakePaperHREF', SmrSession::getNewHREF($container));
 	}
 
 	// breaking news options
-	$PHP_OUTPUT.=('<br />');
-	if (isset($var['added_to_breaking_news'])) {
-		$PHP_OUTPUT.='<span class="green">SUCCESS</span>: added article to Breaking News';
-	} else {
+	$template->assign('AddedToNews', $var['added_to_breaking_news'] ?? false);
+	if (empty($var['added_to_breaking_news'])) {
 		$container = create_container('skeleton.php', 'galactic_post_view_article.php');
-		$container['news'] = $message;
+		$container['news'] = $selectedArticle['text'];
 		transfer('id');
-		$PHP_OUTPUT.=create_link($container, '<b>Add this article to Breaking News</b>');
-		$PHP_OUTPUT.=('<small><br />note: breaking news is in the news section.</small>');
+		$template->assign('AddToNewsHREF', SmrSession::getNewHREF($container));
 	}
 }

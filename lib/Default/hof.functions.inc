@@ -1,7 +1,53 @@
 <?php
 
-function getHofRank($view,$viewType,$accountID,$gameID,&$db) {
+function getHofCategories($hofTypes, $game_id) {
+	global $account, $var;
+	$categories = [];
+	foreach ($hofTypes as $type => $value) {
+		// Make each category a link to view the subcategory page
+		$container = $var;
+		$container['view'] = $type;
+		if (!isset($var['type'])) {
+			$container['type'] = array();
+		}
+		$link = create_link($container, $type);
+
+		// Make the subcategory buttons
+		$container = $var;
+		if (!isset($var['type'])) {
+			$container['type'] = array();
+		}
+		$container['type'][] = $type;
+		$subcategories = [];
+		if (is_array($value)) {
+			foreach ($value as $subType => $subTypeValue) {
+				$container['view'] = $subType;
+				$rankType = $container['type'];
+				$rankType[] = $subType;
+				$rank = getHofRank($subType, $rankType, $account->getAccountID(), $game_id);
+				$rankMsg = '';
+				if ($rank['Rank'] != 0) {
+					$rankMsg = ' (#' . $rank['Rank'] .')';
+				}
+				$subcategories[] = create_submit_link($container, $subType.$rankMsg);
+			}
+		} else {
+			unset($container['view']);
+			$rank = getHofRank($type, $container['type'], $account->getAccountID(), $game_id);
+			$subcategories[] = create_submit_link($container, 'View (#' . $rank['Rank'] .')');
+		}
+
+		$categories[] = [
+			'link' => $link,
+			'subcategories' => join('&nbsp;', $subcategories),
+		];
+	}
+	return $categories;
+}
+
+function getHofRank($view,$viewType,$accountID,$gameID) {
 	global $account,$player;
+	$db = new SmrMySqlDatabase();
 	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
 
 	$vis = HOF_PUBLIC;
