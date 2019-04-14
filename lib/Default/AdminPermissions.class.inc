@@ -15,7 +15,6 @@ class AdminPermissions {
 		8  => ['Edit Account', 'account_edit.php', 1],
 		9  => ['Multi Tools', 'ip_view.php', 1],
 		12 => ['Cheating Ship Check', 'ship_check.php', 1],
-		15 => ['Search for Keywords', 'keyword_search.php', 1],
 		16 => ['Log Console', 'log_console.php', 1],
 		17 => ['Send Newsletter', 'newsletter_send.php', 3],
 		18 => ['Form Access', 'form_open.php', 3],

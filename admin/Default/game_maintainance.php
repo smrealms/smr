@@ -72,8 +72,6 @@ $db->query('OPTIMIZE TABLE
 	`log_has_notes`,
 	`log_type`,
 	`manual`,
-	`mb_exceptions`,
-	`mb_keywords`,
 	`message`,
 	`message_notify`,
 	`multi_checking_cookie`,
