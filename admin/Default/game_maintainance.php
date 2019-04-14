@@ -43,7 +43,6 @@ $db->query('OPTIMIZE TABLE
 	`anon_bank_transactions`,
 	`bar_drink`,
 	`bar_tender`,
-	`bar_wall`,
 	`bounty`,
 	`changelog`,
 	`closing_reason`,
