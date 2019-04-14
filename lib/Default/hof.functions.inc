@@ -146,11 +146,8 @@ function displayHOFRow($rank,$accountID,$amount) {
 
 	if (isset($var['game_id'])) {
 		$container['game_id'] = $var['game_id'];
-		$container['sending_page'] = 'personal_current_hof';
 	}
-	else {
-		$container['sending_page'] = 'personal_hof';
-	}
+
 	if(isset($hofPlayer) && is_object($hofPlayer)) {
 		$return.=('<td '.$bold.'>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
 	}
