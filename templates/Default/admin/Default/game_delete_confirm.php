@@ -1,6 +1,6 @@
 Are you sure you want to delete the game <i><?php echo $Game->getDisplayName(); ?></i>?<br />
 <?php
-if ($Game->getEndDate() > TIME) { ?>
+if (!$Game->hasEnded()) { ?>
 	<span class="red"><b>WARNING!</b> This game hasn't ended yet!</span><br /><?php
 } ?>
 <br />

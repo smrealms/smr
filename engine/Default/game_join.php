@@ -17,8 +17,9 @@ if ($game->getTotalPlayers() >= $game->getMaxPlayers()) {
 //if (TIME < $game['StartDate'])
 //	create_error('You want to join a game that hasn\'t started yet?');
 
-if (TIME > $game->getEndDate())
+if ($game->hasEnded()) {
 	create_error('You want to join a game that is already over?');
+}
 
 $template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
 $template->assign('Game', $game);

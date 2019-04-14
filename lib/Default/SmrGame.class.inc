@@ -198,6 +198,10 @@ class SmrGame {
 		$this->hasChanged=true;
 	}
 
+	public function hasEnded() {
+		return $this->getEndDate() < TIME;
+	}
+
 	public function getEndDate() {
 		return $this->endDate;
 	}
