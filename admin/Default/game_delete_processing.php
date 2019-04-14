@@ -92,7 +92,6 @@ if ($action == 'Yes') {
 	$smr_db_sql[] = 'DELETE FROM anon_bank WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM anon_bank_transactions WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM bar_tender WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM bar_wall WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM blackjack WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM galactic_post_applications WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM galactic_post_article WHERE game_id = '.$db->escapeNumber($game_id);
