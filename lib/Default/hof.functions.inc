@@ -1,7 +1,7 @@
 <?php
 
-function getHofCategories($hofTypes, $game_id) {
-	global $account, $var;
+function getHofCategories($hofTypes, $game_id, $account_id) {
+	global $var;
 	$categories = [];
 	foreach ($hofTypes as $type => $value) {
 		// Make each category a link to view the subcategory page
@@ -24,7 +24,7 @@ function getHofCategories($hofTypes, $game_id) {
 				$container['view'] = $subType;
 				$rankType = $container['type'];
 				$rankType[] = $subType;
-				$rank = getHofRank($subType, $rankType, $account->getAccountID(), $game_id);
+				$rank = getHofRank($subType, $rankType, $account_id, $game_id);
 				$rankMsg = '';
 				if ($rank['Rank'] != 0) {
 					$rankMsg = ' (#' . $rank['Rank'] .')';
@@ -33,7 +33,7 @@ function getHofCategories($hofTypes, $game_id) {
 			}
 		} else {
 			unset($container['view']);
-			$rank = getHofRank($type, $container['type'], $account->getAccountID(), $game_id);
+			$rank = getHofRank($type, $container['type'], $account_id, $game_id);
 			$subcategories[] = create_submit_link($container, 'View (#' . $rank['Rank'] .')');
 		}
 
@@ -45,10 +45,31 @@ function getHofCategories($hofTypes, $game_id) {
 	return $categories;
 }
 
+/**
+ * Conditionally hide displayed HoF stat.
+ *
+ * Hide the amount for:
+ * - alliance stats in live games for players not in your alliance
+ * - private stats for players who are not the current player
+ */
+function applyHofVisibilityMask($amount, $vis, $gameID, $accountID) {
+	global $account, $player;
+	if (($vis == HOF_PRIVATE && $account->getAccountID() != $accountID) ||
+	    ($vis == HOF_ALLIANCE && isset($gameID) &&
+	     !SmrGame::getGame($gameID)->hasEnded() &&
+	     !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($player)))
+	{
+		return '-';
+	} else {
+		return $amount;
+	}
+}
+
 function getHofRank($view,$viewType,$accountID,$gameID) {
-	global $account,$player;
+	global $account;
 	$db = new SmrMySqlDatabase();
-	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
+	// If no game specified, show total amount from completed games only
+	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_date < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).')');
 
 	$vis = HOF_PUBLIC;
 	$rank = array('Amount'=>0,'Rank'=>0);
@@ -69,41 +90,13 @@ function getHofRank($view,$viewType,$accountID,$gameID) {
 		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$db->escapeNumber($accountID).$gameIDSql.' GROUP BY account_id LIMIT 1');
 	}
 
-	// What we will show for the amount:
-	// * Game specified:
-	//  - Ally: real amount
-	//  - Enemy: "-"
-	// * No game specified (All Time HoF):
-	//  - Current player: real total amount
-	//  - Other Player: total amount from completed games
 	$realAmount = 0;
 	if($db->nextRecord()) {
 		if($db->getField('amount')!=null) {
 			$realAmount = $db->getField('amount');
 		}
 	}
-	if($vis==HOF_PUBLIC || $account->getAccountID()==$accountID) {
-		$rank['Amount'] = $realAmount;
-	}
-	else if($vis==HOF_ALLIANCE&&$account->getAccountID()!=$accountID) {
-		if (isset($gameID)) {
-			$hofPlayer = SmrPlayer::getPlayer($accountID, $gameID);
-			// Only show the real amount if player is in your alliance.
-			if ($hofPlayer->sameAlliance($player)) {
-				$rank['Amount'] = $realAmount;
-			} else {
-				$rank['Amount'] = '-';
-			}
-		} else {
-			$rank['Amount'] = 0; //default
-			$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.' AND game_id IN (SELECT game_id FROM game WHERE end_date < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).') GROUP BY account_id LIMIT 1');
-			if($db->nextRecord()) {
-				if($db->getField('amount')!=null) {
-					$rank['Amount'] = $db->getField('amount');
-				}
-			}
-		}
-	}
+	$rank['Amount'] = applyHofVisibilityMask($realAmount, $vis, $gameID, $accountID);
 
 	if($view == DONATION_NAME) {
 		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');
@@ -146,11 +139,8 @@ function displayHOFRow($rank,$accountID,$amount) {
 
 	if (isset($var['game_id'])) {
 		$container['game_id'] = $var['game_id'];
-		$container['sending_page'] = 'personal_current_hof';
 	}
-	else {
-		$container['sending_page'] = 'personal_hof';
-	}
+
 	if(isset($hofPlayer) && is_object($hofPlayer)) {
 		$return.=('<td '.$bold.'>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
 	}
@@ -181,7 +171,7 @@ function buildBreadcrumb(&$var,&$hofTypes,$hofName) {
 			else {
 				$typeList[] = $type;
 			}
-			$viewing .= ' -&gt; ';
+			$viewing .= ' &rarr; ';
 			$container = $var;
 			$container['type'] = $typeList;
 			unset($container['view']);
@@ -191,7 +181,7 @@ function buildBreadcrumb(&$var,&$hofTypes,$hofName) {
 		}
 	}
 	if(isset($var['view'])) {
-		$viewing .= ' -&gt; ';
+		$viewing .= ' &rarr; ';
 		if(is_array($hofTypes[$var['view']])) {
 			$typeList[] = $var['view'];
 			$var['type'] = $typeList;

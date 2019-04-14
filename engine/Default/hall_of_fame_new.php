@@ -35,11 +35,11 @@ while($db->nextRecord()) {
 $template->assign('Breadcrumb', buildBreadcrumb($var,$hofTypes,isset($game_id)?'Current HoF':'Global HoF'));
 
 if(!isset($var['view'])) {
-	$categories = getHofCategories($hofTypes, $game_id);
+	$categories = getHofCategories($hofTypes, $game_id, $account->getAccountID());
 	$template->assign('Categories', $categories);
 }
 else {
-	$gameIDSql = ' AND game_id '.(isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
+	$gameIDSql = ' AND game_id '.(isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE end_date < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).')');
 
 	$vis = HOF_PUBLIC;
 	$rank=1;
@@ -48,10 +48,10 @@ else {
 	$viewType[] = $var['view'];
 	if($var['view'] == DONATION_NAME)
 		$db->query('SELECT account_id, SUM(amount) as amount FROM account_donated
-					GROUP BY account_id ORDER BY amount DESC LIMIT 25');
+					GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 	else if($var['view'] == USER_SCORE_NAME) {
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
-		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].')'.$gameIDSql.' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
+		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].')'.$gameIDSql.' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 		$db->query($query);
 	}
 	else {
@@ -59,25 +59,15 @@ else {
 		if($db->nextRecord()) {
 			$vis = $db->getField('visibility');
 		}
-		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id ORDER BY amount DESC LIMIT 25');
+		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 	}
 	$rows = [];
 	while($db->nextRecord()) {
 		$accountID = $db->getField('account_id');
 		if($accountID == $account->getAccountID()) {
 			$foundMe = true;
-			$amount = $db->getField('amount');
 		}
-		else if($vis==HOF_PUBLIC) {
-			$amount = $db->getField('amount');
-		}
-		else if($vis==HOF_ALLIANCE) {
-			$rankInfo = getHofRank($var['view'], $viewType, $db->getField('account_id'), $game_id);
-			$amount = $rankInfo['Amount'];
-		}
-		else {
-			$amount = '-';
-		}
+		$amount = applyHofVisibilityMask($db->getField('amount'), $vis, $game_id, $accountID);
 		$rows[] = displayHOFRow($rank++, $accountID, $amount);
 	}
 	if(!$foundMe) {
