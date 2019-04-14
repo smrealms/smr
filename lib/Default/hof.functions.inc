@@ -48,7 +48,7 @@ function getHofCategories($hofTypes, $game_id, $account_id) {
 function getHofRank($view,$viewType,$accountID,$gameID) {
 	global $account,$player;
 	$db = new SmrMySqlDatabase();
-	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
+	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_date < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).')');
 
 	$vis = HOF_PUBLIC;
 	$rank = array('Amount'=>0,'Rank'=>0);
@@ -74,38 +74,23 @@ function getHofRank($view,$viewType,$accountID,$gameID) {
 	//  - Ally: real amount
 	//  - Enemy: "-"
 	// * Ended game:
-	//  - Ally: real amount
-	//  - Enemy: real amount
+	//  - All players: real amount
 	// * No game specified (All Time HoF):
-	//  - Current player: real total amount
-	//  - Other Player: total amount from completed games
+	//  - All players: total amount from completed games
 	$realAmount = 0;
 	if($db->nextRecord()) {
 		if($db->getField('amount')!=null) {
 			$realAmount = $db->getField('amount');
 		}
 	}
-	if($vis==HOF_PUBLIC || $account->getAccountID()==$accountID) {
+	if ($vis == HOF_PRIVATE || $vis == HOF_ALLIANCE && isset($gameID) &&
+	    !SmrGame::getGame($gameID)->hasEnded() &&
+	    !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($player))
+	{
+		// Hide the amount in live games for players not in your alliance
+		$rank['Amount'] = '-';
+	} else {
 		$rank['Amount'] = $realAmount;
-	} else if ($vis == HOF_ALLIANCE) {
-		if (isset($gameID)) {
-			$hofPlayer = SmrPlayer::getPlayer($accountID, $gameID);
-			$hofGame = SmrGame::getGame($gameID);
-			// Show the real amount if player is in your alliance or game has ended.
-			if ($hofPlayer->sameAlliance($player) || $hofGame->hasEnded()) {
-				$rank['Amount'] = $realAmount;
-			} else {
-				$rank['Amount'] = '-';
-			}
-		} else {
-			$rank['Amount'] = 0; //default
-			$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.' AND game_id IN (SELECT game_id FROM game WHERE end_date < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).') GROUP BY account_id LIMIT 1');
-			if($db->nextRecord()) {
-				if($db->getField('amount')!=null) {
-					$rank['Amount'] = $db->getField('amount');
-				}
-			}
-		}
 	}
 
 	if($view == DONATION_NAME) {
