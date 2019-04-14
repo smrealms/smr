@@ -50,4 +50,4 @@ if(!isset($var['ClaimText'])) {
 	
 	SmrSession::updateVar('ClaimText',$claimText);
 }
-$PHP_OUTPUT.=$var['ClaimText'];
+$template->assign('ClaimText', $var['ClaimText']);
