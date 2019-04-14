@@ -45,9 +45,30 @@ function getHofCategories($hofTypes, $game_id, $account_id) {
 	return $categories;
 }
 
+/**
+ * Conditionally hide displayed HoF stat.
+ *
+ * Hide the amount for:
+ * - alliance stats in live games for players not in your alliance
+ * - private stats for players who are not the current player
+ */
+function applyHofVisibilityMask($amount, $vis, $gameID, $accountID) {
+	global $account, $player;
+	if (($vis == HOF_PRIVATE && $account->getAccountID() != $accountID) ||
+	    ($vis == HOF_ALLIANCE && isset($gameID) &&
+	     !SmrGame::getGame($gameID)->hasEnded() &&
+	     !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($player)))
+	{
+		return '-';
+	} else {
+		return $amount;
+	}
+}
+
 function getHofRank($view,$viewType,$accountID,$gameID) {
-	global $account,$player;
+	global $account;
 	$db = new SmrMySqlDatabase();
+	// If no game specified, show total amount from completed games only
 	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_date < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).')');
 
 	$vis = HOF_PUBLIC;
@@ -69,29 +90,13 @@ function getHofRank($view,$viewType,$accountID,$gameID) {
 		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$db->escapeNumber($accountID).$gameIDSql.' GROUP BY account_id LIMIT 1');
 	}
 
-	// What we will show for the amount:
-	// * Live game:
-	//  - Ally: real amount
-	//  - Enemy: "-"
-	// * Ended game:
-	//  - All players: real amount
-	// * No game specified (All Time HoF):
-	//  - All players: total amount from completed games
 	$realAmount = 0;
 	if($db->nextRecord()) {
 		if($db->getField('amount')!=null) {
 			$realAmount = $db->getField('amount');
 		}
 	}
-	if ($vis == HOF_PRIVATE || $vis == HOF_ALLIANCE && isset($gameID) &&
-	    !SmrGame::getGame($gameID)->hasEnded() &&
-	    !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($player))
-	{
-		// Hide the amount in live games for players not in your alliance
-		$rank['Amount'] = '-';
-	} else {
-		$rank['Amount'] = $realAmount;
-	}
+	$rank['Amount'] = applyHofVisibilityMask($realAmount, $vis, $gameID, $accountID);
 
 	if($view == DONATION_NAME) {
 		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');

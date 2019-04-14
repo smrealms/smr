@@ -66,18 +66,8 @@ else {
 		$accountID = $db->getField('account_id');
 		if($accountID == $account->getAccountID()) {
 			$foundMe = true;
-			$amount = $db->getField('amount');
 		}
-		else if($vis==HOF_PUBLIC) {
-			$amount = $db->getField('amount');
-		}
-		else if($vis==HOF_ALLIANCE) {
-			$rankInfo = getHofRank($var['view'], $viewType, $db->getField('account_id'), $game_id);
-			$amount = $rankInfo['Amount'];
-		}
-		else {
-			$amount = '-';
-		}
+		$amount = applyHofVisibilityMask($db->getField('amount'), $vis, $game_id, $accountID);
 		$rows[] = displayHOFRow($rank++, $accountID, $amount);
 	}
 	if(!$foundMe) {
