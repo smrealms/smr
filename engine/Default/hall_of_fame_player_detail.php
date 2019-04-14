@@ -18,7 +18,8 @@ if(isset($var['game_id'])) {
 	$template->assign('PageTopic',$hofPlayer->getPlayerName().'\'s Personal Hall of Fame For '.Globals::getGameName($var['game_id']));
 }
 else {
-	$template->assign('PageTopic',$account->getHofName().'\'s All Time Personal Hall of Fame');
+	$hofName = SmrAccount::getAccount($account_id)->getHofName();
+	$template->assign('PageTopic', $hofName.'\'s All Time Personal Hall of Fame');
 }
 
 $allowedVisibities = array(HOF_PUBLIC);
