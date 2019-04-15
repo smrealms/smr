@@ -125,11 +125,8 @@ class Template {
 		elseif (file_exists(TEMPLATES_DIR . 'Default/' . $templateName)) {
 			return TEMPLATES_DIR . 'Default/' . $templateName;
 		}
-		elseif (file_exists($templateDir . 'default.inc')) {
-			return $templateDir.'default.inc';
-		}
 		else {
-			return TEMPLATES_DIR.'Default/default.inc';//return $file_name;
+			throw new Exception('No template found for ' . $templateName);
 		}
 	}
 	
