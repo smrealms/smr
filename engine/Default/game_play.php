@@ -56,9 +56,7 @@ if ($db->getNumRows() > 0) {
 
 		// create a container that will hold next url and additional variables.
 
-		$container_game = array();
-		$container_game['url'] = 'skeleton.php';
-		$container_game['body'] = 'game_stats.php';
+		$container_game = create_container('skeleton.php', 'game_stats.php');
 		$container_game['game_id'] = $game_id;
 		$games['Play'][$game_id]['GameStatsLink'] = SmrSession::getNewHREF($container_game);
 		$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
@@ -107,10 +105,8 @@ if ($db->getNumRows() > 0) {
 		$games['Join'][$game_id]['Speed'] = $db->getField('game_speed');
 		$games['Join'][$game_id]['Credits'] = $db->getField('credits_needed');
 		// create a container that will hold next url and additional variables.
-		$container = array();
+		$container = create_container('skeleton.php', 'game_join.php');
 		$container['game_id'] = $game_id;
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'game_join.php';
 
 		$games['Join'][$game_id]['JoinGameLink'] = SmrSession::getNewHREF($container);
 	}
@@ -162,8 +158,7 @@ foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
 			$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT,$historyDB->getField('end_date'));
 			$games['Previous'][$index]['Speed'] = $historyDB->getField('speed');
 			// create a container that will hold next url and additional variables.
-			$container = array();
-			$container['url'] = 'skeleton.php';
+			$container = create_container('skeleton.php');
 			$container['view_game_id'] = $game_id;
 			$container['HistoryDatabase'] = $databaseClassName;
 			$container['game_name'] = $games['Previous'][$index]['Name'];
@@ -201,9 +196,7 @@ if($db->getNumRows()>0) {
 	while ($db->nextRecord()) {
 		$voteID = $db->getField('vote_id');
 		$voting[$voteID]['ID'] = $voteID;
-		$container = array();
-		$container['body'] = 'game_play.php';
-		$container['url'] = 'vote_processing.php';
+		$container = create_container('vote_processing.php', 'game_play.php');
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = SmrSession::getNewHREF($container);
 		$voting[$voteID]['Question'] = $db->getField('question');
@@ -223,8 +216,6 @@ if($db->getNumRows()>0) {
 // ***************************************
 // ** Announcements View
 // ***************************************
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'announcements.php';
+$container = create_container('skeleton.php', 'announcements.php');
 $container['view_all'] = 'yes';
 $template->assign('OldAnnouncementsLink',SmrSession::getNewHREF($container));

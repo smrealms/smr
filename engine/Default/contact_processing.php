@@ -14,12 +14,10 @@ $mail->Body =
 $mail->addAddress($receiver);
 $mail->send();
 
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php');
 if (SmrSession::hasGame()) {
 	$container['body'] = 'current_sector.php';
-}
-else {
+} else {
 	$container['body'] = 'game_play.php';
 }
 

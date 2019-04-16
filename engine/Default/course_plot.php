@@ -4,9 +4,7 @@ $template->assign('PageTopic','Plot A Course');
 
 Menu::navigation($template, $player);
 
-$container=array();
-$container['url'] = 'course_plot_processing.php';
-$container['body'] = '';
+$container = create_container('course_plot_processing.php');
 
 $template->assign('PlotCourseFormLink',SmrSession::getNewHREF($container));
 $container['url'] = 'course_plot_nearest_processing.php';

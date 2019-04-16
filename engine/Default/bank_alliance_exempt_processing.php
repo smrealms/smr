@@ -18,12 +18,10 @@ if (isset($_REQUEST['exempt']) && is_array($_REQUEST['exempt'])) {
 				AND transaction_id IN (' . $db->escapeArray($temp) . ')');
 }
 
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php');
 if (isset($var['minVal'])) {
 	$container['body'] = 'bank_alliance.php';
-}
-else {
+} else {
 	$container['body'] = 'alliance_exempt_authorize.php';
 }
 forward($container);

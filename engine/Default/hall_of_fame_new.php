@@ -11,9 +11,7 @@ else {
 }
 $template->assign('PageTopic',$topic);
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'hall_of_fame_player_detail.php';
+$container = create_container('skeleton.php', 'hall_of_fame_player_detail.php');
 if (isset($game_id)) $container['game_id'] = $game_id;
 $template->assign('PersonalHofHREF', SmrSession::getNewHREF($container));
 

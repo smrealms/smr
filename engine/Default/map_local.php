@@ -44,11 +44,9 @@ if(isset($var['Dir'])) {
 
 $template->assign('isZoomOn',$zoomOn);
 
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php', 'map_local.php');
 $container['Dir'] = 'Down';
 $container['rid'] = 'zoom_down';
-$container['body'] = 'map_local.php';
 $container['valid_for'] = -5;
 $template->assign('ZoomDownLink',SmrSession::getNewHREF($container));
 $container['Dir'] = 'Up';
