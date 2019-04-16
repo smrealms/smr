@@ -22,7 +22,10 @@ if ($action == 'Take Ownership') {
 	$account->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.', $player->getSectorID());
 }
 else if ($action == 'Rename') {
-	$name = $_REQUEST['name'];
+	$name = trim($_REQUEST['name']);
+	if (empty($name)) {
+		create_error('You cannot leave your planet nameless!');
+	}
 	// rename planet
 	$planet->setName($name);
 	$planet->update();
