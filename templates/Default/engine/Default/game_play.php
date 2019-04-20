@@ -60,8 +60,8 @@ if(isset($Message)) {
 			</tr><?php
 			foreach($Games['Join'] as $Game) { ?>
 				<tr>
-					<td>
-						<div class="buttonA"><a id="game_join_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>"><?php if(TIME < $Game['StartDate']) {?>View Info<?php }else{ ?>Join Game<?php } ?></a></div>
+					<td class="center">
+						<div class="buttonA"><a id="game_join_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>"><?php if(TIME < $Game['JoinTime']) {?>View Info<?php }else{ ?>Join Game<?php } ?></a></div>
 					</td>
 					<td width="35%"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</td>
 					<td class="noWrap"><?php echo $Game['StartDate']; ?></td>

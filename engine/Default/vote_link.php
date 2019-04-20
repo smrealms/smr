@@ -7,7 +7,7 @@ if ($var['can_get_turns'] == true) {
 	// Turns are updated by setting the last turn update to an earlier time.
 	// Make sure not to set their last turn update to before start time.
 	$maxFreeTurnsTime = count(VoteSite::getAllSites()) * VOTE_BONUS_TURNS_TIME;
-	$startFreeTurnsDate = $player->getGame()->getStartTurnsDate() + $maxFreeTurnsTime;
+	$startFreeTurnsDate = $player->getGame()->getStartTime() + $maxFreeTurnsTime;
 	if ($player->getLastTurnUpdate() > $startFreeTurnsDate) {
 		// Allow vote
 		// Don't start the timeout until the vote actually goes through.

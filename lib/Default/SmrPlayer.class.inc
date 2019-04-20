@@ -496,7 +496,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$ship = $this->getShip();
 			$newLastTurnUpdate = $this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $ship->getRealSpeed());
 
-			$startTurnsDate = $this->getGame()->getStartTurnsDate();
+			$startTurnsDate = $this->getGame()->getStartTime();
 			if($startTurnsDate < $newLastTurnUpdate && $startTurnsDate >= $this->getLastTurnUpdate()) {
 				$startingTurns = min($ship->getRealSpeed() * $this->getGame()->getStartTurnHours(), $this->getMaxTurns() - $this->getTurns());
 				$extraUpdateTime = (ceil($startingTurns) - $startingTurns) * 3600 / $ship->getRealSpeed();

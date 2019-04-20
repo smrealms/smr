@@ -69,7 +69,7 @@ function getHofRank($view,$viewType,$accountID,$gameID) {
 	global $account;
 	$db = new SmrMySqlDatabase();
 	// If no game specified, show total amount from completed games only
-	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_date < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).')');
+	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).')');
 
 	$vis = HOF_PUBLIC;
 	$rank = array('Amount'=>0,'Rank'=>0);

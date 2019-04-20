@@ -1,9 +1,9 @@
 <?php
 
 // Get the dates ("|" sets hr/min/sec to 0)
-$start = DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_start']);
-$startTurns = empty($_REQUEST['game_start_turns']) ? $start :
-              DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_start_turns']);
+$join = DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_join']);
+$start = empty($_REQUEST['game_start']) ? $join :
+         DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_start']);
 $end = DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_end']);
 
 $game = SmrGame::getGame($var['game_id']);
@@ -15,9 +15,9 @@ $game->setStartTurnHours($_REQUEST['start_turns']);
 $game->setMaxPlayers($_REQUEST['max_players']);
 $game->setAllianceMaxPlayers($_REQUEST['alliance_max_players']);
 $game->setAllianceMaxVets($_REQUEST['alliance_max_vets']);
-$game->setStartDate($start->getTimestamp());
-$game->setStartTurnsDate($startTurns->getTimestamp());
-$game->setEndDate($end->getTimestamp());
+$game->setJoinTime($join->getTimestamp());
+$game->setStartTime($start->getTimestamp());
+$game->setEndTime($end->getTimestamp());
 $game->setGameSpeed($_REQUEST['game_speed']);
 $game->setIgnoreStats($_REQUEST['ignore_stats'] == 'Yes');
 $game->setStartingCredits($_REQUEST['starting_credits']);

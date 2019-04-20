@@ -18,19 +18,19 @@ $template->assign('UserRankName',$account->getRankName());
 $games = array();
 $games['Play'] = array();
 $game_id_list = array();
-$db->query('SELECT end_date, game_id, game_name, game_speed, game_type
+$db->query('SELECT end_time, game_id, game_name, game_speed, game_type
 			FROM game JOIN player USING (game_id)
 			WHERE account_id = '.$db->escapeNumber($account->getAccountID()).'
 				AND enabled = \'TRUE\'
-				AND end_date >= ' . $db->escapeNumber(TIME) . '
-			ORDER BY start_date DESC');
+				AND end_time >= ' . $db->escapeNumber(TIME) . '
+			ORDER BY start_time DESC');
 if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		$game_id = $db->getField('game_id');
 		$games['Play'][$game_id]['ID'] = $game_id;
 		$games['Play'][$game_id]['Name'] = $db->getField('game_name');
 		$games['Play'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getInt('game_type')];
-		$games['Play'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('end_date'));
+		$games['Play'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT, $db->getInt('end_time'));
 		$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');
 
 		$container = create_container('game_play_processing.php');
@@ -74,19 +74,19 @@ if(empty($games['Play']))
 // ***************************************
 
 if (count($game_id_list) > 0) {
-	$db->query('SELECT start_date, end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed
+	$db->query('SELECT game_id
 				FROM game
 				WHERE game_id NOT IN (' . $db->escapeArray($game_id_list) . ')
-					AND end_date >= ' . $db->escapeNumber(TIME) . '
+					AND end_time >= ' . $db->escapeNumber(TIME) . '
 					AND enabled = ' . $db->escapeBoolean(true) . '
-				ORDER BY start_date DESC');
+				ORDER BY start_time DESC');
 }
 else {
-	$db->query('SELECT start_date, end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed
+	$db->query('SELECT game_id
 				FROM game
-				WHERE end_date >= ' . $db->escapeNumber(TIME) . '
+				WHERE end_time >= ' . $db->escapeNumber(TIME) . '
 					AND enabled = ' . $db->escapeBoolean(true) . '
-				ORDER BY start_date DESC');
+				ORDER BY start_time DESC');
 }
 
 // are there any results?
@@ -96,14 +96,17 @@ if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		$game_id = $db->getField('game_id');
 		$game = SmrGame::getGame($game_id);
-		$games['Join'][$game_id]['ID'] = $game_id;
-		$games['Join'][$game_id]['Name'] = $db->getField('game_name');
-		$games['Join'][$game_id]['StartDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('start_date'));
-		$games['Join'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('end_date'));
-		$games['Join'][$game_id]['Players'] = $game->getTotalPlayers();
-		$games['Join'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getInt('game_type')];
-		$games['Join'][$game_id]['Speed'] = $db->getField('game_speed');
-		$games['Join'][$game_id]['Credits'] = $db->getField('credits_needed');
+		$games['Join'][$game_id] = [
+			'ID' => $game_id,
+			'Name' => $game->getName(),
+			'JoinTime' => $game->getJoinTime(),
+			'StartDate' => date(DATE_FULL_SHORT_SPLIT, $game->getStartTime()),
+			'EndDate' => date(DATE_FULL_SHORT_SPLIT, $game->getEndTime()),
+			'Players' => $game->getTotalPlayers(),
+			'Type' => $game->getGameType(),
+			'Speed' => $game->getGameSpeed(),
+			'Credits' => $game->getCreditsNeeded(),
+		];
 		// create a container that will hold next url and additional variables.
 		$container = create_container('skeleton.php', 'game_join.php');
 		$container['game_id'] = $game_id;
@@ -119,15 +122,15 @@ if ($db->getNumRows() > 0) {
 $games['Previous'] = array();
 
 //New previous games
-$db->query('SELECT start_date, end_date, game_name, game_speed, game_id ' .
-		'FROM game WHERE enabled = \'TRUE\' AND end_date < '.$db->escapeNumber(TIME).' ORDER BY game_id DESC');
+$db->query('SELECT start_time, end_time, game_name, game_speed, game_id ' .
+		'FROM game WHERE enabled = \'TRUE\' AND end_time < '.$db->escapeNumber(TIME).' ORDER BY game_id DESC');
 if ($db->getNumRows()) {
 	while ($db->nextRecord()) {
 		$game_id = $db->getField('game_id');
 		$games['Previous'][$game_id]['ID'] = $game_id;
 		$games['Previous'][$game_id]['Name'] = $db->getField('game_name');
-		$games['Previous'][$game_id]['StartDate'] = date(DATE_DATE_SHORT,$db->getField('start_date'));
-		$games['Previous'][$game_id]['EndDate'] = date(DATE_DATE_SHORT,$db->getField('end_date'));
+		$games['Previous'][$game_id]['StartDate'] = date(DATE_DATE_SHORT, $db->getInt('start_time'));
+		$games['Previous'][$game_id]['EndDate'] = date(DATE_DATE_SHORT, $db->getInt('end_time'));
 		$games['Previous'][$game_id]['Speed'] = $db->getField('game_speed');
 		// create a container that will hold next url and additional variables.
 		$container = create_container('skeleton.php');
