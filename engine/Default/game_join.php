@@ -24,18 +24,11 @@ if ($game->hasEnded()) {
 $template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
 $template->assign('Game', $game);
 
-$raceDescriptions='';
-$first = true;
+$raceDescriptions = [];
 foreach (Globals::getRaces() as $race) {
-	if ($first) {
-		$raceDescriptions.=('\'' . str_replace('\'','\\\'"',$race['Description']) . '\'');
-		$first = false;
-
-	}
-	else
-		$raceDescriptions.=(', \'' . str_replace('\'','\\\'',$race['Description']) . '\'');
+	$raceDescriptions[] = ('\'' . str_replace('\'','\\\'"',$race['Description']) . '\'');
 }
-$template->assign('RaceDescriptions',$raceDescriptions);
+$template->assign('RaceDescriptions', join(',', $raceDescriptions));
 
 
 // create a container that will hold next url and additional variables.
