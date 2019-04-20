@@ -6,7 +6,7 @@ $startTurns = empty($_REQUEST['game_start_turns']) ? $start :
               DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_start_turns']);
 $end = DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_end']);
 
-$game = SmrGame::createGame($var['game_id']);
+$game = SmrGame::getGame($var['game_id']);
 $game->setName($_REQUEST['game_name']);
 $game->setDescription($_REQUEST['desc']);
 $game->setGameTypeID($_REQUEST['game_type']);
