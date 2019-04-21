@@ -174,6 +174,10 @@ class SmrGame {
 		$this->hasChanged=true;
 	}
 
+	public function hasStarted() {
+		return TIME >= $this->getStartTime();
+	}
+
 	/**
 	 * Returns the epoch time when the game starts,
 	 * i.e. when players can move, turns are gained, etc.

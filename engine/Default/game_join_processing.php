@@ -100,8 +100,6 @@ else {
 	$amount_armour = 50;
 }
 
-$last_turn_update = SmrGame::getGame($gameID)->getStartTime();
-
 //// newbie leaders need to put into there alliances
 if ($account->getAccountID() == ACCOUNT_ID_NHL) {
 	$alliance_id = NHA_ID;
@@ -122,12 +120,13 @@ else {
 }
 
 // insert into player table.
-$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_turn_update, last_cpl_action, last_active, newbie_turns, npc, newbie_status)
-			VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escapeString($player_name) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', '.$db->escapeNumber($last_turn_update).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ',' . $db->escapeBoolean($isNewbie) . ')');
+$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_cpl_action, last_active, newbie_turns, npc, newbie_status)
+			VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escapeString($player_name) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ',' . $db->escapeBoolean($isNewbie) . ')');
 
 $db->unlock();
 
 $player = SmrPlayer::getPlayer($account->getAccountID(), $gameID);
+$player->giveStartingTurns();
 
 // Equip the ship
 $ship = $player->getShip();

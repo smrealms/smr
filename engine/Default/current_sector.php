@@ -59,8 +59,8 @@ $template->assign('UnreadMissions', $var['UnreadMissions']);
 // *******************************************
 $turnsMessage = '';
 $game = SmrGame::getGame($player->getGameID());
-if ($game->getStartTime() > TIME) {
-	$turnsMessage = 'Turns will be given when the game starts in ' . format_time($game->getStartTime() - TIME) . '!';
+if (!$game->hasStarted()) {
+	$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - TIME) . '!';
 } else {
 	switch($player->getTurnsLevel()) {
 		case 'NONE':

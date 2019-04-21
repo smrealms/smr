@@ -1,5 +1,9 @@
 <?php
 
+if (!$player->getGame()->hasStarted()) {
+	create_error('You cannot move until the game has started!');
+}
+
 if (isset($_REQUEST['target'])) $target = trim($_REQUEST['target']);
 else $target = $var['target'];
 
