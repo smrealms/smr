@@ -13,53 +13,39 @@ You are currently building: <?php
 	} ?>
 
 <br /><br />
-<table class="standard">
+<table class="standard center">
 	<tr>
-		<th></th>
+		<th class="shrink"></th>
 		<th>Description</th>
-		<th>Current</th>
-		<th>Cost</th>
-		<th>Build</th>
+		<th>Capacity</th>
+		<th colspan="2">Cost</th>
+		<th width="8%">Build</th>
 	</tr><?php
 
 	foreach ($ThisPlanet->getStructureTypes() as $StructureID => $Structure) { ?>
 		<tr>
-			<td><img class="tooltip" id="<?php echo $Structure->name(); ?>_tip" src="images/<?php echo $Structure->image(); ?>" width="16" height="16" alt="" title="<?php echo $Structure->name(); ?>" /></td>
-			<td><?php echo $Structure->name(); ?>: <?php echo $Structure->summary(); ?></td>
-			<td class="center"><?php echo $ThisPlanet->getBuilding($StructureID); ?>/<?php echo $ThisPlanet->getMaxBuildings($StructureID); ?></td>
-			<td><?php
-				foreach($Structure->goods() as $GoodID => $Amount) {
-					if ($ThisPlanet->getStockpile($GoodID) < $Amount) { ?>
-						<span class="red"><?php echo $Amount; ?>-<?php echo $Goods[$GoodID]['Name'];?>, </span><?php
-					}
-					else {
-						echo $Amount; ?>-<?php echo $Goods[$GoodID]['Name']; ?>, <?php
-					}
-				}
-
-				if ($ThisPlayer->getCredits() < $Structure->creditCost()) { ?>
-					<span class="red"><?php echo number_format($Structure->creditCost()); ?>-credits, </span><?php
-				} else {
-					echo number_format($Structure->creditCost()); ?>-credits, <?php
-				}
+			<td><img src="images/<?php echo $Structure->image(); ?>" width="16" height="16" alt="" title="<?php echo $Structure->name(); ?>" /></td>
+			<td class="left"><?php echo $Structure->name(); ?>: <?php echo $Structure->summary(); ?></td>
+			<td><?php echo $ThisPlanet->getBuilding($StructureID); ?> / <?php echo $ThisPlanet->getMaxBuildings($StructureID); ?></td>
+			<td class="left noWrap"><?php
+				foreach ($Structure->goods() as $GoodID => $Amount) {
+					$Good = $Goods[$GoodID]; ?>
+					&nbsp;<img class="bottom" src="<?php echo $Good['ImageLink']; ?>" title="<?php echo $Good['Name']; ?>" alt="" />&nbsp;<span <?php if ($ThisPlanet->getStockpile($GoodID) < $Amount) { ?> class="red" <?php } ?>><?php echo $Amount; ?></span>&nbsp;<br /><?php
+				} ?>
+			</td>
+			<td class="noWrap">
+				<span <?php if ($ThisPlayer->getCredits() < $Structure->creditCost()) { ?> class="red" <?php } ?>><?php echo number_format($Structure->creditCost()); ?> credits</span><?php
 
 				foreach ($Structure->hardwareCost() as $hardwareID) {
-					if ($hardwareID == HARDWARE_SCANNER) {
-						if (!$ThisShip->hasScanner()) { ?>
-							<span class="red">1-Scanner, </span><?php
-						} else {
-							?>1-Scanner, <?php
-						}
+					if ($hardwareID == HARDWARE_SCANNER) { ?>
+						<br /><span <?php if (!$ThisShip->hasScanner()) { ?> class="red" <?php } ?>>1 Scanner</span><?php
 					}
-				}
-
-				echo format_time($ThisPlanet->getConstructionTime($StructureID)); ?>
+				} ?>
+				<br /><?php echo format_time($ThisPlanet->getConstructionTime($StructureID), true); ?>
 		</td>
 			<td><?php
 				if ($ThisPlanet->canBuild($ThisPlayer, $StructureID)===true) { ?>
 					<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getBuildHREF($StructureID); ?>">Build</a></div><?php
-				} else { ?>
-					&nbsp;<?php
 				} ?>
 			</td>
 		</tr><?php

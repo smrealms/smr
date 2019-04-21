@@ -20,7 +20,7 @@ if (count($Planets) > 0) { ?>
 			foreach ($Planets as $Planet) { ?>
 				<tr id="planet-<?php echo $Planet->getSectorID(); ?>" class="ajax">
 					<td class="image noWrap">
-						<img class="tooltip" src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename().': '.$Planet->getTypeDescription(); ?>" /></td>
+						<img src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename().': '.$Planet->getTypeDescription(); ?>" /></td>
 					<td class="name"><?php echo $Planet->getName(); ?></td>
 					<td class="lvl center"><?php echo number_format($Planet->getLevel(),2); ?></td>
 					<td class="owner noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
@@ -50,7 +50,7 @@ if (count($Planets) > 0) { ?>
 							if ($Amount > 0) {
 								$Supply = true;
 								$Good = Globals::getGood($GoodID); ?>
-								<img style="padding:1px" class="bottom" src="<?php echo $Good['ImageLink']; ?>" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" />&nbsp;<?php echo $Amount; ?><br /><?php
+								&nbsp;<img style="padding:1px" class="bottom" src="<?php echo $Good['ImageLink']; ?>" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" />&nbsp;<?php echo $Amount; ?><br /><?php
 							}
 						}
 						if ($Supply === false) {
