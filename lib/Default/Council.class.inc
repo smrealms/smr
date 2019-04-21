@@ -22,12 +22,15 @@ class Council {
 			self::$COUNCILS[$gameID][$raceID] = array();
 			self::$PRESIDENTS[$gameID][$raceID] = false;
 
+			// Require council members to have > 0 exp to ensure that players
+			// cannot perform council activities before the game starts.
 			$i=1;
 			self::$db->query('SELECT account_id, alignment
 								FROM player
 								WHERE game_id = ' . self::$db->escapeNumber($gameID) . '
 									AND race_id = ' . self::$db->escapeNumber($raceID) . '
 									AND npc = \'FALSE\'
+									AND experience > 0
 								ORDER by experience DESC
 								LIMIT ' . MAX_COUNCIL_MEMBERS);
 			while(self::$db->nextRecord()) {
