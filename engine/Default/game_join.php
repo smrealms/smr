@@ -39,9 +39,8 @@ $template->assign('RaceDescriptions',$raceDescriptions);
 
 
 // create a container that will hold next url and additional variables.
-$container = array();
-$container['game_id'] = $var['game_id'];
-$container['url'] = 'game_join_processing.php';
+$container = create_container('game_join_processing.php');
+transfer('game_id');
 if (TIME >= $game->getStartDate())
 	$template->assign('JoinGameFormHref',SmrSession::getNewHREF($container));
 

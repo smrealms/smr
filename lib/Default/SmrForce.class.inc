@@ -428,8 +428,7 @@ class SmrForce {
 	}
 
 	public static function getRefreshAllHREF() {
-		$container = array();
-		$container['url']		= 'forces_mass_refresh.php';
+		$container = create_container('forces_mass_refresh.php');
 		return SmrSession::getNewHREF($container);
 	}
 

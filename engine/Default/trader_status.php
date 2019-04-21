@@ -3,14 +3,12 @@ $template->assign('PageTopic','Trader Status');
 
 Menu::trader();
 
-$container=array();
-$container['url'] = 'skeleton.php';
-
 if ($player->hasNewbieTurns()) {
 	$container = create_container('skeleton.php', 'leave_newbie.php');
 	$template->assign('LeaveNewbieHREF', SmrSession::getNewHREF($container));
 }
 
+$container = create_container('skeleton.php');
 $container['body'] = 'trader_relations.php';
 $template->assign('RelationsHREF', SmrSession::getNewHREF($container));
 

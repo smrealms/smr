@@ -20,9 +20,8 @@ while ($db->nextRecord()) {
 		$went_live = date(DATE_FULL_SHORT, $went_live);
 	} else {
 		if ($link_set_live) {
-			$container = array('url' => 'changelog_set_live_processing.php',
-							   'version_id' => $version_id
-							  );
+			$container = create_container('changelog_set_live_processing.php');
+			$container['version_id'] = $version_id;
 			$went_live = create_link($container, 'never');
 		} else {
 			$went_live = 'never';
@@ -49,9 +48,8 @@ while ($db->nextRecord()) {
 
 	if ($first_entry) {
 		$first_entry = false;
-		$container = array('url' => 'changelog_add_processing.php',
-						   'version_id' => $version_id
-						  );
+		$container = create_container('changelog_add_processing.php');
+		$container['version_id'] = $version_id;
 		$template->assign('AddHREF', SmrSession::getNewHREF($container));
 		$template->assign('FirstVersion', $version);
 	} else {

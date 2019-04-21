@@ -1,8 +1,6 @@
 <?php
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'message_blacklist.php';
+$container = create_container('skeleton.php', 'message_blacklist.php');
 
 if (empty($_REQUEST['PlayerName']) && !isset($var['account_id'])) {
 	$container['msg'] = '<span class="red bold">ERROR: </span>You must enter a player name.';

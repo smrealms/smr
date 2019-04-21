@@ -12,9 +12,8 @@ else {
 
 $forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $owner_id);
 
-$container = array();
-$container['url']		= 'forces_drop_processing.php';
-$container['owner_id']	= $owner_id;
+$container = create_container('forces_drop_processing.php');
+$container['owner_id'] = $owner_id;
 
 $template->assign('Forces', $forces);
 $template->assign('SubmitHREF', SmrSession::getNewHREF($container));
