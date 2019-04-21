@@ -24,7 +24,7 @@ You are currently building: <?php
 
 	foreach ($ThisPlanet->getStructureTypes() as $StructureID => $Structure) { ?>
 		<tr>
-			<td><img class="tooltip" id="<?php echo $Structure->name(); ?>_tip" src="images/<?php echo $Structure->image(); ?>" width="16" height="16" alt="" title="<?php echo $Structure->name(); ?>" /></td>
+			<td><img class="tooltip" src="images/<?php echo $Structure->image(); ?>" width="16" height="16" alt="" title="<?php echo $Structure->name(); ?>" /></td>
 			<td class="left"><?php echo $Structure->name(); ?>: <?php echo $Structure->summary(); ?></td>
 			<td><?php echo $ThisPlanet->getBuilding($StructureID); ?> / <?php echo $ThisPlanet->getMaxBuildings($StructureID); ?></td>
 			<td class="left noWrap"><?php
