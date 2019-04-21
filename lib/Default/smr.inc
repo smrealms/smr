@@ -856,11 +856,6 @@ function format_time($seconds, $short=false) {
 	$hours=0;
 	$days=0;
 	$weeks=0;
-	$string = '';
-	if ($seconds == 0) {
-		$string = '0 seconds';
-		if ($short) $string = '0s';
-	}
 	if ($seconds >= 60) {
 		$minutes = floor($seconds/60);
 		$seconds = $seconds % 60;
@@ -877,63 +872,30 @@ function format_time($seconds, $short=false) {
 		$weeks = floor($days/7);
 		$days = $days % 7;
 	}
-	if ($weeks > 0) {
-		$string .= $weeks;
-		if ($short) $string .= 'w';
-		else {
-			$string .= ' week';
-			if ($weeks > 1) $string .= 's';
+	$times = [
+		'week' => $weeks,
+		'day' => $days,
+		'hour' => $hours,
+		'minute' => $minutes,
+		'second' => $seconds,
+	];
+	$parts = [];
+	foreach ($times as $unit => $amount) {
+		if ($amount > 0) {
+			if ($short) {
+				$parts[] = $amount . $unit[0];
+			} else {
+				$parts[] = $amount . ' ' . pluralise($unit, $amount);
+			}
 		}
 	}
-	if ($days > 0) {
-		$before = $weeks;
-		$after = $hours + $minutes + $seconds;
-		if ($before > 0 && $after > 0) $string .= ', ';
-		elseif ($before > 0 && $after == 0) $string .= ' and ';
-		$string .= $days;
-		if ($short) $string .= 'd';
-		else {
-			$string .= ' day';
-			if ($days > 1) $string .= 's';
-		}
+
+	if (count($parts) == 1) {
+		return $parts[0];
+	} else {
+		// e.g. 5h, 10m and 30s
+		return join(', ', array_slice($parts, 0, -1)) . ' and ' . end($parts);
 	}
-	if ($hours > 0) {
-		$before = $weeks + $days;
-		$after = $minutes + $seconds;
-		if ($before > 0 && $after > 0) $string .= ', ';
-		elseif ($before > 0 && $after == 0) $string .= ' and ';
-		$string .= $hours;
-		if ($short) $string .= 'h';
-		else {
-			$string .= ' hour';
-			if ($hours > 1) $string .= 's';
-		}
-	}
-	if ($minutes > 0) {
-		$before = $weeks + $days + $hours;
-		$after = $seconds;
-		if ($before > 0 && $after > 0) $string .= ', ';
-		elseif ($before > 0 && $after == 0) $string .= ' and ';
-		$string .= $minutes;
-		if ($short) $string .= 'm';
-		else {
-			$string .= ' minute';
-			if ($minutes > 1) $string .= 's';
-		}
-	}
-	if ($seconds > 0) {
-		$before = $weeks + $days + $hours + $minutes;
-		$after = 0;
-		if ($before > 0 && $after > 0) $string .= ', ';
-		elseif ($before > 0 && $after == 0) $string .= ' and ';
-		$string .= $seconds;
-		if ($short) $string .= 's';
-		else {
-			$string .= ' second';
-			if ($seconds > 1) $string .= 's';
-		}
-	}
-	return $string;
 }
 
 function number_colour_format($number,$justSign = false) {
