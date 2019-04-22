@@ -864,7 +864,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		// Update turns due to ship change
 		$new_speed = $this->getShip()->getSpeed();
-		$this->setTurns(round($this->turns / $old_speed * $new_speed),100);
+		$this->setTurns(round($this->turns / $old_speed * $new_speed));
+		$this->setNewbieTurns(100);
 	}
 
 	static public function getHome($gameID, $raceID) {

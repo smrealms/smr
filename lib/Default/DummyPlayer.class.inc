@@ -77,8 +77,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 		// speed for pod
 		$new_speed = 7;
 
-		// adapt turns
-//		$this->setTurns(round($this->turns / $old_speed * $new_speed),100);
+		// don't adapt turns
 
 		$this->setSectorID(1);
 		$this->increaseDeaths(1);

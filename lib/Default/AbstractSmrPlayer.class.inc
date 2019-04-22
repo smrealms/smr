@@ -938,45 +938,40 @@ abstract class AbstractSmrPlayer {
 //		round(DEFAULT_MAX_TURNS * Globals::getGameSpeed($this->getGameID()));
 	}
 
-	public function setTurns($turns,$newNoob = false,$updateLastActive = false) {
-		if($this->turns == $turns && ($this->newbieTurns == $newNoob || $newNoob==false) && !$updateLastActive)
+	public function setTurns($turns) {
+		if ($this->turns == $turns) {
 			return;
-
+		}
 		// Make sure turns are in range [0, MaxTurns]
 		$this->turns = max(0, min($turns, $this->getMaxTurns()));
-
-		if($newNoob !== false)
-			$this->newbieTurns = $newNoob;
-		if ($this->newbieTurns < 0)
-			$this->newbieTurns = 0;
-
-		$this->hasChanged=true;
-		if($updateLastActive === true) {
-			$this->setLastActive(TIME);
-			$this->updateLastCPLAction();
-		}
+		$this->hasChanged = true;
 	}
 
-	public function takeTurns($take, $noob = 0, $updateLastActive = true) {
-		if($take < 0 || $noob < 0)
+	public function takeTurns($take, $takeNewbie=0) {
+		if ($take < 0 || $takeNewbie < 0) {
 			throw new Exception('Trying to take negative turns.');
+		}
 		$take = ceil($take);
-		$new_turns = $this->getTurns() - $take;
-		$newbiesTaken = min($this->getNewbieTurns(),$noob);
-		$new_noob = $this->getNewbieTurns() - $noob;
+		// Only take up to as many newbie turns as we have remaining
+		$takeNewbie = min($this->getNewbieTurns(), $takeNewbie);
 
-		$this->setTurns($new_turns, $new_noob, $updateLastActive);
+		$this->setTurns($this->getTurns() - $take);
+		$this->setNewbieTurns($this->getNewbieTurns() - $takeNewbie);
 		$this->increaseHOF($take,array('Movement','Turns Used','Since Last Death'), HOF_ALLIANCE);
 		$this->increaseHOF($take,array('Movement','Turns Used','Total'), HOF_ALLIANCE);
-		$this->increaseHOF($newbiesTaken,array('Movement','Turns Used','Newbie'), HOF_ALLIANCE);
+		$this->increaseHOF($takeNewbie, array('Movement','Turns Used','Newbie'), HOF_ALLIANCE);
+
+		// Player has taken an action
+		$this->setLastActive(TIME);
+		$this->updateLastCPLAction();
 	}
 
-	public function giveTurns($give, $noob = 0,$updateLastActive = false) {
-		if($give < 0 || $noob < 0)
+	public function giveTurns($give, $giveNewbie=0) {
+		if ($give < 0 || $giveNewbie < 0) {
 			throw new Exception('Trying to give negative turns.');
-		$give = floor($give);
-
-		$this->setTurns($this->getTurns() + $give, $this->getNewbieTurns() + $noob, $updateLastActive);
+		}
+		$this->setTurns($this->getTurns() + floor($give));
+		$this->setNewbieTurns($this->getNewbieTurns() + $giveNewbie);
 	}
 
 	public function getLastActive() {
