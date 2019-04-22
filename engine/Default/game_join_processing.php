@@ -166,4 +166,7 @@ if($race_id == RACE_ALSKANT) { // Give Alskants 250 personal relations to start.
 $player->update();
 $ship->update();
 
-forward(create_container('skeleton.php', 'game_play.php'));
+// Send the player directly into the game
+$container = create_container('game_play_processing.php');
+transfer('game_id');
+forward($container);
