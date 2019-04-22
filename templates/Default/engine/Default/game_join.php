@@ -10,7 +10,6 @@ if ($Game->getDescription()) { ?>
 <table class="standard">
 	<tr class="center">
 		<th>Start Date</th>
-		<th>Start Turns Date</th>
 		<th>End Date</th>
 		<th>Max Turns</th>
 		<th>Start Turn Hours</th>
@@ -19,9 +18,8 @@ if ($Game->getDescription()) { ?>
 		<th>Alliance Max Vets</th>
 	</tr>
 	<tr class="center">
-		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT,$Game->getStartDate()); ?></td>
-		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT,$Game->getStartTurnsDate()); ?></td>
-		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT,$Game->getEndDate()); ?></td>
+		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT, $Game->getStartTime()); ?></td>
+		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT, $Game->getEndTime()); ?></td>
 		<td><?php echo $Game->getMaxTurns(); ?></td>
 		<td><?php echo $Game->getStartTurnHours(); ?></td>
 		<td><?php echo $Game->getMaxPlayers(); ?></td>
@@ -46,7 +44,21 @@ if ($Game->getDescription()) { ?>
 	</tr>
 </table><br />
 
-<form<?php if(isset($JoinGameFormHref)){ ?> name="JoinGameForm" method="POST" action="<?php echo $JoinGameFormHref; ?>"<?php } ?>>
+<?php
+if (!isset($JoinGameFormHref)) { ?>
+	<p class="bold big">
+		Time until you can join this game: <?php echo format_time($Game->getJoinTime() - TIME); ?>
+		<br /><br /><?php
+		if ($Game->getStartTime() == $Game->getJoinTime()) { ?>
+			The game will start immediately at this time!<?php
+		} else { ?>
+			Note: You will not be able to start moving until the game starts <?php echo format_time($Game->getStartTime() - $Game->getJoinTime()); ?> later!<?php
+		} ?>
+	</p><?php
+	return;
+} ?>
+
+<form name="JoinGameForm" method="POST" action="<?php echo $JoinGameFormHref; ?>">
 
 	<table class="nobord nohpad">
 		<tr>
@@ -91,7 +103,7 @@ if ($Game->getDescription()) { ?>
 				<table>
 					<tr>
 						<td class="right"><b>Name:</b>&nbsp;</td>
-						<td><input type="text" name="player_name" maxlength="32" class="InputFields"<?php if(!isset($JoinGameFormHref)){ ?>disabled="disabled"<?php } ?>></td>
+						<td><input type="text" name="player_name" maxlength="32" class="InputFields" /></td>
 						<td rowspan="4" class="standard"><img id="race_image" name="race_image" src="images/race/race1.gif" alt="Please select a race."></td>
 					</tr>
 					<tr>
@@ -108,14 +120,7 @@ if ($Game->getDescription()) { ?>
 					
 					<tr>
 						<td>&nbsp;</td>
-						<td><?php
-						if(isset($JoinGameFormHref)) {
-							?><input type="submit" name="action" value="Create Player" class="InputFields" /><?php
-						}
-						else {
-							?><b>This game has not started yet.</b><?php
-						} ?>
-						</td>
+						<td><input type="submit" name="action" value="Create Player" class="InputFields" /></td>
 					</tr>
 					
 					<tr>

@@ -14,9 +14,6 @@ if ($game->getTotalPlayers() >= $game->getMaxPlayers()) {
 	create_error('The maximum number of players in that game is reached!');
 }
 
-//if (TIME < $game['StartDate'])
-//	create_error('You want to join a game that hasn\'t started yet?');
-
 if ($game->hasEnded()) {
 	create_error('You want to join a game that is already over?');
 }
@@ -24,25 +21,18 @@ if ($game->hasEnded()) {
 $template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
 $template->assign('Game', $game);
 
-$raceDescriptions='';
-$first = true;
+$raceDescriptions = [];
 foreach (Globals::getRaces() as $race) {
-	if ($first) {
-		$raceDescriptions.=('\'' . str_replace('\'','\\\'"',$race['Description']) . '\'');
-		$first = false;
-
-	}
-	else
-		$raceDescriptions.=(', \'' . str_replace('\'','\\\'',$race['Description']) . '\'');
+	$raceDescriptions[] = ('\'' . str_replace('\'','\\\'"',$race['Description']) . '\'');
 }
-$template->assign('RaceDescriptions',$raceDescriptions);
+$template->assign('RaceDescriptions', join(',', $raceDescriptions));
 
 
-// create a container that will hold next url and additional variables.
-$container = create_container('game_join_processing.php');
-transfer('game_id');
-if (TIME >= $game->getStartDate())
+if (TIME >= $game->getJoinTime()) {
+	$container = create_container('game_join_processing.php');
+	transfer('game_id');
 	$template->assign('JoinGameFormHref',SmrSession::getNewHREF($container));
+}
 
 $db2 = new SmrMySqlDatabase();
 //this prevents multiple races appearing when there is more than 1 game

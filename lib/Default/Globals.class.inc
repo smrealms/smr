@@ -207,14 +207,6 @@ class Globals {
 		return SmrGame::getGame($gameID)->getName();
 	}
 
-	public static function getGameStartDate($gameID) {
-		return SmrGame::getGame($gameID)->getStartDate();
-	}
-
-	public static function getGameEndDate($gameID) {
-		return SmrGame::getGame($gameID)->getEndDate();
-	}
-
 	public static function getGameMaxTurns($gameID) {
 		return SmrGame::getGame($gameID)->getMaxTurns();
 	}

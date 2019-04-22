@@ -4,7 +4,7 @@ $template->assign('PageTopic', 'Manage Galactic Post Editors');
 
 // Get the list of active games ordered by reverse start date
 $activeGames = array();
-$db->query('SELECT game_id, game_name FROM game WHERE start_date < ' . $db->escapeNumber(TIME) . ' AND end_date > ' . $db->escapeNumber(TIME) . ' ORDER BY start_date DESC');
+$db->query('SELECT game_id, game_name FROM game WHERE join_time < ' . $db->escapeNumber(TIME) . ' AND end_time > ' . $db->escapeNumber(TIME) . ' ORDER BY start_time DESC');
 while ($db->nextRecord()) {
 	$activeGames[] = array('game_name' => $db->getField('game_name'),
 	                       'game_id' => $db->getInt('game_id'));

@@ -1162,7 +1162,7 @@ abstract class AbstractSmrAccount {
 
 		$this->db->query('SELECT game_id FROM game JOIN player USING (game_id)
 						WHERE ' . $this->SQL . '
-						AND end_date >= ' . $this->db->escapeNumber(TIME));
+						AND end_time >= ' . $this->db->escapeNumber(TIME));
 		while ($this->db->nextRecord()) {
 			$player = SmrPlayer::getPlayer($this->getAccountID(), $this->db->getInt('game_id'));
 			$player->updateTurns();

@@ -25,12 +25,12 @@
 		<td><input type="number" size="6" name="max_players" value="<?php echo $Game['maxPlayers']; ?>"></td>
 	</tr>
 	<tr>
-		<td class="right">Start Date (DD/MM/YYYY)</td>
-		<td><input type="text" size="20" name="game_start" value="<?php echo $Game['startDate']; ?>"></td>
+		<td class="right">Join Date (DD/MM/YYYY)</td>
+		<td><input type="text" size="20" name="game_join" value="<?php echo $Game['joinDate']; ?>"></td>
 	</tr>
 	<tr>
-		<td class="right">Turns Start Date (DD/MM/YYYY)</td>
-		<td><input type="text" size="20" name="game_start_turns" value="<?php echo $Game['startTurnsDate']; ?>"> Leave blank to use Start Date</td>
+		<td class="right">Start Date (DD/MM/YYYY)</td>
+		<td><input type="text" size="20" name="game_start" value="<?php echo $Game['startDate']; ?>"> Leave blank to use Join Date</td>
 	</tr>
 	<tr>
 		<td class="right">End Date (DD/MM/YYYY)</td>

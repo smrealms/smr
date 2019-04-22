@@ -11,9 +11,9 @@ class SmrGame {
 	protected $gameID;
 	protected $name;
 	protected $description;
-	protected $startDate;
-	protected $startTurnsDate;
-	protected $endDate;
+	protected $joinTime;
+	protected $startTime;
+	protected $endTime;
 	protected $maxPlayers;
 	protected $maxTurns;
 	protected $startTurnHours;
@@ -76,9 +76,9 @@ class SmrGame {
 			$this->gameID				= $this->db->getInt('game_id');
 			$this->name					= $this->db->getField('game_name');
 			$this->description			= $this->db->getField('game_description');
-			$this->startDate			= $this->db->getInt('start_date');
-			$this->startTurnsDate		= $this->db->getInt('start_turns_date');
-			$this->endDate				= $this->db->getInt('end_date');
+			$this->joinTime = $this->db->getInt('join_time');
+			$this->startTime = $this->db->getInt('start_time');
+			$this->endTime = $this->db->getInt('end_time');
 			$this->maxPlayers			= $this->db->getInt('max_players');
 			$this->maxTurns				= $this->db->getInt('max_turns');
 			$this->startTurnHours		= $this->db->getInt('start_turns');
@@ -106,9 +106,9 @@ class SmrGame {
 			if($this->isNew==false) {
 				$this->db->query('UPDATE game SET game_name = ' . $this->db->escapeString($this->getName()) .
 										', game_description = ' . $this->db->escapeString($this->getDescription()) .
-										', start_date = ' . $this->db->escapeNumber($this->getStartDate()) .
-										', start_turns_date = ' . $this->db->escapeNumber($this->getStartTurnsDate()) .
-										', end_date = ' . $this->db->escapeNumber($this->getEndDate()) .
+										', join_time = ' . $this->db->escapeNumber($this->getJoinTime()) .
+										', start_time = ' . $this->db->escapeNumber($this->getStartTime()) .
+										', end_time = ' . $this->db->escapeNumber($this->getEndTime()) .
 										', max_players = ' . $this->db->escapeNumber($this->getMaxPlayers()) .
 										', max_turns = ' . $this->db->escapeNumber($this->getMaxTurns()) .
 										', start_turns = ' . $this->db->escapeNumber($this->getStartTurnHours()) .
@@ -123,14 +123,14 @@ class SmrGame {
 									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 			}
 			else {
-				$this->db->query('INSERT INTO game (game_id,game_name,game_description,start_date,start_turns_date,end_date,max_players,max_turns,start_turns,game_type,credits_needed,game_speed,enabled,ignore_stats,alliance_max_players,alliance_max_vets,starting_credits)
+				$this->db->query('INSERT INTO game (game_id,game_name,game_description,join_time,start_time,end_time,max_players,max_turns,start_turns,game_type,credits_needed,game_speed,enabled,ignore_stats,alliance_max_players,alliance_max_vets,starting_credits)
 									VALUES
 									(' . $this->db->escapeNumber($this->getGameID()) .
 										',' . $this->db->escapeString($this->getName()) .
 										',' . $this->db->escapeString($this->getDescription()) .
-										',' . $this->db->escapeNumber($this->getStartDate()) .
-										',' . $this->db->escapeNumber($this->getStartTurnsDate()) .
-										',' . $this->db->escapeNumber($this->getEndDate()) .
+										',' . $this->db->escapeNumber($this->getJoinTime()) .
+										',' . $this->db->escapeNumber($this->getStartTime()) .
+										',' . $this->db->escapeNumber($this->getEndTime()) .
 										',' . $this->db->escapeNumber($this->getMaxPlayers()) .
 										',' . $this->db->escapeNumber($this->getMaxTurns()) .
 										',' . $this->db->escapeNumber($this->getStartTurnHours()) .
@@ -174,44 +174,58 @@ class SmrGame {
 		$this->hasChanged=true;
 	}
 
-	public function getStartDate() {
-		return $this->startDate;
+	public function hasStarted() {
+		return TIME >= $this->getStartTime();
 	}
 
-	public function setStartDate($startDate) {
-		if($this->startDate==$startDate) {
+	/**
+	 * Returns the epoch time when the game starts,
+	 * i.e. when players can move, turns are gained, etc.
+	 */
+	public function getStartTime() {
+		return $this->startTime;
+	}
+
+	public function setStartTime($startTime) {
+		if ($this->startTime == $startTime) {
 			return;
 		}
-		$this->startDate=$startDate;
-		$this->hasChanged=true;
+		$this->startTime = $startTime;
+		$this->hasChanged = true;
 	}
 
-	public function getStartTurnsDate() {
-		return $this->startTurnsDate;
+	/**
+	 * Returns the epoch time when players can begin to join the game.
+	 */
+	public function getJoinTime() {
+		return $this->joinTime;
 	}
 
-	public function setStartTurnsDate($startTurnsDate) {
-		if($this->startTurnsDate==$startTurnsDate) {
+	public function setJoinTime($joinTime) {
+		if ($this->joinTime == $joinTime) {
 			return;
 		}
-		$this->startTurnsDate=$startTurnsDate;
-		$this->hasChanged=true;
+		$this->joinTime = $joinTime;
+		$this->hasChanged = true;
 	}
 
 	public function hasEnded() {
-		return $this->getEndDate() < TIME;
+		return $this->getEndTime() < TIME;
 	}
 
-	public function getEndDate() {
-		return $this->endDate;
+	/**
+	 * Returns the epoch time when the game ends.
+	 */
+	public function getEndTime() {
+		return $this->endTime;
 	}
 
-	public function setEndDate($endDate) {
-		if($this->endDate==$endDate) {
+	public function setEndTime($endTime) {
+		if ($this->endTime == $endTime) {
 			return;
 		}
-		$this->endDate=$endDate;
-		$this->hasChanged=true;
+		$this->endTime = $endTime;
+		$this->hasChanged = true;
 	}
 
 	public function getMaxPlayers() {

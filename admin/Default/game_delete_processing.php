@@ -101,24 +101,10 @@ if ($action == 'Yes') {
 	$smr_db_sql[] = 'DELETE FROM game_galaxy WHERE game_id = '.$db->escapeNumber($game_id);
 
 	if ($save) {
-
-		$db->query('SELECT * FROM game WHERE game_id = '.$db->escapeNumber($game_id));
-
-		if ($db->nextRecord()) {
-
-			// get info we want
-			$end = $db->getField('end_date');
-			$start = $db->getField('start_date');
-			$name = $db->getField('game_name');
-			$speed = $db->getField('game_speed');
-			$type = $db->getField('game_type');
-
-			// insert into history db
-			$history_db_sql[] = 'INSERT INTO game (game_id, end_date, start_date, game_name, speed, type) VALUES ' .
-								'('.$db->escapeNumber($game_id).', '.$end.', '.$start.', ' . $db->escapeString($name) . ', '.$speed.', '.$db->escapeString($type).')';
-
-		}
-
+		$game = SmrGame::getGame($game_id);
+		// insert into history db
+		$history_db_sql[] = 'INSERT INTO game (game_id, end_date, start_date, game_name, speed, type) VALUES ' .
+								'('.$db->escapeNumber($game_id).', '.$game->getEndTime().', '.$game->getStartTime().', ' . $db->escapeString($game->getGameName()) . ', '.$game->getGameSpeed().', '.$db->escapeString($game->getGameType()).')';
 	}
 
 	$smr_db_sql[] = 'DELETE FROM location WHERE game_id = '.$db->escapeNumber($game_id);
@@ -286,7 +272,7 @@ if ($action == 'Yes') {
 	$smr_db_sql[] = 'DELETE FROM ship_has_illusion WHERE game_id = '.$game_id;
 	$smr_db_sql[] = 'DELETE FROM ship_has_weapon WHERE game_id = '.$game_id;
 	$smr_db_sql[] = 'DELETE FROM ship_is_cloaked WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'UPDATE game SET end_date='.TIME.' WHERE game_id = '.$game_id.' AND end_date > '.TIME; // Do not delete game placeholder, just make sure game is finished
+	$smr_db_sql[] = 'UPDATE game SET end_time='.TIME.' WHERE game_id = '.$game_id.' AND end_time > '.TIME; // Do not delete game placeholder, just make sure game is finished
 	$smr_db_sql[] = 'UPDATE active_session SET game_id = 0 WHERE game_id = '.$game_id;
 
 	// now do the sql stuff

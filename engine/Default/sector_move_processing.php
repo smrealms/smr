@@ -1,5 +1,9 @@
 <?php
 
+if (!$player->getGame()->hasStarted()) {
+	create_error('You cannot move until the game has started!');
+}
+
 if ($var['target_sector'] == $player->getSectorID())
 	forward(create_container('skeleton.php', $var['target_page']));
 

@@ -1,6 +1,8 @@
 <?php
-if(Globals::getGameStartDate($player->getGameID())+TIME_MAP_BUY_WAIT > TIME) {
-	create_error('You cannot buy maps for another '.format_time(Globals::getGameStartDate($player->getGameID())+TIME_MAP_BUY_WAIT-TIME).'!');
+
+$timeUntilMaps = $player->getGame()->getStartTime() + TIME_MAP_BUY_WAIT - TIME;
+if ($timeUntilMaps > 0) {
+	create_error('You cannot buy maps for another '.format_time($timeUntilMaps).'!');
 }
 
 if ($account->getTotalSmrCredits() < CREDITS_PER_GAL_MAP) {

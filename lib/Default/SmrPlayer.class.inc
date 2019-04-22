@@ -474,6 +474,15 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return max(0, $maxTurnsTime);
 	}
 
+	/**
+	 * Grant the player their starting turns.
+	 */
+	public function giveStartingTurns() {
+		$startTurns = $this->getShip()->getRealSpeed() * $this->getGame()->getStartTurnHours();
+		$this->giveTurns($startTurns);
+		$this->setLastTurnUpdate($this->getGame()->getStartTime());
+	}
+
 	// Turns only update when player is active.
 	// Calculate turns gained between given time and the last turn update
 	public function getTurnsGained($time, $forceUpdate=false) {
@@ -492,18 +501,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		// do we have at least one turn to give?
 		if ($extraTurns > 0) {
-			// recalc the time to avoid errors
-			$ship = $this->getShip();
-			$newLastTurnUpdate = $this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $ship->getRealSpeed());
-
-			$startTurnsDate = $this->getGame()->getStartTurnsDate();
-			if($startTurnsDate < $newLastTurnUpdate && $startTurnsDate >= $this->getLastTurnUpdate()) {
-				$startingTurns = min($ship->getRealSpeed() * $this->getGame()->getStartTurnHours(), $this->getMaxTurns() - $this->getTurns());
-				$extraUpdateTime = (ceil($startingTurns) - $startingTurns) * 3600 / $ship->getRealSpeed();
-				$extraTurns += $startingTurns;
-				$newLastTurnUpdate += $extraUpdateTime;
-			}
-
+			// recalc the time to avoid rounding errors
+			$newLastTurnUpdate = $this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $this->getShip()->getRealSpeed());
 			$this->setLastTurnUpdate($newLastTurnUpdate);
 			$this->giveTurns($extraTurns);
 		}

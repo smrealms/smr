@@ -19,17 +19,12 @@
 					<tr>
 						<td class="right">Start Date</td>
 						<td>&nbsp;</td>
-						<td><?php echo date(DATE_FULL_SHORT, $StatsGame->getStartDate()); ?></td>
-					</tr>
-					<tr>
-						<td class="right">Start Turns Date</td>
-						<td>&nbsp;</td>
-						<td><?php echo date(DATE_FULL_SHORT, $StatsGame->getStartTurnsDate()); ?></td>
+						<td><?php echo date(DATE_FULL_SHORT, $StatsGame->getStartTime()); ?></td>
 					</tr>
 					<tr>
 						<td class="right">End Date</td>
 						<td>&nbsp;</td>
-						<td><?php echo date(DATE_FULL_SHORT, $StatsGame->getEndDate()); ?></td>
+						<td><?php echo date(DATE_FULL_SHORT, $StatsGame->getEndTime()); ?></td>
 					</tr>
 					<tr>
 						<td class="right">Max Turns</td>

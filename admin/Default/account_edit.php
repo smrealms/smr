@@ -57,7 +57,7 @@ if ($action == "Search") {
 
 if ($curr_account===false) {
 	$games = array();
-	$db->query('SELECT game_id FROM game ORDER BY end_date DESC');
+	$db->query('SELECT game_id FROM game ORDER BY end_time DESC');
 	while ($db->nextRecord()) {
 		$games[] = SmrGame::getGame($db->getInt('game_id'));
 	}

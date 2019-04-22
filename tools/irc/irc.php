@@ -114,8 +114,8 @@ while ($running) {
 				$db->query('SELECT channel
 							FROM irc_alliance_has_channel
 							JOIN game USING (game_id)
-							WHERE start_date < ' . time() . '
-								AND end_date > ' . time());
+							WHERE join_time < ' . time() . '
+								AND end_time > ' . time());
 				while ($db->nextRecord()) {
 					$alliance_channel = $db->getField('channel');
 					// join channels
