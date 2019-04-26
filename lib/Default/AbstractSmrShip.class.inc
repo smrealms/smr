@@ -428,6 +428,10 @@ abstract class AbstractSmrShip {
 		return $this->gameID;
 	}
 
+	public function getGame() {
+		return SmrGame::getGame($this->gameID);
+	}
+
 	public function getShipTypeID() {
 		return $this->baseShip['ShipTypeID'];
 	}
@@ -468,12 +472,18 @@ abstract class AbstractSmrShip {
 		return $this->getCostToUNOAgainstShip($this->getShipTypeID());
 	}
 
+	/**
+	 * Returns the base ship speed (unmodified by the game speed).
+	 */
 	public function getSpeed() {
 		return $this->baseShip['Speed'];
 	}
 
+	/**
+	 * Returns the ship speed modified by the game speed.
+	 */
 	public function getRealSpeed() {
-		return $this->baseShip['Speed'] * Globals::getGameSpeed($this->getGameID());
+		return $this->getSpeed() * $this->getGame()->getGameSpeed();
 	}
 
 	public function getHardware($hardwareTypeID = false) {

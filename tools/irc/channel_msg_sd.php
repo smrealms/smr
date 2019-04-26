@@ -112,7 +112,7 @@ function channel_msg_sd_list($fp, $rdata, $account, $player)
 
 		echo_r('[SD_LIST] by ' . $nick . ' in ' . $channel);
 
-		$refresh_per_hour = 250 * Globals::getGameSpeed($player->getGameID());
+		$refresh_per_hour = 250 * $player->getGame()->getGameSpeed();
 		$refresh_per_sec = $refresh_per_hour / 3600;
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The following supply/demand list has been recorded:' . EOL);

@@ -187,7 +187,7 @@ class AbstractSmrPort {
 		}
 
 		$goodClass = Globals::getGood($goodID)['Class'];
-		$refreshPerHour = self::BASE_REFRESH_PER_HOUR[$goodClass] * Globals::getGameSpeed($this->getGameID());
+		$refreshPerHour = self::BASE_REFRESH_PER_HOUR[$goodClass] * $this->getGame()->getGameSpeed();
 		$refreshPerSec = $refreshPerHour / 3600;
 		$amountToAdd = floor($secondsSinceLastUpdate * $refreshPerSec);
 
@@ -761,7 +761,11 @@ class AbstractSmrPort {
 	public function getGameID() {
 		return $this->gameID;
 	}
-	
+
+	public function getGame() {
+		return SmrGame::getGame($this->gameID);
+	}
+
 	public function getSectorID() {
 		return $this->sectorID;
 	}

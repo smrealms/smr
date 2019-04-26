@@ -934,8 +934,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getMaxTurns() {
-		return Globals::getGameMaxTurns($this->getGameID());
-//		round(DEFAULT_MAX_TURNS * Globals::getGameSpeed($this->getGameID()));
+		return $this->getGame()->getMaxTurns();
 	}
 
 	public function setTurns($turns) {

@@ -110,6 +110,10 @@ class SmrAlliance {
 		return $this->gameID;
 	}
 
+	public function getGame() {
+		return SmrGame::getGame($this->gameID);
+	}
+
 	public function hasDisbanded() {
 		return !$this->hasLeader();
 	}
@@ -280,11 +284,11 @@ class SmrAlliance {
 		if($player->getAllianceJoinable() > TIME) {
 			return 'You cannot join another alliance for '.format_time($player->getAllianceJoinable()-TIME).'.';
 		}
-		if($this->getNumMembers()<Globals::getAllianceMaxPlayers($this->getGameID())) {
+		if ($this->getNumMembers() < $this->getGame()->getAllianceMaxPlayers()) {
 			if ($player->hasNewbieStatus()) {
 				return true;
 			}
-			$maxVets = Globals::getAllianceMaxVets($this->getGameID());
+			$maxVets = $this->getGame()->getAllianceMaxVets();
 			if($this->getNumMembers()<$maxVets) {
 				return true;
 			}
