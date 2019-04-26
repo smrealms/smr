@@ -1,6 +1,6 @@
 <table class="center standard">
 	<tr>
-		<th>ID</th>
+		<th>Galaxy ID</th>
 		<th>Name</th>
 		<th>Type</th>
 		<th>Size</th>
@@ -48,13 +48,13 @@
 		<td>
 			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
 				Connection %<br />
-				<input type="number" name="connect" value="<?php echo $RequestedConnectivity; ?>" size="3"><br />
+				<input type="number" name="connect" value="<?php echo $RequestedConnectivity; ?>" size="3" class="center" /><br />
 				<input type="submit" name="submit" value="Redo Connections">
 			</form>
 			<br />
 			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
 				Sector ID<br />
-				<input type="number" size="5" name="sector_edit"><br />
+				<input type="number" size="5" name="sector_edit" class="center" /><br />
 				<input type="submit" value="Modify Sector" name="submit">
 			</form>
 		</td>
