@@ -114,7 +114,6 @@ elseif ($submit == 'Create Planets') {
 			$galSector->removePlanet();
 		}
 	}
-//	$numberOfNpcPlanets = $_POST['NPC'];
 
 	foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $planetTypeID) {
 		$numberOfPlanets = $_POST['type' . $planetTypeID];
