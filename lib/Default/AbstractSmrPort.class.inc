@@ -460,16 +460,54 @@ class AbstractSmrPort {
 	}
 
 	/**
+	 * Manually set port goods.
+	 * Input must be an array of good_id => transaction.
+	 * Only modifies goods that need to change.
+	 * Returns false on invalid input.
+	 */
+	public function setPortGoods(array $goods) {
+		// Validate the input list of goods to make sure we have the correct
+		// number of each good class for this port level.
+		$givenClasses = [];
+		foreach (array_keys($goods) as $goodID) {
+			$givenClasses[] = Globals::getGood($goodID)['Class'];
+		}
+		$expectedClasses = [1, 1]; // Level 1 has 2 extra Class 1 goods
+		foreach (range(1, $this->getLevel()) as $level) {
+			$expectedClasses[] = $this->getGoodClassAtLevel($level);
+		}
+		if ($givenClasses != $expectedClasses) {
+			return false;
+		}
+
+		// Remove goods not specified or that have the wrong transaction
+		foreach ($this->getAllGoodIDs() as $goodID) {
+			if (!isset($goods[$goodID]) || !$this->hasGood($goodID, $goods[$goodID])) {
+				$this->removePortGood($goodID);
+			}
+		}
+		// Add goods
+		foreach ($goods as $goodID => $trans) {
+			$this->addPortGood($goodID, $trans);
+		}
+		return true;
+	}
+
+	/**
 	 * Add good with given ID to the port, with transaction $type
 	 * as either "Buy" or "Sell", meaning the player buys or sells.
+	 * If the port already has this transaction, do nothing.
+	 *
 	 * NOTE: make sure to adjust the port level appropriately if
 	 * calling this function directly.
 	 */
 	public function addPortGood($goodID,$type) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
-		if(!is_numeric($goodID))
-			return false;
+		if ($this->hasGood($goodID, $type)) {
+			return;
+		}
+
 		$this->goodIDs['All'][] = $goodID;
 		$this->goodIDs[$type][] = $goodID;
 		// sort ID arrays, since the good ID might not be the largest
@@ -484,12 +522,17 @@ class AbstractSmrPort {
 
 	/**
 	 * Remove good with given ID from the port.
+	 * If the port does not have this good, do nothing.
+	 *
 	 * NOTE: make sure to adjust the port level appropriately if
 	 * calling this function directly.
 	 */
 	public function removePortGood($goodID) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
+		if (!$this->hasGood($goodID)) {
+			return;
+		}
 		if (($key = array_search($goodID, $this->goodIDs['All'])) !== false) {
 			array_splice($this->goodIDs['All'], $key, 1);
 		}
