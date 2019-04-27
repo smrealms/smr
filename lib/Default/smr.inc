@@ -852,6 +852,9 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 }
 
 function format_time($seconds, $short=false) {
+	if ($seconds == 0) {
+		return $short ? '0s' : '0 seconds';
+	}
 	$minutes=0;
 	$hours=0;
 	$days=0;
