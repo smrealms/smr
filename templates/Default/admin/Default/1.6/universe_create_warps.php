@@ -39,6 +39,10 @@ if (isset($Message)) {
 				<span class="bold">Note:</span> When you press "Create Warps" this will rearrange all current warps.
 				To add new warps without rearranging everything use the edit sector feature.
 				Keep in mind this removes both sides of the warp, so 2 galaxies are changed for each warp.
+				<br /><br />
+				<a href="map_warps.php?game=<?php echo $Galaxy->getGameID(); ?>" target="_blank">
+					<img src="images/warp_chart.svg" height="24" width="24" style="vertical-align: middle;" />&thinsp;View warp chart
+				</a>
 			</div>
 		</td>
 	</tr>

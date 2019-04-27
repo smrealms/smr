@@ -2,9 +2,15 @@
 try {
 	require_once('config.inc');
 
-	// Require that we are logged and have joined a game
-	if (SmrSession::$account_id == 0 || !SmrSession::hasGame()) {
+	$gameID = $_GET['game'];
+	if (SmrSession::$account_id == 0 || !Globals::isValidGame($gameID)) {
 		header('Location: /login.php');
+		exit;
+	}
+
+	$account = SmrAccount::getAccount(SmrSession::$account_id);
+	if (!SmrGame::getGame($gameID)->isEnabled() && !$account->hasPermission(PERMISSION_UNI_GEN)) {
+		header('location: /error.php?msg=You do not have permission to view this map!');
 		exit;
 	}
 
@@ -18,7 +24,6 @@ try {
 	$links = [];
 
 	// The d3 graph nodes are the galaxies
-	$gameID = SmrSession::getGameID();
 	foreach (SmrGalaxy::getGameGalaxies($gameID) as $galaxy) {
 		$nodes[] = [
 			'name' => $galaxy->getName(),

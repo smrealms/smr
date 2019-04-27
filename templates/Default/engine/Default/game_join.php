@@ -16,6 +16,7 @@ if ($Game->getDescription()) { ?>
 		<th>Max Players</th>
 		<th>Alliance Max Players</th>
 		<th>Alliance Max Vets</th>
+		<th>View Warp Chart</th>
 	</tr>
 	<tr class="center">
 		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT, $Game->getStartTime()); ?></td>
@@ -25,6 +26,11 @@ if ($Game->getDescription()) { ?>
 		<td><?php echo $Game->getMaxPlayers(); ?></td>
 		<td><?php echo $Game->getAllianceMaxPlayers(); ?></td>
 		<td><?php echo $Game->getAllianceMaxVets(); ?></td>
+		<td>
+			<a href="map_warps.php?game=<?php echo $Game->getGameID(); ?>" target="_blank">
+				<img src="images/warp_chart.svg" height="24" width="24" style="vertical-align: middle;" />
+			</a>
+		</td>
 	</tr>
 </table><br/>
 <table class="standard">

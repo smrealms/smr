@@ -81,6 +81,14 @@
 			<td valign="top" class="left">
 				<table class="nobord">
 					<tr>
+						<td class="right">View warp chart</td>
+						<td></td>
+						<td>
+							<a href="map_warps.php?game=<?php echo $StatsGame->getGameID(); ?>" target="_blank">
+								<img src="images/warp_chart.svg" height="24" width="24" style="vertical-align: middle;" />
+							</a>
+						</td>
+					<tr>
 						<td class="right">Total Players</td>
 						<td>&nbsp;</td>
 						<td><?php echo number_format($TotalPlayers); ?></td>
