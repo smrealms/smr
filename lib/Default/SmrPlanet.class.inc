@@ -997,6 +997,10 @@ class SmrPlanet {
 		return $this->inhabitableTime<= TIME;
 	}
 
+	public function getInhabitableTime() {
+		return $this->inhabitableTime;
+	}
+
 	public function isClaimed() {
 		return $this->ownerID>0;
 	}

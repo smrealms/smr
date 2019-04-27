@@ -406,49 +406,52 @@ class AbstractSmrPort {
 			$this->doDowngrade();
 		}
 	}
-	
+
+	/**
+	 * Returns the good class associated with the given level.
+	 * If no level specified, will use the current port level.
+	 * This is useful for determining what trade goods to add/remove.
+	 */
+	protected function getGoodClassAtLevel($level=false) {
+		if ($level === false) {
+			$level = $this->getLevel();
+		}
+		if ($level <= 2) {
+			return 1;
+		} elseif ($level <= 6) {
+			return 2;
+		} else {
+			return 3;
+		}
+	}
+
 	protected function selectAndAddGood($goodClass) {
 		$GOODS = Globals::getGoods();
 		shuffle($GOODS);
-		do {
-			if(count($GOODS) == 0) return false;
-			$newGood = array_shift($GOODS);
-		} while( $this->hasGood($newGood['ID']) || $newGood['Class'] != $goodClass );
-		
-		$transactionType = mt_rand(1,2) == 1 ? 'Buy' : 'Sell';
-		$this->addPortGood($newGood['ID'],$transactionType);
-		return $newGood;
+		foreach ($GOODS as $good) {
+			if (!$this->hasGood($good['ID']) && $good['Class'] == $goodClass) {
+				$transactionType = rand(1,2) == 1 ? 'Buy' : 'Sell';
+				$this->addPortGood($good['ID'], $transactionType);
+				return $good;
+			}
+		}
+		throw new Exception('Failed to add a good!');
 	}
 	
 	protected function doUpgrade() {
-		switch($this->getLevel()) {
-			case 0:
-				for($i=0;$i<3;++$i) { // Add 3 goods for upgrading to level 1
-					if( $this->selectAndAddGood(1) === false ) break;
-				}
-			break;
-			
-			case 1:
-				$this->selectAndAddGood(1);
-			break;
-			
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-				$this->selectAndAddGood(2);
-			break;
-			
-			case 6:
-			case 7:
-			case 8:
-				$this->selectAndAddGood(3);
-			break;
-			
-			default: // We don't want to add goods.
-			break;
+		if ($this->isCachedVersion()) {
+			throw new Exception('Cannot upgrade a cached port!');
 		}
+
 		$this->increaseLevel(1);
+		$goodClass = $this->getGoodClassAtLevel();
+		$this->selectAndAddGood($goodClass);
+
+		if ($this->getLevel() == 1) {
+			// Add 2 extra goods when upgrading to level 1 (i.e. in Uni Gen)
+			$this->selectAndAddGood($goodClass);
+			$this->selectAndAddGood($goodClass);
+		}
 	}
 	
 	public function getUpgradeRequirement() {
@@ -457,16 +460,54 @@ class AbstractSmrPort {
 	}
 
 	/**
+	 * Manually set port goods.
+	 * Input must be an array of good_id => transaction.
+	 * Only modifies goods that need to change.
+	 * Returns false on invalid input.
+	 */
+	public function setPortGoods(array $goods) {
+		// Validate the input list of goods to make sure we have the correct
+		// number of each good class for this port level.
+		$givenClasses = [];
+		foreach (array_keys($goods) as $goodID) {
+			$givenClasses[] = Globals::getGood($goodID)['Class'];
+		}
+		$expectedClasses = [1, 1]; // Level 1 has 2 extra Class 1 goods
+		foreach (range(1, $this->getLevel()) as $level) {
+			$expectedClasses[] = $this->getGoodClassAtLevel($level);
+		}
+		if ($givenClasses != $expectedClasses) {
+			return false;
+		}
+
+		// Remove goods not specified or that have the wrong transaction
+		foreach ($this->getAllGoodIDs() as $goodID) {
+			if (!isset($goods[$goodID]) || !$this->hasGood($goodID, $goods[$goodID])) {
+				$this->removePortGood($goodID);
+			}
+		}
+		// Add goods
+		foreach ($goods as $goodID => $trans) {
+			$this->addPortGood($goodID, $trans);
+		}
+		return true;
+	}
+
+	/**
 	 * Add good with given ID to the port, with transaction $type
 	 * as either "Buy" or "Sell", meaning the player buys or sells.
+	 * If the port already has this transaction, do nothing.
+	 *
 	 * NOTE: make sure to adjust the port level appropriately if
 	 * calling this function directly.
 	 */
 	public function addPortGood($goodID,$type) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
-		if(!is_numeric($goodID))
-			return false;
+		if ($this->hasGood($goodID, $type)) {
+			return;
+		}
+
 		$this->goodIDs['All'][] = $goodID;
 		$this->goodIDs[$type][] = $goodID;
 		// sort ID arrays, since the good ID might not be the largest
@@ -481,12 +522,17 @@ class AbstractSmrPort {
 
 	/**
 	 * Remove good with given ID from the port.
+	 * If the port does not have this good, do nothing.
+	 *
 	 * NOTE: make sure to adjust the port level appropriately if
 	 * calling this function directly.
 	 */
 	public function removePortGood($goodID) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
+		if (!$this->hasGood($goodID)) {
+			return;
+		}
 		if (($key = array_search($goodID, $this->goodIDs['All'])) !== false) {
 			array_splice($this->goodIDs['All'], $key, 1);
 		}
@@ -532,39 +578,17 @@ class AbstractSmrPort {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot downgrade a cached port!');
 
-		switch($this->level) {
-			case 1:
-				// Replace one class 1 good with another
-				$this->selectAndRemoveGood(1);
-				$newGood = $this->selectAndAddGood(1);
-				// Set new good to 0 supply
-				// (since other goods are set to 0 when port is destroyed)
-				$this->setGoodAmount($newGood['ID'], 0);
-			break;
-			
-			case 2:
-				$this->selectAndRemoveGood(1);
-			break;
-			
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-				$this->selectAndRemoveGood(2);
-			break;
-			
-			case 7:
-			case 8:
-			case 9:
-				$this->selectAndRemoveGood(3);
-			break;
+		$goodClass = $this->getGoodClassAtLevel();
+		$this->selectAndRemoveGood($goodClass);
 
-			default: // We don't want to add goods.
-			break;
-		}
-
-		// Don't make the port level 0
-		if ($this->level > 1) {
+		if ($this->getLevel() == 1) {
+			// For level 1 ports, we don't want to have fewer goods
+			$newGood = $this->selectAndAddGood($goodClass);
+			// Set new good to 0 supply
+			// (since other goods are set to 0 when port is destroyed)
+			$this->setGoodAmount($newGood['ID'], 0);
+		} else {
+			// Don't make the port level 0
 			$this->decreaseLevel(1);
 		}
 		$this->setUpgrade(0);

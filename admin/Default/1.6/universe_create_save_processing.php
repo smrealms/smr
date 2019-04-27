@@ -114,7 +114,6 @@ elseif ($submit == 'Create Planets') {
 			$galSector->removePlanet();
 		}
 	}
-//	$numberOfNpcPlanets = $_POST['NPC'];
 
 	foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $planetTypeID) {
 		$numberOfPlanets = $_POST['type' . $planetTypeID];
@@ -198,32 +197,40 @@ elseif ($submit == 'Edit Sector') {
 			}
 		}
 	}
-	
-//	elseif ($_POST['plan_type'] == 'NPC') {
-//		$GAL_PLANETS[$this_sec]['Inhabitable'] = 1;
-//		$GAL_PLANETS[$this_sec]['Owner'] = 0;
-//		$GAL_PLANETS[$this_sec]['Owner Type'] = 'NPC';
-//	}
 	else {
 		$editSector->removePlanet();
 	}
+
 	//update port
 	if ($_POST['port_level'] > 0) {
-		if(!$editSector->hasPort()) {
+		if (!$editSector->hasPort()) {
 			$port = $editSector->createPort();
-		}
-		else {
+		} else {
 			$port = $editSector->getPort();
 		}
-		if ($port->getLevel()!=$_POST['port_level']) {
+		$port->setRaceID($_POST['port_race']);
+		if ($port->getLevel() != $_POST['port_level']) {
 			$port->upgradeToLevel($_POST['port_level']);
 			$port->setCreditsToDefault();
+		} elseif (isset($_POST['select_goods'])) {
+			// Only set the goods manually if the level hasn't changed
+			$goods = [];
+			foreach (array_keys(Globals::getGoods()) as $goodID) {
+				$trans = $_POST['good'.$goodID];
+				if ($trans != 'None') {
+					$goods[$goodID] = $trans;
+				}
+			}
+			if (!$port->setPortGoods($goods)) {
+				create_error('Invalid goods specified for this port level!');
+			}
 		}
-		$port->setRaceID($_POST['port_race']);
 		$port->update();
-	} else $editSector->removePort();
+	} else {
+		$editSector->removePort();
+	}
+
 	//update locations
-	
 	$locationsToAdd = array();
 	$locationsToKeep = array();
 	for($x=0;$x<UNI_GEN_LOCATION_SLOTS;$x++) {

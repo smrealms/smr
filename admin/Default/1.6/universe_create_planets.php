@@ -24,9 +24,6 @@ foreach ($galaxy->getSectors() as $galSector) {
 $template->assign('Galaxy', $galaxy);
 $template->assign('NumberOfPlanets', $numberOfPlanets);
 
-$numberOfNpcPlanets = (isset($planet_info['NPC']) ? $planet_info['NPC'] : 0);
-$template->assign('NumberOfNpcPlanets', $numberOfNpcPlanets);
-
 // Form to make planet changes
 $container = create_container('1.6/universe_create_save_processing.php',
                               '1.6/universe_create_sectors.php', $var);
