@@ -183,7 +183,7 @@ class SmrPlanet {
 	}
 
 	public function getBondTime() {
-		return round(BOND_TIME / Globals::getGameSpeed($this->getGameID()));
+		return round(BOND_TIME / $this->getGame()->getGameSpeed());
 	}
 
 	public function bond() {
@@ -201,6 +201,10 @@ class SmrPlanet {
 
 	public function getGameID() {
 		return $this->gameID;
+	}
+
+	public function getGame() {
+		return SmrGame::getGame($this->gameID);
 	}
 
 	public function getSectorID() {
@@ -929,7 +933,7 @@ class SmrPlanet {
 	// Amount of time (in seconds) to build the next building of this type
 	function getConstructionTime($constructionID) {
 		$baseTime = $this->getStructureTypes($constructionID)->baseTime();
-		$constructionTime = ceil($baseTime * $this->getCompletionModifier($constructionID) / Globals::getGameSpeed($this->getGameID()));
+		$constructionTime = ceil($baseTime * $this->getCompletionModifier($constructionID) / $this->getGame()->getGameSpeed());
 		return $constructionTime;
 	}
 	

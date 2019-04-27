@@ -31,10 +31,9 @@ if (empty($player_name))
 $race_id = $_REQUEST['race_id'];
 if (empty($race_id) || $race_id == 1)
 	create_error('Please choose a race!');
-if(!is_numeric($var['game_id']))
-	create_error('Game ID is not numeric');
 
 $gameID = $var['game_id'];
+$game = SmrGame::getGame($gameID);
 
 // Escape html elements so the name displays correctly
 $player_name = htmlentities($player_name);
@@ -43,17 +42,12 @@ $db->query('SELECT 1 FROM player WHERE game_id = ' . $db->escapeNumber($gameID) 
 if ($db->nextRecord() > 0)
 	create_error('The player name already exists.');
 
-if (!Globals::isValidGame($gameID))
-	create_error('Game not found!');
-
-// does it cost something to join that game?
-$credits = Globals::getGameCreditsRequired($gameID);
-if ($credits > 0) {
-	if($account->getTotalSmrCredits() < $credits) {
-		create_error('You do not have enough credits to join this game!');
-	}
-	$account->decreaseTotalSmrCredits($credits);
+// does it cost SMR Credits to join this game?
+$creditsNeeded = $game->getCreditsNeeded();
+if ($account->getTotalSmrCredits() < $creditsNeeded) {
+	create_error('You do not have enough SMR credits to join this game!');
 }
+$account->decreaseTotalSmrCredits($creditsNeeded);
 
 // put him in a sector with a hq
 $home_sector_id = SmrPlayer::getHome($gameID, $race_id);
@@ -120,13 +114,14 @@ else {
 }
 
 // insert into player table.
-$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_cpl_action, last_active, newbie_turns, npc, newbie_status)
-			VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escapeString($player_name) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ',' . $db->escapeBoolean($isNewbie) . ')');
+$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, alliance_id, sector_id, last_cpl_action, last_active, newbie_turns, npc, newbie_status)
+			VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escapeString($player_name) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ',' . $db->escapeBoolean($isNewbie) . ')');
 
 $db->unlock();
 
 $player = SmrPlayer::getPlayer($account->getAccountID(), $gameID);
 $player->giveStartingTurns();
+$player->setCredits($game->getStartingCredits());
 
 // Equip the ship
 $ship = $player->getShip();

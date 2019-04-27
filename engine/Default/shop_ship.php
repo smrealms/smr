@@ -18,7 +18,7 @@ $template->assign('ShipsSoldHREF',$shipsSoldHREF);
 
 if (isset($var['ship_id'])) {
 	$compareShip = $shipsSold[$var['ship_id']];
-	$compareShip['RealSpeed'] = $compareShip['Speed'] * Globals::getGameSpeed($player->getGameID());
+	$compareShip['RealSpeed'] = $compareShip['Speed'] * $player->getGame()->getGameSpeed();
 	$compareShip['Turns'] = round($player->getTurns()*$compareShip['Speed']/$ship->getSpeed());
 
 	$container = create_container('shop_ship_processing.php');
