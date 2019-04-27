@@ -4,7 +4,7 @@ try {
 	require_once('config.inc');
 	require_once(LIB . 'Default/smr.inc');
 
-	if (SmrSession::$account_id > 0) {
+	if (SmrSession::hasAccount()) {
 		$msg = 'You\'re already logged in! Creating multis is against the rules!';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
@@ -165,7 +165,7 @@ try {
 	}
 
 	// register session
-	SmrSession::$account_id = $account->getAccountID();
+	SmrSession::setAccount($account);
 
 	// save ip
 	$account->updateIP();
@@ -185,7 +185,7 @@ try {
 
 		// remember when we sent validation code
 		$db->query('INSERT INTO notification (notification_type, account_id, time) ' .
-		           'VALUES(\'validation_code\', '.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber(TIME) . ')');
+		           'VALUES(\'validation_code\', '.$db->escapeNumber($account->getAccountID()).', ' . $db->escapeNumber(TIME) . ')');
 	}
 
 	$container = create_container('login_processing.php');

@@ -13,7 +13,7 @@ try {
 	// *
 	// ********************************
 
-	if (SmrSession::$account_id == 0) {
+	if (!SmrSession::hasAccount()) {
 		if(isset($_REQUEST['loginType'])) {
 			$socialLogin = new SocialLogin($_REQUEST['loginType']);
 			if(!$socialLogin->isValid()) {
@@ -24,7 +24,7 @@ try {
 			$account = SmrAccount::getAccountBySocialLogin($socialLogin);
 			if (!is_null($account)) {
 				// register session and continue to login
-				SmrSession::$account_id = $account->getAccountID();
+				SmrSession::setAccount($account);
 			} else {
 				// Let them create an account or link to existing
 				if (session_status() === PHP_SESSION_NONE) {
@@ -57,7 +57,7 @@ try {
 
 			$account = SmrAccount::getAccountByName($login);
 			if (is_object($account) && $account->checkPassword($password)) {
-				SmrSession::$account_id = $account->getAccountID();
+				SmrSession::setAccount($account);
 			}
 			else {
 				$msg = 'Password is incorrect!';
@@ -78,7 +78,7 @@ try {
 	// ********************************
 
 	// get this user from db
-	$account = SmrAccount::getAccount(SmrSession::$account_id);
+	$account = SmrSession::getAccount();
 
 	// If linking a social login to an existing account
 	if(isset($_REQUEST['social'])) {

@@ -136,7 +136,7 @@ class SmrSession {
 	private static $generate;
 	private static $SN;
 	private static $lastSN;
-	public static $account_id;
+	private static $account_id;
 	public static $last_accessed;
 
 	protected static $previousAjaxReturns;
@@ -260,6 +260,25 @@ class SmrSession {
 	 */
 	public static function hasGame() {
 		return self::$game_id != 0;
+	}
+
+	public static function hasAccount() {
+		return self::$account_id > 0;
+	}
+
+	public static function getAccountID() {
+		return self::$account_id;
+	}
+
+	public static function getAccount() {
+		return SmrAccount::getAccount(self::$account_id);
+	}
+
+	/**
+	 * Sets the `account_id` attribute of this session.
+	 */
+	public static function setAccount(AbstractSmrAccount $account) {
+		self::$account_id = $account->getAccountID();
 	}
 
 	/**

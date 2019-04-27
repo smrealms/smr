@@ -10,8 +10,9 @@ try {
 	require_once(LIB . 'Default/smr.inc');
 	require_once(LIB . 'Album/album_functions.php');
 
-	if (SmrSession::$account_id == 0)
+	if (!SmrSession::hasAccount()) {
 		create_error_offline('You need to logged in to post comments!');
+	}
 
 	if (!isset($_GET['album_id']) || empty($_GET['album_id']))
 		create_error_offline('Which picture do you want comment?');
@@ -24,7 +25,7 @@ try {
 	if ($album_id < 1)
 		create_error_offline('Picture ID has to be positive!');
 
-	$account = SmrAccount::getAccount(SmrSession::$account_id);
+	$account = SmrSession::getAccount();
 
 	if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {
 		if(!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM))

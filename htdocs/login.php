@@ -12,9 +12,9 @@ try {
 	// ********************************
 	
 	
-	if (SmrSession::$account_id > 0) {
+	if (SmrSession::hasAccount()) {
 		// creates a new user account object
-		$account = SmrAccount::getAccount(SmrSession::$account_id);
+		$account = SmrSession::getAccount();
 	
 		// update last login column
 		$account->updateLastLogin();

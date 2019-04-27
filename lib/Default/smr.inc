@@ -414,7 +414,7 @@ function do_voodoo() {
 //	ob_clean();
 
 	// create account object
-	$account = SmrAccount::getAccount(SmrSession::$account_id);
+	$account = SmrSession::getAccount();
 
 	if(!defined('DATE_DATE_SHORT')) define('DATE_DATE_SHORT',$account->getShortDateFormat());
 	if(!defined('DATE_TIME_SHORT')) define('DATE_TIME_SHORT',$account->getShortTimeFormat());
@@ -440,7 +440,7 @@ function do_voodoo() {
 		}
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
-		$db->query('SELECT sector_id FROM player WHERE account_id=' . $db->escapeNumber(SmrSession::$account_id) . ' AND game_id=' . $db->escapeNumber(SmrSession::getGameID()) . ' LIMIT 1');
+		$db->query('SELECT sector_id FROM player WHERE account_id=' . $db->escapeNumber($account->getAccountID()) . ' AND game_id=' . $db->escapeNumber(SmrSession::getGameID()) . ' LIMIT 1');
 		$db->nextRecord();
 		$sector_id = $db->getInt('sector_id');
 
@@ -456,7 +456,7 @@ function do_voodoo() {
 				SmrSession::fetchVarInfo();
 				if (!($var = SmrSession::retrieveVar())) {
 					if (ENABLE_DEBUG) {
-						$db->query('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber(SmrSession::$account_id) . ',0,0)');
+						$db->query('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber($account->getAccountID()) . ',0,0)');
 					}
 					create_error('Please do not spam click!');
 				}
@@ -464,7 +464,7 @@ function do_voodoo() {
 		}
 
 		// Now that they've acquire a lock we can move on
-		$player = SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::getGameID());
+		$player = SmrPlayer::getPlayer($account->getAccountID(), SmrSession::getGameID());
 
 		if($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death'])) {
 			forward(create_container('death_processing.php'));
@@ -561,7 +561,7 @@ function acquire_lock($sector) {
 		return true;
 
 	// Insert ourselves into the queue.
-	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber(SmrSession::getGameID()) . ',' . $db->escapeNumber(SmrSession::$account_id) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(TIME) . ')');
+	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber(SmrSession::getGameID()) . ',' . $db->escapeNumber(SmrSession::getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(TIME) . ')');
 	$lock = $db->getInsertID();
 
 	for($i=0;$i<250;++$i) {
@@ -575,7 +575,7 @@ function acquire_lock($sector) {
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber(SmrSession::$account_id) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(TIME - LOCK_DURATION));
+			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber(SmrSession::getAccountID()) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(TIME - LOCK_DURATION));
 			if($db->nextRecord() && $db->getInt('COUNT(*)') > 1) {
 				release_lock();
 				$locksFailed[$sector] = true;
@@ -683,11 +683,11 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 		$template->assign('CurrentHallOfFameLink',SmrSession::getNewHREF($container));
 	}
 
-	if (SmrSession::$account_id > 0) {
+	if (SmrSession::hasAccount()) {
 		$container = create_container('skeleton.php', 'hall_of_fame_new.php');
 		$template->assign('HallOfFameLink',SmrSession::getNewHREF($container));
 
-		$template->assign('AccountID',SmrSession::$account_id);
+		$template->assign('AccountID', SmrSession::getAccountID());
 		$template->assign('PlayGameLink',SmrSession::getNewHREF(create_container('game_play_preprocessing.php')));
 
 		$template->assign('LogoutLink',SmrSession::getNewHREF(create_container('logoff.php')));
