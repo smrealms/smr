@@ -22,7 +22,7 @@
 					<td>Map of the known <span class="big bold"><?php echo $ThisGalaxy->getName(); ?></span> galaxy.</td>
 					<td>
 						&thinsp;
-						<a href="map_warps.php">
+						<a href="map_warps.php?game=<?php echo $ThisPlayer->getGameID(); ?>">
 							<img src="images/warp_chart.svg" height="24" width="24" style="vertical-align: middle;" />&thinsp;Open warp chart
 						</a>
 					</td>
