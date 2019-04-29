@@ -147,7 +147,7 @@ class SmrSession {
 		self::$db = new SmrMySqlDatabase();
 
 		// now try the cookie
-		if (isset($_COOKIE['session_id'])) {
+		if (isset($_COOKIE['session_id']) && strlen($_COOKIE['session_id']) === 32) {
 			self::$session_id = $_COOKIE['session_id'];
 		}
 		else {
