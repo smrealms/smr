@@ -70,7 +70,7 @@
 						if ($Disabled['Time'] > 0) { ?>
 							reopen on <?php echo date(DEFAULT_DATE_FULL_LONG, $Disabled['Time']); ?>.<?php
 						} else { ?>
-							never reopen.</p><?php
+							never reopen.<?php
 						}
 					} else { ?>
 						<span class="green">OPEN</span><?php
