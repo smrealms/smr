@@ -12,8 +12,9 @@ $db->query('SELECT account_id, login
 			FROM account_has_permission JOIN account USING(account_id)
 			GROUP BY account_id');
 while ($db->nextRecord()) {
-	$container['admin_id'] = $db->getField('account_id');
-	$adminLinks[] = [
+	$accountID = $db->getInt('account_id');
+	$container['admin_id'] = $accountID;
+	$adminLinks[$accountID] = [
 		'href' => SmrSession::getNewHREF($container),
 		'name' => $db->getField('login'),
 	];
@@ -28,7 +29,10 @@ if (empty($admin_id)) {
 				WHERE validated = '.$db->escapeBoolean(true).'
 				ORDER BY login');
 	while ($db->nextRecord()) {
-		$validatedAccounts[$db->getField('account_id')] = $db->getField('login');
+		$accountID = $db->getInt('account_id');
+		if (!array_key_exists($accountID, $adminLinks)) {
+			$validatedAccounts[$accountID] = $db->getField('login');
+		}
 	}
 	$template->assign('ValidatedAccounts', $validatedAccounts);
 } else {
