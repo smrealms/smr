@@ -97,8 +97,9 @@ services:
         # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
         # which is incompatible with the way the SMR database is used.
         # Therefore, we override CMD to omit this sql mode.
-        command: ["mysqld", "--sql-mode=NO_ENGINE_SUBSTITUTION"]
-
+        command: ["mysqld", "--sql-mode=NO_ENGINE_SUBSTITUTION",
+                  "--character-set-server=utf8",
+                  "--collation-server=utf8_general_ci"]
 
     pma:
         image: phpmyadmin/phpmyadmin
