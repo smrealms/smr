@@ -18,6 +18,13 @@ abstract class MySqlDatabase {
 				$this->error('Connection failed: ' . self::$dbConn->connect_error);
 			}
 			self::$selectedDbName = $dbName;
+
+			// Default server charset should be set correctly. Using the default
+			// avoids the additional query involved in `set_charset`.
+			$charset = self::$dbConn->character_set_name();
+			if ($charset != 'utf8') {
+				$this->error('Unexpected charset: ' . $charset);
+			}
 		}
 
 		// Do we need to switch databases (e.g. for compatability db access)?
