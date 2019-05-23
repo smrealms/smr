@@ -143,7 +143,10 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 	} ?>.<br /><br /><?php
 }
 $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
-This fleet <?php if($TotalDamage > 0){ ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php }else{ ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br /><?php
-if($TraderTeamCombatResults['Downgrades'] != 0 ) {
-	?>The port has lost <?php echo $TraderTeamCombatResults['Downgrades']; ?> levels.<?php
+This fleet <?php if($TotalDamage > 0){ ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php }else{ ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br />
+
+<?php
+$Downgrades = $TraderTeamCombatResults['Downgrades'];
+if ($Downgrades != 0 ) {
+	?>The port has lost <?php echo $Downgrades . ' ' . pluralise('level', $Downgrades); ?>.<?php
 } ?>
