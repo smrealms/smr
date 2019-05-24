@@ -851,10 +851,23 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 	$template->assign('CurrentYear',date('Y',TIME));
 }
 
+/**
+ * Convert an integer number of seconds into a human-readable time.
+ * Use short=true to use 1-letter units (e.g. "1h, 3m, and 20s").
+ * If seconds is negative, will append "ago" to the result.
+ */
 function format_time($seconds, $short=false) {
 	if ($seconds == 0) {
 		return $short ? '0s' : '0 seconds';
 	}
+
+	if ($seconds < 0) {
+		$past = true;
+		$seconds = abs($seconds);
+	} else {
+		$past = false;
+	}
+
 	$minutes=0;
 	$hours=0;
 	$days=0;
@@ -894,11 +907,16 @@ function format_time($seconds, $short=false) {
 	}
 
 	if (count($parts) == 1) {
-		return $parts[0];
+		$result = $parts[0];
 	} else {
 		// e.g. 5h, 10m and 30s
-		return join(', ', array_slice($parts, 0, -1)) . ' and ' . end($parts);
+		$result = join(', ', array_slice($parts, 0, -1)) . ' and ' . end($parts);
 	}
+
+	if ($past) {
+		$result .= ' ago';
+	}
+	return $result;
 }
 
 function number_colour_format($number,$justSign = false) {
