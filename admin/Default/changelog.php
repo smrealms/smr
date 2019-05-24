@@ -2,6 +2,10 @@
 
 $template->assign('PageTopic','Change Log');
 
+$template->assign('ChangeTitle', $var['change_title'] ?? '');
+$template->assign('ChangeMessage', $var['change_message'] ?? '');
+$template->assign('AffectedDb', $var['affected_db'] ?? '');
+
 $db2 = new SmrMySqlDatabase();
 $first_entry = true;
 $link_set_live = true;
@@ -51,6 +55,13 @@ while ($db->nextRecord()) {
 		$container = create_container('changelog_add_processing.php');
 		$container['version_id'] = $version_id;
 		$template->assign('AddHREF', SmrSession::getNewHREF($container));
+
+		if (isset($var['change_title'])) {
+			$version['changes'][] = [
+				'title' => '<span class="red">PREVIEW: </span>' . $var['change_title'],
+				'message' => $var['change_message'],
+			];
+		}
 		$template->assign('FirstVersion', $version);
 	} else {
 		$versions[] = $version;
