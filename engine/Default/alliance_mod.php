@@ -26,7 +26,7 @@ if ($db->nextRecord()) {
 	$template->assign('OpResponseHREF', $responseHREF);
 
 	$responseInputs = array();
-	foreach (array('Yes', 'No', 'Maybe') as $option) {
+	foreach (array('Yes', 'Maybe', 'No') as $option) {
 		$style = strtoupper($option) == $response ? 'style="background: green"' : '';
 		$responseInputs[$option] = $style;
 	}
