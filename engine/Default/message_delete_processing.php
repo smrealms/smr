@@ -2,12 +2,12 @@
 
 // If not deleting marked messages, we are deleting entire folders
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Marked Messages') {
-	$message_id = $_REQUEST['message_id'];
-	if (!isset($message_id))
+	if (!isset($_REQUEST['message_id'])) {
 		create_error('You must choose the messages you want to delete.');
+	}
 
 	$message_id_list = array();
-	foreach ($message_id as $id) {
+	foreach ($_REQUEST['message_id'] as $id) {
 		if ($temp = @unserialize(base64_decode($id))) {
 			$db->query('SELECT message_id FROM message
 						WHERE sender_id = ' . $db->escapeNumber($temp[0]) . '
