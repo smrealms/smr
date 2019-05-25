@@ -53,12 +53,14 @@ class AdminPermissions {
 	}
 
 	/**
-	 * Returns a list of all permissions with ID keys and name values.
+	 * Returns a list of all permissions with ID keys and name values,
+	 * grouped by the category ID of the permission.
 	 */
-	static function getPermissionList() {
+	static function getPermissionsByCategory() {
 		$result = [];
 		foreach (self::PERMISSION_TABLE as $permissionID => $info) {
-			$result[$permissionID] = $info[0];
+			$categoryID = $info[2];
+			$result[$categoryID][$permissionID] = $info[0];
 		}
 		return $result;
 	}
