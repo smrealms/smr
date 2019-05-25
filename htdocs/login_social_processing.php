@@ -17,7 +17,7 @@ try {
 		} elseif ($type == 'twitter') {
 			$url = SocialLogin::getTwitterLoginUrl();
 		} else {
-			throw new Exception('Unknown social login type');
+			throw new Exception('Unknown social login type: ' . $type);
 		}
 
 		header('Location: ' . $url);

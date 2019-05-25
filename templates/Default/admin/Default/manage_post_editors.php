@@ -29,18 +29,20 @@ if (empty($ActiveGames)) {
 
 	// This var is passed by the processing file if we enabled a game
 	if (!empty($ProcessingMsg)) {
-		echo "<p>$ProcessingMsg</p>";
-	}
+		echo '<br />' . $ProcessingMsg;
+	} ?>
+	<br /><br />
 
+	<?php
 	if (empty($CurrentEditors)) {
-		echo "<p>No current editors for this game!</p>";
+		echo "No current editors for this game!";
 	} else { ?>
-		<p>Current Editors:
+		Current Editors:
 		<ul><?php
 		foreach($CurrentEditors as $Editor) {
 			echo "<li>$Editor</li>";
 		} ?>
-		</ul></p><?php
+		</ul><?php
 	}
 
 }

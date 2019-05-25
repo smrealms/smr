@@ -40,7 +40,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 			<tr>
 				<th class="shrink">&nbsp;</th>
 				<th class="sort" data-sort="name">Trader Name</th>
-				<th class="sort shrink" data-sort="race">Race</th>
+				<th class="sort" data-sort="race">Race</th>
 				<th class="sort" data-sort="experience">Experience</th><?php
 				if($ShowRoles) { ?>
 					<th class="sort shrink" data-sort="role">Role</th><?php

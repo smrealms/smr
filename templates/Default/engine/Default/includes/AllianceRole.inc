@@ -21,7 +21,7 @@
 					<td><input type="checkbox" name="removeMember"<?php if ($Role['RemoveMember']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
-					<td>Change Password</td>
+					<td>Change Password<br /><small>NOTE: This also grants access to Invite Member</small></td>
 					<td><input type="checkbox" name="changePW"<?php if ($Role['ChangePass']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
@@ -29,7 +29,7 @@
 					<td><input type="checkbox" name="changeMoD"<?php if ($Role['ChangeMod']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
-					<td>Change Roles</td>
+					<td>Change Alliance Roles</td>
 					<td><input type="checkbox" name="changeRoles"<?php if ($Role['ChangeRoles']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
@@ -49,7 +49,7 @@
 					<td><input type="checkbox" name="sendAllMsg"<?php if ($Role['SendAllianceMessage']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
-					<td>Operations Leader</td>
+					<td>Operations Leader<br /><small>NOTE: This also grants access to Flagship Designation</small></td>
 					<td><input type="checkbox" name="opLeader" title="Can schedule operations and designate the flagship" <?php if ($Role['OpLeader']){ ?> checked="checked"<?php } ?> /></td>
 				</tr>
 				<tr>

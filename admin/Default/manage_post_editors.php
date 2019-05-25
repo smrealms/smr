@@ -23,10 +23,8 @@ if ($activeGames) {
 
 	// Get the list of current editors for the selected game
 	$currentEditors = array();
-	$db->query('SELECT account_id FROM galactic_post_writer WHERE game_id=' . $db->escapeNumber($var['selected_game_id']) . ' AND position=' . $db->escapeString('editor'));
-	while ($db->nextRecord()) {
-		$editor = SmrPlayer::getPlayer($db->getInt('account_id'),
-		                               $var['selected_game_id']);
+	foreach (Globals::getGalacticPostEditorIDs($var['selected_game_id']) as $editorID) {
+		$editor = SmrPlayer::getPlayer($editorID, $var['selected_game_id']);
 		$currentEditors[] = $editor->getDisplayName();
 	}
 	$template->assign('CurrentEditors', $currentEditors);

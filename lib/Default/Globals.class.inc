@@ -49,6 +49,16 @@ class Globals {
 		return self::$HIDDEN_PLAYERS;
 	}
 
+	public static function getGalacticPostEditorIDs($gameID) {
+		self::initialiseDatabase();
+		$editorIDs = [];
+		self::$db->query('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . self::$db->escapeNumber($gameID));
+		while (self::$db->nextRecord()) {
+			$editorIDs[] = self::$db->getInt('account_id');
+		}
+		return $editorIDs;
+	}
+
 	public static function &getLevelRequirements() {
 		if(self::$LEVEL_REQUIREMENTS==null) {
 			self::initialiseDatabase();
