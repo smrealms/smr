@@ -36,6 +36,17 @@ abstract class MySqlDatabase {
 		}
 	}
 
+	/**
+	 * Returns the size of the selected database in bytes.
+	 */
+	public function getDbBytes() {
+		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=' . $this->escapeString(self::$selectedDbName);
+		if (!$result = self::$dbConn->query($query)) {
+			$this->error('Could not determine size of database!');
+		}
+		return (int)$result->fetch_assoc()['db_bytes'];
+	}
+
 	// This should not be needed except perhaps by persistent connections
 	public function close() {
 		if (self::$dbConn) {
