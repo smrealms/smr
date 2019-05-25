@@ -50,7 +50,7 @@ try {
 	//echo '<pre>';echo_r($session);echo'</pre>';
 	//exit;
 	// do we have a session?
-	if (SmrSession::$account_id == 0) {
+	if (!SmrSession::hasAccount()) {
 		header('Location: /login.php');
 		exit;
 	}
@@ -94,7 +94,7 @@ try {
 
 	require_once(get_file_loc('smr.inc'));
 
-	$account = SmrAccount::getAccount(SmrSession::$account_id);
+	$account = SmrSession::getAccount();
 	// get reason for disabled user
 	if(($disabled = $account->isDisabled())!==false) {
 		// save session (incase we forward)

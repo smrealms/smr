@@ -18,11 +18,9 @@ try {
 	
 	
 	// do we have a session?
-	if (SmrSession::$account_id == 0 || !SmrSession::hasGame()) {
-	
+	if (!SmrSession::hasAccount() || !SmrSession::hasGame()) {
 		header('Location: /login.php');
 		exit;
-	
 	}
 	
 	if(isset($_REQUEST['sector_id'])) {
@@ -53,10 +51,8 @@ try {
 		}
 	}
 	
-	$player = SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::getGameID());
-	
-	// create account object
-	$account = $player->getAccount();
+	$account = SmrSession::getAccount();
+	$player = SmrPlayer::getPlayer($account->getAccountID(), SmrSession::getGameID());
 	
 	// Create a session to store temporary display options
 	// Garbage collect here often, since the page is slow anyways (see map_local.php)

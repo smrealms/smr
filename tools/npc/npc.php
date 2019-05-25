@@ -127,9 +127,9 @@ function NPCStuff() {
 
 			SmrSession::updateGame(NPC_GAME_ID);
 
-			debug('Getting player for account id: '.SmrSession::$account_id);
+			debug('Getting player for account id: '.SmrSession::getAccountID());
 			//We have to reload player on each loop
-			$player = SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::getGameID(), true);
+			$player = SmrPlayer::getPlayer(SmrSession::getAccountID(), SmrSession::getGameID(), true);
 			$player->updateTurns();
 
 			if($actions==0) {
@@ -457,7 +457,7 @@ function changeNPCLogin() {
 	}
 
 	$GLOBALS['account'] =& $account;
-	SmrSession::$account_id = $account->getAccountID();
+	SmrSession::setAccount($account);
 	$underAttack = false;
 
 	//Auto-create player if need be.
