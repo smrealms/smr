@@ -25,17 +25,20 @@ if (!isset($EditAccount)) { ?>
 	</form><?php
 } else { ?>
 	Change permissions for the Account of <u><?php echo $EditAccount->getLogin(); ?></u>!
-	<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-		<p style="padding-left:20px;"><?php
-			foreach ($Permissions as $permissionID => $permissionName) {
-				$checked = $EditAccount->hasPermission($permissionID) ? 'checked' : ''; ?>
-				<input type="checkbox" name="permission_ids[]" value="<?php echo $permissionID; ?>" <?php echo $checked; ?> /><?php echo $permissionName; ?>
-				<br /><?php
-			} ?>
-			<br />
-			<input type="submit" name="action" value="Change" />
-			&nbsp;&nbsp;&nbsp;
-			<input type="submit" name="action" value="Select Another User" />
-		</p>
+	<form method="POST" action="<?php echo $ProcessingHREF; ?>"><?php
+		foreach ($PermissionCategories as $categoryID => $permissions) { ?>
+			<br /><h2><?php echo AdminPermissions::getCategoryName($categoryID); ?></h2>
+			<div style="padding-left:20px;"><?php
+				foreach ($permissions as $permissionID => $permissionName) {
+					$checked = $EditAccount->hasPermission($permissionID) ? 'checked' : ''; ?>
+					<input type="checkbox" name="permission_ids[]" value="<?php echo $permissionID; ?>" <?php echo $checked; ?> />
+					<?php echo $permissionName; ?><br /><?php
+				} ?>
+			</div><?php
+		} ?>
+		<br />
+		<input type="submit" name="action" value="Change" />
+		&nbsp;&nbsp;&nbsp;
+		<input type="submit" name="action" value="Select Another User" />
 	</form><?php
 } ?>

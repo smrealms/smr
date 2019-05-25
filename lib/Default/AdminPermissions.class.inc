@@ -7,6 +7,7 @@ class AdminPermissions {
 	// Info is [Permission Name, Page to Link, Category].
 	private const PERMISSION_TABLE = [
 		1  => ['Manage Admin Permissions', 'permission_manage.php', 3],
+		2  => ['Database Cleanup', 'db_cleanup.php', 3],
 		3  => ['Server Open/Close', 'game_status.php', 3],
 		4  => ['Delete Game', 'game_delete.php', 5],
 		5  => ['Create Announcement', 'announcement_create.php', 3],
@@ -48,22 +49,24 @@ class AdminPermissions {
 	/**
 	 * Returns the info for the admin permission with the given ID.
 	 */
-	static function getPermissionInfo($permissionID) {
+	public static function getPermissionInfo($permissionID) {
 		return self::PERMISSION_TABLE[$permissionID];
 	}
 
 	/**
-	 * Returns a list of all permissions with ID keys and name values.
+	 * Returns a list of all permissions with ID keys and name values,
+	 * grouped by the category ID of the permission.
 	 */
-	static function getPermissionList() {
+	public static function getPermissionsByCategory() {
 		$result = [];
 		foreach (self::PERMISSION_TABLE as $permissionID => $info) {
-			$result[$permissionID] = $info[0];
+			$categoryID = $info[2];
+			$result[$categoryID][$permissionID] = $info[0];
 		}
 		return $result;
 	}
 
-	static function getCategoryName($categoryID) {
+	public static function getCategoryName($categoryID) {
 		return self::PERMISSION_CATEGORIES[$categoryID];
 	}
 
