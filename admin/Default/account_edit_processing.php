@@ -154,71 +154,41 @@ if (!empty($delete)) {
 				continue;
 			}
 
+			$sql = 'account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id);
 			$db->query('DELETE FROM alliance_thread
 						WHERE sender_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM blackjack
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM bounty
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM galactic_post_applications
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
+			$db->query('DELETE FROM bounty WHERE ' . $sql);
+			$db->query('DELETE FROM galactic_post_applications WHERE ' . $sql);
 			$db->query('DELETE FROM galactic_post_article
 						WHERE writer_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM galactic_post_writer
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM message
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
+			$db->query('DELETE FROM galactic_post_writer WHERE ' . $sql);
+			$db->query('DELETE FROM message WHERE ' . $sql);
 			$db->query('DELETE FROM message_notify
 						WHERE (from_id=' . $db->escapeNumber($account_id) . ' OR to_id=' . $db->escapeNumber($account_id) .') AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM message
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('UPDATE planet SET owner_id=0,planet_name=\'\',password=\'\',shields=0,drones=0,credits=0,bonds=0
 						WHERE owner_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_attacks_planet
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_attacks_port
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_cache
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_has_alliance_role
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_has_drinks
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_has_relation
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_has_ticker
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_has_ticket
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_has_unread_messages
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_plotted_course
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_read_thread
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_visited_port
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_visited_sector
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_votes_pact
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player_votes_relation
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM ship_has_cargo
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM ship_has_hardware
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM ship_has_illusion
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM ship_has_weapon
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM ship_is_cloaked
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM player
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
+			$db->query('DELETE FROM player_attacks_planet WHERE ' . $sql);
+			$db->query('DELETE FROM player_attacks_port WHERE ' . $sql);
+			$db->query('DELETE FROM player_has_alliance_role WHERE ' . $sql);
+			$db->query('DELETE FROM player_has_drinks WHERE ' . $sql);
+			$db->query('DELETE FROM player_has_relation WHERE ' . $sql);
+			$db->query('DELETE FROM player_has_ticker WHERE ' . $sql);
+			$db->query('DELETE FROM player_has_ticket WHERE ' . $sql);
+			$db->query('DELETE FROM player_has_unread_messages WHERE ' . $sql);
+			$db->query('DELETE FROM player_plotted_course WHERE ' . $sql);
+			$db->query('DELETE FROM player_read_thread WHERE ' . $sql);
+			$db->query('DELETE FROM player_visited_port WHERE ' . $sql);
+			$db->query('DELETE FROM player_visited_sector WHERE ' . $sql);
+			$db->query('DELETE FROM player_votes_pact WHERE ' . $sql);
+			$db->query('DELETE FROM player_votes_relation WHERE ' . $sql);
+			$db->query('DELETE FROM ship_has_cargo WHERE ' . $sql);
+			$db->query('DELETE FROM ship_has_hardware WHERE ' . $sql);
+			$db->query('DELETE FROM ship_has_illusion WHERE ' . $sql);
+			$db->query('DELETE FROM ship_has_weapon WHERE ' . $sql);
+			$db->query('DELETE FROM ship_is_cloaked WHERE ' . $sql);
+			$db->query('DELETE FROM player WHERE ' . $sql);
 
-			$db->query('UPDATE active_session SET game_id=0
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id) .' LIMIT 1');
+			$db->query('UPDATE active_session SET game_id=0 WHERE ' . $sql . ' LIMIT 1');
 
 			$actions[] = 'deleted player from game '.$game_id;
 		}
