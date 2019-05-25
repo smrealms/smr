@@ -40,9 +40,8 @@ try {
 	<tr>
 	<td valign="top">
 	<?php
-	if (!empty($_SERVER['QUERY_STRING'])) {
-		// query string should be a nick or some letters of a nick
-		$query = urldecode($_SERVER['QUERY_STRING']);
+	if (!empty($_GET['nick'])) {
+		$query = urldecode($_GET['nick']);
 	
 		$db->query('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
@@ -115,7 +114,7 @@ catch(Throwable $e) {
 <table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
 <tr>
 <td valign="top" class="center">
-<form action="search_processing.php">
+<form>
 Quick Search:<br />
 <input type="text" name="nick" size="10" class="InputFields"><br />
 <input type="submit" value="Search" class="InputFields">
