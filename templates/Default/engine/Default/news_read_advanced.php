@@ -54,15 +54,18 @@
 			</tr>
 		</table>
 	</form>
-	<br /><br /><br /><?php
+	<br /><br /><?php
 	if (isset($ResultsFor)) { ?>
 		Returning results for <?php echo $ResultsFor; ?>.<br /><?php
-	}
-
-	if (!empty($NewsItems)) { ?>
-		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br /><?php
-		$this->includeTemplate('includes/NewsTable.inc');
-	} else {
-		?>No news to read.<?php
 	} ?>
 </div>
+
+<?php
+if (!empty($NewsItems)) { ?>
+	<div class="center">
+		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
+	</div><?php
+	$this->includeTemplate('includes/NewsTable.inc');
+} else {
+	?>No news to read.<?php
+} ?>

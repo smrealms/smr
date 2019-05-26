@@ -11,7 +11,7 @@ function getNewsItems(SmrMySqlDatabase $db) {
 			$message = '<span class="admin">ADMIN </span>' . $message;
 		}
 		$newsItems[] = [
-			'Date' => date(DATE_FULL_SHORT, $db->getInt('time')),
+			'Date' => date(DATE_FULL_SHORT_SPLIT, $db->getInt('time')),
 			'Message' => $message,
 		];
 	}
