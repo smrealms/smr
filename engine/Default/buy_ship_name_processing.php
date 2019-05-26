@@ -20,7 +20,7 @@ else {
 }
 
 if ($account->getTotalSmrCredits() < $cred_cost) {
-	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+	create_error('You don\'t have enough SMR Credits. Donate to SMR to gain SMR Credits!');
 }
 
 if(!isset($var['ShipName'])) {
@@ -53,7 +53,7 @@ if(!isset($var['ShipName'])) {
 			}
 
 			$filename = $player->getAccountID() . 'logo' . $player->getGameID();
-			$name = '<img style="padding:3px;" src="upload/' . $filename . '"><br />';
+			$name = '<img style="padding:3px;" src="upload/' . $filename . '">';
 			if (!move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $filename)) {
 				create_error('Failed to upload file');
 			}
@@ -149,10 +149,6 @@ if(!isset($var['ShipName'])) {
 		$container['Preview'] = $name;
 		forward($container);
 	}
-}
-
-if (!stristr($name, '</marquee>')) {
-	$name .= '<br />';
 }
 
 $db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name)

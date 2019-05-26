@@ -6,7 +6,7 @@ if ($timeUntilMaps > 0) {
 }
 
 if ($account->getTotalSmrCredits() < CREDITS_PER_GAL_MAP) {
-	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+	create_error('You don\'t have enough SMR Credits. Donate to SMR to gain SMR Credits!');
 }
 
 //gal map buy
