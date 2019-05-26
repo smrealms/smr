@@ -9,25 +9,12 @@
 </form>
 
 <?php
-if(isset($NewsItems) && count($NewsItems) > 0) { ?>
+if (!empty($NewsItems)) { ?>
 	<br />
 	<div class="center">
 		Showing <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
-	</div>
-	<table class="standard">
-		<tr>
-			<th class="center">Time</th>
-			<th class="center">News</th>
-		</tr>
-		<?php
-		foreach($NewsItems as $NewsItem) { ?>
-			<tr>
-				<td class="center"><?php echo date(DATE_FULL_SHORT, $NewsItem['Time']); ?></td>
-				<td><?php echo $NewsItem['Message']; ?></td>
-			</tr><?php
-		} ?>
-		</table><?php
-}
-else {
+	</div><?php
+	$this->includeTemplate('includes/NewsTable.inc');
+} else {
 	?>No news to read.<?php
 } ?>
