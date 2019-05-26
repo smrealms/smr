@@ -37,9 +37,6 @@ function getPlayerOptionClass($player, $other) {
 								<?php echo $Player->getLinkedDisplayName(); ?>
 							</td>
 							<td><?php
-								if($Player->hasCustomShipName()&&($ThisAccount->isDisplayShipImages()||stripos($Player->getCustomShipName(),'<img')===false)) {
-									echo $Player->getCustomShipName();
-								}
 								if($ThisPlayer->traderMAPAlliance($Player) || !$Ship->hasActiveIllusion()) {
 									if ($Player->isFlagship() && $ThisPlayer->sameAlliance($Player)) { ?>
 										<img title="Alliance Flagship" alt="Alliance Flagship" src="images/flagship.png" width="16" height="12" />&nbsp;<?php
@@ -56,6 +53,9 @@ function getPlayerOptionClass($player, $other) {
 								}
 								if($Ship->isCloaked()) {
 									?> <span class="red">[Cloaked]</span><?php
+								}
+								if ($Player->hasCustomShipName() && ($ThisAccount->isDisplayShipImages() || stripos($Player->getCustomShipName(),'<img')===false)) {
+									?><br /><?php echo $Player->getCustomShipName();
 								} ?>
 							</td>
 							<td class="shrink center noWrap"><?php
