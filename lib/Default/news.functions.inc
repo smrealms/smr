@@ -6,9 +6,13 @@
 function getNewsItems(SmrMySqlDatabase $db) {
 	$newsItems = [];
 	while ($db->nextRecord()) {
+		$message = bbifyMessage($db->getField('news_message'));
+		if ($db->getField('type') == 'admin') {
+			$message = '<span class="admin">ADMIN </span>' . $message;
+		}
 		$newsItems[] = [
 			'Date' => date(DATE_FULL_SHORT, $db->getInt('time')),
-			'Message' => bbifyMessage($db->getField('news_message')),
+			'Message' => $message,
 		];
 	}
 	return $newsItems;
