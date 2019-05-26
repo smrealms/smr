@@ -94,13 +94,8 @@ else {
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY news_id DESC LIMIT 50');
 }
 
-if ($db->getNumRows()) {
-	$NewsItems = array();
-	while ($db->nextRecord()) {
-		$NewsItems[] = array('Time' => $db->getField('time'), 'Message' => bbifyMessage($db->getField('news_message')));
-	}
-	$template->assign('NewsItems',$NewsItems);
-}
+require_once(get_file_loc('news.functions.inc'));
+$template->assign('NewsItems', getNewsItems($db));
 
 $template->assign('PageTopic', 'Advanced News');
 Menu::news($template);

@@ -54,28 +54,18 @@
 			</tr>
 		</table>
 	</form>
-	<br /><br /><br /><?php
+	<br /><br /><?php
 	if (isset($ResultsFor)) { ?>
 		Returning results for <?php echo $ResultsFor; ?>.<br /><?php
-	}
-
-	if(isset($NewsItems) && count($NewsItems) > 0) { ?>
-		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
-		<table class="standard">
-			<tr>
-				<th>Time</th>
-				<th>News</th>
-			</tr>
-			<?php
-			foreach($NewsItems as $NewsItem) { ?>
-				<tr>
-					<td class="center"><?php echo date(DATE_FULL_SHORT, $NewsItem['Time']); ?></td>
-					<td><?php echo $NewsItem['Message']; ?></td>
-				</tr><?php
-			} ?>
-			</table><?php
-	}
-	else {
-		?>No news to read.<?php
 	} ?>
 </div>
+
+<?php
+if (!empty($NewsItems)) { ?>
+	<div class="center">
+		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
+	</div><?php
+	$this->includeTemplate('includes/NewsTable.inc');
+} else {
+	?>No news to read.<?php
+} ?>

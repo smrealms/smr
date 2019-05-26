@@ -14,12 +14,6 @@ if(!isset($var['LastNewsUpdate']))
 	SmrSession::updateVar('LastNewsUpdate',$player->getLastNewsUpdate());
 
 $db->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($gameID).' AND time > '.$db->escapeNumber($var['LastNewsUpdate']).' AND type != \'lotto\' ORDER BY news_id DESC');
-$player->updateLastNewsUpdate();
+$template->assign('NewsItems', getNewsItems($db));
 
-if ($db->getNumRows()) {
-	$NewsItems = array();
-	while ($db->nextRecord()) {
-		$NewsItems[] = array('Time' => $db->getField('time'), 'Message' => bbifyMessage($db->getField('news_message')));
-	}
-	$template->assign('NewsItems',$NewsItems);
-}
+$player->updateLastNewsUpdate();

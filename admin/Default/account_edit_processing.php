@@ -126,9 +126,9 @@ if (!empty($names))
 				$actions[] = 'changed players name to '.$new_name;
 
 				//insert news message
-				$news = '<span class="blue">ADMIN</span> Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
+				$news = 'Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
 
-				$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ','.$db->escapeNumber($game_id).')');
+				$db->query('INSERT INTO news (time, news_message, game_id, type) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($game_id) . ', \'admin\')');
 			} else if ($db->getInt('account_id') != $account_id) {
 				$actions[] = 'have NOT changed players name to '.$new_name.' (already taken)';
 			}
