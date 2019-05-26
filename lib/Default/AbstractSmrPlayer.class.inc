@@ -37,7 +37,6 @@ abstract class AbstractSmrPlayer {
 	protected $bounties;
 	protected $turns;
 	protected $lastCPLAction;
-	protected $completedMissions;
 	protected $missions;
 
 	protected $visitedSectors;
@@ -999,18 +998,6 @@ abstract class AbstractSmrPlayer {
 		$this->setLastCPLAction(TIME);
 	}
 
-
-	function getCompletedMissions() {
-		if(!isset($this->completedMissions)) {
-			//Get Player missions
-			$this->db->query('SELECT mission_id FROM player_completed_mission WHERE ' . $this->SQL);
-			$this->completedMissions = array();
-			while ($this->db->nextRecord())
-				$this->completedMissions[$this->db->getField('mission_id')] = $this->db->getField('mission_id');
-		}
-		return $this->completedMissions;
-	}
-
 	public function getMissions() {
 		if(!isset($this->missions)) {
 			$this->db->query('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
@@ -1073,6 +1060,10 @@ abstract class AbstractSmrPlayer {
 
 	private function setupMissionStep($missionID) {
 		$mission =& $this->missions[$missionID];
+		if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
+			// Nothing to do if this mission is already completed
+			return;
+		}
 		$step = MISSIONS[$missionID]['Steps'][$mission['On Step']];
 		if(isset($step['PickSector'])) {
 			$realX = Plotter::getX($step['PickSector']['Type'], $step['PickSector']['X'], $this->getGameID());
@@ -1087,7 +1078,16 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	function addMission($missionID) {
+	/**
+	 * Declining a mission will permanently hide it from the player
+	 * by adding it in its completed state.
+	 */
+	public function declineMission($missionID) {
+		$finishedStep = count(MISSIONS[$missionID]['Steps']);
+		$this->addMission($missionID, $finishedStep);
+	}
+
+	public function addMission($missionID, $step=0) {
 		$this->getMissions();
 
 		if(isset($this->missions[$missionID]))
@@ -1095,7 +1095,7 @@ abstract class AbstractSmrPlayer {
 		$sector = 0;
 
 		$mission = array(
-			'On Step' => 0,
+			'On Step' => $step,
 			'Progress' => 0,
 			'Unread' => true,
 			'Expires' => (TIME + 86400),

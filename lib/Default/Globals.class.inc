@@ -500,14 +500,6 @@ class Globals {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'buy_ship_name.php'));
 	}
 
-	public static function getAcceptMissionHREF($missionID) {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'mission_accept_processing.php', array('MissionID'=>$missionID)));
-	}
-
-	public static function getClaimMissionRewardHREF($missionID) {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'mission_claim_processing.php', array('MissionID'=>$missionID)));
-	}
-
 	public static function getSectorBBLink($sectorID) {
 		return '[sector=' . $sectorID . ']';
 	}
