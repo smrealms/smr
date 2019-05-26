@@ -41,6 +41,9 @@ function getPlayerOptionClass($player, $other) {
 									echo $Player->getCustomShipName();
 								}
 								if($ThisPlayer->traderMAPAlliance($Player) || !$Ship->hasActiveIllusion()) {
+									if ($Player->isFlagship() && $ThisPlayer->sameAlliance($Player)) { ?>
+										<img title="Alliance Flagship" alt="Alliance Flagship" src="images/flagship.png" width="16" height="12" />&nbsp;<?php
+									}
 									echo $Ship->getName();
 								}
 								if($Ship->hasActiveIllusion()) {
