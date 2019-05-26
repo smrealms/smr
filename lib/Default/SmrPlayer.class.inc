@@ -397,16 +397,17 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->hasChanged=true;
 	}
 
-	function getAttackColour() {
-		return $this->attackColour;
-	}
-
-	function setAttackColour($colour) {
-		if($this->attackColour == $colour)
-			return;
-		$this->attackColour=$colour;
-		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET attack_warning = ' . $this->db->escapeString($this->attackColour) . ' WHERE ' . $this->SQL . ' LIMIT 1');
+	function getPlayerRelationship(&$otherPlayer) {
+		// Returns the CSS class for the relationship between two players
+		if ($otherPlayer->canFight()) {
+			if ($this->traderNAPAlliance($otherPlayer)) {
+				return "friendly";
+			} else {
+				return "enemy";
+			}
+		} else {
+			return "neutral";
+		}
 	}
 
 	function getBank() {

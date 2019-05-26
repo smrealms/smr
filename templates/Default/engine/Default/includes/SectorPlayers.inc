@@ -58,29 +58,13 @@
 									if($PlayersContainer instanceof SmrPlanet) {
 										if($ThisPlanet->getOwnerID() == $ThisPlayer->getAccountID()) {
 											?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="<?php 
-												if(!$ThisPlayer->traderNAPAlliance($Player)){ 
-													if ($Player->canFight()) {
-														?> enemy<?php 
-													} else {
-														?> neutral<?php 
-													}
-												} else {
-													?> friendly<?php 
-												}
+												echo $ThisPlayer->getPlayerRelationship($Player);
 												?>"> Kick </a><?php
 										}
 									}
 									else {
 										?><a href="<?php echo $Player->getExamineTraderHREF() ?>" class="<?php 
-											if(!$ThisPlayer->traderNAPAlliance($Player)){ 
-												if ($Player->canFight()) {
-													?> enemy<?php 
-												} else {
-													?> neutral<?php 
-												}	
-											} else {
-												?> friendly<?php 
-											}
+											echo $ThisPlayer->getPlayerRelationship($Player);
 										?>"> Examine </a><?php
 									} ?>
 								</div>
