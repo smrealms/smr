@@ -49,7 +49,6 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] = $ThisPlayer;
 					echo $fleetPlayer->getLevelName(); ?><br /><?php
 					echo $fleetPlayer->getDisplayName() ?><br />
 					Race: <?php echo $fleetPlayer->getRaceName() ?><br />
-					Level: <?php echo $fleetPlayer->getLevelName() ?><br />
 					Alliance: <?php echo $fleetPlayer->getAllianceName() ?><br /><br /><?php
 					echo $fleetShip->getName() ?><br />
 					Rating : <?php echo $fleetShip->getDisplayAttackRating($ThisPlayer) .'/'. $fleetShip->getDisplayDefenseRating($ThisPlayer) ?><br /><?php
