@@ -20,7 +20,7 @@ else {
 }
 
 if ($account->getTotalSmrCredits() < $cred_cost) {
-	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+	create_error('You don\'t have enough SMR Credits. Donate to SMR to gain SMR Credits!');
 }
 
 if(!isset($var['ShipName'])) {

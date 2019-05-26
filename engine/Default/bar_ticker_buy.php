@@ -2,7 +2,7 @@
 
 if (isset($var['process'])) {
 	if ($account->getTotalSmrCredits() < CREDITS_PER_TICKER) {
-		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+		create_error('You don\'t have enough SMR Credits. Donate to SMR to gain SMR Credits!');
 	}
 	if(isset($_REQUEST['type'])) {
 		SmrSession::updateVar('type',$_REQUEST['type']);
