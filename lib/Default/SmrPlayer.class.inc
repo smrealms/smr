@@ -300,8 +300,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	function setZoom($zoom) {
-		if ($zoom < 0) $zoom = 0;
-		if ($zoom > 12) $zoom = 12;
+		// Set the zoom level between [1, 9]
+		$zoom = max(1, min(9, $zoom));
 		if($this->zoom == $zoom)
 			return;
 		$this->zoom=$zoom;
