@@ -193,22 +193,22 @@ class SmrGalaxy {
 		} else {
 			$topLeft = SmrSector::getSector($this->getGameID(), $centerSectorID);
 			// go left then up
-			for ($i=0; (!$dist || $i<$dist) && $i<floor($this->getWidth()/2); $i++) {
+			for ($i=0; ($dist === false || $i<$dist) && $i<floor($this->getWidth()/2); $i++) {
 				$topLeft = $topLeft->getNeighbourSector('Left');
 			}
-			for ($i=0; (!$dist || $i<$dist) && $i<floor($this->getHeight()/2); $i++) {
+			for ($i=0; ($dist === false || $i<$dist) && $i<floor($this->getHeight()/2); $i++) {
 				$topLeft = $topLeft->getNeighbourSector('Up');
 			}
 		}
 
 		$mapSectors = array();
-		for ($i=0; (!$dist || $i<2*$dist+1) && $i<$this->getHeight(); $i++) {
+		for ($i=0; ($dist === false || $i<2*$dist+1) && $i<$this->getHeight(); $i++) {
 			$mapSectors[$i] = array();
 			// get left most sector for this row
 			$rowLeft = $i == 0 ? $topLeft : $rowLeft->getNeighbourSector('Down');
 
 			// iterate through the columns
-			for ($j=0; (!$dist || $j<2*$dist+1) && $j<$this->getWidth(); $j++) {
+			for ($j=0; ($dist === false || $j<2*$dist+1) && $j<$this->getWidth(); $j++) {
 				$nextSec = $j == 0 ? $rowLeft : $nextSec->getNeighbourSector('Right');
 				$mapSectors[$i][$j] = $nextSec;
 			}
