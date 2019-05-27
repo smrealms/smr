@@ -443,7 +443,7 @@ abstract class AbstractSmrPlayer {
 	public function getLevelName() {
 		$level_name = Globals::getLevelRequirements()[$this->getLevelID()]['Name'];
 		if ($this->isPresident()) {
-			$level_name = '<img src="images/council_president.png" title="' . Globals::getRaceName($this->getRaceID()) . ' President" />&nbsp;' . $level_name;
+			$level_name = '<img src="images/council_president.png" title="' . Globals::getRaceName($this->getRaceID()) . ' President" height="12" width="16" />&nbsp;' . $level_name;
 		}
 		return $level_name;
 	}
