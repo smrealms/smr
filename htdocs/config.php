@@ -54,7 +54,8 @@ const MAX_IMAGE_HEIGHT = 30;
 
 const MULTI_CHECKING_COOKIE_VERSION = 'v3';
 
-const WIKI_URL = 'http://wiki.smrealms.de';
+const WIKI_URL = 'https://wiki.smrealms.de';
+const DISCORD_URL = 'https://discord.me/smrealms';
 
 /*
  * Localisations

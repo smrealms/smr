@@ -33,7 +33,7 @@
 
 				<!-- header menu -->
 				<ul id="main_menu">
-					<li><a href="https://discord.me/smrealms" target="discord">Discord</a></li>
+					<li><a href="<?php echo DISCORD_URL; ?>" target="discord">Discord</a></li>
 					<li><a href="<?php echo WIKI_URL; ?>" target="manu">Game&nbsp;Guide</a></li>
 					<li><a href="https://smrcnn.smrealms.de" target="board">Forums</a></li>
 					<li><a href="<?php echo WIKI_URL; ?>/tutorials#video-tutorials" target="vid">Video&nbsp;Tutorials</a></li>
