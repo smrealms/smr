@@ -12,22 +12,13 @@ function channel_join($fp, $rdata)
 
 		echo_r('[JOIN] ' . $nick . '!' . $user . '@' . $host . ' joined ' . $channel);
 
-//		if ($nick == 'MrSpock' && $user == 'mrspock')
-//			fputs($fp, 'PRIVMSG ' . $channel . ' :The creator! The God! He\'s among us! Praise him!' . EOL);
-		if ($nick == 'Holti' && $user == 'Holti')
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
-		if ($nick == 'kiNky' && $user == 'cicika')
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
-		if ($nick == 'River' && $user == 'Serenity')
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '8@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
-
 		$db = new SmrMySqlDatabase();
 
 		// check if we have seen this user before
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
 
 		if ($db->nextRecord()) {
-			// exiting nick?
+			// existing nick?
 			$seen_id = $db->getField('seen_id');
 
 			$seen_count = $db->getField('seen_count');
@@ -52,6 +43,10 @@ function channel_join($fp, $rdata)
 		} else {
 			// new nick?
 			$db->query('INSERT INTO irc_seen (nick, user, host, channel, signed_on) VALUES(' . $db->escapeString($nick) . ', ' . $db->escapeString($user) . ', ' . $db->escapeString($host) . ', ' . $db->escapeString($channel) . ', ' . time() . ')');
+
+			if ($nick != IRC_BOT_NICK) {
+				fputs($fp, 'PRIVMSG ' . $channel . ' :Welcome, ' . $nick . '! Most players are using Discord (' . DISCORD_URL . ') instead of IRC, but the two platforms are linked by discordbot. Anything you say here will be relayed to the Discord channel and vice versa.' . EOL);
+			}
 		}
 
 		// check if player joined alliance chat
