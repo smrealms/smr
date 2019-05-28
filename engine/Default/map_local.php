@@ -29,29 +29,22 @@ if ($player->hasAlliance()) {
 }
 
 $template->assign('SpaceView',true);
-$template->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
 
-$zoomOn = false;
-if(isset($var['Dir'])) {
-	$zoomOn = true;
-	if ($var['Dir'] == 'Up') {
+if (isset($var['ZoomDir'])) {
+	if ($var['ZoomDir'] == 'Shrink') {
 		$player->decreaseZoom(1);
-	}
-	elseif ($var['Dir'] == 'Down') {
+	} elseif ($var['ZoomDir'] == 'Expand') {
 		$player->increaseZoom(1);
 	}
+	// Unset so that refreshing doesn't zoom again
+	SmrSession::updateVar('ZoomDir', null);
 }
 
-$template->assign('isZoomOn',$zoomOn);
-
 $container = create_container('skeleton.php', 'map_local.php');
-$container['Dir'] = 'Down';
-$container['rid'] = 'zoom_down';
-$container['valid_for'] = -5;
-$template->assign('ZoomDownLink',SmrSession::getNewHREF($container));
-$container['Dir'] = 'Up';
-$container['rid'] = 'zoom_up';
-$template->assign('ZoomUpLink',SmrSession::getNewHREF($container));
+$container['ZoomDir'] = 'Expand';
+$template->assign('MapExpandHREF', SmrSession::getNewHREF($container));
+$container['ZoomDir'] = 'Shrink';
+$template->assign('MapShrinkHREF', SmrSession::getNewHREF($container));
 
 
 $galaxy = $player->getSector()->getGalaxy();
