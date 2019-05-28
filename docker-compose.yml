@@ -68,7 +68,7 @@ services:
 
     flyway:
         image: boxfuse/flyway:latest-alpine
-        command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live -user=smr -password=${MYSQL_PASSWORD} migrate
+        command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live?useSSL=false -user=smr -password=${MYSQL_PASSWORD} migrate
         networks:
             - backend
         labels:
