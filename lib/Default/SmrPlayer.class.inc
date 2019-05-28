@@ -295,11 +295,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return SmrAccount::getAccount($this->getAccountID());
 	}
 
-	function getZoom() {
+	public function getZoom() {
 		return $this->zoom;
 	}
 
-	function setZoom($zoom) {
+	protected function setZoom($zoom) {
 		// Set the zoom level between [1, 9]
 		$zoom = max(1, min(9, $zoom));
 		if($this->zoom == $zoom)
@@ -309,13 +309,13 @@ class SmrPlayer extends AbstractSmrPlayer {
 //		$this->db->query('UPDATE player SET zoom = ' . $zoom . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
-	function increaseZoom($zoom) {
+	public function increaseZoom($zoom) {
 		if ($zoom < 0)
 			throw new Exception('Trying to increase negative zoom.');
 		$this->setZoom($this->getZoom()+$zoom);
 	}
 
-	function decreaseZoom($zoom) {
+	public function decreaseZoom($zoom) {
 		if ($zoom < 0)
 			throw new Exception('Trying to decrease negative zoom.');
 		$this->setZoom($this->getZoom()-$zoom);
