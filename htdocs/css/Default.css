@@ -199,64 +199,6 @@ ul.boxy li {
 	margin-bottom: 4px;
 	padding: 2px 2px;
 }
-#left_col {
-	 width: 500px;
-	 float: left;
-	 margin-left: 5px;
-}
-/* Layout Sprite Map */
-#layout {
-	width: 1024px;
-	height: 768px;
-	background: transparent url('../images/smr_layout.png') no-repeat;
-	margin: 10px auto;
-	padding: 0;
-	position: relative;
-}
-#layout li {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	position: absolute;
-}
-#layout li {
-	display: block;
-}
-#smr_logo, #smr_logo a {
-	left: 0;
-	width: 185px;
-	height: 100px;
-}
-#player_name, #player_name a {
-	left: 190px;
-	top: 30px;
-	width: 120px;
-	height: 50px;
-}
-#player_info, #player_info a {
-	left: 316px;
-	top: 16px;
-	width: 318px;
-	height: 70px;
-}
-#ship_name, #ship_name a {
-	left: 662px;
-	top: 29px;
-	width: 110px;
-	height: 53px;
-}
-#ship_info, #ship_info a {
-	left: 785px;
-	top: 14px;
-	width: 219px;
-	height: 71px;
-}
-#main_window {
-	left: 195px;
-	top: 125px;
-	width: 772px;
-	height: 588px;
-}
 /* Gal Map */
 li.gal {
 	font-size: 95%;
