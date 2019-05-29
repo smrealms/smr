@@ -25,7 +25,8 @@ if (isset($_REQUEST['url'])) {
 	$url = trim($_REQUEST['url']);
 }
 
-if(preg_match('/"/',$url)) {
+// Prevent XSS attacks
+if (isset($url) && preg_match('/"/',$url)) {
 	create_error('You cannot use a " in the image link!');
 }
 
