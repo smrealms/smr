@@ -28,7 +28,7 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 	
 	//now adapt turns
 	$player->setTurns($player->getTurns() * ($speed / $ship->getSpeed()));
-	doUNO($ship);
+	setHardwareToMax($ship);
 }
 elseif ($var['func'] == 'Weapon') {
 	$weapon_id = $_REQUEST['weapon_id'];
@@ -38,7 +38,7 @@ elseif ($var['func'] == 'Weapon') {
 	}
 }
 elseif ($var['func'] == 'Uno') {
-	doUNO($ship);
+	setHardwareToMax($ship);
 }
 elseif ($var['func'] == 'Warp') {
 	$sector_to = trim($_REQUEST['sector_to']);
@@ -116,7 +116,10 @@ elseif ($var['func'] == 'planet_stockpile') {
 $container = create_container('skeleton.php', $var['body']);
 forward($container);
 
-function doUNO($ship) {
+/**
+ * Set all hardware to its maximum value for this ship.
+ */
+function setHardwareToMax($ship) {
 	$maxHardware = $ship->getMaxHardware();
 	foreach($maxHardware as $key => $max) {
 		$ship->setHardware($key,$max);
