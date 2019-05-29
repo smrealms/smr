@@ -54,7 +54,7 @@ $template->assign('Duplicates',$duplicates);
 
 $template->assign('CombatSimHREF',SmrSession::getNewHREF(create_container('skeleton.php','combat_simulator.php')));
 
-if(is_array($realAttackers) && is_array($realDefenders) && count($realAttackers)>0 && count($realDefenders)>0) {
+if (!empty($realAttackers) && !empty($realDefenders)) {
 	if(isset($_REQUEST['run'])) {
 		runAnAttack($realAttackers,$realDefenders);
 	}

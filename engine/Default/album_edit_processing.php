@@ -75,7 +75,7 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 // check if we had a album entry so far
 $db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 if ($db->nextRecord()) {
-	if ($noPicture == false) {
+	if (!$noPicture) {
 		$comment = '<span class="green">*** Picture changed</span>';
 	}
 
