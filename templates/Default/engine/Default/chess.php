@@ -1,46 +1,33 @@
+<p style="width: 60%">Challenge other traders to a round of <i>Faster Than Knight</i>,
+a game of chess played over the super-photonic transponder aboard your ship.</p>
+
 <?php
-if(isset($CreateGameMessage)) {
-	echo $CreateGameMessage;
-} ?>
-<table class="standard ajax" id="GameList">
-	<tr>
-		<th>Players</th>
-		<th>Current Turn</th>
-		<th></th>
-	</tr><?php
-	foreach($ChessGames as $ChessGame) { ?>
+if (!empty($ChessGames)) { ?>
+	<table class="standard ajax" id="GameList">
 		<tr>
-			<td><?php
-				$WhitePlayer = $ChessGame->getWhitePlayer();
-				$BlackPlayer = $ChessGame->getBlackPlayer();
-				if($WhitePlayer == null) {
-					?>Unknown<?php
-				}
-				else {
-					echo $WhitePlayer->getLinkedDisplayName(false);
-				} ?> vs <?php 
-				if($BlackPlayer == null) {
-					?>Unknown<?php
-				}
-				else {
-					echo $BlackPlayer->getLinkedDisplayName(false);
-				} ?>
-			</td>
-			<td><?php
-				$CurrentTurnPlayer = $ChessGame->getCurrentTurnPlayer();
-				if($CurrentTurnPlayer == null) {
-					?>Unknown<?php
-				}
-				else {
-					echo $CurrentTurnPlayer->getLinkedDisplayName(false);
-				} ?>
-			</td>
-			<td>
-				<div class="buttonA"><a class="buttonA" href="<?php echo $ChessGame->getPlayGameHREF(); ?>">Play</a></div>
-			</td>
+			<th>Players</th>
+			<th>Current Turn</th>
+			<th></th>
 		</tr><?php
-	} ?>
-</table><?php
+		foreach($ChessGames as $ChessGame) { ?>
+			<tr>
+				<td>
+					<?php echo $ChessGame->getWhitePlayer()->getLinkedDisplayName(false); ?>
+					vs
+					<?php echo $ChessGame->getBlackPlayer()->getLinkedDisplayName(false); ?>
+				</td>
+				<td>
+					<?php echo $ChessGame->getCurrentTurnPlayer()->getLinkedDisplayName(false); ?>
+				</td>
+				<td>
+					<div class="buttonA"><a class="buttonA" href="<?php echo $ChessGame->getPlayGameHREF(); ?>">Play</a></div>
+				</td>
+			</tr><?php
+		} ?>
+	</table>
+	<small>NOTE: Chess matches do not carry over between games.</small>
+	<br /><br /><?php
+}
 
 if(count($PlayerList) > 0) { ?>
 	<form action="<?php echo Globals::getChessCreateHREF(); ?>" method="POST">
@@ -49,7 +36,7 @@ if(count($PlayerList) > 0) { ?>
 			foreach($PlayerList as $PlayerID => $PlayerName) {
 				?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
 			} ?>
-		</select><input type="submit"/>
+		</select>&nbsp;<input type="submit"/>
 	</form><?php
 }
 else { ?>
@@ -64,7 +51,7 @@ if(isset($NPCList)) {
 				foreach($NPCList as $PlayerID => $PlayerName) {
 					?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
 				} ?>
-			</select><input type="submit"/>
+			</select>&nbsp;<input type="submit"/>
 		</form><?php
 	}
 	else { ?>
