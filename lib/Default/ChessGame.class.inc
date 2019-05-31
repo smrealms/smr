@@ -41,9 +41,9 @@ class ChessGame {
 		return $games;
 	}
 
-	public static function &getOngoingAccountGames($accountID) {
+	public static function &getOngoingPlayerGames(AbstractSmrPlayer $player) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT chess_game_id FROM chess_game WHERE (black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ') AND (end_time > ' . TIME . ' OR end_time IS NULL);');
+		$db->query('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . TIME . ' OR end_time IS NULL);');
 		$games = array();
 		while($db->nextRecord()) {
 			$games[] = self::getChessGame($db->getInt('chess_game_id'));
@@ -277,28 +277,6 @@ class ChessGame {
 		return $fen;
 	}
 
-	//TODO: this hasn't been fully translated to PHP yet, if it ever should be?
-//	public function getMessages() {
-//		if($this->messages == null) {
-//			$df = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss');
-//			$this->db->query('SELECT * FROM chess_game_messages WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ' ORDER BY message_id;');
-//			$this->messages = array();
-//			while($this->db->nextRecord()) {
-//				$this->messages[] = $df->format(new Date($this->db->getInt('sent_time'))) . ' ' . $this->db->getField('sender') . ': ' . $this->db->getField('message');
-//			}
-//		}
-//		return $this->messages;
-//	}
-
-//	public function addMessage($accountID, $message) {
-//		$this->getMessages();
-//		$this->db->query('INSERT INTO chess_game_messages' .
-//				'(chess_game_id,sender,sent_time,message)' .
-//				'values' .
-//				'(' . $this->db->escapeNumber($gameID) . ',' . $this->db->escapeNumber($accountID) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeString($message) . ');');
-//		$this->messages[] = $message;
-//	}
-
 	public static function &parsePieces(array &$pieces) {
 		$board = array();
 		$row = array();
@@ -317,7 +295,7 @@ class ChessGame {
 		return $board;
 	}
 
-	public static function getStandardGame($gameID, AbstractSmrPlayer &$whitePlayer, AbstractSmrPlayer &$blackPlayer) {
+	public static function getStandardGame($gameID, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) {
 		$white = $whitePlayer->getAccountID();
 		$black = $blackPlayer->getAccountID();
 		return array
@@ -360,23 +338,23 @@ class ChessGame {
 			);
 	}
 
-	public static function insertNewGame($startDate, $endDate, AbstractSmrPlayer &$whitePlayer, AbstractSmrPlayer &$blackPlayer) {
+	public static function insertNewGame($startDate, $endDate, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) {
 		if($startDate == null) {
 			throw new Exception('Start date cannot be null.');
 		}
 
 		$db = new SmrMySqlDatabase();
 		$db->query('INSERT INTO chess_game' .
-				'(start_time,end_time,white_id,black_id)' .
+				'(start_time,end_time,white_id,black_id,game_id)' .
 				'values' .
-				'(' . $db->escapeNumber($startDate) . ',' . ($endDate == null ? 'NULL' : $db->escapeNumber($endDate)) . ',' . $db->escapeNumber($whitePlayer->getAccountID()) . ',' . $db->escapeNumber($blackPlayer->getAccountID()) . ');');
+				'(' . $db->escapeNumber($startDate) . ',' . ($endDate == null ? 'NULL' : $db->escapeNumber($endDate)) . ',' . $db->escapeNumber($whitePlayer->getAccountID()) . ',' . $db->escapeNumber($blackPlayer->getAccountID()) . ',' . $db->escapeNumber($whitePlayer->getGameID()) . ');');
 		$chessGameID = $db->getInsertID();
 
 		self::insertPieces($chessGameID, $whitePlayer, $blackPlayer);
 		return $chessGameID;
 	}
 
-	private static function insertPieces($chessGameID, AbstractSmrPlayer &$whitePlayer, AbstractSmrPlayer &$blackPlayer) {
+	private static function insertPieces($chessGameID, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) {
 		$db = new SmrMySqlDatabase();
 		$pieces = self::getStandardGame($chessGameID, $whitePlayer, $blackPlayer);
 		foreach($pieces as $p) {
@@ -752,28 +730,16 @@ class ChessGame {
 //		return $this->gameID;
 	}
 
-	public function &getWhitePlayer() {
-		try {
-			return SmrPlayer::getPlayer($this->whiteID, $this->getGameID());
-		}
-		catch(Exception $e) {
-			$null = null;
-			return $null;
-		}
+	public function getWhitePlayer() {
+		return SmrPlayer::getPlayer($this->whiteID, $this->getGameID());
 	}
 
 	public function getWhiteID() {
 		return $this->whiteID;
 	}
 
-	public function &getBlackPlayer() {
-		try {
-			return SmrPlayer::getPlayer($this->blackID, $this->getGameID());
-		}
-		catch(Exception $e) {
-			$null = null;
-			return $null;
-		}
+	public function getBlackPlayer() {
+		return SmrPlayer::getPlayer($this->blackID, $this->getGameID());
 	}
 
 	public function getBlackID() {
@@ -789,14 +755,8 @@ class ChessGame {
 		}
 	}
 
-	public function &getColourPlayer($colour) {
-		try {
-			return SmrPlayer::getPlayer($this->getColourID($colour), $this->getGameID());
-		}
-		catch(Exception $e) {
-			$null = null;
-			return $null;
-		}
+	public function getColourPlayer($colour) {
+		return SmrPlayer::getPlayer($this->getColourID($colour), $this->getGameID());
 	}
 
 	public function getColourForAccountID($accountID) {
@@ -848,25 +808,19 @@ class ChessGame {
 		return count($this->getMoves()) % 2 == 0 ? $this->whiteID : $this->blackID;
 	}
 
-	public function &getCurrentTurnPlayer() {
-		try {
-			return SmrPlayer::getPlayer($this->getCurrentTurnAccountID(), $this->getGameID());
-		}
-		catch(Exception $e) {
-			$null = null;
-			return $null;
-		}
+	public function getCurrentTurnPlayer() {
+		return SmrPlayer::getPlayer($this->getCurrentTurnAccountID(), $this->getGameID());
 	}
 
-	public function &getCurrentTurnAccount() {
+	public function getCurrentTurnAccount() {
 		return SmrAccount::getAccount($this->getCurrentTurnAccountID());
 	}
 
-	public function &getWhiteAccount() {
+	public function getWhiteAccount() {
 		return SmrAccount::getAccount($this->getWhiteID());
 	}
 
-	public function &getBlackAccount() {
+	public function getBlackAccount() {
 		return SmrAccount::getAccount($this->getBlackID());
 	}
 

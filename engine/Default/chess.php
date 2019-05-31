@@ -1,7 +1,8 @@
 <?php
 
-$chessGames = ChessGame::getOngoingAccountGames($player->getAccountID());
+$chessGames = ChessGame::getOngoingPlayerGames($player);
 $template->assign('ChessGames', $chessGames);
+$template->assign('PageTopic', 'Casino');
 
 $playersChallenged = array($player->getAccountID() => true);
 foreach($chessGames as $chessGame) {
