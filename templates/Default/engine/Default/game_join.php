@@ -109,7 +109,7 @@ if (!isset($JoinGameFormHref)) { ?>
 				<table>
 					<tr>
 						<td class="right"><b>Name:</b>&nbsp;</td>
-						<td><input type="text" name="player_name" maxlength="32" class="InputFields" /></td>
+						<td><input required type="text" name="player_name" maxlength="32" class="InputFields" /></td>
 						<td rowspan="4" class="standard"><img id="race_image" name="race_image" src="images/race/race1.gif" alt="Please select a race."></td>
 					</tr>
 					<tr>
