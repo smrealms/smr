@@ -34,7 +34,7 @@
 										<table class="center" border="0">
 											<tr>
 												<th class="right">Email:</th>
-												<td><input type="email" name="email" class="InputFields"></td>
+												<td><input required type="email" name="email" class="InputFields"></td>
 											</tr>
 										</table>
 										<p><input type="submit" value="Resend my password" class="InputFields"></p>

@@ -34,7 +34,7 @@ else {
 		<br />
 
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-			<input type="text" name="name" value="<?php echo htmlspecialchars($Planet->getName()); ?>" class="InputFields" />&nbsp;&nbsp;&nbsp;
+			<input required type="text" name="name" value="<?php echo htmlspecialchars($Planet->getName()); ?>" class="InputFields" />&nbsp;&nbsp;&nbsp;
 			<input type="submit" name="action" value="Rename" class="InputFields" />
 		</form><?php
 	}

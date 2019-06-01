@@ -2,7 +2,7 @@
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 			<td class="top">Name:</td>
-			<td><input type="text" name="name" size="30"></td>
+			<td><input required type="text" name="name" size="30"></td>
 		</tr>
 		<tr>
 			<td class="top">Description:</td>

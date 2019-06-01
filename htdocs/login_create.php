@@ -40,19 +40,19 @@ require_once('config.inc');
 					<table border='0' cellspacing='0' cellpadding='1'>
 					<tr>
 						<td width='27%'>User name:</td>
-						<td width='73%'><input type='text' name='login' size='20' maxlength='32' class="InputFields"></td>
+						<td width='73%'><input required type='text' name='login' size='20' maxlength='32' class="InputFields"></td>
 					</tr>
 					<tr>
 						<td width='27%'>Password:</td>
-						<td width='73%'><input type='password' name='password' size='20' maxlength='32' class="InputFields"></td>
+						<td width='73%'><input required type='password' name='password' size='20' maxlength='32' class="InputFields"></td>
 					</tr>
 					<tr>
 						<td width='27%'>Verify Password:</td>
-						<td width='73%'><input type='password' name='pass_verify' size='20' maxlength='32' class="InputFields"></td>
+						<td width='73%'><input required type='password' name='pass_verify' size='20' maxlength='32' class="InputFields"></td>
 					</tr>
 					<tr>
 						<td width='27%'>E-Mail Address:</td>
-						<td width='73%'><input type='email' name='email' size='50' maxlength='128' class="InputFields"></td>
+						<td width='73%'><input required type='email' name='email' size='50' maxlength='128' class="InputFields"></td>
 					</tr>
 					<tr>
 						<td width='27%'>Local Time:</td>
@@ -75,7 +75,7 @@ require_once('config.inc');
 					</table>
 
 					<div style='font-size:80%;'>
-						<input type='checkbox' name='agreement' value='checkbox'>
+						<input required type='checkbox' name='agreement' value='checkbox'>
 						I have read and accept the
 						<a href='https://wiki.smrealms.de/rules' target="_blank" style='font-weight:bold;'>Terms of Use</a>.
 					</div>
