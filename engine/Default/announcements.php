@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Announcements');
+$template->assign('PageTopic', 'Announcements');
 
 if (!isset($var['view_all'])) {
 	$db->query('SELECT time, msg

@@ -42,8 +42,8 @@ $template->assign('CanVote', $canVote);
 
 if ($canVote) {
 	$featureVotes = array();
-	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.$account->getAccountID());
-	while($db->nextRecord())
+	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = ' . $account->getAccountID());
+	while ($db->nextRecord())
 		$featureVotes[$db->getInt('feature_request_id')] = $db->getField('vote_type');
 }
 $db->query('SELECT * ' .
@@ -51,12 +51,12 @@ $db->query('SELECT * ' .
 			'JOIN feature_request_comments super USING(feature_request_id) ' .
 			'WHERE comment_id = 1 ' .
 			'AND status = ' . $db->escapeString($thisStatus) .
-			($var['category'] == 'New' ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME - NEW_REQUEST_DAYS*86400) .')':'') .
+			($var['category'] == 'New' ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME - NEW_REQUEST_DAYS * 86400) . ')' : '') .
 			' ORDER BY (SELECT MAX(posting_time) FROM feature_request_comments WHERE feature_request_id = super.feature_request_id) DESC');
 if ($db->getNumRows() > 0) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
-	$template->assign('FeatureModerator',$featureModerator);
-	$template->assign('FeatureRequestVoteFormHREF',SmrSession::getNewHREF(create_container('feature_request_vote_processing.php', '')));
+	$template->assign('FeatureModerator', $featureModerator);
+	$template->assign('FeatureRequestVoteFormHREF', SmrSession::getNewHREF(create_container('feature_request_vote_processing.php', '')));
 
 	$commentsContainer = $var;
 	$commentsContainer['body'] = 'feature_request_comments.php';
@@ -67,10 +67,10 @@ if ($db->getNumRows() > 0) {
 		$featureRequests[$featureRequestID] = array(
 								'RequestID' => $featureRequestID,
 								'Message' => $db->getField('text'),
-								'Votes' => array('FAVOURITE'=>$db->getInt('fav'),'YES'=>$db->getInt('yes'),'NO'=>$db->getInt('no')),
+								'Votes' => array('FAVOURITE'=>$db->getInt('fav'), 'YES'=>$db->getInt('yes'), 'NO'=>$db->getInt('no')),
 								'VotedFor' => isset($featureVotes[$featureRequestID]) ? $featureVotes[$featureRequestID] : false
 		);
-		if($featureModerator)
+		if ($featureModerator)
 			$featureRequests[$featureRequestID]['RequestAccount'] = SmrAccount::getAccount($db->getInt('poster_id'));
 
 		if ($canVote) {
@@ -78,23 +78,23 @@ if ($db->getNumRows() > 0) {
 						FROM account_votes_for_feature
 						WHERE feature_request_id=' . $db2->escapeNumber($featureRequestID) . '
 						GROUP BY vote_type');
-			while($db2->nextRecord()) {
+			while ($db2->nextRecord()) {
 				$featureRequests[$featureRequestID]['Votes'][$db2->getField('vote_type')] = $db2->getInt('COUNT(*)');
 			}
 		}
 		$db2->query('SELECT COUNT(*)
 					FROM feature_request_comments
 					WHERE feature_request_id=' . $db2->escapeNumber($featureRequestID));
-		while($db2->nextRecord()) {
+		while ($db2->nextRecord()) {
 			$featureRequests[$featureRequestID]['Comments'] = $db2->getInt('COUNT(*)');
 		}
 		$commentsContainer['RequestID'] = $featureRequestID;
 		$featureRequests[$featureRequestID]['CommentsHREF'] = SmrSession::getNewHREF($commentsContainer);
 	}
-	$template->assign('FeatureRequests',$featureRequests);
+	$template->assign('FeatureRequests', $featureRequests);
 }
 
-$template->assign('FeatureRequestFormHREF',SmrSession::getNewHREF(create_container('feature_request_processing.php', '')));
+$template->assign('FeatureRequestFormHREF', SmrSession::getNewHREF(create_container('feature_request_processing.php', '')));
 
 function statusFromCategory($category) {
 	return ($category == 'New' || $category == 'All Open') ? 'Opened' : $category;
@@ -108,7 +108,7 @@ function getFeaturesCount($status, $daysNew = false) {
 		JOIN feature_request_comments super USING(feature_request_id)
 		WHERE comment_id = 1
 		AND status = ' . $db->escapeString($status) .
-		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME - $daysNew*86400) .')':'')
+		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME - $daysNew * 86400) . ')' : '')
 	);
 	$db->nextRecord();
 	return $db->getInt('count');

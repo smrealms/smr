@@ -14,13 +14,13 @@ if (!empty($var['paper_id'])) {
 		$template->assign('BackHREF', SmrSession::getNewHREF($container));
 	}
 
-	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = '.$var['paper_id']);
+	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);
 	$db->nextRecord();
 	$paper_name = bbifyMessage($db->getField('title'));
-	$template->assign('PageTopic','Reading <i>Galactic Post</i> Edition : '.$paper_name);
+	$template->assign('PageTopic', 'Reading <i>Galactic Post</i> Edition : ' . $paper_name);
 
 	//now get the articles in this paper.
-	$db->query('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING(game_id, article_id) WHERE paper_id = '.$db->escapeNumber($var['paper_id']).' AND game_id = '.$db->escapeNumber($var['game_id']));
+	$db->query('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING(game_id, article_id) WHERE paper_id = ' . $db->escapeNumber($var['paper_id']) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
 
 	$articles = [];
 	while ($db->nextRecord()) {
@@ -44,5 +44,5 @@ if (!empty($var['paper_id'])) {
 	$template->assign('ArticleLayout', $articleLayout);
 }
 else {
-	$template->assign('PageTopic','Galactic Post');
+	$template->assign('PageTopic', 'Galactic Post');
 }

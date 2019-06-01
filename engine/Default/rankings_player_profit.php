@@ -1,11 +1,11 @@
 <?php
 
-$template->assign('PageTopic','Profit Rankings');
+$template->assign('PageTopic', 'Profit Rankings');
 
 Menu::rankings(0, 1);
 
-$profitType = array('Trade','Money','Profit');
-$profitTypeEscaped = $db->escapeArray($profitType,false,true,':',false);
+$profitType = array('Trade', 'Money', 'Profit');
+$profitTypeEscaped = $db->escapeArray($profitType, false, true, ':', false);
 
 // what rank are we?
 $db->query('SELECT count(*)
@@ -13,9 +13,9 @@ $db->query('SELECT count(*)
 			LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $profitTypeEscaped . '
 			WHERE p.game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND (
-				amount > '.$db->escapeNumber($player->getHOF($profitType)).'
+				amount > '.$db->escapeNumber($player->getHOF($profitType)) . '
 				OR (
-					COALESCE(amount,0) = '.$db->escapeNumber($player->getHOF($profitType)).'
+					COALESCE(amount,0) = '.$db->escapeNumber($player->getHOF($profitType)) . '
 					AND player_name <= ' . $db->escapeString($player->getPlayerName()) . '
 				)
 			)');

@@ -4,11 +4,11 @@
 if ($player->getAlignment() <= ALIGNMENT_EVIL) {
 	create_error('You are not allowed to enter our Government HQ!');
 }
-if(!$player->getSector()->hasLocation($var['LocationID'])) {
+if (!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
 $location = SmrLocation::getLocation($var['LocationID']);
-if(!$location->isHQ()) {
+if (!$location->isHQ()) {
 	create_error('There is no headquarters. Obviously.');
 }
 $raceID = $location->getRaceID();
@@ -28,7 +28,7 @@ $warRaces = [];
 if ($raceID != RACE_NEUTRAL) {
 	$races = Globals::getRaces();
 	$raceRelations = Globals::getRaceRelations($player->getGameID(), $raceID);
-	foreach($raceRelations as $otherRaceID => $relation) {
+	foreach ($raceRelations as $otherRaceID => $relation) {
 		if ($relation <= RELATIONS_WAR) {
 			$warRaces[] = $races[$otherRaceID]['Race Name'];
 		}

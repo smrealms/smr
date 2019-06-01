@@ -25,9 +25,9 @@ if ($action == 'Ship') {
 		create_error('You can\'t take more than you can carry!');
 
 	// now transfer
-	$planet->decreaseStockpile($var['good_id'],$amount);
-	$ship->increaseCargo($var['good_id'],$amount);
-	$account->log(LOG_TYPE_PLANETS, 'Player takes '.$amount.' '.Globals::getGoodName($var['good_id']).' from planet.', $player->getSectorID());
+	$planet->decreaseStockpile($var['good_id'], $amount);
+	$ship->increaseCargo($var['good_id'], $amount);
+	$account->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' ' . Globals::getGoodName($var['good_id']) . ' from planet.', $player->getSectorID());
 
 // transfer to planet
 }
@@ -38,11 +38,11 @@ elseif ($action == 'Planet') {
 
 	// do we want to transfer more than the planet can hold?
 	if ($amount > $planet->getRemainingStockpile($var['good_id']))
-		create_error('This planet cannot store more than '.SmrPlanet::MAX_STOCKPILE.' of each good!');
+		create_error('This planet cannot store more than ' . SmrPlanet::MAX_STOCKPILE . ' of each good!');
 
 	// now transfer
-	$planet->increaseStockpile($var['good_id'],$amount);
-	$ship->decreaseCargo($var['good_id'],$amount);
+	$planet->increaseStockpile($var['good_id'], $amount);
+	$ship->decreaseCargo($var['good_id'], $amount);
 }
 
 // update both

@@ -3,7 +3,7 @@
 $raceName = Globals::getRaceName($var['race_id']);
 $template->assign('RaceName', $raceName);
 
-$template->assign('PageTopic','Send message to Ruling Council of the '.$raceName);
+$template->assign('PageTopic', 'Send message to Ruling Council of the ' . $raceName);
 
 Menu::messages();
 

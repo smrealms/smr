@@ -1,18 +1,18 @@
 <?php
 require_once(get_file_loc('message.functions.inc'));
 
-if(isset($var['Message'])) {
-	$template->assign('Message',$var['Message']);
+if (isset($var['Message'])) {
+	$template->assign('Message', $var['Message']);
 }
 
-$template->assign('PageTopic','Message Notifications');
+$template->assign('PageTopic', 'Message Notifications');
 
 $container = create_container('buy_message_notifications_processing.php');
 
 // Presently only player messages are eligible for notifications
 $notifyTypeIDs = array(MSG_PLAYER);
 
-$messageBoxes = array ();
+$messageBoxes = array();
 foreach ($notifyTypeIDs as $messageTypeID) {
 	$messageBox = array();
 	$messageBox['Name'] = getMessageTypeNames($messageTypeID);

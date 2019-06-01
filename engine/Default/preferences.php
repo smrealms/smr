@@ -1,8 +1,8 @@
 <?php
-$template->assign('PageTopic','Preferences');
+$template->assign('PageTopic', 'Preferences');
 
 if (isset($var['reason']))
-	$template->assign('Reason',$var['reason']);
+	$template->assign('Reason', $var['reason']);
 
 $template->assign('PreferencesFormHREF', SmrSession::getNewHREF(create_container('preferences_processing.php', '')));
 
@@ -23,4 +23,4 @@ $transferAccounts = array();
 		$transferAccounts[$db->getField('account_id')] = $db->getField('hof_name');
 	}
 //}
-$template->assign('TransferAccounts',$transferAccounts);
+$template->assign('TransferAccounts', $transferAccounts);

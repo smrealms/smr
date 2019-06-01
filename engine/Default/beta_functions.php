@@ -1,5 +1,5 @@
 <?php
-if(!ENABLE_BETA) {
+if (!ENABLE_BETA) {
 	create_error('Beta functions are disabled.');
 }
 

@@ -1,14 +1,13 @@
 <?php
-$body = htmlentities(trim($_REQUEST['body']),ENT_COMPAT,'utf-8');
+$body = htmlentities(trim($_REQUEST['body']), ENT_COMPAT, 'utf-8');
 $topic = isset($_REQUEST['topic']) ? $_REQUEST['topic'] : '';
 $allEyesOnly = isset($_REQUEST['allEyesOnly']);
 
-if($_REQUEST['action'] == 'Preview Thread' || $_REQUEST['action'] == 'Preview Reply') {
+if ($_REQUEST['action'] == 'Preview Thread' || $_REQUEST['action'] == 'Preview Reply') {
 	$container = create_container('skeleton.php', '', $var);
-	if(!isset($var['thread_index'])) {
+	if (!isset($var['thread_index'])) {
 		$container['body'] = 'alliance_message.php';
-	}
-	else {
+	} else {
 		$container['body'] = 'alliance_message_view.php';
 	}
 	$container['preview'] = $body;
@@ -40,8 +39,7 @@ if (!isset($var['thread_index'])) {
 	if ($db->nextRecord()) {
 		$thread_id = $db->getInt('max(thread_id)') + 1;
 	}
-}
-else {
+} else {
 	$thread_index = $var['thread_index'];
 	$thread_id = $var['thread_ids'][$thread_index];
 }
@@ -83,22 +81,21 @@ $db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_
 			VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber($reply_id) . ', ' . $db->escapeString($body) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber(TIME) . ')');
 $db->query('REPLACE INTO player_read_thread
 			(account_id, game_id, alliance_id, thread_id, time)
-			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(TIME+2) . ')');
+			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(TIME + 2) . ')');
 
 $container = create_container('skeleton.php');
 $container['alliance_id'] = $alliance_id;
 if (isset($var['alliance_eyes'])) {
 	$container['alliance_eyes'] = $var['alliance_eyes'];
 }
-if(isset($var['thread_index'])) {
+if (isset($var['thread_index'])) {
 	$container['body'] = 'alliance_message_view.php';
 	$container['thread_index'] = $thread_index;
 	$container['thread_ids'] = $var['thread_ids'];
 	$container['thread_topics'] = $var['thread_topics'];
 	++$var['thread_replies'][$thread_index];
 	$container['thread_replies'] = $var['thread_replies'];
-}
-else {
+} else {
 	$container['body'] = 'alliance_message.php';
 }
 

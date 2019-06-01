@@ -1,2 +1,2 @@
 <?php
-$template->assign('PageTopic','Death');
+$template->assign('PageTopic', 'Death');

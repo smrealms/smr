@@ -4,7 +4,7 @@
 // including their current size and if the leader can pick teammates.
 function get_draft_teams($gameId) {
 	$db = new SmrMySqlDatabase();
-	$db->query('SELECT account_id FROM draft_leaders WHERE game_id='.$db->escapeNumber($gameId));
+	$db->query('SELECT account_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($gameId));
 
 	// Get team leader, alliance, and alliance size
 	$teams = array();

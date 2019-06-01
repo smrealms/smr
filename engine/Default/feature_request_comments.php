@@ -2,11 +2,11 @@
 if (!Globals::isFeatureRequestOpen())
 	create_error('Feature requests are currently not being accepted.');
 
-$template->assign('PageTopic','Feature Request Comments');
+$template->assign('PageTopic', 'Feature Request Comments');
 
 $container = $var;
 $container['body'] = 'feature_request.php';
-$template->assign('BackHref',SmrSession::getNewHREF($container));
+$template->assign('BackHref', SmrSession::getNewHREF($container));
 
 $db->query('SELECT *
 			FROM feature_request
@@ -15,7 +15,7 @@ $db->query('SELECT *
 			ORDER BY comment_id ASC');
 if ($db->getNumRows() > 0) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
-	$template->assign('FeatureModerator',$featureModerator);
+	$template->assign('FeatureModerator', $featureModerator);
 
 	// variables needed to set the status for this feature request
 	if ($featureModerator) {
@@ -29,10 +29,10 @@ if ($db->getNumRows() > 0) {
 		$featureRequestComments[$commentID] = array(
 								'CommentID' => $commentID,
 								'Message' => $db->getField('text'),
-								'Time' => date(DATE_FULL_SHORT,$db->getField('posting_time')),
+								'Time' => date(DATE_FULL_SHORT, $db->getField('posting_time')),
 								'Anonymous' => $db->getBoolean('anonymous')
 		);
-		if($featureModerator || !$db->getBoolean('anonymous'))
+		if ($featureModerator || !$db->getBoolean('anonymous'))
 			$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($db->getField('poster_id'));
 	}
 	$template->assign('Comments', $featureRequestComments);
@@ -41,4 +41,4 @@ if ($db->getNumRows() > 0) {
 $container = $var;
 $container['url'] = 'feature_request_comment_processing.php';
 unset($container['body']);
-$template->assign('FeatureRequestCommentFormHREF',SmrSession::getNewHREF($container));
+$template->assign('FeatureRequestCommentFormHREF', SmrSession::getNewHREF($container));

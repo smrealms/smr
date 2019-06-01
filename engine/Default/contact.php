@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Contact Form');
+$template->assign('PageTopic', 'Contact Form');
 
 $container = create_container('contact_processing.php');
 $template->assign('ProcessingHREF', SmrSession::getNewHREF($container));

@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','Dump Cargo');
+$template->assign('PageTopic', 'Dump Cargo');
 
 if ($ship->hasCargo()) {
 

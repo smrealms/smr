@@ -4,7 +4,7 @@ if (!$player->isOnCouncil()) {
 	create_error('You have to be on the council in order to vote.');
 }
 
-$template->assign('PageTopic','Ruling Council Of '.$player->getRaceName());
+$template->assign('PageTopic', 'Ruling Council Of ' . $player->getRaceName());
 Menu::council($player->getRaceID());
 
 // determine for what we voted
@@ -13,14 +13,14 @@ $db->query('SELECT * FROM player_votes_relation
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
 $votedForRace = -1;
 if ($db->nextRecord()) {
-	$votedForRace	= $db->getField('race_id_2');
-	$votedFor		= $db->getField('action');
+	$votedForRace = $db->getField('race_id_2');
+	$votedFor = $db->getField('action');
 }
 
 $voteRelations = array();
 $globalRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
 foreach (Globals::getRaces() as $raceID => $raceInfo) {
-	if($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID())
+	if ($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID())
 		continue;
 	$container = create_container('council_vote_processing.php', '', array('race_id' => $raceID));
 	$voteRelations[$raceID] = array(
@@ -34,7 +34,7 @@ $template->assign('VoteRelations', $voteRelations);
 
 $voteTreaties = array();
 $db->query('SELECT * FROM race_has_voting
-			WHERE '.$db->escapeNumber(TIME).' < end_time
+			WHERE '.$db->escapeNumber(TIME) . ' < end_time
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
 if ($db->getNumRows() > 0) {

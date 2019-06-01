@@ -19,7 +19,7 @@ else $withPerDay = $_REQUEST['maxWith'];
 if (!is_numeric($withPerDay) || ($withPerDay < 0 && $withPerDay != ALLIANCE_BANK_UNLIMITED)) {
 	create_error('You must enter a number for max withdrawals per 24 hours.');
 }
-if($withPerDay == ALLIANCE_BANK_UNLIMITED && $positiveBalance) {
+if ($withPerDay == ALLIANCE_BANK_UNLIMITED && $positiveBalance) {
 	create_error('You cannot have both unlimited withdrawals and a positive balance limit.');
 }
 
@@ -50,10 +50,10 @@ if (!isset($var['role_id'])) {
 else {
 	// if no role is given we delete that entry
 	if (empty($_REQUEST['role'])) {
-		if($var['role_id']==1) {
+		if ($var['role_id'] == 1) {
 			create_error('You cannot delete the leader role.');
 		}
-		else if($var['role_id']==2) {
+		else if ($var['role_id'] == 2) {
 			create_error('You cannot delete the new member role.');
 		}
 		$db->query('DELETE FROM alliance_has_roles

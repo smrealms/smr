@@ -1,13 +1,13 @@
 <?php
-$template->assign('PageTopic','Alliance Profit Rankings');
+$template->assign('PageTopic', 'Alliance Profit Rankings');
 Menu::rankings(1, 1);
 
 $db->query('SELECT count(*) FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 $db->nextRecord();
 $numAlliances = $db->getInt('count(*)');
-$profitType = array('Trade','Money','Profit');
-$profitTypeEscaped = $db->escapeArray($profitType,false,true,':',false);
+$profitType = array('Trade', 'Money', 'Profit');
+$profitTypeEscaped = $db->escapeArray($profitType, false, true, ':', false);
 
 $ourRank = 0;
 if ($player->hasAlliance()) {

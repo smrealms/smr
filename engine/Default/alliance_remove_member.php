@@ -11,7 +11,7 @@ player_name,
 last_cpl_action
 FROM player
 WHERE game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
-AND alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) .'
+AND alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . '
 AND account_id != ' . $db->escapeNumber($player->getAccountID()) . '
 ORDER BY last_cpl_action DESC
 ');
@@ -27,7 +27,7 @@ while ($db->nextRecord()) {
 
 	$members[] = [
 		'last_active' => $lastActive,
-		'display_name' => $db->getField('player_name').' ('.$db->getInt('player_id').')',
+		'display_name' => $db->getField('player_name') . ' (' . $db->getInt('player_id') . ')',
 		'account_id' => $db->getInt('account_id'),
 	];
 }

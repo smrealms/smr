@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','Trader Status');
+$template->assign('PageTopic', 'Trader Status');
 
 Menu::trader();
 
@@ -40,7 +40,7 @@ if (empty($hardware)) $hardware[] = 'none';
 $template->assign('Hardware', $hardware);
 
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $db->escapeNumber($player->getExperience()) . ' ORDER BY requirement ASC LIMIT 1');
-if(!$db->nextRecord()) {
+if (!$db->nextRecord()) {
 	$db->query('SELECT level_name,requirement FROM level ORDER BY requirement DESC LIMIT 1');
 	$db->nextRecord();
 }

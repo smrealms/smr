@@ -1,6 +1,6 @@
 <?php
 
-if(isset($var['RealX'])) {
+if (isset($var['RealX'])) {
 	$realX = $var['RealX'];
 }
 else {
@@ -9,14 +9,14 @@ else {
 	$xType = $_REQUEST['xtype'];
 	$X = $_REQUEST['X'];
 	$realX = Plotter::getX($xType, $X, $player->getGameID(), $player);
-	if($realX === false) {
+	if ($realX === false) {
 		create_error('Invalid search.');
 	}
 
-	$account->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest '.$xType.': '.$X.'.', $player->getSectorID());
+	$account->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest ' . $xType . ': ' . $X . '.', $player->getSectorID());
 }
 
-if($sector->hasX($realX,$player))
+if ($sector->hasX($realX, $player))
 	create_error('Current sector has what you\'re looking for!');
 
 $path = Plotter::findReversiblePathToX($realX, $sector, true, $player, $player);

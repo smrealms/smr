@@ -1,6 +1,6 @@
 <?php
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
@@ -38,7 +38,7 @@ $role_id = $player->getAllianceRole($alliance->getAllianceID());
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 $db->nextRecord();
 if ($db->getBoolean('change_mod') || $db->getBoolean('change_pass')) {
-	$container=create_container('skeleton.php','alliance_stat.php');
+	$container = create_container('skeleton.php', 'alliance_stat.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$template->assign('EditHREF', SmrSession::getNewHREF($container));
 }

@@ -4,8 +4,7 @@
 $location = SmrLocation::getLocation($var['LocationID']);
 if ($location->isHQ()) {
 	$player->setAlignment(150);
-}
-elseif ($location->isUG()) {
+} elseif ($location->isUG()) {
 	$player->setAlignment(-150);
 }
 

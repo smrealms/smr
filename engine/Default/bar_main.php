@@ -27,7 +27,7 @@ if ($db->nextRecord()) {
 	transfer('LocationID');
 	$template->assign('LottoClaimHREF', SmrSession::getNewHREF($container));
 }
-$template->assign('WinningTicket',$winningTicket);
+$template->assign('WinningTicket', $winningTicket);
 
 //get rid of drinks older than 30 mins
 $db->query('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(TIME - 1800));

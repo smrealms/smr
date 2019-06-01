@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Alliance VS Alliance Rankings');
+$template->assign('PageTopic', 'Alliance VS Alliance Rankings');
 
 Menu::rankings(1, 4);
 $db2 = new SmrMySqlDatabase();

@@ -6,8 +6,8 @@ $db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeN
 // Check that the invitation is registered in the database
 $newAlliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $db->query('SELECT 1 FROM alliance_invites_player
-            WHERE game_id = '.$db->escapeNumber($player->getGameID()).'
-              AND alliance_id = '.$db->escapeNumber($newAlliance->getAllianceID()).'
+            WHERE game_id = '.$db->escapeNumber($player->getGameID()) . '
+              AND alliance_id = '.$db->escapeNumber($newAlliance->getAllianceID()) . '
               AND account_id = '.$db->escapeNumber($player->getAccountID()));
 if (!$db->nextRecord()) {
 	create_error('You do not have an invitation to join this alliance!');

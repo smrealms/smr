@@ -1,2 +1,2 @@
 <?php
-$template->assign('PageTopic','Leave Newbie Protection');
+$template->assign('PageTopic', 'Leave Newbie Protection');

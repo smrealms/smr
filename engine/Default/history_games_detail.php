@@ -1,7 +1,7 @@
 <?php
 
 $game_id = $var['view_game_id'];
-$template->assign('PageTopic', 'Extended Stats : '.$var['game_name']);
+$template->assign('PageTopic', 'Extended Stats : ' . $var['game_name']);
 Menu::history_games(1);
 
 $container = $var;
@@ -30,7 +30,7 @@ if (!empty($action)) {
 	$db = new $var['HistoryDatabase']();
 	if ($from != 'alliance') {
 		$template->assign('Name', 'Sector ID');
-		$db->query('SELECT '.$sql.' as val, sector_id FROM '.$from.' WHERE game_id = '.$db->escapeNumber($game_id).' ORDER BY val DESC LIMIT 25');
+		$db->query('SELECT ' . $sql . ' as val, sector_id FROM ' . $from . ' WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY val DESC LIMIT 25');
 		while ($db->nextRecord()) {
 			$rankings[] = [
 				'name' => $db->getInt('sector_id'),
@@ -40,7 +40,7 @@ if (!empty($action)) {
 	}
 	else {
 		$template->assign('Name', 'Alliance');
-		$db->query('SELECT alliance_name, alliance_id, '.$sql.' as val FROM alliance WHERE game_id = '.$db->escapeNumber($game_id).' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25');
+		$db->query('SELECT alliance_name, alliance_id, ' . $sql . ' as val FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25');
 		$container = $var;
 		$container['body'] = 'history_alliance_detail.php';
 		$container['selected_index'] = 1;

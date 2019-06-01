@@ -1,10 +1,10 @@
 <?php
-$template->assign('PageTopic','Voting');
+$template->assign('PageTopic', 'Voting');
 
 $db->query('SELECT * FROM voting ORDER BY end DESC');
-if($db->getNumRows()>0) {
+if ($db->getNumRows() > 0) {
 	$db2 = new SmrMySqlDatabase();
-	$votedFor=array();
+	$votedFor = array();
 	$db2->query('SELECT * FROM voting_results WHERE account_id = ' . $db2->escapeNumber($account->getAccountID()));
 	while ($db2->nextRecord()) {
 		$votedFor[$db2->getInt('vote_id')] = $db2->getInt('option_id');
@@ -17,7 +17,7 @@ if($db->getNumRows()>0) {
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = SmrSession::getNewHREF($container);
 		$voting[$voteID]['Question'] = $db->getField('question');
-		if($db->getField('end') > TIME) {
+		if ($db->getField('end') > TIME) {
 			$voting[$voteID]['TimeRemaining'] = format_time($db->getField('end') - TIME, true);
 		}
 		$voting[$voteID]['Options'] = array();
@@ -29,5 +29,5 @@ if($db->getNumRows()>0) {
 			$voting[$voteID]['Options'][$db2->getInt('option_id')]['Votes'] = $db2->getInt('count(account_id)');
 		}
 	}
-	$template->assign('Voting',$voting);
+	$template->assign('Voting', $voting);
 }

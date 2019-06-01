@@ -25,7 +25,7 @@ while ($db->nextRecord()) {
 		}
 	}
 	$otherAllianceID = $db->getInt('alliance_id_1');
-	$container=create_container('alliance_treaties_processing.php','');
+	$container = create_container('alliance_treaties_processing.php', '');
 	$container['alliance_id_1'] = $otherAllianceID;
 	$container['aa_access'] = $db->getField('aa_access');
 	$container['accept'] = true;

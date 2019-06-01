@@ -26,7 +26,7 @@ if (isset($_POST['add'])) {
 	}
 
 	$gameId = (isset($_POST['all_games'])) ? '0' : $player->getGameID();
-	$db->query('INSERT INTO account_shares_info (to_account_id, from_account_id, game_id) VALUES ('. $db->escapeNumber($accountId) .','. $db->escapeNumber($player->getAccountID()) .','. $db->escapeNumber($gameId) .')');
+	$db->query('INSERT INTO account_shares_info (to_account_id, from_account_id, game_id) VALUES (' . $db->escapeNumber($accountId) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($gameId) . ')');
 }
 
 // Process removing a "share to" account

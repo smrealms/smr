@@ -42,5 +42,5 @@ while ($db->nextRecord()) {
 }
 $template->assign('OwnedAnon', $ownedAnon);
 
-$container = create_container('skeleton.php','bank_anon_create.php');
+$container = create_container('skeleton.php', 'bank_anon_create.php');
 $template->assign('CreateHREF', SmrSession::getNewHREF($container));

@@ -9,9 +9,9 @@ $player->decreaseCredits(10);
 
 if (isset($var['action']) && $var['action'] != 'drink') {
 	$drinkName = 'water';
-	$message.= 'You ask the bartender for some water and you quickly down it.<br />You don\'t feel quite so intoxicated anymore.<br />';
+	$message .= 'You ask the bartender for some water and you quickly down it.<br />You don\'t feel quite so intoxicated anymore.<br />';
 	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
-	$player->increaseHOF(1,array('Bar','Drinks', 'Water'), HOF_PUBLIC);
+	$player->increaseHOF(1, array('Bar', 'Drinks', 'Water'), HOF_PUBLIC);
 }
 else {
 	$random = mt_rand(1, 20);
@@ -35,30 +35,30 @@ else {
 			$curr_drink_id = 1;
 		}
 
-		if ($drink_id != 11 && $drink_id !=1) {
-			$message.=('You have bought a '.$drinkName.' for $10');
+		if ($drink_id != 11 && $drink_id != 1) {
+			$message .= ('You have bought a ' . $drinkName . ' for $10');
 			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
-			$player->increaseHOF(1,array('Bar','Drinks', 'Alcoholic'), HOF_PUBLIC);
+			$player->increaseHOF(1, array('Bar', 'Drinks', 'Alcoholic'), HOF_PUBLIC);
 		}
 		else {
-			$message.=('The bartender says, Ive got something special for ya.<br />');
-			$message.=('The bartender turns around for a minute and whips up a '.$drinkName.'.<br />');
+			$message .= ('The bartender says, Ive got something special for ya.<br />');
+			$message .= ('The bartender turns around for a minute and whips up a ' . $drinkName . '.<br />');
 
 			if ($drink_id == 1) {
-				$message.=('The bartender says that Spock himself gave him the directions to make this drink.<br />');
+				$message .= ('The bartender says that Spock himself gave him the directions to make this drink.<br />');
 			}
 
-			$message.=('You drink the '.$drinkName.' and feel like like you have been drinking for hours.<br />');
+			$message .= ('You drink the ' . $drinkName . ' and feel like like you have been drinking for hours.<br />');
 
 			if ($drink_id == 11) {
-				$message.=('After drinking the '.$drinkName.' you feel like nothing can bring you down and like you are the best trader in the universe.<br />');
+				$message .= ('After drinking the ' . $drinkName . ' you feel like nothing can bring you down and like you are the best trader in the universe.<br />');
 			}
 
 			//has the power of 2 drinks
 			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
 			$curr_drink_id++;
 			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
-			$player->increaseHOF(1,array('Bar','Drinks', 'Special'), HOF_PUBLIC);
+			$player->increaseHOF(1, array('Bar', 'Drinks', 'Special'), HOF_PUBLIC);
 		}
 
 	}
@@ -66,7 +66,7 @@ else {
 	$db->nextRecord();
 	$num_drinks = $db->getInt('count(*)');
 	//display woozy message
-	$message.= '<br />You feel a little W'.str_repeat('oO', $num_drinks).'zy<br />';
+	$message .= '<br />You feel a little W' . str_repeat('oO', $num_drinks) . 'zy<br />';
 }
 
 $player->actionTaken('BuyDrink', array(
@@ -76,22 +76,22 @@ $player->actionTaken('BuyDrink', array(
 
 //see if the player blacksout or not
 if (isset($num_drinks) && $num_drinks > 15) {
-	$percent = mt_rand(1,25);
+	$percent = mt_rand(1, 25);
 	$lostCredits = round($player->getCredits() * $percent / 100);
 
-	$message.= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lostCredits) . ' credits</span><br />';
+	$message .= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lostCredits) . ' credits</span><br />';
 
 	$player->decreaseCredits($lostCredits);
-	$player->increaseHOF(1,array('Bar','Robbed','Number Of Times'), HOF_PUBLIC);
-	$player->increaseHOF($lostCredits,array('Bar','Robbed','Money Lost'), HOF_PUBLIC);
+	$player->increaseHOF(1, array('Bar', 'Robbed', 'Number Of Times'), HOF_PUBLIC);
+	$player->increaseHOF($lostCredits, array('Bar', 'Robbed', 'Money Lost'), HOF_PUBLIC);
 
 	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()));
 
 }
-$player->increaseHOF(1,array('Bar','Drinks', 'Total'), HOF_PUBLIC);
-$message.= '</div>';
+$player->increaseHOF(1, array('Bar', 'Drinks', 'Total'), HOF_PUBLIC);
+$message .= '</div>';
 
-$container=create_container('skeleton.php','bar_main.php');
+$container = create_container('skeleton.php', 'bar_main.php');
 transfer('LocationID');
 $container['message'] = $message;
 forward($container);

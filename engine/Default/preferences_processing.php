@@ -65,7 +65,7 @@ elseif ($action == 'Change Name') {
 	if (empty($HoF_name) || $HoF_name == '') create_error('You Hall of Fame name must contain characters!');
 
 	//no duplicates
-	$db->query('SELECT * FROM account WHERE hof_name = ' . $db->escapeString($HoF_name) . ' AND account_id != '.$db->escapeNumber($account->getAccountID()).' LIMIT 1');
+	$db->query('SELECT * FROM account WHERE hof_name = ' . $db->escapeString($HoF_name) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
 	if ($db->nextRecord()) create_error('Someone is already using that name!');
 
 	// set the HoF name in account stat
@@ -82,7 +82,7 @@ elseif ($action == 'Change Discord ID') {
 
 	} else {
 		// no duplicates
-		$db->query('SELECT * FROM account WHERE discord_id =' . $db->escapeString($discordId) . ' AND account_id != '.$db->escapeNumber($account->getAccountID()).' LIMIT 1');
+		$db->query('SELECT * FROM account WHERE discord_id =' . $db->escapeString($discordId) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
 		if ($db->nextRecord()) create_error('Someone is already using that Discord User ID!');
 
 		$account->setDiscordId($discordId);
@@ -106,7 +106,7 @@ elseif ($action == 'Change IRC Nick') {
 	} else {
 
 		// no duplicates
-		$db->query('SELECT * FROM account WHERE irc_nick = ' . $db->escapeString($ircNick) . ' AND account_id != '.$db->escapeNumber($account->getAccountID()).' LIMIT 1');
+		$db->query('SELECT * FROM account WHERE irc_nick = ' . $db->escapeString($ircNick) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
 		if ($db->nextRecord()) create_error('Someone is already using that nick!');
 
 		// save irc nick in db and set message
@@ -134,7 +134,7 @@ elseif ($action == 'Change Timezone') {
 	if (!is_numeric($timez))
 		create_error('Numbers only please');
 
-	$db->query('UPDATE account SET offset = '.$db->escapeNumber($timez).' WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
+	$db->query('UPDATE account SET offset = ' . $db->escapeNumber($timez) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 }
 elseif ($action == 'Change Date Formats') {
@@ -147,7 +147,7 @@ elseif ($action == 'Change Images') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
 }
 elseif ($action == 'Change Centering') {
-	$account->setCenterGalaxyMapOnPlayer($_REQUEST['centergalmap']=='Yes');
+	$account->setCenterGalaxyMapOnPlayer($_REQUEST['centergalmap'] == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
 }
 else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50) {
@@ -167,22 +167,22 @@ else if ($action == 'Change CSS Options') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
 }
 else if ($action == 'Change Kamikaze Setting') {
-	$player->setCombatDronesKamikazeOnMines($_REQUEST['kamikaze']=='Yes');
+	$player->setCombatDronesKamikazeOnMines($_REQUEST['kamikaze'] == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
 }
 else if ($action == 'Change Message Setting') {
-	$player->setForceDropMessages($_REQUEST['forceDropMessages']=='Yes');
+	$player->setForceDropMessages($_REQUEST['forceDropMessages'] == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your message options.';
 }
 else if ($action == 'Save Hotkeys') {
-	foreach(AbstractSmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
-		if(isset($_REQUEST[$hotkey])) {
+	foreach (AbstractSmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
+		if (isset($_REQUEST[$hotkey])) {
 			$account->setHotkey($hotkey, explode(' ', $_REQUEST[$hotkey]));
 		}
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
 }
-else if (strpos(trim($action),'Alter Player')===0) {
+else if (strpos(trim($action), 'Alter Player') === 0) {
 	// trim input now
 	$player_name = trim($_POST['PlayerName']);
 
@@ -218,13 +218,13 @@ else if (strpos(trim($action),'Alter Player')===0) {
 	// Check if name is in use.
 	// The player_name field has case-insensitive collation, so check against ID
 	// to allow player to change the case of their name.
-	$db->query('SELECT 1 FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND player_name=' . $db->escapeString($player_name) . ' AND player_id != ' . $db->escapeString($player->getPlayerID()) . ' LIMIT 1' );
+	$db->query('SELECT 1 FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND player_name=' . $db->escapeString($player_name) . ' AND player_id != ' . $db->escapeString($player->getPlayerID()) . ' LIMIT 1');
 	if ($db->getNumRows()) {
 		create_error('Name is already being used in this game!');
 	}
 
-	if($player->isNameChanged()) {
-		if($account->getTotalSmrCredits()<CREDITS_PER_NAME_CHANGE) {
+	if ($player->isNameChanged()) {
+		if ($account->getTotalSmrCredits() < CREDITS_PER_NAME_CHANGE) {
 			create_error('You do not have enough credits to change your name.');
 		}
 		$account->decreaseTotalSmrCredits(CREDITS_PER_NAME_CHANGE);
