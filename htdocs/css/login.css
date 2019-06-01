@@ -69,6 +69,12 @@ span.small {
 table.center {
 	margin:auto;
 }
+.noWrap {
+	white-space: nowrap;
+}
+.shrink {
+	width: 1%;
+}
 .collapsed, table.collapsed, table.collapsed tr, table.collapsed th, table.collapsed td {
 	border: 0px;
 	border-spacing: 0px;

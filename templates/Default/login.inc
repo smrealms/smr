@@ -124,18 +124,15 @@
 				</tr>
 			</table><?php
 
-			if(isset($GameNews)) { ?>
+			if (!empty($GameNews)) { ?>
 				<table class="standard center" style="width:730px;">
 					<tr>
-						<th>Time</th>
+						<th class="shrink">Time</th>
 						<th>Recent News</th>
 					</tr><?php
 					foreach($GameNews as $News) { ?>
 						<tr>
-							<td><?php
-								echo $News['Date']; ?><br /><?php
-								echo $News['Time']; ?>
-							</td>
+							<td class="center noWrap"><?php echo $News['Time']; ?></td>
 							<td><?php echo $News['Message']; ?></td>
 						</tr><?php
 					} ?>
