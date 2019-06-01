@@ -3,7 +3,7 @@
 class SmrScoutDrones extends AbstractSmrCombatWeapon {
 	protected $numberOfSDs;
 	
-	public function __construct($gameTypeID,$numberOfSDs) {
+	public function __construct($gameTypeID, $numberOfSDs) {
 		$this->gameTypeID = $gameTypeID;
 		$this->numberOfSDs = $numberOfSDs;
 		$this->name = 'Scout Drones';
@@ -25,19 +25,19 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 		return $modifiedAccuracy;
 	}
 	
-	public function getModifiedForceAccuracyAgainstPlayer(SmrForce $forces,AbstractSmrPlayer $targetPlayer) {
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,mt_rand(1,7) * mt_rand(1,7));
+	public function getModifiedForceAccuracyAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
+		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, mt_rand(1, 7) * mt_rand(1, 7));
 	}
 	
-	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(SmrForce $forces,AbstractSmrPlayer $targetPlayer, $random) {
+	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(SmrForce $forces, AbstractSmrPlayer $targetPlayer, $random) {
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy -= $targetPlayer->getLevelID() + $random;
 	
-		return max(0,min(100,$modifiedAccuracy));
+		return max(0, min(100, $modifiedAccuracy));
 	}
 	
-	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce $forces,AbstractSmrPlayer $targetPlayer) {
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,49);
+	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
+		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, 49);
 	}
 	
 	public function &getModifiedDamage() {
@@ -76,12 +76,12 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 	}
 	
 	public function &getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
-		if(!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
+		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
 		$damage =& $this->getModifiedDamage();
-		$damage['Launched'] = ceil($this->getNumberOfSDs() * $this->getModifiedForceAccuracyAgainstPlayer($forces,$targetPlayer) / 100);
+		$damage['Launched'] = ceil($this->getNumberOfSDs() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);

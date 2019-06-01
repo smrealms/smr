@@ -232,7 +232,7 @@ function channel_msg_op_list($fp, $rdata, $account, $player)
 
 function channel_op_notification($fp, $rdata, $nick, $channel) {
 	echo_r('[OP_ATTENDANCE_CHECK] ' . $nick);
-	if(check_for_registration($account, $player, $fp, $nick, $channel, 'channel_op_notification($fp, \'' . $rdata . '\', \'' . $nick . '\', \'' . $channel . '\');', false)) {
+	if (check_for_registration($account, $player, $fp, $nick, $channel, 'channel_op_notification($fp, \'' . $rdata . '\', \'' . $nick . '\', \'' . $channel . '\');', false)) {
 		return true;
 	}
 

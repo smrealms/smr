@@ -21,7 +21,7 @@ class VoteSite {
 				'img_default' => 'twg.png',
 				'img_star' => 'twg_vote.png',
 				'url_base' => 'http://topwebgames.com/in.aspx?ID=136&alwaysreward=1',
-				'url_func' => function ($baseUrl, $accountId, $gameId, $linkId) {
+				'url_func' => function($baseUrl, $accountId, $gameId, $linkId) {
 					$query = array('account' => $accountId, 'game' => $gameId, 'link' => $linkId);
 					return $baseUrl . '&' . http_build_query($query);
 				},
@@ -30,7 +30,7 @@ class VoteSite {
 				'img_default' => 'dog.png',
 				'img_star' => 'dog_vote.png',
 				'url_base' => 'http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315',
-				'url_func' => function ($baseUrl, $accountId, $gameId, $linkId) {
+				'url_func' => function($baseUrl, $accountId, $gameId, $linkId) {
 					return "$baseUrl&votedef=$accountId,$gameId,$linkId";
 				},
 			),

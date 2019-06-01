@@ -14,7 +14,7 @@ class Rankings {
 			if ($player->getAllianceID() == $currentAlliance->getAllianceID()) {
 				$class = ' class="bold"';
 			}
-			else if($currentAlliance->hasDisbanded()) {
+			else if ($currentAlliance->hasDisbanded()) {
 				$class = ' class="red"';
 			}
 
@@ -35,15 +35,15 @@ class Rankings {
 			$rank++;
 			$currentPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
 
-			$class='';
+			$class = '';
 			if ($player->equals($currentPlayer)) {
 				$class .= 'bold';
 			}
-			if($currentPlayer->hasNewbieStatus()) {
-				$class.= ' newbie';
+			if ($currentPlayer->hasNewbieStatus()) {
+				$class .= ' newbie';
 			}
-			if($class!='') {
-				$class = ' class="'.trim($class).'"';
+			if ($class != '') {
+				$class = ' class="' . trim($class) . '"';
 			}
 
 			$rankings[$rank] = array(
@@ -62,7 +62,7 @@ class Rankings {
 			$minRank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 			$maxRank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 		}
-		elseif(isset($var['MinRank']) && isset($var['MaxRank'])) {
+		elseif (isset($var['MinRank']) && isset($var['MaxRank'])) {
 			$minRank = $var['MinRank'];
 			$maxRank = $var['MaxRank'];
 		}
@@ -78,8 +78,8 @@ class Rankings {
 
 		$maxRank = min($maxRank, $totalRanks);
 
-		SmrSession::updateVar('MinRank',$minRank);
-		SmrSession::updateVar('MaxRank',$maxRank);
+		SmrSession::updateVar('MinRank', $minRank);
+		SmrSession::updateVar('MaxRank', $maxRank);
 		$template->assign('MinRank', $minRank);
 		$template->assign('MaxRank', $maxRank);
 		$template->assign('TotalRanks', $totalRanks);

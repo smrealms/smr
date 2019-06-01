@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/../../htdocs/config.inc');
+require_once(__DIR__ . '/../../htdocs/config.inc');
 require_once(LIB . 'Default/smr.inc');
 require_once(TOOLS . 'discord/GameLink.inc');
 require_once(TOOLS . 'discord/mysql_cleanup.php');

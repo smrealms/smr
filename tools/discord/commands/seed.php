@@ -2,7 +2,7 @@
 
 require_once(TOOLS . 'chat_helpers/channel_msg_seed.php');
 
-$fn_seed = function ($message) {
+$fn_seed = function($message) {
 	$link = new GameLink($message->channel, $message->author);
 	if (!$link->valid) return;
 

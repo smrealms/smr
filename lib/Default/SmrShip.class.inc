@@ -7,9 +7,9 @@ class SmrShip extends AbstractSmrShip {
 	protected $SQL;
 	
 	public static function refreshCache() {
-		foreach(self::$CACHE_SHIPS as &$gameShips) {
-			foreach($gameShips as &$ship) {
-				$ship = self::getShip($ship->getPlayer(),true);
+		foreach (self::$CACHE_SHIPS as &$gameShips) {
+			foreach ($gameShips as &$ship) {
+				$ship = self::getShip($ship->getPlayer(), true);
 			}
 		}
 	}
@@ -19,15 +19,15 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	public static function saveShips() {
-		foreach(self::$CACHE_SHIPS as $gameShips) {
-			foreach($gameShips as $ship) {
+		foreach (self::$CACHE_SHIPS as $gameShips) {
+			foreach ($gameShips as $ship) {
 				$ship->update();
 			}
 		}
 	}
 
-	public static function &getShip(AbstractSmrPlayer $player,$forceUpdate = false) {
-		if($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()])) {
+	public static function &getShip(AbstractSmrPlayer $player, $forceUpdate = false) {
+		if ($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()])) {
 			$s = new SmrShip($player);
 			self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()] = $s;
 		}
@@ -37,7 +37,7 @@ class SmrShip extends AbstractSmrShip {
 	protected function __construct(AbstractSmrPlayer $player) {
 		parent::__construct($player);
 		$this->db = new SmrMySqlDatabase();
-		$this->SQL = 'account_id='.$this->db->escapeNumber($this->getAccountID()).' AND game_id='.$this->db->escapeNumber($this->getGameID());
+		$this->SQL = 'account_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID());
 		
 		$this->loadHardware();
 		$this->loadWeapons();
@@ -50,7 +50,7 @@ class SmrShip extends AbstractSmrShip {
 	protected function loadWeapons() {
 		// determine weapon
 		$this->db->query('SELECT weapon_type.*, order_id FROM ship_has_weapon JOIN weapon_type USING (weapon_type_id)
-							WHERE ' . $this->SQL .'
+							WHERE ' . $this->SQL . '
 							ORDER BY order_id LIMIT ' . $this->db->escapeNumber($this->getHardpoints()));
 		
 		$this->weapons = array();
@@ -62,7 +62,7 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	protected function loadCargo() {
-		if(!isset($this->cargo)) {
+		if (!isset($this->cargo)) {
 			// initialize cargo array
 			$this->cargo = array();
 			
@@ -101,7 +101,7 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	function updateCargo() {
-		if($this->hasChangedCargo === true) {
+		if ($this->hasChangedCargo === true) {
 			// write cargo info
 			foreach ($this->getCargo() as $id => $amount) {
 				if ($amount > 0) {
@@ -135,7 +135,7 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	function updateWeapon() {
-		if($this->hasChangedWeapons === true) {
+		if ($this->hasChangedWeapons === true) {
 			// write weapon info
 			$this->db->query('DELETE FROM ship_has_weapon WHERE ' . $this->SQL);
 			foreach ($this->weapons as $orderID => $weapon) {
@@ -181,11 +181,11 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	public function isCloaked() {
-		if(!$this->hasCloak())
+		if (!$this->hasCloak())
 			return false;
-		if(!isset($this->isCloaked)) {
+		if (!isset($this->isCloaked)) {
 			$this->db->query('SELECT 1 FROM ship_is_cloaked WHERE ' . $this->SQL . ' LIMIT 1');
-			$this->isCloaked = $this->db->getNumRows()>0;
+			$this->isCloaked = $this->db->getNumRows() > 0;
 		}
 		return $this->isCloaked;
 	}
@@ -202,13 +202,13 @@ class SmrShip extends AbstractSmrShip {
 	
 	function cloakOverload() {
 		// 1 in 25 chance of cloak being destroyed if active
-		if($this->isCloaked() && mt_rand(0,99) < 5) {
+		if ($this->isCloaked() && mt_rand(0, 99) < 5) {
 			$this->db->query('DELETE FROM ship_has_hardware
 								WHERE ' . $this->SQL . '
 								AND hardware_type_id = 8
 								LIMIT 1');
 			$this->decloak();
-			$this->setHardware(HARDWARE_CLOAK,0);
+			$this->setHardware(HARDWARE_CLOAK, 0);
 			return true;
 		}
 		
@@ -224,14 +224,14 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	public function getIllusionShip() {
-		if(!isset($this->illusionShip)) {
-			$this->illusionShip=false;
+		if (!isset($this->illusionShip)) {
+			$this->illusionShip = false;
 			$this->db->query('SELECT ship_has_illusion.*,ship_type.ship_name
 							FROM ship_has_illusion
 							JOIN ship_type USING(ship_type_id)
 							WHERE ' . $this->SQL . ' LIMIT 1');
-			if($this->db->nextRecord()) {
-				$this->illusionShip=array(
+			if ($this->db->nextRecord()) {
+				$this->illusionShip = array(
 										'ID' => $this->db->getInt('ship_type_id'),
 										'Attack' => $this->db->getInt('attack'),
 										'Defense' => $this->db->getInt('defense'),

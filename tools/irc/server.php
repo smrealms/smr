@@ -79,7 +79,7 @@ function server_msg_318($fp, $rdata)
 
 
 		global $actions;
-		foreach($actions as $key => $action) {
+		foreach ($actions as $key => $action) {
 
 			// is that a callback for our nick?
 			if ($action[0] == 'MSG_318' && $nick == $action[2]) {
@@ -96,7 +96,7 @@ function server_msg_318($fp, $rdata)
 					$action[4] = time();
 					array_push($actions, $action);
 					fputs($fp, 'NICKSERV INFO ' . $nick . EOL);
-				} else if($action[5] === true) {
+				} else if ($action[5] === true) {
 					fputs($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
 				}
 

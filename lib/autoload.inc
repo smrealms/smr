@@ -54,17 +54,17 @@ function get_file_loc($fileName) {
 
 	$startPaths = array(ENGINE, LIB, ADMIN);
 	$midPaths = array($gameDir, 'Default/');
-	foreach($midPaths as $midPath) {
-		foreach($startPaths as $startPath) {
+	foreach ($midPaths as $midPath) {
+		foreach ($startPaths as $startPath) {
 			$filePath = $startPath . $midPath . $fileName;
-			if(is_file($filePath) && is_readable($filePath)) {
+			if (is_file($filePath) && is_readable($filePath)) {
 				$cache[$cacheKey] = $filePath;
 				return $filePath;
 			}
 		}
 	}
 	$filePath = WWW . $fileName;
-	if(is_file($filePath) && is_readable($filePath)) {
+	if (is_file($filePath) && is_readable($filePath)) {
 		$cache[$cacheKey] = $filePath;
 		return WWW . $fileName;
 	}
