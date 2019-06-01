@@ -16,7 +16,7 @@
 	<body>
 		<div class="center">
 			<div class="collapsed">
-				<img src="images/login/smr_banner.gif" width="769" height="132" alt=""><br />
+				<img src="images/login/smr_banner.png" width="769" height="132" alt=""><br />
 
 				<!-- small header menu -->
 				<div id="small_menu">
@@ -42,7 +42,7 @@
 			</div>
 			<?php
 
-			if(isset($Message)) { ?>
+			if (isset($Message)) { ?>
 				<h4 style="margin-bottom: 0px;"><?php echo $Message ?></h4><?php
 			} ?>
 
@@ -124,18 +124,15 @@
 				</tr>
 			</table><?php
 
-			if(isset($GameNews)) { ?>
+			if (!empty($GameNews)) { ?>
 				<table class="standard center" style="width:730px;">
 					<tr>
-						<th>Time</th>
+						<th class="shrink">Time</th>
 						<th>Recent News</th>
 					</tr><?php
-					foreach($GameNews as $News) { ?>
+					foreach ($GameNews as $News) { ?>
 						<tr>
-							<td><?php
-								echo $News['Date']; ?><br /><?php
-								echo $News['Time']; ?>
-							</td>
+							<td class="center noWrap"><?php echo $News['Time']; ?></td>
 							<td><?php echo $News['Message']; ?></td>
 						</tr><?php
 					} ?>
@@ -144,11 +141,11 @@
 
 			<br /><?php
 
-			if(isset($Story)) { ?>
+			if (isset($Story)) { ?>
 				<table class="center nobord" style="width:640px;">
 					<tr>
 						<td><?php
-							foreach($Story as $StoryPart) { ?>
+							foreach ($Story as $StoryPart) { ?>
 								<p style="text-align:justify">
 									<span class="small" style="font-family: Verdana, Arial, Helvetica; color: #FFFFFF"><?php
 											echo $StoryPart; ?>

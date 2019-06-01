@@ -53,6 +53,10 @@ RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
 # Make the upload directory writable by the apache user
 RUN chown www-data ./htdocs/upload
 
+# Leverage browser caching of static assets using apache's mod_headers
+COPY apache/cache-static.conf /etc/apache2/conf-enabled/cache-static.conf
+RUN a2enmod headers
+
 # Store the git commit hash of the repo in the final image
 COPY .git/HEAD .git/HEAD
 COPY .git/refs .git/refs

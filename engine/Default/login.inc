@@ -6,11 +6,14 @@ $gameNews = array();
 $db->query('SELECT * FROM news WHERE type != \'admin\' ORDER BY time DESC LIMIT 4');
 while ($db->nextRecord()) {
 	$overrideGameID = $db->getInt('game_id');
-	$gameNews[] = array('Date' => date(DEFAULT_DATE_DATE_SHORT,$db->getField('time')), 'Time' => date(DEFAULT_DATE_TIME_SHORT,$db->getField('time')), 'Message' => bbifyMessage($db->getField('news_message')));
+	$gameNews[] = [
+		'Time' => date(DEFAULT_DATE_FULL_SHORT_SPLIT, $db->getInt('time')),
+		'Message' => bbifyMessage($db->getField('news_message')),
+	];
 }
+$template->assign('GameNews', $gameNews);
+
 unset($overrideGameID);
-if(count($gameNews)>0)
-	$template->assign('GameNews',$gameNews);
 
 require_once('login_story.inc');
 
