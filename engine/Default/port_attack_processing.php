@@ -45,12 +45,12 @@ foreach ($attackers as $attacker) {
 }
 
 foreach ($attackers as $attacker) {
-	$playerResults = & $attacker->shootPort($port);
-	$results['Attackers']['Traders'][$attacker->getAccountID()] = & $playerResults;
+	$playerResults =& $attacker->shootPort($port);
+	$results['Attackers']['Traders'][$attacker->getAccountID()] =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 }
 $results['Attackers']['Downgrades'] = $port->checkForDowngrade($results['Attackers']['TotalDamage']);
-$results['Port'] = & $port->shootPlayers($attackers);
+$results['Port'] =& $port->shootPlayers($attackers);
 
 $account->log(LOG_TYPE_PORT_RAIDING, 'Player attacks port, the port does ' . $results['Port']['TotalDamage'] . ', their team does ' . $results['Attackers']['TotalDamage'] . ' and downgrades ' . $results['Attackers']['Downgrades'] . ' levels.', $port->getSectorID());
 
