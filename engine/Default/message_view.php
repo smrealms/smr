@@ -206,7 +206,7 @@ function displayScouts(&$messageBox, $player) {
 					AND receiver_delete = ' . $db->escapeBoolean(false) . '
 					ORDER BY send_time DESC');
 	while ($db->nextRecord()) {
-		$groupBox = & $messageBox['GroupedMessages'][$db->getInt('sender_id')];
+		$groupBox =& $messageBox['GroupedMessages'][$db->getInt('sender_id')];
 		// Limit the number of messages in each group
 		if (!isset($groupBox['Messages']) || count($groupBox['Messages']) < MESSAGE_SCOUT_GROUP_LIMIT) {
 			displayMessage($groupBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), MSG_SCOUT);
