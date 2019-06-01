@@ -50,6 +50,8 @@ var exec = function(s) {
 		return false;
 	}
 
+	// This is used as a jQuery.get callback, but we don't use the arguments
+	// (textStatus, jqXHR), so they are omitted here.
 	updateRefresh = function(data) {
 		$('all > *', data).each(function(i, e) {
 			if(e.tagName === 'JS') {
@@ -94,10 +96,10 @@ var exec = function(s) {
 		var e = $(this);
 		data.toX = e.data('x');
 		data.toY = e.data('y');
-		$.get(submitMoveHREF, data, function(data, textStatus, jqXHR) {
+		$.get(submitMoveHREF, data, function(data) {
 				sn = getURLParameter('sn', submitMoveHREF);
 				highlightMoves();
-				updateRefresh(data, textStatus, jqXHR);
+				updateRefresh(data);
 			}, 'xml');
 	};
 
