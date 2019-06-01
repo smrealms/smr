@@ -42,7 +42,7 @@
 			</div>
 			<?php
 
-			if(isset($Message)) { ?>
+			if (isset($Message)) { ?>
 				<h4 style="margin-bottom: 0px;"><?php echo $Message ?></h4><?php
 			} ?>
 
@@ -130,7 +130,7 @@
 						<th class="shrink">Time</th>
 						<th>Recent News</th>
 					</tr><?php
-					foreach($GameNews as $News) { ?>
+					foreach ($GameNews as $News) { ?>
 						<tr>
 							<td class="center noWrap"><?php echo $News['Time']; ?></td>
 							<td><?php echo $News['Message']; ?></td>
@@ -141,11 +141,11 @@
 
 			<br /><?php
 
-			if(isset($Story)) { ?>
+			if (isset($Story)) { ?>
 				<table class="center nobord" style="width:640px;">
 					<tr>
 						<td><?php
-							foreach($Story as $StoryPart) { ?>
+							foreach ($Story as $StoryPart) { ?>
 								<p style="text-align:justify">
 									<span class="small" style="font-family: Verdana, Arial, Helvetica; color: #FFFFFF"><?php
 											echo $StoryPart; ?>
