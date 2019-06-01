@@ -1,5 +1,5 @@
 // Larger scale => smaller graph in the svg viewBox
-var scale = 1.1
+var scale = 1.1;
 var width = scale * window.innerWidth;
 var height = scale * window.innerHeight;
 
