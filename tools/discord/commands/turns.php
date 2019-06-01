@@ -15,7 +15,7 @@ function get_turns_message($player) {
 	return $msg;
 }
 
-$fn_turns = function ($message) {
+$fn_turns = function($message) {
 	$link = new GameLink($message->channel, $message->author);
 	if (!$link->valid) return;
 
@@ -23,7 +23,7 @@ $fn_turns = function ($message) {
 	$message->channel->sendMessage($msg);
 };
 
-$fn_turns_all = function ($message) {
+$fn_turns_all = function($message) {
 	$link = new GameLink($message->channel, $message->author);
 	if (!$link->valid) return;
 	$player = $link->player;

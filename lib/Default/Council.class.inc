@@ -9,14 +9,14 @@ class Council {
 	}
 
 	protected static function initialiseDatabase() {
-		if(self::$db==null)
+		if (self::$db == null)
 			self::$db = new SmrMySqlDatabase();
 	}
 
 	/**
 	 * Returns an array of Account ID's of the Council for this race.
 	 */
-	public static function &getRaceCouncil($gameID,$raceID) {
+	public static function &getRaceCouncil($gameID, $raceID) {
 		if (!isset(self::$COUNCILS[$gameID][$raceID])) {
 			self::initialiseDatabase();
 			self::$COUNCILS[$gameID][$raceID] = array();
@@ -24,7 +24,7 @@ class Council {
 
 			// Require council members to have > 0 exp to ensure that players
 			// cannot perform council activities before the game starts.
-			$i=1;
+			$i = 1;
 			self::$db->query('SELECT account_id, alignment
 								FROM player
 								WHERE game_id = ' . self::$db->escapeNumber($gameID) . '
@@ -33,7 +33,7 @@ class Council {
 									AND experience > 0
 								ORDER by experience DESC
 								LIMIT ' . MAX_COUNCIL_MEMBERS);
-			while(self::$db->nextRecord()) {
+			while (self::$db->nextRecord()) {
 				// Add this player to the council
 				self::$COUNCILS[$gameID][$raceID][$i++] = self::$db->getInt('account_id');
 
@@ -59,7 +59,7 @@ class Council {
 		return self::$PRESIDENTS[$gameID][$raceID];
 	}
 
-	public static function isOnCouncil($gameID,$raceID,$accountID) {
-		return in_array($accountID,self::getRaceCouncil($gameID,$raceID));
+	public static function isOnCouncil($gameID, $raceID, $accountID) {
+		return in_array($accountID, self::getRaceCouncil($gameID, $raceID));
 	}
 }

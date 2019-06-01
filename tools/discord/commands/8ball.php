@@ -2,7 +2,7 @@
 
 require_once(TOOLS . 'chat_helpers/channel_msg_8ball.php');
 
-$fn_8ball = function ($message, $params) {
+$fn_8ball = function($message, $params) {
 	if (empty($params)) {
 		$message->reply('do you have a question for the magic 8-ball?');
 	} else {

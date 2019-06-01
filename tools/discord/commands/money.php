@@ -2,7 +2,7 @@
 
 require_once(TOOLS . 'chat_helpers/channel_msg_money.php');
 
-$fn_money = function ($message) {
+$fn_money = function($message) {
 	$link = new GameLink($message->channel, $message->author);
 	if (!$link->valid) return;
 

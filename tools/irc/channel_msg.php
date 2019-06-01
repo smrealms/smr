@@ -24,7 +24,7 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 	// get alliance_id and game_id for this channel
 	$alliance = SmrAlliance::getAllianceByIrcChannel($channel, true);
 	if ($alliance == null) {
-		if($validationMessages === true) {
+		if ($validationMessages === true) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
 		}
 		return true;
@@ -33,11 +33,11 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 	// get smr account
 	$account = SmrAccount::getAccountByIrcNick($nick, true);
 	if ($account == null) {
-		if($registeredNick != '') {
+		if ($registeredNick != '') {
 			$account = SmrAccount::getAccountByIrcNick($registeredNick, true);
 		}
 		if ($account == null) {
-			if($validationMessages === true) {
+			if ($validationMessages === true) {
 				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
 			}
 			return true;
@@ -48,8 +48,8 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 	try {
 		$player = SmrPlayer::getPlayer($account->getAccountID(), $alliance->getGameId(), true);
 	}
-	catch(PlayerNotFoundException $e) {
-		if($validationMessages === true) {
+	catch (PlayerNotFoundException $e) {
+		if ($validationMessages === true) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
 		}
 		return true;
@@ -57,7 +57,7 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 
 	// is the user part of this alliance? (no need to check for 0, cannot happen at this point in code)
 	if ($player->getAllianceID() != $alliance->getAllianceID()) {
-		if($validationMessages === true) {
+		if ($validationMessages === true) {
 			fputs($fp, 'KICK ' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
 		}
 		return true;
@@ -81,7 +81,7 @@ function channel_msg_with_registration($fp, $rdata)
 			return true;
 		}
 		
-		if(check_for_registration($account, $player, $fp, $nick, $channel, 'channel_msg_with_registration($fp, \'' . $rdata . '\');')) {
+		if (check_for_registration($account, $player, $fp, $nick, $channel, 'channel_msg_with_registration($fp, \'' . $rdata . '\');')) {
 			return true;
 		}
 

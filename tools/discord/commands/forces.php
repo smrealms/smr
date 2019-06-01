@@ -2,7 +2,7 @@
 
 require_once(TOOLS . 'chat_helpers/channel_msg_forces.php');
 
-$fn_forces = function ($message, $params) {
+$fn_forces = function($message, $params) {
 	$link = new GameLink($message->channel, $message->author);
 	if (!$link->valid) return;
 
