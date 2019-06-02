@@ -15,8 +15,7 @@ function shared_channel_msg_forces($player, $option) {
 				)
 			ORDER BY expire_time ASC LIMIT 1'
 		);
-	}
-	else if ($option == "seedlist") {
+	} else if ($option == "seedlist") {
 		// are we restricting to the seedlist?
 		$seedlist = get_seedlist($player);
 		if (count($seedlist) == 0) {
@@ -33,8 +32,7 @@ function shared_channel_msg_forces($player, $option) {
 				)
 			ORDER BY expire_time ASC LIMIT 1'
 		);
-	}
-	else {
+	} else {
 		// did we get a galaxy name?
 		$db->query('SELECT galaxy_id FROM game_galaxy WHERE galaxy_name = ' . $db->escapeString($option));
 		if ($db->nextRecord()) {

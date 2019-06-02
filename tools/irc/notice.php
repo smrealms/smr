@@ -24,7 +24,7 @@ function notice_nickserv_registered_user($fp, $rdata)
 		}
 		
 		global $actions;
-		foreach($actions as $key => $action) {
+		foreach ($actions as $key => $action) {
 
 			// is that a callback for our nick?
 			if ($action[0] == 'NICKSERV_INFO' && $nick == $action[2]) {
@@ -59,7 +59,7 @@ function notice_nickserv_unknown_user($fp, $rdata)
 		echo_r('[NOTICE_NICKSERV_UNKNOWN_NICK] ' . $nick);
 		
 		global $actions;
-		foreach($actions as $key => $action) {
+		foreach ($actions as $key => $action) {
 
 			// is that a callback for our nick?
 			if ($action[0] == 'NICKSERV_INFO' && $nick == $action[2]) {
@@ -68,7 +68,7 @@ function notice_nickserv_unknown_user($fp, $rdata)
 				
 				unset($actions[$key]);
 
-				if($action[5] === true) {
+				if ($action[5] === true) {
 					fputs($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
 				}
 

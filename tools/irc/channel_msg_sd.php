@@ -43,7 +43,7 @@ function channel_msg_sd_set($fp, $rdata, $account, $player)
 		echo_r('[SD_SET] by ' . $nick . ' in ' . $channel);
 
 		// delete any old entries in the list
-		foreach($sds as $key => $value) {
+		foreach ($sds as $key => $value) {
 
 			if ($value[3] != $channel)
 				continue;
@@ -80,7 +80,7 @@ function channel_msg_sd_del($fp, $rdata, $account, $player)
 
 		echo_r('[SD_DEL] by ' . $nick . ' in ' . $channel);
 
-		foreach($sds as $key => $sd) {
+		foreach ($sds as $key => $sd) {
 
 			if ($sd[3] != $channel)
 				continue;

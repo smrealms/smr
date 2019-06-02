@@ -31,8 +31,7 @@ if (isset($var['maxValue'])
 	&& is_numeric($var['maxValue'])
 	&& $var['maxValue'] > 0) {
 	$maxValue = $var['maxValue'];
-}
-else {
+} else {
 	$db->query('SELECT MAX(transaction_id) FROM anon_bank_transactions
 				WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
 				AND anon_id=' . $db->escapeNumber($account_num)

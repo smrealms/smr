@@ -12,12 +12,12 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 
 	
 	protected static function initialiseDatabase() {
-		if(self::$db==null)
+		if (self::$db == null)
 			self::$db = new SmrMySqlDatabase();
 	}
 
-	public static function &getWeapon($weaponTypeID, $forceUpdate=false, $db=null) {
-		if($forceUpdate || !isset(self::$CACHE_WEAPONS[$weaponTypeID])) {
+	public static function &getWeapon($weaponTypeID, $forceUpdate = false, $db = null) {
+		if ($forceUpdate || !isset(self::$CACHE_WEAPONS[$weaponTypeID])) {
 			$w = new SmrWeapon($weaponTypeID, $db);
 			if ($w->exists())
 				self::$CACHE_WEAPONS[$weaponTypeID] = $w;
@@ -27,17 +27,17 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return self::$CACHE_WEAPONS[$weaponTypeID];
 	}
 
-	public static function &getAllWeapons($forceUpdate=false) {
+	public static function &getAllWeapons($forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM weapon_type');
-		$weapons=array();
-		while($db->nextRecord()) {
+		$weapons = array();
+		while ($db->nextRecord()) {
 			$weapons[] = self::getWeapon($db->getInt('weapon_type_id'), $forceUpdate, $db);
 		}
 		return $weapons;
 	}
 	
-	protected function __construct($weaponTypeID, $db=null) {
+	protected function __construct($weaponTypeID, $db = null) {
 		
 		$this->weaponTypeID = $weaponTypeID;
 		
@@ -61,7 +61,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			$this->buyerRestriction = $db->getInt('buyer_restriction');
 			$this->damageRollover = false;
 			$this->raidWeapon = false;
-			$this->maxDamage = max($this->shieldDamage,$this->armourDamage);
+			$this->maxDamage = max($this->shieldDamage, $this->armourDamage);
 		}
 	}
 
@@ -101,7 +101,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 	
 	protected function &getWeightedRandomForPlayer(AbstractSmrPlayer $player) {
-		return WeightedRandom::getWeightedRandomForPlayer($player,'Weapon',$this->getWeaponTypeID());
+		return WeightedRandom::getWeightedRandomForPlayer($player, 'Weapon', $this->getWeaponTypeID());
 	}
 	
 	protected function checkMiss(AbstractSmrPlayer $player, $percent) {
@@ -109,14 +109,14 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 	
 	public static function getPlayerLevelAccuracyMod(AbstractSmrPlayer $player) {
-		return ($player->getLevelID()*$player->getLevelID()/60+$player->getLevelID()/2+2) / 100;
+		return ($player->getLevelID() * $player->getLevelID() / 60 + $player->getLevelID() / 2 + 2) / 100;
 	}
 	
 	public function getModifiedAccuracy(AbstractSmrPlayer $weaponPlayer) {
 		$modifiedAccuracy = $this->getBaseAccuracy();
 		$modifiedAccuracy += $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($weaponPlayer);
 		if ($weaponPlayer->isGadgetEquipped('Increased Accuracy'))
-			$modifiedAccuracy += $this->getBaseAccuracy() * INCREASED_ACC_GADGET_FACTOR/100;
+			$modifiedAccuracy += $this->getBaseAccuracy() * INCREASED_ACC_GADGET_FACTOR / 100;
 		return $modifiedAccuracy;
 	}
 	
@@ -127,13 +127,13 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	
 	public function getModifiedAccuracyAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
 		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
-		$modifiedAccuracy -= $this->getBaseAccuracy() * $port->getLevel()/50;
+		$modifiedAccuracy -= $this->getBaseAccuracy() * $port->getLevel() / 50;
 		return $modifiedAccuracy;
 	}
 	
 	public function getModifiedAccuracyAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) {
 		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
-		$modifiedAccuracy -= $this->getBaseAccuracy() * $planet->getLevel()/350;
+		$modifiedAccuracy -= $this->getBaseAccuracy() * $planet->getLevel() / 350;
 		return $modifiedAccuracy;
 	}
 	
@@ -141,13 +141,13 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
 		$modifiedAccuracy -= $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($targetPlayer) / 2;
 		if ($targetPlayer->isGadgetEquipped('Increased Maneuverability'))
-			$modifiedAccuracy -= $this->getBaseAccuracy() * INCREASED_MAN_GADGET_FACTOR/100;
+			$modifiedAccuracy -= $this->getBaseAccuracy() * INCREASED_MAN_GADGET_FACTOR / 100;
 		
 		$weaponShip = $weaponPlayer->getShip();
 		$targetShip = $targetPlayer->getShip();
 		$mrDiff = $targetShip->getMR() - $weaponShip->getMR();
-		if($mrDiff > 0)
-			$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff/MR_FACTOR)/100;
+		if ($mrDiff > 0)
+			$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff / MR_FACTOR) / 100;
 	
 		return $modifiedAccuracy;
 	}
@@ -182,7 +182,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	public function &getModifiedDamage(AbstractSmrPlayer $weaponPlayer) {
 		$damage = $this->getDamage();
 		//do they have the weapon damage gadget?
-		if($weaponPlayer->isGadgetEquipped('Increased Weapon Damage')) {
+		if ($weaponPlayer->isGadgetEquipped('Increased Weapon Damage')) {
 			$damage['MaxDamage'] += $this->getMaxDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
 			$damage['Shield'] += $this->getShieldDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
 			$damage['Armour'] += $this->getArmourDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
@@ -191,23 +191,23 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 	
 	public function &getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
-		if(!$this->canShootForces()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+		if (!$this->canShootForces()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
-		$damage =& $this->getModifiedDamage($weaponPlayer);
+		$damage = & $this->getModifiedDamage($weaponPlayer);
 		return $damage;
 	}
 	
 	public function &getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
-		if(!$this->canShootPorts()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+		if (!$this->canShootPorts()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
-		$damage =& $this->getModifiedDamage($weaponPlayer);
+		$damage = & $this->getModifiedDamage($weaponPlayer);
 		return $damage;
 	}
 	
 	public function &getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) {
-		if(!$this->canShootPlanets()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+		if (!$this->canShootPlanets()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
-		$damage =& $this->getModifiedDamage($weaponPlayer);
+		$damage = & $this->getModifiedDamage($weaponPlayer);
 		
 		$planetMod = self::PLANET_DAMAGE_MOD;
 		$damage['MaxDamage'] = ceil($damage['MaxDamage'] * $planetMod);
@@ -223,16 +223,16 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 	
 	public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
-		if(!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculating any damage mods.
+		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculating any damage mods.
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
-		$damage =& $this->getModifiedDamage($weaponPlayer);
+		$damage = & $this->getModifiedDamage($weaponPlayer);
 		return $damage;
 	}
 	
 	public function &getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer) {
-		if(!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculating any damage mods.
+		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculating any damage mods.
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
@@ -241,7 +241,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 	
 	public function &getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) {
-		if(!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculating any damage mods.
+		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculating any damage mods.
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
@@ -251,42 +251,42 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	
 	public function &shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
 		$return = array('Weapon' => $this, 'TargetForces' => $forces);
-		if($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstForces($weaponPlayer,$forces))) { //Check if we miss
+		if ($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstForces($weaponPlayer, $forces))) { //Check if we miss
 			$return['Hit'] = false;
 			return $return;
 		}
 		$return['Hit'] = true;
-		return $this->doPlayerDamageToForce($return,$weaponPlayer, $forces);
+		return $this->doPlayerDamageToForce($return, $weaponPlayer, $forces);
 	}
 	
 	public function &shootPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
 		$return = array('Weapon' => $this, 'TargetPort' => $port);
-		if($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPort($weaponPlayer,$port))) { //Check if we miss
+		if ($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPort($weaponPlayer, $port))) { //Check if we miss
 			$return['Hit'] = false;
 			return $return;
 		}
 		$return['Hit'] = true;
-		return $this->doPlayerDamageToPort($return,$weaponPlayer, $port);
+		return $this->doPlayerDamageToPort($return, $weaponPlayer, $port);
 	}
 	
 	public function &shootPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet, $delayed) {
 		$return = array('Weapon' => $this, 'TargetPlanet' => $planet);
-		if($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPlanet($weaponPlayer,$planet))) { //Check if we miss
+		if ($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet))) { //Check if we miss
 			$return['Hit'] = false;
 			return $return;
 		}
 		$return['Hit'] = true;
-		return $this->doPlayerDamageToPlanet($return,$weaponPlayer, $planet, $delayed);
+		return $this->doPlayerDamageToPlanet($return, $weaponPlayer, $planet, $delayed);
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
 		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer);
-		if($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPlayer($weaponPlayer,$targetPlayer))) { //Check if we miss
+		if ($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPlayer($weaponPlayer, $targetPlayer))) { //Check if we miss
 			$return['Hit'] = false;
 			return $return;
 		}
 		$return['Hit'] = true;
-		return $this->doPlayerDamageToPlayer($return,$weaponPlayer, $targetPlayer);
+		return $this->doPlayerDamageToPlayer($return, $weaponPlayer, $targetPlayer);
 	}
 	
 	public function &shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
@@ -296,22 +296,22 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	
 	public function &shootPlayerAsPort(SmrPort $port, AbstractSmrPlayer $targetPlayer) {
 		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer);
-		if($this->checkMiss($targetPlayer, $this->getModifiedPortAccuracyAgainstPlayer($port,$targetPlayer))) { //Check if the port misses, weight based upon the player being shot at.
+		if ($this->checkMiss($targetPlayer, $this->getModifiedPortAccuracyAgainstPlayer($port, $targetPlayer))) { //Check if the port misses, weight based upon the player being shot at.
 			$return['Hit'] = false;
 			return $return;
 		}
 		$return['Hit'] = true;
-		return $this->doPortDamageToPlayer($return,$port, $targetPlayer);
+		return $this->doPortDamageToPlayer($return, $port, $targetPlayer);
 	}
 	
 	public function &shootPlayerAsPlanet(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) {
 		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer);
-		if($this->checkMiss($targetPlayer, $this->getModifiedPlanetAccuracyAgainstPlayer($planet,$targetPlayer))) { //Check if the planet misses, weight based upon the player being shot at.
+		if ($this->checkMiss($targetPlayer, $this->getModifiedPlanetAccuracyAgainstPlayer($planet, $targetPlayer))) { //Check if the planet misses, weight based upon the player being shot at.
 			$return['Hit'] = false;
 			return $return;
 		}
 		$return['Hit'] = true;
-		return $this->doPlanetDamageToPlayer($return,$planet, $targetPlayer);
+		return $this->doPlanetDamageToPlayer($return, $planet, $targetPlayer);
 	}
 	
 }

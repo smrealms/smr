@@ -9,13 +9,13 @@ class SocialLogin {
 	private $loginType = null;
 	private $userID = null;
 	private $email = null;
-	private static $facebook=null;
+	private static $facebook = null;
 
 	private static function getFacebookObj() {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
-		if(self::$facebook==null) {
+		if (self::$facebook == null) {
 			self::$facebook = new Facebook\Facebook([
 				'app_id' => FACEBOOK_APP_ID,
 				'app_secret' => FACEBOOK_APP_SECRET,
@@ -25,7 +25,7 @@ class SocialLogin {
 		return self::$facebook;
 	}
 
-	private static function getTwitterObj($token=null) {
+	private static function getTwitterObj($token = null) {
 		return new Abraham\TwitterOAuth\TwitterOAuth(
 			TWITTER_CONSUMER_KEY,
 			TWITTER_CONSUMER_SECRET,
@@ -70,7 +70,7 @@ class SocialLogin {
 	public function __construct($loginType) {
 		$this->loginType = $loginType;
 
-		if($loginType == self::FACEBOOK) {
+		if ($loginType == self::FACEBOOK) {
 			$helper = self::getFacebookObj()->getRedirectLoginHelper();
 			$accessToken = $helper->getAccessToken(self::getRedirectUrl($loginType));
 			$response = self::getFacebookObj()->get('/me?fields=email', $accessToken);
@@ -79,7 +79,7 @@ class SocialLogin {
 			$this->email = $userInfo->getEmail();
 			$this->valid = true;
 		}
-		else if($loginType == self::TWITTER) {
+		else if ($loginType == self::TWITTER) {
 			if (session_status() === PHP_SESSION_NONE) {
 				session_start();
 			}

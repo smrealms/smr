@@ -5,11 +5,11 @@ $forceOwner = $forces->getOwner();
 
 if ($player->hasNewbieTurns())
 	create_error('You are under newbie protection!');
-if($player->hasFederalProtection())
+if ($player->hasFederalProtection())
 	create_error('You are under federal protection.');
-if($player->isLandedOnPlanet())
+if ($player->isLandedOnPlanet())
 	create_error('You cannot attack forces whilst on a planet!');
-if(!$player->canFight())
+if (!$player->canFight())
 	create_error('You are not allowed to fight!');
 if ($player->forceNAPAlliance($forceOwner))
 	create_error('You cannot attack allied forces!');
@@ -28,7 +28,7 @@ if ($bump) {
 	if (!$forces->hasMines())
 		create_error('No mines in sector!');
 } else {
-	if(!$forces->exists())
+	if (!$forces->exists())
 		create_error('These forces no longer exist.');
 	if ($player->getTurns() < $forces->getAttackTurnCost($ship))
 		create_error('You do not have enough turns to attack these forces!');
@@ -72,18 +72,18 @@ foreach ($attackers as $attacker) {
 
 // If mines are bumped, the forces shoot first. Otherwise player shoots first.
 if ($bump) {
-	$results['Forces'] =& $forces->shootPlayers($attackers, $bump);
+	$results['Forces'] = & $forces->shootPlayers($attackers, $bump);
 }
 
 $results['Attackers'] = array('TotalDamage' => 0);
 foreach ($attackers as $attacker) {
-	$playerResults =& $attacker->shootForces($forces);
-	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
+	$playerResults = & $attacker->shootForces($forces);
+	$results['Attackers']['Traders'][$attacker->getAccountID()] = & $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 }
 
 if (!$bump) {
-	$results['Forces'] =& $forces->shootPlayers($attackers, $bump);
+	$results['Forces'] = & $forces->shootPlayers($attackers, $bump);
 	$forces->updateExpire();
 }
 
@@ -96,20 +96,20 @@ unserialize($serializedResults); //because of references we have to undo this.
 $logId = $db->getInsertID();
 
 if ($sendMessage) {
-	$message = 'Your forces in sector '.Globals::getSectorBBLink($forces->getSectorID()).' are under <span class="red">attack</span> by '.$player->getBBLink().'! [combatlog='.$logId.']';
+	$message = 'Your forces in sector ' . Globals::getSectorBBLink($forces->getSectorID()) . ' are under <span class="red">attack</span> by ' . $player->getBBLink() . '! [combatlog=' . $logId . ']';
 	$forces->ping($message, $player, true);
 }
 
 $container = create_container('skeleton.php', 'forces_attack.php');
 
 // If their target is dead there is no continue attack button
-if($forces->exists())
+if ($forces->exists())
 	$container['owner_id'] = $forces->getOwnerID();
 else
 	$container['owner_id'] = 0;
 
 // If they died on the shot they get to see the results
-if($player->isDead()) {
+if ($player->isDead()) {
 	$container['override_death'] = TRUE;
 	$container['owner_id'] = 0;
 }

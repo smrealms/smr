@@ -1,44 +1,44 @@
 <?php
 function logException(Throwable $e) {
-	global $account,$var,$player,$db;
+	global $account, $var, $player, $db;
 	$errorType = 'Unexpected Game Error!';
-	$message='';
-	$currMySQLError='';
+	$message = '';
+	$currMySQLError = '';
 
-	if(is_object($account)) {
-		$message .= 'Login: '.$account->getLogin().EOL.EOL.'-----------'.EOL.EOL.
-			'Account ID: '.$account->getAccountID().EOL.EOL.'-----------'.EOL.EOL.
-			'E-Mail: '.$account->getEmail().EOL.EOL.'-----------'.EOL.EOL;
+	if (is_object($account)) {
+		$message .= 'Login: ' . $account->getLogin() . EOL . EOL . '-----------' . EOL . EOL .
+			'Account ID: ' . $account->getAccountID() . EOL . EOL . '-----------' . EOL . EOL .
+			'E-Mail: ' . $account->getEmail() . EOL . EOL . '-----------' . EOL . EOL;
 	}
-	$message .= 'Error Message: '. $e .EOL.EOL.'-----------'.EOL.EOL;
+	$message .= 'Error Message: ' . $e . EOL . EOL . '-----------' . EOL . EOL;
 
 	// Only check database if it was already loaded (do not try to autoload)
 	if (class_exists('MySqlDatabase', false) && ($db instanceof MySqlDatabase)) {
-		if($currMySQLError = $db->getError()) {
+		if ($currMySQLError = $db->getError()) {
 			$errorType = 'Database Error';
-			$message .= 'MySQL Error MSG: '.$db->getError().EOL.EOL.'-----------'.EOL.EOL;
+			$message .= 'MySQL Error MSG: ' . $db->getError() . EOL . EOL . '-----------' . EOL . EOL;
 		}
 	}
 
 	$message .=
-		'$var: '.var_export($var,true).EOL.EOL.'-----------'.EOL.EOL.
-		'USING_AJAX: '.(defined('USING_AJAX')?var_export(USING_AJAX,true):'undefined');
+		'$var: ' . var_export($var, true) . EOL . EOL . '-----------' . EOL . EOL .
+		'USING_AJAX: ' . (defined('USING_AJAX') ?var_export(USING_AJAX, true) : 'undefined');
 
 	try {
-		if(function_exists('release_lock'))
+		if (function_exists('release_lock'))
 			release_lock(); //Try to release lock so they can carry on normally
 	}
-	catch(Throwable $ee) {
-		$message .= EOL.EOL.'-----------'.EOL.EOL.
-					'Releasing Lock Failed' .EOL.
-					'Message: ' . $ee .EOL.EOL;
-		if($currMySQLError!=$db->getError()) {
-			$message .= 'MySQL Error MSG: '.$db->getError().EOL.EOL;
+	catch (Throwable $ee) {
+		$message .= EOL . EOL . '-----------' . EOL . EOL .
+					'Releasing Lock Failed' . EOL .
+					'Message: ' . $ee . EOL . EOL;
+		if ($currMySQLError != $db->getError()) {
+			$message .= 'MySQL Error MSG: ' . $db->getError() . EOL . EOL;
 		}
 	}
 
 	if (defined('NPC_SCRIPT')) {
-		$message = 'Script: '.SCRIPT_ID.EOL.EOL.'-----------'.EOL.EOL.$message;
+		$message = 'Script: ' . SCRIPT_ID . EOL . EOL . '-----------' . EOL . EOL . $message;
 		var_dump($message);
 		return;
 	}
@@ -46,16 +46,16 @@ function logException(Throwable $e) {
 	// Unconditionally send error message to the log
 	error_log($message);
 
-	if(ENABLE_DEBUG) {
+	if (ENABLE_DEBUG) {
 		// Display error message on the page and then exit
 		echo nl2br($message);
 		exit;
 	}
 
 	// Send error message to the in-game auto bugs mailbox
-	if (is_object($player) && method_exists($player,'sendMessageToBox')) {
+	if (is_object($player) && method_exists($player, 'sendMessageToBox')) {
 		$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
-	} elseif (is_object($account) && method_exists($account,'sendMessageToBox')) {
+	} elseif (is_object($account) && method_exists($account, 'sendMessageToBox')) {
 		// Will be logged without a game_id
 		$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
 	} else {
@@ -90,8 +90,8 @@ function handleException(Throwable $e) {
 
 	// If this is an ajax update, we don't really have a way to redirect
 	// to an error page at this time, so we just quit.
-	if(!defined('USING_AJAX')||!USING_AJAX)
-		header('location: /error.php?msg='.urlencode($errorType));
+	if (!defined('USING_AJAX') || !USING_AJAX)
+		header('location: /error.php?msg=' . urlencode($errorType));
 	exit;
 }
 

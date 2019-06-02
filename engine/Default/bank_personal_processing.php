@@ -36,8 +36,7 @@ if ($action == 'Deposit') {
 	// log action
 	$account->log(LOG_TYPE_BANK, 'Deposits ' . $amount . ' credits in personal account', $player->getSectorID());
 
-}
-else {
+} else {
 
 	if ($player->getBank() < $amount) {
 		create_error('You don\'t have that much money on your account!');

@@ -152,7 +152,7 @@ while ($running) {
 
 function safefputs($fp, $text) {
 	stream_set_blocking($fp, false);
-	while(readFromStream($fp)!==false);
+	while (readFromStream($fp) !== false);
 	fputs($fp, $text);
 	stream_set_blocking($fp, true);
 }
@@ -200,9 +200,9 @@ function readFromStream($fp) {
 		return;
 
 	//Are they using a linked nick instead
-	if(notice_nickserv_registered_user($fp, $rdata))
+	if (notice_nickserv_registered_user($fp, $rdata))
 		return;
-	if(notice_nickserv_unknown_user($fp, $rdata))
+	if (notice_nickserv_unknown_user($fp, $rdata))
 		return;
 
 	// some nice things

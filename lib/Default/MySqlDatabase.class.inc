@@ -11,7 +11,7 @@ abstract class MySqlDatabase {
 	protected $dbRecord = null;
 	
 	public function __construct($dbName) {
-		if(!self::$dbConn) {
+		if (!self::$dbConn) {
 			self::$dbConn = new mysqli(self::$host, self::$user, self::$password,
 			                           $dbName, self::$port, self::$socket);
 			if (self::$dbConn->connect_errno) {
@@ -56,17 +56,17 @@ abstract class MySqlDatabase {
 	}
 	
 	public function query($query) {
-		if(!$this->dbResult = self::$dbConn->query($query)) {
+		if (!$this->dbResult = self::$dbConn->query($query)) {
 			$this->error('SQL query failed (' . $query . ')');
 			// the SQL error message will be reported by logException
 		}
 	}
 	
 	public function nextRecord() {
-		if(!$this->dbResult)
+		if (!$this->dbResult)
 			$this->error('No resource to get record from.');
 		
-		if($this->dbRecord = $this->dbResult->fetch_assoc()) {
+		if ($this->dbRecord = $this->dbResult->fetch_assoc()) {
 			return true;
 		}
 		return false;
@@ -79,7 +79,7 @@ abstract class MySqlDatabase {
 	}
 	
 	public function getBoolean($name) {
-		if($this->dbRecord[$name] == 'TRUE')
+		if ($this->dbRecord[$name] == 'TRUE')
 			return true;
 //		if($this->dbRecord[$name] == 'FALSE')
 		return false;
@@ -98,7 +98,7 @@ abstract class MySqlDatabase {
 	// For backwards compatibility, set $pad_msec=true to try to guess at the
 	// intended value. This is not safe if the Microtime length is wrong for an
 	// unrelated reason!
-	public function getMicrotime($name, $pad_msec=false) {
+	public function getMicrotime($name, $pad_msec = false) {
 		$data = $this->dbRecord[$name];
 		$sec  = substr($data, 0, 10);
 		$msec = substr($data, 10);
@@ -106,15 +106,15 @@ abstract class MySqlDatabase {
 			if ($pad_msec) {
 				$msec = str_pad($msec, 6, '0', STR_PAD_LEFT);
 			} else {
-				throw new Exception('Field is not an escaped microtime ('.$data.')');
+				throw new Exception('Field is not an escaped microtime (' . $data . ')');
 			}
 		}
 		return "$sec.$msec";
 	}
 	
-	public function getObject($name,$compressed=false) {
+	public function getObject($name, $compressed = false) {
 		$object = $this->getField($name);
-		if($compressed===true)
+		if ($compressed === true)
 			$object = gzuncompress($object);
 		return unserialize($object);
 	}
@@ -124,13 +124,13 @@ abstract class MySqlDatabase {
 	}
 	
 	public function lockTable($table) {
-		if(!self::$dbConn->query('LOCK TABLES ' . $table . ' WRITE')) {
-			$this->error('Unable to lock table: '. $table);
+		if (!self::$dbConn->query('LOCK TABLES ' . $table . ' WRITE')) {
+			$this->error('Unable to lock table: ' . $table);
 		}
 	}
 	
 	public function unlock() {
-		if(!self::$dbConn->query('UNLOCK TABLES')) {
+		if (!self::$dbConn->query('UNLOCK TABLES')) {
 			$this->error('Unable to remove table locks.');
 		}
 	}
@@ -155,70 +155,70 @@ abstract class MySqlDatabase {
 		throw new Exception($err);
 	}
 	
-	public function escape($escape,$autoQuotes=true,$quotes=true) {
-		if(is_bool($escape)) {
-			if($autoQuotes)
+	public function escape($escape, $autoQuotes = true, $quotes = true) {
+		if (is_bool($escape)) {
+			if ($autoQuotes)
 				return $this->escapeBoolean($escape);
 			else
-				return $this->escapeBoolean($escape,$quotes);
+				return $this->escapeBoolean($escape, $quotes);
 		}
-		if(is_numeric($escape)) {
+		if (is_numeric($escape)) {
 			return $this->escapeNumber($escape);
 		}
-		if(is_string($escape)) {
-			if($autoQuotes)
+		if (is_string($escape)) {
+			if ($autoQuotes)
 				return $this->escapeString($escape);
 			else
-				return $this->escapeString($escape,$quotes);
+				return $this->escapeString($escape, $quotes);
 		}
-		if(is_array($escape)) {
-			return $this->escapeArray($escape,$autoQuotes,$quotes);
+		if (is_array($escape)) {
+			return $this->escapeArray($escape, $autoQuotes, $quotes);
 		}
-		if(is_object($escape)) {
-			if($autoQuotes)
+		if (is_object($escape)) {
+			if ($autoQuotes)
 				return $this->escapeObject($escape);
 			else
-				return $this->escapeObject($escape,$quotes);
+				return $this->escapeObject($escape, $quotes);
 		}
 	}
 	
-	public function escapeString($string,$quotes=true,$nullable=false) {
-		if($nullable===true && ($string===null || $string===''))
+	public function escapeString($string, $quotes = true, $nullable = false) {
+		if ($nullable === true && ($string === null || $string === ''))
 			return 'NULL';
-		if($string===true)
+		if ($string === true)
 			$string = 'TRUE';
-		else if($string===false)
+		else if ($string === false)
 			$string = 'FALSE';
-		if(is_array($string)) {
+		if (is_array($string)) {
 			$escapedString = '';
-			foreach($string as $value) {
-				$escapedString .= $this->escapeString($value, $quotes) .',';
+			foreach ($string as $value) {
+				$escapedString .= $this->escapeString($value, $quotes) . ',';
 			}
-			return substr($escapedString,0,-1);
+			return substr($escapedString, 0, -1);
 		}
-		if($quotes) {
+		if ($quotes) {
 			return '\'' . self::$dbConn->real_escape_string($string) . '\'';
 		}
 		return self::$dbConn->real_escape_string($string);
 	}
 	
 	public function escapeBinary($binary) {
-		return '0x'.bin2hex($binary);
+		return '0x' . bin2hex($binary);
 	}
 	
-	public function escapeArray(array $array,$autoQuotes=true,$quotes=true,$implodeString=',',$escapeIndividually=true) {
+	public function escapeArray(array $array, $autoQuotes = true, $quotes = true, $implodeString = ',', $escapeIndividually = true) {
 		$string = '';
-		if($escapeIndividually) {
-			foreach($array as $value) {
-				if(is_array($value))
-					$string .= $this->escapeArray($value,$autoQuotes,$quotes,$implodeString,$escapeIndividually).$implodeString;
+		if ($escapeIndividually) {
+			foreach ($array as $value) {
+				if (is_array($value))
+					$string .= $this->escapeArray($value, $autoQuotes, $quotes, $implodeString, $escapeIndividually) . $implodeString;
 				else
-					$string .= $this->escape($value, $autoQuotes, $quotes).$implodeString;
+					$string .= $this->escape($value, $autoQuotes, $quotes) . $implodeString;
 			}
-			$string = substr($string,0,-1);
+			$string = substr($string, 0, -1);
 		}
 		else {
-			$string = $this->escape(implode($implodeString,$array), $autoQuotes, $quotes);
+			$string = $this->escape(implode($implodeString, $array), $autoQuotes, $quotes);
 		}
 		return $string;
 	}
@@ -229,29 +229,29 @@ abstract class MySqlDatabase {
 		if (is_numeric($num)) {
 			return $num;
 		} else {
-			throw new Exception('Not a number! ('.$num.')');
+			throw new Exception('Not a number! (' . $num . ')');
 		}
 	}
 	
-	public function escapeMicrotime($microtime,$quotes=false) {
+	public function escapeMicrotime($microtime, $quotes = false) {
 		$sec_str = sprintf('%010d', $microtime);
-		$usec_str = sprintf('%06d', fmod($microtime,1) * 1E6);
+		$usec_str = sprintf('%06d', fmod($microtime, 1) * 1E6);
 		return $this->escapeString($sec_str . $usec_str, $quotes);
 	}
 	
-	public function escapeBoolean($bool,$quotes=true) {
-		if($bool===true)
-			return $this->escapeString('TRUE',$quotes);
-		else if($bool===false)
-			return $this->escapeString('FALSE',$quotes);
+	public function escapeBoolean($bool, $quotes = true) {
+		if ($bool === true)
+			return $this->escapeString('TRUE', $quotes);
+		else if ($bool === false)
+			return $this->escapeString('FALSE', $quotes);
 		else
 			throw new Exception('Not a boolean!'); //TEST
 	}
 	
-	public function escapeObject($object,$compress=false,$quotes=true,$nullable=false) {
-		if($compress===true)
+	public function escapeObject($object, $compress = false, $quotes = true, $nullable = false) {
+		if ($compress === true)
 			return $this->escapeBinary(gzcompress(serialize($object)));
-		return $this->escapeString(serialize($object),$quotes,$nullable);
+		return $this->escapeString(serialize($object), $quotes, $nullable);
 	}
 
 }

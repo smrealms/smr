@@ -11,7 +11,7 @@ try {
 
 	// get this user from db
 	$account = SmrAccount::getAccountByEmail($_REQUEST['email']);
-	if ($account==null) {
+	if ($account == null) {
 		// unknown user
 		header('Location: /error.php?msg=' . rawurlencode('The specified e-mail address is not registered!'));
 		exit;
@@ -19,13 +19,13 @@ try {
 
 	$account->generatePasswordReset();
 
-	$resetURL = URL.'/reset_password.php?login='.$account->getLogin().'&resetcode='.$account->getPasswordReset();
+	$resetURL = URL . '/reset_password.php?login=' . $account->getLogin() . '&resetcode=' . $account->getPasswordReset();
 	$emailMessage =
-		 'A user from ' . getIpAddress() . ' requested to reset your password!'.EOL.EOL.
-		 '   Your game login is: ' . $account->getLogin().EOL.
-		 '   Your password reset code is: ' . $account->getPasswordReset().EOL.EOL.
-		 '   You can use this url: '.$resetURL .EOL.EOL.
-		 'The Space Merchant Realms server is on the web at '.URL.'/';
+		 'A user from ' . getIpAddress() . ' requested to reset your password!' . EOL . EOL .
+		 '   Your game login is: ' . $account->getLogin() . EOL .
+		 '   Your password reset code is: ' . $account->getPasswordReset() . EOL . EOL .
+		 '   You can use this url: ' . $resetURL . EOL . EOL .
+		 'The Space Merchant Realms server is on the web at ' . URL . '/';
 
 	// send email with password to user
 	$mail = setupMailer();
@@ -39,6 +39,6 @@ try {
 	exit;
 
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }

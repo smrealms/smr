@@ -1,13 +1,13 @@
 <?php
 
 // If on a planet, forward to planet_main.php
-if($player->isLandedOnPlanet()) {
+if ($player->isLandedOnPlanet()) {
 	forward(create_container('skeleton.php', 'planet_main.php', $var));
 }
 
-$template->assign('SpaceView',true);
+$template->assign('SpaceView', true);
 
-$template->assign('PageTopic','Current Sector: ' . $player->getSectorID() . ' (' .$sector->getGalaxyName() . ')');
+$template->assign('PageTopic', 'Current Sector: ' . $player->getSectorID() . ' (' . $sector->getGalaxyName() . ')');
 
 Menu::navigation($template, $player);
 
@@ -28,25 +28,25 @@ $links['Warp'] = array('ID'=>$sector->getWarp());
 
 $unvisited = array();
 
-$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeString($links,false) . ') AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
-while($db->nextRecord()) {
+$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeString($links, false) . ') AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
+while ($db->nextRecord()) {
 	$unvisited[$db->getField('sector_id')] = TRUE;
 }
 
-foreach($links as $key => $linkArray) {
-	if($linkArray['ID']>0 && $linkArray['ID']!=$player->getSectorID()) {
+foreach ($links as $key => $linkArray) {
+	if ($linkArray['ID'] > 0 && $linkArray['ID'] != $player->getSectorID()) {
 		if ($player->getLastSectorID() == $linkArray['ID']) $class = 'lastVisited';
-		else if(isset($unvisited[$linkArray['ID']])) $class = 'unvisited';
+		else if (isset($unvisited[$linkArray['ID']])) $class = 'unvisited';
 		else $class = 'visited';
-		$links[$key]['Class']=$class;
+		$links[$key]['Class'] = $class;
 	}
 }
 
-$template->assign('Sectors',$links);
+$template->assign('Sectors', $links);
 
 doTickerAssigns($template, $player, $db);
 
-if(!isset($var['UnreadMissions'])) {
+if (!isset($var['UnreadMissions'])) {
 	$unreadMissions = $player->markMissionsRead();
 	SmrSession::updateVar('UnreadMissions', $unreadMissions);
 }
@@ -62,7 +62,7 @@ $game = SmrGame::getGame($player->getGameID());
 if (!$game->hasStarted()) {
 	$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - TIME) . '!';
 } else {
-	switch($player->getTurnsLevel()) {
+	switch ($player->getTurnsLevel()) {
 		case 'NONE':
 			$turnsMessage = '<span class="red">WARNING</span>: You have run out of turns!';
 		break;
@@ -74,7 +74,7 @@ if (!$game->hasStarted()) {
 		break;
 	}
 }
-$template->assign('TurnsMessage',$turnsMessage);
+$template->assign('TurnsMessage', $turnsMessage);
 
 $protectionMessage = '';
 if ($player->getNewbieTurns()) {
@@ -87,11 +87,11 @@ if ($player->getNewbieTurns()) {
 elseif ($player->hasFederalProtection()) {
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are under <span class="blue">FEDERAL</span> protection.';
 }
-elseif($sector->offersFederalProtection())
+elseif ($sector->offersFederalProtection())
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are <span class="red">NOT</span> under protection.';
 
-if(!empty($protectionMessage))
-	$template->assign('ProtectionMessage',$protectionMessage);
+if (!empty($protectionMessage))
+	$template->assign('ProtectionMessage', $protectionMessage);
 
 //enableProtectionDependantRefresh($template,$player);
 
@@ -133,44 +133,44 @@ if (!empty($var['trade_msg'])) {
 // *
 // *******************************************
 
-if($sector->hasPort()) {
+if ($sector->hasPort()) {
 	$port = $sector->getPort();
-	$template->assign('PortIsAtWar',$player->getRelation($port->getRaceID()) < RELATIONS_WAR);
+	$template->assign('PortIsAtWar', $player->getRelation($port->getRaceID()) < RELATIONS_WAR);
 }
 
 function checkForForceRefreshMessage(&$msg) {
-	global $db,$player,$template;
+	global $db, $player, $template;
 	$contains = 0;
-	$msg = str_replace('[Force Check]','',$msg,$contains);
-	if($contains>0) {
-		if(!$template->hasTemplateVar('ForceRefreshMessage')) {
-			$forceRefreshMessage ='';
+	$msg = str_replace('[Force Check]', '', $msg, $contains);
+	if ($contains > 0) {
+		if (!$template->hasTemplateVar('ForceRefreshMessage')) {
+			$forceRefreshMessage = '';
 			$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . $db->escapeNumber(TIME) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
 			if ($db->nextRecord()) {
 				$remainingTime = $db->getField('refresh_at') - TIME;
-				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
+				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
 				$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', \'[Force Check]\')');
 			}
 			else $forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
-			$template->assign('ForceRefreshMessage',$forceRefreshMessage);
+			$template->assign('ForceRefreshMessage', $forceRefreshMessage);
 		}
 	}
 }
 
 function checkForAttackMessage(&$msg) {
-	global $db,$player,$template;
+	global $db, $player, $template;
 	$contains = 0;
-	$msg = str_replace('[ATTACK_RESULTS]','',$msg,$contains);
-	if($contains>0) {
+	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
+	if ($contains > 0) {
 		// $msg now contains only the log_id, if there is one
-		SmrSession::updateVar('AttackMessage','[ATTACK_RESULTS]'.$msg);
-		if(!$template->hasTemplateVar('AttackResults')) {
+		SmrSession::updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
+		if (!$template->hasTemplateVar('AttackResults')) {
 			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');
-			if($db->nextRecord()) {
-				if($player->getSectorID()==$db->getField('sector_id')) {
+			if ($db->nextRecord()) {
+				if ($player->getSectorID() == $db->getField('sector_id')) {
 					$results = unserialize(gzuncompress($db->getField('result')));
-					$template->assign('AttackResultsType',$db->getField('type'));
-					$template->assign('AttackResults',$results);
+					$template->assign('AttackResultsType', $db->getField('type'));
+					$template->assign('AttackResults', $results);
 					$template->assign('AttackLogLink', linkCombatLog($msg));
 				}
 			}

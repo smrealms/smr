@@ -45,14 +45,14 @@ try {
 	
 		$db->query('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
-					WHERE hof_name LIKE '.$db->escapeString($query.'%').' AND
+					WHERE hof_name LIKE '.$db->escapeString($query . '%') . ' AND
 						  approved = \'YES\'
 					ORDER BY hof_name');
 	
 		if ($db->getNumRows() > 1) {
 			$db2->query('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
-					WHERE hof_name = '.$db->escapeString($query).' AND
+					WHERE hof_name = '.$db->escapeString($query) . ' AND
 						  approved = \'YES\'
 					ORDER BY hof_name');
 			
@@ -85,7 +85,7 @@ try {
 	else
 		main_page();
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }
 ?>
@@ -139,7 +139,7 @@ Quick Search:<br />
 
 <tr>
 	<td class="left" style='font-size:65%;'>
-		&copy; 2002-<?php echo date('Y',TIME); ?> by <a href="<?php echo URL; ?>"><?php echo URL; ?></a><br />
+		&copy; 2002-<?php echo date('Y', TIME); ?> by <a href="<?php echo URL; ?>"><?php echo URL; ?></a><br />
 		Hosted by <a href='http://www.fem.tu-ilmenau.de/' target='fem'>FeM</a>
 	</td>
 </tr>
