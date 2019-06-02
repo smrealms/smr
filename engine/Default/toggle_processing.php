@@ -5,8 +5,7 @@ if ($var['toggle'] == 'WeaponHiding') {
 	if (USING_AJAX) {
 		exit;
 	}
-}
-else if ($var['toggle'] == 'AJAX') {
+} else if ($var['toggle'] == 'AJAX') {
 	$account->setUseAJAX(!$account->isUseAJAX());
 }
 

@@ -15,8 +15,7 @@
 						</a>
 					</div><?php
 				}
-			}
-			else { ?>
+			} else { ?>
 				<div class="move_up move_text"></div>
 				<?php if ($ThisShip->hasScanner()) {
 					?><div class="scan_up scan_hover scan_text_hor"></div><?php
@@ -37,8 +36,7 @@
 						</a>
 					</div><?php
 				}
-			}
-			else { ?>
+			} else { ?>
 				<div class="move_left move_text"></div><?php
 				if ($ThisShip->hasScanner()) {
 					?><div class="scan_left scan_hover scan_text_vert"></div><?php
@@ -70,8 +68,7 @@
 						</a>
 					</div><?php
 				}
-			}
-			else { ?>
+			} else { ?>
 				<div class="move_right move_text"></div><?php
 				if ($ThisShip->hasScanner()) {
 					?><div class="scan_right scan_hover scan_text_vert"></div><?php
@@ -92,8 +89,7 @@
 						</a>
 					</div><?php
 				}
-			}
-			else { ?>
+			} else { ?>
 				<div class="move_down move_text"></div>
 				<?php if ($ThisShip->hasScanner()) {
 					?><div class="scan_down scan_hover scan_text_hor"></div><?php 

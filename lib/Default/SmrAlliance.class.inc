@@ -151,8 +151,7 @@ class SmrAlliance {
 			$this->db->query('SELECT channel FROM irc_alliance_has_channel WHERE ' . $this->SQL);
 			if ($this->db->nextRecord()) {
 				$this->ircChannel = $this->db->getField('channel');
-			}
-			else {
+			} else {
 				$this->ircChannel = '';
 			}
 		}
@@ -172,8 +171,7 @@ class SmrAlliance {
 			}
 
 			$this->db->query('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($ircChannel) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ');');
-		}
-		else {
+		} else {
 			$this->db->query('DELETE FROM irc_alliance_has_channel WHERE ' . $this->SQL);
 		}
 		$this->ircChannel = $ircChannel;
@@ -239,8 +237,7 @@ class SmrAlliance {
 		$boxDescription = 'Alliance ' . $this->getAllianceName(false, true) . ' had their description changed to:' . EOL . EOL . $description;
 		if (is_object($player)) {
 			$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
-		}
-		else {
+		} else {
 			$account->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
 		}
 		$this->description = nl2br(htmlspecialchars($description));

@@ -46,8 +46,7 @@ function getPlayerOptionClass($player, $other) {
 								if ($Ship->hasActiveIllusion()) {
 									if (!$ThisPlayer->traderMAPAlliance($Player)) {
 										echo $Ship->getIllusionShipName();
-									}
-									else if ($Ship->getName() != $Ship->getIllusionShipName()) {
+									} else if ($Ship->getName() != $Ship->getIllusionShipName()) {
 										?> <span class="npcColour">(<?php echo $Ship->getIllusionShipName(); ?>)</span><?php
 									}
 								}
@@ -65,8 +64,7 @@ function getPlayerOptionClass($player, $other) {
 								if ($Ship->hasActiveIllusion()) {
 									if (!$ThisPlayer->traderMAPAlliance($Player)) {
 										echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense();
-									}
-									else if ($Ship->getAttackRating() != $Ship->getIllusionAttack() || $Ship->getDefenseRating() != $Ship->getIllusionDefense()) {
+									} else if ($Ship->getAttackRating() != $Ship->getIllusionAttack() || $Ship->getDefenseRating() != $Ship->getIllusionDefense()) {
 										?> <span class="npcColour">(<?php echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense(); ?>)</span><?php
 									}
 								} ?></td>
@@ -79,8 +77,7 @@ function getPlayerOptionClass($player, $other) {
 												echo getPlayerOptionClass($ThisPlayer, $Player);
 												?>"> Kick </a><?php
 										}
-									}
-									else {
+									} else {
 										?><a href="<?php echo $Player->getExamineTraderHREF() ?>" class="<?php 
 											echo getPlayerOptionClass($ThisPlayer, $Player);
 										?>"> Examine </a><?php
@@ -91,8 +88,7 @@ function getPlayerOptionClass($player, $other) {
 					}
 				} ?>
 			</table><?php
-		}
-		else {
+		} else {
 			?><span class="red bold">WARNING:</span> Sensors have detected the presence of cloaked vessels in this sector<?php
 		}
 	} ?>

@@ -65,8 +65,9 @@ if ($db->getNumRows() > 0) {
 	}
 }
 
-if (empty($games['Play']))
+if (empty($games['Play'])) {
 	unset($games['Play']);
+}
 
 
 // ***************************************
@@ -80,8 +81,7 @@ if (count($game_id_list) > 0) {
 					AND end_time >= ' . $db->escapeNumber(TIME) . '
 					AND enabled = ' . $db->escapeBoolean(true) . '
 				ORDER BY start_time DESC');
-}
-else {
+} else {
 	$db->query('SELECT game_id
 				FROM game
 				WHERE end_time >= ' . $db->escapeNumber(TIME) . '

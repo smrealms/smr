@@ -92,7 +92,9 @@ if ($type == 'comp_share') {
 	//=========================================================
 	// List all IPs for a specific account (id)
 	//=========================================================
-	if (!is_numeric($variable)) create_error('Account id must be numeric.');
+	if (!is_numeric($variable)) {
+		create_error('Account id must be numeric.');
+	}
 	$template->assign('BanAccountID', $variable);
 	$summary = 'Account ' . $variable . ' has had the following IPs at the following times.';
 	$template->assign('Summary', $summary);

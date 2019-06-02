@@ -90,13 +90,11 @@ class SmrGame {
 			$this->allianceMaxPlayers = $this->db->getInt('alliance_max_players');
 			$this->allianceMaxVets = $this->db->getInt('alliance_max_vets');
 			$this->startingCredits = $this->db->getInt('starting_credits');
-		}
-		else if ($create === true) {
+		} else if ($create === true) {
 			$this->gameID = (int)$gameID;
 			$this->isNew = true;
 			return;
-		}
-		else {
+		} else {
 			throw new GameNotFoundException('No such game: ' . $gameID);
 		}
 	}
@@ -121,8 +119,7 @@ class SmrGame {
 										', alliance_max_vets = ' . $this->db->escapeNumber($this->getAllianceMaxVets()) .
 										', starting_credits = ' . $this->db->escapeNumber($this->getStartingCredits()) .
 									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
-			}
-			else {
+			} else {
 				$this->db->query('INSERT INTO game (game_id,game_name,game_description,join_time,start_time,end_time,max_players,max_turns,start_turns,game_type,credits_needed,game_speed,enabled,ignore_stats,alliance_max_players,alliance_max_vets,starting_credits)
 									VALUES
 									(' . $this->db->escapeNumber($this->getGameID()) .

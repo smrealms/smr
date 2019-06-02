@@ -22,8 +22,7 @@ if ($action == 'Delete') {
 	$db->query('DELETE FROM account_has_logs WHERE account_id IN (' . $account_list . ')');
 	$db->query('DELETE FROM log_has_notes WHERE account_id IN (' . $account_list . ')');
 
-}
-else {
+} else {
 	// *********************************
 	// * C o l o r   L e g e n d
 	// *********************************
