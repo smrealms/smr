@@ -92,8 +92,7 @@ class SmrGalaxy {
 										', galaxy_type = ' . $this->db->escapeString($this->getGalaxyType()) .
 										', max_force_time = ' . $this->db->escapeNumber($this->getMaxForceTime()) .
 									' WHERE ' . $this->SQL);
-			}
-			else {
+			} else {
 				$this->db->query('INSERT INTO game_galaxy (game_id,galaxy_id,galaxy_name,width,height,galaxy_type,max_force_time)
 									values
 									(' . $this->db->escapeNumber($this->getGameID()) .

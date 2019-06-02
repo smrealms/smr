@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','Negotiate Price');
+$template->assign('PageTopic', 'Negotiate Price');
 require_once(LIB . 'Default/shop_goods.inc');
 // creates needed objects
 $port = $player->getSectorPort();

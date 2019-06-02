@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','Trader Relations');
+$template->assign('PageTopic', 'Trader Relations');
 
 Menu::trader();
 

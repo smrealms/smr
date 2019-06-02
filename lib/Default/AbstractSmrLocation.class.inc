@@ -23,11 +23,11 @@ class AbstractSmrLocation {
 	protected $weaponsSold;
 	
 	public static function &getAllLocations($forceUpdate = false) {
-		if($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
+		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM location_type ORDER BY location_type_id');
 			$locations = array();
-			while($db->nextRecord()) {
+			while ($db->nextRecord()) {
 				$locationTypeID = $db->getInt('location_type_id');
 				$locations[$locationTypeID] = SmrLocation::getLocation($locationTypeID, $forceUpdate, $db);
 			}
@@ -36,12 +36,12 @@ class AbstractSmrLocation {
 		return self::$CACHE_ALL_LOCATIONS;
 	}
 	
-	public static function &getSectorLocations($gameID,$sectorID,$forceUpdate = false) {
-		if($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
+	public static function &getSectorLocations($gameID, $sectorID, $forceUpdate = false) {
+		if ($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM location JOIN location_type USING (location_type_id) WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
 			$locations = array();
-			while($db->nextRecord()) {
+			while ($db->nextRecord()) {
 				$locationTypeID = $db->getInt('location_type_id');
 				$locations[$locationTypeID] = self::getLocation($locationTypeID, $forceUpdate, $db);
 			}
@@ -50,14 +50,14 @@ class AbstractSmrLocation {
 		return self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID];
 	}
 	
-	public static function &getLocation($locationTypeID, $forceUpdate=false, $db=null) {
-		if($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
+	public static function &getLocation($locationTypeID, $forceUpdate = false, $db = null) {
+		if ($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
 			self::$CACHE_LOCATIONS[$locationTypeID] = new SmrLocation($locationTypeID, $db);
 		}
 		return self::$CACHE_LOCATIONS[$locationTypeID];
 	}
 	
-	protected function __construct($locationTypeID, $db=null) {
+	protected function __construct($locationTypeID, $db = null) {
 		$this->db = new SmrMySqlDatabase();
 		$this->SQL = 'location_type_id = ' . $this->db->escapeNumber($locationTypeID);
 
@@ -76,7 +76,7 @@ class AbstractSmrLocation {
 			$this->image = $db->getField('location_image');
 		}
 		else {
-			throw new Exception('Cannot find location: '.$locationTypeID);
+			throw new Exception('Cannot find location: ' . $locationTypeID);
 		}
 	}
 	
@@ -85,10 +85,10 @@ class AbstractSmrLocation {
 	}
 	
 	public function getRaceID() {
-		if($this->isFed() && $this->getTypeID()!=LOCATION_TYPE_FEDERAL_BEACON) {
+		if ($this->isFed() && $this->getTypeID() != LOCATION_TYPE_FEDERAL_BEACON) {
 			return $this->getTypeID() - LOCATION_GROUP_RACIAL_BEACONS;
 		}
-		if($this->isHQ() && $this->getTypeID()!=LOCATION_TYPE_FEDERAL_HQ) {
+		if ($this->isHQ() && $this->getTypeID() != LOCATION_TYPE_FEDERAL_HQ) {
 			return $this->getTypeID() - LOCATION_GROUP_RACIAL_HQS;
 		}
 		return RACE_NEUTRAL;
@@ -99,8 +99,8 @@ class AbstractSmrLocation {
 	}
 	
 	public function setName($name) {
-		$name = htmlentities($name,ENT_COMPAT,'utf-8');
-		if($this->name==$name) {
+		$name = htmlentities($name, ENT_COMPAT, 'utf-8');
+		if ($this->name == $name) {
 			return;
 		}
 		$this->name = $name;
@@ -108,7 +108,7 @@ class AbstractSmrLocation {
 	}
 	
 	public function hasAction() {
-		return $this->processor!=null;
+		return $this->processor != null;
 	}
 	
 	public function getAction() {
@@ -120,7 +120,7 @@ class AbstractSmrLocation {
 	}
 	
 	public function isFed() {
-		if(!isset($this->fed)) {
+		if (!isset($this->fed)) {
 			$this->db->query('SELECT * FROM location_is_fed WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->fed = $this->db->nextRecord();
 		}
@@ -128,21 +128,21 @@ class AbstractSmrLocation {
 	}
 	
 	public function setFed($bool) {
-		if($this->fed===$bool) {
+		if ($this->fed === $bool) {
 			return;
 		}
-		if($bool===true) {
+		if ($bool === true) {
 			$this->db->query('INSERT IGNORE INTO location_is_fed (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->fed = true;
 		}
-		else if($bool===false) {
+		else if ($bool === false) {
 			$this->db->query('DELETE FROM location_is_fed WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->fed = false;
 		}
 	}
 	
 	public function isBank() {
-		if(!isset($this->bank)) {
+		if (!isset($this->bank)) {
 			$this->db->query('SELECT * FROM location_is_bank WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->bank = $this->db->nextRecord();
 		}
@@ -150,20 +150,20 @@ class AbstractSmrLocation {
 	}
 	
 	public function setBank($bool) {
-		if($this->bank===$bool)
+		if ($this->bank === $bool)
 			return;
-		if($bool===true) {
+		if ($bool === true) {
 			$this->db->query('INSERT INTO location_is_bank (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->bank = true;
 		}
-		else if($bool===false) {
+		else if ($bool === false) {
 			$this->db->query('DELETE FROM location_is_bank WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->bank = false;
 		}
 	}
 	
 	public function isBar() {
-		if(!isset($this->bar)) {
+		if (!isset($this->bar)) {
 			$this->db->query('SELECT * FROM location_is_bar WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->bar = $this->db->nextRecord();
 		}
@@ -171,20 +171,20 @@ class AbstractSmrLocation {
 	}
 	
 	public function setBar($bool) {
-		if($this->bar===$bool)
+		if ($this->bar === $bool)
 			return;
-		if($bool===true) {
+		if ($bool === true) {
 			$this->db->query('INSERT IGNORE INTO location_is_bar (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->bar = true;
 		}
-		else if($bool===false) {
+		else if ($bool === false) {
 			$this->db->query('DELETE FROM location_is_bar WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->bar = false;
 		}
 	}
 	
 	public function isHQ() {
-		if(!isset($this->HQ)) {
+		if (!isset($this->HQ)) {
 			$this->db->query('SELECT * FROM location_is_hq WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->HQ = $this->db->nextRecord();
 		}
@@ -192,20 +192,20 @@ class AbstractSmrLocation {
 	}
 	
 	public function setHQ($bool) {
-		if($this->HQ===$bool)
+		if ($this->HQ === $bool)
 			return;
-		if($bool===true) {
+		if ($bool === true) {
 			$this->db->query('INSERT IGNORE INTO location_is_hq (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->HQ = true;
 		}
-		else if($bool===false) {
+		else if ($bool === false) {
 			$this->db->query('DELETE FROM location_is_hq WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->HQ = false;
 		}
 	}
 	
 	public function isUG() {
-		if(!isset($this->UG)) {
+		if (!isset($this->UG)) {
 			$this->db->query('SELECT * FROM location_is_ug WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->UG = $this->db->nextRecord();
 		}
@@ -213,118 +213,118 @@ class AbstractSmrLocation {
 	}
 	
 	public function setUG($bool) {
-		if($this->UG===$bool)
+		if ($this->UG === $bool)
 			return;
-		if($bool===true) {
+		if ($bool === true) {
 			$this->db->query('INSERT INTO location_is_ug (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->UG = true;
 		}
-		else if($bool===false) {
+		else if ($bool === false) {
 			$this->db->query('DELETE FROM location_is_ug WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->UG = false;
 		}
 	}
 	
 	public function &getHardwareSold() {
-		if(!isset($this->hardwareSold)) {
+		if (!isset($this->hardwareSold)) {
 			$this->hardwareSold = array();
 			$this->db->query('SELECT hardware_type_id FROM location_sells_hardware WHERE ' . $this->SQL);
-			while($this->db->nextRecord()) {
+			while ($this->db->nextRecord()) {
 				$this->hardwareSold[$this->db->getInt('hardware_type_id')] = Globals::getHardwareTypes($this->db->getInt('hardware_type_id'));
 			}
 		}
 		return $this->hardwareSold;
 	}
 	
-	public function isHardwareSold($hardwareTypeID=false) {
+	public function isHardwareSold($hardwareTypeID = false) {
 		$hardware = $this->getHardwareSold();
-		if($hardwareTypeID===false) {
-			return count($hardware)!=0;
+		if ($hardwareTypeID === false) {
+			return count($hardware) != 0;
 		}
 		return isset($hardware[$hardwareTypeID]);
 	}
 	
 	public function addHardwareSold($hardwareTypeID) {
-		if($this->isHardwareSold($hardwareTypeID))
+		if ($this->isHardwareSold($hardwareTypeID))
 			return;
 		$this->db->query('SELECT * FROM hardware_type WHERE hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID) . ' LIMIT 1');
-		if(!$this->db->nextRecord())
+		if (!$this->db->nextRecord())
 			throw new Exception('Invalid hardware type id given');
 		$this->db->query('INSERT INTO location_sells_hardware (location_type_id,hardware_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($hardwareTypeID) . ')');
 		$this->hardwareSold[$hardwareTypeID] = $this->db->getField('hardware_name');
 	}
 	
 	public function removeHardwareSold($hardwareTypeID) {
-		if(!$this->isHardwareSold($hardwareTypeID))
+		if (!$this->isHardwareSold($hardwareTypeID))
 			return;
 		$this->db->query('DELETE FROM location_sells_hardware WHERE ' . $this->SQL . ' AND hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID) . ' LIMIT 1');
 		unset($this->hardwareSold[$hardwareTypeID]);
 	}
 	
 	public function &getShipsSold() {
-		if(!isset($this->shipsSold)) {
+		if (!isset($this->shipsSold)) {
 			$this->shipsSold = array();
 			$this->db->query('SELECT * FROM location_sells_ships WHERE ' . $this->SQL);
-			while($this->db->nextRecord()) {
+			while ($this->db->nextRecord()) {
 				$this->shipsSold[$this->db->getInt('ship_type_id')] = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::getGameID()), $this->db->getInt('ship_type_id'));
 			}
 		}
 		return $this->shipsSold;
 	}
 	
-	public function isShipSold($shipTypeID=false) {
+	public function isShipSold($shipTypeID = false) {
 		$ships = $this->getShipsSold();
-		if($shipTypeID===false)
-			return count($ships)!=0;
+		if ($shipTypeID === false)
+			return count($ships) != 0;
 		return isset($ships[$shipTypeID]);
 	}
 	
 	public function addShipSold($shipTypeID) {
-		if($this->isShipSold($shipTypeID))
+		if ($this->isShipSold($shipTypeID))
 			return;
 		$ship = AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::getGameID()), $shipTypeID);
-		if($ship===false)
+		if ($ship === false)
 			throw new Exception('Invalid ship type id given');
 		$this->db->query('INSERT INTO location_sells_ships (location_type_id,ship_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($shipTypeID) . ')');
 		$this->shipsSold[$shipTypeID] = $ship;
 	}
 	
 	public function removeShipSold($shipTypeID) {
-		if(!$this->isShipSold($shipTypeID))
+		if (!$this->isShipSold($shipTypeID))
 			return;
 		$this->db->query('DELETE FROM location_sells_ships WHERE ' . $this->SQL . ' AND ship_type_id = ' . $this->db->escapeNumber($shipTypeID) . ' LIMIT 1');
 		unset($this->shipsSold[$shipTypeID]);
 	}
 	
 	public function &getWeaponsSold() {
-		if(!isset($this->weaponsSold)) {
+		if (!isset($this->weaponsSold)) {
 			$this->weaponsSold = array();
 			$this->db->query('SELECT * FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
-			while($this->db->nextRecord())
+			while ($this->db->nextRecord())
 				$this->weaponsSold[$this->db->getInt('weapon_type_id')] = SmrWeapon::getWeapon($this->db->getInt('weapon_type_id'), false, $this->db);
 		}
 		return $this->weaponsSold;
 	}
 	
-	public function isWeaponSold($weaponTypeID=false) {
+	public function isWeaponSold($weaponTypeID = false) {
 		$weapons = $this->getWeaponsSold();
-		if($weaponTypeID===false)
-			return count($weapons)!=0;
+		if ($weaponTypeID === false)
+			return count($weapons) != 0;
 		return isset($weapons[$weaponTypeID]);
 	}
 	
 	public function addWeaponSold($weaponTypeID) {
-		if($this->isWeaponSold($weaponTypeID))
+		if ($this->isWeaponSold($weaponTypeID))
 			return;
 		$weapon = SmrWeapon::getWeapon($weaponTypeID);
-		if($weapon===false)
+		if ($weapon === false)
 			throw new Exception('Invalid weapon type id given');
-		$this->db->query('INSERT INTO location_sells_weapons (location_type_id,weapon_type_id) values (' . $this->db->escapeNumber($this->getTypeID()). ',' . $this->db->escapeNumber($weaponTypeID) . ')');
+		$this->db->query('INSERT INTO location_sells_weapons (location_type_id,weapon_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($weaponTypeID) . ')');
 		$this->weaponsSold[$weaponTypeID] = $weapon;
 	}
 	
 	public function removeWeaponSold($weaponTypeID) {
-		if(!$this->isWeaponSold($weaponTypeID))
+		if (!$this->isWeaponSold($weaponTypeID))
 			return;
 		$this->db->query('DELETE FROM location_sells_weapons WHERE ' . $this->SQL . ' AND weapon_type_id = ' . $this->db->escapeNumber($weaponTypeID) . ' LIMIT 1');
 		unset($this->weaponsSold[$weaponTypeID]);
@@ -332,16 +332,16 @@ class AbstractSmrLocation {
 	
 	public function &getLinkedLocations() {
 		$linkedLocations = array();
-		if($this->isHQ()) {
-			if($this->getTypeID()==LOCATION_TYPE_FEDERAL_HQ) {
+		if ($this->isHQ()) {
+			if ($this->getTypeID() == LOCATION_TYPE_FEDERAL_HQ) {
 				$linkedLocations[] = SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_BEACON);
 				$linkedLocations[] = SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_MINT);
 			}
 			else {
 				$raceID = $this->getRaceID();
-				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_BEACONS+$raceID);
-				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHIPS+$raceID);
-				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHOPS+$raceID);
+				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_BEACONS + $raceID);
+				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHIPS + $raceID);
+				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHOPS + $raceID);
 			}
 		}
 		return $linkedLocations;
@@ -361,47 +361,47 @@ class AbstractSmrLocation {
 	}
 	
 	public function equals(SmrLocation $otherLocation) {
-		return $this->getTypeID()==$otherLocation->getTypeID();
+		return $this->getTypeID() == $otherLocation->getTypeID();
 	}
 
-	public function hasX(/*Object*/ $x, AbstractSmrPlayer $player=null) {
+	public function hasX(/*Object*/ $x, AbstractSmrPlayer $player = null) {
 		if ($x instanceof SmrWeapon) {
 			return $this->isWeaponSold($x->getWeaponTypeID());
 		}
 		if (is_array($x)) {
-			if($x['Type']=='Ship') { // instanceof Ship)
+			if ($x['Type'] == 'Ship') { // instanceof Ship)
 				return $this->isShipSold($x['ShipTypeID']);
 			}
-			if ($x['Type']=='Hardware') { // instanceof ShipEquipment)
+			if ($x['Type'] == 'Hardware') { // instanceof ShipEquipment)
 				return $this->isHardwareSold($x['ID']);
 			}
 		}
-		if(is_string($x)) {
-			if ($x=='Bank') {
+		if (is_string($x)) {
+			if ($x == 'Bank') {
 				return $this->isBank();
 			}
-			if ($x=='Bar') {
+			if ($x == 'Bar') {
 				return $this->isBar();
 			}
-			if ($x=='Fed') {
+			if ($x == 'Fed') {
 				return $this->isFed();
 			}
-			if ($x=='SafeFed') {
+			if ($x == 'SafeFed') {
 				return $player != null && $this->isFed() && $player->canBeProtectedByRace($this->getRaceID());
 			}
-			if ($x=='HQ') {
+			if ($x == 'HQ') {
 				return $this->isHQ();
 			}
-			if ($x=='UG') {
+			if ($x == 'UG') {
 				return $this->isUG();
 			}
-			if ($x=='Hardware') {
+			if ($x == 'Hardware') {
 				return $this->isHardwareSold();
 			}
-			if ($x=='Ship') {
+			if ($x == 'Ship') {
 				return $this->isShipSold();
 			}
-			if ($x=='Weapon') {
+			if ($x == 'Weapon') {
 				return $this->isWeaponSold();
 			}
 		}
