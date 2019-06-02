@@ -1,6 +1,6 @@
 <?php
 
-function checkPortTradeable(&$port,&$player) {
+function checkPortTradeable($port, $player) {
 	if($port->getSectorID()!=$player->getSectorID())
 		return 'That port is not in this sector!';
 	

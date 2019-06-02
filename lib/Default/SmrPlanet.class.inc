@@ -994,7 +994,7 @@ class SmrPlanet {
 	}
 
 	public function getDisplayName() {
-		return '<span style="color:yellow;font-variant:small-caps">' . $this->getName() . '(#' . $this->getSectorID() . ')</span>'; ;
+		return '<span style="color:yellow;font-variant:small-caps">' . $this->getName() . '(#' . $this->getSectorID() . ')</span>';
 	}
 
 	public function isInhabitable() {
@@ -1244,7 +1244,7 @@ class SmrPlanet {
 	}
 	
 	protected function doArmourDamage($damage, $delayed) {
-		$actualDamage = min($this->getArmour(true), $damage);;
+		$actualDamage = min($this->getArmour(true), $damage);
 		$this->decreaseArmour($actualDamage, $delayed);
 		return $actualDamage;
 	}

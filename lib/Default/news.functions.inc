@@ -18,7 +18,7 @@ function getNewsItems(SmrMySqlDatabase $db) {
 	return $newsItems;
 }
 
-function doBreakingNewsAssign($gameID,&$template) {
+function doBreakingNewsAssign($gameID, Template $template) {
 	$db = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($gameID).' AND type = \'breaking\' AND time > '.$db->escapeNumber(TIME - TIME_FOR_BREAKING_NEWS).' ORDER BY time DESC LIMIT 1');
 	if ($db->nextRecord()) {
@@ -26,7 +26,7 @@ function doBreakingNewsAssign($gameID,&$template) {
 	}
 }
 
-function doLottoNewsAssign($gameID,&$template) {
+function doLottoNewsAssign($gameID, Template $template) {
 	require_once(get_file_loc('bar.functions.inc'));
 	checkForLottoWinner($gameID);
 	$db = new SmrMySqlDatabase();
