@@ -896,8 +896,8 @@ abstract class AbstractSmrPlayer {
 		}
 		self::$HOFVis[$hofType] = $visibility;
 
-		$hof = & $this->HOF;
-		$hofChanged = & $this->hasHOFChanged;
+		$hof =& $this->HOF;
+		$hofChanged =& $this->hasHOFChanged;
 		$new = false;
 		foreach ($typeList as $type) {
 			if (!isset($hofChanged[$type]))
@@ -906,8 +906,8 @@ abstract class AbstractSmrPlayer {
 				$hof[$type] = array();
 				$new = true;
 			}
-			$hof = & $hof[$type];
-			$hofChanged = & $hofChanged[$type];
+			$hof =& $hof[$type];
+			$hofChanged =& $hofChanged[$type];
 		}
 		if ($hofChanged == null) {
 			$hofChanged = self::HOF_CHANGED;
@@ -1059,7 +1059,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	private function setupMissionStep($missionID) {
-		$mission = & $this->missions[$missionID];
+		$mission =& $this->missions[$missionID];
 		if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
 			// Nothing to do if this mission is already completed
 			return;
@@ -1103,7 +1103,7 @@ abstract class AbstractSmrPlayer {
 			'Starting Sector' => $this->getSectorID()
 		);
 
-		$this->missions[$missionID] = & $mission;
+		$this->missions[$missionID] =& $mission;
 		$this->setupMissionStep($missionID);
 		$this->rebuildMission($missionID);
 
@@ -1162,7 +1162,7 @@ abstract class AbstractSmrPlayer {
 
 	public function claimMissionReward($missionID) {
 		$this->getMissions();
-		$mission = & $this->missions[$missionID];
+		$mission =& $this->missions[$missionID];
 		if ($mission === false) {
 			throw new Exception('Unknown mission: ' . $missionID);
 		}
