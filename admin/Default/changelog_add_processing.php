@@ -19,14 +19,15 @@ $db->query('SELECT MAX(changelog_id)
 			FROM changelog
 			WHERE version_id = ' . $db->escapeNumber($var['version_id'])
 		   );
-if ($db->nextRecord())
+if ($db->nextRecord()) {
 	$changelog_id = $db->getField('MAX(changelog_id)') + 1;
-else
+} else {
 	$changelog_id = 1;
+}
 
 $db->query('INSERT INTO changelog
 			(version_id, changelog_id, change_title, change_message, affected_db)
-			VALUES (' . $db->escapeNumber($var['version_id']) . ', '.$db->escapeNumber($changelog_id).', '.$db->escapeString($change_title).', '.$db->escapeString($change_message).', '.$db->escapeString($affected_db).')');
+			VALUES (' . $db->escapeNumber($var['version_id']) . ', ' . $db->escapeNumber($changelog_id) . ', ' . $db->escapeString($change_title) . ', ' . $db->escapeString($change_message) . ', ' . $db->escapeString($affected_db) . ')');
 
 $db->unlock();
 

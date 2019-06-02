@@ -50,7 +50,9 @@ if (isset($discordChannel)) {
 	} else {
 		// no duplicates in a given game
 		$db->query('SELECT * FROM alliance WHERE discord_channel =' . $db->escapeString($discordChannel) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
-		if ($db->nextRecord()) create_error('Another alliance is already using that Discord Channel ID!');
+		if ($db->nextRecord()) {
+			create_error('Another alliance is already using that Discord Channel ID!');
+		}
 
 		$alliance->setDiscordChannel($discordChannel);
 	}

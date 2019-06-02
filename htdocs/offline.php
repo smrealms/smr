@@ -16,7 +16,6 @@ try {
 	// redirect to the in-game loader (bypassing the server closure).
 	SmrSession::destroy();
 	require_once(ENGINE . 'Default/login.inc');
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }

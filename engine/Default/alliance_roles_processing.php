@@ -14,8 +14,11 @@ $exemptWith = isset($_REQUEST['exemptWithdrawals']);
 $sendAllMsg = isset($_REQUEST['sendAllMsg']);
 $viewBonds = isset($_REQUEST['viewBonds']);
 
-if ($unlimited) $withPerDay = ALLIANCE_BANK_UNLIMITED;
-else $withPerDay = $_REQUEST['maxWith'];
+if ($unlimited) {
+	$withPerDay = ALLIANCE_BANK_UNLIMITED;
+} else {
+	$withPerDay = $_REQUEST['maxWith'];
+}
 if (!is_numeric($withPerDay) || ($withPerDay < 0 && $withPerDay != ALLIANCE_BANK_UNLIMITED)) {
 	create_error('You must enter a number for max withdrawals per 24 hours.');
 }
@@ -46,14 +49,12 @@ if (!isset($var['role_id'])) {
 				VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString($_POST['role']) . ', ' . $db->escapeNumber($withPerDay) . ',' . $db->escapeBoolean($positiveBalance) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 
 	$db->unlock();
-}
-else {
+} else {
 	// if no role is given we delete that entry
 	if (empty($_REQUEST['role'])) {
 		if ($var['role_id'] == 1) {
 			create_error('You cannot delete the leader role.');
-		}
-		else if ($var['role_id'] == 2) {
+		} else if ($var['role_id'] == 2) {
 			create_error('You cannot delete the new member role.');
 		}
 		$db->query('DELETE FROM alliance_has_roles
@@ -61,8 +62,7 @@ else {
 					AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
 					AND role_id = ' . $db->escapeNumber($var['role_id']));
 	// otherwise we update it
-	}
-	else {
+	} else {
 		$db->query('UPDATE alliance_has_roles
 					SET role = ' . $db->escapeString($_REQUEST['role']) . ',
 					with_per_day = ' . $db->escapeNumber($withPerDay) . ',

@@ -95,8 +95,7 @@ if ($_REQUEST['to_email'] == '*') {
 	echo '<br />Done! Total ' . $sent . ' mails sent.';
 	release_lock();
 	exit();
-}
-else {
+} else {
 
 	$mail->addReplyTo('support@smrealms.de', 'SMR Support');
 	$mail->addAddress($_REQUEST['to_email'], $_REQUEST['to_email']);

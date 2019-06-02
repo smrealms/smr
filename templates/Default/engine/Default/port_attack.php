@@ -5,20 +5,17 @@
 		<div class="buttonA">
 			<a href="<?php echo $Port->getAttackHREF() ?>" class="buttonA">Continue Attack</a>
 		</div><?php
-	}
-	else {
+	} else {
 		if ($OverrideDeath) {
 			?><span class="red">You have been destroyed.</span><?php
-		}
-		else { ?>
+		} else { ?>
 			<span class="yellow">You have breached the port defenses.</span><?php
 		} ?>
 		<br /><br />
 		<div class="buttonA"><?php
 			if ($OverrideDeath) { ?>
 				<a href="<?php echo Globals::getPodScreenHREF() ?>" class="buttonA">Let there be pod</a><?php
-			}
-			else { ?>
+			} else { ?>
 				<a href="<?php echo $Port->getClaimHREF(); ?>" class="buttonA">Claim this port for your race</a><?php
 				if ($Port->getCredits() > 0) { ?>&nbsp;
 					<a href="<?php echo $Port->getLootHREF(); ?>" class="buttonA">Loot the port<?php if ($Port->getCredits() > 0) { ?> (100% money)<?php } ?></a>&nbsp;

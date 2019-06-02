@@ -78,8 +78,7 @@ class SocialLogin {
 			$this->userID = $userInfo->getId();
 			$this->email = $userInfo->getEmail();
 			$this->valid = true;
-		}
-		else if ($loginType == self::TWITTER) {
+		} else if ($loginType == self::TWITTER) {
 			if (session_status() === PHP_SESSION_NONE) {
 				session_start();
 			}

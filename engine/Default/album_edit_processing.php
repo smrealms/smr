@@ -92,8 +92,7 @@ if ($db->nextRecord()) {
 					approved = \'TBC\',
 					disabled = \'FALSE\'
 				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-}
-else {
+} else {
 	// if he didn't upload a picture before
 	// we kick him out here
 	if ($noPicture) {
@@ -114,8 +113,7 @@ if (!empty($comment)) {
 	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
 	if ($db->nextRecord()) {
 		$comment_id = $db->getField('MAX(comment_id)') + 1;
-	}
-	else {
+	} else {
 		$comment_id = 1;
 	}
 
@@ -166,8 +164,7 @@ function php_link_check($url, $r = FALSE) {
 
 	if (!$fp) {
 		return false;
-	}
-	else {
+	} else {
 		$head = '';
 		$httpRequest = 'HEAD ' . $url['path'] . ' HTTP/1.1' . EOL
 								.'Host: ' . $url['host'] . EOL

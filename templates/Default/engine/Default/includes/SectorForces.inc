@@ -54,8 +54,7 @@
 						<td class="shrink noWrap center"><?php
 							if ($SharedForceAlliance) {
 								?><span class="green"><?php echo date(DATE_FULL_SHORT, $Force->getExpire()); ?></span><?php
-							}
-							else {
+							} else {
 								?><span class="red">WAR</span><?php
 							} ?>
 						</td>

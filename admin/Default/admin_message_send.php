@@ -14,8 +14,7 @@ if (empty($gameID)) {
 		$activeGames[] = SmrGame::getGame($db->getInt('game_id'));
 	}
 	$template->assign('ActiveGames', $activeGames);
-}
-else {
+} else {
 	$container = create_container('admin_message_send_processing.php');
 	$container['SendGameID'] = $gameID;
 	$template->assign('AdminMessageSendFormHref', SmrSession::getNewHREF($container));

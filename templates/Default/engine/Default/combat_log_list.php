@@ -66,8 +66,7 @@ if (isset($Message)) {?>
 			}
 		});
 		</script><?php
-	}
-	else { ?>
+	} else { ?>
 		No <?php echo $LogType; ?> combat logs found<?php
 	} ?>
 </div>

@@ -4,8 +4,7 @@ if (isset($var['article'])) {
 	if ($_REQUEST['action'] == 'Yes') {
 		$db->query('DELETE FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
 	}
-}
-else {
+} else {
 	// Should we delete this paper?
 	if ($_REQUEST['action'] == 'Yes') {
 

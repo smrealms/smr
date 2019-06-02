@@ -9,8 +9,7 @@ if (empty($_REQUEST['PlayerName']) && !isset($var['account_id'])) {
 
 if (isset($var['account_id'])) {
 	$blacklisted_id = $var['account_id'];
-}
-else {
+} else {
 	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT account_id FROM player WHERE player_name=' . $db->escapeString($_REQUEST['PlayerName']) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');

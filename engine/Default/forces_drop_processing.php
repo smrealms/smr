@@ -122,18 +122,18 @@ if ($change_mines != 0) {
 // All error checking is done, so now update the ship/force
 
 if ($change_combat_drones != 0) {
-	if($change_combat_drones>0) {
-		$ship->decreaseCDs($change_combat_drones,true);
+	if ($change_combat_drones > 0) {
+		$ship->decreaseCDs($change_combat_drones, true);
 		$forces->addCDs($change_combat_drones);
 	}
 	else {
-		$ship->increaseCDs(-$change_combat_drones,true);
+		$ship->increaseCDs(-$change_combat_drones, true);
 		$forces->takeCDs(-$change_combat_drones);
 	}
 }
 
 if ($change_scout_drones != 0) {
-	if($change_scout_drones>0) {
+	if ($change_scout_drones > 0) {
 		$ship->decreaseSDs($change_scout_drones);
 		$forces->addSDs($change_scout_drones);
 	}
@@ -144,7 +144,7 @@ if ($change_scout_drones != 0) {
 }
 
 if ($change_mines != 0) {
-	if($change_mines>0) {
+	if ($change_mines > 0) {
 		$ship->decreaseMines($change_mines);
 		$forces->addMines($change_mines);
 		if ($ship->isCloaked()) {
@@ -170,22 +170,22 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 		$mines_message .= 's';
 
 	if ($change_combat_drones > 0)
-		$combat_drones_message = ($change_mines <= 0 ?'added ':'') . $change_combat_drones . ' combat drone';
+		$combat_drones_message = ($change_mines <= 0 ? 'added ' : '') . $change_combat_drones . ' combat drone';
 	elseif ($change_combat_drones < 0)
-		$combat_drones_message = ($change_mines >= 0 ?'removed ':'') . abs($change_combat_drones) . ' combat drone';
+		$combat_drones_message = ($change_mines >= 0 ? 'removed ' : '') . abs($change_combat_drones) . ' combat drone';
 	//add s to drone if necesary
 	if (abs($change_combat_drones) > 1)
 		$combat_drones_message .= 's';
 
 	if ($change_scout_drones > 0) {
-		$scout_drones_message='';
-		if((isset($combat_drones_message) && $change_combat_drones < 0) || (!isset($combat_drones_message) && $change_mines <= 0))
+		$scout_drones_message = '';
+		if ((isset($combat_drones_message) && $change_combat_drones < 0) || (!isset($combat_drones_message) && $change_mines <= 0))
 			$scout_drones_message = 'added ';
 		$scout_drones_message .= $change_scout_drones . ' scout drone';
 	}
 	elseif ($change_scout_drones < 0) {
-		$scout_drones_message='';
-		if((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines >= 0))
+		$scout_drones_message = '';
+		if ((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines >= 0))
 			$scout_drones_message = 'removed ';
 		$scout_drones_message .= abs($change_scout_drones) . ' scout drone';
 	}
@@ -194,25 +194,25 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 		$scout_drones_message .= 's';
 
 	// now compile it together
-	$message = $player->getPlayerName().' has ' . $mines_message;
+	$message = $player->getPlayerName() . ' has ' . $mines_message;
 
 	if (!empty($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message))
-		$message .= ' and '.$combat_drones_message;
+		$message .= ' and ' . $combat_drones_message;
 	elseif (!empty($mines_message) && isset($combat_drones_message))
-		$message .= ', '.$combat_drones_message;
+		$message .= ', ' . $combat_drones_message;
 	elseif (empty($mines_message) && isset($combat_drones_message))
 		$message .= $combat_drones_message;
 
 	if (!empty($mines_message) && isset($combat_drones_message) && isset($scout_drones_message))
-		$message .= ', and '.$scout_drones_message;
+		$message .= ', and ' . $scout_drones_message;
 	elseif ((!empty($mines_message) || isset($combat_drones_message)) && isset($scout_drones_message))
-		$message .= ' and '.$scout_drones_message;
+		$message .= ' and ' . $scout_drones_message;
 	elseif (empty($mines_message) && !isset($combat_drones_message) && isset($scout_drones_message))
 		$message .= $scout_drones_message;
 
-	if($change_mines >= 0 && $change_combat_drones >= 0 && $change_scout_drones >= 0)
+	if ($change_mines >= 0 && $change_combat_drones >= 0 && $change_scout_drones >= 0)
 		$message .= ' to';
-	elseif($change_mines <= 0 && $change_combat_drones <= 0 && $change_scout_drones <= 0)
+	elseif ($change_mines <= 0 && $change_combat_drones <= 0 && $change_scout_drones <= 0)
 		$message .= ' from';
 	else
 		$message .= ' from/to';
@@ -222,7 +222,7 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 	$player->sendMessage($forces->getOwnerID(), MSG_SCOUT, $message, false);
 }
 
-$account->log(LOG_TYPE_FORCES, $change_combat_drones.' combat drones, '.$change_scout_drones.' scout drones, '.$change_mines.' mines', $player->getSectorID());
+$account->log(LOG_TYPE_FORCES, $change_combat_drones . ' combat drones, ' . $change_scout_drones . ' scout drones, ' . $change_mines . ' mines', $player->getSectorID());
 
 $forces->updateExpire();
 $forces->update(); // Needs to be in db to show up on CS instantly when querying sector forces

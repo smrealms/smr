@@ -47,8 +47,7 @@ foreach ($totals as $accId => $total) {
 	$text .= '<td class="right"><span class="';
 	if ($total < 0) {
 		$text .= 'red bold';
-	}
-	else {
+	} else {
 		$text .= 'bold';
 	}
 	$text .= '">' . number_format($total) . '</span></td>';

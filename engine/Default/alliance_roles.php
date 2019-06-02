@@ -35,8 +35,7 @@ while ($db->nextRecord()) {
 		$allianceRoles[$roleID]['SendAllianceMessage'] = $db->getBoolean('send_alliance_msg');
 		$allianceRoles[$roleID]['OpLeader'] = $db->getBoolean('op_leader');
 		$allianceRoles[$roleID]['ViewBondsInPlanetList'] = $db->getBoolean('view_bonds');
-	}
-	else {
+	} else {
 		$container = create_container('skeleton.php', 'alliance_roles.php');
 	}
 	$container['role_id'] = $roleID;

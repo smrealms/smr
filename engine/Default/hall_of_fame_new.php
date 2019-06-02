@@ -7,69 +7,69 @@ if (empty($game_id)) {
 	$topic = 'All Time Hall of Fame';
 }
 else {
-	$topic = Globals::getGameName($game_id).' Hall of Fame';
+	$topic = Globals::getGameName($game_id) . ' Hall of Fame';
 }
-$template->assign('PageTopic',$topic);
+$template->assign('PageTopic', $topic);
 
 $container = create_container('skeleton.php', 'hall_of_fame_player_detail.php');
 if (isset($game_id)) $container['game_id'] = $game_id;
 $template->assign('PersonalHofHREF', SmrSession::getNewHREF($container));
 
-$db->query('SELECT type FROM hof_visibility WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
+$db->query('SELECT type FROM hof_visibility WHERE visibility != ' . $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';
 const USER_SCORE_NAME = 'User Score';
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
-while($db->nextRecord()) {
+while ($db->nextRecord()) {
 	$hof =& $hofTypes;
-	$typeList = explode(':',$db->getField('type'));
-	foreach($typeList as $type) {
-		if(!isset($hof[$type])) {
+	$typeList = explode(':', $db->getField('type'));
+	foreach ($typeList as $type) {
+		if (!isset($hof[$type])) {
 			$hof[$type] = array();
 		}
 		$hof =& $hof[$type];
 	}
 	$hof = true;
 }
-$template->assign('Breadcrumb', buildBreadcrumb($var,$hofTypes,isset($game_id)?'Current HoF':'Global HoF'));
+$template->assign('Breadcrumb', buildBreadcrumb($var, $hofTypes, isset($game_id) ? 'Current HoF' : 'Global HoF'));
 
-if(!isset($var['view'])) {
+if (!isset($var['view'])) {
 	$categories = getHofCategories($hofTypes, $game_id, $account->getAccountID());
 	$template->assign('Categories', $categories);
 }
 else {
-	$gameIDSql = ' AND game_id '.(isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE end_time < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).')');
+	$gameIDSql = ' AND game_id ' . (isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE end_time < ' . TIME . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
 
 	$vis = HOF_PUBLIC;
-	$rank=1;
-	$foundMe=false;
+	$rank = 1;
+	$foundMe = false;
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];
-	if($var['view'] == DONATION_NAME)
+	if ($var['view'] == DONATION_NAME)
 		$db->query('SELECT account_id, SUM(amount) as amount FROM account_donated
 					GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
-	else if($var['view'] == USER_SCORE_NAME) {
+	else if ($var['view'] == USER_SCORE_NAME) {
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
-		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].')'.$gameIDSql.' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
+		$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 		$db->query($query);
 	}
 	else {
-		$db->query('SELECT visibility FROM hof_visibility WHERE type = '.$db->escapeArray($viewType,false,true,':',false).' LIMIT 1');
-		if($db->nextRecord()) {
+		$db->query('SELECT visibility FROM hof_visibility WHERE type = ' . $db->escapeArray($viewType, false, true, ':', false) . ' LIMIT 1');
+		if ($db->nextRecord()) {
 			$vis = $db->getField('visibility');
 		}
-		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
+		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, false, true, ':', false) . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 	}
 	$rows = [];
-	while($db->nextRecord()) {
+	while ($db->nextRecord()) {
 		$accountID = $db->getField('account_id');
-		if($accountID == $account->getAccountID()) {
+		if ($accountID == $account->getAccountID()) {
 			$foundMe = true;
 		}
 		$amount = applyHofVisibilityMask($db->getField('amount'), $vis, $game_id, $accountID);
 		$rows[] = displayHOFRow($rank++, $accountID, $amount);
 	}
-	if(!$foundMe) {
-		$rank = getHofRank($var['view'],$viewType,$account->getAccountID(),$game_id);
+	if (!$foundMe) {
+		$rank = getHofRank($var['view'], $viewType, $account->getAccountID(), $game_id);
 		$rows[] = displayHOFRow($rank['Rank'], $account->getAccountID(), $rank['Amount']);
 	}
 	$template->assign('Rows', $rows);

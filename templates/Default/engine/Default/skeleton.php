@@ -21,14 +21,12 @@
 								<div><?php
 									if (isset($MenuItems)) {
 										$this->includeTemplate('includes/menu.inc');
-									}
-									else if (isset($MenuBar)) {
+									} else if (isset($MenuBar)) {
 										echo $MenuBar;
 									} ?>
 								</div>
 							</div><br /><?php
-						}
-						else if (isset($SubMenuBar)) {
+						} else if (isset($SubMenuBar)) {
 							echo $SubMenuBar;
 						}
 						$this->includeTemplate($TemplateBody); ?>

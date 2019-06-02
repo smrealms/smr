@@ -1,8 +1,7 @@
 <?php
 if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()) {
 	?>You have no configurable hardware installed!<?php
-}
-else { ?>
+} else { ?>
 	<?php
 	if ($ThisShip->hasCloak()) { ?>
 		<b>Cloaking Device:</b>&nbsp;&nbsp;&nbsp;&nbsp;<div class="buttonA"><a class="buttonA" href="<?php echo $ToggleCloakHREF; ?>"><?php if ($ThisShip->isCloaked()) { ?>Disable<?php } else { ?>Enable(<?php echo TURNS_TO_CLOAK; ?>)<?php } ?></a></div>

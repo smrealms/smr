@@ -24,7 +24,6 @@ try {
 		exit;
 	}
 
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }

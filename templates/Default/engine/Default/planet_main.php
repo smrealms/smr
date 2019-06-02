@@ -27,8 +27,8 @@ if (isset($Msg)) {
 				
 				<tr>
 					<td>Planet Level</td>
-					<td class="center"><span id="planetLevel"><?php echo number_format($ThisPlanet->getLevel(),2); ?></span></td>
-					<td class="center"><?php echo number_format($ThisPlanet->getMaxLevel(),2); ?></td>
+					<td class="center"><span id="planetLevel"><?php echo number_format($ThisPlanet->getLevel(), 2); ?></span></td>
+					<td class="center"><?php echo number_format($ThisPlanet->getMaxLevel(), 2); ?></td>
 				</tr>
 			</table>
 			<br />
@@ -89,7 +89,7 @@ if (isset($Msg)) {
 				</table>
 			<?php } ?>
 		</td><?php
-		if(isset($Ticker)) { ?>
+		if (isset($Ticker)) { ?>
 			<td><?php
 				$this->includeTemplate('includes/Ticker.inc'); ?>
 			</td><?php
@@ -101,5 +101,5 @@ if (isset($Msg)) {
 	<input type="submit" name="action" value="Launch" class="InputFields"/>
 </form>
 <br /><?php
-$this->includeTemplate('includes/SectorPlayers.inc',array('PlayersContainer'=>$ThisPlanet));
+$this->includeTemplate('includes/SectorPlayers.inc', array('PlayersContainer'=>$ThisPlanet));
 ?>

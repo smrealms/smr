@@ -8,10 +8,10 @@ $account_id = $var['account_id'];
 
 //update it so they arent cheating
 $db->query('UPDATE ship_has_hardware ' .
-		   'SET amount = '.$db->escapeNumber($max_amount).' ' .
-		   'WHERE game_id = '.$db->escapeNumber($game_id).' AND ' .
-				 'account_id = '.$db->escapeNumber($account_id).' AND ' .
-				 'hardware_type_id = '.$db->escapeNumber($hardware_id));
+		   'SET amount = ' . $db->escapeNumber($max_amount) . ' ' .
+		   'WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND ' .
+				 'account_id = ' . $db->escapeNumber($account_id) . ' AND ' .
+				 'hardware_type_id = ' . $db->escapeNumber($hardware_id));
 
 //now erdirect back to page
 $container = create_container('skeleton.php', 'ship_check.php');

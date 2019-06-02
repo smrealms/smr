@@ -43,7 +43,6 @@ if (count($Alliances) > 0) { ?>
 		}
 	});
 	</script><?php
-}
-else { ?>
+} else { ?>
 	<p class="center">Currently there are no alliances.</p><?php
 } ?>

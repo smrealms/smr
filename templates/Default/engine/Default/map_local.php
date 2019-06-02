@@ -10,7 +10,7 @@
 		<td style="width: 80%" class="center">
 			Local Map of the Known <span class="big bold"><?php echo $GalaxyName ?></span> Galaxy
 			<br /><br />
-			<?php if(isset($Error)) echo $Error; ?>
+			<?php if (isset($Error)) echo $Error; ?>
 		</td>
 		<td style="width: 10%"></td>
 	</tr>

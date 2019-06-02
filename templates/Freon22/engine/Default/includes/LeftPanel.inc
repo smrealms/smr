@@ -46,8 +46,7 @@ if (isset($GameID)) { ?>
 			} ?>
 			<a class="leftNav" href="<?php echo $LogoutLink; ?>">Logout</a><br />
 		<br /><?php
-	}
-	else {
+	} else {
 		?><a class="leftNav" href="login.php">Login</a><br /><?php
 	} ?>
 	<a class="leftNav" href="manual.php" target="manual">Manual</a><br /><?php

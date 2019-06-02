@@ -28,7 +28,7 @@ try {
 	$account = SmrSession::getAccount();
 
 	if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {
-		if(!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM))
+		if (!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM))
 			create_error_offline('You do not have permission to do that!');
 		$container = create_container('skeleton.php', 'album_moderate.php');
 		$container['account_id'] = $album_id;
@@ -47,12 +47,12 @@ try {
 	$curr_time = TIME;
 
 	$comment = word_filter($comment);
-	$account->sendMessageToBox(BOX_ALBUM_COMMENTS,$comment);
+	$account->sendMessageToBox(BOX_ALBUM_COMMENTS, $comment);
 
 	// check if we have comments for this album already
 	$db->lockTable('album_has_comments');
 
-	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.$db->escapeNumber($album_id));
+	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($album_id));
 	if ($db->nextRecord())
 		$comment_id = $db->getField('MAX(comment_id)') + 1;
 	else
@@ -60,12 +60,12 @@ try {
 
 	$db->query('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
-				VALUES ('.$db->escapeNumber($album_id).', '.$db->escapeNumber($comment_id).', '.$db->escapeNumber($curr_time).', '.$db->escapeNumber($account->getAccountID()).', '.$db->escapeString($comment).')');
+				VALUES ('.$db->escapeNumber($album_id) . ', ' . $db->escapeNumber($comment_id) . ', ' . $db->escapeNumber($curr_time) . ', ' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($comment) . ')');
 	$db->unlock();
 
 	header('Location: /album/?' . get_album_nick($album_id));
 	exit;
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }

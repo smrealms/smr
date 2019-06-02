@@ -77,15 +77,13 @@ if (!isset ($var['folder_id'])) {
 	$container = create_container('skeleton.php', 'message_blacklist.php');
 	$container['folder_id'] = $message_type_id;
 	$template->assign('ManageBlacklistLink', SmrSession::getNewHREF($container));
-}
-else {
+} else {
 	$whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
 	if ($var['folder_id'] == MSG_SENT) {
 		$whereClause .= ' AND sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND message_type_id = ' . $db->escapeNumber(MSG_PLAYER) . '
 						AND sender_delete = ' . $db->escapeBoolean(false);
-	}
-	else {
+	} else {
 		$whereClause .= ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND message_type_id = ' . $db->escapeNumber($var['folder_id']) . '
 						AND receiver_delete = ' . $db->escapeBoolean(false);
@@ -93,8 +91,7 @@ else {
 
 	if ($var['folder_id'] == MSG_SENT) {
 		$messageBox['UnreadMessages'] = 0;
-	}
-	else {
+	} else {
 		$db->query('SELECT count(*) as count
 					FROM message ' . $whereClause . '
 						AND msg_read = ' . $db->escapeBoolean(false));
@@ -162,8 +159,7 @@ else {
 		$messageBox['ShowAllHref'] = SmrSession::getNewHREF($dispContainer);
 
 		displayScouts($messageBox, $player);
-	}
-	else {
+	} else {
 		while ($db->nextRecord()) {
 			displayMessage($messageBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), $db->getField('message_text'), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id']);
 		}

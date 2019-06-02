@@ -11,8 +11,7 @@ if (isset($Comments)) { ?>
 				<td class="shrink noWrap top"><?php
 				if ($Comment['Anonymous']) {
 					?>Anonymous<?php
-				}
-				else {
+				} else {
 					echo $Comment['PosterAccount']->getHofName();
 				}
 				if ($FeatureModerator) {

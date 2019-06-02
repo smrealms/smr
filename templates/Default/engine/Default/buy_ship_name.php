@@ -8,8 +8,7 @@
 		Are you sure you want to continue?<br />
 		<br />
 		<a href="<?php echo $ContinueHref; ?>" class="submitStyle">Continue </a> <a href="<?php echo Globals::getBuyShipNameHref(); ?>" class="submitStyle">Back</a><?php
-	}
-	else { ?>
+	} else { ?>
 		So you want to name your ship?  Great!
 
 		So...what do you want to name it? (max 48 text chars) (max <?php echo MAX_IMAGE_HEIGHT; ?> height by <?php echo MAX_IMAGE_WIDTH; ?> width and <?php echo MAX_IMAGE_SIZE; ?>k for logos)<br />

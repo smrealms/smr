@@ -46,8 +46,8 @@ class SmrGame {
 		self::GAME_TYPE_NEWBIE => 'Newbie',
 	];
 
-	public static function &getGame($gameID,$forceUpdate = false) {
-		if($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
+	public static function &getGame($gameID, $forceUpdate = false) {
+		if ($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID);
 			self::$CACHE_GAMES[$gameID] = $g;
 		}
@@ -55,45 +55,45 @@ class SmrGame {
 	}
 
 	public static function saveGames() {
-		foreach(self::$CACHE_GAMES as $game) {
+		foreach (self::$CACHE_GAMES as $game) {
 			$game->save();
 		}
 	}
 
 	public static function &createGame($gameID) {
-		if(!isset(self::$CACHE_GAMES[$gameID])) {
-			$g = new SmrGame($gameID,true);
+		if (!isset(self::$CACHE_GAMES[$gameID])) {
+			$g = new SmrGame($gameID, true);
 			self::$CACHE_GAMES[$gameID] = $g;
 		}
 		return self::$CACHE_GAMES[$gameID];
 	}
 
-	protected function __construct($gameID, $create=false) {
+	protected function __construct($gameID, $create = false) {
 		$this->db = new SmrMySqlDatabase();
 
 		$this->db->query('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
-		if($this->db->nextRecord()) {
-			$this->gameID				= $this->db->getInt('game_id');
-			$this->name					= $this->db->getField('game_name');
-			$this->description			= $this->db->getField('game_description');
+		if ($this->db->nextRecord()) {
+			$this->gameID = $this->db->getInt('game_id');
+			$this->name = $this->db->getField('game_name');
+			$this->description = $this->db->getField('game_description');
 			$this->joinTime = $this->db->getInt('join_time');
 			$this->startTime = $this->db->getInt('start_time');
 			$this->endTime = $this->db->getInt('end_time');
-			$this->maxPlayers			= $this->db->getInt('max_players');
-			$this->maxTurns				= $this->db->getInt('max_turns');
-			$this->startTurnHours		= $this->db->getInt('start_turns');
-			$this->gameTypeID			= $this->db->getInt('game_type');
-			$this->creditsNeeded		= $this->db->getInt('credits_needed');
-			$this->gameSpeed			= $this->db->getReal('game_speed');
-			$this->enabled				= $this->db->getBoolean('enabled');
-			$this->ignoreStats			= $this->db->getBoolean('ignore_stats');
-			$this->allianceMaxPlayers	= $this->db->getInt('alliance_max_players');
-			$this->allianceMaxVets		= $this->db->getInt('alliance_max_vets');
-			$this->startingCredits		= $this->db->getInt('starting_credits');
+			$this->maxPlayers = $this->db->getInt('max_players');
+			$this->maxTurns = $this->db->getInt('max_turns');
+			$this->startTurnHours = $this->db->getInt('start_turns');
+			$this->gameTypeID = $this->db->getInt('game_type');
+			$this->creditsNeeded = $this->db->getInt('credits_needed');
+			$this->gameSpeed = $this->db->getReal('game_speed');
+			$this->enabled = $this->db->getBoolean('enabled');
+			$this->ignoreStats = $this->db->getBoolean('ignore_stats');
+			$this->allianceMaxPlayers = $this->db->getInt('alliance_max_players');
+			$this->allianceMaxVets = $this->db->getInt('alliance_max_vets');
+			$this->startingCredits = $this->db->getInt('starting_credits');
 		}
-		else if($create===true) {
-			$this->gameID		= (int)$gameID;
-			$this->isNew		= true;
+		else if ($create === true) {
+			$this->gameID = (int)$gameID;
+			$this->isNew = true;
 			return;
 		}
 		else {
@@ -102,8 +102,8 @@ class SmrGame {
 	}
 
 	public function save() {
-		if($this->hasChanged) {
-			if($this->isNew==false) {
+		if ($this->hasChanged) {
+			if ($this->isNew == false) {
 				$this->db->query('UPDATE game SET game_name = ' . $this->db->escapeString($this->getName()) .
 										', game_description = ' . $this->db->escapeString($this->getDescription()) .
 										', join_time = ' . $this->db->escapeNumber($this->getJoinTime()) .
@@ -155,11 +155,11 @@ class SmrGame {
 	}
 
 	public function setName($name) {
-		if($this->name==$name) {
+		if ($this->name == $name) {
 			return;
 		}
-		$this->name=$name;
-		$this->hasChanged=true;
+		$this->name = $name;
+		$this->hasChanged = true;
 	}
 
 	public function getDescription() {
@@ -167,11 +167,11 @@ class SmrGame {
 	}
 
 	public function setDescription($description) {
-		if($this->description==$description) {
+		if ($this->description == $description) {
 			return;
 		}
-		$this->description=$description;
-		$this->hasChanged=true;
+		$this->description = $description;
+		$this->hasChanged = true;
 	}
 
 	public function hasStarted() {
@@ -233,11 +233,11 @@ class SmrGame {
 	}
 
 	public function setMaxPlayers($maxPlayers) {
-		if($this->maxPlayers==$maxPlayers) {
+		if ($this->maxPlayers == $maxPlayers) {
 			return;
 		}
-		$this->maxPlayers=$maxPlayers;
-		$this->hasChanged=true;
+		$this->maxPlayers = $maxPlayers;
+		$this->hasChanged = true;
 	}
 
 	public function getMaxTurns() {
@@ -245,11 +245,11 @@ class SmrGame {
 	}
 
 	public function setMaxTurns($int) {
-		if($this->maxTurns==$int) {
+		if ($this->maxTurns == $int) {
 			return;
 		}
-		$this->maxTurns=$int;
-		$this->hasChanged=true;
+		$this->maxTurns = $int;
+		$this->hasChanged = true;
 	}
 
 	public function getStartTurnHours() {
@@ -257,11 +257,11 @@ class SmrGame {
 	}
 
 	public function setStartTurnHours($int) {
-		if($this->startTurnHours==$int) {
+		if ($this->startTurnHours == $int) {
 			return;
 		}
-		$this->startTurnHours=$int;
-		$this->hasChanged=true;
+		$this->startTurnHours = $int;
+		$this->hasChanged = true;
 	}
 
 	public function getGameType() {
@@ -273,7 +273,7 @@ class SmrGame {
 			return;
 		}
 		$this->gameTypeID = $gameTypeID;
-		$this->hasChanged=true;
+		$this->hasChanged = true;
 	}
 
 	public function getCreditsNeeded() {
@@ -281,11 +281,11 @@ class SmrGame {
 	}
 
 	public function setCreditsNeeded($creditsNeeded) {
-		if($this->creditsNeeded==$creditsNeeded) {
+		if ($this->creditsNeeded == $creditsNeeded) {
 			return;
 		}
-		$this->creditsNeeded=$creditsNeeded;
-		$this->hasChanged=true;
+		$this->creditsNeeded = $creditsNeeded;
+		$this->hasChanged = true;
 	}
 
 	public function getGameSpeed() {
@@ -293,11 +293,11 @@ class SmrGame {
 	}
 
 	public function setGameSpeed($gameSpeed) {
-		if($this->gameSpeed==$gameSpeed) {
+		if ($this->gameSpeed == $gameSpeed) {
 			return;
 		}
-		$this->gameSpeed=$gameSpeed;
-		$this->hasChanged=true;
+		$this->gameSpeed = $gameSpeed;
+		$this->hasChanged = true;
 	}
 
 	public function isEnabled() {
@@ -305,11 +305,11 @@ class SmrGame {
 	}
 
 	public function setEnabled($bool) {
-		if($this->enabled === $bool) {
+		if ($this->enabled === $bool) {
 			return;
 		}
-		$this->enabled=$bool;
-		$this->hasChanged=true;
+		$this->enabled = $bool;
+		$this->hasChanged = true;
 	}
 
 	public function isIgnoreStats() {
@@ -317,11 +317,11 @@ class SmrGame {
 	}
 
 	public function setIgnoreStats($bool) {
-		if($this->ignoreStats === $bool) {
+		if ($this->ignoreStats === $bool) {
 			return;
 		}
-		$this->ignoreStats=$bool;
-		$this->hasChanged=true;
+		$this->ignoreStats = $bool;
+		$this->hasChanged = true;
 	}
 
 	public function getAllianceMaxPlayers() {
@@ -329,11 +329,11 @@ class SmrGame {
 	}
 
 	public function setAllianceMaxPlayers($int) {
-		if($this->allianceMaxPlayers==$int) {
+		if ($this->allianceMaxPlayers == $int) {
 			return;
 		}
-		$this->allianceMaxPlayers=$int;
-		$this->hasChanged=true;
+		$this->allianceMaxPlayers = $int;
+		$this->hasChanged = true;
 	}
 
 	public function getAllianceMaxVets() {
@@ -341,11 +341,11 @@ class SmrGame {
 	}
 
 	public function setAllianceMaxVets($int) {
-		if($this->allianceMaxVets==$int) {
+		if ($this->allianceMaxVets == $int) {
 			return;
 		}
-		$this->allianceMaxVets=$int;
-		$this->hasChanged=true;
+		$this->allianceMaxVets = $int;
+		$this->hasChanged = true;
 	}
 
 	public function getStartingCredits() {
@@ -353,15 +353,15 @@ class SmrGame {
 	}
 
 	public function setStartingCredits($int) {
-		if($this->startingCredits==$int) {
+		if ($this->startingCredits == $int) {
 			return;
 		}
-		$this->startingCredits=$int;
-		$this->hasChanged=true;
+		$this->startingCredits = $int;
+		$this->hasChanged = true;
 	}
 
 	public function getTotalPlayers() {
-		if(!isset($this->totalPlayers)) {
+		if (!isset($this->totalPlayers)) {
 			$this->db->query('SELECT count(*) FROM player WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()));
 			$this->db->nextRecord();
 			$this->totalPlayers = $this->db->getInt('count(*)');
@@ -374,7 +374,7 @@ class SmrGame {
 	}
 
 	public function equals(SmrGame $otherGame) {
-		return $otherGame->getGameID()==$this->getGameID();
+		return $otherGame->getGameID() == $this->getGameID();
 	}
 
 	// Convenience function for printing the game name with id

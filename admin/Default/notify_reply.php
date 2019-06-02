@@ -10,19 +10,25 @@ transfer('offender');
 $template->assign('NotifyReplyFormHref', SmrSession::getNewHREF($container));
 $offender = getMessagePlayer($var['offender'], $var['game_id']);
 $offended = getMessagePlayer($var['offended'], $var['game_id']);
-if (is_object($offender))
+if (is_object($offender)) {
 	$template->assign('OffenderAccount', $offender->getAccount());
-if (is_object($offended))
+}
+if (is_object($offended)) {
 	$template->assign('OffendedAccount', $offended->getAccount());
+}
 $template->assign('Offender', $offender);
 $template->assign('Offended', $offended);
 
-if (isset($var['PreviewOffender']))
+if (isset($var['PreviewOffender'])) {
 	$template->assign('PreviewOffender', $var['PreviewOffender']);
-if (isset($var['OffenderBanPoints']))
+}
+if (isset($var['OffenderBanPoints'])) {
 	$template->assign('OffenderBanPoints', $var['OffenderBanPoints']);
+}
 	
-if (isset($var['PreviewOffended']))
+if (isset($var['PreviewOffended'])) {
 	$template->assign('PreviewOffended', $var['PreviewOffended']);
-if (isset($var['OffendedBanPoints']))
+}
+if (isset($var['OffendedBanPoints'])) {
 	$template->assign('OffendedBanPoints', $var['OffendedBanPoints']);
+}

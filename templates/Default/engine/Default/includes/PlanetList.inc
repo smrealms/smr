@@ -63,8 +63,7 @@ if (count($Planets) > 0) { ?>
 								echo $Planet->getStructureTypes($Building['ConstructionID'])->name(); ?><br /><?php
 								echo format_time($Building['TimeRemaining'], true);
 							}
-						}
-						else {
+						} else {
 							?>Nothing<?php
 						} ?>
 					</td>

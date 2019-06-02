@@ -12,11 +12,9 @@ if (count($AlliedAllianceBanks) > 0) { ?>
 Hello <?php echo $ThisPlayer->getPlayerName(); ?>,<br /><?php
 if (isset($UnlimitedWithdrawal) && $UnlimitedWithdrawal === true) {
 	?>You can withdraw an unlimited amount from this account.<?php
-}
-else if (isset($PositiveWithdrawal)) {
+} else if (isset($PositiveWithdrawal)) {
 	?>You can only withdraw <?php echo number_format($PositiveWithdrawal); ?> more credits based on your deposits.<?php
-}
-else { ?>
+} else { ?>
 	You can withdraw up to <?php echo number_format($WithdrawalPerDay); ?> credits per 24 hours.<br />
 	So far you have withdrawn <?php echo number_format($TotalWithdrawn); ?> credits in the past 24 hours. You can withdraw <?php echo number_format($RemainingWithdrawal); ?> more credits.<?php
 } ?>
@@ -92,8 +90,7 @@ if (!empty($BankTransactions)) { ?>
 			<a class="buttonA" href="<?php echo $BankReportHREF; ?>">View Bank Report</a>
 		</div>
 	</div><?php
-}
-else {
+} else {
 	?>Your alliance account is still unused.<br /><?php
 } ?>
 

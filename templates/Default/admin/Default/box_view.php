@@ -12,8 +12,7 @@ if (isset($Boxes)) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
-}
-else { ?>
+} else { ?>
 	<a href="<?php echo $BackHREF; ?>">Back</a><br /><?php
 	if (isset($Messages)) { ?>
 		<form method="POST" action="<?php echo $DeleteHREF; ?>">
@@ -52,8 +51,7 @@ else { ?>
 				} ?>
 			</table>
 		</form><?php
-	}
-	else {
+	} else {
 		?>There are currently no messages in this box.<?php
 	}
 } ?>

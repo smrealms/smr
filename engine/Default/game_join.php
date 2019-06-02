@@ -23,7 +23,7 @@ $template->assign('Game', $game);
 
 $raceDescriptions = [];
 foreach (Globals::getRaces() as $race) {
-	$raceDescriptions[] = ('\'' . str_replace('\'','\\\'"',$race['Description']) . '\'');
+	$raceDescriptions[] = ('\'' . str_replace('\'', '\\\'"', $race['Description']) . '\'');
 }
 $template->assign('RaceDescriptions', join(',', $raceDescriptions));
 
@@ -31,7 +31,7 @@ $template->assign('RaceDescriptions', join(',', $raceDescriptions));
 if (TIME >= $game->getJoinTime()) {
 	$container = create_container('game_join_processing.php');
 	transfer('game_id');
-	$template->assign('JoinGameFormHref',SmrSession::getNewHREF($container));
+	$template->assign('JoinGameFormHref', SmrSession::getNewHREF($container));
 }
 
 $db2 = new SmrMySqlDatabase();
@@ -40,8 +40,8 @@ $only = array();
 // get all available hq's
 $db->query('SELECT location_name, location_type_id
 			FROM location JOIN location_type USING(location_type_id)
-			WHERE location_type_id > '.$db->escapeNumber(UNDERGROUND).'
-				AND location_type_id < '.$db->escapeNumber(FED).'
+			WHERE location_type_id > '.$db->escapeNumber(UNDERGROUND) . '
+				AND location_type_id < '.$db->escapeNumber(FED) . '
 				AND game_id = ' . $db->escapeNumber($var['game_id']) . '
 			ORDER BY location_type_id');
 $races = array();
@@ -54,7 +54,7 @@ while ($db->nextRecord()) {
 	if (in_array($curr_race_id, $only)) continue;
 	$only[] = $curr_race_id;
 	// get number of traders in game
-	$db2->query('SELECT count(*) as number_of_race FROM player WHERE race_id = '.$db2->escapeNumber($curr_race_id).' AND game_id = ' . $db2->escapeNumber($var['game_id']));
+	$db2->query('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db2->escapeNumber($curr_race_id) . ' AND game_id = ' . $db2->escapeNumber($var['game_id']));
 	$db2->nextRecord();
 
 	$races[$curr_race_id]['ID'] = $curr_race_id;
@@ -62,10 +62,10 @@ while ($db->nextRecord()) {
 	$races[$curr_race_id]['NumberOfPlayers'] = $db2->getInt('number_of_race');
 	$races[$curr_race_id]['Selected'] = false;
 }
-if(count($races) > 1) {
+if (count($races) > 1) {
 	do {
 		$raceKey = array_rand($races);
-	} while($races[$raceKey]['ID'] == RACE_ALSKANT);
+	} while ($races[$raceKey]['ID'] == RACE_ALSKANT);
 	$races[$raceKey]['Selected'] = true;
 }
-$template->assign('Races',$races);
+$template->assign('Races', $races);

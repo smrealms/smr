@@ -6,7 +6,7 @@
 		<th>Average <?php echo $RankingStat; ?></th>
 		<th>Total Members</th>
 	</tr><?php
-	foreach($Rankings as $Ranking) { ?>
+	foreach ($Rankings as $Ranking) { ?>
 		<tr<?php echo $Ranking['Class']; ?>>
 			<td class="top"><?php echo $Ranking['Rank']; ?></td>
 			<td class="top left"><?php echo $Ranking['Alliance']->getAllianceName(true); ?></td>

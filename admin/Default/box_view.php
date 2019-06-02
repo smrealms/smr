@@ -1,8 +1,8 @@
 <?php
 
-$template->assign('PageTopic','Viewing Message Boxes');
+$template->assign('PageTopic', 'Viewing Message Boxes');
 
-if(!isset($var['box_type_id'])) {
+if (!isset($var['box_type_id'])) {
 	$container = create_container('skeleton.php', 'box_view.php');
 	$boxes = array();
 	require_once(get_file_loc('message.functions.inc'));
@@ -17,20 +17,20 @@ if(!isset($var['box_type_id'])) {
 	$db->query('SELECT count(message_id), box_type_id
 				FROM message_boxes
 				GROUP BY box_type_id');
-	while($db->nextRecord()) {
+	while ($db->nextRecord()) {
 		$boxes[$db->getInt('box_type_id')]['TotalMessages'] = $db->getInt('count(message_id)');
 	}
 	$template->assign('Boxes', $boxes);
 }
 else {
-	$template->assign('BackHREF', SmrSession::getNewHREF(create_container('skeleton.php','box_view.php')));
-	$db->query('SELECT * FROM message_boxes WHERE box_type_id='.$db->escapeNumber($var['box_type_id']).' ORDER BY send_time DESC');
+	$template->assign('BackHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'box_view.php')));
+	$db->query('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($var['box_type_id']) . ' ORDER BY send_time DESC');
 	$messages = array();
 	if ($db->getNumRows()) {
 		$container = create_container('box_delete_processing.php');
 		$container['box_type_id'] = $var['box_type_id'];
 		$template->assign('DeleteHREF', SmrSession::getNewHREF($container));
-		while($db->nextRecord()) {
+		while ($db->nextRecord()) {
 			$gameID = $db->getInt('game_id');
 			$validGame = $gameID > 0 && Globals::isValidGame($gameID);
 			$messageID = $db->getInt('message_id');
@@ -43,10 +43,10 @@ else {
 				$senderName = 'User not logged in';
 			} else {
 				$senderAccount = SmrAccount::getAccount($senderID);
-				$senderName = $senderAccount->getLogin().' ('.$senderID.')';
+				$senderName = $senderAccount->getLogin() . ' (' . $senderID . ')';
 				if ($validGame) {
 					$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
-					if($senderAccount->getLogin() != $senderPlayer->getPlayerName()) {
+					if ($senderAccount->getLogin() != $senderPlayer->getPlayerName()) {
 						$senderName .= ' a.k.a ' . $senderPlayer->getPlayerName();
 					}
 				

@@ -47,8 +47,7 @@ if (isset($AccountID)) { ?>
 	}
 	?><a href="<?php echo $LogoutLink; ?>">Logout</a><br />
 	<br /><?php
-}
-else {
+} else {
 	?><a href="login.php">Login</a><br /><?php
 }
 //<a href="http://www.azool.us/baalz/" target="manual">Help Pages</a><br />
