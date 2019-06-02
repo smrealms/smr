@@ -183,12 +183,12 @@ class SmrSession {
 		self::$db->query('SELECT * FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		if (self::$db->nextRecord()) {
 			self::$generate = false;
-			self::$session_id		= self::$db->getField('session_id');
-			self::$account_id		= self::$db->getInt('account_id');
-			self::$game_id			= self::$db->getInt('game_id');
+			self::$session_id = self::$db->getField('session_id');
+			self::$account_id = self::$db->getInt('account_id');
+			self::$game_id = self::$db->getInt('game_id');
 			self::$last_accessed = self::$db->getInt('last_accessed');
 			self::$var = @unserialize(@gzuncompress(self::$db->getField('session_var')));
-			self::$commonIDs	= array();
+			self::$commonIDs = array();
 			self::$lastSN = self::$db->getField('last_sn');
 			// We may not have ajax_returns if ajax was disabled
 			$ajaxReturns = self::$db->getField('ajax_returns');
