@@ -23,7 +23,9 @@ function draw_card($currCards) {
 function get_value($deck) {
 	//this function used to find the value of a player's/bank's cards
 	//if this is just one card push it into an array so we can run the func
-	if (!is_array($deck)) $deck = array($deck);
+	if (!is_array($deck)) {
+		$deck = array($deck);
+	}
 	$curr_aces = 0;
 	$return_val = 0;
 	foreach ($deck as $card) {
@@ -53,15 +55,13 @@ function create_card($card, $show) {
 	$return .= ('<table style="border:1px solid green"><tr><td><table><tr><td valign=top class="left" height=' . $card_height . ' width=' . $card_width . '>');
 	if ($show) {
 		$return .= ('<h1>' . $card_name . '<img src="images/' . $suit . '.gif"></h1></td></tr>');
-	}
-	else {
+	} else {
 		$return .= ('</td></tr>');
 	}
 	$return .= ('<tr><td valign=bottom class="right" height=' . $card_height . ' width=' . $card_width . '>');
 	if ($show) {
 		$return .= ('<h1><img src="images/' . $suit . '.gif">' . $card_name . '</h1></td></tr></table>');
-	}
-	else {
+	} else {
 		$return .= ('</td></tr></table>');
 	}
 	$return .= ('</td></tr></table></td>');
@@ -75,33 +75,27 @@ function check_for_win($ai_card, $player_card) {
 	//does the player win
 	if (sizeof($player_card) == 2 && $play == 21) {
 		return 'bj';
-	}
-	elseif ($play > $comp && $comp <= 21 && $play <= 21) {
+	} elseif ($play > $comp && $comp <= 21 && $play <= 21) {
 		return 'yes';
-	}
-	elseif ($play == $comp && $comp <= 21) {
+	} elseif ($play == $comp && $comp <= 21) {
 		return 'tie';
-	}
-	elseif ($comp > 21) {
+	} elseif ($comp > 21) {
 		return 'yes';
-	}
-	else {
+	} else {
 		return 'no';
 	}
 }
 
 if (isset($var['player_does'])) {
 	$do = $var['player_does'];
-}
-else {
+} else {
 	$do = 'nothing';
 }
 //new game if $do == nothing
 if ($do == 'nothing') {
 	if (isset($var['bet'])) {
 		$bet = $var['bet'];
-	}
-	else {
+	} else {
 		$bet = $_REQUEST['bet'];
 	}
 	if (!is_numeric($bet)) {
@@ -202,13 +196,17 @@ if ($do != 'STAY' && get_value($player_card) != 21) {
 			//get curr val of this card...for the at least part
 			$ai_val = get_value($curr_ai_card);
 			$i++;
-		}
-		else {
+		} else {
 			//lets try and echo cards
 			//new row?
-			if ($i == 4 || $i == 7 || $i == 10) $message .= ('</tr><tr>');
-			if (get_value($ai_card) == 21 || get_value($player_card) >= 21) $message .= create_card($value, TRUE);
-			else $message .= create_card($value, FALSE);
+			if ($i == 4 || $i == 7 || $i == 10) {
+				$message .= ('</tr><tr>');
+			}
+			if (get_value($ai_card) == 21 || get_value($player_card) >= 21) {
+				$message .= create_card($value, TRUE);
+			} else {
+				$message .= create_card($value, FALSE);
+			}
 			$i++;
 		}
 	}
@@ -217,11 +215,9 @@ if ($do != 'STAY' && get_value($player_card) != 21) {
 	if (get_value($ai_card) == 21 && sizeof($ai_card) == 2) {
 		$message .= ('<div class="center">Bank has BLACKJACK!</div><br />');
 		$win = 'no';
-	}
-	elseif (get_value($player_card) >= 21) {
+	} elseif (get_value($player_card) >= 21) {
 		$message .= ('<div class="center">Bank has ' . get_value($ai_card) . '</div><br />');
-	}
-	else {
+	} else {
 		$message .= ('<div class="center">Bank has at least ' . $ai_val . '</div><br />');
 	}
 }
@@ -243,11 +239,9 @@ if ($do == 'STAY' || get_value($player_card) == 21) {
 	$win = check_for_win($ai_card, $player_card);
 	if ($win == 'yes' || $win == 'bj') {
 		$message .= ('<h1 class="green center">You Win</h1>');
-	}
-	elseif ($win == 'tie') {
+	} elseif ($win == 'tie') {
 		$message .= ('<h1 class="yellow center">TIE Game</h1>');
-	}
-	else {
+	} else {
 		$message .= ('<h1 class="red center">Bank Wins</h1>');
 	}
 	$message .= ('<div class="center">Bank\'s Cards are</div><br /><table class="center"><tr>');
@@ -262,8 +256,7 @@ if ($do == 'STAY' || get_value($player_card) == 21) {
 	$message .= ('</tr></table><div class="center">');
 	if (get_value($ai_card) > 21) {
 		$message .= ('Bank <span class="red"><b>BUSTED</b></span><br /><br />');
-	}
-	else {
+	} else {
 		$message .= ('Bank has ' . get_value($ai_card) . '<br /><br />');
 	}
 	$message .= ('</div>');
@@ -303,8 +296,7 @@ if (get_value($player_card) > 21) {
 	$message .= create_submit('Play Some More ($' . $bet . ')');
 	$message .= ('</form>');
 	$message .= ('</div>');
-}
-else if (!isset($win) && get_value($player_card) < 21) {
+} else if (!isset($win) && get_value($player_card) < 21) {
 	$container['player_card'] = $player_card;
 	$container['player_does'] = 'HIT';
 	$container['ai_card'] = $ai_card;
@@ -316,8 +308,7 @@ else if (!isset($win) && get_value($player_card) < 21) {
 	$message .= create_echo_form($container);
 	$message .= create_submit('STAY');
 	$message .= ('</form></div>');
-}
-else if (isset($win)) {
+} else if (isset($win)) {
 	//we have a winner...but who!
 	if ($win == 'bj') {
 		$player->increaseCredits($bet * 2.5);
@@ -326,22 +317,19 @@ else if (isset($win)) {
 		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Won'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Won'), HOF_PUBLIC);
 		$message .= ('You have won $' . number_format($bet * 2.5) . ' credits!');
-	}
-	elseif ($win == 'yes') {
+	} elseif ($win == 'yes') {
 		$player->increaseCredits($bet * 2);
 		$stat = ($bet * 2) - $bet;
 		$player->update();
 		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Won'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Won'), HOF_PUBLIC);
 		$message .= ('You have won $' . number_format($bet * 2) . ' credits!');
-	}
-	elseif ($win == 'tie') {
+	} elseif ($win == 'tie') {
 		$player->increaseCredits($bet);
 		$player->update();
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Draw'), HOF_PUBLIC);
 		$message .= ('You have won back your $' . number_format($bet) . ' credits.');
-	}
-	else {
+	} else {
 		$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
 	}
@@ -349,13 +337,11 @@ else if (isset($win)) {
 	$message .= create_submit('Play Some More ($' . $bet . ')');
 	$message .= ('</form>');
 	$message .= ('</div>');
-}
-elseif ($val1 == 21) {
+} elseif ($val1 == 21) {
 	if (get_value($ai_card) != 21) {
 		if (sizeof($player_card) == 2) {
 			$winnings = 2.5;
-		}
-		else {
+		} else {
 			$winnings = 2;
 		}
 		$player->increaseCredits($bet * $winnings);
@@ -364,8 +350,7 @@ elseif ($val1 == 21) {
 		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Win'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Win'), HOF_PUBLIC);
 		$message .= ('You have won $' . number_format($bet * $winnings) . ' credits!');
-	}
-	else if (sizeof($ai_card) > 2) {
+	} else if (sizeof($ai_card) > 2) {
 		$winnings = 1;
 		$player->increaseCredits($bet * $winnings);
 		$stat = ($bet * $winnings) - $bet;
@@ -373,8 +358,7 @@ elseif ($val1 == 21) {
 		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Win'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Win'), HOF_PUBLIC);
 		$message .= ('You have won back your $' . number_format($bet * $winnings) . ' credits!');
-	}
-	else {
+	} else {
 		//AI has BJ already...sorry
 		$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);

@@ -5,8 +5,7 @@
 			<td><?php
 				if (isset($EditingAccount)) {
 					echo $EditingAccount->getAccountID();
-				}
-				else { ?>
+				} else { ?>
 					<input type="number" name="account_id" class="InputFields" size="5"><?php
 				} ?>
 			</td>
@@ -16,8 +15,7 @@
 			<td><?php
 				if (isset($EditingAccount)) {
 					echo $EditingAccount->getLogin();
-				}
-				else { ?>
+				} else { ?>
 					<input type="text" name="login" class="InputFields" size="20"><?php
 				} ?>
 			</td>
@@ -27,8 +25,7 @@
 			<td><?php
 				if (isset($EditingAccount)) {
 					echo $EditingAccount->getValidationCode();
-				}
-				else { ?>
+				} else { ?>
 					<input type="text" name="val_code" class="InputFields" size="20"><?php
 				} ?>
 			</td>
@@ -38,8 +35,7 @@
 			<td><?php
 				if (isset($EditingAccount)) {
 					echo $EditingAccount->getEmail();
-				}
-				else { ?>
+				} else { ?>
 					<input type="email" name="email" class="InputFields" size="20"><?php
 				} ?>
 			</td>
@@ -49,8 +45,7 @@
 			<td><?php
 				if (isset($EditingAccount)) {
 					echo $EditingAccount->getHofName();
-				}
-				else { ?>
+				} else { ?>
 					<input type="text" name="hofname" class="InputFields" size="20"><?php
 				} ?>
 			</td>
@@ -114,8 +109,7 @@
 									</tr><?php
 								} ?>
 							</table><?php
-						}
-						else { ?>
+						} else { ?>
 							Joined no active games</td><?php
 						} ?>
 				</td>
@@ -248,8 +242,7 @@
 						foreach ($ClosingHistory as $Action) {
 							echo date(DATE_FULL_SHORT, $Action['Time']); ?> - <?php echo $Action['Action']; ?> by <?php echo $Action['AdminName']; ?><br /><?php
 						}
-					}
-					else { ?>
+					} else { ?>
 						No activity.<?php
 					} ?>
 				</td>
@@ -265,8 +258,7 @@
 				<td><?php
 					if (isset($Exception)) {
 						echo $Exception;
-					}
-					else { ?>
+					} else { ?>
 						This account is not listed.<br /><input type="text" name="exception_add" value="Add An Exception"><?php
 					} ?>
 				</td>
@@ -324,8 +316,7 @@
 					} ?>
 				</td>
 			</tr><?php
-		}
-		else { ?>
+		} else { ?>
 			<tr>
 				<td class="right bold">Player Name:</td>
 				<td><input type="text" name="player_name" class="InputFields" size="20"></td>
@@ -351,8 +342,7 @@
 			<td><?php
 				if (isset($EditingAccount)) { ?>
 					<input type="submit" name="action" value="Edit Account" class="InputFields" /><?php
-				}
-				else { ?>
+				} else { ?>
 					<input type="submit" name="action" value="Search" class="InputFields" /><?php
 				} ?>
 			</td><?php

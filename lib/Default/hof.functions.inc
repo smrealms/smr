@@ -75,13 +75,11 @@ function getHofRank($view, $viewType, $accountID, $gameID) {
 	$rank = array('Amount'=>0, 'Rank'=>0);
 	if ($view == DONATION_NAME) {
 		$db->query('SELECT SUM(amount) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID) . ' GROUP BY account_id LIMIT 1');
-	}
-	else if ($view == USER_SCORE_NAME) {
+	} else if ($view == USER_SCORE_NAME) {
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
 		$query = 'SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x ORDER BY amount DESC';
 		$db->query($query);
-	}
-	else {
+	} else {
 		$db->query('SELECT visibility FROM hof_visibility WHERE type=' . $db->escapeArray($viewType, false, true, ':', false) . ' LIMIT 1');
 		if (!$db->nextRecord()) {
 			return $rank;
@@ -100,12 +98,10 @@ function getHofRank($view, $viewType, $accountID, $gameID) {
 
 	if ($view == DONATION_NAME) {
 		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');
-	}
-	else if ($view == USER_SCORE_NAME) {
+	} else if ($view == USER_SCORE_NAME) {
 		$query = 'SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . '>' . $db->escapeNumber($rank['Amount']) . ') x';
 		$db->query($query);
-	}
-	else {
+	} else {
 		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeArray($viewType, false, true, ':', false) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
 	}
 	if ($db->nextRecord()) {
@@ -119,12 +115,10 @@ function displayHOFRow($rank, $accountID, $amount) {
 	if (isset($var['game_id']) && Globals::isValidGame($var['game_id'])) {
 		try {
 			$hofPlayer = SmrPlayer::getPlayer($accountID, $var['game_id']);
-		}
-		catch (PlayerNotFoundException $e) {
+		} catch (PlayerNotFoundException $e) {
 			$hofAccount = SmrAccount::getAccount($accountID);
 		}
-	}
-	else {
+	} else {
 		$hofAccount = SmrAccount::getAccount($accountID);
 	}
 	$bold = '';
@@ -143,11 +137,9 @@ function displayHOFRow($rank, $accountID, $amount) {
 
 	if (isset($hofPlayer) && is_object($hofPlayer)) {
 		$return .= ('<td ' . $bold . '>' . create_link($container, $hofPlayer->getPlayerName()) . '</td>');
-	}
-	else if (isset($hofAccount) && is_object($hofAccount)) {
+	} else if (isset($hofAccount) && is_object($hofAccount)) {
 		$return .= ('<td ' . $bold . '>' . create_link($container, $hofAccount->getHofName()) . '</td>');
-	}
-	else {
+	} else {
 		$return .= ('<td ' . $bold . '>Unknown</td>');
 	}
 	$return .= ('<td ' . $bold . '>' . $amount . '</td>');
@@ -167,8 +159,7 @@ function buildBreadcrumb(&$var, &$hofTypes, $hofName) {
 				$var['type'] = $typeList;
 				$var['view'] = $type;
 				break;
-			}
-			else {
+			} else {
 				$typeList[] = $type;
 			}
 			$viewing .= ' &rarr; ';

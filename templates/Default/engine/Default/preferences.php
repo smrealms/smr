@@ -46,8 +46,7 @@ if (isset($GameID)) { ?>
 					<input type="text" maxlength="32" name="PlayerName" value="<?php echo $ThisPlayer->getPlayerName(); ?>" size="32"><br/><?php
 					if ($ThisPlayer->isNameChanged()) {
 						?>(You have already changed your name for free, further changes will cost <?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits)<?php
-					}
-					else {
+					} else {
 						?>(You can change your name for free once)<?php
 					} ?>
 				</td>

@@ -4,8 +4,7 @@ if (!$AlreadyDestroyed) {
 		<h1>Attacker Results</h1><br /><?php
 	}
 	$this->includeTemplate('includes/PortTraderTeamCombatResults.inc', array('TraderTeamCombatResults'=>$FullPortCombatResults['Attackers'], 'MinimalDisplay'=>$MinimalDisplay));
-}
-else if (!$MinimalDisplay) {
+} else if (!$MinimalDisplay) {
 	?><span class="bold">The port is already destroyed.</span><?php
 }
 ?><br /><?php

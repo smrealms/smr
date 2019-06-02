@@ -21,8 +21,7 @@
 					Ship: <?php echo $Ship->getName(); ?> (<?php echo $Ship->getAttackRating(); ?>/<?php echo $Ship->getDefenseRating(); ?>)<br />
 					DCS: <?php if ($Ship->hasDCS()) { ?>Yes<?php } else { ?>No<?php } ?><br />
 					Weapons: <?php foreach ($ShipWeapons as $ShipWeapon) { ?>* <?php echo $ShipWeapon->getName(); ?><br /><?php }
-				}
-				else { ?>No Dummy<?php } ?>
+				} else { ?>No Dummy<?php } ?>
 		</td>
 	</tr><?php
 	} ?>

@@ -59,8 +59,7 @@
 							if ((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($MapPlayer)) {
 								if (($UniGen || $isCurrentSector) && $Sector->hasPort()) {
 									$Port = $Sector->getPort();
-								}
-								else if ($Sector->hasCachedPort($MapPlayer)) {
+								} else if ($Sector->hasCachedPort($MapPlayer)) {
 									$Port = $Sector->getCachedPort($MapPlayer);
 								} ?>
 								<div class="lmport <?php if ($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?> 
@@ -91,8 +90,7 @@
 								}
 								if ($isVisited) {
 									if ($Sector->hasWarp()) {
-										if ($GalaxyMap) { ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php }
-										else if ($isCurrentSector) { ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapMoveHREF(); ?>"><?php } ?>
+										if ($GalaxyMap) { ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php } else if ($isCurrentSector) { ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapMoveHREF(); ?>"><?php } ?>
 											<img title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxyName(); ?>)" alt="Warp to #<?php echo $Sector->getWarp(); ?>" src="images/warp.png" width="16" height="16" /><?php
 										if ($isCurrentSector || $GalaxyMap) { ?></a><?php }
 									}
@@ -132,14 +130,11 @@
 						if ($UniGen) {
 							$UniGen['sector_id'] = $Sector->getSectorID(); ?>
 							<a class="move_hack" href="<?php echo SmrSession::getNewHREF($UniGen); ?>"></a><?php
-						}
-						else if ($GalaxyMap) { ?>
+						} else if ($GalaxyMap) { ?>
 							<a class="move_hack" href="<?php echo $Sector->getGalaxyMapHREF(); ?>"></a><?php
-						}
-						else if ($isLinkedSector) { ?>
+						} else if ($isLinkedSector) { ?>
 							<a class="move_hack" href="<?php echo $Sector->getLocalMapMoveHREF(); ?>"></a><?php
-						}
-						else if ($isCurrentSector) { ?>
+						} else if ($isCurrentSector) { ?>
 							<a class="move_hack" href="<?php echo Globals::getCurrentSectorHREF(); ?>"></a><?php
 						} ?>
 					</div>

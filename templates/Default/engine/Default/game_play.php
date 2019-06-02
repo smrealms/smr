@@ -73,8 +73,7 @@ if (isset($Message)) {
 				</tr>
 			<?php } ?>
 		</table><?php
-	}
-	else {
+	} else {
 		?><p>You have joined all open games.</p><?php
 	} ?>
 </div>
@@ -126,8 +125,7 @@ if (isset($Voting)) {
 				</tr>
 			<?php } ?>
 		</table><?php
-	}
-	else {
+	} else {
 		?><p>There are no previous games.</p><?php
 	} ?>
 </div>

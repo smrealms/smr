@@ -1,5 +1,7 @@
 <?php
-if (!isset($var['GameID'])) SmrSession::updateVar('GameID', $player->getGameID());
+if (!isset($var['GameID'])) {
+	SmrSession::updateVar('GameID', $player->getGameID());
+}
 $gameID = $var['GameID'];
 
 $template->assign('PageTopic', 'Current News');
@@ -10,8 +12,9 @@ doBreakingNewsAssign($gameID, $template);
 doLottoNewsAssign($gameID, $template);
 
 
-if (!isset($var['LastNewsUpdate']))
+if (!isset($var['LastNewsUpdate'])) {
 	SmrSession::updateVar('LastNewsUpdate', $player->getLastNewsUpdate());
+}
 
 $db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > ' . $db->escapeNumber($var['LastNewsUpdate']) . ' AND type != \'lotto\' ORDER BY news_id DESC');
 $template->assign('NewsItems', getNewsItems($db));

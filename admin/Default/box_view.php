@@ -21,8 +21,7 @@ if (!isset($var['box_type_id'])) {
 		$boxes[$db->getInt('box_type_id')]['TotalMessages'] = $db->getInt('count(message_id)');
 	}
 	$template->assign('Boxes', $boxes);
-}
-else {
+} else {
 	$template->assign('BackHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'box_view.php')));
 	$db->query('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($var['box_type_id']) . ' ORDER BY send_time DESC');
 	$messages = array();

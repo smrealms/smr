@@ -21,8 +21,7 @@ if (isset($var['id'])) {
 	// Editing an article
 	$db->query('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(TIME) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
 	forward(create_container('skeleton.php', 'galactic_post_view_article.php'));
-}
-else {
+} else {
 	// Adding a new article
 	$message = 'Dear Galactic Post editors,<br /><br />[player=' . $player->getPlayerID() . '] has just submitted an article to the Galactic Post!';
 	foreach (Globals::getGalacticPostEditorIDs($player->getGameID()) as $editorID) {

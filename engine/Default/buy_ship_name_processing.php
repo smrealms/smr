@@ -8,14 +8,11 @@ $actionShipLogo = 'Paint a logo (' . CREDITS_PER_SHIP_LOGO . ' SMR Credits)';
 
 if (isset($var['ShipName']) || $action == $actionHtmlShipName) {
 	$cred_cost = CREDITS_PER_HTML_SHIP_NAME;
-}
-else if ($action == $actionShipLogo) {
+} else if ($action == $actionShipLogo) {
 	$cred_cost = CREDITS_PER_SHIP_LOGO;
-}
-else if ($action == $actionTextShipName) {
+} else if ($action == $actionTextShipName) {
 	$cred_cost = CREDITS_PER_TEXT_SHIP_NAME;
-}
-else {
+} else {
 	throw new Exception('Did not match an expected ship name type.');
 }
 
@@ -63,8 +60,7 @@ if (!isset($var['ShipName'])) {
 			$container = create_container('skeleton.php', 'current_sector.php');
 			$container['msg'] = 'Your logo was successfully painted!';
 			forward($container);
-		}
-		else {
+		} else {
 			create_error('Error while uploading');
 		}
 	}
@@ -92,11 +88,9 @@ if (!isset($var['ShipName'])) {
 				$check .= '*>';
 				if ($check != '<h*>' && $check != '</marquee>?*>') {
 					create_error(htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag is not allowed in ship names.<br /><small>If you believe the name is appropriate please contact an admin.</small>');
-				}
-				else if ($check == '</marquee>?*>') {
+				} else if ($check == '</marquee>?*>') {
 					create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES, 'utf-8') . ' tag.');
-				}
-				else {
+				} else {
 					create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES, 'utf-8') . ' tag which is not needed.');
 				}
 			}
@@ -123,8 +117,7 @@ if (!isset($var['ShipName'])) {
 				if ($open < 0) {
 					$ha = TRUE;
 				}
-			}
-			else {
+			} else {
 				$real_open += 1;
 				$open += 1;
 			}
@@ -135,8 +128,7 @@ if (!isset($var['ShipName'])) {
 		if ($close > $real_open || $ha || $open < 0) {
 			create_error('You can not close tags that do not exist!<br /><small>This could be an attempt at hacking if this action is seen again it will be logged</small>');
 		}
-	}
-	else {
+	} else {
 		$max_len = 48;
 		$name = htmlentities($name, ENT_NOQUOTES, 'utf-8');
 	}

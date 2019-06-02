@@ -1,23 +1,24 @@
 <?php
 require_once(get_file_loc('hof.functions.inc'));
 
-if (isset($var['account_id']))
+if (isset($var['account_id'])) {
 	$account_id = $var['account_id'];
-else
+} else {
 	$account_id = $account->getAccountID();
+}
 $game_id = null;
-if (isset($var['game_id'])) $game_id = $var['game_id'];
+if (isset($var['game_id'])) {
+	$game_id = $var['game_id'];
+}
 
 if (isset($var['game_id'])) {
 	try {
 		$hofPlayer = SmrPlayer::getPlayer($account_id, $var['game_id']);
-	}
-	catch (PlayerNotFoundException $e) {
+	} catch (PlayerNotFoundException $e) {
 		create_error('That player has not yet joined this game.');
 	}
 	$template->assign('PageTopic', $hofPlayer->getPlayerName() . '\'s Personal Hall of Fame For ' . Globals::getGameName($var['game_id']));
-}
-else {
+} else {
 	$hofName = SmrAccount::getAccount($account_id)->getHofName();
 	$template->assign('PageTopic', $hofName . '\'s All Time Personal Hall of Fame');
 }
@@ -26,8 +27,7 @@ $allowedVisibities = array(HOF_PUBLIC);
 if ($account->getAccountID() == $account_id) {
 	$allowedVisibities[] = HOF_ALLIANCE;
 	$allowedVisibities[] = HOF_PRIVATE;
-}
-else if (isset($hofPlayer) && $hofPlayer->sameAlliance($player)) {
+} else if (isset($hofPlayer) && $hofPlayer->sameAlliance($player)) {
 	$allowedVisibities[] = HOF_ALLIANCE;
 }
 $db->query('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') ORDER BY type');
@@ -50,8 +50,7 @@ $template->assign('Breadcrumb', buildBreadcrumb($var, $hofTypes, 'Personal HoF')
 if (!isset($var['view'])) {
 	$categories = getHofCategories($hofTypes, $game_id, $account_id);
 	$template->assign('Categories', $categories);
-}
-else {
+} else {
 	// Category rankings page
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];

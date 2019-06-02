@@ -13,11 +13,9 @@ if ($var['func'] == 'Map') {
 		$port->addCachePort($account_id);
 	}
 
-}
-elseif ($var['func'] == 'Money') {
+} elseif ($var['func'] == 'Money') {
 	$player->setCredits(50000000);
-}
-elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_id'] != 68) {
+} elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_id'] != 68) {
 	$ship_id = (int)$_REQUEST['ship_id'];
 	
 	$speed = $ship->getSpeed();
@@ -29,18 +27,15 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 	//now adapt turns
 	$player->setTurns($player->getTurns() * ($speed / $ship->getSpeed()));
 	setHardwareToMax($ship);
-}
-elseif ($var['func'] == 'Weapon') {
+} elseif ($var['func'] == 'Weapon') {
 	$weapon_id = $_REQUEST['weapon_id'];
 	$amount = $_REQUEST['amount'];
 	for ($i = 1; $i <= $amount; $i++) {
 		$ship->addWeapon($weapon_id);
 	}
-}
-elseif ($var['func'] == 'Uno') {
+} elseif ($var['func'] == 'Uno') {
 	setHardwareToMax($ship);
-}
-elseif ($var['func'] == 'Warp') {
+} elseif ($var['func'] == 'Warp') {
 	$sector_to = trim($_REQUEST['sector_to']);
 	if (!is_numeric($sector_to)) {
 		create_error('Sector ID has to be a number.');
@@ -50,33 +45,26 @@ elseif ($var['func'] == 'Warp') {
 	}
 	$player->setSectorID($sector_to);
 	$player->setLandedOnPlanet(false);
-}
-elseif ($var['func'] == 'Turns') {
+} elseif ($var['func'] == 'Turns') {
 	$player->setTurns((int)$_REQUEST['turns']);
-}
-elseif ($var['func'] == 'Exp') {
+} elseif ($var['func'] == 'Exp') {
 	$exp = min(500000, (int)$_REQUEST['exp']);
 	$player->setExperience($exp);
-}
-elseif ($var['func'] == 'Align') {
+} elseif ($var['func'] == 'Align') {
 	$align = max(-500, min(500, (int)$_REQUEST['align']));
 	$player->setAlignment($align);
-}
-elseif ($var['func'] == 'RemWeapon') {
+} elseif ($var['func'] == 'RemWeapon') {
 	$ship->removeAllWeapons();
-}
-elseif ($var['func'] == 'Hard_add') {
+} elseif ($var['func'] == 'Hard_add') {
 	$type_hard = (int)$_REQUEST['type_hard'];
 	$amount_hard = (int)$_REQUEST['amount_hard'];
 	$ship->setHardware($type_hard, $amount_hard);
 	$ship->removeUnderAttack();
-}
-elseif ($var['func'] == 'Relations') {
+} elseif ($var['func'] == 'Relations') {
 	$amount = (int)$_REQUEST['amount'];
 	$race = (int)$_REQUEST['race'];
 	$player->setRelations($amount, $race);
-}
-elseif ($var['func'] == 'Race_Relations') {
+} elseif ($var['func'] == 'Race_Relations') {
 	$amount = $_REQUEST['amount'];
 	$race = $_REQUEST['race'];
 	if (!is_numeric($amount) || !is_numeric($race)) {
@@ -93,20 +81,17 @@ elseif ($var['func'] == 'Race_Relations') {
 		create_error('Amount and Race IDs have to be numbers.');
 	}
 	$player->setRaceID($race);
-}
-elseif ($var['func'] == 'planet_buildings') {
+} elseif ($var['func'] == 'planet_buildings') {
 	$planet = $sector->getPlanet();
 	foreach ($planet->getMaxBuildings() as $id => $amount) {
 		$planet->setBuilding($id, $amount);
 	}
-}
-elseif ($var['func'] == 'planet_defenses') {
+} elseif ($var['func'] == 'planet_defenses') {
 	$planet = $sector->getPlanet();
 	$planet->setShields($planet->getMaxShields());
 	$planet->setCDs($planet->getMaxCDs());
 	$planet->setArmour($planet->getMaxArmour());
-}
-elseif ($var['func'] == 'planet_stockpile') {
+} elseif ($var['func'] == 'planet_stockpile') {
 	$planet = $sector->getPlanet();
 	foreach (Globals::getGoods() as $goodID => $good) {
 		$planet->setStockpile($goodID, SmrPlanet::MAX_STOCKPILE);

@@ -157,7 +157,9 @@ if (!file_exists($file_name)) {
 
 				$field = $db2->getField(0);
 				$insert .= $field;
-				if ($i != 0) $insert .= ',';
+				if ($i != 0) {
+					$insert .= ',';
+				}
 				$i--;
 
 			}
@@ -170,7 +172,9 @@ if (!file_exists($file_name)) {
 				for ($j = 0; $j <= $cols; $j++) {
 
 					$db_ent .= $db2->getField($j);
-					if ($i != 0) $db_ent .= ',';
+					if ($i != 0) {
+						$db_ent .= ',';
+					}
 					$i--;
 
 				}
