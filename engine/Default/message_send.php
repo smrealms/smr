@@ -8,9 +8,11 @@ $container = create_container('message_send_processing.php');
 transfer('receiver');
 $template->assign('MessageSendFormHref', SmrSession::getNewHREF($container));
 
-if (!empty($var['receiver']))
+if (!empty($var['receiver'])) {
 	$template->assign('Receiver', SmrPlayer::getPlayer($var['receiver'], $player->getGameID()));
-else
+} else {
 	$template->assign('Receiver', 'All Online');
-if (isset($var['preview']))
+}
+if (isset($var['preview'])) {
 	$template->assign('Preview', $var['preview']);
+}

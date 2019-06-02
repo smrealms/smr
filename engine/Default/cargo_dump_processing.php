@@ -53,8 +53,7 @@ if ($player->getExperience() > 0) {
 	$container['msg'] = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise('unit', $amount) . ' of ' . $good_name . ' and have lost <span class="exp">' . $lost_xp . '</span> experience.';
 	// log action
 	$account->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good_name . ' and loses ' . $lost_xp . ' experience', $player->getSectorID());
-}
-else {
+} else {
 	// No experience to lose, so damage the ship
 	$damage = ceil($amount / 5);
 

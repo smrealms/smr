@@ -10,12 +10,10 @@ transfer('LocationID');
 if ($location->isHQ()) {
 	$container['body'] = 'government.php';
 	$type = 'HQ';
-}
-else if ($location->isUG()) {
+} else if ($location->isUG()) {
 	$container['body'] = 'underground.php';
 	$type = 'UG';
-}
-else {
+} else {
 	create_error('The location is not a UG or HQ, how did you get here?');
 }
 $action = $_REQUEST['action'];

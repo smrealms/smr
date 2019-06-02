@@ -43,8 +43,7 @@ if (!isset($var['OrderID'])) {
 	// add the weapon to the users ship
 	$ship->addWeapon($weapon->getWeaponTypeID());
 	$account->log(LOG_TYPE_HARDWARE, 'Player Buys a ' . $weapon->getName(), $player->getSectorID());
-}
-else {
+} else {
 	// mhh we wanna sell our weapon
 	// give the money to the user
 	$player->increaseCredits(floor($weapon->getCost() * WEAPON_REFUND_PERCENT));

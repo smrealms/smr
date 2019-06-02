@@ -135,16 +135,14 @@ function checkMissionRequirements(&$values, array &$mission, AbstractSmrPlayer &
 		}
 		if (is_array($values)) {
 			$value = $values[$reqName];
-		}
-		else if (is_object($values)) {
+		} else if (is_object($values)) {
 			$value = $values->$reqName();
 		}
 		if (is_array($req)) {
 			if (checkMissionRequirements($value, $mission, $player, $req) === false) {
 				return false;
 			}
-		}
-		else {
+		} else {
 			if ($value != $req) {
 				return false;
 			}

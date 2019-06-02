@@ -37,8 +37,7 @@ if (!empty($action)) {
 				'value' => $db->getField('val'),
 			];
 		}
-	}
-	else {
+	} else {
 		$template->assign('Name', 'Alliance');
 		$db->query('SELECT alliance_name, alliance_id, ' . $sql . ' as val FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25');
 		$container = $var;

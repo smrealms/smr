@@ -8,8 +8,7 @@ $action = strtoupper($action);
 
 if ($action == 'INCREASE') {
 	$action = 'INC';
-}
-elseif ($action == 'DECREASE') {
+} elseif ($action == 'DECREASE') {
 	$action = 'DEC';
 }
 
@@ -19,13 +18,11 @@ if ($action == 'INC' || $action == 'DEC') {
 	$db->query('REPLACE INTO player_votes_relation
 				(account_id, game_id, race_id_1, race_id_2, action, time)
 				VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getRaceID()) . ', ' . $db->escapeNumber($race_id) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber(TIME) . ')');
-}
-elseif ($action == 'YES' || $action == 'NO') {
+} elseif ($action == 'YES' || $action == 'NO') {
 	$db->query('REPLACE INTO player_votes_pact
 			(account_id, game_id, race_id_1, race_id_2, vote)
 			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getRaceID()) . ', ' . $db->escapeNumber($race_id) . ', ' . $db->escapeString($action) . ')');
-}
-elseif ($action == 'VETO') {
+} elseif ($action == 'VETO') {
 	// try to cancel both votings
 	$db->query('DELETE FROM race_has_voting ' .
 			'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
