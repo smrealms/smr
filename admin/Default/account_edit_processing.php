@@ -111,7 +111,7 @@ if ($except != 'Add An Exception' && $except != '') {
 	$actions[] = 'added the exception ' . $except;
 }
 
-if (!empty($names))
+if (!empty($names)) {
 	foreach ($names as $game_id => $new_name) {
 		if (!empty($new_name)) {
 			// Escape html elements so the name displays correctly
@@ -135,6 +135,7 @@ if (!empty($names))
 		}
 
 	}
+}
 
 if (!empty($delete)) {
 	foreach ($delete as $game_id => $value) {
