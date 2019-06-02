@@ -471,7 +471,7 @@ function changeNPCLogin() {
 	throw new ForwardException;
 }
 
-function canWeUNO(AbstractSmrPlayer &$player, $oppurtunisticOnly) {
+function canWeUNO(AbstractSmrPlayer $player, $oppurtunisticOnly) {
 	if($player->getCredits()<MINUMUM_RESERVE_CREDITS)
 		return false;
 	$ship = $player->getShip();
@@ -525,7 +525,7 @@ function doUNO($hardwareID,$amount) {
 	return create_container('shop_hardware_processing.php','',array('hardware_id'=>$hardwareID));
 }
 
-function tradeGoods($goodID,AbstractSmrPlayer &$player,SmrPort &$port) {
+function tradeGoods($goodID, AbstractSmrPlayer $player, SmrPort $port) {
 	sleepNPC(); //We have an extra sleep at port to make the NPC more vulnerable.
 	$ship = $player->getShip();
 	$relations = $player->getRelation($port->getRaceID());
@@ -544,7 +544,7 @@ function tradeGoods($goodID,AbstractSmrPlayer &$player,SmrPort &$port) {
 	return create_container('shop_goods_processing.php','',array('offered_price'=>$offeredPrice,'ideal_price'=>$idealPrice,'amount'=>$amount,'good_id'=>$goodID,'bargain_price'=>$offeredPrice));
 }
 
-function dumpCargo(&$player) {
+function dumpCargo($player) {
 	$ship = $player->getShip();
 	$cargo = $ship->getCargo();
 	debug('Ship Cargo',$cargo);
@@ -555,11 +555,11 @@ function dumpCargo(&$player) {
 	}
 }
 
-function plotToSector(&$player,$sectorID) {
+function plotToSector($player, $sectorID) {
 	return create_container('course_plot_processing.php','',array('from'=>$player->getSectorID(),'to'=>$sectorID));
 }
 
-function plotToFed(&$player,$plotToHQ=false) {
+function plotToFed($player, $plotToHQ=false) {
 	debug('Plotting To Fed',$plotToHQ);
 
 	if($plotToHQ === false && $player->getSector()->offersFederalProtection()) {
@@ -578,7 +578,7 @@ function plotToFed(&$player,$plotToHQ=false) {
 //	return plotToNearest($player,$plotToHQ===true?'HQ':'Fed');
 }
 
-function plotToNearest(AbstractSmrPlayer &$player, &$realX) {
+function plotToNearest(AbstractSmrPlayer $player, $realX) {
 	debug('Plotting To: ',$realX); //TODO: Can we make the debug output a bit nicer?
 
 	if($player->getSector()->hasX($realX)) { //Check if current sector has what we're looking for before we attempt to plot and get error.
@@ -588,12 +588,12 @@ function plotToNearest(AbstractSmrPlayer &$player, &$realX) {
 
 	return create_container('course_plot_nearest_processing.php','',array('RealX'=>$realX));
 }
-function moveToSector(&$player,$targetSector) {
+function moveToSector($player, $targetSector) {
 	debug('Moving from #'.$player->getSectorID().' to #'.$targetSector);
 	return create_container('sector_move_processing.php','',array('target_sector'=>$targetSector,'target_page'=>''));
 }
 
-function checkForShipUpgrade(AbstractSmrPlayer &$player) {
+function checkForShipUpgrade(AbstractSmrPlayer $player) {
 	foreach(SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
 		if($player->getShipTypeID()==$upgradeShipID) //We can't upgrade, only downgrade.
 			return false;
@@ -608,7 +608,7 @@ function checkForShipUpgrade(AbstractSmrPlayer &$player) {
 	return false;
 }
 
-function doShipUpgrade(AbstractSmrPlayer &$player,$upgradeShipID) {
+function doShipUpgrade(AbstractSmrPlayer $player,$upgradeShipID) {
 	$plotNearest = plotToNearest($player,AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$upgradeShipID));
 
 	if($plotNearest == true) { //We're already there!
@@ -667,7 +667,7 @@ function leaveAlliance() {
 	return create_container('alliance_leave_processing.php','',array('action'=>'YES'));
 }
 
-function &findRoutes(&$player) {
+function &findRoutes($player) {
 	debug('Finding Routes');
 
 	$tradeGoods = array(GOOD_NOTHING => false);

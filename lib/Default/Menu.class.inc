@@ -291,7 +291,7 @@ class Menu {
 					array('Link'=>Globals::getBarBlackjackHREF(), 'Text'=>'BlackJack')));
 	}
 
-	static function news(&$template) {
+	static function news(Template $template) {
 		global $var;
 		$menuItems = array();
 		if (SmrSession::getGameID() == $var['GameID']) {
@@ -303,7 +303,7 @@ class Menu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	static function navigation(&$template, &$player) {
+	static function navigation(Template $template, AbstractSmrPlayer $player) {
 		$menuItems = array();
 		$menuItems[] = array('Link'=>Globals::getPlotCourseHREF(), 'Text'=>'Plot A Course');
 		if (!$player->isLandedOnPlanet())

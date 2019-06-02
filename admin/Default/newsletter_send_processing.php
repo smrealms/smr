@@ -8,7 +8,7 @@ $mail->Encoding = 'base64';
 
 $mail->Subject = $_REQUEST['subject'];
 
-function set_mail_body(&$mail, $newsletterHtml, $newsletterText, $salutation) {
+function set_mail_body($mail, $newsletterHtml, $newsletterText, $salutation) {
 	// Prepend the salutation if one is given
 	if ($salutation) {
 		if (!empty($newsletterHtml)) {
