@@ -41,8 +41,8 @@ $player->update();
 
 function teamAttack(&$results, $fightingPlayers, $attack, $defend) {
 	foreach ($fightingPlayers[$attack] as $accountID => $teamPlayer) {
-		$playerResults = & $teamPlayer->shootPlayers($fightingPlayers[$defend]);
-		$results[$attack]['Traders'][$teamPlayer->getAccountID()] = & $playerResults;
+		$playerResults =& $teamPlayer->shootPlayers($fightingPlayers[$defend]);
+		$results[$attack]['Traders'][$teamPlayer->getAccountID()] =& $playerResults;
 		$results[$attack]['TotalDamage'] += $playerResults['TotalDamage'];
 
 		// Award assists (if there are multiple attackers)
