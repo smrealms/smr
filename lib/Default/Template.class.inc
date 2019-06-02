@@ -61,7 +61,7 @@ class Template {
 
 		$ajaxEnabled = ($this->data['AJAX_ENABLE_REFRESH'] ?? false) !== false;
 		if ($ajaxEnabled) {
-			$ajaxXml = & $this->convertHtmlToAjaxXml($output, $outputXml);
+			$ajaxXml =& $this->convertHtmlToAjaxXml($output, $outputXml);
 			if ($outputXml) {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$ajaxXml = '<all>' . $ajaxXml . '</all>';
@@ -155,7 +155,7 @@ class Template {
 	}
 	
 	protected function &stopCapture() {
-		$captured = & $this->captures[$this->currentCaptureID];
+		$captured =& $this->captures[$this->currentCaptureID];
 		unset($this->captures[$this->currentCaptureID]);
 		$captured .= ob_get_contents();
 		ob_clean();
