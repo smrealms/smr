@@ -1,6 +1,6 @@
 <?php
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
@@ -41,7 +41,7 @@ if ($db->getNumRows() > 0) {
 	$container = create_container('alliance_message_delete_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 
-	$i=0;
+	$i = 0;
 	$alliance_eyes = array();
 	while ($db->nextRecord()) {
 		$threadID = $db->getInt('thread_id');
@@ -82,7 +82,7 @@ if ($db->getNumRows() > 0) {
 						AND alliance_thread.thread_id=' . $db2->escapeNumber($threadID) . '
 						AND alliance_thread.reply_id=1 LIMIT 1
 						');
-			if($db2->nextRecord()) {
+			if ($db2->nextRecord()) {
 				$sender_id = $db2->getInt('sender_id');
 				$author = SmrPlayer::getPlayer($sender_id, $player->getGameID());
 				$playerName = $author->getLinkedDisplayName(false);
@@ -93,7 +93,7 @@ if ($db->getNumRows() > 0) {
 		$db2->query('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
 		$db2->nextRecord();
 		$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $db2->getBoolean('mb_messages');
-		if($threads[$i]['CanDelete']) {
+		if ($threads[$i]['CanDelete']) {
 			$container['thread_id'] = $threadID;
 			$threads[$i]['DeleteHref'] = SmrSession::getNewHREF($container);
 		}
@@ -103,31 +103,31 @@ if ($db->getNumRows() > 0) {
 		++$i;
 	}
 
-	$container = create_container('skeleton.php','alliance_message_view.php');
+	$container = create_container('skeleton.php', 'alliance_message_view.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$container['thread_ids'] = $thread_ids;
 	$container['thread_topics'] = $thread_topics;
 	$container['thread_replies'] = $thread_replies;
 	$container['alliance_eyes'] = $alliance_eyes;
-	for($j=0;$j<$i;$j++) {
+	for ($j = 0; $j < $i; $j++) {
 		$container['thread_index'] = $j;
 		$threads[$j]['ViewHref'] = SmrSession::getNewHREF($container);
 	}
 }
-$template->assign('Threads',$threads);
+$template->assign('Threads', $threads);
 
 if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$container = create_container('alliance_message_add_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
-	$template->assign('CreateNewThreadFormHref',SmrSession::getNewHREF($container));
+	$template->assign('CreateNewThreadFormHref', SmrSession::getNewHREF($container));
 }
 
-if(isset($var['preview'])) {
+if (isset($var['preview'])) {
 	$template->assign('Preview', $var['preview']);
 }
-if(isset($var['topic'])) {
+if (isset($var['topic'])) {
 	$template->assign('Topic', $var['topic']);
 }
-if(isset($var['AllianceEyesOnly'])) {
+if (isset($var['AllianceEyesOnly'])) {
 	$template->assign('AllianceEyesOnly', $var['AllianceEyesOnly']);
 }

@@ -1,6 +1,6 @@
 <?php
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
 if (isset($_REQUEST['password'])) {
@@ -26,7 +26,7 @@ if (isset($_REQUEST['url'])) {
 }
 
 // Prevent XSS attacks
-if (isset($url) && preg_match('/"/',$url)) {
+if (isset($url) && preg_match('/"/', $url)) {
 	create_error('You cannot use a " in the image link!');
 }
 
@@ -49,7 +49,7 @@ if (isset($discordChannel)) {
 		$alliance->setDiscordChannel(null);
 	} else {
 		// no duplicates in a given game
-		$db->query('SELECT * FROM alliance WHERE discord_channel =' .$db->escapeString($discordChannel) .' AND game_id = '.$db->escapeNumber($alliance->getGameID()).' AND alliance_id != '.$db->escapeNumber($alliance->getAllianceID()).' LIMIT 1');
+		$db->query('SELECT * FROM alliance WHERE discord_channel =' . $db->escapeString($discordChannel) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
 		if ($db->nextRecord()) create_error('Another alliance is already using that Discord Channel ID!');
 
 		$alliance->setDiscordChannel($discordChannel);

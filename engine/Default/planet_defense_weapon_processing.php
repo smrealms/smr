@@ -1,15 +1,16 @@
 <?php
-if (!$player->isLandedOnPlanet())
+if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
+}
 
 $planet = $player->getSectorPlanet();
 
 if (isset($_REQUEST['transfer'])) {
 	// transfer weapon to planet
-	if (!isset($_REQUEST['ship_order'.$_REQUEST['transfer']])) {
+	if (!isset($_REQUEST['ship_order' . $_REQUEST['transfer']])) {
 		create_error('You must select a weapon to transfer!');
 	}
-	$shipOrderID = $_REQUEST['ship_order'.$_REQUEST['transfer']];
+	$shipOrderID = $_REQUEST['ship_order' . $_REQUEST['transfer']];
 	$weaponTypeID = $ship->getWeapons()[$shipOrderID]->getWeaponTypeID();
 	$planet->addMountedWeapon($weaponTypeID, $_REQUEST['transfer']);
 	$ship->removeWeapon($shipOrderID);

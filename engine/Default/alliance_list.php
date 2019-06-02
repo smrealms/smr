@@ -1,9 +1,9 @@
 <?php
 
-$template->assign('PageTopic','List Of Alliances');
+$template->assign('PageTopic', 'List Of Alliances');
 
 if (!$player->hasAlliance()) {
-	$container = create_container('skeleton.php','alliance_create.php');
+	$container = create_container('skeleton.php', 'alliance_create.php');
 	$template->assign('CreateAllianceHREF', SmrSession::getNewHREF($container));
 }
 

@@ -4,7 +4,7 @@ if (!$player->isLandedOnPlanet())
 // get a planet from the sector where the player is in
 $planet = $player->getSectorPlanet();
 $action = $_REQUEST['action'];
-$password = isset($_REQUEST['password'])?$_REQUEST['password']:'';
+$password = isset($_REQUEST['password']) ? $_REQUEST['password'] : '';
 
 if ($action == 'Take Ownership') {
 	if ($planet->hasOwner() && $planet->getPassword() != $password)
@@ -29,14 +29,14 @@ else if ($action == 'Rename') {
 	// rename planet
 	$planet->setName($name);
 	$planet->update();
-	$account->log(LOG_TYPE_PLANETS, 'Player renames planet to '.$name.'.', $player->getSectorID());
+	$account->log(LOG_TYPE_PLANETS, 'Player renames planet to ' . $name . '.', $player->getSectorID());
 
 }
 else if ($action == 'Set Password') {
 	// set password
 	$planet->setPassword($password);
 	$planet->update();
-	$account->log(LOG_TYPE_PLANETS, 'Player sets planet password to '.$password, $player->getSectorID());
+	$account->log(LOG_TYPE_PLANETS, 'Player sets planet password to ' . $password, $player->getSectorID());
 }
 
 forward(create_container('skeleton.php', 'planet_ownership.php'));

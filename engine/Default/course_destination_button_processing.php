@@ -2,7 +2,7 @@
 
 $type = trim($_POST['type']);
 
-switch($type){
+switch ($type) {
 	case 'add':
 		$sectorId = trim($_POST['sectorId']);
 		$label = trim($_POST['label']);

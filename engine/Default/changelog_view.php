@@ -1,8 +1,8 @@
 <?php
 
-$template->assign('PageTopic','Change Log');
+$template->assign('PageTopic', 'Change Log');
 
-if(isset($var['Since'])) {
+if (isset($var['Since'])) {
 	$container = create_container('logged_in.php');
 	$template->assign('ContinueHREF', SmrSession::getNewHREF($container));
 }

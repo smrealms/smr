@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','Edit Photo');
+$template->assign('PageTopic', 'Edit Photo');
 
 $db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 if ($db->nextRecord()) {
@@ -14,14 +14,11 @@ if ($db->nextRecord()) {
 
 	if ($approved == 'TBC') {
 		$albumEntry['Status']=('<span style="color:orange;">Waiting approval</span>');
-	}
-	elseif ($approved == 'NO') {
+	} elseif ($approved == 'NO') {
 		$albumEntry['Status']=('<span class="red">Approval denied</span>');
-	}
-	elseif ($db->getBoolean('disabled')) {
+	} elseif ($db->getBoolean('disabled')) {
 		$albumEntry['Status']=('<span class="red">Disabled</span>');
-	}
-	elseif ($approved == 'YES') {
+	} elseif ($approved == 'YES') {
 		$albumEntry['Status']=('<a href="album/?'.$account->getHofName().'" class="dgreen">Online</a>');
 	}
 		

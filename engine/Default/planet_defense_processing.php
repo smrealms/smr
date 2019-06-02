@@ -31,7 +31,7 @@ if ($action == 'Ship') {
 		// now transfer
 		$planet->decreaseShields($amount);
 		$ship->increaseShields($amount);
-		$account->log(LOG_TYPE_PLANETS, 'Player takes '.$amount.' shields from planet.', $player->getSectorID());
+		$account->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' shields from planet.', $player->getSectorID());
 	}
 	else if ($type_id == HARDWARE_COMBAT) {
 		// do we want transfer more than we have?
@@ -45,7 +45,7 @@ if ($action == 'Ship') {
 		// now transfer
 		$planet->decreaseCDs($amount);
 		$ship->increaseCDs($amount);
-		$account->log(LOG_TYPE_PLANETS, 'Player takes '.$amount.' drones from planet.', $player->getSectorID());
+		$account->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' drones from planet.', $player->getSectorID());
 	}
 	else if ($type_id == HARDWARE_ARMOUR) {
 		// do we want transfer more than we have?
@@ -59,7 +59,7 @@ if ($action == 'Ship') {
 		// now transfer
 		$planet->decreaseArmour($amount);
 		$ship->increaseArmour($amount);
-		$account->log(LOG_TYPE_PLANETS, 'Player takes '.$amount.' armour from planet.', $player->getSectorID());
+		$account->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' armour from planet.', $player->getSectorID());
 	}
 	
 }
@@ -77,7 +77,7 @@ elseif ($action == 'Planet') {
 		// now transfer
 		$planet->increaseShields($amount);
 		$ship->decreaseShields($amount);
-		$account->log(LOG_TYPE_PLANETS, 'Player puts '.$amount.' shields on planet.', $player->getSectorID());
+		$account->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' shields on planet.', $player->getSectorID());
 	// does the user wants to transfer drones?
 	}
 	else if ($type_id == HARDWARE_COMBAT) {
@@ -92,7 +92,7 @@ elseif ($action == 'Planet') {
 		// now transfer
 		$planet->increaseCDs($amount);
 		$ship->decreaseCDs($amount);
-		$account->log(LOG_TYPE_PLANETS, 'Player puts '.$amount.' drones on planet.', $player->getSectorID());
+		$account->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' drones on planet.', $player->getSectorID());
 	}
 	// does the user wish to transfare armour?
 	else if ($type_id == HARDWARE_ARMOUR) {
@@ -107,7 +107,7 @@ elseif ($action == 'Planet') {
 		// now transfer
 		$planet->increaseArmour($amount);
 		$ship->decreaseArmour($amount);
-		$account->log(LOG_TYPE_PLANETS, 'Player puts '.$amount.' armour on planet.', $player->getSectorID());
+		$account->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' armour on planet.', $player->getSectorID());
 	}
 	
 }

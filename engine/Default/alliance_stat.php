@@ -1,17 +1,17 @@
 <?php
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
 
-$alliance = SmrAlliance::getAlliance($alliance_id,$player->getGameID());
+$alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
 $template->assign('PageTopic', $alliance->getAllianceName(false, true));
 Menu::alliance($alliance_id, $alliance->getLeaderID());
 
-$container=create_container('alliance_stat_processing.php');
+$container = create_container('alliance_stat_processing.php');
 $container['alliance_id'] = $alliance_id;
 
-$form = create_form($container,'Change');
+$form = create_form($container, 'Change');
 
 $role_id = $player->getAllianceRole($alliance->getAllianceID());
 

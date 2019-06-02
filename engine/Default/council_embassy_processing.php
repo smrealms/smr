@@ -1,6 +1,6 @@
 <?php
 
-if(!$player->isPresident()) {
+if (!$player->isPresident()) {
 	create_error('Only the president can view the embassy.');
 }
 
@@ -17,8 +17,8 @@ if ($db->nextRecord() && $db->getInt('count(*)') > 2) {
 
 if ($type == 'PEACE') {
 	$db->query('SELECT 1 FROM race_has_voting
-				WHERE race_id_1='.$db->escapeNumber($race_id).' AND race_id_2='.$db->escapeNumber($player->getRaceID()).' AND game_id = '.$db->escapeNumber($player->getGameID()));
-	if($db->nextRecord()) {
+				WHERE race_id_1='.$db->escapeNumber($race_id) . ' AND race_id_2=' . $db->escapeNumber($player->getRaceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	if ($db->nextRecord()) {
 		create_error('You cannot start a vote with that race.');
 	}
 }
@@ -26,13 +26,13 @@ if ($type == 'PEACE') {
 // Create the vote for the player's race
 $db->query('REPLACE INTO race_has_voting
 			(game_id, race_id_1, race_id_2, type, end_time)
-			VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getRaceID()) . ', '.$db->escapeNumber($race_id).', '.$db->escapeString($type).', '.$db->escapeNumber($time).')');
+			VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getRaceID()) . ', ' . $db->escapeNumber($race_id) . ', ' . $db->escapeString($type) . ', ' . $db->escapeNumber($time) . ')');
 
 // If voting for peace, the other race also has to vote
 if ($type == 'PEACE') {
 	$db->query('REPLACE INTO race_has_voting
 				(game_id, race_id_1, race_id_2, type, end_time)
-				VALUES(' . $db->escapeNumber($player->getGameID()) . ', '.$race_id.', ' . $db->escapeNumber($player->getRaceID()) . ', '.$db->escapeString($type).', '.$time.')');
+				VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $race_id . ', ' . $db->escapeNumber($player->getRaceID()) . ', ' . $db->escapeString($type) . ', ' . $time . ')');
 }
 
 
@@ -54,7 +54,7 @@ $message = $player->getLevelName() . " " . $player->getBBLink()
            . "! You have " . format_time(TIME_FOR_COUNCIL_VOTE)
            . " to cast your vote.";
 
-foreach($councilMembers as $accountID) {
+foreach ($councilMembers as $accountID) {
 	// don't send to the player who started the vote
 	if ($player->getAccountID() != $accountID) {
 		SmrPlayer::sendMessageFromRace($player->getRaceID(), $player->getGameID(),

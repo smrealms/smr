@@ -1,6 +1,6 @@
 <?php
 
-require(ENGINE.'Default/alliance_option.php');
+require(ENGINE . 'Default/alliance_option.php');
 
 if ($player->isDraftLeader()) {
 	$container['body'] = 'alliance_pick.php';

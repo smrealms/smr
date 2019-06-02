@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Combat Logs');
+$template->assign('PageTopic', 'Combat Logs');
 Menu::combat_log();
 
 // Do we have a message from the processing page?
@@ -9,12 +9,12 @@ if (isset($var['message'])) {
 }
 
 // $var['action'] is the page log type
-if(!isset($var['action'])) {
+if (!isset($var['action'])) {
 	SmrSession::updateVar('action', COMBAT_LOG_PERSONAL);
 }
 $action = $var['action'];
 
-switch($action) {
+switch ($action) {
 	case COMBAT_LOG_PERSONAL:
 	case COMBAT_LOG_ALLIANCE:
 		$query = 'type=\'PLAYER\'';
@@ -39,33 +39,32 @@ switch($action) {
 	break;
 	default:
 }
-if(isset($query) && $query) {
+if (isset($query) && $query) {
 	$query .= ' AND game_id=' . $db->escapeNumber($player->getGameID());
-	if($action != COMBAT_LOG_PERSONAL
+	if ($action != COMBAT_LOG_PERSONAL
 		&& $player->hasAlliance()) {
 		$query .= ' AND (attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ') ';
-	}
-	else {
+	} else {
 		$query .= ' AND (attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ') ';
 	}
 	$page = 0;
-	if(isset($var['page'])) {
+	if (isset($var['page'])) {
 		$page = $var['page'];
 	}
-	$db->query('SELECT count(*) as count FROM combat_logs c WHERE '.$query.' LIMIT 1');
-	if($db->nextRecord()) {
+	$db->query('SELECT count(*) as count FROM combat_logs c WHERE ' . $query . ' LIMIT 1');
+	if ($db->nextRecord()) {
 		$totalLogs = $db->getInt('count');
 		$template->assign('TotalLogs', $totalLogs);
 	}
-	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE '.$query.' ORDER BY log_id DESC, sector_id LIMIT '.($page*COMBAT_LOGS_PER_PAGE).', '.COMBAT_LOGS_PER_PAGE);
+	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
 }
 
 function getParticipantName($accountID, $sectorID) {
 	global $player;
-	if($accountID == ACCOUNT_ID_PORT) {
+	if ($accountID == ACCOUNT_ID_PORT) {
 		return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">Port <span class="sectorColour">#' . $sectorID . '</span></a>';
 	}
-	if($accountID == ACCOUNT_ID_PLANET) {
+	if ($accountID == ACCOUNT_ID_PLANET) {
 		return '<span class="yellow">Planetary Defenses</span>';
 	}
 
@@ -73,7 +72,7 @@ function getParticipantName($accountID, $sectorID) {
 }
 
 // For display purposes, describe the type of log
-switch($action) {
+switch ($action) {
 	case COMBAT_LOG_PERSONAL:
 		$type = ' personal';
 	break;
@@ -97,7 +96,7 @@ $template->assign('LogType', $type);
 
 // Construct the list of logs of this type
 $logs = array();
-if($db->getNumRows() > 0) {
+if ($db->getNumRows() > 0) {
 	// 'View' and 'Save' share the same form, so we use 'old_action' as a
 	// way to return to this page when we only want to save the logs.
 	$container = create_container('combat_log_list_processing.php');
@@ -106,19 +105,19 @@ if($db->getNumRows() > 0) {
 
 	// Set the links for the "view next/previous log list" buttons
 	$container = $var;
-	if($page>0) {
-		$container['page'] = $page-1;
+	if ($page > 0) {
+		$container['page'] = $page - 1;
 		$template->assign('PreviousPage', SmrSession::getNewHREF($container));
 	}
-	if(($page+1)*COMBAT_LOGS_PER_PAGE<$totalLogs) {
-		$container['page'] = $page+1;
+	if (($page + 1) * COMBAT_LOGS_PER_PAGE < $totalLogs) {
+		$container['page'] = $page + 1;
 		$template->assign('NextPage', SmrSession::getNewHREF($container));
 	}
 	// Saved logs
 	$template->assign('CanDelete', $action == COMBAT_LOG_SAVED);
 	$template->assign('CanSave', $action != COMBAT_LOG_SAVED);
 
-	while($db->nextRecord()) {
+	while ($db->nextRecord()) {
 		$sectorID = $db->getInt('sector_id');
 		$logs[$db->getField('log_id')] = array(
 			'Attacker' => getParticipantName($db->getInt('attacker_id'), $sectorID),

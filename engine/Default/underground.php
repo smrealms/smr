@@ -4,11 +4,11 @@ if ($player->getAlignment() >= ALIGNMENT_GOOD) {
 	create_error('You are not allowed to come in here!');
 }
 
-if(!$player->getSector()->hasLocation($var['LocationID'])) {
+if (!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
 $location = SmrLocation::getLocation($var['LocationID']);
-if(!$location->isUG()) {
+if (!$location->isUG()) {
 	create_error('There is no underground here.');
 }
 

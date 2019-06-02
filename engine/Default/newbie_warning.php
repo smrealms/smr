@@ -1,2 +1,2 @@
 <?php
-$template->assign('PageTopic','Warning!');
+$template->assign('PageTopic', 'Warning!');

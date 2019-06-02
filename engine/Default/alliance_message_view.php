@@ -1,42 +1,42 @@
 <?php
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $thread_index = $var['thread_index'];
 $thread_id = $var['thread_ids'][$thread_index];
 
-if(empty($thread_id)) {
+if (empty($thread_id)) {
 	create_error('Unable to find thread id.');
 }
 
-$template->assign('PageTopic',$var['thread_topics'][$thread_index]);
+$template->assign('PageTopic', $var['thread_topics'][$thread_index]);
 Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 $db->query('REPLACE INTO player_read_thread
 			(account_id, game_id, alliance_id, thread_id, time)
-			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance->getAllianceID()) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(TIME+2) . ')');
+			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance->getAllianceID()) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(TIME + 2) . ')');
 
 $mbWrite = true;
 if ($alliance->getAllianceID() != $player->getAllianceID()) {
 	$db->query('SELECT mb_read FROM alliance_treaties
-					WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')'.
-					' AND (alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')'.
+					WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')' .
+					' AND (alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')' .
 					' AND game_id = ' . $db->escapeNumber($player->getGameID()) .
 					' AND mb_write = 1 AND official = \'TRUE\'');
 	$mbWrite = $db->nextRecord();
 }
 
-$container = create_container('skeleton.php','alliance_message_view.php',$var);
+$container = create_container('skeleton.php', 'alliance_message_view.php', $var);
 
 if (isset($var['thread_ids'][$thread_index - 1])) {
 	$container['thread_index'] = $thread_index - 1;
-	$template->assign('PrevThread',array('Topic' => $var['thread_topics'][$thread_index - 1], 'Href' => SmrSession::getNewHREF($container)));
+	$template->assign('PrevThread', array('Topic' => $var['thread_topics'][$thread_index - 1], 'Href' => SmrSession::getNewHREF($container)));
 }
 if (isset($var['thread_ids'][$thread_index + 1])) {
 	$container['thread_index'] = $thread_index + 1;
-	$template->assign('NextThread',array('Topic' => $var['thread_topics'][$thread_index + 1], 'Href' => SmrSession::getNewHREF($container)));
+	$template->assign('NextThread', array('Topic' => $var['thread_topics'][$thread_index + 1], 'Href' => SmrSession::getNewHREF($container)));
 }
 
 $thread = array();
@@ -68,22 +68,22 @@ ORDER BY reply_id LIMIT ' . $var['thread_replies'][$thread_index]);
 
 $thread['CanDelete'] = $db->getNumRows() > 1 && $thread['CanDelete'];
 $thread['Replies'] = array();
-$container = create_container('alliance_message_delete_processing.php','',$var);
+$container = create_container('alliance_message_delete_processing.php', '', $var);
 $container['thread_id'] = $thread_id;
 while ($db->nextRecord()) {
 	$thread['Replies'][$db->getInt('reply_id')] = array('Sender' => $players[$db->getInt('sender_id')], 'Message' => $db->getField('text'), 'SendTime' => $db->getInt('time'));
-	if($thread['CanDelete']) {
+	if ($thread['CanDelete']) {
 		$container['reply_id'] = $db->getInt('reply_id');
 		$thread['Replies'][$db->getInt('reply_id')]['DeleteHref'] = SmrSession::getNewHREF($container);
 	}
 }
 
 if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-	$container = create_container('alliance_message_add_processing.php','',$var);
+	$container = create_container('alliance_message_add_processing.php', '', $var);
 	$container['thread_index'] = $thread_index;
 	$thread['CreateThreadReplyFormHref'] = SmrSession::getNewHREF($container);
 }
-$template->assign('Thread',$thread);
-if(isset($var['preview'])) {
+$template->assign('Thread', $thread);
+if (isset($var['preview'])) {
 	$template->assign('Preview', $var['preview']);
 }

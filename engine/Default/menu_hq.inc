@@ -10,16 +10,16 @@ function create_hq_menu() {
 	$container['LocationID'] = $var['LocationID'];
 
 	$container['body'] = 'government.php';
-	$menu_items[] = create_link($container, 'Government','nav');
+	$menu_items[] = create_link($container, 'Government', 'nav');
 
 	$container['body'] = 'military_payment_claim.php';
-	$menu_items[] = create_link($container, 'Claim Military Payment','nav');
+	$menu_items[] = create_link($container, 'Claim Military Payment', 'nav');
 
 	$container['body'] = 'bounty_claim.php';
-	$menu_items[] = create_link($container, 'Claim Bounty','nav');
+	$menu_items[] = create_link($container, 'Claim Bounty', 'nav');
 
 	$container['body'] = 'bounty_place.php';
-	$menu_items[] = create_link($container, 'Place a Bounty','nav');
+	$menu_items[] = create_link($container, 'Place a Bounty', 'nav');
 
 	create_menu($menu_items);
 }

@@ -31,7 +31,7 @@ if ($action == 'Deposit') {
 	$player->update();
 
 	// log action
-	$account->log(LOG_TYPE_BANK, 'Deposits '.$amount.' credits in anonymous account #'.$account_num, $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Deposits ' . $amount . ' credits in anonymous account #' . $account_num, $player->getSectorID());
 }
 else {
 	$db->query('SELECT * FROM anon_bank WHERE anon_id = ' . $db->escapeNumber($account_num) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
@@ -52,7 +52,7 @@ else {
 	$player->update();
 
 	// log action
-	$account->log(LOG_TYPE_BANK, 'Takes '.$amount.' credits from anonymous account #'.$account_num, $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Takes ' . $amount . ' credits from anonymous account #' . $account_num, $player->getSectorID());
 }
 
 $container = create_container('skeleton.php', 'bank_anon_detail.php');

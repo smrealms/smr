@@ -1,8 +1,8 @@
 <?php
 
-$template->assign('PageTopic','Sector Death Rankings');
+$template->assign('PageTopic', 'Sector Death Rankings');
 
-Menu::rankings(3,0);
+Menu::rankings(3, 0);
 
 $db->query('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY battles DESC, sector_id LIMIT 10');
 
@@ -18,8 +18,7 @@ $template->assign('TopTen', $topTen);
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank']) && is_numeric($_REQUEST['max_rank'])) {
 	$min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-}
-else {
+} else {
 	$min_rank = 1;
 	$max_rank = 10;
 }
@@ -30,11 +29,13 @@ if ($min_rank < 0) {
 }
 
 $db->query('SELECT max(sector_id) FROM sector WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-if ($db->nextRecord())
+if ($db->nextRecord()) {
 	$total_sector = $db->getField('max(sector_id)');
+}
 
-if ($max_rank > $total_sector)
+if ($max_rank > $total_sector) {
 	$max_rank = $total_sector;
+}
 
 $template->assign('MinRank', $min_rank);
 $template->assign('MaxRank', $max_rank);

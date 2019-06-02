@@ -14,8 +14,8 @@ $bannedShips = array(
 	SHIP_TYPE_DEATH_CRUISER
 );
 
-if(in_array($shipID, $bannedShips)) {
+if (in_array($shipID, $bannedShips)) {
 	create_error('No top racial for you, ah na na na na!');
 }
 
-require(ENGINE.'Default/shop_ship_processing.php');
+require(ENGINE . 'Default/shop_ship_processing.php');

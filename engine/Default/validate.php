@@ -1,5 +1,5 @@
 <?php
-if(isset($var['msg']))
+if (isset($var['msg']))
 	$template->assign('Message', $var['msg']);
 
 $template->assign('PageTopic', 'Validation Reminder');

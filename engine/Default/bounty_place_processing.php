@@ -1,6 +1,6 @@
 <?php
 
-if(!$player->getSector()->hasLocation($var['LocationID'])) {
+if (!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
 
@@ -11,7 +11,7 @@ if ($location->isHQ()) {
 	$container['body'] = 'government.php';
 	$type = 'HQ';
 }
-else if($location->isUG()) {
+else if ($location->isUG()) {
 	$container['body'] = 'underground.php';
 	$type = 'UG';
 }
@@ -41,16 +41,16 @@ if ($smrCredits < 0) {
 $player->decreaseCredits($amount);
 $account->decreaseSmrCredits($smrCredits);
 
-$player->increaseHOF($smrCredits,array('Bounties','Placed','SMR Credits'), HOF_PUBLIC);
-$player->increaseHOF($amount,array('Bounties','Placed','Money'), HOF_PUBLIC);
-$player->increaseHOF(1,array('Bounties','Placed','Number'), HOF_PUBLIC);
+$player->increaseHOF($smrCredits, array('Bounties', 'Placed', 'SMR Credits'), HOF_PUBLIC);
+$player->increaseHOF($amount, array('Bounties', 'Placed', 'Money'), HOF_PUBLIC);
+$player->increaseHOF(1, array('Bounties', 'Placed', 'Number'), HOF_PUBLIC);
 
 $placed = SmrPlayer::getPlayer($account_id, $player->getGameID());
-$placed->increaseCurrentBountyAmount($type,$amount);
-$placed->increaseCurrentBountySmrCredits($type,$smrCredits);
-$placed->increaseHOF($smrCredits,array('Bounties','Received','SMR Credits'), HOF_PUBLIC);
-$placed->increaseHOF($amount,array('Bounties','Received','Money'), HOF_PUBLIC);
-$placed->increaseHOF(1,array('Bounties','Received','Number'), HOF_PUBLIC);
+$placed->increaseCurrentBountyAmount($type, $amount);
+$placed->increaseCurrentBountySmrCredits($type, $smrCredits);
+$placed->increaseHOF($smrCredits, array('Bounties', 'Received', 'SMR Credits'), HOF_PUBLIC);
+$placed->increaseHOF($amount, array('Bounties', 'Received', 'Money'), HOF_PUBLIC);
+$placed->increaseHOF(1, array('Bounties', 'Received', 'Number'), HOF_PUBLIC);
 
 //Update for top bounties list
 $player->update();

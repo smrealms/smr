@@ -115,13 +115,13 @@ const MISSIONS = array(
 );
 
 function checkMissionRequirements(&$values, array &$mission, AbstractSmrPlayer &$player, array &$requirements = null) {
-	if($requirements == null) {
+	if ($requirements == null) {
 		return checkMissionRequirements($values, $mission, $player, $mission['Task']['Detail']);
 	}
-	foreach($requirements as $reqName => $req) {
-		if(is_string($req)) {
+	foreach ($requirements as $reqName => $req) {
+		if (is_string($req)) {
 			// Handle aliases
-			switch($reqName) {
+			switch ($reqName) {
 				case 'SectorID':
 					$reqName = 'Sector';
 					$req = array(
@@ -129,23 +129,23 @@ function checkMissionRequirements(&$values, array &$mission, AbstractSmrPlayer &
 					);
 					break;
 				default:
-					$req = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($player->getRaceID(),$mission['Sector'],$mission['Starting Sector'],$player->getPlayerName()),$req);
+					$req = str_replace(array('<Race>', '<Sector>', '<Starting Sector>', '<trader>'), array($player->getRaceID(), $mission['Sector'], $mission['Starting Sector'], $player->getPlayerName()), $req);
 
 			}
 		}
-		if(is_array($values)) {
+		if (is_array($values)) {
 			$value = $values[$reqName];
 		}
-		else if(is_object($values)) {
+		else if (is_object($values)) {
 			$value = $values->$reqName();
 		}
-		if(is_array($req)) {
-			if(checkMissionRequirements($value, $mission, $player, $req) === false) {
+		if (is_array($req)) {
+			if (checkMissionRequirements($value, $mission, $player, $req) === false) {
 				return false;
 			}
 		}
 		else {
-			if($value != $req) {
+			if ($value != $req) {
 				return false;
 			}
 		}

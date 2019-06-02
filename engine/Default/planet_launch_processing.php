@@ -1,6 +1,7 @@
 <?php
-if (!$player->isLandedOnPlanet())
+if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
+}
 
 $player->setLandedOnPlanet(false);
 $player->update();

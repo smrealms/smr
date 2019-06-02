@@ -1,5 +1,5 @@
 <?php
-if(!isset($var['GameID'])) SmrSession::updateVar('GameID',$player->getGameID());
+if (!isset($var['GameID'])) SmrSession::updateVar('GameID', $player->getGameID());
 $gameID = $var['GameID'];
 
 $basicContainer = array('GameID'=>$gameID);
@@ -30,12 +30,12 @@ $db->query('SELECT alliance_id, alliance_name
 
 $newsAlliances = array();
 $newsAlliances[0] = array('ID' => 0, 'Name' => 'None');
-while($db->nextRecord()) {
+while ($db->nextRecord()) {
 	$newsAlliances[$db->getField('alliance_id')] = array('ID' => $db->getField('alliance_id'), 'Name' => $db->getField('alliance_name'));
 }
-$template->assign('NewsAlliances',$newsAlliances);
+$template->assign('NewsAlliances', $newsAlliances);
 
-$template->assign('AdvancedNewsFormHref',SmrSession::getNewHREF(create_container('skeleton.php','news_read_advanced.php',$basicContainer)));
+$template->assign('AdvancedNewsFormHref', SmrSession::getNewHREF(create_container('skeleton.php', 'news_read_advanced.php', $basicContainer)));
 
 
 if (isset($_REQUEST['submit'])) $submit_value = $_REQUEST['submit'];
@@ -46,30 +46,30 @@ if ($submit_value == 'Search For Player') {
 	if (isset($_REQUEST['playerName'])) $p_name = $_REQUEST['playerName'];
 	else $p_name = $var['playerName'];
 	$template->assign('ResultsFor', $p_name);
-	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%'.$p_name.'%') . ' AND game_id = ' . $db->escapeNumber($gameID).' LIMIT 3');
+	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $p_name . '%') . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 3');
 	$IDs = array(0);
-	while($db->nextRecord()) {
+	while ($db->nextRecord()) {
 		$IDs[] = $db->getInt('account_id');
 	}
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (killer_id IN (' . $db->escapeArray($IDs) . ') OR dead_id IN (' . $db->escapeArray($IDs) . ')) ORDER BY news_id DESC');
 }
 elseif ($submit_value == 'Search For Alliance') {
-	if (isset($_REQUEST['allianceID'])) SmrSession::updateVar('AllianceID',$_REQUEST['allianceID']);
-	if(!isset($var['AllianceID'])) create_error('No alliance was specified!');
+	if (isset($_REQUEST['allianceID'])) SmrSession::updateVar('AllianceID', $_REQUEST['allianceID']);
+	if (!isset($var['AllianceID'])) create_error('No alliance was specified!');
 	$allianceID = $var['AllianceID'];
 	$template->assign('ResultsFor', $newsAlliances[$allianceID]['Name']);
-	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != '.$db->escapeNumber(ACCOUNT_ID_PORT).') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != '.$db->escapeNumber(ACCOUNT_ID_PORT).')) ORDER BY news_id DESC');
+	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ')) ORDER BY news_id DESC');
 }
 elseif ($submit_value == 'Search For Players') {
 	$template->assign('ResultsFor', $_REQUEST['player1'] . ' vs. ' . $_REQUEST['player2']);
-	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%'.$_REQUEST['player1'].'%') . ' AND game_id = ' . $db->escapeNumber($gameID).' LIMIT 3');
+	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $_REQUEST['player1'] . '%') . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 3');
 	$IDs = array(0);
-	while($db->nextRecord()) {
+	while ($db->nextRecord()) {
 		$IDs[] = $db->getInt('account_id');
 	}
-	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%'.$_REQUEST['player2'].'%') . ' AND game_id = ' . $db->escapeNumber($gameID).' LIMIT 3');
+	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $_REQUEST['player2'] . '%') . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 3');
 	$IDs2 = array(0);
-	while($db->nextRecord()) {
+	while ($db->nextRecord()) {
 		$IDs2[] = $db->getInt('account_id');
 	}
 	$db->query('SELECT * FROM news

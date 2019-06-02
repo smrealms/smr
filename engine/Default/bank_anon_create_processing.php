@@ -13,5 +13,5 @@ if ($db->nextRecord()) {
 $db->query('INSERT INTO anon_bank (game_id, anon_id, owner_id, password, amount) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($new_acc) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($password) . ', 0)');
 
 $container = create_container('skeleton.php', 'bank_anon.php');
-$container['message'] = '<p>Account #'.$new_acc.' has been opened for you.</p>';
+$container['message'] = '<p>Account #' . $new_acc . ' has been opened for you.</p>';
 forward($container);

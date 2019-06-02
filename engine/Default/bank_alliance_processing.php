@@ -1,6 +1,6 @@
 <?php
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
 
@@ -41,7 +41,7 @@ if ($action == 'Deposit') {
 	}
 	$alliance->setAccount($allianceCredits);
 	// log action
-	$account->log(LOG_TYPE_BANK, 'Deposits '.$amount.' credits in alliance account of '.$alliance->getAllianceName(), $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Deposits ' . $amount . ' credits in alliance account of ' . $alliance->getAllianceName(), $player->getSectorID());
 }
 else {
 	$action = 'Payment';
@@ -64,7 +64,7 @@ else {
 			WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
 			GROUP BY transaction');
 		$playerTrans = array('Deposit' => 0, 'Payment' => 0);
-		while($db->nextRecord()) {
+		while ($db->nextRecord()) {
 			$playerTrans[$db->getField('transaction')] = $db->getInt('total');
 		}
 		$allowedWithdrawal = $withdrawalPerDay + $playerTrans['Deposit'] - $playerTrans['Payment'];
@@ -103,7 +103,7 @@ else {
 	$alliance->setAccount($allianceCredits);
 
 	// log action
-	$account->log(LOG_TYPE_BANK, 'Takes '.$amount.' credits from alliance account of '.$alliance->getAllianceName(), $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Takes ' . $amount . ' credits from alliance account of ' . $alliance->getAllianceName(), $player->getSectorID());
 }
 
 
@@ -124,7 +124,7 @@ else {
 }
 $db->query('INSERT INTO alliance_bank_transactions
 			(alliance_id, game_id, transaction_id, time, payee_id, reason, transaction, amount, request_exempt)
-			VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($next_id) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($message) . ', '.$db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($requestExempt) . ')');
+			VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($next_id) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($message) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($requestExempt) . ')');
 
 // update player credits
 $player->update();

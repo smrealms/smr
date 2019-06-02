@@ -1,16 +1,16 @@
 <?php
 
-if(!$player->isPresident()) {
+if (!$player->isPresident()) {
 	create_error('Only the president can view the embassy.');
 }
 
-$template->assign('PageTopic','Ruling Council Of '.$player->getRaceName());
+$template->assign('PageTopic', 'Ruling Council Of ' . $player->getRaceName());
 
 Menu::council($player->getRaceID());
 
 $voteRaces = array();
 $RACES = Globals::getRaces();
-foreach($RACES as $raceID => $raceInfo) {
+foreach ($RACES as $raceID => $raceInfo) {
 	if ($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID()) {
 		continue;
 	}
@@ -21,6 +21,6 @@ foreach($RACES as $raceID => $raceInfo) {
 	if ($db->getNumRows() > 0) {
 		continue;
 	}
-	$voteRaces[$raceID] = SmrSession::getNewHREF(create_container('council_embassy_processing.php','',array('race_id' => $raceID)));
+	$voteRaces[$raceID] = SmrSession::getNewHREF(create_container('council_embassy_processing.php', '', array('race_id' => $raceID)));
 }
-$template->assign('VoteRaceHrefs',$voteRaces);
+$template->assign('VoteRaceHrefs', $voteRaces);

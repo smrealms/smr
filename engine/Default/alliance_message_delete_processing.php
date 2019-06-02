@@ -4,7 +4,7 @@ if (!isset($var['alliance_id'])) {
 }
 $alliance_id = $var['alliance_id'];
 
-if(isset($var['reply_id'])) {
+if (isset($var['reply_id'])) {
 	$db->query('DELETE FROM alliance_thread
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_id = ' . $db->escapeNumber($alliance_id) . '

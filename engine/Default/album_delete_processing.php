@@ -11,7 +11,7 @@ if ($_REQUEST['action'] == 'Yes') {
 }
 
 $container = create_container('skeleton.php');
-if(!is_object($player)) {
+if (!is_object($player)) {
 	$container['body'] = 'game_play.php';
 } else {
 	$container['body'] = 'current_sector.php';

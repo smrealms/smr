@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Examine Planet');
+$template->assign('PageTopic', 'Examine Planet');
 
 $planet = $player->getSectorPlanet();
 $template->assign('ThisPlanet', $planet);
@@ -10,7 +10,7 @@ $planetLand =
 	|| $planet->getOwner()->sameAlliance($player)
 	|| in_array($player->getAccountID(), Globals::getHiddenPlayers());
 
-if(!$planetLand) {
+if (!$planetLand) {
 	// Only check treaties if we can't otherwise land.
 	$ownerAllianceID = 0;
 	if ($planet->hasOwner()) {

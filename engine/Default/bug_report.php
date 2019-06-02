@@ -1,2 +1,2 @@
 <?php
-$template->assign('PageTopic','Report a Bug');
+$template->assign('PageTopic', 'Report a Bug');

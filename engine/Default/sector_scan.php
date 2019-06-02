@@ -1,13 +1,13 @@
 <?php
 
-if(!$sector->isLinked($var['target_sector']) && $sector->getSectorID() != $var['target_sector']) {
+if (!$sector->isLinked($var['target_sector']) && $sector->getSectorID() != $var['target_sector']) {
 	create_error('You cannot scan a sector you are not linked to.');
 }
 
 // initialize vars
 $scanSector = SmrSector::getSector($player->getGameID(), $var['target_sector']);
 
-$template->assign('PageTopic','Sector Scan of #'.$scanSector->getSectorID().' ('.$scanSector->getGalaxyName().')');
+$template->assign('PageTopic', 'Sector Scan of #' . $scanSector->getSectorID() . ' (' . $scanSector->getGalaxyName() . ')');
 Menu::navigation($template, $player);
 
 $friendly_forces = 0;

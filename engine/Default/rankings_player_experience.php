@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Experience Rankings');
+$template->assign('PageTopic', 'Experience Rankings');
 
 Menu::rankings(0, 0);
 

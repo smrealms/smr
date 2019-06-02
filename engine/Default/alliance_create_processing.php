@@ -1,6 +1,6 @@
 <?php
 
-if($player->getAllianceJoinable() > TIME) {
+if ($player->getAllianceJoinable() > TIME) {
 	create_error('You cannot create an alliance for another ' . format_time($player->getAllianceJoinable() - TIME) . '.');
 }
 
@@ -28,7 +28,7 @@ if ($name2 == 'none' || $name2 == '(none)' || $name2 == '( none )' || $name2 == 
 	create_error('That is not a valid alliance name!');
 }
 $filteredName = word_filter($name);
-if($name != $filteredName) {
+if ($name != $filteredName) {
 	create_error('The alliance name contains one or more filtered words, please reconsider the name.');
 }
 
@@ -42,13 +42,13 @@ if ($db->getNumRows() > 0) {
 $db->query('SELECT max(alliance_id) FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_id < 302 OR alliance_id > 309) LIMIT 1');
 $db->nextRecord();
 $alliance_id = $db->getInt('max(alliance_id)') + 1;
-if($alliance_id >= 302 && $alliance_id <= 309) {
+if ($alliance_id >= 302 && $alliance_id <= 309) {
 	$alliance_id = 310;
 }
 
 
 $description = word_filter($description);
-$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS,'Alliance '.$name.'('.$alliance_id.') had their description changed to:'.EOL.EOL.$description);
+$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, 'Alliance ' . $name . '(' . $alliance_id . ') had their description changed to:' . EOL . EOL . $description);
 // actually create the alliance here
 $db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, recruiting)
 			VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeString($name) . ', ' . $db->escapeString($description) . ', ' . $db->escapeString($password) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeBoolean($recruit) . ')');

@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Death Rankings');
+$template->assign('PageTopic', 'Death Rankings');
 
 Menu::rankings(0, 3);
 

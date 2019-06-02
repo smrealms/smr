@@ -1,5 +1,5 @@
 <?php
-if(!$player->getSector()->hasLocation($var['LocationID'])) {
+if (!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
 
@@ -7,7 +7,7 @@ $weapon = SmrWeapon::getWeapon($var['WeaponTypeID']);
 // Are we buying?
 if (!isset($var['OrderID'])) {
 	$location = SmrLocation::getLocation($var['LocationID']);
-	if(!$location->isWeaponSold($var['WeaponTypeID'])) {
+	if (!$location->isWeaponSold($var['WeaponTypeID'])) {
 		create_error('We do not sell that weapon here!');
 	}
 	
@@ -42,7 +42,7 @@ if (!isset($var['OrderID'])) {
 
 	// add the weapon to the users ship
 	$ship->addWeapon($weapon->getWeaponTypeID());
-	$account->log(LOG_TYPE_HARDWARE, 'Player Buys a '.$weapon->getName(), $player->getSectorID());
+	$account->log(LOG_TYPE_HARDWARE, 'Player Buys a ' . $weapon->getName(), $player->getSectorID());
 }
 else {
 	// mhh we wanna sell our weapon
@@ -52,7 +52,7 @@ else {
 	// take weapon
 	$ship->removeWeapon($var['OrderID']);
 
-	$account->log(LOG_TYPE_HARDWARE, 'Player Sells a '.$weapon->getName(), $player->getSectorID());
+	$account->log(LOG_TYPE_HARDWARE, 'Player Sells a ' . $weapon->getName(), $player->getSectorID());
 }
 $container = create_container('skeleton.php', 'shop_weapon.php');
 transfer('LocationID');

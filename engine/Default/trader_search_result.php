@@ -23,7 +23,7 @@ if (!empty($player_id)) {
 
 	$db->query('SELECT * FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND player_name LIKE ' . $db->escapeString('%'.$player_name.'%') . '
+					AND player_name LIKE ' . $db->escapeString('%' . $player_name . '%') . '
 					AND player_name != ' . $db->escapeString($player_name) . '
 				ORDER BY player_name LIMIT 5');
 	$similarPlayers = array();
@@ -64,7 +64,7 @@ function playerLinks(SmrPlayer $curr_player) {
 	$result['NewsHREF'] = SmrSession::getNewHREF($container);
 
 	if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-		$container= create_container('sector_jump_processing.php');
+		$container = create_container('sector_jump_processing.php');
 		$container['to'] = $curr_player->getSectorID();
 		$result['JumpHREF'] = SmrSession::getNewHREF($container);
 	}
