@@ -1270,13 +1270,13 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->db->query('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
 			$this->HOF = array();
 			while ($this->db->nextRecord()) {
-				$hof = & $this->HOF;
+				$hof =& $this->HOF;
 				$typeList = explode(':', $this->db->getField('type'));
 				foreach ($typeList as $type) {
 					if (!isset($hof[$type])) {
 						$hof[$type] = array();
 					}
-					$hof = & $hof[$type];
+					$hof =& $hof[$type];
 				}
 				$hof = $this->db->getField('amount');
 			}
@@ -1701,7 +1701,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 					'OffsetLeft' => $this->db->getInt('offset_left')
 				);
 			}
-			$this->storedDestinations = & $storedDestinations;
+			$this->storedDestinations =& $storedDestinations;
 		}
 		return $this->storedDestinations;
 	}
@@ -1719,7 +1719,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			create_error('The saved sector must be in the box!');
 		}
 
-		$storedDestinations = & $this->getStoredDestinations();
+		$storedDestinations =& $this->getStoredDestinations();
 		foreach ($storedDestinations as &$sd) {
 			if ($sd['SectorID'] == $sectorID) {
 				$sd['OffsetTop'] = $offsetTop;
