@@ -5,7 +5,7 @@
  */
 class SmrPlanetStructureType {
 
-	function __construct($ID, $planetTypeInfo) {
+	public function __construct($ID, $planetTypeInfo) {
 		$this->ID = $ID;
 		$this->planetTypeInfo = $planetTypeInfo;
 	}
@@ -100,13 +100,13 @@ class SmrPlanetStructureType {
 	}
 
 	// Functions that do not require the planet type to be known
-	function structureID() { return $this->ID; }
-	function name() { return self::INFO[$this->ID]['name']; }
-	function image() { return self::INFO[$this->ID]['image']; }
-	function tooltip() { return self::INFO[$this->ID]['tooltip']; }
-	function summary() { return self::INFO[$this->ID]['summary']; }
-	function goods() { return self::GOODS[$this->ID]; }
-	function hardwareCost() {
+	public function structureID() { return $this->ID; }
+	public function name() { return self::INFO[$this->ID]['name']; }
+	public function image() { return self::INFO[$this->ID]['image']; }
+	public function tooltip() { return self::INFO[$this->ID]['tooltip']; }
+	public function summary() { return self::INFO[$this->ID]['summary']; }
+	public function goods() { return self::GOODS[$this->ID]; }
+	public function hardwareCost() {
 		if (isset(self::INFO[$this->ID]['hardware_cost'])) {
 			return self::INFO[$this->ID]['hardware_cost'];
 		} else {
@@ -115,8 +115,8 @@ class SmrPlanetStructureType {
 	}
 
 	// Functions that require the planet type to be known
-	function maxAmount() { return $this->planetTypeInfo['max_amount']; }
-	function creditCost() { return $this->planetTypeInfo['credit_cost']; }
-	function baseTime() { return $this->planetTypeInfo['base_time']; }
-	function expGain() { return $this->planetTypeInfo['exp_gain']; }
+	public function maxAmount() { return $this->planetTypeInfo['max_amount']; }
+	public function creditCost() { return $this->planetTypeInfo['credit_cost']; }
+	public function baseTime() { return $this->planetTypeInfo['base_time']; }
+	public function expGain() { return $this->planetTypeInfo['exp_gain']; }
 }

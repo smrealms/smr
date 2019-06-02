@@ -211,82 +211,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $results;
 	}
 
-	function get($bit) {
-		switch ($bit) {
-			case 'Sector ID':
-				return $this->sectorID;
-			case 'Last Sector ID':
-				return $this->lastSectorID;
-			case 'Player Name':
-				return $this->playerName;
-			case 'Player ID':
-				return $this->playerID;
-			case 'Land On Planet':
-				return $this->landedOnPlanet;
-			case 'Newbie Turns':
-				return $this->newbieTurns;
-			case 'Race ID':
-				return $this->raceID;
-			case 'Credits':
-				return $this->credits;
-			case 'Experience':
-				return $this->experience;
-			case 'Kills':
-				return $this->kills;
-			case 'Deaths':
-				return $this->deaths;
-			case 'Alignment':
-				return $this->alignment;
-//			case 'Past Knowledge':
-//				return $this->pastKnowledge;
-			case 'Alliance ID':
-				return $this->allianceID;
-			case 'Alliance Joinable':
-				return $this->allianceJoinable;
-			case 'Ship ID':
-				return $this->shipID;
-			case 'Dead':
-				return $this->dead;
-			case 'Last Port':
-				return $this->lastPort;
-			case 'Last News':
-				return $this->lastNewsUpdate;
-			case 'Default Zoom':
-				return $this->zoom;
-			case 'Bank':
-				return $this->bank;
-			case 'Turns':
-				return $this->turns;
-			case 'Last Turn Update':
-				return $this->lastTurnUpdate;
-			case 'Last Active':
-				return $this->lastActive;
-			case 'Last CPL Action':
-				return $this->lastCPLAction;
-			case 'Attack Colour':
-				return $this->attackWarning;
-			case 'Display Missions':
-				return $this->displayMissions;
-			case 'Ignore Global':
-				return $this->ignoreGlobals;
-			case 'Level ID':
-				return $this->getLevelID();
-			case 'Display Name':
-				return $this->getDisplayName();
-
-			case 'Erebus Knowledge':
-				return $this->getKnowledge('Erebus');
-			case 'Nyx Knowledge':
-				return $this->getKnowledge('Nyx');
-			case 'Tartarus Knowledge':
-				return $this->getKnowledge('Tartarus');
-			case 'Aether Knowledge':
-				return $this->getKnowledge('Aether');
-			default:
-				throw new Exception('Player->get(' . $bit . ') not found, report to Page.');
-		}
-	}
-
 	public function &getShip($forceUpdate = false) {
 		return SmrShip::getShip($this, $forceUpdate);
 	}
@@ -331,7 +255,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$port->addCachePort($this->getAccountID()); //Add the port of sector we are now in.
 	}
 
-	function setLastSectorID($lastSectorID) {
+	public function setLastSectorID($lastSectorID) {
 		if ($this->lastSectorID == $lastSectorID)
 			return;
 		$this->lastSectorID = $lastSectorID;
@@ -339,7 +263,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 //		$this->db->query('UPDATE player SET last_sector_id = '.$this->lastSectorID.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 
-	function leaveAlliance(AbstractSmrPlayer $kickedBy = null) {
+	public function leaveAlliance(AbstractSmrPlayer $kickedBy = null) {
 		$allianceID = $this->getAllianceID();
 		$alliance = $this->getAlliance();
 		if ($kickedBy != null) {
@@ -366,7 +290,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
-	function joinAlliance($allianceID) {
+	public function joinAlliance($allianceID) {
 		$this->setAllianceID($allianceID);
 		$alliance = $this->getAlliance();
 
@@ -386,22 +310,22 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->db->query('DELETE FROM alliance_invites_player WHERE ' . $this->SQL);
 	}
 
-	function getAllianceJoinable() {
+	public function getAllianceJoinable() {
 		return $this->allianceJoinable;
 	}
 
-	function setAllianceJoinable($time) {
+	private function setAllianceJoinable($time) {
 		if ($this->allianceJoinable == $time)
 			return;
 		$this->allianceJoinable = $time;
 		$this->hasChanged = true;
 	}
 
-	function getAttackColour() {
+	public function getAttackColour() {
 		return $this->attackColour;
 	}
 
-	function setAttackColour($colour) {
+	public function setAttackColour($colour) {
 		if ($this->attackColour == $colour)
 			return;
 		$this->attackColour = $colour;
@@ -409,11 +333,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 //		$this->db->query('UPDATE player SET attack_warning = ' . $this->db->escapeString($this->attackColour) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
-	function getBank() {
+	public function getBank() {
 		return $this->bank;
 	}
 
-	function increaseBank($credits) {
+	public function increaseBank($credits) {
 		if ($credits < 0)
 			throw new Exception('Trying to increase negative credits.');
 		if ($credits == 0)
@@ -421,7 +345,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$credits += $this->bank;
 		$this->setBank($credits);
 	}
-	function decreaseBank($credits) {
+	public function decreaseBank($credits) {
 		if ($credits < 0)
 			throw new Exception('Trying to decrease negative credits.');
 		if ($credits == 0)
@@ -429,7 +353,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$credits = $this->bank - $credits;
 		$this->setBank($credits);
 	}
-	function setBank($credits) {
+	public function setBank($credits) {
 		if ($this->bank == $credits)
 			return;
 		if ($credits < 0)
@@ -441,11 +365,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 //		$this->db->query('UPDATE player SET bank = '.$this->bank.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 
-	function getLastNewsUpdate() {
+	public function getLastNewsUpdate() {
 		return $this->lastNewsUpdate;
 	}
 
-	function setLastNewsUpdate($time) {
+	private function setLastNewsUpdate($time) {
 		if ($this->lastNewsUpdate == $time)
 			return;
 		$this->lastNewsUpdate = $time;
@@ -453,7 +377,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 //		$this->db->query('UPDATE player SET last_news_update = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
-	function updateLastNewsUpdate() {
+	public function updateLastNewsUpdate() {
 		$this->setLastNewsUpdate(TIME);
 	}
 
@@ -508,11 +432,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
-	function isIgnoreGlobals() {
+	public function isIgnoreGlobals() {
 		return $this->ignoreGlobals;
 	}
 
-	function setIgnoreGlobals($bool) {
+	public function setIgnoreGlobals($bool) {
 		if ($this->ignoreGlobals == $bool)
 			return;
 		$this->ignoreGlobals = $bool;
@@ -521,11 +445,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 
-	function getLastPort() {
+	public function getLastPort() {
 		return $this->lastPort;
 	}
 
-	function setLastPort($lastPort) {
+	public function setLastPort($lastPort) {
 		if ($this->lastPort == $lastPort)
 			return;
 		$this->lastPort = $lastPort;
@@ -533,18 +457,18 @@ class SmrPlayer extends AbstractSmrPlayer {
 //		$this->db->query('UPDATE player SET last_port = ' . $this->lastPort . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
-	function isDisplayMissions() {
+	public function isDisplayMissions() {
 		return $this->displayMissions;
 	}
 
-	function setDisplayMissions($bool) {
+	public function setDisplayMissions($bool) {
 		if ($this->displayMissions == $bool)
 			return;
 		$this->displayMissions = $bool;
 		$this->hasChanged = true;
 	}
 
-	function isDisplayWeapons() {
+	public function isDisplayWeapons() {
 		return $this->displayWeapons;
 	}
 
@@ -553,25 +477,25 @@ class SmrPlayer extends AbstractSmrPlayer {
 	 * This updates the player database directly because it is used with AJAX,
 	 * which does not acquire a sector lock.
 	 */
-	function setDisplayWeapons($bool) {
+	public function setDisplayWeapons($bool) {
 		if ($this->displayWeapons == $bool)
 			return;
 		$this->displayWeapons = $bool;
 		$this->db->query('UPDATE player SET display_weapons=' . $this->db->escapeBoolean($this->displayWeapons) . ' WHERE ' . $this->SQL);
 	}
 
-	function isForceDropMessages() {
+	public function isForceDropMessages() {
 		return $this->forceDropMessages;
 	}
 
-	function setForceDropMessages($bool) {
+	public function setForceDropMessages($bool) {
 		if ($this->forceDropMessages == $bool)
 			return;
 		$this->forceDropMessages = $bool;
 		$this->hasChanged = true;
 	}
 
-	function getScoutMessageGroupLimit() {
+	public function getScoutMessageGroupLimit() {
 		if ($this->groupScoutMessages == 'ALWAYS') {
 			return 0;
 		} elseif ($this->groupScoutMessages == 'AUTO') {
@@ -581,11 +505,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
-	function getGroupScoutMessages() {
+	public function getGroupScoutMessages() {
 		return $this->groupScoutMessages;
 	}
 
-	function setGroupScoutMessages($setting) {
+	public function setGroupScoutMessages($setting) {
 		if ($this->groupScoutMessages == $setting) {
 			return;
 		}
@@ -593,11 +517,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	function getLastTurnUpdate() {
+	public function getLastTurnUpdate() {
 		return $this->lastTurnUpdate;
 	}
 
-	function setLastTurnUpdate($time) {
+	public function setLastTurnUpdate($time) {
 		if ($this->lastTurnUpdate == $time)
 			return;
 		$this->lastTurnUpdate = $time;
@@ -620,7 +544,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
-	function increaseRelationsByTrade($numGoods, $raceID) {
+	public function increaseRelationsByTrade($numGoods, $raceID) {
 		$relations = ceil(min($numGoods, 300) / 30);
 		//Cap relations to a max of 1 after 500 have been reached
 		if ($this->getPureRelation($raceID) + $relations >= 500)
@@ -628,12 +552,12 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->increaseRelations($relations, $raceID);
 	}
 
-	function decreaseRelationsByTrade($numGoods, $raceID) {
+	public function decreaseRelationsByTrade($numGoods, $raceID) {
 		$relations = ceil(min($numGoods, 300) / 30);
 		$this->decreaseRelations($relations, $raceID);
 	}
 
-	function increaseRelations($relations, $raceID) {
+	public function increaseRelations($relations, $raceID) {
 		if ($relations < 0)
 			throw new Exception('Trying to increase negative relations.');
 		if ($relations == 0)
@@ -641,7 +565,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$relations += $this->getPureRelation($raceID);
 		$this->setRelations($relations, $raceID);
 	}
-	function decreaseRelations($relations, $raceID) {
+	public function decreaseRelations($relations, $raceID) {
 		if ($relations < 0)
 			throw new Exception('Trying to decrease negative relations.');
 		if ($relations == 0)
@@ -649,7 +573,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$relations = $this->getPureRelation($raceID) - $relations;
 		$this->setRelations($relations, $raceID);
 	}
-	function setRelations($relations, $raceID) {
+	public function setRelations($relations, $raceID) {
 		$this->getRelations();
 		if ($this->pureRelations[$raceID] == $relations)
 			return;
@@ -737,7 +661,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
-	function setGadget($gadgetID, $keyOrUpdateArray, $value) {
+	public function setGadget($gadgetID, $keyOrUpdateArray, $value) {
 		if (!is_numeric($gadgetID)) {
 			global $GADGETS;
 			$gadgetID = $GADGETS[$gadgetID]['ID'];
@@ -799,7 +723,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
-	function getKnowledge($knowledgeType = false) {
+	public function getKnowledge($knowledgeType = false) {
 		if (!isset($this->knowledge)) {
 			//get players faction knowledge
 			$this->db->query('SELECT * FROM player_knows_faction WHERE ' . $this->SQL . ' LIMIT 1');
@@ -1707,7 +1631,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 
-	function moveDestinationButton($sectorID, $offsetTop, $offsetLeft) {
+	public function moveDestinationButton($sectorID, $offsetTop, $offsetLeft) {
 
 		if (!is_numeric($offsetLeft) || !is_numeric($offsetTop)) {
 			create_error('The position of the saved sector must be numeric!.');
@@ -1736,7 +1660,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		create_error('You do not have a saved sector for #' . $sectorID);
 	}
 
-	function addDestinationButton($sectorID, $label) {
+	public function addDestinationButton($sectorID, $label) {
 
 		if (!is_numeric($sectorID) || !SmrSector::sectorExists($this->getGameID(), $sectorID)) {
 			create_error('You want to add a non-existent sector?');
@@ -1762,7 +1686,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		);
 	}
 
-	function deleteDestinationButton($sectorID) {
+	public function deleteDestinationButton($sectorID) {
 		if (!is_numeric($sectorID) || $sectorID < 1) {
 			create_error('You want to remove a non-existent sector?');
 		}
@@ -1781,16 +1705,16 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return false;
 	}
 
-	function getExperienceRank() {
+	public function getExperienceRank() {
 		return $this->computeRanking('experience', $this->getExperience());
 	}
-	function getKillsRank() {
+	public function getKillsRank() {
 		return $this->computeRanking('kills', $this->getKills());
 	}
-	function getDeathsRank() {
+	public function getDeathsRank() {
 		return $this->computeRanking('deaths', $this->getDeaths());
 	}
-	function getAssistsRank() {
+	public function getAssistsRank() {
 		return $this->computeRanking('assists', $this->getAssists());
 	}
 	private function computeRanking($dbField, $playerAmount) {

@@ -6,11 +6,11 @@
 abstract class SmrPlanetType {
 	const MAX_LANDED_UNLIMITED = 0;
 	const DEFAULT_MENU_OPTIONS = ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP', 'FINANCE'];
-	abstract function name();
-	abstract function imageLink();
-	abstract function description();
-	abstract function maxAttackers();
-	abstract function maxLanded();
+	abstract public function name();
+	abstract public function imageLink();
+	abstract public function description();
+	abstract public function maxAttackers();
+	abstract public function maxLanded();
 
 	/**
 	 * Associates the planet_type_id with the planet class.
@@ -28,7 +28,7 @@ abstract class SmrPlanetType {
 	 * Returns an instance of the planet type from the given $typeID.
 	 * This is the intended method to construct an SmrPlanetType.
 	 */
-	static function getTypeInfo($typeID) {
+	public static function getTypeInfo($typeID) {
 		if (isset(self::PLANET_TYPES[$typeID])) {
 			$planetType = self::PLANET_TYPES[$typeID];
 			return new $planetType;
@@ -40,7 +40,7 @@ abstract class SmrPlanetType {
 	/**
 	 * Access properties of structures that this planet type can build.
 	 */
-	function structureTypes($structureID=false) {
+	public function structureTypes($structureID=false) {
 		if (!isset($this->structures)) {
 			foreach (static::STRUCTURES as $ID => $Info) {
 				$this->structures[$ID] = new SmrPlanetStructureType($ID, $Info);
@@ -77,12 +77,12 @@ class TerranPlanet extends SmrPlanetType {
 			'exp_gain' => 540,
 		],
 	];
-	function name()         { return "Terran Planet"; }
-	function imageLink()    { return "images/planet1.png"; }
-	function description()  { return "A lush world, with forests, seas, sweeping meadows, and indigenous lifeforms."; }
-	function maxAttackers() { return 10; }
-	function maxLanded()    { return self::MAX_LANDED_UNLIMITED; }
-	function menuOptions()  { return self::DEFAULT_MENU_OPTIONS; }
+	public function name()         { return "Terran Planet"; }
+	public function imageLink()    { return "images/planet1.png"; }
+	public function description()  { return "A lush world, with forests, seas, sweeping meadows, and indigenous lifeforms."; }
+	public function maxAttackers() { return 10; }
+	public function maxLanded()    { return self::MAX_LANDED_UNLIMITED; }
+	public function menuOptions()  { return self::DEFAULT_MENU_OPTIONS; }
 }
 
 class AridPlanet extends SmrPlanetType {
@@ -106,12 +106,12 @@ class AridPlanet extends SmrPlanetType {
 			'exp_gain' => 180,
 		],
 	];
-	function name()         { return "Arid Planet"; }
-	function imageLink()    { return "images/planet2.png"; }
-	function description()  { return "A world mostly devoid of surface water, but capable of supporting life."; }
-	function maxAttackers() { return 5; }
-	function maxLanded()    { return 5; }
-	function menuOptions()  { return ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP']; }
+	public function name()         { return "Arid Planet"; }
+	public function imageLink()    { return "images/planet2.png"; }
+	public function description()  { return "A world mostly devoid of surface water, but capable of supporting life."; }
+	public function maxAttackers() { return 5; }
+	public function maxLanded()    { return 5; }
+	public function menuOptions()  { return ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP']; }
 }
 
 class DwarfPlanet extends SmrPlanetType {
@@ -135,12 +135,12 @@ class DwarfPlanet extends SmrPlanetType {
 			'exp_gain' => 540,
 		],
 	];
-	function name()         { return "Dwarf Planet"; }
-	function imageLink()    { return "images/planet3.png"; }
-	function description()  { return "A smaller than usual planet, with no native life present."; }
-	function maxAttackers() { return 5; }
-	function maxLanded()    { return self::MAX_LANDED_UNLIMITED; }
-	function menuOptions()  { return self::DEFAULT_MENU_OPTIONS; }
+	public function name()         { return "Dwarf Planet"; }
+	public function imageLink()    { return "images/planet3.png"; }
+	public function description()  { return "A smaller than usual planet, with no native life present."; }
+	public function maxAttackers() { return 5; }
+	public function maxLanded()    { return self::MAX_LANDED_UNLIMITED; }
+	public function menuOptions()  { return self::DEFAULT_MENU_OPTIONS; }
 }
 
 class ProtoPlanet extends SmrPlanetType {
@@ -170,12 +170,12 @@ class ProtoPlanet extends SmrPlanetType {
 			'exp_gain' => 540,
 		],
 	];
-	function name()         { return "Protoplanet"; }
-	function imageLink()    { return "images/planet5.png"; }
-	function description()  { return "A developing planet, not yet able to support the infrastructure of advanced technologies."; }
-	function maxAttackers() { return 5; }
-	function maxLanded()    { return 5; }
-	function menuOptions()  { return self::DEFAULT_MENU_OPTIONS; }
+	public function name()         { return "Protoplanet"; }
+	public function imageLink()    { return "images/planet5.png"; }
+	public function description()  { return "A developing planet, not yet able to support the infrastructure of advanced technologies."; }
+	public function maxAttackers() { return 5; }
+	public function maxLanded()    { return 5; }
+	public function menuOptions()  { return self::DEFAULT_MENU_OPTIONS; }
 }
 
 class DefenseWorld extends SmrPlanetType {
@@ -205,10 +205,10 @@ class DefenseWorld extends SmrPlanetType {
 			'exp_gain' => 9,
 		],
 	];
-	function name()         { return "Defense World"; }
-	function imageLink()    { return "images/planet4.png"; }
-	function description()  { return "A fully armed and operational battle station loaded with excessive firepower."; }
-	function maxAttackers() { return 10; }
-	function maxLanded()    { return self::MAX_LANDED_UNLIMITED; }
-	function menuOptions()  { return self::DEFAULT_MENU_OPTIONS; }
+	public function name()         { return "Defense World"; }
+	public function imageLink()    { return "images/planet4.png"; }
+	public function description()  { return "A fully armed and operational battle station loaded with excessive firepower."; }
+	public function maxAttackers() { return 10; }
+	public function maxLanded()    { return self::MAX_LANDED_UNLIMITED; }
+	public function menuOptions()  { return self::DEFAULT_MENU_OPTIONS; }
 }
