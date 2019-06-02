@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','Alliance Kill Rankings');
+$template->assign('PageTopic', 'Alliance Kill Rankings');
 Menu::rankings(1, 2);
 
 $db->query('SELECT count(*) FROM alliance
@@ -13,9 +13,9 @@ if ($player->hasAlliance()) {
 				FROM alliance
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND (
-					alliance_kills > '.$db->escapeNumber($player->getAlliance()->getKills()).'
+					alliance_kills > '.$db->escapeNumber($player->getAlliance()->getKills()) . '
 					OR (
-						alliance_kills = '.$db->escapeNumber($player->getAlliance()->getKills()).'
+						alliance_kills = '.$db->escapeNumber($player->getAlliance()->getKills()) . '
 						AND alliance_name <= ' . $db->escapeString($player->getAllianceName()) . '
 					)
 				)');

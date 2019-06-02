@@ -3,8 +3,7 @@ if (!isset($var['CheckType']) || $var['CheckType'] == 'Validate') {
 	// is account validated?
 	if (!$account->isValidated()) {
 		forward(create_container('skeleton.php', 'validate.php'));
-	}
-	else {
+	} else {
 		$var['CheckType'] = 'Announcements';
 	}
 }
@@ -17,8 +16,7 @@ if ($var['CheckType'] == 'Announcements') {
 	// do we have announcements?
 	if ($db->nextRecord()) {
 		forward(create_container('skeleton.php', 'announcements.php'));
-	}
-	else {
+	} else {
 		$var['CheckType'] = 'Updates';
 	}
 }

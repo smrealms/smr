@@ -2,7 +2,7 @@
 
 require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
 
-$fn_seedlist = function ($message) {
+$fn_seedlist = function($message) {
 	$link = new GameLink($message->channel, $message->author);
 	if (!$link->valid) return;
 
@@ -11,7 +11,7 @@ $fn_seedlist = function ($message) {
 	$message->channel->sendMessage(join(EOL, $results));
 };
 
-$fn_seedlist_add = function ($message, $sectors) {
+$fn_seedlist_add = function($message, $sectors) {
 	$link = new GameLink($message->channel, $message->author);
 	if (!$link->valid) return;
 
@@ -20,7 +20,7 @@ $fn_seedlist_add = function ($message, $sectors) {
 	$message->channel->sendMessage(join(EOL, $results));
 };
 
-$fn_seedlist_del = function ($message, $sectors) {
+$fn_seedlist_del = function($message, $sectors) {
 	$link = new GameLink($message->channel, $message->author);
 	if (!$link->valid) return;
 

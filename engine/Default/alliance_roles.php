@@ -1,6 +1,6 @@
 <?php
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
@@ -10,7 +10,7 @@ Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 $db->query('SELECT * 
 FROM alliance_has_roles
 WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) .'
+AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 ORDER BY role_id
 ');
 $allianceRoles = array();
@@ -43,7 +43,7 @@ while ($db->nextRecord()) {
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$allianceRoles[$roleID]['HREF'] = SmrSession::getNewHREF($container);
 }
-$template->assign('AllianceRoles',$allianceRoles);
+$template->assign('AllianceRoles', $allianceRoles);
 $container = create_container('alliance_roles_processing.php');
 $container['alliance_id'] = $alliance->getAllianceID();
 

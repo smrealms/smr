@@ -19,12 +19,12 @@ class SmrGalaxy {
 	protected $hasChanged = false;
 	protected $isNew = false;
 
-	public static function &getGameGalaxies($gameID,$forceUpdate = false) {
-		if($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
+	public static function &getGameGalaxies($gameID, $forceUpdate = false) {
+		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) .' ORDER BY galaxy_id ASC');
+			$db->query('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY galaxy_id ASC');
 			$galaxies = array();
-			while($db->nextRecord()) {
+			while ($db->nextRecord()) {
 				$galaxyID = $db->getField('galaxy_id');
 				$galaxies[$galaxyID] = self::getGalaxy($gameID, $galaxyID, $forceUpdate, $db);
 			}
@@ -33,8 +33,8 @@ class SmrGalaxy {
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
 
-	public static function &getGalaxy($gameID, $galaxyID, $forceUpdate=false, $db=null) {
-		if($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
+	public static function &getGalaxy($gameID, $galaxyID, $forceUpdate = false, $db = null) {
+		if ($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new SmrGalaxy($gameID, $galaxyID, false, $db);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
 		}
@@ -42,22 +42,22 @@ class SmrGalaxy {
 	}
 	
 	public static function saveGalaxies() {
-		foreach(self::$CACHE_GALAXIES as $gameGalaxies) {
-			foreach($gameGalaxies as $galaxy) {
+		foreach (self::$CACHE_GALAXIES as $gameGalaxies) {
+			foreach ($gameGalaxies as $galaxy) {
 				$galaxy->save();
 			}
 		}
 	}
 	
-	public static function &createGalaxy($gameID,$galaxyID) {
-		if(!isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
-			$g = new SmrGalaxy($gameID,$galaxyID,true);
+	public static function &createGalaxy($gameID, $galaxyID) {
+		if (!isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
+			$g = new SmrGalaxy($gameID, $galaxyID, true);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
 		}
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
 	}
 	
-	protected function __construct($gameID, $galaxyID, $create=false, $db=null) {
+	protected function __construct($gameID, $galaxyID, $create = false, $db = null) {
 		$this->db = new SmrMySqlDatabase();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND galaxy_id = ' . $this->db->escapeNumber($galaxyID);
@@ -70,8 +70,8 @@ class SmrGalaxy {
 			$this->isNew = !$db->nextRecord();
 		}
 
-		$this->gameID = (int) $gameID;
-		$this->galaxyID = (int) $galaxyID;
+		$this->gameID = (int)$gameID;
+		$this->galaxyID = (int)$galaxyID;
 		if (!$this->isNew) {
 			$this->name = $db->getField('galaxy_name');
 			$this->width = $db->getInt('width');
@@ -79,13 +79,13 @@ class SmrGalaxy {
 			$this->galaxyType = $db->getField('galaxy_type');
 			$this->maxForceTime = $db->getInt('max_force_time');
 		} elseif ($create === false) {
-			throw new Exception('No such galaxy: '.$gameID.'-'.$galaxyID);
+			throw new Exception('No such galaxy: ' . $gameID . '-' . $galaxyID);
 		}
 	}
 
 	public function save() {
-		if($this->hasChanged) {
-			if($this->isNew==false) {
+		if ($this->hasChanged) {
+			if ($this->isNew == false) {
 				$this->db->query('UPDATE game_galaxy SET galaxy_name = ' . $this->db->escapeString($this->getName()) .
 										', width = ' . $this->db->escapeNumber($this->getWidth()) .
 										', height = ' . $this->db->escapeNumber($this->getHeight()) .
@@ -125,8 +125,8 @@ class SmrGalaxy {
 	}
 	
 	public function setName($name) {
-		$name = htmlentities($name,ENT_COMPAT,'utf-8');
-		if($this->name == $name) {
+		$name = htmlentities($name, ENT_COMPAT, 'utf-8');
+		if ($this->name == $name) {
 			return;
 		}
 		$this->name = $name;
@@ -138,7 +138,7 @@ class SmrGalaxy {
 	}
 	
 	public function setWidth($width) {
-		if($this->width == $width) {
+		if ($this->width == $width) {
 			return;
 		}
 		$this->width = $width;
@@ -150,7 +150,7 @@ class SmrGalaxy {
 	}
 	
 	public function setHeight($height) {
-		if($this->height == $height) {
+		if ($this->height == $height) {
 			return;
 		}
 		$this->height = $height;
@@ -158,11 +158,11 @@ class SmrGalaxy {
 	}
 	
 	public function getStartSector() {
-		if($this->startSector === false) {
+		if ($this->startSector === false) {
 			$this->startSector = 1;
 			if ($this->getGalaxyID() != 1) {
 				$galaxies = SmrGalaxy::getGameGalaxies($this->getGameID());
-				for ($i=1;$i < $this->getGalaxyID();$i++) {
+				for ($i = 1; $i < $this->getGalaxyID(); $i++) {
 					$this->startSector += $galaxies[$i]->getSize();
 				}
 			}
@@ -187,28 +187,28 @@ class SmrGalaxy {
 	 * If $centerSectorID is specified, it will be in the center of the array.
 	 * If $dist is also specified, only include sectors $dist away from center.
 	 */
-	public function getMapSectors($centerSectorID=false, $dist=false) {
+	public function getMapSectors($centerSectorID = false, $dist = false) {
 		if ($centerSectorID === false) {
 			$topLeft = SmrSector::getSector($this->getGameID(), $this->getStartSector());
 		} else {
 			$topLeft = SmrSector::getSector($this->getGameID(), $centerSectorID);
 			// go left then up
-			for ($i=0; ($dist === false || $i<$dist) && $i<floor($this->getWidth()/2); $i++) {
+			for ($i = 0; ($dist === false || $i < $dist) && $i < floor($this->getWidth() / 2); $i++) {
 				$topLeft = $topLeft->getNeighbourSector('Left');
 			}
-			for ($i=0; ($dist === false || $i<$dist) && $i<floor($this->getHeight()/2); $i++) {
+			for ($i = 0; ($dist === false || $i < $dist) && $i < floor($this->getHeight() / 2); $i++) {
 				$topLeft = $topLeft->getNeighbourSector('Up');
 			}
 		}
 
 		$mapSectors = array();
-		for ($i=0; ($dist === false || $i<2*$dist+1) && $i<$this->getHeight(); $i++) {
+		for ($i = 0; ($dist === false || $i < 2 * $dist + 1) && $i < $this->getHeight(); $i++) {
 			$mapSectors[$i] = array();
 			// get left most sector for this row
 			$rowLeft = $i == 0 ? $topLeft : $rowLeft->getNeighbourSector('Down');
 
 			// iterate through the columns
-			for ($j=0; ($dist === false || $j<2*$dist+1) && $j<$this->getWidth(); $j++) {
+			for ($j = 0; ($dist === false || $j < 2 * $dist + 1) && $j < $this->getWidth(); $j++) {
 				$nextSec = $j == 0 ? $rowLeft : $nextSec->getNeighbourSector('Right');
 				$mapSectors[$i][$j] = $nextSec;
 			}
@@ -221,7 +221,7 @@ class SmrGalaxy {
 	}
 	
 	public function setGalaxyType($galaxyType) {
-		if($this->galaxyType == $galaxyType) {
+		if ($this->galaxyType == $galaxyType) {
 			return;
 		}
 		$this->galaxyType = $galaxyType;
@@ -233,7 +233,7 @@ class SmrGalaxy {
 	}
 	
 	public function setMaxForceTime($maxForceTime) {
-		if($this->maxForceTime == $maxForceTime) {
+		if ($this->maxForceTime == $maxForceTime) {
 			return;
 		}
 		$this->maxForceTime = $maxForceTime;
@@ -257,7 +257,7 @@ class SmrGalaxy {
 	 */
 	public function setConnectivity($connectivity) {
 		// Only set down/right, otherwise we double-hit every link
-		$linkDirs = array('Down','Right');
+		$linkDirs = array('Down', 'Right');
 
 		$problem = true;
 		$problemTimes = 0;
@@ -265,8 +265,8 @@ class SmrGalaxy {
 			$problem = false;
 		
 			foreach ($this->getSectors() as $galSector) {
-				foreach($linkDirs as $linkDir) {
-					if (mt_rand(1,100) <= $connectivity) {
+				foreach ($linkDirs as $linkDir) {
+					if (mt_rand(1, 100) <= $connectivity) {
 						$galSector->enableLink($linkDir);
 					} else {
 						$galSector->disableLink($linkDir);
@@ -305,8 +305,8 @@ class SmrGalaxy {
 	}
 
 	public function contains($sectorID) {
-		if($sectorID instanceof SmrSector) {
-			return $sectorID->getGalaxyID()==$this->getGalaxyID();
+		if ($sectorID instanceof SmrSector) {
+			return $sectorID->getGalaxyID() == $this->getGalaxyID();
 		}
 		return $sectorID >= $this->getStartSector() && $sectorID <= $this->getEndSector();
 	}

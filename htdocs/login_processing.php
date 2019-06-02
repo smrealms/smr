@@ -14,9 +14,9 @@ try {
 	// ********************************
 
 	if (!SmrSession::hasAccount()) {
-		if(isset($_REQUEST['loginType'])) {
+		if (isset($_REQUEST['loginType'])) {
 			$socialLogin = new SocialLogin($_REQUEST['loginType']);
-			if(!$socialLogin->isValid()) {
+			if (!$socialLogin->isValid()) {
 				$msg = 'Error validating login.';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
@@ -32,7 +32,7 @@ try {
 				}
 				$_SESSION['socialLogin'] = $socialLogin;
 				$template = new Template();
-				$template->assign('SocialLogin',$socialLogin);
+				$template->assign('SocialLogin', $socialLogin);
 				// Pre-populate the login field if an account with this email exists.
 				// (Also disable creating a new account because they would just get
 				// an "Email already registered" error anyway.)
@@ -81,7 +81,7 @@ try {
 	$account = SmrSession::getAccount();
 
 	// If linking a social login to an existing account
-	if(isset($_REQUEST['social'])) {
+	if (isset($_REQUEST['social'])) {
 		session_start();
 		if (!isset($_SESSION['socialLogin'])) {
 			$msg = 'Tried a social login link without having a social session.';
@@ -110,7 +110,7 @@ try {
 	// ********************************
 
 	// get reason for disabled user
-	if(($disabled = $account->isDisabled())!==false) {
+	if (($disabled = $account->isDisabled()) !== false) {
 		// save session (incase we forward)
 		SmrSession::update();
 		if (($disabled['Reason'] != CLOSE_ACCOUNT_INVALID_EMAIL_REASON) &&
@@ -148,7 +148,7 @@ try {
 	//now we set a cookie that we can use for mult checking
 	if (!isset($_COOKIE['Session_Info'])) {
 		//we get their info from db if they have any
-		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = '.$account->getAccountID());
+		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = ' . $account->getAccountID());
 		if ($db->nextRecord()) {
 			//convert to array
 			$old = explode('-', $db->getField('array'));
@@ -162,8 +162,8 @@ try {
 		//check that each value is legit and add it to db string
 		$new = MULTI_CHECKING_COOKIE_VERSION;
 		foreach ($old as $accID)
-			if (is_numeric($accID)) $new .= '-'.$accID;
-		$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES ('.$db->escapeNumber($account->getAccountID()).', '.$db->escapeString($new).', '.$db->escapeString($use).')');
+			if (is_numeric($accID)) $new .= '-' . $accID;
+		$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($new) . ', ' . $db->escapeString($use) . ')');
 		//now we update their cookie with the newest info
 		setcookie('Session_Info', $new, TIME + 157680000);
 
@@ -179,7 +179,7 @@ try {
 		//add this acc to the cookie if it isn't there
 		if (!in_array($account->getAccountID(), $cookie)) $cookie[] = $account->getAccountID();
 
-		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = '.$account->getAccountID());
+		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = ' . $account->getAccountID());
 		if ($db->nextRecord()) {
 			//convert to array
 			$old = explode('-', $db->getField('array'));
@@ -188,35 +188,35 @@ try {
 		$old[0] = MULTI_CHECKING_COOKIE_VERSION;
 		//merge arrays...but keys are all different so we go through each value
 		foreach ($cookie as $value)
-			if (!in_array($value,$old)) $old[] = $value;
+			if (!in_array($value, $old)) $old[] = $value;
 
 		if (sizeof($old) <= 2) $use = 'FALSE';
 		else $use = 'TRUE';
 		//check that each value is legit and add it to db string
 		$new = MULTI_CHECKING_COOKIE_VERSION;
 		foreach ($old as $accID)
-			if (is_numeric($accID)) $new .= '-'.$accID;
-		$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES ('.$db->escapeNumber($account->getAccountID()).', '.$db->escapeString($new).', '.$db->escapeString($use).')');
+			if (is_numeric($accID)) $new .= '-' . $accID;
+		$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($new) . ', ' . $db->escapeString($use) . ')');
 		//update newest cookie
 		setcookie('Session_Info', $new, TIME + 157680000);
 
 	}
 
 	//get rid of expired messages
-	$db2->query('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < '.$db->escapeNumber(TIME).' AND expire_time != 0');
+	$db2->query('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(TIME) . ' AND expire_time != 0');
 	// Mark message as read if it was sent to self as a mass mail.
 	$db2->query('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND account_id = sender_id AND message_type_id IN (' . $db->escapeArray(array(MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL)) . ');');
 	//check to see if we need to remove player_has_unread
 	$db2 = new SmrMySqlDatabase();
-	$db2->query('DELETE FROM player_has_unread_messages WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
+	$db2->query('DELETE FROM player_has_unread_messages WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$db2->query('
 		INSERT INTO player_has_unread_messages (game_id, account_id, message_type_id)
 		SELECT game_id, account_id, message_type_id FROM message WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND msg_read = ' . $db->escapeBoolean(false) . ' AND receiver_delete = ' . $db->escapeBoolean(false)
 	);
 
-	header('Location: '.$href);
+	header('Location: ' . $href);
 	exit;
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }

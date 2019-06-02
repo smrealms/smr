@@ -13,10 +13,10 @@ class WeightedRandom {
 	protected $typeID;
 	protected $weighting;
 	
-	protected $hasChanged=false;
+	protected $hasChanged = false;
 
 	public static function &getWeightedRandom($gameID, $accountID, $type, $typeID, $forceUpdate = false) {
-		if($forceUpdate || !isset(self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID])) {
+		if ($forceUpdate || !isset(self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID])) {
 			self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID] = new WeightedRandom($gameID, $accountID, $type, $typeID);
 		}
 		return self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID];
@@ -27,10 +27,10 @@ class WeightedRandom {
 	}
 	
 	public static function saveWeightedRandoms() {
-		foreach(self::$CACHE_RANDOMS as $gameRandoms) {
-			foreach($gameRandoms as $accountRandoms) {
-				foreach($accountRandoms as $typeRandoms) {
-					foreach($typeRandoms as $random) {
+		foreach (self::$CACHE_RANDOMS as $gameRandoms) {
+			foreach ($gameRandoms as $accountRandoms) {
+				foreach ($accountRandoms as $typeRandoms) {
+					foreach ($typeRandoms as $random) {
 						$random->update();
 					}
 				}
@@ -45,7 +45,7 @@ class WeightedRandom {
 		$this->typeID = $typeID;
 		
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('SELECT weighting FROM weighted_random WHERE game_id = '.$this->db->escapeNumber($gameID).' AND account_id = '.$this->db->escapeNumber($accountID).' AND type = '.$this->db->escapeString($type).' AND type_id = '.$this->db->escapeNumber($typeID).' LIMIT 1');
+		$this->db->query('SELECT weighting FROM weighted_random WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND account_id = ' . $this->db->escapeNumber($accountID) . ' AND type = ' . $this->db->escapeString($type) . ' AND type_id = ' . $this->db->escapeNumber($typeID) . ' LIMIT 1');
 		if ($this->db->nextRecord()) {
 			$this->weighting = $this->db->getField('weighting');
 		}
@@ -75,22 +75,22 @@ class WeightedRandom {
 	}
 	
 	public function percentFailed($percent) {
-		$failed = mt_rand(0,99)+$this->weighting >= $percent;
+		$failed = mt_rand(0, 99) + $this->weighting >= $percent;
 		$this->adjustWeightByPercent(!$failed, $percent);
 		return $failed;
 	}
 	
 	public function adjustWeightByPercent($success, $percent) {
-		$percent = $percent/100;
-		if($success) {
+		$percent = $percent / 100;
+		if ($success) {
 			$percent = -1 + $percent;
 		}
-		$this->weighting -= self::WEIGHTING_CHANGE*$percent;
+		$this->weighting -= self::WEIGHTING_CHANGE * $percent;
 		$this->hasChanged = true;
 	}
 	
 	public function update() {
-		if($this->hasChanged===true) {
+		if ($this->hasChanged === true) {
 			$this->db->query('REPLACE INTO weighted_random (game_id,account_id,type,type_id,weighting)
 							values
 							(' . $this->db->escapeNumber($this->getGameID()) .
@@ -98,7 +98,7 @@ class WeightedRandom {
 							',' . $this->db->escapeString($this->getType()) .
 							',' . $this->db->escapeNumber($this->getTypeID()) .
 							',' . $this->db->escapeNumber($this->getWeighting()) . ')');
-			$this->hasChanged=false;
+			$this->hasChanged = false;
 		}
 	}
 }

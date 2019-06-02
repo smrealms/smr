@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','Alliance Experience Rankings');
+$template->assign('PageTopic', 'Alliance Experience Rankings');
 Menu::rankings(1, 0);
 
 $db->query('SELECT count(*) FROM alliance

@@ -22,7 +22,7 @@ function channel_action_slap($fp, $rdata)
 			'gets up off the ground and roundhouse kicks ' . $nick . ' in the face',
 			'does an evasive backflip and throws ninja stars at ' . $nick,
 			'slaps ' . $nick . ' around a bit with a large trout',
-			'deflects the slap and deals ' . rand(1,999999) . ' damage to ' . $nick,
+			'deflects the slap and deals ' . rand(1, 999999) . ' damage to ' . $nick,
 			'steals the trout and throws it back in the river'
 		);
 		fputs($fp, 'PRIVMSG ' . $channel . ' :' . chr(1) . 'ACTION ' . $slap_responses[rand(0, count($slap_responses) - 1)] . chr(1) . EOL);

@@ -7,8 +7,7 @@ if (!isset($var['view_all'])) {
 				FROM announcement
 				WHERE time > ' . $db->escapeNumber($account->getLastLogin()) . '
 				ORDER BY time DESC');
-}
-else {
+} else {
 	$db->query('SELECT time, msg
 				FROM announcement
 				ORDER BY time DESC');

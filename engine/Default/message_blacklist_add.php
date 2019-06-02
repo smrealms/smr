@@ -7,7 +7,7 @@ if (empty($_REQUEST['PlayerName']) && !isset($var['account_id'])) {
 	forward($container);
 }
 
-if(isset($var['account_id'])) {
+if (isset($var['account_id'])) {
 	$blacklisted_id = $var['account_id'];
 }
 else {
@@ -15,7 +15,7 @@ else {
 
 	$db->query('SELECT account_id FROM player WHERE player_name=' . $db->escapeString($_REQUEST['PlayerName']) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 
-	if(!$db->nextRecord()) {
+	if (!$db->nextRecord()) {
 		$container['msg'] = '<span class="red bold">ERROR: </span>Player does not exist.';
 		forward($container);
 	}
@@ -24,7 +24,7 @@ else {
 
 $db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted_id) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 
-if($db->nextRecord()) {
+if ($db->nextRecord()) {
 	$container['msg'] = '<span class="red bold">ERROR: </span>Player is already blacklisted.';
 	forward($container);
 }

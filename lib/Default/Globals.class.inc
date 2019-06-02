@@ -17,7 +17,7 @@ class Globals {
 	}
 
 	protected static function initialiseDatabase() {
-		if(self::$db==null) {
+		if (self::$db == null) {
 			self::$db = new SmrMySqlDatabase();
 		}
 	}
@@ -27,9 +27,9 @@ class Globals {
 	}
 
 	public static function canAccessPage($pageName, AbstractSmrPlayer $player, array $extraInfo) {
-		switch($pageName) {
+		switch ($pageName) {
 			case 'AllianceMOTD':
-				if($player->getAllianceID() != $extraInfo['AllianceID']) {
+				if ($player->getAllianceID() != $extraInfo['AllianceID']) {
 					logException(new Exception('Tried to access page without permission.'));
 					create_error('You cannot access this page.');
 				}
@@ -38,10 +38,10 @@ class Globals {
 	}
 
 	public static function &getHiddenPlayers() {
-		if(self::$HIDDEN_PLAYERS==null) {
+		if (self::$HIDDEN_PLAYERS == null) {
 			self::initialiseDatabase();
 			self::$db->query('SELECT account_id FROM hidden_players');
-			self::$HIDDEN_PLAYERS = array(0);//stop errors
+			self::$HIDDEN_PLAYERS = array(0); //stop errors
 			while (self::$db->nextRecord()) {
 				self::$HIDDEN_PLAYERS[] = self::$db->getField('account_id');
 			}
@@ -60,7 +60,7 @@ class Globals {
 	}
 
 	public static function &getLevelRequirements() {
-		if(self::$LEVEL_REQUIREMENTS==null) {
+		if (self::$LEVEL_REQUIREMENTS == null) {
 			self::initialiseDatabase();
 			self::$LEVEL_REQUIREMENTS = array();
 
@@ -77,13 +77,13 @@ class Globals {
 	}
 
 	public static function &getRaces() {
-		if(self::$RACES==null) {
+		if (self::$RACES == null) {
 			self::initialiseDatabase();
 			self::$RACES = array();
 
 			// determine user level
 			self::$db->query('SELECT race_id,race_name,race_description FROM race ORDER BY race_id');
-			while(self::$db->nextRecord()) {
+			while (self::$db->nextRecord()) {
 				self::$RACES[self::$db->getInt('race_id')] = array(
 																'Race ID' => self::$db->getInt('race_id'),
 																'Race Name' => self::$db->getField('race_name'),
@@ -120,21 +120,21 @@ class Globals {
 
 	public static function getColouredRaceName($raceID, $relations, $linked = true) {
 		$raceName = get_colored_text($relations, Globals::getRaceName($raceID));
-		if($linked === true) {
-			$container = create_container('skeleton.php','council_list.php', array('race_id' => $raceID));
+		if ($linked === true) {
+			$container = create_container('skeleton.php', 'council_list.php', array('race_id' => $raceID));
 			$raceName = create_link($container, $raceName);
 		}
 		return $raceName;
 	}
 
 	public static function &getGoods() {
-		if(self::$GOODS==null) {
+		if (self::$GOODS == null) {
 			self::initialiseDatabase();
 			self::$GOODS = array();
 
 			// determine user level
 			self::$db->query('SELECT * FROM good ORDER BY good_id');
-			while(self::$db->nextRecord()) {
+			while (self::$db->nextRecord()) {
 				self::$GOODS[self::$db->getField('good_id')] = array(
 																'Type' => 'Good',
 																'ID' => self::$db->getInt('good_id'),
@@ -153,20 +153,20 @@ class Globals {
 		return Globals::getGoods()[$goodID];
 	}
 	public static function getGoodName($goodID) {
-		if($goodID==GOOD_NOTHING) {
+		if ($goodID == GOOD_NOTHING) {
 			return 'Nothing';
 		}
 		return Globals::getGoods()[$goodID]['Name'];
 	}
 
-	public static function &getHardwareTypes($hardwareTypeID=false) {
-		if(self::$HARDWARE_TYPES==null) {
+	public static function &getHardwareTypes($hardwareTypeID = false) {
+		if (self::$HARDWARE_TYPES == null) {
 			self::initialiseDatabase();
 			self::$HARDWARE_TYPES = array();
 
 			// determine user level
 			self::$db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
-			while(self::$db->nextRecord()) {
+			while (self::$db->nextRecord()) {
 				self::$HARDWARE_TYPES[self::$db->getField('hardware_type_id')] = array(
 																			'Type' => 'Hardware',
 																			'ID' => self::$db->getInt('hardware_type_id'),
@@ -175,7 +175,7 @@ class Globals {
 																			);
 			}
 		}
-		if($hardwareTypeID===false) {
+		if ($hardwareTypeID === false) {
 			return self::$HARDWARE_TYPES;
 		}
 		return self::$HARDWARE_TYPES[$hardwareTypeID];
@@ -199,7 +199,7 @@ class Globals {
 	}
 
 	public static function getGameType($gameID) {
-		if(self::isValidGame($gameID)) {
+		if (self::isValidGame($gameID)) {
 			return SmrGame::getGame($gameID)->getGameType();
 		}
 		return 0;
@@ -210,7 +210,7 @@ class Globals {
 	}
 
 	public static function isFeatureRequestOpen() {
-		if(self::$FEATURE_REQUEST_OPEN == null) {
+		if (self::$FEATURE_REQUEST_OPEN == null) {
 			self::initialiseDatabase();
 			self::$db->query('SELECT open FROM open_forms WHERE type=\'FEATURE\'');
 			self::$db->nextRecord();
@@ -220,12 +220,12 @@ class Globals {
 		return self::$FEATURE_REQUEST_OPEN;
 	}
 
-	public static function &getRaceRelations($gameID,$raceID) {
-		if(!isset(self::$RACE_RELATIONS[$gameID])) {
+	public static function &getRaceRelations($gameID, $raceID) {
+		if (!isset(self::$RACE_RELATIONS[$gameID])) {
 			self::$RACE_RELATIONS[$gameID] = array();
 		}
 
-		if(!isset(self::$RACE_RELATIONS[$gameID][$raceID])) {
+		if (!isset(self::$RACE_RELATIONS[$gameID][$raceID])) {
 			self::initialiseDatabase();
 			//get relations
 			$RACES = Globals::getRaces();
@@ -233,7 +233,7 @@ class Globals {
 			foreach ($RACES as $otherRaceID => $raceArray) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;
 			}
-			self::$db->query('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1='.self::$db->escapeNumber($raceID).' AND game_id='.self::$db->escapeNumber($gameID).' LIMIT '.count($RACES));
+			self::$db->query('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . self::$db->escapeNumber($raceID) . ' AND game_id=' . self::$db->escapeNumber($gameID) . ' LIMIT ' . count($RACES));
 			while (self::$db->nextRecord()) {
 				self::$RACE_RELATIONS[$gameID][$raceID][self::$db->getInt('race_id_2')] = self::$db->getInt('relation');
 			}
@@ -242,7 +242,7 @@ class Globals {
 	}
 
 	public static function getUserRanking() {
-		if(!isset(self::$USER_RANKINGS)) {
+		if (!isset(self::$USER_RANKINGS)) {
 			self::initialiseDatabase();
 			self::$USER_RANKINGS = array();
 			self::$db->query('SELECT rank, rank_name FROM user_rankings ORDER BY rank');
@@ -258,15 +258,15 @@ class Globals {
 	}
 
 	public static function getCurrentSectorHREF() {
-		return self::$AVAILABLE_LINKS['CurrentSector'] = SmrSession::getNewHREF(create_container('skeleton.php','current_sector.php'));
+		return self::$AVAILABLE_LINKS['CurrentSector'] = SmrSession::getNewHREF(create_container('skeleton.php', 'current_sector.php'));
 	}
 
 	public static function getLocalMapHREF() {
-		return self::$AVAILABLE_LINKS['LocalMap'] = SmrSession::getNewHREF(create_container('skeleton.php','map_local.php'));
+		return self::$AVAILABLE_LINKS['LocalMap'] = SmrSession::getNewHREF(create_container('skeleton.php', 'map_local.php'));
 	}
 
 	public static function getCurrentPlayersHREF() {
-		return self::$AVAILABLE_LINKS['CurrentPlayers'] = SmrSession::getNewHREF(create_container('skeleton.php','current_players.php'));
+		return self::$AVAILABLE_LINKS['CurrentPlayers'] = SmrSession::getNewHREF(create_container('skeleton.php', 'current_players.php'));
 	}
 
 	public static function getTradeHREF() {
@@ -274,7 +274,7 @@ class Globals {
 	}
 
 	public static function getAttackTraderHREF($accountID) {
-		$container = create_container('skeleton.php','trader_attack_processing.php');
+		$container = create_container('skeleton.php', 'trader_attack_processing.php');
 		$container['target'] = $accountID;
 		return self::$AVAILABLE_LINKS['AttackTrader'] = SmrSession::getNewHREF($container);
 	}
@@ -283,8 +283,8 @@ class Globals {
 		return SmrSession::getNewHREF(create_container('death_processing.php'));
 	}
 
-	public static function getBetaFunctionsHREF(){ //BETA
-		return SmrSession::getNewHREF(create_container('skeleton.php','beta_functions.php'));
+	public static function getBetaFunctionsHREF() { //BETA
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'beta_functions.php'));
 	}
 
 	public static function getBugReportProcessingHREF() {
@@ -292,13 +292,13 @@ class Globals {
 	}
 
 	public static function getWeaponReorderHREF($weaponOrderID, $direction) {
-		$container = create_container('skeleton.php','weapon_reorder.php');
-		$container[$direction]	= $weaponOrderID;
+		$container = create_container('skeleton.php', 'weapon_reorder.php');
+		$container[$direction] = $weaponOrderID;
 		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getSmrFileCreateHREF($adminCreateGameID = false) {
-		$container = create_container('skeleton.php','smr_file_create.php');
+		$container = create_container('skeleton.php', 'smr_file_create.php');
 		$container['AdminCreateGameID'] = $adminCreateGameID;
 		return SmrSession::getNewHREF($container);
 	}
@@ -317,42 +317,42 @@ class Globals {
 
 	public static function getSectorScanHREF($toSector) {
 		global $player;
-		$container = create_container('skeleton.php','sector_scan.php');
+		$container = create_container('skeleton.php', 'sector_scan.php');
 		$container['target_sector'] = $toSector;
 		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = SmrSession::getNewHREF($container);
 	}
 
 	public static function getPlotCourseHREF($fromSector = false, $toSector = false) {
-		if($fromSector === false && $toSector === false) {
-			return self::$AVAILABLE_LINKS['PlotCourse'] = SmrSession::getNewHREF(create_container('skeleton.php','course_plot.php'));
+		if ($fromSector === false && $toSector === false) {
+			return self::$AVAILABLE_LINKS['PlotCourse'] = SmrSession::getNewHREF(create_container('skeleton.php', 'course_plot.php'));
 		}
 		else {
-			return SmrSession::getNewHREF(create_container('course_plot_processing.php','',array('from'=>$fromSector,'to'=>$toSector)));
+			return SmrSession::getNewHREF(create_container('course_plot_processing.php', '', array('from'=>$fromSector, 'to'=>$toSector)));
 		}
 	}
 
 	public static function getPlanetMainHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php','planet_main.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_main.php'));
 	}
 
 	public static function getPlanetConstructionHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php','planet_construction.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_construction.php'));
 	}
 
 	public static function getPlanetDefensesHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php','planet_defense.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_defense.php'));
 	}
 
 	public static function getPlanetOwnershipHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php','planet_ownership.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_ownership.php'));
 	}
 
 	public static function getPlanetStockpileHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php','planet_stockpile.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_stockpile.php'));
 	}
 
 	public static function getPlanetFinancesHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php','planet_financial.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_financial.php'));
 	}
 
 	public static function getAllianceHREF($allianceID = null) {
@@ -366,7 +366,7 @@ class Globals {
 
 	public static function getAllianceBankHREF($allianceID = null) {
 		$container = create_container('skeleton.php', 'bank_alliance.php');
-		if ($allianceID!=null) {
+		if ($allianceID != null) {
 			$container['alliance_id'] = $allianceID;
 		}
 		return SmrSession::getNewHREF($container);
@@ -374,7 +374,7 @@ class Globals {
 
 	public static function getAllianceRosterHREF($allianceID = null) {
 		$container = create_container('skeleton.php', 'alliance_roster.php');
-		if ($allianceID!=null) {
+		if ($allianceID != null) {
 			$container['alliance_id'] = $allianceID;
 		}
 		return SmrSession::getNewHREF($container);
@@ -439,9 +439,9 @@ class Globals {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'trader_status.php'));
 	}
 
-	public static function getCouncilHREF($raceID=false) {
+	public static function getCouncilHREF($raceID = false) {
 		$container = create_container('skeleton.php', 'council_list.php');
-		if($raceID!==false) {
+		if ($raceID !== false) {
 			$container['race_id'] = $raceID;
 		}
 		return SmrSession::getNewHREF($container);
@@ -506,7 +506,7 @@ class Globals {
 
 	public static function getAvailableTemplates() {
 		return array('Default' => array('Default'),
-			'Freon22' => array('Default','Blue','ClassicGreen','None'));
+			'Freon22' => array('Default', 'Blue', 'ClassicGreen', 'None'));
 	}
 
 	public static function getAvailableColourSchemes($templateName) {

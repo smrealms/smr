@@ -29,8 +29,7 @@ $alliances = array();
 while ($db->nextRecord()) {
 	if ($db->getField('alliance_id') != $player->getAllianceID()) {
 		$container['body'] = 'alliance_roster.php';
-	}
-	else {
+	} else {
 		$container['body'] = 'alliance_mod.php';
 	}
 	$allianceID = $db->getInt('alliance_id');

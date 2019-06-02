@@ -27,7 +27,7 @@ try {
 	// creates a new user account object
 	$account = SmrAccount::getAccountByName($login);
 	$passwordReset = $_REQUEST['password_reset'];
-	if ($account==null || empty($passwordReset) || $account->getPasswordReset() != $passwordReset) {
+	if ($account == null || empty($passwordReset) || $account->getPasswordReset() != $passwordReset) {
 		// unknown user
 		header('Location: /error.php?msg=' . rawurlencode('User does not exist or reset password code is incorrect.'));
 		exit;
@@ -38,6 +38,6 @@ try {
 	
 	header('Location: /login.php');
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }

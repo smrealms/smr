@@ -30,7 +30,7 @@ try {
 	} ?>
 	</table><?php
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }
 ?>

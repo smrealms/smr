@@ -10,9 +10,9 @@ try {
 		exit;
 	}
 	$socialLogin = isset($_REQUEST['socialReg']);
-	if($socialLogin) {
+	if ($socialLogin) {
 		session_start();
-		if(!$_SESSION['socialLogin']) {
+		if (!$_SESSION['socialLogin']) {
 			$msg = 'Tried a social registration without having a social session.';
 			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
@@ -50,7 +50,7 @@ try {
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
-	if(strpos($login,'NPC')===0) {
+	if (strpos($login, 'NPC') === 0) {
 		$msg = 'Login names cannot begin with "NPC".';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
@@ -109,7 +109,7 @@ try {
 
 	// check if the host got a MX or at least an A entry
 	if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
-		$msg = 'This is not a valid email address! The domain '.$host.' does not exist.';
+		$msg = 'This is not a valid email address! The domain ' . $host . ' does not exist.';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
@@ -120,7 +120,7 @@ try {
 		exit;
 	}
 
-	$db->query('SELECT * FROM account WHERE login = '.$db->escapeString($login));
+	$db->query('SELECT * FROM account WHERE login = ' . $db->escapeString($login));
 	if ($db->getNumRows() > 0) {
 		$msg = 'This user name is already registered.';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -149,13 +149,13 @@ try {
 	try {
 		$account = SmrAccount::createAccount($login, $password, $email, $timez, $referral);
 	}
-	catch(AccountNotFoundException $e) {
+	catch (AccountNotFoundException $e) {
 		$msg = 'Invalid referral account ID!';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 	$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give $2 worth of "reward" credits for joining.
-	if($socialLogin) {
+	if ($socialLogin) {
 		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),
 		                        $_SESSION['socialLogin']->getUserID());
 		if ($validatedBySocial) {
@@ -173,8 +173,8 @@ try {
 	if (!$account->isValidated()) {
 		// send email with validation code to user
 		$emailMessage =
-			'Your validation code is: '.$account->getValidationCode().EOL.
-			'The Space Merchant Realms server is on the web at '.URL;
+			'Your validation code is: ' . $account->getValidationCode() . EOL .
+			'The Space Merchant Realms server is on the web at ' . URL;
 
 		$mail = setupMailer();
 		$mail->Subject = 'New Space Merchant Realms Account';
@@ -185,7 +185,7 @@ try {
 
 		// remember when we sent validation code
 		$db->query('INSERT INTO notification (notification_type, account_id, time) ' .
-		           'VALUES(\'validation_code\', '.$db->escapeNumber($account->getAccountID()).', ' . $db->escapeNumber(TIME) . ')');
+		           'VALUES(\'validation_code\', ' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber(TIME) . ')');
 	}
 
 	$container = create_container('login_processing.php');
@@ -193,6 +193,6 @@ try {
 	$container['password'] = $password;
 	forwardURL($container);
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }

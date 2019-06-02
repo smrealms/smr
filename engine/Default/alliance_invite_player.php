@@ -12,7 +12,7 @@ $db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeN
 // Get list of pending invitations
 $pendingInvites = array();
 $db->query('SELECT * FROM alliance_invites_player
-            WHERE game_id = '.$db->escapeNumber($player->getGameID()).'
+            WHERE game_id = '.$db->escapeNumber($player->getGameID()) . '
               AND alliance_id = '.$db->escapeNumber($alliance->getAllianceID()));
 while ($db->nextRecord()) {
 	$invited = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID());
@@ -30,9 +30,9 @@ $template->assign('PendingInvites', $pendingInvites);
 $invitePlayers = array();
 if ($alliance->getNumMembers() < $game->getAllianceMaxPlayers()) {
 	$db->query('SELECT account_id FROM player
-	            WHERE game_id = '.$db->escapeNumber($player->getGameID()).'
-	              AND alliance_id != '.$db->escapeNumber($alliance->getAllianceID()).'
-	              AND npc = '.$db->escapeBoolean(false).'
+	            WHERE game_id = '.$db->escapeNumber($player->getGameID()) . '
+	              AND alliance_id != '.$db->escapeNumber($alliance->getAllianceID()) . '
+	              AND npc = '.$db->escapeBoolean(false) . '
 	            ORDER BY player_id DESC');
 	while ($db->nextRecord()) {
 		$invitePlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID());

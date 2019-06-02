@@ -11,8 +11,7 @@ if (isset($var['reply_id'])) {
 				AND thread_id = ' . $db->escapeNumber($var['thread_id']) . '
 				AND reply_id = ' . $db->escapeNumber($var['reply_id']) . ' LIMIT 1');
 	forward(create_container('skeleton.php', 'alliance_message_view.php', $var));
-}
-else {
+} else {
 	$db->query('DELETE FROM alliance_thread
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_id = ' . $db->escapeNumber($alliance_id) . '

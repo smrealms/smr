@@ -15,8 +15,7 @@ if (!empty($var['cancel'])) {
 
 	// NOTE: for simplicity we don't touch `player_has_unread_messages` here,
 	// so they may get an errant alliance message icon if logged in.
-}
-else {
+} else {
 	// schedule an op
 	if (empty($_POST['date'])) {
 		error_on_page('You must specify a date for the operation!');

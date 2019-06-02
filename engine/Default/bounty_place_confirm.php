@@ -27,13 +27,12 @@ if ((empty($amount) && empty($smrCredits)) || empty($playerID)) {
 	create_error('Don\'t you want to place bounty?');
 }
 
-$template->assign('PageTopic','Placing a bounty');
+$template->assign('PageTopic', 'Placing a bounty');
 
 require_once(get_file_loc('menu_hq.inc'));
 if ($sector->hasHQ()) {
 	create_hq_menu();
-}
-else {
+} else {
 	create_ug_menu();
 }
 

@@ -9,7 +9,7 @@ try {
 	$template = new Template();
 	$db->query('SELECT * FROM game_disable');
 	if ($db->nextRecord()) {
-		$template->assign('Message', '<span class="red">Space Merchant Realms is temporarily offline.<br />'.$db->getField('reason').'</span>');
+		$template->assign('Message', '<span class="red">Space Merchant Realms is temporarily offline.<br />' . $db->getField('reason') . '</span>');
 	}
 
 	// We need to destroy the session so that the login page doesn't
@@ -17,6 +17,6 @@ try {
 	SmrSession::destroy();
 	require_once(ENGINE . 'Default/login.inc');
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }

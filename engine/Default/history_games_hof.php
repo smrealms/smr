@@ -22,8 +22,7 @@ if (!isset($var['stat'])) {
 		$links[] = create_link($container, $statDisplay);
 	}
 	$template->assign('Links', $links);
-}
-else {
+} else {
 	// Link back to overview page
 	$container = $var;
 	unset($container['stat']);

@@ -65,7 +65,7 @@ try {
 
 	// check if we got a sn number with our url
 	if (empty($sn)) {
-		if(!USING_AJAX) {
+		if (!USING_AJAX) {
 			require_once(get_file_loc('smr.inc'));
 			create_error('Your browser lost the SN. Try to reload the page!');
 		}
@@ -75,7 +75,7 @@ try {
 	
 	// do we have such a container object in the db?
 	if (!($var = SmrSession::retrieveVar($sn))) {
-		if(!USING_AJAX) {
+		if (!USING_AJAX) {
 			require_once(get_file_loc('smr.inc'));
 			create_error('Please avoid using the back button!');
 		}
@@ -90,13 +90,13 @@ try {
 	$overrideGameID = 0;
 	if (isset($var['game_id']) && is_numeric($var['game_id'])) $overrideGameID = $var['game_id'];
 	if ($overrideGameID == 0 && isset($var['GameID']) && is_numeric($var['GameID'])) $overrideGameID = $var['GameID'];
-	if($overrideGameID == 0) $overrideGameID = SmrSession::getGameID();
+	if ($overrideGameID == 0) $overrideGameID = SmrSession::getGameID();
 
 	require_once(get_file_loc('smr.inc'));
 
 	$account = SmrSession::getAccount();
 	// get reason for disabled user
-	if(($disabled = $account->isDisabled())!==false) {
+	if (($disabled = $account->isDisabled()) !== false) {
 		// save session (incase we forward)
 		SmrSession::update();
 		if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
@@ -122,6 +122,6 @@ try {
 	
 	do_voodoo();
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }
