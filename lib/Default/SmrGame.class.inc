@@ -74,22 +74,22 @@ class SmrGame {
 		$this->db->query('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
 		if ($this->db->nextRecord()) {
 			$this->gameID = $this->db->getInt('game_id');
-			$this->name					= $this->db->getField('game_name');
+			$this->name = $this->db->getField('game_name');
 			$this->description = $this->db->getField('game_description');
 			$this->joinTime = $this->db->getInt('join_time');
 			$this->startTime = $this->db->getInt('start_time');
 			$this->endTime = $this->db->getInt('end_time');
-			$this->maxPlayers			= $this->db->getInt('max_players');
+			$this->maxPlayers = $this->db->getInt('max_players');
 			$this->maxTurns = $this->db->getInt('max_turns');
 			$this->startTurnHours = $this->db->getInt('start_turns');
-			$this->gameTypeID			= $this->db->getInt('game_type');
+			$this->gameTypeID = $this->db->getInt('game_type');
 			$this->creditsNeeded = $this->db->getInt('credits_needed');
 			$this->gameSpeed = $this->db->getReal('game_speed');
 			$this->enabled = $this->db->getBoolean('enabled');
 			$this->ignoreStats = $this->db->getBoolean('ignore_stats');
 			$this->allianceMaxPlayers = $this->db->getInt('alliance_max_players');
-			$this->allianceMaxVets		= $this->db->getInt('alliance_max_vets');
-			$this->startingCredits		= $this->db->getInt('starting_credits');
+			$this->allianceMaxVets = $this->db->getInt('alliance_max_vets');
+			$this->startingCredits = $this->db->getInt('starting_credits');
 		}
 		else if ($create === true) {
 			$this->gameID = (int)$gameID;
