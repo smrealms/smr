@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','Newsletter');
+$template->assign('PageTopic', 'Newsletter');
 
 $template->assign('CurrentEmail', $account->getEmail());
 
@@ -11,7 +11,7 @@ $db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newslett
 if ($db->nextRecord()) {
 	$id = $db->getField('newsletter_id');
 	$template->assign('NewsletterId', $id);
-	$template->assign('DefaultSubject', 'Space Merchant Realms Newsletter #'.$id);
+	$template->assign('DefaultSubject', 'Space Merchant Realms Newsletter #' . $id);
 
 	// Give both the template and processing container access to the message
 	$processingContainer['newsletter_html'] = $db->getField('newsletter_html');

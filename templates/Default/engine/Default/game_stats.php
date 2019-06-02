@@ -69,7 +69,7 @@
 					<tr>
 						<td class="right">Stats Ignored</td>
 						<td>&nbsp;</td>
-						<td><?php echo $StatsGame->isIgnoreStats()?'Yes':'No'; ?></td>
+						<td><?php echo $StatsGame->isIgnoreStats() ? 'Yes' : 'No'; ?></td>
 					</tr>
 					<tr>
 						<td class="right">Starting Credits</td>
@@ -131,7 +131,7 @@
 		</tr>
 		<tr>
 			<td><?php
-				if(isset($ExperienceRankings)) { ?>
+				if (isset($ExperienceRankings)) { ?>
 					<table class="nobord">
 						<tr>
 							<th>Rank</th>
@@ -149,7 +149,7 @@
 				} ?>
 			</td>
 			<td><?php
-				if(isset($KillRankings)) { ?>
+				if (isset($KillRankings)) { ?>
 					<table class="nobord">
 						<tr>
 							<th>Rank</th>

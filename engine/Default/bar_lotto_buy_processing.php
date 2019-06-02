@@ -17,16 +17,16 @@ while (true) {
 
 $db->query('INSERT INTO player_has_ticket (game_id, account_id, time) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($time) . ')');
 $player->decreaseCredits(1000000);
-$player->increaseHOF(1000000,array('Bar','Lotto', 'Money', 'Spent'), HOF_PUBLIC);
-$player->increaseHOF(1,array('Bar','Lotto', 'Tickets Bought'), HOF_PUBLIC);
+$player->increaseHOF(1000000, array('Bar', 'Lotto', 'Money', 'Spent'), HOF_PUBLIC);
+$player->increaseHOF(1, array('Bar', 'Lotto', 'Tickets Bought'), HOF_PUBLIC);
 $db->query('SELECT count(*) as num FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 	AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND time > 0 GROUP BY account_id');
 $db->nextRecord();
 $num = $db->getInt('num');
-$message=('<div class="center">Thanks for your purchase and good luck!  You currently');
-$message.=(' own '.$num.' '.pluralise('ticket', $num).'!</div><br />');
+$message = ('<div class="center">Thanks for your purchase and good luck!  You currently');
+$message .= (' own ' . $num . ' ' . pluralise('ticket', $num) . '!</div><br />');
 
-$container=create_container('skeleton.php','bar_main.php');
+$container = create_container('skeleton.php', 'bar_main.php');
 transfer('LocationID');
 $container['message'] = $message;
 forward($container);

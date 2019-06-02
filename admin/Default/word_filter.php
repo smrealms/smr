@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Word Filter');
+$template->assign('PageTopic', 'Word Filter');
 
 if (isset($var['msg'])) {
 	$template->assign('Message', $var['msg']);

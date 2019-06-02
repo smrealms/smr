@@ -6,9 +6,9 @@ if (isset($var['message'])) {
 }
 
 $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
-$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
+$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 
-$template->assign('PageTopic', 'Warps for Galaxy : '.$galaxy->getName().' ('.$galaxy->getGalaxyID().')');
+$template->assign('PageTopic', 'Warps for Galaxy : ' . $galaxy->getName() . ' (' . $galaxy->getGalaxyID() . ')');
 
 
 // Initialize warps array
@@ -21,7 +21,7 @@ foreach ($galaxies as $gal1) {
 }
 
 //get totals
-$db->query('SELECT sector_id, warp FROM sector WHERE warp != 0 AND game_id='.$db->escapeNumber($var['game_id']));
+$db->query('SELECT sector_id, warp FROM sector WHERE warp != 0 AND game_id=' . $db->escapeNumber($var['game_id']));
 while ($db->nextRecord()) {
 	$warp1 = SmrSector::getSector($var['game_id'], $db->getInt('sector_id'));
 	$warp2 = SmrSector::getSector($var['game_id'], $db->getInt('warp'));

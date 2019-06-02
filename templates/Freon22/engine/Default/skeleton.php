@@ -13,7 +13,7 @@
 						<span id="tod"><?php echo $timeDisplay; ?></span>
 					</td>
 					<td class="topcenterCell"><?php
-						if(isset($ThisPlayer)) { ?>
+						if (isset($ThisPlayer)) { ?>
 							<div class="TopInfo">
 								<table class="fullwidth">
 									<tr>
@@ -30,12 +30,12 @@
 												
 												Turns : <span id="turns">
 													<span class="<?php echo $ThisPlayer->getTurnsColor(); ?>"><?php
-															echo $ThisPlayer->getTurns() .'/'.$ThisPlayer->getMaxTurns();
+															echo $ThisPlayer->getTurns() . '/' . $ThisPlayer->getMaxTurns();
 														?></span>
 													</span><br />
 												
 												<span id="newbieturns"><?php
-													if($ThisPlayer->hasNewbieTurns()) {
+													if ($ThisPlayer->hasNewbieTurns()) {
 														?>Newbie Turns: <span style="color: #<?php if ($ThisPlayer->getNewbieTurns() > NEWBIE_TURNS_WARNING_LIMIT) { ?>387C44<?php } else { ?>F00<?php } ?>;"><?php echo $ThisPlayer->getNewbieTurns(); ?></span><br /><?php
 													} ?>
 												</span>
@@ -59,7 +59,7 @@
 														<img src="images/bar_right.gif" width="5" height="10" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" /><br />
 													</span>
 												
-												Alignment: <span id="align"><?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?></span><br />
+												Alignment: <span id="align"><?php echo get_colored_text($ThisPlayer->getAlignment(), number_format($ThisPlayer->getAlignment())); ?></span><br />
 												
 												Alliance: <span id="alliance"><a href="<?php echo Globals::getAllianceHREF($ThisPlayer->getAllianceID()); ?>"><?php
 													echo $ThisPlayer->getAllianceName(false, true); ?></a></span>
@@ -68,25 +68,25 @@
 									</tr>
 								</table>
 								<div class="clear"></div><?php
-								if(isset($MenuItems)||isset($MenuBar)) { ?>
+								if (isset($MenuItems) || isset($MenuBar)) { ?>
 									<div class="bar1Separator"></div>
 									<div class="bar1"><?php
-										if(isset($MenuItems)) {
+										if (isset($MenuItems)) {
 											$this->includeTemplate('includes/menu.inc');
 										}
-										else if(isset($MenuBar)) {
+										else if (isset($MenuBar)) {
 											echo $MenuBar;
 										} ?>
 									</div><?php
 								}
-								else if(isset($SubMenuBar)) {
+								else if (isset($SubMenuBar)) {
 									echo $SubMenuBar;
 								} ?>
 							</div><?php
 						} ?>
 					</td>
 					<td rowspan="2" class="rightCell"><?php
-						if(isset($ThisPlayer)) { ?>
+						if (isset($ThisPlayer)) { ?>
 							<div class="rightInfo noWrap">
 								<div class="messages"><?php
 									$this->includeTemplate('includes/UnreadMessages.inc'); ?>
@@ -105,8 +105,8 @@
 					</td>
 					
 					<td class="centerContent">
-						<div id="middle_panel" class="MainContentArea<?php if(isset($SpaceView)&&$SpaceView){ ?> stars<?php } ?>"><?php
-							if(isset($PageTopic)) {
+						<div id="middle_panel" class="MainContentArea<?php if (isset($SpaceView) && $SpaceView) { ?> stars<?php } ?>"><?php
+							if (isset($PageTopic)) {
 								?><h1><?php echo $PageTopic; ?></h1><br /><?php
 							}
 							$this->includeTemplate($TemplateBody); ?>

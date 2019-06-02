@@ -7,7 +7,7 @@ function get_album_nick($album_id) {
 	return SmrAccount::getAccount($album_id)->getHofName();
 }
 
-$template->assign('PageTopic','Approve Album Entries');
+$template->assign('PageTopic', 'Approve Album Entries');
 
 $db->query('SELECT *
 			FROM album
@@ -51,7 +51,7 @@ if ($db->nextRecord()) {
 	if ($disabled) {
 		$imgSrc = 'upload/0';
 	} else {
-		$imgSrc = 'upload/'.$album_id;
+		$imgSrc = 'upload/' . $album_id;
 	}
 	$template->assign('ImgSrc', $imgSrc);
 
@@ -60,9 +60,9 @@ if ($db->nextRecord()) {
 	$template->assign('Nick', $nick);
 
 	if (!empty($day) && !empty($month) && !empty($year))
-		$birthdate = $month.' / '.$day.' / '.$year;
+		$birthdate = $month . ' / ' . $day . ' / ' . $year;
 	if (empty($birthdate) && !empty($year))
-		$birthdate = 'Year '.$year;
+		$birthdate = 'Year ' . $year;
 	if (empty($birthdate))
 		$birthdate = 'N/A';
 	$template->assign('Birthdate', $birthdate);

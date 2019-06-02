@@ -9,7 +9,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 	<div id="alliance-desc" class="ajax"><?php
 		echo bbifyMessage($Alliance->getDescription()); ?>
 	</div><?php
-	if(isset($EditAllianceDescriptionHREF)) { ?>
+	if (isset($EditAllianceDescriptionHREF)) { ?>
 		<br />
 		<div class="buttonA"><a class="buttonA" href="<?php echo $EditAllianceDescriptionHREF; ?>">Edit</a></div>
 		<br /><?php
@@ -42,10 +42,10 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 				<th class="sort" data-sort="name">Trader Name</th>
 				<th class="sort" data-sort="race">Race</th>
 				<th class="sort" data-sort="experience">Experience</th><?php
-				if($ShowRoles) { ?>
+				if ($ShowRoles) { ?>
 					<th class="sort shrink" data-sort="role">Role</th><?php
 				}
-				if(isset($ActiveIDs)) { ?>
+				if (isset($ActiveIDs)) { ?>
 					<th class="sort shrink" data-sort="status">Status</th><?php
 				} ?>
 			</tr>
@@ -59,7 +59,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 					$Class .= ' bold';
 				}
 				if ($AlliancePlayer->hasNewbieStatus()) {
-					$Class.= ' newbie';
+					$Class .= ' newbie';
 				} ?>
 				<tr id="player-<?php echo $AlliancePlayer->getPlayerID(); ?>" class="ajax<?php echo $Class; ?>">
 					<td><?php
@@ -94,13 +94,13 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 							} ?>
 						</td><?php
 					}
-					if($ThisPlayer->getAllianceID() == $Alliance->getAllianceID()) { ?>
+					if ($ThisPlayer->getAllianceID() == $Alliance->getAllianceID()) { ?>
 						<td class="center status"><?php
-							if(in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
+							if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
 								<span class="green">Online</span><?php
 							}
-							else if($ThisPlayer->getAccountID() == $Alliance->getLeaderID() && $Disabled = SmrAccount::getAccount($AlliancePlayer->getAccountID())->isDisabled()) { ?>
-								<span class="red">Banned Until:<br/><?php echo date(DATE_FULL_SHORT_SPLIT,$Disabled['Time']); ?></span><?php
+							else if ($ThisPlayer->getAccountID() == $Alliance->getLeaderID() && $Disabled = SmrAccount::getAccount($AlliancePlayer->getAccountID())->isDisabled()) { ?>
+								<span class="red">Banned Until:<br/><?php echo date(DATE_FULL_SHORT_SPLIT, $Disabled['Time']); ?></span><?php
 							}
 							else { ?>
 								<span class="red">Offline</span><?php
@@ -134,7 +134,7 @@ if ($CanJoin === true) { ?>
 		<input type="password" name="password" size="30">&nbsp;<input class="submit" type="submit" name="action" value="Join">
 	</form><?php
 }
-else if($CanJoin !== false) { ?>
+else if ($CanJoin !== false) { ?>
 	<br /><?php
 	echo $CanJoin;
 }

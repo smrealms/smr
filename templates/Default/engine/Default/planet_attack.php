@@ -1,13 +1,13 @@
 <?php $this->includeTemplate('includes/PlanetFullCombatResults.inc'); ?><br />
 <br />
 <div class="center"><?php
-if(!$OverrideDeath && !$Planet->isDestroyed()) { ?>
+if (!$OverrideDeath && !$Planet->isDestroyed()) { ?>
 	<div class="buttonA">
 		<a href="<?php echo $Planet->getAttackHREF() ?>" class="buttonA">Continue Attack</a>
 	</div><?php
 }
 else {
-	if($OverrideDeath) {
+	if ($OverrideDeath) {
 		?><span class="red">You have been destroyed.</span><?php
 	}
 	else {
@@ -15,7 +15,7 @@ else {
 	} ?>
 	<br /><br />
 	<div class="buttonA"><?php
-		if($OverrideDeath) {
+		if ($OverrideDeath) {
 			?><a href="<?php echo Globals::getPodScreenHREF() ?>" class="buttonA">Let there be pod</a><?php
 		}
 		else { ?>

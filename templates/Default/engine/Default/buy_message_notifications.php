@@ -1,5 +1,5 @@
 <?php
-if(isset($Message)) {
+if (isset($Message)) {
 	echo $Message; ?>
 	<br /><br /><?php
 }

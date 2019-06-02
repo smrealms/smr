@@ -1,5 +1,5 @@
 <?php
-if(isset($MissionMessage)) { ?>
+if (isset($MissionMessage)) { ?>
 	<span class="green">Mission Complete: </span><?php
 	echo $MissionMessage;
 }

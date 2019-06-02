@@ -11,7 +11,7 @@ class Distance {
 	private $path = array();
 	private $warpMap = array();
 
-	public function __construct($gameID,$_startSectorId) {
+	public function __construct($gameID, $_startSectorId) {
 		$this->gameID = $gameID;
 		$this->addToPath($_startSectorId);
 	}
@@ -29,7 +29,7 @@ class Distance {
 	}
 
 	public function getTotalSectors() {
-		return $this->getDistance()+$this->getNumWarps();
+		return $this->getDistance() + $this->getNumWarps();
 	}
 
 	public function getNumWarps() {
@@ -48,11 +48,11 @@ class Distance {
 	 * @return integer
 	 */
 	public function getEndSectorID() {
-		return $this->path[count($this->path)-1];
+		return $this->path[count($this->path) - 1];
 	}
 
 	public function &getEndSector() {
-		return SmrSector::getSector($this->gameID,$this->getEndSectorID());
+		return SmrSector::getSector($this->gameID, $this->getEndSectorID());
 	}
 
 	/**
@@ -100,7 +100,7 @@ class Distance {
 	}
 
 	public function isInPath($sectorID) {
-		return in_array($sectorID,$this->getPath());
+		return in_array($sectorID, $this->getPath());
 	}
 
 	/**

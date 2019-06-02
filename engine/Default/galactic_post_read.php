@@ -42,7 +42,6 @@ if (!empty($var['paper_id'])) {
 		}
 	}
 	$template->assign('ArticleLayout', $articleLayout);
-}
-else {
+} else {
 	$template->assign('PageTopic', 'Galactic Post');
 }

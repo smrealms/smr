@@ -9,7 +9,7 @@ if (empty($ActiveGames)) {
 	Select Game:&nbsp;
 	<form class="standard" id="SelectGameForm" method="POST" action="">
 		<select name="game_id" onchange="this.form.submit()"><?php
-			foreach($ActiveGames as $Game) {
+			foreach ($ActiveGames as $Game) {
 				$id = $Game['game_id'];
 				$name = $Game['game_name'];
 				$selected = ($SelectedGame == $id ? 'selected="selected"' : '');
@@ -39,7 +39,7 @@ if (empty($ActiveGames)) {
 	} else { ?>
 		Current Editors:
 		<ul><?php
-		foreach($CurrentEditors as $Editor) {
+		foreach ($CurrentEditors as $Editor) {
 			echo "<li>$Editor</li>";
 		} ?>
 		</ul><?php

@@ -8,8 +8,7 @@ if ($action == 'Close') {
 	$db->query('REPLACE INTO game_disable (reason) VALUES (' . $db->escapeString($reason, true) . ');');
 	$db->query('DELETE FROM active_session;');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have closed the server. You will now be logged out!';
-}
-elseif ($action == 'Open') {
+} elseif ($action == 'Open') {
 	$db->query('DELETE FROM game_disable;');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have opened the server.';
 }

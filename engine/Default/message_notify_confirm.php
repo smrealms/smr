@@ -1,7 +1,7 @@
 <?php
 
-if(!isset($var['notified_time']))
-	SmrSession::updateVar('notified_time',TIME);
+if (!isset($var['notified_time']))
+	SmrSession::updateVar('notified_time', TIME);
 
 if (empty($var['message_id']))
 	create_error('Please click the small yellow icon to report a message!');

@@ -9,7 +9,7 @@ foreach ($locations as $location) {
 }
 
 // Determine the current amount of each location
-$galSectors = SmrSector::getGalaxySectors($var['game_id'],$var['gal_on']);
+$galSectors = SmrSector::getGalaxySectors($var['game_id'], $var['gal_on']);
 foreach ($galSectors as $galSector) {
 	foreach ($galSector->getLocations() as $sectorLocation) {
 		$totalLocs[$sectorLocation->getTypeID()]++;
@@ -17,7 +17,7 @@ foreach ($galSectors as $galSector) {
 }
 $template->assign('TotalLocs', $totalLocs);
 
-$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
+$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 $template->assign('Galaxy', $galaxy);
 
 // Though we expect a location to be only in one category, it is possible to
@@ -27,7 +27,7 @@ $template->assign('Galaxy', $galaxy);
 // If multi-category locations becomes common, this code should be modified.
 class Categories {
 	public $locTypes = array();
-	private $locAdded = array();  // list of locs added to a category
+	private $locAdded = array(); // list of locs added to a category
 	public function addLoc($locID, $category) {
 		if (!$this->added($locID)) {
 			$this->locTypes[$category][] = $locID;

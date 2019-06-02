@@ -20,17 +20,17 @@ $this->includeTemplate('includes/JumpDrive.inc'); ?>
 <div class="standard">Select a location to plot to. You are only able to plot to sectors you have explored.</div><br />
 <form class="standard" id="SelectXTypeForm" method="POST" action="">
 	<select name="xtype" class="InputFields" onchange="this.form.submit()"><?php
-	foreach($AllXTypes as $EachXType) {
-		?><option value="<?php echo $EachXType; ?>"<?php if(isset($XType)&&$EachXType==$XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType; ?></option><?php
+	foreach ($AllXTypes as $EachXType) {
+		?><option value="<?php echo $EachXType; ?>"<?php if (isset($XType) && $EachXType == $XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType; ?></option><?php
 	} ?>
 	</select>&nbsp;
 	<input type="submit" value="Select" />
 </form><?php
-if(isset($XType)) { ?>
+if (isset($XType)) { ?>
 	<form class="standard" id="PlotNearestForm" method="POST" action="<?php echo $PlotNearestFormLink; ?>">
 		<input type="hidden" name="xtype" value="<?php echo $XType; ?>" /><br />
 		<select name="X" class="InputFields" onchange="this.form.submit()"><?php
-			switch($XType) {
+			switch ($XType) {
 				case 'Technology':
 					$Hardwares = Globals::getHardwareTypes();
 					foreach ($Hardwares as $Hardware) {
@@ -94,12 +94,12 @@ Add new destinations below. Stored destinations can be organized by dragging.
 
 <script src="js/course_plot.js"></script>
 <div id="droppableObject" class="savedDestinationArea"><?php
-	foreach($StoredDestinations as $SD) { ?>
+	foreach ($StoredDestinations as $SD) { ?>
 		<div class="draggableObject savedDestination"
 			style="top:<?php echo $SD['OffsetTop']; ?>px; left:<?php echo $SD['OffsetLeft']; ?>px"
 			data-sector-id="<?php echo $SD['SectorID']; ?>">
-			<a href="javascript:processCourse(<?php echo $SD['SectorID'];?>)"> <?php echo '#' . $SD['SectorID'] . ' - ' . $SD['Label']; ?></a>
-			<a href="javascript:processRemove(<?php echo $SD['SectorID'];?>)"> <img src="images/silk/cross.png" width="16" height="16" alt="X" title="Delete Saved Sector"/></a>
+			<a href="javascript:processCourse(<?php echo $SD['SectorID']; ?>)"> <?php echo '#' . $SD['SectorID'] . ' - ' . $SD['Label']; ?></a>
+			<a href="javascript:processRemove(<?php echo $SD['SectorID']; ?>)"> <img src="images/silk/cross.png" width="16" height="16" alt="X" title="Delete Saved Sector"/></a>
 		</div><?php
 	} ?>
 </div>

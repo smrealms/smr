@@ -59,7 +59,7 @@ require_once('config.inc');
 						<td width='73%'>
 							<select name="timez" class="InputFields"><?php
 								$time = TIME;
-								for ($i = -12; $i<= 11; $i++) {
+								for ($i = -12; $i <= 11; $i++) {
 									?><option value="<?php echo $i; ?>"><?php echo date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600); ?></option><?php
 								} ?>
 							</select>
@@ -67,7 +67,7 @@ require_once('config.inc');
 					</tr>
 					<tr>
 						<td width='27%'>Referral ID (Optional):</td>
-						<td width='73%'><input type='text' name='referral_id' size='10' maxlength='20' class="InputFields" <?php if(isset($_REQUEST['ref'])){ echo 'value="'.htmlspecialchars($_REQUEST['ref']).'"'; }?>></td>
+						<td width='73%'><input type='text' name='referral_id' size='10' maxlength='20' class="InputFields" <?php if (isset($_REQUEST['ref'])) { echo 'value="' . htmlspecialchars($_REQUEST['ref']) . '"'; }?>></td>
 					</tr>
 					<tr>
 						<td colspan='2'><div class="g-recaptcha" data-sitekey="<?php echo RECAPTCHA_PUBLIC; ?>"></div></td>

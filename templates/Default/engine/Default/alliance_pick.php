@@ -34,7 +34,7 @@ if ($CanPick) { ?>
 	<p>You may not pick until another team picks!<p><?php
 }
 
-if(count($PickPlayers)>0) { ?>
+if (count($PickPlayers) > 0) { ?>
 	<table class="standard">
 		<tr>
 			<th>Action</th>
@@ -43,7 +43,7 @@ if(count($PickPlayers)>0) { ?>
 			<th>HoF Name</th>
 			<th>User Score</th>
 		</tr><?php
-		foreach($PickPlayers as $PickPlayer) { ?>
+		foreach ($PickPlayers as $PickPlayer) { ?>
 			<tr>
 				<td class="center"><?php
 				if ($CanPick) { ?>
@@ -84,9 +84,9 @@ if (count($History) > 0) { ?>
 			<th>HoF Name</th>
 			<th>User Score</th>
 		</tr><?php
-		foreach(array_reverse($History, true) as $i => $Pick) { ?>
+		foreach (array_reverse($History, true) as $i => $Pick) { ?>
 			<tr>
-				<td class="center"><?php echo $i+1; ?></td>
+				<td class="center"><?php echo $i + 1; ?></td>
 				<td><?php echo $Pick['Leader']->getPlayerName(); ?></td>
 				<td><?php echo date(DATE_FULL_SHORT, $Pick['Time']); ?></td>
 				<td><?php echo $Pick['Player']->getPlayerName(); ?></td>

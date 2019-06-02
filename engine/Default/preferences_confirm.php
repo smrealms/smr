@@ -13,7 +13,7 @@ if ($amount <= 0)
 if ($amount > $account->getSmrCredits())
 	create_error('You can\'t transfer more than you have!');
 
-$template->assign('PageTopic','Confirmation');
+$template->assign('PageTopic', 'Confirmation');
 $template->assign('Amount', $amount);
 $template->assign('HofName', SmrAccount::getAccount($account_id)->getHofName());
 

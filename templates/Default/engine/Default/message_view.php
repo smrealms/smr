@@ -12,7 +12,7 @@ if (isset($MessageBoxes)) { ?>
 		</thead>
 		<tbody class="list"><?php
 			foreach ($MessageBoxes as $MessageBox) { ?>
-				<tr id="<?php echo str_replace(' ','-',$MessageBox['Name']);?>" class="ajax<?php if($MessageBox['HasUnread']) { ?> bold<?php } ?>">
+				<tr id="<?php echo str_replace(' ', '-', $MessageBox['Name']); ?>" class="ajax<?php if ($MessageBox['HasUnread']) { ?> bold<?php } ?>">
 					<td class="name">
 						<a href="<?php echo $MessageBox['ViewHref']; ?>"><?php echo $MessageBox['Name']; ?></a>
 					</td>
@@ -55,7 +55,7 @@ else {
 		<table class="fullwidth center">
 			<tr>
 				<td style="width: 30%" valign="middle"><?php
-					if(isset($PreviousPageHREF)) {
+					if (isset($PreviousPageHREF)) {
 						?><a href="<?php echo $PreviousPageHREF; ?>"><img src="images/album/rew.jpg" alt="Previous Page" border="0"></a><?php
 					} ?>
 				</td>
@@ -64,10 +64,10 @@ else {
 																						<option>Marked Messages</option>
 																						<option>All Messages</option>
 																					</select>
-					<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> <?php echo pluralise('message', $MessageBox['TotalMessages']); if($MessageBox['TotalMessages']!=$MessageBox['NumberMessages']){ ?> of which <span class="yellow"><?php echo $MessageBox['NumberMessages']; ?></span> <?php echo pluralise('is', $MessageBox['NumberMessages']); ?> being displayed<?php } ?>.</p>
+					<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> <?php echo pluralise('message', $MessageBox['TotalMessages']); if ($MessageBox['TotalMessages'] != $MessageBox['NumberMessages']) { ?> of which <span class="yellow"><?php echo $MessageBox['NumberMessages']; ?></span> <?php echo pluralise('is', $MessageBox['NumberMessages']); ?> being displayed<?php } ?>.</p>
 				</td>
 				<td style="width: 30%" valign="middle"><?php
-					if(isset($NextPageHREF)) {
+					if (isset($NextPageHREF)) {
 						?><a href="<?php echo $NextPageHREF; ?>"><img src="images/album/fwd.jpg" alt="Next Page" border="0"></a><?php
 					} ?>
 				</td>
@@ -78,19 +78,19 @@ else {
 			?><div class="buttonA"><a class="buttonA" href="<?php echo $MessageBox['ShowAllHref'] ?>">Show all Messages</a></div><br /><br /><?php
 		} ?>
 		<table class="standard fullwidth"><?php
-			if(isset($MessageBox['Messages'])) {
-				foreach($MessageBox['Messages'] as $Message) { ?>
+			if (isset($MessageBox['Messages'])) {
+				foreach ($MessageBox['Messages'] as $Message) { ?>
 					<tr>
-						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>" /><?php if($Message['Unread']) { ?>*<?php } ?></td>
+						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>" /><?php if ($Message['Unread']) { ?>*<?php } ?></td>
 						<td class="noWrap" width="100%"><?php
-							if(isset($Message['ReceiverDisplayName'])) {
+							if (isset($Message['ReceiverDisplayName'])) {
 								?>To: <?php echo $Message['ReceiverDisplayName'];
 							}
 							else {
 								?>From: <?php echo $Message['SenderDisplayName'];
 							} ?>
 						</td>
-						<td class="noWrap"<?php if(!isset($Message['ReplyHref'])) { ?> colspan="4"<?php } ?>>Date: <?php echo $Message['SendTime']; ?></td>
+						<td class="noWrap"<?php if (!isset($Message['ReplyHref'])) { ?> colspan="4"<?php } ?>>Date: <?php echo $Message['SendTime']; ?></td>
 						<?php
 						if (isset($Message['ReplyHref'])) { ?>
 							<td>
@@ -116,7 +116,7 @@ else {
 								<table id="group<?php echo $Message['SenderID']; ?>" class="standard fullwidth" style="display:none;margin:5px 0 2px 0;"><?php
 									foreach ($SubMessages as $SubMessage) { ?>
 										<tr>
-											<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $SubMessage['ID']; ?>" /><?php if($SubMessage['Unread']) { ?>*<?php } ?></td>
+											<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $SubMessage['ID']; ?>" /><?php if ($SubMessage['Unread']) { ?>*<?php } ?></td>
 											<td class="noWrap" width="100%">From: <?php echo $SubMessage['SenderDisplayName']; ?></td>
 											<td class="noWrap" colspan="4">Date: <?php echo $SubMessage['SendTime']; ?></td>
 										</tr>
@@ -135,14 +135,14 @@ else {
 		<table class="fullwidth center">
 			<tr>
 				<td style="width: 30%" valign="middle"><?php
-					if(isset($PreviousPageHREF)) {
+					if (isset($PreviousPageHREF)) {
 						?><a href="<?php echo $PreviousPageHREF; ?>"><img src="images/album/rew.jpg" alt="Previous Page" border="0"></a><?php
 					} ?>
 				</td>
 				<td>
 				</td>
 				<td style="width: 30%" valign="middle"><?php
-					if(isset($NextPageHREF)) {
+					if (isset($NextPageHREF)) {
 						?><a href="<?php echo $NextPageHREF; ?>"><img src="images/album/fwd.jpg" alt="Next Page" border="0"></a><?php
 					} ?>
 				</td>

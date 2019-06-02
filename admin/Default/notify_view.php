@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','Viewing Reported Messages');
+$template->assign('PageTopic', 'Viewing Reported Messages');
 
 require_once(get_file_loc('message.functions.inc'));
 
@@ -21,9 +21,9 @@ while ($db->nextRecord()) {
 	$offender = $sender;
 	if (is_object($sender)) {
 		$sender_acc = $sender->getAccount();
-		$offender = $sender_acc->getLogin().' ('.$sender_acc->getAccountID().')';
+		$offender = $sender_acc->getLogin() . ' (' . $sender_acc->getAccountID() . ')';
 		if ($sender_acc->getLogin() != $sender->getPlayerName()) {
-			$offender .= ' a.k.a '.$sender->getPlayerName();
+			$offender .= ' a.k.a ' . $sender->getPlayerName();
 		}
 	}
 	$senderLink = create_link($container, $offender);
@@ -31,9 +31,9 @@ while ($db->nextRecord()) {
 	$offended = $receiver;
 	if (is_object($receiver)) {
 		$receiver_acc = $receiver->getAccount();
-		$offended = $receiver_acc->getLogin().' ('.$receiver_acc->getAccountID().')';
+		$offended = $receiver_acc->getLogin() . ' (' . $receiver_acc->getAccountID() . ')';
 		if ($receiver_acc->getLogin() != $receiver->getPlayerName()) {
-			$offended .= ' a.k.a '.$receiver->getPlayerName();
+			$offended .= ' a.k.a ' . $receiver->getPlayerName();
 		}
 	}
 	$receiverLink = create_link($container, $offended);

@@ -111,7 +111,7 @@ if (!empty($comment)) {
 	// check if we have comments for this album already
 	$db->lockTable('album_has_comments');
 
-	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.$db->escapeNumber($account->getAccountID()));
+	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
 	if ($db->nextRecord()) {
 		$comment_id = $db->getField('MAX(comment_id)') + 1;
 	}
@@ -144,7 +144,7 @@ function php_link_check($url, $r = FALSE) {
 	*/
 	$url = trim($url);
 	if (!preg_match('=://=', $url)) {
-		$url = 'http://'.$url;
+		$url = 'http://' . $url;
 	}
 	$url = parse_url($url);
 	if (strtolower($url['scheme']) != 'http') {
@@ -169,11 +169,11 @@ function php_link_check($url, $r = FALSE) {
 	}
 	else {
 		$head = '';
-		$httpRequest = 'HEAD '. $url['path'] .' HTTP/1.1'.EOL
-								.'Host: '. $url['host'].EOL
-								.'Connection: close'.EOL.EOL;
+		$httpRequest = 'HEAD ' . $url['path'] . ' HTTP/1.1' . EOL
+								.'Host: ' . $url['host'] . EOL
+								.'Connection: close' . EOL . EOL;
 		fputs($fp, $httpRequest);
-		while(!feof($fp)) {
+		while (!feof($fp)) {
 			$head .= fgets($fp, 1024);
 		}
 		fclose($fp);
@@ -192,7 +192,7 @@ function php_link_check($url, $r = FALSE) {
 		$http['Response-Class'] = $rclass[$http['Status-Code'][0] - 1];
 
 		preg_match_all('=^(.+): ([^\r\n]*)=m', $head, $matches, PREG_SET_ORDER);
-		foreach($matches as $line) {
+		foreach ($matches as $line) {
 			$http[$line[1]] = $line[2];
 		}
 

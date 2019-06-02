@@ -9,8 +9,8 @@
 				<h2>Alliance Search</h2>
 				<select name="allianceID" class="InputFields">
 					<option value="-1">Select an alliance</option><?php
-					if(isset($NewsAlliances) && count($NewsAlliances)>0) {
-						foreach($NewsAlliances as $NewsAlliance) {
+					if (isset($NewsAlliances) && count($NewsAlliances) > 0) {
+						foreach ($NewsAlliances as $NewsAlliance) {
 							?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
 						}
 					} ?>
@@ -33,8 +33,8 @@
 					<h2>Alliance Vs Alliance Search</h2>
 					<select name="alliance1" class="InputFields">
 						<option value="-1">Select an alliance</option><?php
-						if(isset($NewsAlliances) && count($NewsAlliances)>0) {
-							foreach($NewsAlliances as $NewsAlliance) {
+						if (isset($NewsAlliances) && count($NewsAlliances) > 0) {
+							foreach ($NewsAlliances as $NewsAlliance) {
 								?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
 							}
 						} ?>
@@ -42,8 +42,8 @@
 						vs.
 					<select name="alliance2" class="InputFields">
 						<option value="-1">Select an alliance</option><?php
-						if(isset($NewsAlliances) && count($NewsAlliances)>0) {
-							foreach($NewsAlliances as $NewsAlliance) {
+						if (isset($NewsAlliances) && count($NewsAlliances) > 0) {
+							foreach ($NewsAlliances as $NewsAlliance) {
 								?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
 							}
 						} ?>

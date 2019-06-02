@@ -1,5 +1,5 @@
 <?php
-if(isset($GameID)) { ?>
+if (isset($GameID)) { ?>
 	<div class="LeftNavOne noWrap"><?php
 		// Use the current sector link for Planet Main to enable the hotkey
 		if ($ThisPlayer->isLandedOnPlanet()) { ?>
@@ -8,7 +8,7 @@ if(isset($GameID)) { ?>
 			<a class="leftNav bold" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Current Sector</a><br />
 			<a class="leftNav bold" href="<?php echo Globals::getLocalMapHREF(); ?>">Local Map</a><br /><?php
 		}
-		if(isset($PlotCourseLink)) {
+		if (isset($PlotCourseLink)) {
 			?><a class="leftNav" href="<?php echo $PlotCourseLink; ?>">Plot A Course</a><br /><?php
 		} ?>
 		<a class="leftNav" href="map_galaxy.php" target="gal_map">Galaxy Map</a><br />
@@ -38,10 +38,10 @@ if(isset($GameID)) { ?>
 } ?>
 
 <div class="LeftNavTwo noWrap"><?php
-	if(isset($AccountID)) {
+	if (isset($AccountID)) {
 		?><a class="leftNav" href="<?php echo $PlayGameLink; ?>">Play Game</a><br />
 			<a class="leftNav" href="<?php echo $PreferencesLink; ?>">Preferences</a><br /><?php
-			if($ThisAccount->hasPermission()) { ?>
+			if ($ThisAccount->hasPermission()) { ?>
 				<a class="leftNav" href="<?php echo $AdminToolsLink; ?>">Admin Tools</a><br /><?php
 			} ?>
 			<a class="leftNav" href="<?php echo $LogoutLink; ?>">Logout</a><br />
@@ -51,18 +51,18 @@ if(isset($GameID)) { ?>
 		?><a class="leftNav" href="login.php">Login</a><br /><?php
 	} ?>
 	<a class="leftNav" href="manual.php" target="manual">Manual</a><br /><?php
-	if(isset($GameID)) {
+	if (isset($GameID)) {
 		?><a class="leftNav" href="<?php echo Globals::getSmrFileCreateHREF(); ?>" target="_self">DL Sectors File</a><br /><?php
 	} ?>
 	<a class="leftNav" href="<?php echo $EditPhotoLink; ?>">Edit Photo</a><br />
 	<a class="leftNav" href="album/" target="album">View Album</a><br /><br /><?php
-	if(Globals::isFeatureRequestOpen()) {
+	if (Globals::isFeatureRequestOpen()) {
 		?><a class="leftNav" href="<?php echo Globals::getFeatureRequestHREF(); ?>">Request A Feature</a><br /><?php
 	} ?>
 	<a class="leftNav" href="<?php echo $ReportABugLink; ?>">Report A Bug</a><br />
 	<a class="leftNav" href="<?php echo $ContactFormLink; ?>">Contact Form</a><br />
 	<br /><?php
-	if(isset($GameID)) {
+	if (isset($GameID)) {
 		?><a class="leftNav" href="<?php echo $IRCLink; ?>">IRC Chat</a><br /><?php
 	} ?>
 	<a class="leftNav" href="http://smrcnn.smrealms.de/viewtopic.php?f=1&amp;t=9705" target="policy">User Policy</a><br />
