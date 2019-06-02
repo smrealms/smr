@@ -35,13 +35,13 @@ const DONATION_NAME = 'Money Donated To SMR';
 const USER_SCORE_NAME = 'User Score';
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
 while ($db->nextRecord()) {
-	$hof = & $hofTypes;
+	$hof =& $hofTypes;
 	$typeList = explode(':', $db->getField('type'));
 	foreach ($typeList as $type) {
 		if (!isset($hof[$type])) {
 			$hof[$type] = array();
 		}
-		$hof = & $hof[$type];
+		$hof =& $hof[$type];
 	}
 	$hof = true;
 }
