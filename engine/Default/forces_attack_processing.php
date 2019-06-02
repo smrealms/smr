@@ -72,18 +72,18 @@ foreach ($attackers as $attacker) {
 
 // If mines are bumped, the forces shoot first. Otherwise player shoots first.
 if ($bump) {
-	$results['Forces'] = & $forces->shootPlayers($attackers, $bump);
+	$results['Forces'] =& $forces->shootPlayers($attackers, $bump);
 }
 
 $results['Attackers'] = array('TotalDamage' => 0);
 foreach ($attackers as $attacker) {
-	$playerResults = & $attacker->shootForces($forces);
-	$results['Attackers']['Traders'][$attacker->getAccountID()] = & $playerResults;
+	$playerResults =& $attacker->shootForces($forces);
+	$results['Attackers']['Traders'][$attacker->getAccountID()] =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 }
 
 if (!$bump) {
-	$results['Forces'] = & $forces->shootPlayers($attackers, $bump);
+	$results['Forces'] =& $forces->shootPlayers($attackers, $bump);
 	$forces->updateExpire();
 }
 
