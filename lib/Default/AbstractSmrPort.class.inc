@@ -1180,7 +1180,7 @@ class AbstractSmrPort {
 			do {
 				$targetPlayer = $targetPlayers[array_rand($targetPlayers)];
 			} while ($results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] > min($results['TotalShotsPerTargetPlayer']));
-			$results['Weapons'][$orderID] = & $weapon->shootPlayerAsPort($this, $targetPlayer);
+			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPort($this, $targetPlayer);
 			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()]++;
 			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
@@ -1189,7 +1189,7 @@ class AbstractSmrPort {
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs(), true);
-			$results['Drones'] = & $thisCDs->shootPlayerAsPort($this, $targetPlayers[array_rand($targetPlayers)]);
+			$results['Drones'] =& $thisCDs->shootPlayerAsPort($this, $targetPlayers[array_rand($targetPlayers)]);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
