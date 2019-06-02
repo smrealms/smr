@@ -3,11 +3,11 @@
 	Don't keep unnecessary data!
 </p><?php
 
-if (count($LoggedAccounts)>0) { ?>
+if (count($LoggedAccounts) > 0) { ?>
 	<form method="POST" action="<?php echo $LogConsoleFormHREF; ?>"><?php
 
 		// put hidden fields in for log type to have all fields selected on next page.
-		foreach($LogTypes as $LogType) { ?>
+		foreach ($LogTypes as $LogType) { ?>
 			<input type="hidden" name="log_type_ids[<?php echo $LogType; ?>]" value="1"><?php
 		} ?>
 		
@@ -19,11 +19,11 @@ if (count($LoggedAccounts)>0) { ?>
 				<th>Notes</th>
 			</tr><?php
 	
-			foreach($LoggedAccounts as $LoggedAccount) { ?>
+			foreach ($LoggedAccounts as $LoggedAccount) { ?>
 				<tr>
 					<td valign="top"><?php echo $LoggedAccount['Login']; ?></td>
 					<td valign="top" class="center"><?php echo $LoggedAccount['TotalEntries']; ?></td>
-					<td valign="middle" class="center"><input type="checkbox" name="account_ids[]" value="<?php echo $LoggedAccount['AccountID']; ?>"<?php if($LoggedAccount['Checked']){ ?> checked="checked"<?php } ?>></td>
+					<td valign="middle" class="center"><input type="checkbox" name="account_ids[]" value="<?php echo $LoggedAccount['AccountID']; ?>"<?php if ($LoggedAccount['Checked']) { ?> checked="checked"<?php } ?>></td>
 					<td><?php echo $LoggedAccount['Notes']; ?></td>
 				</tr><?php
 			} ?>

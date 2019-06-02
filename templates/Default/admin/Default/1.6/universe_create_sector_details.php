@@ -16,7 +16,7 @@
 	<h2>Port</h2>
 	<select name="port_level" class="InputFields">
 		<option value="0">No Port</option><?php
-		for ($i=1; $i<=SmrPort::MAX_LEVEL; $i++) { ?>
+		for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) { ?>
 			<option value="<?php echo $i; ?>" <?php echo ($i == $SelectedPortLevel ? 'selected' : ''); ?>>Level <?php echo $i; ?></option><?php
 		} ?>
 	</select>&nbsp;
@@ -65,7 +65,7 @@
 		<tr>
 			<td class="center noWrap">
 				<?php
-				for ($i=0; $i<UNI_GEN_LOCATION_SLOTS; $i++) { ?>
+				for ($i = 0; $i < UNI_GEN_LOCATION_SLOTS; $i++) { ?>
 					<b><?php echo ($i + 1); ?>. </b>
 					<select name="loc_type<?php echo $i; ?>" class="InputFields">
 						<option value="0">No Location</option><?php

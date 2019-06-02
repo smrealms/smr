@@ -17,7 +17,7 @@ if (empty($DisabledGames)) { ?>
 			<tr>
 				<td class="center">
 					<select name="game_id"><?php
-						foreach($DisabledGames as $Game) {
+						foreach ($DisabledGames as $Game) {
 							$id = $Game['game_id'];
 							$name = $Game['game_name'];
 							echo "<option value=\"$id\">$name ($id)</option>";

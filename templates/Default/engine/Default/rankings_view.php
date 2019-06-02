@@ -9,7 +9,7 @@ You are ranked as a <font size="4" color="greenyellow"><?php echo $ThisAccount->
 	foreach (Globals::getUserRanking() as $rankID => $rankName) { ?>
 		<tr>
 			<td><?php echo $rankName; ?></td>
-			<td class="center"><?php echo ceil(pow((max(0,$rankID-1))*SmrAccount::USER_RANKINGS_RANK_BOUNDARY,1/SmrAccount::USER_RANKINGS_TOTAL_SCORE_POW)); ?></td>
+			<td class="center"><?php echo ceil(pow((max(0, $rankID - 1)) * SmrAccount::USER_RANKINGS_RANK_BOUNDARY, 1 / SmrAccount::USER_RANKINGS_TOTAL_SCORE_POW)); ?></td>
 		</tr><?php
 	} ?>
 </table>

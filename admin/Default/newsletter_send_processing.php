@@ -20,9 +20,9 @@ function set_mail_body($mail, $newsletterHtml, $newsletterText, $salutation) {
 	}
 
 	// Set the body text, giving preference to HTML
-	if(!empty($newsletterHtml)) {
+	if (!empty($newsletterHtml)) {
 		$mail->msgHTML($newsletterHtml);
-		if(!empty($newsletterText)) {
+		if (!empty($newsletterText)) {
 			$mail->AltBody = $newsletterText;
 		}
 	} else {
@@ -37,12 +37,12 @@ function set_mail_body($mail, $newsletterHtml, $newsletterText, $salutation) {
 set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text'],
               $_REQUEST['salutation']);
 
-if($_REQUEST['to_email']=='*') {
+if ($_REQUEST['to_email'] == '*') {
 	// Send the newsletter to all players.
 	// Disable output buffering here so we can monitor the progress.
-	header('X-Accel-Buffering: no');    // disable Nginx output buffering
-	ob_implicit_flush();    // instruct PHP to flush after every output call
-	ob_end_flush();     // turn off PHP output buffering
+	header('X-Accel-Buffering: no'); // disable Nginx output buffering
+	ob_implicit_flush(); // instruct PHP to flush after every output call
+	ob_end_flush(); // turn off PHP output buffering
 
 	$db->query('SELECT account_id, email, login FROM account WHERE validated="TRUE" AND email NOT IN ("noone@smrealms.de","NPC@smrealms.de") AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
 
@@ -59,9 +59,9 @@ if($_REQUEST['to_email']=='*') {
 
 	while ($db->nextRecord()) {
 		// get account data
-		$account_id	= $db->getField('account_id');
-		$to_email	= $db->getField('email');
-		$to_name	= $db->getField('login');
+		$account_id = $db->getField('account_id');
+		$to_email = $db->getField('email');
+		$to_name = $db->getField('login');
 
 		// Reset the message body with personalized salutation, if requested
 		if ($_REQUEST['salutation']) {
@@ -70,21 +70,21 @@ if($_REQUEST['to_email']=='*') {
 		}
 
 		// debug output
-		echo '['.$account_id.'] Preparing mail for '.$to_name.' ('.$to_email.')... ';
+		echo '[' . $account_id . '] Preparing mail for ' . $to_name . ' (' . $to_email . ')... ';
 
 		// set a bounce address we can process later
 		$mail->addReplyTo('bounce_' . $account_id . '@smrealms.de', 'SMR Support');
 		$mail->addAddress($to_email, $to_name);
 
 		if (!$mail->send()) {
-			echo 'error.'.EOL . $mail->ErrorInfo;
+			echo 'error.' . EOL . $mail->ErrorInfo;
 			exit;
 		}
 
 		$sent++;
 		echo 'sent.<br />';
 		if (($sent % 10) == 0) {
-			echo 'Sent '. $sent . ' of ' . $total . ' mails.<br /><br />';
+			echo 'Sent ' . $sent . ' of ' . $total . ' mails.<br /><br />';
 		}
 
 		// Clear all addresses for next loop
@@ -92,7 +92,7 @@ if($_REQUEST['to_email']=='*') {
 		$mail->clearAddresses();
 	}
 
-	echo '<br />Done! Total '.$sent.' mails sent.';
+	echo '<br />Done! Total ' . $sent . ' mails sent.';
 	release_lock();
 	exit();
 }
@@ -102,7 +102,7 @@ else {
 	$mail->addAddress($_REQUEST['to_email'], $_REQUEST['to_email']);
 
 	if (!$mail->send()) {
-		echo 'error.'.EOL . $mail->ErrorInfo;
+		echo 'error.' . EOL . $mail->ErrorInfo;
 		exit;
 	}
 }

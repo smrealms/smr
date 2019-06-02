@@ -29,9 +29,9 @@ class PlayingCard {
 	/**
 	 * Create a specific or random card in the deck.
 	 */
-	public function __construct($cardID=null) {
+	public function __construct($cardID = null) {
 		if (is_null($cardID)) {
-			$this->cardID = rand(0, self::MAX_CARDS-1);
+			$this->cardID = rand(0, self::MAX_CARDS - 1);
 		} else {
 			$this->cardID = $cardID;
 		}

@@ -20,8 +20,7 @@
 		<td><?php
 			if ($ThisPlanet->hasOwner()) {
 				echo $ThisPlanet->getOwner()->getLinkedDisplayName(false);
-			}
-			else { ?>
+			} else { ?>
 				Unclaimed<?php
 			} ?>
 		</td>
@@ -31,8 +30,7 @@
 		<td><?php
 			if ($ThisPlanet->hasOwner()) {
 				echo $ThisPlanet->getOwner()->getAllianceName(true);
-			}
-			else { ?>
+			} else { ?>
 				none<?php
 			} ?>
 		</td>
@@ -46,8 +44,7 @@
 		<td><?php
 			if ($ThisPlanet->getMaxLanded() == 0) { ?>
 				The planetary surface can support an entire armada!<?php
-			}
-			else { ?>
+			} else { ?>
 				There is only room for <?php echo $ThisPlanet->getMaxLanded(); ?> ships on the surface.<?php
 			} ?>
 		</td>
@@ -58,11 +55,9 @@
 <div class="center"><?php
 	if (!$PlanetLand) { ?>
 		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getAttackHREF(); ?>">Attack Planet (3)</a></div><?php
-	}
-	elseif ($ThisPlanet->isInhabitable()) { ?>
+	} elseif ($ThisPlanet->isInhabitable()) { ?>
 		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getLandHREF(); ?>">Land on Planet (1)</a></div><?php
-	}
-	else { ?>
+	} else { ?>
 		The planet is <span class="uninhab">uninhabitable</span> at this time.<?php
 	} ?>
 </div>

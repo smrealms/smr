@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Log Console');
+$template->assign('PageTopic', 'Log Console');
 
 $loggedAccounts = array();
 
@@ -18,7 +18,7 @@ if ($db->getNumRows()) {
 								'Checked' => isset($var['account_ids']) && in_array($accountID, $var['account_ids']),
 								'Notes' => '');
 
-		$db2->query('SELECT notes FROM log_has_notes WHERE account_id = '.$db2->escapeNumber($accountID));
+		$db2->query('SELECT notes FROM log_has_notes WHERE account_id = ' . $db2->escapeNumber($accountID));
 		if ($db2->nextRecord())
 			$loggedAccounts[$accountID]['Notes'] = nl2br($db2->getField('notes'));
 	}
@@ -33,4 +33,4 @@ if ($db->getNumRows()) {
 	$template->assign('LogConsoleFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_console_detail.php')));
 	$template->assign('AnonAccessHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_anonymous_account.php')));
 }
-$template->assign('LoggedAccounts',$loggedAccounts);
+$template->assign('LoggedAccounts', $loggedAccounts);

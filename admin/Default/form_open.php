@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Open/Close Forms');
+$template->assign('PageTopic', 'Open/Close Forms');
 
 
 $container = create_container('form_open_processing.php');

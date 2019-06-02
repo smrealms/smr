@@ -41,7 +41,7 @@ if (!empty($BankTransactions)) { ?>
 				</tr>
 			</table>
 		</form><?php
-		if($CanExempt) {
+		if ($CanExempt) {
 			?><form class="standard" method="POST" action="<?php echo $ExemptTransactionsFormHREF; ?>"><?php
 		} ?>
 			<table class="standard inset center">
@@ -52,37 +52,37 @@ if (!empty($BankTransactions)) { ?>
 					<th>Reason for transfer</th>
 					<th class="shrink">Withdrawal</th>
 					<th class="shrink">Deposit</th><?php
-					if($CanExempt) {
+					if ($CanExempt) {
 						?><th class="shrink noWrap">Make Exempt</th><?php
 					} ?>
 				</tr><?php
-				foreach($BankTransactions as $TransactionID => $BankTransaction) { ?>
+				foreach ($BankTransactions as $TransactionID => $BankTransaction) { ?>
 					<tr>
 						<td><?php echo number_format($TransactionID); ?></td>
 						<td class="noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $BankTransaction['Time']); ?></td>
 						<td class="left"><?php
-							if($BankTransaction['Exempt']) {
+							if ($BankTransaction['Exempt']) {
 								?>Alliance Funds c/o<br /><?php
 							}
 							echo $BankTransaction['Player']->getLinkedDisplayName(); ?>
 						</td>
 						<td class="left"><?php echo $BankTransaction['Reason']; ?></td>
-						<td><?php if(is_numeric($BankTransaction['Withdrawal'])){ echo number_format($BankTransaction['Withdrawal']); }else{ ?>&nbsp;<?php } ?></td>
-						<td><?php if(is_numeric($BankTransaction['Deposit'])){ echo number_format($BankTransaction['Deposit']); }else{ ?>&nbsp;<?php } ?></td><?php
+						<td><?php if (is_numeric($BankTransaction['Withdrawal'])) { echo number_format($BankTransaction['Withdrawal']); } else { ?>&nbsp;<?php } ?></td>
+						<td><?php if (is_numeric($BankTransaction['Deposit'])) { echo number_format($BankTransaction['Deposit']); } else { ?>&nbsp;<?php } ?></td><?php
 						if ($CanExempt) { ?>
-							<td><input type="checkbox" name="exempt[<?php echo $TransactionID; ?>]" value="true"<?php if($BankTransaction['Exempt']){ ?> checked="checked"<?php } ?>></td><?php
+							<td><input type="checkbox" name="exempt[<?php echo $TransactionID; ?>]" value="true"<?php if ($BankTransaction['Exempt']) { ?> checked="checked"<?php } ?>></td><?php
 						} ?>
 					</tr><?php
 				} ?>
 				<tr>
 					<th colspan="5" class="right">Ending Balance</th>
 					<td class="bold right"><?php echo number_format($Alliance->getAccount()); ?></td><?php
-					if($CanExempt) {
+					if ($CanExempt) {
 						?><td><input class="submit" type="submit" name="action" value="Make Exempt"></td><?php
 					} ?>
 				</tr>
 			</table><?php
-		if($CanExempt) {
+		if ($CanExempt) {
 			?></form><?php
 		} ?>
 	</div>

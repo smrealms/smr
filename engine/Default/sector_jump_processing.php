@@ -46,7 +46,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Calculate Turn Cost') {
 
 if ($sector->hasForces()) {
 	foreach ($sector->getForces() as $forces) {
-		if($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
+		if ($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
 			create_error('You cannot jump when there are hostile mines in the sector!');
 		}
 	}
@@ -64,30 +64,30 @@ if ($player->getTurns() < $turnsToJump)
 	create_error('You don\'t have enough turns for that jump!');
 
 // send scout msg
-$sector->leavingSector($player,MOVEMENT_JUMP);
+$sector->leavingSector($player, MOVEMENT_JUMP);
 
 // Move the user around
 // TODO: (Must be done while holding both sector locks)
-$misjump = mt_rand(0,$maxMisjump);
+$misjump = mt_rand(0, $maxMisjump);
 if ($misjump > 0) { // we missed the sector
 	$distances = Plotter::findDistanceToX('Distance', $targetSector, false, null, null, $misjump);
-	while(count($distances[$misjump]) == 0) {
+	while (count($distances[$misjump]) == 0) {
 		$misjump--;
 	}
 		
 	$misjumpSector = array_rand($distances[$misjump]);
-	if($misjumpSector == null)
-		throw new Exception('Misjump sector is null, distances: ' . var_export ($distances, true));
+	if ($misjumpSector == null)
+		throw new Exception('Misjump sector is null, distances: ' . var_export($distances, true));
 	$player->setSectorID($misjumpSector);
 	unset($distances);
 }
 else { // we hit it. exactly
 	$player->setSectorID($targetSector->getSectorID());
 }
-$player->takeTurns($turnsToJump,$turnsToJump);
+$player->takeTurns($turnsToJump, $turnsToJump);
 
 // log action
-$account->log(LOG_TYPE_MOVEMENT, 'Jumps to sector: '.$target.' but hits: '.$player->getSectorID(), $sector->getSectorID());
+$account->log(LOG_TYPE_MOVEMENT, 'Jumps to sector: ' . $target . ' but hits: ' . $player->getSectorID(), $sector->getSectorID());
 
 $player->update();
 
@@ -104,16 +104,16 @@ $sector = $player->getSector();
 $sector->markVisited($player);
 
 // send scout msg
-$sector->enteringSector($player,MOVEMENT_JUMP);
+$sector->enteringSector($player, MOVEMENT_JUMP);
 
 $mineOwnerID = false;
 foreach ($sector->getForces() as $forces) {
-	if(!$mineOwnerID && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
+	if (!$mineOwnerID && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
 		$mineOwnerID = $forces->getOwnerID();
 		break;
 	}
 }
-if($mineOwnerID) {
+if ($mineOwnerID) {
 	if ($player->hasNewbieTurns()) {
 		$container = create_container('skeleton.php', 'current_sector.php');
 		$container['msg'] = 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.';

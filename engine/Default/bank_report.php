@@ -1,6 +1,6 @@
 <?php
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
 const WITHDRAW = 0;
@@ -59,7 +59,7 @@ $text = '<div class="center"><br />Ending Balance: ' . number_format($balance) .
 $template->assign('BankReport', $text);
 
 if (!isset($var['sent_report'])) {
-	$container=create_container('bank_report_processing.php');
+	$container = create_container('bank_report_processing.php');
 	$container['alliance_id'] = $alliance_id;
 	$container['text'] = $text;
 	$template->assign('SendReportHREF', SmrSession::getNewHREF($container));

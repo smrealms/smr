@@ -2,7 +2,7 @@
 <html>
 	<head><?php
 		$this->includeTemplate('includes/Head.inc');
-		if(isset($FocusSector)) { ?>
+		if (isset($FocusSector)) { ?>
 			<script>
 				$(function() {
 					var focusSector = $('#sector<?php echo $FocusSector; ?>'),
@@ -34,7 +34,7 @@
 							<select name="galaxy_id" id="galaxy_id" class="InputFields" onchange="this.form.submit()"><?php
 								foreach ($GameGalaxies as $GameGalaxy) {
 									$GalaxyID = $GameGalaxy->getGalaxyID(); ?>
-									<option value="<?php echo $GalaxyID; ?>"<?php if($ThisGalaxy->equals($GameGalaxy)){ ?> selected="selected"<?php } ?>>
+									<option value="<?php echo $GalaxyID; ?>"<?php if ($ThisGalaxy->equals($GameGalaxy)) { ?> selected="selected"<?php } ?>>
 									<?php echo $GameGalaxy->getName(); ?>
 									</option><?php
 								} ?>
@@ -56,7 +56,7 @@
 		</div>
 
 		<div class="gal_map_main">
-			<?php $this->includeTemplate('includes/SectorMap.inc',array('GalaxyMap'=>true)); ?>
+			<?php $this->includeTemplate('includes/SectorMap.inc', array('GalaxyMap'=>true)); ?>
 		</div>
 	</body>
 </html>

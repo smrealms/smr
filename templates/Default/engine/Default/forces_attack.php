@@ -1,13 +1,13 @@
 <?php $this->includeTemplate('includes/ForceFullCombatResults.inc'); ?><br />
 <br />
 <div class="center"><?php
-	if(isset($Target)) { ?>
+	if (isset($Target)) { ?>
 		<div class="buttonA">
 			<a href="<?php echo $Target->getAttackForcesHREF() ?>" class="buttonA">Continue Attack (<?php echo $Target->getAttackTurnCost($ThisShip); ?>)</a>
 		</div><?php
 	}
 	else {
-		if($OverrideDeath) {
+		if ($OverrideDeath) {
 			?><span class="red">You have been destroyed.</span><?php
 		}
 		else {
@@ -15,7 +15,7 @@
 		} ?>
 		<br /><br />
 		<div class="buttonA"><?php
-		if($OverrideDeath) {
+		if ($OverrideDeath) {
 			?><a href="<?php echo Globals::getPodScreenHREF() ?>" class="buttonA">Let there be pod</a><?php
 		}
 		else {

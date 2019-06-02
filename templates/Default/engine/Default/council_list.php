@@ -32,7 +32,7 @@
 
 	<h3>Council Members</h3><br /><?php
 	$CouncilMembers = Council::getRaceCouncil($ThisPlayer->getGameID(), $RaceID);
-	if(count($CouncilMembers) > 0) { ?>
+	if (count($CouncilMembers) > 0) { ?>
 		<table id="council-members" class="center standard" width="85%">
 			<thead>
 				<tr>
@@ -44,7 +44,7 @@
 				</tr>
 			</thead>
 			<tbody class="list"><?php
-				foreach($CouncilMembers as $Ranking => $AccountID) {
+				foreach ($CouncilMembers as $Ranking => $AccountID) {
 					$CouncilPlayer = SmrPlayer::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
 					<tr id="player-<?php echo $CouncilPlayer->getPlayerID(); ?>" class="ajax<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> bold<?php } ?>">
 						<td><?php echo $Ranking; ?></td>
@@ -65,7 +65,7 @@
 
 <b>View Council For:</b><br /><?php
 foreach (Globals::getRaces() as $RaceID => $RaceInfo) {
-	if($RaceID != RACE_NEUTRAL) { ?>
+	if ($RaceID != RACE_NEUTRAL) { ?>
 		<span class="smallFont"><?php
 			echo $ThisPlayer->getColouredRaceName($RaceID, true); ?>
 		</span><br /><?php

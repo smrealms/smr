@@ -3,11 +3,11 @@
 $template->assign('PageTopic', 'Edit Paper');
 Menu::galactic_post();
 
-$db->query('SELECT * FROM galactic_post_paper WHERE paper_id = '.$db->escapeNumber($var['id']).' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+$db->query('SELECT * FROM galactic_post_paper WHERE paper_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 $db->nextRecord();
 $template->assign('PaperTitle', bbifyMessage($db->getField('title')));
 
-$db->query('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE paper_id = '.$db->escapeNumber($var['id']).' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+$db->query('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE paper_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 
 $articles = [];
 while ($db->nextRecord()) {

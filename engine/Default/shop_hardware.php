@@ -1,6 +1,6 @@
 <?php
 
-if(!$player->getSector()->hasLocation($var['LocationID'])) {
+if (!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
 

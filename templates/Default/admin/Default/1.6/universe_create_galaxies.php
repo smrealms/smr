@@ -16,7 +16,7 @@
 				Forces Expire<br />
 				(Decimals Allowed)</th>
 			</tr><?php
-		for ($i=1;$i<=$NumGals;++$i) {
+		for ($i = 1; $i <= $NumGals; ++$i) {
 			?><tr>
 				<td class="center"><?php echo $i; ?></td>
 				<td><input required type="text" value="<?php if (isset($DefaultNames[$i])) { echo htmlspecialchars($DefaultNames[$i]); } ?>" name="gal<?php echo $i; ?>"></td>
@@ -24,7 +24,7 @@
 				<td><input required class="center" type="number" min="1" max="100" value="15" name="height<?php echo $i; ?>"></td>
 				<td>
 					<select name="type<?php echo $i; ?>" class="InputFields"><?php
-					foreach($GalaxyTypes as $GalaxyType) {
+					foreach ($GalaxyTypes as $GalaxyType) {
 						?><option value="<?php echo htmlspecialchars($GalaxyType); ?>"><?php echo $GalaxyType; ?></option><?php
 					} ?>
 					</select>

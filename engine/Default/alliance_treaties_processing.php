@@ -1,7 +1,9 @@
 <?php
 
 //get the alliances
-if (!$player->hasAlliance()) create_error('You are not in an alliance!');
+if (!$player->hasAlliance()) {
+	create_error('You are not in an alliance!');
+}
 $alliance_id_1 = $var['alliance_id_1'];
 $alliance_id_2 = $player->getAllianceID();
 
@@ -29,8 +31,7 @@ if ($var['accept']) {
 				VALUES (' . $db->escapeNumber($alliance_id_A) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString($allianceName) . ',1)');
 		}
 	}
-}
-else {
+} else {
 	$db->query('DELETE FROM alliance_treaties WHERE alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' AND alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 }
 

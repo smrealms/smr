@@ -5,12 +5,12 @@ require_once(LIB . 'Default/shop_goods.inc');
 // create object from port we can work with
 $port = $player->getSectorPort();
 
-$tradeable = checkPortTradeable($port,$player);
-if($tradeable!==true)
+$tradeable = checkPortTradeable($port, $player);
+if ($tradeable !== true)
 	create_error($tradeable);
 
 // topic
-$template->assign('PageTopic','Port In Sector #'.$player->getSectorID());
+$template->assign('PageTopic', 'Port In Sector #' . $player->getSectorID());
 $template->assign('Port', $port);
 
 $container = create_container('skeleton.php', 'council_list.php');
@@ -42,10 +42,10 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 	$rand = mt_rand(1, 100);
 	if ($rand <= $base_chance) {
 		$searchedByFeds = true;
-		$player->increaseHOF(1,array('Trade','Search','Total'), HOF_PUBLIC);
+		$player->increaseHOF(1, array('Trade', 'Search', 'Total'), HOF_PUBLIC);
 		if ($ship->hasIllegalGoods()) {
 			$template->assign('IllegalsFound', true);
-			$player->increaseHOF(1,array('Trade','Search','Caught','Number Of Times'), HOF_PUBLIC);
+			$player->increaseHOF(1, array('Trade', 'Search', 'Caught', 'Number Of Times'), HOF_PUBLIC);
 			//find the fine
 			//get base for ports that dont happen to trade that good
 			$GOODS = Globals::getGoods();
@@ -53,16 +53,16 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 			    (($ship->getCargo(GOODS_SLAVES) * $GOODS[GOODS_SLAVES]['BasePrice']) +
 			     ($ship->getCargo(GOODS_WEAPONS) * $GOODS[GOODS_WEAPONS]['BasePrice']) +
 			     ($ship->getCargo(GOODS_NARCOTICS) * $GOODS[GOODS_NARCOTICS]['BasePrice']));
-			$player->increaseHOF($ship->getCargo(GOODS_SLAVES) + $ship->getCargo(GOODS_WEAPONS) + $ship->getCargo(GOODS_NARCOTICS), array('Trade','Search','Caught','Goods Confiscated'), HOF_PUBLIC);
-			$player->increaseHOF($totalFine,array('Trade','Search','Caught','Amount Fined'), HOF_PUBLIC);
+			$player->increaseHOF($ship->getCargo(GOODS_SLAVES) + $ship->getCargo(GOODS_WEAPONS) + $ship->getCargo(GOODS_NARCOTICS), array('Trade', 'Search', 'Caught', 'Goods Confiscated'), HOF_PUBLIC);
+			$player->increaseHOF($totalFine, array('Trade', 'Search', 'Caught', 'Amount Fined'), HOF_PUBLIC);
 			$template->assign('TotalFine', $totalFine);
 
-			if($fine > $player->getCredits()) {
+			if ($fine > $player->getCredits()) {
 				$fine -= $player->getCredits();
 				$player->decreaseCredits($player->getCredits());
 				if ($fine > 0) {
 					// because credits is 0 it will take money from bank
-					$player->decreaseBank(min($fine,$player->getBank()));
+					$player->decreaseBank(min($fine, $player->getBank()));
 					// leave insurance
 					if ($player->getBank() < 5000)
 						$player->setBank(5000);
@@ -83,7 +83,7 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 		}
 		else {
 			$template->assign('IllegalsFound', false);
-			$player->increaseHOF(1,array('Trade','Search','Times Found Innocent'), HOF_PUBLIC);
+			$player->increaseHOF(1, array('Trade', 'Search', 'Times Found Innocent'), HOF_PUBLIC);
 			$player->increaseAlignment(1);
 			$account->log(LOG_TYPE_TRADING, 'Player gains alignment at port', $player->getSectorID());
 		}

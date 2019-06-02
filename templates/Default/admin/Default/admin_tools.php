@@ -1,11 +1,11 @@
 <?php
-if(isset($ErrorMessage)) {
+if (isset($ErrorMessage)) {
 	echo $ErrorMessage; ?><br /><br /><?php
 }
-if(isset($Message)) {
+if (isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 }
-if(isset($AdminPermissions)) { ?>
+if (isset($AdminPermissions)) { ?>
 	<h1>Admin Tools</h1>
 	<br /><?php
 	foreach ($AdminPermissions as $CategoryID => $Permissions) { ?>

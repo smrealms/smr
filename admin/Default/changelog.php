@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Change Log');
+$template->assign('PageTopic', 'Change Log');
 
 $template->assign('ChangeTitle', $var['change_title'] ?? '');
 $template->assign('ChangeMessage', $var['change_message'] ?? '');
@@ -34,7 +34,7 @@ while ($db->nextRecord()) {
 
 	$db2->query('SELECT *
 				FROM changelog
-				WHERE version_id = '.$db->escapeNumber($version_id).'
+				WHERE version_id = '.$db->escapeNumber($version_id) . '
 				ORDER BY changelog_id');
 	$changes = [];
 	while ($db2->nextRecord()) {

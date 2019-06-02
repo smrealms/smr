@@ -10,8 +10,7 @@ if (!$Planet->hasOwner()) { ?>
 	<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 		<input type="submit" name="action" value="Take Ownership" class="InputFields" />
 	</form><?php
-}
-else {
+} else {
 	if ($Planet->getOwnerID() != $Player->getAccountID()) { ?>
 		<p><?php echo SmrPlayer::getPlayer($Planet->getOwnerID(), $Planet->getGameID())->getLinkedDisplayName(false); ?> owns this planet.</p>
 		<p>
@@ -24,8 +23,7 @@ else {
 			<input type="text" name="password" class="InputFields">&nbsp;&nbsp;&nbsp;
 			<input type="submit" name="action" value="Take Ownership" class="InputFields" />
 		</form><?php
-	}
-	else { ?>
+	} else { ?>
 		<p>You own this planet!</p>
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 			<input type="text" name="password" value="<?php echo htmlspecialchars($Planet->getPassword()); ?>" class="InputFields" />&nbsp;&nbsp;&nbsp;

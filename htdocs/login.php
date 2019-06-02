@@ -22,17 +22,17 @@ try {
 		$href = SmrSession::getNewHREF(create_container('login_check_processing.php'), true);
 		SmrSession::update();
 	
-		header('Location: '.$href);
+		header('Location: ' . $href);
 		exit;
 	}
 	
 	$template = new Template();
-	if(isset($_REQUEST['msg']))
-		$template->assign('Message',htmlentities(trim($_REQUEST['msg']),ENT_COMPAT,'utf-8'));
+	if (isset($_REQUEST['msg']))
+		$template->assign('Message', htmlentities(trim($_REQUEST['msg']), ENT_COMPAT, 'utf-8'));
 
 	require_once(ENGINE . 'Default/login.inc');
 
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }

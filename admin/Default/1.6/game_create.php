@@ -2,10 +2,10 @@
 
 //get information
 $container = create_container('1.6/game_create_processing.php');
-$template->assign('CreateGalaxiesHREF',SmrSession::getNewHREF($container));
+$template->assign('CreateGalaxiesHREF', SmrSession::getNewHREF($container));
 
 $container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
-$template->assign('EditGameHREF',SmrSession::getNewHREF($container));
+$template->assign('EditGameHREF', SmrSession::getNewHREF($container));
 
 $canEditStartedGames = $account->hasPermission(PERMISSION_EDIT_STARTED_GAMES);
 $template->assign('CanEditStartedGames', $canEditStartedGames);
@@ -39,4 +39,4 @@ if ($canEditStartedGames) {
 while ($db->nextRecord()) {
 	$games[] = SmrGame::getGame($db->getInt('game_id'));
 }
-$template->assign('EditGames',$games);
+$template->assign('EditGames', $games);

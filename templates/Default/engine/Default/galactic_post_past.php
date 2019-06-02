@@ -1,7 +1,7 @@
 Select Game:&nbsp;
 <form class="standard" id="SelectGameForm" method="POST" action="">
 	<select name="game_id" class="InputFields" onchange="this.form.submit()"><?php
-		foreach($PublishedGames as $Game) {
+		foreach ($PublishedGames as $Game) {
 			$id = $Game['game_id'];
 			$name = $Game['game_name'];
 			$selected = ($SelectedGame == $id ? 'selected="selected"' : '');

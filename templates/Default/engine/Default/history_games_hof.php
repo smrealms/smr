@@ -6,8 +6,7 @@ if (isset($Links)) { ?>
 			<tr><td><?php echo $link; ?></td></tr><?php
 		} ?>
 	</table><?php
-}
-else { ?>
+} else { ?>
 	<div class="center"><a href="<?php echo $BackHREF; ?>">&lt;&lt;Back</a></div>
 
 	<?php

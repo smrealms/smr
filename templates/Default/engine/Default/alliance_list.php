@@ -20,7 +20,7 @@ if (count($Alliances) > 0) { ?>
 		</thead>
 
 		<tbody class="list"><?php
-			foreach($Alliances as $AllianceID => $Alliance) { ?>
+			foreach ($Alliances as $AllianceID => $Alliance) { ?>
 				<tr id="alliance-<?php echo $AllianceID; ?>" class="ajax">
 					<td class="name">
 						<a href="<?php echo $Alliance['ViewHREF']; ?>"><?php echo $Alliance['Name']; ?></a>

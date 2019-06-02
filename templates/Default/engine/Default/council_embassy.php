@@ -11,7 +11,7 @@
 		<th>Treaty</th>
 	</tr><?php
 
-	foreach($VoteRaceHrefs as $RaceID => $FormHref) { ?>
+	foreach ($VoteRaceHrefs as $RaceID => $FormHref) { ?>
 		<tr>
 			<td><img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="60" height="64" /><br /><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
 			<td>

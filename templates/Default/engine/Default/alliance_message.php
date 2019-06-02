@@ -10,7 +10,7 @@ if (count($Threads) > 0) { ?>
 			</tr>
 		</thead>
 		<tbody class="list"><?php
-			foreach($Threads as $Thread) { ?>
+			foreach ($Threads as $Thread) { ?>
 				<tr id="topic-<?php echo $Thread['ThreadID']; ?>" class="ajax">
 					<td class="topic"><?php
 						if ($Thread['Unread']) {
@@ -23,7 +23,7 @@ if (count($Threads) > 0) { ?>
 					</td>
 					<td class="author noWrap"><?php
 						echo $Thread['Sender'];
-						if($Thread['CanDelete']) {
+						if ($Thread['CanDelete']) {
 							?><br /><small><a href="<?php echo $Thread['DeleteHref']; ?>">Delete Thread!</a></small><?php
 						} ?>
 					</td>
@@ -37,17 +37,17 @@ if (count($Threads) > 0) { ?>
 
 if (isset($CreateNewThreadFormHref)) { ?>
 	<h2>Create Thread</h2><br /><?php
-	if(isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><?php } ?>
+	if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><?php } ?>
 	<form class="standard" id="CreateNewThreadForm" method="POST" action="<?php echo $CreateNewThreadFormHref; ?>">
 	<table class="standardnobord nohpad">
 		<tr>
 			<td class="top">Topic:&nbsp;</td>
-			<td class="mb"><input type="text" name="topic" size="30" value="<?php if(isset($Topic)) { echo htmlspecialchars($Topic); } ?>"></td>
-			<td>For Alliance Eyes Only:<input class="InputFields" name="allEyesOnly" type="checkbox"<?php if(isset($AllianceEyesOnly) && $AllianceEyesOnly) { ?>checked="checked" <?php } ?>></td>
+			<td class="mb"><input type="text" name="topic" size="30" value="<?php if (isset($Topic)) { echo htmlspecialchars($Topic); } ?>"></td>
+			<td>For Alliance Eyes Only:<input class="InputFields" name="allEyesOnly" type="checkbox"<?php if (isset($AllianceEyesOnly) && $AllianceEyesOnly) { ?>checked="checked" <?php } ?>></td>
 		</tr>
 		<tr>
 			<td class="top">Body:&nbsp;</td>
-			<td colspan="2"><textarea spellcheck="true" name="body"><?php if(isset($Preview)) { echo $Preview; } ?></textarea></td>
+			<td colspan="2"><textarea spellcheck="true" name="body"><?php if (isset($Preview)) { echo $Preview; } ?></textarea></td>
 		</tr>
 	</table><br />
 	<input class="submit" type="submit" name="action" value="New Thread">&nbsp;<input type="submit" name="action" value="Preview Thread" class="InputFields" />

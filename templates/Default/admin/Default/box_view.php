@@ -1,11 +1,11 @@
 <?php
-if(isset($Boxes)) { ?>
+if (isset($Boxes)) { ?>
 	<table class="standard">
 		<tr>
 			<th>Folder</th>
 			<th>Messages</th>
 		</tr><?php
-		foreach($Boxes as $Box) { ?>
+		foreach ($Boxes as $Box) { ?>
 			<tr>
 				<td><a href="<?php echo $Box['ViewHREF']; ?>"><?php echo $Box['BoxName']; ?></a></td>
 				<td><?php echo $Box['TotalMessages']; ?></td>
@@ -27,17 +27,17 @@ else { ?>
 			<br /><br />
 			Click the name to reply<br />
 			<table width="100%" class="standard"><?php
-				foreach($Messages as $Message) { ?>
+				foreach ($Messages as $Message) { ?>
 					<tr>
 						<td class="shrink">
 							<input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>">
 						</td>
 						<td class="noWrap">From: <?php
-							if(isset($Message['ReplyHREF'])) {
+							if (isset($Message['ReplyHREF'])) {
 								?><a href="<?php echo $Message['ReplyHREF']; ?>"><?php
 							}
 							echo $Message['SenderName'];
-							if(isset($Message['ReplyHREF'])) {
+							if (isset($Message['ReplyHREF'])) {
 								?></a><?php
 							} ?>
 						</td>

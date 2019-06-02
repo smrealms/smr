@@ -1,11 +1,11 @@
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-<title><?php echo PAGE_TITLE; ?><?php if(isset($GameName)) echo ": $GameName"; ?></title>
+<title><?php echo PAGE_TITLE; ?><?php if (isset($GameName)) echo ": $GameName"; ?></title>
 <meta http-equiv="pragma" content="no-cache" /><?php
-if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled()) { ?>
+if (!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled()) { ?>
 	<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo $CSSColourLink; ?>" /><?php
 }
-if(isset($ExtraCSSLink)) {
+if (isset($ExtraCSSLink)) {
 	?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>" /><?php
 } ?>
 <style>
@@ -37,7 +37,7 @@ if(isset($ExtraCSSLink)) {
 		}<?php 
 	} ?>
 </style><?php
-if(isset($HeaderTemplateInclude)) {
+if (isset($HeaderTemplateInclude)) {
 	$this->includeTemplate($HeaderTemplateInclude);
 } ?>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />

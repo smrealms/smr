@@ -1,22 +1,22 @@
 <?php
 
 function checkPortTradeable($port, $player) {
-	if($port->getSectorID()!=$player->getSectorID())
+	if ($port->getSectorID() != $player->getSectorID())
 		return 'That port is not in this sector!';
 	
-	if(!$port->exists())
+	if (!$port->exists())
 		return 'There is no port in this sector!';
 	
-	if($player->getRelation($port->getRaceID()) <= RELATIONS_WAR)
+	if ($player->getRelation($port->getRaceID()) <= RELATIONS_WAR)
 		return 'We will not trade with our enemies!';
 	
-	if($port->getReinforceTime() > TIME)
+	if ($port->getReinforceTime() > TIME)
 		return 'We are still repairing damage caused during the last raid.';
 	
 	return true;
 }
 
-function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price,&$container) {
+function check_bargain_number($amount, $ideal_price, $offered_price, $bargain_price, &$container) {
 	global $var, $player;
 
 	$port = $player->getSectorPort();
@@ -27,9 +27,9 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 	if (isset($var['overall_number_of_bargains'])) {
 		// lose relations for bad bargain
 		if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
-			$player->decreaseRelationsByTrade($amount,$port->getRaceID());
+			$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 		}
-		$player->increaseHOF(1,array('Trade','Results','Fail'), HOF_PUBLIC);
+		$player->increaseHOF(1, array('Trade', 'Results', 'Fail'), HOF_PUBLIC);
 		// transfer values
 		transfer('overall_number_of_bargains');
 
@@ -37,9 +37,9 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 		if ($container['number_of_bargains'] > $container['overall_number_of_bargains']) {
 			// change relation for non neutral ports
 			if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
-				$player->decreaseRelationsByTrade($amount,$port->getRaceID());
+				$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 			}
-			$player->increaseHOF(1,array('Trade','Results','Epic Fail'), HOF_PUBLIC);
+			$player->increaseHOF(1, array('Trade', 'Results', 'Epic Fail'), HOF_PUBLIC);
 			create_error('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
 		}
 

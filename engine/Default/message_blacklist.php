@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Player Blacklist');
+$template->assign('PageTopic', 'Player Blacklist');
 
 Menu::messages();
  

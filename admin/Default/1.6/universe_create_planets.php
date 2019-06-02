@@ -14,9 +14,9 @@ foreach (array_keys($allowedTypes) as $ID) {
 }
 
 // Get the current number of each type of planet
-$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
+$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 foreach ($galaxy->getSectors() as $galSector) {
-	if($galSector->hasPlanet()) {
+	if ($galSector->hasPlanet()) {
 		$numberOfPlanets[$galSector->getPlanet()->getTypeID()]++;
 	}
 }

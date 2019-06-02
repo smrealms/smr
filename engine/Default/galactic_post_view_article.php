@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','Viewing Articles');
+$template->assign('PageTopic', 'Viewing Articles');
 Menu::galactic_post();
 
 if (isset($var['news'])) {
@@ -28,7 +28,7 @@ $template->assign('Articles', $articles);
 
 // Details about a selected article
 if (isset($var['id'])) {
-	$db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = '.$db->escapeNumber($var['id']));
+	$db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
 	$db->nextRecord();
 
 	$container = create_container('skeleton.php', 'galactic_post_write_article.php');

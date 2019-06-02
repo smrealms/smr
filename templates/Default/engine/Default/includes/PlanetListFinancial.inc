@@ -19,12 +19,12 @@ if (count($Planets) > 0) { ?>
 		</thead>
 
 		<tbody class="list"><?php
-			foreach($Planets as $Planet) { ?>
+			foreach ($Planets as $Planet) { ?>
 				<tr id="planet-<?php echo $Planet->getSectorID(); ?>" class="ajax">
 					<td class="sort_type shrink">
-						<img src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename().': '.$Planet->getTypeDescription(); ?>" /></td>
+						<img src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename() . ': ' . $Planet->getTypeDescription(); ?>" /></td>
 					<td class="sort_name left"><?php echo $Planet->getName(); ?></td>
-					<td class="sort_lvl"><?php echo number_format($Planet->getLevel(),2); ?></td>
+					<td class="sort_lvl"><?php echo number_format($Planet->getLevel(), 2); ?></td>
 					<td class="sort_owner noWrap left"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
 					<td class="sort_sector"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getName(); ?></a>)</td>
 

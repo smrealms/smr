@@ -4,18 +4,18 @@ if (!isset($var['gal_on'])) {
 	throw new Exception('Gal_on not found!');
 }
 
-$galaxy = SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
+$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 $template->assign('Galaxy', $galaxy);
 
 //get totals
 $total = array();
 $totalPorts = array();
 $total['Ports'] = 0;
-for ($i=1; $i<=SmrPort::MAX_LEVEL; $i++) {
+for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) {
 	$totalPorts[$i] = 0;
 }
 foreach ($galaxy->getSectors() as $galSector) {
-	if($galSector->hasPort()) {
+	if ($galSector->hasPort()) {
 		$totalPorts[$galSector->getPort()->getLevel()]++;
 		$total['Ports']++;
 	}

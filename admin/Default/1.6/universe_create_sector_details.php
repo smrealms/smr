@@ -1,6 +1,6 @@
 <?php
 
-$editSector = SmrSector::getSector($var['game_id'],$var['sector_id']);
+$editSector = SmrSector::getSector($var['game_id'], $var['sector_id']);
 $template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID());
 $template->assign('EditSector', $editSector);
 

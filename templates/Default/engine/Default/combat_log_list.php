@@ -1,31 +1,31 @@
 <?php
-if(isset($Message)) {?>
+if (isset($Message)) {?>
 	<div class="center"><?php echo $Message; ?></div><br /><?php
 } ?>
 
 <div class="center"><?php
 	$NumLogs = count($Logs);
-	if($NumLogs > 0) { ?>
+	if ($NumLogs > 0) { ?>
 		There <span id="total-logs"><?php echo pluralise('is', $TotalLogs), ' ', $TotalLogs, ' ', $LogType, pluralise(' log', $NumLogs); ?></span> available for viewing of which <?php echo $NumLogs, ' ', pluralise('is', $NumLogs); ?> being shown.<br /><br />
 		<form class="standard" method="POST" action="<?php echo $LogFormHREF; ?>">
 			<table class="fullwidth center">
 				<tr>
 					<td id="prev" class="ajax" style="width: 30%" valign="middle"><?php
-						if(isset($PreviousPage)) { ?>
+						if (isset($PreviousPage)) { ?>
 							<a href="<?php echo $PreviousPage; ?>"><img src="images/album/rew.jpg" width="25" height="25" alt="Previous Page" border="0"></a><?php
 						} ?>
 					</td>
 					<td>
 						<input class="submit" type="submit" name="action" value="View"><?php
-						if($CanDelete) {
+						if ($CanDelete) {
 							?>&nbsp;<input class="submit" type="submit" name="action" value="Delete"><?php
 						}
-						if($CanSave) {
+						if ($CanSave) {
 							?>&nbsp;<input class="submit" type="submit" name="action" value="Save"><?php
 						} ?>
 					</td>
 					<td id="next" class="ajax" style="width: 30%" valign="middle"><?php
-						if(isset($NextPage)) { ?>
+						if (isset($NextPage)) { ?>
 							<a href="<?php echo $NextPage; ?>"><img src="images/album/fwd.jpg" width="25" height="25" alt="Next Page" border="0"></a><?php
 						} ?>
 					</td>

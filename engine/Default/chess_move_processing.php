@@ -4,16 +4,16 @@ $container = create_container('skeleton.php', 'chess_play.php');
 transfer('ChessGameID');
 
 $chessGame = ChessGame::getChessGame($var['ChessGameID']);
-if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQUEST['toX']) && is_numeric($_REQUEST['toY'])) {
+if (is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQUEST['toX']) && is_numeric($_REQUEST['toY'])) {
 	$x = $_REQUEST['x'];
 	$y = $_REQUEST['y'];
 	$toX = $_REQUEST['toX'];
 	$toY = $_REQUEST['toY'];
-	if(!$chessGame->hasEnded()) {
-		if($chessGame->isCurrentTurn($account->getAccountID())) {
+	if (!$chessGame->hasEnded()) {
+		if ($chessGame->isCurrentTurn($account->getAccountID())) {
 			$board = $chessGame->getBoard();
-			if($board[$y][$x] != null) {
-				switch($chessGame->tryMove($x, $y, $toX, $toY, $account->getAccountID(), ChessPiece::QUEEN)) {
+			if ($board[$y][$x] != null) {
+				switch ($chessGame->tryMove($x, $y, $toX, $toY, $account->getAccountID(), ChessPiece::QUEEN)) {
 					case 0:
 						//Success
 					break;

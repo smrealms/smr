@@ -13,8 +13,7 @@ class Rankings {
 			$class = '';
 			if ($player->getAllianceID() == $currentAlliance->getAllianceID()) {
 				$class = ' class="bold"';
-			}
-			else if ($currentAlliance->hasDisbanded()) {
+			} else if ($currentAlliance->hasDisbanded()) {
 				$class = ' class="red"';
 			}
 
@@ -61,12 +60,10 @@ class Rankings {
 		if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank']) && is_numeric($_REQUEST['max_rank'])) {
 			$minRank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 			$maxRank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-		}
-		elseif (isset($var['MinRank']) && isset($var['MaxRank'])) {
+		} elseif (isset($var['MinRank']) && isset($var['MaxRank'])) {
 			$minRank = $var['MinRank'];
 			$maxRank = $var['MaxRank'];
-		}
-		else {
+		} else {
 			$minRank = $ourRank - 5;
 			$maxRank = $ourRank + 5;
 		}

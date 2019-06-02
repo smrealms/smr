@@ -1,7 +1,7 @@
 You are currently building: <?php
 	if ($ThisPlanet->hasCurrentlyBuilding()) {
 		$CurrentlyBuilding = $ThisPlanet->getCurrentlyBuilding();
-		foreach($CurrentlyBuilding as $Building) { ?>
+		foreach ($CurrentlyBuilding as $Building) { ?>
 			<br /><?php
 			echo $ThisPlanet->getStructureTypes($Building['ConstructionID'])->name(); ?> which will finish in <?php echo format_time($Building['TimeRemaining']); ?>
 			<br /><br />
@@ -44,7 +44,7 @@ You are currently building: <?php
 				<br /><?php echo format_time($ThisPlanet->getConstructionTime($StructureID), true); ?>
 		</td>
 			<td><?php
-				if ($ThisPlanet->canBuild($ThisPlayer, $StructureID)===true) { ?>
+				if ($ThisPlanet->canBuild($ThisPlayer, $StructureID) === true) { ?>
 					<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getBuildHREF($StructureID); ?>">Build</a></div><?php
 				} ?>
 			</td>

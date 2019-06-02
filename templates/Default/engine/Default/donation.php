@@ -31,7 +31,7 @@ Current donation rate is: $<?php echo number_format($TotalDonation / 3, 2); ?> p
 </div>
 
 <?php
-if(isset($GameID)) { ?>
+if (isset($GameID)) { ?>
 	<br />
 	<br />
 	<br />

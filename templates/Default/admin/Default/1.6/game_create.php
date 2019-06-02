@@ -12,7 +12,7 @@ if (count($EditGames) == 0) { ?>
 			<tr>
 				<td class="right">
 					<select name="game_id"><?php
-						foreach($EditGames as $EditGame) {
+						foreach ($EditGames as $EditGame) {
 							?><option value="<?php echo $EditGame->getGameID(); ?>"><?php echo $EditGame->getDisplayName(); ?></option><?php
 						} ?>
 					</select>

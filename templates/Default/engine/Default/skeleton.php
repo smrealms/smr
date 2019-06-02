@@ -13,22 +13,22 @@
 				</td>
 				<td class="m0" colspan="2">
 					<div id="middle_panel"><?php
-						if(isset($PageTopic)) {
+						if (isset($PageTopic)) {
 							?><h1><?php echo $PageTopic; ?></h1><br /><?php
 						}
-						if(isset($MenuItems)||isset($MenuBar)) { ?>
+						if (isset($MenuItems) || isset($MenuBar)) { ?>
 							<div class="bar1">
 								<div><?php
-									if(isset($MenuItems)) {
+									if (isset($MenuItems)) {
 										$this->includeTemplate('includes/menu.inc');
 									}
-									else if(isset($MenuBar)) {
+									else if (isset($MenuBar)) {
 										echo $MenuBar;
 									} ?>
 								</div>
 							</div><br /><?php
 						}
-						else if(isset($SubMenuBar)) {
+						else if (isset($SubMenuBar)) {
 							echo $SubMenuBar;
 						}
 						$this->includeTemplate($TemplateBody); ?>

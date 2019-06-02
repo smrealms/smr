@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Ship Integrity Check');
+$template->assign('PageTopic', 'Ship Integrity Check');
 
 $db->query('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware, hardware_type ' .
 		   'WHERE ship_type_support_hardware.ship_type_id = player.ship_type_id AND ' .

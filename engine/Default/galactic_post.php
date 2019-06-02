@@ -4,7 +4,7 @@ if (!$player->isGPEditor()) {
 	throw new Exception('Only the GP Editor is allowed to view this page!');
 }
 
-$template->assign('PageTopic','Galactic Post');
+$template->assign('PageTopic', 'Galactic Post');
 Menu::galactic_post();
 
 $db2 = new SmrMySqlDatabase();
