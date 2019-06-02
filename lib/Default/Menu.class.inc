@@ -12,7 +12,7 @@ class Menu {
 		$menuItems[] = array('Link'=>Globals::getPlanetListHREF($alliance_id), 'Text'=>'Defense');
 		$menuItems[] = array('Link'=>Globals::getPlanetListFinancialHREF($alliance_id), 'Text'=>'Financial');
 		// make the selected index bold
-		$boldItem = & $menuItems[$selected_index]['Text'];
+		$boldItem =& $menuItems[$selected_index]['Text'];
 		$boldItem = '<span class="bold">' . $boldItem . '</span>';
 		$template->assign('MenuItems', $menuItems);
 	}
@@ -107,7 +107,7 @@ class Menu {
 		$menuItems[] = ['Link' => SmrSession::getNewHREF($container),
 		                'Text' => 'Game News'];
 		// make the selected index bold
-		$boldItem = & $menuItems[$selected_index]['Text'];
+		$boldItem =& $menuItems[$selected_index]['Text'];
 		$boldItem = '<b>' . $boldItem . '</b>';
 		$template->assign('MenuItems', $menuItems);
 	}
