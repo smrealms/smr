@@ -94,7 +94,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
-		$damage = & $this->getModifiedDamage();
+		$damage =& $this->getModifiedDamage();
 		if ($targetPlayer->getShip()->isFederal()) { // do less damage to fed ships 
 			$damage['MaxDamage'] = round($damage['MaxDamage'] * self::FED_SHIP_DAMAGE_MODIFIER);
 			$damage['Shield'] = round($damage['Shield'] * self::FED_SHIP_DAMAGE_MODIFIER);
@@ -131,12 +131,12 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	}
 	
 	protected function &doForceDamageToPlayer(array &$return, SmrForce $forces, AbstractSmrPlayer $targetPlayer, $minesAreAttacker = false) {
-		$return['WeaponDamage'] = & $this->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer, $minesAreAttacker);
-		$return['ActualDamage'] = & $targetPlayer->getShip()->doMinesDamage($return['WeaponDamage']);
+		$return['WeaponDamage'] =& $this->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer, $minesAreAttacker);
+		$return['ActualDamage'] =& $targetPlayer->getShip()->doMinesDamage($return['WeaponDamage']);
 		$return['ActualDamage']['Launched'] = ceil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['MaxDamage']);
 
 		if ($return['ActualDamage']['KillingShot']) {
-			$return['KillResults'] = & $targetPlayer->killPlayerByForces($forces);
+			$return['KillResults'] =& $targetPlayer->killPlayerByForces($forces);
 		}
 		return $return;
 	}
