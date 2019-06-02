@@ -222,7 +222,7 @@ class SmrSession {
 		else {
 			self::$generate = true;
 			self::$account_id = 0;
-			self::$game_id		= 0;
+			self::$game_id = 0;
 			self::$var = array();
 			self::$commonIDs = array();
 		}
