@@ -5,7 +5,7 @@
  */
 class Menu {
 
-	static function planet_list($alliance_id, $selected_index) {
+	public static function planet_list($alliance_id, $selected_index) {
 		global $template;
 
 		$menuItems = array();
@@ -17,7 +17,7 @@ class Menu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	static function alliance($alliance_id = null, $alliance_leader_id = FALSE) {
+	public static function alliance($alliance_id = null, $alliance_leader_id = FALSE) {
 		global $player, $template, $db;
 
 		if ($alliance_id) {
@@ -76,7 +76,7 @@ class Menu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	static function galactic_post() {
+	public static function galactic_post() {
 		global $template, $player;
 		$menuItems = array();
 		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('galactic_post_current.php')), 'Text'=>'Current Edition');
@@ -88,7 +88,7 @@ class Menu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	static function history_games($selected_index) {
+	public static function history_games($selected_index) {
 		global $template, $var;
 		$menuItems = [];
 		$container = create_container('skeleton.php', 'history_games.php');
@@ -112,7 +112,7 @@ class Menu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	static function messages() {
+	public static function messages() {
 		global $player, $template;
 		$menuItems = array();
 		$menuItems[] = array('Link'=>Globals::getViewMessagesHREF(), 'Text'=>'View Messages');
@@ -125,7 +125,7 @@ class Menu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	static function combat_log() {
+	public static function combat_log() {
 		global $template;
 
 		$container = create_container('skeleton.php', 'combat_log_list.php');
@@ -147,7 +147,7 @@ class Menu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	static function trader() {
+	public static function trader() {
 		global $player, $template;
 		$template->assign('MenuItems', array(
 						array('Link'=>Globals::getTraderStatusHREF(), 'Text'=>'Trader Status'),
@@ -158,7 +158,7 @@ class Menu {
 						array('Link'=>Globals::getTraderBountiesHREF(), 'Text'=>'Bounties')));
 	}
 
-	static function planet($planet) {
+	public static function planet($planet) {
 		global $template;
 
 		$menu_array = array();
@@ -186,7 +186,7 @@ class Menu {
 	 * $active_level1 - the id of the active menu on the first level
 	 * $active_level1 - the id of the active menu on the second level
 	 */
-	static function rankings($active_level1 = 0, $active_level2 = 0) {
+	public static function rankings($active_level1 = 0, $active_level2 = 0) {
 
 		$menu = array();
 
@@ -241,7 +241,7 @@ class Menu {
 		create_sub_menu($menu, $active_level1, $active_level2);
 	}
 
-	static function bank() {
+	public static function bank() {
 		global $player;
 
 		$menu_items[] = create_link(create_container('skeleton.php', 'bank_personal.php'),
@@ -256,7 +256,7 @@ class Menu {
 		create_menu($menu_items);
 	}
 
-	static function council($race_id) {
+	public static function council($race_id) {
 		global $player;
 
 		$menu_items[] = create_link(create_container('skeleton.php', 'council_list.php'),
@@ -283,7 +283,7 @@ class Menu {
 		create_menu($menu_items);
 	}
 
-	static function bar() {
+	public static function bar() {
 		global $template;
 		$template->assign('MenuItems', array(
 					array('Link'=>Globals::getBarMainHREF(), 'Text'=>'Bar Main'),
@@ -291,7 +291,7 @@ class Menu {
 					array('Link'=>Globals::getBarBlackjackHREF(), 'Text'=>'BlackJack')));
 	}
 
-	static function news(Template $template) {
+	public static function news(Template $template) {
 		global $var;
 		$menuItems = array();
 		if (SmrSession::getGameID() == $var['GameID']) {
@@ -303,7 +303,7 @@ class Menu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	static function navigation(Template $template, AbstractSmrPlayer $player) {
+	public static function navigation(Template $template, AbstractSmrPlayer $player) {
 		$menuItems = array();
 		$menuItems[] = array('Link'=>Globals::getPlotCourseHREF(), 'Text'=>'Plot A Course');
 		if (!$player->isLandedOnPlanet())
