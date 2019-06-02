@@ -323,7 +323,7 @@ function NPCStuff() {
 				SmrShip::saveShips();
 				SmrPlayer::savePlayers();
 				SmrForce::saveForces();
-				SmrPort::savePorts();;
+				SmrPort::savePorts();
 				if(class_exists('WeightedRandom', false))
 					WeightedRandom::saveWeightedRandoms();
 				release_lock();
