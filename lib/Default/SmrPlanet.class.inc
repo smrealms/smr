@@ -663,7 +663,7 @@ class SmrPlanet {
 		$this->setBuilding($buildingTypeID, $this->getBuilding($buildingTypeID) - $number);
 	}
 
-	function getCurrentlyBuilding() {
+	public function getCurrentlyBuilding() {
 		if (!isset($this->currentlyBuilding)) {
 			$this->currentlyBuilding = array();
 
@@ -857,15 +857,15 @@ class SmrPlanet {
 		}
 	}
 
-	function getLevel() {
+	public function getLevel() {
 		return array_sum($this->getBuildings()) / 3;
 	}
 	
-	function getMaxLevel() {
+	public function getMaxLevel() {
 		return array_sum($this->getMaxBuildings()) / 3;
 	}
 
-	function accuracy() {
+	public function accuracy() {
 		if ($this->hasWeapons()) {
 			$weapons = $this->getWeapons();
 			return $weapons[0]->getModifiedPlanetAccuracy($this);
@@ -876,22 +876,22 @@ class SmrPlanet {
 	/**
 	 * Returns the accuracy bonus for mounted weaons (as a percent)
 	 */
-	function getAccuracyBonus() {
+	public function getAccuracyBonus() {
 		return 5 * $this->getBuilding(PLANET_RADAR);
 	}
 
-	function getRemainingStockpile($id) {
+	public function getRemainingStockpile($id) {
 		return self::MAX_STOCKPILE - $this->getStockpile($id);
 	}
 
 	/**
 	 * Returns true if there is a building in progress
 	 */
-	function hasCurrentlyBuilding() {
+	public function hasCurrentlyBuilding() {
 		return count($this->getCurrentlyBuilding()) > 0;
 	}
 
-	function canBuild(AbstractSmrPlayer $constructor, $constructionID) {
+	public function canBuild(AbstractSmrPlayer $constructor, $constructionID) {
 		if ($this->hasCurrentlyBuilding()) {
 			return 'There is already a building in progress!';
 		}
@@ -925,19 +925,19 @@ class SmrPlanet {
 	}
 
 	// Amount of exp gained to build the next building of this type
-	function getConstructionExp($constructionID) {
+	private function getConstructionExp($constructionID) {
 		$expGain = $this->getStructureTypes($constructionID)->expGain();
 		return $expGain;
 	}
 
 	// Amount of time (in seconds) to build the next building of this type
-	function getConstructionTime($constructionID) {
+	public function getConstructionTime($constructionID) {
 		$baseTime = $this->getStructureTypes($constructionID)->baseTime();
 		$constructionTime = ceil($baseTime * $this->getCompletionModifier($constructionID) / $this->getGame()->getGameSpeed());
 		return $constructionTime;
 	}
 	
-	function startBuilding(AbstractSmrPlayer $constructor, $constructionID) {
+	public function startBuilding(AbstractSmrPlayer $constructor, $constructionID) {
 		if (($message = $this->canBuild($constructor, $constructionID)) !== true) {
 			throw new Exception('Unable to start building: ' . $message);
 		}
@@ -964,7 +964,7 @@ class SmrPlanet {
 		);
 	}
 
-	function stopBuilding($constructionID) {
+	public function stopBuilding($constructionID) {
 		$matchingBuilding = false;
 		$latestFinish = 0;
 		foreach ($this->getCurrentlyBuilding() as $key => $building) {
@@ -1161,7 +1161,7 @@ class SmrPlanet {
 		return $results;
 	}
 
-	function &checkForDowngrade($damage) {
+	public function &checkForDowngrade($damage) {
 		$results = '';
 		// For every 70 damage there is a 15% chance of destroying a structure.
 		// Which structure is destroyed depends on the ratio of buildings and

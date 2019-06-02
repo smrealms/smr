@@ -334,11 +334,11 @@ class SmrForce {
 		}
 	}
 
-	function &getGalaxy() {
+	public function &getGalaxy() {
 		return SmrGalaxy::getGalaxyContaining($this->getGameID(), $this->getSectorID());
 	}
 
-	function &getOwner() {
+	public function &getOwner() {
 		return SmrPlayer::getPlayer($this->getOwnerID(), $this->getGameID());
 	}
 

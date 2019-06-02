@@ -66,7 +66,7 @@ class VoteSite {
 		return min($minWait);
 	}
 
-	function __construct($linkID, $siteData) {
+	private function __construct($linkID, $siteData) {
 		$this->linkID = $linkID;
 		$this->data = $siteData;
 	}

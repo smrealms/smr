@@ -323,7 +323,7 @@ class SmrAlliance {
 		return count($this->getMemberIDs());
 	}
 
-	function update() {
+	public function update() {
 		$this->db->query('UPDATE alliance SET alliance_password = ' . $this->db->escapeString($this->password) . ',
 								alliance_account = '.$this->db->escapeNumber($this->account).',
 								alliance_description = ' . $this->db->escapeString($this->description) . ',
@@ -341,11 +341,11 @@ class SmrAlliance {
 	/**
 	 * Returns the members of this alliance as an array of SmrPlayer objects.
 	 */
-	function getMembers() {
+	public function getMembers() {
 		return SmrPlayer::getAlliancePlayers($this->getGameID(), $this->getAllianceID());
 	}
 
-	function getMemberIDs() {
+	public function getMemberIDs() {
 		if(!isset($this->memberList)) {
 			$this->db->query('SELECT account_id FROM player WHERE ' . $this->SQL);
 

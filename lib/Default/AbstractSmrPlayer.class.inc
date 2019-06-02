@@ -1028,18 +1028,18 @@ abstract class AbstractSmrPlayer {
 		return $missions;
 	}
 
-	function getMission($missionID) {
+	protected function getMission($missionID) {
 		$missions = $this->getMissions();
 		if (isset($missions[$missionID]))
 			return $missions[$missionID];
 		return false;
 	}
 
-	function hasMission($missionID) {
+	protected function hasMission($missionID) {
 		return $this->getMission($missionID) !== false;
 	}
 
-	function updateMission($missionID) {
+	protected function updateMission($missionID) {
 		$this->getMissions();
 		if (isset($this->missions[$missionID])) {
 			$mission = $this->missions[$missionID];
@@ -1113,7 +1113,7 @@ abstract class AbstractSmrPlayer {
 		);
 	}
 
-	function rebuildMission($missionID) {
+	private function rebuildMission($missionID) {
 		$mission = $this->missions[$missionID];
 		$this->missions[$missionID]['Name'] = MISSIONS[$missionID]['Name'];
 
@@ -1137,7 +1137,7 @@ abstract class AbstractSmrPlayer {
 		$this->missions[$missionID]['Task'] = $currentStep;
 	}
 
-	function deleteMission($missionID) {
+	public function deleteMission($missionID) {
 		$this->getMissions();
 		if (isset($this->missions[$missionID])) {
 			unset($this->missions[$missionID]);

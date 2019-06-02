@@ -100,7 +100,7 @@ class SmrShip extends AbstractSmrShip {
 		return $this->getPlayer()->getAccountID();
 	}
 	
-	function updateCargo() {
+	public function updateCargo() {
 		if ($this->hasChangedCargo === true) {
 			// write cargo info
 			foreach ($this->getCargo() as $id => $amount) {
@@ -117,7 +117,7 @@ class SmrShip extends AbstractSmrShip {
 		}
 	}
 	
-	function updateHardware() {
+	public function updateHardware() {
 		// write hardware info only for hardware that has changed
 		foreach ($this->hasChangedHardware as $hardwareTypeID => $hasChanged) {
 			if (!$hasChanged) {
@@ -134,7 +134,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->hasChangedHardware = array();
 	}
 	
-	function updateWeapon() {
+	private function updateWeapon() {
 		if ($this->hasChangedWeapons === true) {
 			// write weapon info
 			$this->db->query('DELETE FROM ship_has_weapon WHERE ' . $this->SQL);
@@ -146,7 +146,7 @@ class SmrShip extends AbstractSmrShip {
 		}
 	}
 	
-	function update() {
+	public function update() {
 		$this->updateHardware();
 		$this->updateWeapon();
 		$this->updateCargo();
@@ -154,7 +154,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->getPlayer()->update();
 	}
 	
-	function checkPowerLevel($powerLevel) {
+	public function checkPowerLevel($powerLevel) {
 		$this->db->query('SELECT weapon_type_id
 							FROM ship_has_weapon
 							JOIN weapon_type USING(weapon_type_id)
@@ -190,17 +190,17 @@ class SmrShip extends AbstractSmrShip {
 		return $this->isCloaked;
 	}
 	
-	function decloak() {
+	public function decloak() {
 		$this->isCloaked = false;
 		$this->db->query('DELETE FROM ship_is_cloaked WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
-	function enableCloak() {
+	public function enableCloak() {
 		$this->isCloaked = true;
 		$this->db->query('REPLACE INTO ship_is_cloaked VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ')');		
 	}
 	
-	function cloakOverload() {
+	public function cloakOverload() {
 		// 1 in 25 chance of cloak being destroyed if active
 		if ($this->isCloaked() && mt_rand(0, 99) < 5) {
 			$this->db->query('DELETE FROM ship_has_hardware
@@ -215,11 +215,11 @@ class SmrShip extends AbstractSmrShip {
 		return false;
 	}
 	
-	function setIllusion($shipID, $attack, $defense) {
+	public function setIllusion($shipID, $attack, $defense) {
 		$this->db->query('REPLACE INTO ship_has_illusion VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($shipID) . ', ' . $this->db->escapeNumber($attack) . ', ' . $this->db->escapeNumber($defense) . ')');
 	}
 	
-	function disableIllusion() {
+	public function disableIllusion() {
 		$this->db->query('DELETE FROM ship_has_illusion WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	

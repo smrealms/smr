@@ -875,11 +875,11 @@ class AbstractSmrPort {
 		return $this->attackStarted;
 	}
 	
-	function updateAttackStarted() {
+	private function updateAttackStarted() {
 		$this->setAttackStarted(TIME);
 	}
 	
-	public function setAttackStarted($time) {
+	private function setAttackStarted($time) {
 		if($this->attackStarted==$time)
 			return;
 		$this->attackStarted=TIME;

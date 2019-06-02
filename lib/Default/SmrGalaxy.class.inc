@@ -314,7 +314,7 @@ class SmrGalaxy {
 		return SmrSector::getSector($gameID, $sectorID)->getGalaxy();
 	}
 	
-	function equals(SmrGalaxy $otherGalaxy) {
+	public function equals(SmrGalaxy $otherGalaxy) {
 		return $otherGalaxy->getGalaxyID() == $this->getGalaxyID() && $otherGalaxy->getGameID() == $this->getGameID();
 	}
 }
