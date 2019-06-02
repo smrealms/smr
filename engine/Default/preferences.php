@@ -1,8 +1,9 @@
 <?php
 $template->assign('PageTopic', 'Preferences');
 
-if (isset($var['reason']))
+if (isset($var['reason'])) {
 	$template->assign('Reason', $var['reason']);
+}
 
 $template->assign('PreferencesFormHREF', SmrSession::getNewHREF(create_container('preferences_processing.php', '')));
 

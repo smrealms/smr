@@ -13,8 +13,7 @@ if (isset($var['id'])) {
 			SmrSession::updateVar('Preview', $db->getField('text'));
 		}
 	}
-}
-else {
+} else {
 	$template->assign('PageTopic', 'Writing An Article');
 }
 if (isset($var['Preview'])) {

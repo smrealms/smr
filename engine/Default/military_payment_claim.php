@@ -3,10 +3,11 @@
 $template->assign('PageTopic', 'Military Payment Center');
 
 require_once(get_file_loc('menu_hq.inc'));
-if ($sector->hasHQ())
+if ($sector->hasHQ()) {
 	create_hq_menu();
-else
+} else {
 	create_ug_menu();
+}
 
 // We can only claim the payment once, so to prevent clobbering the message
 // upon AJAX refresh, we store it as a session variable when we first get it.

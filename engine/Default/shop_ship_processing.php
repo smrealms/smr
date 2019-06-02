@@ -33,7 +33,7 @@ if ($player->getCredits() < $cost) {
 $player->setTurns(round($player->getTurns() * $newShip['Speed'] / $ship->getSpeed())); //Don't times by game speed as getSpeed doesn't include it meaning ratio will be the same but less work.
 
 // take the money from the user
-if($cost>0) {
+if ($cost > 0) {
 	$player->decreaseCredits($cost);
 } else {
 	$player->increaseCredits(-$cost);

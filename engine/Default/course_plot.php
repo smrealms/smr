@@ -15,10 +15,11 @@ if ($ship->hasJump()) {
 	$container['target_page'] = 'current_sector.php';
 	$template->assign('JumpDriveFormLink', SmrSession::getNewHREF($container));
 }
-if (isset($_REQUEST['xtype']))
+if (isset($_REQUEST['xtype'])) {
 	SmrSession::updateVar('XType', $_REQUEST['xtype']);
-else if (!isset($var['XType']))
+} else if (!isset($var['XType'])) {
 	SmrSession::updateVar('XType', 'Technology');
+}
 $template->assign('XType', $var['XType']);
 $template->assign('AllXTypes', array('Technology', 'Ships', 'Weapons', 'Locations', 'Sell Goods', 'Buy Goods', 'Galaxies'));
 

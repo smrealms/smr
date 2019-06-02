@@ -13,23 +13,23 @@ if ($db->nextRecord()) {
 	$approved = $db->getField('approved');
 
 	if ($approved == 'TBC') {
-		$albumEntry['Status']=('<span style="color:orange;">Waiting approval</span>');
+		$albumEntry['Status'] = ('<span style="color:orange;">Waiting approval</span>');
 	} elseif ($approved == 'NO') {
-		$albumEntry['Status']=('<span class="red">Approval denied</span>');
+		$albumEntry['Status'] = ('<span class="red">Approval denied</span>');
 	} elseif ($db->getBoolean('disabled')) {
-		$albumEntry['Status']=('<span class="red">Disabled</span>');
+		$albumEntry['Status'] = ('<span class="red">Disabled</span>');
 	} elseif ($approved == 'YES') {
-		$albumEntry['Status']=('<a href="album/?'.$account->getHofName().'" class="dgreen">Online</a>');
+		$albumEntry['Status'] = ('<a href="album/?' . $account->getHofName() . '" class="dgreen">Online</a>');
 	}
 		
-	if(is_readable(UPLOAD . $account->getAccountID())) {
-		$albumEntry['Image'] = '/upload/'.$account->getAccountID();
+	if (is_readable(UPLOAD . $account->getAccountID())) {
+		$albumEntry['Image'] = '/upload/' . $account->getAccountID();
 	}
 	
-	$template->assign('AlbumEntry',$albumEntry);
+	$template->assign('AlbumEntry', $albumEntry);
 }
 
-$template->assign('AlbumEditHref',SmrSession::getNewHREF(create_container('album_edit_processing.php', '')));
+$template->assign('AlbumEditHref', SmrSession::getNewHREF(create_container('album_edit_processing.php', '')));
 
 if (isset($var['SuccessMsg'])) {
 	$template->assign('SuccessMsg', $var['SuccessMsg']);

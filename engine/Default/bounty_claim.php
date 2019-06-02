@@ -6,8 +6,7 @@ require_once(get_file_loc('menu_hq.inc'));
 if ($sector->hasHQ()) {
 	create_hq_menu();
 	$bounties = $player->getClaimableBounties('HQ');
-}
-else {
+} else {
 	create_ug_menu();
 	$bounties = $player->getClaimableBounties('UG');
 }
@@ -43,8 +42,7 @@ if (!isset($var['ClaimText'])) {
 							AND claimer_id = ' . $db->escapeNumber($player->getAccountID()) . '
 							AND bounty_id = ' . $db->escapeNumber($bounty['bounty_id']));
 		}
-	}
-	else {
+	} else {
 		$claimText .= ('You have no claimable bounties<br /><br />');
 	}
 	

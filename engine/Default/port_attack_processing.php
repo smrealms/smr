@@ -1,22 +1,29 @@
 <?php
 
-if ($player->hasNewbieTurns())
+if ($player->hasNewbieTurns()) {
 	create_error('You are under newbie protection!');
-if ($player->hasFederalProtection())
+}
+if ($player->hasFederalProtection()) {
 	create_error('You are under federal protection!');
-if ($player->isLandedOnPlanet())
+}
+if ($player->isLandedOnPlanet()) {
 	create_error('You cannot attack ports whilst on a planet!');
-if ($player->getTurns() < TURNS_TO_SHOOT_PORT)
+}
+if ($player->getTurns() < TURNS_TO_SHOOT_PORT) {
 	create_error('You do not have enough turns to attack this port!');
-if (!$ship->hasWeapons() && !$ship->hasCDs())
+}
+if (!$ship->hasWeapons() && !$ship->hasCDs()) {
 	create_error('What are you going to do? Insult it to death?');
-if (!$player->canFight())
+}
+if (!$player->canFight()) {
 	create_error('You are not allowed to fight!');
+}
 
 $port = $sector->getPort();
 
-if (!$port->exists())
+if (!$port->exists()) {
 	create_error('This port does not exist.');
+}
 
 
 if ($port->isDestroyed()) {
