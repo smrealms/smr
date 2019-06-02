@@ -51,8 +51,7 @@ try {
 		'links' => $links,
 	]);
 
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }
 ?>

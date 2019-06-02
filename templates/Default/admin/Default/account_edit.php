@@ -3,7 +3,7 @@
 		<tr>
 			<td class="right bold">Account ID:</td>
 			<td><?php
-				if(isset($EditingAccount)) {
+				if (isset($EditingAccount)) {
 					echo $EditingAccount->getAccountID();
 				}
 				else { ?>
@@ -14,7 +14,7 @@
 		<tr>
 			<td class="right bold">Login:</td>
 			<td><?php
-				if(isset($EditingAccount)) {
+				if (isset($EditingAccount)) {
 					echo $EditingAccount->getLogin();
 				}
 				else { ?>
@@ -25,7 +25,7 @@
 		<tr>
 			<td class="right bold">Validation Code:</td>
 			<td><?php
-				if(isset($EditingAccount)) {
+				if (isset($EditingAccount)) {
 					echo $EditingAccount->getValidationCode();
 				}
 				else { ?>
@@ -36,7 +36,7 @@
 		<tr>
 			<td class="right bold">Email:</td>
 			<td><?php
-				if(isset($EditingAccount)) {
+				if (isset($EditingAccount)) {
 					echo $EditingAccount->getEmail();
 				}
 				else { ?>
@@ -47,7 +47,7 @@
 		<tr>
 			<td class="right bold">HoF Name:</td>
 			<td><?php
-				if(isset($EditingAccount)) {
+				if (isset($EditingAccount)) {
 					echo $EditingAccount->getHofName();
 				}
 				else { ?>
@@ -56,7 +56,7 @@
 			</td>
 		</tr><?php
 
-		if(isset($EditingAccount)) { ?>
+		if (isset($EditingAccount)) { ?>
 			<tr>
 			<td class="right bold">Points:</td>
 			<td><?php echo $EditingAccount->getPoints(); ?></td>
@@ -83,11 +83,11 @@
 			<td colspan="2">&nbsp;</td>
 		</tr><?php
 
-		if(isset($EditingAccount)) { ?>
+		if (isset($EditingAccount)) { ?>
 			<tr>
 				<td valign="top" class="right bold">Player:</td>
 					<td><?php
-						if(count($EditingPlayers)) { ?>
+						if (count($EditingPlayers)) { ?>
 							<a onclick="$('#accountPlayers').fadeToggle(600);">Show/Hide</a>
 							<table id="accountPlayers" style="display:none"><?php
 								foreach ($EditingPlayers as $CurrentPlayer) {
@@ -199,8 +199,8 @@
 						<input type="radio" name="choise" value="pre_select">
 						Existing Reason: <select name="reason_pre_select" onchange="go()">
 							<option value="0">[Please Select]</option><?php
-							foreach($BanReasons as $ReasonID => $BanReason) { ?>
-								<option value="<?php echo $ReasonID; ?>"<?php if($Disabled !== false && $ReasonID == $Disabled['ReasonID']) { ?> selected="selected"<?php } ?>><?php echo $BanReason; ?></option><?php
+							foreach ($BanReasons as $ReasonID => $BanReason) { ?>
+								<option value="<?php echo $ReasonID; ?>"<?php if ($Disabled !== false && $ReasonID == $Disabled['ReasonID']) { ?> selected="selected"<?php } ?>><?php echo $BanReason; ?></option><?php
 							} ?>
 						</select>
 					</p>
@@ -244,8 +244,8 @@
 			<tr>
 				<td valign="top" class="right bold">Closing History:</td>
 				<td><?php
-					if(count($ClosingHistory) > 0) {
-						foreach($ClosingHistory as $Action) {
+					if (count($ClosingHistory) > 0) {
+						foreach ($ClosingHistory as $Action) {
 							echo date(DATE_FULL_SHORT, $Action['Time']); ?> - <?php echo $Action['Action']; ?> by <?php echo $Action['AdminName']; ?><br /><?php
 						}
 					}
@@ -279,11 +279,11 @@
 
 			<tr>
 				<td valign="top" class="right bold">Forced Veteran:</td>
-				<td><input type="radio" name="veteran_status" value="TRUE"<?php if($EditingAccount->isVeteranForced()) { ?> checked="checked"<?php } ?>>Yes</td>
+				<td><input type="radio" name="veteran_status" value="TRUE"<?php if ($EditingAccount->isVeteranForced()) { ?> checked="checked"<?php } ?>>Yes</td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="radio" name="veteran_status" value="FALSE"<?php if(!$EditingAccount->isVeteranForced()) { ?> checked="checked"<?php } ?>>No</td>
+				<td><input type="radio" name="veteran_status" value="FALSE"<?php if (!$EditingAccount->isVeteranForced()) { ?> checked="checked"<?php } ?>>No</td>
 			</tr>
 
 			<tr>
@@ -293,11 +293,11 @@
 
 			<tr>
 				<td valign="top" class="right bold">Logging:</td>
-				<td><input type="radio" name="logging_status" value="TRUE"<?php if($EditingAccount->isLoggingEnabled()) { ?> checked="checked"<?php } ?>>Yes</td>
+				<td><input type="radio" name="logging_status" value="TRUE"<?php if ($EditingAccount->isLoggingEnabled()) { ?> checked="checked"<?php } ?>>Yes</td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="radio" name="logging_status" value="FALSE"<?php if(!$EditingAccount->isLoggingEnabled()) { ?> checked="checked"<?php } ?>>No</td>
+				<td><input type="radio" name="logging_status" value="FALSE"<?php if (!$EditingAccount->isLoggingEnabled()) { ?> checked="checked"<?php } ?>>No</td>
 			</tr>
 
 			<tr>
@@ -308,10 +308,10 @@
 			<tr>
 				<td valign="top" class="right bold">Last IP's:</td>
 				<td><?php
-					if(count($RecentIPs) > 0) { ?>
+					if (count($RecentIPs) > 0) { ?>
 						<a onclick="$('#recentIPs').fadeToggle(600);">Show/Hide</a>
 						<table id="recentIPs" style="display:none"><?php
-							foreach($RecentIPs as $RecentIP) { ?>
+							foreach ($RecentIPs as $RecentIP) { ?>
 								<tr>
 									<td><?php echo date(DATE_FULL_SHORT, $RecentIP['Time']); ?></td>
 									<td>&nbsp;</td>
@@ -349,7 +349,7 @@
 	<table>
 		<tr>
 			<td><?php
-				if(isset($EditingAccount)) { ?>
+				if (isset($EditingAccount)) { ?>
 					<input type="submit" name="action" value="Edit Account" class="InputFields" /><?php
 				}
 				else { ?>
@@ -357,7 +357,7 @@
 				} ?>
 			</td><?php
 
-			if(isset($EditingAccount)) { ?>
+			if (isset($EditingAccount)) { ?>
 				<td>
 					<div class="buttonA"><a class="buttonA" href="<?php echo $ResetFormHREF; ?>">Reset Form</a></div>
 				</td><?php
@@ -365,9 +365,9 @@
 	</table>
 </form><?php
 
-if(isset($ErrorMessage)) { ?>
+if (isset($ErrorMessage)) { ?>
 	<div class="center red"><?php echo $ErrorMessage; ?></div><?php
 }
-if(isset($Message)) { ?>
+if (isset($Message)) { ?>
 	<div class="center"><?php echo $Message; ?></div><?php
 } ?>

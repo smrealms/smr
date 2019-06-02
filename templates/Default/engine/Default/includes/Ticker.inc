@@ -5,8 +5,7 @@ if (isset($Ticker)) { ?>
 			foreach ($Ticker as $Tick) {
 				echo $Tick['Time']; ?>: &nbsp; <?php echo bbifyMessage($Tick['Message']); ?><br /><br /><?php
 			}
-		}
-		else {
+		} else {
 			?>Nothing to report<?php
 		} ?>
 	</div><br /><?php

@@ -1,17 +1,20 @@
 <?php
 
-if (!isset($var['notified_time']))
+if (!isset($var['notified_time'])) {
 	SmrSession::updateVar('notified_time', TIME);
+}
 
-if (empty($var['message_id']))
+if (empty($var['message_id'])) {
 	create_error('Please click the small yellow icon to report a message!');
+}
 
 // get message form db
 $db->query('SELECT message_text
 			FROM message
 			WHERE message_id = ' . $db->escapeNumber($var['message_id']));
-if (!$db->nextRecord())
+if (!$db->nextRecord()) {
 	create_error('Could not find the message you selected!');
+}
 
 $template->assign('MessageText', $db->getField('message_text'));
 

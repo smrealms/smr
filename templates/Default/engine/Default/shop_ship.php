@@ -19,8 +19,7 @@ if (count($ShipsSold) > 0) { ?>
 			</tr><?php
 		}
 	?></table><?php
-}
-else {
+} else {
 	?>We've got nothing for you here! Get outta here!<br /><?php
 }
 ?><br /><?php

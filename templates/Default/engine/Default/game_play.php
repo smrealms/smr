@@ -1,8 +1,8 @@
 <?php
-if(isset($ErrorMessage)) {
+if (isset($ErrorMessage)) {
 	echo $ErrorMessage; ?><br /><br /><?php
 }
-if(isset($Message)) {
+if (isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 } ?>
 
@@ -10,7 +10,7 @@ if(isset($Message)) {
 <br />You are ranked as <?php $this->doAn($ThisAccount->getRankName()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<br /><br />
 
 <div id="playGames" class="ajax"><?php
-	if(isset($Games['Play'])) { ?>
+	if (isset($Games['Play'])) { ?>
 		<table class="standard">
 			<tr>
 				<th>&nbsp;</th>
@@ -22,7 +22,7 @@ if(isset($Message)) {
 				<th>Game Type</th>
 				<th>Game Speed</th>
 			</tr><?php
-			foreach($Games['Play'] as $Game) { ?>
+			foreach ($Games['Play'] as $Game) { ?>
 				<tr>
 					<td>
 						<div class="buttonA">
@@ -46,7 +46,7 @@ if(isset($Message)) {
 
 <h1>Join Game</h1>
 <div id="joinGames" class="ajax"><?php
-	if(isset($Games['Join'])) { ?>
+	if (isset($Games['Join'])) { ?>
 		<table class="standard">
 			<tr>
 				<th>&nbsp;</th>
@@ -58,10 +58,10 @@ if(isset($Message)) {
 				<th>Game Speed</th>
 				<th>Credits Needed</th>
 			</tr><?php
-			foreach($Games['Join'] as $Game) { ?>
+			foreach ($Games['Join'] as $Game) { ?>
 				<tr>
 					<td class="center">
-						<div class="buttonA"><a id="game_join_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>"><?php if(TIME < $Game['JoinTime']) {?>View Info<?php }else{ ?>Join Game<?php } ?></a></div>
+						<div class="buttonA"><a id="game_join_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>"><?php if (TIME < $Game['JoinTime']) {?>View Info<?php } else { ?>Join Game<?php } ?></a></div>
 					</td>
 					<td width="35%"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</td>
 					<td class="noWrap"><?php echo $Game['StartDate']; ?></td>
@@ -84,12 +84,12 @@ if(isset($Message)) {
 <h1><a href="<?php echo $VotingHref; ?>">Voting</a></h1><?php
 if (isset($Voting)) {
 	?>Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
-	foreach($Voting as $Vote) {
+	foreach ($Voting as $Vote) {
 		?><br /><br />
 		<form name="FORM" method="POST" action="<?php echo $Vote['HREF'] ?>">
 			<span class="bold"><?php echo bbifyMessage($Vote['Question']); ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
-			foreach($Vote['Options'] as $VoteOption) { ?>
-				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbifyMessage($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
+			foreach ($Vote['Options'] as $VoteOption) { ?>
+				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if ($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbifyMessage($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
 			} ?>
 			<input type="submit" name="submit" value="Vote!"><br />
 		</form><?php
@@ -105,7 +105,7 @@ if (isset($Voting)) {
 <h1>Previous Games</h1>
 <a onclick="$('#prevGames').slideToggle(600);">Show/Hide</a>
 <div id="prevGames" class="ajax" style="display:none;"><?php
-	if(isset($Games['Previous'])) { ?>
+	if (isset($Games['Previous'])) { ?>
 		<table class="standard">
 			<tr>
 				<th width="150">Game Name</th>
@@ -114,15 +114,15 @@ if (isset($Voting)) {
 				<th>Game Speed</th>
 				<th colspan="3">Options</th>
 			</tr><?php
-			foreach($Games['Previous'] as $Game) { ?>
+			foreach ($Games['Previous'] as $Game) { ?>
 				<tr>
-					<td width="35%"><?php if(isset($Game['PreviousGameLink'])){ ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if(isset($Game['PreviousGameLink'])){ ?></a><?php } ?></td>
+					<td width="35%"><?php if (isset($Game['PreviousGameLink'])) { ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if (isset($Game['PreviousGameLink'])) { ?></a><?php } ?></td>
 					<td><?php echo $Game['StartDate'] ?></td>
 					<td><?php echo $Game['EndDate'] ?></td>
 					<td class="center"><?php echo $Game['Speed'] ?></td>
 					<td class="center"><a href="<?php echo $Game['PreviousGameHOFLink']; ?>">Hall Of Fame</a></td>
 					<td class="center"><a href="<?php echo $Game['PreviousGameNewsLink']; ?>">Game News</a></td>
-					<td class="center"><?php if(isset($Game['PreviousGameStatsLink'])){ ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Game Stats</a><?php } ?></td>
+					<td class="center"><?php if (isset($Game['PreviousGameStatsLink'])) { ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Game Stats</a><?php } ?></td>
 				</tr>
 			<?php } ?>
 		</table><?php

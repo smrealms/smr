@@ -3,7 +3,7 @@
 // trim input now
 $player_name = trim($_REQUEST['player_name']);
 
-if(!defined('NPC_SCRIPT') && strpos($player_name,'NPC')===0)
+if (!defined('NPC_SCRIPT') && strpos($player_name, 'NPC') === 0)
 	create_error('Player names cannot begin with "NPC".');
 
 $limited_char = 0;
@@ -62,7 +62,7 @@ if ($isNewbie) {
 }
 else {
 	$startingNewbieTurns = STARTING_NEWBIE_TURNS_VET;
-	switch($race_id) {
+	switch ($race_id) {
 		case RACE_ALSKANT:
 			$ship_id = SHIP_TYPE_SMALL_TIMER;
 		break;
@@ -115,7 +115,7 @@ else {
 
 // insert into player table.
 $db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, alliance_id, sector_id, last_cpl_action, last_active, newbie_turns, npc, newbie_status)
-			VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escapeString($player_name) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ',' . $db->escapeBoolean($isNewbie) . ')');
+			VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($player_id) . ', ' . $db->escapeString($player_name) . ', ' . $db->escapeNumber($race_id) . ', ' . $db->escapeNumber($ship_id) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($home_sector_id) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ',' . $db->escapeBoolean($isNewbie) . ')');
 
 $db->unlock();
 
@@ -128,7 +128,7 @@ $ship = $player->getShip();
 $ship->setShields($amount_shields, true);
 $ship->setArmour($amount_armour, true);
 $ship->setCargoHolds(40);
-$ship->addWeapon(46);  // Laser
+$ship->addWeapon(46); // Laser
 
 // The `player_visited_sector` table holds *unvisited* sectors, so that once
 // all sectors are visited (the majority of the game), the table is empty.
@@ -144,14 +144,14 @@ if ($isNewbie) {
 	$player->joinAlliance(NHA_ID);
 
 	//we need to send them some messages
-	$message = 'Welcome to Space Merchant Realms! You have been automatically placed into the <u>[alliance='.NHA_ID.']</u>, which is led by a veteran player who can assist you while you learn the basics of the game. Your alliance leader is denoted with a star on your alliance roster.<br />
-	For more tips to help you get started with the game, check out your alliance message boards. These can be reached by clicking the "Alliance" link on the left side of the page, and then clicking the "Message Board" menu link. The <u><a href="'.WIKI_URL.'" target="_blank">SMR Wiki</a></u> also gives detailed information on all aspects of the game.<br />
+	$message = 'Welcome to Space Merchant Realms! You have been automatically placed into the <u>[alliance=' . NHA_ID . ']</u>, which is led by a veteran player who can assist you while you learn the basics of the game. Your alliance leader is denoted with a star on your alliance roster.<br />
+	For more tips to help you get started with the game, check out your alliance message boards. These can be reached by clicking the "Alliance" link on the left side of the page, and then clicking the "Message Board" menu link. The <u><a href="'.WIKI_URL . '" target="_blank">SMR Wiki</a></u> also gives detailed information on all aspects of the game.<br />
 	SMR is integrated with both IRC and Discord. These are free chat services where you can talk to other players and coordinate with your alliance. Simply click the "Join Chat" link at the bottom left panel of the page.';
 
 	SmrPlayer::sendMessageFromAdmin($gameID, $account->getAccountID(), $message);
 }
 
-if($race_id == RACE_ALSKANT) { // Give Alskants 250 personal relations to start.
+if ($race_id == RACE_ALSKANT) { // Give Alskants 250 personal relations to start.
 	foreach (Globals::getRaces() as $raceID => $raceInfo) {
 		$player->setRelations(250, $raceID);
 	}

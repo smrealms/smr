@@ -6,8 +6,9 @@
 //
 ////////////////////////////////////////////////////////////
 
-if ($player->isLandedOnPlanet())
+if ($player->isLandedOnPlanet()) {
 	create_error('You are on a planet!');
+}
 
 // Create a session to store temporary display options
 // Do not garbage collect here for best performance (see map_galaxy.php).

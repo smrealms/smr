@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Log Console - Detail');
+$template->assign('PageTopic', 'Log Console - Detail');
 
 // get the account_ids from last form
 $account_ids = SmrSession::getRequestVar('account_ids');
@@ -19,8 +19,8 @@ $template->assign('Action', $action);
 if ($action == 'Delete') {
 
 	// get rid of all entries
-	$db->query('DELETE FROM account_has_logs WHERE account_id IN ('.$account_list.')');
-	$db->query('DELETE FROM log_has_notes WHERE account_id IN ('.$account_list.')');
+	$db->query('DELETE FROM account_has_logs WHERE account_id IN (' . $account_list . ')');
+	$db->query('DELETE FROM log_has_notes WHERE account_id IN (' . $account_list . ')');
 
 }
 else {
@@ -78,7 +78,7 @@ else {
 
 	// get notes from db
 	$log_notes = array();
-	$db->query('SELECT * FROM log_has_notes WHERE account_id IN ('.$account_list.')');
+	$db->query('SELECT * FROM log_has_notes WHERE account_id IN (' . $account_list . ')');
 	while ($db->nextRecord()) {
 		$log_notes[] = $db->getField('notes');
 	}
@@ -94,11 +94,11 @@ else {
 	// * L o g   T a b l e
 	// *********************************
 	$logs = [];
-	$db->query('SELECT * FROM account_has_logs WHERE account_id IN ('.$account_list.') AND log_type_id IN ('.$db->escapeArray($log_type_id_list).') ORDER BY microtime DESC');
+	$db->query('SELECT * FROM account_has_logs WHERE account_id IN (' . $account_list . ') AND log_type_id IN (' . $db->escapeArray($log_type_id_list) . ') ORDER BY microtime DESC');
 	while ($db->nextRecord()) {
 		$account_id		= $db->getInt('account_id');
 		$microtime		= $db->getMicrotime('microtime', true); //fix value length errors
-		$message		= stripslashes($db->getField('message'));
+		$message = stripslashes($db->getField('message'));
 		$log_type_id	= $db->getInt('log_type_id');
 		$sector_id		= $db->getInt('sector_id');
 

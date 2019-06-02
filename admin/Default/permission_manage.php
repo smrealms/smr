@@ -2,7 +2,7 @@
 
 $admin_id = SmrSession::getRequestVar('admin_id', false);
 
-$template->assign('PageTopic','Manage Admin Permissions');
+$template->assign('PageTopic', 'Manage Admin Permissions');
 
 $container = create_container('skeleton.php', 'permission_manage.php');
 $selectAdminHREF = SmrSession::getNewHREF($container);
@@ -26,7 +26,7 @@ if (empty($admin_id)) {
 	$validatedAccounts = [];
 	$db->query('SELECT account_id, login
 				FROM account
-				WHERE validated = '.$db->escapeBoolean(true).'
+				WHERE validated = '.$db->escapeBoolean(true) . '
 				ORDER BY login');
 	while ($db->nextRecord()) {
 		$accountID = $db->getInt('account_id');

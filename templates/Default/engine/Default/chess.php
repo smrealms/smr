@@ -9,7 +9,7 @@ if (!empty($ChessGames)) { ?>
 			<th>Current Turn</th>
 			<th></th>
 		</tr><?php
-		foreach($ChessGames as $ChessGame) { ?>
+		foreach ($ChessGames as $ChessGame) { ?>
 			<tr>
 				<td>
 					<?php echo $ChessGame->getWhitePlayer()->getLinkedDisplayName(false); ?>
@@ -29,11 +29,11 @@ if (!empty($ChessGames)) { ?>
 	<br /><br /><?php
 }
 
-if(count($PlayerList) > 0) { ?>
+if (count($PlayerList) > 0) { ?>
 	<form action="<?php echo Globals::getChessCreateHREF(); ?>" method="POST">
 		<label for="player_id">Challenge: </label>
 		<select id="player_id" name="player_id"><?php
-			foreach($PlayerList as $PlayerID => $PlayerName) {
+			foreach ($PlayerList as $PlayerID => $PlayerName) {
 				?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
 			} ?>
 		</select>&nbsp;<input type="submit"/>
@@ -43,12 +43,12 @@ else { ?>
 	<p>You have challenged every player.</p><?php
 }
 
-if(isset($NPCList)) {
-	if(count($NPCList) > 0) { ?>
+if (isset($NPCList)) {
+	if (count($NPCList) > 0) { ?>
 		<form action="<?php echo Globals::getChessCreateHREF(); ?>" method="POST">
 			<label for="player_id">Challenge NPC: </label>
 			<select id="player_id" name="player_id"><?php
-				foreach($NPCList as $PlayerID => $PlayerName) {
+				foreach ($NPCList as $PlayerID => $PlayerName) {
 					?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
 				} ?>
 			</select>&nbsp;<input type="submit"/>

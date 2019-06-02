@@ -2,9 +2,9 @@
 
 class Template {
 	private $data = array();
-	private $captures=array('');
-	private $currentCaptureID=0;
-	private $ignoreMiddle=false;
+	private $captures = array('');
+	private $currentCaptureID = 0;
+	private $ignoreMiddle = false;
 	private $nestedIncludes = 0;
 	private $ajaxJS = array();
 	protected $jsAlerts = array();
@@ -37,7 +37,7 @@ class Template {
 	 * Displays the template HTML. Stores any ajax-enabled elements for future
 	 * comparison, and outputs modified elements in XML for ajax if requested.
 	 */
-	public function display($templateName, $outputXml=false) {
+	public function display($templateName, $outputXml = false) {
 		// If we already started output buffering before calling `display`,
 		// we may have unwanted content in the buffer that we need to remove
 		// before we send the Content-Type headers below.
@@ -49,7 +49,7 @@ class Template {
 		}
 		ob_start();
 		$this->includeTemplate($templateName);
-		$this->captures[$this->currentCaptureID].=ob_get_clean();
+		$this->captures[$this->currentCaptureID] .= ob_get_clean();
 		$output = join('', $this->captures);
 		$this->trimWhiteSpace($output);
 
@@ -61,10 +61,10 @@ class Template {
 
 		$ajaxEnabled = ($this->data['AJAX_ENABLE_REFRESH'] ?? false) !== false;
 		if ($ajaxEnabled) {
-			$ajaxXml =& $this->convertHtmlToAjaxXml($output, $outputXml);
+			$ajaxXml = & $this->convertHtmlToAjaxXml($output, $outputXml);
 			if ($outputXml) {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
-				$ajaxXml='<all>'.$ajaxXml.'</all>';
+				$ajaxXml = '<all>' . $ajaxXml . '</all>';
 				echo $ajaxXml;
 			} else {
 				echo $output;
@@ -131,13 +131,13 @@ class Template {
 	}
 	
 	protected function includeTemplate($templateName, array $assignVars = null) {
-		if($this->nestedIncludes > 15) {
+		if ($this->nestedIncludes > 15) {
 			throw new Exception('Nested more than 15 template includes, is something wrong?');
 		}
 		foreach ($this->data as $key => $value) {
 			$$key = $value;
 		}
-		if($assignVars!==null) {
+		if ($assignVars !== null) {
 			foreach ($assignVars as $key => $value) {
 				$$key = $value;
 			}
@@ -148,14 +148,14 @@ class Template {
 	}
 	
 	protected function startCapture() {
-		$this->captures[$this->currentCaptureID].=ob_get_contents();
+		$this->captures[$this->currentCaptureID] .= ob_get_contents();
 		ob_clean();
 		$this->currentCaptureID++;
 		$this->captures[$this->currentCaptureID] = '';
 	}
 	
 	protected function &stopCapture() {
-		$captured =& $this->captures[$this->currentCaptureID];
+		$captured = & $this->captures[$this->currentCaptureID];
 		unset($this->captures[$this->currentCaptureID]);
 		$captured .= ob_get_contents();
 		ob_clean();
@@ -164,7 +164,7 @@ class Template {
 	}
 	
 	protected function checkDisableAJAX($html) {
-		return preg_match('/<input'.'[^>]*'.'[^(submit)(hidden)(image)]'.'[^>]*'.'>/i', $html)!=0;
+		return preg_match('/<input' . '[^>]*' . '[^(submit)(hidden)(image)]' . '[^>]*' . '>/i', $html) != 0;
 	}
 	
 	protected function trimWhiteSpace(&$html) {
@@ -199,13 +199,13 @@ class Template {
 		$html = trim(preg_replace('/> </', '><', $html));
 		
 		// replace span blocks
-		$this->replaceTrimHolder("@@@SMARTY:TRIM:SPAN@@@",$_span_blocks, $html);
+		$this->replaceTrimHolder("@@@SMARTY:TRIM:SPAN@@@", $_span_blocks, $html);
 		
 		// replace textarea blocks
-		$this->replaceTrimHolder("@@@SMARTY:TRIM:TEXTAREA@@@",$_textarea_blocks, $html);
+		$this->replaceTrimHolder("@@@SMARTY:TRIM:TEXTAREA@@@", $_textarea_blocks, $html);
 		
 		// replace pre blocks
-		$this->replaceTrimHolder("@@@SMARTY:TRIM:PRE@@@",$_pre_blocks, $html);
+		$this->replaceTrimHolder("@@@SMARTY:TRIM:PRE@@@", $_pre_blocks, $html);
 		
 		// replace script blocks
 //		$this->replaceTrimHolder("@@@SMARTY:TRIM:SCRIPT@@@",$_script_blocks, $html);
@@ -213,8 +213,8 @@ class Template {
 	protected function replaceTrimHolder($search_str, $replace, &$subject) {
 		$_len = strlen($search_str);
 		$_pos = 0;
-		for ($_i=0, $_count=count($replace); $_i<$_count; $_i++) {
-			if (($_pos=strpos($subject, $search_str, $_pos))!==false) {
+		for ($_i = 0, $_count = count($replace); $_i < $_count; $_i++) {
+			if (($_pos = strpos($subject, $search_str, $_pos)) !== false) {
 				$subject = substr_replace($subject, $replace[$_i], $_pos, $_len);
 			}
 			else {
@@ -224,10 +224,10 @@ class Template {
 	}
 	
 	protected function doDamageTypeReductionDisplay(&$damageTypes) {
-		if($damageTypes == 3) {
+		if ($damageTypes == 3) {
 			echo ', ';
 		}
-		else if($damageTypes == 2) {
+		else if ($damageTypes == 2) {
 			echo ' and ';
 		}
 		$damageTypes--;
@@ -235,7 +235,7 @@ class Template {
 
 	protected function doAn($wordAfter) {
 		$char = strtoupper($wordAfter[0]);
-		if($char == 'A' || $char == 'E' || $char == 'I' || $char == 'O' || $char == 'U') {
+		if ($char == 'A' || $char == 'E' || $char == 'I' || $char == 'O' || $char == 'U') {
 			echo 'an';
 		}
 		else {
@@ -247,33 +247,33 @@ class Template {
 	 * EVAL is special (well, will be when needed and implemented in the javascript).
 	 */
 	public function addJavascriptForAjax($varName, $obj) {
-		if($varName == 'EVAL') {
-			if(!isset($this->ajaxJS['EVAL'])) {
+		if ($varName == 'EVAL') {
+			if (!isset($this->ajaxJS['EVAL'])) {
 				return $this->ajaxJS['EVAL'] = $obj;
 			}
 			return $this->ajaxJS['EVAL'] .= ';' . $obj;
 		}
 		
-		if(isset($this->ajaxJS[$varName])) {
+		if (isset($this->ajaxJS[$varName])) {
 			throw new Exception('Trying to set javascript val twice: ' . $varName);
 		}
 		return $this->ajaxJS[$varName] = json_encode($obj);
 	}
 	
 	protected function addJavascriptAlert($string) {
-		if(!SmrSession::addAjaxReturns('ALERT:'.$string,$string)) {
+		if (!SmrSession::addAjaxReturns('ALERT:' . $string, $string)) {
 			$this->jsAlerts[] = $string;
 		}
 	}
 	
-	protected function &convertHtmlToAjaxXml($str,$returnXml) {
-		if(empty($str)) {
+	protected function &convertHtmlToAjaxXml($str, $returnXml) {
+		if (empty($str)) {
 			return '';
 		}
 
 		// To get inner html, we need to construct a separate DOMDocument.
 		// See PHP Bug #76285.
-		$getInnerHTML = function (DOMNode $node) {
+		$getInnerHTML = function(DOMNode $node) {
 			$dom = new DOMDocument();
 			$dom->formatOutput = false;
 			foreach ($node->childNodes as $child) {
@@ -283,7 +283,7 @@ class Template {
 			return trim(@$dom->saveHTML());
 		};
 
-		$xml='';
+		$xml = '';
 		$dom = new DOMDocument();
 		$dom->loadHTML($str);
 		$xpath = new DOMXpath($dom);
@@ -293,13 +293,13 @@ class Template {
 			foreach ($matchNodes as $node) {
 				$id = $node->getAttribute('id');
 				$inner = $getInnerHTML($node);
-				if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml) {
-					$xml.= '<'.$id.'>'.xmlify($inner). '</'.$id.'>';
+				if (!SmrSession::addAjaxReturns($id, $inner) && $returnXml) {
+					$xml .= '<' . $id . '>' . xmlify($inner) . '</' . $id . '>';
 				}
 			}
 		}
 
-		if(!$this->ignoreMiddle) {
+		if (!$this->ignoreMiddle) {
 			$mid = $dom->getElementById('middle_panel');
 
 			$doAjaxMiddle = true;
@@ -319,28 +319,28 @@ class Template {
 				}
 			}
 
-			if($doAjaxMiddle) {
+			if ($doAjaxMiddle) {
 				$inner = $getInnerHTML($mid);
-				if(!$this->checkDisableAJAX($inner)) {
+				if (!$this->checkDisableAJAX($inner)) {
 					$id = $mid->getAttribute('id');
-					if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml) {
-						$xml .= '<'.$id.'>'.xmlify($inner).'</'.$id.'>';
+					if (!SmrSession::addAjaxReturns($id, $inner) && $returnXml) {
+						$xml .= '<' . $id . '>' . xmlify($inner) . '</' . $id . '>';
 					}
 				}
 			}
 		}
 
 		$js = '';
-		foreach($this->ajaxJS as $varName => $JSON) {
-			if(!SmrSession::addAjaxReturns('JS:'.$varName,$JSON) && $returnXml) {
-				$js .= '<'.$varName.'>'.xmlify($JSON).'</'.$varName.'>';
+		foreach ($this->ajaxJS as $varName => $JSON) {
+			if (!SmrSession::addAjaxReturns('JS:' . $varName, $JSON) && $returnXml) {
+				$js .= '<' . $varName . '>' . xmlify($JSON) . '</' . $varName . '>';
 			}
 		}
-		if($returnXml && count($this->jsAlerts) > 0) {
-			$js = '<ALERT>'.json_encode($this->jsAlerts).'</ALERT>';
+		if ($returnXml && count($this->jsAlerts) > 0) {
+			$js = '<ALERT>' . json_encode($this->jsAlerts) . '</ALERT>';
 		}
-		if(strlen($js) > 0) {
-			$xml .= '<JS>'.$js.'</JS>';
+		if (strlen($js) > 0) {
+			$xml .= '<JS>' . $js . '</JS>';
 		}
 		return $xml;
 	}

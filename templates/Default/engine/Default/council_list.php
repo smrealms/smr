@@ -22,8 +22,7 @@
 				</tr>
 			</tbody>
 		</table><?php
-	}
-	else {
+	} else {
 		?>This council doesn't have a president!<?php
 	} ?>
 	<br /><br />
@@ -56,8 +55,7 @@
 				} ?>
 			</tbody>
 		</table><?php
-	}
-	else { ?>
+	} else { ?>
 		This council doesn't have any members!<?php
 	} ?>
 </div>

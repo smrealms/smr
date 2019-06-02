@@ -42,7 +42,7 @@ elseif ($var['func'] == 'Uno') {
 }
 elseif ($var['func'] == 'Warp') {
 	$sector_to = trim($_REQUEST['sector_to']);
-	if(!is_numeric($sector_to)) {
+	if (!is_numeric($sector_to)) {
 		create_error('Sector ID has to be a number.');
 	}
 	if (!SmrSector::sectorExists($player->getGameID(), $sector_to)) {
@@ -59,7 +59,7 @@ elseif ($var['func'] == 'Exp') {
 	$player->setExperience($exp);
 }
 elseif ($var['func'] == 'Align') {
-	$align=max(-500, min(500, (int)$_REQUEST['align']));
+	$align = max(-500, min(500, (int)$_REQUEST['align']));
 	$player->setAlignment($align);
 }
 elseif ($var['func'] == 'RemWeapon') {
@@ -74,22 +74,22 @@ elseif ($var['func'] == 'Hard_add') {
 elseif ($var['func'] == 'Relations') {
 	$amount = (int)$_REQUEST['amount'];
 	$race = (int)$_REQUEST['race'];
-	$player->setRelations($amount,$race);
+	$player->setRelations($amount, $race);
 }
 elseif ($var['func'] == 'Race_Relations') {
 	$amount = $_REQUEST['amount'];
 	$race = $_REQUEST['race'];
-	if(!is_numeric($amount) || !is_numeric($race)) {
+	if (!is_numeric($amount) || !is_numeric($race)) {
 		create_error('Amount and Race IDs have to be numbers.');
 	}
-	if($player->getRaceID()==$race) {
+	if ($player->getRaceID() == $race) {
 		create_error('You cannot change race relations with your own race.');
 	}
 	$db->query('UPDATE race_has_relation SET relation = ' . $db->escapeNumber($amount) . ' WHERE race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . ' AND race_id_2 = ' . $db->escapeNumber($race) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$db->query('UPDATE race_has_relation SET relation = ' . $db->escapeNumber($amount) . ' WHERE race_id_1 = ' . $db->escapeNumber($race) . ' AND race_id_2 = ' . $db->escapeNumber($player->getRaceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 } elseif ($var['func'] == 'Race') {
 	$race = $_REQUEST['race'];
-	if(!is_numeric($race)) {
+	if (!is_numeric($race)) {
 		create_error('Amount and Race IDs have to be numbers.');
 	}
 	$player->setRaceID($race);
@@ -121,8 +121,8 @@ forward($container);
  */
 function setHardwareToMax($ship) {
 	$maxHardware = $ship->getMaxHardware();
-	foreach($maxHardware as $key => $max) {
-		$ship->setHardware($key,$max);
+	foreach ($maxHardware as $key => $max) {
+		$ship->setHardware($key, $max);
 	}
 	$ship->removeUnderAttack();
 }

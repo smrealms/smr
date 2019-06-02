@@ -9,8 +9,8 @@ $smr_credit = $_REQUEST['smr_credit'];
 $choise = isset($_POST['choise']) ? $_POST['choise'] : '';
 $reason_pre_select = $_REQUEST['reason_pre_select'];
 $reason_msg = $_REQUEST['reason_msg'];
-$veteran_status = $_REQUEST['veteran_status']=='TRUE';
-$logging_status = $_REQUEST['logging_status']=='TRUE';
+$veteran_status = $_REQUEST['veteran_status'] == 'TRUE';
+$logging_status = $_REQUEST['logging_status'] == 'TRUE';
 $except = $_REQUEST['exception_add'];
 $names = $_REQUEST['player_name'];
 $points = intval($_REQUEST['points']);
@@ -20,17 +20,17 @@ $actions = [];
 
 if (!empty($donation)) {
 	// add entry to account donated table
-	$db->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$db->escapeNumber($account_id).', ' . $db->escapeNumber(TIME) . ' , '.$db->escapeNumber($donation).')');
+	$db->query('INSERT INTO account_donated (account_id, time, amount) VALUES (' . $db->escapeNumber($account_id) . ', ' . $db->escapeNumber(TIME) . ' , ' . $db->escapeNumber($donation) . ')');
 
 	// add the credits to the players account - if requested
 	if (!empty($smr_credit)) {
 		$curr_account->increaseSmrCredits($donation * CREDITS_PER_DOLLAR);
 	}
 
-	$actions[] = 'added $'.$donation;
+	$actions[] = 'added $' . $donation;
 }
 
-if(!empty($_REQUEST['grant_credits'])&&is_numeric($_REQUEST['grant_credits'])) {
+if (!empty($_REQUEST['grant_credits']) && is_numeric($_REQUEST['grant_credits'])) {
 	$curr_account->increaseSmrRewardCredits($_REQUEST['grant_credits']);
 	$actions[] = 'added ' . $_REQUEST['grant_credits'] . ' reward credits';
 }
@@ -38,11 +38,11 @@ if(!empty($_REQUEST['grant_credits'])&&is_numeric($_REQUEST['grant_credits'])) {
 if (!empty($_POST['special_close'])) {
 	$specialClose = $_POST['special_close'];
 	// Make sure the special closing reason exists
-	$db->query('SELECT reason_id FROM closing_reason WHERE reason='.$db->escapeString($specialClose));
+	$db->query('SELECT reason_id FROM closing_reason WHERE reason=' . $db->escapeString($specialClose));
 	if ($db->nextRecord()) {
 		$reasonID = $db->getInt('reason_id');
 	} else {
-		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escapeString($specialClose).')');
+		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escapeString($specialClose) . ')');
 		$reasonID = $db->getInsertID();
 	}
 
@@ -59,7 +59,7 @@ if ($choise == 'reopen') {
 	//do we have points
 	$curr_account->removePoints($points);
 	$curr_account->unbanAccount($account);
-	$actions[] = 'reopened account and removed '.$points.' points';
+	$actions[] = 'reopened account and removed ' . $points . ' points';
 }
 else if ($points > 0) {
 	if ($choise == 'individual') {
@@ -72,11 +72,11 @@ else if ($points > 0) {
 
 	$suspicion = isset($_POST['suspicion']) ? $_POST['suspicion'] : '';
 	$bannedDays = $curr_account->addPoints($points, $account, $reason_id, $suspicion);
-	$actions[] = 'added '.$points.' ban points';
+	$actions[] = 'added ' . $points . ' ban points';
 
 	if ($bannedDays !== false) {
 		if ($bannedDays > 0) {
-			$expire_msg = 'for '.$bannedDays.' days';
+			$expire_msg = 'for ' . $bannedDays . ' days';
 		} else {
 			$expire_msg = 'indefinitely';
 		}
@@ -91,46 +91,46 @@ if (!empty($_POST['mailban'])) {
 		$actions[] = 'removed mailban';
 	} elseif ($mailban == 'add_days') {
 		$days = $_POST['mailban_days'];
-		$curr_account->increaseMailBanned($days*86400);
-		$actions[] = 'mail banned for '.$days.' days';
+		$curr_account->increaseMailBanned($days * 86400);
+		$actions[] = 'mail banned for ' . $days . ' days';
 	}
 }
 
 if ($veteran_status != $curr_account->isVeteranForced()) {
-	$db->query('UPDATE account SET veteran = '.$db->escapeString($veteran_status).' WHERE account_id = '.$db->escapeNumber($account_id));
-	$actions[] = 'set the veteran status to '.$db->escapeString($veteran_status);
+	$db->query('UPDATE account SET veteran = ' . $db->escapeString($veteran_status) . ' WHERE account_id = ' . $db->escapeNumber($account_id));
+	$actions[] = 'set the veteran status to ' . $db->escapeString($veteran_status);
 }
 
 if ($logging_status != $curr_account->isLoggingEnabled()) {
 	$curr_account->setLoggingEnabled($logging_status);
-	$actions[] = 'set the logging status to '.$logging_status;
+	$actions[] = 'set the logging status to ' . $logging_status;
 }
 
 if ($except != 'Add An Exception' && $except != '') {
-	$db->query('INSERT INTO account_exceptions (account_id, reason) VALUES ('.$db->escapeNumber($account_id).', '.$db->escapeString($except).')');
-	$actions[] = 'added the exception '.$except;
+	$db->query('INSERT INTO account_exceptions (account_id, reason) VALUES (' . $db->escapeNumber($account_id) . ', ' . $db->escapeString($except) . ')');
+	$actions[] = 'added the exception ' . $except;
 }
 
 if (!empty($names))
 	foreach ($names as $game_id => $new_name) {
-		if(!empty($new_name)) {
+		if (!empty($new_name)) {
 			// Escape html elements so the name displays correctly
 			$new_name = htmlentities($new_name);
 
-			$db->query('SELECT account_id FROM player WHERE game_id = '.$db->escapeNumber($game_id).' AND player_name = ' . $db->escapeString($new_name));
+			$db->query('SELECT account_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND player_name = ' . $db->escapeString($new_name));
 			if (!$db->nextRecord()) {
 				$editPlayer = SmrPlayer::getPlayer($account_id, $game_id);
 				$editPlayer->setPlayerName($new_name);
 				$editPlayer->update();
 
-				$actions[] = 'changed players name to '.$new_name;
+				$actions[] = 'changed players name to ' . $new_name;
 
 				//insert news message
 				$news = 'Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
 
 				$db->query('INSERT INTO news (time, news_message, game_id, type) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($game_id) . ', \'admin\')');
 			} else if ($db->getInt('account_id') != $account_id) {
-				$actions[] = 'have NOT changed players name to '.$new_name.' (already taken)';
+				$actions[] = 'have NOT changed players name to ' . $new_name . ' (already taken)';
 			}
 		}
 
@@ -138,17 +138,17 @@ if (!empty($names))
 
 if (!empty($delete)) {
 	foreach ($delete as $game_id => $value) {
-		if($value == 'TRUE') {
+		if ($value == 'TRUE') {
 			// Check for bank transactions into the alliance account
 			$db->query('SELECT * FROM alliance_bank_transactions WHERE payee_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id) . ' LIMIT 1');
-			if($db->getNumRows() != 0){
+			if ($db->getNumRows() != 0) {
 				// Can't delete
 				$actions[] = 'player has made alliance transaction';
 				continue;
 			}
 			// Check anon accounts for transactions
 			$db->query('SELECT * FROM anon_bank_transactions WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id) . ' LIMIT 1');
-			if($db->getNumRows() != 0){
+			if ($db->getNumRows() != 0) {
 				// Can't delete
 				$actions[] = 'player has made anonymous transaction';
 				continue;
@@ -164,7 +164,7 @@ if (!empty($delete)) {
 			$db->query('DELETE FROM galactic_post_writer WHERE ' . $sql);
 			$db->query('DELETE FROM message WHERE ' . $sql);
 			$db->query('DELETE FROM message_notify
-						WHERE (from_id=' . $db->escapeNumber($account_id) . ' OR to_id=' . $db->escapeNumber($account_id) .') AND game_id=' . $db->escapeNumber($game_id));
+						WHERE (from_id=' . $db->escapeNumber($account_id) . ' OR to_id=' . $db->escapeNumber($account_id) . ') AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('UPDATE planet SET owner_id=0,planet_name=\'\',password=\'\',shields=0,drones=0,credits=0,bonds=0
 						WHERE owner_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM player_attacks_planet WHERE ' . $sql);
@@ -190,7 +190,7 @@ if (!empty($delete)) {
 
 			$db->query('UPDATE active_session SET game_id=0 WHERE ' . $sql . ' LIMIT 1');
 
-			$actions[] = 'deleted player from game '.$game_id;
+			$actions[] = 'deleted player from game ' . $game_id;
 		}
 	}
 
@@ -198,7 +198,7 @@ if (!empty($delete)) {
 
 //get his login name
 $container = create_container('skeleton.php', 'account_edit.php');
-$container['msg'] = 'You '.join(' and ', $actions).' for the account of '.$curr_account->getLogin().'.';
+$container['msg'] = 'You ' . join(' and ', $actions) . ' for the account of ' . $curr_account->getLogin() . '.';
 
 $curr_account->update();
 forward($container);

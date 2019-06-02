@@ -2,8 +2,7 @@
 if ($FullForceCombatResults['Forced']) { ?>
 	<h1>Force Results</h1><br />
 	<?php $this->includeTemplate('includes/ForcesCombatResults.inc', array('ForcesCombatResults'=>$FullForceCombatResults['Forces']));
-}
-else { ?>
+} else { ?>
 	<h1>Attacker Results</h1><br />
 	<?php $this->includeTemplate('includes/ForceTraderTeamCombatResults.inc', array('TraderTeamCombatResults'=>$FullForceCombatResults['Attackers']));
 } ?>
@@ -14,8 +13,7 @@ else { ?>
 <?php if (!$FullForceCombatResults['Forced']) { ?>
 	<h1>Force Results</h1><br />
 	<?php $this->includeTemplate('includes/ForcesCombatResults.inc', array('ForcesCombatResults'=>$FullForceCombatResults['Forces']));
-}
-else { ?>
+} else { ?>
 	<h1>Defender Results</h1><br />
 	<?php $this->includeTemplate('includes/ForceTraderTeamCombatResults.inc', array('TraderTeamCombatResults'=>$FullForceCombatResults['Attackers']));
 } ?>

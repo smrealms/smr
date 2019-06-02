@@ -20,7 +20,9 @@ while ($db->nextRecord()) {
 
 	//make sure this is good data.
 	$cookieVersion = array_shift($accountIDs);
-	if ($cookieVersion != MULTI_CHECKING_COOKIE_VERSION) continue;
+	if ($cookieVersion != MULTI_CHECKING_COOKIE_VERSION) {
+		continue;
+	}
 
 	//how many are they linked to?
 	$rows = sizeof($accountIDs);
@@ -28,7 +30,9 @@ while ($db->nextRecord()) {
 	$currTabAccId = $db->getField('account_id');
 
 	//if this account was listed with another we can skip it.
-	if (isset($used[$currTabAccId])) continue;
+	if (isset($used[$currTabAccId])) {
+		continue;
+	}
 
 	if ($rows > 1) {
 		$db2->query('SELECT account_id, login FROM account WHERE account_id =' . $db2->escapeNumber($currTabAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db2->escapeNumber(TIME - 86400 * 30) : '') . ' LIMIT 1');

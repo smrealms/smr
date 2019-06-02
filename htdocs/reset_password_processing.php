@@ -37,7 +37,6 @@ try {
 	
 	
 	header('Location: /login.php');
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }

@@ -1,5 +1,7 @@
 <?php
-if (!isset($var['GameID'])) SmrSession::updateVar('GameID', $player->getGameID());
+if (!isset($var['GameID'])) {
+	SmrSession::updateVar('GameID', $player->getGameID());
+}
 $gameID = $var['GameID'];
 
 $basicContainer = array('GameID'=>$gameID);
@@ -38,13 +40,20 @@ $template->assign('NewsAlliances', $newsAlliances);
 $template->assign('AdvancedNewsFormHref', SmrSession::getNewHREF(create_container('skeleton.php', 'news_read_advanced.php', $basicContainer)));
 
 
-if (isset($_REQUEST['submit'])) $submit_value = $_REQUEST['submit'];
-elseif (isset($var['submit'])) $submit_value = $var['submit'];
-else $submit_value = 'Default';
+if (isset($_REQUEST['submit'])) {
+	$submit_value = $_REQUEST['submit'];
+} elseif (isset($var['submit'])) {
+	$submit_value = $var['submit'];
+} else {
+	$submit_value = 'Default';
+}
 
 if ($submit_value == 'Search For Player') {
-	if (isset($_REQUEST['playerName'])) $p_name = $_REQUEST['playerName'];
-	else $p_name = $var['playerName'];
+	if (isset($_REQUEST['playerName'])) {
+		$p_name = $_REQUEST['playerName'];
+	} else {
+		$p_name = $var['playerName'];
+	}
 	$template->assign('ResultsFor', $p_name);
 	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $p_name . '%') . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 3');
 	$IDs = array(0);
@@ -52,15 +61,17 @@ if ($submit_value == 'Search For Player') {
 		$IDs[] = $db->getInt('account_id');
 	}
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (killer_id IN (' . $db->escapeArray($IDs) . ') OR dead_id IN (' . $db->escapeArray($IDs) . ')) ORDER BY news_id DESC');
-}
-elseif ($submit_value == 'Search For Alliance') {
-	if (isset($_REQUEST['allianceID'])) SmrSession::updateVar('AllianceID', $_REQUEST['allianceID']);
-	if (!isset($var['AllianceID'])) create_error('No alliance was specified!');
+} elseif ($submit_value == 'Search For Alliance') {
+	if (isset($_REQUEST['allianceID'])) {
+		SmrSession::updateVar('AllianceID', $_REQUEST['allianceID']);
+	}
+	if (!isset($var['AllianceID'])) {
+		create_error('No alliance was specified!');
+	}
 	$allianceID = $var['AllianceID'];
 	$template->assign('ResultsFor', $newsAlliances[$allianceID]['Name']);
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ')) ORDER BY news_id DESC');
-}
-elseif ($submit_value == 'Search For Players') {
+} elseif ($submit_value == 'Search For Players') {
 	$template->assign('ResultsFor', $_REQUEST['player1'] . ' vs. ' . $_REQUEST['player2']);
 	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $_REQUEST['player1'] . '%') . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 3');
 	$IDs = array(0);
@@ -79,8 +90,7 @@ elseif ($submit_value == 'Search For Players') {
 						OR
 						(killer_id IN (' . $db->escapeArray($IDs2) . ') AND dead_id IN (' . $db->escapeArray($IDs) . '))
 					) ORDER BY news_id DESC');
-}
-elseif ($submit_value == 'Search For Alliances') {
+} elseif ($submit_value == 'Search For Alliances') {
 	$template->assign('ResultsFor', $newsAlliances[$_REQUEST['alliance1']]['Name'] . ' vs. ' . $newsAlliances[$_REQUEST['alliance2']]['Name']);
 	$db->query('SELECT * FROM news
 				WHERE game_id = ' . $db->escapeNumber($gameID) . '
@@ -89,8 +99,7 @@ elseif ($submit_value == 'Search For Alliances') {
 						OR
 						(killer_alliance = ' . $db->escapeNumber($_REQUEST['alliance2']) . ' AND dead_alliance = ' . $db->escapeNumber($_REQUEST['alliance1']) . ')
 					) ORDER BY news_id DESC');
-}
-else {
+} else {
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY news_id DESC LIMIT 50');
 }
 

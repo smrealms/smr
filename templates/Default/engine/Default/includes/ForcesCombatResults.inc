@@ -14,11 +14,9 @@ if(isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Resu
 		<span class="cds"><?php echo isset($ActualDamage['Launched']) ? $ActualDamage['Launched'] : $WeaponDamage['Launched']; ?></span><?php
 		if($ForceType == 'Mines') {
 			?> mines kamikaze themselves against <?php
-		}
-		else if($ForceType == 'Drones') {
+		} else if($ForceType == 'Drones') {
 			?> combat drones launch at <?php
-		}
-		else if($ForceType == 'Scouts') {
+		} else if($ForceType == 'Scouts') {
 			?> scout drones kamikaze themselves against <?php
 		}
 		
@@ -27,24 +25,19 @@ if(isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Resu
 		if(!$ActualDamage['TargetAlreadyDead']) {
 			if(!$ShotHit) {
 				?> and misses<?php
-			}
-			else if($ActualDamage['TotalDamage'] == 0) {
+			} else if($ActualDamage['TotalDamage'] == 0) {
 				if($WeaponDamage['Shield'] > 0) {
 					if($ActualDamage['HasCDs']) {
 						?> which proves ineffective against their combat drones<?php
-					}
-					else {
+					} else {
 						?> which washes harmlessly over their hull<?php
 					}
-				}
-				else if($WeaponDamage['Armour'] > 0) {
+				} else if($WeaponDamage['Armour'] > 0) {
 					?> which is deflected by their shields<?php
-				}
-				else {
+				} else {
 					?> but it cannot do any damage<?php
 				}
-			}
-			else {
+			} else {
 				?> destroying <?php
 			}
 			if($ActualDamage['Shield'] > 0) {
@@ -70,4 +63,4 @@ if(isset($ForcesCombatResults['ForcesDestroyed']) && $ForcesCombatResults['Force
 }
 
 $TotalDamage =& $ForcesCombatResults['TotalDamage'] ?>
-The forces <?php if($TotalDamage > 0){ ?>hit for a total of <span class="red"><?php echo number_format($TotalDamage) ?></span> damage in this round of combat<?php }else{ ?>do no damage this round<?php } ?>.
+The forces <?php if($TotalDamage > 0){ ?>hit for a total of <span class="red"><?php echo number_format($TotalDamage) ?></span> damage in this round of combat<?php } else{ ?>do no damage this round<?php } ?>.

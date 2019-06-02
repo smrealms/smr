@@ -5,14 +5,14 @@ define('MICRO_TIME', microtime(true));
 define('TIME', intval(MICRO_TIME));
 
 // Repository paths
-const ROOT =  __DIR__ . '/../';
-const LIB = ROOT.'lib/';
-const ENGINE = ROOT.'engine/';
-const WWW = ROOT.'htdocs/';
-const UPLOAD = WWW.'upload/';
-const ADMIN = ROOT.'admin/';
-const TOOLS = ROOT.'tools/';
-const CONFIG = ROOT.'config/';
+const ROOT = __DIR__ . '/../';
+const LIB = ROOT . 'lib/';
+const ENGINE = ROOT . 'engine/';
+const WWW = ROOT . 'htdocs/';
+const UPLOAD = WWW . 'upload/';
+const ADMIN = ROOT . 'admin/';
+const TOOLS = ROOT . 'tools/';
+const CONFIG = ROOT . 'config/';
 const TEMPLATES_DIR = ROOT . 'templates/';
 
 // Define server-specific constants
@@ -62,9 +62,9 @@ const DISCORD_URL = 'https://discord.me/smrealms';
  */
 const DEFAULT_DATE_DATE_SHORT = 'j/n/Y';
 const DEFAULT_DATE_TIME_SHORT = 'g:i:s A';
-const DEFAULT_DATE_FULL_SHORT = DEFAULT_DATE_DATE_SHORT.' '.DEFAULT_DATE_TIME_SHORT;
-const DEFAULT_DATE_FULL_SHORT_SPLIT = DEFAULT_DATE_DATE_SHORT.'\<b\r /\>'.DEFAULT_DATE_TIME_SHORT;
-const DEFAULT_DATE_FULL_LONG = 'l jS F '.DEFAULT_DATE_TIME_SHORT;
+const DEFAULT_DATE_FULL_SHORT = DEFAULT_DATE_DATE_SHORT . ' ' . DEFAULT_DATE_TIME_SHORT;
+const DEFAULT_DATE_FULL_SHORT_SPLIT = DEFAULT_DATE_DATE_SHORT . '\<b\r /\>' . DEFAULT_DATE_TIME_SHORT;
+const DEFAULT_DATE_FULL_LONG = 'l jS F ' . DEFAULT_DATE_TIME_SHORT;
 
 /*
  * Buyer restrictions for ships and weapons
@@ -421,4 +421,4 @@ const AJAX_UNPROTECTED_REFRESH_TIME = 800;
 const LOCK_DURATION = 10; // The max time for a lock to last before timing out.
 const LOCK_BUFFER = 3; // The minimum time that must be remaining on the lock duration for the lock to be valid.
 
-define('USING_AJAX',isset($_REQUEST['ajax'])&&$_REQUEST['ajax']==1);
+define('USING_AJAX', isset($_REQUEST['ajax']) && $_REQUEST['ajax'] == 1);

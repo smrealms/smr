@@ -1,15 +1,15 @@
 <?php
-$template->assign('PageTopic','Play Game');
+$template->assign('PageTopic', 'Play Game');
 
-if(isset($var['errorMsg'])) {
-	$template->assign('ErrorMessage',$var['errorMsg']);
+if (isset($var['errorMsg'])) {
+	$template->assign('ErrorMessage', $var['errorMsg']);
 }
 if (isset($var['msg'])) {
-	$template->assign('Message',$var['msg']);
+	$template->assign('Message', $var['msg']);
 }
 
-$template->assign('UserRankingLink',SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_view.php')));
-$template->assign('UserRankName',$account->getRankName());
+$template->assign('UserRankingLink', SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_view.php')));
+$template->assign('UserRankName', $account->getRankName());
 
 // ***************************************
 // ** Play Games
@@ -20,7 +20,7 @@ $games['Play'] = array();
 $game_id_list = array();
 $db->query('SELECT end_time, game_id, game_name, game_speed, game_type
 			FROM game JOIN player USING (game_id)
-			WHERE account_id = '.$db->escapeNumber($account->getAccountID()).'
+			WHERE account_id = '.$db->escapeNumber($account->getAccountID()) . '
 				AND enabled = \'TRUE\'
 				AND end_time >= ' . $db->escapeNumber(TIME) . '
 			ORDER BY start_time DESC');
@@ -60,12 +60,12 @@ if ($db->getNumRows() > 0) {
 		$container_game['game_id'] = $game_id;
 		$games['Play'][$game_id]['GameStatsLink'] = SmrSession::getNewHREF($container_game);
 		$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
-		$games['Play'][$game_id]['LastMovement'] = format_time(TIME-$curr_player->getLastActive(),TRUE);
+		$games['Play'][$game_id]['LastMovement'] = format_time(TIME - $curr_player->getLastActive(), TRUE);
 
 	}
 }
 
-if(empty($games['Play']))
+if (empty($games['Play']))
 	unset($games['Play']);
 
 
@@ -123,7 +123,7 @@ $games['Previous'] = array();
 
 //New previous games
 $db->query('SELECT start_time, end_time, game_name, game_speed, game_id ' .
-		'FROM game WHERE enabled = \'TRUE\' AND end_time < '.$db->escapeNumber(TIME).' ORDER BY game_id DESC');
+		'FROM game WHERE enabled = \'TRUE\' AND end_time < ' . $db->escapeNumber(TIME) . ' ORDER BY game_id DESC');
 if ($db->getNumRows()) {
 	while ($db->nextRecord()) {
 		$game_id = $db->getField('game_id');
@@ -154,11 +154,11 @@ foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
 	if ($historyDB->getNumRows()) {
 		while ($historyDB->nextRecord()) {
 			$game_id = $historyDB->getField('game_id');
-			$index = $databaseClassName.$game_id;
+			$index = $databaseClassName . $game_id;
 			$games['Previous'][$index]['ID'] = $game_id;
 			$games['Previous'][$index]['Name'] = $historyDB->getField('game_name');
-			$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT,$historyDB->getField('start_date'));
-			$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT,$historyDB->getField('end_date'));
+			$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT, $historyDB->getField('start_date'));
+			$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT, $historyDB->getField('end_date'));
 			$games['Previous'][$index]['Speed'] = $historyDB->getField('speed');
 			// create a container that will hold next url and additional variables.
 			$container = create_container('skeleton.php');
@@ -179,18 +179,18 @@ foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
 }
 $db = new SmrMySqlDatabase(); // restore database
 
-$template->assign('Games',$games);
+$template->assign('Games', $games);
 
 // ***************************************
 // ** Voting
 // ***************************************
-$container = create_container('skeleton.php','vote.php');
-$template->assign('VotingHref',SmrSession::getNewHREF($container));
+$container = create_container('skeleton.php', 'vote.php');
+$template->assign('VotingHref', SmrSession::getNewHREF($container));
 
 $db->query('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(TIME) . ' ORDER BY end DESC');
-if($db->getNumRows()>0) {
+if ($db->getNumRows() > 0) {
 	$db2 = new SmrMySqlDatabase();
-	$votedFor=array();
+	$votedFor = array();
 	$db2->query('SELECT * FROM voting_results WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	while ($db2->nextRecord()) {
 		$votedFor[$db2->getField('vote_id')] = $db2->getField('option_id');
@@ -205,7 +205,7 @@ if($db->getNumRows()>0) {
 		$voting[$voteID]['Question'] = $db->getField('question');
 		$voting[$voteID]['TimeRemaining'] = format_time($db->getField('end') - TIME, true);
 		$voting[$voteID]['Options'] = array();
-		$db2->query('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db->escapeNumber($db->getInt('vote_id')).' GROUP BY option_id');
+		$db2->query('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db->escapeNumber($db->getInt('vote_id')) . ' GROUP BY option_id');
 		while ($db2->nextRecord()) {
 			$voting[$voteID]['Options'][$db2->getField('option_id')]['ID'] = $db2->getField('option_id');
 			$voting[$voteID]['Options'][$db2->getField('option_id')]['Text'] = $db2->getField('text');
@@ -213,7 +213,7 @@ if($db->getNumRows()>0) {
 			$voting[$voteID]['Options'][$db2->getField('option_id')]['Votes'] = $db2->getField('count(account_id)');
 		}
 	}
-	$template->assign('Voting',$voting);
+	$template->assign('Voting', $voting);
 }
 
 // ***************************************
@@ -221,4 +221,4 @@ if($db->getNumRows()>0) {
 // ***************************************
 $container = create_container('skeleton.php', 'announcements.php');
 $container['view_all'] = 'yes';
-$template->assign('OldAnnouncementsLink',SmrSession::getNewHREF($container));
+$template->assign('OldAnnouncementsLink', SmrSession::getNewHREF($container));

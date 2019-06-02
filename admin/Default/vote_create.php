@@ -12,11 +12,15 @@ while ($db->nextRecord()) {
 	$voting[$voteID]['Question'] = $db->getField('question');
 }
 $template->assign('CurrentVotes', $voting);
-if (isset($var['PreviewVote']))
+if (isset($var['PreviewVote'])) {
 	$template->assign('PreviewVote', $var['PreviewVote']);
-if (isset($var['Days']))
+}
+if (isset($var['Days'])) {
 	$template->assign('Days', $var['Days']);
-if (isset($var['PreviewOption']))
+}
+if (isset($var['PreviewOption'])) {
 	$template->assign('PreviewOption', $var['PreviewOption']);
-if (isset($var['VoteID']))
+}
+if (isset($var['VoteID'])) {
 	$template->assign('VoteID', $var['VoteID']);
+}

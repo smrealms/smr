@@ -44,8 +44,7 @@ if (count($LoggedAccounts) > 0) { ?>
 	<ul>
 		<li><a href="<?php echo $AnonAccessHREF; ?>">Anonymous Account access</a></li>
 	</ul><?php
-}
-else { ?>
+} else { ?>
 	There are no log entries at all!<?php
 }
 ?>

@@ -65,8 +65,7 @@ if (count($PickPlayers) > 0) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
-}
-else {
+} else {
 	?>No one left to pick.<?php
 } ?>
 

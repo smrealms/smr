@@ -29,8 +29,7 @@ if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		if ($db->getInt('alliance_id_1') == $player->getAllianceID()) {
 			$alliedAllianceBanks[$db->getInt('alliance_id_2')] = SmrAlliance::getAlliance($db->getInt('alliance_id_2'), $alliance->getGameID());
-		}
-		else {
+		} else {
 			$alliedAllianceBanks[$db->getInt('alliance_id_1')] = SmrAlliance::getAlliance($db->getInt('alliance_id_1'), $alliance->getGameID());
 		}
 	}
@@ -83,8 +82,7 @@ if (isset($var['maxValue'])
 	&& is_numeric($var['maxValue'])
 	&& $var['maxValue'] > 0) {
 	$maxValue = $var['maxValue'];
-}
-else {
+} else {
 	$db->query('SELECT MAX(transaction_id) FROM alliance_bank_transactions
 				WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 				AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()));
@@ -114,8 +112,7 @@ if ($maxValue > 0 && $minValue > 0) {
 	$query .= ' AND transaction_id>=' . $db->escapeNumber($minValue) . '
 				AND transaction_id<=' . $db->escapeNumber($maxValue) . '
 				ORDER BY time LIMIT ' . (1 + $maxValue - $minValue);
-}
-else {
+} else {
 	$query .= ' ORDER BY time LIMIT 10';
 }
 

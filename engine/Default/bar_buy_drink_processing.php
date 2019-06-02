@@ -12,14 +12,12 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 	$message .= 'You ask the bartender for some water and you quickly down it.<br />You don\'t feel quite so intoxicated anymore.<br />';
 	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
 	$player->increaseHOF(1, array('Bar', 'Drinks', 'Water'), HOF_PUBLIC);
-}
-else {
+} else {
 	$random = mt_rand(1, 20);
 	//only get Azool or Spock drink if they are very lucky
 	if ($random != 1) {
 		$db->query('SELECT drink_id, drink_name FROM bar_drink WHERE drink_id != 1 && drink_id != 11 ORDER BY rand() LIMIT 1');
-	}
-	else {
+	} else {
 		$db->query('SELECT drink_id, drink_name FROM bar_drink ORDER BY rand() LIMIT 1');
 	}
 
@@ -30,8 +28,7 @@ else {
 		$db->query('SELECT drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER by drink_id DESC LIMIT 1');
 		if ($db->nextRecord()) {
 			$curr_drink_id = $db->getInt('drink_id') + 1;
-		}
-		else {
+		} else {
 			$curr_drink_id = 1;
 		}
 
@@ -39,8 +36,7 @@ else {
 			$message .= ('You have bought a ' . $drinkName . ' for $10');
 			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
 			$player->increaseHOF(1, array('Bar', 'Drinks', 'Alcoholic'), HOF_PUBLIC);
-		}
-		else {
+		} else {
 			$message .= ('The bartender says, Ive got something special for ya.<br />');
 			$message .= ('The bartender turns around for a minute and whips up a ' . $drinkName . '.<br />');
 

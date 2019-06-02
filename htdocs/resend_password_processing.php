@@ -38,7 +38,6 @@ try {
 	header('Location: /reset_password.php');
 	exit;
 
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }

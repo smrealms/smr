@@ -325,8 +325,7 @@ class Globals {
 	public static function getPlotCourseHREF($fromSector = false, $toSector = false) {
 		if ($fromSector === false && $toSector === false) {
 			return self::$AVAILABLE_LINKS['PlotCourse'] = SmrSession::getNewHREF(create_container('skeleton.php', 'course_plot.php'));
-		}
-		else {
+		} else {
 			return SmrSession::getNewHREF(create_container('course_plot_processing.php', '', array('from'=>$fromSector, 'to'=>$toSector)));
 		}
 	}
@@ -358,8 +357,7 @@ class Globals {
 	public static function getAllianceHREF($allianceID = null) {
 		if ($allianceID > 0) {
 			return self::getAllianceMotdHREF($allianceID);
-		}
-		else {
+		} else {
 			return self::getAllianceListHREF();
 		}
 	}

@@ -5,7 +5,7 @@ try {
 	
 	// avoid site caching
 	header('Expires: Mon, 03 Nov 1976 16:10:00 GMT');
-	header('Last-Modified: ' . gmdate('D, d M Y H:i:s') .' GMT');
+	header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 	header('Cache-Control: no-cache');
 	header('Pragma: no-cache');
 	header('Cache-Control: post-check=0, pre-check=0', FALSE);
@@ -23,9 +23,9 @@ try {
 		exit;
 	}
 	
-	if(isset($_REQUEST['sector_id'])) {
+	if (isset($_REQUEST['sector_id'])) {
 		$sectorID = $_REQUEST['sector_id'];
-		if(!is_numeric($sectorID)) {
+		if (!is_numeric($sectorID)) {
 			header('location: /error.php?msg=Sector ID was not a number.');
 			exit;
 		}
@@ -36,16 +36,16 @@ try {
 			exit;
 		}
 	}
-	else if(isset($_REQUEST['galaxy_id'])) {
+	else if (isset($_REQUEST['galaxy_id'])) {
 		$galaxyID = $_REQUEST['galaxy_id'];
-		if(!is_numeric($galaxyID)) {
+		if (!is_numeric($galaxyID)) {
 			header('location: /error.php?msg=Galaxy ID was not a number.');
 			exit;
 		}
 		try {
 			$galaxy = SmrGalaxy::getGalaxy(SmrSession::getGameID(), $galaxyID);
 		}
-		catch(Exception $e) {
+		catch (Exception $e) {
 			header('location: /error.php?msg=Invalid galaxy ID');
 			exit;
 		}
@@ -93,24 +93,24 @@ try {
 
 	$template->assign('Title', 'Galaxy Map');
 
-	if($account->getCssLink()!=null)
-		$template->assign('ExtraCSSLink',$account->getCssLink());
+	if ($account->getCssLink() != null)
+		$template->assign('ExtraCSSLink', $account->getCssLink());
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 	$template->assign('FontSize', $account->getFontSize() - 20);
-	$template->assign('ThisGalaxy',$galaxy);
-	$template->assign('ThisAccount',$account);
-	$template->assign('GameGalaxies',SmrGalaxy::getGameGalaxies($player->getGameID()));
-	$template->assign('ThisSector',$player->getSector());
-	$template->assign('MapSectors',$mapSectors);
-	$template->assign('ThisShip',$player->getShip());
-	$template->assign('ThisPlayer',$player);
+	$template->assign('ThisGalaxy', $galaxy);
+	$template->assign('ThisAccount', $account);
+	$template->assign('GameGalaxies', SmrGalaxy::getGameGalaxies($player->getGameID()));
+	$template->assign('ThisSector', $player->getSector());
+	$template->assign('MapSectors', $mapSectors);
+	$template->assign('ThisShip', $player->getShip());
+	$template->assign('ThisPlayer', $player);
 
 	// AJAX updates are not set up for the galaxy map at this time
 	$template->assign('AJAX_ENABLE_REFRESH', false);
 
 	$template->display('GalaxyMap.inc');
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }

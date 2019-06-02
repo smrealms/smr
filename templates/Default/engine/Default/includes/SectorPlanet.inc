@@ -14,8 +14,7 @@ if ($ThisSector->hasPlanet()) {
 				<?php if ($Planet->isInhabitable()) { ?>
 					<span class="inhab">Inhabitable</span>
 				<?php 
-				}
-				else { ?>
+				} else { ?>
 					<span class="uninhab">Uninhabitable</span>
 				<?php
 				} ?>

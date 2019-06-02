@@ -80,7 +80,9 @@
 									<select name="timez" class="InputFields">
 										<?php
 										$time = TIME;
-											for ($i = -12; $i <= 11; $i++) echo('<option value="' . $i . '">' . date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600));
+											for ($i = -12; $i <= 11; $i++) {
+												echo('<option value="' . $i . '">' . date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600));
+											}
 										?>
 									</select>
 								</td>

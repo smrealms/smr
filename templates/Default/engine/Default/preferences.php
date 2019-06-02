@@ -3,7 +3,7 @@ if (isset($Reason)) {
 	?><p><span class="big bold red"><?php echo $Reason; ?></span></p><?php
 }
 
-if(isset($GameID)) { ?>
+if (isset($GameID)) { ?>
 	<form class="standard" id="GamePreferencesForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<table>
 			<tr>
@@ -13,8 +13,8 @@ if(isset($GameID)) { ?>
 			<tr>
 				<td>Combat drones kamikaze on mines</td>
 				<td>
-					Yes: <input type="radio" name="kamikaze" value="Yes"<?php if($ThisPlayer->isCombatDronesKamikazeOnMines()){ ?> checked="checked"<?php } ?> /><br />
-					No: <input type="radio" name="kamikaze" value="No"<?php if(!$ThisPlayer->isCombatDronesKamikazeOnMines()){ ?> checked="checked"<?php } ?> />
+					Yes: <input type="radio" name="kamikaze" value="Yes"<?php if ($ThisPlayer->isCombatDronesKamikazeOnMines()) { ?> checked="checked"<?php } ?> /><br />
+					No: <input type="radio" name="kamikaze" value="No"<?php if (!$ThisPlayer->isCombatDronesKamikazeOnMines()) { ?> checked="checked"<?php } ?> />
 				</td>
 			</tr>
 	
@@ -26,8 +26,8 @@ if(isset($GameID)) { ?>
 			<tr>
 				<td>Receive force change messages</td>
 				<td>
-					Yes: <input type="radio" name="forceDropMessages" value="Yes"<?php if($ThisPlayer->isForceDropMessages()){ ?> checked="checked"<?php } ?> /><br />
-					No: <input type="radio" name="forceDropMessages" value="No"<?php if(!$ThisPlayer->isForceDropMessages()){ ?> checked="checked"<?php } ?> />
+					Yes: <input type="radio" name="forceDropMessages" value="Yes"<?php if ($ThisPlayer->isForceDropMessages()) { ?> checked="checked"<?php } ?> /><br />
+					No: <input type="radio" name="forceDropMessages" value="No"<?php if (!$ThisPlayer->isForceDropMessages()) { ?> checked="checked"<?php } ?> />
 				</td>
 			</tr>
 	
@@ -44,7 +44,7 @@ if(isset($GameID)) { ?>
 				<td>Player Name</td>
 				<td>
 					<input type="text" maxlength="32" name="PlayerName" value="<?php echo $ThisPlayer->getPlayerName(); ?>" size="32"><br/><?php
-					if($ThisPlayer->isNameChanged()) {
+					if ($ThisPlayer->isNameChanged()) {
 						?>(You have already changed your name for free, further changes will cost <?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits)<?php
 					}
 					else {
@@ -55,7 +55,7 @@ if(isset($GameID)) { ?>
 	
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" name="action" value=" Alter Player <?php if($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?>" class="InputFields" /></td>
+				<td><input type="submit" name="action" value=" Alter Player <?php if ($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?>" class="InputFields" /></td>
 			</tr>
 
 			<tr>
@@ -215,8 +215,8 @@ if(isset($GameID)) { ?>
 				<select name="timez" class="InputFields"><?php
 				$time = TIME;
 				$offset = $ThisAccount->getOffset();
-				for ($i = -12; $i<= 11; $i++) {
-					?><option value="<?php echo $i; ?>"<?php if ($offset == $i){ ?> selected="selected"<?php } ?>><?php echo date(DATE_TIME_SHORT, $time + $i * 3600); ?></option><?php
+				for ($i = -12; $i <= 11; $i++) {
+					?><option value="<?php echo $i; ?>"<?php if ($offset == $i) { ?> selected="selected"<?php } ?>><?php echo date(DATE_TIME_SHORT, $time + $i * 3600); ?></option><?php
 				} ?>
 				</select>
 			</td>
@@ -253,7 +253,7 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Use AJAX (Auto&nbsp;Refresh):</td>
 			<td>
-				<a href="<?php echo $ThisAccount->getToggleAJAXHREF() ?>"><?php if($ThisAccount->isUseAJAX()){ ?>Disable AJAX (Currently Enabled)<?php }else{ ?>Enable AJAX (Currently Disabled)<?php } ?></a><br />
+				<a href="<?php echo $ThisAccount->getToggleAJAXHREF() ?>"><?php if ($ThisAccount->isUseAJAX()) { ?>Disable AJAX (Currently Enabled)<?php } else { ?>Enable AJAX (Currently Disabled)<?php } ?></a><br />
 			</td>
 		</tr>
 		
@@ -264,8 +264,8 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Display Ship Images:</td>
 			<td>
-				Yes: <input type="radio" name="images" value="Yes"<?php if($ThisAccount->isDisplayShipImages()){ ?> checked="checked"<?php } ?> /><br />
-				No: <input type="radio" name="images" value="No"<?php if(!$ThisAccount->isDisplayShipImages()){ ?> checked="checked"<?php } ?> /><br />
+				Yes: <input type="radio" name="images" value="Yes"<?php if ($ThisAccount->isDisplayShipImages()) { ?> checked="checked"<?php } ?> /><br />
+				No: <input type="radio" name="images" value="No"<?php if (!$ThisAccount->isDisplayShipImages()) { ?> checked="checked"<?php } ?> /><br />
 			</td>
 		</tr>
 	
@@ -281,8 +281,8 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Center Galaxy Map On Player:</td>
 			<td>
-				Yes: <input type="radio" name="centergalmap" value="Yes"<?php if($ThisAccount->isCenterGalaxyMapOnPlayer()){ ?> checked="checked"<?php } ?> /><br />
-				No: <input type="radio" name="centergalmap" value="No"<?php if(!$ThisAccount->isCenterGalaxyMapOnPlayer()){ ?> checked="checked"<?php } ?> /><br />
+				Yes: <input type="radio" name="centergalmap" value="Yes"<?php if ($ThisAccount->isCenterGalaxyMapOnPlayer()) { ?> checked="checked"<?php } ?> /><br />
+				No: <input type="radio" name="centergalmap" value="No"<?php if (!$ThisAccount->isCenterGalaxyMapOnPlayer()) { ?> checked="checked"<?php } ?> /><br />
 			</td>
 		</tr>
 	
@@ -313,7 +313,7 @@ if(isset($GameID)) { ?>
 			<td>CSS Template:</td>
 			<td>
 				<select name="template" class="InputFields"><?php
-					foreach(Globals::getAvailableTemplates() as $AvailableTemplate => $ColourSchemes) {
+					foreach (Globals::getAvailableTemplates() as $AvailableTemplate => $ColourSchemes) {
 						foreach ($ColourSchemes as $ColourScheme) {
 							$selected = ($ThisAccount->getTemplate() == $AvailableTemplate &&
 							             $ThisAccount->getColourScheme() == $ColourScheme &&
@@ -348,10 +348,10 @@ if(isset($GameID)) { ?>
 		<tr>
 			<th colspan="2">Hotkeys (Use space to separate multiple hotkeys)</th>
 		</tr><?php
-		$MovementTypes = array('Up','Left','Right','Down','Warp');
-		$MovementSubTypes = array('Move','Scan');
-		foreach($MovementTypes as $MovementType) {
-			foreach($MovementSubTypes as $MovementSubType) { 
+		$MovementTypes = array('Up', 'Left', 'Right', 'Down', 'Warp');
+		$MovementSubTypes = array('Move', 'Scan');
+		foreach ($MovementTypes as $MovementType) {
+			foreach ($MovementSubTypes as $MovementSubType) { 
 				$FullMovement = $MovementSubType . $MovementType; ?>
 				<tr>
 					<td><?php echo $MovementSubType, ' ', $MovementType; ?>:</td>
@@ -418,9 +418,9 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Transfer Credits:</td>
 			<td>
-				<input type="number" name="amount" class="InputFields center" style="width:50px;" /> credits to <?php if(!isset($GameID)){ ?>the account with HoF name of <?php } ?>
+				<input type="number" name="amount" class="InputFields center" style="width:50px;" /> credits to <?php if (!isset($GameID)) { ?>the account with HoF name of <?php } ?>
 				<select name="account_id" class="InputFields"><?php
-					foreach($TransferAccounts as $AccID => $AccOrPlayerName) {
+					foreach ($TransferAccounts as $AccID => $AccOrPlayerName) {
 						?><option value="<?php echo $AccID; ?>"><?php echo $AccOrPlayerName; ?></option><?php
 					} ?>
 				</select>

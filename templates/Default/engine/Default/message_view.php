@@ -32,8 +32,7 @@ if (isset($MessageBoxes)) { ?>
 		}
 	});
 	</script><?php
-}
-else {
+} else {
 	if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 		<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 			<div class="center">Ignore global messages?&nbsp;&nbsp;
@@ -85,8 +84,7 @@ else {
 						<td class="noWrap" width="100%"><?php
 							if (isset($Message['ReceiverDisplayName'])) {
 								?>To: <?php echo $Message['ReceiverDisplayName'];
-							}
-							else {
+							} else {
 								?>From: <?php echo $Message['SenderDisplayName'];
 							} ?>
 						</td>

@@ -38,7 +38,6 @@ if ($ThisShip->hasWeapons()) { ?>
 		</form>
 	</div>
 	<script src="js/weapon_reorder.js"></script><?php
-}
-else {
+} else {
 	?>You don't have any weapons!<?php
 } ?>
