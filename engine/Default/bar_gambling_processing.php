@@ -73,7 +73,7 @@ function check_for_win($ai_card, $player_card) {
 	$play = get_value($player_card);
 
 	//does the player win
-	if (sizeof($player_card) == 2 && $play == 21) {
+	if (count($player_card) == 2 && $play == 21) {
 		return 'bj';
 	} elseif ($play > $comp && $comp <= 21 && $play <= 21) {
 		return 'yes';
@@ -130,25 +130,25 @@ if ($do == 'nothing') {
 	$player_curr_card = draw_card($cards);
 	$player_card[] = $player_curr_card;
 	$cards[] = $player_curr_card;
-	if (sizeof($cards) >= $max_cards) {
+	if (count($cards) >= $max_cards) {
 		$cards = array();
 	}
 	$ai_curr_card = draw_card($cards);
 	$ai_card[] = $ai_curr_card;
 	$cards[] = $ai_curr_card;
-	if (sizeof($cards) >= $max_cards) {
+	if (count($cards) >= $max_cards) {
 		$cards = array();
 	}
 	$player_curr_card = draw_card($cards);
 	$player_card[] = $player_curr_card;
 	$cards[] = $player_curr_card;
-	if (sizeof($cards) >= $max_cards) {
+	if (count($cards) >= $max_cards) {
 		$cards = array();
 	}
 	$ai_curr_card = draw_card($cards);
 	$ai_card[] = $ai_curr_card;
 	$cards[] = $ai_curr_card;
-	if (sizeof($cards) >= $max_cards) {
+	if (count($cards) >= $max_cards) {
 		$cards = array();
 	}
 	//find a play_val variable in case they get bj first hand...lucky
@@ -169,7 +169,7 @@ if ($do == 'HIT') {
 	$player_curr_card = draw_card($cards);
 	$player_card[] = $player_curr_card;
 	$cards[] = $player_curr_card;
-	if (sizeof($cards) >= $max_cards) {
+	if (count($cards) >= $max_cards) {
 		$cards = array();
 	}
 	$play_val = get_value($player_card);
@@ -179,7 +179,7 @@ if ($do == 'HIT') {
 if ($do != 'STAY' && get_value($player_card) != 21) {
 	//heres the AIs cards
 	$i = 1;
-	if ((get_value($ai_card) == 21 && sizeof($ai_card) == 2) ||
+	if ((get_value($ai_card) == 21 && count($ai_card) == 2) ||
 	    (get_value($player_card) > 21 && get_value($ai_card) <= 21)) {
 		$message .= ('<h1 class="red center">Bank Wins</h1>');
 	}
@@ -212,7 +212,7 @@ if ($do != 'STAY' && get_value($player_card) != 21) {
 	}
 
 	$message .= ('</tr></table>');
-	if (get_value($ai_card) == 21 && sizeof($ai_card) == 2) {
+	if (get_value($ai_card) == 21 && count($ai_card) == 2) {
 		$message .= ('<div class="center">Bank has BLACKJACK!</div><br />');
 		$win = 'no';
 	} elseif (get_value($player_card) >= 21) {
@@ -226,12 +226,12 @@ if ($do == 'STAY' || get_value($player_card) == 21) {
 	//heres the Banks cards
 	$i = 1;
 
-	if (!(sizeof($player_card) == 2 && get_value($player_card) == 21)) {
+	if (!(count($player_card) == 2 && get_value($player_card) == 21)) {
 		while (get_value($ai_card) < 17) {
 			$ai_curr_card = draw_card($cards);
 			$ai_card[] = $ai_curr_card;
 			$cards[] = $ai_curr_card;
-			if (sizeof($cards) >= $max_cards) {
+			if (count($cards) >= $max_cards) {
 				$cards = array();
 			}
 		}
@@ -339,7 +339,7 @@ if (get_value($player_card) > 21) {
 	$message .= ('</div>');
 } elseif ($val1 == 21) {
 	if (get_value($ai_card) != 21) {
-		if (sizeof($player_card) == 2) {
+		if (count($player_card) == 2) {
 			$winnings = 2.5;
 		} else {
 			$winnings = 2;
@@ -350,7 +350,7 @@ if (get_value($player_card) > 21) {
 		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Win'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Win'), HOF_PUBLIC);
 		$message .= ('You have won $' . number_format($bet * $winnings) . ' credits!');
-	} else if (sizeof($ai_card) > 2) {
+	} else if (count($ai_card) > 2) {
 		$winnings = 1;
 		$player->increaseCredits($bet * $winnings);
 		$stat = ($bet * $winnings) - $bet;
