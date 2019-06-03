@@ -122,7 +122,7 @@ function NPCStuff() {
 	while (true) {
 		$actions++;
 		try {
-			$TRADE_ROUTE = & $GLOBALS['TRADE_ROUTE'];
+			$TRADE_ROUTE =& $GLOBALS['TRADE_ROUTE'];
 			debug('Action #' . $actions);
 
 			SmrSession::updateGame(NPC_GAME_ID);
@@ -156,14 +156,14 @@ function NPCStuff() {
 			}
 
 			if (!isset($TRADE_ROUTE)) { //We only want to change trade route if there isn't already one set.
-				$TRADE_ROUTES = & findRoutes($player);
-				$TRADE_ROUTE = & changeRoute($TRADE_ROUTES);
+				$TRADE_ROUTES =& findRoutes($player);
+				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
 			}
 
 			if ($player->isDead()) {
 				debug('Some evil person killed us, let\'s move on now.');
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
-				$TRADE_ROUTE = & changeRoute($TRADE_ROUTES); //Change route
+				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES); //Change route
 				processContainer(create_container('death_processing.php'));
 			}
 			if ($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning()) {
@@ -228,16 +228,16 @@ function NPCStuff() {
 			}
 			else if ($TRADE_ROUTE instanceof Route) {
 				debug('Trade Route');
-				$forwardRoute = & $TRADE_ROUTE->getForwardRoute();
-				$returnRoute = & $TRADE_ROUTE->getReturnRoute();
+				$forwardRoute =& $TRADE_ROUTE->getForwardRoute();
+				$returnRoute =& $TRADE_ROUTE->getReturnRoute();
 				if ($forwardRoute->getBuySectorId() == $player->getSectorID() || $returnRoute->getBuySectorId() == $player->getSectorID()) {
 					if ($forwardRoute->getBuySectorId() == $player->getSectorID()) {
-						$buyRoute = & $forwardRoute;
-						$sellRoute = & $returnRoute;
+						$buyRoute =& $forwardRoute;
+						$sellRoute =& $returnRoute;
 					}
 					else if ($returnRoute->getBuySectorId() == $player->getSectorID()) {
-						$buyRoute = & $returnRoute;
-						$sellRoute = & $forwardRoute;
+						$buyRoute =& $returnRoute;
+						$sellRoute =& $forwardRoute;
 					}
 
 					$ship = $player->getShip();
@@ -255,7 +255,7 @@ function NPCStuff() {
 							}
 							else {
 								//Move to next route or fed.
-								if (($TRADE_ROUTE = & changeRoute($TRADE_ROUTES)) === false) {
+								if (($TRADE_ROUTE =& changeRoute($TRADE_ROUTES)) === false) {
 									debug('Changing Route Failed');
 									processContainer(plotToFed($player));
 								}
@@ -287,7 +287,7 @@ function NPCStuff() {
 						}
 						else {
 							//Move to next route or fed.
-							if (($TRADE_ROUTE = & changeRoute($TRADE_ROUTES)) === false) {
+							if (($TRADE_ROUTE =& changeRoute($TRADE_ROUTES)) === false) {
 								debug('Changing Route Failed');
 								processContainer(plotToFed($player));
 							}
@@ -456,7 +456,7 @@ function changeNPCLogin() {
 		$account = SmrAccount::getAccountByName($NPC_LOGIN['Login']);
 	}
 
-	$GLOBALS['account'] = & $account;
+	$GLOBALS['account'] =& $account;
 	SmrSession::setAccount($account);
 	$underAttack = false;
 
@@ -623,9 +623,9 @@ function &changeRoute(array &$tradeRoutes) {
 	if (count($tradeRoutes) == 0)
 		return $false;
 	$routeKey = array_rand($tradeRoutes);
-	$tradeRoute = & $tradeRoutes[$routeKey];
+	$tradeRoute =& $tradeRoutes[$routeKey];
 	unset($tradeRoutes[$routeKey]);
-	$GLOBALS['TRADE_ROUTE'] = & $tradeRoute;
+	$GLOBALS['TRADE_ROUTE'] =& $tradeRoute;
 	debug('Switched route', $tradeRoute);
 	return $tradeRoute;
 }
@@ -707,7 +707,7 @@ function &findRoutes($player) {
 			$allSectors += $galaxy->getSectors(); //Merge arrays
 		}
 
-		$distances = & Plotter::calculatePortToPortDistances($allSectors, $maxDistance, $startSectorID, $endSectorID);
+		$distances =& Plotter::calculatePortToPortDistances($allSectors, $maxDistance, $startSectorID, $endSectorID);
 
 
 		if ($maxNumberOfPorts == 1)
@@ -717,7 +717,7 @@ function &findRoutes($player) {
 
 		unset($distances);
 
-		$allRoutes = & $allRoutes[RouteGenerator::EXP_ROUTE];
+		$allRoutes =& $allRoutes[RouteGenerator::EXP_ROUTE];
 		$routesMerged = array();
 		foreach ($allRoutes as $multi => &$routesByMulti) {
 			$routesMerged += $routesByMulti; //Merge arrays
