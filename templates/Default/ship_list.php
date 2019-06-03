@@ -11,25 +11,17 @@
 			padding: 0;
 			border: 0;
 		}
-		#main {
-			margin: 0;
-			padding: 0;
-			border: 0;
-		}
 		select {
 			border: solid #80C870 1px;
 			background-color: #0A4E1D;
 			color: #80C870;
-		}
-		optgroup {
-			border: solid #80C870 1px;
 		}
 		</style>
 		<script src="js/ship_list.js"></script>
 	</head>
 
 	<body>
-		<div id="container" style="padding: 0;">
+		<div id="container">
 			<div style="width:1400px; margin-left:auto; margin-right:auto;">
 				<table id="table" class="center standard">
 					<tr >
