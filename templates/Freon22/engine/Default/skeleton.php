@@ -73,13 +73,11 @@
 									<div class="bar1"><?php
 										if (isset($MenuItems)) {
 											$this->includeTemplate('includes/menu.inc');
-										}
-										else if (isset($MenuBar)) {
+										} else if (isset($MenuBar)) {
 											echo $MenuBar;
 										} ?>
 									</div><?php
-								}
-								else if (isset($SubMenuBar)) {
+								} else if (isset($SubMenuBar)) {
 									echo $SubMenuBar;
 								} ?>
 							</div><?php

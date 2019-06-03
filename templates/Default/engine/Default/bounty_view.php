@@ -22,7 +22,6 @@ if ($BountyPlayer->hasBounties()) {
 			}
 		}
 	}
-}
-else {
+} else {
 	?>This player has no bounties<br /><?php
 } ?>

@@ -83,49 +83,37 @@ class Template {
 		$templateDir = TEMPLATES_DIR;
 		if (isset($this->data['ThisAccount']) && is_object($this->data['ThisAccount']) && $this->data['ThisAccount'] instanceof SmrAccount) {
 			$templateDir .= $this->data['ThisAccount']->getTemplate() . '/';
-		}
-		else {
+		} else {
 			$templateDir .= 'Default/';
 		}
 
 		if (SmrSession::hasGame()) {
 			$gameDir = Globals::getGameType(SmrSession::getGameID()) . '/';
-		}
-		else {
+		} else {
 			$gameDir = 'Default/';
 		}
 
 		if (file_exists($templateDir . 'engine/' . $gameDir . $templateName)) {
 			return $templateDir . 'engine/' . $gameDir . $templateName;
-		}
-		elseif (file_exists($templateDir . 'engine/Default/' . $templateName)) {
+		} elseif (file_exists($templateDir . 'engine/Default/' . $templateName)) {
 			return $templateDir . 'engine/Default/' . $templateName;
-		}
-		elseif (file_exists(TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName)) {
+		} elseif (file_exists(TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName)) {
 			return TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName;
-		}
-		elseif (file_exists(TEMPLATES_DIR . 'Default/engine/Default/' . $templateName)) {
+		} elseif (file_exists(TEMPLATES_DIR . 'Default/engine/Default/' . $templateName)) {
 			return TEMPLATES_DIR . 'Default/engine/Default/' . $templateName;
-		}
-		elseif (file_exists($templateDir . 'admin/' . $gameDir . $templateName)) {
+		} elseif (file_exists($templateDir . 'admin/' . $gameDir . $templateName)) {
 			return $templateDir . 'admin/' . $gameDir . $templateName;
-		}
-		elseif (file_exists($templateDir . 'admin/Default/' . $templateName)) {
+		} elseif (file_exists($templateDir . 'admin/Default/' . $templateName)) {
 			return $templateDir . 'admin/Default/' . $templateName;
-		}
-		elseif (file_exists(TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName)) {
+		} elseif (file_exists(TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName)) {
 			return TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName;
-		}
-		elseif (file_exists(TEMPLATES_DIR . 'Default/admin/Default/' . $templateName)) {
+		} elseif (file_exists(TEMPLATES_DIR . 'Default/admin/Default/' . $templateName)) {
 			return TEMPLATES_DIR . 'Default/admin/Default/' . $templateName;
-		}
-		elseif (file_exists($templateDir . $templateName)) {
+		} elseif (file_exists($templateDir . $templateName)) {
 			return $templateDir . $templateName;
-		}
-		elseif (file_exists(TEMPLATES_DIR . 'Default/' . $templateName)) {
+		} elseif (file_exists(TEMPLATES_DIR . 'Default/' . $templateName)) {
 			return TEMPLATES_DIR . 'Default/' . $templateName;
-		}
-		else {
+		} else {
 			throw new Exception('No template found for ' . $templateName);
 		}
 	}
@@ -216,8 +204,7 @@ class Template {
 		for ($_i = 0, $_count = count($replace); $_i < $_count; $_i++) {
 			if (($_pos = strpos($subject, $search_str, $_pos)) !== false) {
 				$subject = substr_replace($subject, $replace[$_i], $_pos, $_len);
-			}
-			else {
+			} else {
 				break;
 			}
 		}
@@ -226,8 +213,7 @@ class Template {
 	protected function doDamageTypeReductionDisplay(&$damageTypes) {
 		if ($damageTypes == 3) {
 			echo ', ';
-		}
-		else if ($damageTypes == 2) {
+		} else if ($damageTypes == 2) {
 			echo ' and ';
 		}
 		$damageTypes--;
@@ -237,8 +223,7 @@ class Template {
 		$char = strtoupper($wordAfter[0]);
 		if ($char == 'A' || $char == 'E' || $char == 'I' || $char == 'O' || $char == 'U') {
 			echo 'an';
-		}
-		else {
+		} else {
 			echo 'a';
 		}
 	}

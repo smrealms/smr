@@ -38,8 +38,7 @@ if (count($PlayerList) > 0) { ?>
 			} ?>
 		</select>&nbsp;<input type="submit"/>
 	</form><?php
-}
-else { ?>
+} else { ?>
 	<p>You have challenged every player.</p><?php
 }
 
@@ -53,8 +52,7 @@ if (isset($NPCList)) {
 				} ?>
 			</select>&nbsp;<input type="submit"/>
 		</form><?php
-	}
-	else { ?>
+	} else { ?>
 		<p>You have challenged every NPC.</p><?php
 	}
 } ?>

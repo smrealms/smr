@@ -21,18 +21,18 @@ $mapSectors = $galaxy->getMapSectors();
 
 $template->assign('Galaxy', $galaxy);
 $template->assign('Galaxies', $galaxies);
-$template->assign('MapSectors',$mapSectors);
+$template->assign('MapSectors', $mapSectors);
 
 if (isset($var['message'])) {
-	$template->assign('Message',$var['message']);
-	SmrSession::updateVar('message',null); // Only show message once
+	$template->assign('Message', $var['message']);
+	SmrSession::updateVar('message', null); // Only show message once
 }
 
 if (isset($_REQUEST['connect']) && $_REQUEST['connect'] > 0) {
-	SmrSession::updateVar('conn',$_REQUEST['connect']);
+	SmrSession::updateVar('conn', $_REQUEST['connect']);
 }
 else if (!isset($var['conn'])) {
-	SmrSession::updateVar('conn',100);
+	SmrSession::updateVar('conn', 100);
 }
 $template->assign('RequestedConnectivity', $var['conn']);
 
@@ -52,18 +52,18 @@ $template->assign('UniGen', $container);
 
 $container = $var;
 $container['body'] = '1.6/universe_create_locations.php';
-$template->assign('ModifyLocationsHREF',SmrSession::getNewHREF($container));
+$template->assign('ModifyLocationsHREF', SmrSession::getNewHREF($container));
 
 $container['body'] = '1.6/universe_create_planets.php';
-$template->assign('ModifyPlanetsHREF',SmrSession::getNewHREF($container));
+$template->assign('ModifyPlanetsHREF', SmrSession::getNewHREF($container));
 
 $container['body'] = '1.6/universe_create_ports.php';
-$template->assign('ModifyPortsHREF',SmrSession::getNewHREF($container));
+$template->assign('ModifyPortsHREF', SmrSession::getNewHREF($container));
 
 $container['body'] = '1.6/universe_create_warps.php';
-$template->assign('ModifyWarpsHREF',SmrSession::getNewHREF($container));
+$template->assign('ModifyWarpsHREF', SmrSession::getNewHREF($container));
 
-$template->assign('SMRFileHREF',Globals::getSmrFileCreateHREF($var['game_id']));
+$template->assign('SMRFileHREF', Globals::getSmrFileCreateHREF($var['game_id']));
 
 $container = create_container('skeleton.php', '1.6/game_edit.php');
 transfer('game_id');

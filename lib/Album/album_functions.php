@@ -35,7 +35,7 @@ function main_page() {
 			$page_views = $db->getField('page_views');
 			$nick = get_album_nick($db->getField('account_id'));
 
-			echo('<a href="?nick=' . urlencode($nick) . '">'.$nick.'</a> ('.$page_views.')<br />');
+			echo('<a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> (' . $page_views . ')<br />');
 		}
 	}
 
@@ -51,7 +51,7 @@ function main_page() {
 			$created = $db->getField('created');
 			$nick = get_album_nick($db->getField('account_id'));
 
-			echo('<span style="font-size:85%;"><b>[' . date(defined('DATE_FULL_SHORT')?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $created) . ']</b> Picture of <a href="?nick=' . urlencode($nick) . '">'.$nick.'</a> added</span><br />');
+			echo('<span style="font-size:85%;"><b>[' . date(defined('DATE_FULL_SHORT') ?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $created) . ']</b> Picture of <a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> added</span><br />');
 		}
 	}
 	else
@@ -69,13 +69,13 @@ function album_entry($album_id) {
 	if (SmrSession::hasAccount() && $album_id != SmrSession::getAccountID()) {
 		$db->query('UPDATE album
 				SET page_views = page_views + 1
-				WHERE account_id = '.$db->escapeNumber($album_id).' AND
+				WHERE account_id = '.$db->escapeNumber($album_id) . ' AND
 					approved = \'YES\'');
 	}
 
 	$db->query('SELECT *
 				FROM album
-				WHERE account_id = '.$db->escapeNumber($album_id).' AND
+				WHERE account_id = '.$db->escapeNumber($album_id) . ' AND
 					approved = \'YES\'');
 	if ($db->nextRecord()) {
 		$location = stripslashes($db->getField('location'));
@@ -113,10 +113,10 @@ function album_entry($album_id) {
 	echo '<td class="center" style="width: 30%" valign="middle">';
 	if ($db->nextRecord()) {
 		$priv_nick = $db->getField('hof_name');
-		echo '<a href="?nick=' . urlencode($priv_nick) . '"><img src="/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;';
+		echo '<a href="?nick=' . urlencode($priv_nick) . '"><img src="/images/album/rew.jpg" alt="' . $priv_nick . '" border="0"></a>&nbsp;&nbsp;&nbsp;';
 	}
 	echo '</td>';
-	echo('<td class="center" valign="middle"><span style="font-size:150%;">'.$nick.'</span><br /><span style="font-size:75%;">Views: '.$page_views.'</span></td>');
+	echo('<td class="center" valign="middle"><span style="font-size:150%;">' . $nick . '</span><br /><span style="font-size:75%;">Views: ' . $page_views . '</span></td>');
 
 	$db->query('SELECT hof_name
 				FROM album JOIN account USING(account_id)
@@ -127,7 +127,7 @@ function album_entry($album_id) {
 	echo '<td class="center" style="width: 30%" valign="middle">';
 	if ($db->nextRecord()) {
 		$next_nick = $db->getField('hof_name');
-		echo '&nbsp;&nbsp;&nbsp;<a href="?nick=' . urlencode($next_nick) . '"><img src="/images/album/fwd.jpg" alt="'.$next_nick.'" border="0"></a>';
+		echo '&nbsp;&nbsp;&nbsp;<a href="?nick=' . urlencode($next_nick) . '"><img src="/images/album/fwd.jpg" alt="' . $next_nick . '" border="0"></a>';
 	}
 	echo '</td>';
 
@@ -140,7 +140,7 @@ function album_entry($album_id) {
 	echo('<td colspan="2" class="center" valign="middle">');
 
 	if ($disabled == false)
-		echo('<img src="../upload/'.$album_id.'">');
+		echo('<img src="../upload/' . $album_id . '">');
 	else
 		echo('<img src="../images/album/disabled.jpg">');
 
@@ -150,37 +150,37 @@ function album_entry($album_id) {
 	if (empty($location))
 		$location = 'N/A';
 	echo('<tr>');
-	echo('<td class="right bold" width="10%">Location:</td><td>'.$location.'</td>');
+	echo('<td class="right bold" width="10%">Location:</td><td>' . $location . '</td>');
 	echo('</tr>');
 
 	if (empty($email))
 		$email = 'N/A';
 	echo('<tr>');
-	echo('<td class="right bold" width="10%">E-mail:</td><td>'.$email.'</td>');
+	echo('<td class="right bold" width="10%">E-mail:</td><td>' . $email . '</td>');
 	echo('</tr>');
 
 	if (empty($website))
 		$website = 'N/A';
 	else
-		$website = '<a href="'.$website.'" target="_new">'.$website.'</a>';
+		$website = '<a href="' . $website . '" target="_new">' . $website . '</a>';
 	echo('<tr>');
-	echo('<td class="right bold" width="10%">Website:</td><td>'.$website.'</td>');
+	echo('<td class="right bold" width="10%">Website:</td><td>' . $website . '</td>');
 	echo('</tr>');
 
 	echo('<tr>');
 	if (!empty($day) && !empty($month) && !empty($year))
-		$birthdate = $month.' / '.$day.' / '.$year;
+		$birthdate = $month . ' / ' . $day . ' / ' . $year;
 	if (empty($birthdate) && !empty($year))
-		$birthdate = 'Year '.$year;
+		$birthdate = 'Year ' . $year;
 	if (empty($birthdate))
 		$birthdate = 'N/A';
-	echo('<td class="right bold" width="10%">Birthdate:</td><td>'.$birthdate.'</td>');
+	echo('<td class="right bold" width="10%">Birthdate:</td><td>' . $birthdate . '</td>');
 	echo('</tr>');
 
 	if (empty($other))
 		$other = 'N/A';
 	echo('<tr>');
-	echo('<td class="right bold" valign="top" width="10%">Other&nbsp;Info:</td><td>'.$other.'</td>');
+	echo('<td class="right bold" valign="top" width="10%">Other&nbsp;Info:</td><td>' . $other . '</td>');
 	echo('</tr>');
 
 	echo('<tr>');
@@ -191,16 +191,16 @@ function album_entry($album_id) {
 				FROM album_has_comments
 				WHERE album_id = '.$db->escapeNumber($album_id));
 	while ($db->nextRecord()) {
-		$time	= $db->getField('time');
-		$postee	= get_album_nick($db->getField('post_id'));
-		$msg	= stripslashes($db->getField('msg'));
+		$time = $db->getField('time');
+		$postee = get_album_nick($db->getField('post_id'));
+		$msg = stripslashes($db->getField('msg'));
 
-		echo('<span style="font-size:85%;">[' . date(defined('DATE_FULL_SHORT')?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $time) . '] &lt;'.$postee.'&gt; '.$msg.'</span><br />');
+		echo('<span style="font-size:85%;">[' . date(defined('DATE_FULL_SHORT') ?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $time) . '] &lt;' . $postee . '&gt; ' . $msg . '</span><br />');
 	}
 
 	if (SmrSession::hasAccount()) {
 		echo('<form action="album_comment.php">');
-		echo('<input type="hidden" name="album_id" value="'.$album_id.'">');
+		echo('<input type="hidden" name="album_id" value="' . $album_id . '">');
 		echo('<table>');
 		echo('<tr>');
 		echo('<td style="color:green; font-size:70%;">Nick:<br /><input type="text" size="10" name="nick" value="' . htmlspecialchars(get_album_nick(SmrSession::getAccountID())) . '" class="InputFields" readonly></td>');
@@ -208,7 +208,7 @@ function album_entry($album_id) {
 		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" value="Send" class="InputFields"></td>');
 		$db->query('SELECT *
 					FROM account_has_permission
-					WHERE account_id = '.$db->escapeNumber(SmrSession::getAccountID()).' AND
+					WHERE account_id = '.$db->escapeNumber(SmrSession::getAccountID()) . ' AND
 						permission_id = '.$db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
 		if ($db->nextRecord())
 			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate" class="InputFields"></td>');
@@ -243,7 +243,7 @@ function search_result($album_ids) {
 
 		$nick = get_album_nick($album_id);
 
-		echo('<a href="?nick=' . urlencode($nick) . '" style="font-size:80%;">'.$nick.'</a><br />');
+		echo('<a href="?nick=' . urlencode($nick) . '" style="font-size:80%;">' . $nick . '</a><br />');
 
 		if (floor(sizeof($album_ids) / 4) > 0 && $count % floor(sizeof($album_ids) / 4) == 0)
 			echo('</td><td width="25%" valign="top">');

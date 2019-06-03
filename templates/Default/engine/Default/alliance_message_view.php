@@ -8,8 +8,7 @@ if (isset($PrevThread) || isset($NextThread)) { ?>
 				<a href="<?php echo $PrevThread['Href']; ?>"><img src="images/album/rew.jpg" alt="Previous" title="Previous"></a>
 				&nbsp;&nbsp;<?php echo $PrevThread['Topic']; ?>
 			</td><?php
-		}
-		else {
+		} else {
 			?><td>&nbsp;</td><?php
 		}
 		if (isset($NextThread)) { ?>
@@ -17,8 +16,7 @@ if (isset($PrevThread) || isset($NextThread)) { ?>
 			<?php echo $NextThread['Topic']; ?>&nbsp;&nbsp;
 			<a href="<?php echo $NextThread['Href']; ?>"><img src="images/album/fwd.jpg" alt="Next" title="Next"></a>
 			</td><?php
-		}
-		else {
+		} else {
 			?><td>&nbsp;</td><?php
 		} ?>
 		</tr>

@@ -10,8 +10,7 @@ SmrSession::getRequestVar('email', '');
 SmrSession::getRequestVar('hofname', '');
 if (isset($_REQUEST['game_id'])) {
 	SmrSession::updateVar('SearchGameID', $_REQUEST['game_id']);
-}
-elseif (!isset($var['SearchGameID'])) {
+} elseif (!isset($var['SearchGameID'])) {
 	SmrSession::updateVar('SearchGameID', 0);
 }
 $action = SmrSession::getRequestVar('action', false);
@@ -27,8 +26,7 @@ if ($action == "Search") {
 					ORDER BY game_id DESC LIMIT 1');
 		if ($db->nextRecord()) {
 			$account_id = $db->getInt('account_id');
-		}
-		else {
+		} else {
 			$db->query('SELECT * FROM player
 						WHERE player_name LIKE ' . $db->escapeString($player_name . '%') . $gameIDClause);
 			if ($db->nextRecord()) {
@@ -63,8 +61,7 @@ if ($curr_account === false) {
 	}
 	$template->assign('Games', $games);
 	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
-}
-else {
+} else {
 	$template->assign('EditingAccount', $curr_account);
 	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('account_edit_processing.php', '', array('account_id' => $curr_account->getAccountID()))));
 	$template->assign('ResetFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
@@ -96,8 +93,7 @@ else {
 		$admin_id = $db->getInt('admin_id');
 		if ($admin_id > 0) {
 			$admin = SmrAccount::getAccount($admin_id)->getLogin();
-		}
-		else {
+		} else {
 			$admin = 'System';
 		}
 		$closingHistory[] = array(
