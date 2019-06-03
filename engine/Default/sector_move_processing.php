@@ -28,8 +28,9 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 $action = '';
 if (isset($_REQUEST['action'])) {
 	$action = $_REQUEST['action'];
-	if ($action == 'No')
+	if ($action == 'No') {
 		forward(create_container('skeleton.php', $var['target_page']));
+	}
 }
 
 // you can't move while on planet

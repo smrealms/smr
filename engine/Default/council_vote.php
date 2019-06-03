@@ -20,8 +20,9 @@ if ($db->nextRecord()) {
 $voteRelations = array();
 $globalRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
 foreach (Globals::getRaces() as $raceID => $raceInfo) {
-	if ($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID())
+	if ($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID()) {
 		continue;
+	}
 	$container = create_container('council_vote_processing.php', '', array('race_id' => $raceID));
 	$voteRelations[$raceID] = array(
 		'HREF' => SmrSession::getNewHREF($container),

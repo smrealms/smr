@@ -25,10 +25,10 @@ function logException(Throwable $e) {
 		'USING_AJAX: ' . (defined('USING_AJAX') ?var_export(USING_AJAX, true) : 'undefined');
 
 	try {
-		if (function_exists('release_lock'))
+		if (function_exists('release_lock')) {
 			release_lock(); //Try to release lock so they can carry on normally
-	}
-	catch (Throwable $ee) {
+		}
+	} catch (Throwable $ee) {
 		$message .= EOL . EOL . '-----------' . EOL . EOL .
 					'Releasing Lock Failed' . EOL .
 					'Message: ' . $ee . EOL . EOL;
@@ -90,8 +90,9 @@ function handleException(Throwable $e) {
 
 	// If this is an ajax update, we don't really have a way to redirect
 	// to an error page at this time, so we just quit.
-	if (!defined('USING_AJAX') || !USING_AJAX)
+	if (!defined('USING_AJAX') || !USING_AJAX) {
 		header('location: /error.php?msg=' . urlencode($errorType));
+	}
 	exit;
 }
 

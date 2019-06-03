@@ -5,8 +5,9 @@ $game = SmrGame::getGame($var['game_id']);
 // do we need credits for this game?
 if ($game->getCreditsNeeded() > 0) {
 	// do we have enough
-	if ($account->getTotalSmrCredits() < $game->getCreditsNeeded())
+	if ($account->getTotalSmrCredits() < $game->getCreditsNeeded()) {
 		create_error('Sorry you do not have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR.');
+	}
 }
 
 // is the game already full?
@@ -51,7 +52,9 @@ while ($db->nextRecord()) {
 	$race_name = substr(stripslashes($db->getField('location_name')), 0, -13);
 
 	$curr_race_id = $db->getField('location_type_id') - 101;
-	if (in_array($curr_race_id, $only)) continue;
+	if (in_array($curr_race_id, $only)) {
+		continue;
+	}
 	$only[] = $curr_race_id;
 	// get number of traders in game
 	$db2->query('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db2->escapeNumber($curr_race_id) . ' AND game_id = ' . $db2->escapeNumber($var['game_id']));

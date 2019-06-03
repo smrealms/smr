@@ -9,8 +9,9 @@ class Council {
 	}
 
 	protected static function initialiseDatabase() {
-		if (self::$db == null)
+		if (self::$db == null) {
 			self::$db = new SmrMySqlDatabase();
+		}
 	}
 
 	/**
