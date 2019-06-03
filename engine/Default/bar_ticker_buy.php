@@ -33,8 +33,7 @@ if (isset($var['process'])) {
 	transfer('LocationID');
 	$container['message'] = '<div class="center">Your system has been added.  Enjoy!</div><br />';
 	forward($container);
-}
-else {
+} else {
 	// This is a display page!
 	$template->assign('PageTopic', 'Buy System');
 	Menu::bar();

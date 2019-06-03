@@ -48,8 +48,7 @@ if (isset($var['process'])) {
 	transfer('LocationID');
 	$container['message'] = '<div class="center">Galaxy maps have been added. Enjoy!</div><br />';
 	forward($container);
-}
-else {
+} else {
 	// This is a display page!
 	$template->assign('PageTopic', 'Buy Galaxy Maps');
 	Menu::bar();

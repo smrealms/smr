@@ -32,11 +32,9 @@
 				<td class="center shrink noWrap"><?php
 					if ($Port->isUnderAttack()) {
 						?><span class="red bold">ALERT!!</span><?php
-					}
-					else if ($PortIsAtWar) {
+					} else if ($PortIsAtWar) {
 						?><span class="red bold">WAR!!</span><?php
-					}
-					else { ?>
+					} else { ?>
 						<div class="buttonA">
 							<a class="buttonA" href="<?php echo Globals::getTradeHREF() ?>">Trade</a>
 						</div><?php

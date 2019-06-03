@@ -7,8 +7,7 @@ You are currently building: <?php
 			<br /><br />
 			<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getCancelHREF($Building['ConstructionID']); ?>">Cancel</a></div><?php
 		}
-	}
-	else { ?>
+	} else { ?>
 		Nothing!<?php
 	} ?>
 
@@ -63,7 +62,6 @@ if ($ThisPlanet->hasStockpile()) { ?>
 			}
 		} ?>
 	</ul><?php
-}
-else { ?>
+} else { ?>
 	 Nothing!</p><?php
 } ?>

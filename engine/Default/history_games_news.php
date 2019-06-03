@@ -3,10 +3,16 @@
 $template->assign('PageTopic', 'Game News : ' . $var['game_name']);
 Menu::history_games(3);
 
-if (isset($_REQUEST['min'])) $min = $_REQUEST['min'];
-else $min = 1;
-if (isset($_REQUEST['max'])) $max = $_REQUEST['max'];
-else $max = 50;
+if (isset($_REQUEST['min'])) {
+	$min = $_REQUEST['min'];
+} else {
+	$min = 1;
+}
+if (isset($_REQUEST['max'])) {
+	$max = $_REQUEST['max'];
+} else {
+	$max = 50;
+}
 $template->assign('Max', $max);
 $template->assign('Min', $min);
 

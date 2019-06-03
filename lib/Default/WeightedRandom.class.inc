@@ -48,8 +48,7 @@ class WeightedRandom {
 		$this->db->query('SELECT weighting FROM weighted_random WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND account_id = ' . $this->db->escapeNumber($accountID) . ' AND type = ' . $this->db->escapeString($type) . ' AND type_id = ' . $this->db->escapeNumber($typeID) . ' LIMIT 1');
 		if ($this->db->nextRecord()) {
 			$this->weighting = $this->db->getField('weighting');
-		}
-		else {
+		} else {
 			$this->weighting = 0;
 		}
 	}

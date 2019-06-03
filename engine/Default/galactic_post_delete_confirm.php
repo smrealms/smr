@@ -9,8 +9,7 @@ if (isset($var['article'])) {
 	transfer('article');
 	transfer('id');
 	$template->assign('SubmitHREF', SmrSession::getNewHREF($container));
-}
-else {
+} else {
 	// Delete paper
 	$template->assign('PageTopic', 'Delete Paper - Confirm');
 	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($var['id']));
