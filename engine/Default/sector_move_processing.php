@@ -4,13 +4,15 @@ if (!$player->getGame()->hasStarted()) {
 	create_error('You cannot move until the game has started!');
 }
 
-if ($var['target_sector'] == $player->getSectorID())
+if ($var['target_sector'] == $player->getSectorID()) {
 	forward(create_container('skeleton.php', $var['target_page']));
+}
 
-if ($sector->getWarp() == $var['target_sector'])
+if ($sector->getWarp() == $var['target_sector']) {
 	$turns = TURNS_PER_WARP;
-else
+} else {
 	$turns = TURNS_PER_SECTOR;
+}
 
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
@@ -34,14 +36,17 @@ if (isset($_REQUEST['action'])) {
 }
 
 // you can't move while on planet
-if ($player->isLandedOnPlanet())
+if ($player->isLandedOnPlanet()) {
 	create_error('You can\'t activate your engine while you are on a planet!');
+}
 
-if ($player->getTurns() < $turns)
+if ($player->getTurns() < $turns) {
 	create_error('You don\'t have enough turns to move!');
+}
 
-if (!$sector->isLinked($var['target_sector']))
+if (!$sector->isLinked($var['target_sector'])) {
 	create_error('You cannot move to that sector!');
+}
 
 // If you bump into mines in the sector you are trying to leave...
 if ($player->getLastSectorID() != $var['target_sector']) {
@@ -64,8 +69,7 @@ if ($player->getLastSectorID() != $var['target_sector']) {
 			$container = create_container('skeleton.php', 'current_sector.php');
 			$container['msg'] = 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns . ' turn' . ($turns == 1 ? '' : 's') . ' to navigate the minefield safely';
 			forward($container);
-		}
-		else {
+		} else {
 			$container = create_container('forces_attack_processing.php');
 			$container['action'] = 'bump';
 			$container['owner_id'] = $mine_owner_id;
@@ -126,8 +130,7 @@ if ($mine_owner_id) {
 		$container = create_container('skeleton.php', 'current_sector.php');
 		$container['msg'] = 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns . ' turn' . ($turns == 1 ? '' : 's') . ' to navigate the minefield safely.';
 		forward($container);
-	}
-	else {
+	} else {
 		$container = create_container('forces_attack_processing.php');
 		$container['action'] = 'bump';
 		$container['owner_id'] = $mine_owner_id;
