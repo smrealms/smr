@@ -25,7 +25,7 @@ while ($db->nextRecord()) {
 	}
 
 	//how many are they linked to?
-	$rows = sizeof($accountIDs);
+	$rows = count($accountIDs);
 
 	$currTabAccId = $db->getField('account_id');
 

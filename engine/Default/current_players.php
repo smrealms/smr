@@ -57,12 +57,15 @@ if ($count_last_active > 0) {
 
 		// How should we style the row for this player?
 		$class = '';
-		if ($player->equals($curr_player))
+		if ($player->equals($curr_player)) {
 			$class .= 'bold';
-		if ($curr_player->hasNewbieStatus())
+		}
+		if ($curr_player->hasNewbieStatus()) {
 			$class .= ' newbie';
-		if ($class != '')
+		}
+		if ($class != '') {
 			$class = ' class="' . trim($class) . '"';
+		}
 		$row['tr_class'] = $class;
 
 		// What should the player name be displayed as?

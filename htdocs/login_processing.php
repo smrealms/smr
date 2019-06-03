@@ -157,16 +157,6 @@ try {
 		} else $old = array();
 		$old[0] = MULTI_CHECKING_COOKIE_VERSION;
 		if (!in_array($account->getAccountID(), $old)) $old[] = $account->getAccountID();
-		if (sizeof($old) <= 2) $use = 'FALSE';
-		else $use = 'TRUE';
-		//check that each value is legit and add it to db string
-		$new = MULTI_CHECKING_COOKIE_VERSION;
-		foreach ($old as $accID)
-			if (is_numeric($accID)) $new .= '-' . $accID;
-		$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($new) . ', ' . $db->escapeString($use) . ')');
-		//now we update their cookie with the newest info
-		setcookie('Session_Info', $new, TIME + 157680000);
-
 	}
 	else {
 
@@ -189,18 +179,17 @@ try {
 		//merge arrays...but keys are all different so we go through each value
 		foreach ($cookie as $value)
 			if (!in_array($value, $old)) $old[] = $value;
-
-		if (sizeof($old) <= 2) $use = 'FALSE';
-		else $use = 'TRUE';
-		//check that each value is legit and add it to db string
-		$new = MULTI_CHECKING_COOKIE_VERSION;
-		foreach ($old as $accID)
-			if (is_numeric($accID)) $new .= '-' . $accID;
-		$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($new) . ', ' . $db->escapeString($use) . ')');
-		//update newest cookie
-		setcookie('Session_Info', $new, TIME + 157680000);
-
 	}
+	$use = (count($old) <= 2) ? 'FALSE' : 'TRUE';
+	//check that each value is legit and add it to db string
+	$new = MULTI_CHECKING_COOKIE_VERSION;
+	foreach ($old as $accID) {
+		if (is_numeric($accID)) $new .= '-' . $accID;
+	}
+	$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($new) . ', ' . $db->escapeString($use) . ')');
+	//now we update their cookie with the newest info
+	setcookie('Session_Info', $new, TIME + 157680000);
+
 
 	//get rid of expired messages
 	$db2->query('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(TIME) . ' AND expire_time != 0');

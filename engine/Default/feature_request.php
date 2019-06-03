@@ -43,8 +43,9 @@ $template->assign('CanVote', $canVote);
 if ($canVote) {
 	$featureVotes = array();
 	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = ' . $account->getAccountID());
-	while ($db->nextRecord())
+	while ($db->nextRecord()) {
 		$featureVotes[$db->getInt('feature_request_id')] = $db->getField('vote_type');
+	}
 }
 $db->query('SELECT * ' .
 			'FROM feature_request ' .
@@ -70,8 +71,9 @@ if ($db->getNumRows() > 0) {
 								'Votes' => array('FAVOURITE'=>$db->getInt('fav'), 'YES'=>$db->getInt('yes'), 'NO'=>$db->getInt('no')),
 								'VotedFor' => isset($featureVotes[$featureRequestID]) ? $featureVotes[$featureRequestID] : false
 		);
-		if ($featureModerator)
+		if ($featureModerator) {
 			$featureRequests[$featureRequestID]['RequestAccount'] = SmrAccount::getAccount($db->getInt('poster_id'));
+		}
 
 		if ($canVote) {
 			$db2->query('SELECT COUNT(*), vote_type

@@ -1,6 +1,7 @@
 <?php
-if (!Globals::isFeatureRequestOpen())
+if (!Globals::isFeatureRequestOpen()) {
 	create_error('Feature requests are currently not being accepted.');
+}
 
 $template->assign('PageTopic', 'Feature Request Comments');
 
@@ -32,8 +33,9 @@ if ($db->getNumRows() > 0) {
 								'Time' => date(DATE_FULL_SHORT, $db->getField('posting_time')),
 								'Anonymous' => $db->getBoolean('anonymous')
 		);
-		if ($featureModerator || !$db->getBoolean('anonymous'))
+		if ($featureModerator || !$db->getBoolean('anonymous')) {
 			$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($db->getField('poster_id'));
+		}
 	}
 	$template->assign('Comments', $featureRequestComments);
 }

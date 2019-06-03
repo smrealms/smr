@@ -18,16 +18,11 @@ if (isset($GameID)) { ?>
 	Shields : <span id="shields"><?php echo get_colored_text_range($ThisShip->getShields(), $ThisShip->getMaxShields(), number_format($ThisShip->getShields()) . '/' . number_format($ThisShip->getMaxShields())); ?></span><br />
 	Armour : <span id="armour"><?php echo get_colored_text_range($ThisShip->getArmour(), $ThisShip->getMaxArmour(), number_format($ThisShip->getArmour()) . '/' . number_format($ThisShip->getMaxArmour())); ?></span><br />
 	<a href="<?php echo $HardwareLink; ?>">CIJSD</a> : <?php
-	if ($ThisShip->hasCloak()) echo '*';
-	else echo '-';
-	if ($ThisShip->hasIllusion()) echo '*';
-	else echo '-';
-	if ($ThisShip->hasJump()) echo '*';
-	else echo '-';
-	if ($ThisShip->hasScanner()) echo '*';
-	else echo '-';
-	if ($ThisShip->hasDCS()) echo '*';
-	else echo '-';
+	echo $ThisShip->hasCloak() ? '*' : '-';
+	echo $ThisShip->hasIllusion() ? '*' : '-';
+	echo $ThisShip->hasJump() ? '*' : '-';
+	echo $ThisShip->hasScanner() ? '*' : '-';
+	echo $ThisShip->hasDCS() ? '*' : '-';
 	?><br /><br /><?php
 	if ($ThisShip->hasCloak()) { ?>
 		<a href="<?php echo $HardwareLink; ?>"><?php

@@ -272,7 +272,7 @@ forward($container);
 
 function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) {
 	if (!$location->isHQ()) {
-		return (sizeof($sector->getLocations()) < 4 && !$sector->offersFederalProtection());
+		return (count($sector->getLocations()) < 4 && !$sector->offersFederalProtection());
 	}
 	else {
 		//HQs are here

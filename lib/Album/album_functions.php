@@ -245,8 +245,9 @@ function search_result($album_ids) {
 
 		echo('<a href="?nick=' . urlencode($nick) . '" style="font-size:80%;">' . $nick . '</a><br />');
 
-		if (floor(sizeof($album_ids) / 4) > 0 && $count % floor(sizeof($album_ids) / 4) == 0)
+		if (floor(count($album_ids) / 4) > 0 && $count % floor(count($album_ids) / 4) == 0) {
 			echo('</td><td width="25%" valign="top">');
+		}
 	}
 	echo('</td></tr>');
 	echo('</table>');

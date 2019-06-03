@@ -29,7 +29,7 @@ $template->assign('Story', $story);
 ////which parts of the story are available
 //$story_available = array(0,1,2,3,4,5,6,7);
 //
-//if (sizeof($story_available) > 0) {
+//if (count($story_available) > 0) {
 //	$templateStory = array();
 //	foreach ($story_available as $story_id) {
 //		$templateStory[] = $story[$story_id];

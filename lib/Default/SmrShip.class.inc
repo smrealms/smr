@@ -126,8 +126,7 @@ class SmrShip extends AbstractSmrShip {
 			$amount = $this->getHardware($hardwareTypeID);
 			if ($amount > 0) {
 				$this->db->query('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($hardwareTypeID) . ', ' . $this->db->escapeNumber($amount) . ', ' . $this->db->escapeNumber($this->getOldHardware($hardwareTypeID)) . ')');
-			}
-			else {
+			} else {
 				$this->db->query('DELETE FROM ship_has_hardware WHERE ' . $this->SQL . ' AND hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID));
 			}
 		}
@@ -181,8 +180,9 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	public function isCloaked() {
-		if (!$this->hasCloak())
+		if (!$this->hasCloak()) {
 			return false;
+		}
 		if (!isset($this->isCloaked)) {
 			$this->db->query('SELECT 1 FROM ship_is_cloaked WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->isCloaked = $this->db->getNumRows() > 0;

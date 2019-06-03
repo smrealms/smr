@@ -9,12 +9,13 @@ if (!defined('NPC_SCRIPT') && strpos($player_name, 'NPC') === 0)
 $limited_char = 0;
 for ($i = 0; $i < strlen($player_name); $i++) {
 	// disallow certain ascii chars
-	if (ord($player_name[$i]) < 32 || ord($player_name[$i]) > 127)
+	if (ord($player_name[$i]) < 32 || ord($player_name[$i]) > 127) {
 		create_error('The player name contains invalid characters!');
+	}
 
-// numbers 48..57
-// Letters 65..90
-// letters 97..122
+	// numbers 48..57
+	// Letters 65..90
+	// letters 97..122
 	if (!((ord($player_name[$i]) >= 48 && ord($player_name[$i]) <= 57) ||
 		(ord($player_name[$i]) >= 65 && ord($player_name[$i]) <= 90) ||
 		(ord($player_name[$i]) >= 97 && ord($player_name[$i]) <= 122))) {
