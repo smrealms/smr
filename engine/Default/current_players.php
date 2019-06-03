@@ -6,10 +6,12 @@ $db->query('SELECT count(*) count FROM active_session
 			WHERE last_accessed >= ' . $db->escapeNumber(TIME - 600) . ' AND
 				game_id = ' . $db->escapeNumber($player->getGameID()));
 $count_real_last_active = 0;
-if ($db->nextRecord())
+if ($db->nextRecord()) {
 	$count_real_last_active = $db->getField('count');
-if (SmrSession::$last_accessed < TIME - 600)
+}
+if (SmrSession::$last_accessed < TIME - 600) {
 	++$count_real_last_active;
+}
 
 
 $db->query('SELECT * FROM player
@@ -19,8 +21,9 @@ $db->query('SELECT * FROM player
 $count_last_active = $db->getNumRows();
 
 // fix it if some1 is using the logoff button
-if ($count_real_last_active < $count_last_active)
+if ($count_real_last_active < $count_last_active) {
 	$count_real_last_active = $count_last_active;
+}
 
 // Get the summary text
 $summary = 'There ';

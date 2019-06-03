@@ -28,8 +28,7 @@ if (isset($GameID)) { ?>
 		<a href="<?php echo $HardwareLink; ?>"><?php
 			if ($ThisShip->isCloaked()) {
 				?><strong class="green">*** Cloak active ***</strong><?php
-			}
-			else {
+			} else {
 				?><strong class="red">*** Cloak inactive ***</strong><?php
 			} ?>
 		</a><br /><br /><?php

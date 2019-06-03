@@ -3,8 +3,9 @@
 // trim input now
 $player_name = trim($_REQUEST['player_name']);
 
-if (!defined('NPC_SCRIPT') && strpos($player_name, 'NPC') === 0)
+if (!defined('NPC_SCRIPT') && strpos($player_name, 'NPC') === 0) {
 	create_error('Player names cannot begin with "NPC".');
+}
 
 $limited_char = 0;
 for ($i = 0; $i < strlen($player_name); $i++) {
@@ -23,15 +24,18 @@ for ($i = 0; $i < strlen($player_name); $i++) {
 	}
 }
 
-if ($limited_char > 4)
+if ($limited_char > 4) {
 	create_error('You cannot use a name with more than 4 special characters.');
+}
 
-if (empty($player_name))
+if (empty($player_name)) {
 	create_error('You must enter a player name!');
+}
 
 $race_id = $_REQUEST['race_id'];
-if (empty($race_id) || $race_id == 1)
+if (empty($race_id) || $race_id == 1) {
 	create_error('Please choose a race!');
+}
 
 $gameID = $var['game_id'];
 $game = SmrGame::getGame($gameID);
@@ -40,8 +44,9 @@ $game = SmrGame::getGame($gameID);
 $player_name = htmlentities($player_name);
 
 $db->query('SELECT 1 FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($player_name) . ' LIMIT 1');
-if ($db->nextRecord() > 0)
+if ($db->nextRecord() > 0) {
 	create_error('The player name already exists.');
+}
 
 // does it cost SMR Credits to join this game?
 $creditsNeeded = $game->getCreditsNeeded();
@@ -60,8 +65,7 @@ if ($isNewbie) {
 	$ship_id = SHIP_TYPE_NEWBIE_MERCHANT_VESSEL;
 	$amount_shields = 75;
 	$amount_armour = 150;
-}
-else {
+} else {
 	$startingNewbieTurns = STARTING_NEWBIE_TURNS_VET;
 	switch ($race_id) {
 		case RACE_ALSKANT:
@@ -98,8 +102,7 @@ else {
 //// newbie leaders need to put into there alliances
 if ($account->getAccountID() == ACCOUNT_ID_NHL) {
 	$alliance_id = NHA_ID;
-}
-else {
+} else {
 	$alliance_id = 0;
 }
 
@@ -109,8 +112,7 @@ $db->lockTable('player');
 $db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $db->escapeNumber($gameID));
 if ($db->nextRecord()) {
 	$player_id = $db->getInt('MAX(player_id)') + 1;
-}
-else {
+} else {
 	$player_id = 1;
 }
 

@@ -60,13 +60,11 @@ if ($choise == 'reopen') {
 	$curr_account->removePoints($points);
 	$curr_account->unbanAccount($account);
 	$actions[] = 'reopened account and removed ' . $points . ' points';
-}
-else if ($points > 0) {
+} else if ($points > 0) {
 	if ($choise == 'individual') {
 		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escapeString($reason_msg) . ')');
 		$reason_id = $db->getInsertID();
-	}
-	else {
+	} else {
 		$reason_id = $reason_pre_select;
 	}
 
