@@ -2,40 +2,8 @@
 try {
 	require_once('config.inc');
 	
-	$db = new SmrMySqlDatabase();
-	
-	echo ('<!DOCTYPE html>');
-	
-	echo ('<html>');
-	echo ('<head>');
-	echo ('<link rel="stylesheet" type="text/css" href="css/Default.css">');
-	echo ('<link rel="stylesheet" type="text/css" href="css/Default/Default.css">');
-	echo ('<title>Weapon List</title>');
-	echo ('<meta http-equiv="pragma" content="no-cache">');?>
-	<style>
-	#container {
-		margin: 0;
-		padding: 0;
-		border: 0;
-	}
-	#main {
-		margin: 0;
-		padding: 0;
-		border: 0;
-	}
-	select {
-		border: solid #80C870 1px;
-		background-color: #0A4E1D;
-		color: #80C870; }
-	optgroup {
-		border: solid #80C870 1px;
-	}
-	</style>
-	<script src="js/weapon_list.js"></script>
-	<?php
-	echo ('</head>');
-	
-	echo ('<body onload="resetBoxes()">');
+	$template = new Template();
+
 	$seq = isset($_REQUEST['seq']) ? $_REQUEST['seq'] : '';
 	if (empty($seq))
 		$seq = 'ASC';
@@ -43,6 +11,7 @@ try {
 		$seq = 'DESC';
 	else
 		$seq = 'ASC';
+	$template->assign('seq', $seq);
 	
 	$columnNames = array('weapon_name','race_name','cost','shield_damage','armour_damage','accuracy','power_level','buyer_restriction');
 	if (isset($_REQUEST['order'])&&in_array($_REQUEST['order'],$columnNames))
@@ -50,60 +19,48 @@ try {
 	else
 		$order_by = 'weapon_type_id';
 	
-	//$race 		= buildSelector($db, "racePick", "race_name", "race");
-	$race = "";
-	$power 		= buildSelector($db, "powerPick", "power_level", "weapon_type");
-	$restrict 	= buildRestriction();
-	
-	echo ('<div id="container" style="padding: 0;">');
-	echo ('<div id="main" style="width:810px; margin-left:auto; margin-right:auto;">');
-	echo (buildRaceBox($db));	
+	$db = new SmrMySqlDatabase();
+	$template->assign('power', buildSelector($db, "powerPick", "power_level", "weapon_type"));
+	$template->assign('restrict', buildRestriction());
+	$template->assign('raceBoxes', buildRaceBox($db));
+
+	$weapons = [];
 	$db->query('SELECT * FROM weapon_type JOIN race USING(race_id) ORDER BY '.$order_by.' '.$seq);
-	echo ('<table id="table" class="standard center">');
-	echo ('<tr>');
-	echo ('<th style="width: 240px;"><a href="?order=weapon_name&amp;seq='.$seq.'"><span style=color:#80C870;>Weapon Name</span></a></th>');
-	echo ('<th style="width: 90px;"><a href="?order=race_name&amp;seq='.$seq.'"><span style=color:#80C870;>Race</span></a>'.$race.'</th>');
-	echo ('<th style="width: 64px;"><a href="?order=cost&amp;seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
-	echo ('<th style="width: 74px;"><a href="?order=shield_damage&amp;seq='.$seq.'"><span style=color:#80C870;>Shield<br>Damage</span></a></th>');
-	echo ('<th style="width: 74px;"><a href="?order=armour_damage&amp;seq='.$seq.'"><span style=color:#80C870;>Armour<br>Damage</span></a></th>');
-	echo ('<th style="width: 85px;"><a href="?order=accuracy&amp;seq='.$seq.'"><span style=color:#80C870;>Accuracy<br>%</span></a></th>');
-	echo ('<th style="width: 51px;"><a href="?order=power_level&amp;seq='.$seq.'"><span style=color:#80C870;>Level</span></a>'.$power.'</th>');
-	echo ('<th style="width: 92px;"><a href="?order=buyer_restriction&amp;seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a>'.$restrict.'</th>');
-	echo ('</tr>');
 	while ($db->nextRecord()) {
-		echo ('<tr>');
-		echo ('<td>'.$db->getField('weapon_name').'</td>');
-		echo ('<td class="race'.$db->getInt('race_id').'">'.$db->getField('race_name').'</td>');
-		echo ('<td>'.number_format($db->getInt('cost')).'</td>');
-		echo ('<td>'.$db->getInt('shield_damage').'</td>');
-		echo ('<td>'.$db->getInt('armour_damage').'</td>');
-		echo ('<td>'.$db->getInt('accuracy').'</td>');
-		echo ('<td>'.$db->getInt('power_level').'</td>');
 		switch($db->getInt('buyer_restriction')) {
 			case BUYER_RESTRICTION_GOOD:
-				echo ('<td style="color: green;">Good</td>');
+				$restriction = '<td style="color: green;">Good</td>';
 			break;
 			case BUYER_RESTRICTION_EVIL:
-				echo ('<td style="color: red;">Evil</td>');
+				$restriction = '<td style="color: red;">Evil</td>';
 			break;
 			case BUYER_RESTRICTION_NEWBIE:
-				echo ('<td style="color: #06F;">Newbie</td>');
+				$restriction = '<td style="color: #06F;">Newbie</td>';
 			break;
 			case BUYER_RESTRICTION_PORT:
-				echo ('<td style="color: yellow;">Port</td>');
+				$restriction = '<td style="color: yellow;">Port</td>';
 			break;
 			case BUYER_RESTRICTION_PLANET:
-				echo ('<td style="color: yellow;">Planet</td>');
+				$restriction = '<td style="color: yellow;">Planet</td>';
 			break;
 			default:
-				echo ('<td>-</td>');
+				$restriction = '<td></td>';
 		}
-		echo ('</tr>');
+		$weapons[] = [
+			'restriction' => $restriction,
+			'weapon_name' => $db->getField('weapon_name'),
+			'race_id' => $db->getInt('race_id'),
+			'race_name' => $db->getField('race_name'),
+			'cost' => number_format($db->getInt('cost')),
+			'shield_damage' => $db->getInt('shield_damage'),
+			'armour_damage' => $db->getInt('armour_damage'),
+			'accuracy' => $db->getInt('accuracy'),
+			'power_level' => $db->getInt('power_level'),
+		];
 	}
-	echo ('</table></div></div>');
-	
+	$template->assign('Weapons', $weapons);
 
-
+	$template->display('weapon_list.php');
 }
 catch(Throwable $e) {
 	handleException($e);
@@ -130,7 +87,6 @@ function buildRestriction() {
 	."</select>";
 	
 	return $restrict;
-
 }
 
 function buildRaceBox($db) {
@@ -146,4 +102,3 @@ function buildRaceBox($db) {
 	$racebox .= '</form>';
 	return $racebox;
 }
-?>
