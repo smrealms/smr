@@ -4,47 +4,31 @@ try {
 	
 	$template = new Template();
 
-	$seq = isset($_REQUEST['seq']) ? $_REQUEST['seq'] : '';
-	if (empty($seq))
-		$seq = 'ASC';
-	elseif ($seq == 'ASC')
-		$seq = 'DESC';
-	else
-		$seq = 'ASC';
-	$template->assign('seq', $seq);
-	
-	$columnNames = array('weapon_name','race_name','cost','shield_damage','armour_damage','accuracy','power_level','buyer_restriction');
-	if (isset($_REQUEST['order'])&&in_array($_REQUEST['order'],$columnNames))
-		$order_by = $_REQUEST['order'];
-	else
-		$order_by = 'weapon_type_id';
-	
 	$db = new SmrMySqlDatabase();
-	$template->assign('power', buildSelector($db, "powerPick", "power_level", "weapon_type"));
-	$template->assign('restrict', buildRestriction());
+	$template->assign('power', buildSelector($db, "power_level", "weapon_type"));
 	$template->assign('raceBoxes', buildRaceBox($db));
 
 	$weapons = [];
-	$db->query('SELECT * FROM weapon_type JOIN race USING(race_id) ORDER BY '.$order_by.' '.$seq);
+	$db->query('SELECT * FROM weapon_type JOIN race USING(race_id)');
 	while ($db->nextRecord()) {
 		switch($db->getInt('buyer_restriction')) {
 			case BUYER_RESTRICTION_GOOD:
-				$restriction = '<td style="color: green;">Good</td>';
+				$restriction = '<span class="dgreen">Good</span>';
 			break;
 			case BUYER_RESTRICTION_EVIL:
-				$restriction = '<td style="color: red;">Evil</td>';
+				$restriction = '<span class="red">Evil</span>';
 			break;
 			case BUYER_RESTRICTION_NEWBIE:
-				$restriction = '<td style="color: #06F;">Newbie</td>';
+				$restriction = '<span style="color: #06F;">Newbie</span>';
 			break;
 			case BUYER_RESTRICTION_PORT:
-				$restriction = '<td style="color: yellow;">Port</td>';
+				$restriction = '<span class="yellow">Port</span>';
 			break;
 			case BUYER_RESTRICTION_PLANET:
-				$restriction = '<td style="color: yellow;">Planet</td>';
+				$restriction = '<span class="yellow">Planet</span>';
 			break;
 			default:
-				$restriction = '<td></td>';
+				$restriction = '';
 		}
 		$weapons[] = [
 			'restriction' => $restriction,
@@ -66,38 +50,24 @@ catch(Throwable $e) {
 	handleException($e);
 }
 
-function buildSelector($db, $id, $name, $table) {
-	$selector = '<br><select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
+function buildSelector($db, $name, $table) {
+	$selector = '<select onchange="filterSelect(this)"><option>All</option>';
 	$db->query("SELECT DISTINCT ".$name." FROM ".$table." ORDER BY ".$name);
 	while ($db->nextRecord()) {
-		$selector .= '<option value="'.$db->getField($name).'">'
-		.$db->getField($name).'</option>';
+		$selector .= '<option>'.$db->getField($name).'</option>';
 	}
 	$selector .= '</select>';
 	return $selector;
 }
 
-function buildRestriction() {
-	$restrict = '<br><select id="restrictPick" name="restrict" onchange="restrictPickf()">'
-	.'<option value="All">All</option>'
-	.'<option value="-">None</option>'
-	."<option value='Good'>Good</option>"
-	."<option value='Evil' style=\"color: red;\">Evil</option>"
-	."<option value='Newbie' style=\"color: #06F;\">Newbie</option>"
-	."</select>";
-	
-	return $restrict;
-}
-
 function buildRaceBox($db) {
 	$racebox = '<form id="raceform" name="raceform" style="text-align:center;">';
 	$db->query('SELECT race_id, race_name FROM race ORDER BY race_name');
-	while ($db->nextRecord()) {
-		$raceID = $db->getInt('race_id');
-		$raceName = $db->getField('race_name');
+	foreach (Globals::getRaces() as $raceID => $raceData) {
+		$raceName = $raceData['Race Name'];
 		$racebox .= '
 			<input type="checkbox" id="race'.$raceID.'" name="races" value="'.$raceName.'" onClick="raceToggle()">
-			<label for="race'.$raceID.'" class="race'.$raceID.'">'.$raceName.'</label>';
+			<label for="race'.$raceID.'" class="race'.$raceID.'">'.$raceName.'</label>&thinsp;';
 	}
 	$racebox .= '</form>';
 	return $racebox;

@@ -1,3 +1,5 @@
+// For use with {ship,weapon}_list.php
+
 // Benoit Asselin - http://www.ab-d.fr
 Array.prototype.in_array = function(p_val) {
 	for(var i = 0, l = this.length; i < l; i++) {
@@ -7,10 +9,11 @@ Array.prototype.in_array = function(p_val) {
 	}
 	return false;
 }
-//JS code by Astax to foster filtering the results
 
-//Use window variable to store filter values, this is kinda like a JS equivellent of global
-window.filter = ["All", "All", "All", "All", "All", "All", "All", "All", "All", "All"];
+// Use window variable to store filter values. Since this is used for both
+// the ship and weapon tables, it needs to have enough elements for either.
+window.filter = ["All", "All", "All", "All", "All", "All", "All", "All", "All", "All",
+                 "All", "All", "All", "All", "All", "All", "All", "All", "All"];
 
 //reset all check boxes
 function resetBoxes() {
@@ -20,24 +23,12 @@ function resetBoxes() {
 	}
 }
 
-function racePickf() {
-	filterSelect("racePick", 1);
-}
+function filterSelect(element) {
+	var selected = element.options[element.selectedIndex].value;
+	var columnId = element.parentElement.cellIndex;
 
-function powerPickf() {
-	filterSelect("powerPick", 6);
-}
-
-function restrictPickf() {
-	filterSelect("restrictPick", 7);
-}
-
-function filterSelect(selectId, filterId) {
-	var option = document.getElementById(selectId);
-	var selected = option.options[option.selectedIndex].value;
-
-	window.filter[filterId] = selected;
-	applyFilter();
+	window.filter[columnId] = selected;
+	applyFilter('data-list');
 }
 
 function raceToggle() {
@@ -48,11 +39,11 @@ function raceToggle() {
 			window.filter[1].push(toggle.races[i].value);
 		}
 	}
-	applyFilter();
+	applyFilter('data-list');
 }
 
-function applyFilter() {
-	var table = document.getElementById("table");
+function applyFilter(tableId) {
+	var table = document.getElementById(tableId);
 	for (var i=1; i < table.rows.length; i++) {
 		var show = true;
 		for (var j=0; j < table.rows[i].cells.length; j++) {
@@ -60,12 +51,12 @@ function applyFilter() {
 				continue;
 			}
 			if (Array.isArray(window.filter[j])) {
-				if (!window.filter[j].in_array(table.rows[i].cells[j].innerHTML)) {
+				if (!window.filter[j].in_array(table.rows[i].cells[j].textContent)) {
 					show = false;
 					break;
 				}
 			} else {
-				if (table.rows[i].cells[j].innerHTML != window.filter[j]) {
+				if (table.rows[i].cells[j].textContent != window.filter[j]) {
 					show = false;
 					break;
 				}

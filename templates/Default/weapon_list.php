@@ -7,12 +7,7 @@
 		<meta http-equiv="pragma" content="no-cache">
 		<style>
 		#container {
-			margin: 0;
-			padding: 0;
-			border: 0;
-		}
-		#main {
-			margin: 0 auto 0 auto;
+			margin: 10px;
 			padding: 0;
 			border: 0;
 		}
@@ -22,72 +17,81 @@
 			color: #80C870;
 		}
 		</style>
-		<script src="js/weapon_list.js"></script>
+		<script src="js/filter_list.js"></script>
 	</head>
 
 	<body onload="resetBoxes()">
 		<div id="container">
-			<div id="main" style="width:810px;">
-				<?php echo $raceBoxes; ?>
-				<table id="table" class="standard center">
-					<tr>
+			<?php echo $raceBoxes; ?>
+			<table id="data-list" class="standard center">
+				<thead>
+					<tr class="top">
 						<th style="width: 240px;">
-							<a href="?order=weapon_name&amp;seq=<?php echo $seq; ?>">
-								<span>Weapon Name</span>
-							</a>
+							<span class="sort" data-sort="name">Weapon Name</span><br />
+							<input class="search center" placeholder="Search" />
 						</th>
 						<th style="width: 90px;">
-							<a href="?order=race_name&amp;seq=<?php echo $seq; ?>">
-								<span style=color:#80C870;>Race</span>
-							</a>
+							<span class="sort" data-sort="race">Race</span><br />
+							<select onchange="filterSelect(this)">
+								<option>All</option><?php
+								foreach (Globals::getRaces() as $raceId => $raceData) { ?>
+									<option class="race<?php echo $raceId; ?>"><?php echo $raceData['Race Name']; ?></option><?php
+								} ?>
+							</select>
 						</th>
-						<th style="width: 64px;">
-							<a href="?order=cost&amp;seq=<?php echo $seq; ?>">
-								<span style=color:#80C870;>Cost</span>
-							</a>
+						<th style="width: 68px;">
+							<span class="sort" data-sort="cost">Cost</span>
 						</th>
-						<th style="width: 74px;">
-							<a href="?order=shield_damage&amp;seq=<?php echo $seq; ?>">
-								<span style=color:#80C870;>Shield<br>Damage</span>
-							</a>
+						<th style="width: 73px;">
+							<span class="sort" data-sort="shield_damage">Shield<br>Damage</span>
 						</th>
-						<th style="width: 74px;">
-							<a href="?order=armour_damage&amp;seq=<?php echo $seq; ?>">
-								<span style=color:#80C870;>Armour<br>Damage</span>
-							</a>
+						<th style="width: 73px;">
+							<span class="sort" data-sort="armour_damage">Armour<br>Damage</span>
 						</th>
-						<th style="width: 85px;">
-							<a href="?order=accuracy&amp;seq=<?php echo $seq; ?>">
-								<span style=color:#80C870;>Accuracy<br>%</span>
-							</a>
+						<th style="width: 83px;">
+							<span class="sort" data-sort="accuracy">Accuracy<br>(%)</span>
 						</th>
 						<th style="width: 51px;">
-							<a href="?order=power_level&amp;seq=<?php echo $seq; ?>">
-								<span style=color:#80C870;>Level</span>
-							</a>
+							<span class="sort" data-sort="level">Level</span><br />
 							<?php echo $power; ?>
 						</th>
 						<th style="width: 92px;">
-							<a href="?order=buyer_restriction&amp;seq=<?php echo $seq; ?>">
-								<span style=color:#80C870;>Restriction</span>
-							</a>
-							<?php echo $restrict; ?>
+							<span class="sort" data-sort="restriction">Restriction</span><br />
+							<select onchange="filterSelect(this)">
+								<option>All</option>
+								<option value="">None</option>
+								<option class="dgreen">Good</option>
+								<option class="red">Evil</option>
+								<option style="color: #06F;">Newbie</option>
+							</select>
 						</th>
-					</tr><?php
+					</tr>
+				</thead>
+				<tbody class="list"><?php
 					foreach ($Weapons as $weapon) { ?>
 						<tr>
-							<td><?php echo $weapon['weapon_name']; ?></td>
-							<td class="race<?php echo $weapon['race_id']; ?>"><?php echo $weapon['race_name']; ?></td>
-							<td><?php echo $weapon['cost']; ?></td>
-							<td><?php echo $weapon['shield_damage']; ?></td>
-							<td><?php echo $weapon['armour_damage']; ?></td>
-							<td><?php echo $weapon['accuracy']; ?></td>
-							<td><?php echo $weapon['power_level']; ?></td>
-							<?php echo $weapon['restriction']; ?>
+							<td class="name"><?php echo $weapon['weapon_name']; ?></td>
+							<td class="race race<?php echo $weapon['race_id']; ?>"><?php echo $weapon['race_name']; ?></td>
+							<td class="cost"><?php echo $weapon['cost']; ?></td>
+							<td class="shield_damage"><?php echo $weapon['shield_damage']; ?></td>
+							<td class="armour_damage"><?php echo $weapon['armour_damage']; ?></td>
+							<td class="accuracy"><?php echo $weapon['accuracy']; ?></td>
+							<td class="level"><?php echo $weapon['power_level']; ?></td>
+							<td class="restriction"><?php echo $weapon['restriction']; ?></td>
 						</tr><?php
 					} ?>
-				</table>
-			</div>
+				</tbody>
+			</table>
 		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+		<script>
+		var list = new List('data-list', {
+			valueNames: ['name', 'race', 'cost', 'shield_damage', 'armour_damage', 'accuracy', 'level', 'restriction'],
+			sortFunction: function(a, b, options) {
+				return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
+			}
+		});
+		</script>
 	</body>
 </html>
