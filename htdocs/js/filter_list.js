@@ -1,15 +1,5 @@
 // For use with {ship,weapon}_list.php
 
-// Benoit Asselin - http://www.ab-d.fr
-Array.prototype.in_array = function(p_val) {
-	for(var i = 0, l = this.length; i < l; i++) {
-		if(this[i] == p_val) {
-			return true;
-		}
-	}
-	return false;
-}
-
 // Use window variable to store filter values. Since this is used for both
 // the ship and weapon tables, it needs to have enough elements for either.
 window.filter = ["All", "All", "All", "All", "All", "All", "All", "All", "All", "All",
@@ -51,7 +41,7 @@ function applyFilter(tableId) {
 				continue;
 			}
 			if (Array.isArray(window.filter[j])) {
-				if (!window.filter[j].in_array(table.rows[i].cells[j].textContent)) {
+				if (window.filter[j].indexOf(table.rows[i].cells[j].textContent) === -1) {
 					show = false;
 					break;
 				}
