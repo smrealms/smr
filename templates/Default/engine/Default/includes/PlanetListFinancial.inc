@@ -49,13 +49,5 @@ if (count($Planets) > 0) { ?>
 			} ?>
 		</tbody>
 	</table><br/>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-	<script>
-	var list = new List('planet-list', {
-		valueNames: ['sort_name', 'sort_lvl', 'sort_owner', 'sort_sector', 'sort_credits', 'sort_bonds', 'sort_interest', 'sort_mature'],
-		sortFunction: function(a, b, options) {
-			return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
-		}
-	});
-	</script><?php
+	<?php $this->setListjsInclude('PlanetListFinancial');
 } ?>

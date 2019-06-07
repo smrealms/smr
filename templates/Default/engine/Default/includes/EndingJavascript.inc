@@ -7,6 +7,14 @@ foreach ($this->jsAlerts as $string) {
 	?>alert(<?php echo json_encode($string); ?>);<?php
 }
 
+if (!empty($this->listjsInclude)) { ?>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+	<script src="js/listjs_include.js"></script>
+	<script>
+		listjs.<?php echo $this->listjsInclude; ?>();
+	</script><?php
+}
+
 $AvailableLinks = Globals::getAvailableLinks(); ?>
 <script>$(function(){<?php
 	if ($AJAX_ENABLE_REFRESH) { ?>

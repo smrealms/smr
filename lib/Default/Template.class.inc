@@ -9,6 +9,7 @@ class Template {
 	private $ajaxJS = array();
 	protected $jsAlerts = array();
 	private $displayCalled = false;
+	private $listjsInclude = null;
 
 	public function __destruct() {
 		if (!$this->displayCalled && !empty($this->data)) {
@@ -226,6 +227,13 @@ class Template {
 		} else {
 			echo 'a';
 		}
+	}
+
+	/**
+	 * Sets a listjs_include.js function to call at the end of the HTML body.
+	 */
+	public function setListjsInclude($func) {
+		$this->listjsInclude = $func;
 	}
 
 	/*

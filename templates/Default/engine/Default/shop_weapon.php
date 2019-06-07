@@ -30,15 +30,7 @@ if ($ThisLocation->isWeaponSold()) { ?>
 		</tbody>
 	</table>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-	<script>
-	var list = new List('weapon-list', {
-		valueNames: ['sort_name', 'sort_shield', 'sort_armor', 'sort_acc', 'sort_race', 'sort_power', 'sort_cost'],
-		sortFunction: function(a, b, options) {
-			return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
-		}
-	});
-	</script><?php
+	<?php $this->setListjsInclude('shop_weapon');
 }
 
 if ($ThisShip->hasWeapons()) { ?>
