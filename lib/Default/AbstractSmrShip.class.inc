@@ -47,6 +47,7 @@ abstract class AbstractSmrShip {
 		$ship['Type'] = 'Ship';
 		$ship['Name'] = $db->getField('ship_name');
 		$ship['ShipTypeID'] = $db->getField('ship_type_id');
+		$ship['ShipClassID'] = $db->getInt('ship_class_id');
 		$ship['RaceID'] = $db->getField('race_id');
 		$ship['Hardpoint'] = $db->getField('hardpoint');
 		$ship['Speed'] = $db->getField('speed');

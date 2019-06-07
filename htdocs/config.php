@@ -326,7 +326,6 @@ const DEFAULT_FED_RADIUS = 1;
  * Hardware definitions
  */
 const HARDWARE_SHIELDS = 1;
-const HARDWARE_ARMOR = 2;
 const HARDWARE_ARMOUR = 2;
 const HARDWARE_CARGO = 3;
 const HARDWARE_COMBAT = 4;
