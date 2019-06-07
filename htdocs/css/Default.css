@@ -179,10 +179,6 @@ div#right_panel {
 	width: 13em;
 }
 
-.nopad {
-	margin: 0px;
-	padding: 0px;
-}
 /* Weapon Drag Drop */
 ul.sortable li {
 	position: relative;

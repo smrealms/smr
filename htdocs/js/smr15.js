@@ -1,14 +1,12 @@
 (function() {
 "use strict";
 
-	var doCalc;
-
 	window.voteSite = function(url,snUrl) {
 		window.open(url);
 		window.location=snUrl;
 	};
 
-	doCalc = function(type, number, totalDest) {
+	function doCalc(type, number, totalDest) {
 		var i = 1, total = 0, df=document.FORM;
 		for(; i<=number; i++) {
 			total += df[type+i].value * 1;
@@ -45,15 +43,15 @@
 		df.racedist.value = 100;
 	};
 
-	var body, currentlyFlashing=false, flashColour, origColour, intervalFlash, timeoutStopFlash, stopFlash, bgFlash;
+	var body, currentlyFlashing=false, flashColour, origColour, intervalFlash, timeoutStopFlash;
 
-	stopFlash = function() {
+	function stopFlash() {
 		clearInterval(intervalFlash);
 		body.style.backgroundColor = origColour;
 		currentlyFlashing = false;
 	};
 
-	bgFlash = function() {
+	function bgFlash() {
 		var body = document.getElementsByTagName('body')[0];
 		if(body.style.backgroundColor === origColour) {
 			body.style.backgroundColor = flashColour;
