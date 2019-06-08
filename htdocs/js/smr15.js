@@ -76,3 +76,17 @@
 		timeoutStopFlash = setTimeout(stopFlash,3500);
 	};
 })();
+
+// Used by shop_hardware.php
+function recalcOnKeyUp(transaction, hardwareTypeID, cost) {
+	var form = document.getElementById(transaction + hardwareTypeID);
+	form.total.value = form.amount.value * cost;
+}
+
+// Used by planet_defense.php
+function showWeaponInfo(select) {
+	var target = $(select).data('target');
+	var show = $("option:selected", select).data('show');
+	$(target).children().addClass('hide');
+	$(show).removeClass('hide');
+}
