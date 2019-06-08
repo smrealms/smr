@@ -119,7 +119,6 @@
 					</td>
 					<td id="twitter-feed" class="hide" style="height:256px;width:90%;">
 						<a class="twitter-timeline" data-dnt="true" data-height="250" data-theme="dark" data-chrome="transparent nofooter noheader noborders" href="https://twitter.com/SMRealms?ref_src=twsrc%5Etfw"></a>
-						<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 					</td>
 				</tr>
 			</table><?php
@@ -160,6 +159,7 @@
 			<span class="small"><a href="imprint.html">[Imprint]</a></span>
 		</div>
 
+		<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script src="js/login.js"></script>
 
