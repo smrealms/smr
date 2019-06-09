@@ -22,13 +22,6 @@ if ($game->hasEnded()) {
 $template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
 $template->assign('Game', $game);
 
-$raceDescriptions = [];
-foreach (Globals::getRaces() as $race) {
-	$raceDescriptions[] = ('\'' . str_replace('\'', '\\\'"', $race['Description']) . '\'');
-}
-$template->assign('RaceDescriptions', join(',', $raceDescriptions));
-
-
 if (TIME >= $game->getJoinTime()) {
 	$container = create_container('game_join_processing.php');
 	transfer('game_id');
@@ -47,10 +40,6 @@ $db->query('SELECT location_name, location_type_id
 			ORDER BY location_type_id');
 $races = array();
 while ($db->nextRecord()) {
-	// get the name for this race
-	// HACK! cut ' Headquarters' from location name!
-	$race_name = substr(stripslashes($db->getField('location_name')), 0, -13);
-
 	$curr_race_id = $db->getField('location_type_id') - 101;
 	if (in_array($curr_race_id, $only)) {
 		continue;
@@ -60,15 +49,23 @@ while ($db->nextRecord()) {
 	$db2->query('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db2->escapeNumber($curr_race_id) . ' AND game_id = ' . $db2->escapeNumber($var['game_id']));
 	$db2->nextRecord();
 
-	$races[$curr_race_id]['ID'] = $curr_race_id;
-	$races[$curr_race_id]['Name'] = $race_name;
-	$races[$curr_race_id]['NumberOfPlayers'] = $db2->getInt('number_of_race');
-	$races[$curr_race_id]['Selected'] = false;
+	$race = Globals::getRaces()[$curr_race_id];
+	$races[$curr_race_id] = [
+		'ID' => $curr_race_id,
+		'Name' => $race['Race Name'],
+		'Description' => $race['Description'],
+		'NumberOfPlayers' => $db2->getInt('number_of_race'),
+		'Selected' => false,
+	];
 }
-if (count($races) > 1) {
-	do {
-		$raceKey = array_rand($races);
-	} while ($races[$raceKey]['ID'] == RACE_ALSKANT);
-	$races[$raceKey]['Selected'] = true;
+if (empty($races)) {
+	create_error('This game has no races assigned yet!');
 }
+
+// Pick an initial race to display (prefer *not* Alskant)
+do {
+	$raceKey = array_rand($races);
+} while ($raceKey == RACE_ALSKANT && count($races) > 1);
+$races[$raceKey]['Selected'] = true;
+$template->assign('SelectedRaceID', $raceKey);
 $template->assign('Races', $races);

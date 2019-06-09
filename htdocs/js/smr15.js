@@ -90,3 +90,13 @@ function showWeaponInfo(select) {
 	$(target).children().addClass('hide');
 	$(show).removeClass('hide');
 }
+
+// Used by game_join.php
+function showRaceInfo(select) {
+	var race_id = $("option:selected", select).val();
+	document.getElementById('race_image').src = "images/race/race" + race_id + ".jpg";
+	document.getElementById('graphframe').src = "images/race/graph/graph" + race_id + ".gif";
+	var desc = document.getElementById('race_descr');
+	$(desc).children().addClass('hide');
+	$(".race_descr" + race_id, desc).removeClass('hide');
+}
