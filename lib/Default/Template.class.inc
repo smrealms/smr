@@ -9,6 +9,8 @@ class Template {
 	private $ajaxJS = array();
 	protected $jsAlerts = array();
 	private $displayCalled = false;
+	private $listjsInclude = null;
+	private $jsSources = [];
 
 	public function __destruct() {
 		if (!$this->displayCalled && !empty($this->data)) {
@@ -228,6 +230,13 @@ class Template {
 		}
 	}
 
+	/**
+	 * Sets a listjs_include.js function to call at the end of the HTML body.
+	 */
+	public function setListjsInclude($func) {
+		$this->listjsInclude = $func;
+	}
+
 	/*
 	 * EVAL is special (well, will be when needed and implemented in the javascript).
 	 */
@@ -250,7 +259,14 @@ class Template {
 			$this->jsAlerts[] = $string;
 		}
 	}
-	
+
+	/**
+	 * Registers a JS target for inclusion at the end of the HTML body.
+	 */
+	protected function addJavascriptSource($src) {
+		array_push($this->jsSources, $src);
+	}
+
 	protected function &convertHtmlToAjaxXml($str, $returnXml) {
 		if (empty($str)) {
 			return '';

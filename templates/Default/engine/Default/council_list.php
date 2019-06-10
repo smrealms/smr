@@ -47,7 +47,7 @@
 					$CouncilPlayer = SmrPlayer::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
 					<tr id="player-<?php echo $CouncilPlayer->getPlayerID(); ?>" class="ajax<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> bold<?php } ?>">
 						<td><?php echo $Ranking; ?></td>
-						<td class="left name"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
+						<td class="left name" data-name="<?php echo $CouncilPlayer->getPlayerName(); ?>"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
 						<td><?php echo $ThisPlayer->getColouredRaceName($CouncilPlayer->getRaceID(), true); ?></td>
 						<td class="alliance"><?php echo $CouncilPlayer->getAllianceName(true); ?></td>
 						<td class="experience right"><?php echo number_format($CouncilPlayer->getExperience()); ?></td>
@@ -55,6 +55,7 @@
 				} ?>
 			</tbody>
 		</table><?php
+		$this->setListjsInclude('council_list');
 	} else { ?>
 		This council doesn't have any members!<?php
 	} ?>
@@ -69,19 +70,3 @@ foreach (Globals::getRaces() as $RaceID => $RaceInfo) {
 		</span><br /><?php
 	}
 } ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-<script>
-var list = new List('council-members', {
-	valueNames: ['name', 'race', 'alliance', 'experience'],
-	sortFunction: function(a, b, options) {
-		var regex;
-		if(options.valueName === 'name') {
-			regex = /^.*?<.*?>|<.*?>/g;
-		}
-		else {
-			regex = /,/g;
-		}
-		return list.utils.naturalSort(a.values()[options.valueName].replace(regex,''), b.values()[options.valueName].replace(regex,''), options);
-	}
-});
-</script>

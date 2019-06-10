@@ -55,18 +55,6 @@
 <?php }
 
 if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
-	<script>
-		$(document).on('change', '.div-toggle', function() {
-			var target = $(this).data('target');
-			var show = $("option:selected", this).data('show');
-			$(target).children().addClass('hide');
-			$(show).removeClass('hide');
-		});
-		$(document).ready(function() {
-			$('.div-toggle').trigger('change');
-		});
-	</script>
-
 	<p>You can uninstall weapons from your ship and mount them on the planet. Once mounted, a weapon cannot be removed without destroying it. The weapons will fire in the order specified here.</p>
 	<form method="POST" action="<?php echo $WeaponProcessingHREF; ?>">
 		<table class="standard">
@@ -99,7 +87,7 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 						<td><button class="InputFields" type="submit" name="destroy" value="<?php echo $i; ?>">Destroy</button></td><?php
 					} else { ?>
 						<td class="left">
-							<select name="ship_order<?php echo $i; ?>" class="div-toggle InputFields" data-target=".weapon-info<?php echo $i; ?>"><?php
+							<select name="ship_order<?php echo $i; ?>" onchange="showWeaponInfo(this)" class="InputFields" data-target=".weapon-info<?php echo $i; ?>"><?php
 								foreach ($ThisShip->getWeapons() as $orderID => $weapon) { ?>
 									<option value="<?php echo $orderID; ?>" data-show=".weapon<?php echo $i . '-' . $orderID; ?>"><?php echo $weapon->getName(); ?></option><?php
 								} ?>

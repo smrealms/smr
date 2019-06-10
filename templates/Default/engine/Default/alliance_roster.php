@@ -66,7 +66,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 						if ($AlliancePlayer->getAccountID() == $Alliance->getLeaderID()) { ?>*<?php }
 						echo $Count++; ?>
 					</td>
-					<td class="left name"><?php
+					<td class="left name" data-name="<?php echo $AlliancePlayer->getPlayerName(); ?>"><?php
 						echo $AlliancePlayer->getLevelName(); ?>&nbsp;<?php echo $AlliancePlayer->getLinkedDisplayName(false); ?>
 					</td>
 					<td class="race"><?php
@@ -111,6 +111,8 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 	</table>
 </div><?php
 
+$this->setListjsInclude('alliance_roster');
+
 if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 	<br /><h2>Options</h2><br />
 	<div class="buttonA">
@@ -136,13 +138,3 @@ if ($CanJoin === true) { ?>
 	echo $CanJoin;
 }
 ?>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-<script>
-var list = new List('alliance-roster', {
-	valueNames: ['name', 'race', 'experience', 'role', 'status'],
-	sortFunction: function(a, b, options) {
-		return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
-	}
-});
-</script>

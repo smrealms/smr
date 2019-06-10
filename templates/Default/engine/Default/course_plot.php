@@ -92,7 +92,6 @@ if (isset($XType)) { ?>
 <h2>Stored destinations</h2>
 Add new destinations below. Stored destinations can be organized by dragging.
 
-<script src="js/course_plot.js"></script>
 <div id="droppableObject" class="savedDestinationArea"><?php
 	foreach ($StoredDestinations as $SD) { ?>
 		<div class="draggableObject savedDestination"
@@ -103,6 +102,7 @@ Add new destinations below. Stored destinations can be organized by dragging.
 		</div><?php
 	} ?>
 </div>
+<?php $this->addJavascriptSource('js/course_plot.js'); ?>
 
 <br/><br/>
 <h2>Add new destination</h2>

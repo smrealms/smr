@@ -57,15 +57,7 @@ if (isset($Message)) {?>
 				</tbody>
 			</table>
 		</form>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-		<script>
-		var list = new List('logs-list', {
-			valueNames: ['date', 'sectorid', 'attacker', 'defender'],
-			sortFunction: function(a, b, options) {
-				return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
-			}
-		});
-		</script><?php
+		<?php $this->setListjsInclude('combat_log_list');
 	} else { ?>
 		No <?php echo $LogType; ?> combat logs found<?php
 	} ?>

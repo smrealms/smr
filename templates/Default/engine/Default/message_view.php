@@ -22,16 +22,9 @@ if (isset($MessageBoxes)) { ?>
 			} ?>
 		</tbody>
 	</table>
+	<?php $this->setListjsInclude('message_view'); ?>
 	<p><a href="<?php echo $ManageBlacklistLink; ?>">Manage Player Blacklist</a></p>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-	<script>
-	var list = new List('folders', {
-		valueNames: ['name', 'messages'],
-		sortFunction: function(a, b, options) {
-			return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
-		}
-	});
-	</script><?php
+	<?php
 } else {
 	if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 		<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">

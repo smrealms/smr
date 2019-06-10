@@ -23,7 +23,7 @@
 			<tbody class="list"><?php
 				foreach ($AllRows as $Row) { ?>
 					<tr <?php echo $Row['tr_class']; ?>>
-						<td class="sort_name left" data-name="<?php echo strip_tags($Row['player']->getPlayerName()); ?>" valign="top"><?php echo $Row['name_link']; ?></td>
+						<td class="sort_name left" data-name="<?php echo $Row['player']->getPlayerName(); ?>" valign="top"><?php echo $Row['name_link']; ?></td>
 						<td class="sort_race">
 							<?php echo $ThisPlayer->getColouredRaceName($Row['player']->getRaceID(), true); ?>
 						</td>
@@ -34,14 +34,6 @@
 			</tbody>
 		</table>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-		<script>
-		var list = new List('cpl', {
-			valueNames: [{name: 'sort_name', attr: 'data-name'}, 'sort_race', 'sort_alliance', 'sort_exp'],
-			sortFunction: function(a, b, options) {
-				return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
-			}
-		});
-		</script><?php
+		<?php $this->setListjsInclude('current_players');
 	} ?>
 </div>

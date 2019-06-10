@@ -33,6 +33,7 @@ if (count($Threads) > 0) { ?>
 			} ?>
 		</tbody>
 	</table><br /><?php
+	$this->setListjsInclude('alliance_message');
 }
 
 if (isset($CreateNewThreadFormHref)) { ?>
@@ -54,12 +55,3 @@ if (isset($CreateNewThreadFormHref)) { ?>
 	</form><?php
 }
 ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-<script>
-var list = new List('topic-list', {
-	valueNames: ['topic', 'author', 'replies', {name: 'lastReply', attr: 'data-lastReply'}],
-	sortFunction: function(a, b, options) {
-		return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
-	}
-});
-</script>

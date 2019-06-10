@@ -106,16 +106,19 @@ if (!isset($JoinGameFormHref)) { ?>
 
 				<h2>Create Your Trader</h2>
 				<p>Now it is time for you to create your Trader and begin your quest for riches, fame and glory! Where will your destiny take you?</p>
-				<table>
+				<table class="centered">
 					<tr>
 						<td class="right"><b>Name:</b>&nbsp;</td>
 						<td><input required type="text" name="player_name" maxlength="32" class="InputFields" /></td>
-						<td rowspan="4" class="standard"><img id="race_image" name="race_image" src="images/race/race1.gif" alt="Please select a race."></td>
+						<td rowspan="4">&nbsp;&nbsp;</td>
+						<td rowspan="4" class="standard top">
+							<img id="race_image" src="images/race/race<?php echo $SelectedRaceID; ?>.jpg" width="282" height="360" alt="" />
+						</td>
 					</tr>
 					<tr>
 						<td class="right"><b>Race:</b>&nbsp;</td>
 						<td>
-						<select name="race_id" class="InputFields" size="1" OnChange="go();">
+						<select name="race_id" class="InputFields" OnChange="showRaceInfo(this);">
 							<?php /*<option value="1">[please select]</option> */
 							foreach ($Races as $Race) {
 								?><option value="<?php echo $Race['ID']; if ($Race['Selected']) { ?>" selected="selected<?php } ?>"><?php echo $Race['Name']; ?> (<?php echo $Race['NumberOfPlayers']; ?> Traders)<?php
@@ -130,8 +133,13 @@ if (!isset($JoinGameFormHref)) { ?>
 					</tr>
 					
 					<tr>
-						<td colspan="2">
-							<div id="race_descr" class="InputFields" style="width:300px;height:275px;border:0;"></div>
+						<td colspan="2" style="width:300px; height:315px;" class="top">
+							<div id="race_descr">
+								<?php
+								foreach ($Races as $Race) { ?>
+									<span class="race_descr<?php echo $Race['ID']; if (!$Race['Selected']) { ?> hide<?php } ?>"><?php echo $Race['Description']; ?></span><?php
+								} ?>
+							</div>
 						</td>
 					</tr>
 					
@@ -148,7 +156,7 @@ if (!isset($JoinGameFormHref)) { ?>
 					<tr>
 						<td>Combat<br />Strength</td>
 						<td>
-							<img width="440" height="440" border="0" id="graphframe" src="images/race/graph/graph1.gif" alt="Race overview" />
+							<img width="440" height="440" id="graphframe" src="images/race/graph/graph<?php echo $SelectedRaceID; ?>.gif" alt="Race overview" />
 						</td>
 						<td>Hunting</td>
 					</tr>
@@ -160,14 +168,3 @@ if (!isset($JoinGameFormHref)) { ?>
 		</tr>
 	</table>
 </form>
-
-<script>
-var	desc = new Array(<?php echo $RaceDescriptions; ?>);
-function go() {
-	var race_id = document.forms[0].race_id.options[document.forms[0].race_id.selectedIndex].value;
-	document.getElementById('race_image').src = "images/race/race" + race_id + ".jpg";
-	document.getElementById('graphframe').src = "images/race/graph/graph" + race_id + ".gif";
-	document.getElementById('race_descr').innerHTML = desc[race_id - 1];
-}
-go();
-</script>
