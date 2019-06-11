@@ -35,6 +35,8 @@ function applyFilter(tableId) {
 	for (var i=1; i < table.rows.length; i++) {
 		var show = true;
 		for (var j=0; j < table.rows[i].cells.length; j++) {
+			// No filtering for null, undefined, and "All".
+			// But we do filter on the empty string (for the "None" option).
 			if (filter[j] == null || filter[j] === "All") {
 				continue;
 			}
