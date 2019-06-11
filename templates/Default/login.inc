@@ -3,6 +3,17 @@
 	<head>
 		<title><?php echo PAGE_TITLE; ?></title>
 		<link rel="stylesheet" href="css/login.css" />
+		<?php
+		// Include Google Analytics global site tag if we have one
+		if (!empty(GOOGLE_ANALYTICS_ID)) { ?>
+			<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo GOOGLE_ANALYTICS_ID; ?>"></script>
+			<script>
+				window.dataLayer = window.dataLayer || [];
+				function gtag() { dataLayer.push(arguments); }
+				gtag('js', new Date());
+				gtag('config', '<?php echo GOOGLE_ANALYTICS_ID; ?>');
+			</script><?php
+		} ?>
 		<!--[if IE]>
 		<style>
 		input.inputbox {

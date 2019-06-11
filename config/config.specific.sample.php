@@ -13,6 +13,8 @@ const FACEBOOK_APP_SECRET = '';
 const TWITTER_CONSUMER_KEY = '';
 const TWITTER_CONSUMER_SECRET = '';
 
+const GOOGLE_ANALYTICS_ID = '';
+
 const ENABLE_NPCS_CHESS = false;
 
 // Set to empty string if using a local mailserver.
