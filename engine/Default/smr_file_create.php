@@ -9,7 +9,11 @@ if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false)
 else
 	$adminCreate = false;
 
-$file = ';SMR1.6 Sectors File v 1.04
+// NOTE: If the format of this file is changed in an incompatible way,
+// make sure to update the SMR_FILE_VERSION!
+
+$file = '; SMR Sectors File v' . SMR_FILE_VERSION . '
+; Created on ' . date(DEFAULT_DATE_FULL_SHORT) . '
 [Races]
 ; Name = ID' . EOL;
 foreach (Globals::getRaces() as $race) {
@@ -99,7 +103,10 @@ foreach (SmrLocation::getAllLocations() as $location) {
 	$file .= EOL;
 }
 
-$file .= '[Game]
+// Everything below here must be valid INI syntax (safe to parse)
+$file .= '[Metadata]
+FileVersion=' . SMR_FILE_VERSION . '
+[Game]
 Name='.inify(Globals::getGameName($gameID)) . '
 [Galaxies]
 ';

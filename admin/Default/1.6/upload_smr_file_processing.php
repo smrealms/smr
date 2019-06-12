@@ -6,18 +6,23 @@ if ($_FILES['smr_file']['error'] == UPLOAD_ERR_OK) {
 	create_error('Failed to upload SMR file!');
 }
 
-// We only care about the [Galaxies] and [Sector=X] sections, and the earlier
+// We only care about the sections after [Metadata], and the earlier
 // sections have invalid INI key characters (e.g. Creonti "Big Daddy", Salvene
 // Supply & Plunder). For this reason, we simply remove the offending sections
 // instead of trying to encode all the special characters: ?{}|&~![()^"
 //
 // NOTE: these special characters are allowed in the ini-values, but only if
 // we use the "raw" scanner. We need this because of the "Location=" values.
-$ini_substr = strstr($ini_str, "[Galaxies]");
+$ini_substr = strstr($ini_str, "[Metadata]");
 if ($ini_substr === false) {
-	create_error('Could not find [Galaxies] section in SMR file');
+	create_error('Could not find [Metadata] section in SMR file');
 }
 $data = parse_ini_string($ini_substr, true, INI_SCANNER_RAW);
+
+$version = $data['Metadata']['FileVersion'];
+if ($version !== SMR_FILE_VERSION) {
+	create_error('Uploaded v' . $version . ' is incompatible with server expecting v' . SMR_FILE_VERSION);
+}
 
 // Create the galaxies
 foreach ($data['Galaxies'] as $galID => $details) {
