@@ -33,7 +33,7 @@ if (empty($player_name)) {
 }
 
 $race_id = $_REQUEST['race_id'];
-if (empty($race_id) || $race_id == 1) {
+if (empty($race_id) || $race_id == RACE_NEUTRAL) {
 	create_error('Please choose a race!');
 }
 
