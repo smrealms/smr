@@ -181,6 +181,42 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
+	/**
+	 * Insert a new player into the database. Returns the new player object.
+	 */
+	public static function createPlayer($accountID, $gameID, $playerName, $raceID, $isNewbie, $npc=false) {
+		// Put the player in a sector with an HQ
+		$startSectorID = self::getHome($gameID, $raceID);
+
+		$db = new SmrMySqlDatabase();
+		$db->lockTable('player');
+
+		// Escape html elements so the name displays correctly
+		$playerName = htmlentities($playerName);
+
+		// Player names must be unique within each game
+		$db->query('SELECT 1 FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName) . ' LIMIT 1');
+		if ($db->nextRecord() > 0) {
+			$db->unlock();
+			create_error('The player name already exists.');
+		}
+
+		// get last registered player id in that game and increase by one.
+		$db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $db->escapeNumber($gameID));
+		if ($db->nextRecord()) {
+			$playerID = $db->getInt('MAX(player_id)') + 1;
+		} else {
+			$playerID = 1;
+		}
+
+		$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, sector_id, last_cpl_action, last_active, npc, newbie_status)
+					VALUES(' . $db->escapeNumber($accountID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($playerID) . ', ' . $db->escapeString($playerName) . ', ' . $db->escapeNumber($raceID) . ', ' . $db->escapeNumber($startSectorID) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean($npc) . ',' . $db->escapeBoolean($isNewbie) . ')');
+
+		$db->unlock();
+
+		return SmrPlayer::getPlayer($accountID, $gameID);
+	}
+
 	// Get array of players whose info can be accessed by this player.
 	// Skips players who are not in the same alliance as this player.
 	public function getSharingPlayers($forceUpdate = false) {
