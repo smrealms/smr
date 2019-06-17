@@ -26,7 +26,7 @@ if ($var['func'] == 'Map') {
 	
 	//now adapt turns
 	$player->setTurns($player->getTurns() * ($speed / $ship->getSpeed()));
-	setHardwareToMax($ship);
+	$ship->setHardwareToMax();
 } elseif ($var['func'] == 'Weapon') {
 	$weapon_id = $_REQUEST['weapon_id'];
 	$amount = $_REQUEST['amount'];
@@ -34,7 +34,7 @@ if ($var['func'] == 'Map') {
 		$ship->addWeapon($weapon_id);
 	}
 } elseif ($var['func'] == 'Uno') {
-	setHardwareToMax($ship);
+	$ship->setHardwareToMax();
 } elseif ($var['func'] == 'Warp') {
 	$sector_to = trim($_REQUEST['sector_to']);
 	if (!is_numeric($sector_to)) {
@@ -100,14 +100,3 @@ if ($var['func'] == 'Map') {
 
 $container = create_container('skeleton.php', $var['body']);
 forward($container);
-
-/**
- * Set all hardware to its maximum value for this ship.
- */
-function setHardwareToMax($ship) {
-	$maxHardware = $ship->getMaxHardware();
-	foreach ($maxHardware as $key => $max) {
-		$ship->setHardware($key, $max);
-	}
-	$ship->removeUnderAttack();
-}

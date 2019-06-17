@@ -176,6 +176,16 @@ abstract class AbstractSmrShip {
 			}
 	}
 
+	/**
+	 * Set all hardware to its maximum value for this ship.
+	 */
+	public function setHardwareToMax() {
+		foreach ($this->getMaxHardware() as $key => $max) {
+			$this->setHardware($key, $max);
+		}
+		$this->removeUnderAttack();
+	}
+
 	public function getPowerUsed() {
 		$power = 0;
 		if ($this->getNumWeapons() > 0)
