@@ -52,6 +52,16 @@ class SmrAlliance {
 		return $return;
 	}
 
+	public static function getAllianceByName($name, $gameID, $forceUpdate = false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
+		if ($db->nextRecord()) {
+			return self::getAlliance($db->getInt('alliance_id'), $gameID, $forceUpdate);
+		} else {
+			return null;
+		}
+	}
+
 	protected function __construct($allianceID, $gameID) {
 		$this->db = new SmrMySqlDatabase();
 
