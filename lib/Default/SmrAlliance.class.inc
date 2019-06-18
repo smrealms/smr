@@ -85,6 +85,32 @@ class SmrAlliance {
 	}
 
 	/**
+	 * Create an alliance and return the new object.
+	 */
+	public static function createAlliance($gameID, $name, $password, $recruit) {
+		$db = new SmrMySqlDatabase();
+
+		// check if the alliance name already exists
+		$db->query('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
+		if ($db->getNumRows() > 0) {
+			create_error('That alliance name already exists!');
+		}
+
+		// get the next alliance id (ignoring reserved ID's)
+		$db->query('SELECT max(alliance_id) FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (alliance_id < ' . $db->escapeNumber(NHA_ID) . ' OR alliance_id > ' . $db->escapeNumber(NHA_ID + 7) . ') LIMIT 1');
+		$db->nextRecord();
+		$allianceID = $db->getInt('max(alliance_id)') + 1;
+		if ($allianceID >= NHA_ID && $allianceID <= NHA_ID + 7) {
+			$allianceID = NHA_ID + 8;
+		}
+
+		// actually create the alliance here
+		$db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_password, recruiting) VALUES(' . $db->escapeNumber($allianceID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeString($name) . ', ' . $db->escapeString($password) . ', ' . $db->escapeBoolean($recruit) . ')');
+
+		return self::getAlliance($allianceID, $gameID);
+	}
+
+	/**
 	 * Returns true if the alliance ID is associated with allianceless players.
 	 */
 	public function isNone() {
