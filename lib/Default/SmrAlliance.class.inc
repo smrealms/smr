@@ -130,6 +130,10 @@ class SmrAlliance {
 		return SmrPlayer::getPlayer($this->getLeaderID(), $this->getGameID());
 	}
 
+	public function setLeaderID($leaderID) {
+		$this->leaderID = $leaderID;
+	}
+
 	public function getDiscordServer() {
 		return $this->discordServer;
 	}
