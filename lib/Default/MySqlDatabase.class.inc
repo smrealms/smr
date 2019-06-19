@@ -90,7 +90,7 @@ abstract class MySqlDatabase {
 		return (int)$this->dbRecord[$name];
 	}
 	
-	public function getReal($name) {
+	public function getFloat($name) {
 		return (float)$this->dbRecord[$name];
 	}
 	
@@ -240,12 +240,13 @@ abstract class MySqlDatabase {
 	}
 	
 	public function escapeBoolean($bool, $quotes = true) {
-		if ($bool === true)
+		if ($bool === true) {
 			return $this->escapeString('TRUE', $quotes);
-		else if ($bool === false)
+		} else if ($bool === false) {
 			return $this->escapeString('FALSE', $quotes);
-		else
-			throw new Exception('Not a boolean!'); //TEST
+		} else {
+			throw new Exception('Not a boolean: ' . $bool);
+		}
 	}
 	
 	public function escapeObject($object, $compress = false, $quotes = true, $nullable = false) {

@@ -84,7 +84,7 @@ class SmrGame {
 			$this->startTurnHours = $this->db->getInt('start_turns');
 			$this->gameTypeID = $this->db->getInt('game_type');
 			$this->creditsNeeded = $this->db->getInt('credits_needed');
-			$this->gameSpeed = $this->db->getReal('game_speed');
+			$this->gameSpeed = $this->db->getFloat('game_speed');
 			$this->enabled = $this->db->getBoolean('enabled');
 			$this->ignoreStats = $this->db->getBoolean('ignore_stats');
 			$this->allianceMaxPlayers = $this->db->getInt('alliance_max_players');

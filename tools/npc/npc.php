@@ -33,46 +33,46 @@ require_once(get_file_loc('smr.inc'));
 require_once(get_file_loc('shop_goods.inc'));
 
 const SHIP_UPGRADE_PATH = array(
-	2 => array( //Alskant
+	RACE_ALSKANT => array(
 		SHIP_TYPE_TRADE_MASTER,
 		SHIP_TYPE_TRIP_MAKER,
 		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_SMALL_TIMER
 	),
-	3 => array( //Creonti
+	RACE_CREONTI => array(
 		SHIP_TYPE_LEVIATHAN,
 		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_MEDIUM_CARGO_HULK
 	),
-	4 => array( //Human
+	RACE_HUMAN => array(
 		SHIP_TYPE_AMBASSADOR,
 		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_RENAISSANCE,
 		SHIP_TYPE_LIGHT_FREIGHTER
 	),
-	5 => array( //Ik'Thorne
+	RACE_IKTHORNE => array(
 		SHIP_TYPE_FAVOURED_OFFSPRING,
 		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_PROTO_CARRIER,
 		SHIP_TYPE_TINY_DELIGHT
 	),
-	6 => array( //Salvene
+	RACE_SALVENE => array(
 		SHIP_TYPE_DRUDGE,
 		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_HATCHLINGS_DUE
 	),
-	7 => array( //Thevian
+	RACE_THEVIAN => array(
 		SHIP_TYPE_EXPEDITER,
 		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_SWIFT_VENTURE
 	),
-	8 => array( //WQ Human
+	RACE_WQHUMAN => array(
 		SHIP_TYPE_BLOCKADE_RUNNER,
 		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_NEGOTIATOR,
 		SHIP_TYPE_SLIP_FREIGHTER
 	),
-	9 => array( //Nijarin
+	RACE_NIJARIN => array(
 		SHIP_TYPE_VENGEANCE,
 		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_REDEEMER
@@ -634,7 +634,7 @@ function joinGame($gameID, $playerName) {
 	global $NPC_LOGIN;
 	debug('Creating player for: ' . $NPC_LOGIN['Login']);
 	$races = Globals::getRaces();
-	while (($raceID = array_rand($races)) === 1); //Random race that's not neutral.
+	while (($raceID = array_rand($races)) === RACE_NEUTRAL); //Random race that's not neutral.
 
 	debug('Chosen race "' . $races[$raceID]['Race Name'] . '": ' . $raceID);
 
