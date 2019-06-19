@@ -90,7 +90,7 @@ abstract class MySqlDatabase {
 		return (int)$this->dbRecord[$name];
 	}
 	
-	public function getReal($name) {
+	public function getFloat($name) {
 		return (float)$this->dbRecord[$name];
 	}
 	
