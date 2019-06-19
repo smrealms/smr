@@ -107,7 +107,7 @@ foreach (SmrLocation::getAllLocations() as $location) {
 $file .= '[Metadata]
 FileVersion=' . SMR_FILE_VERSION . '
 [Game]
-Name='.inify(Globals::getGameName($gameID)) . '
+Name='.inify(SmrGame::getGame($gameID)->getName()) . '
 [Galaxies]
 ';
 $galaxies = SmrGalaxy::getGameGalaxies($gameID);
@@ -175,7 +175,7 @@ header('Expires: 0');
 header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header('Cache-Control: private', false);
 header('Content-Type: application/force-download');
-header('Content-Disposition: attachment; filename="' . Globals::getGameName($gameID) . '.smr"');
+header('Content-Disposition: attachment; filename="' . SmrGame::getGame($gameID)->getName() . '.smr"');
 header('Content-Transfer-Encoding: binary');
 header('Content-Length: ' . $size);
 

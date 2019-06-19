@@ -62,7 +62,7 @@ if (!isset($var['box_type_id'])) {
 			} elseif (!$validGame) {
 				$messages[$messageID]['GameName'] = 'Game no longer exists';
 			} else {
-				$messages[$messageID]['GameName'] = Globals::getGameName($gameID);
+				$messages[$messageID]['GameName'] = SmrGame::getGame($gameID)->getDisplayName();
 			}
 
 			$messages[$messageID]['SendTime'] = date(DATE_FULL_SHORT, $db->getField('send_time'));

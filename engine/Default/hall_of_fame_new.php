@@ -7,7 +7,7 @@ if (empty($game_id)) {
 	$topic = 'All Time Hall of Fame';
 }
 else {
-	$topic = Globals::getGameName($game_id) . ' Hall of Fame';
+	$topic = 'Hall of Fame: ' . SmrGame::getGame($game_id)->getDisplayName();
 }
 $template->assign('PageTopic', $topic);
 
