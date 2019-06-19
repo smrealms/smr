@@ -41,7 +41,7 @@ while ($db->nextRecord()) {
 	if (!Globals::isValidGame($gameID)) {
 		$gameName = 'Game no longer exists';
 	} else {
-		$gameName = Globals::getGameName($gameID);
+		$gameName = SmrGame::getGame($gameID)->getDisplayName();
 	}
 
 	$messages[] = [

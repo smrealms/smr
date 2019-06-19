@@ -646,7 +646,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 
 
 	if (SmrSession::hasGame()) {
-		$template->assign('GameName', Globals::getGameName(SmrSession::getGameID()));
+		$template->assign('GameName', SmrGame::getGame(SmrSession::getGameID())->getName());
 		$template->assign('GameID', SmrSession::getGameID());
 
 		$template->assign('PlotCourseLink', Globals::getPlotCourseHREF());
