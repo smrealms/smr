@@ -10,7 +10,7 @@
 		</tr>
 		<tr>
 			<td class="top">Password:</td>
-			<td><input type="password" name="password" size="30"></td>
+			<td><input required type="password" name="password" size="30"></td>
 		</tr>
 		<tr>
 			<td class="top">Members start with:&nbsp;&nbsp;&nbsp;</td>
