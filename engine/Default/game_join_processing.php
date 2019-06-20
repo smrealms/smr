@@ -93,7 +93,7 @@ $player = SmrPlayer::createPlayer($account->getAccountID(), $gameID, $player_nam
 
 // Put the Newbie Help Leader into the Newbie Help Alliance
 if ($account->getAccountID() == ACCOUNT_ID_NHL) {
-	$player->setAllianceID(NHA_ID);
+	$player->joinAlliance(NHA_ID);
 }
 
 $player->setNewbieTurns($startingNewbieTurns);

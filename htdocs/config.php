@@ -347,6 +347,8 @@ const ALLIANCE_VS_PORTS = -3;
 /*
  * Miscellaneous definitions
  */
+const ALLIANCE_ROLE_LEADER = 1;
+const ALLIANCE_ROLE_NEW_MEMBER = 2;
 
 const STARTING_NEWBIE_TURNS_NEWBIE = 750;
 const STARTING_NEWBIE_TURNS_VET = 250;

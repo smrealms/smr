@@ -36,12 +36,11 @@ if ($name != $filteredName) {
 $alliance = SmrAlliance::createAlliance($player->getGameID(), $name, $password, $recruit);
 $alliance->setAllianceDescription($description);
 $alliance->setLeaderID($player->getAccountID());
+$alliance->createDefaultRoles($perms);
 $alliance->update();
 
 // assign the player to the created alliance
-$player->setAllianceID($alliance->getAllianceID());
+$player->joinAlliance($alliance->getAllianceID());
 $player->update();
-
-$alliance->createDefaultRoles($perms);
 
 forward(create_container('skeleton.php', 'alliance_roster.php'));

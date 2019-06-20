@@ -326,6 +326,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
+	/**
+	 * Join an alliance (used for both Leader and New Member roles)
+	 */
 	public function joinAlliance($allianceID) {
 		$this->setAllianceID($allianceID);
 		$alliance = $this->getAlliance();
@@ -337,9 +340,13 @@ class SmrPlayer extends AbstractSmrPlayer {
 			} catch (AccountNotFoundException $e) {
 				if ($alliance->getLeaderID() != ACCOUNT_ID_NHL) throw $e;
 			}
-		}
 
-		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', 2,' . $this->db->escapeNumber($alliance->getAllianceID()) . ')');
+			$roleID = ALLIANCE_ROLE_NEW_MEMBER;
+		} else {
+			$roleID = ALLIANCE_ROLE_LEADER;
+		}
+		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($roleID) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+
 		$this->actionTaken('JoinAlliance', array('Alliance' => $alliance));
 
 		// Joining an alliance cancels all open invitations

@@ -531,7 +531,7 @@ abstract class AbstractSmrPlayer {
 		return $this->getAllianceID() != 0;
 	}
 
-	public function setAllianceID($ID) {
+	protected function setAllianceID($ID) {
 		if ($this->allianceID == $ID)
 			return;
 		$this->allianceID = $ID;
