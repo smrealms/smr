@@ -457,7 +457,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getPlayerName() {
-		return $this->playerName . ($this->isNPC() ? ' <span class="npcColour">[NPC]</span>' : '');
+		return $this->playerName;
 	}
 
 	public function setPlayerName($name) {
