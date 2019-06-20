@@ -89,8 +89,6 @@ try {
 
 	$NPC_LOGINS_USED = array('');
 
-	$HIDDEN_PLAYERS = array();
-
 	// Make sure NPC's have been set up in the database
 	$db = new SmrMySqlDatabase();
 	$db->query('SELECT 1 FROM npc_logins LIMIT 1');
@@ -133,22 +131,6 @@ function NPCStuff() {
 			$player->updateTurns();
 
 			if ($actions == 0) {
-				if ($player->getAllianceName() != $NPC_LOGIN['AllianceName']) {
-					// dirty hack so we can revisit the init block here on next iteration
-					$actions--;
-
-					if ($player->hasAlliance())
-						processContainer(leaveAlliance());
-
-					// figure out if the selected alliance already exist
-					$db->query('SELECT alliance_id FROM alliance WHERE alliance_name=' . $db->escapeString($NPC_LOGIN['AllianceName']) . ' AND game_id=' . $db->escapeNumber(SmrSession::getGameID()));
-					if ($db->nextRecord()) {
-						processContainer(joinAlliance($db->getField('alliance_id'), '*--NPCS--*'));
-					}
-					else {
-						processContainer(createAlliance($NPC_LOGIN['AllianceName'], '*--NPCS--*'));
-					}
-				}
 				if ($player->getTurns() <= mt_rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
 					changeNPCLogin();
@@ -351,9 +333,9 @@ function clearCaches() {
 }
 
 function debug($message, $debugObject = null) {
-	global $account, $var, $db;
+	global $player, $var, $db;
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL.var_export($debugObject, true) : '') . EOL;
-	$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . (is_object($account) ? $account->getAccountID() : 0) . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
+	$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . (is_object($player) ? $player->getAccountID() : 0) . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
 }
 
 function processContainer($container) {
@@ -397,7 +379,7 @@ function releaseNPC($login) {
 function exitNPC() {
 	global $NPC_LOGIN;
 	debug('Exiting NPC script.');
-	releaseNPC($NPC_LOGIN['Login']);
+	releaseNPC($NPC_LOGIN);
 	release_lock();
 	exit;
 }
@@ -413,7 +395,7 @@ function changeNPCLogin() {
 	$GLOBALS['TRADE_ROUTE'] = null;
 
 	// Release previous NPC, if any
-	releaseNPC($NPC_LOGIN['Login']);
+	releaseNPC($NPC_LOGIN);
 	$NPC_LOGIN = null;
 
 	// We chose a new NPC, we don't care what we were doing beforehand.
@@ -431,42 +413,23 @@ function changeNPCLogin() {
 	while ($db->nextRecord()) {
 		$db2->query('UPDATE npc_logins SET working=' . $db2->escapeBoolean(true) . ' WHERE login=' . $db2->escapeString($db->getField('login')) . ' AND working=' . $db2->escapeBoolean(false));
 		if ($db2->getChangedRows() > 0) {
-			$NPC_LOGIN = array(
-					'Login' => $db->getField('login'),
-					'PlayerName' => $db->getField('player_name'),
-					'AllianceName' => $db->getField('alliance_name')
-			);
+			$NPC_LOGIN = $db->getField('login');
 			break;
 		}
 	}
-	$NPC_LOGINS_USED[] = $NPC_LOGIN['Login'];
+	$NPC_LOGINS_USED[] = $NPC_LOGIN;
 
 	if ($NPC_LOGIN === null) {
 		debug('No free NPCs');
 		exitNPC();
 	}
-	debug('Chosen NPC: ' . $NPC_LOGIN['Login']);
+	debug('Chosen NPC: ' . $NPC_LOGIN);
 
-	if (SmrAccount::getAccountByName($NPC_LOGIN['Login']) == null) {
-		debug('Creating account for: ' . $NPC_LOGIN['Login']);
-		$account = SmrAccount::createAccount($NPC_LOGIN['Login'], '', 'NPC@smrealms.de', 0, 0);
-		$account->setValidated(true);
+	$account = SmrAccount::getAccountByName($NPC_LOGIN);
+	if (!is_null($account)) {
+		SmrSession::setAccount($account);
 	}
-	else {
-		$account = SmrAccount::getAccountByName($NPC_LOGIN['Login']);
-	}
-
-	$GLOBALS['account'] =& $account;
-	SmrSession::setAccount($account);
 	$underAttack = false;
-
-	//Auto-create player if need be.
-	$db->query('SELECT 1 FROM player WHERE account_id = ' . $account->getAccountID() . ' AND game_id = ' . NPC_GAME_ID . ' LIMIT 1');
-	if (!$db->nextRecord()) {
-		SmrSession::updateGame(0); //Have to be out of game to join game.
-		debug('Auto-creating player: ' . $account->getLogin());
-		processContainer(joinGame(SmrSession::getGameID(), $NPC_LOGIN['PlayerName']));
-	}
 
 	throw new ForwardException;
 }
@@ -628,43 +591,6 @@ function &changeRoute(array &$tradeRoutes) {
 	$GLOBALS['TRADE_ROUTE'] =& $tradeRoute;
 	debug('Switched route', $tradeRoute);
 	return $tradeRoute;
-}
-
-function joinGame($gameID, $playerName) {
-	global $NPC_LOGIN;
-	debug('Creating player for: ' . $NPC_LOGIN['Login']);
-	$races = Globals::getRaces();
-	while (($raceID = array_rand($races)) === RACE_NEUTRAL); //Random race that's not neutral.
-
-	debug('Chosen race "' . $races[$raceID]['Race Name'] . '": ' . $raceID);
-
-	$_REQUEST['player_name'] = $playerName;
-	$_REQUEST['race_id'] = $raceID;
-
-	return create_container('game_join_processing.php', '', array('game_id'=>NPC_GAME_ID));
-}
-
-function joinAlliance($allianceID, $password) {
-	debug('Joining alliance: ' . $allianceID);
-	$_REQUEST['password'] = $password;
-	return create_container('alliance_join_processing.php', '', array('alliance_id'=>$allianceID));
-}
-
-function createAlliance($allianceName, $password) {
-	debug('Creating alliance: ' . $allianceName);
-	$_REQUEST = [
-		'name' => $allianceName,
-		'password' => $password,
-		'Perms' => 'full',
-		'description' => '',
-		'recruit' => 'no',
-	];
-	return create_container('alliance_create_processing.php');
-}
-
-function leaveAlliance() {
-	debug('Leaving alliance');
-	return create_container('alliance_leave_processing.php', '', array('action'=>'YES'));
 }
 
 function &findRoutes($player) {
