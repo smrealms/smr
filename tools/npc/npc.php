@@ -128,6 +128,10 @@ function NPCStuff() {
 			debug('Getting player for account id: ' . SmrSession::getAccountID());
 			//We have to reload player on each loop
 			$player = SmrPlayer::getPlayer(SmrSession::getAccountID(), SmrSession::getGameID(), true);
+			// Sanity check to be certain we actually have an NPC
+			if (!$player->isNPC()) {
+				throw new Exception('Player is not an NPC!');
+			}
 			$player->updateTurns();
 
 			if ($actions == 0) {
