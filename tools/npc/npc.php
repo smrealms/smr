@@ -112,7 +112,7 @@ catch (Throwable $e) {
 
 
 function NPCStuff() {
-	global $actions, $var, $previousContainer, $underAttack, $NPC_LOGIN, $db;
+	global $actions, $var, $previousContainer, $NPC_LOGIN, $db;
 
 	$underAttack = false;
 	$actions = -1;
@@ -385,7 +385,7 @@ function exitNPC() {
 }
 
 function changeNPCLogin() {
-	global $NPC_LOGIN, $actions, $NPC_LOGINS_USED, $underAttack, $previousContainer;
+	global $NPC_LOGIN, $actions, $NPC_LOGINS_USED, $previousContainer;
 	if ($actions > 0) {
 		debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage());
 		exitNPC();
@@ -403,33 +403,21 @@ function changeNPCLogin() {
 
 	debug('Choosing new NPC');
 	$db = new SmrMySqlDatabase();
-	$db2 = new SmrMySqlDatabase();
-	$db->query('SELECT login, npc.player_name, alliance_name
-				FROM npc_logins npc
-				LEFT JOIN account a USING(login)
-				LEFT JOIN player p ON a.account_id = p.account_id AND p.game_id = ' . $db->escapeNumber(NPC_GAME_ID) . '
-				WHERE active=' . $db->escapeBoolean(true) . ' AND working=' . $db->escapeBoolean(false) . ' AND login NOT IN (' . $db->escapeArray($NPC_LOGINS_USED) . ')
-				ORDER BY (turns IS NOT NULL), turns DESC');
-	while ($db->nextRecord()) {
-		$db2->query('UPDATE npc_logins SET working=' . $db2->escapeBoolean(true) . ' WHERE login=' . $db2->escapeString($db->getField('login')) . ' AND working=' . $db2->escapeBoolean(false));
-		if ($db2->getChangedRows() > 0) {
-			$NPC_LOGIN = $db->getField('login');
-			break;
-		}
-	}
-	$NPC_LOGINS_USED[] = $NPC_LOGIN;
-
-	if ($NPC_LOGIN === null) {
+	$db->query('SELECT login FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) WHERE game_id=' . $db->escapeNumber(NPC_GAME_ID) . ' AND active=\'TRUE\' AND working=\'FALSE\' AND login NOT IN (' . $db->escapeArray($NPC_LOGINS_USED) . ') ORDER BY turns DESC LIMIT 1');
+	if (!$db->nextRecord()) {
 		debug('No free NPCs');
 		exitNPC();
 	}
+	$NPC_LOGIN = $db->getField('login');
 	debug('Chosen NPC: ' . $NPC_LOGIN);
+	$NPC_LOGINS_USED[] = $NPC_LOGIN;
 
 	$account = SmrAccount::getAccountByName($NPC_LOGIN);
 	if (!is_null($account)) {
 		SmrSession::setAccount($account);
 	}
-	$underAttack = false;
+
+	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($NPC_LOGIN));
 
 	throw new ForwardException;
 }
