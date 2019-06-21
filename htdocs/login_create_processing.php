@@ -50,7 +50,7 @@ try {
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
-	if (strpos($login, 'NPC') === 0) {
+	if (stripos($login, 'NPC') === 0) {
 		$msg = 'Login names cannot begin with "NPC".';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
