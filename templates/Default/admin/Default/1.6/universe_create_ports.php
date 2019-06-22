@@ -17,7 +17,7 @@
 					} ?>
 					<tr>
 						<th class="right">Total</th>
-						<td><input type="number" disabled="disabled" size="5" name="total" value="<?php echo $Total['Ports']; ?>"></td>
+						<td><input type="number" disabled="disabled" size="5" name="total" value="<?php echo $Total; ?>"></td>
 					</tr>
 					<tr>
 						<td class="center" colspan="2">
@@ -35,15 +35,15 @@
 						<th>Port Race</th>
 						<th>% Distribution</th>
 					</tr><?php
-					foreach (Globals::getRaces() as $race) { ?>
+					foreach (Globals::getRaces() as $raceID => $race) { ?>
 						<tr>
 							<td class="right"><?php echo $race['Race Name']; ?></td>
-							<td><input type="number" size="5" name="race<?php echo $race['Race ID']; ?>" value="0" onInput="raceCalc();"></td>
+							<td><input type="number" size="5" name="race<?php echo $raceID; ?>" value="<?php echo $RacePercents[$raceID]; ?>" onInput="raceCalc();"></td>
 						</tr><?php
 					} ?>
 					<tr>
 						<th class="right">Total</th>
-						<td><input type="number" disabled="disabled" size="5" name="racedist" value="0"></td>
+						<td><input type="number" disabled="disabled" size="5" name="racedist" value="<?php echo $TotalPercent; ?>"></td>
 					</tr>
 					<tr>
 						<td class="center" colspan="2">
