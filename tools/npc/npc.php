@@ -118,6 +118,10 @@ function NPCStuff() {
 	$actions = -1;
 
 	while (true) {
+		// Clear the $_REQUEST global, in case we had set it, to avoid
+		// contaminating subsequent page processing.
+		$_REQUEST = [];
+
 		$actions++;
 		try {
 			$TRADE_ROUTE =& $GLOBALS['TRADE_ROUTE'];
@@ -476,7 +480,10 @@ function canWeUNO(AbstractSmrPlayer $player, $oppurtunisticOnly) {
 
 function doUNO($hardwareID, $amount) {
 	debug('Buying ' . $amount . ' units of "' . Globals::getHardwareName($hardwareID) . '"');
-	$_REQUEST['amount'] = $amount;
+	$_REQUEST = [
+		'amount' => $amount,
+		'action' => 'Buy',
+	];
 	return create_container('shop_hardware_processing.php', '', array('hardware_id'=>$hardwareID));
 }
 
@@ -496,6 +503,7 @@ function tradeGoods($goodID, AbstractSmrPlayer $player, SmrPort $port) {
 	$idealPrice = $port->getIdealPrice($goodID, $transaction, $amount, $relations);
 	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
 
+	$_REQUEST = ['action' => $transaction];
 	return create_container('shop_goods_processing.php', '', array('offered_price'=>$offeredPrice, 'ideal_price'=>$idealPrice, 'amount'=>$amount, 'good_id'=>$goodID, 'bargain_price'=>$offeredPrice));
 }
 
