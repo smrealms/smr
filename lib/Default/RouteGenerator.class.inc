@@ -283,38 +283,6 @@ class OneWayRoute extends Route {
 		$this->buyPortRace = $_buyPortRace;
 	}
 
-	public function setSellSectorId($value) {
-		$this->sellSectorId = $value;
-	}
-
-	public function setBuySectorId($value) {
-		$this->buySectorId = $value;
-	}
-
-	public function setSellPortRace($value) {
-		$this->sellPortRace = $value;
-	}
-
-	public function setBuyPortRace($value) {
-		$this->buyPortRace = $value;
-	}
-
-	public function setSellDi($value) {
-		$this->sellDi = $value;
-	}
-
-	public function setBuyDi($value) {
-		$this->buyDi = $value;
-	}
-
-	public function setDistance(Distance &$value) {
-		$this->distance =& $value;
-	}
-
-	public function setGoodId($value) {
-		$this->goodId = $value;
-	}
-
 	public function getSellSectorId() {
 		return $this->sellSectorId;
 	}
@@ -413,17 +381,9 @@ class MultiplePortRoute extends Route {
 	private $forwardRoute;
 	private $returnRoute;
 
-	public function __construct(Route &$_forwardRoute, Route &$_returnRoute) {
+	public function __construct(OneWayRoute &$_forwardRoute, OneWayRoute &$_returnRoute) {
 		$this->forwardRoute =& $_forwardRoute;
 		$this->returnRoute =& $_returnRoute;
-	}
-
-	public function setForwardRoute(Route &$r) {
-		$this->forwardRoute =& $r;
-	}
-
-	public function setReturnRoute(Route &$r) {
-		$this->returnRoute =& $r;
 	}
 
 	public function &getForwardRoute() {
