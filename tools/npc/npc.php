@@ -614,6 +614,9 @@ function &findRoutes($player) {
 	$db = new SmrMySqlDatabase();
 	$db->query('SELECT routes FROM route_cache WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND max_ports=' . $db->escapeNumber($maxNumberOfPorts) . ' AND goods_allowed=' . $db->escapeObject($tradeGoods) . ' AND races_allowed=' . $db->escapeObject($tradeRaces) . ' AND start_sector_id=' . $db->escapeNumber($startSectorID) . ' AND end_sector_id=' . $db->escapeNumber($endSectorID) . ' AND routes_for_port=' . $db->escapeNumber($routesForPort) . ' AND max_distance=' . $db->escapeNumber($maxDistance));
 	if ($db->nextRecord()) {
+		// The "MultiPortRoute" class cannot be autoloaded because it is not
+		// in its own file.
+		require_once(get_file_loc('RouteGenerator.class.inc'));
 		$routes = unserialize(gzuncompress($db->getField('routes')));
 		debug('Using Cached Routes: #' . count($routes));
 		return $routes;
