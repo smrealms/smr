@@ -50,7 +50,7 @@ if (count($Planets) > 0) { ?>
 							if ($Amount > 0) {
 								$Supply = true;
 								$Good = Globals::getGood($GoodID); ?>
-								&nbsp;<img style="padding:1px" class="bottom" src="<?php echo $Good['ImageLink']; ?>" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" />&nbsp;<?php echo $Amount; ?><br /><?php
+								&nbsp;<img style="padding:1px" class="bottom" src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" />&nbsp;<?php echo $Amount; ?><br /><?php
 							}
 						}
 						if ($Supply === false) {
