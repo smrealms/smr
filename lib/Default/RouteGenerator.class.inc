@@ -330,13 +330,8 @@ class OneWayRoute extends Route {
 //			$sellRelFactor = 2 - (PlayerPreferences.getRelationsForRace($this->sellPortRace) + 50) / 850.0 * ((relations + 350)/1500);
 		}
 		$goodInfo = Globals::getGood($this->goodId);
-		$buyPrice = round(($goodInfo['BasePrice'] * 0.6 * pow($this->buyDi + .5, 1.8) * $buyRelFactor));
-		$sellPrice = round(($goodInfo['BasePrice'] * 0.5 * pow($this->sellDi, 1.84) * $sellRelFactor / 38.56	/*
-																												* * (1 +
-																												* (10 -
-																												* $port_lvl) /
-																												* 50)
-																												*/));
+		$buyPrice = round(0.08 * $goodInfo['BasePrice'] * pow($this->buyDi, 1.3) * $buyRelFactor);
+		$sellPrice = round(0.03 * $goodInfo['BasePrice'] * pow($this->sellDi, 1.3) * $sellRelFactor);
 		return $buyPrice - $sellPrice;
 	}
 
