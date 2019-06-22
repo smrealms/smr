@@ -40,23 +40,12 @@ if (empty($race_id) || $race_id == RACE_NEUTRAL) {
 $gameID = $var['game_id'];
 $game = SmrGame::getGame($gameID);
 
-// Escape html elements so the name displays correctly
-$player_name = htmlentities($player_name);
-
-$db->query('SELECT 1 FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($player_name) . ' LIMIT 1');
-if ($db->nextRecord() > 0) {
-	create_error('The player name already exists.');
-}
-
 // does it cost SMR Credits to join this game?
 $creditsNeeded = $game->getCreditsNeeded();
 if ($account->getTotalSmrCredits() < $creditsNeeded) {
 	create_error('You do not have enough SMR credits to join this game!');
 }
 $account->decreaseTotalSmrCredits($creditsNeeded);
-
-// put him in a sector with a hq
-$home_sector_id = SmrPlayer::getHome($gameID, $race_id);
 
 // for newbie and beginner another ship, more shields and armour
 $isNewbie = !$account->isVeteran();
@@ -99,34 +88,20 @@ if ($isNewbie) {
 	$amount_armour = 50;
 }
 
-//// newbie leaders need to put into there alliances
-if ($account->getAccountID() == ACCOUNT_ID_NHL) {
-	$alliance_id = NHA_ID;
-} else {
-	$alliance_id = 0;
-}
-
-$db->lockTable('player');
-
-// get last registered player id in that game and increase by one.
-$db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $db->escapeNumber($gameID));
-if ($db->nextRecord()) {
-	$player_id = $db->getInt('MAX(player_id)') + 1;
-} else {
-	$player_id = 1;
-}
-
 // insert into player table.
-$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, alliance_id, sector_id, last_cpl_action, last_active, newbie_turns, npc, newbie_status)
-			VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($player_id) . ', ' . $db->escapeString($player_name) . ', ' . $db->escapeNumber($race_id) . ', ' . $db->escapeNumber($ship_id) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($home_sector_id) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ',' . $db->escapeBoolean(defined('NPC_SCRIPT')) . ',' . $db->escapeBoolean($isNewbie) . ')');
+$player = SmrPlayer::createPlayer($account->getAccountID(), $gameID, $player_name, $race_id, $isNewbie, defined('NPC_SCRIPT'));
 
-$db->unlock();
+// Put the Newbie Help Leader into the Newbie Help Alliance
+if ($account->getAccountID() == ACCOUNT_ID_NHL) {
+	$player->joinAlliance(NHA_ID);
+}
 
-$player = SmrPlayer::getPlayer($account->getAccountID(), $gameID);
+$player->setNewbieTurns($startingNewbieTurns);
 $player->giveStartingTurns();
 $player->setCredits($game->getStartingCredits());
 
 // Equip the ship
+$player->setShipTypeID($ship_id);
 $ship = $player->getShip();
 $ship->setShields($amount_shields, true);
 $ship->setArmour($amount_armour, true);

@@ -36,6 +36,7 @@ class AdminPermissions {
 		34 => ['Manage Galactic Post Editors', 'manage_post_editors.php', 5],
 		35 => ['Manage Draft Leaders', 'manage_draft_leaders.php', 5],
 		36 => ['Display Admin Tag', '', 2],
+		37 => ['Manage NPCs', 'npc_manage.php', 5],
 	];
 
 	private const PERMISSION_CATEGORIES = [

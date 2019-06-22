@@ -457,7 +457,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getPlayerName() {
-		return $this->playerName . ($this->isNPC() ? ' <span class="npcColour">[NPC]</span>' : '');
+		return $this->playerName;
 	}
 
 	public function setPlayerName($name) {
@@ -531,7 +531,7 @@ abstract class AbstractSmrPlayer {
 		return $this->getAllianceID() != 0;
 	}
 
-	public function setAllianceID($ID) {
+	protected function setAllianceID($ID) {
 		if ($this->allianceID == $ID)
 			return;
 		$this->allianceID = $ID;

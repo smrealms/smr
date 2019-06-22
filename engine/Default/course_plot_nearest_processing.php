@@ -21,7 +21,5 @@ if ($sector->hasX($realX, $player))
 
 $path = Plotter::findReversiblePathToX($realX, $sector, true, $player, $player);
 
-// Forward to do common processing of path
-$container = create_container('skeleton.php', 'course_plot_result.php');
-$container['Distance'] = serialize($path);
-forward($container);
+// common processing
+require('course_plot_processing.inc');

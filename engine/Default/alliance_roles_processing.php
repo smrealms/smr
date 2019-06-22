@@ -7,7 +7,7 @@ $positiveBalance = isset($_REQUEST['positive']);
 $changePass = isset($_REQUEST['changePW']);
 $removeMember = isset($_REQUEST['removeMember']);
 $changeMOD = isset($_REQUEST['changeMoD']);
-$changeRoles = isset($_REQUEST['changeRoles']) || (isset($var['role_id']) && $var['role_id'] == 1); //Leader can always change roles.
+$changeRoles = isset($_REQUEST['changeRoles']) || (isset($var['role_id']) && $var['role_id'] == ALLIANCE_ROLE_LEADER); //Leader can always change roles.
 $planetAccess = isset($_REQUEST['planets']);
 $mbMessages = isset($_REQUEST['mbMessages']);
 $exemptWith = isset($_REQUEST['exemptWithdrawals']);
@@ -52,9 +52,9 @@ if (!isset($var['role_id'])) {
 } else {
 	// if no role is given we delete that entry
 	if (empty($_REQUEST['role'])) {
-		if ($var['role_id'] == 1) {
+		if ($var['role_id'] == ALLIANCE_ROLE_LEADER) {
 			create_error('You cannot delete the leader role.');
-		} else if ($var['role_id'] == 2) {
+		} else if ($var['role_id'] == ALLIANCE_ROLE_NEW_MEMBER) {
 			create_error('You cannot delete the new member role.');
 		}
 		$db->query('DELETE FROM alliance_has_roles

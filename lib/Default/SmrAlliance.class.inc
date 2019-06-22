@@ -52,6 +52,16 @@ class SmrAlliance {
 		return $return;
 	}
 
+	public static function getAllianceByName($name, $gameID, $forceUpdate = false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
+		if ($db->nextRecord()) {
+			return self::getAlliance($db->getInt('alliance_id'), $gameID, $forceUpdate);
+		} else {
+			return null;
+		}
+	}
+
 	protected function __construct($allianceID, $gameID) {
 		$this->db = new SmrMySqlDatabase();
 
@@ -82,6 +92,32 @@ class SmrAlliance {
 				$this->deaths = 0;
 			}
 		}
+	}
+
+	/**
+	 * Create an alliance and return the new object.
+	 */
+	public static function createAlliance($gameID, $name, $password, $recruit) {
+		$db = new SmrMySqlDatabase();
+
+		// check if the alliance name already exists
+		$db->query('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
+		if ($db->getNumRows() > 0) {
+			create_error('That alliance name already exists!');
+		}
+
+		// get the next alliance id (ignoring reserved ID's)
+		$db->query('SELECT max(alliance_id) FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (alliance_id < ' . $db->escapeNumber(NHA_ID) . ' OR alliance_id > ' . $db->escapeNumber(NHA_ID + 7) . ') LIMIT 1');
+		$db->nextRecord();
+		$allianceID = $db->getInt('max(alliance_id)') + 1;
+		if ($allianceID >= NHA_ID && $allianceID <= NHA_ID + 7) {
+			$allianceID = NHA_ID + 8;
+		}
+
+		// actually create the alliance here
+		$db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_password, recruiting) VALUES(' . $db->escapeNumber($allianceID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeString($name) . ', ' . $db->escapeString($password) . ', ' . $db->escapeBoolean($recruit) . ')');
+
+		return self::getAlliance($allianceID, $gameID);
 	}
 
 	/**
@@ -128,6 +164,10 @@ class SmrAlliance {
 
 	public function &getLeader() {
 		return SmrPlayer::getPlayer($this->getLeaderID(), $this->getGameID());
+	}
+
+	public function setLeaderID($leaderID) {
+		$this->leaderID = $leaderID;
 	}
 
 	public function getDiscordServer() {
@@ -428,7 +468,7 @@ class SmrAlliance {
 		$opLeader = TRUE;
 		$viewBonds = TRUE;
 		$db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds) ' .
-			'VALUES (' . $db->escapeNumber($this->getAllianceID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', 1, \'Leader\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeString($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
+			'VALUES (' . $db->escapeNumber($this->getAllianceID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber(ALLIANCE_ROLE_LEADER) . ', \'Leader\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeString($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 
 		switch ($newMemberPermission) {
 			case 'full':
@@ -462,10 +502,8 @@ class SmrAlliance {
 			break;
 		}
 		$db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds) ' .
-					'VALUES (' . $db->escapeNumber($this->getAllianceID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', 2, \'New Member\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeString($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
+					'VALUES (' . $db->escapeNumber($this->getAllianceID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber(ALLIANCE_ROLE_NEW_MEMBER) . ', \'New Member\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeString($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 
-		// Set the leader permissions
-		$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber($this->getLeaderID()) . ', 1,' . $db->escapeNumber($this->getAllianceID()) . ')');
 	}
 
 }
