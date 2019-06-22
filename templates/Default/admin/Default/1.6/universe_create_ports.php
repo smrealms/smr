@@ -12,12 +12,12 @@
 					foreach ($TotalPorts as $Level => $Count) { ?>
 						<tr>
 							<td class="right">Level <?php echo $Level; ?></td>
-							<td><input type="number" value="<?php echo $Count; ?>" size="5" name="port<?php echo $Level; ?>" onInput="levelCalc(<?php echo SmrPort::MAX_LEVEL; ?>);"></td>
+							<td><input type="number" value="<?php echo $Count; ?>" size="5" name="port<?php echo $Level; ?>" onInput="levelCalc(<?php echo SmrPort::MAX_LEVEL; ?>);" /></td>
 						</tr><?php
 					} ?>
 					<tr>
 						<th class="right">Total</th>
-						<td><input type="number" disabled="disabled" size="5" name="total" value="<?php echo $Total; ?>"></td>
+						<td><input type="number" disabled="disabled" size="5" name="total" value="<?php echo $Total; ?>" /></td>
 					</tr>
 					<tr>
 						<td class="center" colspan="2">
@@ -38,12 +38,12 @@
 					foreach (Globals::getRaces() as $raceID => $race) { ?>
 						<tr>
 							<td class="right"><?php echo $race['Race Name']; ?></td>
-							<td><input type="number" size="5" name="race<?php echo $raceID; ?>" value="<?php echo $RacePercents[$raceID]; ?>" onInput="raceCalc();"></td>
+							<td><input type="number" size="5" name="race<?php echo $raceID; ?>" value="<?php echo $RacePercents[$raceID]; ?>" onInput="raceCalc();" /></td>
 						</tr><?php
 					} ?>
 					<tr>
 						<th class="right">Total</th>
-						<td><input type="number" disabled="disabled" size="5" name="racedist" value="<?php echo $TotalPercent; ?>"></td>
+						<td><input type="number" disabled="disabled" size="5" name="racedist" value="<?php echo $TotalPercent; ?>" /></td>
 					</tr>
 					<tr>
 						<td class="center" colspan="2">
@@ -59,9 +59,9 @@
 
 		<tr>
 			<td colspan="3" class="center">
-				<input type="submit" name="submit" value="Create Ports">
+				<input type="submit" name="submit" value="Create Ports" />
 				<br /><br />
-				<input type="submit" name="submit" value="Cancel">
+				<input type="submit" name="submit" value="Cancel" />
 			</td>
 		</tr>
 	</table>
