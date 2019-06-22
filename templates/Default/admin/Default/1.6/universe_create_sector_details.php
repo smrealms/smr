@@ -42,7 +42,7 @@
 							if ($good['Class'] == $class) { ?>
 								<tr>
 								<td>
-									<img class="bottom" src="<?php echo $good['ImageLink']; ?>">&nbsp;
+									<img class="bottom" src="<?php echo $good['ImageLink']; ?>" width="13" height="16" />&nbsp;
 									<select name="good<?php echo $good['ID']; ?>" class="InputFields">
 										<option value="None">--</option><?php
 										foreach (['Buy', 'Sell'] as $trans) { ?>
