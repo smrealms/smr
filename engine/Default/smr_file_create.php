@@ -1,4 +1,9 @@
 <?php
+
+// We can release the sector lock now because we know that the following
+// code is read-only. This will help reduce sector lag and possible abuse.
+release_lock();
+
 if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false)
 	$gameID = $var['AdminCreateGameID'];
 else
@@ -181,5 +186,4 @@ header('Content-Length: ' . $size);
 
 echo $file;
 
-release_lock();
 exit;
