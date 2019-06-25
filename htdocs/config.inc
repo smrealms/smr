@@ -4,42 +4,43 @@ function logException(Throwable $e) {
 	$errorType = 'Unexpected Game Error!';
 	$message = '';
 	$currMySQLError = '';
+	$delim = "\n\n-----------\n\n";
 
 	if (is_object($account)) {
-		$message .= 'Login: ' . $account->getLogin() . EOL . EOL . '-----------' . EOL . EOL .
-			'Account ID: ' . $account->getAccountID() . EOL . EOL . '-----------' . EOL . EOL .
-			'E-Mail: ' . $account->getEmail() . EOL . EOL . '-----------' . EOL . EOL;
+		$message .= 'Login: ' . $account->getLogin() . "\n" .
+			'Account ID: ' . $account->getAccountID() . "\n" .
+			'E-Mail: ' . $account->getEmail() . $delim;
 	}
-	$message .= 'Error Message: ' . $e . EOL . EOL . '-----------' . EOL . EOL;
+	$message .= 'Error Message: ' . $e . $delim;
 
 	// Only check database if it was already loaded (do not try to autoload)
 	if (class_exists('MySqlDatabase', false) && ($db instanceof MySqlDatabase)) {
 		if ($currMySQLError = $db->getError()) {
 			$errorType = 'Database Error';
-			$message .= 'MySQL Error MSG: ' . $db->getError() . EOL . EOL . '-----------' . EOL . EOL;
+			$message .= 'MySQL Error MSG: ' . $db->getError() . $delim;
 		}
 	}
 
 	$message .=
-		'$var: ' . var_export($var, true) . EOL . EOL . '-----------' . EOL . EOL .
-		'USING_AJAX: ' . (defined('USING_AJAX') ?var_export(USING_AJAX, true) : 'undefined');
+		'$var: ' . var_export($var, true) . $delim .
+		'USING_AJAX: ' . (defined('USING_AJAX') ? var_export(USING_AJAX, true) : 'undefined') . "\n" .
+		'URL: ' . (defined('URL') ? var_export(URL, true) : 'undefined');
 
 	try {
 		if (function_exists('release_lock')) {
 			release_lock(); //Try to release lock so they can carry on normally
 		}
 	} catch (Throwable $ee) {
-		$message .= EOL . EOL . '-----------' . EOL . EOL .
-					'Releasing Lock Failed' . EOL .
-					'Message: ' . $ee . EOL . EOL;
+		$message .= $delim .
+					'Releasing Lock Failed' . "\n" .
+					'Message: ' . $ee . "\n";
 		if ($currMySQLError != $db->getError()) {
-			$message .= 'MySQL Error MSG: ' . $db->getError() . EOL . EOL;
+			$message .= 'MySQL Error MSG: ' . $db->getError();
 		}
 	}
 
 	if (defined('NPC_SCRIPT')) {
-		$message = 'Script: ' . SCRIPT_ID . EOL . EOL . '-----------' . EOL . EOL . $message;
-		var_dump($message);
+		echo 'Script: ' . SCRIPT_ID . $delim . $message . "\n\n";
 		return;
 	}
 
@@ -66,7 +67,8 @@ function logException(Throwable $e) {
 	// Send error message to e-mail so that we have a permanent record
 	if (!empty(BUG_REPORT_TO_ADDRESSES)) {
 		$mail = setupMailer();
-		$mail->Subject = 'Automatic Bug Report';
+		$mail->Subject = (defined('PAGE_PREFIX') ? PAGE_PREFIX : '??? ') .
+		                 'Automatic Bug Report';
 		$mail->setFrom('bugs@smrealms.de');
 		$mail->Body = $message;
 		foreach (BUG_REPORT_TO_ADDRESSES as $toAddress) {
@@ -94,6 +96,13 @@ function handleException(Throwable $e) {
 		header('location: /error.php?msg=' . urlencode($errorType));
 	}
 	exit;
+}
+
+/**
+ * Can be used to convert any type of notice into an exception.
+ */
+function exception_error_handler($errno, $errstr, $errfile, $errline) {
+	throw new ErrorException($errstr, $errno, E_ERROR, $errfile, $errline);
 }
 
 function setupMailer() {

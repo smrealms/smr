@@ -55,26 +55,23 @@ class Template {
 		$output = join('', $this->captures);
 		$this->trimWhiteSpace($output);
 
-		if ($outputXml) {
-			header('Content-Type: text/xml; charset=utf-8');
-		} else {
-			header('Content-Type: text/html; charset=utf-8');
-		}
-
 		$ajaxEnabled = ($this->data['AJAX_ENABLE_REFRESH'] ?? false) !== false;
 		if ($ajaxEnabled) {
 			$ajaxXml =& $this->convertHtmlToAjaxXml($output, $outputXml);
 			if ($outputXml) {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
-				$ajaxXml = '<all>' . $ajaxXml . '</all>';
-				echo $ajaxXml;
-			} else {
-				echo $output;
+				$output = '<all>' . $ajaxXml . '</all>';
 			}
 			SmrSession::saveAjaxReturns();
-		} else {
-			echo $output;
 		}
+
+		// Now that we are completely done processing, we can output
+		if ($outputXml) {
+			header('Content-Type: text/xml; charset=utf-8');
+		} else {
+			header('Content-Type: text/html; charset=utf-8');
+		}
+		echo $output;
 
 		// Record that display was called for error-checking in dtor
 		$this->displayCalled = true;
