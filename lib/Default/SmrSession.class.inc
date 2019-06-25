@@ -187,13 +187,16 @@ class SmrSession {
 			self::$account_id = self::$db->getInt('account_id');
 			self::$game_id = self::$db->getInt('game_id');
 			self::$last_accessed = self::$db->getInt('last_accessed');
-			self::$var = @unserialize(@gzuncompress(self::$db->getField('session_var')));
 			self::$commonIDs = array();
 			self::$lastSN = self::$db->getField('last_sn');
 			// We may not have ajax_returns if ajax was disabled
 			$ajaxReturns = self::$db->getField('ajax_returns');
 			if (!empty($ajaxReturns)) {
 				self::$previousAjaxReturns = unserialize(gzuncompress($ajaxReturns));
+			}
+			self::$var = self::$db->getField('session_var');
+			if (self::$var != '') {
+				self::$var = unserialize(gzuncompress(self::$var));
 			}
 			if (!is_array(self::$var)) {
 				self::$account_id = 0;
