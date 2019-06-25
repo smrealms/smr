@@ -99,6 +99,13 @@ function handleException(Throwable $e) {
 	exit;
 }
 
+/**
+ * Can be used to convert any type of notice into an exception.
+ */
+function exception_error_handler($errno, $errstr, $errfile, $errline) {
+	throw new ErrorException($errstr, $errno, E_ERROR, $errfile, $errline);
+}
+
 function setupMailer() {
 	$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 	if (!empty(SMTP_HOSTNAME)) {
