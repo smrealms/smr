@@ -66,7 +66,8 @@ function logException(Throwable $e) {
 	// Send error message to e-mail so that we have a permanent record
 	if (!empty(BUG_REPORT_TO_ADDRESSES)) {
 		$mail = setupMailer();
-		$mail->Subject = 'Automatic Bug Report';
+		$mail->Subject = (defined('PAGE_PREFIX') ? PAGE_PREFIX : '??? ') .
+		                 'Automatic Bug Report';
 		$mail->setFrom('bugs@smrealms.de');
 		$mail->Body = $message;
 		foreach (BUG_REPORT_TO_ADDRESSES as $toAddress) {

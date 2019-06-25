@@ -24,7 +24,8 @@ if (ENABLE_DEBUG) {
 }
 
 // Change the browser title based on the server config
-const PAGE_TITLE = (ENABLE_DEBUG ? 'DEV: ' : (ENABLE_BETA ? 'BETA: ' : '')) . 'Space Merchant Realms';
+const PAGE_PREFIX = ENABLE_DEBUG ? 'DEV: ' : (ENABLE_BETA ? 'BETA: ' : '');
+const PAGE_TITLE = PAGE_PREFIX . 'Space Merchant Realms';
 
 const ACCOUNT_ID_PORT = 65535;
 const ACCOUNT_ID_ADMIN = 65534;
