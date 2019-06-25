@@ -35,13 +35,12 @@ function logException(Throwable $e) {
 					'Releasing Lock Failed' . "\n" .
 					'Message: ' . $ee . "\n";
 		if ($currMySQLError != $db->getError()) {
-			$message .= 'MySQL Error MSG: ' . $db->getError() . "\n\n";
+			$message .= 'MySQL Error MSG: ' . $db->getError();
 		}
 	}
 
 	if (defined('NPC_SCRIPT')) {
-		$message = 'Script: ' . SCRIPT_ID . $delim . $message;
-		var_dump($message);
+		echo 'Script: ' . SCRIPT_ID . $delim . $message . "\n\n";
 		return;
 	}
 
