@@ -81,6 +81,10 @@ const SHIP_UPGRADE_PATH = array(
 
 
 try {
+	// Initialize the SmrSession before any output to avoid a warning about
+	// setcookie sending headers after output has started.
+	SmrSession::init();
+
 	$db = new SmrMySqlDatabase();
 	debug('Script started');
 
@@ -409,9 +413,11 @@ function changeNPCLogin() {
 	// We chose a new NPC, we don't care what we were doing beforehand.
 	$previousContainer = null;
 
+	// Lacking a convenient way to get up-to-date turns, choose the NPC
+	// that has taken an action least recently.
 	debug('Choosing new NPC');
 	$db = new SmrMySqlDatabase();
-	$db->query('SELECT login FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) WHERE game_id=' . $db->escapeNumber(NPC_GAME_ID) . ' AND active=\'TRUE\' AND working=\'FALSE\' AND login NOT IN (' . $db->escapeArray($NPC_LOGINS_USED) . ') ORDER BY turns DESC LIMIT 1');
+	$db->query('SELECT login FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) WHERE game_id=' . $db->escapeNumber(NPC_GAME_ID) . ' AND active=\'TRUE\' AND working=\'FALSE\' AND login NOT IN (' . $db->escapeArray($NPC_LOGINS_USED) . ') ORDER BY last_turn_update ASC LIMIT 1');
 	if (!$db->nextRecord()) {
 		debug('No free NPCs');
 		exitNPC();

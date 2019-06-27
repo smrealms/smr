@@ -143,6 +143,11 @@ class SmrSession {
 	protected static $ajaxReturns = array();
 
 	public static function init() {
+		// Return immediately if the SmrSession is already initialized
+		if (isset(self::$session_id)) {
+			return;
+		}
+
 		// Initialize the db connector here, since `init` is always called
 		self::$db = new SmrMySqlDatabase();
 
