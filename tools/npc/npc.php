@@ -81,6 +81,10 @@ const SHIP_UPGRADE_PATH = array(
 
 
 try {
+	// Initialize the SmrSession before any output to avoid a warning about
+	// setcookie sending headers after output has started.
+	SmrSession::init();
+
 	$db = new SmrMySqlDatabase();
 	debug('Script started');
 
