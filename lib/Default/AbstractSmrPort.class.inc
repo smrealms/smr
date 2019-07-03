@@ -83,6 +83,7 @@ class AbstractSmrPort {
 		$db->query('DELETE FROM port_has_goods WHERE ' . $SQL);
 		$db->query('DELETE FROM player_visited_port WHERE ' . $SQL);
 		$db->query('DELETE FROM player_attacks_port WHERE ' . $SQL);
+		$db->query('DELETE FROM port_info_cache WHERE ' . $SQL);
 		self::$CACHE_PORTS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
