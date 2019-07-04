@@ -64,6 +64,24 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $players;
 	}
 
+	public static function getGalaxyPlayers($gameID, $galaxyID, $forceUpdate = false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT player.*, sector_id FROM sector LEFT JOIN player USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$galaxyPlayers = [];
+		while ($db->nextRecord()) {
+			$sectorID = $db->getInt('sector_id');
+			if (!$db->hasField('account_id')) {
+				self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] = [];
+			} else {
+				$accountID = $db->getInt('account_id');
+				$player = self::getPlayer($accountID, $gameID, $forceUpdate, $db);
+				self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID][$accountID] = $player;
+				$galaxyPlayers[$sectorID][$accountID] = $player;
+			}
+		}
+		return $galaxyPlayers;
+	}
+
 	public static function &getSectorPlayers($gameID, $sectorID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
 			$db = new SmrMySqlDatabase();

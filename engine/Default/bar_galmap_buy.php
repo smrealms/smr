@@ -38,9 +38,7 @@ if (isset($var['process'])) {
 	//start section
 	
 	// add port infos
-	$db->query('SELECT * FROM port WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND sector_id >= ' . $db->escapeNumber($low));
-	while ($db->nextRecord()) {
-		$port = SmrPort::getPort($player->getGameID(), $db->getField('sector_id'), false, $db);
+	foreach ($galaxy->getPorts() as $port) {
 		$port->addCachePort($player->getAccountID());
 	}
 	

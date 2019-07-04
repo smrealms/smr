@@ -67,6 +67,20 @@ class SmrPlanet {
 		}
 	}
 
+	public static function getGalaxyPlanets($gameID, $galaxyID, $forceUpdate = false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT planet.*, sector_id FROM sector LEFT JOIN planet USING (game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$galaxyPlanets = [];
+		while ($db->nextRecord()) {
+			$sectorID = $db->getInt('sector_id');
+			$planet = self::getPlanet($gameID, $sectorID, $forceUpdate, $db);
+			if ($planet->exists()) {
+				$galaxyPlanets[$sectorID] = $planet;
+			}
+		}
+		return $galaxyPlanets;
+	}
+
 	public static function &getPlanet($gameID, $sectorID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
 			self::$CACHE_PLANETS[$gameID][$sectorID] = new SmrPlanet($gameID, $sectorID, $db);
@@ -106,7 +120,7 @@ class SmrPlanet {
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
 		if (isset($db)) {
-			$planetExists = true;
+			$planetExists = $db->hasField('planet_type_id');
 		} else {
 			$db = $this->db;
 			$db->query('SELECT * FROM planet WHERE ' . $this->SQL);

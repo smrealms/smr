@@ -141,9 +141,8 @@
 				</td><?php
 			} ?>
 		</tr><?php
-		//A little hacky but clearing these caches for each row of gal map drastically reduces total memory usage, and these caches should never be needed after this point either.
-		SmrPort::clearCache();
-		SmrForce::clearCache();
-		SmrPlanet::clearCache();
+		// NOTE: We no longer clear the caches here because we pre-cache.
+		// If memory becomes an issue, we can implement a purge of the cache
+		// for sectors that we have already processed.
 	} ?>
 </table>
