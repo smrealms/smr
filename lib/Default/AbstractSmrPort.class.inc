@@ -68,6 +68,22 @@ class AbstractSmrPort {
 		self::$CACHE_CACHED_PORTS = array();
 	}
 
+	public static function getGalaxyPorts($gameID, $galaxyID, $forceUpdate = false) {
+		$db = new SmrMySqlDatabase();
+		// Use a left join so that we populate the cache for every sector
+		$db->query('SELECT port.*, sector_id FROM sector LEFT JOIN port USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$galaxyPorts = [];
+		while ($db->nextRecord()) {
+			$sectorID = $db->getInt('sector_id');
+			$port = self::getPort($gameID, $sectorID, $forceUpdate, $db);
+			// Only return those ports that exist
+			if ($port->exists()) {
+				$galaxyPorts[$sectorID] = $port;
+			}
+		}
+		return $galaxyPorts;
+	}
+
 	public static function &getPort($gameID, $sectorID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID, $sectorID, $db);
@@ -113,7 +129,7 @@ class AbstractSmrPort {
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
 		if (isset($db)) {
-			$this->isNew = false;
+			$this->isNew = !$db->hasField('game_id');
 		} else {
 			$db = $this->db;
 			$db->query('SELECT * FROM port WHERE ' . $this->SQL . ' LIMIT 1');

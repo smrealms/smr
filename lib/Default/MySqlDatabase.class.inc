@@ -71,9 +71,11 @@ abstract class MySqlDatabase {
 		}
 		return false;
 	}
-	
-	
-	
+
+	public function hasField($name) {
+		return isset($this->dbRecord[$name]);
+	}
+
 	public function getField($name) {
 		return $this->dbRecord[$name];
 	}

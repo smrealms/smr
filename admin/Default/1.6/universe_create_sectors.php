@@ -13,6 +13,13 @@ if (empty($galaxies)) {
 }
 
 $galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
+
+// Efficiently construct the caches before proceeding
+$galaxy->getSectors();
+$galaxy->getPorts();
+$galaxy->getLocations();
+$galaxy->getPlanets();
+
 $connectivity = round($galaxy->getConnectivity());
 $template->assign('ActualConnectivity', $connectivity);
 

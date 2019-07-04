@@ -53,6 +53,24 @@ class SmrForce {
 		}
 	}
 
+	public static function getGalaxyForces($gameID, $galaxyID, $forceUpdate = false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT sector_has_forces.*, sector_id FROM sector LEFT JOIN sector_has_forces USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$galaxyForces = [];
+		while ($db->nextRecord()) {
+			$sectorID = $db->getInt('sector_id');
+			if (!$db->hasField('owner_id')) {
+				self::$CACHE_SECTOR_FORCES[$gameID][$sectorID] = [];
+			} else {
+				$ownerID = $db->getInt('owner_id');
+				$force = self::getForce($gameID, $sectorID, $ownerID, $forceUpdate, $db);
+				self::$CACHE_SECTOR_FORCES[$gameID][$sectorID][$ownerID] = $force;
+				$galaxyForces[$sectorID][$ownerID] = $force;
+			}
+		}
+		return $galaxyForces;
+	}
+
 	public static function &getSectorForces($gameID, $sectorID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID][$sectorID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));

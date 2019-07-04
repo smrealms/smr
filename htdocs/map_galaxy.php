@@ -83,7 +83,13 @@ try {
 		}
 	}
 
-	$galaxy->getSectors(); //optimized call to cache all sectors first
+	// Efficiently construct the caches before proceeding
+	$galaxy->getSectors();
+	$galaxy->getLocations();
+	$galaxy->getPlanets();
+	$galaxy->getForces();
+	$galaxy->getPlayers();
+
 	if (isset($sectorID)) {
 		$template->assign('FocusSector', $sectorID);
 		$mapSectors = $galaxy->getMapSectors($sectorID);

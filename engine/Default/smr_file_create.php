@@ -122,6 +122,11 @@ foreach ($galaxies as $galaxy) {
 
 
 foreach ($galaxies as $galaxy) {
+	// Efficiently construct the caches before proceeding
+	$galaxy->getLocations();
+	$galaxy->getPlanets();
+	$galaxy->getForces();
+
 	foreach ($galaxy->getSectors() as $sector) {
 		$file .= '[Sector=' . $sector->getSectorID() . ']' . EOL;
 		

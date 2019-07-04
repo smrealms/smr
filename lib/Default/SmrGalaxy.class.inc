@@ -181,10 +181,33 @@ class SmrGalaxy {
 		return SmrSector::getGalaxySectors($this->getGameID(), $this->getGalaxyID());
 	}
 
+	public function getPorts() {
+		return SmrPort::getGalaxyPorts($this->getGameID(), $this->getGalaxyID());
+	}
+
+	public function getLocations() {
+		return SmrLocation::getGalaxyLocations($this->getGameID(), $this->getGalaxyID());
+	}
+
+	public function getPlanets() {
+		return SmrPlanet::getGalaxyPlanets($this->getGameID(), $this->getGalaxyID());
+	}
+
+	public function getForces() {
+		return SmrForce::getGalaxyForces($this->getGameID(), $this->getGalaxyID());
+	}
+
+	public function getPlayers() {
+		return SmrPlayer::getGalaxyPlayers($this->getGameID(), $this->getGalaxyID());
+	}
+
 	/**
 	 * Returns a 2D array of sectors in the galaxy.
 	 * If $centerSectorID is specified, it will be in the center of the array.
 	 * If $dist is also specified, only include sectors $dist away from center.
+	 *
+	 * NOTE: This routine queries sectors inefficiently. You may want to
+	 * construct the cache efficiently before calling this.
 	 */
 	public function getMapSectors($centerSectorID = false, $dist = false) {
 		if ($centerSectorID === false) {
