@@ -43,21 +43,25 @@ else if (!isset($var['conn'])) {
 }
 $template->assign('RequestedConnectivity', $var['conn']);
 
-$container = $var;
+$container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
+transfer('game_id');
+transfer('gal_on');
 $template->assign('JumpGalaxyHREF', SmrSession::getNewHref($container));
 
 $container['url'] = '1.6/universe_create_save_processing.php';
-$container['body'] = '1.6/universe_create_sectors.php';
 $template->assign('SubmitChangesHREF', SmrSession::getNewHref($container));
 
 $container['submit'] = 'Toggle Link';
 $template->assign('ToggleLink', $container);
 
-$container = $var;
-$container['body'] = '1.6/universe_create_sector_details.php';
+$container = create_container('skeleton.php', '1.6/universe_create_sector_details.php');
+transfer('game_id');
+transfer('gal_on');
 $template->assign('UniGen', $container);
 
-$container = $var;
+$container = create_container('skeleton.php');
+transfer('game_id');
+transfer('gal_on');
 $container['body'] = '1.6/universe_create_locations.php';
 $template->assign('ModifyLocationsHREF', SmrSession::getNewHREF($container));
 
