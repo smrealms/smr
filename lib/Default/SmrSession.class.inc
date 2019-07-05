@@ -108,12 +108,12 @@ class SmrSession {
 			'permission_manage.php' => self::ALWAYS_AVAILABLE,
 			'word_filter.php' => self::ALWAYS_AVAILABLE,
 			//Uni gen
-			'universe_create_locations.php' => self::ALWAYS_AVAILABLE,
-			'universe_create_planets.php' => self::ALWAYS_AVAILABLE,
-			'universe_create_ports.php' => self::ALWAYS_AVAILABLE,
-			'universe_create_sector_details.php' => self::ALWAYS_AVAILABLE,
-			'universe_create_sectors.php' => self::ALWAYS_AVAILABLE,
-			'universe_create_warps.php' => self::ALWAYS_AVAILABLE
+			'1.6/universe_create_locations.php' => self::ALWAYS_AVAILABLE,
+			'1.6/universe_create_planets.php' => self::ALWAYS_AVAILABLE,
+			'1.6/universe_create_ports.php' => self::ALWAYS_AVAILABLE,
+			'1.6/universe_create_sector_details.php' => self::ALWAYS_AVAILABLE,
+			'1.6/universe_create_sectors.php' => self::ALWAYS_AVAILABLE,
+			'1.6/universe_create_warps.php' => self::ALWAYS_AVAILABLE,
 		);
 
 	private const URL_LOAD_DELAY = array(
