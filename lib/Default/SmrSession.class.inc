@@ -1,7 +1,9 @@
 <?php
 
-if (!defined('USING_AJAX'))
+if (!defined('USING_AJAX')) {
 	define('USING_AJAX', false);
+}
+
 class SmrSession {
 	const ALWAYS_AVAILABLE = 999999;
 	const TIME_BEFORE_EXPIRY = 3600;
@@ -106,12 +108,12 @@ class SmrSession {
 			'permission_manage.php' => self::ALWAYS_AVAILABLE,
 			'word_filter.php' => self::ALWAYS_AVAILABLE,
 			//Uni gen
-			'universe_create_locations.php' => self::ALWAYS_AVAILABLE,
-			'universe_create_planets.php' => self::ALWAYS_AVAILABLE,
-			'universe_create_ports.php' => self::ALWAYS_AVAILABLE,
-			'universe_create_sector_details.php' => self::ALWAYS_AVAILABLE,
-			'universe_create_sectors.php' => self::ALWAYS_AVAILABLE,
-			'universe_create_warps.php' => self::ALWAYS_AVAILABLE
+			'1.6/universe_create_locations.php' => self::ALWAYS_AVAILABLE,
+			'1.6/universe_create_planets.php' => self::ALWAYS_AVAILABLE,
+			'1.6/universe_create_ports.php' => self::ALWAYS_AVAILABLE,
+			'1.6/universe_create_sector_details.php' => self::ALWAYS_AVAILABLE,
+			'1.6/universe_create_sectors.php' => self::ALWAYS_AVAILABLE,
+			'1.6/universe_create_warps.php' => self::ALWAYS_AVAILABLE,
 		);
 
 	private const URL_LOAD_DELAY = array(
@@ -310,9 +312,10 @@ class SmrSession {
 	}
 
 	private static function updateSN() {
-		if (!USING_AJAX)
+		if (!USING_AJAX) {
 			self::$db->query('UPDATE active_session SET last_sn=' . self::$db->escapeString(self::$SN) .
 				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
+		}
 	}
 
 	public static function destroy() {
@@ -384,8 +387,9 @@ class SmrSession {
 		}
 
 		self::$var[$sn] = $container;
-		if (!$lock && !USING_AJAX)
+		if (!$lock && !USING_AJAX) {
 			self::update();
+		}
 		return $sn;
 	}
 
@@ -406,7 +410,7 @@ class SmrSession {
 		self::$commonIDs = array();
 	}
 
-	public static function addLink($container, $sn = false) { // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
+	protected static function addLink($container, $sn = false) { // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
 		if (!isset($container['Expires'])) {
 			$container['Expires'] = 0; // Lasts forever
 		}
@@ -447,15 +451,17 @@ class SmrSession {
 		unset($commonContainer['RemainingPageLoads']);
 		unset($commonContainer['PreviousRequestTime']);
 		unset($commonContainer['CommonID']);
+		// NOTE: This ID will change if the order of elements in the container
+		// changes. If this causes unnecessary SN changes, sort the container!
 		return md5(serialize($commonContainer));
 	}
 
 	public static function getNewHREF($container, $forceFullURL = false) {
 		$sn = self::addLink($container);
-		if ($forceFullURL === true || stripos($_SERVER['REQUEST_URI'], 'loader.php') === false)
+		if ($forceFullURL === true || stripos($_SERVER['REQUEST_URI'], 'loader.php') === false) {
 			return '/loader.php?sn=' . $sn;
-		else
-			return '?sn=' . $sn;
+		}
+		return '?sn=' . $sn;
 	}
 
 	public static function addAjaxReturns($element, $contents) {
@@ -464,8 +470,9 @@ class SmrSession {
 	}
 
 	public static function saveAjaxReturns() {
-		if (empty(self::$ajaxReturns))
+		if (empty(self::$ajaxReturns)) {
 			return;
+		}
 		$compressed = gzcompress(serialize(self::$ajaxReturns));
 		self::$db->query('UPDATE active_session SET ajax_returns=' . self::$db->escapeBinary($compressed) .
 				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
