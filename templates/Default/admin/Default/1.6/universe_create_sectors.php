@@ -13,7 +13,7 @@
 		<td><?php echo $Galaxy->getGalaxyType(); ?></td>
 		<td><?php echo $Galaxy->getWidth(); ?> x <?php echo $Galaxy->getHeight(); ?></td>
 		<td><?php echo $Galaxy->getMaxForceTime() / 3600; ?> hours</td>
-		<td><?php echo $ActualConnectivity; ?>%</td>
+		<td id="conn" class="ajax"><?php echo $ActualConnectivity; ?>%</td>
 	</tr>
 </table>
 <br />

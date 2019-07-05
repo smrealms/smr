@@ -193,6 +193,13 @@ var exec = function(s) {
 		});
 	});
 
+	window.ajaxLink = function(link) {
+		$.get(link, {ajax: 1}, function(data) {
+				sn = getURLParameter('sn', link);
+				updateRefresh(data);
+			}, 'xml');
+	}
+
 	window.toggleWepD = function(link) {
 		"use strict";
 		$('.wep1:visible').slideToggle(600);

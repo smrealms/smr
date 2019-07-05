@@ -52,6 +52,7 @@ $container['url'] = '1.6/universe_create_save_processing.php';
 $template->assign('SubmitChangesHREF', SmrSession::getNewHref($container));
 
 $container['submit'] = 'Toggle Link';
+$container['AJAX'] = true;
 $template->assign('ToggleLink', $container);
 
 $container = create_container('skeleton.php', '1.6/universe_create_sector_details.php');

@@ -28,7 +28,7 @@
 							foreach ($MovementTypes as $MovementType) {
 								if (isset($ToggleLink)) {
 									$ToggleLink['dir'] = $MovementType; ?>
-									<a href="<?php echo SmrSession::getNewHREF($ToggleLink); ?>" class="lm<?php echo $MovementType; ?>"><?php
+									<a onclick="ajaxLink('<?php echo SmrSession::getNewHREF($ToggleLink); ?>')" class="lm<?php echo $MovementType; ?>"><?php
 								} ?>
 								<div class="lm<?php echo $MovementType; ?> <?php if ($Sector->getLink($MovementType)) { ?>con<?php } else { ?>wall<?php } ?>"></div><?php
 								if (isset($ToggleLink)) { ?>
