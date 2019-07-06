@@ -17,6 +17,18 @@ $template->assign('UploadSmrFileHREF', SmrSession::getNewHREF($container));
 
 //Galaxy Creation area
 $defaultNames = array(0, 'Alskant', 'Creonti', 'Human', 'Ik\'Thorne', 'Nijarin', 'Salvene', 'Thevian', 'WQ Human', 'Omar', 'Salzik', 'Manton', 'Livstar', 'Teryllia', 'Doriath', 'Anconus', 'Valheru', 'Sardine', 'Clacher', 'Tangeria');
-$template->assign('DefaultNames', $defaultNames);
 $template->assign('NumGals', $numGals);
 $template->assign('GalaxyTypes', array('Racial', 'Neutral', 'Planet'));
+
+$galaxies = [];
+for ($i = 1; $i <= $numGals; ++$i) {
+	$isRacial = $i <= 8;
+	$galaxies[$i] = [
+		'Name' => $defaultNames[$i] ?? 'Unknown',
+		'Width' => 10,
+		'Height' => 10,
+		'Type' => $isRacial ? 'Racial' : 'Neutral',
+		'ForceExpire' => $isRacial ? 12 : 60,
+	];
+}
+$template->assign('Galaxies', $galaxies);
