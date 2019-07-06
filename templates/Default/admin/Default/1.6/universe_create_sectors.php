@@ -1,15 +1,25 @@
 <table class="center standard">
 	<tr>
-		<th>Galaxy ID</th>
-		<th>Name</th>
+		<th>Galaxy</th>
+		<th>ID</th>
 		<th>Type</th>
 		<th>Size</th>
 		<th>Max Force Time</th>
 		<th>Connectivity</th>
 	</tr>
 	<tr>
+		<td>
+			<form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
+				<select name="gal_on" class="InputFields" onchange="this.form.submit()"><?php
+					foreach ($Galaxies as $CurrentGalaxy) { ?>
+						<option value="<?php echo $CurrentGalaxy->getGalaxyID(); ?>"<?php if ($CurrentGalaxy->equals($Galaxy)) { ?> selected="SELECTED"<?php } ?>><?php
+							echo $CurrentGalaxy->getName(); ?>
+						</option><?php
+					} ?>
+				</select>
+			</form>
+		</td>
 		<td><?php echo $Galaxy->getGalaxyID(); ?> / <?php echo count($Galaxies); ?></td>
-		<td><?php echo $Galaxy->getName(); ?></td>
 		<td><?php echo $Galaxy->getGalaxyType(); ?></td>
 		<td><?php echo $Galaxy->getWidth(); ?> x <?php echo $Galaxy->getHeight(); ?></td>
 		<td><?php echo $Galaxy->getMaxForceTime() / 3600; ?> hours</td>
@@ -21,16 +31,6 @@
 <table class="center">
 	<tr>
 		<td>
-			<form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
-				<select name="gal_on" onchange="this.form.submit()"><?php
-					foreach ($Galaxies as $CurrentGalaxy) { ?>
-						<option value="<?php echo $CurrentGalaxy->getGalaxyID(); ?>"<?php if ($CurrentGalaxy->equals($Galaxy)) { ?> selected="SELECTED"<?php } ?>><?php
-							echo $CurrentGalaxy->getName(); ?>
-						</option><?php
-					} ?>
-				</select>
-				<input type="submit" value="Select Galaxy">
-			</form>
 			<p><a href="<?php echo $SMRFileHREF; ?>" class="submitStyle" target="_blank">Create SMR file</a></p>
 			<p><a href="<?php echo $EditGameDetailsHREF; ?>" class="submitStyle">Edit Game Details</a></p>
 		</td>
@@ -47,14 +47,12 @@
 
 		<td>
 			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
-				Connection %<br />
-				<input type="number" name="connect" value="<?php echo $RequestedConnectivity; ?>" size="3" class="center" /><br />
+				<input required type="number" name="connect" placeholder="Connectivity %" class="center" /><br />
 				<input type="submit" name="submit" value="Redo Connections">
 			</form>
 			<br />
 			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
-				Sector ID<br />
-				<input type="number" size="5" name="sector_edit" class="center" /><br />
+				<input required type="number" size="5" name="sector_edit" placeholder="Sector ID" class="center" /><br />
 				<input type="submit" value="Modify Sector" name="submit">
 			</form>
 		</td>

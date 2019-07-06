@@ -25,7 +25,7 @@ else if ($submit == 'Redo Connections') {
 	if (!$galaxy->setConnectivity($_REQUEST['connect']))
 		$var['message'] = '<span class="red">Error</span> : Regenerating connections failed.';
 	else
-		$var['message'] = '<span class="green">Success</span> : Regenerated connections.';
+		$var['message'] = '<span class="green">Success</span> : Regenerated connectivity with ' . $_REQUEST['connect'] . '% target.';
 	SmrSector::saveSectors();
 }
 elseif ($submit == 'Toggle Link') {
