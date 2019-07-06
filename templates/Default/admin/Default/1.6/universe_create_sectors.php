@@ -33,6 +33,7 @@
 		<td>
 			<p><a href="<?php echo $SMRFileHREF; ?>" class="submitStyle" target="_blank">Create SMR file</a></p>
 			<p><a href="<?php echo $EditGameDetailsHREF; ?>" class="submitStyle">Edit Game Details</a></p>
+			<p><a href="<?php echo $ResetGalaxyHREF; ?>" class="submitStyle">Reset Current Galaxy</a></p>
 		</td>
 
 		<td>
