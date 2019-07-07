@@ -135,7 +135,7 @@ class SmrSector {
 			return;
 		}
 		else {
-			throw new SectorNotFoundException('No such sector: ' . $gameID . '-' . $sectorID);
+			throw new SectorNotFoundException('No sector ' . $sectorID . ' in game ' . $gameID);
 		}
 	}
 
@@ -554,9 +554,13 @@ class SmrSector {
 			throw new Exception('Sector must not warp to itself!');
 		}
 
-		if (($warp->hasWarp() && $warp->getWarp() != $this->getSectorID()) ||
-		    ($this->hasWarp() && $this->getWarp() != $warp->getSectorID())) {
-			throw new Exception('One of the sectors already has a warp!');
+		// Can only have 1 warp per sector
+		foreach ([[$warp, $this], [$this, $warp]] as $sectors) {
+			$A = $sectors[0];
+			$B = $sectors[1];
+			if ($A->hasWarp() && $A->getWarp() != $B->getSectorID()) {
+				throw new Exception('Sector ' . $A->getSectorID() . ' already has a warp (to ' . $A->getWarp() . ')!');
+			}
 		}
 
 		$this->warp = $warp->getSectorID();
