@@ -140,19 +140,8 @@ class SmrSector {
 	}
 
 	public function update() {
-		if ($this->hasChanged) {
-			if ($this->isNew === false) {
-				$this->db->query('UPDATE sector SET battles = ' . $this->db->escapeNumber($this->getBattles()) .
-									', galaxy_id=' . $this->db->escapeNumber($this->getGalaxyID()) .
-									', link_up=' . $this->db->escapeNumber($this->getLinkUp()) .
-									', link_right=' . $this->db->escapeNumber($this->getLinkRight()) .
-									', link_down=' . $this->db->escapeNumber($this->getLinkDown()) .
-									', link_left=' . $this->db->escapeNumber($this->getLinkLeft()) .
-									', warp=' . $this->db->escapeNumber($this->getWarp()) .
-								' WHERE ' . $this->SQL . ' LIMIT 1');
-			}
-			else {
-				$this->db->query('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right,warp)
+		if ($this->isNew) {
+			$this->db->query('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right,warp)
 								values
 								(' . $this->db->escapeNumber($this->getSectorID()) .
 								',' . $this->db->escapeNumber($this->getGameID()) .
@@ -163,9 +152,18 @@ class SmrSector {
 								',' . $this->db->escapeNumber($this->getLinkRight()) .
 								',' . $this->db->escapeNumber($this->getWarp()) .
 								')');
-				$this->isNew = false;
-			}
+		} elseif ($this->hasChanged) {
+			$this->db->query('UPDATE sector SET battles = ' . $this->db->escapeNumber($this->getBattles()) .
+									', galaxy_id=' . $this->db->escapeNumber($this->getGalaxyID()) .
+									', link_up=' . $this->db->escapeNumber($this->getLinkUp()) .
+									', link_right=' . $this->db->escapeNumber($this->getLinkRight()) .
+									', link_down=' . $this->db->escapeNumber($this->getLinkDown()) .
+									', link_left=' . $this->db->escapeNumber($this->getLinkLeft()) .
+									', warp=' . $this->db->escapeNumber($this->getWarp()) .
+								' WHERE ' . $this->SQL . ' LIMIT 1');
 		}
+		$this->isNew = false;
+		$this->hasChanged = false;
 	}
 
 	public function markVisited(AbstractSmrPlayer $player) {
