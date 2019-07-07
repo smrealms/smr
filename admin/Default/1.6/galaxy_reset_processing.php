@@ -9,22 +9,9 @@ $galaxy->getLocations();
 
 $galaxy->setConnectivity(100);
 
+// Remove all ports, planets, locations, and warps
 foreach ($galaxy->getSectors() as $galSector) {
-	if ($galSector->hasPort()) {
-		$galSector->removePort();
-	}
-
-	if ($galSector->hasPlanet()) {
-		$galSector->removePlanet();
-	}
-
-	if ($galSector->hasLocation()) {
-		$galSector->removeAllLocations();
-	}
-
-	if ($galSector->hasWarp()) {
-		$galSector->removeWarp();
-	}
+	$galSector->removeAllFixtures();
 }
 
 SmrSector::saveSectors();

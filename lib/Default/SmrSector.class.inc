@@ -671,6 +671,25 @@ class SmrSector {
 		SmrPlanet::removePlanet($this->getGameID(), $this->getSectorID());
 	}
 
+	/**
+	 * Removes ports, planets, locations, and warps from this sector.
+	 * NOTE: This should only be used by the universe generator!
+	 */
+	public function removeAllFixtures() {
+		if ($this->hasPort()) {
+			$this->removePort();
+		}
+		if ($this->hasPlanet()) {
+			$this->removePlanet();
+		}
+		if ($this->hasLocation()) {
+			$this->removeAllLocations();
+		}
+		if ($this->hasWarp()) {
+			$this->removeWarp();
+		}
+	}
+
 	public function hasForces() {
 		return count($this->getForces()) > 0;
 	}
