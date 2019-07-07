@@ -14,12 +14,6 @@ try {
 		exit;
 	}
 
-	$galaxyTypes = [
-		'Racial' => 1,
-		'Neutral' => 2,
-		'Planet' => 3,
-	];
-
 	$nodes = [];
 	$links = [];
 
@@ -28,7 +22,7 @@ try {
 		$nodes[] = [
 			'name' => $galaxy->getName(),
 			'id' => $galaxy->getGalaxyID(),
-			'group' => $galaxyTypes[$galaxy->getGalaxyType()],
+			'group' => array_search($galaxy->getGalaxyType(), SmrGalaxy::TYPES),
 			'size' => $galaxy->getSize(),
 		];
 	}

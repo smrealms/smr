@@ -2,7 +2,9 @@
 class SmrGalaxy {
 	protected static $CACHE_GALAXIES = array();
 	protected static $CACHE_GAME_GALAXIES = array();
-	
+
+	const TYPES = ['Racial', 'Neutral', 'Planet'];
+
 	protected $db;
 	protected $SQL;
 
@@ -84,15 +86,7 @@ class SmrGalaxy {
 	}
 
 	public function save() {
-		if ($this->hasChanged) {
-			if ($this->isNew == false) {
-				$this->db->query('UPDATE game_galaxy SET galaxy_name = ' . $this->db->escapeString($this->getName()) .
-										', width = ' . $this->db->escapeNumber($this->getWidth()) .
-										', height = ' . $this->db->escapeNumber($this->getHeight()) .
-										', galaxy_type = ' . $this->db->escapeString($this->getGalaxyType()) .
-										', max_force_time = ' . $this->db->escapeNumber($this->getMaxForceTime()) .
-									' WHERE ' . $this->SQL);
-			} else {
+		if ($this->isNew) {
 				$this->db->query('INSERT INTO game_galaxy (game_id,galaxy_id,galaxy_name,width,height,galaxy_type,max_force_time)
 									values
 									(' . $this->db->escapeNumber($this->getGameID()) .
@@ -102,9 +96,16 @@ class SmrGalaxy {
 									',' . $this->db->escapeNumber($this->getHeight()) .
 									',' . $this->db->escapeString($this->getGalaxyType()) .
 									',' . $this->db->escapeNumber($this->getMaxForceTime()) . ')');
-				$this->isNew = false;
-			}
+		} elseif ($this->hasChanged) {
+				$this->db->query('UPDATE game_galaxy SET galaxy_name = ' . $this->db->escapeString($this->getName()) .
+										', width = ' . $this->db->escapeNumber($this->getWidth()) .
+										', height = ' . $this->db->escapeNumber($this->getHeight()) .
+										', galaxy_type = ' . $this->db->escapeString($this->getGalaxyType()) .
+										', max_force_time = ' . $this->db->escapeNumber($this->getMaxForceTime()) .
+									' WHERE ' . $this->SQL);
 		}
+		$this->isNew = false;
+		$this->hasChanged = false;
 	}
 	
 	public function getGameID() {

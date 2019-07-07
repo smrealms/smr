@@ -35,14 +35,6 @@ if (isset($var['message'])) {
 	SmrSession::updateVar('message', null); // Only show message once
 }
 
-if (isset($_REQUEST['connect']) && $_REQUEST['connect'] > 0) {
-	SmrSession::updateVar('conn', $_REQUEST['connect']);
-}
-else if (!isset($var['conn'])) {
-	SmrSession::updateVar('conn', 100);
-}
-$template->assign('RequestedConnectivity', $var['conn']);
-
 $container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
 transfer('game_id');
 transfer('gal_on');
@@ -80,3 +72,13 @@ $template->assign('SMRFileHREF', Globals::getSmrFileCreateHREF($var['game_id']))
 $container = create_container('skeleton.php', '1.6/game_edit.php');
 transfer('game_id');
 $template->assign('EditGameDetailsHREF', SmrSession::getNewHREF($container));
+
+$container = create_container('skeleton.php', '1.6/galaxies_edit.php');
+transfer('game_id');
+transfer('gal_on');
+$template->assign('EditGalaxyDetailsHREF', SmrSession::getNewHREF($container));
+
+$container = create_container('1.6/galaxy_reset_processing.php');
+transfer('game_id');
+transfer('gal_on');
+$template->assign('ResetGalaxyHREF', SmrSession::getNewHREF($container));

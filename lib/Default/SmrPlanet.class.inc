@@ -848,6 +848,7 @@ class SmrPlanet {
 					$this->db->query('DELETE FROM planet_has_weapon WHERE ' . $this->SQL . ' AND order_id=' . $this->db->escapeNumber($orderID));
 				}
 			}
+			$this->hasChangedWeapons = [];
 		}
 
 		if (count($this->hasStoppedBuilding) > 0) {

@@ -1,7 +1,5 @@
 <?php
 
-$container = create_container('skeleton.php', '1.6/universe_create_galaxies.php');
-
 //first create the game
 $db->query('SELECT game_id FROM game WHERE game_name='.$db->escapeString($_REQUEST['game_name']).' LIMIT 1');
 if ($db->nextRecord()) {
@@ -59,8 +57,8 @@ foreach (Globals::getRaces() as $race) {
 
 createNHA($game->getGameID()); //do the alliances/message stuff
 
+$container = create_container('skeleton.php', '1.6/universe_create_galaxies.php');
 $container['game_id'] = $game->getGameID();
-$container['message'] = '<span class="green">Success</span> : Succesfully created game.';
 forward($container);
 
 function createNHA($gameID) {

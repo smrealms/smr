@@ -100,27 +100,8 @@ class SmrGame {
 	}
 
 	public function save() {
-		if ($this->hasChanged) {
-			if ($this->isNew == false) {
-				$this->db->query('UPDATE game SET game_name = ' . $this->db->escapeString($this->getName()) .
-										', game_description = ' . $this->db->escapeString($this->getDescription()) .
-										', join_time = ' . $this->db->escapeNumber($this->getJoinTime()) .
-										', start_time = ' . $this->db->escapeNumber($this->getStartTime()) .
-										', end_time = ' . $this->db->escapeNumber($this->getEndTime()) .
-										', max_players = ' . $this->db->escapeNumber($this->getMaxPlayers()) .
-										', max_turns = ' . $this->db->escapeNumber($this->getMaxTurns()) .
-										', start_turns = ' . $this->db->escapeNumber($this->getStartTurnHours()) .
-										', game_type = ' . $this->db->escapeNumber($this->gameTypeID) .
-										', credits_needed = ' . $this->db->escapeNumber($this->getCreditsNeeded()) .
-										', game_speed = ' . $this->db->escapeNumber($this->getGameSpeed()) .
-										', enabled = ' . $this->db->escapeBoolean($this->isEnabled()) .
-										', ignore_stats = ' . $this->db->escapeBoolean($this->isIgnoreStats()) .
-										', alliance_max_players = ' . $this->db->escapeNumber($this->getAllianceMaxPlayers()) .
-										', alliance_max_vets = ' . $this->db->escapeNumber($this->getAllianceMaxVets()) .
-										', starting_credits = ' . $this->db->escapeNumber($this->getStartingCredits()) .
-									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
-			} else {
-				$this->db->query('INSERT INTO game (game_id,game_name,game_description,join_time,start_time,end_time,max_players,max_turns,start_turns,game_type,credits_needed,game_speed,enabled,ignore_stats,alliance_max_players,alliance_max_vets,starting_credits)
+		if ($this->isNew) {
+			$this->db->query('INSERT INTO game (game_id,game_name,game_description,join_time,start_time,end_time,max_players,max_turns,start_turns,game_type,credits_needed,game_speed,enabled,ignore_stats,alliance_max_players,alliance_max_vets,starting_credits)
 									VALUES
 									(' . $this->db->escapeNumber($this->getGameID()) .
 										',' . $this->db->escapeString($this->getName()) .
@@ -139,8 +120,27 @@ class SmrGame {
 										',' . $this->db->escapeNumber($this->getAllianceMaxPlayers()) .
 										',' . $this->db->escapeNumber($this->getAllianceMaxVets()) .
 										',' . $this->db->escapeNumber($this->getStartingCredits()) . ')');
-			}
+		} elseif ($this->hasChanged) {
+			$this->db->query('UPDATE game SET game_name = ' . $this->db->escapeString($this->getName()) .
+										', game_description = ' . $this->db->escapeString($this->getDescription()) .
+										', join_time = ' . $this->db->escapeNumber($this->getJoinTime()) .
+										', start_time = ' . $this->db->escapeNumber($this->getStartTime()) .
+										', end_time = ' . $this->db->escapeNumber($this->getEndTime()) .
+										', max_players = ' . $this->db->escapeNumber($this->getMaxPlayers()) .
+										', max_turns = ' . $this->db->escapeNumber($this->getMaxTurns()) .
+										', start_turns = ' . $this->db->escapeNumber($this->getStartTurnHours()) .
+										', game_type = ' . $this->db->escapeNumber($this->gameTypeID) .
+										', credits_needed = ' . $this->db->escapeNumber($this->getCreditsNeeded()) .
+										', game_speed = ' . $this->db->escapeNumber($this->getGameSpeed()) .
+										', enabled = ' . $this->db->escapeBoolean($this->isEnabled()) .
+										', ignore_stats = ' . $this->db->escapeBoolean($this->isIgnoreStats()) .
+										', alliance_max_players = ' . $this->db->escapeNumber($this->getAllianceMaxPlayers()) .
+										', alliance_max_vets = ' . $this->db->escapeNumber($this->getAllianceMaxVets()) .
+										', starting_credits = ' . $this->db->escapeNumber($this->getStartingCredits()) .
+									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 		}
+		$this->isNew = false;
+		$this->hasChanged = false;
 	}
 
 	public function getGameID() {
