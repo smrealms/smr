@@ -305,6 +305,10 @@ class SmrSector {
 		}
 	}
 
+	public function getSQL() {
+		return $this->SQL;
+	}
+
 	public function getGameID() {
 		return $this->gameID;
 	}

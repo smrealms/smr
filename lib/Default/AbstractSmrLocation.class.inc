@@ -21,7 +21,13 @@ class AbstractSmrLocation {
 	protected $hardwareSold;
 	protected $shipsSold;
 	protected $weaponsSold;
-	
+
+	public static function clearCache() {
+		self::$CACHE_ALL_LOCATIONS = [];
+		self::$CACHE_LOCATIONS = [];
+		self::$CACHE_SECTOR_LOCATIONS = [];
+	}
+
 	public static function &getAllLocations($forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
 			$db = new SmrMySqlDatabase();

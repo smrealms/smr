@@ -73,6 +73,11 @@ $container = create_container('skeleton.php', '1.6/game_edit.php');
 transfer('game_id');
 $template->assign('EditGameDetailsHREF', SmrSession::getNewHREF($container));
 
+$container = create_container('skeleton.php', '1.6/galaxies_edit.php');
+transfer('game_id');
+transfer('gal_on');
+$template->assign('EditGalaxyDetailsHREF', SmrSession::getNewHREF($container));
+
 $container = create_container('1.6/galaxy_reset_processing.php');
 transfer('game_id');
 transfer('gal_on');
