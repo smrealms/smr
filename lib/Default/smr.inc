@@ -827,6 +827,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 		$voteSites[] = array(
 			'img' => $site->getLinkImg($account->getAccountID(), SmrSession::getGameID()),
 			'url' => $site->getLinkUrl($account->getAccountID(), SmrSession::getGameID()),
+			'sn' => $site->getSN($account->getAccountID(), SmrSession::getGameID()),
 		);
 	}
 	$template->assign('VoteSites', $voteSites);

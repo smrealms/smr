@@ -20,9 +20,9 @@ class VoteSite {
 			3 => array(
 				'img_default' => 'twg.png',
 				'img_star' => 'twg_vote.png',
-				'url_base' => 'http://topwebgames.com/in.aspx?ID=136&alwaysreward=1',
+				'url_base' => 'http://topwebgames.com/in.aspx?ID=136',
 				'url_func' => function($baseUrl, $accountId, $gameId, $linkId) {
-					$query = array('account' => $accountId, 'game' => $gameId, 'link' => $linkId);
+					$query = array('account' => $accountId, 'game' => $gameId, 'link' => $linkId, 'alwaysreward' => 1);
 					return $baseUrl . '&' . http_build_query($query);
 				},
 			),
@@ -109,10 +109,17 @@ class VoteSite {
 	}
 
 	/**
+	 * Returns true if account can currently receive free turns at this site.
+	 */
+	private function freeTurnsReady($accountID, $gameID) {
+		return $this->givesFreeTurns() && $gameID != 0 && $this->getTimeUntilFreeTurns($accountID) <= 0;
+	}
+
+	/**
 	 * Returns the image to display for this voting site.
 	 */
 	public function getLinkImg($accountID, $gameID) {
-		if ($this->givesFreeTurns() && $gameID != 0 && $this->getTimeUntilFreeTurns($accountID) <= 0) {
+		if ($this->freeTurnsReady($accountID, $gameID)) {
 			return $this->data['img_star'];
 		} else {
 			return $this->data['img_default'];
@@ -124,15 +131,26 @@ class VoteSite {
 	 */
 	public function getLinkUrl($accountID, $gameID) {
 		$baseUrl = $this->data['url_base'];
-		if ($this->givesFreeTurns() && $gameID != 0 && $this->getTimeUntilFreeTurns($accountID) <= 0) {
+		if ($this->freeTurnsReady($accountID, $gameID)) {
+			return $this->data['url_func']($baseUrl, $accountID, $gameID, $this->linkID);
+		} else {
+			return $baseUrl;
+		}
+	}
+
+	/**
+	 * Returns the SN to redirect the current page to if free turns are
+	 * available; otherwise, returns false.
+	 */
+	public function getSN($accountID, $gameID) {
+		if ($this->freeTurnsReady($accountID, $gameID)) {
+			// This page will prepare the account for the voting callback.
 			$container = create_container('vote_link.php');
 			$container['link_id'] = $this->linkID;
 			$container['can_get_turns'] = true;
-			$internalUrl = SmrSession::getNewHREF($container, true);
-			$externalUrl = $this->data['url_func']($baseUrl, $accountID, $gameID, $this->linkID);
-			return 'javascript:voteSite("' . $externalUrl . '","' . $internalUrl . '")';
+			return SmrSession::getNewHREF($container, true);
 		} else {
-			return $baseUrl;
+			return false;
 		}
 	}
 
