@@ -1,6 +1,7 @@
 <?php
 
 const NPC_GAME_ID = 1;
+const NPC_LOG_TO_DATABASE = true;  // insert debug messages into db
 
 const NPC_LOW_TURNS = 75;
 const NPC_LOW_NEWBIE_TURNS = 10;
