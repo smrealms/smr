@@ -1,9 +1,12 @@
 (function() {
 "use strict";
 
-	window.voteSite = function(url,snUrl) {
-		window.open(url);
-		window.location=snUrl;
+	window.voteSite = function(snUrl) {
+		// Must not redirect the current page until after the external vote
+		// site URL has been opened in a new tab. Use setTimeout to do this.
+		setTimeout(function() {
+			window.location = snUrl;
+		}, 0);
 	};
 
 	function doCalc(type, number, totalDest) {
