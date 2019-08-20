@@ -1049,8 +1049,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
 						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
-		// Player loses 25% experience
-		$expLossPercentage = .25;
+		// Player loses 15% experience
+		$expLossPercentage = .15;
 		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
 		$this->decreaseExperience($return['DeadExp']);
 
@@ -1085,8 +1085,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,dead_id,dead_alliance)
 						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
-		// Player loses between 20% and 28% experience
-		$expLossPercentage = .29 - .09 * $port->getLevel() / $port->getMaxLevel();
+		// Player loses between 15% and 20% experience
+		$expLossPercentage = .20 - .05 * ($port->getLevel() - 1) / ($port->getMaxLevel() - 1);
 		$return['DeadExp'] = max(0, floor($this->getExperience() * $expLossPercentage));
 		$this->decreaseExperience($return['DeadExp']);
 
@@ -1122,8 +1122,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
 						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($planetOwner->getAccountID()) . ',' . $this->db->escapeNumber($planetOwner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
-		// Player loses between 20% and 27% experience
-		$expLossPercentage = .27 - .07 * $planet->getLevel() / $planet->getMaxLevel();
+		// Player loses between 15% and 20% experience
+		$expLossPercentage = .20 - .05 * $planet->getLevel() / $planet->getMaxLevel();
 		$return['DeadExp'] = max(0, floor($this->getExperience() * $expLossPercentage));
 		$this->decreaseExperience($return['DeadExp']);
 
