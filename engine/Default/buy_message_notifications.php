@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 require_once(get_file_loc('message.functions.inc'));
 
 if (isset($var['Message'])) {

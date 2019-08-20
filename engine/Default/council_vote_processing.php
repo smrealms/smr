@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (!$player->isOnCouncil()) {
 	create_error('You have to be on the council in order to vote.');
 }

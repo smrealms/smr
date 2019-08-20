@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $steps = $_REQUEST['steps'];
 $subject = $_REQUEST['subject'];

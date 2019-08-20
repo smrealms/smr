@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function shared_channel_msg_money($player) {
 	// Insist the player is in an alliance, otherwise this reports data

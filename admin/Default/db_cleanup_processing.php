@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Get initial storage size
 $initialBytes = $db->getDbBytes();

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $alliance = $player->getAlliance();
 $template->assign('PageTopic', $alliance->getAllianceName(false, true));

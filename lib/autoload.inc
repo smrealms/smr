@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Returns the correct file directory based on `$overrideGameID`.

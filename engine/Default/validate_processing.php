@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Only skip validation check if we explicitly chose to validate later
 if ($_REQUEST['action'] != "I'll validate later.") {

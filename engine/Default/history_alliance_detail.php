@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 Menu::history_games($var['selected_index']);
 

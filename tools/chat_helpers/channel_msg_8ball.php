@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function shared_channel_msg_8ball() {
 	static $answers = array(

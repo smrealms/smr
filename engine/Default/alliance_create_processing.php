@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($player->getAllianceJoinable() > TIME) {
 	create_error('You cannot create an alliance for another ' . format_time($player->getAllianceJoinable() - TIME) . '.');

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if ($player->isDraftLeader()) {
 	require_once(ENGINE . 'Default/alliance_create_processing.php');
 } else {

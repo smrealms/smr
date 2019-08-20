@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (isset($var['process'])) {
 	if ($account->getTotalSmrCredits() < CREDITS_PER_TICKER) {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function create_error_offline($msg) {
 	header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $body = htmlentities(trim($_REQUEST['body']), ENT_COMPAT, 'utf-8');
 $topic = isset($_REQUEST['topic']) ? $_REQUEST['topic'] : '';
 $allEyesOnly = isset($_REQUEST['allEyesOnly']);

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Adds a new note into the database
 if (isset($_REQUEST['note'])) {

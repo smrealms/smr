@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 // Callback script for player voting on external sites
 
 if (isset($_POST['account']) && isset($_POST['game']) && isset($_POST['link'])) {

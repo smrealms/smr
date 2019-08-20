@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($account->getAccountID() == ACCOUNT_ID_NHL) {
 	create_error('This account is not allowed to cast a vote!');

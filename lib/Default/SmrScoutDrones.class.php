@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class SmrScoutDrones extends AbstractSmrCombatWeapon {
 	protected $numberOfSDs;

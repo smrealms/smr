@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // register game_id
 SmrSession::updateGame($var['game_id']);

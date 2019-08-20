@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (isset($var['errorMsg'])) {
 	$template->assign('ErrorMessage', $var['errorMsg']);

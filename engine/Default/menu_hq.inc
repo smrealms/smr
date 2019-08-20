@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // NOTE: These menu functions are separate because they are the only
 // ones that differ in other game modes.

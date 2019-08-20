@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($_FILES['smr_file']['error'] == UPLOAD_ERR_OK) {
 	$ini_str = file_get_contents($_FILES['smr_file']['tmp_name']);

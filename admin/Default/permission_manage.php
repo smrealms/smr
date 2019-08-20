@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $admin_id = SmrSession::getRequestVar('admin_id', false);
 

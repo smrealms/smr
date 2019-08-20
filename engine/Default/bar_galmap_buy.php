@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $timeUntilMaps = $player->getGame()->getStartTime() + TIME_MAP_BUY_WAIT - TIME;
 if ($timeUntilMaps > 0) {

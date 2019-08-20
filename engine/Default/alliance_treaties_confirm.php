@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $alliance_id_1 = $player->getAllianceID();
 $alliance_id_2 = $_REQUEST['proposedAlliance'];

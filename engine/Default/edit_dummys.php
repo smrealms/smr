@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $template->assign('PageTopic', 'Edit Dummys');
 
 //TODO add game type id

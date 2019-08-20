@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (count($_REQUEST['role']) > 0) {
 	foreach ($_REQUEST['role'] as $accountID => $roleID) {
 		$db->query('REPLACE INTO player_has_alliance_role

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $title = trim($_REQUEST['title']);
 $message = trim($_REQUEST['message']);

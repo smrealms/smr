@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 //first create the game
 $db->query('SELECT game_id FROM game WHERE game_name='.$db->escapeString($_REQUEST['game_name']).' LIMIT 1');

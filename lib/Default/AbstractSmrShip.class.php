@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 abstract class AbstractSmrShip {
 	protected static $CACHE_BASE_SHIPS = array();

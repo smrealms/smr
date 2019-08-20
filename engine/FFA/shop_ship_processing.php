@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $shipID = $var['ship_id'];
 
 $bannedShips = array(

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class SmrCombatDrones extends AbstractSmrCombatWeapon {
 	const MAX_CDS_RAND = 54;

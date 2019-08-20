@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class DummyShip extends AbstractSmrShip {
 	protected static $CACHED_DUMMY_SHIPS;

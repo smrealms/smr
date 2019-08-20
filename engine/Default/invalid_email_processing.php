@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($_POST['action'] == "Resend Validation Code") {
 	$account->changeEmail($account->getEmail());

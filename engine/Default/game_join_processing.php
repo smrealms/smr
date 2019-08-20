@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // trim input now
 $player_name = trim($_REQUEST['player_name']);

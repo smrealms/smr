@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $numGals = SmrSession::getRequestVar('num_gals', 12);
 

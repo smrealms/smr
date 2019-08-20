@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $chessGames = ChessGame::getOngoingPlayerGames($player);
 $template->assign('ChessGames', $chessGames);

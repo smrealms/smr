@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $game = SmrGame::getGame($var['game_id']);
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function check_for_registration(&$account, &$player, $fp, $nick, $channel, $callback, $validationMessages = true) {
 	//Force $validationMessages to always be boolean.

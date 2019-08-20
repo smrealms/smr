@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function checkPortTradeable($port, $player) {
 	if ($port->getSectorID() != $player->getSectorID())

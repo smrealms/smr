@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class DummyPlayer extends AbstractSmrPlayer {
 	public function __construct($gameID=0,$playerName='Dummy',$raceID=1,$experience=1000,$alignment=100,$allianceID=0,$shipTypeID=60) {

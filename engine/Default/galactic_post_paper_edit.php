@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $template->assign('PageTopic', 'Edit Paper');
 Menu::galactic_post();

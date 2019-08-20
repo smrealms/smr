@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // If on a planet, forward to planet_main.php
 if ($player->isLandedOnPlanet()) {

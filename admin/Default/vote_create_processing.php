@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $question = trim($_REQUEST['question']);
 if ($_REQUEST['action'] == 'Preview Vote') {
 	$container = create_container('skeleton.php', 'vote_create.php');

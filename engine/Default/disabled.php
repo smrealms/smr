@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $disabled = $account->isDisabled();
 if ($disabled === false) {

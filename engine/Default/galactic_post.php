@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!$player->isGPEditor()) {
 	throw new Exception('Only the GP Editor is allowed to view this page!');

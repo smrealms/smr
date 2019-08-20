@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function modifyRelations($race_id_1) {
 	global $player, $db;

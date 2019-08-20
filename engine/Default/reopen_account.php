@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // This page should only be accessed by players whose accounts
 // have been closed at their own request.

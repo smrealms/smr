@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $template->assign('ViewAllLocationsLink', SmrSession::getNewHREF(create_container('skeleton.php', 'location_edit.php')));
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $game_id = $var['view_game_id'];
 $template->assign('PageTopic', 'Extended Stats : ' . $var['game_name']);

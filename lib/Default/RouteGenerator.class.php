@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 const ROUTE_GEN_USE_RELATIONS_FACTOR = false;
 

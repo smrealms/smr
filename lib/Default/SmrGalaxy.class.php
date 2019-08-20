@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 class SmrGalaxy {
 	protected static $CACHE_GALAXIES = array();
 	protected static $CACHE_GAME_GALAXIES = array();

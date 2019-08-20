@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class SmrForce {
 	protected static $CACHE_FORCES = array();

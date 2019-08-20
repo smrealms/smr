@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function get_seed_message($player) {
 	// get a list of seedlist sectors that the player hasn't seeded

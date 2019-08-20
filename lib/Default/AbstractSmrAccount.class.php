@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Exception thrown when an account cannot be found in the database
 class AccountNotFoundException extends Exception {}

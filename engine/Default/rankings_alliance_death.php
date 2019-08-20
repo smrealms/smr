@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $template->assign('PageTopic', 'Alliance Death Rankings');
 Menu::rankings(1, 3);
 

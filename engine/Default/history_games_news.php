@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $template->assign('PageTopic', 'Game News : ' . $var['game_name']);
 Menu::history_games(3);

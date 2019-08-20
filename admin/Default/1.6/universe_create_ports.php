@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!isset($var['gal_on'])) {
 	throw new Exception('Gal_on not found!');

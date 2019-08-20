@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if ($var['action'] == 'Enable') {
 	if ($player->getTurns() < TURNS_TO_CLOAK) {
 		create_error('You do not have enough turns to cloak.');

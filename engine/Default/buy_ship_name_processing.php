@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $action = $_REQUEST['action'];
 $name = isset($var['ShipName']) ? $var['ShipName'] : $_REQUEST['ship_name'];
 

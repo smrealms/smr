@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $template->assign('PageTopic', 'Play Game');
 
 if (isset($var['errorMsg'])) {

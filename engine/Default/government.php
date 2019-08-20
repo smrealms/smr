@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // check if our alignment is high enough
 if ($player->getAlignment() <= ALIGNMENT_EVIL) {

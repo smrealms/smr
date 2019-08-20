@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 //first check if there is a bar here
 if (!$sector->hasBar()) {

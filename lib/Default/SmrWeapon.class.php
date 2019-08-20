@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class SmrWeapon extends AbstractSmrCombatWeapon {
 	protected static $CACHE_WEAPONS = array();

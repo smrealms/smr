@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $receiver = $_REQUEST['receiver'];
 $subject = $_REQUEST['subject'];

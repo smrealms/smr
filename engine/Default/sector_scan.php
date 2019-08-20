@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!$sector->isLinked($var['target_sector']) && $sector->getSectorID() != $var['target_sector']) {
 	create_error('You cannot scan a sector you are not linked to.');

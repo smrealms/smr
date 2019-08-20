@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function error_on_page($message) {
 	$message = '<span class="bold red">ERROR:</span> ' . $message;

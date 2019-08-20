@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $accountIDs = $_REQUEST['account_id'];
 
 if (empty($accountIDs)) {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!empty($_POST['game_id'])) {
 	// Enable the requested game

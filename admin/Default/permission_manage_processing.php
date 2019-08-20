@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($_REQUEST['action'] == 'Change') {
 	// Check to see if admin previously was displaying Admin tag

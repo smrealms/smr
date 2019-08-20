@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $template->assign('PageTopic', 'Negotiate Price');
 require_once(LIB . 'Default/shop_goods.inc');
 // creates needed objects

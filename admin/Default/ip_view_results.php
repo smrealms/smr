@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $variable = SmrSession::getRequestVar('variable');
 $type = SmrSession::getRequestVar('type');
 

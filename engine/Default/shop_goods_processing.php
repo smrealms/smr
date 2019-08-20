@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 require_once(LIB . 'Default/shop_goods.inc');
 
 // creates needed objects

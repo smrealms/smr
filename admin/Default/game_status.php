@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $processingHREF = SmrSession::getNewHREF(create_container('game_status_processing.php'));
 $template->assign('ProcessingHREF', $processingHREF);

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!isset($var['race_id'])) {
 	SmrSession::updateVar('race_id', $player->getRaceID());

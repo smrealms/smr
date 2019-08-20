@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Get a list of all available planet types
 $allowedTypes = array();

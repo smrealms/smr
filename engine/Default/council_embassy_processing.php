@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!$player->isPresident()) {
 	create_error('Only the president can view the embassy.');

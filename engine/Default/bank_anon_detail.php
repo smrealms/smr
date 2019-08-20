@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $account_num = SmrSession::getRequestVar('account_num');
 if (!is_numeric($account_num)) {

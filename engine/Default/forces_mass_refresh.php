@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Note: getSectorForces is cached and also called for sector display,
 // so it saves time to call it here instead of a new query.

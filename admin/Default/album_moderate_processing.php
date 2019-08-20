@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // get account_id from session
 $account_id = $var['account_id'];

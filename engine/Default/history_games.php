@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 //topic
 if (!isset($var['game_name']) || !isset($var['view_game_id'])) {

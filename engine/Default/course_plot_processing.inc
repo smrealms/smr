@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 // NOTE: This file is included by "Conventional" and "Plot To Nearest" pages.
 
 // Throw start sector away (it's useless for the route),

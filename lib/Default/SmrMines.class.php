@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class SmrMines extends AbstractSmrCombatWeapon {
 	const TOTAL_ENEMY_MINES_MODIFIER = 25;

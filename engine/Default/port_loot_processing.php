@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 // get good name, id, ...
 $good_id = $var['GoodID'];
 $good_name = Globals::getGoodName($good_id);

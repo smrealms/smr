@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $results = unserialize($var['results']);
 $template->assign('FullForceCombatResults', $results);

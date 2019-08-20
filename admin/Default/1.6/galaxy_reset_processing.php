@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 

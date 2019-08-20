@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 require_once(TOOLS . 'chat_helpers/channel_msg_seed.php');
 

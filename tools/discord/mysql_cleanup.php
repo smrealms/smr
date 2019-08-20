@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Closes the mysql connection after a command has executed.
 // This is necessary to prevent a blocking mysql timeout error.

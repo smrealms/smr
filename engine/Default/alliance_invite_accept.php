@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Remove any expired invitations
 $db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(TIME));

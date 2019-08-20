@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 //only if we are coming from the bank screen do we unexempt selection first
 if (isset($var['minVal'])) {

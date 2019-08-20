@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // NOTE: this is only for history database games
 

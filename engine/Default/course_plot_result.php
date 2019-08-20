@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $path = $var['Path'];
 $fullPath = $var['FullPath'];
