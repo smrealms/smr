@@ -29,6 +29,7 @@ function get_game_dir() {
  * Try to avoid calling this before `$overrideGameID` is set!
  */
 function get_class_loc($className) {
+	$className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
 	$classFile = LIB . get_game_dir() . $className . '.class.php';
 	if (!is_file($classFile)) {
 		// Fallback to Default directory

@@ -12,7 +12,7 @@ try {
 		// immediately forwards to the social login URL after it is generated.
 
 		require_once('config.inc');
-		header('Location: ' . SocialLogin::getLoginUrl($type));
+		header('Location: ' . SocialLogin::get($type)->getLoginUrl());
 		exit;
 	}
 
