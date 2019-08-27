@@ -42,7 +42,20 @@ class SocialLogin {
 		return URL . '/login_processing.php?loginType=' . $loginType;
 	}
 
-	public static function getFacebookLoginUrl() {
+	/**
+	 * Returns the URL to authenticate with the social platform.
+	 */
+	public static function getLoginUrl($loginType) {
+		if ($loginType == self::FACEBOOK) {
+			return SocialLogin::getFacebookLoginUrl();
+		} elseif ($loginType == self::TWITTER) {
+			return SocialLogin::getTwitterLoginUrl();
+		} else {
+			throw new Exception('Unknown social login type: ' . $loginType);
+		}
+	}
+
+	private static function getFacebookLoginUrl() {
 		if (empty(FACEBOOK_APP_ID)) {
 			// No facebook app specified. Continuing would throw an exception.
 			return;
@@ -52,7 +65,7 @@ class SocialLogin {
 		return $helper->GetLoginUrl(self::getRedirectUrl(self::FACEBOOK), $permissions);
 	}
 
-	public static function getTwitterLoginUrl() {
+	private static function getTwitterLoginUrl() {
 		if (empty(TWITTER_CONSUMER_KEY)) {
 			// No twitter app specified. Continuing would throw an exception.
 			return;

@@ -120,10 +120,10 @@
 						<span style="font-size: 14px;">Or register &amp; login with:</span>
 						<br />
 						<span>
-							<a class="btn-social" href="login_social_processing.php?type=facebook">
+							<a class="btn-social" href="login_social_processing.php?type=<?php echo SocialLogin::FACEBOOK; ?>">
 								<img alt="Facebook" src="images/login/facebook.svg" width="32" height="32">
 							</a>
-							<a class="btn-social" href="login_social_processing.php?type=twitter">
+							<a class="btn-social" href="login_social_processing.php?type=<?php echo SocialLogin::TWITTER; ?>">
 								<img alt="Twitter" src="images/login/twitter.svg" width="32" height="32">
 							</a>
 						</span>
