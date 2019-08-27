@@ -28,16 +28,7 @@ try {
 					session_start();
 				}
 				$_SESSION['socialLogin'] = $socialLogin;
-				$template = new Template();
-				$template->assign('SocialLogin', $socialLogin);
-				// Pre-populate the login field if an account with this email exists.
-				// (Also disable creating a new account because they would just get
-				// an "Email already registered" error anyway.)
-				$account = SmrAccount::getAccountByEmail($socialLogin->getEmail());
-				if (!is_null($account)) {
-					$template->assign('MatchingLogin', $account->getLogin());
-				}
-				$template->display('socialRegister.inc');
+				header('Location: /login_social_create.php');
 				exit;
 			}
 		}
