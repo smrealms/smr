@@ -30,12 +30,11 @@ function get_game_dir() {
  */
 function get_class_loc($className) {
 	$classFile = LIB . get_game_dir() . $className . '.class.inc';
-	if (is_file($classFile)) {
-		require($classFile);
-	} else {
+	if (!is_file($classFile)) {
 		// Fallback to Default directory
-		require(LIB . 'Default/' . $className . '.class.inc');
+		$classFile = LIB . 'Default/' . $className . '.class.inc';
 	}
+	require($classFile);
 }
 
 /**
