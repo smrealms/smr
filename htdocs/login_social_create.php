@@ -24,7 +24,8 @@ try {
 		$template->assign('MatchingLogin', $account->getLogin());
 	}
 
-	$template->display('socialRegister.inc');
+	$template->assign('Body', 'login/login_social_create.php');
+	$template->display('login/skeleton.php');
 
 } catch (Throwable $e) {
 	handleException($e);
