@@ -49,12 +49,12 @@
 
 		<td>
 			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
-				<input required type="number" name="connect" placeholder="Connectivity %" class="center" /><br />
+				<input required type="number" name="connect" placeholder="Connectivity %" class="center" style="width:140px" /><br />
 				<input type="submit" name="submit" value="Redo Connections">
 			</form>
 			<br />
-			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
-				<input required type="number" size="5" name="sector_edit" placeholder="Sector ID" class="center" /><br />
+			<form method="POST" action="<?php echo $ModifySectorHREF; ?>">
+				<input required type="number" min="1" max="<?php echo $LastSector; ?>" name="sector_edit" placeholder="Sector ID" class="center" style="width:140px" /><br />
 				<input type="submit" value="Modify Sector" name="submit">
 			</form>
 		</td>

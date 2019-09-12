@@ -1,7 +1,7 @@
 <?php
 
-$editSector = SmrSector::getSector($var['game_id'], $var['sector_id']);
-$template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID());
+$editSector = SmrSector::getSector($var['game_id'], $_POST['sector_edit']);
+$template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxyName() . ')');
 $template->assign('EditSector', $editSector);
 
 $container = $var;

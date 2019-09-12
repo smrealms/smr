@@ -33,17 +33,6 @@ elseif ($submit == 'Toggle Link') {
 	$linkSector->toggleLink($var['dir']);
 	SmrSector::saveSectors();
 }
-elseif ($submit == 'Modify Sector') {
-	if (!empty($_POST['sector_edit'])) {
-		$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
-		if ($galaxy->contains($_POST['sector_edit'])) {
-			$var['sector_id'] = $_POST['sector_edit'];
-			$var['body'] = '1.6/universe_create_sector_details.php';
-		}
-		else
-			$var['message'] = '<span class="red">Error</span> : That sector does not exist in this galaxy.';
-	}
-}
 elseif ($submit == 'Create Locations') {
 	$galSectors = SmrSector::getGalaxySectors($var['game_id'], $var['gal_on']);
 	foreach ($galSectors as $galSector) {

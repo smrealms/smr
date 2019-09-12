@@ -30,6 +30,9 @@ $template->assign('Galaxy', $galaxy);
 $template->assign('Galaxies', $galaxies);
 $template->assign('MapSectors', $mapSectors);
 
+$lastSector = end($galaxies)->getEndSector();
+$template->assign('LastSector', $lastSector);
+
 if (isset($var['message'])) {
 	$template->assign('Message', $var['message']);
 	SmrSession::updateVar('message', null); // Only show message once
@@ -66,6 +69,9 @@ $template->assign('ModifyPortsHREF', SmrSession::getNewHREF($container));
 
 $container['body'] = '1.6/universe_create_warps.php';
 $template->assign('ModifyWarpsHREF', SmrSession::getNewHREF($container));
+
+$container['body'] = '1.6/universe_create_sector_details.php';
+$template->assign('ModifySectorHREF', SmrSession::getNewHREF($container));
 
 $template->assign('SMRFileHREF', Globals::getSmrFileCreateHREF($var['game_id']));
 
