@@ -126,10 +126,11 @@ elseif ($submit == 'Create Planets') {
 	$var['message'] = '<span class="green">Success</span> : Succesfully added planets.';
 }
 elseif ($submit == 'Create Ports') {
-	$totalPorts = 0;
+	$numLevelPorts = [];
 	for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) {
-		$totalPorts += $_REQUEST['port' . $i];
+		$numLevelPorts[$i] = $_REQUEST['port' . $i] ?? 0;
 	}
+	$totalPorts = array_sum($numLevelPorts);
 
 	$totalRaceDist = 0;
 	$numRacePorts = array();
@@ -156,22 +157,24 @@ elseif ($submit == 'Create Ports') {
 			$assignedPorts++;
 		}
 		//iterate through levels 1-9 port
-		for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) {
+		foreach ($numLevelPorts as $portLevel => $numLevel) {
 			//iterate once for each port of this level
-			for ($j = 0; $j < $_REQUEST['port' . $i]; $j++) {
+			for ($j = 0; $j < $numLevel; $j++) {
 				//get a sector for this port
 				$galSector = $galSectors[array_rand($galSectors)];
 				//check if this sector is valid, if not then get a new one
-				while ($galSector->hasPort() || $galSector->offersFederalProtection()) $galSector = $galSectors[array_rand($galSectors)];
+				while ($galSector->hasPort() || $galSector->offersFederalProtection()) {
+					$galSector = $galSectors[array_rand($galSectors)];
+				}
 
 				$raceID = array_rand($numRacePorts);
 				$numRacePorts[$raceID]--;
-				if ($numRacePorts[$raceID] == 0)
+				if ($numRacePorts[$raceID] == 0) {
 					unset($numRacePorts[$raceID]);
-					
+				}
 				$port = $galSector->createPort();
 				$port->setRaceID($raceID);
-				$port->upgradeToLevel($i);
+				$port->upgradeToLevel($portLevel);
 				$port->setCreditsToDefault();
 			}
 		}
