@@ -159,7 +159,7 @@ services:
             - ./config:/smr/config
 
     traefik:
-        image: traefik:latest
+        image: traefik:1.7
         networks:
             - frontend
         volumes:
