@@ -35,25 +35,11 @@ $game->setGameSpeed($_REQUEST['game_speed']);
 $game->setIgnoreStats($_REQUEST['ignore_stats'] == 'Yes');
 $game->setStartingCredits($_REQUEST['starting_credits']);
 $game->setCreditsNeeded($_REQUEST['creds_needed']);
+$game->setStartingRelations($_REQUEST['relations']);
 
 // Start game disabled by default
 $game->setEnabled(false);
 $game->save();
-
-//insert race relations
-foreach (Globals::getRaces() as $race) {
-	foreach (Globals::getRaces() as $race2) {
-		if ($race['Race ID'] == $race2['Race ID']) {
-			$amount = MAX_GLOBAL_RELATIONS;
-		} elseif ($race['Race ID'] == RACE_NEUTRAL || $race2['Race ID'] == RACE_NEUTRAL) {
-			$amount = 0; //0 relats with neutral
-		} else {
-			$amount = MIN_GLOBAL_RELATIONS;
-		}
-		$db->query('REPLACE INTO race_has_relation (game_id, race_id_1, race_id_2, relation)
-						VALUES (' . $db->escapeNumber($game->getGameID()) . ',' . $db->escapeNumber($race['Race ID']) . ',' . $db->escapeNumber($race2['Race ID']) . ',' . $db->escapeNumber($amount) . ')');
-		}
-	}
 
 createNHA($game->getGameID()); //do the alliances/message stuff
 

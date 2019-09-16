@@ -69,6 +69,13 @@
 		</td>
 	</tr>
 	<tr>
+		<td class="right">Starting Relations</td>
+		<td>
+			<input required type="number" name="relations" min="<?php echo MIN_GLOBAL_RELATIONS; ?>" max="<?php echo MAX_GLOBAL_RELATIONS; ?>" class="InputFields" value="<?php echo $Game['relations']; ?>">
+			Only updated if game hasn't started yet
+		</td>
+	</tr>
+	<tr>
 		<td class="center" colspan="2"><input type="submit" value="<?php echo $SubmitValue; ?>" name="submit"></td>
 	</tr>
 	</table>

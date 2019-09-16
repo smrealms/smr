@@ -22,6 +22,9 @@ $game->setGameSpeed($_REQUEST['game_speed']);
 $game->setIgnoreStats($_REQUEST['ignore_stats'] == 'Yes');
 $game->setStartingCredits($_REQUEST['starting_credits']);
 $game->setCreditsNeeded($_REQUEST['creds_needed']);
+if (!$game->hasStarted()) {
+	$game->setStartingRelations($_REQUEST['relations']);
+}
 $game->save();
 
 $container = create_container('skeleton.php', '1.6/universe_create_sectors.php');

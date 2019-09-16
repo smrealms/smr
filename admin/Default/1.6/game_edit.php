@@ -4,6 +4,9 @@ $template->assign('PageTopic', 'Edit Game Details');
 
 $gameID = SmrSession::getRequestVar('game_id');
 
+// Use Alskant-Creonti as a proxy for the starting political relations
+$relations = Globals::getRaceRelations($gameID, RACE_ALSKANT)[RACE_CREONTI];
+
 $game = SmrGame::getGame($gameID);
 $gameArray = [
 	'name' => $game->getName(),
@@ -21,6 +24,7 @@ $gameArray = [
 	'allianceMaxVets' => $game->getAllianceMaxVets(),
 	'startCredits' => $game->getStartingCredits(),
 	'ignoreStats' => $game->isIgnoreStats(),
+	'relations' => $relations,
 ];
 $template->assign('Game', $gameArray);
 
