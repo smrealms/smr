@@ -26,6 +26,7 @@ $defaultGame = [
 	'allianceMaxVets' => 15,
 	'startCredits' => 100000,
 	'ignoreStats' => false,
+	'relations' => MIN_GLOBAL_RELATIONS,
 ];
 $template->assign('Game', $defaultGame);
 $template->assign('SubmitValue', 'Create Game');
