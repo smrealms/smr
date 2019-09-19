@@ -80,13 +80,9 @@ try {
 	$db = new SmrMySqlDatabase();
 	debug('Script started');
 
-	define('SCRIPT_ID', $db->getInsertID());
-	$db->query('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
-
 	$NPC_LOGINS_USED = array('');
 
 	// Make sure NPC's have been set up in the database
-	$db = new SmrMySqlDatabase();
 	$db->query('SELECT 1 FROM npc_logins LIMIT 1');
 	if (!$db->nextRecord()) {
 		debug('No NPCs have been created yet!');
@@ -341,6 +337,12 @@ function debug($message, $debugObject = null) {
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL.var_export($debugObject, true) : '') . EOL;
 	if (NPC_LOG_TO_DATABASE) {
 		$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . (is_object($player) ? $player->getAccountID() : 0) . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
+
+		// On the first call to debug, we need to update the script_id retroactively
+		if (!defined('SCRIPT_ID')) {
+			define('SCRIPT_ID', $db->getInsertID());
+			$db->query('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
+		}
 	}
 }
 
