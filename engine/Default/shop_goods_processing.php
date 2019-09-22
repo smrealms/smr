@@ -108,6 +108,10 @@ if ($transaction == 'Steal' ||
 		$player->decreaseHOF($bargain_price, array('Trade', 'Money', 'Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Buying'), HOF_PUBLIC);
 		$port->buyGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
+		// change relation for non neutral ports (Alskants get to treat neutrals as an alskant port);
+		if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
+			$player->increaseRelationsByTrade($amount, $port->getRaceID());
+		}
 	}
 	elseif ($transaction == 'Sell') {
 		$msg_transaction = 'sold';
@@ -118,6 +122,10 @@ if ($transaction == 'Steal' ||
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Selling'), HOF_PUBLIC);
 		$port->sellGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
+		// change relation for non neutral ports (Alskants get to treat neutrals as an alskant port);
+		if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
+			$player->increaseRelationsByTrade($amount, $port->getRaceID());
+		}
 	}
 	elseif ($transaction == 'Steal') {
 		$msg_transaction = 'stolen';
@@ -134,11 +142,6 @@ if ($transaction == 'Steal' ||
 	$account->log(LOG_TYPE_TRADING, $transaction . 's ' . $amount . ' ' . $good_name . ' for ' . $bargain_price . ' credits and ' . $gained_exp . ' experience', $player->getSectorID());
 
 	$player->increaseExperience($gained_exp);
-
-	// change relation for non neutral ports (Alskants get to treat neutrals as an alskant port);
-	if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
-		$player->increaseRelationsByTrade($amount, $port->getRaceID());
-	}
 
 	//will use these variables in current sector and port after successful trade
 	$tradeMessage = 'You have just ' . $msg_transaction . ' <span class="yellow">' . $amount . '</span> ' . pluralise('unit', $amount) . ' of <span class="yellow">' . $good_name . '</span>';
