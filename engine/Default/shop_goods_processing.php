@@ -108,10 +108,7 @@ if ($transaction == 'Steal' ||
 		$player->decreaseHOF($bargain_price, array('Trade', 'Money', 'Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Buying'), HOF_PUBLIC);
 		$port->buyGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
-		// change relation for non neutral ports (Alskants get to treat neutrals as an alskant port);
-		if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
-			$player->increaseRelationsByTrade($amount, $port->getRaceID());
-		}
+		$player->increaseRelationsByTrade($amount, $port->getRaceID());
 	}
 	elseif ($transaction == 'Sell') {
 		$msg_transaction = 'sold';
@@ -122,10 +119,7 @@ if ($transaction == 'Steal' ||
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Selling'), HOF_PUBLIC);
 		$port->sellGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
-		// change relation for non neutral ports (Alskants get to treat neutrals as an alskant port);
-		if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
-			$player->increaseRelationsByTrade($amount, $port->getRaceID());
-		}
+		$player->increaseRelationsByTrade($amount, $port->getRaceID());
 	}
 	elseif ($transaction == 'Steal') {
 		$msg_transaction = 'stolen';
