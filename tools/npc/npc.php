@@ -80,8 +80,6 @@ try {
 	$db = new SmrMySqlDatabase();
 	debug('Script started');
 
-	$NPC_LOGINS_USED = array('');
-
 	// Make sure NPC's have been set up in the database
 	$db->query('SELECT 1 FROM npc_logins LIMIT 1');
 	if (!$db->nextRecord()) {
@@ -104,7 +102,7 @@ catch (Throwable $e) {
 
 
 function NPCStuff() {
-	global $actions, $var, $previousContainer, $NPC_LOGIN, $db;
+	global $actions, $var, $previousContainer, $db;
 
 	$underAttack = false;
 	$actions = -1;
@@ -119,9 +117,6 @@ function NPCStuff() {
 			$TRADE_ROUTE =& $GLOBALS['TRADE_ROUTE'];
 			debug('Action #' . $actions);
 
-			SmrSession::updateGame(NPC_GAME_ID);
-
-			debug('Getting player for account id: ' . SmrSession::getAccountID());
 			//We have to reload player on each loop
 			$player = SmrPlayer::getPlayer(SmrSession::getAccountID(), SmrSession::getGameID(), true);
 			// Sanity check to be certain we actually have an NPC
@@ -370,30 +365,30 @@ function sleepNPC() {
 }
 
 // Releases an NPC when it is done working
-function releaseNPC($login) {
-	if (empty($login)) {
-		debug('releaseNPC: no login specified to release');
+function releaseNPC() {
+	if (!SmrSession::hasAccount()) {
+		debug('releaseNPC: no NPC to release');
+		return;
+	}
+	$login = SmrSession::getAccount()->getLogin();
+	$db = new SmrMySqlDatabase();
+	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(false) . ' WHERE login=' . $db->escapeString($login));
+	if ($db->getChangedRows() > 0) {
+		debug('Released NPC: ' . $login);
 	} else {
-		$db = new SmrMySqlDatabase();
-		$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(false) . ' WHERE login=' . $db->escapeString($login));
-		if ($db->getChangedRows() > 0) {
-			debug('Released NPC: ' . $login);
-		} else {
-			debug('Failed to release NPC: ' . $login);
-		}
+		debug('Failed to release NPC: ' . $login);
 	}
 }
 
 function exitNPC() {
-	global $NPC_LOGIN;
 	debug('Exiting NPC script.');
-	releaseNPC($NPC_LOGIN);
+	releaseNPC();
 	release_lock();
 	exit;
 }
 
 function changeNPCLogin() {
-	global $NPC_LOGIN, $actions, $NPC_LOGINS_USED, $previousContainer;
+	global $actions, $previousContainer;
 	if ($actions > 0) {
 		debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage());
 		exitNPC();
@@ -403,31 +398,41 @@ function changeNPCLogin() {
 	$GLOBALS['TRADE_ROUTE'] = null;
 
 	// Release previous NPC, if any
-	releaseNPC($NPC_LOGIN);
-	$NPC_LOGIN = null;
+	releaseNPC();
 
 	// We chose a new NPC, we don't care what we were doing beforehand.
 	$previousContainer = null;
 
-	// Lacking a convenient way to get up-to-date turns, choose the NPC
-	// that has taken an action least recently.
+	// Lacking a convenient way to get up-to-date turns, order NPCs by how
+	// recently they have taken an action.
 	debug('Choosing new NPC');
+	static $availableNpcs = null;
 	$db = new SmrMySqlDatabase();
-	$db->query('SELECT login FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) WHERE game_id=' . $db->escapeNumber(NPC_GAME_ID) . ' AND active=\'TRUE\' AND working=\'FALSE\' AND login NOT IN (' . $db->escapeArray($NPC_LOGINS_USED) . ') ORDER BY last_turn_update ASC LIMIT 1');
-	if (!$db->nextRecord()) {
+	if (is_null($availableNpcs)) {
+		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) WHERE active=\'TRUE\' AND working=\'FALSE\' ORDER BY last_turn_update ASC');
+		while ($db->nextRecord()) {
+			$availableNpcs[] = [
+				'account_id' => $db->getInt('account_id'),
+				'game_id' => $db->getInt('game_id'),
+			];
+		}
+	}
+
+	if (empty($availableNpcs)) {
 		debug('No free NPCs');
 		exitNPC();
 	}
-	$NPC_LOGIN = $db->getField('login');
-	debug('Chosen NPC: ' . $NPC_LOGIN);
-	$NPC_LOGINS_USED[] = $NPC_LOGIN;
 
-	$account = SmrAccount::getAccountByName($NPC_LOGIN);
-	if (!is_null($account)) {
-		SmrSession::setAccount($account);
-	}
+	// Pop an NPC off the top of the stack to activate
+	$npc = array_shift($availableNpcs);
 
-	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($NPC_LOGIN));
+	// Update session info for this chosen NPC
+	$account = SmrAccount::getAccount($npc['account_id']);
+	SmrSession::setAccount($account);
+	SmrSession::updateGame($npc['game_id']);
+
+	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($account->getLogin()));
+	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . SmrSession::getGameID() . ')');
 
 	throw new ForwardException;
 }
