@@ -12,6 +12,7 @@ class ChessGame {
 	private $db;
 
 	private $chessGameID;
+	private $gameID;
 	private $startDate;
 	private $endDate;
 	private $gameType;
@@ -75,6 +76,7 @@ class ChessGame {
 						WHERE chess_game_id=' . $this->db->escapeNumber($chessGameID) . ' LIMIT 1;');
 		if($this->db->nextRecord()) {
 			$this->chessGameID = $chessGameID;
+			$this->gameID = $this->db->getInt('game_id');
 			$this->startDate = $this->db->getInt('start_time');
 			$this->endDate = $this->db->getInt('end_time');
 			$this->whiteID = $this->db->getInt('white_id');
@@ -295,46 +297,46 @@ class ChessGame {
 		return $board;
 	}
 
-	public static function getStandardGame($gameID, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) {
+	public static function getStandardGame($chessGameID, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) {
 		$white = $whitePlayer->getAccountID();
 		$black = $blackPlayer->getAccountID();
 		return array
 			(
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::ROOK, 0, 0),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::KNIGHT, 1, 0),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::BISHOP, 2, 0),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::QUEEN, 3, 0),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::KING, 4, 0),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::BISHOP, 5, 0),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::KNIGHT, 6, 0),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::ROOK, 7, 0),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::ROOK, 0, 0),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::KNIGHT, 1, 0),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::BISHOP, 2, 0),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::QUEEN, 3, 0),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::KING, 4, 0),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::BISHOP, 5, 0),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::KNIGHT, 6, 0),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::ROOK, 7, 0),
 
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 0, 1),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 1, 1),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 2, 1),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 3, 1),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 4, 1),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 5, 1),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 6, 1),
-				new ChessPiece($gameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 7, 1),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 0, 1),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 1, 1),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 2, 1),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 3, 1),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 4, 1),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 5, 1),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 6, 1),
+				new ChessPiece($chessGameID, $black, self::PLAYER_BLACK, ChessPiece::PAWN, 7, 1),
 
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 0, 6),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 1, 6),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 2, 6),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 3, 6),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 4, 6),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 5, 6),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 6, 6),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 7, 6),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 0, 6),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 1, 6),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 2, 6),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 3, 6),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 4, 6),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 5, 6),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 6, 6),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::PAWN, 7, 6),
 
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::ROOK, 0, 7),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::KNIGHT, 1, 7),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::BISHOP, 2, 7),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::QUEEN, 3, 7),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::KING, 4, 7),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::BISHOP, 5, 7),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::KNIGHT, 6, 7),
-				new ChessPiece($gameID, $white, self::PLAYER_WHITE, ChessPiece::ROOK, 7, 7),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::ROOK, 0, 7),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::KNIGHT, 1, 7),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::BISHOP, 2, 7),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::QUEEN, 3, 7),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::KING, 4, 7),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::BISHOP, 5, 7),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::KNIGHT, 6, 7),
+				new ChessPiece($chessGameID, $white, self::PLAYER_WHITE, ChessPiece::ROOK, 7, 7),
 			);
 	}
 
@@ -674,7 +676,7 @@ class ChessGame {
 				$this->db->query('INSERT INTO chess_game_moves
 								(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken,castling,en_passant,promote_piece_id)
 								VALUES
-								(' . $this->db->escapeNumber($p->gameID) . ',' . $this->db->escapeNumber($pieceID) . ',' . $this->db->escapeNumber($x) . ',' . $this->db->escapeNumber($y) . ',' . $this->db->escapeNumber($toX) . ',' . $this->db->escapeNumber($toY) . ',' . $this->db->escapeString($checking, true, true) . ',' . ($moveInfo['PieceTaken'] == null ? 'NULL' : $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID)) . ',' . $this->db->escapeString($moveInfo['Castling']['Type'], true, true) . ',' . $this->db->escapeBoolean($moveInfo['EnPassant']) . ',' . ($moveInfo['PawnPromotion'] == false ? 'NULL' : $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID'])) . ');');
+								(' . $this->db->escapeNumber($p->chessGameID) . ',' . $this->db->escapeNumber($pieceID) . ',' . $this->db->escapeNumber($x) . ',' . $this->db->escapeNumber($y) . ',' . $this->db->escapeNumber($toX) . ',' . $this->db->escapeNumber($toY) . ',' . $this->db->escapeString($checking, true, true) . ',' . ($moveInfo['PieceTaken'] == null ? 'NULL' : $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID)) . ',' . $this->db->escapeString($moveInfo['Castling']['Type'], true, true) . ',' . $this->db->escapeBoolean($moveInfo['EnPassant']) . ',' . ($moveInfo['PawnPromotion'] == false ? 'NULL' : $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID'])) . ');');
 
 
 				$currentPlayer->increaseHOF(1, array($chessType,'Moves','Total Taken'), HOF_PUBLIC);
@@ -726,8 +728,7 @@ class ChessGame {
 	}
 
 	public function getGameID() {
-		return SmrSession::getGameID();
-//		return $this->gameID;
+		return $this->gameID;
 	}
 
 	public function getWhitePlayer() {
