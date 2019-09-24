@@ -8,7 +8,7 @@ class ChessPiece {
 	const KNIGHT = 5;
 	const PAWN = 6;
 
-	public $gameID;
+	public $chessGameID;
 	public $accountID;
 	public $colour;
 	public $pieceID;
@@ -16,8 +16,8 @@ class ChessPiece {
 	private $x;
 	private $y;
 	
-	public function __construct($gameID, $accountID, $colour, $pieceID, $x, $y, $pieceNo = -1) {
-		$this->gameID = $gameID;
+	public function __construct($chessGameID, $accountID, $colour, $pieceID, $x, $y, $pieceNo = -1) {
+		$this->chessGameID = $chessGameID;
 		$this->accountID = $accountID;
 		$this->colour = $colour;
 		$this->pieceID = $pieceID;
