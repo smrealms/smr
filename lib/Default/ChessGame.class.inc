@@ -12,6 +12,7 @@ class ChessGame {
 	private $db;
 
 	private $chessGameID;
+	private $gameID;
 	private $startDate;
 	private $endDate;
 	private $gameType;
@@ -75,6 +76,7 @@ class ChessGame {
 						WHERE chess_game_id=' . $this->db->escapeNumber($chessGameID) . ' LIMIT 1;');
 		if($this->db->nextRecord()) {
 			$this->chessGameID = $chessGameID;
+			$this->gameID = $this->db->getInt('game_id');
 			$this->startDate = $this->db->getInt('start_time');
 			$this->endDate = $this->db->getInt('end_time');
 			$this->whiteID = $this->db->getInt('white_id');
@@ -726,8 +728,7 @@ class ChessGame {
 	}
 
 	public function getGameID() {
-		return SmrSession::getGameID();
-//		return $this->gameID;
+		return $this->gameID;
 	}
 
 	public function getWhitePlayer() {
