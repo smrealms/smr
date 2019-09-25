@@ -1334,11 +1334,9 @@ class AbstractSmrPort {
 		$killer->increaseCurrentBountyAmount('HQ', $return['KillerBounty']);
 		$killer->increaseHOF($return['KillerBounty'], array('Combat', 'Port', 'Bounties', 'Gained'), HOF_PUBLIC);
 		
-		if ($this->getRaceID() != RACE_NEUTRAL) {
-			$return['KillerRelations'] = 45;
-			$killer->decreaseRelations($return['KillerRelations'], $this->getRaceID());
-			$killer->increaseHOF($return['KillerRelations'], array('Combat', 'Port', 'Relation', 'Loss'), HOF_PUBLIC);
-		}
+		$return['KillerRelations'] = 45;
+		$killer->decreaseRelations($return['KillerRelations'], $this->getRaceID());
+		$killer->increaseHOF($return['KillerRelations'], array('Combat', 'Port', 'Relation', 'Loss'), HOF_PUBLIC);
 		
 		return $return;
 	}
