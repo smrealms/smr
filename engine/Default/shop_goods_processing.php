@@ -73,6 +73,7 @@ if ($_REQUEST['action'] == 'Steal') {
 		$newCredits = max(5000, $player->getCredits() - $fine);
 		$player->setCredits($newCredits);
 		$player->decreaseAlignment(5);
+		$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 
 		$fineMessage = '<span class="red">A Federation patrol caught you loading stolen goods onto your ship!<br />The stolen goods have been confiscated and you have been fined ' . number_format($fine) . ' credits.</span><br /><br />';
 		$container = create_container('skeleton.php', 'shop_goods.php');
