@@ -610,10 +610,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 	 * of the port given by $raceID.
 	 */
 	public function increaseRelationsByTrade($numGoods, $raceID) {
-		// No relations increase for neutral ports (unless Alskant)
-		if ($raceID == RACE_NEUTRAL && $this->getRaceID() != RACE_ALSKANT) {
-			return;
-		}
 		$relations = ceil(min($numGoods, 300) / 30);
 		//Cap relations to a max of 1 after 500 have been reached
 		if ($this->getPureRelation($raceID) + $relations >= 500) {

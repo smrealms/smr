@@ -26,19 +26,14 @@ function check_bargain_number($amount, $ideal_price, $offered_price, $bargain_pr
 
 	if (isset($var['overall_number_of_bargains'])) {
 		// lose relations for bad bargain
-		if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
-			$player->decreaseRelationsByTrade($amount, $port->getRaceID());
-		}
+		$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 		$player->increaseHOF(1, array('Trade', 'Results', 'Fail'), HOF_PUBLIC);
 		// transfer values
 		transfer('overall_number_of_bargains');
 
 		// does we have enough of it?
 		if ($container['number_of_bargains'] > $container['overall_number_of_bargains']) {
-			// change relation for non neutral ports
-			if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
-				$player->decreaseRelationsByTrade($amount, $port->getRaceID());
-			}
+			$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 			$player->increaseHOF(1, array('Trade', 'Results', 'Epic Fail'), HOF_PUBLIC);
 			create_error('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
 		}
