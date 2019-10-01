@@ -396,6 +396,10 @@ class AbstractSmrPort {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 	}
 	
+	protected function stealGoods(array $good, $goodsTraded) {
+		$this->decreaseGood($good, $goodsTraded, false);
+	}
+	
 	public function checkForUpgrade() {
 		if ($this->isCachedVersion())
 			throw new Exception('Cannot upgrade a cached port!');

@@ -126,7 +126,7 @@ if ($transaction == 'Steal' ||
 		$ship->increaseCargo($good_id, $amount);
 		$player->increaseHOF($amount, array('Trade', 'Goods', 'Stolen'), HOF_ALLIANCE);
 		$player->increaseHOF($gained_exp, array('Trade', 'Experience', 'Stealing'), HOF_PUBLIC);
-		$port->buyGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
+		$port->stealGoods($portGood, $amount);
 	}
 
 	$player->increaseHOF($gained_exp, array('Trade', 'Experience', 'Total'), HOF_PUBLIC);
