@@ -532,20 +532,19 @@ function plotToSector($player, $sectorID) {
 function plotToFed($player, $plotToHQ = false) {
 	debug('Plotting To Fed', $plotToHQ);
 
-	if ($plotToHQ === false && $player->getSector()->offersFederalProtection()) {
-		if (!$player->hasNewbieTurns() && !$player->hasFederalProtection() && $player->getShip()->hasIllegalGoods()) { //We have illegals and no newbie turns, dump the illegals to get fed protection.
-			debug('Dumping illegals');
-			processContainer(dumpCargo($player));
-		}
+	// Always drop illegal goods before heading to fed space
+	if ($player->getShip()->hasIllegalGoods()) {
+		debug('Dumping illegal goods');
+		processContainer(dumpCargo($player));
+	}
+
+	$fedLocID = $player->getRaceID() + ($plotToHQ ? LOCATION_GROUP_RACIAL_HQS : LOCATION_GROUP_RACIAL_BEACONS);
+	if ($player->getSector()->hasLocation($fedLocID)) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
 		changeNPCLogin();
 		return true;
 	}
-	if ($plotToHQ === true) {
-		return plotToNearest($player, SmrLocation::getLocation($player->getRaceID() + LOCATION_GROUP_RACIAL_HQS));
-	}
-	return plotToNearest($player, SmrLocation::getLocation($player->getRaceID() + LOCATION_GROUP_RACIAL_BEACONS));
-//	return plotToNearest($player,$plotToHQ===true?'HQ':'Fed');
+	return plotToNearest($player, SmrLocation::getLocation($fedLocID));
 }
 
 function plotToNearest(AbstractSmrPlayer $player, $realX) {
