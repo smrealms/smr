@@ -13,7 +13,7 @@ function get_game_dir() {
 		$gameDir = $storedDir;
 	} else {
 		if ($overrideGameID > 0) {
-			require_once(LIB . 'Default/SmrGame.class.inc');
+			require_once(LIB . 'Default/SmrGame.class.php');
 			$storedDir = SmrGame::getGame($overrideGameID)->getGameType() . '/';
 			$gameDir = $storedDir;
 		} else {
@@ -29,10 +29,10 @@ function get_game_dir() {
  * Try to avoid calling this before `$overrideGameID` is set!
  */
 function get_class_loc($className) {
-	$classFile = LIB . get_game_dir() . $className . '.class.inc';
+	$classFile = LIB . get_game_dir() . $className . '.class.php';
 	if (!is_file($classFile)) {
 		// Fallback to Default directory
-		$classFile = LIB . 'Default/' . $className . '.class.inc';
+		$classFile = LIB . 'Default/' . $className . '.class.php';
 	}
 	require($classFile);
 }

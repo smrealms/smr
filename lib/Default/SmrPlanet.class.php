@@ -2,7 +2,7 @@
 
 // This file defines more than just one class, which is not handled by
 // the autoloader. So we must include it explicitly.
-require_once('SmrPlanetType.class.inc');
+require_once('SmrPlanetType.class.php');
 
 class SmrPlanet {
 	protected static $CACHE_PLANETS = array();
