@@ -697,25 +697,25 @@ abstract class AbstractSmrPlayer {
 
 	abstract protected function getBountiesData();
 
-	public function getBounties() {
+	public function getBounties() : array {
 		$this->getBountiesData();
 		return $this->bounties;
 	}
 
-	public function hasBounties() {
+	public function hasBounties() : bool {
 		return count($this->getBounties()) > 0;
 	}
 
-	public function getBounty($bountyID) {
+	protected function getBounty(int $bountyID) {
 		$bounties = $this->getBounties();
 		return isset($bounties[$bountyID]) ? $bounties[$bountyID] : false;
 	}
 
-	public function hasBounty($bountyID) {
+	public function hasBounty(int $bountyID) : bool {
 		return $this->getBounty($bountyID) !== false;
 	}
 
-	public function getBountyAmount($bountyID) {
+	protected function getBountyAmount(int $bountyID) : int {
 		$bounty = $this->getBounty($bountyID);
 		return $bounty['Amount'];
 	}
@@ -732,7 +732,7 @@ abstract class AbstractSmrPlayer {
 		return $bounty;
 	}
 
-	public function getNextBountyID() {
+	protected function getNextBountyID() : int {
 		$keys = array_keys($this->getBounties());
 		if (count($keys) > 0)
 			return max($keys) + 1;
@@ -740,30 +740,30 @@ abstract class AbstractSmrPlayer {
 			return 0;
 	}
 
-	public function setBounty(array $bounty) {
+	protected function setBounty(array $bounty) : void {
 		$this->bounties[$bounty['ID']] = $bounty;
 		$this->hasBountyChanged[$bounty['ID']] = true;
 	}
 
-	public function setBountyAmount($bountyID, $amount) {
+	protected function setBountyAmount(int $bountyID, int $amount) : void {
 		$bounty = $this->getBounty($bountyID);
 		$bounty['Amount'] = $amount;
 		$this->setBounty($bounty);
 	}
 
-	public function increaseBountyAmount($bountyID, $amount) {
+	public function increaseBountyAmount(int $bountyID, int $amount) : void {
 		if ($amount < 0)
 			throw new Exception('Trying to increase negative bounty.');
 		$this->setBountyAmount($this->getBountyAmount($bountyID) + $amount);
 	}
 
-	public function decreaseBountyAmount($bountyID, $amount) {
+	public function decreaseBountyAmount(int $bountyID, int $amount) : void {
 		if ($amount < 0)
 			throw new Exception('Trying to decrease negative bounty.');
 		$this->setBountyAmount($this->getBountyAmount($bountyID) + $amount);
 	}
 
-	public function getCurrentBounty($type) {
+	public function getCurrentBounty(string $type) : array {
 		$bounties = $this->getBounties();
 		foreach ($bounties as $bounty) {
 			if ($bounty['Claimer'] == 0 && $bounty['Type'] == $type)
@@ -772,7 +772,7 @@ abstract class AbstractSmrPlayer {
 		return $this->createBounty($type);
 	}
 
-	public function hasCurrentBounty($type) {
+	public function hasCurrentBounty(string $type) : bool {
 		$bounties = $this->getBounties();
 		foreach ($bounties as $bounty) {
 			if ($bounty['Claimer'] == 0 && $bounty['Type'] == $type)
@@ -781,12 +781,12 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	public function getCurrentBountyAmount($type) {
+	protected function getCurrentBountyAmount(string $type) : int {
 		$bounty = $this->getCurrentBounty($type);
 		return $bounty['Amount'];
 	}
 
-	public function setCurrentBountyAmount($type, $amount) {
+	protected function setCurrentBountyAmount(string $type, int $amount) : void {
 		$bounty = $this->getCurrentBounty($type);
 		if ($bounty['Amount'] == $amount)
 			return;
@@ -794,24 +794,24 @@ abstract class AbstractSmrPlayer {
 		$this->setBounty($bounty);
 	}
 
-	public function increaseCurrentBountyAmount($type, $amount) {
+	public function increaseCurrentBountyAmount(string $type, int $amount) : void {
 		if ($amount < 0)
 			throw new Exception('Trying to increase negative current bounty.');
 		$this->setCurrentBountyAmount($type, $this->getCurrentBountyAmount($type) + $amount);
 	}
 
-	public function decreaseCurrentBountyAmount($type, $amount) {
+	public function decreaseCurrentBountyAmount(string $type, int $amount) : void {
 		if ($amount < 0)
 			throw new Exception('Trying to decrease negative current bounty.');
 		$this->setCurrentBountyAmount($type, $this->getCurrentBountyAmount($type) - $amount);
 	}
 
-	public function getCurrentBountySmrCredits($type) {
+	protected function getCurrentBountySmrCredits(string $type) : int {
 		$bounty = $this->getCurrentBounty($type);
 		return $bounty['SmrCredits'];
 	}
 
-	public function setCurrentBountySmrCredits($type, $credits) {
+	protected function setCurrentBountySmrCredits(string $type, int $credits) : void {
 		$bounty = $this->getCurrentBounty($type);
 		if ($bounty['SmrCredits'] == $credits)
 			return;
@@ -819,19 +819,19 @@ abstract class AbstractSmrPlayer {
 		$this->setBounty($bounty);
 	}
 
-	public function increaseCurrentBountySmrCredits($type, $credits) {
+	public function increaseCurrentBountySmrCredits(string $type, int $credits) : void {
 		if ($credits < 0)
 			throw new Exception('Trying to increase negative current bounty.');
 		$this->setCurrentBountySmrCredits($type, $this->getCurrentBountySmrCredits($type) + $credits);
 	}
 
-	public function decreaseCurrentBountySmrCredits($type, $credits) {
+	public function decreaseCurrentBountySmrCredits(string $type, int $credits) : void {
 		if ($credits < 0)
 			throw new Exception('Trying to decrease negative current bounty.');
 		$this->setCurrentBountySmrCredits($type, $this->getCurrentBountySmrCredits($type) - $credits);
 	}
 
-	public function setBountiesClaimable(AbstractSmrPlayer $claimer) {
+	public function setBountiesClaimable(AbstractSmrPlayer $claimer) : void {
 		$bounties = $this->getBounties();
 		if (is_array($bounties)) {
 			foreach ($bounties as $bounty) {
