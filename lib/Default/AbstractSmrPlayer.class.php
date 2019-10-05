@@ -720,7 +720,7 @@ abstract class AbstractSmrPlayer {
 		return $bounty['Amount'];
 	}
 
-	protected function createBounty($type) {
+	protected function createBounty(string $type) : array {
 		$bounty = array('Amount' => 0,
 						'SmrCredits' => 0,
 						'Type' => $type,
@@ -729,6 +729,7 @@ abstract class AbstractSmrPlayer {
 						'ID' => $this->getNextBountyID(),
 						'New' => true);
 		$this->setBounty($bounty);
+		return $bounty;
 	}
 
 	public function getNextBountyID() {
