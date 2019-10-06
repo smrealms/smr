@@ -832,13 +832,10 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setBountiesClaimable(AbstractSmrPlayer $claimer) : void {
-		$bounties = $this->getBounties();
-		if (is_array($bounties)) {
-			foreach ($bounties as $bounty) {
-				if ($bounty['Claimer'] == 0) {
-					$bounty['Claimer'] = $claimer->getAccountID();
-					$this->setBounty($bounty);
-				}
+		foreach ($this->getBounties() as $bounty) {
+			if ($bounty['Claimer'] == 0) {
+				$bounty['Claimer'] = $claimer->getAccountID();
+				$this->setBounty($bounty);
 			}
 		}
 	}
