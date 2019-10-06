@@ -642,7 +642,7 @@ class AbstractSmrPort {
 			}
 			
 			$newsMessage .= '. The Federal Government is offering ';
-			$bounty = number_format(round($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL));
+			$bounty = number_format(intval($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL));
 
 			if ($trigger->hasAlliance()) {
 				$newsMessage .= 'bounties of <span class="creds">' . $bounty . '</span> credits for the deaths of any raiding members of ' . $trigger->getAllianceBBLink();
