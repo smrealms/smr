@@ -629,7 +629,7 @@ function &findRoutes($player) {
 	if ($db->nextRecord()) {
 		// The "MultiPortRoute" class cannot be autoloaded because it is not
 		// in its own file.
-		require_once(get_file_loc('RouteGenerator.class.inc'));
+		require_once(get_file_loc('RouteGenerator.class.php'));
 		$routes = unserialize(gzuncompress($db->getField('routes')));
 		debug('Using Cached Routes: #' . count($routes));
 		return $routes;

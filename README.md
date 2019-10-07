@@ -114,7 +114,7 @@ This is the coding style that should be used for any new code, although currentl
 To include a file use get_file_loc()
 
 ```php
-require_once(get_file_loc('SmrAlliance.class.inc'));
+require_once(get_file_loc('SmrAlliance.class.php'));
 ```
 
 ## Links
