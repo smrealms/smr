@@ -1,116 +1,81 @@
 <?php
 
-class SocialLogin {
-	// Define `loginType` constants to avoid string typos
-	const FACEBOOK = 'Facebook';
-	const TWITTER = 'Twitter';
+/**
+ * Defines the methods to be implemented by each social login platform.
+ */
+abstract class SocialLogin {
 
-	private $valid = false;
-	private $loginType = null;
 	private $userID = null;
 	private $email = null;
-	private static $facebook = null;
+	private $valid = false;
 
-	private static function getFacebookObj() {
-		if (session_status() === PHP_SESSION_NONE) {
-			session_start();
+	/**
+	 * Provides the canonical name of the platform to use in string comparison.
+	 */
+	abstract public static function getLoginType() : string;
+
+	/**
+	 * Returns a SocialLogin class of the given derived type.
+	 */
+	public static function get(string $loginType) : SocialLogin {
+		if ($loginType === SocialLogins\Facebook::getLoginType()) {
+			return new SocialLogins\Facebook();
+		} elseif ($loginType === SocialLogins\Twitter::getLoginType()) {
+			return new SocialLogins\Twitter();
+		} else {
+			throw new Exception('Unknown social login type: ' . $loginType);
 		}
-		if (self::$facebook == null) {
-			self::$facebook = new Facebook\Facebook([
-				'app_id' => FACEBOOK_APP_ID,
-				'app_secret' => FACEBOOK_APP_SECRET,
-				'default_graph_version' => 'v2.12'
-			]);
-		}
-		return self::$facebook;
 	}
 
-	private static function getTwitterObj($token = null) {
-		return new Abraham\TwitterOAuth\TwitterOAuth(
-			TWITTER_CONSUMER_KEY,
-			TWITTER_CONSUMER_SECRET,
-			is_null($token) ? null : $token['oauth_token'],
-			is_null($token) ? null : $token['oauth_token_secret']
-		);
+	public function __construct() {
+		// All social logins use a session for authentication
+		if (session_status() === PHP_SESSION_NONE) {
+			if (!session_start()) {
+				throw new Exception('Failed to start social login session');
+			}
+		}
+	}
+
+	/**
+	 * After a successful authentication, set credentials.
+	 */
+	protected function setCredentials(?string $userID, ?string $email) : void {
+		$this->userID = $userID;
+		$this->email = $email;
+		$this->valid = !empty($userID);
 	}
 
 	/**
 	 * Returns the URL that the social platform will redirect to
 	 * after authentication.
 	 */
-	private static function getRedirectUrl($loginType) {
-		return URL . '/login_processing.php?loginType=' . $loginType;
+	protected function getRedirectUrl() : string {
+		return URL . '/login_processing.php?loginType=' . $this->getLoginType();
 	}
 
-	public static function getFacebookLoginUrl() {
-		if (empty(FACEBOOK_APP_ID)) {
-			// No facebook app specified. Continuing would throw an exception.
-			return;
-		}
-		$helper = self::getFacebookObj()->getRedirectLoginHelper();
-		$permissions = ['email'];
-		return $helper->GetLoginUrl(self::getRedirectUrl(self::FACEBOOK), $permissions);
-	}
+	/**
+	 * Returns the URL to authenticate with the social platform.
+	 */
+	abstract public function getLoginUrl() : string;
 
-	public static function getTwitterLoginUrl() {
-		if (empty(TWITTER_CONSUMER_KEY)) {
-			// No twitter app specified. Continuing would throw an exception.
-			return;
-		}
-		if (session_status() === PHP_SESSION_NONE) {
-			session_start();
-		}
-		$auth = self::getTwitterObj();
-		$params = ['oauth_callback' => self::getRedirectUrl(self::TWITTER)];
-		$_SESSION['TwitterToken'] = $auth->oauth('oauth/request_token', $params);
-		// 'authenticate' asks for permission only once ('authorize' is every time)
-		return $auth->url('oauth/authenticate', $_SESSION['TwitterToken']);
-	}
+	/**
+	 * Authenticates with the social platform.
+	 */
+	abstract public function login() : SocialLogin;
 
-	public function __construct($loginType) {
-		$this->loginType = $loginType;
-
-		if ($loginType == self::FACEBOOK) {
-			$helper = self::getFacebookObj()->getRedirectLoginHelper();
-			$accessToken = $helper->getAccessToken(self::getRedirectUrl($loginType));
-			$response = self::getFacebookObj()->get('/me?fields=email', $accessToken);
-			$userInfo = $response->getGraphUser();
-			$this->userID = $userInfo->getId();
-			$this->email = $userInfo->getEmail();
-			$this->valid = true;
-		} else if ($loginType == self::TWITTER) {
-			if (session_status() === PHP_SESSION_NONE) {
-				session_start();
-			}
-			if ($_SESSION['TwitterToken']['oauth_token'] != $_REQUEST['oauth_token']) {
-				create_error('Unexpected token received from Twitter');
-			}
-			$helper = self::getTwitterObj($_SESSION['TwitterToken']);
-			$accessToken = $helper->oauth('oauth/access_token',
-			                              ['oauth_verifier' => $_REQUEST['oauth_verifier']]);
-			$auth = self::getTwitterObj($accessToken);
-			$userInfo = $auth->get('account/verify_credentials', ['include_email' => 'true']);
-			if ($auth->getLastHttpCode() == 200) {
-				$this->userID = $userInfo->id_str;
-				$this->email = $userInfo->email;
-				$this->valid = true;
-			}
-		}
-	}
-
-	public function isValid() {
+	/**
+	 * Returns true if the authentication was successful.
+	 */
+	public function isValid() : bool {
 		return $this->valid;
 	}
 
-	public function getLoginType() {
-		return $this->loginType;
-	}
-
-	public function getUserID() {
+	public function getUserID() : ?string {
 		return $this->userID;
 	}
 
-	public function getEmail() {
+	public function getEmail() : ?string {
 		return $this->email;
 	}
+
 }

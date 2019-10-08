@@ -12,15 +12,7 @@ try {
 		// immediately forwards to the social login URL after it is generated.
 
 		require_once('config.inc');
-		if ($type == 'facebook') {
-			$url = SocialLogin::getFacebookLoginUrl();
-		} elseif ($type == 'twitter') {
-			$url = SocialLogin::getTwitterLoginUrl();
-		} else {
-			throw new Exception('Unknown social login type: ' . $type);
-		}
-
-		header('Location: ' . $url);
+		header('Location: ' . SocialLogin::get($type)->getLoginUrl());
 		exit;
 	}
 
