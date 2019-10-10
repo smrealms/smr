@@ -27,10 +27,28 @@ try {
 	}
 	
 	$template = new Template();
-	if (isset($_REQUEST['msg']))
+	if (isset($_REQUEST['msg'])) {
 		$template->assign('Message', htmlentities(trim($_REQUEST['msg']), ENT_COMPAT, 'utf-8'));
+	}
 
-	require_once(ENGINE . 'Default/login.inc');
+	// Get recent non-admin game news
+	$gameNews = array();
+	$db = new SmrMySqlDatabase();
+	$db->query('SELECT * FROM news WHERE type != \'admin\' ORDER BY time DESC LIMIT 4');
+	while ($db->nextRecord()) {
+		$overrideGameID = $db->getInt('game_id'); //for bbifyMessage
+		$gameNews[] = [
+			'Time' => date(DEFAULT_DATE_FULL_SHORT_SPLIT, $db->getInt('time')),
+			'Message' => bbifyMessage($db->getField('news_message')),
+		];
+	}
+	$template->assign('GameNews', $gameNews);
+	unset($overrideGameID);
+
+	require_once(ENGINE . 'Default/login_story.inc');
+
+	$template->assign('Body', 'login/login.php');
+	$template->display('login/skeleton.php');
 
 }
 catch (Throwable $e) {
