@@ -514,6 +514,11 @@ class SmrPlanet {
 		return $this->mountedWeapons;
 	}
 
+	public function hasMountedWeapon($orderID) {
+		$this->getMountedWeapons(); // Make sure array is initialized
+		return isset($this->mountedWeapons[$orderID]);
+	}
+
 	public function addMountedWeapon($weaponTypeID, $orderID) {
 		$this->getMountedWeapons(); // Make sure array is initialized
 		$this->mountedWeapons[$orderID] = SmrWeapon::getWeapon($weaponTypeID);
