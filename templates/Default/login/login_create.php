@@ -1,5 +1,3 @@
-<script src='//www.google.com/recaptcha/api.js'></script>
-
 <div class="centered" style="width: 630px;">
 	<h1>Create Login</h1>
 	<p>
@@ -56,3 +54,5 @@
 		<p><input class="InputFields" type='submit' name='create_login' value='Create Login'></p>
 	</form>
 </div>
+
+<script src='//www.google.com/recaptcha/api.js'></script>
