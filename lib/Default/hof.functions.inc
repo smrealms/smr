@@ -39,7 +39,7 @@ function getHofCategories($hofTypes, $game_id, $account_id) {
 
 		$categories[] = [
 			'link' => $link,
-			'subcategories' => join('&nbsp;', $subcategories),
+			'subcategories' => join('&#32;', $subcategories),
 		];
 	}
 	return $categories;
