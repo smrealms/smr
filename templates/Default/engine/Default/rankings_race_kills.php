@@ -10,7 +10,7 @@
 	foreach ($Ranks as $rank => $data) { ?>
 		<tr>
 			<td <?php echo $data['style']; ?>><?php echo $rank + 1; ?></td>
-			<td <?php echo $data['style']; ?>><?php echo $data['race_name']; ?></td>
+			<td <?php echo $data['style']; ?>><?php echo $ThisPlayer->getColouredRaceName($data['race_id'], true); ?></td>
 			<td <?php echo $data['style']; ?>><?php echo $data['kill_sum']; ?></td>
 		</tr><?php
 	} ?>
