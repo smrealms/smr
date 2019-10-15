@@ -43,7 +43,7 @@ class VoteSite {
 
 	public static function getAllSites() {
 		static $ALL_SITES;
-		if (!isset($allSites)) {
+		if (!isset($ALL_SITES)) {
 			$ALL_SITES = array(); // ensure this is set
 			foreach (self::getAllSiteData() as $linkID => $siteData) {
 				$ALL_SITES[$linkID] = new VoteSite($linkID, $siteData);
