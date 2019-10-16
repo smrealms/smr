@@ -77,10 +77,6 @@ const SHIP_UPGRADE_PATH = array(
 
 
 try {
-	// Initialize the SmrSession before any output to avoid a warning about
-	// setcookie sending headers after output has started.
-	SmrSession::init();
-
 	$db = new SmrMySqlDatabase();
 	debug('Script started');
 
@@ -382,6 +378,7 @@ function releaseNPC() {
 	} else {
 		debug('Failed to release NPC: ' . $login);
 	}
+	SmrSession::destroy();
 }
 
 function exitNPC() {
@@ -432,6 +429,7 @@ function changeNPCLogin() {
 
 	// Update session info for this chosen NPC
 	$account = SmrAccount::getAccount($npc['account_id']);
+	SmrSession::init();
 	SmrSession::setAccount($account);
 	SmrSession::updateGame($npc['game_id']);
 
