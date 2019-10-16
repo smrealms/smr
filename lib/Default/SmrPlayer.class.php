@@ -64,9 +64,14 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $players;
 	}
 
+	/**
+	 * Returns the same players as getSectorPlayers (e.g. not on planets),
+	 * but for an entire galaxy rather than a single sector. This is useful
+	 * for reducing the number of queries in galaxy-wide processing.
+	 */
 	public static function getGalaxyPlayers($gameID, $galaxyID, $forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT player.*, sector_id FROM sector LEFT JOIN player USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$db->query('SELECT player.*, sector_id FROM sector LEFT JOIN player USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(TIME - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlayers = [];
 		while ($db->nextRecord()) {
 			$sectorID = $db->getInt('sector_id');
