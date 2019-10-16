@@ -1170,12 +1170,16 @@ class SmrPlanet {
 		return $results;
 	}
 
-	public function &checkForDowngrade($damage) {
-		$results = '';
+	/**
+	 * Returns an array of structure losses due to damage taken.
+	 */
+	public function checkForDowngrade($damage) : array {
+		$results = [];
 		// For every 70 damage there is a 15% chance of destroying a structure.
 		// Which structure is destroyed depends on the ratio of buildings and
 		// the time it takes to build them.
-		for ($i = 0; $damage > self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE; $damage -= self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE) {
+		$numChances = floor($damage / self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
+		for ($i = 0; $i < $numChances; $i++) {
 			// Stop if the planet has no more buildlings
 			if ($this->getLevel() == 0) {
 				break;
@@ -1189,7 +1193,11 @@ class SmrPlanet {
 				$destroyID = getWeightedRandom($chanceFactors);
 				$this->destroyBuilding($destroyID, 1);
 				$this->checkForExcessDefense();
-				$results .= 'This team destroys <span class="red">1</span> ' . $this->getStructureTypes($destroyID)->name() . '.<br />';
+				if (isset($results[$destroyID])) {
+					$results[$destroyID] += 1;
+				} else {
+					$results[$destroyID] = 1;
+				}
 			}
 		}
 		return $results;
