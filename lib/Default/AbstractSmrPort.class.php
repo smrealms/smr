@@ -568,16 +568,20 @@ class AbstractSmrPort {
 		$this->db->query('DELETE FROM port_has_goods WHERE ' . $this->SQL . ' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
 		$this->db->query('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
-	
-	public function checkForDowngrade($damageDone) {
-		$downgrades = 0;
-		for (;$damageDone > self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE; $damageDone -= self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE) {
+
+	/**
+	 * Returns the number of port level downgrades due to damage taken.
+	 */
+	public function checkForDowngrade($damage) : int {
+		$numDowngrades = 0;
+		$numChances = floor($damage / self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
+		for ($i = 0; $i < $numChances; $i++) {
 			if (mt_rand(1, 100) <= self::CHANCE_TO_DOWNGRADE && $this->level > 1) {
-				++$downgrades;
+				++$numDowngrades;
 				$this->doDowngrade();
 			}
 		}
-		return $downgrades;
+		return $numDowngrades;
 	}
 	
 	protected function selectAndRemoveGood($goodClass) {

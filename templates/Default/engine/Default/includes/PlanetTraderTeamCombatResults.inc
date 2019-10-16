@@ -131,6 +131,6 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 }
 $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
 This fleet <?php if($TotalDamage > 0){ ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else{ ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br /><?php
-if($TraderTeamCombatResults['Downgrades']) {
-	echo $TraderTeamCombatResults['Downgrades'];
+foreach ($TraderTeamCombatResults['Downgrades'] as $structureID => $numDestroyed) { ?>
+	This team destroys <span class="red"><?php echo $numDestroyed; ?> </span><?php echo pluralise($TargetPlanet->getStructureTypes($structureID)->name(), $numDestroyed); ?>.<br /><?php
 } ?>
