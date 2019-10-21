@@ -138,7 +138,7 @@ function displayHOFRow($rank, $accountID, $amount) {
 	if (isset($hofPlayer) && is_object($hofPlayer)) {
 		$return .= ('<td ' . $bold . '>' . create_link($container, $hofPlayer->getPlayerName()) . '</td>');
 	} else if (isset($hofAccount) && is_object($hofAccount)) {
-		$return .= ('<td ' . $bold . '>' . create_link($container, $hofAccount->getHofName()) . '</td>');
+		$return .= ('<td ' . $bold . '>' . create_link($container, $hofAccount->getHofDisplayName()) . '</td>');
 	} else {
 		$return .= ('<td ' . $bold . '>Unknown</td>');
 	}

@@ -19,7 +19,7 @@ if ($amount > $account->getSmrCredits()) {
 
 $template->assign('PageTopic', 'Confirmation');
 $template->assign('Amount', $amount);
-$template->assign('HofName', SmrAccount::getAccount($account_id)->getHofName());
+$template->assign('HofName', SmrAccount::getAccount($account_id)->getHofDisplayName());
 
 $container = create_container('preferences_processing.php');
 $container['account_id'] = $account_id;

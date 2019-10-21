@@ -19,7 +19,7 @@ if ($db->nextRecord()) {
 	} elseif ($db->getBoolean('disabled')) {
 		$albumEntry['Status'] = ('<span class="red">Disabled</span>');
 	} elseif ($approved == 'YES') {
-		$albumEntry['Status'] = ('<a href="album/?' . $account->getHofName() . '" class="dgreen">Online</a>');
+		$albumEntry['Status'] = ('<a href="album/?nick=' . urlencode($account->getHofName()) . '" class="dgreen">Online</a>');
 	}
 		
 	if (is_readable(UPLOAD . $account->getAccountID())) {

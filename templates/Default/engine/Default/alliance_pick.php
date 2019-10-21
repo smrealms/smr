@@ -57,7 +57,7 @@ if (count($PickPlayers) > 0) { ?>
 					<?php echo $PickPlayer['Player']->getRaceName(); ?>
 				</td>
 				<td>
-					<?php echo $PickPlayer['Player']->getAccount()->getHofName(true); ?>
+					<?php echo $PickPlayer['Player']->getAccount()->getHofDisplayName(true); ?>
 				</td>
 				<td>
 					<?php echo $PickPlayer['Player']->getAccount()->getScore(); ?>
@@ -90,7 +90,7 @@ if (count($History) > 0) { ?>
 				<td><?php echo date(DATE_FULL_SHORT, $Pick['Time']); ?></td>
 				<td><?php echo $Pick['Player']->getPlayerName(); ?></td>
 				<td><?php echo $Pick['Player']->getRaceName(); ?></td>
-				<td><?php echo $Pick['Player']->getAccount()->getHofName(true); ?></td>
+				<td><?php echo $Pick['Player']->getAccount()->getHofDisplayName(true); ?></td>
 				<td><?php echo $Pick['Player']->getAccount()->getScore(); ?></td>
 			</tr><?php
 		} ?>

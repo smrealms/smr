@@ -741,12 +741,21 @@ abstract class AbstractSmrAccount {
 		return CSS_COLOUR_URLS[$this->getTemplate()][$this->getColourScheme()];
 	}
 
-	public function getHofName($linked=false) {
+	/**
+	 * The Hall Of Fame name is not html-escaped in the database, so to display
+	 * it correctly we must escape html entities.
+	 */
+	public function getHofDisplayName($linked=false) {
+		$hofDisplayName = htmlspecialchars($this->getHofName());
 		if ($linked) {
-			return '<a href="' . $this->getPersonalHofHREF() . '">' . $this->hofName . '</a>';
+			return '<a href="' . $this->getPersonalHofHREF() . '">' . $hofDisplayName . '</a>';
 		} else {
-			return $this->hofName;
+			return $hofDisplayName;
 		}
+	}
+
+	public function getHofName() {
+		return $this->hofName;
 	}
 
 	public function setHofName($name) {
