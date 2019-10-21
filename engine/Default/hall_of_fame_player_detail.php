@@ -19,7 +19,7 @@ if (isset($var['game_id'])) {
 	}
 	$template->assign('PageTopic', $hofPlayer->getPlayerName() . '\'s Personal Hall of Fame: ' . SmrGame::getGame($game_id)->getDisplayName());
 } else {
-	$hofName = SmrAccount::getAccount($account_id)->getHofName();
+	$hofName = SmrAccount::getAccount($account_id)->getHofDisplayName();
 	$template->assign('PageTopic', $hofName . '\'s All Time Personal Hall of Fame');
 }
 

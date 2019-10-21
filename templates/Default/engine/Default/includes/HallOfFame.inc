@@ -1,5 +1,5 @@
 <div class="center">
-	Welcome to the Hall of Fame, <?php echo $ThisAccount->getHofName(); ?>!<br />
+	Welcome to the Hall of Fame, <?php echo $ThisAccount->getHofDisplayName(); ?>!<br />
 	The Hall of Fame is a comprehensive list of player accomplishments.
 	Here you can view how players rank in many different aspects of the game.<?php
 	if (isset($PersonalHofHREF)) { ?>

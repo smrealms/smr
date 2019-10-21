@@ -11,7 +11,7 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 	<table>
 		<tr>
 			<td class="right bold">Nick:</td>
-			<td><?php echo $ThisAccount->getHofName(); ?></td>
+			<td><?php echo $ThisAccount->getHofDisplayName(); ?></td>
 		</tr>
 		
 		<tr>
