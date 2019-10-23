@@ -32,6 +32,10 @@ require_once(CONFIG . 'npc/config.specific.php');
 require_once(get_file_loc('smr.inc'));
 require_once(get_file_loc('shop_goods.inc'));
 
+// Raise exceptions for all types of errors for improved error reporting
+// and to attempt to shut down the NPCs cleanly on errors.
+set_error_handler("exception_error_handler");
+
 const SHIP_UPGRADE_PATH = array(
 	RACE_ALSKANT => array(
 		SHIP_TYPE_TRADE_MASTER,
