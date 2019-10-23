@@ -40,13 +40,20 @@ function logException(Throwable $e) {
 		}
 	}
 
-	if (defined('NPC_SCRIPT')) {
-		echo 'Script: ' . SCRIPT_ID . $delim . $message . "\n\n";
-		return;
+	if (defined('SCRIPT_ID')) {
+		$message = 'Script: ' . SCRIPT_ID . $delim . $message . "\n\n";
 	}
 
 	// Unconditionally send error message to the log
 	error_log($message);
+
+	if (defined('NPC_SCRIPT')) {
+		echo $message;
+		// In debug mode, we normally exit, but NPCs must cleanup after an error
+		if (ENABLE_DEBUG) {
+			return;
+		}
+	}
 
 	if (ENABLE_DEBUG) {
 		// Display error message on the page and then exit
