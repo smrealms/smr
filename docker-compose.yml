@@ -155,6 +155,7 @@ services:
             - "traefik.enable=false"
         depends_on:
             - mysql
+            - smtp
         volumes:
             - ./config:/smr/config
 

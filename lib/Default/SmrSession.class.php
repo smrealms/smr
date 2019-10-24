@@ -163,7 +163,9 @@ class SmrSession {
 				self::$session_id = md5(uniqid(mt_rand()));
 				self::$db->query('SELECT 1 FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 			} while (self::$db->nextRecord()); //Make sure we haven't somehow clashed with someone else's session.
-			setcookie('session_id', self::$session_id);
+			if (!defined('NPC_SCRIPT')) {
+				setcookie('session_id', self::$session_id);
+			}
 		}
 
 		// try to get current session

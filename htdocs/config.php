@@ -1,6 +1,8 @@
 <?php
 ini_set('date.timezone', 'UTC');
+error_reporting(E_ALL);
 
+// Must use define so that the time is evaluated at runtime, not compile time.
 define('MICRO_TIME', microtime(true));
 define('TIME', intval(MICRO_TIME));
 
@@ -17,11 +19,6 @@ const TEMPLATES_DIR = ROOT . 'templates/';
 
 // Define server-specific constants
 require_once(CONFIG . 'config.specific.php');
-
-if (ENABLE_DEBUG) {
-	// Warn about everything when in debug mode
-	error_reporting(E_ALL);
-}
 
 if (ENABLE_BETA && !ENABLE_DEBUG) {
 	// Everything raises an exception in beta mode (for e-mail notifications).

@@ -32,6 +32,10 @@ require_once(CONFIG . 'npc/config.specific.php');
 require_once(get_file_loc('smr.inc'));
 require_once(get_file_loc('shop_goods.inc'));
 
+// Raise exceptions for all types of errors for improved error reporting
+// and to attempt to shut down the NPCs cleanly on errors.
+set_error_handler("exception_error_handler");
+
 const SHIP_UPGRADE_PATH = array(
 	RACE_ALSKANT => array(
 		SHIP_TYPE_TRADE_MASTER,
@@ -73,10 +77,6 @@ const SHIP_UPGRADE_PATH = array(
 
 
 try {
-	// Initialize the SmrSession before any output to avoid a warning about
-	// setcookie sending headers after output has started.
-	SmrSession::init();
-
 	$db = new SmrMySqlDatabase();
 	debug('Script started');
 
@@ -378,6 +378,7 @@ function releaseNPC() {
 	} else {
 		debug('Failed to release NPC: ' . $login);
 	}
+	SmrSession::destroy();
 }
 
 function exitNPC() {
@@ -428,6 +429,7 @@ function changeNPCLogin() {
 
 	// Update session info for this chosen NPC
 	$account = SmrAccount::getAccount($npc['account_id']);
+	SmrSession::init();
 	SmrSession::setAccount($account);
 	SmrSession::updateGame($npc['game_id']);
 
