@@ -42,7 +42,7 @@ RUN composer install --no-interaction
 
 # Set the baseline php.ini version based on the value of PHP_DEBUG
 ARG PHP_DEBUG=0
-RUN MODE=$([ "$PHP_DEBUG" == "0" ] && echo "production" || echo "development") && \
+RUN MODE=$([ "$PHP_DEBUG" = "0" ] && echo "production" || echo "development") && \
 	echo "Using $MODE php.ini" && \
 	tar -xOvf /usr/src/php.tar.xz php-$PHP_VERSION/php.ini-$MODE > /usr/local/etc/php/php.ini
 
