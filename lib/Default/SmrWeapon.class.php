@@ -103,9 +103,12 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	protected function &getWeightedRandomForPlayer(AbstractSmrPlayer $player) {
 		return WeightedRandom::getWeightedRandomForPlayer($player, 'Weapon', $this->getWeaponTypeID());
 	}
-	
-	protected function checkMiss(AbstractSmrPlayer $player, $percent) {
-		return $this->getWeightedRandomForPlayer($player)->percentFailed($percent);
+
+	/**
+	 * Given $weaponAccuracy as a percent, decide if the weapon hits.
+	 */
+	protected function checkHit(AbstractSmrPlayer $player, $weaponAccuracy) : bool {
+		return $this->getWeightedRandomForPlayer($player)->flipWeightedCoin($weaponAccuracy);
 	}
 	
 	public static function getPlayerLevelAccuracyMod(AbstractSmrPlayer $player) {
@@ -250,43 +253,43 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 	
 	public function &shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
-		$return = array('Weapon' => $this, 'TargetForces' => $forces);
-		if ($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstForces($weaponPlayer, $forces))) { //Check if we miss
-			$return['Hit'] = false;
-			return $return;
+		$return = array('Weapon' => $this, 'TargetForces' => $forces, 'Hit' => false);
+		$modifiedAccuracy = $this->getModifiedAccuracyAgainstForces($weaponPlayer, $forces);
+		if ($this->checkHit($weaponPlayer, $modifiedAccuracy)) {
+			$return['Hit'] = true;
+			return $this->doPlayerDamageToForce($return, $weaponPlayer, $forces);
 		}
-		$return['Hit'] = true;
-		return $this->doPlayerDamageToForce($return, $weaponPlayer, $forces);
+		return $return;
 	}
 	
 	public function &shootPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
-		$return = array('Weapon' => $this, 'TargetPort' => $port);
-		if ($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPort($weaponPlayer, $port))) { //Check if we miss
-			$return['Hit'] = false;
-			return $return;
+		$return = array('Weapon' => $this, 'TargetPort' => $port, 'Hit' => false);
+		$modifiedAccuracy = $this->getModifiedAccuracyAgainstPort($weaponPlayer, $port);
+		if ($this->checkHit($weaponPlayer, $modifiedAccuracy)) {
+			$return['Hit'] = true;
+			return $this->doPlayerDamageToPort($return, $weaponPlayer, $port);
 		}
-		$return['Hit'] = true;
-		return $this->doPlayerDamageToPort($return, $weaponPlayer, $port);
+		return $return;
 	}
 	
 	public function &shootPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet, $delayed) {
-		$return = array('Weapon' => $this, 'TargetPlanet' => $planet);
-		if ($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet))) { //Check if we miss
-			$return['Hit'] = false;
-			return $return;
+		$return = array('Weapon' => $this, 'TargetPlanet' => $planet, 'Hit' => false);
+		$modifiedAccuracy = $this->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet);
+		if ($this->checkHit($weaponPlayer, $modifiedAccuracy)) {
+			$return['Hit'] = true;
+			return $this->doPlayerDamageToPlanet($return, $weaponPlayer, $planet, $delayed);
 		}
-		$return['Hit'] = true;
-		return $this->doPlayerDamageToPlanet($return, $weaponPlayer, $planet, $delayed);
+		return $return;
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
-		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer);
-		if ($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPlayer($weaponPlayer, $targetPlayer))) { //Check if we miss
-			$return['Hit'] = false;
-			return $return;
+		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false);
+		$modifiedAccuracy = $this->getModifiedAccuracyAgainstPlayer($weaponPlayer, $targetPlayer);
+		if ($this->checkHit($weaponPlayer, $modifiedAccuracy)) {
+			$return['Hit'] = true;
+			return $this->doPlayerDamageToPlayer($return, $weaponPlayer, $targetPlayer);
 		}
-		$return['Hit'] = true;
-		return $this->doPlayerDamageToPlayer($return, $weaponPlayer, $targetPlayer);
+		return $return;
 	}
 	
 	public function &shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
@@ -295,23 +298,23 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 	
 	public function &shootPlayerAsPort(SmrPort $port, AbstractSmrPlayer $targetPlayer) {
-		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer);
-		if ($this->checkMiss($targetPlayer, $this->getModifiedPortAccuracyAgainstPlayer($port, $targetPlayer))) { //Check if the port misses, weight based upon the player being shot at.
-			$return['Hit'] = false;
-			return $return;
+		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false);
+		$modifiedAccuracy = $this->getModifiedPortAccuracyAgainstPlayer($port, $targetPlayer);
+		if ($this->checkHit($targetPlayer, $modifiedAccuracy)) {
+			$return['Hit'] = true;
+			return $this->doPortDamageToPlayer($return, $port, $targetPlayer);
 		}
-		$return['Hit'] = true;
-		return $this->doPortDamageToPlayer($return, $port, $targetPlayer);
+		return $return;
 	}
 	
 	public function &shootPlayerAsPlanet(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) {
-		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer);
-		if ($this->checkMiss($targetPlayer, $this->getModifiedPlanetAccuracyAgainstPlayer($planet, $targetPlayer))) { //Check if the planet misses, weight based upon the player being shot at.
-			$return['Hit'] = false;
-			return $return;
+		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false);
+		$modifiedAccuracy = $this->getModifiedPlanetAccuracyAgainstPlayer($planet, $targetPlayer);
+		if ($this->checkHit($targetPlayer, $modifiedAccuracy)) {
+			$return['Hit'] = true;
+			return $this->doPlanetDamageToPlayer($return, $planet, $targetPlayer);
 		}
-		$return['Hit'] = true;
-		return $this->doPlanetDamageToPlayer($return, $planet, $targetPlayer);
+		return $return;
 	}
 	
 }
