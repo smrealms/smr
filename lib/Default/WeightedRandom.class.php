@@ -1,9 +1,19 @@
 <?php
 
+/**
+ * Weighted random number generator used to make events achieve their expected
+ * rate of success faster than a pure random number generator.
+ *
+ * The weighting is added to a random number (higher weight means that success
+ * is less likely). Therefore, when the weighted coin flip is successful, the
+ * weight is increased so that future events are less likely; similarly, when
+ * the weighted coin flip is unsuccessful, the weight is decreased so that
+ * future events are more likely.
+ */
 class WeightedRandom {
 	protected static $CACHE_RANDOMS = array();
 	
-	const WEIGHTING_CHANGE = 50;
+	const WEIGHTING_CHANGE = 50; // as a percent
 	
 	protected $db;
 	
@@ -72,20 +82,24 @@ class WeightedRandom {
 	public function getWeighting() {
 		return $this->weighting;
 	}
-	
-	public function percentFailed($percent) {
-		$failed = mt_rand(0, 99) + $this->weighting >= $percent;
-		$this->adjustWeightByPercent(!$failed, $percent);
-		return $failed;
-	}
-	
-	public function adjustWeightByPercent($success, $percent) {
-		$percent = $percent / 100;
+
+	/**
+	 * Given $successChance as the base percent chance that an event happens,
+	 * reduce that chance by the current weighting, and then check the result.
+	 */
+	public function flipWeightedCoin($successChance) : bool {
+		$success = mt_rand(1, 100) + $this->weighting <= $successChance;
+
+		// Now update the weighting (the extra factor is needed to achieve the
+		// base success chance on average).
 		if ($success) {
-			$percent = -1 + $percent;
+			$weightChangeFactor = (100 - $successChance) / 100;
+		} else {
+			$weightChangeFactor = -$successChance / 100;
 		}
-		$this->weighting -= self::WEIGHTING_CHANGE * $percent;
+		$this->weighting += self::WEIGHTING_CHANGE * $weightChangeFactor;
 		$this->hasChanged = true;
+		return $success;
 	}
 	
 	public function update() {
