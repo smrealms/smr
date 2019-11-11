@@ -396,6 +396,10 @@ class AbstractSmrPort {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 	}
 	
+	protected function stealGoods(array $good, $goodsTraded) {
+		$this->decreaseGood($good, $goodsTraded, false);
+	}
+	
 	public function checkForUpgrade() {
 		if ($this->isCachedVersion())
 			throw new Exception('Cannot upgrade a cached port!');
@@ -564,16 +568,20 @@ class AbstractSmrPort {
 		$this->db->query('DELETE FROM port_has_goods WHERE ' . $this->SQL . ' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
 		$this->db->query('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
-	
-	public function checkForDowngrade($damageDone) {
-		$downgrades = 0;
-		for (;$damageDone > self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE; $damageDone -= self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE) {
+
+	/**
+	 * Returns the number of port level downgrades due to damage taken.
+	 */
+	public function checkForDowngrade($damage) : int {
+		$numDowngrades = 0;
+		$numChances = floor($damage / self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
+		for ($i = 0; $i < $numChances; $i++) {
 			if (mt_rand(1, 100) <= self::CHANCE_TO_DOWNGRADE && $this->level > 1) {
-				++$downgrades;
+				++$numDowngrades;
 				$this->doDowngrade();
 			}
 		}
-		return $downgrades;
+		return $numDowngrades;
 	}
 	
 	protected function selectAndRemoveGood($goodClass) {
@@ -638,7 +646,7 @@ class AbstractSmrPort {
 			}
 			
 			$newsMessage .= '. The Federal Government is offering ';
-			$bounty = number_format(round($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL));
+			$bounty = number_format(intval($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL));
 
 			if ($trigger->hasAlliance()) {
 				$newsMessage .= 'bounties of <span class="creds">' . $bounty . '</span> credits for the deaths of any raiding members of ' . $trigger->getAllianceBBLink();
@@ -1334,11 +1342,9 @@ class AbstractSmrPort {
 		$killer->increaseCurrentBountyAmount('HQ', $return['KillerBounty']);
 		$killer->increaseHOF($return['KillerBounty'], array('Combat', 'Port', 'Bounties', 'Gained'), HOF_PUBLIC);
 		
-		if ($this->getRaceID() != RACE_NEUTRAL) {
-			$return['KillerRelations'] = 45;
-			$killer->decreaseRelations($return['KillerRelations'], $this->getRaceID());
-			$killer->increaseHOF($return['KillerRelations'], array('Combat', 'Port', 'Relation', 'Loss'), HOF_PUBLIC);
-		}
+		$return['KillerRelations'] = 45;
+		$killer->decreaseRelations($return['KillerRelations'], $this->getRaceID());
+		$killer->increaseHOF($return['KillerRelations'], array('Combat', 'Port', 'Relation', 'Loss'), HOF_PUBLIC);
 		
 		return $return;
 	}

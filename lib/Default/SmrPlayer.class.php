@@ -64,9 +64,14 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $players;
 	}
 
+	/**
+	 * Returns the same players as getSectorPlayers (e.g. not on planets),
+	 * but for an entire galaxy rather than a single sector. This is useful
+	 * for reducing the number of queries in galaxy-wide processing.
+	 */
 	public static function getGalaxyPlayers($gameID, $galaxyID, $forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT player.*, sector_id FROM sector LEFT JOIN player USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$db->query('SELECT player.*, sector_id FROM sector LEFT JOIN player USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(TIME - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlayers = [];
 		while ($db->nextRecord()) {
 			$sectorID = $db->getInt('sector_id');
@@ -610,10 +615,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 	 * of the port given by $raceID.
 	 */
 	public function increaseRelationsByTrade($numGoods, $raceID) {
-		// No relations increase for neutral ports (unless Alskant)
-		if ($raceID == RACE_NEUTRAL && $this->getRaceID() != RACE_ALSKANT) {
-			return;
-		}
 		$relations = ceil(min($numGoods, 300) / 30);
 		//Cap relations to a max of 1 after 500 have been reached
 		if ($this->getPureRelation($raceID) + $relations >= 500) {
@@ -945,7 +946,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 					WHERE armour > 0 AND ' . $this->SQL . ' LIMIT 1';
 		$this->db->query($query);
 		if ($this->db->nextRecord()) {
-			$bounty = round(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
+			$bounty = intval(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
 			$this->increaseCurrentBountyAmount('HQ', $bounty);
 		}
 
@@ -968,7 +969,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			}
 
 			if ($return['BountyGained']['Type'] != 'None') {
-				$return['BountyGained']['Amount'] = floor(pow($alignmentDiff, 2.56));
+				$return['BountyGained']['Amount'] = intval(pow($alignmentDiff, 2.56));
 				$killer->increaseCurrentBountyAmount($return['BountyGained']['Type'], $return['BountyGained']['Amount']);
 			}
 		}

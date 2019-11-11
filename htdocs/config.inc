@@ -23,8 +23,9 @@ function logException(Throwable $e) {
 
 	$message .=
 		'$var: ' . var_export($var, true) . $delim .
+		'User IP: ' . getIpAddress() . "\n" .
 		'USING_AJAX: ' . (defined('USING_AJAX') ? var_export(USING_AJAX, true) : 'undefined') . "\n" .
-		'URL: ' . (defined('URL') ? var_export(URL, true) : 'undefined');
+		'URL: ' . (defined('URL') ? URL : 'undefined');
 
 	try {
 		if (function_exists('release_lock')) {
@@ -39,13 +40,20 @@ function logException(Throwable $e) {
 		}
 	}
 
-	if (defined('NPC_SCRIPT')) {
-		echo 'Script: ' . SCRIPT_ID . $delim . $message . "\n\n";
-		return;
+	if (defined('SCRIPT_ID')) {
+		$message = 'Script: ' . SCRIPT_ID . $delim . $message . "\n\n";
 	}
 
 	// Unconditionally send error message to the log
 	error_log($message);
+
+	if (defined('NPC_SCRIPT')) {
+		echo $message;
+		// In debug mode, we normally exit, but NPCs must cleanup after an error
+		if (ENABLE_DEBUG) {
+			return;
+		}
+	}
 
 	if (ENABLE_DEBUG) {
 		// Display error message on the page and then exit
@@ -112,6 +120,19 @@ function setupMailer() {
 		$mail->Host = SMTP_HOSTNAME;
 	}
 	return $mail;
+}
+
+function getIpAddress() {
+	foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'] as $key) {
+		if (array_key_exists($key, $_SERVER) === true) {
+			foreach (explode(',', $_SERVER[$key]) as $ip) {
+				if (filter_var($ip, FILTER_VALIDATE_IP) !== false) {
+					return $ip;
+				}
+			}
+		}
+	}
+	return 'unknown';
 }
 
 function dumpMemDiff($msg) {

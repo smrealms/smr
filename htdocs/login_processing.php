@@ -4,9 +4,6 @@ try {
 	require_once('config.inc');
 	require_once(LIB . 'Default/smr.inc');
 
-	$db = new SmrMySqlDatabase();
-	$db2 = new SmrMySqlDatabase();
-
 	// ********************************
 	// *
 	// * C r e a t e   S e s s i o n
@@ -15,7 +12,7 @@ try {
 
 	if (!SmrSession::hasAccount()) {
 		if (isset($_REQUEST['loginType'])) {
-			$socialLogin = new SocialLogin($_REQUEST['loginType']);
+			$socialLogin = SocialLogin::get($_REQUEST['loginType'])->login();
 			if (!$socialLogin->isValid()) {
 				$msg = 'Error validating login.';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -31,16 +28,7 @@ try {
 					session_start();
 				}
 				$_SESSION['socialLogin'] = $socialLogin;
-				$template = new Template();
-				$template->assign('SocialLogin', $socialLogin);
-				// Pre-populate the login field if an account with this email exists.
-				// (Also disable creating a new account because they would just get
-				// an "Email already registered" error anyway.)
-				$account = SmrAccount::getAccountByEmail($socialLogin->getEmail());
-				if (!is_null($account)) {
-					$template->assign('MatchingLogin', $account->getLogin());
-				}
-				$template->display('socialRegister.inc');
+				header('Location: /login_social_create.php');
 				exit;
 			}
 		}
@@ -93,6 +81,7 @@ try {
 		session_destroy();
 	}
 
+	$db = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM game_disable');
 	if ($db->nextRecord()) {
 		// allow admins to access it
@@ -192,13 +181,12 @@ try {
 
 
 	//get rid of expired messages
-	$db2->query('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(TIME) . ' AND expire_time != 0');
+	$db->query('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(TIME) . ' AND expire_time != 0');
 	// Mark message as read if it was sent to self as a mass mail.
-	$db2->query('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND account_id = sender_id AND message_type_id IN (' . $db->escapeArray(array(MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL)) . ');');
+	$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND account_id = sender_id AND message_type_id IN (' . $db->escapeArray(array(MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL)) . ');');
 	//check to see if we need to remove player_has_unread
-	$db2 = new SmrMySqlDatabase();
-	$db2->query('DELETE FROM player_has_unread_messages WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
-	$db2->query('
+	$db->query('DELETE FROM player_has_unread_messages WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+	$db->query('
 		INSERT INTO player_has_unread_messages (game_id, account_id, message_type_id)
 		SELECT game_id, account_id, message_type_id FROM message WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND msg_read = ' . $db->escapeBoolean(false) . ' AND receiver_delete = ' . $db->escapeBoolean(false)
 	);

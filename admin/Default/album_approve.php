@@ -4,7 +4,7 @@ function get_album_nick($album_id) {
 	if ($album_id == 0)
 		return 'System';
 
-	return SmrAccount::getAccount($album_id)->getHofName();
+	return SmrAccount::getAccount($album_id)->getHofDisplayName();
 }
 
 $template->assign('PageTopic', 'Approve Album Entries');

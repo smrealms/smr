@@ -1,3 +1,8 @@
+html, body {
+	width: 100%;  /* fallback for older browsers */
+	width: calc(100vw - 34px); /* Prevent centered content shifting when scrollbar appears */
+}
+
 body{
 	background:#082010;
 	font-family: Arial, sans-serif;
@@ -6,6 +11,9 @@ body{
 	padding:0px;
 	margin-top:10px;
 	color:#ffffff;
+}
+button, input[type=submit] {
+	cursor: pointer;
 }
 a.nobord {
 	text-decoration:none;
@@ -65,6 +73,9 @@ span.small {
 }
 .center {
 	text-align: center;
+}
+.centered {
+	margin: auto;
 }
 table.center {
 	margin:auto;
@@ -170,4 +181,9 @@ ul#main_menu li a {
 }
 .btn-social img {
 	vertical-align: top;
+}
+
+.recaptchatable #recaptcha_response_field {
+	background:white;
+	color: black;
 }

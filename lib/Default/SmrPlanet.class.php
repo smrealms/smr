@@ -2,7 +2,7 @@
 
 // This file defines more than just one class, which is not handled by
 // the autoloader. So we must include it explicitly.
-require_once('SmrPlanetType.class.inc');
+require_once('SmrPlanetType.class.php');
 
 class SmrPlanet {
 	protected static $CACHE_PLANETS = array();
@@ -514,6 +514,11 @@ class SmrPlanet {
 		return $this->mountedWeapons;
 	}
 
+	public function hasMountedWeapon($orderID) {
+		$this->getMountedWeapons(); // Make sure array is initialized
+		return isset($this->mountedWeapons[$orderID]);
+	}
+
 	public function addMountedWeapon($weaponTypeID, $orderID) {
 		$this->getMountedWeapons(); // Make sure array is initialized
 		$this->mountedWeapons[$orderID] = SmrWeapon::getWeapon($weaponTypeID);
@@ -526,48 +531,37 @@ class SmrPlanet {
 		$this->hasChangedWeapons[$orderID] = true;
 	}
 
-	public function moveMountedWeaponUp($orderID) {
+	private function swapMountedWeapons($orderID1, $orderID2) {
 		$this->getMountedWeapons(); // Make sure array is initialized
+		if (isset($this->mountedWeapons[$orderID1])) {
+			$saveWeapon = $this->mountedWeapons[$orderID1];
+		}
+		if (isset($this->mountedWeapons[$orderID2])) {
+			$this->mountedWeapons[$orderID1] = $this->mountedWeapons[$orderID2];
+		} else {
+			unset($this->mountedWeapons[$orderID1]);
+		}
+		if (isset($saveWeapon)) {
+			$this->mountedWeapons[$orderID2] = $saveWeapon;
+		} else {
+			unset($this->mountedWeapons[$orderID2]);
+		}
+		$this->hasChangedWeapons[$orderID1] = true;
+		$this->hasChangedWeapons[$orderID2] = true;
+	}
+
+	public function moveMountedWeaponUp($orderID) {
 		if ($orderID == 0) {
 			throw new Exception('Cannot move this weapon up!');
 		}
-		if (isset($this->mountedWeapons[$orderID - 1])) {
-			$previousWeapon = $this->mountedWeapons[$orderID - 1];
-		}
-		if (isset($this->mountedWeapons[$orderID])) {
-			$this->mountedWeapons[$orderID - 1] = $this->mountedWeapons[$orderID];
-		} else {
-			unset($this->mountedWeapons[$orderID - 1]);
-		}
-		if (isset($previousWeapon)) {
-			$this->mountedWeapons[$orderID] = $previousWeapon;
-		} else {
-			unset($this->mountedWeapons[$orderID]);
-		}
-		$this->hasChangedWeapons[$orderID] = true;
-		$this->hasChangedWeapons[$orderID - 1] = true;
+		$this->swapMountedWeapons($orderID - 1, $orderID);
 	}
 
 	public function moveMountedWeaponDown($orderID) {
-		$this->getMountedWeapons(); // Make sure array is initialized
 		if ($orderID == $this->getMaxMountedWeapons() - 1) {
 			throw new Exception('Cannot move this weapon down!');
 		}
-		if (isset($this->mountedWeapons[$orderID + 1])) {
-			$nextWeapon = $this->mountedWeapons[$orderID + 1];
-		}
-		if (isset($this->mountedWeapons[$orderID])) {
-			$this->mountedWeapons[$orderID + 1] = $this->mountedWeapons[$orderID];
-		} else {
-			unset($this->mountedWeapons[$orderID + 1]);
-		}
-		if (isset($nextWeapon)) {
-			$this->mountedWeapons[$orderID] = $nextWeapon;
-		} else {
-			unset($this->mountedWeapons[$orderID]);
-		}
-		$this->hasChangedWeapons[$orderID] = true;
-		$this->hasChangedWeapons[$orderID + 1] = true;
+		$this->swapMountedWeapons($orderID + 1, $orderID);
 	}
 
 
@@ -1176,12 +1170,16 @@ class SmrPlanet {
 		return $results;
 	}
 
-	public function &checkForDowngrade($damage) {
-		$results = '';
+	/**
+	 * Returns an array of structure losses due to damage taken.
+	 */
+	public function checkForDowngrade($damage) : array {
+		$results = [];
 		// For every 70 damage there is a 15% chance of destroying a structure.
 		// Which structure is destroyed depends on the ratio of buildings and
 		// the time it takes to build them.
-		for ($i = 0; $damage > self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE; $damage -= self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE) {
+		$numChances = floor($damage / self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
+		for ($i = 0; $i < $numChances; $i++) {
 			// Stop if the planet has no more buildlings
 			if ($this->getLevel() == 0) {
 				break;
@@ -1195,7 +1193,11 @@ class SmrPlanet {
 				$destroyID = getWeightedRandom($chanceFactors);
 				$this->destroyBuilding($destroyID, 1);
 				$this->checkForExcessDefense();
-				$results .= 'This team destroys <span class="red">1</span> ' . $this->getStructureTypes($destroyID)->name() . '.<br />';
+				if (isset($results[$destroyID])) {
+					$results[$destroyID] += 1;
+				} else {
+					$results[$destroyID] = 1;
+				}
 			}
 		}
 		return $results;

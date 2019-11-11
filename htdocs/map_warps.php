@@ -51,17 +51,21 @@ try {
 ?>
 
 <!DOCTYPE html>
-<meta charset="utf-8">
+<html>
+	<head>
+		<title><?php echo PAGE_TITLE . ": " . SmrGame::getGame($gameID)->getName(); ?></title>
+		<meta charset="utf-8">
+		<style>
+		body { background-image: url("images/stars2.png"); }
+		</style>
+	</head>
 
-<style>
-body { background-image: url("images/stars2.png"); }
-</style>
-
-<body></body>
-
-<script src="https://d3js.org/d3.v5.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script>
-	const graph = <?php echo $data; ?>;
-</script>
-<script src="js/map_warps.js"></script>
+	<body>
+		<script src="https://d3js.org/d3.v5.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script>
+			const graph = <?php echo $data; ?>;
+		</script>
+		<script src="js/map_warps.js"></script>
+	</body>
+</html>

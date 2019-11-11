@@ -19,7 +19,7 @@ while ($db->nextRecord()) {
 	$shareFrom[$fromAccountId] = array(
 		'Player ID'   => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
 		'Player Name' => $otherPlayer == null ?
-		                 '<b>Account</b>: ' . SmrAccount::getAccount($fromAccountId)->getHofName() :
+		                 '<b>Account</b>: ' . SmrAccount::getAccount($fromAccountId)->getHofDisplayName() :
 		                 $otherPlayer->getPlayerName(),
 		'All Games'   => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
 		'Game ID'     => $gameId,
@@ -40,7 +40,7 @@ while ($db->nextRecord()) {
 	$shareTo[$toAccountId] = array(
 		'Player ID'   => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
 		'Player Name' => $otherPlayer == null ?
-		                 '<b>Account</b>: ' . SmrAccount::getAccount($toAccountId)->getHofName() :
+		                 '<b>Account</b>: ' . SmrAccount::getAccount($toAccountId)->getHofDisplayName() :
 		                 $otherPlayer->getPlayerName(),
 		'All Games'   => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
 		'Game ID'     => $gameId,

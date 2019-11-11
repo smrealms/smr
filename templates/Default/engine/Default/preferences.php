@@ -172,7 +172,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>Hall of Fame Name:</td>
-			<td><input type="text" name="HoF_name" value="<?php echo htmlspecialchars($ThisAccount->getHofName()); ?>" class="InputFields" size="50" /></td>
+			<td><input type="text" name="HoF_name" value="<?php echo $ThisAccount->getHofDisplayName(); ?>" class="InputFields" size="50" /></td>
 		</tr>
 		
 		<tr>
@@ -419,8 +419,8 @@ if (isset($GameID)) { ?>
 			<td>
 				<input type="number" name="amount" class="InputFields center" style="width:50px;" /> credits to <?php if (!isset($GameID)) { ?>the account with HoF name of <?php } ?>
 				<select name="account_id" class="InputFields"><?php
-					foreach ($TransferAccounts as $AccID => $AccOrPlayerName) {
-						?><option value="<?php echo $AccID; ?>"><?php echo $AccOrPlayerName; ?></option><?php
+					foreach ($TransferAccounts as $AccID => $HofDisplayName) {
+						?><option value="<?php echo $AccID; ?>"><?php echo $HofDisplayName; ?></option><?php
 					} ?>
 				</select>
 			</td>

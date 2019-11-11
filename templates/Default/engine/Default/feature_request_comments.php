@@ -12,7 +12,7 @@ if (isset($Comments)) { ?>
 				if ($Comment['Anonymous']) {
 					?>Anonymous<?php
 				} else {
-					echo $Comment['PosterAccount']->getHofName();
+					echo $Comment['PosterAccount']->getHofDisplayName();
 				}
 				if ($FeatureModerator) {
 					?> - <?php echo $Comment['PosterAccount']->getLogin(); ?>&nbsp;(<?php echo $Comment['PosterAccount']->getAccountID(); ?>)</td><?php

@@ -44,7 +44,7 @@
 			<td class="right bold">HoF Name:</td>
 			<td><?php
 				if (isset($EditingAccount)) {
-					echo $EditingAccount->getHofName();
+					echo $EditingAccount->getHofDisplayName();
 				} else { ?>
 					<input type="text" name="hofname" class="InputFields" size="20"><?php
 				} ?>

@@ -11,9 +11,9 @@ if (isset($var['processing_msg'])) {
 $db->query('SELECT game_name, game_id FROM game WHERE enabled=' . $db->escapeBoolean(false));
 $disabledGames = array();
 while ($db->nextRecord()) {
-	$disabledGames[] = array('game_name' => $db->getField('game_name'),
-	                         'game_id' => $db->getInt('game_id'));
+	$disabledGames[$db->getInt('game_id')] = $db->getField('game_name');
 }
+krsort($disabledGames);
 $template->assign('DisabledGames', $disabledGames);
 
 // Create the link to the processing file

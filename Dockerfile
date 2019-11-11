@@ -40,12 +40,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY composer.json .
 RUN composer install --no-interaction
 
-# Use the production php.ini unless PHP_DEBUG=1 (defaults to 0)
+# Set the baseline php.ini version based on the value of PHP_DEBUG
 ARG PHP_DEBUG=0
-RUN [ "$PHP_DEBUG" = "1" ] && echo "Using development php.ini" || \
-	{ echo "Using production php.ini" && \
-	  tar -xOvf /usr/src/php.tar.xz php-$PHP_VERSION/php.ini-production > /usr/local/etc/php/php.ini; \
-	}
+RUN MODE=$([ "$PHP_DEBUG" = "0" ] && echo "production" || echo "development") && \
+	echo "Using $MODE php.ini" && \
+	tar -xOvf /usr/src/php.tar.xz php-$PHP_VERSION/php.ini-$MODE > /usr/local/etc/php/php.ini
 
 COPY --from=builder /smr .
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html

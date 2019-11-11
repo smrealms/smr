@@ -15,7 +15,11 @@ if ($sector->hasLocation()) {
 function getInputAmount($name) {
 	global $var;
 	$value = $var[$name] ?? ($_REQUEST[$name] ?? 0);
-	// Any non-numeric value is bypassing the HTML5 input type
+	// Empty strings are a valid HTML5 "number" input type value
+	if (empty($value)) {
+		$value = 0;
+	}
+	// Any other non-numeric value is bypassing the HTML5 input type validator
 	if (!is_numeric($value)) {
 		throw new Exception('Expected numeric value for ' . $name . ', got ' . $value);
 	}
