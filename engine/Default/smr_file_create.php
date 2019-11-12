@@ -47,10 +47,10 @@ foreach ($hardwares as $hardware) {
 }
 
 $file .= '[Ships]
-; Name = Race,Cost,TPH,Hardpoints,Power,+Equipment (Optional),+Restrictions(Optional)
+; Name = Race,Cost,TPH,Hardpoints,Power,Class,+Equipment (Optional),+Restrictions(Optional)
 ; Restrictions:Align(Integer)' . EOL;
 foreach (AbstractSmrShip::getAllBaseShips(Globals::getGameType($gameID)) as $ship) {
-	$file .= inify($ship['Name']) . '=' . Globals::getRaceName($ship['RaceID']) . ',' . $ship['Cost'] . ',' . $ship['Speed'] . ',' . $ship['Hardpoint'] . ',' . $ship['MaxPower'];
+	$file .= inify($ship['Name']) . '=' . Globals::getRaceName($ship['RaceID']) . ',' . $ship['Cost'] . ',' . $ship['Speed'] . ',' . $ship['Hardpoint'] . ',' . $ship['MaxPower'] . ',' . Globals::getShipClass($ship['ShipClassID']);
 	if ($ship['MaxHardware'] > 0) {
 		$shipEquip = ',ShipEquipment=';
 		foreach ($ship['MaxHardware'] as $hardwareID => $maxHardware) {
