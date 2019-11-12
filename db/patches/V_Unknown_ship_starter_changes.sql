@@ -1,6 +1,3 @@
---Galactic Semi cargo holds from 60 to 95.  Trade throughput increase from 480 (8tph * 60 holds) to 760 (8tph * 95 cargo holds).
-UPDATE ship_type_support_hardware SET max_amount = 95 WHERE ship_type_id = 1 AND hardware_type_id = 3;
-
 --Armored Semi cargo holds from 60 to 140.  TTP increase from 420 to 980.
 UPDATE ship_type_support_hardware SET max_amount = 140 WHERE ship_type_id = 2 AND hardware_type_id = 3;
 
