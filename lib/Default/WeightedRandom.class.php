@@ -88,6 +88,10 @@ class WeightedRandom {
 	 * reduce that chance by the current weighting, and then check the result.
 	 */
 	public function flipWeightedCoin($successChance) : bool {
+		// The weighting update formulas below only work in the range [0, 100].
+		$successChance = min(100, max(0, $successChance));
+
+		// Check if the event was successful.
 		$success = mt_rand(1, 100) + $this->weighting <= $successChance;
 
 		// Now update the weighting (the extra factor is needed to achieve the
