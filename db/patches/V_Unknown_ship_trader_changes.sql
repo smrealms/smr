@@ -38,7 +38,7 @@ UPDATE ship_type_support_hardware SET max_amount = 170 WHERE ship_type_id = 57 A
 UPDATE ship_type_support_hardware SET max_amount = 170 WHERE ship_type_id = 57 AND hardware_type_id = 3;
 
 --Negotiator +1,397,104 cost (155,234 -> 1,552,340).
-UPDATE ship_type SET cost = 1397104 WHERE ship_type_id = 57;
+UPDATE ship_type SET cost = 1552340 WHERE ship_type_id = 57;
 
 --Blockade Runner +40 holds (175 -> 215).  TTP +360 (1575 -> 1935)
 UPDATE ship_type_support_hardware SET max_amount = 215 WHERE ship_type_id = 66 AND hardware_type_id = 3;
