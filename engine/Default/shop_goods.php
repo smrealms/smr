@@ -35,6 +35,7 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 	if ($port->hasGood(GOODS_NARCOTICS))
 		$base_chance -= 4;
 
+	//IF evil ship OR blockade runner THEN reduce chance of being caught with illegal goods
 	if ($ship->isUnderground() || ($ship->getShipTypeID() == 66)) {
 		$base_chance -= 4;
 	}
