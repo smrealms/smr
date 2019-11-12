@@ -35,7 +35,7 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 	if ($port->hasGood(GOODS_NARCOTICS))
 		$base_chance -= 4;
 
-	if ($ship->isUnderground()) {
+	if ($ship->isUnderground() || ($ship->getShipTypeID() == 66)) {
 		$base_chance -= 4;
 	}
 
