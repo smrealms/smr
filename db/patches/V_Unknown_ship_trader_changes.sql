@@ -1,6 +1,9 @@
 --Merchant Vessel -20  holds (170 -> 150).  Trade throughput down from 1530 (9tph * 170 cargo holds) to 1350 (9tph * 150 cargo holds).
 UPDATE ship_type_support_hardware SET max_amount = 150 WHERE ship_type_id = 4 AND hardware_type_id = 3;
 
+--Celestial Trader +30 holds (80 -> 110).  TTP + 270 (720 -> 990)
+UPDATE ship_type_support_hardware SET max_amount = 110 WHERE ship_type_id = 3 AND hardware_type_id = 3;
+
 --Light Courier Vessel +60 holds (120 -> 180).  TTP +600 (1200 -> 1800).
 UPDATE ship_type_support_hardware SET max_amount = 150 WHERE ship_type_id = 7 AND hardware_type_id = 3;
 
