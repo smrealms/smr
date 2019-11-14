@@ -856,11 +856,15 @@ abstract class AbstractSmrShip {
 	}
 
 	public function isFederal() {
-		return $this->getShipTypeID() == 20 || $this->getShipTypeID() == 21 || $this->getShipTypeID() == 22;
+		return $this->getShipTypeID() == SHIP_TYPE_FEDERAL_DISCOVERY ||
+		       $this->getShipTypeID() == SHIP_TYPE_FEDERAL_WARRANT ||
+		       $this->getShipTypeID() == SHIP_TYPE_FEDERAL_ULTIMATUM;
 	}
 
 	public function isUnderground() {
-		return $this->getShipTypeID() == 23 || $this->getShipTypeID() == 24 || $this->getShipTypeID() == 25;
+		return $this->getShipTypeID() == SHIP_TYPE_THIEF ||
+		       $this->getShipTypeID() == SHIP_TYPE_ASSASSIN ||
+		       $this->getShipTypeID() == SHIP_TYPE_DEATH_CRUISER;
 	}
 
 	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
