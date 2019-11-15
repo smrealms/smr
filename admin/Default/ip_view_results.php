@@ -4,8 +4,6 @@ $type = SmrSession::getRequestVar('type');
 
 $db2 = new SmrMySqlDatabase();
 
-$template->assign('PageTopic', 'IP Search Results');
-
 $container = create_container('skeleton.php', 'ip_view.php');
 $template->assign('BackHREF', SmrSession::getNewHREF($container));
 
@@ -17,6 +15,7 @@ $template->assign('type', $type);
 if ($type == 'comp_share') {
 	//another script for comp share
 	require(get_file_loc('comp_share.php'));
+	return;
 
 } elseif ($type == 'list') {
 	//=========================================================
@@ -236,3 +235,5 @@ if ($type == 'comp_share') {
 	$template->assign('Rows', $rows);
 
 }
+
+$template->assign('PageTopic', 'IP Search Results');
