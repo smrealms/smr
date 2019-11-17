@@ -108,7 +108,7 @@ if ($transaction == 'Steal' ||
 		$player->increaseHOF($gained_exp, array('Trade', 'Experience', 'Buying'), HOF_PUBLIC);
 		$player->decreaseHOF($bargain_price, array('Trade', 'Money', 'Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Buying'), HOF_PUBLIC);
-		$port->tradeGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
+		$port->tradeGoods($portGood, $amount, $bargain_price, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
 	}
 	elseif ($transaction == 'Sell') {
@@ -119,7 +119,7 @@ if ($transaction == 'Steal' ||
 		$player->increaseHOF($gained_exp, array('Trade', 'Experience', 'Selling'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Selling'), HOF_PUBLIC);
-		$port->tradeGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
+		$port->tradeGoods($portGood, $amount, $bargain_price, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
 	}
 	elseif ($transaction == 'Steal') {

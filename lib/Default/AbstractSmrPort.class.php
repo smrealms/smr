@@ -23,7 +23,9 @@ class AbstractSmrPort {
 	);
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
-	const GOODS_TRADED_UPGRADE_MULTIPLIER = 100;	//max credits possibly applied to port upgrade per unit of good traded
+	const UPGRADE_MULTIPLIER_PER_GOOD_TRADED = 50; //constant upgrade gain per good traded.  increase to speed early game port leveling.
+	const PORT_CREDIT_MARGIN = 0.05; //port adds this percent of all trade value to lootable coffer.  increase to speed port credit accumulation.
+	const PORT_UPGRADE_MARGIN = 0.1; //port adds this percent of all trade value towards upgrades.  increase to speed port upgrade rate.
 	const RAZE_MONEY_PERCENT = 75;
 	
 	protected $db;
@@ -379,13 +381,13 @@ class AbstractSmrPort {
 	}
 	
 	/*
-	* Increases port upgrade/credits and decreases supply due to a trade taking place
+	* Increases port upgrade/credits and decreases supply as the result of a trade
 	*/
-	protected function tradeGoods(array $good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
-		//limit player ability to force port upgrades by capping the max upgrade amount per unit of good traded
-		$this->increaseUpgrade(min(max($idealPrice, $goodsTraded * GOODS_TRADED_UPGRADE_MULTIPLIER), $bargainPrice));
-		//fraction of bargain price applied to credits so that accumulation rate will more closely match previous code
-		$this->increaseCredits($bargainPrice / 10);
+	protected function tradeGoods(array $good, $goodsTraded, $bargainPrice, $exp) {
+		//port gains a cut of the credits traded plus a flat rate for each unit of goods traded
+		$this->increaseUpgrade(($bargainPrice * self::PORT_UPGRADE_MARGIN) + ($goodsTraded * self::UPGRADE_MULTIPLIER_PER_GOOD_TRADED));
+		//port puts a cut of the credits traded in to coffers which can be looted during a raid
+		$this->increaseCredits($bargainPrice * self::PORT_CREDIT_MARGIN);
 		$this->increaseExperience($exp);
 		$this->decreaseGood($good, $goodsTraded, true);
 	}
