@@ -24,8 +24,8 @@ class AbstractSmrPort {
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
 	const UPGRADE_MULTIPLIER_PER_GOOD_TRADED = 50; //constant upgrade gain per good traded.  increase to speed early game port leveling.
-	const PORT_CREDIT_MARGIN = 0.05; //port adds this percent of all trade value to lootable coffer.  increase to speed port credit accumulation.
-	const PORT_UPGRADE_MARGIN = 0.1; //port adds this percent of all trade value towards upgrades.  increase to speed port upgrade rate.
+	const PORT_CREDIT_MARGIN = 0.05; //port adds this decimal percent of all trade value to lootable coffer.  increase to speed port credit accumulation.
+	const PORT_UPGRADE_MARGIN = 0.1; //port adds this decimal percent of all trade value towards upgrades.  increase to speed port upgrade rate.
 	const RAZE_MONEY_PERCENT = 75;
 	
 	protected $db;
