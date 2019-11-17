@@ -23,7 +23,7 @@ class AbstractSmrPort {
 	);
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
-	const GOODS_TRADED_UPGRADE_MULTIPLIER = 333;	//max credits possibly applied to port upgrade per unit of good traded
+	const GOODS_TRADED_UPGRADE_MULTIPLIER = 100;	//max credits possibly applied to port upgrade per unit of good traded
 	const RAZE_MONEY_PERCENT = 75;
 	
 	protected $db;
@@ -384,8 +384,8 @@ class AbstractSmrPort {
 	protected function tradeGoods(array $good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
 		//limit player ability to force port upgrades by capping the max upgrade amount per unit of good traded
 		$this->increaseUpgrade(min(max($idealPrice, $goodsTraded * GOODS_TRADED_UPGRADE_MULTIPLIER), $bargainPrice));
-		//1/3 of bargain price applied to credits so that accumulation rate will more closely match previous code
-		$this->increaseCredits($bargainPrice / 3);
+		//fraction of bargain price applied to credits so that accumulation rate will more closely match previous code
+		$this->increaseCredits($bargainPrice / 10);
 		$this->increaseExperience($exp);
 		$this->decreaseGood($good, $goodsTraded, true);
 	}
