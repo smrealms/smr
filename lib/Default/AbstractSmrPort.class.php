@@ -384,7 +384,7 @@ class AbstractSmrPort {
 	* Increases port upgrade/credits and decreases supply as the result of a trade
 	*/
 	protected function tradeGoods(array $good, $goodsTraded, $bargainPrice, $exp) {
-		//port gains a cut of the credits traded plus a flat rate for each unit of goods traded
+		//port upgrade gains a cut of the credits traded plus a flat rate for each unit of goods traded
 		$this->increaseUpgrade(($bargainPrice * self::PORT_UPGRADE_MARGIN) + ($goodsTraded * self::UPGRADE_MULTIPLIER_PER_GOOD_TRADED));
 		//port puts a cut of the credits traded in to coffers which can be looted during a raid
 		$this->increaseCredits($bargainPrice * self::PORT_CREDIT_MARGIN);
