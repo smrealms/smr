@@ -30,14 +30,14 @@
 
 <table class="center">
 	<tr>
-		<td>
+		<td class="top">
+			<a href="<?php echo $EditGameDetailsHREF; ?>" class="submitStyle">Edit Game Details</a>
+			<p><a href="<?php echo $EditGalaxyDetailsHREF; ?>" class="submitStyle">Edit Galaxies</a></p>
+			<p><a href="<?php echo $CheckMapHREF; ?>" class="submitStyle">Check Map</a></p>
 			<p><a href="<?php echo $SMRFileHREF; ?>" class="submitStyle" target="_blank">Create SMR file</a></p>
-			<p><a href="<?php echo $EditGameDetailsHREF; ?>" class="submitStyle">Edit Game Details</a></p>
-			<p><a href="<?php echo $EditGalaxyDetailsHREF; ?>" class="submitStyle">Edit Galaxy Details</a></p>
-			<p><a href="<?php echo $ResetGalaxyHREF; ?>" class="submitStyle">Reset Current Galaxy</a></p>
 		</td>
 
-		<td>
+		<td class="top">
 			<table class="center standard">
 				<tr><th>Modify Galaxy</th></tr>
 				<tr><td><a href="<?php echo $ModifyLocationsHREF; ?>">Locations</a></td></tr>
@@ -47,7 +47,7 @@
 			</table>
 		</td>
 
-		<td>
+		<td class="top">
 			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
 				<input required type="number" name="connect" placeholder="Connectivity %" class="center" style="width:140px" /><br />
 				<input type="submit" name="submit" value="Redo Connections">
@@ -57,6 +57,7 @@
 				<input required type="number" min="1" max="<?php echo $LastSector; ?>" name="sector_edit" placeholder="Sector ID" class="center" style="width:140px" /><br />
 				<input type="submit" value="Modify Sector" name="submit">
 			</form>
+			<p><a href="<?php echo $ResetGalaxyHREF; ?>" class="submitStyle">Reset Current Galaxy</a></p>
 		</td>
 	</tr>
 </table>
