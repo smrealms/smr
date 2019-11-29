@@ -1,4 +1,4 @@
-FROM php:7.3-cli-alpine as builder
+FROM php:7.4.0-cli-alpine as builder
 
 # Install phpDox - https://github.com/theseer/phpdox
 # - dependency: XSL
