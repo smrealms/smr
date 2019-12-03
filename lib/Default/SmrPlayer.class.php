@@ -1173,7 +1173,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', credits=' . $this->db->escapeNumber($this->credits) .
 				', experience=' . $this->db->escapeNumber($this->experience) .
 				', alignment=' . $this->db->escapeNumber($this->alignment) .
-				', military_payment=' . $this->db->escapeString($this->militaryPayment) .
+				', military_payment=' . $this->db->escapeNumber($this->militaryPayment) .
 //				', past_knowledge='.$this->db->escapeString($this->pastKnowledge).
 				', alliance_id=' . $this->db->escapeNumber($this->allianceID) .
 				', alliance_join=' . $this->db->escapeNumber($this->allianceJoinable) .
@@ -1183,7 +1183,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', assists=' . $this->db->escapeNumber($this->assists) .
 				', last_port=' . $this->db->escapeNumber($this->lastPort) .
 				', bank=' . $this->db->escapeNumber($this->bank) .
-				', zoom=' . $this->db->escapeString($this->zoom) .
+				', zoom=' . $this->db->escapeNumber($this->zoom) .
 				', display_missions=' . $this->db->escapeBoolean($this->displayMissions) .
 				', force_drop_messages=' . $this->db->escapeBoolean($this->forceDropMessages) .
 				', group_scout_messages=' . $this->db->escapeString($this->groupScoutMessages) .
@@ -1206,7 +1206,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 					if ($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0)
 						$this->db->query('UPDATE bounty
 							SET amount=' . $this->db->escapeNumber($bounty['Amount']) . ',
-							smr_credits=' . $this->db->escapeString($bounty['SmrCredits']) . ',
+							smr_credits=' . $this->db->escapeNumber($bounty['SmrCredits']) . ',
 							type=' . $this->db->escapeString($bounty['Type']) . ',
 							claimer_id=' . $this->db->escapeNumber($bounty['Claimer']) . ',
 							time=' . $this->db->escapeNumber($bounty['Time']) . '

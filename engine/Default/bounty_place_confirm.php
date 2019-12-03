@@ -9,12 +9,12 @@ if ($playerID == '0') {
 	create_error('Uhhh...who is [Please Select]?');
 }
 
-$amount = round($amount);
+$amount = intval($amount);
 if ($player->getCredits() < $amount) {
 	create_error('You dont have that much money.');
 }
 
-$smrCredits = round($smrCredits);
+$smrCredits = intval($smrCredits);
 if ($account->getSmrCredits() < $smrCredits) {
 	create_error('You dont have that many SMR credits.');
 }
