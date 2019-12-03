@@ -5,12 +5,12 @@
     "require": {
         "abraham/twitteroauth": "^1.0",
         "ext-curl": "*",
-        "ext-json": "^1.0.0",
+        "ext-json": "*",
         "ext-mysqli": "*",
         "facebook/graph-sdk": "^5.5.0",
         "google/recaptcha": "^1.1",
-        "php": "^7.3",
-        "phpmailer/phpmailer": "^6.0",
+        "php": "^7.4",
+        "phpmailer/phpmailer": "^6.1",
         "vanilla/nbbc": "^2.0"
     }
 }

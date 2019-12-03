@@ -1,4 +1,4 @@
-FROM php:7.3-cli-alpine
+FROM php:7.4-cli-alpine
 
 RUN docker-php-ext-install mysqli
 
@@ -8,7 +8,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Install an extension for redefining constants
 # (The .build-deps package group is needed to run `pecl install`)
 RUN apk add --no-cache --virtual .build-deps pcre-dev ${PHPIZE_DEPS} \
-	&& pecl install uopz-6.0.1 \
+	&& pecl install uopz-6.1.1 \
 	&& docker-php-ext-enable uopz \
 	&& apk del .build-deps
 

@@ -1,10 +1,12 @@
-FROM php:7.3-cli-alpine as builder
+FROM php:7.4-cli-alpine as builder
 
 # Install phpDox - https://github.com/theseer/phpdox
+# - dependency: gcrypt (missing prereq for libxslt-dev)
 # - dependency: XSL
 # - dependency: git (for composer and git enricher)
 
 RUN apk upgrade --update && apk add --no-cache \
+    libgcrypt-dev \
     libxslt-dev \
     git \
     && docker-php-ext-install xsl
