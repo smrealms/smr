@@ -119,7 +119,7 @@ if ($db->getNumRows() > 0) {
 
 	while ($db->nextRecord()) {
 		$sectorID = $db->getInt('sector_id');
-		$logs[$db->getField('log_id')] = array(
+		$logs[$db->getInt('log_id')] = array(
 			'Attacker' => getParticipantName($db->getInt('attacker_id'), $sectorID),
 			'Defender' => getParticipantName($db->getInt('defender_id'), $sectorID),
 			'Time' => $db->getInt('timestamp'),

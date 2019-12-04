@@ -78,7 +78,7 @@ if ($action == 'Deposit') {
 						AND transaction = \'Payment\'
 						AND exempt = 0
 						AND time > ' . $db->escapeNumber(TIME - 86400));
-		if ($db->nextRecord() && !is_null($db->getField('total'))) {
+		if ($db->nextRecord() && !is_null($db->getInt('total'))) {
 			$total = $db->getInt('total');
 		} else {
 			$total = 0;

@@ -31,7 +31,7 @@ while ($db->nextRecord()) {
 	$container['back'] = true;
 
 	$pastEditions[] = array('title' => $db->getField('title'),
-	                        'online_since' => $db->getField('online_since'),
+	                        'online_since' => $db->getInt('online_since'),
 	                        'href' => SmrSession::getNewHREF($container));
 }
 $template->assign('PastEditions', $pastEditions);

@@ -25,7 +25,7 @@ if (empty($gameID)) {
 		$gamePlayers = array();
 		$db->query('SELECT account_id,player_id,player_name FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY player_name');
 		while ($db->nextRecord()) {
-			$gamePlayers[] = array('AccountID' => $db->getField('account_id'), 'PlayerID' => $db->getField('player_id'), 'Name' => $db->getField('player_name'));
+			$gamePlayers[] = array('AccountID' => $db->getInt('account_id'), 'PlayerID' => $db->getInt('player_id'), 'Name' => $db->getField('player_name'));
 		}
 		$template->assign('GamePlayers', $gamePlayers);
 	}

@@ -26,15 +26,15 @@ if ($db->getNumRows() > 0) {
 
 	$featureRequestComments = array();
 	while ($db->nextRecord()) {
-		$commentID = $db->getField('comment_id');
+		$commentID = $db->getInt('comment_id');
 		$featureRequestComments[$commentID] = array(
 								'CommentID' => $commentID,
 								'Message' => $db->getField('text'),
-								'Time' => date(DATE_FULL_SHORT, $db->getField('posting_time')),
+								'Time' => date(DATE_FULL_SHORT, $db->getInt('posting_time')),
 								'Anonymous' => $db->getBoolean('anonymous')
 		);
 		if ($featureModerator || !$db->getBoolean('anonymous')) {
-			$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($db->getField('poster_id'));
+			$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($db->getInt('poster_id'));
 		}
 	}
 	$template->assign('Comments', $featureRequestComments);

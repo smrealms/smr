@@ -45,6 +45,6 @@ ORDER BY sector_id ASC');
 
 $forces = array();
 while ($db->nextRecord()) {
-	$forces[] = SmrForce::getForce($player->getGameID(), $db->getField('sector_id'), $db->getField('owner_id'), false, $db);
+	$forces[] = SmrForce::getForce($player->getGameID(), $db->getInt('sector_id'), $db->getInt('owner_id'), false, $db);
 }
 $template->assign('Forces', $forces);

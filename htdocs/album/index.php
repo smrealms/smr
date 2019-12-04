@@ -57,13 +57,13 @@ try {
 					ORDER BY hof_name');
 			
 			if ($db2->nextRecord())
-				album_entry($db2->getField('album_id'));
+				album_entry($db2->getInt('album_id'));
 			else {
 				// get all id's and build array
 				$album_ids = array();
 		
 				while ($db->nextRecord())
-					$album_ids[] = $db->getField('album_id');
+					$album_ids[] = $db->getInt('album_id');
 		
 				// double check if we have id's
 				if (count($album_ids) > 0)
@@ -75,7 +75,7 @@ try {
 		}
 		elseif ($db->getNumRows() == 1) {
 			if ($db->nextRecord())
-				album_entry($db->getField('album_id'));
+				album_entry($db->getInt('album_id'));
 			else
 				main_page();
 		}

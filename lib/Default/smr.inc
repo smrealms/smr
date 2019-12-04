@@ -601,7 +601,7 @@ function doTickerAssigns($template, $player, $db) {
 			//get recent news (5 mins)
 			$db->query('SELECT time,news_message FROM news WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time >= ' . $max . ' ORDER BY time DESC LIMIT 4');
 			while ($db->nextRecord()) {
-				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getField('time')),
+				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getInt('time')),
 								'Message'=>$db->getField('news_message'));
 			}
 		}
@@ -615,7 +615,7 @@ function doTickerAssigns($template, $player, $db) {
 						ORDER BY send_time DESC
 						LIMIT 4');
 			while ($db->nextRecord()) {
-				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getField('send_time')),
+				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getInt('send_time')),
 								'Message'=>$db->getField('message_text'));
 			}
 		}

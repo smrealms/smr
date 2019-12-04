@@ -77,9 +77,9 @@ if ($action == 'Yes') {
 		$db->query('SELECT * FROM alliance_vs_alliance WHERE game_id = '.$db->escapeNumber($game_id));
 		while ($db->nextRecord()) {
 
-			$alliance_1 = $db->getField('alliance_id_1');
-			$alliance_2 = $db->getField('alliance_id_2');
-			$kills = $db->getField('kills');
+			$alliance_1 = $db->getInt('alliance_id_1');
+			$alliance_2 = $db->getInt('alliance_id_2');
+			$kills = $db->getInt('kills');
 			$history_db_sql[] = 'INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) ' .
 								'VALUES ('.$game_id.', '.$alliance_1.', '.$alliance_2.', '.$kills.')';
 
@@ -120,7 +120,7 @@ if ($action == 'Yes') {
 		while ($db->nextRecord()) {
 
 			// get info we want
-			$time = $db->getField('time');
+			$time = $db->getInt('time');
 			$msg = $db->getField('news_message');
 
 			// insert into history db
@@ -139,19 +139,19 @@ if ($action == 'Yes') {
 		while ($db->nextRecord()) {
 
 			// get info we want
-			$sector = $db->getField('sector_id');
-			$owner = $db->getField('owner_id');
+			$sector = $db->getInt('sector_id');
+			$owner = $db->getInt('owner_id');
 
 			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 1');
-			if ($db2->nextRecord()) $gens = $db2->getField('amount');
+			if ($db2->nextRecord()) $gens = $db2->getInt('amount');
 			else $gens = 0;
 
 			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 2');
-			if ($db2->nextRecord()) $hangs = $db2->getField('amount');
+			if ($db2->nextRecord()) $hangs = $db2->getInt('amount');
 			else $hangs = 0;
 
 			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 3');
-			if ($db2->nextRecord()) $turs = $db2->getField('amount');
+			if ($db2->nextRecord()) $turs = $db2->getInt('amount');
 			else $turs = 0;
 
 			// insert into history db
@@ -174,23 +174,23 @@ if ($action == 'Yes') {
 		while ($db->nextRecord()) {
 
 			// get info we want
-			$acc_id = $db->getField('account_id');
+			$acc_id = $db->getInt('account_id');
 			$name = stripslashes($db->getField('player_name'));
-			$id = $db->getField('player_id');
-			$exp = $db->getField('experience');
-			$ship = $db->getField('ship_type_id');
-			$race = $db->getField('race_id');
-			$align = $db->getField('alignment');
-			$alli = $db->getField('alliance_id');
-			$kills = $db->getField('kills');
-			$deaths = $db->getField('deaths');
+			$id = $db->getInt('player_id');
+			$exp = $db->getInt('experience');
+			$ship = $db->getInt('ship_type_id');
+			$race = $db->getInt('race_id');
+			$align = $db->getInt('alignment');
+			$alli = $db->getInt('alliance_id');
+			$kills = $db->getInt('kills');
+			$deaths = $db->getInt('deaths');
 
 			$amount = 0;
 			$smrCredits = 0;
 			$db2->query('SELECT sum(amount) as bounty_am, sum(smr_credits) as bounty_cred FROM bounty WHERE game_id = '.$game_id.' AND account_id = '.$acc_id.' AND claimer_id = 0');
 			if ($db2->nextRecord()) {
-				if (is_int($db2->getField('bounty_am'))) $amount = $db2->getField('bounty_am');
-				if (is_int($db2->getField('bounty_cred'))) $smrCredits = $db2->getField('bounty_cred');
+				if (is_int($db2->getField('bounty_am'))) $amount = $db2->getInt('bounty_am');
+				if (is_int($db2->getField('bounty_cred'))) $smrCredits = $db2->getInt('bounty_cred');
 
 			}
 
@@ -233,17 +233,17 @@ if ($action == 'Yes') {
 		while ($db->nextRecord()) {
 
 			// get info we want
-			$sector = $db->getField('sector_id');
-			$kills = $db->getField('battles');
-			$gal_id = $db->getField('galaxy_id');
+			$sector = $db->getInt('sector_id');
+			$kills = $db->getInt('battles');
+			$gal_id = $db->getInt('galaxy_id');
 
 			$db2->query('SELECT sum(mines) as sum_mines, sum(combat_drones) as cds, sum(scout_drones) as sds FROM sector_has_forces ' .
 						'WHERE sector_id = '.$sector.' AND game_id = '.$game_id.' GROUP BY sector_id');
 			if ($db2->nextRecord()) {
 
-				$mines = $db2->getField('sum_mines');
-				$cds = $db2->getField('cds');
-				$sds = $db2->getField('sds');
+				$mines = $db2->getInt('sum_mines');
+				$cds = $db2->getInt('cds');
+				$sds = $db2->getInt('sds');
 				if (!is_numeric($mines)) $mines = 0;
 				if (!is_numeric($cds)) $cds = 0;
 				if (!is_numeric($sds)) $sds = 0;

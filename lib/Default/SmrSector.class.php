@@ -113,16 +113,16 @@ class SmrSector {
 			$this->battles = $db->getInt('battles');
 
 			$this->links = array();
-			if ($db->getField('link_up')) {
+			if ($db->getInt('link_up')) {
 				$this->links['Up'] = $db->getInt('link_up');
 			}
-			if ($db->getField('link_down')) {
+			if ($db->getInt('link_down')) {
 				$this->links['Down'] = $db->getInt('link_down');
 			}
-			if ($db->getField('link_left')) {
+			if ($db->getInt('link_left')) {
 				$this->links['Left'] = $db->getInt('link_left');
 			}
-			if ($db->getField('link_right')) {
+			if ($db->getInt('link_right')) {
 				$this->links['Right'] = $db->getInt('link_right');
 			}
 			$this->warp = $db->getInt('warp');

@@ -27,7 +27,7 @@ function modifyRelations($race_id_1) {
 						AND race_id_2 = ' . $db2->escapeNumber($race_id_2) . '
 						AND game_id = ' . $db2->escapeNumber($player->getGameID()));
 		if ($db2->nextRecord())
-			$relation = $db2->getField('relation') + $relation_modifier;
+			$relation = $db2->getInt('relation') + $relation_modifier;
 
 		if ($relation < MIN_GLOBAL_RELATIONS) {
 			$relation = MIN_GLOBAL_RELATIONS;

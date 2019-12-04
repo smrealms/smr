@@ -16,7 +16,7 @@ while ($db->nextRecord()) {
 
 	$ranks[] = [
 		'style' => $style,
-		'race_id' => $db->getField('race_id'),
+		'race_id' => $db->getInt('race_id'),
 		'exp_sum' => $db->getInt('exp_sum'),
 		'exp_avg' => round($db->getInt('exp_sum') / $db->getInt('num_players')),
 		'num_players' => $db->getInt('num_players'),

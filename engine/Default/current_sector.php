@@ -30,7 +30,7 @@ $unvisited = array();
 
 $db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
 while ($db->nextRecord()) {
-	$unvisited[$db->getField('sector_id')] = TRUE;
+	$unvisited[$db->getInt('sector_id')] = TRUE;
 }
 
 foreach ($links as $key => $linkArray) {
@@ -147,7 +147,7 @@ function checkForForceRefreshMessage(&$msg) {
 			$forceRefreshMessage = '';
 			$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . $db->escapeNumber(TIME) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
 			if ($db->nextRecord()) {
-				$remainingTime = $db->getField('refresh_at') - TIME;
+				$remainingTime = $db->getInt('refresh_at') - TIME;
 				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
 				$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', \'[Force Check]\')');
 			}
@@ -167,7 +167,7 @@ function checkForAttackMessage(&$msg) {
 		if (!$template->hasTemplateVar('AttackResults')) {
 			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');
 			if ($db->nextRecord()) {
-				if ($player->getSectorID() == $db->getField('sector_id')) {
+				if ($player->getSectorID() == $db->getInt('sector_id')) {
 					$results = unserialize(gzuncompress($db->getField('result')));
 					$template->assign('AttackResultsType', $db->getField('type'));
 					$template->assign('AttackResults', $results);

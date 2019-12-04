@@ -40,7 +40,7 @@ $db->query('SELECT location_name, location_type_id
 			ORDER BY location_type_id');
 $races = array();
 while ($db->nextRecord()) {
-	$curr_race_id = $db->getField('location_type_id') - 101;
+	$curr_race_id = $db->getInt('location_type_id') - 101;
 	if (in_array($curr_race_id, $only)) {
 		continue;
 	}

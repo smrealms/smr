@@ -32,8 +32,8 @@ function main_page() {
 				LIMIT 5');
 	if ($db->getNumRows()) {
 		while ($db->nextRecord()) {
-			$page_views = $db->getField('page_views');
-			$nick = get_album_nick($db->getField('account_id'));
+			$page_views = $db->getInt('page_views');
+			$nick = get_album_nick($db->getInt('account_id'));
 
 			echo('<a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> (' . $page_views . ')<br />');
 		}
@@ -48,8 +48,8 @@ function main_page() {
 				LIMIT 5');
 	if ($db->getNumRows()) {
 		while ($db->nextRecord()) {
-			$created = $db->getField('created');
-			$nick = get_album_nick($db->getField('account_id'));
+			$created = $db->getInt('created');
+			$nick = get_album_nick($db->getInt('account_id'));
 
 			echo('<span style="font-size:85%;"><b>[' . date(defined('DATE_FULL_SHORT') ?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $created) . ']</b> Picture of <a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> added</span><br />');
 		}
@@ -85,8 +85,8 @@ function album_entry($album_id) {
 		$month = $db->getField('month');
 		$year = $db->getField('year');
 		$other = nl2br(stripslashes($db->getField('other')));
-		$page_views = $db->getField('page_views');
-		$disabled = $db->getField('disabled') == 'TRUE';
+		$page_views = $db->getInt('page_views');
+		$disabled = $db->getBoolean('disabled');
 	}
 	else {
 		echo('<h1>Error</h1>');
@@ -191,8 +191,8 @@ function album_entry($album_id) {
 				FROM album_has_comments
 				WHERE album_id = '.$db->escapeNumber($album_id));
 	while ($db->nextRecord()) {
-		$time = $db->getField('time');
-		$postee = get_album_nick($db->getField('post_id'));
+		$time = $db->getInt('time');
+		$postee = get_album_nick($db->getInt('post_id'));
 		$msg = stripslashes($db->getField('msg'));
 
 		echo('<span style="font-size:85%;">[' . date(defined('DATE_FULL_SHORT') ?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $time) . '] &lt;' . $postee . '&gt; ' . $msg . '</span><br />');

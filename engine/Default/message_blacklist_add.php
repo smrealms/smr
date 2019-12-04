@@ -18,7 +18,7 @@ if (isset($var['account_id'])) {
 		$container['msg'] = '<span class="red bold">ERROR: </span>Player does not exist.';
 		forward($container);
 	}
-	$blacklisted_id = $db->getField('account_id');
+	$blacklisted_id = $db->getInt('account_id');
 }
 
 $db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted_id) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');

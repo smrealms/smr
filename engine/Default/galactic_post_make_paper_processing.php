@@ -2,7 +2,7 @@
 
 $db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY paper_id DESC');
 if ($db->nextRecord()) {
-	$num = $db->getField('paper_id') + 1;
+	$num = $db->getInt('paper_id') + 1;
 } else {
 	$num = 1;
 }

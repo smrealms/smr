@@ -13,7 +13,7 @@ $db->query('SELECT * FROM player_votes_relation
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
 $votedForRace = -1;
 if ($db->nextRecord()) {
-	$votedForRace = $db->getField('race_id_2');
+	$votedForRace = $db->getInt('race_id_2');
 	$votedFor = $db->getField('action');
 }
 
@@ -43,7 +43,7 @@ if ($db->getNumRows() > 0) {
 	$db2 = new SmrMySqlDatabase();
 
 	while ($db->nextRecord()) {
-		$otherRaceID = $db->getField('race_id_2');
+		$otherRaceID = $db->getInt('race_id_2');
 		$container = create_container('council_vote_processing.php', '', array('race_id' => $otherRaceID));
 
 		// get 'yes' votes
@@ -77,7 +77,7 @@ if ($db->getNumRows() > 0) {
 		$voteTreaties[$otherRaceID] = array(
 			'HREF' => SmrSession::getNewHREF($container),
 			'Type' => $db->getField('type'),
-			'EndTime' => $db->getField('end_time'),
+			'EndTime' => $db->getInt('end_time'),
 			'For' => $votedFor == 'YES',
 			'Against' => $votedFor == 'NO',
 			'NoVotes' => $noVotes,

@@ -11,8 +11,8 @@ $db->query('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id
 if (!$db->nextRecord()) {
 	create_error('Combat log not found');
 }
-$template->assign('CombatLogSector', $db->getField('sector_id'));
-$template->assign('CombatLogTimestamp', date(DATE_FULL_SHORT, $db->getField('timestamp')));
+$template->assign('CombatLogSector', $db->getInt('sector_id'));
+$template->assign('CombatLogTimestamp', date(DATE_FULL_SHORT, $db->getInt('timestamp')));
 $results = unserialize(gzuncompress($db->getField('result')));
 $template->assign('CombatResultsType', $db->getField('type'));
 $template->assign('CombatResults', $results);

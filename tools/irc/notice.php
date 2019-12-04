@@ -16,7 +16,7 @@ function notice_nickserv_registered_user($fp, $rdata)
 
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 		while ($db->nextRecord()) {
-			$seen_id = $db->getField('seen_id');
+			$seen_id = $db->getInt('seen_id');
 
 			$db2->query('UPDATE irc_seen SET
 						registered_nick = ' . $db->escapeString($registeredNick) . '

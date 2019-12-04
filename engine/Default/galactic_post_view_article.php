@@ -15,9 +15,9 @@ $articles = [];
 $db->query('SELECT * FROM galactic_post_article WHERE article_id NOT IN (SELECT article_id FROM galactic_post_paper_content) AND game_id = ' . $db->escapeNumber($player->getGameID()));
 while ($db->nextRecord()) {
 	$title = stripslashes($db->getField('title'));
-	$writer = SmrPlayer::getPlayer($db->getField('writer_id'), $player->getGameID());
+	$writer = SmrPlayer::getPlayer($db->getInt('writer_id'), $player->getGameID());
 	$container = create_container('skeleton.php', 'galactic_post_view_article.php');
-	$container['id'] = $db->getField('article_id');
+	$container['id'] = $db->getInt('article_id');
 	$articles[] = [
 		'title' => $title,
 		'writer' => $writer->getPlayerName(),
@@ -53,7 +53,7 @@ if (isset($var['id'])) {
 	$papers = [];
 	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 	while ($db->nextRecord()) {
-		$container['paper_id'] = $db->getField('paper_id');
+		$container['paper_id'] = $db->getInt('paper_id');
 		$papers[] = [
 			'title' => $db->getField('title'),
 			'addHREF' => SmrSession::getNewHREF($container),

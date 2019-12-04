@@ -11,13 +11,13 @@ function checkForLottoWinner($gameID) {
 		//we need to pick a winner
 		$db->query('SELECT * FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > 0 ORDER BY rand() LIMIT 1');
 		if ($db->nextRecord()) {
-			$winner_id = $db->getField('account_id');
+			$winner_id = $db->getInt('account_id');
 		}
 
 		// Any unclaimed prizes get merged into this prize
 		$db->query('SELECT SUM(prize) FROM player_has_ticket WHERE time = 0 AND game_id = ' . $db->escapeNumber($gameID));
 		if ($db->nextRecord()) {
-			$lottoInfo['Prize'] += $db->getField('SUM(prize)');
+			$lottoInfo['Prize'] += $db->getInt('SUM(prize)');
 		}
 
 		// Delete all tickets and re-insert the winning ticket
@@ -51,9 +51,9 @@ function getLottoInfo($gameID) {
 	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket
 				WHERE game_id = '.$db->escapeNumber($gameID) . ' AND time > 0');
 	$db->nextRecord();
-	if ($db->getField('num') > 0) {
-		$amount += $db->getField('num') * 1000000 * .9;
-		$firstBuy = $db->getField('time');
+	if ($db->getInt('num') > 0) {
+		$amount += $db->getInt('num') * 1000000 * .9;
+		$firstBuy = $db->getInt('time');
 	}
 	//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
 	return array('Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - TIME);

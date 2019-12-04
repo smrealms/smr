@@ -11,7 +11,7 @@ if ($var['task'] == 'reset_image') {
 	$db->lockTable('album_has_comments');
 	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account_id));
 	if ($db->nextRecord())
-		$comment_id = $db->getField('MAX(comment_id)') + 1;
+		$comment_id = $db->getInt('MAX(comment_id)') + 1;
 	else
 		$comment_id = 1;
 

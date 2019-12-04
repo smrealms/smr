@@ -10,7 +10,7 @@ $rank = 1;
 $topTen = [];
 while ($db->nextRecord()) {
 	// get current player
-	$sectorID = $db->getField('sector_id');
+	$sectorID = $db->getInt('sector_id');
 	$topTen[$rank++] = SmrSector::getSector($player->getGameID(), $sectorID, false, $db);
 }
 $template->assign('TopTen', $topTen);
@@ -30,7 +30,7 @@ if ($min_rank < 0) {
 
 $db->query('SELECT max(sector_id) FROM sector WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($db->nextRecord()) {
-	$total_sector = $db->getField('max(sector_id)');
+	$total_sector = $db->getInt('max(sector_id)');
 }
 
 if ($max_rank > $total_sector) {
@@ -51,7 +51,7 @@ $rank = $min_rank;
 $topCustom = [];
 while ($db->nextRecord()) {
 	// get current player
-	$sectorID = $db->getField('sector_id');
+	$sectorID = $db->getInt('sector_id');
 	$topCustom[$rank++] = SmrSector::getSector($player->getGameID(), $sectorID, false, $db);
 }
 $template->assign('TopCustom', $topCustom);

@@ -65,7 +65,7 @@ if (!isset($var['box_type_id'])) {
 				$messages[$messageID]['GameName'] = SmrGame::getGame($gameID)->getDisplayName();
 			}
 
-			$messages[$messageID]['SendTime'] = date(DATE_FULL_SHORT, $db->getField('send_time'));
+			$messages[$messageID]['SendTime'] = date(DATE_FULL_SHORT, $db->getInt('send_time'));
 			$messages[$messageID]['Message'] = bbifyMessage(htmliseMessage($db->getField('message_text')));
 		}
 		$template->assign('Messages', $messages);

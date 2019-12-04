@@ -27,7 +27,7 @@ while ($db->nextRecord()) {
 	//how many are they linked to?
 	$rows = count($accountIDs);
 
-	$currTabAccId = $db->getField('account_id');
+	$currTabAccId = $db->getInt('account_id');
 
 	//if this account was listed with another we can skip it.
 	if (isset($used[$currTabAccId])) {
@@ -69,7 +69,7 @@ while ($db->nextRecord()) {
 			$email = $db2->getField('email');
 			$valid = $db2->getBoolean('validated') ? 'Valid' : 'Invalid';
 			$common_ip = $db2->getField('common_ip');
-			$last_login = date(DATE_FULL_SHORT, $db2->getField('last_login'));
+			$last_login = date(DATE_FULL_SHORT, $db2->getInt('last_login'));
 
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = ' . $db2->escapeNumber($currLinkAccId));
 			$isDisabled = $db2->nextRecord();

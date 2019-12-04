@@ -26,12 +26,12 @@ $db->query('SELECT end_time, game_id, game_name, game_speed, game_type
 			ORDER BY start_time DESC');
 if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
-		$game_id = $db->getField('game_id');
+		$game_id = $db->getInt('game_id');
 		$games['Play'][$game_id]['ID'] = $game_id;
 		$games['Play'][$game_id]['Name'] = $db->getField('game_name');
 		$games['Play'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getInt('game_type')];
 		$games['Play'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT, $db->getInt('end_time'));
-		$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');
+		$games['Play'][$game_id]['Speed'] = $db->getFloat('game_speed');
 
 		$container = create_container('game_play_processing.php');
 		$container['game_id'] = $game_id;
@@ -52,7 +52,7 @@ if ($db->getNumRows() > 0) {
 					WHERE last_cpl_action >= ' . $db->escapeNumber(TIME - 600) . '
 						AND game_id = '.$db->escapeNumber($game_id));
 		$db2->nextRecord();
-		$games['Play'][$game_id]['NumberPlaying'] = $db2->getField('num_playing');
+		$games['Play'][$game_id]['NumberPlaying'] = $db2->getInt('num_playing');
 
 		// create a container that will hold next url and additional variables.
 
@@ -94,7 +94,7 @@ if ($db->getNumRows() > 0) {
 	$games['Join'] = array();
 	// iterate over the resultset
 	while ($db->nextRecord()) {
-		$game_id = $db->getField('game_id');
+		$game_id = $db->getInt('game_id');
 		$game = SmrGame::getGame($game_id);
 		$games['Join'][$game_id] = [
 			'ID' => $game_id,
@@ -126,12 +126,12 @@ $db->query('SELECT start_time, end_time, game_name, game_speed, game_id ' .
 		'FROM game WHERE enabled = \'TRUE\' AND end_time < ' . $db->escapeNumber(TIME) . ' ORDER BY game_id DESC');
 if ($db->getNumRows()) {
 	while ($db->nextRecord()) {
-		$game_id = $db->getField('game_id');
+		$game_id = $db->getInt('game_id');
 		$games['Previous'][$game_id]['ID'] = $game_id;
 		$games['Previous'][$game_id]['Name'] = $db->getField('game_name');
 		$games['Previous'][$game_id]['StartDate'] = date(DATE_DATE_SHORT, $db->getInt('start_time'));
 		$games['Previous'][$game_id]['EndDate'] = date(DATE_DATE_SHORT, $db->getInt('end_time'));
-		$games['Previous'][$game_id]['Speed'] = $db->getField('game_speed');
+		$games['Previous'][$game_id]['Speed'] = $db->getFloat('game_speed');
 		// create a container that will hold next url and additional variables.
 		$container = create_container('skeleton.php');
 		$container['game_id'] = $container['GameID'] = $game_id;
@@ -153,13 +153,13 @@ foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
 						FROM game ORDER BY game_id DESC');
 	if ($historyDB->getNumRows()) {
 		while ($historyDB->nextRecord()) {
-			$game_id = $historyDB->getField('game_id');
+			$game_id = $historyDB->getInt('game_id');
 			$index = $databaseClassName . $game_id;
 			$games['Previous'][$index]['ID'] = $game_id;
 			$games['Previous'][$index]['Name'] = $historyDB->getField('game_name');
-			$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT, $historyDB->getField('start_date'));
-			$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT, $historyDB->getField('end_date'));
-			$games['Previous'][$index]['Speed'] = $historyDB->getField('speed');
+			$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT, $historyDB->getInt('start_date'));
+			$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT, $historyDB->getInt('end_date'));
+			$games['Previous'][$index]['Speed'] = $historyDB->getFloat('speed');
 			// create a container that will hold next url and additional variables.
 			$container = create_container('skeleton.php');
 			$container['view_game_id'] = $game_id;
@@ -193,24 +193,24 @@ if ($db->getNumRows() > 0) {
 	$votedFor = array();
 	$db2->query('SELECT * FROM voting_results WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	while ($db2->nextRecord()) {
-		$votedFor[$db2->getField('vote_id')] = $db2->getField('option_id');
+		$votedFor[$db2->getInt('vote_id')] = $db2->getInt('option_id');
 	}
 	$voting = array();
 	while ($db->nextRecord()) {
-		$voteID = $db->getField('vote_id');
+		$voteID = $db->getInt('vote_id');
 		$voting[$voteID]['ID'] = $voteID;
 		$container = create_container('vote_processing.php', 'game_play.php');
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = SmrSession::getNewHREF($container);
 		$voting[$voteID]['Question'] = $db->getField('question');
-		$voting[$voteID]['TimeRemaining'] = format_time($db->getField('end') - TIME, true);
+		$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - TIME, true);
 		$voting[$voteID]['Options'] = array();
 		$db2->query('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db->escapeNumber($db->getInt('vote_id')) . ' GROUP BY option_id');
 		while ($db2->nextRecord()) {
-			$voting[$voteID]['Options'][$db2->getField('option_id')]['ID'] = $db2->getField('option_id');
-			$voting[$voteID]['Options'][$db2->getField('option_id')]['Text'] = $db2->getField('text');
-			$voting[$voteID]['Options'][$db2->getField('option_id')]['Chosen'] = isset($votedFor[$db->getField('vote_id')]) && $votedFor[$voteID] == $db2->getField('option_id');
-			$voting[$voteID]['Options'][$db2->getField('option_id')]['Votes'] = $db2->getField('count(account_id)');
+			$voting[$voteID]['Options'][$db2->getInt('option_id')]['ID'] = $db2->getInt('option_id');
+			$voting[$voteID]['Options'][$db2->getInt('option_id')]['Text'] = $db2->getField('text');
+			$voting[$voteID]['Options'][$db2->getInt('option_id')]['Chosen'] = isset($votedFor[$db->getInt('vote_id')]) && $votedFor[$voteID] == $db2->getInt('option_id');
+			$voting[$voteID]['Options'][$db2->getInt('option_id')]['Votes'] = $db2->getInt('count(account_id)');
 		}
 	}
 	$template->assign('Voting', $voting);

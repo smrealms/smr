@@ -39,7 +39,7 @@ function server_msg_307($fp, $rdata)
 
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 		while ($db->nextRecord()) {
-			$seen_id = $db->getField('seen_id');
+			$seen_id = $db->getInt('seen_id');
 
 			$db2->query('UPDATE irc_seen SET ' .
 						'registered = 1 ' .
@@ -70,7 +70,7 @@ function server_msg_318($fp, $rdata)
 
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered IS NULL');
 		while ($db->nextRecord()) {
-			$seen_id = $db->getField('seen_id');
+			$seen_id = $db->getInt('seen_id');
 
 			$db2->query('UPDATE irc_seen SET ' .
 						'registered = 0 ' .
@@ -133,7 +133,7 @@ function server_msg_352($fp, $rdata)
 
 		if ($db->nextRecord()) {
 			// exiting nick?
-			$seen_id = $db->getField('seen_id');
+			$seen_id = $db->getInt('seen_id');
 
 			$db->query('UPDATE irc_seen SET ' .
 					   'signed_on = ' . time() . ', ' .
@@ -175,7 +175,7 @@ function server_msg_401($fp, $rdata)
 		// get the user in question
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND signed_off = 0');
 		if ($db->nextRecord()) {
-			$seen_id = $db->getField('seen_id');
+			$seen_id = $db->getInt('seen_id');
 
 			// maybe he left without us noticing, so we fix this now
 			$db->query('UPDATE irc_seen SET ' .

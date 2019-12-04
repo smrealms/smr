@@ -19,7 +19,7 @@ while ($db->nextRecord()) {
 	$anon_logs[$db->getInt('game_id')][$db->getInt('anon_id')][] = [
 		'login' => $db->getField('login'),
 		'amount' => number_format($db->getInt('amount')),
-		'date' => date(DATE_FULL_SHORT, $db->getField('time')),
+		'date' => date(DATE_FULL_SHORT, $db->getInt('time')),
 		'type' => $transaction,
 		'color' => $transaction == 'payment' ? 'tomato' : 'green',
 	];

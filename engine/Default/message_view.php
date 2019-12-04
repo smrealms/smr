@@ -38,7 +38,7 @@ if (!isset ($var['folder_id'])) {
 						AND message_type_id = ' . $db2->escapeNumber($message_type_id) . '
 						AND receiver_delete = ' . $db2->escapeBoolean(false));
 		if ($db2->nextRecord()) {
-			$messageBox['MessageCount'] = $db2->getField('message_count');
+			$messageBox['MessageCount'] = $db2->getInt('message_count');
 		}
 
 		$container = create_container('skeleton.php', 'message_view.php');
@@ -59,7 +59,7 @@ if (!isset ($var['folder_id'])) {
 					AND message_type_id = ' . $db->escapeNumber(MSG_PLAYER) . '
 					AND sender_delete = ' . $db->escapeBoolean(false));
 	if ($db->nextRecord()) {
-		$messageBox['MessageCount'] = $db->getField('count');
+		$messageBox['MessageCount'] = $db->getInt('count');
 	}
 	$messageBox['Name'] = 'Sent Messages';
 	$messageBox['HasUnread'] = false;
@@ -96,11 +96,11 @@ if (!isset ($var['folder_id'])) {
 					FROM message ' . $whereClause . '
 						AND msg_read = ' . $db->escapeBoolean(false));
 		$db->nextRecord();
-		$messageBox['UnreadMessages'] = $db->getField('count');
+		$messageBox['UnreadMessages'] = $db->getInt('count');
 	}
 	$db->query('SELECT count(*) as count FROM message ' . $whereClause);
 	$db->nextRecord();
-	$messageBox['TotalMessages'] = $db->getField('count');
+	$messageBox['TotalMessages'] = $db->getInt('count');
 	$messageBox['Type'] = $var['folder_id'];
 
 	$page = 0;
@@ -161,7 +161,7 @@ if (!isset ($var['folder_id'])) {
 		displayScouts($messageBox, $player);
 	} else {
 		while ($db->nextRecord()) {
-			displayMessage($messageBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), $db->getField('message_text'), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id']);
+			displayMessage($messageBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $db->getField('message_text'), $db->getInt('send_time'), $db->getBoolean('msg_read'), $var['folder_id']);
 		}
 	}
 	if (!USING_AJAX) {
@@ -185,11 +185,11 @@ function displayScouts(&$messageBox, $player) {
 					ORDER BY last DESC');
 
 	while ($db->nextRecord()) {
-		$senderName = get_colored_text($db->getField('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getField('player_id') . ')');
+		$senderName = get_colored_text($db->getInt('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getInt('player_id') . ')');
 		$totalUnread = $db->getInt('total_unread');
-		$message = 'Your forces have spotted ' . $senderName . ' passing your forces ' . $db->getField('number') . ' ' . pluralise('time', $db->getField('number'));
+		$message = 'Your forces have spotted ' . $senderName . ' passing your forces ' . $db->getInt('number') . ' ' . pluralise('time', $db->getInt('number'));
 		$message .= ($totalUnread > 0) ? ' (' . $totalUnread . ' unread).' : '.';
-		displayGrouped($messageBox, $senderName, $db->getField('player_id'), $db->getField('sender_id'), $message, $db->getField('first'), $db->getField('last'), $totalUnread > 0);
+		displayGrouped($messageBox, $senderName, $db->getInt('player_id'), $db->getInt('sender_id'), $message, $db->getInt('first'), $db->getInt('last'), $totalUnread > 0);
 	}
 
 	// Now display individual messages in each group
@@ -205,7 +205,7 @@ function displayScouts(&$messageBox, $player) {
 		$groupBox =& $messageBox['GroupedMessages'][$db->getInt('sender_id')];
 		// Limit the number of messages in each group
 		if (!isset($groupBox['Messages']) || count($groupBox['Messages']) < MESSAGE_SCOUT_GROUP_LIMIT) {
-			displayMessage($groupBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), MSG_SCOUT);
+			displayMessage($groupBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), stripslashes($db->getField('message_text')), $db->getInt('send_time'), $db->getBoolean('msg_read'), MSG_SCOUT);
 		}
 	}
 
@@ -241,7 +241,7 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 	$message = array();
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;
-	$message['Unread'] = $msg_read == 'FALSE';
+	$message['Unread'] = !$msg_read;
 	$message['SendTime'] = date(DATE_FULL_SHORT, $send_time);
 
 	$sender = getMessagePlayer($sender_id, $player->getGameID(), $type);

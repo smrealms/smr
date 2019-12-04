@@ -14,7 +14,7 @@ if (!$db->getNumRows()) {
 $trans = array();
 while ($db->nextRecord()) {
 	$transType = ($db->getField('transaction') == 'Payment') ? WITHDRAW : DEPOSIT;
-	$payeeId = ($db->getField('exempt')) ? 0 : $db->getInt('payee_id');
+	$payeeId = ($db->getInt('exempt')) ? 0 : $db->getInt('payee_id');
 	// initialize payee if necessary
 	if (!isset($trans[$payeeId])) {
 		$trans[$payeeId] = array(WITHDRAW => 0, DEPOSIT => 0);
@@ -31,7 +31,7 @@ arsort($totals, SORT_NUMERIC);
 $db->query('SELECT * FROM player WHERE account_id IN (' . $db->escapeArray($playerIDs) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
 $players[0] = 'Alliance Funds';
 while ($db->nextRecord()) {
-	$players[$db->getField('account_id')] = $db->getField('player_name');
+	$players[$db->getInt('account_id')] = $db->getField('player_name');
 }
 
 //format it this way so its easy to send to the alliance MB if requested.
