@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $template->assign('PageTopic', 'Viewing Reported Messages');
 
 require_once(get_file_loc('message.functions.inc'));

@@ -1,5 +1,5 @@
 #!/usr/bin/php -q
-<?php
+<?php declare(strict_types=1);
 
 class TimeoutException extends Exception {}
 

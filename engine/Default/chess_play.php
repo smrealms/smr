@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $template->assign('MoveMessage', $var['MoveMessage'] ?? '');
 $template->assign('ChessGame', ChessGame::getChessGame($var['ChessGameID']));

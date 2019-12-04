@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Get the dates ("|" sets hr/min/sec to 0)
 $join = DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_join']);

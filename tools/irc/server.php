@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // very important
 // if we do not answer the ping from server we will be disconnected

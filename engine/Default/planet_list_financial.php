@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 Menu::planet_list($var['alliance_id'], 1);
 

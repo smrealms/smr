@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 class AbstractSmrPort {
 	protected static $CACHE_PORTS = array();
 	protected static $CACHE_CACHED_PORTS = array();

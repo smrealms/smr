@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function htmliseMessage($message) {
 	$message = htmlentities($message, ENT_COMPAT, 'utf-8');

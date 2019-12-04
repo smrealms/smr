@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class Rankings {
 	private function __construct() {}

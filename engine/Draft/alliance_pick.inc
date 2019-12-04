@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Returns an array with all relevant information about draft teams,
 // including their current size and if the leader can pick teammates.

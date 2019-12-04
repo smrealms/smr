@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $amount = SmrSession::getRequestVar('amount');
 $account_id = SmrSession::getRequestVar('account_id');

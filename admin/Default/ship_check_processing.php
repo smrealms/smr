@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 //get our variables
 $game_id = $var['game_id'];

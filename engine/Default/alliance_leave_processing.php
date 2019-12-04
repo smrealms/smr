@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $action = $var['action'];
 if ($action == 'YES') {
 	$alliance = $player->getAlliance();

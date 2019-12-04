@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 //view anon acct activity.
 $template->assign('PageTopic', 'View Anonymous Account Info');

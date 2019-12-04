@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $container = create_container('skeleton.php', 'current_sector.php');
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Exception thrown when a game cannot be found in the database
 class GameNotFoundException extends Exception {}

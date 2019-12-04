@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 foreach ($var['account_ids'] as $account_id) {
 	if (empty($_POST['notes'])) {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 SmrSession::getRequestVar('game_id');
 SmrSession::getRequestVar('gal_on', 1);

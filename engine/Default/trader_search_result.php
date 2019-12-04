@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $player_id = SmrSession::getRequestVar('player_id');
 $player_name = SmrSession::getRequestVar('player_name');

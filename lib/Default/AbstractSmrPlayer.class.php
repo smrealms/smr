@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 require_once('missions.inc');
 
 abstract class AbstractSmrPlayer {

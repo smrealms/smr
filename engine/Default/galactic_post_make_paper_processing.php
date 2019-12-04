@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY paper_id DESC');
 if ($db->nextRecord()) {

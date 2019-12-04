@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 Menu::galactic_post();
 $container = create_container('galactic_post_write_article_processing.php');

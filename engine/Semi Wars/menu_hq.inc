@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // NOTE: only difference from Default menus is that Bounty pages
 // have been removed.

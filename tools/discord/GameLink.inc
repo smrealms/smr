@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Holds information linking the received message and the game data
 class GameLink

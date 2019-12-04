@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Returns a list of all active (not claimable) bounties for given location $type.

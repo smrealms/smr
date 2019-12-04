@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $port = $player->getSectorPort();
 switch ($var['PayoutType']) {
 	case 'Raze':

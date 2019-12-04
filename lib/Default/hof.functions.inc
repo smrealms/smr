@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function getHofCategories($hofTypes, $game_id, $account_id) {
 	global $var;

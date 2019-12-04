@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (!ENABLE_BETA) {
 	create_error('Beta functions are disabled.');
 }

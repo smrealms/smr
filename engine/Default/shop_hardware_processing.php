@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $action = $_REQUEST['action'];
 $amount = $_REQUEST['amount'];
 if (!is_numeric($amount))

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function channel_msg_seed($fp, $rdata, $account, $player)
 {

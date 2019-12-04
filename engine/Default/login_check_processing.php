@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (!isset($var['CheckType']) || $var['CheckType'] == 'Validate') {
 	// is account validated?
 	if (!$account->isValidated()) {

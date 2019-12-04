@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!$player->getGame()->hasStarted()) {
 	create_error('You cannot move until the game has started!');

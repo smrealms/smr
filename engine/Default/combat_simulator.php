@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $template->assign('PageTopic','Combat Simulator');
 
 $template->assign('EditDummysLink',SmrSession::getNewHREF(create_container('skeleton.php','edit_dummys.php')));

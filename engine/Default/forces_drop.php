@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (isset($var['owner_id'])) {
 	$owner = SmrPlayer::getPlayer($var['owner_id'], $player->getGameID());

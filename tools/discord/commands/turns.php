@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function get_turns_message($player) {
 	// turns only update when the player is active, so calculate current turns

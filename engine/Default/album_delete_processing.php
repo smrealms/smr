@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($_REQUEST['action'] == 'Yes') {
 	$db->query('DELETE

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $submit = isset($var['submit']) ? $var['submit'] : (isset($_REQUEST['submit']) ? $_REQUEST['submit'] : '');
 unset($var['submit']);

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($var['func'] == 'Map') {
 	$account_id = $player->getAccountID();

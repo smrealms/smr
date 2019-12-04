@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!isset($_POST['op_response'])) {
 	create_error('No op response specified!');

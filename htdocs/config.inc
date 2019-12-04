@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 function logException(Throwable $e) {
 	global $account, $var, $player, $db;
 	$errorType = 'Unexpected Game Error!';

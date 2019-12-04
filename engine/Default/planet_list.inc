@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // The engine files for planet lists have a lot in common, so do
 // most of the work here.

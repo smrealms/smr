@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $db->query('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY online_since DESC LIMIT 1');
 if ($db->nextRecord()) {

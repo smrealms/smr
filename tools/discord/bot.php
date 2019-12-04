@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 require_once(__DIR__ . '/../../htdocs/config.inc');
 require_once(LIB . 'Default/smr.inc');

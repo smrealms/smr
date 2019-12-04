@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 // Common code for all the planet display pages
 
 // If not on a planet, forward to current_sector.php

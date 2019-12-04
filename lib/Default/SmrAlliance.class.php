@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class SmrAlliance {
 	protected static $CACHE_ALLIANCES = array();

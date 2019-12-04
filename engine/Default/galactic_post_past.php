@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
 Menu::galactic_post();

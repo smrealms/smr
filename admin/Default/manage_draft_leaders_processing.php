@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Get the selected game
 $gameId = $var['selected_game_id'];

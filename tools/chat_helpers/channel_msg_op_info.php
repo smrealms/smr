@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function shared_channel_msg_op_info($player) {
 	// get the op from db

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 class Sorter {
 	private static $sortKey;
 	private static $reverseOrder;

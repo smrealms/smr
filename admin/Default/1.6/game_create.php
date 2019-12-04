@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 //get information
 $container = create_container('1.6/game_create_processing.php');

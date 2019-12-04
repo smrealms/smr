@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $template->assign('PageTopic', 'Edit Photo');
 
 $db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));

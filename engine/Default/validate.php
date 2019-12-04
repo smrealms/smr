@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (isset($var['msg'])) {
 	$template->assign('Message', $var['msg']);
 }

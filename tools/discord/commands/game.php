@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $fn_game = function($message) {
 	$link = new GameLink($message->channel, $message->author);

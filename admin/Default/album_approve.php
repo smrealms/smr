@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function get_album_nick($album_id) {
 	if ($album_id == 0)

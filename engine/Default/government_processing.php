@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Player has selected to become a deputy/smuggler
 $location = SmrLocation::getLocation($var['LocationID']);

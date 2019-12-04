@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $db2 = new SmrMySqlDatabase();
 if (isset($var['article'])) {
 	if ($_REQUEST['action'] == 'Yes') {

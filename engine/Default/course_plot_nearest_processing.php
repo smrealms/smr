@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (isset($var['RealX'])) {
 	$realX = $var['RealX'];

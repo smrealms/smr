@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
 $amount = trim($_REQUEST['amount']);

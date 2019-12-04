@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 // Verify that the player is permitted to view the requested combat log
 // Qualifications:
 //  * Log must be from the current game

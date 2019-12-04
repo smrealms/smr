@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Change active status of an NPC
 if (isset($_POST['active-submit'])) {

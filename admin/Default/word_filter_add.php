@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $word = strtoupper(trim($_REQUEST['Word']));
 $word_replacement = strtoupper(trim($_REQUEST['WordReplacement']));

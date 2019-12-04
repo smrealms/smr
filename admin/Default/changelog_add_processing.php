@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $change_title = $_REQUEST['change_title'];
 $change_message = $_REQUEST['change_message'];

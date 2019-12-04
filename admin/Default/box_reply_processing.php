@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $message = trim($_REQUEST['message']);
 if ($_REQUEST['action'] == 'Preview message') {

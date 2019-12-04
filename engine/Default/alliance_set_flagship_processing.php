@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $flagshipID = $_REQUEST['flagship_id'];
 if (!is_numeric($flagshipID)) {

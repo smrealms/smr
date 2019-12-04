@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (!Globals::isFeatureRequestOpen()) {
 	create_error('Feature requests are currently not being accepted.');
 }

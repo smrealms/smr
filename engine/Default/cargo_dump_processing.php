@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
 if (isset($_REQUEST['amount'])) {

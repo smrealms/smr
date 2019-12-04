@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $receiverID = $_POST['account_id'];
 $addMessage = $_POST['message'];

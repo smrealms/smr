@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 function modifyRelations($race_id_1) {
 	global $player, $db;
 
-	$endtime = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+	// Process any votes that ended prior to the start of today
+	$endtime = strtotime(date('Y-m-d'));
 
 	$db2 = new SmrMySqlDatabase();
 

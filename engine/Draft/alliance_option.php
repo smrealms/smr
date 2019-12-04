@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 require(ENGINE . 'Default/alliance_option.php');
 

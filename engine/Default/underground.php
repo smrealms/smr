@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($player->getAlignment() >= ALIGNMENT_GOOD) {
 	create_error('You are not allowed to come in here!');

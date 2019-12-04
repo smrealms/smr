@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!isset($var['log_ids']) && !isset($var['current_log'])) {
 	create_error('You must select a combat log to view');

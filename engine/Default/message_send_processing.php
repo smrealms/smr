@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $message = htmlentities(trim($_REQUEST['message']), ENT_COMPAT, 'utf-8');
 

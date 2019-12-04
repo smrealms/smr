@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Make sure this paper hasn't been published before
 $db->query('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($var['id']));

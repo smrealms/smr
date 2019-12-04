@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // If not deleting marked messages, we are deleting entire folders
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Marked Messages') {

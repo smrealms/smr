@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Use this exception to help override container forwarding for NPC's
 class ForwardException extends Exception {}

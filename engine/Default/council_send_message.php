@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $raceName = Globals::getRaceName($var['race_id']);
 $template->assign('RaceName', $raceName);

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $chessGame = ChessGame::getChessGame($var['ChessGameID']);
 $result = $chessGame->resign($player->getAccountID());

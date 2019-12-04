@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $action = $_REQUEST['action'];
 if ($action == 'Marked Messages') {
 	if (!isset($_REQUEST['message_id']))

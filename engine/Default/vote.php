@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $template->assign('PageTopic', 'Voting');
 
 $db->query('SELECT * FROM voting ORDER BY end DESC');

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!isset($var['notified_time'])) {
 	SmrSession::updateVar('notified_time', TIME);

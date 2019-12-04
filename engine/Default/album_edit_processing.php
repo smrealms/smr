@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($_REQUEST['action'] == 'Delete Entry') {
 	forward(create_container('skeleton.php', 'album_delete_confirmation.php'));

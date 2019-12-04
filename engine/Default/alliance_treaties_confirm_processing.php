@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $alliance1 = $player->getAlliance();
 $alliance2 = SmrAlliance::getAlliance($var['proposedAlliance'], $player->getGameID());

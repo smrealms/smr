@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function notice_nickserv_registered_user($fp, $rdata)
 {

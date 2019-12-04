@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // If here, we have hit either the 'Save', 'Delete', or 'View' form buttons.
 // Immediately return to the log list if we haven't selected any logs.

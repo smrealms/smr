@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 function echo_nav($topic_id) {
 	// database object

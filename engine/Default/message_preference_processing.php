@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (isset($_POST['ignore_globals'])) {
 	$player->setIgnoreGlobals($_POST['ignore_globals'] == 'Yes');

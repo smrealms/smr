@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }

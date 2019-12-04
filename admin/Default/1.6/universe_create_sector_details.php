@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $editSectorID = $_POST['sector_edit'] ?? $var['sector_id'];
 $editSector = SmrSector::getSector($var['game_id'], $editSectorID);

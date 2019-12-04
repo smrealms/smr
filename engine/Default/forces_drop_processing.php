@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($player->getNewbieTurns() > 0) {
 	create_error('You can\'t take/drop forces under newbie protection!');

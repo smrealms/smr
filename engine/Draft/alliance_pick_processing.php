@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (!is_numeric($var['PickedAccountID'])) {
 	create_error('You have to pick a player.');
 }

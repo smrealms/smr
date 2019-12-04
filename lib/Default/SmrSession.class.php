@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!defined('USING_AJAX')) {
 	define('USING_AJAX', false);
@@ -136,7 +136,7 @@ class SmrSession {
 	private static $var;
 	private static $commonIDs;
 	private static $generate;
-	private static $SN;
+	private static $SN = '';
 	private static $lastSN;
 	private static $account_id;
 	public static $last_accessed;
@@ -160,7 +160,7 @@ class SmrSession {
 		else {
 			// create a new session id
 			do {
-				self::$session_id = md5(uniqid(mt_rand()));
+				self::$session_id = md5(uniqid(strval(rand())));
 				self::$db->query('SELECT 1 FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 			} while (self::$db->nextRecord()); //Make sure we haven't somehow clashed with someone else's session.
 			if (!defined('NPC_SCRIPT')) {
@@ -440,7 +440,7 @@ class SmrSession {
 		}
 		else {
 			do {
-				$sn = substr(md5(mt_rand()), 0, 8);
+				$sn = substr(md5(strval(rand())), 0, 8);
 			} while (isset(self::$var[$sn]));
 			$container['PreviousRequestTime'] = MICRO_TIME;
 		}

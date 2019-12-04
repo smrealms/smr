@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!is_numeric($_REQUEST['player_id'])) {
 	create_error('You must select a player.');

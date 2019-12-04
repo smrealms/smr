@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class Globals {
 	protected static $HIDDEN_PLAYERS = null;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $template->assign('PageTopic', 'Alliance Profit Rankings');
 Menu::rankings(1, 1);
 

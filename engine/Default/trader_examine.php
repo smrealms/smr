@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Get the player we're attacking
 $targetPlayer = SmrPlayer::getPlayer($var['target'], $player->getGameID());
