@@ -92,12 +92,14 @@ class Plotter {
 		$sectorsTravelled = 0;
 		$visitedSectors = array();
 		$visitedSectors[$checkSector->getSectorID()] = true;
-		if ($x == 'Distance')
+		if ($x == 'Distance') {
 			$distances[0][$checkSector->getSectorID()] = new Distance($gameID, $checkSector->getSectorID());
+		}
 
 		$distanceQ = array();
-		for ($i = 0; $i <= TURNS_WARP_SECTOR_EQUIVALENCE; $i++)
+		for ($i = 0; $i <= TURNS_WARP_SECTOR_EQUIVALENCE; $i++) {
 			$distanceQ[] = array();
+		}
 		//Warps first as a slight optimisation due to how visitedSectors is set.
 		if ($checkSector->hasWarp() === true) {
 			$d = new Distance($gameID, $checkSector->getSectorID());
@@ -115,8 +117,9 @@ class Plotter {
 		$maybeWarps = 0;
 		while ($maybeWarps <= TURNS_WARP_SECTOR_EQUIVALENCE) {
 			$sectorsTravelled++;
-			if ($sectorsTravelled > $distanceLimit)
+			if ($sectorsTravelled > $distanceLimit) {
 				return $distances;
+			}
 			if ($x == 'Distance') {
 				$distances[$sectorsTravelled] = array();
 			}
@@ -137,8 +140,9 @@ class Plotter {
 					}
 					else if (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
 							&& $checkSector->hasX($x, $player) === true) {
-						if ($useFirst === true)
+						if ($useFirst === true) {
 							return $distance;
+						}
 						$distances[$checkSector->getSectorID()] = $distance;
 					}
 					//Warps first as a slight optimisation due to how visitedSectors is set.

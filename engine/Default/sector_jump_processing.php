@@ -20,18 +20,22 @@ if (isset($_POST['action']) && $_POST['action'] == 'No') {
 }
 
 // you can't move while on planet
-if ($player->isLandedOnPlanet())
+if ($player->isLandedOnPlanet()) {
 	create_error('You are on a planet! You must launch first!');
+}
 
 // if no 'target' is given we forward to plot
-if (empty($target))
+if (empty($target)) {
 	create_error('Where do you want to go today?');
+}
 
-if (!is_numeric($target))
+if (!is_numeric($target)) {
 	create_error('Please enter only numbers!');
-	
-if ($player->getSectorID() == $target)
+}
+
+if ($player->getSectorID() == $target) {
 	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
+}
 
 if (!SmrSector::sectorExists($player->getGameID(), $target)) {
 	create_error('The target sector doesn\'t exist!');
@@ -60,8 +64,9 @@ $turnsToJump = $jumpInfo['turn_cost'];
 $maxMisjump = $jumpInfo['max_misjump'];
 
 // check for turns
-if ($player->getTurns() < $turnsToJump)
+if ($player->getTurns() < $turnsToJump) {
 	create_error('You don\'t have enough turns for that jump!');
+}
 
 // send scout msg
 $sector->leavingSector($player, MOVEMENT_JUMP);
@@ -76,8 +81,9 @@ if ($misjump > 0) { // we missed the sector
 	}
 		
 	$misjumpSector = array_rand($distances[$misjump]);
-	if ($misjumpSector == null)
+	if ($misjumpSector == null) {
 		throw new Exception('Misjump sector is null, distances: ' . var_export($distances, true));
+	}
 	$player->setSectorID($misjumpSector);
 	unset($distances);
 }

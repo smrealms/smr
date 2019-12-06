@@ -23,17 +23,21 @@ elseif ($action == 'Change Password') {
 	$old_password = $_REQUEST['old_password'];
 	$retype_password = $_REQUEST['retype_password'];
 
-	if (empty($new_password))
+	if (empty($new_password)) {
 		create_error('You must enter a non empty password!');
+	}
 
-	if (!$account->checkPassword($old_password))
+	if (!$account->checkPassword($old_password)) {
 		create_error('Your current password is wrong!');
+	}
 
-	if ($new_password != $retype_password)
+	if ($new_password != $retype_password) {
 		create_error('The passwords you entered don\'t match!');
+	}
 
-	if ($new_password == $account->getLogin())
+	if ($new_password == $account->getLogin()) {
 		create_error('Your chosen password is invalid!');
+	}
 
 	$account->setPassword($new_password);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your password.';
@@ -44,8 +48,9 @@ elseif ($action == 'Change Name') {
 	$limited_char = 0;
 	for ($i = 0; $i < strlen($HoF_name); $i++) {
 		// disallow certain ascii chars
-		if (ord($HoF_name[$i]) < 32 || ord($HoF_name[$i]) > 127)
+		if (ord($HoF_name[$i]) < 32 || ord($HoF_name[$i]) > 127) {
 			create_error('Your Hall Of Fame name contains invalid characters!');
+		}
 
 		// numbers 48..57
 		// Letters 65..90
@@ -57,9 +62,9 @@ elseif ($action == 'Change Name') {
 		}
 	}
 
-	if ($limited_char > 4)
+	if ($limited_char > 4) {
 		create_error('You cannot use a name with more than 4 special characters.');
-
+	}
 
 	//disallow blank names
 	if (empty($HoF_name) || $HoF_name == '') create_error('You Hall of Fame name must contain characters!');
@@ -95,8 +100,9 @@ elseif ($action == 'Change IRC Nick') {
 
 	for ($i = 0; $i < strlen($ircNick); $i++) {
 		// disallow certain ascii chars (and whitespace!)
-		if (ord($ircNick[$i]) < 33 || ord($ircNick[$i]) > 127)
+		if (ord($ircNick[$i]) < 33 || ord($ircNick[$i]) > 127) {
 			create_error('Your IRC Nick contains invalid characters!');
+		}
 	}
 
 	// here you can delete your registered irc nick
@@ -131,8 +137,9 @@ elseif ($action == 'Yes') {
 }
 elseif ($action == 'Change Timezone') {
 	$timez = $_REQUEST['timez'];
-	if (!is_numeric($timez))
+	if (!is_numeric($timez)) {
 		create_error('Numbers only please');
+	}
 
 	$db->query('UPDATE account SET offset = ' . $db->escapeNumber($timez) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
@@ -193,8 +200,9 @@ else if (strpos(trim($action), 'Alter Player') === 0) {
 	$limited_char = 0;
 	for ($i = 0; $i < strlen($player_name); $i++) {
 		// disallow certain ascii chars
-		if (ord($player_name[$i]) < 32 || ord($player_name[$i]) > 127)
+		if (ord($player_name[$i]) < 32 || ord($player_name[$i]) > 127) {
 			create_error('The player name contains invalid characters!');
+		}
 
 		// numbers 48..57
 		// Letters 65..90
@@ -206,11 +214,13 @@ else if (strpos(trim($action), 'Alter Player') === 0) {
 		}
 	}
 
-	if ($limited_char > 4)
+	if ($limited_char > 4) {
 		create_error('You cannot use a name with more than 4 special characters.');
+	}
 
-	if (empty($player_name))
+	if (empty($player_name)) {
 		create_error('You must enter a player name!');
+	}
 
 	// Escape html elements so the name displays correctly
 	$player_name = htmlentities($player_name);

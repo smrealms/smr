@@ -302,8 +302,9 @@ class AbstractSmrPort {
 				$x['TransactionType'] = 'Buy';
 			}
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
-			if (is_object($di))
+			if (is_object($di)) {
 				$di = $di->getRelativeDistance();
+			}
 			$this->goodDistances[$goodID] = max(1, $di);
 		}
 		return $this->goodDistances[$goodID];
@@ -329,12 +330,14 @@ class AbstractSmrPort {
 	}
 	
 	private function setGoodAmount($goodID, $amount, $doUpdate = true) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
+		}
 		// The new amount must be between 0 and the max for this good
 		$amount = max(0, min($amount, $this->getGood($goodID)['Max']));
-		if ($this->getGoodAmount($goodID) == $amount)
+		if ($this->getGoodAmount($goodID) == $amount) {
 			return;
+		}
 		$this->goodAmounts[$goodID] = $amount;
 
 		if ($doUpdate) {
@@ -401,8 +404,9 @@ class AbstractSmrPort {
 	}
 	
 	public function checkForUpgrade() {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot upgrade a cached port!');
+		}
 		$upgrades = 0;
 		while ($this->upgrade >= $this->getUpgradeRequirement() && $this->level < 9) {
 			++$upgrades;
@@ -418,8 +422,9 @@ class AbstractSmrPort {
 	 * ports to a specific level.
 	 */
 	public function upgradeToLevel($level) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot upgrade a cached port!');
+		}
 		while ($this->getLevel() < $level) {
 			$this->doUpgrade();
 		}
@@ -523,8 +528,9 @@ class AbstractSmrPort {
 	 * calling this function directly.
 	 */
 	public function addPortGood($goodID, $type) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
+		}
 		if ($this->hasGood($goodID, $type)) {
 			return;
 		}
@@ -549,8 +555,9 @@ class AbstractSmrPort {
 	 * calling this function directly.
 	 */
 	public function removePortGood($goodID) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
+		}
 		if (!$this->hasGood($goodID)) {
 			return;
 		}
@@ -600,8 +607,9 @@ class AbstractSmrPort {
 	}
 
 	protected function doDowngrade() {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot downgrade a cached port!');
+		}
 
 		$goodClass = $this->getGoodClassAtLevel();
 		$this->selectAndRemoveGood($goodClass);
@@ -620,9 +628,10 @@ class AbstractSmrPort {
 	}
 	
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot attack a cached port!');
-			
+		}
+
 		$trigger->increaseHOF(1, array('Combat', 'Port', 'Number Of Triggers'), HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, array('Combat', 'Port', 'Number Of Attacks'), HOF_PUBLIC);
@@ -665,34 +674,43 @@ class AbstractSmrPort {
 	}
 	
 	public function setShields($shields) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($shields < 0)
+		}
+		if ($shields < 0) {
 			$shields = 0;
-		if ($this->shields == $shields)
+		}
+		if ($this->shields == $shields) {
 			return;
+		}
 		$this->shields = $shields;
 		$this->hasChanged = true;
 	}
 	
 	public function setArmour($armour) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($armour < 0)
+		}
+		if ($armour < 0) {
 			$armour = 0;
-		if ($this->armour == $armour)
+		}
+		if ($this->armour == $armour) {
 			return;
+		}
 		$this->armour = $armour;
 		$this->hasChanged = true;
 	}
 	
 	public function setCDs($combatDrones) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($combatDrones < 0)
+		}
+		if ($combatDrones < 0) {
 			$combatDrones = 0;
-		if ($this->combatDrones == $combatDrones)
+		}
+		if ($this->combatDrones == $combatDrones) {
 			return;
+		}
 		$this->combatDrones = $combatDrones;
 		$this->hasChanged = true;
 	}
@@ -702,84 +720,99 @@ class AbstractSmrPort {
 	}
 
 	public function setCredits($credits) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($this->credits == $credits)
+		}
+		if ($this->credits == $credits) {
 			return;
+		}
 		$this->credits = $credits;
 		$this->hasChanged = true;
 	}
 	
 	public function decreaseCredits($credits) {
-		if ($credits < 0)
+		if ($credits < 0) {
 			throw new Exception('Cannot decrease negative credits.');
+		}
 		$this->setCredits($this->getCredits() - $credits);
 	}
 	
 	public function increaseCredits($credits) {
-		if ($credits < 0)
+		if ($credits < 0) {
 			throw new Exception('Cannot increase negative credits.');
+		}
 		$this->setCredits($this->getCredits() + $credits);
 	}
 	
 	public function setUpgrade($upgrade) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
+		}
 		if ($this->getLevel() == $this->getMaxLevel()) {
 			$upgrade = 0;
 		}
-		if ($this->upgrade == $upgrade)
+		if ($this->upgrade == $upgrade) {
 			return;
+		}
 		$this->upgrade = $upgrade;
 		$this->hasChanged = true;
 		$this->checkForUpgrade();
 	}
 	
 	public function decreaseUpgrade($upgrade) {
-		if ($upgrade < 0)
+		if ($upgrade < 0) {
 			throw new Exception('Cannot decrease negative upgrade.');
+		}
 		$this->setUpgrade($this->getUpgrade() - $upgrade);
 	}
 	
 	public function increaseUpgrade($upgrade) {
-		if ($upgrade < 0)
+		if ($upgrade < 0) {
 			throw new Exception('Cannot increase negative upgrade.');
+		}
 		$this->setUpgrade($this->getUpgrade() + $upgrade);
 	}
 	
 	public function setLevel($level) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($this->level == $level)
+		}
+		if ($this->level == $level) {
 			return;
+		}
 		$this->level = $level;
 		$this->hasChanged = true;
 	}
 	
 	public function increaseLevel($level) {
-		if ($level < 0)
+		if ($level < 0) {
 			throw new Exception('Cannot increase negative level.');
+		}
 		$this->setLevel($this->getLevel() + $level);
 	}
 	
 	public function decreaseLevel($level) {
-		if ($level < 0)
+		if ($level < 0) {
 			throw new Exception('Cannot increase negative level.');
+		}
 		$this->setLevel($this->getLevel() - $level);
 	}
 	
 	public function setExperience($experience) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($this->experience == $experience)
+		}
+		if ($this->experience == $experience) {
 			return;
+		}
 		$this->experience = $experience;
 		$this->hasChanged = true;
 	}
 	
 	public function increaseExperience($experience) {
-		if ($experience < 0)
+		if ($experience < 0) {
 			throw new Exception('Cannot increase negative experience.');
+		}
 		$this->setExperience($this->getExperience() + $experience);
 	}
 	
@@ -804,8 +837,9 @@ class AbstractSmrPort {
 	}
 	
 	public function setRaceID($raceID) {
-		if ($this->raceID == $raceID)
+		if ($this->raceID == $raceID) {
 			return;
+		}
 		$this->raceID = $raceID;
 		$this->hasChanged = true;
 		$this->cacheIsValid = false;
@@ -883,8 +917,9 @@ class AbstractSmrPort {
 	}
 	
 	public function getReinforcePercent() {
-		if (!$this->isUnderAttack())
+		if (!$this->isUnderAttack()) {
 			return 0;
+		}
 		return min(1, max(0, ($this->getReinforceTime() - TIME) / ($this->getReinforceTime() - $this->getAttackStarted())));
 	}
 	
@@ -905,8 +940,9 @@ class AbstractSmrPort {
 	}
 	
 	private function setAttackStarted($time) {
-		if ($this->attackStarted == $time)
+		if ($this->attackStarted == $time) {
 			return;
+		}
 		$this->attackStarted = TIME;
 		$this->hasChanged = true;
 	}
@@ -966,13 +1002,12 @@ class AbstractSmrPort {
 		$relationsEffect = pow(1 + ($expRelations - 1000) / 10000, 1.2 - $expRelations / 1000);
 		$relationsEffect -= max(0, min(self::BARGAIN_LENIENCY_PERCENT, self::BARGAIN_LENIENCY_PERCENT * (2000 - $moneyRelations) / 1000)); //Gradual increase getting closer and closer to actual ideal price as relations increase to 2000 (will only be an increase of self::BARGAIN_LENIENCY_PERCENT percent extra cash)
 		 
-		 if ($transactionType == 'Buy')
-		 {
+		if ($transactionType == 'Buy') {
 			$relationsEffect = 2 - $relationsEffect;
 			return max($idealPrice, IFloor($idealPrice * $relationsEffect));
-		 }
-		 else
+		} else {
 			return min($idealPrice, ICeil($idealPrice * $relationsEffect));
+		}
 //		$range = .11 - .095;
 //		$rand = .095 + $range * mt_rand(0, 32767)/32767;
 //
@@ -1106,9 +1141,9 @@ class AbstractSmrPort {
 			if ($db->nextRecord()) {
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = unserialize(gzuncompress($db->getField('port_info')));
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]->setCachedTime($db->getInt('visited'));
-			}
-			else
+			} else {
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;
+			}
 		}
 		return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
 	}
@@ -1234,8 +1269,9 @@ class AbstractSmrPort {
 					$cdDamage = $this->doCDDamage(min($damage['MaxDamage'], $damage['Armour']));
 					$damage['Armour'] -= $cdDamage;
 					$damage['MaxDamage'] -= $cdDamage;
-					if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover']))
+					if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
 						$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'], $damage['Armour']));
+					}
 				}
 			}
 			else { //hit drones behind shields
@@ -1351,8 +1387,9 @@ class AbstractSmrPort {
 
 	public function hasX(/*Object*/ $x) {
 		if (is_array($x) && $x['Type'] == 'Good') { // instanceof Good) - No Good class yet, so array is the best we can do
-			if (isset($x['ID']))
+			if (isset($x['ID'])) {
 				return $this->hasGood($x['ID'], isset($x['TransactionType']) ? $x['TransactionType'] : false);
+			}
 		}
 		return false;
 	}

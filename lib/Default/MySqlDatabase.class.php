@@ -63,8 +63,9 @@ abstract class MySqlDatabase {
 	}
 	
 	public function nextRecord() {
-		if (!$this->dbResult)
+		if (!$this->dbResult) {
 			$this->error('No resource to get record from.');
+		}
 		
 		if ($this->dbRecord = $this->dbResult->fetch_assoc()) {
 			return true;
@@ -81,8 +82,9 @@ abstract class MySqlDatabase {
 	}
 	
 	public function getBoolean($name) {
-		if ($this->dbRecord[$name] == 'TRUE')
+		if ($this->dbRecord[$name] == 'TRUE') {
 			return true;
+		}
 //		if($this->dbRecord[$name] == 'FALSE')
 		return false;
 //		throw new Exception('Field is not a boolean');
@@ -116,8 +118,9 @@ abstract class MySqlDatabase {
 	
 	public function getObject($name, $compressed = false) {
 		$object = $this->getField($name);
-		if ($compressed === true)
+		if ($compressed === true) {
 			$object = gzuncompress($object);
+		}
 		return unserialize($object);
 	}
 	
@@ -159,38 +162,43 @@ abstract class MySqlDatabase {
 	
 	public function escape($escape, $autoQuotes = true, $quotes = true) {
 		if (is_bool($escape)) {
-			if ($autoQuotes)
+			if ($autoQuotes) {
 				return $this->escapeBoolean($escape);
-			else
+			} else {
 				return $this->escapeBoolean($escape, $quotes);
+			}
 		}
 		if (is_numeric($escape)) {
 			return $this->escapeNumber($escape);
 		}
 		if (is_string($escape)) {
-			if ($autoQuotes)
+			if ($autoQuotes) {
 				return $this->escapeString($escape);
-			else
+			} else {
 				return $this->escapeString($escape, $quotes);
+			}
 		}
 		if (is_array($escape)) {
 			return $this->escapeArray($escape, $autoQuotes, $quotes);
 		}
 		if (is_object($escape)) {
-			if ($autoQuotes)
+			if ($autoQuotes) {
 				return $this->escapeObject($escape);
-			else
+			} else {
 				return $this->escapeObject($escape, $quotes);
+			}
 		}
 	}
 	
 	public function escapeString($string, $quotes = true, $nullable = false) {
-		if ($nullable === true && ($string === null || $string === ''))
+		if ($nullable === true && ($string === null || $string === '')) {
 			return 'NULL';
-		if ($string === true)
+		}
+		if ($string === true) {
 			$string = 'TRUE';
-		else if ($string === false)
+		} else if ($string === false) {
 			$string = 'FALSE';
+		}
 		if (is_array($string)) {
 			$escapedString = '';
 			foreach ($string as $value) {
@@ -212,10 +220,11 @@ abstract class MySqlDatabase {
 		$string = '';
 		if ($escapeIndividually) {
 			foreach ($array as $value) {
-				if (is_array($value))
+				if (is_array($value)) {
 					$string .= $this->escapeArray($value, $autoQuotes, $quotes, $implodeString, $escapeIndividually) . $implodeString;
-				else
+				} else {
 					$string .= $this->escape($value, $autoQuotes, $quotes) . $implodeString;
+				}
 			}
 			$string = substr($string, 0, -1);
 		}
@@ -252,8 +261,9 @@ abstract class MySqlDatabase {
 	}
 	
 	public function escapeObject($object, $compress = false, $quotes = true, $nullable = false) {
-		if ($compress === true)
+		if ($compress === true) {
 			return $this->escapeBinary(gzcompress(serialize($object)));
+		}
 		return $this->escapeString(serialize($object), $quotes, $nullable);
 	}
 

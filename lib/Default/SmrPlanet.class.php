@@ -580,13 +580,16 @@ class SmrPlanet {
 			// get supplies from db
 			$this->db->query('SELECT good_id, amount FROM planet_has_cargo WHERE ' . $this->SQL);
 			// adding cargo and amount to array
-			while ($this->db->nextRecord())
+			while ($this->db->nextRecord()) {
 				$this->stockpile[$this->db->getInt('good_id')] = $this->db->getInt('amount');
+			}
 		}
-		if ($goodID === false)
+		if ($goodID === false) {
 			return $this->stockpile;
-		if (isset($this->stockpile[$goodID]))
+		}
+		if (isset($this->stockpile[$goodID])) {
 			return $this->stockpile[$goodID];
+		}
 		return 0;
 	}
 
@@ -612,14 +615,16 @@ class SmrPlanet {
 	}
 
 	public function decreaseStockpile($goodID, $amount) {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative stockpile.');
+		}
 		$this->setStockpile($goodID, $this->getStockpile($goodID) - $amount);
 	}
 
 	public function increaseStockpile($goodID, $amount) {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to increase negative stockpile.');
+		}
 		$this->setStockpile($goodID, $this->getStockpile($goodID) + $amount);
 	}
 
@@ -653,8 +658,9 @@ class SmrPlanet {
 	}
 
 	public function setBuilding($buildingTypeID, $number) {
-		if ($this->getBuilding($buildingTypeID) == $number)
+		if ($this->getBuilding($buildingTypeID) == $number) {
 			return;
+		}
 
 		$this->buildings[$buildingTypeID] = $number;
 		$this->hasChangedBuildings[$buildingTypeID] = true;
@@ -1106,23 +1112,27 @@ class SmrPlanet {
 	}
 
 	public function hasEnemyTraders(AbstractSmrPlayer $player) {
-		if (!$this->hasOtherTraders($player))
+		if (!$this->hasOtherTraders($player)) {
 			return false;
+		}
 		$otherPlayers = $this->getOtherTraders($player);
 		foreach ($otherPlayers as $otherPlayer) {
-			if (!$player->traderNAPAlliance($otherPlayer))
+			if (!$player->traderNAPAlliance($otherPlayer)) {
 				return true;
+			}
 		}
 		return false;
 	}
 
 	public function hasFriendlyTraders(AbstractSmrPlayer $player) {
-		if (!$this->hasOtherTraders($player))
+		if (!$this->hasOtherTraders($player)) {
 			return false;
+		}
 		$otherPlayers = $this->getOtherTraders($player);
 		foreach ($otherPlayers as $otherPlayer) {
-			if ($player->traderNAPAlliance($otherPlayer))
+			if ($player->traderNAPAlliance($otherPlayer)) {
 				return true;
+			}
 		}
 		return false;
 	}

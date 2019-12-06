@@ -270,8 +270,9 @@ class SmrForce {
 		}
 		$this->hasChanged = true;
 		$this->expire = $time;
-		if (!$this->isNew)
+		if (!$this->isNew) {
 			$this->update();
+		}
 	}
 
 	public function updateExpire() {

@@ -5,46 +5,55 @@ require_once(LIB . 'Default/shop_goods.inc');
 $amount = get_amount();
 $bargain_price = get_bargain_price();
 
-if (!is_numeric($amount) || !is_numeric($bargain_price))
+if (!is_numeric($amount) || !is_numeric($bargain_price)) {
 	create_error('Numbers only please!');
+}
 // get good name, id, ...
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
 
 // do we have enough turns?
-if ($player->getTurns() == 0)
+if ($player->getTurns() == 0) {
 	create_error('You don\'t have enough turns to trade.');
+}
 
 // get rid of those bugs when we die...there is no port at the home sector
-if (!$sector->hasPort())
+if (!$sector->hasPort()) {
 	create_error('I can\'t see a port in this sector. Can you?');
+}
 $port = $sector->getPort();
 
 // check if the player has the right relations to trade at the current port
-if ($player->getRelation($port->getRaceID()) < RELATIONS_WAR)
+if ($player->getRelation($port->getRaceID()) < RELATIONS_WAR) {
 	create_error('This port refuses to trade with you because you are at <span class="big bold red">WAR!</span>');
+}
 
 // does the port actually buy or sell this good?
 $transaction = $port->getGoodTransaction($good_id);
-if (empty($transaction))
+if (empty($transaction)) {
 	create_error('I don\'t trade in that good.');
+}
 
 $portGood = $port->getGood($good_id);
 // check if there are enough left at port
-if ($port->getGoodAmount($good_id) < $amount)
+if ($port->getGoodAmount($good_id) < $amount) {
 	create_error('I\'m short of ' . $good_name . '. So I\'m not going to sell you ' . $amount . ' pcs.');
+}
 
 // does we have what we are going to sell?
-if ($transaction == 'Sell' && $amount > $ship->getCargo($good_id))
+if ($transaction == 'Sell' && $amount > $ship->getCargo($good_id)) {
 	create_error('Scanning your ships indicates you don\'t have ' . $amount . ' pcs. of ' . $good_name . '!');
+}
 
 // check if we have enough room for the thing we are going to buy
-if ($transaction == 'Buy' && $amount > $ship->getEmptyHolds())
+if ($transaction == 'Buy' && $amount > $ship->getEmptyHolds()) {
 	create_error('Scanning your ships indicates you don\'t have enough free cargo bays!');
+}
 
 // check if the guy has enough money
-if ($transaction == 'Buy' && $player->getCredits() < $bargain_price)
+if ($transaction == 'Buy' && $player->getCredits() < $bargain_price) {
 	create_error('You don\'t have enough credits!');
+}
 
 // get relations for us (global + personal)
 $relations = $player->getRelation($port->getRaceID());
@@ -56,8 +65,9 @@ if (!isset($var['offered_price'])) SmrSession::updateVar('offered_price', $port-
 $offered_price = $var['offered_price'];
 
 // nothing should happen here but just to avoid / by 0
-if ($ideal_price == 0 || $offered_price == 0)
+if ($ideal_price == 0 || $offered_price == 0) {
 	create_error('Port calculation error...buy more goods.');
+}
 
 if ($_REQUEST['action'] == 'Steal') {
 	if (!$ship->isUnderground()) {
@@ -152,10 +162,11 @@ if ($transaction == 'Steal' ||
 
 	$container['trade_msg'] = $tradeMessage;
 
-	if ($ship->getEmptyHolds() == 0)
+	if ($ship->getEmptyHolds() == 0) {
 		$container['body'] = 'current_sector.php';
-	else
+	} else {
 		$container['body'] = 'shop_goods.php';
+	}
 
 }
 else {
@@ -173,8 +184,9 @@ else {
 }
 
 // only take turns if they bargained
-if (!isset($container['number_of_bargains']) || $container['number_of_bargains'] != 1)
+if (!isset($container['number_of_bargains']) || $container['number_of_bargains'] != 1) {
 	$player->takeTurns(TURNS_PER_TRADE, TURNS_PER_TRADE);
+}
 
 // go to next page
 forward($container);

@@ -54,9 +54,9 @@ try {
 		if (!USING_AJAX) {
 			require_once(get_file_loc('smr.inc'));
 			create_error('Your browser lost the SN. Try to reload the page!');
-		}
-		else
+		} else {
 			exit;
+		}
 	}
 	
 	// do we have such a container object in the db?
@@ -64,9 +64,9 @@ try {
 		if (!USING_AJAX) {
 			require_once(get_file_loc('smr.inc'));
 			create_error('Please avoid using the back button!');
-		}
-		else
+		} else {
 			exit;
+		}
 	}
 	
 	// Determine where to load game scripts from (in case we need a special

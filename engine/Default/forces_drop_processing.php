@@ -165,61 +165,71 @@ if ($change_mines != 0) {
 // message to send out
 if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isForceDropMessages()) {
 	$mines_message = '';
-	if ($change_mines > 0)
+	if ($change_mines > 0) {
 		$mines_message = 'added ' . $change_mines . ' mine';
-	elseif ($change_mines < 0)
+	} elseif ($change_mines < 0) {
 		$mines_message = 'removed ' . abs($change_mines) . ' mine';
+	}
 	//add s to mine if necesary
-	if (abs($change_mines) > 1)
+	if (abs($change_mines) > 1) {
 		$mines_message .= 's';
+	}
 
-	if ($change_combat_drones > 0)
+	if ($change_combat_drones > 0) {
 		$combat_drones_message = ($change_mines <= 0 ? 'added ' : '') . $change_combat_drones . ' combat drone';
-	elseif ($change_combat_drones < 0)
+	} elseif ($change_combat_drones < 0) {
 		$combat_drones_message = ($change_mines >= 0 ? 'removed ' : '') . abs($change_combat_drones) . ' combat drone';
+	}
 	//add s to drone if necesary
-	if (abs($change_combat_drones) > 1)
+	if (abs($change_combat_drones) > 1) {
 		$combat_drones_message .= 's';
+	}
 
 	if ($change_scout_drones > 0) {
 		$scout_drones_message = '';
-		if ((isset($combat_drones_message) && $change_combat_drones < 0) || (!isset($combat_drones_message) && $change_mines <= 0))
+		if ((isset($combat_drones_message) && $change_combat_drones < 0) || (!isset($combat_drones_message) && $change_mines <= 0)) {
 			$scout_drones_message = 'added ';
+		}
 		$scout_drones_message .= $change_scout_drones . ' scout drone';
 	}
 	elseif ($change_scout_drones < 0) {
 		$scout_drones_message = '';
-		if ((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines >= 0))
+		if ((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines >= 0)) {
 			$scout_drones_message = 'removed ';
+		}
 		$scout_drones_message .= abs($change_scout_drones) . ' scout drone';
 	}
 	//add s to drone if necesary
-	if (abs($change_scout_drones) > 1)
+	if (abs($change_scout_drones) > 1) {
 		$scout_drones_message .= 's';
+	}
 
 	// now compile it together
 	$message = $player->getPlayerName() . ' has ' . $mines_message;
 
-	if (!empty($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message))
+	if (!empty($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message)) {
 		$message .= ' and ' . $combat_drones_message;
-	elseif (!empty($mines_message) && isset($combat_drones_message))
+	} elseif (!empty($mines_message) && isset($combat_drones_message)) {
 		$message .= ', ' . $combat_drones_message;
-	elseif (empty($mines_message) && isset($combat_drones_message))
+	} elseif (empty($mines_message) && isset($combat_drones_message)) {
 		$message .= $combat_drones_message;
+	}
 
-	if (!empty($mines_message) && isset($combat_drones_message) && isset($scout_drones_message))
+	if (!empty($mines_message) && isset($combat_drones_message) && isset($scout_drones_message)) {
 		$message .= ', and ' . $scout_drones_message;
-	elseif ((!empty($mines_message) || isset($combat_drones_message)) && isset($scout_drones_message))
+	} elseif ((!empty($mines_message) || isset($combat_drones_message)) && isset($scout_drones_message)) {
 		$message .= ' and ' . $scout_drones_message;
-	elseif (empty($mines_message) && !isset($combat_drones_message) && isset($scout_drones_message))
+	} elseif (empty($mines_message) && !isset($combat_drones_message) && isset($scout_drones_message)) {
 		$message .= $scout_drones_message;
+	}
 
-	if ($change_mines >= 0 && $change_combat_drones >= 0 && $change_scout_drones >= 0)
+	if ($change_mines >= 0 && $change_combat_drones >= 0 && $change_scout_drones >= 0) {
 		$message .= ' to';
-	elseif ($change_mines <= 0 && $change_combat_drones <= 0 && $change_scout_drones <= 0)
+	} elseif ($change_mines <= 0 && $change_combat_drones <= 0 && $change_scout_drones <= 0) {
 		$message .= ' from';
-	else
+	} else {
 		$message .= ' from/to';
+	}
 
 	$message .= ' your stack in sector ' . Globals::getSectorBBLink($forces->getSectorID());
 

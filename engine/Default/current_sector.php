@@ -80,18 +80,20 @@ $protectionMessage = '';
 if ($player->getNewbieTurns()) {
 	if ($player->getNewbieTurns() < 25) {
 		$protectionMessage = '<span class="blue">PROTECTION</span>: You are almost out of <span class="green">NEWBIE</span> protection.';
-	}
-	else
+	} else {
 		$protectionMessage = '<span class="blue">PROTECTION</span>: You are under <span class="green">NEWBIE</span> protection.';
+	}
 }
 elseif ($player->hasFederalProtection()) {
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are under <span class="blue">FEDERAL</span> protection.';
 }
-elseif ($sector->offersFederalProtection())
+elseif ($sector->offersFederalProtection()) {
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are <span class="red">NOT</span> under protection.';
+}
 
-if (!empty($protectionMessage))
+if (!empty($protectionMessage)) {
 	$template->assign('ProtectionMessage', $protectionMessage);
+}
 
 //enableProtectionDependantRefresh($template,$player);
 

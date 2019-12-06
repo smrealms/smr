@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
 function get_album_nick($album_id) {
-	if ($album_id == 0)
+	if ($album_id == 0) {
 		return 'System';
+	}
 
 	return SmrAccount::getAccount($album_id)->getHofDisplayName();
 }
@@ -59,12 +60,15 @@ if ($db->nextRecord()) {
 	$nick = get_album_nick($album_id);
 	$template->assign('Nick', $nick);
 
-	if (!empty($day) && !empty($month) && !empty($year))
+	if (!empty($day) && !empty($month) && !empty($year)) {
 		$birthdate = $month . ' / ' . $day . ' / ' . $year;
-	if (empty($birthdate) && !empty($year))
+	}
+	if (empty($birthdate) && !empty($year)) {
 		$birthdate = 'Year ' . $year;
-	if (empty($birthdate))
+	}
+	if (empty($birthdate)) {
 		$birthdate = 'N/A';
+	}
 	$template->assign('Birthdate', $birthdate);
 
 	// get the time that passed since the entry was last changed

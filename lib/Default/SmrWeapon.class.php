@@ -12,17 +12,19 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 
 	
 	protected static function initialiseDatabase() {
-		if (self::$db == null)
+		if (self::$db == null) {
 			self::$db = new SmrMySqlDatabase();
+		}
 	}
 
 	public static function getWeapon($weaponTypeID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_WEAPONS[$weaponTypeID])) {
 			$w = new SmrWeapon($weaponTypeID, $db);
-			if ($w->exists())
+			if ($w->exists()) {
 				self::$CACHE_WEAPONS[$weaponTypeID] = $w;
-			else
+			} else {
 				self::$CACHE_WEAPONS[$weaponTypeID] = false;
+			}
 		}
 		return self::$CACHE_WEAPONS[$weaponTypeID];
 	}
@@ -151,8 +153,9 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		$weaponShip = $weaponPlayer->getShip();
 		$targetShip = $targetPlayer->getShip();
 		$mrDiff = $targetShip->getMR() - $weaponShip->getMR();
-		if ($mrDiff > 0)
+		if ($mrDiff > 0) {
 			$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff / MR_FACTOR) / 100;
+		}
 	
 		return $modifiedAccuracy;
 	}

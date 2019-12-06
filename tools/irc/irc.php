@@ -6,11 +6,12 @@ class TimeoutException extends Exception {}
 function echo_r($message)
 {
 	if (is_array($message)) {
-		foreach ($message as $msg)
+		foreach ($message as $msg) {
 			echo_r($msg);
-	}
-	else
+		}
+	} else {
 		echo date("d.m.Y H:i:s => ") . $message . EOL;
+	}
 }
 
 // not keeping the filehandle might not be the wisest idea.
@@ -164,12 +165,14 @@ function readFromStream($fp) {
 	$rdata = preg_replace('/\s+/', ' ', $rdata);
 
 	// log for reports (if enabled via command line (-log)
-	if (IRC_LOGGING && strlen($rdata) > 0)
+	if (IRC_LOGGING && strlen($rdata) > 0) {
 		write_log_message($rdata);
+	}
 
 	// remember the last time we got something from the server
-	if (strlen($rdata) > 0)
+	if (strlen($rdata) > 0) {
 		$last_ping = time();
+	}
 
 	// timeout detection!
 	if ($last_ping < time() - 300) {
@@ -186,76 +189,102 @@ function readFromStream($fp) {
 	}
 
 	// required!!! otherwise timeout!
-	if (server_ping($fp, $rdata))
+	if (server_ping($fp, $rdata)) {
 		return;
+	}
 
 	// server msg
-	if (server_msg_307($fp, $rdata))
+	if (server_msg_307($fp, $rdata)) {
 		return;
-	if (server_msg_318($fp, $rdata))
+	}
+	if (server_msg_318($fp, $rdata)) {
 		return;
-	if (server_msg_352($fp, $rdata))
+	}
+	if (server_msg_352($fp, $rdata)) {
 		return;
-	if (server_msg_401($fp, $rdata))
+	}
+	if (server_msg_401($fp, $rdata)) {
 		return;
+	}
 
 	//Are they using a linked nick instead
-	if (notice_nickserv_registered_user($fp, $rdata))
+	if (notice_nickserv_registered_user($fp, $rdata)) {
 		return;
-	if (notice_nickserv_unknown_user($fp, $rdata))
+	}
+	if (notice_nickserv_unknown_user($fp, $rdata)) {
 		return;
+	}
 
 	// some nice things
-	if (ctcp_version($fp, $rdata))
+	if (ctcp_version($fp, $rdata)) {
 		return;
-	if (ctcp_finger($fp, $rdata))
+	}
+	if (ctcp_finger($fp, $rdata)) {
 		return;
-	if (ctcp_time($fp, $rdata))
+	}
+	if (ctcp_time($fp, $rdata)) {
 		return;
-	if (ctcp_ping($fp, $rdata))
+	}
+	if (ctcp_ping($fp, $rdata)) {
 		return;
+	}
 
-	if (invite($fp, $rdata))
+	if (invite($fp, $rdata)) {
 		return;
+	}
 
 	// join and part
-	if (channel_join($fp, $rdata))
+	if (channel_join($fp, $rdata)) {
 		return;
-	if (channel_part($fp, $rdata))
+	}
+	if (channel_part($fp, $rdata)) {
 		return;
+	}
 
 	// nick change and quit
-	if (user_nick($fp, $rdata))
+	if (user_nick($fp, $rdata)) {
 		return;
-	if (user_quit($fp, $rdata))
+	}
+	if (user_quit($fp, $rdata)) {
 		return;
+	}
 
-	if (channel_action_slap($fp, $rdata))
+	if (channel_action_slap($fp, $rdata)) {
 		return;
+	}
 
 	// channel msg (!xyz) without registration
-	if (channel_msg_help($fp, $rdata))
+	if (channel_msg_help($fp, $rdata)) {
 		return;
-	if (channel_msg_seedlist($fp, $rdata))
+	}
+	if (channel_msg_seedlist($fp, $rdata)) {
 		return;
-	if (channel_msg_op($fp, $rdata))
+	}
+	if (channel_msg_op($fp, $rdata)) {
 		return;
-	if (channel_msg_timer($fp, $rdata))
+	}
+	if (channel_msg_timer($fp, $rdata)) {
 		return;
-	if (channel_msg_8ball($fp, $rdata))
+	}
+	if (channel_msg_8ball($fp, $rdata)) {
 		return;
-	if (channel_msg_seen($fp, $rdata))
+	}
+	if (channel_msg_seen($fp, $rdata)) {
 		return;
-	if (channel_msg_sd($fp, $rdata))
+	}
+	if (channel_msg_sd($fp, $rdata)) {
 		return;
+	}
 
 	// channel msg (!xyz) with registration
-	if (channel_msg_with_registration($fp, $rdata))
+	if (channel_msg_with_registration($fp, $rdata)) {
 		return;
+	}
 
 	// MrSpock can use this to send commands as caretaker
-	if (query_command($fp, $rdata))
+	if (query_command($fp, $rdata)) {
 		return;
+	}
 
 
 	// debug

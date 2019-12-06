@@ -82,10 +82,11 @@ class OneWayRoute extends Route {
 	}
 
 	public function getTurnsForRoute() : int {
-		if ($this->goodId === GOOD_NOTHING)
+		if ($this->goodId === GOOD_NOTHING) {
 			$tradeTurns = 0;
-		else
+		} else {
 			$tradeTurns = 2 * TURNS_PER_TRADE;
+		}
 		return $this->distance->getTurns() + $tradeTurns;
 	}
 

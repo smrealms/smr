@@ -36,12 +36,15 @@ else {
 		create_error('This User doesn\'t have an album entry or it needs to be approved first!');
 	}
 
-	if (!empty($day) && !empty($month) && !empty($year))
+	if (!empty($day) && !empty($month) && !empty($year)) {
 		$birthdate = $month . ' / ' . $day . ' / ' . $year;
-	if (empty($birthdate) && !empty($year))
+	}
+	if (empty($birthdate) && !empty($year)) {
 		$birthdate = 'Year ' . $year;
-	if (empty($birthdate))
+	}
+	if (empty($birthdate)) {
 		$birthdate = 'N/A';
+	}
 
 	$entry = [
 		'disabled' => $disabled,

@@ -166,8 +166,9 @@ try {
 		} else $old = array();
 		$old[0] = MULTI_CHECKING_COOKIE_VERSION;
 		//merge arrays...but keys are all different so we go through each value
-		foreach ($cookie as $value)
+		foreach ($cookie as $value) {
 			if (!in_array($value, $old)) $old[] = $value;
+		}
 	}
 	$use = (count($old) <= 2) ? 'FALSE' : 'TRUE';
 	//check that each value is legit and add it to db string
