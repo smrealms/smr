@@ -17,17 +17,19 @@ function modifyRelations($race_id_1) {
 		$race_id_2 = $db->getInt('race_id_2');
 		$action = $db->getField('action');
 
-		if ($action == 'INC')
+		if ($action == 'INC') {
 			$relation_modifier = RELATIONS_VOTE_CHANGE;
-		else
+		} else {
 			$relation_modifier = -RELATIONS_VOTE_CHANGE;
+		}
 
 		$db2->query('SELECT * FROM race_has_relation ' .
 					'WHERE race_id_1 = ' . $db2->escapeNumber($race_id_1) . '
 						AND race_id_2 = ' . $db2->escapeNumber($race_id_2) . '
 						AND game_id = ' . $db2->escapeNumber($player->getGameID()));
-		if ($db2->nextRecord())
+		if ($db2->nextRecord()) {
 			$relation = $db2->getInt('relation') + $relation_modifier;
+		}
 
 		if ($relation < MIN_GLOBAL_RELATIONS) {
 			$relation = MIN_GLOBAL_RELATIONS;
@@ -108,10 +110,11 @@ function checkPacts($race_id_1) {
 					$expireTime = TIME + TIME_FOR_WAR_VOTE_FED_SAFETY;
 					$query = 'REPLACE INTO player_can_fed (account_id, game_id, race_id, expiry, allowed) VALUES ';
 					foreach ($currentlyParkedAccountIDs as $raceID => $accountIDs) {
-						if ($raceID == $race_id_1)
+						if ($raceID == $race_id_1) {
 							$message = 'We have declared war upon your race';
-						else
+						} else {
 							$message = 'Your race has declared war upon us';
+						}
 						$message .= ', you have ' . format_time(TIME_FOR_WAR_VOTE_FED_SAFETY) . ' to vacate our federal space, after that time you will no longer be protected (unless you have strong personal relations).';
 						foreach ($accountIDs as $accountID) {
 							$query .= '(' . $db2->escapeNumber($accountID) . ',' . $db2->escapeNumber($player->getGameID()) . ',' . $db2->escapeNumber($raceID) . ',' . $db2->escapeNumber($expireTime) . ',' . $db2->escapeBoolean(true) . '),';

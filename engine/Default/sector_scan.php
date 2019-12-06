@@ -18,20 +18,22 @@ $enemy_vessel = 0;
 // iterate over all forces in the target sector
 foreach ($scanSector->getForces() as $scanSectorForces) {
 	// decide if it's a friendly or enemy stack
-	if ($player->sameAlliance($scanSectorForces->getOwner()))
+	if ($player->sameAlliance($scanSectorForces->getOwner())) {
 		$friendly_forces += $scanSectorForces->getMines() * 3 + $scanSectorForces->getCDs() * 2 + $scanSectorForces->getSDs();
-	else
+	} else {
 		$enemy_forces += $scanSectorForces->getMines() * 3 + $scanSectorForces->getCDs() * 2 + $scanSectorForces->getSDs();
+	}
 }
 
 foreach ($scanSector->getOtherTraders($player) as $scanSectorPlayer) {
 	$scanSectorShip = $scanSectorPlayer->getShip();
 
 	// he's a friend if he's in our alliance (and we are not in a 0 alliance
-	if ($player->traderMAPAlliance($scanSectorPlayer))
+	if ($player->traderMAPAlliance($scanSectorPlayer)) {
 		$friendly_vessel += $scanSectorShip->getAttackRating();
-	else
+	} else {
 		$enemy_vessel += $scanSectorShip->getDefenseRating() * 10;
+	}
 }
 
 $template->assign('FriendlyVessel', $friendly_vessel);
@@ -40,10 +42,11 @@ $template->assign('EnemyVessel', $enemy_vessel);
 $template->assign('EnemyForces', $enemy_forces);
 
 // is it a warp or a normal move?
-if ($sector->getWarp() == $var['target_sector'])
+if ($sector->getWarp() == $var['target_sector']) {
 	$turns = TURNS_PER_WARP;
-else
+} else {
 	$turns = TURNS_PER_SECTOR;
+}
 
 $template->assign('ScanSector', $scanSector);
 $template->assign('Turns', $turns);

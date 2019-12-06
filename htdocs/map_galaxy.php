@@ -99,8 +99,9 @@ try {
 
 	$template->assign('Title', 'Galaxy Map');
 
-	if ($account->getCssLink() != null)
+	if ($account->getCssLink() != null) {
 		$template->assign('ExtraCSSLink', $account->getCssLink());
+	}
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 	$template->assign('FontSize', $account->getFontSize() - 20);

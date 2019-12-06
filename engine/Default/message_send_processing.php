@@ -4,18 +4,20 @@ $message = htmlentities(trim($_REQUEST['message']), ENT_COMPAT, 'utf-8');
 
 if ($_REQUEST['action'] == 'Preview message') {
 	$container = create_container('skeleton.php');
-	if (isset($var['alliance_id']))
+	if (isset($var['alliance_id'])) {
 		$container['body'] = 'alliance_broadcast.php';
-	else
+	} else {
 		$container['body'] = 'message_send.php';
+	}
 	transfer('receiver');
 	transfer('alliance_id');
 	$container['preview'] = $message;
 	forward($container);
 }
 
-if (empty($message))
+if (empty($message)) {
 	create_error('You have to enter a message to send!');
+}
 
 if (isset($var['alliance_id'])) {
 	$db->query('SELECT account_id FROM player

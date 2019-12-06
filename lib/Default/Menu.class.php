@@ -247,9 +247,10 @@ class Menu {
 		$menu_items[] = create_link(create_container('skeleton.php', 'bank_personal.php'),
 														'Personal Account', 'nav');
 
-		if ($player->hasAlliance())
+		if ($player->hasAlliance()) {
 			$menu_items[] = create_link(create_container('skeleton.php', 'bank_alliance.php'),
 															'Alliance Account', 'nav');
+		}
 
 		$menu_items[] = create_link(create_container('skeleton.php', 'bank_anon.php'),
 														'Anonymous Account', 'nav');
@@ -272,12 +273,14 @@ class Menu {
 		$menu_items[] = create_link($container, 'Send Message', 'nav');
 
 		if ($player->getRaceID() == $race_id) {
-			if ($player->isOnCouncil())
+			if ($player->isOnCouncil()) {
 				$menu_items[] = create_link(create_container('skeleton.php', 'council_vote.php'),
 																'Voting Center', 'nav');
-			if ($player->isPresident())
+			}
+			if ($player->isPresident()) {
 				$menu_items[] = create_link(create_container('skeleton.php', 'council_embassy.php'),
 																'Embassy', 'nav');
+			}
 		}
 
 		create_menu($menu_items);
@@ -306,8 +309,9 @@ class Menu {
 	public static function navigation(Template $template, AbstractSmrPlayer $player) {
 		$menuItems = array();
 		$menuItems[] = array('Link'=>Globals::getPlotCourseHREF(), 'Text'=>'Plot A Course');
-		if (!$player->isLandedOnPlanet())
+		if (!$player->isLandedOnPlanet()) {
 			$menuItems[] = array('Link'=>Globals::getLocalMapHREF(), 'Text'=>'Local Map');
+		}
 		$menuItems[] = array('Link'=>'map_galaxy.php" target="gal_map', 'Text'=>'Galaxy Map');
 		$template->assign('MenuItems', $menuItems);
 	}
@@ -328,14 +332,16 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 	$return .= ('<tr>');
 	foreach ($menu as $number => $entry) {
 		// insert spacer
-		if ($number > 0)
+		if ($number > 0) {
 			$return .= ('<td>&nbsp;|&nbsp;</td>');
+		}
 
 		// if this is the active entry we mark it
-		if ($number == $active_level1)
+		if ($number == $active_level1) {
 			$active = ' class="bold"';
-		else
+		} else {
 			$active = '';
+		}
 
 		// echo entry itself
 		$return .= ('<td ' . $active . '> ' . $entry['entry'] . '</td>');
@@ -349,13 +355,15 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 		if (isset($entry['submenu']) && $number == $active_level1) {
 			$return .= ('<td><small>');
 			foreach ($entry['submenu'] as $sub_number => $sub_entry) {
-				if ($sub_number > 0)
+				if ($sub_number > 0) {
 					$return .= (' | ');
+				}
 
-				if ($sub_number == $active_level2)
+				if ($sub_number == $active_level2) {
 					$return .= ('<span class="bold">' . $sub_entry . '</span>');
-				else
+				} else {
 					$return .= ($sub_entry);
+				}
 			}
 			$return .= ('</small></td>');
 		}

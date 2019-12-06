@@ -10,10 +10,11 @@ if ($var['task'] == 'reset_image') {
 
 	$db->lockTable('album_has_comments');
 	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account_id));
-	if ($db->nextRecord())
+	if ($db->nextRecord()) {
 		$comment_id = $db->getInt('MAX(comment_id)') + 1;
-	else
+	} else {
 		$comment_id = 1;
+	}
 
 	$db->query('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
@@ -31,17 +32,17 @@ if ($var['task'] == 'reset_image') {
 		$mail->send();
 	}
 
-} else if ($var['task'] == 'reset_location')
+} else if ($var['task'] == 'reset_location') {
 	$db->query('UPDATE album SET location = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
-else if ($var['task'] == 'reset_email')
+} else if ($var['task'] == 'reset_email') {
 	$db->query('UPDATE album SET email = \'\' WHERE account_id =' . $db->escapeNumber($account_id));
-else if ($var['task'] == 'reset_website')
+} else if ($var['task'] == 'reset_website') {
 	$db->query('UPDATE album SET website = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
-else if ($var['task'] == 'reset_birthdate')
+} else if ($var['task'] == 'reset_birthdate') {
 	$db->query('UPDATE album SET day = 0, month = 0, year = 0 WHERE account_id = ' . $db->escapeNumber($account_id));
-else if ($var['task'] == 'reset_other')
+} else if ($var['task'] == 'reset_other') {
 	$db->query('UPDATE album SET other = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
-else if ($var['task'] == 'delete_comment') {
+} else if ($var['task'] == 'delete_comment') {
 	$comment_ids = $_REQUEST['comment_ids'];
 	// we just ignore if nothing was set
 	if (count($comment_ids) > 0) {

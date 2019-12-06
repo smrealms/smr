@@ -10,8 +10,9 @@ if ($_REQUEST['action'] == 'Vote') {
 		}
 		$db->query(substr($query, 0, -1));
 	}
-	if (!empty($_REQUEST['favourite']) && is_numeric($_REQUEST['favourite']))
+	if (!empty($_REQUEST['favourite']) && is_numeric($_REQUEST['favourite'])) {
 		$db->query('REPLACE INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($_REQUEST['favourite']) . ',\'FAVOURITE\')');
+	}
 
 	forward(create_container('skeleton.php', 'feature_request.php'));
 }
@@ -20,10 +21,12 @@ else if ($_REQUEST['action'] == 'Set Status') {
 		create_error('You have to select a status to set');
 	}
 	$status = $_REQUEST['status'];
-	if (empty($_REQUEST['set_status_ids']))
+	if (empty($_REQUEST['set_status_ids'])) {
 		create_error('You have to select a feature');
-	if (!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST))
+	}
+	if (!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST)) {
 		create_error('You do not have permission to do that');
+	}
 
 	$db->query('UPDATE feature_request fr SET status = ' . $db->escapeString($status) . '
 			, fav = (

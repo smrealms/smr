@@ -308,8 +308,9 @@ function NPCStuff() {
 				SmrPlayer::savePlayers();
 				SmrForce::saveForces();
 				SmrPort::savePorts();
-				if (class_exists('WeightedRandom', false))
+				if (class_exists('WeightedRandom', false)) {
 					WeightedRandom::saveWeightedRandoms();
+				}
 				release_lock();
 			}
 			//Clean up the caches as the data may get changed by other players
@@ -448,11 +449,13 @@ function changeNPCLogin() {
 }
 
 function canWeUNO(AbstractSmrPlayer $player, $oppurtunisticOnly) {
-	if ($player->getCredits() < MINUMUM_RESERVE_CREDITS)
+	if ($player->getCredits() < MINUMUM_RESERVE_CREDITS) {
 		return false;
+	}
 	$ship = $player->getShip();
-	if ($ship->hasMaxShields() && $ship->hasMaxArmour() && $ship->hasMaxCargoHolds())
+	if ($ship->hasMaxShields() && $ship->hasMaxArmour() && $ship->hasMaxCargoHolds()) {
 		return false;
+	}
 	$sector = $player->getSector();
 
 	// We buy armour in preference to shields as it's cheaper.
@@ -481,11 +484,13 @@ function canWeUNO(AbstractSmrPlayer $player, $oppurtunisticOnly) {
 		}
 	}
 
-	if ($oppurtunisticOnly === true)
+	if ($oppurtunisticOnly === true) {
 		return false;
+	}
 
-	if ($player->getCredits() - $ship->getCostToUNO() < MINUMUM_RESERVE_CREDITS)
+	if ($player->getCredits() - $ship->getCostToUNO() < MINUMUM_RESERVE_CREDITS) {
 		return false; //Only do non-oppurtunistic UNO if we have the money to do it properly!
+	}
 
 	foreach ($hardwareArray as $hardwareArrayID) {
 		if (!$ship->hasMaxHardware($hardwareArrayID)) {
@@ -597,8 +602,9 @@ function doShipUpgrade(AbstractSmrPlayer $player, $upgradeShipID) {
 
 function &changeRoute(array &$tradeRoutes) {
 	$false = false;
-	if (count($tradeRoutes) == 0)
+	if (count($tradeRoutes) == 0) {
 		return $false;
+	}
 	$routeKey = array_rand($tradeRoutes);
 	$tradeRoute =& $tradeRoutes[$routeKey];
 	unset($tradeRoutes[$routeKey]);
@@ -612,10 +618,11 @@ function &findRoutes($player) {
 
 	$tradeGoods = array(GOOD_NOTHING => false);
 	foreach (Globals::getGoods() as $goodID => $good) {
-		if ($player->meetsAlignmentRestriction($good['AlignRestriction']))
+		if ($player->meetsAlignmentRestriction($good['AlignRestriction'])) {
 			$tradeGoods[$goodID] = true;
-		else
+		} else {
 			$tradeGoods[$goodID] = false;
+		}
 	}
 
 	// Only allow NPCs to trade at ports of their race and neutral ports
@@ -652,10 +659,11 @@ function &findRoutes($player) {
 
 		$distances = Plotter::calculatePortToPortDistances($allSectors, $maxDistance, $startSectorID, $endSectorID);
 
-		if ($maxNumberOfPorts == 1)
+		if ($maxNumberOfPorts == 1) {
 			$allRoutes = \Routes\RouteGenerator::generateOneWayRoutes($allSectors, $distances, $tradeGoods, $tradeRaces, $routesForPort);
-		else
+		} else {
 			$allRoutes = \Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+		}
 
 		unset($distances);
 

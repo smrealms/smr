@@ -1,14 +1,16 @@
 <?php declare(strict_types=1);
-if (!$player->isLandedOnPlanet())
+if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
+}
 // get a planet from the sector where the player is in
 $planet = $player->getSectorPlanet();
 $action = $_REQUEST['action'];
 $password = isset($_REQUEST['password']) ? $_REQUEST['password'] : '';
 
 if ($action == 'Take Ownership') {
-	if ($planet->hasOwner() && $planet->getPassword() != $password)
+	if ($planet->hasOwner() && $planet->getPassword() != $password) {
 		create_error('You are not allowed to take ownership!');
+	}
 
 	// delete all previous ownerships
 	$db->query('UPDATE planet SET owner_id = 0, password = NULL

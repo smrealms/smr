@@ -36,8 +36,9 @@ if ($action == 'Deposit') {
 else {
 	$db->query('SELECT * FROM anon_bank WHERE anon_id = ' . $db->escapeNumber($account_num) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$db->nextRecord();
-	if ($db->getInt('amount') < $amount)
+	if ($db->getInt('amount') < $amount) {
 		create_error('You don\'t have that much money on your account!');
+	}
 	$db->query('SELECT transaction_id FROM anon_bank_transactions WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num) . ' ORDER BY transaction_id DESC LIMIT 1');
 	if ($db->nextRecord()) {
 		$trans_id = $db->getInt('transaction_id') + 1;

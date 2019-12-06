@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 $action = $_REQUEST['action'];
 $amount = $_REQUEST['amount'];
-if (!is_numeric($amount))
+if (!is_numeric($amount)) {
 	create_error('Numbers only please');
+}
 
 // only whole numbers allowed
 $amount = floor($amount);
@@ -12,8 +13,9 @@ $hardware_name = Globals::getHardwareName($hardware_id);
 $cost = Globals::getHardwareCost($hardware_id);
 
 // no negative amounts are allowed
-if ($amount <= 0)
+if ($amount <= 0) {
 	create_error('You must actually enter an amount greater than zero!');
+}
 
 if ($action == 'Buy') {
 	// do we have enough cash?

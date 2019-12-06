@@ -24,10 +24,11 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Marked Messages') {
 			$message_id_list[] = $id;
 		}
 	}
-	if ($var['folder_id'] == MSG_SENT)
+	if ($var['folder_id'] == MSG_SENT) {
 		$db->query('UPDATE message SET sender_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN (' . $db->escapeArray($message_id_list) . ')');
-	else
+	} else {
 		$db->query('UPDATE message SET receiver_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN (' . $db->escapeArray($message_id_list) . ')');
+	}
 }
 else {
 	if ($var['folder_id'] == MSG_SCOUT) {

@@ -4,15 +4,17 @@
 // code is read-only. This will help reduce sector lag and possible abuse.
 release_lock();
 
-if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false)
+if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false) {
 	$gameID = $var['AdminCreateGameID'];
-else
+} else {
 	$gameID = $player->getGameID();
+}
 
-if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false)
+if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false) {
 	$adminCreate = true;
-else
+} else {
 	$adminCreate = false;
+}
 
 // NOTE: If the format of this file is changed in an incompatible way,
 // make sure to update the SMR_FILE_VERSION!
@@ -103,8 +105,9 @@ foreach (SmrLocation::getAllLocations() as $location) {
 	if ($location->isFed()) {
 		$locSells .= 'Fed=,';
 	}
-	if ($locSells != '')
+	if ($locSells != '') {
 		$file .= substr($locSells, 0, -1);
+	}
 	$file .= EOL;
 }
 
@@ -130,19 +133,22 @@ foreach ($galaxies as $galaxy) {
 	foreach ($galaxy->getSectors() as $sector) {
 		$file .= '[Sector=' . $sector->getSectorID() . ']' . EOL;
 		
-		if (!$sector->isVisited($player) && $adminCreate === false)
+		if (!$sector->isVisited($player) && $adminCreate === false) {
 			continue;
+		}
 		
 		foreach ($sector->getLinks() as $linkName => $link) {
 			$file .= $linkName . '=' . $link . EOL;
 		}
-		if ($sector->hasWarp())
+		if ($sector->hasWarp()) {
 			$file .= 'Warp=' . $sector->getWarp() . EOL;
+		}
 		if (($adminCreate !== false && $sector->hasPort()) || is_object($player) && $sector->hasCachedPort($player)) {
-			if ($adminCreate !== false)
+			if ($adminCreate !== false) {
 				$port = $sector->getPort();
-			else
+			} else {
 				$port = $sector->getCachedPort($player);
+			}
 			$file .= 'Port Level=' . $port->getLevel() . EOL;
 			$file .= 'Port Race=' . $port->getRaceID() . EOL;
 			if (!empty($port->getSoldGoodIDs())) {

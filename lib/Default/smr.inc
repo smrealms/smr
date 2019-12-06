@@ -8,8 +8,9 @@ function htmliseMessage($message) {
 
 function parseBoolean($check) {
 	// Only negative strings are not implicitly converted to the correct bool
-	if (is_string($check) && (strcasecmp($check, 'NO') == 0 || strcasecmp($check, 'FALSE') == 0))
+	if (is_string($check) && (strcasecmp($check, 'NO') == 0 || strcasecmp($check, 'FALSE') == 0)) {
 		return false;
+	}
 	return (bool)$check;
 }
 
@@ -32,8 +33,9 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'player':
 				$playerID = $default;
-				if (!is_numeric($playerID))
+				if (!is_numeric($playerID)) {
 					$playerID = $tagParams['id'];
+				}
 				$bbPlayer = SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
@@ -46,8 +48,9 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'alliance':
 				$allianceID = $default;
-				if (!is_numeric($allianceID))
+				if (!is_numeric($allianceID)) {
 					$allianceID = $tagParams['id'];
+				}
 				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
@@ -56,10 +59,11 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if ($disableBBLinks === false && $overrideGameID == SmrSession::getGameID()) {
 					$container = create_container('skeleton.php');
 					$container['alliance_id'] = $alliance->getAllianceID();
-					if (is_object($player) && $alliance->getAllianceID() == $player->getAllianceID())
+					if (is_object($player) && $alliance->getAllianceID() == $player->getAllianceID()) {
 						$container['body'] = 'alliance_mod.php';
-					else
+					} else {
 						$container['body'] = 'alliance_roster.php';
+					}
 					return create_link($container, $alliance->getAllianceDisplayName());
 				}
 				return $alliance->getAllianceDisplayName();
@@ -83,8 +87,9 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return true;
 				}
 				if ($timeString != '' && ($time = strtotime($timeString)) !== false) {
-					if (is_object($account))
+					if (is_object($account)) {
 						$time += $account->getOffset() * 3600;
+					}
 					return date(DATE_FULL_SHORT, $time);
 				}
 			break;
@@ -173,10 +178,11 @@ function bbifyMessage($message, $noLinks = false) {
 		$bbParser->addRule('join_alliance', $smrRule);
 	}
 	global $disableBBLinks;
-	if ($noLinks === true)
+	if ($noLinks === true) {
 		$disableBBLinks = true;
-	else
+	} else {
 		$disableBBLinks = false;
+	}
 	if (strpos($message, '[') !== false) { //We have BBCode so let's do a full parse.
 		$message = $bbParser->parse($message);
 		$message = str_replace('&lt;br /&gt;', '<br />', $message);
@@ -267,8 +273,9 @@ function resetContainer($new_container) {
 }
 
 function forward($new_container) {
-	if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true)
+	if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
 		return overrideForward($new_container);
+	}
 	resetContainer($new_container);
 	do_voodoo();
 }
@@ -277,16 +284,15 @@ function forwardURL($new_container) {
 	resetContainer($new_container);
 	global $var;
 	require_once(get_file_loc($var['url']));
-
 }
 
 function transfer($what) {
 	global $var, $container;
 
 	// transfer this value to next container
-	if (isset($var[$what]))
+	if (isset($var[$what])) {
 		$container[$what] = $var[$what];
-
+	}
 }
 
 function create_container($file, $body = '', array $extra = array(), $remainingPageLoads = null) {
@@ -533,8 +539,9 @@ function do_voodoo() {
 function acquire_lock($sector) {
 	global $db, $lock, $locksFailed;
 
-	if ($lock)
+	if ($lock) {
 		return true;
+	}
 
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber(SmrSession::getGameID()) . ',' . $db->escapeNumber(SmrSession::getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(TIME) . ')');
@@ -898,16 +905,18 @@ function format_time($seconds, $short = false) {
 
 function number_colour_format($number, $justSign = false) {
 	$formatted = '<span';
-	if ($number > 0)
+	if ($number > 0) {
 		$formatted .= ' class="green">+';
-	else if ($number < 0)
+	} else if ($number < 0) {
 		$formatted .= ' class="red">-';
-	else
+	} else {
 		$formatted .= '>';
+	}
 	if ($justSign === false) {
 		$decimalPlaces = 0;
-		if (($pos = strpos((string)$number, '.')) !== false)
+		if (($pos = strpos((string)$number, '.')) !== false) {
 			$decimalPlaces = strlen(substr((string)$number, $pos + 1));
+		}
 		$formatted .= number_format(abs($number), $decimalPlaces);
 	}
 	$formatted .= '</span>';

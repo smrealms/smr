@@ -22,10 +22,11 @@ if ($submit == 'Create Galaxies') {
 }
 else if ($submit == 'Redo Connections') {
 	$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
-	if (!$galaxy->setConnectivity($_REQUEST['connect']))
+	if (!$galaxy->setConnectivity($_REQUEST['connect'])) {
 		$var['message'] = '<span class="red">Error</span> : Regenerating connections failed.';
-	else
+	} else {
 		$var['message'] = '<span class="green">Success</span> : Regenerated connectivity with ' . $_REQUEST['connect'] . '% target.';
+	}
 	SmrSector::saveSectors();
 }
 elseif ($submit == 'Toggle Link') {
@@ -228,10 +229,11 @@ elseif ($submit == 'Edit Sector') {
 	for ($x = 0; $x < UNI_GEN_LOCATION_SLOTS; $x++) {
 		if ($_POST['loc_type' . $x] != 0) {
 			$locationToAdd = SmrLocation::getLocation($_POST['loc_type' . $x]);
-			if ($editSector->hasLocation($locationToAdd->getTypeID()))
+			if ($editSector->hasLocation($locationToAdd->getTypeID())) {
 				$locationsToKeep[] = $locationToAdd;
-			else
+			} else {
 				$locationsToAdd[] = $locationToAdd;
+			}
 		}
 	}
 	$editSector->removeAllLocations();
@@ -274,8 +276,9 @@ function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) {
 }
 
 function addLocationToSector(SmrLocation $location, SmrSector $sector) {
-	if ($sector->hasLocation($location->getTypeID()))
+	if ($sector->hasLocation($location->getTypeID())) {
 		return false;
+	}
 
 	$sector->addLocation($location); //insert the location
 	if ($location->isHQ()) {
@@ -283,13 +286,15 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector) {
 		//Racial/Fed
 		foreach ($location->getLinkedLocations() as $linkedLocation) {
 			$sector->addLocation($linkedLocation);
-			if ($linkedLocation->isFed())
+			if ($linkedLocation->isFed()) {
 				$fedBeacon = $linkedLocation;
+			}
 		}
 			
 		//add Beacons to all surrounding areas (up to 2 sectors out)
-		if (!$sector->offersFederalProtection())
+		if (!$sector->offersFederalProtection()) {
 			$sector->addLocation($fedBeacon); //add beacon to this sector
+		}
 		$visitedSectors = array();
 		$links = array('Up', 'Right', 'Down', 'Left');
 		$fedSectors = array($sector);
@@ -299,8 +304,9 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector) {
 				foreach ($links as $link) {
 					if ($fedSector->hasLink($link) && !isset($visitedSectors[$fedSector->getLink($link)])) {
 						$linkSector = $sector->getLinkSector($link);
-						if (!$linkSector->offersFederalProtection())
+						if (!$linkSector->offersFederalProtection()) {
 							$linkSector->addLocation($fedBeacon); //add beacon to this sector
+						}
 						$tempFedSectors[] = $linkSector;
 						$visitedSectors[$fedSector->getLink($link)] = true;
 					}

@@ -85,8 +85,9 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		$weaponShip = $weaponPlayer->getShip();
 		$targetShip = $targetPlayer->getShip();
 		$mrDiff = $targetShip->getMR() - $weaponShip->getMR();
-		if ($mrDiff > 0)
+		if ($mrDiff > 0) {
 			$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff / MR_FACTOR) / 100;
+		}
 	
 		return max(0, min(100, $modifiedAccuracy));
 	}

@@ -85,36 +85,50 @@ function channel_msg_with_registration($fp, $rdata)
 			return true;
 		}
 
-		if (channel_msg_money($fp, $rdata, $account, $player))
+		if (channel_msg_money($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_forces($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_forces($fp, $rdata, $account, $player)) {
 			return true;
+		}
 
-		if (channel_msg_seed($fp, $rdata, $account, $player))
+		if (channel_msg_seed($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_seedlist_add($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_seedlist_add($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_seedlist_del($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_seedlist_del($fp, $rdata, $account, $player)) {
 			return true;
+		}
 
-		if (channel_msg_op_info($fp, $rdata, $account, $player))
+		if (channel_msg_op_info($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_op_cancel($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_op_cancel($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_op_set($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_op_set($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_op_turns($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_op_turns($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_op_response($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_op_response($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_op_list($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_op_list($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_sd_set($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_sd_set($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_sd_del($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_sd_del($fp, $rdata, $account, $player)) {
 			return true;
-		if (channel_msg_sd_list($fp, $rdata, $account, $player))
+		}
+		if (channel_msg_sd_list($fp, $rdata, $account, $player)) {
 			return true;
+		}
 
 	}
 
@@ -253,8 +267,9 @@ function channel_msg_timer($fp, $rdata)
 		$countdown = intval($msg[5]);
 		$message = 'ALERT! ALERT! ALERT!';
 
-		if (isset($msg[6]))
+		if (isset($msg[6])) {
 			$message .= ' ' . $msg[6];
+		}
 
 		echo_r('[TIMER] ' . $nick . ' started a timer with ' . $countdown . ' minute(s) (' . $message . ') in ' . $channel);
 
@@ -364,8 +379,9 @@ function channel_msg_help($fp, $rdata)
 		if ($topic == 'seen') {
 			fputs($fp, 'NOTICE ' . $nick . ' :Syntax !seen <nickname>' . EOL);
 			fputs($fp, 'NOTICE ' . $nick . ' :   Displays the last time <nickname> was seen' . EOL);
-		} else
+		} else {
 			fputs($fp, 'NOTICE ' . $nick . ' :There is no help available for this command! Try !help' . EOL);
+		}
 
 		//		if ($topic == 'login')
 		//			fputs($fp, 'NOTICE '.$nick.' :No help available yet! Ask MrSpock!'.EOL);

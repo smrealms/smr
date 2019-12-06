@@ -7,12 +7,14 @@ if ($_REQUEST['action'] == 'Preview messages') {
 	transfer('offended');
 	transfer('game_id');
 	transfer('sender_id');
-	if (!empty($offenderReply))
+	if (!empty($offenderReply)) {
 		$container['PreviewOffender'] = $offenderReply;
+	}
 	$container['OffenderBanPoints'] = $_REQUEST['offenderBanPoints'];
 
-	if (!empty($offendedReply))
+	if (!empty($offendedReply)) {
 		$container['PreviewOffended'] = $offendedReply;
+	}
 	$container['OffendedBanPoints'] = $_REQUEST['offendedBanPoints'];
 	forward($container);
 }
