@@ -19,9 +19,9 @@ function channel_join($fp, $rdata)
 
 		if ($db->nextRecord()) {
 			// existing nick?
-			$seen_id = $db->getField('seen_id');
+			$seen_id = $db->getInt('seen_id');
 
-			$seen_count = $db->getField('seen_count');
+			$seen_count = $db->getInt('seen_count');
 			$seen_by = $db->getField('seen_by');
 
 			if ($seen_count > 1) {
@@ -83,7 +83,7 @@ function channel_part($fp, $rdata)
 		// exiting nick?
 		if ($db->nextRecord()) {
 
-			$seen_id = $db->getField('seen_id');
+			$seen_id = $db->getInt('seen_id');
 
 			$db->query('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
 

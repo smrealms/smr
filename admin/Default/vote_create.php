@@ -7,7 +7,7 @@ $template->assign('VoteFormHREF', SmrSession::getNewHREF(create_container('vote_
 $voting = array();
 $db->query('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(TIME));
 while ($db->nextRecord()) {
-	$voteID = $db->getField('vote_id');
+	$voteID = $db->getInt('vote_id');
 	$voting[$voteID]['ID'] = $voteID;
 	$voting[$voteID]['Question'] = $db->getField('question');
 }

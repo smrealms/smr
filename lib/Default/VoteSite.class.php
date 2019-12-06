@@ -96,7 +96,7 @@ class VoteSite {
 			$db->query('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountID) . ' AND link_id IN (' . join(',', $activeLinkIDs) . ') LIMIT ' . $db->escapeNumber(count($activeLinkIDs)));
 			while ($db->nextRecord()) {
 				// 'timeout' is the last time the player claimed free turns (or 0, if unclaimed)
-				$WAIT_TIMES[$db->getInt('link_id')] = ($db->getField('timeout') + TIME_BETWEEN_VOTING) - TIME;
+				$WAIT_TIMES[$db->getInt('link_id')] = ($db->getInt('timeout') + TIME_BETWEEN_VOTING) - TIME;
 			}
 			// If not in the vote_link database, this site is eligible now.
 			foreach ($activeLinkIDs as $linkID) {

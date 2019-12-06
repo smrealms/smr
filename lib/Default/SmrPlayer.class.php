@@ -107,7 +107,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$db->query('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
 			while ($db->nextRecord()) {
-				$accountID = $db->getField('account_id');
+				$accountID = $db->getInt('account_id');
 				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $db);
 			}
 			self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] = $players;
@@ -698,7 +698,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->db->query('SELECT gadget_id,equipped,cooldown,lasts_until FROM player_has_gadget WHERE ' . $this->SQL);
 			$this->gadgets = array();
 			while ($this->db->nextRecord())
-				$this->gadgets[$this->db->getField('gadget_id')] = array('Equipped' => $this->db->getField('equipped'), 'Cooldown' => $this->db->getField('cooldown'), 'Expires' => $this->db->getField('lasts_until'));
+				$this->gadgets[$this->db->getInt('gadget_id')] = array('Equipped' => $this->db->getField('equipped'), 'Cooldown' => $this->db->getInt('cooldown'), 'Expires' => $this->db->getInt('lasts_until'));
 		}
 	}
 
@@ -1273,7 +1273,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 					}
 					$hof =& $hof[$type];
 				}
-				$hof = $this->db->getField('amount');
+				$hof = $this->db->getFloat('amount');
 			}
 			self::getHOFVis();
 		}
@@ -1296,7 +1296,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->bounties = array();
 			$this->db->query('SELECT * FROM bounty WHERE ' . $this->SQL);
 			while ($this->db->nextRecord()) {
-				$this->bounties[$this->db->getField('bounty_id')] = array(
+				$this->bounties[$this->db->getInt('bounty_id')] = array(
 							'Amount' => $this->db->getInt('amount'),
 							'SmrCredits' => $this->db->getInt('smr_credits'),
 							'Type' => $this->db->getField('type'),

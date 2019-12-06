@@ -15,7 +15,7 @@ ORDER BY role_id
 ');
 $allianceRoles = array();
 while ($db->nextRecord()) {
-	$roleID = $db->getField('role_id');
+	$roleID = $db->getInt('role_id');
 	$allianceRoles[$roleID]['RoleID'] = $roleID;
 	$allianceRoles[$roleID]['Name'] = $db->getField('role');
 	$allianceRoles[$roleID]['EditingRole'] = isset($var['role_id']) && $var['role_id'] == $roleID;

@@ -59,7 +59,7 @@ if ($_REQUEST['to_email'] == '*') {
 
 	while ($db->nextRecord()) {
 		// get account data
-		$account_id = $db->getField('account_id');
+		$account_id = $db->getInt('account_id');
 		$to_email = $db->getField('email');
 		$to_name = $db->getField('login');
 

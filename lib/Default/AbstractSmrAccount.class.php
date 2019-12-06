@@ -100,7 +100,7 @@ abstract class AbstractSmrAccount {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM account WHERE login = '.$db->escapeString($login).' LIMIT 1');
 		if($db->nextRecord())
-			return self::getAccount($db->getField('account_id'),$forceUpdate);
+			return self::getAccount($db->getInt('account_id'), $forceUpdate);
 		$return = null;
 		return $return;
 	}
@@ -121,7 +121,7 @@ abstract class AbstractSmrAccount {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM account where discord_id = '.$db->escapeString($id).' LIMIT 1');
 		if ($db->nextRecord()) {
-			return self::getAccount($db->getField('account_id'), $forceUpdate);
+			return self::getAccount($db->getInt('account_id'), $forceUpdate);
 		} else {
 			return null;
 		}
@@ -132,7 +132,7 @@ abstract class AbstractSmrAccount {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM account WHERE irc_nick = '.$db->escapeString($nick).' LIMIT 1');
 		if ($db->nextRecord()) {
-			return self::getAccount($db->getField('account_id'), $forceUpdate);
+			return self::getAccount($db->getInt('account_id'), $forceUpdate);
 		} else {
 			return null;
 		}
@@ -305,7 +305,7 @@ abstract class AbstractSmrAccount {
 
 		$this->db->query('SELECT time,ip FROM account_has_ip WHERE '.$this->SQL.' ORDER BY time ASC');
 		if ($this->db->getNumRows() > 50 && $this->db->nextRecord()) {
-			$delete_time = $this->db->getField('time');
+			$delete_time = $this->db->getInt('time');
 			$delete_ip = $this->db->getField('ip');
 
 			$this->db->query('DELETE FROM account_has_ip
@@ -379,7 +379,7 @@ abstract class AbstractSmrAccount {
 					}
 					$hof =& $hof[$type];
 				}
-				$hof = $this->db->getField('amount');
+				$hof = $this->db->getFloat('amount');
 			}
 		}
 	}

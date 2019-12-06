@@ -20,7 +20,7 @@ $db->query('SELECT MAX(changelog_id)
 			WHERE version_id = ' . $db->escapeNumber($var['version_id'])
 		   );
 if ($db->nextRecord()) {
-	$changelog_id = $db->getField('MAX(changelog_id)') + 1;
+	$changelog_id = $db->getInt('MAX(changelog_id)') + 1;
 } else {
 	$changelog_id = 1;
 }

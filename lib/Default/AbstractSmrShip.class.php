@@ -46,14 +46,14 @@ abstract class AbstractSmrShip {
 		$ship = array();
 		$ship['Type'] = 'Ship';
 		$ship['Name'] = $db->getField('ship_name');
-		$ship['ShipTypeID'] = $db->getField('ship_type_id');
+		$ship['ShipTypeID'] = $db->getInt('ship_type_id');
 		$ship['ShipClassID'] = $db->getInt('ship_class_id');
-		$ship['RaceID'] = $db->getField('race_id');
-		$ship['Hardpoint'] = $db->getField('hardpoint');
-		$ship['Speed'] = $db->getField('speed');
-		$ship['Cost'] = $db->getField('cost');
-		$ship['AlignRestriction'] = $db->getField('buyer_restriction');
-		$ship['Level'] = $db->getField('lvl_needed');
+		$ship['RaceID'] = $db->getInt('race_id');
+		$ship['Hardpoint'] = $db->getInt('hardpoint');
+		$ship['Speed'] = $db->getInt('speed');
+		$ship['Cost'] = $db->getInt('cost');
+		$ship['AlignRestriction'] = $db->getInt('buyer_restriction');
+		$ship['Level'] = $db->getInt('lvl_needed');
 
 		$maxPower = 0;
 		switch ($ship['Hardpoint']) {
@@ -92,7 +92,7 @@ abstract class AbstractSmrShip {
 
 		while ($db2->nextRecord()) {
 			// adding hardware to array
-			$ship['MaxHardware'][$db2->getField('hardware_type_id')] = $db2->getField('max_amount');
+			$ship['MaxHardware'][$db2->getInt('hardware_type_id')] = $db2->getInt('max_amount');
 		}
 
 		$ship['BaseMR'] = round(

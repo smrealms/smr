@@ -23,7 +23,7 @@ $db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($var['view_
 $rows = [];
 while ($db->nextRecord()) {
 	$rows[] = [
-		'time' => date(DATE_FULL_SHORT, $db->getField('time')),
+		'time' => date(DATE_FULL_SHORT, $db->getInt('time')),
 		'news' => $db->getField('message'),
 	];
 }

@@ -91,7 +91,7 @@ function getHofRank($view, $viewType, $accountID, $gameID) {
 	$realAmount = 0;
 	if ($db->nextRecord()) {
 		if ($db->getField('amount') != null) {
-			$realAmount = $db->getField('amount');
+			$realAmount = $db->getFloat('amount');
 		}
 	}
 	$rank['Amount'] = applyHofVisibilityMask($realAmount, $vis, $gameID, $accountID);

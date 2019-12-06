@@ -29,7 +29,7 @@ if (isset($_REQUEST['account_id']) || $game_id == 20000) {
 		//send to all players in games that haven't ended yet
 		$db->query('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(TIME));
 		while ($db->nextRecord()) {
-			SmrPlayer::sendMessageFromAdmin($db->getField('game_id'), $db->getField('account_id'), $message, $expire);
+			SmrPlayer::sendMessageFromAdmin($db->getInt('game_id'), $db->getInt('account_id'), $message, $expire);
 		}
 	}
 	$msg = '<span class="green">SUCCESS: </span>Your message has been sent.';

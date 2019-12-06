@@ -9,7 +9,7 @@ $template->assign('DeleteHREF', SmrSession::getNewHREF($container));
 $db->query('SELECT * FROM message_notify');
 $messages = [];
 while ($db->nextRecord()) {
-	$gameID = $db->getField('game_id');
+	$gameID = $db->getInt('game_id');
 	$sender = getMessagePlayer($db->getInt('from_id'), $gameID);
 	$receiver = getMessagePlayer($db->getInt('to_id'), $gameID);
 
@@ -49,8 +49,8 @@ while ($db->nextRecord()) {
 		'senderLink' => $senderLink,
 		'receiverLink' => $receiverLink,
 		'gameName' => $gameName,
-		'sentDate' => date(DATE_FULL_SHORT, $db->getField('sent_time')),
-		'reportDate' => date(DATE_FULL_SHORT, $db->getField('notify_time')),
+		'sentDate' => date(DATE_FULL_SHORT, $db->getInt('sent_time')),
+		'reportDate' => date(DATE_FULL_SHORT, $db->getInt('notify_time')),
 		'text' => bbifyMessage($db->getField('text')),
 	];
 }

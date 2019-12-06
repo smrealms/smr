@@ -165,12 +165,12 @@ function channel_msg_seen($fp, $rdata)
 			$seennick = $db->getField('nick');
 			$seenuser = $db->getField('user');
 			$seenhost = $db->getField('host');
-			$signed_on = $db->getField('signed_on');
-			$signed_off = $db->getField('signed_off');
+			$signed_on = $db->getInt('signed_on');
+			$signed_off = $db->getInt('signed_off');
 
 			if ($signed_off > 0) {
 
-				$seen_id = $db->getField('seen_id');
+				$seen_id = $db->getInt('seen_id');
 
 				// remember who did the !seen command
 				$db->query('UPDATE irc_seen

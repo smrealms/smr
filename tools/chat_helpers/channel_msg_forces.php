@@ -55,8 +55,8 @@ function shared_channel_msg_forces($player, $option) {
 	}
 
 	if ($db->nextRecord()) {
-		$sectorId = $db->getField('sector');
-		$expire = $db->getField('expire_time');
+		$sectorId = $db->getInt('sector');
+		$expire = $db->getInt('expire_time');
 
 		return array('Forces in sector ' . $sectorId . ' will expire in ' . format_time($expire - time()));
 	} else {

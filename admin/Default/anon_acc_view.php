@@ -23,7 +23,7 @@ if ($haveIDs) {
 		$rows[] = [
 			'player_name' => $db->getField('player_name'),
 			'transaction' => $db->getField('transaction'),
-			'amount' => $db->getField('amount'),
+			'amount' => $db->getInt('amount'),
 		];
 	}
 	$template->assign('Rows', $rows);

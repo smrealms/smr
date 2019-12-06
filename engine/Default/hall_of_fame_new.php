@@ -61,11 +61,11 @@ else {
 	}
 	$rows = [];
 	while ($db->nextRecord()) {
-		$accountID = $db->getField('account_id');
+		$accountID = $db->getInt('account_id');
 		if ($accountID == $account->getAccountID()) {
 			$foundMe = true;
 		}
-		$amount = applyHofVisibilityMask($db->getField('amount'), $vis, $game_id, $accountID);
+		$amount = applyHofVisibilityMask($db->getFloat('amount'), $vis, $game_id, $accountID);
 		$rows[] = displayHOFRow($rank++, $accountID, $amount);
 	}
 	if (!$foundMe) {

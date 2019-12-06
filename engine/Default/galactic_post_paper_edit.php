@@ -12,7 +12,7 @@ $db->query('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article
 $articles = [];
 while ($db->nextRecord()) {
 	$container = create_container('galactic_post_paper_edit_processing.php');
-	$container['article_id'] = $db->getField('article_id');
+	$container['article_id'] = $db->getInt('article_id');
 	transfer('id');
 	$articles[] = [
 		'title' => bbifyMessage($db->getField('title')),

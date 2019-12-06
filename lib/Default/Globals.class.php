@@ -44,7 +44,7 @@ class Globals {
 			self::$db->query('SELECT account_id FROM hidden_players');
 			self::$HIDDEN_PLAYERS = array(0); //stop errors
 			while (self::$db->nextRecord()) {
-				self::$HIDDEN_PLAYERS[] = self::$db->getField('account_id');
+				self::$HIDDEN_PLAYERS[] = self::$db->getInt('account_id');
 			}
 		}
 		return self::$HIDDEN_PLAYERS;
@@ -136,14 +136,14 @@ class Globals {
 			// determine user level
 			self::$db->query('SELECT * FROM good ORDER BY good_id');
 			while (self::$db->nextRecord()) {
-				self::$GOODS[self::$db->getField('good_id')] = array(
+				self::$GOODS[self::$db->getInt('good_id')] = array(
 																'Type' => 'Good',
 																'ID' => self::$db->getInt('good_id'),
 																'Name' => self::$db->getField('good_name'),
 																'Max' => self::$db->getInt('max_amount'),
 																'BasePrice' => self::$db->getInt('base_price'),
 																'Class' => self::$db->getInt('good_class'),
-																'ImageLink' => 'images/port/' . self::$db->getField('good_id') . '.png',
+																'ImageLink' => 'images/port/' . self::$db->getInt('good_id') . '.png',
 																'AlignRestriction' => self::$db->getInt('align_restriction')
 															);
 			}
@@ -168,7 +168,7 @@ class Globals {
 			// determine user level
 			self::$db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
 			while (self::$db->nextRecord()) {
-				self::$HARDWARE_TYPES[self::$db->getField('hardware_type_id')] = array(
+				self::$HARDWARE_TYPES[self::$db->getInt('hardware_type_id')] = array(
 																			'Type' => 'Hardware',
 																			'ID' => self::$db->getInt('hardware_type_id'),
 																			'Name' => self::$db->getField('hardware_name'),

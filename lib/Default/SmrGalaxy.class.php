@@ -27,7 +27,7 @@ class SmrGalaxy {
 			$db->query('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY galaxy_id ASC');
 			$galaxies = array();
 			while ($db->nextRecord()) {
-				$galaxyID = $db->getField('galaxy_id');
+				$galaxyID = $db->getInt('galaxy_id');
 				$galaxies[$galaxyID] = self::getGalaxy($gameID, $galaxyID, $forceUpdate, $db);
 			}
 			self::$CACHE_GAME_GALAXIES[$gameID] = $galaxies;

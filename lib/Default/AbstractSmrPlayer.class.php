@@ -1341,7 +1341,7 @@ abstract class AbstractSmrPlayer {
 			$this->visitedSectors = array();
 			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE ' . $this->SQL);
 			while ($this->db->nextRecord())
-				$this->visitedSectors[$this->db->getField('sector_id')] = false;
+				$this->visitedSectors[$this->db->getInt('sector_id')] = false;
 		}
 		return !isset($this->visitedSectors[$sectorID]);
 	}

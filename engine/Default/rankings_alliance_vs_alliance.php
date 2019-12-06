@@ -14,7 +14,7 @@ $detailsAllianceID = SmrSession::getRequestVar('alliance_id', $player->getAllian
 $activeAlliances = [];
 $db->query('SELECT alliance_id FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_kills DESC, alliance_name');
 while ($db->nextRecord()) {
-	$activeAlliances[] = $db->getField('alliance_id');
+	$activeAlliances[] = $db->getInt('alliance_id');
 }
 $template->assign('ActiveAlliances', $activeAlliances);
 
@@ -100,7 +100,7 @@ $db->query('SELECT * FROM alliance_vs_alliance
 			WHERE alliance_id_1 = '.$db->escapeNumber($var['alliance_id']) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY kills DESC');
 while ($db->nextRecord()) {
-	$id = $db->getField('alliance_id_2');
+	$id = $db->getInt('alliance_id_2');
 	if ($id > 0) {
 		$killer_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
 		$alliance_name = $killer_alliance->getAllianceName();
@@ -122,7 +122,7 @@ $db->query('SELECT * FROM alliance_vs_alliance
 			WHERE alliance_id_2 = '.$db->escapeNumber($var['alliance_id']) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY kills DESC');
 while ($db->nextRecord()) {
-	$id = $db->getField('alliance_id_1');
+	$id = $db->getInt('alliance_id_1');
 	if ($id > 0) {
 		$killer_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
 		$alliance_name = $killer_alliance->getAllianceName();
@@ -134,7 +134,7 @@ while ($db->nextRecord()) {
 
 	$deaths[] = [
 		'Name' => $alliance_name,
-		'Deaths' => $db->getField('kills'),
+		'Deaths' => $db->getInt('kills'),
 	];
 }
 $template->assign('Deaths', $deaths);

@@ -9,7 +9,7 @@ $processingContainer = create_container('newsletter_send_processing.php');
 $db = new SmrMySqlDatabase();
 $db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
 if ($db->nextRecord()) {
-	$id = $db->getField('newsletter_id');
+	$id = $db->getInt('newsletter_id');
 	$template->assign('NewsletterId', $id);
 	$template->assign('DefaultSubject', 'Space Merchant Realms Newsletter #' . $id);
 

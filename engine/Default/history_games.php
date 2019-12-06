@@ -14,10 +14,10 @@ $db->query('SELECT start_date, type, end_date, game_name, speed, game_id ' .
            'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
 $db->nextRecord();
 $template->assign('GameName', $game_name);
-$template->assign('Start', date(DATE_DATE_SHORT, $db->getField('start_date')));
-$template->assign('End', date(DATE_DATE_SHORT, $db->getField('end_date')));
+$template->assign('Start', date(DATE_DATE_SHORT, $db->getInt('start_date')));
+$template->assign('End', date(DATE_DATE_SHORT, $db->getInt('end_date')));
 $template->assign('Type', $db->getField('type'));
-$template->assign('Speed', $db->getField('speed'));
+$template->assign('Speed', $db->getFloat('speed'));
 
 $db->query('SELECT count(*), max(experience), max(alignment), min(alignment), max(kills) FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
 if ($db->nextRecord()) {
@@ -35,7 +35,7 @@ $playerExp = [];
 $db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY experience DESC LIMIT 10');
 while ($db->nextRecord()) {
 	$playerExp[] = [
-		'exp' => $db->getField('experience'),
+		'exp' => $db->getInt('experience'),
 		'name' => stripslashes($db->getField('player_name')),
 	];
 }
@@ -45,7 +45,7 @@ $playerKills = [];
 $db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY kills DESC LIMIT 10');
 while ($db->nextRecord()) {
 	$playerKills[] = [
-		'kills' => $db->getField('kills'),
+		'kills' => $db->getInt('kills'),
 		'name' => stripslashes($db->getField('player_name')),
 	];
 }
@@ -62,10 +62,10 @@ $db->query('SELECT SUM(experience) as exp, alliance_name, alliance_id
 			WHERE game_id = '.$db->escapeNumber($game_id) . ' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
 while ($db->nextRecord()) {
 	$alliance = stripslashes($db->getField('alliance_name'));
-	$id = $db->getField('alliance_id');
+	$id = $db->getInt('alliance_id');
 	$container['alliance_id'] = $id;
 	$allianceExp[] = [
-		'exp' => $db->getField('exp'),
+		'exp' => $db->getInt('exp'),
 		'link' => create_link($container, $alliance),
 	];
 }
@@ -75,10 +75,10 @@ $allianceKills = [];
 $db->query('SELECT kills, alliance_name, alliance_id FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY kills DESC LIMIT 10');
 while ($db->nextRecord()) {
 	$alliance = stripslashes($db->getField('alliance_name'));
-	$id = $db->getField('alliance_id');
+	$id = $db->getInt('alliance_id');
 	$container['alliance_id'] = $id;
 	$allianceKills[] = [
-		'kills' => $db->getField('kills'),
+		'kills' => $db->getInt('kills'),
 		'link' => create_link($container, $alliance),
 	];
 }

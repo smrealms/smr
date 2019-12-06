@@ -1280,7 +1280,7 @@ class AbstractSmrPort {
 		$attackers = array();
 		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
 		while ($this->db->nextRecord()) {
-			$attackers[] = SmrPlayer::getPlayer($this->db->getField('account_id'), $this->getGameID());
+			$attackers[] = SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID());
 		}
 		return $attackers;
 	}

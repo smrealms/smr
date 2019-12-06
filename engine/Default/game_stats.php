@@ -10,16 +10,16 @@ $template->assign('PageTopic', 'Game Stats: ' . $statsGame->getName() . ' (' . $
 
 $db->query('SELECT count(*) total_players, MAX(experience) max_exp, MAX(alignment) max_align, MIN(alignment) min_alignment, MAX(kills) max_kills FROM player WHERE game_id = ' . $gameID . ' ORDER BY experience DESC');
 if ($db->nextRecord()) {
-	$template->assign('TotalPlayers', $db->getField('total_players'));
-	$template->assign('HighestExp', $db->getField('max_exp'));
-	$template->assign('HighestAlign', $db->getField('max_align'));
-	$template->assign('LowestAlign', $db->getField('min_alignment'));
-	$template->assign('HighestKills', $db->getField('max_kills'));
+	$template->assign('TotalPlayers', $db->getInt('total_players'));
+	$template->assign('HighestExp', $db->getInt('max_exp'));
+	$template->assign('HighestAlign', $db->getInt('max_align'));
+	$template->assign('LowestAlign', $db->getInt('min_alignment'));
+	$template->assign('HighestKills', $db->getInt('max_kills'));
 }
 	
 $db->query('SELECT count(*) num_alliance FROM alliance WHERE game_id = ' . $gameID);
 if ($db->nextRecord()) {
-	$template->assign('TotalAlliances', $db->getField('num_alliance'));
+	$template->assign('TotalAlliances', $db->getInt('num_alliance'));
 }
 
 $db->query('SELECT * FROM player WHERE game_id = ' . $gameID . ' ORDER BY experience DESC LIMIT 10');

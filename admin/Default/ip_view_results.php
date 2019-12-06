@@ -27,7 +27,7 @@ if ($type == 'comp_share') {
 	$ip_array = array();
 	//make sure we have enough but not too mant to reduce lag
 	while ($db->nextRecord()) {
-		$id = $db->getField('account_id');
+		$id = $db->getInt('account_id');
 		$ip = $db->getField('ip');
 		$host = $db->getField('host');
 		$ip_array[] = array('ip' => $ip, 'id' => $id, 'host' => $host);
@@ -112,7 +112,7 @@ if ($type == 'comp_share') {
 	while ($db->nextRecord()) {
 		$rows[] = [
 			'ip' => $db->getField('ip'),
-			'date' => date(DATE_FULL_SHORT, $db->getField('time')),
+			'date' => date(DATE_FULL_SHORT, $db->getInt('time')),
 			'host' => $db->getField('host'),
 		];
 	}
@@ -196,8 +196,8 @@ if ($type == 'comp_share') {
 
 	$rows = [];
 	while ($db->nextRecord()) {
-		$id = $db->getField('account_id');
-		$time = $db->getField('time');
+		$id = $db->getInt('account_id');
+		$time = $db->getInt('time');
 		$ip = $db->getField('ip');
 		$host = $db->getField('host');
 

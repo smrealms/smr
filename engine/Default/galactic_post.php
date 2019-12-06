@@ -23,7 +23,7 @@ while ($db->nextRecord()) {
 
 	$db2->query('SELECT count(*) FROM galactic_post_paper_content WHERE paper_id = ' . $db2->escapeNumber($paper_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$db2->nextRecord();
-	$numArticles = $db2->getField('count(*)');
+	$numArticles = $db2->getInt('count(*)');
 	$hasEnoughArticles = $numArticles > 2 && $numArticles < 9;
 
 	$paper = [

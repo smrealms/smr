@@ -9,7 +9,7 @@ if ($var['func'] == 'Map') {
 	// add port infos
 	$db->query('SELECT * FROM port WHERE game_id = ' . $db->escapeNumber($game_id));
 	while ($db->nextRecord()) {
-		$port = SmrPort::getPort($game_id, $db->getField('sector_id'), false, $db);
+		$port = SmrPort::getPort($game_id, $db->getInt('sector_id'), false, $db);
 		$port->addCachePort($account_id);
 	}
 

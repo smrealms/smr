@@ -9,7 +9,7 @@ function shared_channel_msg_op_info($player) {
 	}
 
 	// check if the op has already started
-	$opTime = $db->getField('time');
+	$opTime = $db->getInt('time');
 	if ($opTime < time()) {
 		return array('The op started ' . format_time(time() - $opTime, true) . ' ago!');
 	}

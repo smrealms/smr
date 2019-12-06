@@ -78,7 +78,7 @@ function user_nick($fp, $rdata)
 
 			if ($db->nextRecord()) {
 				// exiting nick?
-				$seen_id = $db->getField('seen_id');
+				$seen_id = $db->getInt('seen_id');
 
 				$db->query('UPDATE irc_seen SET ' .
 						   'signed_on = ' . time() . ', ' .

@@ -20,7 +20,7 @@ if ($ship->hasIllusion()) {
 	$ships = array();
 	$db->query('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
 	while ($db->nextRecord()) {
-		$ships[$db->getField('ship_type_id')] = $db->getField('ship_name');
+		$ships[$db->getInt('ship_type_id')] = $db->getField('ship_name');
 	}
 	$template->assign('IllusionShips', $ships);
 	$container['action'] = 'Disable Illusion';

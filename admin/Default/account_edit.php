@@ -46,7 +46,7 @@ if ($action == "Search") {
 									   'hof_name LIKE ' . $db->escapeString($var['hofname']) . ' OR ' .
 									   'validation_code LIKE ' . $db->escapeString($var['val_code']));
 	if ($db->nextRecord()) {
-		$curr_account = SmrAccount::getAccount($db->getField('account_id'));
+		$curr_account = SmrAccount::getAccount($db->getInt('account_id'));
 	} else {
 		SmrSession::updateVar('errorMsg', 'No matching accounts were found!');
 	}

@@ -27,7 +27,7 @@ ORDER BY alliance_name ASC'
 
 $alliances = array();
 while ($db->nextRecord()) {
-	if ($db->getField('alliance_id') != $player->getAllianceID()) {
+	if ($db->getInt('alliance_id') != $player->getAllianceID()) {
 		$container['body'] = 'alliance_roster.php';
 	} else {
 		$container['body'] = 'alliance_mod.php';

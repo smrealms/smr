@@ -7,7 +7,7 @@ $db->query('SELECT count(*) count FROM active_session
 				game_id = ' . $db->escapeNumber($player->getGameID()));
 $count_real_last_active = 0;
 if ($db->nextRecord()) {
-	$count_real_last_active = $db->getField('count');
+	$count_real_last_active = $db->getInt('count');
 }
 if (SmrSession::$last_accessed < TIME - 600) {
 	++$count_real_last_active;

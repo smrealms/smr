@@ -37,7 +37,7 @@ if (isset($var['maxValue'])
 				AND anon_id=' . $db->escapeNumber($account_num)
 				);
 	if ($db->nextRecord()) {
-		$maxValue = $db->getField('MAX(transaction_id)');
+		$maxValue = $db->getInt('MAX(transaction_id)');
 	} else {
 		$maxValue = 5;
 	}

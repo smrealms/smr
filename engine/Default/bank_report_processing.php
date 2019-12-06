@@ -16,7 +16,7 @@ if ($db->nextRecord()) {
 	// There is no "Bank Statement" thread yet
 	$db->query('SELECT thread_id FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($alliance_id) . ' ORDER BY thread_id DESC LIMIT 1');
 	if ($db->nextRecord()) {
-		$thread_id = $db->getField('thread_id') + 1;
+		$thread_id = $db->getInt('thread_id') + 1;
 	} else {
 		$thread_id = 1;
 	}
