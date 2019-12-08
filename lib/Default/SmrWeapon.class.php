@@ -124,8 +124,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	public function getModifiedAccuracy(AbstractSmrPlayer $weaponPlayer) {
 		$modifiedAccuracy = $this->getBaseAccuracy();
 		$modifiedAccuracy += $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($weaponPlayer);
-		if ($weaponPlayer->isGadgetEquipped('Increased Accuracy'))
-			$modifiedAccuracy += $this->getBaseAccuracy() * INCREASED_ACC_GADGET_FACTOR / 100;
 		return $modifiedAccuracy;
 	}
 	
@@ -149,8 +147,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
 		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
 		$modifiedAccuracy -= $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($targetPlayer) / 2;
-		if ($targetPlayer->isGadgetEquipped('Increased Maneuverability'))
-			$modifiedAccuracy -= $this->getBaseAccuracy() * INCREASED_MAN_GADGET_FACTOR / 100;
 		
 		$weaponShip = $weaponPlayer->getShip();
 		$targetShip = $targetPlayer->getShip();
@@ -188,35 +184,29 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $modifiedAccuracy;
 	}
 	
-	public function &getModifiedDamage(AbstractSmrPlayer $weaponPlayer) {
+	public function &getModifiedDamage() {
 		$damage = $this->getDamage();
-		//do they have the weapon damage gadget?
-		if ($weaponPlayer->isGadgetEquipped('Increased Weapon Damage')) {
-			$damage['MaxDamage'] += $this->getMaxDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
-			$damage['Shield'] += $this->getShieldDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
-			$damage['Armour'] += $this->getArmourDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
-		}
 		return $damage;
 	}
 	
 	public function &getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
 		if (!$this->canShootForces()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
-		$damage =& $this->getModifiedDamage($weaponPlayer);
+		$damage =& $this->getModifiedDamage();
 		return $damage;
 	}
 	
 	public function &getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
 		if (!$this->canShootPorts()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
-		$damage =& $this->getModifiedDamage($weaponPlayer);
+		$damage =& $this->getModifiedDamage();
 		return $damage;
 	}
 	
 	public function &getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) {
 		if (!$this->canShootPlanets()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
-		$damage =& $this->getModifiedDamage($weaponPlayer);
+		$damage =& $this->getModifiedDamage();
 		
 		$planetMod = self::PLANET_DAMAGE_MOD;
 		$damage['MaxDamage'] = ceil($damage['MaxDamage'] * $planetMod);
@@ -236,7 +226,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
-		$damage =& $this->getModifiedDamage($weaponPlayer);
+		$damage =& $this->getModifiedDamage();
 		return $damage;
 	}
 	

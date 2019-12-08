@@ -29,12 +29,8 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$this->bank						= 0;
 		$this->zoom						= 0;
 		
-		$this->gadgets = array();
 		$this->pureRelations = array();
 		$this->bounties = array();
-	}
-	
-	protected function getGadgetsData() {
 	}
 	
 	protected function getPureRelationsData() {
