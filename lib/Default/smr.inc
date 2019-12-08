@@ -918,8 +918,8 @@ function number_colour_format($number, $justSign = false) {
 		$formatted .= '>';
 	if ($justSign === false) {
 		$decimalPlaces = 0;
-		if (($pos = strpos($number, '.')) !== false)
-			$decimalPlaces = strlen(substr($number, $pos + 1));
+		if (($pos = strpos((string)$number, '.')) !== false)
+			$decimalPlaces = strlen(substr((string)$number, $pos + 1));
 		$formatted .= number_format(abs($number), $decimalPlaces);
 	}
 	$formatted .= '</span>';
