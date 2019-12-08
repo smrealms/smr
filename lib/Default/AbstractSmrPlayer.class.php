@@ -29,7 +29,6 @@ abstract class AbstractSmrPlayer {
 	protected $kills;
 	protected $deaths;
 	protected $assists;
-	protected $gadgets;
 	protected $stats;
 	protected $pureRelations;
 	protected $relations;
@@ -583,30 +582,6 @@ abstract class AbstractSmrPlayer {
 			return;
 		$this->combatDronesKamikazeOnMines = $bool;
 		$this->hasChanged = true;
-	}
-
-	protected abstract function getGadgetsData();
-	public function getGadgets() {
-		$this->getGadgetsData();
-		return $this->gadgets;
-	}
-
-	public function getGadget($gadgetID) {
-		if (!is_numeric($gadgetID)) {
-			global $GADGETS;
-			$gadgetID = $GADGETS[$gadgetID]['ID'];
-		}
-		$gadgets = $this->getGadgets();
-		if (isset($gadgets[$gadgetID]))
-			return $gadgets[$gadgetID];
-		return false;
-	}
-
-	public function isGadgetEquipped($gadgetID) {
-		$gadget = $this->getGadget($gadgetID);
-		if ($gadget === false)
-			return false;
-		return $gadget['Equipped'] > 0 && $gadget['Equipped'] < TIME && ($gadget['Expires'] == 0 || $gadget['Expires'] > TIME) && $gadget['Cooldown'] <= TIME;
 	}
 
 	protected abstract function getPureRelationsData();
