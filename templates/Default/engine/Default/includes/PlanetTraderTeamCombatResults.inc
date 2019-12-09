@@ -22,13 +22,9 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 				$ActualDamage =& $WeaponResults['ActualDamage'];
 				$WeaponDamage =& $WeaponResults['WeaponDamage'];
 				$TargetPlanet =& $WeaponResults['TargetPlanet'];
-				$DamageTypes = 0;
-				if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
 				
 				echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?>the debris that was once <?php } echo $TargetPlanet->getDisplayName();
-				if(!$ActualDamage['TargetAlreadyDead']) {
+				if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 					if(!$ShotHit) {
 						?> and misses<?php
 					} else if($ActualDamage['TotalDamage'] == 0) {
@@ -45,6 +41,11 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 						}
 					} else {
 						?> destroying <?php
+						$DamageTypes = 0;
+						if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
+						if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+						if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+
 						if($ActualDamage['Shield'] > 0) {
 							?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
 							$this->doDamageTypeReductionDisplay($DamageTypes);
@@ -59,7 +60,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 					}
 				} ?>.
 				<br /><?php
-				if($ActualDamage['KillingShot']) {
+				if ($ShotHit && $ActualDamage['KillingShot']) {
 					$this->includeTemplate('includes/PlanetKillMessage.inc',array('KillResults'=>$WeaponResults['KillResults'],'TargetPlanet'=>$TargetPlanet));
 				}
 			}

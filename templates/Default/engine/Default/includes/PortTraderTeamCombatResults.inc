@@ -22,13 +22,9 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 				$ActualDamage =& $WeaponResults['ActualDamage'];
 				$WeaponDamage =& $WeaponResults['WeaponDamage'];
 				$TargetPort =& $WeaponResults['TargetPort'];
-				$DamageTypes = 0;
-				if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
 				
 				echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?>the remnants of <?php } echo $TargetPort->getDisplayName();
-				if(!$ActualDamage['TargetAlreadyDead']) {
+				if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 					if(!$ShotHit) {
 						?> and misses every critical system<?php
 					} else if($ActualDamage['TotalDamage'] == 0) {
@@ -45,6 +41,11 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 						}
 					} else {
 						?> destroying <?php
+						$DamageTypes = 0;
+						if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
+						if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+						if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+
 						if($ActualDamage['Shield'] > 0) {
 							?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
 							$this->doDamageTypeReductionDisplay($DamageTypes);
@@ -59,7 +60,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 					}
 				} ?>.
 				<br /><?php
-				if($ActualDamage['KillingShot']) {
+				if ($ShotHit && $ActualDamage['KillingShot']) {
 					$this->includeTemplate('includes/PortKillMessage.inc',array('KillResults'=>$WeaponResults['KillResults'],'TargetPort'=>$TargetPort,'ShootingPlayer'=>$ShootingPlayer));
 				}
 			}
@@ -69,10 +70,6 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 			$ActualDamage =& $Drones['ActualDamage'];
 			$WeaponDamage =& $Drones['WeaponDamage'];
 			$TargetPort =& $Drones['TargetPort'];
-			$DamageTypes = 0;
-			if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-			if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-			if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
 			
 			echo $ShootingPlayer->getDisplayName();
 			if($WeaponDamage['Launched'] == 0) {
@@ -100,6 +97,11 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 						}
 					} else {
 						?> destroying <?php
+						$DamageTypes = 0;
+						if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
+						if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+						if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+
 						if($ActualDamage['Shield'] > 0) {
 							?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
 							$this->doDamageTypeReductionDisplay($DamageTypes);
