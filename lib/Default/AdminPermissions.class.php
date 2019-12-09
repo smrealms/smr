@@ -20,7 +20,7 @@ class AdminPermissions {
 		17 => ['Send Newsletter', 'newsletter_send.php', 3],
 		18 => ['Form Access', 'form_open.php', 3],
 		19 => ['Approve Photo Album', 'album_approve.php', 2],
-		20 => ['Moderate Photo Album', 'album_moderate.php', 2],
+		20 => ['Moderate Photo Album', 'album_moderate_select.php', 2],
 		21 => ['Manage ChangeLog', 'changelog.php', 3],
 		22 => ['Anon Account View', 'anon_acc_view.php', 1],
 		23 => ['Word Filter', 'word_filter.php', 1],
