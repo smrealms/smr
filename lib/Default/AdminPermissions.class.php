@@ -11,7 +11,7 @@ class AdminPermissions {
 		3  => ['Server Open/Close', 'game_status.php', 3],
 		4  => ['Delete Game', 'game_delete.php', 5],
 		5  => ['Create Announcement', 'announcement_create.php', 3],
-		6  => ['Send Message', 'admin_message_send.php', 3],
+		6  => ['Send Message', 'admin_message_send_select.php', 3],
 		7  => ['View Reported Messages', 'notify_view.php', 1],
 		8  => ['Edit Account', 'account_edit.php', 1],
 		9  => ['Multi Tools', 'ip_view.php', 1],
