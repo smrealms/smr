@@ -22,7 +22,7 @@ class AdminPermissions {
 		19 => ['Approve Photo Album', 'album_approve.php', 2],
 		20 => ['Moderate Photo Album', 'album_moderate_select.php', 2],
 		21 => ['Manage ChangeLog', 'changelog.php', 3],
-		22 => ['Anon Account View', 'anon_acc_view.php', 1],
+		22 => ['Anon Account View', 'anon_acc_view_select.php', 1],
 		23 => ['Word Filter', 'word_filter.php', 1],
 		24 => ['Combat Simulator', 'combat_simulator.php', 4],
 		25 => ['Edit Locations', 'location_edit.php', 4],
