@@ -2,6 +2,7 @@
 
 const NPC_LOG_TO_DATABASE = true; // insert debug messages into db
 
+const NPC_MAX_ACTIONS = 2500; // About a half hour worth of actions
 const NPC_LOW_TURNS = 75;
 const NPC_LOW_NEWBIE_TURNS = 10;
 const MINUMUM_RESERVE_CREDITS = 100000;
