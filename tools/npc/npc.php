@@ -113,6 +113,13 @@ function NPCStuff() {
 		$_REQUEST = [];
 
 		$actions++;
+
+		// Avoid infinite loops by restricting the number of actions
+		if ($actions > NPC_MAX_ACTIONS) {
+			debug('Reached maximum number of actions: ' . NPC_MAX_ACTIONS);
+			changeNPCLogin();
+		}
+
 		try {
 			$TRADE_ROUTE =& $GLOBALS['TRADE_ROUTE'];
 			debug('Action #' . $actions);
