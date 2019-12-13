@@ -396,7 +396,7 @@ class AbstractSmrPort {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 	}
 	
-	protected function stealGoods(array $good, $goodsTraded) {
+	public function stealGoods(array $good, $goodsTraded) {
 		$this->decreaseGood($good, $goodsTraded, false);
 	}
 	
