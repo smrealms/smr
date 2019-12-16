@@ -80,13 +80,13 @@ class RouteGenerator {
 					continue;
 
 				if ($goods[GOOD_NOTHING]===true)
-					$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $races[$raceID], $sectors[$targetSectorId]->getPort()->getRaceID(), 0, 0, $distance, GOOD_NOTHING);
+					$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $sectors[$targetSectorId]->getPort()->getRaceID(), 0, 0, $distance, GOOD_NOTHING);
 
 				foreach (\Globals::getGoods() as $goodId => $value) {
 					if ($goods[$goodId]===true) {
 						if ($sectors[$currentSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_SELLS &&
 						    $sectors[$targetSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_BUYS) {
-							$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $races[$raceID], $sectors[$targetSectorId]->getPort()->getRaceID(), $sectors[$currentSectorId]->getPort()->getGoodDistance($goodId), $sectors[$targetSectorId]->getPort()->getGoodDistance($goodId), $distance, $goodId);
+							$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $sectors[$targetSectorId]->getPort()->getRaceID(), $sectors[$currentSectorId]->getPort()->getGoodDistance($goodId), $sectors[$targetSectorId]->getPort()->getGoodDistance($goodId), $distance, $goodId);
 						}
 					}
 				}
