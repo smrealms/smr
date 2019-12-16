@@ -144,6 +144,27 @@ function dumpMemDiff($msg) {
 	ob_start();
 }
 
+/**
+ * Wrapper around the floor() builtin for returning an integer type.
+ */
+function IFloor(float $val) : int {
+	return (int)floor($val);
+}
+
+/**
+ * Wrapper around the ceil() builtin for returning an integer type.
+ */
+function ICeil(float $val) : int {
+	return (int)ceil($val);
+}
+
+/**
+ * Wrapper around the round() builtin for returning an integer type.
+ */
+function IRound(float $val) : int {
+	return (int)round($val);
+}
+
 // Defines all constants
 require_once('config.php');
 

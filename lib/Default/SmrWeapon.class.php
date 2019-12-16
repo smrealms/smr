@@ -209,9 +209,9 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		$damage =& $this->getModifiedDamage();
 		
 		$planetMod = self::PLANET_DAMAGE_MOD;
-		$damage['MaxDamage'] = ceil($damage['MaxDamage'] * $planetMod);
-		$damage['Shield'] = ceil($damage['Shield'] * $planetMod);
-		$damage['Armour'] = ceil($damage['Armour'] * $planetMod);
+		$damage['MaxDamage'] = ICeil($damage['MaxDamage'] * $planetMod);
+		$damage['Shield'] = ICeil($damage['Shield'] * $planetMod);
+		$damage['Armour'] = ICeil($damage['Armour'] * $planetMod);
 		
 		return $damage;
 	}

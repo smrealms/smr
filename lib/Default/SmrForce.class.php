@@ -522,19 +522,19 @@ class SmrForce {
 	}
 
 	protected function doMinesDamage($damage) {
-		$actualDamage = min($this->getMines(), floor($damage / MINE_ARMOUR));
+		$actualDamage = min($this->getMines(), IFloor($damage / MINE_ARMOUR));
 		$this->takeMines($actualDamage);
 		return $actualDamage * MINE_ARMOUR;
 	}
 
 	protected function doCDDamage($damage) {
-		$actualDamage = min($this->getCDs(), floor($damage / CD_ARMOUR));
+		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
 		$this->takeCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
 
 	protected function doSDDamage($damage) {
-		$actualDamage = min($this->getSDs(), floor($damage / SD_ARMOUR));
+		$actualDamage = min($this->getSDs(), IFloor($damage / SD_ARMOUR));
 		$this->takeSDs($actualDamage);
 		return $actualDamage * SD_ARMOUR;
 	}

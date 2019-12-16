@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 
 // Must use define so that the time is evaluated at runtime, not compile time.
 define('MICRO_TIME', microtime(true));
-define('TIME', intval(MICRO_TIME));
+define('TIME', IFloor(MICRO_TIME));
 
 // Repository paths
 const ROOT = __DIR__ . '/../';

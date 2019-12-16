@@ -98,7 +98,7 @@ if ($transaction == 'Steal' ||
 	$base_xp = SmrPort::getBaseExperience($amount, $port->getGoodDistance($good_id));
 
 	// if offered equals ideal we get a problem (division by zero)
-	$gained_exp = round($port->calculateExperiencePercent($ideal_price, $offered_price, $bargain_price, $transaction) * $base_xp);
+	$gained_exp = IRound($port->calculateExperiencePercent($ideal_price, $offered_price, $bargain_price, $transaction) * $base_xp);
 
 	if ($transaction == 'Buy') {
 		$msg_transaction = 'bought';

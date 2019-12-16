@@ -362,7 +362,7 @@ function processContainer($container) {
 	debug('Executing container', $container);
  	//Redefine MICRO_TIME and TIME, the rest of the game expects them to be the single point in time that the script is executing, with it being redefined for each page load - unfortunately NPCs are one consistent script so we have to do a hack and redefine it (or change every instance of the TIME constant.
 	uopz_redefine('MICRO_TIME', microtime(true));
-	uopz_redefine('TIME', intval(MICRO_TIME));
+	uopz_redefine('TIME', IFloor(MICRO_TIME));
 	resetContainer($container);
 	do_voodoo();
 }

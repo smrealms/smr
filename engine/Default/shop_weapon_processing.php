@@ -46,7 +46,7 @@ if (!isset($var['OrderID'])) {
 } else {
 	// mhh we wanna sell our weapon
 	// give the money to the user
-	$player->increaseCredits(floor($weapon->getCost() * WEAPON_REFUND_PERCENT));
+	$player->increaseCredits(IFloor($weapon->getCost() * WEAPON_REFUND_PERCENT));
 
 	// take weapon
 	$ship->removeWeapon($var['OrderID']);

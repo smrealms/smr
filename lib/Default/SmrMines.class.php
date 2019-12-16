@@ -96,20 +96,20 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		}
 		$damage =& $this->getModifiedDamage();
 		if ($targetPlayer->getShip()->isFederal()) { // do less damage to fed ships 
-			$damage['MaxDamage'] = round($damage['MaxDamage'] * self::FED_SHIP_DAMAGE_MODIFIER);
-			$damage['Shield'] = round($damage['Shield'] * self::FED_SHIP_DAMAGE_MODIFIER);
-			$damage['Armour'] = round($damage['Armour'] * self::FED_SHIP_DAMAGE_MODIFIER);
+			$damage['MaxDamage'] = IRound($damage['MaxDamage'] * self::FED_SHIP_DAMAGE_MODIFIER);
+			$damage['Shield'] = IRound($damage['Shield'] * self::FED_SHIP_DAMAGE_MODIFIER);
+			$damage['Armour'] = IRound($damage['Armour'] * self::FED_SHIP_DAMAGE_MODIFIER);
 		} 
 		
 		if ($targetPlayer->getShip()->hasDCS()) { // do less damage to DCS (Drone Scrambler) 
-			$damage['MaxDamage'] = round($damage['MaxDamage'] * self::DCS_DAMAGE_MODIFIER);
-			$damage['Shield'] = round($damage['Shield'] * self::DCS_DAMAGE_MODIFIER);
-			$damage['Armour'] = round($damage['Armour'] * self::DCS_DAMAGE_MODIFIER);		
+			$damage['MaxDamage'] = IRound($damage['MaxDamage'] * self::DCS_DAMAGE_MODIFIER);
+			$damage['Shield'] = IRound($damage['Shield'] * self::DCS_DAMAGE_MODIFIER);
+			$damage['Armour'] = IRound($damage['Armour'] * self::DCS_DAMAGE_MODIFIER);
 		}
-		$damage['Launched'] = ceil($this->getNumberOfMines() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer, $minesAreAttacker) / 100);
-		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
-		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
-		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
+		$damage['Launched'] = ICeil($this->getNumberOfMines() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer, $minesAreAttacker) / 100);
+		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
+		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
+		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
 		return $damage;
 	}
 	
@@ -133,7 +133,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	protected function &doForceDamageToPlayer(array &$return, SmrForce $forces, AbstractSmrPlayer $targetPlayer, $minesAreAttacker = false) {
 		$return['WeaponDamage'] =& $this->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer, $minesAreAttacker);
 		$return['ActualDamage'] =& $targetPlayer->getShip()->doMinesDamage($return['WeaponDamage']);
-		$return['ActualDamage']['Launched'] = ceil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['MaxDamage']);
+		$return['ActualDamage']['Launched'] = ICeil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['MaxDamage']);
 
 		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] =& $targetPlayer->killPlayerByForces($forces);

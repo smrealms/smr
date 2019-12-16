@@ -433,8 +433,8 @@ abstract class AbstractSmrAccount {
 		return $this->individualScores[$gameID];
 	}
 
-	public function getRank() {
-		$rank = ceil(pow($this->getScore(),self::USER_RANKINGS_TOTAL_SCORE_POW)/self::USER_RANKINGS_RANK_BOUNDARY);
+	public function getRank() : int {
+		$rank = ICeil(pow($this->getScore(),self::USER_RANKINGS_TOTAL_SCORE_POW)/self::USER_RANKINGS_RANK_BOUNDARY);
 		if($rank<1)
 			$rank=1;
 		if($rank > $this->maxRankAchieved)

@@ -46,7 +46,7 @@ if ($player->getExperience() > 0) {
 
 	// Don't lose more exp than you have
 	$lost_xp = min($player->getExperience(),
-	               round(SmrPort::getBaseExperience($amount, $good_distance)));
+	               IRound(SmrPort::getBaseExperience($amount, $good_distance)));
 	$player->decreaseExperience($lost_xp);
 	$player->increaseHOF($lost_xp, array('Trade', 'Experience', 'Jettisoned'), HOF_PUBLIC);
 
@@ -55,7 +55,7 @@ if ($player->getExperience() > 0) {
 	$account->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good_name . ' and loses ' . $lost_xp . ' experience', $player->getSectorID());
 } else {
 	// No experience to lose, so damage the ship
-	$damage = ceil($amount / 5);
+	$damage = ICeil($amount / 5);
 
 	// Don't allow ship to be destroyed dumping cargo
 	if ($ship->getArmour() <= $damage) {
