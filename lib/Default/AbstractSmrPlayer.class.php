@@ -327,10 +327,14 @@ abstract class AbstractSmrPlayer {
 		return $this->experience;
 	}
 
-	public function getNextLevelPercentAcquired() {
+	/**
+	 * Returns the percent progress towards the next level.
+	 * This value is rounded because it is used primarily in HTML img widths.
+	 */
+	public function getNextLevelPercentAcquired() : int {
 		if ($this->getNextLevelExperience() == $this->getThisLevelExperience())
 			return 100;
-		return max(0, min(100, round(($this->getExperience() - $this->getThisLevelExperience()) / ($this->getNextLevelExperience() - $this->getThisLevelExperience()) * 100)));
+		return max(0, min(100, IRound(($this->getExperience() - $this->getThisLevelExperience()) / ($this->getNextLevelExperience() - $this->getThisLevelExperience()) * 100)));
 	}
 
 	public function getNextLevelPercentRemaining() {
@@ -922,7 +926,7 @@ abstract class AbstractSmrPlayer {
 		if ($take < 0 || $takeNewbie < 0) {
 			throw new Exception('Trying to take negative turns.');
 		}
-		$take = ceil($take);
+		$take = ICeil($take);
 		// Only take up to as many newbie turns as we have remaining
 		$takeNewbie = min($this->getNewbieTurns(), $takeNewbie);
 
@@ -937,11 +941,11 @@ abstract class AbstractSmrPlayer {
 		$this->updateLastCPLAction();
 	}
 
-	public function giveTurns($give, $giveNewbie = 0) {
+	public function giveTurns(int $give, $giveNewbie = 0) {
 		if ($give < 0 || $giveNewbie < 0) {
 			throw new Exception('Trying to give negative turns.');
 		}
-		$this->setTurns($this->getTurns() + floor($give));
+		$this->setTurns($this->getTurns() + $give);
 		$this->setNewbieTurns($this->getNewbieTurns() + $giveNewbie);
 	}
 

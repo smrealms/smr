@@ -459,7 +459,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$timeDiff = $time - $this->getLastTurnUpdate();
 		$turnsDiff = $this->getMaxTurns() - $this->getTurns();
 		$ship = $this->getShip($forceUpdate);
-		$maxTurnsTime = ceil(($turnsDiff * 3600 / $ship->getRealSpeed())) - $timeDiff;
+		$maxTurnsTime = ICeil(($turnsDiff * 3600 / $ship->getRealSpeed())) - $timeDiff;
 		// If already at max turns, return 0
 		return max(0, $maxTurnsTime);
 	}
@@ -468,17 +468,17 @@ class SmrPlayer extends AbstractSmrPlayer {
 	 * Grant the player their starting turns.
 	 */
 	public function giveStartingTurns() {
-		$startTurns = $this->getShip()->getRealSpeed() * $this->getGame()->getStartTurnHours();
+		$startTurns = IFloor($this->getShip()->getRealSpeed() * $this->getGame()->getStartTurnHours());
 		$this->giveTurns($startTurns);
 		$this->setLastTurnUpdate($this->getGame()->getStartTime());
 	}
 
 	// Turns only update when player is active.
 	// Calculate turns gained between given time and the last turn update
-	public function getTurnsGained($time, $forceUpdate = false) {
+	public function getTurnsGained($time, $forceUpdate = false) : int {
 		$timeDiff = $time - $this->getLastTurnUpdate();
 		$ship = $this->getShip($forceUpdate);
-		$extraTurns = floor($timeDiff * $ship->getRealSpeed() / 3600);
+		$extraTurns = IFloor($timeDiff * $ship->getRealSpeed() / 3600);
 		return $extraTurns;
 	}
 
@@ -492,7 +492,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		// do we have at least one turn to give?
 		if ($extraTurns > 0) {
 			// recalc the time to avoid rounding errors
-			$newLastTurnUpdate = $this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $this->getShip()->getRealSpeed());
+			$newLastTurnUpdate = $this->getLastTurnUpdate() + ICeil($extraTurns * 3600 / $this->getShip()->getRealSpeed());
 			$this->setLastTurnUpdate($newLastTurnUpdate);
 			$this->giveTurns($extraTurns);
 		}
@@ -615,7 +615,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	 * of the port given by $raceID.
 	 */
 	public function increaseRelationsByTrade($numGoods, $raceID) {
-		$relations = ceil(min($numGoods, 300) / 30);
+		$relations = ICeil(min($numGoods, 300) / 30);
 		//Cap relations to a max of 1 after 500 have been reached
 		if ($this->getPureRelation($raceID) + $relations >= 500) {
 			$relations = max(1, min($relations, 500 - $this->getPureRelation($raceID)));
@@ -624,7 +624,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	public function decreaseRelationsByTrade($numGoods, $raceID) {
-		$relations = ceil(min($numGoods, 300) / 30);
+		$relations = ICeil(min($numGoods, 300) / 30);
 		$this->decreaseRelations($relations, $raceID);
 	}
 
@@ -650,9 +650,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 			return;
 		if ($relations < MIN_RELATIONS)
 			$relations = MIN_RELATIONS;
-		$relationsDiff = $relations - $this->pureRelations[$raceID];
+		$relationsDiff = IRound($relations - $this->pureRelations[$raceID]);
 		$this->pureRelations[$raceID] = $relations;
-		$this->relations[$raceID] += round($relationsDiff);
+		$this->relations[$raceID] += $relationsDiff;
 		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID) . ',' . $this->db->escapeNumber($this->pureRelations[$raceID]) . ')');
 	}
 
@@ -741,7 +741,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->setHOF(0, array('Movement', 'Turns Used', 'Since Last Death'), HOF_ALLIANCE);
 
 		// 1/4 of ship value -> insurance
-		$newCredits = round($this->getShip()->getCost() / 4);
+		$newCredits = IRound($this->getShip()->getCost() / 4);
 		$old_speed = $this->getShip()->getSpeed();
 
 		if ($newCredits < 100000)
@@ -757,7 +757,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		// Update turns due to ship change
 		$new_speed = $this->getShip()->getSpeed();
-		$this->setTurns(round($this->turns / $old_speed * $new_speed));
+		$this->setTurns(IRound($this->turns / $old_speed * $new_speed));
 		$this->setNewbieTurns(100);
 	}
 
@@ -805,11 +805,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		// Dead player loses between 5% and 25% experience
 		$expLossPercentage = 0.15 + 0.10 * ($this->getLevelID() - $killer->getLevelID()) / $this->getMaxLevel();
-		$return['DeadExp'] = max(0, floor($this->getExperience() * $expLossPercentage));
+		$return['DeadExp'] = max(0, IFloor($this->getExperience() * $expLossPercentage));
 		$this->decreaseExperience($return['DeadExp']);
 
 		// Killer gains 50% of the lost exp
-		$return['KillerExp'] = max(0, ceil(0.5 * $return['DeadExp']));
+		$return['KillerExp'] = max(0, ICeil(0.5 * $return['DeadExp']));
 		$killer->increaseExperience($return['KillerExp']);
 
 		$return['KillerCredits'] = $this->getCredits();
@@ -832,7 +832,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 		// War setting gives them military pay
 		if ($relation <= RELATIONS_WAR) {
-			$killer->increaseMilitaryPayment(-floor($relation * 100 * (pow($return['KillerExp'] / 2, 0.25))));
+			$killer->increaseMilitaryPayment(-IFloor($relation * 100 * pow($return['KillerExp'] / 2, 0.25)));
 		}
 
 		//check for federal bounty being offered for current port raiders;
@@ -844,7 +844,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 					WHERE armour > 0 AND ' . $this->SQL . ' LIMIT 1';
 		$this->db->query($query);
 		if ($this->db->nextRecord()) {
-			$bounty = intval(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
+			$bounty = IFloor(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
 			$this->increaseCurrentBountyAmount('HQ', $bounty);
 		}
 
@@ -867,7 +867,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			}
 
 			if ($return['BountyGained']['Type'] != 'None') {
-				$return['BountyGained']['Amount'] = intval(pow($alignmentDiff, 2.56));
+				$return['BountyGained']['Amount'] = IFloor(pow($alignmentDiff, 2.56));
 				$killer->increaseCurrentBountyAmount($return['BountyGained']['Type'], $return['BountyGained']['Amount']);
 			}
 		}
@@ -959,7 +959,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		// Player loses 15% experience
 		$expLossPercentage = .15;
-		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
+		$return['DeadExp'] = IFloor($this->getExperience() * $expLossPercentage);
 		$this->decreaseExperience($return['DeadExp']);
 
 		$return['LostCredits'] = $this->getCredits();
@@ -995,7 +995,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		// Player loses between 15% and 20% experience
 		$expLossPercentage = .20 - .05 * ($port->getLevel() - 1) / ($port->getMaxLevel() - 1);
-		$return['DeadExp'] = max(0, floor($this->getExperience() * $expLossPercentage));
+		$return['DeadExp'] = max(0, IFloor($this->getExperience() * $expLossPercentage));
 		$this->decreaseExperience($return['DeadExp']);
 
 		$return['LostCredits'] = $this->getCredits();
@@ -1032,7 +1032,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		// Player loses between 15% and 20% experience
 		$expLossPercentage = .20 - .05 * $planet->getLevel() / $planet->getMaxLevel();
-		$return['DeadExp'] = max(0, floor($this->getExperience() * $expLossPercentage));
+		$return['DeadExp'] = max(0, IFloor($this->getExperience() * $expLossPercentage));
 		$this->decreaseExperience($return['DeadExp']);
 
 		$return['LostCredits'] = $this->getCredits();
@@ -1573,8 +1573,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 		$distance = $path->getRelativeDistance();
 
-		$turnCost = max(TURNS_JUMP_MINIMUM, round($distance * TURNS_PER_JUMP_DISTANCE));
-		$maxMisjump = max(0, round(($distance - $turnCost) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $this->getLevelID() * MISJUMP_LEVEL_FACTOR)));
+		$turnCost = max(TURNS_JUMP_MINIMUM, IRound($distance * TURNS_PER_JUMP_DISTANCE));
+		$maxMisjump = max(0, IRound(($distance - $turnCost) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $this->getLevelID() * MISJUMP_LEVEL_FACTOR)));
 		return array('turn_cost' => $turnCost, 'max_misjump' => $maxMisjump);
 	}
 

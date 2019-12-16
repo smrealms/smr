@@ -45,7 +45,7 @@ else if ($action == 'Sell') {
 		create_error('You can\'t sell more ' . $hardware_name . ' than you have aboard your ship!');
 	}
 
-	$player->increaseCredits(round($cost * CDS_REFUND_PERCENT) * $amount);
+	$player->increaseCredits(IRound($cost * CDS_REFUND_PERCENT) * $amount);
 	$ship->decreaseCDs($amount, true); // 2nd arg avoids under attack warning
 }
 else {

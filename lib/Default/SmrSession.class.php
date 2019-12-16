@@ -178,7 +178,7 @@ class SmrSession {
 			$loadDelay = isset(self::URL_LOAD_DELAY[$currentPage]) ? self::URL_LOAD_DELAY[$currentPage] : 0;
 			$initialTimeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
 			while (($timeBetweenLoads = microtime(true) - $var['PreviousRequestTime']) < $loadDelay) {
-				$sleepTime = round(($loadDelay - $timeBetweenLoads) * 1000000);
+				$sleepTime = IRound(($loadDelay - $timeBetweenLoads) * 1000000);
 			//	echo 'Sleeping for: ' . $sleepTime . 'us';
 				usleep($sleepTime);
 			}

@@ -95,7 +95,7 @@ abstract class AbstractSmrShip {
 			$ship['MaxHardware'][$db2->getInt('hardware_type_id')] = $db2->getInt('max_amount');
 		}
 
-		$ship['BaseMR'] = round(
+		$ship['BaseMR'] = IRound(
 								700 -
 								(
 									(
@@ -224,28 +224,28 @@ abstract class AbstractSmrShip {
 			return $this->getDefenseRating();
 	}
 
-	public function getAttackRating() {
-		return round(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getCDs() * 2) / 40);
+	public function getAttackRating() : int {
+		return IRound(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getCDs() * 2) / 40);
 	}
 
-	public function getAttackRatingWithMaxCDs() {
-		return round(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getMaxCDs() * .7) / 40);
+	public function getAttackRatingWithMaxCDs() : int {
+		return IRound(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getMaxCDs() * .7) / 40);
 	}
 
-	public function getDefenseRating() {
-		return round((($this->getShields() + $this->getArmour()) / 100) + (($this->getCDs() * 3) / 100));
+	public function getDefenseRating() : int {
+		return IRound((($this->getShields() + $this->getArmour()) / 100) + (($this->getCDs() * 3) / 100));
 	}
 
-	public function getMaxDefenseRating() {
-		return round((($this->getMaxShields() + $this->getMaxArmour()) / 100) + (($this->getMaxCDs() * 3) / 100));
+	public function getMaxDefenseRating() : int {
+		return IRound((($this->getMaxShields() + $this->getMaxArmour()) / 100) + (($this->getMaxCDs() * 3) / 100));
 	}
 
-	public function getShieldLow() { return floor($this->getShields() / 100) * 100; }
-	public function getShieldHigh() { return $this->getShieldLow() + 100; }
-	public function getArmourLow() { return floor($this->getArmour() / 100) * 100; }
-	public function getArmourHigh() { return $this->getArmourLow() + 100; }
-	public function getCDsLow() { return floor($this->getCDs() / 100) * 100; }
-	public function getCDsHigh() { return $this->getCDsLow() + 100; }
+	public function getShieldLow() : int { return IFloor($this->getShields() / 100) * 100; }
+	public function getShieldHigh() : int { return $this->getShieldLow() + 100; }
+	public function getArmourLow() : int { return IFloor($this->getArmour() / 100) * 100; }
+	public function getArmourHigh() : int { return $this->getArmourLow() + 100; }
+	public function getCDsLow() : int { return IFloor($this->getCDs() / 100) * 100; }
+	public function getCDsHigh() : int { return $this->getCDsLow() + 100; }
 
 
 
@@ -462,7 +462,7 @@ abstract class AbstractSmrShip {
 
 	public function getCostToUpgrade($upgradeShipID) {
 		$upgadeBaseShip = AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()), $upgradeShipID);
-		return $upgadeBaseShip['Cost'] - floor($this->getCost() * SHIP_REFUND_PERCENT);
+		return $upgadeBaseShip['Cost'] - IFloor($this->getCost() * SHIP_REFUND_PERCENT);
 	}
 
 	public function getCostToUpgradeAndUNO($upgradeShipID) {
@@ -889,7 +889,7 @@ abstract class AbstractSmrShip {
 			$results['Drones'] =& $thisCDs->shootPlayer($thisPlayer, $targetPlayers[array_rand($targetPlayers)]);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
+		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
 		$thisPlayer->increaseHOF($results['TotalDamage'], array('Combat', 'Player', 'Damage Done'), HOF_PUBLIC);
 		$thisPlayer->increaseHOF(1, array('Combat', 'Player', 'Shots'), HOF_PUBLIC);
 		return $results;
@@ -928,7 +928,7 @@ abstract class AbstractSmrShip {
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['SDs'], array('Combat', 'Forces', 'Scout Drones', 'Damage Done'), HOF_PUBLIC);
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines'] + $results['Drones']['ActualDamage']['NumCDs'] + $results['Drones']['ActualDamage']['NumSDs'], array('Combat', 'Forces', 'Killed'), HOF_PUBLIC);
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_FORCE));
+		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_FORCE));
 		$thisPlayer->increaseHOF($results['TotalDamage'], array('Combat', 'Forces', 'Damage Done'), HOF_PUBLIC);
 		$thisPlayer->increaseHOF(1, array('Combat', 'Forces', 'Shots'), HOF_PUBLIC);
 		return $results;
@@ -952,7 +952,7 @@ abstract class AbstractSmrShip {
 			$results['Drones'] =& $thisCDs->shootPort($thisPlayer, $port);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_PORT));
+		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PORT));
 		$thisPlayer->increaseHOF($results['TotalDamage'], array('Combat', 'Port', 'Damage Done'), HOF_PUBLIC);
 //		$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in SmrPortt::attackedBy()
 
@@ -989,7 +989,7 @@ abstract class AbstractSmrShip {
 			$results['Drones'] =& $thisCDs->shootPlanet($thisPlayer, $planet, $delayed);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLANET));
+		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLANET));
 		$thisPlayer->increaseHOF($results['TotalDamage'], array('Combat', 'Planet', 'Damage Done'), HOF_PUBLIC);
 //		$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots')); //in SmrPlanet::attackedBy()
 		return $results;
@@ -1056,7 +1056,7 @@ abstract class AbstractSmrShip {
 	}
 
 	protected function doCDDamage($damage) {
-		$actualDamage = min($this->getCDs(), floor($damage / CD_ARMOUR));
+		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
 		$this->decreaseCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
@@ -1067,8 +1067,8 @@ abstract class AbstractSmrShip {
 		return $actualDamage;
 	}
 
-	public function getMR() {
-		return round(
+	public function getMR() : int {
+		return IRound(
 						700 -
 						(
 							(

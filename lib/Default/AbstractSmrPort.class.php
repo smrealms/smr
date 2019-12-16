@@ -173,17 +173,17 @@ class AbstractSmrPort {
 			$defences = self::BASE_DEFENCES + $this->getLevel() * self::DEFENCES_PER_LEVEL;
 			$cds = self::BASE_CDS + $this->getLevel() * self::CDS_PER_LEVEL;
 			// Upgrade modifier
-			$defences += max(0, round(self::DEFENCES_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
-			$cds += max(0, round(self::CDS_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
+			$defences += max(0, IRound(self::DEFENCES_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
+			$cds += max(0, IRound(self::CDS_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
 			// Credits modifier
-			$defences += max(0, round(self::DEFENCES_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
-			$cds += max(0, round(self::CDS_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
+			$defences += max(0, IRound(self::DEFENCES_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
+			$cds += max(0, IRound(self::CDS_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
 			// Defences restock (check for fed arrival)
 			if (TIME < $this->getReinforceTime() + self::TIME_FEDS_STAY) {
 				$federalMod = (self::TIME_FEDS_STAY - (TIME - $this->getReinforceTime())) / self::TIME_FEDS_STAY;
-				$federalMod = max(0, round($federalMod * self::MAX_FEDS_BONUS));
+				$federalMod = max(0, IRound($federalMod * self::MAX_FEDS_BONUS));
 				$defences += $federalMod;
-				$cds += round($federalMod / 10);
+				$cds += IRound($federalMod / 10);
 			}
 			$this->setShields($defences);
 			$this->setArmour($defences);
@@ -206,7 +206,7 @@ class AbstractSmrPort {
 		$goodClass = Globals::getGood($goodID)['Class'];
 		$refreshPerHour = self::BASE_REFRESH_PER_HOUR[$goodClass] * $this->getGame()->getGameSpeed();
 		$refreshPerSec = $refreshPerHour / 3600;
-		$amountToAdd = floor($secondsSinceLastUpdate * $refreshPerSec);
+		$amountToAdd = IFloor($secondsSinceLastUpdate * $refreshPerSec);
 
 		// We will not save automatic resupplying in the database,
 		// because the stock can be correctly recalculated based on the
@@ -367,7 +367,7 @@ class AbstractSmrPort {
 	 * Adds extra stock to goods in the tier above a good that was traded
 	 */
 	protected function refreshGoods($classTraded, $amountTraded) {
-		$refreshAmount = round($amountTraded * self::REFRESH_PER_GOOD);
+		$refreshAmount = IRound($amountTraded * self::REFRESH_PER_GOOD);
 		//refresh goods that need it
 		$refreshClass = $classTraded + 1;
 		foreach ($this->getAllGoodIDs() as $goodID) {
@@ -632,7 +632,7 @@ class AbstractSmrPort {
 		if (!$this->isUnderAttack()) {
 	
 			//5 mins per port level
-			$nextReinforce = round(TIME + $this->getLevel() * 300);
+			$nextReinforce = TIME + $this->getLevel() * 300;
 			
 			$this->setReinforceTime($nextReinforce);
 			$this->updateAttackStarted();
@@ -646,7 +646,7 @@ class AbstractSmrPort {
 			}
 			
 			$newsMessage .= '. The Federal Government is offering ';
-			$bounty = number_format(intval($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL));
+			$bounty = number_format(floor($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL));
 
 			if ($trigger->hasAlliance()) {
 				$newsMessage .= 'bounties of <span class="creds">' . $bounty . '</span> credits for the deaths of any raiding members of ' . $trigger->getAllianceBBLink();
@@ -935,7 +935,7 @@ class AbstractSmrPort {
 		$this->setArmour($this->getArmour() - $number);
 	}
 	
-	public function getIdealPrice($goodID, $transactionType, $numGoods, $relations) {
+	public function getIdealPrice($goodID, $transactionType, $numGoods, $relations) : int {
 		$relations = min(1000, $relations); // no effect for higher relations
 		$good = $this->getGood($goodID);
 		$base = $good['BasePrice'] * $numGoods;
@@ -957,10 +957,10 @@ class AbstractSmrPort {
 		} else {
 			throw new Exception('Unknown transaction type');
 		}
-		return round($base * $scale * $distFactor * $supplyFactor * $relationsFactor);
+		return IRound($base * $scale * $distFactor * $supplyFactor * $relationsFactor);
 	}
 	
-	public function getOfferPrice($idealPrice, $relations, $transactionType) {
+	public function getOfferPrice($idealPrice, $relations, $transactionType) : int {
 		$moneyRelations = max(0, min(2000, $relations));
 		$expRelations = max(0, min(1000, $relations));
 		$relationsEffect = pow(1 + ($expRelations - 1000) / 10000, 1.2 - $expRelations / 1000);
@@ -969,10 +969,10 @@ class AbstractSmrPort {
 		 if ($transactionType == 'Buy')
 		 {
 			$relationsEffect = 2 - $relationsEffect;
-			return max($idealPrice, floor($idealPrice * $relationsEffect));
+			return max($idealPrice, IFloor($idealPrice * $relationsEffect));
 		 }
 		 else
-			return min($idealPrice, ceil($idealPrice * $relationsEffect));
+			return min($idealPrice, ICeil($idealPrice * $relationsEffect));
 //		$range = .11 - .095;
 //		$rand = .095 + $range * mt_rand(0, 32767)/32767;
 //
@@ -1239,7 +1239,7 @@ class AbstractSmrPort {
 				}
 			}
 			else { //hit drones behind shields
-				$cdDamage = $this->doCDDamage(floor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
+				$cdDamage = $this->doCDDamage(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
 			}
 		}
 
@@ -1264,13 +1264,13 @@ class AbstractSmrPort {
 	}
 	
 	protected function doCDDamage($damage) {
-		$actualDamage = min($this->getCDs(), floor($damage / CD_ARMOUR));
+		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
 		$this->decreaseCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
 	
 	protected function doArmourDamage($damage) {
-		$actualDamage = min($this->getArmour(), floor($damage));
+		$actualDamage = min($this->getArmour(), IFloor($damage));
 		$this->decreaseArmour($actualDamage);
 		return $actualDamage;
 	}
@@ -1308,8 +1308,8 @@ class AbstractSmrPort {
 		return true;
 	}
 
-	public function razePort(AbstractSmrPlayer $killer) {
-		$credits = floor($this->getCredits() * self::RAZE_MONEY_PERCENT / 100);
+	public function razePort(AbstractSmrPlayer $killer) : int {
+		$credits = IFloor($this->getCredits() * self::RAZE_MONEY_PERCENT / 100);
 		if ($this->payout($killer, $credits, 'Razed')) {
 			$this->doDowngrade();
 		}

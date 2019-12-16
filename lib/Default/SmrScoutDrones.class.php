@@ -81,10 +81,10 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 			return $return;
 		}
 		$damage =& $this->getModifiedDamage();
-		$damage['Launched'] = ceil($this->getNumberOfSDs() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
-		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
-		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
-		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
+		$damage['Launched'] = ICeil($this->getNumberOfSDs() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
+		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
+		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
+		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
 		return $damage;
 	}
 	

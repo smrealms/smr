@@ -196,8 +196,8 @@ class SmrPlanet {
 		}
 	}
 
-	public function getBondTime() {
-		return round(BOND_TIME / $this->getGame()->getGameSpeed());
+	public function getBondTime() : int {
+		return IRound(BOND_TIME / $this->getGame()->getGameSpeed());
 	}
 
 	public function bond() {
@@ -940,9 +940,9 @@ class SmrPlanet {
 	}
 
 	// Amount of time (in seconds) to build the next building of this type
-	public function getConstructionTime($constructionID) {
+	public function getConstructionTime($constructionID) : int {
 		$baseTime = $this->getStructureTypes($constructionID)->baseTime();
-		$constructionTime = ceil($baseTime * $this->getCompletionModifier($constructionID) / $this->getGame()->getGameSpeed());
+		$constructionTime = ICeil($baseTime * $this->getCompletionModifier($constructionID) / $this->getGame()->getGameSpeed());
 		return $constructionTime;
 	}
 	
@@ -1229,7 +1229,7 @@ class SmrPlanet {
 
 			}
 			else { // hit drones behind shields - we should only use this reduced damage branch if we cannot hit shields.
-				$cdDamage = $this->doCDDamage(floor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT), $delayed);
+				$cdDamage = $this->doCDDamage(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT), $delayed);
 			}
 		}
 
@@ -1255,7 +1255,7 @@ class SmrPlanet {
 	}
 
 	protected function doCDDamage($damage, $delayed) {
-		$actualDamage = min($this->getCDs(true), floor($damage / CD_ARMOUR));
+		$actualDamage = min($this->getCDs(true), IFloor($damage / CD_ARMOUR));
 		$this->decreaseCDs($actualDamage, $delayed);
 		return $actualDamage * CD_ARMOUR;
 	}
