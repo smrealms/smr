@@ -12,6 +12,11 @@ class OneWayRoute extends Route {
 	private int $sellPortRace;
 	private int $buyPortRace;
 
+	/**
+	 * Construct a one-way route for buying a specific trade good at one port
+	 * and selling it at another.
+	 * NOTE: Transactions are from the perspective of the player (not the port).
+	 */
 	public function __construct(int $_sellSectorId, int $_buySectorId, int $_sellPortRace, int $_buyPortRace, int $_sellDi, int $_buyDi, \Distance $_distance, int $_goodId) {
 		$this->sellSectorId = $_sellSectorId;
 		$this->buySectorId = $_buySectorId;
@@ -60,8 +65,10 @@ class OneWayRoute extends Route {
 	}
 
 	public function getMoneyMultiplierSum() : int {// TODO sellDi stuff and check accuracy of formula
+		$sellRelFactor = 3;
+		$sellSupplyFactor = 2;
 		$buyRelFactor = 1;
-		$sellRelFactor = 1;
+		$buySupplyFactor = 1;
 		if (ROUTE_GEN_USE_RELATIONS_FACTOR===true) {
 			//TODO: This needs to be converted for PHP/SMR.
 //			$relations = max(PlayerPreferences.getRelationsForRace($this->buyPortRace), Settings.MAX_MONEY_RELATIONS);
@@ -70,9 +77,9 @@ class OneWayRoute extends Route {
 //			$sellRelFactor = 2 - (PlayerPreferences.getRelationsForRace($this->sellPortRace) + 50) / 850.0 * ((relations + 350)/1500);
 		}
 		$goodInfo = \Globals::getGood($this->goodId);
-		$buyPrice = IRound(0.08 * $goodInfo['BasePrice'] * pow($this->buyDi, 1.3) * $buyRelFactor);
-		$sellPrice = IRound(0.03 * $goodInfo['BasePrice'] * pow($this->sellDi, 1.3) * $sellRelFactor);
-		return $buyPrice - $sellPrice;
+		$buyPrice = IRound(0.03 * $goodInfo['BasePrice'] * pow($this->buyDi, 1.3) * $buyRelFactor * $buySupplyFactor);
+		$sellPrice = IRound(0.08 * $goodInfo['BasePrice'] * pow($this->sellDi, 1.3) * $sellRelFactor * $sellSupplyFactor);
+		return $sellPrice - $buyPrice;
 	}
 
 	public function getExpMultiplierSum() : int {
@@ -108,6 +115,6 @@ class OneWayRoute extends Route {
 	}
 
 	public function getRouteString() : string {
-		return $this->sellSectorId . ' (' . \Globals::getRaceName($this->sellPortRace) . ') buy ' . \Globals::getGoodName($this->goodId) . ' at ' . $this->sellDi . 'x to sell at (Distance: ' . $this->distance->getDistance() . ($this->distance->getNumWarps() > 0 ? ' + ' . $this->distance->getNumWarps() . ' warps) ' : ') ') . $this->buySectorId . ' (' . \Globals::getRaceName($this->buyPortRace) . ') at ' . $this->buyDi . 'x';
+		return $this->buySectorId . ' (' . \Globals::getRaceName($this->buyPortRace) . ') buy ' . \Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->distance->getDistance() . ($this->distance->getNumWarps() > 0 ? ' + ' . $this->distance->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . \Globals::getRaceName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
 	}
 }

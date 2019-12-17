@@ -5,6 +5,7 @@ namespace Routes;
 const ROUTE_GEN_USE_RELATIONS_FACTOR = false;
 
 class RouteGenerator {
+	// Transactions are from the perspective of the player (not the port).
 	const GOOD_BUYS = 'Buy';
 	const GOOD_SELLS = 'Sell';
 
