@@ -130,7 +130,7 @@ class RouteGenerator {
 	}
 
 	private static function addExpRoute(Route $r) : void {
-		$overallMultiplier = $r->getOverallExpMultiplier();
+		$overallMultiplier = strval($r->getOverallExpMultiplier()); // array keys must be string or int
 		if ($overallMultiplier > self::$dontAddWorseThan[self::EXP_ROUTE]) {
 			if (isset(self::$expRoutes[$overallMultiplier])) {
 				self::$expRoutes[$overallMultiplier][] = $r;
@@ -141,7 +141,7 @@ class RouteGenerator {
 	}
 
 	private static function addMoneyRoute(Route $r) : void {
-		$overallMultiplier = $r->getOverallMoneyMultiplier();
+		$overallMultiplier = strval($r->getOverallMoneyMultiplier()); // array keys must be string or int
 		if ($overallMultiplier > self::$dontAddWorseThan[self::MONEY_ROUTE]) {
 			if (isset(self::$moneyRoutes[$overallMultiplier])) {
 				self::$moneyRoutes[$overallMultiplier][] = $r;
@@ -153,7 +153,7 @@ class RouteGenerator {
 
 	private static function trimRoutes(int $trimToBestXRoutes) : void {
 		$i = 0;
-		krsort(self::$expRoutes);
+		krsort(self::$expRoutes, SORT_NUMERIC);
 		foreach (self::$expRoutes as $multi => $routesByMulti) {
 			if(count($routesByMulti)+$i < $trimToBestXRoutes) {
 				$i += count($routesByMulti);
@@ -176,7 +176,7 @@ class RouteGenerator {
 		}
 
 		$i = 0;
-		krsort(self::$moneyRoutes);
+		krsort(self::$moneyRoutes, SORT_NUMERIC);
 		foreach (self::$moneyRoutes as $multi => $routesByMulti) {
 			if(count($routesByMulti)+$i < $trimToBestXRoutes) {
 				$i += count($routesByMulti);
