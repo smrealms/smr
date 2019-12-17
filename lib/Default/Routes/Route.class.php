@@ -16,7 +16,7 @@ abstract class Route {
 	}
 
 	public function getMoneyMultiplierSum() : int {
-		return $this->getForwardRoute()->getExpMultiplierSum() + $this->getReturnRoute()->getExpMultiplierSum();
+		return $this->getForwardRoute()->getMoneyMultiplierSum() + $this->getReturnRoute()->getMoneyMultiplierSum();
 	}
 
 	public function getExpMultiplierSum() : int {
