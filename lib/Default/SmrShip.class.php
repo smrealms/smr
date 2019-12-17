@@ -153,30 +153,11 @@ class SmrShip extends AbstractSmrShip {
 		$this->getPlayer()->update();
 	}
 	
-	public function checkPowerLevel($powerLevel) {
-		$this->db->query('SELECT weapon_type_id
-							FROM ship_has_weapon
-							JOIN weapon_type USING(weapon_type_id)
-							WHERE ' . $this->SQL . ' AND power_level = ' . $this->db->escapeNumber($powerLevel));
-		
-		switch ($powerLevel) {
-			case 5:
-				return $this->db->getNumRows() < 1;
-			break;
-			case 4:
-				return $this->db->getNumRows() < 2;
-			break;
-			case 3:
-				return $this->db->getNumRows() < 3;
-			break;
-			case 2:
-				return $this->db->getNumRows() < 4;
-			break;
-			case 1:
-				return true;
-			break;
-		}
-		return true;
+	/**
+	 * given power level of new weapon, return whether there is enough power available to install it on this ship
+	 */
+	public function checkPowerAvailable($powerLevel) {
+		return $this->getRemainingPower() >= $powerLevel;
 	}
 	
 	public function isCloaked() {

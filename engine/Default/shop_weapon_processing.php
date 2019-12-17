@@ -21,7 +21,7 @@ if (!isset($var['OrderID'])) {
 	}
 
 	// can we load such a weapon (power_level)
-	if (!$ship->checkPowerLevel($weapon->getPowerLevel())) {
+	if (!$ship->checkPowerAvailable($weapon->getPowerLevel())) {
 		create_error('Your ship doesn\'t have enough power to support that weapon!');
 	}
 
