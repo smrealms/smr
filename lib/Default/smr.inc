@@ -941,7 +941,7 @@ function getWeightedRandom($choices) {
 	// Normalize the weights so that their sum is much larger than 1.
 	$maxWeight = max($choices);
 	foreach ($choices as $key => &$weight) {
-		$weight = round($weight * 1000 / $maxWeight);
+		$weight = IRound($weight * 1000 / $maxWeight);
 	} unset($weight);
 
 	// Generate a random number that is lower than the sum of the weights.
