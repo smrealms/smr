@@ -13,12 +13,17 @@ class RouteGenerator {
 	const MONEY_ROUTE = 1;
 	static $expRoutes;
 	static $moneyRoutes;
-	static $dontAddWorseThan = array(0, 0);
+	static $dontAddWorseThan;
+
+	private static function initialize() {
+		self::$expRoutes = [];
+		self::$moneyRoutes = [];
+		self::$dontAddWorseThan = [0, 0];
+	}
 
 	public static function generateMultiPortRoutes($maxNumPorts, array $sectors, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes) : array {
+		self::initialize();
 		$routeLists = self::findOneWayRoutes($sectors, $distances, $routesForPort, $goods, $races);
-		self::$expRoutes = array();
-		self::$moneyRoutes = array();
 		$totalTasks = 0;
 		foreach ($routeLists as $key => $value) {
 			self::startRoutesToContinue($maxNumPorts, $key, $value, $routeLists);
@@ -98,8 +103,7 @@ class RouteGenerator {
 	}
 
 	public static function generateOneWayRoutes(array $sectors, array $distances, array $goods, array $races, int $routesForPort) : array {
-		self::$expRoutes = array();
-		self::$moneyRoutes = array();
+		self::initialize();
 		foreach ($distances as $currentSectorId => $d) {
 			if ($races[$sectors[$currentSectorId]->getPort()->getRaceID()]===false)
 				continue;
