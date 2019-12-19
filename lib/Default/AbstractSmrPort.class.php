@@ -1278,7 +1278,7 @@ class AbstractSmrPort {
 	protected function &getAttackersToCredit() {
 		//get all players involved for HoF
 		$attackers = array();
-		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
+		$this->db->query('SELECT account_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
 		while ($this->db->nextRecord()) {
 			$attackers[] = SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID());
 		}
@@ -1289,7 +1289,7 @@ class AbstractSmrPort {
 		//get all players involved for HoF
 		$attackers = $this->getAttackersToCredit();
 		foreach ($attackers as $attacker) {
-			$attacker->increaseHOF($this->db->getInt('level'), array('Combat', 'Port', 'Levels Raided'), HOF_PUBLIC);
+			$attacker->increaseHOF($this->level, array('Combat', 'Port', 'Levels Raided'), HOF_PUBLIC);
 			$attacker->increaseHOF(1, array('Combat', 'Port', 'Total Raided'), HOF_PUBLIC);
 		}
 	}
