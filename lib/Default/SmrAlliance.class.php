@@ -368,8 +368,8 @@ class SmrAlliance {
 								img_src = ' . $this->db->escapeString($this->imgSrc) . ',
 								alliance_kills = '.$this->db->escapeNumber($this->kills) . ',
 								alliance_deaths = '.$this->db->escapeNumber($this->deaths) . ',
-								discord_server = '.$this->db->escapeString($this->discordServer) . ',
-								discord_channel = '.$this->db->escapeString($this->discordChannel) . ',
+								discord_server = '.$this->db->escapeString($this->discordServer, true, true) . ',
+								discord_channel = '.$this->db->escapeString($this->discordChannel, true, true) . ',
 								flagship_id = '.$this->db->escapeNumber($this->flagshipID) . ',
 								leader_id = '.$this->db->escapeNumber($this->leaderID) . '
 							WHERE ' . $this->SQL);
