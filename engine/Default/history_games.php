@@ -61,7 +61,7 @@ $db->query('SELECT SUM(experience) as exp, alliance_name, alliance_id
 			FROM player JOIN alliance USING (game_id, alliance_id)
 			WHERE game_id = '.$db->escapeNumber($game_id) . ' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
 while ($db->nextRecord()) {
-	$alliance = stripslashes($db->getField('alliance_name'));
+	$alliance = htmlentities($db->getField('alliance_name'));
 	$id = $db->getInt('alliance_id');
 	$container['alliance_id'] = $id;
 	$allianceExp[] = [
@@ -74,7 +74,7 @@ $template->assign('AllianceExp', $allianceExp);
 $allianceKills = [];
 $db->query('SELECT kills, alliance_name, alliance_id FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY kills DESC LIMIT 10');
 while ($db->nextRecord()) {
-	$alliance = stripslashes($db->getField('alliance_name'));
+	$alliance = htmlentities($db->getField('alliance_name'));
 	$id = $db->getInt('alliance_id');
 	$container['alliance_id'] = $id;
 	$allianceKills[] = [

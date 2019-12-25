@@ -17,7 +17,7 @@ function planet_list_common($allianceId, $getPlanets) {
 	} else {
 		$alliance = SmrAlliance::getAlliance($allianceId, $player->getGameID());
 		$template->assign('Alliance', $alliance);
-		$template->assign('PageTopic', 'Planets : ' . $alliance->getAllianceName());
+		$template->assign('PageTopic', 'Planets : ' . $alliance->getAllianceDisplayName());
 	}
 
 	// We might not assign the planet lists if the info is private.

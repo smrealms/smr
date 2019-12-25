@@ -44,20 +44,20 @@ class Menu {
 			}
 		}
 
-		$role_id = $player->getAllianceRole();
-		$db->query('SELECT send_alliance_msg FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
-		$db->nextRecord();
-		$send = $db->getBoolean('send_alliance_msg');
-		//if ($player->getAccountID() == $alliance_leader_id) {
-		//	$container['body']='alliance_treaties.php';
-		//	$menu_items[] = create_link($container,'Treaties','nav');
-		//}
+		$role_id = $player->getAllianceRole($alliance_id);
+		$db->query('SELECT send_alliance_msg FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
+		if ($db->nextRecord()) {
+			$send_alliance_msg = $db->getBoolean('send_alliance_msg');
+		} else {
+			$send_alliance_msg = false;
+		}
+
 		$menuItems = array();
 		if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $modRead) {
 			$menuItems[] = array('Link'=>Globals::getAllianceMotdHREF($alliance_id), 'Text'=>'Message of the Day');
 		}
 		$menuItems[] = array('Link'=>Globals::getAllianceRosterHREF($alliance_id), 'Text'=>'Roster');
-		if (($send && $in_alliance) || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($send_alliance_msg || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 			$menuItems[] = array('Link'=>Globals::getAllianceMessageHREF($alliance_id), 'Text'=>'Send Message');
 		}
 		if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $mbRead) {

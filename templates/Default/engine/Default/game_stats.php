@@ -187,7 +187,7 @@
 						foreach ($AllianceExpRankings as $Rank => $RankedAlliance) { ?>
 							<tr>
 								<td><?php echo $Rank; ?></td>
-								<td><?php echo $RankedAlliance['Alliance']->getAllianceName(); ?></td>
+								<td><?php echo $RankedAlliance['Alliance']->getAllianceDisplayName(); ?></td>
 								<td><?php echo number_format($RankedAlliance['Amount']); ?></td>
 							</tr><?php
 						} ?>
@@ -205,7 +205,7 @@
 						foreach ($AllianceKillRankings as $Rank => $RankedAlliance) { ?>
 							<tr>
 								<td><?php echo $Rank; ?></td>
-								<td><?php echo $RankedAlliance['Alliance']->getAllianceName(); ?></td>
+								<td><?php echo $RankedAlliance['Alliance']->getAllianceDisplayName(); ?></td>
 								<td><?php echo number_format($RankedAlliance['Amount']); ?></td>
 							</tr><?php
 						} ?>

@@ -33,7 +33,7 @@ $db->query('SELECT alliance_id, alliance_name
 $newsAlliances = array();
 $newsAlliances[0] = array('ID' => 0, 'Name' => 'None');
 while ($db->nextRecord()) {
-	$newsAlliances[$db->getInt('alliance_id')] = array('ID' => $db->getInt('alliance_id'), 'Name' => $db->getField('alliance_name'));
+	$newsAlliances[$db->getInt('alliance_id')] = array('ID' => $db->getInt('alliance_id'), 'Name' => htmlentities($db->getField('alliance_name')));
 }
 $template->assign('NewsAlliances', $newsAlliances);
 

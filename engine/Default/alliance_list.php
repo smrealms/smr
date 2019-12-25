@@ -37,7 +37,7 @@ while ($db->nextRecord()) {
 
 	$alliances[$allianceID] = array(
 		'ViewHREF' => SmrSession::getNewHREF($container),
-		'Name' => $db->getField('alliance_name'),
+		'Name' => htmlentities($db->getField('alliance_name')),
 		'TotalExperience' => $db->getInt('alliance_xp'),
 		'AverageExperience' => $db->getInt('alliance_avg'),
 		'Members' => $db->getInt('alliance_member_count'),
