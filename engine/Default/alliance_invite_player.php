@@ -3,7 +3,7 @@
 $alliance = $player->getAlliance();
 $game = $player->getGame();
 
-$template->assign('PageTopic', $alliance->getAllianceName(false, true));
+$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 // Remove any expired invitations

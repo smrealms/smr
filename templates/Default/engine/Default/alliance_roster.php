@@ -25,7 +25,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 			<th>Members</th>
 		</tr>
 		<tr id="alliance-info" class="ajax bold">
-			<td class="left"><?php echo $Alliance->getAllianceName(); ?></td>
+			<td class="left"><?php echo $Alliance->getAllianceDisplayName(); ?></td>
 			<td class="shrink"><?php echo number_format($AllianceExp); ?></td>
 			<td class="shrink"><?php echo number_format($AllianceAverageExp); ?></td>
 			<td class="shrink"><?php echo number_format($Alliance->getNumMembers()); ?></td>

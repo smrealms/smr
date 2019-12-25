@@ -140,7 +140,7 @@ if ($type == 'comp_share') {
 		if (!is_numeric($game) || !is_numeric($alliance)) {
 			create_error('Incorrect format used.');
 		}
-		$name = SmrAlliance::getAlliance($alliance, $game)->getAllianceName();
+		$name = SmrAlliance::getAlliance($alliance, $game)->getAllianceDisplayName();
 		$db->query('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE game_id = ' . $db->escapeNumber($game) . ' AND alliance_id = ' . $db->escapeNumber($alliance) . ' ORDER BY ip');
 		$summary = 'Listing all IPs for alliance ' . $name . ' in game with ID ' . $game;
 

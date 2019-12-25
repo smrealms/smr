@@ -72,7 +72,7 @@ class SmrAlliance {
 		if ($allianceID != 0) {
 			$this->db->query('SELECT * FROM alliance WHERE ' . $this->SQL);
 			$this->db->nextRecord();
-			$this->allianceName = stripslashes($this->db->getField('alliance_name'));
+			$this->allianceName = $this->db->getField('alliance_name');
 			$this->password = stripslashes($this->db->getField('alliance_password'));
 			$this->description = $this->db->getField('alliance_description');
 			$this->leaderID = $this->db->getInt('leader_id');
@@ -131,8 +131,8 @@ class SmrAlliance {
 		return $this->allianceID;
 	}
 
-	public function getAllianceName($linked = false, $includeAllianceID = false) {
-		$name = $this->allianceName;
+	public function getAllianceDisplayName($linked = false, $includeAllianceID = false) {
+		$name = htmlentities($this->allianceName);
 		if ($includeAllianceID) {
 			$name .= ' (' . $this->allianceID . ')';
 		}
@@ -140,6 +140,14 @@ class SmrAlliance {
 			return create_link(Globals::getAllianceRosterHREF($this->getAllianceID()), $name);
 		}
 		return $name;
+	}
+
+	/**
+	 * Returns the alliance name.
+	 * Use getAllianceDisplayName for an HTML-safe version.
+	 */
+	public function getAllianceName() {
+		return $this->allianceName;
 	}
 
 	public function getGameID() {
@@ -284,7 +292,7 @@ class SmrAlliance {
 			return;
 		}
 		global $player, $account;
-		$boxDescription = 'Alliance ' . $this->getAllianceName(false, true) . ' had their description changed to:' . EOL . EOL . $description;
+		$boxDescription = 'Alliance ' . $this->getAllianceDisplayName(false, true) . ' had their description changed to:' . EOL . EOL . $description;
 		if (is_object($player)) {
 			$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
 		} else {

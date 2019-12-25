@@ -41,7 +41,7 @@ foreach ($alliance_vs_ids as $curr_id) {
 	$alliance_vs[] = [
 		'ID' => $curr_id,
 		'DetailsHREF' => SmrSession::getNewHREF($container),
-		'Name' => $curr_alliance->isNone() ? 'No Alliance' : $curr_alliance->getAllianceName(),
+		'Name' => $curr_alliance->isNone() ? 'No Alliance' : $curr_alliance->getAllianceDisplayName(),
 		'Style' => $style,
 	];
 }
@@ -92,7 +92,7 @@ $template->assign('AllianceVsTable', $alliance_vs_table);
 
 // Show details for a specific alliance
 $main_alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
-$mainName = $main_alliance->isNone() ? 'No Alliance' : $main_alliance->getAllianceName();
+$mainName = $main_alliance->isNone() ? 'No Alliance' : $main_alliance->getAllianceDisplayName();
 $template->assign('DetailsName', $mainName);
 
 $kills = [];
@@ -103,7 +103,7 @@ while ($db->nextRecord()) {
 	$id = $db->getInt('alliance_id_2');
 	if ($id > 0) {
 		$killer_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
-		$alliance_name = $killer_alliance->getAllianceName();
+		$alliance_name = $killer_alliance->getAllianceDisplayName();
 	}
 	elseif ($id == 0) $alliance_name = 'No Alliance';
 	elseif ($id == ALLIANCE_VS_FORCES) $alliance_name = '<span class="yellow">Forces</span>';
@@ -125,7 +125,7 @@ while ($db->nextRecord()) {
 	$id = $db->getInt('alliance_id_1');
 	if ($id > 0) {
 		$killer_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
-		$alliance_name = $killer_alliance->getAllianceName();
+		$alliance_name = $killer_alliance->getAllianceDisplayName();
 	}
 	elseif ($id == 0) $alliance_name = 'No Alliance';
 	elseif ($id == ALLIANCE_VS_FORCES) $alliance_name = '<span class="yellow">Forces</span>';

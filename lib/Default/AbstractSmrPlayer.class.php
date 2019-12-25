@@ -474,7 +474,7 @@ abstract class AbstractSmrPlayer {
 			$return .= ' <span class="npcColour">[NPC]</span>';
 		}
 		if ($includeAlliance) {
-			$return .= ' (' . $this->getAllianceName() . ')';
+			$return .= ' (' . $this->getAllianceDisplayName() . ')';
 		}
 		return $return;
 	}
@@ -486,7 +486,7 @@ abstract class AbstractSmrPlayer {
 	public function getLinkedDisplayName($includeAlliance = true) {
 		$return = '<a href="' . $this->getTraderSearchHREF() . '">' . $this->getDisplayName() . '</a>';
 		if ($includeAlliance) {
-			$return .= ' (' . $this->getAllianceName(true) . ')';
+			$return .= ' (' . $this->getAllianceDisplayName(true) . ')';
 		}
 		return $return;
 	}
@@ -547,12 +547,12 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getAllianceBBLink() {
-		return $this->hasAlliance() ? '[alliance=' . $this->getAllianceID() . ']' : $this->getAllianceName();
+		return $this->hasAlliance() ? '[alliance=' . $this->getAllianceID() . ']' : $this->getAllianceDisplayName();
 	}
 
-	public function getAllianceName($linked = false, $includeAllianceID = false) {
+	public function getAllianceDisplayName($linked = false, $includeAllianceID = false) {
 		if ($this->hasAlliance()) {
-			return $this->getAlliance()->getAllianceName($linked, $includeAllianceID);
+			return $this->getAlliance()->getAllianceDisplayName($linked, $includeAllianceID);
 		}
 		else {
 			return 'No Alliance';

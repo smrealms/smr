@@ -27,7 +27,7 @@
 						foreach ($ActiveAlliances as $activeID) {
 							$curr_alliance = SmrAlliance::getAlliance($activeID, $ThisPlayer->getGameID());
 							$attr = ($data['ID'] == $activeID) ? 'selected' : ''; ?>
-							<option value="<?php echo $activeID; ?>" <?php echo $attr; ?>><?php echo $curr_alliance->getAllianceName(); ?></option><?php
+							<option value="<?php echo $activeID; ?>" <?php echo $attr; ?>><?php echo $curr_alliance->getAllianceDisplayName(); ?></option><?php
 						} ?>
 						<option value="0" <?php echo ($data['ID'] == 0) ? 'selected' : ''; ?>>No Alliance</option>
 					</select>

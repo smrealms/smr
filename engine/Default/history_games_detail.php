@@ -44,7 +44,7 @@ if (!empty($action)) {
 		$container['body'] = 'history_alliance_detail.php';
 		$container['selected_index'] = 1;
 		while ($db->nextRecord()) {
-			$name = stripslashes($db->getField('alliance_name'));
+			$name = htmlentities($db->getField('alliance_name'));
 			$container['alliance_id'] = $db->getInt('alliance_id');
 			$rankings[] = [
 				'name' => create_link($container, $name),

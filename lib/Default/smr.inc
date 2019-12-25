@@ -60,9 +60,9 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 						$container['body'] = 'alliance_mod.php';
 					else
 						$container['body'] = 'alliance_roster.php';
-					return create_link($container, $alliance->getAllianceName());
+					return create_link($container, $alliance->getAllianceDisplayName());
 				}
-				return $alliance->getAllianceName();
+				return $alliance->getAllianceDisplayName();
 			break;
 			case 'race':
 				$raceNameID = $default;
@@ -124,7 +124,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				$container = create_container('alliance_invite_accept.php');
 				$container['alliance_id'] = $alliance->getAllianceID();
-				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">Join ' . $alliance->getAllianceName() . '</a></div>';
+				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
 			break;
 		}
 	}

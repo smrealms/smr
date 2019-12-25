@@ -12,7 +12,7 @@ $id = $var['alliance_id'];
 $db = new $var['HistoryDatabase']();
 $db->query('SELECT * FROM alliance WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id));
 $db->nextRecord();
-$template->assign('PageTopic', 'Alliance Roster - ' . stripslashes($db->getField('alliance_name')));
+$template->assign('PageTopic', 'Alliance Roster - ' . htmlentities($db->getField('alliance_name')));
 
 //get alliance members
 $db->query('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY experience DESC');

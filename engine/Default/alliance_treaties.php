@@ -7,7 +7,7 @@ Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 $alliances = [];
 $db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY alliance_name');
 while ($db->nextRecord()) {
-	$alliances[$db->getInt('alliance_id')] = stripslashes($db->getField('alliance_name'));
+	$alliances[$db->getInt('alliance_id')] = htmlentities($db->getField('alliance_name'));
 }
 $template->assign('Alliances', $alliances);
 

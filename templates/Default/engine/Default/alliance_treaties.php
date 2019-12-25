@@ -6,7 +6,7 @@
 
 	<?php
 	foreach ($Offers as $Offer) { ?>
-		Treaty offer from <span class="yellow"><?php echo $Offer['Alliance']->getAllianceName(true); ?></span>.
+		Treaty offer from <span class="yellow"><?php echo $Offer['Alliance']->getAllianceDisplayName(true); ?></span>.
 		Terms as follows:<br />
 		<ul class="noWrap left" style="display: inline-block"><?php
 			foreach ($Offer['Terms'] as $Term) { ?>
