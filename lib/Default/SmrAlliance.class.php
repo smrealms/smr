@@ -131,6 +131,10 @@ class SmrAlliance {
 		return $this->allianceID;
 	}
 
+	public function getAllianceBBLink() {
+		return '[alliance=' . $this->allianceID . ']';
+	}
+
 	public function getAllianceDisplayName($linked = false, $includeAllianceID = false) {
 		$name = htmlentities($this->allianceName);
 		if ($includeAllianceID) {
@@ -292,7 +296,7 @@ class SmrAlliance {
 			return;
 		}
 		global $player, $account;
-		$boxDescription = 'Alliance ' . $this->getAllianceDisplayName(false, true) . ' had their description changed to:' . EOL . EOL . $description;
+		$boxDescription = 'Alliance ' . $this->getAllianceBBLink() . ' had their description changed to:' . EOL . EOL . $description;
 		if (is_object($player)) {
 			$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
 		} else {

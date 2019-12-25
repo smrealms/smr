@@ -547,7 +547,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getAllianceBBLink() {
-		return $this->hasAlliance() ? '[alliance=' . $this->getAllianceID() . ']' : $this->getAllianceDisplayName();
+		return $this->hasAlliance() ? $this->getAlliance()->getAllianceBBLink() : $this->getAllianceDisplayName();
 	}
 
 	public function getAllianceDisplayName($linked = false, $includeAllianceID = false) {

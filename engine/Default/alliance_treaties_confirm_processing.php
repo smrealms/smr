@@ -13,7 +13,7 @@ $db->query('INSERT INTO alliance_treaties (alliance_id_1,alliance_id_2,game_id,t
 
 //send a message to the leader letting them know the offer is waiting.
 $leader2 = $alliance2->getLeaderID();
-$message = 'An ambassador from [alliance=' . $alliance1->getAllianceID() . '] has arrived with a treaty offer.';
+$message = 'An ambassador from ' . $alliance1->getAllianceBBLink() . ' has arrived with a treaty offer.';
 
 SmrPlayer::sendMessageFromAllianceAmbassador($player->getGameID(), $leader2, $message);
 $container = create_container('skeleton.php', 'alliance_treaties.php');
