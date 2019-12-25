@@ -74,12 +74,12 @@ class SmrAlliance {
 			$this->db->nextRecord();
 			$this->allianceName = stripslashes($this->db->getField('alliance_name'));
 			$this->password = stripslashes($this->db->getField('alliance_password'));
-			$this->description = strip_tags(stripslashes($this->db->getField('alliance_description')));
+			$this->description = $this->db->getField('alliance_description');
 			$this->leaderID = $this->db->getInt('leader_id');
 			$this->account = $this->db->getInt('alliance_account');
 			$this->kills = $this->db->getInt('alliance_kills');
 			$this->deaths = $this->db->getInt('alliance_deaths');
-			$this->motd = strip_tags(stripslashes($this->db->getField('mod')));
+			$this->motd = $this->db->getField('mod');
 			$this->imgSrc = $this->db->getField('img_src');
 			$this->discordServer = $this->db->getField('discord_server');
 			$this->discordChannel = $this->db->getField('discord_channel');
@@ -240,12 +240,15 @@ class SmrAlliance {
 		$this->account = $credits;
 	}
 
+	/**
+	 * Get (HTML-safe) alliance Message of the Day for display.
+	 */
 	public function getMotD() {
-		return $this->motd;
+		return htmlentities($this->motd);
 	}
 
 	public function setMotD($motd) {
-		$this->motd = nl2br(htmlspecialchars($motd));
+		$this->motd = $motd;
 	}
 
 	public function getPassword() {
@@ -264,8 +267,15 @@ class SmrAlliance {
 		return $this->deaths;
 	}
 
+	/**
+	 * Get (HTML-safe) alliance description for display.
+	 */
 	public function getDescription() {
-		return $this->description;
+		if (empty($this->description)) {
+			return '';
+		} else {
+			return htmlentities($this->description);
+		}
 	}
 
 	public function setAllianceDescription($description) {
@@ -280,7 +290,7 @@ class SmrAlliance {
 		} else {
 			$account->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
 		}
-		$this->description = nl2br(htmlspecialchars($description));
+		$this->description = $description;
 	}
 
 	public function hasFlagship() {
@@ -363,7 +373,7 @@ class SmrAlliance {
 	public function update() {
 		$this->db->query('UPDATE alliance SET alliance_password = ' . $this->db->escapeString($this->password) . ',
 								alliance_account = '.$this->db->escapeNumber($this->account) . ',
-								alliance_description = ' . $this->db->escapeString($this->description) . ',
+								alliance_description = ' . $this->db->escapeString($this->description, true, true) . ',
 								`mod` = ' . $this->db->escapeString($this->motd) . ',
 								img_src = ' . $this->db->escapeString($this->imgSrc) . ',
 								alliance_kills = '.$this->db->escapeNumber($this->kills) . ',
