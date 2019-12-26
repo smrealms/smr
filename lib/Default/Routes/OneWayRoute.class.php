@@ -94,14 +94,6 @@ class OneWayRoute extends Route {
 		return $this->distance->getTurns() + $tradeTurns;
 	}
 
-	public function compareTo(OneWayRoute $compare) : int {
-		if ($this->equals($compare)===true)
-			return 0;
-		if ($this->getOverallExpMultiplier() > $compare->getOverallExpMultiplier())
-			return 1;
-		return -1;
-	}
-
 	public function containsPort(int $sectorID) : bool {
 		return $this->sellSectorId == $sectorID || $this->buySectorId == $sectorID;
 	}
