@@ -64,18 +64,13 @@ class OneWayRoute extends Route {
 		return ($this->buyDi + $this->sellDi) / getTurnsForRoute();
 	}
 
-	public function getMoneyMultiplierSum() : int {// TODO sellDi stuff and check accuracy of formula
-		$sellRelFactor = 3;
-		$sellSupplyFactor = 2;
+	public function getMoneyMultiplierSum() : int {
+		// Relations factors assume maximum relations
+		$sellRelFactor = 3; // Note that this assumes maximum relations
 		$buyRelFactor = 1;
+		// Supply factors assume maximum supply
+		$sellSupplyFactor = 2;
 		$buySupplyFactor = 1;
-		if (ROUTE_GEN_USE_RELATIONS_FACTOR===true) {
-			//TODO: This needs to be converted for PHP/SMR.
-//			$relations = max(PlayerPreferences.getRelationsForRace($this->buyPortRace), Settings.MAX_MONEY_RELATIONS);
-//			$buyRelFactor = ($relations + 350) / 8415.0;
-//
-//			$sellRelFactor = 2 - (PlayerPreferences.getRelationsForRace($this->sellPortRace) + 50) / 850.0 * ((relations + 350)/1500);
-		}
 		$goodInfo = \Globals::getGood($this->goodId);
 		$buyPrice = IRound(0.03 * $goodInfo['BasePrice'] * pow($this->buyDi, 1.3) * $buyRelFactor * $buySupplyFactor);
 		$sellPrice = IRound(0.08 * $goodInfo['BasePrice'] * pow($this->sellDi, 1.3) * $sellRelFactor * $sellSupplyFactor);
