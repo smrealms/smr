@@ -210,18 +210,18 @@ function NPCStuff() {
 				debug('We need to UNO, so off we go!');
 				processContainer($container);
 			}
-			else if ($TRADE_ROUTE instanceof Route) {
+			else if ($TRADE_ROUTE instanceof \Routes\Route) {
 				debug('Trade Route');
-				$forwardRoute =& $TRADE_ROUTE->getForwardRoute();
-				$returnRoute =& $TRADE_ROUTE->getReturnRoute();
+				$forwardRoute = $TRADE_ROUTE->getForwardRoute();
+				$returnRoute = $TRADE_ROUTE->getReturnRoute();
 				if ($forwardRoute->getBuySectorId() == $player->getSectorID() || $returnRoute->getBuySectorId() == $player->getSectorID()) {
 					if ($forwardRoute->getBuySectorId() == $player->getSectorID()) {
-						$buyRoute =& $forwardRoute;
-						$sellRoute =& $returnRoute;
+						$buyRoute = $forwardRoute;
+						$sellRoute = $returnRoute;
 					}
 					else if ($returnRoute->getBuySectorId() == $player->getSectorID()) {
-						$buyRoute =& $returnRoute;
-						$sellRoute =& $forwardRoute;
+						$buyRoute = $returnRoute;
+						$sellRoute = $forwardRoute;
 					}
 
 					$ship = $player->getShip();
@@ -635,9 +635,6 @@ function &findRoutes($player) {
 	$db = new SmrMySqlDatabase();
 	$db->query('SELECT routes FROM route_cache WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND max_ports=' . $db->escapeNumber($maxNumberOfPorts) . ' AND goods_allowed=' . $db->escapeObject($tradeGoods) . ' AND races_allowed=' . $db->escapeObject($tradeRaces) . ' AND start_sector_id=' . $db->escapeNumber($startSectorID) . ' AND end_sector_id=' . $db->escapeNumber($endSectorID) . ' AND routes_for_port=' . $db->escapeNumber($routesForPort) . ' AND max_distance=' . $db->escapeNumber($maxDistance));
 	if ($db->nextRecord()) {
-		// The "MultiPortRoute" class cannot be autoloaded because it is not
-		// in its own file.
-		require_once(get_file_loc('RouteGenerator.class.php'));
 		$routes = unserialize(gzuncompress($db->getField('routes')));
 		debug('Using Cached Routes: #' . count($routes));
 		return $routes;
@@ -653,17 +650,16 @@ function &findRoutes($player) {
 
 
 		if ($maxNumberOfPorts == 1)
-			$allRoutes = RouteGenerator::generateOneWayRoutes($allSectors, $distances, $tradeGoods, $tradeRaces, $routesForPort);
+			$allRoutes = \Routes\RouteGenerator::generateOneWayRoutes($allSectors, $distances, $tradeGoods, $tradeRaces, $routesForPort);
 		else
-			$allRoutes = RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+			$allRoutes = \Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 
 		unset($distances);
 
-		$allRoutes =& $allRoutes[RouteGenerator::EXP_ROUTE];
 		$routesMerged = array();
-		foreach ($allRoutes as $multi => &$routesByMulti) {
+		foreach ($allRoutes[\Routes\RouteGenerator::EXP_ROUTE] as $multi => $routesByMulti) {
 			$routesMerged += $routesByMulti; //Merge arrays
-		} unset($routesByMulti);
+		}
 
 		unset($allSectors);
 		SmrPort::clearCache();

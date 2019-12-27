@@ -30,9 +30,11 @@ $template->assign('Game', $gameArray);
 
 $container = create_container('1.6/game_edit_processing.php');
 transfer('game_id');
+transfer('gal_on');
 $template->assign('ProcessingHREF', SmrSession::getNewHREF($container));
 $template->assign('SubmitValue', 'Modify Game');
 
 $container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
 transfer('game_id');
+transfer('gal_on');
 $template->assign('CancelHREF', SmrSession::getNewHREF($container));

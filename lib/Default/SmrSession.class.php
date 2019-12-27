@@ -108,6 +108,7 @@ class SmrSession {
 			'permission_manage.php' => self::ALWAYS_AVAILABLE,
 			'word_filter.php' => self::ALWAYS_AVAILABLE,
 			//Uni gen
+			'1.6/check_map.php' => self::ALWAYS_AVAILABLE,
 			'1.6/universe_create_locations.php' => self::ALWAYS_AVAILABLE,
 			'1.6/universe_create_planets.php' => self::ALWAYS_AVAILABLE,
 			'1.6/universe_create_ports.php' => self::ALWAYS_AVAILABLE,
