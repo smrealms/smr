@@ -646,8 +646,7 @@ function &findRoutes($player) {
 			$allSectors += $galaxy->getSectors(); //Merge arrays
 		}
 
-		$distances =& Plotter::calculatePortToPortDistances($allSectors, $maxDistance, $startSectorID, $endSectorID);
-
+		$distances = Plotter::calculatePortToPortDistances($allSectors, $maxDistance, $startSectorID, $endSectorID);
 
 		if ($maxNumberOfPorts == 1)
 			$allRoutes = \Routes\RouteGenerator::generateOneWayRoutes($allSectors, $distances, $tradeGoods, $tradeRaces, $routesForPort);

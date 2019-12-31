@@ -69,7 +69,7 @@ class Plotter {
 			// Now that we know where $x is, make sure path is reversible
 			// (i.e. start sector < end sector)
 			if ($path->getEndSectorID() < $sector->getSectorID()) {
-				$path =& Plotter::findDistanceToX($sector, $path->getEndSector(), true);
+				$path = Plotter::findDistanceToX($sector, $path->getEndSector(), true);
 				$path->reversePath();
 			}
 
