@@ -1585,17 +1585,16 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	public function &getStoredDestinations() {
 		if (!isset($this->storedDestinations)) {
-			$storedDestinations = array();
+			$this->storedDestinations = array();
 			$this->db->query('SELECT * FROM player_stored_sector WHERE ' . $this->SQL);
 			while ($this->db->nextRecord()) {
-				$storedDestinations[] = array(
+				$this->storedDestinations[] = array(
 					'Label' => $this->db->getField('label'),
 					'SectorID' => $this->db->getInt('sector_id'),
 					'OffsetTop' => $this->db->getInt('offset_top'),
 					'OffsetLeft' => $this->db->getInt('offset_left')
 				);
 			}
-			$this->storedDestinations =& $storedDestinations;
 		}
 		return $this->storedDestinations;
 	}
