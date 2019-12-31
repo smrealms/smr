@@ -38,7 +38,7 @@ class Globals {
 		}
 	}
 
-	public static function &getHiddenPlayers() {
+	public static function getHiddenPlayers() {
 		if (self::$HIDDEN_PLAYERS == null) {
 			self::initialiseDatabase();
 			self::$db->query('SELECT account_id FROM hidden_players');
@@ -60,7 +60,7 @@ class Globals {
 		return $editorIDs;
 	}
 
-	public static function &getLevelRequirements() {
+	public static function getLevelRequirements() {
 		if (self::$LEVEL_REQUIREMENTS == null) {
 			self::initialiseDatabase();
 			self::$LEVEL_REQUIREMENTS = array();
@@ -77,7 +77,7 @@ class Globals {
 		return self::$LEVEL_REQUIREMENTS;
 	}
 
-	public static function &getRaces() {
+	public static function getRaces() {
 		if (self::$RACES == null) {
 			self::initialiseDatabase();
 			self::$RACES = array();
@@ -128,7 +128,7 @@ class Globals {
 		return $raceName;
 	}
 
-	public static function &getGoods() {
+	public static function getGoods() {
 		if (self::$GOODS == null) {
 			self::initialiseDatabase();
 			self::$GOODS = array();
@@ -150,7 +150,7 @@ class Globals {
 		}
 		return self::$GOODS;
 	}
-	public static function &getGood($goodID) {
+	public static function getGood($goodID) {
 		return Globals::getGoods()[$goodID];
 	}
 	public static function getGoodName($goodID) {
@@ -160,7 +160,7 @@ class Globals {
 		return Globals::getGoods()[$goodID]['Name'];
 	}
 
-	public static function &getHardwareTypes($hardwareTypeID = false) {
+	public static function getHardwareTypes($hardwareTypeID = false) {
 		if (self::$HARDWARE_TYPES == null) {
 			self::initialiseDatabase();
 			self::$HARDWARE_TYPES = array();
@@ -217,7 +217,7 @@ class Globals {
 		return self::$FEATURE_REQUEST_OPEN;
 	}
 
-	public static function &getRaceRelations($gameID, $raceID) {
+	public static function getRaceRelations($gameID, $raceID) {
 		if (!isset(self::$RACE_RELATIONS[$gameID])) {
 			self::$RACE_RELATIONS[$gameID] = array();
 		}

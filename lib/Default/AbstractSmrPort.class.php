@@ -84,7 +84,7 @@ class AbstractSmrPort {
 		return $galaxyPorts;
 	}
 
-	public static function &getPort($gameID, $sectorID, $forceUpdate = false, $db = null) {
+	public static function getPort($gameID, $sectorID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID, $sectorID, $db);
 		}
@@ -104,7 +104,7 @@ class AbstractSmrPort {
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
 
-	public static function &createPort($gameID, $sectorID) {
+	public static function createPort($gameID, $sectorID) {
 		if (!isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			$p = new SmrPort($gameID, $sectorID);
 			self::$CACHE_PORTS[$gameID][$sectorID] = $p;
@@ -263,25 +263,25 @@ class AbstractSmrPort {
 		return $this->getVisibleGoods('Buy', $player);
 	}
 	
-	public function &getAllGoodIDs() {
+	public function getAllGoodIDs() {
 		return $this->goodIDs['All'];
 	}
 	
 	/**
 	 * Get IDs of goods that can be sold to the port
 	 */
-	public function &getSoldGoodIDs() {
+	public function getSoldGoodIDs() {
 		return $this->goodIDs['Sell'];
 	}
 	
 	/**
 	 * Get IDs of goods that can be bought from the port
 	 */
-	public function &getBoughtGoodIDs() {
+	public function getBoughtGoodIDs() {
 		return $this->goodIDs['Buy'];
 	}
 	
-	public function &getGood($goodID) {
+	public function getGood($goodID) {
 		if ($this->hasGood($goodID)) {
 			return Globals::getGood($goodID);
 		} else {
@@ -795,7 +795,7 @@ class AbstractSmrPort {
 		return $this->sectorID;
 	}
 	
-	public function &getSector() {
+	public function getSector() {
 		return SmrSector::getSector($this->getGameID(), $this->getSectorID());
 	}
 	
@@ -866,7 +866,7 @@ class AbstractSmrPort {
 		return $this->getLevel() + 3;
 	}
 
-	public function &getWeapons() {
+	public function getWeapons() {
 		$weapons = array();
 		for ($i = 0; $i < $this->getNumWeapons(); ++$i) {
 			$weapons[$i] = SmrWeapon::getWeapon(WEAPON_PORT_TURRET);
@@ -1093,7 +1093,7 @@ class AbstractSmrPort {
 		}
 		return false;
 	}
-	public static function &getCachedPort($gameID, $sectorID, $accountID, $forceUpdate = false) {
+	public static function getCachedPort($gameID, $sectorID, $accountID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT visited, port_info
@@ -1275,7 +1275,7 @@ class AbstractSmrPort {
 		return $actualDamage;
 	}
 
-	protected function &getAttackersToCredit() {
+	protected function getAttackersToCredit() {
 		//get all players involved for HoF
 		$attackers = array();
 		$this->db->query('SELECT account_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));

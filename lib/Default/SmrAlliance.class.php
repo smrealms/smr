@@ -25,7 +25,7 @@ class SmrAlliance {
 	protected $memberList;
 	protected $seedlist;
 
-	public static function &getAlliance($allianceID, $gameID, $forceUpdate = false) {
+	public static function getAlliance($allianceID, $gameID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
 			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new SmrAlliance($allianceID, $gameID);
 		}
@@ -42,7 +42,7 @@ class SmrAlliance {
 		}
 	}
 
-	public static function &getAllianceByIrcChannel($channel, $forceUpdate = false) {
+	public static function getAllianceByIrcChannel($channel, $forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel) . ' LIMIT 1');
 		if ($db->nextRecord()) {
@@ -174,7 +174,7 @@ class SmrAlliance {
 		return $this->leaderID;
 	}
 
-	public function &getLeader() {
+	public function getLeader() {
 		return SmrPlayer::getPlayer($this->getLeaderID(), $this->getGameID());
 	}
 

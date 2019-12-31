@@ -28,7 +28,7 @@ class AbstractSmrLocation {
 		self::$CACHE_SECTOR_LOCATIONS = [];
 	}
 
-	public static function &getAllLocations($forceUpdate = false) {
+	public static function getAllLocations($forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM location_type ORDER BY location_type_id');
@@ -60,7 +60,7 @@ class AbstractSmrLocation {
 		return $galaxyLocations;
 	}
 
-	public static function &getSectorLocations($gameID, $sectorID, $forceUpdate = false) {
+	public static function getSectorLocations($gameID, $sectorID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM location JOIN location_type USING (location_type_id) WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
@@ -74,7 +74,7 @@ class AbstractSmrLocation {
 		return self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID];
 	}
 	
-	public static function &getLocation($locationTypeID, $forceUpdate = false, $db = null) {
+	public static function getLocation($locationTypeID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
 			self::$CACHE_LOCATIONS[$locationTypeID] = new SmrLocation($locationTypeID, $db);
 		}
@@ -249,7 +249,7 @@ class AbstractSmrLocation {
 		}
 	}
 	
-	public function &getHardwareSold() {
+	public function getHardwareSold() {
 		if (!isset($this->hardwareSold)) {
 			$this->hardwareSold = array();
 			$this->db->query('SELECT hardware_type_id FROM location_sells_hardware WHERE ' . $this->SQL);
@@ -285,7 +285,7 @@ class AbstractSmrLocation {
 		unset($this->hardwareSold[$hardwareTypeID]);
 	}
 	
-	public function &getShipsSold() {
+	public function getShipsSold() {
 		if (!isset($this->shipsSold)) {
 			$this->shipsSold = array();
 			$this->db->query('SELECT * FROM location_sells_ships WHERE ' . $this->SQL);
@@ -320,7 +320,7 @@ class AbstractSmrLocation {
 		unset($this->shipsSold[$shipTypeID]);
 	}
 	
-	public function &getWeaponsSold() {
+	public function getWeaponsSold() {
 		if (!isset($this->weaponsSold)) {
 			$this->weaponsSold = array();
 			$this->db->query('SELECT * FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
@@ -354,7 +354,7 @@ class AbstractSmrLocation {
 		unset($this->weaponsSold[$weaponTypeID]);
 	}
 	
-	public function &getLinkedLocations() {
+	public function getLinkedLocations() {
 		$linkedLocations = array();
 		if ($this->isHQ()) {
 			if ($this->getTypeID() == LOCATION_TYPE_FEDERAL_HQ) {

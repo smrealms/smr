@@ -88,7 +88,7 @@ abstract class AbstractSmrAccount {
 		return self::DEFAULT_HOTKEYS;
 	}
 
-	public static function &getAccount($accountID,$forceUpdate = false) {
+	public static function getAccount($accountID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_ACCOUNTS[$accountID])) {
 			self::$CACHE_ACCOUNTS[$accountID] = new SmrAccount($accountID);
 		}
@@ -416,7 +416,7 @@ abstract class AbstractSmrAccount {
 		return $this->score;
 	}
 
-	public function &getIndividualScores(SmrPlayer $player = null) {
+	public function getIndividualScores(SmrPlayer $player = null) {
 		$gameID=0;
 		if($player!=null)
 			$gameID = $player->getGameID();
@@ -462,7 +462,7 @@ abstract class AbstractSmrAccount {
 		return $this->referrerID>0;
 	}
 
-	public function &getReferrer() {
+	public function getReferrer() {
 		return SmrAccount::getAccount($this->getReferrerID());
 	}
 

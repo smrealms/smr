@@ -245,7 +245,7 @@ class Template {
 		array_push($this->jsSources, $src);
 	}
 
-	protected function &convertHtmlToAjaxXml($str, $returnXml) {
+	protected function convertHtmlToAjaxXml($str, $returnXml) {
 		if (empty($str)) {
 			return '';
 		}

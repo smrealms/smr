@@ -25,7 +25,7 @@ class ChessGame {
 
 	private $lastMove = null;
 
-	public static function &getNPCMoveGames($forceUpdate = false) {
+	public static function getNPCMoveGames($forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT chess_game_id
 					FROM npc_logins
@@ -42,7 +42,7 @@ class ChessGame {
 		return $games;
 	}
 
-	public static function &getOngoingPlayerGames(AbstractSmrPlayer $player) {
+	public static function getOngoingPlayerGames(AbstractSmrPlayer $player) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . TIME . ' OR end_time IS NULL);');
 		$games = array();
@@ -52,7 +52,7 @@ class ChessGame {
 		return $games;
 	}
 
-	public static function &getAccountGames($accountID) {
+	public static function getAccountGames($accountID) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');
 		$games = array();
@@ -62,7 +62,7 @@ class ChessGame {
 		return $games;
 	}
 
-	public static function &getChessGame($chessGameID,$forceUpdate = false) {
+	public static function getChessGame($chessGameID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_CHESS_GAMES[$chessGameID])) {
 			self::$CACHE_CHESS_GAMES[$chessGameID] = new ChessGame($chessGameID);
 		}

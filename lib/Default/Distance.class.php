@@ -51,7 +51,7 @@ class Distance {
 		return $this->path[count($this->path) - 1];
 	}
 
-	public function &getEndSector() {
+	public function getEndSector() {
 		return SmrSector::getSector($this->gameID, $this->getEndSectorID());
 	}
 

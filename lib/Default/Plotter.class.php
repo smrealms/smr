@@ -83,7 +83,7 @@ class Plotter {
 	 * The resulting path prefers neighbors in their order in SmrSector->links,
 	 * (i.e. up, down, left, right).
 	 */
-	public static function &findDistanceToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function findDistanceToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE - 1;
 
 		$checkSector = $sector;
@@ -168,7 +168,7 @@ class Plotter {
 		return $distances;
 	}
 	
-	public static function &calculatePortToPortDistances(array $sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function calculatePortToPortDistances(array $sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		$distances = array();
 		foreach ($sectors as $sec) {
 			if ($sec !== null) {
@@ -182,7 +182,7 @@ class Plotter {
 		return $distances;
 	}
 
-	public static function &findDistanceToOtherPorts(SmrSector $sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function findDistanceToOtherPorts(SmrSector $sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		return self::findDistanceToX('Port', $sector, false, null, null, $distanceLimit, $lowLimit, $highLimit);
 	}
 }

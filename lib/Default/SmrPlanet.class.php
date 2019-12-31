@@ -81,14 +81,14 @@ class SmrPlanet {
 		return $galaxyPlanets;
 	}
 
-	public static function &getPlanet($gameID, $sectorID, $forceUpdate = false, $db = null) {
+	public static function getPlanet($gameID, $sectorID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
 			self::$CACHE_PLANETS[$gameID][$sectorID] = new SmrPlanet($gameID, $sectorID, $db);
 		}
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
 
-	public static function &createPlanet($gameID, $sectorID, $type = 1) {
+	public static function createPlanet($gameID, $sectorID, $type = 1) {
 		if (!self::getPlanet($gameID, $sectorID)->exists()) {
 			$minTime = SmrGame::getGame($gameID)->getStartTime();
 			$inhabitableTime = $minTime + pow(mt_rand(45, 85), 3);
@@ -225,7 +225,7 @@ class SmrPlanet {
 		return $this->sectorID;
 	}
 
-	public function &getGalaxy() {
+	public function getGalaxy() {
 		return SmrGalaxy::getGalaxyContaining($this->getGameID(), $this->getSectorID());
 	}
 
@@ -245,7 +245,7 @@ class SmrPlanet {
 		$this->hasChanged = true;
 	}
 
-	public function &getOwner() {
+	public function getOwner() {
 		return SmrPlayer::getPlayer($this->getOwnerID(), $this->getGameID());
 	}
 
@@ -1083,7 +1083,7 @@ class SmrPlanet {
 
 	
 	
-	public function &getPlayers() {
+	public function getPlayers() {
 		return SmrPlayer::getPlanetPlayers($this->getGameID(), $this->getSectorID());
 	}
 
@@ -1095,7 +1095,7 @@ class SmrPlanet {
 		return count($this->getPlayers()) > 0;
 	}
 
-	public function &getOtherTraders(AbstractSmrPlayer $player) {
+	public function getOtherTraders(AbstractSmrPlayer $player) {
 		$players = SmrPlayer::getPlanetPlayers($this->getGameID(), $this->getSectorID()); //Do not use & because we unset something and only want that in what we return
 		unset($players[$player->getAccountID()]);
 		return $players;
@@ -1127,7 +1127,7 @@ class SmrPlanet {
 		return false;
 	}
 
-	public function &getWeapons() {
+	public function getWeapons() {
 		$weapons = $this->getMountedWeapons();
 		for ($i = 0; $i < $this->getBuilding(PLANET_TURRET); ++$i) {
 			$weapons[] = SmrWeapon::getWeapon(WEAPON_PLANET_TURRET);

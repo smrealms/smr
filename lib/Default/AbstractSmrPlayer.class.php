@@ -64,7 +64,7 @@ abstract class AbstractSmrPlayer {
 		return $this->gameID;
 	}
 
-	public function &getGame() {
+	public function getGame() {
 		return SmrGame::getGame($this->gameID);
 	}
 
@@ -106,11 +106,11 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function &getSectorPlanet() {
+	public function getSectorPlanet() {
 		return SmrPlanet::getPlanet($this->getGameID(), $this->getSectorID());
 	}
 
-	public function &getSectorPort() {
+	public function getSectorPort() {
 		return SmrPort::getPort($this->getGameID(), $this->getSectorID());
 	}
 
@@ -118,7 +118,7 @@ abstract class AbstractSmrPlayer {
 		return $this->sectorID;
 	}
 
-	public function &getSector() {
+	public function getSector() {
 		return SmrSector::getSector($this->getGameID(), $this->getSectorID());
 	}
 
@@ -522,7 +522,7 @@ abstract class AbstractSmrPlayer {
 		return $this->getAccountID() == $this->getAlliance($forceUpdate)->getLeaderID();
 	}
 
-	public function &getAlliance($forceUpdate = false) {
+	public function getAlliance($forceUpdate = false) {
 		return SmrAlliance::getAlliance($this->getAllianceID(), $this->getGameID(), $forceUpdate);
 	}
 
@@ -625,7 +625,7 @@ abstract class AbstractSmrPlayer {
 		return $rels[$raceID];
 	}
 
-	abstract public function &getShip();
+	abstract public function getShip();
 
 	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
 		return $this->getShip()->shootPlayer($targetPlayer);

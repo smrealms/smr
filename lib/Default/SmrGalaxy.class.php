@@ -21,7 +21,7 @@ class SmrGalaxy {
 	protected $hasChanged = false;
 	protected $isNew = false;
 
-	public static function &getGameGalaxies($gameID, $forceUpdate = false) {
+	public static function getGameGalaxies($gameID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY galaxy_id ASC');
@@ -35,7 +35,7 @@ class SmrGalaxy {
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
 
-	public static function &getGalaxy($gameID, $galaxyID, $forceUpdate = false, $db = null) {
+	public static function getGalaxy($gameID, $galaxyID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new SmrGalaxy($gameID, $galaxyID, false, $db);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
@@ -51,7 +51,7 @@ class SmrGalaxy {
 		}
 	}
 	
-	public static function &createGalaxy($gameID, $galaxyID) {
+	public static function createGalaxy($gameID, $galaxyID) {
 		if (!isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new SmrGalaxy($gameID, $galaxyID, true);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
@@ -178,7 +178,7 @@ class SmrGalaxy {
 		return $this->getHeight() * $this->getWidth();
 	}
 	
-	public function &getSectors() {
+	public function getSectors() {
 		return SmrSector::getGalaxySectors($this->getGameID(), $this->getGalaxyID());
 	}
 
@@ -334,7 +334,7 @@ class SmrGalaxy {
 		return $sectorID >= $this->getStartSector() && $sectorID <= $this->getEndSector();
 	}
 	
-	public static function &getGalaxyContaining($gameID, $sectorID) {
+	public static function getGalaxyContaining($gameID, $sectorID) {
 		return SmrSector::getSector($gameID, $sectorID)->getGalaxy();
 	}
 	

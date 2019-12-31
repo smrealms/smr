@@ -25,7 +25,7 @@ function getAdminBoxNames() {
 	];
 }
 
-function &getMessagePlayer($accountID, $gameID, $messageType = false) {
+function getMessagePlayer($accountID, $gameID, $messageType = false) {
 	if ($accountID == ACCOUNT_ID_PORT)
 		$return = '<span class="yellow">Port Defenses</span>';
 	else if ($accountID == ACCOUNT_ID_ADMIN)
