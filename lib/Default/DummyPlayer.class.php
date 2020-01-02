@@ -67,7 +67,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 	public function &killPlayerByPlanet(SmrPlanet $planet) {
 	}
 	
-	public function &getShip() {
+	public function getShip() {
 		return DummyShip::getCachedDummyShip($this);
 	}
 	

@@ -2,8 +2,6 @@
 
 class Template {
 	private $data = array();
-	private $captures = array('');
-	private $currentCaptureID = 0;
 	private $ignoreMiddle = false;
 	private $nestedIncludes = 0;
 	private $ajaxJS = array();
@@ -51,13 +49,12 @@ class Template {
 		}
 		ob_start();
 		$this->includeTemplate($templateName);
-		$this->captures[$this->currentCaptureID] .= ob_get_clean();
-		$output = join('', $this->captures);
+		$output = ob_get_clean();
 		$this->trimWhiteSpace($output);
 
 		$ajaxEnabled = ($this->data['AJAX_ENABLE_REFRESH'] ?? false) !== false;
 		if ($ajaxEnabled) {
-			$ajaxXml =& $this->convertHtmlToAjaxXml($output, $outputXml);
+			$ajaxXml = $this->convertHtmlToAjaxXml($output, $outputXml);
 			if ($outputXml) {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$output = '<all>' . $ajaxXml . '</all>';
@@ -132,22 +129,6 @@ class Template {
 		$this->nestedIncludes++;
 		require($this->getTemplateLocation($templateName));
 		$this->nestedIncludes--;
-	}
-	
-	protected function startCapture() {
-		$this->captures[$this->currentCaptureID] .= ob_get_contents();
-		ob_clean();
-		$this->currentCaptureID++;
-		$this->captures[$this->currentCaptureID] = '';
-	}
-	
-	protected function &stopCapture() {
-		$captured =& $this->captures[$this->currentCaptureID];
-		unset($this->captures[$this->currentCaptureID]);
-		$captured .= ob_get_contents();
-		ob_clean();
-		$this->currentCaptureID--;
-		return $captured;
 	}
 	
 	protected function checkDisableAJAX($html) {
@@ -264,7 +245,7 @@ class Template {
 		array_push($this->jsSources, $src);
 	}
 
-	protected function &convertHtmlToAjaxXml($str, $returnXml) {
+	protected function convertHtmlToAjaxXml($str, $returnXml) {
 		if (empty($str)) {
 			return '';
 		}

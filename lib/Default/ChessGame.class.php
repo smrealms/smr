@@ -25,7 +25,7 @@ class ChessGame {
 
 	private $lastMove = null;
 
-	public static function &getNPCMoveGames($forceUpdate = false) {
+	public static function getNPCMoveGames($forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT chess_game_id
 					FROM npc_logins
@@ -42,7 +42,7 @@ class ChessGame {
 		return $games;
 	}
 
-	public static function &getOngoingPlayerGames(AbstractSmrPlayer $player) {
+	public static function getOngoingPlayerGames(AbstractSmrPlayer $player) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . TIME . ' OR end_time IS NULL);');
 		$games = array();
@@ -52,7 +52,7 @@ class ChessGame {
 		return $games;
 	}
 
-	public static function &getAccountGames($accountID) {
+	public static function getAccountGames($accountID) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');
 		$games = array();
@@ -62,7 +62,7 @@ class ChessGame {
 		return $games;
 	}
 
-	public static function &getChessGame($chessGameID,$forceUpdate = false) {
+	public static function getChessGame($chessGameID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_CHESS_GAMES[$chessGameID])) {
 			self::$CACHE_CHESS_GAMES[$chessGameID] = new ChessGame($chessGameID);
 		}
@@ -168,7 +168,7 @@ class ChessGame {
 				$accountID = $this->db->getInt('account_id');
 				$pieces[] = new ChessPiece($this->chessGameID, $accountID, $this->getColourForAccountID($accountID), $this->db->getInt('piece_id'), $this->db->getInt('x'), $this->db->getInt('y'), $this->db->getInt('piece_no'));
 			}
-			$this->board =& $this->parsePieces($pieces);
+			$this->board = $this->parsePieces($pieces);
 		}
 		return $this->board;
 	}
@@ -279,7 +279,7 @@ class ChessGame {
 		return $fen;
 	}
 
-	public static function &parsePieces(array &$pieces) {
+	private static function parsePieces(array $pieces) {
 		$board = array();
 		$row = array();
 		for($i=0;$i<8;$i++) {
@@ -288,11 +288,11 @@ class ChessGame {
 		for($i=0;$i<8;$i++) {
 			$board[] = $row;
 		}
-		foreach($pieces as &$piece) {
+		foreach($pieces as $piece) {
 			if($board[$piece->getY()][$piece->getX()] != null) {
 				throw new Exception('Two pieces found in the same tile.');
 			}
-			$board[$piece->getY()][$piece->getX()] =& $piece;
+			$board[$piece->getY()][$piece->getX()] = $piece;
 		}
 		return $board;
 	}
@@ -407,10 +407,8 @@ class ChessGame {
 	}
 
 	public function isCheckmated($colour) {
-		$board =& $this->board;
-		$hasMoved =& $this->getHasMoved();
 		$king = null;
-		foreach($board as $row) {
+		foreach($this->board as $row) {
 			foreach($row as $piece) {
 				if($piece != null && $piece->pieceID == ChessPiece::KING && $piece->colour == $colour) {
 					$king = $piece;
@@ -421,13 +419,13 @@ class ChessGame {
 		if($king == null) {
 			throw new Exception('Could not find the king: game id = ' . $this->chessGameID);
 		}
-		if(!self::isPlayerChecked($board, $hasMoved, $colour)) {
+		if(!self::isPlayerChecked($this->board, $this->getHasMoved(), $colour)) {
 			return false;
 		}
-		foreach($board as $row) {
+		foreach($this->board as $row) {
 			foreach($row as $piece) {
 				if($piece != null && $piece->colour == $colour) {
-					$moves = $piece->getPossibleMoves($board, $hasMoved);
+					$moves = $piece->getPossibleMoves($this->board, $this->getHasMoved());
 					//There are moves we can make, we are clearly not checkmated.
 					if(count($moves) > 0) {
 						return false;

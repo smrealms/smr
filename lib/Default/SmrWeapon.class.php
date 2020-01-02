@@ -16,7 +16,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			self::$db = new SmrMySqlDatabase();
 	}
 
-	public static function &getWeapon($weaponTypeID, $forceUpdate = false, $db = null) {
+	public static function getWeapon($weaponTypeID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_WEAPONS[$weaponTypeID])) {
 			$w = new SmrWeapon($weaponTypeID, $db);
 			if ($w->exists())
@@ -27,7 +27,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return self::$CACHE_WEAPONS[$weaponTypeID];
 	}
 
-	public static function &getAllWeapons($forceUpdate = false) {
+	public static function getAllWeapons($forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM weapon_type');
 		$weapons = array();
@@ -100,7 +100,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $this->buyerRestriction;
 	}
 	
-	protected function &getWeightedRandomForPlayer(AbstractSmrPlayer $player) {
+	protected function getWeightedRandomForPlayer(AbstractSmrPlayer $player) {
 		return WeightedRandom::getWeightedRandomForPlayer($player, 'Weapon', $this->getWeaponTypeID());
 	}
 

@@ -46,7 +46,7 @@ class SmrGame {
 		self::GAME_TYPE_NEWBIE => 'Newbie',
 	];
 
-	public static function &getGame($gameID, $forceUpdate = false) {
+	public static function getGame($gameID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID);
 			self::$CACHE_GAMES[$gameID] = $g;
@@ -60,7 +60,7 @@ class SmrGame {
 		}
 	}
 
-	public static function &createGame($gameID) {
+	public static function createGame($gameID) {
 		if (!isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID, true);
 			self::$CACHE_GAMES[$gameID] = $g;

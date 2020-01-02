@@ -2,7 +2,7 @@
 
 class SmrLocation extends AbstractSmrLocation {
 
-	public function &getShipsSold() {
+	public function getShipsSold() {
 		if (!isset($this->shipsSold)) {
 			$this->shipsSold = array();
 			$this->db->query('SELECT * FROM location_sells_ships

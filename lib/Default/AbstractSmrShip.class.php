@@ -29,7 +29,7 @@ abstract class AbstractSmrShip {
 	protected $hasChangedCargo = false;
 	protected $hasChangedHardware = array();
 
-	public static function &getBaseShip($gameTypeID, $shipTypeID, $forceUpdate = false) {
+	public static function getBaseShip($gameTypeID, $shipTypeID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID])) {
 			// determine ship
 			$db = new SmrMySqlDatabase();
@@ -42,7 +42,7 @@ abstract class AbstractSmrShip {
 		return self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID];
 	}
 
-	protected static function &buildBaseShip(MySqlDatabase $db) {
+	protected static function buildBaseShip(MySqlDatabase $db) {
 		$ship = array();
 		$ship['Type'] = 'Ship';
 		$ship['Name'] = $db->getField('ship_name');
@@ -114,7 +114,7 @@ abstract class AbstractSmrShip {
 		return $ship;
 	}
 
-	public static function &getAllBaseShips($gameTypeID, $forceUpdate = false) {
+	public static function getAllBaseShips($gameTypeID, $forceUpdate = false) {
 		// determine ship
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC'); //TODO add game type id
@@ -249,7 +249,7 @@ abstract class AbstractSmrShip {
 
 
 
-	public function &addWeapon($weaponTypeID) {
+	public function addWeapon($weaponTypeID) {
 		if ($this->hasOpenWeaponSlots() && $this->hasRemainingPower()) {
 			$weapon = SmrWeapon::getWeapon($weaponTypeID);
 			if ($this->getRemainingPower() >= $weapon->getPowerLevel()) {
@@ -431,7 +431,7 @@ abstract class AbstractSmrShip {
 		return $this->illusionShip['Defense'];
 	}
 
-	public function &getPlayer() {
+	public function getPlayer() {
 		return $this->player;
 	}
 
@@ -735,7 +735,7 @@ abstract class AbstractSmrShip {
 		$this->setHardware(HARDWARE_CARGO, $amount);
 	}
 
-	public function &getCargo($goodID = false) {
+	public function getCargo($goodID = false) {
 		if ($goodID !== false) {
 			if (isset($this->cargo[$goodID]))
 				return $this->cargo[$goodID];
@@ -813,7 +813,7 @@ abstract class AbstractSmrShip {
 		return $this->getNumWeapons() > 0;
 	}
 
-	public function &getWeapons() {
+	public function getWeapons() {
 		return $this->weapons;
 	}
 

@@ -71,7 +71,7 @@ class SmrForce {
 		return $galaxyForces;
 	}
 
-	public static function &getSectorForces($gameID, $sectorID, $forceUpdate = false) {
+	public static function getSectorForces($gameID, $sectorID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID][$sectorID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
 			$db = new SmrMySqlDatabase();
@@ -86,7 +86,7 @@ class SmrForce {
 		return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID];
 	}
 
-	public static function &getForce($gameID, $sectorID, $ownerID, $forceUpdate = false, $db = null) {
+	public static function getForce($gameID, $sectorID, $ownerID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
 			$p = new SmrForce($gameID, $sectorID, $ownerID, $db);
@@ -334,7 +334,7 @@ class SmrForce {
 		return $this->gameID;
 	}
 
-	public function &getSector() {
+	public function getSector() {
 		return SmrSector::getSector($this->getGameID(), $this->getSectorID());
 	}
 
@@ -352,11 +352,11 @@ class SmrForce {
 		}
 	}
 
-	public function &getGalaxy() {
+	public function getGalaxy() {
 		return SmrGalaxy::getGalaxyContaining($this->getGameID(), $this->getSectorID());
 	}
 
-	public function &getOwner() {
+	public function getOwner() {
 		return SmrPlayer::getPlayer($this->getOwnerID(), $this->getGameID());
 	}
 
