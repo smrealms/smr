@@ -32,6 +32,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	protected $nameChanged;
 	protected $combatDronesKamikazeOnMines;
 	protected $customShipName;
+	protected $storedDestinations;
 
 
 	public static function refreshCache() {
