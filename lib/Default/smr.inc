@@ -133,7 +133,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 	if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 		return false;
 	}
-	return htmlspecialchars($params['_tag']) . $tagContent . htmlspecialchars($params['_endtag']);
+	return htmlspecialchars($tagParams['_tag']) . $tagContent . htmlspecialchars($tagParams['_endtag']);
 }
 
 function xmlify($str) {
