@@ -15,13 +15,13 @@ class ChessGame {
 	private $gameID;
 	private $startDate;
 	private $endDate;
-	private $gameType;
 	private $winner;
+	private $whiteID;
+	private $blackID;
 
 	private $hasMoved;
 	private $board;
 	private $moves;
-	private $messages;
 
 	private $lastMove = null;
 

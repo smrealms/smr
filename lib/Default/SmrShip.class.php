@@ -5,7 +5,9 @@ class SmrShip extends AbstractSmrShip {
 	
 	protected $db;
 	protected $SQL;
-	
+
+	protected $isCloaked;
+
 	public static function refreshCache() {
 		foreach (self::$CACHE_SHIPS as &$gameShips) {
 			foreach ($gameShips as &$ship) {
