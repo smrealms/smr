@@ -5,7 +5,10 @@
  */
 class SmrPlanetStructureType {
 
-	public function __construct($ID, $planetTypeInfo) {
+	private int $ID;
+	private array $planetTypeInfo;
+
+	public function __construct(int $ID, array $planetTypeInfo) {
 		$this->ID = $ID;
 		$this->planetTypeInfo = $planetTypeInfo;
 	}
