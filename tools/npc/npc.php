@@ -417,7 +417,8 @@ function changeNPCLogin() {
 	static $availableNpcs = null;
 	$db = new SmrMySqlDatabase();
 	if (is_null($availableNpcs)) {
-		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) WHERE active=\'TRUE\' AND working=\'FALSE\' ORDER BY last_turn_update ASC');
+		// Make sure to select NPCs from active games only
+		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(TIME) . ' AND end_time > ' . $db->escapeNumber(TIME) . ' ORDER BY last_turn_update ASC');
 		while ($db->nextRecord()) {
 			$availableNpcs[] = [
 				'account_id' => $db->getInt('account_id'),
