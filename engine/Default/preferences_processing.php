@@ -218,7 +218,7 @@ else if (strpos(trim($action), 'Alter Player') === 0) {
 	// Check if name is in use.
 	// The player_name field has case-insensitive collation, so check against ID
 	// to allow player to change the case of their name.
-	$db->query('SELECT 1 FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND player_name=' . $db->escapeString($player_name) . ' AND player_id != ' . $db->escapeString($player->getPlayerID()) . ' LIMIT 1');
+	$db->query('SELECT 1 FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND player_name=' . $db->escapeString($player_name) . ' AND player_id != ' . $db->escapeNumber($player->getPlayerID()) . ' LIMIT 1');
 	if ($db->getNumRows()) {
 		create_error('Name is already being used in this game!');
 	}
