@@ -47,12 +47,9 @@ function logException(Throwable $e) {
 	// Unconditionally send error message to the log
 	error_log($message);
 
-	if (defined('NPC_SCRIPT')) {
-		echo $message;
+	if (defined('NPC_SCRIPT') && ENABLE_DEBUG) {
 		// In debug mode, we normally exit, but NPCs must cleanup after an error
-		if (ENABLE_DEBUG) {
-			return;
-		}
+		return;
 	}
 
 	if (ENABLE_DEBUG) {
