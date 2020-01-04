@@ -617,11 +617,14 @@ function &findRoutes($player) {
 		else
 			$tradeGoods[$goodID] = false;
 	}
+
+	// Only allow NPCs to trade at ports of their race and neutral ports
 	$tradeRaces = array();
 	foreach (Globals::getRaces() as $raceID => $race) {
 		$tradeRaces[$raceID] = false;
 	}
 	$tradeRaces[$player->getRaceID()] = true;
+	$tradeRaces[RACE_NEUTRAL] = true;
 
 	$galaxy = $player->getSector()->getGalaxy();
 
