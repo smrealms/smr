@@ -409,18 +409,6 @@ function do_voodoo() {
 	if (!defined('DATE_FULL_SHORT')) define('DATE_FULL_SHORT', DATE_DATE_SHORT . ' ' . DATE_TIME_SHORT);
 	if (!defined('DATE_FULL_SHORT_SPLIT')) define('DATE_FULL_SHORT_SPLIT', DATE_DATE_SHORT . '\<b\r /\>' . DATE_TIME_SHORT);
 
-	if ($var['url'] == 'game_play_preprocessing.php') { // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
-		SmrSession::clearLinks();
-		if (SmrSession::hasGame()) {
-			$account->log(LOG_TYPE_GAME_ENTERING, 'Player left game ' . SmrSession::getGameID());
-		}
-
-		// reset game id
-		SmrSession::updateGame(0);
-
-		forward(create_container('skeleton.php', 'game_play.php', $var));
-	}
-
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::hasGame()) {
 		if (SmrGame::getGame(SmrSession::getGameID())->hasEnded()) {
