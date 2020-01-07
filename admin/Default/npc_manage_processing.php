@@ -17,6 +17,7 @@ if (isset($_POST['create_npc_player'])) {
 
 	$npcPlayer->getShip()->setHardwareToMax();
 	$npcPlayer->giveStartingTurns();
+	$npcPlayer->setCredits(SmrGame::getGame($gameID)->getStartingCredits());
 
 	// Give a random alignment
 	$npcPlayer->setAlignment(rand(-300, 300));
