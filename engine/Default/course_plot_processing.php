@@ -19,22 +19,16 @@ $target = abs(str_replace('.', '', $target));
 if ($start == $target)
 	create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 
-$startExists = false;
-$targetExists = false;
-$galaxies = SmrGalaxy::getGameGalaxies($player->getGameID());
-foreach ($galaxies as $galaxy) {
-	if ($galaxy->contains($start))
-		$startExists = true;
-	if ($galaxy->contains($target))
-		$targetExists = true;
-}
-
-if ($startExists === false || $targetExists === false)
+try {
+	$startSector = SmrSector::getSector($player->getGameID(), $start);
+	$targetSector = SmrSector::getSector($player->getGameID(), $target);
+} catch (SectorNotFoundException $e) {
 	create_error('The sectors have to exist!');
+}
 
 $account->log(LOG_TYPE_MOVEMENT, 'Player plots to ' . $target . '.', $player->getSectorID());
 
-$path = Plotter::findReversiblePathToX(SmrSector::getSector($player->getGameID(), $target), SmrSector::getSector($player->getGameID(), $start), true);
+$path = Plotter::findReversiblePathToX($targetSector, $startSector, true);
 
 // common processing
 require('course_plot_processing.inc');
