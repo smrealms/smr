@@ -4,11 +4,6 @@ $shipID = $var['ship_id'];
 $newShip = AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()), $shipID);
 $cost = $ship->getCostToUpgrade($shipID);
 
-// trade master 33
-// trip maker 30
-//(22,25,23,75,43,55,61,24,21,38,67,33,49)
-// Top racials minus ATM + top UG/FED are restricted 
-
 if ($newShip['AlignRestriction'] == BUYER_RESTRICTION_EVIL && $player->getAlignment() > ALIGNMENT_EVIL) {
 	create_error('You can\'t buy smuggler ships!');
 }
@@ -20,9 +15,6 @@ if ($newShip['AlignRestriction'] == BUYER_RESTRICTION_GOOD && $player->getAlignm
 if ($newShip['RaceID'] != RACE_NEUTRAL && $player->getRaceID() != $newShip['RaceID']) {
 	create_error('You can\'t buy other race\'s ships!');
 }
-
-/*if ($player->getAccountID() == 101)
-	create_error('Cheaters do NOT get ships!');*/
 
 // do we have enough cash?
 if ($player->getCredits() < $cost) {
