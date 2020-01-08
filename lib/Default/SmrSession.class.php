@@ -157,8 +157,7 @@ class SmrSession {
 		// now try the cookie
 		if (isset($_COOKIE['session_id']) && strlen($_COOKIE['session_id']) === 32) {
 			self::$session_id = $_COOKIE['session_id'];
-		}
-		else {
+		} else {
 			// create a new session id
 			do {
 				self::$session_id = md5(uniqid(strval(rand())));
@@ -212,18 +211,15 @@ class SmrSession {
 				self::$account_id = 0;
 				self::$game_id = 0;
 				self::$var = array();
-			}
-			else {
+			} else {
 				foreach (self::$var as $key => &$value) {
 					if ($value['Expires'] > 0 && $value['Expires'] <= TIME) { // Use 0 for infinity
 						//This link is no longer valid
 						unset(self::$var[$key]);
-					}
-					else if ($value['RemainingPageLoads'] < 0) {
+					} else if ($value['RemainingPageLoads'] < 0) {
 						//This link is no longer valid
 						unset(self::$var[$key]);
-					}
-					else {
+					} else {
 						--$value['RemainingPageLoads'];
 						if (isset($value['CommonID'])) {
 							self::$commonIDs[$value['CommonID']] = $key;
@@ -231,8 +227,7 @@ class SmrSession {
 					}
 				} unset($value);
 			}
-		}
-		else {
+		} else {
 			self::$generate = true;
 			self::$account_id = 0;
 			self::$game_id = 0;
@@ -253,8 +248,7 @@ class SmrSession {
 			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(TIME) : '') . ',session_var=' . self::$db->escapeBinary($compressed) .
 					',last_sn=' . self::$db->escapeString(self::$SN) .
 					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn=' . self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
-		}
-		else {
+		} else {
 			self::$db->query('DELETE FROM active_session WHERE account_id = ' . self::$db->escapeNumber(self::$account_id) . ' AND game_id = ' . self::$db->escapeNumber(self::$game_id));
 			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(TIME) . ',' . self::$db->escapeBinary($compressed) . ')');
 			self::$generate = false;
@@ -401,8 +395,7 @@ class SmrSession {
 		if ($value === null) {
 			unset($var[$key]);
 			unset(self::$var[self::$SN][$key]);
-		}
-		else {
+		} else {
 			$var[$key] = $value;
 			self::$var[self::$SN][$key] = $value;
 		}
@@ -424,8 +417,7 @@ class SmrSession {
 
 		if ($sn === false) {
 			$sn = self::generateSN($container);
-		}
-		else {
+		} else {
 			// If we've been provided an SN to use then copy over the existing 'PreviousRequestTime'
 			$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime'];
 		}
@@ -438,8 +430,7 @@ class SmrSession {
 		if (isset(self::$commonIDs[$container['CommonID']])) {
 			$sn = self::$commonIDs[$container['CommonID']];
 			$container['PreviousRequestTime'] = isset(self::$var[$sn]) ? self::$var[$sn]['PreviousRequestTime'] : MICRO_TIME;
-		}
-		else {
+		} else {
 			do {
 				$sn = substr(md5(strval(rand())), 0, 8);
 			} while (isset(self::$var[$sn]));

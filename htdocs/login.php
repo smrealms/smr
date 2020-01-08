@@ -50,7 +50,6 @@ try {
 	$template->assign('Body', 'login/login.php');
 	$template->display('login/skeleton.php');
 
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }

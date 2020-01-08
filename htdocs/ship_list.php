@@ -16,8 +16,7 @@ try {
 	$template->assign('shipArray', $shipArray);
 
 	$template->display('ship_list.php');
-}
-catch(Throwable $e) {
+} catch(Throwable $e) {
 	handleException($e);
 }
 
@@ -25,7 +24,7 @@ function buildSelector($db, $name, $table) {
 	$selector = '<select onchange="filterSelect(this)"><option>All</option>';
 	$db->query('SELECT DISTINCT ' . $name . ' FROM ' . $table . ' ORDER BY ' . $name);
 	while ($db->nextRecord()) {
-		$selector .= '<option>'.$db->getField($name).'</option>';
+		$selector .= '<option>' . $db->getField($name) . '</option>';
 	}
 	$selector .= '</select>';
 	return $selector;

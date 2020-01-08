@@ -87,32 +87,32 @@ if(isset($PortCombatResults['Drones'])) {
 			} else {
 				?> destroying <?php
 				$DamageTypes = 0;
-				if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+				if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
+				if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+				if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
-				if($ActualDamage['Shield'] > 0) {
+				if ($ActualDamage['Shield'] > 0) {
 					?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
 					$this->doDamageTypeReductionDisplay($DamageTypes);
 				}
-				if($ActualDamage['NumCDs'] > 0) {
+				if ($ActualDamage['NumCDs'] > 0) {
 					?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
 					$this->doDamageTypeReductionDisplay($DamageTypes);
 				}
-				if($ActualDamage['Armour'] > 0) {
+				if ($ActualDamage['Armour'] > 0) {
 					?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
 				}
 			}
 		}
 	} ?>.
 	<br /><?php
-	if($ActualDamage['KillingShot']) {
-		$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>$Drones['KillResults'],'TargetPlayer'=>$TargetPlayer));
+	if ($ActualDamage['KillingShot']) {
+		$this->includeTemplate('includes/TraderCombatKillMessage.inc', array('KillResults'=>$Drones['KillResults'], 'TargetPlayer'=>$TargetPlayer));
 	}
 }
 
 echo $CombatPort->getDisplayName();
-if($TotalDamage > 0) {
+if ($TotalDamage > 0) {
 	?> hit for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
 } else {
 	?> does no damage this round<?php

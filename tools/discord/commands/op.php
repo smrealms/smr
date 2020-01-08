@@ -6,7 +6,9 @@ require_once(TOOLS . 'chat_helpers/channel_msg_op_turns.php');
 
 $fn_op = function($message) {
 	$link = new GameLink($message->channel, $message->author);
-	if (!$link->valid) return;
+	if (!$link->valid) {
+		return;
+	}
 	$player = $link->player;
 
 	// print info about the next op
@@ -16,7 +18,9 @@ $fn_op = function($message) {
 
 $fn_op_list = function($message) {
 	$link = new GameLink($message->channel, $message->author);
-	if (!$link->valid) return;
+	if (!$link->valid) {
+		return;
+	}
 	$player = $link->player;
 
 	// print list of attendees
@@ -26,7 +30,9 @@ $fn_op_list = function($message) {
 
 $fn_op_turns = function($message) {
 	$link = new GameLink($message->channel, $message->author);
-	if (!$link->valid) return;
+	if (!$link->valid) {
+		return;
+	}
 	$player = $link->player;
 
 	// print list of attendees
