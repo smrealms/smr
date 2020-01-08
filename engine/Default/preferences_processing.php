@@ -3,8 +3,7 @@
 $container = create_container('skeleton.php');
 if (SmrSession::hasGame()) {
 	$container['body'] = 'current_sector.php';
-}
-else {
+} else {
 	$container['body'] = 'game_play.php';
 }
 $action = $_REQUEST['action'];
@@ -17,8 +16,7 @@ if ($action == 'Save and resend validation code') {
 	// overwrite container
 	$container['body'] = 'validate.php';
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
-}
-elseif ($action == 'Change Password') {
+} elseif ($action == 'Change Password') {
 	$new_password = $_REQUEST['new_password'];
 	$old_password = $_REQUEST['old_password'];
 	$retype_password = $_REQUEST['retype_password'];
@@ -41,8 +39,7 @@ elseif ($action == 'Change Password') {
 
 	$account->setPassword($new_password);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your password.';
-}
-elseif ($action == 'Change Name') {
+} elseif ($action == 'Change Name') {
 	$HoF_name = trim($_REQUEST['HoF_name']);
 
 	$limited_char = 0;
@@ -67,18 +64,20 @@ elseif ($action == 'Change Name') {
 	}
 
 	//disallow blank names
-	if (empty($HoF_name) || $HoF_name == '') create_error('You Hall of Fame name must contain characters!');
+	if (empty($HoF_name) || $HoF_name == '') {
+		create_error('You Hall of Fame name must contain characters!');
+	}
 
 	//no duplicates
 	$db->query('SELECT * FROM account WHERE hof_name = ' . $db->escapeString($HoF_name) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-	if ($db->nextRecord()) create_error('Someone is already using that name!');
+	if ($db->nextRecord()) {
+		create_error('Someone is already using that name!');
+	}
 
 	// set the HoF name in account stat
 	$account->setHofName($HoF_name);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your hall of fame name.';
-}
-
-elseif ($action == 'Change Discord ID') {
+} elseif ($action == 'Change Discord ID') {
 	$discordId = trim($_REQUEST['discord_id']);
 
 	if (empty($discordId)) {
@@ -88,14 +87,14 @@ elseif ($action == 'Change Discord ID') {
 	} else {
 		// no duplicates
 		$db->query('SELECT * FROM account WHERE discord_id =' . $db->escapeString($discordId) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-		if ($db->nextRecord()) create_error('Someone is already using that Discord User ID!');
+		if ($db->nextRecord()) {
+			create_error('Someone is already using that Discord User ID!');
+		}
 
 		$account->setDiscordId($discordId);
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your Discord User ID.';
 	}
-}
-
-elseif ($action == 'Change IRC Nick') {
+} elseif ($action == 'Change IRC Nick') {
 	$ircNick = trim($_REQUEST['irc_nick']);
 
 	for ($i = 0; $i < strlen($ircNick); $i++) {
@@ -113,7 +112,9 @@ elseif ($action == 'Change IRC Nick') {
 
 		// no duplicates
 		$db->query('SELECT * FROM account WHERE irc_nick = ' . $db->escapeString($ircNick) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-		if ($db->nextRecord()) create_error('Someone is already using that nick!');
+		if ($db->nextRecord()) {
+			create_error('Someone is already using that nick!');
+		}
 
 		// save irc nick in db and set message
 		$account->setIrcNick($ircNick);
@@ -121,8 +122,7 @@ elseif ($action == 'Change IRC Nick') {
 
 	}
 
-}
-elseif ($action == 'Yes') {
+} elseif ($action == 'Yes') {
 	$account_id = $var['account_id'];
 	$amount = $var['amount'];
 
@@ -134,8 +134,7 @@ elseif ($action == 'Yes') {
 	// add to him
 	$his_account->increaseSmrCredits($amount);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have sent SMR credits.';
-}
-elseif ($action == 'Change Timezone') {
+} elseif ($action == 'Change Timezone') {
 	$timez = $_REQUEST['timez'];
 	if (!is_numeric($timez)) {
 		create_error('Numbers only please');
@@ -143,25 +142,20 @@ elseif ($action == 'Change Timezone') {
 
 	$db->query('UPDATE account SET offset = ' . $db->escapeNumber($timez) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
-}
-elseif ($action == 'Change Date Formats') {
+} elseif ($action == 'Change Date Formats') {
 	$account->setShortDateFormat($_REQUEST['dateformat']);
 	$account->setShortTimeFormat($_REQUEST['timeformat']);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your date formats.';
-}
-elseif ($action == 'Change Images') {
+} elseif ($action == 'Change Images') {
 	$account->setDisplayShipImages($_REQUEST['images']);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
-}
-elseif ($action == 'Change Centering') {
+} elseif ($action == 'Change Centering') {
 	$account->setCenterGalaxyMapOnPlayer($_REQUEST['centergalmap'] == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
-}
-else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50) {
+} else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50) {
 	$account->setFontSize($_REQUEST['fontsize']);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your font size.';
-}
-else if ($action == 'Change CSS Options') {
+} else if ($action == 'Change CSS Options') {
 	$account->setCssLink($_REQUEST['csslink']);
 	if ($_REQUEST['template'] == 'None') {
 		$account->setDefaultCSSEnabled(false);
@@ -172,24 +166,20 @@ else if ($action == 'Change CSS Options') {
 		$account->setColourScheme($cssColourScheme);
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
-}
-else if ($action == 'Change Kamikaze Setting') {
+} else if ($action == 'Change Kamikaze Setting') {
 	$player->setCombatDronesKamikazeOnMines($_REQUEST['kamikaze'] == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
-}
-else if ($action == 'Change Message Setting') {
+} else if ($action == 'Change Message Setting') {
 	$player->setForceDropMessages($_REQUEST['forceDropMessages'] == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your message options.';
-}
-else if ($action == 'Save Hotkeys') {
+} else if ($action == 'Save Hotkeys') {
 	foreach (AbstractSmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
 		if (isset($_REQUEST[$hotkey])) {
 			$account->setHotkey($hotkey, explode(' ', $_REQUEST[$hotkey]));
 		}
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
-}
-else if (strpos(trim($action), 'Alter Player') === 0) {
+} else if (strpos(trim($action), 'Alter Player') === 0) {
 	// trim input now
 	$player_name = trim($_POST['PlayerName']);
 
@@ -247,8 +237,7 @@ else if (strpos(trim($action), 'Alter Player') === 0) {
 	$news = 'Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink();
 	$db->query('INSERT INTO news (time, news_message, game_id, type) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
-}
-else if ($action == 'Update Colours') {
+} else if ($action == 'Update Colours') {
 	$friendlyColour = $_REQUEST['friendly_color'];
 	$neutralColour = $_REQUEST['neutral_color'];
 	$enemyColour = $_REQUEST['enemy_color'];

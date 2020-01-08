@@ -13,8 +13,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			$this->maxDamage = 2;
 			$this->shieldDamage = 2;
 			$this->armourDamage = 2;
-		}
-		else {
+		} else {
 			$this->maxDamage = 1;
 			$this->shieldDamage = 1;
 			$this->armourDamage = 1;
@@ -129,8 +128,10 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 	}
 	
 	public function &getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
-		if (!$this->canShootForces()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+		if (!$this->canShootForces()) {
+			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		}
 		$damage =& $this->getModifiedDamage();
 		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstForces($weaponPlayer, $forces) / 100);
 		$damage['Kamikaze'] = 0;
@@ -151,8 +152,10 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 	}
 	
 	public function &getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
-		if (!$this->canShootPorts()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+		if (!$this->canShootPorts()) {
+			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		}
 		$damage =& $this->getModifiedDamage();
 		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPort($weaponPlayer, $port) / 100);
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
@@ -163,8 +166,10 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 	}
 	
 	public function &getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) {
-		if (!$this->canShootPlanets()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+		if (!$this->canShootPlanets()) {
+			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		}
 		$damage =& $this->getModifiedDamage();
 		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet) / 100);
 		$planetMod = self::PLANET_DAMAGE_MOD;

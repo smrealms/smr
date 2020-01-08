@@ -279,8 +279,7 @@ class SmrForce {
 		// Changed (26/10/05) - scout drones count * 2
 		if ($this->getCDs() == 0 && $this->getMines() == 0 && $this->getSDs() > 0) {
 			$time = self::TIME_PER_SCOUT_ONLY * $this->getSDs();
-		}
-		else {
+		} else {
 			$time = ($this->getCDs() * self::TIME_PERCENT_PER_COMBAT + $this->getSDs() * self::TIME_PERCENT_PER_SCOUT + $this->getMines() * self::TIME_PERCENT_PER_MINE) * $this->getMaxGalaxyExpireTime();
 		}
 		$this->setExpire(TIME + $time);
@@ -307,11 +306,9 @@ class SmrForce {
 		}
 		if ($mines < 10) {
 			$turns = 1;
-		}
-		else if ($mines < 25) {
+		} else if ($mines < 25) {
 			$turns = 2;
-		}
-		else {
+		} else {
 			$turns = 3;
 		}
 		if ($ship->isFederal() || $ship->hasDCS()) {
@@ -366,12 +363,10 @@ class SmrForce {
 			if (!$this->exists()) {
 				$this->db->query('DELETE FROM sector_has_forces WHERE ' . $this->SQL);
 				$this->isNew = true;
-			}
-			else if ($this->hasChanged) {
+			} else if ($this->hasChanged) {
 				$this->db->query('UPDATE sector_has_forces SET combat_drones = ' . $this->db->escapeNumber($this->combatDrones) . ', scout_drones = ' . $this->db->escapeNumber($this->scoutDrones) . ', mines = ' . $this->db->escapeNumber($this->mines) . ', expire_time = ' . $this->db->escapeNumber($this->expire) . ' WHERE ' . $this->SQL);
 			}
-		}
-		else if ($this->exists()) {
+		} else if ($this->exists()) {
 			$this->db->query('INSERT INTO sector_has_forces (game_id, sector_id, owner_id, combat_drones, scout_drones, mines, expire_time)
 								VALUES('.$this->db->escapeNumber($this->gameID) . ', ' . $this->db->escapeNumber($this->sectorID) . ', ' . $this->db->escapeNumber($this->ownerID) . ', ' . $this->db->escapeNumber($this->combatDrones) . ', ' . $this->db->escapeNumber($this->scoutDrones) . ', ' . $this->db->escapeNumber($this->mines) . ', ' . $this->db->escapeNumber($this->expire) . ')');
 			$this->isNew = false;

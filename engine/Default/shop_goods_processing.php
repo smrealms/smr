@@ -58,10 +58,14 @@ if ($transaction == 'Buy' && $player->getCredits() < $bargain_price) {
 // get relations for us (global + personal)
 $relations = $player->getRelation($port->getRaceID());
 
-if (!isset($var['ideal_price'])) SmrSession::updateVar('ideal_price', $port->getIdealPrice($good_id, $transaction, $amount, $relations));
+if (!isset($var['ideal_price'])) {
+	SmrSession::updateVar('ideal_price', $port->getIdealPrice($good_id, $transaction, $amount, $relations));
+}
 $ideal_price = $var['ideal_price'];
 
-if (!isset($var['offered_price'])) SmrSession::updateVar('offered_price', $port->getOfferPrice($ideal_price, $relations, $transaction));
+if (!isset($var['offered_price'])) {
+	SmrSession::updateVar('offered_price', $port->getOfferPrice($ideal_price, $relations, $transaction));
+}
 $offered_price = $var['offered_price'];
 
 // nothing should happen here but just to avoid / by 0
@@ -120,8 +124,7 @@ if ($transaction == 'Steal' ||
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Buying'), HOF_PUBLIC);
 		$port->buyGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
-	}
-	elseif ($transaction == 'Sell') {
+	} elseif ($transaction == 'Sell') {
 		$msg_transaction = 'sold';
 		$ship->decreaseCargo($good_id, $amount);
 		$player->increaseCredits($bargain_price);
@@ -131,8 +134,7 @@ if ($transaction == 'Steal' ||
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Selling'), HOF_PUBLIC);
 		$port->sellGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
-	}
-	elseif ($transaction == 'Steal') {
+	} elseif ($transaction == 'Steal') {
 		$msg_transaction = 'stolen';
 		$ship->increaseCargo($good_id, $amount);
 		$player->increaseHOF($amount, array('Trade', 'Goods', 'Stolen'), HOF_ALLIANCE);
@@ -168,8 +170,7 @@ if ($transaction == 'Steal' ||
 		$container['body'] = 'shop_goods.php';
 	}
 
-}
-else {
+} else {
 	// does the trader try to outsmart us?
 	$container = create_container('skeleton.php', 'shop_goods_trade.php');
 	transfer('ideal_price');

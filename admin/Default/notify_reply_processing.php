@@ -30,7 +30,9 @@ if (isset($offenderReply) && $offenderReply != '') {
 		$offenderAccount->addPoints($_REQUEST['offenderBanPoints'], $account, 7, $suspicion);
 	}
 }
-if (isset($_REQUEST['offendedReply'])) $offendedReply = $_REQUEST['offendedReply'];
+if (isset($_REQUEST['offendedReply'])) {
+	$offendedReply = $_REQUEST['offendedReply'];
+}
 
 if (isset($offendedReply) && $offendedReply != '') {
 	//next message

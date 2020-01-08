@@ -4,8 +4,11 @@ if (!$player->getGame()->hasStarted()) {
 	create_error('You cannot move until the game has started!');
 }
 
-if (isset($_REQUEST['target'])) $target = trim($_REQUEST['target']);
-else $target = $var['target'];
+if (isset($_REQUEST['target'])) {
+	$target = trim($_REQUEST['target']);
+} else {
+	$target = $var['target'];
+}
 
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
@@ -86,8 +89,7 @@ if ($misjump > 0) { // we missed the sector
 	}
 	$player->setSectorID($misjumpSector);
 	unset($distances);
-}
-else { // we hit it. exactly
+} else { // we hit it. exactly
 	$player->setSectorID($targetSector->getSectorID());
 }
 $player->takeTurns($turnsToJump, $turnsToJump);
@@ -124,8 +126,7 @@ if ($mineOwnerID) {
 		$container = create_container('skeleton.php', 'current_sector.php');
 		$container['msg'] = 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.';
 		forward($container);
-	}
-	else {
+	} else {
 		$container = create_container('forces_attack_processing.php');
 		$container['action'] = 'bump';
 		$container['owner_id'] = $mineOwnerID;

@@ -22,8 +22,7 @@ if ($action == 'Take Ownership') {
 	$planet->removePassword();
 	$planet->update();
 	$account->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.', $player->getSectorID());
-}
-else if ($action == 'Rename') {
+} else if ($action == 'Rename') {
 	$name = trim($_REQUEST['name']);
 	if (empty($name)) {
 		create_error('You cannot leave your planet nameless!');
@@ -33,8 +32,7 @@ else if ($action == 'Rename') {
 	$planet->update();
 	$account->log(LOG_TYPE_PLANETS, 'Player renames planet to ' . $name . '.', $player->getSectorID());
 
-}
-else if ($action == 'Set Password') {
+} else if ($action == 'Set Password') {
 	// set password
 	$planet->setPassword($password);
 	$planet->update();

@@ -28,11 +28,9 @@ if (isset($var['alliance_id'])) {
 		$player->sendMessage($db->getInt('account_id'), MSG_ALLIANCE, $message, false);
 	}
 	$player->sendMessage($player->getAccountID(), MSG_ALLIANCE, $message, true, false);
-}
-else if (!empty($var['receiver'])) {
+} else if (!empty($var['receiver'])) {
 	$player->sendMessage($var['receiver'], MSG_PLAYER, $message);
-}
-else {
+} else {
 	$player->sendGlobalMessage($message);
 }
 

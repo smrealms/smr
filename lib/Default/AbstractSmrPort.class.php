@@ -153,8 +153,7 @@ class AbstractSmrPort {
 			$this->checkDefenses();
 			$this->getGoods();
 			$this->checkForUpgrade();
-		}
-		else {
+		} else {
 			$this->shields = 0;
 			$this->combatDrones = 0;
 			$this->armour = 0;
@@ -566,8 +565,7 @@ class AbstractSmrPort {
 		}
 		if (($key = array_search($goodID, $this->goodIDs['Buy'])) !== false) {
 			array_splice($this->goodIDs['Buy'], $key, 1);
-		}
-		elseif (($key = array_search($goodID, $this->goodIDs['Sell'])) !== false) {
+		} elseif (($key = array_search($goodID, $this->goodIDs['Sell'])) !== false) {
 			array_splice($this->goodIDs['Sell'], $key, 1);
 		}
 		
@@ -649,8 +647,7 @@ class AbstractSmrPort {
 			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> A distress beacon has been activated by the port in sector ' . Globals::getSectorBBLink($this->getSectorID()) . '. It is under attack by ';
 			if ($trigger->hasAlliance()) {
 				$newsMessage .= 'members of ' . $trigger->getAllianceBBLink();
-			}
-			else {
+			} else {
 				$newsMessage .= $trigger->getBBLink();
 			}
 			
@@ -659,8 +656,7 @@ class AbstractSmrPort {
 
 			if ($trigger->hasAlliance()) {
 				$newsMessage .= 'bounties of <span class="creds">' . $bounty . '</span> credits for the deaths of any raiding members of ' . $trigger->getAllianceBBLink();
-			}
-			else {
+			} else {
 				$newsMessage .= 'a bounty of <span class="creds">' . $bounty . '</span> credits for the death of ' . $trigger->getBBLink();
 			}
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
@@ -1069,8 +1065,7 @@ class AbstractSmrPort {
 		if ($this->getCredits() > 0) {
 			$container = create_container('skeleton.php', 'port_payout_processing.php');
 			$container['PayoutType'] = 'Loot';
-		}
-		else {
+		} else {
 			$container = create_container('skeleton.php', 'current_sector.php');
 			$container['msg'] = 'This port has already been looted.';
 		}
@@ -1189,8 +1184,7 @@ class AbstractSmrPort {
 								', attack_started = ' . $this->db->escapeNumber($this->getAttackStarted()) .
 								', race_id = ' . $this->db->escapeNumber($this->getRaceID()) . '
 								WHERE ' . $this->SQL . ' LIMIT 1');
-			}
-			else {
+			} else {
 				$this->db->query('INSERT INTO port (game_id,sector_id,experience,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)
 								values
 								(' . $this->db->escapeNumber($this->getGameID()) .
@@ -1273,8 +1267,7 @@ class AbstractSmrPort {
 						$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'], $damage['Armour']));
 					}
 				}
-			}
-			else { //hit drones behind shields
+			} else { //hit drones behind shields
 				$cdDamage = $this->doCDDamage(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
 			}
 		}
@@ -1370,8 +1363,11 @@ class AbstractSmrPort {
 		
 		// News Entry
 		$news = $this->getDisplayName() . ' has been successfully raided by ';
-		if ($killer->hasAlliance()) $news .= 'the members of <span class="yellow">' . $killer->getAllianceBBLink() . '</span>';
-		else $news .= $killer->getBBLink();
+		if ($killer->hasAlliance()) {
+			$news .= 'the members of <span class="yellow">' . $killer->getAllianceBBLink() . '</span>';
+		} else {
+			$news .= $killer->getBBLink();
+		}
 		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
 		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();

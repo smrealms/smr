@@ -145,8 +145,7 @@ while ($running) {
 			sleep(60);
 
 		}
-	}
-	catch (TimeoutException $e) {
+	} catch (TimeoutException $e) {
 		// Ignore the timeout exception, we'll loop round and reconnect.
 	}
 } // end of while running

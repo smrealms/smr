@@ -22,8 +22,7 @@ class Menu {
 
 		if ($alliance_id) {
 			$in_alliance = ($alliance_id == $player->getAllianceID());
-		}
-		else {
+		} else {
 			$in_alliance = $player->hasAlliance();
 		}
 		if (!$in_alliance) {
@@ -36,8 +35,7 @@ class Menu {
 				$mbRead = $db->getBoolean('mb_read');
 				$modRead = $db->getBoolean('mod_read');
 				$planetLand = $db->getBoolean('planet_land');
-			}
-			else {
+			} else {
 				$mbRead = FALSE;
 				$modRead = FALSE;
 				$planetLand = FALSE;
@@ -366,8 +364,7 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 				}
 			}
 			$return .= ('</small></td>');
-		}
-		else {
+		} else {
 			// if it's not the first entry we have to put
 			// additional empty cell for the spacer
 			//if ($number > 0)

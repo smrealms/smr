@@ -51,8 +51,7 @@ if ($var['task'] == 'reset_image') {
 					WHERE album_id = '.$db->escapeNumber($account_id) . ' AND
 						  comment_id IN ('.$db->escapeArray($comment_ids) . ')');
 	}
-}
-else {
+} else {
 	create_error('No action chosen!');
 }
 

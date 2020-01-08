@@ -53,8 +53,7 @@ function main_page() {
 
 			echo('<span style="font-size:85%;"><b>[' . date(defined('DATE_FULL_SHORT') ?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $created) . ']</b> Picture of <a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> added</span><br />');
 		}
-	}
-	else {
+	} else {
 		echo('<span style="font-size:85%;">no entries</span>');
 	}
 	echo('</p>');
@@ -88,8 +87,7 @@ function album_entry($album_id) {
 		$other = nl2br(stripslashes($db->getField('other')));
 		$page_views = $db->getInt('page_views');
 		$disabled = $db->getBoolean('disabled');
-	}
-	else {
+	} else {
 		echo('<h1>Error</h1>');
 		echo('This user doesn\'t have an entry in our album!');
 		return;
@@ -165,8 +163,7 @@ function album_entry($album_id) {
 
 	if (empty($website)) {
 		$website = 'N/A';
-	}
-	else {
+	} else {
 		$website = '<a href="' . $website . '" target="_new">' . $website . '</a>';
 	}
 	echo('<tr>');
@@ -227,8 +224,7 @@ function album_entry($album_id) {
 		echo('</tr>');
 		echo('</table>');
 		echo('</form>');
-	}
-	else {
+	} else {
 		echo('<p>Please <a href="/login.php?return_page=/album/?nick=' . urlencode($nick) . '"><u>login</u></a> if you want comment on this picture!</p>');
 	}
 

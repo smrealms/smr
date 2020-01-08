@@ -19,8 +19,7 @@ if (empty($account_id)) {
 		$approved[$accountId] = get_album_nick($accountId);
 	}
 	$template->assign('Approved', $approved);
-}
-else {
+} else {
 	// check if the given account really has an entry
 	$db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account_id) . ' AND Approved = \'YES\'');
 	if ($db->nextRecord()) {

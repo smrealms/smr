@@ -74,8 +74,7 @@ try {
 				}
 			}
 	
-		}
-		elseif ($db->getNumRows() == 1) {
+		} elseif ($db->getNumRows() == 1) {
 			if ($db->nextRecord()) {
 				album_entry($db->getInt('album_id'));
 			} else {
@@ -87,8 +86,7 @@ try {
 	} else {
 		main_page();
 	}
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }
 ?>
