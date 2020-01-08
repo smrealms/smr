@@ -74,9 +74,15 @@ try {
 	// Must not call `get_file_loc` until after we have set $overrideGameID
 	// (unless we're exiting immediately with an error, as above).
 	$overrideGameID = 0;
-	if (isset($var['game_id']) && is_numeric($var['game_id'])) $overrideGameID = $var['game_id'];
-	if ($overrideGameID == 0 && isset($var['GameID']) && is_numeric($var['GameID'])) $overrideGameID = $var['GameID'];
-	if ($overrideGameID == 0) $overrideGameID = SmrSession::getGameID();
+	if (isset($var['game_id']) && is_numeric($var['game_id'])) {
+		$overrideGameID = $var['game_id'];
+	}
+	if ($overrideGameID == 0 && isset($var['GameID']) && is_numeric($var['GameID'])) {
+		$overrideGameID = $var['GameID'];
+	}
+	if ($overrideGameID == 0) {
+		$overrideGameID = SmrSession::getGameID();
+	}
 
 	require_once(get_file_loc('smr.inc'));
 
@@ -92,22 +98,19 @@ try {
 			} else {
 				forward(create_container('skeleton.php', 'invalid_email.php'));
 			}
-		}
-		else if ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
+		} else if ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
 			if (isset($var['do_reopen_account'])) {
 				// The user has requested to reopen their account
 				$account->unbanAccount($account);
 			} else {
 				forward(create_container('skeleton.php', 'reopen_account.php'));
 			}
-		}
-		else {
+		} else {
 			forward(create_container('disabled.php'));
 		}
 	}
 	
 	do_voodoo();
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }
