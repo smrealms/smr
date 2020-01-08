@@ -31,8 +31,7 @@ try {
 				header('Location: /login_social_create.php');
 				exit;
 			}
-		}
-		else {
+		} else {
 			$login = (isset($_REQUEST['login']) ? $_REQUEST['login'] : (isset($var['login']) ? $var['login'] : ''));
 			$password = (isset($_REQUEST['password']) ? $_REQUEST['password'] : (isset($var['password']) ? $var['password'] : ''));
 
@@ -46,8 +45,7 @@ try {
 			$account = SmrAccount::getAccountByName($login);
 			if (is_object($account) && $account->checkPassword($password)) {
 				SmrSession::setAccount($account);
-			}
-			else {
+			} else {
 				$msg = 'Password is incorrect!';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
@@ -142,39 +140,56 @@ try {
 			//convert to array
 			$old = explode('-', $db->getField('array'));
 			//get rid of old version cookie since it isn't optimal.
-			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) $old = array();
-		} else $old = array();
+			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) {
+				$old = array();
+			}
+		} else {
+			$old = array();
+		}
 		$old[0] = MULTI_CHECKING_COOKIE_VERSION;
-		if (!in_array($account->getAccountID(), $old)) $old[] = $account->getAccountID();
-	}
-	else {
+		if (!in_array($account->getAccountID(), $old)) {
+			$old[] = $account->getAccountID();
+		}
+	} else {
 
 		//we have a cookie so we see if we add to it etc
 		//break cookie into array
 		$cookie = explode('-', $_COOKIE['Session_Info']);
 		//check for current version
-		if ($cookie[0] != MULTI_CHECKING_COOKIE_VERSION) $cookie = array();
+		if ($cookie[0] != MULTI_CHECKING_COOKIE_VERSION) {
+			$cookie = array();
+		}
 		$cookie[0] = MULTI_CHECKING_COOKIE_VERSION;
 		//add this acc to the cookie if it isn't there
-		if (!in_array($account->getAccountID(), $cookie)) $cookie[] = $account->getAccountID();
+		if (!in_array($account->getAccountID(), $cookie)) {
+			$cookie[] = $account->getAccountID();
+		}
 
 		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = ' . $account->getAccountID());
 		if ($db->nextRecord()) {
 			//convert to array
 			$old = explode('-', $db->getField('array'));
-			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) $old = array();
-		} else $old = array();
+			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) {
+				$old = array();
+			}
+		} else {
+			$old = array();
+		}
 		$old[0] = MULTI_CHECKING_COOKIE_VERSION;
 		//merge arrays...but keys are all different so we go through each value
 		foreach ($cookie as $value) {
-			if (!in_array($value, $old)) $old[] = $value;
+			if (!in_array($value, $old)) {
+				$old[] = $value;
+			}
 		}
 	}
 	$use = (count($old) <= 2) ? 'FALSE' : 'TRUE';
 	//check that each value is legit and add it to db string
 	$new = MULTI_CHECKING_COOKIE_VERSION;
 	foreach ($old as $accID) {
-		if (is_numeric($accID)) $new .= '-' . $accID;
+		if (is_numeric($accID)) {
+			$new .= '-' . $accID;
+		}
 	}
 	$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($new) . ', ' . $db->escapeString($use) . ')');
 	//now we update their cookie with the newest info
@@ -194,7 +209,6 @@ try {
 
 	header('Location: ' . $href);
 	exit;
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }

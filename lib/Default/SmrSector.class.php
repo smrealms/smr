@@ -126,15 +126,13 @@ class SmrSector {
 				$this->links['Right'] = $db->getInt('link_right');
 			}
 			$this->warp = $db->getInt('warp');
-		}
-		else if ($create) {
+		} else if ($create) {
 			$this->battles = 0;
 			$this->links = array();
 			$this->warp = 0;
 			$this->isNew = true;
 			return;
-		}
-		else {
+		} else {
 			throw new SectorNotFoundException('No sector ' . $sectorID . ' in game ' . $gameID);
 		}
 	}
@@ -492,8 +490,7 @@ class SmrSector {
 	public function toggleLink($dir) {
 		if ($this->hasLink($dir)) {
 			$this->disableLink($dir);
-		}
-		else {
+		} else {
 			$this->enableLink($dir);
 		}
 	}

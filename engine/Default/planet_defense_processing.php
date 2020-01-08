@@ -38,8 +38,7 @@ if ($action == 'Ship') {
 		$planet->decreaseShields($amount);
 		$ship->increaseShields($amount);
 		$account->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' shields from planet.', $player->getSectorID());
-	}
-	else if ($type_id == HARDWARE_COMBAT) {
+	} else if ($type_id == HARDWARE_COMBAT) {
 		// do we want transfer more than we have?
 		if ($amount > $planet->getCDs()) {
 			create_error('You can\'t take more drones from planet than are on it!');
@@ -54,8 +53,7 @@ if ($action == 'Ship') {
 		$planet->decreaseCDs($amount);
 		$ship->increaseCDs($amount);
 		$account->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' drones from planet.', $player->getSectorID());
-	}
-	else if ($type_id == HARDWARE_ARMOUR) {
+	} else if ($type_id == HARDWARE_ARMOUR) {
 		// do we want transfer more than we have?
 		if ($amount > $planet->getArmour()) {
 			create_error('You can\'t take more armour from planet than are on it!');
@@ -72,8 +70,7 @@ if ($action == 'Ship') {
 		$account->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' armour from planet.', $player->getSectorID());
 	}
 	
-}
-elseif ($action == 'Planet') {
+} elseif ($action == 'Planet') {
 	// does the user wants to transfer shields?
 	if ($type_id == HARDWARE_SHIELDS) {
 		// do we want transfer more than we have?
@@ -91,8 +88,7 @@ elseif ($action == 'Planet') {
 		$ship->decreaseShields($amount);
 		$account->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' shields on planet.', $player->getSectorID());
 	// does the user wants to transfer drones?
-	}
-	else if ($type_id == HARDWARE_COMBAT) {
+	} else if ($type_id == HARDWARE_COMBAT) {
 		// do we want transfer more than we have?
 		if ($amount > $ship->getCDs()) {
 			create_error('You can\'t transfer more combat drones than you carry!');
@@ -126,8 +122,7 @@ elseif ($action == 'Planet') {
 		$account->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' armour on planet.', $player->getSectorID());
 	}
 	
-}
-else {
+} else {
 	create_error('You must choose if you want to transfer to planet or to the ship!');
 }
 

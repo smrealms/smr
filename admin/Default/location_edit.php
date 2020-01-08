@@ -50,7 +50,6 @@ if (isset($var['location_type_id'])) {
 														'Name' => $db->getField('hardware_name'));
 	}
 	$template->assign('AllHardware', $hardware);
-}
-else {
+} else {
 	$template->assign('Locations', SmrLocation::getAllLocations());
 }

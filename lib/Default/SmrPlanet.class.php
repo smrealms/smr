@@ -151,26 +151,19 @@ class SmrPlanet {
 		$level = $this->getLevel();
 		if ($level < 9) {
 			return .0404;
-		}
-		elseif ($level < 19) {
+		} elseif ($level < 19) {
 			return .0609;
-		}
-		elseif ($level < 29) {
+		} elseif ($level < 29) {
 			return .1236;
-		}
-		elseif ($level < 39) {
+		} elseif ($level < 39) {
 			return .050625;
-		}
-		elseif ($level < 49) {
+		} elseif ($level < 49) {
 			return .0404;
-		}
-		elseif ($level < 59) {
+		} elseif ($level < 59) {
 			return .030225;
-		}
-		elseif ($level < 69) {
+		} elseif ($level < 69) {
 			return .0201;
-		}
-		else {
+		} else {
 			return .018081;
 		}
 	}
@@ -383,8 +376,7 @@ class SmrPlanet {
 		}
 		if ($delayed === false) {
 			$this->setShields($this->getShields() - $number);
-		}
-		else {
+		} else {
 			$this->delayedShieldsDelta -= $number;
 		}
 	}
@@ -395,8 +387,7 @@ class SmrPlanet {
 		}
 		if ($delayed === false) {
 			$this->setShields($this->getShields() + $number);
-		}
-		else {
+		} else {
 			$this->delayedShieldsDelta += $number;
 		}
 	}
@@ -428,8 +419,7 @@ class SmrPlanet {
 		}
 		if ($delayed === false) {
 			$this->setArmour($this->getArmour() - $number);
-		}
-		else {
+		} else {
 			$this->delayedArmourDelta -= $number;
 		}
 	}
@@ -440,8 +430,7 @@ class SmrPlanet {
 		}
 		if ($delayed === false) {
 			$this->setArmour($this->getArmour() + $number);
-		}
-		else {
+		} else {
 			$this->delayedArmourDelta += $number;
 		}
 	}
@@ -473,8 +462,7 @@ class SmrPlanet {
 		}
 		if ($delayed === false) {
 			$this->setCDs($this->getCDs() - $number);
-		}
-		else {
+		} else {
 			$this->delayedCDsDelta -= $number;
 		}
 	}
@@ -485,8 +473,7 @@ class SmrPlanet {
 		}
 		if ($delayed === false) {
 			$this->setCDs($this->getCDs() + $number);
-		}
-		else {
+		} else {
 			$this->delayedCDsDelta += $number;
 		}
 	}
@@ -597,8 +584,7 @@ class SmrPlanet {
 		if ($goodID === false) {
 			$stockpile = $this->getStockpile($goodID);
 			return count($stockpile) > 0 && max($stockpile) > 0;
-		}
-		else {
+		} else {
 			return $this->getStockpile($goodID) > 0;
 		}
 	}
@@ -832,8 +818,7 @@ class SmrPlanet {
 				if ($amount != 0) {
 					$this->db->query('REPLACE INTO planet_has_cargo (game_id, sector_id, good_id, amount) ' .
 										 'VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber($id) . ', ' . $this->db->escapeNumber($amount) . ')');
-				}
-				else {
+				} else {
 					$this->db->query('DELETE FROM planet_has_cargo WHERE ' . $this->SQL . '
 										AND good_id = ' . $this->db->escapeNumber($id));
 				}
@@ -862,8 +847,7 @@ class SmrPlanet {
 				if ($this->hasBuilding($id)) {
 					$this->db->query('REPLACE INTO planet_has_building (game_id, sector_id, construction_id, amount) ' .
 										'VALUES(' . $this->db->escapeNumber($this->gameID) . ', ' . $this->db->escapeNumber($this->sectorID) . ', ' . $this->db->escapeNumber($id) . ', ' . $this->db->escapeNumber($this->getBuilding($id)) . ')');
-				}
-				else {
+				} else {
 					$this->db->query('DELETE FROM planet_has_building WHERE ' . $this->SQL . '
 										AND construction_id = ' . $this->db->escapeNumber($id));
 				}
@@ -1237,8 +1221,7 @@ class SmrPlanet {
 					}
 				}
 
-			}
-			else { // hit drones behind shields - we should only use this reduced damage branch if we cannot hit shields.
+			} else { // hit drones behind shields - we should only use this reduced damage branch if we cannot hit shields.
 				$cdDamage = $this->doCDDamage(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT), $delayed);
 			}
 		}

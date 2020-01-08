@@ -35,8 +35,7 @@ try {
 			header('location: /error.php?msg=Invalid sector ID');
 			exit;
 		}
-	}
-	else if (isset($_REQUEST['galaxy_id'])) {
+	} else if (isset($_REQUEST['galaxy_id'])) {
 		$galaxyID = $_REQUEST['galaxy_id'];
 		if (!is_numeric($galaxyID)) {
 			header('location: /error.php?msg=Galaxy ID was not a number.');
@@ -44,8 +43,7 @@ try {
 		}
 		try {
 			$galaxy = SmrGalaxy::getGalaxy(SmrSession::getGameID(), $galaxyID);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			header('location: /error.php?msg=Invalid galaxy ID');
 			exit;
 		}
@@ -117,7 +115,6 @@ try {
 	$template->assign('AJAX_ENABLE_REFRESH', false);
 
 	$template->display('GalaxyMap.inc');
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }

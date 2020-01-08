@@ -35,9 +35,13 @@ while ($db->nextRecord()) {
 
 foreach ($links as $key => $linkArray) {
 	if ($linkArray['ID'] > 0 && $linkArray['ID'] != $player->getSectorID()) {
-		if ($player->getLastSectorID() == $linkArray['ID']) $class = 'lastVisited';
-		else if (isset($unvisited[$linkArray['ID']])) $class = 'unvisited';
-		else $class = 'visited';
+		if ($player->getLastSectorID() == $linkArray['ID']) {
+			$class = 'lastVisited';
+		} else if (isset($unvisited[$linkArray['ID']])) {
+			$class = 'unvisited';
+		} else {
+			$class = 'visited';
+		}
 		$links[$key]['Class'] = $class;
 	}
 }
@@ -83,11 +87,9 @@ if ($player->getNewbieTurns()) {
 	} else {
 		$protectionMessage = '<span class="blue">PROTECTION</span>: You are under <span class="green">NEWBIE</span> protection.';
 	}
-}
-elseif ($player->hasFederalProtection()) {
+} elseif ($player->hasFederalProtection()) {
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are under <span class="blue">FEDERAL</span> protection.';
-}
-elseif ($sector->offersFederalProtection()) {
+} elseif ($sector->offersFederalProtection()) {
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are <span class="red">NOT</span> under protection.';
 }
 
@@ -117,7 +119,9 @@ if (isset($var['msg'])) {
 }
 
 //error msgs take precedence
-if (isset($var['errorMsg'])) $template->assign('ErrorMessage', $var['errorMsg']);
+if (isset($var['errorMsg'])) {
+	$template->assign('ErrorMessage', $var['errorMsg']);
+}
 
 // *******************************************
 // *
@@ -152,8 +156,9 @@ function checkForForceRefreshMessage(&$msg) {
 				$remainingTime = $db->getInt('refresh_at') - TIME;
 				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
 				$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', \'[Force Check]\')');
+			} else {
+				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
 			}
-			else $forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
 			$template->assign('ForceRefreshMessage', $forceRefreshMessage);
 		}
 	}

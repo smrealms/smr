@@ -21,8 +21,7 @@ if ($action == 'Deposit') {
 	$db->query('SELECT transaction_id FROM anon_bank_transactions WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num) . ' ORDER BY transaction_id DESC LIMIT 1');
 	if ($db->nextRecord()) {
 		$trans_id = $db->getInt('transaction_id') + 1;
-	}
-	else {
+	} else {
 		$trans_id = 1;
 	}
 	$db->query('INSERT INTO anon_bank_transactions (account_id, game_id, anon_id, transaction_id, transaction, amount, time) ' .
@@ -32,8 +31,7 @@ if ($action == 'Deposit') {
 
 	// log action
 	$account->log(LOG_TYPE_BANK, 'Deposits ' . $amount . ' credits in anonymous account #' . $account_num, $player->getSectorID());
-}
-else {
+} else {
 	$db->query('SELECT * FROM anon_bank WHERE anon_id = ' . $db->escapeNumber($account_num) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$db->nextRecord();
 	if ($db->getInt('amount') < $amount) {
@@ -42,8 +40,7 @@ else {
 	$db->query('SELECT transaction_id FROM anon_bank_transactions WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num) . ' ORDER BY transaction_id DESC LIMIT 1');
 	if ($db->nextRecord()) {
 		$trans_id = $db->getInt('transaction_id') + 1;
-	}
-	else {
+	} else {
 		$trans_id = 1;
 	}
 	$db->query('INSERT INTO anon_bank_transactions (account_id, game_id, anon_id, transaction_id, transaction, amount, time)

@@ -2,8 +2,7 @@
 
 if (isset($var['RealX'])) {
 	$realX = $var['RealX'];
-}
-else {
+} else {
 	if (!isset($_REQUEST['xtype']) || !isset($_REQUEST['X'])) {
 		create_error('You have to select what you would like to find.');
 	}

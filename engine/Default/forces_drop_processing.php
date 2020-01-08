@@ -129,8 +129,7 @@ if ($change_combat_drones != 0) {
 	if ($change_combat_drones > 0) {
 		$ship->decreaseCDs($change_combat_drones, true);
 		$forces->addCDs($change_combat_drones);
-	}
-	else {
+	} else {
 		$ship->increaseCDs(-$change_combat_drones, true);
 		$forces->takeCDs(-$change_combat_drones);
 	}
@@ -140,8 +139,7 @@ if ($change_scout_drones != 0) {
 	if ($change_scout_drones > 0) {
 		$ship->decreaseSDs($change_scout_drones);
 		$forces->addSDs($change_scout_drones);
-	}
-	else {
+	} else {
 		$ship->increaseSDs(-$change_scout_drones);
 		$forces->takeSDs(-$change_scout_drones);
 	}
@@ -155,8 +153,7 @@ if ($change_mines != 0) {
 			$ship->decloak();
 			$player->giveTurns(1);
 		}
-	}
-	else {
+	} else {
 		$ship->increaseMines(-$change_mines);
 		$forces->takeMines(-$change_mines);
 	}
@@ -191,8 +188,7 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 			$scout_drones_message = 'added ';
 		}
 		$scout_drones_message .= $change_scout_drones . ' scout drone';
-	}
-	elseif ($change_scout_drones < 0) {
+	} elseif ($change_scout_drones < 0) {
 		$scout_drones_message = '';
 		if ((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines >= 0)) {
 			$scout_drones_message = 'removed ';

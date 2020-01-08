@@ -71,7 +71,6 @@ try {
 
 	header('Location: /album/?' . get_album_nick($album_id));
 	exit;
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }

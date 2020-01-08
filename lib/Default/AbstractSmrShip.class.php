@@ -273,8 +273,7 @@ abstract class AbstractSmrShip {
 		if ($replacement < 0) {
 			// Shift everything up by one and put the selected weapon at the bottom
 			array_push($this->weapons, array_shift($this->weapons));
-		}
-		else {
+		} else {
 			// Swap the selected weapon with the one above it
 			$temp = $this->weapons[$replacement];
 			$this->weapons[$replacement] = $this->weapons[$orderID];
@@ -288,8 +287,7 @@ abstract class AbstractSmrShip {
 		if ($replacement >= count($this->weapons)) {
 			// Shift everything down by one and put the selected weapon at the top
 			array_unshift($this->weapons, array_pop($this->weapons));
-		}
-		else {
+		} else {
 			// Swap the selected weapon with the one below it
 			$temp = $this->weapons[$replacement];
 			$this->weapons[$replacement] = $this->weapons[$orderID];
@@ -348,8 +346,7 @@ abstract class AbstractSmrShip {
 			$this->setArmour(150, true);
 			$this->setCargoHolds(40);
 			$this->setShipTypeID(SHIP_TYPE_NEWBIE_MERCHANT_VESSEL);
-		}
-		else {
+		} else {
 			$this->setShields(50, true);
 			$this->setArmour(50, true);
 			$this->setCargoHolds(5);

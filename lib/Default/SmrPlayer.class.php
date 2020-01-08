@@ -200,8 +200,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->newbieWarning = $db->getBoolean('newbie_warning');
 			$this->nameChanged = $db->getBoolean('name_changed');
 			$this->combatDronesKamikazeOnMines = $db->getBoolean('combat_drones_kamikaze_on_mines');
-		}
-		else {
+		} else {
 			throw new PlayerNotFoundException('Invalid accountID: ' . $accountID . ' OR gameID:' . $gameID);
 		}
 	}
@@ -335,11 +334,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
 			$this->actionTaken('PlayerKicked', array('Alliance' => $alliance, 'Player' => $kickedBy));
 			$kickedBy->actionTaken('KickPlayer', array('Alliance' => $alliance, 'Player' => $this));
-		}
-		else if ($this->isAllianceLeader()) {
+		} else if ($this->isAllianceLeader()) {
 			$this->actionTaken('DisbandAlliance', array('Alliance' => $alliance));
-		}
-		else {
+		} else {
 			$this->actionTaken('LeaveAlliance', array('Alliance' => $alliance));
 			if ($alliance->getLeaderID() != 0 && $alliance->getLeaderID() != ACCOUNT_ID_NHL) {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I left your alliance!', false);
@@ -367,7 +364,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 			try {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
 			} catch (AccountNotFoundException $e) {
-				if ($alliance->getLeaderID() != ACCOUNT_ID_NHL) throw $e;
+				if ($alliance->getLeaderID() != ACCOUNT_ID_NHL) {
+					throw $e;
+				}
 			}
 
 			$roleID = ALLIANCE_ROLE_NEW_MEMBER;
@@ -500,7 +499,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	public function updateTurns() {
 		// is account validated?
-		if (!$this->getAccount()->isValidated()) return;
+		if (!$this->getAccount()->isValidated()) {
+			return;
+		}
 
 		// how many turns would he get right now?
 		$extraTurns = $this->getTurnsGained(TIME);
@@ -712,8 +713,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->db->query('SELECT * FROM ship_has_name WHERE ' . $this->SQL . ' LIMIT 1');
 			if ($this->db->nextRecord()) {
 				$this->customShipName = $this->db->getField('ship_name');
-			}
-			else {
+			} else {
 				$this->customShipName = false;
 			}
 		}
@@ -731,8 +731,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				$this->knowledge['Nyx'] = $this->db->getInt('nyx');
 				$this->knowledge['Federation'] = 0;
 				$this->knowledge['Underground'] = 0;
-			}
-			else {
+			} else {
 				$this->knowledge['Erebus'] = 0;
 				$this->knowledge['Aether'] = 0;
 				$this->knowledge['Tartarus'] = 0;
@@ -859,8 +858,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return['KillerAlign'] = -$relation * $alignChangePerRelation; //Lose relations when killing a peaceful race
 		if ($return['KillerAlign'] > 0) {
 			$killer->increaseAlignment($return['KillerAlign']);
-		}
-		else {
+		} else {
 			$killer->decreaseAlignment(-$return['KillerAlign']);
 		}
 		// War setting gives them military pay
@@ -894,8 +892,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			// If the podded players alignment makes them deputy or member then set bounty
 			if ($this->getAlignment() >= 100) {
 				$return['BountyGained']['Type'] = 'HQ';
-			}
-			else if ($this->getAlignment() <= 100) {
+			} else if ($this->getAlignment() <= 100) {
 				$return['BountyGained']['Type'] = 'UG';
 			}
 
@@ -917,16 +914,14 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 			if ($return['KillerAlign'] > 0) {
 				$killer->increaseHOF($return['KillerAlign'], array('Killing', 'NPC', 'Alignment', 'Gain'), HOF_PUBLIC);
-			}
-			else {
+			} else {
 				$killer->increaseHOF(-$return['KillerAlign'], array('Killing', 'NPC', 'Alignment', 'Loss'), HOF_PUBLIC);
 			}
 
 			$killer->increaseHOF($return['BountyGained']['Amount'], array('Killing', 'NPC', 'Money', 'Bounty Gained'), HOF_PUBLIC);
 
 			$killer->increaseHOF(1, array('Killing', 'NPC Kills'), HOF_PUBLIC);
-		}
-		else {
+		} else {
 			$killer->increaseHOF($return['KillerExp'], array('Killing', 'Experience', 'Gained'), HOF_PUBLIC);
 			$killer->increaseHOF($this->getExperience(), array('Killing', 'Experience', 'Of Traders Killed'), HOF_PUBLIC);
 
@@ -938,8 +933,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 			if ($return['KillerAlign'] > 0) {
 				$killer->increaseHOF($return['KillerAlign'], array('Killing', 'Alignment', 'Gain'), HOF_PUBLIC);
-			}
-			else {
+			} else {
 				$killer->increaseHOF(-$return['KillerAlign'], array('Killing', 'Alignment', 'Loss'), HOF_PUBLIC);
 			}
 
@@ -947,8 +941,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 			if ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus()) { //Newbie kill
 				$killer->increaseHOF(1, array('Killing', 'Newbie Kills'), HOF_PUBLIC);
-			}
-			else {
+			} else {
 				$killer->increaseKills(1);
 				$killer->increaseHOF(1, array('Killing', 'Kills'), HOF_PUBLIC);
 
@@ -1133,8 +1126,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 					if ($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0) {
 						$this->db->query('INSERT INTO bounty (account_id,game_id,type,amount,smr_credits,claimer_id,time) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeString($bounty['Type']) . ',' . $this->db->escapeNumber($bounty['Amount']) . ',' . $this->db->escapeNumber($bounty['SmrCredits']) . ',' . $this->db->escapeNumber($bounty['Claimer']) . ',' . $this->db->escapeNumber($bounty['Time']) . ')');
 					}
-				}
-				else {
+				} else {
 					if ($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0) {
 						$this->db->query('UPDATE bounty
 							SET amount=' . $this->db->escapeNumber($bounty['Amount']) . ',
@@ -1173,15 +1165,13 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$tempTypeList[] = $type;
 			if (is_array($hofChanged)) {
 				$this->doHOFSave($hofChanged, $tempTypeList);
-			}
-			else {
+			} else {
 				$amount = $this->getHOF($tempTypeList);
 				if ($hofChanged == self::HOF_NEW) {
 					if ($amount > 0) {
 						$this->db->query('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeArray($tempTypeList, false, true, ':', false) . ',' . $this->db->escapeNumber($amount) . ')');
 					}
-				}
-				else if ($hofChanged == self::HOF_CHANGED) {
+				} else if ($hofChanged == self::HOF_CHANGED) {
 	//				if($amount > 0)
 						$this->db->query('UPDATE player_hof
 							SET amount=' . $this->db->escapeNumber($amount) . '
@@ -1319,9 +1309,15 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	public function getTurnsLevel() {
-		if (!$this->hasTurns()) return 'NONE';
-		if ($this->getTurns() <= 25) return 'LOW';
-		if ($this->getTurns() <= 75) return 'MEDIUM';
+		if (!$this->hasTurns()) {
+			return 'NONE';
+		}
+		if ($this->getTurns() <= 25) {
+			return 'LOW';
+		}
+		if ($this->getTurns() <= 75) {
+			return 'MEDIUM';
+		}
 		return 'HIGH';
 	}
 

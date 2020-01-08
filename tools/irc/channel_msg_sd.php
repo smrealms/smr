@@ -123,7 +123,9 @@ function channel_msg_sd_list($fp, $rdata, $account, $player)
 			if ($sd[3] == $channel) {
 
 				$seconds_since_refresh = time() - $sd[2];
-				if ($seconds_since_refresh < 0) $seconds_since_refresh = 0;
+				if ($seconds_since_refresh < 0) {
+					$seconds_since_refresh = 0;
+				}
 				$amt_to_add = floor($seconds_since_refresh * $refresh_per_sec);
 
 				if ($sd[1] + $amt_to_add > 4000) {

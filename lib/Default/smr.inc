@@ -132,8 +132,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
 			break;
 		}
-	}
-	catch (Exception $e) {
+	} catch (Exception $e) {
 	}
 	if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 		return false;
@@ -186,8 +185,7 @@ function bbifyMessage($message, $noLinks = false) {
 	if (strpos($message, '[') !== false) { //We have BBCode so let's do a full parse.
 		$message = $bbParser->parse($message);
 		$message = str_replace('&lt;br /&gt;', '<br />', $message);
-	}
-	else { //Otherwise just convert newlines
+	} else { //Otherwise just convert newlines
 		$message = nl2br($message, true);
 	}
 	return $message;
@@ -227,8 +225,7 @@ function create_form($container, $actions) {
 
 	if (!is_array($actions)) {
 		$form['submit'] = '<input class="submit" type="submit" name="action" value="' . htmlspecialchars($actions) . '">';
-	}
-	else {
+	} else {
 		$form['submit'] = array();
 		foreach ($actions as $action) {
 			$form['submit'][$action[0]] = '<input class="submit" type="submit" name="action" value="' . htmlspecialchars($action[1]) . '">';
@@ -319,8 +316,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 	}
 	if ($maxValue - $minValue == 0) {
 		return $text;
-	}
-	else {
+	} else {
 		$normalisedValue = round(510 * max(0, min($maxValue, $value) - $minValue) / ($maxValue - $minValue)) - 255;
 	}
 	if ($type == 'Game') {
@@ -330,28 +326,33 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 			if (strlen($g_component) == 1) {
 				$g_component = '0' . $g_component;
 			}
-		}
-		else if ($normalisedValue > 0) {
+		} else if ($normalisedValue > 0) {
 			$g_component = 'ff';
 			$r_component = dechex(255 - $normalisedValue);
 			if (strlen($r_component) == 1) {
 				$r_component = '0' . $r_component;
 			}
-		}
-		else {
+		} else {
 			$r_component = 'ff';
 			$g_component = 'ff';
 		}
 		$colour = $r_component . $g_component . '00';
-		if ($return_type == 'Colour') return $colour;
+		if ($return_type == 'Colour') {
+			return $colour;
+		}
 		return '<span style="color:#' . $colour . '">' . $text . '</span>';
-	}
-	elseif ($type == 'IRC') {
+	} elseif ($type == 'IRC') {
 		//IRC color codes
-		if ($normalisedValue == 255) $colour = '[k03]';
-		elseif ($normalisedValue == -255) $colour = '[k04]';
-		else $colour = '[k08]';
-		if ($return_type == 'Colour') return $colour;
+		if ($normalisedValue == 255) {
+			$colour = '[k03]';
+		} elseif ($normalisedValue == -255) {
+			$colour = '[k04]';
+		} else {
+			$colour = '[k08]';
+		}
+		if ($return_type == 'Colour') {
+			return $colour;
+		}
 		return $colour . $text;
 	}
 }
@@ -410,10 +411,18 @@ function do_voodoo() {
 	// create account object
 	$account = SmrSession::getAccount();
 
-	if (!defined('DATE_DATE_SHORT')) define('DATE_DATE_SHORT', $account->getShortDateFormat());
-	if (!defined('DATE_TIME_SHORT')) define('DATE_TIME_SHORT', $account->getShortTimeFormat());
-	if (!defined('DATE_FULL_SHORT')) define('DATE_FULL_SHORT', DATE_DATE_SHORT . ' ' . DATE_TIME_SHORT);
-	if (!defined('DATE_FULL_SHORT_SPLIT')) define('DATE_FULL_SHORT_SPLIT', DATE_DATE_SHORT . '\<b\r /\>' . DATE_TIME_SHORT);
+	if (!defined('DATE_DATE_SHORT')) {
+		define('DATE_DATE_SHORT', $account->getShortDateFormat());
+	}
+	if (!defined('DATE_TIME_SHORT')) {
+		define('DATE_TIME_SHORT', $account->getShortTimeFormat());
+	}
+	if (!defined('DATE_FULL_SHORT')) {
+		define('DATE_FULL_SHORT', DATE_DATE_SHORT . ' ' . DATE_TIME_SHORT);
+	}
+	if (!defined('DATE_FULL_SHORT_SPLIT')) {
+		define('DATE_FULL_SHORT_SPLIT', DATE_DATE_SHORT . '\<b\r /\>' . DATE_TIME_SHORT);
+	}
 
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::hasGame()) {
@@ -567,8 +576,7 @@ function acquire_lock($sector) {
 
 			usleep(25000 * $locksInQueue);
 			continue;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
@@ -765,7 +773,9 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 		$container['player_id'] = $player->getPlayerID();
 		$template->assign('PlayerNameLink', SmrSession::getNewHREF($container));
 
-		if (is_array(Globals::getHiddenPlayers()) && in_array($player->getAccountID(), Globals::getHiddenPlayers())) $template->assign('PlayerInvisible', true);
+		if (is_array(Globals::getHiddenPlayers()) && in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+			$template->assign('PlayerInvisible', true);
+		}
 
 		// ******* Hardware *******
 		$container = create_container('skeleton.php', 'configure_hardware.php');

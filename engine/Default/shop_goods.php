@@ -24,8 +24,7 @@ $searchedByFeds = false;
 //The player is sent here after trading and sees this if his offer is accepted.
 if (!empty($var['trade_msg'])) {
 	$template->assign('TradeMsg', $var['trade_msg']);
-}
-elseif ($player->getLastPort() != $player->getSectorID()) {
+} elseif ($player->getLastPort() != $player->getSectorID()) {
 	// test if we are searched, but only if we hadn't a previous trade here
 
 	$base_chance = 15;
@@ -72,8 +71,7 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 						$player->setBank(5000);
 					}
 				}
-			}
-			else {
+			} else {
 				$player->decreaseCredits($fine);
 			}
 
@@ -85,8 +83,7 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 			$ship->setCargo(GOODS_NARCOTICS, 0);
 			$account->log(LOG_TYPE_TRADING, 'Player gets caught with illegals', $player->getSectorID());
 
-		}
-		else {
+		} else {
 			$template->assign('IllegalsFound', false);
 			$player->increaseHOF(1, array('Trade', 'Search', 'Times Found Innocent'), HOF_PUBLIC);
 			$player->increaseAlignment(1);

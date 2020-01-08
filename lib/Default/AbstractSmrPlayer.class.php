@@ -464,7 +464,9 @@ abstract class AbstractSmrPlayer {
 		if ($this->level === null) {
 			$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
 			foreach ($LEVELS_REQUIREMENTS as $level_id => $require) {
-				if ($this->getExperience() >= $require['Requirement']) continue;
+				if ($this->getExperience() >= $require['Requirement']) {
+					continue;
+				}
 				$this->level = $level_id - 1;
 				return $this->level;
 			}
@@ -585,8 +587,7 @@ abstract class AbstractSmrPlayer {
 	public function getAllianceDisplayName($linked = false, $includeAllianceID = false) {
 		if ($this->hasAlliance()) {
 			return $this->getAlliance()->getAllianceDisplayName($linked, $includeAllianceID);
-		}
-		else {
+		} else {
 			return 'No Alliance';
 		}
 	}
@@ -923,8 +924,7 @@ abstract class AbstractSmrPlayer {
 		$hofType = implode(':', $typeList);
 		if (!isset(self::$HOFVis[$hofType])) {
 			self::$hasHOFVisChanged[$hofType] = self::HOF_NEW;
-		}
-		else if (self::$HOFVis[$hofType] != $visibility) {
+		} else if (self::$HOFVis[$hofType] != $visibility) {
 			self::$hasHOFVisChanged[$hofType] = self::HOF_CHANGED;
 		}
 		self::$HOFVis[$hofType] = $visibility;
@@ -1159,8 +1159,7 @@ abstract class AbstractSmrPlayer {
 		if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
 			// If we have completed this mission just use false to indicate no current task.
 			$currentStep = false;
-		}
-		else {
+		} else {
 			$currentStep = MISSIONS[$missionID]['Steps'][$mission['On Step']];
 			$currentStep['Text'] = str_replace(array('<Race>', '<Sector>', '<Starting Sector>', '<trader>'), array($this->getRaceID(), $mission['Sector'], $mission['Starting Sector'], $this->playerName), $currentStep['Text']);
 			if (isset($currentStep['Task'])) {
@@ -1168,8 +1167,7 @@ abstract class AbstractSmrPlayer {
 			}
 			if (isset($currentStep['Level'])) {
 				$currentStep['Level'] = str_replace('<Player Level>', $this->getLevelID(), $currentStep['Level']);
-			}
-			else {
+			} else {
 				$currentStep['Level'] = 0;
 			}
 		}

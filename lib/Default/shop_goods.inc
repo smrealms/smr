@@ -58,8 +58,7 @@ function check_bargain_number($amount, $ideal_price, $offered_price, $bargain_pr
 
 			$container['offered_price'] = round($container['ideal_price'] * $offer_modifier / 100);
 		}
-	}
-	else {
+	} else {
 		$container['overall_number_of_bargains'] = mt_rand(2, 5);
 	}
 }

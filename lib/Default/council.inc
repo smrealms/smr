@@ -139,8 +139,7 @@ function checkPacts($race_id_1) {
 				$news = 'The [race=' . $race_id_1 . '] have declared <span class="red">WAR</span> on the [race=' . $race_id_2 . ']';
 				$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
 							'(' . $db2->escapeNumber($player->getGameID()) . ', ' . $db2->escapeNumber(TIME) . ', ' . $db2->escapeString($news) . ')');
-			}
-			elseif ($type == 'PEACE') {
+			} elseif ($type == 'PEACE') {
 				// get 'yes' votes
 				$db2->query('SELECT * FROM player_votes_pact
 							WHERE game_id = '.$db2->escapeNumber($player->getGameID()) . '

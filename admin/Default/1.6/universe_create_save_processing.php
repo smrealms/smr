@@ -19,8 +19,7 @@ if ($submit == 'Create Galaxies') {
 	}
 	SmrSector::saveSectors();
 	$var['message'] = '<span class="green">Success</span> : Succesfully created galaxies.';
-}
-else if ($submit == 'Redo Connections') {
+} else if ($submit == 'Redo Connections') {
 	$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 	if (!$galaxy->setConnectivity($_REQUEST['connect'])) {
 		$var['message'] = '<span class="red">Error</span> : Regenerating connections failed.';
@@ -28,13 +27,11 @@ else if ($submit == 'Redo Connections') {
 		$var['message'] = '<span class="green">Success</span> : Regenerated connectivity with ' . $_REQUEST['connect'] . '% target.';
 	}
 	SmrSector::saveSectors();
-}
-elseif ($submit == 'Toggle Link') {
+} elseif ($submit == 'Toggle Link') {
 	$linkSector = SmrSector::getSector($var['game_id'], $var['sector_id']);
 	$linkSector->toggleLink($var['dir']);
 	SmrSector::saveSectors();
-}
-elseif ($submit == 'Create Locations') {
+} elseif ($submit == 'Create Locations') {
 	$galSectors = SmrSector::getGalaxySectors($var['game_id'], $var['gal_on']);
 	foreach ($galSectors as $galSector) {
 		$galSector->removeAllLocations();
@@ -54,8 +51,7 @@ elseif ($submit == 'Create Locations') {
 		}
 	}
 	$var['message'] = '<span class="green">Success</span> : Succesfully added locations.';
-}
-elseif ($submit == 'Create Warps') {
+} elseif ($submit == 'Create Warps') {
 	//get all warp info from all gals, some need to be removed, some need to be added
 	$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 	$galSectors = $galaxy->getSectors();
@@ -95,8 +91,7 @@ elseif ($submit == 'Create Warps') {
 	}
 	SmrSector::saveSectors();
 	$var['message'] = '<span class="green">Success</span> : Succesfully added warps.';
-}
-elseif ($submit == 'Create Planets') {
+} elseif ($submit == 'Create Planets') {
 	$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 	$galSectors = $galaxy->getSectors();
 	foreach ($galSectors as $galSector) {
@@ -170,27 +165,23 @@ elseif ($submit == 'Create Ports') {
 		}
 		SmrPort::savePorts();
 		$var['message'] = '<span class="green">Success</span> : Succesfully added ports.';
-	}
-	else {
+	} else {
 		$var['message'] = '<span class="red">Error: Your port race distribution must equal 100!</span>';
 	}
-}
-elseif ($submit == 'Edit Sector') {
+} elseif ($submit == 'Edit Sector') {
 	$editSector = SmrSector::getSector($var['game_id'], $var['sector_id']);
 
 	//update planet
 	if ($_POST['plan_type'] != '0') {
 		if (!$editSector->hasPlanet()) {
 			$editSector->createPlanet($_POST['plan_type']);
-		}
-		else {
+		} else {
 			$type = $editSector->getPlanet()->getTypeID();
 			if ($_POST['plan_type'] != $type) {
 				$editSector->getPlanet()->setTypeID($_POST['plan_type']);
 			}
 		}
-	}
-	else {
+	} else {
 		$editSector->removePlanet();
 	}
 
@@ -267,8 +258,7 @@ forward($container);
 function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) {
 	if (!$location->isHQ()) {
 		return (count($sector->getLocations()) < 4 && !$sector->offersFederalProtection());
-	}
-	else {
+	} else {
 		//HQs are here
 		//find a sector where there are no locations yet
 		return !$sector->hasLocation();

@@ -98,8 +98,7 @@ class AbstractSmrLocation {
 			$this->name = $db->getField('location_name');
 			$this->processor = $db->getField('location_processor');
 			$this->image = $db->getField('location_image');
-		}
-		else {
+		} else {
 			throw new Exception('Cannot find location: ' . $locationTypeID);
 		}
 	}
@@ -158,8 +157,7 @@ class AbstractSmrLocation {
 		if ($bool === true) {
 			$this->db->query('INSERT IGNORE INTO location_is_fed (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->fed = true;
-		}
-		else if ($bool === false) {
+		} else if ($bool === false) {
 			$this->db->query('DELETE FROM location_is_fed WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->fed = false;
 		}
@@ -180,8 +178,7 @@ class AbstractSmrLocation {
 		if ($bool === true) {
 			$this->db->query('INSERT INTO location_is_bank (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->bank = true;
-		}
-		else if ($bool === false) {
+		} else if ($bool === false) {
 			$this->db->query('DELETE FROM location_is_bank WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->bank = false;
 		}
@@ -202,8 +199,7 @@ class AbstractSmrLocation {
 		if ($bool === true) {
 			$this->db->query('INSERT IGNORE INTO location_is_bar (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->bar = true;
-		}
-		else if ($bool === false) {
+		} else if ($bool === false) {
 			$this->db->query('DELETE FROM location_is_bar WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->bar = false;
 		}
@@ -224,8 +220,7 @@ class AbstractSmrLocation {
 		if ($bool === true) {
 			$this->db->query('INSERT IGNORE INTO location_is_hq (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->HQ = true;
-		}
-		else if ($bool === false) {
+		} else if ($bool === false) {
 			$this->db->query('DELETE FROM location_is_hq WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->HQ = false;
 		}
@@ -246,8 +241,7 @@ class AbstractSmrLocation {
 		if ($bool === true) {
 			$this->db->query('INSERT INTO location_is_ug (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->UG = true;
-		}
-		else if ($bool === false) {
+		} else if ($bool === false) {
 			$this->db->query('DELETE FROM location_is_ug WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->UG = false;
 		}
@@ -376,8 +370,7 @@ class AbstractSmrLocation {
 			if ($this->getTypeID() == LOCATION_TYPE_FEDERAL_HQ) {
 				$linkedLocations[] = SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_BEACON);
 				$linkedLocations[] = SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_MINT);
-			}
-			else {
+			} else {
 				$raceID = $this->getRaceID();
 				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_BEACONS + $raceID);
 				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHIPS + $raceID);

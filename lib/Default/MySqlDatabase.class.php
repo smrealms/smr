@@ -227,8 +227,7 @@ abstract class MySqlDatabase {
 				}
 			}
 			$string = substr($string, 0, -1);
-		}
-		else {
+		} else {
 			$string = $this->escape(implode($implodeString, $array), $autoQuotes, $quotes);
 		}
 		return $string;
