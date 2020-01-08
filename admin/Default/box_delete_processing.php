@@ -8,8 +8,7 @@ if ($action == 'Marked Messages') {
 	foreach ($_REQUEST['message_id'] as $id) {
 		$db->query('DELETE FROM message_boxes WHERE message_id = ' . $db->escapeNumber($id));
 	}
-}
-else if ($action == 'All Messages') {
+} else if ($action == 'All Messages') {
 	if (!isset($var['box_type_id'])) {
 		create_error('No box selected.');
 	}

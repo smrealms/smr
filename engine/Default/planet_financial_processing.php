@@ -28,8 +28,7 @@ if ($action == 'Deposit' || $action == 'Withdraw') {
 		$player->decreaseCredits($amount);
 		$planet->increaseCredits($amount);
 		$account->log(LOG_TYPE_BANK, 'Player puts ' . $amount . ' credits on planet', $player->getSectorID());
-	}
-	elseif ($action == 'Withdraw') {
+	} elseif ($action == 'Withdraw') {
 		if ($planet->getCredits() < $amount) {
 			create_error('There are not enough credits in the planetary account!');
 		}

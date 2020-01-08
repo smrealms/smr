@@ -58,8 +58,7 @@ class RouteGenerator {
 					$mpr = new MultiplePortRoute($routeToContinue, $currentStepRoute);
 					self::addExpRoute($mpr);
 					self::addMoneyRoute($mpr);
-				}
-				else if ($maxNumPorts > 1 && !$routeToContinue->containsPort($currentStepBuySector)) {
+				} else if ($maxNumPorts > 1 && !$routeToContinue->containsPort($currentStepBuySector)) {
 					$mpr = new MultiplePortRoute($routeToContinue, $currentStepRoute);
 					self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $mpr, $routeLists[$currentStepBuySector], $routeLists, $lastGoodIsNothing);
 				}
@@ -71,11 +70,11 @@ class RouteGenerator {
 		$routes = array();
 		foreach ($distances as $currentSectorId => $d) {
 			$raceID = $sectors[$currentSectorId]->getPort()->getRaceID();
-			if (isset($races[$raceID])===false) {
-				echo 'Error with Race ID: '.$sectors[$currentSectorId]->getPort()->getRaceID();
+			if (isset($races[$raceID]) === false) {
+				echo 'Error with Race ID: ' . $sectors[$currentSectorId]->getPort()->getRaceID();
 				continue;
 			}
-			if($races[$raceID]===false) {
+			if ($races[$raceID] === false) {
 				continue;
 			}
 			$rl = array();
@@ -83,16 +82,16 @@ class RouteGenerator {
 				if (!$races[$sectors[$targetSectorId]->getPort()->getRaceID()]) {
 					continue;
 				}
-				if($routesForPort!==-1 && $currentSectorId !== $routesForPort && $targetSectorId !== $routesForPort) {
+				if ($routesForPort !== -1 && $currentSectorId !== $routesForPort && $targetSectorId !== $routesForPort) {
 					continue;
 				}
 
-				if ($goods[GOOD_NOTHING]===true) {
+				if ($goods[GOOD_NOTHING] === true) {
 					$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $sectors[$targetSectorId]->getPort()->getRaceID(), 0, 0, $distance, GOOD_NOTHING);
 				}
 
 				foreach (\Globals::getGoods() as $goodId => $value) {
-					if ($goods[$goodId]===true) {
+					if ($goods[$goodId] === true) {
 						if ($sectors[$currentSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_SELLS &&
 						    $sectors[$targetSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_BUYS) {
 							$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $sectors[$targetSectorId]->getPort()->getRaceID(), $sectors[$currentSectorId]->getPort()->getGoodDistance($goodId), $sectors[$targetSectorId]->getPort()->getGoodDistance($goodId), $distance, $goodId);
@@ -108,19 +107,19 @@ class RouteGenerator {
 	public static function generateOneWayRoutes(array $sectors, array $distances, array $goods, array $races, int $routesForPort) : array {
 		self::initialize();
 		foreach ($distances as $currentSectorId => $d) {
-			if ($races[$sectors[$currentSectorId]->getPort()->getRaceID()]===false) {
+			if ($races[$sectors[$currentSectorId]->getPort()->getRaceID()] === false) {
 				continue;
 			}
 			foreach ($d as $targetSectorId => $distance) {
-				if ($races[$sectors[$targetSectorId]->getPort()->getRaceID()]===false) {
+				if ($races[$sectors[$targetSectorId]->getPort()->getRaceID()] === false) {
 					continue;
 				}
-				if($routesForPort!==-1 && $currentSectorId !== $routesForPort && $targetSectorId !== $routesForPort) {
+				if ($routesForPort !== -1 && $currentSectorId !== $routesForPort && $targetSectorId !== $routesForPort) {
 					continue;
 				}
 
 				foreach (\Globals::getGoods() as $goodId => $value) {
-					if ($goods[$goodId]===true) {
+					if ($goods[$goodId] === true) {
 						if ($sectors[$currentSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_SELLS &&
 						    $sectors[$targetSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_BUYS) {
 							$owr = new OneWayRoute($currentSectorId, $targetSectorId, $sectors[$currentSectorId]->getPort()->getRaceID(), $sectors[$targetSectorId]->getPort()->getRaceID(), $sectors[$currentSectorId]->getPort()->getGoodDistance($goodId), $sectors[$targetSectorId]->getPort()->getGoodDistance($goodId), $distance, $goodId);
@@ -166,19 +165,19 @@ class RouteGenerator {
 		$i = 0;
 		krsort(self::$expRoutes, SORT_NUMERIC);
 		foreach (self::$expRoutes as $multi => $routesByMulti) {
-			if(count($routesByMulti)+$i < $trimToBestXRoutes) {
+			if (count($routesByMulti) + $i < $trimToBestXRoutes) {
 				$i += count($routesByMulti);
 			}
-			else if($i > $trimToBestXRoutes) {
+			else if ($i > $trimToBestXRoutes) {
 				unset(self::$expRoutes[$multi]);
 			}
 			else {
-				foreach($routesByMulti as $key => $value) {
+				foreach ($routesByMulti as $key => $value) {
 					$i++;
-					if($i < $trimToBestXRoutes) {
+					if ($i < $trimToBestXRoutes) {
 						continue;
 					}
-					if($i === $trimToBestXRoutes) {
+					if ($i === $trimToBestXRoutes) {
 						self::$dontAddWorseThan[self::EXP_ROUTE] = $multi;
 						continue;
 					}
@@ -190,20 +189,20 @@ class RouteGenerator {
 		$i = 0;
 		krsort(self::$moneyRoutes, SORT_NUMERIC);
 		foreach (self::$moneyRoutes as $multi => $routesByMulti) {
-			if(count($routesByMulti)+$i < $trimToBestXRoutes) {
+			if (count($routesByMulti) + $i < $trimToBestXRoutes) {
 				$i += count($routesByMulti);
 			}
-			else if($i > $trimToBestXRoutes) {
+			else if ($i > $trimToBestXRoutes) {
 				unset(self::$moneyRoutes[$multi]);
 				continue;
 			}
 			else {
-				foreach($routesByMulti as $key => $value) {
+				foreach ($routesByMulti as $key => $value) {
 					$i++;
-					if($i < $trimToBestXRoutes) {
+					if ($i < $trimToBestXRoutes) {
 						continue;
 					}
-					if($i === $trimToBestXRoutes) {
+					if ($i === $trimToBestXRoutes) {
 						self::$dontAddWorseThan[self::MONEY_ROUTE] = $multi;
 						continue;
 					}
