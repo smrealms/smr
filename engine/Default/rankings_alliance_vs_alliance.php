@@ -62,8 +62,7 @@ foreach ($alliance_vs_ids as $curr_id) {
 			} elseif ($showBold) {
 				$style = 'class="bold"';
 			}
-		}
-		else {
+		} else {
 			$db2->query('SELECT kills FROM alliance_vs_alliance
 						WHERE alliance_id_2 = ' . $db2->escapeNumber($curr_id) . '
 							AND alliance_id_1 = ' . $db2->escapeNumber($id) . '
@@ -104,11 +103,15 @@ while ($db->nextRecord()) {
 	if ($id > 0) {
 		$killer_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
 		$alliance_name = $killer_alliance->getAllianceDisplayName();
+	} elseif ($id == 0) {
+		$alliance_name = 'No Alliance';
+	} elseif ($id == ALLIANCE_VS_FORCES) {
+		$alliance_name = '<span class="yellow">Forces</span>';
+	} elseif ($id == ALLIANCE_VS_PLANETS) {
+		$alliance_name = '<span class="yellow">Planets</span>';
+	} elseif ($id == ALLIANCE_VS_PORTS) {
+		$alliance_name = '<span class="yellow">Ports</span>';
 	}
-	elseif ($id == 0) $alliance_name = 'No Alliance';
-	elseif ($id == ALLIANCE_VS_FORCES) $alliance_name = '<span class="yellow">Forces</span>';
-	elseif ($id == ALLIANCE_VS_PLANETS) $alliance_name = '<span class="yellow">Planets</span>';
-	elseif ($id == ALLIANCE_VS_PORTS) $alliance_name = '<span class="yellow">Ports</span>';
 
 	$kills[] = [
 		'Name' => $alliance_name,
@@ -126,11 +129,15 @@ while ($db->nextRecord()) {
 	if ($id > 0) {
 		$killer_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
 		$alliance_name = $killer_alliance->getAllianceDisplayName();
+	} elseif ($id == 0) {
+		$alliance_name = 'No Alliance';
+	} elseif ($id == ALLIANCE_VS_FORCES) {
+		$alliance_name = '<span class="yellow">Forces</span>';
+	} elseif ($id == ALLIANCE_VS_PLANETS) {
+		$alliance_name = '<span class="yellow">Planets</span>';
+	} elseif ($id == ALLIANCE_VS_PORTS) {
+		$alliance_name = '<span class="yellow">Ports</span>';
 	}
-	elseif ($id == 0) $alliance_name = 'No Alliance';
-	elseif ($id == ALLIANCE_VS_FORCES) $alliance_name = '<span class="yellow">Forces</span>';
-	elseif ($id == ALLIANCE_VS_PLANETS) $alliance_name = '<span class="yellow">Planets</span>';
-	elseif ($id == ALLIANCE_VS_PORTS) $alliance_name = '<span class="yellow">Ports</span>';
 
 	$deaths[] = [
 		'Name' => $alliance_name,

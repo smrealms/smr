@@ -101,7 +101,7 @@ while ($running) {
 
 			safefputs($fp, 'NICKSERV IDENTIFY ' . IRC_BOT_PASS . EOL);
 
-            sleep(5);
+			sleep(5);
 
 			// join our public channel
 			if (!IRC_DEBUGGING) {

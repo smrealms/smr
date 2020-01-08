@@ -167,11 +167,9 @@ class RouteGenerator {
 		foreach (self::$expRoutes as $multi => $routesByMulti) {
 			if (count($routesByMulti) + $i < $trimToBestXRoutes) {
 				$i += count($routesByMulti);
-			}
-			else if ($i > $trimToBestXRoutes) {
+			} else if ($i > $trimToBestXRoutes) {
 				unset(self::$expRoutes[$multi]);
-			}
-			else {
+			} else {
 				foreach ($routesByMulti as $key => $value) {
 					$i++;
 					if ($i < $trimToBestXRoutes) {
@@ -191,12 +189,10 @@ class RouteGenerator {
 		foreach (self::$moneyRoutes as $multi => $routesByMulti) {
 			if (count($routesByMulti) + $i < $trimToBestXRoutes) {
 				$i += count($routesByMulti);
-			}
-			else if ($i > $trimToBestXRoutes) {
+			} else if ($i > $trimToBestXRoutes) {
 				unset(self::$moneyRoutes[$multi]);
 				continue;
-			}
-			else {
+			} else {
 				foreach ($routesByMulti as $key => $value) {
 					$i++;
 					if ($i < $trimToBestXRoutes) {

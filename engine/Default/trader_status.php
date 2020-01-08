@@ -31,12 +31,24 @@ $container['body'] = 'configure_hardware.php';
 $template->assign('HardwareHREF', SmrSession::getNewHREF($container));
 
 $hardware = [];
-if ($ship->canHaveScanner()) $hardware[] = 'Scanner';
-if ($ship->canHaveIllusion()) $hardware[] = 'Illusion Generator';
-if ($ship->canHaveCloak()) $hardware[] = 'Cloaking Device';
-if ($ship->canHaveJump()) $hardware[] = 'Jump Drive';
-if ($ship->canHaveDCS()) $hardware[] = 'Drone Scrambler';
-if (empty($hardware)) $hardware[] = 'none';
+if ($ship->canHaveScanner()) {
+	$hardware[] = 'Scanner';
+}
+if ($ship->canHaveIllusion()) {
+	$hardware[] = 'Illusion Generator';
+}
+if ($ship->canHaveCloak()) {
+	$hardware[] = 'Cloaking Device';
+}
+if ($ship->canHaveJump()) {
+	$hardware[] = 'Jump Drive';
+}
+if ($ship->canHaveDCS()) {
+	$hardware[] = 'Drone Scrambler';
+}
+if (empty($hardware)) {
+	$hardware[] = 'none';
+}
 $template->assign('Hardware', $hardware);
 
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $db->escapeNumber($player->getExperience()) . ' ORDER BY requirement ASC LIMIT 1');

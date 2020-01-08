@@ -4,7 +4,9 @@ require_once(TOOLS . 'chat_helpers/channel_msg_forces.php');
 
 $fn_forces = function($message, $params) {
 	$link = new GameLink($message->channel, $message->author);
-	if (!$link->valid) return;
+	if (!$link->valid) {
+		return;
+	}
 
 	// print the next expiring forces
 	$option = isset($params[0]) ? $params[0] : null;

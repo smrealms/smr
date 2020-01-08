@@ -72,8 +72,7 @@ class DummyShip extends AbstractSmrShip {
 				$return = unserialize($db->getField('info'));
 				$return->regenerate($player);
 				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] =& $return;
-			}
-			else {
+			} else {
 				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] = new DummyShip($player);
 			}
 		}

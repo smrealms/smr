@@ -77,8 +77,7 @@ try {
 	fclose($toEngine);
 	fclose($fromEngine);
 	proc_close($engine);
-}
-catch(Throwable $e) {
+} catch(Throwable $e) {
 	logException($e);
 	exit;
 }

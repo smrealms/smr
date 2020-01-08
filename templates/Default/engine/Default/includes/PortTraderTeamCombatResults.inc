@@ -98,45 +98,45 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 					} else {
 						?> destroying <?php
 						$DamageTypes = 0;
-						if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-						if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-						if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+						if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
+						if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+						if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
-						if($ActualDamage['Shield'] > 0) {
+						if ($ActualDamage['Shield'] > 0) {
 							?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
 							$this->doDamageTypeReductionDisplay($DamageTypes);
 						}
-						if($ActualDamage['NumCDs'] > 0) {
+						if ($ActualDamage['NumCDs'] > 0) {
 							?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
 							$this->doDamageTypeReductionDisplay($DamageTypes);
 						}
-						if($ActualDamage['Armour'] > 0) {
+						if ($ActualDamage['Armour'] > 0) {
 							?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
 						}
 					}
 				}
 			} ?>.
 			<br /><?php
-			if($ActualDamage['KillingShot']) {
-				$this->includeTemplate('includes/PortKillMessage.inc',array('KillResults'=>$Drones['KillResults'],'TargetPort'=>$TargetPort,'ShootingPlayer'=>$ShootingPlayer));
+			if ($ActualDamage['KillingShot']) {
+				$this->includeTemplate('includes/PortKillMessage.inc', array('KillResults'=>$Drones['KillResults'], 'TargetPort'=>$TargetPort, 'ShootingPlayer'=>$ShootingPlayer));
 			}
 		}
 	}
 	echo $ShootingPlayer->getDisplayName();
-	if($TotalDamage > 0) {
+	if ($TotalDamage > 0) {
 		?> hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
 	} else {
 		?> does no damage this round<?php
-		if(!$TraderResults['DeadBeforeShot']) {
+		if (!$TraderResults['DeadBeforeShot']) {
 			?>. Maybe they should go back to the academy<?php
 		}
 	} ?>.<br /><br /><?php
 }
 $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
-This fleet <?php if($TotalDamage > 0){ ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else{ ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br />
+This fleet <?php if ($TotalDamage > 0) { ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else { ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br />
 
 <?php
 $Downgrades = $TraderTeamCombatResults['Downgrades'];
-if ($Downgrades != 0 ) {
+if ($Downgrades != 0) {
 	?>The port has lost <?php echo $Downgrades . ' ' . pluralise('level', $Downgrades); ?>.<?php
 } ?>

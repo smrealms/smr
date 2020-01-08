@@ -12,7 +12,7 @@ abstract class AbstractSmrCombatWeapon {
 	protected $maxDamage;
 	protected $shieldDamage;
 	protected $armourDamage;
-	protected $empDamage=0;
+	protected $empDamage = 0;
 	protected $accuracy;
 	protected $damageRollover;
 	protected $raidWeapon;
