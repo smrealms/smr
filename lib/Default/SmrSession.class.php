@@ -316,8 +316,8 @@ class SmrSession {
 	}
 
 	public static function destroy() {
-		self::$db->query('UPDATE active_session SET account_id=0,game_id=0,session_var=\'\',ajax_returns=\'\' WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
-		self::$session_id = '';
+		self::$db->query('DELETE FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id));
+		self::$session_id = null;
 		self::$account_id = 0;
 		self::$game_id = 0;
 	}
