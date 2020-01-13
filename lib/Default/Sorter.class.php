@@ -4,7 +4,7 @@ class Sorter {
 	private static $reverseOrder;
 
 	private static function cmpStrProp($a, $b) {
-		return (self::$reverseOrder?-1:1)*strcasecmp($a->{self::$sortKey}, $b->{self::$sortKey});
+		return (self::$reverseOrder ? -1 : 1) * strcasecmp($a->{self::$sortKey}, $b->{self::$sortKey});
 	}
 
 	private static function cmpNumElement($a, $b) {
@@ -20,8 +20,8 @@ class Sorter {
 	}
 
 	public static function cmpNum($a, $b) {
-		if($a == $b) return 0;
-		return (self::$reverseOrder?-1:1)*($a < $b ? -1 : 1);
+		if ($a == $b) return 0;
+		return (self::$reverseOrder ? -1 : 1) * ($a < $b ? -1 : 1);
 	}
 
 	public static function sortByStrProp(array &$array, $property, $reverseOrder = false) {

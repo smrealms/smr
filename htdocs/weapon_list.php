@@ -11,7 +11,7 @@ try {
 	$weapons = [];
 	$db->query('SELECT * FROM weapon_type JOIN race USING(race_id)');
 	while ($db->nextRecord()) {
-		switch($db->getInt('buyer_restriction')) {
+		switch ($db->getInt('buyer_restriction')) {
 			case BUYER_RESTRICTION_GOOD:
 				$restriction = '<span class="dgreen">Good</span>';
 			break;
@@ -46,15 +46,15 @@ try {
 
 	$template->display('weapon_list.php');
 }
-catch(Throwable $e) {
+catch (Throwable $e) {
 	handleException($e);
 }
 
 function buildSelector($db, $name, $table) {
 	$selector = '<select onchange="filterSelect(this)"><option>All</option>';
-	$db->query("SELECT DISTINCT ".$name." FROM ".$table." ORDER BY ".$name);
+	$db->query("SELECT DISTINCT " . $name . " FROM " . $table . " ORDER BY " . $name);
 	while ($db->nextRecord()) {
-		$selector .= '<option>'.$db->getField($name).'</option>';
+		$selector .= '<option>' . $db->getField($name) . '</option>';
 	}
 	$selector .= '</select>';
 	return $selector;
@@ -66,8 +66,8 @@ function buildRaceBox($db) {
 	foreach (Globals::getRaces() as $raceID => $raceData) {
 		$raceName = $raceData['Race Name'];
 		$racebox .= '
-			<input type="checkbox" id="race'.$raceID.'" name="races" value="'.$raceName.'" onClick="raceToggle()">
-			<label for="race'.$raceID.'" class="race'.$raceID.'">'.$raceName.'</label>&thinsp;';
+			<input type="checkbox" id="race'.$raceID . '" name="races" value="' . $raceName . '" onClick="raceToggle()">
+			<label for="race'.$raceID . '" class="race' . $raceID . '">' . $raceName . '</label>&thinsp;';
 	}
 	$racebox .= '</form>';
 	return $racebox;

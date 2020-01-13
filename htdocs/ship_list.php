@@ -16,7 +16,7 @@ try {
 	$template->assign('shipArray', $shipArray);
 
 	$template->display('ship_list.php');
-} catch(Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }
 

@@ -60,7 +60,7 @@ class GameLink
 
 			$this->player = SmrPlayer::getPlayer($this->account->getAccountID(), $this->alliance->getGameID(), true);
 			if ($this->player->getAllianceID() != $this->alliance->getAllianceID()) {
-				$channel->sendMessage("Player `".$this->player->getPlayerName()."` is not a member of alliance `".$this->alliance->getAllianceName()."`");
+				$channel->sendMessage("Player `" . $this->player->getPlayerName() . "` is not a member of alliance `" . $this->alliance->getAllianceName() . "`");
 				return;
 			}
 		}
