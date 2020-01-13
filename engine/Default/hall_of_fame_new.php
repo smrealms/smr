@@ -49,7 +49,7 @@ if (!isset($var['view'])) {
 	if ($var['view'] == DONATION_NAME) {
 		$db->query('SELECT account_id, SUM(amount) as amount FROM account_donated
 					GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
-	} else if ($var['view'] == USER_SCORE_NAME) {
+	} elseif ($var['view'] == USER_SCORE_NAME) {
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
 		$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 		$db->query($query);

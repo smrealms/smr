@@ -15,7 +15,7 @@ if ($_REQUEST['action'] == 'Vote') {
 	}
 
 	forward(create_container('skeleton.php', 'feature_request.php'));
-} else if ($_REQUEST['action'] == 'Set Status') {
+} elseif ($_REQUEST['action'] == 'Set Status') {
 	if (empty($_REQUEST['status'])) {
 		create_error('You have to select a status to set');
 	}

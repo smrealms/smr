@@ -19,7 +19,7 @@ foreach (Globals::getRaces() as $otherRaceID => $raceInfo) {
 	if ($otherRaceID != RACE_NEUTRAL && $raceID != $otherRaceID) {
 		if ($raceRelations[$otherRaceID] >= RELATIONS_PEACE) {
 			$peaceRaces[$otherRaceID] = $raceInfo;
-		} else if ($raceRelations[$otherRaceID] <= RELATIONS_WAR) {
+		} elseif ($raceRelations[$otherRaceID] <= RELATIONS_WAR) {
 			$warRaces[$otherRaceID] = $raceInfo;
 		} else {
 			$neutralRaces[$otherRaceID] = $raceInfo;

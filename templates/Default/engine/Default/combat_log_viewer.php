@@ -16,13 +16,13 @@ Sector <?php echo $CombatLogSector ?><br />
 <?php
 if ($CombatResultsType == 'PLAYER') {
 	$this->includeTemplate('includes/TraderFullCombatResults.inc', array('TraderCombatResults'=>$CombatResults));
-} else if ($CombatResultsType == 'FORCE') {
+} elseif ($CombatResultsType == 'FORCE') {
 	$this->includeTemplate('includes/ForceFullCombatResults.inc', array('FullForceCombatResults'=>$CombatResults));
-} else if ($CombatResultsType == 'PORT') {
+} elseif ($CombatResultsType == 'PORT') {
 	$this->includeTemplate('includes/PortFullCombatResults.inc', array('FullPortCombatResults'=>$CombatResults,
 	                                                                  'MinimalDisplay'=>false,
 	                                                                  'AlreadyDestroyed'=>false));
-} else if ($CombatResultsType == 'PLANET') {
+} elseif ($CombatResultsType == 'PLANET') {
 	$this->includeTemplate('includes/PlanetFullCombatResults.inc', array('FullPlanetCombatResults'=>$CombatResults,
 	                                                                    'MinimalDisplay'=>false,
 	                                                                    'AlreadyDestroyed'=>false));

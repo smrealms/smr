@@ -37,7 +37,7 @@ foreach ($links as $key => $linkArray) {
 	if ($linkArray['ID'] > 0 && $linkArray['ID'] != $player->getSectorID()) {
 		if ($player->getLastSectorID() == $linkArray['ID']) {
 			$class = 'lastVisited';
-		} else if (isset($unvisited[$linkArray['ID']])) {
+		} elseif (isset($unvisited[$linkArray['ID']])) {
 			$class = 'unvisited';
 		} else {
 			$class = 'visited';

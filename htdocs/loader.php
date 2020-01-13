@@ -98,7 +98,7 @@ try {
 			} else {
 				forward(create_container('skeleton.php', 'invalid_email.php'));
 			}
-		} else if ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
+		} elseif ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
 			if (isset($var['do_reopen_account'])) {
 				// The user has requested to reopen their account
 				$account->unbanAccount($account);

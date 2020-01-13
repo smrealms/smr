@@ -15,7 +15,7 @@ function shared_channel_msg_forces($player, $option) {
 				)
 			ORDER BY expire_time ASC LIMIT 1'
 		);
-	} else if ($option == "seedlist") {
+	} elseif ($option == "seedlist") {
 		// are we restricting to the seedlist?
 		$seedlist = get_seedlist($player);
 		if (count($seedlist) == 0) {

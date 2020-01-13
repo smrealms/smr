@@ -35,7 +35,7 @@ try {
 			header('location: /error.php?msg=Invalid sector ID');
 			exit;
 		}
-	} else if (isset($_REQUEST['galaxy_id'])) {
+	} elseif (isset($_REQUEST['galaxy_id'])) {
 		$galaxyID = $_REQUEST['galaxy_id'];
 		if (!is_numeric($galaxyID)) {
 			header('location: /error.php?msg=Galaxy ID was not a number.');

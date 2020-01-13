@@ -6,7 +6,7 @@ Menu::galactic_post();
 // View past editions of current game by default
 if (isset($_POST['game_id'])) {
 	SmrSession::updateVar('game_id', $_POST['game_id']);
-} else if (!isset($var['game_id'])) {
+} elseif (!isset($var['game_id'])) {
 	SmrSession::updateVar('game_id', $player->getGameID());
 }
 $template->assign('SelectedGame', $var['game_id']);

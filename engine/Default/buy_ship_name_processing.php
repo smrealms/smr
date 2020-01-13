@@ -8,9 +8,9 @@ $actionShipLogo = 'Paint a logo (' . CREDITS_PER_SHIP_LOGO . ' SMR Credits)';
 
 if (isset($var['ShipName']) || $action == $actionHtmlShipName) {
 	$cred_cost = CREDITS_PER_HTML_SHIP_NAME;
-} else if ($action == $actionShipLogo) {
+} elseif ($action == $actionShipLogo) {
 	$cred_cost = CREDITS_PER_SHIP_LOGO;
-} else if ($action == $actionTextShipName) {
+} elseif ($action == $actionTextShipName) {
 	$cred_cost = CREDITS_PER_TEXT_SHIP_NAME;
 } else {
 	throw new Exception('Did not match an expected ship name type.');
@@ -88,7 +88,7 @@ if (!isset($var['ShipName'])) {
 				$check .= '*>';
 				if ($check != '<h*>' && $check != '</marquee>?*>') {
 					create_error(htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag is not allowed in ship names.<br /><small>If you believe the name is appropriate please contact an admin.</small>');
-				} else if ($check == '</marquee>?*>') {
+				} elseif ($check == '</marquee>?*>') {
 					create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES, 'utf-8') . ' tag.');
 				} else {
 					create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES, 'utf-8') . ' tag which is not needed.');

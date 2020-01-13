@@ -126,7 +126,7 @@ class SmrSector {
 				$this->links['Right'] = $db->getInt('link_right');
 			}
 			$this->warp = $db->getInt('warp');
-		} else if ($create) {
+		} elseif ($create) {
 			$this->battles = 0;
 			$this->links = array();
 			$this->warp = 0;
@@ -913,7 +913,7 @@ class SmrSector {
 			if ($player->canFight()) {
 				if ($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player)) {
 					$attackers[] = $alliancePlayers[$accountID];
-				} else if ($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player) && ($checkForCloak === false || $attackingPlayer->canSee($player))) {
+				} elseif ($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player) && ($checkForCloak === false || $attackingPlayer->canSee($player))) {
 					$defenders[] = $alliancePlayers[$accountID];
 				}
 			}

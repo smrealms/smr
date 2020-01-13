@@ -54,7 +54,7 @@ if (!isset($var['role_id'])) {
 	if (empty($_REQUEST['role'])) {
 		if ($var['role_id'] == ALLIANCE_ROLE_LEADER) {
 			create_error('You cannot delete the leader role.');
-		} else if ($var['role_id'] == ALLIANCE_ROLE_NEW_MEMBER) {
+		} elseif ($var['role_id'] == ALLIANCE_ROLE_NEW_MEMBER) {
 			create_error('You cannot delete the new member role.');
 		}
 		$db->query('DELETE FROM alliance_has_roles

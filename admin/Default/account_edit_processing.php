@@ -60,7 +60,7 @@ if ($choise == 'reopen') {
 	$curr_account->removePoints($points);
 	$curr_account->unbanAccount($account);
 	$actions[] = 'reopened account and removed ' . $points . ' points';
-} else if ($points > 0) {
+} elseif ($points > 0) {
 	if ($choise == 'individual') {
 		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escapeString($reason_msg) . ')');
 		$reason_id = $db->getInsertID();
@@ -127,7 +127,7 @@ if (!empty($names)) {
 				$news = 'Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
 
 				$db->query('INSERT INTO news (time, news_message, game_id, type) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($game_id) . ', \'admin\')');
-			} else if ($db->getInt('account_id') != $account_id) {
+			} elseif ($db->getInt('account_id') != $account_id) {
 				$actions[] = 'have NOT changed players name to ' . $new_name . ' (already taken)';
 			}
 		}

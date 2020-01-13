@@ -28,7 +28,7 @@ if ($action == "Assign") {
 	} else {
 		$db->query('INSERT INTO draft_leaders (account_id, game_id) VALUES (' . $db->escapeNumber($accountId) . ', ' . $db->escapeNumber($gameId) . ')');
 	}
-} else if ($action == "Remove") {
+} elseif ($action == "Remove") {
 	if (!$selectedPlayer->isDraftLeader()) {
 		$msg = "<span class='red'>ERROR: </span>$name is not a draft leader in game $game!";
 	} else {

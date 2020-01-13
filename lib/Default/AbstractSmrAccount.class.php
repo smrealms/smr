@@ -1133,7 +1133,7 @@ abstract class AbstractSmrAccount {
 		}
 		if ($this->points == 0) {
 			$this->db->query('INSERT INTO account_has_points (account_id, points, last_update) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($numPoints) . ', ' . $this->db->escapeNumber($lastUpdate ? $lastUpdate : TIME) . ')');
-		} else if ($numPoints <= 0) {
+		} elseif ($numPoints <= 0) {
 			$this->db->query('DELETE FROM account_has_points WHERE ' . $this->SQL . ' LIMIT 1');
 		} else {
 			$this->db->query('UPDATE account_has_points SET points = ' . $this->db->escapeNumber($numPoints) . ($lastUpdate ? ', last_update = ' . $this->db->escapeNumber(TIME) : '') . ' WHERE ' . $this->SQL . ' LIMIT 1');

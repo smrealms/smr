@@ -152,10 +152,10 @@ if ($action == 'Save and resend validation code') {
 } elseif ($action == 'Change Centering') {
 	$account->setCenterGalaxyMapOnPlayer($_REQUEST['centergalmap'] == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
-} else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50) {
+} elseif ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50) {
 	$account->setFontSize($_REQUEST['fontsize']);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your font size.';
-} else if ($action == 'Change CSS Options') {
+} elseif ($action == 'Change CSS Options') {
 	$account->setCssLink($_REQUEST['csslink']);
 	if ($_REQUEST['template'] == 'None') {
 		$account->setDefaultCSSEnabled(false);
@@ -166,20 +166,20 @@ if ($action == 'Save and resend validation code') {
 		$account->setColourScheme($cssColourScheme);
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
-} else if ($action == 'Change Kamikaze Setting') {
+} elseif ($action == 'Change Kamikaze Setting') {
 	$player->setCombatDronesKamikazeOnMines($_REQUEST['kamikaze'] == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
-} else if ($action == 'Change Message Setting') {
+} elseif ($action == 'Change Message Setting') {
 	$player->setForceDropMessages($_REQUEST['forceDropMessages'] == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your message options.';
-} else if ($action == 'Save Hotkeys') {
+} elseif ($action == 'Save Hotkeys') {
 	foreach (AbstractSmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
 		if (isset($_REQUEST[$hotkey])) {
 			$account->setHotkey($hotkey, explode(' ', $_REQUEST[$hotkey]));
 		}
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
-} else if (strpos(trim($action), 'Alter Player') === 0) {
+} elseif (strpos(trim($action), 'Alter Player') === 0) {
 	// trim input now
 	$player_name = trim($_POST['PlayerName']);
 
@@ -237,7 +237,7 @@ if ($action == 'Save and resend validation code') {
 	$news = 'Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink();
 	$db->query('INSERT INTO news (time, news_message, game_id, type) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
-} else if ($action == 'Update Colours') {
+} elseif ($action == 'Update Colours') {
 	$friendlyColour = $_REQUEST['friendly_color'];
 	$neutralColour = $_REQUEST['neutral_color'];
 	$enemyColour = $_REQUEST['enemy_color'];

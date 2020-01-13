@@ -90,7 +90,7 @@ class SmrGame {
 			$this->allianceMaxPlayers = $this->db->getInt('alliance_max_players');
 			$this->allianceMaxVets = $this->db->getInt('alliance_max_vets');
 			$this->startingCredits = $this->db->getInt('starting_credits');
-		} else if ($create === true) {
+		} elseif ($create === true) {
 			$this->gameID = (int)$gameID;
 			$this->isNew = true;
 			return;

@@ -14,7 +14,7 @@
 					<a class="buttonA" href="<?php echo $LeaveNewbieHREF; ?>">Leave Newbie Protection</a>
 				</div>
 			<?php
-			} else if ($ThisPlayer->hasFederalProtection()) { ?>
+			} elseif ($ThisPlayer->hasFederalProtection()) { ?>
 				You are under <span class="blue">FEDERAL</span> protection.<?php
 			} else { ?>
 				You are <span class="red">NOT</span> under protection.<?php

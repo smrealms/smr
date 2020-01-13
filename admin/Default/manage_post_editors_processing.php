@@ -28,7 +28,7 @@ if ($action == "Assign") {
 	} else {
 		$db->query('INSERT INTO galactic_post_writer (account_id, game_id) VALUES (' . $db->escapeNumber($account_id) . ', ' . $db->escapeNumber($game_id) . ')');
 	}
-} else if ($action == "Remove") {
+} elseif ($action == "Remove") {
 	if (!$selected_player->isGPEditor()) {
 		$msg = "<span class='red'>ERROR: </span>$name is not an editor in game $game!";
 	} else {

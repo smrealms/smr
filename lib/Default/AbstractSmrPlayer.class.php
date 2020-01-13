@@ -924,7 +924,7 @@ abstract class AbstractSmrPlayer {
 		$hofType = implode(':', $typeList);
 		if (!isset(self::$HOFVis[$hofType])) {
 			self::$hasHOFVisChanged[$hofType] = self::HOF_NEW;
-		} else if (self::$HOFVis[$hofType] != $visibility) {
+		} elseif (self::$HOFVis[$hofType] != $visibility) {
 			self::$hasHOFVisChanged[$hofType] = self::HOF_CHANGED;
 		}
 		self::$HOFVis[$hofType] = $visibility;

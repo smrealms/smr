@@ -58,7 +58,7 @@ class RouteGenerator {
 					$mpr = new MultiplePortRoute($routeToContinue, $currentStepRoute);
 					self::addExpRoute($mpr);
 					self::addMoneyRoute($mpr);
-				} else if ($maxNumPorts > 1 && !$routeToContinue->containsPort($currentStepBuySector)) {
+				} elseif ($maxNumPorts > 1 && !$routeToContinue->containsPort($currentStepBuySector)) {
 					$mpr = new MultiplePortRoute($routeToContinue, $currentStepRoute);
 					self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $mpr, $routeLists[$currentStepBuySector], $routeLists, $lastGoodIsNothing);
 				}
@@ -167,7 +167,7 @@ class RouteGenerator {
 		foreach (self::$expRoutes as $multi => $routesByMulti) {
 			if (count($routesByMulti) + $i < $trimToBestXRoutes) {
 				$i += count($routesByMulti);
-			} else if ($i > $trimToBestXRoutes) {
+			} elseif ($i > $trimToBestXRoutes) {
 				unset(self::$expRoutes[$multi]);
 			} else {
 				foreach ($routesByMulti as $key => $value) {
@@ -189,7 +189,7 @@ class RouteGenerator {
 		foreach (self::$moneyRoutes as $multi => $routesByMulti) {
 			if (count($routesByMulti) + $i < $trimToBestXRoutes) {
 				$i += count($routesByMulti);
-			} else if ($i > $trimToBestXRoutes) {
+			} elseif ($i > $trimToBestXRoutes) {
 				unset(self::$moneyRoutes[$multi]);
 				continue;
 			} else {

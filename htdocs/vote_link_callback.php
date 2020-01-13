@@ -6,7 +6,7 @@ if (isset($_POST['account']) && isset($_POST['game']) && isset($_POST['link'])) 
 	$accountId = $_POST['account'];
 	$gameId = $_POST['game'];
 	$linkId = $_POST['link'];
-} else if (isset($_GET['votedef'])) {
+} elseif (isset($_GET['votedef'])) {
 	// callback from DOG
 	$data = explode(',', $_GET['votedef']);
 	$accountId = $data[0];

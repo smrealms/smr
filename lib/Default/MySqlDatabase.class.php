@@ -196,7 +196,7 @@ abstract class MySqlDatabase {
 		}
 		if ($string === true) {
 			$string = 'TRUE';
-		} else if ($string === false) {
+		} elseif ($string === false) {
 			$string = 'FALSE';
 		}
 		if (is_array($string)) {
@@ -252,7 +252,7 @@ abstract class MySqlDatabase {
 	public function escapeBoolean($bool, $quotes = true) {
 		if ($bool === true) {
 			return $this->escapeString('TRUE', $quotes);
-		} else if ($bool === false) {
+		} elseif ($bool === false) {
 			return $this->escapeString('FALSE', $quotes);
 		} else {
 			throw new Exception('Not a boolean: ' . $bool);

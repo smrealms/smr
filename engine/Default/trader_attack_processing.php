@@ -20,15 +20,15 @@ $targetPlayer = SmrPlayer::getPlayer($var['target'], $player->getGameID());
 
 	if ($player->traderNAPAlliance($targetPlayer)) {
 		create_error('Your alliance does not allow you to attack this trader.');
-	} else if ($targetPlayer->isDead()) {
+	} elseif ($targetPlayer->isDead()) {
 		create_error('Target is already dead.');
-	} else if ($targetPlayer->getSectorID() != $player->getSectorID()) {
+	} elseif ($targetPlayer->getSectorID() != $player->getSectorID()) {
 		create_error('Target is no longer in this sector.');
-	} else if ($targetPlayer->hasNewbieTurns()) {
+	} elseif ($targetPlayer->hasNewbieTurns()) {
 		create_error('Target is under newbie protection.');
-	} else if ($targetPlayer->isLandedOnPlanet()) {
+	} elseif ($targetPlayer->isLandedOnPlanet()) {
 		create_error('Target is protected by planetary shields.');
-	} else if ($targetPlayer->hasFederalProtection()) {
+	} elseif ($targetPlayer->hasFederalProtection()) {
 		create_error('Target is under federal protection.');
 	}
 

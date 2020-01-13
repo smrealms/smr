@@ -23,7 +23,7 @@ if ($player->forceNAPAlliance($forceOwner)) {
 // when moving into sector
 if ($var['action'] == 'attack') {
 	$bump = false;
-} else if ($var['action'] == 'bump') {
+} elseif ($var['action'] == 'bump') {
 	$bump = true;
 } else {
 	create_error('Action must be either bump or attack');
