@@ -31,7 +31,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 							: '') . '
 						)
 					LIMIT ' . count($logIDs));
-	} else if ($submitAction == 'Delete') {
+	} elseif ($submitAction == 'Delete') {
 		$db->query('DELETE FROM player_saved_combat_logs
 					WHERE log_id IN (' . $db->escapeArray($logIDs) . ')
 						AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
@@ -44,7 +44,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 	$container['message'] = $submitAction . 'd ' . $db->getChangedRows() . ' new logs.';
 	$container['action'] = $var['old_action'];
 	forward($container);
-} else if ($submitAction == 'View') {
+} elseif ($submitAction == 'View') {
 	$container = create_container('skeleton.php', 'combat_log_viewer.php');
 	$container['log_ids'] = $logIDs;
 	sort($container['log_ids']);

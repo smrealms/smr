@@ -306,7 +306,7 @@ class SmrForce {
 		}
 		if ($mines < 10) {
 			$turns = 1;
-		} else if ($mines < 25) {
+		} elseif ($mines < 25) {
 			$turns = 2;
 		} else {
 			$turns = 3;
@@ -363,10 +363,10 @@ class SmrForce {
 			if (!$this->exists()) {
 				$this->db->query('DELETE FROM sector_has_forces WHERE ' . $this->SQL);
 				$this->isNew = true;
-			} else if ($this->hasChanged) {
+			} elseif ($this->hasChanged) {
 				$this->db->query('UPDATE sector_has_forces SET combat_drones = ' . $this->db->escapeNumber($this->combatDrones) . ', scout_drones = ' . $this->db->escapeNumber($this->scoutDrones) . ', mines = ' . $this->db->escapeNumber($this->mines) . ', expire_time = ' . $this->db->escapeNumber($this->expire) . ' WHERE ' . $this->SQL);
 			}
-		} else if ($this->exists()) {
+		} elseif ($this->exists()) {
 			$this->db->query('INSERT INTO sector_has_forces (game_id, sector_id, owner_id, combat_drones, scout_drones, mines, expire_time)
 								VALUES('.$this->db->escapeNumber($this->gameID) . ', ' . $this->db->escapeNumber($this->sectorID) . ', ' . $this->db->escapeNumber($this->ownerID) . ', ' . $this->db->escapeNumber($this->combatDrones) . ', ' . $this->db->escapeNumber($this->scoutDrones) . ', ' . $this->db->escapeNumber($this->mines) . ', ' . $this->db->escapeNumber($this->expire) . ')');
 			$this->isNew = false;

@@ -32,17 +32,17 @@ if ($var['task'] == 'reset_image') {
 		$mail->send();
 	}
 
-} else if ($var['task'] == 'reset_location') {
+} elseif ($var['task'] == 'reset_location') {
 	$db->query('UPDATE album SET location = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
-} else if ($var['task'] == 'reset_email') {
+} elseif ($var['task'] == 'reset_email') {
 	$db->query('UPDATE album SET email = \'\' WHERE account_id =' . $db->escapeNumber($account_id));
-} else if ($var['task'] == 'reset_website') {
+} elseif ($var['task'] == 'reset_website') {
 	$db->query('UPDATE album SET website = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
-} else if ($var['task'] == 'reset_birthdate') {
+} elseif ($var['task'] == 'reset_birthdate') {
 	$db->query('UPDATE album SET day = 0, month = 0, year = 0 WHERE account_id = ' . $db->escapeNumber($account_id));
-} else if ($var['task'] == 'reset_other') {
+} elseif ($var['task'] == 'reset_other') {
 	$db->query('UPDATE album SET other = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
-} else if ($var['task'] == 'delete_comment') {
+} elseif ($var['task'] == 'delete_comment') {
 	$comment_ids = $_REQUEST['comment_ids'];
 	// we just ignore if nothing was set
 	if (count($comment_ids) > 0) {

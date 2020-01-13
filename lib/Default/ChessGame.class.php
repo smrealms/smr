@@ -189,7 +189,7 @@ class ChessGame {
 			if(!$mate && $this->hasEnded()) {
 				if($this->getWinner() != 0) {
 					$this->moves[] = ($this->getWinner() == $this->getWhiteID() ? 'Black' : 'White') . ' Resigned.';
-				} else if(count($this->moves) < 2) {
+				} elseif(count($this->moves) < 2) {
 					$this->moves[] = 'Game Cancelled.';
 				} else {
 					$this->moves[] = 'Game Drawn.';
@@ -438,7 +438,7 @@ class ChessGame {
 						'ToX' => 3
 					);
 			} //To the right
-			else if ($movement == 2) {
+			elseif ($movement == 2) {
 				return array('Type' => 'King',
 						'X' => 7,
 						'ToX' => 5
@@ -485,16 +485,16 @@ class ChessGame {
 				$board[$toY][$castling['ToX']]->setX($castling['ToX']);
 				$board[$y][$castling['X']] = null;
 			}
-		} else if($p->pieceID == ChessPiece::PAWN) {
+		} elseif($p->pieceID == ChessPiece::PAWN) {
 			if($toY == 0 || $toY == 7) {
 				$pawnPromotion = $p->promote($pawnPromotionPiece, $board);
 			}
 			//Double move to track?
-			else if(($y == 1 || $y == 6) && ($toY == 3 || $toY == 4)) {
+			elseif(($y == 1 || $y == 6) && ($toY == 3 || $toY == 4)) {
 				$nextPawnMovement = array($toX, $toY);
 			}
 			//En passant?
-			else if($hasMoved[ChessPiece::PAWN][0] == $toX &&
+			elseif($hasMoved[ChessPiece::PAWN][0] == $toX &&
 					($hasMoved[ChessPiece::PAWN][1] == 3 && $toY == 2 || $hasMoved[ChessPiece::PAWN][1] == 4 && $toY == 5)) {
 				$enPassant = true;
 				$pieceTaken = $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
@@ -503,7 +503,7 @@ class ChessGame {
 				}
 				$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = null;
 			}
-		} else if($p->pieceID == ChessPiece::ROOK && ($x == 0 || $x == 7) && $y == ($p->colour == self::PLAYER_WHITE ? 7 : 0)) {
+		} elseif($p->pieceID == ChessPiece::ROOK && ($x == 0 || $x == 7) && $y == ($p->colour == self::PLAYER_WHITE ? 7 : 0)) {
 			//Rook moved?
 			if($hasMoved[$p->colour][ChessPiece::ROOK][$x==0?'Queen':'King'] === false) {
 				// We set rook moved in here as it's used for move info.
@@ -563,10 +563,10 @@ class ChessGame {
 				$board[$y][$castling['X']]->setX($castling['X']);
 				$board[$toY][$castling['ToX']] = null;
 			}
-		} else if($moveInfo['EnPassant'] === true) {
+		} elseif($moveInfo['EnPassant'] === true) {
 			$board[$toY][$toX] = null;
 			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = $moveInfo['PieceTaken'];
-		} else if($moveInfo['RookMoved'] !== false) {
+		} elseif($moveInfo['RookMoved'] !== false) {
 			$hasMoved[$p->colour][ChessPiece::ROOK][$moveInfo['RookMoved']] = false;
 		}
 		if($moveInfo['RookTaken'] !== false) {

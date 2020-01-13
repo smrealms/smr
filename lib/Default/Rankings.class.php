@@ -13,7 +13,7 @@ class Rankings {
 			$class = '';
 			if ($player->getAllianceID() == $currentAlliance->getAllianceID()) {
 				$class = ' class="bold"';
-			} else if ($currentAlliance->hasDisbanded()) {
+			} elseif ($currentAlliance->hasDisbanded()) {
 				$class = ' class="red"';
 			}
 

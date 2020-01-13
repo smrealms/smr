@@ -137,7 +137,7 @@ class Plotter {
 					$checkSector = SmrSector::getSector($gameID, $checkSectorID);
 					if ($x == 'Distance') {
 						$distances[$sectorsTravelled][$checkSector->getSectorID()] = $distance;
-					} else if (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
+					} elseif (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
 							&& $checkSector->hasX($x, $player) === true) {
 						if ($useFirst === true) {
 							return $distance;

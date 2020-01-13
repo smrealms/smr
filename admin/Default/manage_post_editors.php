@@ -16,7 +16,7 @@ if ($activeGames) {
 	if (isset($_POST['game_id'])) {
 		SmrSession::updateVar('selected_game_id', $_POST['game_id']);
 		SmrSession::updateVar('processing_msg', null);
-	} else if (!isset($var['selected_game_id'])) {
+	} elseif (!isset($var['selected_game_id'])) {
 		SmrSession::updateVar('selected_game_id', $activeGames[0]['game_id']);
 	}
 	$template->assign('SelectedGame', $var['selected_game_id']);

@@ -34,7 +34,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Marked Messages') {
 					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND message_type_id = '.$db->escapeNumber($var['folder_id']) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	} else if ($var['folder_id'] == MSG_SENT) {
+	} elseif ($var['folder_id'] == MSG_SENT) {
 		$db->query('UPDATE message SET sender_delete = ' . $db->escapeBoolean(true) . '
 					WHERE sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()));

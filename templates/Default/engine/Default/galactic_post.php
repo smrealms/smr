@@ -14,7 +14,7 @@ foreach ($Papers as $Paper) { ?>
 	 which contains <span class="<?php echo $Paper['color']; ?>"><?php echo $Paper['num_articles']; ?> </span>articles.<?php
 	if ($Paper['published']) { ?>
 		<span class="bold green">PUBLISHED!</span><?php
-	} else if (isset($Paper['PublishHREF'])) { ?>
+	} elseif (isset($Paper['PublishHREF'])) { ?>
 		<a href="<?php echo $Paper['PublishHREF']; ?>"><b>HIT THE PRESS!</b></a><?php
 	} ?>
 

@@ -10,7 +10,7 @@ transfer('LocationID');
 if ($location->isHQ()) {
 	$container['body'] = 'government.php';
 	$type = 'HQ';
-} else if ($location->isUG()) {
+} elseif ($location->isUG()) {
 	$container['body'] = 'underground.php';
 	$type = 'UG';
 } else {

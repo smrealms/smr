@@ -17,7 +17,7 @@ if ($ship->hasJump()) {
 }
 if (isset($_REQUEST['xtype'])) {
 	SmrSession::updateVar('XType', $_REQUEST['xtype']);
-} else if (!isset($var['XType'])) {
+} elseif (!isset($var['XType'])) {
 	SmrSession::updateVar('XType', 'Technology');
 }
 $template->assign('XType', $var['XType']);

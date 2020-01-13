@@ -157,7 +157,7 @@ class AbstractSmrLocation {
 		if ($bool === true) {
 			$this->db->query('INSERT IGNORE INTO location_is_fed (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->fed = true;
-		} else if ($bool === false) {
+		} elseif ($bool === false) {
 			$this->db->query('DELETE FROM location_is_fed WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->fed = false;
 		}
@@ -178,7 +178,7 @@ class AbstractSmrLocation {
 		if ($bool === true) {
 			$this->db->query('INSERT INTO location_is_bank (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->bank = true;
-		} else if ($bool === false) {
+		} elseif ($bool === false) {
 			$this->db->query('DELETE FROM location_is_bank WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->bank = false;
 		}
@@ -199,7 +199,7 @@ class AbstractSmrLocation {
 		if ($bool === true) {
 			$this->db->query('INSERT IGNORE INTO location_is_bar (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->bar = true;
-		} else if ($bool === false) {
+		} elseif ($bool === false) {
 			$this->db->query('DELETE FROM location_is_bar WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->bar = false;
 		}
@@ -220,7 +220,7 @@ class AbstractSmrLocation {
 		if ($bool === true) {
 			$this->db->query('INSERT IGNORE INTO location_is_hq (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->HQ = true;
-		} else if ($bool === false) {
+		} elseif ($bool === false) {
 			$this->db->query('DELETE FROM location_is_hq WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->HQ = false;
 		}
@@ -241,7 +241,7 @@ class AbstractSmrLocation {
 		if ($bool === true) {
 			$this->db->query('INSERT INTO location_is_ug (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->UG = true;
-		} else if ($bool === false) {
+		} elseif ($bool === false) {
 			$this->db->query('DELETE FROM location_is_ug WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->UG = false;
 		}

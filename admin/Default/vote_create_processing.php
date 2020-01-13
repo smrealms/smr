@@ -28,7 +28,7 @@ if ($_REQUEST['action'] == 'Create Vote') {
 	
 	// put the msg into the database
 	$db->query('INSERT INTO voting (question, end) VALUES(' . $db->escapeString($question) . ',' . $db->escapeNumber($end) . ')');
-} else if ($_REQUEST['action'] == 'Add Option') {
+} elseif ($_REQUEST['action'] == 'Add Option') {
 	if (empty($option)) {
 		create_error('You have to specify an option message.');
 	}

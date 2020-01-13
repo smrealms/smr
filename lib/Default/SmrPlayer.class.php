@@ -334,7 +334,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
 			$this->actionTaken('PlayerKicked', array('Alliance' => $alliance, 'Player' => $kickedBy));
 			$kickedBy->actionTaken('KickPlayer', array('Alliance' => $alliance, 'Player' => $this));
-		} else if ($this->isAllianceLeader()) {
+		} elseif ($this->isAllianceLeader()) {
 			$this->actionTaken('DisbandAlliance', array('Alliance' => $alliance));
 		} else {
 			$this->actionTaken('LeaveAlliance', array('Alliance' => $alliance));
@@ -892,7 +892,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			// If the podded players alignment makes them deputy or member then set bounty
 			if ($this->getAlignment() >= 100) {
 				$return['BountyGained']['Type'] = 'HQ';
-			} else if ($this->getAlignment() <= 100) {
+			} elseif ($this->getAlignment() <= 100) {
 				$return['BountyGained']['Type'] = 'UG';
 			}
 
@@ -1171,7 +1171,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 					if ($amount > 0) {
 						$this->db->query('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeArray($tempTypeList, false, true, ':', false) . ',' . $this->db->escapeNumber($amount) . ')');
 					}
-				} else if ($hofChanged == self::HOF_CHANGED) {
+				} elseif ($hofChanged == self::HOF_CHANGED) {
 	//				if($amount > 0)
 						$this->db->query('UPDATE player_hof
 							SET amount=' . $this->db->escapeNumber($amount) . '
@@ -1584,7 +1584,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->db->query('REPLACE INTO player_plotted_course
 				(account_id, game_id, course)
 				VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeBinary(serialize($this->plottedCourse)) . ')');
-		} else if ($hadPlottedCourse) {
+		} elseif ($hadPlottedCourse) {
 			$this->deletePlottedCourse();
 		}
 	}

@@ -92,7 +92,7 @@ class ChessPiece {
 					}
 				}
 			}
-			else if ($this->pieceID == self::KING) {
+			elseif ($this->pieceID == self::KING) {
 				for ($i = -1; $i < 2; $i++) {
 					for ($j = -1; $j < 2; $j++) {
 						if ($i != 0 || $j != 0) {
@@ -115,7 +115,7 @@ class ChessPiece {
 					}
 				}
 			}
-			else if ($this->pieceID == self::QUEEN) {
+			elseif ($this->pieceID == self::QUEEN) {
 				$moveX = $this->x;
 				$moveY = $this->y;
 				while ($this->addMove(--$moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Left
@@ -141,7 +141,7 @@ class ChessPiece {
 				$moveY = $this->y;
 				while ($this->addMove(++$moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up-Left
 			}
-			else if ($this->pieceID == self::ROOK) {
+			elseif ($this->pieceID == self::ROOK) {
 				$moveX = $this->x;
 				$moveY = $this->y;
 				while ($this->addMove(--$moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Left
@@ -155,7 +155,7 @@ class ChessPiece {
 				$moveY = $this->y;
 				while ($this->addMove($moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Down
 			}
-			else if ($this->pieceID == self::BISHOP) {
+			elseif ($this->pieceID == self::BISHOP) {
 				$moveX = $this->x;
 				$moveY = $this->y;
 				while ($this->addMove(--$moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up-Left
@@ -169,7 +169,7 @@ class ChessPiece {
 				$moveY = $this->y;
 				while ($this->addMove(++$moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up-Left
 			}
-			else if ($this->pieceID == self::KNIGHT) {
+			elseif ($this->pieceID == self::KNIGHT) {
 				$moveX = $this->x - 1;
 				$moveY = $this->y - 2;
 				$this->addMove($moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck); //2up-left

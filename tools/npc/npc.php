@@ -155,7 +155,7 @@ function NPCStuff() {
 			$fedContainer = null;
 			if ($var['url'] == 'shop_ship_processing.php' && ($fedContainer = plotToFed($player, true)) !== true) { //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
 				processContainer($fedContainer);
-			} else if ($player->getShip()->isUnderAttack() === true
+			} elseif ($player->getShip()->isUnderAttack() === true
 				&&($player->hasPlottedCourse() === false || $player->getPlottedCourse()->getEndSector()->offersFederalProtection() === false)
 				&&($fedContainer == null ? $fedContainer = plotToFed($player, true) : $fedContainer) !== true) { //We're under attack and need to plot course to fed.
 				// Get the lock, remove under attack and update.
@@ -168,16 +168,16 @@ function NPCStuff() {
 				debug('Under Attack');
 				$underAttack = true;
 				processContainer($fedContainer);
-			} else if ($player->hasPlottedCourse() === true && $player->getPlottedCourse()->getEndSector()->offersFederalProtection()) { //We have a route to fed to follow, figure it's probably a damned sensible thing to follow.
+			} elseif ($player->hasPlottedCourse() === true && $player->getPlottedCourse()->getEndSector()->offersFederalProtection()) { //We have a route to fed to follow, figure it's probably a damned sensible thing to follow.
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} else if (($container = canWeUNO($player, true)) !== false) { //We have money and are at a uno, let's uno!
+			} elseif (($container = canWeUNO($player, true)) !== false) { //We have money and are at a uno, let's uno!
 				debug('We\'re UNOing');
 				processContainer($container);
-			} else if ($player->hasPlottedCourse() === true) { //We have a route to follow, figure it's probably a sensible thing to follow.
+			} elseif ($player->hasPlottedCourse() === true) { //We have a route to follow, figure it's probably a sensible thing to follow.
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} else if ($player->getTurns() < NPC_LOW_TURNS || ($player->getTurns() < $player->getMaxTurns() / 2 && $player->getNewbieTurns() < NPC_LOW_NEWBIE_TURNS) || $underAttack) { //We're low on turns or have been under attack and need to plot course to fed
+			} elseif ($player->getTurns() < NPC_LOW_TURNS || ($player->getTurns() < $player->getMaxTurns() / 2 && $player->getNewbieTurns() < NPC_LOW_NEWBIE_TURNS) || $underAttack) { //We're low on turns or have been under attack and need to plot course to fed
 				if ($player->getTurns() < NPC_LOW_TURNS) {
 					debug('Low Turns:' . $player->getTurns());
 				}
@@ -194,13 +194,13 @@ function NPCStuff() {
 				}
 				$ship = $player->getShip();
 				processContainer(plotToFed($player, !$ship->hasMaxShields() || !$ship->hasMaxArmour() || !$ship->hasMaxCargoHolds()));
-			} else if (($container = checkForShipUpgrade($player)) !== false) { //We have money and are at a uno, let's uno!
+			} elseif (($container = checkForShipUpgrade($player)) !== false) { //We have money and are at a uno, let's uno!
 				debug('We\'re reshipping!');
 				processContainer($container);
-			} else if (($container = canWeUNO($player, false)) !== false) { //We need to UNO and have enough money to do it properly so let's do it sooner rather than later.
+			} elseif (($container = canWeUNO($player, false)) !== false) { //We need to UNO and have enough money to do it properly so let's do it sooner rather than later.
 				debug('We need to UNO, so off we go!');
 				processContainer($container);
-			} else if ($TRADE_ROUTE instanceof \Routes\Route) {
+			} elseif ($TRADE_ROUTE instanceof \Routes\Route) {
 				debug('Trade Route');
 				$forwardRoute = $TRADE_ROUTE->getForwardRoute();
 				$returnRoute = $TRADE_ROUTE->getReturnRoute();
@@ -208,7 +208,7 @@ function NPCStuff() {
 					if ($forwardRoute->getBuySectorId() == $player->getSectorID()) {
 						$buyRoute = $forwardRoute;
 						$sellRoute = $returnRoute;
-					} else if ($returnRoute->getBuySectorId() == $player->getSectorID()) {
+					} elseif ($returnRoute->getBuySectorId() == $player->getSectorID()) {
 						$buyRoute = $returnRoute;
 						$sellRoute = $forwardRoute;
 					}
@@ -235,7 +235,7 @@ function NPCStuff() {
 									continue;
 								}
 							}
-						} else if ($ship->hasCargo($buyRoute->getGoodID()) === true) { //We've bought goods, plot to sell
+						} elseif ($ship->hasCargo($buyRoute->getGoodID()) === true) { //We've bought goods, plot to sell
 							debug('Plot To Sell: ' . $buyRoute->getSellSectorId());
 							processContainer(plotToSector($player, $buyRoute->getSellSectorId()));
 						} else {

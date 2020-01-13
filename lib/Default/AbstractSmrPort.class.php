@@ -981,7 +981,7 @@ class AbstractSmrPort {
 			$supplyFactor = 1 + ($supply / $maxSupply);
 			$relationsFactor = 1 + 2 * ($relations / 1000);
 			$scale = 0.08;
-		} else if ($transactionType == 'Buy') {
+		} elseif ($transactionType == 'Buy') {
 			// Trader buys
 			$supplyFactor = 2 - ($supply / $maxSupply);
 			$relationsFactor = 3 - 2 * ($relations / 1000);
@@ -1009,7 +1009,7 @@ class AbstractSmrPort {
 //
 //		if($transactionType == 'Buy')
 //			$offeredPrice = round( $idealPrice * (($relations - 1250) / 10000 + 1 * (pow($relations / 500 + 1, $rand)) - ($relations / 9500)) );
-//		else if($transactionType == 'Sell')
+//		elseif($transactionType == 'Sell')
 //			$offeredPrice = round( $idealPrice * (($relations - 1500) / 10000 + 1 * (pow($relations / 500 + 1, $rand)) - ($relations / 2450) + .35) );
 //		return $offeredPrice;
 	}

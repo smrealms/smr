@@ -193,7 +193,7 @@ class Template {
 	protected function doDamageTypeReductionDisplay(&$damageTypes) {
 		if ($damageTypes == 3) {
 			echo ', ';
-		} else if ($damageTypes == 2) {
+		} elseif ($damageTypes == 2) {
 			echo ' and ';
 		}
 		$damageTypes--;

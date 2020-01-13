@@ -216,7 +216,7 @@ class SmrSession {
 					if ($value['Expires'] > 0 && $value['Expires'] <= TIME) { // Use 0 for infinity
 						//This link is no longer valid
 						unset(self::$var[$key]);
-					} else if ($value['RemainingPageLoads'] < 0) {
+					} elseif ($value['RemainingPageLoads'] < 0) {
 						//This link is no longer valid
 						unset(self::$var[$key]);
 					} else {
