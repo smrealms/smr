@@ -341,8 +341,9 @@ if (isset($GameID)) { ?>
 			<td><input type="submit" name="action" value="Change CSS Options" class="InputFields" /></td>
 		</tr>
 	</table>
-	<br />
-	
+</form><br />
+
+<form id="HotkeyPreferencesForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 	<table>
 		<tr>
 			<th colspan="2">Hotkeys (Use space to separate multiple hotkeys)</th>
