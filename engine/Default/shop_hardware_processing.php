@@ -1,12 +1,6 @@
 <?php declare(strict_types=1);
-$action = $_REQUEST['action'];
-$amount = $_REQUEST['amount'];
-if (!is_numeric($amount)) {
-	create_error('Numbers only please');
-}
-
-// only whole numbers allowed
-$amount = floor($amount);
+$action = Request::get('action');
+$amount = Request::getInt('amount');
 
 $hardware_id = $var['hardware_id'];
 $hardware_name = Globals::getHardwareName($hardware_id);

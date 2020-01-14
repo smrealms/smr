@@ -1,13 +1,7 @@
 <?php declare(strict_types=1);
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
-if (isset($_REQUEST['amount'])) {
-	SmrSession::updateVar('amount', $_REQUEST['amount']);
-}
-$amount = $var['amount'];
-if (!is_numeric($amount)) {
-	create_error('Numbers only please!');
-}
+$amount = Request::getVarInt('amount');
 
 if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');

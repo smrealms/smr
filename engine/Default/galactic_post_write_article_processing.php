@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-$title = trim($_REQUEST['title']);
-$message = trim($_REQUEST['message']);
+$title = trim(Request::get('title'));
+$message = trim(Request::get('message'));
 if (!$player->isGPEditor()) {
 	$title = htmlentities($title, ENT_COMPAT, 'utf-8');
 	$message = htmlentities($message, ENT_COMPAT, 'utf-8');
 }
 
-if ($_REQUEST['action'] == 'Preview article') {
+if (Request::get('action') == 'Preview article') {
 	$container = create_container('skeleton.php', 'galactic_post_write_article.php');
 	$container['PreviewTitle'] = $title;
 	$container['Preview'] = $message;

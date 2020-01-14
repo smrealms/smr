@@ -6,7 +6,7 @@ if ($db->nextRecord()) {
 } else {
 	$num = 1;
 }
-$title = $_REQUEST['title'];
+$title = Request::get('title');
 $db->query('INSERT INTO galactic_post_paper (game_id, paper_id, title) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($num) . ', ' . $db->escapeString($title) . ')');
 //send em back
 $container = create_container('skeleton.php', 'galactic_post_view_article.php');

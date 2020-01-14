@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-$message = trim($_REQUEST['message']);
-$expire = $_REQUEST['expire'];
-if ($_REQUEST['action'] == 'Preview message') {
+$message = trim(Request::get('message'));
+$expire = Request::getFloat('expire');
+if (Request::get('action') == 'Preview message') {
 	$container = create_container('skeleton.php', 'admin_message_send.php');
 	transfer('SendGameID');
 	$container['preview'] = $message;
@@ -11,10 +11,7 @@ if ($_REQUEST['action'] == 'Preview message') {
 }
 
 $game_id = $var['SendGameID'];
-if (isset($_REQUEST['account_id']) || $game_id == 20000) {
-	if (!is_numeric($expire)) {
-		create_error('Expire time must be numeric!');
-	}
+if (Request::has('account_id') || $game_id == 20000) {
 	if ($expire < 0) {
 		create_error('Expire time cannot be negative!');
 	}
@@ -24,7 +21,7 @@ if (isset($_REQUEST['account_id']) || $game_id == 20000) {
 	}
 
 	if ($game_id != 20000) {
-		SmrPlayer::sendMessageFromAdmin($game_id, $_REQUEST['account_id'], $message, $expire);
+		SmrPlayer::sendMessageFromAdmin($game_id, Request::getInt('account_id'), $message, $expire);
 	} else {
 		//send to all players in games that haven't ended yet
 		$db->query('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(TIME));

@@ -18,9 +18,9 @@ if (!session_start(['gc_probability' => 0, 'gc_maxlifetime' => 86400])) {
 
 // Set temporary options
 if ($player->hasAlliance()) {
-	if (isset($_POST['change_settings'])) {
-		$_SESSION['show_seedlist_sectors'] = isset($_POST['show_seedlist_sectors']);
-		$_SESSION['hide_allied_forces'] = isset($_POST['hide_allied_forces']);
+	if (Request::has('change_settings')) {
+		$_SESSION['show_seedlist_sectors'] = Request::has('show_seedlist_sectors');
+		$_SESSION['hide_allied_forces'] = Request::has('hide_allied_forces');
 	}
 	$showSeedlistSectors = $_SESSION['show_seedlist_sectors'] ?? false;
 	$hideAlliedForces = $_SESSION['hide_allied_forces'] ?? false;

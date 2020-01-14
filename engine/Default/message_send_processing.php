@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-$message = htmlentities(trim($_REQUEST['message']), ENT_COMPAT, 'utf-8');
+$message = htmlentities(trim(Request::get('message')), ENT_COMPAT, 'utf-8');
 
-if ($_REQUEST['action'] == 'Preview message') {
+if (Request::get('action') == 'Preview message') {
 	$container = create_container('skeleton.php');
 	if (isset($var['alliance_id'])) {
 		$container['body'] = 'alliance_broadcast.php';

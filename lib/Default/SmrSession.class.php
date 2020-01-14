@@ -349,7 +349,8 @@ class SmrSession {
 	/**
 	 * Gets a var from $_REQUEST (or $default) and then stores it in the
 	 * session so that it can still be retrieved when the page auto-refreshes.
-	 * This is the recommended way to get $_REQUEST data.
+	 * This is the recommended way to get $_REQUEST data for display pages.
+	 * For processing pages, see the Request class.
 	 */
 	public static function getRequestVar($varName, $default = null) {
 		global $var;

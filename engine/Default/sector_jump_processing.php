@@ -4,11 +4,7 @@ if (!$player->getGame()->hasStarted()) {
 	create_error('You cannot move until the game has started!');
 }
 
-if (isset($_REQUEST['target'])) {
-	$target = trim($_REQUEST['target']);
-} else {
-	$target = $var['target'];
-}
+$target = Request::getVarInt('target');
 
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
@@ -28,10 +24,6 @@ if (empty($target)) {
 	create_error('Where do you want to go today?');
 }
 
-if (!is_numeric($target)) {
-	create_error('Please enter only numbers!');
-}
-
 if ($player->getSectorID() == $target) {
 	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 }
@@ -41,7 +33,7 @@ if (!SmrSector::sectorExists($player->getGameID(), $target)) {
 }
 
 // If the Calculate Turn Cost button was pressed
-if (isset($_POST['action']) && $_POST['action'] == 'Calculate Turn Cost') {
+if (Request::get('action', '')  == 'Calculate Turn Cost') {
 	$container = create_container('skeleton.php', 'sector_jump_calculate.php');
 	$container['target'] = $target;
 	forward($container);

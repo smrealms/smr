@@ -1,45 +1,26 @@
 <?php declare(strict_types=1);
-$question = trim($_REQUEST['question']);
-if ($_REQUEST['action'] == 'Preview Vote') {
+
+$action = Request::get('action');
+if ($action == 'Preview Vote') {
 	$container = create_container('skeleton.php', 'vote_create.php');
-	$container['PreviewVote'] = $question;
-	$container['Days'] = $_REQUEST['days'];
+	$container['PreviewVote'] = Request::get('question');
+	$container['Days'] = Request::getInt('days');
 	forward($container);
 }
-$option = trim($_REQUEST['option']);
-if ($_REQUEST['action'] == 'Preview Option') {
+if ($action == 'Preview Option') {
 	$container = create_container('skeleton.php', 'vote_create.php');
-	$container['PreviewOption'] = $option;
-	$container['VoteID'] = $_REQUEST['vote'];
+	$container['PreviewOption'] = Request::get('option');
+	$container['VoteID'] = Request::getInt('vote');
 	forward($container);
 }
 
-if ($_REQUEST['action'] == 'Create Vote') {
-	if (empty($question)) {
-		create_error('You have to specify a vote message.');
-	}
-	if (empty($_REQUEST['days'])) {
-		create_error('You have to specify the amount of time to run the vote for.');
-	}
-	if (!is_numeric($_REQUEST['days'])) {
-		create_error('The vote runtime must be a number.');
-	}
-	$end = TIME + 86400 * $_REQUEST['days'];
-	
-	// put the msg into the database
+if ($action == 'Create Vote') {
+	$question = trim(Request::get('question'));
+	$end = TIME + 86400 * Request::getInt('days');
 	$db->query('INSERT INTO voting (question, end) VALUES(' . $db->escapeString($question) . ',' . $db->escapeNumber($end) . ')');
-} elseif ($_REQUEST['action'] == 'Add Option') {
-	if (empty($option)) {
-		create_error('You have to specify an option message.');
-	}
-	if (empty($_REQUEST['vote'])) {
-		create_error('You have to select a vote to add the option to.');
-	}
-	if (!is_numeric($_REQUEST['vote'])) {
-		create_error('Vote ID must be a number.');
-	}
-	
-	// put the msg into the database
-	$db->query('INSERT INTO voting_options (vote_id, text) VALUES(' . $db->escapeNumber($_REQUEST['vote']) . ',' . $db->escapeString($option) . ')');
+} elseif ($action == 'Add Option') {
+	$option = trim(Request::get('option'));
+	$voteID = Request::getInt('vote');
+	$db->query('INSERT INTO voting_options (vote_id, text) VALUES(' . $db->escapeNumber($voteID) . ',' . $db->escapeString($option) . ')');
 }
 forward(create_container('skeleton.php', 'vote_create.php'));

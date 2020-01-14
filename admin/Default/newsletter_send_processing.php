@@ -6,7 +6,7 @@ $mail->setFrom('newsletter@smrealms.de', 'SMR Team');
 
 $mail->Encoding = 'base64';
 
-$mail->Subject = $_REQUEST['subject'];
+$mail->Subject = Request::get('subject');
 
 function set_mail_body($mail, $newsletterHtml, $newsletterText, $salutation) {
 	// Prepend the salutation if one is given
@@ -35,9 +35,9 @@ function set_mail_body($mail, $newsletterHtml, $newsletterText, $salutation) {
 
 // Set the body of the e-mail
 set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text'],
-              $_REQUEST['salutation']);
+              Request::get('salutation'));
 
-if ($_REQUEST['to_email'] == '*') {
+if (Request::get('to_email') == '*') {
 	// Send the newsletter to all players.
 	// Disable output buffering here so we can monitor the progress.
 	header('X-Accel-Buffering: no'); // disable Nginx output buffering
@@ -64,8 +64,9 @@ if ($_REQUEST['to_email'] == '*') {
 		$to_name = $db->getField('login');
 
 		// Reset the message body with personalized salutation, if requested
-		if ($_REQUEST['salutation']) {
-			$salutation = $_REQUEST['salutation'] . ' ' . $to_name . ',';
+		$salutation = trim(Request::get('salutation'));
+		if (!empty($salutation)) {
+			$salutation .= ' ' . $to_name . ',';
 			set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text'], $salutation);
 		}
 
@@ -98,7 +99,7 @@ if ($_REQUEST['to_email'] == '*') {
 } else {
 
 	$mail->addReplyTo('support@smrealms.de', 'SMR Support');
-	$mail->addAddress($_REQUEST['to_email'], $_REQUEST['to_email']);
+	$mail->addAddress(Request::get('to_email'));
 
 	if (!$mail->send()) {
 		echo 'error.' . EOL . $mail->ErrorInfo;

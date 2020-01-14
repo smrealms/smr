@@ -5,7 +5,7 @@ if (!$player->isPresident()) {
 }
 
 $race_id = $var['race_id'];
-$type = strtoupper($_REQUEST['action']);
+$type = strtoupper(Request::get('action'));
 $time = TIME + TIME_FOR_COUNCIL_VOTE;
 
 $db->query('SELECT count(*) FROM race_has_voting

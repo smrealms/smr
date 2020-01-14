@@ -9,9 +9,7 @@ if (isset($var['Down']) && is_numeric($var['Down'])) {
 }
 
 if (isset($var['Form'])) {
-	if (isset($_REQUEST['weapon_reorder']) && is_array($_REQUEST['weapon_reorder'])) {
-		$ship->setWeaponLocations($_REQUEST['weapon_reorder']);
-	}
+	$ship->setWeaponLocations(Request::getIntArray('weapon_reorder'));
 }
 
 forward(create_container('skeleton.php', 'weapon_reorder.php'));

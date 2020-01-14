@@ -4,11 +4,10 @@ if (!$player->isLandedOnPlanet()) {
 }
 // get a planet from the sector where the player is in
 $planet = $player->getSectorPlanet();
-$action = $_REQUEST['action'];
-$password = isset($_REQUEST['password']) ? $_REQUEST['password'] : '';
+$action = Request::get('action');
 
 if ($action == 'Take Ownership') {
-	if ($planet->hasOwner() && $planet->getPassword() != $password) {
+	if ($planet->hasOwner() && $planet->getPassword() != Request::get('password')) {
 		create_error('You are not allowed to take ownership!');
 	}
 
@@ -23,7 +22,7 @@ if ($action == 'Take Ownership') {
 	$planet->update();
 	$account->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.', $player->getSectorID());
 } elseif ($action == 'Rename') {
-	$name = trim($_REQUEST['name']);
+	$name = trim(Request::get('name'));
 	if (empty($name)) {
 		create_error('You cannot leave your planet nameless!');
 	}
@@ -34,6 +33,7 @@ if ($action == 'Take Ownership') {
 
 } elseif ($action == 'Set Password') {
 	// set password
+	$password = Request::get('password');
 	$planet->setPassword($password);
 	$planet->update();
 	$account->log(LOG_TYPE_PLANETS, 'Player sets planet password to ' . $password, $player->getSectorID());

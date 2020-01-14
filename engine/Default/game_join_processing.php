@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 // trim input now
-$player_name = trim($_REQUEST['player_name']);
+$player_name = trim(Request::get('player_name'));
 
 if (!defined('NPC_SCRIPT') && strpos($player_name, 'NPC') === 0) {
 	create_error('Player names cannot begin with "NPC".');
@@ -32,7 +32,7 @@ if (empty($player_name)) {
 	create_error('You must enter a player name!');
 }
 
-$race_id = $_REQUEST['race_id'];
+$race_id = Request::getInt('race_id');
 if (empty($race_id) || $race_id == RACE_NEUTRAL) {
 	create_error('Please choose a race!');
 }

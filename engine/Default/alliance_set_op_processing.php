@@ -17,11 +17,12 @@ if (!empty($var['cancel'])) {
 	// so they may get an errant alliance message icon if logged in.
 } else {
 	// schedule an op
-	if (empty($_POST['date'])) {
+	$date = Request::get('date');
+	if (empty($date)) {
 		error_on_page('You must specify a date for the operation!');
 	}
 
-	$time = strtotime($_POST['date']);
+	$time = strtotime($date);
 	if ($time === false) {
 		error_on_page('The specified date is not in a valid format.');
 	}

@@ -2,19 +2,15 @@
 if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
 }
-$amount = $_REQUEST['amount'];
-if (!is_numeric($amount)) {
-	create_error('Numbers only please');
-}
-$amount = floor($amount);
 
+$amount = Request::getInt('amount');
 if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');
 }
 
 // get a planet from the sector where the player is in
 $planet = $player->getSectorPlanet();
-$action = $_REQUEST['action'];
+$action = Request::get('action');
 // transfer to ship
 if ($action == 'Ship') {
 

@@ -2,11 +2,7 @@
 // get good name, id, ...
 $good_id = $var['GoodID'];
 $good_name = Globals::getGoodName($good_id);
-$amount = $_REQUEST['amount'];
-if (!is_numeric($amount)) {
-	create_error('Numbers only please!');
-}
-$amount = floor($amount);
+$amount = Request::getInt('amount');
 if ($amount <= 0) {
 	create_error('You must enter an amount > 0!');
 }

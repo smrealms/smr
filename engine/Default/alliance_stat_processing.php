@@ -3,26 +3,26 @@ if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
-if (isset($_REQUEST['password'])) {
-	$password = trim($_REQUEST['password']);
+if (Request::has('password')) {
+	$password = trim(Request::get('password'));
 }
-if (isset($_REQUEST['description'])) {
-	$description = trim($_REQUEST['description']);
+if (Request::has('description')) {
+	$description = trim(Request::get('description'));
 }
-if (isset($_REQUEST['discord_server'])) {
-	$discordServer = trim($_REQUEST['discord_server']);
+if (Request::has('discord_server')) {
+	$discordServer = trim(Request::get('discord_server'));
 }
-if (isset($_REQUEST['discord_channel'])) {
-	$discordChannel = trim($_REQUEST['discord_channel']);
+if (Request::has('discord_channel')) {
+	$discordChannel = trim(Request::get('discord_channel'));
 }
-if (isset($_REQUEST['irc'])) {
-	$irc = trim($_REQUEST['irc']);
+if (Request::has('irc')) {
+	$irc = trim(Request::get('irc'));
 }
-if (isset($_REQUEST['mod'])) {
-	$mod = trim($_REQUEST['mod']);
+if (Request::has('mod')) {
+	$mod = trim(Request::get('mod'));
 }
-if (isset($_REQUEST['url'])) {
-	$url = trim($_REQUEST['url']);
+if (Request::has('url')) {
+	$url = trim(Request::get('url'));
 }
 
 // Prevent XSS attacks

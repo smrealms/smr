@@ -1,13 +1,18 @@
 <?php declare(strict_types=1);
 require_once(LIB . 'Default/shop_goods.inc');
 
-// creates needed objects
-$amount = get_amount();
-$bargain_price = get_bargain_price();
-
-if (!is_numeric($amount) || !is_numeric($bargain_price)) {
-	create_error('Numbers only please!');
+$amount = Request::getVarInt('amount');
+// no negative amounts are allowed
+if ($amount <= 0) {
+	create_error('You must enter an amount > 0!');
 }
+
+$bargain_price = Request::getVarInt('bargain_price', 0);
+// no negative amounts are allowed
+if ($bargain_price < 0) {
+	create_error('Negative prices are not allowed!');
+}
+
 // get good name, id, ...
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
@@ -73,14 +78,14 @@ if ($ideal_price == 0 || $offered_price == 0) {
 	create_error('Port calculation error...buy more goods.');
 }
 
-if ($_REQUEST['action'] == 'Steal') {
+if (Request::get('action') == 'Steal') {
 	if (!$ship->isUnderground()) {
 		throw new Exception('Player tried to steal in a non-underground ship!');
 	}
 	if ($transaction != 'Buy') {
 		throw new Exception('Player tried to steal a good the port does not sell!');
 	}
-	$transaction = $_REQUEST['action'];
+	$transaction = Request::get('action');
 
 	// Small chance to get caught stealing
 	$catchChancePercent = $port->getMaxLevel() - $port->getLevel() + 1;

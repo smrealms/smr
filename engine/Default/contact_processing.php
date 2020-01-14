@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-$receiver = $_REQUEST['receiver'];
-$subject = $_REQUEST['subject'];
-$msg = $_REQUEST['msg'];
+$receiver = Request::get('receiver');
+$subject = Request::get('subject');
+$msg = Request::get('msg');
 
 $mail = setupMailer();
 $mail->Subject = $subject;

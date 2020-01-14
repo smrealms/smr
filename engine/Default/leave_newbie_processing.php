@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-$action = $_REQUEST['action'];
+$action = Request::get('action');
 if ($action == 'Yes!') {
 	$player->setNewbieTurns(0);
 	$player->setNewbieWarning(false);

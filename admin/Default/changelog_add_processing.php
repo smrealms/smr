@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-$change_title = $_REQUEST['change_title'];
-$change_message = $_REQUEST['change_message'];
-$affected_db = $_REQUEST['affected_db'];
+$change_title = Request::get('change_title');
+$change_message = Request::get('change_message');
+$affected_db = Request::get('affected_db');
 
 $container = create_container('skeleton.php', 'changelog.php');
 
-if ($_REQUEST['action'] == 'Preview') {
+if (Request::get('action') == 'Preview') {
 	$container['change_title'] = $change_title;
 	$container['change_message'] = $change_message;
 	$container['affected_db'] = $affected_db;

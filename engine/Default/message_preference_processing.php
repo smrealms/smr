@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-if (isset($_POST['ignore_globals'])) {
-	$player->setIgnoreGlobals($_POST['ignore_globals'] == 'Yes');
-} elseif (isset($_POST['group_scouts'])) {
-	$player->setGroupScoutMessages(strtoupper($_POST['group_scouts']));
+if (Request::has('ignore_globals')) {
+	$player->setIgnoreGlobals(Request::get('ignore_globals') == 'Yes');
+} elseif (Request::has('group_scouts')) {
+	$player->setGroupScoutMessages(strtoupper(Request::get('group_scouts')));
 }
 
 $container = create_container('skeleton.php', 'message_view.php');
