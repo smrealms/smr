@@ -1,13 +1,10 @@
 <?php declare(strict_types=1);
 
-if (!empty($_POST['game_id'])) {
-	// Enable the requested game
-	$db->query('UPDATE game SET enabled=' . $db->escapeBoolean(true) .
-	           ' WHERE game_id=' . $db->escapeNumber($_POST['game_id']));
+$game = SmrGame::getGame($_POST['game_id']);
+$game->setEnabled(true);
+$game->save(); // because next page queries database
 
-	$game = SmrGame::getGame($_POST['game_id'])->getDisplayName();
-	$msg = "<span class='green'>SUCCESS: </span>Enabled game $game.";
-}
+$msg = '<span class="green">SUCCESS: </span>Enabled game ' . $game->getDisplayName();
 
 forward(create_container('skeleton.php', 'enable_game.php',
                          array('processing_msg' => $msg)));
