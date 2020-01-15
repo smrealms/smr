@@ -27,10 +27,8 @@ if (!isset($var['Message'])) {
 		$message = 'I havent heard anything recently... got anything to tell me?';
 	}
 	SmrSession::updateVar('Message', $message);
-} else {
-	$message = $var['Message'];
 }
-$template->assign('Message', $message);
+$template->assign('Message', $var['Message']);
 
 $container = create_container('skeleton.php', 'bar_talk_bartender.php');
 transfer('LocationID');
