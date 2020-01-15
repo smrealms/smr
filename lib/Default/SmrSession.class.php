@@ -175,7 +175,7 @@ class SmrSession {
 		if (!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']])) {
 			$var = self::$var[$_REQUEST['sn']];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
-			$loadDelay = isset(self::URL_LOAD_DELAY[$currentPage]) ? self::URL_LOAD_DELAY[$currentPage] : 0;
+			$loadDelay = self::URL_LOAD_DELAY[$currentPage] ?? 0;
 			$initialTimeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
 			while (($timeBetweenLoads = microtime(true) - $var['PreviousRequestTime']) < $loadDelay) {
 				$sleepTime = IRound(($loadDelay - $timeBetweenLoads) * 1000000);
@@ -412,7 +412,7 @@ class SmrSession {
 		}
 		if (!isset($container['RemainingPageLoads'])) {
 			$pageURL = $container['url'] == 'skeleton.php' ? $container['body'] : $container['url'];
-			$container['RemainingPageLoads'] = isset(self::URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL]) ? self::URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] : 1; // Allow refreshing
+			$container['RemainingPageLoads'] = self::URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] ?? 1; // Allow refreshing
 		}
 
 		if ($sn === false) {

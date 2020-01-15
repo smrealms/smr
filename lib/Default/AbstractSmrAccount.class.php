@@ -624,7 +624,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function getOldAccountID($dbName) {
-		return isset($this->oldAccountIDs[$dbName]) ? $this->oldAccountIDs[$dbName] : 0;
+		return $this->oldAccountIDs[$dbName] ?? 0;
 	}
 
 	public function hasOldAccountID($dbName = false) {
@@ -1014,11 +1014,11 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function isReceivingMessageNotifications($messageTypeID) {
-		return isset($this->messageNotifications[$messageTypeID]) ? $this->messageNotifications[$messageTypeID] > 0 : false;
+		return $this->getMessageNotifications($messageTypeID) > 0;
 	}
 
 	public function getMessageNotifications($messageTypeID) {
-		return isset($this->messageNotifications[$messageTypeID]) ? $this->messageNotifications[$messageTypeID] : 0;
+		return $this->messageNotifications[$messageTypeID] ?? 0;
 	}
 
 	public function setMessageNotifications($messageTypeID, $num) {
@@ -1100,7 +1100,7 @@ abstract class AbstractSmrAccount {
 		if ($permissionID === false) {
 			return count($permissions) > 0;
 		}
-		return isset($permissions[$permissionID]) ? $permissions[$permissionID] : false;
+		return $permissions[$permissionID] ?? false;
 	}
 
 	public function getPoints() {

@@ -9,7 +9,7 @@ $fn_forces = function($message, $params) {
 	}
 
 	// print the next expiring forces
-	$option = isset($params[0]) ? $params[0] : null;
+	$option = $params[0] ?? null;
 	$results = shared_channel_msg_forces($link->player, $option);
 	$message->channel->sendMessage(join(EOL, $results));
 };

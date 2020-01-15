@@ -431,7 +431,7 @@ class SmrSector {
 	}
 
 	public function getLink($name) {
-		return isset($this->links[$name]) ? $this->links[$name] : 0;
+		return $this->links[$name] ?? 0;
 	}
 
 	public function hasLink($name) {

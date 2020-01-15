@@ -67,8 +67,8 @@ try {
 			$_SESSION['show_seedlist_sectors'] = isset($_POST['show_seedlist_sectors']);
 			$_SESSION['hide_allied_forces'] = isset($_POST['hide_allied_forces']);
 		}
-		$showSeedlistSectors = isset($_SESSION['show_seedlist_sectors']) ? $_SESSION['show_seedlist_sectors'] : false;
-		$hideAlliedForces = isset($_SESSION['hide_allied_forces']) ? $_SESSION['hide_allied_forces'] : false;
+		$showSeedlistSectors = $_SESSION['show_seedlist_sectors'] ?? false;
+		$hideAlliedForces = $_SESSION['hide_allied_forces'] ?? false;
 		$template->assign('ShowSeedlistSectors', $showSeedlistSectors);
 		$template->assign('HideAlliedForces', $hideAlliedForces);
 		$template->assign('CheckboxFormHREF', ''); // Submit to same page

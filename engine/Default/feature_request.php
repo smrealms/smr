@@ -69,7 +69,7 @@ if ($db->getNumRows() > 0) {
 								'RequestID' => $featureRequestID,
 								'Message' => $db->getField('text'),
 								'Votes' => array('FAVOURITE'=>$db->getInt('fav'), 'YES'=>$db->getInt('yes'), 'NO'=>$db->getInt('no')),
-								'VotedFor' => isset($featureVotes[$featureRequestID]) ? $featureVotes[$featureRequestID] : false
+								'VotedFor' => $featureVotes[$featureRequestID] ?? false,
 		);
 		if ($featureModerator) {
 			$featureRequests[$featureRequestID]['RequestAccount'] = SmrAccount::getAccount($db->getInt('poster_id'));
