@@ -7,7 +7,7 @@ if(isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Resu
 		$WeaponDamage =& $ForceResults['WeaponDamage'];
 		$TargetPlayer =& $ForceResults['TargetPlayer'];
 		?>
-		<span class="cds"><?php echo isset($ActualDamage['Launched']) ? $ActualDamage['Launched'] : $WeaponDamage['Launched']; ?></span><?php
+		<span class="cds"><?php echo $ActualDamage['Launched'] ?? $WeaponDamage['Launched']; ?></span><?php
 		if($ForceType == 'Mines') {
 			?> mines kamikaze themselves against <?php
 		} else if($ForceType == 'Drones') {

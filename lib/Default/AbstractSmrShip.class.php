@@ -504,7 +504,7 @@ abstract class AbstractSmrShip {
 		if ($hardwareTypeID === false) {
 			return $this->hardware;
 		}
-		return isset($this->hardware[$hardwareTypeID]) ? $this->hardware[$hardwareTypeID] : 0;
+		return $this->hardware[$hardwareTypeID] ?? 0;
 	}
 
 	public function setHardware($hardwareTypeID, $amount) {
@@ -523,7 +523,7 @@ abstract class AbstractSmrShip {
 		if ($hardwareTypeID === false) {
 			return $this->oldHardware;
 		}
-		return isset($this->oldHardware[$hardwareTypeID]) ? $this->oldHardware[$hardwareTypeID] : 0;
+		return $this->oldHardware[$hardwareTypeID] ?? 0;
 	}
 
 	public function setOldHardware($hardwareTypeID, $amount) {

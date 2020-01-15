@@ -1384,7 +1384,7 @@ class AbstractSmrPort {
 	public function hasX(/*Object*/ $x) {
 		if (is_array($x) && $x['Type'] == 'Good') { // instanceof Good) - No Good class yet, so array is the best we can do
 			if (isset($x['ID'])) {
-				return $this->hasGood($x['ID'], isset($x['TransactionType']) ? $x['TransactionType'] : false);
+				return $this->hasGood($x['ID'], $x['TransactionType'] ?? false);
 			}
 		}
 		return false;

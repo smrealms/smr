@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-$alliance_id = isset($var['alliance_id']) ? $var['alliance_id'] : $player->getAllianceID();
+$alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
 
 // Checkbox inputs only post if they are checked
 $unlimited = isset($_REQUEST['unlimited']);

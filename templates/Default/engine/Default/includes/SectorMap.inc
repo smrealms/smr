@@ -1,6 +1,6 @@
 <table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;
-	$UniGen = isset($UniGen) ? $UniGen : false;
+	$UniGen = $UniGen ?? false;
 	$MapPlayer = $UniGen ? null : $ThisPlayer;
 	$MovementTypes = array('Up', 'Left', 'Right', 'Down');
 	foreach ($MapSectors as $MapSector) { ?>
