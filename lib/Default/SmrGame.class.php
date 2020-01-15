@@ -152,7 +152,7 @@ class SmrGame {
 	}
 
 	public function setName($name) {
-		if ($this->name == $name) {
+		if ($this->name === $name) {
 			return;
 		}
 		$this->name = $name;
@@ -164,7 +164,7 @@ class SmrGame {
 	}
 
 	public function setDescription($description) {
-		if ($this->description == $description) {
+		if ($this->description === $description) {
 			return;
 		}
 		$this->description = $description;
@@ -184,7 +184,7 @@ class SmrGame {
 	}
 
 	public function setStartTime($startTime) {
-		if ($this->startTime == $startTime) {
+		if ($this->startTime === $startTime) {
 			return;
 		}
 		$this->startTime = $startTime;
@@ -199,7 +199,7 @@ class SmrGame {
 	}
 
 	public function setJoinTime($joinTime) {
-		if ($this->joinTime == $joinTime) {
+		if ($this->joinTime === $joinTime) {
 			return;
 		}
 		$this->joinTime = $joinTime;
@@ -218,7 +218,7 @@ class SmrGame {
 	}
 
 	public function setEndTime($endTime) {
-		if ($this->endTime == $endTime) {
+		if ($this->endTime === $endTime) {
 			return;
 		}
 		$this->endTime = $endTime;
@@ -230,7 +230,7 @@ class SmrGame {
 	}
 
 	public function setMaxPlayers($maxPlayers) {
-		if ($this->maxPlayers == $maxPlayers) {
+		if ($this->maxPlayers === $maxPlayers) {
 			return;
 		}
 		$this->maxPlayers = $maxPlayers;
@@ -242,7 +242,7 @@ class SmrGame {
 	}
 
 	public function setMaxTurns($int) {
-		if ($this->maxTurns == $int) {
+		if ($this->maxTurns === $int) {
 			return;
 		}
 		$this->maxTurns = $int;
@@ -254,7 +254,7 @@ class SmrGame {
 	}
 
 	public function setStartTurnHours($int) {
-		if ($this->startTurnHours == $int) {
+		if ($this->startTurnHours === $int) {
 			return;
 		}
 		$this->startTurnHours = $int;
@@ -266,7 +266,7 @@ class SmrGame {
 	}
 
 	public function setGameTypeID($gameTypeID) {
-		if ($this->gameTypeID == $gameTypeID) {
+		if ($this->gameTypeID === $gameTypeID) {
 			return;
 		}
 		$this->gameTypeID = $gameTypeID;
@@ -278,7 +278,7 @@ class SmrGame {
 	}
 
 	public function setCreditsNeeded($creditsNeeded) {
-		if ($this->creditsNeeded == $creditsNeeded) {
+		if ($this->creditsNeeded === $creditsNeeded) {
 			return;
 		}
 		$this->creditsNeeded = $creditsNeeded;
@@ -290,7 +290,7 @@ class SmrGame {
 	}
 
 	public function setGameSpeed($gameSpeed) {
-		if ($this->gameSpeed == $gameSpeed) {
+		if ($this->gameSpeed === $gameSpeed) {
 			return;
 		}
 		$this->gameSpeed = $gameSpeed;
@@ -326,7 +326,7 @@ class SmrGame {
 	}
 
 	public function setAllianceMaxPlayers($int) {
-		if ($this->allianceMaxPlayers == $int) {
+		if ($this->allianceMaxPlayers === $int) {
 			return;
 		}
 		$this->allianceMaxPlayers = $int;
@@ -338,7 +338,7 @@ class SmrGame {
 	}
 
 	public function setAllianceMaxVets($int) {
-		if ($this->allianceMaxVets == $int) {
+		if ($this->allianceMaxVets === $int) {
 			return;
 		}
 		$this->allianceMaxVets = $int;
@@ -350,7 +350,7 @@ class SmrGame {
 	}
 
 	public function setStartingCredits($int) {
-		if ($this->startingCredits == $int) {
+		if ($this->startingCredits === $int) {
 			return;
 		}
 		$this->startingCredits = $int;
