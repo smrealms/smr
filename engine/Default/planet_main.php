@@ -12,4 +12,4 @@ if (isset($var['msg'])) {
 
 doTickerAssigns($template, $player, $db);
 
-$template->assign('LaunchFormLink', SmrSession::getNewHREF(create_container('planet_launch_processing.php', '')));
+$template->assign('LaunchLink', SmrSession::getNewHREF(create_container('planet_launch_processing.php', '')));
