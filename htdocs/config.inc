@@ -21,8 +21,13 @@ function logException(Throwable $e) {
 		}
 	}
 
+	$message .= '$var: ' . var_export($var, true);
+	if (isset($_REQUEST)) {
+		$message .= "\n\n" . '$_REQUEST: ' . var_export($_REQUEST, true);
+	}
+	$message .= $delim;
+
 	$message .=
-		'$var: ' . var_export($var, true) . $delim .
 		'User IP: ' . getIpAddress() . "\n" .
 		'USING_AJAX: ' . (defined('USING_AJAX') ? var_export(USING_AJAX, true) : 'undefined') . "\n" .
 		'URL: ' . (defined('URL') ? URL : 'undefined');
