@@ -22,9 +22,9 @@ if ($_REQUEST['website'] != '') {
 
 $other = $_REQUEST['other'];
 
-$day = $_REQUEST['day'] != 'N/A' ? $_POST['day'] : 0;
-$month = $_REQUEST['month'] != 'N/A' ? $_POST['month'] : 0;
-$year = $_REQUEST['year'] != 'N/A' ? $_POST['year'] : 0;
+$day = empty($_REQUEST['day']) ? $_POST['day'] : 0;
+$month = empty($_REQUEST['month']) ? $_POST['month'] : 0;
+$year = empty($_REQUEST['year']) ? $_POST['year'] : 0;
 
 // check if these values are nummeric
 if (!is_numeric($day)) {

@@ -3,12 +3,15 @@ $template->assign('PageTopic', 'Edit Photo');
 
 $db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 if ($db->nextRecord()) {
+	$day = $db->getInt('day');
+	$month = $db->getInt('month');
+	$year = $db->getInt('year');
 	$albumEntry['Location'] = stripslashes($db->getField('location'));
 	$albumEntry['Email'] = stripslashes($db->getField('email'));
 	$albumEntry['Website'] = stripslashes($db->getField('website'));
-	$albumEntry['Day'] = $db->getInt('day');
-	$albumEntry['Month'] = $db->getInt('month');
-	$albumEntry['Year'] = $db->getInt('year');
+	$albumEntry['Day'] = $day > 0 ? $day : '';
+	$albumEntry['Month'] = $month > 0 ? $month : '';
+	$albumEntry['Year'] = $year > 0 ? $year : '';
 	$albumEntry['Other'] = stripslashes($db->getField('other'));
 	$approved = $db->getField('approved');
 
