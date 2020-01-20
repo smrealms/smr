@@ -27,7 +27,7 @@ if (isset($offenderReply) && $offenderReply != '') {
 	if ($_REQUEST['offenderBanPoints']) {
 		$suspicion = 'Inappropriate In-Game Message';
 		$offenderAccount = SmrAccount::getAccount($var['offender']);
-		$offenderAccount->addPoints($_REQUEST['offenderBanPoints'], $account, 7, $suspicion);
+		$offenderAccount->addPoints($_REQUEST['offenderBanPoints'], $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 	}
 }
 if (isset($_REQUEST['offendedReply'])) {
@@ -42,7 +42,7 @@ if (isset($offendedReply) && $offendedReply != '') {
 	if ($_REQUEST['offendedBanPoints']) {
 		$suspicion = 'Inappropriate In-Game Message';
 		$offenderAccount = SmrAccount::getAccount($var['offended']);
-		$offenderAccount->addPoints($_REQUEST['offendedBanPoints'], $account, 7, $suspicion);
+		$offenderAccount->addPoints($_REQUEST['offendedBanPoints'], $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 	}
 }
 forward(create_container('skeleton.php', 'notify_view.php'));

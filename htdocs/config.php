@@ -353,6 +353,12 @@ const ALLIANCE_VS_PLANETS = -2;
 const ALLIANCE_VS_PORTS = -3;
 
 /*
+ * Preset ban/closing reasons
+ */
+const BAN_REASON_MULTI = 2;
+const BAN_REASON_BAD_BEHAVIOR = 7;
+
+/*
  * Miscellaneous definitions
  */
 const ALLIANCE_ROLE_LEADER = 1;
