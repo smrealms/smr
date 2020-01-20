@@ -12,9 +12,9 @@ $reason_msg = $_REQUEST['reason_msg'];
 $veteran_status = $_REQUEST['veteran_status'] == 'TRUE';
 $logging_status = $_REQUEST['logging_status'] == 'TRUE';
 $except = $_REQUEST['exception_add'];
-$names = $_REQUEST['player_name'];
+$names = $_REQUEST['player_name'] ?? [];
 $points = intval($_REQUEST['points']);
-$delete = $_REQUEST['delete'];
+$delete = $_REQUEST['delete'] ?? [];
 
 $actions = [];
 
