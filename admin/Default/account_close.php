@@ -10,7 +10,7 @@ if (isset($_REQUEST['close'])) {
 	foreach ($_REQUEST['close'] as $key => $value) {
 		$val = 'Match list:' . $value;
 		$bannedAccount = SmrAccount::getAccount($key);
-		$bannedAccount->banAccount($expire_time, $account, 2, $val);
+		$bannedAccount->banAccount($expire_time, $account, BAN_REASON_MULTI, $val);
 		$amount++;
 	}
 }
@@ -21,7 +21,7 @@ if (isset($_REQUEST['first'])) {
 	foreach ($same_ip as $account_id) {
 		//never expire
 		$bannedAccount = SmrAccount::getAccount($account_id);
-		$bannedAccount->banAccount(0, $account, 2, $val);
+		$bannedAccount->banAccount(0, $account, BAN_REASON_MULTI, $val);
 		$amount++;
 	}
 }
@@ -30,7 +30,7 @@ if (isset($_REQUEST['first'])) {
 if (isset($_REQUEST['second'])) {
 	//never expire
 	$bannedAccount = SmrAccount::getAccount($_REQUEST['second']);
-	$bannedAccount->banAccount(0, $account, 2, $_REQUEST['reason']);
+	$bannedAccount->banAccount(0, $account, BAN_REASON_MULTI, $_REQUEST['reason']);
 	$amount++;
 }
 
@@ -45,7 +45,7 @@ if (isset($_REQUEST['disable_id'])) {
 
 		//never expire
 		$bannedAccount = SmrAccount::getAccount($id);
-		$bannedAccount->banAccount(0, $account, 2, $reason);
+		$bannedAccount->banAccount(0, $account, BAN_REASON_MULTI, $reason);
 		$amount++;
 	}
 }

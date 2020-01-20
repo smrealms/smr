@@ -16,7 +16,7 @@ if (!empty($message)) {
 	if ($_REQUEST['BanPoints']) {
 		$suspicion = 'Inappropriate Actions';
 		$senderAccount = SmrAccount::getAccount($var['sender_id']);
-		$senderAccount->addPoints($_REQUEST['BanPoints'], $account, 7, $suspicion);
+		$senderAccount->addPoints($_REQUEST['BanPoints'], $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 	}
 }
 forward(create_container('skeleton.php', 'box_view.php'));
