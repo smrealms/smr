@@ -100,7 +100,7 @@ if (!empty($BankTransactions)) { ?>
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 			<td class="top">Amount:&nbsp;</td>
-			<td><input type="number" name="amount" size="10">&nbsp;
+			<td><input type="number" name="amount" required size="10">&nbsp;
 				Request Exemption:<input type="checkbox" name="requestExempt"></td>
 		</tr>
 		<tr>
