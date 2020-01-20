@@ -75,7 +75,10 @@ if ($ideal_price == 0 || $offered_price == 0) {
 
 if ($_REQUEST['action'] == 'Steal') {
 	if (!$ship->isUnderground()) {
-		create_error('You are not allowed to steal goods!');
+		throw new Exception('Player tried to steal in a non-underground ship!');
+	}
+	if ($transaction != 'Buy') {
+		throw new Exception('Player tried to steal a good the port does not sell!');
 	}
 	$transaction = $_REQUEST['action'];
 
