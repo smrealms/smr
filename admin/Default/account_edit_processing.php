@@ -197,7 +197,7 @@ if (!empty($delete)) {
 }
 
 //get his login name
-$container = create_container('skeleton.php', 'account_edit.php');
+$container = create_container('skeleton.php', 'account_edit_search.php');
 $container['msg'] = 'You ' . join(' and ', $actions) . ' for the account of ' . $curr_account->getLogin() . '.';
 
 $curr_account->update();
