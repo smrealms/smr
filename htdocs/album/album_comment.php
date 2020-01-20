@@ -37,7 +37,11 @@ try {
 		$container = create_container('skeleton.php', 'album_moderate.php');
 		$container['account_id'] = $album_id;
 
-		forward($container);
+		$href = SmrSession::getNewHREF($container, true);
+		SmrSession::update();
+
+		header('Location: ' . $href);
+		exit;
 	}
 
 	$db = new SmrMySqlDatabase();
