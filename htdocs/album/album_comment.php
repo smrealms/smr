@@ -69,7 +69,7 @@ try {
 				VALUES ('.$db->escapeNumber($album_id) . ', ' . $db->escapeNumber($comment_id) . ', ' . $db->escapeNumber($curr_time) . ', ' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($comment) . ')');
 	$db->unlock();
 
-	header('Location: /album/?' . get_album_nick($album_id));
+	header('Location: /album/?nick=' . urlencode(get_album_nick($album_id)));
 	exit;
 } catch (Throwable $e) {
 	handleException($e);
