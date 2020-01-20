@@ -10,13 +10,11 @@ if ($_REQUEST['action'] == 'Preview message') {
 	forward($container);
 }
 
-if (!empty($message)) {
-	SmrPlayer::sendMessageFromAdmin($var['game_id'], $var['sender_id'], $_REQUEST['message']);
-	//do we have points?
-	if ($_REQUEST['BanPoints']) {
-		$suspicion = 'Inappropriate Actions';
-		$senderAccount = SmrAccount::getAccount($var['sender_id']);
-		$senderAccount->addPoints($_REQUEST['BanPoints'], $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
-	}
+SmrPlayer::sendMessageFromAdmin($var['game_id'], $var['sender_id'], $message);
+//do we have points?
+if ($_REQUEST['BanPoints']) {
+	$suspicion = 'Inappropriate Actions';
+	$senderAccount = SmrAccount::getAccount($var['sender_id']);
+	$senderAccount->addPoints($_REQUEST['BanPoints'], $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 }
 forward(create_container('skeleton.php', 'box_view.php'));
