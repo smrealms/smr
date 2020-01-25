@@ -32,23 +32,24 @@ h3 {
 }
 .submitStyle:link {
 	font: inherit;
-	padding: 0px 8px;
+	padding: 1px 6px;
 }
 .submitStyle:visited {
 	font: inherit;
-	padding: 0px 8px;
+	padding: 1px 6px;
 }
 .submitStyle:hover {
 	font: inherit;
-	padding: 0px 8px;
+	padding: 1px 6px;
 }
 .submitStyle:active {
 	font: inherit;
-	padding: 0px 8px;
+	padding: 1px 6px;
 }
 .submitStyle {
 	font: inherit;
-	padding: 0px 8px;
+	padding: 1px 6px;
+	border-spacing: 0px;
 	display: inline-table; /* Fixes the problems with vertical overlap in FF, but not IE :( */
 }
 /* ------------------------------------ */
