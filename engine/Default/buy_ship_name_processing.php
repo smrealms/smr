@@ -82,28 +82,18 @@ if (!isset($var['ShipName'])) {
 		if (preg_match('/(\<span[^\>]*id\s*=)|(class\s*=\s*"[^"]*ajax)/i', $name) > 0) {
 			create_error('You have used html that is not allowed.');
 		}
-		$bad = array('<form', '<applet', '<a ', '<bgsound', '<body', '<meta', '<dd', '<dir', '<dl', '<!doctype', '<dt', '<embed', '<frame', '<head', '<hr', '<iframe', '<ilayer', '<img', '<input', '<isindex', '<layer', '<li', '<link', '<map', '<menu', '<nobr', '<no', '<object', '<ol', '<opt', '<p', '<script', '<select', '<sound', '<td', '<text', '<t', '<ul', '<h', '<br', '</marquee><marquee', 'size', 'width', 'height', '<div', 'width=', '</marquee>%<marquee', '</marquee>?');
+		$bad = array('<form', '<applet', '<a ', '<bgsound', '<body', '<meta', '<dd', '<dir', '<dl', '<!doctype', '<dt', '<embed', '<frame', '<head', '<hr', '<iframe', '<ilayer', '<img', '<input', '<isindex', '<layer', '<li', '<link', '<map', '<menu', '<nobr', '<no', '<object', '<ol', '<opt', '<p', '<script', '<select', '<sound', '<td', '<text', '<t', '<ul', '<h', '<br', '<marquee', 'size', 'width', 'height', '<div', 'width=');
 		foreach ($bad as $check) {
 			if (stristr($name, $check)) {
 				$check .= '*>';
-				if ($check != '<h*>' && $check != '</marquee>?*>') {
+				if ($check != '<h*>') {
 					create_error(htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag is not allowed in ship names.<br /><small>If you believe the name is appropriate please contact an admin.</small>');
-				} elseif ($check == '</marquee>?*>') {
-					create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES, 'utf-8') . ' tag.');
 				} else {
 					create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES, 'utf-8') . ' tag which is not needed.');
 				}
 			}
 		}
-		list ($first, $second) = explode('</marquee>', $name);
-		if ($second != '') {
-			create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES, 'utf-8') . ' tag.');
-		}
 
-		list ($first, $second) = explode('<marquee>', $name);
-		if ($first != '' && $second != '') {
-			create_error('Sorry no text is allowed to come before a ' . htmlentities('<marquee>', ENT_NOQUOTES, 'utf-8') . ' tag.');
-		}
 
 		//lets try to see if they closed all tags
 		$first = explode('<', $name);
