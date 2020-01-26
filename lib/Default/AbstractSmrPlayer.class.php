@@ -722,13 +722,16 @@ abstract class AbstractSmrPlayer {
 		return count($this->getBounties()) > 0;
 	}
 
-	protected function getBounty(int $bountyID) {
-		$bounties = $this->getBounties();
-		return $bounties[$bountyID] ?? false;
+	protected function getBounty(int $bountyID) : array {
+		if (!$this->hasBounty($bountyID)) {
+			throw new Exception('BountyID does not exist: ' . $bountyID);
+		}
+		return $this->bounties[$bountyID];
 	}
 
 	public function hasBounty(int $bountyID) : bool {
-		return $this->getBounty($bountyID) !== false;
+		$bounties = $this->getBounties();
+		return isset($bounties[$bountyID]);
 	}
 
 	protected function getBountyAmount(int $bountyID) : int {
