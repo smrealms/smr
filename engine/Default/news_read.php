@@ -16,6 +16,8 @@ if (empty($min_news) || empty($max_news)) {
 } elseif ($min_news > $max_news) {
 		create_error('The first number must be lower than the second number!');
 }
+$template->assign('MinNews', $min_news);
+$template->assign('MaxNews', $max_news);
 
 $template->assign('PageTopic', 'Reading The News');
 
