@@ -1425,7 +1425,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getToggleWeaponHidingHREF($ajax = false) {
-		$container = create_container('skeleton.php', 'toggle_processing.php');
+		$container = create_container('toggle_processing.php');
 		$container['toggle'] = 'WeaponHiding';
 		$container['AJAX'] = $ajax;
 		return SmrSession::getNewHREF($container);

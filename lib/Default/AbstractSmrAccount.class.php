@@ -1260,7 +1260,7 @@ abstract class AbstractSmrAccount {
 
 	public function getToggleAJAXHREF() {
 		global $var;
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'toggle_processing.php', array('toggle'=>'AJAX', 'referrer'=>$var['body'])));
+		return SmrSession::getNewHREF(create_container('toggle_processing.php', '', array('toggle'=>'AJAX', 'referrer'=>$var['body'])));
 	}
 
 	public function getUserRankingHREF() {

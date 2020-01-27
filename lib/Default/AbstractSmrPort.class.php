@@ -1044,7 +1044,7 @@ class AbstractSmrPort {
 	}
 	
 	public function getAttackHREF() {
-		$container = create_container('skeleton.php', 'port_attack_processing.php');
+		$container = create_container('port_attack_processing.php');
 		$container['port_id'] = $this->getSectorID();
 		return SmrSession::getNewHREF($container);
 	}
@@ -1056,14 +1056,14 @@ class AbstractSmrPort {
 	}
 
 	public function getRazeHREF($justContainer = false) {
-		$container = create_container('skeleton.php', 'port_payout_processing.php');
+		$container = create_container('port_payout_processing.php');
 		$container['PayoutType'] = 'Raze';
 		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
 	}
 
 	public function getLootHREF($justContainer = false) {
 		if ($this->getCredits() > 0) {
-			$container = create_container('skeleton.php', 'port_payout_processing.php');
+			$container = create_container('port_payout_processing.php');
 			$container['PayoutType'] = 'Loot';
 		} else {
 			$container = create_container('skeleton.php', 'current_sector.php');

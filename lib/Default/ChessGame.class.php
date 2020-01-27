@@ -857,6 +857,6 @@ class ChessGame {
 	}
 
 	public function getResignHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'chess_resign_processing.php', array('ChessGameID' => $this->chessGameID)));
+		return SmrSession::getNewHREF(create_container('chess_resign_processing.php', '', array('ChessGameID' => $this->chessGameID)));
 	}
 }
