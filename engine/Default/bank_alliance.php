@@ -71,35 +71,20 @@ if ($db->getBoolean('positive_balance')) {
 	$template->assign('TotalWithdrawn', $totalWithdrawn);
 }
 
-if (isset($_REQUEST['maxValue'])) {
-	SmrSession::updateVar('maxValue', $_REQUEST['maxValue']);
-}
-if (isset($_REQUEST['minValue'])) {
-	SmrSession::updateVar('minValue', $_REQUEST['minValue']);
-}
+$maxValue = SmrSession::getRequestVarInt('maxValue', 0);
+$minValue = SmrSession::getRequestVarInt('minValue', 0);
 
-if (isset($var['maxValue'])
-	&& is_numeric($var['maxValue'])
-	&& $var['maxValue'] > 0) {
-	$maxValue = $var['maxValue'];
-} else {
+if ($maxValue <= 0) {
 	$db->query('SELECT MAX(transaction_id) FROM alliance_bank_transactions
 				WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 				AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()));
 	if ($db->nextRecord()) {
 		$maxValue = $db->getInt('MAX(transaction_id)');
-		$minValue = $maxValue - 5;
-		if ($minValue < 1) {
-			$minValue = 1;
-		}
 	}
 }
 
-if (isset($var['minValue'])
-	&& $var['minValue'] <= $maxValue
-	&& $var['minValue'] > 0
-	&& is_numeric($var['maxValue'])) {
-	$minValue = $var['minValue'];
+if ($minValue <= 0 || $minValue > $maxValue) {
+	$minValue = max(1, $maxValue - 5);
 }
 
 $query = 'SELECT time, transaction_id, transaction, amount, exempt, reason, payee_id
