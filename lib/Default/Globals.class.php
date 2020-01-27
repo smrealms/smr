@@ -307,7 +307,7 @@ class Globals {
 	}
 
 	public static function getWeaponReorderHREF($weaponOrderID, $direction) {
-		$container = create_container('skeleton.php', 'weapon_reorder.php');
+		$container = create_container('weapon_reorder_processing.php');
 		$container[$direction] = $weaponOrderID;
 		return SmrSession::getNewHREF($container);
 	}
