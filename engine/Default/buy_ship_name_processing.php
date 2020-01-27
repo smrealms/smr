@@ -95,29 +95,29 @@ if (!isset($var['ShipName'])) {
 		}
 
 
-		//lets try to see if they closed all tags
-		$first = explode('<', $name);
-		foreach ($first as $second) {
-			if ($second == '') {
-				continue;
-			}
-			if (strpos($second, '/') !== false) {
-				$open -= 1;
-				$close += 1;
-				if ($open < 0) {
-					$ha = TRUE;
-				}
-			} else {
-				$real_open += 1;
-				$open += 1;
-			}
+		// Check for valid HTML by parsing the name with DOMDocument
+		$doc = new DOMDocument();
+		$use_errors = libxml_use_internal_errors(true);
+		$doc->loadHTML('<html>' . $name . '</html>');
+		libxml_use_internal_errors($use_errors);
+		$error = libxml_get_last_error();
+		if (!empty($error)) {
+			create_error('Your ship name must not contain invalid HTML!<br /><small>If you think you received this message in error, please contact an admin.</small>');
 		}
-		if ($open > 0) {
-			create_error('You must close all HTML tags.  (i.e a &lt;font color="red"&gt tag must have a &lt;/font&gt; tag somewhere after it).<br /><small>If you think you received this message in error please contact an admin.');
+
+		// Make sure all tags are closed (since DOMDocument allows some tags,
+		// e.g. <span>, to be unclosed).
+		$opening_matches;
+		preg_match_all('|<([^/>]+)>|', $name, $opening_matches);
+		$closing_matches;
+		preg_match_all('|</([^>]+)>|', $name, $closing_matches);
+		sort($opening_matches[1]);
+		sort($closing_matches[1]);
+		if ($opening_matches[1] != $closing_matches[1]) {
+			create_error('You must close all HTML tags.  (i.e a &lt;font color="red"&gt; tag must have a &lt;/font&gt; tag somewhere after it).<br /><small>If you think you received this message in error please contact an admin.</small>');
 		}
-		if ($close > $real_open || $ha || $open < 0) {
-			create_error('You can not close tags that do not exist!<br /><small>This could be an attempt at hacking if this action is seen again it will be logged</small>');
-		}
+
+		forward(create_container('skeleton.php', 'buy_ship_name.php', ['Preview' => $name]));
 	} else {
 		$max_len = 48;
 		$name = htmlentities($name, ENT_NOQUOTES, 'utf-8');
