@@ -23,7 +23,7 @@ while ($db->nextRecord()) {
 $template->assign('Games', $games);
 $template->assign('SelectedGameID', $selectedGameID);
 
-$container = create_container('skeleton.php', 'npc_manage_processing.php');
+$container = create_container('npc_manage_processing.php');
 $container['selected_game_id'] = $selectedGameID;
 $template->assign('AddAccountHREF', SmrSession::getNewHREF($container));
 

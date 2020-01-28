@@ -289,7 +289,7 @@ class Globals {
 	}
 
 	public static function getAttackTraderHREF($accountID) {
-		$container = create_container('skeleton.php', 'trader_attack_processing.php');
+		$container = create_container('trader_attack_processing.php');
 		$container['target'] = $accountID;
 		return self::$AVAILABLE_LINKS['AttackTrader'] = SmrSession::getNewHREF($container);
 	}
@@ -481,7 +481,7 @@ class Globals {
 	}
 
 	public static function getChessCreateHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'chess_create_processing.php'));
+		return SmrSession::getNewHREF(create_container('chess_create_processing.php'));
 	}
 
 	public static function getBarMainHREF() {
