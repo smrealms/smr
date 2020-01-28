@@ -80,30 +80,43 @@ class Rankings {
 		return $rankings;
 	}
 
+	/**
+	 * Get a subset of rankings from the player table sorted by $stat.
+	 */
+	public static function playerRanks(string $stat, int $minRank = 1, int $maxRank = 10) : array {
+		global $player, $db;
+		$offset = $minRank - 1;
+		$limit = $maxRank - $offset;
+		$db->query('SELECT *, ' . $stat . ' AS amount FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, player_name LIMIT ' . $offset . ', ' . $limit);
+		return self::collectRankings($db, $player, $offset);
+	}
+
+	/**
+	 * Get a subset of rankings from the alliance table sorted by $stat.
+	 */
+	public static function allianceRanks(string $stat, int $minRank = 1, int $maxRank = 10) : array {
+		global $player, $db;
+		$offset = $minRank - 1;
+		$limit = $maxRank - $offset;
+		$db->query('SELECT alliance_id, alliance_' . $stat . ' AS amount FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, alliance_name LIMIT ' . $offset. ', ' . $limit);
+		return self::collectAllianceRankings($db, $player, $offset);
+	}
+
 	public static function calculateMinMaxRanks($ourRank, $totalRanks) {
 		global $var, $template;
-		if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank']) && is_numeric($_REQUEST['max_rank'])) {
-			$minRank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-			$maxRank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-		} elseif (isset($var['MinRank']) && isset($var['MaxRank'])) {
-			$minRank = $var['MinRank'];
-			$maxRank = $var['MaxRank'];
-		} else {
-			$minRank = $ourRank - 5;
-			$maxRank = $ourRank + 5;
-		}
+		$minRank = SmrSession::getRequestVarInt('min_rank', $ourRank - 5);
+		$maxRank = SmrSession::getRequestVarInt('max_rank', $ourRank + 5);
 
 		if ($minRank <= 0 || $minRank > $totalRanks) {
 			$minRank = 1;
-			$maxRank = 10;
 		}
 
 		$maxRank = min($maxRank, $totalRanks);
 
-		SmrSession::updateVar('MinRank', $minRank);
-		SmrSession::updateVar('MaxRank', $maxRank);
 		$template->assign('MinRank', $minRank);
 		$template->assign('MaxRank', $maxRank);
 		$template->assign('TotalRanks', $totalRanks);
+
+		return [$minRank, $maxRank];
 	}
 }

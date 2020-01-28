@@ -15,13 +15,8 @@ while ($db->nextRecord()) {
 }
 $template->assign('TopTen', $topTen);
 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank']) && is_numeric($_REQUEST['max_rank'])) {
-	$min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-} else {
-	$min_rank = 1;
-	$max_rank = 10;
-}
+$min_rank = Request::getInt('min_rank', 1);
+$max_rank = Request::getInt('max_rank', 10);
 
 if ($min_rank < 0) {
 	$min_rank = 1;
@@ -33,21 +28,28 @@ if ($db->nextRecord()) {
 	$total_sector = $db->getInt('max(sector_id)');
 }
 
-if ($max_rank > $total_sector) {
-	$max_rank = $total_sector;
-}
-
-$template->assign('MinRank', $min_rank);
-$template->assign('MaxRank', $max_rank);
+// Calculate the rank of the sector the player is currently in
+$db->query('SELECT count(*) FROM sector
+			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+			AND (
+				battles > ' . $db->escapeNumber($player->getSector()->getBattles()) . '
+				OR (
+					battles = ' . $db->escapeNumber($player->getSector()->getBattles()) . '
+					AND sector_id <= ' . $db->escapeNumber($player->getSectorID()) . '
+				)
+			)');
+$db->nextRecord();
+$ourRank = $db->getInt('count(*)');
 
 $container = create_container('skeleton.php', 'rankings_sector_kill.php');
-$container['min_rank']	= $min_rank;
-$container['max_rank']	= $max_rank;
 $template->assign('SubmitHREF', SmrSession::getNewHREF($container));
 
-$db->query('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY battles DESC, sector_id LIMIT ' . ($min_rank - 1) . ', ' . ($max_rank - $min_rank + 1));
+list($minRank, $maxRank) = Rankings::calculateMinMaxRanks($ourRank, $total_sector);
 
-$rank = $min_rank;
+$lowerLimit = $minRank - 1;
+$db->query('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY battles DESC, sector_id LIMIT ' . $lowerLimit . ', ' . ($maxRank - $lowerLimit));
+
+$rank = $minRank;
 $topCustom = [];
 while ($db->nextRecord()) {
 	// get current player

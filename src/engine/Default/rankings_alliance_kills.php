@@ -24,15 +24,10 @@ if ($player->hasAlliance()) {
 	$template->assign('OurRank', $ourRank);
 }
 
-$db->query('SELECT alliance_id, alliance_kills amount FROM alliance
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, alliance_name LIMIT 10');
-$template->assign('Rankings', Rankings::collectAllianceRankings($db, $player, 0));
+$template->assign('Rankings', Rankings::allianceRanks('kills'));
 
-Rankings::calculateMinMaxRanks($ourRank, $numAlliances);
+list($minRank, $maxRank) = Rankings::calculateMinMaxRanks($ourRank, $numAlliances);
 
-$lowerLimit = $var['MinRank'] - 1;
-$db->query('SELECT alliance_id, alliance_kills amount FROM alliance
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, alliance_name LIMIT ' . $lowerLimit . ', ' . ($var['MaxRank'] - $lowerLimit));
-$template->assign('FilteredRankings', Rankings::collectAllianceRankings($db, $player, $lowerLimit));
+$template->assign('FilteredRankings', Rankings::allianceRanks('kills', $minRank, $maxRank));
 
 $template->assign('FilterRankingsHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_alliance_kills.php')));

@@ -35,25 +35,23 @@ if ($player->hasAlliance()) {
 	$template->assign('OurRank', $ourRank);
 }
 
-$db->query('SELECT alliance_id, SUM(experience) amount
-			FROM alliance
-			LEFT JOIN player USING (game_id, alliance_id)
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-			GROUP BY alliance_id, alliance_name
-			ORDER BY amount DESC, alliance_name
-			LIMIT 10');
-$template->assign('Rankings', Rankings::collectAllianceRankings($db, $player, 0));
+$expRanks = function (int $minRank, int $maxRank) use ($player, $db) : array {
+	$offset = $minRank - 1;
+	$limit = $maxRank - $offset;
+	$db->query('SELECT alliance_id, SUM(experience) amount
+		FROM alliance
+		LEFT JOIN player USING (game_id, alliance_id)
+		WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+		GROUP BY alliance_id, alliance_name
+		ORDER BY amount DESC, alliance_name
+		LIMIT ' . $offset . ', ' . $limit);
+	return Rankings::collectAllianceRankings($db, $player, $offset);
+};
 
-Rankings::calculateMinMaxRanks($ourRank, $numAlliances);
+$template->assign('Rankings', $expRanks(1, 10));
 
-$lowerLimit = $var['MinRank'] - 1;
-$db->query('SELECT alliance_id, SUM(experience) amount
-			FROM alliance
-			LEFT JOIN player USING (game_id, alliance_id)
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-			GROUP BY alliance_id, alliance_name
-			ORDER BY amount DESC, alliance_name
-			LIMIT ' . $lowerLimit . ', ' . ($var['MaxRank'] - $lowerLimit));
-$template->assign('FilteredRankings', Rankings::collectAllianceRankings($db, $player, $lowerLimit));
+list($minRank, $maxRank) = Rankings::calculateMinMaxRanks($ourRank, $numAlliances);
+
+$template->assign('FilteredRankings', $expRanks($minRank, $maxRank));
 
 $template->assign('FilterRankingsHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_alliance_experience.php')));
