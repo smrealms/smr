@@ -13,23 +13,22 @@ $template->assign('ActiveGames', $activeGames);
 
 if ($activeGames) {
 	// Set the selected game (or the first in the list if not selected yet)
-	if (isset($_POST['game_id'])) {
-		SmrSession::updateVar('selected_game_id', $_POST['game_id']);
-		SmrSession::updateVar('processing_msg', null);
-	} elseif (!isset($var['selected_game_id'])) {
-		SmrSession::updateVar('selected_game_id', $activeGames[0]['game_id']);
-	}
-	$template->assign('SelectedGame', $var['selected_game_id']);
+	$selectedGameID = SmrSession::getRequestVar('selected_game_id', $activeGames[0]['game_id']);
+	$template->assign('SelectedGame', $selectedGameID);
 
 	// Get the list of current editors for the selected game
 	$currentEditors = array();
-	foreach (Globals::getGalacticPostEditorIDs($var['selected_game_id']) as $editorID) {
-		$editor = SmrPlayer::getPlayer($editorID, $var['selected_game_id']);
+	foreach (Globals::getGalacticPostEditorIDs($selectedGameID) as $editorID) {
+		$editor = SmrPlayer::getPlayer($editorID, $selectedGameID);
 		$currentEditors[] = $editor->getDisplayName();
 	}
 	$template->assign('CurrentEditors', $currentEditors);
 }
 
+// If we are selecting a different game, clear the processing message.
+if (isset($_POST['game_id'])) {
+	SmrSession::updateVar('processing_msg', null);
+}
 // If we have just forwarded from the processing file, pass its message.
 if (isset($var['processing_msg'])) {
 	$template->assign('ProcessingMsg', $var['processing_msg']);
