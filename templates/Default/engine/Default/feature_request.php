@@ -84,7 +84,7 @@ if (isset($FeatureRequests)) { ?>
 			<td class="center">Please describe your requested feature here:</td>
 		</tr>
 		<tr>
-			<td class="center"><textarea spellcheck="true" name="feature" class="InputFields" maxlength="500"></textarea></td>
+			<td class="center"><textarea spellcheck="true" name="feature" required class="InputFields" maxlength="500"></textarea></td>
 		</tr>
 		<tr>
 			<td class="center">Anonymous: <input name="anon" class="InputFields" type="checkbox" checked="checked"/></td>

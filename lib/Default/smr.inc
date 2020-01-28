@@ -127,7 +127,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
-				$container = create_container('alliance_invite_accept.php');
+				$container = create_container('alliance_invite_accept_processing.php');
 				$container['alliance_id'] = $alliance->getAllianceID();
 				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
 			break;

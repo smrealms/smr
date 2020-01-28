@@ -153,7 +153,7 @@
 		<tr>
 			<td>
 				Enter text in the box below to create a new note.<br />(examples:  trade routes, weapon locations, key alliance related locations)
-				<textarea spellcheck="true" name="note"></textarea>
+				<textarea spellcheck="true" name="note" required maxlength="1000"></textarea>
 			</td>
 		</tr>
 	</table>

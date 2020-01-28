@@ -48,7 +48,7 @@ if ($FeatureModerator) { ?>
 			<td class="center">Comment:</td>
 		</tr>
 		<tr>
-			<td class="center"><textarea spellcheck="true" name="comment" class="InputFields"></textarea></td>
+			<td class="center"><textarea spellcheck="true" name="comment" required class="InputFields"></textarea></td>
 		</tr>
 		<tr>
 			<td class="center">Anonymous: <input name="anon" class="InputFields" type="checkbox" checked="checked"/></td>
