@@ -82,52 +82,42 @@ if (!isset($var['ShipName'])) {
 		if (preg_match('/(\<span[^\>]*id\s*=)|(class\s*=\s*"[^"]*ajax)/i', $name) > 0) {
 			create_error('You have used html that is not allowed.');
 		}
-		$bad = array('<form', '<applet', '<a ', '<bgsound', '<body', '<meta', '<dd', '<dir', '<dl', '<!doctype', '<dt', '<embed', '<frame', '<head', '<hr', '<iframe', '<ilayer', '<img', '<input', '<isindex', '<layer', '<li', '<link', '<map', '<menu', '<nobr', '<no', '<object', '<ol', '<opt', '<p', '<script', '<select', '<sound', '<td', '<text', '<t', '<ul', '<h', '<br', '</marquee><marquee', 'size', 'width', 'height', '<div', 'width=', '</marquee>%<marquee', '</marquee>?');
+		$bad = array('<form', '<applet', '<a ', '<bgsound', '<body', '<meta', '<dd', '<dir', '<dl', '<!doctype', '<dt', '<embed', '<frame', '<head', '<hr', '<iframe', '<ilayer', '<img', '<input', '<isindex', '<layer', '<li', '<link', '<map', '<menu', '<nobr', '<no', '<object', '<ol', '<opt', '<p', '<script', '<select', '<sound', '<td', '<text', '<t', '<ul', '<h', '<br', '<marquee', 'size', 'width', 'height', '<div', 'width=');
 		foreach ($bad as $check) {
 			if (stristr($name, $check)) {
 				$check .= '*>';
-				if ($check != '<h*>' && $check != '</marquee>?*>') {
+				if ($check != '<h*>') {
 					create_error(htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag is not allowed in ship names.<br /><small>If you believe the name is appropriate please contact an admin.</small>');
-				} elseif ($check == '</marquee>?*>') {
-					create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES, 'utf-8') . ' tag.');
 				} else {
 					create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES, 'utf-8') . ' tag which is not needed.');
 				}
 			}
 		}
-		list ($first, $second) = explode('</marquee>', $name);
-		if ($second != '') {
-			create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES, 'utf-8') . ' tag.');
+
+
+		// Check for valid HTML by parsing the name with DOMDocument
+		$doc = new DOMDocument();
+		$use_errors = libxml_use_internal_errors(true);
+		$doc->loadHTML('<html>' . $name . '</html>');
+		libxml_use_internal_errors($use_errors);
+		$error = libxml_get_last_error();
+		if (!empty($error)) {
+			create_error('Your ship name must not contain invalid HTML!<br /><small>If you think you received this message in error, please contact an admin.</small>');
 		}
 
-		list ($first, $second) = explode('<marquee>', $name);
-		if ($first != '' && $second != '') {
-			create_error('Sorry no text is allowed to come before a ' . htmlentities('<marquee>', ENT_NOQUOTES, 'utf-8') . ' tag.');
+		// Make sure all tags are closed (since DOMDocument allows some tags,
+		// e.g. <span>, to be unclosed).
+		$opening_matches;
+		preg_match_all('|<([^/>]+)>|', $name, $opening_matches);
+		$closing_matches;
+		preg_match_all('|</([^>]+)>|', $name, $closing_matches);
+		sort($opening_matches[1]);
+		sort($closing_matches[1]);
+		if ($opening_matches[1] != $closing_matches[1]) {
+			create_error('You must close all HTML tags.  (i.e a &lt;font color="red"&gt; tag must have a &lt;/font&gt; tag somewhere after it).<br /><small>If you think you received this message in error please contact an admin.</small>');
 		}
 
-		//lets try to see if they closed all tags
-		$first = explode('<', $name);
-		foreach ($first as $second) {
-			if ($second == '') {
-				continue;
-			}
-			if (strpos($second, '/') !== false) {
-				$open -= 1;
-				$close += 1;
-				if ($open < 0) {
-					$ha = TRUE;
-				}
-			} else {
-				$real_open += 1;
-				$open += 1;
-			}
-		}
-		if ($open > 0) {
-			create_error('You must close all HTML tags.  (i.e a &lt;font color="red"&gt tag must have a &lt;/font&gt; tag somewhere after it).<br /><small>If you think you received this message in error please contact an admin.');
-		}
-		if ($close > $real_open || $ha || $open < 0) {
-			create_error('You can not close tags that do not exist!<br /><small>This could be an attempt at hacking if this action is seen again it will be logged</small>');
-		}
+		forward(create_container('skeleton.php', 'buy_ship_name.php', ['Preview' => $name]));
 	} else {
 		$max_len = 48;
 		$name = htmlentities($name, ENT_NOQUOTES, 'utf-8');
