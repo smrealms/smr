@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // Reset the game ID if necessary
 if (SmrSession::hasGame()) {
