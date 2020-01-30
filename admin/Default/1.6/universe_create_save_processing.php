@@ -169,7 +169,7 @@ elseif ($submit == 'Create Ports') {
 		$var['message'] = '<span class="red">Error: Your port race distribution must equal 100!</span>';
 	}
 } elseif ($submit == 'Edit Sector') {
-	$editSector = SmrSector::getSector($var['game_id'], $var['sector_id']);
+	$editSector = SmrSector::getSector($var['game_id'], $var['sector_edit']);
 
 	//update planet
 	if ($_POST['plan_type'] != '0') {
