@@ -6,7 +6,8 @@ $msg = $_REQUEST['msg'];
 
 $mail = setupMailer();
 $mail->Subject = $subject;
-$mail->setFrom($account->getEmail(), $account->getHofName());
+$mail->setFrom('contact@smrealms.de');
+$mail->addReplyTo($account->getEmail(), $account->getHofName());
 $mail->Body =
 	'Login:' . EOL . '------' . EOL . $account->getLogin() . EOL . EOL .
 	'Account ID:' . EOL . '-----------' . EOL . $account->getAccountID() . EOL . EOL .
