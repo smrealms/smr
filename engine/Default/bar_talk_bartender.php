@@ -3,22 +3,6 @@
 $template->assign('PageTopic', 'Talk to Bartender');
 Menu::bar();
 
-// We don't save this in session because we only want to insert once
-$gossip = Request::get('gossip_tell', '');
-if (!empty($gossip)) {
-	$db->query('SELECT message_id FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY message_id DESC LIMIT 1');
-	if ($db->nextRecord()) {
-		$amount = $db->getInt('message_id') + 1;
-	} else {
-		$amount = 1;
-	}
-
-	$db->query('INSERT INTO bar_tender (game_id, message_id, message) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($amount) . ',  ' . $db->escapeString($gossip) . ' )');
-	SmrAccount::doMessageSendingToBox($player->getAccountID(), BOX_BARTENDER, $gossip, $player->getGameID());
-
-	SmrSession::updateVar('Message', 'Huh, that\'s news to me...<br /><br />Got anything else to tell me?');
-}
-
 // We save the displayed message in session since it is randomized
 if (!isset($var['Message'])) {
 	$db->query('SELECT * FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY rand() LIMIT 1');
@@ -32,5 +16,9 @@ if (!isset($var['Message'])) {
 $template->assign('Message', $var['Message']);
 
 $container = create_container('skeleton.php', 'bar_talk_bartender.php');
+transfer('LocationID');
+$template->assign('ListenHREF', SmrSession::getNewHREF($container));
+
+$container = create_container('bar_talk_bartender_processing.php');
 transfer('LocationID');
 $template->assign('GossipHREF', SmrSession::getNewHREF($container));
