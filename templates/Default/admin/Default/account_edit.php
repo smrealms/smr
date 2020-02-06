@@ -61,7 +61,7 @@
 								</tr>
 								<tr>
 									<td class="right">Name:</td>
-									<td><input type=text name=player_name[<?php echo $CurrentPlayer->getGameID(); ?>] value="<?php echo $CurrentPlayer->getPlayerName(); ?>" />(<?php echo $CurrentPlayer->getPlayerID(); ?>)</td>
+									<td><input type=text name=player_name[<?php echo $CurrentPlayer->getGameID(); ?>] placeholder="<?php echo $CurrentPlayer->getPlayerName(); ?>" />(<?php echo $CurrentPlayer->getPlayerID(); ?>)</td>
 								</tr>
 								<tr>
 									<td class="right">Experience:</td>
