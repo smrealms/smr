@@ -720,6 +720,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $this->customShipName;
 	}
 
+	public function setCustomShipName(string $name) {
+		$this->db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name)
+			VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeString($name) . ')');
+	}
+
 	public function getKnowledge($knowledgeType = false) {
 		if (!isset($this->knowledge)) {
 			//get players faction knowledge
