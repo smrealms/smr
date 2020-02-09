@@ -7,8 +7,8 @@ $gameId = $var['selected_game_id'];
 SmrSession::updateVar('processing_msg', null);
 
 // Get the POST variables
-$playerId = $_POST['player_id'];
-$action = $_POST['submit'];
+$playerId = Request::getInt('player_id');
+$action = Request::get('submit');
 
 try {
 	$selectedPlayer = SmrPlayer::getPlayerByPlayerID($playerId, $gameId);

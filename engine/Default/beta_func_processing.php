@@ -15,71 +15,63 @@ if ($var['func'] == 'Map') {
 
 } elseif ($var['func'] == 'Money') {
 	$player->setCredits(50000000);
-} elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_id'] != 68) {
-	$ship_id = (int)$_REQUEST['ship_id'];
-	
-	$speed = $ship->getSpeed();
-	// assign the new ship
-	$ship->decloak();
-	$ship->disableIllusion();
-	$ship->setShipTypeID($ship_id);
-	
-	//now adapt turns
-	$player->setTurns($player->getTurns() * ($speed / $ship->getSpeed()));
-	$ship->setHardwareToMax();
+} elseif ($var['func'] == 'Ship') {
+	$ship_id = Request::getInt('ship_id');
+	if ($ship_id <= 75 && $ship_id != 68) {
+		$speed = $ship->getSpeed();
+		// assign the new ship
+		$ship->decloak();
+		$ship->disableIllusion();
+		$ship->setShipTypeID($ship_id);
+
+		//now adapt turns
+		$player->setTurns($player->getTurns() * ($speed / $ship->getSpeed()));
+		$ship->setHardwareToMax();
+	}
 } elseif ($var['func'] == 'Weapon') {
-	$weapon_id = $_REQUEST['weapon_id'];
-	$amount = $_REQUEST['amount'];
+	$weapon_id = Request::getInt('weapon_id');
+	$amount = Request::getInt('amount');
 	for ($i = 1; $i <= $amount; $i++) {
 		$ship->addWeapon($weapon_id);
 	}
 } elseif ($var['func'] == 'Uno') {
 	$ship->setHardwareToMax();
 } elseif ($var['func'] == 'Warp') {
-	$sector_to = trim($_REQUEST['sector_to']);
-	if (!is_numeric($sector_to)) {
-		create_error('Sector ID has to be a number.');
-	}
+	$sector_to = Request::getInt('sector_to');
 	if (!SmrSector::sectorExists($player->getGameID(), $sector_to)) {
 		create_error('Sector ID is not in any galaxy.');
 	}
 	$player->setSectorID($sector_to);
 	$player->setLandedOnPlanet(false);
 } elseif ($var['func'] == 'Turns') {
-	$player->setTurns((int)$_REQUEST['turns']);
+	$player->setTurns(Request::getInt('turns'));
 } elseif ($var['func'] == 'Exp') {
-	$exp = min(500000, (int)$_REQUEST['exp']);
+	$exp = min(500000, Request::getInt('exp'));
 	$player->setExperience($exp);
 } elseif ($var['func'] == 'Align') {
-	$align = max(-500, min(500, (int)$_REQUEST['align']));
+	$align = max(-500, min(500, Request::getInt('align')));
 	$player->setAlignment($align);
 } elseif ($var['func'] == 'RemWeapon') {
 	$ship->removeAllWeapons();
 } elseif ($var['func'] == 'Hard_add') {
-	$type_hard = (int)$_REQUEST['type_hard'];
-	$amount_hard = (int)$_REQUEST['amount_hard'];
+	$type_hard = Request::getInt('type_hard');
+	$amount_hard = Request::getInt('amount_hard');
 	$ship->setHardware($type_hard, $amount_hard);
 	$ship->removeUnderAttack();
 } elseif ($var['func'] == 'Relations') {
-	$amount = (int)$_REQUEST['amount'];
-	$race = (int)$_REQUEST['race'];
+	$amount = Request::getInt('amount');
+	$race = Request::getInt('race');
 	$player->setRelations($amount, $race);
 } elseif ($var['func'] == 'Race_Relations') {
-	$amount = $_REQUEST['amount'];
-	$race = $_REQUEST['race'];
-	if (!is_numeric($amount) || !is_numeric($race)) {
-		create_error('Amount and Race IDs have to be numbers.');
-	}
+	$amount = Request::getInt('amount');
+	$race = Request::getInt('race');
 	if ($player->getRaceID() == $race) {
 		create_error('You cannot change race relations with your own race.');
 	}
 	$db->query('UPDATE race_has_relation SET relation = ' . $db->escapeNumber($amount) . ' WHERE race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . ' AND race_id_2 = ' . $db->escapeNumber($race) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$db->query('UPDATE race_has_relation SET relation = ' . $db->escapeNumber($amount) . ' WHERE race_id_1 = ' . $db->escapeNumber($race) . ' AND race_id_2 = ' . $db->escapeNumber($player->getRaceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 } elseif ($var['func'] == 'Race') {
-	$race = $_REQUEST['race'];
-	if (!is_numeric($race)) {
-		create_error('Amount and Race IDs have to be numbers.');
-	}
+	$race = Request::getInt('race');
 	$player->setRaceID($race);
 } elseif ($var['func'] == 'planet_buildings') {
 	$planet = $sector->getPlanet();

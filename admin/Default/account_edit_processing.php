@@ -4,17 +4,18 @@ $account_id = $var['account_id'];
 $curr_account = SmrAccount::getAccount($account_id);
 
 // request
-$donation = $_REQUEST['donation'];
-$smr_credit = $_REQUEST['smr_credit'];
-$choise = $_POST['choise'] ?? '';
-$reason_pre_select = $_REQUEST['reason_pre_select'];
-$reason_msg = $_REQUEST['reason_msg'];
-$veteran_status = $_REQUEST['veteran_status'] == 'TRUE';
-$logging_status = $_REQUEST['logging_status'] == 'TRUE';
-$except = $_REQUEST['exception_add'];
-$names = $_REQUEST['player_name'] ?? [];
-$points = intval($_REQUEST['points']);
-$delete = $_REQUEST['delete'] ?? [];
+$donation = Request::getInt('donation');
+$smr_credit = Request::has('smr_credit');
+$rewardCredits = Request::getInt('grant_credits');
+$choise = Request::get('choise', ''); // no radio button selected by default
+$reason_pre_select = Request::getInt('reason_pre_select');
+$reason_msg = Request::get('reason_msg');
+$veteran_status = Request::get('veteran_status') == 'TRUE';
+$logging_status = Request::get('logging_status') == 'TRUE';
+$except = Request::get('exception_add');
+$points = Request::getInt('points');
+$names = Request::getArray('player_name', []); // missing when no games joined
+$delete = Request::getArray('delete', []); // missing when no games joined
 
 $actions = [];
 
@@ -30,13 +31,13 @@ if (!empty($donation)) {
 	$actions[] = 'added $' . $donation;
 }
 
-if (!empty($_REQUEST['grant_credits']) && is_numeric($_REQUEST['grant_credits'])) {
-	$curr_account->increaseSmrRewardCredits($_REQUEST['grant_credits']);
-	$actions[] = 'added ' . $_REQUEST['grant_credits'] . ' reward credits';
+if (!empty($rewardCredits)) {
+	$curr_account->increaseSmrRewardCredits($rewardCredits);
+	$actions[] = 'added ' . $rewardCredits . ' reward credits';
 }
 
-if (!empty($_POST['special_close'])) {
-	$specialClose = $_POST['special_close'];
+if (Request::has('special_close')) {
+	$specialClose = Request::get('special_close');
 	// Make sure the special closing reason exists
 	$db->query('SELECT reason_id FROM closing_reason WHERE reason=' . $db->escapeString($specialClose));
 	if ($db->nextRecord()) {
@@ -46,7 +47,7 @@ if (!empty($_POST['special_close'])) {
 		$reasonID = $db->getInsertID();
 	}
 
-	$closeByRequestNote = $_REQUEST['close_by_request_note'];
+	$closeByRequestNote = Request::get('close_by_request_note');
 	if (empty($closeByRequestNote)) {
 		$closeByRequestNote = $specialClose;
 	}
@@ -68,7 +69,7 @@ if ($choise == 'reopen') {
 		$reason_id = $reason_pre_select;
 	}
 
-	$suspicion = $_POST['suspicion'] ?? '';
+	$suspicion = Request::get('suspicion');
 	$bannedDays = $curr_account->addPoints($points, $account, $reason_id, $suspicion);
 	$actions[] = 'added ' . $points . ' ban points';
 
@@ -82,13 +83,13 @@ if ($choise == 'reopen') {
 	}
 }
 
-if (!empty($_POST['mailban'])) {
-	$mailban = $_POST['mailban'];
+if (Request::has('mailban')) {
+	$mailban = Request::get('mailban');
 	if ($mailban == 'remove') {
 		$curr_account->setMailBanned(TIME);
 		$actions[] = 'removed mailban';
 	} elseif ($mailban == 'add_days') {
-		$days = $_POST['mailban_days'];
+		$days = Request::getInt('mailban_days');
 		$curr_account->increaseMailBanned($days * 86400);
 		$actions[] = 'mail banned for ' . $days . ' days';
 	}

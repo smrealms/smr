@@ -2,10 +2,10 @@
 
 // get account_id from session
 $account_id = $var['account_id'];
-$email_txt = $_REQUEST['email_txt'];
 
 // check for each task
 if ($var['task'] == 'reset_image') {
+	$email_txt = Request::get('email_txt');
 	$db->query('UPDATE album SET disabled = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account_id));
 
 	$db->lockTable('album_has_comments');
@@ -43,13 +43,12 @@ if ($var['task'] == 'reset_image') {
 } elseif ($var['task'] == 'reset_other') {
 	$db->query('UPDATE album SET other = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
 } elseif ($var['task'] == 'delete_comment') {
-	$comment_ids = $_REQUEST['comment_ids'];
 	// we just ignore if nothing was set
-	if (count($comment_ids) > 0) {
+	if (Request::has('comment_ids')) {
 		$db->query('DELETE
 					FROM album_has_comments
 					WHERE album_id = '.$db->escapeNumber($account_id) . ' AND
-						  comment_id IN ('.$db->escapeArray($comment_ids) . ')');
+						  comment_id IN ('.$db->escapeArray(Request::getIntArray('comment_ids')) . ')');
 	}
 } else {
 	create_error('No action chosen!');

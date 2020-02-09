@@ -93,15 +93,7 @@ if (isset($var['player_does'])) {
 }
 //new game if $do == nothing
 if ($do == 'nothing') {
-	if (isset($var['bet'])) {
-		$bet = $var['bet'];
-	} else {
-		$bet = $_REQUEST['bet'];
-	}
-	if (!is_numeric($bet)) {
-		create_error('Numbers only!');
-	}
-	$bet = round($bet);
+	$bet = Request::getVarInt('bet');
 	if ($player->getCredits() < $bet) {
 		create_error('Not even enough to play BlackJack...you need to trade!');
 	}

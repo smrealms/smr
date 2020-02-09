@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
-$action = $_REQUEST['action'];
-$name = $var['ShipName'] ?? $_REQUEST['ship_name'];
+$action = Request::get('action');
+$name = $var['ShipName'] ?? Request::get('ship_name');
 
 $actionHtmlShipName = 'Include HTML (' . CREDITS_PER_HTML_SHIP_NAME . ' SMR Credits)';
 $actionTextShipName = 'Get It Painted! (' . CREDITS_PER_TEXT_SHIP_NAME . ' SMR Credit)';

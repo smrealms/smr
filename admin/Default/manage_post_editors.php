@@ -26,7 +26,7 @@ if ($activeGames) {
 }
 
 // If we are selecting a different game, clear the processing message.
-if (isset($_POST['game_id'])) {
+if (Request::has('game_id')) {
 	SmrSession::updateVar('processing_msg', null);
 }
 // If we have just forwarded from the processing file, pass its message.

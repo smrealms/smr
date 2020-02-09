@@ -12,27 +12,13 @@ if ($sector->hasLocation()) {
 	create_error('You can\'t drop forces in a sector with a location!');
 }
 
-function getInputAmount($name) {
-	global $var;
-	$value = $var[$name] ?? ($_REQUEST[$name] ?? 0);
-	// Empty strings are a valid HTML5 "number" input type value
-	if (empty($value)) {
-		$value = 0;
-	}
-	// Any other non-numeric value is bypassing the HTML5 input type validator
-	if (!is_numeric($value)) {
-		throw new Exception('Expected numeric value for ' . $name . ', got ' . $value);
-	}
-	return round($value);
-}
-
 // take either from container or request, prefer container
-$drop_mines = getInputAmount('drop_mines');
-$take_mines = getInputAmount('take_mines');
-$drop_combat_drones = getInputAmount('drop_combat_drones');
-$take_combat_drones = getInputAmount('take_combat_drones');
-$drop_scout_drones = getInputAmount('drop_scout_drones');
-$take_scout_drones = getInputAmount('take_scout_drones');
+$drop_mines = Request::getVarInt('drop_mines', 0);
+$take_mines = Request::getVarInt('take_mines', 0);
+$drop_combat_drones = Request::getVarInt('drop_combat_drones', 0);
+$take_combat_drones = Request::getVarInt('take_combat_drones', 0);
+$drop_scout_drones = Request::getVarInt('drop_scout_drones', 0);
+$take_scout_drones = Request::getVarInt('take_scout_drones', 0);
 
 // so how many forces do we take/add per type?
 $change_mines = $drop_mines - $take_mines;

@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
-$action = $_REQUEST['action'];
+$action = Request::get('action');
 if ($action == 'Marked Messages') {
-	if (!isset($_REQUEST['message_id'])) {
+	if (!Request::has('message_id')) {
 		create_error('You must choose the messages you want to delete.');
 	}
 
-	foreach ($_REQUEST['message_id'] as $id) {
+	foreach (Request::getIntArray('message_id') as $id) {
 		$db->query('DELETE FROM message_boxes WHERE message_id = ' . $db->escapeNumber($id));
 	}
 } elseif ($action == 'All Messages') {

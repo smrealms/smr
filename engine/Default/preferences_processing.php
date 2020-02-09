@@ -6,20 +6,20 @@ if (SmrSession::hasGame()) {
 } else {
 	$container['body'] = 'game_play.php';
 }
-$action = $_REQUEST['action'];
+$action = Request::get('action');
 
 if ($action == 'Save and resend validation code') {
-	$email = $_REQUEST['email'];
+	$email = Request::get('email');
 
-	$account->changeEmail($_REQUEST['email']);
+	$account->changeEmail($email);
 
 	// overwrite container
 	$container['body'] = 'validate.php';
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
 } elseif ($action == 'Change Password') {
-	$new_password = $_REQUEST['new_password'];
-	$old_password = $_REQUEST['old_password'];
-	$retype_password = $_REQUEST['retype_password'];
+	$new_password = Request::get('new_password');
+	$old_password = Request::get('old_password');
+	$retype_password = Request::get('retype_password');
 
 	if (empty($new_password)) {
 		create_error('You must enter a non empty password!');
@@ -40,7 +40,7 @@ if ($action == 'Save and resend validation code') {
 	$account->setPassword($new_password);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your password.';
 } elseif ($action == 'Change Name') {
-	$HoF_name = trim($_REQUEST['HoF_name']);
+	$HoF_name = trim(Request::get('HoF_name'));
 
 	$limited_char = 0;
 	for ($i = 0; $i < strlen($HoF_name); $i++) {
@@ -78,7 +78,7 @@ if ($action == 'Save and resend validation code') {
 	$account->setHofName($HoF_name);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your hall of fame name.';
 } elseif ($action == 'Change Discord ID') {
-	$discordId = trim($_REQUEST['discord_id']);
+	$discordId = trim(Request::get('discord_id'));
 
 	if (empty($discordId)) {
 		$account->setDiscordId(null);
@@ -95,7 +95,7 @@ if ($action == 'Save and resend validation code') {
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your Discord User ID.';
 	}
 } elseif ($action == 'Change IRC Nick') {
-	$ircNick = trim($_REQUEST['irc_nick']);
+	$ircNick = trim(Request::get('irc_nick'));
 
 	for ($i = 0; $i < strlen($ircNick); $i++) {
 		// disallow certain ascii chars (and whitespace!)
@@ -135,53 +135,53 @@ if ($action == 'Save and resend validation code') {
 	$his_account->increaseSmrCredits($amount);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have sent SMR credits.';
 } elseif ($action == 'Change Timezone') {
-	$timez = $_REQUEST['timez'];
-	if (!is_numeric($timez)) {
-		create_error('Numbers only please');
-	}
+	$timez = Request::getInt('timez');
 
 	$db->query('UPDATE account SET offset = ' . $db->escapeNumber($timez) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 } elseif ($action == 'Change Date Formats') {
-	$account->setShortDateFormat($_REQUEST['dateformat']);
-	$account->setShortTimeFormat($_REQUEST['timeformat']);
+	$account->setShortDateFormat(Request::get('dateformat'));
+	$account->setShortTimeFormat(Request::get('timeformat'));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your date formats.';
 } elseif ($action == 'Change Images') {
-	$account->setDisplayShipImages($_REQUEST['images']);
+	$account->setDisplayShipImages(Request::get('images'));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
 } elseif ($action == 'Change Centering') {
-	$account->setCenterGalaxyMapOnPlayer($_REQUEST['centergalmap'] == 'Yes');
+	$account->setCenterGalaxyMapOnPlayer(Request::get('centergalmap') == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
-} elseif ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50) {
-	$account->setFontSize($_REQUEST['fontsize']);
+} elseif ($action == 'Change Size') {
+	$fontsize = Request::getInt('fontsize');
+	if ($fontsize < 50) {
+		create_error('Minimum font size is 50%');
+	}
+	$account->setFontSize($fontsize);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your font size.';
 } elseif ($action == 'Change CSS Options') {
-	$account->setCssLink($_REQUEST['csslink']);
-	if ($_REQUEST['template'] == 'None') {
+	$account->setCssLink(Request::get('csslink'));
+	$cssTemplateAndColor = Request::get('template');
+	if ($cssTemplateAndColor == 'None') {
 		$account->setDefaultCSSEnabled(false);
 	} else {
 		$account->setDefaultCSSEnabled(true);
-		list($cssTemplate, $cssColourScheme) = explode(' - ', $_REQUEST['template']);
+		list($cssTemplate, $cssColourScheme) = explode(' - ', $cssTemplateAndColor);
 		$account->setTemplate($cssTemplate);
 		$account->setColourScheme($cssColourScheme);
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
 } elseif ($action == 'Change Kamikaze Setting') {
-	$player->setCombatDronesKamikazeOnMines($_REQUEST['kamikaze'] == 'Yes');
+	$player->setCombatDronesKamikazeOnMines(Request::get('kamikaze') == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
 } elseif ($action == 'Change Message Setting') {
-	$player->setForceDropMessages($_REQUEST['forceDropMessages'] == 'Yes');
+	$player->setForceDropMessages(Request::get('forceDropMessages') == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your message options.';
 } elseif ($action == 'Save Hotkeys') {
 	foreach (AbstractSmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
-		if (isset($_REQUEST[$hotkey])) {
-			$account->setHotkey($hotkey, explode(' ', $_REQUEST[$hotkey]));
-		}
+		$account->setHotkey($hotkey, explode(' ', Request::get($hotkey)));
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
 } elseif (strpos(trim($action), 'Alter Player') === 0) {
 	// trim input now
-	$player_name = trim($_POST['PlayerName']);
+	$player_name = trim(Request::get('PlayerName'));
 
 	if ($player->getPlayerName() == $player_name) {
 		create_error('Your player already has that name!');
@@ -238,9 +238,9 @@ if ($action == 'Save and resend validation code') {
 	$db->query('INSERT INTO news (time, news_message, game_id, type) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 } elseif ($action == 'Update Colours') {
-	$friendlyColour = $_REQUEST['friendly_color'];
-	$neutralColour = $_REQUEST['neutral_color'];
-	$enemyColour = $_REQUEST['enemy_color'];
+	$friendlyColour = Request::get('friendly_color');
+	$neutralColour = Request::get('neutral_color');
+	$enemyColour = Request::get('enemy_color');
 
 	if (strlen($friendlyColour) == 6) {
 		$account->setFriendlyColour($friendlyColour);

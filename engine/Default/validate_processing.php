@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
 // Only skip validation check if we explicitly chose to validate later
-if ($_REQUEST['action'] != "I'll validate later.") {
-	if ($account->getValidationCode() != $_REQUEST['validation_code']) {
+if (Request::get('action') != "I'll validate later.") {
+	if ($account->getValidationCode() != Request::get('validation_code')) {
 		$container = create_container('skeleton.php', 'validate.php');
 		$container['msg'] = '<span class="red">The validation code you entered is incorrect!</span>';
 		forward($container);

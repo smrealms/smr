@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
-$body = htmlentities(trim($_REQUEST['body']), ENT_COMPAT, 'utf-8');
-$topic = $_REQUEST['topic'] ?? '';
-$allEyesOnly = isset($_REQUEST['allEyesOnly']);
+$body = htmlentities(trim(Request::get('body')), ENT_COMPAT, 'utf-8');
+$topic = Request::get('topic', ''); // only present for Create Thread
+$allEyesOnly = Request::has('allEyesOnly'); // only present for Create Thread
 
-if ($_REQUEST['action'] == 'Preview Thread' || $_REQUEST['action'] == 'Preview Reply') {
+$action = Request::get('action');
+if ($action == 'Preview Thread' || $action == 'Preview Reply') {
 	$container = create_container('skeleton.php', '', $var);
 	if (!isset($var['thread_index'])) {
 		$container['body'] = 'alliance_message.php';

@@ -2,14 +2,8 @@
 if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
 }
-$amount = trim($_REQUEST['amount']);
-if (!is_numeric($amount)) {
-	create_error('Numbers only please');
-}
 
-// only whole numbers allowed
-$amount = round($amount);
-
+$amount = Request::getInt('amount');
 if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');
 }
@@ -20,7 +14,7 @@ if ($player->getNewbieTurns() > 0) {
 $planet = $player->getSectorPlanet();
 
 $type_id = $var['type_id'];
-$action = $_REQUEST['action'];
+$action = Request::get('action');
 // transfer to ship
 if ($action == 'Ship') {
 	if ($type_id == HARDWARE_SHIELDS) {

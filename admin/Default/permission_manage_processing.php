@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-if ($_REQUEST['action'] == 'Change') {
+if (Request::get('action') == 'Change') {
 	// Check to see if admin previously was displaying Admin tag
 	$hadAdminTag = SmrAccount::getAccount($var['admin_id'])->hasPermission(PERMISSION_DISPLAY_ADMIN_TAG);
 
@@ -10,7 +10,7 @@ if ($_REQUEST['action'] == 'Change') {
 				WHERE account_id = ' . $db->escapeNumber($var['admin_id']));
 
 	// Grant permissions
-	$permissions = $_POST['permission_ids'] ?? [];
+	$permissions = Request::getIntArray('permission_ids', []);
 	foreach ($permissions as $permission_id) {
 		$db->query('REPLACE
 						INTO account_has_permission

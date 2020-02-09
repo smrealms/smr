@@ -10,13 +10,7 @@ if ($var['action'] == 'Enable') {
 } elseif ($var['action'] == 'Disable') {
 	$ship->decloak();
 } elseif ($var['action'] == 'Set Illusion') {
-	if (!is_numeric($_REQUEST['ship_id']) ||
-		!is_numeric($_REQUEST['attack']) ||
-		!is_numeric($_REQUEST['defense'])) {
-		create_error('Numbers only please!');
-	}
-
-	$ship->setIllusion($_REQUEST['ship_id'], $_REQUEST['attack'], $_REQUEST['defense']);
+	$ship->setIllusion(Request::getInt('ship_id'), Request::getInt('attack'), Request::getInt('defense'));
 } elseif ($var['action'] == 'Disable Illusion') {
 	$ship->disableIllusion();
 }

@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-if (empty($_REQUEST['feature'])) {
-	create_error('We need at least a feature desciption!');
+$feature = Request::get('feature');
+if (empty($feature)) {
+	create_error('We need at least a feature description!');
 }
-if (strlen($_REQUEST['feature']) > 500) {
+if (strlen($feature) > 500) {
 	create_error('Feature request longer than 500 characters, please be more concise!');
 }
 
@@ -11,7 +12,7 @@ if (strlen($_REQUEST['feature']) > 500) {
 $db->query('INSERT INTO feature_request (feature_request_id) VALUES (NULL)');
 $featureRequestID = $db->getInsertID();
 $db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text) ' .
-								'VALUES(' . $db->escapeNumber($featureRequestID) . ', ' . $db->escapeNumber($account->getAccountID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean(isset($_REQUEST['anon'])) . ',' . $db->escapeString(word_filter($_REQUEST['feature'])) . ')');
+								'VALUES(' . $db->escapeNumber($featureRequestID) . ', ' . $db->escapeNumber($account->getAccountID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean(Request::has('anon')) . ',' . $db->escapeString(word_filter($feature)) . ')');
 
 // vote for this feature
 $db->query('INSERT INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($featureRequestID) . ',\'YES\')');

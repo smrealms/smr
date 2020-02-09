@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-if ($_REQUEST['action'] == 'Yes') {
+if (Request::get('action') == 'Yes') {
 	$db->query('DELETE
 				FROM album
 				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 try {
 
-	if (empty($_REQUEST['email'])) {
+	if (empty(Request::get('email'))) {
 		header('Location: /error.php?msg=' . rawurlencode('You must specify an e-mail address!'));
 		exit;
 	}
@@ -10,7 +10,7 @@ try {
 	require_once(LIB . 'Default/smr.inc');
 
 	// get this user from db
-	$account = SmrAccount::getAccountByEmail($_REQUEST['email']);
+	$account = SmrAccount::getAccountByEmail(Request::get('email'));
 	if ($account == null) {
 		// unknown user
 		header('Location: /error.php?msg=' . rawurlencode('The specified e-mail address is not registered!'));

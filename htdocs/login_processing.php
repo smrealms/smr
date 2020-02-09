@@ -11,8 +11,8 @@ try {
 	// ********************************
 
 	if (!SmrSession::hasAccount()) {
-		if (isset($_REQUEST['loginType'])) {
-			$socialLogin = SocialLogin::get($_REQUEST['loginType'])->login();
+		if (Request::has('loginType')) {
+			$socialLogin = SocialLogin::get(Request::get('loginType'))->login();
 			if (!$socialLogin->isValid()) {
 				$msg = 'Error validating login.';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -32,8 +32,8 @@ try {
 				exit;
 			}
 		} else {
-			$login = (isset($_REQUEST['login']) ? $_REQUEST['login'] : (isset($var['login']) ? $var['login'] : ''));
-			$password = (isset($_REQUEST['password']) ? $_REQUEST['password'] : (isset($var['password']) ? $var['password'] : ''));
+			$login = Request::getVar('login');
+			$password = Request::getVar('password');
 
 			// has the user submitted empty fields
 			if (empty($login) || empty($password)) {
@@ -67,7 +67,7 @@ try {
 	$account = SmrSession::getAccount();
 
 	// If linking a social login to an existing account
-	if (isset($_REQUEST['social'])) {
+	if (Request::has('social')) {
 		session_start();
 		if (!isset($_SESSION['socialLogin'])) {
 			$msg = 'Tried a social login link without having a social session.';

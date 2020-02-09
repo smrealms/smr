@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 //first create the game
-$db->query('SELECT game_id FROM game WHERE game_name='.$db->escapeString($_REQUEST['game_name']).' LIMIT 1');
+$db->query('SELECT game_id FROM game WHERE game_name='.$db->escapeString(Request::get('game_name')).' LIMIT 1');
 if ($db->nextRecord()) {
 	create_error('That game name is already taken.');
 }
@@ -14,28 +14,28 @@ if ($db->nextRecord()) {
 }
 
 // Get the dates ("|" sets hr/min/sec to 0)
-$join = DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_join']);
-$start = empty($_REQUEST['game_start']) ? $join :
-         DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_start']);
-$end = DateTime::createFromFormat('d/m/Y|', $_REQUEST['game_end']);
+$join = DateTime::createFromFormat('d/m/Y|', Request::get('game_join'));
+$start = empty(Request::get('game_start')) ? $join :
+         DateTime::createFromFormat('d/m/Y|', Request::get('game_start'));
+$end = DateTime::createFromFormat('d/m/Y|', Request::get('game_end'));
 
 $game = SmrGame::createGame($newID);
-$game->setName($_REQUEST['game_name']);
-$game->setDescription($_REQUEST['desc']);
-$game->setGameTypeID($_REQUEST['game_type']);
-$game->setMaxTurns($_REQUEST['max_turns']);
-$game->setStartTurnHours($_REQUEST['start_turns']);
-$game->setMaxPlayers($_REQUEST['max_players']);
-$game->setAllianceMaxPlayers($_REQUEST['alliance_max_players']);
-$game->setAllianceMaxVets($_REQUEST['alliance_max_vets']);
+$game->setName(Request::get('game_name'));
+$game->setDescription(Request::get('desc'));
+$game->setGameTypeID(Request::getInt('game_type'));
+$game->setMaxTurns(Request::getInt('max_turns'));
+$game->setStartTurnHours(Request::getInt('start_turns'));
+$game->setMaxPlayers(Request::getInt('max_players'));
+$game->setAllianceMaxPlayers(Request::getInt('alliance_max_players'));
+$game->setAllianceMaxVets(Request::getInt('alliance_max_vets'));
 $game->setJoinTime($join->getTimestamp());
 $game->setStartTime($start->getTimestamp());
 $game->setEndTime($end->getTimestamp());
-$game->setGameSpeed($_REQUEST['game_speed']);
-$game->setIgnoreStats($_REQUEST['ignore_stats'] == 'Yes');
-$game->setStartingCredits($_REQUEST['starting_credits']);
-$game->setCreditsNeeded($_REQUEST['creds_needed']);
-$game->setStartingRelations($_REQUEST['relations']);
+$game->setGameSpeed(Request::getFloat('game_speed'));
+$game->setIgnoreStats(Request::get('ignore_stats') == 'Yes');
+$game->setStartingCredits(Request::getInt('starting_credits'));
+$game->setCreditsNeeded(Request::getInt('creds_needed'));
+$game->setStartingRelations(Request::getInt('relations'));
 
 // Start game disabled by default
 $game->setEnabled(false);

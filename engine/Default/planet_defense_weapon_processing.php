@@ -5,26 +5,26 @@ if (!$player->isLandedOnPlanet()) {
 
 $planet = $player->getSectorPlanet();
 
-if (isset($_REQUEST['transfer'])) {
-	$planetOrderID = $_REQUEST['transfer'];
+if (Request::has('transfer')) {
+	$planetOrderID = Request::getInt('transfer');
 	if ($planet->hasMountedWeapon($planetOrderID)) {
 		create_error('The planet already has a weapon mounted there!');
 	}
 	// transfer weapon to planet
-	if (!isset($_REQUEST['ship_order' . $planetOrderID])) {
+	if (!Request::has('ship_order' . $planetOrderID)) {
 		create_error('You must select a weapon to transfer!');
 	}
-	$shipOrderID = $_REQUEST['ship_order' . $planetOrderID];
+	$shipOrderID = Request::getInt('ship_order' . $planetOrderID);
 	$weaponTypeID = $ship->getWeapons()[$shipOrderID]->getWeaponTypeID();
 	$planet->addMountedWeapon($weaponTypeID, $planetOrderID);
 	$ship->removeWeapon($shipOrderID);
-} elseif (isset($_REQUEST['destroy'])) {
+} elseif (Request::has('destroy')) {
 	// Destroy the weapon on the planet
-	$planet->removeMountedWeapon($_REQUEST['destroy']);
-} elseif (isset($_REQUEST['move_up'])) {
-	$planet->moveMountedWeaponUp($_REQUEST['move_up']);
-} elseif (isset($_REQUEST['move_down'])) {
-	$planet->moveMountedWeaponDown($_REQUEST['move_down']);
+	$planet->removeMountedWeapon(Request::getInt('destroy'));
+} elseif (Request::has('move_up')) {
+	$planet->moveMountedWeaponUp(Request::getInt('move_up'));
+} elseif (Request::has('move_down')) {
+	$planet->moveMountedWeaponDown(Request::getInt('move_down'));
 }
 
 forward(create_container('skeleton.php', 'planet_defense.php'));

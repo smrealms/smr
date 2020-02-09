@@ -1,8 +1,5 @@
 <?php declare(strict_types=1);
-$leader_id = $_REQUEST['leader_id'];
-if (!is_numeric($leader_id)) {
-	create_error('Leader ID must be a number.');
-}
+$leader_id = Request::getInt('leader_id');
 
 $alliance = $player->getAlliance();
 $alliance->setLeaderID($leader_id);

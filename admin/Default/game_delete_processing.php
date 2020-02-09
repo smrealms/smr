@@ -8,8 +8,8 @@ $db2 = new SmrMySqlDatabase();
 $smr_db_sql = array();
 $history_db_sql = array();
 
-$action = $_REQUEST['action'];
-if ($_REQUEST['save'] == 'Yes') {
+$action = Request::get('action');
+if (Request::get('save') == 'Yes') {
 	$save = true;
 }
 else {

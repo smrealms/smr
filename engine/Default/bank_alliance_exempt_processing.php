@@ -10,12 +10,10 @@ if (isset($var['minVal'])) {
 	unset($temp);
 }
 
-if (isset($_REQUEST['exempt']) && is_array($_REQUEST['exempt'])) {
-	foreach ($_REQUEST['exempt'] as $trans_id => $value) {
-		$temp[] = $trans_id;
-	}
+if (Request::has('exempt')) {
+	$trans_ids = array_keys(Request::getArray('exempt'));
 	$db->query('UPDATE alliance_bank_transactions SET exempt = 1, request_exempt = 0 WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-				AND transaction_id IN (' . $db->escapeArray($temp) . ')');
+				AND transaction_id IN (' . $db->escapeArray($trans_ids) . ')');
 }
 
 $container = create_container('skeleton.php');
