@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic', 'Edit Game Details');
 
-$gameID = SmrSession::getRequestVar('game_id');
+$gameID = $var['game_id'];
 
 // Use Alskant-Creonti as a proxy for the starting political relations
 $relations = Globals::getRaceRelations($gameID, RACE_ALSKANT)[RACE_CREONTI];
