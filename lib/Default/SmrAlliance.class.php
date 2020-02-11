@@ -25,7 +25,7 @@ class SmrAlliance {
 	protected $memberList;
 	protected $seedlist;
 
-	public static function &getAlliance($allianceID, $gameID, $forceUpdate = false) {
+	public static function getAlliance($allianceID, $gameID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
 			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new SmrAlliance($allianceID, $gameID);
 		}
@@ -42,7 +42,7 @@ class SmrAlliance {
 		}
 	}
 
-	public static function &getAllianceByIrcChannel($channel, $forceUpdate = false) {
+	public static function getAllianceByIrcChannel($channel, $forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel) . ' LIMIT 1');
 		if ($db->nextRecord()) {
@@ -72,14 +72,14 @@ class SmrAlliance {
 		if ($allianceID != 0) {
 			$this->db->query('SELECT * FROM alliance WHERE ' . $this->SQL);
 			$this->db->nextRecord();
-			$this->allianceName = stripslashes($this->db->getField('alliance_name'));
+			$this->allianceName = $this->db->getField('alliance_name');
 			$this->password = stripslashes($this->db->getField('alliance_password'));
-			$this->description = strip_tags(stripslashes($this->db->getField('alliance_description')));
+			$this->description = $this->db->getField('alliance_description');
 			$this->leaderID = $this->db->getInt('leader_id');
 			$this->account = $this->db->getInt('alliance_account');
 			$this->kills = $this->db->getInt('alliance_kills');
 			$this->deaths = $this->db->getInt('alliance_deaths');
-			$this->motd = strip_tags(stripslashes($this->db->getField('mod')));
+			$this->motd = $this->db->getField('mod');
 			$this->imgSrc = $this->db->getField('img_src');
 			$this->discordServer = $this->db->getField('discord_server');
 			$this->discordChannel = $this->db->getField('discord_channel');
@@ -131,8 +131,12 @@ class SmrAlliance {
 		return $this->allianceID;
 	}
 
-	public function getAllianceName($linked = false, $includeAllianceID = false) {
-		$name = $this->allianceName;
+	public function getAllianceBBLink() {
+		return '[alliance=' . $this->allianceID . ']';
+	}
+
+	public function getAllianceDisplayName($linked = false, $includeAllianceID = false) {
+		$name = htmlentities($this->allianceName);
 		if ($includeAllianceID) {
 			$name .= ' (' . $this->allianceID . ')';
 		}
@@ -140,6 +144,14 @@ class SmrAlliance {
 			return create_link(Globals::getAllianceRosterHREF($this->getAllianceID()), $name);
 		}
 		return $name;
+	}
+
+	/**
+	 * Returns the alliance name.
+	 * Use getAllianceDisplayName for an HTML-safe version.
+	 */
+	public function getAllianceName() {
+		return $this->allianceName;
 	}
 
 	public function getGameID() {
@@ -162,7 +174,7 @@ class SmrAlliance {
 		return $this->leaderID;
 	}
 
-	public function &getLeader() {
+	public function getLeader() {
 		return SmrPlayer::getPlayer($this->getLeaderID(), $this->getGameID());
 	}
 
@@ -240,12 +252,15 @@ class SmrAlliance {
 		$this->account = $credits;
 	}
 
+	/**
+	 * Get (HTML-safe) alliance Message of the Day for display.
+	 */
 	public function getMotD() {
-		return $this->motd;
+		return htmlentities($this->motd);
 	}
 
 	public function setMotD($motd) {
-		$this->motd = nl2br(htmlspecialchars($motd));
+		$this->motd = $motd;
 	}
 
 	public function getPassword() {
@@ -264,8 +279,15 @@ class SmrAlliance {
 		return $this->deaths;
 	}
 
+	/**
+	 * Get (HTML-safe) alliance description for display.
+	 */
 	public function getDescription() {
-		return $this->description;
+		if (empty($this->description)) {
+			return '';
+		} else {
+			return htmlentities($this->description);
+		}
 	}
 
 	public function setAllianceDescription($description) {
@@ -274,13 +296,13 @@ class SmrAlliance {
 			return;
 		}
 		global $player, $account;
-		$boxDescription = 'Alliance ' . $this->getAllianceName(false, true) . ' had their description changed to:' . EOL . EOL . $description;
+		$boxDescription = 'Alliance ' . $this->getAllianceBBLink() . ' had their description changed to:' . EOL . EOL . $description;
 		if (is_object($player)) {
 			$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
 		} else {
 			$account->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
 		}
-		$this->description = nl2br(htmlspecialchars($description));
+		$this->description = $description;
 	}
 
 	public function hasFlagship() {
@@ -363,13 +385,13 @@ class SmrAlliance {
 	public function update() {
 		$this->db->query('UPDATE alliance SET alliance_password = ' . $this->db->escapeString($this->password) . ',
 								alliance_account = '.$this->db->escapeNumber($this->account) . ',
-								alliance_description = ' . $this->db->escapeString($this->description) . ',
+								alliance_description = ' . $this->db->escapeString($this->description, true, true) . ',
 								`mod` = ' . $this->db->escapeString($this->motd) . ',
 								img_src = ' . $this->db->escapeString($this->imgSrc) . ',
 								alliance_kills = '.$this->db->escapeNumber($this->kills) . ',
 								alliance_deaths = '.$this->db->escapeNumber($this->deaths) . ',
-								discord_server = '.$this->db->escapeString($this->discordServer) . ',
-								discord_channel = '.$this->db->escapeString($this->discordChannel) . ',
+								discord_server = '.$this->db->escapeString($this->discordServer, true, true) . ',
+								discord_channel = '.$this->db->escapeString($this->discordChannel, true, true) . ',
 								flagship_id = '.$this->db->escapeNumber($this->flagshipID) . ',
 								leader_id = '.$this->db->escapeNumber($this->leaderID) . '
 							WHERE ' . $this->SQL);

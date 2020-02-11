@@ -3,7 +3,7 @@ if (count($AlliedAllianceBanks) > 0) { ?>
 	<ul><?php
 	foreach ($AlliedAllianceBanks as $AlliedAllianceID => $AlliedAlliance) { ?>
 		<li>
-			<a class="bold" href="<?php echo Globals::getAllianceBankHref($AlliedAlliance->getAllianceID()); ?>"><?php echo $AlliedAlliance->getAllianceName(); ?>'s Account</a>
+			<a class="bold" href="<?php echo Globals::getAllianceBankHref($AlliedAlliance->getAllianceID()); ?>"><?php echo $AlliedAlliance->getAllianceDisplayName(); ?>'s Account</a>
 		</li><?php
 	} ?>
 	</ul><br /><?php
@@ -12,7 +12,7 @@ if (count($AlliedAllianceBanks) > 0) { ?>
 Hello <?php echo $ThisPlayer->getPlayerName(); ?>,<br /><?php
 if (isset($UnlimitedWithdrawal) && $UnlimitedWithdrawal === true) {
 	?>You can withdraw an unlimited amount from this account.<?php
-} else if (isset($PositiveWithdrawal)) {
+} elseif (isset($PositiveWithdrawal)) {
 	?>You can only withdraw <?php echo number_format($PositiveWithdrawal); ?> more credits based on your deposits.<?php
 } else { ?>
 	You can withdraw up to <?php echo number_format($WithdrawalPerDay); ?> credits per 24 hours.<br />
@@ -100,7 +100,7 @@ if (!empty($BankTransactions)) { ?>
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 			<td class="top">Amount:&nbsp;</td>
-			<td><input type="number" name="amount" size="10">&nbsp;
+			<td><input type="number" name="amount" required size="10">&nbsp;
 				Request Exemption:<input type="checkbox" name="requestExempt"></td>
 		</tr>
 		<tr>

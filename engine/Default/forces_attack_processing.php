@@ -3,37 +3,46 @@
 $forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 $forceOwner = $forces->getOwner();
 
-if ($player->hasNewbieTurns())
+if ($player->hasNewbieTurns()) {
 	create_error('You are under newbie protection!');
-if ($player->hasFederalProtection())
+}
+if ($player->hasFederalProtection()) {
 	create_error('You are under federal protection.');
-if ($player->isLandedOnPlanet())
+}
+if ($player->isLandedOnPlanet()) {
 	create_error('You cannot attack forces whilst on a planet!');
-if (!$player->canFight())
+}
+if (!$player->canFight()) {
 	create_error('You are not allowed to fight!');
-if ($player->forceNAPAlliance($forceOwner))
+}
+if ($player->forceNAPAlliance($forceOwner)) {
 	create_error('You cannot attack allied forces!');
+}
 
 // The attack is processed slightly differently if the attacker bumped into mines
 // when moving into sector
 if ($var['action'] == 'attack') {
 	$bump = false;
-} else if ($var['action'] == 'bump') {
+} elseif ($var['action'] == 'bump') {
 	$bump = true;
 } else {
 	create_error('Action must be either bump or attack');
 }
 
 if ($bump) {
-	if (!$forces->hasMines())
+	if (!$forces->hasMines()) {
 		create_error('No mines in sector!');
+	}
 } else {
-	if (!$forces->exists())
+	if (!$forces->exists()) {
 		create_error('These forces no longer exist.');
-	if ($player->getTurns() < $forces->getAttackTurnCost($ship))
+	}
+	if ($player->getTurns() < $forces->getAttackTurnCost($ship)) {
 		create_error('You do not have enough turns to attack these forces!');
-	if (!$ship->hasWeapons() && !$ship->hasCDs())
+	}
+	if (!$ship->hasWeapons() && !$ship->hasCDs()) {
 		create_error('You cannot attack without weapons!');
+	}
 }
 
 // take the turns
@@ -103,10 +112,11 @@ if ($sendMessage) {
 $container = create_container('skeleton.php', 'forces_attack.php');
 
 // If their target is dead there is no continue attack button
-if ($forces->exists())
+if ($forces->exists()) {
 	$container['owner_id'] = $forces->getOwnerID();
-else
+} else {
 	$container['owner_id'] = 0;
+}
 
 // If they died on the shot they get to see the results
 if ($player->isDead()) {

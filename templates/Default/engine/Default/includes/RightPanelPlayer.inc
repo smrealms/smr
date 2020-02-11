@@ -35,7 +35,7 @@ if (isset($GameID)) { ?>
 		</span>
 	</a>
 	Alignment : <span id="align"><?php echo get_colored_text($ThisPlayer->getAlignment(), number_format($ThisPlayer->getAlignment())); ?></span><br />
-	Alliance : <span id="alliance"><a href="<?php echo Globals::getAllianceHREF($ThisPlayer->getAllianceID()); ?>"><?php echo $ThisPlayer->getAllianceName(false, true); ?></a></span><br />
+	Alliance : <span id="alliance"><a href="<?php echo Globals::getAllianceHREF($ThisPlayer->getAllianceID()); ?>"><?php echo $ThisPlayer->getAllianceDisplayName(false, true); ?></a></span><br />
 	<br />
 	<?php
 }

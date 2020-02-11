@@ -4,12 +4,8 @@ $template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
 Menu::galactic_post();
 
 // View past editions of current game by default
-if (isset($_POST['game_id'])) {
-	SmrSession::updateVar('game_id', $_POST['game_id']);
-} else if (!isset($var['game_id'])) {
-	SmrSession::updateVar('game_id', $player->getGameID());
-}
-$template->assign('SelectedGame', $var['game_id']);
+$selectedGameID = SmrSession::getRequestVar('selected_game_id', $player->getGameID());
+$template->assign('SelectedGame', $selectedGameID);
 
 // Get the list of games with published papers
 // Add the current game to this list no matter what
@@ -22,12 +18,12 @@ while ($db->nextRecord()) {
 $template->assign('PublishedGames', $publishedGames);
 
 // Get the list of published papers for the selected game
-$db->query('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id=' . $db->escapeNumber($var['game_id']));
+$db->query('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id=' . $db->escapeNumber($selectedGameID));
 $pastEditions = array();
 while ($db->nextRecord()) {
 	$container = create_container('skeleton.php', 'galactic_post_read.php');
 	$container['paper_id'] = $db->getInt('paper_id');
-	$container['game_id'] = $var['game_id'];
+	$container['game_id'] = $selectedGameID;
 	$container['back'] = true;
 
 	$pastEditions[] = array('title' => $db->getField('title'),

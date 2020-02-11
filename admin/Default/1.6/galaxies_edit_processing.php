@@ -20,12 +20,12 @@ foreach ($galaxies as $i => $galaxy) {
 
 // Modify the galaxy properties
 foreach ($galaxies as $i => $galaxy) {
-	$galaxy->setName($_POST['gal' . $i]);
-	$galaxy->setGalaxyType($_POST['type' . $i]);
-	$galaxy->setMaxForceTime($_POST['forces' . $i] * 3600);
+	$galaxy->setName(Request::get('gal' . $i));
+	$galaxy->setGalaxyType(Request::get('type' . $i));
+	$galaxy->setMaxForceTime(IFloor(Request::getFloat('forces' . $i) * 3600));
 	if (!SmrGame::getGame($gameID)->isEnabled()) {
-		$galaxy->setWidth($_POST['width' . $i]);
-		$galaxy->setHeight($_POST['height' . $i]);
+		$galaxy->setWidth(Request::getInt('width' . $i));
+		$galaxy->setHeight(Request::getInt('height' . $i));
 	}
 }
 

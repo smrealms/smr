@@ -71,7 +71,7 @@ class SmrForce {
 		return $galaxyForces;
 	}
 
-	public static function &getSectorForces($gameID, $sectorID, $forceUpdate = false) {
+	public static function getSectorForces($gameID, $sectorID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID][$sectorID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
 			$db = new SmrMySqlDatabase();
@@ -86,7 +86,7 @@ class SmrForce {
 		return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID];
 	}
 
-	public static function &getForce($gameID, $sectorID, $ownerID, $forceUpdate = false, $db = null) {
+	public static function getForce($gameID, $sectorID, $ownerID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
 			$p = new SmrForce($gameID, $sectorID, $ownerID, $db);
@@ -270,16 +270,16 @@ class SmrForce {
 		}
 		$this->hasChanged = true;
 		$this->expire = $time;
-		if (!$this->isNew)
+		if (!$this->isNew) {
 			$this->update();
+		}
 	}
 
 	public function updateExpire() {
 		// Changed (26/10/05) - scout drones count * 2
 		if ($this->getCDs() == 0 && $this->getMines() == 0 && $this->getSDs() > 0) {
 			$time = self::TIME_PER_SCOUT_ONLY * $this->getSDs();
-		}
-		else {
+		} else {
 			$time = ($this->getCDs() * self::TIME_PERCENT_PER_COMBAT + $this->getSDs() * self::TIME_PERCENT_PER_SCOUT + $this->getMines() * self::TIME_PERCENT_PER_MINE) * $this->getMaxGalaxyExpireTime();
 		}
 		$this->setExpire(TIME + $time);
@@ -306,11 +306,9 @@ class SmrForce {
 		}
 		if ($mines < 10) {
 			$turns = 1;
-		}
-		else if ($mines < 25) {
+		} elseif ($mines < 25) {
 			$turns = 2;
-		}
-		else {
+		} else {
 			$turns = 3;
 		}
 		if ($ship->isFederal() || $ship->hasDCS()) {
@@ -334,7 +332,7 @@ class SmrForce {
 		return $this->gameID;
 	}
 
-	public function &getSector() {
+	public function getSector() {
 		return SmrSector::getSector($this->getGameID(), $this->getSectorID());
 	}
 
@@ -352,11 +350,11 @@ class SmrForce {
 		}
 	}
 
-	public function &getGalaxy() {
+	public function getGalaxy() {
 		return SmrGalaxy::getGalaxyContaining($this->getGameID(), $this->getSectorID());
 	}
 
-	public function &getOwner() {
+	public function getOwner() {
 		return SmrPlayer::getPlayer($this->getOwnerID(), $this->getGameID());
 	}
 
@@ -365,12 +363,10 @@ class SmrForce {
 			if (!$this->exists()) {
 				$this->db->query('DELETE FROM sector_has_forces WHERE ' . $this->SQL);
 				$this->isNew = true;
-			}
-			else if ($this->hasChanged) {
+			} elseif ($this->hasChanged) {
 				$this->db->query('UPDATE sector_has_forces SET combat_drones = ' . $this->db->escapeNumber($this->combatDrones) . ', scout_drones = ' . $this->db->escapeNumber($this->scoutDrones) . ', mines = ' . $this->db->escapeNumber($this->mines) . ', expire_time = ' . $this->db->escapeNumber($this->expire) . ' WHERE ' . $this->SQL);
 			}
-		}
-		else if ($this->exists()) {
+		} elseif ($this->exists()) {
 			$this->db->query('INSERT INTO sector_has_forces (game_id, sector_id, owner_id, combat_drones, scout_drones, mines, expire_time)
 								VALUES('.$this->db->escapeNumber($this->gameID) . ', ' . $this->db->escapeNumber($this->sectorID) . ', ' . $this->db->escapeNumber($this->ownerID) . ', ' . $this->db->escapeNumber($this->combatDrones) . ', ' . $this->db->escapeNumber($this->scoutDrones) . ', ' . $this->db->escapeNumber($this->mines) . ', ' . $this->db->escapeNumber($this->expire) . ')');
 			$this->isNew = false;
@@ -522,19 +518,19 @@ class SmrForce {
 	}
 
 	protected function doMinesDamage($damage) {
-		$actualDamage = min($this->getMines(), floor($damage / MINE_ARMOUR));
+		$actualDamage = min($this->getMines(), IFloor($damage / MINE_ARMOUR));
 		$this->takeMines($actualDamage);
 		return $actualDamage * MINE_ARMOUR;
 	}
 
 	protected function doCDDamage($damage) {
-		$actualDamage = min($this->getCDs(), floor($damage / CD_ARMOUR));
+		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
 		$this->takeCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
 
 	protected function doSDDamage($damage) {
-		$actualDamage = min($this->getSDs(), floor($damage / SD_ARMOUR));
+		$actualDamage = min($this->getSDs(), IFloor($damage / SD_ARMOUR));
 		$this->takeSDs($actualDamage);
 		return $actualDamage * SD_ARMOUR;
 	}

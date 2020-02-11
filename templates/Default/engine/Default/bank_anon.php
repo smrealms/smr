@@ -5,11 +5,11 @@
 <table cellspacing="0" cellpadding="0" class="nobord nohpad">
 	<tr>
 		<td class="top">Account Number:&nbsp;</td>
-		<td><input type="number" name="account_num" size="4"></td>
+		<td><input type="number" name="account_num" required size="4"></td>
 	</tr>
 	<tr>
 		<td class="top">Password:&nbsp;</td>
-		<td><input type="password" name="password" size="30"></td>
+		<td><input type="password" name="password" required size="30"></td>
 	</tr>
 </table>
 <br />

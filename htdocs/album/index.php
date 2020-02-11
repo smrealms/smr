@@ -56,36 +56,37 @@ try {
 						  approved = \'YES\'
 					ORDER BY hof_name');
 			
-			if ($db2->nextRecord())
+			if ($db2->nextRecord()) {
 				album_entry($db2->getInt('album_id'));
-			else {
+			} else {
 				// get all id's and build array
 				$album_ids = array();
 		
-				while ($db->nextRecord())
+				while ($db->nextRecord()) {
 					$album_ids[] = $db->getInt('album_id');
+				}
 		
 				// double check if we have id's
-				if (count($album_ids) > 0)
+				if (count($album_ids) > 0) {
 					search_result($album_ids);
-				else
+				} else {
 					main_page();
+				}
 			}
 	
-		}
-		elseif ($db->getNumRows() == 1) {
-			if ($db->nextRecord())
+		} elseif ($db->getNumRows() == 1) {
+			if ($db->nextRecord()) {
 				album_entry($db->getInt('album_id'));
-			else
+			} else {
 				main_page();
-		}
-		else
+			}
+		} else {
 			main_page();
-	}
-	else
+		}
+	} else {
 		main_page();
-}
-catch (Throwable $e) {
+	}
+} catch (Throwable $e) {
 	handleException($e);
 }
 ?>

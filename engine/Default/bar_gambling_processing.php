@@ -93,15 +93,7 @@ if (isset($var['player_does'])) {
 }
 //new game if $do == nothing
 if ($do == 'nothing') {
-	if (isset($var['bet'])) {
-		$bet = $var['bet'];
-	} else {
-		$bet = $_REQUEST['bet'];
-	}
-	if (!is_numeric($bet)) {
-		create_error('Numbers only!');
-	}
-	$bet = round($bet);
+	$bet = Request::getVarInt('bet');
 	if ($player->getCredits() < $bet) {
 		create_error('Not even enough to play BlackJack...you need to trade!');
 	}
@@ -296,7 +288,7 @@ if (get_value($player_card) > 21) {
 	$message .= create_submit('Play Some More ($' . $bet . ')');
 	$message .= ('</form>');
 	$message .= ('</div>');
-} else if (!isset($win) && get_value($player_card) < 21) {
+} elseif (!isset($win) && get_value($player_card) < 21) {
 	$container['player_card'] = $player_card;
 	$container['player_does'] = 'HIT';
 	$container['ai_card'] = $ai_card;
@@ -308,7 +300,7 @@ if (get_value($player_card) > 21) {
 	$message .= create_echo_form($container);
 	$message .= create_submit('STAY');
 	$message .= ('</form></div>');
-} else if (isset($win)) {
+} elseif (isset($win)) {
 	//we have a winner...but who!
 	if ($win == 'bj') {
 		$player->increaseCredits($bet * 2.5);
@@ -350,7 +342,7 @@ if (get_value($player_card) > 21) {
 		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Win'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Win'), HOF_PUBLIC);
 		$message .= ('You have won $' . number_format($bet * $winnings) . ' credits!');
-	} else if (count($ai_card) > 2) {
+	} elseif (count($ai_card) > 2) {
 		$winnings = 1;
 		$player->increaseCredits($bet * $winnings);
 		$stat = ($bet * $winnings) - $bet;

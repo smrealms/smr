@@ -45,8 +45,9 @@ function channel_msg_sd_set($fp, $rdata, $account, $player)
 		// delete any old entries in the list
 		foreach ($sds as $key => $value) {
 
-			if ($value[3] != $channel)
+			if ($value[3] != $channel) {
 				continue;
+			}
 
 			if ($value[0] == $sector) {
 				unset($sds[$key]);
@@ -82,8 +83,9 @@ function channel_msg_sd_del($fp, $rdata, $account, $player)
 
 		foreach ($sds as $key => $sd) {
 
-			if ($sd[3] != $channel)
+			if ($sd[3] != $channel) {
 				continue;
+			}
 
 			if ($sd[0] == $sector) {
 				fputs($fp, 'PRIVMSG ' . $channel . ' :The supply/demand for sector ' . $sector . ' has been deleted.' . EOL);
@@ -121,7 +123,9 @@ function channel_msg_sd_list($fp, $rdata, $account, $player)
 			if ($sd[3] == $channel) {
 
 				$seconds_since_refresh = time() - $sd[2];
-				if ($seconds_since_refresh < 0) $seconds_since_refresh = 0;
+				if ($seconds_since_refresh < 0) {
+					$seconds_since_refresh = 0;
+				}
 				$amt_to_add = floor($seconds_since_refresh * $refresh_per_sec);
 
 				if ($sd[1] + $amt_to_add > 4000) {

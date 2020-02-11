@@ -31,9 +31,9 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 		
 		<tr>
 			<td class="right bold">Birthdate:</td>
-			<td>Day:&nbsp;<input type="text" name="month" class="InputFields center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Month']); } else { ?>N/A<?php } ?>" size="3" maxlength="2" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}">&nbsp;&nbsp;&nbsp;
-				Month:&nbsp;<input type="text" name="day" class="InputFields center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Day']); } else { ?>N/A<?php } ?>" size="3" maxlength="2" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}">&nbsp;&nbsp;&nbsp;
-				Year:&nbsp;<input type="text" name="year" class="InputFields center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Year']); } else { ?>N/A<?php } ?>" size="3" maxlength="4" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}">
+			<td>Day:&nbsp;<input type="number" name="month" class="InputFields center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Month']); } ?>" min="1" max="12">&nbsp;&nbsp;&nbsp;
+				Month:&nbsp;<input type="number" name="day" class="InputFields center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Day']); } ?>" min="1" max="31">&nbsp;&nbsp;&nbsp;
+				Year:&nbsp;<input type="number" name="year" class="InputFields center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Year']); } ?>" min="1900" max="<?php echo date('Y'); ?>">
 			</td>
 		</tr>
 		
@@ -53,7 +53,8 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 		<tr>
 			<td>&nbsp;</td>
 			<td>
-				<input type="submit" name="action" value="Submit" class="InputFields" />&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="Delete Entry" class="InputFields" />
+				<input type="submit" name="action" value="Submit" class="InputFields" />&nbsp;&nbsp;&nbsp;
+				<a href="<?php echo $AlbumDeleteHref; ?>" class="submitStyle">Delete Entry</a>
 			</td>
 		</tr>
 

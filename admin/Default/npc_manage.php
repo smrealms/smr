@@ -23,7 +23,7 @@ while ($db->nextRecord()) {
 $template->assign('Games', $games);
 $template->assign('SelectedGameID', $selectedGameID);
 
-$container = create_container('skeleton.php', 'npc_manage_processing.php');
+$container = create_container('npc_manage_processing.php');
 $container['selected_game_id'] = $selectedGameID;
 $template->assign('AddAccountHREF', SmrSession::getNewHREF($container));
 
@@ -39,7 +39,7 @@ while ($db->nextRecord()) {
 	$npcs[$accountID] = [
 		'login' => $login,
 		'default_player_name' => $db->getField('player_name'),
-		'default_alliance' => $db->getField('alliance_name'),
+		'default_alliance' => htmlentities($db->getField('alliance_name')),
 		'active' => $db->getBoolean('active'),
 		'working' => $db->getBoolean('working'),
 		'href' => SmrSession::getNewHREF($container),

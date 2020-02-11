@@ -9,4 +9,4 @@
 <br />
 <a href="<?php echo Globals::getBarMainHREF(); ?>" class="submitStyle">Enough talk</a>
 &nbsp;&nbsp;
-<a href="<?php echo $GossipHREF; ?>" class="submitStyle">Keep listening</a>
+<a href="<?php echo $ListenHREF; ?>" class="submitStyle">Keep listening</a>

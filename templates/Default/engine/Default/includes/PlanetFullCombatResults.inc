@@ -4,8 +4,7 @@ if (!$AlreadyDestroyed) {
 		<h1>Attacker Results</h1><br /><?php
 	}
 	$this->includeTemplate('includes/PlanetTraderTeamCombatResults.inc', array('TraderTeamCombatResults'=>$FullPlanetCombatResults['Attackers'], 'MinimalDisplay'=>$MinimalDisplay));
-}
-else if (!$MinimalDisplay) {
+} else if (!$MinimalDisplay) {
 	?><span class="bold">The planet is already destroyed.</span><?php
 }
 ?><br /><?php

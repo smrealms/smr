@@ -3,17 +3,17 @@ $canAttack = false;
 
 if ($ThisPlayer->hasNewbieTurns()) {
 	?><p class="big green">You are under newbie protection!</p><?php
-} else if ($TargetPlayer->hasNewbieTurns()) {
+} elseif ($TargetPlayer->hasNewbieTurns()) {
 	?><p class="big green">Your target is under newbie protection!</p><?php
-} else if ($ThisPlayer->sameAlliance($TargetPlayer)) {
+} elseif ($ThisPlayer->sameAlliance($TargetPlayer)) {
 	?><p class="big blue">This is your alliancemate.</p><?php
-} else if (!$ThisShip->canAttack()) {
+} elseif (!$ThisShip->canAttack()) {
 	?><p class="big red">You ready your weapons, you take aim, you...realise you have no weapons.</p><?php
-} else if ($ThisPlayer->traderNAPAlliance($TargetPlayer)) {
+} elseif ($ThisPlayer->traderNAPAlliance($TargetPlayer)) {
 	?><p class="big blue">This is your ally.</p><?php
-} else if ($ThisPlayer->hasFederalProtection()) {
+} elseif ($ThisPlayer->hasFederalProtection()) {
 	?><p class="big blue">You are under federal protection! That wouldn't be fair.</p><?php
-} else if ($TargetPlayer->hasFederalProtection()) {
+} elseif ($TargetPlayer->hasFederalProtection()) {
 	?><p class="big blue">Your target is under federal protection!</p><?php
 } else {
 	$canAttack = true;
@@ -42,7 +42,7 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] = $ThisPlayer;
 					echo $fleetPlayer->getLevelName(); ?><br /><?php
 					echo $fleetPlayer->getDisplayName() ?><br />
 					Race: <?php echo $fleetPlayer->getRaceName() ?><br />
-					Alliance: <?php echo $fleetPlayer->getAllianceName() ?><br /><br /><?php
+					Alliance: <?php echo $fleetPlayer->getAllianceDisplayName() ?><br /><br /><?php
 					echo $fleetShip->getName() ?><br />
 					Rating : <?php echo $fleetShip->getDisplayAttackRating($ThisPlayer) . '/' . $fleetShip->getDisplayDefenseRating($ThisPlayer) ?><br /><?php
 					if ($ThisShip->hasScanner()) { ?>

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$password = trim($_REQUEST['password']);
+$password = trim(Request::get('password'));
 
 if (empty($password)) {
 	create_error('You cannot use a blank password!');

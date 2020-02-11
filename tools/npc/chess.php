@@ -48,7 +48,7 @@ try {
 	while(true) {
 		//Redefine MICRO_TIME and TIME, the rest of the game expects them to be the single point in time that the script is executing, with it being redefined for each page load - unfortunately NPCs are one consistent script so we have to do a hack and redefine it (or change every instance of the TIME constant).
 		runkit_constant_redefine('MICRO_TIME', microtime(true));
-		runkit_constant_redefine('TIME', intval(MICRO_TIME));
+		runkit_constant_redefine('TIME', IFloor(MICRO_TIME));
 
 		foreach (ChessGame::getNPCMoveGames(true) as $chessGame) {
 			debug('Looking at game: ' . $chessGame->getChessGameID());
@@ -77,8 +77,7 @@ try {
 	fclose($toEngine);
 	fclose($fromEngine);
 	proc_close($engine);
-}
-catch(Throwable $e) {
+} catch(Throwable $e) {
 	logException($e);
 	exit;
 }

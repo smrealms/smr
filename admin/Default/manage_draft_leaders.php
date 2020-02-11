@@ -13,25 +13,23 @@ $template->assign('ActiveGames', $activeGames);
 
 if ($activeGames) {
 	// Set the selected game (or the first in the list if not selected yet)
-	if (isset($_POST['game_id'])) {
-		SmrSession::updateVar('selected_game_id', $_POST['game_id']);
-		SmrSession::updateVar('processing_msg', null);
-	} else if (!isset($var['selected_game_id'])) {
-		SmrSession::updateVar('selected_game_id', $activeGames[0]['game_id']);
-	}
-	$template->assign('SelectedGame', $var['selected_game_id']);
+	$selectedGameID = SmrSession::getRequestVar('selected_game_id', $activeGames[0]['game_id']);
+	$template->assign('SelectedGame', $selectedGameID);
 
 	// Get the list of current draft leaders for the selected game
 	$currentLeaders = array();
-	$db->query('SELECT account_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($var['selected_game_id']));
+	$db->query('SELECT account_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($selectedGameID));
 	while ($db->nextRecord()) {
-		$editor = SmrPlayer::getPlayer($db->getInt('account_id'),
-		                               $var['selected_game_id']);
+		$editor = SmrPlayer::getPlayer($db->getInt('account_id'), $selectedGameID);
 		$currentLeaders[] = $editor->getDisplayName();
 	}
 	$template->assign('CurrentLeaders', $currentLeaders);
 }
 
+// If we are selecting a different game, clear the processing message.
+if (Request::has('selected_game_id')) {
+	SmrSession::updateVar('processing_msg', null);
+}
 // If we have just forwarded from the processing file, pass its message.
 if (isset($var['processing_msg'])) {
 	$template->assign('ProcessingMsg', $var['processing_msg']);

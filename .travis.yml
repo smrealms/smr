@@ -5,3 +5,4 @@ git:
   depth: false
 script:
   - tests/phplint.sh
+  - tests/strict_types.sh

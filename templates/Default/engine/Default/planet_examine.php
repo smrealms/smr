@@ -29,7 +29,7 @@
 		<td class="bold">Alliance:</td>
 		<td><?php
 			if ($ThisPlanet->hasOwner()) {
-				echo $ThisPlanet->getOwner()->getAllianceName(true);
+				echo $ThisPlanet->getOwner()->getAllianceDisplayName(true);
 			} else { ?>
 				none<?php
 			} ?>

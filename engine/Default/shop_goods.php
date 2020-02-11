@@ -6,8 +6,9 @@ require_once(LIB . 'Default/shop_goods.inc');
 $port = $player->getSectorPort();
 
 $tradeable = checkPortTradeable($port, $player);
-if ($tradeable !== true)
+if ($tradeable !== true) {
 	create_error($tradeable);
+}
 
 // topic
 $template->assign('PageTopic', 'Port In Sector #' . $player->getSectorID());
@@ -23,17 +24,19 @@ $searchedByFeds = false;
 //The player is sent here after trading and sees this if his offer is accepted.
 if (!empty($var['trade_msg'])) {
 	$template->assign('TradeMsg', $var['trade_msg']);
-}
-elseif ($player->getLastPort() != $player->getSectorID()) {
+} elseif ($player->getLastPort() != $player->getSectorID()) {
 	// test if we are searched, but only if we hadn't a previous trade here
 
 	$base_chance = 15;
-	if ($port->hasGood(GOODS_SLAVES))
+	if ($port->hasGood(GOODS_SLAVES)) {
 		$base_chance -= 4;
-	if ($port->hasGood(GOODS_WEAPONS))
+	}
+	if ($port->hasGood(GOODS_WEAPONS)) {
 		$base_chance -= 4;
-	if ($port->hasGood(GOODS_NARCOTICS))
+	}
+	if ($port->hasGood(GOODS_NARCOTICS)) {
 		$base_chance -= 4;
+	}
 
 	if ($ship->isUnderground()) {
 		$base_chance -= 4;
@@ -64,11 +67,11 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 					// because credits is 0 it will take money from bank
 					$player->decreaseBank(min($fine, $player->getBank()));
 					// leave insurance
-					if ($player->getBank() < 5000)
+					if ($player->getBank() < 5000) {
 						$player->setBank(5000);
+					}
 				}
-			}
-			else {
+			} else {
 				$player->decreaseCredits($fine);
 			}
 
@@ -80,8 +83,7 @@ elseif ($player->getLastPort() != $player->getSectorID()) {
 			$ship->setCargo(GOODS_NARCOTICS, 0);
 			$account->log(LOG_TYPE_TRADING, 'Player gets caught with illegals', $player->getSectorID());
 
-		}
-		else {
+		} else {
 			$template->assign('IllegalsFound', false);
 			$player->increaseHOF(1, array('Trade', 'Search', 'Times Found Innocent'), HOF_PUBLIC);
 			$player->increaseAlignment(1);

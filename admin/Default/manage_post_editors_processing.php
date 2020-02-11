@@ -7,8 +7,8 @@ $game_id = $var['selected_game_id'];
 SmrSession::updateVar('processing_msg', null);
 
 // Get the POST variables
-$player_id = $_POST['player_id'];
-$action = $_POST['submit'];
+$player_id = Request::getInt('player_id');
+$action = Request::get('submit');
 
 try {
 	$selected_player = SmrPlayer::getPlayerByPlayerID($player_id, $game_id);
@@ -28,7 +28,7 @@ if ($action == "Assign") {
 	} else {
 		$db->query('INSERT INTO galactic_post_writer (account_id, game_id) VALUES (' . $db->escapeNumber($account_id) . ', ' . $db->escapeNumber($game_id) . ')');
 	}
-} else if ($action == "Remove") {
+} elseif ($action == "Remove") {
 	if (!$selected_player->isGPEditor()) {
 		$msg = "<span class='red'>ERROR: </span>$name is not an editor in game $game!";
 	} else {

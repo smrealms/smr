@@ -69,7 +69,7 @@ class Plotter {
 			// Now that we know where $x is, make sure path is reversible
 			// (i.e. start sector < end sector)
 			if ($path->getEndSectorID() < $sector->getSectorID()) {
-				$path =& Plotter::findDistanceToX($sector, $path->getEndSector(), true);
+				$path = Plotter::findDistanceToX($sector, $path->getEndSector(), true);
 				$path->reversePath();
 			}
 
@@ -83,7 +83,7 @@ class Plotter {
 	 * The resulting path prefers neighbors in their order in SmrSector->links,
 	 * (i.e. up, down, left, right).
 	 */
-	public static function &findDistanceToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function findDistanceToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE - 1;
 
 		$checkSector = $sector;
@@ -92,12 +92,14 @@ class Plotter {
 		$sectorsTravelled = 0;
 		$visitedSectors = array();
 		$visitedSectors[$checkSector->getSectorID()] = true;
-		if ($x == 'Distance')
+		if ($x == 'Distance') {
 			$distances[0][$checkSector->getSectorID()] = new Distance($gameID, $checkSector->getSectorID());
+		}
 
 		$distanceQ = array();
-		for ($i = 0; $i <= TURNS_WARP_SECTOR_EQUIVALENCE; $i++)
+		for ($i = 0; $i <= TURNS_WARP_SECTOR_EQUIVALENCE; $i++) {
 			$distanceQ[] = array();
+		}
 		//Warps first as a slight optimisation due to how visitedSectors is set.
 		if ($checkSector->hasWarp() === true) {
 			$d = new Distance($gameID, $checkSector->getSectorID());
@@ -115,8 +117,9 @@ class Plotter {
 		$maybeWarps = 0;
 		while ($maybeWarps <= TURNS_WARP_SECTOR_EQUIVALENCE) {
 			$sectorsTravelled++;
-			if ($sectorsTravelled > $distanceLimit)
+			if ($sectorsTravelled > $distanceLimit) {
 				return $distances;
+			}
 			if ($x == 'Distance') {
 				$distances[$sectorsTravelled] = array();
 			}
@@ -134,11 +137,11 @@ class Plotter {
 					$checkSector = SmrSector::getSector($gameID, $checkSectorID);
 					if ($x == 'Distance') {
 						$distances[$sectorsTravelled][$checkSector->getSectorID()] = $distance;
-					}
-					else if (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
+					} elseif (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
 							&& $checkSector->hasX($x, $player) === true) {
-						if ($useFirst === true)
+						if ($useFirst === true) {
 							return $distance;
+						}
 						$distances[$checkSector->getSectorID()] = $distance;
 					}
 					//Warps first as a slight optimisation due to how visitedSectors is set.
@@ -168,7 +171,7 @@ class Plotter {
 		return $distances;
 	}
 	
-	public static function &calculatePortToPortDistances(array $sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function calculatePortToPortDistances(array $sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		$distances = array();
 		foreach ($sectors as $sec) {
 			if ($sec !== null) {
@@ -182,7 +185,7 @@ class Plotter {
 		return $distances;
 	}
 
-	public static function &findDistanceToOtherPorts(SmrSector $sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function findDistanceToOtherPorts(SmrSector $sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		return self::findDistanceToX('Port', $sector, false, null, null, $distanceLimit, $lowLimit, $highLimit);
 	}
 }

@@ -4,19 +4,20 @@ if ($player->getAllianceJoinable() > TIME) {
 	create_error('You cannot create an alliance for another ' . format_time($player->getAllianceJoinable() - TIME) . '.');
 }
 
+// trim input first
+$name = trim(Request::get('name'));
+
 // disallow certain ascii chars
-for ($i = 0; $i < strlen($_REQUEST['name']); $i++) {
-	if (ord($_REQUEST['name'][$i]) < 32 || ord($_REQUEST['name'][$i]) > 127) {
+for ($i = 0; $i < strlen($name); $i++) {
+	if (ord($name[$i]) < 32 || ord($name[$i]) > 127) {
 		create_error('The alliance name contains invalid characters!');
 	}
 }
 
-// trim input first
-$name = trim($_REQUEST['name']);
-$password = $_REQUEST['password'];
-$description = $_REQUEST['description'];
-$recruit = $_REQUEST['recruit'] == 'yes';
-$perms = $_REQUEST['Perms'];
+$password = Request::get('password');
+$description = Request::get('description');
+$recruit = Request::get('recruit') == 'yes';
+$perms = Request::get('Perms');
 if (empty($password)) {
 	create_error('You must enter a password!');
 }

@@ -77,7 +77,13 @@ $template->assign('SMRFileHREF', Globals::getSmrFileCreateHREF($var['game_id']))
 
 $container = create_container('skeleton.php', '1.6/game_edit.php');
 transfer('game_id');
+transfer('gal_on');
 $template->assign('EditGameDetailsHREF', SmrSession::getNewHREF($container));
+
+$container = create_container('skeleton.php', '1.6/check_map.php');
+transfer('game_id');
+transfer('gal_on');
+$template->assign('CheckMapHREF', SmrSession::getNewHREF($container));
 
 $container = create_container('skeleton.php', '1.6/galaxies_edit.php');
 transfer('game_id');

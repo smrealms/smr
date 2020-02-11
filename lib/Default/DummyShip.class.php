@@ -62,7 +62,7 @@ class DummyShip extends AbstractSmrShip {
 		unserialize($cache);
 	}
 	
-	public static function &getCachedDummyShip(AbstractSmrPlayer $player) {
+	public static function getCachedDummyShip(AbstractSmrPlayer $player) {
 		if(!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT info FROM cached_dummys
@@ -72,15 +72,14 @@ class DummyShip extends AbstractSmrShip {
 				$return = unserialize($db->getField('info'));
 				$return->regenerate($player);
 				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] =& $return;
-			}
-			else {
+			} else {
 				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] = new DummyShip($player);
 			}
 		}
 		return self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()];
 	}
 	
-	public static function &getDummyShipNames() {
+	public static function getDummyShipNames() {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT id FROM cached_dummys
 					WHERE type = \'DummyShip\'');

@@ -1,6 +1,6 @@
 <table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;
-	$UniGen = isset($UniGen) ? $UniGen : false;
+	$UniGen = $UniGen ?? false;
 	$MapPlayer = $UniGen ? null : $ThisPlayer;
 	$MovementTypes = array('Up', 'Left', 'Right', 'Down');
 	foreach ($MapSectors as $MapSector) { ?>
@@ -128,7 +128,7 @@
 						} ?>
 						<div class="lmsector"><?php echo $Sector->getSectorID(); ?></div><?php
 						if ($UniGen) {
-							$UniGen['sector_id'] = $Sector->getSectorID(); ?>
+							$UniGen['sector_edit'] = $Sector->getSectorID(); ?>
 							<a class="move_hack" href="<?php echo SmrSession::getNewHREF($UniGen); ?>"></a><?php
 						} else if ($GalaxyMap) { ?>
 							<a class="move_hack" href="<?php echo $Sector->getGalaxyMapHREF(); ?>"></a><?php

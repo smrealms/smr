@@ -23,29 +23,19 @@ try {
 		exit;
 	}
 	
-	if (isset($_REQUEST['sector_id'])) {
-		$sectorID = $_REQUEST['sector_id'];
-		if (!is_numeric($sectorID)) {
-			header('location: /error.php?msg=Sector ID was not a number.');
-			exit;
-		}
+	if (Request::has('sector_id')) {
+		$sectorID = Request::getInt('sector_id');
 		try {
 			$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::getGameID(), $sectorID);
 		} catch (SectorNotFoundException $e) {
 			header('location: /error.php?msg=Invalid sector ID');
 			exit;
 		}
-	}
-	else if (isset($_REQUEST['galaxy_id'])) {
-		$galaxyID = $_REQUEST['galaxy_id'];
-		if (!is_numeric($galaxyID)) {
-			header('location: /error.php?msg=Galaxy ID was not a number.');
-			exit;
-		}
+	} elseif (Request::has('galaxy_id')) {
+		$galaxyID = Request::getInt('galaxy_id');
 		try {
 			$galaxy = SmrGalaxy::getGalaxy(SmrSession::getGameID(), $galaxyID);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			header('location: /error.php?msg=Invalid galaxy ID');
 			exit;
 		}
@@ -65,12 +55,12 @@ try {
 
 	// Set temporary options
 	if ($player->hasAlliance()) {
-		if (isset($_POST['change_settings'])) {
-			$_SESSION['show_seedlist_sectors'] = isset($_POST['show_seedlist_sectors']);
-			$_SESSION['hide_allied_forces'] = isset($_POST['hide_allied_forces']);
+		if (Request::has('change_settings')) {
+			$_SESSION['show_seedlist_sectors'] = Request::has('show_seedlist_sectors');
+			$_SESSION['hide_allied_forces'] = Request::has('hide_allied_forces');
 		}
-		$showSeedlistSectors = isset($_SESSION['show_seedlist_sectors']) ? $_SESSION['show_seedlist_sectors'] : false;
-		$hideAlliedForces = isset($_SESSION['hide_allied_forces']) ? $_SESSION['hide_allied_forces'] : false;
+		$showSeedlistSectors = $_SESSION['show_seedlist_sectors'] ?? false;
+		$hideAlliedForces = $_SESSION['hide_allied_forces'] ?? false;
 		$template->assign('ShowSeedlistSectors', $showSeedlistSectors);
 		$template->assign('HideAlliedForces', $hideAlliedForces);
 		$template->assign('CheckboxFormHREF', ''); // Submit to same page
@@ -99,8 +89,9 @@ try {
 
 	$template->assign('Title', 'Galaxy Map');
 
-	if ($account->getCssLink() != null)
+	if ($account->getCssLink() != null) {
 		$template->assign('ExtraCSSLink', $account->getCssLink());
+	}
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 	$template->assign('FontSize', $account->getFontSize() - 20);
@@ -116,7 +107,6 @@ try {
 	$template->assign('AJAX_ENABLE_REFRESH', false);
 
 	$template->display('GalaxyMap.inc');
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }

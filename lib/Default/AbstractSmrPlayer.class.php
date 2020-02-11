@@ -64,7 +64,7 @@ abstract class AbstractSmrPlayer {
 		return $this->gameID;
 	}
 
-	public function &getGame() {
+	public function getGame() {
 		return SmrGame::getGame($this->gameID);
 	}
 
@@ -76,8 +76,9 @@ abstract class AbstractSmrPlayer {
 		return $this->getNewbieTurns() > 0;
 	}
 	public function setNewbieTurns($newbieTurns) {
-		if ($this->newbieTurns == $newbieTurns)
+		if ($this->newbieTurns == $newbieTurns) {
 			return;
+		}
 		$this->newbieTurns = $newbieTurns;
 		$this->hasChanged = true;
 	}
@@ -87,8 +88,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setShipTypeID($shipID) {
-		if ($this->shipID == $shipID)
+		if ($this->shipID == $shipID) {
 			return;
+		}
 		$this->shipID = $shipID;
 		$this->hasChanged = true;
 	}
@@ -106,11 +108,11 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function &getSectorPlanet() {
+	public function getSectorPlanet() {
 		return SmrPlanet::getPlanet($this->getGameID(), $this->getSectorID());
 	}
 
-	public function &getSectorPort() {
+	public function getSectorPort() {
 		return SmrPort::getPort($this->getGameID(), $this->getSectorID());
 	}
 
@@ -118,7 +120,7 @@ abstract class AbstractSmrPlayer {
 		return $this->sectorID;
 	}
 
-	public function &getSector() {
+	public function getSector() {
 		return SmrSector::getSector($this->getGameID(), $this->getSectorID());
 	}
 
@@ -198,8 +200,9 @@ abstract class AbstractSmrPlayer {
 		}
 
 		$ship = $this->getShip();
-		if ($ship->hasIllegalGoods())
+		if ($ship->hasIllegalGoods()) {
 			return false;
+		}
 
 		if ($ship->getAttackRating() <= $this->getSafeAttackRating()) {
 			foreach ($sector->getFedRaceIDs() as $fedRaceID) {
@@ -240,8 +243,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setDead($bool) {
-		if ($this->dead == $bool)
+		if ($this->dead == $bool) {
 			return;
+		}
 		$this->dead = $bool;
 		$this->hasChanged = true;
 	}
@@ -251,14 +255,16 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function increaseKills($kills) {
-		if ($kills < 0)
+		if ($kills < 0) {
 			throw new Exception('Trying to increase negative kills.');
+		}
 		$this->setKills($this->kills + $kills);
 	}
 
 	public function setKills($kills) {
-		if ($this->kills == $kills)
+		if ($this->kills == $kills) {
 			return;
+		}
 		$this->kills = $kills;
 		$this->hasChanged = true;
 	}
@@ -268,14 +274,16 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function increaseDeaths($deaths) {
-		if ($deaths < 0)
+		if ($deaths < 0) {
 			throw new Exception('Trying to increase negative deaths.');
+		}
 		$this->setDeaths($this->getDeaths() + $deaths);
 	}
 
 	public function setDeaths($deaths) {
-		if ($this->deaths == $deaths)
+		if ($this->deaths == $deaths) {
 			return;
+		}
 		$this->deaths = $deaths;
 		$this->hasChanged = true;
 	}
@@ -297,24 +305,29 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function increaseAlignment($align) {
-		if ($align < 0)
+		if ($align < 0) {
 			throw new Exception('Trying to increase negative align.');
-		if ($align == 0)
+		}
+		if ($align == 0) {
 			return;
+		}
 		$align += $this->alignment;
 		$this->setAlignment($align);
 	}
 	public function decreaseAlignment($align) {
-		if ($align < 0)
+		if ($align < 0) {
 			throw new Exception('Trying to decrease negative align.');
-		if ($align == 0)
+		}
+		if ($align == 0) {
 			return;
+		}
 		$align = $this->alignment - $align;
 		$this->setAlignment($align);
 	}
 	public function setAlignment($align) {
-		if ($this->alignment == $align)
+		if ($this->alignment == $align) {
 			return;
+		}
 		$this->alignment = $align;
 		$this->hasChanged = true;
 	}
@@ -327,10 +340,15 @@ abstract class AbstractSmrPlayer {
 		return $this->experience;
 	}
 
-	public function getNextLevelPercentAcquired() {
-		if ($this->getNextLevelExperience() == $this->getThisLevelExperience())
+	/**
+	 * Returns the percent progress towards the next level.
+	 * This value is rounded because it is used primarily in HTML img widths.
+	 */
+	public function getNextLevelPercentAcquired() : int {
+		if ($this->getNextLevelExperience() == $this->getThisLevelExperience()) {
 			return 100;
-		return max(0, min(100, round(($this->getExperience() - $this->getThisLevelExperience()) / ($this->getNextLevelExperience() - $this->getThisLevelExperience()) * 100)));
+		}
+		return max(0, min(100, IRound(($this->getExperience() - $this->getThisLevelExperience()) / ($this->getNextLevelExperience() - $this->getThisLevelExperience()) * 100)));
 	}
 
 	public function getNextLevelPercentRemaining() {
@@ -339,8 +357,9 @@ abstract class AbstractSmrPlayer {
 
 	public function getNextLevelExperience() {
 		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
-		if (!isset($LEVELS_REQUIREMENTS[$this->getLevelID() + 1]))
+		if (!isset($LEVELS_REQUIREMENTS[$this->getLevelID() + 1])) {
 			return $this->getThisLevelExperience(); //Return current level experience if on last level.
+		}
 		return $LEVELS_REQUIREMENTS[$this->getLevelID() + 1]['Requirement'];
 	}
 
@@ -350,12 +369,15 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setExperience($experience) {
-		if ($this->experience == $experience)
+		if ($this->experience == $experience) {
 			return;
-		if ($experience < MIN_EXPERIENCE)
+		}
+		if ($experience < MIN_EXPERIENCE) {
 			$experience = MIN_EXPERIENCE;
-		if ($experience > MAX_EXPERIENCE)
+		}
+		if ($experience > MAX_EXPERIENCE) {
 			$experience = MAX_EXPERIENCE;
+		}
 		$this->experience = $experience;
 		$this->hasChanged = true;
 
@@ -365,46 +387,57 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function increaseCredits($credits) {
-		if ($credits < 0)
+		if ($credits < 0) {
 			throw new Exception('Trying to increase negative credits.');
-		if ($credits == 0)
+		}
+		if ($credits == 0) {
 			return;
+		}
 		$credits += $this->credits;
 		$this->setCredits($credits);
 	}
 	public function decreaseCredits($credits) {
-		if ($credits < 0)
+		if ($credits < 0) {
 			throw new Exception('Trying to decrease negative credits.');
-		if ($credits == 0)
+		}
+		if ($credits == 0) {
 			return;
+		}
 		$credits = $this->credits - $credits;
 		$this->setCredits($credits);
 	}
 	public function setCredits($credits) {
-		if ($this->credits == $credits)
+		if ($this->credits == $credits) {
 			return;
-		if ($credits < 0)
+		}
+		if ($credits < 0) {
 			throw new Exception('Trying to set negative credits.');
-		if ($credits > MAX_MONEY)
+		}
+		if ($credits > MAX_MONEY) {
 			$credits = MAX_MONEY;
+		}
 		$this->credits = $credits;
 		$this->hasChanged = true;
 	}
 
 	public function increaseExperience($experience) {
-		if ($experience < 0)
+		if ($experience < 0) {
 			throw new Exception('Trying to increase negative experience.');
-		if ($experience == 0)
+		}
+		if ($experience == 0) {
 			return;
+		}
 		$newExperience = $this->experience + $experience;
 		$this->setExperience($newExperience);
 		$this->increaseHOF($experience, array('Experience', 'Total', 'Gain'), HOF_PUBLIC);
 	}
 	public function decreaseExperience($experience) {
-		if ($experience < 0)
+		if ($experience < 0) {
 			throw new Exception('Trying to decrease negative experience.');
-		if ($experience == 0)
+		}
+		if ($experience == 0) {
 			return;
+		}
 		$newExperience = $this->experience - $experience;
 		$this->setExperience($newExperience);
 		$this->decreaseHOF($experience, array('Experience', 'Total', 'Loss'), HOF_PUBLIC);
@@ -415,8 +448,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setLandedOnPlanet($bool) {
-		if ($this->landedOnPlanet == $bool)
+		if ($this->landedOnPlanet == $bool) {
 			return;
+		}
 		$this->landedOnPlanet = $bool;
 		$this->hasChanged = true;
 	}
@@ -430,7 +464,9 @@ abstract class AbstractSmrPlayer {
 		if ($this->level === null) {
 			$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
 			foreach ($LEVELS_REQUIREMENTS as $level_id => $require) {
-				if ($this->getExperience() >= $require['Requirement']) continue;
+				if ($this->getExperience() >= $require['Requirement']) {
+					continue;
+				}
 				$this->level = $level_id - 1;
 				return $this->level;
 			}
@@ -470,7 +506,7 @@ abstract class AbstractSmrPlayer {
 			$return .= ' <span class="npcColour">[NPC]</span>';
 		}
 		if ($includeAlliance) {
-			$return .= ' (' . $this->getAllianceName() . ')';
+			$return .= ' (' . $this->getAllianceDisplayName() . ')';
 		}
 		return $return;
 	}
@@ -482,7 +518,7 @@ abstract class AbstractSmrPlayer {
 	public function getLinkedDisplayName($includeAlliance = true) {
 		$return = '<a href="' . $this->getTraderSearchHREF() . '">' . $this->getDisplayName() . '</a>';
 		if ($includeAlliance) {
-			$return .= ' (' . $this->getAllianceName(true) . ')';
+			$return .= ' (' . $this->getAllianceDisplayName(true) . ')';
 		}
 		return $return;
 	}
@@ -508,8 +544,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setRaceID($raceID) {
-		if ($this->raceID == $raceID)
+		if ($this->raceID == $raceID) {
 			return;
+		}
 		$this->raceID = $raceID;
 		$this->hasChanged = true;
 	}
@@ -518,7 +555,7 @@ abstract class AbstractSmrPlayer {
 		return $this->getAccountID() == $this->getAlliance($forceUpdate)->getLeaderID();
 	}
 
-	public function &getAlliance($forceUpdate = false) {
+	public function getAlliance($forceUpdate = false) {
 		return SmrAlliance::getAlliance($this->getAllianceID(), $this->getGameID(), $forceUpdate);
 	}
 
@@ -531,8 +568,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	protected function setAllianceID($ID) {
-		if ($this->allianceID == $ID)
+		if ($this->allianceID == $ID) {
 			return;
+		}
 		$this->allianceID = $ID;
 		if ($this->allianceID != 0) {
 			$status = $this->hasNewbieStatus() ? 'NEWBIE' : 'VETERAN';
@@ -543,14 +581,13 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getAllianceBBLink() {
-		return $this->hasAlliance() ? '[alliance=' . $this->getAllianceID() . ']' : $this->getAllianceName();
+		return $this->hasAlliance() ? $this->getAlliance()->getAllianceBBLink() : $this->getAllianceDisplayName();
 	}
 
-	public function getAllianceName($linked = false, $includeAllianceID = false) {
+	public function getAllianceDisplayName($linked = false, $includeAllianceID = false) {
 		if ($this->hasAlliance()) {
-			return $this->getAlliance()->getAllianceName($linked, $includeAllianceID);
-		}
-		else {
+			return $this->getAlliance()->getAllianceDisplayName($linked, $includeAllianceID);
+		} else {
 			return 'No Alliance';
 		}
 	}
@@ -578,8 +615,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setCombatDronesKamikazeOnMines($bool) {
-		if ($this->combatDronesKamikazeOnMines == $bool)
+		if ($this->combatDronesKamikazeOnMines == $bool) {
 			return;
+		}
 		$this->combatDronesKamikazeOnMines = $bool;
 		$this->hasChanged = true;
 	}
@@ -621,7 +659,7 @@ abstract class AbstractSmrPlayer {
 		return $rels[$raceID];
 	}
 
-	abstract public function &getShip();
+	abstract public function getShip();
 
 	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
 		return $this->getShip()->shootPlayer($targetPlayer);
@@ -652,21 +690,24 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setMilitaryPayment($amount) {
-		if ($this->militaryPayment == $amount)
+		if ($this->militaryPayment == $amount) {
 			return;
+		}
 		$this->militaryPayment = $amount;
 		$this->hasChanged = true;
 	}
 
 	public function increaseMilitaryPayment($amount) {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to increase negative military payment.');
+		}
 		$this->setMilitaryPayment($this->getMilitaryPayment() + $amount);
 	}
 
 	public function decreaseMilitaryPayment($amount) {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative military payment.');
+		}
 		$this->setMilitaryPayment($this->getMilitaryPayment() - $amount);
 	}
 
@@ -681,13 +722,16 @@ abstract class AbstractSmrPlayer {
 		return count($this->getBounties()) > 0;
 	}
 
-	protected function getBounty(int $bountyID) {
-		$bounties = $this->getBounties();
-		return isset($bounties[$bountyID]) ? $bounties[$bountyID] : false;
+	protected function getBounty(int $bountyID) : array {
+		if (!$this->hasBounty($bountyID)) {
+			throw new Exception('BountyID does not exist: ' . $bountyID);
+		}
+		return $this->bounties[$bountyID];
 	}
 
 	public function hasBounty(int $bountyID) : bool {
-		return $this->getBounty($bountyID) !== false;
+		$bounties = $this->getBounties();
+		return isset($bounties[$bountyID]);
 	}
 
 	protected function getBountyAmount(int $bountyID) : int {
@@ -709,10 +753,11 @@ abstract class AbstractSmrPlayer {
 
 	protected function getNextBountyID() : int {
 		$keys = array_keys($this->getBounties());
-		if (count($keys) > 0)
+		if (count($keys) > 0) {
 			return max($keys) + 1;
-		else
+		} else {
 			return 0;
+		}
 	}
 
 	protected function setBounty(array $bounty) : void {
@@ -727,22 +772,25 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function increaseBountyAmount(int $bountyID, int $amount) : void {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to increase negative bounty.');
+		}
 		$this->setBountyAmount($this->getBountyAmount($bountyID) + $amount);
 	}
 
 	public function decreaseBountyAmount(int $bountyID, int $amount) : void {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative bounty.');
+		}
 		$this->setBountyAmount($this->getBountyAmount($bountyID) + $amount);
 	}
 
 	public function getCurrentBounty(string $type) : array {
 		$bounties = $this->getBounties();
 		foreach ($bounties as $bounty) {
-			if ($bounty['Claimer'] == 0 && $bounty['Type'] == $type)
+			if ($bounty['Claimer'] == 0 && $bounty['Type'] == $type) {
 				return $bounty;
+			}
 		}
 		return $this->createBounty($type);
 	}
@@ -750,8 +798,9 @@ abstract class AbstractSmrPlayer {
 	public function hasCurrentBounty(string $type) : bool {
 		$bounties = $this->getBounties();
 		foreach ($bounties as $bounty) {
-			if ($bounty['Claimer'] == 0 && $bounty['Type'] == $type)
+			if ($bounty['Claimer'] == 0 && $bounty['Type'] == $type) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -763,21 +812,24 @@ abstract class AbstractSmrPlayer {
 
 	protected function setCurrentBountyAmount(string $type, int $amount) : void {
 		$bounty = $this->getCurrentBounty($type);
-		if ($bounty['Amount'] == $amount)
+		if ($bounty['Amount'] == $amount) {
 			return;
+		}
 		$bounty['Amount'] = $amount;
 		$this->setBounty($bounty);
 	}
 
 	public function increaseCurrentBountyAmount(string $type, int $amount) : void {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to increase negative current bounty.');
+		}
 		$this->setCurrentBountyAmount($type, $this->getCurrentBountyAmount($type) + $amount);
 	}
 
 	public function decreaseCurrentBountyAmount(string $type, int $amount) : void {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative current bounty.');
+		}
 		$this->setCurrentBountyAmount($type, $this->getCurrentBountyAmount($type) - $amount);
 	}
 
@@ -788,21 +840,24 @@ abstract class AbstractSmrPlayer {
 
 	protected function setCurrentBountySmrCredits(string $type, int $credits) : void {
 		$bounty = $this->getCurrentBounty($type);
-		if ($bounty['SmrCredits'] == $credits)
+		if ($bounty['SmrCredits'] == $credits) {
 			return;
+		}
 		$bounty['SmrCredits'] = $credits;
 		$this->setBounty($bounty);
 	}
 
 	public function increaseCurrentBountySmrCredits(string $type, int $credits) : void {
-		if ($credits < 0)
+		if ($credits < 0) {
 			throw new Exception('Trying to increase negative current bounty.');
+		}
 		$this->setCurrentBountySmrCredits($type, $this->getCurrentBountySmrCredits($type) + $credits);
 	}
 
 	public function decreaseCurrentBountySmrCredits(string $type, int $credits) : void {
-		if ($credits < 0)
+		if ($credits < 0) {
 			throw new Exception('Trying to decrease negative current bounty.');
+		}
 		$this->setCurrentBountySmrCredits($type, $this->getCurrentBountySmrCredits($type) - $credits);
 	}
 
@@ -820,51 +875,59 @@ abstract class AbstractSmrPlayer {
 
 	public function getHOF(array $typeList = null) {
 		$this->getHOFData();
-		if ($typeList == null)
+		if ($typeList == null) {
 			return $this->HOF;
+		}
 		$hof = $this->HOF;
 		foreach ($typeList as $type) {
-			if (!isset($hof[$type]))
+			if (!isset($hof[$type])) {
 				return 0;
+			}
 			$hof = $hof[$type];
 		}
 		return $hof;
 	}
 
 	public function increaseHOF($amount, array $typeList, $visibility) {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to increase negative HOF: ' . implode(':', $typeList));
-		if ($amount == 0)
+		}
+		if ($amount == 0) {
 			return;
+		}
 		$this->setHOF($this->getHOF($typeList) + $amount, $typeList, $visibility);
 	}
 
 	public function decreaseHOF($amount, array $typeList, $visibility) {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative HOF: ' . implode(':', $typeList));
-		if ($amount == 0)
+		}
+		if ($amount == 0) {
 			return;
+		}
 		$this->setHOF($this->getHOF($typeList) - $amount, $typeList, $visibility);
 	}
 
 	public function setHOF($amount, array $typeList, $visibility) {
-		if (is_array($this->getHOF($typeList)))
+		if (is_array($this->getHOF($typeList))) {
 			throw new Exception('Trying to overwrite a HOF type: ' . implode(':', $typeList));
+		}
 		if ($this->isNPC()) {
 			// Don't store HOF for NPCs.
 			return;
 		}
-		if ($this->getHOF($typeList) == $amount)
+		if ($this->getHOF($typeList) == $amount) {
 			return;
-		if ($amount < 0)
+		}
+		if ($amount < 0) {
 			$amount = 0;
+		}
 		$this->getHOF();
 
 		$hofType = implode(':', $typeList);
 		if (!isset(self::$HOFVis[$hofType])) {
 			self::$hasHOFVisChanged[$hofType] = self::HOF_NEW;
-		}
-		else if (self::$HOFVis[$hofType] != $visibility) {
+		} elseif (self::$HOFVis[$hofType] != $visibility) {
 			self::$hasHOFVisChanged[$hofType] = self::HOF_CHANGED;
 		}
 		self::$HOFVis[$hofType] = $visibility;
@@ -873,8 +936,9 @@ abstract class AbstractSmrPlayer {
 		$hofChanged =& $this->hasHOFChanged;
 		$new = false;
 		foreach ($typeList as $type) {
-			if (!isset($hofChanged[$type]))
+			if (!isset($hofChanged[$type])) {
 				$hofChanged[$type] = array();
+			}
 			if (!isset($hof[$type])) {
 				$hof[$type] = array();
 				$new = true;
@@ -884,8 +948,9 @@ abstract class AbstractSmrPlayer {
 		}
 		if ($hofChanged == null) {
 			$hofChanged = self::HOF_CHANGED;
-			if ($new)
+			if ($new) {
 				$hofChanged = self::HOF_NEW;
+			}
 		}
 		$hof = $amount;
 	}
@@ -922,7 +987,7 @@ abstract class AbstractSmrPlayer {
 		if ($take < 0 || $takeNewbie < 0) {
 			throw new Exception('Trying to take negative turns.');
 		}
-		$take = ceil($take);
+		$take = ICeil($take);
 		// Only take up to as many newbie turns as we have remaining
 		$takeNewbie = min($this->getNewbieTurns(), $takeNewbie);
 
@@ -937,11 +1002,11 @@ abstract class AbstractSmrPlayer {
 		$this->updateLastCPLAction();
 	}
 
-	public function giveTurns($give, $giveNewbie = 0) {
+	public function giveTurns(int $give, $giveNewbie = 0) {
 		if ($give < 0 || $giveNewbie < 0) {
 			throw new Exception('Trying to give negative turns.');
 		}
-		$this->setTurns($this->getTurns() + floor($give));
+		$this->setTurns($this->getTurns() + $give);
 		$this->setNewbieTurns($this->getNewbieTurns() + $giveNewbie);
 	}
 
@@ -950,8 +1015,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setLastActive($lastActive) {
-		if ($this->lastActive == $lastActive)
+		if ($this->lastActive == $lastActive) {
 			return;
+		}
 		$this->lastActive = $lastActive;
 		$this->hasChanged = true;
 	}
@@ -961,8 +1027,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setLastCPLAction($time) {
-		if ($this->lastCPLAction == $time)
+		if ($this->lastCPLAction == $time) {
 			return;
+		}
 		$this->lastCPLAction = $time;
 		$this->hasChanged = true;
 	}
@@ -1003,8 +1070,9 @@ abstract class AbstractSmrPlayer {
 
 	protected function getMission($missionID) {
 		$missions = $this->getMissions();
-		if (isset($missions[$missionID]))
+		if (isset($missions[$missionID])) {
 			return $missions[$missionID];
+		}
 		return false;
 	}
 
@@ -1063,8 +1131,9 @@ abstract class AbstractSmrPlayer {
 	public function addMission($missionID, $step = 0) {
 		$this->getMissions();
 
-		if (isset($this->missions[$missionID]))
+		if (isset($this->missions[$missionID])) {
 			return;
+		}
 		$sector = 0;
 
 		$mission = array(
@@ -1093,8 +1162,7 @@ abstract class AbstractSmrPlayer {
 		if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
 			// If we have completed this mission just use false to indicate no current task.
 			$currentStep = false;
-		}
-		else {
+		} else {
 			$currentStep = MISSIONS[$missionID]['Steps'][$mission['On Step']];
 			$currentStep['Text'] = str_replace(array('<Race>', '<Sector>', '<Starting Sector>', '<trader>'), array($this->getRaceID(), $mission['Sector'], $mission['Starting Sector'], $this->playerName), $currentStep['Text']);
 			if (isset($currentStep['Task'])) {
@@ -1102,8 +1170,7 @@ abstract class AbstractSmrPlayer {
 			}
 			if (isset($currentStep['Level'])) {
 				$currentStep['Level'] = str_replace('<Player Level>', $this->getLevelID(), $currentStep['Level']);
-			}
-			else {
+			} else {
 				$currentStep['Level'] = 0;
 			}
 		}
@@ -1231,12 +1298,15 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function canSee(AbstractSmrPlayer $otherPlayer) {
-		if (!$otherPlayer->getShip()->isCloaked())
+		if (!$otherPlayer->getShip()->isCloaked()) {
 			return true;
-		if ($this->sameAlliance($otherPlayer))
+		}
+		if ($this->sameAlliance($otherPlayer)) {
 			return true;
-		if ($this->getExperience() >= $otherPlayer->getExperience())
+		}
+		if ($this->getExperience() >= $otherPlayer->getExperience()) {
 			return true;
+		}
 		return false;
 	}
 
@@ -1289,10 +1359,12 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function meetsAlignmentRestriction($restriction) {
-		if ($restriction < 0)
+		if ($restriction < 0) {
 			return $this->getAlignment() <= $restriction;
-		if ($restriction > 0)
+		}
+		if ($restriction > 0) {
 			return $this->getAlignment() >= $restriction;
+		}
 		return true;
 	}
 
@@ -1315,8 +1387,9 @@ abstract class AbstractSmrPlayer {
 		if (!isset($this->visitedSectors)) {
 			$this->visitedSectors = array();
 			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE ' . $this->SQL);
-			while ($this->db->nextRecord())
+			while ($this->db->nextRecord()) {
 				$this->visitedSectors[$this->db->getInt('sector_id')] = false;
+			}
 		}
 		return !isset($this->visitedSectors[$sectorID]);
 	}
@@ -1352,7 +1425,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getToggleWeaponHidingHREF($ajax = false) {
-		$container = create_container('skeleton.php', 'toggle_processing.php');
+		$container = create_container('toggle_processing.php');
 		$container['toggle'] = 'WeaponHiding';
 		$container['AJAX'] = $ajax;
 		return SmrSession::getNewHREF($container);

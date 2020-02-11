@@ -27,7 +27,7 @@
 						<td class="sort_race">
 							<?php echo $ThisPlayer->getColouredRaceName($Row['player']->getRaceID(), true); ?>
 						</td>
-						<td class="sort_alliance"><?php echo $Row['player']->getAllianceName(true); ?></td>
+						<td class="sort_alliance"><?php echo $Row['player']->getAllianceDisplayName(true); ?></td>
 						<td class="sort_exp right"><?php echo number_format($Row['player']->getExperience()); ?></td>
 					</tr><?php
 				} ?>

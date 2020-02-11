@@ -17,7 +17,7 @@
 				<tr>
 					<td class="left">President <?php echo $President->getLinkedDisplayName(false); ?></td>
 					<td><?php echo $ThisPlayer->getColouredRaceName($President->getRaceID(), true); ?></td>
-					<td><?php echo $President->getAllianceName(true); ?></td>
+					<td><?php echo $President->getAllianceDisplayName(true); ?></td>
 					<td class="right"><?php echo number_format($President->getExperience()); ?></td>
 				</tr>
 			</tbody>
@@ -49,7 +49,7 @@
 						<td><?php echo $Ranking; ?></td>
 						<td class="left name" data-name="<?php echo $CouncilPlayer->getPlayerName(); ?>"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
 						<td><?php echo $ThisPlayer->getColouredRaceName($CouncilPlayer->getRaceID(), true); ?></td>
-						<td class="alliance"><?php echo $CouncilPlayer->getAllianceName(true); ?></td>
+						<td class="alliance"><?php echo $CouncilPlayer->getAllianceDisplayName(true); ?></td>
 						<td class="experience right"><?php echo number_format($CouncilPlayer->getExperience()); ?></td>
 					</tr><?php
 				} ?>

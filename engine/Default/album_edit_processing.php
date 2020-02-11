@@ -1,16 +1,11 @@
 <?php declare(strict_types=1);
 
-if ($_REQUEST['action'] == 'Delete Entry') {
-	forward(create_container('skeleton.php', 'album_delete_confirmation.php'));
-}
-
-$location = $_POST['location'];
-$email = $_POST['email'];
+$location = Request::get('location');
+$email = Request::get('email');
 
 // get website (and validate it)
-$website = '';
-if ($_REQUEST['website'] != '') {
-	$website = $_POST['website'];
+$website = Request::get('website');
+if ($website != '') {
 	// add http:// if missing
 	if (!preg_match('=://=', $website)) {
 		$website = 'http://' . $website;
@@ -24,22 +19,11 @@ if ($_REQUEST['website'] != '') {
 	}
 }
 
-$other = $_REQUEST['other'];
+$other = Request::get('other');
 
-$day = $_REQUEST['day'] != 'N/A' ? $_POST['day'] : 0;
-$month = $_REQUEST['month'] != 'N/A' ? $_POST['month'] : 0;
-$year = $_REQUEST['year'] != 'N/A' ? $_POST['year'] : 0;
-
-// check if these values are nummeric
-if (!is_numeric($day)) {
-	create_error('The day has to be a number!');
-}
-if (!is_numeric($month)) {
-	create_error('The month has to be a number!');
-}
-if (!is_numeric($year)) {
-	create_error('The year has to be a number!');
-}
+$day = Request::getInt('day');
+$month = Request::getInt('month');
+$year = Request::getInt('year');
 
 // check if we have an image
 $noPicture = true;

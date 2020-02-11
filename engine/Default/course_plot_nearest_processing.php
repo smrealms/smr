@@ -1,13 +1,11 @@
 <?php declare(strict_types=1);
 
 if (isset($var['RealX'])) {
+	// This is only used by NPC's
 	$realX = $var['RealX'];
-}
-else {
-	if (!isset($_REQUEST['xtype']) || !isset($_REQUEST['X']))
-		create_error('You have to select what you would like to find.');
-	$xType = $_REQUEST['xtype'];
-	$X = $_REQUEST['X'];
+} else {
+	$xType = Request::get('xtype');
+	$X = Request::get('X');
 	$realX = Plotter::getX($xType, $X, $player->getGameID(), $player);
 	if ($realX === false) {
 		create_error('Invalid search.');
@@ -16,8 +14,9 @@ else {
 	$account->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest ' . $xType . ': ' . $X . '.', $player->getSectorID());
 }
 
-if ($sector->hasX($realX, $player))
+if ($sector->hasX($realX, $player)) {
 	create_error('Current sector has what you\'re looking for!');
+}
 
 $path = Plotter::findReversiblePathToX($realX, $sector, true, $player, $player);
 

@@ -17,7 +17,9 @@ function get_turns_message($player) {
 
 $fn_turns = function($message) {
 	$link = new GameLink($message->channel, $message->author);
-	if (!$link->valid) return;
+	if (!$link->valid) {
+		return;
+	}
 
 	$msg = get_turns_message($link->player);
 	$message->channel->sendMessage($msg);
@@ -25,7 +27,9 @@ $fn_turns = function($message) {
 
 $fn_turns_all = function($message) {
 	$link = new GameLink($message->channel, $message->author);
-	if (!$link->valid) return;
+	if (!$link->valid) {
+		return;
+	}
 	$player = $link->player;
 
 	$results = array_map('get_turns_message', $player->getSharingPlayers(true));

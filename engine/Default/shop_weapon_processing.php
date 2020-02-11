@@ -21,7 +21,7 @@ if (!isset($var['OrderID'])) {
 	}
 
 	// can we load such a weapon (power_level)
-	if (!$ship->checkPowerLevel($weapon->getPowerLevel())) {
+	if (!$ship->checkPowerAvailable($weapon->getPowerLevel())) {
 		create_error('Your ship doesn\'t have enough power to support that weapon!');
 	}
 
@@ -31,9 +31,9 @@ if (!isset($var['OrderID'])) {
 
 	if ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_EVIL && $player->getAlignment() > ALIGNMENT_EVIL) {
 		create_error('You can\'t buy evil weapons!');
-	} else if ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_GOOD && $player->getAlignment() < ALIGNMENT_GOOD) {
+	} elseif ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_GOOD && $player->getAlignment() < ALIGNMENT_GOOD) {
 		create_error('You can\'t buy good weapons!');
-	} else if ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_NEWBIE && !$player->hasNewbieStatus()) {
+	} elseif ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_NEWBIE && !$player->hasNewbieStatus()) {
 		create_error('You can\'t buy newbie weapons!');
 	}
 
@@ -46,7 +46,7 @@ if (!isset($var['OrderID'])) {
 } else {
 	// mhh we wanna sell our weapon
 	// give the money to the user
-	$player->increaseCredits(floor($weapon->getCost() * WEAPON_REFUND_PERCENT));
+	$player->increaseCredits(IFloor($weapon->getCost() * WEAPON_REFUND_PERCENT));
 
 	// take weapon
 	$ship->removeWeapon($var['OrderID']);

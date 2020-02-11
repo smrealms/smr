@@ -25,7 +25,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 			<th>Members</th>
 		</tr>
 		<tr id="alliance-info" class="ajax bold">
-			<td class="left"><?php echo $Alliance->getAllianceName(); ?></td>
+			<td class="left"><?php echo $Alliance->getAllianceDisplayName(); ?></td>
 			<td class="shrink"><?php echo number_format($AllianceExp); ?></td>
 			<td class="shrink"><?php echo number_format($AllianceAverageExp); ?></td>
 			<td class="shrink"><?php echo number_format($Alliance->getNumMembers()); ?></td>
@@ -98,7 +98,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 						<td class="center status"><?php
 							if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
 								<span class="green">Online</span><?php
-							} else if ($ThisPlayer->getAccountID() == $Alliance->getLeaderID() && $Disabled = SmrAccount::getAccount($AlliancePlayer->getAccountID())->isDisabled()) { ?>
+							} elseif ($ThisPlayer->getAccountID() == $Alliance->getLeaderID() && $Disabled = SmrAccount::getAccount($AlliancePlayer->getAccountID())->isDisabled()) { ?>
 								<span class="red">Banned Until:<br/><?php echo date(DATE_FULL_SHORT_SPLIT, $Disabled['Time']); ?></span><?php
 							} else { ?>
 								<span class="red">Offline</span><?php
@@ -133,7 +133,7 @@ if ($CanJoin === true) { ?>
 		Enter password to join alliance<br /><br />
 		<input type="password" name="password" size="30">&nbsp;<input class="submit" type="submit" name="action" value="Join">
 	</form><?php
-} else if ($CanJoin !== false) { ?>
+} elseif ($CanJoin !== false) { ?>
 	<br /><?php
 	echo $CanJoin;
 }

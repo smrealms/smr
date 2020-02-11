@@ -12,6 +12,8 @@ abstract class SmrPlanetType {
 	abstract public function maxAttackers();
 	abstract public function maxLanded();
 
+	private array $structures;
+
 	/**
 	 * Associates the planet_type_id with the planet class.
 	 * These indices must not be changed!

@@ -97,9 +97,7 @@ if (isset($Msg)) {
 	</tr>
 </table>
 <br />
-<form name="LaunchForm" method="POST" action="<?php echo $LaunchFormLink; ?>">
-	<input type="submit" name="action" value="Launch" class="InputFields"/>
-</form>
+<a href="<?php echo $LaunchLink; ?>" class="submitStyle">Launch</a>
 <br /><?php
 $this->includeTemplate('includes/SectorPlayers.inc', array('PlayersContainer'=>$ThisPlanet));
 ?>

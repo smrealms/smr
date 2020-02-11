@@ -21,8 +21,13 @@ function logException(Throwable $e) {
 		}
 	}
 
+	$message .= '$var: ' . var_export($var, true);
+	if (isset($_REQUEST)) {
+		$message .= "\n\n" . '$_REQUEST: ' . var_export($_REQUEST, true);
+	}
+	$message .= $delim;
+
 	$message .=
-		'$var: ' . var_export($var, true) . $delim .
 		'User IP: ' . getIpAddress() . "\n" .
 		'USING_AJAX: ' . (defined('USING_AJAX') ? var_export(USING_AJAX, true) : 'undefined') . "\n" .
 		'URL: ' . (defined('URL') ? URL : 'undefined');
@@ -47,12 +52,9 @@ function logException(Throwable $e) {
 	// Unconditionally send error message to the log
 	error_log($message);
 
-	if (defined('NPC_SCRIPT')) {
-		echo $message;
+	if (defined('NPC_SCRIPT') && ENABLE_DEBUG) {
 		// In debug mode, we normally exit, but NPCs must cleanup after an error
-		if (ENABLE_DEBUG) {
-			return;
-		}
+		return;
 	}
 
 	if (ENABLE_DEBUG) {
@@ -142,6 +144,27 @@ function dumpMemDiff($msg) {
 	var_dump(($memory2 = memory_get_usage()) - $memory);
 	$memory = $memory2;
 	ob_start();
+}
+
+/**
+ * Wrapper around the floor() builtin for returning an integer type.
+ */
+function IFloor(float $val) : int {
+	return (int)floor($val);
+}
+
+/**
+ * Wrapper around the ceil() builtin for returning an integer type.
+ */
+function ICeil(float $val) : int {
+	return (int)ceil($val);
+}
+
+/**
+ * Wrapper around the round() builtin for returning an integer type.
+ */
+function IRound(float $val) : int {
+	return (int)round($val);
 }
 
 // Defines all constants

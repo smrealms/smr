@@ -29,20 +29,21 @@ abstract class AbstractSmrShip {
 	protected $hasChangedCargo = false;
 	protected $hasChangedHardware = array();
 
-	public static function &getBaseShip($gameTypeID, $shipTypeID, $forceUpdate = false) {
+	public static function getBaseShip($gameTypeID, $shipTypeID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID])) {
 			// determine ship
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM ship_type WHERE ship_type_id = ' . $db->escapeNumber($shipTypeID) . ' LIMIT 1'); //TODO add game type id
-			if ($db->nextRecord())
+			if ($db->nextRecord()) {
 				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] = self::buildBaseShip($db);
-			else
+			} else {
 				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] = false;
+			}
 		}
 		return self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID];
 	}
 
-	protected static function &buildBaseShip(MySqlDatabase $db) {
+	protected static function buildBaseShip(MySqlDatabase $db) {
 		$ship = array();
 		$ship['Type'] = 'Ship';
 		$ship['Name'] = $db->getField('ship_name');
@@ -95,7 +96,7 @@ abstract class AbstractSmrShip {
 			$ship['MaxHardware'][$db2->getInt('hardware_type_id')] = $db2->getInt('max_amount');
 		}
 
-		$ship['BaseMR'] = round(
+		$ship['BaseMR'] = IRound(
 								700 -
 								(
 									(
@@ -114,7 +115,7 @@ abstract class AbstractSmrShip {
 		return $ship;
 	}
 
-	public static function &getAllBaseShips($gameTypeID, $forceUpdate = false) {
+	public static function getAllBaseShips($gameTypeID, $forceUpdate = false) {
 		// determine ship
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC'); //TODO add game type id
@@ -168,12 +169,13 @@ abstract class AbstractSmrShip {
 
 	public function checkForExcessHardware() {
 		//check hardware to see if anything needs to be removed
-		if (is_array($hardware = $this->getHardware()))
+		if (is_array($hardware = $this->getHardware())) {
 			foreach ($hardware as $hardwareTypeID => $amount) {
 				if ($amount > ($max = $this->getMaxHardware($hardwareTypeID))) {
 					$this->setHardware($hardwareTypeID, $max, true);
 				}
 			}
+		}
 	}
 
 	/**
@@ -188,9 +190,11 @@ abstract class AbstractSmrShip {
 
 	public function getPowerUsed() {
 		$power = 0;
-		if ($this->getNumWeapons() > 0)
-			foreach ($this->weapons as $weapon)
+		if ($this->getNumWeapons() > 0) {
+			foreach ($this->weapons as $weapon) {
 				$power += $weapon->getPowerLevel();
+			}
+		}
 		return $power;
 	}
 
@@ -211,45 +215,47 @@ abstract class AbstractSmrShip {
 	}
 
 	public function getDisplayAttackRating(AbstractSmrPlayer $player) {
-		if ($this->hasActiveIllusion())
+		if ($this->hasActiveIllusion()) {
 			return $this->getIllusionAttack();
-		else
+		} else {
 			return $this->getAttackRating();
+		}
 	}
 
 	public function getDisplayDefenseRating() {
-		if ($this->hasActiveIllusion())
+		if ($this->hasActiveIllusion()) {
 			return $this->getIllusionDefense();
-		else
+		} else {
 			return $this->getDefenseRating();
+		}
 	}
 
-	public function getAttackRating() {
-		return round(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getCDs() * 2) / 40);
+	public function getAttackRating() : int {
+		return IRound(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getCDs() * 2) / 40);
 	}
 
-	public function getAttackRatingWithMaxCDs() {
-		return round(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getMaxCDs() * .7) / 40);
+	public function getAttackRatingWithMaxCDs() : int {
+		return IRound(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getMaxCDs() * .7) / 40);
 	}
 
-	public function getDefenseRating() {
-		return round((($this->getShields() + $this->getArmour()) / 100) + (($this->getCDs() * 3) / 100));
+	public function getDefenseRating() : int {
+		return IRound((($this->getShields() + $this->getArmour()) / 100) + (($this->getCDs() * 3) / 100));
 	}
 
-	public function getMaxDefenseRating() {
-		return round((($this->getMaxShields() + $this->getMaxArmour()) / 100) + (($this->getMaxCDs() * 3) / 100));
+	public function getMaxDefenseRating() : int {
+		return IRound((($this->getMaxShields() + $this->getMaxArmour()) / 100) + (($this->getMaxCDs() * 3) / 100));
 	}
 
-	public function getShieldLow() { return floor($this->getShields() / 100) * 100; }
-	public function getShieldHigh() { return $this->getShieldLow() + 100; }
-	public function getArmourLow() { return floor($this->getArmour() / 100) * 100; }
-	public function getArmourHigh() { return $this->getArmourLow() + 100; }
-	public function getCDsLow() { return floor($this->getCDs() / 100) * 100; }
-	public function getCDsHigh() { return $this->getCDsLow() + 100; }
+	public function getShieldLow() : int { return IFloor($this->getShields() / 100) * 100; }
+	public function getShieldHigh() : int { return $this->getShieldLow() + 100; }
+	public function getArmourLow() : int { return IFloor($this->getArmour() / 100) * 100; }
+	public function getArmourHigh() : int { return $this->getArmourLow() + 100; }
+	public function getCDsLow() : int { return IFloor($this->getCDs() / 100) * 100; }
+	public function getCDsHigh() : int { return $this->getCDsLow() + 100; }
 
 
 
-	public function &addWeapon($weaponTypeID) {
+	public function addWeapon($weaponTypeID) {
 		if ($this->hasOpenWeaponSlots() && $this->hasRemainingPower()) {
 			$weapon = SmrWeapon::getWeapon($weaponTypeID);
 			if ($this->getRemainingPower() >= $weapon->getPowerLevel()) {
@@ -267,8 +273,7 @@ abstract class AbstractSmrShip {
 		if ($replacement < 0) {
 			// Shift everything up by one and put the selected weapon at the bottom
 			array_push($this->weapons, array_shift($this->weapons));
-		}
-		else {
+		} else {
 			// Swap the selected weapon with the one above it
 			$temp = $this->weapons[$replacement];
 			$this->weapons[$replacement] = $this->weapons[$orderID];
@@ -282,8 +287,7 @@ abstract class AbstractSmrShip {
 		if ($replacement >= count($this->weapons)) {
 			// Shift everything down by one and put the selected weapon at the top
 			array_unshift($this->weapons, array_pop($this->weapons));
-		}
-		else {
+		} else {
 			// Swap the selected weapon with the one below it
 			$temp = $this->weapons[$replacement];
 			$this->weapons[$replacement] = $this->weapons[$orderID];
@@ -342,8 +346,7 @@ abstract class AbstractSmrShip {
 			$this->setArmour(150, true);
 			$this->setCargoHolds(40);
 			$this->setShipTypeID(SHIP_TYPE_NEWBIE_MERCHANT_VESSEL);
-		}
-		else {
+		} else {
 			$this->setShields(50, true);
 			$this->setArmour(50, true);
 			$this->setCargoHolds(5);
@@ -363,10 +366,10 @@ abstract class AbstractSmrShip {
 
 
 	public function hasActiveIllusion() {
-		if (!$this->hasIllusion())
+		if (!$this->hasIllusion()) {
 			return false;
+		}
 		return $this->getIllusionShip() !== false;
-
 	}
 
 	public function hasIllusion() {
@@ -431,7 +434,7 @@ abstract class AbstractSmrShip {
 		return $this->illusionShip['Defense'];
 	}
 
-	public function &getPlayer() {
+	public function getPlayer() {
 		return $this->player;
 	}
 
@@ -462,7 +465,7 @@ abstract class AbstractSmrShip {
 
 	public function getCostToUpgrade($upgradeShipID) {
 		$upgadeBaseShip = AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()), $upgradeShipID);
-		return $upgadeBaseShip['Cost'] - floor($this->getCost() * SHIP_REFUND_PERCENT);
+		return $upgadeBaseShip['Cost'] - IFloor($this->getCost() * SHIP_REFUND_PERCENT);
 	}
 
 	public function getCostToUpgradeAndUNO($upgradeShipID) {
@@ -498,14 +501,16 @@ abstract class AbstractSmrShip {
 	}
 
 	public function getHardware($hardwareTypeID = false) {
-		if ($hardwareTypeID === false)
+		if ($hardwareTypeID === false) {
 			return $this->hardware;
-		return isset($this->hardware[$hardwareTypeID]) ? $this->hardware[$hardwareTypeID] : 0;
+		}
+		return $this->hardware[$hardwareTypeID] ?? 0;
 	}
 
 	public function setHardware($hardwareTypeID, $amount) {
-		if ($this->getHardware($hardwareTypeID) == $amount)
+		if ($this->getHardware($hardwareTypeID) == $amount) {
 			return;
+		}
 		$this->hardware[$hardwareTypeID] = $amount;
 		$this->hasChangedHardware[$hardwareTypeID] = true;
 	}
@@ -515,14 +520,16 @@ abstract class AbstractSmrShip {
 	}
 
 	public function getOldHardware($hardwareTypeID = false) {
-		if ($hardwareTypeID === false)
+		if ($hardwareTypeID === false) {
 			return $this->oldHardware;
-		return isset($this->oldHardware[$hardwareTypeID]) ? $this->oldHardware[$hardwareTypeID] : 0;
+		}
+		return $this->oldHardware[$hardwareTypeID] ?? 0;
 	}
 
 	public function setOldHardware($hardwareTypeID, $amount) {
-		if ($this->getOldHardware($hardwareTypeID) == $amount)
+		if ($this->getOldHardware($hardwareTypeID) == $amount) {
 			return;
+		}
 		$this->oldHardware[$hardwareTypeID] = $amount;
 		$this->hasChangedHardware[$hardwareTypeID] = true;
 	}
@@ -532,8 +539,9 @@ abstract class AbstractSmrShip {
 	}
 
 	public function getMaxHardware($hardwareTypeID = false) {
-		if ($hardwareTypeID === false)
+		if ($hardwareTypeID === false) {
 			return $this->baseShip['MaxHardware'];
+		}
 		return $this->baseShip['MaxHardware'][$hardwareTypeID];
 	}
 
@@ -542,8 +550,9 @@ abstract class AbstractSmrShip {
 	}
 
 	public function setShields($amount, $updateOldAmount = false) {
-		if ($updateOldAmount && !$this->hasLostShields())
+		if ($updateOldAmount && !$this->hasLostShields()) {
 			$this->setOldHardware(HARDWARE_SHIELDS, $amount);
+		}
 		$this->setHardware(HARDWARE_SHIELDS, $amount);
 	}
 
@@ -584,8 +593,9 @@ abstract class AbstractSmrShip {
 	}
 
 	public function setArmour($amount, $updateOldAmount = false) {
-		if ($updateOldAmount && !$this->hasLostArmour())
+		if ($updateOldAmount && !$this->hasLostArmour()) {
 			$this->setOldHardware(HARDWARE_ARMOUR, $amount);
+		}
 		$this->setHardware(HARDWARE_ARMOUR, $amount);
 	}
 
@@ -654,8 +664,9 @@ abstract class AbstractSmrShip {
 	}
 
 	public function setCDs($amount, $updateOldAmount = false) {
-		if ($updateOldAmount && !$this->hasLostCDs())
+		if ($updateOldAmount && !$this->hasLostCDs()) {
 			$this->setOldHardware(HARDWARE_COMBAT, $amount);
+		}
 		$this->setHardware(HARDWARE_COMBAT, $amount);
 	}
 
@@ -735,10 +746,11 @@ abstract class AbstractSmrShip {
 		$this->setHardware(HARDWARE_CARGO, $amount);
 	}
 
-	public function &getCargo($goodID = false) {
+	public function getCargo($goodID = false) {
 		if ($goodID !== false) {
-			if (isset($this->cargo[$goodID]))
+			if (isset($this->cargo[$goodID])) {
 				return $this->cargo[$goodID];
+			}
 			$cargo = 0;
 			return $cargo;
 		}
@@ -746,16 +758,19 @@ abstract class AbstractSmrShip {
 	}
 
 	public function hasCargo($goodID = false) {
-		if ($goodID !== false)
+		if ($goodID !== false) {
 			return $this->getCargo($goodID) > 0;
-		if (is_array($cargo = $this->getCargo()))
+		}
+		if (is_array($cargo = $this->getCargo())) {
 			return array_sum($cargo) > 0;
+		}
 		return false;
 	}
 
 	public function setCargo($goodID, $amount) {
-		if ($this->getCargo($goodID) == $amount)
+		if ($this->getCargo($goodID) == $amount) {
 			return;
+		}
 		$this->cargo[$goodID] = $amount;
 		$this->hasChangedCargo = true;
 		// Sort cargo by goodID to make sure it shows up in the correct order
@@ -764,14 +779,16 @@ abstract class AbstractSmrShip {
 	}
 
 	public function decreaseCargo($goodID, $amount) {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative cargo.');
+		}
 		$this->setCargo($goodID, $this->getCargo($goodID) - $amount);
 	}
 
 	public function increaseCargo($goodID, $amount) {
-		if ($amount < 0)
+		if ($amount < 0) {
 			throw new Exception('Trying to increase negative cargo.');
+		}
 		$this->setCargo($goodID, $this->getCargo($goodID) + $amount);
 	}
 
@@ -801,8 +818,9 @@ abstract class AbstractSmrShip {
 		$this->setOldShields($this->getShields());
 		$this->setOldCDs($this->getCDs());
 		$this->setOldArmour($this->getArmour());
-		if (isset($var['UnderAttack']))
+		if (isset($var['UnderAttack'])) {
 			return $var['UnderAttack'];
+		}
 		if ($underAttack && !USING_AJAX) {
 			SmrSession::updateVar('UnderAttack', $underAttack); //Remember we are under attack for AJAX
 		}
@@ -813,7 +831,7 @@ abstract class AbstractSmrShip {
 		return $this->getNumWeapons() > 0;
 	}
 
-	public function &getWeapons() {
+	public function getWeapons() {
 		return $this->weapons;
 	}
 
@@ -881,15 +899,16 @@ abstract class AbstractSmrShip {
 		$results['DeadBeforeShot'] = false;
 		foreach ($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] =& $weapon->shootPlayer($thisPlayer, $targetPlayers[array_rand($targetPlayers)]);
-			if ($results['Weapons'][$orderID]['Hit'])
+			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+			}
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
 			$results['Drones'] =& $thisCDs->shootPlayer($thisPlayer, $targetPlayers[array_rand($targetPlayers)]);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
+		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
 		$thisPlayer->increaseHOF($results['TotalDamage'], array('Combat', 'Player', 'Damage Done'), HOF_PUBLIC);
 		$thisPlayer->increaseHOF(1, array('Combat', 'Player', 'Shots'), HOF_PUBLIC);
 		return $results;
@@ -928,7 +947,7 @@ abstract class AbstractSmrShip {
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['SDs'], array('Combat', 'Forces', 'Scout Drones', 'Damage Done'), HOF_PUBLIC);
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines'] + $results['Drones']['ActualDamage']['NumCDs'] + $results['Drones']['ActualDamage']['NumSDs'], array('Combat', 'Forces', 'Killed'), HOF_PUBLIC);
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_FORCE));
+		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_FORCE));
 		$thisPlayer->increaseHOF($results['TotalDamage'], array('Combat', 'Forces', 'Damage Done'), HOF_PUBLIC);
 		$thisPlayer->increaseHOF(1, array('Combat', 'Forces', 'Shots'), HOF_PUBLIC);
 		return $results;
@@ -944,15 +963,16 @@ abstract class AbstractSmrShip {
 		$results['DeadBeforeShot'] = false;
 		foreach ($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] =& $weapon->shootPort($thisPlayer, $port);
-			if ($results['Weapons'][$orderID]['Hit'])
+			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+			}
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
 			$results['Drones'] =& $thisCDs->shootPort($thisPlayer, $port);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_PORT));
+		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PORT));
 		$thisPlayer->increaseHOF($results['TotalDamage'], array('Combat', 'Port', 'Damage Done'), HOF_PUBLIC);
 //		$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in SmrPortt::attackedBy()
 
@@ -981,15 +1001,16 @@ abstract class AbstractSmrShip {
 		$results['DeadBeforeShot'] = false;
 		foreach ($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] =& $weapon->shootPlanet($thisPlayer, $planet, $delayed);
-			if ($results['Weapons'][$orderID]['Hit'])
+			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+			}
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
 			$results['Drones'] =& $thisCDs->shootPlanet($thisPlayer, $planet, $delayed);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience(round($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLANET));
+		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLANET));
 		$thisPlayer->increaseHOF($results['TotalDamage'], array('Combat', 'Planet', 'Damage Done'), HOF_PUBLIC);
 //		$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots')); //in SmrPlanet::attackedBy()
 		return $results;
@@ -1007,8 +1028,9 @@ abstract class AbstractSmrShip {
 				$cdDamage = $this->doCDDamage(min($damage['MaxDamage'], $damage['Armour']));
 				$damage['Armour'] -= $cdDamage;
 				$damage['MaxDamage'] -= $cdDamage;
-				if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover']))
+				if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
 					$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'], $damage['Armour']));
+				}
 			}
 		}
 		$return = array(
@@ -1056,7 +1078,7 @@ abstract class AbstractSmrShip {
 	}
 
 	protected function doCDDamage($damage) {
-		$actualDamage = min($this->getCDs(), floor($damage / CD_ARMOUR));
+		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
 		$this->decreaseCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
@@ -1067,8 +1089,8 @@ abstract class AbstractSmrShip {
 		return $actualDamage;
 	}
 
-	public function getMR() {
-		return round(
+	public function getMR() : int {
+		return IRound(
 						700 -
 						(
 							(

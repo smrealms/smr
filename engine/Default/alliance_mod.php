@@ -8,7 +8,7 @@ $template->assign('Alliance', $alliance);
 
 Globals::canAccessPage('AllianceMOTD', $player, array('AllianceID' => $alliance->getAllianceID()));
 
-$template->assign('PageTopic', $alliance->getAllianceName(false, true));
+$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 // Check to see if an alliance op is scheduled

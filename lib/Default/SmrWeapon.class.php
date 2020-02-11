@@ -12,22 +12,24 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 
 	
 	protected static function initialiseDatabase() {
-		if (self::$db == null)
+		if (self::$db == null) {
 			self::$db = new SmrMySqlDatabase();
+		}
 	}
 
-	public static function &getWeapon($weaponTypeID, $forceUpdate = false, $db = null) {
+	public static function getWeapon($weaponTypeID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_WEAPONS[$weaponTypeID])) {
 			$w = new SmrWeapon($weaponTypeID, $db);
-			if ($w->exists())
+			if ($w->exists()) {
 				self::$CACHE_WEAPONS[$weaponTypeID] = $w;
-			else
+			} else {
 				self::$CACHE_WEAPONS[$weaponTypeID] = false;
+			}
 		}
 		return self::$CACHE_WEAPONS[$weaponTypeID];
 	}
 
-	public static function &getAllWeapons($forceUpdate = false) {
+	public static function getAllWeapons($forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM weapon_type');
 		$weapons = array();
@@ -100,7 +102,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $this->buyerRestriction;
 	}
 	
-	protected function &getWeightedRandomForPlayer(AbstractSmrPlayer $player) {
+	protected function getWeightedRandomForPlayer(AbstractSmrPlayer $player) {
 		return WeightedRandom::getWeightedRandomForPlayer($player, 'Weapon', $this->getWeaponTypeID());
 	}
 
@@ -151,8 +153,9 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		$weaponShip = $weaponPlayer->getShip();
 		$targetShip = $targetPlayer->getShip();
 		$mrDiff = $targetShip->getMR() - $weaponShip->getMR();
-		if ($mrDiff > 0)
+		if ($mrDiff > 0) {
 			$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff / MR_FACTOR) / 100;
+		}
 	
 		return $modifiedAccuracy;
 	}
@@ -190,28 +193,34 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 	
 	public function &getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
-		if (!$this->canShootForces()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+		if (!$this->canShootForces()) {
+			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		}
 		$damage =& $this->getModifiedDamage();
 		return $damage;
 	}
 	
 	public function &getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
-		if (!$this->canShootPorts()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+		if (!$this->canShootPorts()) {
+			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		}
 		$damage =& $this->getModifiedDamage();
 		return $damage;
 	}
 	
 	public function &getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) {
-		if (!$this->canShootPlanets()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+		if (!$this->canShootPlanets()) {
+			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		}
 		$damage =& $this->getModifiedDamage();
 		
 		$planetMod = self::PLANET_DAMAGE_MOD;
-		$damage['MaxDamage'] = ceil($damage['MaxDamage'] * $planetMod);
-		$damage['Shield'] = ceil($damage['Shield'] * $planetMod);
-		$damage['Armour'] = ceil($damage['Armour'] * $planetMod);
+		$damage['MaxDamage'] = ICeil($damage['MaxDamage'] * $planetMod);
+		$damage['Shield'] = ICeil($damage['Shield'] * $planetMod);
+		$damage['Armour'] = ICeil($damage['Armour'] * $planetMod);
 		
 		return $damage;
 	}

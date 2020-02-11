@@ -34,7 +34,7 @@ while ($db->nextRecord()) {
 	];
 
 	if (!empty($published)) {
-	} else if ($hasEnoughArticles) {
+	} elseif ($hasEnoughArticles) {
 		$container = create_container('galactic_post_make_current.php');
 		$container['id'] = $paper_id;
 		$paper['PublishHREF'] = SmrSession::getNewHREF($container);

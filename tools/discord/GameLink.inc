@@ -29,7 +29,7 @@ class GameLink
 		$this->account = SmrAccount::getAccountByDiscordId($user_id, true);
 
 		if (is_null($this->account)) {
-			$channel->sendMessage("There is no SMR account associated with your Discord User ID. To set this up, go to `Preferences` and set `$user_id` as your `Discord User ID`.");
+			$channel->sendMessage("There is no SMR account associated with your Discord User ID. To set this up, go to `Preferences` in-game and set `$user_id` as your `Discord User ID`.");
 			return;
 		}
 
@@ -60,7 +60,7 @@ class GameLink
 
 			$this->player = SmrPlayer::getPlayer($this->account->getAccountID(), $this->alliance->getGameID(), true);
 			if ($this->player->getAllianceID() != $this->alliance->getAllianceID()) {
-				$channel->sendMessage("Player `".$this->player->getPlayerName()."` is not a member of alliance `".$this->alliance->getAllianceName()."`");
+				$channel->sendMessage("Player `" . $this->player->getPlayerName() . "` is not a member of alliance `" . $this->alliance->getAllianceName() . "`");
 				return;
 			}
 		}

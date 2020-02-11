@@ -46,7 +46,7 @@ class SmrGame {
 		self::GAME_TYPE_NEWBIE => 'Newbie',
 	];
 
-	public static function &getGame(int $gameID, $forceUpdate = false) : SmrGame {
+	public static function getGame(int $gameID, bool $forceUpdate = false) : SmrGame {
 		if ($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID);
 			self::$CACHE_GAMES[$gameID] = $g;
@@ -60,7 +60,7 @@ class SmrGame {
 		}
 	}
 
-	public static function &createGame(int $gameID) : SmrGame {
+	public static function createGame(int $gameID) : SmrGame {
 		if (!isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID, true);
 			self::$CACHE_GAMES[$gameID] = $g;
@@ -90,7 +90,7 @@ class SmrGame {
 			$this->allianceMaxPlayers = $this->db->getInt('alliance_max_players');
 			$this->allianceMaxVets = $this->db->getInt('alliance_max_vets');
 			$this->startingCredits = $this->db->getInt('starting_credits');
-		} else if ($create === true) {
+		} elseif ($create === true) {
 			$this->gameID = (int)$gameID;
 			$this->isNew = true;
 			return;
@@ -152,7 +152,7 @@ class SmrGame {
 	}
 
 	public function setName(string $name) : void {
-		if ($this->name == $name) {
+		if ($this->name === $name) {
 			return;
 		}
 		$this->name = $name;
@@ -164,7 +164,7 @@ class SmrGame {
 	}
 
 	public function setDescription(string $description) : void {
-		if ($this->description == $description) {
+		if ($this->description === $description) {
 			return;
 		}
 		$this->description = $description;
@@ -184,7 +184,7 @@ class SmrGame {
 	}
 
 	public function setStartTime(int $startTime) : void {
-		if ($this->startTime == $startTime) {
+		if ($this->startTime === $startTime) {
 			return;
 		}
 		$this->startTime = $startTime;
@@ -199,7 +199,7 @@ class SmrGame {
 	}
 
 	public function setJoinTime(int $joinTime) : void {
-		if ($this->joinTime == $joinTime) {
+		if ($this->joinTime === $joinTime) {
 			return;
 		}
 		$this->joinTime = $joinTime;
@@ -218,7 +218,7 @@ class SmrGame {
 	}
 
 	public function setEndTime(int $endTime) : void {
-		if ($this->endTime == $endTime) {
+		if ($this->endTime === $endTime) {
 			return;
 		}
 		$this->endTime = $endTime;
@@ -230,7 +230,7 @@ class SmrGame {
 	}
 
 	public function setMaxPlayers(int $maxPlayers) : void {
-		if ($this->maxPlayers == $maxPlayers) {
+		if ($this->maxPlayers === $maxPlayers) {
 			return;
 		}
 		$this->maxPlayers = $maxPlayers;
@@ -242,7 +242,7 @@ class SmrGame {
 	}
 
 	public function setMaxTurns(int $int) : void {
-		if ($this->maxTurns == $int) {
+		if ($this->maxTurns === $int) {
 			return;
 		}
 		$this->maxTurns = $int;
@@ -254,7 +254,7 @@ class SmrGame {
 	}
 
 	public function setStartTurnHours(int $int) : void {
-		if ($this->startTurnHours == $int) {
+		if ($this->startTurnHours === $int) {
 			return;
 		}
 		$this->startTurnHours = $int;
@@ -266,7 +266,7 @@ class SmrGame {
 	}
 
 	public function setGameTypeID(int $gameTypeID) : void {
-		if ($this->gameTypeID == $gameTypeID) {
+		if ($this->gameTypeID === $gameTypeID) {
 			return;
 		}
 		$this->gameTypeID = $gameTypeID;
@@ -278,7 +278,7 @@ class SmrGame {
 	}
 
 	public function setCreditsNeeded(int $creditsNeeded) : void {
-		if ($this->creditsNeeded == $creditsNeeded) {
+		if ($this->creditsNeeded === $creditsNeeded) {
 			return;
 		}
 		$this->creditsNeeded = $creditsNeeded;
@@ -290,7 +290,7 @@ class SmrGame {
 	}
 
 	public function setGameSpeed(float $gameSpeed) : void {
-		if ($this->gameSpeed == $gameSpeed) {
+		if ($this->gameSpeed === $gameSpeed) {
 			return;
 		}
 		$this->gameSpeed = $gameSpeed;
@@ -326,7 +326,7 @@ class SmrGame {
 	}
 
 	public function setAllianceMaxPlayers(int $int) : void {
-		if ($this->allianceMaxPlayers == $int) {
+		if ($this->allianceMaxPlayers === $int) {
 			return;
 		}
 		$this->allianceMaxPlayers = $int;
@@ -338,7 +338,7 @@ class SmrGame {
 	}
 
 	public function setAllianceMaxVets(int $int) : void {
-		if ($this->allianceMaxVets == $int) {
+		if ($this->allianceMaxVets === $int) {
 			return;
 		}
 		$this->allianceMaxVets = $int;
@@ -350,7 +350,7 @@ class SmrGame {
 	}
 
 	public function setStartingCredits(int $int) : void {
-		if ($this->startingCredits == $int) {
+		if ($this->startingCredits === $int) {
 			return;
 		}
 		$this->startingCredits = $int;

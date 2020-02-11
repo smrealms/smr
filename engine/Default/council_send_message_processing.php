@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-$message = htmlentities(trim($_POST['message']), ENT_COMPAT, 'utf-8');
+$message = htmlentities(trim(Request::get('message')), ENT_COMPAT, 'utf-8');
 
 if (empty($message)) {
-	create_error('You have to enter a text to send!');
+	create_error('You have to enter text to send a message!');
 }
 
 // send to all council members

@@ -1,23 +1,31 @@
 <?php declare(strict_types=1);
 
-if ($player->hasNewbieTurns())
+if ($player->hasNewbieTurns()) {
 	create_error('You are under newbie protection!');
-if ($player->hasFederalProtection())
+}
+if ($player->hasFederalProtection()) {
 	create_error('You are under federal protection!');
-if ($player->isLandedOnPlanet())
+}
+if ($player->isLandedOnPlanet()) {
 	create_error('You cannot attack planets whilst on a planet!');
-if ($player->getTurns() < 3)
+}
+if ($player->getTurns() < 3) {
 	create_error('You do not have enough turns to attack this planet!');
-if (!$ship->hasWeapons() && !$ship->hasCDs())
+}
+if (!$ship->hasWeapons() && !$ship->hasCDs()) {
 	create_error('What are you going to do? Insult it to death?');
-if (!$player->canFight())
+}
+if (!$player->canFight()) {
 	create_error('You are not allowed to fight!');
+}
 
 $planet = $player->getSectorPlanet();
-if (!$planet->exists())
+if (!$planet->exists()) {
 	create_error('This planet does not exist.');
-if (!$planet->isClaimed())
+}
+if (!$planet->isClaimed()) {
 	create_error('This planet is not claimed.');
+}
 
 $planetOwner = $planet->getOwner();
 
@@ -88,8 +96,9 @@ if ($planetOwner->hasAlliance()) {
 
 // Update sector messages for attackers
 foreach ($attackers as $attacker) {
-	if (!$player->equals($attacker))
+	if (!$player->equals($attacker)) {
 		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ',' . $db->escapeString('[ATTACK_RESULTS]' . $logId) . ')');
+	}
 }
 
 $container = create_container('skeleton.php', 'planet_attack.php');

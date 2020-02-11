@@ -8,8 +8,9 @@ function htmliseMessage($message) {
 
 function parseBoolean($check) {
 	// Only negative strings are not implicitly converted to the correct bool
-	if (is_string($check) && (strcasecmp($check, 'NO') == 0 || strcasecmp($check, 'FALSE') == 0))
+	if (is_string($check) && (strcasecmp($check, 'NO') == 0 || strcasecmp($check, 'FALSE') == 0)) {
 		return false;
+	}
 	return (bool)$check;
 }
 
@@ -32,8 +33,9 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'player':
 				$playerID = $default;
-				if (!is_numeric($playerID))
+				if (!is_numeric($playerID)) {
 					$playerID = $tagParams['id'];
+				}
 				$bbPlayer = SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
@@ -46,8 +48,9 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'alliance':
 				$allianceID = $default;
-				if (!is_numeric($allianceID))
+				if (!is_numeric($allianceID)) {
 					$allianceID = $tagParams['id'];
+				}
 				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
@@ -56,13 +59,14 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if ($disableBBLinks === false && $overrideGameID == SmrSession::getGameID()) {
 					$container = create_container('skeleton.php');
 					$container['alliance_id'] = $alliance->getAllianceID();
-					if (is_object($player) && $alliance->getAllianceID() == $player->getAllianceID())
+					if (is_object($player) && $alliance->getAllianceID() == $player->getAllianceID()) {
 						$container['body'] = 'alliance_mod.php';
-					else
+					} else {
 						$container['body'] = 'alliance_roster.php';
-					return create_link($container, $alliance->getAllianceName());
+					}
+					return create_link($container, $alliance->getAllianceDisplayName());
 				}
-				return $alliance->getAllianceName();
+				return $alliance->getAllianceDisplayName();
 			break;
 			case 'race':
 				$raceNameID = $default;
@@ -83,8 +87,9 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return true;
 				}
 				if ($timeString != '' && ($time = strtotime($timeString)) !== false) {
-					if (is_object($account))
+					if (is_object($account)) {
 						$time += $account->getOffset() * 3600;
+					}
 					return date(DATE_FULL_SHORT, $time);
 				}
 			break;
@@ -122,18 +127,17 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
-				$container = create_container('alliance_invite_accept.php');
+				$container = create_container('alliance_invite_accept_processing.php');
 				$container['alliance_id'] = $alliance->getAllianceID();
-				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">Join ' . $alliance->getAllianceName() . '</a></div>';
+				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
 			break;
 		}
-	}
-	catch (Exception $e) {
+	} catch (Exception $e) {
 	}
 	if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 		return false;
 	}
-	return htmlspecialchars($params['_tag']) . $tagContent . htmlspecialchars($params['_endtag']);
+	return htmlspecialchars($tagParams['_tag']) . $tagContent . htmlspecialchars($tagParams['_endtag']);
 }
 
 function xmlify($str) {
@@ -173,15 +177,15 @@ function bbifyMessage($message, $noLinks = false) {
 		$bbParser->addRule('join_alliance', $smrRule);
 	}
 	global $disableBBLinks;
-	if ($noLinks === true)
+	if ($noLinks === true) {
 		$disableBBLinks = true;
-	else
+	} else {
 		$disableBBLinks = false;
+	}
 	if (strpos($message, '[') !== false) { //We have BBCode so let's do a full parse.
 		$message = $bbParser->parse($message);
 		$message = str_replace('&lt;br /&gt;', '<br />', $message);
-	}
-	else { //Otherwise just convert newlines
+	} else { //Otherwise just convert newlines
 		$message = nl2br($message, true);
 	}
 	return $message;
@@ -221,8 +225,7 @@ function create_form($container, $actions) {
 
 	if (!is_array($actions)) {
 		$form['submit'] = '<input class="submit" type="submit" name="action" value="' . htmlspecialchars($actions) . '">';
-	}
-	else {
+	} else {
 		$form['submit'] = array();
 		foreach ($actions as $action) {
 			$form['submit'][$action[0]] = '<input class="submit" type="submit" name="action" value="' . htmlspecialchars($action[1]) . '">';
@@ -267,8 +270,9 @@ function resetContainer($new_container) {
 }
 
 function forward($new_container) {
-	if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true)
+	if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
 		return overrideForward($new_container);
+	}
 	resetContainer($new_container);
 	do_voodoo();
 }
@@ -277,16 +281,15 @@ function forwardURL($new_container) {
 	resetContainer($new_container);
 	global $var;
 	require_once(get_file_loc($var['url']));
-
 }
 
 function transfer($what) {
 	global $var, $container;
 
 	// transfer this value to next container
-	if (isset($var[$what]))
+	if (isset($var[$what])) {
 		$container[$what] = $var[$what];
-
+	}
 }
 
 function create_container($file, $body = '', array $extra = array(), $remainingPageLoads = null) {
@@ -313,8 +316,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 	}
 	if ($maxValue - $minValue == 0) {
 		return $text;
-	}
-	else {
+	} else {
 		$normalisedValue = round(510 * max(0, min($maxValue, $value) - $minValue) / ($maxValue - $minValue)) - 255;
 	}
 	if ($type == 'Game') {
@@ -324,28 +326,33 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 			if (strlen($g_component) == 1) {
 				$g_component = '0' . $g_component;
 			}
-		}
-		else if ($normalisedValue > 0) {
+		} else if ($normalisedValue > 0) {
 			$g_component = 'ff';
 			$r_component = dechex(255 - $normalisedValue);
 			if (strlen($r_component) == 1) {
 				$r_component = '0' . $r_component;
 			}
-		}
-		else {
+		} else {
 			$r_component = 'ff';
 			$g_component = 'ff';
 		}
 		$colour = $r_component . $g_component . '00';
-		if ($return_type == 'Colour') return $colour;
+		if ($return_type == 'Colour') {
+			return $colour;
+		}
 		return '<span style="color:#' . $colour . '">' . $text . '</span>';
-	}
-	elseif ($type == 'IRC') {
+	} elseif ($type == 'IRC') {
 		//IRC color codes
-		if ($normalisedValue == 255) $colour = '[k03]';
-		elseif ($normalisedValue == -255) $colour = '[k04]';
-		else $colour = '[k08]';
-		if ($return_type == 'Colour') return $colour;
+		if ($normalisedValue == 255) {
+			$colour = '[k03]';
+		} elseif ($normalisedValue == -255) {
+			$colour = '[k04]';
+		} else {
+			$colour = '[k08]';
+		}
+		if ($return_type == 'Colour') {
+			return $colour;
+		}
 		return $colour . $text;
 	}
 }
@@ -404,21 +411,17 @@ function do_voodoo() {
 	// create account object
 	$account = SmrSession::getAccount();
 
-	if (!defined('DATE_DATE_SHORT')) define('DATE_DATE_SHORT', $account->getShortDateFormat());
-	if (!defined('DATE_TIME_SHORT')) define('DATE_TIME_SHORT', $account->getShortTimeFormat());
-	if (!defined('DATE_FULL_SHORT')) define('DATE_FULL_SHORT', DATE_DATE_SHORT . ' ' . DATE_TIME_SHORT);
-	if (!defined('DATE_FULL_SHORT_SPLIT')) define('DATE_FULL_SHORT_SPLIT', DATE_DATE_SHORT . '\<b\r /\>' . DATE_TIME_SHORT);
-
-	if ($var['url'] == 'game_play_preprocessing.php') { // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
-		SmrSession::clearLinks();
-		if (SmrSession::hasGame()) {
-			$account->log(LOG_TYPE_GAME_ENTERING, 'Player left game ' . SmrSession::getGameID());
-		}
-
-		// reset game id
-		SmrSession::updateGame(0);
-
-		forward(create_container('skeleton.php', 'game_play.php', $var));
+	if (!defined('DATE_DATE_SHORT')) {
+		define('DATE_DATE_SHORT', $account->getShortDateFormat());
+	}
+	if (!defined('DATE_TIME_SHORT')) {
+		define('DATE_TIME_SHORT', $account->getShortTimeFormat());
+	}
+	if (!defined('DATE_FULL_SHORT')) {
+		define('DATE_FULL_SHORT', DATE_DATE_SHORT . ' ' . DATE_TIME_SHORT);
+	}
+	if (!defined('DATE_FULL_SHORT_SPLIT')) {
+		define('DATE_FULL_SHORT_SPLIT', DATE_DATE_SHORT . '\<b\r /\>' . DATE_TIME_SHORT);
 	}
 
 	// initialize objects we usually need, like player, ship
@@ -545,8 +548,9 @@ function do_voodoo() {
 function acquire_lock($sector) {
 	global $db, $lock, $locksFailed;
 
-	if ($lock)
+	if ($lock) {
 		return true;
+	}
 
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber(SmrSession::getGameID()) . ',' . $db->escapeNumber(SmrSession::getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(TIME) . ')');
@@ -572,8 +576,7 @@ function acquire_lock($sector) {
 
 			usleep(25000 * $locksInQueue);
 			continue;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
@@ -770,7 +773,9 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 		$container['player_id'] = $player->getPlayerID();
 		$template->assign('PlayerNameLink', SmrSession::getNewHREF($container));
 
-		if (is_array(Globals::getHiddenPlayers()) && in_array($player->getAccountID(), Globals::getHiddenPlayers())) $template->assign('PlayerInvisible', true);
+		if (is_array(Globals::getHiddenPlayers()) && in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+			$template->assign('PlayerInvisible', true);
+		}
 
 		// ******* Hardware *******
 		$container = create_container('skeleton.php', 'configure_hardware.php');
@@ -910,16 +915,18 @@ function format_time($seconds, $short = false) {
 
 function number_colour_format($number, $justSign = false) {
 	$formatted = '<span';
-	if ($number > 0)
+	if ($number > 0) {
 		$formatted .= ' class="green">+';
-	else if ($number < 0)
+	} else if ($number < 0) {
 		$formatted .= ' class="red">-';
-	else
+	} else {
 		$formatted .= '>';
+	}
 	if ($justSign === false) {
 		$decimalPlaces = 0;
-		if (($pos = strpos((string)$number, '.')) !== false)
+		if (($pos = strpos((string)$number, '.')) !== false) {
 			$decimalPlaces = strlen(substr((string)$number, $pos + 1));
+		}
 		$formatted .= number_format(abs($number), $decimalPlaces);
 	}
 	$formatted .= '</span>';
@@ -941,7 +948,7 @@ function getWeightedRandom($choices) {
 	// Normalize the weights so that their sum is much larger than 1.
 	$maxWeight = max($choices);
 	foreach ($choices as $key => &$weight) {
-		$weight = round($weight * 1000 / $maxWeight);
+		$weight = IRound($weight * 1000 / $maxWeight);
 	} unset($weight);
 
 	// Generate a random number that is lower than the sum of the weights.

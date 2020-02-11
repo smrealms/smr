@@ -12,27 +12,13 @@ if ($sector->hasLocation()) {
 	create_error('You can\'t drop forces in a sector with a location!');
 }
 
-function getInputAmount($name) {
-	global $var;
-	$value = $var[$name] ?? ($_REQUEST[$name] ?? 0);
-	// Empty strings are a valid HTML5 "number" input type value
-	if (empty($value)) {
-		$value = 0;
-	}
-	// Any other non-numeric value is bypassing the HTML5 input type validator
-	if (!is_numeric($value)) {
-		throw new Exception('Expected numeric value for ' . $name . ', got ' . $value);
-	}
-	return round($value);
-}
-
 // take either from container or request, prefer container
-$drop_mines = getInputAmount('drop_mines');
-$take_mines = getInputAmount('take_mines');
-$drop_combat_drones = getInputAmount('drop_combat_drones');
-$take_combat_drones = getInputAmount('take_combat_drones');
-$drop_scout_drones = getInputAmount('drop_scout_drones');
-$take_scout_drones = getInputAmount('take_scout_drones');
+$drop_mines = Request::getVarInt('drop_mines', 0);
+$take_mines = Request::getVarInt('take_mines', 0);
+$drop_combat_drones = Request::getVarInt('drop_combat_drones', 0);
+$take_combat_drones = Request::getVarInt('take_combat_drones', 0);
+$drop_scout_drones = Request::getVarInt('drop_scout_drones', 0);
+$take_scout_drones = Request::getVarInt('take_scout_drones', 0);
 
 // so how many forces do we take/add per type?
 $change_mines = $drop_mines - $take_mines;
@@ -129,8 +115,7 @@ if ($change_combat_drones != 0) {
 	if ($change_combat_drones > 0) {
 		$ship->decreaseCDs($change_combat_drones, true);
 		$forces->addCDs($change_combat_drones);
-	}
-	else {
+	} else {
 		$ship->increaseCDs(-$change_combat_drones, true);
 		$forces->takeCDs(-$change_combat_drones);
 	}
@@ -140,8 +125,7 @@ if ($change_scout_drones != 0) {
 	if ($change_scout_drones > 0) {
 		$ship->decreaseSDs($change_scout_drones);
 		$forces->addSDs($change_scout_drones);
-	}
-	else {
+	} else {
 		$ship->increaseSDs(-$change_scout_drones);
 		$forces->takeSDs(-$change_scout_drones);
 	}
@@ -155,8 +139,7 @@ if ($change_mines != 0) {
 			$ship->decloak();
 			$player->giveTurns(1);
 		}
-	}
-	else {
+	} else {
 		$ship->increaseMines(-$change_mines);
 		$forces->takeMines(-$change_mines);
 	}
@@ -165,61 +148,70 @@ if ($change_mines != 0) {
 // message to send out
 if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isForceDropMessages()) {
 	$mines_message = '';
-	if ($change_mines > 0)
+	if ($change_mines > 0) {
 		$mines_message = 'added ' . $change_mines . ' mine';
-	elseif ($change_mines < 0)
+	} elseif ($change_mines < 0) {
 		$mines_message = 'removed ' . abs($change_mines) . ' mine';
+	}
 	//add s to mine if necesary
-	if (abs($change_mines) > 1)
+	if (abs($change_mines) > 1) {
 		$mines_message .= 's';
+	}
 
-	if ($change_combat_drones > 0)
+	if ($change_combat_drones > 0) {
 		$combat_drones_message = ($change_mines <= 0 ? 'added ' : '') . $change_combat_drones . ' combat drone';
-	elseif ($change_combat_drones < 0)
+	} elseif ($change_combat_drones < 0) {
 		$combat_drones_message = ($change_mines >= 0 ? 'removed ' : '') . abs($change_combat_drones) . ' combat drone';
+	}
 	//add s to drone if necesary
-	if (abs($change_combat_drones) > 1)
+	if (abs($change_combat_drones) > 1) {
 		$combat_drones_message .= 's';
+	}
 
 	if ($change_scout_drones > 0) {
 		$scout_drones_message = '';
-		if ((isset($combat_drones_message) && $change_combat_drones < 0) || (!isset($combat_drones_message) && $change_mines <= 0))
+		if ((isset($combat_drones_message) && $change_combat_drones < 0) || (!isset($combat_drones_message) && $change_mines <= 0)) {
 			$scout_drones_message = 'added ';
+		}
 		$scout_drones_message .= $change_scout_drones . ' scout drone';
-	}
-	elseif ($change_scout_drones < 0) {
+	} elseif ($change_scout_drones < 0) {
 		$scout_drones_message = '';
-		if ((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines >= 0))
+		if ((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines >= 0)) {
 			$scout_drones_message = 'removed ';
+		}
 		$scout_drones_message .= abs($change_scout_drones) . ' scout drone';
 	}
 	//add s to drone if necesary
-	if (abs($change_scout_drones) > 1)
+	if (abs($change_scout_drones) > 1) {
 		$scout_drones_message .= 's';
+	}
 
 	// now compile it together
 	$message = $player->getPlayerName() . ' has ' . $mines_message;
 
-	if (!empty($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message))
+	if (!empty($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message)) {
 		$message .= ' and ' . $combat_drones_message;
-	elseif (!empty($mines_message) && isset($combat_drones_message))
+	} elseif (!empty($mines_message) && isset($combat_drones_message)) {
 		$message .= ', ' . $combat_drones_message;
-	elseif (empty($mines_message) && isset($combat_drones_message))
+	} elseif (empty($mines_message) && isset($combat_drones_message)) {
 		$message .= $combat_drones_message;
+	}
 
-	if (!empty($mines_message) && isset($combat_drones_message) && isset($scout_drones_message))
+	if (!empty($mines_message) && isset($combat_drones_message) && isset($scout_drones_message)) {
 		$message .= ', and ' . $scout_drones_message;
-	elseif ((!empty($mines_message) || isset($combat_drones_message)) && isset($scout_drones_message))
+	} elseif ((!empty($mines_message) || isset($combat_drones_message)) && isset($scout_drones_message)) {
 		$message .= ' and ' . $scout_drones_message;
-	elseif (empty($mines_message) && !isset($combat_drones_message) && isset($scout_drones_message))
+	} elseif (empty($mines_message) && !isset($combat_drones_message) && isset($scout_drones_message)) {
 		$message .= $scout_drones_message;
+	}
 
-	if ($change_mines >= 0 && $change_combat_drones >= 0 && $change_scout_drones >= 0)
+	if ($change_mines >= 0 && $change_combat_drones >= 0 && $change_scout_drones >= 0) {
 		$message .= ' to';
-	elseif ($change_mines <= 0 && $change_combat_drones <= 0 && $change_scout_drones <= 0)
+	} elseif ($change_mines <= 0 && $change_combat_drones <= 0 && $change_scout_drones <= 0) {
 		$message .= ' from';
-	else
+	} else {
 		$message .= ' from/to';
+	}
 
 	$message .= ' your stack in sector ' . Globals::getSectorBBLink($forces->getSectorID());
 

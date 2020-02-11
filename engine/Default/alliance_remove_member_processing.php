@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-$accountIDs = $_REQUEST['account_id'];
+$accountIDs = Request::getIntArray('account_id', []);
 
 if (empty($accountIDs)) {
 	create_error('You have to choose someone to remove them!');

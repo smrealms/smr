@@ -27,7 +27,7 @@ $allowedVisibities = array(HOF_PUBLIC);
 if ($account->getAccountID() == $account_id) {
 	$allowedVisibities[] = HOF_ALLIANCE;
 	$allowedVisibities[] = HOF_PRIVATE;
-} else if (isset($hofPlayer) && $hofPlayer->sameAlliance($player)) {
+} elseif (isset($hofPlayer) && $hofPlayer->sameAlliance($player)) {
 	$allowedVisibities[] = HOF_ALLIANCE;
 }
 $db->query('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') ORDER BY type');

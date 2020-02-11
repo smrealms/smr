@@ -23,7 +23,7 @@ function DisplayResult(array $Links, SmrPlayer $Player) { ?>
 						echo $Link['Player']->getCustomShipName();
 					} ?>
 				</td>
-				<td><?php echo $Link['Player']->getAllianceName(true); ?></td>
+				<td><?php echo $Link['Player']->getAllianceDisplayName(true); ?></td>
 				<td class="shrink center">
 					<a href="<?php echo $Link['RaceHREF']; ?>"><?php echo $Player->getColouredRaceName($Link['Player']->getRaceID()); ?></a>
 				</td>

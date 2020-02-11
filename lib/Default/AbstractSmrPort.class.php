@@ -84,7 +84,7 @@ class AbstractSmrPort {
 		return $galaxyPorts;
 	}
 
-	public static function &getPort($gameID, $sectorID, $forceUpdate = false, $db = null) {
+	public static function getPort($gameID, $sectorID, $forceUpdate = false, $db = null) {
 		if ($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID, $sectorID, $db);
 		}
@@ -104,7 +104,7 @@ class AbstractSmrPort {
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
 
-	public static function &createPort($gameID, $sectorID) {
+	public static function createPort($gameID, $sectorID) {
 		if (!isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			$p = new SmrPort($gameID, $sectorID);
 			self::$CACHE_PORTS[$gameID][$sectorID] = $p;
@@ -153,8 +153,7 @@ class AbstractSmrPort {
 			$this->checkDefenses();
 			$this->getGoods();
 			$this->checkForUpgrade();
-		}
-		else {
+		} else {
 			$this->shields = 0;
 			$this->combatDrones = 0;
 			$this->armour = 0;
@@ -173,17 +172,17 @@ class AbstractSmrPort {
 			$defences = self::BASE_DEFENCES + $this->getLevel() * self::DEFENCES_PER_LEVEL;
 			$cds = self::BASE_CDS + $this->getLevel() * self::CDS_PER_LEVEL;
 			// Upgrade modifier
-			$defences += max(0, round(self::DEFENCES_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
-			$cds += max(0, round(self::CDS_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
+			$defences += max(0, IRound(self::DEFENCES_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
+			$cds += max(0, IRound(self::CDS_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
 			// Credits modifier
-			$defences += max(0, round(self::DEFENCES_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
-			$cds += max(0, round(self::CDS_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
+			$defences += max(0, IRound(self::DEFENCES_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
+			$cds += max(0, IRound(self::CDS_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
 			// Defences restock (check for fed arrival)
 			if (TIME < $this->getReinforceTime() + self::TIME_FEDS_STAY) {
 				$federalMod = (self::TIME_FEDS_STAY - (TIME - $this->getReinforceTime())) / self::TIME_FEDS_STAY;
-				$federalMod = max(0, round($federalMod * self::MAX_FEDS_BONUS));
+				$federalMod = max(0, IRound($federalMod * self::MAX_FEDS_BONUS));
 				$defences += $federalMod;
-				$cds += round($federalMod / 10);
+				$cds += IRound($federalMod / 10);
 			}
 			$this->setShields($defences);
 			$this->setArmour($defences);
@@ -206,7 +205,7 @@ class AbstractSmrPort {
 		$goodClass = Globals::getGood($goodID)['Class'];
 		$refreshPerHour = self::BASE_REFRESH_PER_HOUR[$goodClass] * $this->getGame()->getGameSpeed();
 		$refreshPerSec = $refreshPerHour / 3600;
-		$amountToAdd = floor($secondsSinceLastUpdate * $refreshPerSec);
+		$amountToAdd = IFloor($secondsSinceLastUpdate * $refreshPerSec);
 
 		// We will not save automatic resupplying in the database,
 		// because the stock can be correctly recalculated based on the
@@ -263,25 +262,25 @@ class AbstractSmrPort {
 		return $this->getVisibleGoods('Buy', $player);
 	}
 	
-	public function &getAllGoodIDs() {
+	public function getAllGoodIDs() {
 		return $this->goodIDs['All'];
 	}
 	
 	/**
 	 * Get IDs of goods that can be sold to the port
 	 */
-	public function &getSoldGoodIDs() {
+	public function getSoldGoodIDs() {
 		return $this->goodIDs['Sell'];
 	}
 	
 	/**
 	 * Get IDs of goods that can be bought from the port
 	 */
-	public function &getBoughtGoodIDs() {
+	public function getBoughtGoodIDs() {
 		return $this->goodIDs['Buy'];
 	}
 	
-	public function &getGood($goodID) {
+	public function getGood($goodID) {
 		if ($this->hasGood($goodID)) {
 			return Globals::getGood($goodID);
 		} else {
@@ -302,8 +301,9 @@ class AbstractSmrPort {
 				$x['TransactionType'] = 'Buy';
 			}
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
-			if (is_object($di))
+			if (is_object($di)) {
 				$di = $di->getRelativeDistance();
+			}
 			$this->goodDistances[$goodID] = max(1, $di);
 		}
 		return $this->goodDistances[$goodID];
@@ -329,12 +329,14 @@ class AbstractSmrPort {
 	}
 	
 	private function setGoodAmount($goodID, $amount, $doUpdate = true) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
+		}
 		// The new amount must be between 0 and the max for this good
 		$amount = max(0, min($amount, $this->getGood($goodID)['Max']));
-		if ($this->getGoodAmount($goodID) == $amount)
+		if ($this->getGoodAmount($goodID) == $amount) {
 			return;
+		}
 		$this->goodAmounts[$goodID] = $amount;
 
 		if ($doUpdate) {
@@ -367,7 +369,7 @@ class AbstractSmrPort {
 	 * Adds extra stock to goods in the tier above a good that was traded
 	 */
 	protected function refreshGoods($classTraded, $amountTraded) {
-		$refreshAmount = round($amountTraded * self::REFRESH_PER_GOOD);
+		$refreshAmount = IRound($amountTraded * self::REFRESH_PER_GOOD);
 		//refresh goods that need it
 		$refreshClass = $classTraded + 1;
 		foreach ($this->getAllGoodIDs() as $goodID) {
@@ -396,13 +398,14 @@ class AbstractSmrPort {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 	}
 	
-	protected function stealGoods(array $good, $goodsTraded) {
+	public function stealGoods(array $good, $goodsTraded) {
 		$this->decreaseGood($good, $goodsTraded, false);
 	}
 	
 	public function checkForUpgrade() {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot upgrade a cached port!');
+		}
 		$upgrades = 0;
 		while ($this->upgrade >= $this->getUpgradeRequirement() && $this->level < 9) {
 			++$upgrades;
@@ -418,8 +421,9 @@ class AbstractSmrPort {
 	 * ports to a specific level.
 	 */
 	public function upgradeToLevel($level) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot upgrade a cached port!');
+		}
 		while ($this->getLevel() < $level) {
 			$this->doUpgrade();
 		}
@@ -523,8 +527,9 @@ class AbstractSmrPort {
 	 * calling this function directly.
 	 */
 	public function addPortGood($goodID, $type) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
+		}
 		if ($this->hasGood($goodID, $type)) {
 			return;
 		}
@@ -549,8 +554,9 @@ class AbstractSmrPort {
 	 * calling this function directly.
 	 */
 	public function removePortGood($goodID) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
+		}
 		if (!$this->hasGood($goodID)) {
 			return;
 		}
@@ -559,8 +565,7 @@ class AbstractSmrPort {
 		}
 		if (($key = array_search($goodID, $this->goodIDs['Buy'])) !== false) {
 			array_splice($this->goodIDs['Buy'], $key, 1);
-		}
-		elseif (($key = array_search($goodID, $this->goodIDs['Sell'])) !== false) {
+		} elseif (($key = array_search($goodID, $this->goodIDs['Sell'])) !== false) {
 			array_splice($this->goodIDs['Sell'], $key, 1);
 		}
 		
@@ -600,8 +605,9 @@ class AbstractSmrPort {
 	}
 
 	protected function doDowngrade() {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot downgrade a cached port!');
+		}
 
 		$goodClass = $this->getGoodClassAtLevel();
 		$this->selectAndRemoveGood($goodClass);
@@ -620,9 +626,10 @@ class AbstractSmrPort {
 	}
 	
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot attack a cached port!');
-			
+		}
+
 		$trigger->increaseHOF(1, array('Combat', 'Port', 'Number Of Triggers'), HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, array('Combat', 'Port', 'Number Of Attacks'), HOF_PUBLIC);
@@ -632,7 +639,7 @@ class AbstractSmrPort {
 		if (!$this->isUnderAttack()) {
 	
 			//5 mins per port level
-			$nextReinforce = round(TIME + $this->getLevel() * 300);
+			$nextReinforce = TIME + $this->getLevel() * 300;
 			
 			$this->setReinforceTime($nextReinforce);
 			$this->updateAttackStarted();
@@ -640,18 +647,16 @@ class AbstractSmrPort {
 			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> A distress beacon has been activated by the port in sector ' . Globals::getSectorBBLink($this->getSectorID()) . '. It is under attack by ';
 			if ($trigger->hasAlliance()) {
 				$newsMessage .= 'members of ' . $trigger->getAllianceBBLink();
-			}
-			else {
+			} else {
 				$newsMessage .= $trigger->getBBLink();
 			}
 			
 			$newsMessage .= '. The Federal Government is offering ';
-			$bounty = number_format(intval($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL));
+			$bounty = number_format(floor($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL));
 
 			if ($trigger->hasAlliance()) {
 				$newsMessage .= 'bounties of <span class="creds">' . $bounty . '</span> credits for the deaths of any raiding members of ' . $trigger->getAllianceBBLink();
-			}
-			else {
+			} else {
 				$newsMessage .= 'a bounty of <span class="creds">' . $bounty . '</span> credits for the death of ' . $trigger->getBBLink();
 			}
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
@@ -665,34 +670,43 @@ class AbstractSmrPort {
 	}
 	
 	public function setShields($shields) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($shields < 0)
+		}
+		if ($shields < 0) {
 			$shields = 0;
-		if ($this->shields == $shields)
+		}
+		if ($this->shields == $shields) {
 			return;
+		}
 		$this->shields = $shields;
 		$this->hasChanged = true;
 	}
 	
 	public function setArmour($armour) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($armour < 0)
+		}
+		if ($armour < 0) {
 			$armour = 0;
-		if ($this->armour == $armour)
+		}
+		if ($this->armour == $armour) {
 			return;
+		}
 		$this->armour = $armour;
 		$this->hasChanged = true;
 	}
 	
 	public function setCDs($combatDrones) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($combatDrones < 0)
+		}
+		if ($combatDrones < 0) {
 			$combatDrones = 0;
-		if ($this->combatDrones == $combatDrones)
+		}
+		if ($this->combatDrones == $combatDrones) {
 			return;
+		}
 		$this->combatDrones = $combatDrones;
 		$this->hasChanged = true;
 	}
@@ -702,84 +716,99 @@ class AbstractSmrPort {
 	}
 
 	public function setCredits($credits) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($this->credits == $credits)
+		}
+		if ($this->credits == $credits) {
 			return;
+		}
 		$this->credits = $credits;
 		$this->hasChanged = true;
 	}
 	
 	public function decreaseCredits($credits) {
-		if ($credits < 0)
+		if ($credits < 0) {
 			throw new Exception('Cannot decrease negative credits.');
+		}
 		$this->setCredits($this->getCredits() - $credits);
 	}
 	
 	public function increaseCredits($credits) {
-		if ($credits < 0)
+		if ($credits < 0) {
 			throw new Exception('Cannot increase negative credits.');
+		}
 		$this->setCredits($this->getCredits() + $credits);
 	}
 	
 	public function setUpgrade($upgrade) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
+		}
 		if ($this->getLevel() == $this->getMaxLevel()) {
 			$upgrade = 0;
 		}
-		if ($this->upgrade == $upgrade)
+		if ($this->upgrade == $upgrade) {
 			return;
+		}
 		$this->upgrade = $upgrade;
 		$this->hasChanged = true;
 		$this->checkForUpgrade();
 	}
 	
 	public function decreaseUpgrade($upgrade) {
-		if ($upgrade < 0)
+		if ($upgrade < 0) {
 			throw new Exception('Cannot decrease negative upgrade.');
+		}
 		$this->setUpgrade($this->getUpgrade() - $upgrade);
 	}
 	
 	public function increaseUpgrade($upgrade) {
-		if ($upgrade < 0)
+		if ($upgrade < 0) {
 			throw new Exception('Cannot increase negative upgrade.');
+		}
 		$this->setUpgrade($this->getUpgrade() + $upgrade);
 	}
 	
 	public function setLevel($level) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($this->level == $level)
+		}
+		if ($this->level == $level) {
 			return;
+		}
 		$this->level = $level;
 		$this->hasChanged = true;
 	}
 	
 	public function increaseLevel($level) {
-		if ($level < 0)
+		if ($level < 0) {
 			throw new Exception('Cannot increase negative level.');
+		}
 		$this->setLevel($this->getLevel() + $level);
 	}
 	
 	public function decreaseLevel($level) {
-		if ($level < 0)
+		if ($level < 0) {
 			throw new Exception('Cannot increase negative level.');
+		}
 		$this->setLevel($this->getLevel() - $level);
 	}
 	
 	public function setExperience($experience) {
-		if ($this->isCachedVersion())
+		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
-		if ($this->experience == $experience)
+		}
+		if ($this->experience == $experience) {
 			return;
+		}
 		$this->experience = $experience;
 		$this->hasChanged = true;
 	}
 	
 	public function increaseExperience($experience) {
-		if ($experience < 0)
+		if ($experience < 0) {
 			throw new Exception('Cannot increase negative experience.');
+		}
 		$this->setExperience($this->getExperience() + $experience);
 	}
 	
@@ -795,7 +824,7 @@ class AbstractSmrPort {
 		return $this->sectorID;
 	}
 	
-	public function &getSector() {
+	public function getSector() {
 		return SmrSector::getSector($this->getGameID(), $this->getSectorID());
 	}
 	
@@ -804,8 +833,9 @@ class AbstractSmrPort {
 	}
 	
 	public function setRaceID($raceID) {
-		if ($this->raceID == $raceID)
+		if ($this->raceID == $raceID) {
 			return;
+		}
 		$this->raceID = $raceID;
 		$this->hasChanged = true;
 		$this->cacheIsValid = false;
@@ -866,7 +896,7 @@ class AbstractSmrPort {
 		return $this->getLevel() + 3;
 	}
 
-	public function &getWeapons() {
+	public function getWeapons() {
 		$weapons = array();
 		for ($i = 0; $i < $this->getNumWeapons(); ++$i) {
 			$weapons[$i] = SmrWeapon::getWeapon(WEAPON_PORT_TURRET);
@@ -883,8 +913,9 @@ class AbstractSmrPort {
 	}
 	
 	public function getReinforcePercent() {
-		if (!$this->isUnderAttack())
+		if (!$this->isUnderAttack()) {
 			return 0;
+		}
 		return min(1, max(0, ($this->getReinforceTime() - TIME) / ($this->getReinforceTime() - $this->getAttackStarted())));
 	}
 	
@@ -905,8 +936,9 @@ class AbstractSmrPort {
 	}
 	
 	private function setAttackStarted($time) {
-		if ($this->attackStarted == $time)
+		if ($this->attackStarted == $time) {
 			return;
+		}
 		$this->attackStarted = TIME;
 		$this->hasChanged = true;
 	}
@@ -935,7 +967,7 @@ class AbstractSmrPort {
 		$this->setArmour($this->getArmour() - $number);
 	}
 	
-	public function getIdealPrice($goodID, $transactionType, $numGoods, $relations) {
+	public function getIdealPrice($goodID, $transactionType, $numGoods, $relations) : int {
 		$relations = min(1000, $relations); // no effect for higher relations
 		$good = $this->getGood($goodID);
 		$base = $good['BasePrice'] * $numGoods;
@@ -949,7 +981,7 @@ class AbstractSmrPort {
 			$supplyFactor = 1 + ($supply / $maxSupply);
 			$relationsFactor = 1 + 2 * ($relations / 1000);
 			$scale = 0.08;
-		} else if ($transactionType == 'Buy') {
+		} elseif ($transactionType == 'Buy') {
 			// Trader buys
 			$supplyFactor = 2 - ($supply / $maxSupply);
 			$relationsFactor = 3 - 2 * ($relations / 1000);
@@ -957,28 +989,27 @@ class AbstractSmrPort {
 		} else {
 			throw new Exception('Unknown transaction type');
 		}
-		return round($base * $scale * $distFactor * $supplyFactor * $relationsFactor);
+		return IRound($base * $scale * $distFactor * $supplyFactor * $relationsFactor);
 	}
 	
-	public function getOfferPrice($idealPrice, $relations, $transactionType) {
+	public function getOfferPrice($idealPrice, $relations, $transactionType) : int {
 		$moneyRelations = max(0, min(2000, $relations));
 		$expRelations = max(0, min(1000, $relations));
 		$relationsEffect = pow(1 + ($expRelations - 1000) / 10000, 1.2 - $expRelations / 1000);
 		$relationsEffect -= max(0, min(self::BARGAIN_LENIENCY_PERCENT, self::BARGAIN_LENIENCY_PERCENT * (2000 - $moneyRelations) / 1000)); //Gradual increase getting closer and closer to actual ideal price as relations increase to 2000 (will only be an increase of self::BARGAIN_LENIENCY_PERCENT percent extra cash)
 		 
-		 if ($transactionType == 'Buy')
-		 {
+		if ($transactionType == 'Buy') {
 			$relationsEffect = 2 - $relationsEffect;
-			return max($idealPrice, floor($idealPrice * $relationsEffect));
-		 }
-		 else
-			return min($idealPrice, ceil($idealPrice * $relationsEffect));
+			return max($idealPrice, IFloor($idealPrice * $relationsEffect));
+		} else {
+			return min($idealPrice, ICeil($idealPrice * $relationsEffect));
+		}
 //		$range = .11 - .095;
 //		$rand = .095 + $range * mt_rand(0, 32767)/32767;
 //
 //		if($transactionType == 'Buy')
 //			$offeredPrice = round( $idealPrice * (($relations - 1250) / 10000 + 1 * (pow($relations / 500 + 1, $rand)) - ($relations / 9500)) );
-//		else if($transactionType == 'Sell')
+//		elseif($transactionType == 'Sell')
 //			$offeredPrice = round( $idealPrice * (($relations - 1500) / 10000 + 1 * (pow($relations / 500 + 1, $rand)) - ($relations / 2450) + .35) );
 //		return $offeredPrice;
 	}
@@ -1013,7 +1044,7 @@ class AbstractSmrPort {
 	}
 	
 	public function getAttackHREF() {
-		$container = create_container('skeleton.php', 'port_attack_processing.php');
+		$container = create_container('port_attack_processing.php');
 		$container['port_id'] = $this->getSectorID();
 		return SmrSession::getNewHREF($container);
 	}
@@ -1025,17 +1056,16 @@ class AbstractSmrPort {
 	}
 
 	public function getRazeHREF($justContainer = false) {
-		$container = create_container('skeleton.php', 'port_payout_processing.php');
+		$container = create_container('port_payout_processing.php');
 		$container['PayoutType'] = 'Raze';
 		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
 	}
 
 	public function getLootHREF($justContainer = false) {
 		if ($this->getCredits() > 0) {
-			$container = create_container('skeleton.php', 'port_payout_processing.php');
+			$container = create_container('port_payout_processing.php');
 			$container['PayoutType'] = 'Loot';
-		}
-		else {
+		} else {
 			$container = create_container('skeleton.php', 'current_sector.php');
 			$container['msg'] = 'This port has already been looted.';
 		}
@@ -1093,7 +1123,7 @@ class AbstractSmrPort {
 		}
 		return false;
 	}
-	public static function &getCachedPort($gameID, $sectorID, $accountID, $forceUpdate = false) {
+	public static function getCachedPort($gameID, $sectorID, $accountID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT visited, port_info
@@ -1106,9 +1136,9 @@ class AbstractSmrPort {
 			if ($db->nextRecord()) {
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = unserialize(gzuncompress($db->getField('port_info')));
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]->setCachedTime($db->getInt('visited'));
-			}
-			else
+			} else {
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;
+			}
 		}
 		return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
 	}
@@ -1154,8 +1184,7 @@ class AbstractSmrPort {
 								', attack_started = ' . $this->db->escapeNumber($this->getAttackStarted()) .
 								', race_id = ' . $this->db->escapeNumber($this->getRaceID()) . '
 								WHERE ' . $this->SQL . ' LIMIT 1');
-			}
-			else {
+			} else {
 				$this->db->query('INSERT INTO port (game_id,sector_id,experience,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)
 								values
 								(' . $this->db->escapeNumber($this->getGameID()) .
@@ -1234,12 +1263,12 @@ class AbstractSmrPort {
 					$cdDamage = $this->doCDDamage(min($damage['MaxDamage'], $damage['Armour']));
 					$damage['Armour'] -= $cdDamage;
 					$damage['MaxDamage'] -= $cdDamage;
-					if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover']))
+					if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
 						$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'], $damage['Armour']));
+					}
 				}
-			}
-			else { //hit drones behind shields
-				$cdDamage = $this->doCDDamage(floor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
+			} else { //hit drones behind shields
+				$cdDamage = $this->doCDDamage(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
 			}
 		}
 
@@ -1264,21 +1293,21 @@ class AbstractSmrPort {
 	}
 	
 	protected function doCDDamage($damage) {
-		$actualDamage = min($this->getCDs(), floor($damage / CD_ARMOUR));
+		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
 		$this->decreaseCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
 	
 	protected function doArmourDamage($damage) {
-		$actualDamage = min($this->getArmour(), floor($damage));
+		$actualDamage = min($this->getArmour(), IFloor($damage));
 		$this->decreaseArmour($actualDamage);
 		return $actualDamage;
 	}
 
-	protected function &getAttackersToCredit() {
+	protected function getAttackersToCredit() {
 		//get all players involved for HoF
 		$attackers = array();
-		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
+		$this->db->query('SELECT account_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
 		while ($this->db->nextRecord()) {
 			$attackers[] = SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID());
 		}
@@ -1289,7 +1318,7 @@ class AbstractSmrPort {
 		//get all players involved for HoF
 		$attackers = $this->getAttackersToCredit();
 		foreach ($attackers as $attacker) {
-			$attacker->increaseHOF($this->db->getInt('level'), array('Combat', 'Port', 'Levels Raided'), HOF_PUBLIC);
+			$attacker->increaseHOF($this->level, array('Combat', 'Port', 'Levels Raided'), HOF_PUBLIC);
 			$attacker->increaseHOF(1, array('Combat', 'Port', 'Total Raided'), HOF_PUBLIC);
 		}
 	}
@@ -1308,8 +1337,8 @@ class AbstractSmrPort {
 		return true;
 	}
 
-	public function razePort(AbstractSmrPlayer $killer) {
-		$credits = floor($this->getCredits() * self::RAZE_MONEY_PERCENT / 100);
+	public function razePort(AbstractSmrPlayer $killer) : int {
+		$credits = IFloor($this->getCredits() * self::RAZE_MONEY_PERCENT / 100);
 		if ($this->payout($killer, $credits, 'Razed')) {
 			$this->doDowngrade();
 		}
@@ -1334,8 +1363,11 @@ class AbstractSmrPort {
 		
 		// News Entry
 		$news = $this->getDisplayName() . ' has been successfully raided by ';
-		if ($killer->hasAlliance()) $news .= 'the members of <span class="yellow">' . $killer->getAllianceBBLink() . '</span>';
-		else $news .= $killer->getBBLink();
+		if ($killer->hasAlliance()) {
+			$news .= 'the members of <span class="yellow">' . $killer->getAllianceBBLink() . '</span>';
+		} else {
+			$news .= $killer->getBBLink();
+		}
 		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
 		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
@@ -1351,8 +1383,9 @@ class AbstractSmrPort {
 
 	public function hasX(/*Object*/ $x) {
 		if (is_array($x) && $x['Type'] == 'Good') { // instanceof Good) - No Good class yet, so array is the best we can do
-			if (isset($x['ID']))
-				return $this->hasGood($x['ID'], isset($x['TransactionType']) ? $x['TransactionType'] : false);
+			if (isset($x['ID'])) {
+				return $this->hasGood($x['ID'], $x['TransactionType'] ?? false);
+			}
 		}
 		return false;
 	}

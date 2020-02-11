@@ -88,7 +88,7 @@ if (isset($Voting)) {
 		<form name="FORM" method="POST" action="<?php echo $Vote['HREF'] ?>">
 			<span class="bold"><?php echo bbifyMessage($Vote['Question']); ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
 			foreach ($Vote['Options'] as $VoteOption) { ?>
-				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if ($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbifyMessage($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
+				<input type="radio" name="vote" required value="<?php echo $VoteOption['ID']; ?>"<?php if ($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbifyMessage($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
 			} ?>
 			<input type="submit" name="submit" value="Vote!"><br />
 		</form><?php

@@ -1,19 +1,15 @@
 <?php declare(strict_types=1);
-$action = $_REQUEST['action'];
-$amount = $_REQUEST['amount'];
-if (!is_numeric($amount))
-	create_error('Numbers only please');
-
-// only whole numbers allowed
-$amount = floor($amount);
+$action = Request::get('action');
+$amount = Request::getInt('amount');
 
 $hardware_id = $var['hardware_id'];
 $hardware_name = Globals::getHardwareName($hardware_id);
 $cost = Globals::getHardwareCost($hardware_id);
 
 // no negative amounts are allowed
-if ($amount <= 0)
+if ($amount <= 0) {
 	create_error('You must actually enter an amount greater than zero!');
+}
 
 if ($action == 'Buy') {
 	// do we have enough cash?
@@ -34,7 +30,7 @@ if ($action == 'Buy') {
 	if ($hardware_id == HARDWARE_SCOUT) $player->increaseHOF($amount, array('Forces', 'Bought', 'Scout Drones'), HOF_ALLIANCE);
 	if ($hardware_id == HARDWARE_MINE) $player->increaseHOF($amount, array('Forces', 'Bought', 'Mines'), HOF_ALLIANCE);
 }
-else if ($action == 'Sell') {
+elseif ($action == 'Sell') {
 	// We only allow selling combat drones
 	if ($hardware_id != HARDWARE_COMBAT) {
 		throw new Exception('This item cannot be sold!');
@@ -45,10 +41,9 @@ else if ($action == 'Sell') {
 		create_error('You can\'t sell more ' . $hardware_name . ' than you have aboard your ship!');
 	}
 
-	$player->increaseCredits(round($cost * CDS_REFUND_PERCENT) * $amount);
+	$player->increaseCredits(IRound($cost * CDS_REFUND_PERCENT) * $amount);
 	$ship->decreaseCDs($amount, true); // 2nd arg avoids under attack warning
-}
-else {
+} else {
 	throw new Exception('Action must be either Buy or Sell.');
 }
 

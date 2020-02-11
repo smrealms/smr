@@ -59,6 +59,7 @@ services:
         networks:
             - backend
         environment:
+            - POSTFIX_myhostname=hostname.local
             - OPENDKIM_DOMAINS=smrealms.de
             - OPENDKIM_SELECTOR=key1
         labels:

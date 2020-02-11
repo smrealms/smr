@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-if ($_POST['action'] == 'No') {
+if (Request::get('action') == 'No') {
 	forward(create_container('skeleton.php', 'message_view.php'));
 }
 

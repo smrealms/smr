@@ -7,10 +7,10 @@ if (!isset($var['alliance_id'])) {
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('Alliance', $alliance);
 
-$template->assign('PageTopic', $alliance->getAllianceName(false, true));
+$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
-$varAction = isset($var['action']) ? $var['action'] : '';
+$varAction = $var['action'] ?? '';
 // Does anyone actually use these?
 $showRoles = $varAction == 'Show Alliance Roles';
 $template->assign('ShowRoles', $showRoles);

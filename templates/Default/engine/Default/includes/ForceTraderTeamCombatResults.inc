@@ -14,12 +14,9 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 					$ActualDamage =& $WeaponResults['ActualDamage'];
 					$WeaponDamage =& $WeaponResults['WeaponDamage'];
 					$TargetPlayer =& $WeaponResults['TargetPlayer'];
-					$DamageTypes = 0;
-					if($ActualDamage['NumMines'] > 0){ $DamageTypes = $DamageTypes+1; }
-					if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-					if($ActualDamage['NumSDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+
 					echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at<?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once<?php } ?> the forces<?php
-					if(!$ActualDamage['TargetAlreadyDead']) {
+					if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 						if(!$ShotHit) {
 							?> and misses<?php
 						} else if($ActualDamage['TotalDamage'] == 0) {
@@ -32,6 +29,11 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 							}
 						} else {
 							?> destroying <?php
+							$DamageTypes = 0;
+							if($ActualDamage['NumMines'] > 0){ $DamageTypes = $DamageTypes+1; }
+							if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+							if($ActualDamage['NumSDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+
 							if($ActualDamage['NumMines'] > 0) {
 								?><span class="red"><?php echo number_format($ActualDamage['NumMines']) ?></span> mines<?php
 								$this->doDamageTypeReductionDisplay($DamageTypes);
@@ -46,7 +48,7 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 						}
 					} ?>.
 					<br />
-					<?php if($ActualDamage['KillingShot']) {
+					<?php if ($ShotHit && $ActualDamage['KillingShot']) {
 						?>Forces are <span class="red">DESTROYED!</span><br /><?php
 					}
 				}
@@ -56,10 +58,7 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 				$ActualDamage =& $Drones['ActualDamage'];
 				$WeaponDamage =& $Drones['WeaponDamage'];
 				$TargetPlayer =& $Drones['TargetPlayer'];
-				$DamageTypes = 0;
-				if($ActualDamage['NumMines'] > $WeaponDamage['Kamikaze']) { $DamageTypes = $DamageTypes+1; }
-				if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if($ActualDamage['NumSDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+
 				echo $ShootingPlayer->getDisplayName();
 				if($WeaponDamage['Launched'] == 0) {
 					?> fails to launch their combat drones<?php
@@ -76,6 +75,11 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 								?> but they cannot do any damage<?php
 							}
 						} else {
+							$DamageTypes = 0;
+							if($ActualDamage['NumMines'] > $WeaponDamage['Kamikaze']) { $DamageTypes = $DamageTypes+1; }
+							if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+							if($ActualDamage['NumSDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+
 							if($WeaponDamage['Kamikaze'] == 0) {
 								?> destroying <?php
 							} else {

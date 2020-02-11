@@ -22,8 +22,7 @@ class Menu {
 
 		if ($alliance_id) {
 			$in_alliance = ($alliance_id == $player->getAllianceID());
-		}
-		else {
+		} else {
 			$in_alliance = $player->hasAlliance();
 		}
 		if (!$in_alliance) {
@@ -36,28 +35,27 @@ class Menu {
 				$mbRead = $db->getBoolean('mb_read');
 				$modRead = $db->getBoolean('mod_read');
 				$planetLand = $db->getBoolean('planet_land');
-			}
-			else {
+			} else {
 				$mbRead = FALSE;
 				$modRead = FALSE;
 				$planetLand = FALSE;
 			}
 		}
 
-		$role_id = $player->getAllianceRole();
-		$db->query('SELECT send_alliance_msg FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
-		$db->nextRecord();
-		$send = $db->getBoolean('send_alliance_msg');
-		//if ($player->getAccountID() == $alliance_leader_id) {
-		//	$container['body']='alliance_treaties.php';
-		//	$menu_items[] = create_link($container,'Treaties','nav');
-		//}
+		$role_id = $player->getAllianceRole($alliance_id);
+		$db->query('SELECT send_alliance_msg FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
+		if ($db->nextRecord()) {
+			$send_alliance_msg = $db->getBoolean('send_alliance_msg');
+		} else {
+			$send_alliance_msg = false;
+		}
+
 		$menuItems = array();
 		if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $modRead) {
 			$menuItems[] = array('Link'=>Globals::getAllianceMotdHREF($alliance_id), 'Text'=>'Message of the Day');
 		}
 		$menuItems[] = array('Link'=>Globals::getAllianceRosterHREF($alliance_id), 'Text'=>'Roster');
-		if (($send && $in_alliance) || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($send_alliance_msg || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 			$menuItems[] = array('Link'=>Globals::getAllianceMessageHREF($alliance_id), 'Text'=>'Send Message');
 		}
 		if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $mbRead) {
@@ -247,9 +245,10 @@ class Menu {
 		$menu_items[] = create_link(create_container('skeleton.php', 'bank_personal.php'),
 														'Personal Account', 'nav');
 
-		if ($player->hasAlliance())
+		if ($player->hasAlliance()) {
 			$menu_items[] = create_link(create_container('skeleton.php', 'bank_alliance.php'),
 															'Alliance Account', 'nav');
+		}
 
 		$menu_items[] = create_link(create_container('skeleton.php', 'bank_anon.php'),
 														'Anonymous Account', 'nav');
@@ -272,12 +271,14 @@ class Menu {
 		$menu_items[] = create_link($container, 'Send Message', 'nav');
 
 		if ($player->getRaceID() == $race_id) {
-			if ($player->isOnCouncil())
+			if ($player->isOnCouncil()) {
 				$menu_items[] = create_link(create_container('skeleton.php', 'council_vote.php'),
 																'Voting Center', 'nav');
-			if ($player->isPresident())
+			}
+			if ($player->isPresident()) {
 				$menu_items[] = create_link(create_container('skeleton.php', 'council_embassy.php'),
 																'Embassy', 'nav');
+			}
 		}
 
 		create_menu($menu_items);
@@ -306,8 +307,9 @@ class Menu {
 	public static function navigation(Template $template, AbstractSmrPlayer $player) {
 		$menuItems = array();
 		$menuItems[] = array('Link'=>Globals::getPlotCourseHREF(), 'Text'=>'Plot A Course');
-		if (!$player->isLandedOnPlanet())
+		if (!$player->isLandedOnPlanet()) {
 			$menuItems[] = array('Link'=>Globals::getLocalMapHREF(), 'Text'=>'Local Map');
+		}
 		$menuItems[] = array('Link'=>'map_galaxy.php" target="gal_map', 'Text'=>'Galaxy Map');
 		$template->assign('MenuItems', $menuItems);
 	}
@@ -328,14 +330,16 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 	$return .= ('<tr>');
 	foreach ($menu as $number => $entry) {
 		// insert spacer
-		if ($number > 0)
+		if ($number > 0) {
 			$return .= ('<td>&nbsp;|&nbsp;</td>');
+		}
 
 		// if this is the active entry we mark it
-		if ($number == $active_level1)
+		if ($number == $active_level1) {
 			$active = ' class="bold"';
-		else
+		} else {
 			$active = '';
+		}
 
 		// echo entry itself
 		$return .= ('<td ' . $active . '> ' . $entry['entry'] . '</td>');
@@ -349,17 +353,18 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 		if (isset($entry['submenu']) && $number == $active_level1) {
 			$return .= ('<td><small>');
 			foreach ($entry['submenu'] as $sub_number => $sub_entry) {
-				if ($sub_number > 0)
+				if ($sub_number > 0) {
 					$return .= (' | ');
+				}
 
-				if ($sub_number == $active_level2)
+				if ($sub_number == $active_level2) {
 					$return .= ('<span class="bold">' . $sub_entry . '</span>');
-				else
+				} else {
 					$return .= ($sub_entry);
+				}
 			}
 			$return .= ('</small></td>');
-		}
-		else {
+		} else {
 			// if it's not the first entry we have to put
 			// additional empty cell for the spacer
 			//if ($number > 0)

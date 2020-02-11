@@ -1,23 +1,23 @@
 <?php declare(strict_types=1);
 
-$type = trim($_POST['type']);
+$type = Request::get('type');
+$sectorId = Request::getInt('sectorId');
 
 switch ($type) {
 	case 'add':
-		$sectorId = trim($_POST['sectorId']);
-		$label = trim($_POST['label']);
+		$label = trim(Request::get('label'));
 		$player->addDestinationButton($sectorId, $label);
-   break;
+	break;
 
 	case 'move':
-		$sectorId = trim($_POST['sectorId']);
-		$offsetTop = $_POST['offsetTop'];
-		$offsetLeft = $_POST['offsetLeft'];
+		// These are submitted as floats by ui.draggable.position JS, but
+		// we (and the browser) only accept integer positions.
+		$offsetTop = Request::getInt('offsetTop');
+		$offsetLeft = Request::getInt('offsetLeft');
 		$player->moveDestinationButton($sectorId, $offsetTop, $offsetLeft);
 	break;
 
 	case 'delete':
-		$sectorId = trim($_POST['sectorId']);
 		$player->deleteDestinationButton($sectorId);
 	break;
 

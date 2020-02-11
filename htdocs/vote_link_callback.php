@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 // Callback script for player voting on external sites
 
-if (isset($_POST['account']) && isset($_POST['game']) && isset($_POST['link'])) {
+if (Request::has('account') && Request::has('game') && Request::has('link')) {
 	// callback from TWG
-	$accountId = $_POST['account'];
-	$gameId = $_POST['game'];
-	$linkId = $_POST['link'];
-} else if (isset($_GET['votedef'])) {
+	$accountId = Request::getInt('account');
+	$gameId = Request::getInt('game');
+	$linkId = Request::getInt('link');
+} elseif (Request::has('votedef')) {
 	// callback from DOG
-	$data = explode(',', $_GET['votedef']);
-	$accountId = $data[0];
-	$gameId = $data[1];
-	$linkId = $data[2];
+	$data = explode(',', Request::get('votedef'));
+	$accountId = (int)$data[0];
+	$gameId = (int)$data[1];
+	$linkId = (int)$data[2];
 } else {
 	exit;
 }

@@ -1,18 +1,21 @@
 <?php declare(strict_types=1);
 require_once(get_file_loc('hof.functions.inc'));
 $game_id = null;
-if (isset($var['game_id'])) $game_id = $var['game_id'];
+if (isset($var['game_id'])) {
+	$game_id = $var['game_id'];
+}
 
 if (empty($game_id)) {
 	$topic = 'All Time Hall of Fame';
-}
-else {
+} else {
 	$topic = 'Hall of Fame: ' . SmrGame::getGame($game_id)->getDisplayName();
 }
 $template->assign('PageTopic', $topic);
 
 $container = create_container('skeleton.php', 'hall_of_fame_player_detail.php');
-if (isset($game_id)) $container['game_id'] = $game_id;
+if (isset($game_id)) {
+	$container['game_id'] = $game_id;
+}
 $template->assign('PersonalHofHREF', SmrSession::getNewHREF($container));
 
 $db->query('SELECT type FROM hof_visibility WHERE visibility != ' . $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
@@ -35,8 +38,7 @@ $template->assign('Breadcrumb', buildBreadcrumb($var, $hofTypes, isset($game_id)
 if (!isset($var['view'])) {
 	$categories = getHofCategories($hofTypes, $game_id, $account->getAccountID());
 	$template->assign('Categories', $categories);
-}
-else {
+} else {
 	$gameIDSql = ' AND game_id ' . (isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE end_time < ' . TIME . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
 
 	$vis = HOF_PUBLIC;
@@ -44,15 +46,14 @@ else {
 	$foundMe = false;
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];
-	if ($var['view'] == DONATION_NAME)
+	if ($var['view'] == DONATION_NAME) {
 		$db->query('SELECT account_id, SUM(amount) as amount FROM account_donated
 					GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
-	else if ($var['view'] == USER_SCORE_NAME) {
+	} elseif ($var['view'] == USER_SCORE_NAME) {
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
 		$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 		$db->query($query);
-	}
-	else {
+	} else {
 		$db->query('SELECT visibility FROM hof_visibility WHERE type = ' . $db->escapeArray($viewType, false, true, ':', false) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			$vis = $db->getField('visibility');

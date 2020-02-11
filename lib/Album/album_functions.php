@@ -53,9 +53,9 @@ function main_page() {
 
 			echo('<span style="font-size:85%;"><b>[' . date(defined('DATE_FULL_SHORT') ?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $created) . ']</b> Picture of <a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> added</span><br />');
 		}
-	}
-	else
+	} else {
 		echo('<span style="font-size:85%;">no entries</span>');
+	}
 	echo('</p>');
 }
 
@@ -87,8 +87,7 @@ function album_entry($album_id) {
 		$other = nl2br(stripslashes($db->getField('other')));
 		$page_views = $db->getInt('page_views');
 		$disabled = $db->getBoolean('disabled');
-	}
-	else {
+	} else {
 		echo('<h1>Error</h1>');
 		echo('This user doesn\'t have an entry in our album!');
 		return;
@@ -139,46 +138,54 @@ function album_entry($album_id) {
 	echo('<tr>');
 	echo('<td colspan="2" class="center" valign="middle">');
 
-	if ($disabled == false)
+	if ($disabled == false) {
 		echo('<img src="../upload/' . $album_id . '">');
-	else
+	} else {
 		echo('<img src="../images/album/disabled.jpg">');
+	}
 
 	echo('</td>');
 	echo('</tr>');
 
-	if (empty($location))
+	if (empty($location)) {
 		$location = 'N/A';
+	}
 	echo('<tr>');
 	echo('<td class="right bold" width="10%">Location:</td><td>' . $location . '</td>');
 	echo('</tr>');
 
-	if (empty($email))
+	if (empty($email)) {
 		$email = 'N/A';
+	}
 	echo('<tr>');
 	echo('<td class="right bold" width="10%">E-mail:</td><td>' . $email . '</td>');
 	echo('</tr>');
 
-	if (empty($website))
+	if (empty($website)) {
 		$website = 'N/A';
-	else
+	} else {
 		$website = '<a href="' . $website . '" target="_new">' . $website . '</a>';
+	}
 	echo('<tr>');
 	echo('<td class="right bold" width="10%">Website:</td><td>' . $website . '</td>');
 	echo('</tr>');
 
 	echo('<tr>');
-	if (!empty($day) && !empty($month) && !empty($year))
+	if (!empty($day) && !empty($month) && !empty($year)) {
 		$birthdate = $month . ' / ' . $day . ' / ' . $year;
-	if (empty($birthdate) && !empty($year))
+	}
+	if (empty($birthdate) && !empty($year)) {
 		$birthdate = 'Year ' . $year;
-	if (empty($birthdate))
+	}
+	if (empty($birthdate)) {
 		$birthdate = 'N/A';
+	}
 	echo('<td class="right bold" width="10%">Birthdate:</td><td>' . $birthdate . '</td>');
 	echo('</tr>');
 
-	if (empty($other))
+	if (empty($other)) {
 		$other = 'N/A';
+	}
 	echo('<tr>');
 	echo('<td class="right bold" valign="top" width="10%">Other&nbsp;Info:</td><td>' . $other . '</td>');
 	echo('</tr>');
@@ -210,15 +217,16 @@ function album_entry($album_id) {
 					FROM account_has_permission
 					WHERE account_id = '.$db->escapeNumber(SmrSession::getAccountID()) . ' AND
 						permission_id = '.$db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
-		if ($db->nextRecord())
+		if ($db->nextRecord()) {
 			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate" class="InputFields"></td>');
+		}
 
 		echo('</tr>');
 		echo('</table>');
 		echo('</form>');
-	}
-	else
+	} else {
 		echo('<p>Please <a href="/login.php?return_page=/album/?nick=' . urlencode($nick) . '"><u>login</u></a> if you want comment on this picture!</p>');
+	}
 
 	echo('</td>');
 	echo('</tr>');
@@ -288,8 +296,9 @@ function create_link_list() {
 
 
 function get_album_nick($album_id) {
-	if ($album_id == 0)
+	if ($album_id == 0) {
 		return 'System';
+	}
 
 	return SmrAccount::getAccount($album_id)->getHofName();
 }

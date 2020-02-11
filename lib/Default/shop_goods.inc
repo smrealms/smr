@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
 function checkPortTradeable($port, $player) {
-	if ($port->getSectorID() != $player->getSectorID())
+	if ($port->getSectorID() != $player->getSectorID()) {
 		return 'That port is not in this sector!';
-	
-	if (!$port->exists())
+	}
+	if (!$port->exists()) {
 		return 'There is no port in this sector!';
-	
-	if ($player->getRelation($port->getRaceID()) <= RELATIONS_WAR)
+	}
+	if ($player->getRelation($port->getRaceID()) <= RELATIONS_WAR) {
 		return 'We will not trade with our enemies!';
-	
-	if ($port->getReinforceTime() > TIME)
+	}
+	if ($port->getReinforceTime() > TIME) {
 		return 'We are still repairing damage caused during the last raid.';
-	
+	}
 	return true;
 }
 
@@ -50,64 +50,15 @@ function check_bargain_number($amount, $ideal_price, $offered_price, $bargain_pr
 		if (abs($port_off_rel) > abs($trader_off_rel)) {
 			// get a random number between
 			// (port_off) and (100 +/- $trader_off_rel)
-			if (100 + $trader_off_rel < $port_off)
+			if (100 + $trader_off_rel < $port_off) {
 				$offer_modifier = mt_rand(100 + $trader_off_rel, $port_off);
-			else
+			} else {
 				$offer_modifier = mt_rand($port_off, 100 + $trader_off_rel);
+			}
 
 			$container['offered_price'] = round($container['ideal_price'] * $offer_modifier / 100);
 		}
-	}
-	else
+	} else {
 		$container['overall_number_of_bargains'] = mt_rand(2, 5);
-}
-
-function get_amount() {
-	global $var;
-
-	// retrieve amount
-	if (isset($var['amount']))
-		$amount = $var['amount'];
-	else if (isset($_REQUEST['amount']))
-		$amount = $_REQUEST['amount'];
-	else
-		$amount = 0;
-
-	// only numbers
-	if (!is_numeric($amount))
-		create_error('You must actually enter a number!');
-
-	// we take as it is but round it
-	$amount = floor($amount);
-
-	// no negative amounts are allowed
-	if ($amount <= 0)
-		create_error('You must actually enter an amount > 0!');
-
-	return $amount;
-}
-
-function get_bargain_price() {
-	global $var;
-
-	// we get it from form
-	if (isset($_REQUEST['bargain_price']))
-		$price = $_REQUEST['bargain_price'];
-	else if (isset($var['bargain_price']))
-		$price = $var['bargain_price'];
-	else
-		$price = 0;
-
-	// only numbers
-	if (!is_numeric($price))
-		create_error('You must actually enter a number!');
-
-	// we take as it is but round it
-	$price = floor($price);
-
-	// no negative amounts are allowed
-	if ($price < 0)
-		create_error('No negative prices are allowed!');
-
-	return $price;
+	}
 }

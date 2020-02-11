@@ -19,8 +19,7 @@
 	</tr><?php
 if (isset($Locations)) {
 	$this->includeTemplate('includes/ViewLocations.inc', array('Locations'=>$Locations));
-}
-else { ?>
+} else { ?>
 	<tr>
 		<td><input name="name" type="text" value="<?php echo htmlspecialchars($Location->getName()); ?>" /></td>
 		<td><input name="action" type="text" value="<?php echo htmlspecialchars($Location->getAction()); ?>" /></td>

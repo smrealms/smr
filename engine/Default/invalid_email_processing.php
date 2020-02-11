@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-if ($_POST['action'] == "Resend Validation Code") {
+if (Request::get('action') == "Resend Validation Code") {
 	$account->changeEmail($account->getEmail());
 } else {
-	$account->changeEmail($_POST['email']);
+	$account->changeEmail(Request::get('email'));
 }
 forward(create_container('skeleton.php', 'validate.php'));

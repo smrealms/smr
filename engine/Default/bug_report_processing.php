@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-$steps = $_REQUEST['steps'];
-$subject = $_REQUEST['subject'];
-$error_msg = $_REQUEST['error_msg'];
-$description = $_REQUEST['description'];
+$steps = Request::get('steps');
+$subject = Request::get('subject');
+$error_msg = Request::get('error_msg');
+$description = Request::get('description');
 $new_sub = '[Bug] ' . $subject;
 
 $message = 'Login: ' . $account->getLogin() . EOL . EOL . '-----------' . EOL . EOL .

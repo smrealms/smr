@@ -27,14 +27,6 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	forward(create_container('skeleton.php', $var['target_page']));
 }
 
-$action = '';
-if (isset($_REQUEST['action'])) {
-	$action = $_REQUEST['action'];
-	if ($action == 'No') {
-		forward(create_container('skeleton.php', $var['target_page']));
-	}
-}
-
 // you can't move while on planet
 if ($player->isLandedOnPlanet()) {
 	create_error('You can\'t activate your engine while you are on a planet!');

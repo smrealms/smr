@@ -10,15 +10,14 @@ transfer('LocationID');
 if ($location->isHQ()) {
 	$container['body'] = 'government.php';
 	$type = 'HQ';
-} else if ($location->isUG()) {
+} elseif ($location->isUG()) {
 	$container['body'] = 'underground.php';
 	$type = 'UG';
 } else {
 	create_error('The location is not a UG or HQ, how did you get here?');
 }
-$action = $_REQUEST['action'];
 // if we don't have a yes we leave immediatly
-if ($action != 'Yes') {
+if (Request::get('action') != 'Yes') {
 	forward($container);
 }
 

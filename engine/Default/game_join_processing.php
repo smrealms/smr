@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 // trim input now
-$player_name = trim($_REQUEST['player_name']);
+$player_name = trim(Request::get('player_name'));
 
 if (!defined('NPC_SCRIPT') && strpos($player_name, 'NPC') === 0) {
 	create_error('Player names cannot begin with "NPC".');
@@ -32,7 +32,7 @@ if (empty($player_name)) {
 	create_error('You must enter a player name!');
 }
 
-$race_id = $_REQUEST['race_id'];
+$race_id = Request::getInt('race_id');
 if (empty($race_id) || $race_id == RACE_NEUTRAL) {
 	create_error('Please choose a race!');
 }
@@ -122,8 +122,8 @@ if ($isNewbie) {
 	$player->joinAlliance(NHA_ID);
 
 	//we need to send them some messages
-	$message = 'Welcome to Space Merchant Realms! You have been automatically placed into the <u>[alliance=' . NHA_ID . ']</u>, which is led by a veteran player who can assist you while you learn the basics of the game. Your alliance leader is denoted with a star on your alliance roster.<br />
-	For more tips to help you get started with the game, check out your alliance message boards. These can be reached by clicking the "Alliance" link on the left side of the page, and then clicking the "Message Board" menu link. The <u><a href="'.WIKI_URL . '" target="_blank">SMR Wiki</a></u> also gives detailed information on all aspects of the game.<br />
+	$message = 'Welcome to Space Merchant Realms! You have been automatically placed into the <u>' . $player->getAllianceBBLink() . '</u>, which is led by a veteran player who can assist you while you learn the basics of the game. Your alliance leader is denoted with a star on your alliance roster.<br />
+	For more tips to help you get started with the game, check out your alliance message boards. These can be reached by clicking the "Alliance" link on the left side of the page, and then clicking the "Message Board" menu link. The <u><a href="' . WIKI_URL . '" target="_blank">SMR Wiki</a></u> also gives detailed information on all aspects of the game.<br />
 	SMR is integrated with both IRC and Discord. These are free chat services where you can talk to other players and coordinate with your alliance. Simply click the "Join Chat" link at the bottom left panel of the page.';
 
 	SmrPlayer::sendMessageFromAdmin($gameID, $account->getAccountID(), $message);

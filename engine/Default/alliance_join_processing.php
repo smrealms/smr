@@ -7,7 +7,7 @@ if ($canJoin !== true) {
 	create_error($canJoin);
 }
 
-if ($_REQUEST['password'] != $alliance->getPassword()) {
+if (Request::get('password') != $alliance->getPassword()) {
 	create_error('Incorrect Password!');
 }
 

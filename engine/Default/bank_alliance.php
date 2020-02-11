@@ -58,7 +58,7 @@ $withdrawalPerDay = $db->getInt('with_per_day');
 
 if ($db->getBoolean('positive_balance')) {
 	$template->assign('PositiveWithdrawal', $withdrawalPerDay + $playerTrans['Deposit'] - $playerTrans['Payment']);
-} else if ($withdrawalPerDay == ALLIANCE_BANK_UNLIMITED) {
+} elseif ($withdrawalPerDay == ALLIANCE_BANK_UNLIMITED) {
 	$template->assign('UnlimitedWithdrawal', true);
 } else {
 	$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '

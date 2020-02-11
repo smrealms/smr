@@ -4,7 +4,9 @@ require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
 
 $fn_seedlist = function($message) {
 	$link = new GameLink($message->channel, $message->author);
-	if (!$link->valid) return;
+	if (!$link->valid) {
+		return;
+	}
 
 	// print the entire seedlist
 	$results = shared_channel_msg_seedlist($link->player);
@@ -13,7 +15,9 @@ $fn_seedlist = function($message) {
 
 $fn_seedlist_add = function($message, $sectors) {
 	$link = new GameLink($message->channel, $message->author);
-	if (!$link->valid) return;
+	if (!$link->valid) {
+		return;
+	}
 
 	// add sectors to the seedlist
 	$results = shared_channel_msg_seedlist_add($link->player, $sectors);
@@ -22,7 +26,9 @@ $fn_seedlist_add = function($message, $sectors) {
 
 $fn_seedlist_del = function($message, $sectors) {
 	$link = new GameLink($message->channel, $message->author);
-	if (!$link->valid) return;
+	if (!$link->valid) {
+		return;
+	}
 
 	// delete sectors from the seedlist
 	$results = shared_channel_msg_seedlist_del($link->player, $sectors);

@@ -17,7 +17,7 @@ class Council {
 	/**
 	 * Returns an array of Account ID's of the Council for this race.
 	 */
-	public static function &getRaceCouncil($gameID, $raceID) {
+	public static function getRaceCouncil($gameID, $raceID) {
 		if (!isset(self::$COUNCILS[$gameID][$raceID])) {
 			self::initialiseDatabase();
 			self::$COUNCILS[$gameID][$raceID] = array();

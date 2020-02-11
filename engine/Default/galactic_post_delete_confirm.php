@@ -5,7 +5,7 @@ if (isset($var['article'])) {
 	$db->query('SELECT * FROM galactic_post_article WHERE article_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$db->nextRecord();
 	$template->assign('ArticleTitle', $db->getField('title'));
-	$container = create_container('galactic_post_delete.php');
+	$container = create_container('galactic_post_delete_processing.php');
 	transfer('article');
 	transfer('id');
 	$template->assign('SubmitHREF', SmrSession::getNewHREF($container));
@@ -23,7 +23,7 @@ if (isset($var['article'])) {
 	}
 	$template->assign('Articles', $articles);
 
-	$container = create_container('galactic_post_delete.php');
+	$container = create_container('galactic_post_delete_processing.php');
 	transfer('paper');
 	transfer('id');
 	$template->assign('SubmitHREF', SmrSession::getNewHREF($container));

@@ -6,12 +6,8 @@ if(isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Resu
 		$ActualDamage =& $ForceResults['ActualDamage'];
 		$WeaponDamage =& $ForceResults['WeaponDamage'];
 		$TargetPlayer =& $ForceResults['TargetPlayer'];
-		$DamageTypes = 0;
-		if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-		if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-		if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; } ?>
-		
-		<span class="cds"><?php echo isset($ActualDamage['Launched']) ? $ActualDamage['Launched'] : $WeaponDamage['Launched']; ?></span><?php
+		?>
+		<span class="cds"><?php echo $ActualDamage['Launched'] ?? $WeaponDamage['Launched']; ?></span><?php
 		if($ForceType == 'Mines') {
 			?> mines kamikaze themselves against <?php
 		} else if($ForceType == 'Drones') {
@@ -22,7 +18,7 @@ if(isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Resu
 		
 		if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php }
 		echo $TargetPlayer->getDisplayName();
-		if(!$ActualDamage['TargetAlreadyDead']) {
+		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 			if(!$ShotHit) {
 				?> and misses<?php
 			} else if($ActualDamage['TotalDamage'] == 0) {
@@ -40,6 +36,11 @@ if(isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Resu
 			} else {
 				?> destroying <?php
 			}
+			$DamageTypes = 0;
+			if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
+			if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+			if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+
 			if($ActualDamage['Shield'] > 0) {
 				?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
 				$this->doDamageTypeReductionDisplay($DamageTypes);
@@ -53,7 +54,7 @@ if(isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Resu
 			}
 		} ?>.
 		<br /><?php
-		if($ActualDamage['KillingShot']) {
+		if ($ShotHit && $ActualDamage['KillingShot']) {
 			$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>$ForceResults['KillResults'],'TargetPlayer'=>$TargetPlayer));
 		}
 	}

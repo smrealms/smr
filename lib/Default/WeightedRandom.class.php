@@ -25,14 +25,14 @@ class WeightedRandom {
 	
 	protected $hasChanged = false;
 
-	public static function &getWeightedRandom($gameID, $accountID, $type, $typeID, $forceUpdate = false) {
+	public static function getWeightedRandom($gameID, $accountID, $type, $typeID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID])) {
 			self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID] = new WeightedRandom($gameID, $accountID, $type, $typeID);
 		}
 		return self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID];
 	}
 
-	public static function &getWeightedRandomForPlayer(AbstractSmrPlayer $player, $type, $typeID, $forceUpdate = false) {
+	public static function getWeightedRandomForPlayer(AbstractSmrPlayer $player, $type, $typeID, $forceUpdate = false) {
 		return self::getWeightedRandom($player->getGameID(), $player->getAccountID(), $type, $typeID, $forceUpdate);
 	}
 	

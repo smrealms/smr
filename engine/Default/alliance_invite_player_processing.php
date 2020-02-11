@@ -1,12 +1,9 @@
 <?php declare(strict_types=1);
 
-$receiverID = $_POST['account_id'];
-$addMessage = $_POST['message'];
-$expireDays = $_POST['expire_days'];
+$receiverID = Request::getInt('account_id');
+$addMessage = Request::get('message');
+$expireDays = Request::getInt('expire_days');
 
-if (!is_numeric($expireDays)) {
-	create_error('Expiration must be a number of days!');
-}
 $expires = TIME + 86400 * $expireDays;
 
 // If sender is mail banned or blacklisted by receiver, omit the custom message

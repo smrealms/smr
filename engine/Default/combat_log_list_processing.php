@@ -2,15 +2,15 @@
 
 // If here, we have hit either the 'Save', 'Delete', or 'View' form buttons.
 // Immediately return to the log list if we haven't selected any logs.
-if (!isset($_REQUEST['id'])) {
+if (!Request::has('id')) {
 	$container = create_container('skeleton.php', 'combat_log_list.php');
 	$container['message'] = 'You must select at least one combat log!';
 	$container['action'] = $var['old_action'];
 	forward($container);
 }
 
-$submitAction = $_REQUEST['action'];
-$logIDs = array_keys($_REQUEST['id']);
+$submitAction = Request::get('action');
+$logIDs = array_keys(Request::getArray('id'));
 
 // Do we need to save any logs (or delete any saved logs)?
 if ($submitAction == 'Save' || $submitAction == 'Delete') {
@@ -31,7 +31,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 							: '') . '
 						)
 					LIMIT ' . count($logIDs));
-	} else if ($submitAction == 'Delete') {
+	} elseif ($submitAction == 'Delete') {
 		$db->query('DELETE FROM player_saved_combat_logs
 					WHERE log_id IN (' . $db->escapeArray($logIDs) . ')
 						AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
@@ -44,7 +44,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 	$container['message'] = $submitAction . 'd ' . $db->getChangedRows() . ' new logs.';
 	$container['action'] = $var['old_action'];
 	forward($container);
-} else if ($submitAction == 'View') {
+} elseif ($submitAction == 'View') {
 	$container = create_container('skeleton.php', 'combat_log_viewer.php');
 	$container['log_ids'] = $logIDs;
 	sort($container['log_ids']);

@@ -73,7 +73,7 @@ $player->actionTaken('BuyDrink', array(
 //see if the player blacksout or not
 if (isset($num_drinks) && $num_drinks > 15) {
 	$percent = mt_rand(1, 25);
-	$lostCredits = round($player->getCredits() * $percent / 100);
+	$lostCredits = IRound($player->getCredits() * $percent / 100);
 
 	$message .= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lostCredits) . ' credits</span><br />';
 
