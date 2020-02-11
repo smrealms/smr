@@ -13,7 +13,7 @@ class AdminPermissions {
 		5  => ['Create Announcement', 'announcement_create.php', 3],
 		6  => ['Send Message', 'admin_message_send_select.php', 3],
 		7  => ['View Reported Messages', 'notify_view.php', 1],
-		8  => ['Edit Account', 'account_edit.php', 1],
+		8  => ['Edit Account', 'account_edit_search.php', 1],
 		9  => ['Multi Tools', 'ip_view.php', 1],
 		12 => ['Cheating Ship Check', 'ship_check.php', 1],
 		16 => ['Log Console', 'log_console.php', 1],
