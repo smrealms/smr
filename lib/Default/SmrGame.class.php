@@ -6,30 +6,30 @@ class GameNotFoundException extends Exception {}
 class SmrGame {
 	protected static $CACHE_GAMES = array();
 
-	protected $db;
+	protected SmrMySqlDatabase $db;
 
-	protected $gameID;
-	protected $name;
-	protected $description;
-	protected $joinTime;
-	protected $startTime;
-	protected $endTime;
-	protected $maxPlayers;
-	protected $maxTurns;
-	protected $startTurnHours;
-	protected $gameTypeID;
-	protected $creditsNeeded;
-	protected $gameSpeed;
-	protected $enabled;
-	protected $ignoreStats;
-	protected $allianceMaxPlayers;
-	protected $allianceMaxVets;
-	protected $startingCredits;
+	protected int $gameID;
+	protected string $name;
+	protected string $description;
+	protected int $joinTime;
+	protected int $startTime;
+	protected int $endTime;
+	protected int $maxPlayers;
+	protected int $maxTurns;
+	protected int $startTurnHours;
+	protected int $gameTypeID;
+	protected int $creditsNeeded;
+	protected float $gameSpeed;
+	protected bool $enabled;
+	protected bool $ignoreStats;
+	protected int $allianceMaxPlayers;
+	protected int $allianceMaxVets;
+	protected int $startingCredits;
 
-	protected $totalPlayers;
+	protected int $totalPlayers;
 
-	protected $hasChanged = false;
-	protected $isNew = false;
+	protected bool $hasChanged = false;
+	protected bool $isNew = false;
 
 	const GAME_TYPE_DEFAULT = 0;
 	const GAME_TYPE_HUNTER_WARS = 3;
@@ -46,7 +46,7 @@ class SmrGame {
 		self::GAME_TYPE_NEWBIE => 'Newbie',
 	];
 
-	public static function getGame($gameID, $forceUpdate = false) {
+	public static function getGame(int $gameID, bool $forceUpdate = false) : SmrGame {
 		if ($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID);
 			self::$CACHE_GAMES[$gameID] = $g;
@@ -54,13 +54,13 @@ class SmrGame {
 		return self::$CACHE_GAMES[$gameID];
 	}
 
-	public static function saveGames() {
+	public static function saveGames() : void {
 		foreach (self::$CACHE_GAMES as $game) {
 			$game->save();
 		}
 	}
 
-	public static function createGame($gameID) {
+	public static function createGame(int $gameID) : SmrGame {
 		if (!isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID, true);
 			self::$CACHE_GAMES[$gameID] = $g;
@@ -68,7 +68,7 @@ class SmrGame {
 		return self::$CACHE_GAMES[$gameID];
 	}
 
-	protected function __construct($gameID, $create = false) {
+	protected function __construct(int $gameID, bool $create = false) {
 		$this->db = new SmrMySqlDatabase();
 
 		$this->db->query('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
@@ -99,7 +99,7 @@ class SmrGame {
 		}
 	}
 
-	public function save() {
+	public function save() : void {
 		if ($this->isNew) {
 			$this->db->query('INSERT INTO game (game_id,game_name,game_description,join_time,start_time,end_time,max_players,max_turns,start_turns,game_type,credits_needed,game_speed,enabled,ignore_stats,alliance_max_players,alliance_max_vets,starting_credits)
 									VALUES
@@ -143,15 +143,15 @@ class SmrGame {
 		$this->hasChanged = false;
 	}
 
-	public function getGameID() {
+	public function getGameID() : int {
 		return $this->gameID;
 	}
 
-	public function getName() {
+	public function getName() : string {
 		return $this->name;
 	}
 
-	public function setName($name) {
+	public function setName(string $name) : void {
 		if ($this->name === $name) {
 			return;
 		}
@@ -159,11 +159,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getDescription() {
+	public function getDescription() : string {
 		return $this->description;
 	}
 
-	public function setDescription($description) {
+	public function setDescription(string $description) : void {
 		if ($this->description === $description) {
 			return;
 		}
@@ -171,7 +171,7 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function hasStarted() {
+	public function hasStarted() : bool {
 		return TIME >= $this->getStartTime();
 	}
 
@@ -179,11 +179,11 @@ class SmrGame {
 	 * Returns the epoch time when the game starts,
 	 * i.e. when players can move, turns are gained, etc.
 	 */
-	public function getStartTime() {
+	public function getStartTime() : int {
 		return $this->startTime;
 	}
 
-	public function setStartTime($startTime) {
+	public function setStartTime(int $startTime) : void {
 		if ($this->startTime === $startTime) {
 			return;
 		}
@@ -194,11 +194,11 @@ class SmrGame {
 	/**
 	 * Returns the epoch time when players can begin to join the game.
 	 */
-	public function getJoinTime() {
+	public function getJoinTime() : int {
 		return $this->joinTime;
 	}
 
-	public function setJoinTime($joinTime) {
+	public function setJoinTime(int $joinTime) : void {
 		if ($this->joinTime === $joinTime) {
 			return;
 		}
@@ -206,18 +206,18 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function hasEnded() {
+	public function hasEnded() : bool {
 		return $this->getEndTime() < TIME;
 	}
 
 	/**
 	 * Returns the epoch time when the game ends.
 	 */
-	public function getEndTime() {
+	public function getEndTime() : int {
 		return $this->endTime;
 	}
 
-	public function setEndTime($endTime) {
+	public function setEndTime(int $endTime) : void {
 		if ($this->endTime === $endTime) {
 			return;
 		}
@@ -225,11 +225,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getMaxPlayers() {
+	public function getMaxPlayers() : int {
 		return $this->maxPlayers;
 	}
 
-	public function setMaxPlayers($maxPlayers) {
+	public function setMaxPlayers(int $maxPlayers) : void {
 		if ($this->maxPlayers === $maxPlayers) {
 			return;
 		}
@@ -237,11 +237,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getMaxTurns() {
+	public function getMaxTurns() : int {
 		return $this->maxTurns;
 	}
 
-	public function setMaxTurns($int) {
+	public function setMaxTurns(int $int) : void {
 		if ($this->maxTurns === $int) {
 			return;
 		}
@@ -249,11 +249,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getStartTurnHours() {
+	public function getStartTurnHours() : int {
 		return $this->startTurnHours;
 	}
 
-	public function setStartTurnHours($int) {
+	public function setStartTurnHours(int $int) : void {
 		if ($this->startTurnHours === $int) {
 			return;
 		}
@@ -261,11 +261,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getGameType() {
+	public function getGameType() : string {
 		return self::GAME_TYPES[$this->gameTypeID];
 	}
 
-	public function setGameTypeID($gameTypeID) {
+	public function setGameTypeID(int $gameTypeID) : void {
 		if ($this->gameTypeID === $gameTypeID) {
 			return;
 		}
@@ -273,11 +273,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getCreditsNeeded() {
+	public function getCreditsNeeded() : int {
 		return $this->creditsNeeded;
 	}
 
-	public function setCreditsNeeded($creditsNeeded) {
+	public function setCreditsNeeded(int $creditsNeeded) : void {
 		if ($this->creditsNeeded === $creditsNeeded) {
 			return;
 		}
@@ -285,11 +285,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getGameSpeed() {
+	public function getGameSpeed() : float {
 		return $this->gameSpeed;
 	}
 
-	public function setGameSpeed($gameSpeed) {
+	public function setGameSpeed(float $gameSpeed) : void {
 		if ($this->gameSpeed === $gameSpeed) {
 			return;
 		}
@@ -297,11 +297,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function isEnabled() {
+	public function isEnabled() : bool {
 		return $this->enabled;
 	}
 
-	public function setEnabled($bool) {
+	public function setEnabled(bool $bool) : void {
 		if ($this->enabled === $bool) {
 			return;
 		}
@@ -309,11 +309,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function isIgnoreStats() {
+	public function isIgnoreStats() : bool {
 		return $this->ignoreStats;
 	}
 
-	public function setIgnoreStats($bool) {
+	public function setIgnoreStats(bool $bool) : void {
 		if ($this->ignoreStats === $bool) {
 			return;
 		}
@@ -321,11 +321,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getAllianceMaxPlayers() {
+	public function getAllianceMaxPlayers() : int {
 		return $this->allianceMaxPlayers;
 	}
 
-	public function setAllianceMaxPlayers($int) {
+	public function setAllianceMaxPlayers(int $int) : void {
 		if ($this->allianceMaxPlayers === $int) {
 			return;
 		}
@@ -333,11 +333,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getAllianceMaxVets() {
+	public function getAllianceMaxVets() : int {
 		return $this->allianceMaxVets;
 	}
 
-	public function setAllianceMaxVets($int) {
+	public function setAllianceMaxVets(int $int) : void {
 		if ($this->allianceMaxVets === $int) {
 			return;
 		}
@@ -345,11 +345,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getStartingCredits() {
+	public function getStartingCredits() : int {
 		return $this->startingCredits;
 	}
 
-	public function setStartingCredits($int) {
+	public function setStartingCredits(int $int) : void {
 		if ($this->startingCredits === $int) {
 			return;
 		}
@@ -357,7 +357,7 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getTotalPlayers() {
+	public function getTotalPlayers() : int {
 		if (!isset($this->totalPlayers)) {
 			$this->db->query('SELECT count(*) FROM player WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()));
 			$this->db->nextRecord();
@@ -366,23 +366,23 @@ class SmrGame {
 		return $this->totalPlayers;
 	}
 
-	public function getNumberOfGalaxies() {
+	public function getNumberOfGalaxies() : int {
 		return count(SmrGalaxy::getGameGalaxies($this->getGameID()));
 	}
 
-	public function equals(SmrGame $otherGame) {
+	public function equals(SmrGame $otherGame) : bool {
 		return $otherGame->getGameID() == $this->getGameID();
 	}
 
 	// Convenience function for printing the game name with id
-	public function getDisplayName() {
+	public function getDisplayName() : string {
 		return $this->getName() . " (" . $this->getGameID() . ")";
 	}
 
 	/**
 	 * Set the starting political relations between races.
 	 */
-	public function setStartingRelations($relations) {
+	public function setStartingRelations(int $relations) : void {
 		if ($relations < MIN_GLOBAL_RELATIONS || $relations > MAX_GLOBAL_RELATIONS) {
 			throw new Exception('Invalid relations: ' . $relations);
 		}
