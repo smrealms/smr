@@ -3,18 +3,26 @@
 class Plotter {
 
 	public static function getX($xType, $X, $gameID, $player = null) {
+		// Special case for Location categories (i.e. Bar, HQ, SafeFed)
+		if (!is_numeric($X)) {
+			if ($xType != 'Locations') {
+				throw new Exception('Non-numeric X only exists for Locations');
+			}
+			return $X;
+		}
+
+		// In all other cases, X is a numeric ID
+		$X = (int)$X;
+
 		switch ($xType) {
 			case 'Technology':
 				return Globals::getHardwareTypes($X);
 			case 'Ships':
 				return AbstractSmrShip::getBaseShip(Globals::getGameType($gameID), $X);
 			case 'Weapons':
-				return SmrWeaponType::getWeaponType((int)$X);
+				return SmrWeaponType::getWeaponType($X);
 			case 'Locations':
-				if (is_numeric($X)) {
-					return SmrLocation::getLocation($X);
-				}
-				return $X;
+				return SmrLocation::getLocation($X);
 			case 'Sell Goods':
 			case 'Buy Goods':
 				// $X is the good ID
