@@ -244,6 +244,9 @@ class SmrAlliance {
 		$this->imgSrc = htmlspecialchars($url);
 	}
 
+	/**
+	 * Get the total credits in the alliance bank account.
+	 */
 	public function getAccount() {
 		return $this->account;
 	}
