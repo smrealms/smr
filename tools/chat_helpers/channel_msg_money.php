@@ -10,7 +10,7 @@ function shared_channel_msg_money($player) {
 	$result = array();
 
 	// get money from AA
-	$result[] = 'The alliance has ' . number_format($player->getAlliance(true)->getAccount()) . ' credits in the bank account.';
+	$result[] = 'The alliance has ' . number_format($player->getAlliance(true)->getBank()) . ' credits in the bank account.';
 
 	// get money on ships and personal bank accounts
 	$db = new SmrMySqlDatabase();

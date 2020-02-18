@@ -23,7 +23,7 @@ if ($action == 'Deposit') {
 	}
 
 	$player->decreaseCredits($amount);
-	$allianceCredits = $alliance->getAccount() + $amount;
+	$allianceCredits = $alliance->getBank() + $amount;
 	//too much money?
 	if ($allianceCredits > 4294967295) {
 		$overflow = $allianceCredits - 4294967295;
@@ -32,12 +32,12 @@ if ($action == 'Deposit') {
 		$message .= ' (Account is Full)';
 		$amount -= $overflow;
 	}
-	$alliance->setAccount($allianceCredits);
+	$alliance->setBank($allianceCredits);
 	// log action
 	$account->log(LOG_TYPE_BANK, 'Deposits ' . $amount . ' credits in alliance account of ' . $alliance->getAllianceName(), $player->getSectorID());
 } else {
 	$action = 'Payment';
-	if ($alliance->getAccount() < $amount) {
+	if ($alliance->getBank() < $amount) {
 		create_error('Your alliance isn\'t soo rich!');
 	}
 	$query = '';
@@ -82,7 +82,7 @@ if ($action == 'Deposit') {
 	}
 
 	$player->increaseCredits($amount);
-	$allianceCredits = $alliance->getAccount() - $amount;
+	$allianceCredits = $alliance->getBank() - $amount;
 	//too much money?
 	if ($player->getCredits() > 4294967295) {
 		$overflow = $player->getCredits() - 4294967295;
@@ -90,7 +90,7 @@ if ($action == 'Deposit') {
 		$player->decreaseCredits($overflow);
 		$amount += $overflow;
 	}
-	$alliance->setAccount($allianceCredits);
+	$alliance->setBank($allianceCredits);
 
 	// log action
 	$account->log(LOG_TYPE_BANK, 'Takes ' . $amount . ' credits from alliance account of ' . $alliance->getAllianceName(), $player->getSectorID());
