@@ -12,7 +12,7 @@ class SmrAlliance {
 	protected $description;
 	protected $password;
 	protected $leaderID;
-	protected $account;
+	protected $bank;
 	protected $kills;
 	protected $deaths;
 	protected $motd;
@@ -76,7 +76,7 @@ class SmrAlliance {
 			$this->password = stripslashes($this->db->getField('alliance_password'));
 			$this->description = $this->db->getField('alliance_description');
 			$this->leaderID = $this->db->getInt('leader_id');
-			$this->account = $this->db->getInt('alliance_account');
+			$this->bank = $this->db->getInt('alliance_account');
 			$this->kills = $this->db->getInt('alliance_kills');
 			$this->deaths = $this->db->getInt('alliance_deaths');
 			$this->motd = $this->db->getField('mod');
@@ -244,12 +244,15 @@ class SmrAlliance {
 		$this->imgSrc = htmlspecialchars($url);
 	}
 
-	public function getAccount() {
-		return $this->account;
+	/**
+	 * Get the total credits in the alliance bank account.
+	 */
+	public function getBank() {
+		return $this->bank;
 	}
 
-	public function setAccount($credits) {
-		$this->account = $credits;
+	public function setBank($credits) {
+		$this->bank = $credits;
 	}
 
 	/**
@@ -384,7 +387,7 @@ class SmrAlliance {
 
 	public function update() {
 		$this->db->query('UPDATE alliance SET alliance_password = ' . $this->db->escapeString($this->password) . ',
-								alliance_account = '.$this->db->escapeNumber($this->account) . ',
+								alliance_account = '.$this->db->escapeNumber($this->bank) . ',
 								alliance_description = ' . $this->db->escapeString($this->description, true, true) . ',
 								`mod` = ' . $this->db->escapeString($this->motd) . ',
 								img_src = ' . $this->db->escapeString($this->imgSrc) . ',

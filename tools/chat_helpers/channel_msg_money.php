@@ -10,14 +10,10 @@ function shared_channel_msg_money($player) {
 	$result = array();
 
 	// get money from AA
-	$db = new SmrMySqlDatabase();
-	$db->query('SELECT alliance_account FROM alliance WHERE alliance_id = ' . $player->getAllianceID() . ' AND game_id = ' . $player->getGameID());
-
-	if ($db->nextRecord()) {
-		$result[] = 'The alliance has ' . number_format($db->getInt('alliance_account')) . ' credits in the bank account.';
-	}
+	$result[] = 'The alliance has ' . number_format($player->getAlliance(true)->getBank()) . ' credits in the bank account.';
 
 	// get money on ships and personal bank accounts
+	$db = new SmrMySqlDatabase();
 	$db->query('SELECT sum(credits) as total_onship, sum(bank) as total_onbank FROM player WHERE alliance_id = ' . $player->getAllianceID() . ' AND game_id = ' . $player->getGameID());
 
 	if ($db->nextRecord()) {
