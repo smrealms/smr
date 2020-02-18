@@ -64,8 +64,13 @@
 			</a>
 			<br />
 			You have <span class="yellow"><?php echo number_format($ThisPlayer->getBank()); ?></span> credits in your personal account.
-			<br />
-			Your alliance account contains <span class="yellow"><?php echo number_format($ThisPlayer->getAlliance()->getAccount()); ?></span> credits.
+			<?php
+			if ($ThisPlayer->hasAlliance()) { ?>
+				<br />
+				Your alliance account contains <span class="yellow"><?php echo number_format($ThisPlayer->getAlliance()->getAccount()); ?></span> credits.
+			<?php
+			} ?>
+				
 		</td>
 
 
