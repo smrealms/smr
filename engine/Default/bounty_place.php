@@ -9,7 +9,7 @@ if ($sector->hasHQ()) {
 	create_ug_menu();
 }
 
-$container = create_container('skeleton.php', 'bounty_place_confirm.php');
+$container = create_container('bounty_place_processing.php');
 transfer('LocationID');
 $template->assign('SubmitHREF', SmrSession::getNewHREF($container));
 

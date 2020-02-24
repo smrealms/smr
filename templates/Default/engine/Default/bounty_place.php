@@ -1,7 +1,7 @@
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
 	Select the player you want to add the bounty to<br />
-	<select name="player_id" size="1" class="InputFields">
-		<option value="0">[Please Select]</option>
+	<select name="player_id" required size="1" class="InputFields">
+		<option value="" disabled selected>[Please Select]</option>
 
 		<?php
 		foreach ($BountyPlayers as $id => $name) { ?>
