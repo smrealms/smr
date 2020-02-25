@@ -191,13 +191,6 @@ function bbifyMessage($message, $noLinks = false) {
 	return $message;
 }
 
-function create_menu($menu) {
-	global $template;
-	$return = '<span class="noWrap">' . implode('</span> | <span class="noWrap">', $menu) . '</span>';
-	$template->unassign('MenuItems');
-	$template->assign('MenuBar', $return);
-}
-
 function create_table() {
  	return '<table class="standard">';
 }

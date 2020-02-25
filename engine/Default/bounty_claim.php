@@ -2,12 +2,10 @@
 
 $template->assign('PageTopic', 'Bounty Payout');
 
-require_once(get_file_loc('menu_hq.inc'));
+Menu::headquarters();
 if ($sector->hasHQ()) {
-	create_hq_menu();
 	$bounties = $player->getClaimableBounties('HQ');
 } else {
-	create_ug_menu();
 	$bounties = $player->getClaimableBounties('UG');
 }
 
