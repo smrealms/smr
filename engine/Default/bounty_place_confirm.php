@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$template->assign('PageTopic', 'Placing a bounty');
+$template->assign('PageTopic', 'Place a Bounty');
 
 require_once(get_file_loc('menu_hq.inc'));
 if ($sector->hasHQ()) {
