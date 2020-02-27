@@ -27,7 +27,7 @@ if ($player->hasAlliance()) {
 					t.amount > us.amount
 					OR (
 						t.amount = us.amount
-						AND alliance_name <= ' . $db->escapeString($player->getAllianceName()) . '
+						AND alliance_name <= ' . $db->escapeString($player->getAlliance()->getAllianceName()) . '
 					)
 				)');
 	$db->nextRecord();

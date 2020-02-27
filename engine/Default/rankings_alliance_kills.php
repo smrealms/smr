@@ -16,7 +16,7 @@ if ($player->hasAlliance()) {
 					alliance_kills > '.$db->escapeNumber($player->getAlliance()->getKills()) . '
 					OR (
 						alliance_kills = '.$db->escapeNumber($player->getAlliance()->getKills()) . '
-						AND alliance_name <= ' . $db->escapeString($player->getAllianceName()) . '
+						AND alliance_name <= ' . $db->escapeString($player->getAlliance()->getAllianceName()) . '
 					)
 				)');
 	$db->nextRecord();

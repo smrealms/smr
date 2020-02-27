@@ -48,7 +48,7 @@ if ($alliance->getAllianceID() == $player->getAllianceID()) {
 	$role_id = $player->getAllianceRole($alliance->getAllianceID());
 	$query = 'role_id = ' . $db->escapeNumber($role_id);
 } else {
-	$query = 'role = ' . $db->escapeString($player->getAllianceName());
+	$query = 'role = ' . $db->escapeString($player->getAlliance()->getAllianceName());
 }
 
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND ' . $query);
