@@ -74,7 +74,7 @@ if (!empty($BankTransactions)) { ?>
 				} ?>
 				<tr>
 					<th colspan="5" class="right">Ending Balance</th>
-					<td class="bold right"><?php echo number_format($Alliance->getAccount()); ?></td><?php
+					<td class="bold right"><?php echo number_format($Alliance->getBank()); ?></td><?php
 					if ($CanExempt) {
 						?><td><input class="submit" type="submit" name="action" value="Make Exempt"></td><?php
 					} ?>
