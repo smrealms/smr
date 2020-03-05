@@ -8,7 +8,7 @@ if (isset($GameID)) { ?>
 		<span class="smallFont smallCaps red">INVISIBLE</span><br /><?php
 	} ?>
 	<br />
-	Race : <a href="<?php echo Globals::getCouncilHREF($ThisPlayer->getRaceID()); ?>"><?php echo $ThisPlayer->getColouredRaceName($ThisPlayer->getRaceID()); ?></a><br />
+	Race : <?php echo $ThisPlayer->getColouredRaceName($ThisPlayer->getRaceID(), true); ?><br />
 	Turns : <span id="turns">
 		<span class="<?php echo $ThisPlayer->getTurnsColor(); ?>"><?php
 				echo $ThisPlayer->getTurns() . '/' . $ThisPlayer->getMaxTurns();

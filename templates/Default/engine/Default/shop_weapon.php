@@ -21,7 +21,7 @@ if ($ThisLocation->isWeaponSold()) { ?>
 					<td class="sort_shield"><?php echo $Weapon->getShieldDamage(); ?></td>
 					<td class="sort_armor"><?php echo $Weapon->getArmourDamage(); ?></td>
 					<td class="sort_acc"><?php echo $Weapon->getBaseAccuracy(); ?>%</td>
-					<td class="sort_race"><?php echo $ThisPlayer->getColouredRaceName($Weapon->getRaceID()); ?></td>
+					<td class="sort_race"><?php echo $ThisPlayer->getColouredRaceName($Weapon->getRaceID(), true); ?></td>
 					<td class="sort_power"><?php echo $Weapon->getPowerLevel(); ?></td>
 					<td class="sort_cost"><?php echo $Weapon->getCost(); ?></td>
 					<td><a href="<?php echo $Weapon->getBuyHREF($ThisLocation); ?>" class="submitStyle">Buy</a></td>

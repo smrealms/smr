@@ -14,10 +14,6 @@ if ($tradeable !== true) {
 $template->assign('PageTopic', 'Port In Sector #' . $player->getSectorID());
 $template->assign('Port', $port);
 
-$container = create_container('skeleton.php', 'council_list.php');
-$container['race_id'] = $port->getRaceID();
-$template->assign('CouncilHREF', SmrSession::getNewHREF($container));
-
 $account->log(LOG_TYPE_TRADING, 'Player examines port', $player->getSectorID());
 $searchedByFeds = false;
 

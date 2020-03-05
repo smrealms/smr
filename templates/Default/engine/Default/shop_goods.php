@@ -1,4 +1,4 @@
-<p>This is a level <?php echo $Port->getLevel(); ?> port run by the <a href="<?php echo $CouncilHREF; ?>"><?php echo $ThisPlayer->getColouredRaceName($Port->getRaceID()); ?></a>.<br />
+<p>This is a level <?php echo $Port->getLevel(); ?> port run by the <?php echo $ThisPlayer->getColouredRaceName($Port->getRaceID(), true); ?>.<br />
 Your relations with them are <?php echo get_colored_text($ThisPlayer->getRelation($Port->getRaceID())); ?>.</p>
 <br />
 
