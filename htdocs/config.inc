@@ -167,6 +167,17 @@ function IRound(float $val) : int {
 	return (int)round($val);
 }
 
+/**
+ * Generate a cryptographically strong random hexadecimal string.
+ * The requested length must be a multiple of 2.
+ */
+function random_string(int $length) : string {
+	if ($length % 2 != 0) {
+		throw new Exception('Length must be a multiple of 2!');
+	}
+	return bin2hex(random_bytes($length / 2));
+}
+
 // Defines all constants
 require_once('config.php');
 
