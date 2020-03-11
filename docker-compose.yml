@@ -60,8 +60,7 @@ services:
             - backend
         environment:
             - POSTFIX_myhostname=hostname.local
-            - OPENDKIM_DOMAINS=smrealms.de
-            - OPENDKIM_SELECTOR=key1
+            - OPENDKIM_DOMAINS=smrealms.de=key1
         labels:
             - "traefik.enable=false"
         volumes:
