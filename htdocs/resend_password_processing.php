@@ -1,13 +1,11 @@
 <?php declare(strict_types=1);
 try {
+	require_once('config.inc');
 
 	if (empty(Request::get('email'))) {
 		header('Location: /error.php?msg=' . rawurlencode('You must specify an e-mail address!'));
 		exit;
 	}
-
-	require_once('config.inc');
-	require_once(LIB . 'Default/smr.inc');
 
 	// get this user from db
 	$account = SmrAccount::getAccountByEmail(Request::get('email'));
