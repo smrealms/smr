@@ -152,7 +152,7 @@ class SmrGame {
 	}
 
 	public function setName(string $name) : void {
-		if ($this->name === $name) {
+		if (!$this->isNew && $this->name === $name) {
 			return;
 		}
 		$this->name = $name;
@@ -164,7 +164,7 @@ class SmrGame {
 	}
 
 	public function setDescription(string $description) : void {
-		if ($this->description === $description) {
+		if (!$this->isNew && $this->description === $description) {
 			return;
 		}
 		$this->description = $description;
@@ -184,7 +184,7 @@ class SmrGame {
 	}
 
 	public function setStartTime(int $startTime) : void {
-		if ($this->startTime === $startTime) {
+		if (!$this->isNew && $this->startTime === $startTime) {
 			return;
 		}
 		$this->startTime = $startTime;
@@ -199,7 +199,7 @@ class SmrGame {
 	}
 
 	public function setJoinTime(int $joinTime) : void {
-		if ($this->joinTime === $joinTime) {
+		if (!$this->isNew && $this->joinTime === $joinTime) {
 			return;
 		}
 		$this->joinTime = $joinTime;
@@ -218,7 +218,7 @@ class SmrGame {
 	}
 
 	public function setEndTime(int $endTime) : void {
-		if ($this->endTime === $endTime) {
+		if (!$this->isNew && $this->endTime === $endTime) {
 			return;
 		}
 		$this->endTime = $endTime;
@@ -230,7 +230,7 @@ class SmrGame {
 	}
 
 	public function setMaxPlayers(int $maxPlayers) : void {
-		if ($this->maxPlayers === $maxPlayers) {
+		if (!$this->isNew && $this->maxPlayers === $maxPlayers) {
 			return;
 		}
 		$this->maxPlayers = $maxPlayers;
@@ -242,7 +242,7 @@ class SmrGame {
 	}
 
 	public function setMaxTurns(int $int) : void {
-		if ($this->maxTurns === $int) {
+		if (!$this->isNew && $this->maxTurns === $int) {
 			return;
 		}
 		$this->maxTurns = $int;
@@ -254,7 +254,7 @@ class SmrGame {
 	}
 
 	public function setStartTurnHours(int $int) : void {
-		if ($this->startTurnHours === $int) {
+		if (!$this->isNew && $this->startTurnHours === $int) {
 			return;
 		}
 		$this->startTurnHours = $int;
@@ -266,7 +266,7 @@ class SmrGame {
 	}
 
 	public function setGameTypeID(int $gameTypeID) : void {
-		if ($this->gameTypeID === $gameTypeID) {
+		if (!$this->isNew && $this->gameTypeID === $gameTypeID) {
 			return;
 		}
 		$this->gameTypeID = $gameTypeID;
@@ -278,7 +278,7 @@ class SmrGame {
 	}
 
 	public function setCreditsNeeded(int $creditsNeeded) : void {
-		if ($this->creditsNeeded === $creditsNeeded) {
+		if (!$this->isNew && $this->creditsNeeded === $creditsNeeded) {
 			return;
 		}
 		$this->creditsNeeded = $creditsNeeded;
@@ -290,7 +290,7 @@ class SmrGame {
 	}
 
 	public function setGameSpeed(float $gameSpeed) : void {
-		if ($this->gameSpeed === $gameSpeed) {
+		if (!$this->isNew && $this->gameSpeed === $gameSpeed) {
 			return;
 		}
 		$this->gameSpeed = $gameSpeed;
@@ -302,7 +302,7 @@ class SmrGame {
 	}
 
 	public function setEnabled(bool $bool) : void {
-		if ($this->enabled === $bool) {
+		if (!$this->isNew && $this->enabled === $bool) {
 			return;
 		}
 		$this->enabled = $bool;
@@ -314,7 +314,7 @@ class SmrGame {
 	}
 
 	public function setIgnoreStats(bool $bool) : void {
-		if ($this->ignoreStats === $bool) {
+		if (!$this->isNew && $this->ignoreStats === $bool) {
 			return;
 		}
 		$this->ignoreStats = $bool;
@@ -326,7 +326,7 @@ class SmrGame {
 	}
 
 	public function setAllianceMaxPlayers(int $int) : void {
-		if ($this->allianceMaxPlayers === $int) {
+		if (!$this->isNew && $this->allianceMaxPlayers === $int) {
 			return;
 		}
 		$this->allianceMaxPlayers = $int;
@@ -338,7 +338,7 @@ class SmrGame {
 	}
 
 	public function setAllianceMaxVets(int $int) : void {
-		if ($this->allianceMaxVets === $int) {
+		if (!$this->isNew && $this->allianceMaxVets === $int) {
 			return;
 		}
 		$this->allianceMaxVets = $int;
@@ -350,7 +350,7 @@ class SmrGame {
 	}
 
 	public function setStartingCredits(int $int) : void {
-		if ($this->startingCredits === $int) {
+		if (!$this->isNew && $this->startingCredits === $int) {
 			return;
 		}
 		$this->startingCredits = $int;
