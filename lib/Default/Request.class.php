@@ -111,4 +111,19 @@ class Request {
 		return self::getInt($index, $default);
 	}
 
+	/**
+	 * Like getVar, but returns an array of ints instead of a string.
+	 */
+	public static function getVarIntArray(string $index, array $default = null) : array {
+		global $var;
+		if (isset($var[$index])) {
+			if (self::has($index)) {
+				throw new Exception('Index "' . $index . '" must not be in both $var and $_REQUEST!');
+			}
+			return $var[$index];
+		}
+		return self::getIntArray($index, $default);
+	}
+
+
 }

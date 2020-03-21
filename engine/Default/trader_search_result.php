@@ -1,10 +1,8 @@
 <?php declare(strict_types=1);
 
-$player_id = SmrSession::getRequestVar('player_id');
+$player_id = SmrSession::getRequestVarInt('player_id');
 $player_name = SmrSession::getRequestVar('player_name');
-if (!is_numeric($player_id) && !empty($player_id)) {
-	create_error('Please enter only numbers!');
-}
+
 if (empty($player_name) && empty($player_id)) {
 	create_error('You must specify either a player name or ID!');
 }

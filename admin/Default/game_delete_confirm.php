@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic', 'Delete Game - Confirmation');
 
-SmrSession::getRequestVar('delete_game_id');
+SmrSession::getRequestVarInt('delete_game_id');
 $template->assign('Game', SmrGame::getGame($var['delete_game_id']));
 
 $container = create_container('game_delete_processing.php');

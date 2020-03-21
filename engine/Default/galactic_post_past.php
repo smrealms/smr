@@ -3,8 +3,11 @@
 $template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
 Menu::galactic_post();
 
+$container = create_container('skeleton.php', 'galactic_post_past.php');
+$template->assign('SelectGameHREF', SmrSession::getNewHREF($container));
+
 // View past editions of current game by default
-$selectedGameID = SmrSession::getRequestVar('selected_game_id', $player->getGameID());
+$selectedGameID = SmrSession::getRequestVarInt('selected_game_id', $player->getGameID());
 $template->assign('SelectedGame', $selectedGameID);
 
 // Get the list of games with published papers

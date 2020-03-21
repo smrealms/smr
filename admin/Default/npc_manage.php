@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic', 'Manage NPCs');
 
-$selectedGameID = SmrSession::getRequestVar('selected_game_id');
+$selectedGameID = SmrSession::getRequestVarInt('selected_game_id', 0);
 
 $container = create_container('skeleton.php', 'npc_manage.php');
 $template->assign('SelectGameHREF', SmrSession::getNewHREF($container));
@@ -11,7 +11,7 @@ $games = [];
 $db->query('SELECT game_id FROM game WHERE end_time > ' . $db->escapeNumber(TIME) . ' AND enabled = ' . $db->escapeBoolean(true) . ' ORDER BY game_id DESC');
 while ($db->nextRecord()) {
 	$gameID = $db->getInt('game_id');
-	if (!isset($selectedGameID)) {
+	if (empty($selectedGameID)) {
 		$selectedGameID = $gameID;
 	}
 	$games[] = [

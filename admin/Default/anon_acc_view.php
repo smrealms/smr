@@ -6,8 +6,8 @@ $template->assign('PageTopic', 'View Anonymous Account Info');
 $container = create_container('skeleton.php', 'anon_acc_view_select.php');
 $template->assign('BackHREF', SmrSession::getNewHREF($container));
 
-$anonID = SmrSession::getRequestVar('anon_account');
-$gameID = SmrSession::getRequestVar('view_game_id');
+$anonID = SmrSession::getRequestVarInt('anon_account');
+$gameID = SmrSession::getRequestVarInt('view_game_id');
 
 $db->query('SELECT *
 			FROM anon_bank_transactions

@@ -1,12 +1,8 @@
 <?php declare(strict_types=1);
 
-$account_num = SmrSession::getRequestVar('account_num');
-if (!is_numeric($account_num)) {
-	create_error('Account number must be a number!');
-}
-SmrSession::getRequestVar('password');
-SmrSession::getRequestVar('maxValue');
-SmrSession::getRequestVar('minValue');
+$account_num = SmrSession::getRequestVarInt('account_num');
+SmrSession::getRequestVarInt('maxValue', 0);
+SmrSession::getRequestVarInt('minValue', 0);
 
 $db->query('SELECT *
 			FROM anon_bank
@@ -16,6 +12,7 @@ $db->query('SELECT *
 // if they didn't come from the creation screen we need to check if the pw is correct
 if ($db->nextRecord()) {
 	if (!isset($var['allowed']) || $var['allowed'] != 'yes') {
+		SmrSession::getRequestVar('password');
 		if ($db->getField('password') != $var['password']) {
 			create_error('Invalid password!');
 		}
@@ -27,9 +24,7 @@ if ($db->nextRecord()) {
 $balance = $db->getInt('amount');
 $template->assign('Balance', $balance);
 
-if (isset($var['maxValue'])
-	&& is_numeric($var['maxValue'])
-	&& $var['maxValue'] > 0) {
+if ($var['maxValue'] > 0) {
 	$maxValue = $var['maxValue'];
 } else {
 	$db->query('SELECT MAX(transaction_id) FROM anon_bank_transactions
@@ -44,10 +39,7 @@ if (isset($var['maxValue'])
 	$minValue = max(1, $maxValue - 5);
 }
 
-if (isset($var['minValue'])
-	&& $var['minValue'] <= $maxValue
-	&& $var['minValue'] > 0
-	&& is_numeric($var['minValue'])) {
+if ($var['minValue'] <= $maxValue && $var['minValue'] > 0) {
 	$minValue = $var['minValue'];
 }
 

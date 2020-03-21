@@ -2,6 +2,9 @@
 
 $template->assign('PageTopic', 'Manage Galactic Post Editors');
 
+$container = create_container('skeleton.php', 'manage_post_editors.php');
+$template->assign('SelectGameHREF', SmrSession::getNewHREF($container));
+
 // Get the list of active games ordered by reverse start date
 $activeGames = array();
 $db->query('SELECT game_id, game_name FROM game WHERE join_time < ' . $db->escapeNumber(TIME) . ' AND end_time > ' . $db->escapeNumber(TIME) . ' ORDER BY start_time DESC');
@@ -13,7 +16,7 @@ $template->assign('ActiveGames', $activeGames);
 
 if ($activeGames) {
 	// Set the selected game (or the first in the list if not selected yet)
-	$selectedGameID = SmrSession::getRequestVar('selected_game_id', $activeGames[0]['game_id']);
+	$selectedGameID = SmrSession::getRequestVarInt('selected_game_id', $activeGames[0]['game_id']);
 	$template->assign('SelectedGame', $selectedGameID);
 
 	// Get the list of current editors for the selected game

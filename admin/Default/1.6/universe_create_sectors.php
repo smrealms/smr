@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-SmrSession::getRequestVar('game_id');
-SmrSession::getRequestVar('gal_on', 1);
+SmrSession::getRequestVarInt('game_id');
+SmrSession::getRequestVarInt('gal_on', 1);
 
 $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 if (empty($galaxies)) {
@@ -40,7 +40,6 @@ if (isset($var['message'])) {
 
 $container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
 transfer('game_id');
-transfer('gal_on');
 $template->assign('JumpGalaxyHREF', SmrSession::getNewHref($container));
 
 $container['url'] = '1.6/universe_create_save_processing.php';
