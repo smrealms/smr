@@ -347,23 +347,27 @@ class SmrSession {
 	}
 
 	/**
-	 * Gets a var from $_REQUEST (or $default) and then stores it in the
+	 * Gets a var from $var, $_REQUEST, or $default. Then stores it in the
 	 * session so that it can still be retrieved when the page auto-refreshes.
 	 * This is the recommended way to get $_REQUEST data for display pages.
 	 * For processing pages, see the Request class.
 	 */
-	public static function getRequestVar($varName, $default = null) {
-		global $var;
-		// Set the session var, if in $_REQUESTS or if a default is given
-		if (isset($_REQUEST[$varName])) {
-			self::updateVar($varName, $_REQUEST[$varName]);
-		} elseif (isset($default) && !isset($var[$varName])) {
-			self::updateVar($varName, $default);
-		}
-		// Return the possibly updated session var
-		if (isset($var[$varName])) {
-			return $var[$varName];
-		}
+	public static function getRequestVar(string $varName, string $default = null) : string {
+		$result = Request::getVar($varName, $default);
+		self::updateVar($varName, $result);
+		return $result;
+	}
+
+	public static function getRequestVarInt(string $varName, int $default = null) : int {
+		$result = Request::getVarInt($varName, $default);
+		self::updateVar($varName, $result);
+		return $result;
+	}
+
+	public static function getRequestVarIntArray(string $varName, array $default = null) : array {
+		$result = Request::getVarIntArray($varName, $default);
+		self::updateVar($varName, $result);
+		return $result;
 	}
 
 	public static function resetLink($container, $sn) { //Do not allow sharing SN, useful for forwarding.

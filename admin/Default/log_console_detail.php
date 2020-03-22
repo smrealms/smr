@@ -3,13 +3,13 @@
 $template->assign('PageTopic', 'Log Console - Detail');
 
 // get the account_ids from last form
-$account_ids = SmrSession::getRequestVar('account_ids');
+$account_ids = SmrSession::getRequestVarIntArray('account_ids');
 
-// get the account_ids from last form
-$log_type_ids = SmrSession::getRequestVar('log_type_ids');
+// get the log_type_ids for log types to be displayed
+$log_type_ids = SmrSession::getRequestVarIntArray('log_type_ids');
 
 // nothing marked?
-if (!is_array($account_ids) || count($account_ids) == 0) {
+if (count($account_ids) == 0) {
 	create_error('You have to select the log files you want to view/delete!');
 }
 $account_list = $db->escapeArray($account_ids);

@@ -89,6 +89,9 @@ class Request {
 	public static function getVar(string $index, string $default = null) : string {
 		global $var;
 		if (isset($var[$index])) {
+			if (self::has($index)) {
+				throw new Exception('Index "' . $index . '" must not be in both $var and $_REQUEST!');
+			}
 			return $var[$index];
 		}
 		return self::get($index, $default);
@@ -100,9 +103,27 @@ class Request {
 	public static function getVarInt(string $index, int $default = null) : int {
 		global $var;
 		if (isset($var[$index])) {
+			if (self::has($index)) {
+				throw new Exception('Index "' . $index . '" must not be in both $var and $_REQUEST!');
+			}
 			return $var[$index];
 		}
 		return self::getInt($index, $default);
 	}
+
+	/**
+	 * Like getVar, but returns an array of ints instead of a string.
+	 */
+	public static function getVarIntArray(string $index, array $default = null) : array {
+		global $var;
+		if (isset($var[$index])) {
+			if (self::has($index)) {
+				throw new Exception('Index "' . $index . '" must not be in both $var and $_REQUEST!');
+			}
+			return $var[$index];
+		}
+		return self::getIntArray($index, $default);
+	}
+
 
 }

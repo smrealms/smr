@@ -7,8 +7,8 @@ $db2 = new SmrMySqlDatabase();
 $container = create_container('skeleton.php', 'rankings_alliance_vs_alliance.php');
 $template->assign('SubmitHREF', SmrSession::getNewHREF($container));
 
-$alliancer = SmrSession::getRequestVar('alliancer');
-$detailsAllianceID = SmrSession::getRequestVar('alliance_id', $player->getAllianceID());
+$alliancer = SmrSession::getRequestVarIntArray('alliancer', []);
+$detailsAllianceID = SmrSession::getRequestVarInt('alliance_id', $player->getAllianceID());
 
 // Get list of alliances that have kills or deaths
 $activeAlliances = [];

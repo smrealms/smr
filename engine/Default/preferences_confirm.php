@@ -1,14 +1,7 @@
 <?php declare(strict_types=1);
 
-$amount = SmrSession::getRequestVar('amount');
-$account_id = SmrSession::getRequestVar('account_id');
-if (!is_numeric($amount)) {
-	create_error('Numbers only please!');
-}
-if (!is_numeric($account_id)) {
-	create_error('Invalid player selected!');
-}
-$amount = round($amount);
+$amount = SmrSession::getRequestVarInt('amount');
+$account_id = SmrSession::getRequestVarInt('account_id');
 if ($amount <= 0) {
 	create_error('You can only tranfer a positive amount!');
 }

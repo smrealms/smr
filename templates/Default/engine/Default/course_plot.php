@@ -18,7 +18,7 @@ $this->includeTemplate('includes/JumpDrive.inc'); ?>
 <br />
 <h2>Plot To Nearest</h2>
 <div class="standard">Select a location to plot to. You are only able to plot to sectors you have explored.</div><br />
-<form class="standard" id="SelectXTypeForm" method="POST" action="">
+<form class="standard" id="SelectXTypeForm" method="POST" action="<?php echo $PlotToNearestHREF; ?>">
 	<select name="xtype" class="InputFields" onchange="this.form.submit()"><?php
 	foreach ($AllXTypes as $EachXType) {
 		?><option value="<?php echo $EachXType; ?>"<?php if (isset($XType) && $EachXType == $XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType; ?></option><?php

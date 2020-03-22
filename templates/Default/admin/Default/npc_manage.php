@@ -8,7 +8,7 @@
 </form>
 
 <?php
-if (isset($SelectedGameID)) { ?>
+if (!empty($SelectedGameID)) { ?>
 	<br />
 	<table class="standard">
 		<tr>

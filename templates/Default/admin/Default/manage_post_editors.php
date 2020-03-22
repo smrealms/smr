@@ -7,7 +7,7 @@ if (empty($ActiveGames)) {
 	<p>Specify the Game and Player ID to assign or remove a Galactic Post editor.</p>
 
 	Select Game:&nbsp;
-	<form class="standard" id="SelectGameForm" method="POST" action="">
+	<form class="standard" id="SelectGameForm" method="POST" action="<?php echo $SelectGameHREF; ?>">
 		<select name="selected_game_id" onchange="this.form.submit()"><?php
 			foreach ($ActiveGames as $Game) {
 				$id = $Game['game_id'];
