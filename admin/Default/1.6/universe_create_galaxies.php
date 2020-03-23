@@ -7,12 +7,14 @@ $template->assign('PageTopic', 'Create Galaxies : ' . $game->getDisplayName());
 $template->assign('GameEnabled', $game->isEnabled());
 
 // Link for updating the number of galaxies
-$container = $var;
+$container = create_container('skeleton.php', '1.6/universe_create_galaxies.php');
+transfer('game_id');
 $template->assign('UpdateNumGalsHREF', SmrSession::getNewHREF($container));
 
 // Link for creating galaxies
-$container['url'] = '1.6/universe_create_save_processing.php';
-$container['body'] = '1.6/universe_create_sectors.php';
+$container = create_container('1.6/universe_create_save_processing.php', '1.6/universe_create_sectors.php');
+transfer('game_id');
+transfer('num_gals');
 $submit = [
 	'value' => 'Create Galaxies',
 	'href' => SmrSession::getNewHREF($container),
