@@ -2,12 +2,7 @@
 
 $template->assign('PageTopic', 'Place a Bounty');
 
-require_once(get_file_loc('menu_hq.inc'));
-if ($sector->hasHQ()) {
-	create_hq_menu();
-} else {
-	create_ug_menu();
-}
+Menu::headquarters();
 
 // get this guy from db
 $bountyPlayer = SmrPlayer::getPlayerByPlayerID($var['player_id'], $player->getGameID());
