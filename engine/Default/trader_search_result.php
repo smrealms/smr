@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
 $player_id = SmrSession::getRequestVarInt('player_id');
-$player_name = SmrSession::getRequestVar('player_name');
+// When clicking on a player name, only the 'player_id' is supplied
+$player_name = SmrSession::getRequestVar('player_name', '');
 
 if (empty($player_name) && empty($player_id)) {
 	create_error('You must specify either a player name or ID!');
@@ -89,5 +90,5 @@ if (!empty($similarPlayers)) {
 	$template->assign('SimilarPlayersLinks', $similarPlayersLinks);
 }
 
-$template->assign('PageTopic', 'Search Trader Results');
+$template->assign('PageTopic', 'Search For Trader Results');
 $template->assign('Player', $player);

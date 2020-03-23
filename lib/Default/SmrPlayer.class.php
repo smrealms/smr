@@ -147,6 +147,15 @@ class SmrPlayer extends AbstractSmrPlayer {
 		throw new PlayerNotFoundException('Player ID not found.');
 	}
 
+	public static function getPlayerByPlayerName($playerName, $gameID, $forceUpdate = false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName) . ' LIMIT 1');
+		if ($db->nextRecord()) {
+			return self::getPlayer($db->getInt('account_id'), $gameID, $forceUpdate, $db);
+		}
+		throw new PlayerNotFoundException('Player Name not found.');
+	}
+
 	protected function __construct($gameID, $accountID, $db = null) {
 		parent::__construct();
 		$this->db = new SmrMySqlDatabase();
