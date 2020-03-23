@@ -70,7 +70,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 						echo $AlliancePlayer->getLevelName(); ?>&nbsp;<?php echo $AlliancePlayer->getLinkedDisplayName(false); ?>
 					</td>
 					<td class="race"><?php
-						echo $ThisPlayer->getColouredRaceName($AlliancePlayer->getRaceID()); ?>
+						echo $ThisPlayer->getColouredRaceName($AlliancePlayer->getRaceID(), true); ?>
 					</td>
 					<td class="experience"><?php
 						echo number_format($AlliancePlayer->getExperience()); ?>

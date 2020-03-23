@@ -23,7 +23,7 @@ if (!$VoteTreaties) { ?>
 
 	foreach ($VoteTreaties as $RaceID => $VoteInfo) { ?>
 		<tr>
-			<td><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
+			<td><?php echo $ThisPlayer->getColouredRaceName($RaceID, true); ?></td>
 			<td><?php echo $VoteInfo['Type']; ?></td>
 			<td class="noWrap">
 				<form method="POST" action="<?php echo $VoteInfo['HREF']; ?>">

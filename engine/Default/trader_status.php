@@ -12,9 +12,6 @@ $container = create_container('skeleton.php');
 $container['body'] = 'trader_relations.php';
 $template->assign('RelationsHREF', SmrSession::getNewHREF($container));
 
-$container['body'] = 'council_list.php';
-$template->assign('CouncilHREF', SmrSession::getNewHREF($container));
-
 $container['body'] = 'trader_savings.php';
 $template->assign('SavingsHREF', SmrSession::getNewHREF($container));
 

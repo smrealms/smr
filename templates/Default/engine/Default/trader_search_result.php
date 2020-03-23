@@ -25,7 +25,7 @@ function DisplayResult(array $Links, SmrPlayer $Player) { ?>
 				</td>
 				<td><?php echo $Link['Player']->getAllianceDisplayName(true); ?></td>
 				<td class="shrink center">
-					<a href="<?php echo $Link['RaceHREF']; ?>"><?php echo $Player->getColouredRaceName($Link['Player']->getRaceID()); ?></a>
+					<?php echo $Player->getColouredRaceName($Link['Player']->getRaceID(), true); ?>
 				</td>
 				<td class="shrink center"><?php echo $Link['Player']->getExperience(); ?></td><?php
 				if ($Link['Player']->hasNewbieStatus()) { ?>

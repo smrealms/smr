@@ -35,7 +35,7 @@
 
 			<br />
 
-			<a href="<?php echo $CouncilHREF; ?>">
+			<a href="<?php echo Globals::getCouncilHREF(); ?>">
 				<span class="yellow bold">Politics</span>
 			</a>
 			<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank">
