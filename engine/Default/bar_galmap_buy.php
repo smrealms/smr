@@ -12,9 +12,6 @@ if ($account->getTotalSmrCredits() < CREDITS_PER_GAL_MAP) {
 //gal map buy
 if (isset($var['process'])) {
 	$galaxyID = trim($_REQUEST['gal_id']);
-	if (!is_numeric($galaxyID) || $galaxyID == 0) {
-		create_error('You must select a galaxy to buy the map of!');
-	}
 	
 	//get start sector
 	$galaxy = SmrGalaxy::getGalaxy($player->getGameID(), $galaxyID);

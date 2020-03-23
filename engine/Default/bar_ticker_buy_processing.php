@@ -4,17 +4,6 @@ if ($account->getTotalSmrCredits() < CREDITS_PER_TICKER) {
 	create_error('You don\'t have enough SMR Credits. Donate to SMR to gain SMR Credits!');
 }
 $type = $_REQUEST['type'];
-if (empty($type)) {
-	create_error('You have to choose the type of ticker to buy.');
-}
-switch ($type) {
-	case 'NEWS':
-	case 'SCOUT':
-	case 'BLOCK':
-	break;
-	default:
-		create_error('The ticker you chose does not exist.');
-}
 $expires = TIME;
 $ticker = $player->getTicker($type);
 if ($ticker !== false) {

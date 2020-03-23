@@ -4,10 +4,6 @@ $word = strtoupper(trim($_REQUEST['Word']));
 $word_replacement = strtoupper(trim($_REQUEST['WordReplacement']));
 
 $container = create_container('skeleton.php', 'word_filter.php');
-if (empty($word) || empty($word_replacement)) {
-	$container['msg'] = '<span class="red bold">ERROR: </span>Invalid input.';
-	forward($container);
-}
 
 $db->query('SELECT word_id FROM word_filter WHERE word_value=' . $db->escapeString($word) . ' LIMIT 1');
 if ($db->nextRecord()) {

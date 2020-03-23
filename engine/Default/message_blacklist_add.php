@@ -2,11 +2,6 @@
 
 $container = create_container('skeleton.php', 'message_blacklist.php');
 
-if (empty($_REQUEST['PlayerName']) && !isset($var['account_id'])) {
-	$container['msg'] = '<span class="red bold">ERROR: </span>You must enter a player name.';
-	forward($container);
-}
-
 if (isset($var['account_id'])) {
 	$blacklisted_id = $var['account_id'];
 } else {

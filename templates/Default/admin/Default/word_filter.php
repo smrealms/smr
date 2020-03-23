@@ -28,11 +28,11 @@ if (empty($FilteredWords)) { ?>
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 			<td class="top">Word:&nbsp;</td>
-			<td class="mb"><input type="text" name="Word" size="30"></td>
+			<td class="mb"><input type="text" name="Word" required size="30"></td>
 		</tr>
 		<tr>
 			<td class="top">Replacement:&nbsp;</td>
-			<td class="mb"><input type="text" name="WordReplacement" size="30"></td>
+			<td class="mb"><input type="text" name="WordReplacement" required size="30"></td>
 		</tr>
 	</table><br />
 	<input type="submit" name="action" value="Add" />

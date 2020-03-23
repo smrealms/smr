@@ -37,7 +37,7 @@ if ($Blacklist) { ?>
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 			<td class="top">Name:&nbsp;</td>
-			<td class="mb"><input type="text" name="PlayerName" size="30"></td>
+			<td class="mb"><input type="text" name="PlayerName" required size="30"></td>
 		</tr>
 	</table><br />
 	<input type="submit" name="action" value="Blacklist" />
