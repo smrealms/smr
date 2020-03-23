@@ -89,5 +89,5 @@ if (!empty($similarPlayers)) {
 	$template->assign('SimilarPlayersLinks', $similarPlayersLinks);
 }
 
-$template->assign('PageTopic', 'Search Trader Results');
+$template->assign('PageTopic', 'Search For Trader Results');
 $template->assign('Player', $player);
