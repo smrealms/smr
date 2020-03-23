@@ -11,7 +11,7 @@ if ($account->getTotalSmrCredits() < CREDITS_PER_GAL_MAP) {
 
 //gal map buy
 if (isset($var['process'])) {
-	$galaxyID = trim($_REQUEST['gal_id']);
+	$galaxyID = Request::getInt('gal_id');
 	
 	//get start sector
 	$galaxy = SmrGalaxy::getGalaxy($player->getGameID(), $galaxyID);

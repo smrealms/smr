@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-$word = strtoupper(trim($_REQUEST['Word']));
-$word_replacement = strtoupper(trim($_REQUEST['WordReplacement']));
+$word = strtoupper(trim(Request::get('Word')));
+$word_replacement = strtoupper(trim(Request::get('WordReplacement')));
 
 $container = create_container('skeleton.php', 'word_filter.php');
 
