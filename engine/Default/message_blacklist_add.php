@@ -3,27 +3,24 @@
 $container = create_container('skeleton.php', 'message_blacklist.php');
 
 if (isset($var['account_id'])) {
-	$blacklisted_id = $var['account_id'];
+	$blacklisted = SmrPlayer::getPlayer($var['account_id'], $player->getGameID());
 } else {
-	$db = new SmrMySqlDatabase();
-
-	$db->query('SELECT account_id FROM player WHERE player_name=' . $db->escapeString($_REQUEST['PlayerName']) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
-
-	if (!$db->nextRecord()) {
+	try {
+		$blacklisted = SmrPlayer::getPlayerByPlayerName(Request::get('PlayerName'), $player->getGameID());
+	} catch (PlayerNotFoundException $e) {
 		$container['msg'] = '<span class="red bold">ERROR: </span>Player does not exist.';
 		forward($container);
 	}
-	$blacklisted_id = $db->getInt('account_id');
 }
 
-$db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted_id) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
+$db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 
 if ($db->nextRecord()) {
 	$container['msg'] = '<span class="red bold">ERROR: </span>Player is already blacklisted.';
 	forward($container);
 }
 
-$db->query('INSERT INTO message_blacklist (game_id,account_id,blacklisted_id) VALUES (' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($blacklisted_id) . ')');
+$db->query('INSERT INTO message_blacklist (game_id,account_id,blacklisted_id) VALUES (' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($blacklisted->getAccountID()) . ')');
 
-$container['msg'] = '<span class="yellow">' . $_REQUEST['PlayerName'] . '</span> has been added to your blacklist.';
+$container['msg'] = '<span class="yellow">' . $blacklisted->getPlayerName() . '</span> has been added to your blacklist.';
 forward($container);
