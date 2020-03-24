@@ -43,6 +43,7 @@ transfer('game_id');
 $template->assign('JumpGalaxyHREF', SmrSession::getNewHref($container));
 
 $container['url'] = '1.6/universe_create_save_processing.php';
+transfer('gal_on');
 $template->assign('SubmitChangesHREF', SmrSession::getNewHref($container));
 
 $container['submit'] = 'Toggle Link';
