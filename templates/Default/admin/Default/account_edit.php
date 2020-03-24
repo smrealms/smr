@@ -145,11 +145,9 @@
 				if (val == 2) {
 					alert("Please use the following syntax when you enter the multi closing suspicion: 'Match list:1+5+7' Thanks");
 					window.document.form_acc.suspicion.value = 'Match list:';
-					window.document.form_acc.suspicion.disabled = false;
 					window.document.form_acc.suspicion.focus();
 				} else {
-					window.document.form_acc.suspicion.value = 'Use for multi closings only';
-					window.document.form_acc.suspicion.disabled = true;
+					window.document.form_acc.suspicion.value = '';
 				}
 				window.document.form_acc.choise[0].checked = true;
 			}
@@ -171,7 +169,7 @@
 					New Reason: <input type="text" name="reason_msg" class="InputFields" style="width:400px;">
 				</p>
 				<p><input type="radio" name="choise" value="reopen"> Reopen! (Will remove ban points, if specified)</p>
-				<p>Suspicion: <input type="text" name="suspicion" class="InputFields" disabled="disabled" style="width:300px;" value="Use for multi closings only"></p>
+				<p>Suspicion: <input type="text" name="suspicion" class="InputFields" style="width:300px;" maxlength="255" placeholder="Add any private details about ban here"></p>
 				<p>Ban Points: <input type="number" name="points" class="InputFields center" style="width:40px;"> points</p>
 			</td>
 		</tr>
