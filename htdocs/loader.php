@@ -88,7 +88,8 @@ try {
 
 	$account = SmrSession::getAccount();
 	// get reason for disabled user
-	if (($disabled = $account->isDisabled()) !== false) {
+	require_once(LIB . 'Default/login_processing.inc');
+	if (($disabled = redirectIfDisabled($account)) !== false) {
 		// save session (incase we forward)
 		SmrSession::update();
 		if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
@@ -106,7 +107,7 @@ try {
 				forward(create_container('skeleton.php', 'reopen_account.php'));
 			}
 		} else {
-			forward(create_container('disabled.php'));
+			throw new Exception('Unexpected disabled reason');
 		}
 	}
 	
