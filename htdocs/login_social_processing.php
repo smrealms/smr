@@ -12,8 +12,11 @@ try {
 		// immediately forwards to the social login URL after it is generated.
 
 		require_once('config.inc');
-		header('Location: ' . SocialLogin::get($type)->getLoginUrl());
-		exit;
+		try {
+			header('Location: ' . SocialLogin::get($type)->getLoginUrl());
+		} catch (SocialLoginNotFound $e) {
+			header('location: /error.php?msg=' . urlencode('Unknown social login type'));
+		}
 	}
 
 } catch (Throwable $e) {
