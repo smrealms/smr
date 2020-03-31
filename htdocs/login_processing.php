@@ -57,12 +57,6 @@ try {
 	$href = SmrSession::getNewHREF(create_container('login_check_processing.php'), true);
 	SmrSession::update();
 
-	// ********************************
-	// *
-	// * G a m e   O p e n
-	// *
-	// ********************************
-
 	// get this user from db
 	$account = SmrSession::getAccount();
 
@@ -79,39 +73,22 @@ try {
 		session_destroy();
 	}
 
-	$db = new SmrMySqlDatabase();
-	$db->query('SELECT * FROM game_disable');
-	if ($db->nextRecord()) {
-		// allow admins to access it
-		if (!$account->hasPermission(PERMISSION_GAME_OPEN_CLOSE)) {
-			header('Location: /offline.php');
-			exit;
-		}
-	}
-
-
 	// ********************************
 	// *
 	// * P e r m i s s i o n
 	// *
 	// ********************************
 
-	// get reason for disabled user
-	if (($disabled = $account->isDisabled()) !== false) {
-		// save session (incase we forward)
-		SmrSession::update();
-		if (($disabled['Reason'] != CLOSE_ACCOUNT_INVALID_EMAIL_REASON) &&
-		    ($disabled['Reason'] != CLOSE_ACCOUNT_BY_REQUEST_REASON)) {
-			forward(create_container('disabled.php'));
-		}
-	}
-
+	require_once(LIB . 'Default/login_processing.inc');
+	redirectIfDisabled($account);
+	redirectIfOffline($account);
 
 	// *********************************
 	// *
 	// * a u t o   n e w b i e   t u r n
 	// *
 	// *********************************
+	$db = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM active_session ' .
 			   'WHERE last_accessed > ' . $db->escapeNumber(TIME - TIME_BEFORE_NEWBIE_TIME));
 	if ($db->getNumRows() == 0) {

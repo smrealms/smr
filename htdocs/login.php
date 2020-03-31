@@ -29,6 +29,12 @@ try {
 	$template = new Template();
 	if (Request::has('msg')) {
 		$template->assign('Message', htmlentities(trim(Request::get('msg')), ENT_COMPAT, 'utf-8'));
+	} elseif (Request::has('status')) {
+		session_start();
+		if (isset($_SESSION['login_msg'])) {
+			$template->assign('Message', $_SESSION['login_msg']);
+		}
+		session_destroy();
 	}
 
 	// Get recent non-admin game news
