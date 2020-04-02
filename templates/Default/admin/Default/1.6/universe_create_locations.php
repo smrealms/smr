@@ -1,4 +1,14 @@
-Working on Galaxy : <?php echo $Galaxy->getName(); ?> (<?php echo $Galaxy->getGalaxyID() ?>)<br /><br />
+<form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
+	Working on Galaxy:
+	<select name="gal_on" class="InputFields" onchange="this.form.submit()"><?php
+		foreach ($Galaxies as $OtherGalaxy) { ?>
+			<option value="<?php echo $OtherGalaxy->getGalaxyID(); ?>"<?php if ($OtherGalaxy->equals($Galaxy)) { ?> selected<?php } ?>><?php
+				echo $OtherGalaxy->getName() . ' (' . $OtherGalaxy->getGalaxyID() . ')'; ?>
+			</option><?php
+		} ?>
+	</select>
+</form>
+<br />
 
 <?php
 foreach ($LocTypes as $category => $LocIDs) { ?>
