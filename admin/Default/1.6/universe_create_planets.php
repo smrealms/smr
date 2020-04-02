@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+SmrSession::getRequestVarInt('gal_on');
+$template->assign('Galaxies', SmrGalaxy::getGameGalaxies($var['game_id']));
+
+$container = create_container('skeleton.php', '1.6/universe_create_planets.php');
+transfer('game_id');
+$template->assign('JumpGalaxyHREF', SmrSession::getNewHREF($container));
+
 // Get a list of all available planet types
 $allowedTypes = array();
 foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $PlanetTypeID) {

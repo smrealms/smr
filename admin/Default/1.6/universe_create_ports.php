@@ -1,8 +1,11 @@
 <?php declare(strict_types=1);
 
-if (!isset($var['gal_on'])) {
-	throw new Exception('Gal_on not found!');
-}
+SmrSession::getRequestVarInt('gal_on');
+$template->assign('Galaxies', SmrGalaxy::getGameGalaxies($var['game_id']));
+
+$container = create_container('skeleton.php', '1.6/universe_create_ports.php');
+transfer('game_id');
+$template->assign('JumpGalaxyHREF', SmrSession::getNewHREF($container));
 
 $galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 $template->assign('Galaxy', $galaxy);
