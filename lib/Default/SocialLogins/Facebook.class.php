@@ -15,7 +15,6 @@ class Facebook extends \SocialLogin {
 			self::$facebook = new \Facebook\Facebook([
 				'app_id' => FACEBOOK_APP_ID,
 				'app_secret' => FACEBOOK_APP_SECRET,
-				'default_graph_version' => 'v2.12'
 			]);
 		}
 		return self::$facebook;
