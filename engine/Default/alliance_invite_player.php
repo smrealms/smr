@@ -36,7 +36,7 @@ if ($alliance->getNumMembers() < $game->getAllianceMaxPlayers()) {
 	            ORDER BY player_id DESC');
 	while ($db->nextRecord()) {
 		$invitePlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID());
-		if (in_array($invitePlayer->getAccountID(), array_keys($pendingInvites))) {
+		if (array_key_exists($invitePlayer->getAccountID(), $pendingInvites)) {
 			// Don't display players we've already invited
 			continue;
 		}

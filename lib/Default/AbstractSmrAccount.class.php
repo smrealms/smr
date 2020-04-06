@@ -740,7 +740,7 @@ abstract class AbstractSmrAccount {
 		if ($this->template == $template) {
 			return;
 		}
-		if (!in_array($template, array_keys(Globals::getAvailableTemplates()))) {
+		if (!array_key_exists($template, Globals::getAvailableTemplates())) {
 			throw new Exception('Template not allowed: ' . $template);
 		}
 		$this->db->query('UPDATE account SET template = ' . $this->db->escapeString($template) . ' WHERE ' . $this->SQL . ' LIMIT 1');
@@ -757,7 +757,7 @@ abstract class AbstractSmrAccount {
 		if ($this->colourScheme == $colourScheme) {
 			return;
 		}
-		if (!in_array($colourScheme, array_keys(Globals::getAvailableColourSchemes($this->getTemplate())))) {
+		if (!array_key_exists($colourScheme, Globals::getAvailableColourSchemes($this->getTemplate()))) {
 			throw new Exception('Colour scheme not allowed: ' . $colourScheme);
 		}
 		$this->colourScheme = $colourScheme;
