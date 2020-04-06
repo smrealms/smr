@@ -11,6 +11,7 @@ class SmrAlliance {
 	protected $allianceName;
 	protected $description;
 	protected $password;
+	protected $recruiting;
 	protected $leaderID;
 	protected $bank;
 	protected $kills;
@@ -24,6 +25,11 @@ class SmrAlliance {
 
 	protected $memberList;
 	protected $seedlist;
+
+	// Recruit type constants
+	const RECRUIT_OPEN = "open";
+	const RECRUIT_CLOSED = "closed";
+	const RECRUIT_PASSWORD = "password";
 
 	public static function getAlliance($allianceID, $gameID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
@@ -74,6 +80,7 @@ class SmrAlliance {
 			$this->db->nextRecord();
 			$this->allianceName = $this->db->getField('alliance_name');
 			$this->password = stripslashes($this->db->getField('alliance_password'));
+			$this->recruiting = $this->db->getBoolean('recruiting');
 			$this->description = $this->db->getField('alliance_description');
 			$this->leaderID = $this->db->getInt('leader_id');
 			$this->bank = $this->db->getInt('alliance_account');
@@ -96,8 +103,9 @@ class SmrAlliance {
 
 	/**
 	 * Create an alliance and return the new object.
+	 * Starts alliance with "closed" recruitment (for safety).
 	 */
-	public static function createAlliance($gameID, $name, $password, $recruit) {
+	public static function createAlliance($gameID, $name) {
 		$db = new SmrMySqlDatabase();
 
 		// check if the alliance name already exists
@@ -115,7 +123,7 @@ class SmrAlliance {
 		}
 
 		// actually create the alliance here
-		$db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_password, recruiting) VALUES(' . $db->escapeNumber($allianceID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeString($name) . ', ' . $db->escapeString($password) . ', ' . $db->escapeBoolean($recruit) . ')');
+		$db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_password, recruiting) VALUES(' . $db->escapeNumber($allianceID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeString($name) . ', \'\', \'FALSE\')');
 
 		return self::getAlliance($allianceID, $gameID);
 	}
@@ -270,8 +278,53 @@ class SmrAlliance {
 		return $this->password;
 	}
 
-	public function setPassword($password) {
-		$this->password = $password;
+	public function isRecruiting() : bool {
+		return $this->recruiting;
+	}
+
+	/**
+	 * Set the password and recruiting attributes.
+	 * The input $password is ignored except for the "password" $type.
+	 */
+	public function setRecruitType(string $type, string $password) : void {
+		if ($type == self::RECRUIT_CLOSED) {
+			$this->recruiting = false;
+			$this->password = '';
+		} elseif ($type == self::RECRUIT_OPEN) {
+			$this->recruiting = true;
+			$this->password = '';
+		} elseif ($type == self::RECRUIT_PASSWORD) {
+			if (empty($password)) {
+				throw new Exception('Password must not be empty here');
+			}
+			$this->recruiting = true;
+			$this->password = $password;
+		} else {
+			throw new Exception('Unknown recruit type: ' . $type);
+		}
+	}
+
+	public function getRecruitType() : string {
+		if (!$this->isRecruiting()) {
+			return self::RECRUIT_CLOSED;
+		} elseif (empty($this->getPassword())) {
+			return self::RECRUIT_OPEN;
+		} else {
+			return self::RECRUIT_PASSWORD;
+		}
+	}
+
+	/**
+	 * List of all recruitment types and their descriptions.
+	 * Do not change the order of elements in the list!
+	 */
+	public static function allRecruitTypes() : array {
+		// The first type is the default option when creating new alliances
+		return [
+			self::RECRUIT_PASSWORD => "Players can join by password or invitation",
+			self::RECRUIT_CLOSED => "Players can join by invitation only",
+			self::RECRUIT_OPEN => "Anyone can join (no password needed)",
+		];
 	}
 
 	public function getKills() {
@@ -340,7 +393,7 @@ class SmrAlliance {
 		if ($doAllianceCheck && $player->hasAlliance()) {
 			return 'You are already in an alliance!';
 		}
-		if ($this->getPassword() == '*') {
+		if (!$this->isRecruiting()) {
 			return 'This alliance is not currently accepting new recruits.';
 		}
 		if ($player->getAllianceJoinable() > TIME) {
@@ -386,17 +439,19 @@ class SmrAlliance {
 	}
 
 	public function update() {
-		$this->db->query('UPDATE alliance SET alliance_password = ' . $this->db->escapeString($this->password) . ',
-								alliance_account = '.$this->db->escapeNumber($this->bank) . ',
+		$this->db->query('UPDATE alliance SET
+								alliance_password = ' . $this->db->escapeString($this->password) . ',
+								recruiting = ' . $this->db->escapeBoolean($this->recruiting) . ',
+								alliance_account = ' . $this->db->escapeNumber($this->bank) . ',
 								alliance_description = ' . $this->db->escapeString($this->description, true, true) . ',
 								`mod` = ' . $this->db->escapeString($this->motd) . ',
 								img_src = ' . $this->db->escapeString($this->imgSrc) . ',
-								alliance_kills = '.$this->db->escapeNumber($this->kills) . ',
-								alliance_deaths = '.$this->db->escapeNumber($this->deaths) . ',
-								discord_server = '.$this->db->escapeString($this->discordServer, true, true) . ',
-								discord_channel = '.$this->db->escapeString($this->discordChannel, true, true) . ',
-								flagship_id = '.$this->db->escapeNumber($this->flagshipID) . ',
-								leader_id = '.$this->db->escapeNumber($this->leaderID) . '
+								alliance_kills = ' . $this->db->escapeNumber($this->kills) . ',
+								alliance_deaths = ' . $this->db->escapeNumber($this->deaths) . ',
+								discord_server = ' . $this->db->escapeString($this->discordServer, true, true) . ',
+								discord_channel = ' . $this->db->escapeString($this->discordChannel, true, true) . ',
+								flagship_id = ' . $this->db->escapeNumber($this->flagshipID) . ',
+								leader_id = ' . $this->db->escapeNumber($this->leaderID) . '
 							WHERE ' . $this->SQL);
 	}
 

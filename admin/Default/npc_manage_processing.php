@@ -25,7 +25,7 @@ if (Request::has('create_npc_player')) {
 	$allianceName = Request::get('player_alliance');
 	$alliance = SmrAlliance::getAllianceByName($allianceName, $gameID);
 	if (is_null($alliance)) {
-		$alliance = SmrAlliance::createAlliance($gameID, $allianceName, '*', false);
+		$alliance = SmrAlliance::createAlliance($gameID, $allianceName);
 		$alliance->setLeaderID($npcPlayer->getAccountID());
 		$alliance->update();
 		$alliance->createDefaultRoles();

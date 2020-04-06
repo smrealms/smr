@@ -1,5 +1,5 @@
 <form method="POST" action="<?php echo $CreateHREF; ?>">
-	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
+	<table class="standard">
 		<tr>
 			<td class="top">Name:</td>
 			<td><input required type="text" name="name" size="30"></td>
@@ -7,10 +7,6 @@
 		<tr>
 			<td class="top">Description:</td>
 			<td><textarea spellcheck="true" name="description"></textarea></td>
-		</tr>
-		<tr>
-			<td class="top">Password:</td>
-			<td><input required type="password" name="password" size="30"></td>
 		</tr>
 		<tr>
 			<td class="top">Members start with:&nbsp;&nbsp;&nbsp;</td>
@@ -21,8 +17,16 @@
 		</tr>
 		<tr>
 			<td class="top">Recruiting:</td>
-			<td>Yes<input type="radio" name="recruit" value="yes" checked><br />
-				No<input type="radio" name="recruit" value="no">
+			<td>
+				<select name="recruit_type" class="InputFields" onchange="togglePassword(this)"><?php
+					foreach (SmrAlliance::allRecruitTypes() as $type => $text) { ?>
+						<option value="<?php echo $type; ?>"><?php echo $text; ?></option><?php
+					} ?>
+				</select>
+				<br />
+				<div id="password-display">
+					<input required id="password-input" name="password" placeholder=" Enter password here" size="30">
+				</div>
 			</td>
 		</tr>
 	</table>

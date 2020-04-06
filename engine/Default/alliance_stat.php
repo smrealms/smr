@@ -32,3 +32,4 @@ $template->assign('CanChangeDescription', $change_mod || $account->hasPermission
 $template->assign('CanChangePassword', $change_pass);
 $template->assign('CanChangeChatChannel', $change_chat);
 $template->assign('CanChangeMOTD', $change_mod);
+$template->assign('HidePassword', $alliance->getRecruitType() != SmrAlliance::RECRUIT_PASSWORD);

@@ -103,3 +103,16 @@ function showRaceInfo(select) {
 	$(desc).children().addClass('hide');
 	$(".race_descr" + race_id, desc).removeClass('hide');
 }
+
+// Used by alliance_create.php and alliance_stat.php
+function togglePassword(select) {
+	var showPassword = $(select).val() === "password";
+	// We need to both toggle the element display (for the user) and toggle the
+	// disabled property (for the form submission).
+	if (showPassword) {
+		$("#password-display").show();
+	} else {
+		$("#password-display").hide();
+	}
+	$("#password-input").prop("disabled", !showPassword);
+}
