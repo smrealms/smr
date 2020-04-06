@@ -23,7 +23,7 @@ $db->query('SELECT end_time, game_id, game_name, game_speed, game_type
 			WHERE account_id = '.$db->escapeNumber($account->getAccountID()) . '
 				AND enabled = \'TRUE\'
 				AND end_time >= ' . $db->escapeNumber(TIME) . '
-			ORDER BY start_time DESC');
+			ORDER BY start_time, game_id DESC');
 if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		$game_id = $db->getInt('game_id');
