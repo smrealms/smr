@@ -3,9 +3,6 @@ if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id', $player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
-if (Request::has('password')) {
-	$password = trim(Request::get('password'));
-}
 if (Request::has('description')) {
 	$description = trim(Request::get('description'));
 }
@@ -30,13 +27,11 @@ if (isset($url) && preg_match('/"/', $url)) {
 	create_error('You cannot use a " in the image link!');
 }
 
-if (isset($password) && $password == '') {
-	create_error('You cannot set an empty password!');
-}
-
 $alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
-if (isset($password)) {
-	$alliance->setPassword($password);
+if (Request::has('recruit_type')) {
+	$recruitType = Request::get('recruit_type');
+	$password = Request::get('password', '');
+	$alliance->setRecruitType($recruitType, $password);
 }
 if (isset($description)) {
 	$alliance->setAllianceDescription($description);

@@ -128,13 +128,17 @@ if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 }
 
 if ($CanJoin === true) { ?>
-	<br />
-	<form class="standard" method="POST" action="<?php echo $JoinHREF; ?>">
-		Enter password to join alliance<br /><br />
-		<input type="password" name="password" size="30">&nbsp;<input class="submit" type="submit" name="action" value="Join">
+	<form class="standard" method="POST" action="<?php echo $JoinHREF; ?>"><?php
+		if ($Alliance->getRecruitType() == SmrAlliance::RECRUIT_OPEN) { ?>
+			<p>This alliance is accepting all recruits!</p>
+			<input hidden name="password" value=""><?php
+		} else { ?>
+			<p>Enter password to join alliance</p>
+			<input required name="password" size="30">&nbsp;<?php
+		} ?>
+		<input class="submit" type="submit" name="action" value="Join">
 	</form><?php
 } elseif ($CanJoin !== false) { ?>
-	<br /><?php
-	echo $CanJoin;
+	<p><?php echo $CanJoin; ?></p><?php
 }
 ?>

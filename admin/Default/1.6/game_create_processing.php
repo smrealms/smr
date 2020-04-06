@@ -51,8 +51,8 @@ function createNHA($gameID) {
 	$db = new SmrMySqlDatabase();
 
 	// create the Newbie Help Alliance
-	$db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`) VALUES
-				(' . $db->escapeNumber(NHA_ID) . ',' . $db->escapeNumber($gameID) . ',\'Newbie Help Alliance\',\'Newbie Help Alliance\',\'*\',' . $db->escapeNumber(ACCOUNT_ID_NHL) . ',\'Alliance message board includes tips and FAQs.\')');
+	$db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`, recruiting) VALUES
+				(' . $db->escapeNumber(NHA_ID) . ',' . $db->escapeNumber($gameID) . ',\'Newbie Help Alliance\',\'Newbie Help Alliance\',\'\',' . $db->escapeNumber(ACCOUNT_ID_NHL) . ',\'Alliance message board includes tips and FAQs.\', \'FALSE\')');
 
 	$alliance = SmrAlliance::getAlliance(NHA_ID, $gameID);
 	$alliance->createDefaultRoles();

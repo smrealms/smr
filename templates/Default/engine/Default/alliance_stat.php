@@ -4,7 +4,18 @@
 <?php
 if ($CanChangePassword) { ?>
 	<tr>
-		<td class="top">Password:&nbsp;</td><td><input type="password" name="password" size="30" value="<?php echo htmlspecialchars($Alliance->getPassword()); ?>"></td>
+		<td class="top">Recruiting:</td>
+		<td>
+			<select name="recruit_type" class="InputFields" onchange="togglePassword(this)"><?php
+				foreach (SmrAlliance::allRecruitTypes() as $type => $text) { ?>
+					<option value="<?php echo $type; ?>" <?php if ($Alliance->getRecruitType() == $type) { ?> selected<?php } ?>><?php echo $text; ?></option><?php
+				} ?>
+			</select>
+		</td>
+	</tr>
+	<tr id="password-display" <?php if ($HidePassword) { ?> class="hide" <?php } ?>>
+		<td class="top">Password:&nbsp;</td>
+		<td><input required id="password-input" name="password" size="30" placeholder=" Enter password here" value="<?php echo htmlspecialchars($Alliance->getPassword()); ?>" <?php if ($HidePassword) { echo "disabled"; } ?>></td>
 	</tr><?php
 }
 

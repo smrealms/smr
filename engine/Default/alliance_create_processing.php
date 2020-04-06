@@ -6,6 +6,9 @@ if ($player->getAllianceJoinable() > TIME) {
 
 // trim input first
 $name = trim(Request::get('name'));
+if (empty($name)) {
+	throw new Exception('No alliance name entered');
+}
 
 // disallow certain ascii chars
 for ($i = 0; $i < strlen($name); $i++) {
@@ -14,16 +17,11 @@ for ($i = 0; $i < strlen($name); $i++) {
 	}
 }
 
-$password = Request::get('password');
+$password = trim(Request::get('password', ''));
 $description = Request::get('description');
-$recruit = Request::get('recruit') == 'yes';
+$recruitType = Request::get('recruit_type');
 $perms = Request::get('Perms');
-if (empty($password)) {
-	create_error('You must enter a password!');
-}
-if (empty($name)) {
-	create_error('You must enter an alliance name!');
-}
+
 $name2 = strtolower($name);
 if ($name2 == 'none' || $name2 == '(none)' || $name2 == '( none )' || $name2 == 'no alliance') {
 	create_error('That is not a valid alliance name!');
@@ -34,7 +32,8 @@ if ($name != $filteredName) {
 }
 
 // create the alliance
-$alliance = SmrAlliance::createAlliance($player->getGameID(), $name, $password, $recruit);
+$alliance = SmrAlliance::createAlliance($player->getGameID(), $name);
+$alliance->setRecruitType($recruitType, $password);
 $alliance->setAllianceDescription($description);
 $alliance->setLeaderID($player->getAccountID());
 $alliance->createDefaultRoles($perms);
