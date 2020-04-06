@@ -54,7 +54,10 @@ function createNHA($gameID) {
 	$db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`) VALUES
 				(' . $db->escapeNumber(NHA_ID) . ',' . $db->escapeNumber($gameID) . ',\'Newbie Help Alliance\',\'Newbie Help Alliance\',\'*\',' . $db->escapeNumber(ACCOUNT_ID_NHL) . ',\'Alliance message board includes tips and FAQs.\')');
 
-	SmrAlliance::getAlliance(NHA_ID, $gameID)->createDefaultRoles();
+	$alliance = SmrAlliance::getAlliance(NHA_ID, $gameID);
+	$alliance->createDefaultRoles();
+	$alliance->setDiscordServer(DISCORD_SERVER_ID);
+	$alliance->update();
 	
 	// NHA default topics
 	

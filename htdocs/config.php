@@ -60,6 +60,7 @@ const MULTI_CHECKING_COOKIE_VERSION = 'v3';
 
 const WIKI_URL = 'https://wiki.smrealms.de';
 const DISCORD_URL = 'https://discord.me/smrealms';
+const DISCORD_SERVER_ID = '376433706916642826';
 
 /*
  * Localisations

@@ -9,5 +9,5 @@ Chat with your fellow players as you navigate the universe! You may join via IRC
 
 	<br /><br /><br />
 
-	<iframe src="https://discordapp.com/widget?id=376433706916642826&amp;theme=dark" width="320" height="370" allowtransparency="true" frameborder="0"></iframe>
+	<iframe src="https://discordapp.com/widget?id=<?php echo DISCORD_SERVER_ID; ?>&amp;theme=dark" width="320" height="370" allowtransparency="true" frameborder="0"></iframe>
 </center>
