@@ -91,11 +91,6 @@ if ($isNewbie) {
 // insert into player table.
 $player = SmrPlayer::createPlayer($account->getAccountID(), $gameID, $player_name, $race_id, $isNewbie, defined('NPC_SCRIPT'));
 
-// Put the Newbie Help Leader into the Newbie Help Alliance
-if ($account->getAccountID() == ACCOUNT_ID_NHL) {
-	$player->joinAlliance(NHA_ID);
-}
-
 $player->setNewbieTurns($startingNewbieTurns);
 $player->giveStartingTurns();
 $player->setCredits($game->getStartingCredits());
@@ -117,8 +112,8 @@ $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
 // Mark the player's start sector as visited
 $player->getSector()->markVisited($player);
 
-if ($isNewbie) {
-	//we are a newb set our alliance to be Newbie Help Allaince
+if ($isNewbie || $account->getAccountID() == ACCOUNT_ID_NHL) {
+	// If player is a newb (or NHL), set alliance to be Newbie Help Allaince
 	$player->joinAlliance(NHA_ID);
 
 	//we need to send them some messages
