@@ -38,8 +38,8 @@ function check_bargain_number($amount, $ideal_price, $offered_price, $bargain_pr
 			create_error('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
 		}
 
-		$port_off = round($offered_price * 100 / $ideal_price);
-		$trader_off = round($bargain_price * 100 / $ideal_price);
+		$port_off = IRound($offered_price * 100 / $ideal_price);
+		$trader_off = IRound($bargain_price * 100 / $ideal_price);
 
 		// get relative numbers!
 		// be carefull! one of this value is negative!
@@ -56,7 +56,7 @@ function check_bargain_number($amount, $ideal_price, $offered_price, $bargain_pr
 				$offer_modifier = mt_rand($port_off, 100 + $trader_off_rel);
 			}
 
-			$container['offered_price'] = round($container['ideal_price'] * $offer_modifier / 100);
+			$container['offered_price'] = IRound($container['ideal_price'] * $offer_modifier / 100);
 		}
 	} else {
 		$container['overall_number_of_bargains'] = mt_rand(2, 5);
