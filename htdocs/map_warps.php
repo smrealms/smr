@@ -2,7 +2,7 @@
 try {
 	require_once('config.inc');
 
-	$gameID = $_GET['game'];
+	$gameID = Request::getInt('game');
 	if (!SmrSession::hasAccount() || !Globals::isValidGame($gameID)) {
 		header('Location: /login.php');
 		exit;
