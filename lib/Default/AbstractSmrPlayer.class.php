@@ -771,20 +771,6 @@ abstract class AbstractSmrPlayer {
 		$this->setBounty($bounty);
 	}
 
-	public function increaseBountyAmount(int $bountyID, int $amount) : void {
-		if ($amount < 0) {
-			throw new Exception('Trying to increase negative bounty.');
-		}
-		$this->setBountyAmount($this->getBountyAmount($bountyID) + $amount);
-	}
-
-	public function decreaseBountyAmount(int $bountyID, int $amount) : void {
-		if ($amount < 0) {
-			throw new Exception('Trying to decrease negative bounty.');
-		}
-		$this->setBountyAmount($this->getBountyAmount($bountyID) + $amount);
-	}
-
 	public function getCurrentBounty(string $type) : array {
 		$bounties = $this->getBounties();
 		foreach ($bounties as $bounty) {
