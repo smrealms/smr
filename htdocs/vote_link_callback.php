@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 // Callback script for player voting on external sites
 
+require_once('config.inc');
+
 if (Request::has('account') && Request::has('game') && Request::has('link')) {
 	// callback from TWG
 	$accountId = Request::getInt('account');
@@ -16,7 +18,6 @@ if (Request::has('account') && Request::has('game') && Request::has('link')) {
 	exit;
 }
 
-require_once('config.inc');
 require_once(LIB . 'Default/smr.inc');
 
 // Is the player allowed to get free turns from this link right now?
