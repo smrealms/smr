@@ -310,7 +310,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 	if ($maxValue - $minValue == 0) {
 		return $text;
 	} else {
-		$normalisedValue = round(510 * max(0, min($maxValue, $value) - $minValue) / ($maxValue - $minValue)) - 255;
+		$normalisedValue = IRound(510 * max(0, min($maxValue, $value) - $minValue) / ($maxValue - $minValue)) - 255;
 	}
 	if ($type == 'Game') {
 		if ($normalisedValue < 0) {

@@ -825,7 +825,7 @@ class SmrPlanet {
 			}
 		}
 
-		if ($this->hasChangedWeapons) {
+		if (count($this->hasChangedWeapons) > 0) {
 			foreach (array_keys($this->hasChangedWeapons) as $orderID) {
 				if (isset($this->mountedWeapons[$orderID])) {
 					$this->db->query('REPLACE INTO planet_has_weapon (game_id, sector_id, order_id, weapon_type_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($orderID) . ',' . $this->db->escapeNumber($this->mountedWeapons[$orderID]->getWeaponTypeID()) . ')');
