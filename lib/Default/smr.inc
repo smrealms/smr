@@ -252,22 +252,24 @@ function create_error($message) {
 	forward($container);
 }
 
-function resetContainer($new_container) {
-	global $sn, $container, $var;
+function resetContainer($new_container, $sn=null) {
+	global $container, $var;
 
 	// this sn identifies our container later
-
-	SmrSession::resetLink($new_container, $sn);
+	if (!is_null($sn)) {
+		SmrSession::resetLink($new_container, $sn);
+	}
 
 	$var = $new_container;
 	$container = $new_container;
 }
 
 function forward($new_container) {
+	global $sn;
 	if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
 		return overrideForward($new_container);
 	}
-	resetContainer($new_container);
+	resetContainer($new_container, $sn);
 	do_voodoo();
 }
 
