@@ -252,7 +252,7 @@ function create_error($message) {
 	forward($container);
 }
 
-function resetContainer($new_container, $sn=null) {
+function resetContainer($new_container, $sn = null) {
 	global $container, $var;
 
 	// this sn identifies our container later
