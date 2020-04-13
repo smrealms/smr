@@ -20,26 +20,29 @@ function linkCombatLog($logID) {
 	return '<a href="' . SmrSession::getNewHREF($container) . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
 }
 
+/**
+ * Converts a BBCode tag into some other text depending on the tag and value.
+ * This is called in two stages: first with action BBCODE_CHECK (where the
+ * returned value must be a boolean) and second, if the first check passes,
+ * with action BBCODE_OUTPUT.
+ */
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
 	global $overrideGameID, $disableBBLinks, $player, $account, $var;
 	try {
 		switch ($tagName) {
 			case 'combatlog':
-				$logID = (is_numeric($default)) ? $default : $tagParams['id'];
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
-					return true;
+					return is_numeric($default);
 				}
+				$logID = (int)$default;
 				return linkCombatLog($logID);
 			break;
 			case 'player':
-				$playerID = $default;
-				if (!is_numeric($playerID)) {
-					$playerID = $tagParams['id'];
-				}
-				$bbPlayer = SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
-					return true;
+					return is_numeric($default);
 				}
+				$playerID = (int)$default;
+				$bbPlayer = SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
 				$showAlliance = isset($tagParams['showalliance']) ? parseBoolean($tagParams['showalliance']) : false;
 				if ($disableBBLinks === false && $overrideGameID == SmrSession::getGameID()) {
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
@@ -47,15 +50,11 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				return $bbPlayer->getDisplayName($showAlliance);
 			break;
 			case 'alliance':
-				$allianceID = $default;
-				if (!is_numeric($allianceID)) {
-					$allianceID = $tagParams['id'];
-				}
-				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
-					return true;
+					return is_numeric($default);
 				}
-
+				$allianceID = (int)$default;
+				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
 				if ($disableBBLinks === false && $overrideGameID == SmrSession::getGameID()) {
 					$container = create_container('skeleton.php');
 					$container['alliance_id'] = $alliance->getAllianceID();
@@ -82,10 +81,10 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 			break;
 			case 'servertimetouser':
-				$timeString = $default;
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
+				$timeString = $default;
 				if ($timeString != '' && ($time = strtotime($timeString)) !== false) {
 					if (is_object($account)) {
 						$time += $account->getOffset() * 3600;
@@ -94,39 +93,39 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 			break;
 			case 'chess':
-				$chessGameID = $default;
-				$chessGame = ChessGame::getChessGame($chessGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
-					return true;
+					return is_numeric($default);
 				}
+				$chessGameID = (int)$default;
+				$chessGame = ChessGame::getChessGame($chessGameID);
 				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
 			break;
 
 			case 'sector':
-				$sectorID = $default;
-
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
-					return true;
+					return is_numeric($default);
 				}
 
+				$sectorID = (int)$default;
 				$sectorTag = '<span class="sectorColour">#' . $sectorID . '</span>';
 
 				// The use of $var here is for a corner case where an admin can check reported messages whilst being in-game.
 				// Ugly but working, probably want a better mechanism to check if more BBCode tags get added
-				if (is_numeric($sectorID)
+				if ($disableBBLinks === false
 					&& SmrSession::hasGame()
-					&& SmrSector::sectorExists($overrideGameID, $sectorID)
-					&& $disableBBLinks === false && $overrideGameID == SmrSession::getGameID()) {
+					&& SmrSession::getGameID() == $overrideGameID
+					&& SmrSector::sectorExists($overrideGameID, $sectorID)) {
 					return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
 				}
 
 				return $sectorTag;
 			break;
 			case 'join_alliance':
-				$alliance = SmrAlliance::getAlliance($default, $overrideGameID);
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
-					return true;
+					return is_numeric($default);
 				}
+				$allianceID = (int)$default;
+				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
 				$container = create_container('alliance_invite_accept_processing.php');
 				$container['alliance_id'] = $alliance->getAllianceID();
 				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
