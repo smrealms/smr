@@ -9,7 +9,8 @@ $container['body'] = 'history_games_detail.php';
 unset($container['action']);
 $template->assign('SelfHREF', SmrSession::getNewHREF($container));
 
-$action = SmrSession::getRequestVar('action');
+// Default page has no category (action) selected yet
+$action = SmrSession::getRequestVar('action', '');
 if (!empty($action)) {
 	if ($action == 'Top Mined Sectors') {
 		$sql = 'mines'; $from = 'sector'; $dis = 'Mines';
