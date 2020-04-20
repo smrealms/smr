@@ -114,7 +114,7 @@ const MISSIONS = array(
 	)
 );
 
-function checkMissionRequirements(&$values, array &$mission, AbstractSmrPlayer $player, array &$requirements = null) {
+function checkMissionRequirements($values, array $mission, AbstractSmrPlayer $player, array $requirements = null) {
 	if ($requirements == null) {
 		return checkMissionRequirements($values, $mission, $player, $mission['Task']['Detail']);
 	}
