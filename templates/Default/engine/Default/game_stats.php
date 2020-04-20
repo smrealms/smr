@@ -1,5 +1,5 @@
 <h2>Description</h2>
-<?php echo $StatsGame->getDescription(); ?>
+<?php echo bbifyMessage($StatsGame->getDescription()); ?>
 <br /><br />
 
 <div class="center">
