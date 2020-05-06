@@ -4,12 +4,13 @@ $steps = Request::get('steps');
 $subject = Request::get('subject');
 $error_msg = Request::get('error_msg');
 $description = Request::get('description');
-$new_sub = '[Bug] ' . $subject;
 
-$message = 'Login: ' . $account->getLogin() . EOL . EOL . '-----------' . EOL . EOL .
-	'Account ID: ' . $account->getAccountID() . EOL . EOL . '-----------' . EOL . EOL .
-	'Description: ' . $description . EOL . EOL . '-----------' . EOL . EOL .
-	'Steps to repeat: ' . $steps . EOL . EOL . '-----------' . EOL . EOL .
+$delim = EOL . EOL . '-----------' . EOL . EOL;
+$message = 'Login: ' . $account->getLogin() . EOL .
+	'Account ID: ' . $account->getAccountID() . $delim .
+	'Subject: ' . $subject . $delim .
+	'Description: ' . $description . $delim .
+	'Steps to repeat: ' . $steps . $delim .
 	'Error Message: ' . $error_msg;
 
 if (is_object($player)) {
