@@ -8,6 +8,7 @@ if (!$Planet->hasOwner()) { ?>
 		} ?>
 	</p>
 	<form method="POST" action="<?php echo $ProcessingHREF; ?>">
+		<input hidden name="password" />
 		<input type="submit" name="action" value="Take Ownership" class="InputFields" />
 	</form><?php
 } else {
