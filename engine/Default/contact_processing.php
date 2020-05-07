@@ -5,7 +5,7 @@ $subject = Request::get('subject');
 $msg = Request::get('msg');
 
 $mail = setupMailer();
-$mail->Subject = $subject;
+$mail->Subject = PAGE_PREFIX . $subject;
 $mail->setFrom('contact@smrealms.de');
 $mail->addReplyTo($account->getEmail(), $account->getHofName());
 $mail->Body =

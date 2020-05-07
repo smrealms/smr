@@ -22,7 +22,7 @@ if (is_object($player)) {
 // Send report to e-mail so that we have a permanent record
 if (!empty(BUG_REPORT_TO_ADDRESSES)) {
 	$mail = setupMailer();
-	$mail->Subject = 'Player Bug Report';
+	$mail->Subject = PAGE_PREFIX . 'Player Bug Report';
 	$mail->setFrom('bugs@smrealms.de');
 	$mail->Body = $message;
 	foreach (BUG_REPORT_TO_ADDRESSES as $toAddress) {
