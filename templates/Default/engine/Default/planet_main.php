@@ -40,8 +40,9 @@ if (isset($Msg)) {
 				</tr><?php
 				foreach ($ThisPlanet->getStructureTypes() as $StructureID => $Structure) { ?>
 				<tr>
-					<td><img id="tip<?php echo $StructureID; ?>" src="images/<?php echo $Structure->image(); ?>" width="16" height="16" alt="" title="<?php echo $Structure->tooltip(); ?>" />
-						<label for="tip<?php echo $StructureID; ?>">&nbsp;<?php echo $Structure->name(); ?></td>
+					<td title="<?php echo $Structure->tooltip(); ?>">
+						<img src="images/<?php echo $Structure->image(); ?>" width="16" height="16" alt="" />&nbsp;<?php echo $Structure->name(); ?>
+					</td>
 					<td class="center"><span id="planetStructure<?php echo $StructureID; ?>"><?php echo $ThisPlanet->getBuilding($StructureID); ?></span></td>
 					<td class="center"><?php echo $ThisPlanet->getMaxBuildings($StructureID); ?></td>
 				</tr><?php
