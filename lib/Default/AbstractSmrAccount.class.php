@@ -757,7 +757,7 @@ abstract class AbstractSmrAccount {
 		if ($this->colourScheme == $colourScheme) {
 			return;
 		}
-		if (!array_key_exists($colourScheme, Globals::getAvailableColourSchemes($this->getTemplate()))) {
+		if (!in_array($colourScheme, Globals::getAvailableColourSchemes($this->getTemplate()), true)) {
 			throw new Exception('Colour scheme not allowed: ' . $colourScheme);
 		}
 		$this->colourScheme = $colourScheme;
