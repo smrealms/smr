@@ -8,7 +8,7 @@ $action = Request::get('action');
 
 if ($action == 'Take Ownership') {
 	if ($planet->hasOwner() && $planet->getPassword() != Request::get('password')) {
-		create_error('You are not allowed to take ownership!');
+		create_error('You entered an incorrect password for this planet!');
 	}
 
 	// delete all previous ownerships
