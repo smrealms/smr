@@ -13,8 +13,8 @@
 							<img src="images/login/loginPw.png" width="104" height="48" alt="Login/Password" />
 						</td>
 						<td>
-							<input id="login_username" class="InputFields inputbox uncollapse" type="text" name="login"><br />
-							<input id="login_password" class="InputFields inputbox uncollapse" type="password" name="password">
+							<input id="login_username" class="InputFields inputbox uncollapse" type="text" name="login" required><br />
+							<input id="login_password" class="InputFields inputbox uncollapse" type="password" name="password" required>
 						</td>
 						<td>
 							<img src="images/login/loginPwRight.png" width="29" height="48"  alt="">
