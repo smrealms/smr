@@ -13,9 +13,12 @@ function logException(Throwable $e) {
 	$message .= 'Error Message: ' . $e . $delim;
 
 	$message .= '$var: ' . var_export($var, true);
-	if (isset($_REQUEST)) {
-		$message .= "\n\n" . '$_REQUEST: ' . var_export($_REQUEST, true);
+
+	// Don't display passwords input by users in the log message!
+	if (isset($_REQUEST['password'])) {
+		$_REQUEST['password'] = '*****';
 	}
+	$message .= "\n\n" . '$_REQUEST: ' . var_export($_REQUEST, true);
 	$message .= $delim;
 
 	$message .=
