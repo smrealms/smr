@@ -181,10 +181,7 @@ try {
 		           'VALUES(\'validation_code\', ' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber(TIME) . ')');
 	}
 
-	$container = create_container('login_processing.php');
-	$container['login'] = $login;
-	$container['password'] = $password;
-	forwardURL($container);
+	forwardURL(create_container('login_processing.php'));
 } catch (Throwable $e) {
 	handleException($e);
 }

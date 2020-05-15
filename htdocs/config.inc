@@ -1,9 +1,8 @@
 <?php declare(strict_types=1);
 function logException(Throwable $e) {
-	global $account, $var, $player, $db;
+	global $account, $var, $player;
 	$errorType = 'Unexpected Game Error!';
 	$message = '';
-	$currMySQLError = '';
 	$delim = "\n\n-----------\n\n";
 
 	if (is_object($account)) {
@@ -13,18 +12,13 @@ function logException(Throwable $e) {
 	}
 	$message .= 'Error Message: ' . $e . $delim;
 
-	// Only check database if it was already loaded (do not try to autoload)
-	if (class_exists('MySqlDatabase', false) && ($db instanceof MySqlDatabase)) {
-		if ($currMySQLError = $db->getError()) {
-			$errorType = 'Database Error';
-			$message .= 'MySQL Error MSG: ' . $db->getError() . $delim;
-		}
-	}
-
 	$message .= '$var: ' . var_export($var, true);
-	if (isset($_REQUEST)) {
-		$message .= "\n\n" . '$_REQUEST: ' . var_export($_REQUEST, true);
+
+	// Don't display passwords input by users in the log message!
+	if (isset($_REQUEST['password'])) {
+		$_REQUEST['password'] = '*****';
 	}
+	$message .= "\n\n" . '$_REQUEST: ' . var_export($_REQUEST, true);
 	$message .= $delim;
 
 	$message .=
@@ -40,9 +34,6 @@ function logException(Throwable $e) {
 		$message .= $delim .
 					'Releasing Lock Failed' . "\n" .
 					'Message: ' . $ee . "\n";
-		if ($currMySQLError != $db->getError()) {
-			$message .= 'MySQL Error MSG: ' . $db->getError();
-		}
 	}
 
 	if (defined('SCRIPT_ID')) {

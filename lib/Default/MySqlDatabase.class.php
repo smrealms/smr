@@ -12,11 +12,13 @@ abstract class MySqlDatabase {
 	
 	public function __construct($dbName) {
 		if (!self::$dbConn) {
+			// Set the mysqli driver to raise exceptions on errors
+			if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
+				$this->error('Failed to enable mysqli error reporting');
+			}
+
 			self::$dbConn = new mysqli(self::$host, self::$user, self::$password,
 			                           $dbName, self::$port, self::$socket);
-			if (self::$dbConn->connect_errno) {
-				$this->error('Connection failed: ' . self::$dbConn->connect_error);
-			}
 			self::$selectedDbName = $dbName;
 
 			// Default server charset should be set correctly. Using the default
@@ -29,9 +31,7 @@ abstract class MySqlDatabase {
 
 		// Do we need to switch databases (e.g. for compatability db access)?
 		if (self::$selectedDbName != $dbName) {
-			if (!self::$dbConn->select_db($dbName)) {
-				$this->error('Database selection failed for ' . $dbName);
-			}
+			self::$dbConn->select_db($dbName);
 			self::$selectedDbName = $dbName;
 		}
 	}
@@ -41,9 +41,7 @@ abstract class MySqlDatabase {
 	 */
 	public function getDbBytes() {
 		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=' . $this->escapeString(self::$selectedDbName);
-		if (!$result = self::$dbConn->query($query)) {
-			$this->error('Could not determine size of database!');
-		}
+		$result = self::$dbConn->query($query);
 		return (int)$result->fetch_assoc()['db_bytes'];
 	}
 
@@ -56,10 +54,7 @@ abstract class MySqlDatabase {
 	}
 	
 	public function query($query) {
-		if (!$this->dbResult = self::$dbConn->query($query)) {
-			$this->error('SQL query failed (' . $query . ')');
-			// the SQL error message will be reported by logException
-		}
+		$this->dbResult = self::$dbConn->query($query);
 	}
 	
 	public function nextRecord() {
@@ -129,15 +124,11 @@ abstract class MySqlDatabase {
 	}
 	
 	public function lockTable($table) {
-		if (!self::$dbConn->query('LOCK TABLES ' . $table . ' WRITE')) {
-			$this->error('Unable to lock table: ' . $table);
-		}
+		self::$dbConn->query('LOCK TABLES ' . $table . ' WRITE');
 	}
 	
 	public function unlock() {
-		if (!self::$dbConn->query('UNLOCK TABLES')) {
-			$this->error('Unable to remove table locks.');
-		}
+		self::$dbConn->query('UNLOCK TABLES');
 	}
 	
 	public function getNumRows() {
@@ -150,10 +141,6 @@ abstract class MySqlDatabase {
 	
 	public function getInsertID() {
 		return self::$dbConn->insert_id;
-	}
-
-	public function getError() {
-		return self::$dbConn->error;
 	}
 
 	protected function error($err) {
