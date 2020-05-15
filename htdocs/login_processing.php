@@ -32,8 +32,8 @@ try {
 				exit;
 			}
 		} else {
-			$login = Request::getVar('login');
-			$password = Request::getVar('password');
+			$login = Request::get('login');
+			$password = Request::get('password');
 
 			// has the user submitted empty fields
 			if (empty($login) || empty($password)) {
