@@ -80,9 +80,9 @@ if ($planet->isDestroyed()) {
 	$planet->removePassword();
 
 	// Prepare message for planet owners
-	$planetAttackMessage = 'The defenses of ' . $planet->getDisplayName() . ' have been breached. The planet is lost! [combatlog=' . $logId . ']';
+	$planetAttackMessage = 'The defenses of ' . $planet->getCombatName() . ' have been breached. The planet is lost! [combatlog=' . $logId . ']';
 } else {
-	$planetAttackMessage = 'Reports from the surface of ' . $planet->getDisplayName() . ' confirm that it is under <span class="red">attack</span>! [combatlog=' . $logId . ']';
+	$planetAttackMessage = 'Reports from the surface of ' . $planet->getCombatName() . ' confirm that it is under <span class="red">attack</span>! [combatlog=' . $logId . ']';
 }
 
 // Send notification to planet owners

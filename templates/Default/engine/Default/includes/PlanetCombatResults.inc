@@ -2,7 +2,7 @@
 $CombatPlanet = $PlanetCombatResults['Planet'];
 $TotalDamage = $PlanetCombatResults['TotalDamage'];
 if($MinimalDisplay) {
-	echo $CombatPlanet->getDisplayName();
+	echo $CombatPlanet->getCombatName();
 	if($TotalDamage > 0) {
 		?> hit for a total of <span class="red"><?php echo $TotalDamage; ?></span> damage in this round of combat of which <span class="red"><?php echo $PlanetCombatResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()]; ?></span> was done to you<?php
 	}
@@ -19,7 +19,7 @@ if(isset($PlanetCombatResults['Weapons']) && is_array($PlanetCombatResults['Weap
 		$WeaponDamage =& $WeaponResults['WeaponDamage'];
 		$TargetPlayer =& $WeaponResults['TargetPlayer'];
 		
-		echo $CombatPlanet->getDisplayName() ?> fires a <?php echo $ShootingWeapon->getName(); ?> at <?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
+		echo $CombatPlanet->getCombatName() ?> fires a <?php echo $ShootingWeapon->getName(); ?> at <?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 			if(!$ShotHit) {
 				?> and misses<?php
@@ -76,7 +76,7 @@ if(isset($PlanetCombatResults['Drones'])) {
 	if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
 	if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
 	
-	echo $CombatPlanet->getDisplayName();
+	echo $CombatPlanet->getCombatName();
 	if($WeaponDamage['Launched'] == 0) {
 		?> fails to launch it's combat drones<?php
 	}
@@ -121,7 +121,7 @@ if(isset($PlanetCombatResults['Drones'])) {
 	}
 }
 
-echo $CombatPlanet->getDisplayName();
+echo $CombatPlanet->getCombatName();
 if($TotalDamage > 0) {
 	?> hit for a total of <span class="red"><?php echo $TotalDamage; ?></span> damage in this round of combat<?php
 }

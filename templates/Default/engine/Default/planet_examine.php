@@ -1,7 +1,7 @@
 <table>
 	<tr>
 		<td class="bold">Planet Name:</td>
-		<td><?php echo $ThisPlanet->getName(); ?></td>
+		<td><?php echo $ThisPlanet->getDisplayName(); ?></td>
 	</tr>
 	<tr>
 		<td class="bold">Planet Type:</td>

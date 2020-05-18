@@ -980,10 +980,6 @@ class SmrPlanet {
 		return false;
 	}
 
-	public function getName() {
-		return $this->planetName;
-	}
-
 	public function setName($name) {
 		if ($this->planetName == $name) {
 			return;
@@ -992,8 +988,18 @@ class SmrPlanet {
 		$this->hasChanged = true;
 	}
 
+	/**
+	 * Returns the name of the planet, suitably escaped for HTML display.
+	 */
 	public function getDisplayName() {
-		return '<span style="color:yellow;font-variant:small-caps">' . $this->getName() . '(#' . $this->getSectorID() . ')</span>';
+		return htmlentities($this->planetName);
+	}
+
+	/**
+	 * Returns the name of the planet, intended for combat messages.
+	 */
+	public function getCombatName() {
+		return '<span style="color:yellow;font-variant:small-caps">' . $this->getDisplayName() . '(#' . $this->getSectorID() . ')</span>';
 	}
 
 	public function isInhabitable() {

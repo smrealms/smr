@@ -19,6 +19,6 @@ if (!$player->isLandedOnPlanet()) {
 
 $planet = $player->getSectorPlanet();
 $template->assign('ThisPlanet', $planet);
-$template->assign('PageTopic', 'Planet : ' . $planet->getName() . ' [Sector #' . $player->getSectorID() . ']');
+$template->assign('PageTopic', 'Planet : ' . $planet->getDisplayName() . ' [Sector #' . $player->getSectorID() . ']');
 
 Menu::planet($planet);
