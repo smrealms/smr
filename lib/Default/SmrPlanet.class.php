@@ -999,7 +999,7 @@ class SmrPlanet {
 	 * Returns the name of the planet, intended for combat messages.
 	 */
 	public function getCombatName() {
-		return '<span style="color:yellow;font-variant:small-caps">' . $this->getDisplayName() . '(#' . $this->getSectorID() . ')</span>';
+		return '<span style="color:yellow;font-variant:small-caps">' . $this->getDisplayName() . ' (#' . $this->getSectorID() . ')</span>';
 	}
 
 	public function isInhabitable() {
