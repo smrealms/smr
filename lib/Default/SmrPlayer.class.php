@@ -1372,6 +1372,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$db->escapeNumber($expires) . ',' .
 			$db->escapeBoolean($senderDelete) . ')'
 		);
+		// Keep track of the message_id so it can be returned
+		$insertID = $db->getInsertID();
 
 		if ($unread === true) {
 			// give him the message icon
@@ -1400,6 +1402,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 				}
 			break;
 		}
+
+		return $insertID;
 	}
 
 	public function sendMessageToBox($boxTypeID, $message) {
@@ -1484,8 +1488,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$senderDelete = true;
 		}
 
-		// send him the message
-		self::doMessageSending($this->getAccountID(), $receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $senderDelete, $unread);
+		// send him the message and return the message_id
+		return self::doMessageSending($this->getAccountID(), $receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $senderDelete, $unread);
 	}
 
 	public function sendMessageFromOpAnnounce($receiverID, $message, $expires = false) {
