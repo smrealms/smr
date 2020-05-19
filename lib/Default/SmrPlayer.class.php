@@ -385,9 +385,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($roleID) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
 		$this->actionTaken('JoinAlliance', array('Alliance' => $alliance));
-
-		// Joining an alliance cancels all open invitations
-		$this->db->query('DELETE FROM alliance_invites_player WHERE ' . $this->SQL);
 	}
 
 	public function getAllianceJoinable() {
@@ -400,6 +397,18 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 		$this->allianceJoinable = $time;
 		$this->hasChanged = true;
+	}
+
+	/**
+	 * Invites player with $accountID to this player's alliance.
+	 */
+	public function sendAllianceInvitation(int $accountID, string $message, int $expires) : void {
+		if (!$this->hasAlliance()) {
+			throw new Exception('Must be in an alliance to send alliance invitations');
+		}
+		// Send message to invited player
+		$messageID = $this->sendMessage($accountID, MSG_PLAYER, $message, false, true, $expires, true);
+		SmrInvitation::send($this->getAllianceID(), $this->getGameID(), $accountID, $this->getAccountID(), $messageID, $expires);
 	}
 
 	public function getAttackColour() {

@@ -58,12 +58,14 @@ if (count($PendingInvites) == 0) { ?>
 			<th>Invited Player</th>
 			<th>Invited By</th>
 			<th>Expires</th>
+			<th>Cancel</th>
 		</tr><?php
 		foreach ($PendingInvites as $invite) { ?>
 			<tr>
 				<td><?php echo $invite['invited']; ?></td>
 				<td><?php echo $invite['invited_by']; ?></td>
 				<td><?php echo $invite['expires']; ?></td>
+				<td class="center"><a href="<?php echo $invite['cancelHREF']; ?>"><img class="bottom" src="images/silk/cross.png" width="16" height="16" alt="Cancel" title="Cancel Invitation" /></a></td>
 			</tr><?php
 		} ?>
 	</table><?php

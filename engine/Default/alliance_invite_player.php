@@ -6,21 +6,18 @@ $game = $player->getGame();
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
-// Remove any expired invitations
-$db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(TIME));
-
 // Get list of pending invitations
 $pendingInvites = array();
-$db->query('SELECT * FROM alliance_invites_player
-            WHERE game_id = '.$db->escapeNumber($player->getGameID()) . '
-              AND alliance_id = '.$db->escapeNumber($alliance->getAllianceID()));
-while ($db->nextRecord()) {
-	$invited = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID());
-	$invitedBy = SmrPlayer::getPlayer($db->getInt('invited_by_id'), $player->getGameID());
+foreach (SmrInvitation::getAll($player->getAllianceID(), $player->getGameID()) as $invite) {
+	$container = create_container('alliance_invite_cancel_processing.php');
+	$container['invite'] = $invite;
+
+	$invited = $invite->getReceiver();
 	$pendingInvites[$invited->getAccountID()] = array(
 		'invited' => $invited->getDisplayName(true),
-		'invited_by' => $invitedBy->getDisplayName(),
-		'expires' => format_time($db->getInt('expires') - TIME, true),
+		'invited_by' => $invite->getSender()->getDisplayName(),
+		'expires' => format_time($invite->getExpires() - TIME, true),
+		'cancelHREF' => SmrSession::getNewHREF($container),
 	);
 }
 $template->assign('PendingInvites', $pendingInvites);
