@@ -19,6 +19,8 @@ if ($db->getNumRows() > 0) {
 		$voting[$voteID]['Question'] = $db->getField('question');
 		if ($db->getInt('end') > TIME) {
 			$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - TIME, true);
+		} else {
+			$voting[$voteID]['EndDate'] = date(DATE_DATE_SHORT, $db->getInt('end'));
 		}
 		$voting[$voteID]['Options'] = array();
 		$db2->query('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db2->escapeNumber($db->getInt('vote_id')) . ' GROUP BY option_id');
