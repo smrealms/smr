@@ -25,11 +25,7 @@ if (!empty($addMessage)) {
 	$msg .= '<br />' . $addMessage;
 }
 
-// Send mail to player
-$player->sendMessage($receiverID, MSG_PLAYER, $msg, false, true, $expires, true);
-
-// Record invitation in the database
-$db->query('INSERT INTO alliance_invites_player (game_id, account_id, alliance_id, invited_by_id, expires) VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($receiverID) . ', ' . $db->escapeNumber($player->getAllianceID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($expires) . ')');
+$player->sendAllianceInvitation($receiverID, $msg, $expires);
 
 $container = create_container('skeleton.php', 'alliance_invite_player.php');
 forward($container);
