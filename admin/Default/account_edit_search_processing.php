@@ -5,7 +5,7 @@ $player_name = Request::get('player_name');
 $searchGameID = Request::getInt('game_id');
 
 if (!empty($player_name)) {
-	$gameIDClause = $searchGameID != 0 ? ' AND game_id = ' . $db->escapeNumber($var['SearchGameID']) . ' ' : '';
+	$gameIDClause = $searchGameID != 0 ? ' AND game_id = ' . $db->escapeNumber($searchGameID) . ' ' : '';
 	$db->query('SELECT account_id FROM player
 					WHERE player_name = ' . $db->escapeString($player_name) . $gameIDClause . '
 					ORDER BY game_id DESC LIMIT 1');
