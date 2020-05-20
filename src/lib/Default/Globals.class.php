@@ -514,10 +514,15 @@ class Globals {
 	}
 
 	public static function getBuyShipNameCosts() : array {
+		global $player;
+		$discount = 0;
+		if ($player->getGameID() == 133) {
+			$discount = 10;
+		}
 		return [
-			'text' => CREDITS_PER_TEXT_SHIP_NAME,
-			'html' => CREDITS_PER_HTML_SHIP_NAME,
-			'logo' => CREDITS_PER_SHIP_LOGO,
+			'text' => CREDITS_PER_TEXT_SHIP_NAME - $discount,
+			'html' => CREDITS_PER_HTML_SHIP_NAME - $discount,
+			'logo' => CREDITS_PER_SHIP_LOGO - $discount,
 		];
 	}
 
