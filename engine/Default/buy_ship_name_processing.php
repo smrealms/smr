@@ -97,39 +97,27 @@ function checkHtmlShipName(string $name) : void {
 
 $action = Request::get('action');
 
-$actionHtmlShipName = 'Include HTML (' . CREDITS_PER_HTML_SHIP_NAME . ' SMR Credits)';
-$actionTextShipName = 'Get It Painted! (' . CREDITS_PER_TEXT_SHIP_NAME . ' SMR Credit)';
-$actionShipLogo = 'Paint a logo (' . CREDITS_PER_SHIP_LOGO . ' SMR Credits)';
-
-if ($action == $actionHtmlShipName) {
-	$cred_cost = CREDITS_PER_HTML_SHIP_NAME;
-} elseif ($action == $actionShipLogo) {
-	$cred_cost = CREDITS_PER_SHIP_LOGO;
-} elseif ($action == $actionTextShipName) {
-	$cred_cost = CREDITS_PER_TEXT_SHIP_NAME;
-} else {
-	throw new Exception('Did not match an expected ship name type.');
-}
-
+$cred_cost = $var['costs'][$action];
 if ($account->getTotalSmrCredits() < $cred_cost) {
-	create_error('You don\'t have enough SMR Credits. Donate to SMR to gain SMR Credits!');
+	create_error('You don\'t have enough SMR Credits. These can be earned by donating to SMR!');
 }
 
-if ($action == $actionShipLogo) {
+if ($action == 'logo') {
 	$filename = $player->getAccountID() . 'logo' . $player->getGameID();
 	checkShipLogo($filename);
 	$name = '<img style="padding:3px;" src="upload/' . $filename . '">';
 } else {
 	// Player submitted a text or HTML ship name
 	$name = Request::get('ship_name');
-	if ($action == $actionTextShipName) {
+	if ($action == 'text') {
 		checkTextShipName($name, 48);
 		$name = htmlentities($name, ENT_NOQUOTES, 'utf-8');
-	} else {
+	} elseif ($action == 'html') {
 		checkTextShipName($name, 128);
 		checkHtmlShipName($name);
 		$container = create_container('skeleton.php', 'buy_ship_name_preview.php');
 		$container['ShipName'] = $name;
+		$container['cost'] = $cred_cost;
 		forward($container);
 	}
 }

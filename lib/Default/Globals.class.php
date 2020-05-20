@@ -513,6 +513,14 @@ class Globals {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'buy_ship_name.php'));
 	}
 
+	public static function getBuyShipNameCosts() : array {
+		return [
+			'text' => CREDITS_PER_TEXT_SHIP_NAME,
+			'html' => CREDITS_PER_HTML_SHIP_NAME,
+			'logo' => CREDITS_PER_SHIP_LOGO,
+		];
+	}
+
 	public static function getSectorBBLink($sectorID) {
 		return '[sector=' . $sectorID . ']';
 	}
