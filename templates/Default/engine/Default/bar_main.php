@@ -47,7 +47,7 @@ if ($WinningTicket) { ?>
 Well... of course you could always pay our painters to customise your ship name, or even spray on your favourite logo!<br />
 <br />
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo Globals::getBuyShipnameHREF(); ?>">Customize Ship Name (<?php echo min(CREDITS_PER_TEXT_SHIP_NAME, CREDITS_PER_HTML_SHIP_NAME, CREDITS_PER_SHIP_LOGO); ?>-<?php echo max(CREDITS_PER_TEXT_SHIP_NAME, CREDITS_PER_HTML_SHIP_NAME, CREDITS_PER_SHIP_LOGO); ?> SMR Credits)</a>
+	<a class="buttonA" href="<?php echo Globals::getBuyShipnameHREF(); ?>">Customize Ship Name (<?php echo min(Globals::getBuyShipNameCosts()); ?>-<?php echo max(Globals::getBuyShipNameCosts()); ?> SMR Credits)</a>
 </div>
 
 <br />
