@@ -40,7 +40,6 @@ if (isset($ExtraCSSLink)) {
 if (isset($HeaderTemplateInclude)) {
 	$this->includeTemplate($HeaderTemplateInclude);
 } ?>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" href="css/colorpicker.css" />
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
