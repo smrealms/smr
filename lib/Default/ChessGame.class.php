@@ -632,9 +632,11 @@ class ChessGame {
 
 				$pieceID = $p->pieceID;
 				$pieceNo = $p->pieceNo;
+				$promotionPieceID = null;
 				if($moveInfo['PawnPromotion'] !== false) {
 					$p->pieceID = $moveInfo['PawnPromotion']['PieceID'];
 					$p->pieceNo = $moveInfo['PawnPromotion']['PieceNo'];
+					$promotionPieceID = $p->pieceID;
 				}
 
 				$checking = null;
@@ -644,8 +646,11 @@ class ChessGame {
 				if($this->isCheckmated(self::getOtherColour($p->colour))) {
 					$checking = 'MATE';
 				}
+
+				$castlingType = $moveInfo['Castling'] === false ? null : $moveInfo['Castling']['Type'];
+
 				if($this->moves!=null) {
-					$this->moves[] = $this->createMove($pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $moveInfo['Castling']['Type'], $moveInfo['EnPassant'], $moveInfo['PawnPromotion'] === false ? null : $moveInfo['PawnPromotion']['PieceID']);
+					$this->moves[] = $this->createMove($pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $castlingType, $moveInfo['EnPassant'], $promotionPieceID);
 				}
 				if(self::isPlayerChecked($this->board, $this->getHasMoved(), $p->colour)) {
 					return 3;
@@ -660,7 +665,6 @@ class ChessGame {
 					$otherPlayer->increaseHOF(1, array($chessType,'Moves','Opponent Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
 				}
 
-				$castlingType = $moveInfo['Castling'] === false ? null : $moveInfo['Castling']['Type'];
 				$this->db->query('INSERT INTO chess_game_moves
 								(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken,castling,en_passant,promote_piece_id)
 								VALUES
