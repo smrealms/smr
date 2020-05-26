@@ -203,27 +203,27 @@ class ChessGame {
 		$fen = '';
 		$board = $this->getBoard();
 		$blanks = 0;
-		for($y=0; $y < 8; $y++) {
-			if($y > 0) {
+		for ($y = 0; $y < 8; $y++) {
+			if ($y > 0) {
 				$fen .= '/';
 			}
-			for($x=0; $x < 8; $x++) {
-				if($board[$y][$x] == null) {
+			for ($x = 0; $x < 8; $x++) {
+				if ($board[$y][$x] == null) {
 					$blanks++;
 				} else {
-					if($blanks > 0) {
+					if ($blanks > 0) {
 						$fen .= $blanks;
 						$blanks = 0;
 					}
 					$fen .= $board[$y][$x]->getPieceLetter();
 				}
 			}
-			if($blanks > 0) {
+			if ($blanks > 0) {
 				$fen .= $blanks;
 				$blanks = 0;
 			}
 		}
-		switch($this->getCurrentTurnColour()) {
+		switch ($this->getCurrentTurnColour()) {
 			case self::PLAYER_WHITE:
 				$fen .= ' w ';
 			break;
@@ -449,72 +449,72 @@ class ChessGame {
 	}
 
 	public static function movePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, $pawnPromotionPiece = ChessPiece::QUEEN) {
-		if(!self::isValidCoord($x, $y, $board)) {
+		if (!self::isValidCoord($x, $y, $board)) {
 			throw new Exception('Invalid from coordinates, x=' . $x . ', y=' . $y);
 		}
-		if(!self::isValidCoord($toX, $toY, $board)) {
+		if (!self::isValidCoord($toX, $toY, $board)) {
 			throw new Exception('Invalid to coordinates, x=' . $toX . ', y=' . $toY);
 		}
 		$pieceTaken = $board[$toY][$toX];
 		$board[$toY][$toX] = $board[$y][$x];
 		$p = $board[$toY][$toX];
 		$board[$y][$x] = null;
-		if($p == null) {
+		if ($p == null) {
 			throw new Exception('Trying to move non-existent piece: ' . var_export($board, true));
 		}
 		$p->setX($toX);
 		$p->setY($toY);
 
 		$oldPawnMovement = $hasMoved[ChessPiece::PAWN];
-		$nextPawnMovement = array(-1,-1);
+		$nextPawnMovement = array(-1, -1);
 		$castling = false;
 		$enPassant = false;
 		$rookMoved = false;
 		$rookTaken = false;
 		$pawnPromotion = false;
-		if($p->pieceID == ChessPiece::KING) {
+		if ($p->pieceID == ChessPiece::KING) {
 			//Castling?
 			$castling = self::isCastling($x, $toX);
-			if($castling !== false) {
+			if ($castling !== false) {
 				$hasMoved[$p->colour][ChessPiece::KING] = true;
 				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = true;
-				if($board[$y][$castling['X']] == null) {
+				if ($board[$y][$castling['X']] == null) {
 					throw new Exception('Cannot castle with non-existent castle.');
 				}
 				$board[$toY][$castling['ToX']] = $board[$y][$castling['X']];
 				$board[$toY][$castling['ToX']]->setX($castling['ToX']);
 				$board[$y][$castling['X']] = null;
 			}
-		} elseif($p->pieceID == ChessPiece::PAWN) {
-			if($toY == 0 || $toY == 7) {
+		} elseif ($p->pieceID == ChessPiece::PAWN) {
+			if ($toY == 0 || $toY == 7) {
 				$pawnPromotion = $p->promote($pawnPromotionPiece, $board);
 			}
 			//Double move to track?
-			elseif(($y == 1 || $y == 6) && ($toY == 3 || $toY == 4)) {
+			elseif (($y == 1 || $y == 6) && ($toY == 3 || $toY == 4)) {
 				$nextPawnMovement = array($toX, $toY);
 			}
 			//En passant?
-			elseif($hasMoved[ChessPiece::PAWN][0] == $toX &&
+			elseif ($hasMoved[ChessPiece::PAWN][0] == $toX &&
 					($hasMoved[ChessPiece::PAWN][1] == 3 && $toY == 2 || $hasMoved[ChessPiece::PAWN][1] == 4 && $toY == 5)) {
 				$enPassant = true;
 				$pieceTaken = $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
-				if($board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] == null) {
+				if ($board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] == null) {
 					throw new Exception('Cannot en passant a non-existent pawn.');
 				}
 				$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = null;
 			}
-		} elseif($p->pieceID == ChessPiece::ROOK && ($x == 0 || $x == 7) && $y == ($p->colour == self::PLAYER_WHITE ? 7 : 0)) {
+		} elseif ($p->pieceID == ChessPiece::ROOK && ($x == 0 || $x == 7) && $y == ($p->colour == self::PLAYER_WHITE ? 7 : 0)) {
 			//Rook moved?
-			if($hasMoved[$p->colour][ChessPiece::ROOK][$x==0?'Queen':'King'] === false) {
+			if ($hasMoved[$p->colour][ChessPiece::ROOK][$x == 0 ? 'Queen' : 'King'] === false) {
 				// We set rook moved in here as it's used for move info.
-				$rookMoved = $x==0?'Queen':'King';
+				$rookMoved = $x == 0 ? 'Queen' : 'King';
 				$hasMoved[$p->colour][ChessPiece::ROOK][$rookMoved] = true;
 			}
 		}
 		// Check if we've taken a rook and marked them as moved, if they've already moved this does nothing, but if they were taken before moving this stops an issue with trying to castle with a non-existent castle.
-		if($pieceTaken != null && $pieceTaken->pieceID == ChessPiece::ROOK && ($toX == 0 || $toX == 7) && $toY == ($pieceTaken->colour == self::PLAYER_WHITE ? 7 : 0)) {
-			if($hasMoved[$pieceTaken->colour][ChessPiece::ROOK][$toX==0?'Queen':'King'] === false) {
-				$rookTaken = $toX==0?'Queen':'King';
+		if ($pieceTaken != null && $pieceTaken->pieceID == ChessPiece::ROOK && ($toX == 0 || $toX == 7) && $toY == ($pieceTaken->colour == self::PLAYER_WHITE ? 7 : 0)) {
+			if ($hasMoved[$pieceTaken->colour][ChessPiece::ROOK][$toX == 0 ? 'Queen' : 'King'] === false) {
+				$rookTaken = $toX == 0 ? 'Queen' : 'King';
 				$hasMoved[$pieceTaken->colour][ChessPiece::ROOK][$rookTaken] = true;
 			}
 		}
@@ -531,18 +531,18 @@ class ChessGame {
 	}
 
 	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, $moveInfo) {
-		if(!self::isValidCoord($x, $y, $board)) {
+		if (!self::isValidCoord($x, $y, $board)) {
 			throw new Exception('Invalid from coordinates, x=' . $x . ', y=' . $y);
 		}
-		if(!self::isValidCoord($toX, $toY, $board)) {
+		if (!self::isValidCoord($toX, $toY, $board)) {
 			throw new Exception('Invalid to coordinates, x=' . $toX . ', y=' . $toY);
 		}
-		if($board[$y][$x] != null) {
+		if ($board[$y][$x] != null) {
 			throw new Exception('Undoing move onto another piece? x=' . $x . ', y=' . $y);
 		}
 		$board[$y][$x] = $board[$toY][$toX];
 		$p = $board[$y][$x];
-		if($p == null) {
+		if ($p == null) {
 			throw new Exception('Trying to undo move of a non-existent piece: ' . var_export($board, true));
 		}
 		$board[$toY][$toX] = $moveInfo['PieceTaken'];
@@ -591,29 +591,29 @@ class ChessGame {
 		$toX = ord($move[2]) - $aVal;
 		$toY = 8 - $move[3];
 		$pawnPromotionPiece = null;
-		if(isset($move[4])) {
+		if (isset($move[4])) {
 			$pawnPromotionPiece = ChessPiece::getPieceForLetter($move[4]);
 		}
 		return $this->tryMove($x, $y, $toX, $toY, $this->getCurrentTurnAccountID(), $pawnPromotionPiece);
 	}
 
 	public function tryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) {
-		if($this->hasEnded()) {
+		if ($this->hasEnded()) {
 			return 5;
 		}
-		if($this->getCurrentTurnAccountID() != $forAccountID) {
+		if ($this->getCurrentTurnAccountID() != $forAccountID) {
 			return 4;
 		}
 		$lastTurnPlayer = $this->getCurrentTurnPlayer();
 		$this->getBoard();
 		$p = $this->board[$y][$x];
-		if($p == null || $p->colour != $this->getColourForAccountID($forAccountID)) {
+		if ($p == null || $p->colour != $this->getColourForAccountID($forAccountID)) {
 			return 2;
 		}
 
 		$moves = $p->getPossibleMoves($this->board, $this->getHasMoved(), $forAccountID);
-		foreach($moves as $move) {
-			if($move[0]==$toX && $move[1]==$toY) {
+		foreach ($moves as $move) {
+			if ($move[0] == $toX && $move[1] == $toY) {
 				$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 				$currentPlayer = $this->getCurrentTurnPlayer();
 
@@ -623,9 +623,9 @@ class ChessGame {
 				$p = $this->board[$toY][$toX];
 
 				$pieceTakenID = null;
-				if($moveInfo['PieceTaken'] != null) {
+				if ($moveInfo['PieceTaken'] != null) {
 					$pieceTakenID = $moveInfo['PieceTaken']->pieceID;
-					if($moveInfo['PieceTaken']->pieceID == ChessPiece::KING) {
+					if ($moveInfo['PieceTaken']->pieceID == ChessPiece::KING) {
 						throw new Exception('King was taken.');
 					}
 				}
@@ -633,36 +633,36 @@ class ChessGame {
 				$pieceID = $p->pieceID;
 				$pieceNo = $p->pieceNo;
 				$promotionPieceID = null;
-				if($moveInfo['PawnPromotion'] !== false) {
+				if ($moveInfo['PawnPromotion'] !== false) {
 					$p->pieceID = $moveInfo['PawnPromotion']['PieceID'];
 					$p->pieceNo = $moveInfo['PawnPromotion']['PieceNo'];
 					$promotionPieceID = $p->pieceID;
 				}
 
 				$checking = null;
-				if($p->isAttacking($this->board, $this->getHasMoved(), true)) {
+				if ($p->isAttacking($this->board, $this->getHasMoved(), true)) {
 					$checking = 'CHECK';
 				}
-				if($this->isCheckmated(self::getOtherColour($p->colour))) {
+				if ($this->isCheckmated(self::getOtherColour($p->colour))) {
 					$checking = 'MATE';
 				}
 
 				$castlingType = $moveInfo['Castling'] === false ? null : $moveInfo['Castling']['Type'];
 
-				if($this->moves!=null) {
+				if ($this->moves != null) {
 					$this->moves[] = $this->createMove($pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $castlingType, $moveInfo['EnPassant'], $promotionPieceID);
 				}
-				if(self::isPlayerChecked($this->board, $this->getHasMoved(), $p->colour)) {
+				if (self::isPlayerChecked($this->board, $this->getHasMoved(), $p->colour)) {
 					return 3;
 				}
 
 				$otherPlayer = $this->getCurrentTurnPlayer();
-				if($moveInfo['PawnPromotion'] !== false) {
+				if ($moveInfo['PawnPromotion'] !== false) {
 					$piecePromotedSymbol = $p->getPieceSymbol();
-					$currentPlayer->increaseHOF(1, array($chessType,'Moves','Own Pawns Promoted','Total'), HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, array($chessType,'Moves','Opponent Pawns Promoted','Total'), HOF_PUBLIC);
-					$currentPlayer->increaseHOF(1, array($chessType,'Moves','Own Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, array($chessType,'Moves','Opponent Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
+					$currentPlayer->increaseHOF(1, array($chessType, 'Moves', 'Own Pawns Promoted', 'Total'), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array($chessType, 'Moves', 'Opponent Pawns Promoted', 'Total'), HOF_PUBLIC);
+					$currentPlayer->increaseHOF(1, array($chessType, 'Moves', 'Own Pawns Promoted', $piecePromotedSymbol), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array($chessType, 'Moves', 'Opponent Pawns Promoted', $piecePromotedSymbol), HOF_PUBLIC);
 				}
 
 				$this->db->query('INSERT INTO chess_game_moves
