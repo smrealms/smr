@@ -201,7 +201,7 @@ class ChessGame {
 
 	public function getFENString() {
 		$fen = '';
-		$board =& $this->getBoard();
+		$board = $this->getBoard();
 		$blanks = 0;
 		for($y=0; $y < 8; $y++) {
 			if($y > 0) {
@@ -457,7 +457,7 @@ class ChessGame {
 		}
 		$pieceTaken = $board[$toY][$toX];
 		$board[$toY][$toX] = $board[$y][$x];
-		$p =& $board[$toY][$toX];
+		$p = $board[$toY][$toX];
 		$board[$y][$x] = null;
 		if($p == null) {
 			throw new Exception('Trying to move non-existent piece: ' . var_export($board, true));
@@ -541,7 +541,7 @@ class ChessGame {
 			throw new Exception('Undoing move onto another piece? x=' . $x . ', y=' . $y);
 		}
 		$board[$y][$x] = $board[$toY][$toX];
-		$p =& $board[$y][$x];
+		$p = $board[$y][$x];
 		if($p == null) {
 			throw new Exception('Trying to undo move of a non-existent piece: ' . var_export($board, true));
 		}
@@ -620,7 +620,7 @@ class ChessGame {
 				$moveInfo = ChessGame::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY, $pawnPromotionPiece);
 
 				//We have taken the move, we should refresh $p
-				$p =& $this->board[$toY][$toX];
+				$p = $this->board[$toY][$toX];
 
 				$pieceTakenID = null;
 				if($moveInfo['PieceTaken'] != null) {
