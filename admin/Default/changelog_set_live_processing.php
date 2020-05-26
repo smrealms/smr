@@ -8,7 +8,7 @@ $db->query('UPDATE version
 // Initialize the next version (since the version set live is not always the
 // last one, we INSERT IGNORE to skip this step in this case).
 $db->query('SELECT * FROM version WHERE version_id = ' . $db->escapeNumber($var['version_id']));
-$db->nextRecord();
+$db->requireRecord();
 $versionID = $db->getInt('version_id') + 1;
 $major = $db->getInt('major_version');
 $minor = $db->getInt('minor_version');

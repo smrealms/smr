@@ -20,7 +20,7 @@ $container['body'] = 'trader_bounties.php';
 $template->assign('BountiesHREF', SmrSession::getNewHREF($container));
 
 $db->query('SELECT count(*) FROM bounty WHERE claimer_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
-$db->nextRecord();
+$db->requireRecord();
 $template->assign('BountiesClaimable', $db->getInt('count(*)'));
 
 // Ship
@@ -51,7 +51,7 @@ $template->assign('Hardware', $hardware);
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $db->escapeNumber($player->getExperience()) . ' ORDER BY requirement ASC LIMIT 1');
 if (!$db->nextRecord()) {
 	$db->query('SELECT level_name,requirement FROM level ORDER BY requirement DESC LIMIT 1');
-	$db->nextRecord();
+	$db->requireRecord();
 }
 $template->assign('NextLevelName', $db->getField('level_name'));
 

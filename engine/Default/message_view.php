@@ -95,11 +95,11 @@ if (!isset ($var['folder_id'])) {
 		$db->query('SELECT count(*) as count
 					FROM message ' . $whereClause . '
 						AND msg_read = ' . $db->escapeBoolean(false));
-		$db->nextRecord();
+		$db->requireRecord();
 		$messageBox['UnreadMessages'] = $db->getInt('count');
 	}
 	$db->query('SELECT count(*) as count FROM message ' . $whereClause);
-	$db->nextRecord();
+	$db->requireRecord();
 	$messageBox['TotalMessages'] = $db->getInt('count');
 	$messageBox['Type'] = $var['folder_id'];
 

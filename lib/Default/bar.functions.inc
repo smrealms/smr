@@ -50,7 +50,7 @@ function getLottoInfo($gameID) {
 		$firstBuy = TIME;
 	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket
 				WHERE game_id = '.$db->escapeNumber($gameID) . ' AND time > 0');
-	$db->nextRecord();
+	$db->requireRecord();
 	if ($db->getInt('num') > 0) {
 		$amount += $db->getInt('num') * 1000000 * .9;
 		$firstBuy = $db->getInt('time');

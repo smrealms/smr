@@ -12,7 +12,7 @@ Menu::history_games(0);
 $db = new $var['HistoryDatabase']();
 $db->query('SELECT start_date, type, end_date, game_name, speed, game_id ' .
            'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
-$db->nextRecord();
+$db->requireRecord();
 $template->assign('GameName', $game_name);
 $template->assign('Start', date(DATE_DATE_SHORT, $db->getInt('start_date')));
 $template->assign('End', date(DATE_DATE_SHORT, $db->getInt('end_date')));
@@ -28,7 +28,7 @@ if ($db->nextRecord()) {
 	$template->assign('MaxKills', $db->getInt('max(kills)'));
 }
 $db->query('SELECT count(*) FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id));
-$db->nextRecord();
+$db->requireRecord();
 $template->assign('NumAlliances', $db->getInt('count(*)'));
 
 $playerExp = [];

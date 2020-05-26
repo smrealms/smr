@@ -3,7 +3,7 @@
 if (isset($var['article'])) {
 	$template->assign('PageTopic', 'Delete Article - Confirm');
 	$db->query('SELECT * FROM galactic_post_article WHERE article_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	$db->nextRecord();
+	$db->requireRecord();
 	$template->assign('ArticleTitle', $db->getField('title'));
 	$container = create_container('galactic_post_delete_processing.php');
 	transfer('article');
@@ -13,7 +13,7 @@ if (isset($var['article'])) {
 	// Delete paper
 	$template->assign('PageTopic', 'Delete Paper - Confirm');
 	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($var['id']));
-	$db->nextRecord();
+	$db->requireRecord();
 	$template->assign('PaperTitle', $db->getField('title'));
 
 	$articles = [];

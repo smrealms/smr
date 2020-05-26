@@ -46,7 +46,7 @@ $db->query('SELECT
 	GROUP BY alliance_id'
 );
 
-$db->nextRecord();
+$db->requireRecord();
 $template->assign('AllianceExp', $db->getInt('alliance_xp'));
 $template->assign('AllianceAverageExp', $db->getInt('alliance_avg'));
 

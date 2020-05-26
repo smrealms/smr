@@ -25,7 +25,7 @@ $links[] = array(
 $role_id = $player->getAllianceRole($alliance->getAllianceID());
 
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
-$db->nextRecord();
+$db->requireRecord();
 
 $container['url'] = 'skeleton.php';
 $container['alliance_id'] = $alliance->getAllianceID();

@@ -54,7 +54,7 @@ while ($db->nextRecord()) {
 }
 
 $db->query('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
-$db->nextRecord();
+$db->requireRecord();
 $thread['CanDelete'] = $db->getBoolean('mb_messages');
 
 $db->query('SELECT text, sender_id, time, reply_id

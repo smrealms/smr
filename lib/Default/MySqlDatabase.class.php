@@ -56,8 +56,11 @@ abstract class MySqlDatabase {
 	public function query($query) {
 		$this->dbResult = self::$dbConn->query($query);
 	}
-	
-	public function nextRecord() {
+
+	/**
+	 * Use to populate this instance with the next record of the active query.
+	 */
+	public function nextRecord() : bool {
 		if (!$this->dbResult) {
 			$this->error('No resource to get record from.');
 		}
@@ -66,6 +69,16 @@ abstract class MySqlDatabase {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Use instead of nextRecord when exactly one record is expected from the
+	 * active query.
+	 */
+	public function requireRecord() : void {
+		if (!$this->nextRecord() || $this->getNumRows() != 1) {
+			$this->error('One record required, but found ' . $this->getNumRows());
+		}
 	}
 
 	public function hasField($name) {

@@ -11,7 +11,7 @@ $game_id = $var['view_game_id'];
 $id = $var['alliance_id'];
 $db = new $var['HistoryDatabase']();
 $db->query('SELECT * FROM alliance WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id));
-$db->nextRecord();
+$db->requireRecord();
 $template->assign('PageTopic', 'Alliance Roster - ' . htmlentities($db->getField('alliance_name')));
 
 //get alliance members

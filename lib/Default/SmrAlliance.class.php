@@ -116,7 +116,7 @@ class SmrAlliance {
 
 		// get the next alliance id (ignoring reserved ID's)
 		$db->query('SELECT max(alliance_id) FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (alliance_id < ' . $db->escapeNumber(NHA_ID) . ' OR alliance_id > ' . $db->escapeNumber(NHA_ID + 7) . ') LIMIT 1');
-		$db->nextRecord();
+		$db->requireRecord();
 		$allianceID = $db->getInt('max(alliance_id)') + 1;
 		if ($allianceID >= NHA_ID && $allianceID <= NHA_ID + 7) {
 			$allianceID = NHA_ID + 8;
