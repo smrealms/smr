@@ -5,7 +5,7 @@
 	if ($AnonAccounts) { ?>
 		You own the following accounts:<br /><br /><?php
 		foreach ($AnonAccounts as $Acc) { ?>
-			Account <span class="yellow"><?php echo $Acc['ID']; ?></span> with password <span class="yellow"><?php echo $Acc['Password']; ?></span>
+			Account <span class="yellow"><?php echo $Acc['ID']; ?></span> with password <span class="yellow"><?php echo htmlentities($Acc['Password']); ?></span>
 			<br /><?php
 		}
 	} else { ?>
