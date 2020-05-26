@@ -45,8 +45,7 @@ try {
 	$template->assign('Weapons', $weapons);
 
 	$template->display('weapon_list.php');
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }
 

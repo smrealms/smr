@@ -33,7 +33,7 @@ if (!SmrSector::sectorExists($player->getGameID(), $target)) {
 }
 
 // If the Calculate Turn Cost button was pressed
-if (Request::get('action', '')  == 'Calculate Turn Cost') {
+if (Request::get('action', '') == 'Calculate Turn Cost') {
 	$container = create_container('skeleton.php', 'sector_jump_calculate.php');
 	$container['target'] = $target;
 	forward($container);

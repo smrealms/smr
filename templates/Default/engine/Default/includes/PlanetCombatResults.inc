@@ -5,8 +5,7 @@ if($MinimalDisplay) {
 	echo $CombatPlanet->getCombatName();
 	if($TotalDamage > 0) {
 		?> hit for a total of <span class="red"><?php echo $TotalDamage; ?></span> damage in this round of combat of which <span class="red"><?php echo $PlanetCombatResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()]; ?></span> was done to you<?php
-	}
-	else {
+	} else {
 		?> does no damage this round<?php
 	} ?>. <?php echo $AttackLogLink;
 	return;
@@ -23,24 +22,19 @@ if(isset($PlanetCombatResults['Weapons']) && is_array($PlanetCombatResults['Weap
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 			if(!$ShotHit) {
 				?> and misses<?php
-			}
-			else if($ActualDamage['TotalDamage'] == 0) {
+			} else if($ActualDamage['TotalDamage'] == 0) {
 				if($WeaponDamage['Shield'] > 0) {
 					if($ActualDamage['HasCDs']) {
 						?> which proves ineffective against their combat drones<?php
-					}
-					else {
+					} else {
 						?> which washes harmlessly over their hull<?php
 					}
-				}
-				else if($WeaponDamage['Armour'] > 0) {
+				} else if($WeaponDamage['Armour'] > 0) {
 					?> which is deflected by their shields<?php
-				}
-				else {
+				} else {
 					?> but it cannot do any damage<?php
 				}
-			}
-			else {
+			} else {
 				?> destroying <?php
 				$DamageTypes = 0;
 				if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
@@ -79,27 +73,22 @@ if(isset($PlanetCombatResults['Drones'])) {
 	echo $CombatPlanet->getCombatName();
 	if($WeaponDamage['Launched'] == 0) {
 		?> fails to launch it's combat drones<?php
-	}
-	else {
+	} else {
 		?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php if($ActualDamage['TargetAlreadyDead']){ ?>the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if(!$ActualDamage['TargetAlreadyDead']) {
 			if($ActualDamage['TotalDamage'] == 0) {
 				if($WeaponDamage['Shield'] > 0) {
 					if($ActualDamage['HasCDs']) {
 						?> which prove ineffective against their combat drones<?php
-					}
-					else {
+					} else {
 						?> which washes harmlessly over their hull<?php
 					}
-				}
-				else if($WeaponDamage['Armour'] > 0) {
+				} else if($WeaponDamage['Armour'] > 0) {
 					?> which is deflected by their shields<?php
-				}
-				else {
+				} else {
 					?> but they cannot do any damage<?php
 				}
-			}
-			else {
+			} else {
 				?> destroying <?php
 				if($ActualDamage['Shield'] > 0) {
 					?><span class="shields"><?php echo number_format($ActualDamage['Shield']); ?></span> shields<?php
@@ -124,7 +113,6 @@ if(isset($PlanetCombatResults['Drones'])) {
 echo $CombatPlanet->getCombatName();
 if($TotalDamage > 0) {
 	?> hit for a total of <span class="red"><?php echo $TotalDamage; ?></span> damage in this round of combat<?php
-}
-else {
+} else {
 	?> does no damage this round. You call that a planet? It needs a better builder<?php
 } ?>.
