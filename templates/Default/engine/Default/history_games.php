@@ -73,7 +73,7 @@
 					<th>Experience</th>
 				</tr><?php
 				foreach ($PlayerExp as $index => $player) { ?>
-					<tr>
+					<tr <?php echo $player['bold']; ?>>
 						<td><?php echo $index + 1; ?></td>
 						<td><?php echo $player['name']; ?></td>
 						<td><?php echo $player['exp']; ?></td>
@@ -90,7 +90,7 @@
 					<th>Kills</th>
 				</tr><?php
 				foreach ($PlayerKills as $index => $player) { ?>
-					<tr>
+					<tr <?php echo $player['bold']; ?>>
 						<td><?php echo $index + 1; ?></td>
 						<td><?php echo $player['name']; ?></td>
 						<td><?php echo $player['kills']; ?></td>
@@ -116,7 +116,7 @@
 					<th>Experience</th>
 				</tr><?php
 				foreach ($AllianceExp as $index => $alliance) { ?>
-					<tr>
+					<tr <?php echo $alliance['bold']; ?>>
 						<td><?php echo $index + 1; ?></td>
 						<td><?php echo $alliance['link']; ?></td>
 						<td><?php echo $alliance['exp']; ?></td>
@@ -133,7 +133,7 @@
 					<th>Kills</th>
 				</tr><?php
 				foreach ($AllianceKills as $index => $alliance) { ?>
-					<tr>
+					<tr <?php echo $alliance['bold']; ?>>
 						<td><?php echo $index + 1; ?></td>
 						<td><?php echo $alliance['link']; ?></td>
 						<td><?php echo $alliance['kills']; ?></td>
