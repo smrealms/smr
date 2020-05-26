@@ -75,7 +75,7 @@
 				foreach ($PlayerExp as $index => $player) { ?>
 					<tr <?php echo $player['bold']; ?>>
 						<td><?php echo $index + 1; ?></td>
-						<td><?php echo $player['name']; ?></td>
+						<td><?php echo htmlentities($player['name']); ?></td>
 						<td><?php echo $player['exp']; ?></td>
 					</tr><?php
 				} ?>
@@ -92,7 +92,7 @@
 				foreach ($PlayerKills as $index => $player) { ?>
 					<tr <?php echo $player['bold']; ?>>
 						<td><?php echo $index + 1; ?></td>
-						<td><?php echo $player['name']; ?></td>
+						<td><?php echo htmlentities($player['name']); ?></td>
 						<td><?php echo $player['kills']; ?></td>
 					</tr><?php
 				} ?>

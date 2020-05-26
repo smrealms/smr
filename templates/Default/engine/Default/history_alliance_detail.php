@@ -13,7 +13,7 @@
 		</tr><?php
 		foreach ($Players as $player) { ?>
 			<tr <?php echo $player['bold']; ?>>
-				<td><?php echo $player['player_name']; ?></td>
+				<td><?php echo htmlentities($player['player_name']); ?></td>
 				<td><?php echo $player['experience']; ?></td>
 				<td><?php echo $player['alignment']; ?></td>
 				<td><?php echo $player['race']; ?></td>
