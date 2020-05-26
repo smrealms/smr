@@ -14,7 +14,7 @@ if ($var['alliance_id'] != 0) {
 		AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 		AND role_id = ' . $db->escapeNumber($role_id)
 	);
-	$db->nextRecord();
+	$db->requireRecord();
 	$viewBonds = $db->getBoolean('view_bonds');
 }
 $template->assign('CanViewBonds', $viewBonds);

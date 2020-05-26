@@ -12,7 +12,7 @@ Menu::history_games(0);
 $db = new $var['HistoryDatabase']();
 $db->query('SELECT start_date, type, end_date, game_name, speed, game_id ' .
            'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
-$db->nextRecord();
+$db->requireRecord();
 $template->assign('GameName', $game_name);
 $template->assign('Start', date(DATE_DATE_SHORT, $db->getInt('start_date')));
 $template->assign('End', date(DATE_DATE_SHORT, $db->getInt('end_date')));
@@ -28,13 +28,19 @@ if ($db->nextRecord()) {
 	$template->assign('MaxKills', $db->getInt('max(kills)'));
 }
 $db->query('SELECT count(*) FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id));
-$db->nextRecord();
+$db->requireRecord();
 $template->assign('NumAlliances', $db->getInt('count(*)'));
+
+// Get linked player information, if available
+$oldAccountID = $account->getOldAccountID($var['HistoryDatabase']);
+$db->query('SELECT alliance_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND account_id = ' . $db->escapeNumber($oldAccountID));
+$oldAllianceID = $db->nextRecord() ? $db->getInt('alliance_id') : 0;
 
 $playerExp = [];
 $db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY experience DESC LIMIT 10');
 while ($db->nextRecord()) {
 	$playerExp[] = [
+		'bold' => $db->getInt('account_id') == $oldAccountID ? 'class="bold"' : '',
 		'exp' => $db->getInt('experience'),
 		'name' => stripslashes($db->getField('player_name')),
 	];
@@ -45,6 +51,7 @@ $playerKills = [];
 $db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY kills DESC LIMIT 10');
 while ($db->nextRecord()) {
 	$playerKills[] = [
+		'bold' => $db->getInt('account_id') == $oldAccountID ? 'class="bold"' : '',
 		'kills' => $db->getInt('kills'),
 		'name' => stripslashes($db->getField('player_name')),
 	];
@@ -65,6 +72,7 @@ while ($db->nextRecord()) {
 	$id = $db->getInt('alliance_id');
 	$container['alliance_id'] = $id;
 	$allianceExp[] = [
+		'bold' => $db->getInt('alliance_id') == $oldAllianceID ? 'class="bold"' : '',
 		'exp' => $db->getInt('exp'),
 		'link' => create_link($container, $alliance),
 	];
@@ -78,6 +86,7 @@ while ($db->nextRecord()) {
 	$id = $db->getInt('alliance_id');
 	$container['alliance_id'] = $id;
 	$allianceKills[] = [
+		'bold' => $db->getInt('alliance_id') == $oldAllianceID ? 'class="bold"' : '',
 		'kills' => $db->getInt('kills'),
 		'link' => create_link($container, $alliance),
 	];

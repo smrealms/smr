@@ -29,7 +29,7 @@ $template->assign('Articles', $articles);
 // Details about a selected article
 if (isset($var['id'])) {
 	$db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
-	$db->nextRecord();
+	$db->requireRecord();
 
 	$container = create_container('skeleton.php', 'galactic_post_write_article.php');
 	transfer('id');

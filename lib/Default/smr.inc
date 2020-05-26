@@ -427,7 +427,7 @@ function do_voodoo() {
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
 		$db->query('SELECT sector_id FROM player WHERE account_id=' . $db->escapeNumber($account->getAccountID()) . ' AND game_id=' . $db->escapeNumber(SmrSession::getGameID()) . ' LIMIT 1');
-		$db->nextRecord();
+		$db->requireRecord();
 		$sector_id = $db->getInt('sector_id');
 
 		global $locksFailed;

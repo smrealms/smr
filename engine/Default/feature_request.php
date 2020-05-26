@@ -112,6 +112,6 @@ function getFeaturesCount($status, $daysNew = false) {
 		AND status = ' . $db->escapeString($status) .
 		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME - $daysNew * 86400) . ')' : '')
 	);
-	$db->nextRecord();
+	$db->requireRecord();
 	return $db->getInt('count');
 }

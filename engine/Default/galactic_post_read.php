@@ -15,7 +15,7 @@ if (!empty($var['paper_id'])) {
 	}
 
 	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);
-	$db->nextRecord();
+	$db->requireRecord();
 	$paper_name = bbifyMessage($db->getField('title'));
 	$template->assign('PageTopic', 'Reading <i>Galactic Post</i> Edition : ' . $paper_name);
 

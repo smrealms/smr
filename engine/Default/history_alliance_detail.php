@@ -11,14 +11,16 @@ $game_id = $var['view_game_id'];
 $id = $var['alliance_id'];
 $db = new $var['HistoryDatabase']();
 $db->query('SELECT * FROM alliance WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id));
-$db->nextRecord();
+$db->requireRecord();
 $template->assign('PageTopic', 'Alliance Roster - ' . htmlentities($db->getField('alliance_name')));
 
 //get alliance members
+$oldAccountID = $account->getOldAccountID($var['HistoryDatabase']);
 $db->query('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY experience DESC');
 $players = [];
 while ($db->nextRecord()) {
 	$players[] = [
+		'bold' => $db->getInt('account_id') == $oldAccountID ? 'class="bold"' : '',
 		'player_name' => $db->getField('player_name'),
 		'experience' => number_format($db->getInt('experience')),
 		'alignment' => number_format($db->getInt('alignment')),

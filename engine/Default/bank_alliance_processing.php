@@ -49,7 +49,7 @@ if ($action == 'Deposit') {
 		$query = 'role = ' . $db->escapeString($player->getAlliance()->getAllianceName());
 	}
 	$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' . $query);
-	$db->nextRecord();
+	$db->requireRecord();
 	$withdrawalPerDay = $db->getInt('with_per_day');
 	if ($db->getBoolean('positive_balance')) {
 		$db->query('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions

@@ -4,7 +4,7 @@ Menu::rankings(1, 0);
 
 $db->query('SELECT count(*) FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-$db->nextRecord();
+$db->requireRecord();
 $numAlliances = $db->getInt('count(*)');
 
 $ourRank = 0;
@@ -30,7 +30,7 @@ if ($player->hasAlliance()) {
 						AND alliance_name <= ' . $db->escapeString($player->getAlliance()->getAllianceName()) . '
 					)
 				)');
-	$db->nextRecord();
+	$db->requireRecord();
 	$ourRank = $db->getInt('count(*)');
 	$template->assign('OurRank', $ourRank);
 }

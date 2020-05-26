@@ -19,7 +19,7 @@ $db->query('SELECT count(*)
 					AND player_name <= ' . $db->escapeString($player->getPlayerName()) . '
 				)
 			)');
-$db->nextRecord();
+$db->requireRecord();
 $ourRank = $db->getInt('count(*)');
 $template->assign('OurRank', $ourRank);
 

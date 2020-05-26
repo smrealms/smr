@@ -4,7 +4,7 @@ Menu::rankings(1, 1);
 
 $db->query('SELECT count(*) FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-$db->nextRecord();
+$db->requireRecord();
 $numAlliances = $db->getInt('count(*)');
 $profitType = array('Trade', 'Money', 'Profit');
 $profitTypeEscaped = $db->escapeArray($profitType, false, true, ':', false);
@@ -34,7 +34,7 @@ if ($player->hasAlliance()) {
 						AND alliance_name <= ' . $db->escapeString($player->getAlliance()->getAllianceName()) . '
 					)
 				)');
-	$db->nextRecord();
+	$db->requireRecord();
 	$ourRank = $db->getInt('count(*)');
 	$template->assign('OurRank', $ourRank);
 }

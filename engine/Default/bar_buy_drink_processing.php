@@ -59,7 +59,7 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 
 	}
 	$db->query('SELECT count(*) FROM player_has_drinks WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()));
-	$db->nextRecord();
+	$db->requireRecord();
 	$num_drinks = $db->getInt('count(*)');
 	//display woozy message
 	$message .= '<br />You feel a little W' . str_repeat('oO', $num_drinks) . 'zy<br />';

@@ -33,7 +33,7 @@ function shared_channel_msg_seed($player) {
 		FROM alliance_has_seedlist
 		WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 			AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	$db->nextRecord();
+	$db->requireRecord();
 	$numSectors = $db->getInt('count(*)');
 
 	if ($numSectors == 0) {

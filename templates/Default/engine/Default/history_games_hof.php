@@ -20,7 +20,7 @@ if (isset($Links)) { ?>
 			foreach ($Rankings as $index => $ranking) { ?>
 				<tr <?php echo $ranking['bold']; ?>>
 					<td><?php echo $index + 1; ?></td>
-					<td class="noWrap"><?php echo $ranking['name']; ?></td>
+					<td class="noWrap"><?php echo htmlentities($ranking['name']); ?></td>
 					<td><?php echo number_format($ranking['stat']); ?></td>
 				</tr><?php
 			} ?>

@@ -52,7 +52,7 @@ if ($alliance->getAllianceID() == $player->getAllianceID()) {
 }
 
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND ' . $query);
-$db->nextRecord();
+$db->requireRecord();
 $template->assign('CanExempt', $db->getBoolean('exempt_with'));
 $withdrawalPerDay = $db->getInt('with_per_day');
 
