@@ -422,7 +422,7 @@ function do_voodoo() {
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::hasGame()) {
 		if (SmrGame::getGame(SmrSession::getGameID())->hasEnded()) {
-			forward(create_container('game_play_preprocessing.php', '', array('errorMsg' => 'The game has ended.')));
+			forward(create_container('game_leave_processing.php', 'game_play.php', array('errorMsg' => 'The game has ended.')));
 		}
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
@@ -674,16 +674,16 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 		$template->assign('HallOfFameLink', SmrSession::getNewHREF($container));
 
 		$template->assign('AccountID', SmrSession::getAccountID());
-		$template->assign('PlayGameLink', SmrSession::getNewHREF(create_container('game_play_preprocessing.php')));
+		$template->assign('PlayGameLink', SmrSession::getNewHREF(create_container('game_leave_processing.php', 'game_play.php')));
 
 		$template->assign('LogoutLink', SmrSession::getNewHREF(create_container('logoff.php')));
 	}
 
+	$container = create_container('game_leave_processing.php', 'admin_tools.php');
+	$template->assign('AdminToolsLink', SmrSession::getNewHREF($container));
+
 	$container = create_container('skeleton.php', 'preferences.php');
 	$template->assign('PreferencesLink', SmrSession::getNewHREF($container));
-
-	$container['body'] = 'admin_tools.php';
-	$template->assign('AdminToolsLink', SmrSession::getNewHREF($container));
 
 	$container['body'] = 'album_edit.php';
 	$template->assign('EditPhotoLink', SmrSession::getNewHREF($container));
