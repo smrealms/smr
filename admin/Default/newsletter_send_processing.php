@@ -95,7 +95,6 @@ if (Request::get('to_email') == '*') {
 	}
 
 	echo '<br />Done! Total ' . $sent . ' mails sent.';
-	release_lock();
 	exit();
 } else {
 

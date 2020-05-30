@@ -8,4 +8,4 @@ if (SmrSession::hasGame()) {
 
 SmrSession::clearLinks();
 
-forward(create_container('skeleton.php', 'game_play.php', $var));
+forward(create_container('skeleton.php', $var['body'], $var));
