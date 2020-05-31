@@ -100,7 +100,7 @@ try {
 
 
 function NPCStuff() {
-	global $actions, $var, $previousContainer, $db;
+	global $actions, $var, $previousContainer, $db, $player;
 
 	$underAttack = false;
 	$actions = -1;
@@ -344,6 +344,7 @@ function processContainer($container) {
 	uopz_redefine('MICRO_TIME', microtime(true));
 	uopz_redefine('TIME', IFloor(MICRO_TIME));
 	resetContainer($container);
+	acquire_lock($player->getSectorID()); // Lock now to skip var update in do_voodoo
 	do_voodoo();
 }
 
