@@ -3,7 +3,7 @@
 // trim input now
 $player_name = trim(Request::get('player_name'));
 
-if (!defined('NPC_SCRIPT') && strpos($player_name, 'NPC') === 0) {
+if (strpos($player_name, 'NPC') === 0) {
 	create_error('Player names cannot begin with "NPC".');
 }
 
@@ -89,7 +89,7 @@ if ($isNewbie) {
 }
 
 // insert into player table.
-$player = SmrPlayer::createPlayer($account->getAccountID(), $gameID, $player_name, $race_id, $isNewbie, defined('NPC_SCRIPT'));
+$player = SmrPlayer::createPlayer($account->getAccountID(), $gameID, $player_name, $race_id, $isNewbie);
 
 $player->setNewbieTurns($startingNewbieTurns);
 $player->giveStartingTurns();

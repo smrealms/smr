@@ -100,7 +100,7 @@ try {
 
 
 function NPCStuff() {
-	global $actions, $var, $previousContainer, $db;
+	global $actions, $var, $previousContainer, $db, $player;
 
 	$underAttack = false;
 	$actions = -1;
@@ -153,7 +153,7 @@ function NPCStuff() {
 			}
 
 			$fedContainer = null;
-			if ($var['url'] == 'shop_ship_processing.php' && ($fedContainer = plotToFed($player, true)) !== true) { //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
+			if (isset($var) && $var['url'] == 'shop_ship_processing.php' && ($fedContainer = plotToFed($player, true)) !== true) { //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
 				processContainer($fedContainer);
 			} elseif ($player->getShip()->isUnderAttack() === true
 				&&($player->hasPlottedCourse() === false || $player->getPlottedCourse()->getEndSector()->offersFederalProtection() === false)
@@ -344,6 +344,7 @@ function processContainer($container) {
 	uopz_redefine('MICRO_TIME', microtime(true));
 	uopz_redefine('TIME', IFloor(MICRO_TIME));
 	resetContainer($container);
+	acquire_lock($player->getSectorID()); // Lock now to skip var update in do_voodoo
 	do_voodoo();
 }
 
