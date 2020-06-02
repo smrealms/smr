@@ -224,9 +224,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$db = new SmrMySqlDatabase();
 		$db->lockTable('player');
 
-		// Escape html elements so the name displays correctly
-		$playerName = htmlentities($playerName);
-
 		// Player names must be unique within each game
 		$db->query('SELECT 1 FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName) . ' LIMIT 1');
 		if ($db->nextRecord() > 0) {

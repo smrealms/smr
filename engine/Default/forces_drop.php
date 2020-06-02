@@ -2,7 +2,7 @@
 
 if (isset($var['owner_id'])) {
 	$owner = SmrPlayer::getPlayer($var['owner_id'], $player->getGameID());
-	$template->assign('PageTopic', 'Change ' . $owner->getPlayerName() . '\'s Forces');
+	$template->assign('PageTopic', 'Change ' . htmlentities($owner->getPlayerName()) . '\'s Forces');
 	$owner_id = $var['owner_id'];
 } else {
 	$template->assign('PageTopic', 'Drop Forces');

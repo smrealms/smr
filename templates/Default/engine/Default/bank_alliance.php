@@ -9,7 +9,7 @@ if (count($AlliedAllianceBanks) > 0) { ?>
 	</ul><br /><?php
 } ?>
 
-Hello <?php echo $ThisPlayer->getPlayerName(); ?>,<br /><?php
+Hello <?php echo $ThisPlayer->getDisplayName(); ?>,<br /><?php
 if (isset($UnlimitedWithdrawal) && $UnlimitedWithdrawal === true) {
 	?>You can withdraw an unlimited amount from this account.<?php
 } elseif (isset($PositiveWithdrawal)) {

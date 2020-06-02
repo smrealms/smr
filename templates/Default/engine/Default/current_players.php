@@ -23,7 +23,7 @@
 			<tbody class="list"><?php
 				foreach ($AllRows as $Row) { ?>
 					<tr <?php echo $Row['tr_class']; ?>>
-						<td class="sort_name left" data-name="<?php echo $Row['player']->getPlayerName(); ?>" valign="top"><?php echo $Row['name_link']; ?></td>
+						<td class="sort_name left" data-name="<?php echo htmlentities($Row['player']->getPlayerName()); ?>" valign="top"><?php echo $Row['name_link']; ?></td>
 						<td class="sort_race">
 							<?php echo $ThisPlayer->getColouredRaceName($Row['player']->getRaceID(), true); ?>
 						</td>

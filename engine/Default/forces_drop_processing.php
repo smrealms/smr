@@ -187,7 +187,7 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 	}
 
 	// now compile it together
-	$message = $player->getPlayerName() . ' has ' . $mines_message;
+	$message = $player->getBBLink() . ' has ' . $mines_message;
 
 	if (!empty($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message)) {
 		$message .= ' and ' . $combat_drones_message;

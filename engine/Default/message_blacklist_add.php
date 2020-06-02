@@ -22,5 +22,5 @@ if ($db->nextRecord()) {
 
 $db->query('INSERT INTO message_blacklist (game_id,account_id,blacklisted_id) VALUES (' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($blacklisted->getAccountID()) . ')');
 
-$container['msg'] = '<span class="yellow">' . $blacklisted->getPlayerName() . '</span> has been added to your blacklist.';
+$container['msg'] = $blacklisted->getDisplayName() . ' has been added to your blacklist.';
 forward($container);

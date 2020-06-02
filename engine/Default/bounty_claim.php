@@ -27,7 +27,7 @@ if (!isset($var['ClaimText'])) {
 			// add bounty to our cash
 			$player->increaseCredits($amount);
 			$account->increaseSmrCredits($smrCredits);
-			$claimText .= ('<span class="yellow">' . $bounty['player']->getPlayerName() . '</span> : <span class="creds">' . number_format($amount) . '</span> credits and <span class="red">' . number_format($smrCredits) . '</span> SMR credits<br />');
+			$claimText .= ($bounty['player']->getDisplayName() . ' : <span class="creds">' . number_format($amount) . '</span> credits and <span class="red">' . number_format($smrCredits) . '</span> SMR credits<br />');
 	
 			// add HoF stat
 			$player->increaseHOF(1, array('Bounties', 'Claimed', 'Results'), HOF_PUBLIC);

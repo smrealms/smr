@@ -42,7 +42,7 @@ while ($db->nextRecord()) {
 	$playerExp[] = [
 		'bold' => $db->getInt('account_id') == $oldAccountID ? 'class="bold"' : '',
 		'exp' => $db->getInt('experience'),
-		'name' => stripslashes($db->getField('player_name')),
+		'name' => $db->getField('player_name'),
 	];
 }
 $template->assign('PlayerExp', $playerExp);
@@ -53,7 +53,7 @@ while ($db->nextRecord()) {
 	$playerKills[] = [
 		'bold' => $db->getInt('account_id') == $oldAccountID ? 'class="bold"' : '',
 		'kills' => $db->getInt('kills'),
-		'name' => stripslashes($db->getField('player_name')),
+		'name' => $db->getField('player_name'),
 	];
 }
 $template->assign('PlayerKills', $playerKills);

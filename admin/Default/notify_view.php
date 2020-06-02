@@ -22,9 +22,7 @@ while ($db->nextRecord()) {
 	if (is_object($sender)) {
 		$sender_acc = $sender->getAccount();
 		$offender = $sender_acc->getLogin() . ' (' . $sender_acc->getAccountID() . ')';
-		if ($sender_acc->getLogin() != $sender->getPlayerName()) {
-			$offender .= ' a.k.a ' . $sender->getPlayerName();
-		}
+		$offender .= ' a.k.a ' . $sender->getDisplayName();
 	}
 	$senderLink = create_link($container, $offender);
 
@@ -32,9 +30,7 @@ while ($db->nextRecord()) {
 	if (is_object($receiver)) {
 		$receiver_acc = $receiver->getAccount();
 		$offended = $receiver_acc->getLogin() . ' (' . $receiver_acc->getAccountID() . ')';
-		if ($receiver_acc->getLogin() != $receiver->getPlayerName()) {
-			$offended .= ' a.k.a ' . $receiver->getPlayerName();
-		}
+		$offended .= ' a.k.a ' . $receiver->getDisplayName();
 	}
 	$receiverLink = create_link($container, $offended);
 

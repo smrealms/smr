@@ -1,4 +1,4 @@
-Welcome <?php echo $ThisPlayer->getPlayerName(); ?>, your position is <i>Editor</i><br /><br />
+Welcome <?php echo $ThisPlayer->getDisplayName(); ?>, your position is <i>Editor</i><br /><br />
 <b>EDITOR OPTIONS</b>
 <ul>
 	<li><a href="<?php echo $ViewArticlesHREF; ?>">View the articles</a></li>

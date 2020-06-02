@@ -66,7 +66,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 						if ($AlliancePlayer->getAccountID() == $Alliance->getLeaderID()) { ?>*<?php }
 						echo $Count++; ?>
 					</td>
-					<td class="left name" data-name="<?php echo $AlliancePlayer->getPlayerName(); ?>"><?php
+					<td class="left name" data-name="<?php echo htmlentities($AlliancePlayer->getPlayerName()); ?>"><?php
 						echo $AlliancePlayer->getLevelName(); ?>&nbsp;<?php echo $AlliancePlayer->getLinkedDisplayName(false); ?>
 					</td>
 					<td class="race"><?php

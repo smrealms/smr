@@ -9,7 +9,7 @@ abstract class AbstractSmrPlayer {
 
 	protected $accountID;
 	protected $gameID;
-	protected $playerName; // This is escaped with htmlentities in the db
+	protected $playerName;
 	protected $playerID;
 	protected $sectorID;
 	protected $lastSectorID;
@@ -491,6 +491,10 @@ abstract class AbstractSmrPlayer {
 		return $this->playerID;
 	}
 
+	/**
+	 * Returns the player name.
+	 * Use getDisplayName or getLinkedDisplayName for HTML-safe versions.
+	 */
 	public function getPlayerName() {
 		return $this->playerName;
 	}
@@ -500,8 +504,12 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
+	/**
+	 * Returns the decorated player name, suitable for HTML display.
+	 */
 	public function getDisplayName($includeAlliance = false) {
-		$return = get_colored_text($this->getAlignment(), $this->playerName . ' (' . $this->getPlayerID() . ')');
+		$name = htmlentities($this->playerName) . ' (' . $this->getPlayerID() . ')';
+		$return = get_colored_text($this->getAlignment(), $name);
 		if ($this->isNPC()) {
 			$return .= ' <span class="npcColour">[NPC]</span>';
 		}

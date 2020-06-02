@@ -20,7 +20,7 @@ while ($db->nextRecord()) {
 	$container['id'] = $db->getInt('article_id');
 	$articles[] = [
 		'title' => $title,
-		'writer' => $writer->getPlayerName(),
+		'writer' => $writer->getDisplayName(),
 		'link' => SmrSession::getNewHREF($container),
 	];
 }

@@ -64,7 +64,7 @@
 	</table>
 	<br /><br /><?php
 	if (isset($ResultsFor)) { ?>
-		Returning results for <?php echo $ResultsFor; ?>.<br /><?php
+		Returning results for <?php echo htmlentities($ResultsFor); ?>.<br /><?php
 	} ?>
 </div>
 

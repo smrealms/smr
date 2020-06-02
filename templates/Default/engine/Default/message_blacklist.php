@@ -21,7 +21,7 @@ if ($Blacklist) { ?>
 						<input type="checkbox" name="entry_ids[]" value="<?php echo $Entry['entry_id']; ?>">
 					</td>
 					<td class="center shrink"><?php echo $Entry['game_id']; ?></td>
-					<td><?php echo $Entry['player_name']; ?></td>
+					<td><?php echo htmlentities($Entry['player_name']); ?></td>
 				</tr><?php
 			} ?>
 		</table><br />

@@ -38,7 +38,7 @@ while ($db->nextRecord()) {
 
 	$npcs[$accountID] = [
 		'login' => $login,
-		'default_player_name' => $db->getField('player_name'),
+		'default_player_name' => htmlentities($db->getField('player_name')),
 		'default_alliance' => htmlentities($db->getField('alliance_name')),
 		'active' => $db->getBoolean('active'),
 		'working' => $db->getBoolean('working'),

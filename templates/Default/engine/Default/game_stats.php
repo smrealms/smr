@@ -141,7 +141,7 @@
 						foreach ($ExperienceRankings as $Rank => $RankedPlayer) { ?>
 							<tr>
 								<td><?php echo $Rank; ?></td>
-								<td><?php echo $RankedPlayer->getPlayerName(); ?></td>
+								<td><?php echo $RankedPlayer->getDisplayName(); ?></td>
 								<td><?php echo number_format($RankedPlayer->getExperience()); ?></td>
 							</tr><?php
 						} ?>
@@ -159,7 +159,7 @@
 						foreach ($KillRankings as $Rank => $RankedPlayer) { ?>
 							<tr>
 								<td><?php echo $Rank; ?></td>
-								<td><?php echo $RankedPlayer->getPlayerName(); ?></td>
+								<td><?php echo $RankedPlayer->getDisplayName(); ?></td>
 								<td><?php echo number_format($RankedPlayer->getKills()); ?></td>
 							</tr><?php
 						} ?>
