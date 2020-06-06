@@ -64,7 +64,6 @@ if ($db->getNumRows() > 0) {
 		
 		// Determine the thread author display name
 		$sender_id = $db->getInt('sender_id');
-		$playerName = 'Unknown'; // default
 		if ($sender_id == ACCOUNT_ID_PLANET) {
 			$playerName = 'Planet Reporter';
 		} elseif ($sender_id == ACCOUNT_ID_BANK_REPORTER) {
@@ -72,20 +71,11 @@ if ($db->getNumRows() > 0) {
 		} elseif ($sender_id == ACCOUNT_ID_ADMIN) {
 			$playerName = 'Game Admins';
 		} else {
-			$db2->query('SELECT
-						player.player_name as player_name,
-						alliance_thread.sender_id as sender_id
-						FROM player
-						JOIN alliance_thread ON alliance_thread.game_id = player.game_id AND player.account_id=alliance_thread.sender_id
-						WHERE player.game_id=' . $db2->escapeNumber($player->getGameID()) . '
-						AND alliance_thread.alliance_id=' . $db2->escapeNumber($alliance->getAllianceID()) . '
-						AND alliance_thread.thread_id=' . $db2->escapeNumber($threadID) . '
-						AND alliance_thread.reply_id=1 LIMIT 1
-						');
-			if ($db2->nextRecord()) {
-				$sender_id = $db2->getInt('sender_id');
+			try {
 				$author = SmrPlayer::getPlayer($sender_id, $player->getGameID());
 				$playerName = $author->getLinkedDisplayName(false);
+			} catch (PlayerNotFoundException $e) {
+				$playerName = 'Unknown'; // default
 			}
 		}
 		$threads[$i]['Sender'] = $playerName;
