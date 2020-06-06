@@ -174,7 +174,7 @@ if (!isset ($var['folder_id'])) {
 function displayScouts(&$messageBox, $player) {
 	// Generate the group messages
 	$db = new SmrMySqlDatabase();
-	$db->query('SELECT alignment, player_id, sender_id, player_name AS sender, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
+	$db->query('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
 					FROM message
 					JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
 					WHERE message.account_id = ' . $db->escapeNumber($player->getAccountID()) . '
@@ -185,11 +185,11 @@ function displayScouts(&$messageBox, $player) {
 					ORDER BY last DESC');
 
 	while ($db->nextRecord()) {
-		$senderName = get_colored_text($db->getInt('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getInt('player_id') . ')');
+		$sender = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
 		$totalUnread = $db->getInt('total_unread');
-		$message = 'Your forces have spotted ' . $senderName . ' passing your forces ' . $db->getInt('number') . ' ' . pluralise('time', $db->getInt('number'));
+		$message = 'Your forces have spotted ' . $sender->getBBLink() . ' passing your forces ' . $db->getInt('number') . ' ' . pluralise('time', $db->getInt('number'));
 		$message .= ($totalUnread > 0) ? ' (' . $totalUnread . ' unread).' : '.';
-		displayGrouped($messageBox, $senderName, $db->getInt('player_id'), $db->getInt('sender_id'), $message, $db->getInt('first'), $db->getInt('last'), $totalUnread > 0);
+		displayGrouped($messageBox, $sender, $message, $db->getInt('first'), $db->getInt('last'), $totalUnread > 0);
 	}
 
 	// Now display individual messages in each group
@@ -215,10 +215,10 @@ function displayScouts(&$messageBox, $player) {
 	$template->unassign('NextPageHREF');
 }
 
-function displayGrouped(&$messageBox, $playerName, $player_id, $sender_id, $message_text, $first, $last, $star) {
+function displayGrouped(&$messageBox, SmrPlayer $sender, $message_text, $first, $last, $star) {
 	// Define a unique array so we can delete grouped messages
 	$array = array(
-		$sender_id,
+		$sender->getAccountID(),
 		$first,
 		$last
 	);
@@ -226,10 +226,8 @@ function displayGrouped(&$messageBox, $playerName, $player_id, $sender_id, $mess
 	$message = array();
 	$message['ID'] = base64_encode(serialize($array));
 	$message['Unread'] = $star;
-	$container = create_container('skeleton.php', 'trader_search_result.php');
-	$container['player_id'] = $player_id;
-	$message['SenderID'] = $sender_id;
-	$message['SenderDisplayName'] = create_link($container, $playerName);
+	$message['SenderID'] = $sender->getAccountID();
+	$message['SenderDisplayName'] = $sender->getLinkedDisplayName(false);
 	$message['SendTime'] = date(DATE_FULL_SHORT, $first) . " - " . date(DATE_FULL_SHORT, $last);
 	$message['Text'] = $message_text;
 	$messageBox['Messages'][] = $message;
