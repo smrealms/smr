@@ -1,25 +1,23 @@
 <?php
 if ($BountyPlayer->hasBounties()) {
 	$Bounties = $BountyPlayer->getBounties();
-	$HasHQBounty = false;
 	foreach ($Bounties as $Bounty) {
 		if ($Bounty['Type'] == 'HQ') { ?>
-			The <span class="green">Federal Government</span> is offering a bounty on <?php echo $BountyPlayer->getDisplayName(); ?> worth <span class="creds"><?php echo $Bounty['Amount']; ?></span> credits and <span class="yellow"><?php echo $Bounty['SmrCredits']; ?></span> SMR credits.<br /><?php
+			The <span class="green">Federal Government</span> is offering a bounty on <?php echo $BountyPlayer->getDisplayName(); ?> worth <span class="creds"><?php echo number_format($Bounty['Amount']); ?></span> credits and <span class="yellow"><?php echo $Bounty['SmrCredits']; ?></span> SMR credits.<br /><?php
 			if ($Bounty['Claimer'] != 0) { ?>
-				This bounty can be claimed by <?php echo SmrPlayer::getPlayer($Bounty['Claimer'], $ThisPlayer->getGameID())->getDisplayName(); ?><br /><?php
-				$HasHQBounty = true;
-			}
+				This bounty can be claimed by <?php echo SmrPlayer::getPlayer($Bounty['Claimer'], $ThisPlayer->getGameID())->getDisplayName(); ?>.<br /><?php
+			} ?>
+			<br /><?php
 		}
 	}
-	if ($HasHQBounty) {
-		?><br /><br /><br /><?php
-	}
+
 	foreach ($Bounties as $Bounty) {
 		if ($Bounty['Type'] == 'UG') { ?>
-			The <span class="red">Underground</span> is offering a bounty on <?php echo $BountyPlayer->getDisplayName(); ?> worth <span class="creds"><?php echo $Bounty['Amount']; ?></span> credits and <span class="yellow"><?php echo $Bounty['SmrCredits']; ?></span> SMR credits.<br /><?php
+			The <span class="red">Underground</span> is offering a bounty on <?php echo $BountyPlayer->getDisplayName(); ?> worth <span class="creds"><?php echo number_format($Bounty['Amount']); ?></span> credits and <span class="yellow"><?php echo $Bounty['SmrCredits']; ?></span> SMR credits.<br /><?php
 			if ($Bounty['Claimer'] != 0) {
-				?>This bounty can be claimed by <?php echo SmrPlayer::getPlayer($Bounty['Claimer'], $ThisPlayer->getGameID())->getDisplayName(); ?><br /><?php
-			}
+				?>This bounty can be claimed by <?php echo SmrPlayer::getPlayer($Bounty['Claimer'], $ThisPlayer->getGameID())->getDisplayName(); ?>.<br /><?php
+			} ?>
+			<br /><?php
 		}
 	}
 } else {
