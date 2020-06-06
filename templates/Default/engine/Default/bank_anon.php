@@ -32,7 +32,7 @@ if ($OwnedAnon) { ?>
 				<td class="shrink"><?php echo $anon['anon_id']; ?></td>
 				<td class="left"><?php echo htmlentities($anon['password']); ?></td>
 				<td class="shrink noWrap"><?php echo $anon['last_transaction']; ?></td>
-				<td class="right shrink"><?php echo $anon['amount']; ?></td>
+				<td class="right shrink"><?php echo number_format($anon['amount']); ?></td>
 				<td class="button">
 					<div class="buttonA">
 						<a class="buttonA" href="<?php echo $anon['href']; ?>">Access Account</a>

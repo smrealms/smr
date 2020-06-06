@@ -30,7 +30,7 @@ if (isset($Transactions)) { ?>
 		} ?>
 		<tr>
 			<th colspan="4" class="right">Ending Balance</th>
-			<td class="bold shrink right"><?php echo $Balance; ?></td>
+			<td class="bold shrink right"><?php echo number_format($Balance); ?></td>
 		</tr>
 	</table><?php
 } else { ?>
