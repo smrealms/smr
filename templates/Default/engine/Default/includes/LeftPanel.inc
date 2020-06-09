@@ -35,11 +35,12 @@ if (isset($GameID)) {
 	<a href="<?php echo Globals::getCurrentPlayersHREF(); ?>">Current Players</a><br />
 	<br />
 	<a href="<?php echo $RankingsLink; ?>">Rankings</a><br />
-	<a href="<?php echo $HallOfFameLink; ?>">Hall of Fame</a><br />
 	<a href="<?php echo $CurrentHallOfFameLink; ?>">Current HoF</a><br />
-	<br /><?php
+	<?php
 }
 if (isset($AccountID)) { ?>
+	<a href="<?php echo $HallOfFameLink; ?>">Hall of Fame</a><br />
+	<br />
 	<a href="<?php echo $PlayGameLink; ?>">Play Game</a><br />
 	<a href="<?php echo $PreferencesLink; ?>">Preferences</a><br /><?php
 	if ($ThisAccount->hasPermission()) { ?>

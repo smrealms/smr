@@ -1,6 +1,7 @@
 <?php
-if (isset($GameID)) { ?>
-	<div class="LeftNavOne noWrap"><?php
+if (isset($AccountID)) { ?>
+<div class="LeftNavOne noWrap"><?php
+	if (isset($GameID)) {
 		// Use the current sector link for Planet Main to enable the hotkey
 		if ($ThisPlayer->isLandedOnPlanet()) { ?>
 			<a class="leftNav bold" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Planet Main</a><br /><?php
@@ -32,8 +33,9 @@ if (isset($GameID)) { ?>
 		<a class="leftNav" href="<?php echo Globals::getCurrentPlayersHREF(); ?>">Current Players</a><br />
 		<br />
 		<a class="leftNav" href="<?php echo $RankingsLink; ?>">Rankings</a><br />
-		<a class="leftNav" href="<?php echo $HallOfFameLink; ?>">Hall of Fame</a><br />
-		<a class="leftNav" href="<?php echo $CurrentHallOfFameLink; ?>">Current HoF</a>
+		<a class="leftNav" href="<?php echo $CurrentHallOfFameLink; ?>">Current HoF</a><br /><?php
+	} ?>
+	<a class="leftNav" href="<?php echo $HallOfFameLink; ?>">Hall of Fame</a><br />
 </div><?php
 } ?>
 
