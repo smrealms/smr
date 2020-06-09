@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
-$template->assign('PageTopic', 'Viewing Message Boxes');
+require_once(get_file_loc('message.functions.inc'));
 
 if (!isset($var['box_type_id'])) {
+	$template->assign('PageTopic', 'Viewing Message Boxes');
+
 	$container = create_container('skeleton.php', 'box_view.php');
 	$boxes = array();
-	require_once(get_file_loc('message.functions.inc'));
 	foreach (getAdminBoxNames() as $boxTypeID => $boxName) {
 		$container['box_type_id'] = $boxTypeID;
 		$boxes[$boxTypeID] = array(
@@ -22,6 +23,9 @@ if (!isset($var['box_type_id'])) {
 	}
 	$template->assign('Boxes', $boxes);
 } else {
+	$boxName = getAdminBoxNames()[$var['box_type_id']];
+	$template->assign('PageTopic', 'Viewing ' . $boxName);
+
 	$template->assign('BackHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'box_view.php')));
 	$db->query('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($var['box_type_id']) . ' ORDER BY send_time DESC');
 	$messages = array();
@@ -49,6 +53,7 @@ if (!isset($var['box_type_id'])) {
 					$container = create_container('skeleton.php', 'box_reply.php');
 					$container['sender_id'] = $senderID;
 					$container['game_id'] = $gameID;
+					transfer('box_type_id');
 					$messages[$messageID]['ReplyHREF'] = SmrSession::getNewHREF($container);
 				}
 			}
