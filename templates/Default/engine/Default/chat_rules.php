@@ -5,7 +5,7 @@ Chat with your fellow players as you navigate the universe! You may join via IRC
 	<b>Please read the <u><a href="<?php echo WIKI_URL; ?>/rules#irc-and-discord-rules" target="_blank">Chat Rules</a></u> before joining!</b>
 	<br /><br /><br />
 
-	<div class="buttonA"><a class="buttonA" href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&amp;server=irc.theairlock.net&amp;channel=<?php echo $AutoChannels; ?>&amp;autoConnect=true&amp;nick=<?php echo urlencode('SMR-' . str_replace(' ', '_', $ThisPlayer->getPlayerName())); ?>" target="_chat">Connect to IRC</a></div>
+	<div class="buttonA"><a class="buttonA" href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&amp;server=irc.theairlock.net&amp;channel=<?php echo $AutoChannels; ?>&amp;autoConnect=true&amp;nick=<?php echo urlencode('SMR-' . str_replace(' ', '_', htmlentities($ThisPlayer->getPlayerName()))); ?>" target="_chat">Connect to IRC</a></div>
 
 	<br /><br /><br />
 

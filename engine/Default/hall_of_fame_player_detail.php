@@ -17,7 +17,7 @@ if (isset($var['game_id'])) {
 	} catch (PlayerNotFoundException $e) {
 		create_error('That player has not yet joined this game.');
 	}
-	$template->assign('PageTopic', $hofPlayer->getPlayerName() . '\'s Personal Hall of Fame: ' . SmrGame::getGame($game_id)->getDisplayName());
+	$template->assign('PageTopic', htmlentities($hofPlayer->getPlayerName()) . '\'s Personal Hall of Fame: ' . SmrGame::getGame($game_id)->getDisplayName());
 } else {
 	$hofName = SmrAccount::getAccount($account_id)->getHofDisplayName();
 	$template->assign('PageTopic', $hofName . '\'s All Time Personal Hall of Fame');

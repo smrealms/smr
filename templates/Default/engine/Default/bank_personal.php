@@ -1,4 +1,4 @@
-Hello <?php echo $ThisPlayer->getPlayerName(); ?>
+Hello <?php echo $ThisPlayer->getDisplayName(); ?>
 <br /><br />
 
 Balance: <b><?php echo number_format($ThisPlayer->getBank()); ?></b>

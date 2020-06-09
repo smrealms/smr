@@ -212,9 +212,6 @@ if ($action == 'Save and resend validation code') {
 		create_error('You must enter a player name!');
 	}
 
-	// Escape html elements so the name displays correctly
-	$player_name = htmlentities($player_name);
-
 	// Check if name is in use.
 	// The player_name field has case-insensitive collation, so check against ID
 	// to allow player to change the case of their name.

@@ -19,7 +19,7 @@ while ($db->nextRecord()) {
 	$container['max_amount'] = $db->getInt('max_amount');
 
 	$excessHardware[] = [
-		'player' => stripslashes($db->getField('player_name')),
+		'player' => htmlentities($db->getField('player_name')),
 		'game_id' => $db->getInt('game_id'),
 		'hardware' => $db->getField('hardware_name'),
 		'amount' => $db->getInt('amount'),

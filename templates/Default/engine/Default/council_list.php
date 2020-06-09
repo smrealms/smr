@@ -47,7 +47,7 @@
 					$CouncilPlayer = SmrPlayer::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
 					<tr id="player-<?php echo $CouncilPlayer->getPlayerID(); ?>" class="ajax<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> bold<?php } ?>">
 						<td><?php echo $Ranking; ?></td>
-						<td class="left name" data-name="<?php echo $CouncilPlayer->getPlayerName(); ?>"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
+						<td class="left name" data-name="<?php echo htmlentities($CouncilPlayer->getPlayerName()); ?>"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
 						<td><?php echo $ThisPlayer->getColouredRaceName($CouncilPlayer->getRaceID(), true); ?></td>
 						<td class="alliance"><?php echo $CouncilPlayer->getAllianceDisplayName(true); ?></td>
 						<td class="experience right"><?php echo number_format($CouncilPlayer->getExperience()); ?></td>

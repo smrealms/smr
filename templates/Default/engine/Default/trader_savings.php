@@ -1,5 +1,5 @@
 <div>
-	<h2>Anonymous accounts for <?php echo $ThisPlayer->getPlayerName(); ?></h2>
+	<h2>Anonymous Accounts</h2>
 	<br />
 	<?php
 	if ($AnonAccounts) { ?>
@@ -14,7 +14,7 @@
 </div>
 <br /><br />
 <div>
-	<h2>Lotto Tickets for <?php echo $ThisPlayer->getPlayerName(); ?></h2>
+	<h2>Lotto Tickets</h2>
 	<br />You own <span class="yellow"><?php echo $LottoTickets; ?></span> Lotto Tickets.
 	<br />There are <?php echo format_time($LottoInfo['TimeRemaining']); ?> remaining until the next drawing.
 	<br />Currently you have a <?php echo $LottoWinChance; ?>% chance to win.

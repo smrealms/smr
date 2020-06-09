@@ -18,7 +18,7 @@ if ($db->getNumRows()) {
 	while ($db->nextRecord()) {
 		$transactions[] = [
 			'type' => $db->getField('transaction') == 'Payment' ? 'Withdraw' : 'Deposit',
-			'player' => $players[$db->getInt('payee_id')]->getPlayerName(),
+			'player' => $players[$db->getInt('payee_id')]->getDisplayName(),
 			'reason' => $db->getField('reason'),
 			'amount' => number_format($db->getInt('amount')),
 			'transactionID' => $db->getInt('transaction_id'),

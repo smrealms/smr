@@ -8,7 +8,7 @@
 	</tr><?php
 	foreach ($Rows as $Row) { ?>
 		<tr>
-			<td><?php echo $Row['player_name']; ?></td>
+			<td><?php echo htmlentities($Row['player_name']); ?></td>
 			<td><?php echo $Row['transaction']; ?></td>
 			<td class="right"><?php echo number_format($Row['amount']); ?></td>
 		</tr><?php

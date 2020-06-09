@@ -38,7 +38,7 @@ if (!isset($var['stat'])) {
 	while ($db->nextRecord()) {
 		$rankings[] = [
 			'bold' => $db->getInt('account_id') == $oldAccountId ? 'class="bold"' : '',
-			'name' => stripslashes($db->getField('player_name')),
+			'name' => $db->getField('player_name'),
 			'stat' => $db->getInt($var['stat']),
 		];
 	}

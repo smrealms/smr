@@ -20,7 +20,7 @@ while ($db->nextRecord()) {
 		'Player ID'   => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
 		'Player Name' => $otherPlayer == null ?
 		                 '<b>Account</b>: ' . SmrAccount::getAccount($fromAccountId)->getHofDisplayName() :
-		                 $otherPlayer->getPlayerName(),
+		                 $otherPlayer->getDisplayName(),
 		'All Games'   => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
 		'Game ID'     => $gameId,
 	);
@@ -41,7 +41,7 @@ while ($db->nextRecord()) {
 		'Player ID'   => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
 		'Player Name' => $otherPlayer == null ?
 		                 '<b>Account</b>: ' . SmrAccount::getAccount($toAccountId)->getHofDisplayName() :
-		                 $otherPlayer->getPlayerName(),
+		                 $otherPlayer->getDisplayName(),
 		'All Games'   => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
 		'Game ID'     => $gameId,
 	);

@@ -45,10 +45,7 @@ if (!isset($var['box_type_id'])) {
 				$senderName = $senderAccount->getLogin() . ' (' . $senderID . ')';
 				if ($validGame) {
 					$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
-					if ($senderAccount->getLogin() != $senderPlayer->getPlayerName()) {
-						$senderName .= ' a.k.a ' . $senderPlayer->getPlayerName();
-					}
-				
+					$senderName .= ' a.k.a ' . $senderPlayer->getDisplayName();
 					$container = create_container('skeleton.php', 'box_reply.php');
 					$container['sender_id'] = $senderID;
 					$container['game_id'] = $gameID;

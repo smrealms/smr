@@ -51,7 +51,7 @@ if (count($PickPlayers) > 0) { ?>
 				} ?>
 				</td>
 				<td>
-					<?php echo $PickPlayer['Player']->getPlayerName(); ?>
+					<?php echo $PickPlayer['Player']->getDisplayName(); ?>
 				</td>
 				<td>
 					<?php echo $PickPlayer['Player']->getRaceName(); ?>
@@ -86,9 +86,9 @@ if (count($History) > 0) { ?>
 		foreach (array_reverse($History, true) as $i => $Pick) { ?>
 			<tr>
 				<td class="center"><?php echo $i + 1; ?></td>
-				<td><?php echo $Pick['Leader']->getPlayerName(); ?></td>
+				<td><?php echo $Pick['Leader']->getDisplayName(); ?></td>
 				<td><?php echo date(DATE_FULL_SHORT, $Pick['Time']); ?></td>
-				<td><?php echo $Pick['Player']->getPlayerName(); ?></td>
+				<td><?php echo $Pick['Player']->getDisplayName(); ?></td>
 				<td><?php echo $Pick['Player']->getRaceName(); ?></td>
 				<td><?php echo $Pick['Player']->getAccount()->getHofDisplayName(true); ?></td>
 				<td><?php echo $Pick['Player']->getAccount()->getScore(); ?></td>

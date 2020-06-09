@@ -27,7 +27,7 @@ while ($db->nextRecord()) {
 
 	$members[] = [
 		'last_active' => $lastActive,
-		'display_name' => $db->getField('player_name') . ' (' . $db->getInt('player_id') . ')',
+		'display_name' => htmlentities($db->getField('player_name')) . ' (' . $db->getInt('player_id') . ')',
 		'account_id' => $db->getInt('account_id'),
 	];
 }

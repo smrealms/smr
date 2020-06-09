@@ -43,7 +43,7 @@ if ($var['minValue'] <= $maxValue && $var['minValue'] > 0) {
 	$minValue = $var['minValue'];
 }
 
-$query = 'SELECT time, player_name, player_id, alignment, transaction_id, transaction, amount
+$query = 'SELECT *
 			FROM player
 			JOIN anon_bank_transactions USING (game_id, account_id)
 			WHERE player.game_id=' . $db->escapeNumber($player->getGameID()) . '
@@ -68,19 +68,16 @@ if ($db->getNumRows() > 0) {
 	$container['account_num'] = $account_num;
 	$template->assign('ShowHREF', SmrSession::getNewHREF($container));
 
-	$container = create_container('skeleton.php', 'trader_search_result.php');
-
 	$transactions = [];
 	while ($db->nextRecord()) {
-		$container['player_id'] = $db->getInt('player_id');
-		$link = create_link($container, get_colored_text($db->getInt('alignment'), $db->getField('player_name')));
+		$transactionPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
 		$transaction = $db->getField('transaction');
 		$amount = number_format($db->getInt('amount'));
 		$transactions[$db->getInt('transaction_id')] = [
 			'date' => date(DATE_FULL_SHORT_SPLIT, $db->getInt('time')),
 			'payment' => $transaction == 'Payment' ? $amount : '',
 			'deposit' => $transaction == 'Deposit' ? $amount : '',
-			'link' => $link,
+			'link' => $transactionPlayer->getLinkedDisplayName(),
 		];
 	}
 	$template->assign('Transactions', $transactions);
