@@ -9,27 +9,22 @@ if (isset($GameID)) {
 	} else { ?>
 		<a class="big bold" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Current Sector</a><br />
 		<a class="big bold" href="<?php echo Globals::getLocalMapHREF(); ?>">Local Map</a><br /><?php
-	}
-	if (isset($PlotCourseLink)) {
-		?><a class="big bold" href="<?php echo $PlotCourseLink; ?>">Plot A Course</a><br /><?php
-	}
-	?>
+	} ?>
+	<a class="big bold" href="<?php echo $PlotCourseLink; ?>">Plot A Course</a><br />
 	<a href="map_galaxy.php" target="gal_map">Galaxy Map</a><br />
+	<a href="<?php echo Globals::getSmrFileCreateHREF(); ?>" target="_blank">DL Sectors File</a><br />
 	<br />
 	<a href="<?php echo $TraderLink; ?>">Trader</a><br />
 	<a href="<?php echo Globals::getAllianceHREF($ThisPlayer->getAllianceID()); ?>">Alliance</a><br />
 	<a href="<?php echo $PoliticsLink; ?>">Politics</a><br />
-	<a href="<?php echo $CombatLogsLink; ?>"><span>Combat Logs</span></a>
-	<br />
-	<br />
-	<?php /* <a href="<?php echo $TradingLink; ?>">Trading</a><br /> */ ?>
+	<a href="<?php echo $CombatLogsLink; ?>"><span>Combat Logs</span></a><br />
 	<a href="<?php echo $PlanetLink; ?>">Planets</a><br />
 	<a href="<?php echo $ForcesLink; ?>">Forces</a><br />
-	<a href="<?php echo Globals::getCasinoHREF(); ?>">Casino</a><br />
 	<br />
 	<a href="<?php echo $MessagesLink; ?>">Messages</a><br />
 	<a href="<?php echo $ReadNewsLink; ?>">Read News</a><br />
 	<a href="<?php echo $GalacticPostLink; ?>">Galactic Post</a><br />
+	<a href="<?php echo Globals::getCasinoHREF(); ?>">Casino</a><br />
 	<br />
 	<a href="<?php echo $SearchForTraderLink; ?>">Search For Trader</a><br />
 	<a href="<?php echo Globals::getCurrentPlayersHREF(); ?>">Current Players</a><br />
@@ -53,10 +48,6 @@ if (isset($AccountID)) { ?>
 }
 //<a href="http://www.azool.us/baalz/" target="manual">Help Pages</a><br />
 ?>
-<a href="<?php echo WIKI_URL; ?>" target="_blank">SMR Wiki</a><br /><?php
-if (isset($GameID)) {
-	?><a href="<?php echo Globals::getSmrFileCreateHREF(); ?>" target="_blank">DL Sectors File</a><br /><?php
-} ?>
 <a href="<?php echo $EditPhotoLink; ?>">Edit Photo</a><br />
 <a href="album/" target="album">View Album</a><br /><br /><?php
 if (Globals::isFeatureRequestOpen()) {
@@ -66,7 +57,8 @@ if (Globals::isFeatureRequestOpen()) {
 <a href="<?php echo $ContactFormLink; ?>">Contact Form</a><br />
 <br />
 <a class="bold" href="<?php echo $IRCLink; ?>">Join Chat</a><br />
-<a class="bold" href="http://smrcnn.smrealms.de/viewtopic.php?f=1&amp;t=9705" target="policy">User Policy</a><br />
-<a class="bold" href="http://smrcnn.smrealms.de/" target="webboard">Webboard</a><br />
+<a href="http://smrcnn.smrealms.de/viewtopic.php?f=1&amp;t=9705" target="policy">User Policy</a><br />
+<a href="<?php echo WIKI_URL; ?>" target="_blank">SMR Wiki</a><br />
+<a href="http://smrcnn.smrealms.de/" target="webboard">Webboard</a><br />
 <a href="<?php echo $DonateLink; ?>">Donate</a><br />
 <br />
