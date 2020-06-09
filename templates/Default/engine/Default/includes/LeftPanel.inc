@@ -57,7 +57,7 @@ if (Globals::isFeatureRequestOpen()) {
 <a href="<?php echo $ContactFormLink; ?>">Contact Form</a><br />
 <br />
 <a class="bold" href="<?php echo $IRCLink; ?>">Join Chat</a><br />
-<a href="http://smrcnn.smrealms.de/viewtopic.php?f=1&amp;t=9705" target="policy">User Policy</a><br />
+<a href="<?php echo WIKI_URL; ?>/rules" target="policy">User Policy</a><br />
 <a href="<?php echo WIKI_URL; ?>" target="_blank">SMR Wiki</a><br />
 <a href="http://smrcnn.smrealms.de/" target="webboard">Webboard</a><br />
 <a href="<?php echo $DonateLink; ?>">Donate</a><br />

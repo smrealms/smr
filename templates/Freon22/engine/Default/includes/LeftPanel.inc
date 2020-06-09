@@ -56,7 +56,7 @@ if (isset($AccountID)) { ?>
 	<a class="leftNav" href="<?php echo $ContactFormLink; ?>">Contact Form</a><br />
 	<br />
 	<a class="leftNav bold" href="<?php echo $IRCLink; ?>">Join Chat</a><br />
-	<a class="leftNav" href="http://smrcnn.smrealms.de/viewtopic.php?f=1&amp;t=9705" target="policy">User Policy</a><br />
+	<a class="leftNav" href="<?php echo WIKI_URL; ?>/rules" target="policy">User Policy</a><br />
 	<a class="leftNav" href="<?php echo WIKI_URL; ?>" target="_blank">SMR Wiki</a><br />
 	<a class="leftNav" href="http://smrcnn.smrealms.de/" target="webboard">Webboard</a><br />
 	<a class="leftNav" href="<?php echo $DonateLink; ?>">Donate</a>
