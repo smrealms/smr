@@ -2,11 +2,18 @@
 
 $template->assign('PageTopic', 'Space Merchant Realms Chat');
 
-$autoChannels = urlencode('#SMR');
-if ($player->hasAlliance()) {
+
+$autoChannels = '#SMR';
+$nick = 'SMR-';
+if (isset($player) && $player->hasAlliance()) {
 	$allianceChan = $player->getAlliance()->getIrcChannel();
-	if ($allianceChan != '') {
-		$autoChannels .= ',' . urlencode($allianceChan);
+	if ($allianceChan) {
+		$autoChannels .= ',' . $allianceChan;
 	}
+	$nick .= $player->getPlayerName();
+} else {
+	$nick .= $account->getHofName();
 }
-$template->assign('AutoChannels', $autoChannels);
+
+$ircURL = 'http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.theairlock.net&autoconnect=true&channel=' . urlencode($autoChannels) . '&nick=' . urlencode(str_replace(' ', '_', $nick));
+$template->assign('IrcURL', $ircURL);
