@@ -49,7 +49,7 @@ if (isset($GameID)) { ?>
 	} else {
 		?><a class="leftNav" href="login.php">Login</a><br /><?php
 	} ?>
-	<a class="leftNav" href="manual.php" target="manual">Manual</a><br /><?php
+	<a class="leftNav" href="<?php echo WIKI_URL; ?>" target="_blank">SMR Wiki</a><br /><?php
 	if (isset($GameID)) {
 		?><a class="leftNav" href="<?php echo Globals::getSmrFileCreateHREF(); ?>" target="_blank">DL Sectors File</a><br /><?php
 	} ?>
