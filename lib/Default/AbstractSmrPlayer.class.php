@@ -440,7 +440,7 @@ abstract class AbstractSmrPlayer {
 		}
 		$newExperience = $this->experience - $experience;
 		$this->setExperience($newExperience);
-		$this->decreaseHOF($experience, array('Experience', 'Total', 'Loss'), HOF_PUBLIC);
+		$this->increaseHOF($experience, array('Experience', 'Total', 'Loss'), HOF_PUBLIC);
 	}
 
 	public function isLandedOnPlanet() {
