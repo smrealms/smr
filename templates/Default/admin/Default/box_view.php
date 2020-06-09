@@ -13,7 +13,7 @@ if (isset($Boxes)) { ?>
 		} ?>
 	</table><?php
 } else { ?>
-	<a href="<?php echo $BackHREF; ?>">Back</a><br /><?php
+	<a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a><br /><br /><?php
 	if (isset($Messages)) { ?>
 		<form method="POST" action="<?php echo $DeleteHREF; ?>">
 			<input type="submit" name="action" value="Delete" class="InputFields" />
