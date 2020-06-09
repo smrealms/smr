@@ -694,10 +694,8 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 	$container['body'] = 'contact.php';
 	$template->assign('ContactFormLink', SmrSession::getNewHREF($container));
 
-	if (SmrSession::hasGame()) {
-		$container['body'] = 'chat_rules.php';
-		$template->assign('IRCLink', SmrSession::getNewHREF($container));
-	}
+	$container['body'] = 'chat_rules.php';
+	$template->assign('IRCLink', SmrSession::getNewHREF($container));
 
 	$container['body'] = 'donation.php';
 	$template->assign('DonateLink', SmrSession::getNewHREF($container));

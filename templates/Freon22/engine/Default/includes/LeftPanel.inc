@@ -60,10 +60,8 @@ if (isset($GameID)) { ?>
 	} ?>
 	<a class="leftNav" href="<?php echo $ReportABugLink; ?>">Report A Bug</a><br />
 	<a class="leftNav" href="<?php echo $ContactFormLink; ?>">Contact Form</a><br />
-	<br /><?php
-	if (isset($GameID)) {
-		?><a class="leftNav" href="<?php echo $IRCLink; ?>">IRC Chat</a><br /><?php
-	} ?>
+	<br />
+	<a class="leftNav" href="<?php echo $IRCLink; ?>">Join Chat</a><br />
 	<a class="leftNav" href="http://smrcnn.smrealms.de/viewtopic.php?f=1&amp;t=9705" target="policy">User Policy</a><br />
 	<a class="leftNav" href="http://smrcnn.smrealms.de/" target="webboard">Webboard</a><br />
 	<a class="leftNav" href="<?php echo $DonateLink; ?>">Donate</a>
