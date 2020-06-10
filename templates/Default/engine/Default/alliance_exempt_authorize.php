@@ -15,7 +15,7 @@ if (!empty($Transactions)) { ?>
 				<tr>
 					<td><?php echo $Trans['player']; ?></td>
 					<td><?php echo $Trans['type']; ?></td>
-					<td><?php echo $Trans['reason']; ?></td>
+					<td><?php echo htmlentities($Trans['reason']); ?></td>
 					<td><?php echo $Trans['amount']; ?></td>
 					<td><input type="checkbox" name="exempt[<?php echo $Trans['transactionID']; ?>]"></td>
 				</tr><?php

@@ -64,7 +64,7 @@ if (!empty($BankTransactions)) { ?>
 							}
 							echo $BankTransaction['Player']->getLinkedDisplayName(); ?>
 						</td>
-						<td class="left"><?php echo $BankTransaction['Reason']; ?></td>
+						<td class="left"><?php echo htmlentities($BankTransaction['Reason']); ?></td>
 						<td><?php if (is_numeric($BankTransaction['Withdrawal'])) { echo number_format($BankTransaction['Withdrawal']); } else { ?>&nbsp;<?php } ?></td>
 						<td><?php if (is_numeric($BankTransaction['Deposit'])) { echo number_format($BankTransaction['Deposit']); } else { ?>&nbsp;<?php } ?></td><?php
 						if ($CanExempt) { ?>
