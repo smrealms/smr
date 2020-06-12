@@ -979,7 +979,7 @@ class AbstractSmrPort {
 		if ($transactionType == 'Sell') {
 			// Trader sells
 			$supplyFactor = 1 + ($supply / $maxSupply);
-			$relationsFactor = 1 + 2 * ($relations / 1000);
+			$relationsFactor = 1.2 + 1.8 * ($relations / 1000); // [0.75-3]
 			$scale = 0.08;
 		} elseif ($transactionType == 'Buy') {
 			// Trader buys
