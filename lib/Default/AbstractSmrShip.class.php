@@ -6,10 +6,10 @@ abstract class AbstractSmrShip {
 	const SHIP_CLASS_RAIDER = 3;
 
 	// Player exp gained for each point of damage done
-	const EXP_PER_DAMAGE_PLAYER = 0.25;
-	const EXP_PER_DAMAGE_PLANET = 0.5;
-	const EXP_PER_DAMAGE_PORT   = 0.1;
-	const EXP_PER_DAMAGE_FORCE  = 0.05;
+	const EXP_PER_DAMAGE_PLAYER = 0.375;
+	const EXP_PER_DAMAGE_PLANET = 1.0; // note that planet damage is reduced
+	const EXP_PER_DAMAGE_PORT   = 0.15;
+	const EXP_PER_DAMAGE_FORCE  = 0.075;
 
 	protected $player;
 
