@@ -16,8 +16,8 @@ UPDATE ship_type SET hardpoint = 3 where ship_type_id = 64;
 UPDATE ship_type SET cost = 465702 WHERE ship_type_id = 65;
 -- Rogue +2 hardpoints (2 -> 4)
 UPDATE ship_type SET hardpoint = 4 where ship_type_id = 65;
--- Rogue -100 armor (550 -> 450)
-UPDATE ship_type_support_hardware SET max_amount = 450 where ship_type_id = 65 AND hardware_type_id = 2;
+-- Rogue -150 armor (550 -> 400)
+UPDATE ship_type_support_hardware SET max_amount = 400 where ship_type_id = 65 AND hardware_type_id = 2;
 
 -- Blockade Runner -50% cost (5,131,071 -> 2,565,536)
 UPDATE ship_type SET cost = 2565536 WHERE ship_type_id = 66;
