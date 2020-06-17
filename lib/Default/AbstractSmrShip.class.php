@@ -1095,7 +1095,7 @@ abstract class AbstractSmrShip {
 	public function getMR() : int {
 		//700 - [ (ship hit points / 25) + (ship stat factors) ]
 		//Minimum value of 0 because negative values cause issues with calculations calling this routine
-		return Max(0, IRound(
+		return max(0, IRound(
 						700 -
 						(
 							(
