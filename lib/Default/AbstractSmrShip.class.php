@@ -1089,8 +1089,13 @@ abstract class AbstractSmrShip {
 		return $actualDamage;
 	}
 
+	/**
+	 * Returns the maneuverability rating for this ship.
+	 */
 	public function getMR() : int {
-		return IRound(
+		//700 - [ (ship hit points / 25) + (ship stat factors) ]
+		//Minimum value of 0 because negative values cause issues with calculations calling this routine
+		return max(0, IRound(
 						700 -
 						(
 							(
@@ -1109,6 +1114,7 @@ abstract class AbstractSmrShip {
 								+$this->getCDs() / 5
 							)
 						)
+					)
 					);
 	}
 
