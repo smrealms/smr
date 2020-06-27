@@ -24,8 +24,16 @@ if ($pickedPlayer->hasAlliance()) {
 		create_error('Picked player already has an alliance.');
 	}
 }
+
 // assign the player to the current alliance
 $pickedPlayer->joinAlliance($player->getAllianceID());
+
+// move the player to the alliance home sector if not using traditional HQ's
+if ($pickedPlayer->getSectorID() === 1) {
+	$pickedPlayer->setSectorID($pickedPlayer->getHome());
+	$pickedPlayer->getSector()->markVisited($pickedPlayer);
+}
+
 $pickedPlayer->update();
 
 // Update the draft history

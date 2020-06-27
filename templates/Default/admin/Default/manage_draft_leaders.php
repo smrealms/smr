@@ -18,12 +18,23 @@ if (empty($ActiveGames)) {
 		</select>
 	</form><br />
 
-	Player ID:&nbsp;
 	<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-		<input type="number" name="player_id" class="InputFields center">
-		<br />
-		<input type="submit" name="submit" value="Assign">&nbsp;
-		<input type="submit" name="submit" value="Remove">
+		<table>
+			<tr>
+				<td>Player ID:</td>
+				<td>Home Sector ID (optional):</td>
+			</tr>
+			<tr>
+				<td><input required type="number" name="player_id" class="InputFields center"></td>
+				<td><input type="number" name="home_sector_id" class="InputFields center"></td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<input type="submit" name="submit" value="Assign">&nbsp;
+					<input type="submit" name="submit" value="Remove">
+				</td>
+			</tr>
+		</table>
 	</form>
 	<?php
 
@@ -38,8 +49,8 @@ if (empty($ActiveGames)) {
 		<br />
 		Current Draft Leaders:
 		<ul><?php
-		foreach ($CurrentLeaders as $Leader) {
-			echo "<li>$Leader</li>";
+		foreach ($CurrentLeaders as $Leader) { ?>
+			<li><?php echo $Leader['Name']; ?><br />Home Sector: <?php echo $Leader['HomeSectorID']; ?></li><?php
 		} ?>
 		</ul><?php
 	}
