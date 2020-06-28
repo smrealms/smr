@@ -267,9 +267,6 @@ abstract class AbstractSmrPlayer {
 	 * Insert a new player into the database. Returns the new player object.
 	 */
 	public static function createPlayer($accountID, $gameID, $playerName, $raceID, $isNewbie, $npc=false) {
-		// Put the player in a sector with an HQ
-		$startSectorID = self::getHome($gameID, $raceID);
-
 		$db = new SmrMySqlDatabase();
 		$db->lockTable('player');
 
@@ -288,12 +285,15 @@ abstract class AbstractSmrPlayer {
 			$playerID = 1;
 		}
 
+		$startSectorID = 0; // Temporarily put player into non-existent sector
 		$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, sector_id, last_cpl_action, last_active, npc, newbie_status)
 					VALUES(' . $db->escapeNumber($accountID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($playerID) . ', ' . $db->escapeString($playerName) . ', ' . $db->escapeNumber($raceID) . ', ' . $db->escapeNumber($startSectorID) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean($npc) . ',' . $db->escapeBoolean($isNewbie) . ')');
 
 		$db->unlock();
 
-		return SmrPlayer::getPlayer($accountID, $gameID);
+		$player = SmrPlayer::getPlayer($accountID, $gameID);
+		$player->setSectorID($player->getHome());
+		return $player;
 	}
 
 	/**
@@ -507,10 +507,10 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	static public function getHome($gameID, $raceID) {
+	public function getHome() {
 		// get his home sector
-		$hq_id = GOVERNMENT + $raceID;
-		$raceHqSectors = SmrSector::getLocationSectors($gameID, $hq_id);
+		$hq_id = GOVERNMENT + $this->getRaceID();
+		$raceHqSectors = SmrSector::getLocationSectors($this->getGameID(), $hq_id);
 		if (!empty($raceHqSectors)) {
 			// If race has multiple HQ's for some reason, use the first one
 			return key($raceHqSectors);
@@ -2142,7 +2142,7 @@ abstract class AbstractSmrPlayer {
 		}
 		$this->setCredits($newCredits);
 
-		$this->setSectorID($this::getHome($this->getGameID(), $this->getRaceID()));
+		$this->setSectorID($this->getHome());
 		$this->increaseDeaths(1);
 		$this->setLandedOnPlanet(false);
 		$this->setDead(true);
