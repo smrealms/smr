@@ -58,12 +58,12 @@ if ($isNewbie) {
 // insert into player table.
 $player = SmrPlayer::createPlayer($account->getAccountID(), $gameID, $player_name, $race_id, $isNewbie);
 
-$player->setNewbieTurns($startingNewbieTurns);
-$player->giveStartingTurns();
-$player->setCredits($game->getStartingCredits());
-
 // Equip the ship
 $player->getShip()->giveStarterShip();
+
+$player->giveStartingTurns(); // must be done after setting ship
+$player->setNewbieTurns($startingNewbieTurns);
+$player->setCredits($game->getStartingCredits());
 
 // The `player_visited_sector` table holds *unvisited* sectors, so that once
 // all sectors are visited (the majority of the game), the table is empty.
