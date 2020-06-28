@@ -486,12 +486,12 @@ abstract class AbstractSmrPlayer {
 		$port->addCachePort($this->getAccountID()); //Add port of sector we were just in, to make sure it is left totally up to date.
 
 		$this->setLastSectorID($this->getSectorID());
-		$this->actionTaken('LeaveSector', array('Sector'=>$this->getSector()));
+		$this->actionTaken('LeaveSector', ['SectorID' => $this->getSectorID()]);
 		$this->sectorID = $sectorID;
-		$this->actionTaken('EnterSector', array('Sector'=>$this->getSector()));
+		$this->actionTaken('EnterSector', ['SectorID' => $this->getSectorID()]);
 		$this->hasChanged = true;
 
-		$port = SmrPort::getPort($this->getGameID(), $sectorID);
+		$port = SmrPort::getPort($this->getGameID(), $this->getSectorID());
 		$port->addCachePort($this->getAccountID()); //Add the port of sector we are now in.
 	}
 
