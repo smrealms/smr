@@ -479,9 +479,18 @@ abstract class AbstractSmrShip {
 		return $this->baseShip['ShipTypeID'];
 	}
 
+	/**
+	 * Switch to a new ship, updating player turns accordingly.
+	 */
 	public function setShipTypeID($shipTypeID) {
+		$oldSpeed = $this->getSpeed();
 		$this->getPlayer()->setShipTypeID($shipTypeID);
 		$this->regenerateBaseShip();
+		$newSpeed = $this->getSpeed();
+
+		// Update the player's turns to account for the speed change
+		$oldTurns = $this->getPlayer()->getTurns();
+		$this->getPlayer()->setTurns(IRound($oldTurns * $newSpeed / $oldSpeed));
 	}
 
 	public function getName() {

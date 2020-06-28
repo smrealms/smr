@@ -18,14 +18,10 @@ if ($var['func'] == 'Map') {
 } elseif ($var['func'] == 'Ship') {
 	$ship_id = Request::getInt('ship_id');
 	if ($ship_id <= 75 && $ship_id != 68) {
-		$speed = $ship->getSpeed();
 		// assign the new ship
 		$ship->decloak();
 		$ship->disableIllusion();
 		$ship->setShipTypeID($ship_id);
-
-		//now adapt turns
-		$player->setTurns($player->getTurns() * ($speed / $ship->getSpeed()));
 		$ship->setHardwareToMax();
 	}
 } elseif ($var['func'] == 'Weapon') {

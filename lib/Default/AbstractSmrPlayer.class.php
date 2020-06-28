@@ -2138,8 +2138,6 @@ abstract class AbstractSmrPlayer {
 
 		// 1/4 of ship value -> insurance
 		$newCredits = IRound($this->getShip()->getCost() / 4);
-		$old_speed = $this->getShip()->getSpeed();
-
 		if ($newCredits < 100000) {
 			$newCredits = 100000;
 		}
@@ -2151,10 +2149,6 @@ abstract class AbstractSmrPlayer {
 		$this->setDead(true);
 		$this->setNewbieWarning(true);
 		$this->getShip()->getPod($this->hasNewbieStatus());
-
-		// Update turns due to ship change
-		$new_speed = $this->getShip()->getSpeed();
-		$this->setTurns(IRound($this->turns / $old_speed * $new_speed));
 		$this->setNewbieTurns(100);
 	}
 
