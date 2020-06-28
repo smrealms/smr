@@ -59,7 +59,29 @@ if (isset($GameID)) { ?>
 
 			<tr>
 				<td colspan="2">&nbsp;</td>
+			</tr><?php
+
+			if ($ThisPlayer->canChangeRace()) { ?>
+				<tr>
+					<td>Player Race</td>
+					<td>
+						<select name="race_id" class="InputFields"><?php
+							foreach ($ThisPlayer->getGame()->getPlayableRaceIDs() as $RaceID) {
+								?><option value="<?php echo $RaceID; ?>" <?php if ($RaceID == $ThisPlayer->getRaceID()) { ?> selected<?php } ?>><?php echo Globals::getRaceName($RaceID); ?></option><?php
+							} ?>
+						</select>
+						<br />
+						(This will mostly reset your trader! You may only change your race once per game, and only during the first <?php echo TIME_FOR_RACE_CHANGE / 3600; ?> hours of the game.)
 			</tr>
+
+				<tr>
+					<td>&nbsp;</td>
+					<td><button type="submit" name="action" value="change_race" class="InputFields">Alter Player Race</button></td>
+
+				<tr>
+					<td colspan="2">&nbsp;</td>
+				</tr><?php
+			} ?>
 
 			<tr>
 				<td>Chat Sharing:</td>

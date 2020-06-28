@@ -66,6 +66,7 @@ abstract class AbstractSmrPlayer {
 	protected $plottedCourse;
 	protected $plottedCourseFrom;
 	protected $nameChanged;
+	protected bool $raceChanged;
 	protected $combatDronesKamikazeOnMines;
 	protected $customShipName;
 	protected $storedDestinations;
@@ -257,6 +258,7 @@ abstract class AbstractSmrPlayer {
 			$this->ignoreGlobals = $db->getBoolean('ignore_globals');
 			$this->newbieWarning = $db->getBoolean('newbie_warning');
 			$this->nameChanged = $db->getBoolean('name_changed');
+			$this->raceChanged = $db->getBoolean('race_changed');
 			$this->combatDronesKamikazeOnMines = $db->getBoolean('combat_drones_kamikaze_on_mines');
 		} else {
 			throw new PlayerNotFoundException('Invalid accountID: ' . $accountID . ' OR gameID:' . $gameID);
@@ -326,6 +328,10 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 		return $results;
+	}
+
+	public function getSQL() : string {
+		return $this->SQL;
 	}
 
 	public function getZoom() {
@@ -1233,6 +1239,19 @@ abstract class AbstractSmrPlayer {
 	public function setNameChanged($bool) {
 		$this->nameChanged = $bool;
 		$this->hasChanged = true;
+	}
+
+	public function isRaceChanged() : bool {
+		return $this->raceChanged;
+	}
+
+	public function setRaceChanged(bool $raceChanged) : void {
+		$this->raceChanged = $raceChanged;
+		$this->hasChanged = true;
+	}
+
+	public function canChangeRace() : bool {
+		return !$this->isRaceChanged() && (TIME - $this->getGame()->getStartTime() < TIME_FOR_RACE_CHANGE);
 	}
 
 	public function getRaceID() {
@@ -3078,6 +3097,7 @@ abstract class AbstractSmrPlayer {
 				', ignore_globals=' . $this->db->escapeBoolean($this->ignoreGlobals) .
 				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning) .
 				', name_changed = ' . $this->db->escapeBoolean($this->nameChanged) .
+				', race_changed = ' . $this->db->escapeBoolean($this->raceChanged) .
 				', combat_drones_kamikaze_on_mines = ' . $this->db->escapeBoolean($this->combatDronesKamikazeOnMines) .
 				' WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->hasChanged = false;

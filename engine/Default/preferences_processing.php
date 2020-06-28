@@ -234,6 +234,33 @@ if ($action == 'Save and resend validation code') {
 	$news = 'Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink();
 	$db->query('INSERT INTO news (time, news_message, game_id, type) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
+} elseif ($action == 'change_race') {
+	if (!$player->canChangeRace()) {
+		throw new Exception('Player is not allowed to change their race!');
+	}
+	$newRaceID = Request::getInt('race_id');
+	if (!in_array($newRaceID, $player->getGame()->getPlayableRaceIDs())) {
+		throw new Exception('Invalid race ID selected!');
+	}
+
+	// Modify the player
+	$oldRaceID = $player->getRaceID();
+	$player->setRaceID($newRaceID);
+	$player->setSectorID($player->getHome());
+	$player->getSector()->markVisited($player);
+	$player->getShip()->getPod($player->hasNewbieStatus()); // just to reset
+	$player->getShip()->giveStarterShip();
+	$player->setNewbieTurns(max(1, $player->getNewbieTurns()));
+	$player->setExperience(0);
+	$player->setRaceChanged(true);
+
+	// Reset relations
+	$db->query('DELETE FROM player_has_relation WHERE ' . $player->getSQL());
+	$player->giveStartingRelations();
+
+	$news = 'Please be advised that ' . $player->getBBLink() . ' has changed their race from [race=' . $oldRaceID . '] to [race=' . $player->getRaceID() . ']';
+	$db->query('INSERT INTO news (time, news_message, game_id, type) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\')');
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player race.';
 } elseif ($action == 'Update Colours') {
 	$friendlyColour = Request::get('friendly_color');
 	$neutralColour = Request::get('neutral_color');
