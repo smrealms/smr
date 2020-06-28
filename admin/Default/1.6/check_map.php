@@ -74,7 +74,7 @@ foreach (SmrGalaxy::getGameGalaxies($var['game_id']) as $galaxy) {
 	}
 	if (!empty($max)) {
 		$output = $max['Distance'] . 'x ' . Globals::getGoodName($max['GoodID']) . ' at Port #' . $max['Port']->getSectorID() . ' (' . Globals::getRaceName($max['Port']->getRaceID()) . ')';
+		$maxSellMultipliers[$galaxy->getName()] = $output;
 	}
-	$maxSellMultipliers[$galaxy->getName()] = $output;
 }
 $template->assign('MaxSellMultipliers', $maxSellMultipliers);
