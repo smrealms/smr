@@ -68,7 +68,7 @@ if (isset($GameID)) { ?>
 			<tr>
 				<td>&nbsp;</td>
 				<td>These settings specify who you share your game information with in supported chat services.</td>
-			<tr>
+			</tr>
 
 		</table>
 	</form>
