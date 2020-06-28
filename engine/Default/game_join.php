@@ -28,33 +28,18 @@ if (TIME >= $game->getJoinTime()) {
 	$template->assign('JoinGameFormHref', SmrSession::getNewHREF($container));
 }
 
-$db2 = new SmrMySqlDatabase();
-//this prevents multiple races appearing when there is more than 1 game
-$only = array();
-// get all available hq's
-$db->query('SELECT location_name, location_type_id
-			FROM location JOIN location_type USING(location_type_id)
-			WHERE location_type_id > '.$db->escapeNumber(UNDERGROUND) . '
-				AND location_type_id < '.$db->escapeNumber(FED) . '
-				AND game_id = ' . $db->escapeNumber($var['game_id']) . '
-			ORDER BY location_type_id');
-$races = array();
-while ($db->nextRecord()) {
-	$curr_race_id = $db->getInt('location_type_id') - 101;
-	if (in_array($curr_race_id, $only)) {
-		continue;
-	}
-	$only[] = $curr_race_id;
+$races = [];
+foreach ($game->getPlayableRaceIDs() as $raceID) {
 	// get number of traders in game
-	$db2->query('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db2->escapeNumber($curr_race_id) . ' AND game_id = ' . $db2->escapeNumber($var['game_id']));
-	$db2->nextRecord();
+	$db->query('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db->escapeNumber($raceID) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
+	$db->requireRecord();
 
-	$race = Globals::getRaces()[$curr_race_id];
-	$races[$curr_race_id] = [
-		'ID' => $curr_race_id,
+	$race = Globals::getRaces()[$raceID];
+	$races[$raceID] = [
+		'ID' => $raceID,
 		'Name' => $race['Race Name'],
 		'Description' => $race['Description'],
-		'NumberOfPlayers' => $db2->getInt('number_of_race'),
+		'NumberOfPlayers' => $db->getInt('number_of_race'),
 		'Selected' => false,
 	];
 }
