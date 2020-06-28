@@ -64,6 +64,7 @@ $player->getShip()->giveStarterShip();
 $player->giveStartingTurns(); // must be done after setting ship
 $player->setNewbieTurns($startingNewbieTurns);
 $player->setCredits($game->getStartingCredits());
+$player->giveStartingRelations();
 
 // The `player_visited_sector` table holds *unvisited* sectors, so that once
 // all sectors are visited (the majority of the game), the table is empty.
@@ -84,12 +85,6 @@ if ($isNewbie || $account->getAccountID() == ACCOUNT_ID_NHL) {
 	SMR is integrated with both IRC and Discord. These are free chat services where you can talk to other players and coordinate with your alliance. Simply click the "Join Chat" link at the bottom left panel of the page.';
 
 	SmrPlayer::sendMessageFromAdmin($gameID, $account->getAccountID(), $message);
-}
-
-if ($race_id == RACE_ALSKANT) { // Give Alskants 250 personal relations to start.
-	foreach (Globals::getRaces() as $raceID => $raceInfo) {
-		$player->setRelations(250, $raceID);
-	}
 }
 
 // We aren't in a game yet, so updates are not done automatically here

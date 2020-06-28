@@ -1513,6 +1513,18 @@ abstract class AbstractSmrPlayer {
 		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID) . ',' . $this->db->escapeNumber($this->pureRelations[$raceID]) . ')');
 	}
 
+	/**
+	 * Set any starting personal relations bonuses or penalties.
+	 */
+	public function giveStartingRelations() {
+		if ($this->getRaceID() === RACE_ALSKANT) {
+			// Give Alskants 250 personal relations to start.
+			foreach (Globals::getRaces() as $raceID => $raceInfo) {
+				$this->setRelations(250, $raceID);
+			}
+		}
+	}
+
 	public function getLastNewsUpdate() {
 		return $this->lastNewsUpdate;
 	}
