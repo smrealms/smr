@@ -179,7 +179,7 @@ if ($action == 'Save and resend validation code') {
 		$account->setHotkey($hotkey, explode(' ', Request::get($hotkey)));
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
-} elseif (strpos(trim($action), 'Alter Player') === 0) {
+} elseif ($action == 'change_name') {
 	// trim input now
 	$player_name = trim(Request::get('PlayerName'));
 

@@ -54,7 +54,7 @@ if (isset($GameID)) { ?>
 	
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" name="action" value=" Alter Player <?php if ($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?>" class="InputFields" /></td>
+				<td><button type="submit" name="action" value="change_name" class="InputFields">Alter Player Name <?php if ($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?></button></td>
 			</tr>
 
 			<tr>
