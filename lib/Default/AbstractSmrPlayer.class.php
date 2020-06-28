@@ -81,7 +81,7 @@ abstract class AbstractSmrPlayer {
 	protected static $HOFVis;
 
 	protected $hasChanged = false;
-	protected $hasHOFChanged = false;
+	protected array $hasHOFChanged = [];
 	protected static $hasHOFVisChanged = array();
 	protected $hasBountyChanged = array();
 
@@ -3100,8 +3100,9 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function saveHOF() {
-		if ($this->hasHOFChanged !== false) {
+		if (count($this->hasHOFChanged) > 0) {
 			$this->doHOFSave($this->hasHOFChanged);
+			$this->hasHOFChanged = [];
 		}
 		if (!empty(self::$hasHOFVisChanged)) {
 			foreach (self::$hasHOFVisChanged as $hofType => $changeType) {
@@ -3115,8 +3116,12 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	protected function doHOFSave(array &$hasChangedList, array $typeList = array()) {
-		foreach ($hasChangedList as $type => &$hofChanged) {
+	/**
+	 * This should only be called by `saveHOF` (and recursively) to
+	 * ensure that the `hasHOFChanged` attribute is properly cleared.
+	 */
+	protected function doHOFSave(array $hasChangedList, array $typeList = array()) {
+		foreach ($hasChangedList as $type => $hofChanged) {
 			$tempTypeList = $typeList;
 			$tempTypeList[] = $type;
 			if (is_array($hofChanged)) {
@@ -3132,7 +3137,6 @@ abstract class AbstractSmrPlayer {
 						SET amount=' . $this->db->escapeNumber($amount) . '
 						WHERE ' . $this->SQL . ' AND type = ' . $this->db->escapeArray($tempTypeList, false, true, ':', false) . ' LIMIT 1');
 				}
-				$hofChanged = false;
 			}
 		}
 	}
