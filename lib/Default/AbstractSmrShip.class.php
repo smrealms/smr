@@ -11,6 +11,18 @@ abstract class AbstractSmrShip {
 	const EXP_PER_DAMAGE_PORT   = 0.15;
 	const EXP_PER_DAMAGE_FORCE  = 0.075;
 
+	const STARTER_SHIPS = [
+		RACE_NEUTRAL => SHIP_TYPE_GALACTIC_SEMI,
+		RACE_ALSKANT => SHIP_TYPE_SMALL_TIMER,
+		RACE_CREONTI => SHIP_TYPE_MEDIUM_CARGO_HULK,
+		RACE_HUMAN => SHIP_TYPE_LIGHT_FREIGHTER,
+		RACE_IKTHORNE => SHIP_TYPE_TINY_DELIGHT,
+		RACE_SALVENE => SHIP_TYPE_HATCHLINGS_DUE,
+		RACE_THEVIAN => SHIP_TYPE_SWIFT_VENTURE,
+		RACE_WQHUMAN => SHIP_TYPE_SLIP_FREIGHTER,
+		RACE_NIJARIN => SHIP_TYPE_REDEEMER,
+	];
+
 	protected $player;
 
 	protected $gameID;
@@ -356,6 +368,23 @@ abstract class AbstractSmrShip {
 		$this->removeUnderAttack();
 	}
 
+	public function giveStarterShip() : void {
+		if ($this->player->hasNewbieStatus()) {
+			$shipID = SHIP_TYPE_NEWBIE_MERCHANT_VESSEL;
+			$amount_shields = 75;
+			$amount_armour = 150;
+		} else {
+			$shipID = self::STARTER_SHIPS[$this->player->getRaceID()];
+			$amount_shields = 50;
+			$amount_armour = 50;
+		}
+		$this->setShipTypeID($shipID);
+		$this->setShields($amount_shields, true);
+		$this->setArmour($amount_armour, true);
+		$this->setCargoHolds(40);
+		$this->addWeapon(46); // Laser
+	}
+
 	public function hasCloak() {
 		return $this->getHardware(HARDWARE_CLOAK);
 	}
@@ -450,9 +479,18 @@ abstract class AbstractSmrShip {
 		return $this->baseShip['ShipTypeID'];
 	}
 
+	/**
+	 * Switch to a new ship, updating player turns accordingly.
+	 */
 	public function setShipTypeID($shipTypeID) {
+		$oldSpeed = $this->getSpeed();
 		$this->getPlayer()->setShipTypeID($shipTypeID);
 		$this->regenerateBaseShip();
+		$newSpeed = $this->getSpeed();
+
+		// Update the player's turns to account for the speed change
+		$oldTurns = $this->getPlayer()->getTurns();
+		$this->getPlayer()->setTurns(IRound($oldTurns * $newSpeed / $oldSpeed));
 	}
 
 	public function getName() {

@@ -51,57 +51,19 @@ $account->decreaseTotalSmrCredits($creditsNeeded);
 $isNewbie = !$account->isVeteran();
 if ($isNewbie) {
 	$startingNewbieTurns = STARTING_NEWBIE_TURNS_NEWBIE;
-	$ship_id = SHIP_TYPE_NEWBIE_MERCHANT_VESSEL;
-	$amount_shields = 75;
-	$amount_armour = 150;
 } else {
 	$startingNewbieTurns = STARTING_NEWBIE_TURNS_VET;
-	switch ($race_id) {
-		case RACE_ALSKANT:
-			$ship_id = SHIP_TYPE_SMALL_TIMER;
-		break;
-		case RACE_CREONTI:
-			$ship_id = SHIP_TYPE_MEDIUM_CARGO_HULK;
-		break;
-		case RACE_HUMAN:
-			$ship_id = SHIP_TYPE_LIGHT_FREIGHTER;
-		break;
-		case RACE_IKTHORNE:
-			$ship_id = SHIP_TYPE_TINY_DELIGHT;
-		break;
-		case RACE_SALVENE:
-			$ship_id = SHIP_TYPE_HATCHLINGS_DUE;
-		break;
-		case RACE_THEVIAN:
-			$ship_id = SHIP_TYPE_SWIFT_VENTURE;
-		break;
-		case RACE_WQHUMAN:
-			$ship_id = SHIP_TYPE_SLIP_FREIGHTER;
-		break;
-		case RACE_NIJARIN:
-			$ship_id = SHIP_TYPE_REDEEMER;
-		break;
-		default:
-			$ship_id = SHIP_TYPE_GALACTIC_SEMI;
-	}
-	$amount_shields = 50;
-	$amount_armour = 50;
 }
 
 // insert into player table.
 $player = SmrPlayer::createPlayer($account->getAccountID(), $gameID, $player_name, $race_id, $isNewbie);
 
-$player->setNewbieTurns($startingNewbieTurns);
-$player->giveStartingTurns();
-$player->setCredits($game->getStartingCredits());
-
 // Equip the ship
-$player->setShipTypeID($ship_id);
-$ship = $player->getShip();
-$ship->setShields($amount_shields, true);
-$ship->setArmour($amount_armour, true);
-$ship->setCargoHolds(40);
-$ship->addWeapon(46); // Laser
+$player->getShip()->giveStarterShip();
+
+$player->giveStartingTurns(); // must be done after setting ship
+$player->setNewbieTurns($startingNewbieTurns);
+$player->setCredits($game->getStartingCredits());
 
 // The `player_visited_sector` table holds *unvisited* sectors, so that once
 // all sectors are visited (the majority of the game), the table is empty.
@@ -132,7 +94,7 @@ if ($race_id == RACE_ALSKANT) { // Give Alskants 250 personal relations to start
 
 // We aren't in a game yet, so updates are not done automatically here
 $player->update();
-$ship->update();
+$player->getShip()->update();
 
 // Announce the player joining in the news
 $news = '[player=' . $player->getPlayerID() . '] has joined the game!';
