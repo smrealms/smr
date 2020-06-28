@@ -14,7 +14,7 @@ $template->assign('CanPick', $teams[$player->getAccountID()]['CanPick']);
 
 // Get a list of players still in the pick pool
 $players = array();
-$db->query('SELECT * FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_id=0 OR alliance_id=' . $db->escapeNumber(NHA_ID) . ') AND account_id NOT IN (SELECT account_id FROM draft_leaders WHERE draft_leaders.game_id=player.game_id) AND sector_id!=1 AND account_id != ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ';');
+$db->query('SELECT * FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_id=0 OR alliance_id=' . $db->escapeNumber(NHA_ID) . ') AND account_id NOT IN (SELECT account_id FROM draft_leaders WHERE draft_leaders.game_id=player.game_id) AND account_id NOT IN (SELECT picked_account_id FROM draft_history WHERE draft_history.game_id=player.game_id) AND account_id != ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ';');
 while ($db->nextRecord()) {
 	$pickPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
 	$players[] = array('Player' => $pickPlayer,
