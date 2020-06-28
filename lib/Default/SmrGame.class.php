@@ -27,6 +27,7 @@ class SmrGame {
 	protected int $startingCredits;
 
 	protected int $totalPlayers;
+	protected array $playableRaceIDs;
 
 	protected bool $hasChanged = false;
 	protected bool $isNew = false;
@@ -400,6 +401,27 @@ class SmrGame {
 				                  VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($race1['Race ID']) . ',' . $this->db->escapeNumber($race2['Race ID']) . ',' . $this->db->escapeNumber($amount) . ')');
 			}
 		}
+	}
+
+	/**
+	 * Get the list of playable Race IDs based on which Racial HQ's
+	 * are locations in this game.
+	 */
+	public function getPlayableRaceIDs() : array {
+		if (!isset($this->playableRaceIDs)) {
+			// Get a unique set of HQ's available in game
+			$this->db->query('SELECT DISTINCT location_type_id
+				FROM location
+				WHERE location_type_id > ' . $this->db->escapeNumber(UNDERGROUND) . '
+					AND location_type_id < ' . $this->db->escapeNumber(FED) . '
+					AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+				ORDER BY location_type_id');
+			$this->playableRaceIDs = array();
+			while ($this->db->nextRecord()) {
+				$this->playableRaceIDs[] = $this->db->getInt('location_type_id') - 101;
+			}
+		}
+		return $this->playableRaceIDs;
 	}
 
 }

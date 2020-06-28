@@ -66,6 +66,7 @@ abstract class AbstractSmrPlayer {
 	protected $plottedCourse;
 	protected $plottedCourseFrom;
 	protected $nameChanged;
+	protected bool $raceChanged;
 	protected $combatDronesKamikazeOnMines;
 	protected $customShipName;
 	protected $storedDestinations;
@@ -257,6 +258,7 @@ abstract class AbstractSmrPlayer {
 			$this->ignoreGlobals = $db->getBoolean('ignore_globals');
 			$this->newbieWarning = $db->getBoolean('newbie_warning');
 			$this->nameChanged = $db->getBoolean('name_changed');
+			$this->raceChanged = $db->getBoolean('race_changed');
 			$this->combatDronesKamikazeOnMines = $db->getBoolean('combat_drones_kamikaze_on_mines');
 		} else {
 			throw new PlayerNotFoundException('Invalid accountID: ' . $accountID . ' OR gameID:' . $gameID);
@@ -326,6 +328,10 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 		return $results;
+	}
+
+	public function getSQL() : string {
+		return $this->SQL;
 	}
 
 	public function getZoom() {
@@ -1235,6 +1241,19 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
+	public function isRaceChanged() : bool {
+		return $this->raceChanged;
+	}
+
+	public function setRaceChanged(bool $raceChanged) : void {
+		$this->raceChanged = $raceChanged;
+		$this->hasChanged = true;
+	}
+
+	public function canChangeRace() : bool {
+		return !$this->isRaceChanged() && (TIME - $this->getGame()->getStartTime() < TIME_FOR_RACE_CHANGE);
+	}
+
 	public function getRaceID() {
 		return $this->raceID;
 	}
@@ -1511,6 +1530,18 @@ abstract class AbstractSmrPlayer {
 		$this->pureRelations[$raceID] = $relations;
 		$this->relations[$raceID] += $relationsDiff;
 		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID) . ',' . $this->db->escapeNumber($this->pureRelations[$raceID]) . ')');
+	}
+
+	/**
+	 * Set any starting personal relations bonuses or penalties.
+	 */
+	public function giveStartingRelations() {
+		if ($this->getRaceID() === RACE_ALSKANT) {
+			// Give Alskants 250 personal relations to start.
+			foreach (Globals::getRaces() as $raceID => $raceInfo) {
+				$this->setRelations(250, $raceID);
+			}
+		}
 	}
 
 	public function getLastNewsUpdate() {
@@ -3066,6 +3097,7 @@ abstract class AbstractSmrPlayer {
 				', ignore_globals=' . $this->db->escapeBoolean($this->ignoreGlobals) .
 				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning) .
 				', name_changed = ' . $this->db->escapeBoolean($this->nameChanged) .
+				', race_changed = ' . $this->db->escapeBoolean($this->raceChanged) .
 				', combat_drones_kamikaze_on_mines = ' . $this->db->escapeBoolean($this->combatDronesKamikazeOnMines) .
 				' WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->hasChanged = false;
