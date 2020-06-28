@@ -62,6 +62,10 @@ var listjs = (function() {
 		defaultList('weapon-list', ['sort_name', 'sort_shield', 'sort_armor', 'sort_acc', 'sort_race', 'sort_power', 'sort_cost']);
 	};
 
+	listjs.alliance_pick = function() {
+		defaultList('draft-pick', ['sort_name', 'sort_race', 'sort_hof', 'sort_score']);
+	};
+
 	return listjs;
 
 })();

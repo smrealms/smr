@@ -35,36 +35,41 @@ if ($CanPick) { ?>
 }
 
 if (count($PickPlayers) > 0) { ?>
-	<table class="standard">
-		<tr>
-			<th>Action</th>
-			<th>Player Name</th>
-			<th>Race Name</th>
-			<th>HoF Name</th>
-			<th>User Score</th>
-		</tr><?php
-		foreach ($PickPlayers as $PickPlayer) { ?>
+	<table id="draft-pick" class="standard">
+		<thead>
 			<tr>
-				<td class="center"><?php
-				if ($CanPick) { ?>
-					<div class="buttonA"><a class="buttonA" href="<?php echo $PickPlayer['HREF'] ?>">Pick</a></div><?php
-				} ?>
-				</td>
-				<td>
-					<?php echo $PickPlayer['Player']->getDisplayName(); ?>
-				</td>
-				<td>
-					<?php echo $PickPlayer['Player']->getRaceName(); ?>
-				</td>
-				<td>
-					<?php echo $PickPlayer['Player']->getAccount()->getHofDisplayName(true); ?>
-				</td>
-				<td>
-					<?php echo $PickPlayer['Player']->getAccount()->getScore(); ?>
-				</td>
-			</tr><?php
-		} ?>
+				<th>Action</th>
+				<th class="sort" data-sort="sort_name">Player Name</th>
+				<th class="sort" data-sort="sort_race">Race Name</th>
+				<th class="sort" data-sort="sort_hof">HoF Name</th>
+				<th class="sort" data-sort="sort_score">User Score</th>
+			</tr>
+		</thead>
+		<tbody class="list"><?php
+			foreach ($PickPlayers as $PickPlayer) { ?>
+				<tr>
+					<td class="center"><?php
+					if ($CanPick) { ?>
+						<div class="buttonA"><a class="buttonA" href="<?php echo $PickPlayer['HREF'] ?>">Pick</a></div><?php
+					} ?>
+					</td>
+					<td class="sort_name">
+						<?php echo $PickPlayer['Player']->getDisplayName(); ?>
+					</td>
+					<td class="sort_race">
+						<?php echo $PickPlayer['Player']->getRaceName(); ?>
+					</td>
+					<td class="sort_hof">
+						<?php echo $PickPlayer['Player']->getAccount()->getHofDisplayName(true); ?>
+					</td>
+					<td class="sort_score">
+						<?php echo $PickPlayer['Player']->getAccount()->getScore(); ?>
+					</td>
+				</tr><?php
+			} ?>
+		</tbody>
 	</table><?php
+	$this->setListjsInclude('alliance_pick');
 } else {
 	?>No one left to pick.<?php
 } ?>
