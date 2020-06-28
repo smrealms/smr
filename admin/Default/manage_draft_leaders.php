@@ -21,10 +21,14 @@ if ($activeGames) {
 
 	// Get the list of current draft leaders for the selected game
 	$currentLeaders = array();
-	$db->query('SELECT account_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($selectedGameID));
+	$db->query('SELECT account_id, home_sector_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($selectedGameID));
 	while ($db->nextRecord()) {
-		$editor = SmrPlayer::getPlayer($db->getInt('account_id'), $selectedGameID);
-		$currentLeaders[] = $editor->getDisplayName();
+		$homeSectorID = $db->getInt('home_sector_id');
+		$leader = SmrPlayer::getPlayer($db->getInt('account_id'), $selectedGameID);
+		$currentLeaders[] = [
+			'Name' => $leader->getDisplayName(),
+			'HomeSectorID' => $homeSectorID === 0 ? 'None' : $homeSectorID,
+		];
 	}
 	$template->assign('CurrentLeaders', $currentLeaders);
 }

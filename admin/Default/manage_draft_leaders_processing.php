@@ -8,6 +8,7 @@ SmrSession::updateVar('processing_msg', null);
 
 // Get the POST variables
 $playerId = Request::getInt('player_id');
+$homeSectorID = Request::getInt('home_sector_id');
 $action = Request::get('submit');
 
 try {
@@ -26,7 +27,7 @@ if ($action == "Assign") {
 	if ($selectedPlayer->isDraftLeader()) {
 		$msg = "<span class='red'>ERROR: </span>$name is already a draft leader in game $game!";
 	} else {
-		$db->query('INSERT INTO draft_leaders (account_id, game_id) VALUES (' . $db->escapeNumber($accountId) . ', ' . $db->escapeNumber($gameId) . ')');
+		$db->query('INSERT INTO draft_leaders (account_id, game_id, home_sector_id) VALUES (' . $db->escapeNumber($accountId) . ', ' . $db->escapeNumber($gameId) . ', ' . $db->escapeNumber($homeSectorID) . ')');
 	}
 } elseif ($action == "Remove") {
 	if (!$selectedPlayer->isDraftLeader()) {
