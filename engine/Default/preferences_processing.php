@@ -247,6 +247,7 @@ if ($action == 'Save and resend validation code') {
 	$oldRaceID = $player->getRaceID();
 	$player->setRaceID($newRaceID);
 	$player->setSectorID($player->getHome());
+	$player->setLandedOnPlanet(false);
 	$player->getSector()->markVisited($player);
 	$player->getShip()->getPod($player->hasNewbieStatus()); // just to reset
 	$player->getShip()->giveStarterShip();
