@@ -77,6 +77,4 @@ if ($SoldGoods) { ?>
 	<p>&nbsp;</p><?php
 } ?>
 
-<form method="POST" action="<?php echo $LeavePortHREF; ?>">
-	<input type="submit" name="action" value="Leave Port" class="InputFields" />
-</form>
+<a href="<?php echo $LeavePortHREF; ?>" class="submitStyle">Leave Port</a>
