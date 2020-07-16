@@ -27,32 +27,6 @@ h3 {
 }
 /* ----- End Heading styles ----- */
 /* ---------------------------- */
-.InputFields {
-	font: inherit;
-}
-.submitStyle:link {
-	font: inherit;
-	padding: 1px 6px;
-}
-.submitStyle:visited {
-	font: inherit;
-	padding: 1px 6px;
-}
-.submitStyle:hover {
-	font: inherit;
-	padding: 1px 6px;
-}
-.submitStyle:active {
-	font: inherit;
-	padding: 1px 6px;
-}
-.submitStyle {
-	font: inherit;
-	padding: 1px 6px;
-	border-spacing: 0px;
-	display: inline-table; /* Fixes the problems with vertical overlap in FF, but not IE :( */
-}
-/* ------------------------------------ */
 #help_content {
 	margin: 10px 20px 50px 20px;
 }
@@ -148,9 +122,6 @@ div.bar1 {
 div.bar1 div {
 	padding: 2px;
 	text-align: center;
-}
-input {
-	font: 100%;
 }
 a {
 	text-decoration: none;

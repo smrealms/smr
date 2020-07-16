@@ -9,7 +9,7 @@ if (!$Planet->hasOwner()) { ?>
 	</p>
 	<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 		<input hidden name="password" />
-		<input type="submit" name="action" value="Take Ownership" class="InputFields" />
+		<input type="submit" name="action" value="Take Ownership" />
 	</form><?php
 } else {
 	if ($Planet->getOwnerID() != $Player->getAccountID()) { ?>
@@ -21,20 +21,20 @@ if (!$Planet->hasOwner()) { ?>
 			} ?>
 		</p>
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-			<input type="text" name="password" class="InputFields">&nbsp;&nbsp;&nbsp;
-			<input type="submit" name="action" value="Take Ownership" class="InputFields" />
+			<input type="text" name="password">&nbsp;&nbsp;&nbsp;
+			<input type="submit" name="action" value="Take Ownership" />
 		</form><?php
 	} else { ?>
 		<p>You own this planet!</p>
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-			<input type="text" name="password" value="<?php echo htmlspecialchars($Planet->getPassword()); ?>" class="InputFields" />&nbsp;&nbsp;&nbsp;
-			<input type="submit" name="action" value="Set Password" class="InputFields" />
+			<input type="text" name="password" value="<?php echo htmlspecialchars($Planet->getPassword()); ?>" />&nbsp;&nbsp;&nbsp;
+			<input type="submit" name="action" value="Set Password" />
 		</form>
 		<br />
 
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-			<input required type="text" name="name" value="<?php echo $Planet->getDisplayName(); ?>" class="InputFields" />&nbsp;&nbsp;&nbsp;
-			<input type="submit" name="action" value="Rename" class="InputFields" />
+			<input required type="text" name="name" value="<?php echo $Planet->getDisplayName(); ?>" />&nbsp;&nbsp;&nbsp;
+			<input type="submit" name="action" value="Rename" />
 		</form><?php
 	}
 }

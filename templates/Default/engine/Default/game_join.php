@@ -109,7 +109,7 @@ if (!isset($JoinGameFormHref)) { ?>
 				<table class="centered">
 					<tr>
 						<td class="right"><b>Name:</b>&nbsp;</td>
-						<td><input required type="text" name="player_name" maxlength="32" class="InputFields" /></td>
+						<td><input required type="text" name="player_name" maxlength="32" /></td>
 						<td rowspan="4">&nbsp;&nbsp;</td>
 						<td rowspan="4" class="standard top">
 							<img id="race_image" src="images/race/race<?php echo $SelectedRaceID; ?>.jpg" width="282" height="360" alt="" />
@@ -118,7 +118,7 @@ if (!isset($JoinGameFormHref)) { ?>
 					<tr>
 						<td class="right"><b>Race:</b>&nbsp;</td>
 						<td>
-						<select name="race_id" class="InputFields" OnChange="showRaceInfo(this);">
+						<select name="race_id" OnChange="showRaceInfo(this);">
 							<?php /*<option value="1">[please select]</option> */
 							foreach ($Races as $Race) {
 								?><option value="<?php echo $Race['ID']; if ($Race['Selected']) { ?>" selected="selected<?php } ?>"><?php echo $Race['Name']; ?> (<?php echo $Race['NumberOfPlayers']; ?> Traders)<?php
@@ -129,7 +129,7 @@ if (!isset($JoinGameFormHref)) { ?>
 					
 					<tr>
 						<td>&nbsp;</td>
-						<td><input type="submit" name="action" value="Create Player" class="InputFields" /></td>
+						<td><input type="submit" name="action" value="Create Player" /></td>
 					</tr>
 					
 					<tr>

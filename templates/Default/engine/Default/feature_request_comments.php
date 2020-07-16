@@ -48,13 +48,13 @@ if ($FeatureModerator) { ?>
 			<td class="center">Comment:</td>
 		</tr>
 		<tr>
-			<td class="center"><textarea spellcheck="true" name="comment" required class="InputFields"></textarea></td>
+			<td class="center"><textarea spellcheck="true" name="comment" required></textarea></td>
 		</tr>
 		<tr>
-			<td class="center">Anonymous: <input name="anon" class="InputFields" type="checkbox" checked="checked"/></td>
+			<td class="center">Anonymous: <input name="anon" type="checkbox" checked="checked"/></td>
 		</tr>
 		<tr>
-			<td class="center"><input type="submit" name="action" value="Add Comment" class="InputFields"></td>
+			<td class="center"><input type="submit" name="action" value="Add Comment"></td>
 		</tr>
 	</table>
 </form>

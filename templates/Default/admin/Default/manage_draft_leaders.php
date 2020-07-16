@@ -25,8 +25,8 @@ if (empty($ActiveGames)) {
 				<td>Home Sector ID (optional):</td>
 			</tr>
 			<tr>
-				<td><input required type="number" name="player_id" class="InputFields center"></td>
-				<td><input type="number" name="home_sector_id" class="InputFields center"></td>
+				<td><input required type="number" name="player_id" class="center"></td>
+				<td><input type="number" name="home_sector_id" class="center"></td>
 			</tr>
 			<tr>
 				<td colspan=2>

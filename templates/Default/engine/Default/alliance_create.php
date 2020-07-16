@@ -18,7 +18,7 @@
 		<tr>
 			<td class="top">Recruiting:</td>
 			<td>
-				<select name="recruit_type" class="InputFields" onchange="togglePassword(this)"><?php
+				<select name="recruit_type" onchange="togglePassword(this)"><?php
 					foreach (SmrAlliance::allRecruitTypes() as $type => $text) { ?>
 						<option value="<?php echo $type; ?>"><?php echo $text; ?></option><?php
 					} ?>

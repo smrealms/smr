@@ -1,5 +1,5 @@
 <form method="POST" action="<?php echo $SelectGameHREF; ?>">
-	<select id="InputFields" name="selected_game_id" onchange="this.form.submit()"><?php
+	<select name="selected_game_id" onchange="this.form.submit()"><?php
 		foreach ($Games as $Game) { ?>
 			<option <?php if ($Game['Selected']) { ?>selected<?php } ?> value="<?php echo $Game['ID']; ?>"><?php echo $Game['Name']; ?></option><?php
 		} ?>
@@ -33,7 +33,7 @@ if (!empty($SelectedGameID)) { ?>
 					<form method="POST" action="<?php echo $npc['href']; ?>">
 						<td><input required name="player_name" value="<?php echo $npc['default_player_name']; ?>" /></td>
 						<td>
-							<select name="race_id" class="InputFields"><?php
+							<select name="race_id"><?php
 								foreach (Globals::getRaces() as $raceID => $race) {
 									if ($raceID == RACE_NEUTRAL) {
 										continue;

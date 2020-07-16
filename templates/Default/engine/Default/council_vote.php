@@ -27,12 +27,12 @@ if (!$VoteTreaties) { ?>
 			<td><?php echo $VoteInfo['Type']; ?></td>
 			<td class="noWrap">
 				<form method="POST" action="<?php echo $VoteInfo['HREF']; ?>">
-					<input type="submit" name="action" value="Yes" class="InputFields"<?php if ($VoteInfo['For']) { ?> style="background-color:green"<?php } ?> />
+					<input type="submit" name="action" value="Yes" <?php if ($VoteInfo['For']) { ?> style="background-color:green"<?php } ?> />
 					&nbsp;
-					<input type="submit" name="action" value="No" class="InputFields"<?php if ($VoteInfo['Against']) { ?> style="background-color:green"<?php } ?> /><?php
+					<input type="submit" name="action" value="No" <?php if ($VoteInfo['Against']) { ?> style="background-color:green"<?php } ?> /><?php
 					if ($ThisPlayer->isPresident()) { ?>
 						&nbsp;
-						<input type="submit" name="action" value="Veto" class="InputFields" /><?php
+						<input type="submit" name="action" value="Veto" /><?php
 					} ?>
 				</form>
 			</td>
@@ -70,9 +70,9 @@ if (!$VoteTreaties) { ?>
 			</td>
 			<td>
 				<form method="POST" action="<?php echo $VoteInfo['HREF']; ?>">
-					<input type="submit" name="action" value="Increase" class="InputFields"<?php if ($VoteInfo['Increased']) { ?> style="background-color:green"<?php } ?> />
+					<input type="submit" name="action" value="Increase" <?php if ($VoteInfo['Increased']) { ?> style="background-color:green"<?php } ?> />
 					&nbsp;
-					<input type="submit" name="action" value="Decrease" class="InputFields"<?php if ($VoteInfo['Decreased']) { ?> style="background-color:green"<?php } ?> />
+					<input type="submit" name="action" value="Decrease" <?php if ($VoteInfo['Decreased']) { ?> style="background-color:green"<?php } ?> />
 				</form>
 			</td>
 			<td><?php echo get_colored_text($VoteInfo['Relations']); ?></td>

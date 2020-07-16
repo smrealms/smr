@@ -7,7 +7,7 @@
 
 <form method="POST" action="<?php echo $AddWeaponHREF; ?>">
 	<input type="number" name="amount" value="1" style="width:75px" />&nbsp;
-	<select name="weapon_id" class="InputFields"><?php
+	<select name="weapon_id"><?php
 		foreach ($WeaponList as $weapon) { ?>
 			<option value="<?php echo $weapon['ID']; ?>"><?php echo $weapon['Name']; ?></option><?php
 		} ?>
@@ -17,7 +17,7 @@
 <br />
 
 <form method="POST" action="<?php echo $ShipHREF; ?>">
-	<select name="ship_id" class="InputFields"><?php
+	<select name="ship_id"><?php
 		foreach ($ShipList as $ship) { ?>
 			<option value="<?php echo $ship['ID']; ?>"><?php echo $ship['Name']; ?></option><?php
 		} ?>
@@ -28,7 +28,7 @@
 
 <form method="POST" action="<?php echo $HardwareHREF; ?>">
 	<input type="number" name="amount_hard" value="0" style="width:75px" />&nbsp;
-	<select name="type_hard" class="InputFields"><?php
+	<select name="type_hard"><?php
 		foreach ($Hardware as $item) { ?>
 			<option value="<?php echo $item['ID']; ?>"><?php echo $item['Name']; ?></option><?php
 		} ?>
@@ -63,7 +63,7 @@
 
 <form method="POST" action="<?php echo $PersonalRelationsHREF; ?>">
 	<input type="number" name="amount" value="0" style="width:75px" />&nbsp;
-	<select name="race" class="InputFields"><?php
+	<select name="race"><?php
 		foreach (Globals::getRaces() as $race) { ?>
 			<option value="<?php echo $race['Race ID']; ?>"><?php echo $race['Race Name']; ?></option><?php
 		} ?>
@@ -74,7 +74,7 @@
 
 <form method="POST" action="<?php echo $RaceRelationsHREF; ?>">
 	<input type="number" name="amount" value="0" min="<?php echo MIN_GLOBAL_RELATIONS; ?>" max="<?php echo MAX_GLOBAL_RELATIONS; ?>" style="width:75px" />&nbsp;
-	<select name="race" class="InputFields"><?php
+	<select name="race"><?php
 		foreach (Globals::getRaces() as $race) {
 			if ($race['Race ID'] == $ThisPlayer->getRaceID()) continue;
 			if ($race['Race ID'] == RACE_NEUTRAL) continue; ?>
@@ -86,7 +86,7 @@
 <br />
 
 <form method="POST" action="<?php echo $ChangeRaceHREF; ?>">
-	<select name="race" class="InputFields"><?php
+	<select name="race"><?php
 		foreach (Globals::getRaces() as $race) {
 			if ($race['Race ID'] == $ThisPlayer->getRaceID()) continue;
 			if ($race['Race ID'] == RACE_NEUTRAL) continue; ?>

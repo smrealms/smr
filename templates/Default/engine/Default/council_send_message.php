@@ -6,7 +6,7 @@
 		</small>
 	</p>
 
-	<textarea spellcheck="true" name="message" class="InputFields"></textarea>
+	<textarea spellcheck="true" name="message"></textarea>
 	<br /><br />
 	<input type="submit" name="action" value="Send message" />
 </form>

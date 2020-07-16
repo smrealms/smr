@@ -41,7 +41,7 @@
 </script>
 Please select the type of IP search you would like.<br />
 <form name="form_ip" method="POST" action="<?php echo $IpFormHref; ?>">
-	<select name="type" onchange="go()" class="InputFields">
+	<select name="type" onchange="go()">
 		<option value="list">List all IPs</option>
 		<option value="search">Search for a specific IP</option>
 		<option value="account_ips">List all IPs for a specific account (id)</option>
@@ -54,9 +54,9 @@ Please select the type of IP search you would like.<br />
 		<option value="wild_host">Wildcard Host Search</option>
 		<option value="comp_share">Computer Sharing</option>
 	</select><br /><br />
-	<input type="text" size="64" value="Press continue to proceed" name="variable" class="InputFields">
+	<input type="text" size="64" value="Press continue to proceed" name="variable">
 	<br /><br />
-	<input type="submit" name="action" value="Continue" class="InputFields" />
+	<input type="submit" name="action" value="Continue" />
 </form>
 <script>
 	window.document.form_ip.variable.select();

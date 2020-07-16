@@ -231,7 +231,7 @@ function create_form($container, $actions) {
 }
 
 function create_submit($value) {
-	return ('<input type="submit" name="action" value="' . htmlspecialchars($value) . '" class="InputFields" />');
+	return ('<input type="submit" name="action" value="' . htmlspecialchars($value) . '" />');
 }
 
 function create_error($message) {

@@ -85,12 +85,6 @@ a.white {
 }
 a {
 	color: #9DCEFF;
-	text-decoration: none;
-	padding: 0px;
-	margin: 0px;
-}
-a:hover {
-	color: #CC3300;
 }
 a.leftNav {
 	color: #9DCEFF;
@@ -105,7 +99,7 @@ a:hover.nav {
 	color: #CC3300;
 }
 a.buttonA {
-    border-color: #1154A6 #0A2D58 #0A2D58 #1154A6;
+	border-color: #1154A6 #0A2D58 #0A2D58 #1154A6;
 	background-color: #00006C;
 }
 a.buttonA:hover {
@@ -164,26 +158,22 @@ h1, h2, h3, h4, h5, h6 {
 	color: #6699FF;
 }
 
-input  {
+input, button, select, textarea, a.submitStyle  {
 	background: #111;
 	color: #FFF;
 	border: 2px solid #1154A6;
 }
 
-input[type="submit"]  {
-	border: 2px outset #1154A6;
-	cursor: pointer;
+/* Highlight navigation elements on hover */
+input[type="submit"]:hover, button:hover, a:hover {
+	background: #00006C;
 }
-input[type="submit"]:active {
+input[type="submit"], button, a.submitStyle {
+	border: 2px outset #1154A6;
+}
+input[type="submit"]:active, button:active, a.submitStyle:active {
 	border: 2px inset #1154A6;
 }
-
-textarea {
-	background: #111;
-	color: #FFF;
-	border: 2px solid #1154A6;
-}
-
 
 /* Current Sector Navigation Box Colours */
 div.secNavBox div div {

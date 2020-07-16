@@ -1,7 +1,7 @@
 Please select the new Leader:
 
 <form method="POST" action="<?php echo $HandoverHREF; ?>">
-	<select name="leader_id" class="InputFields" size="1">
+	<select name="leader_id" size="1">
 		<?php
 		foreach ($AlliancePlayers as $alliancePlayer) {
 			$selected = $alliancePlayer->equals($ThisPlayer) ? 'selected="selected"' : '';
@@ -12,5 +12,5 @@ Please select the new Leader:
 		} ?>
 	</select>
 	<br /><br />
-	<input type="submit" name="action" class="InputFields" value="Handover Leadership" />
+	<input type="submit" name="action" value="Handover Leadership" />
 </form>

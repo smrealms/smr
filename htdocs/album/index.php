@@ -117,8 +117,8 @@ try {
 <td valign="top" class="center">
 <form>
 Quick Search:<br />
-<input type="text" name="nick" size="10" class="InputFields"><br />
-<input type="submit" value="Search" class="InputFields">
+<input type="text" name="nick" size="10"><br />
+<input type="submit" value="Search">
 </form>
 
 </td>

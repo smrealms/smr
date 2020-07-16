@@ -26,11 +26,11 @@ if (isset($Message)) {
 </ul>
 <p>
 	Enter validation code:&nbsp;&nbsp;
-	<input type="text" name="validation_code" maxlength="10" size="10" class="InputFields center">
+	<input type="text" name="validation_code" maxlength="10" size="10" class="center">
 </p>
 <p class="center">
-	<input type="submit" name="action" value="Validate me now!" class="InputFields">
+	<input type="submit" name="action" value="Validate me now!">
 	&nbsp;&nbsp;
-	<input type="submit" name="action" value="I'll validate later." class="InputFields">
+	<input type="submit" name="action" value="I'll validate later.">
 </p>
 </form>

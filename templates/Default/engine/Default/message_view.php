@@ -29,8 +29,8 @@ if (isset($MessageBoxes)) { ?>
 	if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 		<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 			<div class="center">Ignore global messages?&nbsp;&nbsp;
-				<input type="submit" name="ignore_globals" value="Yes" class="InputFields"<?php if ($ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />&nbsp;
-				<input type="submit" name="ignore_globals" value="No" class="InputFields"<?php if (!$ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />
+				<input type="submit" name="ignore_globals" value="Yes" <?php if ($ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />&nbsp;
+				<input type="submit" name="ignore_globals" value="No" <?php if (!$ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />
 			</div>
 		</form><?php
 	} elseif ($MessageBox['Type'] == MSG_SCOUT) { ?>
@@ -52,7 +52,7 @@ if (isset($MessageBoxes)) { ?>
 					} ?>
 				</td>
 				<td>
-					<input type="submit" name="action" value="Delete" class="InputFields" />&nbsp;<select name="action" size="1" class="InputFields">
+					<input type="submit" name="action" value="Delete" />&nbsp;<select name="action" size="1">
 																						<option>Marked Messages</option>
 																						<option>All Messages</option>
 																					</select>

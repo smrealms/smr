@@ -1,6 +1,6 @@
 <form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
 	Working on Galaxy:
-	<select name="gal_on" class="InputFields" onchange="this.form.submit()"><?php
+	<select name="gal_on" onchange="this.form.submit()"><?php
 		foreach ($Galaxies as $OtherGalaxy) { ?>
 			<option value="<?php echo $OtherGalaxy->getGalaxyID(); ?>"<?php if ($OtherGalaxy->equals($Galaxy)) { ?> selected<?php } ?>><?php
 				echo $OtherGalaxy->getName() . ' (' . $OtherGalaxy->getGalaxyID() . ')'; ?>

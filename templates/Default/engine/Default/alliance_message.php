@@ -44,14 +44,14 @@ if (isset($CreateNewThreadFormHref)) { ?>
 		<tr>
 			<td class="top">Topic:&nbsp;</td>
 			<td class="mb"><input type="text" name="topic" required size="30" value="<?php if (isset($Topic)) { echo htmlspecialchars($Topic); } ?>"></td>
-			<td>For Alliance Eyes Only:<input class="InputFields" name="allEyesOnly" type="checkbox"<?php if (isset($AllianceEyesOnly) && $AllianceEyesOnly) { ?>checked="checked" <?php } ?>></td>
+			<td>For Alliance Eyes Only:<input name="allEyesOnly" type="checkbox"<?php if (isset($AllianceEyesOnly) && $AllianceEyesOnly) { ?>checked="checked" <?php } ?>></td>
 		</tr>
 		<tr>
 			<td class="top">Body:&nbsp;</td>
 			<td colspan="2"><textarea spellcheck="true" name="body" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea></td>
 		</tr>
 	</table><br />
-	<input type="submit" name="action" value="New Thread">&nbsp;<input type="submit" name="action" value="Preview Thread" class="InputFields" />
+	<input type="submit" name="action" value="New Thread">&nbsp;<input type="submit" name="action" value="Preview Thread" />
 	</form><?php
 }
 ?>

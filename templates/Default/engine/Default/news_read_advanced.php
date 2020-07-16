@@ -11,7 +11,7 @@
 			<td class="center">
 				<form name="AdvancedNewsForm" method="POST" action="<?php echo $AdvancedNewsFormHref; ?>">
 					<h2>Alliance Search</h2>
-					<select name="allianceID" required class="InputFields">
+					<select name="allianceID" required>
 						<option value="" disabled selected>Select an alliance</option><?php
 						if (isset($NewsAlliances) && count($NewsAlliances) > 0) {
 							foreach ($NewsAlliances as $NewsAlliance) {
@@ -39,7 +39,7 @@
 			<td class="center">
 				<form name="AdvancedNewsForm" method="POST" action="<?php echo $AdvancedNewsFormHref; ?>">
 					<h2>Alliance Vs Alliance Search</h2>
-					<select name="alliance1" required class="InputFields">
+					<select name="alliance1" required>
 						<option value="" disabled selected>Select an alliance</option><?php
 						if (isset($NewsAlliances) && count($NewsAlliances) > 0) {
 							foreach ($NewsAlliances as $NewsAlliance) {
@@ -48,7 +48,7 @@
 						} ?>
 					</select>
 						vs.
-					<select name="alliance2" required class="InputFields">
+					<select name="alliance2" required>
 						<option value="" disabled selected>Select an alliance</option><?php
 						if (isset($NewsAlliances) && count($NewsAlliances) > 0) {
 							foreach ($NewsAlliances as $NewsAlliance) {

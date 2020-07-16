@@ -1,6 +1,15 @@
-button, input[type=submit] {
+input[type=submit], button, a.submitStyle {
 	cursor: pointer;
+	padding: 1px 6px;
 }
+input, button, select, textarea, a.submitStyle {
+	font: inherit;
+}
+a.submitStyle {
+	border-spacing: 0px;
+	display: inline-table; /* Fixes the problems with vertical overlap */
+}
+
 th {
 	font-size: 110%;
 	text-align: center;

@@ -20,7 +20,7 @@ if (isset($GameID)) { ?>
 	
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" name="action" value="Change Kamikaze Setting" class="InputFields" /></td>
+				<td><input type="submit" name="action" value="Change Kamikaze Setting" /></td>
 			</tr>
 	
 			<tr>
@@ -33,7 +33,7 @@ if (isset($GameID)) { ?>
 	
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" name="action" value="Change Message Setting" class="InputFields" /></td>
+				<td><input type="submit" name="action" value="Change Message Setting" /></td>
 			</tr>
 	
 			<tr>
@@ -54,7 +54,7 @@ if (isset($GameID)) { ?>
 	
 			<tr>
 				<td>&nbsp;</td>
-				<td><button type="submit" name="action" value="change_name" class="InputFields">Alter Player Name <?php if ($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?></button></td>
+				<td><button type="submit" name="action" value="change_name">Alter Player Name <?php if ($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?></button></td>
 			</tr>
 
 			<tr>
@@ -65,7 +65,7 @@ if (isset($GameID)) { ?>
 				<tr>
 					<td>Player Race</td>
 					<td>
-						<select name="race_id" class="InputFields"><?php
+						<select name="race_id"><?php
 							foreach ($ThisPlayer->getGame()->getPlayableRaceIDs() as $RaceID) {
 								?><option value="<?php echo $RaceID; ?>" <?php if ($RaceID == $ThisPlayer->getRaceID()) { ?> selected<?php } ?>><?php echo Globals::getRaceName($RaceID); ?></option><?php
 							} ?>
@@ -76,7 +76,7 @@ if (isset($GameID)) { ?>
 
 				<tr>
 					<td>&nbsp;</td>
-					<td><button type="submit" name="action" value="change_race" class="InputFields">Alter Player Race</button></td>
+					<td><button type="submit" name="action" value="change_race">Alter Player Race</button></td>
 
 				<tr>
 					<td colspan="2">&nbsp;</td>
@@ -155,51 +155,51 @@ if (isset($GameID)) { ?>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Update Colours" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Update Colours" /></td>
 		</tr>
 		
 		<tr>
 			<td>Current Password:</td>
-			<td><input type="password" name="old_password" class="InputFields" size="25" /></td>
+			<td><input type="password" name="old_password" size="25" /></td>
 		</tr>
 		
 		<tr>
 			<td>New Password:</td>
-			<td><input type="password" name="new_password" class="InputFields" size="25" /></td>
+			<td><input type="password" name="new_password" size="25" /></td>
 		</tr>
 		
 		<tr>
 			<td>Verify New Password:</td>
-			<td><input type="password" name="retype_password" class="InputFields" size="25" /></td>
+			<td><input type="password" name="retype_password" size="25" /></td>
 		</tr>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Password" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Password" /></td>
 		</tr>
 		
 		<tr><td colspan="2">&nbsp;</td></tr>
 		
 		<tr>
 			<td>Email address:</td>
-			<td><input type="email" name="email" value="<?php echo htmlspecialchars($ThisAccount->getEmail()); ?>" class="InputFields" size="50" /></td>
+			<td><input type="email" name="email" value="<?php echo htmlspecialchars($ThisAccount->getEmail()); ?>" size="50" /></td>
 		</tr>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Save and resend validation code" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Save and resend validation code" /></td>
 		</tr>
 	
 		<tr><td colspan="2">&nbsp;</td></tr>
 
 		<tr>
 			<td>Hall of Fame Name:</td>
-			<td><input type="text" name="HoF_name" value="<?php echo $ThisAccount->getHofDisplayName(); ?>" class="InputFields" size="50" /></td>
+			<td><input type="text" name="HoF_name" value="<?php echo $ThisAccount->getHofDisplayName(); ?>" size="50" /></td>
 		</tr>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Name" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Name" /></td>
 		</tr>
 	
 		<tr>
@@ -208,22 +208,22 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>Discord User ID:</td>
-			<td><input type="text" name="discord_id" value="<?php echo htmlspecialchars($ThisAccount->getDiscordId()); ?>" class="InputFields" size=50 /></td>
+			<td><input type="text" name="discord_id" value="<?php echo htmlspecialchars($ThisAccount->getDiscordId()); ?>" size=50 /></td>
 		</tr>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Discord ID" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Discord ID" /></td>
 		</tr>
 
 		<tr>
 			<td>IRC Nick:</td>
-			<td><input type="text" name="irc_nick" value="<?php echo htmlspecialchars($ThisAccount->getIrcNick()); ?>" class="InputFields" size="50" /></td>
+			<td><input type="text" name="irc_nick" value="<?php echo htmlspecialchars($ThisAccount->getIrcNick()); ?>" size="50" /></td>
 		</tr>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change IRC Nick" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change IRC Nick" /></td>
 		</tr>
 
 		<tr>
@@ -233,7 +233,7 @@ if (isset($GameID)) { ?>
 		<tr>
 			<td>Timezone:</td>
 			<td>
-				<select name="timez" class="InputFields"><?php
+				<select name="timez"><?php
 				$time = TIME;
 				$offset = $ThisAccount->getOffset();
 				for ($i = -12; $i <= 11; $i++) {
@@ -245,7 +245,7 @@ if (isset($GameID)) { ?>
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Timezone" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Timezone" /></td>
 		</tr>
 	
 		<tr>
@@ -254,17 +254,17 @@ if (isset($GameID)) { ?>
 	
 		<tr>
 			<td>Date Format:</td>
-			<td><input type="text" name="dateformat" value="<?php echo htmlspecialchars($ThisAccount->getShortDateFormat()); ?>" class="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_DATE_SHORT; ?>')</td>
+			<td><input type="text" name="dateformat" value="<?php echo htmlspecialchars($ThisAccount->getShortDateFormat()); ?>" /><br />(Default: '<?php echo DEFAULT_DATE_DATE_SHORT; ?>')</td>
 		</tr>
 	
 		<tr>
 			<td>Time Format:</td>
-			<td><input type="text" name="timeformat" value="<?php echo htmlspecialchars($ThisAccount->getShortTimeFormat()); ?>" class="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_TIME_SHORT; ?>')</td>
+			<td><input type="text" name="timeformat" value="<?php echo htmlspecialchars($ThisAccount->getShortTimeFormat()); ?>" /><br />(Default: '<?php echo DEFAULT_DATE_TIME_SHORT; ?>')</td>
 		</tr>
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Date Formats" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Date Formats" /></td>
 		</tr>
 	
 		<tr>
@@ -292,7 +292,7 @@ if (isset($GameID)) { ?>
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Images" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Images" /></td>
 		</tr>
 		
 		<tr>
@@ -309,7 +309,7 @@ if (isset($GameID)) { ?>
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Centering" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Centering" /></td>
 		</tr>
 	
 		<tr>
@@ -323,7 +323,7 @@ if (isset($GameID)) { ?>
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Size" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Size" /></td>
 		</tr>
 	
 		<tr>
@@ -333,7 +333,7 @@ if (isset($GameID)) { ?>
 		<tr>
 			<td>CSS Template:</td>
 			<td>
-				<select name="template" class="InputFields"><?php
+				<select name="template"><?php
 					foreach (Globals::getAvailableTemplates() as $AvailableTemplate => $ColourSchemes) {
 						foreach ($ColourSchemes as $ColourScheme) {
 							$selected = ($ThisAccount->getTemplate() == $AvailableTemplate &&
@@ -360,7 +360,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change CSS Options" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change CSS Options" /></td>
 		</tr>
 	</table>
 </form><br />
@@ -427,7 +427,7 @@ if (isset($GameID)) { ?>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Save Hotkeys" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Save Hotkeys" /></td>
 		</tr>
 	</table>
 </form><br />
@@ -440,8 +440,8 @@ if (isset($GameID)) { ?>
 		<tr>
 			<td>Transfer Credits:</td>
 			<td>
-				<input type="number" name="amount" class="InputFields center" style="width:50px;" /> credits to <?php if (!isset($GameID)) { ?>the account with HoF name of <?php } ?>
-				<select name="account_id" class="InputFields"><?php
+				<input type="number" name="amount" class="center" style="width:50px;" /> credits to <?php if (!isset($GameID)) { ?>the account with HoF name of <?php } ?>
+				<select name="account_id"><?php
 					foreach ($TransferAccounts as $AccID => $HofDisplayName) {
 						?><option value="<?php echo $AccID; ?>"><?php echo $HofDisplayName; ?></option><?php
 					} ?>
@@ -451,7 +451,7 @@ if (isset($GameID)) { ?>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Transfer" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Transfer" /></td>
 		</tr>
 	</table>
 </form>

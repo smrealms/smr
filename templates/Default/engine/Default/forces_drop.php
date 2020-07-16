@@ -12,24 +12,24 @@
 			<td>Mines</td>
 			<td><?php echo $ThisShip->getMines(); ?></td>
 			<td><?php echo $Forces->getMines(); ?></td>
-			<td><input type="number" name="drop_mines" min="0" max="50" value="0" class="InputFields center" style="width:100px;"></td>
-			<td><input type="number" name="take_mines" min="0" max="50" value="0" class="InputFields center" style="width:100px;"></td>
+			<td><input type="number" name="drop_mines" min="0" max="50" value="0" class="center" style="width:100px;"></td>
+			<td><input type="number" name="take_mines" min="0" max="50" value="0" class="center" style="width:100px;"></td>
 		</tr>
 
 		<tr class="center">
 			<td>Combat Drones</td>
 			<td><?php echo $ThisShip->getCDs(); ?></td>
 			<td><?php echo $Forces->getCDs(); ?></td>
-			<td><input type="number" name="drop_combat_drones" min="0" max="50" value="0" class="InputFields center" style="width:100px;"></td>
-			<td><input type="number" name="take_combat_drones" min="0" max="50" value="0" class="InputFields center" style="width:100px;"></td>
+			<td><input type="number" name="drop_combat_drones" min="0" max="50" value="0" class="center" style="width:100px;"></td>
+			<td><input type="number" name="take_combat_drones" min="0" max="50" value="0" class="center" style="width:100px;"></td>
 		</tr>
 
 		<tr class="center">
 			<td>Scout Drones</td>
 			<td><?php echo $ThisShip->getSDs(); ?></td>
 			<td><?php echo $Forces->getSDs(); ?></td>
-			<td><input type="number" name="drop_scout_drones" min="0" max="50" value="0" class="InputFields center" style="width:100px;"></td>
-			<td><input type="number" name="take_scout_drones" min="0" max="50" value="0" class="InputFields center" style="width:100px;"></td>
+			<td><input type="number" name="drop_scout_drones" min="0" max="50" value="0" class="center" style="width:100px;"></td>
+			<td><input type="number" name="take_scout_drones" min="0" max="50" value="0" class="center" style="width:100px;"></td>
 		</tr>
 
 		<tr class="center">

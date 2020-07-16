@@ -5,36 +5,6 @@ body {
 h1, h2 {
 	color: #80C870;
 }
-#InputFields, .InputFields {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-.submitStyle:link {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-.submitStyle:visited {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-.submitStyle:hover {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-.submitStyle:active {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-.submitStyle {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
 th {
 	background-color: #0A4E1D;
 	color: #80C870;
@@ -81,21 +51,20 @@ table.bar1 td, table.bar1 th {
 tr.bar1 {
 	background-color: #0B8D35;
 }
-input {
+
+input, button, select, textarea, a.submitStyle {
 	background: #06240E;
 	color: #FFFFFF;
 	border: 1px solid #80C870;
 }
-textarea {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
+
+/* Highlight navigation elements on hover */
+button:hover, input[type="submit"]:hover, a:hover {
+	background: #0A4E1D;
 }
+
 a {
 	color: #FFFFFF;
-}
-a:hover {
-	background: #0A4E1D;
 }
 a.header {
 	color: #80C870;

@@ -31,7 +31,7 @@ if (!empty($OpDate)) { ?>
 <h2>Alliance Flagship</h2>
 <p>The Flagship's location <img src="images/flagship.png" /> will be visible to all alliance members on the Local Map.</p>
 <form method="POST" action="<?php echo $FlagshipHREF; ?>">
-	<select name="flagship_id" class="InputFields" size="1">
+	<select name="flagship_id" size="1">
 		<option value="0">-- None --</option>
 		<?php
 		foreach ($AlliancePlayers as $alliancePlayer) {
@@ -43,5 +43,5 @@ if (!empty($OpDate)) { ?>
 		} ?>
 	</select>
 	<br /><br />
-	<input type="submit" name="action" class="InputFields" value="Designate Flagship" />
+	<input type="submit" name="action" value="Designate Flagship" />
 </form>
