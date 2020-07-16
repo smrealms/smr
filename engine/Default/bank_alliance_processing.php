@@ -25,8 +25,8 @@ if ($action == 'Deposit') {
 	$player->decreaseCredits($amount);
 	$allianceCredits = $alliance->getBank() + $amount;
 	//too much money?
-	if ($allianceCredits > 4294967295) {
-		$overflow = $allianceCredits - 4294967295;
+	if ($allianceCredits > MAX_MONEY) {
+		$overflow = $allianceCredits - MAX_MONEY;
 		$allianceCredits -= $overflow;
 		$player->increaseCredits($overflow);
 		$message .= ' (Account is Full)';
@@ -84,8 +84,8 @@ if ($action == 'Deposit') {
 	$player->increaseCredits($amount);
 	$allianceCredits = $alliance->getBank() - $amount;
 	//too much money?
-	if ($player->getCredits() > 4294967295) {
-		$overflow = $player->getCredits() - 4294967295;
+	if ($player->getCredits() > MAX_MONEY) {
+		$overflow = $player->getCredits() - MAX_MONEY;
 		$allianceCredits += $overflow;
 		$player->decreaseCredits($overflow);
 		$amount += $overflow;

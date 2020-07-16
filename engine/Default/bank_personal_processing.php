@@ -15,9 +15,9 @@ if ($action == 'Deposit') {
 	$player->decreaseCredits($amount);
 	$player->increaseBank($amount);
 	//too much money?
-//	if ($player->getBank() > 4294967295) {
+//	if ($player->getBank() > MAX_MONEY) {
 //		
-//		$overflow = $player->getBank() - 4294967295;
+//		$overflow = $player->getBank() - MAX_MONEY;
 //		$player->getCredits() += $overflow;
 //		$player->getBank() -= $overflow;
 //		
