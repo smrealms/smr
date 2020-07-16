@@ -100,13 +100,6 @@ table.nohpad td {
 	padding-right: 0px;
 	margin: 0px;
 }
-td.button {
-	padding: 0px;
-	text-align: center;
-	width: 1%;
-	white-space: nowrap;
-	vertical-align: middle;
-}
 /***************************/
 table.m {
 	height: 100%;
