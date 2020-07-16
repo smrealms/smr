@@ -51,7 +51,7 @@ if (isset($CreateNewThreadFormHref)) { ?>
 			<td colspan="2"><textarea spellcheck="true" name="body" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea></td>
 		</tr>
 	</table><br />
-	<input class="submit" type="submit" name="action" value="New Thread">&nbsp;<input type="submit" name="action" value="Preview Thread" class="InputFields" />
+	<input type="submit" name="action" value="New Thread">&nbsp;<input type="submit" name="action" value="Preview Thread" class="InputFields" />
 	</form><?php
 }
 ?>

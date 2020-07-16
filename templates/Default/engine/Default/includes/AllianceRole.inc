@@ -59,7 +59,7 @@
 			}
 		} ?>
 		<tr>
-			<td colspan="2" class="center"><input class="submit" type="submit" name="action" value="<?php if ($Role['CreatingRole']) { ?>Create<?php } else if ($Role['EditingRole']) { ?>Submit Changes<?php } else { ?>Edit<?php } ?>"></td>
+			<td colspan="2" class="center"><input type="submit" name="action" value="<?php if ($Role['CreatingRole']) { ?>Create<?php } else if ($Role['EditingRole']) { ?>Submit Changes<?php } else { ?>Edit<?php } ?>"></td>
 		</tr>
 	</table>
 </form><br />

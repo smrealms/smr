@@ -122,7 +122,7 @@ if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 	</div><?php
 	if ($ShowRoles && $CanChangeRoles) { ?>
 		&nbsp;&nbsp;
-		<input class="submit" type="submit" name="action" value="Save Alliance Roles">
+		<input type="submit" name="action" value="Save Alliance Roles">
 		</form><?php
 	}
 }
@@ -136,7 +136,7 @@ if ($CanJoin === true) { ?>
 			<p>Enter password to join alliance</p>
 			<input required name="password" size="30">&nbsp;<?php
 		} ?>
-		<input class="submit" type="submit" name="action" value="Join">
+		<input type="submit" name="action" value="Join">
 	</form><?php
 } elseif ($CanJoin !== false) { ?>
 	<p><?php echo $CanJoin; ?></p><?php

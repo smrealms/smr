@@ -16,12 +16,12 @@ if (isset($Message)) {?>
 						} ?>
 					</td>
 					<td>
-						<input class="submit" type="submit" name="action" value="View"><?php
+						<input type="submit" name="action" value="View"><?php
 						if ($CanDelete) {
-							?>&nbsp;<input class="submit" type="submit" name="action" value="Delete"><?php
+							?>&nbsp;<input type="submit" name="action" value="Delete"><?php
 						}
 						if ($CanSave) {
-							?>&nbsp;<input class="submit" type="submit" name="action" value="Save"><?php
+							?>&nbsp;<input type="submit" name="action" value="Save"><?php
 						} ?>
 					</td>
 					<td id="next" class="ajax" style="width: 30%" valign="middle"><?php

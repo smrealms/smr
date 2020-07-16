@@ -7,7 +7,7 @@ if ($ThisShip->hasJump()) { ?>
 			<tr>
 				<td>Jump To:&nbsp;</td>
 				<td><input type="number" size="5" name="target" maxlength="5" class="center"></td>
-				<td>&nbsp;&nbsp;&nbsp;&nbsp;<input class="submit" type="submit" name="action" value="Engage Jump (<?php echo TURNS_JUMP_MINIMUM; ?>+)"></td>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="Engage Jump (<?php echo TURNS_JUMP_MINIMUM; ?>+)"></td>
 				<td>&nbsp;&nbsp;<input type="submit" name="action" value="Calculate Turn Cost" /></td>
 			</tr>
 		</table>

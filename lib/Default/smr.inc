@@ -217,11 +217,11 @@ function create_form($container, $actions) {
 	$form['form'] = '<form class="standard" id="FORM' . $form_id . '" method="POST" action="' . SmrSession::getNewHREF($container) . '">';
 
 	if (!is_array($actions)) {
-		$form['submit'] = '<input class="submit" type="submit" name="action" value="' . htmlspecialchars($actions) . '">';
+		$form['submit'] = '<input type="submit" name="action" value="' . htmlspecialchars($actions) . '">';
 	} else {
 		$form['submit'] = array();
 		foreach ($actions as $action) {
-			$form['submit'][$action[0]] = '<input class="submit" type="submit" name="action" value="' . htmlspecialchars($action[1]) . '">';
+			$form['submit'][$action[0]] = '<input type="submit" name="action" value="' . htmlspecialchars($action[1]) . '">';
 		}
 	}
 

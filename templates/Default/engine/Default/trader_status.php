@@ -151,7 +151,7 @@
 	</table>
 
 	<br />
-	<input class="submit" type="submit" name="action" value="Delete Selected" />
+	<input type="submit" name="action" value="Delete Selected" />
 </form>
 <br />
 
@@ -165,6 +165,6 @@
 		</tr>
 	</table>
 	<br />
-	<input class="submit" type="submit" name="action" value="Create New Note" />
+	<input type="submit" name="action" value="Create New Note" />
 	<small>&nbsp;&nbsp;&nbsp;Maximum note length is 1000 characters</small>
 </form>

@@ -8,7 +8,7 @@
 			<td><input type="number" size="5" name="from" maxlength="5" class="center" value="<?php echo $ThisPlayer->getSectorID(); ?>"></td>
 			<td>&nbsp;&nbsp;&nbsp;&nbsp;To:&nbsp;</td>
 			<td><input type="number" size="5" name="to" maxlength="5" class="center"></td>
-			<td>&nbsp;&nbsp;&nbsp;&nbsp;<input class="submit" type="submit" name="action" value="Plot Course"></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="Plot Course"></td>
 		</tr>
 	</table>
 </form><?php

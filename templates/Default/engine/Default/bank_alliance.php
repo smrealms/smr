@@ -34,7 +34,7 @@ if (!empty($BankTransactions)) { ?>
 						<input class="center" type="number" name="maxValue" size="3" value="<?php echo $MaxValue; ?>">
 					</td>
 					<td>
-						<input class="submit" type="submit" name="action" value="Show">
+						<input type="submit" name="action" value="Show">
 					</td>
 				</tr>
 			</table>
@@ -76,7 +76,7 @@ if (!empty($BankTransactions)) { ?>
 					<th colspan="5" class="right">Ending Balance</th>
 					<td class="bold right"><?php echo number_format($Alliance->getBank()); ?></td><?php
 					if ($CanExempt) {
-						?><td><input class="submit" type="submit" name="action" value="Make Exempt"></td><?php
+						?><td><input type="submit" name="action" value="Make Exempt"></td><?php
 					} ?>
 				</tr>
 			</table><?php
@@ -109,5 +109,5 @@ if (!empty($BankTransactions)) { ?>
 		</tr>
 	</table>
 	<br />
-	<input class="submit" type="submit" name="action" value="Deposit">&nbsp;&nbsp;<input class="submit" type="submit" name="action" value="Withdraw">
+	<input type="submit" name="action" value="Deposit">&nbsp;&nbsp;<input type="submit" name="action" value="Withdraw">
 </form>
