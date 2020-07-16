@@ -40,7 +40,7 @@ class GameLink
 			if ($db->nextRecord()) {
 				$game_id = $db->getInt('MAX(game_id)');
 			} else {
-				$channel->sendMessage('Could find any games!');
+				$channel->sendMessage('Could not find any games!');
 				return;
 			}
 
