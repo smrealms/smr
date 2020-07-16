@@ -62,13 +62,6 @@ h3 {
 form {
 	margin: 0px;
 }
-a.scan_btn {
-	font: 80% bold;
-	padding: 0.1em 0.5em 0.1em 0.5em;
-	text-align: center;
-	position: relative;
-	top: -1.6em;
-}
 /* -------- Table rules --------- */
 table {
 	font-size: 100%;
