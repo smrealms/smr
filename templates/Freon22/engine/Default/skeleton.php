@@ -68,14 +68,10 @@
 									</tr>
 								</table>
 								<div class="clear"></div><?php
-								if (isset($MenuItems) || isset($MenuBar)) { ?>
+								if (isset($MenuItems)) { ?>
 									<div class="bar1Separator"></div>
 									<div class="bar1"><?php
-										if (isset($MenuItems)) {
-											$this->includeTemplate('includes/menu.inc');
-										} elseif (isset($MenuBar)) {
-											echo $MenuBar;
-										} ?>
+										$this->includeTemplate('includes/menu.inc'); ?>
 									</div><?php
 								} elseif (isset($SubMenuBar)) {
 									echo $SubMenuBar;

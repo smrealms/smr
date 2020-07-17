@@ -4,24 +4,30 @@ class Menu extends AbstractMenu {
 
 	// No bounties in Semi Wars games
 	public static function headquarters() {
-		global $var;
-		$menu_items = [];
-		$container = create_container('skeleton.php');
-		$container['LocationID'] = $var['LocationID'];
+		global $var, $template;
 
+		$links = [];
 		$location = SmrLocation::getLocation($var['LocationID']);
 		if ($location->isHQ()) {
-			$container['body'] = 'government.php';
-			$menu_items[] = create_link($container, 'Government', 'nav');
-			$container['body'] = 'military_payment_claim.php';
-			$menu_items[] = create_link($container, 'Claim Military Payment', 'nav');
+			$links[] = ['government.php', 'Government'];
+			$links[] = ['military_payment_claim.php', 'Claim Military Payment'];
 		} elseif ($location->isUG()) {
-			$container['body'] = 'underground.php';
-			$menu_items[] = create_link($container, 'Underground', 'nav');
+			$links[] = ['underground.php', 'Underground'];
 		} else {
 			throw new Exception("Location is not HQ or UG: " . $location->getName());
 		}
-		create_menu($menu_items);
+
+		$menuItems = [];
+		$container = create_container('skeleton.php');
+		$container['LocationID'] = $var['LocationID'];
+		foreach ($links as $link) {
+			$container['body'] = $link[0];
+			$menuItems[] = [
+				'Link' => SmrSession::getNewHREF($container),
+				'Text' => $link[1],
+			];
+		}
+		$template->assign('MenuItems', $menuItems);
 	}
 
 }
