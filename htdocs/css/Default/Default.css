@@ -131,14 +131,6 @@ a.enemyExamine:active {
 }
 
 
-ul.boxy {
-	font: 13px Arial, Sans-Serif;
-	border: 1px solid #0B8D35;
-}
-ul.boxy li {
-	border: 1px solid #0B8D35;
-}
-
 /* LM */
 .currentSeclm, .connectSeclm, .normalSeclm {
 	color: #00AA00;

@@ -177,18 +177,7 @@ div#right_panel {
 ul.sortable li {
 	position: relative;
 }
-ul.boxy {
-	list-style-type: none;
-	padding: 4px 4px 0 4px;
-	margin: 0px;
-	width: 10em;
-	font: 13px;
-}
-ul.boxy li {
-	cursor: move;
-	margin-bottom: 4px;
-	padding: 2px 2px;
-}
+
 /* Gal Map */
 li.gal {
 	font-size: 95%;
