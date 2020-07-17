@@ -1,9 +1,6 @@
 html {
 	background-color: #00001C;
 }
-.bar1Separator {
-	border-top: 2px solid #000099;
-}
 .tableHeight {
 	color: #FFF;
 }
@@ -85,6 +82,12 @@ a.buttonA:active {
 	border-color: #5B3100 #9B7141 #9B7141 #5B3100;
 }
 
+div.bar1 {
+	border-color: #1154A6;
+}
+div.bar1 div {
+	background-color: #00002D;
+}
 
 .attack_warning {
 	border: 1px solid #BB0;

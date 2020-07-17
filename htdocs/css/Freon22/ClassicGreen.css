@@ -50,9 +50,14 @@ table.nobord td {
 	font-size: 90%;
 	border-color: #0B2121;
 }
-.bar1Separator {
-	border-top: 2px solid #0B8D35;
+
+div.bar1 {
+	border-color: #0B8D35;
 }
+div.bar1 div {
+	background-color: #0B8D35;
+}
+
 .attack_warning {
 	border: 1px solid #BB0;
 	background-color: #500;

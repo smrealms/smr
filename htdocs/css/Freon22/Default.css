@@ -1,9 +1,6 @@
 html {
 	background-color: #000; /* The main background color, you can change this */
 }
-.bar1Separator {
-	border-top: 2px solid #A3692D;
-}
 .tableHeight {
 	color: #FFF;
 }
@@ -74,6 +71,12 @@ a:hover.nav {
 	background: #C93;
 }
 
+div.bar1 {
+	border-color: #9B7141;
+}
+div.bar1 div {
+	background-color: #7B5121;
+}
 
 .attack_warning {
 	border: 1px solid #BB0;

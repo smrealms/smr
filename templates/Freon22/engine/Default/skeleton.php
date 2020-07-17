@@ -67,15 +67,6 @@
 										</td>
 									</tr>
 								</table>
-								<div class="clear"></div><?php
-								if (isset($MenuItems)) { ?>
-									<div class="bar1Separator"></div>
-									<div class="bar1"><?php
-										$this->includeTemplate('includes/menu.inc'); ?>
-									</div><?php
-								} elseif (isset($SubMenuBar)) {
-									echo $SubMenuBar;
-								} ?>
 							</div><?php
 						} ?>
 					</td>
@@ -103,6 +94,7 @@
 							if (isset($PageTopic)) {
 								?><h1><?php echo $PageTopic; ?></h1><br /><?php
 							}
+							$this->includeTemplate('includes/menu.inc');
 							$this->includeTemplate($TemplateBody); ?>
 						</div>
 						<div class="footer_left">

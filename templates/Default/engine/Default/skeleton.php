@@ -16,15 +16,7 @@
 						if (isset($PageTopic)) {
 							?><h1><?php echo $PageTopic; ?></h1><br /><?php
 						}
-						if (isset($MenuItems)) { ?>
-							<div class="bar1">
-								<div><?php
-									$this->includeTemplate('includes/menu.inc'); ?>
-								</div>
-							</div><br /><?php
-						} elseif (isset($SubMenuBar)) {
-							echo $SubMenuBar;
-						}
+						$this->includeTemplate('includes/menu.inc');
 						$this->includeTemplate($TemplateBody); ?>
 					</div>
 				</td>

@@ -369,14 +369,8 @@ class AbstractMenu {
 
 function create_sub_menu($menu, $active_level1, $active_level2) {
 	global $template;
-	$return = ('<table class="bar1">');
-	$return .= ('<tr>');
-	$return .= ('<td>');
-	$return .= ('<table class="fullwidth">');
-	$return .= ('<tr class="bar1">');
-	$return .= ('<td>');
 
-	$return .= ('<table class="center">');
+	$return = ('<table class="fullwidth center">');
 	$return .= ('<tr>');
 	foreach ($menu as $number => $entry) {
 		// insert spacer
@@ -428,12 +422,6 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 
 	$return .= ('</table>');
 
-	$return .= ('</td>');
-	$return .= ('</tr>');
-	$return .= ('</table>');
-	$return .= ('</td>');
-	$return .= ('</tr>');
-	$return .= ('</table>');
 	$template->unassign('MenuItems');
 	$template->assign('SubMenuBar', $return);
 }
