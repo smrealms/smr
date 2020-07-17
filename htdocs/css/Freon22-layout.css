@@ -2,7 +2,8 @@ html, body {
 	font-family: Arial, sans-serif; /* Default font stlye, you can change this */
 	font-size: 14px;
 	text-align: center;
-	width: 100%;
+	width: 100%; /* fallback for older browsers */
+	width: calc(100vw - 16px); /* Prevent centered content shifting when scrollbar appears */
 	height: 100%;
 	margin: 0px;
 	padding: 0px;

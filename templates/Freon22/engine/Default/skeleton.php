@@ -5,7 +5,7 @@
 	</head>
 	<body>
 		<div id="Container">
-			<table class="tableHeight">
+			<table class="tableHeight centered">
 				<tr class="topRow">
 					<td class="topleftCell">
 						<b><span class="smrBanner">smr</span></b>
