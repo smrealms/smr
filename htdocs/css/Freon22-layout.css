@@ -77,7 +77,9 @@ tr.topRow {
 .TopInfo {
 	text-align: left;
 	padding: 10px;
-	margin: 10px 50px 10px 50px;
+	margin: 10px 50px;
+	border: 4px solid;
+	border-radius: 4px;
 }
 .name {
 	float: left;
@@ -115,20 +117,26 @@ tr.topRow {
 	text-align: right;
 	padding: 10px;
 	margin: 5px 8px 10px 50px;
+	border: 4px solid;
+	border-radius: 4px;
 }
 /* This starts the borders for the left nav area two */
 .LeftNavTwo {
 	text-align: right;
 	padding: 10px;
 	margin: 5px 8px 5px 50px;
+	border: 4px solid;
+	border-radius: 4px;
 }
 /* This starts the borders for the main content area along with other rules */
 .MainContentArea {
 	min-height: 500px;
 	min-width: 400px;
 	text-align: left;
-	padding: 5px;
+	padding: 10px;
 	margin: 0px 0px 10px 0px;
+	border: 4px solid;
+	border-radius: 4px;
 }
 .footer_right {
 	text-align: right;
@@ -151,6 +159,8 @@ tr.topRow {
 	text-align: left;
 	padding: 10px;
 	margin: 10px 50px 10px 10px;
+	border: 4px solid;
+	border-radius: 4px;
 }
 div.rightInfoShip {
 	font-weight: bold;

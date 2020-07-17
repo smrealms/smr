@@ -21,51 +21,26 @@ html {
 }
 .TopInfo {
 	background-color: #7B5121;
-	border: 4px solid #A3692D;
-	-moz-border-radius: 4px; /* Firefox */
-	-webkit-border-radius: 4px; /* Safari and chrome */
-	-khtml-border-radius: 4px; /* Linux browsers */
-	border-radius: 4px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #A3692D;
 }
 .LeftNavOne {
 	background-color: #140F0B;
-	border: 4px solid #A3692D;
-	-moz-border-radius: 4px; /* Firefox */
-	-webkit-border-radius: 4px; /* Safari and chrome */
-	-khtml-border-radius: 4px; /* Linux browsers */
-	border-radius: 4px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #A3692D;
 }
 .LeftNavTwo {
 	background-color: #140F0B;
-	border: 4px solid #A3692D;
-	-moz-border-radius: 4px; /* Firefox */
-	-webkit-border-radius: 4px; /* Safari and chrome */
-	-khtml-border-radius: 4px; /* Linux browsers */
-	border-radius: 4px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #A3692D;
 }
 .MainContentArea {
 	background-color: #000;
 	color: #FFF;
-	border: 6px solid #A3692D;
-	-moz-border-radius: 6px; /* Firefox */
-	-webkit-border-radius: 6px; /* Safari and chrome */
-	-khtml-border-radius: 6px; /* Linux browsers */
-	border-radius: 6px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #A3692D;
 }
 .rightInfo {
 	background-color: #7B5121;
-	border: 4px solid #A3692D;
-	-moz-border-radius: 6px; /* Firefox */
-	-webkit-border-radius: 6px; /* Safari and chrome */
-	-khtml-border-radius: 6px; /* Linux browsers */
-	border-radius: 6px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #A3692D;
 }
-div.rightInfoShip a {	
+div.rightInfoShip a {
 	color: #000;
 }
 div.rightInfoShip a:hover {
