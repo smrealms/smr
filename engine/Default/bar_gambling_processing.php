@@ -268,7 +268,12 @@ foreach ($player_card as $key => $value) {
 }
 $message .= ('</tr></table>');
 
-$message .= ('<div class="center">You have a total of ' . get_value($player_card) . ' </div><br />');
+if (get_value($player_card) == 21 && count($player_card) == 2) {
+	$message .= '<div class="center">You have BLACKJACK!</div><br />';
+} else {
+	$message .= ('<div class="center">You have a total of ' . get_value($player_card) . ' </div><br />');
+}
+
 //check for win
 if ($do == 'STAY') {
 	$win = check_for_win($ai_card, $player_card);
