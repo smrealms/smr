@@ -291,11 +291,11 @@ if (get_value($player_card) > 21) {
 	$container['player_does'] = 'HIT';
 	$container['ai_card'] = $ai_card;
 	$container['player_val'] = $val1;
-	$message .= create_echo_form($container);
+	$message .= '<form method="POST" action="' . SmrSession::getNewHREF($container) . '">';
 	$message .= '<input type="submit" name="action" value="HIT" />';
 	$message .= ('<br /><small><br /></small></form>');
 	$container['player_does'] = 'STAY';
-	$message .= create_echo_form($container);
+	$message .= '<form method="POST" action="' . SmrSession::getNewHREF($container) . '">';
 	$message .= '<input type="submit" name="action" value="STAY" />';
 	$message .= ('</form></div>');
 } elseif (isset($win)) {

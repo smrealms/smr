@@ -11,8 +11,6 @@ Menu::alliance($alliance_id, $alliance->getLeaderID());
 $container = create_container('alliance_stat_processing.php');
 $container['alliance_id'] = $alliance_id;
 
-$form = create_form($container, 'Change');
-
 $role_id = $player->getAllianceRole($alliance->getAllianceID());
 
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
@@ -25,7 +23,7 @@ if ($db->nextRecord()) {
 }
 $change_chat = $player->getAllianceID() == $alliance_id && $player->isAllianceLeader();
 
-$template->assign('Form', $form);
+$template->assign('FormHREF', SmrSession::getNewHREF($container));
 $template->assign('Alliance', $alliance);
 
 $template->assign('CanChangeDescription', $change_mod || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION));

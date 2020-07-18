@@ -5,7 +5,7 @@ if (!isset($NewsletterId)) { ?>
 	<h2>Send Newsletter</h2>
 	<p>This sends the latest newsletter added to the DB: Newsletter #<?php echo $NewsletterId; ?></p>
 
-	<?php echo $ProcessingForm; ?>
+	<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 	<p>Set the subject of the newsletter mail (the default is recommended).</p>
 	<input type="text" name="subject" required value="<?php echo $DefaultSubject; ?>" size="35">
 
