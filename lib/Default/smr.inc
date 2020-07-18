@@ -191,10 +191,6 @@ function bbifyMessage($message, $noLinks = false) {
 	return $message;
 }
 
-function create_table() {
- 	return '<table class="standard">';
-}
-
 function create_echo_form($container) {
 	return create_form_name($container, 'FORM');
 }
@@ -205,10 +201,6 @@ function create_form_name($container, $name) {
 
 function create_form_parameter($container, $param) {
 	return '<form ' . $param . ' method="POST" action="' . SmrSession::getNewHREF($container) . '">';
-}
-
-function create_button($container, $text) {
-	return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">' . $text . '</a></div>';
 }
 
 function create_form($container, $actions) {
