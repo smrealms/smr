@@ -230,10 +230,6 @@ function create_form($container, $actions) {
 
 }
 
-function create_submit($value) {
-	return ('<input type="submit" name="action" value="' . htmlspecialchars($value) . '" />');
-}
-
 function create_error($message) {
 	$container = create_container('skeleton.php', 'error.php');
 	$container['message'] = $message;

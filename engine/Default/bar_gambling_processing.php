@@ -284,9 +284,7 @@ if (get_value($player_card) > 21) {
 	$message .= ('You have <span class="red"><b>BUSTED</b></span>');
 	$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
 	$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
-	$message .= create_echo_form($container);
-	$message .= create_submit('Play Some More ($' . $bet . ')');
-	$message .= ('</form>');
+	$message .= '<p><a class="submitStyle" href="' . SmrSession::getNewHREF($container) . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');
 } elseif (!isset($win) && get_value($player_card) < 21) {
 	$container['player_card'] = $player_card;
@@ -294,11 +292,11 @@ if (get_value($player_card) > 21) {
 	$container['ai_card'] = $ai_card;
 	$container['player_val'] = $val1;
 	$message .= create_echo_form($container);
-	$message .= create_submit('HIT');
+	$message .= '<input type="submit" name="action" value="HIT" />';
 	$message .= ('<br /><small><br /></small></form>');
 	$container['player_does'] = 'STAY';
 	$message .= create_echo_form($container);
-	$message .= create_submit('STAY');
+	$message .= '<input type="submit" name="action" value="STAY" />';
 	$message .= ('</form></div>');
 } elseif (isset($win)) {
 	//we have a winner...but who!
@@ -325,9 +323,7 @@ if (get_value($player_card) > 21) {
 		$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
 	}
-	$message .= create_echo_form($container);
-	$message .= create_submit('Play Some More ($' . $bet . ')');
-	$message .= ('</form>');
+	$message .= '<p><a class="submitStyle" href="' . SmrSession::getNewHREF($container) . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');
 } elseif ($val1 == 21) {
 	if (get_value($ai_card) != 21) {
@@ -355,9 +351,7 @@ if (get_value($player_card) > 21) {
 		$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
 	}
-	$message .= create_echo_form($container);
-	$message .= create_submit('Play Some More ($' . $bet . ')');
-	$message .= ('</form>');
+	$message .= '<p><a class="submitStyle" href="' . SmrSession::getNewHREF($container) . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');
 }
 
