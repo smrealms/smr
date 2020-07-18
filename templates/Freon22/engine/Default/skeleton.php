@@ -70,16 +70,10 @@
 							</div><?php
 						} ?>
 					</td>
-					<td rowspan="2" class="rightCell"><?php
+					<td class="rightCell bottom"><?php
 						if (isset($ThisPlayer)) { ?>
-							<div class="rightInfo noWrap">
-								<div class="messages"><?php
-									$this->includeTemplate('includes/UnreadMessages.inc'); ?>
-								</div>
-
-								<div class="rightInfoShip">
-									<?php $this->includeTemplate('includes/RightPanelShip.inc'); ?>
-								</div>
+							<div class="rightInfoMail noWrap"><?php
+								$this->includeTemplate('includes/UnreadMessages.inc'); ?>
 							</div><?php
 						} ?>
 					</td>
@@ -103,6 +97,14 @@
 						<div class="footer_right">
 							<?php $this->includeTemplate('includes/copyright.inc'); ?>
 						</div>
+					</td>
+
+					<td class="rightCell top"><?php
+						if (isset($ThisPlayer)) { ?>
+							<div class="rightInfoShip noWrap">
+								<?php $this->includeTemplate('includes/RightPanelShip.inc'); ?>
+							</div><?php
+						} ?>
 					</td>
 				</tr>
 			</table>
