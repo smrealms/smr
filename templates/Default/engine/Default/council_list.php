@@ -36,10 +36,10 @@
 			<thead>
 				<tr>
 					<th>&nbsp;</th>
-					<th class="sort" data-sort="name">Name</th>
+					<th class="sort" data-sort="sort_name">Name</th>
 					<th>Race</th>
-					<th class="sort" data-sort="alliance">Alliance</th>
-					<th class="sort" data-sort="experience">Experience</th>
+					<th class="sort" data-sort="sort_alliance">Alliance</th>
+					<th class="sort" data-sort="sort_experience">Experience</th>
 				</tr>
 			</thead>
 			<tbody class="list"><?php
@@ -47,10 +47,10 @@
 					$CouncilPlayer = SmrPlayer::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
 					<tr id="player-<?php echo $CouncilPlayer->getPlayerID(); ?>" class="ajax<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> bold<?php } ?>">
 						<td><?php echo $Ranking; ?></td>
-						<td class="left name" data-name="<?php echo htmlentities($CouncilPlayer->getPlayerName()); ?>"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
+						<td class="sort_name left" data-name="<?php echo htmlentities($CouncilPlayer->getPlayerName()); ?>"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
 						<td><?php echo $ThisPlayer->getColouredRaceName($CouncilPlayer->getRaceID(), true); ?></td>
-						<td class="alliance"><?php echo $CouncilPlayer->getAllianceDisplayName(true); ?></td>
-						<td class="experience right"><?php echo number_format($CouncilPlayer->getExperience()); ?></td>
+						<td class="sort_alliance"><?php echo $CouncilPlayer->getAllianceDisplayName(true); ?></td>
+						<td class="sort_experience right"><?php echo number_format($CouncilPlayer->getExperience()); ?></td>
 					</tr><?php
 				} ?>
 			</tbody>

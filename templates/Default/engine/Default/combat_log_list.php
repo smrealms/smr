@@ -36,10 +36,10 @@ if (isset($Message)) {?>
 				<thead>
 					<tr>
 						<th class="shrink">View</th>
-						<th class="sort shrink" data-sort="date">Date</th>
-						<th class="sort shrink" data-sort="sectorid">Sector</th>
-						<th class="sort" data-sort="attacker">Attacker</th>
-						<th class="sort" data-sort="defender">Defender</th>
+						<th class="sort shrink" data-sort="sort_date">Date</th>
+						<th class="sort shrink" data-sort="sort_sectorid">Sector</th>
+						<th class="sort" data-sort="sort_attacker">Attacker</th>
+						<th class="sort" data-sort="sort_defender">Defender</th>
 					</tr>
 				</thead>
 				<tbody class="list"><?php
@@ -48,10 +48,10 @@ if (isset($Message)) {?>
 							<td class="center">
 								<input type="checkbox" value="on" name="id[<?php echo $LogID; ?>]">
 							</td>
-							<td class="date noWrap"><?php echo date(DATE_FULL_SHORT, $Log['Time']); ?></td>
-							<td class="sectorid center"><?php echo $Log['Sector']; ?></td>
-							<td class="attacker"><?php echo $Log['Attacker']; ?></td>
-							<td class="defender"><?php echo $Log['Defender']; ?></td>
+							<td class="sort_date noWrap"><?php echo date(DATE_FULL_SHORT, $Log['Time']); ?></td>
+							<td class="sort_sectorid center"><?php echo $Log['Sector']; ?></td>
+							<td class="sort_attacker"><?php echo $Log['Attacker']; ?></td>
+							<td class="sort_defender"><?php echo $Log['Defender']; ?></td>
 						</tr><?php
 					} ?>
 				</tbody>

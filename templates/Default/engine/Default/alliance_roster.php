@@ -39,14 +39,14 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 		<thead>
 			<tr>
 				<th class="shrink">&nbsp;</th>
-				<th class="sort" data-sort="name">Trader Name</th>
-				<th class="sort" data-sort="race">Race</th>
-				<th class="sort" data-sort="experience">Experience</th><?php
+				<th class="sort" data-sort="sort_name">Trader Name</th>
+				<th class="sort" data-sort="sort_race">Race</th>
+				<th class="sort" data-sort="sort_experience">Experience</th><?php
 				if ($ShowRoles) { ?>
-					<th class="sort shrink" data-sort="role">Role</th><?php
+					<th class="sort shrink" data-sort="sort_role">Role</th><?php
 				}
 				if (isset($ActiveIDs)) { ?>
-					<th class="sort shrink" data-sort="status">Status</th><?php
+					<th class="sort shrink" data-sort="sort_status">Status</th><?php
 				} ?>
 			</tr>
 		</thead>
@@ -66,17 +66,17 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 						if ($AlliancePlayer->getAccountID() == $Alliance->getLeaderID()) { ?>*<?php }
 						echo $Count++; ?>
 					</td>
-					<td class="left name" data-name="<?php echo htmlentities($AlliancePlayer->getPlayerName()); ?>"><?php
+					<td class="sort_name left" data-name="<?php echo htmlentities($AlliancePlayer->getPlayerName()); ?>"><?php
 						echo $AlliancePlayer->getLevelName(); ?>&nbsp;<?php echo $AlliancePlayer->getLinkedDisplayName(false); ?>
 					</td>
-					<td class="race"><?php
+					<td class="sort_race"><?php
 						echo $ThisPlayer->getColouredRaceName($AlliancePlayer->getRaceID(), true); ?>
 					</td>
-					<td class="experience"><?php
+					<td class="sort_experience"><?php
 						echo number_format($AlliancePlayer->getExperience()); ?>
 					</td><?php
 					if ($ShowRoles) { ?>
-						<td class="role"><?php
+						<td class="sort_role"><?php
 							$PlayerRole = $AlliancePlayer->getAllianceRole();
 							if ($CanChangeRoles && $AlliancePlayer->getAccountID() != $Alliance->getLeaderID()) { ?>
 								<select name="role[<?php echo $AlliancePlayer->getAccountID(); ?>]" class="InputFields"><?php
@@ -95,7 +95,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 						</td><?php
 					}
 					if ($ThisPlayer->getAllianceID() == $Alliance->getAllianceID()) { ?>
-						<td class="center status"><?php
+						<td class="sort_status center"><?php
 							if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
 								<span class="green">Online</span><?php
 							} elseif ($ThisPlayer->getAccountID() == $Alliance->getLeaderID() && $Disabled = SmrAccount::getAccount($AlliancePlayer->getAccountID())->isDisabled()) { ?>

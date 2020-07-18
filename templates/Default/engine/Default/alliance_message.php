@@ -3,16 +3,16 @@ if (count($Threads) > 0) { ?>
 	<table id="topic-list" class="centered standard inset">
 		<thead>
 			<tr>
-				<th class="sort" data-sort="topic">Topic</th>
-				<th class="sort shrink" data-sort="author">Author</th>
-				<th class="sort shrink" data-sort="replies">Replies</th>
-				<th class="sort shrink" data-sort="lastReply">Last Reply</th>
+				<th class="sort" data-sort="sort_topic">Topic</th>
+				<th class="sort shrink" data-sort="sort_author">Author</th>
+				<th class="sort shrink" data-sort="sort_replies">Replies</th>
+				<th class="sort shrink" data-sort="sort_lastReply">Last Reply</th>
 			</tr>
 		</thead>
 		<tbody class="list"><?php
 			foreach ($Threads as $Thread) { ?>
 				<tr id="topic-<?php echo $Thread['ThreadID']; ?>" class="ajax">
-					<td class="topic"><?php
+					<td class="sort_topic"><?php
 						if ($Thread['Unread']) {
 							?><b><?php
 						}
@@ -21,14 +21,14 @@ if (count($Threads) > 0) { ?>
 							?></b><?php
 						} ?>
 					</td>
-					<td class="author noWrap"><?php
+					<td class="sort_author noWrap"><?php
 						echo $Thread['Sender'];
 						if ($Thread['CanDelete']) {
 							?><br /><small><a href="<?php echo $Thread['DeleteHref']; ?>">Delete Thread!</a></small><?php
 						} ?>
 					</td>
-					<td class="replies center"><?php echo $Thread['Replies']; ?></td>
-					<td class="lastReply noWrap" data-lastReply="<?php echo $Thread['SendTime']; ?>"><?php echo date(DATE_FULL_SHORT, $Thread['SendTime']); ?></td>
+					<td class="sort_replies center"><?php echo $Thread['Replies']; ?></td>
+					<td class="sort_lastReply noWrap" data-lastReply="<?php echo $Thread['SendTime']; ?>"><?php echo date(DATE_FULL_SHORT, $Thread['SendTime']); ?></td>
 				</tr><?php
 			} ?>
 		</tbody>

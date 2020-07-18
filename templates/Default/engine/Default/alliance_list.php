@@ -12,22 +12,22 @@ if (count($Alliances) > 0) { ?>
 	<table id="alliance-list" class="standard inset centered">
 		<thead>
 			<tr>
-				<th class="sort" data-sort="name">Alliance Name</th>
-				<th class="sort shrink" data-sort="totExp">Total Experience</th>
-				<th class="sort shrink" data-sort="avgExp">Average Experience</th>
-				<th class="sort shrink" data-sort="members">Members</th>
+				<th class="sort" data-sort="sort_name">Alliance Name</th>
+				<th class="sort shrink" data-sort="sort_totExp">Total Experience</th>
+				<th class="sort shrink" data-sort="sort_avgExp">Average Experience</th>
+				<th class="sort shrink" data-sort="sort_members">Members</th>
 			</tr>
 		</thead>
 
 		<tbody class="list"><?php
 			foreach ($Alliances as $AllianceID => $Alliance) { ?>
 				<tr id="alliance-<?php echo $AllianceID; ?>" class="ajax">
-					<td class="name">
+					<td class="sort_name">
 						<a href="<?php echo $Alliance['ViewHREF']; ?>"><?php echo $Alliance['Name']; ?></a>
 					</td>
-					<td class="totExp right"><?php echo number_format($Alliance['TotalExperience']); ?></td>
-					<td class="avgExp right"><?php echo number_format($Alliance['AverageExperience']); ?></td>
-					<td class="members right"><?php echo number_format($Alliance['Members']); ?></td>
+					<td class="sort_totExp right"><?php echo number_format($Alliance['TotalExperience']); ?></td>
+					<td class="sort_avgExp right"><?php echo number_format($Alliance['AverageExperience']); ?></td>
+					<td class="sort_members right"><?php echo number_format($Alliance['Members']); ?></td>
 				</tr><?php
 			} ?>
 		</tbody>

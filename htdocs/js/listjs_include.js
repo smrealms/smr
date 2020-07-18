@@ -15,7 +15,7 @@ var listjs = (function() {
 	var listjs = {};
 
 	listjs.PlanetList = function() {
-		defaultList('planet-list', ['name', 'lvl', 'owner', 'sector', 'build']);
+		defaultList('planet-list', ['sort_name', 'sort_lvl', 'sort_owner', 'sort_sector', 'sort_build']);
 	};
 
 	listjs.PlanetListFinancial = function() {
@@ -27,23 +27,23 @@ var listjs = (function() {
 	};
 
 	listjs.alliance_list = function() {
-		defaultList('alliance-list', ['name', 'totExp', 'avgExp', 'members']);
+		defaultList('alliance-list', ['sort_name', 'sort_totExp', 'sort_avgExp', 'sort_members']);
 	};
 
 	listjs.alliance_message = function() {
-		defaultList('topic-list', ['topic', 'author', 'replies', {name: 'lastReply', attr: 'data-lastReply'}]);
+		defaultList('topic-list', ['sort_topic', 'sort_author', 'sort_replies', {name: 'sort_lastReply', attr: 'data-lastReply'}]);
 	};
 
 	listjs.alliance_roster = function() {
-		defaultList('alliance-roster', [{name: 'name', attr: 'data-name'}, 'race', 'experience', 'role', 'status']);
+		defaultList('alliance-roster', [{name: 'sort_name', attr: 'data-name'}, 'sort_race', 'sort_experience', 'sort_role', 'sort_status']);
 	};
 
 	listjs.combat_log_list = function() {
-		defaultList('logs-list', ['date', 'sectorid', 'attacker', 'defender']);
+		defaultList('logs-list', ['sort_date', 'sort_sectorid', 'sort_attacker', 'sort_defender']);
 	};
 
 	listjs.council_list = function() {
-		defaultList('council-members', [{name: 'name', attr: 'data-name'}, 'race', 'alliance', 'experience']);
+		defaultList('council-members', [{name: 'sort_name', attr: 'data-name'}, 'sort_alliance', 'sort_experience']);
 	};
 
 	listjs.current_players = function() {
@@ -55,7 +55,7 @@ var listjs = (function() {
 	};
 
 	listjs.message_view = function() {
-		defaultList('folders', ['name', 'messages']);
+		defaultList('folders', ['sort_name', 'sort_messages']);
 	};
 
 	listjs.shop_weapon = function() {

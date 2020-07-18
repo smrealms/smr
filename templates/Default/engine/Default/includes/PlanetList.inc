@@ -4,27 +4,27 @@ if (count($Planets) > 0) { ?>
 	<table id="planet-list" class="standard inset left centered">
 		<thead>
 			<tr>
-				<th class="sort shrink" data-sort="image">
+				<th class="shrink">
 					<a href="<?php echo WIKI_URL; ?>/game-guide/locations#planets" target="_blank"><img class="bottom" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a></th>
-				<th class="sort" data-sort="name">Name</th>
-				<th class="sort shrink" data-sort="lvl">Level</th>
-				<th class="sort" data-sort="owner">Owner</th>
-				<th class="sort shrink" data-sort="sector">Sector</th>
+				<th class="sort" data-sort="sort_name">Name</th>
+				<th class="sort shrink" data-sort="sort_lvl">Level</th>
+				<th class="sort" data-sort="sort_owner">Owner</th>
+				<th class="sort shrink" data-sort="sort_sector">Sector</th>
 				<th class="shrink">Structures</th>
 				<th class="shrink">Hardware</th>
 				<th class="shrink">Supplies</th>
-				<th class="sort" data-sort="build">Build</th>
+				<th class="sort" data-sort="sort_build">Build</th>
 			</tr>
 		</thead>
 		<tbody class="list"><?php
 			foreach ($Planets as $Planet) { ?>
 				<tr id="planet-<?php echo $Planet->getSectorID(); ?>" class="ajax">
-					<td class="image noWrap">
+					<td class="noWrap">
 						<img src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename() . ': ' . $Planet->getTypeDescription(); ?>" /></td>
-					<td class="name"><?php echo $Planet->getDisplayName(); ?></td>
-					<td class="lvl center"><?php echo number_format($Planet->getLevel(), 2); ?></td>
-					<td class="owner noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
-					<td class="sector center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getName(); ?></a>)</td>
+					<td class="sort_name"><?php echo $Planet->getDisplayName(); ?></td>
+					<td class="sort_lvl center"><?php echo number_format($Planet->getLevel(), 2); ?></td>
+					<td class="sort_owner noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
+					<td class="sort_sector center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getName(); ?></a>)</td>
 					<td class="noWrap"><?php
 						foreach ($Planet->getStructureTypes() as $Structure) { ?>
 							<img style="padding:1px;" class="bottom" src="images/<?php echo $Structure->image(); ?>"  width="16" height="16" alt="" title="<?php echo $Structure->name(); ?>" />&nbsp;<?php echo $Planet->getBuilding($Structure->structureID()); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxBuildings($Structure->structureID()); ?><br /><?php
@@ -57,7 +57,7 @@ if (count($Planets) > 0) { ?>
 							?>None<?php
 						} ?>
 					</td>
-					<td class="build noWrap center"><?php
+					<td class="sort_build noWrap center"><?php
 						if ($Planet->hasCurrentlyBuilding()) {
 							foreach ($Planet->getCurrentlyBuilding() as $Building) {
 								echo $Planet->getStructureTypes($Building['ConstructionID'])->name(); ?><br /><?php
