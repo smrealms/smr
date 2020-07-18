@@ -207,9 +207,6 @@ table.center, table.centered {
 .newbie {
 	font-style: italic;
 }
-.clear {
-	clear: both; /* don't change clear is required to end floats */
-}
 
 /* Colours */
 .yellow {
