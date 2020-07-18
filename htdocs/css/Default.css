@@ -4,7 +4,7 @@ html, body {
 	height: 100%; /* fallback for older browsers */
 	width: 100%;  /* fallback for older browsers */
 	height: calc(100% - 10px); /* Account for padding to fix persistent vertical scrollbar */
-	width: calc(100vw - 34px); /* Prevent centered content shifting when scrollbar appears */
+	width: calc(100vw - 16px); /* Prevent centered content shifting when scrollbar appears */
 }
 body {
 	font-family: Arial, Sans-Serif;
@@ -27,32 +27,6 @@ h3 {
 }
 /* ----- End Heading styles ----- */
 /* ---------------------------- */
-.InputFields {
-	font: inherit;
-}
-.submitStyle:link {
-	font: inherit;
-	padding: 1px 6px;
-}
-.submitStyle:visited {
-	font: inherit;
-	padding: 1px 6px;
-}
-.submitStyle:hover {
-	font: inherit;
-	padding: 1px 6px;
-}
-.submitStyle:active {
-	font: inherit;
-	padding: 1px 6px;
-}
-.submitStyle {
-	font: inherit;
-	padding: 1px 6px;
-	border-spacing: 0px;
-	display: inline-table; /* Fixes the problems with vertical overlap in FF, but not IE :( */
-}
-/* ------------------------------------ */
 #help_content {
 	margin: 10px 20px 50px 20px;
 }
@@ -142,16 +116,7 @@ big, .big {
 small, .small {
 	font-size: 75%;
 }
-div.bar1 {
-	padding: 5px;
-}
-div.bar1 div {
-	padding: 2px;
-	text-align: center;
-}
-input {
-	font: 100%;
-}
+
 a {
 	text-decoration: none;
 	padding: 0px;

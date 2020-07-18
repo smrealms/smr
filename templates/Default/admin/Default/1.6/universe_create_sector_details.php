@@ -2,7 +2,7 @@
 <form method="POST" action="<?php echo $EditHREF; ?>">
 	<h2>Planet</h2><br />
 	<b>Type: </b>
-	<select name="plan_type" class="InputFields">
+	<select name="plan_type">
 		<option value="0">No Planet</option><?php
 		foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $type) { ?>
 			<option value="<?php echo $type; ?>" <?php echo ($type == $SelectedPlanetType ? 'selected' : ''); ?>><?php echo SmrPlanetType::getTypeInfo($type)->name(); ?></option><?php
@@ -14,14 +14,14 @@
 	<br />
 
 	<h2>Port</h2>
-	<select name="port_level" class="InputFields">
+	<select name="port_level">
 		<option value="0">No Port</option><?php
 		for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) { ?>
 			<option value="<?php echo $i; ?>" <?php echo ($i == $SelectedPortLevel ? 'selected' : ''); ?>>Level <?php echo $i; ?></option><?php
 		} ?>
 	</select>&nbsp;
 
-	<select name="port_race" class="InputFields"><?php
+	<select name="port_race"><?php
 		foreach (Globals::getRaces() as $race) { ?>
 		<option value="<?php echo $race['Race ID']; ?>" <?php echo ($race['Race ID'] == $SelectedPortRaceID ? 'selected' : ''); ?>><?php echo $race['Race Name']; ?></option><?php
 	} ?>
@@ -43,7 +43,7 @@
 								<tr>
 								<td>
 									<img class="bottom" src="<?php echo $good['ImageLink']; ?>" width="13" height="16" />&nbsp;
-									<select name="good<?php echo $good['ID']; ?>" class="InputFields">
+									<select name="good<?php echo $good['ID']; ?>">
 										<option value="None">--</option><?php
 										foreach (['Buy', 'Sell'] as $trans) { ?>
 											<option <?php if ($Port->hasGood($good['ID'], $trans)) { ?> selected <?php } ?> value="<?php echo $trans; ?>"><?php echo $trans; ?></option><?php
@@ -67,7 +67,7 @@
 				<?php
 				for ($i = 0; $i < UNI_GEN_LOCATION_SLOTS; $i++) { ?>
 					<b><?php echo ($i + 1); ?>. </b>
-					<select name="loc_type<?php echo $i; ?>" class="InputFields">
+					<select name="loc_type<?php echo $i; ?>">
 						<option value="0">No Location</option><?php
 						foreach (SmrLocation::getAllLocations() as $id => $location) { ?>
 							<option value="<?php echo $id ?>" <?php echo ($id == $SectorLocationIDs[$i] ? 'selected' : ''); ?>><?php echo $location->getName(); ?></option><?php

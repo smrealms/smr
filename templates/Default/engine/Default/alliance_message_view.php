@@ -58,7 +58,7 @@ if (isset($Thread['CreateThreadReplyFormHref'])) { ?>
 				<td><textarea spellcheck="true" name="body" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea></td>
 			</tr>
 		</table><br />
-		<input type="submit" name="action" value="Create Reply">&nbsp;<input type="submit" name="action" value="Preview Reply" class="InputFields" />
+		<input type="submit" name="action" value="Create Reply">&nbsp;<input type="submit" name="action" value="Preview Reply" />
 	</form><?php
 }
 ?>

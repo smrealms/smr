@@ -5,7 +5,7 @@ if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage
 	<b>From: </b><span class="admin">Administrator</span><br />
 	<b>To: </b><?php
 		if ($MessageGameID != 20000) { ?>
-			<select name="account_id" size="1" class="InputFields">
+			<select name="account_id" size="1">
 			<option value="0">[Please Select]</option><?php
 			foreach ($GamePlayers as $GamePlayer) {
 				?><option value="<?php echo $GamePlayer['AccountID']; ?>"><?php echo $GamePlayer['Name']; ?> (<?php echo $GamePlayer['PlayerID']; ?>)</option><?php
@@ -15,8 +15,8 @@ if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage
 			All Players<?php
 		} ?>
 	</p>
-	<textarea required spellcheck="true" name="message" class="InputFields"><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br />
-	Hours Till Expire: <input type="number" step="0.01" name="expire" value="<?php echo $ExpireTime; ?>" size="2" class="InputFields"> (0 = never expire)<br />
+	<textarea required spellcheck="true" name="message"><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br />
+	Hours Till Expire: <input type="number" step="0.01" name="expire" value="<?php echo $ExpireTime; ?>" size="2"> (0 = never expire)<br />
 	<br />
-	<input type="submit" name="action" value="Send message" class="InputFields" />&nbsp;<input type="submit" name="action" value="Preview message" class="InputFields" />
+	<input type="submit" name="action" value="Send message" />&nbsp;<input type="submit" name="action" value="Preview message" />
 </form>

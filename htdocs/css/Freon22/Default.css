@@ -1,9 +1,6 @@
 html {
 	background-color: #000; /* The main background color, you can change this */
 }
-.bar1Separator {
-	border-top: 2px solid #A3692D;
-}
 .tableHeight {
 	color: #FFF;
 }
@@ -21,51 +18,26 @@ html {
 }
 .TopInfo {
 	background-color: #7B5121;
-	border: 4px solid #A3692D;
-	-moz-border-radius: 4px; /* Firefox */
-	-webkit-border-radius: 4px; /* Safari and chrome */
-	-khtml-border-radius: 4px; /* Linux browsers */
-	border-radius: 4px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #A3692D;
 }
 .LeftNavOne {
 	background-color: #140F0B;
-	border: 4px solid #A3692D;
-	-moz-border-radius: 4px; /* Firefox */
-	-webkit-border-radius: 4px; /* Safari and chrome */
-	-khtml-border-radius: 4px; /* Linux browsers */
-	border-radius: 4px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #A3692D;
 }
 .LeftNavTwo {
 	background-color: #140F0B;
-	border: 4px solid #A3692D;
-	-moz-border-radius: 4px; /* Firefox */
-	-webkit-border-radius: 4px; /* Safari and chrome */
-	-khtml-border-radius: 4px; /* Linux browsers */
-	border-radius: 4px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #A3692D;
 }
 .MainContentArea {
 	background-color: #000;
 	color: #FFF;
-	border: 6px solid #A3692D;
-	-moz-border-radius: 6px; /* Firefox */
-	-webkit-border-radius: 6px; /* Safari and chrome */
-	-khtml-border-radius: 6px; /* Linux browsers */
-	border-radius: 6px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #A3692D;
 }
-.rightInfo {
+div.rightInfoShip {
 	background-color: #7B5121;
-	border: 4px solid #A3692D;
-	-moz-border-radius: 6px; /* Firefox */
-	-webkit-border-radius: 6px; /* Safari and chrome */
-	-khtml-border-radius: 6px; /* Linux browsers */
-	border-radius: 6px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #A3692D;
 }
-div.rightInfoShip a {	
+div.rightInfoShip a {
 	color: #000;
 }
 div.rightInfoShip a:hover {
@@ -85,12 +57,6 @@ a.white {
 }
 a {
 	color: #F2A648; /*#CC9933;*/
-	text-decoration: none;
-	padding: 0px;
-	margin: 0px;
-}
-a:hover {
-	background: #5A4B38; /*#D7A970; #C39C4D;*/
 }
 a.leftNav {
 	color: #F2A648; /*#CC9933;*/
@@ -105,6 +71,12 @@ a:hover.nav {
 	background: #C93;
 }
 
+div.bar1 {
+	border-color: #9B7141;
+}
+div.bar1 div {
+	background-color: #7B5121;
+}
 
 .attack_warning {
 	border: 1px solid #BB0;
@@ -161,24 +133,21 @@ h1, h2, h3, h4, h5, h6 {
 	color: #f2a648;
 }
 
-input  {
+input, button, select, textarea, a.submitStyle {
 	background: #111;
 	color: #FFF;
 	border: 2px solid #7B5121;
 }
 
-input[type="submit"]  {
+/* Highlight navigation elements on hover */
+input[type="submit"]:hover, button:hover, a:hover {
+	background: #5A4B38;
+}
+input[type="submit"], button, a.submitStyle  {
 	border: 2px outset #7B5121;
-	cursor: pointer;
 }
-input[type="submit"]:active {
+input[type="submit"]:active, button:active, a.submitStyle:active {
 	border: 2px inset #7B5121;
-}
-
-textarea {
-	background: #111;
-	color: #FFF;
-	border: 2px solid #7B5121;
 }
 
 /* Current Sector Navigation Box Colours */

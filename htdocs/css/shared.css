@@ -1,6 +1,15 @@
-button, input[type=submit] {
+input[type=submit], button, a.submitStyle {
 	cursor: pointer;
+	padding: 1px 6px;
 }
+input, button, select, textarea, a.submitStyle {
+	font: inherit;
+}
+a.submitStyle {
+	border-spacing: 0px;
+	display: inline-table; /* Fixes the problems with vertical overlap */
+}
+
 th {
 	font-size: 110%;
 	text-align: center;
@@ -239,6 +248,24 @@ table.center, table.centered {
 	color: #FF0;
 }
 
+/* Navigation Bar */
+
+div.bar1 {
+	border: 1px solid;
+	padding: 3px;
+}
+
+div.bar1 div {
+	margin: 2px;
+	padding: 2px;
+	text-align: center;
+}
+
+div.bar1 table, div.bar1 table td {
+	width: auto;
+	padding: 0px;
+}
+
 /* More */
 
 
@@ -253,14 +280,6 @@ table.standard td, table.standard th {
 	padding:2px;
 }
 
-table.bar1, table.bar1 table {
-	width: 100%;
-}
-
-table.bar1 table table, table.bar1 table table td{
-	width: auto;
-	padding: 0px;
-}
 table.csl {
 	width: 27em;
 }

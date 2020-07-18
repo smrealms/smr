@@ -90,7 +90,7 @@
 
 		<tr>
 			<td valign="top" class="right bold">Donation:</td>
-			<td><input type="number" name="donation" size="5" class="InputFields center">$</td>
+			<td><input type="number" name="donation" size="5" class="center">$</td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
@@ -99,7 +99,7 @@
 
 		<tr>
 			<td valign="top" class="right bold">Grant Reward SMR Credits:</td>
-			<td><input type="number" name="grant_credits" size="5" class="InputFields center"> Credits</td>
+			<td><input type="number" name="grant_credits" size="5" class="center"> Credits</td>
 		</tr>
 
 		<tr>
@@ -130,7 +130,7 @@
 						</td>
 					</tr>
 				</table>
-				<p>Note (optional): <input type="text" name="close_by_request_note" class="InputFields" /></p>
+				<p>Note (optional): <input type="text" name="close_by_request_note" /></p>
 			</td>
 		</tr>
 
@@ -166,11 +166,11 @@
 				</p>
 				<p>
 					<input type="radio" name="choise" value="individual">
-					New Reason: <input type="text" name="reason_msg" class="InputFields" style="width:400px;">
+					New Reason: <input type="text" name="reason_msg" style="width:400px;">
 				</p>
 				<p><input type="radio" name="choise" value="reopen"> Reopen! (Will remove ban points, if specified)</p>
-				<p>Suspicion: <input type="text" name="suspicion" class="InputFields" style="width:300px;" maxlength="255" placeholder="Add any private details about ban here"></p>
-				<p>Ban Points: <input type="number" name="points" class="InputFields center" style="width:40px;"> points</p>
+				<p>Suspicion: <input type="text" name="suspicion" style="width:300px;" maxlength="255" placeholder="Add any private details about ban here"></p>
+				<p>Ban Points: <input type="number" name="points" class="center" style="width:40px;"> points</p>
 			</td>
 		</tr>
 
@@ -190,7 +190,7 @@
 				} ?>
 				<br /><br />
 				<input type="radio" name="mailban" value="add_days" />
-				Increase mail ban by <input type="number" name="mailban_days" class="InputFields center" style="width:40px" /> days
+				Increase mail ban by <input type="number" name="mailban_days" class="center" style="width:40px" /> days
 				<br />
 				<input type="radio" name="mailban" value="remove" /> Remove mail ban
 			</td>
@@ -286,6 +286,6 @@
 	</table>
 
 	<br />
-	<input type="submit" name="action" value="Edit Account" class="InputFields" />&nbsp;&nbsp;
+	<input type="submit" name="action" value="Edit Account" />&nbsp;&nbsp;
 	<div class="buttonA"><a class="buttonA" href="<?php echo $ResetFormHREF; ?>">Reset Form</a></div>
 </form>

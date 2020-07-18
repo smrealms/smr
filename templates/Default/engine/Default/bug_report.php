@@ -16,28 +16,28 @@ Be as accurate as possible with your bug description.
 
 		<tr>
 			<td class="bold">Subject:</td>
-			<td><input type="text" name="subject" class="InputFields" style="width:300px;"></td>
+			<td><input type="text" name="subject" style="width:300px;"></td>
 		</tr>
 
 		<tr>
 			<td class="bold" valign="top">Description:</td>
-			<td><textarea spellcheck="true" class="InputFields" name="description" style="width:300px;height:100px;"></textarea></td>
+			<td><textarea spellcheck="true" name="description" style="width:300px;height:100px;"></textarea></td>
 		</tr>
 
 		<tr>
 			<td class="bold" valign="top">Steps to repeat:</td>
-			<td><textarea spellcheck="true" class="InputFields" name="steps" style="width:300px;height:100px;"></textarea></td>
+			<td><textarea spellcheck="true" name="steps" style="width:300px;height:100px;"></textarea></td>
 		</tr>
 
 		<tr>
 			<td class="bold" valign="top">Error Message:</td>
-			<td><textarea spellcheck="true" class="InputFields" name="error_msg" style="width:300px;height:100px;"></textarea></td>
+			<td><textarea spellcheck="true" name="error_msg" style="width:300px;height:100px;"></textarea></td>
 		</tr>
 
 		<tr>
 			<td></td>
 			<td>
-				<input type="submit" name="action" value="Submit" class="InputFields" />
+				<input type="submit" name="action" value="Submit" />
 			</td>
 		</tr>
 

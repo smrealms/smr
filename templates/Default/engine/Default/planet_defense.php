@@ -18,9 +18,9 @@
 			<td><img src="images/shields.png"  width="16" height="16" alt="" title="Shields"/>Shields</td>
 			<td class="center"><?php echo $ThisShip->getShields(); ?></td>
 			<td class="center"><?php echo $ThisPlanet->getShields(); ?></td>
-			<td class="center"><input type="number" name="amount" value="<?php echo min($ThisShip->getShields(), $ThisPlanet->getMaxShields() - $ThisPlanet->getShields()); ?>" class="InputFields center" size="4"></td>
+			<td class="center"><input type="number" name="amount" value="<?php echo min($ThisShip->getShields(), $ThisPlanet->getMaxShields() - $ThisPlanet->getShields()); ?>" class="center" size="4"></td>
 			<td>
-				<input type="submit" name="action" value="Ship" class="InputFields" />&nbsp;<input type="submit" name="action" value="Planet" class="InputFields" />
+				<input type="submit" name="action" value="Ship" />&nbsp;<input type="submit" name="action" value="Planet" />
 			</td>
 		</tr>
 	</form>
@@ -30,9 +30,9 @@
 			<td><img src="images/cd.png"  width="16" height="16" alt="" title="Combat Drones"/>Combat Drones</td>
 			<td class="center"><?php echo $ThisShip->getCDs(); ?></td>
 			<td class="center"><?php echo $ThisPlanet->getCDs(); ?></td>
-			<td class="center"><input type="number" name="amount" value="<?php echo min($ThisShip->getCDs(), $ThisPlanet->getMaxCDs() - $ThisPlanet->getCDs()); ?>" class="InputFields center" size="4"></td>
+			<td class="center"><input type="number" name="amount" value="<?php echo min($ThisShip->getCDs(), $ThisPlanet->getMaxCDs() - $ThisPlanet->getCDs()); ?>" class="center" size="4"></td>
 			<td>
-				<input type="submit" name="action" value="Ship" class="InputFields" />&nbsp;<input type="submit" name="action" value="Planet" class="InputFields" />
+				<input type="submit" name="action" value="Ship" />&nbsp;<input type="submit" name="action" value="Planet" />
 			</td>
 		</tr>
 	</form>
@@ -43,9 +43,9 @@
 			<td><img src="images/armour.png"  width="16" height="16" alt="" title="Armour"/>Armour</td>
 			<td class="center"><?php echo $ThisShip->getArmour(); ?></td>
 			<td class="center"><?php echo $ThisPlanet->getArmour(); ?></td>
-			<td class="center"><input type="number" name="amount" value="<?php echo min($ThisShip->getArmour() - 1, $ThisPlanet->getMaxArmour() - ($ThisPlanet->getArmour())); ?>" class="InputFields center" size="4"></td>
+			<td class="center"><input type="number" name="amount" value="<?php echo min($ThisShip->getArmour() - 1, $ThisPlanet->getMaxArmour() - ($ThisPlanet->getArmour())); ?>" class="center" size="4"></td>
 			<td>
-				<input type="submit" name="action" value="Ship" class="InputFields" />&nbsp;<input type="submit" name="action" value="Planet" class="InputFields" />
+				<input type="submit" name="action" value="Ship" />&nbsp;<input type="submit" name="action" value="Planet" />
 			</td>
 		</tr>
 	</form>
@@ -73,10 +73,10 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 					<td><?php echo $i + 1; ?></td>
 					<td><?php
 						if ($i != 0) { ?>
-							<button class="InputFields" type="submit" title="Move Up" style="padding:0px; height:20px; border:none;" name="move_up" value="<?php echo $i; ?>"><img src="images/up.gif" alt="" height="20" width="20" /></button><?php
+							<button type="submit" title="Move Up" style="padding:0px; height:20px; border:none;" name="move_up" value="<?php echo $i; ?>"><img src="images/up.gif" alt="" height="20" width="20" /></button><?php
 						}
 						if ($i != $ThisPlanet->getMaxMountedWeapons() - 1) { ?>
-							<button class="InputFields" type="submit" title="Move Down" style="padding:0px; height:20px; border:none;" name="move_down" value="<?php echo $i; ?>"><img src="images/down.gif" alt="" height="20" width="20" /></button><?php
+							<button type="submit" title="Move Down" style="padding:0px; height:20px; border:none;" name="move_down" value="<?php echo $i; ?>"><img src="images/down.gif" alt="" height="20" width="20" /></button><?php
 					} ?>
 					</td><?php
 					if (isset($weapons[$i])) { ?>
@@ -84,10 +84,10 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 						<td><?php echo $weapons[$i]->getShieldDamage() . ' / ' . $weapons[$i]->getArmourDamage(); ?></td>
 						<td><?php echo $weapons[$i]->getBaseAccuracy(); ?>%</td>
 						<td><?php echo $weapons[$i]->getPowerLevel(); ?></td>
-						<td><button class="InputFields" type="submit" name="destroy" value="<?php echo $i; ?>">Destroy</button></td><?php
+						<td><button type="submit" name="destroy" value="<?php echo $i; ?>">Destroy</button></td><?php
 					} else { ?>
 						<td class="left">
-							<select name="ship_order<?php echo $i; ?>" onchange="showWeaponInfo(this)" class="InputFields" data-target=".weapon-info<?php echo $i; ?>"><?php
+							<select name="ship_order<?php echo $i; ?>" onchange="showWeaponInfo(this)" data-target=".weapon-info<?php echo $i; ?>"><?php
 								foreach ($ThisShip->getWeapons() as $orderID => $weapon) { ?>
 									<option value="<?php echo $orderID; ?>" data-show=".weapon<?php echo $i . '-' . $orderID; ?>"><?php echo $weapon->getName(); ?></option><?php
 								} ?>
@@ -114,7 +114,7 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 									<div class="weapon<?php echo $i . '-' . $orderID; ?> hide"><?php echo $weapon->getPowerLevel(); ?></div><?php
 								} ?>
 							</div>
-						<td><button class="InputFields" type="submit" name="transfer" value="<?php echo $i; ?>">Transfer</button></td><?php
+						<td><button type="submit" name="transfer" value="<?php echo $i; ?>">Transfer</button></td><?php
 					} ?>
 				</tr><?php
 			} ?>

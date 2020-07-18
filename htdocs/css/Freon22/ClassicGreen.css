@@ -5,36 +5,6 @@ html {
 h1, h2 {
 	color: #80C870;
 }
-#InputFields, .InputFields {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-.submitStyle:link {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-.submitStyle:visited {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-.submitStyle:hover {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-.submitStyle:active {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-.submitStyle {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
 th {
 	background-color: #0A4E1D;
 	color: #80C870;
@@ -63,53 +33,50 @@ table.nobord td {
 	border: none;
 }
 .TopInfo {
-	border: 4px solid #0B8D35;
-	-moz-border-radius: 4px; /* Firefox */
-	-webkit-border-radius: 4px; /* Safari and chrome */
-	-khtml-border-radius: 4px; /* Linux browsers */
-	border-radius: 4px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #0B8D35;
 }
 .LeftNavOne {
+	border-color: #0B2121;
 }
 .LeftNavTwo {
+	border-color: #0B2121;
 }
 .MainContentArea {
 	background-color: #06240E;
 	color: #FFF;
-	border: 4px solid #0B8D35;
-	-moz-border-radius: 4px; /* Firefox */
-	-webkit-border-radius: 4px; /* Safari and chrome */
-	-khtml-border-radius: 4px; /* Linux browsers */
-	border-radius: 4px; /* CSS3 */
-	behavior: url(css/ie-css3.htc); /* IE */
+	border-color: #0B8D35;
 }
-.rightInfo {
+div.rightInfoShip {
 	font-size: 90%;
+	border-color: #0B2121;
 }
-.bar1Separator {
-	border-top: 2px solid #0B8D35;
+
+div.bar1 {
+	border-color: #0B8D35;
 }
+div.bar1 div {
+	background-color: #0B8D35;
+}
+
 .attack_warning {
 	border: 1px solid #BB0;
 	background-color: #500;
 	color: #F00;
 }
-input {
+
+input, button, select, textarea, a.submitStyle {
 	background: #06240E;
 	color: #FFFFFF;
 	border: 1px solid #80C870;
 }
-textarea {
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
+
+/* Highlight navigation elements on hover */
+button:hover, input[type="submit"]:hover, a:hover {
+	background: #0A4E1D;
 }
+
 a {
 	color: #FFFFFF;
-}
-a:hover {
-	background: #0A4E1D;
 }
 a.header {
 	color: #80C870;

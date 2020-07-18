@@ -3,11 +3,11 @@
 <form id="BondForm" method="POST" action="<?php echo $ThisPlanet->getFinancesHREF(); ?>">
 	<table>
 		<tr>
-			<td colspan="2"><input type="number" name="amount" value="0" class="InputFields" style="text-align:right;width:152;"></td>
+			<td colspan="2"><input type="number" name="amount" value="0" style="text-align:right;width:152;"></td>
 		</tr>
 		<tr>
-			<td><input type="submit" name="action" value="Deposit" class="InputFields" /></td>
-			<td><input type="submit" name="action" value="Withdraw" class="InputFields" /></td>
+			<td><input type="submit" name="action" value="Deposit" /></td>
+			<td><input type="submit" name="action" value="Withdraw" /></td>
 		</tr>
 	</table>
 </form>

@@ -5,7 +5,7 @@
 	</head>
 	<body>
 		<div id="Container">
-			<table class="tableHeight">
+			<table class="tableHeight centered">
 				<tr class="topRow">
 					<td class="topleftCell">
 						<b><span class="smrBanner">smr</span></b>
@@ -67,28 +67,13 @@
 										</td>
 									</tr>
 								</table>
-								<div class="clear"></div><?php
-								if (isset($MenuItems)) { ?>
-									<div class="bar1Separator"></div>
-									<div class="bar1"><?php
-										$this->includeTemplate('includes/menu.inc'); ?>
-									</div><?php
-								} elseif (isset($SubMenuBar)) {
-									echo $SubMenuBar;
-								} ?>
 							</div><?php
 						} ?>
 					</td>
-					<td rowspan="2" class="rightCell"><?php
+					<td class="rightCell bottom"><?php
 						if (isset($ThisPlayer)) { ?>
-							<div class="rightInfo noWrap">
-								<div class="messages"><?php
-									$this->includeTemplate('includes/UnreadMessages.inc'); ?>
-								</div>
-
-								<div class="rightInfoShip">
-									<?php $this->includeTemplate('includes/RightPanelShip.inc'); ?>
-								</div>
+							<div class="rightInfoMail noWrap"><?php
+								$this->includeTemplate('includes/UnreadMessages.inc'); ?>
 							</div><?php
 						} ?>
 					</td>
@@ -103,6 +88,7 @@
 							if (isset($PageTopic)) {
 								?><h1><?php echo $PageTopic; ?></h1><br /><?php
 							}
+							$this->includeTemplate('includes/menu.inc');
 							$this->includeTemplate($TemplateBody); ?>
 						</div>
 						<div class="footer_left">
@@ -111,6 +97,14 @@
 						<div class="footer_right">
 							<?php $this->includeTemplate('includes/copyright.inc'); ?>
 						</div>
+					</td>
+
+					<td class="rightCell top"><?php
+						if (isset($ThisPlayer)) { ?>
+							<div class="rightInfoShip noWrap">
+								<?php $this->includeTemplate('includes/RightPanelShip.inc'); ?>
+							</div><?php
+						} ?>
 					</td>
 				</tr>
 			</table>

@@ -210,15 +210,15 @@ function album_entry($album_id) {
 		echo('<input type="hidden" name="album_id" value="' . $album_id . '">');
 		echo('<table>');
 		echo('<tr>');
-		echo('<td style="color:green; font-size:70%;">Nick:<br /><input type="text" size="10" name="nick" value="' . htmlspecialchars(get_album_nick(SmrSession::getAccountID())) . '" class="InputFields" readonly></td>');
-		echo('<td style="color:green; font-size:70%;">Comment:<br /><input type="text" size="50" name="comment" class="InputFields"></td>');
-		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" value="Send" class="InputFields"></td>');
+		echo('<td style="color:green; font-size:70%;">Nick:<br /><input type="text" size="10" name="nick" value="' . htmlspecialchars(get_album_nick(SmrSession::getAccountID())) . '" readonly></td>');
+		echo('<td style="color:green; font-size:70%;">Comment:<br /><input type="text" size="50" name="comment"></td>');
+		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" value="Send"></td>');
 		$db->query('SELECT *
 					FROM account_has_permission
 					WHERE account_id = '.$db->escapeNumber(SmrSession::getAccountID()) . ' AND
 						permission_id = '.$db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
 		if ($db->nextRecord()) {
-			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate" class="InputFields"></td>');
+			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate"></td>');
 		}
 
 		echo('</tr>');

@@ -2,7 +2,7 @@
 <br />
 
 <form method="POST" action="<?php echo $GossipHREF; ?>">
-	<input type="text" name="gossip_tell" size="30" class="InputFields" />
+	<input type="text" name="gossip_tell" size="30" />
 	<input type="submit" name="action" value="Tell him" />
 </form>
 

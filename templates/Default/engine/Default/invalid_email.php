@@ -13,12 +13,12 @@ away!</p>
 		re-validate this address.
 	</p>
 
-	<p><input type="submit" name="action" value="Resend Validation Code" class="InputFields" /></p>
+	<p><input type="submit" name="action" value="Resend Validation Code" /></p>
 	<br />
 
 	<h2>Enter new address</h2>
 	<p>If your current address is no longer valid, please enter a new one.</p>
-	<p>New e-mail address: <input type="email" name="email" size="40" maxlength="128" class="InputFields"></p>
+	<p>New e-mail address: <input type="email" name="email" size="40" maxlength="128"></p>
 
-	<p><input type="submit" name="action" value="Change E-mail Address" class="InputFields"></p>
+	<p><input type="submit" name="action" value="Change E-mail Address"></p>
 </form>

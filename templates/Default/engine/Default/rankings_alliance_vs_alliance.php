@@ -23,7 +23,7 @@
 		foreach ($AllianceVs as $data) { ?>
 			<tr>
 				<td <?php echo $data['Style']; ?>>
-					<select name="alliancer[]" class="InputFields" style="width:155px"><?php
+					<select name="alliancer[]" style="width:155px"><?php
 						foreach ($ActiveAlliances as $activeID) {
 							$curr_alliance = SmrAlliance::getAlliance($activeID, $ThisPlayer->getGameID());
 							$attr = ($data['ID'] == $activeID) ? 'selected' : ''; ?>
@@ -41,7 +41,7 @@
 	</table>
 
 	<br />
-	<input type="submit" name="action" value="Show" class="InputFields">
+	<input type="submit" name="action" value="Show">
 </form>
 </div>
 

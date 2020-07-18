@@ -4,9 +4,9 @@
 	<b>From: </b><span class="admin">Administrator</span><br />
 	<b>To: </b><?php echo $Sender->getDisplayName(); ?> a.k.a <?php echo $SenderAccount->getLogin(); ?>
 	<br />
-	<textarea required spellcheck="true" name="message" class="InputFields"><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br /><br />
+	<textarea required spellcheck="true" name="message"><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br /><br />
 	<input type="number" value="<?php echo $BanPoints; ?>" name="BanPoints" size="4" /> Add Ban Points<br /><br />
 	<input type="number" value="<?php echo $RewardCredits; ?>" name="RewardCredits" size="4" /> Add Reward Credits<br />
 	<p>Sending the message will add ban points or reward credits, if specified above.</p>
-	<input type="submit" name="action" value="Send message" class="InputFields" />&nbsp;<input type="submit" name="action" value="Preview message" class="InputFields" />
+	<input type="submit" name="action" value="Send message" />&nbsp;<input type="submit" name="action" value="Preview message" />
 </form>

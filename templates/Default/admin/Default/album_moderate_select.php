@@ -5,7 +5,7 @@ if (empty($Approved)) { ?>
 	<p>Select the entry you wish to edit:</p>
 
 	<form method="POST" action="<?php echo $ModerateHREF; ?>">
-		<select class="InputFields" name="account_id"><?php
+		<select name="account_id"><?php
 			foreach ($Approved as $AccountID => $Name) { ?>
 				<option value="<?php echo $AccountID; ?>"><?php echo $Name; ?></option><?php
 			} ?>

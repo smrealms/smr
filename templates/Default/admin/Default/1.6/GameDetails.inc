@@ -42,7 +42,7 @@
 	<tr>
 		<td class="right">Game Type</td>
 		<td>
-			<select name="game_type" class="InputFields"><?php
+			<select name="game_type"><?php
 			foreach (SmrGame::GAME_TYPES as $GameTypeID => $GameType) {
 				?><option value="<?php echo $GameTypeID; ?>" <?php if ($GameType == $Game['gameType']) echo 'selected'; ?>><?php echo $GameType; ?></option><?php
 			} ?>
@@ -64,14 +64,14 @@
 	<tr>
 		<td class="right">Ignore Stats</td>
 		<td>
-			Yes: <input type="radio" name="ignore_stats" class="InputFields" value="Yes" <?php if ($Game['ignoreStats']) { echo "checked"; } ?> /><br />
-			No: <input type="radio" name="ignore_stats" class="InputFields" value="No" <?php if (!$Game['ignoreStats']) { echo "checked"; } ?> /><br />
+			Yes: <input type="radio" name="ignore_stats" value="Yes" <?php if ($Game['ignoreStats']) { echo "checked"; } ?> /><br />
+			No: <input type="radio" name="ignore_stats" value="No" <?php if (!$Game['ignoreStats']) { echo "checked"; } ?> /><br />
 		</td>
 	</tr>
 	<tr>
 		<td class="right">Starting Relations</td>
 		<td>
-			<input required type="number" name="relations" min="<?php echo MIN_GLOBAL_RELATIONS; ?>" max="<?php echo MAX_GLOBAL_RELATIONS; ?>" class="InputFields" value="<?php echo $Game['relations']; ?>">
+			<input required type="number" name="relations" min="<?php echo MIN_GLOBAL_RELATIONS; ?>" max="<?php echo MAX_GLOBAL_RELATIONS; ?>" value="<?php echo $Game['relations']; ?>">
 			Only updated if game hasn't started yet
 		</td>
 	</tr>

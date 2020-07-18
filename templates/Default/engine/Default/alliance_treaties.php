@@ -28,7 +28,7 @@
 	<small>Note: Treaties require 24 hours to be canceled once in effect</small><br />
 
 	<form method="POST" action="<?php echo $SendOfferHREF; ?>">
-		<select name="proposedAlliance" class="InputFields"><?php
+		<select name="proposedAlliance"><?php
 			foreach ($Alliances as $allId => $allName) { ?>
 				<option value="<?php echo $allId; ?>"><?php echo $allName; ?></option><?php
 			} ?>

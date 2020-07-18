@@ -14,7 +14,7 @@ if ($MaxMisjump > 0) { ?>
 <br /><br />
 <div class="center">
 	<a href="<?php echo $JumpProcessingHREF; ?>">
-		<button class="InputFields">Engage Jump (<?php echo $TurnCost; ?>)</button>
+		<button>Engage Jump (<?php echo $TurnCost; ?>)</button>
 	</a>
 </div>
 

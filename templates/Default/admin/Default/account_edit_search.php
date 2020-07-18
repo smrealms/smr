@@ -2,23 +2,23 @@
 	<table cellpadding="3" border="0">
 		<tr>
 			<td class="right bold">Account ID:</td>
-			<td><input type="number" name="account_id" class="InputFields" size="5"></td>
+			<td><input type="number" name="account_id" size="5"></td>
 		</tr>
 		<tr>
 			<td class="right bold">Login:</td>
-			<td><input type="text" name="login" class="InputFields" size="20"></td>
+			<td><input type="text" name="login" size="20"></td>
 		</tr>
 		<tr>
 			<td class="right bold">Validation Code:</td>
-			<td><input type="text" name="val_code" class="InputFields" size="20"></td>
+			<td><input type="text" name="val_code" size="20"></td>
 		</tr>
 		<tr>
 			<td class="right bold">Email:</td>
-			<td><input type="email" name="email" class="InputFields" size="20"></td>
+			<td><input type="email" name="email" size="20"></td>
 		</tr>
 		<tr>
 			<td class="right bold">HoF Name:</td>
-			<td><input type="text" name="hofname" class="InputFields" size="20"></td>
+			<td><input type="text" name="hofname" size="20"></td>
 		</tr>
 
 		<tr>
@@ -27,12 +27,12 @@
 
 		<tr>
 			<td class="right bold">Player Name:</td>
-			<td><input type="text" name="player_name" class="InputFields" size="20"></td>
+			<td><input type="text" name="player_name" size="20"></td>
 		</tr>
 		<tr>
 			<td class="right bold">Game:</td>
 			<td>
-				<select name="game_id" size="1" class="InputFields">
+				<select name="game_id" size="1">
 					<option value="0">All Games</option><?php
 					foreach ($Games as $GameID => $GameName) { ?>
 						<option value="<?php echo $GameID ?>"><?php echo $GameName; ?></option><?php
@@ -47,7 +47,7 @@
 	<table>
 		<tr>
 			<td>
-					<input type="submit" name="action" value="Search" class="InputFields" />
+					<input type="submit" name="action" value="Search" />
 			</td>
 	</table>
 </form><?php

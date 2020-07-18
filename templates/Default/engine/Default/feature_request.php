@@ -84,13 +84,13 @@ if (isset($FeatureRequests)) { ?>
 			<td class="center">Please describe your requested feature here:</td>
 		</tr>
 		<tr>
-			<td class="center"><textarea spellcheck="true" name="feature" required class="InputFields" maxlength="500"></textarea></td>
+			<td class="center"><textarea spellcheck="true" name="feature" required maxlength="500"></textarea></td>
 		</tr>
 		<tr>
-			<td class="center">Anonymous: <input name="anon" class="InputFields" type="checkbox" checked="checked"/></td>
+			<td class="center">Anonymous: <input name="anon" type="checkbox" checked="checked"/></td>
 		</tr>
 		<tr>
-			<td class="center"><input type="submit" name="action" value="Submit New Feature" class="InputFields"></td>
+			<td class="center"><input type="submit" name="action" value="Submit New Feature"></td>
 		</tr>
 	</table>
 </form>

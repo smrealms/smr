@@ -1,6 +1,6 @@
 Select Game:&nbsp;
 <form class="standard" id="SelectGameForm" method="POST" action="<?php echo $SelectGameHREF; ?>">
-	<select name="selected_game_id" class="InputFields" onchange="this.form.submit()"><?php
+	<select name="selected_game_id" onchange="this.form.submit()"><?php
 		foreach ($PublishedGames as $Game) {
 			$id = $Game['game_id'];
 			$name = $Game['game_name'];

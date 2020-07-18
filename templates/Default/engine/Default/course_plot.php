@@ -19,7 +19,7 @@ $this->includeTemplate('includes/JumpDrive.inc'); ?>
 <h2>Plot To Nearest</h2>
 <div class="standard">Select a location to plot to. You are only able to plot to sectors you have explored.</div><br />
 <form class="standard" id="SelectXTypeForm" method="POST" action="<?php echo $PlotToNearestHREF; ?>">
-	<select name="xtype" class="InputFields" onchange="this.form.submit()"><?php
+	<select name="xtype" onchange="this.form.submit()"><?php
 	foreach ($AllXTypes as $EachXType) {
 		?><option value="<?php echo $EachXType; ?>"<?php if (isset($XType) && $EachXType == $XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType; ?></option><?php
 	} ?>
@@ -29,7 +29,7 @@ $this->includeTemplate('includes/JumpDrive.inc'); ?>
 if (isset($XType)) { ?>
 	<form class="standard" id="PlotNearestForm" method="POST" action="<?php echo $PlotNearestFormLink; ?>">
 		<input type="hidden" name="xtype" value="<?php echo $XType; ?>" /><br />
-		<select name="X" class="InputFields" onchange="this.form.submit()"><?php
+		<select name="X" onchange="this.form.submit()"><?php
 			switch ($XType) {
 				case 'Technology':
 					$Hardwares = Globals::getHardwareTypes();

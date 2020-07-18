@@ -31,7 +31,7 @@ if (count($LoggedAccounts) > 0) { ?>
 			<tr>
 				<td colspan="3">&nbsp;</td>
 				<td>
-					<input type="submit" name="action" value="View" class="InputFields" />	&nbsp;&nbsp;<input type="submit" name="action" value="Delete" class="InputFields" />
+					<input type="submit" name="action" value="View" />&nbsp;&nbsp;<input type="submit" name="action" value="Delete" />
 				</td>
 			</tr>
 		</table>
