@@ -6,28 +6,32 @@
 class AbstractMenu {
 
 	public static function headquarters() {
-		global $var;
-		$menu_items = [];
-		$container = create_container('skeleton.php');
-		$container['LocationID'] = $var['LocationID'];
+		global $var, $template;
 
+		$links = [];
 		$location = SmrLocation::getLocation($var['LocationID']);
 		if ($location->isHQ()) {
-			$container['body'] = 'government.php';
-			$menu_items[] = create_link($container, 'Government', 'nav');
-			$container['body'] = 'military_payment_claim.php';
-			$menu_items[] = create_link($container, 'Claim Military Payment', 'nav');
+			$links[] = ['government.php', 'Government'];
+			$links[] = ['military_payment_claim.php', 'Claim Military Payment'];
 		} elseif ($location->isUG()) {
-			$container['body'] = 'underground.php';
-			$menu_items[] = create_link($container, 'Underground', 'nav');
+			$links[] = ['underground.php', 'Underground'];
 		} else {
 			throw new Exception("Location is not HQ or UG: " . $location->getName());
 		}
-		$container['body'] = 'bounty_claim.php';
-		$menu_items[] = create_link($container, 'Claim Bounty', 'nav');
-		$container['body'] = 'bounty_place.php';
-		$menu_items[] = create_link($container, 'Place a Bounty', 'nav');
-		create_menu($menu_items);
+		$links[] = ['bounty_claim.php', 'Claim Bounty'];
+		$links[] = ['bounty_place.php', 'Place Bounty'];
+
+		$menuItems = [];
+		$container = create_container('skeleton.php');
+		$container['LocationID'] = $var['LocationID'];
+		foreach ($links as $link) {
+			$container['body'] = $link[0];
+			$menuItems[] = [
+				'Link' => SmrSession::getNewHREF($container),
+				'Text' => $link[1],
+			];
+		}
+		$template->assign('MenuItems', $menuItems);
 	}
 
 	public static function planet_list($alliance_id, $selected_index) {
@@ -265,48 +269,70 @@ class AbstractMenu {
 	}
 
 	public static function bank() {
-		global $player;
+		global $player, $template;
 
-		$menu_items[] = create_link(create_container('skeleton.php', 'bank_personal.php'),
-														'Personal Account', 'nav');
-
+		$links = [];
+		$links[] = ['bank_personal.php', 'Personal Account'];
 		if ($player->hasAlliance()) {
-			$menu_items[] = create_link(create_container('skeleton.php', 'bank_alliance.php'),
-															'Alliance Account', 'nav');
+			$links[] = ['bank_alliance.php', 'Alliance Account'];
 		}
+		$links[] = ['bank_anon.php', 'Anonymous Account'];
 
-		$menu_items[] = create_link(create_container('skeleton.php', 'bank_anon.php'),
-														'Anonymous Account', 'nav');
-		create_menu($menu_items);
+		$menuItems = [];
+		$container = create_container('skeleton.php');
+		foreach ($links as $link) {
+			$container['body'] = $link[0];
+			$menuItems[] = [
+				'Link' => SmrSession::getNewHREF($container),
+				'Text' => $link[1],
+			];
+		}
+		$template->assign('MenuItems', $menuItems);
 	}
 
 	public static function council($race_id) {
-		global $player;
+		global $player, $template;
 
-		$menu_items[] = create_link(create_container('skeleton.php', 'council_list.php'),
-														'View Council', 'nav');
+		$container = create_container('skeleton.php', 'council_list.php');
+		$menu_items = [];
+		$menu_items[] = [
+			'Link' => SmrSession::getNewHREF($container),
+			'Text' => 'View Council',
+		];
 
 		$container = create_container('skeleton.php');
 		$container['body'] = 'council_politics.php';
 		$container['race_id'] = $race_id;
-		$menu_items[] = create_link($container, 'Political Status', 'nav');
+		$menu_items[] = [
+			'Link' => SmrSession::getNewHREF($container),
+			'Text' => 'Political Status',
+		];
 
 		$container['body'] = 'council_send_message.php';
 		$container['race_id'] = $race_id;
-		$menu_items[] = create_link($container, 'Send Message', 'nav');
+		$menu_items[] = [
+			'Link' => SmrSession::getNewHREF($container),
+			'Text' => 'Send Message',
+		];
 
 		if ($player->getRaceID() == $race_id) {
 			if ($player->isOnCouncil()) {
-				$menu_items[] = create_link(create_container('skeleton.php', 'council_vote.php'),
-																'Voting Center', 'nav');
+				$container = create_container('skeleton.php', 'council_vote.php');
+				$menu_items[] = [
+					'Link' => SmrSession::getNewHREF($container),
+					'Text' => 'Voting Center',
+				];
 			}
 			if ($player->isPresident()) {
-				$menu_items[] = create_link(create_container('skeleton.php', 'council_embassy.php'),
-																'Embassy', 'nav');
+				$container = create_container('skeleton.php', 'council_embassy.php');
+				$menu_items[] = [
+					'Link' => SmrSession::getNewHREF($container),
+					'Text' => 'Embassy',
+				];
 			}
 		}
 
-		create_menu($menu_items);
+		$template->assign('MenuItems', $menu_items);
 	}
 
 	public static function bar() {
@@ -339,13 +365,6 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-}
-
-function create_menu($menu) {
-	global $template;
-	$return = '<span class="noWrap">' . implode('</span> | <span class="noWrap">', $menu) . '</span>';
-	$template->unassign('MenuItems');
-	$template->assign('MenuBar', $return);
 }
 
 function create_sub_menu($menu, $active_level1, $active_level2) {
@@ -416,6 +435,5 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 	$return .= ('</tr>');
 	$return .= ('</table>');
 	$template->unassign('MenuItems');
-	$template->unassign('MenuBar');
 	$template->assign('SubMenuBar', $return);
 }

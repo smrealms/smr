@@ -16,14 +16,10 @@
 						if (isset($PageTopic)) {
 							?><h1><?php echo $PageTopic; ?></h1><br /><?php
 						}
-						if (isset($MenuItems) || isset($MenuBar)) { ?>
+						if (isset($MenuItems)) { ?>
 							<div class="bar1">
 								<div><?php
-									if (isset($MenuItems)) {
-										$this->includeTemplate('includes/menu.inc');
-									} elseif (isset($MenuBar)) {
-										echo $MenuBar;
-									} ?>
+									$this->includeTemplate('includes/menu.inc'); ?>
 								</div>
 							</div><br /><?php
 						} elseif (isset($SubMenuBar)) {

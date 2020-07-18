@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$template->assign('PageTopic', 'Place a Bounty');
+$template->assign('PageTopic', 'Place Bounty');
 
 Menu::headquarters();
 
