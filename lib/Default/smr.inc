@@ -191,49 +191,6 @@ function bbifyMessage($message, $noLinks = false) {
 	return $message;
 }
 
-function create_table() {
- 	return '<table class="standard">';
-}
-
-function create_echo_form($container) {
-	return create_form_name($container, 'FORM');
-}
-
-function create_form_name($container, $name) {
-	return create_form_parameter($container, 'name="' . $name . '"');
-}
-
-function create_form_parameter($container, $param) {
-	return '<form ' . $param . ' method="POST" action="' . SmrSession::getNewHREF($container) . '">';
-}
-
-function create_button($container, $text) {
-	return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">' . $text . '</a></div>';
-}
-
-function create_form($container, $actions) {
-	static $form_id = 0;
-	$form = array();
-	$form['form'] = '<form class="standard" id="FORM' . $form_id . '" method="POST" action="' . SmrSession::getNewHREF($container) . '">';
-
-	if (!is_array($actions)) {
-		$form['submit'] = '<input type="submit" name="action" value="' . htmlspecialchars($actions) . '">';
-	} else {
-		$form['submit'] = array();
-		foreach ($actions as $action) {
-			$form['submit'][$action[0]] = '<input type="submit" name="action" value="' . htmlspecialchars($action[1]) . '">';
-		}
-	}
-
-	++$form_id;
-	return $form;
-
-}
-
-function create_submit($value) {
-	return ('<input type="submit" name="action" value="' . htmlspecialchars($value) . '" />');
-}
-
 function create_error($message) {
 	$container = create_container('skeleton.php', 'error.php');
 	$container['message'] = $message;

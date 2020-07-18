@@ -1,4 +1,4 @@
-<?php echo $Form['form']; ?>
+<form method="POST" action="<?php echo $FormHREF; ?>">
 <table cellspacing="0" cellpadding="0" class="nobord nohpad">
 
 <?php
@@ -69,5 +69,5 @@ if ($CanChangeMOTD) { ?>
 
 </table>
 <br />
-<?php echo $Form['submit']; ?>
+<input type="submit" name="action" value="Change" />
 </form>
