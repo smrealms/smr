@@ -43,5 +43,5 @@ if (isset($Transactions)) { ?>
 	Amount:&nbsp;<input type="number" name="amount" size="10" value="0"><br /><br />
 	<input type="submit" name="action" value="Deposit" />
 	&nbsp;&nbsp;
-	<input type="submit" name="action" value="Withdraw" />
+	<button type="submit" name="action" value="Payment">Withdraw</button>
 </form>

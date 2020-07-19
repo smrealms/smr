@@ -9,36 +9,20 @@ if ($amount <= 0) {
 
 if ($action == 'Deposit') {
 	if ($player->getCredits() < $amount) {
-		create_error('You don\'t own that much money!');
+		create_error('You don\'t have that much money on your ship!');
 	}
-
+	$amount = $player->increaseBank($amount); // handles overflow
 	$player->decreaseCredits($amount);
-	$player->increaseBank($amount);
-	//too much money?
-//	if ($player->getBank() > 4294967295) {
-//		
-//		$overflow = $player->getBank() - 4294967295;
-//		$player->getCredits() += $overflow;
-//		$player->getBank() -= $overflow;
-//		
-//	}
-	$player->update();
-
-	// log action
-	$account->log(LOG_TYPE_BANK, 'Deposits ' . $amount . ' credits in personal account', $player->getSectorID());
-
 } else {
-
 	if ($player->getBank() < $amount) {
-		create_error('You don\'t have that much money on your account!');
+		create_error('You don\'t have that much money in your account!');
 	}
-
+	$amount = $player->increaseCredits($amount); // handles overflow
 	$player->decreaseBank($amount);
-	$player->increaseCredits($amount);
-	$player->update();
-
-	// log action
-	$account->log(LOG_TYPE_BANK, 'Takes ' . $amount . ' credits from personal account', $player->getSectorID());
 }
 
+// log action
+$account->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for personal account', $player->getSectorID());
+
+$player->update();
 forward(create_container('skeleton.php', 'bank_personal.php'));

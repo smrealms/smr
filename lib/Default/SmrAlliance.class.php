@@ -259,7 +259,23 @@ class SmrAlliance {
 		return $this->bank;
 	}
 
-	public function setBank($credits) {
+	/**
+	 * Increases alliance bank account up to the maximum allowed credits.
+	 * Returns the amount that was actually added to handle overflow.
+	 */
+	public function increaseBank(int $credits) : int {
+		$newTotal = min($this->bank + $credits, MAX_MONEY);
+		$actualAdded = $newTotal - $this->bank;
+		$this->setBank($newTotal);
+		return $actualAdded;
+	}
+
+	public function decreaseBank(int $credits) : void {
+		$newTotal = $this->bank - $credits;
+		$this->setBank($newTotal);
+	}
+
+	public function setBank(int $credits) : void {
 		$this->bank = $credits;
 	}
 

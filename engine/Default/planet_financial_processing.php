@@ -17,18 +17,17 @@ if ($action == 'Deposit' || $action == 'Withdraw') {
 			create_error('You don\'t own that much money!');
 		}
 
+		$amount = $planet->increaseCredits($amount); // handles overflow
 		$player->decreaseCredits($amount);
-		$planet->increaseCredits($amount);
-		$account->log(LOG_TYPE_BANK, 'Player puts ' . $amount . ' credits on planet', $player->getSectorID());
 	} elseif ($action == 'Withdraw') {
 		if ($planet->getCredits() < $amount) {
 			create_error('There are not enough credits in the planetary account!');
 		}
 
-		$player->increaseCredits($amount);
+		$amount = $player->increaseCredits($amount); // handles overflow
 		$planet->decreaseCredits($amount);
-		$account->log(LOG_TYPE_BANK, 'Player takes ' . $amount . ' credits from planet', $player->getSectorID());
 	}
+	$account->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits at planet', $player->getSectorID());
 }
 
 // Player has confirmed the request to bond

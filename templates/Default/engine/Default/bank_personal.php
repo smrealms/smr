@@ -1,7 +1,10 @@
 Hello <?php echo $ThisPlayer->getDisplayName(); ?>
 <br /><br />
 
-Balance: <b><?php echo number_format($ThisPlayer->getBank()); ?></b>
+Balance: <b><?php echo number_format($ThisPlayer->getBank()); ?></b><?php
+if ($ThisPlayer->getBank() >= MAX_MONEY) { ?>
+	(Account is Full)<?php
+} ?>
 <br /><br />
 <h2>Make transaction</h2>
 <br />

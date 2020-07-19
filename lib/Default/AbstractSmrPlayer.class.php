@@ -992,29 +992,35 @@ abstract class AbstractSmrPlayer {
 		return $this->bank;
 	}
 
-	public function increaseBank($credits) {
+	/**
+	 * Increases personal bank account up to the maximum allowed credits.
+	 * Returns the amount that was actually added to handle overflow.
+	 */
+	public function increaseBank(int $credits) : int {
+		if ($credits == 0) {
+			return 0;
+		}
 		if ($credits < 0) {
 			throw new Exception('Trying to increase negative credits.');
 		}
+		$newTotal = min($this->bank + $credits, MAX_MONEY);
+		$actualAdded = $newTotal - $this->bank;
+		$this->setBank($newTotal);
+		return $actualAdded;
+	}
+
+	public function decreaseBank(int $credits) : void {
 		if ($credits == 0) {
 			return;
 		}
-		$credits += $this->bank;
-		$this->setBank($credits);
-	}
-
-	public function decreaseBank($credits) {
 		if ($credits < 0) {
 			throw new Exception('Trying to decrease negative credits.');
 		}
-		if ($credits == 0) {
-			return;
-		}
-		$credits = $this->bank - $credits;
-		$this->setBank($credits);
+		$newTotal = $this->bank - $credits;
+		$this->setBank($newTotal);
 	}
 
-	public function setBank($credits) {
+	public function setBank(int $credits) : void {
 		if ($this->bank == $credits) {
 			return;
 		}
@@ -1078,27 +1084,35 @@ abstract class AbstractSmrPlayer {
 		$this->level = null;
 	}
 
-	public function increaseCredits($credits) {
+	/**
+	 * Increases onboard credits up to the maximum allowed credits.
+	 * Returns the amount that was actually added to handle overflow.
+	 */
+	public function increaseCredits(int $credits) : int {
+		if ($credits == 0) {
+			return 0;
+		}
 		if ($credits < 0) {
 			throw new Exception('Trying to increase negative credits.');
 		}
+		$newTotal = min($this->credits + $credits, MAX_MONEY);
+		$actualAdded = $newTotal - $this->credits;
+		$this->setCredits($newTotal);
+		return $actualAdded;
+	}
+
+	public function decreaseCredits(int $credits) : void {
 		if ($credits == 0) {
 			return;
 		}
-		$credits += $this->credits;
-		$this->setCredits($credits);
-	}
-	public function decreaseCredits($credits) {
 		if ($credits < 0) {
 			throw new Exception('Trying to decrease negative credits.');
 		}
-		if ($credits == 0) {
-			return;
-		}
-		$credits = $this->credits - $credits;
-		$this->setCredits($credits);
+		$newTotal = $this->credits - $credits;
+		$this->setCredits($newTotal);
 	}
-	public function setCredits($credits) {
+
+	public function setCredits(int $credits) : void {
 		if ($this->credits == $credits) {
 			return;
 		}
@@ -1106,7 +1120,7 @@ abstract class AbstractSmrPlayer {
 			throw new Exception('Trying to set negative credits.');
 		}
 		if ($credits > MAX_MONEY) {
-			$credits = MAX_MONEY;
+			throw new Exception('Trying to set more than max credits.');
 		}
 		$this->credits = $credits;
 		$this->hasChanged = true;
