@@ -25,9 +25,9 @@ if ($action == 'Deposit') {
 		create_error('You don\'t own that much money!');
 	}
 
+	// Does not handle overflow!
 	$player->decreaseCredits($amount);
 	$db->query('UPDATE anon_bank SET amount = amount + ' . $db->escapeNumber($amount) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
-	$player->update();
 } else {
 	$db->query('SELECT * FROM anon_bank WHERE anon_id = ' . $db->escapeNumber($account_num) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$db->requireRecord();
@@ -35,10 +35,11 @@ if ($action == 'Deposit') {
 		create_error('You don\'t have that much money on your account!');
 	}
 
+	$amount = $player->increaseCredits($amount); // handles overflow
 	$db->query('UPDATE anon_bank SET amount = amount - ' . $db->escapeNumber($amount) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
-	$player->increaseCredits($amount);
-	$player->update();
 }
+
+$player->update();
 
 // Log the bank transaction
 $db->query('INSERT INTO anon_bank_transactions (account_id, game_id, anon_id, transaction_id, transaction, amount, time)

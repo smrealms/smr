@@ -179,7 +179,7 @@ class SmrPlanet {
 			}
 
 			// transfer money to free avail cash
-			$this->increaseCredits($this->getBonds() + $interest);
+			$this->increaseCredits($this->getBonds() + IFloor($interest));
 
 			// reset bonds
 			$this->setBonds(0);
@@ -262,29 +262,40 @@ class SmrPlanet {
 		return $this->credits;
 	}
 
-	public function setCredits($num) {
+	public function setCredits(int $num) : void {
 		if ($this->credits == $num) {
 			return;
 		}
 		if ($num < 0) {
 			throw new Exception('You cannot set negative credits.');
 		}
+		if ($num > MAX_MONEY) {
+			throw new Exception('You cannot set more than the max credits.');
+		}
 		$this->credits = $num;
 		$this->hasChangedFinancial = true;
 	}
 
-	public function increaseCredits($num) {
+	/**
+	 * Increases planet credits up to the maximum allowed credits.
+	 * Returns the amount that was actually added to handle overflow.
+	 */
+	public function increaseCredits(int $num) : int {
 		if ($num == 0) {
-			return;
+			return 0;
 		}
-		$this->setCredits($this->getCredits() + $num);
+		$newTotal = min($this->credits + $num, MAX_MONEY);
+		$actualAdded = $newTotal - $this->credits;
+		$this->setCredits($newTotal);
+		return $actualAdded;
 	}
 
-	public function decreaseCredits($num) {
+	public function decreaseCredits(int $num) : void {
 		if ($num == 0) {
 			return;
 		}
-		$this->setCredits($this->getCredits() - $num);
+		$newTotal = $this->credits - $num;
+		$this->setCredits($newTotal);
 	}
 
 	public function getMaturity() {
