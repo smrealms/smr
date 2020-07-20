@@ -162,32 +162,34 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 	$message['Unread'] = !$msg_read;
 	$message['SendTime'] = date(DATE_FULL_SHORT, $send_time);
 
-	$sender = getMessagePlayer($sender_id, $player->getGameID(), $type);
-	if ($sender instanceof SmrPlayer) {
-		$message['Sender'] = $sender;
-		$container = create_container('skeleton.php', 'trader_search_result.php');
-		$container['player_id'] = $sender->getPlayerID();
-		$message['SenderDisplayName'] = create_link($container, $sender->getDisplayName());
+	// Display the sender (except for scout messages)
+	if ($type != MSG_SCOUT) {
+		$sender = getMessagePlayer($sender_id, $player->getGameID(), $type);
+		if ($sender instanceof SmrPlayer) {
+			$message['Sender'] = $sender;
+			$container = create_container('skeleton.php', 'trader_search_result.php');
+			$container['player_id'] = $sender->getPlayerID();
+			$message['SenderDisplayName'] = create_link($container, $sender->getDisplayName());
 
-		// Add actions that we can take on messages sent by players.
-		// Scout messages are always procedural and don't need these options.
-		if ($type != MSG_SCOUT) {
-			$container = create_container('skeleton.php', 'message_notify_confirm.php');
-			$container['message_id'] = $message_id;
-			$container['sent_time'] = $send_time;
-			$container['folder_id'] = $type;
-			$message['ReportHref'] = SmrSession::getNewHREF($container);
+			// Add actions that we can take on messages sent by other players.
+			if ($type != MSG_SENT) {
+				$container = create_container('skeleton.php', 'message_notify_confirm.php');
+				$container['message_id'] = $message_id;
+				$container['sent_time'] = $send_time;
+				$container['folder_id'] = $type;
+				$message['ReportHref'] = SmrSession::getNewHREF($container);
 
-			$container = create_container('skeleton.php', 'message_blacklist_add.php');
-			$container['account_id'] = $sender_id;
-			$message['BlacklistHref'] = SmrSession::getNewHREF($container);
+				$container = create_container('skeleton.php', 'message_blacklist_add.php');
+				$container['account_id'] = $sender_id;
+				$message['BlacklistHref'] = SmrSession::getNewHREF($container);
 
-			$container = create_container('skeleton.php', 'message_send.php');
-			$container['receiver'] = $sender->getAccountID();
-			$message['ReplyHref'] = SmrSession::getNewHREF($container);
+				$container = create_container('skeleton.php', 'message_send.php');
+				$container['receiver'] = $sender->getAccountID();
+				$message['ReplyHref'] = SmrSession::getNewHREF($container);
+			}
+		} else {
+			$message['SenderDisplayName'] = $sender;
 		}
-	} else {
-		$message['SenderDisplayName'] = $sender;
 	}
 
 	if ($type == MSG_SENT) {

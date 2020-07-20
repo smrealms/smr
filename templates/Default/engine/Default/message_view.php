@@ -44,54 +44,60 @@ if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 	} ?>
 	<table class="standard fullwidth"><?php
 		if (isset($MessageBox['Messages'])) {
-			foreach ($MessageBox['Messages'] as $Message) { ?>
-				<tr>
-					<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>" /><?php if ($Message['Unread']) { ?>*<?php } ?></td>
-					<td class="noWrap" width="100%"><?php
-						if (isset($Message['ReceiverDisplayName'])) {
-							?>To: <?php echo $Message['ReceiverDisplayName'];
-						} else {
-							?>From: <?php echo $Message['SenderDisplayName'];
-						} ?>
-					</td>
-					<td class="noWrap"<?php if (!isset($Message['ReplyHref'])) { ?> colspan="4"<?php } ?>>Date: <?php echo $Message['SendTime']; ?></td>
-					<?php
-					if (isset($Message['ReplyHref'])) { ?>
-						<td>
-							<a href="<?php echo $Message['ReportHref']; ?>"><img class="bottom" src="images/report.png" width="16" height="16" border="0" title="Report this message to an admin" /></a>
+			foreach ($MessageBox['Messages'] as $Message) {
+				if ($MessageBox['Type'] == MSG_SCOUT) { ?>
+					<tr>
+						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>" /><?php if ($Message['Unread']) { ?>*<?php } ?></td>
+						<td><?php echo bbifyMessage($Message['Text']); ?></td>
+						<td class="noWrap"><?php echo $Message['SendTime']; ?></td>
+					</tr><?php
+					if (isset($MessageBox['GroupedMessages'])) { ?>
+						<tr>
+							<td colspan="3"><?php
+								$SubMessages = $MessageBox['GroupedMessages'][$Message['SenderID']]['Messages']; ?>
+								<div class="shrink noWrap pointer" id="toggle-recent<?php echo $Message['SenderID']; ?>" onclick="toggleScoutGroup(<?php echo $Message['SenderID']; ?>);">
+									Show/Hide Recent (<?php echo count($SubMessages); ?>)
+								</div>
+								<table id="group<?php echo $Message['SenderID']; ?>" class="standard fullwidth" style="display:none;margin:5px 0 2px 0;"><?php
+									foreach ($SubMessages as $SubMessage) { ?>
+										<tr>
+											<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $SubMessage['ID']; ?>" /><?php if ($SubMessage['Unread']) { ?>*<?php } ?></td>
+											<td><?php echo bbifyMessage($SubMessage['Text']); ?></td>
+											<td class="noWrap"><?php echo $SubMessage['SendTime']; ?></td>
+										</tr><?php
+									} ?>
+								</table>
+							</td>
+						</tr><?php
+					}
+				} else { ?>
+					<tr>
+						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>" /><?php if ($Message['Unread']) { ?>*<?php } ?></td>
+						<td class="noWrap" width="100%"><?php
+							if (isset($Message['ReceiverDisplayName'])) {
+								?>To: <?php echo $Message['ReceiverDisplayName'];
+							} else {
+								?>From: <?php echo $Message['SenderDisplayName'];
+							} ?>
 						</td>
-						<td>
-							<a href="<?php echo $Message['BlacklistHref']; ?>">Blacklist Player</a>
-						</td>
-						<td>
-							<a href="<?php echo $Message['ReplyHref']; ?>">Reply</a>
-						</td><?php
-					} ?>
-				</tr>
-				<tr>
-					<td colspan="6"><?php
-						echo bbifyMessage($Message['Text']);
-						if (isset($MessageBox['GroupedMessages'])) {
-							$SubMessages = $MessageBox['GroupedMessages'][$Message['SenderID']]['Messages']; ?>
-							<br />
-							<div class="shrink noWrap pointer" id="toggle-recent<?php echo $Message['SenderID']; ?>" onclick="toggleScoutGroup(<?php echo $Message['SenderID']; ?>);">
-								Show/Hide Recent (<?php echo count($SubMessages); ?>)
-							</div>
-							<table id="group<?php echo $Message['SenderID']; ?>" class="standard fullwidth" style="display:none;margin:5px 0 2px 0;"><?php
-								foreach ($SubMessages as $SubMessage) { ?>
-									<tr>
-										<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $SubMessage['ID']; ?>" /><?php if ($SubMessage['Unread']) { ?>*<?php } ?></td>
-										<td class="noWrap" width="100%">From: <?php echo $SubMessage['SenderDisplayName']; ?></td>
-										<td class="noWrap" colspan="4">Date: <?php echo $SubMessage['SendTime']; ?></td>
-									</tr>
-									<tr>
-										<td colspan="6"><?php echo bbifyMessage($SubMessage['Text']); ?></td>
-									</tr><?php
-								} ?>
-							</table><?php
+						<td class="noWrap"<?php if (!isset($Message['ReplyHref'])) { ?> colspan="4"<?php } ?>>Date: <?php echo $Message['SendTime']; ?></td>
+						<?php
+						if (isset($Message['ReplyHref'])) { ?>
+							<td>
+								<a href="<?php echo $Message['ReportHref']; ?>"><img class="bottom" src="images/report.png" width="16" height="16" border="0" title="Report this message to an admin" /></a>
+							</td>
+							<td>
+								<a href="<?php echo $Message['BlacklistHref']; ?>">Blacklist Player</a>
+							</td>
+							<td>
+								<a href="<?php echo $Message['ReplyHref']; ?>">Reply</a>
+							</td><?php
 						} ?>
-					</td>
-				</tr><?php
+					</tr>
+					<tr>
+						<td colspan="6"><?php echo bbifyMessage($Message['Text']); ?></td>
+					</tr><?php
+				}
 			}
 		} ?>
 	</table>
