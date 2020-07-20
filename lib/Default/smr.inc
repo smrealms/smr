@@ -606,8 +606,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 		$container['body'] = 'forces_list.php';
 		$template->assign('ForcesLink', SmrSession::getNewHREF($container));
 
-		$container['body'] = 'message_view.php';
-		$template->assign('MessagesLink', SmrSession::getNewHREF($container));
+		$template->assign('MessagesLink', Globals::getViewMessageBoxesHREF());
 
 		$container['body'] = 'news_read_current.php';
 		$template->assign('ReadNewsLink', SmrSession::getNewHREF($container));

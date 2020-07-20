@@ -142,7 +142,7 @@ class AbstractMenu {
 	public static function messages() {
 		global $player, $template;
 		$menuItems = array();
-		$menuItems[] = array('Link'=>Globals::getViewMessagesHREF(), 'Text'=>'View Messages');
+		$menuItems[] = array('Link'=>Globals::getViewMessageBoxesHREF(), 'Text'=>'View Messages');
 		$menuItems[] = array('Link'=>Globals::getSendGlobalMessageHREF(), 'Text'=>'Send Global Message');
 		if ($player->isOnCouncil()) {
 			$menuItems[] = array('Link'=>Globals::getSendCouncilMessageHREF($player->getRaceID()), 'Text'=>'Send Council Message');
