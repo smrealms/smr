@@ -242,6 +242,9 @@ if ($action == 'Save and resend validation code') {
 	if (!in_array($newRaceID, $player->getGame()->getPlayableRaceIDs())) {
 		throw new Exception('Invalid race ID selected!');
 	}
+	if ($newRaceID == $player->getRaceID()) {
+		create_error('You are already the ' . $player->getRaceName() . ' race!');
+	}
 
 	// Modify the player
 	$oldRaceID = $player->getRaceID();
