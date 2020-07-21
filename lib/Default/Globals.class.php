@@ -429,8 +429,8 @@ class Globals {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_list_financial.php', array('alliance_id'=>$allianceID)));
 	}
 
-	public static function getViewMessagesHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'message_view.php'));
+	public static function getViewMessageBoxesHREF() {
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'message_box.php'));
 	}
 
 	public static function getSendGlobalMessageHREF() {

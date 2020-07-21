@@ -54,7 +54,7 @@ var listjs = (function() {
 		defaultList('forces-list', ['sort_sector', 'sort_cds', 'sort_sds', 'sort_mines', {name: 'sort_expire', attr: 'data-expire'}]);
 	};
 
-	listjs.message_view = function() {
+	listjs.message_box = function() {
 		defaultList('folders', ['sort_name', 'sort_messages']);
 	};
 

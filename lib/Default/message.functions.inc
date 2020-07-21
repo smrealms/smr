@@ -2,14 +2,15 @@
 
 function getMessageTypeNames($typeID = false) {
 	$typeNames = [
-		MSG_GLOBAL => 'Global Messages',
 		MSG_PLAYER => 'Player Messages',
 		MSG_PLANET => 'Planet Messages',
 		MSG_SCOUT => 'Scout Messages',
-		MSG_POLITICAL => 'Political Messages',
 		MSG_ALLIANCE => 'Alliance Messages',
+		MSG_POLITICAL => 'Political Messages',
+		MSG_GLOBAL => 'Global Messages',
 		MSG_ADMIN => 'Admin Messages',
 		MSG_CASINO => 'Casino Messages',
+		MSG_SENT => 'Sent Messages',
 	];
 	return $typeID === false ? $typeNames : $typeNames[$typeID];
 }

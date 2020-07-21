@@ -19,6 +19,7 @@ if (!$db->nextRecord()) {
 $template->assign('MessageText', $db->getField('message_text'));
 
 $container = create_container('message_notify_processing.php', '');
+transfer('folder_id');
 transfer('message_id');
 transfer('sent_time');
 transfer('notified_time');
