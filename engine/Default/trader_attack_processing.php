@@ -77,7 +77,6 @@ $account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' 
 
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLAYER\',' . $db->escapeNumber($sector->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($var['target']) . ',' . $db->escapeNumber($targetPlayer->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
-unserialize($serializedResults); //because of references we have to undo this.
 
 $container = create_container('skeleton.php', 'trader_attack.php');
 

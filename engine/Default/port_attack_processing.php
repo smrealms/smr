@@ -66,7 +66,6 @@ $port->update();
 
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PORT\',' . $db->escapeNumber($port->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $db->escapeNumber(PORT_ALLIANCE_ID) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
-unserialize($serializedResults); //because of references we have to undo this.
 $logId = $db->escapeString('[ATTACK_RESULTS]' . $db->getInsertID());
 foreach ($attackers as $attacker) {
 	if (!$player->equals($attacker)) {
