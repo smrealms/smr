@@ -527,7 +527,7 @@ class Globals {
 
 	public static function getAvailableTemplates() {
 		return array('Default' => array('Default'),
-			'Freon22' => array('Default', 'Blue', 'ClassicGreen', 'None'));
+			'Freon22' => array('Rust', 'Blue', 'ClassicGreen', 'None'));
 	}
 
 	public static function getAvailableColourSchemes($templateName) {
