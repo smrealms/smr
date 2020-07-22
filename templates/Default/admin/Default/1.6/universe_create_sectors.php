@@ -48,16 +48,25 @@
 		</td>
 
 		<td class="top">
-			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
-				<input required type="number" name="connect" placeholder="Connectivity %" class="center" style="width:140px" /><br />
-				<input type="submit" name="submit" value="Redo Connections">
-			</form>
-			<br />
 			<form method="POST" action="<?php echo $ModifySectorHREF; ?>">
 				<input required type="number" min="1" max="<?php echo $LastSector; ?>" name="sector_edit" placeholder="Sector ID" class="center" style="width:140px" /><br />
 				<input type="submit" value="Modify Sector" name="submit">
 			</form>
+			<br />
+			<form method="POST" action="<?php echo $RecenterHREF; ?>">
+				<input required type="number" min="<?php echo $Galaxy->getStartSector(); ?>" max="<?php echo $Galaxy->getEndSector(); ?>" name="focus_sector_id" placeholder="Sector ID" class="center" style="width:140px" value="<?php echo $FocusSector ?? ''; ?>" /><br />
+				<input type="submit" name="submit" value="Recenter on Sector">
+			</form>
+			<a href="<?php echo $RecenterHREF; ?>" class="submitStyle">Default Center</a>
+		</td>
+
+		<td class="top">
+			<span class="red bold">DANGEROUS OPTIONS</span>
 			<p><a href="<?php echo $ResetGalaxyHREF; ?>" class="submitStyle">Reset Current Galaxy</a></p>
+			<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
+				<input required type="number" name="connect" placeholder="Connectivity %" class="center" style="width:140px" /><br />
+				<input type="submit" name="submit" value="Redo Connections">
+			</form>
 		</td>
 	</tr>
 </table>
