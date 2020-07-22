@@ -42,6 +42,7 @@ if (Request::has('add_npc_account')) {
 	$login = Request::get('npc_login');
 	$npcAccount = SmrAccount::createAccount($login, '', 'NPC@smrealms.de', 0, 0);
 	$npcAccount->setValidated(true);
+	$npcAccount->update();
 	$db->query('INSERT INTO npc_logins (login, player_name, alliance_name) VALUES(' . $db->escapeString($login) . ',' . $db->escapeString(Request::get('default_player_name')) . ',' . $db->escapeString(Request::get('default_alliance')) . ')');
 }
 

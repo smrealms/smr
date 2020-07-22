@@ -16,6 +16,7 @@ try {
 	}
 
 	$account->generatePasswordReset();
+	$account->update();
 
 	$resetURL = URL . '/reset_password.php?login=' . $account->getLogin() . '&resetcode=' . $account->getPasswordReset();
 	$emailMessage =

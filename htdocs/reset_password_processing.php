@@ -34,7 +34,7 @@ try {
 	}
 	
 	$account->setPassword($password);
-	
+	$account->update();
 	
 	header('Location: /login.php');
 } catch (Throwable $e) {

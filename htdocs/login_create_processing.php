@@ -153,6 +153,7 @@ try {
 		                        $_SESSION['socialLogin']->getUserID());
 		if ($validatedBySocial) {
 			$account->setValidated(true);
+			$account->update();
 		}
 		session_destroy();
 	}

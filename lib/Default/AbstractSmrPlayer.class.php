@@ -673,6 +673,7 @@ abstract class AbstractSmrPlayer {
 					$mail->addAddress($receiverAccount->getEmail(), $receiverAccount->getHofName());
 					$mail->send();
 					$receiverAccount->decreaseMessageNotifications($messageTypeID, 1);
+					$receiverAccount->update();
 				}
 			break;
 		}
