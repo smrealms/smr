@@ -287,6 +287,7 @@ abstract class AbstractSmrAccount {
 			', discord_id = ' . $this->db->escapeString($this->discordId, true, true) .
 			', irc_nick = ' . $this->db->escapeString($this->ircNick, true, true) .
 			', hof_name = ' . $this->db->escapeString($this->hofName) .
+			', template = ' . $this->db->escapeString($this->template) .
 			', colour_scheme = ' . $this->db->escapeString($this->colourScheme) .
 			', fontsize = ' . $this->db->escapeNumber($this->fontSize) .
 			', css_link = ' . $this->db->escapeString($this->cssLink, true, true) .
@@ -743,10 +744,9 @@ abstract class AbstractSmrAccount {
 		if (!array_key_exists($template, Globals::getAvailableTemplates())) {
 			throw new Exception('Template not allowed: ' . $template);
 		}
-		$this->db->query('UPDATE account SET template = ' . $this->db->escapeString($template) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 		$this->template = $template;
-		$colourSchemes = Globals::getAvailableColourSchemes($template);
-		$this->setColourScheme($colourSchemes[0]);
+		$this->hasChanged = true;
+		$this->update();
 	}
 
 	public function getColourScheme() {
