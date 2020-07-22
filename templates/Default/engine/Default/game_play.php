@@ -54,7 +54,7 @@ if (isset($Message)) {
 				<th>Start Date</th>
 				<th>End Date</th>
 				<th>Players</th>
-				<th>Type</th>
+				<th>Game Type</th>
 				<th>Game Speed</th>
 				<th>Credits Needed</th>
 			</tr><?php
@@ -110,6 +110,7 @@ if (isset($Voting)) {
 				<th width="150">Game Name</th>
 				<th>Start Date</th>
 				<th>End Date</th>
+				<th>Game Type</th>
 				<th>Game Speed</th>
 				<th colspan="3">Options</th>
 			</tr><?php
@@ -118,7 +119,8 @@ if (isset($Voting)) {
 					<td width="35%"><?php if (isset($Game['PreviousGameLink'])) { ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if (isset($Game['PreviousGameLink'])) { ?></a><?php } ?></td>
 					<td><?php echo $Game['StartDate'] ?></td>
 					<td><?php echo $Game['EndDate'] ?></td>
-					<td class="center"><?php echo $Game['Speed'] ?></td>
+					<td class="center"><?php echo $Game['Type']; ?></td>
+					<td class="center"><?php echo $Game['Speed']; ?></td>
 					<td class="center"><a href="<?php echo $Game['PreviousGameHOFLink']; ?>">Hall Of Fame</a></td>
 					<td class="center"><a href="<?php echo $Game['PreviousGameNewsLink']; ?>">Game News</a></td>
 					<td class="center"><?php if (isset($Game['PreviousGameStatsLink'])) { ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Game Stats</a><?php } ?></td>

@@ -122,7 +122,7 @@ if ($db->getNumRows() > 0) {
 $games['Previous'] = array();
 
 //New previous games
-$db->query('SELECT start_time, end_time, game_name, game_speed, game_id ' .
+$db->query('SELECT start_time, end_time, game_name, game_type, game_speed, game_id ' .
 		'FROM game WHERE enabled = \'TRUE\' AND end_time < ' . $db->escapeNumber(TIME) . ' ORDER BY game_id DESC');
 if ($db->getNumRows()) {
 	while ($db->nextRecord()) {
@@ -131,6 +131,7 @@ if ($db->getNumRows()) {
 		$games['Previous'][$game_id]['Name'] = $db->getField('game_name');
 		$games['Previous'][$game_id]['StartDate'] = date(DATE_DATE_SHORT, $db->getInt('start_time'));
 		$games['Previous'][$game_id]['EndDate'] = date(DATE_DATE_SHORT, $db->getInt('end_time'));
+		$games['Previous'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getField('game_type')];
 		$games['Previous'][$game_id]['Speed'] = $db->getFloat('game_speed');
 		// create a container that will hold next url and additional variables.
 		$container = create_container('skeleton.php');
@@ -149,7 +150,7 @@ if ($db->getNumRows()) {
 foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
 	//Old previous games
 	$historyDB = new $databaseClassName();
-	$historyDB->query('SELECT start_date, end_date, game_name, speed, game_id
+	$historyDB->query('SELECT start_date, end_date, game_name, type, speed, game_id
 						FROM game ORDER BY game_id DESC');
 	if ($historyDB->getNumRows()) {
 		while ($historyDB->nextRecord()) {
@@ -159,6 +160,7 @@ foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
 			$games['Previous'][$index]['Name'] = $historyDB->getField('game_name');
 			$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT, $historyDB->getInt('start_date'));
 			$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT, $historyDB->getInt('end_date'));
+			$games['Previous'][$index]['Type'] = $historyDB->getField('type');
 			$games['Previous'][$index]['Speed'] = $historyDB->getFloat('speed');
 			// create a container that will hold next url and additional variables.
 			$container = create_container('skeleton.php');
