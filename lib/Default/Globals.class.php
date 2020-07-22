@@ -526,13 +526,11 @@ class Globals {
 	}
 
 	public static function getAvailableTemplates() {
-		return array('Default' => array('Default'),
-			'Freon22' => array('Default', 'Blue', 'ClassicGreen', 'None'));
+		return array_keys(CSS_URLS);
 	}
 
 	public static function getAvailableColourSchemes($templateName) {
-		$templates = self::getAvailableTemplates();
-		return $templates[$templateName];
+		return array_keys(CSS_COLOUR_URLS[$templateName]);
 	}
 
 	/**

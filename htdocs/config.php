@@ -423,7 +423,7 @@ const CSS_COLOUR_URLS = array(
 		'Default' => 'css/Default/Default.css',
 	),
 	'Freon22' => array(
-		'Default'      => 'css/Freon22/Default.css',
+		'Rust'         => 'css/Freon22/Rust.css',
 		'Blue'         => 'css/Freon22/Blue.css',
 		'ClassicGreen' => 'css/Freon22/ClassicGreen.css',
 		'None'         => 'css/Freon22/None.css',

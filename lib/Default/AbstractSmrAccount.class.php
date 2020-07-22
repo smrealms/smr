@@ -287,6 +287,7 @@ abstract class AbstractSmrAccount {
 			', discord_id = ' . $this->db->escapeString($this->discordId, true, true) .
 			', irc_nick = ' . $this->db->escapeString($this->ircNick, true, true) .
 			', hof_name = ' . $this->db->escapeString($this->hofName) .
+			', template = ' . $this->db->escapeString($this->template) .
 			', colour_scheme = ' . $this->db->escapeString($this->colourScheme) .
 			', fontsize = ' . $this->db->escapeNumber($this->fontSize) .
 			', css_link = ' . $this->db->escapeString($this->cssLink, true, true) .
@@ -344,7 +345,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->logging = $bool;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function isLoggingEnabled() {
@@ -642,13 +642,12 @@ abstract class AbstractSmrAccount {
 		return $this->email;
 	}
 
-	public function setEmail($email) {
+	protected function setEmail($email) {
 		if ($this->email == $email) {
 			return;
 		}
 		$this->email = $email;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	/**
@@ -714,7 +713,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->fontSize = $size;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	// gets the extra CSS file linked in preferences
@@ -729,7 +727,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->cssLink = $link;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function getTemplate() {
@@ -740,13 +737,11 @@ abstract class AbstractSmrAccount {
 		if ($this->template == $template) {
 			return;
 		}
-		if (!array_key_exists($template, Globals::getAvailableTemplates())) {
+		if (!in_array($template, Globals::getAvailableTemplates())) {
 			throw new Exception('Template not allowed: ' . $template);
 		}
-		$this->db->query('UPDATE account SET template = ' . $this->db->escapeString($template) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 		$this->template = $template;
-		$colourSchemes = Globals::getAvailableColourSchemes($template);
-		$this->setColourScheme($colourSchemes[0]);
+		$this->hasChanged = true;
 	}
 
 	public function getColourScheme() {
@@ -757,12 +752,11 @@ abstract class AbstractSmrAccount {
 		if ($this->colourScheme == $colourScheme) {
 			return;
 		}
-		if (!in_array($colourScheme, Globals::getAvailableColourSchemes($this->getTemplate()), true)) {
+		if (!in_array($colourScheme, Globals::getAvailableColourSchemes($this->getTemplate()))) {
 			throw new Exception('Colour scheme not allowed: ' . $colourScheme);
 		}
 		$this->colourScheme = $colourScheme;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	// gets the CSS URL based on the template name specified in preferences
@@ -798,7 +792,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->hofName = $name;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function getIrcNick() {
@@ -811,7 +804,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->ircNick = $nick;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function getDiscordId() {
@@ -824,7 +816,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->discordId = $id;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function getReferralLink() {
@@ -841,7 +832,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->dateShort = $format;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function getShortTimeFormat() {
@@ -854,7 +844,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->timeShort = $format;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function getValidationCode() {
@@ -867,7 +856,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->validation_code = $code;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function setValidated($bool) {
@@ -876,7 +864,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->validated = $bool;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function isValidated() {
@@ -906,6 +893,7 @@ abstract class AbstractSmrAccount {
 		// This will also update any obsolete md5 password hashes.
 		if ($result && password_needs_rehash($this->passwordHash, PASSWORD_DEFAULT)) {
 			$this->setPassword($password);
+			$this->update();
 		}
 
 		return $result;
@@ -922,7 +910,6 @@ abstract class AbstractSmrAccount {
 		$this->passwordHash = $hash;
 		$this->generatePasswordReset();
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function addAuthMethod($loginType, $authKey) {
@@ -951,7 +938,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->passwordReset = $passwordReset;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function isDisplayShipImages() {
@@ -964,7 +950,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->images = $yesNo;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function isUseAJAX() {
@@ -977,7 +962,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->useAJAX = $bool;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function isDefaultCSSEnabled() {
@@ -990,7 +974,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->defaultCSSEnabled = $bool;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function getHotkeys($hotkeyType = false) {
@@ -1010,7 +993,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->hotkeys[$hotkeyType] = $binding;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function isReceivingMessageNotifications($messageTypeID) {
@@ -1027,7 +1009,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->messageNotifications[$messageTypeID] = $num;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function increaseMessageNotifications($messageTypeID, $num) {
@@ -1060,7 +1041,6 @@ abstract class AbstractSmrAccount {
 		}
 		$this->centerGalaxyMapOnPlayer = $bool;
 		$this->hasChanged = true;
-		$this->update();
 	}
 
 	public function getMailBanned() {

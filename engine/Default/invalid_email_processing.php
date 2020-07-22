@@ -5,4 +5,5 @@ if (Request::get('action') == "Resend Validation Code") {
 } else {
 	$account->changeEmail(Request::get('email'));
 }
+$account->update();
 forward(create_container('skeleton.php', 'validate.php'));

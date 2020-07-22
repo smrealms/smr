@@ -279,7 +279,9 @@ if ($action == 'Save and resend validation code') {
 	if (strlen($enemyColour) == 6) {
 		$account->setEnemyColour($enemyColour);
 	}
-	$account->update();
 }
+
+// Update the account in case it has changed
+$account->update();
 
 forward($container);

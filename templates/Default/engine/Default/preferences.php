@@ -334,12 +334,12 @@ if (isset($GameID)) { ?>
 			<td>CSS Template:</td>
 			<td>
 				<select name="template"><?php
-					foreach (Globals::getAvailableTemplates() as $AvailableTemplate => $ColourSchemes) {
-						foreach ($ColourSchemes as $ColourScheme) {
-							$selected = ($ThisAccount->getTemplate() == $AvailableTemplate &&
+					foreach (Globals::getAvailableTemplates() as $Template) {
+						foreach (Globals::getAvailableColourSchemes($Template) as $ColourScheme) {
+							$selected = ($ThisAccount->getTemplate() == $Template &&
 							             $ThisAccount->getColourScheme() == $ColourScheme &&
 							             $ThisAccount->isDefaultCSSEnabled()) ? 'selected' : '';
-							$name = $AvailableTemplate . ' - ' . $ColourScheme;
+							$name = $Template . ' - ' . $ColourScheme;
 							?><option value="<?php echo $name; ?>" <?php echo $selected; ?>><?php echo $name; ?></option><?php
 						}
 					} ?>

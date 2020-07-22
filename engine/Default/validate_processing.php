@@ -9,6 +9,7 @@ if (Request::get('action') != "I'll validate later.") {
 	}
 
 	$account->setValidated(true);
+	$account->update();
 
 	// delete the notification (when send)
 	$db->query('DELETE FROM notification

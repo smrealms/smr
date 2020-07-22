@@ -7,6 +7,7 @@ if ($var['toggle'] == 'WeaponHiding') {
 	}
 } elseif ($var['toggle'] == 'AJAX') {
 	$account->setUseAJAX(!$account->isUseAJAX());
+	$account->update();
 }
 
 $body = $var['referrer'] ?? 'current_sector.php';
