@@ -642,7 +642,7 @@ abstract class AbstractSmrAccount {
 		return $this->email;
 	}
 
-	public function setEmail($email) {
+	protected function setEmail($email) {
 		if ($this->email == $email) {
 			return;
 		}
