@@ -165,21 +165,7 @@ try {
 	$account->updateIP();
 
 	if (!$account->isValidated()) {
-		// send email with validation code to user
-		$emailMessage =
-			'Your validation code is: ' . $account->getValidationCode() . EOL .
-			'The Space Merchant Realms server is on the web at ' . URL;
-
-		$mail = setupMailer();
-		$mail->Subject = 'New Space Merchant Realms Account';
-		$mail->setFrom('support@smrealms.de', 'SMR Support');
-		$mail->msgHTML(nl2br($emailMessage));
-		$mail->addAddress($account->getEmail(), $account->getHofName());
-		$mail->send();
-
-		// remember when we sent validation code
-		$db->query('INSERT INTO notification (notification_type, account_id, time) ' .
-		           'VALUES(\'validation_code\', ' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber(TIME) . ')');
+		$account->sendValidationEmail();
 	}
 
 	forwardURL(create_container('login_processing.php'));
