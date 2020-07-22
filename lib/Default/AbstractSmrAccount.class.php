@@ -741,7 +741,7 @@ abstract class AbstractSmrAccount {
 		if ($this->template == $template) {
 			return;
 		}
-		if (!array_key_exists($template, Globals::getAvailableTemplates())) {
+		if (!in_array($template, Globals::getAvailableTemplates())) {
 			throw new Exception('Template not allowed: ' . $template);
 		}
 		$this->template = $template;
@@ -757,7 +757,7 @@ abstract class AbstractSmrAccount {
 		if ($this->colourScheme == $colourScheme) {
 			return;
 		}
-		if (!in_array($colourScheme, Globals::getAvailableColourSchemes($this->getTemplate()), true)) {
+		if (!in_array($colourScheme, Globals::getAvailableColourSchemes($this->getTemplate()))) {
 			throw new Exception('Colour scheme not allowed: ' . $colourScheme);
 		}
 		$this->colourScheme = $colourScheme;
