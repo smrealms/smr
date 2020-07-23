@@ -2,6 +2,7 @@
 
 SmrSession::getRequestVarInt('game_id');
 SmrSession::getRequestVarInt('gal_on', 1);
+$focusSector = SmrSession::getRequestVarInt('focus_sector_id', 0);
 
 $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 if (empty($galaxies)) {
@@ -24,7 +25,12 @@ $connectivity = round($galaxy->getConnectivity());
 $template->assign('ActualConnectivity', $connectivity);
 
 // Call this after all sectors have been cached in an efficient way.
-$mapSectors = $galaxy->getMapSectors();
+if ($focusSector == 0) {
+	$mapSectors = $galaxy->getMapSectors();
+} else {
+	$mapSectors = $galaxy->getMapSectors($focusSector);
+	$template->assign('FocusSector', $focusSector);
+}
 
 $template->assign('Galaxy', $galaxy);
 $template->assign('Galaxies', $galaxies);
@@ -42,8 +48,10 @@ $container = create_container('skeleton.php', '1.6/universe_create_sectors.php')
 transfer('game_id');
 $template->assign('JumpGalaxyHREF', SmrSession::getNewHref($container));
 
-$container['url'] = '1.6/universe_create_save_processing.php';
 transfer('gal_on');
+$template->assign('RecenterHREF', SmrSession::getNewHref($container));
+
+$container['url'] = '1.6/universe_create_save_processing.php';
 $template->assign('SubmitChangesHREF', SmrSession::getNewHref($container));
 
 $container['submit'] = 'Toggle Link';
