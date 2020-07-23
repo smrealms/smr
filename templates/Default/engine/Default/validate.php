@@ -1,10 +1,5 @@
 <form name="FORM" method="POST" action="<?php echo $ValidateFormHref ?>">
 
-<?php
-if (isset($Message)) {
-	echo $Message; ?><br /><?php
-} ?>
-
 <p>
 	Thank you for trying out Space Merchant Realms! We hope that you are enjoying the game. However,
 	in order for you to experience the full features of the game, you need to validate your e-mail address.
@@ -31,6 +26,13 @@ if (isset($Message)) {
 <p class="center">
 	<input type="submit" name="action" value="Validate me now!">
 	&nbsp;&nbsp;
-	<input type="submit" name="action" value="I'll validate later.">
+	<button type="submit" name="action" value="resend">Resend code</button>
+	&nbsp;&nbsp;
+	<button type="submit" name="action" value="skip">I'll validate later</button>
 </p>
 </form>
+
+<?php
+if (isset($Message)) { ?>
+	<p class="center"><?php echo $Message; ?></p><?php
+} ?>
