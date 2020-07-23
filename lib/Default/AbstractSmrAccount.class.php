@@ -674,22 +674,7 @@ abstract class AbstractSmrAccount {
 		$this->setEmail($email);
 		$this->setValidationCode(random_string(10));
 		$this->setValidated(false);
-
-		// remember when we sent validation code
-		$this->db->query('REPLACE INTO notification (notification_type, account_id, time)
-				VALUES(\'validation_code\', '.$this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(TIME) . ')');
-
-		$emailMessage =
-			'You changed your email address registered with SMR and need to revalidate now!' . EOL . EOL .
-			'   Your new validation code is: ' . $this->getValidationCode() . EOL . EOL .
-			'The Space Merchant Realms server is on the web at ' . URL;
-
-		$mail = setupMailer();
-		$mail->Subject = 'Your validation code!';
-		$mail->setFrom('support@smrealms.de', 'SMR Support');
-		$mail->msgHTML(nl2br($emailMessage));
-		$mail->addAddress($this->getEmail(), $this->getHofName());
-		$mail->send();
+		$this->sendValidationEmail();
 
 		// Remove an "Invalid email" ban (may or may not have one)
 		if ($disabled = $this->isDisabled()) {
@@ -697,6 +682,23 @@ abstract class AbstractSmrAccount {
 				$this->unbanAccount($this);
 			}
 		}
+	}
+
+	public function sendValidationEmail() : void {
+		// remember when we sent validation code
+		$this->db->query('REPLACE INTO notification (notification_type, account_id, time)
+				VALUES(\'validation_code\', '.$this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(TIME) . ')');
+
+		$emailMessage =
+			'Your validation code is: ' . $this->getValidationCode() . EOL . EOL .
+			'The Space Merchant Realms server is on the web at ' . URL;
+
+		$mail = setupMailer();
+		$mail->Subject = 'Space Merchant Realms Validation Code';
+		$mail->setFrom('support@smrealms.de', 'SMR Support');
+		$mail->msgHTML(nl2br($emailMessage));
+		$mail->addAddress($this->getEmail(), $this->getHofName());
+		$mail->send();
 	}
 
 	public function getOffset() {
