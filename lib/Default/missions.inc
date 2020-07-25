@@ -114,38 +114,24 @@ const MISSIONS = array(
 	)
 );
 
-function checkMissionRequirements($values, array $mission, AbstractSmrPlayer $player, array $requirements = null) {
-	if ($requirements == null) {
-		return checkMissionRequirements($values, $mission, $player, $mission['Task']['Detail']);
+/**
+ * Callback for array_walk_recursive in SmrPlayer::rebuildMission.
+ * Searches for placeholders in template and replaces them with values
+ * derived from the supplied data.
+ */
+function replaceMissionTemplate(&$template, $key, array $data) : void {
+	if (!is_string($template)) {
+		return;
 	}
-	foreach ($requirements as $reqName => $req) {
-		if (is_string($req)) {
-			// Handle aliases
-			switch ($reqName) {
-				case 'SectorID':
-					$reqName = 'Sector';
-					$req = array(
-						'getSectorID' => $req
-					);
-					break;
-				default:
-					$req = str_replace(array('<Race>', '<Sector>', '<Starting Sector>', '<trader>'), array($player->getRaceID(), $mission['Sector'], $mission['Starting Sector'], $player->getPlayerName()), $req);
+	$search = ['<Race>', '<Sector>', '<Starting Sector>'];
+	$replace = [$data['player']->getRaceID(), $data['mission']['Sector'], $data['mission']['Starting Sector']];
+	$template = str_replace($search, $replace, $template);
+}
 
-			}
-		}
-		if (is_array($values)) {
-			$value = $values[$reqName];
-		} else if (is_object($values)) {
-			$value = $values->$reqName();
-		}
-		if (is_array($req)) {
-			if (checkMissionRequirements($value, $mission, $player, $req) === false) {
-				return false;
-			}
-		} else {
-			if ($value != $req) {
-				return false;
-			}
+function checkMissionRequirements(array $values, array $requirements) : bool {
+	foreach ($requirements as $reqName => $reqValue) {
+		if ($values[$reqName] != $reqValue) {
+			return false;
 		}
 	}
 	return true;

@@ -2787,16 +2787,9 @@ abstract class AbstractSmrPlayer {
 			// If we have completed this mission just use false to indicate no current task.
 			$currentStep = false;
 		} else {
+			$data = ['player' => $this, 'mission' => $mission];
 			$currentStep = MISSIONS[$missionID]['Steps'][$mission['On Step']];
-			$currentStep['Text'] = str_replace(array('<Race>', '<Sector>', '<Starting Sector>', '<trader>'), array($this->getRaceID(), $mission['Sector'], $mission['Starting Sector'], $this->playerName), $currentStep['Text']);
-			if (isset($currentStep['Task'])) {
-				$currentStep['Task'] = str_replace(array('<Race>', '<Sector>', '<Starting Sector>', '<trader>'), array($this->getRaceID(), $mission['Sector'], $mission['Starting Sector'], $this->playerName), $currentStep['Task']);
-			}
-			if (isset($currentStep['Level'])) {
-				$currentStep['Level'] = str_replace('<Player Level>', $this->getLevelID(), $currentStep['Level']);
-			} else {
-				$currentStep['Level'] = 0;
-			}
+			array_walk_recursive($currentStep, 'replaceMissionTemplate', $data);
 		}
 		$this->missions[$missionID]['Task'] = $currentStep;
 	}
@@ -2901,7 +2894,8 @@ abstract class AbstractSmrPlayer {
 		$this->getMissions();
 		foreach ($this->missions as $missionID => &$mission) {
 			if ($mission['Task'] !== false && $mission['Task']['Step'] == $actionID) {
-				if (checkMissionRequirements($values, $mission, $this) === true) {
+				$requirements = $mission['Task']['Detail'];
+				if (checkMissionRequirements($values, $requirements) === true) {
 					$mission['On Step']++;
 					$mission['Unread'] = true;
 					$this->setupMissionStep($missionID);
