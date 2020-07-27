@@ -3,15 +3,17 @@
 $template->assign('PageTopic', 'Bounty Payout');
 
 Menu::headquarters();
-if ($sector->hasHQ()) {
-	$bounties = $player->getClaimableBounties('HQ');
-} else {
-	$bounties = $player->getClaimableBounties('UG');
-}
-
-$claimText = '';
 
 if (!isset($var['ClaimText'])) {
+	// Determine if we're claiming Fed or UG bounties
+	$location = SmrLocation::getLocation($var['LocationID']);
+	if ($location->isHQ()) {
+		$bounties = $player->getClaimableBounties('HQ');
+	} elseif ($location->isUG()) {
+		$bounties = $player->getClaimableBounties('UG');
+	}
+
+	$claimText = '';
 	if (!empty($bounties)) {
 		$claimText .= ('You have claimed the following bounties<br /><br />');
 	
