@@ -2737,7 +2737,11 @@ abstract class AbstractSmrPlayer {
 			}
 			$path = Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
 			if ($path === false) {
-				throw new Exception('Cannot find location: ' . $missionID);
+				// Abandon the mission if it cannot be completed due to a
+				// sector that does not exist or cannot be reached.
+				// (Probably shouldn't bestow this mission in the first place)
+				$this->deleteMission($missionID);
+				create_error('Cannot find a path to the destination!');
 			}
 			$mission['Sector'] = $path->getEndSectorID();
 		}
