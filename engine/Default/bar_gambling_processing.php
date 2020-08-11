@@ -3,45 +3,6 @@
 // blackjack
 $message = '';
 
-$max_cards = PlayingCard::MAX_CARDS;
-
-/**
- * Draw a valid card given the cards that are already drawn.
- */
-function draw_card($currCards) {
-	$newCard = new PlayingCard();
-	//no cards twice
-	while (in_array($newCard, $currCards)) {
-		$newCard = new PlayingCard();
-	}
-	return $newCard;
-}
-
-/**
- * Get the total value of a deck.
- */
-function get_value($deck) {
-	//this function used to find the value of a player's/bank's cards
-	//if this is just one card push it into an array so we can run the func
-	if (!is_array($deck)) {
-		$deck = array($deck);
-	}
-	$curr_aces = 0;
-	$return_val = 0;
-	foreach ($deck as $card) {
-		if ($card->isAce()) {
-			$curr_aces += 1;
-		}
-		$return_val += $card->getValue();
-	}
-	while ($return_val > 21 && $curr_aces > 0) {
-		//if we have aces and > 21 score we subtract to make it a 1 instead of 11
-		$return_val -= 10;
-		$curr_aces -= 1;
-	}
-	return $return_val;
-}
-
 function create_card($card, $show) {
 	//only display what the card really is if they want to
 	$card_height = 100;
@@ -68,12 +29,12 @@ function create_card($card, $show) {
 	return $return;
 }
 
-function check_for_win($ai_card, $player_card) {
-	$comp = get_value($ai_card);
-	$play = get_value($player_card);
+function check_for_win($dealerHand, $playerHand) {
+	$comp = $dealerHand->getValue();
+	$play = $playerHand->getValue();
 
 	//does the player win
-	if (count($player_card) == 2 && $play == 21) {
+	if ($playerHand->hasBlackjack()) {
 		return 'bj';
 	} elseif ($play > $comp && $comp <= 21 && $play <= 21) {
 		return 'yes';
@@ -85,6 +46,10 @@ function check_for_win($ai_card, $player_card) {
 		return 'no';
 	}
 }
+
+$deck = $var['deck'] ?? new \Blackjack\Deck();
+$playerHand = $var['player_hand'] ?? new \Blackjack\Hand();
+$dealerHand = $var['dealer_hand'] ?? new \Blackjack\Hand();
 
 if (isset($var['player_does'])) {
 	$do = $var['player_does'];
@@ -112,122 +77,74 @@ if ($do == 'nothing') {
 	$player->decreaseCredits($bet);
 
 	//first we deal some cards...player,ai,player,ai
-	if (isset($var['cards'])) {
-		$cards = $var['cards'];
-	}
-	if (empty($cards)) {
-		$cards = array();
-	}
-	$player_curr_card = draw_card($cards);
-	$player_card[] = $player_curr_card;
-	$cards[] = $player_curr_card;
-	if (count($cards) >= $max_cards) {
-		$cards = array();
-	}
-	$ai_curr_card = draw_card($cards);
-	$ai_card[] = $ai_curr_card;
-	$cards[] = $ai_curr_card;
-	if (count($cards) >= $max_cards) {
-		$cards = array();
-	}
-	$player_curr_card = draw_card($cards);
-	$player_card[] = $player_curr_card;
-	$cards[] = $player_curr_card;
-	if (count($cards) >= $max_cards) {
-		$cards = array();
-	}
-	$ai_curr_card = draw_card($cards);
-	$ai_card[] = $ai_curr_card;
-	$cards[] = $ai_curr_card;
-	if (count($cards) >= $max_cards) {
-		$cards = array();
-	}
-	//find a play_val variable in case they get bj first hand...lucky
-	$play_val = get_value($player_card);
+	$playerHand->drawCard($deck);
+	$dealerHand->drawCard($deck);
+	$playerHand->drawCard($deck);
+	$dealerHand->drawCard($deck);
 }
-if (isset($var['cards']) && !isset($cards)) {
-	$cards = $var['cards'];
-}
+
 if (isset($var['bet'])) {
 	$bet = $var['bet'];
 }
-if (isset($var['player_card'])) {
-	$player_card = $var['player_card'];
-	$ai_card = $var['ai_card'];
-	$play_val = $var['player_val'];
-}
+
 if ($do == 'HIT') {
-	$player_curr_card = draw_card($cards);
-	$player_card[] = $player_curr_card;
-	$cards[] = $player_curr_card;
-	if (count($cards) >= $max_cards) {
-		$cards = array();
-	}
-	$play_val = get_value($player_card);
+	$playerHand->drawCard($deck);
 }
 
 //only display if we wont display later..
-if ($do != 'STAY' && get_value($player_card) != 21) {
+if ($do != 'STAY' && $playerHand->getValue() != 21) {
 	//heres the AIs cards
 	$i = 1;
-	if ((get_value($ai_card) == 21 && count($ai_card) == 2) ||
-	    (get_value($player_card) > 21 && get_value($ai_card) <= 21)) {
+	if ($dealerHand->hasBlackjack() ||
+	    ($playerHand->getValue() > 21 && $dealerHand->getValue() <= 21)) {
 		$message .= ('<h1 class="red center">Bank Wins</h1>');
 	}
 	$message .= ('<div class="center">Bank\'s Cards are</div><br /><table class="center"><tr>');
-	foreach ($ai_card as $key => $value) {
+	foreach ($dealerHand->getCards() as $key => $card) {
 		if ($key == 0) {
 			//do we need a new row?
 			if ($i == 4 || $i == 7 || $i == 10) {
 				$message .= ('</tr><tr>');
 			}
-			$message .= create_card($value, TRUE);
-			$curr_ai_card = array();
-			$curr_ai_card[] = $value;
+			$message .= create_card($card, TRUE);
 			//get curr val of this card...for the at least part
-			$ai_val = get_value($curr_ai_card);
-			$i++;
+			$ai_val = $card->getValue();
 		} else {
 			//lets try and echo cards
 			//new row?
 			if ($i == 4 || $i == 7 || $i == 10) {
 				$message .= ('</tr><tr>');
 			}
-			if (get_value($ai_card) == 21 || get_value($player_card) >= 21) {
-				$message .= create_card($value, TRUE);
+			if ($dealerHand->getValue() == 21 || $playerHand->getValue() >= 21) {
+				$message .= create_card($card, TRUE);
 			} else {
-				$message .= create_card($value, FALSE);
+				$message .= create_card($card, FALSE);
 			}
-			$i++;
 		}
+		$i++;
 	}
 
 	$message .= ('</tr></table>');
-	if (get_value($ai_card) == 21 && count($ai_card) == 2) {
+	if ($dealerHand->hasBlackjack()) {
 		$message .= ('<div class="center">Bank has BLACKJACK!</div><br />');
 		$win = 'no';
-	} elseif (get_value($player_card) >= 21) {
-		$message .= ('<div class="center">Bank has ' . get_value($ai_card) . '</div><br />');
+	} elseif ($playerHand->getValue() >= 21) {
+		$message .= ('<div class="center">Bank has ' . $dealerHand->getValue() . '</div><br />');
 	} else {
 		$message .= ('<div class="center">Bank has at least ' . $ai_val . '</div><br />');
 	}
 }
 
-if ($do == 'STAY' || get_value($player_card) == 21) {
+if ($do == 'STAY' || $playerHand->getValue() == 21) {
 	//heres the Banks cards
 	$i = 1;
 
-	if (!(count($player_card) == 2 && get_value($player_card) == 21)) {
-		while (get_value($ai_card) < 17) {
-			$ai_curr_card = draw_card($cards);
-			$ai_card[] = $ai_curr_card;
-			$cards[] = $ai_curr_card;
-			if (count($cards) >= $max_cards) {
-				$cards = array();
-			}
+	if (!$playerHand->hasBlackjack()) {
+		while ($dealerHand->getValue() < 17) {
+			$dealerHand->drawCard($deck);
 		}
 	}
-	$win = check_for_win($ai_card, $player_card);
+	$win = check_for_win($dealerHand, $playerHand);
 	if ($win == 'yes' || $win == 'bj') {
 		$message .= ('<h1 class="green center">You Win</h1>');
 	} elseif ($win == 'tie') {
@@ -236,65 +153,64 @@ if ($do == 'STAY' || get_value($player_card) == 21) {
 		$message .= ('<h1 class="red center">Bank Wins</h1>');
 	}
 	$message .= ('<div class="center">Bank\'s Cards are</div><br /><table class="center"><tr>');
-	foreach ($ai_card as $key => $value) {
+	foreach ($dealerHand->getCards() as $key => $card) {
 		//now row?
 		if ($i == 4 || $i == 7 || $i == 10) {
 			$message .= ('</tr><tr>');
 		}
-		$message .= create_card($value, TRUE);
+		$message .= create_card($card, TRUE);
 		$i++;
 	}
 	$message .= ('</tr></table><div class="center">');
-	if (get_value($ai_card) > 21) {
+	if ($dealerHand->getValue() > 21) {
 		$message .= ('Bank <span class="red"><b>BUSTED</b></span><br /><br />');
 	} else {
-		$message .= ('Bank has ' . get_value($ai_card) . '<br /><br />');
+		$message .= ('Bank has ' . $dealerHand->getValue() . '<br /><br />');
 	}
 	$message .= ('</div>');
 }
 $message .= ('<hr style="border:1px solid green;width:50%" noshade>');
 $i = 1;
 
-$val1 = get_value($player_card);
+$val1 = $playerHand->getValue();
 
 $message .= ('<div class="center">Your Cards are</div><br /><table class="center"><tr>');
-foreach ($player_card as $key => $value) {
+foreach ($playerHand->getCards() as $key => $card) {
 	if ($i == 4 || $i == 7 || $i == 10) {
 		$message .= ('</tr><tr>');
 	}
-	$message .= create_card($value, TRUE);
+	$message .= create_card($card, TRUE);
 	$i++;
 }
 $message .= ('</tr></table>');
 
-if (get_value($player_card) == 21 && count($player_card) == 2) {
+if ($playerHand->hasBlackjack()) {
 	$message .= '<div class="center">You have BLACKJACK!</div><br />';
 } else {
-	$message .= ('<div class="center">You have a total of ' . get_value($player_card) . ' </div><br />');
+	$message .= ('<div class="center">You have a total of ' . $playerHand->getValue() . ' </div><br />');
 }
 
 //check for win
 if ($do == 'STAY') {
-	$win = check_for_win($ai_card, $player_card);
+	$win = check_for_win($dealerHand, $playerHand);
 }
 
 $container = create_container('bar_gambling_processing.php');
 transfer('LocationID');
-$container['cards'] = $cards;
 $container['bet'] = $bet;
 
 $message .= ('<div class="center">');
-if (get_value($player_card) > 21) {
+if ($playerHand->getValue() > 21) {
 	$message .= ('You have <span class="red"><b>BUSTED</b></span>');
 	$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
 	$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
 	$message .= '<p><a class="submitStyle" href="' . SmrSession::getNewHREF($container) . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');
-} elseif (!isset($win) && get_value($player_card) < 21) {
-	$container['player_card'] = $player_card;
+} elseif (!isset($win) && $playerHand->getValue() < 21) {
+	$container['deck'] = $deck;
+	$container['player_hand'] = $playerHand;
 	$container['player_does'] = 'HIT';
-	$container['ai_card'] = $ai_card;
-	$container['player_val'] = $val1;
+	$container['dealer_hand'] = $dealerHand;
 	$message .= '<form method="POST" action="' . SmrSession::getNewHREF($container) . '">';
 	$message .= '<input type="submit" name="action" value="HIT" />';
 	$message .= ('<br /><small><br /></small></form>');
@@ -328,9 +244,9 @@ if (get_value($player_card) > 21) {
 	}
 	$message .= '<p><a class="submitStyle" href="' . SmrSession::getNewHREF($container) . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');
-} elseif ($val1 == 21) {
-	if (get_value($ai_card) != 21) {
-		if (count($player_card) == 2) {
+} elseif ($playerHand->getValue() == 21) {
+	if ($dealerHand->getValue() != 21) {
+		if ($playerHand->getNumCards() == 2) {
 			$multiplier = 2.5;
 		} else {
 			$multiplier = 2;
@@ -341,7 +257,7 @@ if (get_value($player_card) > 21) {
 		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Win'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Win'), HOF_PUBLIC);
 		$message .= ('You have won $' . number_format($winnings) . ' credits!');
-	} elseif (count($ai_card) > 2) {
+	} elseif ($dealerHand->getNumCards() > 2) {
 		$winnings = $bet;
 		$player->increaseCredits($winnings);
 		$stat = $winnings - $bet;
