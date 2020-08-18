@@ -159,7 +159,8 @@
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 			<td>
-				Enter text in the box below to create a new note.<br />(examples:  trade routes, weapon locations, key alliance related locations)
+				Enter text in the box below to create a new note.<br />
+				(examples: trade routes, weapon locations, key alliance related locations)<br />
 				<textarea spellcheck="true" name="note" required maxlength="1000"></textarea>
 			</td>
 		</tr>
