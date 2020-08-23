@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
+namespace Blackjack;
+
 /**
  * Classic playing card for blackjack.
  */
-class PlayingCard {
-	//num of decks and cards
-	const NUM_DECKS = 1;
-	const MAX_CARDS = 52 * self::NUM_DECKS;
+class Card {
 
 	// Special card ranks
 	private const RANK_ACE = 1;
@@ -27,16 +26,16 @@ class PlayingCard {
 	private int $rank; // non-unique rank of the card (1-indexed)
 
 	/**
-	 * Create a specific or random card in the deck.
+	 * Create a specific card in the deck.
 	 */
-	public function __construct(int $cardID = null) {
-		if (is_null($cardID)) {
-			$this->cardID = rand(0, self::MAX_CARDS - 1);
-		} else {
-			$this->cardID = $cardID;
-		}
+	public function __construct(int $cardID) {
+		$this->cardID = $cardID;
 		// 52 cards per deck, 13 cards per suit
 		$this->rank = ($this->cardID % 52) % 13 + 1;
+	}
+
+	public function getCardID() : int {
+		return $this->cardID;
 	}
 
 	/**
@@ -73,7 +72,7 @@ class PlayingCard {
 			return self::RANK_NAMES[$this->rank];
 		} else {
 			// For normal pip (non-face) cards, name and rank are the same.
-			return (string) $this->rank;
+			return (string)$this->rank;
 		}
 	}
 }
