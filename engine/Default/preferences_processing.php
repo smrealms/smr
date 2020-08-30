@@ -232,7 +232,7 @@ if ($action == 'Save and resend validation code') {
 	$player->setPlayerNameByPlayer($player_name);
 
 	$news = 'Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink();
-	$db->query('INSERT INTO news (time, news_message, game_id, type) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\')');
+	$db->query('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\', ' . $db->escapeNumber($player->getAccountID()) . ')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 } elseif ($action == 'change_race') {
 	if (!$player->canChangeRace()) {
@@ -263,7 +263,7 @@ if ($action == 'Save and resend validation code') {
 	$player->giveStartingRelations();
 
 	$news = 'Please be advised that ' . $player->getBBLink() . ' has changed their race from [race=' . $oldRaceID . '] to [race=' . $player->getRaceID() . ']';
-	$db->query('INSERT INTO news (time, news_message, game_id, type) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\')');
+	$db->query('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\', ' . $db->escapeNumber($player->getAccountID()) . ')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player race.';
 } elseif ($action == 'Update Colours') {
 	$friendlyColour = Request::get('friendly_color');
