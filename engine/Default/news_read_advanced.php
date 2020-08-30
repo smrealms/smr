@@ -55,7 +55,7 @@ if ($submit_value == 'Search For Player') {
 		$p_name = $var['playerName'];
 	}
 	$template->assign('ResultsFor', $p_name);
-	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $p_name . '%') . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 3');
+	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $p_name . '%') . ' AND game_id = ' . $db->escapeNumber($gameID));
 	$IDs = array(0);
 	while ($db->nextRecord()) {
 		$IDs[] = $db->getInt('account_id');
@@ -73,12 +73,12 @@ if ($submit_value == 'Search For Player') {
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ')) ORDER BY news_id DESC');
 } elseif ($submit_value == 'Search For Players') {
 	$template->assign('ResultsFor', $_REQUEST['player1'] . ' vs. ' . $_REQUEST['player2']);
-	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $_REQUEST['player1'] . '%') . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 3');
+	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $_REQUEST['player1'] . '%') . ' AND game_id = ' . $db->escapeNumber($gameID));
 	$IDs = array(0);
 	while ($db->nextRecord()) {
 		$IDs[] = $db->getInt('account_id');
 	}
-	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $_REQUEST['player2'] . '%') . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 3');
+	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $_REQUEST['player2'] . '%') . ' AND game_id = ' . $db->escapeNumber($gameID));
 	$IDs2 = array(0);
 	while ($db->nextRecord()) {
 		$IDs2[] = $db->getInt('account_id');
