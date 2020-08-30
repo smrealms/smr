@@ -120,7 +120,7 @@ if ($transaction == 'Steal' ||
 	$base_xp = SmrPort::getBaseExperience($amount, $port->getGoodDistance($good_id));
 
 	// if offered equals ideal we get a problem (division by zero)
-	$gained_exp = IRound($port->calculateExperiencePercent($ideal_price, $offered_price, $bargain_price, $transaction) * $base_xp);
+	$gained_exp = IRound($port->calculateExperiencePercent($ideal_price, $bargain_price, $transaction) * $base_xp);
 
 	if ($transaction == 'Buy') {
 		$msg_transaction = 'bought';
@@ -164,9 +164,23 @@ if ($transaction == 'Steal' ||
 		$tradeMessage .= ' for <span class="creds">' . $bargain_price . '</span> ' . pluralise('credit', $bargain_price);
 	}
 	$tradeMessage .= '.<br />';
+
 	if ($gained_exp > 0) {
+		if ($transaction == 'Steal') {
+			$qualifier = 'cunning';
+		} elseif ($gained_exp < $base_xp * 0.25) {
+			$qualifier = 'novice';
+		} elseif ($gained_exp < $base_xp * 0.5) {
+			$qualifier = 'mediocre';
+		} elseif ($gained_exp < $base_xp * 0.75) {
+			$qualifier = 'respectable';
+		} elseif ($gained_exp < IRound($base_xp)) {
+			$qualifier = 'excellent';
+		} else {
+			$qualifier = 'peerless';
+		}
 		$skill = $transaction == 'Steal' ? 'thievery' : 'trading';
-		$tradeMessage .= 'Your excellent ' . $skill . ' skills have earned you <span class="exp">' . $gained_exp . ' </span> experience ' . pluralise('point', $gained_exp) . '!<br />';
+		$tradeMessage .= 'Your ' . $qualifier . ' ' . $skill . ' skills have earned you <span class="exp">' . $gained_exp . ' </span> experience ' . pluralise('point', $gained_exp) . '!<br />';
 	}
 	$tradeMessage .= '<br />';
 

@@ -14,7 +14,6 @@ class AbstractSmrPort {
 	const BASE_DEFENCES = 500;
 	const DEFENCES_PER_LEVEL = 700;
 	const DEFENCES_PER_TEN_MIL_CREDITS = 250;
-	const BARGAIN_LENIENCY_PERCENT = 0.01;
 	const MAX_LEVEL = 9;
 	const BASE_REFRESH_PER_HOUR = array(
 		'1' => 150,
@@ -991,52 +990,31 @@ class AbstractSmrPort {
 		}
 		return IRound($base * $scale * $distFactor * $supplyFactor * $relationsFactor);
 	}
-	
-	public function getOfferPrice($idealPrice, $relations, $transactionType) : int {
-		$moneyRelations = max(0, min(2000, $relations));
-		$expRelations = max(0, min(1000, $relations));
-		$relationsEffect = pow(1 + ($expRelations - 1000) / 10000, 1.2 - $expRelations / 1000);
-		$relationsEffect -= max(0, min(self::BARGAIN_LENIENCY_PERCENT, self::BARGAIN_LENIENCY_PERCENT * (2000 - $moneyRelations) / 1000)); //Gradual increase getting closer and closer to actual ideal price as relations increase to 2000 (will only be an increase of self::BARGAIN_LENIENCY_PERCENT percent extra cash)
-		 
+
+	public function getOfferPrice(int $idealPrice, int $relations, string $transactionType) : int {
+		$relations = min(1000, $relations); // no effect for higher relations
+		$relationsEffect = (2 * $relations + 8000) / 10000; // [0.75-1]
+
 		if ($transactionType == 'Buy') {
 			$relationsEffect = 2 - $relationsEffect;
 			return max($idealPrice, IFloor($idealPrice * $relationsEffect));
 		} else {
 			return min($idealPrice, ICeil($idealPrice * $relationsEffect));
 		}
-//		$range = .11 - .095;
-//		$rand = .095 + $range * mt_rand(0, 32767)/32767;
-//
-//		if($transactionType == 'Buy')
-//			$offeredPrice = round( $idealPrice * (($relations - 1250) / 10000 + 1 * (pow($relations / 500 + 1, $rand)) - ($relations / 9500)) );
-//		elseif($transactionType == 'Sell')
-//			$offeredPrice = round( $idealPrice * (($relations - 1500) / 10000 + 1 * (pow($relations / 500 + 1, $rand)) - ($relations / 2450) + .35) );
-//		return $offeredPrice;
 	}
-	
-	public function calculateExperiencePercent($idealPrice, $offerPrice, $bargainPrice, $transactionType) {
-		if (($transactionType == 'Sell' && $bargainPrice < $offerPrice) ||
-		    ($transactionType == 'Buy' && $bargainPrice > $offerPrice)) {
-			return 0;
-		}
+
+	/**
+	 * Return the fraction of max exp earned.
+	 */
+	public function calculateExperiencePercent(int $idealPrice, int $bargainPrice, string $transactionType) : float {
 		if ($bargainPrice == $idealPrice || $transactionType == 'Steal') {
 			// Stealing always gives full exp
 			return 1;
 		}
 
-		$bargainLeniency = min($idealPrice * self::BARGAIN_LENIENCY_PERCENT, abs($idealPrice - $bargainPrice));
-		if ($transactionType == 'Sell') {
-			$bargainLeniency = -$bargainLeniency;
-		}
-		$bargainPrice -= $bargainLeniency;
-		
 		$offerPriceNoRelations = $this->getOfferPrice($idealPrice, 0, $transactionType);
-		$val = abs(($idealPrice - $bargainPrice) / ($idealPrice - $offerPriceNoRelations));
-		if ($val >= 1) {
-			return 0;
-		}
-		$expPercent = max(0, min(1, pow(1 - $val, 13)));
-		return $expPercent;
+		$expPercent = 1 - abs(($idealPrice - $bargainPrice) / ($idealPrice - $offerPriceNoRelations));
+		return max(0, min(1, $expPercent));
 	}
 	
 	public function getRaidWarningHREF() {
