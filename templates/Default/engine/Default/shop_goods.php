@@ -36,7 +36,7 @@ if ($BoughtGoods) { ?>
 					<td class="ajax" id="amount<?php echo $goodID; ?>"><?php echo $good['PortAmount']; ?></td>
 					<td><?php echo $good['BasePrice']; ?></td>
 					<td><?php echo $ThisShip->getCargo($good['ID']); ?></td>
-					<td><input type="number" name="amount" value="<?php echo $good['Amount']; ?>" size="4" class="center"></td>
+					<td><input type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 					<td>
 						<input type="submit" name="action" value="Buy"><?php
 						if ($ThisShip->isUnderground()) { ?>
@@ -68,7 +68,7 @@ if ($SoldGoods) { ?>
 					<td class="ajax" id="amount<?php echo $goodID; ?>"><?php echo $good['PortAmount']; ?></td>
 					<td><?php echo $good['BasePrice']; ?></td>
 					<td><?php echo $ThisShip->getCargo($goodID); ?></td>
-					<td><input type="number" name="amount" value="<?php echo $good['Amount']; ?>" size="4" class="center"></td>
+					<td><input type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 					<td><input type="submit" name="action" value="Sell"></td>
 				</tr>
 			</form><?php
