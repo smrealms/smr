@@ -311,6 +311,7 @@ const TURNS_JUMP_MINIMUM = 10;
 
 const TURNS_TO_CLOAK = 1;
 const TURNS_TO_SHOOT_PORT = 2;
+const TURNS_TO_BUILD = 1;
 
 const GOOD_NOTHING = 0;
 /*
