@@ -18,7 +18,7 @@ You are currently building: <?php
 		<th>Description</th>
 		<th>Capacity</th>
 		<th colspan="2">Cost</th>
-		<th width="8%">Build</th>
+		<th width="8%">Action</th>
 	</tr><?php
 
 	foreach ($ThisPlanet->getStructureTypes() as $StructureID => $Structure) { ?>
@@ -44,7 +44,7 @@ You are currently building: <?php
 		</td>
 			<td><?php
 				if ($ThisPlanet->canBuild($ThisPlayer, $StructureID) === true) { ?>
-					<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getBuildHREF($StructureID); ?>">Build</a></div><?php
+					<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getBuildHREF($StructureID); ?>">Build (<?php echo TURNS_TO_BUILD; ?>)</a></div><?php
 				} ?>
 			</td>
 		</tr><?php

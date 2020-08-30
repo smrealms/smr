@@ -9,6 +9,11 @@ if ($action == 'Build') {
 		create_error($message);
 	}
 
+	if ($player->getTurns() < TURNS_TO_BUILD) {
+		create_error('You don\'t have enough turns to build!');
+	}
+	$player->takeTurns(TURNS_TO_BUILD);
+
 	// now start the construction
 	$planet->startBuilding($player, $var['construction_id']);
 	$player->increaseHOF(1, array('Planet', 'Buildings', 'Started'), HOF_ALLIANCE);
