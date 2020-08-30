@@ -154,7 +154,7 @@ class Globals {
 		return Globals::getGoods()[$goodID];
 	}
 	public static function getGoodName($goodID) {
-		if ($goodID == GOOD_NOTHING) {
+		if ($goodID == GOODS_NOTHING) {
 			return 'Nothing';
 		}
 		return Globals::getGoods()[$goodID]['Name'];

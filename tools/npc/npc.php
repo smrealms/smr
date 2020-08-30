@@ -597,7 +597,7 @@ function &changeRoute(array &$tradeRoutes) {
 function &findRoutes($player) {
 	debug('Finding Routes');
 
-	$tradeGoods = array(GOOD_NOTHING => false);
+	$tradeGoods = array(GOODS_NOTHING => false);
 	foreach (Globals::getGoods() as $goodID => $good) {
 		if ($player->meetsAlignmentRestriction($good['AlignRestriction'])) {
 			$tradeGoods[$goodID] = true;

@@ -42,7 +42,7 @@ class RouteGenerator {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentStepBuySector = $currentStepRoute->getBuySectorId();
 			if ($currentStepBuySector > $startSectorId) { // Not already checked
-				self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $currentStepRoute, $routeLists[$currentStepBuySector], $routeLists, $currentStepRoute->getGoodID() === GOOD_NOTHING);
+				self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $currentStepRoute, $routeLists[$currentStepBuySector], $routeLists, $currentStepRoute->getGoodID() === GOODS_NOTHING);
 			}
 		}
 	}
@@ -50,7 +50,7 @@ class RouteGenerator {
 	private static function getContinueRoutes(int $maxNumPorts, int $startSectorId, Route $routeToContinue, array $forwardRoutes, array $routeLists, bool $lastGoodIsNothing) : void {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentStepBuySector = $currentStepRoute->getBuySectorId();
-			if ($lastGoodIsNothing && ($lastGoodIsNothing = GOOD_NOTHING === $currentStepRoute->getGoodID())) {
+			if ($lastGoodIsNothing && ($lastGoodIsNothing = GOODS_NOTHING === $currentStepRoute->getGoodID())) {
 				continue; // Don't do two nothings in a row
 			}
 			if ($currentStepBuySector >= $startSectorId) { // Not already checked or back to start
@@ -86,8 +86,8 @@ class RouteGenerator {
 					continue;
 				}
 
-				if ($goods[GOOD_NOTHING] === true) {
-					$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $sectors[$targetSectorId]->getPort()->getRaceID(), 0, 0, $distance, GOOD_NOTHING);
+				if ($goods[GOODS_NOTHING] === true) {
+					$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $sectors[$targetSectorId]->getPort()->getRaceID(), 0, 0, $distance, GOODS_NOTHING);
 				}
 
 				foreach (\Globals::getGoods() as $goodId => $value) {
@@ -123,7 +123,7 @@ class RouteGenerator {
 						if ($sectors[$currentSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_SELLS &&
 						    $sectors[$targetSectorId]->getPort()->getGoodTransaction($goodId) === self::GOOD_BUYS) {
 							$owr = new OneWayRoute($currentSectorId, $targetSectorId, $sectors[$currentSectorId]->getPort()->getRaceID(), $sectors[$targetSectorId]->getPort()->getRaceID(), $sectors[$currentSectorId]->getPort()->getGoodDistance($goodId), $sectors[$targetSectorId]->getPort()->getGoodDistance($goodId), $distance, $goodId);
-							$fakeReturn = new OneWayRoute($targetSectorId, $currentSectorId, $sectors[$targetSectorId]->getPort()->getRaceID(), $sectors[$currentSectorId]->getPort()->getRaceID(), 0, 0, $distance, GOOD_NOTHING);
+							$fakeReturn = new OneWayRoute($targetSectorId, $currentSectorId, $sectors[$targetSectorId]->getPort()->getRaceID(), $sectors[$currentSectorId]->getPort()->getRaceID(), 0, 0, $distance, GOODS_NOTHING);
 							$mpr = new MultiplePortRoute($owr, $fakeReturn);
 							self::addExpRoute($mpr);
 							self::addMoneyRoute($mpr);

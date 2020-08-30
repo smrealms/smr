@@ -122,6 +122,7 @@ const RACE_NIJARIN = 9;
 /*
  * Trade goods
  */
+const GOODS_NOTHING = 0;
 const GOODS_WOOD = 1;
 const GOODS_FOOD = 2;
 const GOODS_ORE = 3;
@@ -313,7 +314,6 @@ const TURNS_TO_CLOAK = 1;
 const TURNS_TO_SHOOT_PORT = 2;
 const TURNS_TO_BUILD = 1;
 
-const GOOD_NOTHING = 0;
 /*
  * Special locations
  */
