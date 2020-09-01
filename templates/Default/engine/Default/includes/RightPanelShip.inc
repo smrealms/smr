@@ -25,13 +25,14 @@ if (isset($GameID)) { ?>
 	echo $ThisShip->hasDCS() ? '*' : '-';
 	?><br /><br /><?php
 	if ($ThisShip->hasCloak()) { ?>
-		<a href="<?php echo $HardwareLink; ?>"><?php
+		<span id="cloak"><a href="<?php echo $HardwareLink; ?>"><?php
 			if ($ThisShip->isCloaked()) {
 				?><strong class="green">*** Cloak active ***</strong><?php
 			} else {
 				?><strong class="red">*** Cloak inactive ***</strong><?php
 			} ?>
-		</a><br /><br /><?php
+		</a></span>
+		<br /><br /><?php
 	}
 	if ($ThisShip->hasActiveIllusion()) { ?>
 		<a href="<?php echo $HardwareLink; ?>">
