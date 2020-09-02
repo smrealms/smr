@@ -15,6 +15,8 @@ if ($ThisPlayer->hasNewbieTurns()) {
 	?><p class="big blue">You are under federal protection! That wouldn't be fair.</p><?php
 } elseif ($TargetPlayer->hasFederalProtection()) {
 	?><p class="big blue">Your target is under federal protection!</p><?php
+}elseif (!$ThisPlayer->canSee($TargetPlayer)) {
+	?><p class="big red">Your target has cloaked!</p><?php
 } else {
 	$canAttack = true;
 	$fightingPlayers = $ThisSector->getFightingTraders($ThisPlayer, $TargetPlayer, true);
