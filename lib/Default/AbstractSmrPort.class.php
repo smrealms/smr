@@ -23,7 +23,8 @@ class AbstractSmrPort {
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
 	const GOODS_TRADED_MONEY_MULTIPLIER = 50;
-	const RAZE_MONEY_PERCENT = 75;
+	const RAZE_MONEY_PERCENT = 56;	//0.75*75
+	const LOOT_MONEY_PERCENT = 75;
 	
 	protected $db;
 	
@@ -1324,7 +1325,7 @@ class AbstractSmrPort {
 	}
 
 	public function lootPort(AbstractSmrPlayer $killer) {
-		$credits = $this->getCredits();
+		$credits = IFloor($this->getCredits() * self::LOOT_MONEY_PERCENT / 100);
 		$this->payout($killer, $credits, 'Looted');
 		return $credits;
 	}
