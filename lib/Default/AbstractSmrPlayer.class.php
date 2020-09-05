@@ -44,7 +44,7 @@ abstract class AbstractSmrPlayer {
 	protected $deaths;
 	protected $assists;
 	protected $stats;
-	protected $pureRelations;
+	protected $personalRelations;
 	protected $relations;
 	protected $militaryPayment;
 	protected $bounties;
@@ -1443,43 +1443,46 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	protected function getPureRelationsData() {
-		if (!isset($this->pureRelations)) {
+	protected function getPersonalRelationsData() {
+		if (!isset($this->personalRelations)) {
 			//get relations
 			$RACES = Globals::getRaces();
-			$this->pureRelations = array();
+			$this->personalRelations = array();
 			foreach ($RACES as $raceID => $raceName) {
-				$this->pureRelations[$raceID] = 0;
+				$this->personalRelations[$raceID] = 0;
 			}
 			$this->db->query('SELECT race_id,relation FROM player_has_relation WHERE ' . $this->SQL . ' LIMIT ' . count($RACES));
 			while ($this->db->nextRecord()) {
-				$this->pureRelations[$this->db->getInt('race_id')] = $this->db->getInt('relation');
+				$this->personalRelations[$this->db->getInt('race_id')] = $this->db->getInt('relation');
 			}
 		}
 	}
 
-	public function getPureRelations() {
-		$this->getPureRelationsData();
-		return $this->pureRelations;
+	public function getPersonalRelations() {
+		$this->getPersonalRelationsData();
+		return $this->personalRelations;
 	}
 
 	/**
 	 * Get personal relations with a race
 	 */
-	public function getPureRelation($raceID) {
-		$rels = $this->getPureRelations();
+	public function getPersonalRelation($raceID) {
+		$rels = $this->getPersonalRelations();
 		return $rels[$raceID];
 	}
 
+	/**
+	 * Get total relations with all races (personal + political)
+	 */
 	public function getRelations() {
 		if (!isset($this->relations)) {
 			//get relations
 			$RACES = Globals::getRaces();
 			$raceRelations = Globals::getRaceRelations($this->getGameID(), $this->getRaceID());
-			$pureRels = $this->getPureRelations(); // make sure they're initialised.
+			$personalRels = $this->getPersonalRelations(); // make sure they're initialised.
 			$this->relations = array();
 			foreach ($RACES as $raceID => $raceName) {
-				$this->relations[$raceID] = $pureRels[$raceID] + $raceRelations[$raceID];
+				$this->relations[$raceID] = $personalRels[$raceID] + $raceRelations[$raceID];
 			}
 		}
 		return $this->relations;
@@ -1500,17 +1503,24 @@ abstract class AbstractSmrPlayer {
 	public function increaseRelationsByTrade($numGoods, $raceID) {
 		$relations = ICeil(min($numGoods, 300) / 30);
 		//Cap relations to a max of 1 after 500 have been reached
-		if ($this->getPureRelation($raceID) + $relations >= 500) {
-			$relations = max(1, min($relations, 500 - $this->getPureRelation($raceID)));
+		if ($this->getPersonalRelation($raceID) + $relations >= 500) {
+			$relations = max(1, min($relations, 500 - $this->getPersonalRelation($raceID)));
 		}
 		$this->increaseRelations($relations, $raceID);
 	}
 
+	/**
+	 * Decreases personal relations from trading failures, e.g. rejected
+	 * bargaining and getting caught stealing.
+	 */
 	public function decreaseRelationsByTrade($numGoods, $raceID) {
 		$relations = ICeil(min($numGoods, 300) / 30);
 		$this->decreaseRelations($relations, $raceID);
 	}
 
+	/**
+	 * Increase personal relations.
+	 */
 	public function increaseRelations($relations, $raceID) {
 		if ($relations < 0) {
 			throw new Exception('Trying to increase negative relations.');
@@ -1518,10 +1528,13 @@ abstract class AbstractSmrPlayer {
 		if ($relations == 0) {
 			return;
 		}
-		$relations += $this->getPureRelation($raceID);
+		$relations += $this->getPersonalRelation($raceID);
 		$this->setRelations($relations, $raceID);
 	}
 
+	/**
+	 * Decrease personal relations.
+	 */
 	public function decreaseRelations($relations, $raceID) {
 		if ($relations < 0) {
 			throw new Exception('Trying to decrease negative relations.');
@@ -1529,22 +1542,25 @@ abstract class AbstractSmrPlayer {
 		if ($relations == 0) {
 			return;
 		}
-		$relations = $this->getPureRelation($raceID) - $relations;
+		$relations = $this->getPersonalRelation($raceID) - $relations;
 		$this->setRelations($relations, $raceID);
 	}
 
+	/**
+	 * Set personal relations.
+	 */
 	public function setRelations($relations, $raceID) {
 		$this->getRelations();
-		if ($this->pureRelations[$raceID] == $relations) {
+		if ($this->personalRelations[$raceID] == $relations) {
 			return;
 		}
 		if ($relations < MIN_RELATIONS) {
 			$relations = MIN_RELATIONS;
 		}
-		$relationsDiff = IRound($relations - $this->pureRelations[$raceID]);
-		$this->pureRelations[$raceID] = $relations;
+		$relationsDiff = IRound($relations - $this->personalRelations[$raceID]);
+		$this->personalRelations[$raceID] = $relations;
 		$this->relations[$raceID] += $relationsDiff;
-		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID) . ',' . $this->db->escapeNumber($this->pureRelations[$raceID]) . ')');
+		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID) . ',' . $this->db->escapeNumber($this->personalRelations[$raceID]) . ')');
 	}
 
 	/**

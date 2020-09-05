@@ -28,8 +28,8 @@
 
 			<br /><?php
 			foreach (Globals::getRaces() as $raceID => $raceInfo) {
-				if ($ThisPlayer->getPureRelation($raceID) != 0) {
-					echo $raceInfo['Race Name'] . ' : ' . get_colored_text($ThisPlayer->getPureRelation($raceID)) . '<br />';
+				if ($ThisPlayer->getPersonalRelation($raceID) != 0) {
+					echo $raceInfo['Race Name'] . ' : ' . get_colored_text($ThisPlayer->getPersonalRelation($raceID)) . '<br />';
 				}
 			} ?>
 

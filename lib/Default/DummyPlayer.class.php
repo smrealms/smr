@@ -28,11 +28,11 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$this->bank						= 0;
 		$this->zoom						= 0;
 		
-		$this->pureRelations = array();
+		$this->personalRelations = array();
 		$this->bounties = array();
 	}
 	
-	protected function getPureRelationsData() {
+	protected function getPersonalRelationsData() {
 	}
 	
 	protected function getHOFData() {
