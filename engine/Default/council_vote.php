@@ -18,7 +18,7 @@ if ($db->nextRecord()) {
 }
 
 $voteRelations = array();
-$globalRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
+$raceRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
 foreach (Globals::getRaces() as $raceID => $raceInfo) {
 	if ($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID()) {
 		continue;
@@ -28,7 +28,7 @@ foreach (Globals::getRaces() as $raceID => $raceInfo) {
 		'HREF' => SmrSession::getNewHREF($container),
 		'Increased' => $votedForRace == $raceID && $votedFor == 'INC',
 		'Decreased' => $votedForRace == $raceID && $votedFor == 'DEC',
-		'Relations' => $globalRelations[$raceID],
+		'Relations' => $raceRelations[$raceID],
 	);
 }
 $template->assign('VoteRelations', $voteRelations);
