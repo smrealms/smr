@@ -31,8 +31,8 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 		
 		<tr>
 			<td class="right bold">Birthdate:</td>
-			<td>Day:&nbsp;<input type="number" name="month" class="center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Month']); } ?>" min="1" max="12">&nbsp;&nbsp;&nbsp;
-				Month:&nbsp;<input type="number" name="day" class="center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Day']); } ?>" min="1" max="31">&nbsp;&nbsp;&nbsp;
+			<td>Day:&nbsp;<input type="number" name="day" class="center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Day']); } ?>" min="1" max="31">&nbsp;&nbsp;&nbsp;
+				Month:&nbsp;<input type="number" name="month" class="center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Month']); } ?>" min="1" max="12">&nbsp;&nbsp;&nbsp;
 				Year:&nbsp;<input type="number" name="year" class="center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Year']); } ?>" min="1900" max="<?php echo date('Y'); ?>">
 			</td>
 		</tr>
