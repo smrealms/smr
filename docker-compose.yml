@@ -26,11 +26,7 @@ x-smr-common: &smr-common
         - backend
     labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=frontend"
-        - "traefik.backend=${SMR_HOST}"
-        - "traefik.frontend.passHostHeader=true"
-        - "traefik.frontend.rule=${SMR_RULE:-PathPrefix:/}"
-        - "traefik.port=80"
+        - "traefik.http.routers.${SMR_HOST}.rule=${SMR_RULE:-PathPrefix(`/`)}"
     depends_on:
         - mysql
         - smtp
@@ -61,8 +57,6 @@ services:
         environment:
             - POSTFIX_myhostname=hostname.local
             - OPENDKIM_DOMAINS=smrealms.de=key1
-        labels:
-            - "traefik.enable=false"
         volumes:
             - ./opendkim:/etc/opendkim/keys/smrealms.de
 
@@ -71,8 +65,6 @@ services:
         command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live?useSSL=false -user=smr -password=${MYSQL_PASSWORD} migrate
         networks:
             - backend
-        labels:
-            - "traefik.enable=false"
         depends_on:
             - mysql
         volumes:
@@ -92,8 +84,6 @@ services:
             MYSQL_DATABASE:      smr_live
         volumes:
             - ./vol_db:/var/lib/mysql
-        labels:
-            - "traefik.enable=false"
         # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
         # which is incompatible with the way the SMR database is used.
         # Therefore, we override CMD to omit this sql mode.
@@ -111,11 +101,8 @@ services:
             PMA_ABSOLUTE_URI: /pma/
         labels:
             - "traefik.enable=true"
-            - "traefik.docker.network=frontend"
-            - "traefik.backend=pma"
-            - "traefik.frontend.passHostHeader=true"
-            - "traefik.frontend.rule=PathPrefixStrip:/pma/"
-            - "traefik.port=80"
+            - "traefik.http.routers.pma-${MYSQL_HOST}.rule=PathPrefix(`/pma`)"
+            - "traefik.http.routers.pma-${MYSQL_HOST}.middlewares=slash-then-strip@file"
         depends_on:
             - mysql
 
@@ -125,8 +112,6 @@ services:
             dockerfile: ./tools/discord/Dockerfile
         networks:
             - backend
-        labels:
-            - "traefik.enable=false"
         depends_on:
             - mysql
         volumes:
@@ -138,8 +123,6 @@ services:
             dockerfile: ./tools/irc/Dockerfile
         networks:
             - backend
-        labels:
-            - "traefik.enable=false"
         depends_on:
             - mysql
         volumes:
@@ -151,8 +134,6 @@ services:
             dockerfile: ./tools/npc/Dockerfile
         networks:
             - backend
-        labels:
-            - "traefik.enable=false"
         depends_on:
             - mysql
             - smtp
@@ -160,19 +141,17 @@ services:
             - ./config:/smr/config
 
     traefik:
-        image: traefik:1.7
+        image: traefik:2.2
         networks:
             - frontend
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - ./traefik/traefik.toml:/etc/traefik/traefik.toml
+            - ./traefik:/etc/traefik
         labels:
             - "traefik.enable=true"
-            - "traefik.backend=traefik-dashboard"
-            - "traefik.docker.network=frontend"
-            - "traefik.frontend.passHostHeader=true"
-            - "traefik.frontend.rule=PathPrefixStrip:/traefik"
-            - "traefik.port=8080"
+            - "traefik.http.routers.traefik.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+            - "traefik.http.routers.traefik.service=api@internal"
+            - "traefik.http.routers.traefik.middlewares=add-slash@file"
         ports:
             - "80:80"
             - "443:443"
@@ -186,8 +165,8 @@ services:
             - frontend
         labels:
             - "traefik.enable=true"
-            - "traefik.frontend.rule=PathPrefixStrip:/api"
-            - "traefik.port=80"
+            - "traefik.http.routers.api-docs.rule=PathPrefix(`/docs`)"
+            - "traefik.http.routers.api-docs.middlewares=slash-then-strip@file"
 
     # Web interface for managing Docker services
     portainer:
@@ -196,11 +175,8 @@ services:
             - frontend
         labels:
             - "traefik.enable=true"
-            - "traefik.backend=portainer"
-            - "traefik.docker.network=frontend"
-            - "traefik.frontend.passHostHeader=true"
-            - "traefik.frontend.rule=PathPrefixStrip:/docker"
-            - "traefik.port=9000"
+            - "traefik.http.routers.portainer.rule=PathPrefix(`/docker`)"
+            - "traefik.http.routers.portainer.middlewares=slash-then-strip@file"
         command: -H unix:///var/run/docker.sock
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock

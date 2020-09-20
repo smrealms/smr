@@ -1,0 +1,10 @@
+# For services that need to strip off a PathPrefix and/or add a trailing slash
+[http.middlewares]
+  [http.middlewares.strip-pathprefix.stripPrefixRegex]
+    regex = ["/[^/]+"]
+  [http.middlewares.add-slash.redirectRegex]
+    regex = "^(https?://[^/]+/[^/]+)$"
+    replacement = "${1}/"
+    permanent = true
+  [http.middlewares.slash-then-strip.chain]
+    middlewares = ["add-slash", "strip-pathprefix"]
