@@ -170,13 +170,14 @@ services:
 
     # Web interface for managing Docker services
     portainer:
-        image: portainer/portainer
+        image: portainer/portainer-ce
         networks:
             - frontend
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.portainer.rule=PathPrefix(`/docker`)"
             - "traefik.http.routers.portainer.middlewares=slash-then-strip@file"
+            - "traefik.http.services.portainer.loadbalancer.server.port=9000"
         command: -H unix:///var/run/docker.sock
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
