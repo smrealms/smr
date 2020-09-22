@@ -34,11 +34,10 @@ foreach (Globals::getGoods() as $good) {
 }
 
 $file .= '[Weapons]
-; Weapon = Race,Cost,Shield,Armour,Accuracy,Power level,EMP (%),Align Restriction,Attack Restriction
-; Align: 0=none, 1=good, 2=evil, 3=newbie
-; Attack: 0=none, 1=raid' . EOL;
+; Weapon = Race,Cost,Shield,Armour,Accuracy,Power level,Restriction
+; Restriction: 0=none, 1=good, 2=evil, 3=newbie, 4=port, 5=planet' . EOL;
 foreach (SmrWeapon::getAllWeapons(Globals::getGameType($gameID)) as $weapon) {
-	$file .= inify($weapon->getName()) . '=' . inify($weapon->getRaceName()) . ',' . $weapon->getCost() . ',' . $weapon->getShieldDamage() . ',' . $weapon->getArmourDamage() . ',' . $weapon->getBaseAccuracy() . ',' . $weapon->getPowerLevel() . ',' . $weapon->getEmpDamage() . ',' . $weapon->getBuyerRestriction() . ',' . ($weapon->isRaidWeapon() ? '1' : '0') . EOL;
+	$file .= inify($weapon->getName()) . '=' . inify($weapon->getRaceName()) . ',' . $weapon->getCost() . ',' . $weapon->getShieldDamage() . ',' . $weapon->getArmourDamage() . ',' . $weapon->getBaseAccuracy() . ',' . $weapon->getPowerLevel() . ',' . $weapon->getBuyerRestriction() . EOL;
 }
 
 $file .= '[ShipEquipment]

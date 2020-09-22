@@ -13,7 +13,6 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 		$this->armourDamage = 20;
 		$this->accuracy = 100;
 		$this->damageRollover = false;
-		$this->raidWeapon = false;
 	}
 	
 	public function getNumberOfSDs() {

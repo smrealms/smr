@@ -20,7 +20,6 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		}
 		$this->accuracy = 3;
 		$this->damageRollover = true;
-		$this->raidWeapon = false;
 	}
 	
 	public function getNumberOfCDs() {
