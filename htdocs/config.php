@@ -108,7 +108,6 @@ const LOG_TYPE_ACCOUNT_CHANGES = 13;
 /*
  * Race types
  */
-
 const RACE_NEUTRAL = 1;
 const RACE_ALSKANT = 2;
 const RACE_CREONTI = 3;
@@ -139,7 +138,6 @@ const GOODS_NARCOTICS = 12;
 /*
  * Ship types
  */
-
 const SHIP_TYPE_GALACTIC_SEMI = 1;
 const SHIP_TYPE_INTERSTELLAR_TRADER = 9;
 const SHIP_TYPE_PLANETARY_SUPER_FREIGHTER = 12;
@@ -180,6 +178,11 @@ const SHIP_TYPE_REDEEMER = 70;
 const SHIP_TYPE_RETALIATION = 71;
 const SHIP_TYPE_VENGEANCE = 72;
 const SHIP_TYPE_FURY = 75;
+
+/*
+ * Weapon types
+ */
+const WEAPON_TYPE_LASER = 46;
 
 /*
  * Combat log pages

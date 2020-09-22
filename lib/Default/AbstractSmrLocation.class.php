@@ -330,7 +330,8 @@ class AbstractSmrLocation {
 			$this->weaponsSold = array();
 			$this->db->query('SELECT * FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
 			while ($this->db->nextRecord()) {
-				$this->weaponsSold[$this->db->getInt('weapon_type_id')] = SmrWeapon::getWeapon($this->db->getInt('weapon_type_id'), false, $this->db);
+				$weaponTypeID = $this->db->getInt('weapon_type_id');
+				$this->weaponsSold[$weaponTypeID] = SmrWeapon::getWeapon($weaponTypeID, $this->db);
 			}
 		}
 		return $this->weaponsSold;
@@ -349,9 +350,6 @@ class AbstractSmrLocation {
 			return;
 		}
 		$weapon = SmrWeapon::getWeapon($weaponTypeID);
-		if ($weapon === false) {
-			throw new Exception('Invalid weapon type id given');
-		}
 		$this->db->query('INSERT INTO location_sells_weapons (location_type_id,weapon_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($weaponTypeID) . ')');
 		$this->weaponsSold[$weaponTypeID] = $weapon;
 	}
@@ -398,7 +396,7 @@ class AbstractSmrLocation {
 	}
 
 	public function hasX(/*Object*/ $x, AbstractSmrPlayer $player = null) {
-		if ($x instanceof SmrWeapon) {
+		if ($x instanceof SmrWeaponType) {
 			return $this->isWeaponSold($x->getWeaponTypeID());
 		}
 		if (is_array($x)) {

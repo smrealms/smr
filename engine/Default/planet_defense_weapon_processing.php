@@ -15,8 +15,8 @@ if (Request::has('transfer')) {
 		create_error('You must select a weapon to transfer!');
 	}
 	$shipOrderID = Request::getInt('ship_order' . $planetOrderID);
-	$weaponTypeID = $ship->getWeapons()[$shipOrderID]->getWeaponTypeID();
-	$planet->addMountedWeapon($weaponTypeID, $planetOrderID);
+	$weapon = $ship->getWeapons()[$shipOrderID];
+	$planet->addMountedWeapon($weapon, $planetOrderID);
 	$ship->removeWeapon($shipOrderID);
 } elseif (Request::has('destroy')) {
 	// Destroy the weapon on the planet (but only if all mounts are filled)

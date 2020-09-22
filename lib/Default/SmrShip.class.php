@@ -51,14 +51,19 @@ class SmrShip extends AbstractSmrShip {
 	 */
 	protected function loadWeapons() {
 		// determine weapon
-		$this->db->query('SELECT weapon_type.*, order_id FROM ship_has_weapon JOIN weapon_type USING (weapon_type_id)
+		$this->db->query('SELECT * FROM ship_has_weapon JOIN weapon_type USING (weapon_type_id)
 							WHERE ' . $this->SQL . '
 							ORDER BY order_id LIMIT ' . $this->db->escapeNumber($this->getHardpoints()));
 		
 		$this->weapons = array();
 		// generate list of weapon names the user transports
 		while ($this->db->nextRecord()) {
-			$this->weapons[$this->db->getInt('order_id')] = SmrWeapon::getWeapon($this->db->getInt('weapon_type_id'), false, $this->db);
+			$weaponTypeID = $this->db->getInt('weapon_type_id');
+			$orderID = $this->db->getInt('order_id');
+			$weapon = SmrWeapon::getWeapon($weaponTypeID, $this->db);
+			$weapon->setBonusAccuracy($this->db->getBoolean('bonus_accuracy'));
+			$weapon->setBonusDamage($this->db->getBoolean('bonus_damage'));
+			$this->weapons[$orderID] = $weapon;
 		}
 		$this->checkForExcessWeapons();
 	}
@@ -140,8 +145,8 @@ class SmrShip extends AbstractSmrShip {
 			// write weapon info
 			$this->db->query('DELETE FROM ship_has_weapon WHERE ' . $this->SQL);
 			foreach ($this->weapons as $orderID => $weapon) {
-				$this->db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id)
-								VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($orderID) . ', ' . $this->db->escapeNumber($weapon->getWeaponTypeID()) . ')');
+				$this->db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id, bonus_accuracy, bonus_damage)
+								VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($orderID) . ', ' . $this->db->escapeNumber($weapon->getWeaponTypeID()) . ', ' . $this->db->escapeBoolean($weapon->hasBonusAccuracy()) . ', ' . $this->db->escapeBoolean($weapon->hasBonusDamage()) . ')');
 			}
 			$this->hasChangedWeapons = false;
 		}
