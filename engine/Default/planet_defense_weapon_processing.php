@@ -19,7 +19,10 @@ if (Request::has('transfer')) {
 	$planet->addMountedWeapon($weaponTypeID, $planetOrderID);
 	$ship->removeWeapon($shipOrderID);
 } elseif (Request::has('destroy')) {
-	// Destroy the weapon on the planet
+	// Destroy the weapon on the planet (but only if all mounts are filled)
+	if (count($planet->getMountedWeapons()) != $planet->getMaxMountedWeapons()) {
+		create_error('You can only destroy a mounted weapon once all mounts are filled!');
+	}
 	$planet->removeMountedWeapon(Request::getInt('destroy'));
 } elseif (Request::has('move_up')) {
 	$planet->moveMountedWeaponUp(Request::getInt('move_up'));

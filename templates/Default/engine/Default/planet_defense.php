@@ -84,7 +84,12 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 						<td><?php echo $weapons[$i]->getShieldDamage() . ' / ' . $weapons[$i]->getArmourDamage(); ?></td>
 						<td><?php echo $weapons[$i]->getBaseAccuracy(); ?>%</td>
 						<td><?php echo $weapons[$i]->getPowerLevel(); ?></td>
-						<td><button type="submit" name="destroy" value="<?php echo $i; ?>">Destroy</button></td><?php
+						<td><?php
+							if (count($weapons) == $ThisPlanet->getMaxMountedWeapons()) {
+								// Only allow destroying mounted weapons when all slots are filled ?>
+								<button type="submit" name="destroy" value="<?php echo $i; ?>">Destroy</button><?php
+							} ?>
+						</td><?php
 					} else { ?>
 						<td class="left">
 							<select name="ship_order<?php echo $i; ?>" onchange="showWeaponInfo(this)" data-target=".weapon-info<?php echo $i; ?>"><?php
