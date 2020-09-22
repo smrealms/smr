@@ -12,10 +12,8 @@ abstract class AbstractSmrCombatWeapon {
 	protected $maxDamage;
 	protected $shieldDamage;
 	protected $armourDamage;
-	protected $empDamage = 0;
 	protected $accuracy;
 	protected $damageRollover;
-	protected $raidWeapon;
 	
 	public function getBaseAccuracy() {
 		return $this->accuracy;
@@ -45,20 +43,12 @@ abstract class AbstractSmrCombatWeapon {
 		return $this->armourDamage;
 	}
 	
-	public function getEmpDamage() {
-		return $this->empDamage;
-	}
-	
 	public function isDamageRollover() {
 		return $this->damageRollover;
 	}
 	
-	public function isRaidWeapon() {
-		return $this->raidWeapon;
-	}
-	
 	public function canShootForces() {
-		return !$this->isRaidWeapon();
+		return true;
 	}
 	
 	public function canShootPorts() {
@@ -70,7 +60,7 @@ abstract class AbstractSmrCombatWeapon {
 	}
 	
 	public function canShootTraders() {
-		return !$this->isRaidWeapon();
+		return true;
 	}
 	
 	public function getDamage() {

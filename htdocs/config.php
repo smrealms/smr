@@ -411,7 +411,7 @@ const CDS_REFUND_PERCENT = .5;
 
 const EOL = "\n";
 
-const SMR_FILE_VERSION = '1.06';
+const SMR_FILE_VERSION = '1.07';
 
 // These CSS URLs must be hard-coded here so that grunt-cache-bust
 // can replace them with the hashed filenames.

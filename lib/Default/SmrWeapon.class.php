@@ -62,7 +62,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			$this->powerLevel = $db->getInt('power_level');
 			$this->buyerRestriction = $db->getInt('buyer_restriction');
 			$this->damageRollover = false;
-			$this->raidWeapon = false;
 			$this->maxDamage = max($this->shieldDamage, $this->armourDamage);
 		}
 	}
