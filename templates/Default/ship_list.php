@@ -52,11 +52,21 @@
 						</th>
 						<th>
 							<span class="sort" data-sort="speed">Speed</span><br />
-							<?php echo $speed; ?>
+							<select onchange="filterSelect(this)">
+								<option>All</option><?php
+								foreach ($Speeds as $Speed) { ?>
+									<option><?php echo $Speed; ?></option><?php
+								} ?>
+							</select>
 						</th>
 						<th>
 							<span class="sort" data-sort="hardpoint">Hardpoints</span><br />
-							<?php echo $hardpoint; ?>
+							<select onchange="filterSelect(this)">
+								<option>All</option><?php
+								foreach ($Hardpoints as $Hardpoint) { ?>
+									<option><?php echo $Hardpoint; ?></option><?php
+								} ?>
+							</select>
 						</th>
 						<th>
 							<span class="sort" data-sort="restriction">Restriction</span><br />
@@ -72,26 +82,17 @@
 						<th><span class="sort" data-sort="cargo">Cargo</span></th>
 						<th><span class="sort" data-sort="cds">Drones</span></th>
 						<th><span class="sort" data-sort="scouts">Scouts</span></th>
-						<th><span class="sort" data-sort="mines">Mines</span></th>
-						<th>
-							<span class="sort" data-sort="scanner">Scanner</span><br />
-							<?php echo $toggle; ?>
-						</th>
-						<th>
-							<span class="sort" data-sort="cloak">Cloak</span><br />
-							<?php echo $toggle; ?>
-						</th>
-						<th>
-							<span class="sort" data-sort="illusion">Illusion</span><br />
-							<?php echo $toggle; ?>
-						</th>
-						<th>
-							<span class="sort" data-sort="jump">Jump</span><br />
-							<?php echo $toggle; ?></th>
-						<th>
-							<span class="sort" data-sort="scrambler">Scrambler</span><br />
-							<?php echo $toggle; ?>
-						</th>
+						<th><span class="sort" data-sort="mines">Mines</span></th><?php
+						foreach ($BooleanFields as $Field) { ?>
+							<th>
+								<span class="sort" data-sort="<?php echo strtolower($Field); ?>"><?php echo $Field; ?></span><br />
+								<select onchange="filterSelect(this)">
+									<option>All</option>
+									<option>Yes</option>
+									<option value="">No</option>
+								</select>
+							</th><?php
+						} ?>
 					</tr>
 				</thead>
 				<tbody class="list"><?php

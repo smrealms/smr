@@ -4,38 +4,26 @@ try {
 
 	$template = new Template();
 
-	$db = new SmrMySqlDatabase();
-	$template->assign('speed', buildSelector($db, 'speed', 'ship_type'));
-	$template->assign('hardpoint', buildSelector($db, 'hardpoint', 'ship_type'));
-	$template->assign('toggle', buildToggle());
-
 	$gameType = ''; // no game type here
 	foreach (SmrShip::getAllBaseShips($gameType) as $ship) {
 		$shipArray[] = buildShipStats($ship);
 	}
 	$template->assign('shipArray', $shipArray);
 
+	$speeds = array_unique(array_column($shipArray, 'speed'));
+	rsort($speeds);
+	$template->assign('Speeds', $speeds);
+
+	$hardpoints = array_unique(array_column($shipArray, 'hardpoint'));
+	rsort($hardpoints);
+	$template->assign('Hardpoints', $hardpoints);
+
+	$booleanFields = ['Scanner', 'Cloak', 'Illusion', 'Jump', 'Scrambler'];
+	$template->assign('BooleanFields', $booleanFields);
+
 	$template->display('ship_list.php');
 } catch (Throwable $e) {
 	handleException($e);
-}
-
-function buildSelector($db, $name, $table) {
-	$selector = '<select onchange="filterSelect(this)"><option>All</option>';
-	$db->query('SELECT DISTINCT ' . $name . ' FROM ' . $table . ' ORDER BY ' . $name);
-	while ($db->nextRecord()) {
-		$selector .= '<option>' . $db->getField($name) . '</option>';
-	}
-	$selector .= '</select>';
-	return $selector;
-}
-
-function buildToggle() {
-	$toggle = '<select onchange="filterSelect(this)">'
-	.'<option>All</option>'
-	.'<option>Yes</option>'
-	.'<option value="">No</option></select>';
-	return $toggle;
 }
 
 function buildShipStats($ship) {
