@@ -22,7 +22,12 @@
 
 	<body onload="resetBoxes()">
 		<div id="container">
-			<?php echo $raceBoxes; ?>
+			<form id="raceform" name="raceform" style="text-align:center;"><?php
+				foreach (Globals::getRaces() as $raceID => $race) { ?>
+					<input type="checkbox" id="race<?php echo $raceID; ?>" name="races" value="<?php echo $race['Race Name']; ?>" onClick="raceToggle()">
+					<label for="race<?php echo $raceID; ?>" class="race<?php echo $raceID; ?>"><?php echo $race['Race Name']; ?></label>&thinsp;<?php
+				} ?>
+			</form>
 			<table id="data-list" class="standard center">
 				<thead>
 					<tr class="top">
@@ -53,7 +58,12 @@
 						</th>
 						<th style="width: 51px;">
 							<span class="sort" data-sort="level">Level</span><br />
-							<?php echo $power; ?>
+							<select onchange="filterSelect(this)">
+								<option>All</option><?php
+								foreach ($PowerLevels as $PowerLevel) { ?>
+									<option><?php echo $PowerLevel; ?></option><?php
+								} ?>
+							</select>
 						</th>
 						<th style="width: 92px;">
 							<span class="sort" data-sort="restriction">Restriction</span><br />
