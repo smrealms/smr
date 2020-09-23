@@ -35,7 +35,8 @@ class SmrWeaponType {
 		$db->query('SELECT * FROM weapon_type');
 		$weapons = array();
 		while ($db->nextRecord()) {
-			$weapons[] = self::getWeaponType($db->getInt('weapon_type_id'), $db);
+			$weaponTypeID = $db->getInt('weapon_type_id');
+			$weapons[$weaponTypeID] = self::getWeaponType($weaponTypeID, $db);
 		}
 		return $weapons;
 	}
