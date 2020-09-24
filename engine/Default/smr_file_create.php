@@ -36,7 +36,7 @@ foreach (Globals::getGoods() as $good) {
 $file .= '[Weapons]
 ; Weapon = Race,Cost,Shield,Armour,Accuracy,Power level,Restriction
 ; Restriction: 0=none, 1=good, 2=evil, 3=newbie, 4=port, 5=planet' . EOL;
-foreach (SmrWeapon::getAllWeapons(Globals::getGameType($gameID)) as $weapon) {
+foreach (SmrWeaponType::getAllWeaponTypes() as $weapon) {
 	$file .= inify($weapon->getName()) . '=' . inify($weapon->getRaceName()) . ',' . $weapon->getCost() . ',' . $weapon->getShieldDamage() . ',' . $weapon->getArmourDamage() . ',' . $weapon->getBaseAccuracy() . ',' . $weapon->getPowerLevel() . ',' . $weapon->getBuyerRestriction() . EOL;
 }
 

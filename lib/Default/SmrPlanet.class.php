@@ -501,11 +501,14 @@ class SmrPlanet {
 		if (!isset($this->mountedWeapons)) {
 			$this->mountedWeapons = [];
 			if ($this->hasBuilding(PLANET_WEAPON_MOUNT)) {
-				$this->db->query('SELECT weapon_type.*, order_id FROM planet_has_weapon JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
+				$this->db->query('SELECT * FROM planet_has_weapon JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
 				while ($this->db->nextRecord()) {
 					$weaponTypeID = $this->db->getInt('weapon_type_id');
 					$orderID = $this->db->getInt('order_id');
-					$this->mountedWeapons[$orderID] = SmrWeapon::getWeapon($weaponTypeID, false, $this->db);
+					$weapon = SmrWeapon::getWeapon($weaponTypeID, $this->db);
+					$weapon->setBonusAccuracy($this->db->getBoolean('bonus_accuracy'));
+					$weapon->setBonusDamage($this->db->getBoolean('bonus_damage'));
+					$this->mountedWeapons[$orderID] = $weapon;
 				}
 			}
 		}
@@ -517,9 +520,9 @@ class SmrPlanet {
 		return isset($this->mountedWeapons[$orderID]);
 	}
 
-	public function addMountedWeapon($weaponTypeID, $orderID) {
+	public function addMountedWeapon(SmrWeapon $weapon, $orderID) {
 		$this->getMountedWeapons(); // Make sure array is initialized
-		$this->mountedWeapons[$orderID] = SmrWeapon::getWeapon($weaponTypeID);
+		$this->mountedWeapons[$orderID] = $weapon;
 		$this->hasChangedWeapons[$orderID] = true;
 	}
 
@@ -839,7 +842,7 @@ class SmrPlanet {
 		if (count($this->hasChangedWeapons) > 0) {
 			foreach (array_keys($this->hasChangedWeapons) as $orderID) {
 				if (isset($this->mountedWeapons[$orderID])) {
-					$this->db->query('REPLACE INTO planet_has_weapon (game_id, sector_id, order_id, weapon_type_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($orderID) . ',' . $this->db->escapeNumber($this->mountedWeapons[$orderID]->getWeaponTypeID()) . ')');
+					$this->db->query('REPLACE INTO planet_has_weapon (game_id, sector_id, order_id, weapon_type_id, bonus_accuracy, bonus_damage) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($orderID) . ',' . $this->db->escapeNumber($this->mountedWeapons[$orderID]->getWeaponTypeID()) . ',' . $this->db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusAccuracy()) . ',' . $this->db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusDamage()) . ')');
 				} else {
 					$this->db->query('DELETE FROM planet_has_weapon WHERE ' . $this->SQL . ' AND order_id=' . $this->db->escapeNumber($orderID));
 				}

@@ -16,7 +16,7 @@ if ($ThisLocation->isWeaponSold()) { ?>
 		</thead>
 
 		<tbody class="list"><?php
-			foreach ($ThisLocation->getWeaponsSold() as $Weapon) { ?>
+			foreach ($WeaponsSold as $Weapon) { ?>
 				<tr>
 					<td class="sort_name"><?php echo $Weapon->getName(); ?></td>
 					<td class="sort_shield"><?php echo $Weapon->getShieldDamage(); ?></td>

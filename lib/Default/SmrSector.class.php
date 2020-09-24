@@ -1038,7 +1038,7 @@ class SmrSector {
 		}
 
 		//Check if it's possible for location to have X, hacky but nice performance gains
-		if ($x instanceof SmrWeapon || (is_array($x) && ($x['Type'] == 'Ship' || $x['Type'] == 'Hardware')) || (is_string($x) && ($x == 'Bank' || $x == 'Bar' || $x == 'Fed' || $x == 'SafeFed' || $x == 'HQ' || $x == 'UG' || $x == 'Hardware' || $x == 'Ship' || $x == 'Weapon'))) {
+		if ($x instanceof SmrWeaponType || (is_array($x) && ($x['Type'] == 'Ship' || $x['Type'] == 'Hardware')) || (is_string($x) && ($x == 'Bank' || $x == 'Bar' || $x == 'Fed' || $x == 'SafeFed' || $x == 'HQ' || $x == 'UG' || $x == 'Hardware' || $x == 'Ship' || $x == 'Weapon'))) {
 			foreach ($this->getLocations() as $loc) {
 				if ($loc->hasX($x, $player)) {
 					return true;

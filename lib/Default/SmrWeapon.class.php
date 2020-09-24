@@ -1,86 +1,113 @@
 <?php declare(strict_types=1);
 
+/**
+ * Defines a concrete realization of a weapon type for ships/planets.
+ */
 class SmrWeapon extends AbstractSmrCombatWeapon {
-	protected static $CACHE_WEAPONS = array();
-	
-	protected static $db;
-	
-	protected $weaponTypeID;
-	protected $cost;
-	protected $powerLevel;
-	protected $buyerRestriction;
 
-	
-	protected static function initialiseDatabase() {
-		if (self::$db == null) {
-			self::$db = new SmrMySqlDatabase();
-		}
+	const BONUS_DAMAGE = 1.05; // multiplicative bonus
+	const BONUS_ACCURACY = 3; // additive bonus
+
+	protected int $weaponTypeID;
+	protected SmrWeaponType $weaponType;
+	protected bool $bonusAccuracy = false; // default
+	protected bool $bonusDamage = false; // default
+	protected $damageRollover = false; // fixed for all SmrWeapons
+
+	public static function getWeapon(int $weaponTypeID, SmrMySqlDatabase $db = null) : SmrWeapon {
+		return new SmrWeapon($weaponTypeID, $db);
 	}
 
-	public static function getWeapon($weaponTypeID, $forceUpdate = false, $db = null) {
-		if ($forceUpdate || !isset(self::$CACHE_WEAPONS[$weaponTypeID])) {
-			$w = new SmrWeapon($weaponTypeID, $db);
-			if ($w->exists()) {
-				self::$CACHE_WEAPONS[$weaponTypeID] = $w;
-			} else {
-				self::$CACHE_WEAPONS[$weaponTypeID] = false;
-			}
-		}
-		return self::$CACHE_WEAPONS[$weaponTypeID];
-	}
-
-	public static function getAllWeapons($forceUpdate = false) {
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT * FROM weapon_type');
-		$weapons = array();
-		while ($db->nextRecord()) {
-			$weapons[] = self::getWeapon($db->getInt('weapon_type_id'), $forceUpdate, $db);
-		}
-		return $weapons;
-	}
-	
-	protected function __construct($weaponTypeID, $db = null) {
-		
+	protected function __construct(int $weaponTypeID, SmrMySqlDatabase $db = null) {
+		$this->weaponType = SmrWeaponType::getWeaponType($weaponTypeID, $db);
 		$this->weaponTypeID = $weaponTypeID;
-		
-		if (isset($db)) {
-			$weaponExists = true;
-		} else {
-			self::initialiseDatabase();
-			$db = self::$db;
-			self::$db->query('SELECT * FROM weapon_type WHERE weapon_type_id = ' . $db->escapeNumber($weaponTypeID) . ' LIMIT 1');
-			$weaponExists = $db->nextRecord();
-		}
-
-		if ($weaponExists) {
-			$this->name = $db->getField('weapon_name');
-			$this->raceID = $db->getInt('race_id');
-			$this->cost = $db->getInt('cost');
-			$this->shieldDamage = $db->getInt('shield_damage');
-			$this->armourDamage = $db->getInt('armour_damage');
-			$this->accuracy = $db->getInt('accuracy');
-			$this->powerLevel = $db->getInt('power_level');
-			$this->buyerRestriction = $db->getInt('buyer_restriction');
-			$this->damageRollover = false;
-			$this->maxDamage = max($this->shieldDamage, $this->armourDamage);
-		}
+		$this->name = $this->weaponType->getName();
+		$this->raceID = $this->weaponType->getRaceID();
 	}
 
-	public function exists() {
-		return !empty($this->name);
+	public function hasBonusAccuracy() : bool {
+		return $this->bonusAccuracy;
+	}
+
+	public function setBonusAccuracy(bool $bonusAccuracy) {
+		$this->bonusAccuracy = $bonusAccuracy;
+	}
+
+	public function hasBonusDamage() : bool {
+		return $this->bonusDamage;
+	}
+
+	public function setBonusDamage(bool $bonusDamage) {
+		$this->bonusDamage = $bonusDamage;
+	}
+
+	private function hasEnhancements() : bool {
+		return $this->getNumberOfEnhancements() > 0;
+	}
+
+	private function getNumberOfEnhancements() : int {
+		return (int)$this->bonusAccuracy + (int)$this->bonusDamage;
+	}
+
+	/**
+	 * (Override) Return weapon name suitable for HTML display.
+	 * The name is displayed in green with pluses if enhancements are present.
+	 */
+	public function getName() : string {
+		if ($this->hasEnhancements()) {
+			return '<span class="green">' . $this->name . str_repeat('+', $this->getNumberOfEnhancements()) . '</span>';
+		}
+		return $this->name;
+	}
+
+	/**
+	 * (Override) Return the weapon base accuracy.
+	 */
+	public function getBaseAccuracy() : int {
+		if ($this->bonusAccuracy) {
+			return $this->weaponType->getAccuracy() + self::BONUS_ACCURACY;
+		}
+		return $this->weaponType->getAccuracy();
+	}
+
+	/**
+	 * (Override) Return the weapon shield damage.
+	 */
+	public function getShieldDamage() : int {
+		if ($this->bonusDamage) {
+			return IFloor($this->weaponType->getShieldDamage() * self::BONUS_DAMAGE);
+		}
+		return $this->weaponType->getShieldDamage();
+	}
+
+	/**
+	 * (Override) Return the weapon armour damage.
+	 */
+	public function getArmourDamage() : int {
+		if ($this->bonusDamage) {
+			return IFloor($this->weaponType->getArmourDamage() * self::BONUS_DAMAGE);
+		}
+		return $this->weaponType->getArmourDamage();
+	}
+
+	/**
+	 * (Override) Return the max weapon damage possible in a single round.
+	 */
+	public function getMaxDamage() : int {
+		return max($this->getShieldDamage(), $this->getArmourDamage());
 	}
 
 	public function getBuyHREF(SmrLocation $location) {
 		$container = create_container('shop_weapon_processing.php');
 		$container['LocationID'] = $location->getTypeID();
-		$container['WeaponTypeID'] = $this->getWeaponTypeID();
+		$container['Weapon'] = $this;
 		return SmrSession::getNewHREF($container);
 	}
 
 	public function getSellHREF(SmrLocation $location, $orderID) {
 		$container = create_container('shop_weapon_processing.php');
 		$container['LocationID'] = $location->getTypeID();
-		$container['WeaponTypeID'] = $this->getWeaponTypeID();
+		$container['Weapon'] = $this;
 		$container['OrderID'] = $orderID;
 		return SmrSession::getNewHREF($container);
 	}
@@ -88,17 +115,20 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	public function getWeaponTypeID() {
 		return $this->weaponTypeID;
 	}
-	
+
+	/**
+	 * Weapon cost is increased by 100% for each enhancement present
+	 */
 	public function getCost() {
-		return $this->cost;
+		return $this->weaponType->getCost() * (1 + $this->getNumberOfEnhancements());
 	}
 	
 	public function getPowerLevel() {
-		return $this->powerLevel;
+		return $this->weaponType->getPowerLevel();
 	}
 	
 	public function getBuyerRestriction() {
-		return $this->buyerRestriction;
+		return $this->weaponType->getBuyerRestriction();
 	}
 	
 	protected function getWeightedRandomForPlayer(AbstractSmrPlayer $player) {

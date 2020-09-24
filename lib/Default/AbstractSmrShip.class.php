@@ -267,9 +267,8 @@ abstract class AbstractSmrShip {
 
 
 
-	public function addWeapon($weaponTypeID) {
+	public function addWeapon(SmrWeapon $weapon) {
 		if ($this->hasOpenWeaponSlots() && $this->hasRemainingPower()) {
-			$weapon = SmrWeapon::getWeapon($weaponTypeID);
 			if ($this->getRemainingPower() >= $weapon->getPowerLevel()) {
 				array_push($this->weapons, $weapon);
 				$this->hasChangedWeapons = true;
@@ -382,7 +381,7 @@ abstract class AbstractSmrShip {
 		$this->setShields($amount_shields, true);
 		$this->setArmour($amount_armour, true);
 		$this->setCargoHolds(40);
-		$this->addWeapon(46); // Laser
+		$this->addWeapon(SmrWeapon::getWeapon(WEAPON_TYPE_LASER));
 	}
 
 	public function hasCloak() {

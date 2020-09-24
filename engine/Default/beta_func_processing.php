@@ -25,10 +25,10 @@ if ($var['func'] == 'Map') {
 		$ship->setHardwareToMax();
 	}
 } elseif ($var['func'] == 'Weapon') {
-	$weapon_id = Request::getInt('weapon_id');
+	$weapon = SmrWeapon::getWeapon(Request::getInt('weapon_id'));
 	$amount = Request::getInt('amount');
 	for ($i = 1; $i <= $amount; $i++) {
-		$ship->addWeapon($weapon_id);
+		$ship->addWeapon($weapon);
 	}
 } elseif ($var['func'] == 'Uno') {
 	$ship->setHardwareToMax();

@@ -4,7 +4,7 @@ $template->assign('PageTopic', 'Edit Dummys');
 //TODO add game type id
 $template->assign('CombatSimLink', SmrSession::getNewHREF(create_container('skeleton.php', 'combat_simulator.php')));
 $template->assign('BaseShips', AbstractSmrShip::getAllBaseShips(0));
-$template->assign('Weapons', SmrWeapon::getAllWeapons(0));
+$template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
 
 $template->assign('EditDummysLink', SmrSession::getNewHREF(create_container('skeleton.php', 'edit_dummys.php')));
 
@@ -20,7 +20,7 @@ if (isset($_REQUEST['save_dummy'])) {
 		$dummyShip->removeAllWeapons();
 		foreach ($_REQUEST['weapons'] as $weaponTypeID) {
 			if ($weaponTypeID != 0) {
-				$dummyShip->addWeapon($weaponTypeID);
+				$dummyShip->addWeapon(SmrWeapon::getWeapon($weaponTypeID));
 			}
 		}
 	}

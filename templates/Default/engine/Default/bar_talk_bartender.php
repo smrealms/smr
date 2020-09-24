@@ -1,9 +1,12 @@
 <p><?php echo $Message; ?></p>
 <br />
 
-<form method="POST" action="<?php echo $GossipHREF; ?>">
+<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 	<input type="text" name="gossip_tell" size="30" />
-	<input type="submit" name="action" value="Tell him" />
+	<button type="submit" name="action" value="tell">Spread gossip</button>
+	<br /><br />
+	<input type="number" name="tip" class="center" min="1" max="<?php echo $ThisPlayer->getCredits(); ?>" />
+	<button type="submit" name="action" value="tip">Give to tip jar</button>
 </form>
 
 <br />

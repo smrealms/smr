@@ -13,7 +13,7 @@ if (!isset($var['Message'])) {
 	}
 	SmrSession::updateVar('Message', $message);
 }
-$template->assign('Message', $var['Message']);
+$template->assign('Message', bbifyMessage($var['Message']));
 
 $container = create_container('skeleton.php', 'bar_talk_bartender.php');
 transfer('LocationID');
@@ -21,4 +21,4 @@ $template->assign('ListenHREF', SmrSession::getNewHREF($container));
 
 $container = create_container('bar_talk_bartender_processing.php');
 transfer('LocationID');
-$template->assign('GossipHREF', SmrSession::getNewHREF($container));
+$template->assign('ProcessingHREF', SmrSession::getNewHREF($container));
