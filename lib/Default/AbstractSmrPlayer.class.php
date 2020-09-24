@@ -11,6 +11,8 @@ abstract class AbstractSmrPlayer {
 
 	const HOF_CHANGED = 1;
 	const HOF_NEW = 2;
+	
+	const NEWBIE_KILL_BOUNTY_FACTOR = 200;
 
 	protected static $CACHE_SECTOR_PLAYERS = array();
 	protected static $CACHE_PLANET_PLAYERS = array();
@@ -2222,7 +2224,13 @@ abstract class AbstractSmrPlayer {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$msg .= ' flying <span class="yellow">' . $named_ship . '</span>';
 		}
-		$msg .= ' was destroyed by ' . $killer->getBBLink();
+		//adjust message for newbie kill
+		if ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus()) {
+			$msg .= ' was newbie killed by ' . $killer->getBBLink();
+		} else {
+			$msg .= ' was destroyed by ' . $killer->getBBLink();
+		}
+		
 		if ($killer->hasCustomShipName()) {
 			$named_ship = strip_tags($killer->getCustomShipName(), '<font><span><img>');
 			$msg .= ' flying <span class="yellow">' . $named_ship . '</span>';
@@ -2341,6 +2349,7 @@ abstract class AbstractSmrPlayer {
 
 			if ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus()) { //Newbie kill
 				$killer->increaseHOF(1, array('Killing', 'Newbie Kills'), HOF_PUBLIC);
+				$killer->increaseCurrentBountyAmount('HQ', $killer->getExperience() * NEWBIE_KILL_BOUNTY_FACTOR);
 			} else {
 				$killer->increaseKills(1);
 				$killer->increaseHOF(1, array('Killing', 'Kills'), HOF_PUBLIC);
