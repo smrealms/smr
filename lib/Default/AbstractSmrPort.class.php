@@ -23,7 +23,8 @@ class AbstractSmrPort {
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
 	const GOODS_TRADED_MONEY_MULTIPLIER = 50;
-	const RAZE_MONEY_PERCENT = 75;
+	const BASE_PAYOUT = 0.9; // fraction of credits for looting
+	const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
 	
 	protected $db;
 	
@@ -979,12 +980,12 @@ class AbstractSmrPort {
 			// Trader sells
 			$supplyFactor = 1 + ($supply / $maxSupply);
 			$relationsFactor = 1.2 + 1.8 * ($relations / 1000); // [0.75-3]
-			$scale = 0.084;
+			$scale = 0.088;
 		} elseif ($transactionType == 'Buy') {
 			// Trader buys
 			$supplyFactor = 2 - ($supply / $maxSupply);
 			$relationsFactor = 3 - 2 * ($relations / 1000);
-			$scale = 0.0315;
+			$scale = 0.03;
 		} else {
 			throw new Exception('Unknown transaction type');
 		}
@@ -1315,16 +1316,24 @@ class AbstractSmrPort {
 		return true;
 	}
 
+	/**
+	 * Get a reduced fraction of the credits stored in the port for razing
+	 * after a successful port raid.
+	 */
 	public function razePort(AbstractSmrPlayer $killer) : int {
-		$credits = IFloor($this->getCredits() * self::RAZE_MONEY_PERCENT / 100);
+		$credits = IFloor($this->getCredits() * self::BASE_PAYOUT * self::RAZE_PAYOUT);
 		if ($this->payout($killer, $credits, 'Razed')) {
 			$this->doDowngrade();
 		}
 		return $credits;
 	}
 
-	public function lootPort(AbstractSmrPlayer $killer) {
-		$credits = $this->getCredits();
+	/**
+	 * Get a fraction of the credits stored in the port for looting after a
+	 * successful port raid.
+	 */
+	public function lootPort(AbstractSmrPlayer $killer) : int {
+		$credits = IFloor($this->getCredits() * self::BASE_PAYOUT);
 		$this->payout($killer, $credits, 'Looted');
 		return $credits;
 	}
