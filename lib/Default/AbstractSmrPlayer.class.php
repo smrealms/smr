@@ -546,14 +546,10 @@ abstract class AbstractSmrPlayer {
 	}
 	
 	/**
-	 * Does the player have newbie status and
-	 * a low attack rating?
+	 * Is $killer of veteran rank, the player of newbie rank, and the player poorly armed?
 	 */
-	public function isNoncombatNewbie() {
-		if ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus()) {
-			return true;
-		}
-		return false;
+	public function isNewbieKilledBy(AbstractSmrPlayer $killer) {
+		return ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus()) 
 	}
 
 	/**
@@ -2227,7 +2223,7 @@ abstract class AbstractSmrPlayer {
 		$this->setNewbieTurns(100);
 	}
 
-	/*
+	/**
 	 * process $this player being podded by $killer
 	 */
 	public function &killPlayerByPlayer(AbstractSmrPlayer $killer) {
@@ -2238,15 +2234,16 @@ abstract class AbstractSmrPlayer {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$msg .= ' flying <span class="yellow">' . $named_ship . '</span>';
 		}
-		//adjust message for newbie kill
-		if ($this->isNoncombatNewbie() && !$killer->hasNewbieStatus()) {
+		
+		if ($this->isNewbieKilledBy(AbstractSmrPlayer $killer)) {
 			$msg .= ' was newbie killed by ' . $killer->getBBLink();
 		} else {
 			$msg .= ' was destroyed by ' . $killer->getBBLink();
-			if ($killer->hasCustomShipName()) {
-				$named_ship = strip_tags($killer->getCustomShipName(), '<font><span><img>');
-				$msg .= ' flying <span class="yellow">' . $named_ship . '</span>';
-			}
+		}
+		
+		if ($killer->hasCustomShipName()) {
+			$named_ship = strip_tags($killer->getCustomShipName(), '<font><span><img>');
+			$msg .= ' flying <span class="yellow">' . $named_ship . '</span>';
 		}
 		
 		$msg .= ' in Sector&nbsp;' . Globals::getSectorBBLink($this->getSectorID());
@@ -2260,24 +2257,6 @@ abstract class AbstractSmrPlayer {
 		$expLossPercentage = 0.15 + 0.10 * ($this->getLevelID() - $killer->getLevelID()) / $this->getMaxLevel();
 		$return['DeadExp'] = max(0, IFloor($this->getExperience() * $expLossPercentage));
 		$this->decreaseExperience($return['DeadExp']);
-
-		// newbie kills do not award XP, credits, or military pay
-		if ($this->isNoncombatNewbie() && !$killer->hasNewbieStatus()) {
-			$return['KillerExp'] = $return['KillerCredits'] = 0;
-		} else {
-			// Killer gains 50% of the lost exp
-			$return['KillerExp'] = max(0, ICeil(0.5 * $return['DeadExp']));
-			$killer->increaseExperience($return['KillerExp']);
-
-			// Killer gains credits carried
-			$return['KillerCredits'] = $this->getCredits();
-			$killer->increaseCredits($return['KillerCredits']);
-			
-			// War setting gives them military pay
-			if ($relation <= RELATIONS_WAR) {
-				$killer->increaseMilitaryPayment(-IFloor($relation * 100 * pow($return['KillerExp'] / 2, 0.25)));
-			}
-		}
 
 		// The killer may change alignment
 		$relations = Globals::getRaceRelations($this->getGameID(), $this->getRaceID());
@@ -2293,6 +2272,24 @@ abstract class AbstractSmrPlayer {
 			$killer->increaseAlignment($return['KillerAlign']);
 		} else {
 			$killer->decreaseAlignment(-$return['KillerAlign']);
+		}
+
+		// newbie kills do not award XP, credits, or military pay to the killer
+		if ($this->isNewbieKilledBy($AbstractSmrPlayer $killer)) {
+			$return['KillerExp'] = $return['KillerCredits'] = 0;
+		} else {
+			// Killer gains 50% of the lost exp
+			$return['KillerExp'] = max(0, ICeil(0.5 * $return['DeadExp']));
+			$killer->increaseExperience($return['KillerExp']);
+
+			// Killer gains credits carried
+			$return['KillerCredits'] = $this->getCredits();
+			$killer->increaseCredits($return['KillerCredits']);
+			
+			// War setting gives them military pay
+			if ($relation <= RELATIONS_WAR) {
+				$killer->increaseMilitaryPayment(-IFloor($relation * 100 * pow($return['KillerExp'] / 2, 0.25)));
+			}
 		}
 
 		//check for federal bounty being offered for current port raiders;
@@ -2369,9 +2366,9 @@ abstract class AbstractSmrPlayer {
 
 			$killer->increaseHOF($return['BountyGained']['Amount'], array('Killing', 'Money', 'Bounty Gained'), HOF_PUBLIC);
 
-			if ($this->isNoncombatNewbie() && !$killer->hasNewbieStatus()) { //Newbie kill
+			if ($this->isNewbieKilledBy(AbstractSmrPlayer $killer)) {
 				$killer->increaseHOF(1, array('Killing', 'Newbie Kills'), HOF_PUBLIC);
-				$killer->increaseCurrentBountyAmount('HQ', $killer->getExperience() * NEWBIE_KILL_BOUNTY_FACTOR);
+				$killer->increaseCurrentBountyAmount('HQ', $killer->getExperience() * self::NEWBIE_KILL_BOUNTY_FACTOR);
 			} else { //not a newbie kill
 				$killer->increaseKills(1);
 				$killer->increaseHOF(1, array('Killing', 'Kills'), HOF_PUBLIC);
