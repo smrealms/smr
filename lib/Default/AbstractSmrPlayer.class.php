@@ -2235,7 +2235,7 @@ abstract class AbstractSmrPlayer {
 			$msg .= ' flying <span class="yellow">' . $named_ship . '</span>';
 		}
 		
-		if ($this->isNewbieKilledBy(AbstractSmrPlayer $killer)) {
+		if ($this->isNewbieKilledBy($killer)) {
 			$msg .= ' was newbie killed by ' . $killer->getBBLink();
 		} else {
 			$msg .= ' was destroyed by ' . $killer->getBBLink();
@@ -2275,7 +2275,7 @@ abstract class AbstractSmrPlayer {
 		}
 
 		// newbie kills do not award XP, credits, or military pay to the killer
-		if ($this->isNewbieKilledBy($AbstractSmrPlayer $killer)) {
+		if ($this->isNewbieKilledBy($killer)) {
 			$return['KillerExp'] = $return['KillerCredits'] = 0;
 		} else {
 			// Killer gains 50% of the lost exp
@@ -2366,7 +2366,7 @@ abstract class AbstractSmrPlayer {
 
 			$killer->increaseHOF($return['BountyGained']['Amount'], array('Killing', 'Money', 'Bounty Gained'), HOF_PUBLIC);
 
-			if ($this->isNewbieKilledBy(AbstractSmrPlayer $killer)) {
+			if ($this->isNewbieKilledBy($killer)) {
 				$killer->increaseHOF(1, array('Killing', 'Newbie Kills'), HOF_PUBLIC);
 				$killer->increaseCurrentBountyAmount('HQ', $killer->getExperience() * self::NEWBIE_KILL_BOUNTY_FACTOR);
 			} else { //not a newbie kill
