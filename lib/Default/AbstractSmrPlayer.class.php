@@ -549,7 +549,7 @@ abstract class AbstractSmrPlayer {
 	 * Is $killer of veteran rank, the player of newbie rank, and the player poorly armed?
 	 */
 	public function isNewbieKilledBy(AbstractSmrPlayer $killer) {
-		return ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus()) 
+		return ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus());
 	}
 
 	/**
