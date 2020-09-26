@@ -19,7 +19,7 @@ if ($ThisPlayer->hasNewbieTurns()) {
 	$canAttack = true;
 	$fightingPlayers = $ThisSector->getFightingTraders($ThisPlayer, $TargetPlayer, true);
 	if (count($fightingPlayers['Defenders']) > 0) {
-		if ($TargetPlayer->isNoncombatNewbie() && !$ThisPlayer->hasNewbieStatus()) {
+		if ($TargetPlayer->isNewbieKilledBy($ThisPlayer)) {
 			?><p class="big green">Newbie Kill Warning!  This target is of newbie rank and not in a combat vessel!</p><?php
 		}
 		?><p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (3)</a></p><?php
