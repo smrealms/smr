@@ -141,7 +141,7 @@ services:
             - ./config:/smr/config
 
     traefik:
-        image: traefik:2.2
+        image: traefik:2.3
         networks:
             - frontend
         volumes:
