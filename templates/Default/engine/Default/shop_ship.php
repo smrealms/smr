@@ -1,6 +1,7 @@
 <?php
 
 if (count($ShipsSold) > 0) { ?>
+	<h2>Available Ships</h2>
 	<table class="standard">
 		<tr>
 			<th>Name</th>
@@ -19,11 +20,28 @@ if (count($ShipsSold) > 0) { ?>
 			</tr><?php
 		}
 	?></table><?php
+	if ($ShipsUnavailable) { ?>
+		<br />
+		<h2>Under Construction</h2>
+		<table class="standard">
+			<tr>
+				<th>Name</th>
+				<th>Time To Completion</th>
+			</tr><?php
+			foreach ($ShipsUnavailable as $Ship) { ?>
+				<tr>
+					<td><?php echo $Ship['Name']; ?></td>
+					<td><?php echo format_time($Ship['TimeUntilUnlock']); ?></td>
+				</tr><?php
+			} ?>
+		</table><?php
+	}
 } else {
 	?>We've got nothing for you here! Get outta here!<br /><?php
 }
 ?><br /><?php
 if (isset($CompareShip)) { ?>
+	<h2>Details</h2>
 	<table class="standard">
 		<tr>
 			<th>&nbsp;</th>

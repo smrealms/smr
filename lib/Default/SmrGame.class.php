@@ -424,4 +424,11 @@ class SmrGame {
 		return $this->playableRaceIDs;
 	}
 
+	/**
+	 * Returns the time (in seconds) until restricted ships are unlocked.
+	 */
+	public function timeUntilShipUnlock() : int {
+		return $this->getStartTime() + TIME_FOR_RAIDER_UNLOCK - TIME;
+	}
+
 }
