@@ -796,12 +796,15 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 
 /**
  * Convert an integer number of seconds into a human-readable time.
- * Use short=true to use 1-letter units (e.g. "1h, 3m, and 20s").
+ * Seconds are omitted to avoid frequent and disruptive ajax updates.
+ * Use short=true to use 1-letter units (e.g. "1h and 3m").
  * If seconds is negative, will append "ago" to the result.
+ * If seconds is zero, will return only "now".
+ * If seconds is <60, will prefix "less than" or "<" (HTML-safe).
  */
 function format_time($seconds, $short = false) {
 	if ($seconds == 0) {
-		return $short ? '0s' : '0 seconds';
+		return "now";
 	}
 
 	if ($seconds < 0) {
@@ -811,14 +814,10 @@ function format_time($seconds, $short = false) {
 		$past = false;
 	}
 
-	$minutes = 0;
+	$minutes = ceil($seconds / 60);
 	$hours = 0;
 	$days = 0;
 	$weeks = 0;
-	if ($seconds >= 60) {
-		$minutes = floor($seconds / 60);
-		$seconds = $seconds % 60;
-	}
 	if ($minutes >= 60) {
 		$hours = floor($minutes / 60);
 		$minutes = $minutes % 60;
@@ -836,7 +835,6 @@ function format_time($seconds, $short = false) {
 		'day' => $days,
 		'hour' => $hours,
 		'minute' => $minutes,
-		'second' => $seconds,
 	];
 	$parts = [];
 	foreach ($times as $unit => $amount) {
@@ -854,6 +852,10 @@ function format_time($seconds, $short = false) {
 	} else {
 		// e.g. 5h, 10m and 30s
 		$result = join(', ', array_slice($parts, 0, -1)) . ' and ' . end($parts);
+	}
+
+	if ($seconds < 60) {
+		$result = ($short ? '&lt;' : 'less than ') . $result;
 	}
 
 	if ($past) {
