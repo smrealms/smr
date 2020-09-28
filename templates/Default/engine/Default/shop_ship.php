@@ -10,7 +10,7 @@ if (count($ShipsSold) > 0) { ?>
 		foreach ($ShipsSold as $ShipSold) { ?>
 			<tr>
 				<td><?php echo $ShipSold['Name']; ?></td>
-				<td><?php echo $ShipSold['Cost']; ?></td>
+				<td class="center"><?php echo number_format($ShipSold['Cost']); ?></td>
 				<td>
 					<div class="buttonA">
 						<a class="buttonA" href="<?php echo $ShipsSoldHREF[$ShipSold['ShipTypeID']]; ?>">View Details</a>
