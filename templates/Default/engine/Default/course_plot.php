@@ -45,7 +45,7 @@ if (isset($XType)) { ?>
 					}
 				break;
 				case 'Weapons':
-					$Weapons = SmrWeaponType::getAllWeaponTypes();
+					$Weapons = SmrWeaponType::getAllSoldWeaponTypes($ThisPlayer->getGameID());
 					Sorter::sortByNumMethod($Weapons, 'getName');
 					foreach ($Weapons as $Weapon) {
 						?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?></option><?php

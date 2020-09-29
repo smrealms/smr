@@ -61,7 +61,7 @@ class SmrEnhancedWeaponEvent {
 	 */
 	private static function createEvent(int $gameID) : SmrEnhancedWeaponEvent {
 		// First, randomly select a weapon type to enhance
-		$weaponTypeID = array_rand(SmrWeaponType::getAllWeaponTypes());
+		$weaponTypeID = array_rand(SmrWeaponType::getAllSoldWeaponTypes($gameID));
 
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT location_type_id, sector_id FROM location JOIN location_sells_weapons USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND weapon_type_id = ' . $db->escapeNumber($weaponTypeID) . ' ORDER BY RAND() LIMIT 1');
