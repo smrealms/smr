@@ -41,6 +41,20 @@ class SmrWeaponType {
 		return $weapons;
 	}
 
+	/**
+	 * Returns all weapon types that are purchasable in the given game.
+	 */
+	public static function getAllSoldWeaponTypes(int $gameID) : array {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT DISTINCT weapon_type.* FROM weapon_type JOIN location_sells_weapons USING (weapon_type_id) JOIN location USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID));
+		$weapons = [];
+		while ($db->nextRecord()) {
+			$weaponTypeID = $db->getInt('weapon_type_id');
+			$weapons[$weaponTypeID] = self::getWeaponType($weaponTypeID, $db);
+		}
+		return $weapons;
+	}
+
 	protected function __construct(int $weaponTypeID, SmrMySqlDatabase $db) {
 		$this->weaponTypeID = $weaponTypeID;
 		$this->name = $db->getField('weapon_name');
