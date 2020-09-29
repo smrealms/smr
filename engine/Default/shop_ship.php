@@ -27,4 +27,6 @@ if (isset($var['ship_id'])) {
 	$compareShip['BuyHREF'] = SmrSession::getNewHREF($container);
 
 	$template->assign('CompareShip', $compareShip);
+	$template->assign('TradeInValue', floor($ship->getCost() * SHIP_REFUND_PERCENT));
+	$template->assign('TotalCost', $ship->getCostToUpgrade($compareShip['ShipTypeID']));
 }

@@ -122,19 +122,24 @@ if (isset($CompareShip)) { ?>
 			<td colspan="2"><hr style="width:200px"></td>
 		</tr>
 		<tr>
-			<td class="right">Ship Cost</td><td class="right"><?php echo number_colour_format($CompareShip['Cost']); ?></td>
+			<td class="right"><?php echo $CompareShip['Name']; ?> Cost</td>
+			<td class="right red"><?php echo number_format($CompareShip['Cost']); ?></td>
+		</tr>
+		<tr>
+			<td class="right"><?php echo $ThisShip->getName(); ?> Trade-In</td>
+			<td class="right green">- <?php echo number_format($TradeInValue); ?></td>
 		</tr>
 		<tr>
 			<td colspan="2"><hr style="width:200px"></td>
 		</tr>
-		<tr>
-			<td class="right">Ship Refund</td><td class="right"><?php echo number_colour_format(-floor($ThisShip->getCost() * SHIP_REFUND_PERCENT)); ?></td>
-		</tr>
-		<tr>
-			<td colspan="2"><hr style="width:200px"></td>
-		</tr>
-		<tr>
-			<td class="right">Total Cost</td><td class="right"><?php echo number_colour_format($ThisShip->getCostToUpgrade($CompareShip['ShipTypeID'])); ?></td>
+		<tr><?php
+			if ($TotalCost >= 0) { ?>
+				<td class="right">Total Cost</td>
+				<td class="right red"><?php echo number_format($TotalCost); ?></td><?php
+			} else { ?>
+				<td class="right">Total Refund</td>
+				<td class="right green"><?php echo number_format(-$TotalCost); ?></td><?php
+			} ?>
 		</tr>
 		<tr>
 			<td colspan="2"><hr style="width:200px"></td>
