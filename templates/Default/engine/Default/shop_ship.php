@@ -30,90 +30,32 @@ if (isset($CompareShip)) { ?>
 			<th><?php echo $ThisShip->getName(); ?></th>
 			<th><?php echo $CompareShip['Name']; ?></th>
 			<th>Change</th>
-		</tr>
-		<tr>
-			<td>Shields</td>
-			<td><?php echo $ThisShip->getMaxShields(); ?></td>
-			<td><?php echo $CompareShip['MaxHardware'][HARDWARE_SHIELDS]; ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_SHIELDS] - $ThisShip->getMaxShields()); ?></td>
-		</tr>
-		<tr>
-			<td>Armour</td>
-			<td><?php echo $ThisShip->getMaxArmour(); ?></td>
-			<td><?php echo $CompareShip['MaxHardware'][HARDWARE_ARMOUR]; ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_ARMOUR] - $ThisShip->getMaxArmour()); ?></td>
-		</tr>
-		<tr>
-			<td>Combat Drones</td>
-			<td><?php echo $ThisShip->getMaxCDs(); ?></td>
-			<td><?php echo $CompareShip['MaxHardware'][HARDWARE_COMBAT]; ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_COMBAT] - $ThisShip->getMaxCDs()); ?></td>
-		</tr>
-		<tr>
-			<td>Scout Drones</td>
-			<td><?php echo $ThisShip->getMaxSDs(); ?></td>
-			<td><?php echo $CompareShip['MaxHardware'][HARDWARE_SCOUT]; ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_SCOUT] - $ThisShip->getMaxSDs()); ?></td>
-		</tr>
-		<tr>
-			<td>Mines</td>
-			<td><?php echo $ThisShip->getMaxMines(); ?></td>
-			<td><?php echo $CompareShip['MaxHardware'][HARDWARE_MINE]; ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_MINE] - $ThisShip->getMaxMines()); ?></td>
-		</tr>
-		<tr>
-			<td>Cargo Holds</td>
-			<td><?php echo $ThisShip->getMaxCargoHolds(); ?></td>
-			<td><?php echo $CompareShip['MaxHardware'][HARDWARE_CARGO]; ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_CARGO] - $ThisShip->getMaxCargoHolds()); ?></td>
-		</tr>
-		<tr>
-			<td>Hardpoints</td>
+		</tr><?php
+		foreach (Globals::getHardwareTypes() as $HardwareTypeID => $Hardware) { ?>
+			<tr class="center">
+				<td class="left"><?php echo $Hardware['Name']; ?></td>
+				<td><?php echo $ThisShip->getMaxHardware($HardwareTypeID); ?></td>
+				<td><?php echo $CompareShip['MaxHardware'][$HardwareTypeID]; ?></td>
+				<td><?php echo number_colour_format($CompareShip['MaxHardware'][$HardwareTypeID] - $ThisShip->getMaxHardware($HardwareTypeID)); ?></td>
+			</tr><?php
+		} ?>
+		<tr class="center">
+			<td class="left">Hardpoints</td>
 			<td><?php echo $ThisShip->getHardpoints(); ?></td>
 			<td><?php echo $CompareShip['Hardpoint']; ?></td>
 			<td><?php echo number_colour_format($CompareShip['Hardpoint'] - $ThisShip->getHardpoints()); ?></td>
 		</tr>
-		<tr>
-			<td>Speed</td>
+		<tr class="center">
+			<td class="left">Speed</td>
 			<td><?php echo $ThisShip->getRealSpeed(); ?></td>
 			<td><?php echo $CompareShip['RealSpeed']; ?></td>
 			<td><?php echo number_colour_format($CompareShip['RealSpeed'] - $ThisShip->getRealSpeed()); ?></td>
 		</tr>
-		<tr>
-			<td>Turns</td>
+		<tr class="center">
+			<td class="left">Turns</td>
 			<td><?php echo $ThisPlayer->getTurns() ?></td>
 			<td><?php echo $CompareShip['Turns']; ?></td>
 			<td><?php echo number_colour_format($CompareShip['Turns'] - $ThisPlayer->getTurns()); ?></td>
-		</tr>
-		<tr>
-			<td>Scanner</td>
-			<td><?php if ($ThisShip->canHaveScanner()) { ?>+<?php } else { ?>-<?php } ?></td>
-			<td><?php if ($CompareShip['MaxHardware'][HARDWARE_SCANNER]) { ?>+<?php } else { ?>-<?php } ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_SCANNER] - $ThisShip->canHaveScanner(), true); ?></td>
-		</tr>
-		<tr>
-			<td>Illusion</td>
-			<td><?php if ($ThisShip->canHaveIllusion()) { ?>+<?php } else { ?>-<?php } ?></td>
-			<td><?php if ($CompareShip['MaxHardware'][HARDWARE_ILLUSION]) { ?>+<?php } else { ?>-<?php } ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_ILLUSION] - $ThisShip->canHaveIllusion(), true); ?></td>
-		</tr>
-		<tr>
-			<td>Jump</td>
-			<td><?php if ($ThisShip->canHaveJump()) { ?>+<?php } else { ?>-<?php } ?></td>
-			<td><?php if ($CompareShip['MaxHardware'][HARDWARE_JUMP]) { ?>+<?php } else { ?>-<?php } ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_JUMP] - $ThisShip->canHaveJump(), true); ?></td>
-		</tr>
-		<tr>
-			<td>Cloak</td>
-			<td><?php if ($ThisShip->canHaveCloak()) { ?>+<?php } else { ?>-<?php } ?></td>
-			<td><?php if ($CompareShip['MaxHardware'][HARDWARE_CLOAK]) { ?>+<?php } else { ?>-<?php } ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_CLOAK] - $ThisShip->canHaveCloak(), true); ?></td>
-		</tr>
-		<tr>
-			<td>DCS</td>
-			<td><?php if ($ThisShip->canHaveDCS()) { ?>+<?php } else { ?>-<?php } ?></td>
-			<td><?php if ($CompareShip['MaxHardware'][HARDWARE_DCS]) { ?>+<?php } else { ?>-<?php } ?></td>
-			<td><?php echo number_colour_format($CompareShip['MaxHardware'][HARDWARE_DCS] - $ThisShip->canHaveDCS(), true); ?></td>
 		</tr>
 	</table><br />
 
