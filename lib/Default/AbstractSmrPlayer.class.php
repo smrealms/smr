@@ -2508,10 +2508,8 @@ abstract class AbstractSmrPlayer {
 			case 'NONE':
 			case 'LOW':
 				return 'red';
-			break;
 			case 'MEDIUM':
 				return 'yellow';
-			break;
 			default:
 				return 'green';
 		}

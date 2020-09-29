@@ -266,27 +266,21 @@ class ChessPiece {
 			case 'k':
 			case 'K':
 				return self::KING;
-			break;
 			case 'q':
 			case 'Q':
 				return self::QUEEN;
-			break;
 			case 'r':
 			case 'R':
 				return self::ROOK;
-			break;
 			case 'b':
 			case 'B':
 				return self::BISHOP;
-			break;
 			case 'n':
 			case 'N':
 				return self::KNIGHT;
-			break;
 			case 'p':
 			case 'P':
 				return self::PAWN;
-			break;
 		}
 	}
 }
