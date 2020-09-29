@@ -8,7 +8,6 @@ abstract class AbstractSmrCombatWeapon {
 
 	protected $gameTypeID;
 	protected $name;
-	protected $raceID;
 	protected $maxDamage;
 	protected $shieldDamage;
 	protected $armourDamage;
@@ -21,14 +20,6 @@ abstract class AbstractSmrCombatWeapon {
 	
 	public function getName() {
 		return $this->name;
-	}
-	
-	public function getRaceID() {
-		return $this->raceID;
-	}
-	
-	public function getRaceName() {
-		return Globals::getRaceName($this->getRaceID());
 	}
 	
 	public function getMaxDamage() {

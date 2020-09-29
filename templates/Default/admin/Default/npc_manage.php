@@ -47,7 +47,7 @@ if (!empty($SelectedGameID)) { ?>
 					</form><?php
 				} else { ?>
 					<td><?php echo $npc['player']->getDisplayName(); ?></td>
-					<td><?php echo Globals::getRaceName($npc['player']->getRaceID()); ?></td>
+					<td><?php echo $npc['player']->getRaceName(); ?></td>
 					<td><?php echo $npc['player']->getAllianceDisplayName(); ?></td>
 					<td class="center"><?php echo $npc['working'] ? 'Working' : 'Idle'; ?></td><?php
 				} ?>

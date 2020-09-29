@@ -5,6 +5,7 @@ require_once('missions.inc');
 class PlayerNotFoundException extends Exception {}
 
 abstract class AbstractSmrPlayer {
+	use Traits\RaceID;
 
 	const TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;
 	const TIME_FOR_ALLIANCE_SWITCH = 0;
@@ -33,7 +34,6 @@ abstract class AbstractSmrPlayer {
 	protected $newbieWarning;
 	protected $landedOnPlanet;
 	protected $lastActive;
-	protected $raceID;
 	protected $credits;
 	protected $alignment;
 	protected $experience;
@@ -1267,14 +1267,6 @@ abstract class AbstractSmrPlayer {
 
 	public function canChangeRace() : bool {
 		return !$this->isRaceChanged() && (TIME - $this->getGame()->getStartTime() < TIME_FOR_RACE_CHANGE);
-	}
-
-	public function getRaceID() {
-		return $this->raceID;
-	}
-
-	public function getRaceName() {
-		return Globals::getRaceName($this->getRaceID());
 	}
 
 	public static function getColouredRaceNameOrDefault($otherRaceID, AbstractSmrPlayer $player = null, $linked = false) {
