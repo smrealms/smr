@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 class AbstractSmrPort {
+	use Traits\RaceID;
+
 	protected static $CACHE_PORTS = array();
 	protected static $CACHE_CACHED_PORTS = array();
 	
@@ -30,7 +32,6 @@ class AbstractSmrPort {
 	
 	protected $gameID;
 	protected $sectorID;
-	protected $raceID;
 	protected $shields;
 	protected $combatDrones;
 	protected $armour;
@@ -828,10 +829,6 @@ class AbstractSmrPort {
 		return SmrSector::getSector($this->getGameID(), $this->getSectorID());
 	}
 	
-	public function getRaceID() {
-		return $this->raceID;
-	}
-	
 	public function setRaceID($raceID) {
 		if ($this->raceID == $raceID) {
 			return;
@@ -841,10 +838,6 @@ class AbstractSmrPort {
 		$this->cacheIsValid = false;
 		// route_cache tells NPC's where they can trade
 		$this->db->query('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
-	}
-	
-	public function getRaceName() {
-		return Globals::getRaceName($this->getRaceID());
 	}
 	
 	public function getLevel() {

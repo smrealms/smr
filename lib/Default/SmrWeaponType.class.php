@@ -4,12 +4,12 @@
  * Defines the base weapon types for ships/planets.
  */
 class SmrWeaponType {
+	use Traits\RaceID;
 
 	protected static array $CACHE_WEAPON_TYPES = [];
 
 	protected int $weaponTypeID;
 	protected string $name;
-	protected int $raceID;
 	protected int $cost;
 	protected int $shieldDamage;
 	protected int $armourDamage;
@@ -73,10 +73,6 @@ class SmrWeaponType {
 
 	public function getName() {
 		return $this->name;
-	}
-
-	public function getRaceID() {
-		return $this->raceID;
 	}
 
 	public function getCost() {

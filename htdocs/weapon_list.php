@@ -29,7 +29,7 @@ try {
 			'restriction' => $restriction,
 			'weapon_name' => $weapon->getName(),
 			'race_id' => $weapon->getRaceID(),
-			'race_name' => Globals::getRaceName($weapon->getRaceID()),
+			'race_name' => $weapon->getRaceName(),
 			'cost' => number_format($weapon->getCost()),
 			'shield_damage' => $weapon->getShieldDamage(),
 			'armour_damage' => $weapon->getArmourDamage(),
