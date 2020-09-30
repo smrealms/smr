@@ -195,9 +195,6 @@ span#ship_name  {
 	white-space: pre-wrap; 
 }
 
-ul, ol {
-	margin-left: 40px;
-}
 ul li {
 	list-style: disc;
 }
