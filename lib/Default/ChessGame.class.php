@@ -171,6 +171,18 @@ class ChessGame {
 		return $this->board;
 	}
 
+	/**
+	 * Get the board from black's perspective
+	 */
+	public function getBoardReversed() : array {
+		// Need to reverse both the rows and the files to rotate the board
+		$board = array_reverse($this->getBoard(), true);
+		foreach ($board as $key => $row) {
+			$board[$key] = array_reverse($row, true);
+		}
+		return $board;
+	}
+
 	public function getLastMove() {
 		$this->getMoves();
 		return $this->lastMove;
