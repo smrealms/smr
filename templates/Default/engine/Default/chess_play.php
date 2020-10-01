@@ -7,14 +7,6 @@
 			<div style="height: 500px; width: 500px;">
 				<table class="chess chessFont">
 					<td class="chessOutline">&nbsp;</td><?php
-					for ($X = ord('a'); $X <= ord('h'); $X++) { ?>
-						<td class="chessOutline"><?php echo chr($X); ?></td><?php
-					} ?><?php
-					$Board = $ChessGame->getBoard();
-					//If we are the black player then reverse the board
-					if ($ChessGame->getBlackID() == $ThisPlayer->getAccountID()) {
-						$Board = array_reverse($Board, true);
-					}
 					foreach ($Board as $Y => $Row) { ?>
 						<tr>
 							<td class="chessOutline"><?php echo 8 - $Y; ?></td><?php
@@ -23,12 +15,11 @@
 									if ($Cell == null) { ?>&nbsp;<?php } else { ?><span class="pointer"><?php echo $Cell->getPieceSymbol(); ?></span><?php } ?>
 								</td><?php
 							} ?>
-							<td class="chessOutline"><?php echo 8 - $Y; ?></td>
 						</tr><?php
 					}?>
 					<td class="chessOutline">&nbsp;</td><?php
-					for ($X = ord('a'); $X <= ord('h'); $X++) { ?>
-						<td class="chessOutline"><?php echo chr($X); ?></td><?php
+					foreach ($FileCoords as $FileCoord) { ?>
+						<td class="chessOutline"><?php echo $FileCoord; ?></td><?php
 					} ?>
 				</table>
 			</div>
