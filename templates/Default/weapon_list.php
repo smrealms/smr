@@ -75,6 +75,15 @@
 								<option style="color: #06F;">Newbie</option>
 							</select>
 						</th>
+						<th>
+							Locations<br />
+							<select onchange="filterSelect(this)">
+								<option>All</option><?php
+								foreach ($AllLocs as $Loc) { ?>
+									<option><?php echo $Loc; ?></option><?php
+								} ?>
+							</select>
+						</th>
 					</tr>
 				</thead>
 				<tbody class="list"><?php
@@ -88,6 +97,7 @@
 							<td class="accuracy"><?php echo $weapon['accuracy']; ?></td>
 							<td class="level"><?php echo $weapon['power_level']; ?></td>
 							<td class="restriction"><?php echo $weapon['restriction']; ?></td>
+							<td class="locs"><?php echo join('<br />', $weapon['locs']); ?></td>
 						</tr><?php
 					} ?>
 				</tbody>

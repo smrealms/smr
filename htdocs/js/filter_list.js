@@ -14,7 +14,7 @@ function filterSelect(element) {
 	var selected = element.options[element.selectedIndex].value;
 	var columnId = element.parentElement.cellIndex;
 
-	filter[columnId] = selected;
+	filter[columnId] = [selected];
 	applyFilter('data-list');
 }
 
@@ -37,16 +37,20 @@ function applyFilter(tableId) {
 		for (var j=0; j < table.rows[i].cells.length; j++) {
 			// No filtering for null, undefined, and "All".
 			// But we do filter on the empty string (for the "None" option).
-			if (filter[j] == null || filter[j] === "All") {
+			if (filter[j] == null || filter[j][0] === "All") {
 				continue;
 			}
-			if (Array.isArray(filter[j])) {
-				if (filter[j].indexOf(table.rows[i].cells[j].textContent) === -1) {
+			var cell = table.rows[i].cells[j];
+			if (cell.className == "locs") {
+				// At least one of the (line-break delimited) Locations must
+				// match the filter (there will be only one filter).
+				if (cell.innerHTML.split('<br>').indexOf(filter[j][0]) === -1) {
 					show = false;
 					break;
 				}
 			} else {
-				if (table.rows[i].cells[j].textContent != filter[j]) {
+				// The cell content must match exactly at least one filter.
+				if (filter[j].indexOf(cell.textContent) === -1) {
 					show = false;
 					break;
 				}
