@@ -13,6 +13,7 @@ $mbMessages = Request::has('mbMessages');
 $exemptWith = Request::has('exemptWithdrawals');
 $sendAllMsg = Request::has('sendAllMsg');
 $viewBonds = Request::has('viewBonds');
+$opLeader = Request::has('opLeader');
 
 if ($unlimited) {
 	$withPerDay = ALLIANCE_BANK_UNLIMITED;
@@ -45,8 +46,8 @@ if (!isset($var['role_id'])) {
 	}
 
 	$db->query('INSERT INTO alliance_has_roles
-				(alliance_id, game_id, role_id, role, with_per_day, positive_balance, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, view_bonds)
-				VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString(Request::get('role')) . ', ' . $db->escapeNumber($withPerDay) . ',' . $db->escapeBoolean($positiveBalance) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($viewBonds) . ')');
+				(alliance_id, game_id, role_id, role, with_per_day, positive_balance, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds)
+				VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString(Request::get('role')) . ', ' . $db->escapeNumber($withPerDay) . ',' . $db->escapeBoolean($positiveBalance) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 
 	$db->unlock();
 } else {
@@ -75,6 +76,7 @@ if (!isset($var['role_id'])) {
 					exempt_with = ' . $db->escapeBoolean($exemptWith) . ',
 					mb_messages = ' . $db->escapeBoolean($mbMessages) . ',
 					send_alliance_msg = ' . $db->escapeBoolean($sendAllMsg) . ',
+					op_leader = ' . $db->escapeBoolean($opLeader) . ',
 					view_bonds = ' . $db->escapeBoolean($viewBonds) . '
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
