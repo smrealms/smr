@@ -260,7 +260,7 @@ class Globals {
 		if (!isset(self::$USER_RANKINGS)) {
 			self::initialiseDatabase();
 			self::$USER_RANKINGS = array();
-			self::$db->query('SELECT rank, rank_name FROM user_rankings ORDER BY rank');
+			self::$db->query('SELECT `rank`, rank_name FROM user_rankings ORDER BY `rank`');
 			while (self::$db->nextRecord()) {
 				self::$USER_RANKINGS[self::$db->getInt('rank')] = self::$db->getField('rank_name');
 			}
