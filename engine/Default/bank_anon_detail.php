@@ -70,7 +70,7 @@ if ($db->getNumRows() > 0) {
 
 	$transactions = [];
 	while ($db->nextRecord()) {
-		$transactionPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
+		$transactionPlayer = SmrPlayer::getPlayer($db->getInt('player_id'), $player->getGameID(), false, $db);
 		$transaction = $db->getField('transaction');
 		$amount = number_format($db->getInt('amount'));
 		$transactions[$db->getInt('transaction_id')] = [

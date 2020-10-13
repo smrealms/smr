@@ -8,7 +8,7 @@ $query = 'SELECT log_id FROM combat_logs WHERE log_id=' . $db->escapeNumber($var
 if ($player->hasAlliance()) {
 	$query .= '(attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ')';
 } else {
-	$query .= '(attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ')';
+	$query .= '(attacker_player_id=' . $db->escapeNumber($player->getPlayerID()) . ' OR defender_player_id=' . $db->escapeNumber($player->getPlayerID()) . ')';
 }
 $db->query($query . ' LIMIT 1');
 

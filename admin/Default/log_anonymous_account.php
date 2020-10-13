@@ -10,14 +10,14 @@ while ($db->nextRecord()) {
 
 // get all anon bank transactions that are logged in an array
 $db->query('SELECT * FROM anon_bank_transactions
-            JOIN account USING(account_id)
+            JOIN player USING(player_id)
             WHERE account_id IN ('.$db->escapeArray($log_account_ids) . ')
             ORDER BY game_id DESC, anon_id ASC');
 $anon_logs = [];
 while ($db->nextRecord()) {
 	$transaction = strtolower($db->getField('transaction'));
 	$anon_logs[$db->getInt('game_id')][$db->getInt('anon_id')][] = [
-		'login' => $db->getField('login'),
+		'player_name' => $db->getField('player_name'),
 		'amount' => number_format($db->getInt('amount')),
 		'date' => date(DATE_FULL_SHORT, $db->getInt('time')),
 		'type' => $transaction,

@@ -21,7 +21,7 @@ if ($db->nextRecord()) {
 		$thread_id = 1;
 	}
 	$db->query('INSERT INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', \'Bank Statement\')');
-	$db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_BANK_REPORTER) . ', ' . $db->escapeNumber(TIME) . ')');
+	$db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, player_id, time) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(PLAYER_ID_BANK_REPORTER) . ', ' . $db->escapeNumber(TIME) . ')');
 }
 
 $container = create_container('skeleton.php', 'bank_report.php');

@@ -8,8 +8,8 @@ if (strlen($note) > 1000) {
 
 $note = htmlentities($note, ENT_QUOTES, 'utf-8');
 $note = nl2br($note);
-$db->query('INSERT INTO player_has_notes (account_id,game_id,note) VALUES(' .
-		$db->escapeNumber($player->getAccountID()) . ',' .
+$db->query('INSERT INTO player_has_notes (player_id,game_id,note) VALUES(' .
+		$db->escapeNumber($player->getPlayerID()) . ',' .
 		$db->escapeNumber($player->getGameID()) . ',' .
 		$db->escapeBinary(gzcompress($note)) . ')');
 

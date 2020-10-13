@@ -1071,8 +1071,8 @@ class SmrPlanet {
 		$trigger->increaseHOF(1, array('Combat', 'Planet', 'Number Of Triggers'), HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, array('Combat', 'Planet', 'Number Of Attacks'), HOF_PUBLIC);
-			$this->db->query('REPLACE INTO player_attacks_planet (game_id, account_id, sector_id, time, level) VALUES ' .
-					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
+			$this->db->query('REPLACE INTO player_attacks_planet (game_id, player_id, sector_id, time, level) VALUES ' .
+					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getPlayerID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
 
 		// Add each unique attack to news unless it was already added recently.
@@ -1282,9 +1282,9 @@ class SmrPlanet {
 
 	public function creditCurrentAttackersForKill() {
 		//get all players involved for HoF
-		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_BUST));
+		$this->db->query('SELECT player_id, level FROM player_attacks_planet WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_BUST));
 		while ($this->db->nextRecord()) {
-			$currPlayer = SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID());
+			$currPlayer = SmrPlayer::getPlayer($this->db->getInt('player_id'), $this->getGameID());
 			$currPlayer->increaseHOF($this->db->getInt('level'), array('Combat', 'Planet', 'Levels'), HOF_PUBLIC);
 			$currPlayer->increaseHOF(1, array('Combat', 'Planet', 'Completed'), HOF_PUBLIC);
 		}

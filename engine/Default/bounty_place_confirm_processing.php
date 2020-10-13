@@ -24,7 +24,6 @@ if (Request::get('action') != 'Yes') {
 // get values from container (validated in bounty_place_processing.php)
 $amount = $var['amount'];
 $smrCredits = $var['SmrCredits'];
-$account_id = $var['account_id'];
 
 // take the bounty from the cash
 $player->decreaseCredits($amount);
@@ -34,7 +33,7 @@ $player->increaseHOF($smrCredits, array('Bounties', 'Placed', 'SMR Credits'), HO
 $player->increaseHOF($amount, array('Bounties', 'Placed', 'Money'), HOF_PUBLIC);
 $player->increaseHOF(1, array('Bounties', 'Placed', 'Number'), HOF_PUBLIC);
 
-$placed = SmrPlayer::getPlayer($account_id, $player->getGameID());
+$placed = SmrPlayer::getPlayer($var['player_id'], $player->getGameID());
 $placed->increaseCurrentBountyAmount($type, $amount);
 $placed->increaseCurrentBountySmrCredits($type, $smrCredits);
 $placed->increaseHOF($smrCredits, array('Bounties', 'Received', 'SMR Credits'), HOF_PUBLIC);

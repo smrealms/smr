@@ -50,14 +50,14 @@ class Globals {
 		return self::$HIDDEN_PLAYERS;
 	}
 
-	public static function getGalacticPostEditorIDs($gameID) {
+	public static function getGalacticPostEditorPlayerIDs($gameID) {
 		self::initialiseDatabase();
-		$editorIDs = [];
-		self::$db->query('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . self::$db->escapeNumber($gameID));
+		$editorPlayerIDs = [];
+		self::$db->query('SELECT player_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . self::$db->escapeNumber($gameID));
 		while (self::$db->nextRecord()) {
-			$editorIDs[] = self::$db->getInt('account_id');
+			$editorPlayerIDs[] = self::$db->getInt('account_id');
 		}
-		return $editorIDs;
+		return $editorPlayerIDs;
 	}
 
 	public static function getLevelRequirements() {
@@ -288,9 +288,9 @@ class Globals {
 		return self::$AVAILABLE_LINKS['EnterPort'] = SmrSession::getNewHREF(create_container('skeleton.php', 'shop_goods.php'));
 	}
 
-	public static function getAttackTraderHREF($accountID) {
+	public static function getAttackTraderHREF($playerID) {
 		$container = create_container('trader_attack_processing.php');
-		$container['target'] = $accountID;
+		$container['targetPlayerID'] = $playerID;
 		return self::$AVAILABLE_LINKS['AttackTrader'] = SmrSession::getNewHREF($container);
 	}
 

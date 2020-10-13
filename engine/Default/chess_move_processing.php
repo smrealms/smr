@@ -9,10 +9,10 @@ $y = Request::getInt('y');
 $toX = Request::getInt('toX');
 $toY = Request::getInt('toY');
 if (!$chessGame->hasEnded()) {
-	if ($chessGame->isCurrentTurn($account->getAccountID())) {
+	if ($chessGame->isCurrentTurn($player->getPlayerID())) {
 		$board = $chessGame->getBoard();
 		if ($board[$y][$x] != null) {
-			switch ($chessGame->tryMove($x, $y, $toX, $toY, $account->getAccountID(), ChessPiece::QUEEN)) {
+			switch ($chessGame->tryMove($x, $y, $toX, $toY, $player->getPlayerID(), ChessPiece::QUEEN)) {
 				case 0:
 					//Success
 				break;

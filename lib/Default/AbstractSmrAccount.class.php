@@ -601,16 +601,16 @@ abstract class AbstractSmrAccount {
 		self::doMessageSendingToBox($this->getAccountID(), $boxTypeID, $message);
 	}
 
-	public static function doMessageSendingToBox($senderID, $boxTypeID, $message, $gameID = 0) {
+	public static function doMessageSendingToBox($senderAccountID, $boxTypeID, $message, $gameID = 0) {
 		$db = new SmrMySqlDatabase();
 		// send him the message
 		$db->query('INSERT INTO message_boxes
 			(box_type_id,game_id,message_text,
-			sender_id,send_time) VALUES (' .
+			sender_account_id,send_time) VALUES (' .
 			$db->escapeNumber($boxTypeID) . ',' .
 			$db->escapeNumber($gameID) . ',' .
 			$db->escapeString($message) . ',' .
-			$db->escapeNumber($senderID) . ',' .
+			$db->escapeNumber($senderAccountID) . ',' .
 			$db->escapeNumber(TIME) . ')'
 		);
 	}

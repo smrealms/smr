@@ -11,7 +11,7 @@ $gameID = SmrSession::getRequestVarInt('view_game_id');
 
 $db->query('SELECT *
 			FROM anon_bank_transactions
-			JOIN player USING(account_id, game_id)
+			JOIN player USING(player_id, game_id)
 			WHERE anon_id = '.$db->escapeNumber($anonID) . '
 				AND game_id = '.$db->escapeNumber($gameID) . '
 			ORDER BY transaction_id');

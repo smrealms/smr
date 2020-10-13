@@ -34,7 +34,7 @@ if ($db->getNumRows() > 0) {
 								'Anonymous' => $db->getBoolean('anonymous')
 		);
 		if ($featureModerator || !$db->getBoolean('anonymous')) {
-			$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($db->getInt('poster_id'));
+			$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($db->getInt('poster_account_id'));
 		}
 	}
 	$template->assign('Comments', $featureRequestComments);

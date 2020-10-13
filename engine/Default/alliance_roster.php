@@ -50,7 +50,7 @@ $db->requireRecord();
 $template->assign('AllianceExp', $db->getInt('alliance_xp'));
 $template->assign('AllianceAverageExp', $db->getInt('alliance_avg'));
 
-if ($account->getAccountID() == $alliance->getLeaderID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
+if ($player->getPlayerID() == $alliance->getLeaderPlayerID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
 	$container = create_container('skeleton.php', 'alliance_stat.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$template->assign('EditAllianceDescriptionHREF', SmrSession::getNewHREF($container));
@@ -66,7 +66,7 @@ $template->assign('AlliancePlayers', $alliancePlayers);
 
 if ($alliance->getAllianceID() == $player->getAllianceID()) {
 	// Alliance members get to see active/inactive status of members
-	$template->assign('ActiveIDs', $alliance->getActiveIDs());
+	$template->assign('ActivePlayerIDs', $alliance->getActivePlayerIDs());
 	$container = create_container('skeleton.php', 'alliance_roster.php');
 	if ($showRoles) {
 		$container['action'] = 'Hide Alliance Roles';

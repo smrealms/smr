@@ -4,15 +4,10 @@ $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 $db->query('
-SELECT
-account_id,
-player_id,
-player_name,
-last_cpl_action
-FROM player
+SELECT * FROM player
 WHERE game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
 AND alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . '
-AND account_id != ' . $db->escapeNumber($player->getAccountID()) . '
+AND player_id != ' . $db->escapeNumber($player->getPlayerID()) . '
 ORDER BY last_cpl_action DESC
 ');
 
@@ -21,14 +16,17 @@ $template->assign('BanishHREF', SmrSession::getNewHREF($container));
 
 $members = [];
 while ($db->nextRecord()) {
+	$alliancePlayer = SmrPlayer::getPlayer($db->getInt('player_id'), $player->getGameID(), false, $db);
+
 	// get the amount of time since last_active
-	$diff = 864000 + max(-864000, $db->getInt('last_cpl_action') - TIME);
-	$lastActive = get_colored_text_range($diff, 864000, date(DATE_FULL_SHORT, $db->getInt('last_cpl_action')));
+	$last_cpl_action = $alliancePlayer->getLastCPLAction();
+	$diff = 864000 + max(-864000, $last_cpl_action - TIME);
+	$lastActive = get_colored_text_range($diff, 864000, date(DATE_FULL_SHORT, $last_cpl_action));
 
 	$members[] = [
 		'last_active' => $lastActive,
-		'display_name' => htmlentities($db->getField('player_name')) . ' (' . $db->getInt('player_id') . ')',
-		'account_id' => $db->getInt('account_id'),
+		'display_name' => $alliancePlayer->getDisplayName(),
+		'ccount_id' => $alliancePlayer->getPlayerID(),
 	];
 }
 $template->assign('Members', $members);

@@ -53,8 +53,9 @@ $template->assign('NextLogin', 'npc' . $nextNpcID);
 // Get the existing NPC players for the selected game
 $db->query('SELECT * FROM player WHERE game_id=' . $db->escapeNumber($selectedGameID) . ' AND npc=' . $db->escapeBoolean(true));
 while ($db->nextRecord()) {
+	$playerID = $db->getInt('player_id');
 	$accountID = $db->getInt('account_id');
-	$npcs[$accountID]['player'] = SmrPlayer::getPlayer($accountID, $selectedGameID, false, $db);
+	$npcs[$accountID]['player'] = SmrPlayer::getPlayer($playerID, $selectedGameID, false, $db);
 }
 
 $template->assign('Npcs', $npcs);

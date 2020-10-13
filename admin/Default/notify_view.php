@@ -10,12 +10,12 @@ $db->query('SELECT * FROM message_notify');
 $messages = [];
 while ($db->nextRecord()) {
 	$gameID = $db->getInt('game_id');
-	$sender = getMessagePlayer($db->getInt('from_id'), $gameID);
-	$receiver = getMessagePlayer($db->getInt('to_id'), $gameID);
+	$sender = getMessagePlayer($db->getInt('from_player_id'), $gameID);
+	$receiver = getMessagePlayer($db->getInt('to_player_id'), $gameID);
 
 	$container = create_container('skeleton.php', 'notify_reply.php');
-	$container['offender'] = $db->getInt('from_id');
-	$container['offended'] = $db->getInt('to_id');
+	$container['offender_player_id'] = $db->getInt('from_player_id');
+	$container['offended_player_'] = $db->getInt('to_player_id');
 	$container['game_id'] = $gameID;
 
 	$offender = $sender;
