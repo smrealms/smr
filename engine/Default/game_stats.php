@@ -27,7 +27,7 @@ if ($db->getNumRows() > 0) {
 	$rank = 0;
 	$expRankings = array();
 	while ($db->nextRecord()) {
-		$expRankings[++$rank] = SmrPlayer::getPlayer($db->getInt('account_id'), $gameID, false, $db);
+		$expRankings[++$rank] = SmrPlayer::getPlayer($db->getInt('player_id'), $gameID, false, $db);
 	}
 	$template->assign('ExperienceRankings', $expRankings);
 }
@@ -38,7 +38,7 @@ if ($db->getNumRows() > 0) {
 	$rank = 0;
 	$killRankings = array();
 	while ($db->nextRecord()) {
-		$killRankings[++$rank] = SmrPlayer::getPlayer($db->getInt('account_id'), $gameID, false, $db);
+		$killRankings[++$rank] = SmrPlayer::getPlayer($db->getInt('player_id'), $gameID, false, $db);
 	}
 	$template->assign('KillRankings', $killRankings);
 }

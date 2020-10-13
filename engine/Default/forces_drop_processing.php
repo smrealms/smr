@@ -146,7 +146,7 @@ if ($change_mines != 0) {
 }
 
 // message to send out
-if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isForceDropMessages()) {
+if (!$forces->getOwner()->equals($player) && $forces->getOwner()->isForceDropMessages()) {
 	$mines_message = '';
 	if ($change_mines > 0) {
 		$mines_message = 'added ' . $change_mines . ' mine';

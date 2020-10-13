@@ -37,7 +37,7 @@ if ($db->getNumRows() > 0) {
 $template->assign('AlliedAllianceBanks', $alliedAllianceBanks);
 
 $db->query('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
-			WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
+			WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND ' . $player->getSQL() . '
 			GROUP BY transaction');
 $playerTrans = array('Deposit' => 0, 'Payment' => 0);
 while ($db->nextRecord()) {
@@ -61,8 +61,7 @@ if ($db->getBoolean('positive_balance')) {
 } elseif ($withdrawalPerDay == ALLIANCE_BANK_UNLIMITED) {
 	$template->assign('UnlimitedWithdrawal', true);
 } else {
-	$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
-				AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . $db->escapeNumber(TIME - 86400));
+	$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND ' . $player->getSQL() . ' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . $db->escapeNumber(TIME - 86400));
 	if ($db->nextRecord()) {
 		$totalWithdrawn = $db->getInt('total');
 	}
@@ -87,11 +86,9 @@ if ($minValue <= 0 || $minValue > $maxValue) {
 	$minValue = max(1, $maxValue - 5);
 }
 
-$query = 'SELECT time, transaction_id, transaction, amount, exempt, reason, payee_id
-	FROM alliance_bank_transactions
+$query = 'SELECT * FROM alliance_bank_transactions
 	WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 	AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID());
-
 
 if ($maxValue > 0 && $minValue > 0) {
 	$query .= ' AND transaction_id>=' . $db->escapeNumber($minValue) . '
@@ -109,7 +106,7 @@ if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		$bankTransactions[$db->getInt('transaction_id')] = array(
 			'Time' => $db->getInt('time'),
-			'Player' => SmrPlayer::getPlayer($db->getInt('payee_id'), $player->getGameID()),
+			'Player' => SmrPlayer::getPlayer($db->getInt('player_id'), $player->getGameID()),
 			'Reason' => $db->getField('reason'),
 			'TransactionType' => $db->getField('transaction'),
 			'Withdrawal' => $db->getField('transaction') == 'Payment' ? $db->getInt('amount') : '',

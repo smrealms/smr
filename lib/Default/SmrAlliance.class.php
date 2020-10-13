@@ -175,19 +175,19 @@ class SmrAlliance {
 	}
 
 	public function hasLeader() {
-		return $this->getLeaderID() != 0;
+		return $this->getLeaderPlayerID() != 0;
 	}
 
-	public function getLeaderID() {
-		return $this->leaderID;
+	public function getLeaderPlayerID() {
+		return $this->leaderPlayerID;
 	}
 
 	public function getLeader() {
-		return SmrPlayer::getPlayer($this->getLeaderID(), $this->getGameID());
+		return SmrPlayer::getPlayer($this->getLeaderPlayerID(), $this->getGameID());
 	}
 
-	public function setLeaderID($leaderID) {
-		$this->leaderID = $leaderID;
+	public function setLeaderPlayerID($leaderPlayerID) {
+		$this->leaderPlayerID = $leaderPlayerID;
 	}
 
 	public function getDiscordServer() {
@@ -451,7 +451,7 @@ class SmrAlliance {
 	}
 
 	public function getNumMembers() {
-		return count($this->getMemberIDs());
+		return count($this->getMemberPlayerIDs());
 	}
 
 	public function update() {
@@ -466,8 +466,8 @@ class SmrAlliance {
 								alliance_deaths = ' . $this->db->escapeNumber($this->deaths) . ',
 								discord_server = ' . $this->db->escapeString($this->discordServer, true, true) . ',
 								discord_channel = ' . $this->db->escapeString($this->discordChannel, true, true) . ',
-								flagship_id = ' . $this->db->escapeNumber($this->flagshipID) . ',
-								leader_id = ' . $this->db->escapeNumber($this->leaderID) . '
+								flagship_player_id = ' . $this->db->escapeNumber($this->flagshipPlayerID) . ',
+								leader_player_id = ' . $this->db->escapeNumber($this->leaderPlayerID) . '
 							WHERE ' . $this->SQL);
 	}
 
@@ -478,32 +478,32 @@ class SmrAlliance {
 		return SmrPlayer::getAlliancePlayers($this->getGameID(), $this->getAllianceID());
 	}
 
-	public function getMemberIDs() {
+	public function getMemberPlayerIDs() {
 		if (!isset($this->memberList)) {
-			$this->db->query('SELECT account_id FROM player WHERE ' . $this->SQL);
+			$this->db->query('SELECT player_id FROM player WHERE ' . $this->SQL);
 
 			//we have the list of players put them in an array now
 			$this->memberList = array();
 			while ($this->db->nextRecord()) {
-				$this->memberList[] = $this->db->getInt('account_id');
+				$this->memberList[] = $this->db->getInt('player_id');
 			}
 		}
 		return $this->memberList;
 	}
 	
-	public function getActiveIDs() {
-		$activeIDs = array();
+	public function getActivePlayerIDs() {
+		$activePlayerIDs = array();
 		
-		$this->db->query('SELECT account_id
+		$this->db->query('SELECT player_id
 						FROM active_session
-						JOIN player USING(account_id, game_id)
+						JOIN player USING(player_id, game_id)
 						WHERE '.$this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(TIME - 600));
 		
 		while ($this->db->nextRecord()) {
-			$activeIDs[] = $this->db->getInt('account_id');
+			$activePlayerIDs[] = $this->db->getInt('player_id');
 		}
 		
-		return $activeIDs;
+		return $activePlayerIDs;
 	}
 
 	/**
@@ -512,7 +512,7 @@ class SmrAlliance {
 	public function getPlanets() {
 		$this->db->query('SELECT planet.*
 			FROM player
-			JOIN planet ON player.game_id = planet.game_id AND player.account_id = planet.owner_id
+			JOIN planet ON player.game_id = planet.game_id AND player.player_id = planet.owner_player_id
 			WHERE player.game_id=' . $this->db->escapeNumber($this->gameID) . '
 			AND player.alliance_id=' . $this->db->escapeNumber($this->allianceID) . '
 			ORDER BY planet.sector_id

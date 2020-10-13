@@ -634,8 +634,8 @@ class AbstractSmrPort {
 		$trigger->increaseHOF(1, array('Combat', 'Port', 'Number Of Triggers'), HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, array('Combat', 'Port', 'Number Of Attacks'), HOF_PUBLIC);
-			$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES
-							(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
+			$this->db->query('REPLACE INTO player_attacks_port (game_id, player_id, sector_id, time, level) VALUES
+							(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getPlayerID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
 		if (!$this->isUnderAttack()) {
 	
@@ -662,7 +662,7 @@ class AbstractSmrPort {
 			}
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
 //			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
-			$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeString($newsMessage) . ',\'REGULAR\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
+			$this->db->query('INSERT INTO news (game_id, time, news_message, type, killer_player_id, killer_alliance, dead_player_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeString($newsMessage) . ',\'REGULAR\',' . $this->db->escapeNumber($trigger->getPlayerID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber(PLAYER_ID_PORT) . ')');
 		}
 	}
 	
@@ -1279,9 +1279,9 @@ class AbstractSmrPort {
 	protected function getAttackersToCredit() {
 		//get all players involved for HoF
 		$attackers = array();
-		$this->db->query('SELECT account_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
+		$this->db->query('SELECT player_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
 		while ($this->db->nextRecord()) {
-			$attackers[] = SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID());
+			$attackers[] = SmrPlayer::getPlayer($this->db->getInt('player_id'), $this->getGameID());
 		}
 		return $attackers;
 	}
@@ -1348,7 +1348,7 @@ class AbstractSmrPort {
 		} else {
 			$news .= $killer->getBBLink();
 		}
-		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
+		$this->db->query('INSERT INTO news (game_id, time, news_message, type, killer_player_id, killer_alliance, dead_player_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getPlayerID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(PLAYER_ID_PORT) . ')');
 		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ', $return['KillerBounty']);

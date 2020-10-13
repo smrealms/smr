@@ -68,8 +68,8 @@ $player->giveStartingRelations();
 
 // The `player_visited_sector` table holds *unvisited* sectors, so that once
 // all sectors are visited (the majority of the game), the table is empty.
-$db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
-            SELECT ' . $db->escapeNumber($account->getAccountID()) . ', game_id, sector_id
+$db->query('INSERT INTO player_visited_sector (player_id, game_id, sector_id)
+            SELECT ' . $db->escapeNumber($player->getPlayerID()) . ', game_id, sector_id
               FROM sector WHERE game_id = ' . $db->escapeNumber($gameID));
 
 // Mark the player's start sector as visited
@@ -84,7 +84,7 @@ if ($isNewbie || $account->getAccountID() == ACCOUNT_ID_NHL) {
 	For more tips to help you get started with the game, check out your alliance message boards. These can be reached by clicking the "Alliance" link on the left side of the page, and then clicking the "Message Board" menu link. The <u><a href="' . WIKI_URL . '" target="_blank">SMR Wiki</a></u> also gives detailed information on all aspects of the game.<br />
 	SMR is integrated with both IRC and Discord. These are free chat services where you can talk to other players and coordinate with your alliance. Simply click the "Join Chat" link at the bottom left panel of the page.';
 
-	SmrPlayer::sendMessageFromAdmin($gameID, $account->getAccountID(), $message);
+	SmrPlayer::sendMessageFromAdmin($gameID, $player->getPlayerID(), $message);
 }
 
 // We aren't in a game yet, so updates are not done automatically here

@@ -20,14 +20,14 @@ if (empty($message)) {
 }
 
 if (isset($var['alliance_id'])) {
-	$db->query('SELECT account_id FROM player
+	$db->query('SELECT player_id FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_id = ' . $var['alliance_id'] . '
-				AND account_id != ' . $db->escapeNumber($player->getAccountID())); //No limit in case they are over limit - ie NHA
+				AND player_id != ' . $db->escapeNumber($player->getPlayerID())); //No limit in case they are over limit - ie NHA
 	while ($db->nextRecord()) {
-		$player->sendMessage($db->getInt('account_id'), MSG_ALLIANCE, $message, false);
+		$player->sendMessage($db->getInt('player_id'), MSG_ALLIANCE, $message, false);
 	}
-	$player->sendMessage($player->getAccountID(), MSG_ALLIANCE, $message, true, false);
+	$player->sendMessage($player->getPlayerID(), MSG_ALLIANCE, $message, true, false);
 } elseif (!empty($var['receiver'])) {
 	$player->sendMessage($var['receiver'], MSG_PLAYER, $message);
 } else {

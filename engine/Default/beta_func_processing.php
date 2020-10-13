@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 if ($var['func'] == 'Map') {
-	$account_id = $player->getAccountID();
 	$game_id = $player->getGameID();
 	// delete all entries from the player_visited_sector/port table
 	$db->query('DELETE FROM player_visited_sector WHERE ' . $player->getSQL());
@@ -10,7 +9,7 @@ if ($var['func'] == 'Map') {
 	$db->query('SELECT * FROM port WHERE game_id = ' . $db->escapeNumber($game_id));
 	while ($db->nextRecord()) {
 		$port = SmrPort::getPort($game_id, $db->getInt('sector_id'), false, $db);
-		$port->addCachePort($account_id);
+		$port->addCachePort($player->getPlayerID());
 	}
 
 } elseif ($var['func'] == 'Money') {

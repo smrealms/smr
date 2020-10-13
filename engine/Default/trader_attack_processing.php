@@ -16,7 +16,7 @@ if (!$player->canFight()) {
 	create_error('You are not allowed to fight!');
 }
 
-$targetPlayer = SmrPlayer::getPlayer($var['target'], $player->getGameID());
+$targetPlayer = SmrPlayer::getPlayer($var['targetPlayerID'], $player->getGameID());
 
 	if ($player->traderNAPAlliance($targetPlayer)) {
 		create_error('Your alliance does not allow you to attack this trader.');
@@ -46,9 +46,9 @@ $player->takeTurns(3);
 $player->update();
 
 function teamAttack(&$results, $fightingPlayers, $attack, $defend) {
-	foreach ($fightingPlayers[$attack] as $accountID => $teamPlayer) {
+	foreach ($fightingPlayers[$attack] as $playerID => $teamPlayer) {
 		$playerResults =& $teamPlayer->shootPlayers($fightingPlayers[$defend]);
-		$results[$attack]['Traders'][$teamPlayer->getAccountID()] =& $playerResults;
+		$results[$attack]['Traders'][$teamPlayer->getPlayerID()] =& $playerResults;
 		$results[$attack]['TotalDamage'] += $playerResults['TotalDamage'];
 
 		// Award assists (if there are multiple attackers)
@@ -76,7 +76,7 @@ $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 $account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'] . ' and the other team does ' . $results['Defenders']['TotalDamage'], $sector->getSectorID());
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLAYER\',' . $db->escapeNumber($sector->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($var['target']) . ',' . $db->escapeNumber($targetPlayer->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLAYER\',' . $db->escapeNumber($sector->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getPlayerID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($var['target']) . ',' . $db->escapeNumber($targetPlayer->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
 
 $container = create_container('skeleton.php', 'trader_attack.php');
 

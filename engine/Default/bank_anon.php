@@ -13,9 +13,7 @@ $template->assign('AccessHREF', SmrSession::getNewHREF($container));
 
 $template->assign('Message', $var['message'] ?? '');
 
-$db->query('SELECT * FROM anon_bank
-			WHERE owner_id=' . $db->escapeNumber($player->getAccountID()) . '
-			AND game_id=' . $db->escapeNumber($player->getGameID()));
+$db->query('SELECT * FROM anon_bank WHERE ' . $player->getSQL());
 
 $ownedAnon = [];
 $db2 = new SmrMySqlDatabase();

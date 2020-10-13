@@ -53,7 +53,7 @@ foreach ($attackers as $attacker) {
 
 foreach ($attackers as $attacker) {
 	$playerResults =& $attacker->shootPort($port);
-	$results['Attackers']['Traders'][$attacker->getAccountID()] =& $playerResults;
+	$results['Attackers']['Traders'][$attacker->getPlayerID()] =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 }
 $results['Attackers']['Downgrades'] = $port->checkForDowngrade($results['Attackers']['TotalDamage']);
@@ -65,11 +65,11 @@ $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 $port->update();
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PORT\',' . $db->escapeNumber($port->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $db->escapeNumber(PORT_ALLIANCE_ID) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PORT\',' . $db->escapeNumber($port->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getPlayerID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber(PLAYER_ID_PORT) . ',' . $db->escapeNumber(PORT_ALLIANCE_ID) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
 $logId = $db->escapeString('[ATTACK_RESULTS]' . $db->getInsertID());
 foreach ($attackers as $attacker) {
 	if (!$player->equals($attacker)) {
-		$db->query('REPLACE INTO sector_message VALUES(' . $db->escapeNumber($attacker->getAccountID()) . ',' . $db->escapeNumber($attacker->getGameID()) . ',' . $logId . ')');
+		$db->query('REPLACE INTO sector_message VALUES(' . $db->escapeNumber($attacker->getPlayerID()) . ',' . $db->escapeNumber($attacker->getGameID()) . ',' . $logId . ')');
 	}
 }
 

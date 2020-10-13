@@ -58,7 +58,7 @@ foreach ($attackers as $attacker) {
 
 foreach ($attackers as $attacker) {
 	$playerResults =& $attacker->shootPlanet($planet, false);
-	$results['Attackers']['Traders'][$attacker->getAccountID()] =& $playerResults;
+	$results['Attackers']['Traders'][$attacker->getPlayerID()] =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 }
 $results['Attackers']['Downgrades'] = $planet->checkForDowngrade($results['Attackers']['TotalDamage']);
@@ -70,7 +70,7 @@ $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 // Add this log to the `combat_logs` database table
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $planetOwner->getAccountID() . ',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getPlayerID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $planetOwner->getPlayerID() . ',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
 $logId = $db->getInsertID();
 
 if ($planet->isDestroyed()) {
@@ -86,17 +86,17 @@ if ($planet->isDestroyed()) {
 
 // Send notification to planet owners
 if ($planetOwner->hasAlliance()) {
-	foreach ($planetOwner->getAlliance()->getMemberIDs() as $allyAccountID) {
-		SmrPlayer::sendMessageFromPlanet($planet->getGameID(), $allyAccountID, $planetAttackMessage);
+	foreach ($planetOwner->getAlliance()->getMemberPlayerIDs() as $allyPlayerID) {
+		SmrPlayer::sendMessageFromPlanet($planet->getGameID(), $allyPlayerID, $planetAttackMessage);
 	}
 } else {
-	SmrPlayer::sendMessageFromPlanet($planet->getGameID(), $planetOwner->getAccountID(), $planetAttackMessage);
+	SmrPlayer::sendMessageFromPlanet($planet->getGameID(), $planetOwner->getPlayerID(), $planetAttackMessage);
 }
 
 // Update sector messages for attackers
 foreach ($attackers as $attacker) {
 	if (!$player->equals($attacker)) {
-		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ',' . $db->escapeString('[ATTACK_RESULTS]' . $logId) . ')');
+		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getPlayerID() . ',' . $attacker->getGameID() . ',' . $db->escapeString('[ATTACK_RESULTS]' . $logId) . ')');
 	}
 }
 

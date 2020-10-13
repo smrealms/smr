@@ -5,7 +5,7 @@ $message = trim(Request::get('message'));
 $expire = Request::getFloat('expire');
 $game_id = $var['SendGameID'];
 if ($game_id != ALL_GAMES_ID) {
-	$account_id = Request::getInt('account_id');
+	$playerID = Request::getInt('player_id');
 }
 
 if (Request::get('action') == 'Preview message') {
@@ -14,7 +14,7 @@ if (Request::get('action') == 'Preview message') {
 	$container['preview'] = $message;
 	$container['expire'] = $expire;
 	if ($game_id != ALL_GAMES_ID) {
-		$container['account_id'] = $account_id;
+		$container['player_id'] = $playerID;
 	}
 	forward($container);
 }
@@ -29,20 +29,20 @@ if ($expire > 0) {
 
 $receivers = [];
 if ($game_id != ALL_GAMES_ID) {
-	if ($account_id == 0) {
+	if ($playerID == 0) {
 		// Send to all players in the requested game
-		$db->query('SELECT account_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
+		$db->query('SELECT player_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
 		while ($db->nextRecord()) {
-			$receivers[] = [$game_id, $db->getInt('account_id')];
+			$receivers[] = [$game_id, $db->getInt('player_id')];
 		}
 	} else {
-		$receivers[] = [$game_id, $account_id];
+		$receivers[] = [$game_id, $player_id];
 	}
 } else {
 	//send to all players in games that haven't ended yet
-	$db->query('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(TIME));
+	$db->query('SELECT game_id, player_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(TIME));
 	while ($db->nextRecord()) {
-		$receivers[] = [$db->getInt('game_id'), $db->getInt('account_id')];
+		$receivers[] = [$db->getInt('game_id'), $db->getInt('player_id')];
 	}
 }
 // Send the messages

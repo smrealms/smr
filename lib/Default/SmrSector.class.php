@@ -166,15 +166,15 @@ class SmrSector {
 
 	public function markVisited(AbstractSmrPlayer $player) {
 		if ($this->hasPort()) {
-			$this->getPort()->addCachePort($player->getAccountID());
+			$this->getPort()->addCachePort($player->getPlayerID());
 		}
 
 		//now delete the entry from visited
 		if (!$this->isVisited($player)) {
 			$this->db->query('DELETE FROM player_visited_sector WHERE ' . $this->SQL . '
-								 AND account_id = ' . $this->db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
+								 AND player_id = ' . $this->db->escapeNumber($player->getPlayerID()) . ' LIMIT 1');
 		}
-		$this->visited[$player->getAccountID()] = true;
+		$this->visited[$player->getPlayerID()] = true;
 	}
 
 	public function hasWeaponShop() {
@@ -801,7 +801,7 @@ class SmrSector {
 
 	public function getOtherTraders(AbstractSmrPlayer $player) {
 		$players = SmrPlayer::getSectorPlayers($this->getGameID(), $this->getSectorID()); //Do not use & because we unset something and only want that in what we return
-		unset($players[$player->getAccountID()]);
+		unset($players[$player->getPlayerID()]);
 		return $players;
 	}
 
@@ -875,10 +875,10 @@ class SmrSector {
 	public function getFightingTradersAgainstPort(AbstractSmrPlayer $attackingPlayer, SmrPort $defendingPort) {
 		$fightingPlayers = array();
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), array($attackingPlayer->getAllianceID()));
-		foreach ($alliancePlayers as $accountID => $player) {
+		foreach ($alliancePlayers as $playerID => $player) {
 			if ($player->canFight()) {
 				if ($attackingPlayer->traderAttackPortAlliance($player)) {
-					$fightingPlayers[$accountID] = $alliancePlayers[$accountID];
+					$fightingPlayers[$playerID] = $alliancePlayers[$playerID];
 				}
 			}
 		}
@@ -890,10 +890,10 @@ class SmrSector {
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), array($attackingPlayer->getAllianceID()));
 		if (count($alliancePlayers) > 0) {
 			$planetOwner = $defendingPlanet->getOwner();
-			foreach ($alliancePlayers as $accountID => $player) {
+			foreach ($alliancePlayers as $playerID => $player) {
 				if ($player->canFight()) {
 					if ($attackingPlayer->traderAttackPlanetAlliance($player) && !$planetOwner->planetNAPAlliance($player)) {
-						$fightingPlayers[$accountID] = $alliancePlayers[$accountID];
+						$fightingPlayers[$playerID] = $alliancePlayers[$playerID];
 					}
 				}
 			}
@@ -909,24 +909,24 @@ class SmrSector {
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), array($attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()));
 		$attackers = array();
 		$defenders = array();
-		foreach ($alliancePlayers as $accountID => $player) {
+		foreach ($alliancePlayers as $playerID => $player) {
 			if ($player->canFight()) {
 				if ($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player)) {
-					$attackers[] = $alliancePlayers[$accountID];
+					$attackers[] = $alliancePlayers[$playerID];
 				} elseif ($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player) && ($checkForCloak === false || $attackingPlayer->canSee($player))) {
-					$defenders[] = $alliancePlayers[$accountID];
+					$defenders[] = $alliancePlayers[$playerID];
 				}
 			}
 		}
 		$attackers = self::limitFightingTraders($attackers, $attackingPlayer, MAXIMUM_PVP_FLEET_SIZE);
 		shuffle($attackers);
 		foreach ($attackers as $attacker) {
-			$fightingPlayers['Attackers'][$attacker->getAccountID()] = $attacker;
+			$fightingPlayers['Attackers'][$attacker->getPlayerID()] = $attacker;
 		}
 		$defenders = self::limitFightingTraders($defenders, $defendingPlayer, MAXIMUM_PVP_FLEET_SIZE);
 		shuffle($defenders);
 		foreach ($defenders as $defender) {
-			$fightingPlayers['Defenders'][$defender->getAccountID()] = $defender;
+			$fightingPlayers['Defenders'][$defender->getPlayerID()] = $defender;
 		}
 		return $fightingPlayers;
 	}
@@ -949,10 +949,10 @@ class SmrSector {
 	public function getPotentialFightingTraders(AbstractSmrPlayer $attackingPlayer) {
 		$fightingPlayers = array();
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), array($attackingPlayer->getAllianceID()));
-		foreach ($alliancePlayers as $accountID => $player) {
+		foreach ($alliancePlayers as $playerID => $player) {
 			if ($player->canFight()) {
 				if ($attackingPlayer->traderAttackTraderAlliance($player)) {
-					$fightingPlayers['Attackers'][$accountID] = $player;
+					$fightingPlayers['Attackers'][$playerID] = $player;
 				}
 			}
 		}
@@ -991,11 +991,11 @@ class SmrSector {
 		if ($player === null) {
 			return true;
 		}
-		if (!isset($this->visited[$player->getAccountID()])) {
-			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE ' . $this->SQL . ' AND account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
-			$this->visited[$player->getAccountID()] = !$this->db->nextRecord();
+		if (!isset($this->visited[$player->getPlayerID()])) {
+			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE ' . $this->SQL . ' AND player_id=' . $this->db->escapeNumber($player->getPlayerID()) . ' LIMIT 1');
+			$this->visited[$player->getPlayerID()] = !$this->db->nextRecord();
 		}
-		return $this->visited[$player->getAccountID()];
+		return $this->visited[$player->getPlayerID()];
 	}
 
 	public function getLocalMapMoveHREF() {

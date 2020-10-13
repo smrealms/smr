@@ -54,11 +54,11 @@ $message = $player->getLevelName() . " " . $player->getBBLink()
            . "! You have " . format_time(TIME_FOR_COUNCIL_VOTE)
            . " to cast your vote.";
 
-foreach ($councilMembers as $accountID) {
+foreach ($councilMembers as $playerID) {
 	// don't send to the player who started the vote
-	if ($player->getAccountID() != $accountID) {
+	if ($player->getPlayerID() != $playerID) {
 		SmrPlayer::sendMessageFromRace($player->getRaceID(), $player->getGameID(),
-		                               $accountID, $message, $time);
+		                               $playerID, $message, $time);
   }
 }
 

@@ -3,7 +3,7 @@
 // register game_id
 SmrSession::updateGame($var['game_id']);
 
-$player = SmrPlayer::getPlayer($account->getAccountID(), $var['game_id']);
+$player = SmrPlayer::getPlayerByAccountID($account->getAccountID(), $var['game_id']);
 $player->updateLastCPLAction();
 
 // Check to see if newbie status has changed

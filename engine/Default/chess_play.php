@@ -4,7 +4,7 @@ $chessGame = ChessGame::getChessGame($var['ChessGameID']);
 $template->assign('ChessGame', $chessGame);
 
 // Board orientation depends on the player's color.
-$playerIsWhite = $chessGame->getWhiteID() == $player->getAccountID();
+$playerIsWhite = $chessGame->getWhitePlayerID() == $player->getPlayerID();
 if ($playerIsWhite) {
 	$board = $chessGame->getBoard();
 } else {

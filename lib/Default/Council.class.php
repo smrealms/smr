@@ -15,7 +15,7 @@ class Council {
 	}
 
 	/**
-	 * Returns an array of Account ID's of the Council for this race.
+	 * Returns an array of Player ID's of the Council for this race.
 	 */
 	public static function getRaceCouncil($gameID, $raceID) {
 		if (!isset(self::$COUNCILS[$gameID][$raceID])) {
@@ -26,7 +26,7 @@ class Council {
 			// Require council members to have > 0 exp to ensure that players
 			// cannot perform council activities before the game starts.
 			$i = 1;
-			self::$db->query('SELECT account_id, alignment
+			self::$db->query('SELECT player_id, alignment
 								FROM player
 								WHERE game_id = ' . self::$db->escapeNumber($gameID) . '
 									AND race_id = ' . self::$db->escapeNumber($raceID) . '
@@ -36,12 +36,12 @@ class Council {
 								LIMIT ' . MAX_COUNCIL_MEMBERS);
 			while (self::$db->nextRecord()) {
 				// Add this player to the council
-				self::$COUNCILS[$gameID][$raceID][$i++] = self::$db->getInt('account_id');
+				self::$COUNCILS[$gameID][$raceID][$i++] = self::$db->getInt('player_id');
 
 				// Determine if this player is also the president
 				if (self::$PRESIDENTS[$gameID][$raceID] === false) {
 					if (self::$db->getInt('alignment') >= ALIGNMENT_PRESIDENT) {
-						self::$PRESIDENTS[$gameID][$raceID] = self::$db->getInt('account_id');
+						self::$PRESIDENTS[$gameID][$raceID] = self::$db->getInt('player_id');
 					}
 				}
 			}
@@ -50,9 +50,9 @@ class Council {
 	}
 
 	/**
-	 * Returns the Account ID of the President for this race (or false if no President).
+	 * Returns the Player ID of the President for this race (or false if no President).
 	 */
-	public static function getPresidentID($gameID, $raceID) {
+	public static function getPresidentPlayerID($gameID, $raceID) {
 		if (!isset(self::$PRESIDENTS[$gameID][$raceID])) {
 			self::initialiseDatabase();
 			self::getRaceCouncil($gameID, $raceID); // determines the president

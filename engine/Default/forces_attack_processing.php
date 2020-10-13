@@ -87,7 +87,7 @@ if ($bump) {
 $results['Attackers'] = array('TotalDamage' => 0);
 foreach ($attackers as $attacker) {
 	$playerResults =& $attacker->shootForces($forces);
-	$results['Attackers']['Traders'][$attacker->getAccountID()] =& $playerResults;
+	$results['Attackers']['Traders'][$attacker->getPlayerID()] =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 }
 
@@ -100,7 +100,7 @@ $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 // Add this log to the `combat_logs` database table
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getAccountID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getPlayerID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getPlayerID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
 $logId = $db->getInsertID();
 
 if ($sendMessage) {
@@ -112,7 +112,7 @@ $container = create_container('skeleton.php', 'forces_attack.php');
 
 // If their target is dead there is no continue attack button
 if ($forces->exists()) {
-	$container['owner_id'] = $forces->getOwnerID();
+	$container['owner_id'] = $forces->getOwnerPlayerID();
 } else {
 	$container['owner_id'] = 0;
 }

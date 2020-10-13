@@ -50,7 +50,7 @@ if ($action == 'Vote') {
 			)
 			WHERE feature_request_id IN (' . $db->escapeArray($setStatusIDs) . ')');
 	foreach ($setStatusIDs as $featureID) {
-		$db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text)
+		$db->query('INSERT INTO feature_request_comments (feature_request_id, poster_account_id, posting_time, anonymous, text)
 					VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber($account->getAccountID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
 	}
 

@@ -41,17 +41,17 @@ if (!isset($var['box_type_id'])) {
 				'ID' => $messageID
 			);
 
-			$senderID = $db->getInt('sender_id');
-			if ($senderID == 0) {
+			$senderAccountID = $db->getInt('sender_account_id');
+			if ($senderAccountID == 0) {
 				$senderName = 'User not logged in';
 			} else {
-				$senderAccount = SmrAccount::getAccount($senderID);
-				$senderName = $senderAccount->getLogin() . ' (' . $senderID . ')';
+				$senderAccount = SmrAccount::getAccount($senderAccountID);
+				$senderName = $senderAccount->getLogin() . ' (' . $senderAccountID . ')';
 				if ($validGame) {
-					$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
+					$senderPlayer = SmrPlayer::getPlayerByAccountID($senderAccountID, $gameID);
 					$senderName .= ' a.k.a ' . $senderPlayer->getDisplayName();
 					$container = create_container('skeleton.php', 'box_reply.php');
-					$container['sender_id'] = $senderID;
+					$container['sender_account_id'] = $senderAccountID;
 					$container['game_id'] = $gameID;
 					transfer('box_type_id');
 					$messages[$messageID]['ReplyHREF'] = SmrSession::getNewHREF($container);

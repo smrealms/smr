@@ -12,9 +12,9 @@ SELECT
 sum(mines) as tot_mines,
 sum(combat_drones) as tot_cds,
 sum(scout_drones) as tot_sds
-FROM sector_has_forces JOIN player ON player.game_id=sector_has_forces.game_id AND sector_has_forces.owner_id=player.account_id
-WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
+FROM sector_has_forces JOIN player USING (game_id, player_id)
+WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
+AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 AND expire_time >= ' . $db->escapeNumber(TIME));
 
 $hardwareTypes = Globals::getHardwareTypes();
@@ -37,14 +37,14 @@ $template->assign('TotalCost', $totalCost);
 $db->query('
 SELECT sector_has_forces.*
 FROM player
-JOIN sector_has_forces ON player.game_id = sector_has_forces.game_id AND player.account_id = sector_has_forces.owner_id
-WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
+JOIN sector_has_forces USING (game_id, player_id)
+WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
+AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 AND expire_time >= ' . $db->escapeNumber(TIME) . '
 ORDER BY sector_id ASC');
 
 $forces = array();
 while ($db->nextRecord()) {
-	$forces[] = SmrForce::getForce($player->getGameID(), $db->getInt('sector_id'), $db->getInt('owner_id'), false, $db);
+	$forces[] = SmrForce::getForce($player->getGameID(), $db->getInt('sector_id'), $db->getInt('player_id'), false, $db);
 }
 $template->assign('Forces', $forces);

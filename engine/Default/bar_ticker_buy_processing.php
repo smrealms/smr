@@ -10,7 +10,7 @@ if ($ticker !== false) {
 	$expires = $ticker['Expires'];
 }
 $expires += 5 * 86400;
-$db->query('REPLACE INTO player_has_ticker (game_id, account_id, type, expires) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($type) . ', ' . $db->escapeNumber($expires) . ')');
+$db->query('REPLACE INTO player_has_ticker (game_id, player_id, type, expires) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getPlayerID()) . ', ' . $db->escapeString($type) . ', ' . $db->escapeNumber($expires) . ')');
 
 //take credits
 $account->decreaseTotalSmrCredits(CREDITS_PER_TICKER);

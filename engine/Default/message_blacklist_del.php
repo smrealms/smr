@@ -8,5 +8,6 @@ if (empty($entry_ids)) {
 	forward($container);
 }
 
-$db->query('DELETE FROM message_blacklist WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND entry_id IN (' . $db->escapeArray($entry_ids) . ')');
+// TODO: does this need game_id?
+$db->query('DELETE FROM message_blacklist WHERE player_id=' . $db->escapeNumber($player->getPlayerID()) . ' AND entry_id IN (' . $db->escapeArray($entry_ids) . ')');
 forward($container);

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 // Get the player we're attacking
-$targetPlayer = SmrPlayer::getPlayer($var['target'], $player->getGameID());
+$targetPlayer = SmrPlayer::getPlayer($var['targetPlayerID'], $player->getGameID());
 
 if ($targetPlayer->isDead()) {
 	$container = create_container('skeleton.php', 'current_sector.php');

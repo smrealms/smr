@@ -5,7 +5,7 @@ $template->assign('PageTopic', 'Savings');
 Menu::trader();
 
 $anonAccounts = [];
-$db->query('SELECT * FROM anon_bank WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+$db->query('SELECT * FROM anon_bank WHERE owner_player_id = ' . $db->escapeNumber($player->getPlayerID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 while ($db->nextRecord()) {
 	$anonAccounts[] = [
 		'ID' => $db->getInt('anon_id'),

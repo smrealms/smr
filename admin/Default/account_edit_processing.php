@@ -139,15 +139,17 @@ if (!empty($names)) {
 if (!empty($delete)) {
 	foreach ($delete as $game_id => $value) {
 		if ($value == 'TRUE') {
+			$deletePlayer = SmrPlayer::getPlayerByAccountID($account_id, $game_id);
+			$playerID = $deletePlayer->getPlayerID();
+			$sql = $deletePlayer->getSQL();
+
 			// Check for bank transactions into the alliance account
-			$db->query('SELECT * FROM alliance_bank_transactions WHERE payee_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id) . ' LIMIT 1');
+			$db->query('SELECT * FROM alliance_bank_transactions WHERE payee_player_id=' . $db->escapeNumber($playerID) . ' AND game_id=' . $db->escapeNumber($game_id) . ' LIMIT 1');
 			if ($db->getNumRows() != 0) {
 				// Can't delete
 				$actions[] = 'player has made alliance transaction';
 				continue;
 			}
-
-			$sql = 'account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id);
 
 			// Check anon accounts for transactions
 			$db->query('SELECT * FROM anon_bank_transactions WHERE ' . $sql . ' LIMIT 1');
@@ -157,18 +159,17 @@ if (!empty($delete)) {
 				continue;
 			}
 
-			$db->query('DELETE FROM alliance_thread
-						WHERE sender_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
+			$db->query('DELETE FROM alliance_thread WHERE ' . $sql);
 			$db->query('DELETE FROM bounty WHERE ' . $sql);
 			$db->query('DELETE FROM galactic_post_applications WHERE ' . $sql);
-			$db->query('DELETE FROM galactic_post_article
-						WHERE writer_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
+			$db->query('DELETE FROM galactic_post_article WHERE ' . $sql);
 			$db->query('DELETE FROM galactic_post_writer WHERE ' . $sql);
 			$db->query('DELETE FROM message WHERE ' . $sql);
 			$db->query('DELETE FROM message_notify
-						WHERE (from_id=' . $db->escapeNumber($account_id) . ' OR to_id=' . $db->escapeNumber($account_id) . ') AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('UPDATE planet SET owner_id=0,planet_name=\'\',password=\'\',shields=0,drones=0,credits=0,bonds=0
-						WHERE owner_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
+						WHERE (from_player_id=' . $db->escapeNumber($playerID) . ' OR to_player_id=' . $db->escapeNumber($playerID) . ') AND game_id=' . $db->escapeNumber($game_id));
+			$db->query('UPDATE planet SET owner_player_id=0,planet_name=\'\',password=\'\',shields=0,drones=0,credits=0,bonds=0
+						WHERE ' . $sql);
+
 			$db->query('DELETE FROM player_attacks_planet WHERE ' . $sql);
 			$db->query('DELETE FROM player_attacks_port WHERE ' . $sql);
 			$db->query('DELETE FROM player_has_alliance_role WHERE ' . $sql);

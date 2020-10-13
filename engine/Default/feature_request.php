@@ -72,7 +72,7 @@ if ($db->getNumRows() > 0) {
 								'VotedFor' => $featureVotes[$featureRequestID] ?? false,
 		);
 		if ($featureModerator) {
-			$featureRequests[$featureRequestID]['RequestAccount'] = SmrAccount::getAccount($db->getInt('poster_id'));
+			$featureRequests[$featureRequestID]['RequestAccount'] = SmrAccount::getAccount($db->getInt('poster_account_id'));
 		}
 
 		if ($canVote) {

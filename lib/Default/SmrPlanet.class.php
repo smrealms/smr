@@ -19,7 +19,7 @@ class SmrPlanet {
 	protected $sectorID;
 	protected $gameID;
 	protected $planetName;
-	protected $ownerID;
+	protected $ownerPlayerID;
 	protected $password;
 	protected $shields;
 	protected $armour;
@@ -132,7 +132,7 @@ class SmrPlanet {
 			$this->gameID = (int)$gameID;
 			$this->sectorID = (int)$sectorID;
 			$this->planetName = stripslashes($db->getField('planet_name'));
-			$this->ownerID = $db->getInt('owner_id');
+			$this->ownerPlayerID = $db->getInt('player_id');
 			$this->password = $db->getField('password');
 			$this->shields = $db->getInt('shields');
 			$this->armour = $db->getInt('armour');
@@ -223,28 +223,24 @@ class SmrPlanet {
 		return SmrGalaxy::getGalaxyContaining($this->getGameID(), $this->getSectorID());
 	}
 
-	public function getOwnerID() {
-		return $this->ownerID;
+	public function getOwnerPlayerID() {
+		return $this->ownerPlayerID;
 	}
 
 	public function hasOwner() {
-		return $this->ownerID != 0;
+		return $this->ownerPlayerID != 0;
 	}
 
-	public function removeOwner() {
-		$this->setOwnerID(0);
-	}
-
-	public function setOwnerID($claimerID) {
-		if ($this->ownerID == $claimerID) {
+	public function setOwnerPlayerID($claimerPlayerID) {
+		if ($this->ownerPlayerID == $claimerPlayerID) {
 			return;
 		}
-		$this->ownerID = $claimerID;
+		$this->ownerPlayerID = $claimerPlayerID;
 		$this->hasChanged = true;
 	}
 
 	public function getOwner() {
-		return SmrPlayer::getPlayer($this->getOwnerID(), $this->getGameID());
+		return SmrPlayer::getPlayer($this->getOwnerPlayerID(), $this->getGameID());
 	}
 
 	public function getPassword() {
@@ -809,7 +805,7 @@ class SmrPlanet {
 		$this->doDelayedUpdates();
 		if ($this->hasChanged) {
 			$this->db->query('UPDATE planet SET
-									owner_id = ' . $this->db->escapeNumber($this->ownerID) . ',
+									player_id = ' . $this->db->escapeNumber($this->ownerPlayerID) . ',
 									password = '.$this->db->escapeString($this->password) . ',
 									planet_name = ' . $this->db->escapeString($this->planetName) . ',
 									shields = ' . $this->db->escapeNumber($this->shields) . ',
@@ -1067,8 +1063,8 @@ class SmrPlanet {
 		$trigger->increaseHOF(1, array('Combat', 'Planet', 'Number Of Triggers'), HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, array('Combat', 'Planet', 'Number Of Attacks'), HOF_PUBLIC);
-			$this->db->query('REPLACE INTO player_attacks_planet (game_id, account_id, sector_id, time, level) VALUES ' .
-					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
+			$this->db->query('REPLACE INTO player_attacks_planet (game_id, player_id, sector_id, time, level) VALUES ' .
+					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getPlayerID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
 
 		// Add each unique attack to news unless it was already added recently.
@@ -1278,9 +1274,9 @@ class SmrPlanet {
 
 	public function creditCurrentAttackersForKill() {
 		//get all players involved for HoF
-		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_BUST));
+		$this->db->query('SELECT player_id, level FROM player_attacks_planet WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_BUST));
 		while ($this->db->nextRecord()) {
-			$currPlayer = SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID());
+			$currPlayer = SmrPlayer::getPlayer($this->db->getInt('player_id'), $this->getGameID());
 			$currPlayer->increaseHOF($this->db->getInt('level'), array('Combat', 'Planet', 'Levels'), HOF_PUBLIC);
 			$currPlayer->increaseHOF(1, array('Combat', 'Planet', 'Completed'), HOF_PUBLIC);
 		}

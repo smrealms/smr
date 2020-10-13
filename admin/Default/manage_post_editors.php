@@ -21,8 +21,8 @@ if ($activeGames) {
 
 	// Get the list of current editors for the selected game
 	$currentEditors = array();
-	foreach (Globals::getGalacticPostEditorIDs($selectedGameID) as $editorID) {
-		$editor = SmrPlayer::getPlayer($editorID, $selectedGameID);
+	foreach (Globals::getGalacticPostEditorPlayerIDs($selectedGameID) as $editorPlayerID) {
+		$editor = SmrPlayer::getPlayer($editorPlayerID, $selectedGameID);
 		$currentEditors[] = $editor->getDisplayName();
 	}
 	$template->assign('CurrentEditors', $currentEditors);

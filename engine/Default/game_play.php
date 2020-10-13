@@ -38,7 +38,7 @@ if ($db->getNumRows() > 0) {
 		$games['Play'][$game_id]['PlayGameLink'] = SmrSession::getNewHREF($container);
 
 		// creates a new player object
-		$curr_player = SmrPlayer::getPlayer($account->getAccountID(), $game_id);
+		$curr_player = SmrPlayer::getPlayerByAccountID($account->getAccountID(), $game_id);
 
 		// update turns for this game
 		$curr_player->updateTurns();

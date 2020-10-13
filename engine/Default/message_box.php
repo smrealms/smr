@@ -15,7 +15,7 @@ foreach (getMessageTypeNames() as $message_type_id => $message_type_name) {
 		$messageBox['HasUnread'] = false;
 	} else {
 		$db->query('SELECT 1 FROM message
-				WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+				WHERE player_id = ' . $db->escapeNumber($player->getPlayerID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND message_type_id = ' . $db->escapeNumber($message_type_id) . '
 					AND msg_read = ' . $db->escapeBoolean(false) . '
@@ -26,13 +26,13 @@ foreach (getMessageTypeNames() as $message_type_id => $message_type_name) {
 	// get number of msges
 	if ($message_type_id == MSG_SENT) {
 		$db->query('SELECT count(message_id) as message_count FROM message
-				WHERE sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
+				WHERE sender_player_id = ' . $db->escapeNumber($player->getPlayerID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_PLAYER) . '
 					AND sender_delete = ' . $db->escapeBoolean(false));
 	} else {
 		$db->query('SELECT count(message_id) as message_count FROM message
-				WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+				WHERE player_id = ' . $db->escapeNumber($player->getPlayerID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND message_type_id = ' . $db->escapeNumber($message_type_id) . '
 					AND receiver_delete = ' . $db->escapeBoolean(false));
