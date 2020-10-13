@@ -1,19 +1,12 @@
 <?php declare(strict_types=1);
 require_once(get_file_loc('hof.functions.inc'));
 
-if (isset($var['account_id'])) {
-	$account_id = $var['account_id'];
-} else {
-	$account_id = $account->getAccountID();
-}
-$game_id = null;
-if (isset($var['game_id'])) {
-	$game_id = $var['game_id'];
-}
+$account_id = $var['account_id'] ?? $account->getAccountID();
+$game_id = $var['game_id'] ?? null;
 
-if (isset($var['game_id'])) {
+if (isset($game_id)) {
 	try {
-		$hofPlayer = SmrPlayer::getPlayer($account_id, $var['game_id']);
+		$hofPlayer = SmrPlayer::getPlayer($account_id, $game_id);
 	} catch (PlayerNotFoundException $e) {
 		create_error('That player has not yet joined this game.');
 	}
