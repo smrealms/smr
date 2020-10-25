@@ -105,6 +105,7 @@ class SmrPlanet {
 		$db = new SmrMySqlDatabase();
 		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID);
 		$db->query('DELETE FROM planet WHERE ' . $SQL);
+		$db->query('DELETE FROM planet_has_weapon WHERE ' . $SQL);
 		$db->query('DELETE FROM planet_has_cargo WHERE ' . $SQL);
 		$db->query('DELETE FROM planet_has_building WHERE ' . $SQL);
 		$db->query('DELETE FROM planet_is_building WHERE ' . $SQL);
