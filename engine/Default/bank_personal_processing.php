@@ -22,7 +22,7 @@ if ($action == 'Deposit') {
 }
 
 // log action
-$account->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for personal account', $player->getSectorID());
+$player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for personal account');
 
 $player->update();
 forward(create_container('skeleton.php', 'bank_personal.php'));

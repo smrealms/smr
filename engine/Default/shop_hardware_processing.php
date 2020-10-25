@@ -47,7 +47,7 @@ elseif ($action == 'Sell') {
 	throw new Exception('Action must be either Buy or Sell.');
 }
 
-$account->log(LOG_TYPE_HARDWARE, 'Player ' . $action . 's ' . $amount . ' ' . $hardware_name, $player->getSectorID());
+$player->log(LOG_TYPE_HARDWARE, 'Player ' . $action . 's ' . $amount . ' ' . $hardware_name);
 
 $player->update();
 $ship->updateHardware();

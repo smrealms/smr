@@ -14,7 +14,7 @@ if ($tradeable !== true) {
 $template->assign('PageTopic', 'Port In Sector #' . $player->getSectorID());
 $template->assign('Port', $port);
 
-$account->log(LOG_TYPE_TRADING, 'Player examines port', $player->getSectorID());
+$player->log(LOG_TYPE_TRADING, 'Player examines port');
 $searchedByFeds = false;
 
 //The player is sent here after trading and sees this if his offer is accepted.
@@ -77,13 +77,13 @@ if (!empty($var['trade_msg'])) {
 			$ship->setCargo(GOODS_SLAVES, 0);
 			$ship->setCargo(GOODS_WEAPONS, 0);
 			$ship->setCargo(GOODS_NARCOTICS, 0);
-			$account->log(LOG_TYPE_TRADING, 'Player gets caught with illegals', $player->getSectorID());
+			$player->log(LOG_TYPE_TRADING, 'Player gets caught with illegals');
 
 		} else {
 			$template->assign('IllegalsFound', false);
 			$player->increaseHOF(1, array('Trade', 'Search', 'Times Found Innocent'), HOF_PUBLIC);
 			$player->increaseAlignment(1);
-			$account->log(LOG_TYPE_TRADING, 'Player gains alignment at port', $player->getSectorID());
+			$player->log(LOG_TYPE_TRADING, 'Player gains alignment at port');
 		}
 	}
 }

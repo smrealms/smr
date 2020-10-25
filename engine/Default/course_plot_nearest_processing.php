@@ -11,7 +11,7 @@ if (isset($var['RealX'])) {
 		create_error('Invalid search.');
 	}
 
-	$account->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest ' . $xType . ': ' . $X . '.', $player->getSectorID());
+	$player->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest ' . $xType . ': ' . $X . '.');
 }
 
 if ($sector->hasX($realX, $player)) {

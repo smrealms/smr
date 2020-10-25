@@ -5,5 +5,5 @@ if ($action == 'Yes!') {
 	$player->setNewbieWarning(false);
 }
 
-$account->log(LOG_TYPE_MOVEMENT, 'Player drops newbie turns.', $player->getSectorID());
+$player->log(LOG_TYPE_MOVEMENT, 'Player drops newbie turns.');
 forward(create_container('skeleton.php', 'current_sector.php'));

@@ -2,5 +2,5 @@
 $player->setDead(false);
 $player->deletePlottedCourse();
 
-$account->log(LOG_TYPE_TRADER_COMBAT, 'Player sees death screen', $player->getSectorID());
+$player->log(LOG_TYPE_TRADER_COMBAT, 'Player sees death screen');
 forward(create_container('skeleton.php', 'death.php'));

@@ -42,7 +42,7 @@ if (!isset($var['OrderID'])) {
 
 	// add the weapon to the users ship
 	$ship->addWeapon($weapon);
-	$account->log(LOG_TYPE_HARDWARE, 'Player Buys a ' . $weapon->getName(), $player->getSectorID());
+	$player->log(LOG_TYPE_HARDWARE, 'Player Buys a ' . $weapon->getName());
 } else {
 	// mhh we wanna sell our weapon
 	// give the money to the user
@@ -51,7 +51,7 @@ if (!isset($var['OrderID'])) {
 	// take weapon
 	$ship->removeWeapon($var['OrderID']);
 
-	$account->log(LOG_TYPE_HARDWARE, 'Player Sells a ' . $weapon->getName(), $player->getSectorID());
+	$player->log(LOG_TYPE_HARDWARE, 'Player Sells a ' . $weapon->getName());
 }
 $container = create_container('skeleton.php', 'shop_weapon.php');
 transfer('LocationID');

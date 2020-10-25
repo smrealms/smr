@@ -2875,6 +2875,13 @@ abstract class AbstractSmrPlayer {
 		return $availableMissions;
 	}
 
+	/**
+	 * Log a player action in the current sector to the admin log console.
+	 */
+	public function log(int $log_type_id, string $msg) : void {
+		$this->getAccount()->log($log_type_id, $msg, $this->getSectorID());
+	}
+
 	public function actionTaken($actionID, array $values) {
 		if (!in_array($actionID, MISSION_ACTIONS)) {
 			throw new Exception('Unknown action: ' . $actionID);
@@ -2882,22 +2889,22 @@ abstract class AbstractSmrPlayer {
 // TODO: Reenable this once tested.		if($this->getAccount()->isLoggingEnabled())
 			switch ($actionID) {
 				case 'WalkSector':
-					$this->getAccount()->log(LOG_TYPE_MOVEMENT, 'Walks to sector: ' . $values['Sector']->getSectorID(), $this->getSectorID());
+					$this->log(LOG_TYPE_MOVEMENT, 'Walks to sector: ' . $values['Sector']->getSectorID());
 				break;
 				case 'JoinAlliance':
-					$this->getAccount()->log(LOG_TYPE_ALLIANCE, 'joined alliance: ' . $values['Alliance']->getAllianceName(), $this->getSectorID());
+					$this->log(LOG_TYPE_ALLIANCE, 'joined alliance: ' . $values['Alliance']->getAllianceName());
 				break;
 				case 'LeaveAlliance':
-					$this->getAccount()->log(LOG_TYPE_ALLIANCE, 'left alliance: ' . $values['Alliance']->getAllianceName(), $this->getSectorID());
+					$this->log(LOG_TYPE_ALLIANCE, 'left alliance: ' . $values['Alliance']->getAllianceName());
 				break;
 				case 'DisbandAlliance':
-					$this->getAccount()->log(LOG_TYPE_ALLIANCE, 'disbanded alliance ' . $values['Alliance']->getAllianceName(), $this->getSectorID());
+					$this->log(LOG_TYPE_ALLIANCE, 'disbanded alliance ' . $values['Alliance']->getAllianceName());
 				break;
 				case 'KickPlayer':
-					$this->getAccount()->log(LOG_TYPE_ALLIANCE, 'kicked ' . $values['Player']->getAccount()->getLogin() . ' (' . $values['Player']->getPlayerName() . ') from alliance ' . $values['Alliance']->getAllianceName(), 0);
+					$this->log(LOG_TYPE_ALLIANCE, 'kicked ' . $values['Player']->getAccount()->getLogin() . ' (' . $values['Player']->getPlayerName() . ') from alliance ' . $values['Alliance']->getAllianceName());
 				break;
 				case 'PlayerKicked':
-					$this->getAccount()->log(LOG_TYPE_ALLIANCE, 'was kicked from alliance ' . $values['Alliance']->getAllianceName() . ' by ' . $values['Player']->getAccount()->getLogin() . ' (' . $values['Player']->getPlayerName() . ')', 0);
+					$this->log(LOG_TYPE_ALLIANCE, 'was kicked from alliance ' . $values['Alliance']->getAllianceName() . ' by ' . $values['Player']->getAccount()->getLogin() . ' (' . $values['Player']->getPlayerName() . ')');
 				break;
 
 			}

@@ -14,7 +14,7 @@ $player->deletePlottedCourse();
 $player->update();
 
 // log
-$account->log(LOG_TYPE_GAME_ENTERING, 'Player entered game ' . SmrSession::getGameID(), $player->getSectorID());
+$player->log(LOG_TYPE_GAME_ENTERING, 'Player entered game ' . SmrSession::getGameID());
 
 $container = create_container('skeleton.php', 'current_sector.php');
 forward($container);
