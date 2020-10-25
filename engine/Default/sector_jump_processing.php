@@ -83,7 +83,7 @@ if ($misjump > 0) { // we missed the sector
 $player->takeTurns($turnsToJump, $turnsToJump);
 
 // log action
-$account->log(LOG_TYPE_MOVEMENT, 'Jumps to sector: ' . $target . ' but hits: ' . $player->getSectorID(), $sector->getSectorID());
+$player->log(LOG_TYPE_MOVEMENT, 'Jumps to sector: ' . $target . ' but hits: ' . $player->getSectorID());
 
 $player->update();
 

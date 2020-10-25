@@ -46,7 +46,7 @@ if ($player->getExperience() > 0) {
 
 	$container['msg'] = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise('unit', $amount) . ' of ' . $good_name . ' and have lost <span class="exp">' . $lost_xp . '</span> experience.';
 	// log action
-	$account->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good_name . ' and loses ' . $lost_xp . ' experience', $player->getSectorID());
+	$player->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good_name . ' and loses ' . $lost_xp . ' experience');
 } else {
 	// No experience to lose, so damage the ship
 	$damage = ICeil($amount / 5);
@@ -61,7 +61,7 @@ if ($player->getExperience() > 0) {
 
 	$container['msg'] = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise('unit', $amount) . ' of ' . $good_name . '. Due to your lack of piloting experience, the cargo pierces the hull of your ship as you clumsily try to jettison the goods through the bay doors, destroying <span class="red">' . $damage . '</span> ' . pluralise('plate', $damage) . ' of armour!';
 	// log action
-	$account->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good_name . ' and takes ' . $damage . ' armour damage', $player->getSectorID());
+	$player->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good_name . ' and takes ' . $damage . ' armour damage');
 }
 
 // take turn

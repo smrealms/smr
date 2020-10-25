@@ -79,7 +79,7 @@ if ($action == 'Deposit') {
 }
 
 // log action
-$account->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for alliance account of ' . $alliance->getAllianceName(), $player->getSectorID());
+$player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for alliance account of ' . $alliance->getAllianceName());
 
 // get next transaction id
 $db->query('SELECT MAX(transaction_id) as next_id FROM alliance_bank_transactions

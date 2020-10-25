@@ -19,7 +19,7 @@ try {
 	create_error('The sectors have to exist!');
 }
 
-$account->log(LOG_TYPE_MOVEMENT, 'Player plots to ' . $target . '.', $player->getSectorID());
+$player->log(LOG_TYPE_MOVEMENT, 'Player plots to ' . $target . '.');
 
 $path = Plotter::findReversiblePathToX($targetSector, $startSector, true);
 

@@ -39,7 +39,7 @@ $ship->removeUnderAttack();
 $ship->update();
 $player->update();
 
-$account->log(LOG_TYPE_HARDWARE, 'Buys a ' . $ship->getName() . ' for ' . $cost . ' credits', $player->getSectorID());
+$player->log(LOG_TYPE_HARDWARE, 'Buys a ' . $ship->getName() . ' for ' . $cost . ' credits');
 
 $container = create_container('skeleton.php', 'current_sector.php');
 transfer('LocationID');

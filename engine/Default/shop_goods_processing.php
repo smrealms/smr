@@ -154,7 +154,7 @@ if ($transaction == 'Steal' ||
 	$player->increaseHOF(1, array('Trade', 'Results', 'Success'), HOF_PUBLIC);
 
 	// log action
-	$account->log(LOG_TYPE_TRADING, $transaction . 's ' . $amount . ' ' . $good_name . ' for ' . $bargain_price . ' credits and ' . $gained_exp . ' experience', $player->getSectorID());
+	$player->log(LOG_TYPE_TRADING, $transaction . 's ' . $amount . ' ' . $good_name . ' for ' . $bargain_price . ' credits and ' . $gained_exp . ' experience');
 
 	$player->increaseExperience($gained_exp);
 

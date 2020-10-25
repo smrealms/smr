@@ -10,7 +10,7 @@ switch ($var['PayoutType']) {
 	default:
 		throw new Exception('Unknown payout type: ', $var['PayoutType']);
 }
-$account->log(LOG_TYPE_TRADING, 'Player Triggers Payout: ' . $var['PayoutType'], $player->getSectorID());
+$player->log(LOG_TYPE_TRADING, 'Player Triggers Payout: ' . $var['PayoutType']);
 $port->update();
 $container = create_container('skeleton.php', 'current_sector.php');
 $container['msg'] = 'You have taken <span class="creds">' . number_format($credits) . '</span> from the port.';

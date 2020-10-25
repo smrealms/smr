@@ -27,7 +27,7 @@ if ($action == 'Deposit' || $action == 'Withdraw') {
 		$amount = $player->increaseCredits($amount); // handles overflow
 		$planet->decreaseCredits($amount);
 	}
-	$account->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits at planet', $player->getSectorID());
+	$player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits at planet');
 }
 
 // Player has confirmed the request to bond
@@ -35,7 +35,7 @@ elseif ($action == 'Confirm') {
 	$planet->bond();
 
 	// save to db
-	$account->log(LOG_TYPE_BANK, 'Player bonds ' . $planet->getBonds() . ' credits at planet.', $player->getSectorID());
+	$player->log(LOG_TYPE_BANK, 'Player bonds ' . $planet->getBonds() . ' credits at planet.');
 }
 
 forward(create_container('skeleton.php', 'planet_financial.php'));
