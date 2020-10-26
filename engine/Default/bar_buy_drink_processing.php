@@ -10,7 +10,7 @@ $player->decreaseCredits(10);
 if (isset($var['action']) && $var['action'] != 'drink') {
 	$drinkName = 'water';
 	$message .= 'You ask the bartender for some water and you quickly down it.<br />You don\'t feel quite so intoxicated anymore.<br />';
-	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
+	$db->query('DELETE FROM player_has_drinks WHERE ' . $player->getSQL() . ' LIMIT 1');
 	$player->increaseHOF(1, array('Bar', 'Drinks', 'Water'), HOF_PUBLIC);
 } else {
 	$random = mt_rand(1, 20);
@@ -58,7 +58,7 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 		}
 
 	}
-	$db->query('SELECT count(*) FROM player_has_drinks WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()));
+	$db->query('SELECT count(*) FROM player_has_drinks WHERE ' . $player->getSQL());
 	$db->requireRecord();
 	$num_drinks = $db->getInt('count(*)');
 	//display woozy message
@@ -81,7 +81,7 @@ if (isset($num_drinks) && $num_drinks > 15) {
 	$player->increaseHOF(1, array('Bar', 'Robbed', 'Number Of Times'), HOF_PUBLIC);
 	$player->increaseHOF($lostCredits, array('Bar', 'Robbed', 'Money Lost'), HOF_PUBLIC);
 
-	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()));
+	$db->query('DELETE FROM player_has_drinks WHERE ' . $player->getSQL());
 
 }
 $player->increaseHOF(1, array('Bar', 'Drinks', 'Total'), HOF_PUBLIC);

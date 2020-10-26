@@ -659,7 +659,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 
 
 	if (SmrSession::hasGame()) {
-		$db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' GROUP BY message_type_id');
+		$db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
 
 		if ($db->getNumRows()) {
 			$messages = array();

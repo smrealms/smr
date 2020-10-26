@@ -19,7 +19,7 @@ if ($db->nextRecord()) {
 
 	// Has player responded yet?
 	$db2 = new SmrMySqlDatabase();
-	$db2->query('SELECT response FROM alliance_has_op_response WHERE alliance_id=' . $db2->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db2->escapeNumber($player->getGameID()) . ' AND account_id=' . $db2->escapeNumber($player->getAccountID()) . ' LIMIT 1');
+	$db2->query('SELECT response FROM alliance_has_op_response WHERE alliance_id=' . $db2->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL() . ' LIMIT 1');
 
 	$response = $db2->nextRecord() ? $db2->getField('response') : null;
 	$responseHREF = SmrSession::getNewHREF(create_container('alliance_op_response_processing.php'));

@@ -32,7 +32,7 @@ if ($action == "Assign") {
 	if (!$selected_player->isGPEditor()) {
 		$msg = "<span class='red'>ERROR: </span>$name is not an editor in game $game!";
 	} else {
-		$db->query('DELETE FROM galactic_post_writer WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
+		$db->query('DELETE FROM galactic_post_writer WHERE ' . $selected_player->getSQL());
 	}
 } else {
 	$msg = "<span class='red'>ERROR: </span>Do not know action '$action'!";

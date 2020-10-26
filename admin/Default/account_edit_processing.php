@@ -146,15 +146,17 @@ if (!empty($delete)) {
 				$actions[] = 'player has made alliance transaction';
 				continue;
 			}
+
+			$sql = 'account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id);
+
 			// Check anon accounts for transactions
-			$db->query('SELECT * FROM anon_bank_transactions WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id) . ' LIMIT 1');
+			$db->query('SELECT * FROM anon_bank_transactions WHERE ' . $sql . ' LIMIT 1');
 			if ($db->getNumRows() != 0) {
 				// Can't delete
 				$actions[] = 'player has made anonymous transaction';
 				continue;
 			}
 
-			$sql = 'account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id);
 			$db->query('DELETE FROM alliance_thread
 						WHERE sender_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM bounty WHERE ' . $sql);

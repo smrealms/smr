@@ -53,7 +53,7 @@ while ($db->nextRecord()) {
 	$players[$db->getInt('account_id')] = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID())->getLinkedDisplayName(false);
 }
 
-$db->query('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
+$db->query('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
 $db->requireRecord();
 $thread['CanDelete'] = $db->getBoolean('mb_messages');
 
