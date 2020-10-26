@@ -20,10 +20,7 @@ if (empty($alliance_ids)) {
 $unvisitedSectors = array(0);
 
 // get the sectors the user hasn't visited yet
-$db->query('SELECT sector_id
-			FROM player_visited_sector
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND account_id = ' . $db->escapeNumber($player->getAccountID()));
+$db->query('SELECT sector_id FROM player_visited_sector WHERE ' . $player->getSQL());
 while ($db->nextRecord()) {
 	$unvisitedSectors[] = $db->getInt('sector_id');
 }
@@ -39,10 +36,7 @@ $db->query('DELETE
 unset($unvisitedSectors);
 
 // get a list of all visited ports
-$db->query('SELECT sector_id
-			FROM player_visited_port
-			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-				AND game_id = ' . $db->escapeNumber($player->getGameID()));
+$db->query('SELECT sector_id FROM player_visited_port WHERE ' . $player->getSQL());
 while ($db->nextRecord()) {
 	$cachedPort = SmrPort::getCachedPort($player->getGameID(), $db->getInt('sector_id'), $player->getAccountID());
 	$cachedPort->addCachePorts($alliance_ids);

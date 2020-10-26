@@ -86,7 +86,7 @@ if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['T
 }
 if (!USING_AJAX) {
 	$db->query('UPDATE message SET msg_read = \'TRUE\'
-				WHERE message_type_id = ' . $db->escapeNumber($var['folder_id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
+				WHERE message_type_id = ' . $db->escapeNumber($var['folder_id']) . ' AND ' . $player->getSQL());
 }
 $template->assign('MessageBox', $messageBox);
 

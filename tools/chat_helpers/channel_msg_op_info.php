@@ -18,7 +18,7 @@ function shared_channel_msg_op_info($player) {
 	$getOpInfoMessage = function($player) use ($opTime) {
 		// have we signed up?
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT response FROM alliance_has_op_response WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
+		$db->query('SELECT response FROM alliance_has_op_response WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());
 		if ($db->nextRecord()) {
 			$msg = $player->getPlayerName() . ' is on the ' . $db->getField('response') . ' list.';
 		} else {

@@ -55,8 +55,7 @@ if ($db->getNumRows() > 0) {
 		
 		$db2->query('SELECT time
 					FROM player_read_thread 
-					WHERE account_id=' . $db2->escapeNumber($player->getAccountID()) . '
-					AND game_id=' . $db2->escapeNumber($player->getGameID()) . '
+					WHERE ' . $player->getSQL() . '
 					AND alliance_id =' . $db2->escapeNumber($alliance->getAllianceID()) . '
 					AND thread_id=' . $db2->escapeNumber($threadID) . '
 					AND time>' . $db2->escapeNumber($db->getInt('sendtime')) . ' LIMIT 1');
@@ -80,7 +79,7 @@ if ($db->getNumRows() > 0) {
 		}
 		$threads[$i]['Sender'] = $playerName;
 
-		$db2->query('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
+		$db2->query('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
 		$db2->nextRecord();
 		$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $db2->getBoolean('mb_messages');
 		if ($threads[$i]['CanDelete']) {

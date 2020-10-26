@@ -13,7 +13,7 @@ if (isset($var['account_id'])) {
 	}
 }
 
-$db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
+$db->query('SELECT account_id FROM message_blacklist WHERE ' . $player->getSQL() . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted->getAccountID()) . ' LIMIT 1');
 
 if ($db->nextRecord()) {
 	$container['msg'] = '<span class="red bold">ERROR: </span>Player is already blacklisted.';

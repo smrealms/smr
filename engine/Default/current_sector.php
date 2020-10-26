@@ -28,7 +28,7 @@ $links['Warp'] = array('ID'=>$sector->getWarp());
 
 $unvisited = array();
 
-$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
+$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND ' . $player->getSQL());
 while ($db->nextRecord()) {
 	$unvisited[$db->getInt('sector_id')] = TRUE;
 }
@@ -99,10 +99,10 @@ if (!empty($protectionMessage)) {
 
 //enableProtectionDependantRefresh($template,$player);
 
-$db->query('SELECT * FROM sector_message WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+$db->query('SELECT * FROM sector_message WHERE ' . $player->getSQL());
 if ($db->nextRecord()) {
 	$msg = $db->getField('message');
-	$db->query('DELETE FROM sector_message WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	$db->query('DELETE FROM sector_message WHERE ' . $player->getSQL());
 	checkForForceRefreshMessage($msg);
 	checkForAttackMessage($msg);
 }

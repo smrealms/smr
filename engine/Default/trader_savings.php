@@ -19,7 +19,7 @@ checkForLottoWinner($player->getGameID());
 $template->assign('LottoInfo', getLottoInfo($player->getGameID()));
 
 // Number of active lotto tickets this player has
-$db->query('SELECT count(*) FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND time > 0');
+$db->query('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time > 0');
 $db->requireRecord();
 $tickets = $db->getInt('count(*)');
 $template->assign('LottoTickets', $tickets);
@@ -36,6 +36,6 @@ if ($tickets == 0) {
 $template->assign('LottoWinChance', $win_chance);
 
 // Number of winning lotto tickets this player has to claim
-$db->query('SELECT count(*) FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND time = 0');
+$db->query('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
 $db->requireRecord();
 $template->assign('WinningTickets', $db->getInt('count(*)'));

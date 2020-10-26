@@ -62,7 +62,7 @@ $container = create_container('note_delete_processing.php');
 $template->assign('NoteDeleteHREF', SmrSession::getNewHREF($container));
 
 $notes = [];
-$db->query('SELECT * FROM player_has_notes WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY note_id DESC');
+$db->query('SELECT * FROM player_has_notes WHERE ' . $player->getSQL() . ' ORDER BY note_id DESC');
 while ($db->nextRecord()) {
 	$notes[$db->getInt('note_id')] = $db->getField('note');
 }
