@@ -12,7 +12,7 @@ $discord = new Discord\DiscordCommandClient([
 	'token' => DISCORD_TOKEN,
 	'prefix' => defined('COMMAND_PREFIX') ? COMMAND_PREFIX : '.',
 	'discordOptions' => [
-		'loggerLevel' => 'INFO',
+		'loggerLevel' => defined('LOGGER_LEVEL') ? LOGGER_LEVEL : 'INFO',
 		// See https://github.com/teamreflex/DiscordPHP/issues/242
 		'disabledEvents' => ['PRESENCE_UPDATE'],
 	],
