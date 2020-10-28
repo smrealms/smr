@@ -8,15 +8,26 @@ require_once(CONFIG . 'discord/config.specific.php');
 
 error_reporting(E_ALL);
 
+function getCommandPrefix() : string {
+	return defined('COMMAND_PREFIX') ? COMMAND_PREFIX : '.';
+}
+
 $discord = new Discord\DiscordCommandClient([
 	'token' => DISCORD_TOKEN,
-	'prefix' => defined('COMMAND_PREFIX') ? COMMAND_PREFIX : '.',
+	'prefix' => getCommandPrefix(),
 	'discordOptions' => [
 		'loggerLevel' => defined('LOGGER_LEVEL') ? LOGGER_LEVEL : 'INFO',
-		// See https://github.com/teamreflex/DiscordPHP/issues/242
-		'disabledEvents' => ['PRESENCE_UPDATE'],
 	],
 ]);
+
+// Set bot presence to "Listening to <help command>"
+$discord->on('ready', function($discord) {
+	$activity = $discord->factory(Discord\Parts\User\Activity::class, [
+		'name' => getCommandPrefix() . 'help',
+		'type' => Discord\Parts\User\Activity::TYPE_LISTENING,
+	]);
+	$discord->updatePresence($activity);
+});
 
 // Register commands
 require_once('commands/money.php');
