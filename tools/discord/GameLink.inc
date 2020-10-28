@@ -4,28 +4,14 @@
 class GameLink
 {
 	public $valid = false;  // identifies if the message is linked to game data
-	public $user;           // Discord user associated with the message
 	public $account;        // SmrAccount instance
 	public $alliance;       // SmrAlliance instance
 	public $player;         // SmrPlayer instance
 
-	// Takes the following arguments:
-	//	channel = Discord\Parts\Channel\Channel instance
-	//	author = Discord\Parts\User\{User,Member} instance
-	function __construct($channel, $author) {
+	function __construct(Discord\Parts\Channel\Channel $channel, Discord\Parts\User\User $author) {
 
-		// Get the discord user
-		if ($channel->is_private) {
-			// in private channels
-			// author is a Discord\Parts\User\User
-			$this->user = $author;
-		} else {
-			// in public channels
-			// author is a Discord\Parts\User\Member
-			$this->user = $author->user;
-		}
 		// force update in case the ID has been changed in-game
-		$user_id = $this->user->id;
+		$user_id = $author->id;
 		$this->account = SmrAccount::getAccountByDiscordId($user_id, true);
 
 		if (is_null($this->account)) {
