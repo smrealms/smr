@@ -8,7 +8,8 @@ class GameLink
 	public $alliance;       // SmrAlliance instance
 	public $player;         // SmrPlayer instance
 
-	function __construct(Discord\Parts\Channel\Channel $channel, Discord\Parts\User\User $author) {
+	// $author can be either Discord\Parts\User\{User,Member}
+	function __construct(Discord\Parts\Channel\Channel $channel, $author) {
 
 		// force update in case the ID has been changed in-game
 		$user_id = $author->id;
