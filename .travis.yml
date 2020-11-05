@@ -6,4 +6,5 @@ git:
 script:
   - tests/phplint.sh
   - tests/strict_types.sh
+  - composer install
   - vendor/bin/phpunit test
