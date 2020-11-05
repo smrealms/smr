@@ -55,7 +55,6 @@ if (isset($XType)) { ?>
 					?><option value="Bank">Any Bank</option>
 					<option value="Bar">Any Bar</option>
 					<option value="SafeFed">Any Safe Fed</option>
-					<option value="Fed">Any Fed</option>
 					<option value="HQ">Any Headquarters</option>
 					<option value="UG">Any Underground</option>
 					<option value="Hardware">Any Hardware Shop</option>
