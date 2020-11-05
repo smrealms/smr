@@ -7,4 +7,8 @@ script:
   - tests/phplint.sh
   - tests/strict_types.sh
   - composer install
+  - mv config/config.specific.sample.php config/config.specific.php
+  - mv config/discord/config.specific.sample.php config/discord/config.specific.php
+  - mv config/irc/config.specific.sample.php config/irc/config.specific.php
+  - mv config/npc/SmrMySqlSecrets.sample.inc config/npc/SmrMySqlSecrets.inc
   - vendor/bin/phpunit test
