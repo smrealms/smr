@@ -13,7 +13,7 @@ class Record
     public string $last_login = "last login";
     public string $validation_code = "validation code";
     public string $offset = "offset";
-    public string $images = "images";
+    public string $images = "Yes";
     public string $fontsize = "font size";
     public string $password_reset = "password reset";
     public int $mail_banned = 0;
@@ -49,9 +49,29 @@ class AbstractSmrAccountTest extends TestCase
         //# And there is no force update
         $forceUpdate = false;
         //# When the account is retrieved by its ID
-        $this->abstractSmrAccount = AbstractSmrAccount::getAccount("some id", $forceUpdate);
+        $this->abstractSmrAccount = AbstractSmrAccount::getAccount($record->account_id, $forceUpdate);
         //# Then the integrity of the user is correct
+        $this->assertEquals($record->account_id, $this->abstractSmrAccount->getAccountID());
+        $this->assertEquals($record->login, $this->abstractSmrAccount->getLogin());
         $this->assertEquals($record->email, $this->abstractSmrAccount->getEmail());
+        $this->assertEquals($record->last_login, $this->abstractSmrAccount->getLastLogin());
+        $this->assertEquals($record->validation_code, $this->abstractSmrAccount->getValidationCode());
+        $this->assertEquals($record->offset, $this->abstractSmrAccount->getOffset());
+        $this->assertEquals(true, $this->abstractSmrAccount->isDisplayShipImages());
+        $this->assertEquals($record->fontsize, $this->abstractSmrAccount->getFontSize());
+        $this->assertEquals($record->password_reset, $this->abstractSmrAccount->getPasswordReset());
+        $this->assertEquals($record->mail_banned, $this->abstractSmrAccount->getMailBanned());
+        $this->assertEquals($record->friendly_colour, $this->abstractSmrAccount->getFriendlyColour());
+        $this->assertEquals($record->neutral_colour, $this->abstractSmrAccount->getNeutralColour());
+        $this->assertEquals($record->enemy_colour, $this->abstractSmrAccount->getEnemyColour());
+        $this->assertEquals($record->css_link, $this->abstractSmrAccount->getCssLink());
+        $this->assertEquals($record->referral_id, $this->abstractSmrAccount->getReferrerID());
+        $this->assertEquals($record->hof_name, $this->abstractSmrAccount->getHofName());
+        $this->assertEquals($record->discord_id, $this->abstractSmrAccount->getDiscordId());
+        $this->assertEquals($record->irc_nick, $this->abstractSmrAccount->getIrcNick());
+        $this->assertEquals($record->date_short, $this->abstractSmrAccount->getShortDateFormat());
+        $this->assertEquals($record->time_short, $this->abstractSmrAccount->getShortTimeFormat());
+        $this->assertEquals($record->template, $this->abstractSmrAccount->getTemplate());
     }
 
     private static function setupMockMysqlDatabase(Record $record): MockInterface
@@ -59,7 +79,9 @@ class AbstractSmrAccountTest extends TestCase
         //# Force the mock to be used in the autoloader
         $mysqlDatabase = m::mock("overload:SmrMySqlDatabase");
         $mysqlDatabase
-            ->shouldReceive("escapeNumber");
+            ->shouldReceive("escapeNumber")
+            ->with($record->account_id)
+            ->andReturn($record->account_id);
         $mysqlDatabase
             ->shouldReceive("query");
         $mysqlDatabase
@@ -73,9 +95,6 @@ class AbstractSmrAccountTest extends TestCase
             ->andReturn(false);
         $mysqlDatabase
             ->shouldReceive("getObject")
-            ->andReturn(array());
-        $mysqlDatabase
-            ->shouldReceive("asdasd")
             ->andReturn(array());
         return $mysqlDatabase;
     }

@@ -14,7 +14,7 @@
         "vanilla/nbbc": "^2.0"
     },
     "require-dev": {
-        "phpunir/phpunit": "9.1.4",
+        "phpunit/phpunit": "9.4.2",
         "mockery/mockery": "@stable"
     }
 }

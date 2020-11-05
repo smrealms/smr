@@ -6,3 +6,4 @@ git:
 script:
   - tests/phplint.sh
   - tests/strict_types.sh
+  - vendor/bin/phpunit test
