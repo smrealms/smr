@@ -41,7 +41,12 @@ class AbstractSmrAccountTest extends TestCase
 {
     private AbstractSmrAccount $abstractSmrAccount;
 
-    public function testGetAccountByAccountId()
+    /**
+     * Verify that an account can be retrieved from the database using its id.
+     * @runInSeparateProcess
+     * @preserveGlobalState enabled
+     */
+    public function test_get_account_by_account_id()
     {
         //# Given the database has been set up with a user
         $record = new Record();
@@ -74,14 +79,66 @@ class AbstractSmrAccountTest extends TestCase
         $this->assertEquals($record->template, $this->abstractSmrAccount->getTemplate());
     }
 
+    /**
+     * Verify that multiple calls to retrieve an account with the force refresh flag
+     * enabled causes subsequent calls to the database skipping the cache.
+     * @runInSeparateProcess
+     * @preserveGlobalState enabled
+     */
+    public function test_get_account_by_account_id_force_update_from_database()
+    {
+        //# Given the database has been set up with a user
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# And the force update flag is true
+        $forceUpdate = true;
+        //# And the account has been retrieved once
+        AbstractSmrAccount::getAccount($record->account_id, $forceUpdate);
+        //# When retrieving the account a second time
+        AbstractSmrAccount::getAccount($record->account_id, $forceUpdate);
+        //# Then verify multiple interactions with the database
+        //# There are a total of three mocks in the container:
+        //# One constructed here in this test, and one for each time getAccount was called.
+        $this->assertCount(3, m::getContainer()->getMocks());
+    }
+
+    /**
+     * Verify that when there is no force update flag, subsequent calls to retrieve accounts
+     * will use the cache instead of hitting the database.
+     * @runInSeparateProcess
+     * @preserveGlobalState enabled
+     */
+    public function test_get_account_by_id_multiple_times_without_force_refresh_calls_database_once()
+    {
+        //# Given the database has been set up with a user
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# And the force update flag is true
+        $forceUpdate = false;
+        //# And the account has been retrieved once
+        AbstractSmrAccount::getAccount($record->account_id, $forceUpdate);
+        //# When retrieving the account a second time
+        AbstractSmrAccount::getAccount($record->account_id, $forceUpdate);
+        //# Then verify multiple interactions with the database
+        //# There are a total of two mocks in the container:
+        //# One constructed here in this test, and one for the only time a database connection was spawned.
+        $this->assertCount(2, m::getContainer()->getMocks());
+    }
+
+    public function tearDown(): void
+    {
+        m::close();
+    }
+
     private static function setupMockMysqlDatabase(Record $record): MockInterface
     {
         //# Force the mock to be used in the autoloader
-        $mysqlDatabase = m::mock("overload:SmrMySqlDatabase");
+        $mysqlDatabase = m::mock("overload:" . SmrMySqlDatabase::class);
         $mysqlDatabase
             ->shouldReceive("escapeNumber")
             ->with($record->account_id)
-            ->andReturn($record->account_id);
+            ->andReturn($record->account_id)
+            ->times(1);
         $mysqlDatabase
             ->shouldReceive("query");
         $mysqlDatabase
