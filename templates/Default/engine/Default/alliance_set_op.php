@@ -21,7 +21,7 @@ if (!empty($OpDate)) { ?>
 } else { ?>
 	<p>Schedule the next alliance operation:<br><small>Enter the date in server time (example: Dec 12 18:30)</small></p>
 	<form method="POST" action="<?php echo $OpProcessingHREF; ?>">
-		<input type="text" name="date" />
+		<input type="text" name="date" required />
 		<input type="submit" value="Confirm" />
 	</form><?php
 }
