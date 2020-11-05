@@ -8,7 +8,8 @@ script:
   - tests/strict_types.sh
   - composer install
   - mv config/config.specific.sample.php config/config.specific.php
+  - mv config/SmrMySqlSecrets.sample.inc config/SmrMySqlSecrets.inc
   - mv config/discord/config.specific.sample.php config/discord/config.specific.php
   - mv config/irc/config.specific.sample.php config/irc/config.specific.php
-  - mv config/npc/SmrMySqlSecrets.sample.inc config/npc/SmrMySqlSecrets.inc
+  - mv config/npc/config.specific.sample.php config/npc/config.specific.php
   - vendor/bin/phpunit test
