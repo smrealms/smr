@@ -75,6 +75,18 @@ class AbstractSmrAccountTest extends TestCase
         $this->assertEquals($record->template, $this->abstractSmrAccount->getTemplate());
     }
 
+    public function test_get_account_by_account_id_no_account_found_throws_exception()
+    {
+        $this->expectException(AccountNotFoundException::class);
+        //# Given there is no account record
+        $mysqlDatabase = m::mock("overload:" . SmrMySqlDatabase::class)->shouldIgnoreMissing();
+        $mysqlDatabase
+            ->shouldReceive("nextRecord")
+            ->andReturnNull();
+        //# When performing an account lookup by id
+        AbstractSmrAccount::getAccount("bad account id");
+    }
+
     public function test_get_account_by_account_id_force_update_from_database()
     {
         //# Given the database has been set up with a user
