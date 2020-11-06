@@ -1,3 +1,5 @@
+services:
+  - docker
 language: php
 php:
   - '7.4'
@@ -12,4 +14,7 @@ script:
   - mv config/discord/config.specific.sample.php config/discord/config.specific.php
   - mv config/irc/config.specific.sample.php config/irc/config.specific.php
   - mv config/npc/config.specific.sample.php config/npc/config.specific.php
+  - docker-compose run mysql-integration-test
+  - sleep 10
+  - docker-compose run flyway-integration-test
   - vendor/bin/phpunit test

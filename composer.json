@@ -1,20 +1,25 @@
 {
-    "name": "smr/smr",
-    "description": "SMR",
-    "license": "AGPL-3.0",
-    "require": {
-        "abraham/twitteroauth": "^1.0",
-        "ext-curl": "*",
-        "ext-json": "*",
-        "ext-mysqli": "*",
-        "facebook/graph-sdk": "^5.5.0",
-        "google/recaptcha": "^1.1",
-        "php": "^7.4",
-        "phpmailer/phpmailer": "^6.1",
-        "vanilla/nbbc": "^2.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "9.4.2",
-        "mockery/mockery": "@stable"
-    }
+	"name": "smr/smr",
+	"description": "SMR",
+	"license": "AGPL-3.0",
+	"require": {
+		"abraham/twitteroauth": "^1.0",
+		"ext-curl": "*",
+		"ext-json": "*",
+		"ext-mysqli": "*",
+		"facebook/graph-sdk": "^5.5.0",
+		"google/recaptcha": "^1.1",
+		"php": "^7.4",
+		"phpmailer/phpmailer": "^6.1",
+		"vanilla/nbbc": "^2.0"
+	},
+	"autoload-dev": {
+		"psr-0": {
+			"SmrTest\\": "test/"
+		}
+	},
+	"require-dev": {
+		"phpunit/phpunit": "9.4.2",
+		"mockery/mockery": "@stable"
+	}
 }

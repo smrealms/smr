@@ -34,3 +34,4 @@
 /newsletters
 /vendor
 .phpunit*
+out/

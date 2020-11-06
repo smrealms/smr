@@ -1,27 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.4/phpunit.xsd"
-    bootstrap="htdocs/config.inc"
-    cacheResultFile=".phpunit.cache/test-results"
-    executionOrder="depends,defects"
-    forceCoversAnnotation="true"
-    beStrictAboutCoversAnnotation="true"
-    beStrictAboutOutputDuringTests="true"
-    beStrictAboutTodoAnnotatedTests="true"
-    failOnRisky="true"
-    failOnWarning="true"
-    verbose="true">
-    <testsuites>
-        <testsuite name="default">
-            <directory suffix="Test.php">test</directory>
-        </testsuite>
-    </testsuites>
-    <coverage
-        cacheDirectory=".phpunit.cache/code-coverage"
-        processUncoveredFiles="false">
-        <include>
-            <directory suffix=".php">lib/Default</directory>
-        </include>
-    </coverage>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.4/phpunit.xsd"
+	bootstrap="htdocs/config.inc"
+	cacheResultFile=".phpunit.cache/test-results"
+	executionOrder="depends,defects"
+	beStrictAboutTodoAnnotatedTests="true"
+	failOnRisky="true"
+	failOnWarning="true"
+	verbose="true">
+	<php>
+		<const
+			name="OVERRIDE_MYSQL_CONFIG"
+			value="true" />
+		<const
+			name="OVERRIDE_MYSQL_HOST"
+			value="localhost" />
+		<const
+			name="OVERRIDE_MYSQL_USER"
+			value="smr" />
+		<const
+			name="OVERRIDE_MYSQL_PASSWORD"
+			value="smr" />
+		<const
+			name="OVERRIDE_MYSQL_PORT"
+			value="3307" />
+	</php>
+	<testsuites>
+		<testsuite name="default">
+			<directory suffix="Test.php">test</directory>
+		</testsuite>
+	</testsuites>
+	<coverage
+		cacheDirectory=".phpunit.cache/code-coverage"
+		includeUncoveredFiles="false">
+		<include>
+			<directory suffix=".php">lib/Default</directory>
+		</include>
+	</coverage>
 </phpunit>
