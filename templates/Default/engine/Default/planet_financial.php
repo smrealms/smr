@@ -15,7 +15,7 @@
 	<p>&nbsp;</p> <?php
 
 // Print bond properties if the planet is claimed
-if (!$ThisPlanet->isClaimed()) {
+if (!$ThisPlanet->hasOwner()) {
 	echo "This planet must be claimed before you can bond funds here.<br /><br />";
 } else { ?>
 	You are able to transfer these credits into a planetary bond.<br />
@@ -34,7 +34,7 @@ if (!$ThisPlanet->isClaimed()) {
 </span><?php
 
 // Allow the player to bond if the planet is claimed
-if ($ThisPlanet->isClaimed()) { ?>
+if ($ThisPlanet->hasOwner()) { ?>
 	<div class="buttonA">
 		<a id="bondFunds" class="buttonA" href="<?php echo $ThisPlanet->getBondConfirmationHREF(); ?>">Bond Funds</a>
 	</div>&nbsp; <?php

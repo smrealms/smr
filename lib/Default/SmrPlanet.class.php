@@ -231,6 +231,10 @@ class SmrPlanet {
 		return $this->ownerID != 0;
 	}
 
+	public function removeOwner() {
+		$this->setOwnerID(0);
+	}
+
 	public function setOwnerID($claimerID) {
 		if ($this->ownerID == $claimerID) {
 			return;
@@ -1025,14 +1029,6 @@ class SmrPlanet {
 		return $this->inhabitableTime;
 	}
 
-	public function isClaimed() {
-		return $this->ownerID > 0;
-	}
-
-	public function removeClaimed() {
-		$this->setOwnerID(0);
-	}
-
 	public function getExamineHREF() {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_examine.php'));
 	}
@@ -1297,7 +1293,7 @@ class SmrPlanet {
 
 		//kick everyone from planet
 		$this->db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE ' . $this->SQL);
-		$this->removeClaimed();
+		$this->removeOwner();
 		$this->removePassword();
 		return $return;
 	}
