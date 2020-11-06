@@ -9,6 +9,7 @@ script:
   - tests/phplint.sh
   - tests/strict_types.sh
   - composer install
+  - mv .env.sample .env
   - mv config/config.specific.sample.php config/config.specific.php
   - mv config/SmrMySqlSecrets.sample.inc config/SmrMySqlSecrets.inc
   - mv config/discord/config.specific.sample.php config/discord/config.specific.php
