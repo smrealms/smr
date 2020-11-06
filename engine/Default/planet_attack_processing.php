@@ -23,7 +23,7 @@ $planet = $player->getSectorPlanet();
 if (!$planet->exists()) {
 	create_error('This planet does not exist.');
 }
-if (!$planet->isClaimed()) {
+if (!$planet->hasOwner()) {
 	create_error('This planet is not claimed.');
 }
 
@@ -75,7 +75,7 @@ $logId = $db->getInsertID();
 
 if ($planet->isDestroyed()) {
 	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = ' . $db->escapeNumber($planet->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	$planet->removeClaimed();
+	$planet->removeOwner();
 	$planet->removePassword();
 
 	// Prepare message for planet owners
