@@ -18,7 +18,7 @@ class BaseIntegrationTest extends TestCase {
 	private static $defaultPopulatedTables = array();
 
 	public static function setUpBeforeClass(): void {
-		exec("docker-compose run flyway-integration-test 1>&2");
+		exec("docker-compose run --rm flyway-integration-test 1>&2");
 		$conn = self::$conn = mysqli_connect(
 			constant("OVERRIDE_MYSQL_HOST"),
 			constant("OVERRIDE_MYSQL_USER"),
