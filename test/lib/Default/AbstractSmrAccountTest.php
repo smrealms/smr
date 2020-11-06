@@ -40,8 +40,6 @@ class Record
  */
 class AbstractSmrAccountTest extends TestCase
 {
-    private AbstractSmrAccount $abstractSmrAccount;
-
     public function test_get_account_by_account_id()
     {
         //# Given the database has been set up with a user
@@ -50,29 +48,29 @@ class AbstractSmrAccountTest extends TestCase
         //# And there is no force update
         $forceUpdate = false;
         //# When the account is retrieved by its ID
-        $this->abstractSmrAccount = AbstractSmrAccount::getAccount($record->account_id, $forceUpdate);
+        $abstractSmrAccount = AbstractSmrAccount::getAccount($record->account_id, $forceUpdate);
         //# Then the integrity of the user is correct
-        $this->assertEquals($record->account_id, $this->abstractSmrAccount->getAccountID());
-        $this->assertEquals($record->login, $this->abstractSmrAccount->getLogin());
-        $this->assertEquals($record->email, $this->abstractSmrAccount->getEmail());
-        $this->assertEquals($record->last_login, $this->abstractSmrAccount->getLastLogin());
-        $this->assertEquals($record->validation_code, $this->abstractSmrAccount->getValidationCode());
-        $this->assertEquals($record->offset, $this->abstractSmrAccount->getOffset());
-        $this->assertEquals(true, $this->abstractSmrAccount->isDisplayShipImages());
-        $this->assertEquals($record->fontsize, $this->abstractSmrAccount->getFontSize());
-        $this->assertEquals($record->password_reset, $this->abstractSmrAccount->getPasswordReset());
-        $this->assertEquals($record->mail_banned, $this->abstractSmrAccount->getMailBanned());
-        $this->assertEquals($record->friendly_colour, $this->abstractSmrAccount->getFriendlyColour());
-        $this->assertEquals($record->neutral_colour, $this->abstractSmrAccount->getNeutralColour());
-        $this->assertEquals($record->enemy_colour, $this->abstractSmrAccount->getEnemyColour());
-        $this->assertEquals($record->css_link, $this->abstractSmrAccount->getCssLink());
-        $this->assertEquals($record->referral_id, $this->abstractSmrAccount->getReferrerID());
-        $this->assertEquals($record->hof_name, $this->abstractSmrAccount->getHofName());
-        $this->assertEquals($record->discord_id, $this->abstractSmrAccount->getDiscordId());
-        $this->assertEquals($record->irc_nick, $this->abstractSmrAccount->getIrcNick());
-        $this->assertEquals($record->date_short, $this->abstractSmrAccount->getShortDateFormat());
-        $this->assertEquals($record->time_short, $this->abstractSmrAccount->getShortTimeFormat());
-        $this->assertEquals($record->template, $this->abstractSmrAccount->getTemplate());
+        $this->assertEquals($record->account_id, $abstractSmrAccount->getAccountID());
+        $this->assertEquals($record->login, $abstractSmrAccount->getLogin());
+        $this->assertEquals($record->email, $abstractSmrAccount->getEmail());
+        $this->assertEquals($record->last_login, $abstractSmrAccount->getLastLogin());
+        $this->assertEquals($record->validation_code, $abstractSmrAccount->getValidationCode());
+        $this->assertEquals($record->offset, $abstractSmrAccount->getOffset());
+        $this->assertEquals(true, $abstractSmrAccount->isDisplayShipImages());
+        $this->assertEquals($record->fontsize, $abstractSmrAccount->getFontSize());
+        $this->assertEquals($record->password_reset, $abstractSmrAccount->getPasswordReset());
+        $this->assertEquals($record->mail_banned, $abstractSmrAccount->getMailBanned());
+        $this->assertEquals($record->friendly_colour, $abstractSmrAccount->getFriendlyColour());
+        $this->assertEquals($record->neutral_colour, $abstractSmrAccount->getNeutralColour());
+        $this->assertEquals($record->enemy_colour, $abstractSmrAccount->getEnemyColour());
+        $this->assertEquals($record->css_link, $abstractSmrAccount->getCssLink());
+        $this->assertEquals($record->referral_id, $abstractSmrAccount->getReferrerID());
+        $this->assertEquals($record->hof_name, $abstractSmrAccount->getHofName());
+        $this->assertEquals($record->discord_id, $abstractSmrAccount->getDiscordId());
+        $this->assertEquals($record->irc_nick, $abstractSmrAccount->getIrcNick());
+        $this->assertEquals($record->date_short, $abstractSmrAccount->getShortDateFormat());
+        $this->assertEquals($record->time_short, $abstractSmrAccount->getShortTimeFormat());
+        $this->assertEquals($record->template, $abstractSmrAccount->getTemplate());
     }
 
     public function test_get_account_by_account_id_no_account_found_throws_exception()
