@@ -17,10 +17,10 @@ abstract class MySqlDatabase {
 				$this->error('Failed to enable mysqli error reporting');
 			}
 
-            $host = self::$host;
-            $user = self::$host;
-            $password = self::$password;
-            $port = self::$port;
+			$host = self::$host;
+			$user = self::$host;
+			$password = self::$password;
+			$port = self::$port;
 
 			// The configuration can be overridden via PHPUnit configuration
 			if (defined("OVERRIDE_MYSQL_CONFIG")) {
@@ -31,7 +31,7 @@ abstract class MySqlDatabase {
 			}
 
 			self::$dbConn = new mysqli($host, $user, $password,
-			                           $dbName, $port, self::$socket);
+				$dbName, $port, self::$socket);
 			self::$selectedDbName = $dbName;
 
 			// Default server charset should be set correctly. Using the default
