@@ -5,7 +5,7 @@ namespace SmrTest\lib\DefaultGame;
 use AbstractSmrAccount;
 use AccountNotFoundException;
 use Mockery as m;
-use SmrTest\BaseIntegrationTest;
+use SmrTest\BaseIntegrationSpec;
 use SocialLogin;
 use SocialLogins\Facebook;
 
@@ -40,7 +40,7 @@ class Record {
  * Class AbstractSmrAccountTest
  * @covers AbstractSmrAccount
  */
-class AbstractSmrAccountIntegrationTest extends BaseIntegrationTest {
+class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 	public function test_account_creation() {
 		$account = AbstractSmrAccount::createAccount("test", "test", "test@test.com", 9, 0);
 		$this->assertEquals("test", $account->getLogin());

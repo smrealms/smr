@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Throwable;
 
 
-class BaseIntegrationTest extends TestCase {
+class BaseIntegrationSpec extends TestCase {
 	protected static mysqli $conn;
 	private static $defaultPopulatedTables = array();
 
@@ -44,7 +44,7 @@ class BaseIntegrationTest extends TestCase {
 	}
 
 	private function cleanUp() {
-		echo "Cleaning non-default populated tables for next test...";
+		echo "Cleaning non-default populated tables for next test...\n";
 		$implode = implode(",", self::$defaultPopulatedTables);
 		$query = "SELECT Concat('TRUNCATE TABLE ', TABLE_NAME, ';') FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'smr_live' and TABLE_NAME not in (${implode})";
 		$rs = self::$conn->query($query);
