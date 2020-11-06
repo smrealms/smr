@@ -15,7 +15,7 @@
 			value="true" />
 		<const
 			name="OVERRIDE_MYSQL_HOST"
-			value="localhost" />
+			value="127.0.0.1" />
 		<const
 			name="OVERRIDE_MYSQL_USER"
 			value="smr" />
