@@ -36,16 +36,12 @@ class Record
  * Class AbstractSmrAccountTest
  * @covers AbstractSmrAccount
  * @covers Globals
+ * @runTestsInSeparateProcesses
  */
 class AbstractSmrAccountTest extends TestCase
 {
     private AbstractSmrAccount $abstractSmrAccount;
 
-    /**
-     * Verify that an account can be retrieved from the database using its id.
-     * @runInSeparateProcess
-     * @preserveGlobalState enabled
-     */
     public function test_get_account_by_account_id()
     {
         //# Given the database has been set up with a user
@@ -79,12 +75,6 @@ class AbstractSmrAccountTest extends TestCase
         $this->assertEquals($record->template, $this->abstractSmrAccount->getTemplate());
     }
 
-    /**
-     * Verify that multiple calls to retrieve an account with the force refresh flag
-     * enabled causes subsequent calls to the database skipping the cache.
-     * @runInSeparateProcess
-     * @preserveGlobalState enabled
-     */
     public function test_get_account_by_account_id_force_update_from_database()
     {
         //# Given the database has been set up with a user
@@ -102,12 +92,6 @@ class AbstractSmrAccountTest extends TestCase
         $this->assertCount(3, m::getContainer()->getMocks());
     }
 
-    /**
-     * Verify that when there is no force update flag, subsequent calls to retrieve accounts
-     * will use the cache instead of hitting the database.
-     * @runInSeparateProcess
-     * @preserveGlobalState enabled
-     */
     public function test_get_account_by_id_multiple_times_without_force_refresh_calls_database_once()
     {
         //# Given the database has been set up with a user
@@ -125,34 +109,206 @@ class AbstractSmrAccountTest extends TestCase
         $this->assertCount(2, m::getContainer()->getMocks());
     }
 
+    public function test_get_account_by_name_happy_path()
+    {
+        //# Given a record exists
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# When retrieving account by name
+        $account = AbstractSmrAccount::getAccountByName($record->login);
+        //# Then the record is found
+        $this->assertEquals($record->account_id, $account->getAccountID());
+    }
+
+    public function test_get_account_by_name_returns_null_when_no_account_name_provided()
+    {
+        //# Given a record exists
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# When retrieving account by null name
+        $account = AbstractSmrAccount::getAccountByName(null);
+        //# Then the record is null
+        $this->assertNull($account);
+    }
+
+    public function test_get_account_by_name_returns_null_when_no_record_found()
+    {
+        //# Given no record exists
+        self::setupMockMysqlDatabase(null);
+        //# When retrieving account by name
+        $account = AbstractSmrAccount::getAccountByName("any");
+        //# Then the record is null
+        $this->assertNull($account);
+    }
+
+    public function test_get_account_by_email_happy_path()
+    {
+        //# Given a record exists
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# When retrieving account by email
+        $account = AbstractSmrAccount::getAccountByEmail($record->email);
+        //# Then the record is found
+        $this->assertEquals($record->account_id, $account->getAccountID());
+    }
+
+    public function test_get_account_by_email_returns_null_when_no_email_provided()
+    {
+        //# Given a record exists
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# When retrieving account by null email
+        $account = AbstractSmrAccount::getAccountByEmail(null);
+        //# Then the record is null
+        $this->assertNull($account);
+    }
+
+    public function test_get_account_by_email_returns_null_when_no_record_found()
+    {
+        //# Given no record exists
+        self::setupMockMysqlDatabase(null);
+        //# When retrieving account by email
+        $account = AbstractSmrAccount::getAccountByEmail("any");
+        //# Then the record is null
+        $this->assertNull($account);
+    }
+
+    public function test_get_account_by_discord_happy_path()
+    {
+        //# Given a record exists
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# When retrieving account by discord
+        $account = AbstractSmrAccount::getAccountByDiscordId($record->login);
+        //# Then the record is found
+        $this->assertEquals($record->account_id, $account->getAccountID());
+    }
+
+    public function test_get_account_by_discord_returns_null_when_no_discord_provided()
+    {
+        //# Given a record exists
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# When retrieving account by null discord
+        $account = AbstractSmrAccount::getAccountByDiscordId(null);
+        //# Then the record is null
+        $this->assertNull($account);
+    }
+
+    public function test_get_account_by_discord_returns_null_when_no_record_found()
+    {
+        //# Given no record exists
+        self::setupMockMysqlDatabase(null);
+        //# When retrieving account by discord
+        $account = AbstractSmrAccount::getAccountByDiscordId("any");
+        //# Then the record is null
+        $this->assertNull($account);
+    }
+
+    public function test_get_account_by_irc_happy_path()
+    {
+        //# Given a record exists
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# When retrieving account by irc
+        $account = AbstractSmrAccount::getAccountByIrcNick($record->login);
+        //# Then the record is found
+        $this->assertEquals($record->account_id, $account->getAccountID());
+    }
+
+    public function test_get_account_by_irc_returns_null_when_no_irc_provided()
+    {
+        //# Given a record exists
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# When retrieving account by null irc
+        $account = AbstractSmrAccount::getAccountByIrcNick(null);
+        //# Then the record is null
+        $this->assertNull($account);
+    }
+
+    public function test_get_account_by_irc_returns_null_when_no_record_found()
+    {
+        //# Given no record exists
+        self::setupMockMysqlDatabase(null);
+        //# When retrieving account by irc
+        $account = AbstractSmrAccount::getAccountByIrcNick("any");
+        //# Then the record is null
+        $this->assertNull($account);
+    }
+
+    /////
+    public function test_get_account_by_social_happy_path()
+    {
+        //# Given a record exists
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# And a valid social login
+        $socialLogin = m::mock(SocialLogin::class)->shouldIgnoreMissing();
+        $socialLogin
+            ->expects()
+            ->isValid()
+            ->andReturns(true);
+        //# When retrieving account by social
+        $account = AbstractSmrAccount::getAccountBySocialLogin($socialLogin);
+        //# Then the record is found
+        $this->assertEquals($record->account_id, $account->getAccountID());
+    }
+
+    public function test_get_account_by_social_returns_null_when_social_invalid()
+    {
+        //# Given a record exists
+        $record = new Record();
+        self::setupMockMysqlDatabase($record);
+        //# And an invalid social login
+        $socialLogin = m::mock(SocialLogin::class)->shouldIgnoreMissing();
+        $socialLogin
+            ->expects()
+            ->isValid()
+            ->andReturns(false);
+        //# When retrieving account by null social
+        $account = AbstractSmrAccount::getAccountBySocialLogin($socialLogin);
+        //# Then the record is null
+        $this->assertNull($account);
+    }
+
+    public function test_get_account_by_social_returns_null_when_no_record_found()
+    {
+        //# Given no record exists
+        self::setupMockMysqlDatabase(null);
+        //# And a valid social login
+        $socialLogin = m::mock(SocialLogin::class)->shouldIgnoreMissing();
+        $socialLogin
+            ->expects()
+            ->isValid()
+            ->andReturns(true);
+        //# When retrieving account by social
+        $account = AbstractSmrAccount::getAccountBySocialLogin($socialLogin);
+        //# Then the record is null
+        $this->assertNull($account);
+    }
+
     public function tearDown(): void
     {
         m::close();
     }
 
-    private static function setupMockMysqlDatabase(Record $record): MockInterface
+    private static function setupMockMysqlDatabase(?Record $record): MockInterface
     {
         //# Force the mock to be used in the autoloader
-        $mysqlDatabase = m::mock("overload:" . SmrMySqlDatabase::class);
-        $mysqlDatabase
-            ->shouldReceive("escapeNumber")
-            ->with($record->account_id)
-            ->andReturn($record->account_id)
-            ->times(1);
-        $mysqlDatabase
-            ->shouldReceive("query");
-        $mysqlDatabase
-            ->shouldReceive("nextRecord")
-            ->andReturn("a record");
-        $mysqlDatabase
-            ->shouldReceive("getRow")
-            ->andReturn((array)$record);
-        $mysqlDatabase
-            ->shouldReceive("getBoolean")
-            ->andReturn(false);
-        $mysqlDatabase
-            ->shouldReceive("getObject")
-            ->andReturn(array());
+        $mysqlDatabase = m::mock("overload:" . SmrMySqlDatabase::class)->shouldIgnoreMissing();
+        if (isset($record)) {
+            $mysqlDatabase
+                ->shouldReceive("escapeNumber")
+                ->with($record->account_id)
+                ->andReturn($record->account_id);
+            $mysqlDatabase
+                ->shouldReceive("nextRecord")
+                ->andReturn($record);
+            $mysqlDatabase
+                ->shouldReceive("getRow")
+                ->andReturn((array)$record);
+        }
         return $mysqlDatabase;
     }
 }
