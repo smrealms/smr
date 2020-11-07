@@ -9,6 +9,9 @@ Make sure the following software is installed:
 * docker (version 18.06.0+)
 * docker-compose (version 1.22.0+)
 
+To run unit tests on your machine:
+* Composer (2.0.5+)
+
 ## Setup
 First, you will need to clone this repository. Then inside the clone, you
 will need to create installation-specific copies of the following files:
@@ -175,3 +178,18 @@ For any page which takes input through POST or GET (or other forms?) they should
 ## Abstract vs normal classes
 This initially started out to be used in the "standard" way for NPCs but that idea has since been discarded.
 Now all core/shared "Default" code should be in the abstract version, with the normal class child implementing game type specific functionality/overrides, for instance "lib/Semi Wars/SmrAccount" which is used to make every account appear to be a "vet" account when playing semi wars.
+
+## Unit testing
+SMR uses [PHPUnit](https://phpunit.de/) to run unit tests.
+### Setup
+1. Ensure the `mysqli` extension is enabled in your local PHP installation's `php.ini`, as this is a hard dependency.
+1. From the root directory run `composer install` to install dependencies, and configure the development auto loader.
+1. In some cases, you may have to manually run `docker-compose up -d mysql-integration-test` in order to have the integration test MySQL Docker container ready to receive connections for the `flyway` migration that happens during integration tests. This only needs to be done once, but if you ever stop this container you should repeat this step before running any integration tests.
+1. Run `vendor/bin/phpunit test` to execute the full suite of tests.
+1. Add new tests as needed in the `/test` directory.
+
+* For information on running one-off tests inside your IDE, please refer to your IDE vendor's documentation on how to run PHPUnit tests.
+* If you're running one-off unit tests that don't need database interaction, you don't need to start up the `mysql-integration-test` Docker service.
+
+### Integration testing
+1. To create an integration test that uses the database, your test should extend `SmrTest\BaseIntegrationSpec`. This will ensure that the `flyway` migration happens before your test suite initializes, and cleans up any records written between tests.
