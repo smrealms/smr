@@ -4,9 +4,7 @@ namespace SmrTest\lib\DefaultGame;
 
 use AbstractSmrAccount;
 use AccountNotFoundException;
-use Mockery as m;
 use SmrTest\BaseIntegrationSpec;
-use SocialLogin;
 use SocialLogins\Facebook;
 
 /**
@@ -146,36 +144,41 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	public function test_get_account_by_social_happy_path() {
+
 		// Given a record exists
-		$orignal = AbstractSmrAccount::createAccount("test", "test", "test@test.com", 9, 0);
-		$orignal->addAuthMethod("facebook", $orignal->getAccountID());
+		$original = AbstractSmrAccount::createAccount("test", "test", "test@test.com", 9, 0);
+		$original->addAuthMethod(Facebook::getLoginType(), $original->getAccountID());
 		// And a valid social login
-		$socialLogin = m::mock(Facebook::class)->shouldIgnoreMissing();
+		/*
+		 * Unfortunately we cannot use the simple createMock() method, because the SocialLogin class uses
+		 * a static method for getLoginType(). PHPUnit cannot operate on static methods, so it throws a warning.
+		 * Instead we create a partial mock, and all other methods will call their default method, and prevent the warning
+		 * that causes PHPUnit to fail due to "warnings" or "risky" tests.
+		 */
+		$isValid = "isValid";
+		$getUserId = "getUserId";
+		$socialLogin = $this->createPartialMock(Facebook::class, array($isValid, $getUserId));
 		$socialLogin
-			->expects()
-			->isValid()
-			->andReturns(true);
+			->expects(self::once())
+			->method($isValid)
+			->willReturn(true);
 		$socialLogin
-			->expects()
-			->getLoginType()
-			->andReturns("facebook");
-		$socialLogin
-			->expects()
-			->getUserId()
-			->andReturns($orignal->getAccountID());
+			->expects(self::once())
+			->method($getUserId)
+			->willReturn($original->getAccountID());
 		// When retrieving account by social
 		$account = AbstractSmrAccount::getAccountBySocialLogin($socialLogin, true);
 		// Then the record is found
-		$this->assertEquals($orignal->getAccountID(), $account->getAccountID());
+		$this->assertEquals($original->getAccountID(), $account->getAccountID());
 	}
 
 	public function test_get_account_by_social_returns_null_when_social_invalid() {
 		// Given an invalid social login
-		$socialLogin = m::mock(SocialLogin::class)->shouldIgnoreMissing();
+		$socialLogin = $this->createMock(Facebook::class);
 		$socialLogin
-			->expects()
-			->isValid()
-			->andReturns(false);
+			->expects(self::once())
+			->method("isValid")
+			->willReturn(false);
 		// When retrieving account by null social
 		$account = AbstractSmrAccount::getAccountBySocialLogin($socialLogin);
 		// Then the record is null
@@ -185,19 +188,23 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 	public function test_get_account_by_social_returns_null_when_no_record_found() {
 		// Given no record exists
 		// And a valid social login
-		$socialLogin = m::mock(SocialLogin::class)->shouldIgnoreMissing();
+		/*
+		 * Unfortunately we cannot use the simple createMock() method, because the SocialLogin class uses
+		 * a static method for getLoginType(). PHPUnit cannot operate on static methods, so it throws a warning.
+		 * Instead we create a partial mock, and all other methods will call their default method, and prevent the warning
+		 * that causes PHPUnit to fail due to "warnings" or "risky" tests.
+		 */
+		$isValid = "isValid";
+		$getUserId = "getUserId";
+		$socialLogin = $this->createPartialMock(Facebook::class, array($isValid, $getUserId));
 		$socialLogin
-			->expects()
-			->isValid()
-			->andReturns(true);
+			->expects(self::once())
+			->method($isValid)
+			->willReturn(true);
 		$socialLogin
-			->expects()
-			->getLoginType()
-			->andReturns("facebook");
-		$socialLogin
-			->expects()
-			->getUserId()
-			->andReturns(123);
+			->expects(self::once())
+			->method($getUserId)
+			->willReturn("123");
 		// When retrieving account by social
 		$account = AbstractSmrAccount::getAccountBySocialLogin($socialLogin);
 		// Then the record is null
