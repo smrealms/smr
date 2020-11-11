@@ -18,7 +18,6 @@ will need to create installation-specific copies of the following files:
 
 * `.env.sample` &rarr; `.env`
 * `config/config.specific.sample.php` &rarr; `config/config.specific.php`
-* `config/SmrMySqlSecrets.sample.inc` &rarr; `config/SmrMySqlSecrets.inc`
 
 For "Caretaker" (IRC) or "Autopilot" (Discord) functionality:
 * `config/irc/config.specific.sample.php` &rarr; `config/irc/config.specific.php`

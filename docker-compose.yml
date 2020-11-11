@@ -43,9 +43,10 @@ x-mysql-common: &mysql-common
     # the runtime environment (because we can't specify build args).
     environment:
         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_USER:          smr
+        MYSQL_USER:          ${MYSQL_USER}
         MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
-        MYSQL_DATABASE:      smr_live
+        MYSQL_DATABASE:      ${MYSQL_DATABASE}
+        MYSQL_PORT:          ${MYSQL_PORT}
     # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
     # which is incompatible with the way the SMR database is used.
     # Therefore, we override CMD to omit this sql mode.
@@ -81,7 +82,7 @@ services:
 
     flyway: &flyway-common
         image: boxfuse/flyway:latest-alpine
-        command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live?allowPublicKeyRetrieval=true&useSSL=false -user=smr -password=${MYSQL_PASSWORD} migrate
+        command: -url=jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} migrate
         networks:
             - backend
         depends_on:
@@ -102,7 +103,7 @@ services:
     mysql-integration-test:
         <<: *mysql-common
         ports:
-            - 3307:3306
+            - ${MYSQL_PORT}:3306
 
     pma:
         image: phpmyadmin/phpmyadmin

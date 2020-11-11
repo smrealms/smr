@@ -1,37 +1,30 @@
 <?php declare(strict_types=1);
+
 require_once(CONFIG . 'SmrMySqlSecrets.inc');
 
 abstract class MySqlDatabase {
-	// add configuration static members via traits
-	use SmrMySqlSecrets;
-
 	protected static $dbConn;
 	protected static $selectedDbName;
 	protected $dbResult = null;
 	protected $dbRecord = null;
 
-	public function __construct($dbName) {
+	public function __construct($dbName=null, MysqlProperties $mysqlProperties=null) {
 		if (!self::$dbConn) {
+			if(!$mysqlProperties){
+				$mysqlProperties = new MysqlProperties();
+			}
 			// Set the mysqli driver to raise exceptions on errors
 			if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
 				$this->error('Failed to enable mysqli error reporting');
 			}
 
-			$host = self::$host;
-			$user = self::$user;
-			$password = self::$password;
-			$port = self::$port;
-
-			// The configuration can be overridden via PHPUnit configuration
-			if (defined("OVERRIDE_MYSQL_CONFIG")) {
-				$host = constant("OVERRIDE_MYSQL_HOST");
-				$user = constant("OVERRIDE_MYSQL_USER");
-				$password = constant("OVERRIDE_MYSQL_PASSWORD");
-				$port = (int)constant("OVERRIDE_MYSQL_PORT");
-			}
-
-			self::$dbConn = new mysqli($host, $user, $password,
-				$dbName, $port, self::$socket);
+			$dbName = $dbName ?? $mysqlProperties->getDatabaseName();
+			self::$dbConn = new mysqli(
+				$mysqlProperties->getHost(),
+				$mysqlProperties->getUser(),
+				$mysqlProperties->getPassword(),
+				$dbName,
+				$mysqlProperties->getPort());
 			self::$selectedDbName = $dbName;
 
 			// Default server charset should be set correctly. Using the default
@@ -43,7 +36,7 @@ abstract class MySqlDatabase {
 		}
 
 		// Do we need to switch databases (e.g. for compatability db access)?
-		if (self::$selectedDbName != $dbName) {
+		if ($dbName != null &&self::$selectedDbName != $dbName) {
 			self::$dbConn->select_db($dbName);
 			self::$selectedDbName = $dbName;
 		}

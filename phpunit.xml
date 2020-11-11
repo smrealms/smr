@@ -10,21 +10,24 @@
 	failOnWarning="true"
 	verbose="true">
 	<php>
-		<const
-			name="OVERRIDE_MYSQL_CONFIG"
+		<env
+			name="MYSQL_CONFIG_FROM_ENVIRONMENT"
 			value="true" />
-		<const
-			name="OVERRIDE_MYSQL_HOST"
+		<env
+			name="MYSQL_HOST"
 			value="127.0.0.1" />
-		<const
-			name="OVERRIDE_MYSQL_USER"
+		<env
+			name="MYSQL_USER"
 			value="smr" />
-		<const
-			name="OVERRIDE_MYSQL_PASSWORD"
+		<env
+			name="MYSQL_PASSWORD"
 			value="smr" />
-		<const
-			name="OVERRIDE_MYSQL_PORT"
+		<env
+			name="MYSQL_PORT"
 			value="3307" />
+		<env
+			name="MYSQL_DATABASE"
+			value="smr_live" />
 	</php>
 	<testsuites>
 		<testsuite name="default">
