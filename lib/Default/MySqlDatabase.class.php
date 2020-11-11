@@ -18,7 +18,7 @@ abstract class MySqlDatabase {
 			}
 
 			$host = self::$host;
-			$user = self::$host;
+			$user = self::$user;
 			$password = self::$password;
 			$port = self::$port;
 
