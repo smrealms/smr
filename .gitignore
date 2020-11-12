@@ -3,6 +3,7 @@
 /.buildpath
 /.project
 /.idea
+*.iml
 /nbproject
 /composer.lock
 
@@ -23,7 +24,7 @@
 /htdocs/upload
 
 # DKIM private keys
-/opendkim/*.private
+/opendkim
 
 # Docker data volumes
 /vol_*
@@ -32,3 +33,5 @@
 
 /newsletters
 /vendor
+.phpunit*
+out/

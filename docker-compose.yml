@@ -34,6 +34,25 @@ x-smr-common: &smr-common
         - ./vol_upload:/smr/htdocs/upload
         - ./config:/smr/config:ro
 
+x-mysql-common: &mysql-common
+    image: mysql:8.0
+    container_name: ${MYSQL_HOST}
+    networks:
+        - backend
+    # By using the default image, we must expose the secrets in
+    # the runtime environment (because we can't specify build args).
+    environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_USER:          smr
+        MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
+        MYSQL_DATABASE:      smr_live
+    # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
+    # which is incompatible with the way the SMR database is used.
+    # Therefore, we override CMD to omit this sql mode.
+    command: ["mysqld", "--sql-mode=NO_ENGINE_SUBSTITUTION",
+              "--character-set-server=utf8",
+              "--collation-server=utf8_general_ci"]
+
 services:
     smr:
         << : *smr-common
@@ -60,7 +79,7 @@ services:
         volumes:
             - ./opendkim:/etc/opendkim/keys/smrealms.de
 
-    flyway:
+    flyway: &flyway-common
         image: boxfuse/flyway:latest-alpine
         command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live?allowPublicKeyRetrieval=true&useSSL=false -user=smr -password=${MYSQL_PASSWORD} migrate
         networks:
@@ -70,26 +89,20 @@ services:
         volumes:
             - ./db/patches:/flyway/sql:ro
 
+    flyway-integration-test:
+        << : *flyway-common
+        depends_on:
+            - mysql-integration-test
+
     mysql:
-        image: mysql:8.0
-        container_name: ${MYSQL_HOST}
-        networks:
-            - backend
-        # By using the default image, we must expose the secrets in
-        # the runtime environment (because we can't specify build args).
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_USER:          smr
-            MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
-            MYSQL_DATABASE:      smr_live
+        << : *mysql-common
         volumes:
             - ./vol_db:/var/lib/mysql
-        # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
-        # which is incompatible with the way the SMR database is used.
-        # Therefore, we override CMD to omit this sql mode.
-        command: ["mysqld", "--sql-mode=NO_ENGINE_SUBSTITUTION",
-                  "--character-set-server=utf8",
-                  "--collation-server=utf8_general_ci"]
+
+    mysql-integration-test:
+        <<: *mysql-common
+        ports:
+            - 3307:3306
 
     pma:
         image: phpmyadmin/phpmyadmin
