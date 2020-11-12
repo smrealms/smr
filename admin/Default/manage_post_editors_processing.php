@@ -11,7 +11,7 @@ $player_id = Request::getInt('player_id');
 $action = Request::get('submit');
 
 try {
-	$selected_player = SmrPlayer::getPlayerByPlayerID($player_id, $game_id);
+	$selected_player = SmrPlayer::getPlayer($player_id, $game_id);
 } catch (PlayerNotFoundException $e) {
 	$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 	SmrSession::updateVar('processing_msg', $msg);
@@ -19,14 +19,13 @@ try {
 }
 
 $name = $selected_player->getDisplayName();
-$account_id = $selected_player->getAccountID();
 $game = $selected_player->getGame()->getDisplayName();
 
 if ($action == "Assign") {
 	if ($selected_player->isGPEditor()) {
 		$msg = "<span class='red'>ERROR: </span>$name is already an editor in game $game!";
 	} else {
-		$db->query('INSERT INTO galactic_post_writer (account_id, game_id) VALUES (' . $db->escapeNumber($account_id) . ', ' . $db->escapeNumber($game_id) . ')');
+		$db->query('INSERT INTO galactic_post_writer (player_id, game_id) VALUES (' . $db->escapeNumber($player_id) . ', ' . $db->escapeNumber($game_id) . ')');
 	}
 } elseif ($action == "Remove") {
 	if (!$selected_player->isGPEditor()) {

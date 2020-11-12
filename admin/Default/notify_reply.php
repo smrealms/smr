@@ -5,11 +5,11 @@ require_once(get_file_loc('message.functions.inc'));
 
 $container = create_container('notify_reply_processing.php');
 transfer('game_id');
-transfer('offended');
-transfer('offender');
+transfer('offended_player_id');
+transfer('offender_player_id');
 $template->assign('NotifyReplyFormHref', SmrSession::getNewHREF($container));
-$offender = getMessagePlayer($var['offender'], $var['game_id']);
-$offended = getMessagePlayer($var['offended'], $var['game_id']);
+$offender = getMessagePlayer($var['offender_player_id'], $var['game_id']);
+$offended = getMessagePlayer($var['offended_player_id'], $var['game_id']);
 if (is_object($offender)) {
 	$template->assign('OffenderAccount', $offender->getAccount());
 }

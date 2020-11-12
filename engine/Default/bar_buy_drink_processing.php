@@ -34,10 +34,10 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 
 		if ($drink_id != 11 && $drink_id != 1) {
 			$message .= ('You have bought a ' . $drinkName . ' for $10');
-			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
+			$db->query('INSERT INTO player_has_drinks (player_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getPlayerID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
 			$player->increaseHOF(1, array('Bar', 'Drinks', 'Alcoholic'), HOF_PUBLIC);
 		} else {
-			$message .= ('The bartender says, Ive got something special for ya.<br />');
+			$message .= ('The bartender says, I\'ve got something special for ya.<br />');
 			$message .= ('The bartender turns around for a minute and whips up a ' . $drinkName . '.<br />');
 
 			if ($drink_id == 1) {
@@ -51,9 +51,9 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 			}
 
 			//has the power of 2 drinks
-			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
+			$db->query('INSERT INTO player_has_drinks (player_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getPlayerID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
 			$curr_drink_id++;
-			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
+			$db->query('INSERT INTO player_has_drinks (player_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getPlayerID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
 			$player->increaseHOF(1, array('Bar', 'Drinks', 'Special'), HOF_PUBLIC);
 		}
 

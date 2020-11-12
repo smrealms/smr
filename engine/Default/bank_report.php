@@ -14,36 +14,36 @@ if (!$db->getNumRows()) {
 $trans = array();
 while ($db->nextRecord()) {
 	$transType = ($db->getField('transaction') == 'Payment') ? WITHDRAW : DEPOSIT;
-	$payeeId = ($db->getInt('exempt')) ? 0 : $db->getInt('payee_id');
+	$playerID = ($db->getInt('exempt')) ? 0 : $db->getInt('player_id');
 	// initialize payee if necessary
-	if (!isset($trans[$payeeId])) {
-		$trans[$payeeId] = array(WITHDRAW => 0, DEPOSIT => 0);
+	if (!isset($trans[$playerID])) {
+		$trans[$playerID] = array(WITHDRAW => 0, DEPOSIT => 0);
 	}
-	$trans[$payeeId][$transType] += $db->getInt('amount');
+	$trans[$playerID][$transType] += $db->getInt('amount');
 }
 
 //ordering
 $playerIDs = array_keys($trans);
-foreach ($trans as $accId => $transArray) {
-	$totals[$accId] = $transArray[DEPOSIT] - $transArray[WITHDRAW];
+foreach ($trans as $playerID => $transArray) {
+	$totals[$playerID] = $transArray[DEPOSIT] - $transArray[WITHDRAW];
 }
 arsort($totals, SORT_NUMERIC);
-$db->query('SELECT * FROM player WHERE account_id IN (' . $db->escapeArray($playerIDs) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
+$db->query('SELECT * FROM player WHERE player_id IN (' . $db->escapeArray($playerIDs) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
 $players[0] = 'Alliance Funds';
 while ($db->nextRecord()) {
-	$players[$db->getInt('account_id')] = htmlentities($db->getField('player_name'));
+	$players[$db->getInt('player_id')] = htmlentities($db->getField('player_name'));
 }
 
 //format it this way so its easy to send to the alliance MB if requested.
 $text = '<table class="nobord centered" cellspacing="1">';
 $text .= '<tr><th>Player</th><th>Deposits</th><th>Withdrawals</th><th>Total</th></tr>';
 $balance = 0;
-foreach ($totals as $accId => $total) {
+foreach ($totals as $playerID => $total) {
 	$balance += $total;
 	$text .= '<tr>';
-	$text .= '<td><span class="yellow">' . $players[$accId] . '</span></td>';
-	$text .= '<td class="right">' . number_format($trans[$accId][DEPOSIT]) . '</td>';
-	$text .= '<td class="right">-' . number_format($trans[$accId][WITHDRAW]) . '</td>';
+	$text .= '<td><span class="yellow">' . $players[$playerID] . '</span></td>';
+	$text .= '<td class="right">' . number_format($trans[$playerID][DEPOSIT]) . '</td>';
+	$text .= '<td class="right">-' . number_format($trans[$playerID][WITHDRAW]) . '</td>';
 	$text .= '<td class="right"><span class="';
 	if ($total < 0) {
 		$text .= 'red bold';

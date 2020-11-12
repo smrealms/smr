@@ -24,16 +24,16 @@ if (isset($var['id'])) {
 } else {
 	// Adding a new article
 	$message = 'Dear Galactic Post editors,<br /><br />[player=' . $player->getPlayerID() . '] has just submitted an article to the Galactic Post!';
-	foreach (Globals::getGalacticPostEditorIDs($player->getGameID()) as $editorID) {
-		if ($editorID != $player->getAccountID()) {
-			SmrPlayer::sendMessageFromAdmin($player->getGameID(), $editorID, $message);
+	foreach (Globals::getGalacticPostEditorPlayerIDs($player->getGameID()) as $editorPlayerID) {
+		if ($editorPlayerID != $player->getPlayerID()) {
+			SmrPlayer::sendMessageFromAdmin($player->getGameID(), $editorPlayerID, $message);
 		}
 	}
 
 	$db->query('SELECT MAX(article_id) article_id FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 	$db->requireRecord();
 	$num = $db->getInt('article_id') + 1;
-	$db->query('INSERT INTO galactic_post_article (game_id, article_id, writer_id, title, text, last_modified) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($num) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($title) . ' , ' . $db->escapeString($message) . ' , ' . $db->escapeNumber(TIME) . ')');
+	$db->query('INSERT INTO galactic_post_article (game_id, article_id, player_id, title, text, last_modified) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($num) . ', ' . $db->escapeNumber($player->getPlayerID()) . ', ' . $db->escapeString($title) . ' , ' . $db->escapeString($message) . ' , ' . $db->escapeNumber(TIME) . ')');
 	$db->query('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(TIME) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	forward(create_container('skeleton.php', 'galactic_post_read.php'));
 }

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 $chessGame = ChessGame::getChessGame($var['ChessGameID']);
-$result = $chessGame->resign($player->getAccountID());
+$result = $chessGame->resign($player->getPlayerID());
 
 $container = create_container('skeleton.php', 'current_sector.php');
 

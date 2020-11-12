@@ -5,8 +5,8 @@ $message = '';
 $db->query('SELECT * FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
 if ($db->nextRecord()) {
 	$prize = $db->getInt('prize');
-	$NHLAmount = ($prize - 1000000) / 9;
-	$db->query('UPDATE player SET bank = bank + ' . $db->escapeNumber($NHLAmount) . ' WHERE account_id = ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	$NHLAmount = IRound(($prize - 1000000) / 9);
+	$db->query('UPDATE player SET bank = bank + ' . $db->escapeNumber($NHLAmount) . ' WHERE player_id = ' . $db->escapeNumber(PLAYER_ID_NHL) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$player->increaseCredits($prize);
 	$player->increaseHOF($prize, array('Bar', 'Lotto', 'Money', 'Claimed'), HOF_PUBLIC);
 	$player->increaseHOF(1, array('Bar', 'Lotto', 'Results', 'Claims'), HOF_PUBLIC);

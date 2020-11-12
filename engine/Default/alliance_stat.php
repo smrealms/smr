@@ -6,7 +6,7 @@ $alliance_id = $var['alliance_id'];
 
 $alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
-Menu::alliance($alliance_id, $alliance->getLeaderID());
+Menu::alliance($alliance_id, $alliance->getLeaderPlayerID());
 
 $container = create_container('alliance_stat_processing.php');
 $container['alliance_id'] = $alliance_id;

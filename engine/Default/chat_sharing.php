@@ -5,6 +5,8 @@ if (isset($var['message'])) {
 	$template->assign('Message', $var['message']);
 }
 
+//TODO
+
 $shareFrom = array();
 $db->query('SELECT * FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
 while ($db->nextRecord()) {

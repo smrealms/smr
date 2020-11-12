@@ -46,7 +46,7 @@ if ($action == 'Deposit') {
 	$withdrawalPerDay = $db->getInt('with_per_day');
 	if ($db->getBoolean('positive_balance')) {
 		$db->query('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
-			WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
+			WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND ' . $player->getSQL() . '
 			GROUP BY transaction');
 		$playerTrans = array('Deposit' => 0, 'Payment' => 0);
 		while ($db->nextRecord()) {
@@ -59,8 +59,7 @@ if ($action == 'Deposit') {
 	} elseif ($withdrawalPerDay >= 0) {
 		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions
 					WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . '
-						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
+						AND ' . $player->getSQL() . '
 						AND transaction = \'Payment\'
 						AND exempt = 0
 						AND time > ' . $db->escapeNumber(TIME - 86400));
@@ -92,8 +91,8 @@ if ($db->nextRecord()) {
 // save log
 $requestExempt = Request::has('requestExempt') ? 1 : 0;
 $db->query('INSERT INTO alliance_bank_transactions
-			(alliance_id, game_id, transaction_id, time, payee_id, reason, transaction, amount, request_exempt)
-			VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($next_id) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($message) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($requestExempt) . ')');
+			(alliance_id, game_id, transaction_id, time, player_id, reason, transaction, amount, request_exempt)
+			VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($next_id) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber($player->getPlayerID()) . ', ' . $db->escapeString($message) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($requestExempt) . ')');
 
 // update player credits
 $player->update();

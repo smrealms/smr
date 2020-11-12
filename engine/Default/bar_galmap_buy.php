@@ -19,7 +19,7 @@ if (isset($var['process'])) {
 	//get end sector
 	$high = $galaxy->getEndSector();
 
-	// Have they already got this map? (Are there any unexplored sectors?
+	// Have they already got this map? (Are there any unexplored sectors?)
 	$db->query('SELECT * FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND ' . $player->getSQL() . ' LIMIT 1');
 	if (!$db->nextRecord()) {
 		create_error('You already have maps of this galaxy!');
@@ -36,7 +36,7 @@ if (isset($var['process'])) {
 	
 	// add port infos
 	foreach ($galaxy->getPorts() as $port) {
-		$port->addCachePort($player->getAccountID());
+		$port->addCachePort($player->getPlayerID());
 	}
 	
 	$container = create_container('skeleton.php', 'bar_main.php');

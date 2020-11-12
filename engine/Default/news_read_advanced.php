@@ -58,9 +58,9 @@ if ($submit_value == 'Search For Player') {
 	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $p_name . '%') . ' AND game_id = ' . $db->escapeNumber($gameID));
 	$IDs = array(0);
 	while ($db->nextRecord()) {
-		$IDs[] = $db->getInt('account_id');
+		$IDs[] = $db->getInt('player_id');
 	}
-	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (killer_id IN (' . $db->escapeArray($IDs) . ') OR dead_id IN (' . $db->escapeArray($IDs) . ')) ORDER BY news_id DESC');
+	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (killer_player_id IN (' . $db->escapeArray($IDs) . ') OR dead_player_id IN (' . $db->escapeArray($IDs) . ')) ORDER BY news_id DESC');
 } elseif ($submit_value == 'Search For Alliance') {
 	if (isset($_REQUEST['allianceID'])) {
 		SmrSession::updateVar('AllianceID', $_REQUEST['allianceID']);
@@ -70,25 +70,25 @@ if ($submit_value == 'Search For Player') {
 	}
 	$allianceID = $var['AllianceID'];
 	$template->assign('ResultsFor', $newsAlliances[$allianceID]['Name']);
-	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ')) ORDER BY news_id DESC');
+	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_player_id != ' . $db->escapeNumber(PLAYER_ID_PORT) . ') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_player_id != ' . $db->escapeNumber(PLAYER_ID_PORT) . ')) ORDER BY news_id DESC');
 } elseif ($submit_value == 'Search For Players') {
 	$template->assign('ResultsFor', $_REQUEST['player1'] . ' vs. ' . $_REQUEST['player2']);
 	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $_REQUEST['player1'] . '%') . ' AND game_id = ' . $db->escapeNumber($gameID));
 	$IDs = array(0);
 	while ($db->nextRecord()) {
-		$IDs[] = $db->getInt('account_id');
+		$IDs[] = $db->getInt('player_id');
 	}
 	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $_REQUEST['player2'] . '%') . ' AND game_id = ' . $db->escapeNumber($gameID));
 	$IDs2 = array(0);
 	while ($db->nextRecord()) {
-		$IDs2[] = $db->getInt('account_id');
+		$IDs2[] = $db->getInt('player_id');
 	}
 	$db->query('SELECT * FROM news
 				WHERE game_id = ' . $db->escapeNumber($gameID) . '
 					AND (
-						(killer_id IN (' . $db->escapeArray($IDs) . ') AND dead_id IN (' . $db->escapeArray($IDs2) . '))
+						(killer_player_id IN (' . $db->escapeArray($IDs) . ') AND dead_player_id IN (' . $db->escapeArray($IDs2) . '))
 						OR
-						(killer_id IN (' . $db->escapeArray($IDs2) . ') AND dead_id IN (' . $db->escapeArray($IDs) . '))
+						(killer_player_id IN (' . $db->escapeArray($IDs2) . ') AND dead_player_id IN (' . $db->escapeArray($IDs) . '))
 					) ORDER BY news_id DESC');
 } elseif ($submit_value == 'Search For Alliances') {
 	$template->assign('ResultsFor', $newsAlliances[$_REQUEST['alliance1']]['Name'] . ' vs. ' . $newsAlliances[$_REQUEST['alliance2']]['Name']);

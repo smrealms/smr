@@ -42,7 +42,7 @@ try {
 	}
 	
 	$account = SmrSession::getAccount();
-	$player = SmrPlayer::getPlayer($account->getAccountID(), SmrSession::getGameID());
+	$player = SmrPlayer::getPlayerByAccountID($account->getAccountID(), SmrSession::getGameID());
 	
 	// Create a session to store temporary display options
 	// Garbage collect here often, since the page is slow anyways (see map_local.php)

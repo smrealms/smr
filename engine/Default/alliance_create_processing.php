@@ -35,7 +35,7 @@ if ($name != $filteredName) {
 $alliance = SmrAlliance::createAlliance($player->getGameID(), $name);
 $alliance->setRecruitType($recruitType, $password);
 $alliance->setAllianceDescription($description);
-$alliance->setLeaderID($player->getAccountID());
+$alliance->setLeaderPlayerID($player->getPlayerID());
 $alliance->createDefaultRoles($perms);
 $alliance->update();
 

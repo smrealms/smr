@@ -17,7 +17,7 @@ if (!empty($player_id)) {
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND player_name = ' . $db->escapeString($player_name) . ' LIMIT 1');
 	if ($db->nextRecord()) {
-		$resultPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
+		$resultPlayer = SmrPlayer::getPlayer($db->getInt('player_id'), $player->getGameID(), false, $db);
 	}
 
 	$db->query('SELECT * FROM player
@@ -27,7 +27,7 @@ if (!empty($player_id)) {
 				ORDER BY player_name LIMIT 5');
 	$similarPlayers = array();
 	while ($db->nextRecord()) {
-		$similarPlayers[] = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
+		$similarPlayers[] = SmrPlayer::getPlayer($db->getInt('player_id'), $player->getGameID(), false, $db);
 	}
 }
 
@@ -44,11 +44,11 @@ function playerLinks(SmrPlayer $curr_player) {
 	$result['RaceHREF'] = SmrSession::getNewHREF($container);
 
 	$container = create_container('skeleton.php', 'message_send.php');
-	$container['receiver'] = $curr_player->getAccountID();
+	$container['receiver'] = $curr_player->getPlayerID();
 	$result['MessageHREF'] = SmrSession::getNewHREF($container);
 
 	$container = create_container('skeleton.php', 'bounty_view.php');
-	$container['id'] = $curr_player->getAccountID();
+	$container['id'] = $curr_player->getPlayerID();
 	$result['BountyHREF'] = SmrSession::getNewHREF($container);
 
 	$container = create_container('skeleton.php', 'hall_of_fame_player_detail.php');

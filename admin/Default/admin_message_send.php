@@ -11,16 +11,16 @@ $template->assign('ExpireTime', $var['expire'] ?? 0.5);
 
 if ($gameID != 20000) {
 	$game = SmrGame::getGame($gameID);
-	$gamePlayers = [['AccountID' => 0, 'Name' => 'All Players (' . $game->getName() . ')']];
-	$db->query('SELECT account_id,player_id,player_name FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY player_name');
+	$gamePlayers = [['PlayerID' => 0, 'Name' => 'All Players (' . $game->getName() . ')']];
+	$db->query('SELECT player_id,player_name FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY player_name');
 	while ($db->nextRecord()) {
 		$gamePlayers[] = [
-			'AccountID' => $db->getInt('account_id'),
+			'PlayerID' => $db->getInt('player_id'),
 			'Name' => $db->getField('player_name') . ' (' . $db->getInt('player_id') . ')',
 		];
 	}
 	$template->assign('GamePlayers', $gamePlayers);
-	$template->assign('SelectedAccountID', $var['account_id'] ?? 0);
+	$template->assign('SelectedPlayerID', $var['player_id'] ?? 0);
 }
 if (isset($var['preview'])) {
 	$template->assign('Preview', $var['preview']);

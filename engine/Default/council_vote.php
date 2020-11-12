@@ -9,7 +9,7 @@ Menu::council($player->getRaceID());
 
 // determine for what we voted
 $db->query('SELECT * FROM player_votes_relation
-			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+			WHERE player_id = ' . $db->escapeNumber($player->getPlayerID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
 $votedForRace = -1;
 if ($db->nextRecord()) {
@@ -65,7 +65,7 @@ if ($db->getNumRows() > 0) {
 		$noVotes = $db2->getInt('count(*)');
 
 		$db2->query('SELECT vote FROM player_votes_pact
-					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+					WHERE player_id = ' . $db->escapeNumber($player->getPlayerID()) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
 						AND race_id_2 = '.$db->escapeNumber($otherRaceID));

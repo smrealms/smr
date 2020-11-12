@@ -451,7 +451,7 @@ class SmrAlliance {
 	}
 
 	public function getNumMembers() {
-		return count($this->getMemberIDs());
+		return count($this->getMemberPlayerIDs());
 	}
 
 	public function update() {
@@ -478,32 +478,32 @@ class SmrAlliance {
 		return SmrPlayer::getAlliancePlayers($this->getGameID(), $this->getAllianceID());
 	}
 
-	public function getMemberIDs() {
+	public function getMemberPlayerIDs() {
 		if (!isset($this->memberList)) {
-			$this->db->query('SELECT account_id FROM player WHERE ' . $this->SQL);
+			$this->db->query('SELECT player_id FROM player WHERE ' . $this->SQL);
 
 			//we have the list of players put them in an array now
 			$this->memberList = array();
 			while ($this->db->nextRecord()) {
-				$this->memberList[] = $this->db->getInt('account_id');
+				$this->memberList[] = $this->db->getInt('player_id');
 			}
 		}
 		return $this->memberList;
 	}
 	
-	public function getActiveIDs() {
-		$activeIDs = array();
+	public function getActivePlayerIDs() {
+		$activePlayerIDs = array();
 		
-		$this->db->query('SELECT account_id
+		$this->db->query('SELECT player_id
 						FROM active_session
 						JOIN player USING(account_id, game_id)
 						WHERE '.$this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(TIME - 600));
 		
 		while ($this->db->nextRecord()) {
-			$activeIDs[] = $this->db->getInt('account_id');
+			$activePlayerIDs[] = $this->db->getInt('account_id');
 		}
 		
-		return $activeIDs;
+		return $activePlayerIDs;
 	}
 
 	/**

@@ -25,7 +25,7 @@ if ($player->hasAlliance()) {
 	$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 	$db->requireRecord();
 	if (!$db->getBoolean('planet_access')) {
-		if ($planet->hasOwner() && $planet->getOwnerID() != $player->getAccountID()) {
+		if ($planet->hasOwner() && $planet->getOwnerPlayerID() != $player->getPlayerID()) {
 			create_error('Your alliance doesn\'t allow you to dock at their planet.');
 		}
 	}

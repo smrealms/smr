@@ -42,22 +42,25 @@ if (isset($var['thread_ids'][$thread_index + 1])) {
 $thread = array();
 $thread['AllianceEyesOnly'] = is_array($var['alliance_eyes']) && $var['alliance_eyes'][$thread_index];
 //for report type (system sent) messages
-$players[ACCOUNT_ID_PLANET] = 'Planet Reporter';
-$players[ACCOUNT_ID_BANK_REPORTER] = 'Bank Reporter';
-$db->query('SELECT account_id
+$players = [
+	PLAYER_ID_PLANET => 'Planet Reporter',
+	PLAYER_ID_BANK_REPORTER => 'Bank Reporter',
+];
+$db->query('SELECT *
 			FROM player
 			JOIN alliance_thread USING (game_id)
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_thread.alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND alliance_thread.thread_id = ' . $db->escapeNumber($thread_id));
 while ($db->nextRecord()) {
-	$players[$db->getInt('account_id')] = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID())->getLinkedDisplayName(false);
+	$threadPlayer = SmrPlayer::getPlayer($db->getInt('player_id'), $player->getGameID(), false, $db);
+	$players[$db->getInt('player_id')] = $threadPlayer->getLinkedDisplayName(false);
 }
 
 $db->query('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
 $db->requireRecord();
 $thread['CanDelete'] = $db->getBoolean('mb_messages');
 
-$db->query('SELECT text, sender_id, time, reply_id
+$db->query('SELECT text, sender_player_id, time, reply_id
 FROM alliance_thread
 WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
 AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
@@ -69,7 +72,7 @@ $thread['Replies'] = array();
 $container = create_container('alliance_message_delete_processing.php', '', $var);
 $container['thread_id'] = $thread_id;
 while ($db->nextRecord()) {
-	$thread['Replies'][$db->getInt('reply_id')] = array('Sender' => $players[$db->getInt('sender_id')], 'Message' => $db->getField('text'), 'SendTime' => $db->getInt('time'));
+	$thread['Replies'][$db->getInt('reply_id')] = array('Sender' => $players[$db->getInt('sender_player_id')], 'Message' => $db->getField('text'), 'SendTime' => $db->getInt('time'));
 	if ($thread['CanDelete']) {
 		$container['reply_id'] = $db->getInt('reply_id');
 		$thread['Replies'][$db->getInt('reply_id')]['DeleteHref'] = SmrSession::getNewHREF($container);

@@ -88,37 +88,37 @@ function checkPacts($race_id_1) {
 		// more yes than no?
 		if ($yes_votes > $no_votes) {
 			if ($type == 'WAR') {
-				$currentlyParkedAccountIDs = array();
+				$currentlyParkedPlayerIDs = array();
 				$raceFedSectors = array(
 										$race_id_1 => SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
 										$race_id_2 => SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_2)
 									);
 				foreach ($raceFedSectors as $raceID => $fedSectors) {
-					$currentlyParkedAccountIDs[$raceID] = array(); //initialize
+					$currentlyParkedPlayerIDs[$raceID] = array(); //initialize
 					$otherRaceID = $raceID == $race_id_1 ? $race_id_2 : $race_id_1;
 					foreach ($fedSectors as $fedSector) {
 						$sectorPlayers = $fedSector->getPlayers();
 						foreach ($sectorPlayers as $sectorPlayer) {
 							if ($sectorPlayer->getRaceID() == $otherRaceID && $sectorPlayer->canBeProtectedByRace($raceID)) {
-								$currentlyParkedAccountIDs[$raceID][] = $sectorPlayer->getAccountID();
+								$currentlyParkedPlayerIDs[$raceID][] = $sectorPlayer->getPlayerID();
 							}
 						}
 					}
 				}
 
-				if (count($currentlyParkedAccountIDs[$race_id_1]) + count($currentlyParkedAccountIDs[$race_id_2]) > 0) {
+				if (count($currentlyParkedPlayerIDs[$race_id_1]) + count($currentlyParkedPlayerIDs[$race_id_2]) > 0) {
 					$expireTime = TIME + TIME_FOR_WAR_VOTE_FED_SAFETY;
-					$query = 'REPLACE INTO player_can_fed (account_id, game_id, race_id, expiry, allowed) VALUES ';
-					foreach ($currentlyParkedAccountIDs as $raceID => $accountIDs) {
+					$query = 'REPLACE INTO player_can_fed (player_id, game_id, race_id, expiry, allowed) VALUES ';
+					foreach ($currentlyParkedPlayerIDs as $raceID => $playerIDs) {
 						if ($raceID == $race_id_1) {
 							$message = 'We have declared war upon your race';
 						} else {
 							$message = 'Your race has declared war upon us';
 						}
 						$message .= ', you have ' . format_time(TIME_FOR_WAR_VOTE_FED_SAFETY) . ' to vacate our federal space, after that time you will no longer be protected (unless you have strong personal relations).';
-						foreach ($accountIDs as $accountID) {
-							$query .= '(' . $db2->escapeNumber($accountID) . ',' . $db2->escapeNumber($player->getGameID()) . ',' . $db2->escapeNumber($raceID) . ',' . $db2->escapeNumber($expireTime) . ',' . $db2->escapeBoolean(true) . '),';
-							SmrPlayer::sendMessageFromRace($raceID, $player->getGameID(), $accountID, $message, $expireTime);
+						foreach ($playerIDs as $playerID) {
+							$query .= '(' . $db2->escapeNumber($playerID) . ',' . $db2->escapeNumber($player->getGameID()) . ',' . $db2->escapeNumber($raceID) . ',' . $db2->escapeNumber($expireTime) . ',' . $db2->escapeBoolean(true) . '),';
+							SmrPlayer::sendMessageFromRace($raceID, $player->getGameID(), $playerID, $message, $expireTime);
 						}
 					}
 					$db2->query(substr($query, 0, -1));

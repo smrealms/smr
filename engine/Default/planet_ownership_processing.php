@@ -12,12 +12,12 @@ if ($action == 'Take Ownership') {
 	}
 
 	// delete all previous ownerships
-	$db->query('UPDATE planet SET owner_id = 0, password = NULL
-				WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
+	$db->query('UPDATE planet SET owner_player_id = 0, password = NULL
+				WHERE owner_player_id = ' . $db->escapeNumber($player->getPlayerID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
 
 	// set ownership
-	$planet->setOwnerID($player->getAccountID());
+	$planet->setOwnerPlayerID($player->getPlayerID());
 	$planet->removePassword();
 	$planet->update();
 	$player->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.');

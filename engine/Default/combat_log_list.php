@@ -29,7 +29,7 @@ switch ($action) {
 		$query = 'EXISTS(
 					SELECT 1
 					FROM player_saved_combat_logs
-					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+					WHERE player_id = ' . $db->escapeNumber($player->getPlayerID()) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND log_id = c.log_id
 				)';
@@ -45,7 +45,7 @@ if (isset($query) && $query) {
 		&& $player->hasAlliance()) {
 		$query .= ' AND (attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ') ';
 	} else {
-		$query .= ' AND (attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ') ';
+		$query .= ' AND (attacker_player_id=' . $db->escapeNumber($player->getPlayerID()) . ' OR defender_player_id=' . $db->escapeNumber($player->getPlayerID()) . ') ';
 	}
 	$page = 0;
 	if (isset($var['page'])) {
@@ -59,16 +59,16 @@ if (isset($query) && $query) {
 	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
 }
 
-function getParticipantName($accountID, $sectorID) {
+function getParticipantName($playerID, $sectorID) {
 	global $player;
-	if ($accountID == ACCOUNT_ID_PORT) {
+	if ($playerID == PLAYER_ID_PORT) {
 		return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">Port <span class="sectorColour">#' . $sectorID . '</span></a>';
 	}
-	if ($accountID == ACCOUNT_ID_PLANET) {
+	if ($playerID == PLAYER_ID_PLANET) {
 		return '<span class="yellow">Planetary Defenses</span>';
 	}
 
-	return SmrPlayer::getPlayer($accountID, $player->getGameID())->getLinkedDisplayName(false);
+	return SmrPlayer::getPlayer($playerID, $player->getGameID())->getLinkedDisplayName(false);
 }
 
 // For display purposes, describe the type of log
@@ -120,8 +120,8 @@ if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		$sectorID = $db->getInt('sector_id');
 		$logs[$db->getInt('log_id')] = array(
-			'Attacker' => getParticipantName($db->getInt('attacker_id'), $sectorID),
-			'Defender' => getParticipantName($db->getInt('defender_id'), $sectorID),
+			'Attacker' => getParticipantName($db->getInt('attacker_player_id'), $sectorID),
+			'Defender' => getParticipantName($db->getInt('defender_player_id'), $sectorID),
 			'Time' => $db->getInt('timestamp'),
 			'Sector' => $sectorID
 		);

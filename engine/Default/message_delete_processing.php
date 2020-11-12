@@ -14,11 +14,11 @@ if (Request::get('action') == 'All Messages') {
 	foreach (Request::getArray('message_id') as $id) {
 		if ($temp = @unserialize(base64_decode($id))) {
 			$db->query('SELECT message_id FROM message
-						WHERE sender_id = ' . $db->escapeNumber($temp[0]) . '
+						WHERE sender_player_id = ' . $db->escapeNumber($temp[0]) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND send_time >= ' . $db->escapeNumber($temp[1]) . '
 						AND send_time <= ' . $db->escapeNumber($temp[2]) . '
-						AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+						AND player_id = ' . $db->escapeNumber($player->getPlayerID()) . '
 						AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . ' AND receiver_delete = ' . $db->escapeBoolean(false));
 			while ($db->nextRecord()) {
 				$message_id_list[] = $db->getInt('message_id');

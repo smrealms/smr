@@ -2,8 +2,8 @@
 
 $container = create_container('skeleton.php', 'message_blacklist.php');
 
-if (isset($var['account_id'])) {
-	$blacklisted = SmrPlayer::getPlayer($var['account_id'], $player->getGameID());
+if (isset($var['player_id'])) {
+	$blacklisted = SmrPlayer::getPlayer($var['player_id'], $player->getGameID());
 } else {
 	try {
 		$blacklisted = SmrPlayer::getPlayerByPlayerName(Request::get('PlayerName'), $player->getGameID());
@@ -20,7 +20,7 @@ if ($db->nextRecord()) {
 	forward($container);
 }
 
-$db->query('INSERT INTO message_blacklist (game_id,account_id,blacklisted_id) VALUES (' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($blacklisted->getAccountID()) . ')');
+$db->query('INSERT INTO message_blacklist (game_id, player_id, blacklisted_player_id) VALUES (' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getPlayerID()) . ',' . $db->escapeNumber($blacklisted->getPlayerID()) . ')');
 
 $container['msg'] = $blacklisted->getDisplayName() . ' has been added to your blacklist.';
 forward($container);

@@ -4,22 +4,22 @@
 // including their current size and if the leader can pick teammates.
 function get_draft_teams($gameId) {
 	$db = new SmrMySqlDatabase();
-	$db->query('SELECT account_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($gameId));
+	$db->query('SELECT player_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($gameId));
 
 	// Get team leader, alliance, and alliance size
 	$teams = array();
 	while ($db->nextRecord()) {
-		$leader = SmrPlayer::getPlayer($db->getInt('account_id'), $gameId);
+		$leader = SmrPlayer::getPlayer($db->getInt('player_id'), $gameId);
 		$alliance = $leader->getAlliance();
 		if (!$leader->hasAlliance() || $alliance->getAllianceID() == NHA_ID) {
 			// Special case for leaders who haven't made their own alliance yet,
 			// or are still in the Newbie Help Alliance.
-			$teams[$leader->getAccountId()] = array('Leader'   => $leader,
-			                                        'Size'     => 0);
+			$teams[$leader->getPlayerID()] = array('Leader'   => $leader,
+			                                       'Size'     => 0);
 		} else {
-			$teams[$leader->getAccountId()] = array('Leader'   => $leader,
-			                                        'Alliance' => $alliance,
-			                                        'Size'     => $alliance->getNumMembers());
+			$teams[$leader->getPlayerID()] = array('Leader'   => $leader,
+			                                       'Alliance' => $alliance,
+			                                       'Size'     => $alliance->getNumMembers());
 		}
 	}
 
