@@ -9,9 +9,9 @@
 namespace SmrTest;
 
 use mysqli;
-use MysqlProperties;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use Smr\MysqlProperties;
 use Throwable;
 
 

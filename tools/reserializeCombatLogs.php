@@ -2,8 +2,8 @@
 
 require_once('../htdocs/config.inc');
 
-$db = new SmrMySqlDatabase();
-$db2 = new SmrMySqlDatabase();
+$db = MySqlDatabase::getInstance();
+$db2 = MySqlDatabase::getInstance(true);
 
 //$db->query('SELECT * FROM combat_logs WHERE type=\'PLAYER\' ORDER BY OCTET_LENGTH(result) DESC LIMIT 1');
 //if($db->nextRecord())
@@ -11,10 +11,10 @@ $db2 = new SmrMySqlDatabase();
 //	$x = $db->getField('result');
 //	$y = gzuncompress($x);
 //	var_dump($y);
-//	
+//
 //	$z = serialize(unserialize($y));
 //	var_dump($z);
-//	
+//
 //	var_dump(strlen($x));
 //	var_dump(strlen(gzcompress($z)));
 //	var_dump(strlen(bzcompress($z)));

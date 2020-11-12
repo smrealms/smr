@@ -89,7 +89,7 @@ try {
 	// * a u t o   n e w b i e   t u r n
 	// *
 	// *********************************
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 	$db->query('SELECT * FROM active_session ' .
 			   'WHERE last_accessed > ' . $db->escapeNumber(TIME - TIME_BEFORE_NEWBIE_TIME));
 	if ($db->getNumRows() == 0) {

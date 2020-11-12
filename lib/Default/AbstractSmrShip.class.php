@@ -44,7 +44,7 @@ abstract class AbstractSmrShip {
 	public static function getBaseShip($gameTypeID, $shipTypeID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID])) {
 			// determine ship
-			$db = new SmrMySqlDatabase();
+			$db = MySqlDatabase::getInstance();
 			$db->query('SELECT * FROM ship_type WHERE ship_type_id = ' . $db->escapeNumber($shipTypeID) . ' LIMIT 1'); //TODO add game type id
 			if ($db->nextRecord()) {
 				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] = self::buildBaseShip($db);
@@ -99,7 +99,7 @@ abstract class AbstractSmrShip {
 
 
 		// get supported hardware from db
-		$db2 = new SmrMySqlDatabase();
+		$db2 = MySqlDatabase::getInstance(true);
 		$db2->query('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
 			'WHERE ship_type_id = ' . $db2->escapeNumber($ship['ShipTypeID']) . ' ORDER BY hardware_type_id');
 
@@ -129,7 +129,7 @@ abstract class AbstractSmrShip {
 
 	public static function getAllBaseShips($gameTypeID, $forceUpdate = false) {
 		// determine ship
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC'); //TODO add game type id
 		while ($db->nextRecord()) {
 			if (!isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getInt('ship_type_id')])) {

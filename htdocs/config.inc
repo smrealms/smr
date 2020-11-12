@@ -1,4 +1,7 @@
 <?php declare(strict_types=1);
+
+use Smr\Container\DiContainer;
+
 function logException(Throwable $e) {
 	global $account, $var, $player;
 	$errorType = 'Unexpected Game Error!';
@@ -176,3 +179,6 @@ require_once('config.php');
 require_once(ROOT . 'vendor/autoload.php');
 require_once(LIB . 'autoload.inc');
 spl_autoload_register('get_class_loc');
+
+// Set up dependency injection container
+DiContainer::initializeContainer();

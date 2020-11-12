@@ -34,8 +34,8 @@ function server_msg_307($fp, $rdata)
 
 		echo_r('[SERVER_307] ' . $server . ' said that ' . $nick . ' is registered');
 
-		$db = new SmrMySqlDatabase();
-		$db2 = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
+		$db2 = MySqlDatabase::getInstance(true);
 
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 		while ($db->nextRecord()) {
@@ -65,8 +65,8 @@ function server_msg_318($fp, $rdata)
 
 		echo_r('[SERVER_318] ' . $server . ' end of /WHOIS for ' . $nick);
 
-		$db = new SmrMySqlDatabase();
-		$db2 = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
+		$db2 = MySqlDatabase::getInstance(true);
 
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered IS NULL');
 		while ($db->nextRecord()) {
@@ -85,7 +85,7 @@ function server_msg_318($fp, $rdata)
 			if ($action[0] == 'MSG_318' && $nick == $action[2]) {
 
 				echo_r('Callback found: ' . $action[3]);
-				
+
 				unset($actions[$key]);
 
 				// so we should do a callback but need to check first if the guy has registered
@@ -126,7 +126,7 @@ function server_msg_352($fp, $rdata)
 
 		echo_r('[WHO] ' . $channel . ': ' . $nick);
 
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 
 		// check if we have seen this user before
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
@@ -169,8 +169,8 @@ function server_msg_401($fp, $rdata)
 
 		echo_r('[SERVER_401] ' . $server . ' said: "No such nick/channel" for ' . $nick);
 
-		$db = new SmrMySqlDatabase();
-		$db2 = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
+		$db2 = MySqlDatabase::getInstance(true);
 
 		// get the user in question
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND signed_off = 0');

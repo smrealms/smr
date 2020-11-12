@@ -61,7 +61,7 @@ if ($db->getNumRows() > 0) {
 
 	$commentsContainer = $var;
 	$commentsContainer['body'] = 'feature_request_comments.php';
-	$db2 = new SmrMySqlDatabase();
+	$db2 = MySqlDatabase::getInstance(true);
 	$featureRequests = array();
 	while ($db->nextRecord()) {
 		$featureRequestID = $db->getInt('feature_request_id');

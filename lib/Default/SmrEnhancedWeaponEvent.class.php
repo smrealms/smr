@@ -19,7 +19,7 @@ class SmrEnhancedWeaponEvent {
 	 */
 	public static function getShopEvents(int $gameID, int $sectorID, int $locationID) : array {
 		$events = [];
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT * FROM location_sells_special WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND location_type_id = ' . $db->escapeNumber($locationID) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' AND expires > ' . $db->escapeNumber(TIME));
 		while ($db->nextRecord()) {
 			$events[] = self::getEventFromDatabase($db);
@@ -35,11 +35,11 @@ class SmrEnhancedWeaponEvent {
 	 */
 	public static function getLatestEvent(int $gameID) : SmrEnhancedWeaponEvent {
 		// First, remove any expired events from the database
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('DELETE FROM location_sells_special WHERE expires < ' . $db->escapeNumber(TIME));
 
 		// Next, check if an existing event can be advertised
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT * FROM location_sells_special WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY expires DESC LIMIT 1');
 		if ($db->nextRecord()) {
 			$event = self::getEventFromDatabase($db);
@@ -63,7 +63,7 @@ class SmrEnhancedWeaponEvent {
 		// First, randomly select a weapon type to enhance
 		$weaponTypeID = array_rand(SmrWeaponType::getAllSoldWeaponTypes($gameID));
 
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT location_type_id, sector_id FROM location JOIN location_sells_weapons USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND weapon_type_id = ' . $db->escapeNumber($weaponTypeID) . ' ORDER BY RAND() LIMIT 1');
 		$db->requireRecord();
 		$locationTypeID = $db->getInt('location_type_id');
@@ -92,7 +92,7 @@ class SmrEnhancedWeaponEvent {
 	/**
 	 * Convenience function to instantiate an event from a query result.
 	 */
-	private static function getEventFromDatabase(SmrMySqlDatabase $db) : SmrEnhancedWeaponEvent {
+	private static function getEventFromDatabase(MySqlDatabase $db) : SmrEnhancedWeaponEvent {
 		return new SmrEnhancedWeaponEvent($db->getInt('game_id'), $db->getInt('weapon_type_id'), $db->getInt('location_type_id'), $db->getInt('sector_id'), $db->getInt('expires'), $db->getBoolean('bonus_accuracy'), $db->getBoolean('bonus_damage'));
 	}
 

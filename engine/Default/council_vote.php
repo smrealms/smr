@@ -40,7 +40,7 @@ $db->query('SELECT * FROM race_has_voting
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
 if ($db->getNumRows() > 0) {
 
-	$db2 = new SmrMySqlDatabase();
+	$db2 = MySqlDatabase::getInstance(true);
 
 	while ($db->nextRecord()) {
 		$otherRaceID = $db->getInt('race_id_2');

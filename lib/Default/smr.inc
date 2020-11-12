@@ -317,7 +317,7 @@ function word_filter($string) {
 	static $words;
 
 	if (!is_array($words)) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT word_value, word_replacement FROM word_filter');
 		$words = array();
 		while ($db->nextRecord()) {

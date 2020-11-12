@@ -26,7 +26,7 @@ class ChessGame {
 	private $lastMove = null;
 
 	public static function getNPCMoveGames($forceUpdate = false) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT chess_game_id
 					FROM npc_logins
 					JOIN account USING(login)
@@ -43,7 +43,7 @@ class ChessGame {
 	}
 
 	public static function getOngoingPlayerGames(AbstractSmrPlayer $player) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . TIME . ' OR end_time IS NULL);');
 		$games = array();
 		while ($db->nextRecord()) {
@@ -53,7 +53,7 @@ class ChessGame {
 	}
 
 	public static function getAccountGames($accountID) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');
 		$games = array();
 		while ($db->nextRecord()) {
@@ -70,7 +70,7 @@ class ChessGame {
 	}
 
 	public function __construct($chessGameID) {
-		$this->db = new SmrMySqlDatabase();
+		$this->db = MySqlDatabase::getInstance();
 		$this->db->query('SELECT *
 						FROM chess_game
 						WHERE chess_game_id=' . $this->db->escapeNumber($chessGameID) . ' LIMIT 1;');
@@ -124,8 +124,8 @@ class ChessGame {
 	}
 
 	public function rerunGame($debugInfo = false) {
-		$db = new SmrMySqlDatabase();
-		$db2 = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
+		$db2 = MySqlDatabase::getInstance(true);
 
 		$db->query('UPDATE chess_game
 					SET end_time = NULL, winner_id = 0
@@ -350,7 +350,7 @@ class ChessGame {
 			throw new Exception('Start date cannot be null.');
 		}
 
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('INSERT INTO chess_game' .
 				'(start_time,end_time,white_id,black_id,game_id)' .
 				'values' .
@@ -362,7 +362,7 @@ class ChessGame {
 	}
 
 	private static function insertPieces($chessGameID, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$pieces = self::getStandardGame($chessGameID, $whitePlayer, $blackPlayer);
 		foreach ($pieces as $p) {
 			$db->query('INSERT INTO chess_game_pieces' .
@@ -530,7 +530,7 @@ class ChessGame {
 				$hasMoved[$pieceTaken->colour][ChessPiece::ROOK][$rookTaken] = true;
 			}
 		}
-		
+
 		$hasMoved[ChessPiece::PAWN] = $nextPawnMovement;
 		return array('Castling' => $castling,
 				'PieceTaken' => $pieceTaken,

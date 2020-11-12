@@ -54,7 +54,7 @@ class SmrForce {
 	}
 
 	public static function getGalaxyForces($gameID, $galaxyID, $forceUpdate = false) {
-		$db = new SmrMySqlDatabase();
+		MySqlDatabase::getInstance();
 		$db->query('SELECT sector_has_forces.*, sector_id FROM sector LEFT JOIN sector_has_forces USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyForces = [];
 		while ($db->nextRecord()) {
@@ -74,7 +74,7 @@ class SmrForce {
 	public static function getSectorForces($gameID, $sectorID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID][$sectorID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
-			$db = new SmrMySqlDatabase();
+			MySqlDatabase::getInstance();
 			$db->query('SELECT * FROM sector_has_forces WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY expire_time ASC');
 			$forces = array();
 			while ($db->nextRecord()) {
@@ -98,7 +98,7 @@ class SmrForce {
 	public static function tidyUpForces(SmrGalaxy $galaxyToTidy) {
 		if (!isset(self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()])) {
 			self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()] = true;
-			$db = new SmrMySqlDatabase();
+			MySqlDatabase::getInstance();
 			$db->query('UPDATE sector_has_forces
 						SET refresher=0,
 							expire_time = (refresh_at + if(combat_drones+mines=0,
@@ -111,7 +111,7 @@ class SmrForce {
 	}
 
 	protected function __construct($gameID, $sectorID, $ownerID, $db = null) {
-		$this->db = new SmrMySqlDatabase();
+		$this->MySqlDatabase::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND sector_id = '.$this->db->escapeNumber($sectorID) . '
 		              AND owner_id = '.$this->db->escapeNumber($ownerID);

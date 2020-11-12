@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
+namespace Smr;
 
 use Dotenv\Dotenv;
-
 
 class MysqlProperties {
 	private const CONFIG_MYSQL_HOST = "MYSQL_HOST";
@@ -18,7 +18,7 @@ class MysqlProperties {
 
 	public function __construct() {
 		$configArray = !isset($_ENV["MYSQL_CONFIG_FROM_ENVIRONMENT"])
-			? Dotenv::createArrayBacked(ROOT)->load()
+			? Dotenv::createArrayBacked(ROOT, ".env")->load()
 			: $_ENV;
 		$this->parseConfigArray($configArray);
 	}

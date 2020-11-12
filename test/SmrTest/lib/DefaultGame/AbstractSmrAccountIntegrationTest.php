@@ -4,6 +4,8 @@ namespace SmrTest\lib\DefaultGame;
 
 use AbstractSmrAccount;
 use AccountNotFoundException;
+use MySqlDatabase;
+use mysqli;
 use SmrTest\BaseIntegrationSpec;
 use SocialLogins\Facebook;
 
@@ -13,6 +15,8 @@ use SocialLogins\Facebook;
  */
 class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 	public function test_account_creation() {
+		global $phpDiContainer;
+		$phpDiContainer->set(MySqlDatabase::class, $this->createMock(MySqlDatabase::class));
 		$account = AbstractSmrAccount::createAccount("test", "test", "test@test.com", 9, 0);
 		$this->assertEquals("test", $account->getLogin());
 		$this->assertEquals("test@test.com", $account->getEmail());

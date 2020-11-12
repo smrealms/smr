@@ -11,8 +11,8 @@ function notice_nickserv_registered_user($fp, $rdata)
 
 		echo_r('[NOTICE_NICKSERV_REGISTERED_NICK] ' . $nick . ' is ' . $registeredNick);
 
-		$db = new SmrMySqlDatabase();
-		$db2 = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
+		$db2 = MySqlDatabase::getInstance(true);
 
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 		while ($db->nextRecord()) {
@@ -22,7 +22,7 @@ function notice_nickserv_registered_user($fp, $rdata)
 						registered_nick = ' . $db->escapeString($registeredNick) . '
 						WHERE seen_id = ' . $seen_id);
 		}
-		
+
 		global $actions;
 		foreach ($actions as $key => $action) {
 
@@ -30,9 +30,9 @@ function notice_nickserv_registered_user($fp, $rdata)
 			if ($action[0] == 'NICKSERV_INFO' && $nick == $action[2]) {
 
 				echo_r('Callback found: ' . $action[3]);
-				
+
 				unset($actions[$key]);
-				
+
 				eval($action[3]);
 
 			}
@@ -57,7 +57,7 @@ function notice_nickserv_unknown_user($fp, $rdata)
 		$nick = $msg[1];
 
 		echo_r('[NOTICE_NICKSERV_UNKNOWN_NICK] ' . $nick);
-		
+
 		global $actions;
 		foreach ($actions as $key => $action) {
 
@@ -65,7 +65,7 @@ function notice_nickserv_unknown_user($fp, $rdata)
 			if ($action[0] == 'NICKSERV_INFO' && $nick == $action[2]) {
 
 				echo_r('Callback found: ' . $action[3]);
-				
+
 				unset($actions[$key]);
 
 				if ($action[5] === true) {

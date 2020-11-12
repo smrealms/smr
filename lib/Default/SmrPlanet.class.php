@@ -34,7 +34,7 @@ class SmrPlanet {
 	protected $mountedWeapons;
 	protected $typeID;
 	protected $typeInfo;
-	
+
 	protected $hasChanged = false;
 	protected $hasChangedFinancial = false; // for credits, bond, maturity
 	protected $hasChangedStockpile = false;
@@ -68,7 +68,7 @@ class SmrPlanet {
 	}
 
 	public static function getGalaxyPlanets($gameID, $galaxyID, $forceUpdate = false) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT planet.*, sector_id FROM sector LEFT JOIN planet USING (game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlanets = [];
 		while ($db->nextRecord()) {
@@ -94,7 +94,7 @@ class SmrPlanet {
 			$inhabitableTime = $minTime + pow(mt_rand(45, 85), 3);
 
 			// insert planet into db
-			$db = new SmrMySqlDatabase();
+			$db = MySqlDatabase::getInstance();
 			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time, planet_type_id)
 				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ', ' . $db->escapeNumber($type) . ')');
 		}
@@ -102,7 +102,7 @@ class SmrPlanet {
 	}
 
 	public static function removePlanet($gameID, $sectorID) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID);
 		$db->query('DELETE FROM planet WHERE ' . $SQL);
 		$db->query('DELETE FROM planet_has_weapon WHERE ' . $SQL);
@@ -117,7 +117,7 @@ class SmrPlanet {
 	}
 
 	protected function __construct($gameID, $sectorID, $db = null) {
-		$this->db = new SmrMySqlDatabase();
+		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
 		if (isset($db)) {
@@ -142,7 +142,7 @@ class SmrPlanet {
 			$this->maturity = $db->getInt('maturity');
 			$this->inhabitableTime = $db->getInt('inhabitable_time');
 			$this->typeID = $db->getInt('planet_type_id');
-			
+
 			$this->typeInfo = SmrPlanetType::getTypeInfo($this->getTypeID());
 			$this->checkBondMaturity();
 		}
@@ -332,7 +332,7 @@ class SmrPlanet {
 		$this->bonds = $num;
 		$this->hasChangedFinancial = true;
 	}
-	
+
 	public function increaseBonds($num) {
 		if ($num == 0) {
 			return;
@@ -730,11 +730,11 @@ class SmrPlanet {
 		}
 		return $this->getStructureTypes($buildingTypeID)->maxAmount();
 	}
-	
+
 	public function getTypeID() {
 		return $this->typeID;
 	}
-	
+
 	public function setTypeID($num) {
 		if (isset($this->typeID) && $this->typeID == $num) {
 			return;
@@ -742,21 +742,21 @@ class SmrPlanet {
 		$this->typeID = $num;
 		$this->db->query('UPDATE planet SET planet_type_id = ' . $this->db->escapeNumber($num) . ' WHERE ' . $this->SQL);
 		$this->typeInfo = SmrPlanetType::getTypeInfo($this->getTypeID());
-		
+
 		//trim buildings first
 		foreach ($this->getBuildings() as $id => $amt) {
 			if ($this->getMaxBuildings($id) < $amt) {
 				$this->destroyBuilding($id, $amt - $this->getMaxBuildings($id));
 			}
 		}
-		
+
 		//trim excess defenses
 		$this->checkForExcessDefense();
-		
+
 		$this->hasChanged = true;
 		$this->update();
 	}
-	
+
 	public function getTypeImage() {
 		return $this->typeInfo->imageLink();
 	}
@@ -801,7 +801,7 @@ class SmrPlanet {
 		$this->setArmour($this->getArmour(true));
 		$this->delayedArmourDelta = 0;
 	}
-	
+
 	public function update() {
 		if (!$this->exists()) {
 			return;
@@ -878,7 +878,7 @@ class SmrPlanet {
 	public function getLevel() {
 		return array_sum($this->getBuildings()) / 3;
 	}
-	
+
 	public function getMaxLevel() {
 		return array_sum($this->getMaxBuildings()) / 3;
 	}
@@ -954,7 +954,7 @@ class SmrPlanet {
 		$constructionTime = ICeil($baseTime * $this->getCompletionModifier($constructionID) / $this->getGame()->getGameSpeed());
 		return $constructionTime;
 	}
-	
+
 	public function startBuilding(AbstractSmrPlayer $constructor, $constructionID) {
 		if (($message = $this->canBuild($constructor, $constructionID)) !== true) {
 			throw new Exception('Unable to start building: ' . $message);
@@ -967,7 +967,7 @@ class SmrPlanet {
 		foreach ($this->getStructureTypes($constructionID)->hardwareCost() as $hardwareID) {
 			$constructor->getShip()->setHardware($hardwareID, 0);
 		}
-	
+
 		// gets the time for the buildings
 		$timeComplete = TIME + $this->getConstructionTime($constructionID);
 		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, constructor_id, time_complete) ' .
@@ -1088,8 +1088,8 @@ class SmrPlanet {
 		}
 	}
 
-	
-	
+
+
 	public function getPlayers() {
 		return SmrPlayer::getPlanetPlayers($this->getGameID(), $this->getSectorID());
 	}
@@ -1097,7 +1097,7 @@ class SmrPlanet {
 	public function countPlayers() {
 		return count($this->getPlayers());
 	}
-	
+
 	public function hasPlayers() {
 		return count($this->getPlayers()) > 0;
 	}
@@ -1269,7 +1269,7 @@ class SmrPlanet {
 		$this->decreaseCDs($actualDamage, $delayed);
 		return $actualDamage * CD_ARMOUR;
 	}
-	
+
 	protected function doArmourDamage($damage, $delayed) {
 		$actualDamage = min($this->getArmour(true), $damage);
 		$this->decreaseArmour($actualDamage, $delayed);

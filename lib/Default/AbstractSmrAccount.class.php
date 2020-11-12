@@ -97,7 +97,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountByName($login, $forceUpdate = false) {
 		if (empty($login)) { return null; }
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAccount($db->getInt('account_id'), $forceUpdate);
@@ -108,7 +108,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountByEmail($email, $forceUpdate = false) {
 		if (empty($email)) { return null; }
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account WHERE email = ' . $db->escapeString($email) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAccount($db->getInt('account_id'), $forceUpdate);
@@ -119,7 +119,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountByDiscordId($id, $forceUpdate = false) {
 		if (empty($id)) { return null; }
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account where discord_id = ' . $db->escapeString($id) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAccount($db->getInt('account_id'), $forceUpdate);
@@ -130,7 +130,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountByIrcNick($nick, $forceUpdate = false) {
 		if (empty($nick)) { return null; }
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account WHERE irc_nick = ' . $db->escapeString($nick) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAccount($db->getInt('account_id'), $forceUpdate);
@@ -141,7 +141,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountBySocialLogin(SocialLogin $social, $forceUpdate = false) {
 		if (!$social->isValid()) { return null; }
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account JOIN account_auth USING(account_id)
 		            WHERE login_type = '.$db->escapeString($social->getLoginType()) . '
 		              AND auth_key = '.$db->escapeString($social->getUserID()) . ' LIMIT 1');
@@ -157,7 +157,7 @@ abstract class AbstractSmrAccount {
 			// Will throw if referral account doesn't exist
 			SmrAccount::getAccount($referral);
 		}
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 		$db->query('INSERT INTO account (login, password, email, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
 			$db->escapeString($login) . ', ' . $db->escapeString($passwordHash) . ', ' . $db->escapeString($email) . ', ' .
@@ -178,7 +178,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	protected function __construct($accountID) {
-		$this->db = new SmrMySqlDatabase();
+		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID);
 		$this->db->query('SELECT * FROM account WHERE ' . $this->SQL . ' LIMIT 1');
 
@@ -202,7 +202,7 @@ abstract class AbstractSmrAccount {
 			$this->passwordReset = $row['password_reset'];
 			$this->useAJAX = $this->db->getBoolean('use_ajax');
 			$this->mailBanned = (int)$row['mail_banned'];
-			
+
 			$this->friendlyColour = $row['friendly_colour'];
 			$this->neutralColour = $row['neutral_colour'];
 			$this->enemyColour = $row['enemy_colour'];
@@ -602,7 +602,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public static function doMessageSendingToBox($senderID, $boxTypeID, $message, $gameID = 0) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		// send him the message
 		$db->query('INSERT INTO message_boxes
 			(box_type_id,game_id,message_text,
@@ -1065,7 +1065,7 @@ abstract class AbstractSmrAccount {
 		$time = max(TIME, $this->getMailBanned());
 		$this->setMailBanned($time + $increaseTime);
 	}
-	
+
 	public function getPermissions() {
 		if (!isset($this->permissions)) {
 			$this->permissions = array();
@@ -1166,7 +1166,7 @@ abstract class AbstractSmrAccount {
 
 		return $days;
 	}
-	
+
 	public function getFriendlyColour() {
 		return $this->friendlyColour;
 	}

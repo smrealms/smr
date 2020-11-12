@@ -16,7 +16,7 @@ class SmrInvitation {
 	private int $expires;
 
 	static public function send(int $allianceID, int $gameID, int $receiverAccountID, int $senderAccountID, int $messageID, int $expires) : void {
-		$db = new SmrMySqlDatabase();
+		MySqlDatabase::getInstance();
 		$db->query('INSERT INTO alliance_invites_player (game_id, account_id, alliance_id, invited_by_id, expires, message_id) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($receiverAccountID) . ', ' . $db->escapeNumber($allianceID) . ', ' . $db->escapeNumber($senderAccountID) . ', ' . $db->escapeNumber($expires) . ', ' . $db->escapeNumber($messageID) . ')');
 	}
 
@@ -25,7 +25,7 @@ class SmrInvitation {
 	 */
 	static public function getAll(int $allianceID, int $gameID) : array {
 		// Remove any expired invitations
-		$db = new SmrMySqlDatabase();
+		MySqlDatabase::getInstance();
 		$db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(TIME));
 
 		$db->query('SELECT * FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID));
@@ -41,7 +41,7 @@ class SmrInvitation {
 	 */
 	static public function get(int $allianceID, int $gameID, int $receiverAccountID) : SmrInvitation {
 		// Remove any expired invitations
-		$db = new SmrMySqlDatabase();
+		MySqlDatabase::getInstance();
 		$db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(TIME));
 
 		$db->query('SELECT * FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND account_id=' . $db->escapeNumber($receiverAccountID));
@@ -61,7 +61,7 @@ class SmrInvitation {
 	}
 
 	public function delete() : void {
-		$db = new SmrMySqlDatabase();
+		MySqlDatabase::getInstance();
 		$db->query('DELETE FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($this->allianceID) . ' AND game_id=' . $db->escapeNumber($this->gameID) . ' AND account_id=' . $db->escapeNumber($this->receiverAccountID));
 		$db->query('DELETE FROM message WHERE message_id=' . $db->escapeNumber($this->messageID));
 	}

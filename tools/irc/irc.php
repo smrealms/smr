@@ -78,7 +78,7 @@ require_once(TOOLS . 'chat_helpers/channel_msg_forces.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_8ball.php');
 
 // delete all seen stats that appear to be on (we do not want to take something for granted that happend while we were away)
-$db = new SmrMySqlDatabase();
+$db = MySqlDatabase::getInstance();
 $db->query('DELETE from irc_seen WHERE signed_off = 0');
 
 // just in case we need to exit for good

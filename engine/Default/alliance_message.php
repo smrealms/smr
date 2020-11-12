@@ -36,7 +36,7 @@ $query .= ' GROUP BY thread_id ORDER BY sendtime DESC';
 $db->query($query);
 $threads = array();
 if ($db->getNumRows() > 0) {
-	$db2 = new SmrMySqlDatabase();
+	$db2 = MySqlDatabase::getInstance(true);
 
 	$container = create_container('alliance_message_delete_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
@@ -52,15 +52,15 @@ if ($db->getNumRows() > 0) {
 		$thread_topics[$i] = $db->getField('topic');
 
 		$threads[$i]['Topic'] = $db->getField('topic');
-		
+
 		$db2->query('SELECT time
-					FROM player_read_thread 
+					FROM player_read_thread
 					WHERE ' . $player->getSQL() . '
 					AND alliance_id =' . $db2->escapeNumber($alliance->getAllianceID()) . '
 					AND thread_id=' . $db2->escapeNumber($threadID) . '
 					AND time>' . $db2->escapeNumber($db->getInt('sendtime')) . ' LIMIT 1');
 		$threads[$i]['Unread'] = $db2->getNumRows() == 0;
-		
+
 		// Determine the thread author display name
 		$sender_id = $db->getInt('sender_id');
 		if ($sender_id == ACCOUNT_ID_PLANET) {

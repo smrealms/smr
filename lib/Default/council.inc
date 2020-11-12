@@ -6,7 +6,7 @@ function modifyRelations($race_id_1) {
 	// Process any votes that ended prior to the start of today
 	$endtime = strtotime(date('Y-m-d'));
 
-	$db2 = new SmrMySqlDatabase();
+	MySqlDatabase::getInstance(true);
 
 	$db->query('SELECT * FROM player_votes_relation
 				WHERE time < '.$db->escapeNumber($endtime) . '
@@ -58,7 +58,7 @@ function modifyRelations($race_id_1) {
 function checkPacts($race_id_1) {
 	global $player, $db;
 
-	$db2 = new SmrMySqlDatabase();
+	MySqlDatabase::getInstance(true);
 
 	$db->query('SELECT * FROM race_has_voting
 				WHERE end_time < ' . $db->escapeNumber(TIME) . '

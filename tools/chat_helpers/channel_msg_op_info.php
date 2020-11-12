@@ -2,7 +2,7 @@
 
 function shared_channel_msg_op_info($player) {
 	// get the op from db
-	$db = new SmrMySqlDatabase();
+	MySqlDatabase::getInstance();
 	$db->query('SELECT time FROM alliance_has_op WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	if (!$db->nextRecord()) {
 		return array('Your leader has not scheduled an operation.');
@@ -17,7 +17,7 @@ function shared_channel_msg_op_info($player) {
 	// function to return op info message for each player
 	$getOpInfoMessage = function($player) use ($opTime) {
 		// have we signed up?
-		$db = new SmrMySqlDatabase();
+		MySqlDatabase::getInstance();
 		$db->query('SELECT response FROM alliance_has_op_response WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());
 		if ($db->nextRecord()) {
 			$msg = $player->getPlayerName() . ' is on the ' . $db->getField('response') . ' list.';

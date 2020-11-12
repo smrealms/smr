@@ -39,7 +39,7 @@ class SmrAlliance {
 	}
 
 	public static function getAllianceByDiscordChannel($channel, $forceUpdate = false) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT alliance_id, game_id FROM alliance JOIN game USING(game_id) WHERE discord_channel = ' . $db->escapeString($channel) . ' AND game.end_time > ' . $db->escapeNumber(time()) . ' ORDER BY game_id DESC LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAlliance($db->getInt('alliance_id'), $db->getInt('game_id'), $forceUpdate);
@@ -49,7 +49,7 @@ class SmrAlliance {
 	}
 
 	public static function getAllianceByIrcChannel($channel, $forceUpdate = false) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAlliance($db->getInt('alliance_id'), $db->getInt('game_id'), $forceUpdate);
@@ -59,7 +59,7 @@ class SmrAlliance {
 	}
 
 	public static function getAllianceByName($name, $gameID, $forceUpdate = false) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAlliance($db->getInt('alliance_id'), $gameID, $forceUpdate);
@@ -69,7 +69,7 @@ class SmrAlliance {
 	}
 
 	protected function __construct($allianceID, $gameID) {
-		$this->db = new SmrMySqlDatabase();
+		$this->db = MySqlDatabase::getInstance();
 
 		$this->allianceID = $allianceID;
 		$this->gameID = $gameID;
@@ -106,7 +106,7 @@ class SmrAlliance {
 	 * Starts alliance with "closed" recruitment (for safety).
 	 */
 	public static function createAlliance($gameID, $name) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 
 		// check if the alliance name already exists
 		$db->query('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
@@ -490,19 +490,19 @@ class SmrAlliance {
 		}
 		return $this->memberList;
 	}
-	
+
 	public function getActiveIDs() {
 		$activeIDs = array();
-		
+
 		$this->db->query('SELECT account_id
 						FROM active_session
 						JOIN player USING(account_id, game_id)
 						WHERE '.$this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(TIME - 600));
-		
+
 		while ($this->db->nextRecord()) {
 			$activeIDs[] = $this->db->getInt('account_id');
 		}
-		
+
 		return $activeIDs;
 	}
 

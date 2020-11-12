@@ -56,4 +56,4 @@ if (!empty($action)) {
 	$template->assign('Rankings', $rankings);
 }
 
-$db = new SmrMySqlDatabase();
+$db = MySqlDatabase::getInstance();

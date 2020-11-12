@@ -3,10 +3,10 @@ try {
 	require_once('../config.inc');
 	require_once(LIB . 'Default/smr.inc');
 	require_once(LIB . 'Album/album_functions.php');
-	
+
 	// database object
-	$db = new SmrMySqlDatabase();
-	$db2 = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
+	$db2 = MySqlDatabase::getInstance(true);
 	?>
 	<!DOCTYPE html>
 	<html>
@@ -17,7 +17,7 @@ try {
 	<meta http-equiv="pragma" content="no-cache">
 	</head>
 	<body>
-	
+
 	<table class="center" width="850" border="0" cellpadding="0" cellspacing="0" >
 	<tr>
 	<td colspan="2"></td>
@@ -27,7 +27,7 @@ try {
 	<table width="750" border="0" cellspacing="0" cellpadding="0">
 	<tr>
 	<td>
-	
+
 	<table cellspacing="0" cellpadding="0" border="0" width="700">
 	<tr><td class="center" colspan="3"><h1>Space Merchant Realms - Photo Album</h1></td></tr>
 	<tr>
@@ -42,30 +42,30 @@ try {
 	<?php
 	if (!empty($_GET['nick'])) {
 		$query = urldecode($_GET['nick']);
-	
+
 		$db->query('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
 					WHERE hof_name LIKE '.$db->escapeString($query . '%') . ' AND
 						  approved = \'YES\'
 					ORDER BY hof_name');
-	
+
 		if ($db->getNumRows() > 1) {
 			$db2->query('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
 					WHERE hof_name = '.$db->escapeString($query) . ' AND
 						  approved = \'YES\'
 					ORDER BY hof_name');
-			
+
 			if ($db2->nextRecord()) {
 				album_entry($db2->getInt('album_id'));
 			} else {
 				// get all id's and build array
 				$album_ids = array();
-		
+
 				while ($db->nextRecord()) {
 					$album_ids[] = $db->getInt('album_id');
 				}
-		
+
 				// double check if we have id's
 				if (count($album_ids) > 0) {
 					search_result($album_ids);
@@ -73,7 +73,7 @@ try {
 					main_page();
 				}
 			}
-	
+
 		} elseif ($db->getNumRows() == 1) {
 			if ($db->nextRecord()) {
 				album_entry($db->getInt('album_id'));

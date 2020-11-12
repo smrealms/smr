@@ -3,7 +3,7 @@ $template->assign('PageTopic', 'Voting');
 
 $db->query('SELECT * FROM voting ORDER BY end DESC');
 if ($db->getNumRows() > 0) {
-	$db2 = new SmrMySqlDatabase();
+	$db2 = MySqlDatabase::getInstance(true);
 	$votedFor = array();
 	$db2->query('SELECT * FROM voting_results WHERE account_id = ' . $db2->escapeNumber($account->getAccountID()));
 	while ($db2->nextRecord()) {

@@ -32,4 +32,4 @@ while ($db->nextRecord()) {
 }
 $template->assign('Players', $players);
 
-$db = new SmrMySqlDatabase();
+$db = MySqlDatabase::getInstance();

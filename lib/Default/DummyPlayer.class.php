@@ -27,61 +27,61 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$this->lastPort					= 0;
 		$this->bank						= 0;
 		$this->zoom						= 0;
-		
+
 		$this->personalRelations = array();
 		$this->bounties = array();
 	}
-	
+
 	protected function getPersonalRelationsData() {
 	}
-	
+
 	protected function getHOFData() {
 	}
-	
+
 	protected function getBountiesData() {
 	}
-	
+
 	public function killPlayer($sectorID) {
 		$this->setSectorID(1);
 		$this->setDead(true);
 		$this->getShip()->getPod();
 	}
-	
+
 	public function setAllianceID($ID) {
 		if($this->allianceID == $ID)
 			return;
 		$this->allianceID=$ID;
 	}
-	
+
 	public function &killPlayerByPlayer(AbstractSmrPlayer $killer) {
 		$this->killPlayer($this->getSectorID());
 	}
-	
+
 	public function &killPlayerByForces(SmrForce $forces) {
 	}
-	
+
 	public function &killPlayerByPort(SmrPort $port) {
 	}
-	
+
 	public function &killPlayerByPlanet(SmrPlanet $planet) {
 	}
-	
+
 	public function getShip() {
 		return DummyShip::getCachedDummyShip($this);
 	}
-	
+
 	public function cacheDummyPlayer() {
 		$this->getShip()->cacheDummyShip();
 		$cache = serialize($this);
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('REPLACE INTO cached_dummys ' .
 					'(type, id, info) ' .
-					'VALUES (\'DummyPlayer\', '.$db->escapeString($this->getPlayerName()).', '.$db->escapeString($cache).')');	
+					'VALUES (\'DummyPlayer\', '.$db->escapeString($this->getPlayerName()).', '.$db->escapeString($cache).')');
 		 unserialize($cache);
 	}
-	
+
 	public static function &getCachedDummyPlayer($name) {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT info FROM cached_dummys
 					WHERE type = \'DummyPlayer\'
 						AND id = ' . $db->escapeString($name) . ' LIMIT 1');
@@ -94,9 +94,9 @@ class DummyPlayer extends AbstractSmrPlayer {
 			return $return;
 		}
 	}
-	
+
 	public static function getDummyPlayerNames() {
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT id FROM cached_dummys
 					WHERE type = \'DummyPlayer\'');
 		$dummyNames = array();

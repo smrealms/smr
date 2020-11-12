@@ -2,7 +2,7 @@
 $variable = SmrSession::getRequestVar('variable');
 $type = SmrSession::getRequestVar('type');
 
-$db2 = new SmrMySqlDatabase();
+$db2 = MySqlDatabase::getInstance(true);
 
 $container = create_container('skeleton.php', 'ip_view.php');
 $template->assign('BackHREF', SmrSession::getNewHREF($container));

@@ -16,7 +16,7 @@ if ($db->nextRecord()) {
 	$template->assign('LowestAlign', $db->getInt('min_alignment'));
 	$template->assign('HighestKills', $db->getInt('max_kills'));
 }
-	
+
 $db->query('SELECT count(*) num_alliance FROM alliance WHERE game_id = ' . $gameID);
 if ($db->nextRecord()) {
 	$template->assign('TotalAlliances', $db->getInt('num_alliance'));
@@ -44,7 +44,7 @@ if ($db->getNumRows() > 0) {
 }
 
 function allianceTopTen($gameID, $field) {
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance(true);
 	$db->query('SELECT alliance_id, SUM(' . $field . ') amount
 				FROM alliance
 				LEFT JOIN player USING (game_id, alliance_id)

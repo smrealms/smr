@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Container\DiContainer;
+
 if (!defined('USING_AJAX')) {
 	define('USING_AJAX', false);
 }
@@ -152,7 +154,7 @@ class SmrSession {
 		}
 
 		// Initialize the db connector here, since `init` is always called
-		self::$db = new SmrMySqlDatabase();
+		self::$db = DiContainer::get(MySqlDatabase::class);
 
 		// now try the cookie
 		if (isset($_COOKIE['session_id']) && strlen($_COOKIE['session_id']) === 32) {

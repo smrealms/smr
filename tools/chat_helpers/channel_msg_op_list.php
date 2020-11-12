@@ -2,7 +2,7 @@
 
 function shared_channel_msg_op_list($player) {
 	// get the op info from db
-	$db = new SmrMySqlDatabase();
+	MySqlDatabase::getInstance();
 	$db->query('SELECT 1
 				FROM alliance_has_op
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '

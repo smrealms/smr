@@ -29,4 +29,4 @@ while ($db->nextRecord()) {
 }
 $template->assign('Rows', $rows);
 
-$db = new SmrMySqlDatabase();
+$db = MySqlDatabase::getInstance();

@@ -42,7 +42,7 @@ try {
 	}
 
 	// db object
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 	$login = trim(Request::get('login'));
 	$password = trim(Request::get('password'));
 	if (strstr($login, '\'')) {

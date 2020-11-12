@@ -18,7 +18,7 @@ $db->query('SELECT * FROM anon_bank
 			AND game_id=' . $db->escapeNumber($player->getGameID()));
 
 $ownedAnon = [];
-$db2 = new SmrMySqlDatabase();
+$db2 = MySqlDatabase::getInstance(true);
 while ($db->nextRecord()) {
 	$anon = [];
 	$anon['anon_id'] = $db->getInt('anon_id');
@@ -33,7 +33,7 @@ while ($db->nextRecord()) {
 	} else {
 		$anon['last_transaction'] = 'No transactions';
 	}
-	
+
 	$container['account_num'] = $anon['anon_id'];
 	$container['password'] = $anon['password'];
 	$anon['href'] = SmrSession::getNewHREF($container);

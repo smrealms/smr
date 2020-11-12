@@ -94,4 +94,4 @@ while ($db->nextRecord()) {
 $template->assign('AllianceKills', $allianceKills);
 
 //to stop errors on the following scripts
-$db = new SmrMySqlDatabase();
+$db = MySqlDatabase::getInstance();

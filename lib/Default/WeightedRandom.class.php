@@ -12,17 +12,17 @@
  */
 class WeightedRandom {
 	protected static $CACHE_RANDOMS = array();
-	
+
 	const WEIGHTING_CHANGE = 50; // as a percent
-	
+
 	protected $db;
-	
+
 	protected $gameID;
 	protected $accountID;
 	protected $type;
 	protected $typeID;
 	protected $weighting;
-	
+
 	protected $hasChanged = false;
 
 	public static function getWeightedRandom($gameID, $accountID, $type, $typeID, $forceUpdate = false) {
@@ -35,7 +35,7 @@ class WeightedRandom {
 	public static function getWeightedRandomForPlayer(AbstractSmrPlayer $player, $type, $typeID, $forceUpdate = false) {
 		return self::getWeightedRandom($player->getGameID(), $player->getAccountID(), $type, $typeID, $forceUpdate);
 	}
-	
+
 	public static function saveWeightedRandoms() {
 		foreach (self::$CACHE_RANDOMS as $gameRandoms) {
 			foreach ($gameRandoms as $accountRandoms) {
@@ -47,14 +47,14 @@ class WeightedRandom {
 			}
 		}
 	}
-	
+
 	protected function __construct($gameID, $accountID, $type, $typeID) {
 		$this->gameID = $gameID;
 		$this->accountID = $accountID;
 		$this->type = $type;
 		$this->typeID = $typeID;
-		
-		$this->db = new SmrMySqlDatabase();
+
+		$this->MySqlDatabase::getInstance();
 		$this->db->query('SELECT weighting FROM weighted_random WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND account_id = ' . $this->db->escapeNumber($accountID) . ' AND type = ' . $this->db->escapeString($type) . ' AND type_id = ' . $this->db->escapeNumber($typeID) . ' LIMIT 1');
 		if ($this->db->nextRecord()) {
 			$this->weighting = $this->db->getInt('weighting');
@@ -62,23 +62,23 @@ class WeightedRandom {
 			$this->weighting = 0;
 		}
 	}
-	
+
 	public function getGameID() {
 		return $this->gameID;
 	}
-	
+
 	public function getAccountID() {
 		return $this->accountID;
 	}
-	
+
 	public function getType() {
 		return $this->type;
 	}
-	
+
 	public function getTypeID() {
 		return $this->typeID;
 	}
-	
+
 	public function getWeighting() {
 		return $this->weighting;
 	}
@@ -105,7 +105,7 @@ class WeightedRandom {
 		$this->hasChanged = true;
 		return $success;
 	}
-	
+
 	public function update() {
 		if ($this->hasChanged === true) {
 			$this->db->query('REPLACE INTO weighted_random (game_id,account_id,type,type_id,weighting)

@@ -23,7 +23,7 @@ try {
 
 	// Is the player allowed to get free turns from this link right now?
 	// If player clicked a valid free turns link, they have `turns_claimed=false`
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 	$db->query('SELECT timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountId) . ' AND link_id=' . $db->escapeNumber($linkId) . ' AND turns_claimed=' . $db->escapeBoolean(false) . ' LIMIT 1');
 
 	if ($db->nextRecord()) {

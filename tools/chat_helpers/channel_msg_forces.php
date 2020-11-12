@@ -3,7 +3,7 @@
 require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
 
 function shared_channel_msg_forces($player, $option) {
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 	if (empty($option)) {
 		$db->query('SELECT sector_has_forces.sector_id AS sector, expire_time
 			FROM sector_has_forces

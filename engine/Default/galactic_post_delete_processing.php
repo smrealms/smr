@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-$db2 = new SmrMySqlDatabase();
+$db2 = MySqlDatabase::getInstance(true);
 if (isset($var['article'])) {
 	if (Request::get('action') == 'Yes') {
 		$db->query('DELETE FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));

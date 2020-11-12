@@ -18,7 +18,7 @@ if ($db->nextRecord()) {
 	$template->assign('OpTime', $db->getInt('time'));
 
 	// Has player responded yet?
-	$db2 = new SmrMySqlDatabase();
+	$db2 = MySqlDatabase::getInstance(true);
 	$db2->query('SELECT response FROM alliance_has_op_response WHERE alliance_id=' . $db2->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL() . ' LIMIT 1');
 
 	$response = $db2->nextRecord() ? $db2->getField('response') : null;

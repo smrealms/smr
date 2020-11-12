@@ -2,7 +2,7 @@
 
 function get_seed_message($player) {
 	// get a list of seedlist sectors that the player hasn't seeded
-	$db = new SmrMySqlDatabase();
+	MySqlDatabase::getInstance();
 	$db->query('SELECT sector_id
 		FROM alliance_has_seedlist
 		WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
@@ -28,7 +28,7 @@ function get_seed_message($player) {
 
 function shared_channel_msg_seed($player) {
 	// Check to see how many sectors are in the seedlist
-	$db = new SmrMySqlDatabase();
+	MySqlDatabase::getInstance();
 	$db->query('SELECT count(*)
 		FROM alliance_has_seedlist
 		WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '

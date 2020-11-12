@@ -2,7 +2,7 @@
 
 function get_seedlist($player) {
 	// Return the seedlist
-	$db = new SmrMySqlDatabase();
+	MySqlDatabase::getInstance();
 	$db->query('SELECT sector_id FROM alliance_has_seedlist
 						WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 							AND game_id = ' . $db->escapeNumber($player->getGameID()));
@@ -50,7 +50,7 @@ function shared_channel_msg_seedlist_add($player, $sectors) {
 	$currentSeedlist = get_seedlist($player);
 	$initSizeSeedlist = count($currentSeedlist);
 
-	$db = new SmrMySqlDatabase();
+	MySqlDatabase::getInstance();
 	foreach ($sectors as $sector) {
 		// check if the sector is a part of the game
 		$db->query('SELECT sector_id
@@ -103,7 +103,7 @@ function shared_channel_msg_seedlist_del($player, $sectors) {
 	}
 
 	// remove sectors from the db
-	$db = new SmrMySqlDatabase();
+	MySqlDatabase::getInstance();
 	$db->query('DELETE FROM alliance_has_seedlist
 				WHERE alliance_id = ' . $player->getAllianceID() . '
 					AND game_id = ' . $player->getGameID() . '

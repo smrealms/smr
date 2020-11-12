@@ -2,9 +2,9 @@
 
 function echo_nav($topic_id) {
 	// database object
-	$db = new SmrMySqlDatabase();
-	$db2 = new SmrMySqlDatabase();
-	$db3 = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
+	$db2 = MySqlDatabase::getInstance(true);
+	$db3 = MySqlDatabase::getInstance(true);
 
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$db->escapeNumber($topic_id));
@@ -100,7 +100,7 @@ function echo_nav($topic_id) {
 
 function echo_content($topic_id) {
 	// database object
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$topic_id);
@@ -120,7 +120,7 @@ function echo_content($topic_id) {
 
 function echo_subsection($topic_id) {
 	// database object
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 	$return='';
 	// check if there are subsections
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$db->escapeNumber($topic_id).' ORDER BY order_id');
@@ -139,7 +139,7 @@ function echo_subsection($topic_id) {
 function echo_menu($topic_id) {
 	$return='';
 	// database object
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$db->escapeNumber($topic_id).' ORDER BY order_id');
 	if ($db->getNumRows()) {
@@ -158,7 +158,7 @@ function echo_menu($topic_id) {
 }
 
 function get_numbering($topic_id) {
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$db->escapeNumber($topic_id));
 	if ($db->nextRecord()) {

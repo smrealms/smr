@@ -45,4 +45,4 @@ if (!isset($var['stat'])) {
 	$template->assign('Rankings', $rankings);
 }
 
-$db = new SmrMySqlDatabase();
+$db = MySqlDatabase::getInstance();

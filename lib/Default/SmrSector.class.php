@@ -37,7 +37,7 @@ class SmrSector {
 
 	public static function getGalaxySectors($gameID, $galaxyID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID])) {
-			$db = new SmrMySqlDatabase();
+			$db = MySqlDatabase::getInstance();
 			$db->query('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id=' . $db->escapeNumber($galaxyID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
 			while ($db->nextRecord()) {
@@ -51,7 +51,7 @@ class SmrSector {
 
 	public static function getLocationSectors($gameID, $locationTypeID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID])) {
-			$db = new SmrMySqlDatabase();
+			$db = MySqlDatabase::getInstance();
 			$db->query('SELECT * FROM location JOIN sector USING (game_id, sector_id) WHERE location_type_id = ' . $db->escapeNumber($locationTypeID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
 			while ($db->nextRecord()) {
@@ -93,7 +93,7 @@ class SmrSector {
 	}
 
 	protected function __construct($gameID, $sectorID, $create = false, $db = null) {
-		$this->db = new SmrMySqlDatabase();
+		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
 		// Do we already have a database query for this sector?
@@ -815,7 +815,7 @@ class SmrSector {
 		}
 		$otherPlayers = $this->getOtherTraders($player);
 		foreach ($otherPlayers as $otherPlayer) {
-			if (!$player->traderNAPAlliance($otherPlayer) 
+			if (!$player->traderNAPAlliance($otherPlayer)
 				&& !$otherPlayer->hasNewbieTurns()
 				&& !$otherPlayer->hasFederalProtection()) {
 				return true;
@@ -859,7 +859,7 @@ class SmrSector {
 		}
 		$otherPlayers = $this->getOtherTraders($player);
 		foreach ($otherPlayers as $otherPlayer) {
-			if (!$player->traderNAPAlliance($otherPlayer) 
+			if (!$player->traderNAPAlliance($otherPlayer)
 				&& ($otherPlayer->hasNewbieTurns() || $otherPlayer->hasFederalProtection())) {
 				return true;
 			}

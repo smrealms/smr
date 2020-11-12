@@ -48,7 +48,7 @@ $container['game_id'] = $game->getGameID();
 forward($container);
 
 function createNHA($gameID) {
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 
 	// create the Newbie Help Alliance
 	$db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`, recruiting) VALUES
@@ -58,9 +58,9 @@ function createNHA($gameID) {
 	$alliance->createDefaultRoles();
 	$alliance->setDiscordServer(DISCORD_SERVER_ID);
 	$alliance->update();
-	
+
 	// NHA default topics
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 1, \'Read this first!\')');
 	$text = 'This alliance message board contains pretty much everything you need to know to get going in the game, and hopefully learn some of the skills you will need to do well and stay alive. Here are some basic tips that you should start thinking about right from the start, all of which are dealt with in more detail elsewhere on the message board:<br />
 	<br />
@@ -74,7 +74,7 @@ function createNHA($gameID) {
 	<br />
 	8) Most of all - have fun out there!';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 1, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 2, \'What the Newbie Help Alliance (NHA) can do for you\')');
 	$text = 'There are a number of ways this alliance can help you as a new player, and you are welcome to make use of as many or as few of these as you wish:<br />
 	<br />
@@ -88,7 +88,7 @@ function createNHA($gameID) {
 	<br />
 	5) Newbie Help Leader will work with each of you individually on specific questions and game goals if you want. If resources allow it (I am dependent on my own trading income for cash) I try to reward players for achieving the game goals they work towards. I also try to make sure that members have at least a mid-level tradeship after they have been killed, although I try to make sure that they have learned from their mistakes before buying replacement ships (to be fair to the rest of the players in the game, you can no longer get cash or new ships after reaching fledgling status, although you are welcome to stay in the alliance as long as you like).';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 2, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 3, \'Turns\')');
 	$text = 'Many of the basic actions performed in SMR cost turns, the most common examples being moving, trading &amp; attacking. One of the keys to success in the game is good turn management, no matter what you are busing the turns to accomplish. If you are a trader, you want to get as much cash and xp as possible per turn used. If you are a hunter, you want to spend as many turns as possible efficiently locating targets and getting kills, and as few as possible chasing traders around without getting the final trigger shot off. In an alliance, you will often be expected to save turns for op\'s, where it is often crucial to have plenty of alliance members show up with plenty of turns.<br />
 	<br />
@@ -96,7 +96,7 @@ function createNHA($gameID) {
 	<br />
 	A good way to get a few extra turns and help the game at the same time is to click on the voting links at the bottom of your screen. Voting for SMR helps our rankings, which brings more players to the game - making it better for all of us.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 3, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 4, \'How to trade\')');
 	$text = 'In SMR, trading is the easiest and most fundamental way to accumulate both cash and experience points. The basic principles of trading are easy, but getting really good at it takes time and experience.<br />
 	<br />
@@ -110,7 +110,7 @@ function createNHA($gameID) {
 	<br />
 	One of the major contributing factors to how well you can trade is the ship you are using. Profit and experience depend on the number of goods you are able to trade which depends in turn on the number of cargo holds you have and the speed of your ship. A general guide to how efficient a tradeship is is to multiply the number of holds by the ship speed to give you the trade potential. It is important to note, however, that trade potential is not the only important factor in choosing a tradeship. For example, the planetary super freighter is a very efficient trader with good defenses but is very slow and therefore very inefficient if you have to travel a lot between traderoutes and parking spots; whereas the Interstellar trader has pretty good trade potential and a jump drive to allow you to travel easily but has very weak defenses and is easily killed.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 4, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 5, \'Safe trading\')');
 	$text = 'This topic is extensive, and there is no substitute for playing the game, probably dying a few times, and learning through experience. However, it doesn\'t hurt to keep a few tips and tricks in mind:<br />
 	<br />
@@ -126,7 +126,7 @@ function createNHA($gameID) {
 	<br />
 	5) Use local map. It can sometimes be useful to enter your port sectors using local map, especially if you suspect there may be trouble close by. This allows you to see ships sitting in neighbouring sectors waiting to ambush you, but it only works if you have a scanner.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 5, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 6, \'Get a scanner\')');
 	$text = ' 	If your ship can equip with a scanner, then get one and learn how to use it. Scanners are very useful for moving around safely and for gathering information about local sectors. Some examples:<br />
 	<br />
@@ -136,24 +136,24 @@ function createNHA($gameID) {
 	<br />
 	Scanners will give you force readings. Scanning a neighbouring sector will tell you the total number of forces in the sector (scouts scan as 1, drones as 2, mines as 3). This allows you to avoid sectors with heavy force scans (which usually means a lot of mines) when navigating.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 6, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 7, \'Logging off safely\')');
 	$text = 'Before logging off, it is very important to ALWAYS check that your are as safe as you can be. Until you join a major alliance, you should all be parking safely in federally protected space every time you log off (sectors with a "Federal Beacon"). Before leaving SMR, ALWAYS check your main screen protection message and/or click the "Trader" link to make sure you are in fact protected.<br />
 	<br />
 	The two things that can prevent you from having federal protection are carrying illegal goods (slaves, weapons or narcotics) or having an attack rating that is too high. At neutral alignment, that is +/-149, you can park safely with an attack rating of 3 or less. The attack rating you can park with increases with increasing alignment and decreases with decreasing alignment.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 7, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 8, \'Merchant\\\'s Guide to the Universe\')');
 	$text = 'MGU, as everyone calls it, is an extremely valuable tool to use alongside SMR. Details on how to get the software (as well as instructions and discussions) can be found on the SMR Wiki at https://wiki.smrealms.de/tools/mgu.<br />
 	<br />
 	Basically, after you have installed MGU, you need to download your game maps using the link on the left side of the SMR page, and save them into your MGU directory. From MGU, you can then open the game maps and access the map information to do may useful things. MGU functions include things like finding traderoutes (listed by experience or cash), finding locations, plotting arming routes, finding safe course plots, etc.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 8, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-		
+
 // remove newbie gals
 //	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 9, \'Racial galaxies\')');
 //	$text = ' 	As long as you are ranked newbie or beginner, players ranked fledgling or above cannot see you in the racial galaxies. This makes these galaxies considerably safer for you, and I recommend avoiding too much time spent outside them.';
 //	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 9, 1, '.$db->escapeString($text).', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 10, \'Respect for other players\')');
 	$text = 'SMR has a very active and social player community, and one thing that will get noticed is how you treat your fellow players. If you send polite messages to other players asking for advice or just to make some contacts, they\'ll remember your name, maybe mention you to their teammates, and you have taken the first step to becoming a respected player. However, if you, for example, react to being killed (it happens to everyone, get used to it) by sending an abusive and angry message then you will quickly lose the respect of your fellow players.<br />
 	<br />
@@ -161,22 +161,22 @@ function createNHA($gameID) {
 	<br />
 	There are all kinds of ways to play and enjoy this game, different players choose to emphasize different aspects of gameplay - but whatever choices you make, the bottom line is that if you treat your fellow players (both allies and enemies) with respect, then they will respect you.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 10, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-		
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 11, \'Talk to the players\')');
 	$text = 'SMR has a very active community, and it is always a good idea to talk to the other players. You can do this in the #smr chatroom, or by messaging them ingame. Most players will be happy to talk to you or help you if you send them polite messages.<br />
 	<br />
 	It is also a good idea to talk to veteran players, especially alliance leaders, about their alliances and what they look for in their team members. You probably won\'t be asked to join a major alliance right away, but many of them have training alliances and they are always looking for active players who are willing to learn and contribute to an alliance.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 11, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 12, \'The Webboard\')');
 	$text = 'The SMR webboard (often referred to simply as the WB) is full of all kinds of advice and discussions, and I recommend stopping by to take a look every so often. It will all seem a bit much at first, but start with the sections that seem most useful to you and you will quickly learn to recognize what is important and what is not.<br />
 	<br />
 	You should also contribute to the webboard if you have an opinion or something you feel needs discussed, but please use the search function before starting new topics to make sure you are not repeating what someone else has posted somewhere else.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 12, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
-	
-	
-		
+
+
+
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 13, \'Alignment\')');
 	$text = ' 	Alignment has a couple of functions, the main ones being for trading purposes and determining which restricted ships and weapons you can buy.<br />
 	<br />
@@ -186,7 +186,7 @@ function createNHA($gameID) {
 	<br />
 	Alignment also affects the attack ratings you can have and still be federally protected in fed space. At neutral alignment you can park with an attack rating of 3, and the protected rating goes up 1 for every +150 alignment and down 1 for every -150 alignment. You are always protected with an attack rating of zero.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 13, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 14, \'Watching the news and CPL\')');
 	$text = 'Whether you are a trader or a hunter, it is very valuable to know as much as possible about who is currently active in the game, and where they might be. Two of the resources you need to learn to use, but also know the limitations of, are the news and the current player list (CPL).<br />
 	<br />
@@ -194,7 +194,7 @@ function createNHA($gameID) {
 	<br />
 	The CPL will let you know who has recently accessed the database, and also how many players are "lurking" (logged into the game, but not moving). It is a good idea to check the CPL for hunters you believe are a threat to you before you trade, and also every so often while you trade (especially if you are trading over a scout drone).';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 14, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 15, \'IRC chat\')');
 	$text = ' 	It is very helpful to learn to use IRC chat often while playing this game. The first step is to simply use the IRC chat link on the left of your screen and just spend some time in the #smr room getting to know some of the players. This is also a good time to ask questions - not just about technical or tactical aspects of the game, but about what the players like about the game, about the alliances, about pretty much anything. Getting to know the players and the community is part of getting to know SMR.<br />
 	<br />
@@ -202,7 +202,7 @@ function createNHA($gameID) {
 	<br />
 	In time, if you are able to do so, it is useful to install an IRC client on the computer(s) you use. mIRC is free and works well. If you have trouble getting your IRC client to work, there are instructions and help to be found on the webboard.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 15, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 16, \'Avoiding mines\')');
 	$text = 'Enemy mines are something you will encounter on a regular basis in SMR, and there are a couple of things that can help prevent you dying to them.<br />
 	<br />
@@ -214,11 +214,11 @@ function createNHA($gameID) {
 	<br />
 	4) Use your maps. If you encounter heavily mined sectors, retreat to safety, then take the time to look carefully at your maps to see if the area you were in is close to something an alliance would want to protect (usually a galaxy warp or a Combat Accessories shop). Then plan a new route avoiding this area.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 16, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 17, \'Port raiding\')');
 	$text = 'It\'s simple - don\'t do it! Raiding small ports will gain you nothing and will often get you killed, and raiding big ports is impossible without a well-armed fleet of warships.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 17, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 18, \'Operations guide\')');
 	$text = ' 	http://smrcnn.smrealms.de/viewtopic.php?t=3922<br />
 	<br />
@@ -226,13 +226,13 @@ function createNHA($gameID) {
 	<br />
 	The link I posted here is a rough guide to what you might expect, and what will be expected of you, in alliance op\'s.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 18, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 19, \'Multiple accounts\')');
 	$text = 'Multiple accounts are NOT permitted in SMR. The game has admins who actively look for multiple accounts and suspicious activity. If you are caught playing more than one account, you risk losing all your accumulated stats and being banned from the game.<br />
 	<br />
 	One of the results of this strict policy on multiple accounts is that you should try to avoid logging into your account from any computer also used by other SMR players. Even though you are not actually playing more than one account, it can seem as though you are when the connection logs are checked.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 19, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 20, \'Moving on to a new alliance\')');
 	$text = 'When you feel you are ready to move on from this alliance to a new one, it is a good idea to take the time to talk to the alliance leaders out there, When you do, don\'t be afraid to talk to the major alliances as well as the small ones - they probably won\'t offer you a spot right away, but they can give good advice and it also puts your name on their radar for future games.<br />
 	<br />
@@ -246,7 +246,7 @@ function createNHA($gameID) {
 	<br />
 	There is no right time to leave this alliance and join a new one, but I recommend that you do not jump hastily or blindly into a random small alliance. Apart from anything else, some of the small ones are made up of new players who have as little game knowledge as you and are not doing anything remotely organized or coordinated.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 20, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-			
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 21, \'Experience\')');
 	$text = 'There are many ways to play SMR, and many different aspects of the game to enjoy - but experience points are important whether you play with a high ranking as a goal in itself, or whether you see it as just another tool to help achieve other goals.<br />
 	<br />
@@ -257,7 +257,7 @@ function createNHA($gameID) {
 	2) The ability to cloak from lower ranked players.<br />
 	3) Demonstrating the ability to accumulate and keep a good experience level. This last benefit is especially important for new players since climbing the rankings and avoiding too many deaths will get you noticed.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 21, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 22, \'Ships\')');
 	$text = 'Everything you do in SMR is done while you are flying some kind of ship - it can be anything from an escape pod to a huge IkThorne mothership, but you are always the pilot of something. In addition to the neutral ships, each race also has unique ships that only race members can purchase. You can find the SMR shiplist <a href="ship_list.php" target="_blank"><b><u>here</u></b></a>.<br />
 	Additional information relating to ships can be found in the <a href="' . WIKI_URL . '" target="_blank">SMR wiki</a><br />
@@ -284,7 +284,7 @@ function createNHA($gameID) {
 	- Hardware. Most ships can use one or more hardware items, each of which adds certain capabilities to the ship. These are Scanners (see scanner thread), Cloaks (invisibility from lower ranked traders when activated), Illusion Generators (the ability to disguise your ship), Jump Drives (allows you to jump from place to place without travelling through the sectors between), and Drone Scramblers (improved defense against combat drones).<br />
 	- Restricted ships. There are restrictions on who can buy certain ships. These include racial restrictions, top racial restrictions (the top racial ships cannot be purchased until you reach fledgling status), and alignment restrictions (Underground and Federal ships require you to be evil or good respectively, Federal ships also take half damage from forces).';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 22, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 23, \'Weapons\')');
 	$text = 'SMR has a wide variety of weapons with which to arm your ships, and information on weapon capabilities can be found <a href="weapon_list.php" target="_blank"><b><u>here</b></u></a>.<br />
 	<br />
@@ -296,7 +296,7 @@ function createNHA($gameID) {
 	- Rating. There are restrictions on how many weapons of certain ratings you are allowed to arm yourself with. Weapon rating is determined by accuracy and damage, and higher is better. You are allowed up to one level 5 weapon, up to 2 level 4 weapons, and up to 3 level 3 weapons.<br />
 	- Availability.Weapon choice when arming is sometimes determined by the availability of certain weapons. Racial weapons are only available to the owner race or races that have peaceful relations with them; weapons may be sold at weapon shops that are not safely accessible; or the number of turns it would take to acquire all the weapons you would like may be too high.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 23, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(TIME) . ')');
-	
+
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 24, \'Planets and Territory\')');
 	$text = 'Except for your ship and what it carries, a planet is the only thing in SMR that you can claim for yourself or your alliance. This means that planets and planet galaxies are often the main focus of the rivalries and wars between alliances.<br />
 	<br />
