@@ -1,7 +1,5 @@
 <?php declare(strict_types=1);
 
-require_once(CONFIG . 'SmrMySqlSecrets.inc');
-
 abstract class MySqlDatabase {
 	protected static $dbConn;
 	protected static $selectedDbName;

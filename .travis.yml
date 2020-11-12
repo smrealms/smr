@@ -11,7 +11,6 @@ script:
   - composer install
   - mv .env.sample .env
   - mv config/config.specific.sample.php config/config.specific.php
-  - mv config/SmrMySqlSecrets.sample.inc config/SmrMySqlSecrets.inc
   - mv config/discord/config.specific.sample.php config/discord/config.specific.php
   - mv config/irc/config.specific.sample.php config/irc/config.specific.php
   - mv config/npc/config.specific.sample.php config/npc/config.specific.php
