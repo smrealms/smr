@@ -33,6 +33,7 @@ x-smr-common: &smr-common
     volumes:
         - ./vol_upload:/smr/htdocs/upload
         - ./config:/smr/config:ro
+        - ./.env:/smr/.env
 
 x-mysql-common: &mysql-common
     image: mysql:8.0
@@ -63,6 +64,7 @@ services:
         volumes:
             - ./vol_upload:/smr/htdocs/upload
             - ./config:/smr/config:ro
+            - ./.env:/smr/.env
             # Mount the source code instead of copying it.
             - ./admin:/smr/admin
             - ./engine:/smr/engine
