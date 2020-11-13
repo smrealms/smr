@@ -135,6 +135,11 @@ function NPCStuff() {
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
 					changeNPCLogin();
 				}
+
+				// Ensure the NPC doesn't think it's under attack at startup,
+				// since this could cause it to get stuck in a loop in Fed.
+				$player->getShip()->removeUnderAttack();
+				$player->getShip()->updateHardware();
 			}
 
 			if (!isset($TRADE_ROUTE)) { //We only want to change trade route if there isn't already one set.
