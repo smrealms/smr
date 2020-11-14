@@ -7,23 +7,21 @@ abstract class MySqlDatabase {
 	protected $dbResult = null;
 	protected $dbRecord = null;
 
-	public function __construct(MySqlProperties $mysqlProperties = null) {
+	public function __construct() {
 		if (!self::$dbConn) {
 			// Set the mysqli driver to raise exceptions on errors
 			if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
 				$this->error('Failed to enable mysqli error reporting');
 			}
-			if (!$mysqlProperties) {
-				$mysqlProperties = new MySqlProperties();
-			}
+			$mysqlProperties = new MySqlProperties();
 			self::$dbConn = new mysqli(
 				$mysqlProperties->getHost(),
 				$mysqlProperties->getUser(),
 				$mysqlProperties->getPassword(),
 				$mysqlProperties->getDatabaseName(),
 				$mysqlProperties->getPort());
+			self::$mysqlProperties = $mysqlProperties;
 			self::$selectedDbName = $mysqlProperties->getDatabaseName();
-			self::$mysqlProperties = $mysqlProperties = new MySqlProperties();
 			// Default server charset should be set correctly. Using the default
 			// avoids the additional query involved in `set_charset`.
 			$charset = self::$dbConn->character_set_name();
