@@ -24,7 +24,7 @@ ENV PATH /root/.composer/vendor/bin:$PATH
 WORKDIR "/api"
 
 # Add the phpDox configuration file
-COPY ./docs/phpdox.xml .
+COPY ./api-docs/phpdox.xml .
 
 # Mount entire source code
 # NOTE: we lose the git enricher because .git is in the .dockerignore
