@@ -6,9 +6,9 @@ abstract class MySqlDatabase {
 	protected $dbResult = null;
 	protected $dbRecord = null;
 
-	public function __construct($dbName=null, MySqlProperties $mysqlProperties=null) {
+	public function __construct($dbName = null, MySqlProperties $mysqlProperties = null) {
 		if (!self::$dbConn) {
-			if(!$mysqlProperties){
+			if (!$mysqlProperties) {
 				$mysqlProperties = new MySqlProperties();
 			}
 			// Set the mysqli driver to raise exceptions on errors
