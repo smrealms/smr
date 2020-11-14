@@ -9,7 +9,7 @@
 namespace SmrTest;
 
 use mysqli;
-use MysqlProperties;
+use MySqlProperties;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Throwable;
@@ -22,7 +22,7 @@ class BaseIntegrationSpec extends TestCase {
 	private const MYSQL_CONNECTION_RETRY_SECONDS = 5;
 
 	public static function setUpBeforeClass(): void {
-		$mysqlProperties = new MysqlProperties();
+		$mysqlProperties = new MySqlProperties();
 		if (self::$conn = self::getMysqlConnection($mysqlProperties)) {
 			// Reset environment variables for flyway. Unfortunately adding -e to the docker-compose command does not take precedence.
 			putenv("MYSQL_PORT=3306");
@@ -36,7 +36,7 @@ class BaseIntegrationSpec extends TestCase {
 		}
 	}
 
-	private static function getMysqlConnection(MysqlProperties $mysqlProperties, $attempt = 0): mysqli {
+	private static function getMysqlConnection(MySqlProperties $mysqlProperties, $attempt = 0): mysqli {
 		putenv("MYSQL_HOST=smr-mysql");
 		while ($attempt < self::MYSQL_CONNECTION_ATTEMPTS) {
 			print "#${attempt}: Attempting to connect to MySQL on " . $mysqlProperties->getHost() . ":" . $mysqlProperties->getPort() . "...\n";

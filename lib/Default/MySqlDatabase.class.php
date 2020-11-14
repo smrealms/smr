@@ -6,10 +6,10 @@ abstract class MySqlDatabase {
 	protected $dbResult = null;
 	protected $dbRecord = null;
 
-	public function __construct($dbName=null, MysqlProperties $mysqlProperties=null) {
+	public function __construct($dbName=null, MySqlProperties $mysqlProperties=null) {
 		if (!self::$dbConn) {
 			if(!$mysqlProperties){
-				$mysqlProperties = new MysqlProperties();
+				$mysqlProperties = new MySqlProperties();
 			}
 			// Set the mysqli driver to raise exceptions on errors
 			if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
