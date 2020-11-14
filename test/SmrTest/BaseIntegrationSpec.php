@@ -40,7 +40,7 @@ class BaseIntegrationSpec extends TestCase {
 		putenv("MYSQL_HOST=smr-mysql");
 		while ($attempt < self::MYSQL_CONNECTION_ATTEMPTS) {
 			print "#${attempt}: Attempting to connect to MySQL on " . $mysqlProperties->getHost() . ":" . $mysqlProperties->getPort() . "...\n";
-			$conn = @mysqli_connect(
+			$conn = mysqli_connect(
 				$mysqlProperties->getHost(),
 				$mysqlProperties->getUser(),
 				$mysqlProperties->getPassword(),
