@@ -3,28 +3,27 @@
 abstract class MySqlDatabase {
 	protected static $dbConn;
 	protected static $selectedDbName;
+	private static MySqlProperties $mysqlProperties;
 	protected $dbResult = null;
 	protected $dbRecord = null;
 
-	public function __construct($dbName = null, MySqlProperties $mysqlProperties = null) {
+	public function __construct(MySqlProperties $mysqlProperties = null) {
 		if (!self::$dbConn) {
-			if (!$mysqlProperties) {
-				$mysqlProperties = new MySqlProperties();
-			}
 			// Set the mysqli driver to raise exceptions on errors
 			if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
 				$this->error('Failed to enable mysqli error reporting');
 			}
-
-			$dbName = $dbName ?? $mysqlProperties->getDatabaseName();
+			if (!$mysqlProperties) {
+				$mysqlProperties = new MySqlProperties();
+			}
 			self::$dbConn = new mysqli(
 				$mysqlProperties->getHost(),
 				$mysqlProperties->getUser(),
 				$mysqlProperties->getPassword(),
-				$dbName,
+				$mysqlProperties->getDatabaseName(),
 				$mysqlProperties->getPort());
-			self::$selectedDbName = $dbName;
-
+			self::$selectedDbName = $mysqlProperties->getDatabaseName();
+			self::$mysqlProperties = $mysqlProperties = new MySqlProperties();
 			// Default server charset should be set correctly. Using the default
 			// avoids the additional query involved in `set_charset`.
 			$charset = self::$dbConn->character_set_name();
@@ -32,12 +31,24 @@ abstract class MySqlDatabase {
 				$this->error('Unexpected charset: ' . $charset);
 			}
 		}
+	}
 
-		// Do we need to switch databases (e.g. for compatability db access)?
-		if ($dbName != null &&self::$selectedDbName != $dbName) {
-			self::$dbConn->select_db($dbName);
-			self::$selectedDbName = $dbName;
-		}
+	/**
+	 * This method will switch the connection to the specified database.
+	 * Useful for switching back and forth between historical, and live databases.
+	 *
+	 * @param string $databaseName The name of the database to switch to
+	 */
+	public function switchDatabases(string $databaseName) {
+		self::$dbConn->select_db($databaseName);
+		self::$selectedDbName = $databaseName;
+	}
+
+	/**
+	 * Switch back to the configured live database
+	 */
+	public function switchDatabaseToLive() {
+		$this->switchDatabases(self::$mysqlProperties->getDatabaseName());
 	}
 
 	/**
