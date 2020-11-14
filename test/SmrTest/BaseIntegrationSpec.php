@@ -18,7 +18,7 @@ use Throwable;
 class BaseIntegrationSpec extends TestCase {
 	protected static mysqli $conn;
 	private static $defaultPopulatedTables = array();
-	private const MYSQL_CONNECTION_ATTEMPTS = 5;
+	private const MYSQL_CONNECTION_ATTEMPTS = 10;
 	private const MYSQL_CONNECTION_RETRY_SECONDS = 5;
 
 	public static function setUpBeforeClass(): void {
