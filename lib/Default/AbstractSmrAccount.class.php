@@ -619,19 +619,11 @@ abstract class AbstractSmrAccount {
 		return $this->account_id;
 	}
 
-	public function getOldAccountIDs() {
-		return $this->oldAccountIDs;
-	}
-
+	/**
+	 * Return the ID associated with this account in the given history database.
+	 */
 	public function getOldAccountID($dbName) {
 		return $this->oldAccountIDs[$dbName] ?? 0;
-	}
-
-	public function hasOldAccountID($dbName = false) {
-		if ($dbName === false) {
-			return count($this->getOldAccountIDs()) != 0;
-		}
-		return $this->getOldAccountID($dbName) != 0;
 	}
 
 	public function getLogin() {
