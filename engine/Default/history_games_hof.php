@@ -2,7 +2,7 @@
 
 // NOTE: this is only for history database games
 
-$db = new $var['HistoryDatabase']();
+$db->switchDatabases($var['HistoryDatabase']);
 
 $template->assign('PageTopic', 'Hall of Fame : ' . $var['game_name']);
 Menu::history_games(2);
@@ -45,4 +45,4 @@ if (!isset($var['stat'])) {
 	$template->assign('Rankings', $rankings);
 }
 
-$db = new SmrMySqlDatabase();
+$db->switchDatabaseToLive(); // restore database

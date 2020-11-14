@@ -1,0 +1,27 @@
+name: API Docs
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    name: Build and Deploy API Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+      - name: Build API Docs
+        uses: ./api-docs
+      - name: Install SSH Client
+        uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: ${{ secrets.API_DOCS_DEPLOY_KEY }}
+      - name: Publish API Docs
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          SSH: true
+          REPOSITORY_NAME: smrealms/api-docs
+          BRANCH: main
+          FOLDER: .
+          TARGET_FOLDER: docs
+          CLEAN: true

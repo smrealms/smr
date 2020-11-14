@@ -18,7 +18,7 @@ $template->assign('Min', $min);
 
 $template->assign('ShowHREF', SmrSession::getNewHREF($var));
 
-$db = new $var['HistoryDatabase']();
+$db->switchDatabases($var['HistoryDatabase']);
 $db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($var['view_game_id']) . ' AND news_id >= ' . $db->escapeNumber($min) . ' AND news_id <= ' . $db->escapeNumber($max));
 $rows = [];
 while ($db->nextRecord()) {
@@ -29,4 +29,4 @@ while ($db->nextRecord()) {
 }
 $template->assign('Rows', $rows);
 
-$db = new SmrMySqlDatabase();
+$db->switchDatabaseToLive(); // restore database

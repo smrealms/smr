@@ -9,7 +9,7 @@ $game_id = $var['view_game_id'];
 $template->assign('PageTopic', 'Old SMR Game : ' . $game_name);
 Menu::history_games(0);
 
-$db = new $var['HistoryDatabase']();
+$db->switchDatabases($var['HistoryDatabase']);
 $db->query('SELECT start_date, type, end_date, game_name, speed, game_id ' .
            'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
 $db->requireRecord();
@@ -93,5 +93,4 @@ while ($db->nextRecord()) {
 }
 $template->assign('AllianceKills', $allianceKills);
 
-//to stop errors on the following scripts
-$db = new SmrMySqlDatabase();
+$db->switchDatabaseToLive(); // restore database
