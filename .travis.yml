@@ -17,3 +17,4 @@ script:
   - docker-compose up -d mysql-integration-test
   - sleep 20
   - docker-compose run --rm flyway-integration-test
+  - composer run test
