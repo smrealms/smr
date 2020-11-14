@@ -1,0 +1,5 @@
+name: 'Build API Docs'
+description: 'Runs phpdox to build the SMR API Docs'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
