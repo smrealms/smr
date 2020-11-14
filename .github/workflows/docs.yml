@@ -17,7 +17,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.API_DOCS_DEPLOY_KEY }}
       - name: Publish API Docs
-        uses: JamesIves/github-pages-deploy-action@3.7
+        uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           SSH: true
           REPOSITORY_NAME: smrealms/api-docs
