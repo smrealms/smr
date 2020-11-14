@@ -14,4 +14,6 @@ script:
   - mv config/discord/config.specific.sample.php config/discord/config.specific.php
   - mv config/irc/config.specific.sample.php config/irc/config.specific.php
   - mv config/npc/config.specific.sample.php config/npc/config.specific.php
-  - composer run test
+  - docker-compose up -d mysql-integration-test
+  - sleep 20
+  - docker-compose run --rm flyway-integration-test

@@ -105,7 +105,7 @@ services:
     mysql-integration-test:
         <<: *mysql-common
         ports:
-            - ${MYSQL_PORT}:3306
+            - 3307:3306
 
     pma:
         image: phpmyadmin/phpmyadmin
