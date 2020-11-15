@@ -43,6 +43,6 @@ $cmd_seedlist->registerSubCommand('add', mysql_cleanup($fn_seedlist_add),
 	]);
 
 $cmd_seedlist->registerSubCommand('del', mysql_cleanup($fn_seedlist_del),
-	['description' => 'Delete space-delimited list of sectors from the seedlist',
-	 'usage' => '[sectors]',
+	['description' => 'Delete space-delimited list of sectors (or all sectors) from the seedlist',
+	 'usage' => '[sectors|all]',
 	]);
