@@ -6,8 +6,8 @@ php:
 git:
   depth: false
 script:
-  - tests/phplint.sh
-  - tests/strict_types.sh
+  - test/phplint.sh
+  - test/strict_types.sh
   - composer install
   - mv .env.sample .env
   - mv config/config.specific.sample.php config/config.specific.php
