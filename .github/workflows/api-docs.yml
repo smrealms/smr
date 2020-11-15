@@ -11,7 +11,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v2
       - name: Build API Docs
-        uses: .github/actions/api-docs
+        uses: ./.github/actions/api-docs
       - name: Install SSH Client
         uses: webfactory/ssh-agent@v0.4.1
         with:
