@@ -45,37 +45,22 @@ class MySqlProperties {
 		$config->required(self::CONFIG_MYSQL_DATABASE);
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getHost(): string {
 		return $this->host;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getUser(): string {
 		return $this->user;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getPassword(): string {
 		return $this->password;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getPort(): int {
 		return $this->port;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getDatabaseName(): string {
 		return $this->databaseName;
 	}
