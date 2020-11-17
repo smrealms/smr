@@ -46,6 +46,10 @@ RUN MODE=$([ "$PHP_DEBUG" = "0" ] && echo "production" || echo "development") &&
 	echo "Using $MODE php.ini" && \
 	tar -xOvf /usr/src/php.tar.xz php-$PHP_VERSION/php.ini-$MODE > /usr/local/etc/php/php.ini
 
+RUN if [ "$PHP_DEBUG" = "1" ] ; then pecl install xdebug-2.8.1 \
+	&& docker-php-ext-enable xdebug ; \
+	fi
+
 COPY --from=builder /smr .
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
 
@@ -59,4 +63,6 @@ RUN a2enmod headers
 # Store the git commit hash of the repo in the final image
 COPY .git/HEAD .git/HEAD
 COPY .git/refs .git/refs
-RUN cat .git/$(cat .git/HEAD | awk '{print $2}') > git-commit
+RUN REF="ref: HEAD" && \
+	while [ -n "$(echo $REF | grep ref:)" ]; do REF=$(cat ".git/$(echo $REF | awk '{print $2}')"); done && \
+	echo $REF > git-commit

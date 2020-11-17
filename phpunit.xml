@@ -9,26 +9,6 @@
 	failOnRisky="true"
 	failOnWarning="true"
 	verbose="true">
-	<php>
-		<env
-			name="MYSQL_CONFIG_FROM_ENVIRONMENT"
-			value="true" />
-		<env
-			name="MYSQL_HOST"
-			value="127.0.0.1" />
-		<env
-			name="MYSQL_USER"
-			value="smr" />
-		<env
-			name="MYSQL_PASSWORD"
-			value="smr" />
-		<env
-			name="MYSQL_PORT"
-			value="3307" />
-		<env
-			name="MYSQL_DATABASE"
-			value="smr_live" />
-	</php>
 	<testsuites>
 		<testsuite name="default">
 			<directory suffix="Test.php">test</directory>

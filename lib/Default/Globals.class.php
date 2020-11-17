@@ -535,8 +535,8 @@ class Globals {
 
 	/**
 	 * Returns an array of history databases for which we have ancient saved
-	 * game data. Array keys are database class names and values are the
-	 * columns in the `account` table with the linked historical account ID's.
+	 * game data. Array keys are database names and values are the columns in
+	 * the `account` table with the linked historical account ID's.
 	 */
 	public static function getHistoryDatabases() {
 		if (defined('HISTORY_DATABASES')) {

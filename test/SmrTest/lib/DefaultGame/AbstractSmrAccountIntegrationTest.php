@@ -14,6 +14,7 @@ use SocialLogins\Facebook;
  * @covers AbstractSmrAccount
  */
 class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
+
 	public function test_account_creation() {
 		global $phpDiContainer;
 		$phpDiContainer->set(MySqlDatabase::class, $this->createMock(MySqlDatabase::class));

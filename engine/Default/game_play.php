@@ -147,25 +147,25 @@ if ($db->getNumRows()) {
 	}
 }
 
-foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
+foreach (Globals::getHistoryDatabases() as $databaseName => $oldColumn) {
 	//Old previous games
-	$historyDB = new $databaseClassName();
-	$historyDB->query('SELECT start_date, end_date, game_name, type, speed, game_id
+	$db->switchDatabases($databaseName);
+	$db->query('SELECT start_date, end_date, game_name, type, speed, game_id
 						FROM game ORDER BY game_id DESC');
-	if ($historyDB->getNumRows()) {
-		while ($historyDB->nextRecord()) {
-			$game_id = $historyDB->getInt('game_id');
-			$index = $databaseClassName . $game_id;
+	if ($db->getNumRows()) {
+		while ($db->nextRecord()) {
+			$game_id = $db->getInt('game_id');
+			$index = $databaseName . $game_id;
 			$games['Previous'][$index]['ID'] = $game_id;
-			$games['Previous'][$index]['Name'] = $historyDB->getField('game_name');
-			$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT, $historyDB->getInt('start_date'));
-			$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT, $historyDB->getInt('end_date'));
-			$games['Previous'][$index]['Type'] = $historyDB->getField('type');
-			$games['Previous'][$index]['Speed'] = $historyDB->getFloat('speed');
+			$games['Previous'][$index]['Name'] = $db->getField('game_name');
+			$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT, $db->getInt('start_date'));
+			$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT, $db->getInt('end_date'));
+			$games['Previous'][$index]['Type'] = $db->getField('type');
+			$games['Previous'][$index]['Speed'] = $db->getFloat('speed');
 			// create a container that will hold next url and additional variables.
 			$container = create_container('skeleton.php');
 			$container['view_game_id'] = $game_id;
-			$container['HistoryDatabase'] = $databaseClassName;
+			$container['HistoryDatabase'] = $databaseName;
 			$container['game_name'] = $games['Previous'][$index]['Name'];
 
 			$container['body'] = 'history_games.php';
@@ -179,7 +179,7 @@ foreach (Globals::getHistoryDatabases() as $databaseClassName => $oldColumn) {
 		}
 	}
 }
-$db = MySqlDatabase::getInstance(); // restore database
+$db->switchDatabaseToLive(); // restore database
 
 $template->assign('Games', $games);
 

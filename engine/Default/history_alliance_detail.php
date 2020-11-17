@@ -9,7 +9,7 @@ $template->assign('BackHREF', SmrSession::getNewHREF($container));
 
 $game_id = $var['view_game_id'];
 $id = $var['alliance_id'];
-$db = new $var['HistoryDatabase']();
+$db->switchDatabases($var['HistoryDatabase']);
 $db->query('SELECT * FROM alliance WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id));
 $db->requireRecord();
 $template->assign('PageTopic', 'Alliance Roster - ' . htmlentities($db->getField('alliance_name')));
@@ -32,4 +32,4 @@ while ($db->nextRecord()) {
 }
 $template->assign('Players', $players);
 
-$db = MySqlDatabase::getInstance();
+$db->switchDatabaseToLive(); // restore database

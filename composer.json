@@ -21,18 +21,18 @@
 		}
 	},
 	"scripts": {
-		"test": "vendor/bin/phpunit test",
 		"start:dev": "docker-compose up --build -d traefik smr-dev",
-		"start:integration": [
-			"docker-compose up -d mysql-integration-test",
-			"sleep 10",
-			"docker-compose run --rm flyway-integration-test"
+		"start:integration-services": [
+			"docker-compose --env-file test.env up -d mysql-integration-test",
+			"sleep 20",
+			"docker-compose --env-file test.env run --rm flyway-integration-test"
 		],
-		"stop": [
+		"stop" : [
 			"docker-compose stop",
 			"docker-compose rm --force"
 		],
-		"rebuild": [
+		"test": "docker-compose --env-file test.env run --rm smr-integration-test",
+		"rebuild:dev": [
 			"@stop",
 			"@start:dev"
 		]
@@ -43,6 +43,6 @@
 		}
 	},
 	"require-dev": {
-		"phpunit/phpunit": "9.4.2"
+		"phpunit/phpunit": "9.4.3"
 	}
 }

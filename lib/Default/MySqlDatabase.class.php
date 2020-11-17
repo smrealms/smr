@@ -31,6 +31,23 @@ class MySqlDatabase {
 		}
 		$this->dbConn = $dbConn;
 	}
+	/**
+	 * This method will switch the connection to the specified database.
+	 * Useful for switching back and forth between historical, and live databases.
+	 *
+	 * @param string $databaseName The name of the database to switch to
+	 */
+	public function switchDatabases(string $databaseName) {
+		self::$dbConn->select_db($databaseName);
+		self::$selectedDbName = $databaseName;
+	}
+
+	/**
+	 * Switch back to the configured live database
+	 */
+	public function switchDatabaseToLive() {
+		$this->switchDatabases(self::$mysqlProperties->getDatabaseName());
+	}
 
 	/**
 	 * Returns the size of the selected database in bytes.
@@ -261,5 +278,4 @@ class MySqlDatabase {
 		}
 		return $this->escapeString(serialize($object), $quotes, $nullable);
 	}
-
 }

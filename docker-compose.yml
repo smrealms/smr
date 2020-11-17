@@ -33,7 +33,7 @@ x-smr-common: &smr-common
     volumes:
         - ./vol_upload:/smr/htdocs/upload
         - ./config:/smr/config:ro
-        - .env:/smr/.env:ro
+        - ./.env:/smr/.env
 
 x-mysql-common: &mysql-common
     image: mysql:8.0
@@ -44,27 +44,26 @@ x-mysql-common: &mysql-common
     # the runtime environment (because we can't specify build args).
     environment:
         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_USER:          ${MYSQL_USER}
-        MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
-        MYSQL_DATABASE:      ${MYSQL_DATABASE}
-        MYSQL_PORT:          ${MYSQL_PORT}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
     # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
     # which is incompatible with the way the SMR database is used.
     # Therefore, we override CMD to omit this sql mode.
-    command: ["mysqld", "--sql-mode=NO_ENGINE_SUBSTITUTION",
-              "--character-set-server=utf8",
-              "--collation-server=utf8_general_ci"]
+    command: [ "mysqld", "--sql-mode=NO_ENGINE_SUBSTITUTION",
+               "--character-set-server=utf8",
+               "--collation-server=utf8_general_ci" ]
 
 services:
     smr:
-        << : *smr-common
+        <<: *smr-common
 
     smr-dev:
-        << : *smr-common
+        <<: *smr-common
         volumes:
             - ./vol_upload:/smr/htdocs/upload
             - ./config:/smr/config:ro
-            - .env:/smr/.env:ro
+            - ./.env:/smr/.env
             # Mount the source code instead of copying it.
             - ./admin:/smr/admin
             - ./engine:/smr/engine
@@ -84,7 +83,7 @@ services:
 
     flyway: &flyway-common
         image: boxfuse/flyway:latest-alpine
-        command: -url=jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} migrate
+        command: -url=jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} migrate
         networks:
             - backend
         depends_on:
@@ -93,19 +92,37 @@ services:
             - ./db/patches:/flyway/sql:ro
 
     flyway-integration-test:
-        << : *flyway-common
+        <<: *flyway-common
         depends_on:
             - mysql-integration-test
 
     mysql:
-        << : *mysql-common
+        <<: *mysql-common
         volumes:
             - ./vol_db:/var/lib/mysql
 
+    # MySQL container with no volumes mounted for testing
     mysql-integration-test:
         <<: *mysql-common
-        ports:
-            - 3307:3306
+
+    smr-integration-test:
+        <<: *smr-common
+        command: /smr/vendor/bin/phpunit test
+        volumes:
+            - ./config:/smr/config:ro
+            - ./test.env:/smr/.env
+            - ./phpunit.xml:/smr/phpunit.xml
+            # Mount the source code instead of copying it.
+            - ./admin:/smr/admin
+            - ./engine:/smr/engine
+            - ./htdocs:/smr/htdocs
+            - ./lib:/smr/lib
+            - ./templates:/smr/templates
+            - ./test:/smr/test
+        depends_on:
+            - mysql-integration-test
+        labels:
+            - "traefik.enable=false"
 
     pma:
         image: phpmyadmin/phpmyadmin
@@ -176,7 +193,7 @@ services:
     api-docs:
         build:
             context: .
-            dockerfile: ./docs/Dockerfile
+            dockerfile: ./api-docs/Dockerfile
         networks:
             - frontend
         labels:

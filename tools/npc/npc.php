@@ -135,6 +135,11 @@ function NPCStuff() {
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
 					changeNPCLogin();
 				}
+
+				// Ensure the NPC doesn't think it's under attack at startup,
+				// since this could cause it to get stuck in a loop in Fed.
+				$player->getShip()->removeUnderAttack();
+				$player->getShip()->updateHardware();
 			}
 
 			if (!isset($TRADE_ROUTE)) { //We only want to change trade route if there isn't already one set.
@@ -153,7 +158,7 @@ function NPCStuff() {
 			}
 
 			$fedContainer = null;
-			if (isset($var) && $var['url'] == 'shop_ship_processing.php' && ($fedContainer = plotToFed($player, true)) !== true) { //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
+			if (isset($var['url']) && $var['url'] == 'shop_ship_processing.php' && ($fedContainer = plotToFed($player, true)) !== true) { //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
 				processContainer($fedContainer);
 			} elseif ($player->getShip()->isUnderAttack() === true
 				&&($player->hasPlottedCourse() === false || $player->getPlottedCourse()->getEndSector()->offersFederalProtection() === false)

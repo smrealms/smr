@@ -28,7 +28,7 @@ if (!empty($action)) {
 	$template->assign('Description', $dis);
 
 	$rankings = [];
-	$db = new $var['HistoryDatabase']();
+	$db->switchDatabases($var['HistoryDatabase']);
 	if ($from != 'alliance') {
 		$template->assign('Name', 'Sector ID');
 		$db->query('SELECT ' . $sql . ' as val, sector_id FROM ' . $from . ' WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY val DESC LIMIT 25');
@@ -56,4 +56,4 @@ if (!empty($action)) {
 	$template->assign('Rankings', $rankings);
 }
 
-$db = MySqlDatabase::getInstance();
+$db->switchDatabaseToLive(); // restore database
