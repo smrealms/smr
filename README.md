@@ -18,7 +18,6 @@ will need to create installation-specific copies of the following files:
 
 * `.env.sample` &rarr; `.env`
 * `config/config.specific.sample.php` &rarr; `config/config.specific.php`
-* `config/SmrMySqlSecrets.sample.inc` &rarr; `config/SmrMySqlSecrets.inc`
 
 For "Caretaker" (IRC) or "Autopilot" (Discord) functionality:
 * `config/irc/config.specific.sample.php` &rarr; `config/irc/config.specific.php`
@@ -182,14 +181,33 @@ Now all core/shared "Default" code should be in the abstract version, with the n
 ## Unit testing
 SMR uses [PHPUnit](https://phpunit.de/) to run unit tests.
 ### Setup
-1. Ensure the `mysqli` extension is enabled in your local PHP installation's `php.ini`, as this is a hard dependency.
-1. From the root directory run `composer install` to install dependencies, and configure the development auto loader.
-1. In some cases, you may have to manually run `docker-compose up -d mysql-integration-test` in order to have the integration test MySQL Docker container ready to receive connections for the `flyway` migration that happens during integration tests. This only needs to be done once, but if you ever stop this container you should repeat this step before running any integration tests.
-1. Run `vendor/bin/phpunit test` to execute the full suite of tests.
+1. Ensure the MySQL container is running, and ready for any integration tests that touch the database:
+   * `composer start:integration-services`
+1. Run `composer run test` to execute the full suite of tests.
 1. Add new tests as needed in the `/test` directory.
 
-* For information on running one-off tests inside your IDE, please refer to your IDE vendor's documentation on how to run PHPUnit tests.
-* If you're running one-off unit tests that don't need database interaction, you don't need to start up the `mysql-integration-test` Docker service.
+### Setting up your IDE to run tests
+This information applies to IDEA-based IDEs, e.g. `IntelliJ`, `PHPStorm`. For other vendors, please refer to your vendor's documentation for running PHPUnit tests against a remote container.
+* In order to perform these next steps in `IntelliJ`, you must have the following Jetbrains-provided plugins installed:
+ * [PHP](https://plugins.jetbrains.com/plugin/6610-php)
+ * [PHP Docker](https://plugins.jetbrains.com/plugin/8595-php-docker)
+   * This should also install [PHP Remote Intepreter](https://plugins.jetbrains.com/plugin/7511-php-remote-interpreter)
 
-### Integration testing
-1. To create an integration test that uses the database, your test should extend `SmrTest\BaseIntegrationSpec`. This will ensure that the `flyway` migration happens before your test suite initializes, and cleans up any records written between tests.
+##### Configure a remote PHP interpreter for the project
+
+1. `File > Settings > Languages & Frameworks > PHP`. In the `CLI Interpreter` area, click the `...` button
+1. Press the "+" button in the top left, and select `From Docker, Vagrant, VM, WSL, Remote...`
+1. In the new window, choose `Docker Compose`, and in the `Service` area, select `smr-integration-test`. Press "OK".
+1. It will check the configuration by starting up the Docker container, and gathering PHP information. Once that's finished, you should be on a configuration screen for the new interpreter. It should have the PHP information from the Docker container, and also the `Xdebug` information.
+1. In the `Environment variables` box on the new intepreter's screen, paste in the values from `/test.env` in the project directory.
+1. The rest of the default settings should be fine, so you can press "Apply".
+1. On the settings navigation tree, underneath PHP, click the `Composer` item: In the `CLI Interpreter` drop down, select the new interpreter you've created. Press "Apply".
+1. On the settings navigation tree, underneath PHP, click the `Test Frameworks` item.
+1. Click the `+` button to create an entry, select the newly created interpreter from the drop down, and press "OK".
+1. In the `PHPUnit library` section, set the `Path to script` value to `/smr/vendor/autoload.php`
+1. In the `Test Runner` section, set the `Default configuration file` to `/smr/phpunit.xml`
+1. Press "OK", and you should be good to go for executing tests inside the IDE.
+
+### Writing integration tests
+1. To create an integration test that uses the database, your test should extend `SmrTest\BaseIntegrationSpec`. This will ensure that any test data that gets written to the database will be cleaned up after each test.
+ * The SMR database uses MyISAM for a storage engine, so we cannot simply rollback transactions after each test. Instead, the `BaseIntegrationSpec` will check for any tables that are populated from the `flyway` migration during startup, and truncate all other tables after your test.

@@ -1,12 +1,9 @@
 <?php declare(strict_types=1);
-require_once(CONFIG . 'SmrMySqlSecrets.inc');
 
 abstract class MySqlDatabase {
-	// add configuration static members via traits
-	use SmrMySqlSecrets;
-
 	protected static $dbConn;
 	protected static $selectedDbName;
+	private static MySqlProperties $mysqlProperties;
 	protected $dbResult = null;
 	protected $dbRecord = null;
 
@@ -16,24 +13,14 @@ abstract class MySqlDatabase {
 			if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
 				$this->error('Failed to enable mysqli error reporting');
 			}
-
-			$host = self::$host;
-			$user = self::$user;
-			$password = self::$password;
-			$port = self::$port;
-
-			// The configuration can be overridden via PHPUnit configuration
-			if (defined("OVERRIDE_MYSQL_CONFIG")) {
-				$host = constant("OVERRIDE_MYSQL_HOST");
-				$user = constant("OVERRIDE_MYSQL_USER");
-				$password = constant("OVERRIDE_MYSQL_PASSWORD");
-				$port = (int)constant("OVERRIDE_MYSQL_PORT");
-			}
-
-			self::$dbConn = new mysqli($host, $user, $password,
-				self::$databaseName, $port, self::$socket);
-			self::$selectedDbName = self::$databaseName;
-
+			$mysqlProperties = new MySqlProperties();
+			self::$dbConn = new mysqli(
+				$mysqlProperties->getHost(),
+				$mysqlProperties->getUser(),
+				$mysqlProperties->getPassword(),
+				$mysqlProperties->getDatabaseName());
+			self::$mysqlProperties = $mysqlProperties;
+			self::$selectedDbName = $mysqlProperties->getDatabaseName();
 			// Default server charset should be set correctly. Using the default
 			// avoids the additional query involved in `set_charset`.
 			$charset = self::$dbConn->character_set_name();
@@ -58,7 +45,7 @@ abstract class MySqlDatabase {
 	 * Switch back to the configured live database
 	 */
 	public function switchDatabaseToLive() {
-		$this->switchDatabases(self::$databaseName);
+		$this->switchDatabases(self::$mysqlProperties->getDatabaseName());
 	}
 
 	/**
