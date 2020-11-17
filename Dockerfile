@@ -46,6 +46,10 @@ RUN MODE=$([ "$PHP_DEBUG" = "0" ] && echo "production" || echo "development") &&
 	echo "Using $MODE php.ini" && \
 	tar -xOvf /usr/src/php.tar.xz php-$PHP_VERSION/php.ini-$MODE > /usr/local/etc/php/php.ini
 
+RUN if [ "$PHP_DEBUG" = "1" ] ; then pecl install xdebug \
+	&& echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so" >> /usr/local/etc/php/php.ini ; \
+	fi
+
 COPY --from=builder /smr .
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
 

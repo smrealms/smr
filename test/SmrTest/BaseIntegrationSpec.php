@@ -1,10 +1,4 @@
 <?php
-/**
- * > set global general_log_file = "/var/log/mysql/queries.log";
- * > set global general_log = "ON";
- * [wait some time, hit some pages, whatever]
- * > set global general_log = "OFF";
- */
 
 namespace SmrTest;
 
@@ -13,20 +7,18 @@ use MySqlProperties;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
-
 class BaseIntegrationSpec extends TestCase {
 	protected static mysqli $conn;
 	private static $defaultPopulatedTables = array();
 
 	public static function setUpBeforeClass(): void {
 		$mysqlProperties = new MySqlProperties();
-		print "Attempting to connect to MySQL at " . $mysqlProperties->getHost() . ":" . $mysqlProperties->getPort() . "\n";
+		print "Attempting to connect to MySQL at " . $mysqlProperties->getHost() . "\n";
 		self::$conn = mysqli_connect(
 			$mysqlProperties->getHost(),
 			$mysqlProperties->getUser(),
 			$mysqlProperties->getPassword(),
-			$mysqlProperties->getDatabaseName(),
-			$mysqlProperties->getPort());
+			$mysqlProperties->getDatabaseName());
 		print "Connected.\n";
 		$query = "SELECT table_name FROM information_schema.tables WHERE table_rows > 0 AND TABLE_SCHEMA='smr_live'";
 		$rs = self::$conn->query($query);

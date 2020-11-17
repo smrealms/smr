@@ -18,8 +18,7 @@ abstract class MySqlDatabase {
 				$mysqlProperties->getHost(),
 				$mysqlProperties->getUser(),
 				$mysqlProperties->getPassword(),
-				$mysqlProperties->getDatabaseName(),
-				$mysqlProperties->getPort());
+				$mysqlProperties->getDatabaseName());
 			self::$mysqlProperties = $mysqlProperties;
 			self::$selectedDbName = $mysqlProperties->getDatabaseName();
 			// Default server charset should be set correctly. Using the default

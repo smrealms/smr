@@ -12,6 +12,7 @@ use SocialLogins\Facebook;
  * @covers AbstractSmrAccount
  */
 class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
+
 	public function test_account_creation() {
 		$account = AbstractSmrAccount::createAccount("test", "test", "test@test.com", 9, 0);
 		$this->assertEquals("test", $account->getLogin());
