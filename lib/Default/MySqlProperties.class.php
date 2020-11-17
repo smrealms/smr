@@ -17,10 +17,10 @@ class MySqlProperties {
 		$array = $config->load();
 		self::validateConfig($config);
 		[
-			MySqlProperties::CONFIG_MYSQL_HOST => $this->host,
-			MySqlProperties::CONFIG_MYSQL_USER => $this->user,
-			MySqlProperties::CONFIG_MYSQL_PASSWORD => $this->password,
-			MySqlProperties::CONFIG_MYSQL_DATABASE => $this->databaseName,
+			self::CONFIG_MYSQL_HOST => $this->host,
+			self::CONFIG_MYSQL_USER => $this->user,
+			self::CONFIG_MYSQL_PASSWORD => $this->password,
+			self::CONFIG_MYSQL_DATABASE => $this->databaseName,
 		] = $array;
 	}
 
