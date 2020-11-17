@@ -198,7 +198,7 @@ services:
             - frontend
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.api-docs.rule=PathPrefix(`/api-docs`)"
+            - "traefik.http.routers.api-docs.rule=PathPrefix(`/docs`)"
             - "traefik.http.routers.api-docs.middlewares=slash-then-strip@file"
 
     # Web interface for managing Docker services

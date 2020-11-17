@@ -11,7 +11,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v2
       - name: Build API Docs
-        uses: ./api-docs
+        uses: ./.github/actions/api-docs
       - name: Install SSH Client
         uses: webfactory/ssh-agent@v0.4.1
         with:
@@ -22,6 +22,6 @@ jobs:
           SSH: true
           REPOSITORY_NAME: smrealms/api-docs
           BRANCH: main
-          FOLDER: .
+          FOLDER: api-docs/build
           TARGET_FOLDER: docs
           CLEAN: true

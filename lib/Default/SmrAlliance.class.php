@@ -219,6 +219,7 @@ class SmrAlliance {
 	}
 
 	public function setIrcChannel($ircChannel) {
+		$this->getIrcChannel(); // to populate the class attribute
 		if ($this->ircChannel == $ircChannel) {
 			return;
 		}

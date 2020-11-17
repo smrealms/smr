@@ -95,6 +95,10 @@ function shared_channel_msg_seedlist_del($player, $sectors) {
 		return array('You must specify sectors to delete.');
 	}
 
+	if (count($sectors) === 1 && $sectors[0] === "all") {
+		$sectors = get_seedlist($player);
+	}
+
 	// see if the sectors are numeric
 	foreach ($sectors as $sector) {
 		if (!is_numeric($sector)) {
@@ -110,5 +114,5 @@ function shared_channel_msg_seedlist_del($player, $sectors) {
 					AND sector_id IN (' . $db->escapeArray($sectors) . ')'
 	);
 
-	return array('The specified sectors have been removed from the seedlist.');
+	return array('The following sectors have been removed from the seedlist:' . implode(' ', $sectors));
 }
