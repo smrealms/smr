@@ -182,7 +182,7 @@ Now all core/shared "Default" code should be in the abstract version, with the n
 SMR uses [PHPUnit](https://phpunit.de/) to run unit tests.
 ### Setup
 1. Ensure the MySQL container is running, and ready for any integration tests that touch the database:
-   1. `composer start:integration-services`
+   * `composer start:integration-services`
 1. Run `composer run test` to execute the full suite of tests.
 1. Add new tests as needed in the `/test` directory.
 
