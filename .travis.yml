@@ -15,6 +15,7 @@ php:
 git:
   depth: false
 script:
+  - docker-compose --version
   - tests/phplint.sh
   - tests/strict_types.sh
   - composer install
