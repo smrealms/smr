@@ -59,4 +59,6 @@ RUN a2enmod headers
 # Store the git commit hash of the repo in the final image
 COPY .git/HEAD .git/HEAD
 COPY .git/refs .git/refs
-RUN cat .git/$(cat .git/HEAD | awk '{print $2}') > git-commit
+RUN REF="ref: HEAD" && \
+	while [ -n "$(echo $REF | grep ref:)" ]; do REF=$(cat ".git/$(echo $REF | awk '{print $2}')"); done && \
+	echo $REF > git-commit
