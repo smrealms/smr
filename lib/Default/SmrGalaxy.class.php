@@ -23,7 +23,7 @@ class SmrGalaxy {
 
 	public static function getGameGalaxies($gameID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
-			MySqlDatabase::getInstance();
+			$db = MySqlDatabase::getInstance();
 			$db->query('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY galaxy_id ASC');
 			$galaxies = array();
 			while ($db->nextRecord()) {

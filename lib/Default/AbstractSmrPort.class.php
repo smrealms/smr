@@ -70,7 +70,7 @@ class AbstractSmrPort {
 	}
 
 	public static function getGalaxyPorts($gameID, $galaxyID, $forceUpdate = false) {
-		MySqlDatabase::getInstance();
+		$db = MySqlDatabase::getInstance();
 		// Use a left join so that we populate the cache for every sector
 		$db->query('SELECT port.*, sector_id FROM sector LEFT JOIN port USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPorts = [];
@@ -93,7 +93,7 @@ class AbstractSmrPort {
 	}
 
 	public static function removePort($gameID, $sectorID) {
-		MySqlDatabase::getInstance();
+		$db = MySqlDatabase::getInstance();
 		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
 		        AND sector_id = ' . $db->escapeNumber($sectorID);
 		$db->query('DELETE FROM port WHERE ' . $SQL);
@@ -1097,7 +1097,7 @@ class AbstractSmrPort {
 	}
 	public static function getCachedPort($gameID, $sectorID, $accountID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID])) {
-			MySqlDatabase::getInstance();
+			$db = MySqlDatabase::getInstance();
 			$db->query('SELECT visited, port_info
 						FROM player_visited_port
 						JOIN port_info_cache USING (game_id,sector_id,port_info_hash)
