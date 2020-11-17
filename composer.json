@@ -15,6 +15,15 @@
 		"vlucas/phpdotenv": "^v5.2.0"
 	},
 	"scripts": {
+		"start:integration-services": [
+			"docker-compose --env-file test.env up -d mysql-integration-test",
+			"sleep 20",
+			"docker-compose --env-file test.env run --rm flyway-integration-test"
+		],
+		"stop" : [
+			"docker-compose stop",
+			"docker-compose rm --force"
+		],
 		"test": "docker-compose --env-file test.env run --rm smr-integration-test"
 	},
 	"autoload-dev": {

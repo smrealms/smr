@@ -17,13 +17,10 @@ script:
   - docker-compose --version
   - test/phplint.sh
   - test/strict_types.sh
-  - composer install
   - mv .env.sample .env
   - mv config/config.specific.sample.php config/config.specific.php
   - mv config/discord/config.specific.sample.php config/discord/config.specific.php
   - mv config/irc/config.specific.sample.php config/irc/config.specific.php
   - mv config/npc/config.specific.sample.php config/npc/config.specific.php
-  - docker-compose --env-file test.env up -d mysql-integration-test
-  - sleep 20
-  - docker-compose --env-file test.env run --rm flyway-integration-test
-  - docker-compose --env-file test.env run --rm smr-integration-test
+  - composer run start:integration-services
+  - composer run test

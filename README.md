@@ -182,8 +182,7 @@ Now all core/shared "Default" code should be in the abstract version, with the n
 SMR uses [PHPUnit](https://phpunit.de/) to run unit tests.
 ### Setup
 1. Ensure the MySQL container is running, and ready for any integration tests that touch the database:
-   1. Start the container: `docker-compose --env-file test.env up -d mysql-integration-test`
-   1. Run the `flyway` migration: `docker-compose --env-file test.env run --rm flyway-integration-test`. You may need to wait ~10 seconds to perform this command after you've started the MySQL container.
+   1. `composer start:integration-services`
 1. Run `composer run test` to execute the full suite of tests.
 1. Add new tests as needed in the `/test` directory.
 

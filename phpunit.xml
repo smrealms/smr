@@ -9,11 +9,6 @@
 	failOnRisky="true"
 	failOnWarning="true"
 	verbose="true">
-	<php>
-		<env
-			name="MYSQL_CONFIG_ENVIRONMENT"
-			value="test" />
-	</php>
 	<testsuites>
 		<testsuite name="default">
 			<directory suffix="Test.php">test</directory>
