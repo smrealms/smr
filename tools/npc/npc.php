@@ -77,7 +77,7 @@ const SHIP_UPGRADE_PATH = array(
 
 
 try {
-	MySqlDatabase::getInstance();
+	$db = MySqlDatabase::getInstance();
 	debug('Script started');
 
 	// Make sure NPC's have been set up in the database
@@ -364,7 +364,7 @@ function releaseNPC() {
 		return;
 	}
 	$login = SmrSession::getAccount()->getLogin();
-	MySqlDatabase::getInstance();
+	$db = MySqlDatabase::getInstance();
 	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(false) . ' WHERE login=' . $db->escapeString($login));
 	if ($db->getChangedRows() > 0) {
 		debug('Released NPC: ' . $login);
@@ -401,7 +401,7 @@ function changeNPCLogin() {
 	// recently they have taken an action.
 	debug('Choosing new NPC');
 	static $availableNpcs = null;
-	MySqlDatabase::getInstance();
+	$db = MySqlDatabase::getInstance();
 	if (is_null($availableNpcs)) {
 		// Make sure to select NPCs from active games only
 		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(TIME) . ' AND end_time > ' . $db->escapeNumber(TIME) . ' ORDER BY last_turn_update ASC');
@@ -629,7 +629,7 @@ function &findRoutes($player) {
 	$startSectorID = $galaxy->getStartSector();
 	$endSectorID = $galaxy->getEndSector();
 
-	MySqlDatabase::getInstance();
+	$db = MySqlDatabase::getInstance();
 	$db->query('SELECT routes FROM route_cache WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND max_ports=' . $db->escapeNumber($maxNumberOfPorts) . ' AND goods_allowed=' . $db->escapeObject($tradeGoods) . ' AND races_allowed=' . $db->escapeObject($tradeRaces) . ' AND start_sector_id=' . $db->escapeNumber($startSectorID) . ' AND end_sector_id=' . $db->escapeNumber($endSectorID) . ' AND routes_for_port=' . $db->escapeNumber($routesForPort) . ' AND max_distance=' . $db->escapeNumber($maxDistance));
 	if ($db->nextRecord()) {
 		$routes = unserialize(gzuncompress($db->getField('routes')));

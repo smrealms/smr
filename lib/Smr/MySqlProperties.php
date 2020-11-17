@@ -4,7 +4,7 @@ namespace Smr;
 
 use Dotenv\Dotenv;
 
-class MysqlProperties {
+class MySqlProperties {
 	private const CONFIG_MYSQL_HOST = "MYSQL_HOST";
 	private const CONFIG_MYSQL_USER = "MYSQL_USER";
 	private const CONFIG_MYSQL_PASSWORD = "MYSQL_PASSWORD";

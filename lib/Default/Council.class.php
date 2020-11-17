@@ -10,7 +10,7 @@ class Council {
 
 	protected static function initialiseDatabase() {
 		if (self::$db == null) {
-			self::MySqlDatabase::getInstance();
+			self::$db = MySqlDatabase::getInstance();
 		}
 	}
 

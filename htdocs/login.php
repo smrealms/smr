@@ -41,7 +41,7 @@ try {
 
 	// Get recent non-admin game news
 	$gameNews = array();
-	$db = DiContainer::get(MySqlDatabase::class);
+	$db = MySqlDatabase::getInstance();
 	$db->query('SELECT * FROM news WHERE type != \'admin\' ORDER BY time DESC LIMIT 4');
 	while ($db->nextRecord()) {
 		$overrideGameID = $db->getInt('game_id'); //for bbifyMessage

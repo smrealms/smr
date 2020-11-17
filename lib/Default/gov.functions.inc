@@ -4,7 +4,7 @@
  * Returns a list of all active (not claimable) bounties for given location $type.
  */
 function getBounties($type) {
-	MySqlDatabase::getInstance();
+	$db = MySqlDatabase::getInstance();
 	$db->query('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber(SmrSession::getGameID()) . ' AND type =' . $db->escapeString($type) . ' AND claimer_id = 0 ORDER BY amount DESC');
 	$bounties = [];
 	while ($db->nextRecord()) {

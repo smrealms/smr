@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
 use Smr\Container\DiContainer;
-use Smr\MysqlProperties;
+use Smr\MySqlProperties;
 
 class MySqlDatabase {
 	private mysqli $dbConn;
-	private MysqlProperties $mysqlProperties;
+	private MySqlProperties $mysqlProperties;
 	private string $selectedDbName;
 	/**
 	 * @var bool | mysqli_result
@@ -28,9 +28,9 @@ class MySqlDatabase {
 	 * Not intended to be constructed by hand. If you need an instance of MySqlDatabase,
 	 * use MySqlDatabase::getInstance();
 	 * @param mysqli $dbConn The mysqli instance
-	 * @param MysqlProperties $mysqlProperties The properties object that was used to construct the mysqli instance
+	 * @param MySqlProperties $mysqlProperties The properties object that was used to construct the mysqli instance
 	 */
-	public function __construct(mysqli $dbConn, MysqlProperties $mysqlProperties) {
+	public function __construct(mysqli $dbConn, MySqlProperties $mysqlProperties) {
 		$charset = $dbConn->character_set_name();
 		if ($charset != 'utf8') {
 			$this->error('Unexpected charset: ' . $charset);

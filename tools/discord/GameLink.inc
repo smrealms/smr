@@ -22,7 +22,7 @@ class GameLink
 
 		if ($channel->is_private) {
 			// Get the most recent enabled game, since there is no other way to determine the game ID
-			MySqlDatabase::getInstance();
+			$db = MySqlDatabase::getInstance();
 			$db->query('SELECT MAX(game_id) FROM game WHERE enabled=' . $db->escapeBoolean(true) . ' AND end_time > ' . $db->escapeNumber(time()));
 			if ($db->nextRecord()) {
 				$game_id = $db->getInt('MAX(game_id)');

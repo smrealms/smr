@@ -8,7 +8,7 @@ use Dotenv\Dotenv;
 use MySqlDatabase;
 use mysqli;
 use RuntimeException;
-use Smr\MysqlProperties;
+use Smr\MySqlProperties;
 use function DI\autowire;
 
 /**
@@ -38,7 +38,7 @@ class DiContainer {
 			 * The factories themselves are able to use dependency injection as well, so we can provide the MysqlProperties
 			 * typehint to make sure the container constructs and instance and provides it to the factory.
 			 */
-			mysqli::class => function (MysqlProperties $mysqlProperties): mysqli {
+			mysqli::class => function (MySqlProperties $mysqlProperties): mysqli {
 				// Set the mysqli driver to raise exceptions on errors
 				if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
 					throw new RuntimeException('Failed to enable mysqli error reporting');
@@ -54,7 +54,7 @@ class DiContainer {
 			},
 			// Explicitly name all classes that are autowired, so we can take advantage of
 			// the compiled container feature for a performance boost
-			MysqlProperties::class => autowire(),
+			MySqlProperties::class => autowire(),
 			MySqlDatabase::class => autowire()
 		];
 	}
