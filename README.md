@@ -193,19 +193,20 @@ This information applies to IDEA-based IDEs, e.g. `IntelliJ`, `PHPStorm`. For ot
  * [PHP Docker](https://plugins.jetbrains.com/plugin/8595-php-docker)
    * This should also install [PHP Remote Intepreter](https://plugins.jetbrains.com/plugin/7511-php-remote-interpreter)
 
-1. Configure a remote PHP interpreter for the project
-   1. File > Settings > Languages & Frameworks > PHP. In the `CLI Interpreter` area, click the `...` button
-   1. Press the "+" button in the top left, and select `From Docker, Vagrant, VM, WSL, Remote...`
-   1. In the new window, choose `Docker Compose`, and in the `Service` area, select `smr-integration-test`. Press "OK".
-   1. It will check the configuration by starting up the Docker container, and gathering PHP information. Once that's finished, you should be on a configuration screen for the new interpreter. It should have the PHP information from the Docker container, and also the `Xdebug` information.
-   1. In the `Environment variables` box on the new intepreter's screen, paste in the values from `/test.env` in the project directory.
-   1. The rest of the default settings should be fine, so you can press "Apply".
-   1. On the settings navigation tree, underneath PHP, click the `Composer` item: In the `CLI Interpreter` drop down, select the new interpreter you've created. Press "Apply".
-   1. On the settings navigation tree, underneath PHP, click the `Test Frameworks` item.
-   1. Click the `+` button to create an entry, select the newly created interpreter from the drop down, and press "OK".
-   1. In the `PHPUnit library` section, set the `Path to script` value to `/smr/vendor/autoload.php`
-   1. In the `Test Runner` section, set the `Default configuration file` to `/smr/phpunit.xml`
-   1. Press "OK", and you should be good to go for executing tests inside the IDE.
+##### Configure a remote PHP interpreter for the project
+
+1. `File > Settings > Languages & Frameworks > PHP`. In the `CLI Interpreter` area, click the `...` button
+1. Press the "+" button in the top left, and select `From Docker, Vagrant, VM, WSL, Remote...`
+1. In the new window, choose `Docker Compose`, and in the `Service` area, select `smr-integration-test`. Press "OK".
+1. It will check the configuration by starting up the Docker container, and gathering PHP information. Once that's finished, you should be on a configuration screen for the new interpreter. It should have the PHP information from the Docker container, and also the `Xdebug` information.
+1. In the `Environment variables` box on the new intepreter's screen, paste in the values from `/test.env` in the project directory.
+1. The rest of the default settings should be fine, so you can press "Apply".
+1. On the settings navigation tree, underneath PHP, click the `Composer` item: In the `CLI Interpreter` drop down, select the new interpreter you've created. Press "Apply".
+1. On the settings navigation tree, underneath PHP, click the `Test Frameworks` item.
+1. Click the `+` button to create an entry, select the newly created interpreter from the drop down, and press "OK".
+1. In the `PHPUnit library` section, set the `Path to script` value to `/smr/vendor/autoload.php`
+1. In the `Test Runner` section, set the `Default configuration file` to `/smr/phpunit.xml`
+1. Press "OK", and you should be good to go for executing tests inside the IDE.
 
 ### Writing integration tests
 1. To create an integration test that uses the database, your test should extend `SmrTest\BaseIntegrationSpec`. This will ensure that any test data that gets written to the database will be cleaned up after each test.
