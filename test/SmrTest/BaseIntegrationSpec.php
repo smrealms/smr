@@ -3,8 +3,9 @@
 namespace SmrTest;
 
 use mysqli;
-use Smr\MySqlProperties;
 use PHPUnit\Framework\TestCase;
+use Smr\Container\DiContainer;
+use Smr\MySqlProperties;
 use Throwable;
 
 class BaseIntegrationSpec extends TestCase {
@@ -12,13 +13,9 @@ class BaseIntegrationSpec extends TestCase {
 	private static $defaultPopulatedTables = array();
 
 	public static function setUpBeforeClass(): void {
-		$mysqlProperties = new MySqlProperties();
+		$mysqlProperties = DiContainer::get(MySqlProperties::class);
 		print "Attempting to connect to MySQL at " . $mysqlProperties->getHost() . "\n";
-		self::$conn = mysqli_connect(
-			$mysqlProperties->getHost(),
-			$mysqlProperties->getUser(),
-			$mysqlProperties->getPassword(),
-			$mysqlProperties->getDatabaseName());
+		self::$conn = DiContainer::get(mysqli::class);
 		print "Connected.\n";
 		$query = "SELECT table_name FROM information_schema.tables WHERE table_rows > 0 AND TABLE_SCHEMA='smr_live'";
 		$rs = self::$conn->query($query);

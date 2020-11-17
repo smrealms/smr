@@ -4,8 +4,6 @@ namespace SmrTest\lib\DefaultGame;
 
 use AbstractSmrAccount;
 use AccountNotFoundException;
-use MySqlDatabase;
-use mysqli;
 use SmrTest\BaseIntegrationSpec;
 use SocialLogins\Facebook;
 
