@@ -41,8 +41,7 @@ class DiContainer {
 					$mysqlProperties->getHost(),
 					$mysqlProperties->getUser(),
 					$mysqlProperties->getPassword(),
-					$mysqlProperties->getDatabaseName(),
-					$mysqlProperties->getPort());
+					$mysqlProperties->getDatabaseName());
 			},
 			// Explicitly name all classes that are autowired, so we can take advantage of
 			// the compiled container feature for a performance boost
