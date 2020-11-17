@@ -111,7 +111,7 @@ class SmrForce {
 	}
 
 	protected function __construct($gameID, $sectorID, $ownerID, $db = null) {
-		$this->MySqlDatabase::getInstance();
+		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND sector_id = '.$this->db->escapeNumber($sectorID) . '
 		              AND owner_id = '.$this->db->escapeNumber($ownerID);

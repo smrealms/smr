@@ -60,7 +60,7 @@ class SmrGalaxy {
 	}
 
 	protected function __construct($gameID, $galaxyID, $create = false, $db = null) {
-		$this->MySqlDatabase::getInstance();
+		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND galaxy_id = ' . $this->db->escapeNumber($galaxyID);
 

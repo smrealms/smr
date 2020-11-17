@@ -126,7 +126,7 @@ class AbstractSmrPort {
 	}
 
 	protected function __construct($gameID, $sectorID, $db = null) {
-		$this->MySqlDatabase::getInstance();
+		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
 		if (isset($db)) {
@@ -1126,7 +1126,7 @@ class AbstractSmrPort {
 
 	public function __wakeup() {
 		$this->cachedVersion = true;
-		$this->MySqlDatabase::getInstance();
+		$this->db = MySqlDatabase::getInstance();
 	}
 
 	public function update() {

@@ -38,7 +38,7 @@ class SmrShip extends AbstractSmrShip {
 
 	protected function __construct(AbstractSmrPlayer $player) {
 		parent::__construct($player);
-		$this->MySqlDatabase::getInstance();
+		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'account_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID());
 
 		$this->loadHardware();
