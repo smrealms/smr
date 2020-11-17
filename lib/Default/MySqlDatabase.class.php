@@ -1,11 +1,20 @@
 <?php declare(strict_types=1);
 
 use Smr\Container\DiContainer;
+use Smr\MysqlProperties;
 
 class MySqlDatabase {
-	protected mysqli $dbConn;
-	protected $dbResult = null;
-	protected $dbRecord = null;
+	private mysqli $dbConn;
+	private MysqlProperties $mysqlProperties;
+	private string $selectedDbName;
+	/**
+	 * @var bool | mysqli_result
+	 */
+	private $dbResult = null;
+	/**
+	 * @var array | null
+	 */
+	private $dbRecord = null;
 
 	public static function getInstance(bool $requireNewInstance = false): MySqlDatabase {
 		$class = MySqlDatabase::class;
@@ -19,18 +28,18 @@ class MySqlDatabase {
 	 * Not intended to be constructed by hand. If you need an instance of MySqlDatabase,
 	 * use MySqlDatabase::getInstance();
 	 * @param mysqli $dbConn The mysqli instance
+	 * @param MysqlProperties $mysqlProperties The properties object that was used to construct the mysqli instance
 	 */
-	public function __construct(mysqli $dbConn) {
-		// Set the mysqli driver to raise exceptions on errors
-		if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
-			$this->error('Failed to enable mysqli error reporting');
-		}
+	public function __construct(mysqli $dbConn, MysqlProperties $mysqlProperties) {
 		$charset = $dbConn->character_set_name();
 		if ($charset != 'utf8') {
 			$this->error('Unexpected charset: ' . $charset);
 		}
 		$this->dbConn = $dbConn;
+		$this->mysqlProperties = $mysqlProperties;
+		$this->selectedDbName = $mysqlProperties->getDatabaseName();
 	}
+
 	/**
 	 * This method will switch the connection to the specified database.
 	 * Useful for switching back and forth between historical, and live databases.
@@ -38,31 +47,31 @@ class MySqlDatabase {
 	 * @param string $databaseName The name of the database to switch to
 	 */
 	public function switchDatabases(string $databaseName) {
-		self::$dbConn->select_db($databaseName);
-		self::$selectedDbName = $databaseName;
+		$this->dbConn->select_db($databaseName);
+		$this->selectedDbName = $databaseName;
 	}
 
 	/**
 	 * Switch back to the configured live database
 	 */
 	public function switchDatabaseToLive() {
-		$this->switchDatabases(self::$mysqlProperties->getDatabaseName());
+		$this->switchDatabases($this->mysqlProperties->getDatabaseName());
 	}
 
 	/**
 	 * Returns the size of the selected database in bytes.
 	 */
 	public function getDbBytes() {
-		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=' . $this->escapeString(self::$selectedDbName);
+		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=' . $this->escapeString($this->selectedDbName);
 		$result = $this->dbConn->query($query);
 		return (int)$result->fetch_assoc()['db_bytes'];
 	}
 
 	// This should not be needed except perhaps by persistent connections
 	public function close() {
-		if (self::$dbConn) {
-			self::$dbConn->close();
-			self::$dbConn = false;
+		if ($this->dbConn) {
+			$this->dbConn->close();
+			unset($this->dbConn);
 		}
 	}
 
@@ -108,7 +117,7 @@ class MySqlDatabase {
 		}
 //		if($this->dbRecord[$name] == 'FALSE')
 		return false;
-//		throw new Exception('Field is not a boolean');
+//		$this->error('Field is not a boolean');
 	}
 
 	public function getInt($name) {
@@ -131,7 +140,7 @@ class MySqlDatabase {
 			if ($pad_msec) {
 				$msec = str_pad($msec, 6, '0', STR_PAD_LEFT);
 			} else {
-				throw new Exception('Field is not an escaped microtime (' . $data . ')');
+				$this->error('Field is not an escaped microtime (' . $data . ')');
 			}
 		}
 		return "$sec.$msec";
@@ -252,7 +261,7 @@ class MySqlDatabase {
 		if (is_numeric($num)) {
 			return $num;
 		} else {
-			throw new Exception('Not a number! (' . $num . ')');
+			$this->error('Not a number! (' . $num . ')');
 		}
 	}
 
@@ -268,7 +277,7 @@ class MySqlDatabase {
 		} elseif ($bool === false) {
 			return $this->escapeString('FALSE', $quotes);
 		} else {
-			throw new Exception('Not a boolean: ' . $bool);
+			$this->error('Not a boolean: ' . $bool);
 		}
 	}
 

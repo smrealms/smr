@@ -4,8 +4,10 @@ namespace Smr\Container;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use Dotenv\Dotenv;
 use MySqlDatabase;
 use mysqli;
+use RuntimeException;
 use Smr\MysqlProperties;
 use function DI\autowire;
 
@@ -37,11 +39,18 @@ class DiContainer {
 			 * typehint to make sure the container constructs and instance and provides it to the factory.
 			 */
 			mysqli::class => function (MysqlProperties $mysqlProperties): mysqli {
+				// Set the mysqli driver to raise exceptions on errors
+				if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
+					throw new RuntimeException('Failed to enable mysqli error reporting');
+				}
 				return new mysqli(
 					$mysqlProperties->getHost(),
 					$mysqlProperties->getUser(),
 					$mysqlProperties->getPassword(),
 					$mysqlProperties->getDatabaseName());
+			},
+			Dotenv::class => function (): Dotenv {
+				return Dotenv::createArrayBacked(ROOT);
 			},
 			// Explicitly name all classes that are autowired, so we can take advantage of
 			// the compiled container feature for a performance boost

@@ -3,7 +3,7 @@
 namespace SmrTest;
 
 use mysqli;
-use MySqlProperties;
+use Smr\MySqlProperties;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
