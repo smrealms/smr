@@ -15,7 +15,7 @@
 		"vlucas/phpdotenv": "^v5.2.0"
 	},
 	"scripts": {
-		"test": "vendor/bin/phpunit test"
+		"test": "docker-compose --env-file test.env run --rm smr-integration-test"
 	},
 	"autoload-dev": {
 		"psr-0": {
