@@ -7,7 +7,7 @@ if (!$player->isGPEditor()) {
 $template->assign('PageTopic', 'Galactic Post');
 Menu::galactic_post();
 
-$db2 = MySqlDatabase::getInstance(true);
+$db2 = MySqlDatabase::getNewInstance();
 
 $container = create_container('skeleton.php', 'galactic_post_view_article.php');
 $template->assign('ViewArticlesHREF', SmrSession::getNewHREF($container));

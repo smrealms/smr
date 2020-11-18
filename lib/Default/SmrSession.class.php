@@ -1,7 +1,5 @@
 <?php declare(strict_types=1);
 
-use Smr\Container\DiContainer;
-
 if (!defined('USING_AJAX')) {
 	define('USING_AJAX', false);
 }

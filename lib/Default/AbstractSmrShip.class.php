@@ -99,7 +99,7 @@ abstract class AbstractSmrShip {
 
 
 		// get supported hardware from db
-		$db2 = MySqlDatabase::getInstance(true);
+		$db2 = MySqlDatabase::getNewInstance();
 		$db2->query('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
 			'WHERE ship_type_id = ' . $db2->escapeNumber($ship['ShipTypeID']) . ' ORDER BY hardware_type_id');
 

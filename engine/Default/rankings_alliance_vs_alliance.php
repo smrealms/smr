@@ -3,7 +3,7 @@
 $template->assign('PageTopic', 'Alliance VS Alliance Rankings');
 
 Menu::rankings(1, 4);
-$db2 = MySqlDatabase::getInstance(true);
+$db2 = MySqlDatabase::getNewInstance();
 $container = create_container('skeleton.php', 'rankings_alliance_vs_alliance.php');
 $template->assign('SubmitHREF', SmrSession::getNewHREF($container));
 

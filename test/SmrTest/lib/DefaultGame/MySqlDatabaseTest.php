@@ -5,17 +5,13 @@ namespace SmrTest\lib\DefaultGame;
 use DI\Container;
 use MySqlDatabase;
 use mysqli;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Smr\Container\DiContainer;
 
 class MySqlDatabaseTest extends TestCase {
 	private Container $container;
-	/**
-	 * @var mysqli|MockObject
-	 */
-	private mysqli $mysql;
+	private $mysql;
 
 	protected function setUp(): void {
 		DiContainer::initializeContainer();

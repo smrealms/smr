@@ -6,7 +6,7 @@ try {
 
 	// database object
 	$db = MySqlDatabase::getInstance();
-	$db2 = MySqlDatabase::getInstance(true);
+	$db2 = MySqlDatabase::getNewInstance();
 	?>
 	<!DOCTYPE html>
 	<html>

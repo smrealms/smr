@@ -125,7 +125,7 @@ class ChessGame {
 
 	public function rerunGame($debugInfo = false) {
 		$db = MySqlDatabase::getInstance();
-		$db2 = MySqlDatabase::getInstance(true);
+		$db2 = MySqlDatabase::getNewInstance();
 
 		$db->query('UPDATE chess_game
 					SET end_time = NULL, winner_id = 0

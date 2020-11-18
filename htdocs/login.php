@@ -1,7 +1,5 @@
 <?php declare(strict_types=1);
 
-use Smr\Container\DiContainer;
-
 try {
 
 	require_once('config.inc');

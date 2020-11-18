@@ -75,7 +75,7 @@ class DiContainer {
 	 * Create a new DI\Container instance.
 	 * This needs to be done once during a bootstrapping script, like htdocs/config.inc
 	 */
-	public static function initializeContainer() {
+	public static function initializeContainer(): void {
 		new DiContainer();
 	}
 
@@ -103,7 +103,8 @@ class DiContainer {
 	}
 
 	/**
-	 * Return the raw Container instance
+	 * Return the raw dependency injection Container instance for more robust
+	 * container management operations.
 	 * @return Container
 	 */
 	public static function getContainer(): Container {

@@ -11,16 +11,17 @@ class MySqlDatabase {
 	 * @var bool | mysqli_result
 	 */
 	private $dbResult = null;
-	/**
-	 * @var array | null
-	 */
-	private $dbRecord = null;
+	private ?array $dbRecord = null;
 
 	public static function getInstance(bool $requireNewInstance = false): MySqlDatabase {
 		$class = MySqlDatabase::class;
 		return !$requireNewInstance
 			? DiContainer::get($class)
 			: DiContainer::make($class);
+	}
+
+	public static function getNewInstance(): MySqlDatabase {
+		return self::getInstance(true);
 	}
 
 	/**
