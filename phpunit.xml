@@ -20,5 +20,8 @@
 		<include>
 			<directory suffix=".php">lib</directory>
 		</include>
+		<report>
+			<clover outputFile="test/coverage.xml" />
+		</report>
 	</coverage>
 </phpunit>
