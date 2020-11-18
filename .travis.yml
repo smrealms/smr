@@ -24,3 +24,7 @@ script:
   - mv config/npc/config.specific.sample.php config/npc/config.specific.php
   - composer run start:integration-services
   - composer run test
+
+after_success:
+    # Upload coverage report written by PHPUnit to codecov.io
+    - bash <(curl -s https://codecov.io/bash) -f test/coverage.xml
