@@ -107,7 +107,7 @@ services:
 
     smr-integration-test:
         <<: *smr-common
-        command: /smr/vendor/bin/phpunit test --coverage-clover test/coverage.xml
+        command: /smr/vendor/bin/phpunit test
         volumes:
             - ./config:/smr/config:ro
             - ./test.env:/smr/.env
