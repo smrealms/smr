@@ -119,4 +119,12 @@ class SmrEnhancedWeaponEvent {
 		return $this->weapon;
 	}
 
+	/**
+	 * Returns the amount of time left in the event as a percent of the
+	 * total duration of the event.
+	 */
+	public function getDurationRemainingPercent() : float {
+		return max(0, min(100, ($this->expires - TIME) / self::DURATION * 100));
+	}
+
 }
