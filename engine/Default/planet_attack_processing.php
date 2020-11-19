@@ -56,12 +56,20 @@ foreach ($attackers as $attacker) {
 	$attacker->getShip()->decloak();
 }
 
+$totalShieldDamage = 0;
 foreach ($attackers as $attacker) {
 	$playerResults =& $attacker->shootPlanet($planet, false);
 	$results['Attackers']['Traders'][$attacker->getAccountID()] =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
+	foreach ($playerResults['Weapons'] as $weapon) {
+		$totalShieldDamage += $weapon['ActualDamage']['Shield'];
+	}
 }
-$results['Attackers']['Downgrades'] = $planet->checkForDowngrade($results['Attackers']['TotalDamage']);
+
+// Planet downgrades only occur on non-shield damage
+$downgradeDamage = $results['Attackers']['TotalDamage'] - $totalShieldDamage;
+$results['Attackers']['Downgrades'] = $planet->checkForDowngrade($downgradeDamage);
+
 $results['Planet'] =& $planet->shootPlayers($attackers);
 
 $account->log(LOG_TYPE_PLANET_BUSTING, 'Player attacks planet, the planet does ' . $results['Planet']['TotalDamage'] . ', their team does ' . $results['Attackers']['TotalDamage'] . ' and downgrades: ' . var_export($results['Attackers']['Downgrades'], true), $planet->getSectorID());
