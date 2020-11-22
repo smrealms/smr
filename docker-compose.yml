@@ -57,6 +57,8 @@ x-mysql-common: &mysql-common
 services:
     smr:
         <<: *smr-common
+        environment:
+            ENABLE_PHPDI_COMPILATION: "true"
 
     smr-dev:
         <<: *smr-common

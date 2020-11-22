@@ -1,6 +1,6 @@
 <?php
 
-namespace SmrTest\lib\DefaultGame;
+namespace SmrTest;
 
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;

@@ -61,14 +61,16 @@ class DiContainer {
 
 	private function buildContainer(): Container {
 		$builder = new ContainerBuilder();
-		return $builder
+		$builder
 			->addDefinitions($this->getDefinitions())
 			->useAnnotations(false)
-			->useAutowiring(true)
+			->useAutowiring(true);
+		if (isset($_ENV["ENABLE_PHPDI_COMPILATION"])) {
 			// The CompiledContainer.php will be saved to the /tmp directory on the Docker container once
 			// during its lifecycle (first request)
-			->enableCompilation("/tmp")
-			->build();
+			$builder->enableCompilation("/tmp");
+		}
+		return $builder->build();
 	}
 
 	/**
