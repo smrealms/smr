@@ -5,6 +5,11 @@ namespace SmrTest\Container;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 
+/**
+ * Class DiContainerTest
+ * @package SmrTest\Container
+ * @covers \Smr\Container\DiContainer
+ */
 class DiContainerTest extends TestCase {
 	private const PHPDI_COMPILED_CONTAINER_FILE = "/tmp/CompiledContainer.php";
 

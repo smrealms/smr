@@ -9,7 +9,7 @@ use Smr\MySqlProperties;
 /**
  * Class MySqlPropertiesTest
  * @package SmrTest\lib\DefaultGame
- * @covers MySqlProperties
+ * @covers \Smr\MySqlProperties
  */
 class MySqlPropertiesTest extends TestCase {
 	public function test_validate_config_happy_path() {
