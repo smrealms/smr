@@ -13,15 +13,12 @@ class MySqlDatabase {
 	private $dbResult = null;
 	private ?array $dbRecord = null;
 
-	public static function getInstance(bool $requireNewInstance = false): MySqlDatabase {
-		$class = MySqlDatabase::class;
-		return !$requireNewInstance
-			? DiContainer::get($class)
-			: DiContainer::make($class);
+	public static function getInstance(): MySqlDatabase {
+		return DiContainer::get(self::class);
 	}
 
 	public static function getNewInstance(): MySqlDatabase {
-		return self::getInstance(true);
+		return DiContainer::make(self::class);
 	}
 
 	/**

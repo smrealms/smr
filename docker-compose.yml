@@ -57,8 +57,6 @@ x-mysql-common: &mysql-common
 services:
     smr:
         <<: *smr-common
-        environment:
-            ENABLE_PHPDI_COMPILATION: "true"
 
     smr-dev:
         <<: *smr-common
@@ -72,6 +70,8 @@ services:
             - ./htdocs:/smr/htdocs
             - ./lib:/smr/lib
             - ./templates:/smr/templates
+        environment:
+            DISABLE_PHPDI_COMPILATION: "true"
 
     smtp:
         image: hemberger/postfix-relay

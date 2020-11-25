@@ -22,7 +22,6 @@ class DiContainer {
 	private Container $container;
 
 	private function __construct() {
-		self::$instance = $this;
 		$this->container = $this->buildContainer();
 	}
 
@@ -65,7 +64,7 @@ class DiContainer {
 			->addDefinitions($this->getDefinitions())
 			->useAnnotations(false)
 			->useAutowiring(true);
-		if (isset($_ENV["ENABLE_PHPDI_COMPILATION"])) {
+		if (!isset($_ENV["DISABLE_PHPDI_COMPILATION"])) {
 			// The CompiledContainer.php will be saved to the /tmp directory on the Docker container once
 			// during its lifecycle (first request)
 			$builder->enableCompilation("/tmp");
@@ -78,7 +77,7 @@ class DiContainer {
 	 * This needs to be done once during a bootstrapping script, like htdocs/config.inc
 	 */
 	public static function initializeContainer(): void {
-		new DiContainer();
+		self::$instance = new DiContainer();
 	}
 
 	/**
