@@ -9,6 +9,8 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	const BONUS_DAMAGE = 15; // additive bonus
 	const BONUS_ACCURACY = 4; // additive bonus
 
+	const HIGHEST_POWER_LEVEL = 5; // must track the highest power level in db
+
 	protected int $weaponTypeID;
 	protected SmrWeaponType $weaponType;
 	protected bool $bonusAccuracy = false; // default
@@ -134,7 +136,14 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	public function getBuyerRestriction() {
 		return $this->weaponType->getBuyerRestriction();
 	}
-	
+
+	/**
+	 * Ships are only allowed to equip one of each type of Unique weapon
+	 */
+	public function isUniqueType() : bool {
+		return $this->getPowerLevel() === self::HIGHEST_POWER_LEVEL;
+	}
+
 	protected function getWeightedRandomForPlayer(AbstractSmrPlayer $player) {
 		return WeightedRandom::getWeightedRandomForPlayer($player, 'Weapon', $this->getWeaponTypeID());
 	}
