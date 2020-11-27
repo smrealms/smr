@@ -40,34 +40,11 @@ if (!$sector->isLinked($var['target_sector'])) {
 	create_error('You cannot move to that sector!');
 }
 
-// If you bump into mines in the sector you are trying to leave...
+// If not moving to your "green sector", you might hit mines...
 if ($player->getLastSectorID() != $var['target_sector']) {
-	$sectorForces = $sector->getForces();
-	Sorter::sortByNumMethod($sectorForces, 'getMines', true);
-	$mine_owner_id = false;
-	foreach ($sectorForces as $forces) {
-		if (!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
-			$mine_owner_id = $forces->getOwnerID();
-			break;
-		}
-	}
-	// set last sector
+	// Update the "green sector"
 	$player->setLastSectorID($var['target_sector']);
-	
-	if ($mine_owner_id) {
-		if ($player->hasNewbieTurns()) {
-			$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
-			$player->takeTurns($turns, $turns);
-			$container = create_container('skeleton.php', 'current_sector.php');
-			$container['msg'] = 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns . ' turn' . ($turns == 1 ? '' : 's') . ' to navigate the minefield safely';
-			forward($container);
-		} else {
-			$container = create_container('forces_attack_processing.php');
-			$container['action'] = 'bump';
-			$container['owner_id'] = $mine_owner_id;
-			forward($container);
-		}
-	}
+	require('sector_mines.inc');
 }
 
 // log action
@@ -104,31 +81,8 @@ $sector->markVisited($player);
 // send scout msgs
 $sector->enteringSector($player, MOVEMENT_WALK);
 
-$sectorForces = $sector->getForces();
-$mine_owner_id = false;
-Sorter::sortByNumMethod($sectorForces, 'getMines', true);
-foreach ($sectorForces as $forces) {
-	if (!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
-		$mine_owner_id = $forces->getOwnerID();
-		break;
-	}
-}
-
 // If you bump into mines while entering the target sector...
-if ($mine_owner_id) {
-	if ($player->hasNewbieTurns()) {
-		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
-		$player->takeTurns($turns, $turns);
-		$container = create_container('skeleton.php', 'current_sector.php');
-		$container['msg'] = 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns . ' turn' . ($turns == 1 ? '' : 's') . ' to navigate the minefield safely.';
-		forward($container);
-	} else {
-		$container = create_container('forces_attack_processing.php');
-		$container['action'] = 'bump';
-		$container['owner_id'] = $mine_owner_id;
-		forward($container);
-	}
-}
+require('sector_mines.inc');
 
 // otherwise
 forward(create_container('skeleton.php', $var['target_page']));
