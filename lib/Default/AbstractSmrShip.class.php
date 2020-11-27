@@ -4,6 +4,7 @@ abstract class AbstractSmrShip {
 	protected static $CACHE_BASE_SHIPS = array();
 
 	const SHIP_CLASS_RAIDER = 3;
+	const SHIP_CLASS_SCOUT = 4;
 
 	// Player exp gained for each point of damage done
 	const EXP_PER_DAMAGE_PLAYER = 0.375;
@@ -475,6 +476,10 @@ abstract class AbstractSmrShip {
 
 	public function getShipTypeID() {
 		return $this->baseShip['ShipTypeID'];
+	}
+
+	public function getShipClassID() {
+		return $this->baseShip['ShipClassID'];
 	}
 
 	/**
