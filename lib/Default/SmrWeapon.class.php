@@ -6,8 +6,10 @@
 class SmrWeapon extends AbstractSmrCombatWeapon {
 	use Traits\RaceID;
 
-	const BONUS_DAMAGE = 1.05; // multiplicative bonus
-	const BONUS_ACCURACY = 3; // additive bonus
+	const BONUS_DAMAGE = 15; // additive bonus
+	const BONUS_ACCURACY = 4; // additive bonus
+
+	const HIGHEST_POWER_LEVEL = 5; // must track the highest power level in db
 
 	protected int $weaponTypeID;
 	protected SmrWeaponType $weaponType;
@@ -65,30 +67,33 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	 * (Override) Return the weapon base accuracy.
 	 */
 	public function getBaseAccuracy() : int {
+		$baseAccuracy = $this->weaponType->getAccuracy();
 		if ($this->bonusAccuracy) {
-			return $this->weaponType->getAccuracy() + self::BONUS_ACCURACY;
+			$baseAccuracy += self::BONUS_ACCURACY;
 		}
-		return $this->weaponType->getAccuracy();
+		return $baseAccuracy;
 	}
 
 	/**
 	 * (Override) Return the weapon shield damage.
 	 */
 	public function getShieldDamage() : int {
-		if ($this->bonusDamage) {
-			return IFloor($this->weaponType->getShieldDamage() * self::BONUS_DAMAGE);
+		$shieldDamage = $this->weaponType->getShieldDamage();
+		if ($this->bonusDamage && $shieldDamage > 0) {
+			$shieldDamage += self::BONUS_DAMAGE;
 		}
-		return $this->weaponType->getShieldDamage();
+		return $shieldDamage;
 	}
 
 	/**
 	 * (Override) Return the weapon armour damage.
 	 */
 	public function getArmourDamage() : int {
-		if ($this->bonusDamage) {
-			return IFloor($this->weaponType->getArmourDamage() * self::BONUS_DAMAGE);
+		$armourDamage = $this->weaponType->getArmourDamage();
+		if ($this->bonusDamage && $armourDamage > 0) {
+			$armourDamage += self::BONUS_DAMAGE;
 		}
-		return $this->weaponType->getArmourDamage();
+		return $armourDamage;
 	}
 
 	/**
@@ -131,7 +136,14 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	public function getBuyerRestriction() {
 		return $this->weaponType->getBuyerRestriction();
 	}
-	
+
+	/**
+	 * Ships are only allowed to equip one of each type of Unique weapon
+	 */
+	public function isUniqueType() : bool {
+		return $this->getPowerLevel() === self::HIGHEST_POWER_LEVEL;
+	}
+
 	protected function getWeightedRandomForPlayer(AbstractSmrPlayer $player) {
 		return WeightedRandom::getWeightedRandomForPlayer($player, 'Weapon', $this->getWeaponTypeID());
 	}

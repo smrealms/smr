@@ -33,6 +33,8 @@ function raceToggle() {
 function applyFilter(tableId) {
 	var table = document.getElementById(tableId);
 	for (var i=1; i < table.rows.length; i++) {
+		// Loop over columns with active filters, and hide row if any column
+		// fails its respective filter.
 		var show = true;
 		for (var j=0; j < table.rows[i].cells.length; j++) {
 			// No filtering for null, undefined, and "All".
@@ -40,20 +42,25 @@ function applyFilter(tableId) {
 			if (filter[j] == null || filter[j][0] === "All") {
 				continue;
 			}
+
+			// Prepare the list of values in this cell for filtering.
+			// If there are no divs, then entire cell is the only value.
 			var cell = table.rows[i].cells[j];
-			if (cell.className == "locs") {
-				// At least one of the (line-break delimited) Locations must
-				// match the filter (there will be only one filter).
-				if (cell.innerHTML.split('<br>').indexOf(filter[j][0]) === -1) {
-					show = false;
-					break;
-				}
-			} else {
-				// The cell content must match exactly at least one filter.
-				if (filter[j].indexOf(cell.textContent) === -1) {
-					show = false;
-					break;
-				}
+			var values = cell.getElementsByTagName('div');
+			if (values.length === 0) {
+				values = [cell];
+			}
+
+			// The filters match against raw values, so extract them here.
+			var rawValues = [];
+			for (var k=0; k < values.length; k++) {
+				rawValues.push(values[k].textContent);
+			}
+
+			// One of the values must match at least one of the filters
+			if (rawValues.filter(function(value) { return filter[j].indexOf(value) !== -1; }).length === 0) {
+				show = false;
+				break;
 			}
 		}
 		if (show) {

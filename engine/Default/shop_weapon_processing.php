@@ -37,6 +37,14 @@ if (!isset($var['OrderID'])) {
 		create_error('You can\'t buy newbie weapons!');
 	}
 
+	if ($weapon->isUniqueType()) {
+		foreach ($ship->getWeapons() as $shipWeapon) {
+			if ($weapon->getWeaponTypeID() === $shipWeapon->getWeaponTypeID()) {
+				create_error('This weapon is unique, and your ship already has one equipped!');
+			}
+		}
+	}
+
 	// take the money from the user
 	$player->decreaseCredits($weapon->getCost());
 

@@ -30,20 +30,36 @@ if ($action == 'tell') {
 	$tip = Request::getInt('tip');
 	$player->decreaseCredits($tip);
 	$container['Message'] = '<i>The bartender notices your ' . number_format($tip) . ' credit tip.</i><br /><br />';
+
 	if ($tip > 0.25 * $cost) {
 		$eventSectorID = $event->getSectorID();
 		$eventGalaxy = SmrGalaxy::getGalaxyContaining($player->getGameID(), $eventSectorID);
+
 		if ($player->getSector()->getGalaxy()->equals($eventGalaxy)) {
 			$locationHint = 'Sector ' . Globals::getSectorBBLink($eventSectorID);
 		} else {
 			$locationHint = 'the ' . $eventGalaxy->getName() . ' galaxy';
 		}
+
 		if ($event->getWeapon()->hasBonusDamage() && $event->getWeapon()->hasBonusAccuracy()) {
 			$qualifier = 'very special';
 		} else {
 			$qualifier = 'special';
 		}
-		$container['Message'] .= 'Thank you kindly!<br /><br /><i>The bartender begins to turn away, hesitates, and then turns back to you.</i><br /><br />By the way, I heard that a weapon shop in ' . $locationHint . ' has some ' . $qualifier . ' stock that a person like you just might be interested in. That\'s all I know about it...<br /><br />Got anything to tell me?';
+
+		// Add a message indicating how much time is left in the event
+		$percTimeLeft = $event->getDurationRemainingPercent();
+		if ($percTimeLeft > 95) {
+			$timeHint = 'just heard';
+		} elseif ($percTimeLeft > 66) {
+			$timeHint = 'recently heard';
+		} elseif ($percTimeLeft > 33) {
+			$timeHint = 'heard';
+		} else {
+			$timeHint = 'heard some time ago';
+		}
+
+		$container['Message'] .= 'Thank you kindly!<br /><br /><i>The bartender begins to turn away, hesitates, and then turns back to you.</i><br /><br />By the way, I ' . $timeHint . ' that a weapon shop in ' . $locationHint . ' has some ' . $qualifier . ' stock that a person like you just might be interested in. That\'s all I know about it...<br /><br />Got anything to tell me?';
 	} elseif ($tip > 0.05 * $cost) {
 		$container['Message'] .= 'Oh, so it\'s secrets you\'re after, eh? Well, it\'ll cost ya more than that...<br /><br />Got anything to tell me?';
 	} else {

@@ -147,14 +147,20 @@ class DwarfPlanet extends SmrPlanetType {
 
 class ProtoPlanet extends SmrPlanetType {
 	const STRUCTURES = [
+		PLANET_GENERATOR => [
+			'max_amount' => 5,
+			'base_time' => 10800,
+			'credit_cost' => 100000,
+			'exp_gain' => 90,
+		],
 		PLANET_HANGAR => [
-			'max_amount' => 40,
+			'max_amount' => 50,
 			'base_time' => 21600,
 			'credit_cost' => 100000,
 			'exp_gain' => 180,
 		],
 		PLANET_BUNKER => [
-			'max_amount' => 20,
+			'max_amount' => 15,
 			'base_time' => 10800,
 			'credit_cost' => 50000,
 			'exp_gain' => 90,
