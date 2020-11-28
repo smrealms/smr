@@ -28,11 +28,11 @@ if ($version !== SMR_FILE_VERSION) {
 foreach ($data['Galaxies'] as $galID => $details) {
 	list($width, $height, $type, $name, $maxForceTime) = explode(',', $details);
 	$galaxy = SmrGalaxy::createGalaxy($var['game_id'], $galID);
-	$galaxy->setWidth($width);
-	$galaxy->setHeight($height);
+	$galaxy->setWidth(str2int($width));
+	$galaxy->setHeight(str2int($height));
 	$galaxy->setGalaxyType($type);
 	$galaxy->setName($name);
-	$galaxy->setMaxForceTime($maxForceTime);
+	$galaxy->setMaxForceTime(str2int($maxForceTime));
 }
 // Workaround for SmrGalaxy::getStartSector depending on all other galaxies
 SmrGalaxy::saveGalaxies();
@@ -46,7 +46,7 @@ foreach ($data as $key => $vals) {
 		continue;
 	}
 
-	$sectorID = $matches[1];
+	$sectorID = str2int($matches[1]);
 	$editSector = SmrSector::getSector($var['game_id'], $sectorID);
 
 	// Sector connections (we assume link sectors are correct)
@@ -61,19 +61,19 @@ foreach ($data as $key => $vals) {
 	// Ports
 	if (isset($vals['Port Level'])) {
 		$port = $editSector->createPort();
-		$port->setRaceID($vals['Port Race']);
-		$port->setLevel($vals['Port Level']);
+		$port->setRaceID(str2int($vals['Port Race']));
+		$port->setLevel(str2int($vals['Port Level']));
 		$port->setCreditsToDefault();
 		// SMR file indicates the port action Buys/Sells,
 		// but SmrPort::addPortGood uses the player action.
 		if (isset($vals['Buys'])) {
 			foreach (explode(',', $vals['Buys']) as $goodID) {
-				$port->addPortGood($goodID, 'Sell');
+				$port->addPortGood(str2int($goodID), 'Sell');
 			}
 		}
 		if (isset($vals['Sells'])) {
 			foreach (explode(',', $vals['Sells']) as $goodID) {
-				$port->addPortGood($goodID, 'Buy');
+				$port->addPortGood(str2int($goodID), 'Buy');
 			}
 		}
 	}
@@ -100,12 +100,12 @@ foreach ($data as $key => $vals) {
 
 	// Warps
 	if (isset($vals['Warp'])) {
-		$editSector->setWarp(SmrSector::getSector($var['game_id'], $vals['Warp']));
+		$editSector->setWarp(SmrSector::getSector($var['game_id'], str2int($vals['Warp'])));
 	}
 
 	// Planets
 	if (isset($vals['Planet'])) {
-		$editSector->createPlanet($vals['Planet']);
+		$editSector->createPlanet(str2int($vals['Planet']));
 	}
 }
 

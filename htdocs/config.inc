@@ -159,6 +159,17 @@ function IRound(float $val) : int {
 }
 
 /**
+ * Convert a numeric string to an int with input validation.
+ */
+function str2int(string $val) : int {
+	$result = filter_var($val, FILTER_VALIDATE_INT);
+	if ($result === false) {
+		throw new Exception('Input value is not an integer: ' . $val);
+	}
+	return $result;
+}
+
+/**
  * Generate a cryptographically strong random hexadecimal string.
  * The requested length must be a multiple of 2.
  */
