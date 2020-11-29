@@ -1007,7 +1007,12 @@ class AbstractSmrPort {
 		}
 
 		$offerPriceNoRelations = $this->getOfferPrice($idealPrice, 0, $transactionType);
-		$expPercent = 1 - abs(($idealPrice - $bargainPrice) / ($idealPrice - $offerPriceNoRelations));
+
+		// Avoid division by 0 in the case where the ideal price is so small
+		// that relations have no impact on the offered price.
+		$denom = max(1, abs($idealPrice - $offerPriceNoRelations));
+
+		$expPercent = 1 - abs(($idealPrice - $bargainPrice) / $denom);
 		return max(0, min(1, $expPercent));
 	}
 	
