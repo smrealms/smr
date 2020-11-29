@@ -62,7 +62,9 @@ foreach ($attackers as $attacker) {
 	$results['Attackers']['Traders'][$attacker->getAccountID()] =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 	foreach ($playerResults['Weapons'] as $weapon) {
-		$totalShieldDamage += $weapon['ActualDamage']['Shield'];
+		if (isset($weapon['ActualDamage'])) { // Only set if the weapon hits
+			$totalShieldDamage += $weapon['ActualDamage']['Shield'];
+		}
 	}
 }
 
