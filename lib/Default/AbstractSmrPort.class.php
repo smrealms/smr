@@ -391,8 +391,10 @@ class AbstractSmrPort {
 	
 	public function buyGoods(array $good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
 		$this->tradeGoods($good, $goodsTraded, $exp);
-		$this->increaseUpgrade(min(max($idealPrice, $goodsTraded * 1000), $bargainPrice));
-		$this->increaseCredits($bargainPrice);
+		// Limit upgrade/credits to prevent massive increases in a single trade
+		$cappedBargainPrice = min(max($idealPrice, $goodsTraded * 1000), $bargainPrice);
+		$this->increaseUpgrade($cappedBargainPrice);
+		$this->increaseCredits($cappedBargainPrice);
 	}
 	
 	public function sellGoods(array $good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
