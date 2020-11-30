@@ -15,9 +15,18 @@ if ($db->nextRecord()) {
 
 // Get the dates ("|" sets hr/min/sec to 0)
 $join = DateTime::createFromFormat('d/m/Y|', Request::get('game_join'));
+if ($join === false) {
+	create_error('Join Date is not valid!');
+}
 $start = empty(Request::get('game_start')) ? $join :
          DateTime::createFromFormat('d/m/Y|', Request::get('game_start'));
+if ($start === false) {
+	create_error('Start Date is not valid!');
+}
 $end = DateTime::createFromFormat('d/m/Y|', Request::get('game_end'));
+if ($end === false) {
+	create_error('End Date is not valid!');
+}
 
 $game = SmrGame::createGame($newID);
 $game->setName(Request::get('game_name'));
