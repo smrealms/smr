@@ -119,7 +119,6 @@ class MySqlDatabase {
 		if ($this->dbConn) {
 			$this->dbConn->close();
 			unset($this->dbConn);
-			$i = 0;
 		}
 	}
 
