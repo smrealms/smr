@@ -14,11 +14,51 @@ class MySqlDatabase {
 	private ?array $dbRecord = null;
 
 	public static function getInstance(): MySqlDatabase {
-		return DiContainer::get(self::class);
+		return self::ensureConnected(DiContainer::get(self::class));
 	}
 
 	public static function getNewInstance(): MySqlDatabase {
-		return DiContainer::make(self::class);
+		return self::ensureConnected(DiContainer::make(self::class));
+	}
+
+	/**
+	 * Verifies that the MySqlDatabase instance has a valid $dbConn instance,
+	 * and rewires the DI container to use freshly instantiated instances in the event
+	 * of disconnect from the database.
+	 * @param MySqlDatabase $mysqlDatabase
+	 * @return MySqlDatabase
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	private static function ensureConnected(MySqlDatabase $mysqlDatabase): MySqlDatabase {
+		if (!isset($mysqlDatabase->dbConn)) {
+			self::reconnectMysql();
+			DiContainer::getContainer()->set(MySqlDatabase::class, self::getNewInstance());
+			$mysqlDatabase = self::getInstance();
+		}
+		return $mysqlDatabase;
+	}
+
+	/**
+	 * Reconnects to the MySQL database, and replaces the managed mysqli instance
+	 * in the dependency injection container for future retrievals.
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	private static function reconnectMysql() {
+		$newMysqli = DiContainer::make(mysqli::class);
+		DiContainer::getContainer()->set(mysqli::class, $newMysqli);
+	}
+
+	public static function mysqliFactory(MySqlProperties $mysqlProperties): mysqli {
+		if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
+			throw new RuntimeException('Failed to enable mysqli error reporting');
+		}
+		return new mysqli(
+			$mysqlProperties->getHost(),
+			$mysqlProperties->getUser(),
+			$mysqlProperties->getPassword(),
+			$mysqlProperties->getDatabaseName());
 	}
 
 	/**
@@ -65,11 +105,21 @@ class MySqlDatabase {
 		return (int)$result->fetch_assoc()['db_bytes'];
 	}
 
-	// This should not be needed except perhaps by persistent connections
+	/**
+	 * This should not be needed except perhaps by persistent connections
+	 *
+	 * Closes the connection to the MySQL database. After closing this connection,
+	 * this MySqlDatabase instance is no longer valid, and will subsequently throw exceptions when
+	 * attempting to perform database operations.
+	 *
+	 * You must call MySqlDatabase::getInstance() again to retrieve a valid instance that
+	 * is reconnected to the database.
+	 */
 	public function close() {
 		if ($this->dbConn) {
 			$this->dbConn->close();
 			unset($this->dbConn);
+			$i = 0;
 		}
 	}
 
@@ -84,7 +134,6 @@ class MySqlDatabase {
 		if (!$this->dbResult) {
 			$this->error('No resource to get record from.');
 		}
-
 		if ($this->dbRecord = $this->dbResult->fetch_assoc()) {
 			return true;
 		}

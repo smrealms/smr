@@ -7,7 +7,6 @@ use DI\ContainerBuilder;
 use Dotenv\Dotenv;
 use MySqlDatabase;
 use mysqli;
-use RuntimeException;
 use Smr\MySqlProperties;
 use function DI\autowire;
 
@@ -38,15 +37,7 @@ class DiContainer {
 			 * typehint to make sure the container constructs and instance and provides it to the factory.
 			 */
 			mysqli::class => function (MySqlProperties $mysqlProperties): mysqli {
-				// Set the mysqli driver to raise exceptions on errors
-				if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
-					throw new RuntimeException('Failed to enable mysqli error reporting');
-				}
-				return new mysqli(
-					$mysqlProperties->getHost(),
-					$mysqlProperties->getUser(),
-					$mysqlProperties->getPassword(),
-					$mysqlProperties->getDatabaseName());
+				return MySqlDatabase::mysqliFactory($mysqlProperties);
 			},
 			Dotenv::class => function (): Dotenv {
 				return Dotenv::createArrayBacked(ROOT);
