@@ -1493,10 +1493,14 @@ abstract class AbstractSmrPlayer {
 	 * of the port given by $raceID.
 	 */
 	public function increaseRelationsByTrade($numGoods, $raceID) {
-		$relations = ICeil(min($numGoods, 300) / 30);
-		//Cap relations to a max of 1 after 500 have been reached
-		if ($this->getPersonalRelation($raceID) + $relations >= 500) {
-			$relations = max(1, min($relations, 500 - $this->getPersonalRelation($raceID)));
+		if ($raceID == RACE_NEUTRAL) {
+			$relations = ICeil(min($numGoods, 150) / 30);
+		} else {
+			$relations = ICeil(min($numGoods, 300) / 30);
+			//Cap relations to a max of 1 after 500 have been reached
+			if ($this->getPersonalRelation($raceID) + $relations >= 500) {
+				$relations = max(1, min($relations, 500 - $this->getPersonalRelation($raceID)));
+			}
 		}
 		$this->increaseRelations($relations, $raceID);
 	}
@@ -1506,7 +1510,11 @@ abstract class AbstractSmrPlayer {
 	 * bargaining and getting caught stealing.
 	 */
 	public function decreaseRelationsByTrade($numGoods, $raceID) {
-		$relations = ICeil(min($numGoods, 300) / 30);
+		if ($raceID == RACE_NEUTRAL) {
+			$relations = ICeil(min($numGoods, 150) / 30);
+		}else{
+			$relations = ICeil(min($numGoods, 300) / 30);
+		}
 		$this->decreaseRelations($relations, $raceID);
 	}
 
