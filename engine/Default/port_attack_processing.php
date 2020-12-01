@@ -51,12 +51,22 @@ foreach ($attackers as $attacker) {
 	$attacker->getShip()->decloak();
 }
 
+$totalShieldDamage = 0;
 foreach ($attackers as $attacker) {
 	$playerResults =& $attacker->shootPort($port);
 	$results['Attackers']['Traders'][$attacker->getAccountID()] =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
+	foreach ($playerResults['Weapons'] as $weapon) {
+		if (isset($weapon['ActualDamage'])) { // Only set if the weapon hits
+			$totalShieldDamage += $weapon['ActualDamage']['Shield'];
+		}
+	}
 }
-$results['Attackers']['Downgrades'] = $port->checkForDowngrade($results['Attackers']['TotalDamage']);
+
+// Planet downgrades only occur on non-shield damage
+$downgradeDamage = $results['Attackers']['TotalDamage'] - $totalShieldDamage;
+$results['Attackers']['Downgrades'] = $port->checkForDowngrade($downgradeDamage);
+
 $results['Port'] =& $port->shootPlayers($attackers);
 
 $account->log(LOG_TYPE_PORT_RAIDING, 'Player attacks port, the port does ' . $results['Port']['TotalDamage'] . ', their team does ' . $results['Attackers']['TotalDamage'] . ' and downgrades ' . $results['Attackers']['Downgrades'] . ' levels.', $port->getSectorID());

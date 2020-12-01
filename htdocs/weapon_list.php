@@ -20,27 +20,29 @@ try {
 	// Get all the properties to display for each weapon
 	$weapons = [];
 	foreach (SmrWeaponType::getAllWeaponTypes() as $weapon) {
+		$restrictions = [];
 		switch ($weapon->getBuyerRestriction()) {
 			case BUYER_RESTRICTION_GOOD:
-				$restriction = '<span class="dgreen">Good</span>';
+				$restrictions[] = '<div class="dgreen">Good</div>';
 			break;
 			case BUYER_RESTRICTION_EVIL:
-				$restriction = '<span class="red">Evil</span>';
+				$restrictions[] = '<div class="red">Evil</div>';
 			break;
 			case BUYER_RESTRICTION_NEWBIE:
-				$restriction = '<span style="color: #06F;">Newbie</span>';
+				$restrictions[] = '<div style="color: #06F;">Newbie</div>';
 			break;
 			case BUYER_RESTRICTION_PORT:
-				$restriction = '<span class="yellow">Port</span>';
+				$restrictions[] = '<div class="yellow">Port</div>';
 			break;
 			case BUYER_RESTRICTION_PLANET:
-				$restriction = '<span class="yellow">Planet</span>';
+				$restrictions[] = '<div class="yellow">Planet</div>';
 			break;
-			default:
-				$restriction = '';
+		}
+		if (SmrWeapon::getWeapon($weapon->getWeaponTypeID())->isUniqueType()) {
+			$restrictions[] = '<div style="color: #64B9B9">Unique</div>';
 		}
 		$weapons[] = [
-			'restriction' => $restriction,
+			'restriction' => $restrictions,
 			'weapon_name' => $weapon->getName(),
 			'race_id' => $weapon->getRaceID(),
 			'race_name' => $weapon->getRaceName(),

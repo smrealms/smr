@@ -66,13 +66,16 @@
 							</select>
 						</th>
 						<th style="width: 92px;">
-							<span class="sort" data-sort="restriction">Restriction</span><br />
+							<span class="sort" data-sort="restrictions">Restriction</span><br />
 							<select onchange="filterSelect(this)">
 								<option>All</option>
 								<option value="">None</option>
-								<option class="dgreen">Good</option>
 								<option class="red">Evil</option>
+								<option class="dgreen">Good</option>
 								<option style="color: #06F;">Newbie</option>
+								<option class="yellow">Planet</option>
+								<option class="yellow">Port</option>
+								<option style="color: #64B9B9;">Unique</option>
 							</select>
 						</th>
 						<th>
@@ -96,15 +99,19 @@
 							<td class="armour_damage"><?php echo $weapon['armour_damage']; ?></td>
 							<td class="accuracy"><?php echo $weapon['accuracy']; ?></td>
 							<td class="level"><?php echo $weapon['power_level']; ?></td>
-							<td class="restriction"><?php echo $weapon['restriction']; ?></td>
-							<td class="locs"><?php echo join('<br />', $weapon['locs']); ?></td>
+							<td class="restriction"><?php echo join('', $weapon['restriction']); ?></td>
+							<td class="locs"><?php
+								foreach ($weapon['locs'] as $loc) { ?>
+									<div><?php echo $loc; ?></div><?php
+								} ?>
+							</td>
 						</tr><?php
 					} ?>
 				</tbody>
 			</table>
 		</div>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.0/list.min.js"></script>
 		<script>
 		var list = new List('data-list', {
 			valueNames: ['name', 'race', 'cost', 'shield_damage', 'armour_damage', 'accuracy', 'level', 'restriction'],

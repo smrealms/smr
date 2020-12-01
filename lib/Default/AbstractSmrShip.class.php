@@ -4,6 +4,7 @@ abstract class AbstractSmrShip {
 	protected static $CACHE_BASE_SHIPS = array();
 
 	const SHIP_CLASS_RAIDER = 3;
+	const SHIP_CLASS_SCOUT = 4;
 
 	// Player exp gained for each point of damage done
 	const EXP_PER_DAMAGE_PLAYER = 0.375;
@@ -202,10 +203,8 @@ abstract class AbstractSmrShip {
 
 	public function getPowerUsed() {
 		$power = 0;
-		if ($this->getNumWeapons() > 0) {
-			foreach ($this->weapons as $weapon) {
-				$power += $weapon->getPowerLevel();
-			}
+		foreach ($this->weapons as $weapon) {
+			$power += $weapon->getPowerLevel();
 		}
 		return $power;
 	}
@@ -214,8 +213,11 @@ abstract class AbstractSmrShip {
 		return $this->getMaxPower() - $this->getPowerUsed();
 	}
 
-	public function hasRemainingPower() {
-		return $this->getRemainingPower() > 0;
+	/**
+	 * given power level of new weapon, return whether there is enough power available to install it on this ship
+	 */
+	public function checkPowerAvailable($powerLevel) {
+		return $this->getRemainingPower() >= $powerLevel;
 	}
 
 	public function getMaxPower() {
@@ -268,12 +270,10 @@ abstract class AbstractSmrShip {
 
 
 	public function addWeapon(SmrWeapon $weapon) {
-		if ($this->hasOpenWeaponSlots() && $this->hasRemainingPower()) {
-			if ($this->getRemainingPower() >= $weapon->getPowerLevel()) {
-				array_push($this->weapons, $weapon);
-				$this->hasChangedWeapons = true;
-				return $weapon;
-			}
+		if ($this->hasOpenWeaponSlots() && $this->checkPowerAvailable($weapon->getPowerLevel())) {
+			array_push($this->weapons, $weapon);
+			$this->hasChangedWeapons = true;
+			return $weapon;
 		}
 		$return = false;
 		return $return;
@@ -476,6 +476,10 @@ abstract class AbstractSmrShip {
 
 	public function getShipTypeID() {
 		return $this->baseShip['ShipTypeID'];
+	}
+
+	public function getShipClassID() {
+		return $this->baseShip['ShipClassID'];
 	}
 
 	/**

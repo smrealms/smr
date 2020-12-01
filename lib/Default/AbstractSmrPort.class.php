@@ -391,8 +391,10 @@ class AbstractSmrPort {
 
 	public function buyGoods(array $good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
 		$this->tradeGoods($good, $goodsTraded, $exp);
-		$this->increaseUpgrade(min(max($idealPrice, $goodsTraded * 1000), $bargainPrice));
-		$this->increaseCredits($bargainPrice);
+		// Limit upgrade/credits to prevent massive increases in a single trade
+		$cappedBargainPrice = min(max($idealPrice, $goodsTraded * 1000), $bargainPrice);
+		$this->increaseUpgrade($cappedBargainPrice);
+		$this->increaseCredits($cappedBargainPrice);
 	}
 
 	public function sellGoods(array $good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
@@ -1007,7 +1009,12 @@ class AbstractSmrPort {
 		}
 
 		$offerPriceNoRelations = $this->getOfferPrice($idealPrice, 0, $transactionType);
-		$expPercent = 1 - abs(($idealPrice - $bargainPrice) / ($idealPrice - $offerPriceNoRelations));
+
+		// Avoid division by 0 in the case where the ideal price is so small
+		// that relations have no impact on the offered price.
+		$denom = max(1, abs($idealPrice - $offerPriceNoRelations));
+
+		$expPercent = 1 - abs(($idealPrice - $bargainPrice) / $denom);
 		return max(0, min(1, $expPercent));
 	}
 

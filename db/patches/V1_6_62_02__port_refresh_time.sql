@@ -1,5 +1,5 @@
 -- Add a `last_update` field to the `port_has_goods` table
-ALTER TABLE port_has_goods ADD COLUMN last_update int(10) unsigned NOT NULL;
+ALTER TABLE port_has_goods ADD COLUMN last_update int unsigned NOT NULL;
 
 -- Copy `last_update` from `port` to `port_has_goods`
 UPDATE port_has_goods, port SET port_has_goods.last_update = port.last_update

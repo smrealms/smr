@@ -102,24 +102,7 @@ $sector->markVisited($player);
 // send scout msg
 $sector->enteringSector($player, MOVEMENT_JUMP);
 
-$mineOwnerID = false;
-foreach ($sector->getForces() as $forces) {
-	if (!$mineOwnerID && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
-		$mineOwnerID = $forces->getOwnerID();
-		break;
-	}
-}
-if ($mineOwnerID) {
-	if ($player->hasNewbieTurns()) {
-		$container = create_container('skeleton.php', 'current_sector.php');
-		$container['msg'] = 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.';
-		forward($container);
-	} else {
-		$container = create_container('forces_attack_processing.php');
-		$container['action'] = 'bump';
-		$container['owner_id'] = $mineOwnerID;
-		forward($container);
-	}
-}
+// If the new sector has mines...
+require('sector_mines.inc');
 
 forward(create_container('skeleton.php', $var['target_page']));

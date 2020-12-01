@@ -1,6 +1,6 @@
 /*Support for ship classes*/
 CREATE TABLE IF NOT EXISTS `ship_class` (
-	`ship_class_id` int(10) unsigned AUTO_INCREMENT PRIMARY KEY,
+	`ship_class_id` int unsigned AUTO_INCREMENT PRIMARY KEY,
 	`ship_class_name` varchar(100)  NOT NULL DEFAULT 'NO CLASS'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -13,7 +13,7 @@ INSERT INTO `ship_class` (`ship_class_id`, `ship_class_name`) VALUES
 (5, 'Starter');
 
 ALTER TABLE `ship_type` 
-ADD `ship_class_id` int(10) unsigned NOT NULL DEFAULT '1' AFTER `race_id`;
+ADD `ship_class_id` int unsigned NOT NULL DEFAULT '1' AFTER `race_id`;
 /* Set class for all the ships */
 
 #Galactic Semi

@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS player_saved_combat_logs (
-	account_id smallint(5) unsigned NOT NULL,
-	game_id tinyint(3) unsigned NOT NULL,
-	log_id int(10) unsigned NOT NULL,
+	account_id smallint unsigned NOT NULL,
+	game_id tinyint unsigned NOT NULL,
+	log_id int unsigned NOT NULL,
 	PRIMARY KEY (account_id,game_id,log_id)
 ) ENGINE=InnoDB;
 

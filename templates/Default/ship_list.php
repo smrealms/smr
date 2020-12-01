@@ -107,7 +107,7 @@
 			</table>
 		</div>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.0/list.min.js"></script>
 		<script>
 		var list = new List('data-list', {
 			valueNames: ['name', 'race', 'class_', 'cost', 'speed', 'hardpoint', 'restriction', 'shields', 'armour', 'cargo', 'cds', 'scouts', 'mines', 'scanner', 'cloak', 'illusion', 'jump', 'scrambler'],

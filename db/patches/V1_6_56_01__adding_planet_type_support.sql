@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS planet_type (
-	planet_type_id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	planet_type_id int UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	planet_type_name VARCHAR( 100 ),
 	planet_type_description VARCHAR( 100 ),
 	planet_image_link VARCHAR( 100 ),
-	planet_max_attackers INT(10) UNSIGNED NOT NULL,
-	planet_max_landed INT(10) UNSIGNED NOT NULL
+	planet_max_attackers int UNSIGNED NOT NULL,
+	planet_max_landed int UNSIGNED NOT NULL
 );
 
 INSERT INTO planet_type (planet_type_id, planet_type_name, planet_type_description, planet_image_link, planet_max_attackers, planet_max_landed) VALUES
@@ -12,7 +12,7 @@ INSERT INTO planet_type (planet_type_id, planet_type_name, planet_type_descripti
 (NULL, 'Arid Planet', 'A world mostly devoid of surface water, but capable of supporting life', 'images/planet2.png', '5', '5');
 
 CREATE TABLE IF NOT EXISTS planet_type_has_section (
-	planet_type_id INT(10) UNSIGNED NOT NULL,
+	planet_type_id int UNSIGNED NOT NULL,
 	planet_section ENUM('CONSTRUCTION', 'DEFENSE', 'FINANCE', 'STOCKPILE', 'OWNERSHIP') NOT NULL,
 	PRIMARY KEY (planet_type_id, planet_section)
 );
@@ -29,16 +29,16 @@ INSERT INTO planet_type_has_section (planet_type_id, planet_section) VALUES
 ('2', 'OWNERSHIP');
 
 CREATE TABLE IF NOT EXISTS planet_can_build (
-	planet_type_id INT(10) UNSIGNED NOT NULL,
-	construction_id INT(10) UNSIGNED NOT NULL,
-	max_amount INT(10) UNSIGNED NOT NULL,
-	cost_time INT(10) UNSIGNED NOT NULL,
-	cost_credit INT(10) UNSIGNED NOT NULL,
-	exp_gain INT(10) UNSIGNED NOT NULL
+	planet_type_id int UNSIGNED NOT NULL,
+	construction_id int UNSIGNED NOT NULL,
+	max_amount int UNSIGNED NOT NULL,
+	cost_time int UNSIGNED NOT NULL,
+	cost_credit int UNSIGNED NOT NULL,
+	exp_gain int UNSIGNED NOT NULL
 );
 
 ALTER TABLE planet
-ADD planet_type_id INT(10) UNSIGNED NOT NULL DEFAULT 1;
+ADD planet_type_id int UNSIGNED NOT NULL DEFAULT 1;
 
 ALTER TABLE planet_construction
 MODIFY construction_description VARCHAR( 100 );
@@ -59,7 +59,7 @@ UPDATE planet_construction
 SET construction_image = 'images/turret.png' WHERE construction_id = 3;
 
 ALTER TABLE planet
-ADD armour INT(10) UNSIGNED NOT NULL DEFAULT 0 AFTER shields;
+ADD armour int UNSIGNED NOT NULL DEFAULT 0 AFTER shields;
 
 INSERT INTO planet_construction (construction_id, construction_name, construction_description, construction_image, max_construction, exp_gain) VALUES 
 (4, 'Bunker', 'Increases planet\'s maximum armour capacity by 100 armour', 'images/bunker.png', 0, 90);
