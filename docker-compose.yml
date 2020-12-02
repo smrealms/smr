@@ -43,10 +43,10 @@ x-mysql-common: &mysql-common
     # By using the default image, we must expose the secrets in
     # the runtime environment (because we can't specify build args).
     environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_USER: ${MYSQL_USER}
-        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        - MYSQL_ROOT_PASSWORD
+        - MYSQL_USER
+        - MYSQL_PASSWORD
+        - MYSQL_DATABASE
     # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
     # which is incompatible with the way the SMR database is used.
     # Therefore, we override CMD to omit this sql mode.
