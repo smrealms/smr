@@ -34,8 +34,8 @@ try {
 		$warp1 = SmrSector::getSector($gameID, $db->getInt('sector_id'));
 		$warp2 = SmrSector::getSector($gameID, $db->getInt('warp'));
 		$links[] = [
-			'source' => $warp1->getGalaxyName(),
-			'target' => $warp2->getGalaxyName(),
+			'source' => $warp1->getGalaxy()->getName(),
+			'target' => $warp2->getGalaxy()->getName(),
 		];
 	}
 

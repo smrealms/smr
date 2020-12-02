@@ -5,7 +5,7 @@
 			<option value="" disabled selected>[Select a galaxy]</option><?php
 			$GameGalaxies = SmrGalaxy::getGameGalaxies($ThisPlayer->getGameID());
 			foreach ($GameGalaxies as $Galaxy) { ?>
-				<option value="<?php echo $Galaxy->getGalaxyID(); ?>"><?php echo $Galaxy->getName(); ?></option><?php
+				<option value="<?php echo $Galaxy->getGalaxyID(); ?>"><?php echo $Galaxy->getDisplayName(); ?></option><?php
 			} ?>
 		</select>
 		<br /><br />

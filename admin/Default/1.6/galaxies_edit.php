@@ -16,7 +16,7 @@ $template->assign('Submit', $submit);
 $galaxies = [];
 foreach (SmrGalaxy::getGameGalaxies($var['game_id']) as $galaxy) {
 	$galaxies[$galaxy->getGalaxyID()] = [
-		'Name' => $galaxy->getName(),
+		'Name' => $galaxy->getDisplayName(),
 		'Width' => $galaxy->getWidth(),
 		'Height' => $galaxy->getHeight(),
 		'Type' => $galaxy->getGalaxyType(),

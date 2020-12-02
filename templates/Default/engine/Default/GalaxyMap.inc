@@ -19,7 +19,7 @@
 		<div class="gal_map_header">
 			<table cellspacing="0" cellpadding="0">
 				<tr>
-					<td>Map of the known <span class="big bold"><?php echo $ThisGalaxy->getName(); ?></span> galaxy.</td>
+					<td>Map of the known <span class="big bold"><?php echo $ThisGalaxy->getDisplayName(); ?></span> galaxy.</td>
 					<td>
 						&thinsp;
 						<a href="map_warps.php?game=<?php echo $ThisPlayer->getGameID(); ?>">
@@ -35,7 +35,7 @@
 								foreach ($GameGalaxies as $GameGalaxy) {
 									$GalaxyID = $GameGalaxy->getGalaxyID(); ?>
 									<option value="<?php echo $GalaxyID; ?>"<?php if ($ThisGalaxy->equals($GameGalaxy)) { ?> selected="selected"<?php } ?>>
-									<?php echo $GameGalaxy->getName(); ?>
+									<?php echo $GameGalaxy->getDisplayName(); ?>
 									</option><?php
 								} ?>
 							</select>&nbsp;

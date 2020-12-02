@@ -8,7 +8,7 @@ if (isset($var['message'])) {
 $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 $galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 
-$template->assign('PageTopic', 'Warps for Galaxy : ' . $galaxy->getName() . ' (' . $galaxy->getGalaxyID() . ')');
+$template->assign('PageTopic', 'Warps for Galaxy : ' . $galaxy->getDisplayName() . ' (' . $galaxy->getGalaxyID() . ')');
 
 
 // Initialize warps array

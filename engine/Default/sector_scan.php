@@ -7,7 +7,7 @@ if (!$sector->isLinked($var['target_sector']) && $sector->getSectorID() != $var[
 // initialize vars
 $scanSector = SmrSector::getSector($player->getGameID(), $var['target_sector']);
 
-$template->assign('PageTopic', 'Sector Scan of #' . $scanSector->getSectorID() . ' (' . $scanSector->getGalaxyName() . ')');
+$template->assign('PageTopic', 'Sector Scan of #' . $scanSector->getSectorID() . ' (' . $scanSector->getGalaxy()->getDisplayName() . ')');
 Menu::navigation($template, $player);
 
 $friendly_forces = 0;

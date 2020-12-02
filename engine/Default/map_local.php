@@ -50,7 +50,7 @@ $template->assign('MapShrinkHREF', SmrSession::getNewHREF($container));
 
 $galaxy = $player->getSector()->getGalaxy();
 
-$template->assign('GalaxyName', $galaxy->getName());
+$template->assign('GalaxyName', $galaxy->getDisplayName());
 
 $mapSectors = $galaxy->getMapSectors($player->getSectorID(), $player->getZoom());
 $template->assign('MapSectors', $mapSectors);

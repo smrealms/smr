@@ -119,13 +119,23 @@ class SmrGalaxy {
 	public function getGalaxyMapHREF() {
 		return 'map_galaxy.php?galaxy_id=' . $this->getGalaxyID();
 	}
-	
+
+	/**
+	 * Returns the galaxy name.
+	 * Use getDisplayName for an HTML-safe version.
+	 */
 	public function getName() {
 		return $this->name;
 	}
-	
+
+	/**
+	 * Returns the galaxy name, suitable for HTML display.
+	 */
+	public function getDisplayName() : string {
+		return htmlentities($this->name);
+	}
+
 	public function setName($name) {
-		$name = htmlentities($name, ENT_COMPAT, 'utf-8');
 		if ($this->name == $name) {
 			return;
 		}
