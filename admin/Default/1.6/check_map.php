@@ -46,7 +46,7 @@ $allGalaxyRoutes = [];
 foreach (SmrGalaxy::getGameGalaxies($var['game_id']) as $galaxy) {
 	$galaxy->getPorts(); // Efficiently construct the port cache
 	$distances = Plotter::calculatePortToPortDistances($galaxy->getSectors(), $maxDistance, $galaxy->getStartSector(), $galaxy->getEndSector());
-	$allGalaxyRoutes[$galaxy->getName()] = \Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $galaxy->getSectors(), $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+	$allGalaxyRoutes[$galaxy->getDisplayName()] = \Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $galaxy->getSectors(), $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 }
 $template->assign('AllGalaxyRoutes', $allGalaxyRoutes);
 
@@ -74,7 +74,7 @@ foreach (SmrGalaxy::getGameGalaxies($var['game_id']) as $galaxy) {
 	}
 	if (!empty($max)) {
 		$output = $max['Distance'] . 'x ' . Globals::getGoodName($max['GoodID']) . ' at Port #' . $max['Port']->getSectorID() . ' (' . $max['Port']->getRaceName() . ')';
-		$maxSellMultipliers[$galaxy->getName()] = $output;
+		$maxSellMultipliers[$galaxy->getDisplayName()] = $output;
 	}
 }
 $template->assign('MaxSellMultipliers', $maxSellMultipliers);

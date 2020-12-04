@@ -7,7 +7,7 @@ if ($player->isLandedOnPlanet()) {
 
 $template->assign('SpaceView', true);
 
-$template->assign('PageTopic', 'Current Sector: ' . $player->getSectorID() . ' (' . $sector->getGalaxyName() . ')');
+$template->assign('PageTopic', 'Current Sector: ' . $player->getSectorID() . ' (' . $sector->getGalaxy()->getDisplayName() . ')');
 
 Menu::navigation($template, $player);
 

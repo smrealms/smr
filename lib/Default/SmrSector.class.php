@@ -338,10 +338,6 @@ class SmrSector {
 		$this->hasChanged = true;
 	}
 
-	public function getGalaxyName() {
-		return $this->getGalaxy()->getName();
-	}
-
 	public function getNumberOfLinks() {
 		$num = 0;
 		if (!is_array($this->getLinks())) {

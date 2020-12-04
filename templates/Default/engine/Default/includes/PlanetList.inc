@@ -24,7 +24,7 @@ if (count($Planets) > 0) { ?>
 					<td class="sort_name"><?php echo $Planet->getDisplayName(); ?></td>
 					<td class="sort_lvl center"><?php echo number_format($Planet->getLevel(), 2); ?></td>
 					<td class="sort_owner noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
-					<td class="sort_sector center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getName(); ?></a>)</td>
+					<td class="sort_sector center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getDisplayName(); ?></a>)</td>
 					<td class="noWrap"><?php
 						foreach ($Planet->getStructureTypes() as $Structure) { ?>
 							<img style="padding:1px;" class="bottom" src="images/<?php echo $Structure->image(); ?>"  width="16" height="16" alt="" title="<?php echo $Structure->name(); ?>" />&nbsp;<?php echo $Planet->getBuilding($Structure->structureID()); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxBuildings($Structure->structureID()); ?><br /><?php

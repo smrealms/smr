@@ -14,7 +14,7 @@ if (isset($Message)) {
 					</tr><?php
 					foreach ($Galaxies as $eachGalaxy) { ?>
 						<tr>
-							<td class="right"><?php echo $eachGalaxy->getName(); ?></td>
+							<td class="right"><?php echo $eachGalaxy->getDisplayName(); ?></td>
 							<td><input class="center" type="number" value="<?php echo $Warps[$Galaxy->getGalaxyID()][$eachGalaxy->getGalaxyID()]; ?>" name="warp<?php echo $eachGalaxy->getGalaxyID(); ?>"></td>
 						</tr><?php
 					} ?>
@@ -65,7 +65,7 @@ p.vert {
 		foreach ($Galaxies as $gal) { ?>
 			<th>
 				<p class="vert">
-					<a href="<?php echo $GalLinks[$gal->getGalaxyID()]; ?>"><?php echo $gal->getName(); ?></a>
+					<a href="<?php echo $GalLinks[$gal->getGalaxyID()]; ?>"><?php echo $gal->getDisplayName(); ?></a>
 				</p>
 			</th><?php
 		} ?>
@@ -73,7 +73,7 @@ p.vert {
 	</tr><?php
 	foreach ($Galaxies as $galRow) { ?>
 		<tr>
-			<th><a href="<?php echo $GalLinks[$galRow->getGalaxyID()]; ?>"><?php echo $galRow->getName(); ?></a></th><?php
+			<th><a href="<?php echo $GalLinks[$galRow->getGalaxyID()]; ?>"><?php echo $galRow->getDisplayName(); ?></a></th><?php
 			foreach ($Galaxies as $galCol) {
 				$count = $Warps[$galRow->getGalaxyID()][$galCol->getGalaxyID()];
 				$display = $count == 0 ? '' : $count; ?>
