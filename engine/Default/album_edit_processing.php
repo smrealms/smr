@@ -72,7 +72,7 @@ if ($db->nextRecord()) {
 					month = ' . $db->escapeNumber($month) . ',
 					year = ' . $db->escapeNumber($year) . ',
 					other = ' . $db->escapeString($other) . ',
-					last_changed = ' . $db->escapeNumber(TIME) . ',
+					last_changed = ' . $db->escapeNumber(SmrSession::getTime()) . ',
 					approved = \'TBC\',
 					disabled = \'FALSE\'
 				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
@@ -87,7 +87,7 @@ if ($db->nextRecord()) {
 
 	// add album entry
 	$db->query('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved)
-				VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($location) . ', ' . $db->escapeString($email) . ', ' . $db->escapeString($website) . ', ' . $db->escapeNumber($day) . ', ' . $db->escapeNumber($month) . ', ' . $db->escapeNumber($year) . ', ' . $db->escapeString($other) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ', \'TBC\')');
+				VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($location) . ', ' . $db->escapeString($email) . ', ' . $db->escapeString($website) . ', ' . $db->escapeNumber($day) . ', ' . $db->escapeNumber($month) . ', ' . $db->escapeNumber($year) . ', ' . $db->escapeString($other) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ', \'TBC\')');
 }
 
 if (!empty($comment)) {
@@ -103,7 +103,7 @@ if (!empty($comment)) {
 
 	$db->query('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
-				VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($comment_id) . ', ' . $db->escapeNumber(TIME) . ', 0, ' . $db->escapeString($comment) . ')');
+				VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($comment_id) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ', 0, ' . $db->escapeString($comment) . ')');
 	$db->unlock();
 }
 

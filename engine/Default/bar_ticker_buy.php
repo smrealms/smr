@@ -16,7 +16,7 @@ foreach ($player->getTickers() as $ticker) {
 	if ($ticker['Type'] == 'BLOCK') {
 		$type = 'Scout Message Blocker';
 	}
-	$tickers[$type] = $ticker['Expires'] - TIME;
+	$tickers[$type] = $ticker['Expires'] - SmrSession::getTime();
 }
 $template->assign('Tickers', $tickers);
 

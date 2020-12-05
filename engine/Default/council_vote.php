@@ -35,7 +35,7 @@ $template->assign('VoteRelations', $voteRelations);
 
 $voteTreaties = array();
 $db->query('SELECT * FROM race_has_voting
-			WHERE '.$db->escapeNumber(TIME) . ' < end_time
+			WHERE '.$db->escapeNumber(SmrSession::getTime()) . ' < end_time
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
 if ($db->getNumRows() > 0) {

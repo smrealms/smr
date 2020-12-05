@@ -61,7 +61,7 @@ function checkPacts($race_id_1) {
 	$db2 = new SmrMySqlDatabase();
 
 	$db->query('SELECT * FROM race_has_voting
-				WHERE end_time < ' . $db->escapeNumber(TIME) . '
+				WHERE end_time < ' . $db->escapeNumber(SmrSession::getTime()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND race_id_1 = ' . $db->escapeNumber($race_id_1));
 	while ($db->nextRecord()) {
@@ -107,7 +107,7 @@ function checkPacts($race_id_1) {
 				}
 
 				if (count($currentlyParkedAccountIDs[$race_id_1]) + count($currentlyParkedAccountIDs[$race_id_2]) > 0) {
-					$expireTime = TIME + TIME_FOR_WAR_VOTE_FED_SAFETY;
+					$expireTime = SmrSession::getTime() + TIME_FOR_WAR_VOTE_FED_SAFETY;
 					$query = 'REPLACE INTO player_can_fed (account_id, game_id, race_id, expiry, allowed) VALUES ';
 					foreach ($currentlyParkedAccountIDs as $raceID => $accountIDs) {
 						if ($raceID == $race_id_1) {
@@ -138,7 +138,7 @@ function checkPacts($race_id_1) {
 				// get news message
 				$news = 'The [race=' . $race_id_1 . '] have declared <span class="red">WAR</span> on the [race=' . $race_id_2 . ']';
 				$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
-							'(' . $db2->escapeNumber($player->getGameID()) . ', ' . $db2->escapeNumber(TIME) . ', ' . $db2->escapeString($news) . ')');
+							'(' . $db2->escapeNumber($player->getGameID()) . ', ' . $db2->escapeNumber(SmrSession::getTime()) . ', ' . $db2->escapeString($news) . ')');
 			} elseif ($type == 'PEACE') {
 				// get 'yes' votes
 				$db2->query('SELECT * FROM player_votes_pact
@@ -172,7 +172,7 @@ function checkPacts($race_id_1) {
 					//get news message
 					$news = 'The [race=' . $race_id_1 . '] have signed a <span class="dgreen">PEACE</span> treaty with the [race=' . $race_id_2 . ']';
 					$db2->query('INSERT INTO news (game_id, time, news_message) VALUES
-								('.$db2->escapeNumber($player->getGameID()) . ', ' . $db2->escapeNumber(TIME) . ', ' . $db2->escapeString($news) . ')');
+								('.$db2->escapeNumber($player->getGameID()) . ', ' . $db2->escapeNumber(SmrSession::getTime()) . ', ' . $db2->escapeString($news) . ')');
 				}
 			}
 		}

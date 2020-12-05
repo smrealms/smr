@@ -124,7 +124,7 @@ abstract class AbstractSmrPlayer {
 	 */
 	public static function getGalaxyPlayers($gameID, $galaxyID, $forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT player.*, sector_id FROM sector LEFT JOIN player USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(TIME - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$db->query('SELECT player.*, sector_id FROM sector LEFT JOIN player USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(SmrSession::getTime() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlayers = [];
 		while ($db->nextRecord()) {
 			$sectorID = $db->getInt('sector_id');
@@ -143,7 +143,7 @@ abstract class AbstractSmrPlayer {
 	public static function getSectorPlayers($gameID, $sectorID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(TIME - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
+			$db->query('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(SmrSession::getTime() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
 			while ($db->nextRecord()) {
 				$accountID = $db->getInt('account_id');
@@ -289,7 +289,7 @@ abstract class AbstractSmrPlayer {
 
 		$startSectorID = 0; // Temporarily put player into non-existent sector
 		$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, sector_id, last_cpl_action, last_active, npc, newbie_status)
-					VALUES(' . $db->escapeNumber($accountID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($playerID) . ', ' . $db->escapeString($playerName) . ', ' . $db->escapeNumber($raceID) . ', ' . $db->escapeNumber($startSectorID) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean($npc) . ',' . $db->escapeBoolean($isNewbie) . ')');
+					VALUES(' . $db->escapeNumber($accountID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($playerID) . ', ' . $db->escapeString($playerName) . ', ' . $db->escapeNumber($raceID) . ', ' . $db->escapeNumber($startSectorID) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeBoolean($npc) . ',' . $db->escapeBoolean($isNewbie) . ')');
 
 		$db->unlock();
 
@@ -642,7 +642,7 @@ abstract class AbstractSmrPlayer {
 			$db->escapeNumber($messageTypeID) . ',' .
 			$db->escapeString($message) . ',' .
 			$db->escapeNumber($senderID) . ',' .
-			$db->escapeNumber(TIME) . ',' .
+			$db->escapeNumber(SmrSession::getTime()) . ',' .
 			$db->escapeNumber($expires) . ',' .
 			$db->escapeBoolean($senderDelete) . ')'
 		);
@@ -667,7 +667,7 @@ abstract class AbstractSmrPlayer {
 					$mail = setupMailer();
 					$mail->Subject = 'Message Notification';
 					$mail->setFrom('notifications@smrealms.de', 'SMR Notifications');
-					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getShortDateFormat() . ' ' . $receiverAccount->getShortTimeFormat(), TIME) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message, true);
+					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getShortDateFormat() . ' ' . $receiverAccount->getShortTimeFormat(), SmrSession::getTime()) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message, true);
 					$mail->msgHTML($bbifiedMessage);
 					$mail->AltBody = strip_tags($bbifiedMessage);
 					$mail->addAddress($receiverAccount->getEmail(), $receiverAccount->getHofName());
@@ -699,7 +699,7 @@ abstract class AbstractSmrPlayer {
 		$db->query('SELECT account_id
 					FROM active_session
 					JOIN player USING (game_id, account_id)
-					WHERE active_session.last_accessed >= ' . $db->escapeNumber(TIME - SmrSession::TIME_BEFORE_EXPIRY) . '
+					WHERE active_session.last_accessed >= ' . $db->escapeNumber(SmrSession::getTime() - SmrSession::TIME_BEFORE_EXPIRY) . '
 						AND game_id = ' . $db->escapeNumber($this->getGameID()) . '
 						AND ignore_globals = \'FALSE\'
 						AND account_id != ' . $db->escapeNumber($this->getAccountID()));
@@ -755,7 +755,7 @@ abstract class AbstractSmrPlayer {
 				default:
 					$expires = 86400 * 7;
 			}
-			$expires += TIME;
+			$expires += SmrSession::getTime();
 		}
 
 		// Do not put scout messages in the sender's sent box
@@ -770,39 +770,39 @@ abstract class AbstractSmrPlayer {
 	public function sendMessageFromOpAnnounce($receiverID, $message, $expires = false) {
 		// get expire time if not set
 		if ($expires === false) {
-			$expires = TIME + 86400 * 14;
+			$expires = SmrSession::getTime() + 86400 * 14;
 		}
 		self::doMessageSending(ACCOUNT_ID_OP_ANNOUNCE, $receiverID, $this->getGameID(), MSG_ALLIANCE, $message, $expires);
 	}
 
 	public function sendMessageFromAllianceCommand($receiverID, $message) {
-		$expires = TIME + 86400 * 365;
+		$expires = SmrSession::getTime() + 86400 * 365;
 		self::doMessageSending(ACCOUNT_ID_ALLIANCE_COMMAND, $receiverID, $this->getGameID(), MSG_PLAYER, $message, $expires);
 	}
 
 	public static function sendMessageFromPlanet($gameID, $receiverID, $message) {
 		//get expire time
-		$expires = TIME + 86400 * 31;
+		$expires = SmrSession::getTime() + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PLANET, $receiverID, $gameID, MSG_PLANET, $message, $expires);
 	}
 
 	public static function sendMessageFromPort($gameID, $receiverID, $message) {
 		//get expire time
-		$expires = TIME + 86400 * 31;
+		$expires = SmrSession::getTime() + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PORT, $receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 
 	public static function sendMessageFromFedClerk($gameID, $receiverID, $message) {
-		$expires = TIME + 86400 * 365;
+		$expires = SmrSession::getTime() + 86400 * 365;
 		self::doMessageSending(ACCOUNT_ID_FED_CLERK, $receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 
 	public static function sendMessageFromAdmin($gameID, $receiverID, $message, $expires = false) {
 		//get expire time
 		if ($expires === false) {
-			$expires = TIME + 86400 * 365;
+			$expires = SmrSession::getTime() + 86400 * 365;
 		}
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_ADMIN, $receiverID, $gameID, MSG_ADMIN, $message, $expires);
@@ -811,7 +811,7 @@ abstract class AbstractSmrPlayer {
 	public static function sendMessageFromAllianceAmbassador($gameID, $receiverID, $message, $expires = false) {
 		//get expire time
 		if ($expires === false) {
-			$expires = TIME + 86400 * 31;
+			$expires = SmrSession::getTime() + 86400 * 31;
 		}
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_ALLIANCE_AMBASSADOR, $receiverID, $gameID, MSG_ALLIANCE, $message, $expires);
@@ -820,7 +820,7 @@ abstract class AbstractSmrPlayer {
 	public static function sendMessageFromCasino($gameID, $receiverID, $message, $expires = false) {
 		//get expire time
 		if ($expires === false) {
-			$expires = TIME + 86400 * 7;
+			$expires = SmrSession::getTime() + 86400 * 7;
 		}
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_CASINO, $receiverID, $gameID, MSG_CASINO, $message, $expires);
@@ -829,7 +829,7 @@ abstract class AbstractSmrPlayer {
 	public static function sendMessageFromRace($raceID, $gameID, $receiverID, $message, $expires = false) {
 		//get expire time
 		if ($expires === false) {
-			$expires = TIME + 86400 * 5;
+			$expires = SmrSession::getTime() + 86400 * 5;
 		}
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_GROUP_RACES + $raceID, $receiverID, $gameID, MSG_POLITICAL, $message, $expires);
@@ -874,7 +874,7 @@ abstract class AbstractSmrPlayer {
 				$this->canFed[$raceID2] = $this->getRelation($raceID2) >= ALIGN_FED_PROTECTION;
 			}
 			$this->db->query('SELECT race_id, allowed FROM player_can_fed
-								WHERE ' . $this->SQL . ' AND expiry > ' . $this->db->escapeNumber(TIME));
+								WHERE ' . $this->SQL . ' AND expiry > ' . $this->db->escapeNumber(SmrSession::getTime()));
 			while ($this->db->nextRecord()) {
 				$this->canFed[$this->db->getInt('race_id')] = $this->db->getBoolean('allowed');
 			}
@@ -1266,7 +1266,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function canChangeRace() : bool {
-		return !$this->isRaceChanged() && (TIME - $this->getGame()->getStartTime() < TIME_FOR_RACE_CHANGE);
+		return !$this->isRaceChanged() && (SmrSession::getTime() - $this->getGame()->getStartTime() < TIME_FOR_RACE_CHANGE);
 	}
 
 	public static function getColouredRaceNameOrDefault($otherRaceID, AbstractSmrPlayer $player = null, $linked = false) {
@@ -1368,8 +1368,8 @@ abstract class AbstractSmrPlayer {
 		$this->db->query('DELETE FROM player_has_alliance_role WHERE ' . $this->SQL);
 
 		if (!$this->isAllianceLeader() && $allianceID != NHA_ID) { // Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
-			$this->setAllianceJoinable(TIME + self::TIME_FOR_ALLIANCE_SWITCH);
-			$alliance->getLeader()->setAllianceJoinable(TIME + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
+			$this->setAllianceJoinable(SmrSession::getTime() + self::TIME_FOR_ALLIANCE_SWITCH);
+			$alliance->getLeader()->setAllianceJoinable(SmrSession::getTime() + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
 		}
 	}
 
@@ -1580,7 +1580,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function updateLastNewsUpdate() {
-		$this->setLastNewsUpdate(TIME);
+		$this->setLastNewsUpdate(SmrSession::getTime());
 	}
 
 	public function getLastPort() {
@@ -1769,7 +1769,7 @@ abstract class AbstractSmrPlayer {
 		if (!isset($this->tickers)) {
 			$this->tickers = array();
 			//get ticker info
-			$this->db->query('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL . ' AND expires > ' . $this->db->escapeNumber(TIME));
+			$this->db->query('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL . ' AND expires > ' . $this->db->escapeNumber(SmrSession::getTime()));
 			while ($this->db->nextRecord()) {
 				$this->tickers[$this->db->getField('type')] = [
 					'Type' => $this->db->getField('type'),
@@ -1912,7 +1912,7 @@ abstract class AbstractSmrPlayer {
 						'SmrCredits' => 0,
 						'Type' => $type,
 						'Claimer' => 0,
-						'Time' => TIME,
+						'Time' => SmrSession::getTime(),
 						'ID' => $this->getNextBountyID(),
 						'New' => true);
 		$this->setBounty($bounty);
@@ -2221,7 +2221,7 @@ abstract class AbstractSmrPlayer {
 		}
 		$msg .= ' in Sector&nbsp;' . Globals::getSectorBBLink($this->getSectorID());
 		$this->getSector()->increaseBattles(1);
-		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeString($msg, true) . ',\'regular\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(SmrSession::getTime()) . ',' . $this->db->escapeString($msg, true) . ',\'regular\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
 		self::sendMessageFromFedClerk($this->getGameID(), $killer->getAccountID(), 'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
@@ -2259,7 +2259,7 @@ abstract class AbstractSmrPlayer {
 		}
 
 		//check for federal bounty being offered for current port raiders;
-		$this->db->query('DELETE FROM player_attacks_port WHERE time < ' . $this->db->escapeNumber(TIME - self::TIME_FOR_FEDERAL_BOUNTY_ON_PR));
+		$this->db->query('DELETE FROM player_attacks_port WHERE time < ' . $this->db->escapeNumber(SmrSession::getTime() - self::TIME_FOR_FEDERAL_BOUNTY_ON_PR));
 		$query = 'SELECT 1
 					FROM player_attacks_port
 					JOIN port USING(game_id, sector_id)
@@ -2373,7 +2373,7 @@ abstract class AbstractSmrPlayer {
 		$news_message .= ' was destroyed by ' . $owner->getBBLink() . '\'s forces in sector ' . Globals::getSectorBBLink($forces->getSectorID());
 		// insert the news entry
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
-						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
 		// Player loses 15% experience
 		$expLossPercentage = .15;
@@ -2409,7 +2409,7 @@ abstract class AbstractSmrPlayer {
 		$news_message .= ' was destroyed while invading ' . $port->getDisplayName() . '.';
 		// insert the news entry
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,dead_id,dead_alliance)
-						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
 		// Player loses between 15% and 20% experience
 		$expLossPercentage = .20 - .05 * ($port->getLevel() - 1) / ($port->getMaxLevel() - 1);
@@ -2446,7 +2446,7 @@ abstract class AbstractSmrPlayer {
 		$news_message .= ' was destroyed by ' . $planet->getCombatName() . '\'s planetary defenses in sector ' . Globals::getSectorBBLink($planet->getSectorID()) . '.';
 		// insert the news entry
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
-						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($planetOwner->getAccountID()) . ',' . $this->db->escapeNumber($planetOwner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($planetOwner->getAccountID()) . ',' . $this->db->escapeNumber($planetOwner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
 		// Player loses between 15% and 20% experience
 		$expLossPercentage = .20 - .05 * $planet->getLevel() / $planet->getMaxLevel();
@@ -2543,7 +2543,7 @@ abstract class AbstractSmrPlayer {
 		$this->increaseHOF($takeNewbie, array('Movement', 'Turns Used', 'Newbie'), HOF_ALLIANCE);
 
 		// Player has taken an action
-		$this->setLastActive(TIME);
+		$this->setLastActive(SmrSession::getTime());
 		$this->updateLastCPLAction();
 	}
 
@@ -2593,7 +2593,7 @@ abstract class AbstractSmrPlayer {
 		}
 
 		// how many turns would he get right now?
-		$extraTurns = $this->getTurnsGained(TIME);
+		$extraTurns = $this->getTurnsGained(SmrSession::getTime());
 
 		// do we have at least one turn to give?
 		if ($extraTurns > 0) {
@@ -2641,7 +2641,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function updateLastCPLAction() {
-		$this->setLastCPLAction(TIME);
+		$this->setLastCPLAction(SmrSession::getTime());
 	}
 
 	public function setNewbieWarning($bool) {
@@ -2774,7 +2774,7 @@ abstract class AbstractSmrPlayer {
 			'On Step' => $step,
 			'Progress' => 0,
 			'Unread' => true,
-			'Expires' => (TIME + 86400),
+			'Expires' => (SmrSession::getTime() + 86400),
 			'Sector' => $sector,
 			'Starting Sector' => $this->getSectorID()
 		);

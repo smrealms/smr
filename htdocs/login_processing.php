@@ -91,7 +91,7 @@ try {
 	// *********************************
 	$db = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM active_session ' .
-			   'WHERE last_accessed > ' . $db->escapeNumber(TIME - TIME_BEFORE_NEWBIE_TIME));
+			   'WHERE last_accessed > ' . $db->escapeNumber(SmrSession::getTime() - TIME_BEFORE_NEWBIE_TIME));
 	if ($db->getNumRows() == 0) {
 		$db->query('UPDATE player SET newbie_turns = 1
 					WHERE newbie_turns = 0 AND
@@ -104,8 +104,8 @@ try {
 	// *
 	// ******************************************
 
-	$db->query('DELETE FROM player_has_ticker WHERE expires <= ' . $db->escapeNumber(TIME));
-	$db->query('DELETE FROM cpl_tag WHERE expires <= ' . $db->escapeNumber(TIME) . ' AND expires > 0');
+	$db->query('DELETE FROM player_has_ticker WHERE expires <= ' . $db->escapeNumber(SmrSession::getTime()));
+	$db->query('DELETE FROM cpl_tag WHERE expires <= ' . $db->escapeNumber(SmrSession::getTime()) . ' AND expires > 0');
 
 	// save ip
 	$account->updateIP();
@@ -171,11 +171,11 @@ try {
 	}
 	$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($new) . ', ' . $db->escapeString($use) . ')');
 	//now we update their cookie with the newest info
-	setcookie('Session_Info', $new, TIME + 157680000);
+	setcookie('Session_Info', $new, SmrSession::getTime() + 157680000);
 
 
 	//get rid of expired messages
-	$db->query('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(TIME) . ' AND expire_time != 0');
+	$db->query('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(SmrSession::getTime()) . ' AND expire_time != 0');
 	// Mark message as read if it was sent to self as a mass mail.
 	$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND account_id = sender_id AND message_type_id IN (' . $db->escapeArray(array(MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL)) . ');');
 	//check to see if we need to remove player_has_unread

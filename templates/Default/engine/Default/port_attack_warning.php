@@ -48,6 +48,6 @@ Are you sure you want to attack this port?<br /><br />
 if ($Port->isUnderAttack()) { ?>
 	The port is under attack and has activated its distress beacon!<br />
 	Federal reinforcements will arrive to defend the port in
-	<?php echo format_time($Port->getReinforceTime() - TIME) . '.';
+	<?php echo format_time($Port->getReinforceTime() - SmrSession::getTime()) . '.';
 }
 ?></span>

@@ -5,7 +5,7 @@ $template->assign('PageTopic', 'Create Vote');
 $template->assign('VoteFormHREF', SmrSession::getNewHREF(create_container('vote_create_processing.php', '')));
 
 $voting = array();
-$db->query('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(TIME));
+$db->query('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(SmrSession::getTime()));
 while ($db->nextRecord()) {
 	$voteID = $db->getInt('vote_id');
 	$voting[$voteID]['ID'] = $voteID;

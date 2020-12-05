@@ -40,14 +40,14 @@ function checkForLottoWinner($gameID) {
 		$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($gameID));
 		$db->query('INSERT INTO news
 					(game_id, time, news_message, type, dead_id, dead_alliance)
-					VALUES ('.$db->escapeNumber($gameID) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeString($news_message) . ',\'lotto\',' . $db->escapeNumber($winner->getAccountID()) . ',' . $db->escapeNumber($winner->getAllianceID()) . ')');
+					VALUES ('.$db->escapeNumber($gameID) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ', ' . $db->escapeString($news_message) . ',\'lotto\',' . $db->escapeNumber($winner->getAccountID()) . ',' . $db->escapeNumber($winner->getAllianceID()) . ')');
 	}
 }
 
 function getLottoInfo($gameID) {
 	global $db;
 	$amount = 1000000;
-		$firstBuy = TIME;
+		$firstBuy = SmrSession::getTime();
 	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket
 				WHERE game_id = '.$db->escapeNumber($gameID) . ' AND time > 0');
 	$db->requireRecord();
@@ -56,5 +56,5 @@ function getLottoInfo($gameID) {
 		$firstBuy = $db->getInt('time');
 	}
 	//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
-	return array('Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - TIME);
+	return array('Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - SmrSession::getTime());
 }

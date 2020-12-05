@@ -13,7 +13,7 @@ Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 // Check to see if an alliance op is scheduled
 // Display it for 1 hour past start time (late arrivals, etc.)
-$db->query('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND time > ' . $db->escapeNumber(TIME - 3600) . ' LIMIT 1');
+$db->query('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND time > ' . $db->escapeNumber(SmrSession::getTime() - 3600) . ' LIMIT 1');
 if ($db->nextRecord()) {
 	$template->assign('OpTime', $db->getInt('time'));
 

@@ -20,7 +20,7 @@ class SmrEnhancedWeaponEvent {
 	public static function getShopEvents(int $gameID, int $sectorID, int $locationID) : array {
 		$events = [];
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT * FROM location_sells_special WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND location_type_id = ' . $db->escapeNumber($locationID) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' AND expires > ' . $db->escapeNumber(TIME));
+		$db->query('SELECT * FROM location_sells_special WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND location_type_id = ' . $db->escapeNumber($locationID) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' AND expires > ' . $db->escapeNumber(SmrSession::getTime()));
 		while ($db->nextRecord()) {
 			$events[] = self::getEventFromDatabase($db);
 		}
@@ -36,7 +36,7 @@ class SmrEnhancedWeaponEvent {
 	public static function getLatestEvent(int $gameID) : SmrEnhancedWeaponEvent {
 		// First, remove any expired events from the database
 		$db = new SmrMySqlDatabase();
-		$db->query('DELETE FROM location_sells_special WHERE expires < ' . $db->escapeNumber(TIME));
+		$db->query('DELETE FROM location_sells_special WHERE expires < ' . $db->escapeNumber(SmrSession::getTime()));
 
 		// Next, check if an existing event can be advertised
 		$db = new SmrMySqlDatabase();
@@ -44,7 +44,7 @@ class SmrEnhancedWeaponEvent {
 		if ($db->nextRecord()) {
 			$event = self::getEventFromDatabase($db);
 			// Don't advertise if the event expires within one GRACE_PERIOD
-			if (TIME < $event->getExpireTime() - self::GRACE_PERIOD) {
+			if (SmrSession::getTime() < $event->getExpireTime() - self::GRACE_PERIOD) {
 				return $event;
 			}
 		}
@@ -69,7 +69,7 @@ class SmrEnhancedWeaponEvent {
 		$locationTypeID = $db->getInt('location_type_id');
 		$sectorID = $db->getInt('sector_id');
 
-		$expires = TIME + self::DURATION;
+		$expires = SmrSession::getTime() + self::DURATION;
 
 		// Determine which bonuses the weapon should have
 		$random = rand(1, 100);
@@ -124,7 +124,7 @@ class SmrEnhancedWeaponEvent {
 	 * total duration of the event.
 	 */
 	public function getDurationRemainingPercent() : float {
-		return max(0, min(100, ($this->expires - TIME) / self::DURATION * 100));
+		return max(0, min(100, ($this->expires - SmrSession::getTime()) / self::DURATION * 100));
 	}
 
 }

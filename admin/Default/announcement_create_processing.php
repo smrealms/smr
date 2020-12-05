@@ -7,6 +7,6 @@ if (Request::get('action') == 'Preview announcement') {
 }
 
 // put the msg into the database
-$db->query('INSERT INTO announcement (time, admin_id, msg) VALUES(' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($message) . ')');
+$db->query('INSERT INTO announcement (time, admin_id, msg) VALUES(' . $db->escapeNumber(SmrSession::getTime()) . ', ' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($message) . ')');
 
 forward(create_container('skeleton.php', 'admin_tools.php'));
