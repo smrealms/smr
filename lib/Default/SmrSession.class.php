@@ -163,7 +163,10 @@ class SmrSession {
 				self::$session_id = md5(uniqid(strval(rand())));
 				self::$db->query('SELECT 1 FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 			} while (self::$db->nextRecord()); //Make sure we haven't somehow clashed with someone else's session.
-			if (!defined('NPC_SCRIPT')) {
+
+			// This is a minor hack to make sure that setcookie is not called
+			// for CLI programs and tests (to avoid "headers already sent").
+			if (headers_sent() === false) {
 				setcookie('session_id', self::$session_id);
 			}
 		}
