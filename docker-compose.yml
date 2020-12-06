@@ -33,7 +33,7 @@ x-smr-common: &smr-common
     volumes:
         - ./vol_upload:/smr/htdocs/upload
         - ./config:/smr/config:ro
-        - ./.env:/smr/.env
+        - ./.env:/smr/.env:ro
 
 x-mysql-common: &mysql-common
     image: mysql:8.0
@@ -63,7 +63,7 @@ services:
         volumes:
             - ./vol_upload:/smr/htdocs/upload
             - ./config:/smr/config:ro
-            - ./.env:/smr/.env
+            - ./.env:/smr/.env:ro
             # Mount the source code instead of copying it.
             - ./admin:/smr/admin
             - ./engine:/smr/engine
@@ -110,7 +110,7 @@ services:
         command: /smr/vendor/bin/phpunit test
         volumes:
             - ./config:/smr/config:ro
-            - ./test.env:/smr/.env
+            - ./test.env:/smr/.env:ro
             - ./phpunit.xml:/smr/phpunit.xml
             # Mount the source code instead of copying it.
             - ./admin:/smr/admin
@@ -148,7 +148,8 @@ services:
         depends_on:
             - mysql
         volumes:
-            - ./config:/smr/config
+            - ./config:/smr/config:ro
+            - ./.env:/smr/.env:ro
 
     irc:
         build:
@@ -159,7 +160,8 @@ services:
         depends_on:
             - mysql
         volumes:
-            - ./config:/smr/config
+            - ./config:/smr/config:ro
+            - ./.env:/smr/.env:ro
 
     npc:
         build:
@@ -171,7 +173,8 @@ services:
             - mysql
             - smtp
         volumes:
-            - ./config:/smr/config
+            - ./config:/smr/config:ro
+            - ./.env:/smr/.env:ro
 
     traefik:
         image: traefik:2.3
