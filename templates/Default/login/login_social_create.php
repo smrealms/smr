@@ -51,7 +51,7 @@
 					<td width="73%">
 						<select name="timez" class="InputFields">
 							<?php
-							$time = TIME;
+							$time = SmrSession::getTime();
 								for ($i = -12; $i <= 11; $i++) {
 									echo('<option value="' . $i . '">' . date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600));
 								}

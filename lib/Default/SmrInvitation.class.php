@@ -26,7 +26,7 @@ class SmrInvitation {
 	static public function getAll(int $allianceID, int $gameID) : array {
 		// Remove any expired invitations
 		$db = new SmrMySqlDatabase();
-		$db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(TIME));
+		$db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(SmrSession::getTime()));
 
 		$db->query('SELECT * FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID));
 		$invites = [];
@@ -42,7 +42,7 @@ class SmrInvitation {
 	static public function get(int $allianceID, int $gameID, int $receiverAccountID) : SmrInvitation {
 		// Remove any expired invitations
 		$db = new SmrMySqlDatabase();
-		$db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(TIME));
+		$db->query('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(SmrSession::getTime()));
 
 		$db->query('SELECT * FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND account_id=' . $db->escapeNumber($receiverAccountID));
 		if ($db->nextRecord()) {

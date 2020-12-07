@@ -16,7 +16,7 @@ if ($action == 'Preview Option') {
 
 if ($action == 'Create Vote') {
 	$question = trim(Request::get('question'));
-	$end = TIME + 86400 * Request::getInt('days');
+	$end = SmrSession::getTime() + 86400 * Request::getInt('days');
 	$db->query('INSERT INTO voting (question, end) VALUES(' . $db->escapeString($question) . ',' . $db->escapeNumber($end) . ')');
 } elseif ($action == 'Add Option') {
 	$option = trim(Request::get('option'));

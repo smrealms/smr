@@ -33,7 +33,7 @@ function DisplayResult(array $Links, SmrPlayer $Player) { ?>
 				} else { ?>
 					<td width="10%" class="center red">NO</td><?php
 				}
-				if ($Link['Player']->getLastCPLAction() > TIME - 600) { ?>
+				if ($Link['Player']->getLastCPLAction() > SmrSession::getTime() - 600) { ?>
 					<td width="10%" class="center dgreen">YES</td><?php
 				} else { ?>
 					<td width="10%" class="center red">NO</td><?php

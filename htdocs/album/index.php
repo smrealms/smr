@@ -140,7 +140,7 @@ Quick Search:<br />
 
 <tr>
 	<td class="left" style='font-size:65%;'>
-		&copy; 2002-<?php echo date('Y', TIME); ?> by <a href="<?php echo URL; ?>"><?php echo URL; ?></a><br />
+		&copy; 2002-<?php echo date('Y', SmrSession::getTime()); ?> by <a href="<?php echo URL; ?>"><?php echo URL; ?></a><br />
 		Hosted by <a href='http://www.fem.tu-ilmenau.de/' target='fem'>FeM</a>
 	</td>
 </tr>

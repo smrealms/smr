@@ -21,9 +21,6 @@ const OVERRIDE_FORWARD = true;
 // Must be defined before anything that might throw an exception
 const NPC_SCRIPT = true;
 
-// UOPZ overrides exit by default, which we don't want
-uopz_allow_exit(true);
-
 // global config
 require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
 // bot config
@@ -345,9 +342,8 @@ function processContainer($container) {
 	clearCaches(); //Clear caches of anything we have used for decision making before processing container and getting lock.
 	$previousContainer = $container;
 	debug('Executing container', $container);
- 	//Redefine MICRO_TIME and TIME, the rest of the game expects them to be the single point in time that the script is executing, with it being redefined for each page load - unfortunately NPCs are one consistent script so we have to do a hack and redefine it (or change every instance of the TIME constant.
-	uopz_redefine('MICRO_TIME', microtime(true));
-	uopz_redefine('TIME', IFloor(MICRO_TIME));
+	// The next "page request" must occur at an updated time.
+	SmrSession::updateTime();
 	resetContainer($container);
 	acquire_lock($player->getSectorID()); // Lock now to skip var update in do_voodoo
 	do_voodoo();
@@ -404,7 +400,7 @@ function changeNPCLogin() {
 	$db = new SmrMySqlDatabase();
 	if (is_null($availableNpcs)) {
 		// Make sure to select NPCs from active games only
-		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(TIME) . ' AND end_time > ' . $db->escapeNumber(TIME) . ' ORDER BY last_turn_update ASC');
+		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(SmrSession::getTime()) . ' AND end_time > ' . $db->escapeNumber(SmrSession::getTime()) . ' ORDER BY last_turn_update ASC');
 		while ($db->nextRecord()) {
 			$availableNpcs[] = [
 				'account_id' => $db->getInt('account_id'),

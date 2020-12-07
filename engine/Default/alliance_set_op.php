@@ -18,7 +18,7 @@ if ($db->nextRecord()) {
 	// An op is already scheduled, so get the time
 	$time = $db->getInt('time');
 	$template->assign('OpDate', date(DATE_FULL_SHORT, $time));
-	$template->assign('OpCountdown', format_time($time - TIME));
+	$template->assign('OpCountdown', format_time($time - SmrSession::getTime()));
 
 	// Add a cancel button
 	$container['cancel'] = true;

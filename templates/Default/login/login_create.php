@@ -29,7 +29,7 @@
 				<td width='27%'>Local Time:</td>
 				<td width='73%'>
 					<select name="timez" class="InputFields"><?php
-						$time = TIME;
+						$time = SmrSession::getTime();
 						for ($i = -12; $i <= 11; $i++) {
 							?><option value="<?php echo $i; ?>"><?php echo date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600); ?></option><?php
 						} ?>

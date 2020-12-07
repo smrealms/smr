@@ -184,7 +184,7 @@
 			<td>
 				Current mail ban: <?php
 				if ($EditingAccount->isMailBanned()) { ?>
-					<span class="red">For <?php echo format_time($EditingAccount->getMailBanned() - TIME); ?></span><?php
+					<span class="red">For <?php echo format_time($EditingAccount->getMailBanned() - SmrSession::getTime()); ?></span><?php
 				} else { ?>
 					<span class="green">None</span><?php
 				} ?>

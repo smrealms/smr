@@ -35,7 +35,7 @@ while ($db->nextRecord()) {
 	}
 
 	if ($rows > 1) {
-		$db2->query('SELECT account_id, login FROM account WHERE account_id =' . $db2->escapeNumber($currTabAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db2->escapeNumber(TIME - 86400 * 30) : '') . ' LIMIT 1');
+		$db2->query('SELECT account_id, login FROM account WHERE account_id =' . $db2->escapeNumber($currTabAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db2->escapeNumber(SmrSession::getTime() - 86400 * 30) : '') . ' LIMIT 1');
 		if ($db2->nextRecord()) {
 			$currTabAccLogin = $db2->getField('login');
 		} else {
@@ -58,7 +58,7 @@ while ($db->nextRecord()) {
 
 		$rows = [];
 		foreach ($accountIDs as $currLinkAccId) {
-			$db2->query('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db2->escapeNumber($currLinkAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db2->escapeNumber(TIME - 86400 * 30) : ''));
+			$db2->query('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db2->escapeNumber($currLinkAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db2->escapeNumber(SmrSession::getTime() - 86400 * 30) : ''));
 			if ($db2->nextRecord()) {
 				$currLinkAccLogin = $db2->getField('login');
 			} else {

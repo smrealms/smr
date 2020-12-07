@@ -24,7 +24,7 @@ if ($expire < 0) {
 }
 // When expire==0, message will not expire
 if ($expire > 0) {
-	$expire = ($expire * 3600) + TIME;
+	$expire = ($expire * 3600) + SmrSession::getTime();
 }
 
 $receivers = [];
@@ -40,7 +40,7 @@ if ($game_id != ALL_GAMES_ID) {
 	}
 } else {
 	//send to all players in games that haven't ended yet
-	$db->query('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(TIME));
+	$db->query('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(SmrSession::getTime()));
 	while ($db->nextRecord()) {
 		$receivers[] = [$db->getInt('game_id'), $db->getInt('account_id')];
 	}

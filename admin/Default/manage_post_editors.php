@@ -7,7 +7,7 @@ $template->assign('SelectGameHREF', SmrSession::getNewHREF($container));
 
 // Get the list of active games ordered by reverse start date
 $activeGames = array();
-$db->query('SELECT game_id, game_name FROM game WHERE join_time < ' . $db->escapeNumber(TIME) . ' AND end_time > ' . $db->escapeNumber(TIME) . ' ORDER BY start_time DESC');
+$db->query('SELECT game_id, game_name FROM game WHERE join_time < ' . $db->escapeNumber(SmrSession::getTime()) . ' AND end_time > ' . $db->escapeNumber(SmrSession::getTime()) . ' ORDER BY start_time DESC');
 while ($db->nextRecord()) {
 	$activeGames[] = array('game_name' => $db->getField('game_name'),
 	                       'game_id' => $db->getInt('game_id'));
