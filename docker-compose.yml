@@ -35,6 +35,20 @@ x-smr-common: &smr-common
         - ./config:/smr/config:ro
         - ./.env:/smr/.env:ro
 
+# Base configuration for the SMR command line tools
+x-smr-cli: &smr-cli
+    build:
+        context: .
+        dockerfile: ./tools/Dockerfile
+    networks:
+        - backend
+    depends_on:
+        - mysql
+        - smtp
+    volumes:
+        - ./config:/smr/config:ro
+        - ./.env:/smr/.env:ro
+
 x-mysql-common: &mysql-common
     image: mysql:8.0
     container_name: ${MYSQL_HOST}
@@ -140,41 +154,16 @@ services:
             - mysql
 
     discord:
-        build:
-            context: .
-            dockerfile: ./tools/discord/Dockerfile
-        networks:
-            - backend
-        depends_on:
-            - mysql
-        volumes:
-            - ./config:/smr/config:ro
-            - ./.env:/smr/.env:ro
+        command: php discord/bot.php
+        <<: *smr-cli
 
     irc:
-        build:
-            context: .
-            dockerfile: ./tools/irc/Dockerfile
-        networks:
-            - backend
-        depends_on:
-            - mysql
-        volumes:
-            - ./config:/smr/config:ro
-            - ./.env:/smr/.env:ro
+        command: php irc/irc.php
+        <<: *smr-cli
 
     npc:
-        build:
-            context: .
-            dockerfile: ./tools/npc/Dockerfile
-        networks:
-            - backend
-        depends_on:
-            - mysql
-            - smtp
-        volumes:
-            - ./config:/smr/config:ro
-            - ./.env:/smr/.env:ro
+        command: php npc/npc.php
+        <<: *smr-cli
 
     traefik:
         image: traefik:2.3

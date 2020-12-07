@@ -28,31 +28,11 @@ updates:
     interval: daily
 
 - package-ecosystem: docker
-  directory: "/tools/irc"
+  directory: "/tools"
   schedule:
     interval: daily
 
 - package-ecosystem: composer
-  directory: "/tools/irc"
-  schedule:
-    interval: daily
-
-- package-ecosystem: docker
-  directory: "/tools/npc"
-  schedule:
-    interval: daily
-
-- package-ecosystem: composer
-  directory: "/tools/npc"
-  schedule:
-    interval: daily
-
-- package-ecosystem: docker
-  directory: "/tools/discord"
-  schedule:
-    interval: daily
-
-- package-ecosystem: composer
-  directory: "/tools/discord"
+  directory: "/tools"
   schedule:
     interval: daily

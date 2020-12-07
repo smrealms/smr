@@ -7,7 +7,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Install SMR-related dependencies
 WORKDIR /smr
-COPY tools/npc/composer.json .
+COPY tools/composer.json .
 RUN composer install --no-interaction
 
 # Get the SMR source code
@@ -16,6 +16,4 @@ COPY ./htdocs ./htdocs
 COPY ./lib ./lib
 COPY ./tools ./tools
 
-WORKDIR /smr/tools/npc
-
-CMD ["php", "./npc.php"]
+WORKDIR /smr/tools
