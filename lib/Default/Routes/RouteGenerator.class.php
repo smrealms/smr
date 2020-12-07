@@ -3,9 +3,9 @@
 namespace Routes;
 
 class RouteGenerator {
-	// Transactions are from the perspective of the player (not the port).
-	const GOOD_BUYS = 'Buy';
-	const GOOD_SELLS = 'Sell';
+	// RouteGenerator transactions are from the perspective of the port, but SMR uses player perspective elsewhere, so we invert here.
+	const GOOD_BUYS = 'Sell';
+	const GOOD_SELLS = 'Buy';
 
 	const EXP_ROUTE = 0;
 	const MONEY_ROUTE = 1;

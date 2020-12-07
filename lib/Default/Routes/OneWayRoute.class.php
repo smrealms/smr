@@ -66,15 +66,16 @@ class OneWayRoute extends Route {
 
 	public function getMoneyMultiplierSum() : int {
 		// Relations factors assume maximum relations
-		$sellRelFactor = 3; // Note that this assumes maximum relations
-		$buyRelFactor = 1;
+		$buyRelFactor = 3; // Note that this assumes maximum relations
+		$sellRelFactor = 1;
 		// Supply factors assume maximum supply
-		$sellSupplyFactor = 2;
-		$buySupplyFactor = 1;
+		$buySupplyFactor = 2;
+		$sellSupplyFactor = 1;
 		$goodInfo = \Globals::getGood($this->goodId);
-		$buyPrice = IRound(0.03 * $goodInfo['BasePrice'] * pow($this->buyDi, 1.3) * $buyRelFactor * $buySupplyFactor);
-		$sellPrice = IRound(0.08 * $goodInfo['BasePrice'] * pow($this->sellDi, 1.3) * $sellRelFactor * $sellSupplyFactor);
-		return $sellPrice - $buyPrice;
+		$sellPrice = IRound(0.03 * $goodInfo['BasePrice'] * pow($this->sellDi, 1.3) * $sellRelFactor * $sellSupplyFactor);
+		$buyPrice = IRound(0.088 * $goodInfo['BasePrice'] * pow($this->buyDi, 1.3) * $buyRelFactor * $buySupplyFactor);
+		// NOTE: RouteGenerator code uses buy/sell from the perspective of the PORT not the player, hence why this seems the wrong way round
+		return $buyPrice - $sellPrice;
 	}
 
 	public function getExpMultiplierSum() : int {
