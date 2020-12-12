@@ -102,47 +102,48 @@ function showRaceInfo(select) {
 	var desc = document.getElementById('race_descr');
 	$(desc).children().addClass('hide');
 	$(".race_descr" + race_id, desc).removeClass('hide');
-	graph_by_plotly(race_id);
+	createRaceRadarChart(race_id);
 }
 
 // Used by game_join.php 
-function graph_by_plotly(race_id) {
+function createRaceRadarChart(race_id) {
 
-	var races = [["[1.0,1.0,1.0,1.0,1.0]","'Neutral'","'#FFD800'"],
-	[[1.0,1.0,1.0,1.0,1.0],'Neutral','#FFD800'],
-	[[5.2, 10.0, 5.8, 8.1, 5.2],'Alaskant','#FF00FF'],
-	[[8.3, 5.0, 10.0, 3.3, 8.3],'Creonti','#FF8000'],
-	[[9.5, 4.9, 9.5, 7.7, 9.5],'Human','#0000FF'],
-	[[8.0, 6.1, 9.7, 10.0, 8.0],'Ik\'Thorne','#BFBFFF'],
-	[[8.1, 4.7, 8.8, 4.3, 8.1],'Salvene','#00AA00'],
-	[[10.0, 5.7, 8.7, 9.1, 10.0],'Thevian','#800000'],
-	[[7.2, 6.3, 7.9, 6.2, 7.2],'WQ Human','#804040'],
-	[[9.5, 4.9, 8.0, 5.1, 9.5],'Nijarin','#FF8080']];
-	data = [
+	var races = {
+		1: [[1.0,  1.0,  1.0,  1.0,  1.0],  'Neutral',    '#FFD800'],
+		2: [[5.2,  10.0, 5.8,  8.1,  5.2],  'Alskant',    '#FF00FF'],
+		3: [[8.3,  5.0,  10.0, 3.3,  8.3],  'Creonti',    '#FF8000'],
+		4: [[9.5,  4.9,  9.5,  7.7,  9.5],  'Human',      '#0000FF'],
+		5: [[8.0,  6.1,  9.7,  10.0, 8.0],  'Ik\'Thorne', '#BFBFFF'],
+		6: [[8.1,  4.7,  8.8,  4.3,  8.1],  'Salvene',    '#00AA00'],
+		7: [[10.0, 5.7,  8.7,  9.1,  10.0], 'Thevian',    '#800000'],
+		8: [[7.2, 6.3,   7.9,  6.2,  7.2],  'WQ Human',   '#804040'],
+		9: [[9.5, 4.9,   8.0,  5.1,  9.5],  'Nijarin',    '#FF8080']
+	};
+	
+	var data = [
 		{
 			type: 'scatterpolar',
-			r: races[race_id][0],
-			theta: ['Hunting','Trading','Combat', 'Utility', 'Hunting'],
+			r: [1.0, 1.0, 1.0, 1.0, 1.0],
+			theta: ['Hunting', 'Trading', 'Combat', 'Utility', 'Hunting'],
 			fill: 'toself',
-			name: races[race_id][1],
-			line: {color: races[race_id][2], dash: 'longdash'},
+			name: 'Neutral',
+			line: {color: '#FFD800'},
 			title: {
-				text: races[race_id][1]
+				text: 'Neutral'
 			}
 		}
 	];
 
-	layout = {
-		showlegend: true,
+	var layout = {
+		showlegend: false,
 		polar: {
 			radialaxis: {
 				visible: true,
 				showgrid: true,
 				range: [0, 11],
-				color: '#000',
-				plot_bgcolor: '#000',
-				bgcolor: '#000',
+				color: '#fff',
 			},
+			bgcolor: '#111'
 		},
 		paper_bgcolor: '#06240E',
 		plot_bgcolor: '#000',
@@ -151,7 +152,27 @@ function graph_by_plotly(race_id) {
 		},
 		coloraxis : '#000'
 	};
-	Plotly.newPlot("graphframe", data, layout, {staticPlot: true});
+	var check = document.getElementsByClassName('plotly');
+	if (check.length == 0) {
+		Plotly.newPlot('graphframe', data, layout, {staticPlot: true});
+	} 
+	Plotly.animate('graphframe', {
+		data: [{
+			r: races[race_id][0],
+			name: races[race_id][1],
+			line: {color: races[race_id][2]},
+		}],
+		traces: [0],
+		layout: {}
+	}, {
+		tansition: {
+			duration: 500,
+			easing: 'linear'
+		},
+		frame: {
+			duration: 500
+		}
+	})
 }
 // Used by alliance_create.php and alliance_stat.php
 function togglePassword(select) {

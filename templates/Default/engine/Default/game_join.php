@@ -6,7 +6,6 @@ if ($Game->getDescription()) { ?>
 	<h2>Round Description</h2>
 	<p><?php echo bbifyMessage($Game->getDescription()); ?></p><?php
 }?>
-<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 <table class="standard">
 	<tr class="center">
 		<th>Start Date</th>
@@ -146,20 +145,8 @@ if (!isset($JoinGameFormHref)) { ?>
 				</table>
 			</td>
 		</tr>
-
-		<tr>
-			<td>
-				<table class="center">
-					<tr>
-						<td>
-							<div style="width: 550px; height: 550px;background: noone;" id="graphframe"></div>
-							<script>
-								graph_by_plotly('<?php echo $SelectedRaceID?>');
-							</script>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
 	</table>
+	<div class="center">
+		<div style="width: 600px; height: 600px;background: none; margin: auto;" id="graphframe"></div>
+	</div>
 </form>
