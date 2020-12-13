@@ -98,10 +98,61 @@ function showWeaponInfo(select) {
 function showRaceInfo(select) {
 	var race_id = $("option:selected", select).val();
 	document.getElementById('race_image').src = "images/race/race" + race_id + ".jpg";
-	document.getElementById('graphframe').src = "images/race/graph/graph" + race_id + ".gif";
 	var desc = document.getElementById('race_descr');
 	$(desc).children().addClass('hide');
 	$(".race_descr" + race_id, desc).removeClass('hide');
+	createRaceRadarChart(race_id);
+}
+
+// Used by game_join.php
+function createRaceRadarChart(race_id) {
+
+	// Each array key is the race ID
+	var races = {
+		2: [[5.2,  10.0, 5.8,  8.1,  5.2],  'Alskant',    '#FF00FF'],
+		3: [[8.3,  5.0,  10.0, 3.3,  8.3],  'Creonti',    '#FF8000'],
+		4: [[9.5,  4.9,  9.5,  7.7,  9.5],  'Human',      '#0000FF'],
+		5: [[8.0,  6.1,  9.7,  10.0, 8.0],  'Ik\'Thorne', '#BFBFFF'],
+		6: [[8.1,  4.7,  8.8,  4.3,  8.1],  'Salvene',    '#00AA00'],
+		7: [[10.0, 5.7,  8.7,  9.1,  10.0], 'Thevian',    '#800000'],
+		8: [[7.2, 6.3,   7.9,  6.2,  7.2],  'WQ Human',   '#804040'],
+		9: [[9.5, 4.9,   8.0,  5.1,  9.5],  'Nijarin',    '#FF8080']
+	};
+
+	var data = [
+		{
+			type: 'scatterpolar',
+			r: races[race_id][0],
+			theta: ['Hunting', 'Trading', 'Combat', 'Utility', 'Hunting'],
+			fill: 'toself',
+			name: races[race_id][1],
+			line: {color: races[race_id][2]},
+			title: {
+				text: races[race_id][1]
+			}
+		}
+	];
+
+	var layout = {
+		showlegend: true,
+		polar: {
+			radialaxis: {
+				visible: true,
+				showgrid: true,
+				range: [0, 10],
+				color: '#fff',
+			},
+			bgcolor: '#111'
+		},
+		paper_bgcolor: '#06240E',
+		font: {
+			color: '#fff'
+		},
+		margin: { l: 170, r: 170, t: 0, b: 0 },
+		coloraxis: '#000'
+	};
+
+	Plotly.newPlot('graphframe', data, layout, {staticPlot: true});
 }
 
 // Used by alliance_create.php and alliance_stat.php

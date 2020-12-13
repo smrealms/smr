@@ -126,7 +126,7 @@ if (!isset($JoinGameFormHref)) { ?>
 						</select>
 						</td>
 					</tr>
-					
+
 					<tr>
 						<td>&nbsp;</td>
 						<td><input type="submit" name="action" value="Create Player" /></td>
@@ -142,29 +142,11 @@ if (!isset($JoinGameFormHref)) { ?>
 							</div>
 						</td>
 					</tr>
-					
-				</table>
-			</td>
-		</tr>
-
-		<tr>
-			<td>
-				<table class="center">
-					<tr>
-						<td colspan="3">Trading</td>
-					</tr>
-					<tr>
-						<td>Combat<br />Strength</td>
-						<td>
-							<img width="440" height="440" id="graphframe" src="images/race/graph/graph<?php echo $SelectedRaceID; ?>.gif" alt="Race overview" />
-						</td>
-						<td>Hunting</td>
-					</tr>
-					<tr>
-						<td colspan="3">Utility</td>
-					</tr>
 				</table>
 			</td>
 		</tr>
 	</table>
+	<div class="center">
+		<div id="graphframe"></div>
+	</div>
 </form>
