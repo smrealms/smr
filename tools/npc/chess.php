@@ -6,7 +6,7 @@ try {
 	// bot config
 	require_once(CONFIG . 'npc/config.specific.php');
 
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 
 	debug('Script started');
 	define('SCRIPT_ID', $db->getInsertID());

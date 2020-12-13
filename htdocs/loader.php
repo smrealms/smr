@@ -1,21 +1,21 @@
 <?php declare(strict_types=1);
 try {
 	require_once('config.inc');
-	
+
 	header('Cache-Control: no-cache, must-revalidate');
 	//A date in the past
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-	
+
 	//xdebug_start_profiling();
-	
+
 	//ob_start();
-	
+
 	// ********************************
 	// *
 	// * Define Globals
 	// *
 	// ********************************
-	
+
 	// We want these to be already defined as globals
 	$account = null;
 	$player = null;
@@ -24,15 +24,15 @@ try {
 	$container = null;
 	$var = null;
 	$lock = false;
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 	$template = null;
-	
+
 	// ********************************
 	// *
 	// * c h e c k   S e s s i o n
 	// *
 	// ********************************
-	
+
 	//echo '<pre>';echo_r($session);echo'</pre>';
 	//exit;
 	// do we have a session?
@@ -58,7 +58,7 @@ try {
 			exit;
 		}
 	}
-	
+
 	// do we have such a container object in the db?
 	if (!($var = SmrSession::retrieveVar($sn))) {
 		if (!USING_AJAX) {
@@ -68,7 +68,7 @@ try {
 			exit;
 		}
 	}
-	
+
 	// Determine where to load game scripts from (in case we need a special
 	// game script from outside the current SmrSession game).
 	// Must not call `get_file_loc` until after we have set $overrideGameID
@@ -110,7 +110,7 @@ try {
 			throw new Exception('Unexpected disabled reason');
 		}
 	}
-	
+
 	do_voodoo();
 } catch (Throwable $e) {
 	handleException($e);

@@ -1,33 +1,81 @@
 <?php declare(strict_types=1);
 
-abstract class MySqlDatabase {
-	protected static $dbConn;
-	protected static $selectedDbName;
-	private static MySqlProperties $mysqlProperties;
-	protected $dbResult = null;
-	protected $dbRecord = null;
+use Smr\Container\DiContainer;
+use Smr\MySqlProperties;
 
-	public function __construct() {
-		if (!self::$dbConn) {
-			// Set the mysqli driver to raise exceptions on errors
-			if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
-				$this->error('Failed to enable mysqli error reporting');
-			}
-			$mysqlProperties = new MySqlProperties();
-			self::$dbConn = new mysqli(
-				$mysqlProperties->getHost(),
-				$mysqlProperties->getUser(),
-				$mysqlProperties->getPassword(),
-				$mysqlProperties->getDatabaseName());
-			self::$mysqlProperties = $mysqlProperties;
-			self::$selectedDbName = $mysqlProperties->getDatabaseName();
-			// Default server charset should be set correctly. Using the default
-			// avoids the additional query involved in `set_charset`.
-			$charset = self::$dbConn->character_set_name();
-			if ($charset != 'utf8') {
-				$this->error('Unexpected charset: ' . $charset);
-			}
+class MySqlDatabase {
+	private mysqli $dbConn;
+	private MySqlProperties $mysqlProperties;
+	private string $selectedDbName;
+	/**
+	 * @var bool | mysqli_result
+	 */
+	private $dbResult = null;
+	private ?array $dbRecord = null;
+
+	public static function getInstance(): MySqlDatabase {
+		return self::ensureConnected(DiContainer::get(self::class));
+	}
+
+	public static function getNewInstance(): MySqlDatabase {
+		return self::ensureConnected(DiContainer::make(self::class));
+	}
+
+	/**
+	 * Verifies that the MySqlDatabase instance has a valid $dbConn instance,
+	 * and rewires the DI container to use freshly instantiated instances in the event
+	 * of disconnect from the database.
+	 * @param MySqlDatabase $mysqlDatabase
+	 * @return MySqlDatabase
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	private static function ensureConnected(MySqlDatabase $mysqlDatabase): MySqlDatabase {
+		if (!isset($mysqlDatabase->dbConn)) {
+			self::reconnectMysql();
+			DiContainer::getContainer()->set(MySqlDatabase::class, self::getNewInstance());
+			$mysqlDatabase = self::getInstance();
 		}
+		return $mysqlDatabase;
+	}
+
+	/**
+	 * Reconnects to the MySQL database, and replaces the managed mysqli instance
+	 * in the dependency injection container for future retrievals.
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	private static function reconnectMysql() {
+		$newMysqli = DiContainer::make(mysqli::class);
+		DiContainer::getContainer()->set(mysqli::class, $newMysqli);
+	}
+
+	public static function mysqliFactory(MySqlProperties $mysqlProperties): mysqli {
+		if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
+			throw new RuntimeException('Failed to enable mysqli error reporting');
+		}
+		return new mysqli(
+			$mysqlProperties->getHost(),
+			$mysqlProperties->getUser(),
+			$mysqlProperties->getPassword(),
+			$mysqlProperties->getDatabaseName());
+	}
+
+	/**
+	 * MySqlDatabase constructor.
+	 * Not intended to be constructed by hand. If you need an instance of MySqlDatabase,
+	 * use MySqlDatabase::getInstance();
+	 * @param mysqli $dbConn The mysqli instance
+	 * @param MySqlProperties $mysqlProperties The properties object that was used to construct the mysqli instance
+	 */
+	public function __construct(mysqli $dbConn, MySqlProperties $mysqlProperties) {
+		$charset = $dbConn->character_set_name();
+		if ($charset != 'utf8') {
+			$this->error('Unexpected charset: ' . $charset);
+		}
+		$this->dbConn = $dbConn;
+		$this->mysqlProperties = $mysqlProperties;
+		$this->selectedDbName = $mysqlProperties->getDatabaseName();
 	}
 
 	/**
@@ -37,46 +85,54 @@ abstract class MySqlDatabase {
 	 * @param string $databaseName The name of the database to switch to
 	 */
 	public function switchDatabases(string $databaseName) {
-		self::$dbConn->select_db($databaseName);
-		self::$selectedDbName = $databaseName;
+		$this->dbConn->select_db($databaseName);
+		$this->selectedDbName = $databaseName;
 	}
 
 	/**
 	 * Switch back to the configured live database
 	 */
 	public function switchDatabaseToLive() {
-		$this->switchDatabases(self::$mysqlProperties->getDatabaseName());
+		$this->switchDatabases($this->mysqlProperties->getDatabaseName());
 	}
 
 	/**
 	 * Returns the size of the selected database in bytes.
 	 */
 	public function getDbBytes() {
-		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=' . $this->escapeString(self::$selectedDbName);
-		$result = self::$dbConn->query($query);
+		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=' . $this->escapeString($this->selectedDbName);
+		$result = $this->dbConn->query($query);
 		return (int)$result->fetch_assoc()['db_bytes'];
 	}
 
-	// This should not be needed except perhaps by persistent connections
+	/**
+	 * This should not be needed except perhaps by persistent connections
+	 *
+	 * Closes the connection to the MySQL database. After closing this connection,
+	 * this MySqlDatabase instance is no longer valid, and will subsequently throw exceptions when
+	 * attempting to perform database operations.
+	 *
+	 * You must call MySqlDatabase::getInstance() again to retrieve a valid instance that
+	 * is reconnected to the database.
+	 */
 	public function close() {
-		if (self::$dbConn) {
-			self::$dbConn->close();
-			self::$dbConn = false;
+		if ($this->dbConn) {
+			$this->dbConn->close();
+			unset($this->dbConn);
 		}
 	}
 
 	public function query($query) {
-		$this->dbResult = self::$dbConn->query($query);
+		$this->dbResult = $this->dbConn->query($query);
 	}
 
 	/**
 	 * Use to populate this instance with the next record of the active query.
 	 */
-	public function nextRecord() : bool {
+	public function nextRecord(): bool {
 		if (!$this->dbResult) {
 			$this->error('No resource to get record from.');
 		}
-
 		if ($this->dbRecord = $this->dbResult->fetch_assoc()) {
 			return true;
 		}
@@ -87,7 +143,7 @@ abstract class MySqlDatabase {
 	 * Use instead of nextRecord when exactly one record is expected from the
 	 * active query.
 	 */
-	public function requireRecord() : void {
+	public function requireRecord(): void {
 		if (!$this->nextRecord() || $this->getNumRows() != 1) {
 			$this->error('One record required, but found ' . $this->getNumRows());
 		}
@@ -107,7 +163,7 @@ abstract class MySqlDatabase {
 		}
 //		if($this->dbRecord[$name] == 'FALSE')
 		return false;
-//		throw new Exception('Field is not a boolean');
+//		$this->error('Field is not a boolean');
 	}
 
 	public function getInt($name) {
@@ -124,13 +180,13 @@ abstract class MySqlDatabase {
 	// unrelated reason!
 	public function getMicrotime($name, $pad_msec = false) {
 		$data = $this->dbRecord[$name];
-		$sec  = substr($data, 0, 10);
+		$sec = substr($data, 0, 10);
 		$msec = substr($data, 10);
 		if (strlen($msec) != 6) {
 			if ($pad_msec) {
 				$msec = str_pad($msec, 6, '0', STR_PAD_LEFT);
 			} else {
-				throw new Exception('Field is not an escaped microtime (' . $data . ')');
+				$this->error('Field is not an escaped microtime (' . $data . ')');
 			}
 		}
 		return "$sec.$msec";
@@ -149,11 +205,11 @@ abstract class MySqlDatabase {
 	}
 
 	public function lockTable($table) {
-		self::$dbConn->query('LOCK TABLES ' . $table . ' WRITE');
+		$this->dbConn->query('LOCK TABLES ' . $table . ' WRITE');
 	}
 
 	public function unlock() {
-		self::$dbConn->query('UNLOCK TABLES');
+		$this->dbConn->query('UNLOCK TABLES');
 	}
 
 	public function getNumRows() {
@@ -161,15 +217,15 @@ abstract class MySqlDatabase {
 	}
 
 	public function getChangedRows() {
-		return self::$dbConn->affected_rows;
+		return $this->dbConn->affected_rows;
 	}
 
 	public function getInsertID() {
-		return self::$dbConn->insert_id;
+		return $this->dbConn->insert_id;
 	}
 
 	protected function error($err) {
-		throw new Exception($err);
+		throw new RuntimeException($err);
 	}
 
 	public function escape($escape, $autoQuotes = true, $quotes = true) {
@@ -219,9 +275,9 @@ abstract class MySqlDatabase {
 			return substr($escapedString, 0, -1);
 		}
 		if ($quotes) {
-			return '\'' . self::$dbConn->real_escape_string($string) . '\'';
+			return '\'' . $this->dbConn->real_escape_string($string) . '\'';
 		}
-		return self::$dbConn->real_escape_string($string);
+		return $this->dbConn->real_escape_string($string);
 	}
 
 	public function escapeBinary($binary) {
@@ -251,7 +307,7 @@ abstract class MySqlDatabase {
 		if (is_numeric($num)) {
 			return $num;
 		} else {
-			throw new Exception('Not a number! (' . $num . ')');
+			$this->error('Not a number! (' . $num . ')');
 		}
 	}
 
@@ -267,7 +323,7 @@ abstract class MySqlDatabase {
 		} elseif ($bool === false) {
 			return $this->escapeString('FALSE', $quotes);
 		} else {
-			throw new Exception('Not a boolean: ' . $bool);
+			$this->error('Not a boolean: ' . $bool);
 		}
 	}
 
@@ -277,5 +333,4 @@ abstract class MySqlDatabase {
 		}
 		return $this->escapeString(serialize($object), $quotes, $nullable);
 	}
-
 }

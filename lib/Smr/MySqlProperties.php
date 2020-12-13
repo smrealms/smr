@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+namespace Smr;
+
 use Dotenv\Dotenv;
 
 class MySqlProperties {
@@ -12,8 +14,7 @@ class MySqlProperties {
 	private string $password;
 	private string $databaseName;
 
-	public function __construct() {
-		$config = Dotenv::createArrayBacked(ROOT);
+	public function __construct(Dotenv $config) {
 		$array = $config->load();
 		self::validateConfig($config);
 		[
@@ -24,7 +25,7 @@ class MySqlProperties {
 		] = $array;
 	}
 
-	public static function validateConfig(Dotenv $config) {
+	private static function validateConfig(Dotenv $config) {
 		$config->required(self::CONFIG_MYSQL_HOST);
 		$config->required(self::CONFIG_MYSQL_USER);
 		$config->required(self::CONFIG_MYSQL_PASSWORD);

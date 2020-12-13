@@ -9,7 +9,7 @@ $db->query('SELECT account_id as account_id, login, count(*) as number_of_entrie
 			JOIN account USING(account_id)
 			GROUP BY account_id');
 if ($db->getNumRows()) {
-	$db2 = new SmrMySqlDatabase();
+	$db2 = MySqlDatabase::getNewInstance();
 	while ($db->nextRecord()) {
 		$accountID = $db->getInt('account_id');
 		$loggedAccounts[$accountID] = array('AccountID' => $accountID,

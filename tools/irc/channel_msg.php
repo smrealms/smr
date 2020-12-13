@@ -3,8 +3,8 @@
 function check_for_registration(&$account, &$player, $fp, $nick, $channel, $callback, $validationMessages = true) {
 	//Force $validationMessages to always be boolean.
 	$validationMessages = $validationMessages === true;
-	
-	$db = new SmrMySqlDatabase();
+
+	$db = MySqlDatabase::getInstance();
 
 	// only registered users are allowed to use this command
 	$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
@@ -18,7 +18,7 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 
 		return true;
 	}
-	
+
 	$registeredNick = $db->getField('registered_nick');
 
 	// get alliance_id and game_id for this channel
@@ -61,7 +61,7 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 		}
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -79,7 +79,7 @@ function channel_msg_with_registration($fp, $rdata)
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', that command can only be used in an alliance controlled channel.' . EOL);
 			return true;
 		}
-		
+
 		if (check_for_registration($account, $player, $fp, $nick, $channel, 'channel_msg_with_registration($fp, \'' . $rdata . '\');')) {
 			return true;
 		}
@@ -163,7 +163,7 @@ function channel_msg_seen($fp, $rdata)
 			return true;
 		}
 
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 
 		// if user provided more than 3 letters we do a wildcard search
 		if (strlen($seennick) > 3) {

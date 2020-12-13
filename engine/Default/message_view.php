@@ -93,7 +93,7 @@ $template->assign('MessageBox', $messageBox);
 
 function displayScouts(&$messageBox, $player) {
 	// Generate the group messages
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 	$db->query('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
 					FROM message
 					JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id

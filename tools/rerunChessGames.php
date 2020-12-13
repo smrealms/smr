@@ -3,7 +3,7 @@ require_once('../htdocs/config.inc');
 
 SmrSession::updateGame(44);
 
-$db = new SmrMySqlDatabase();
+$db = MySqlDatabase::getInstance();
 $db->query('DELETE FROM player_hof WHERE type LIKE \'Chess%\'');
 $db->query('SELECT chess_game_id FROM chess_game');
 while ($db->nextRecord()) {
@@ -11,7 +11,7 @@ while ($db->nextRecord()) {
 	$game = ChessGame::getChessGame($chessGameID);
 	echo 'Running game ' . $chessGameID . ' for white id "' . $game->getWhiteID() . '", black id "' . $game->getBlackID() . '", winner "' . $game->getWinner() . '"' . EOL;
 	echoChessMoves($game);
-	
+
 	$game->rerunGame(true);
 	echo 'Finished game ' . $chessGameID . ' for white id "' . $game->getWhiteID() . '", black id "' . $game->getBlackID() . '", winner "' . $game->getWinner() . '"' . EOL;
 	echoChessMoves($game);

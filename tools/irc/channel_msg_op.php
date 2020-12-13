@@ -70,7 +70,7 @@ function channel_msg_op_cancel($fp, $rdata, $account, $player)
 		}
 
 		// get the op from db
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT 1
 					FROM alliance_has_op
 					WHERE alliance_id = ' . $player->getAllianceID() . '
@@ -117,7 +117,7 @@ function channel_msg_op_set($fp, $rdata, $account, $player)
 		}
 
 		// get the op from db
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT time
 					FROM alliance_has_op
 					WHERE alliance_id = ' . $player->getAllianceID() . '
@@ -185,7 +185,7 @@ function channel_msg_op_response($fp, $rdata, $account, $player) {
 		echo_r('[OP_' . $response . '] by ' . $nick . ' in ' . $channel);
 
 		// get the op info from db
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT 1
 					FROM alliance_has_op
 					WHERE alliance_id = ' . $player->getAllianceID() . '
@@ -236,7 +236,7 @@ function channel_op_notification($fp, $rdata, $nick, $channel) {
 		return true;
 	}
 
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 	// check if there is an upcoming op
 	$db->query('SELECT 1
 				FROM alliance_has_op

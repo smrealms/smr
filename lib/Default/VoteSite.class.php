@@ -92,7 +92,7 @@ class VoteSite {
 		if (!isset($WAIT_TIMES)) {
 			$WAIT_TIMES = array(); // ensure this is set
 			$activeLinkIDs = array_keys(self::getAllSites());
-			$db = new SmrMySqlDatabase();
+			$db = MySqlDatabase::getInstance();
 			$db->query('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountID) . ' AND link_id IN (' . join(',', $activeLinkIDs) . ') LIMIT ' . $db->escapeNumber(count($activeLinkIDs)));
 			while ($db->nextRecord()) {
 				// 'timeout' is the last time the player claimed free turns (or 0, if unclaimed)

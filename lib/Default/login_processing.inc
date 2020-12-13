@@ -37,7 +37,7 @@ function redirectIfDisabled(SmrAccount $account) {
 
 function redirectIfOffline(SmrAccount $account) : void {
 	// Check if the game is offline
-	$db = new SmrMySqlDatabase();
+	$db = MySqlDatabase::getInstance();
 	$db->query('SELECT * FROM game_disable');
 	$offline = $db->nextRecord();
 

@@ -14,8 +14,8 @@ function user_quit($fp, $rdata)
 		echo_r('[QUIT] ' . $nick . '!' . $user . '@' . $host . ' stated ' . $quit_msg);
 
 		// database object
-		$db = new SmrMySqlDatabase();
-		$db2 = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
+		$db2 = MySqlDatabase::getNewInstance();
 
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 
@@ -52,8 +52,8 @@ function user_nick($fp, $rdata)
 		echo_r('[NICK] ' . $nick . ' -> ' . $new_nick);
 
 		// database object
-		$db = new SmrMySqlDatabase();
-		$db2 = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
+		$db2 = MySqlDatabase::getNewInstance();
 
 		$channel_list = array();
 

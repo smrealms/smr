@@ -12,7 +12,7 @@ function channel_join($fp, $rdata)
 
 		echo_r('[JOIN] ' . $nick . '!' . $user . '@' . $host . ' joined ' . $channel);
 
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 
 		// check if we have seen this user before
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
@@ -76,7 +76,7 @@ function channel_part($fp, $rdata)
 		echo_r('[PART] ' . $nick . '!' . $user . '@' . $host . ' ' . $channel);
 
 		// database object
-		$db = new SmrMySqlDatabase();
+		$db = MySqlDatabase::getInstance();
 
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
 

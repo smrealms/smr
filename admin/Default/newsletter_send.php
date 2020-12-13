@@ -6,7 +6,7 @@ $template->assign('CurrentEmail', $account->getEmail());
 $processingContainer = create_container('newsletter_send_processing.php');
 
 // Get the most recent newsletter text for preview
-$db = new SmrMySqlDatabase();
+$db = MySqlDatabase::getInstance();
 $db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
 if ($db->nextRecord()) {
 	$id = $db->getInt('newsletter_id');

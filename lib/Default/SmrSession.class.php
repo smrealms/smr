@@ -184,7 +184,7 @@ class SmrSession {
 		self::$pageRequestTime = new Time();
 
 		// Initialize the db connector here, since `init` is always called
-		self::$db = new SmrMySqlDatabase();
+		self::$db = MySqlDatabase::getInstance();
 
 		// now try the cookie
 		if (isset($_COOKIE['session_id']) && strlen($_COOKIE['session_id']) === 32) {

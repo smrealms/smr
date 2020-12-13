@@ -19,7 +19,7 @@ class Globals {
 
 	protected static function initialiseDatabase() {
 		if (self::$db == null) {
-			self::$db = new SmrMySqlDatabase();
+			self::$db = MySqlDatabase::getInstance();
 		}
 	}
 
