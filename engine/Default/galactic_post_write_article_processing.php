@@ -19,7 +19,7 @@ if (Request::get('action') == 'Preview article') {
 
 if (isset($var['id'])) {
 	// Editing an article
-	$db->query('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(TIME) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
+	$db->query('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(SmrSession::getTime()) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
 	forward(create_container('skeleton.php', 'galactic_post_view_article.php'));
 } else {
 	// Adding a new article
@@ -33,7 +33,7 @@ if (isset($var['id'])) {
 	$db->query('SELECT MAX(article_id) article_id FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 	$db->requireRecord();
 	$num = $db->getInt('article_id') + 1;
-	$db->query('INSERT INTO galactic_post_article (game_id, article_id, writer_id, title, text, last_modified) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($num) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($title) . ' , ' . $db->escapeString($message) . ' , ' . $db->escapeNumber(TIME) . ')');
-	$db->query('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(TIME) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+	$db->query('INSERT INTO galactic_post_article (game_id, article_id, writer_id, title, text, last_modified) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($num) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($title) . ' , ' . $db->escapeString($message) . ' , ' . $db->escapeNumber(SmrSession::getTime()) . ')');
+	$db->query('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(SmrSession::getTime()) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	forward(create_container('skeleton.php', 'galactic_post_read.php'));
 }

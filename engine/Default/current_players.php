@@ -1,21 +1,21 @@
 <?php declare(strict_types=1);
 
 $template->assign('PageTopic', 'Current Players');
-$db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(TIME));
+$db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(SmrSession::getTime()));
 $db->query('SELECT count(*) count FROM active_session
-			WHERE last_accessed >= ' . $db->escapeNumber(TIME - 600) . ' AND
+			WHERE last_accessed >= ' . $db->escapeNumber(SmrSession::getTime() - 600) . ' AND
 				game_id = ' . $db->escapeNumber($player->getGameID()));
 $count_real_last_active = 0;
 if ($db->nextRecord()) {
 	$count_real_last_active = $db->getInt('count');
 }
-if (SmrSession::$last_accessed < TIME - 600) {
+if (SmrSession::$last_accessed < SmrSession::getTime() - 600) {
 	++$count_real_last_active;
 }
 
 
 $db->query('SELECT * FROM player
-		WHERE last_cpl_action >= ' . $db->escapeNumber(TIME - 600) . '
+		WHERE last_cpl_action >= ' . $db->escapeNumber(SmrSession::getTime() - 600) . '
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 		ORDER BY experience DESC, player_name DESC');
 $count_last_active = $db->getNumRows();

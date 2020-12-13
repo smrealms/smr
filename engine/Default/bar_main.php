@@ -30,7 +30,7 @@ if ($db->nextRecord()) {
 $template->assign('WinningTicket', $winningTicket);
 
 //get rid of drinks older than 30 mins
-$db->query('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(TIME - 1800));
+$db->query('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(SmrSession::getTime() - 1800));
 
 $container = create_container('skeleton.php', 'bar_talk_bartender.php');
 transfer('LocationID');

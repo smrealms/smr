@@ -22,7 +22,7 @@ if (empty($Forces)) { ?>
 		<tbody class="list"><?php
 		foreach ($Forces as $Force) { ?>
 			<tr>
-				<td class="sort_sector noWrap"><?php echo $Force->getSectorID(); ?> (<?php echo $Force->getGalaxy()->getName(); ?>)</td>
+				<td class="sort_sector noWrap"><?php echo $Force->getSectorID(); ?> (<?php echo $Force->getGalaxy()->getDisplayName(); ?>)</td>
 				<td class="sort_cds center"><?php echo $Force->getCDs(); ?></td>
 				<td class="sort_sds center"><?php echo $Force->getSDs(); ?></td>
 				<td class="sort_mines center"><?php echo $Force->getMines(); ?></td>

@@ -33,7 +33,21 @@ x-smr-common: &smr-common
     volumes:
         - ./vol_upload:/smr/htdocs/upload
         - ./config:/smr/config:ro
-        - ./.env:/smr/.env
+        - ./.env:/smr/.env:ro
+
+# Base configuration for the SMR command line tools
+x-smr-cli: &smr-cli
+    build:
+        context: .
+        dockerfile: ./tools/Dockerfile
+    networks:
+        - backend
+    depends_on:
+        - mysql
+        - smtp
+    volumes:
+        - ./config:/smr/config:ro
+        - ./.env:/smr/.env:ro
 
 x-mysql-common: &mysql-common
     image: mysql:8.0
@@ -43,10 +57,10 @@ x-mysql-common: &mysql-common
     # By using the default image, we must expose the secrets in
     # the runtime environment (because we can't specify build args).
     environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_USER: ${MYSQL_USER}
-        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        - MYSQL_ROOT_PASSWORD
+        - MYSQL_USER
+        - MYSQL_PASSWORD
+        - MYSQL_DATABASE
     # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
     # which is incompatible with the way the SMR database is used.
     # Therefore, we override CMD to omit this sql mode.
@@ -63,7 +77,7 @@ services:
         volumes:
             - ./vol_upload:/smr/htdocs/upload
             - ./config:/smr/config:ro
-            - ./.env:/smr/.env
+            - ./.env:/smr/.env:ro
             # Mount the source code instead of copying it.
             - ./admin:/smr/admin
             - ./engine:/smr/engine
@@ -112,7 +126,7 @@ services:
         command: /smr/vendor/bin/phpunit test
         volumes:
             - ./config:/smr/config:ro
-            - ./test.env:/smr/.env
+            - ./test.env:/smr/.env:ro
             - ./phpunit.xml:/smr/phpunit.xml
             # Mount the source code instead of copying it.
             - ./admin:/smr/admin
@@ -142,38 +156,16 @@ services:
             - mysql
 
     discord:
-        build:
-            context: .
-            dockerfile: ./tools/discord/Dockerfile
-        networks:
-            - backend
-        depends_on:
-            - mysql
-        volumes:
-            - ./config:/smr/config
+        command: php discord/bot.php
+        <<: *smr-cli
 
     irc:
-        build:
-            context: .
-            dockerfile: ./tools/irc/Dockerfile
-        networks:
-            - backend
-        depends_on:
-            - mysql
-        volumes:
-            - ./config:/smr/config
+        command: php irc/irc.php
+        <<: *smr-cli
 
     npc:
-        build:
-            context: .
-            dockerfile: ./tools/npc/Dockerfile
-        networks:
-            - backend
-        depends_on:
-            - mysql
-            - smtp
-        volumes:
-            - ./config:/smr/config
+        command: php npc/npc.php
+        <<: *smr-cli
 
     traefik:
         image: traefik:2.3

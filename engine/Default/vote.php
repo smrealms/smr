@@ -17,8 +17,8 @@ if ($db->getNumRows() > 0) {
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = SmrSession::getNewHREF($container);
 		$voting[$voteID]['Question'] = $db->getField('question');
-		if ($db->getInt('end') > TIME) {
-			$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - TIME, true);
+		if ($db->getInt('end') > SmrSession::getTime()) {
+			$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - SmrSession::getTime(), true);
 		} else {
 			$voting[$voteID]['EndDate'] = date(DATE_DATE_SHORT, $db->getInt('end'));
 		}

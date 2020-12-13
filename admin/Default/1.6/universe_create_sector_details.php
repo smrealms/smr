@@ -2,7 +2,7 @@
 
 $editSectorID = SmrSession::getRequestVarInt('sector_edit');
 $editSector = SmrSector::getSector($var['game_id'], $editSectorID);
-$template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxyName() . ')');
+$template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')');
 $template->assign('EditSector', $editSector);
 
 $container = $var;
@@ -34,7 +34,7 @@ $template->assign('SectorLocationIDs', $sectorLocationIDs);
 if ($editSector->hasWarp()) {
 	$warpSector = $editSector->getWarpSector();
 	$warpSectorID = $warpSector->getSectorID();
-	$warpGal = $warpSector->getGalaxyName();
+	$warpGal = $warpSector->getGalaxy()->getDisplayName();
 } else {
 	$warpSectorID = 0;
 	$warpGal = 'No Warp';

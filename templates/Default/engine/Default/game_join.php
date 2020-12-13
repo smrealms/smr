@@ -53,7 +53,7 @@ if ($Game->getDescription()) { ?>
 <?php
 if (!isset($JoinGameFormHref)) { ?>
 	<p class="bold big">
-		Time until you can join this game: <?php echo format_time($Game->getJoinTime() - TIME); ?>
+		Time until you can join this game: <?php echo format_time($Game->getJoinTime() - SmrSession::getTime()); ?>
 		<br /><br /><?php
 		if ($Game->getStartTime() == $Game->getJoinTime()) { ?>
 			The game will start immediately at this time!<?php

@@ -161,7 +161,7 @@ abstract class AbstractSmrAccount {
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 		$db->query('INSERT INTO account (login, password, email, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
 			$db->escapeString($login) . ', ' . $db->escapeString($passwordHash) . ', ' . $db->escapeString($email) . ', ' .
-			$db->escapeString(random_string(10)) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($timez) . ',' . $db->escapeNumber($referral) . ',' . $db->escapeString($login) . ')');
+			$db->escapeString(random_string(10)) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeNumber($timez) . ',' . $db->escapeNumber($referral) . ',' . $db->escapeString($login) . ')');
 		return self::getAccountByName($login);
 	}
 
@@ -252,7 +252,7 @@ abstract class AbstractSmrAccount {
 			$expireTime = $this->db->getInt('expires');
 
 			// are we over this time?
-			if ($expireTime > 0 && $expireTime < TIME) {
+			if ($expireTime > 0 && $expireTime < SmrSession::getTime()) {
 				// get rid of the expire entry
 				$this->unbanAccount();
 				return false;
@@ -323,14 +323,14 @@ abstract class AbstractSmrAccount {
 		}
 
 		// save...first make sure there isn't one for these keys (someone could double click and get error)
-		$this->db->query('REPLACE INTO account_has_ip (account_id, time, ip, host) VALUES (' . $this->db->escapeNumber($this->account_id) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($curr_ip) . ', ' . $this->db->escapeString($host) . ')');
+		$this->db->query('REPLACE INTO account_has_ip (account_id, time, ip, host) VALUES (' . $this->db->escapeNumber($this->account_id) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeString($curr_ip) . ', ' . $this->db->escapeString($host) . ')');
 	}
 
 	public function updateLastLogin() {
-		if ($this->last_login == TIME) {
+		if ($this->last_login == SmrSession::getTime()) {
 			return;
 		}
-		$this->last_login = TIME;
+		$this->last_login = SmrSession::getTime();
 		$this->hasChanged = true;
 		$this->update();
 	}
@@ -482,7 +482,7 @@ abstract class AbstractSmrAccount {
 		if ($this->isLoggingEnabled()) {
 			$this->db->query('INSERT INTO account_has_logs ' .
 				'(account_id, microtime, log_type_id, message, sector_id) ' .
-				'VALUES(' . $this->db->escapeNumber($this->account_id) . ', ' . $this->db->escapeMicrotime(MICRO_TIME) . ', ' . $this->db->escapeNumber($log_type_id) . ', ' . $this->db->escapeString($msg) . ', ' . $this->db->escapeNumber($sector_id) . ')');
+				'VALUES(' . $this->db->escapeNumber($this->account_id) . ', ' . $this->db->escapeMicrotime(SmrSession::getMicroTime()) . ', ' . $this->db->escapeNumber($log_type_id) . ', ' . $this->db->escapeString($msg) . ', ' . $this->db->escapeNumber($sector_id) . ')');
 		}
 	}
 
@@ -611,7 +611,7 @@ abstract class AbstractSmrAccount {
 			$db->escapeNumber($gameID) . ',' .
 			$db->escapeString($message) . ',' .
 			$db->escapeNumber($senderID) . ',' .
-			$db->escapeNumber(TIME) . ')'
+			$db->escapeNumber(SmrSession::getTime()) . ')'
 		);
 	}
 
@@ -679,7 +679,7 @@ abstract class AbstractSmrAccount {
 	public function sendValidationEmail() : void {
 		// remember when we sent validation code
 		$this->db->query('REPLACE INTO notification (notification_type, account_id, time)
-				VALUES(\'validation_code\', '.$this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(TIME) . ')');
+				VALUES(\'validation_code\', '.$this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ')');
 
 		$emailMessage =
 			'Your validation code is: ' . $this->getValidationCode() . EOL . EOL .
@@ -1042,7 +1042,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function isMailBanned() {
-		return $this->mailBanned > TIME;
+		return $this->mailBanned > SmrSession::getTime();
 	}
 
 	public function setMailBanned($time) {
@@ -1054,7 +1054,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function increaseMailBanned($increaseTime) {
-		$time = max(TIME, $this->getMailBanned());
+		$time = max(SmrSession::getTime(), $this->getMailBanned());
 		$this->setMailBanned($time + $increaseTime);
 	}
 
@@ -1086,9 +1086,9 @@ abstract class AbstractSmrAccount {
 				$this->points = $this->db->getInt('points');
 				$lastUpdate = $this->db->getInt('last_update');
 				//we are gonna check for reducing points...
-				if ($this->points > 0 && $lastUpdate < TIME - (7 * 86400)) {
+				if ($this->points > 0 && $lastUpdate < SmrSession::getTime() - (7 * 86400)) {
 					$removePoints = 0;
-					while ($lastUpdate < TIME - (7 * 86400)) {
+					while ($lastUpdate < SmrSession::getTime() - (7 * 86400)) {
 						$removePoints++;
 						$lastUpdate += (7 * 86400);
 					}
@@ -1106,11 +1106,11 @@ abstract class AbstractSmrAccount {
 			return;
 		}
 		if ($this->points == 0) {
-			$this->db->query('INSERT INTO account_has_points (account_id, points, last_update) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($numPoints) . ', ' . $this->db->escapeNumber($lastUpdate ? $lastUpdate : TIME) . ')');
+			$this->db->query('INSERT INTO account_has_points (account_id, points, last_update) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($numPoints) . ', ' . $this->db->escapeNumber($lastUpdate ? $lastUpdate : SmrSession::getTime()) . ')');
 		} elseif ($numPoints <= 0) {
 			$this->db->query('DELETE FROM account_has_points WHERE ' . $this->SQL . ' LIMIT 1');
 		} else {
-			$this->db->query('UPDATE account_has_points SET points = ' . $this->db->escapeNumber($numPoints) . ($lastUpdate ? ', last_update = ' . $this->db->escapeNumber(TIME) : '') . ' WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->query('UPDATE account_has_points SET points = ' . $this->db->escapeNumber($numPoints) . ($lastUpdate ? ', last_update = ' . $this->db->escapeNumber(SmrSession::getTime()) : '') . ' WHERE ' . $this->SQL . ' LIMIT 1');
 		}
 		$this->points = $numPoints;
 	}
@@ -1123,7 +1123,7 @@ abstract class AbstractSmrAccount {
 
 	public function addPoints($numPoints, SmrAccount $admin, $reasonID, $suspicion) {
 		//do we have points
-		$this->setPoints($this->getPoints() + $numPoints, TIME);
+		$this->setPoints($this->getPoints() + $numPoints, SmrSession::getTime());
 		$totalPoints = $this->getPoints();
 		if ($totalPoints < 10) {
 			return false; //leave scripts its only a warning
@@ -1152,7 +1152,7 @@ abstract class AbstractSmrAccount {
 		if ($days == 0) {
 			$expireTime = 0;
 		} else {
-			$expireTime = TIME + $days * 86400;
+			$expireTime = SmrSession::getTime() + $days * 86400;
 		}
 		$this->banAccount($expireTime, $admin, $reasonID, $suspicion);
 
@@ -1191,7 +1191,7 @@ abstract class AbstractSmrAccount {
 
 		$this->db->query('INSERT INTO account_has_closing_history
 						(account_id, time, admin_id, action)
-						VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($admin->getAccountID()) . ', ' . $this->db->escapeString('Closed') . ');');
+						VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeNumber($admin->getAccountID()) . ', ' . $this->db->escapeString('Closed') . ');');
 		$this->db->query('UPDATE player SET newbie_turns = 1
 						WHERE ' . $this->SQL . '
 						AND newbie_turns = 0
@@ -1199,7 +1199,7 @@ abstract class AbstractSmrAccount {
 
 		$this->db->query('SELECT game_id FROM game JOIN player USING (game_id)
 						WHERE ' . $this->SQL . '
-						AND end_time >= ' . $this->db->escapeNumber(TIME));
+						AND end_time >= ' . $this->db->escapeNumber(SmrSession::getTime()));
 		while ($this->db->nextRecord()) {
 			$player = SmrPlayer::getPlayer($this->getAccountID(), $this->db->getInt('game_id'));
 			$player->updateTurns();
@@ -1219,8 +1219,8 @@ abstract class AbstractSmrAccount {
 		$this->db->query('DELETE FROM account_is_closed WHERE ' . $this->SQL . ' LIMIT 1');
 		$this->db->query('INSERT INTO account_has_closing_history
 						(account_id, time, admin_id, action)
-						VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($adminID) . ', ' . $this->db->escapeString('Opened') . ')');
-		$this->db->query('UPDATE player SET last_turn_update = GREATEST(' . $this->db->escapeNumber(TIME) . ', last_turn_update) WHERE ' . $this->SQL);
+						VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeNumber($adminID) . ', ' . $this->db->escapeString('Opened') . ')');
+		$this->db->query('UPDATE player SET last_turn_update = GREATEST(' . $this->db->escapeNumber(SmrSession::getTime()) . ', last_turn_update) WHERE ' . $this->SQL);
 		if ($admin !== null) {
 			$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account reopened by ' . $admin->getLogin() . '.');
 		} else {

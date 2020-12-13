@@ -73,7 +73,7 @@ class OneWayRoute extends Route {
 		$buySupplyFactor = 1;
 		$goodInfo = \Globals::getGood($this->goodId);
 		$buyPrice = IRound(0.03 * $goodInfo['BasePrice'] * pow($this->buyDi, 1.3) * $buyRelFactor * $buySupplyFactor);
-		$sellPrice = IRound(0.08 * $goodInfo['BasePrice'] * pow($this->sellDi, 1.3) * $sellRelFactor * $sellSupplyFactor);
+		$sellPrice = IRound(0.088 * $goodInfo['BasePrice'] * pow($this->sellDi, 1.3) * $sellRelFactor * $sellSupplyFactor);
 		return $sellPrice - $buyPrice;
 	}
 

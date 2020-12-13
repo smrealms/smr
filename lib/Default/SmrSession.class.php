@@ -141,15 +141,47 @@ class SmrSession {
 	private static $lastSN;
 	private static $account_id;
 	public static $last_accessed;
+	private static Time $pageRequestTime;
 
 	protected static $previousAjaxReturns;
 	protected static $ajaxReturns = array();
+
+	/**
+	 * Returns the time (in seconds) associated with this page request.
+	 */
+	public static function getTime() : int {
+		return self::$pageRequestTime->getTime();
+	}
+
+	/**
+	 * Returns the time (in seconds, with microsecond-level precision)
+	 * associated with this page request.
+	 */
+	public static function getMicroTime() : float {
+		return self::$pageRequestTime->getMicroTime();
+	}
+
+	/**
+	 * Update the time associated with this page request.
+	 *
+	 * NOTE: This should never be called by normal page requests, and should
+	 * only be used by the CLI programs that run continuously.
+	 */
+	public static function updateTime() : void {
+		if (!defined('NPC_SCRIPT')) {
+			throw new Exception('Only call this function from CLI programs!');
+		}
+		self::$pageRequestTime = new Time();
+	}
 
 	public static function init() {
 		// Return immediately if the SmrSession is already initialized
 		if (isset(self::$session_id)) {
 			return;
 		}
+
+		// Initialize the page request time
+		self::$pageRequestTime = new Time();
 
 		// Initialize the db connector here, since `init` is always called
 		self::$db = MySqlDatabase::getInstance();
@@ -163,7 +195,10 @@ class SmrSession {
 				self::$session_id = md5(uniqid(strval(rand())));
 				self::$db->query('SELECT 1 FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 			} while (self::$db->nextRecord()); //Make sure we haven't somehow clashed with someone else's session.
-			if (!defined('NPC_SCRIPT')) {
+
+			// This is a minor hack to make sure that setcookie is not called
+			// for CLI programs and tests (to avoid "headers already sent").
+			if (headers_sent() === false) {
 				setcookie('session_id', self::$session_id);
 			}
 		}
@@ -213,7 +248,7 @@ class SmrSession {
 				self::$var = array();
 			} else {
 				foreach (self::$var as $key => &$value) {
-					if ($value['Expires'] > 0 && $value['Expires'] <= TIME) { // Use 0 for infinity
+					if ($value['Expires'] > 0 && $value['Expires'] <= self::getTime()) { // Use 0 for infinity
 						//This link is no longer valid
 						unset(self::$var[$key]);
 					} elseif ($value['RemainingPageLoads'] < 0) {
@@ -245,12 +280,12 @@ class SmrSession {
 		} unset($value);
 		$compressed = gzcompress(serialize(self::$var));
 		if (!self::$generate) {
-			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(TIME) : '') . ',session_var=' . self::$db->escapeBinary($compressed) .
+			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(self::getTime()) : '') . ',session_var=' . self::$db->escapeBinary($compressed) .
 					',last_sn=' . self::$db->escapeString(self::$SN) .
 					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn=' . self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
 		} else {
 			self::$db->query('DELETE FROM active_session WHERE account_id = ' . self::$db->escapeNumber(self::$account_id) . ' AND game_id = ' . self::$db->escapeNumber(self::$game_id));
-			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(TIME) . ',' . self::$db->escapeBinary($compressed) . ')');
+			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(self::getTime()) . ',' . self::$db->escapeBinary($compressed) . ')');
 			self::$generate = false;
 		}
 	}
@@ -434,12 +469,12 @@ class SmrSession {
 		$container['CommonID'] = self::getCommonID($container);
 		if (isset(self::$commonIDs[$container['CommonID']])) {
 			$sn = self::$commonIDs[$container['CommonID']];
-			$container['PreviousRequestTime'] = isset(self::$var[$sn]) ? self::$var[$sn]['PreviousRequestTime'] : MICRO_TIME;
+			$container['PreviousRequestTime'] = isset(self::$var[$sn]) ? self::$var[$sn]['PreviousRequestTime'] : self::getMicroTime();
 		} else {
 			do {
 				$sn = substr(md5(strval(rand())), 0, 8);
 			} while (isset(self::$var[$sn]));
-			$container['PreviousRequestTime'] = MICRO_TIME;
+			$container['PreviousRequestTime'] = self::getMicroTime();
 		}
 		self::$commonIDs[$container['CommonID']] = $sn;
 		return $sn;

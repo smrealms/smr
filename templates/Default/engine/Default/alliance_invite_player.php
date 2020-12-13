@@ -39,7 +39,7 @@ if (count($InvitePlayers) == 0) { ?>
 		<p>Optional invitation message:</p>
 		<textarea spellcheck="true" name="message" style="height: 5em"></textarea>
 		<p>Days until invitation expires:</p>
-		<input type="number" name="expire_days" value="7" />
+		<input type="number" name="expire_days" value="7" min="1" max="365" />
 		<br /><br />
 		<input type="submit" name="action" value="Invite Player" />
 	</form><?php

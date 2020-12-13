@@ -38,7 +38,7 @@ if ($action == 'tell') {
 		if ($player->getSector()->getGalaxy()->equals($eventGalaxy)) {
 			$locationHint = 'Sector ' . Globals::getSectorBBLink($eventSectorID);
 		} else {
-			$locationHint = 'the ' . $eventGalaxy->getName() . ' galaxy';
+			$locationHint = 'the ' . $eventGalaxy->getDisplayName() . ' galaxy';
 		}
 
 		if ($event->getWeapon()->hasBonusDamage() && $event->getWeapon()->hasBonusAccuracy()) {

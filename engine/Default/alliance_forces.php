@@ -15,7 +15,7 @@ sum(scout_drones) as tot_sds
 FROM sector_has_forces JOIN player ON player.game_id=sector_has_forces.game_id AND sector_has_forces.owner_id=player.account_id
 WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-AND expire_time >= ' . $db->escapeNumber(TIME));
+AND expire_time >= ' . $db->escapeNumber(SmrSession::getTime()));
 
 $hardwareTypes = Globals::getHardwareTypes();
 
@@ -40,7 +40,7 @@ FROM player
 JOIN sector_has_forces ON player.game_id = sector_has_forces.game_id AND player.account_id = sector_has_forces.owner_id
 WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-AND expire_time >= ' . $db->escapeNumber(TIME) . '
+AND expire_time >= ' . $db->escapeNumber(SmrSession::getTime()) . '
 ORDER BY sector_id ASC');
 
 $forces = array();

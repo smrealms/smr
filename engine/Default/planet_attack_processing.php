@@ -80,7 +80,7 @@ $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 // Add this log to the `combat_logs` database table
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $planetOwner->getAccountID() . ',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . SmrSession::getTime() . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $planetOwner->getAccountID() . ',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
 $logId = $db->getInsertID();
 
 if ($planet->isDestroyed()) {

@@ -173,7 +173,7 @@ class SmrGame {
 	}
 
 	public function hasStarted() : bool {
-		return TIME >= $this->getStartTime();
+		return SmrSession::getTime() >= $this->getStartTime();
 	}
 
 	/**
@@ -208,7 +208,7 @@ class SmrGame {
 	}
 
 	public function hasEnded() : bool {
-		return $this->getEndTime() < TIME;
+		return $this->getEndTime() < SmrSession::getTime();
 	}
 
 	/**
@@ -428,7 +428,7 @@ class SmrGame {
 	 * Returns the time (in seconds) until restricted ships are unlocked.
 	 */
 	public function timeUntilShipUnlock() : int {
-		return $this->getStartTime() + TIME_FOR_RAIDER_UNLOCK - TIME;
+		return $this->getStartTime() + TIME_FOR_RAIDER_UNLOCK - SmrSession::getTime();
 	}
 
 }

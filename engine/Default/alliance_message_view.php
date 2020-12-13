@@ -16,7 +16,7 @@ Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 $db->query('REPLACE INTO player_read_thread
 			(account_id, game_id, alliance_id, thread_id, time)
-			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance->getAllianceID()) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(TIME + 2) . ')');
+			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance->getAllianceID()) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(SmrSession::getTime() + 2) . ')');
 
 $mbWrite = true;
 if ($alliance->getAllianceID() != $player->getAllianceID()) {
