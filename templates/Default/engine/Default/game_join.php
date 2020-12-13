@@ -6,6 +6,7 @@ if ($Game->getDescription()) { ?>
 	<h2>Round Description</h2>
 	<p><?php echo bbifyMessage($Game->getDescription()); ?></p><?php
 }?>
+
 <table class="standard">
 	<tr class="center">
 		<th>Start Date</th>
@@ -124,7 +125,8 @@ if (!isset($JoinGameFormHref)) { ?>
 							} ?>
 						</select>
 						</td>
-					</tr>				
+					</tr>
+
 					<tr>
 						<td>&nbsp;</td>
 						<td><input type="submit" name="action" value="Create Player" /></td>
