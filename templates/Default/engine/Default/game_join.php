@@ -124,8 +124,7 @@ if (!isset($JoinGameFormHref)) { ?>
 							} ?>
 						</select>
 						</td>
-					</tr>
-					
+					</tr>				
 					<tr>
 						<td>&nbsp;</td>
 						<td><input type="submit" name="action" value="Create Player" /></td>
@@ -140,13 +139,12 @@ if (!isset($JoinGameFormHref)) { ?>
 								} ?>
 							</div>
 						</td>
-					</tr>
-					
+					</tr>	
 				</table>
 			</td>
 		</tr>
 	</table>
 	<div class="center">
-		<div style="width: 600px; height: 600px;background: none; margin: auto;" id="graphframe"></div>
+		<div id="graphframe"></div>
 	</div>
 </form>

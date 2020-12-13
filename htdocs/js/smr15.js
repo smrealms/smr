@@ -109,7 +109,6 @@ function showRaceInfo(select) {
 function createRaceRadarChart(race_id) {
 
 	var races = {
-		1: [[1.0,  1.0,  1.0,  1.0,  1.0],  'Neutral',    '#FFD800'],
 		2: [[5.2,  10.0, 5.8,  8.1,  5.2],  'Alskant',    '#FF00FF'],
 		3: [[8.3,  5.0,  10.0, 3.3,  8.3],  'Creonti',    '#FF8000'],
 		4: [[9.5,  4.9,  9.5,  7.7,  9.5],  'Human',      '#0000FF'],
@@ -123,13 +122,13 @@ function createRaceRadarChart(race_id) {
 	var data = [
 		{
 			type: 'scatterpolar',
-			r: [1.0, 1.0, 1.0, 1.0, 1.0],
+			r: races[race_id][0],
 			theta: ['Hunting', 'Trading', 'Combat', 'Utility', 'Hunting'],
 			fill: 'toself',
-			name: 'Neutral',
-			line: {color: '#FFD800'},
+			name: races[race_id][1],
+			line: {color: races[race_id][2]},
 			title: {
-				text: 'Neutral'
+				text: races[race_id][1]
 			}
 		}
 	];
@@ -150,29 +149,10 @@ function createRaceRadarChart(race_id) {
 		font: {
 			color: '#fff'
 		},
+		margin: { l: 170, r: 170, t: 0, b: 0 },
 		coloraxis : '#000'
 	};
-	var check = document.getElementsByClassName('plotly');
-	if (check.length == 0) {
-		Plotly.newPlot('graphframe', data, layout, {staticPlot: true});
-	} 
-	Plotly.animate('graphframe', {
-		data: [{
-			r: races[race_id][0],
-			name: races[race_id][1],
-			line: {color: races[race_id][2]},
-		}],
-		traces: [0],
-		layout: {}
-	}, {
-		tansition: {
-			duration: 500,
-			easing: 'linear'
-		},
-		frame: {
-			duration: 500
-		}
-	})
+	Plotly.newPlot('graphframe', data, layout, {staticPlot: true});
 }
 // Used by alliance_create.php and alliance_stat.php
 function togglePassword(select) {
