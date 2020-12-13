@@ -160,13 +160,6 @@ class SmrShip extends AbstractSmrShip {
 		$this->getPlayer()->update();
 	}
 
-	/**
-	 * given power level of new weapon, return whether there is enough power available to install it on this ship
-	 */
-	public function checkPowerAvailable($powerLevel) {
-		return $this->getRemainingPower() >= $powerLevel;
-	}
-
 	public function isCloaked() {
 		if (!$this->hasCloak()) {
 			return false;
