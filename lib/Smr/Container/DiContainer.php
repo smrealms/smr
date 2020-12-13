@@ -33,8 +33,8 @@ class DiContainer {
 			 * PHP-DI cannot construct mysqli by itself, because all of its arguments are primitive types.
 			 * Therefore, we need to declare a provider factory for the container to use when constructing new instances.
 			 *
-			 * The factories themselves are able to use dependency injection as well, so we can provide the MysqlProperties
-			 * typehint to make sure the container constructs and instance and provides it to the factory.
+			 * The factories themselves are able to use dependency injection as well, so we can provide the MySqlProperties
+			 * typehint to make sure the container constructs an instance and provides it to the factory.
 			 */
 			mysqli::class => function (MySqlProperties $mysqlProperties): mysqli {
 				return MySqlDatabase::mysqliFactory($mysqlProperties);
