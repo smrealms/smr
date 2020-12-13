@@ -3,8 +3,8 @@
 function echo_nav($topic_id) {
 	// database object
 	$db = MySqlDatabase::getInstance();
-	$db2 = MySqlDatabase::getNewInstance();
-	$db3 = MySqlDatabase::getNewInstance();
+	$db2 = MySqlDatabase::getInstance();
+	$db3 = MySqlDatabase::getInstance();
 
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$db->escapeNumber($topic_id));

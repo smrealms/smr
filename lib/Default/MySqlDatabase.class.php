@@ -14,29 +14,16 @@ class MySqlDatabase {
 	private ?array $dbRecord = null;
 
 	public static function getInstance(): MySqlDatabase {
-		return self::ensureConnected(DiContainer::get(self::class));
-	}
-
-	public static function getNewInstance(): MySqlDatabase {
-		return self::ensureConnected(DiContainer::make(self::class));
-	}
-
-	/**
-	 * Verifies that the MySqlDatabase instance has a valid $dbConn instance,
-	 * and rewires the DI container to use freshly instantiated instances in the event
-	 * of disconnect from the database.
-	 * @param MySqlDatabase $mysqlDatabase
-	 * @return MySqlDatabase
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
-	 */
-	private static function ensureConnected(MySqlDatabase $mysqlDatabase): MySqlDatabase {
-		if (!isset($mysqlDatabase->dbConn)) {
+		/**
+		 * @var $mysqli mysqli
+		 */
+		$mysqli = DiContainer::get(mysqli::class);
+		try {
+			$mysqli->ping();
+		} catch (Exception $e) {
 			self::reconnectMysql();
-			DiContainer::getContainer()->set(MySqlDatabase::class, self::getNewInstance());
-			$mysqlDatabase = self::getInstance();
 		}
-		return $mysqlDatabase;
+		return DiContainer::make(self::class);
 	}
 
 	/**
@@ -54,11 +41,16 @@ class MySqlDatabase {
 		if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
 			throw new RuntimeException('Failed to enable mysqli error reporting');
 		}
-		return new mysqli(
+		$mysql = new mysqli(
 			$mysqlProperties->getHost(),
 			$mysqlProperties->getUser(),
 			$mysqlProperties->getPassword(),
 			$mysqlProperties->getDatabaseName());
+		$charset = $mysql->character_set_name();
+		if ($charset != 'utf8') {
+			throw new RuntimeException('Unexpected charset: ' . $charset);
+		}
+		return $mysql;
 	}
 
 	/**
@@ -69,10 +61,6 @@ class MySqlDatabase {
 	 * @param MySqlProperties $mysqlProperties The properties object that was used to construct the mysqli instance
 	 */
 	public function __construct(mysqli $dbConn, MySqlProperties $mysqlProperties) {
-		$charset = $dbConn->character_set_name();
-		if ($charset != 'utf8') {
-			$this->error('Unexpected charset: ' . $charset);
-		}
 		$this->dbConn = $dbConn;
 		$this->mysqlProperties = $mysqlProperties;
 		$this->selectedDbName = $mysqlProperties->getDatabaseName();

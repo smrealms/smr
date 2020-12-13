@@ -44,7 +44,7 @@ if ($db->getNumRows() > 0) {
 }
 
 function allianceTopTen($gameID, $field) {
-	$db = MySqlDatabase::getNewInstance();
+	$db = MySqlDatabase::getInstance();
 	$db->query('SELECT alliance_id, SUM(' . $field . ') amount
 				FROM alliance
 				LEFT JOIN player USING (game_id, alliance_id)

@@ -12,7 +12,7 @@ function notice_nickserv_registered_user($fp, $rdata)
 		echo_r('[NOTICE_NICKSERV_REGISTERED_NICK] ' . $nick . ' is ' . $registeredNick);
 
 		$db = MySqlDatabase::getInstance();
-		$db2 = MySqlDatabase::getNewInstance();
+		$db2 = MySqlDatabase::getInstance();
 
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 		while ($db->nextRecord()) {

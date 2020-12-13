@@ -51,7 +51,7 @@ $template->assign('Summary', $summary);
 
 $allRows = array();
 if ($count_last_active > 0) {
-	$db2 = MySqlDatabase::getNewInstance();
+	$db2 = MySqlDatabase::getInstance();
 	while ($db->nextRecord()) {
 		$row = array();
 

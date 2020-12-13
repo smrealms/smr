@@ -18,7 +18,7 @@ $db->query('SELECT * FROM anon_bank
 			AND game_id=' . $db->escapeNumber($player->getGameID()));
 
 $ownedAnon = [];
-$db2 = MySqlDatabase::getNewInstance();
+$db2 = MySqlDatabase::getInstance();
 while ($db->nextRecord()) {
 	$anon = [];
 	$anon['anon_id'] = $db->getInt('anon_id');
