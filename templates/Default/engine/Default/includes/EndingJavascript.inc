@@ -18,11 +18,11 @@ if (!empty($this->listjsInclude)) { ?>
 	</script><?php
 }
 
-if (isset($SelectedRaceID)) { ?>
+if (isset($AddRaceRadarChartJS) && isset($SelectedRaceID)) { ?>
 	<script src="https://cdn.plot.ly/plotly-1.58.2.min.js"></script>
 	<script>
 		createRaceRadarChart(<?php echo $SelectedRaceID?>);
-	</script><?php 
+	</script><?php
 }
 
 $AvailableLinks = Globals::getAvailableLinks(); ?>
