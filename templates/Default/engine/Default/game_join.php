@@ -141,7 +141,7 @@ if (!isset($JoinGameFormHref)) { ?>
 								} ?>
 							</div>
 						</td>
-					</tr>	
+					</tr>
 				</table>
 			</td>
 		</tr>
