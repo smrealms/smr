@@ -13,16 +13,18 @@ class BaseIntegrationSpec extends TestCase {
 	private static $defaultPopulatedTables = array();
 
 	public static function setUpBeforeClass(): void {
-		$mysqlProperties = DiContainer::get(MySqlProperties::class);
-		print "Attempting to connect to MySQL at " . $mysqlProperties->getHost() . "\n";
-		self::$conn = DiContainer::get(mysqli::class);
-		print "Connected.\n";
-		$query = "SELECT table_name FROM information_schema.tables WHERE table_rows > 0 AND TABLE_SCHEMA='smr_live'";
-		$rs = self::$conn->query($query);
-		$all = $rs->fetch_all();
-		array_walk_recursive($all, function ($a) {
-			self::$defaultPopulatedTables[] = "'" . $a . "'";
-		});
+		if (!isset(self::$conn)) {
+			$mysqlProperties = DiContainer::get(MySqlProperties::class);
+			print "Attempting to connect to MySQL at " . $mysqlProperties->getHost() . "\n";
+			self::$conn = DiContainer::make(mysqli::class);
+			print "Connected.\n";
+			$query = "SELECT table_name FROM information_schema.tables WHERE table_rows > 0 AND TABLE_SCHEMA='smr_live'";
+			$rs = self::$conn->query($query);
+			$all = $rs->fetch_all();
+			array_walk_recursive($all, function ($a) {
+				self::$defaultPopulatedTables[] = "'" . $a . "'";
+			});
+		}
 	}
 
 	protected function onNotSuccessfulTest(Throwable $t): void {

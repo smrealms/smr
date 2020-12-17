@@ -14,15 +14,6 @@ class MySqlDatabase {
 	private ?array $dbRecord = null;
 
 	public static function getInstance(): MySqlDatabase {
-		/**
-		 * @var $mysqli mysqli
-		 */
-		$mysqli = DiContainer::get(mysqli::class);
-		try {
-			$mysqli->ping();
-		} catch (Exception $e) {
-			self::reconnectMysql();
-		}
 		return DiContainer::make(self::class);
 	}
 
@@ -32,9 +23,10 @@ class MySqlDatabase {
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
-	private static function reconnectMysql() {
+	private static function reconnectMysql(): mysqli {
 		$newMysqli = DiContainer::make(mysqli::class);
 		DiContainer::getContainer()->set(mysqli::class, $newMysqli);
+		return $newMysqli;
 	}
 
 	public static function mysqliFactory(MySqlProperties $mysqlProperties): mysqli {
@@ -57,10 +49,13 @@ class MySqlDatabase {
 	 * MySqlDatabase constructor.
 	 * Not intended to be constructed by hand. If you need an instance of MySqlDatabase,
 	 * use MySqlDatabase::getInstance();
-	 * @param mysqli $dbConn The mysqli instance
+	 * @param ?mysqli $dbConn The mysqli instance (null if reconnect needed)
 	 * @param MySqlProperties $mysqlProperties The properties object that was used to construct the mysqli instance
 	 */
-	public function __construct(mysqli $dbConn, MySqlProperties $mysqlProperties) {
+	public function __construct(?mysqli $dbConn, MySqlProperties $mysqlProperties) {
+		if (is_null($dbConn)) {
+			$dbConn = self::reconnectMysql();
+		}
 		$this->dbConn = $dbConn;
 		$this->mysqlProperties = $mysqlProperties;
 		$this->selectedDbName = $mysqlProperties->getDatabaseName();
@@ -107,6 +102,10 @@ class MySqlDatabase {
 		if ($this->dbConn) {
 			$this->dbConn->close();
 			unset($this->dbConn);
+			// Set the mysqli instance in the dependency injection container to
+			// null so that the MySqlDatabase constructor will reconnect the
+			// next time it is called.
+			DiContainer::getContainer()->set(mysqli::class, null);
 		}
 	}
 

@@ -24,15 +24,6 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		$this->container = DiContainer::getContainer();
 	}
 
-	protected function tearDown(): void {
-		$mysqli = $this->container->get(mysqli::class);
-		try {
-			$mysqli->close();
-		} catch (Exception $e) {
-			print "tearDown() - mysqli connection already closed. $e\n";
-		}
-	}
-
 	public function test_performing_operations_on_closed_database_throws_error() {
 		// Expectations
 		$this->expectException(Error::class);
