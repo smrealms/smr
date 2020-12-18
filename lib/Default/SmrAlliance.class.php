@@ -3,42 +3,42 @@
 class SmrAlliance {
 	protected static $CACHE_ALLIANCES = array();
 
-	protected $db;
-	protected $SQL;
+	protected MySqlDatabase $db;
+	protected string $SQL;
 
-	protected $gameID;
-	protected $allianceID;
-	protected $allianceName;
-	protected $description;
-	protected $password;
-	protected $recruiting;
-	protected $leaderID;
-	protected $bank;
-	protected $kills;
-	protected $deaths;
-	protected $motd;
-	protected $imgSrc;
-	protected $discordServer;
-	protected $discordChannel;
-	protected $ircChannel;
-	protected $flagshipID;
+	protected int $gameID;
+	protected int $allianceID;
+	protected string $allianceName;
+	protected ?string $description;
+	protected string $password;
+	protected bool $recruiting;
+	protected int $leaderID;
+	protected int $bank;
+	protected int $kills;
+	protected int $deaths;
+	protected string $motd;
+	protected string $imgSrc;
+	protected ?string $discordServer;
+	protected ?string $discordChannel;
+	protected string $ircChannel;
+	protected int $flagshipID;
 
-	protected $memberList;
-	protected $seedlist;
+	protected array $memberList;
+	protected array $seedlist;
 
 	// Recruit type constants
 	const RECRUIT_OPEN = "open";
 	const RECRUIT_CLOSED = "closed";
 	const RECRUIT_PASSWORD = "password";
 
-	public static function getAlliance($allianceID, $gameID, $forceUpdate = false) {
+	public static function getAlliance(int $allianceID, int $gameID, bool $forceUpdate = false) : SmrAlliance {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
 			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new SmrAlliance($allianceID, $gameID);
 		}
 		return self::$CACHE_ALLIANCES[$gameID][$allianceID];
 	}
 
-	public static function getAllianceByDiscordChannel($channel, $forceUpdate = false) {
+	public static function getAllianceByDiscordChannel(string $channel, bool $forceUpdate = false) : ?SmrAlliance {
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT alliance_id, game_id FROM alliance JOIN game USING(game_id) WHERE discord_channel = ' . $db->escapeString($channel) . ' AND game.end_time > ' . $db->escapeNumber(time()) . ' ORDER BY game_id DESC LIMIT 1');
 		if ($db->nextRecord()) {
@@ -48,17 +48,17 @@ class SmrAlliance {
 		}
 	}
 
-	public static function getAllianceByIrcChannel($channel, $forceUpdate = false) {
+	public static function getAllianceByIrcChannel(string $channel, bool $forceUpdate = false) : ?SmrAlliance {
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAlliance($db->getInt('alliance_id'), $db->getInt('game_id'), $forceUpdate);
+		} else {
+			return null;
 		}
-		$return = null;
-		return $return;
 	}
 
-	public static function getAllianceByName($name, $gameID, $forceUpdate = false) {
+	public static function getAllianceByName(string $name, int $gameID, bool $forceUpdate = false) : ?SmrAlliance {
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
 		if ($db->nextRecord()) {
@@ -68,7 +68,7 @@ class SmrAlliance {
 		}
 	}
 
-	protected function __construct($allianceID, $gameID) {
+	protected function __construct(int $allianceID, int $gameID) {
 		$this->db = MySqlDatabase::getInstance();
 
 		$this->allianceID = $allianceID;
@@ -105,7 +105,7 @@ class SmrAlliance {
 	 * Create an alliance and return the new object.
 	 * Starts alliance with "closed" recruitment (for safety).
 	 */
-	public static function createAlliance($gameID, $name) {
+	public static function createAlliance(int $gameID, string $name) : SmrAlliance {
 		$db = MySqlDatabase::getInstance();
 
 		// check if the alliance name already exists
@@ -131,19 +131,19 @@ class SmrAlliance {
 	/**
 	 * Returns true if the alliance ID is associated with allianceless players.
 	 */
-	public function isNone() {
+	public function isNone() : bool {
 		return $this->allianceID == 0;
 	}
 
-	public function getAllianceID() {
+	public function getAllianceID() : int {
 		return $this->allianceID;
 	}
 
-	public function getAllianceBBLink() {
+	public function getAllianceBBLink() : string {
 		return '[alliance=' . $this->allianceID . ']';
 	}
 
-	public function getAllianceDisplayName($linked = false, $includeAllianceID = false) {
+	public function getAllianceDisplayName(bool $linked = false, bool $includeAllianceID = false) : string {
 		$name = htmlentities($this->allianceName);
 		if ($includeAllianceID) {
 			$name .= ' (' . $this->allianceID . ')';
@@ -158,55 +158,55 @@ class SmrAlliance {
 	 * Returns the alliance name.
 	 * Use getAllianceDisplayName for an HTML-safe version.
 	 */
-	public function getAllianceName() {
+	public function getAllianceName() : string {
 		return $this->allianceName;
 	}
 
-	public function getGameID() {
+	public function getGameID() : int {
 		return $this->gameID;
 	}
 
-	public function getGame() {
+	public function getGame() : SmrGame {
 		return SmrGame::getGame($this->gameID);
 	}
 
-	public function hasDisbanded() {
+	public function hasDisbanded() : bool {
 		return !$this->hasLeader();
 	}
 
-	public function hasLeader() {
+	public function hasLeader() : bool {
 		return $this->getLeaderID() != 0;
 	}
 
-	public function getLeaderID() {
+	public function getLeaderID() : int {
 		return $this->leaderID;
 	}
 
-	public function getLeader() {
+	public function getLeader() : SmrPlayer {
 		return SmrPlayer::getPlayer($this->getLeaderID(), $this->getGameID());
 	}
 
-	public function setLeaderID($leaderID) {
+	public function setLeaderID($leaderID) : void {
 		$this->leaderID = $leaderID;
 	}
 
-	public function getDiscordServer() {
+	public function getDiscordServer() : ?string {
 		return $this->discordServer;
 	}
 
-	public function setDiscordServer($serverId) {
+	public function setDiscordServer(string $serverId) : void {
 		$this->discordServer = $serverId;
 	}
 
-	public function getDiscordChannel() {
+	public function getDiscordChannel() : ?string {
 		return $this->discordChannel;
 	}
 
-	public function setDiscordChannel($channelId) {
+	public function setDiscordChannel(?string $channelId) : void {
 		$this->discordChannel = $channelId;
 	}
 
-	public function getIrcChannel() {
+	public function getIrcChannel() : string {
 		if (!isset($this->ircChannel)) {
 			$this->db->query('SELECT channel FROM irc_alliance_has_channel WHERE ' . $this->SQL);
 			if ($this->db->nextRecord()) {
@@ -218,7 +218,7 @@ class SmrAlliance {
 		return $this->ircChannel;
 	}
 
-	public function setIrcChannel($ircChannel) {
+	public function setIrcChannel(string $ircChannel) : void {
 		$this->getIrcChannel(); // to populate the class attribute
 		if ($this->ircChannel == $ircChannel) {
 			return;
@@ -238,15 +238,15 @@ class SmrAlliance {
 		$this->ircChannel = $ircChannel;
 	}
 
-	public function hasImageURL() {
+	public function hasImageURL() : bool {
 		return strlen($this->imgSrc) && $this->imgSrc != 'http://';
 	}
 
-	public function getImageURL() {
+	public function getImageURL() : string {
 		return $this->imgSrc;
 	}
 
-	public function setImageURL($url) {
+	public function setImageURL(string $url) : void {
 		if (preg_match('/"/', $url)) {
 			throw new Exception('Tried to set an image url with ": ' . $url);
 		}
@@ -256,7 +256,7 @@ class SmrAlliance {
 	/**
 	 * Get the total credits in the alliance bank account.
 	 */
-	public function getBank() {
+	public function getBank() : int {
 		return $this->bank;
 	}
 
@@ -283,15 +283,15 @@ class SmrAlliance {
 	/**
 	 * Get (HTML-safe) alliance Message of the Day for display.
 	 */
-	public function getMotD() {
+	public function getMotD() : string {
 		return htmlentities($this->motd);
 	}
 
-	public function setMotD($motd) {
+	public function setMotD(string $motd) : void {
 		$this->motd = $motd;
 	}
 
-	public function getPassword() {
+	public function getPassword() : string {
 		return $this->password;
 	}
 
@@ -344,18 +344,18 @@ class SmrAlliance {
 		];
 	}
 
-	public function getKills() {
+	public function getKills() : int {
 		return $this->kills;
 	}
 
-	public function getDeaths() {
+	public function getDeaths() : int {
 		return $this->deaths;
 	}
 
 	/**
 	 * Get (HTML-safe) alliance description for display.
 	 */
-	public function getDescription() {
+	public function getDescription() : string {
 		if (empty($this->description)) {
 			return '';
 		} else {
@@ -363,7 +363,7 @@ class SmrAlliance {
 		}
 	}
 
-	public function setAllianceDescription($description) {
+	public function setAllianceDescription(string $description) : void {
 		$description = word_filter($description);
 		if ($description == $this->description) {
 			return;
@@ -378,7 +378,7 @@ class SmrAlliance {
 		$this->description = $description;
 	}
 
-	public function hasFlagship() {
+	public function hasFlagship() : bool {
 		return $this->flagshipID != 0;
 	}
 
@@ -386,21 +386,24 @@ class SmrAlliance {
 	 * Get account ID of the player designated as the alliance flagship.
 	 * Returns 0 if no flagship.
 	 */
-	public function getFlagshipID() {
+	public function getFlagshipID() : int {
 		return $this->flagshipID;
 	}
 
 	/**
 	 * Designate a player as the alliance flagship by their account ID.
 	 */
-	public function setFlagshipID($accountID) {
+	public function setFlagshipID(int $accountID) : void {
 		if ($this->flagshipID == $accountID) {
 			return;
 		}
 		$this->flagshipID = $accountID;
 	}
 
-	public function canJoinAlliance(SmrPlayer $player, $doAllianceCheck = true) {
+	/**
+	 * @return string|true
+	 */
+	public function canJoinAlliance(SmrPlayer $player, bool $doAllianceCheck = true) {
 		if (!$player->getAccount()->isValidated()) {
 			return 'You cannot join an alliance until you validate your account.';
 		}
@@ -441,7 +444,7 @@ class SmrAlliance {
 		return 'There is not currently enough room for you in this alliance.';
 	}
 
-	public function getNumVeterans() {
+	public function getNumVeterans() : int {
 		$numVeterans = 0;
 		foreach ($this->getMembers() as $player) {
 			if (!$player->hasNewbieStatus()) {
@@ -451,11 +454,11 @@ class SmrAlliance {
 		return $numVeterans;
 	}
 
-	public function getNumMembers() {
+	public function getNumMembers() : int {
 		return count($this->getMemberIDs());
 	}
 
-	public function update() {
+	public function update() : void {
 		$this->db->query('UPDATE alliance SET
 								alliance_password = ' . $this->db->escapeString($this->password) . ',
 								recruiting = ' . $this->db->escapeBoolean($this->recruiting) . ',
@@ -475,11 +478,11 @@ class SmrAlliance {
 	/**
 	 * Returns the members of this alliance as an array of SmrPlayer objects.
 	 */
-	public function getMembers() {
+	public function getMembers() : array {
 		return SmrPlayer::getAlliancePlayers($this->getGameID(), $this->getAllianceID());
 	}
 
-	public function getMemberIDs() {
+	public function getMemberIDs() : array {
 		if (!isset($this->memberList)) {
 			$this->db->query('SELECT account_id FROM player WHERE ' . $this->SQL);
 
@@ -492,7 +495,7 @@ class SmrAlliance {
 		return $this->memberList;
 	}
 
-	public function getActiveIDs() {
+	public function getActiveIDs() : array {
 		$activeIDs = array();
 
 		$this->db->query('SELECT account_id
@@ -510,7 +513,7 @@ class SmrAlliance {
 	/**
 	 * Return all planets owned by members of this alliance.
 	 */
-	public function getPlanets() {
+	public function getPlanets() : array {
 		$this->db->query('SELECT planet.*
 			FROM player
 			JOIN planet ON player.game_id = planet.game_id AND player.account_id = planet.owner_id
@@ -528,7 +531,7 @@ class SmrAlliance {
 	/**
 	 * Return array of sector_id for sectors in the alliance seedlist.
 	 */
-	public function getSeedlist() {
+	public function getSeedlist() : array {
 		if (!isset($this->seedlist)) {
 			$this->db->query('SELECT sector_id FROM alliance_has_seedlist WHERE ' . $this->SQL);
 			$this->seedlist = array();
@@ -542,7 +545,7 @@ class SmrAlliance {
 	/**
 	 * Is the given sector in the alliance seedlist?
 	 */
-	public function isInSeedlist(SmrSector $sector) {
+	public function isInSeedlist(SmrSector $sector) : bool {
 		return in_array($sector->getSectorID(), $this->getSeedlist());
 	}
 
@@ -550,7 +553,7 @@ class SmrAlliance {
 	 * Create the default roles for this alliance.
 	 * This should only be called once after the alliance is created.
 	 */
-	public function createDefaultRoles($newMemberPermission = 'basic') {
+	public function createDefaultRoles(string $newMemberPermission = 'basic') : void {
 		$db = $this->db; //for convenience
 
 		$withPerDay = ALLIANCE_BANK_UNLIMITED;
