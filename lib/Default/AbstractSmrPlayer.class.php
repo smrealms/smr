@@ -1364,13 +1364,13 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 
-		$this->setAllianceID(0);
-		$this->db->query('DELETE FROM player_has_alliance_role WHERE ' . $this->SQL);
-
 		if (!$this->isAllianceLeader() && $allianceID != NHA_ID) { // Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
 			$this->setAllianceJoinable(SmrSession::getTime() + self::TIME_FOR_ALLIANCE_SWITCH);
 			$alliance->getLeader()->setAllianceJoinable(SmrSession::getTime() + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
 		}
+
+		$this->setAllianceID(0);
+		$this->db->query('DELETE FROM player_has_alliance_role WHERE ' . $this->SQL);
 	}
 
 	/**
