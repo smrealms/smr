@@ -14,7 +14,6 @@ foreach ($galaxies as $i => $galaxy) {
 	$origGals[$i] = [
 		'Width' => $galaxy->getWidth(),
 		'Height' => $galaxy->getHeight(),
-		'Size' => $galaxy->getSize(),
 	];
 }
 
@@ -32,7 +31,7 @@ foreach ($galaxies as $i => $galaxy) {
 // Early return if no galaxy dimensions are modified
 $galaxySizesUnchanged = true;
 foreach ($galaxies as $i => $galaxy) {
-	if ($galaxy->getSize() != $origGals[$i]['Size']) {
+	if ($galaxy->getWidth() != $origGals[$i]['Width'] || $galaxy->getHeight() != $origGals[$i]['Height']) {
 		$galaxySizesUnchanged = false;
 		break;
 	}
