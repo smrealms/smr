@@ -3,7 +3,7 @@
 create_error('Deleting games is disabled!');
 
 // additional db objects
-$db2 = MySqlDatabase::getNewInstance();
+$db2 = MySqlDatabase::getInstance();
 
 $smr_db_sql = array();
 $history_db_sql = array();

@@ -3,7 +3,7 @@
 require_once('../htdocs/config.inc');
 
 $db = MySqlDatabase::getInstance();
-$db2 = MySqlDatabase::getNewInstance();
+$db2 = MySqlDatabase::getInstance();
 
 //$db->query('SELECT * FROM combat_logs WHERE type=\'PLAYER\' ORDER BY OCTET_LENGTH(result) DESC LIMIT 1');
 //if($db->nextRecord())

@@ -14,29 +14,7 @@ class MySqlDatabase {
 	private ?array $dbRecord = null;
 
 	public static function getInstance(): MySqlDatabase {
-		return self::ensureConnected(DiContainer::get(self::class));
-	}
-
-	public static function getNewInstance(): MySqlDatabase {
-		return self::ensureConnected(DiContainer::make(self::class));
-	}
-
-	/**
-	 * Verifies that the MySqlDatabase instance has a valid $dbConn instance,
-	 * and rewires the DI container to use freshly instantiated instances in the event
-	 * of disconnect from the database.
-	 * @param MySqlDatabase $mysqlDatabase
-	 * @return MySqlDatabase
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
-	 */
-	private static function ensureConnected(MySqlDatabase $mysqlDatabase): MySqlDatabase {
-		if (!isset($mysqlDatabase->dbConn)) {
-			self::reconnectMysql();
-			DiContainer::getContainer()->set(MySqlDatabase::class, self::getNewInstance());
-			$mysqlDatabase = self::getInstance();
-		}
-		return $mysqlDatabase;
+		return DiContainer::make(self::class);
 	}
 
 	/**
@@ -45,33 +23,38 @@ class MySqlDatabase {
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
-	private static function reconnectMysql() {
+	private static function reconnectMysql(): mysqli {
 		$newMysqli = DiContainer::make(mysqli::class);
 		DiContainer::getContainer()->set(mysqli::class, $newMysqli);
+		return $newMysqli;
 	}
 
 	public static function mysqliFactory(MySqlProperties $mysqlProperties): mysqli {
 		if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
 			throw new RuntimeException('Failed to enable mysqli error reporting');
 		}
-		return new mysqli(
+		$mysql = new mysqli(
 			$mysqlProperties->getHost(),
 			$mysqlProperties->getUser(),
 			$mysqlProperties->getPassword(),
 			$mysqlProperties->getDatabaseName());
+		$charset = $mysql->character_set_name();
+		if ($charset != 'utf8') {
+			throw new RuntimeException('Unexpected charset: ' . $charset);
+		}
+		return $mysql;
 	}
 
 	/**
 	 * MySqlDatabase constructor.
 	 * Not intended to be constructed by hand. If you need an instance of MySqlDatabase,
 	 * use MySqlDatabase::getInstance();
-	 * @param mysqli $dbConn The mysqli instance
+	 * @param ?mysqli $dbConn The mysqli instance (null if reconnect needed)
 	 * @param MySqlProperties $mysqlProperties The properties object that was used to construct the mysqli instance
 	 */
-	public function __construct(mysqli $dbConn, MySqlProperties $mysqlProperties) {
-		$charset = $dbConn->character_set_name();
-		if ($charset != 'utf8') {
-			$this->error('Unexpected charset: ' . $charset);
+	public function __construct(?mysqli $dbConn, MySqlProperties $mysqlProperties) {
+		if (is_null($dbConn)) {
+			$dbConn = self::reconnectMysql();
 		}
 		$this->dbConn = $dbConn;
 		$this->mysqlProperties = $mysqlProperties;
@@ -119,6 +102,10 @@ class MySqlDatabase {
 		if ($this->dbConn) {
 			$this->dbConn->close();
 			unset($this->dbConn);
+			// Set the mysqli instance in the dependency injection container to
+			// null so that the MySqlDatabase constructor will reconnect the
+			// next time it is called.
+			DiContainer::getContainer()->set(mysqli::class, null);
 		}
 	}
 

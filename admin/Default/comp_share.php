@@ -8,7 +8,7 @@ $skipClosedAccs = false;
 $skipExceptions = false;
 
 //extra db object and other vars
-$db2 = MySqlDatabase::getNewInstance();
+$db2 = MySqlDatabase::getInstance();
 $used = array();
 
 //check the db and get the info we need

@@ -15,7 +15,7 @@ function user_quit($fp, $rdata)
 
 		// database object
 		$db = MySqlDatabase::getInstance();
-		$db2 = MySqlDatabase::getNewInstance();
+		$db2 = MySqlDatabase::getInstance();
 
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 
@@ -53,7 +53,7 @@ function user_nick($fp, $rdata)
 
 		// database object
 		$db = MySqlDatabase::getInstance();
-		$db2 = MySqlDatabase::getNewInstance();
+		$db2 = MySqlDatabase::getInstance();
 
 		$channel_list = array();
 
