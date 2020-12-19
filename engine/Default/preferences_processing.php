@@ -144,7 +144,7 @@ if ($action == 'Save and resend validation code') {
 	$account->setShortTimeFormat(Request::get('timeformat'));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your date formats.';
 } elseif ($action == 'Change Images') {
-	$account->setDisplayShipImages(Request::get('images'));
+	$account->setDisplayShipImages(Request::get('images') == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
 } elseif ($action == 'Change Centering') {
 	$account->setCenterGalaxyMapOnPlayer(Request::get('centergalmap') == 'Yes');
