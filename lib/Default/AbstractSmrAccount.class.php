@@ -36,77 +36,77 @@ abstract class AbstractSmrAccount {
 		'AttackTrader' => array('f')
 	);
 
-	protected $db;
+	protected MySqlDatabase $db;
 
-	protected $account_id;
-	protected $login;
-	protected $passwordHash;
-	protected $email;
-	protected $validated;
-	protected $validation_code;
-	protected $last_login;
-	protected $hofName;
-	protected $discordId;
-	protected $ircNick;
-	protected $veteranForced;
-	protected $logging;
-	protected $offset;
-	protected $images;
-	protected $fontSize;
-	protected $passwordReset;
-	protected $points;
-	protected $useAJAX;
-	protected $mailBanned;
-	protected $HOF;
-	protected $individualScores;
-	protected $score;
-	protected $cssLink;
-	protected $defaultCSSEnabled;
-	protected $messageNotifications;
-	protected $centerGalaxyMapOnPlayer;
-	protected $oldAccountIDs = array();
-	protected $maxRankAchieved;
-	protected $referrerID;
-	protected $credits; // SMR credits
-	protected $rewardCredits; // SMR reward credits
-	protected $dateShort;
-	protected $timeShort;
-	protected $template;
-	protected $colourScheme;
-	protected $hotkeys = array();
-	protected $permissions;
-	protected $friendlyColour;
-	protected $neutralColour;
-	protected $enemyColour;
-	protected $SQL;
+	protected int $account_id;
+	protected string $login;
+	protected string $passwordHash;
+	protected string $email;
+	protected bool $validated;
+	protected string $validation_code;
+	protected int $last_login;
+	protected string $hofName;
+	protected ?string $discordId;
+	protected ?string $ircNick;
+	protected bool $veteranForced;
+	protected bool $logging;
+	protected int $offset;
+	protected bool $images;
+	protected int $fontSize;
+	protected string $passwordReset;
+	protected int $points;
+	protected bool $useAJAX;
+	protected int $mailBanned;
+	protected array $HOF;
+	protected array $individualScores;
+	protected int $score;
+	protected ?string $cssLink;
+	protected bool $defaultCSSEnabled;
+	protected ?array $messageNotifications;
+	protected bool $centerGalaxyMapOnPlayer;
+	protected array $oldAccountIDs = array();
+	protected int $maxRankAchieved;
+	protected int $referrerID;
+	protected int $credits; // SMR credits
+	protected int $rewardCredits; // SMR reward credits
+	protected string $dateShort;
+	protected string $timeShort;
+	protected string $template;
+	protected string $colourScheme;
+	protected array $hotkeys;
+	protected array $permissions;
+	protected string $friendlyColour;
+	protected string $neutralColour;
+	protected string $enemyColour;
+	protected string $SQL;
 
-	protected $npc;
+	protected bool $npc;
 
-	protected $hasChanged;
+	protected bool $hasChanged;
 
-	public static function getDefaultHotkeys() {
+	public static function getDefaultHotkeys() : array {
 		return self::DEFAULT_HOTKEYS;
 	}
 
-	public static function getAccount($accountID, $forceUpdate = false) {
+	public static function getAccount(int $accountID, bool $forceUpdate = false) : SmrAccount {
 		if ($forceUpdate || !isset(self::$CACHE_ACCOUNTS[$accountID])) {
 			self::$CACHE_ACCOUNTS[$accountID] = new SmrAccount($accountID);
 		}
 		return self::$CACHE_ACCOUNTS[$accountID];
 	}
 
-	public static function getAccountByName($login, $forceUpdate = false) {
+	public static function getAccountByName(string $login, bool $forceUpdate = false) : ?SmrAccount {
 		if (empty($login)) { return null; }
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAccount($db->getInt('account_id'), $forceUpdate);
+		} else {
+			return null;
 		}
-		$return = null;
-		return $return;
 	}
 
-	public static function getAccountByEmail($email, $forceUpdate = false) {
+	public static function getAccountByEmail(?string $email, bool $forceUpdate = false) : ?SmrAccount {
 		if (empty($email)) { return null; }
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account WHERE email = ' . $db->escapeString($email) . ' LIMIT 1');
@@ -117,7 +117,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public static function getAccountByDiscordId($id, $forceUpdate = false) {
+	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false) : ?SmrAccount {
 		if (empty($id)) { return null; }
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account where discord_id = ' . $db->escapeString($id) . ' LIMIT 1');
@@ -128,7 +128,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public static function getAccountByIrcNick($nick, $forceUpdate = false) {
+	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false) : ?SmrAccount {
 		if (empty($nick)) { return null; }
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account WHERE irc_nick = ' . $db->escapeString($nick) . ' LIMIT 1');
@@ -139,7 +139,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public static function getAccountBySocialLogin(SocialLogin $social, $forceUpdate = false) {
+	public static function getAccountBySocialLogin(SocialLogin $social, bool $forceUpdate = false) : ?SmrAccount {
 		if (!$social->isValid()) { return null; }
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account JOIN account_auth USING(account_id)
@@ -152,20 +152,20 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public static function createAccount($login, $password, $email, $timez, $referral) {
+	public static function createAccount(string $login, string $password, string $email, int $timez, int $referral) : SmrAccount {
 		if ($referral != 0) {
 			// Will throw if referral account doesn't exist
 			SmrAccount::getAccount($referral);
 		}
 		$db = MySqlDatabase::getInstance();
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
-		$db->query('INSERT INTO account (login, password, email, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
+		$db->query('INSERT INTO account (login, password, email, validation_code, last_login, offset, referral_id, hof_name, hotkeys) VALUES(' .
 			$db->escapeString($login) . ', ' . $db->escapeString($passwordHash) . ', ' . $db->escapeString($email) . ', ' .
-			$db->escapeString(random_string(10)) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeNumber($timez) . ',' . $db->escapeNumber($referral) . ',' . $db->escapeString($login) . ')');
+			$db->escapeString(random_string(10)) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeNumber($timez) . ',' . $db->escapeNumber($referral) . ',' . $db->escapeString($login) . ',' . $db->escapeObject([]) . ')');
 		return self::getAccountByName($login);
 	}
 
-	public static function getUserScoreCaseStatement($db) {
+	public static function getUserScoreCaseStatement(MySqlDatabase $db) : array {
 		$userRankingTypes = array();
 		$case = 'FLOOR(SUM(CASE type ';
 		foreach (self::USER_RANKINGS_SCORE as $userRankingScore) {
@@ -177,41 +177,40 @@ abstract class AbstractSmrAccount {
 		return array('CASE' => $case, 'IN' => join(',', $userRankingTypes));
 	}
 
-	protected function __construct($accountID) {
+	protected function __construct(int $accountID) {
 		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID);
 		$this->db->query('SELECT * FROM account WHERE ' . $this->SQL . ' LIMIT 1');
 
 		if ($this->db->nextRecord()) {
-			$row = $this->db->getRow();
-			$this->account_id = $row['account_id'];
+			$this->account_id = $this->db->getInt('account_id');
 
-			$this->login			= $row['login'];
-			$this->passwordHash = $row['password'];
-			$this->email			= $row['email'];
+			$this->login = $this->db->getField('login');
+			$this->passwordHash = $this->db->getField('password');
+			$this->email = $this->db->getField('email');
 			$this->validated = $this->db->getBoolean('validated');
 
-			$this->last_login = $row['last_login'];
-			$this->validation_code = $row['validation_code'];
+			$this->last_login = $this->db->getInt('last_login');
+			$this->validation_code = $this->db->getField('validation_code');
 			$this->veteranForced = $this->db->getBoolean('veteran');
 			$this->logging = $this->db->getBoolean('logging');
-			$this->offset			= $row['offset'];
+			$this->offset = $this->db->getInt('offset');
 			$this->images = $this->db->getBoolean('images');
-			$this->fontSize = $row['fontsize'];
+			$this->fontSize = $this->db->getInt('fontsize');
 
-			$this->passwordReset = $row['password_reset'];
+			$this->passwordReset = $this->db->getField('password_reset');
 			$this->useAJAX = $this->db->getBoolean('use_ajax');
-			$this->mailBanned = (int)$row['mail_banned'];
+			$this->mailBanned = $this->db->getInt('mail_banned');
 
-			$this->friendlyColour = $row['friendly_colour'];
-			$this->neutralColour = $row['neutral_colour'];
-			$this->enemyColour = $row['enemy_colour'];
+			$this->friendlyColour = $this->db->getField('friendly_colour');
+			$this->neutralColour = $this->db->getField('neutral_colour');
+			$this->enemyColour = $this->db->getField('enemy_colour');
 
-			$this->cssLink = $row['css_link'];
+			$this->cssLink = $this->db->getField('css_link');
 			$this->defaultCSSEnabled = $this->db->getBoolean('default_css_enabled');
 			$this->centerGalaxyMapOnPlayer = $this->db->getBoolean('center_galaxy_map_on_player');
 
-			$this->messageNotifications = $this->db->getObject('message_notifications');
+			$this->messageNotifications = $this->db->getObject('message_notifications', false, true);
 			$this->hotkeys = $this->db->getObject('hotkeys');
 			foreach (self::DEFAULT_HOTKEYS as $hotkey => $binding) {
 				if (!isset($this->hotkeys[$hotkey])) {
@@ -220,21 +219,21 @@ abstract class AbstractSmrAccount {
 			}
 
 			foreach (Globals::getHistoryDatabases() as $databaseName => $oldColumn) {
-				$this->oldAccountIDs[$databaseName] = $row[$oldColumn];
+				$this->oldAccountIDs[$databaseName] = $this->db->getInt($oldColumn);
 			}
 
-			$this->referrerID = $row['referral_id'];
-			$this->maxRankAchieved = $row['max_rank_achieved'];
+			$this->referrerID = $this->db->getInt('referral_id');
+			$this->maxRankAchieved = $this->db->getInt('max_rank_achieved');
 
-			$this->hofName			= $row['hof_name'];
-			$this->discordId		= $row['discord_id'];
-			$this->ircNick			= $row['irc_nick'];
+			$this->hofName = $this->db->getField('hof_name');
+			$this->discordId = $this->db->getField('discord_id');
+			$this->ircNick = $this->db->getField('irc_nick');
 
-			$this->dateShort		= $row['date_short'];
-			$this->timeShort		= $row['time_short'];
+			$this->dateShort = $this->db->getField('date_short');
+			$this->timeShort = $this->db->getField('time_short');
 
-			$this->template			= $row['template'];
-			$this->colourScheme = $row['colour_scheme'];
+			$this->template = $this->db->getField('template');
+			$this->colourScheme = $this->db->getField('colour_scheme');
 
 			if (empty($this->hofName)) {
 				$this->hofName = $this->login;
@@ -244,7 +243,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function isDisabled() {
+	public function isDisabled() : bool {
 		$this->db->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
 			'WHERE ' . $this->SQL . ' LIMIT 1');
 		if ($this->db->nextRecord()) {
@@ -266,7 +265,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function update() {
+	public function update() : void {
 		$this->db->query('UPDATE account SET email = ' . $this->db->escapeString($this->email) .
 			', validation_code = ' . $this->db->escapeString($this->validation_code) .
 			', validated = ' . $this->db->escapeBoolean($this->validated) .
@@ -278,7 +277,7 @@ abstract class AbstractSmrAccount {
 			', max_rank_achieved=' . $this->db->escapeNumber($this->maxRankAchieved) .
 			', default_css_enabled=' . $this->db->escapeBoolean($this->defaultCSSEnabled) .
 			', center_galaxy_map_on_player=' . $this->db->escapeBoolean($this->centerGalaxyMapOnPlayer) .
-			', message_notifications=' . $this->db->escapeObject($this->messageNotifications) .
+			', message_notifications=' . $this->db->escapeObject($this->messageNotifications, false, true) .
 			', hotkeys=' . $this->db->escapeObject($this->hotkeys) .
 			', last_login = ' . $this->db->escapeNumber($this->last_login) .
 			', logging = ' . $this->db->escapeBoolean($this->logging) .
@@ -298,7 +297,7 @@ abstract class AbstractSmrAccount {
 		$this->hasChanged = false;
 	}
 
-	public function updateIP() {
+	public function updateIP() : void {
 		$curr_ip = getIpAddress();
 		$this->log(LOG_TYPE_LOGIN, 'logged in from ' . $curr_ip);
 
@@ -326,7 +325,7 @@ abstract class AbstractSmrAccount {
 		$this->db->query('REPLACE INTO account_has_ip (account_id, time, ip, host) VALUES (' . $this->db->escapeNumber($this->account_id) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeString($curr_ip) . ', ' . $this->db->escapeString($host) . ')');
 	}
 
-	public function updateLastLogin() {
+	public function updateLastLogin() : void {
 		if ($this->last_login == SmrSession::getTime()) {
 			return;
 		}
@@ -335,33 +334,33 @@ abstract class AbstractSmrAccount {
 		$this->update();
 	}
 
-	public function getLastLogin() {
+	public function getLastLogin() : int {
 		return $this->last_login;
 	}
 
-	public function setLoggingEnabled($bool) {
-		if ($this->logging == $bool) {
+	public function setLoggingEnabled(bool $bool) : void {
+		if ($this->logging === $bool) {
 			return;
 		}
 		$this->logging = $bool;
 		$this->hasChanged = true;
 	}
 
-	public function isLoggingEnabled() {
+	public function isLoggingEnabled() : bool {
 		return $this->logging;
 	}
 
-	public function isVeteranForced() {
+	public function isVeteranForced() : bool {
 		return $this->veteranForced;
 	}
 
-	public function isVeteran() {
+	public function isVeteran() : bool {
 		// Use maxRankAchieved to avoid a database call to get user stats.
 		// This saves a lot of time on the CPL, Rankings, Rosters, etc.
 		return $this->isVeteranForced() || $this->maxRankAchieved >= FLEDGLING;
 	}
 
-	public function isNPC() {
+	public function isNPC() : bool {
 		if(!isset($this->npc)) {
 			$this->db->query('SELECT login FROM npc_logins WHERE login = '.$this->db->escapeString($this->getLogin()).' LIMIT 1;');
 			$this->npc = $this->db->nextRecord();
@@ -369,7 +368,7 @@ abstract class AbstractSmrAccount {
 		return $this->npc;
 	}
 
-	protected function getHOFData() {
+	protected function getHOFData() : void {
 		if(!isset($this->HOF)) {
 			//Get Player HOF
 			$this->db->query('SELECT type,sum(amount) as amount FROM player_hof WHERE ' . $this->SQL . ' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = \'FALSE\') GROUP BY type');
@@ -388,6 +387,9 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
+	/**
+	 * @return array|float
+	 */
 	public function getHOF(array $typeList = null) {
 		$this->getHOFData();
 		if ($typeList == null) {
@@ -403,7 +405,7 @@ abstract class AbstractSmrAccount {
 		return $hof;
 	}
 
-	public function getRankName() {
+	public function getRankName() : string {
 		$rankings = Globals::getUserRanking();
 		if (isset($rankings[$this->getRank()])) {
 			return $rankings[$this->getRank()];
@@ -412,18 +414,18 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function getScore() {
+	public function getScore() : int {
 		if (!isset($this->score)) {
 			$score = 0;
 			foreach ($this->getIndividualScores() as $each) {
 				$score += $each['Score'];
 			}
-			$this->score = round($score);
+			$this->score = IRound($score);
 		}
 		return $this->score;
 	}
 
-	public function getIndividualScores(SmrPlayer $player = null) {
+	public function getIndividualScores(SmrPlayer $player = null) : array {
 		$gameID = 0;
 		if ($player != null) {
 			$gameID = $player->getGameID();
@@ -453,7 +455,7 @@ abstract class AbstractSmrAccount {
 		return $rank;
 	}
 
-	protected function updateMaxRankAchieved($rank) {
+	protected function updateMaxRankAchieved(int $rank) : void {
 		if ($rank <= $this->maxRankAchieved) {
 			throw new Exception('Trying to set max rank achieved to a lower value: ' . $rank);
 		}
@@ -466,19 +468,19 @@ abstract class AbstractSmrAccount {
 		$this->update();
 	}
 
-	public function getReferrerID() {
+	public function getReferrerID() : int {
 		return $this->referrerID;
 	}
 
-	public function hasReferrer() {
+	public function hasReferrer() : bool {
 		return $this->referrerID > 0;
 	}
 
-	public function getReferrer() {
+	public function getReferrer() : SmrAccount {
 		return SmrAccount::getAccount($this->getReferrerID());
 	}
 
-	public function log($log_type_id, $msg, $sector_id = 0) {
+	public function log(int $log_type_id, string $msg, int $sector_id = 0) : void {
 		if ($this->isLoggingEnabled()) {
 			$this->db->query('INSERT INTO account_has_logs ' .
 				'(account_id, microtime, log_type_id, message, sector_id) ' .
@@ -486,7 +488,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	protected function getSmrCreditsData() {
+	protected function getSmrCreditsData() : void {
 		if (!isset($this->credits) || !isset($this->rewardCredits)) {
 			$this->credits = 0;
 			$this->rewardCredits = 0;
@@ -498,11 +500,11 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function getTotalSmrCredits() {
+	public function getTotalSmrCredits() : int {
 		return $this->getSmrCredits() + $this->getSmrRewardCredits();
 	}
 
-	public function decreaseTotalSmrCredits($totalCredits) {
+	public function decreaseTotalSmrCredits(int $totalCredits) : void {
 		if ($totalCredits == 0) {
 			return;
 		}
@@ -529,17 +531,17 @@ abstract class AbstractSmrAccount {
 		$this->rewardCredits = $rewardCredits;
 	}
 
-	public function getSmrCredits() {
+	public function getSmrCredits() : int {
 		$this->getSmrCreditsData();
 		return $this->credits;
 	}
 
-	public function getSmrRewardCredits() {
+	public function getSmrRewardCredits() : int {
 		$this->getSmrCreditsData();
 		return $this->rewardCredits;
 	}
 
-	public function setSmrCredits($credits) {
+	public function setSmrCredits(int $credits) : void {
 		if ($this->getSmrCredits() == $credits) {
 			return;
 		}
@@ -551,7 +553,7 @@ abstract class AbstractSmrAccount {
 		$this->credits = $credits;
 	}
 
-	public function increaseSmrCredits($credits) {
+	public function increaseSmrCredits(int $credits) : void {
 		if ($credits == 0) {
 			return;
 		}
@@ -561,7 +563,7 @@ abstract class AbstractSmrAccount {
 		$this->setSmrCredits($this->getSmrCredits() + $credits);
 	}
 
-	public function decreaseSmrCredits($credits) {
+	public function decreaseSmrCredits(int $credits) : void {
 		if ($credits == 0) {
 			return;
 		}
@@ -574,8 +576,8 @@ abstract class AbstractSmrAccount {
 		$this->setSmrCredits($this->getSmrCredits() - $credits);
 	}
 
-	public function setSmrRewardCredits($credits) {
-		if ($this->getSmrRewardCredits() == $credits) {
+	public function setSmrRewardCredits(int $credits) : void {
+		if ($this->getSmrRewardCredits() === $credits) {
 			return;
 		}
 		if ($this->credits == 0 && $this->rewardCredits == 0) {
@@ -586,7 +588,7 @@ abstract class AbstractSmrAccount {
 		$this->rewardCredits = $credits;
 	}
 
-	public function increaseSmrRewardCredits($credits) {
+	public function increaseSmrRewardCredits(int $credits) : void {
 		if ($credits == 0) {
 			return;
 		}
@@ -596,12 +598,12 @@ abstract class AbstractSmrAccount {
 		$this->setSmrRewardCredits($this->getSmrRewardCredits() + $credits);
 	}
 
-	public function sendMessageToBox($boxTypeID, $message) {
+	public function sendMessageToBox(int $boxTypeID, string $message) : void {
 		// send him the message
 		self::doMessageSendingToBox($this->getAccountID(), $boxTypeID, $message);
 	}
 
-	public static function doMessageSendingToBox($senderID, $boxTypeID, $message, $gameID = 0) {
+	public static function doMessageSendingToBox(int $senderID, int $boxTypeID, string $message, int $gameID = 0) : void {
 		$db = MySqlDatabase::getInstance();
 		// send him the message
 		$db->query('INSERT INTO message_boxes
@@ -615,27 +617,27 @@ abstract class AbstractSmrAccount {
 		);
 	}
 
-	public function getAccountID() {
+	public function getAccountID() : int {
 		return $this->account_id;
 	}
 
 	/**
 	 * Return the ID associated with this account in the given history database.
 	 */
-	public function getOldAccountID($dbName) {
+	public function getOldAccountID(string $dbName) : int {
 		return $this->oldAccountIDs[$dbName] ?? 0;
 	}
 
-	public function getLogin() {
+	public function getLogin() : string {
 		return $this->login;
 	}
 
-	public function getEmail() {
+	public function getEmail() : string {
 		return $this->email;
 	}
 
-	protected function setEmail($email) {
-		if ($this->email == $email) {
+	protected function setEmail(string $email) : void {
+		if ($this->email === $email) {
 			return;
 		}
 		$this->email = $email;
@@ -645,7 +647,7 @@ abstract class AbstractSmrAccount {
 	/**
 	 * Change e-mail address, unvalidate the account, and resend validation code
 	 */
-	public function changeEmail($email) {
+	public function changeEmail(string $email) : void {
 		// get user and host for the provided address
 		list($user, $host) = explode('@', $email);
 
@@ -693,16 +695,16 @@ abstract class AbstractSmrAccount {
 		$mail->send();
 	}
 
-	public function getOffset() {
+	public function getOffset() : int {
 		return $this->offset;
 	}
 
-	public function getFontSize() {
+	public function getFontSize() : int {
 		return $this->fontSize;
 	}
 
-	public function setFontSize($size) {
-		if ($this->fontSize == $size) {
+	public function setFontSize(int $size) : void {
+		if ($this->fontSize === $size) {
 			return;
 		}
 		$this->fontSize = $size;
@@ -710,25 +712,25 @@ abstract class AbstractSmrAccount {
 	}
 
 	// gets the extra CSS file linked in preferences
-	public function getCssLink() {
+	public function getCssLink() : ?string {
 		return $this->cssLink;
 	}
 
 	// sets the extra CSS file linked in preferences
-	public function setCssLink($link) {
-		if ($this->cssLink == $link) {
+	public function setCssLink(string $link) : void {
+		if ($this->cssLink === $link) {
 			return;
 		}
 		$this->cssLink = $link;
 		$this->hasChanged = true;
 	}
 
-	public function getTemplate() {
+	public function getTemplate() : string {
 		return $this->template;
 	}
 
-	public function setTemplate($template) {
-		if ($this->template == $template) {
+	public function setTemplate(string $template) : void {
+		if ($this->template === $template) {
 			return;
 		}
 		if (!in_array($template, Globals::getAvailableTemplates())) {
@@ -738,12 +740,12 @@ abstract class AbstractSmrAccount {
 		$this->hasChanged = true;
 	}
 
-	public function getColourScheme() {
+	public function getColourScheme() : string {
 		return $this->colourScheme;
 	}
 
-	public function setColourScheme($colourScheme) {
-		if ($this->colourScheme == $colourScheme) {
+	public function setColourScheme(string $colourScheme) : void {
+		if ($this->colourScheme === $colourScheme) {
 			return;
 		}
 		if (!in_array($colourScheme, Globals::getAvailableColourSchemes($this->getTemplate()))) {
@@ -754,12 +756,12 @@ abstract class AbstractSmrAccount {
 	}
 
 	// gets the CSS URL based on the template name specified in preferences
-	public function getCssUrl() {
+	public function getCssUrl() : string {
 		return CSS_URLS[$this->getTemplate()];
 	}
 
 	// gets the CSS_COLOUR URL based on the template and color scheme specified in preferences
-	public function getCssColourUrl() {
+	public function getCssColourUrl() : string {
 		return CSS_COLOUR_URLS[$this->getTemplate()][$this->getColourScheme()];
 	}
 
@@ -767,7 +769,7 @@ abstract class AbstractSmrAccount {
 	 * The Hall Of Fame name is not html-escaped in the database, so to display
 	 * it correctly we must escape html entities.
 	 */
-	public function getHofDisplayName($linked = false) {
+	public function getHofDisplayName(bool $linked = false) : string {
 		$hofDisplayName = htmlspecialchars($this->getHofName());
 		if ($linked) {
 			return '<a href="' . $this->getPersonalHofHREF() . '">' . $hofDisplayName . '</a>';
@@ -776,95 +778,95 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function getHofName() {
+	public function getHofName() : string {
 		return $this->hofName;
 	}
 
-	public function setHofName($name) {
-		if ($this->hofName == $name) {
+	public function setHofName(string $name) : void {
+		if ($this->hofName === $name) {
 			return;
 		}
 		$this->hofName = $name;
 		$this->hasChanged = true;
 	}
 
-	public function getIrcNick() {
+	public function getIrcNick() : ?string {
 		return $this->ircNick;
 	}
 
-	public function setIrcNick($nick) {
-		if ($this->ircNick == $nick) {
+	public function setIrcNick(string $nick) : void {
+		if ($this->ircNick === $nick) {
 			return;
 		}
 		$this->ircNick = $nick;
 		$this->hasChanged = true;
 	}
 
-	public function getDiscordId() {
+	public function getDiscordId() : ?string {
 		return $this->discordId;
 	}
 
-	public function setDiscordId($id) {
-		if ($this->discordId == $id) {
+	public function setDiscordId(string $id) : void {
+		if ($this->discordId === $id) {
 			return;
 		}
 		$this->discordId = $id;
 		$this->hasChanged = true;
 	}
 
-	public function getReferralLink() {
+	public function getReferralLink() : string {
 		return URL . '/login_create.php?ref=' . $this->getAccountID();
 	}
 
-	public function getShortDateFormat() {
+	public function getShortDateFormat() : string {
 		return $this->dateShort;
 	}
 
-	public function setShortDateFormat($format) {
-		if ($this->dateShort == $format) {
+	public function setShortDateFormat(string $format) : void {
+		if ($this->dateShort === $format) {
 			return;
 		}
 		$this->dateShort = $format;
 		$this->hasChanged = true;
 	}
 
-	public function getShortTimeFormat() {
+	public function getShortTimeFormat() : string {
 		return $this->timeShort;
 	}
 
-	public function setShortTimeFormat($format) {
-		if ($this->timeShort == $format) {
+	public function setShortTimeFormat(string $format) : void {
+		if ($this->timeShort === $format) {
 			return;
 		}
 		$this->timeShort = $format;
 		$this->hasChanged = true;
 	}
 
-	public function getValidationCode() {
+	public function getValidationCode() : string {
 		return $this->validation_code;
 	}
 
-	protected function setValidationCode($code) {
-		if ($this->validation_code == $code) {
+	protected function setValidationCode(string $code) : void {
+		if ($this->validation_code === $code) {
 			return;
 		}
 		$this->validation_code = $code;
 		$this->hasChanged = true;
 	}
 
-	public function setValidated($bool) {
-		if ($this->validated == $bool) {
+	public function setValidated(bool $bool) : void {
+		if ($this->validated === $bool) {
 			return;
 		}
 		$this->validated = $bool;
 		$this->hasChanged = true;
 	}
 
-	public function isValidated() {
+	public function isValidated() : bool {
 		return $this->validated;
 	}
 
-	public function isLoggedIn() {
+	public function isLoggedIn() : bool {
 		$this->db->query('SELECT 1 FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
 		return $this->db->nextRecord();
 	}
@@ -873,7 +875,7 @@ abstract class AbstractSmrAccount {
 	 * Check if the given (plain-text) password is correct.
 	 * Updates the password hash if necessary.
 	 */
-	public function checkPassword($password) {
+	public function checkPassword(string $password) : bool {
 		// New (safe) password hashes will start with a $, but accounts logging
 		// in for the first time since the transition from md5 will still have
 		// hex-only hashes.
@@ -896,7 +898,7 @@ abstract class AbstractSmrAccount {
 	/**
 	 * Set the (plain-text) password for this account.
 	 */
-	public function setPassword($password) {
+	public function setPassword(string $password) : void {
 		$hash = password_hash($password, PASSWORD_DEFAULT);
 		if ($this->passwordHash === $hash) {
 			return;
@@ -906,72 +908,71 @@ abstract class AbstractSmrAccount {
 		$this->hasChanged = true;
 	}
 
-	public function addAuthMethod($loginType, $authKey) {
+	public function addAuthMethod(string $loginType, string $authKey) : void {
 		$this->db->query('SELECT account_id FROM account_auth WHERE login_type=' . $this->db->escapeString($loginType) . ' AND auth_key = ' . $this->db->escapeString($authKey) . ';');
 		if ($this->db->nextRecord()) {
 			if ($this->db->getInt('account_id') != $this->getAccountID()) {
 				throw new Exception('Another account already uses this form of auth.');
 			}
-			return true;
+			return;
 		}
 		$this->db->query('INSERT INTO account_auth values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeString($loginType) . ',' . $this->db->escapeString($authKey) . ');');
-		return true;
 	}
 
-	public function generatePasswordReset() {
+	public function generatePasswordReset() : void {
 		$this->setPasswordReset(random_string(32));
 	}
 
-	public function getPasswordReset() {
+	public function getPasswordReset() : string {
 		return $this->passwordReset;
 	}
 
-	protected function setPasswordReset($passwordReset) {
-		if ($this->passwordReset == $passwordReset) {
+	protected function setPasswordReset(string $passwordReset) : void {
+		if ($this->passwordReset === $passwordReset) {
 			return;
 		}
 		$this->passwordReset = $passwordReset;
 		$this->hasChanged = true;
 	}
 
-	public function isDisplayShipImages() {
+	public function isDisplayShipImages() : bool {
 		return $this->images;
 	}
 
-	public function setDisplayShipImages($bool) {
-		if ($this->images == $bool) {
+	public function setDisplayShipImages(bool $bool) : void {
+		if ($this->images === $bool) {
 			return;
 		}
 		$this->images = $bool;
 		$this->hasChanged = true;
 	}
 
-	public function isUseAJAX() {
+	public function isUseAJAX() : bool {
 		return $this->useAJAX;
 	}
 
-	public function setUseAJAX($bool) {
-		if ($this->useAJAX == $bool) {
+	public function setUseAJAX(bool $bool) : void {
+		if ($this->useAJAX === $bool) {
 			return;
 		}
 		$this->useAJAX = $bool;
 		$this->hasChanged = true;
 	}
 
-	public function isDefaultCSSEnabled() {
+	public function isDefaultCSSEnabled() : bool {
 		return $this->defaultCSSEnabled;
 	}
 
-	public function setDefaultCSSEnabled($bool) {
-		if ($this->defaultCSSEnabled == $bool) {
+	public function setDefaultCSSEnabled(bool $bool) : void {
+		if ($this->defaultCSSEnabled === $bool) {
 			return;
 		}
 		$this->defaultCSSEnabled = $bool;
 		$this->hasChanged = true;
 	}
 
-	public function getHotkeys($hotkeyType = false) {
-		if ($hotkeyType !== false) {
+	public function getHotkeys(string $hotkeyType = null) : array {
+		if ($hotkeyType !== null) {
 			if (isset($this->hotkeys[$hotkeyType])) {
 				return $this->hotkeys[$hotkeyType];
 			} else {
@@ -981,23 +982,23 @@ abstract class AbstractSmrAccount {
 		return $this->hotkeys;
 	}
 
-	public function setHotkey($hotkeyType, $binding) {
-		if ($this->getHotkeys($hotkeyType) == $binding) {
+	public function setHotkey(string $hotkeyType, array $bindings) : void {
+		if ($this->getHotkeys($hotkeyType) === $bindings) {
 			return;
 		}
-		$this->hotkeys[$hotkeyType] = $binding;
+		$this->hotkeys[$hotkeyType] = $bindings;
 		$this->hasChanged = true;
 	}
 
-	public function isReceivingMessageNotifications($messageTypeID) {
+	public function isReceivingMessageNotifications(int $messageTypeID) : bool {
 		return $this->getMessageNotifications($messageTypeID) > 0;
 	}
 
-	public function getMessageNotifications($messageTypeID) {
+	public function getMessageNotifications(int $messageTypeID) : int {
 		return $this->messageNotifications[$messageTypeID] ?? 0;
 	}
 
-	public function setMessageNotifications($messageTypeID, $num) {
+	public function setMessageNotifications(int $messageTypeID, int $num) : void {
 		if ($this->getMessageNotifications($messageTypeID) == $num) {
 			return;
 		}
@@ -1005,7 +1006,7 @@ abstract class AbstractSmrAccount {
 		$this->hasChanged = true;
 	}
 
-	public function increaseMessageNotifications($messageTypeID, $num) {
+	public function increaseMessageNotifications(int $messageTypeID, int $num) : void {
 		if ($num == 0) {
 			return;
 		}
@@ -1015,7 +1016,7 @@ abstract class AbstractSmrAccount {
 		$this->setMessageNotifications($messageTypeID, $this->getMessageNotifications($messageTypeID) + $num);
 	}
 
-	public function decreaseMessageNotifications($messageTypeID, $num) {
+	public function decreaseMessageNotifications(int $messageTypeID, int $num) : void {
 		if ($num == 0) {
 			return;
 		}
@@ -1025,40 +1026,40 @@ abstract class AbstractSmrAccount {
 		$this->setMessageNotifications($messageTypeID, $this->getMessageNotifications($messageTypeID) - $num);
 	}
 
-	public function isCenterGalaxyMapOnPlayer() {
+	public function isCenterGalaxyMapOnPlayer() : bool {
 		return $this->centerGalaxyMapOnPlayer;
 	}
 
-	public function setCenterGalaxyMapOnPlayer($bool) {
-		if ($this->centerGalaxyMapOnPlayer == $bool) {
+	public function setCenterGalaxyMapOnPlayer(bool $bool) : void {
+		if ($this->centerGalaxyMapOnPlayer === $bool) {
 			return;
 		}
 		$this->centerGalaxyMapOnPlayer = $bool;
 		$this->hasChanged = true;
 	}
 
-	public function getMailBanned() {
+	public function getMailBanned() : int {
 		return $this->mailBanned;
 	}
 
-	public function isMailBanned() {
+	public function isMailBanned() : bool {
 		return $this->mailBanned > SmrSession::getTime();
 	}
 
-	public function setMailBanned($time) {
-		if ($this->mailBanned == $time) {
+	public function setMailBanned(int $time) : void {
+		if ($this->mailBanned === $time) {
 			return;
 		}
 		$this->mailBanned = $time;
 		$this->hasChanged = true;
 	}
 
-	public function increaseMailBanned($increaseTime) {
+	public function increaseMailBanned(int $increaseTime) : void {
 		$time = max(SmrSession::getTime(), $this->getMailBanned());
 		$this->setMailBanned($time + $increaseTime);
 	}
 
-	public function getPermissions() {
+	public function getPermissions() : array {
 		if (!isset($this->permissions)) {
 			$this->permissions = array();
 			$this->db->query('SELECT permission_id FROM account_has_permission WHERE ' . $this->SQL);
@@ -1069,15 +1070,15 @@ abstract class AbstractSmrAccount {
 		return $this->permissions;
 	}
 
-	public function hasPermission($permissionID = false) {
+	public function hasPermission(int $permissionID = null) : bool {
 		$permissions = $this->getPermissions();
-		if ($permissionID === false) {
+		if ($permissionID === null) {
 			return count($permissions) > 0;
 		}
 		return $permissions[$permissionID] ?? false;
 	}
 
-	public function getPoints() {
+	public function getPoints() : int {
 		if (!isset($this->points)) {
 			$this->points = 0;
 			$this->db->lockTable('account_has_points');
@@ -1100,28 +1101,28 @@ abstract class AbstractSmrAccount {
 		return $this->points;
 	}
 
-	public function setPoints($numPoints, $lastUpdate = false) {
+	public function setPoints(int $numPoints, ?int $lastUpdate = null) : void {
 		$numPoints = max($numPoints, 0);
 		if ($this->getPoints() == $numPoints) {
 			return;
 		}
 		if ($this->points == 0) {
-			$this->db->query('INSERT INTO account_has_points (account_id, points, last_update) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($numPoints) . ', ' . $this->db->escapeNumber($lastUpdate ? $lastUpdate : SmrSession::getTime()) . ')');
+			$this->db->query('INSERT INTO account_has_points (account_id, points, last_update) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($numPoints) . ', ' . $this->db->escapeNumber($lastUpdate ?? SmrSession::getTime()) . ')');
 		} elseif ($numPoints <= 0) {
 			$this->db->query('DELETE FROM account_has_points WHERE ' . $this->SQL . ' LIMIT 1');
 		} else {
-			$this->db->query('UPDATE account_has_points SET points = ' . $this->db->escapeNumber($numPoints) . ($lastUpdate ? ', last_update = ' . $this->db->escapeNumber(SmrSession::getTime()) : '') . ' WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->query('UPDATE account_has_points SET points = ' . $this->db->escapeNumber($numPoints) . (isset($lastUpdate) ? ', last_update = ' . $this->db->escapeNumber(SmrSession::getTime()) : '') . ' WHERE ' . $this->SQL . ' LIMIT 1');
 		}
 		$this->points = $numPoints;
 	}
 
-	public function removePoints($numPoints, $lastUpdate = false) {
+	public function removePoints(int $numPoints, ?int $lastUpdate = null) : void {
 		if ($numPoints > 0) {
 			$this->setPoints($this->getPoints() - $numPoints, $lastUpdate);
 		}
 	}
 
-	public function addPoints($numPoints, SmrAccount $admin, $reasonID, $suspicion) {
+	public function addPoints(int $numPoints, SmrAccount $admin, int $reasonID, string $suspicion) : int {
 		//do we have points
 		$this->setPoints($this->getPoints() + $numPoints, SmrSession::getTime());
 		$totalPoints = $this->getPoints();
@@ -1159,29 +1160,29 @@ abstract class AbstractSmrAccount {
 		return $days;
 	}
 
-	public function getFriendlyColour() {
+	public function getFriendlyColour() : string {
 		return $this->friendlyColour;
 	}
-	public function setFriendlyColour($colour) {
+	public function setFriendlyColour(string $colour) : void {
 		$this->friendlyColour = $colour;
 		$this->hasChanged = true;
 	}
-	public function getNeutralColour() {
+	public function getNeutralColour() : string {
 		return $this->neutralColour;
 	}
-	public function setNeutralColour($colour) {
+	public function setNeutralColour(string $colour) : void {
 		$this->neutralColour = $colour;
 		$this->hasChanged = true;
 	}
-	public function getEnemyColour() {
+	public function getEnemyColour() : string {
 		return $this->enemyColour;
 	}
-	public function setEnemyColour($colour) {
+	public function setEnemyColour(string $colour) : void {
 		$this->enemyColour = $colour;
 		$this->hasChanged = true;
 	}
 
-	public function banAccount($expireTime, SmrAccount $admin, $reasonID, $suspicion, $removeExceptions = false) {
+	public function banAccount(int $expireTime, SmrAccount $admin, int $reasonID, string $suspicion, bool $removeExceptions = false) : void {
 		$this->db->query('REPLACE INTO account_is_closed
 					(account_id, reason_id, suspicion, expires)
 					VALUES('.$this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($reasonID) . ', ' . $this->db->escapeString($suspicion) . ', ' . $this->db->escapeNumber($expireTime) . ')');
@@ -1211,7 +1212,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function unbanAccount(SmrAccount $admin = null, $currException = false) {
+	public function unbanAccount(SmrAccount $admin = null, string $currException = null) {
 		$adminID = 0;
 		if ($admin !== null) {
 			$adminID = $admin->getAccountID();
@@ -1226,22 +1227,22 @@ abstract class AbstractSmrAccount {
 		} else {
 			$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account automatically reopened.');
 		}
-		if ($currException !== false) {
+		if ($currException !== null) {
 			$this->db->query('REPLACE INTO account_exceptions (account_id, reason)
 							VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeString($currException) . ')');
 		}
 	}
 
-	public function getToggleAJAXHREF() {
+	public function getToggleAJAXHREF() : string {
 		global $var;
 		return SmrSession::getNewHREF(create_container('toggle_processing.php', '', array('toggle'=>'AJAX', 'referrer'=>$var['body'])));
 	}
 
-	public function getUserRankingHREF() {
+	public function getUserRankingHREF() : string {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_view.php'));
 	}
 
-	public function getPersonalHofHREF() {
+	public function getPersonalHofHREF() : string {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'hall_of_fame_player_detail.php', array('account_id' => $this->getAccountID())));
 	}
 }
