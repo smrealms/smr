@@ -144,13 +144,13 @@ class MySqlDatabase {
 		return $this->dbRecord[$name];
 	}
 
-	public function getBoolean($name) {
-		if ($this->dbRecord[$name] == 'TRUE') {
+	public function getBoolean(string $name) : bool {
+		if ($this->dbRecord[$name] === 'TRUE') {
 			return true;
+		} elseif ($this->dbRecord[$name] === 'FALSE') {
+			return false;
 		}
-//		if($this->dbRecord[$name] == 'FALSE')
-		return false;
-//		$this->error('Field is not a boolean');
+		$this->error('Field is not a boolean: ' . $name);
 	}
 
 	public function getInt($name) {
@@ -205,11 +205,7 @@ class MySqlDatabase {
 
 	public function escape($escape, $autoQuotes = true, $quotes = true) {
 		if (is_bool($escape)) {
-			if ($autoQuotes) {
-				return $this->escapeBoolean($escape);
-			} else {
-				return $this->escapeBoolean($escape, $quotes);
-			}
+			return $this->escapeBoolean($escape);
 		}
 		if (is_numeric($escape)) {
 			return $this->escapeNumber($escape);
@@ -291,13 +287,12 @@ class MySqlDatabase {
 		return sprintf('%d', $microtime * 1E6);
 	}
 
-	public function escapeBoolean($bool, $quotes = true) {
-		if ($bool === true) {
-			return $this->escapeString('TRUE', $quotes);
-		} elseif ($bool === false) {
-			return $this->escapeString('FALSE', $quotes);
+	public function escapeBoolean(bool $bool) : string {
+		// We store booleans as an enum
+		if ($bool) {
+			return '\'TRUE\'';
 		} else {
-			$this->error('Not a boolean: ' . $bool);
+			return '\'FALSE\'';
 		}
 	}
 

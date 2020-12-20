@@ -69,4 +69,11 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		// Check that the formatting preserves all digits
 		self::assertSame("1608455259123456", $db->escapeMicrotime(1608455259.123456));
 	}
+
+	public function test_escapeBoolean() {
+		$db = MySqlDatabase::getInstance();
+		// Test both boolean values
+		self::assertSame("'TRUE'", $db->escapeBoolean(true));
+		self::assertSame("'FALSE'", $db->escapeBoolean(false));
+	}
 }
