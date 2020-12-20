@@ -115,4 +115,22 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		$this->expectNoticeMessage('Array to string conversion');
 		$db->escapeArray(['a', ['x', 9, 'y'], 2, 'c'], ':', false);
 	}
+
+	public function test_escapeNumber() {
+		// No escaping is done of numeric types
+		$db = MySqlDatabase::getInstance();
+		// Test int
+		self::assertSame(42, $db->escapeNumber(42));
+		// Test float
+		self::assertSame(0.21, $db->escapeNumber(0.21));
+		// Test numeric string
+		self::assertSame('42', $db->escapeNumber('42'));
+	}
+
+	public function test_escapeNumber_nonnumeric_throws() {
+		$db = MySqlDatabase::getInstance();
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('Not a number');
+		$db->escapeNumber('bla');
+	}
 }
