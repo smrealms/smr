@@ -76,4 +76,43 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		self::assertSame("'TRUE'", $db->escapeBoolean(true));
 		self::assertSame("'FALSE'", $db->escapeBoolean(false));
 	}
+
+	public function test_escapeString() {
+		$db = MySqlDatabase::getInstance();
+		// Test the empty string
+		self::assertSame("''", $db->escapeString(''));
+		self::assertSame('NULL', $db->escapeString('', true)); // nullable
+		// Test null
+		self::assertSame('NULL', $db->escapeString(null, true)); // nullable
+		// Test a normal string
+		self::assertSame("'bla'", $db->escapeString('bla'));
+		self::assertSame("'bla'", $db->escapeString('bla', true)); // nullable
+	}
+
+	public function test_escapeString_null_throws() {
+		$db = MySqlDatabase::getInstance();
+		$this->expectException(\TypeError::class);
+		$db->escapeString(null);
+	}
+
+	public function test_escapeArray() {
+		$db = MySqlDatabase::getInstance();
+		// Test a mixed array
+		self::assertSame("'a',2,'c'", $db->escapeArray(['a', 2, 'c']));
+		// Test a different implodeString
+		self::assertSame("'a':2:'c'", $db->escapeArray(['a', 2, 'c'], ':'));
+		// Test escapeIndividually=false
+		self::assertSame("'a,2,c'", $db->escapeArray(['a', 2, 'c'], ',', false));
+		// Test nested arrays
+		// Warning: The array is flattened, which may be unexpected!
+		self::assertSame("'a','x',9,2", $db->escapeArray(['a', ['x', 9], 2], ',', true));
+	}
+
+	public function test_escapeArray_nested_array_throws() {
+		// Warning: It is dangerous to use nested arrays with escapeIndividually=false
+		$db = MySqlDatabase::getInstance();
+		$this->expectNotice();
+		$this->expectNoticeMessage('Array to string conversion');
+		$db->escapeArray(['a', ['x', 9, 'y'], 2, 'c'], ':', false);
+	}
 }

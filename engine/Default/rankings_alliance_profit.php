@@ -7,7 +7,7 @@ $db->query('SELECT count(*) FROM alliance
 $db->requireRecord();
 $numAlliances = $db->getInt('count(*)');
 $profitType = array('Trade', 'Money', 'Profit');
-$profitTypeEscaped = $db->escapeArray($profitType, false, true, ':', false);
+$profitTypeEscaped = $db->escapeArray($profitType, ':', false);
 
 $ourRank = 0;
 if ($player->hasAlliance()) {

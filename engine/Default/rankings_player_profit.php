@@ -5,7 +5,7 @@ $template->assign('PageTopic', 'Profit Rankings');
 Menu::rankings(0, 1);
 
 $profitType = array('Trade', 'Money', 'Profit');
-$profitTypeEscaped = $db->escapeArray($profitType, false, true, ':', false);
+$profitTypeEscaped = $db->escapeArray($profitType, ':', false);
 
 // what rank are we?
 $db->query('SELECT count(*)

@@ -203,7 +203,7 @@ class MySqlDatabase {
 		throw new RuntimeException($err);
 	}
 
-	public function escape($escape, $autoQuotes = true, $quotes = true) {
+	public function escape($escape) {
 		if (is_bool($escape)) {
 			return $this->escapeBoolean($escape);
 		}
@@ -211,63 +211,36 @@ class MySqlDatabase {
 			return $this->escapeNumber($escape);
 		}
 		if (is_string($escape)) {
-			if ($autoQuotes) {
-				return $this->escapeString($escape);
-			} else {
-				return $this->escapeString($escape, $quotes);
-			}
+			return $this->escapeString($escape);
 		}
 		if (is_array($escape)) {
-			return $this->escapeArray($escape, $autoQuotes, $quotes);
+			return $this->escapeArray($escape);
 		}
 		if (is_object($escape)) {
-			if ($autoQuotes) {
-				return $this->escapeObject($escape);
-			} else {
-				return $this->escapeObject($escape, $quotes);
-			}
+			return $this->escapeObject($escape);
 		}
 	}
 
-	public function escapeString($string, $quotes = true, $nullable = false) {
+	public function escapeString(?string $string, bool $nullable = false) : string {
 		if ($nullable === true && ($string === null || $string === '')) {
 			return 'NULL';
 		}
-		if ($string === true) {
-			$string = 'TRUE';
-		} elseif ($string === false) {
-			$string = 'FALSE';
-		}
-		if (is_array($string)) {
-			$escapedString = '';
-			foreach ($string as $value) {
-				$escapedString .= $this->escapeString($value, $quotes) . ',';
-			}
-			return substr($escapedString, 0, -1);
-		}
-		if ($quotes) {
-			return '\'' . $this->dbConn->real_escape_string($string) . '\'';
-		}
-		return $this->dbConn->real_escape_string($string);
+		return '\'' . $this->dbConn->real_escape_string($string) . '\'';
 	}
 
 	public function escapeBinary($binary) {
 		return '0x' . bin2hex($binary);
 	}
 
-	public function escapeArray(array $array, $autoQuotes = true, $quotes = true, $implodeString = ',', $escapeIndividually = true) {
-		$string = '';
+	/**
+	 * Warning: If escaping a nested array, use escapeIndividually=true,
+	 * but beware that the escaped array is flattened!
+	 */
+	public function escapeArray(array $array, string $delimiter = ',', bool $escapeIndividually = true) : string {
 		if ($escapeIndividually) {
-			foreach ($array as $value) {
-				if (is_array($value)) {
-					$string .= $this->escapeArray($value, $autoQuotes, $quotes, $implodeString, $escapeIndividually) . $implodeString;
-				} else {
-					$string .= $this->escape($value, $autoQuotes, $quotes) . $implodeString;
-				}
-			}
-			$string = substr($string, 0, -1);
+			$string = join($delimiter, array_map(function($item) { return $this->escape($item); }, $array));
 		} else {
-			$string = $this->escape(implode($implodeString, $array), $autoQuotes, $quotes);
+			$string = $this->escape(join($delimiter, $array));
 		}
 		return $string;
 	}
@@ -296,10 +269,10 @@ class MySqlDatabase {
 		}
 	}
 
-	public function escapeObject($object, $compress = false, $quotes = true, $nullable = false) {
+	public function escapeObject($object, $compress = false, $nullable = false) {
 		if ($compress === true) {
 			return $this->escapeBinary(gzcompress(serialize($object)));
 		}
-		return $this->escapeString(serialize($object), $quotes, $nullable);
+		return $this->escapeString(serialize($object), $nullable);
 	}
 }

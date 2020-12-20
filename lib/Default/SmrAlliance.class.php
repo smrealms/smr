@@ -463,13 +463,13 @@ class SmrAlliance {
 								alliance_password = ' . $this->db->escapeString($this->password) . ',
 								recruiting = ' . $this->db->escapeBoolean($this->recruiting) . ',
 								alliance_account = ' . $this->db->escapeNumber($this->bank) . ',
-								alliance_description = ' . $this->db->escapeString($this->description, true, true) . ',
+								alliance_description = ' . $this->db->escapeString($this->description, true) . ',
 								`mod` = ' . $this->db->escapeString($this->motd) . ',
 								img_src = ' . $this->db->escapeString($this->imgSrc) . ',
 								alliance_kills = ' . $this->db->escapeNumber($this->kills) . ',
 								alliance_deaths = ' . $this->db->escapeNumber($this->deaths) . ',
-								discord_server = ' . $this->db->escapeString($this->discordServer, true, true) . ',
-								discord_channel = ' . $this->db->escapeString($this->discordChannel, true, true) . ',
+								discord_server = ' . $this->db->escapeString($this->discordServer, true) . ',
+								discord_channel = ' . $this->db->escapeString($this->discordChannel, true) . ',
 								flagship_id = ' . $this->db->escapeNumber($this->flagshipID) . ',
 								leader_id = ' . $this->db->escapeNumber($this->leaderID) . '
 							WHERE ' . $this->SQL);
