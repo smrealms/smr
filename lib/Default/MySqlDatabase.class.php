@@ -144,13 +144,13 @@ class MySqlDatabase {
 		return $this->dbRecord[$name];
 	}
 
-	public function getBoolean($name) {
-		if ($this->dbRecord[$name] == 'TRUE') {
+	public function getBoolean(string $name) : bool {
+		if ($this->dbRecord[$name] === 'TRUE') {
 			return true;
+		} elseif ($this->dbRecord[$name] === 'FALSE') {
+			return false;
 		}
-//		if($this->dbRecord[$name] == 'FALSE')
-		return false;
-//		$this->error('Field is not a boolean');
+		$this->error('Field is not a boolean: ' . $name);
 	}
 
 	public function getInt($name) {
@@ -161,26 +161,17 @@ class MySqlDatabase {
 		return (float)$this->dbRecord[$name];
 	}
 
-	// WARNING: In the past, Microtime was stored in the database incorrectly.
-	// For backwards compatibility, set $pad_msec=true to try to guess at the
-	// intended value. This is not safe if the Microtime length is wrong for an
-	// unrelated reason!
-	public function getMicrotime($name, $pad_msec = false) {
+	public function getMicrotime(string $name) : string {
+		// All digits of precision are stored in a MySQL bigint
 		$data = $this->dbRecord[$name];
-		$sec = substr($data, 0, 10);
-		$msec = substr($data, 10);
-		if (strlen($msec) != 6) {
-			if ($pad_msec) {
-				$msec = str_pad($msec, 6, '0', STR_PAD_LEFT);
-			} else {
-				$this->error('Field is not an escaped microtime (' . $data . ')');
-			}
-		}
-		return "$sec.$msec";
+		return sprintf('%f', $data / 1E6);
 	}
 
-	public function getObject($name, $compressed = false) {
+	public function getObject($name, $compressed = false, $nullable = false) {
 		$object = $this->getField($name);
+		if ($nullable === true && $object === null) {
+			return null;
+		}
 		if ($compressed === true) {
 			$object = gzuncompress($object);
 		}
@@ -215,75 +206,44 @@ class MySqlDatabase {
 		throw new RuntimeException($err);
 	}
 
-	public function escape($escape, $autoQuotes = true, $quotes = true) {
+	public function escape($escape) {
 		if (is_bool($escape)) {
-			if ($autoQuotes) {
-				return $this->escapeBoolean($escape);
-			} else {
-				return $this->escapeBoolean($escape, $quotes);
-			}
+			return $this->escapeBoolean($escape);
 		}
 		if (is_numeric($escape)) {
 			return $this->escapeNumber($escape);
 		}
 		if (is_string($escape)) {
-			if ($autoQuotes) {
-				return $this->escapeString($escape);
-			} else {
-				return $this->escapeString($escape, $quotes);
-			}
+			return $this->escapeString($escape);
 		}
 		if (is_array($escape)) {
-			return $this->escapeArray($escape, $autoQuotes, $quotes);
+			return $this->escapeArray($escape);
 		}
 		if (is_object($escape)) {
-			if ($autoQuotes) {
-				return $this->escapeObject($escape);
-			} else {
-				return $this->escapeObject($escape, $quotes);
-			}
+			return $this->escapeObject($escape);
 		}
 	}
 
-	public function escapeString($string, $quotes = true, $nullable = false) {
+	public function escapeString(?string $string, bool $nullable = false) : string {
 		if ($nullable === true && ($string === null || $string === '')) {
 			return 'NULL';
 		}
-		if ($string === true) {
-			$string = 'TRUE';
-		} elseif ($string === false) {
-			$string = 'FALSE';
-		}
-		if (is_array($string)) {
-			$escapedString = '';
-			foreach ($string as $value) {
-				$escapedString .= $this->escapeString($value, $quotes) . ',';
-			}
-			return substr($escapedString, 0, -1);
-		}
-		if ($quotes) {
-			return '\'' . $this->dbConn->real_escape_string($string) . '\'';
-		}
-		return $this->dbConn->real_escape_string($string);
+		return '\'' . $this->dbConn->real_escape_string($string) . '\'';
 	}
 
 	public function escapeBinary($binary) {
 		return '0x' . bin2hex($binary);
 	}
 
-	public function escapeArray(array $array, $autoQuotes = true, $quotes = true, $implodeString = ',', $escapeIndividually = true) {
-		$string = '';
+	/**
+	 * Warning: If escaping a nested array, use escapeIndividually=true,
+	 * but beware that the escaped array is flattened!
+	 */
+	public function escapeArray(array $array, string $delimiter = ',', bool $escapeIndividually = true) : string {
 		if ($escapeIndividually) {
-			foreach ($array as $value) {
-				if (is_array($value)) {
-					$string .= $this->escapeArray($value, $autoQuotes, $quotes, $implodeString, $escapeIndividually) . $implodeString;
-				} else {
-					$string .= $this->escape($value, $autoQuotes, $quotes) . $implodeString;
-				}
-			}
-			$string = substr($string, 0, -1);
+			$string = join($delimiter, array_map(function($item) { return $this->escape($item); }, $array));
 		} else {
-			$string = $this->escape(implode($implodeString, $array), $autoQuotes, $quotes);
+			$string = $this->escape(join($delimiter, $array));
 		}
 		return $string;
 	}
@@ -298,26 +258,27 @@ class MySqlDatabase {
 		}
 	}
 
-	public function escapeMicrotime($microtime, $quotes = false) {
-		$sec_str = sprintf('%010d', $microtime);
-		$usec_str = sprintf('%06d', fmod($microtime, 1) * 1E6);
-		return $this->escapeString($sec_str . $usec_str, $quotes);
+	public function escapeMicrotime(float $microtime) : string {
+		// Retain all digits of precision for storing in a MySQL bigint
+		return sprintf('%d', $microtime * 1E6);
 	}
 
-	public function escapeBoolean($bool, $quotes = true) {
-		if ($bool === true) {
-			return $this->escapeString('TRUE', $quotes);
-		} elseif ($bool === false) {
-			return $this->escapeString('FALSE', $quotes);
+	public function escapeBoolean(bool $bool) : string {
+		// We store booleans as an enum
+		if ($bool) {
+			return '\'TRUE\'';
 		} else {
-			$this->error('Not a boolean: ' . $bool);
+			return '\'FALSE\'';
 		}
 	}
 
-	public function escapeObject($object, $compress = false, $quotes = true, $nullable = false) {
+	public function escapeObject($object, bool $compress = false, bool $nullable = false) : string {
+		if ($nullable === true && $object === null) {
+			return 'NULL';
+		}
 		if ($compress === true) {
 			return $this->escapeBinary(gzcompress(serialize($object)));
 		}
-		return $this->escapeString(serialize($object), $quotes, $nullable);
+		return $this->escapeString(serialize($object));
 	}
 }

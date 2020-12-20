@@ -169,12 +169,12 @@ abstract class AbstractSmrAccount {
 		$userRankingTypes = array();
 		$case = 'FLOOR(SUM(CASE type ';
 		foreach (self::USER_RANKINGS_SCORE as $userRankingScore) {
-			$userRankingType = $db->escapeArray($userRankingScore[0], false, false, ':', false);
+			$userRankingType = $db->escapeArray($userRankingScore[0], ':', false);
 			$userRankingTypes[] = $userRankingType;
-			$case .= ' WHEN ' . $db->escapeString($userRankingType) . ' THEN POW(amount*' . $userRankingScore[1] . ',' . SmrAccount::USER_RANKINGS_EACH_STAT_POW . ')*' . $userRankingScore[2];
+			$case .= ' WHEN ' . $userRankingType . ' THEN POW(amount*' . $userRankingScore[1] . ',' . SmrAccount::USER_RANKINGS_EACH_STAT_POW . ')*' . $userRankingScore[2];
 		}
 		$case .= ' END))';
-		return array('CASE'=>$case, 'IN'=>$db->escapeArray($userRankingTypes));
+		return array('CASE' => $case, 'IN' => join(',', $userRankingTypes));
 	}
 
 	protected function __construct($accountID) {
@@ -284,16 +284,16 @@ abstract class AbstractSmrAccount {
 			', logging = ' . $this->db->escapeBoolean($this->logging) .
 			', time_short = ' . $this->db->escapeString($this->timeShort) .
 			', date_short = ' . $this->db->escapeString($this->dateShort) .
-			', discord_id = ' . $this->db->escapeString($this->discordId, true, true) .
-			', irc_nick = ' . $this->db->escapeString($this->ircNick, true, true) .
+			', discord_id = ' . $this->db->escapeString($this->discordId, true) .
+			', irc_nick = ' . $this->db->escapeString($this->ircNick, true) .
 			', hof_name = ' . $this->db->escapeString($this->hofName) .
 			', template = ' . $this->db->escapeString($this->template) .
 			', colour_scheme = ' . $this->db->escapeString($this->colourScheme) .
 			', fontsize = ' . $this->db->escapeNumber($this->fontSize) .
-			', css_link = ' . $this->db->escapeString($this->cssLink, true, true) .
-			', friendly_colour = ' . $this->db->escapeString($this->friendlyColour, true, true) .
-			', neutral_colour = ' . $this->db->escapeString($this->neutralColour, true, true) .
-			', enemy_colour = ' . $this->db->escapeString($this->enemyColour, true, true) .
+			', css_link = ' . $this->db->escapeString($this->cssLink, true) .
+			', friendly_colour = ' . $this->db->escapeString($this->friendlyColour, true) .
+			', neutral_colour = ' . $this->db->escapeString($this->neutralColour, true) .
+			', enemy_colour = ' . $this->db->escapeString($this->enemyColour, true) .
 			' WHERE ' . $this->SQL . ' LIMIT 1');
 		$this->hasChanged = false;
 	}

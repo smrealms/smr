@@ -463,13 +463,13 @@ class SmrAlliance {
 								alliance_password = ' . $this->db->escapeString($this->password) . ',
 								recruiting = ' . $this->db->escapeBoolean($this->recruiting) . ',
 								alliance_account = ' . $this->db->escapeNumber($this->bank) . ',
-								alliance_description = ' . $this->db->escapeString($this->description, true, true) . ',
+								alliance_description = ' . $this->db->escapeString($this->description, true) . ',
 								`mod` = ' . $this->db->escapeString($this->motd) . ',
 								img_src = ' . $this->db->escapeString($this->imgSrc) . ',
 								alliance_kills = ' . $this->db->escapeNumber($this->kills) . ',
 								alliance_deaths = ' . $this->db->escapeNumber($this->deaths) . ',
-								discord_server = ' . $this->db->escapeString($this->discordServer, true, true) . ',
-								discord_channel = ' . $this->db->escapeString($this->discordChannel, true, true) . ',
+								discord_server = ' . $this->db->escapeString($this->discordServer, true) . ',
+								discord_channel = ' . $this->db->escapeString($this->discordChannel, true) . ',
 								flagship_id = ' . $this->db->escapeNumber($this->flagshipID) . ',
 								leader_id = ' . $this->db->escapeNumber($this->leaderID) . '
 							WHERE ' . $this->SQL);
@@ -568,7 +568,7 @@ class SmrAlliance {
 		$opLeader = TRUE;
 		$viewBonds = TRUE;
 		$db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds) ' .
-			'VALUES (' . $db->escapeNumber($this->getAllianceID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber(ALLIANCE_ROLE_LEADER) . ', \'Leader\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeString($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
+			'VALUES (' . $db->escapeNumber($this->getAllianceID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber(ALLIANCE_ROLE_LEADER) . ', \'Leader\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 
 		switch ($newMemberPermission) {
 			case 'full':
@@ -602,7 +602,7 @@ class SmrAlliance {
 			break;
 		}
 		$db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds) ' .
-					'VALUES (' . $db->escapeNumber($this->getAllianceID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber(ALLIANCE_ROLE_NEW_MEMBER) . ', \'New Member\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeString($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
+					'VALUES (' . $db->escapeNumber($this->getAllianceID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber(ALLIANCE_ROLE_NEW_MEMBER) . ', \'New Member\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 
 	}
 

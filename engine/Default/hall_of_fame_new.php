@@ -54,11 +54,11 @@ if (!isset($var['view'])) {
 		$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 		$db->query($query);
 	} else {
-		$db->query('SELECT visibility FROM hof_visibility WHERE type = ' . $db->escapeArray($viewType, false, true, ':', false) . ' LIMIT 1');
+		$db->query('SELECT visibility FROM hof_visibility WHERE type = ' . $db->escapeArray($viewType, ':', false) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			$vis = $db->getField('visibility');
 		}
-		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, false, true, ':', false) . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
+		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 	}
 	$rows = [];
 	while ($db->nextRecord()) {

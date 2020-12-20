@@ -1742,7 +1742,7 @@ abstract class AbstractSmrPlayer {
 
 		$this->db->query('
 			INSERT INTO player_stored_sector (account_id, game_id, sector_id, label, offset_top, offset_left)
-			VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($sectorID) . ',' . $this->db->escapeString($label, true) . ',1,1)'
+			VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($sectorID) . ',' . $this->db->escapeString($label) . ',1,1)'
 		);
 	}
 
@@ -2221,7 +2221,7 @@ abstract class AbstractSmrPlayer {
 		}
 		$msg .= ' in Sector&nbsp;' . Globals::getSectorBBLink($this->getSectorID());
 		$this->getSector()->increaseBattles(1);
-		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(SmrSession::getTime()) . ',' . $this->db->escapeString($msg, true) . ',\'regular\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(SmrSession::getTime()) . ',' . $this->db->escapeString($msg) . ',\'regular\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
 		self::sendMessageFromFedClerk($this->getGameID(), $killer->getAccountID(), 'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
@@ -3185,12 +3185,12 @@ abstract class AbstractSmrPlayer {
 				$amount = $this->getHOF($tempTypeList);
 				if ($hofChanged == self::HOF_NEW) {
 					if ($amount > 0) {
-						$this->db->query('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeArray($tempTypeList, false, true, ':', false) . ',' . $this->db->escapeNumber($amount) . ')');
+						$this->db->query('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeArray($tempTypeList, ':', false) . ',' . $this->db->escapeNumber($amount) . ')');
 					}
 				} elseif ($hofChanged == self::HOF_CHANGED) {
 					$this->db->query('UPDATE player_hof
 						SET amount=' . $this->db->escapeNumber($amount) . '
-						WHERE ' . $this->SQL . ' AND type = ' . $this->db->escapeArray($tempTypeList, false, true, ':', false) . ' LIMIT 1');
+						WHERE ' . $this->SQL . ' AND type = ' . $this->db->escapeArray($tempTypeList, ':', false) . ' LIMIT 1');
 				}
 			}
 		}

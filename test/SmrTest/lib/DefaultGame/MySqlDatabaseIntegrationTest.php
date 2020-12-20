@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace SmrTest\lib\DefaultGame;
 
@@ -60,5 +60,89 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		MySqlDatabase::getInstance();
 		// Then the two mysqli instances are the same
 		self::assertSame($originalMysql, $this->container->get(mysqli::class));
+	}
+
+	public function test_escapeMicrotime() {
+		$db = MySqlDatabase::getInstance();
+		// The current microtime must not throw an exception
+		$db->escapeMicrotime(microtime(true));
+		// Check that the formatting preserves all digits
+		self::assertSame("1608455259123456", $db->escapeMicrotime(1608455259.123456));
+	}
+
+	public function test_escapeBoolean() {
+		$db = MySqlDatabase::getInstance();
+		// Test both boolean values
+		self::assertSame("'TRUE'", $db->escapeBoolean(true));
+		self::assertSame("'FALSE'", $db->escapeBoolean(false));
+	}
+
+	public function test_escapeString() {
+		$db = MySqlDatabase::getInstance();
+		// Test the empty string
+		self::assertSame("''", $db->escapeString(''));
+		self::assertSame('NULL', $db->escapeString('', true)); // nullable
+		// Test null
+		self::assertSame('NULL', $db->escapeString(null, true)); // nullable
+		// Test a normal string
+		self::assertSame("'bla'", $db->escapeString('bla'));
+		self::assertSame("'bla'", $db->escapeString('bla', true)); // nullable
+	}
+
+	public function test_escapeString_null_throws() {
+		$db = MySqlDatabase::getInstance();
+		$this->expectException(\TypeError::class);
+		$db->escapeString(null);
+	}
+
+	public function test_escapeArray() {
+		$db = MySqlDatabase::getInstance();
+		// Test a mixed array
+		self::assertSame("'a',2,'c'", $db->escapeArray(['a', 2, 'c']));
+		// Test a different implodeString
+		self::assertSame("'a':2:'c'", $db->escapeArray(['a', 2, 'c'], ':'));
+		// Test escapeIndividually=false
+		self::assertSame("'a,2,c'", $db->escapeArray(['a', 2, 'c'], ',', false));
+		// Test nested arrays
+		// Warning: The array is flattened, which may be unexpected!
+		self::assertSame("'a','x',9,2", $db->escapeArray(['a', ['x', 9], 2], ',', true));
+	}
+
+	public function test_escapeArray_nested_array_throws() {
+		// Warning: It is dangerous to use nested arrays with escapeIndividually=false
+		$db = MySqlDatabase::getInstance();
+		$this->expectNotice();
+		$this->expectNoticeMessage('Array to string conversion');
+		$db->escapeArray(['a', ['x', 9, 'y'], 2, 'c'], ':', false);
+	}
+
+	public function test_escapeNumber() {
+		// No escaping is done of numeric types
+		$db = MySqlDatabase::getInstance();
+		// Test int
+		self::assertSame(42, $db->escapeNumber(42));
+		// Test float
+		self::assertSame(0.21, $db->escapeNumber(0.21));
+		// Test numeric string
+		self::assertSame('42', $db->escapeNumber('42'));
+	}
+
+	public function test_escapeNumber_nonnumeric_throws() {
+		$db = MySqlDatabase::getInstance();
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('Not a number');
+		$db->escapeNumber('bla');
+	}
+
+	public function test_escapeObject() {
+		$db = MySqlDatabase::getInstance();
+		// Test null
+		self::assertSame('NULL', $db->escapeObject(null, false, true));
+		// Test empty array
+		self::assertSame("'a:0:{}'", $db->escapeObject([]));
+		// Test empty string
+		self::assertSame('\'s:0:\"\";\'', $db->escapeObject(''));
+		// Test zero
+		self::assertSame("'i:0;'", $db->escapeObject(0));
 	}
 }

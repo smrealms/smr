@@ -80,12 +80,12 @@ function getHofRank($view, $viewType, $accountID, $gameID) {
 		$query = 'SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x ORDER BY amount DESC';
 		$db->query($query);
 	} else {
-		$db->query('SELECT visibility FROM hof_visibility WHERE type=' . $db->escapeArray($viewType, false, true, ':', false) . ' LIMIT 1');
+		$db->query('SELECT visibility FROM hof_visibility WHERE type=' . $db->escapeArray($viewType, ':', false) . ' LIMIT 1');
 		if (!$db->nextRecord()) {
 			return $rank;
 		}
 		$vis = $db->getField('visibility');
-		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, false, true, ':', false) . ' AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id LIMIT 1');
+		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . ' AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id LIMIT 1');
 	}
 
 	$realAmount = 0;
@@ -102,7 +102,7 @@ function getHofRank($view, $viewType, $accountID, $gameID) {
 		$query = 'SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . '>' . $db->escapeNumber($rank['Amount']) . ') x';
 		$db->query($query);
 	} else {
-		$db->query('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeArray($viewType, false, true, ':', false) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
+		$db->query('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
 	}
 	if ($db->nextRecord()) {
 		$rank['Rank'] = $db->getInt('rank') + 1;
