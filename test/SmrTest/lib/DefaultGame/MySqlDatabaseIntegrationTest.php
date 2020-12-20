@@ -61,4 +61,12 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		// Then the two mysqli instances are the same
 		self::assertSame($originalMysql, $this->container->get(mysqli::class));
 	}
+
+	public function test_escapeMicrotime() {
+		$db = MySqlDatabase::getInstance();
+		// The current microtime must not throw an exception
+		$db->escapeMicrotime(microtime(true));
+		// Check that the formatting preserves all digits
+		self::assertSame("1608455259123456", $db->escapeMicrotime(1608455259.123456));
+	}
 }

@@ -96,7 +96,7 @@ if ($action == 'Delete') {
 	$db->query('SELECT * FROM account_has_logs WHERE account_id IN (' . $account_list . ') AND log_type_id IN (' . $db->escapeArray($log_type_id_list) . ') ORDER BY microtime DESC');
 	while ($db->nextRecord()) {
 		$account_id = $db->getInt('account_id');
-		$microtime = $db->getMicrotime('microtime', true); //fix value length errors
+		$microtime = $db->getMicrotime('microtime');
 		$message = stripslashes($db->getField('message'));
 		$log_type_id = $db->getInt('log_type_id');
 		$sector_id = $db->getInt('sector_id');

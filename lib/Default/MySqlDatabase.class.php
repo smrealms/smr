@@ -161,22 +161,10 @@ class MySqlDatabase {
 		return (float)$this->dbRecord[$name];
 	}
 
-	// WARNING: In the past, Microtime was stored in the database incorrectly.
-	// For backwards compatibility, set $pad_msec=true to try to guess at the
-	// intended value. This is not safe if the Microtime length is wrong for an
-	// unrelated reason!
-	public function getMicrotime($name, $pad_msec = false) {
+	public function getMicrotime(string $name) : string {
+		// All digits of precision are stored in a MySQL bigint
 		$data = $this->dbRecord[$name];
-		$sec = substr($data, 0, 10);
-		$msec = substr($data, 10);
-		if (strlen($msec) != 6) {
-			if ($pad_msec) {
-				$msec = str_pad($msec, 6, '0', STR_PAD_LEFT);
-			} else {
-				$this->error('Field is not an escaped microtime (' . $data . ')');
-			}
-		}
-		return "$sec.$msec";
+		return sprintf('%f', $data / 1E6);
 	}
 
 	public function getObject($name, $compressed = false) {
@@ -298,10 +286,9 @@ class MySqlDatabase {
 		}
 	}
 
-	public function escapeMicrotime($microtime, $quotes = false) {
-		$sec_str = sprintf('%010d', $microtime);
-		$usec_str = sprintf('%06d', fmod($microtime, 1) * 1E6);
-		return $this->escapeString($sec_str . $usec_str, $quotes);
+	public function escapeMicrotime(float $microtime) : string {
+		// Retain all digits of precision for storing in a MySQL bigint
+		return sprintf('%d', $microtime * 1E6);
 	}
 
 	public function escapeBoolean($bool, $quotes = true) {
