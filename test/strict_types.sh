@@ -15,7 +15,7 @@ do
         echo "$LINE"
         ERROR="true"
     fi
-done < <(find $ROOT/admin $ROOT/engine $ROOT/lib -type f \( -name "*.php" -o -name "*.inc" \) -print0)
+done < <(find $ROOT/admin $ROOT/engine $ROOT/lib $ROOT/test -type f \( -name "*.php" -o -name "*.inc" \) -print0)
 
 if [[ "$ERROR" == "true" ]] ; then
     exit 1
