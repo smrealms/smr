@@ -133,4 +133,16 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		$this->expectExceptionMessage('Not a number');
 		$db->escapeNumber('bla');
 	}
+
+	public function test_escapeObject() {
+		$db = MySqlDatabase::getInstance();
+		// Test null
+		self::assertSame('NULL', $db->escapeObject(null, false, true));
+		// Test empty array
+		self::assertSame("'a:0:{}'", $db->escapeObject([]));
+		// Test empty string
+		self::assertSame('\'s:0:\"\";\'', $db->escapeObject(''));
+		// Test zero
+		self::assertSame("'i:0;'", $db->escapeObject(0));
+	}
 }

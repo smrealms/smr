@@ -167,8 +167,11 @@ class MySqlDatabase {
 		return sprintf('%f', $data / 1E6);
 	}
 
-	public function getObject($name, $compressed = false) {
+	public function getObject($name, $compressed = false, $nullable = false) {
 		$object = $this->getField($name);
+		if ($nullable === true && $object === null) {
+			return null;
+		}
 		if ($compressed === true) {
 			$object = gzuncompress($object);
 		}
@@ -269,10 +272,13 @@ class MySqlDatabase {
 		}
 	}
 
-	public function escapeObject($object, $compress = false, $nullable = false) {
+	public function escapeObject($object, bool $compress = false, bool $nullable = false) : string {
+		if ($nullable === true && $object === null) {
+			return 'NULL';
+		}
 		if ($compress === true) {
 			return $this->escapeBinary(gzcompress(serialize($object)));
 		}
-		return $this->escapeString(serialize($object), $nullable);
+		return $this->escapeString(serialize($object));
 	}
 }
