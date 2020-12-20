@@ -196,7 +196,7 @@ abstract class AbstractSmrAccount {
 			$this->veteranForced = $this->db->getBoolean('veteran');
 			$this->logging = $this->db->getBoolean('logging');
 			$this->offset			= $row['offset'];
-			$this->images			= $row['images'];
+			$this->images = $this->db->getBoolean('images');
 			$this->fontSize = $row['fontsize'];
 
 			$this->passwordReset = $row['password_reset'];
@@ -271,7 +271,7 @@ abstract class AbstractSmrAccount {
 			', validation_code = ' . $this->db->escapeString($this->validation_code) .
 			', validated = ' . $this->db->escapeBoolean($this->validated) .
 			', password = ' . $this->db->escapeString($this->passwordHash) .
-			', images = ' . $this->db->escapeString($this->images) .
+			', images = ' . $this->db->escapeBoolean($this->images) .
 			', password_reset = ' . $this->db->escapeString($this->passwordReset) .
 			', use_ajax=' . $this->db->escapeBoolean($this->useAJAX) .
 			', mail_banned=' . $this->db->escapeNumber($this->mailBanned) .
@@ -935,14 +935,14 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function isDisplayShipImages() {
-		return $this->images == 'Yes';
+		return $this->images;
 	}
 
-	public function setDisplayShipImages($yesNo) {
-		if ($this->images == $yesNo) {
+	public function setDisplayShipImages($bool) {
+		if ($this->images == $bool) {
 			return;
 		}
-		$this->images = $yesNo;
+		$this->images = $bool;
 		$this->hasChanged = true;
 	}
 
