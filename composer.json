@@ -16,8 +16,8 @@
 		"vlucas/phpdotenv": "^5.2.0"
 	},
 	"autoload": {
-		"psr-0": {
-			"Smr\\": "lib/"
+		"psr-4": {
+			"Smr\\": "lib/Smr/"
 		}
 	},
 	"scripts": {
@@ -38,8 +38,8 @@
 		]
 	},
 	"autoload-dev": {
-		"psr-0": {
-			"SmrTest\\": "test/"
+		"psr-4": {
+			"SmrTest\\": "test/SmrTest/"
 		}
 	},
 	"require-dev": {
