@@ -2,6 +2,12 @@
 
 function checkForLottoWinner($gameID) {
 	global $db;
+
+	// No more lotto winners after the game has ended
+	if (SmrGame::getGame($gameID)->hasEnded()) {
+		return;
+	}
+
 	// we check for a lotto winner...
 	$db->lockTable('player_has_ticket');
 	$lottoInfo = getLottoInfo($gameID);
