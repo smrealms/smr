@@ -52,8 +52,8 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	public function test_get_account_by_name_returns_null_when_no_account_name_provided() {
-		// When retrieving account by null name
-		$account = AbstractSmrAccount::getAccountByName(null);
+		// When retrieving account by empty string name
+		$account = AbstractSmrAccount::getAccountByName('');
 		// Then the record is null
 		$this->assertNull($account);
 	}
@@ -148,7 +148,8 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 
 		// Given a record exists
 		$original = AbstractSmrAccount::createAccount("test", "test", "test@test.com", 9, 0);
-		$original->addAuthMethod(Facebook::getLoginType(), $original->getAccountID());
+		$authUserID = 'MySocialUserID';
+		$original->addAuthMethod(Facebook::getLoginType(), $authUserID);
 		// And a valid social login
 		/*
 		 * Unfortunately we cannot use the simple createMock() method, because the SocialLogin class uses
@@ -166,7 +167,7 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 		$socialLogin
 			->expects(self::once())
 			->method($getUserId)
-			->willReturn($original->getAccountID());
+			->willReturn($authUserID);
 		// When retrieving account by social
 		$account = AbstractSmrAccount::getAccountBySocialLogin($socialLogin, true);
 		// Then the record is found
