@@ -15,9 +15,9 @@ class BaseIntegrationSpec extends TestCase {
 	public static function setUpBeforeClass(): void {
 		if (!isset(self::$conn)) {
 			$mysqlProperties = DiContainer::get(MySqlProperties::class);
-			print "Attempting to connect to MySQL at " . $mysqlProperties->getHost() . "\n";
+			print "\nAttempting to connect to MySQL at " . $mysqlProperties->getHost() . ": ";
 			self::$conn = DiContainer::make(mysqli::class);
-			print "Connected.\n";
+			print "Connected\n";
 			$query = "SELECT table_name FROM information_schema.tables WHERE table_rows > 0 AND TABLE_SCHEMA='smr_live'";
 			$rs = self::$conn->query($query);
 			$all = $rs->fetch_all();
@@ -37,7 +37,6 @@ class BaseIntegrationSpec extends TestCase {
 	}
 
 	private function cleanUp() {
-		echo "Cleaning non-default populated tables for next test...\n";
 		$implode = implode(",", self::$defaultPopulatedTables);
 		$query = "SELECT Concat('TRUNCATE TABLE ', TABLE_NAME, ';') FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'smr_live' and TABLE_NAME not in (${implode})";
 		$rs = self::$conn->query($query);

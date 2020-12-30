@@ -135,6 +135,7 @@ services:
             - ./lib:/smr/lib
             - ./templates:/smr/templates
             - ./test:/smr/test
+            - ./tools:/smr/tools
         depends_on:
             - mysql-integration-test
         labels:

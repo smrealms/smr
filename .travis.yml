@@ -15,8 +15,6 @@ git:
   depth: false
 script:
   - docker-compose --version
-  - test/phplint.sh
-  - test/strict_types.sh
   - mv .env.sample .env
   - mv config/config.specific.sample.php config/config.specific.php
   - mv config/discord/config.specific.sample.php config/discord/config.specific.php
