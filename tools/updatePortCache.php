@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 require_once('../htdocs/config.inc');
 
 $db = MySqlDatabase::getInstance();
