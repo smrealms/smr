@@ -19,7 +19,7 @@ x-smr-common: &smr-common
     build:
         context: .
         args:
-            - PHP_DEBUG=${PHP_DEBUG}
+            - PHP_DEBUG
     container_name: ${SMR_HOST}
     networks:
         - frontend
@@ -39,7 +39,8 @@ x-smr-common: &smr-common
 x-smr-cli: &smr-cli
     build:
         context: .
-        dockerfile: ./tools/Dockerfile
+        args:
+            - PHP_DEBUG
     networks:
         - backend
     depends_on:
@@ -157,15 +158,15 @@ services:
             - mysql
 
     discord:
-        command: php discord/bot.php
+        command: php tools/discord/bot.php
         <<: *smr-cli
 
     irc:
-        command: php irc/irc.php
+        command: php tools/irc/irc.php
         <<: *smr-cli
 
     npc:
-        command: php npc/npc.php
+        command: php tools/npc/npc.php
         <<: *smr-cli
 
     traefik:

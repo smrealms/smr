@@ -11,6 +11,7 @@ COPY engine engine
 COPY htdocs htdocs
 COPY lib lib
 COPY templates templates
+COPY tools tools
 
 # Perform CSS/JS minification and cache busting
 COPY Gruntfile.js .
