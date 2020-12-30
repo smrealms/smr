@@ -678,14 +678,11 @@ class SmrSector {
 	}
 
 	public function addLocation(SmrLocation $location) {
-		$this->db->query('INSERT INTO location (game_id,sector_id,location_type_id)
-						values(' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($location->getTypeID()) . ')');
-		SmrLocation::getSectorLocations($this->getGameID(), $this->getSectorID(), true);
+		SmrLocation::addSectorLocation($this->getGameID(), $this->getSectorID(), $location);
 	}
 
 	public function removeAllLocations() {
-		$this->db->query('DELETE FROM location WHERE ' . $this->SQL);
-		SmrLocation::getSectorLocations($this->getGameID(), $this->getSectorID(), true);
+		SmrLocation::removeSectorLocations($this->getGameID(), $this->getSectorID());
 	}
 
 	public function hasPlanet() {
