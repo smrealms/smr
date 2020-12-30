@@ -16,6 +16,7 @@ $discord = new Discord\DiscordCommandClient([
 	'token' => DISCORD_TOKEN,
 	'prefix' => getCommandPrefix(),
 	'description' => 'Your automated co-pilot in the Space Merchant Realms universe. Made with DiscordPHP ' . Discord\Discord::VERSION . '.',
+	'caseInsensitiveCommands' => true,
 	'discordOptions' => [
 		'loggerLevel' => defined('LOGGER_LEVEL') ? LOGGER_LEVEL : 'INFO',
 	],
