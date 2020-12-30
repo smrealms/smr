@@ -18,7 +18,7 @@ foreach ($shipsSold as $shipTypeID => $shipSold) {
 }
 $template->assign('ShipsUnavailable', $shipsUnavailable);
 
-if ($shipsSold) {
+if (!empty($shipsSold)) {
 	$container = create_container('skeleton.php', 'shop_ship.php');
 	transfer('LocationID');
 
