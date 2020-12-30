@@ -74,6 +74,20 @@ class AbstractSmrLocation {
 		return self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID];
 	}
 
+	public static function addSectorLocation(int $gameID, int $sectorID, SmrLocation $location) : void {
+		self::getSectorLocations($gameID, $sectorID); // make sure cache is populated
+		$db = MySqlDatabase::getInstance();
+		$db->query('INSERT INTO location (game_id, sector_id, location_type_id)
+						values(' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($sectorID) . ',' . $db->escapeNumber($location->getTypeID()) . ')');
+		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$location->getTypeID()] = $location;
+	}
+
+	public static function removeSectorLocations(int $gameID, int $sectorID) : void {
+		$db = MySqlDatabase::getInstance();
+		$db->query('DELETE FROM location WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = [];
+	}
+
 	public static function getLocation(int $locationTypeID, bool $forceUpdate = false, MySqlDatabase $db = null) : SmrLocation {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
 			self::$CACHE_LOCATIONS[$locationTypeID] = new SmrLocation($locationTypeID, $db);

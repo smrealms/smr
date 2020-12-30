@@ -214,21 +214,13 @@ elseif ($submit == 'Create Ports') {
 
 	//update locations
 	$locationsToAdd = array();
-	$locationsToKeep = array();
 	for ($x = 0; $x < UNI_GEN_LOCATION_SLOTS; $x++) {
 		if (Request::getInt('loc_type' . $x) != 0) {
-			$locationToAdd = SmrLocation::getLocation(Request::getInt('loc_type' . $x));
-			if ($editSector->hasLocation($locationToAdd->getTypeID())) {
-				$locationsToKeep[] = $locationToAdd;
-			} else {
-				$locationsToAdd[] = $locationToAdd;
-			}
+			$locationTypeID = Request::getInt('loc_type' . $x);
+			$locationsToAdd[$locationTypeID] = SmrLocation::getLocation($locationTypeID);
 		}
 	}
 	$editSector->removeAllLocations();
-	foreach ($locationsToKeep as $locationToAdd) {
-		$editSector->addLocation($locationToAdd);
-	}
 	foreach ($locationsToAdd as $locationToAdd) {
 		addLocationToSector($locationToAdd, $editSector);
 	}
@@ -276,7 +268,9 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector) {
 		//only playable races have extra locations to add
 		//Racial/Fed
 		foreach ($location->getLinkedLocations() as $linkedLocation) {
-			$sector->addLocation($linkedLocation);
+			if (!$sector->hasLocation($linkedLocation->getTypeID())) {
+				$sector->addLocation($linkedLocation);
+			}
 			if ($linkedLocation->isFed()) {
 				$fedBeacon = $linkedLocation;
 			}
