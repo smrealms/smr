@@ -5,7 +5,7 @@ $template->assign('PageTopic', 'Examine Planet');
 $planet = $player->getSectorPlanet();
 $template->assign('ThisPlanet', $planet);
 
-$planetLand = 
+$planetLand =
 	!$planet->hasOwner()
 	|| $planet->getOwner()->sameAlliance($player)
 	|| in_array($player->getAccountID(), Globals::getHiddenPlayers());

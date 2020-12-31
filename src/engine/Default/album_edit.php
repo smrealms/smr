@@ -24,11 +24,11 @@ if ($db->nextRecord()) {
 	} elseif ($approved == 'YES') {
 		$albumEntry['Status'] = ('<a href="album/?nick=' . urlencode($account->getHofName()) . '" class="dgreen">Online</a>');
 	}
-		
+
 	if (is_readable(UPLOAD . $account->getAccountID())) {
 		$albumEntry['Image'] = '/upload/' . $account->getAccountID();
 	}
-	
+
 	$template->assign('AlbumEntry', $albumEntry);
 }
 

@@ -163,7 +163,7 @@ class Plotter {
 					foreach ($checkSector->getLinks() as $nextSector) {
 						if (!isset($visitedSectors[$nextSector])) {
 							$visitedSectors[$nextSector] = true;
-	
+
 							$cloneDistance = clone($distance);
 							$cloneDistance->addToPath($nextSector);
 							$distanceQ[0][] = $cloneDistance;
@@ -178,7 +178,7 @@ class Plotter {
 		}
 		return $distances;
 	}
-	
+
 	public static function calculatePortToPortDistances(array $sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		$distances = array();
 		foreach ($sectors as $sec) {

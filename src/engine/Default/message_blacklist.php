@@ -3,7 +3,7 @@
 $template->assign('PageTopic', 'Player Blacklist');
 
 Menu::messages();
- 
+
 if (isset($var['msg'])) {
 	$template->assign('Message', $var['msg']);
 }

@@ -361,23 +361,23 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function isNPC() : bool {
-		if(!isset($this->npc)) {
-			$this->db->query('SELECT login FROM npc_logins WHERE login = '.$this->db->escapeString($this->getLogin()).' LIMIT 1;');
+		if (!isset($this->npc)) {
+			$this->db->query('SELECT login FROM npc_logins WHERE login = ' . $this->db->escapeString($this->getLogin()) . ' LIMIT 1;');
 			$this->npc = $this->db->nextRecord();
 		}
 		return $this->npc;
 	}
 
 	protected function getHOFData() : void {
-		if(!isset($this->HOF)) {
+		if (!isset($this->HOF)) {
 			//Get Player HOF
 			$this->db->query('SELECT type,sum(amount) as amount FROM player_hof WHERE ' . $this->SQL . ' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = \'FALSE\') GROUP BY type');
 			$this->HOF = array();
-			while($this->db->nextRecord()) {
+			while ($this->db->nextRecord()) {
 				$hof =& $this->HOF;
-				$typeList = explode(':',$this->db->getField('type'));
-				foreach($typeList as $type) {
-					if(!isset($hof[$type])) {
+				$typeList = explode(':', $this->db->getField('type'));
+				foreach ($typeList as $type) {
+					if (!isset($hof[$type])) {
 						$hof[$type] = array();
 					}
 					$hof =& $hof[$type];

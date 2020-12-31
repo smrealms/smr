@@ -36,13 +36,13 @@ if (isset($var['location_type_id'])) {
 		$location->setHQ(isset($_REQUEST['hq']));
 		$location->setUG(isset($_REQUEST['ug']));
 	}
-	
-	
+
+
 	$template->assign('Location', $location);
 	$template->assign('Ships', AbstractSmrShip::getAllBaseShips($var['game_type_id']));
 	$template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
-	
-	
+
+
 	$db->query('SELECT * FROM hardware_type');
 	$hardware = array();
 	while ($db->nextRecord()) {

@@ -47,13 +47,13 @@ if (isset($GameID)) { ?>
 			<span class="bold">[X]</span>
 		</a><?php
 	} ?>Mines : <?php echo $ThisShip->getMines(); ?>/<?php echo $ThisShip->getMaxMines(); ?><br /><?php
-	
+
 	if (isset($DropCDLink)) { ?>
 		<a href="<?php echo $DropCDLink; ?>">
 			<span class="bold">[X]</span>
 		</a><?php
 	} ?>Combat : <span id="cds"><?php echo get_colored_text_range($ThisShip->getCDs(), $ThisShip->getMaxCDs(), number_format($ThisShip->getCDs()) . '/' . number_format($ThisShip->getMaxCDs())); ?></span><br /><?php
-	
+
 	if (isset($DropSDLink)) { ?>
 		<a href="<?php echo $DropSDLink; ?>">
 			<span class="bold">[X]</span>

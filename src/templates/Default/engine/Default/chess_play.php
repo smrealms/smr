@@ -47,7 +47,7 @@
 	foreach ($Board as $Y => $Row) {
 		foreach ($Row as $X => $Cell) {
 			$AvailableMoves[$Y][$X] = array();
-			if ($Cell != null) { 
+			if ($Cell != null) {
 				if ($ChessGame->isCurrentTurn($ThisAccount->getAccountID())) {
 					$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $ThisAccount->getAccountID());
 					foreach ($Moves as $Move) {

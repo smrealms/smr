@@ -15,7 +15,7 @@ if (isset($ExtraCSSLink)) {
 	if (is_object($ThisAccount)) { ?>
 		/* Friend vs Foe shades */
 
-		.enemy, .enemy:hover { 
+		.enemy, .enemy:hover {
 			color: #<?php echo $ThisAccount->getEnemyColour(); ?>;
 		}
 		.enemyBack, .enemyBack:hover {
@@ -34,7 +34,7 @@ if (isset($ExtraCSSLink)) {
 		}
 		.neutralBack, .neutralBack:hover {
 			background-color: #<?php echo $ThisAccount->getNeutralColour(); ?>;
-		}<?php 
+		}<?php
 	} ?>
 </style><?php
 if (isset($HeaderTemplateInclude)) {

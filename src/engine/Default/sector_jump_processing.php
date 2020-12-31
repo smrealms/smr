@@ -70,7 +70,7 @@ if ($misjump > 0) { // we missed the sector
 	while (count($distances[$misjump]) == 0) {
 		$misjump--;
 	}
-		
+
 	$misjumpSector = array_rand($distances[$misjump]);
 	if ($misjumpSector == null) {
 		throw new Exception('Misjump sector is null, distances: ' . var_export($distances, true));

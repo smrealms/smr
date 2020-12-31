@@ -20,7 +20,7 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$player->updateLastCPLAction();
 	$player->setSectorID($var['target_sector']);
 	$player->update();
-					
+
 	// get new sector object
 	$sector = $player->getSector();
 	$sector->markVisited($player);

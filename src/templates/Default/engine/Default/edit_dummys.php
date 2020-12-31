@@ -28,7 +28,7 @@
 						?><option value="<?php echo $BaseShip['ShipTypeID']; ?>"<?php if ($BaseShip['ShipTypeID'] == $DummyPlayer->getShipTypeID()) { ?> selected="selected"<?php } ?>><?php echo $BaseShip['Name']; ?></option><?php
 					} ?>
 				</select><br /><?php
-				
+
 				foreach ($DummyShip->getWeapons() as $OrderID => $ShipWeapon) { ?>
 					Weapon: <?php echo $OrderID + 1; ?>
 					<select name="weapons[]">

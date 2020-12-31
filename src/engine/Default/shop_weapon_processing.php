@@ -10,7 +10,7 @@ if (!isset($var['OrderID'])) {
 	if (!$location->isWeaponSold($weapon->getWeaponTypeID())) {
 		create_error('We do not sell that weapon here!');
 	}
-	
+
 	if ($weapon->getRaceID() != RACE_NEUTRAL && $player->getRelation($weapon->getRaceID()) < RELATIONS_PEACE) {
 		create_error('We are at WAR!!! Do you really think I\'m gonna sell you that weapon?');
 	}

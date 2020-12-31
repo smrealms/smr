@@ -502,7 +502,7 @@ class SmrAlliance {
 						FROM active_session
 						JOIN player USING(account_id, game_id)
 						WHERE '.$this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(SmrSession::getTime() - 600));
-		
+
 		while ($this->db->nextRecord()) {
 			$activeIDs[] = $this->db->getInt('account_id');
 		}

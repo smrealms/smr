@@ -22,7 +22,7 @@
 					if ($SharedForceAlliance) {
 						$RefreshAny = true;
 					} ?>
-				
+
 					<tr>
 						<td class="center shrink noWrap"><?php
 							if ($SharedForceAlliance && $ThisShip->canAcceptMines() && $Force->hasMines()) {

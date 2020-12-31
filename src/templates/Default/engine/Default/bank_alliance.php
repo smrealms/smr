@@ -84,7 +84,7 @@ if (!empty($BankTransactions)) { ?>
 			?></form><?php
 		} ?>
 	</div>
-	
+
 	<div class="center">
 		<div class="buttonA">
 			<a class="buttonA" href="<?php echo $BankReportHREF; ?>">View Bank Report</a>

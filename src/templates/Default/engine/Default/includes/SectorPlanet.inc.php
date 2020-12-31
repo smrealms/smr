@@ -13,7 +13,7 @@ if ($ThisSector->hasPlanet()) {
 				<?php echo $Planet->getTypeName() ?>&nbsp;
 				<?php if ($Planet->isInhabitable()) { ?>
 					<span class="inhab">Inhabitable</span>
-				<?php 
+				<?php
 				} else { ?>
 					<span class="uninhab">Uninhabitable</span>
 				<?php

@@ -1,30 +1,30 @@
 <?php
 $CombatPort =& $PortCombatResults['Port'];
 $TotalDamage = $PortCombatResults['TotalDamage'];
-if($MinimalDisplay) {
+if ($MinimalDisplay) {
 	echo $CombatPort->getDisplayName();
-	if($TotalDamage > 0) {
+	if ($TotalDamage > 0) {
 		?> hit for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat of which <span class="red"><?php echo $PortCombatResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()]; ?></span> was done to you<?php
 	} else {
 		?> does no damage this round<?php
 	} ?>. <?php echo $AttackLogLink;
 	return;
 }
-if(isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons'])) {
-	foreach($PortCombatResults['Weapons'] as $WeaponResults) {
+if (isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons'])) {
+	foreach ($PortCombatResults['Weapons'] as $WeaponResults) {
 		$ShootingWeapon =& $WeaponResults['Weapon'];
 		$ShotHit =& $WeaponResults['Hit'];
 		$ActualDamage =& $WeaponResults['ActualDamage'];
 		$WeaponDamage =& $WeaponResults['WeaponDamage'];
 		$TargetPlayer =& $WeaponResults['TargetPlayer'];
-		
-		echo $CombatPort->getDisplayName() ?> fires an <?php echo $ShootingWeapon->getName() ?> at <?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
+
+		echo $CombatPort->getDisplayName() ?> fires an <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
-			if(!$ShotHit) {
+			if (!$ShotHit) {
 				?> and misses<?php
 			} elseif ($ActualDamage['TotalDamage'] == 0) {
-				if($WeaponDamage['Shield'] > 0) {
-					if($ActualDamage['HasCDs']) {
+				if ($WeaponDamage['Shield'] > 0) {
+					if ($ActualDamage['HasCDs']) {
 						?> which proves ineffective against their combat drones<?php
 					} else {
 						?> which washes harmlessly over their hull<?php
@@ -37,19 +37,19 @@ if(isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons'
 			} else {
 				?> destroying <?php
 				$DamageTypes = 0;
-				if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+				if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
+				if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+				if ($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
 
-				if($ActualDamage['Shield'] > 0) {
+				if ($ActualDamage['Shield'] > 0) {
 					?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
 					$this->doDamageTypeReductionDisplay($DamageTypes);
 				}
-				if($ActualDamage['NumCDs'] > 0) {
+				if ($ActualDamage['NumCDs'] > 0) {
 					?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
 					$this->doDamageTypeReductionDisplay($DamageTypes);
 				}
-				if($ActualDamage['Armour'] > 0) {
+				if ($ActualDamage['Armour'] > 0) {
 					?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
 				}
 			}
@@ -60,21 +60,21 @@ if(isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons'
 		}
 	}
 }
-if(isset($PortCombatResults['Drones'])) {
+if (isset($PortCombatResults['Drones'])) {
 	$Drones =& $PortCombatResults['Drones'];
 	$ActualDamage =& $Drones['ActualDamage'];
 	$WeaponDamage =& $Drones['WeaponDamage'];
 	$TargetPlayer =& $Drones['TargetPlayer'];
-	
+
 	echo $CombatPort->getDisplayName();
-	if($WeaponDamage['Launched'] == 0) {
+	if ($WeaponDamage['Launched'] == 0) {
 		?> fails to launch it's combat drones<?php
 	} else {
-		?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php if($ActualDamage['TargetAlreadyDead']){ ?>the debris that was once <?php } echo $TargetPlayer->getDisplayName();
-		if(!$ActualDamage['TargetAlreadyDead']) {
-			if($ActualDamage['TotalDamage'] == 0) {
-				if($WeaponDamage['Shield'] > 0) {
-					if($ActualDamage['HasCDs']) {
+		?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php if ($ActualDamage['TargetAlreadyDead']){ ?>the debris that was once <?php } echo $TargetPlayer->getDisplayName();
+		if (!$ActualDamage['TargetAlreadyDead']) {
+			if ($ActualDamage['TotalDamage'] == 0) {
+				if ($WeaponDamage['Shield'] > 0) {
+					if ($ActualDamage['HasCDs']) {
 						?> which prove ineffective against their combat drones<?php
 					} else {
 						?> which washes harmlessly over their hull<?php

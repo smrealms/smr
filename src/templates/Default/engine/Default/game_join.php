@@ -131,7 +131,7 @@ if (!isset($JoinGameFormHref)) { ?>
 						<td>&nbsp;</td>
 						<td><input type="submit" name="action" value="Create Player" /></td>
 					</tr>
-					
+
 					<tr>
 						<td colspan="2" style="width:300px; height:315px;" class="top">
 							<div id="race_descr">
