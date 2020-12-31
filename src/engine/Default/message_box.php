@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-require_once(get_file_loc('message.functions.inc'));
+require_once(get_file_loc('messages.inc.php'));
 Menu::messages();
 
 $template->assign('PageTopic', 'View Messages');

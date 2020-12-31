@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-require_once(get_file_loc('hof.functions.inc'));
+require_once(get_file_loc('hof.inc.php'));
 
 $account_id = $var['account_id'] ?? $account->getAccountID();
 $game_id = $var['game_id'] ?? null;

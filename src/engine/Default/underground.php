@@ -16,7 +16,7 @@ $template->assign('PageTopic', $location->getName());
 
 Menu::headquarters();
 
-require_once(get_file_loc('gov.functions.inc'));
+require_once(get_file_loc('gov.inc.php'));
 $template->assign('AllBounties', getBounties('UG'));
 $template->assign('MyBounties', $player->getClaimableBounties('UG'));
 

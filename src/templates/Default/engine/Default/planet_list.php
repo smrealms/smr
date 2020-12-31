@@ -1,3 +1,3 @@
 <?php
-$this->includeTemplate('planet_list.inc', array('ExtraInclude'=>'includes/PlanetList.inc'));
+$this->includeTemplate('planet_list.inc.php', array('ExtraInclude'=>'includes/PlanetList.inc.php'));
 ?>

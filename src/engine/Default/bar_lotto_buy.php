@@ -3,7 +3,7 @@
 $template->assign('PageTopic', 'Galactic Lotto');
 Menu::bar();
 
-require_once(get_file_loc('bar.functions.inc'));
+require_once(get_file_loc('bar.inc.php'));
 checkForLottoWinner($player->getGameID());
 $lottoInfo = getLottoInfo($player->getGameID());
 $template->assign('LottoInfo', $lottoInfo);

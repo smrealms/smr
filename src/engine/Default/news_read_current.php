@@ -7,7 +7,7 @@ $gameID = $var['GameID'];
 $template->assign('PageTopic', 'Current News');
 Menu::news($template);
 
-require_once(get_file_loc('news.functions.inc'));
+require_once(get_file_loc('news.inc.php'));
 doBreakingNewsAssign($gameID, $template);
 doLottoNewsAssign($gameID, $template);
 

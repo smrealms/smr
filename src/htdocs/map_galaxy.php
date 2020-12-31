@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 try {
-	require_once('config.inc');
-	require_once(get_file_loc('smr.inc'));
+	require_once('../bootstrap.php');
+	require_once(get_file_loc('smr.inc.php'));
 	
 	// avoid site caching
 	header('Expires: Mon, 03 Nov 1976 16:10:00 GMT');
@@ -106,7 +106,7 @@ try {
 	// AJAX updates are not set up for the galaxy map at this time
 	$template->assign('AJAX_ENABLE_REFRESH', false);
 
-	$template->display('GalaxyMap.inc');
+	$template->display('GalaxyMap.inc.php');
 } catch (Throwable $e) {
 	handleException($e);
 }

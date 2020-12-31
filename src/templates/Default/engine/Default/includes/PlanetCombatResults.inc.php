@@ -1,24 +1,24 @@
 <?php
-$CombatPort =& $PortCombatResults['Port'];
-$TotalDamage = $PortCombatResults['TotalDamage'];
+$CombatPlanet = $PlanetCombatResults['Planet'];
+$TotalDamage = $PlanetCombatResults['TotalDamage'];
 if($MinimalDisplay) {
-	echo $CombatPort->getDisplayName();
+	echo $CombatPlanet->getCombatName();
 	if($TotalDamage > 0) {
-		?> hit for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat of which <span class="red"><?php echo $PortCombatResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()]; ?></span> was done to you<?php
+		?> hit for a total of <span class="red"><?php echo $TotalDamage; ?></span> damage in this round of combat of which <span class="red"><?php echo $PlanetCombatResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()]; ?></span> was done to you<?php
 	} else {
 		?> does no damage this round<?php
 	} ?>. <?php echo $AttackLogLink;
 	return;
 }
-if(isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons'])) {
-	foreach($PortCombatResults['Weapons'] as $WeaponResults) {
+if(isset($PlanetCombatResults['Weapons']) && is_array($PlanetCombatResults['Weapons'])) {
+	foreach($PlanetCombatResults['Weapons'] as $WeaponResults) {
 		$ShootingWeapon =& $WeaponResults['Weapon'];
 		$ShotHit =& $WeaponResults['Hit'];
 		$ActualDamage =& $WeaponResults['ActualDamage'];
 		$WeaponDamage =& $WeaponResults['WeaponDamage'];
 		$TargetPlayer =& $WeaponResults['TargetPlayer'];
 		
-		echo $CombatPort->getDisplayName() ?> fires an <?php echo $ShootingWeapon->getName() ?> at <?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
+		echo $CombatPlanet->getCombatName() ?> fires a <?php echo $ShootingWeapon->getName(); ?> at <?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 			if(!$ShotHit) {
 				?> and misses<?php
@@ -42,31 +42,35 @@ if(isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons'
 				if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
 
 				if($ActualDamage['Shield'] > 0) {
-					?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
+					?><span class="shields"><?php echo number_format($ActualDamage['Shield']); ?></span> shields<?php
 					$this->doDamageTypeReductionDisplay($DamageTypes);
 				}
 				if($ActualDamage['NumCDs'] > 0) {
-					?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
+					?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']); ?></span> combat drones<?php
 					$this->doDamageTypeReductionDisplay($DamageTypes);
 				}
 				if($ActualDamage['Armour'] > 0) {
-					?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
+					?><span class="red"><?php echo number_format($ActualDamage['Armour']); ?></span> plates of armour<?php
 				}
 			}
 		} ?>.
 		<br /><?php
 		if ($ShotHit && $ActualDamage['KillingShot']) {
-			$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>$WeaponResults['KillResults'],'TargetPlayer'=>$TargetPlayer));
+			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php',array('KillResults'=>$WeaponResults['KillResults'],'TargetPlayer'=>$TargetPlayer));
 		}
 	}
 }
-if(isset($PortCombatResults['Drones'])) {
-	$Drones =& $PortCombatResults['Drones'];
+if(isset($PlanetCombatResults['Drones'])) {
+	$Drones =& $PlanetCombatResults['Drones'];
 	$ActualDamage =& $Drones['ActualDamage'];
 	$WeaponDamage =& $Drones['WeaponDamage'];
 	$TargetPlayer =& $Drones['TargetPlayer'];
+	$DamageTypes = 0;
+	if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
+	if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+	if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
 	
-	echo $CombatPort->getDisplayName();
+	echo $CombatPlanet->getCombatName();
 	if($WeaponDamage['Launched'] == 0) {
 		?> fails to launch it's combat drones<?php
 	} else {
@@ -86,34 +90,29 @@ if(isset($PortCombatResults['Drones'])) {
 				}
 			} else {
 				?> destroying <?php
-				$DamageTypes = 0;
-				if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
-				if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
-				if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
-
-				if ($ActualDamage['Shield'] > 0) {
-					?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
+				if($ActualDamage['Shield'] > 0) {
+					?><span class="shields"><?php echo number_format($ActualDamage['Shield']); ?></span> shields<?php
 					$this->doDamageTypeReductionDisplay($DamageTypes);
 				}
-				if ($ActualDamage['NumCDs'] > 0) {
-					?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
+				if($ActualDamage['NumCDs'] > 0) {
+					?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']); ?></span> combat drones<?php
 					$this->doDamageTypeReductionDisplay($DamageTypes);
 				}
-				if ($ActualDamage['Armour'] > 0) {
-					?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
+				if($ActualDamage['Armour'] > 0) {
+					?><span class="red"><?php echo number_format($ActualDamage['Armour']); ?></span> plates of armour<?php
 				}
 			}
 		}
 	} ?>.
 	<br /><?php
-	if ($ActualDamage['KillingShot']) {
-		$this->includeTemplate('includes/TraderCombatKillMessage.inc', array('KillResults'=>$Drones['KillResults'], 'TargetPlayer'=>$TargetPlayer));
+	if($ActualDamage['KillingShot']) {
+		$this->includeTemplate('includes/TraderCombatKillMessage.inc.php',array('KillResults'=>$Drones['KillResults'],'TargetPlayer'=>$TargetPlayer));
 	}
 }
 
-echo $CombatPort->getDisplayName();
-if ($TotalDamage > 0) {
-	?> hit for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
+echo $CombatPlanet->getCombatName();
+if($TotalDamage > 0) {
+	?> hit for a total of <span class="red"><?php echo $TotalDamage; ?></span> damage in this round of combat<?php
 } else {
-	?> does no damage this round<?php
+	?> does no damage this round. You call that a planet? It needs a better builder<?php
 } ?>.

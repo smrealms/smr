@@ -13,7 +13,7 @@
 	</table>
 </form><?php
 
-$this->includeTemplate('includes/JumpDrive.inc'); ?>
+$this->includeTemplate('includes/JumpDrive.inc.php'); ?>
 
 <br />
 <h2>Plot To Nearest</h2>

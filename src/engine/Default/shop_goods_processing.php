@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-require_once(LIB . 'Default/shop_goods.inc');
+require_once(LIB . 'Default/shop_goods.inc.php');
 
 $amount = Request::getVarInt('amount');
 // no negative amounts are allowed

@@ -1,6 +1,6 @@
 <div class="center">
 	<p>Here are the most deadly Sectors!</p>
-	<?php $this->includeTemplate('includes/SectorKillList.inc', array('Rankings' => $TopTen)); ?>
+	<?php $this->includeTemplate('includes/SectorKillList.inc.php', array('Rankings' => $TopTen)); ?>
 
 	<form method="POST" action="<?php echo $SubmitHREF; ?>">
 		<p>
@@ -10,5 +10,5 @@
 		</p>
 	</form>
 
-	<?php $this->includeTemplate('includes/SectorKillList.inc', array('Rankings' => $TopCustom)); ?>
+	<?php $this->includeTemplate('includes/SectorKillList.inc.php', array('Rankings' => $TopCustom)); ?>
 </div>

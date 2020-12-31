@@ -27,7 +27,7 @@
 		<td>
 			<div class="chat" style="height: 500px; width: 160px; overflow-y:scroll;">
 				<table id="moveTable" class="ajax chessFont">
-					<?php $this->includeTemplate('includes/ChessMoves.inc'); ?>
+					<?php $this->includeTemplate('includes/ChessMoves.inc.php'); ?>
 				</table>
 			</div>
 		</td>

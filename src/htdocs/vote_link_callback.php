@@ -2,7 +2,7 @@
 // Callback script for player voting on external sites
 
 try {
-	require_once('config.inc');
+	require_once('../bootstrap.php');
 
 	if (Request::has('account') && Request::has('game') && Request::has('link')) {
 		// callback from TWG
@@ -19,7 +19,7 @@ try {
 		exit;
 	}
 
-	require_once(LIB . 'Default/smr.inc');
+	require_once(LIB . 'Default/smr.inc.php');
 
 	// Is the player allowed to get free turns from this link right now?
 	// If player clicked a valid free turns link, they have `turns_claimed=false`

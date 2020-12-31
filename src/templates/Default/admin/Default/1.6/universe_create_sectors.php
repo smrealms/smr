@@ -76,4 +76,4 @@ if (isset($Message)) { ?>
 	<p class="center"><?php echo $Message; ?></p><?php
 } ?>
 
-<?php $this->includeTemplate('includes/SectorMap.inc'); ?>
+<?php $this->includeTemplate('includes/SectorMap.inc.php'); ?>

@@ -35,7 +35,7 @@ if ($raceID != RACE_NEUTRAL) {
 }
 $template->assign('WarRaces', $warRaces);
 
-require_once(get_file_loc('gov.functions.inc'));
+require_once(get_file_loc('gov.inc.php'));
 $template->assign('AllBounties', getBounties('HQ'));
 $template->assign('MyBounties', $player->getClaimableBounties('HQ'));
 

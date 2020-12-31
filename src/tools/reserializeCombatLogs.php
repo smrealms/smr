@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-require_once('../htdocs/config.inc');
+require_once('../bootstrap.php');
 
 $db = MySqlDatabase::getInstance();
 $db2 = MySqlDatabase::getInstance();

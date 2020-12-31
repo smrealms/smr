@@ -27,7 +27,7 @@ function doBreakingNewsAssign($gameID, Template $template) {
 }
 
 function doLottoNewsAssign($gameID, Template $template) {
-	require_once(get_file_loc('bar.functions.inc'));
+	require_once(get_file_loc('bar.inc.php'));
 	checkForLottoWinner($gameID);
 	$db = MySqlDatabase::getInstance();
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'lotto\' ORDER BY time DESC LIMIT 1');

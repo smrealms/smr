@@ -2,8 +2,8 @@
 
 try {
 
-	require_once('config.inc');
-	require_once(LIB . 'Default/smr.inc');
+	require_once('../bootstrap.php');
+	require_once(LIB . 'Default/smr.inc.php');
 
 	// ********************************
 	// *
@@ -51,7 +51,7 @@ try {
 	$template->assign('GameNews', $gameNews);
 	unset($overrideGameID);
 
-	require_once(ENGINE . 'Default/login_story.inc');
+	require_once(ENGINE . 'Default/login_story.inc.php');
 
 	$template->assign('Body', 'login/login.php');
 	$template->display('login/skeleton.php');

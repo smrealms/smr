@@ -4,7 +4,7 @@ $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
 
 // Get the current teams
-require_once('alliance_pick.inc');
+require_once(get_file_loc('alliance_pick.inc.php'));
 $teams = get_draft_teams($player->getGameID());
 $template->assign('Teams', $teams);
 

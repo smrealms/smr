@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 try {
 
-	require_once('config.inc');
-	require_once(LIB . 'Default/smr.inc');
+	require_once('../bootstrap.php');
+	require_once(LIB . 'Default/smr.inc.php');
 
 	if (SmrSession::hasAccount()) {
 		$msg = 'You\'re already logged in! Creating multis is against the rules!';

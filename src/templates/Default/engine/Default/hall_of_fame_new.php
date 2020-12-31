@@ -1,2 +1,2 @@
 <?php
-$this->includeTemplate('includes/HallOfFame.inc');
+$this->includeTemplate('includes/HallOfFame.inc.php');

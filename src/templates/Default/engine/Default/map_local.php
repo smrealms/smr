@@ -17,6 +17,6 @@
 </table>
 
 <?php
-$this->includeTemplate('includes/SectorMap.inc');
-$this->includeTemplate('includes/SectorMapOptions.inc');
+$this->includeTemplate('includes/SectorMap.inc.php');
+$this->includeTemplate('includes/SectorMapOptions.inc.php');
 ?>

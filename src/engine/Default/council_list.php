@@ -11,6 +11,6 @@ $template->assign('RaceID', $raceID);
 Menu::council($raceID);
 
 // check for relations here
-require_once(get_file_loc('council.inc'));
+require_once(get_file_loc('council.inc.php'));
 modifyRelations($raceID);
 checkPacts($raceID);

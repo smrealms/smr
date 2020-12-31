@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-require('planet.inc');
+require('planet.inc.php');
 
 //echo the dump cargo message or other message.
 if (isset($var['errorMsg'])) {

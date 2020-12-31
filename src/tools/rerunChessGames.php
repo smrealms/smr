@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-require_once('../htdocs/config.inc');
+require_once('../bootstrap.php');
 
 SmrSession::updateGame(44);
 

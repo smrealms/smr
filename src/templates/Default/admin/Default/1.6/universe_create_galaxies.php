@@ -4,7 +4,7 @@
 	<input type="submit" name="submit" value="Update" />
 </form>
 <br />
-<?php $this->includeTemplate('1.6/GalaxyDetails.inc'); ?>
+<?php $this->includeTemplate('1.6/GalaxyDetails.inc.php'); ?>
 
 <br /><br />
 <form method="POST" enctype="multipart/form-data" action="<?php echo $UploadSmrFileHREF; ?>">

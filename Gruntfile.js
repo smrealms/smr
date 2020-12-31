@@ -30,7 +30,6 @@ module.exports = function(grunt) {
                     expand: true,
                     src: [
                         'src/templates/**/*.php',
-                        'src/templates/**/*.inc',
                         'src/htdocs/**/*.php',
                         'src/htdocs/**/*.html',
                     ],

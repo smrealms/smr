@@ -55,6 +55,6 @@ $races[$raceKey]['Selected'] = true;
 $template->assign('SelectedRaceID', $raceKey);
 $template->assign('Races', $races);
 
-// This instructs EndingJavascript.inc to include the javascript to display
+// This instructs EndingJavascript.inc.php to include the javascript to display
 // the Plotly.js radar charts.
 $template->assign('AddRaceRadarChartJS', true);
