@@ -12,7 +12,7 @@ if ($account->getTotalSmrCredits() < CREDITS_PER_GAL_MAP) {
 //gal map buy
 if (isset($var['process'])) {
 	$galaxyID = Request::getInt('gal_id');
-	
+
 	//get start sector
 	$galaxy = SmrGalaxy::getGalaxy($player->getGameID(), $galaxyID);
 	$low = $galaxy->getStartSector();
@@ -24,21 +24,21 @@ if (isset($var['process'])) {
 	if (!$db->nextRecord()) {
 		create_error('You already have maps of this galaxy!');
 	}
-	
+
 	$player->increaseHOF(1, array('Bar', 'Maps Bought'), HOF_PUBLIC);
 	//take money
 	$account->decreaseTotalSmrCredits(CREDITS_PER_GAL_MAP);
 	//now give maps
-	
+
 	// delete all entries from the player_visited_sector/port table
 	$db->query('DELETE FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND ' . $player->getSQL());
 	//start section
-	
+
 	// add port infos
 	foreach ($galaxy->getPorts() as $port) {
 		$port->addCachePort($player->getAccountID());
 	}
-	
+
 	$container = create_container('skeleton.php', 'bar_main.php');
 	transfer('LocationID');
 	$container['message'] = '<div class="center">Galaxy maps have been added. Enjoy!</div><br />';

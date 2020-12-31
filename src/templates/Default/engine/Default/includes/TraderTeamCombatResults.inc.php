@@ -3,7 +3,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 	foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 		$ShootingPlayer =& $TraderResults['Player'];
 		$TotalDamage =& $TraderResults['TotalDamage'];
-	
+
 		if ($TraderResults['DeadBeforeShot']) {
 			echo $ShootingPlayer->getDisplayName() ?> died before they were able to attack!<br /><?php
 		} else {
@@ -14,7 +14,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 					$ActualDamage =& $WeaponResults['ActualDamage'];
 					$WeaponDamage =& $WeaponResults['WeaponDamage'];
 					$TargetPlayer =& $WeaponResults['TargetPlayer'];
-					
+
 					echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php
 					if ($ShotHit && $ActualDamage['TargetAlreadyDead']) {
 						?>the debris that was once <?php
@@ -70,7 +70,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 				if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
 				if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
 				if ($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
-	
+
 				echo $ShootingPlayer->getDisplayName();
 				if ($WeaponDamage['Launched'] == 0) {
 					?> fails to launch their combat drones<?php

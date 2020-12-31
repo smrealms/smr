@@ -2,27 +2,27 @@
 try {
 	require_once('../bootstrap.php');
 	require_once(get_file_loc('smr.inc.php'));
-	
+
 	// avoid site caching
 	header('Expires: Mon, 03 Nov 1976 16:10:00 GMT');
 	header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 	header('Cache-Control: no-cache');
 	header('Pragma: no-cache');
 	header('Cache-Control: post-check=0, pre-check=0', FALSE);
-	
+
 	// ********************************
 	// *
 	// * S e s s i o n
 	// *
 	// ********************************
-	
-	
+
+
 	// do we have a session?
 	if (!SmrSession::hasAccount() || !SmrSession::hasGame()) {
 		header('Location: /login.php');
 		exit;
 	}
-	
+
 	if (Request::has('sector_id')) {
 		$sectorID = Request::getInt('sector_id');
 		try {
@@ -40,10 +40,10 @@ try {
 			exit;
 		}
 	}
-	
+
 	$account = SmrSession::getAccount();
 	$player = SmrPlayer::getPlayer($account->getAccountID(), SmrSession::getGameID());
-	
+
 	// Create a session to store temporary display options
 	// Garbage collect here often, since the page is slow anyways (see map_local.php)
 	if (!session_start(['gc_probability' => 10, 'gc_maxlifetime' => 86400])) {

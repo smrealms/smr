@@ -14,7 +14,7 @@
 			</script><?php
 		} ?>
 	</head>
-	
+
 	<body>
 		<div class="gal_map_header">
 			<table cellspacing="0" cellpadding="0">

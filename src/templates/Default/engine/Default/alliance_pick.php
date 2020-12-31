@@ -27,7 +27,7 @@
 </table>
 <br />
 
-<?php 
+<?php
 if ($CanPick) { ?>
 	<p>You may pick a new member now!</p><?php
 } else { ?>

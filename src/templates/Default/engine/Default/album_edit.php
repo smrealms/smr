@@ -13,22 +13,22 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 			<td class="right bold">Nick:</td>
 			<td><?php echo $ThisAccount->getHofDisplayName(); ?></td>
 		</tr>
-		
+
 		<tr>
 			<td class="right bold">Location:</td>
 			<td><input type="text" name="location" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Location']); } else { ?>N/A<?php } ?>" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}"></td>
 		</tr>
-		
+
 		<tr>
 			<td class="right bold">Email Address:</td>
 			<td><input type="email" name="email" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Email']); } ?>" style="width:303px;"></td>
 		</tr>
-		
+
 		<tr>
 			<td class="right bold">Website:</td>
 			<td><input type="url" name="website" style="width:303px;" value="<?php if (isset($AlbumEntry) && $AlbumEntry['Website'] != '') { echo htmlspecialchars($AlbumEntry['Website']); } ?>"></td>
 		</tr>
-		
+
 		<tr>
 			<td class="right bold">Birthdate:</td>
 			<td>Day:&nbsp;<input type="number" name="day" class="center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Day']); } ?>" min="1" max="31">&nbsp;&nbsp;&nbsp;
@@ -36,12 +36,12 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 				Year:&nbsp;<input type="number" name="year" class="center" value="<?php if (isset($AlbumEntry)) { echo htmlspecialchars($AlbumEntry['Year']); } ?>" min="1900" max="<?php echo date('Y'); ?>">
 			</td>
 		</tr>
-		
+
 		<tr>
 			<td valign="top" class="right bold">Other Info:<br /><small>(AIM/ICQ)</small></td>
 			<td><textarea spellcheck="true" name="other" style="width:303px;height:100px;" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}"><?php if (isset($AlbumEntry)) { echo $AlbumEntry['Other']; } else { ?>N/A<?php } ?></textarea></td>
 		</tr>
-		
+
 		<tr>
 			<td valign="top" class="right bold">Image:</td>
 			<td>
@@ -49,7 +49,7 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 				<input type="file" name="photo" accept="image/jpeg, image/png" style="width:303px;" >
 			</td>
 		</tr>
-		
+
 		<tr>
 			<td>&nbsp;</td>
 			<td>

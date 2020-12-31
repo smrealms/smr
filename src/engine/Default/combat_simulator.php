@@ -45,7 +45,7 @@ if(isset($_POST['defenders']))
 		$realDefenders[$i] =& $defenders[$i];
 		++$i;
 	}
-	
+
 for(;$i<=10;++$i)
 	$defenders[$i] = null;
 $template->assign('Defenders',$defenders);
@@ -75,7 +75,7 @@ if (!empty($realAttackers) && !empty($realDefenders)) {
 
 function runAnAttack($realAttackers,$realDefenders) {
 	global $template;
-	$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0), 
+	$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0),
 					'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
 	foreach ($realAttackers as $accountID => $teamPlayer) {
 		$playerResults =& $teamPlayer->shootPlayers($realDefenders);

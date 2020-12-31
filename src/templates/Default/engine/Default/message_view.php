@@ -38,7 +38,7 @@ if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 			</td>
 		</tr>
 	</table><?php
-	
+
 	if (isset($MessageBox['ShowAllHref'])) {
 		?><div class="buttonA"><a class="buttonA" href="<?php echo $MessageBox['ShowAllHref'] ?>">Show all Messages</a></div><br /><br /><?php
 	} ?>

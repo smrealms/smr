@@ -27,21 +27,21 @@
 										<td>
 											<div class="topcenterOne noWrap">
 												Race: <?php echo $ThisPlayer->getColouredRaceName($ThisPlayer->getRaceID(), true); ?><br />
-												
+
 												Turns : <span id="turns">
 													<span class="<?php echo $ThisPlayer->getTurnsColor(); ?>"><?php
 															echo $ThisPlayer->getTurns() . '/' . $ThisPlayer->getMaxTurns();
 														?></span>
 													</span><br />
-												
+
 												<span id="newbieturns"><?php
 													if ($ThisPlayer->hasNewbieTurns()) {
 														?>Newbie Turns: <span style="color: #<?php if ($ThisPlayer->getNewbieTurns() > NEWBIE_TURNS_WARNING_LIMIT) { ?>387C44<?php } else { ?>F00<?php } ?>;"><?php echo $ThisPlayer->getNewbieTurns(); ?></span><br /><?php
 													} ?>
 												</span>
-												
+
 												Credits: <span id="creds"><?php echo number_format($ThisPlayer->getCredits()); ?></span><br />
-												
+
 												Experience: <span id="exp"><?php echo number_format($ThisPlayer->getExperience()); ?></span>
 											</div>
 										</td>
@@ -58,9 +58,9 @@
 														<img src="images/bar_border.gif" width="<?php echo $ThisPlayer->getNextLevelPercentRemaining(); ?>" height="10" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
 														<img src="images/bar_right.gif" width="5" height="10" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" /><br />
 													</span>
-												
+
 												Alignment: <span id="align"><?php echo get_colored_text($ThisPlayer->getAlignment(), number_format($ThisPlayer->getAlignment())); ?></span><br />
-												
+
 												Alliance: <span id="alliance"><a href="<?php echo Globals::getAllianceHREF($ThisPlayer->getAllianceID()); ?>"><?php
 													echo $ThisPlayer->getAllianceDisplayName(false, true); ?></a></span>
 											</div>
@@ -82,7 +82,7 @@
 					<td class="leftCell">
 						<?php $this->includeTemplate('includes/LeftPanel.inc.php'); ?>
 					</td>
-					
+
 					<td class="centerContent">
 						<div id="middle_panel" class="MainContentArea<?php if (isset($SpaceView) && $SpaceView) { ?> stars<?php } ?>"><?php
 							if (isset($PageTopic)) {

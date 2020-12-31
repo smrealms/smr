@@ -1,6 +1,6 @@
 <?php if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMaxArmour() == 0) { ?>
 	<p>This planet cannot yet store any shields, combat drones, or armour.</p>
-<?php } else { ?>	
+<?php } else { ?>
 
 <br />
 <table class="standard">
@@ -11,7 +11,7 @@
 		<th>Amount</th>
 		<th>Transfer to</th>
 	</tr>
-	
+
 	<?php if ($ThisPlanet->getMaxShields() > 0) { ?>
 	<form name="TransferShieldsForm" method="POST" action="<?php echo $TransferShieldsHref; ?>">
 		<tr>

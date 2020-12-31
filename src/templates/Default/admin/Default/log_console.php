@@ -10,7 +10,7 @@ if (count($LoggedAccounts) > 0) { ?>
 		foreach ($LogTypes as $LogType) { ?>
 			<input type="hidden" name="log_type_ids[<?php echo $LogType; ?>]" value="1"><?php
 		} ?>
-		
+
 		<table class="standard">
 			<tr>
 				<th>Login</th>
@@ -18,7 +18,7 @@ if (count($LoggedAccounts) > 0) { ?>
 				<th>Action</th>
 				<th>Notes</th>
 			</tr><?php
-	
+
 			foreach ($LoggedAccounts as $LoggedAccount) { ?>
 				<tr>
 					<td valign="top"><?php echo $LoggedAccount['Login']; ?></td>
@@ -27,7 +27,7 @@ if (count($LoggedAccounts) > 0) { ?>
 					<td><?php echo $LoggedAccount['Notes']; ?></td>
 				</tr><?php
 			} ?>
-		
+
 			<tr>
 				<td colspan="3">&nbsp;</td>
 				<td>

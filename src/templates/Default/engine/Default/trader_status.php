@@ -70,7 +70,7 @@
 				Your alliance account contains <span class="yellow"><?php echo number_format($ThisPlayer->getAlliance()->getBank()); ?></span> credits.
 			<?php
 			} ?>
-				
+
 		</td>
 
 

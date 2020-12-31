@@ -22,7 +22,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 				$ActualDamage =& $WeaponResults['ActualDamage'];
 				$WeaponDamage =& $WeaponResults['WeaponDamage'];
 				$TargetPlanet =& $WeaponResults['TargetPlanet'];
-				
+
 				echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?>the debris that was once <?php } echo $TargetPlanet->getCombatName();
 				if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 					if (!$ShotHit) {

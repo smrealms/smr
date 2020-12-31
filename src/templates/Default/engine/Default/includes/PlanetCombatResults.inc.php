@@ -17,7 +17,7 @@ if (isset($PlanetCombatResults['Weapons']) && is_array($PlanetCombatResults['Wea
 		$ActualDamage =& $WeaponResults['ActualDamage'];
 		$WeaponDamage =& $WeaponResults['WeaponDamage'];
 		$TargetPlayer =& $WeaponResults['TargetPlayer'];
-		
+
 		echo $CombatPlanet->getCombatName() ?> fires a <?php echo $ShootingWeapon->getName(); ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 			if (!$ShotHit) {
@@ -69,7 +69,7 @@ if (isset($PlanetCombatResults['Drones'])) {
 	if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
 	if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
 	if ($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
-	
+
 	echo $CombatPlanet->getCombatName();
 	if ($WeaponDamage['Launched'] == 0) {
 		?> fails to launch it's combat drones<?php

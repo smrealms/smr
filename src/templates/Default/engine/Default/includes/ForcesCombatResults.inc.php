@@ -15,7 +15,7 @@ if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Res
 		} elseif ($ForceType == 'Scouts') {
 			?> scout drones kamikaze themselves against <?php
 		}
-		
+
 		if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php }
 		echo $TargetPlayer->getDisplayName();
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {

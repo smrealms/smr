@@ -42,11 +42,11 @@ if ($submit == 'Create Galaxies') {
 			for ($i = 0; $i < Request::getInt('loc' . $location->getTypeID()); $i++) {
 				$randSector = $galSectors[array_rand($galSectors)]; //get random sector from start of gal to end of gal
 				//4 per sector max locs and no locations inside fed
-				
+
 				while (!checkSectorAllowedForLoc($randSector, $location)) {
 					$randSector = $galSectors[array_rand($galSectors)]; //get valid sector
 				}
-				
+
 				addLocationToSector($location, $randSector);
 			}
 		}
@@ -276,7 +276,7 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector) {
 				$fedBeacon = $linkedLocation;
 			}
 		}
-			
+
 		//add Beacons to all surrounding areas (up to 2 sectors out)
 		if (!$sector->offersFederalProtection()) {
 			$sector->addLocation($fedBeacon); //add beacon to this sector

@@ -22,7 +22,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 				$ActualDamage =& $WeaponResults['ActualDamage'];
 				$WeaponDamage =& $WeaponResults['WeaponDamage'];
 				$TargetPort =& $WeaponResults['TargetPort'];
-				
+
 				echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?>the remnants of <?php } echo $TargetPort->getDisplayName();
 				if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 					if (!$ShotHit) {
@@ -70,7 +70,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 			$ActualDamage =& $Drones['ActualDamage'];
 			$WeaponDamage =& $Drones['WeaponDamage'];
 			$TargetPort =& $Drones['TargetPort'];
-			
+
 			echo $ShootingPlayer->getDisplayName();
 			if ($WeaponDamage['Launched'] == 0) {
 				?> fails to launch their combat drones<?php
@@ -80,7 +80,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 					?>the debris that was once <?php
 				}
 				echo $TargetPort->getDisplayName();
-				
+
 				if (!$ActualDamage['TargetAlreadyDead']) {
 					if ($ActualDamage['TotalDamage'] == 0) {
 						if ($WeaponDamage['Shield'] > 0) {

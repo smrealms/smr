@@ -16,10 +16,10 @@ $messageBoxes = array();
 foreach ($notifyTypeIDs as $messageTypeID) {
 	$messageBox = array();
 	$messageBox['Name'] = getMessageTypeNames($messageTypeID);
-	
+
 	$messageBox['MessagesRemaining'] = $account->getMessageNotifications($messageTypeID);
 	$messageBox['MessagesPerCredit'] = MESSAGES_PER_CREDIT[$messageTypeID];
-	
+
 	$container['MessageTypeID'] = $messageTypeID;
 	$messageBox['BuyHref'] = SmrSession::getNewHREF($container);
 	$messageBoxes[] = $messageBox;

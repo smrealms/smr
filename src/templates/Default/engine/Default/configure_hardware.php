@@ -8,7 +8,7 @@ if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()
 		<br /><br />
 		<?php
 	}
-	
+
 	if ($ThisShip->hasIllusion()) { ?>
 		<form id="SetIllusionForm" method="POST" action="<?php echo $SetIllusionFormHREF; ?>">
 			<b>Illusion Generator:</b><br /><br />

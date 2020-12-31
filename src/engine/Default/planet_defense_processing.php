@@ -63,7 +63,7 @@ if ($action == 'Ship') {
 		$ship->increaseArmour($amount);
 		$player->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' armour from planet.');
 	}
-	
+
 } elseif ($action == 'Planet') {
 	// does the user wants to transfer shields?
 	if ($type_id == HARDWARE_SHIELDS) {
@@ -115,7 +115,7 @@ if ($action == 'Ship') {
 		$ship->decreaseArmour($amount);
 		$player->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' armour on planet.');
 	}
-	
+
 } else {
 	create_error('You must choose if you want to transfer to planet or to the ship!');
 }

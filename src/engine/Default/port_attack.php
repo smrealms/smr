@@ -8,7 +8,7 @@ if (isset($var['results'])) {
 	$template->assign('AlreadyDestroyed', true);
 }
 $template->assign('MinimalDisplay', false);
-	
+
 if (isset($var['override_death'])) {
 	$template->assign('OverrideDeath', true);
 } else {

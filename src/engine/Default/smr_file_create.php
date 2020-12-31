@@ -131,11 +131,11 @@ foreach ($galaxies as $galaxy) {
 
 	foreach ($galaxy->getSectors() as $sector) {
 		$file .= '[Sector=' . $sector->getSectorID() . ']' . EOL;
-		
+
 		if (!$sector->isVisited($player) && $adminCreate === false) {
 			continue;
 		}
-		
+
 		foreach ($sector->getLinks() as $linkName => $link) {
 			$file .= $linkName . '=' . $link . EOL;
 		}
@@ -153,7 +153,7 @@ foreach ($galaxies as $galaxy) {
 			if (!empty($port->getSoldGoodIDs())) {
 				$file .= 'Buys=' . join(',', $port->getSoldGoodIDs()) . EOL;
 			}
-			
+
 			if (!empty($port->getBoughtGoodIDs())) {
 				$file .= 'Sells=' . join(',', $port->getBoughtGoodIDs()) . EOL;
 			}

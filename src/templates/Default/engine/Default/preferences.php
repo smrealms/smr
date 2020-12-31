@@ -9,7 +9,7 @@ if (isset($GameID)) { ?>
 			<tr>
 				<th colspan="2">Player Preferences (For Current Game)</th>
 			</tr>
-	
+
 			<tr>
 				<td>Combat drones kamikaze on mines</td>
 				<td>
@@ -17,12 +17,12 @@ if (isset($GameID)) { ?>
 					No: <input type="radio" name="kamikaze" value="No"<?php if (!$ThisPlayer->isCombatDronesKamikazeOnMines()) { ?> checked="checked"<?php } ?> />
 				</td>
 			</tr>
-	
+
 			<tr>
 				<td>&nbsp;</td>
 				<td><input type="submit" name="action" value="Change Kamikaze Setting" /></td>
 			</tr>
-	
+
 			<tr>
 				<td>Receive force change messages</td>
 				<td>
@@ -30,16 +30,16 @@ if (isset($GameID)) { ?>
 					No: <input type="radio" name="forceDropMessages" value="No"<?php if (!$ThisPlayer->isForceDropMessages()) { ?> checked="checked"<?php } ?> />
 				</td>
 			</tr>
-	
+
 			<tr>
 				<td>&nbsp;</td>
 				<td><input type="submit" name="action" value="Change Message Setting" /></td>
 			</tr>
-	
+
 			<tr>
 				<td colspan="2">&nbsp;</td>
 			</tr>
-			
+
 			<tr>
 				<td>Player Name</td>
 				<td>
@@ -51,7 +51,7 @@ if (isset($GameID)) { ?>
 					} ?>
 				</td>
 			</tr>
-	
+
 			<tr>
 				<td>&nbsp;</td>
 				<td><button type="submit" name="action" value="change_name">Alter Player Name <?php if ($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?></button></td>
@@ -101,107 +101,107 @@ if (isset($GameID)) { ?>
 		<tr>
 			<th colspan="2">Account Preferences</th>
 		</tr>
-		
+
 		<tr>
 			<td>Referral Link:</td>
 			<td><b><?php echo $ThisAccount->getReferralLink(); ?></b></td>
 		</tr>
-		
+
 		<tr>
 			<td>Login:</td>
 			<td><b><?php echo $ThisAccount->getLogin(); ?></b></td>
 		</tr>
-		
+
 		<tr>
 			<td>ID:</td>
 			<td><?php echo $ThisAccount->getAccountID(); ?></td>
 		</tr>
-		
+
 		<tr>
 			<td>SMR&nbsp;Credits:</td>
 			<td><?php echo $ThisAccount->getSmrCredits(); ?></td>
 		</tr>
-		
+
 		<tr>
 			<td>SMR&nbsp;Reward&nbsp;Credits:</td>
 			<td><?php echo $ThisAccount->getSmrRewardCredits(); ?></td>
 		</tr>
-		
+
 		<tr>
 			<td>Ban Points:</td>
 			<td><?php echo $ThisAccount->getPoints(); ?></td>
 		</tr>
-		
+
 		<tr>
 			<td>Friendly Colour:</td>
 			<td><div id="friendlyColorSelector">
 				<div class="preview" style="background-color: #<?php echo $ThisAccount->getFriendlyColour(); ?>"></div>
 				<input type="hidden" name="friendly_color" value="<?php echo $ThisAccount->getFriendlyColour(); ?>"/></div></td>
 		</tr>
-		
+
 		<tr>
 			<td>Neutral Colour:</td>
 			<td><div id="neutralColorSelector">
 				<div class="preview" style="background-color: #<?php echo $ThisAccount->getNeutralColour(); ?>"></div>
 				<input type="hidden" name="neutral_color" value="<?php echo $ThisAccount->getNeutralColour(); ?>"/></div></td>
 		</tr>
-		
+
 		<tr>
 			<td>Enemy Colour:</td>
 			<td><div id="enemyColorSelector">
 				<div class="preview" style="background-color: #<?php echo $ThisAccount->getEnemyColour(); ?>"></div>
 				<input type="hidden" name="enemy_color" value="<?php echo $ThisAccount->getEnemyColour(); ?>"/></div></td>
 		</tr>
-		
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Update Colours" /></td>
 		</tr>
-		
+
 		<tr>
 			<td>Current Password:</td>
 			<td><input type="password" name="old_password" size="25" /></td>
 		</tr>
-		
+
 		<tr>
 			<td>New Password:</td>
 			<td><input type="password" name="new_password" size="25" /></td>
 		</tr>
-		
+
 		<tr>
 			<td>Verify New Password:</td>
 			<td><input type="password" name="retype_password" size="25" /></td>
 		</tr>
-		
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Change Password" /></td>
 		</tr>
-		
+
 		<tr><td colspan="2">&nbsp;</td></tr>
-		
+
 		<tr>
 			<td>Email address:</td>
 			<td><input type="email" name="email" value="<?php echo htmlspecialchars($ThisAccount->getEmail()); ?>" size="50" /></td>
 		</tr>
-		
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Save and resend validation code" /></td>
 		</tr>
-	
+
 		<tr><td colspan="2">&nbsp;</td></tr>
 
 		<tr>
 			<td>Hall of Fame Name:</td>
 			<td><input type="text" name="HoF_name" value="<?php echo $ThisAccount->getHofDisplayName(); ?>" size="50" /></td>
 		</tr>
-		
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Change Name" /></td>
 		</tr>
-	
+
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
@@ -242,46 +242,46 @@ if (isset($GameID)) { ?>
 				</select>
 			</td>
 		</tr>
-	
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Change Timezone" /></td>
 		</tr>
-	
+
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
-	
+
 		<tr>
 			<td>Date Format:</td>
 			<td><input type="text" name="dateformat" value="<?php echo htmlspecialchars($ThisAccount->getShortDateFormat()); ?>" /><br />(Default: '<?php echo DEFAULT_DATE_DATE_SHORT; ?>')</td>
 		</tr>
-	
+
 		<tr>
 			<td>Time Format:</td>
 			<td><input type="text" name="timeformat" value="<?php echo htmlspecialchars($ThisAccount->getShortTimeFormat()); ?>" /><br />(Default: '<?php echo DEFAULT_DATE_TIME_SHORT; ?>')</td>
 		</tr>
-	
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Change Date Formats" /></td>
 		</tr>
-	
+
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
-		
+
 		<tr>
 			<td>Use AJAX (Auto&nbsp;Refresh):</td>
 			<td>
 				<a href="<?php echo $ThisAccount->getToggleAJAXHREF() ?>"><?php if ($ThisAccount->isUseAJAX()) { ?>Disable AJAX (Currently Enabled)<?php } else { ?>Enable AJAX (Currently Disabled)<?php } ?></a><br />
 			</td>
 		</tr>
-		
+
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
-		
+
 		<tr>
 			<td>Display Ship Images:</td>
 			<td>
@@ -289,16 +289,16 @@ if (isset($GameID)) { ?>
 				No: <input type="radio" name="images" value="No"<?php if (!$ThisAccount->isDisplayShipImages()) { ?> checked="checked"<?php } ?> /><br />
 			</td>
 		</tr>
-	
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Change Images" /></td>
 		</tr>
-		
+
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
-		
+
 		<tr>
 			<td>Center Galaxy Map On Player:</td>
 			<td>
@@ -306,12 +306,12 @@ if (isset($GameID)) { ?>
 				No: <input type="radio" name="centergalmap" value="No"<?php if (!$ThisAccount->isCenterGalaxyMapOnPlayer()) { ?> checked="checked"<?php } ?> /><br />
 			</td>
 		</tr>
-	
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Change Centering" /></td>
 		</tr>
-	
+
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
@@ -320,12 +320,12 @@ if (isset($GameID)) { ?>
 			<td>Font size:</td>
 			<td><input type="number" size="4" name="fontsize" value="<?php echo $ThisAccount->getFontSize(); ?>" /> Minimum font size is 50%</td>
 		</tr>
-	
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Change Size" /></td>
 		</tr>
-	
+
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
@@ -373,7 +373,7 @@ if (isset($GameID)) { ?>
 		$MovementTypes = array('Up', 'Left', 'Right', 'Down', 'Warp');
 		$MovementSubTypes = array('Move', 'Scan');
 		foreach ($MovementTypes as $MovementType) {
-			foreach ($MovementSubTypes as $MovementSubType) { 
+			foreach ($MovementSubTypes as $MovementSubType) {
 				$FullMovement = $MovementSubType . $MovementType; ?>
 				<tr>
 					<td><?php echo $MovementSubType, ' ', $MovementType; ?>:</td>
@@ -448,7 +448,7 @@ if (isset($GameID)) { ?>
 				</select>
 			</td>
 		</tr>
-		
+
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Transfer" /></td>

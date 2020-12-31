@@ -73,12 +73,12 @@ function getPlayerOptionClass($player, $other) {
 								<div class="buttonA"><?php
 									if ($PlayersContainer instanceof SmrPlanet) {
 										if ($ThisPlanet->getOwnerID() == $ThisPlayer->getAccountID()) {
-											?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="<?php 
+											?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="<?php
 												echo getPlayerOptionClass($ThisPlayer, $Player);
 												?>"> Kick </a><?php
 										}
 									} else {
-										?><a href="<?php echo $Player->getExamineTraderHREF() ?>" class="<?php 
+										?><a href="<?php echo $Player->getExamineTraderHREF() ?>" class="<?php
 											echo getPlayerOptionClass($ThisPlayer, $Player);
 										?>"> Examine </a><?php
 									} ?>

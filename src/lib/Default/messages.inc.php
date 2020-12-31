@@ -55,11 +55,11 @@ function getMessagePlayer($accountID, $gameID, $messageType = false) {
 				case MSG_ADMIN:
 					$return = '<span class="admin">Administrator</span>';
 				break;
-					
+
 				case MSG_ALLIANCE:
 					$return = '<span class="green">Alliance Ambassador</span>';
 				break;
-							
+
 				default:
 					$return = 'Unknown';
 			}

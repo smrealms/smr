@@ -12,7 +12,7 @@ if (isset($Msg)) {
 
 	<tr>
 		<td>
-			<img class="bottom" src="<?php echo $ThisPlanet->getTypeImage()?>" width="16" height="16" alt="Planet" title="<?php echo $ThisPlanet->getTypeName(); ?>" /> 
+			<img class="bottom" src="<?php echo $ThisPlanet->getTypeImage()?>" width="16" height="16" alt="Planet" title="<?php echo $ThisPlanet->getTypeName(); ?>" />
 			&nbsp;<b><?php echo $ThisPlanet->getTypeName() ?>:</b> <?php echo $ThisPlanet->getTypeDescription(); ?>
 			<a href="<?php echo WIKI_URL; ?>/game-guide/locations#planets" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a>
 		</td>
@@ -24,7 +24,7 @@ if (isset($Msg)) {
 					<th width="75">Current</th>
 					<th width="75">Max</th>
 				</tr>
-				
+
 				<tr>
 					<td>Planet Level</td>
 					<td class="center"><span id="planetLevel"><?php echo number_format($ThisPlanet->getLevel(), 2); ?></span></td>

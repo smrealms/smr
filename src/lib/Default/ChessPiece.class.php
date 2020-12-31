@@ -15,7 +15,7 @@ class ChessPiece {
 	public $pieceNo;
 	private $x;
 	private $y;
-	
+
 	public function __construct($chessGameID, $accountID, $colour, $pieceID, $x, $y, $pieceNo = -1) {
 		$this->chessGameID = $chessGameID;
 		$this->accountID = $accountID;
@@ -29,7 +29,7 @@ class ChessPiece {
 	public function getX() {
 		return $this->x;
 	}
-	
+
 	public function getY() {
 		return $this->y;
 	}
@@ -41,7 +41,7 @@ class ChessPiece {
 	public function setY($y) {
 		$this->y = $y;
 	}
-	
+
 	public function isSafeMove(array &$board, &$hasMoved, $toX = -1, $toY = -1) {
 		$x = $this->x;
 		$y = $this->y;
@@ -50,7 +50,7 @@ class ChessPiece {
 		ChessGame::undoMovePiece($board, $hasMoved, $x, $y, $toX, $toY, $moveInfo);
 		return $safe;
 	}
-	
+
 	public function isAttacking(array &$board, array &$hasMoved, $king, $x = -1, $y = -1) {
 		$moves = $this->getPossibleMoves($board, $hasMoved, null, true);
 		foreach ($moves as $move) {
@@ -83,8 +83,8 @@ class ChessPiece {
 				for ($i = -1; $i < 2; $i += 2) {
 					$moveX = $this->x + $i;
 					if (ChessGame::isValidCoord($moveX, $moveY, $board)) {
-						if ($attackingCheck || 
-							((($hasMoved[ChessPiece::PAWN][0] == $moveX && $hasMoved[ChessPiece::PAWN][1] == $this->y) || 
+						if ($attackingCheck ||
+							((($hasMoved[ChessPiece::PAWN][0] == $moveX && $hasMoved[ChessPiece::PAWN][1] == $this->y) ||
 							($board[$moveY][$moveX] != null && $board[$moveY][$moveX]->colour != $this->colour))
 							&& $this->isSafeMove($board, $hasMoved, $moveX, $moveY))) {
 							$moves[] = array($moveX, $moveY);
@@ -101,7 +101,7 @@ class ChessPiece {
 				}
 				//Castling is not attacking - so don't check it if doing an attacking check.
 				if (!$attackingCheck && !$hasMoved[$this->colour][ChessPiece::KING] && !ChessGame::isPlayerChecked($board, $hasMoved, $this->colour)) {
-					if (!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && 
+					if (!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] &&
 							ChessGame::isValidCoord($this->x - 1, $this->y, $board) && $board[$this->y][$this->x - 1] == null &&
 							ChessGame::isValidCoord($this->x - 3, $this->y, $board) && $board[$this->y][$this->x - 3] == null &&
 							$this->isSafeMove($board, $hasMoved, $this->x - 1, $this->y)) {
@@ -185,10 +185,10 @@ class ChessPiece {
 				$this->addMove($moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck); //2right-up
 			}
 		}
-		
+
 		return $moves;
 	}
-	
+
 	private function addMove($toX, $toY, array &$board, array &$moves, array &$hasMoved = null, $attackingCheck = true) {
 		if (ChessGame::isValidCoord($toX, $toY, $board)) {
 			if (($board[$toY][$toX] == null || $board[$toY][$toX]->colour != $this->colour)) {
@@ -201,7 +201,7 @@ class ChessPiece {
 		}
 		return false;
 	}
-	
+
 	public function promote($pawnPromotionPieceID, array &$board) {
 		if ($pawnPromotionPieceID == null) {
 			throw new Exception('Promotion piece cannot be null on a promote.');

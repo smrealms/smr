@@ -644,7 +644,7 @@ class AbstractSmrPort {
 
 			//5 mins per port level
 			$nextReinforce = SmrSession::getTime() + $this->getLevel() * 300;
-			
+
 			$this->setReinforceTime($nextReinforce);
 			$this->updateAttackStarted();
 			//add news

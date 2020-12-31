@@ -19,7 +19,7 @@ class Template {
 	public function hasTemplateVar($var) {
 		return isset($this->data[$var]);
 	}
-	
+
 	public function assign($var, $value) {
 		if (!isset($this->data[$var])) {
 			$this->data[$var] = $value;
@@ -28,7 +28,7 @@ class Template {
 			throw new Exception("Cannot re-assign template variable '$var'!");
 		}
 	}
-	
+
 	public function unassign($var) {
 		unset($this->data[$var]);
 	}
@@ -73,8 +73,8 @@ class Template {
 		// Record that display was called for error-checking in dtor
 		$this->displayCalled = true;
 	}
-	
-	
+
+
 	protected function getTemplateLocation($templateName) {
 		$templateDir = TEMPLATES_DIR;
 		if (isset($this->data['ThisAccount']) && is_object($this->data['ThisAccount']) && $this->data['ThisAccount'] instanceof SmrAccount) {
@@ -113,7 +113,7 @@ class Template {
 			throw new Exception('No template found for ' . $templateName);
 		}
 	}
-	
+
 	protected function includeTemplate($templateName, array $assignVars = null) {
 		if ($this->nestedIncludes > 15) {
 			throw new Exception('Nested more than 15 template includes, is something wrong?');
@@ -130,11 +130,11 @@ class Template {
 		require($this->getTemplateLocation($templateName));
 		$this->nestedIncludes--;
 	}
-	
+
 	protected function checkDisableAJAX($html) {
 		return preg_match('/<input' . '[^>]*' . '[^(submit)(hidden)(image)]' . '[^>]*' . '>/i', $html) != 0;
 	}
-	
+
 	protected function trimWhiteSpace(&$html) {
 		// Pull out the script blocks
 		/*	preg_match_all("!<script[^>]*?>.*?</script>!is", $source, $match);
@@ -147,34 +147,34 @@ class Template {
 		$_pre_blocks = $match[0];
 		$html = preg_replace("!<pre[^>]*?>.*?</pre>!is",
 			'@@@SMARTY:TRIM:PRE@@@', $html);
-		
+
 		// Pull out the textarea blocks
 		preg_match_all("!<textarea[^>]*?>.*?</textarea>!is", $html, $match);
 		$_textarea_blocks = $match[0];
 		$html = preg_replace("!<textarea[^>]*?>.*?</textarea>!is",
 			'@@@SMARTY:TRIM:TEXTAREA@@@', $html);
-		
+
 		// remove all leading spaces, tabs and carriage returns NOT
 		// preceeded by a php close tag.
 		$html = preg_replace('/[\s]+/', ' ', $html);
-		
+
 		// Pull out the span> <span blocks
 		preg_match_all("!</span> <span!is", $html, $match);
 		$_span_blocks = $match[0];
 		$html = preg_replace("!</span> <span!is",
 			'@@@SMARTY:TRIM:SPAN@@@', $html);
-		
+
 		$html = trim(preg_replace('/> </', '><', $html));
-		
+
 		// replace span blocks
 		$this->replaceTrimHolder("@@@SMARTY:TRIM:SPAN@@@", $_span_blocks, $html);
-		
+
 		// replace textarea blocks
 		$this->replaceTrimHolder("@@@SMARTY:TRIM:TEXTAREA@@@", $_textarea_blocks, $html);
-		
+
 		// replace pre blocks
 		$this->replaceTrimHolder("@@@SMARTY:TRIM:PRE@@@", $_pre_blocks, $html);
-		
+
 		// replace script blocks
 //		$this->replaceTrimHolder("@@@SMARTY:TRIM:SCRIPT@@@",$_script_blocks, $html);
 	}
@@ -189,7 +189,7 @@ class Template {
 			}
 		}
 	}
-	
+
 	protected function doDamageTypeReductionDisplay(&$damageTypes) {
 		if ($damageTypes == 3) {
 			echo ', ';
@@ -225,13 +225,13 @@ class Template {
 			}
 			return $this->ajaxJS['EVAL'] .= ';' . $obj;
 		}
-		
+
 		if (isset($this->ajaxJS[$varName])) {
 			throw new Exception('Trying to set javascript val twice: ' . $varName);
 		}
 		return $this->ajaxJS[$varName] = json_encode($obj);
 	}
-	
+
 	protected function addJavascriptAlert($string) {
 		if (!SmrSession::addAjaxReturns('ALERT:' . $string, $string)) {
 			$this->jsAlerts[] = $string;
@@ -323,7 +323,7 @@ class Template {
 		}
 		return $xml;
 	}
-	
+
 	public function ignoreMiddle() {
 		$this->ignoreMiddle = true;
 	}
