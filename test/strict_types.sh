@@ -11,7 +11,7 @@ do
     LINE=$(head -n 1 "$FILE")
 
     if [[ "$LINE" != "<?php declare(strict_types=1);" ]] ; then
-        echo "====> $FILE"
+        echo "====> ${FILE#$ROOT/}"
         echo "$LINE"
         ERROR="true"
     fi

@@ -11,7 +11,7 @@ do
     RESULTS=`php -l "$FILE" 2>&1`
 
     if [[ "$RESULTS" != "No syntax errors detected in $FILE" ]] ; then
-        echo "====> $FILE"
+        echo "====> ${FILE#$ROOT/}"
         echo "$RESULTS"
         ERROR="true"
     fi
