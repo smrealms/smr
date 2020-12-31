@@ -27,14 +27,14 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 				if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 					if(!$ShotHit) {
 						?> and misses<?php
-					} else if($ActualDamage['TotalDamage'] == 0) {
+					} elseif ($ActualDamage['TotalDamage'] == 0) {
 						if($WeaponDamage['Shield'] > 0) {
 							if($ActualDamage['HasCDs']) {
 								?> which proves ineffective against their combat drones<?php
 							} else {
 								?> which washes harmlessly over their hull<?php
 							}
-						} else if($WeaponDamage['Armour'] > 0) {
+						} elseif ($WeaponDamage['Armour'] > 0) {
 							?> which is deflected by their shields<?php
 						} else {
 							?> but it cannot do any damage<?php

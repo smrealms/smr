@@ -19,11 +19,11 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 					if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 						if(!$ShotHit) {
 							?> and misses<?php
-						} else if($ActualDamage['TotalDamage'] == 0) {
+						} elseif ($ActualDamage['TotalDamage'] == 0) {
 							if($WeaponDamage['Shield'] > 0) {
-								?> which proves ineffective against the <?php if($ActualDamage['HasMines']){ ?>mines<?php } else if($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php }
-							} else if($WeaponDamage['Armour'] > 0) {
-								?> which is deflected by the <?php if($ActualDamage['HasMines']){ ?>mines<?php } else if($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php } ?> shields<?php
+								?> which proves ineffective against the <?php if($ActualDamage['HasMines']){ ?>mines<?php } elseif ($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php }
+							} elseif ($WeaponDamage['Armour'] > 0) {
+								?> which is deflected by the <?php if($ActualDamage['HasMines']){ ?>mines<?php } elseif ($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php } ?> shields<?php
 							} else {
 								?> but it cannot do any damage<?php
 							}
@@ -67,10 +67,10 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 					if(!$ActualDamage['TargetAlreadyDead']) {
 						if($ActualDamage['TotalDamage'] == 0) {
 							if($WeaponDamage['Shield'] > 0) {
-								?> which prove ineffective against the <?php if($ActualDamage['HasMines']){ ?>mines<?php } else if($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php }
-							} else if($WeaponDamage['Armour'] > 0) {
+								?> which prove ineffective against the <?php if($ActualDamage['HasMines']){ ?>mines<?php } elseif ($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php }
+							} elseif ($WeaponDamage['Armour'] > 0) {
 								?> which is deflected by the <?php
-								if($ActualDamage['HasMines']){ ?>mines<?php } else if($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php } ?> shields<?php
+								if($ActualDamage['HasMines']){ ?>mines<?php } elseif ($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php } ?> shields<?php
 							} else {
 								?> but they cannot do any damage<?php
 							}

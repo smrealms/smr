@@ -46,7 +46,7 @@ function getPlayerOptionClass($player, $other) {
 								if ($Ship->hasActiveIllusion()) {
 									if (!$ThisPlayer->traderMAPAlliance($Player)) {
 										echo $Ship->getIllusionShipName();
-									} else if ($Ship->getName() != $Ship->getIllusionShipName()) {
+									} elseif ($Ship->getName() != $Ship->getIllusionShipName()) {
 										?> <span class="npcColour">(<?php echo $Ship->getIllusionShipName(); ?>)</span><?php
 									}
 								}
@@ -64,7 +64,7 @@ function getPlayerOptionClass($player, $other) {
 								if ($Ship->hasActiveIllusion()) {
 									if (!$ThisPlayer->traderMAPAlliance($Player)) {
 										echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense();
-									} else if ($Ship->getAttackRating() != $Ship->getIllusionAttack() || $Ship->getDefenseRating() != $Ship->getIllusionDefense()) {
+									} elseif ($Ship->getAttackRating() != $Ship->getIllusionAttack() || $Ship->getDefenseRating() != $Ship->getIllusionDefense()) {
 										?> <span class="npcColour">(<?php echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense(); ?>)</span><?php
 									}
 								} ?></td>

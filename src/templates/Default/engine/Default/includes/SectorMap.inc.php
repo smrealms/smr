@@ -16,9 +16,9 @@
 							if ($isCurrentSector) { ?> currentSeclm_seedlist<?php } else { ?> lm_seedlist<?php }
 						}
 						if ($isCurrentSector) { ?> currentSeclm<?php
-						} else if ($isLinkedSector && !$isVisited) { ?> connectSeclmu<?php
-						} else if ($isLinkedSector) { ?> connectSeclm<?php
-						} else if ($isVisited) { ?> normalSeclm<?php
+						} elseif ($isLinkedSector && !$isVisited) { ?> connectSeclmu<?php
+						} elseif ($isLinkedSector) { ?> connectSeclm<?php
+						} elseif ($isVisited) { ?> normalSeclm<?php
 						} else { ?> normalSeclmu<?php } ?>"><?php
 
 						if ($isVisited) {
@@ -59,7 +59,7 @@
 							if ((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($MapPlayer)) {
 								if (($UniGen || $isCurrentSector) && $Sector->hasPort()) {
 									$Port = $Sector->getPort();
-								} else if ($Sector->hasCachedPort($MapPlayer)) {
+								} elseif ($Sector->hasCachedPort($MapPlayer)) {
 									$Port = $Sector->getCachedPort($MapPlayer);
 								} ?>
 								<div class="lmport <?php if ($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?> 
@@ -90,7 +90,7 @@
 								}
 								if ($isVisited) {
 									if ($Sector->hasWarp()) {
-										if ($GalaxyMap) { ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php } else if ($isCurrentSector) { ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapMoveHREF(); ?>"><?php } ?>
+										if ($GalaxyMap) { ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php } elseif ($isCurrentSector) { ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapMoveHREF(); ?>"><?php } ?>
 											<img title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxy()->getDisplayName(); ?>)" alt="Warp to #<?php echo $Sector->getWarp(); ?>" src="images/warp.png" width="16" height="16" /><?php
 										if ($isCurrentSector || $GalaxyMap) { ?></a><?php }
 									}
@@ -130,11 +130,11 @@
 						if ($UniGen) {
 							$UniGen['sector_edit'] = $Sector->getSectorID(); ?>
 							<a class="move_hack" href="<?php echo SmrSession::getNewHREF($UniGen); ?>"></a><?php
-						} else if ($GalaxyMap) { ?>
+						} elseif ($GalaxyMap) { ?>
 							<a class="move_hack" href="<?php echo $Sector->getGalaxyMapHREF(); ?>"></a><?php
-						} else if ($isLinkedSector) { ?>
+						} elseif ($isLinkedSector) { ?>
 							<a class="move_hack" href="<?php echo $Sector->getLocalMapMoveHREF(); ?>"></a><?php
-						} else if ($isCurrentSector) { ?>
+						} elseif ($isCurrentSector) { ?>
 							<a class="move_hack" href="<?php echo Globals::getCurrentSectorHREF(); ?>"></a><?php
 						} ?>
 					</div>

@@ -32,7 +32,7 @@
 				<td class="center shrink noWrap"><?php
 					if ($Port->isUnderAttack()) {
 						?><span class="red bold">ALERT!!</span><?php
-					} else if ($PortIsAtWar) {
+					} elseif ($PortIsAtWar) {
 						?><span class="red bold">WAR!!</span><?php
 					} else { ?>
 						<div class="buttonA">
