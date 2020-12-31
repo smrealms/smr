@@ -105,13 +105,14 @@ if ($submit == 'Create Galaxies') {
 		$numberOfPlanets = Request::getInt('type' . $planetTypeID);
 		for ($i = 1; $i <= $numberOfPlanets; $i++) {
 			$galSector = $galSectors[array_rand($galSectors)];
-			while ($galSector->hasPlanet()) $galSector = $galSectors[array_rand($galSectors)]; //1 per sector
+			while ($galSector->hasPlanet()) {
+				$galSector = $galSectors[array_rand($galSectors)]; //1 per sector
+			}
 			$galSector->createPlanet($planetTypeID);
 		}
 	}
 	$var['message'] = '<span class="green">Success</span> : Succesfully added planets.';
-}
-elseif ($submit == 'Create Ports') {
+} elseif ($submit == 'Create Ports') {
 	$numLevelPorts = [];
 	for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) {
 		$numLevelPorts[$i] = Request::getInt('port' . $i);

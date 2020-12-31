@@ -21,7 +21,7 @@ class BaseIntegrationSpec extends TestCase {
 			$query = "SELECT table_name FROM information_schema.tables WHERE table_rows > 0 AND TABLE_SCHEMA='smr_live'";
 			$rs = self::$conn->query($query);
 			$all = $rs->fetch_all();
-			array_walk_recursive($all, function ($a) {
+			array_walk_recursive($all, function($a) {
 				self::$defaultPopulatedTables[] = "'" . $a . "'";
 			});
 		}

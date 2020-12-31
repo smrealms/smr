@@ -20,7 +20,9 @@ class Sorter {
 	}
 
 	public static function cmpNum($a, $b) {
-		if ($a == $b) return 0;
+		if ($a == $b) {
+			return 0;
+		}
 		return (self::$reverseOrder ? -1 : 1) * ($a < $b ? -1 : 1);
 	}
 

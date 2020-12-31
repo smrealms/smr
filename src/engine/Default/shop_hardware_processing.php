@@ -26,11 +26,16 @@ if ($action == 'Buy') {
 	$ship->increaseHardware($hardware_id, $amount);
 
 	//HoF
-	if ($hardware_id == HARDWARE_COMBAT) $player->increaseHOF($amount, array('Forces', 'Bought', 'Combat Drones'), HOF_ALLIANCE);
-	if ($hardware_id == HARDWARE_SCOUT) $player->increaseHOF($amount, array('Forces', 'Bought', 'Scout Drones'), HOF_ALLIANCE);
-	if ($hardware_id == HARDWARE_MINE) $player->increaseHOF($amount, array('Forces', 'Bought', 'Mines'), HOF_ALLIANCE);
-}
-elseif ($action == 'Sell') {
+	if ($hardware_id == HARDWARE_COMBAT) {
+		$player->increaseHOF($amount, array('Forces', 'Bought', 'Combat Drones'), HOF_ALLIANCE);
+	}
+	if ($hardware_id == HARDWARE_SCOUT) {
+		$player->increaseHOF($amount, array('Forces', 'Bought', 'Scout Drones'), HOF_ALLIANCE);
+	}
+	if ($hardware_id == HARDWARE_MINE) {
+		$player->increaseHOF($amount, array('Forces', 'Bought', 'Mines'), HOF_ALLIANCE);
+	}
+} elseif ($action == 'Sell') {
 	// We only allow selling combat drones
 	if ($hardware_id != HARDWARE_COMBAT) {
 		throw new Exception('This item cannot be sold!');

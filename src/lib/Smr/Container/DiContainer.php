@@ -36,10 +36,10 @@ class DiContainer {
 			 * The factories themselves are able to use dependency injection as well, so we can provide the MySqlProperties
 			 * typehint to make sure the container constructs an instance and provides it to the factory.
 			 */
-			mysqli::class => function (MySqlProperties $mysqlProperties): mysqli {
+			mysqli::class => function(MySqlProperties $mysqlProperties): mysqli {
 				return MySqlDatabase::mysqliFactory($mysqlProperties);
 			},
-			Dotenv::class => function (): Dotenv {
+			Dotenv::class => function(): Dotenv {
 				return Dotenv::createArrayBacked(ROOT);
 			},
 			// Explicitly name all classes that are autowired, so we can take advantage of

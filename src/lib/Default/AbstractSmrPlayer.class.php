@@ -268,7 +268,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Insert a new player into the database. Returns the new player object.
 	 */
-	public static function createPlayer($accountID, $gameID, $playerName, $raceID, $isNewbie, $npc=false) {
+	public static function createPlayer($accountID, $gameID, $playerName, $raceID, $isNewbie, $npc = false) {
 		$db = MySqlDatabase::getInstance();
 		$db->lockTable('player');
 

@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 //first create the game
-$db->query('SELECT game_id FROM game WHERE game_name='.$db->escapeString(Request::get('game_name')).' LIMIT 1');
+$db->query('SELECT game_id FROM game WHERE game_name=' . $db->escapeString(Request::get('game_name')) . ' LIMIT 1');
 if ($db->nextRecord()) {
 	create_error('That game name is already taken.');
 }
 
 $db->query('SELECT game_id FROM game ORDER BY game_id DESC LIMIT 1');
 if ($db->nextRecord()) {
-	$newID = $db->getInt('game_id')+1;
+	$newID = $db->getInt('game_id') + 1;
 } else {
 	$newID = 1;
 }

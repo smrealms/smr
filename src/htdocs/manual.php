@@ -5,8 +5,9 @@ try {
 	require_once(LIB . 'Default/help.inc.php');
 
 	$topic_id = $_SERVER['QUERY_STRING'];
-	if (empty($topic_id) || !is_numeric($topic_id))
+	if (empty($topic_id) || !is_numeric($topic_id)) {
 		$topic_id = 1;
+	}
 	?>
 <!DOCTYPE html>
 
@@ -48,8 +49,7 @@ try {
 
 	</body>
 	</html><?php
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
 	handleException($e);
 }
 ?>

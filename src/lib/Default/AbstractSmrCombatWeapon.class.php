@@ -68,7 +68,7 @@ abstract class AbstractSmrCombatWeapon {
 	protected function &doPlayerDamageToForce(array &$return, AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
 		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstForces($weaponPlayer,$forces);
 		$return['ActualDamage'] =& $forces->doWeaponDamage($return['WeaponDamage']);
-		if($return['ActualDamage']['KillingShot']) {
+		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] =& $forces->killForcesByPlayer($weaponPlayer);
 		}
 		return $return;
@@ -78,7 +78,7 @@ abstract class AbstractSmrCombatWeapon {
 		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPlayer($weaponPlayer,$targetPlayer);
 		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
 
-		if($return['ActualDamage']['KillingShot']) {
+		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] =& $targetPlayer->killPlayerByPlayer($weaponPlayer);
 		}
 		return $return;
@@ -87,7 +87,7 @@ abstract class AbstractSmrCombatWeapon {
 	protected function &doPlayerDamageToPort(array &$return, AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
 		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPort($weaponPlayer,$port);
 		$return['ActualDamage'] =& $port->doWeaponDamage($return['WeaponDamage']);
-		if($return['ActualDamage']['KillingShot']) {
+		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] =& $port->killPortByPlayer($weaponPlayer);
 		}
 		return $return;
@@ -96,7 +96,7 @@ abstract class AbstractSmrCombatWeapon {
 	protected function &doPlayerDamageToPlanet(array &$return, AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet, $delayed) {
 		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPlanet($weaponPlayer,$planet);
 		$return['ActualDamage'] =& $planet->doWeaponDamage($return['WeaponDamage'],$delayed);
-		if($return['ActualDamage']['KillingShot']) {
+		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] =& $planet->killPlanetByPlayer($weaponPlayer);
 		}
 		return $return;
@@ -106,7 +106,7 @@ abstract class AbstractSmrCombatWeapon {
 		$return['WeaponDamage'] =& $this->getModifiedPortDamageAgainstPlayer($port,$targetPlayer);
 		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
 
-		if($return['ActualDamage']['KillingShot']) {
+		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] =& $targetPlayer->killPlayerByPort($port);
 		}
 		return $return;
@@ -116,7 +116,7 @@ abstract class AbstractSmrCombatWeapon {
 		$return['WeaponDamage'] =& $this->getModifiedPlanetDamageAgainstPlayer($planet,$targetPlayer);
 		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
 
-		if($return['ActualDamage']['KillingShot']) {
+		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] =& $targetPlayer->killPlayerByPlanet($planet);
 		}
 		return $return;
@@ -126,7 +126,7 @@ abstract class AbstractSmrCombatWeapon {
 		$return['WeaponDamage'] =& $this->getModifiedForceDamageAgainstPlayer($forces,$targetPlayer);
 		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
 
-		if($return['ActualDamage']['KillingShot']) {
+		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] =& $targetPlayer->killPlayerByForces($forces);
 		}
 		return $return;

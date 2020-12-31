@@ -42,7 +42,7 @@ abstract class SmrPlanetType {
 	/**
 	 * Access properties of structures that this planet type can build.
 	 */
-	public function structureTypes($structureID=false) {
+	public function structureTypes($structureID = false) {
 		if (!isset($this->structures)) {
 			foreach (static::STRUCTURES as $ID => $Info) {
 				$this->structures[$ID] = new SmrPlanetStructureType($ID, $Info);
