@@ -11,7 +11,7 @@ try {
 		// ensure that the session cannot expire before validation, this script
 		// immediately forwards to the social login URL after it is generated.
 
-		require_once('config.inc');
+		require_once('../bootstrap.php');
 		try {
 			header('Location: ' . SocialLogin::get($type)->getLoginUrl());
 		} catch (SocialLoginNotFound $e) {

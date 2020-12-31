@@ -3,7 +3,7 @@ ini_set('date.timezone', 'UTC');
 error_reporting(E_ALL);
 
 // Repository paths
-const ROOT = __DIR__ . '/../../';
+const ROOT = __DIR__ . '/../';
 const LIB = ROOT . 'src/lib/';
 const ENGINE = ROOT . 'src/engine/';
 const WWW = ROOT . 'src/htdocs/';

@@ -2,7 +2,7 @@
 // Callback script for player voting on external sites
 
 try {
-	require_once('config.inc');
+	require_once('../bootstrap.php');
 
 	if (Request::has('account') && Request::has('game') && Request::has('link')) {
 		// callback from TWG

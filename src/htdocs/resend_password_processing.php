@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 try {
-	require_once('config.inc');
+	require_once('../bootstrap.php');
 
 	if (empty(Request::get('email'))) {
 		header('Location: /error.php?msg=' . rawurlencode('You must specify an e-mail address!'));

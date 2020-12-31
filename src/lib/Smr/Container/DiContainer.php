@@ -65,7 +65,7 @@ class DiContainer {
 
 	/**
 	 * Create a new DI\Container instance.
-	 * This needs to be done once during a bootstrapping script, like htdocs/config.inc
+	 * This needs to be done once during a bootstrapping script, like bootstrap.php
 	 */
 	public static function initializeContainer(): void {
 		self::$instance = new DiContainer();

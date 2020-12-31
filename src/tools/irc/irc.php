@@ -22,7 +22,7 @@ function write_log_message($msg)
 }
 
 // config file
-require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
+require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
 // bot config
 require_once(CONFIG . 'irc/config.specific.php');
 // some libs

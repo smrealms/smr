@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-require_once('../htdocs/config.inc');
+require_once('../bootstrap.php');
 
 $db = MySqlDatabase::getInstance();
 $db->query('SELECT account_id,sector_id,game_id FROM player_visited_port');

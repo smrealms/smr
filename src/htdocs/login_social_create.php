@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 try {
-	require_once('config.inc');
+	require_once('../bootstrap.php');
 
 	if (session_status() === PHP_SESSION_NONE) {
 		session_start();

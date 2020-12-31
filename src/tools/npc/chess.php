@@ -2,7 +2,7 @@
 try {
 	echo '<pre>';
 	// global config
-	require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
+	require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
 	// bot config
 	require_once(CONFIG . 'npc/config.specific.php');
 

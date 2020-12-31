@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 try {
-	require_once('config.inc');
+	require_once('../bootstrap.php');
 	require_once(get_file_loc('smr.inc'));
 	
 	// avoid site caching
