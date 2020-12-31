@@ -44,7 +44,7 @@ if (!$sector->isLinked($var['target_sector'])) {
 if ($player->getLastSectorID() != $var['target_sector']) {
 	// Update the "green sector"
 	$player->setLastSectorID($var['target_sector']);
-	require('sector_mines.inc');
+	require('sector_mines.inc.php');
 }
 
 // log action
@@ -82,7 +82,7 @@ $sector->markVisited($player);
 $sector->enteringSector($player, MOVEMENT_WALK);
 
 // If you bump into mines while entering the target sector...
-require('sector_mines.inc');
+require('sector_mines.inc.php');
 
 // otherwise
 forward(create_container('skeleton.php', $var['target_page']));

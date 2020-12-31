@@ -19,7 +19,7 @@ try {
 		exit;
 	}
 
-	require_once(LIB . 'Default/smr.inc');
+	require_once(LIB . 'Default/smr.inc.php');
 
 	// Is the player allowed to get free turns from this link right now?
 	// If player clicked a valid free turns link, they have `turns_claimed=false`

@@ -188,7 +188,7 @@ require_once('config.php');
 
 // Set up vendor and class autoloaders
 require_once(ROOT . 'vendor/autoload.php');
-require_once(LIB . 'autoload.inc');
+require_once(LIB . 'autoload.inc.php');
 spl_autoload_register('get_class_loc');
 
 // Set up dependency injection container

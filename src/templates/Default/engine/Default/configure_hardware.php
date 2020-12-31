@@ -35,5 +35,5 @@ if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()
 			</table>
 		</form><?php
 	}
-	$this->includeTemplate('includes/JumpDrive.inc');
+	$this->includeTemplate('includes/JumpDrive.inc.php');
 } ?>

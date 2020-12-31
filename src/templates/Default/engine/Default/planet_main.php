@@ -92,12 +92,12 @@ if (isset($Msg)) {
 		</td><?php
 		if (isset($Ticker)) { ?>
 			<td><?php
-				$this->includeTemplate('includes/Ticker.inc'); ?>
+				$this->includeTemplate('includes/Ticker.inc.php'); ?>
 			</td><?php
 		} ?>
 	</tr>
 </table>
 <p><a href="<?php echo $LaunchLink; ?>" class="submitStyle">Launch</a></p>
 <?php
-$this->includeTemplate('includes/SectorPlayers.inc', array('PlayersContainer'=>$ThisPlanet));
+$this->includeTemplate('includes/SectorPlayers.inc.php', array('PlayersContainer'=>$ThisPlanet));
 ?>

@@ -26,7 +26,7 @@ require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
 // bot config
 require_once(CONFIG . 'irc/config.specific.php');
 // some libs
-require_once(get_file_loc('smr.inc'));
+require_once(get_file_loc('smr.inc.php'));
 
 // timer events
 $events = array();

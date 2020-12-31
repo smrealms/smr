@@ -14,7 +14,7 @@ while ($db->nextRecord()) {
 }
 $template->assign('AnonAccounts', $anonAccounts);
 
-require_once(get_file_loc('bar.functions.inc'));
+require_once(get_file_loc('bar.inc.php'));
 checkForLottoWinner($player->getGameID());
 $template->assign('LottoInfo', getLottoInfo($player->getGameID()));
 

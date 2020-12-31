@@ -2,7 +2,7 @@
 try {
 
 	require_once('../bootstrap.php');
-	require_once(LIB . 'Default/smr.inc');
+	require_once(LIB . 'Default/smr.inc.php');
 
 	// ********************************
 	// *
@@ -80,7 +80,7 @@ try {
 	// *
 	// ********************************
 
-	require_once(LIB . 'Default/login_processing.inc');
+	require_once(LIB . 'Default/login_processing.inc.php');
 	redirectIfDisabled($account);
 	redirectIfOffline($account);
 

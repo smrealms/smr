@@ -1,12 +1,12 @@
 <table class="fullwidth" style="border:none">
 	<tr>
 		<td class="top nopad"><?php
-			$this->includeTemplate('includes/SectorNavigation.inc'); ?>
+			$this->includeTemplate('includes/SectorNavigation.inc.php'); ?>
 		</td>
 		<td class="top nopad" style="width:32em;"><?php
-			$this->includeTemplate('includes/PlottedCourse.inc');
-			$this->includeTemplate('includes/Ticker.inc');
-			$this->includeTemplate('includes/Missions.inc'); ?>
+			$this->includeTemplate('includes/PlottedCourse.inc.php');
+			$this->includeTemplate('includes/Ticker.inc.php');
+			$this->includeTemplate('includes/Missions.inc.php'); ?>
 			<span id="secmess"><?php
 				if (isset($ErrorMessage)) {
 					echo $ErrorMessage; ?><br /><?php
@@ -25,13 +25,13 @@
 				}
 				if (isset($AttackResults)) {
 					if ($AttackResultsType == 'PLAYER') {
-						$this->includeTemplate('includes/TraderFullCombatResults.inc', array('TraderCombatResults'=>$AttackResults, 'MinimalDisplay'=>true));
+						$this->includeTemplate('includes/TraderFullCombatResults.inc.php', array('TraderCombatResults'=>$AttackResults, 'MinimalDisplay'=>true));
 					} elseif ($AttackResultsType == 'FORCE') {
-						$this->includeTemplate('includes/ForceFullCombatResults.inc', array('FullForceCombatResults'=>$AttackResults, 'MinimalDisplay'=>true));
+						$this->includeTemplate('includes/ForceFullCombatResults.inc.php', array('FullForceCombatResults'=>$AttackResults, 'MinimalDisplay'=>true));
 					} elseif ($AttackResultsType == 'PORT') {
-						$this->includeTemplate('includes/PortFullCombatResults.inc', array('FullPortCombatResults'=>$AttackResults, 'MinimalDisplay'=>true, 'AlreadyDestroyed'=>false));
+						$this->includeTemplate('includes/PortFullCombatResults.inc.php', array('FullPortCombatResults'=>$AttackResults, 'MinimalDisplay'=>true, 'AlreadyDestroyed'=>false));
 					} elseif ($AttackResultsType == 'PLANET') {
-						$this->includeTemplate('includes/PlanetFullCombatResults.inc', array('FullPlanetCombatResults'=>$AttackResults, 'MinimalDisplay'=>true, 'AlreadyDestroyed'=>false));
+						$this->includeTemplate('includes/PlanetFullCombatResults.inc.php', array('FullPlanetCombatResults'=>$AttackResults, 'MinimalDisplay'=>true, 'AlreadyDestroyed'=>false));
 					} ?><br /><?php
 				}
 				if (isset($VarMessage)) {
@@ -41,9 +41,9 @@
 		</td>
 	</tr>
 </table><br /><?php
-$this->includeTemplate('includes/SectorPlanet.inc');
-$this->includeTemplate('includes/SectorPort.inc');
-$this->includeTemplate('includes/SectorLocations.inc');
-$this->includeTemplate('includes/SectorPlayers.inc', array('PlayersContainer'=>$ThisSector));
-$this->includeTemplate('includes/SectorForces.inc'); ?>
+$this->includeTemplate('includes/SectorPlanet.inc.php');
+$this->includeTemplate('includes/SectorPort.inc.php');
+$this->includeTemplate('includes/SectorLocations.inc.php');
+$this->includeTemplate('includes/SectorPlayers.inc.php', array('PlayersContainer'=>$ThisSector));
+$this->includeTemplate('includes/SectorForces.inc.php'); ?>
 <br />

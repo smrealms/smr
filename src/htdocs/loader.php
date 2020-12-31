@@ -52,7 +52,7 @@ try {
 	// check if we got a sn number with our url
 	if (empty($sn)) {
 		if (!USING_AJAX) {
-			require_once(get_file_loc('smr.inc'));
+			require_once(get_file_loc('smr.inc.php'));
 			create_error('Your browser lost the SN. Try to reload the page!');
 		} else {
 			exit;
@@ -62,7 +62,7 @@ try {
 	// do we have such a container object in the db?
 	if (!($var = SmrSession::retrieveVar($sn))) {
 		if (!USING_AJAX) {
-			require_once(get_file_loc('smr.inc'));
+			require_once(get_file_loc('smr.inc.php'));
 			create_error('Please avoid using the back button!');
 		} else {
 			exit;
@@ -84,11 +84,11 @@ try {
 		$overrideGameID = SmrSession::getGameID();
 	}
 
-	require_once(get_file_loc('smr.inc'));
+	require_once(get_file_loc('smr.inc.php'));
 
 	$account = SmrSession::getAccount();
 	// get reason for disabled user
-	require_once(LIB . 'Default/login_processing.inc');
+	require_once(LIB . 'Default/login_processing.inc.php');
 	if (($disabled = redirectIfDisabled($account)) !== false) {
 		// save session (incase we forward)
 		SmrSession::update();

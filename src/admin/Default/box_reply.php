@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-require_once(get_file_loc('message.functions.inc'));
+require_once(get_file_loc('messages.inc.php'));
 $boxName = getAdminBoxNames()[$var['box_type_id']];
 $template->assign('PageTopic', 'Reply To ' . $boxName);
 

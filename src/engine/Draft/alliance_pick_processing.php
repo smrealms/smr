@@ -10,7 +10,7 @@ if ($db->nextRecord()) {
 	create_error('You cannot pick another leader.');
 }
 
-require_once('alliance_pick.inc');
+require_once(get_file_loc('alliance_pick.inc.php'));
 $teams = get_draft_teams($player->getGameID());
 if (!$teams[$player->getAccountID()]['CanPick']) {
 	create_error('You have to wait for others to pick first.');

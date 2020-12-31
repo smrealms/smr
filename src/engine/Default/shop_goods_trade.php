@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 $template->assign('PageTopic', 'Negotiate Price');
-require_once(LIB . 'Default/shop_goods.inc');
+require_once(LIB . 'Default/shop_goods.inc.php');
 // creates needed objects
 $port = $player->getSectorPort();
 // get values from request

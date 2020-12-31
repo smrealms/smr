@@ -1,4 +1,4 @@
-<?php $this->includeTemplate('includes/CommonNews.inc'); ?>
+<?php $this->includeTemplate('includes/CommonNews.inc.php'); ?>
 
 <div class="center">View News entries</div><br />
 <form name="ViewNewsForm" method="POST" action="<?php echo $ViewNewsFormHref; ?>">
@@ -16,7 +16,7 @@ if (!empty($NewsItems)) { ?>
 	<div class="center">
 		Showing <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 	</div><?php
-	$this->includeTemplate('includes/NewsTable.inc');
+	$this->includeTemplate('includes/NewsTable.inc.php');
 } else {
 	?>No news to read.<?php
 } ?>

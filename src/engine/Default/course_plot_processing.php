@@ -24,4 +24,4 @@ $player->log(LOG_TYPE_MOVEMENT, 'Player plots to ' . $target . '.');
 $path = Plotter::findReversiblePathToX($targetSector, $startSector, true);
 
 // common processing
-require('course_plot_processing.inc');
+require('course_plot_processing.inc.php');

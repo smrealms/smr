@@ -7,7 +7,7 @@ function create_error_offline($msg) {
 
 try {
 	require_once('../../bootstrap.php');
-	require_once(LIB . 'Default/smr.inc');
+	require_once(LIB . 'Default/smr.inc.php');
 	require_once(LIB . 'Album/album_functions.php');
 
 	if (!SmrSession::hasAccount()) {

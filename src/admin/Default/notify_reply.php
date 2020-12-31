@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 $template->assign('PageTopic', 'Reply To Reported Messages');
 
-require_once(get_file_loc('message.functions.inc'));
+require_once(get_file_loc('messages.inc.php'));
 
 $container = create_container('notify_reply_processing.php');
 transfer('game_id');

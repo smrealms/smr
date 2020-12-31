@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-require('planet.inc');
+require('planet.inc.php');
 
 $container = create_container('planet_ownership_processing.php');
 $template->assign('ProcessingHREF', SmrSession::getNewHREF($container));

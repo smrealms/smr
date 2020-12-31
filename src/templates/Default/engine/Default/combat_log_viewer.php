@@ -15,15 +15,15 @@ Sector <?php echo $CombatLogSector ?><br />
 
 <?php
 if ($CombatResultsType == 'PLAYER') {
-	$this->includeTemplate('includes/TraderFullCombatResults.inc', array('TraderCombatResults'=>$CombatResults));
+	$this->includeTemplate('includes/TraderFullCombatResults.inc.php', array('TraderCombatResults'=>$CombatResults));
 } elseif ($CombatResultsType == 'FORCE') {
-	$this->includeTemplate('includes/ForceFullCombatResults.inc', array('FullForceCombatResults'=>$CombatResults));
+	$this->includeTemplate('includes/ForceFullCombatResults.inc.php', array('FullForceCombatResults'=>$CombatResults));
 } elseif ($CombatResultsType == 'PORT') {
-	$this->includeTemplate('includes/PortFullCombatResults.inc', array('FullPortCombatResults'=>$CombatResults,
+	$this->includeTemplate('includes/PortFullCombatResults.inc.php', array('FullPortCombatResults'=>$CombatResults,
 	                                                                  'MinimalDisplay'=>false,
 	                                                                  'AlreadyDestroyed'=>false));
 } elseif ($CombatResultsType == 'PLANET') {
-	$this->includeTemplate('includes/PlanetFullCombatResults.inc', array('FullPlanetCombatResults'=>$CombatResults,
+	$this->includeTemplate('includes/PlanetFullCombatResults.inc.php', array('FullPlanetCombatResults'=>$CombatResults,
 	                                                                    'MinimalDisplay'=>false,
 	                                                                    'AlreadyDestroyed'=>false));
 }

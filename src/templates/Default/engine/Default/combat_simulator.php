@@ -7,13 +7,13 @@
 		<tr>
 			<td class="top">
 				Attackers<br />
-				<?php $this->includeTemplate('includes/CombatSimTeamDetails.inc', array('Team'=>$Attackers, 'MemberDescription'=>'Attacker', 'MemberInputName'=>'attackers')); ?>
+				<?php $this->includeTemplate('includes/CombatSimTeamDetails.inc.php', array('Team'=>$Attackers, 'MemberDescription'=>'Attacker', 'MemberInputName'=>'attackers')); ?>
 			</td>
 		</tr>
 		<tr>
 			<td class="top">
 				Defenders<br />
-				<?php $this->includeTemplate('includes/CombatSimTeamDetails.inc', array('Team'=>$Defenders, 'MemberDescription'=>'Defender', 'MemberInputName'=>'defenders')); ?>
+				<?php $this->includeTemplate('includes/CombatSimTeamDetails.inc.php', array('Team'=>$Defenders, 'MemberDescription'=>'Defender', 'MemberInputName'=>'defenders')); ?>
 			</td>
 		</tr>
 		<tr>
@@ -27,6 +27,6 @@
 	</table>
 </form><?php
 if ($TraderCombatResults) {
-	$this->includeTemplate('includes/TraderFullCombatResults.inc');
+	$this->includeTemplate('includes/TraderFullCombatResults.inc.php');
 	?><br /><?php
 } ?>

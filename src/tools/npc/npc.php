@@ -26,8 +26,8 @@ require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
 // bot config
 require_once(CONFIG . 'npc/config.specific.php');
 // needed libs
-require_once(get_file_loc('smr.inc'));
-require_once(get_file_loc('shop_goods.inc'));
+require_once(get_file_loc('smr.inc.php'));
+require_once(get_file_loc('shop_goods.inc.php'));
 
 // Raise exceptions for all types of errors for improved error reporting
 // and to attempt to shut down the NPCs cleanly on errors.

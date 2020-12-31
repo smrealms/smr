@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head><?php
-		$this->includeTemplate('includes/Head.inc'); ?>
+		$this->includeTemplate('includes/Head.inc.php'); ?>
 	</head>
 	<body>
 		<div id="Container">
@@ -73,14 +73,14 @@
 					<td class="rightCell bottom"><?php
 						if (isset($ThisPlayer)) { ?>
 							<div class="rightInfoMail noWrap"><?php
-								$this->includeTemplate('includes/UnreadMessages.inc'); ?>
+								$this->includeTemplate('includes/UnreadMessages.inc.php'); ?>
 							</div><?php
 						} ?>
 					</td>
 				</tr>
 				<tr>
 					<td class="leftCell">
-						<?php $this->includeTemplate('includes/LeftPanel.inc'); ?>
+						<?php $this->includeTemplate('includes/LeftPanel.inc.php'); ?>
 					</td>
 					
 					<td class="centerContent">
@@ -88,27 +88,27 @@
 							if (isset($PageTopic)) {
 								?><h1><?php echo $PageTopic; ?></h1><br /><?php
 							}
-							$this->includeTemplate('includes/menu.inc');
+							$this->includeTemplate('includes/menu.inc.php');
 							$this->includeTemplate($TemplateBody); ?>
 						</div>
 						<div class="footer_left">
-							<?php $this->includeTemplate('includes/VoteLinks.inc'); ?>
+							<?php $this->includeTemplate('includes/VoteLinks.inc.php'); ?>
 						</div>
 						<div class="footer_right">
-							<?php $this->includeTemplate('includes/copyright.inc'); ?>
+							<?php $this->includeTemplate('includes/copyright.inc.php'); ?>
 						</div>
 					</td>
 
 					<td class="rightCell top"><?php
 						if (isset($ThisPlayer)) { ?>
 							<div class="rightInfoShip noWrap">
-								<?php $this->includeTemplate('includes/RightPanelShip.inc'); ?>
+								<?php $this->includeTemplate('includes/RightPanelShip.inc.php'); ?>
 							</div><?php
 						} ?>
 					</td>
 				</tr>
 			</table>
 		</div>
-		<?php $this->includeTemplate('includes/EndingJavascript.inc'); ?>
+		<?php $this->includeTemplate('includes/EndingJavascript.inc.php'); ?>
 	</body>
 </html>

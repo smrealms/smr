@@ -57,7 +57,7 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 					} ?>.
 					<br /><?php
 					if ($ShotHit && $ActualDamage['KillingShot']) {
-						$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>$WeaponResults['KillResults'],'TargetPlayer'=>$TargetPlayer,'ShootingPlayer'=>$ShootingPlayer));
+						$this->includeTemplate('includes/TraderCombatKillMessage.inc.php',array('KillResults'=>$WeaponResults['KillResults'],'TargetPlayer'=>$TargetPlayer,'ShootingPlayer'=>$ShootingPlayer));
 					}
 				}
 			}
@@ -112,7 +112,7 @@ if(is_array($TraderTeamCombatResults['Traders'])) {
 				} ?>.
 				<br /><?php
 				if($ActualDamage['KillingShot']) {
-					$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>$Drones['KillResults'],'TargetPlayer'=>$TargetPlayer,'ShootingPlayer'=>$ShootingPlayer));
+					$this->includeTemplate('includes/TraderCombatKillMessage.inc.php',array('KillResults'=>$Drones['KillResults'],'TargetPlayer'=>$TargetPlayer,'ShootingPlayer'=>$ShootingPlayer));
 				}
 			}
 		}

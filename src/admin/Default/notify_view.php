@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 $template->assign('PageTopic', 'Viewing Reported Messages');
 
-require_once(get_file_loc('message.functions.inc'));
+require_once(get_file_loc('messages.inc.php'));
 
 $container = create_container('notify_delete_processing.php');
 $template->assign('DeleteHREF', SmrSession::getNewHREF($container));

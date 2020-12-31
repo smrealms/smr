@@ -10,11 +10,11 @@
 
 	if ($AllBounties) { ?>
 		<div class="center">Most wanted by the Federal Government</div><br /><?php
-		$this->includeTemplate('includes/BountyList.inc', ['Bounties' => $AllBounties]);
+		$this->includeTemplate('includes/BountyList.inc.php', ['Bounties' => $AllBounties]);
 	}
 	if ($MyBounties) { ?>
 		<div class="center">Claimable Bounties</div><br /><?php
-		$this->includeTemplate('includes/BountyList.inc', ['Bounties' => $MyBounties]);
+		$this->includeTemplate('includes/BountyList.inc.php', ['Bounties' => $MyBounties]);
 	}
 
 	if (isset($JoinHREF)) { ?>

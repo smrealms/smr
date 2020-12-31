@@ -28,4 +28,4 @@ if (count($EditGames) == 0) { ?>
 <br /><br />
 
 <h1>Create New Game</h1>
-<?php $this->includeTemplate('1.6/GameDetails.inc', ['ProcessingHREF' => $CreateGalaxiesHREF]); ?>
+<?php $this->includeTemplate('1.6/GameDetails.inc.php', ['ProcessingHREF' => $CreateGalaxiesHREF]); ?>

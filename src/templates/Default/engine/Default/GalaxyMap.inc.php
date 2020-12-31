@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head><?php
-		$this->includeTemplate('includes/Head.inc');
+		$this->includeTemplate('includes/Head.inc.php');
 		if (isset($FocusSector)) { ?>
 			<script>
 				$(function() {
@@ -49,14 +49,14 @@
 						</form>
 					</td>
 					<td class="bottom">
-						<?php $this->includeTemplate('includes/SectorMapOptions.inc'); ?>
+						<?php $this->includeTemplate('includes/SectorMapOptions.inc.php'); ?>
 					</td>
 				</tr>
 			</table>
 		</div>
 
 		<div class="gal_map_main">
-			<?php $this->includeTemplate('includes/SectorMap.inc', array('GalaxyMap'=>true)); ?>
+			<?php $this->includeTemplate('includes/SectorMap.inc.php', array('GalaxyMap'=>true)); ?>
 		</div>
 	</body>
 </html>

@@ -1,4 +1,4 @@
-<?php $this->includeTemplate('includes/ForceFullCombatResults.inc'); ?><br />
+<?php $this->includeTemplate('includes/ForceFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php
 	if (isset($Target)) { ?>
