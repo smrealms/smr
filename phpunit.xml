@@ -2,7 +2,7 @@
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.4/phpunit.xsd"
-	bootstrap="htdocs/config.inc"
+	bootstrap="src/htdocs/config.inc"
 	cacheResultFile=".phpunit.cache/test-results"
 	executionOrder="depends,defects"
 	beStrictAboutTodoAnnotatedTests="true"
@@ -18,7 +18,7 @@
 		cacheDirectory=".phpunit.cache/code-coverage"
 		includeUncoveredFiles="true">
 		<include>
-			<directory suffix=".php">lib</directory>
+			<directory suffix=".php">src/lib</directory>
 		</include>
 		<report>
 			<clover outputFile="test/coverage.xml" />

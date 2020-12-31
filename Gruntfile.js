@@ -5,7 +5,7 @@ module.exports = function(grunt) {
             target: {
                 files: [{
                     expand: true,
-                    src: 'htdocs/js/**/*.js',
+                    src: 'src/htdocs/js/**/*.js',
                 }]
             }
         },
@@ -14,7 +14,7 @@ module.exports = function(grunt) {
             target: {
                 files: [{
                     expand: true,
-                    src: 'htdocs/css/**/*.css',
+                    src: 'src/htdocs/css/**/*.css',
                 }]
             }
         },
@@ -23,16 +23,16 @@ module.exports = function(grunt) {
             options: {
                 deleteOriginals: true,
                 baseDir: 'htdocs/',
-                assets: ['css/**/*.css', 'js/**/*.js'],
+                assets: ['src/css/**/*.css', 'src/js/**/*.js'],
             },
             taskName: {
                 files: [{
                     expand: true,
                     src: [
-                        'templates/**/*.php',
-                        'templates/**/*.inc',
-                        'htdocs/**/*.php',
-                        'htdocs/**/*.html',
+                        'src/templates/**/*.php',
+                        'src/templates/**/*.inc',
+                        'src/htdocs/**/*.php',
+                        'src/htdocs/**/*.html',
                     ],
                 }]
             }

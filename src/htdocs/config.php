@@ -3,15 +3,15 @@ ini_set('date.timezone', 'UTC');
 error_reporting(E_ALL);
 
 // Repository paths
-const ROOT = __DIR__ . '/../';
-const LIB = ROOT . 'lib/';
-const ENGINE = ROOT . 'engine/';
-const WWW = ROOT . 'htdocs/';
+const ROOT = __DIR__ . '/../../';
+const LIB = ROOT . 'src/lib/';
+const ENGINE = ROOT . 'src/engine/';
+const WWW = ROOT . 'src/htdocs/';
 const UPLOAD = WWW . 'upload/';
-const ADMIN = ROOT . 'admin/';
-const TOOLS = ROOT . 'tools/';
+const ADMIN = ROOT . 'src/admin/';
+const TOOLS = ROOT . 'src/tools/';
 const CONFIG = ROOT . 'config/';
-const TEMPLATES_DIR = ROOT . 'templates/';
+const TEMPLATES_DIR = ROOT . 'src/templates/';
 
 // Define server-specific constants
 require_once(CONFIG . 'config.specific.php');

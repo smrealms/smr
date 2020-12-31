@@ -6,12 +6,7 @@ WORKDIR /smr/
 RUN npm i --save grunt grunt-contrib-uglify grunt-contrib-cssmin grunt-cache-bust@1.4.1
 
 # Copy the SMR source code directories
-COPY admin admin
-COPY engine engine
-COPY htdocs htdocs
-COPY lib lib
-COPY templates templates
-COPY tools tools
+COPY src src
 
 # Perform CSS/JS minification and cache busting
 COPY Gruntfile.js .
@@ -52,10 +47,10 @@ RUN if [ "$PHP_DEBUG" = "1" ] ; then pecl install xdebug-2.8.1 \
 	fi
 
 COPY --from=builder /smr .
-RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
+RUN rm -rf /var/www/html/ && ln -s "$(pwd)/src/htdocs" /var/www/html
 
 # Make the upload directory writable by the apache user
-RUN chown www-data ./htdocs/upload
+RUN chown www-data ./src/htdocs/upload
 
 # Leverage browser caching of static assets using apache's mod_headers
 COPY apache/cache-static.conf /etc/apache2/conf-enabled/cache-static.conf

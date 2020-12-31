@@ -15,13 +15,12 @@
 
 # /config/
 /config/config.specific.php
-/config/SmrMySqlSecrets.inc
 /config/discord/config.specific.php
 /config/irc/config.specific.php
 /config/npc/config.specific.php
 
 # /htdocs/
-/htdocs/upload
+/src/htdocs/upload
 
 # DKIM private keys
 /opendkim

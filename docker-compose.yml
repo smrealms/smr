@@ -31,7 +31,7 @@ x-smr-common: &smr-common
         - mysql
         - smtp
     volumes:
-        - ./vol_upload:/smr/htdocs/upload
+        - ./vol_upload:/smr/src/htdocs/upload
         - ./config:/smr/config:ro
         - ./.env:/smr/.env:ro
 
@@ -80,11 +80,7 @@ services:
             - ./config:/smr/config:ro
             - ./.env:/smr/.env:ro
             # Mount the source code instead of copying it.
-            - ./admin:/smr/admin
-            - ./engine:/smr/engine
-            - ./htdocs:/smr/htdocs
-            - ./lib:/smr/lib
-            - ./templates:/smr/templates
+            - ./src:/smr/src
         environment:
             DISABLE_PHPDI_COMPILATION: "true"
 
@@ -130,13 +126,8 @@ services:
             - ./test.env:/smr/.env:ro
             - ./phpunit.xml:/smr/phpunit.xml
             # Mount the source code instead of copying it.
-            - ./admin:/smr/admin
-            - ./engine:/smr/engine
-            - ./htdocs:/smr/htdocs
-            - ./lib:/smr/lib
-            - ./templates:/smr/templates
+            - ./src:/smr/src
             - ./test:/smr/test
-            - ./tools:/smr/tools
         depends_on:
             - mysql-integration-test
         labels:
@@ -158,15 +149,15 @@ services:
             - mysql
 
     discord:
-        command: php tools/discord/bot.php
+        command: php src/tools/discord/bot.php
         <<: *smr-cli
 
     irc:
-        command: php tools/irc/irc.php
+        command: php src/tools/irc/irc.php
         <<: *smr-cli
 
     npc:
-        command: php tools/npc/npc.php
+        command: php src/tools/npc/npc.php
         <<: *smr-cli
 
     traefik:
