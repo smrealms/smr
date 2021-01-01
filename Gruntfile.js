@@ -22,15 +22,14 @@ module.exports = function(grunt) {
         cacheBust: {
             options: {
                 deleteOriginals: true,
-                baseDir: 'htdocs/',
-                assets: ['src/css/**/*.css', 'src/js/**/*.js'],
+                baseDir: 'src/htdocs/',
+                assets: ['css/**/*.css', 'js/**/*.js'],
             },
             taskName: {
                 files: [{
                     expand: true,
                     src: [
-                        'src/templates/**/*.php',
-                        'src/htdocs/**/*.php',
+                        'src/**/*.php',
                         'src/htdocs/**/*.html',
                     ],
                 }]
