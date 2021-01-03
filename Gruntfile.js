@@ -28,10 +28,7 @@ module.exports = function(grunt) {
             taskName: {
                 files: [{
                     expand: true,
-                    src: [
-                        'src/**/*.php',
-                        'src/htdocs/**/*.html',
-                    ],
+                    src: 'src/**/*.php',
                 }]
             }
         }

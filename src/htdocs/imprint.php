@@ -1,9 +1,12 @@
+<?php declare(strict_types=1);
+require_once('../bootstrap.php');
+?>
 <!DOCTYPE html>
 
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="css/Default.css">
-		<link rel="stylesheet" type="text/css" href="css/Default/Default.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS; ?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS_COLOUR; ?>">
 		<title>Imprint</title>
 		<meta http-equiv='pragma' content='no-cache'>
 	</head>

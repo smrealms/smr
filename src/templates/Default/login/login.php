@@ -109,7 +109,7 @@ if (isset($Story)) { ?>
 } ?>
 <br /><br />
 <div class="center">
-	<span class="small"><a href="imprint.html">[Imprint]</a></span>
+	<span class="small"><a href="imprint.php">[Imprint]</a></span>
 </div>
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
