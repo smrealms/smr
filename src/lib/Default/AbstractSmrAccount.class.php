@@ -243,7 +243,10 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function isDisabled() : bool {
+	/**
+	 * @return array|false
+	 */
+	public function isDisabled() {
 		$this->db->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
 			'WHERE ' . $this->SQL . ' LIMIT 1');
 		if ($this->db->nextRecord()) {
