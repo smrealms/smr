@@ -44,6 +44,9 @@
 			"docker-compose rm --force"
 		]
 	},
+	"config": {
+		"process-timeout": 0
+	},
 	"autoload-dev": {
 		"psr-4": {
 			"SmrTest\\": "test/SmrTest/"
