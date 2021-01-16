@@ -122,7 +122,7 @@ services:
         <<: *smr-common
         command: /smr/vendor/bin/phpunit test
         volumes:
-            - ./config:/smr/config:ro
+            - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
             - ./test.env:/smr/.env:ro
             - ./phpunit.xml:/smr/phpunit.xml
             # Mount the source code instead of copying it.
