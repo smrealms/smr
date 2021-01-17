@@ -2,9 +2,8 @@
 
 use Smr\Container\DiContainer;
 
-function logException(Throwable $e) {
+function logException(Throwable $e) : void {
 	global $account, $var, $player;
-	$errorType = 'Unexpected Game Error!';
 	$message = '';
 	$delim = "\n\n-----------\n\n";
 
@@ -46,15 +45,13 @@ function logException(Throwable $e) {
 	// Unconditionally send error message to the log
 	error_log($message);
 
-	if (defined('NPC_SCRIPT') && ENABLE_DEBUG) {
-		// In debug mode, we normally exit, but NPCs must cleanup after an error
-		return;
-	}
-
 	if (ENABLE_DEBUG) {
-		// Display error message on the page and then exit
-		echo nl2br($message);
-		exit;
+		// Display error message on the page (redundant with error_log for CLI)
+		if (php_sapi_name() !== 'cli') {
+			echo nl2br($message);
+		}
+		// Skip remaining log methods (too disruptive during development)
+		return;
 	}
 
 	// Send error message to the in-game auto bugs mailbox
@@ -80,26 +77,24 @@ function logException(Throwable $e) {
 		}
 		$mail->send();
 	}
-
-	return $errorType;
 }
 
 function handleException(Throwable $e) {
 	// The real error message may display sensitive information, so we
 	// need to catch any exceptions that are thrown while logging the error.
 	try {
-		$errorType = logException($e);
+		logException($e);
+		$errorType = 'Unexpected Error!';
 	} catch (Throwable $e) {
 		error_log($e);
 		$errorType = 'This error cannot be automatically reported. Please notify an admin!';
 	}
 
 	// If this is an ajax update, we don't really have a way to redirect
-	// to an error page at this time, so we just quit.
-	if (!defined('USING_AJAX') || !USING_AJAX) {
+	// to an error page at this time.
+	if (!ENABLE_DEBUG && (!defined('USING_AJAX') || !USING_AJAX)) {
 		header('location: /error.php?msg=' . urlencode($errorType));
 	}
-	exit;
 }
 
 /**
