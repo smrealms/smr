@@ -56,6 +56,7 @@ const MAX_IMAGE_HEIGHT = 30;
 
 const MULTI_CHECKING_COOKIE_VERSION = 'v3';
 
+const LISTJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js';
 const WIKI_URL = 'https://wiki.smrealms.de';
 const DISCORD_URL = 'https://discord.me/smrealms';
 const DISCORD_SERVER_ID = '376433706916642826';

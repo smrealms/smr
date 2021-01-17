@@ -11,7 +11,7 @@ foreach ($this->jsAlerts as $string) {
 }
 
 if (!empty($this->listjsInclude)) { ?>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.0/list.min.js"></script>
+	<script src="<?php echo LISTJS_URL; ?>"></script>
 	<script src="js/listjs_include.js"></script>
 	<script>
 		listjs.<?php echo $this->listjsInclude; ?>();

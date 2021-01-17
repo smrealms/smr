@@ -111,7 +111,7 @@
 			</table>
 		</div>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.0/list.min.js"></script>
+		<script src="<?php echo LISTJS_URL; ?>"></script>
 		<script>
 		var list = new List('data-list', {
 			valueNames: ['name', 'race', 'cost', 'shield_damage', 'armour_damage', 'accuracy', 'level', 'restriction'],
