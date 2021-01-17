@@ -15,11 +15,6 @@ git:
   depth: false
 script:
   - docker-compose --version
-  - mv .env.sample .env
-  - mv config/config.specific.sample.php config/config.specific.php
-  - mv config/discord/config.specific.sample.php config/discord/config.specific.php
-  - mv config/irc/config.specific.sample.php config/irc/config.specific.php
-  - mv config/npc/config.specific.sample.php config/npc/config.specific.php
   - composer run start:integration-services
   - composer run test
 

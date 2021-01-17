@@ -22,21 +22,30 @@
 		}
 	},
 	"scripts": {
-		"start:dev": "docker-compose up --build -d traefik smr-dev",
+		"start:dev": [
+			"docker-compose up -d traefik smr-dev"
+		],
+		"rebuild:dev": [
+			"docker-compose up --build -d smr-dev"
+		],
 		"start:integration-services": [
 			"docker-compose --env-file test.env up -d mysql-integration-test",
-			"sleep 20",
+			"@rebuild:integration-services"
+		],
+		"rebuild:integration-services": [
+			"docker-compose --env-file test.env build smr-integration-test",
 			"docker-compose --env-file test.env run --rm flyway-integration-test"
 		],
-		"stop" : [
+		"test": [
+			"docker-compose --env-file test.env run --rm smr-integration-test"
+		],
+		"stop": [
 			"docker-compose stop",
 			"docker-compose rm --force"
-		],
-		"test": "docker-compose --env-file test.env run --rm smr-integration-test",
-		"rebuild:dev": [
-			"@stop",
-			"@start:dev"
 		]
+	},
+	"config": {
+		"process-timeout": 0
 	},
 	"autoload-dev": {
 		"psr-4": {
