@@ -10,9 +10,9 @@ function mysql_cleanup(callable $func) {
 		try {
 			$func($message, $params);
 		} catch (Throwable $e) {
-			print('Error in ' . $e->getFile() . ' line ' . $e->getLine() . ':' . EOL);
-			print($e->getMessage() . EOL);
-			$message->reply('I encountered an error. Please report this to an admin!');
+			logException($e);
+			$message->reply('I encountered an error. Please report this to an admin!')
+				->done(null, 'logException');
 		}
 
 		// Then, close the mysql connection to prevent timeouts

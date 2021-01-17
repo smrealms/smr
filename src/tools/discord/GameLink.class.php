@@ -16,7 +16,8 @@ class GameLink
 		$this->account = SmrAccount::getAccountByDiscordId($user_id, true);
 
 		if (is_null($this->account)) {
-			$channel->sendMessage("There is no SMR account associated with your Discord User ID. To set this up, go to `Preferences` in-game and set `$user_id` as your `Discord User ID`.");
+			$channel->sendMessage("There is no SMR account associated with your Discord User ID. To set this up, go to `Preferences` in-game and set `$user_id` as your `Discord User ID`.")
+				->done(null, 'logException');
 			return;
 		}
 
@@ -27,7 +28,8 @@ class GameLink
 			if ($db->nextRecord()) {
 				$game_id = $db->getInt('MAX(game_id)');
 			} else {
-				$channel->sendMessage('Could not find any games!');
+				$channel->sendMessage('Could not find any games!')
+					->done(null, 'logException');
 				return;
 			}
 
@@ -41,13 +43,15 @@ class GameLink
 			$this->alliance = SmrAlliance::getAllianceByDiscordChannel($channel_id, true);
 
 			if (is_null($this->alliance)) {
-				$channel->sendMessage("There is no SMR alliance associated with this Discord Channel ID. To set this up (you must have permission to set this for your alliance), go to `Change Alliance Stats` and set `$channel_id` as your `Discord Channel ID`.\n\n-- If this Discord Channel is public, you probably want to choose a different channel for your alliance.\n-- If you are not in an alliance (or if your alliance doesn't want a channel), send your command again in a direct message to me.");
+				$channel->sendMessage("There is no SMR alliance associated with this Discord Channel ID. To set this up (you must have permission to set this for your alliance), go to `Change Alliance Stats` and set `$channel_id` as your `Discord Channel ID`.\n\n-- If this Discord Channel is public, you probably want to choose a different channel for your alliance.\n-- If you are not in an alliance (or if your alliance doesn't want a channel), send your command again in a direct message to me.")
+					->done(null, 'logException');
 				return;
 			}
 
 			$this->player = SmrPlayer::getPlayer($this->account->getAccountID(), $this->alliance->getGameID(), true);
 			if ($this->player->getAllianceID() != $this->alliance->getAllianceID()) {
-				$channel->sendMessage("Player `" . $this->player->getPlayerName() . "` is not a member of alliance `" . $this->alliance->getAllianceName() . "`");
+				$channel->sendMessage("Player `" . $this->player->getPlayerName() . "` is not a member of alliance `" . $this->alliance->getAllianceName() . "`")
+					->done(null, 'logException');
 				return;
 			}
 		}

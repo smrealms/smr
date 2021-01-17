@@ -11,7 +11,8 @@ $fn_forces = function($message, $params) {
 	// print the next expiring forces
 	$option = $params[0] ?? null;
 	$results = shared_channel_msg_forces($link->player, $option);
-	$message->channel->sendMessage(join(EOL, $results));
+	$message->channel->sendMessage(join(EOL, $results))
+		->done(null, 'logException');
 };
 
 $discord->registerCommand('forces', mysql_cleanup($fn_forces),
