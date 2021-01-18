@@ -23,7 +23,8 @@ $fn_turns = function($message) {
 	$player = $link->player;
 
 	$results = array_map('get_turns_message', $player->getSharingPlayers(true));
-	$message->channel->sendMessage(join("\n", $results));
+	$message->channel->sendMessage(join("\n", $results))
+		->done(null, 'logException');
 };
 
 $cmd_turns = $discord->registerCommand('turns', mysql_cleanup($fn_turns), ['description' => 'Show current turns']);

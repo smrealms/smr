@@ -4,10 +4,11 @@ require_once(TOOLS . 'chat_helpers/channel_msg_8ball.php');
 
 $fn_8ball = function($message, $params) {
 	if (empty($params)) {
-		$message->reply('do you have a question for the magic 8-ball?');
+		$response = 'do you have a question for the magic 8-ball?';
 	} else {
-		$message->reply(shared_channel_msg_8ball());
+		$response = shared_channel_msg_8ball();
 	}
+	$message->reply($response)->done(null, 'logException');
 };
 
 $discord->registerCommand('8ball', mysql_cleanup($fn_8ball),

@@ -13,7 +13,8 @@ $fn_op = function($message) {
 
 	// print info about the next op
 	$results = shared_channel_msg_op_info($player);
-	$message->channel->sendMessage(join(EOL, $results));
+	$message->channel->sendMessage(join(EOL, $results))
+		->done(null, 'logException');
 };
 
 $fn_op_list = function($message) {
@@ -25,7 +26,8 @@ $fn_op_list = function($message) {
 
 	// print list of attendees
 	$results = shared_channel_msg_op_list($player);
-	$message->channel->sendMessage(join(EOL, $results));
+	$message->channel->sendMessage(join(EOL, $results))
+		->done(null, 'logException');
 };
 
 $fn_op_turns = function($message) {
@@ -37,7 +39,8 @@ $fn_op_turns = function($message) {
 
 	// print list of attendees
 	$results = shared_channel_msg_op_turns($player);
-	$message->channel->sendMessage(join(EOL, $results));
+	$message->channel->sendMessage(join(EOL, $results))
+		->done(null, 'logException');
 };
 
 $cmd_op = $discord->registerCommand('op', mysql_cleanup($fn_op), ['description' => 'Get information about the next scheduled op']);

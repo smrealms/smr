@@ -9,7 +9,8 @@ $fn_seed = function($message) {
 	}
 
 	$result = shared_channel_msg_seed($link->player);
-	$message->channel->sendMessage(join(EOL, $result));
+	$message->channel->sendMessage(join(EOL, $result))
+		->done(null, 'logException');
 };
 
 $discord->registerCommand('seed', mysql_cleanup($fn_seed), ['description' => 'List sectors with missing seeds']);

@@ -11,7 +11,7 @@ $fn_money = function($message) {
 	$result = shared_channel_msg_money($link->player);
 	if ($result) {
 		$text = implode(EOL, $result);
-		$message->channel->sendMessage($text);
+		$message->channel->sendMessage($text)->done(null, 'logException');
 	}
 };
 
