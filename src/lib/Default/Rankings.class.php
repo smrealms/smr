@@ -3,6 +3,31 @@
 class Rankings {
 	private function __construct() {}
 
+	public static function collectRaceRankings(MySqlDatabase $db, AbstractSmrPlayer $player) {
+		$rankings = [];
+		$rank = 0;
+		while ($db->nextRecord()) {
+			// increase rank counter
+			$rank++;
+
+			$race_id = $db->getInt('race_id');
+			if ($player->getRaceID() == $race_id) {
+				$style = ' class="bold"';
+			} else {
+				$style = '';
+			}
+
+			$rankings[$rank] = [
+				'style' => $style,
+				'race_id' => $db->getInt('race_id'),
+				'amount' => $db->getInt('amount'),
+				'amount_avg' => IRound($db->getInt('amount') / $db->getInt('num_players')),
+				'num_players' => $db->getInt('num_players'),
+			];
+		}
+		return $rankings;
+	}
+
 	public static function collectAllianceRankings(MySqlDatabase $db, AbstractSmrPlayer $player, $rank) {
 		$rankings = array();
 		while ($db->nextRecord()) {
