@@ -38,12 +38,14 @@ RUN composer install --no-interaction
 
 # Set the baseline php.ini version based on the value of PHP_DEBUG
 ARG PHP_DEBUG=0
-RUN MODE=$([ "$PHP_DEBUG" = "0" ] && echo "production" || echo "development") && \
+RUN MODE=$([ "$PHP_DEBUG" = "1" ] && echo "development" || echo "production") && \
 	echo "Using $MODE php.ini" && \
 	tar -xOvf /usr/src/php.tar.xz php-$PHP_VERSION/php.ini-$MODE > /usr/local/etc/php/php.ini
 
-RUN if [ "$PHP_DEBUG" = "1" ] ; then pecl install xdebug-2.8.1 \
-	&& docker-php-ext-enable xdebug ; \
+RUN if [ "$PHP_DEBUG" = "1" ]; \
+	then \
+		pecl install xdebug-2.8.1 && \
+		docker-php-ext-enable xdebug; \
 	fi
 
 COPY --from=builder /smr .
