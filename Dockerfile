@@ -44,7 +44,7 @@ RUN MODE=$([ "$PHP_DEBUG" = "1" ] && echo "development" || echo "production") &&
 
 RUN if [ "$PHP_DEBUG" = "1" ]; \
 	then \
-		pecl install xdebug-2.8.1 && \
+		pecl install xdebug-3.0.2 && \
 		docker-php-ext-enable xdebug; \
 	fi
 
