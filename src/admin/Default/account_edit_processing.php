@@ -113,23 +113,20 @@ if ($except != 'Add An Exception' && $except != '') {
 if (!empty($names)) {
 	foreach ($names as $game_id => $new_name) {
 		if (!empty($new_name)) {
-			// Escape html elements so the name displays correctly
-			$new_name = htmlentities($new_name);
-
 			$db->query('SELECT account_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND player_name = ' . $db->escapeString($new_name));
 			if (!$db->nextRecord()) {
 				$editPlayer = SmrPlayer::getPlayer($account_id, $game_id);
 				$editPlayer->setPlayerName($new_name);
 				$editPlayer->update();
 
-				$actions[] = 'changed players name to ' . $new_name;
+				$actions[] = 'changed player name to ' . $editPlayer->getDisplayName();
 
 				//insert news message
 				$news = 'Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
 
 				$db->query('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($game_id) . ', \'admin\', ' . $db->escapeNumber($account_id) . ')');
 			} elseif ($db->getInt('account_id') != $account_id) {
-				$actions[] = 'have NOT changed players name to ' . $new_name . ' (already taken)';
+				$actions[] = 'have NOT changed player name to ' . htmlentities($new_name) . ' (already taken)';
 			}
 		}
 
