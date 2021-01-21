@@ -87,34 +87,27 @@ class Request {
 	 * Note that this does not save the result in $var (see SmrSession).
 	 */
 	public static function getVar(string $index, string $default = null) : string {
-		global $var;
-		if (isset($var[$index])) {
-			if (self::has($index)) {
-				throw new Exception('Index "' . $index . '" must not be in both $var and $_REQUEST!');
-			}
-			return $var[$index];
-		}
-		return self::get($index, $default);
+		return self::getVarX($index, $default, 'get');
 	}
 
 	/**
 	 * Like getVar, but returns an int instead of a string.
 	 */
 	public static function getVarInt(string $index, int $default = null) : int {
-		global $var;
-		if (isset($var[$index])) {
-			if (self::has($index)) {
-				throw new Exception('Index "' . $index . '" must not be in both $var and $_REQUEST!');
-			}
-			return $var[$index];
-		}
-		return self::getInt($index, $default);
+		return self::getVarX($index, $default, 'getInt');
 	}
 
 	/**
 	 * Like getVar, but returns an array of ints instead of a string.
 	 */
 	public static function getVarIntArray(string $index, array $default = null) : array {
+		return self::getVarX($index, $default, 'getIntArray');
+	}
+
+	/**
+	 * Helper function to avoid code duplication in getVar* functions.
+	 */
+	private static function getVarX($index, $default, $func) {
 		global $var;
 		if (isset($var[$index])) {
 			if (self::has($index)) {
@@ -122,7 +115,7 @@ class Request {
 			}
 			return $var[$index];
 		}
-		return self::getIntArray($index, $default);
+		return self::$func($index, $default);
 	}
 
 
