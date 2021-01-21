@@ -121,6 +121,8 @@ services:
     smr-integration-test:
         <<: *smr-common
         command: /smr/vendor/bin/phpunit test
+        environment:
+            - XDEBUG_MODE=coverage
         volumes:
             - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
             - ./test.env:/smr/.env:ro
