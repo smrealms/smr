@@ -110,8 +110,11 @@ class Request {
 	private static function getVarX($index, $default, $func) {
 		global $var;
 		if (isset($var[$index])) {
-			if (self::has($index)) {
-				throw new Exception('Index "' . $index . '" must not be in both $var and $_REQUEST!');
+			// An index may be present in both var and request. This indicates
+			// a logical error in the code, unless the values are the same,
+			// which can occur if, e.g., player refreshes a page (this is OK).
+			if (self::has($index) && $var[$index] !== self::$func($index, $default)) {
+				throw new Exception('Index "' . $index . '" inconsistent between $var and $_REQUEST!');
 			}
 			return $var[$index];
 		}

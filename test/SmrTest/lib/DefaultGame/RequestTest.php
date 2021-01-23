@@ -156,10 +156,17 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function test_getVar_exception_index_in_both() {
 		global $var;
 		$var['str'] = 'ing:var';
-		// An index that exists in both var and request
+		// An index that exists in both var and request, with different values
 		$this->expectException(\Exception::class);
-		$this->expectExceptionMessage('Index "str" must not be in both $var and $_REQUEST!');
+		$this->expectExceptionMessage('Index "str" inconsistent between $var and $_REQUEST!');
 		Request::getVar('str');
+	}
+
+	public function test_getVar_index_same_in_both() {
+		global $var;
+		$var['str'] = 'ing';
+		// An index that exists in both var and request, with the same value
+		$this->assertSame(Request::getVar('str'), 'ing');
 	}
 
 	//------------------------------------------------------------------------
@@ -192,10 +199,17 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function test_getVarInt_exception_index_in_both() {
 		global $var;
 		$var['int'] = 3;
-		// An index that exists in both var and request
+		// An index that exists in both var and request, with different values
 		$this->expectException(\Exception::class);
-		$this->expectExceptionMessage('Index "int" must not be in both $var and $_REQUEST!');
+		$this->expectExceptionMessage('Index "int" inconsistent between $var and $_REQUEST!');
 		Request::getVarInt('int');
+	}
+
+	public function test_getVarInt_index_same_in_both() {
+		global $var;
+		$var['int'] = 2;
+		// An index that exists in both var and request, with the same value
+		$this->assertSame(Request::getVarInt('int'), 2);
 	}
 
 	//------------------------------------------------------------------------
@@ -228,10 +242,17 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function test_getVarIntArray_exception_index_in_both() {
 		global $var;
 		$var['array_int'] = [];
-		// An index that exists in both var and request
+		// An index that exists in both var and request, with different values
 		$this->expectException(\Exception::class);
-		$this->expectExceptionMessage('Index "array_int" must not be in both $var and $_REQUEST!');
+		$this->expectExceptionMessage('Index "array_int" inconsistent between $var and $_REQUEST!');
 		Request::getVarIntArray('array_int');
+	}
+
+	public function test_getVarIntArray_index_same_in_both() {
+		global $var;
+		$var['array_int'] = [1, 2, 3];
+		// An index that exists in both var and request, with the same value
+		$this->assertSame(Request::getVarIntArray('array_int'), [1, 2, 3]);
 	}
 
 }
