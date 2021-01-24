@@ -2139,34 +2139,33 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getExperienceRank() {
-		return $this->computeRanking('experience', $this->getExperience());
+		return $this->computeRanking('experience');
 	}
 
 	public function getKillsRank() {
-		return $this->computeRanking('kills', $this->getKills());
+		return $this->computeRanking('kills');
 	}
 
 	public function getDeathsRank() {
-		return $this->computeRanking('deaths', $this->getDeaths());
+		return $this->computeRanking('deaths');
 	}
 
 	public function getAssistsRank() {
-		return $this->computeRanking('assists', $this->getAssists());
+		return $this->computeRanking('assists');
 	}
 
-	private function computeRanking($dbField, $playerAmount) {
-		$this->db->query('SELECT count(*) FROM player
-			WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
-			AND (
-				'.$dbField . ' > ' . $this->db->escapeNumber($playerAmount) . '
-				OR (
-					'.$dbField . ' = ' . $this->db->escapeNumber($playerAmount) . '
-					AND player_name <= ' . $this->db->escapeString($this->getPlayerName()) . '
-				)
-			)');
-		$this->db->nextRecord();
-		$rank = $this->db->getInt('count(*)');
-		return $rank;
+	private function computeRanking(string $dbField) : int {
+		$this->db->query('SELECT ranking
+			FROM (
+				SELECT player_id,
+				ROW_NUMBER() OVER (ORDER BY ' . $dbField . ' DESC, player_name ASC) AS ranking
+				FROM player
+				WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+			) t
+			WHERE player_id = ' . $this->db->escapeNumber($this->getPlayerID())
+		);
+		$this->db->requireRecord();
+		return $this->db->getInt('ranking');
 	}
 
 	public function killPlayer($sectorID) {
