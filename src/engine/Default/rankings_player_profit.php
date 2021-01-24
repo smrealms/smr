@@ -8,19 +8,18 @@ $profitType = array('Trade', 'Money', 'Profit');
 $profitTypeEscaped = $db->escapeArray($profitType, ':', false);
 
 // what rank are we?
-$db->query('SELECT count(*)
-			FROM player p
-			LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $profitTypeEscaped . '
-			WHERE p.game_id = ' . $db->escapeNumber($player->getGameID()) . '
-			AND (
-				amount > '.$db->escapeNumber($player->getHOF($profitType)) . '
-				OR (
-					COALESCE(amount,0) = '.$db->escapeNumber($player->getHOF($profitType)) . '
-					AND player_name <= ' . $db->escapeString($player->getPlayerName()) . '
-				)
-			)');
+$db->query('SELECT ranking
+			FROM (
+				SELECT player_id,
+				ROW_NUMBER() OVER (ORDER BY COALESCE(ph.amount, 0) DESC, player_name ASC) AS ranking
+				FROM player p
+				LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $profitTypeEscaped . '
+				WHERE p.game_id = ' . $db->escapeNumber($player->getGameID()) . '
+			) t
+			WHERE player_id = ' . $db->escapeNumber($player->getPlayerID())
+);
 $db->requireRecord();
-$ourRank = $db->getInt('count(*)');
+$ourRank = $db->getInt('ranking');
 $template->assign('OurRank', $ourRank);
 
 $totalPlayers = $player->getGame()->getTotalPlayers();

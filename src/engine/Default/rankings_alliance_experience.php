@@ -9,41 +9,31 @@ $numAlliances = $db->getInt('count(*)');
 
 $ourRank = 0;
 if ($player->hasAlliance()) {
-	$db->query('SELECT count(*)
+	$db->query('SELECT ranking
 				FROM (
-					SELECT alliance_id, alliance_name, SUM(experience) amount
+					SELECT alliance_id,
+					ROW_NUMBER() OVER (ORDER BY COALESCE(SUM(experience), 0) DESC, alliance_name ASC) AS ranking
 					FROM alliance
 					LEFT JOIN player USING (game_id, alliance_id)
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					GROUP BY alliance_id, alliance_name
-				) t, (
-					SELECT SUM(experience) amount
-					FROM alliance
-					LEFT JOIN player USING (game_id, alliance_id)
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-				) us
-				WHERE (
-					t.amount > us.amount
-					OR (
-						t.amount = us.amount
-						AND alliance_name <= ' . $db->escapeString($player->getAlliance()->getAllianceName()) . '
-					)
-				)');
+					GROUP BY alliance_id
+				) t
+				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID())
+	);
 	$db->requireRecord();
-	$ourRank = $db->getInt('count(*)');
+	$ourRank = $db->getInt('ranking');
 	$template->assign('OurRank', $ourRank);
 }
 
 $expRanks = function (int $minRank, int $maxRank) use ($player, $db) : array {
 	$offset = $minRank - 1;
 	$limit = $maxRank - $offset;
-	$db->query('SELECT alliance_id, SUM(experience) amount
+	$db->query('SELECT alliance_id, COALESCE(SUM(experience), 0) amount
 		FROM alliance
 		LEFT JOIN player USING (game_id, alliance_id)
 		WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-		GROUP BY alliance_id, alliance_name
-		ORDER BY amount DESC, alliance_name
+		GROUP BY alliance_id
+		ORDER BY amount DESC, alliance_name ASC
 		LIMIT ' . $offset . ', ' . $limit);
 	return Rankings::collectAllianceRankings($db, $player, $offset);
 };

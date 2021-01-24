@@ -29,17 +29,17 @@ if ($db->nextRecord()) {
 }
 
 // Calculate the rank of the sector the player is currently in
-$db->query('SELECT count(*) FROM sector
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-			AND (
-				battles > ' . $db->escapeNumber($player->getSector()->getBattles()) . '
-				OR (
-					battles = ' . $db->escapeNumber($player->getSector()->getBattles()) . '
-					AND sector_id <= ' . $db->escapeNumber($player->getSectorID()) . '
-				)
-			)');
-$db->nextRecord();
-$ourRank = $db->getInt('count(*)');
+$db->query('SELECT ranking
+			FROM (
+				SELECT sector_id,
+				ROW_NUMBER() OVER (ORDER BY battles DESC, sector_id ASC) AS ranking
+				FROM sector
+				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+			) t
+			WHERE sector_id = ' . $db->escapeNumber($player->getSectorID())
+);
+$db->requireRecord();
+$ourRank = $db->getInt('ranking');
 
 $container = create_container('skeleton.php', 'rankings_sector_kill.php');
 $template->assign('SubmitHREF', SmrSession::getNewHREF($container));

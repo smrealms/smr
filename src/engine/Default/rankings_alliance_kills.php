@@ -9,18 +9,17 @@ $numAlliances = $db->getInt('count(*)');
 
 $ourRank = 0;
 if ($player->hasAlliance()) {
-	$db->query('SELECT count(*)
-				FROM alliance
-				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND (
-					alliance_kills > '.$db->escapeNumber($player->getAlliance()->getKills()) . '
-					OR (
-						alliance_kills = '.$db->escapeNumber($player->getAlliance()->getKills()) . '
-						AND alliance_name <= ' . $db->escapeString($player->getAlliance()->getAllianceName()) . '
-					)
-				)');
+	$db->query('SELECT ranking
+				FROM (
+					SELECT alliance_id,
+					ROW_NUMBER() OVER (ORDER BY alliance_kills DESC, alliance_name ASC) AS ranking
+					FROM alliance
+					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+				) t
+				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID())
+	);
 	$db->requireRecord();
-	$ourRank = $db->getInt('count(*)');
+	$ourRank = $db->getInt('ranking');
 	$template->assign('OurRank', $ourRank);
 }
 
