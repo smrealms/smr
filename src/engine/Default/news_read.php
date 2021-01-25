@@ -4,17 +4,10 @@ if (!isset($var['GameID'])) {
 }
 $gameID = $var['GameID'];
 
-if (isset($_REQUEST['min_news'])) {
-	$min_news = $_REQUEST['min_news'];
-}
-if (isset($_REQUEST['max_news'])) {
-	$max_news = $_REQUEST['max_news'];
-}
-if (empty($min_news) || empty($max_news)) {
-	$min_news = 1;
-	$max_news = 50;
-} elseif ($min_news > $max_news) {
-		create_error('The first number must be lower than the second number!');
+$min_news = Request::getInt('min_news', 1);
+$max_news = Request::getInt('max_news', 50);
+if ($min_news > $max_news) {
+	create_error('The first number must be lower than the second number!');
 }
 $template->assign('MinNews', $min_news);
 $template->assign('MaxNews', $max_news);
