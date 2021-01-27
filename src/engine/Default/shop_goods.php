@@ -23,23 +23,23 @@ if (!empty($var['trade_msg'])) {
 } elseif ($player->getLastPort() != $player->getSectorID()) {
 	// test if we are searched, but only if we hadn't a previous trade here
 
-	$base_chance = 15;
+	$baseChance = PORT_SEARCH_BASE_CHANCE;
 	if ($port->hasGood(GOODS_SLAVES)) {
-		$base_chance -= 4;
+		$baseChance -= PORT_SEARCH_REDUCTION_PER_EVIL_GOOD;
 	}
 	if ($port->hasGood(GOODS_WEAPONS)) {
-		$base_chance -= 4;
+		$baseChance -= PORT_SEARCH_REDUCTION_PER_EVIL_GOOD;
 	}
 	if ($port->hasGood(GOODS_NARCOTICS)) {
-		$base_chance -= 4;
+		$baseChance -= PORT_SEARCH_REDUCTION_PER_EVIL_GOOD;
 	}
 
 	if ($ship->isUnderground()) {
-		$base_chance -= 4;
+		$baseChance -= PORT_SEARCH_REDUCTION_FOR_EVIL_SHIP;
 	}
 
 	$rand = mt_rand(1, 100);
-	if ($rand <= $base_chance) {
+	if ($rand <= $baseChance) {
 		$searchedByFeds = true;
 		$player->increaseHOF(1, array('Trade', 'Search', 'Total'), HOF_PUBLIC);
 		if ($ship->hasIllegalGoods()) {

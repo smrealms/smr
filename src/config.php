@@ -134,6 +134,13 @@ const GOODS_LUXURY_ITEMS = 11;
 const GOODS_NARCOTICS = 12;
 
 /*
+ * Port searchs
+ */
+const PORT_SEARCH_BASE_CHANCE = 15;
+const PORT_SEARCH_REDUCTION_PER_EVIL_GOOD = 4;
+const PORT_SEARCH_REDUCTION_FOR_EVIL_SHIP = 4;
+
+/*
  * Ship types
  */
 const SHIP_TYPE_GALACTIC_SEMI = 1;
