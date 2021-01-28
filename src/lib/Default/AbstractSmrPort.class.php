@@ -964,12 +964,19 @@ class AbstractSmrPort {
 	}
 
 	public function getIdealPrice($goodID, $transactionType, $numGoods, $relations) : int {
-		$relations = min(1000, $relations); // no effect for higher relations
-		$good = $this->getGood($goodID);
-		$base = $good['BasePrice'] * $numGoods;
-		$maxSupply = $good['Max'];
 		$supply = $this->getGoodAmount($goodID);
 		$dist = $this->getGoodDistance($goodID);
+		return self::idealPrice($goodID, $transactionType, $numGoods, $relations, $supply, $dist);
+}
+
+	/**
+	 * Generic ideal price calculation, given all parameters as input.
+	 */
+	public static function idealPrice(int $goodID, string $transactionType, int $numGoods, int $relations, int $supply, int $dist) : int {
+		$relations = min(1000, $relations); // no effect for higher relations
+		$good = Globals::getGood($goodID);
+		$base = $good['BasePrice'] * $numGoods;
+		$maxSupply = $good['Max'];
 
 		$distFactor = pow($dist, 1.3);
 		if ($transactionType == 'Sell') {
