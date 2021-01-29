@@ -65,15 +65,11 @@ class OneWayRoute extends Route {
 	}
 
 	public function getMoneyMultiplierSum() : int {
-		// Relations factors assume maximum relations
-		$sellRelFactor = 3; // Note that this assumes maximum relations
-		$buyRelFactor = 1;
-		// Supply factors assume maximum supply
-		$sellSupplyFactor = 2;
-		$buySupplyFactor = 1;
-		$goodInfo = \Globals::getGood($this->goodId);
-		$buyPrice = IRound(0.03 * $goodInfo['BasePrice'] * pow($this->buyDi, 1.3) * $buyRelFactor * $buySupplyFactor);
-		$sellPrice = IRound(0.088 * $goodInfo['BasePrice'] * pow($this->sellDi, 1.3) * $sellRelFactor * $sellSupplyFactor);
+		$numGoods = 1;
+		$relations = 1000; // assume max relations
+		$supply = \Globals::getGood($this->goodId)['Max']; // assume max supply
+		$buyPrice = \SmrPort::idealPrice($this->goodId, TRADER_BUYS, $numGoods, $relations, $supply, $this->buyDi);
+		$sellPrice = \SmrPort::idealPrice($this->goodId, TRADER_SELLS, $numGoods, $relations, $supply, $this->sellDi);
 		return $sellPrice - $buyPrice;
 	}
 

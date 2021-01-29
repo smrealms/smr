@@ -12,18 +12,18 @@ $transaction = $port->getGoodTransaction($good_id);
 if ($var['bargain_price'] > 0) {
 	$bargain_price = $var['bargain_price'];
 
-	if ($transaction == 'Sell') {
+	if ($transaction === TRADER_SELLS) {
 		$template->assign('OfferToo', 'high');
-	} elseif ($transaction == 'Buy') {
+	} elseif ($transaction === TRADER_BUYS) {
 		$template->assign('OfferToo', 'low');
 	}
 } else {
 	$bargain_price = $var['offered_price'];
 }
 
-if ($transaction == 'Sell') {
+if ($transaction === TRADER_SELLS) {
 	$template->assign('PortAction', 'buy');
-} elseif ($transaction == 'Buy') {
+} elseif ($transaction === TRADER_BUYS) {
 	$template->assign('PortAction', 'offer you');
 }
 

@@ -42,7 +42,7 @@ class AbstractSmrPort {
 	protected $upgrade;
 	protected $experience;
 
-	protected $goodIDs = array('All' => array(), 'Sell' => array(), 'Buy' => array());
+	protected $goodIDs = array('All' => [], TRADER_SELLS => [], TRADER_BUYS => []);
 	protected $goodAmounts;
 	protected $goodAmountsChanged = array();
 	protected $goodDistances;
@@ -254,14 +254,14 @@ class AbstractSmrPort {
 	 * Get IDs of goods that can be sold by $player to the port
 	 */
 	public function getVisibleGoodsSold(AbstractSmrPlayer $player = null) {
-		return $this->getVisibleGoods('Sell', $player);
+		return $this->getVisibleGoods(TRADER_SELLS, $player);
 	}
 
 	/**
 	 * Get IDs of goods that can be bought by $player from the port
 	 */
 	public function getVisibleGoodsBought(AbstractSmrPlayer $player = null) {
-		return $this->getVisibleGoods('Buy', $player);
+		return $this->getVisibleGoods(TRADER_BUYS, $player);
 	}
 
 	public function getAllGoodIDs() {
@@ -272,14 +272,14 @@ class AbstractSmrPort {
 	 * Get IDs of goods that can be sold to the port
 	 */
 	public function getSoldGoodIDs() {
-		return $this->goodIDs['Sell'];
+		return $this->goodIDs[TRADER_SELLS];
 	}
 
 	/**
 	 * Get IDs of goods that can be bought from the port
 	 */
 	public function getBoughtGoodIDs() {
-		return $this->goodIDs['Buy'];
+		return $this->goodIDs[TRADER_BUYS];
 	}
 
 	public function getGood($goodID) {
@@ -297,10 +297,10 @@ class AbstractSmrPort {
 			if ($x === false) {
 				throw new Exception('This port does not have this good!');
 			}
-			if ($this->hasGood($goodID, 'Buy')) {
-				$x['TransactionType'] = 'Sell';
+			if ($this->hasGood($goodID, TRADER_BUYS)) {
+				$x['TransactionType'] = TRADER_SELLS;
 			} else {
-				$x['TransactionType'] = 'Buy';
+				$x['TransactionType'] = TRADER_BUYS;
 			}
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
 			if (is_object($di)) {
@@ -316,7 +316,7 @@ class AbstractSmrPort {
 	 * Note: this is the player's transaction, not the port's.
 	 */
 	public function getGoodTransaction($goodID) {
-		foreach (array('Buy', 'Sell') as $transaction) {
+		foreach ([TRADER_BUYS, TRADER_SELLS] as $transaction) {
 			if ($this->hasGood($goodID, $transaction)) {
 				return $transaction;
 			}
@@ -459,7 +459,7 @@ class AbstractSmrPort {
 		shuffle($GOODS);
 		foreach ($GOODS as $good) {
 			if (!$this->hasGood($good['ID']) && $good['Class'] == $goodClass) {
-				$transactionType = rand(1, 2) == 1 ? 'Buy' : 'Sell';
+				$transactionType = rand(1, 2) == 1 ? TRADER_BUYS : TRADER_SELLS;
 				$this->addPortGood($good['ID'], $transactionType);
 				return $good;
 			}
@@ -567,10 +567,10 @@ class AbstractSmrPort {
 		if (($key = array_search($goodID, $this->goodIDs['All'])) !== false) {
 			array_splice($this->goodIDs['All'], $key, 1);
 		}
-		if (($key = array_search($goodID, $this->goodIDs['Buy'])) !== false) {
-			array_splice($this->goodIDs['Buy'], $key, 1);
-		} elseif (($key = array_search($goodID, $this->goodIDs['Sell'])) !== false) {
-			array_splice($this->goodIDs['Sell'], $key, 1);
+		if (($key = array_search($goodID, $this->goodIDs[TRADER_BUYS])) !== false) {
+			array_splice($this->goodIDs[TRADER_BUYS], $key, 1);
+		} elseif (($key = array_search($goodID, $this->goodIDs[TRADER_SELLS])) !== false) {
+			array_splice($this->goodIDs[TRADER_SELLS], $key, 1);
 		}
 
 		$this->cacheIsValid = false;
@@ -964,21 +964,26 @@ class AbstractSmrPort {
 	}
 
 	public function getIdealPrice($goodID, $transactionType, $numGoods, $relations) : int {
-		$relations = min(1000, $relations); // no effect for higher relations
-		$good = $this->getGood($goodID);
-		$base = $good['BasePrice'] * $numGoods;
-		$maxSupply = $good['Max'];
 		$supply = $this->getGoodAmount($goodID);
 		$dist = $this->getGoodDistance($goodID);
+		return self::idealPrice($goodID, $transactionType, $numGoods, $relations, $supply, $dist);
+}
+
+	/**
+	 * Generic ideal price calculation, given all parameters as input.
+	 */
+	public static function idealPrice(int $goodID, string $transactionType, int $numGoods, int $relations, int $supply, int $dist) : int {
+		$relations = min(1000, $relations); // no effect for higher relations
+		$good = Globals::getGood($goodID);
+		$base = $good['BasePrice'] * $numGoods;
+		$maxSupply = $good['Max'];
 
 		$distFactor = pow($dist, 1.3);
-		if ($transactionType == 'Sell') {
-			// Trader sells
+		if ($transactionType === TRADER_SELLS) {
 			$supplyFactor = 1 + ($supply / $maxSupply);
 			$relationsFactor = 1.2 + 1.8 * ($relations / 1000); // [0.75-3]
 			$scale = 0.088;
-		} elseif ($transactionType == 'Buy') {
-			// Trader buys
+		} elseif ($transactionType === TRADER_BUYS) {
 			$supplyFactor = 2 - ($supply / $maxSupply);
 			$relationsFactor = 3 - 2 * ($relations / 1000);
 			$scale = 0.03;
@@ -992,7 +997,7 @@ class AbstractSmrPort {
 		$relations = min(1000, $relations); // no effect for higher relations
 		$relationsEffect = (2 * $relations + 8000) / 10000; // [0.75-1]
 
-		if ($transactionType == 'Buy') {
+		if ($transactionType === TRADER_BUYS) {
 			$relationsEffect = 2 - $relationsEffect;
 			return max($idealPrice, IFloor($idealPrice * $relationsEffect));
 		} else {
@@ -1004,7 +1009,7 @@ class AbstractSmrPort {
 	 * Return the fraction of max exp earned.
 	 */
 	public function calculateExperiencePercent(int $idealPrice, int $bargainPrice, string $transactionType) : float {
-		if ($bargainPrice == $idealPrice || $transactionType == 'Steal') {
+		if ($bargainPrice == $idealPrice || $transactionType === TRADER_STEALS) {
 			// Stealing always gives full exp
 			return 1;
 		}

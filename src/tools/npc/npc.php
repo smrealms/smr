@@ -496,7 +496,7 @@ function tradeGoods($goodID, AbstractSmrPlayer $player, SmrPort $port) {
 
 	$transaction = $port->getGoodTransaction($goodID);
 
-	if ($transaction == 'Buy') {
+	if ($transaction === TRADER_BUYS) {
 		$amount = $ship->getEmptyHolds();
 	} else {
 		$amount = $ship->getCargo($goodID);
