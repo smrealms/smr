@@ -68,8 +68,8 @@ class OneWayRoute extends Route {
 		$numGoods = 1;
 		$relations = 1000; // assume max relations
 		$supply = \Globals::getGood($this->goodId)['Max']; // assume max supply
-		$buyPrice = \SmrPort::idealPrice($this->goodId, 'Buy', $numGoods, $relations, $supply, $this->buyDi);
-		$sellPrice = \SmrPort::idealPrice($this->goodId, 'Sell', $numGoods, $relations, $supply, $this->sellDi);
+		$buyPrice = \SmrPort::idealPrice($this->goodId, TRADER_BUYS, $numGoods, $relations, $supply, $this->buyDi);
+		$sellPrice = \SmrPort::idealPrice($this->goodId, TRADER_SELLS, $numGoods, $relations, $supply, $this->sellDi);
 		return $sellPrice - $buyPrice;
 	}
 

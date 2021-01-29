@@ -46,17 +46,17 @@ if ($port->getGoodAmount($good_id) < $amount) {
 }
 
 // does we have what we are going to sell?
-if ($transaction == 'Sell' && $amount > $ship->getCargo($good_id)) {
-	create_error('Scanning your ships indicates you don\'t have ' . $amount . ' pcs. of ' . $good_name . '!');
+if ($transaction === TRADER_SELLS && $amount > $ship->getCargo($good_id)) {
+	create_error('Scanning your ship indicates you don\'t have ' . $amount . ' pcs. of ' . $good_name . '!');
 }
 
 // check if we have enough room for the thing we are going to buy
-if ($transaction == 'Buy' && $amount > $ship->getEmptyHolds()) {
-	create_error('Scanning your ships indicates you don\'t have enough free cargo bays!');
+if ($transaction === TRADER_BUYS && $amount > $ship->getEmptyHolds()) {
+	create_error('Scanning your ship indicates you don\'t have enough free cargo bays!');
 }
 
 // check if the guy has enough money
-if ($transaction == 'Buy' && $player->getCredits() < $bargain_price) {
+if ($transaction === TRADER_BUYS && $player->getCredits() < $bargain_price) {
 	create_error('You don\'t have enough credits!');
 }
 
@@ -78,11 +78,11 @@ if ($ideal_price == 0 || $offered_price == 0) {
 	create_error('Port calculation error...buy more goods.');
 }
 
-if (Request::get('action') == 'Steal') {
+if (Request::get('action') === TRADER_STEALS) {
 	if (!$ship->isUnderground()) {
 		throw new Exception('Player tried to steal in a non-underground ship!');
 	}
-	if ($transaction != 'Buy') {
+	if ($transaction !== TRADER_BUYS) {
 		throw new Exception('Player tried to steal a good the port does not sell!');
 	}
 	$transaction = Request::get('action');
@@ -105,10 +105,10 @@ if (Request::get('action') == 'Steal') {
 }
 
 // can we accept the current price?
-if ($transaction == 'Steal' ||
+if ($transaction === TRADER_STEALS ||
 	(!empty($bargain_price) &&
-	 (($transaction == 'Buy' && $bargain_price >= $ideal_price) ||
-	  ($transaction == 'Sell' && $bargain_price <= $ideal_price)))) {
+	 (($transaction === TRADER_BUYS && $bargain_price >= $ideal_price) ||
+	  ($transaction === TRADER_SELLS && $bargain_price <= $ideal_price)))) {
 
 	// the url we going to
 	$container = create_container('skeleton.php');
@@ -122,7 +122,7 @@ if ($transaction == 'Steal' ||
 	// if offered equals ideal we get a problem (division by zero)
 	$gained_exp = IRound($port->calculateExperiencePercent($ideal_price, $bargain_price, $transaction) * $base_xp);
 
-	if ($transaction == 'Buy') {
+	if ($transaction === TRADER_BUYS) {
 		$msg_transaction = 'bought';
 		$ship->increaseCargo($good_id, $amount);
 		$player->decreaseCredits($bargain_price);
@@ -132,7 +132,7 @@ if ($transaction == 'Steal' ||
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Buying'), HOF_PUBLIC);
 		$port->buyGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
-	} elseif ($transaction == 'Sell') {
+	} elseif ($transaction === TRADER_SELLS) {
 		$msg_transaction = 'sold';
 		$ship->decreaseCargo($good_id, $amount);
 		$player->increaseCredits($bargain_price);
@@ -142,7 +142,7 @@ if ($transaction == 'Steal' ||
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Selling'), HOF_PUBLIC);
 		$port->sellGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
-	} elseif ($transaction == 'Steal') {
+	} elseif ($transaction === TRADER_STEALS) {
 		$msg_transaction = 'stolen';
 		$ship->increaseCargo($good_id, $amount);
 		$player->increaseHOF($amount, array('Trade', 'Goods', 'Stolen'), HOF_ALLIANCE);
@@ -166,7 +166,7 @@ if ($transaction == 'Steal' ||
 	$tradeMessage .= '.<br />';
 
 	if ($gained_exp > 0) {
-		if ($transaction == 'Steal') {
+		if ($transaction === TRADER_STEALS) {
 			$qualifier = 'cunning';
 		} elseif ($gained_exp < $base_xp * 0.25) {
 			$qualifier = 'novice';
@@ -179,7 +179,7 @@ if ($transaction == 'Steal' ||
 		} else {
 			$qualifier = 'peerless';
 		}
-		$skill = $transaction == 'Steal' ? 'thievery' : 'trading';
+		$skill = $transaction === TRADER_STEALS ? 'thievery' : 'trading';
 		$tradeMessage .= 'Your ' . $qualifier . ' ' . $skill . ' skills have earned you <span class="exp">' . $gained_exp . ' </span> experience ' . pluralise('point', $gained_exp) . '!<br />';
 	}
 	$tradeMessage .= '<br />';

@@ -15,7 +15,7 @@ if ($good['Amount'] < $amount) {
 }
 
 // check if we have enough room for the thing we are going to buy
-if ($good['TransactionType'] == 'Buy' && $amount > $ship->getEmptyHolds()) {
+if ($good['TransactionType'] === TRADER_BUYS && $amount > $ship->getEmptyHolds()) {
    create_error('Scanning your ships indicates that you do not have enough free cargo bays!');
 }
 

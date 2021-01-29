@@ -68,12 +68,12 @@ foreach ($data as $key => $vals) {
 		// but SmrPort::addPortGood uses the player action.
 		if (isset($vals['Buys'])) {
 			foreach (explode(',', $vals['Buys']) as $goodID) {
-				$port->addPortGood(str2int($goodID), 'Sell');
+				$port->addPortGood(str2int($goodID), TRADER_SELLS);
 			}
 		}
 		if (isset($vals['Sells'])) {
 			foreach (explode(',', $vals['Sells']) as $goodID) {
-				$port->addPortGood(str2int($goodID), 'Buy');
+				$port->addPortGood(str2int($goodID), TRADER_BUYS);
 			}
 		}
 	}

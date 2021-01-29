@@ -31,7 +31,7 @@ if ($player->getExperience() > 0) {
 
 	// get the distance
 	$x = Globals::getGood($good_id);
-	$x['TransactionType'] = 'Sell';
+	$x['TransactionType'] = TRADER_SELLS;
 	$good_distance = Plotter::findDistanceToX($x, $sector, true);
 	if (is_object($good_distance)) {
 		$good_distance = $good_distance->getRelativeDistance();

@@ -134,6 +134,13 @@ const GOODS_LUXURY_ITEMS = 11;
 const GOODS_NARCOTICS = 12;
 
 /*
+ * Trade transaction types
+ */
+const TRADER_BUYS = 'Buy';
+const TRADER_SELLS = 'Sell';
+const TRADER_STEALS = 'Steal';
+
+/*
  * Port searchs
  */
 const PORT_SEARCH_BASE_CHANCE = 15;
