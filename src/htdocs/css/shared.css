@@ -96,6 +96,10 @@ div.secNavBox div.move_warp {
 	top: 161px;
 	left: 159px;
 }
+div.secNavBox a:hover {
+	font-size: 115%;
+	font-weight: bold;
+}
 .scan_text_vert {
 	width: 20px;
 	height: 60px;

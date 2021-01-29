@@ -141,9 +141,3 @@ li.gal {
 	font-size: 95%;
 	height: 1.5em;
 }
-
-/* Current Sector Navigation Box Colours */
-div.secNavBox a:hover {
-	font-size: 115%;
-	font-weight: bold;
-}

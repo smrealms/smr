@@ -157,10 +157,6 @@ input[type="submit"]:active, button:active, a.submitStyle:active {
 div.secNavBox div div {
 	border: 2px solid #1154A6;
 }
-div.secNavBox a:hover {
-	font-size: 115%;
-	font-weight: bold;
-}
 .move_hover a:hover {
 	background-color: #222;
 }
