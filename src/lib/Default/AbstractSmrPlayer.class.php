@@ -1562,9 +1562,9 @@ abstract class AbstractSmrPlayer {
 	 */
 	public function giveStartingRelations() {
 		if ($this->getRaceID() === RACE_ALSKANT) {
-			// Give Alskants 250 personal relations to start.
+			// Give Alskants bonus personal relations to start.
 			foreach (Globals::getRaces() as $raceID => $raceInfo) {
-				$this->setRelations(250, $raceID);
+				$this->setRelations(ALSKANT_BONUS_RELATIONS, $raceID);
 			}
 		}
 	}
@@ -2202,7 +2202,7 @@ abstract class AbstractSmrPlayer {
 		$this->setDead(true);
 		$this->setNewbieWarning(true);
 		$this->getShip()->getPod($this->hasNewbieStatus());
-		$this->setNewbieTurns(100);
+		$this->setNewbieTurns(NEWBIE_TURNS_ON_DEATH);
 	}
 
 	public function &killPlayerByPlayer(AbstractSmrPlayer $killer) {

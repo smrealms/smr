@@ -26,6 +26,9 @@ if (ENABLE_BETA && !ENABLE_DEBUG) {
 const PAGE_PREFIX = ENABLE_DEBUG ? 'DEV: ' : (ENABLE_BETA ? 'BETA: ' : '');
 const PAGE_TITLE = PAGE_PREFIX . 'Space Merchant Realms';
 
+/*
+ * Special account IDs
+ */
 const ACCOUNT_ID_PORT = 65535;
 const ACCOUNT_ID_ADMIN = 65534;
 const ACCOUNT_ID_PLANET = 65533;
@@ -38,9 +41,13 @@ const ACCOUNT_ID_ALLIANCE_COMMAND = 65527;
 const ACCOUNT_ID_GROUP_RACES = 65500;
 const ACCOUNT_ID_NHL = 36;
 
+/*
+ * Special durations
+ */
 const TIME_FOR_RAIDER_UNLOCK = 1209600; // 2 weeks
 const TIME_FOR_RACE_CHANGE = 172800; // 2 days
 const TIME_BETWEEN_VOTING = 84600; //23 1/2 hours
+const TIME_BEFORE_INACTIVE = 259200; // 3 days
 const TIME_BEFORE_NEWBIE_TIME = 3600; //1 hour
 const TIME_FOR_COUNCIL_VOTE = 172800; //2 days
 const TIME_FOR_WAR_VOTE_FED_SAFETY = 259200; //3 days
@@ -50,11 +57,18 @@ const VOTE_BONUS_TURNS_TIME = 1800; //30 mins
 const BOND_TIME = 172800; //48 hours
 const TIME_LOTTO = 172800; //2 days
 
+/*
+ * Ship image restrictions
+ */
 const MAX_IMAGE_SIZE = 30; //in kb
 const MAX_IMAGE_WIDTH = 200;
 const MAX_IMAGE_HEIGHT = 30;
 
+/*
+ * Miscellaneous external resources
+ */
 const MULTI_CHECKING_COOKIE_VERSION = 'v3';
+const SMR_FILE_VERSION = '1.07';
 
 const LISTJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js';
 const WIKI_URL = 'https://wiki.smrealms.de';
@@ -250,6 +264,8 @@ const RELATIONS_VOTE_WAR = -400;
 const RELATIONS_VOTE_PEACE = 300;
 const RELATIONS_VOTE_CHANGE = 15;
 
+const ALSKANT_BONUS_RELATIONS = 250; // starting bonus to personal relations
+
 /*
  * HoF
  */
@@ -285,7 +301,6 @@ const MESSAGES_PER_PAGE = 50;
 /*
  * Credit features
  */
-
 const MESSAGES_PER_CREDIT = array(
 	MSG_GLOBAL => 20,
 	MSG_PLAYER => 20,
@@ -379,16 +394,20 @@ const BAN_REASON_MULTI = 2;
 const BAN_REASON_BAD_BEHAVIOR = 7;
 
 /*
- * Miscellaneous definitions
+ * Default alliance roles
  */
 const ALLIANCE_ROLE_LEADER = 1;
 const ALLIANCE_ROLE_NEW_MEMBER = 2;
 
 /*
- * Starting newbie turns
+ * Newbie turns
  */
 const STARTING_NEWBIE_TURNS_NEWBIE = 750;
 const STARTING_NEWBIE_TURNS_VET = 250;
+
+const NEWBIE_TURNS_ON_DEATH = 100;
+
+const NEWBIE_TURNS_WARNING_LIMIT = 20;
 
 /*
  * User ranks
@@ -416,8 +435,6 @@ const UNI_GEN_LOCATION_SLOTS = 9;
 
 const NHA_ID = 302;
 
-const TIME_BEFORE_INACTIVE = 259200; // 3 days.
-
 const CLOSE_ACCOUNT_BY_REQUEST_REASON = 'User Request';
 const CLOSE_ACCOUNT_INVALID_EMAIL_REASON = 'Invalid email';
 
@@ -427,16 +444,12 @@ const MIN_EXPERIENCE = 0;
 const MAX_EXPERIENCE = 4294967295; // 2^32-1
 const MAX_COUNCIL_MEMBERS = 5;
 
-const NEWBIE_TURNS_WARNING_LIMIT = 20;
-
 const MAX_MONEY = 4294967295; // 2^32-1
 const SHIP_REFUND_PERCENT = .75;
 const WEAPON_REFUND_PERCENT = .5;
 const CDS_REFUND_PERCENT = .5;
 
 const EOL = "\n";
-
-const SMR_FILE_VERSION = '1.07';
 
 // These CSS URLs must be hard-coded here so that grunt-cache-bust
 // can replace them with the hashed filenames.
