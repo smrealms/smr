@@ -10,6 +10,8 @@ abstract class AbstractSmrPlayer {
 	const TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;
 	const TIME_FOR_ALLIANCE_SWITCH = 0;
 
+	const SHIP_INSURANCE_FRACTION = 0.25; // ship value regained on death
+
 	const HOF_CHANGED = 1;
 	const HOF_NEW = 2;
 
@@ -2189,12 +2191,10 @@ abstract class AbstractSmrPlayer {
 		// reset turns since last death
 		$this->setHOF(0, array('Movement', 'Turns Used', 'Since Last Death'), HOF_ALLIANCE);
 
-		// 1/4 of ship value -> insurance
-		$newCredits = IRound($this->getShip()->getCost() / 4);
-		if ($newCredits < 100000) {
-			$newCredits = 100000;
-		}
-		$this->setCredits($newCredits);
+		// Reset credits to starting amount + ship insurance
+		$credits = $this->getGame()->getStartingCredits();
+		$credits += IRound($this->getShip()->getCost() * self::SHIP_INSURANCE_FRACTION);
+		$this->setCredits($credits);
 
 		$this->setSectorID($this->getHome());
 		$this->increaseDeaths(1);
