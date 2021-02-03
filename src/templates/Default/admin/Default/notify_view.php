@@ -4,9 +4,8 @@ if (empty($Messages)) { ?>
 	return;
 } ?>
 
+<p>Click either name to reply (requires admin messaging permission)</p>
 <form method="POST" action="<?php echo $DeleteHREF; ?>">
-	<br />
-	Click either name to reply<br />
 	<table width="100%" class="standard"><?php
 	foreach ($Messages as $Message) { ?>
 		<tr>
@@ -14,8 +13,8 @@ if (empty($Messages)) { ?>
 				<input type="checkbox" name="notify_id[]" value="<?php echo $Message['notifyID']; ?>">
 			</td>
 			<td class="noWrap">
-				<span class="yellow smallCaps">From: </span><?php echo $Message['senderLink']; ?><br />
-				<span class="yellow smallCaps">To: </span><?php echo $Message['receiverLink']; ?>
+				<span class="yellow smallCaps">From: </span><?php echo $Message['senderName']; ?><br />
+				<span class="yellow smallCaps">To: </span><?php echo $Message['receiverName']; ?>
 			</td>
 			<td class="noWrap">
 				Sent at <?php echo $Message['sentDate']; ?><br />

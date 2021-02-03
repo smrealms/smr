@@ -23,8 +23,7 @@ if (isset($Boxes)) { ?>
 				<option>All Messages</option>
 			</select>
 
-			<br /><br />
-			Click the name to reply<br />
+			<p>Click the name to reply (requires admin messaging permission)</p>
 			<table width="100%" class="standard"><?php
 				foreach ($Messages as $Message) { ?>
 					<tr>

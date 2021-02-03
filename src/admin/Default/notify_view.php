@@ -18,32 +18,33 @@ while ($db->nextRecord()) {
 	$container['offended'] = $db->getInt('to_id');
 	$container['game_id'] = $gameID;
 
-	$offender = $sender;
-	if (is_object($sender)) {
-		$sender_acc = $sender->getAccount();
-		$offender = $sender_acc->getLogin() . ' (' . $sender_acc->getAccountID() . ')';
-		$offender .= ' a.k.a ' . $sender->getDisplayName();
-	}
-	$senderLink = create_link($container, $offender);
-
-	$offended = $receiver;
-	if (is_object($receiver)) {
-		$receiver_acc = $receiver->getAccount();
-		$offended = $receiver_acc->getLogin() . ' (' . $receiver_acc->getAccountID() . ')';
-		$offended .= ' a.k.a ' . $receiver->getDisplayName();
-	}
-	$receiverLink = create_link($container, $offended);
+	/**
+	 * @var $messagePlayer SmrPlayer | string
+	 */
+	$getName = function ($messagePlayer) use ($container, $account) : string {
+		$name = $messagePlayer;
+		if ($messagePlayer instanceof SmrPlayer) {
+			$name = $messagePlayer->getAccount()->getLogin();
+			$name .= ' (' . $messagePlayer->getAccountID() . ')';
+			$name .= ' a.k.a ' . $messagePlayer->getDisplayName();
+		}
+		// If we can send admin messages, make the names reply links
+		if ($account->hasPermission(PERMISSION_SEND_ADMIN_MESSAGE)) {
+			$name = create_link($container, $name);
+		}
+		return $name;
+	};
 
 	if (!Globals::isValidGame($gameID)) {
-		$gameName = 'Game no longer exists';
+		$gameName = 'Game ' . $gameID . ' no longer exists';
 	} else {
 		$gameName = SmrGame::getGame($gameID)->getDisplayName();
 	}
 
 	$messages[] = [
 		'notifyID' => $db->getInt('notify_id'),
-		'senderLink' => $senderLink,
-		'receiverLink' => $receiverLink,
+		'senderName' => $getName($sender),
+		'receiverName' => $getName($receiver),
 		'gameName' => $gameName,
 		'sentDate' => date(DATE_FULL_SHORT, $db->getInt('sent_time')),
 		'reportDate' => date(DATE_FULL_SHORT, $db->getInt('notify_time')),
