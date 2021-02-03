@@ -50,11 +50,13 @@ if (!isset($var['box_type_id'])) {
 				if ($validGame) {
 					$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
 					$senderName .= ' a.k.a ' . $senderPlayer->getDisplayName();
-					$container = create_container('skeleton.php', 'box_reply.php');
-					$container['sender_id'] = $senderID;
-					$container['game_id'] = $gameID;
-					transfer('box_type_id');
-					$messages[$messageID]['ReplyHREF'] = SmrSession::getNewHREF($container);
+					if ($account->hasPermission(PERMISSION_SEND_ADMIN_MESSAGE)) {
+						$container = create_container('skeleton.php', 'box_reply.php');
+						$container['sender_id'] = $senderID;
+						$container['game_id'] = $gameID;
+						transfer('box_type_id');
+						$messages[$messageID]['ReplyHREF'] = SmrSession::getNewHREF($container);
+					}
 				}
 			}
 			$messages[$messageID]['SenderName'] = $senderName;
