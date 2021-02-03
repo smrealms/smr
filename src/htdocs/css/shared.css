@@ -97,7 +97,6 @@ div.secNavBox div.move_warp {
 	left: 159px;
 }
 div.secNavBox a:hover {
-	font-size: 115%;
 	font-weight: bold;
 }
 .scan_text_vert {
@@ -105,22 +104,24 @@ div.secNavBox a:hover {
 	height: 60px;
 }
 .scan_text_vert a {
-	display:block;
-	width: 20px;
+	display: flex;
 	font-size: 90%;
-	text-align: center;
-	line-height: 15px;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	line-height: 100%;
 }
 .scan_text_hor {
 	width: 60px;
 	height: 20px;
 }
 .scan_text_hor a {
-	display:block;
-	width: 60px;
+	display: flex;
 	font-size: 90%;
-	text-align: center;
-	line-height: 20px;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	letter-spacing: 0.12em;
 }
 .move_text {
 	width: 60px;
