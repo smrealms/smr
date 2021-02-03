@@ -59,7 +59,10 @@
 	</tr>
 	<tr>
 		<td class="right">Starting Credits</td>
-		<td><input required type="number" size="6" name="starting_credits" value="<?php echo $Game['startCredits']; ?>"></td>
+		<td>
+			<input required type="number" size="6" name="starting_credits" value="<?php echo $Game['startCredits']; ?>">
+			Given at game start and on death
+		</td>
 	</tr>
 	<tr>
 		<td class="right">Ignore Stats</td>
