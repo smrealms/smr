@@ -51,14 +51,14 @@ function check_bargain_number($amount, $ideal_price, $offered_price, $bargain_pr
 			// get a random number between
 			// (port_off) and (100 +/- $trader_off_rel)
 			if (100 + $trader_off_rel < $port_off) {
-				$offer_modifier = mt_rand(100 + $trader_off_rel, $port_off);
+				$offer_modifier = rand(100 + $trader_off_rel, $port_off);
 			} else {
-				$offer_modifier = mt_rand($port_off, 100 + $trader_off_rel);
+				$offer_modifier = rand($port_off, 100 + $trader_off_rel);
 			}
 
 			$container['offered_price'] = IRound($container['ideal_price'] * $offer_modifier / 100);
 		}
 	} else {
-		$container['overall_number_of_bargains'] = mt_rand(2, 5);
+		$container['overall_number_of_bargains'] = rand(2, 5);
 	}
 }

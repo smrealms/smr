@@ -13,7 +13,7 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 	$db->query('DELETE FROM player_has_drinks WHERE ' . $player->getSQL() . ' LIMIT 1');
 	$player->increaseHOF(1, array('Bar', 'Drinks', 'Water'), HOF_PUBLIC);
 } else {
-	$random = mt_rand(1, 20);
+	$random = rand(1, 20);
 	//only get Azool or Spock drink if they are very lucky
 	if ($random != 1) {
 		$db->query('SELECT drink_id, drink_name FROM bar_drink WHERE drink_id != 1 && drink_id != 11 ORDER BY rand() LIMIT 1');
@@ -72,7 +72,7 @@ $player->actionTaken('BuyDrink', array(
 
 //see if the player blacksout or not
 if (isset($num_drinks) && $num_drinks > 15) {
-	$percent = mt_rand(1, 25);
+	$percent = rand(1, 25);
 	$lostCredits = IRound($player->getCredits() * $percent / 100);
 
 	$message .= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lostCredits) . ' credits</span><br />';

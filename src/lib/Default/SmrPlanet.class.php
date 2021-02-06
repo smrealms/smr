@@ -91,7 +91,7 @@ class SmrPlanet {
 	public static function createPlanet($gameID, $sectorID, $type = 1) {
 		if (!self::getPlanet($gameID, $sectorID)->exists()) {
 			$minTime = SmrGame::getGame($gameID)->getStartTime();
-			$inhabitableTime = $minTime + pow(mt_rand(45, 85), 3);
+			$inhabitableTime = $minTime + pow(rand(45, 85), 3);
 
 			// insert planet into db
 			$db = MySqlDatabase::getInstance();
@@ -1196,7 +1196,7 @@ class SmrPlanet {
 				break;
 			}
 			//15% chance to destroy something
-			if (mt_rand(1, 100) <= self::CHANCE_TO_DOWNGRADE) {
+			if (rand(1, 100) <= self::CHANCE_TO_DOWNGRADE) {
 				$chanceFactors = [];
 				foreach ($this->getStructureTypes() as $structureID => $structure) {
 					$chanceFactors[$structureID] = ($this->getBuilding($structureID) / $this->getMaxBuildings($structureID)) / $structure->baseTime();

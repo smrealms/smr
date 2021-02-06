@@ -28,7 +28,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	}
 
 	public function getModifiedForceAccuracyAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer, $minesAreAttacker) {
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, mt_rand(1, 7) * mt_rand(1, 7), $minesAreAttacker);
+		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, rand(1, 7) * rand(1, 7), $minesAreAttacker);
 	}
 
 	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(SmrForce $forces, AbstractSmrPlayer $targetPlayer, $random, $minesAreAttacker) {

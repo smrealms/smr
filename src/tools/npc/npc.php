@@ -128,7 +128,7 @@ function NPCStuff() {
 			$player->updateTurns();
 
 			if ($actions == 0) {
-				if ($player->getTurns() <= mt_rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
+				if ($player->getTurns() <= rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
 					changeNPCLogin();
 				}
@@ -350,7 +350,7 @@ function processContainer($container) {
 }
 
 function sleepNPC() {
-	usleep(mt_rand(MIN_SLEEP_TIME, MAX_SLEEP_TIME)); //Sleep for a random time
+	usleep(rand(MIN_SLEEP_TIME, MAX_SLEEP_TIME)); //Sleep for a random time
 }
 
 // Releases an NPC when it is done working

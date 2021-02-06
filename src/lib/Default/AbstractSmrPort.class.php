@@ -585,7 +585,7 @@ class AbstractSmrPort {
 		$numDowngrades = 0;
 		$numChances = floor($damage / self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
 		for ($i = 0; $i < $numChances; $i++) {
-			if (mt_rand(1, 100) <= self::CHANCE_TO_DOWNGRADE && $this->level > 1) {
+			if (rand(1, 100) <= self::CHANCE_TO_DOWNGRADE && $this->level > 1) {
 				++$numDowngrades;
 				$this->doDowngrade();
 			}
