@@ -64,7 +64,7 @@ $sector->leavingSector($player, MOVEMENT_JUMP);
 
 // Move the user around
 // TODO: (Must be done while holding both sector locks)
-$misjump = mt_rand(0, $maxMisjump);
+$misjump = rand(0, $maxMisjump);
 if ($misjump > 0) { // we missed the sector
 	$distances = Plotter::findDistanceToX('Distance', $targetSector, false, null, null, $misjump);
 	while (count($distances[$misjump]) == 0) {

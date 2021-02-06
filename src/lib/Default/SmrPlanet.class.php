@@ -91,7 +91,7 @@ class SmrPlanet {
 	public static function createPlanet($gameID, $sectorID, $type = 1) {
 		if (!self::getPlanet($gameID, $sectorID)->exists()) {
 			$minTime = SmrGame::getGame($gameID)->getStartTime();
-			$inhabitableTime = $minTime + pow(mt_rand(45, 85), 3);
+			$inhabitableTime = $minTime + pow(rand(45, 85), 3);
 
 			// insert planet into db
 			$db = MySqlDatabase::getInstance();
@@ -1166,7 +1166,7 @@ class SmrPlanet {
 		$results['DeadBeforeShot'] = false;
 		$weapons = $this->getWeapons();
 		foreach ($weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPlanet($this, $targetPlayers[array_rand($targetPlayers)]);
+			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
 			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
@@ -1174,7 +1174,7 @@ class SmrPlanet {
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs(), true);
-			$results['Drones'] =& $thisCDs->shootPlayerAsPlanet($this, $targetPlayers[array_rand($targetPlayers)]);
+			$results['Drones'] =& $thisCDs->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
@@ -1196,7 +1196,7 @@ class SmrPlanet {
 				break;
 			}
 			//15% chance to destroy something
-			if (mt_rand(1, 100) <= self::CHANCE_TO_DOWNGRADE) {
+			if (rand(1, 100) <= self::CHANCE_TO_DOWNGRADE) {
 				$chanceFactors = [];
 				foreach ($this->getStructureTypes() as $structureID => $structure) {
 					$chanceFactors[$structureID] = ($this->getBuilding($structureID) / $this->getMaxBuildings($structureID)) / $structure->baseTime();

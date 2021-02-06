@@ -183,7 +183,7 @@ class SmrShip extends AbstractSmrShip {
 
 	public function cloakOverload() {
 		// 1 in 25 chance of cloak being destroyed if active
-		if ($this->isCloaked() && mt_rand(0, 99) < 5) {
+		if ($this->isCloaked() && rand(0, 99) < 5) {
 			$this->db->query('DELETE FROM ship_has_hardware
 								WHERE ' . $this->SQL . '
 								AND hardware_type_id = 8

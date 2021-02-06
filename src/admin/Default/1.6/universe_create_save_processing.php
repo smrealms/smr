@@ -40,11 +40,11 @@ if ($submit == 'Create Galaxies') {
 	foreach (SmrLocation::getAllLocations() as $location) {
 		if (Request::has('loc' . $location->getTypeID())) {
 			for ($i = 0; $i < Request::getInt('loc' . $location->getTypeID()); $i++) {
-				$randSector = $galSectors[array_rand($galSectors)]; //get random sector from start of gal to end of gal
+				$randSector = array_rand_value($galSectors); //get random sector from start of gal to end of gal
 				//4 per sector max locs and no locations inside fed
 
 				while (!checkSectorAllowedForLoc($randSector, $location)) {
-					$randSector = $galSectors[array_rand($galSectors)]; //get valid sector
+					$randSector = array_rand_value($galSectors); //get valid sector
 				}
 
 				addLocationToSector($location, $randSector);
@@ -74,17 +74,17 @@ if ($submit == 'Create Galaxies') {
 			}
 			//iterate for each warp to this gal
 			for ($i = 1; $i <= $numWarps; $i++) {
-				$galSector = $galSectors[array_rand($galSectors)];
+				$galSector = array_rand_value($galSectors);
 				//only 1 warp per sector
 				while ($galSector->hasWarp() || $galSector->offersFederalProtection()) {
-					$galSector = $galSectors[array_rand($galSectors)];
+					$galSector = array_rand_value($galSectors);
 				}
 				//get other side
 				$otherSectors = $eachGalaxy->getSectors();
-				$otherSector = $otherSectors[array_rand($otherSectors)];
+				$otherSector = array_rand_value($otherSectors);
 				//make sure it does not go to itself
 				while ($otherSector->hasWarp() || $otherSector->offersFederalProtection() || $otherSector->equals($galSector)) {
-					$otherSector = $otherSectors[array_rand($otherSectors)];
+					$otherSector = array_rand_value($otherSectors);
 				}
 				$galSector->setWarp($otherSector);
 			}
@@ -104,9 +104,9 @@ if ($submit == 'Create Galaxies') {
 	foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $planetTypeID) {
 		$numberOfPlanets = Request::getInt('type' . $planetTypeID);
 		for ($i = 1; $i <= $numberOfPlanets; $i++) {
-			$galSector = $galSectors[array_rand($galSectors)];
+			$galSector = array_rand_value($galSectors);
 			while ($galSector->hasPlanet()) {
-				$galSector = $galSectors[array_rand($galSectors)]; //1 per sector
+				$galSector = array_rand_value($galSectors); //1 per sector
 			}
 			$galSector->createPlanet($planetTypeID);
 		}
@@ -148,10 +148,10 @@ if ($submit == 'Create Galaxies') {
 			//iterate once for each port of this level
 			for ($j = 0; $j < $numLevel; $j++) {
 				//get a sector for this port
-				$galSector = $galSectors[array_rand($galSectors)];
+				$galSector = array_rand_value($galSectors);
 				//check if this sector is valid, if not then get a new one
 				while ($galSector->hasPort() || $galSector->offersFederalProtection()) {
-					$galSector = $galSectors[array_rand($galSectors)];
+					$galSector = array_rand_value($galSectors);
 				}
 
 				$raceID = array_rand($numRacePorts);

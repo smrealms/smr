@@ -38,7 +38,7 @@ if (!empty($var['trade_msg'])) {
 		$baseChance -= PORT_SEARCH_REDUCTION_FOR_EVIL_SHIP;
 	}
 
-	$rand = mt_rand(1, 100);
+	$rand = rand(1, 100);
 	if ($rand <= $baseChance) {
 		$searchedByFeds = true;
 		$player->increaseHOF(1, array('Trade', 'Search', 'Total'), HOF_PUBLIC);

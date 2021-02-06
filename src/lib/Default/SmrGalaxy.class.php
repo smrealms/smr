@@ -299,7 +299,7 @@ class SmrGalaxy {
 
 			foreach ($this->getSectors() as $galSector) {
 				foreach ($linkDirs as $linkDir) {
-					if (mt_rand(1, 100) <= $connectivity) {
+					if (rand(1, 100) <= $connectivity) {
 						$galSector->enableLink($linkDir);
 					} else {
 						$galSector->disableLink($linkDir);
