@@ -178,6 +178,17 @@ function random_string(int $length) : string {
 	return bin2hex(random_bytes($length / 2));
 }
 
+/**
+ * Return the value of a random key from an array.
+ * @return mixed
+ */
+function array_rand_value(array $arr) {
+	if (empty($arr)) {
+		throw new Exception('Cannot pick random value from empty array!');
+	}
+	return $arr[array_rand($arr)];
+}
+
 // Defines all constants
 require_once('config.php');
 
