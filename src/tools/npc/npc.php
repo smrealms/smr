@@ -619,7 +619,7 @@ function &findRoutes($player) {
 
 	$maxNumberOfPorts = 2;
 	$routesForPort = -1;
-	$numberOfRoutes = 1000;
+	$numberOfRoutes = 100;
 	$maxDistance = 15;
 
 	$startSectorID = $galaxy->getStartSector();
@@ -649,7 +649,7 @@ function &findRoutes($player) {
 		unset($distances);
 
 		$routesMerged = array();
-		foreach ($allRoutes[\Routes\RouteGenerator::EXP_ROUTE] as $multi => $routesByMulti) {
+		foreach ($allRoutes[\Routes\RouteGenerator::MONEY_ROUTE] as $multi => $routesByMulti) {
 			$routesMerged += $routesByMulti; //Merge arrays
 		}
 
