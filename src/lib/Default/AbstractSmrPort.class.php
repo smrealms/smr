@@ -25,7 +25,7 @@ class AbstractSmrPort {
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
 	const GOODS_TRADED_MONEY_MULTIPLIER = 50;
-	const BASE_PAYOUT = 0.9; // fraction of credits for looting
+	const BASE_PAYOUT = 0.85; // fraction of credits for looting
 	const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
 
 	protected $db;
