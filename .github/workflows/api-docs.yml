@@ -12,16 +12,11 @@ jobs:
         uses: actions/checkout@v2
       - name: Build API Docs
         uses: ./.github/actions/api-docs
-      - name: Install SSH Client
-        uses: webfactory/ssh-agent@v0.4.1
-        with:
-          ssh-private-key: ${{ secrets.API_DOCS_DEPLOY_KEY }}
       - name: Publish API Docs
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+        uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
-          SSH: true
-          REPOSITORY_NAME: smrealms/api-docs
-          BRANCH: main
-          FOLDER: api-docs/build
-          TARGET_FOLDER: docs
-          CLEAN: true
+          ssh-key: ${{ secrets.API_DOCS_DEPLOY_KEY }}
+          repository-name: smrealms/api-docs
+          branch: main
+          folder: api-docs/build
+          target-folder: docs
