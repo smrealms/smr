@@ -23,6 +23,18 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& docker-php-ext-install mysqli opcache
 
+# Set the baseline php.ini version based on the value of PHP_DEBUG
+ARG PHP_DEBUG=0
+RUN MODE=$([ "$PHP_DEBUG" = "1" ] && echo "development" || echo "production") && \
+	echo "Using $MODE php.ini" && \
+	mv "$PHP_INI_DIR/php.ini-$MODE" "$PHP_INI_DIR/php.ini"
+
+RUN if [ "$PHP_DEBUG" = "1" ]; \
+	then \
+		pecl install xdebug-3.0.2 && \
+		docker-php-ext-enable xdebug; \
+	fi
+
 # Disable apache access logging (error logging is still enabled)
 RUN sed -i 's|CustomLog.*|CustomLog /dev/null common|' /etc/apache2/sites-enabled/000-default.conf
 
@@ -35,18 +47,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY composer.json .
 RUN composer install --no-interaction
-
-# Set the baseline php.ini version based on the value of PHP_DEBUG
-ARG PHP_DEBUG=0
-RUN MODE=$([ "$PHP_DEBUG" = "1" ] && echo "development" || echo "production") && \
-	echo "Using $MODE php.ini" && \
-	mv "$PHP_INI_DIR/php.ini-$MODE" "$PHP_INI_DIR/php.ini"
-
-RUN if [ "$PHP_DEBUG" = "1" ]; \
-	then \
-		pecl install xdebug-3.0.2 && \
-		docker-php-ext-enable xdebug; \
-	fi
 
 COPY --from=builder /smr .
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/src/htdocs" /var/www/html
