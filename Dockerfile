@@ -40,7 +40,7 @@ RUN composer install --no-interaction
 ARG PHP_DEBUG=0
 RUN MODE=$([ "$PHP_DEBUG" = "1" ] && echo "development" || echo "production") && \
 	echo "Using $MODE php.ini" && \
-	tar -xOvf /usr/src/php.tar.xz php-$PHP_VERSION/php.ini-$MODE > /usr/local/etc/php/php.ini
+	mv "$PHP_INI_DIR/php.ini-$MODE" "$PHP_INI_DIR/php.ini"
 
 RUN if [ "$PHP_DEBUG" = "1" ]; \
 	then \
