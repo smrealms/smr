@@ -30,7 +30,7 @@ FROM alliance_thread_topic
 WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 	AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID());
 if (!$in_alliance) {
-	$query .= ' AND alliance_only = 0';
+	$query .= ' AND alliance_only = ' . $db->escapeBoolean(false);
 }
 $query .= ' GROUP BY thread_id ORDER BY sendtime DESC';
 $db->query($query);
@@ -45,7 +45,7 @@ if ($db->getNumRows() > 0) {
 	$alliance_eyes = array();
 	while ($db->nextRecord()) {
 		$threadID = $db->getInt('thread_id');
-		$alliance_eyes[$i] = $db->getInt('alliance_only') == 1;
+		$alliance_eyes[$i] = $db->getBoolean('alliance_only');
 		$threads[$i]['ThreadID'] = $threadID;
 
 		$thread_ids[$i] = $threadID;
