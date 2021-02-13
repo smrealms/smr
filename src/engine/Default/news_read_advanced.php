@@ -52,7 +52,7 @@ if ($submit_value == 'Search For Player') {
 	}
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (killer_id IN (' . $db->escapeArray($IDs) . ') OR dead_id IN (' . $db->escapeArray($IDs) . ')) ORDER BY news_id DESC');
 } elseif ($submit_value == 'Search For Alliance') {
-	$allianceID = SmrSession::getRequestVar('allianceID');
+	$allianceID = SmrSession::getRequestVarInt('allianceID');
 	$template->assign('ResultsFor', $newsAlliances[$allianceID]['Name']);
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ')) ORDER BY news_id DESC');
 } elseif ($submit_value == 'Search For Players') {
