@@ -40,7 +40,7 @@ class DiContainer {
 				return MySqlDatabase::mysqliFactory($mysqlProperties);
 			},
 			Dotenv::class => function(): Dotenv {
-				return Dotenv::createArrayBacked(ROOT);
+				return Dotenv::createArrayBacked(CONFIG, 'env');
 			},
 			// Explicitly name all classes that are autowired, so we can take advantage of
 			// the compiled container feature for a performance boost

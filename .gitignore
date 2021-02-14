@@ -10,10 +10,8 @@
 # /.settings/
 /.settings/
 
-# Docker-compose environment variable file
-/.env
-
 # /config/
+/config/env
 /config/config.specific.php
 /config/discord/config.specific.php
 /config/irc/config.specific.php
