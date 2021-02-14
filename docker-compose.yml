@@ -76,7 +76,7 @@ services:
     smr-dev:
         <<: *smr-common
         volumes:
-            - ./vol_upload:/smr/htdocs/upload
+            - ./vol_upload:/smr/src/htdocs/upload
             - ./config:/smr/config:ro
             - ./.env:/smr/.env:ro
             # Mount the source code instead of copying it.
