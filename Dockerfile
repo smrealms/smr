@@ -29,10 +29,13 @@ RUN MODE=$([ "$PHP_DEBUG" = "1" ] && echo "development" || echo "production") &&
 	echo "Using $MODE php.ini" && \
 	mv "$PHP_INI_DIR/php.ini-$MODE" "$PHP_INI_DIR/php.ini"
 
+# Install xdebug (use /tmp/xdebug for profiler output)
 RUN if [ "$PHP_DEBUG" = "1" ]; \
 	then \
 		pecl install xdebug-3.0.2 && \
-		docker-php-ext-enable xdebug; \
+		docker-php-ext-enable xdebug && \
+		echo "xdebug.output_dir = /tmp/xdebug" > "$PHP_INI_DIR/conf.d/xdebug.ini" && \
+		mkdir /tmp/xdebug; \
 	fi
 
 # Disable apache access logging (error logging is still enabled)
