@@ -26,10 +26,12 @@ class MySqlProperties {
 	}
 
 	private static function validateConfig(Dotenv $config) {
-		$config->required(self::CONFIG_MYSQL_HOST);
-		$config->required(self::CONFIG_MYSQL_USER);
-		$config->required(self::CONFIG_MYSQL_PASSWORD);
-		$config->required(self::CONFIG_MYSQL_DATABASE);
+		$config->required([
+			self::CONFIG_MYSQL_HOST,
+			self::CONFIG_MYSQL_USER,
+			self::CONFIG_MYSQL_PASSWORD,
+			self::CONFIG_MYSQL_DATABASE,
+		])->notEmpty();
 	}
 
 	public function getHost(): string {
