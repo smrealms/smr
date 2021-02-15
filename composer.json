@@ -29,15 +29,15 @@
 			"docker-compose up --build -d smr-dev"
 		],
 		"start:integration-services": [
-			"docker-compose --env-file test.env up -d mysql-integration-test",
+			"docker-compose --env-file test/env up -d mysql-integration-test",
 			"@rebuild:integration-services"
 		],
 		"rebuild:integration-services": [
-			"docker-compose --env-file test.env build smr-integration-test",
-			"docker-compose --env-file test.env run --rm flyway-integration-test"
+			"docker-compose --env-file test/env build smr-integration-test",
+			"docker-compose --env-file test/env run --rm flyway-integration-test"
 		],
 		"test": [
-			"docker-compose --env-file test.env run --rm smr-integration-test"
+			"docker-compose --env-file test/env run --rm smr-integration-test"
 		],
 		"stop": [
 			"docker-compose stop",

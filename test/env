@@ -1,0 +1,9 @@
+# docker-compose environment file to be used with phpunit
+
+MYSQL_ROOT_PASSWORD=smr
+MYSQL_USER=smr
+MYSQL_PASSWORD=smr
+MYSQL_HOST=smr-mysql-test
+MYSQL_DATABASE=smr_live
+SMR_HOST=smr-game-test
+PHP_DEBUG=1

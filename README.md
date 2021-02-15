@@ -17,7 +17,7 @@ To run unit tests on your machine:
 First, you will need to clone this repository. Then inside the clone, you
 will need to create installation-specific copies of the following files:
 
-* `.env.sample` &rarr; `.env`
+* `config/env.sample` &rarr; `config/env`
 * `config/config.specific.sample.php` &rarr; `config/config.specific.php`
 
 For "Caretaker" (IRC) or "Autopilot" (Discord) functionality:
@@ -200,7 +200,7 @@ This information applies to IDEA-based IDEs, e.g. `IntelliJ`, `PHPStorm`. For ot
 1. Press the "+" button in the top left, and select `From Docker, Vagrant, VM, WSL, Remote...`
 1. In the new window, choose `Docker Compose`, and in the `Service` area, select `smr-integration-test`. Press "OK".
 1. It will check the configuration by starting up the Docker container, and gathering PHP information. Once that's finished, you should be on a configuration screen for the new interpreter. It should have the PHP information from the Docker container, and also the `Xdebug` information.
-1. In the `Environment variables` box on the new intepreter's screen, paste in the values from `/test.env` in the project directory.
+1. In the `Environment variables` box on the new intepreter's screen, paste in the values from `/test/env` in the project directory.
 1. The rest of the default settings should be fine, so you can press "Apply".
 1. On the settings navigation tree, underneath PHP, click the `Composer` item: In the `CLI Interpreter` drop down, select the new interpreter you've created. Press "Apply".
 1. On the settings navigation tree, underneath PHP, click the `Test Frameworks` item.
