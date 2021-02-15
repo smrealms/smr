@@ -16,13 +16,13 @@ if (Request::get('action') == 'Preview message') {
 
 SmrPlayer::sendMessageFromAdmin($var['game_id'], $var['sender_id'], $message);
 
+$senderAccount = SmrAccount::getAccount($var['sender_id']);
+$senderAccount->increaseSmrRewardCredits($rewardCredits);
+
 //do we have points?
 if ($banPoints > 0) {
 	$suspicion = 'Inappropriate Actions';
-	$senderAccount = SmrAccount::getAccount($var['sender_id']);
 	$senderAccount->addPoints($banPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 }
-
-$senderAccount->increaseSmrRewardCredits($rewardCredits);
 
 forward(create_container('skeleton.php', 'box_view.php'));
