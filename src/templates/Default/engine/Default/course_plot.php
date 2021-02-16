@@ -101,7 +101,7 @@ Add new destinations below. Stored destinations can be organized by dragging.
 		</div><?php
 	} ?>
 </div>
-<?php $this->addJavascriptSource('js/course_plot.js'); ?>
+<?php $this->addJavascriptSource('/js/course_plot.js'); ?>
 
 <br/><br/>
 <h2>Add new destination</h2>

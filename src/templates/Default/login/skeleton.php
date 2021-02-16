@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title><?php echo PAGE_TITLE; ?></title>
-		<link rel="stylesheet" href="css/login.css" />
+		<link rel="stylesheet" href="/css/login.css" />
 		<?php
 		// Include Google Analytics global site tag if we have one
 		if (!empty(GOOGLE_ANALYTICS_ID)) { ?>

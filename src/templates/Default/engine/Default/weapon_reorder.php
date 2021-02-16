@@ -37,7 +37,7 @@ if ($ThisShip->hasWeapons()) { ?>
 			<input type="submit" value="Update Weapon Order" />
 		</form>
 	</div>
-	<?php $this->addJavascriptSource('js/weapon_reorder.js');
+	<?php $this->addJavascriptSource('/js/weapon_reorder.js');
 } else {
 	?>You don't have any weapons!<?php
 } ?>
