@@ -276,10 +276,12 @@ abstract class AbstractSmrPlayer {
 		$db->lockTable('player');
 
 		// Player names must be unique within each game
-		$db->query('SELECT 1 FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName) . ' LIMIT 1');
-		if ($db->nextRecord() > 0) {
+		try {
+			self::getPlayerByPlayerName($playerName, $gameID);
 			$db->unlock();
 			throw new \Smr\UserException('That player name already exists.');
+		} catch (PlayerNotFoundException $e) {
+			// Player name does not yet exist, we may proceed
 		}
 
 		// get last registered player id in that game and increase by one.
