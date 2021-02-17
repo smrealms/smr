@@ -279,7 +279,7 @@ abstract class AbstractSmrPlayer {
 		$db->query('SELECT 1 FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName) . ' LIMIT 1');
 		if ($db->nextRecord() > 0) {
 			$db->unlock();
-			create_error('The player name already exists.');
+			throw new \Smr\UserException('That player name already exists.');
 		}
 
 		// get last registered player id in that game and increase by one.
