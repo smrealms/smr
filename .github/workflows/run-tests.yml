@@ -5,12 +5,15 @@ on:
   pull_request:
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout the source code
         uses: actions/checkout@v2
+        with:
+          # Needed by Codecov
+          fetch-depth: 2
 
       - name: Run tests
         run: |
