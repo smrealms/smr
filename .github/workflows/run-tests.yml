@@ -18,7 +18,7 @@ jobs:
       # Pull the latest image to build, and avoid caching pull-only images.
       # (docker pull is faster than caching in most cases.)
       - name: Download pull-only images
-        run: docker-compose pull mysql-integration-test flyway-integration-test
+        run: docker-compose --env-file test/env pull mysql-integration-test flyway-integration-test
 
       # In this step, this action saves a list of existing images,
       # the cache is created without them in the post run.
