@@ -1,8 +1,13 @@
 name: Run Tests
 
 on:
-  # Run tests for any PRs.
+  # Run tests for pull requests or pushes to the master branch
   pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
 
 jobs:
   build-and-test:
