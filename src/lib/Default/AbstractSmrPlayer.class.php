@@ -271,6 +271,7 @@ abstract class AbstractSmrPlayer {
 	 * Insert a new player into the database. Returns the new player object.
 	 */
 	public static function createPlayer($accountID, $gameID, $playerName, $raceID, $isNewbie, $npc = false) {
+		$time = SmrSession::getTime();
 		$db = MySqlDatabase::getInstance();
 		$db->lockTable('player');
 
@@ -291,7 +292,7 @@ abstract class AbstractSmrPlayer {
 
 		$startSectorID = 0; // Temporarily put player into non-existent sector
 		$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, sector_id, last_cpl_action, last_active, npc, newbie_status)
-					VALUES(' . $db->escapeNumber($accountID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($playerID) . ', ' . $db->escapeString($playerName) . ', ' . $db->escapeNumber($raceID) . ', ' . $db->escapeNumber($startSectorID) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeBoolean($npc) . ',' . $db->escapeBoolean($isNewbie) . ')');
+					VALUES(' . $db->escapeNumber($accountID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($playerID) . ', ' . $db->escapeString($playerName) . ', ' . $db->escapeNumber($raceID) . ', ' . $db->escapeNumber($startSectorID) . ', ' . $db->escapeNumber($time) . ', ' . $db->escapeNumber($time) . ',' . $db->escapeBoolean($npc) . ',' . $db->escapeBoolean($isNewbie) . ')');
 
 		$db->unlock();
 
