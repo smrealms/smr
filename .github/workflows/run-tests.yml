@@ -11,7 +11,15 @@ on:
 
 jobs:
   build-and-test:
+    name: Build and Test
+
     runs-on: ubuntu-20.04
+
+    env:
+      # Use buildkit for faster builds
+      COMPOSE_DOCKER_CLI_BUILD: 1
+      DOCKER_BUILDKIT: 1
+      BUILDKIT_PROGRESS: plain
 
     steps:
       - name: Checkout the source code
