@@ -15,23 +15,26 @@ jobs:
           # Needed by Codecov
           fetch-depth: 2
 
-      # Pull the latest image to build, and avoid caching pull-only images.
-      # (docker pull is faster than caching in most cases.)
-      - name: Download pull-only images
-        run: docker-compose --env-file test/env pull mysql-integration-test flyway-integration-test
+      - name: Prepare database services
+        # We do this before caching for two reasons:
+        #  1. Avoid caching pull-only images (docker pull is faster)
+        #  2. Gives the mysql service time to spin up to avoid delays
+        run: |
+          docker-compose --env-file test/env up -d mysql-integration-test
+          docker-compose --env-file test/env pull flyway-integration-test
 
-      # In this step, this action saves a list of existing images,
-      # the cache is created without them in the post run.
-      # It also restores the cache if it exists.
       - name: Docker layer caching
+        # In the post-run, the cache is created without any images that
+        # exist at this point. Then the cache is restored if it exists.
         uses: satackey/action-docker-layer-caching@v0.0.11
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
 
       - name: Run tests
         run: |
-          composer run start:integration-services
-          composer run test
+          docker-compose --env-file test/env build smr-integration-test
+          docker-compose --env-file test/env run --rm flyway-integration-test
+          docker-compose --env-file test/env run --rm smr-integration-test
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
