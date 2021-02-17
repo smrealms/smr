@@ -15,6 +15,19 @@ jobs:
           # Needed by Codecov
           fetch-depth: 2
 
+      # Pull the latest image to build, and avoid caching pull-only images.
+      # (docker pull is faster than caching in most cases.)
+      - name: Download pull-only images
+        run: docker-compose pull mysql-integration-test flyway-integration-test
+
+      # In this step, this action saves a list of existing images,
+      # the cache is created without them in the post run.
+      # It also restores the cache if it exists.
+      - name: Docker layer caching
+        uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
       - name: Run tests
         run: |
           composer run start:integration-services
