@@ -5,7 +5,7 @@ namespace SmrTest\lib\DefaultGame;
 use AbstractSmrAccount;
 use AccountNotFoundException;
 use SmrTest\BaseIntegrationSpec;
-use SocialLogins\Facebook;
+use Smr\SocialLogin\Facebook;
 
 /**
  * Class AbstractSmrAccountTest

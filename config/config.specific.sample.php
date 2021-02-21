@@ -13,6 +13,9 @@ const FACEBOOK_APP_SECRET = '';
 const TWITTER_CONSUMER_KEY = '';
 const TWITTER_CONSUMER_SECRET = '';
 
+const GOOGLE_CLIENT_ID = '';
+const GOOGLE_CLIENT_SECRET = '';
+
 const GOOGLE_ANALYTICS_ID = '';
 
 const ENABLE_NPCS_CHESS = false;

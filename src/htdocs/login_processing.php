@@ -12,7 +12,7 @@ try {
 
 	if (!SmrSession::hasAccount()) {
 		if (Request::has('loginType')) {
-			$socialLogin = SocialLogin::get(Request::get('loginType'))->login();
+			$socialLogin = Smr\SocialLogin\SocialLogin::get(Request::get('loginType'))->login();
 			if (!$socialLogin->isValid()) {
 				$msg = 'Error validating login.';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));

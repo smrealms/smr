@@ -139,7 +139,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public static function getAccountBySocialLogin(SocialLogin $social, bool $forceUpdate = false) : ?SmrAccount {
+	public static function getAccountBySocialLogin(Smr\SocialLogin\SocialLogin $social, bool $forceUpdate = false) : ?SmrAccount {
 		if (!$social->isValid()) { return null; }
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT account_id FROM account JOIN account_auth USING(account_id)
