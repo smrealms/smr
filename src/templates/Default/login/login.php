@@ -67,6 +67,9 @@
 				<a class="btn-social" href="login_social_processing.php?type=<?php echo Smr\SocialLogin\Twitter::getLoginType(); ?>">
 					<img alt="Twitter" src="images/login/twitter.svg" width="32" height="32">
 				</a>
+				<a class="btn-social" href="login_social_processing.php?type=<?php echo Smr\SocialLogin\Google::getLoginType(); ?>">
+					<img alt="Twitter" src="images/login/google.svg" width="32" height="32">
+				</a>
 			</span>
 		</td>
 		<td id="twitter-feed" class="hide" style="height:256px;width:90%;">

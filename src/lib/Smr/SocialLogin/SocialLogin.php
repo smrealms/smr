@@ -29,6 +29,8 @@ abstract class SocialLogin {
 			return new Facebook();
 		} elseif ($loginType === Twitter::getLoginType()) {
 			return new Twitter();
+		} elseif ($loginType === Google::getLoginType()) {
+			return new Google();
 		} else {
 			throw new SocialLoginNotFound('Unknown social login type: ' . $loginType);
 		}
