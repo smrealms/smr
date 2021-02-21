@@ -2,22 +2,21 @@
 
 namespace Smr\SocialLogin;
 
-class Facebook extends SocialLogin {
+use \League\OAuth2\Client\Provider\Facebook as FacebookProvider;
 
-	private static $facebook = null;
+class Facebook extends SocialLogin {
 
 	public static function getLoginType() : string {
 		return 'Facebook';
 	}
 
-	private static function getFacebookObj() : \Facebook\Facebook {
-		if (is_null(self::$facebook)) {
-			self::$facebook = new \Facebook\Facebook([
-				'app_id' => FACEBOOK_APP_ID,
-				'app_secret' => FACEBOOK_APP_SECRET,
-			]);
-		}
-		return self::$facebook;
+	private function getFacebookObj() : FacebookProvider {
+		return new FacebookProvider([
+			'clientId' => FACEBOOK_APP_ID,
+			'clientSecret' => FACEBOOK_APP_SECRET,
+			'redirectUri' => $this->getRedirectUrl(),
+			'graphApiVersion' => 'v3.2',
+		]);
 	}
 
 	public function getLoginUrl() : string {
@@ -25,16 +24,24 @@ class Facebook extends SocialLogin {
 			// No facebook app specified. Continuing would throw an exception.
 			return URL;
 		}
-		$helper = self::getFacebookObj()->getRedirectLoginHelper();
-		$permissions = ['email'];
-		return $helper->GetLoginUrl($this->getRedirectUrl(), $permissions);
+		$provider = $this->getFacebookObj();
+		$authUrl = $provider->getAuthorizationUrl([
+			'scope' => ['email'],
+		]);
+		$_SESSION['FacebookToken'] = $provider->getState();
+		return $authUrl;
 	}
 
 	public function login() : SocialLogin {
-		$helper = self::getFacebookObj()->getRedirectLoginHelper();
-		$accessToken = $helper->getAccessToken($this->getRedirectUrl());
-		$response = self::getFacebookObj()->get('/me?fields=email', $accessToken);
-		$userInfo = $response->getGraphUser();
+		if ($_SESSION['FacebookToken'] != \Request::get('state')) {
+			throw new \Exception('Unexpected token received from Facebook');
+		}
+		$provider = $this->getFacebookObj();
+		$accessToken = $provider->getAccessToken(
+			'authorization_code',
+			['code' => \Request::get('code')],
+		);
+		$userInfo = $provider->getResourceOwner($accessToken);
 		$this->setCredentials($userInfo->getId(), $userInfo->getEmail());
 		return $this;
 	}
