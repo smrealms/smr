@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace SocialLogins;
+namespace Smr\SocialLogin;
 
-class Twitter extends \SocialLogin {
+class Twitter extends SocialLogin {
 
 	public static function getLoginType() : string {
 		return 'Twitter';
@@ -29,7 +29,7 @@ class Twitter extends \SocialLogin {
 		return $auth->url('oauth/authenticate', $_SESSION['TwitterToken']);
 	}
 
-	public function login() : \SocialLogin {
+	public function login() : SocialLogin {
 		if ($_SESSION['TwitterToken']['oauth_token'] != \Request::get('oauth_token')) {
 			throw new \Exception('Unexpected token received from Twitter');
 		}

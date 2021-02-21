@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace SocialLogins;
+namespace Smr\SocialLogin;
 
-class Facebook extends \SocialLogin {
+class Facebook extends SocialLogin {
 
 	private static $facebook = null;
 
@@ -30,7 +30,7 @@ class Facebook extends \SocialLogin {
 		return $helper->GetLoginUrl($this->getRedirectUrl(), $permissions);
 	}
 
-	public function login() : \SocialLogin {
+	public function login() : SocialLogin {
 		$helper = self::getFacebookObj()->getRedirectLoginHelper();
 		$accessToken = $helper->getAccessToken($this->getRedirectUrl());
 		$response = self::getFacebookObj()->get('/me?fields=email', $accessToken);

@@ -13,8 +13,8 @@ try {
 
 		require_once('../bootstrap.php');
 		try {
-			header('Location: ' . SocialLogin::get($type)->getLoginUrl());
-		} catch (SocialLoginNotFound $e) {
+			header('Location: ' . Smr\SocialLogin\SocialLogin::get($type)->getLoginUrl());
+		} catch (Smr\SocialLogin\SocialLoginNotFound $e) {
 			header('location: /error.php?msg=' . urlencode('Unknown social login type'));
 		}
 	}

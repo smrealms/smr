@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 
+namespace Smr\SocialLogin;
+
 /**
  * Exception thrown when a SocialLogin type cannot be found
  */
-class SocialLoginNotFound extends Exception {}
+class SocialLoginNotFound extends \Exception {}
 
 /**
  * Defines the methods to be implemented by each social login platform.
@@ -23,10 +25,10 @@ abstract class SocialLogin {
 	 * Returns a SocialLogin class of the given derived type.
 	 */
 	public static function get(string $loginType) : SocialLogin {
-		if ($loginType === SocialLogins\Facebook::getLoginType()) {
-			return new SocialLogins\Facebook();
-		} elseif ($loginType === SocialLogins\Twitter::getLoginType()) {
-			return new SocialLogins\Twitter();
+		if ($loginType === Facebook::getLoginType()) {
+			return new Facebook();
+		} elseif ($loginType === Twitter::getLoginType()) {
+			return new Twitter();
 		} else {
 			throw new SocialLoginNotFound('Unknown social login type: ' . $loginType);
 		}
@@ -36,7 +38,7 @@ abstract class SocialLogin {
 		// All social logins use a session for authentication
 		if (session_status() === PHP_SESSION_NONE) {
 			if (!session_start()) {
-				throw new Exception('Failed to start social login session');
+				throw new \Exception('Failed to start social login session');
 			}
 		}
 	}
