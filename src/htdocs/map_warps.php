@@ -66,6 +66,6 @@ try {
 		<script>
 			const graph = <?php echo $data; ?>;
 		</script>
-		<script src="js/map_warps.js"></script>
+		<script src="/js/map_warps.js"></script>
 	</body>
 </html>

@@ -456,4 +456,4 @@ if (isset($GameID)) { ?>
 	</table>
 </form>
 
-<?php $this->addJavascriptSource('js/colorpicker.js'); ?>
+<?php $this->addJavascriptSource('/js/colorpicker.js'); ?>

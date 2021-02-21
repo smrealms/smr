@@ -1,5 +1,5 @@
-<script src="js/jquery.hotkeys.js"></script>
-<script src="js/ajax.js"></script>
+<script src="/js/jquery.hotkeys.js"></script>
+<script src="/js/ajax.js"></script>
 
 <?php
 foreach ($this->jsSources as $src) { ?>
@@ -12,7 +12,7 @@ foreach ($this->jsAlerts as $string) {
 
 if (!empty($this->listjsInclude)) { ?>
 	<script src="<?php echo LISTJS_URL; ?>"></script>
-	<script src="js/listjs_include.js"></script>
+	<script src="/js/listjs_include.js"></script>
 	<script>
 		listjs.<?php echo $this->listjsInclude; ?>();
 	</script><?php

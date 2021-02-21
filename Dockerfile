@@ -2,8 +2,7 @@ FROM node:alpine as builder
 
 WORKDIR /smr/
 
-# See https://github.com/hollandben/grunt-cache-bust/issues/236
-RUN npm i --save grunt grunt-contrib-uglify grunt-contrib-cssmin grunt-cache-bust@1.4.1
+RUN npm i --save grunt grunt-contrib-uglify grunt-contrib-cssmin grunt-cache-bust@1.7.0
 
 # Copy the SMR source code directories
 COPY src src
