@@ -62,13 +62,13 @@
 			<br />
 			<span>
 				<a class="btn-social" href="login_social_processing.php?type=<?php echo Smr\SocialLogin\Facebook::getLoginType(); ?>">
-					<img alt="Facebook" src="images/login/facebook.svg" width="32" height="32">
+					<img alt="Facebook" title="Facebook" src="images/login/facebook.svg" width="32" height="32">
 				</a>
 				<a class="btn-social" href="login_social_processing.php?type=<?php echo Smr\SocialLogin\Twitter::getLoginType(); ?>">
-					<img alt="Twitter" src="images/login/twitter.svg" width="32" height="32">
+					<img alt="Twitter" title="Twitter" src="images/login/twitter.svg" width="32" height="32">
 				</a>
 				<a class="btn-social" href="login_social_processing.php?type=<?php echo Smr\SocialLogin\Google::getLoginType(); ?>">
-					<img alt="Twitter" src="images/login/google.svg" width="32" height="32">
+					<img alt="Google" title="Google" src="images/login/google.svg" width="32" height="32">
 				</a>
 			</span>
 		</td>
