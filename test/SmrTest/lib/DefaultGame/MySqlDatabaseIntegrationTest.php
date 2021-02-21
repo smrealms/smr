@@ -111,8 +111,8 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	public function test_escapeArray_nested_array_throws() {
 		// Warning: It is dangerous to use nested arrays with escapeIndividually=false
 		$db = MySqlDatabase::getInstance();
-		$this->expectNotice();
-		$this->expectNoticeMessage('Array to string conversion');
+		$this->expectWarning();
+		$this->expectWarningMessage('Array to string conversion');
 		$db->escapeArray(['a', ['x', 9, 'y'], 2, 'c'], ':', false);
 	}
 
