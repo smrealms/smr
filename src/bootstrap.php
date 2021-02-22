@@ -126,15 +126,6 @@ function getIpAddress() {
 	return 'unknown';
 }
 
-function dumpMemDiff($msg) {
-	static $memory;
-	@ob_end_clean();
-	var_dump($msg);
-	var_dump(($memory2 = memory_get_usage()) - $memory);
-	$memory = $memory2;
-	ob_start();
-}
-
 /**
  * Wrapper around the floor() builtin for returning an integer type.
  */
