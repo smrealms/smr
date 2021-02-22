@@ -12,6 +12,7 @@
 		<api>
 			<source dsn=".">
 				<path>src/lib/Default</path>
+				<path>src/lib/Smr</path>
 			</source>
 			<include-source>true</include-source>
 		</api>
