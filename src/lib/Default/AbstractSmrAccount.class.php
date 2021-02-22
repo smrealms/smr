@@ -1125,7 +1125,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function addPoints(int $numPoints, SmrAccount $admin, int $reasonID, string $suspicion) : int {
+	public function addPoints(int $numPoints, SmrAccount $admin, int $reasonID, string $suspicion) : int | false {
 		//do we have points
 		$this->setPoints($this->getPoints() + $numPoints, SmrSession::getTime());
 		$totalPoints = $this->getPoints();
