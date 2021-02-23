@@ -140,7 +140,7 @@ if ($transaction === TRADER_STEALS ||
 		$player->increaseHOF($gained_exp, array('Trade', 'Experience', 'Selling'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Selling'), HOF_PUBLIC);
-		$port->sellGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
+		$port->sellGoods($portGood, $amount, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
 	} elseif ($transaction === TRADER_STEALS) {
 		$msg_transaction = 'stolen';
