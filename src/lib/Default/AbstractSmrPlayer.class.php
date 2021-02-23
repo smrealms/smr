@@ -64,6 +64,8 @@ abstract class AbstractSmrPlayer {
 	protected $zoom;
 	protected $displayMissions;
 	protected $displayWeapons;
+	protected $forceDropMessages;
+	protected $groupScoutMessages;
 	protected $ignoreGlobals;
 	protected $plottedCourse;
 	protected $plottedCourseFrom;
@@ -72,6 +74,7 @@ abstract class AbstractSmrPlayer {
 	protected $combatDronesKamikazeOnMines;
 	protected $customShipName;
 	protected $storedDestinations;
+	protected $canFed;
 
 	protected $visitedSectors;
 	protected $allianceRoles = array(
