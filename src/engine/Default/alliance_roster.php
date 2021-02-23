@@ -8,7 +8,7 @@ $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('Alliance', $alliance);
 
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
-Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID());
 
 $varAction = $var['action'] ?? '';
 // Does anyone actually use these?

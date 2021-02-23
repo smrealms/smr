@@ -46,14 +46,10 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function alliance($alliance_id = null, $alliance_leader_id = FALSE) {
+	public static function alliance($alliance_id) {
 		global $player, $template, $db;
 
-		if ($alliance_id) {
-			$in_alliance = ($alliance_id == $player->getAllianceID());
-		} else {
-			$in_alliance = $player->hasAlliance();
-		}
+		$in_alliance = ($alliance_id == $player->getAllianceID());
 		if (!$in_alliance) {
 			$db->query('SELECT mb_read, mod_read, planet_land FROM alliance_treaties
 							WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
@@ -98,7 +94,7 @@ class AbstractMenu {
 			$menuItems[] = array('Link'=>Globals::getAllianceOptionsHREF($alliance_id), 'Text'=>'Options');
 		}
 		$menuItems[] = array('Link'=>Globals::getAllianceListHREF(), 'Text'=>'List Alliances');
-		$menuItems[] = array('Link'=>Globals::getAllianceNewsHREF($alliance_id ? $alliance_id : $player->getAllianceID()), 'Text'=>'View News');
+		$menuItems[] = array('Link'=>Globals::getAllianceNewsHREF($alliance_id), 'Text'=>'View News');
 
 		$template->assign('MenuItems', $menuItems);
 	}

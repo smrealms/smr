@@ -2,7 +2,7 @@
 
 $alliance = $player->getAlliance();
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
-Menu::alliance($player->getAllianceID(), $alliance->getLeaderID());
+Menu::alliance($player->getAllianceID());
 
 $container = create_container('alliance_leadership_processing.php');
 $template->assign('HandoverHREF', SmrSession::getNewHREF($container));
