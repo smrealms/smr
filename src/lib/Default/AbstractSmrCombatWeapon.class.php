@@ -64,6 +64,7 @@ abstract class AbstractSmrCombatWeapon {
 	abstract public function &getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer);
 	abstract public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer);
 	abstract public function &getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer);
+	abstract public function &getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer);
 
 	protected function &doPlayerDamageToForce(array &$return, AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
 		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstForces($weaponPlayer,$forces);
