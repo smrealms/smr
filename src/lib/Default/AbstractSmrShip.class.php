@@ -185,7 +185,7 @@ abstract class AbstractSmrShip {
 		if (is_array($hardware = $this->getHardware())) {
 			foreach ($hardware as $hardwareTypeID => $amount) {
 				if ($amount > ($max = $this->getMaxHardware($hardwareTypeID))) {
-					$this->setHardware($hardwareTypeID, $max, true);
+					$this->setHardware($hardwareTypeID, $max);
 				}
 			}
 		}
