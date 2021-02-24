@@ -1,3 +1,3 @@
-FROM boxfuse/flyway:latest-alpine
+FROM flyway/flyway:latest-alpine
 
 COPY ./patches/ /flyway/sql/

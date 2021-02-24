@@ -91,7 +91,7 @@ services:
             - ./opendkim:/etc/opendkim/keys/smrealms.de
 
     flyway: &flyway-common
-        image: boxfuse/flyway:latest-alpine
+        image: flyway/flyway:latest-alpine
         # Allow retries in case the mysql service is still spinning up
         command: -connectRetries=20 -url=jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} migrate
         networks:
