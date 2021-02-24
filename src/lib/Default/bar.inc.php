@@ -11,42 +11,41 @@ function checkForLottoWinner($gameID) {
 	// we check for a lotto winner...
 	$db->lockTable('player_has_ticket');
 	$lottoInfo = getLottoInfo($gameID);
-	$lottoWon = false;
 
-	if ($lottoInfo['TimeRemaining'] <= 0) {
-		//we need to pick a winner
-		$db->query('SELECT * FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > 0 ORDER BY rand() LIMIT 1');
-		$db->requireRecord();
-		$winner_id = $db->getInt('account_id');
-
-		// Any unclaimed prizes get merged into this prize
-		$db->query('SELECT SUM(prize) FROM player_has_ticket WHERE time = 0 AND game_id = ' . $db->escapeNumber($gameID));
-		if ($db->nextRecord()) {
-			$lottoInfo['Prize'] += $db->getInt('SUM(prize)');
-		}
-
-		// Delete all tickets and re-insert the winning ticket
-		$db->query('DELETE FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($gameID));
-		$db->query('INSERT INTO player_has_ticket (game_id, account_id, time, prize) '
-		           .'VALUES (' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($winner_id) . ',\'0\',' . $db->escapeNumber($lottoInfo['Prize']) . ')');
-
-		//get around locked table problem
-		$lottoWon = true;
+	if ($lottoInfo['TimeRemaining'] > 0) {
+		// Drawing is not closed yet
+		$db->unlock();
+		return;
 	}
+
+	//we need to pick a winner
+	$db->query('SELECT * FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > 0 ORDER BY rand() LIMIT 1');
+	$db->requireRecord();
+	$winner_id = $db->getInt('account_id');
+
+	// Any unclaimed prizes get merged into this prize
+	$db->query('SELECT SUM(prize) FROM player_has_ticket WHERE time = 0 AND game_id = ' . $db->escapeNumber($gameID));
+	if ($db->nextRecord()) {
+		$lottoInfo['Prize'] += $db->getInt('SUM(prize)');
+	}
+
+	// Delete all tickets and re-insert the winning ticket
+	$db->query('DELETE FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($gameID));
+	$db->query('INSERT INTO player_has_ticket (game_id, account_id, time, prize) '
+	           .'VALUES (' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($winner_id) . ',\'0\',' . $db->escapeNumber($lottoInfo['Prize']) . ')');
+
 	$db->unlock();
 
-	if ($lottoWon === true) {
-		// create news msg
-		$winner = SmrPlayer::getPlayer($winner_id, $gameID);
-		$winner->increaseHOF($lottoInfo['Prize'], array('Bar', 'Lotto', 'Money', 'Winnings'), HOF_PUBLIC);
-		$winner->increaseHOF(1, array('Bar', 'Lotto', 'Results', 'Wins'), HOF_PUBLIC);
-		$news_message = $winner->getBBLink() . ' has won the lotto! The jackpot was ' . number_format($lottoInfo['Prize']) . '. ' . $winner->getBBLink() . ' can report to any bar to claim their prize before the next drawing!';
-		// insert the news entry
-		$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($gameID));
-		$db->query('INSERT INTO news
-					(game_id, time, news_message, type, dead_id, dead_alliance)
-					VALUES ('.$db->escapeNumber($gameID) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ', ' . $db->escapeString($news_message) . ',\'lotto\',' . $db->escapeNumber($winner->getAccountID()) . ',' . $db->escapeNumber($winner->getAllianceID()) . ')');
-	}
+	// create news msg
+	$winner = SmrPlayer::getPlayer($winner_id, $gameID);
+	$winner->increaseHOF($lottoInfo['Prize'], array('Bar', 'Lotto', 'Money', 'Winnings'), HOF_PUBLIC);
+	$winner->increaseHOF(1, array('Bar', 'Lotto', 'Results', 'Wins'), HOF_PUBLIC);
+	$news_message = $winner->getBBLink() . ' has won the lotto! The jackpot was ' . number_format($lottoInfo['Prize']) . '. ' . $winner->getBBLink() . ' can report to any bar to claim their prize before the next drawing!';
+	// insert the news entry
+	$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($gameID));
+	$db->query('INSERT INTO news
+				(game_id, time, news_message, type, dead_id, dead_alliance)
+				VALUES ('.$db->escapeNumber($gameID) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ', ' . $db->escapeString($news_message) . ',\'lotto\',' . $db->escapeNumber($winner->getAccountID()) . ',' . $db->escapeNumber($winner->getAllianceID()) . ')');
 }
 
 function getLottoInfo($gameID) {
