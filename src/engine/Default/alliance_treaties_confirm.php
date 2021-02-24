@@ -15,7 +15,7 @@ $alliance2 = SmrAlliance::getAlliance($alliance_id_2, $player->getGameID());
 $template->assign('AllianceName', $alliance2->getAllianceDisplayName());
 
 $template->assign('PageTopic', 'Alliance Treaty Confirmation');
-Menu::alliance($alliance1->getAllianceID(), $alliance1->getLeaderID());
+Menu::alliance($alliance1->getAllianceID());
 
 // Get the terms selected for this offer
 $terms = [];

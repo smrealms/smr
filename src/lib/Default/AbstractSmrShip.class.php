@@ -128,7 +128,7 @@ abstract class AbstractSmrShip {
 		return $ship;
 	}
 
-	public static function getAllBaseShips($gameTypeID, $forceUpdate = false) {
+	public static function getAllBaseShips($gameTypeID) {
 		// determine ship
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC'); //TODO add game type id
@@ -185,7 +185,7 @@ abstract class AbstractSmrShip {
 		if (is_array($hardware = $this->getHardware())) {
 			foreach ($hardware as $hardwareTypeID => $amount) {
 				if ($amount > ($max = $this->getMaxHardware($hardwareTypeID))) {
-					$this->setHardware($hardwareTypeID, $max, true);
+					$this->setHardware($hardwareTypeID, $max);
 				}
 			}
 		}
@@ -228,7 +228,7 @@ abstract class AbstractSmrShip {
 		return $this->hasCargo(GOODS_SLAVES) || $this->hasCargo(GOODS_WEAPONS) || $this->hasCargo(GOODS_NARCOTICS);
 	}
 
-	public function getDisplayAttackRating(AbstractSmrPlayer $player) {
+	public function getDisplayAttackRating() {
 		if ($this->hasActiveIllusion()) {
 			return $this->getIllusionAttack();
 		} else {
@@ -241,6 +241,14 @@ abstract class AbstractSmrShip {
 			return $this->getIllusionDefense();
 		} else {
 			return $this->getDefenseRating();
+		}
+	}
+
+	public function getDisplayName() {
+		if ($this->hasActiveIllusion()) {
+			return $this->getIllusionShipName();
+		} else {
+			return $this->getName();
 		}
 	}
 

@@ -72,9 +72,6 @@ if ($misjump > 0) { // we missed the sector
 	}
 
 	$misjumpSector = array_rand($distances[$misjump]);
-	if ($misjumpSector == null) {
-		throw new Exception('Misjump sector is null, distances: ' . var_export($distances, true));
-	}
 	$player->setSectorID($misjumpSector);
 	unset($distances);
 } else { // we hit it. exactly

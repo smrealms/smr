@@ -46,14 +46,17 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function alliance($alliance_id = null, $alliance_leader_id = FALSE) {
+	public static function alliance($alliance_id) {
 		global $player, $template, $db;
 
-		if ($alliance_id) {
-			$in_alliance = ($alliance_id == $player->getAllianceID());
-		} else {
-			$in_alliance = $player->hasAlliance();
-		}
+		$in_alliance = ($alliance_id == $player->getAllianceID() || in_array($player->getAccountID(), Globals::getHiddenPlayers()));
+
+		// Some pages are visible to all alliance members
+		$canReadMb = $in_alliance;
+		$canReadMotd = $in_alliance;
+		$canSeePlanetList = $in_alliance;
+
+		// Check if player has permissions through an alliance treaty
 		if (!$in_alliance) {
 			$db->query('SELECT mb_read, mod_read, planet_land FROM alliance_treaties
 							WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
@@ -61,13 +64,9 @@ class AbstractMenu {
 							AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 							AND (mb_read = 1 OR mod_read = 1 OR planet_land = 1) AND official = \'TRUE\'');
 			if ($db->nextRecord()) {
-				$mbRead = $db->getBoolean('mb_read');
-				$modRead = $db->getBoolean('mod_read');
-				$planetLand = $db->getBoolean('planet_land');
-			} else {
-				$mbRead = FALSE;
-				$modRead = FALSE;
-				$planetLand = FALSE;
+				$canReadMb = $db->getBoolean('mb_read');
+				$canReadMotd = $db->getBoolean('mod_read');
+				$canSeePlanetList = $db->getBoolean('planet_land');
 			}
 		}
 
@@ -80,25 +79,25 @@ class AbstractMenu {
 		}
 
 		$menuItems = array();
-		if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $modRead) {
+		if ($canReadMotd) {
 			$menuItems[] = array('Link'=>Globals::getAllianceMotdHREF($alliance_id), 'Text'=>'Message of the Day');
 		}
 		$menuItems[] = array('Link'=>Globals::getAllianceRosterHREF($alliance_id), 'Text'=>'Roster');
-		if ($send_alliance_msg || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($send_alliance_msg) {
 			$menuItems[] = array('Link'=>Globals::getAllianceMessageHREF($alliance_id), 'Text'=>'Send Message');
 		}
-		if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $mbRead) {
+		if ($canReadMb) {
 			$menuItems[] = array('Link'=>Globals::getAllianceMessageBoardHREF($alliance_id), 'Text'=>'Message Board');
 		}
-		if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $planetLand) {
+		if ($canSeePlanetList) {
 			$menuItems[] = array('Link'=>Globals::getPlanetListHREF($alliance_id), 'Text'=>'Planets');
 		}
-		if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($in_alliance) {
 			$menuItems[] = array('Link'=>Globals::getAllianceForcesHREF($alliance_id), 'Text'=>'Forces');
 			$menuItems[] = array('Link'=>Globals::getAllianceOptionsHREF($alliance_id), 'Text'=>'Options');
 		}
 		$menuItems[] = array('Link'=>Globals::getAllianceListHREF(), 'Text'=>'List Alliances');
-		$menuItems[] = array('Link'=>Globals::getAllianceNewsHREF($alliance_id ? $alliance_id : $player->getAllianceID()), 'Text'=>'View News');
+		$menuItems[] = array('Link'=>Globals::getAllianceNewsHREF($alliance_id), 'Text'=>'View News');
 
 		$template->assign('MenuItems', $menuItems);
 	}

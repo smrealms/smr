@@ -2,7 +2,7 @@
 
 $alliance = $player->getAlliance();
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
-Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID());
 
 $container = create_container('alliance_set_op_processing.php');
 

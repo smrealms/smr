@@ -146,7 +146,7 @@ class ChessGame {
 				if ($debugInfo === true) {
 					echo 'x=', $db->getInt('start_x'), ', y=', $db->getInt('start_y'), ', endX=', $db->getInt('end_x'), ', endY=', $db->getInt('end_y'), ', forAccountID=', $db->getInt('move_id') % 2 == 1 ? $this->getWhiteID() : $this->getBlackID(), EOL;
 				}
-				if (0 != $this->tryMove($db->getInt('start_x'), $db->getInt('start_y'), $db->getInt('end_x'), $db->getInt('end_y'), $db->getInt('move_id') % 2 == 1 ? $this->getWhiteID() : $this->getBlackID())) {
+				if (0 != $this->tryMove($db->getInt('start_x'), $db->getInt('start_y'), $db->getInt('end_x'), $db->getInt('end_y'), $db->getInt('move_id') % 2 == 1 ? $this->getWhiteID() : $this->getBlackID(), $db->getInt('promote_piece_id'))) {
 					break;
 				}
 			}
@@ -609,7 +609,7 @@ class ChessGame {
 		return $this->tryMove($x, $y, $toX, $toY, $this->getCurrentTurnAccountID(), $pawnPromotionPiece);
 	}
 
-	public function tryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) {
+	public function tryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) : int {
 		if ($this->hasEnded()) {
 			return 5;
 		}
@@ -720,6 +720,8 @@ class ChessGame {
 				return $return;
 			}
 		}
+		// Invalid move was attempted
+		return 6;
 	}
 
 	public function getChessGameID() {

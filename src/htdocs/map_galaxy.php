@@ -89,7 +89,7 @@ try {
 
 	$template->assign('Title', 'Galaxy Map');
 
-	if ($account->getCssLink() != null) {
+	if (!empty($account->getCssLink())) {
 		$template->assign('ExtraCSSLink', $account->getCssLink());
 	}
 	$template->assign('CSSLink', $account->getCssUrl());

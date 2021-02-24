@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic', 'Alliance Treaties');
 $alliance = $player->getAlliance();
-Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID());
 
 $alliances = [];
 $db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY alliance_name');

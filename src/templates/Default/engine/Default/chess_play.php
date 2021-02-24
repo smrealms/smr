@@ -4,9 +4,8 @@
 <table>
 	<tr>
 		<td>
-			<div style="height: 500px; width: 500px;">
-				<table class="chess chessFont">
-					<td class="chessOutline">&nbsp;</td><?php
+			<div style="height: 484px; width: 500px;">
+				<table class="chess chessFont"><?php
 					foreach ($Board as $Y => $Row) { ?>
 						<tr>
 							<td class="chessOutline"><?php echo 8 - $Y; ?></td><?php
@@ -17,15 +16,17 @@
 							} ?>
 						</tr><?php
 					}?>
-					<td class="chessOutline">&nbsp;</td><?php
-					foreach ($FileCoords as $FileCoord) { ?>
-						<td class="chessOutline"><?php echo $FileCoord; ?></td><?php
-					} ?>
+					<tr>
+						<td class="chessOutline">&nbsp;</td><?php
+						foreach ($FileCoords as $FileCoord) { ?>
+							<td class="chessOutline"><?php echo $FileCoord; ?></td><?php
+						} ?>
+					</tr>
 				</table>
 			</div>
 		</td>
 		<td>
-			<div class="chat" style="height: 500px; width: 160px; overflow-y:scroll;">
+			<div class="chat" style="height: 484px; width: 160px; overflow-y:scroll;">
 				<table id="moveTable" class="ajax chessFont">
 					<?php $this->includeTemplate('includes/ChessMoves.inc.php'); ?>
 				</table>

@@ -398,7 +398,7 @@ class AbstractSmrPort {
 		$this->increaseCredits($cappedBargainPrice);
 	}
 
-	public function sellGoods(array $good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
+	public function sellGoods(array $good, $goodsTraded, $exp) {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 	}
 

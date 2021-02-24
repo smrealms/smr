@@ -12,7 +12,7 @@ if (empty($thread_id)) {
 }
 
 $template->assign('PageTopic', $var['thread_topics'][$thread_index]);
-Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID());
 
 $db->query('REPLACE INTO player_read_thread
 			(account_id, game_id, alliance_id, thread_id, time)

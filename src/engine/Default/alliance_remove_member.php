@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 $alliance = $player->getAlliance();
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
-Menu::alliance($alliance->getAllianceID(), $alliance->getLeaderID());
+Menu::alliance($alliance->getAllianceID());
 
 $db->query('
 SELECT

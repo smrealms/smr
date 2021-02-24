@@ -12,7 +12,7 @@ if ($website != '') {
 	}
 
 	// validate
-	$status = floor(php_link_check($website, true) / 100);
+	$status = floor(php_link_check($website) / 100);
 
 	if ($status != 2 && $status != 3) {
 		create_error('The website you entered is invalid!');
@@ -111,7 +111,7 @@ $container = create_container('skeleton.php', 'album_edit.php');
 $container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
 forward($container);
 
-function php_link_check($url, $r = FALSE) {
+function php_link_check($url) {
 	/*	Purpose: Check HTTP Links
 	*	Usage:	$var = phpLinkCheck(absoluteURI)
 	*					$var['Status-Code'] will return the HTTP status code
@@ -129,7 +129,7 @@ function php_link_check($url, $r = FALSE) {
 		$url = 'http://' . $url;
 	}
 	$url = parse_url($url);
-	if (strtolower($url['scheme']) != 'http') {
+	if (!in_array(strtolower($url['scheme']), ['http', 'https'])) {
 		return false;
 	}
 
@@ -146,7 +146,7 @@ function php_link_check($url, $r = FALSE) {
 
 	$fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
 
-	if (!$fp) {
+	if ($fp === false) {
 		return false;
 	} else {
 		$head = '';
@@ -159,24 +159,12 @@ function php_link_check($url, $r = FALSE) {
 		}
 		fclose($fp);
 
-		preg_match('=^(HTTP/\d+\.\d+) (\d {3}) ([^\r\n]*)=', $head, $matches);
+		preg_match('=^(HTTP/\d+\.\d+) (\d{3}) ([^\r\n]*)=', $head, $matches);
 		$http['Status-Line'] = $matches[0];
 		$http['HTTP-Version'] = $matches[1];
 		$http['Status-Code'] = $matches[2];
 		$http['Reason-Phrase'] = $matches[3];
 
-		if ($r) {
-			return $http['Status-Code'];
-		}
-
-		$rclass = array('Informational', 'Success', 'Redirection', 'Client Error', 'Server Error');
-		$http['Response-Class'] = $rclass[$http['Status-Code'][0] - 1];
-
-		preg_match_all('=^(.+): ([^\r\n]*)=m', $head, $matches, PREG_SET_ORDER);
-		foreach ($matches as $line) {
-			$http[$line[1]] = $line[2];
-		}
-
-		return $http;
+		return $http['Status-Code'];
 	}
 }

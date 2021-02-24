@@ -233,54 +233,29 @@ class ChessPiece {
 		return "&#" . (9811 + $pieceID + ($colour == ChessGame::PLAYER_WHITE ? 0 : 6)) . ";";
 	}
 
-	public static function getLetterForPiece($pieceID, $colour) {
-		switch ($pieceID) {
-			case self::KING:
-				$letter = 'k';
-			break;
-			case self::QUEEN:
-				$letter = 'q';
-			break;
-			case self::ROOK:
-				$letter = 'r';
-			break;
-			break;
-			case self::BISHOP:
-				$letter = 'b';
-			break;
-			case self::KNIGHT:
-				$letter = 'n';
-			break;
-			case self::PAWN:
-				$letter = 'p';
-			break;
-		}
+	public static function getLetterForPiece(int $pieceID, string $colour) : string {
+		$letter = match ($pieceID) {
+			self::KING => 'k',
+			self::QUEEN => 'q',
+			self::ROOK => 'r',
+			self::BISHOP => 'b',
+			self::KNIGHT => 'n',
+			self::PAWN => 'p',
+		};
 		if ($colour == ChessGame::PLAYER_WHITE) {
 			$letter = strtoupper($letter);
 		}
 		return $letter;
 	}
 
-	public static function getPieceForLetter($letter) {
-		switch ($letter) {
-			case 'k':
-			case 'K':
-				return self::KING;
-			case 'q':
-			case 'Q':
-				return self::QUEEN;
-			case 'r':
-			case 'R':
-				return self::ROOK;
-			case 'b':
-			case 'B':
-				return self::BISHOP;
-			case 'n':
-			case 'N':
-				return self::KNIGHT;
-			case 'p':
-			case 'P':
-				return self::PAWN;
-		}
+	public static function getPieceForLetter(string $letter) : int {
+		return match (strtolower($letter)) {
+			'k' => self::KING,
+			'q' => self::QUEEN,
+			'r' => self::ROOK,
+			'b' => self::BISHOP,
+			'n' => self::KNIGHT,
+			'p' => self::PAWN,
+		};
 	}
 }

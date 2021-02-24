@@ -94,18 +94,19 @@ if ($type == 'comp_share') {
 	if (!is_numeric($variable)) {
 		create_error('Account id must be numeric.');
 	}
-	$template->assign('BanAccountID', $variable);
-	$summary = 'Account ' . $variable . ' has had the following IPs at the following times.';
+	$accountID = (int)$variable;
+	$template->assign('BanAccountID', $accountID);
+	$summary = 'Account ' . $accountID. ' has had the following IPs at the following times.';
 	$template->assign('Summary', $summary);
 	$db2->query('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($variable));
 	if ($db2->nextRecord()) {
 		$ex = $db2->getField('reason');
 		$template->assign('Exception', $ex);
 	}
-	$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = ' . $db->escapeNumber($variable));
-	if ($db2->nextRecord()) {
-		$close_reason = $db2->getField('reason');
-		$template->assign('CloseReason', $close_reason);
+	$viewAccount = SmrAccount::getAccount($accountID);
+	$disabled = $viewAccount->isDisabled();
+	if ($disabled !== false) {
+		$template->assign('CloseReason', $disabled['Reason']);
 	}
 	$rows = [];
 	$db->query('SELECT * FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($variable) . ' ORDER BY time');
@@ -136,13 +137,15 @@ if ($type == 'comp_share') {
 		//=========================================================
 		// List all IPs for a specific alliance
 		//=========================================================
-		list ($alliance, $game) = preg_split('/[\/]/', $variable);
-		if (!is_numeric($game) || !is_numeric($alliance)) {
+		list ($allianceID, $gameID) = preg_split('/[\/]/', $variable);
+		if (!is_numeric($gameID) || !is_numeric($allianceID)) {
 			create_error('Incorrect format used.');
 		}
-		$name = SmrAlliance::getAlliance($alliance, $game)->getAllianceDisplayName();
-		$db->query('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE game_id = ' . $db->escapeNumber($game) . ' AND alliance_id = ' . $db->escapeNumber($alliance) . ' ORDER BY ip');
-		$summary = 'Listing all IPs for alliance ' . $name . ' in game with ID ' . $game;
+		$allianceID = (int)$allianceID;
+		$gameID = (int)$gameID;
+		$name = SmrAlliance::getAlliance($allianceID, $gameID)->getAllianceDisplayName();
+		$db->query('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND alliance_id = ' . $db->escapeNumber($allianceID) . ' ORDER BY ip');
+		$summary = 'Listing all IPs for alliance ' . $name . ' in game with ID ' . $gameID;
 
 	} elseif ($type == 'wild_log') {
 		//=========================================================

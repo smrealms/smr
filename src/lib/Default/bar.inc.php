@@ -16,9 +16,8 @@ function checkForLottoWinner($gameID) {
 	if ($lottoInfo['TimeRemaining'] <= 0) {
 		//we need to pick a winner
 		$db->query('SELECT * FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > 0 ORDER BY rand() LIMIT 1');
-		if ($db->nextRecord()) {
-			$winner_id = $db->getInt('account_id');
-		}
+		$db->requireRecord();
+		$winner_id = $db->getInt('account_id');
 
 		// Any unclaimed prizes get merged into this prize
 		$db->query('SELECT SUM(prize) FROM player_has_ticket WHERE time = 0 AND game_id = ' . $db->escapeNumber($gameID));
@@ -53,7 +52,7 @@ function checkForLottoWinner($gameID) {
 function getLottoInfo($gameID) {
 	global $db;
 	$amount = 1000000;
-		$firstBuy = SmrSession::getTime();
+	$firstBuy = SmrSession::getTime();
 	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket
 				WHERE game_id = '.$db->escapeNumber($gameID) . ' AND time > 0');
 	$db->requireRecord();
