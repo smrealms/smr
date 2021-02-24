@@ -50,7 +50,6 @@ class Template {
 		ob_start();
 		$this->includeTemplate($templateName);
 		$output = ob_get_clean();
-		$this->trimWhiteSpace($output);
 
 		$ajaxEnabled = ($this->data['AJAX_ENABLE_REFRESH'] ?? false) !== false;
 		if ($ajaxEnabled) {
@@ -133,61 +132,6 @@ class Template {
 
 	protected function checkDisableAJAX($html) {
 		return preg_match('/<input' . '[^>]*' . '[^(submit)(hidden)(image)]' . '[^>]*' . '>/i', $html) != 0;
-	}
-
-	protected function trimWhiteSpace(&$html) {
-		// Pull out the script blocks
-		/*	preg_match_all("!<script[^>]*?>.*?</script>!is", $source, $match);
-		 $_script_blocks = $match[0];
-		 $source = preg_replace("!<script[^>]*?>.*?</script>!is",
-		 '@@@SMARTY:TRIM:SCRIPT@@@', $source);
-		 */
-		// Pull out the pre blocks
-		preg_match_all("!<pre[^>]*?>.*?</pre>!is", $html, $match);
-		$_pre_blocks = $match[0];
-		$html = preg_replace("!<pre[^>]*?>.*?</pre>!is",
-			'@@@SMARTY:TRIM:PRE@@@', $html);
-
-		// Pull out the textarea blocks
-		preg_match_all("!<textarea[^>]*?>.*?</textarea>!is", $html, $match);
-		$_textarea_blocks = $match[0];
-		$html = preg_replace("!<textarea[^>]*?>.*?</textarea>!is",
-			'@@@SMARTY:TRIM:TEXTAREA@@@', $html);
-
-		// remove all leading spaces, tabs and carriage returns NOT
-		// preceeded by a php close tag.
-		$html = preg_replace('/[\s]+/', ' ', $html);
-
-		// Pull out the span> <span blocks
-		preg_match_all("!</span> <span!is", $html, $match);
-		$_span_blocks = $match[0];
-		$html = preg_replace("!</span> <span!is",
-			'@@@SMARTY:TRIM:SPAN@@@', $html);
-
-		$html = trim(preg_replace('/> </', '><', $html));
-
-		// replace span blocks
-		$this->replaceTrimHolder("@@@SMARTY:TRIM:SPAN@@@", $_span_blocks, $html);
-
-		// replace textarea blocks
-		$this->replaceTrimHolder("@@@SMARTY:TRIM:TEXTAREA@@@", $_textarea_blocks, $html);
-
-		// replace pre blocks
-		$this->replaceTrimHolder("@@@SMARTY:TRIM:PRE@@@", $_pre_blocks, $html);
-
-		// replace script blocks
-//		$this->replaceTrimHolder("@@@SMARTY:TRIM:SCRIPT@@@",$_script_blocks, $html);
-	}
-	protected function replaceTrimHolder($search_str, $replace, &$subject) {
-		$_len = strlen($search_str);
-		$_pos = 0;
-		for ($_i = 0, $_count = count($replace); $_i < $_count; $_i++) {
-			if (($_pos = strpos($subject, $search_str, $_pos)) !== false) {
-				$subject = substr_replace($subject, $replace[$_i], $_pos, $_len);
-			} else {
-				break;
-			}
-		}
 	}
 
 	protected function doDamageTypeReductionDisplay(&$damageTypes) {
