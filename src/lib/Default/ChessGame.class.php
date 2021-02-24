@@ -609,7 +609,7 @@ class ChessGame {
 		return $this->tryMove($x, $y, $toX, $toY, $this->getCurrentTurnAccountID(), $pawnPromotionPiece);
 	}
 
-	public function tryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) {
+	public function tryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) : int {
 		if ($this->hasEnded()) {
 			return 5;
 		}
@@ -720,6 +720,8 @@ class ChessGame {
 				return $return;
 			}
 		}
+		// Invalid move was attempted
+		return 6;
 	}
 
 	public function getChessGameID() {

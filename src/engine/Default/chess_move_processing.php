@@ -31,6 +31,9 @@ if (!$chessGame->hasEnded()) {
 				case 5:
 					$container['MoveMessage'] = 'The game is over.';
 				break;
+				case 6:
+					$container['MoveMessage'] = 'That is not a valid move!';
+				break;
 			}
 		}
 	} else {
