@@ -30,21 +30,21 @@ if ($BoughtGoods) { ?>
 			<th>Action</th>
 		</tr><?php
 		foreach ($BoughtGoods as $goodID => $good) { ?>
-			<form method="POST" action="<?php echo $good['HREF']; ?>">
-				<tr class="center">
-					<td class="left"><img src="<?php echo $good['ImageLink']; ?>" width="13" height="16" title="<?php echo $good['Name']; ?>" alt=""><?php echo $good['Name']; ?></td>
-					<td class="ajax" id="amount<?php echo $goodID; ?>"><?php echo $good['PortAmount']; ?></td>
-					<td><?php echo $good['BasePrice']; ?></td>
-					<td><?php echo $ThisShip->getCargo($good['ID']); ?></td>
-					<td><input type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
-					<td>
+			<tr class="center">
+				<td class="left"><img src="<?php echo $good['ImageLink']; ?>" width="13" height="16" title="<?php echo $good['Name']; ?>" alt=""><?php echo $good['Name']; ?></td>
+				<td class="ajax" id="amount<?php echo $goodID; ?>"><?php echo $good['PortAmount']; ?></td>
+				<td><?php echo $good['BasePrice']; ?></td>
+				<td><?php echo $ThisShip->getCargo($good['ID']); ?></td>
+				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
+				<td>
+					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
 						<input type="submit" name="action" value="Buy"><?php
 						if ($ThisShip->isUnderground()) { ?>
 							<input type="submit" name="action" value="Steal"><?php
 						} ?>
-					</td>
-				</tr>
-			</form><?php
+					</form>
+				</td>
+			</tr><?php
 		} ?>
 	</table>
 	<p>&nbsp;</p><?php
@@ -62,16 +62,18 @@ if ($SoldGoods) { ?>
 			<th>Action</th>
 		</tr><?php
 		foreach ($SoldGoods as $goodID => $good) { ?>
-			<form method="POST" action="<?php echo $good['HREF']; ?>">
-				<tr class="center">
-					<td class="left"><img src="<?php echo $good['ImageLink']; ?>" width="13" height="16" title="<?php echo $good['Name']; ?>" alt=""><?php echo $good['Name']; ?></td>
-					<td class="ajax" id="amount<?php echo $goodID; ?>"><?php echo $good['PortAmount']; ?></td>
-					<td><?php echo $good['BasePrice']; ?></td>
-					<td><?php echo $ThisShip->getCargo($goodID); ?></td>
-					<td><input type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
-					<td><input type="submit" name="action" value="Sell"></td>
-				</tr>
-			</form><?php
+			<tr class="center">
+				<td class="left"><img src="<?php echo $good['ImageLink']; ?>" width="13" height="16" title="<?php echo $good['Name']; ?>" alt=""><?php echo $good['Name']; ?></td>
+				<td class="ajax" id="amount<?php echo $goodID; ?>"><?php echo $good['PortAmount']; ?></td>
+				<td><?php echo $good['BasePrice']; ?></td>
+				<td><?php echo $ThisShip->getCargo($goodID); ?></td>
+				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
+				<td>
+					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
+						<input type="submit" name="action" value="Sell">
+					</form>
+				</td>
+			</tr><?php
 		} ?>
 	</table>
 	<p>&nbsp;</p><?php
