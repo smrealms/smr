@@ -25,6 +25,7 @@ function logException(Throwable $e) : void {
 
 	$message .=
 		'User IP: ' . getIpAddress() . "\n" .
+		'User Agent: ' . ($_SERVER['HTTP_USER_AGENT'] ?? 'undefined') . "\n" .
 		'USING_AJAX: ' . (defined('USING_AJAX') ? var_export(USING_AJAX, true) : 'undefined') . "\n" .
 		'URL: ' . (defined('URL') ? URL : 'undefined');
 
