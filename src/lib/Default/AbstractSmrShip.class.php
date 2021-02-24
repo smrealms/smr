@@ -128,7 +128,7 @@ abstract class AbstractSmrShip {
 		return $ship;
 	}
 
-	public static function getAllBaseShips($gameTypeID, $forceUpdate = false) {
+	public static function getAllBaseShips($gameTypeID) {
 		// determine ship
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC'); //TODO add game type id
