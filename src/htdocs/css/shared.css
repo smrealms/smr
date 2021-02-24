@@ -623,3 +623,8 @@ table#moveTable td {
 .port9 {
 	background-color: #FF8080;
 }
+
+/* Right panel experience bar */
+#lvlBar {
+	font-size: 0;
+}
