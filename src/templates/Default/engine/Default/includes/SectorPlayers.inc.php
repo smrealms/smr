@@ -37,18 +37,18 @@ function getPlayerOptionClass($player, $other) {
 								<?php echo $Player->getLinkedDisplayName(); ?>
 							</td>
 							<td><?php
-								if ($ThisPlayer->traderMAPAlliance($Player) || !$Ship->hasActiveIllusion()) {
+								if ($ThisPlayer->traderMAPAlliance($Player)) {
 									if ($Player->isFlagship() && $ThisPlayer->sameAlliance($Player)) { ?>
 										<img title="Alliance Flagship" alt="Alliance Flagship" src="images/flagship.png" width="16" height="12" />&nbsp;<?php
 									}
 									echo $Ship->getName();
-								}
-								if ($Ship->hasActiveIllusion()) {
-									if (!$ThisPlayer->traderMAPAlliance($Player)) {
-										echo $Ship->getIllusionShipName();
-									} elseif ($Ship->getName() != $Ship->getIllusionShipName()) {
-										?> <span class="npcColour">(<?php echo $Ship->getIllusionShipName(); ?>)</span><?php
+									if ($Ship->hasActiveIllusion()) {
+										if ($Ship->getName() != $Ship->getIllusionShipName()) {
+											?> <span class="npcColour">(<?php echo $Ship->getIllusionShipName(); ?>)</span><?php
+										}
 									}
+								} else {
+									echo $Ship->getDisplayName();
 								}
 								if ($Ship->isCloaked()) {
 									?> <span class="red">[Cloaked]</span><?php
@@ -58,16 +58,15 @@ function getPlayerOptionClass($player, $other) {
 								} ?>
 							</td>
 							<td class="shrink center noWrap"><?php
-								if ($ThisPlayer->traderMAPAlliance($Player) || !$Ship->hasActiveIllusion()) {
+								if ($ThisPlayer->traderMAPAlliance($Player)) {
 									echo $Ship->getAttackRating(); ?> / <?php echo $Ship->getDefenseRating();
-								}
-								if ($Ship->hasActiveIllusion()) {
-									if (!$ThisPlayer->traderMAPAlliance($Player)) {
-										echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense();
-									} elseif ($Ship->getAttackRating() != $Ship->getIllusionAttack() || $Ship->getDefenseRating() != $Ship->getIllusionDefense()) {
+									if ($Ship->hasActiveIllusion()) {
 										?> <span class="npcColour">(<?php echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense(); ?>)</span><?php
 									}
-								} ?></td>
+								} else {
+									echo $Ship->getDisplayAttackRating(); ?> / <?php echo $Ship->getDisplayDefenseRating();
+								} ?>
+							</td>
 							<td class="shrink center noWrap"><?php echo $Player->getLevelID() ?></td>
 							<td class="shrink center noWrap">
 								<div class="buttonA"><?php

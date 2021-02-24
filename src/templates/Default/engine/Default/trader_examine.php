@@ -46,7 +46,7 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] = $ThisPlayer;
 					Race: <?php echo $fleetPlayer->getRaceName() ?><br />
 					Alliance: <?php echo $fleetPlayer->getAllianceDisplayName() ?><br /><br /><?php
 					echo $fleetShip->getName() ?><br />
-					Rating : <?php echo $fleetShip->getDisplayAttackRating($ThisPlayer) . '/' . $fleetShip->getDisplayDefenseRating($ThisPlayer) ?><br /><?php
+					Rating : <?php echo $fleetShip->getDisplayAttackRating() . '/' . $fleetShip->getDisplayDefenseRating() ?><br /><?php
 					if ($ThisShip->hasScanner()) { ?>
 						Shields : <?php echo $fleetShip->getShieldLow() . '-' . $fleetShip->getShieldHigh() ?><br />
 						Armour : <?php echo $fleetShip->getArmourLow() . '-' . $fleetShip->getArmourHigh() ?><br />

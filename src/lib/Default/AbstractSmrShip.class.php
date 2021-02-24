@@ -228,7 +228,7 @@ abstract class AbstractSmrShip {
 		return $this->hasCargo(GOODS_SLAVES) || $this->hasCargo(GOODS_WEAPONS) || $this->hasCargo(GOODS_NARCOTICS);
 	}
 
-	public function getDisplayAttackRating(AbstractSmrPlayer $player) {
+	public function getDisplayAttackRating() {
 		if ($this->hasActiveIllusion()) {
 			return $this->getIllusionAttack();
 		} else {
@@ -241,6 +241,14 @@ abstract class AbstractSmrShip {
 			return $this->getIllusionDefense();
 		} else {
 			return $this->getDefenseRating();
+		}
+	}
+
+	public function getDisplayName() {
+		if ($this->hasActiveIllusion()) {
+			return $this->getIllusionShipName();
+		} else {
+			return $this->getName();
 		}
 	}
 
