@@ -160,10 +160,12 @@ function php_link_check($url) {
 		fclose($fp);
 
 		preg_match('=^(HTTP/\d+\.\d+) (\d{3}) ([^\r\n]*)=', $head, $matches);
-		$http['Status-Line'] = $matches[0];
-		$http['HTTP-Version'] = $matches[1];
-		$http['Status-Code'] = $matches[2];
-		$http['Reason-Phrase'] = $matches[3];
+		$http = [
+			'Status-Line' => $matches[0],
+			'HTTP-Version' => $matches[1],
+			'Status-Code' => $matches[2],
+			'Reason-Phrase' => $matches[3],
+		];
 
 		return $http['Status-Code'];
 	}

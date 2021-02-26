@@ -13,9 +13,8 @@ class DummyShip extends AbstractSmrShip {
 
 		$this->regenerate($player);
 		$this->doFullUNO();
-
-		$this->cargo_left = $this->getCargoHolds();
 	}
+
 	protected function doFullUNO() {
 		foreach($this->getMaxHardware() as $hardwareTypeID => $max) {
 			$this->hardware[$hardwareTypeID] = $max;
@@ -34,16 +33,16 @@ class DummyShip extends AbstractSmrShip {
 		$this->checkForExcessWeapons();
 	}
 
-	function decloak() {
+	public function decloak() {
 	}
 
-	function enableCloak() {
+	public function enableCloak() {
 	}
 
-	function setIllusion($ship_id, $attack, $defense) {
+	public function setIllusion($ship_id, $attack, $defense) {
 	}
 
-	function disableIllusion() {
+	public function disableIllusion() {
 	}
 
 	public function getIllusionShip() {
