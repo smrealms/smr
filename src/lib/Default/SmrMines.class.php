@@ -49,11 +49,6 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function &getModifiedDamage() {
-		$damage = $this->getDamage();
-		return $damage;
-	}
-
 	public function &getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
 		$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		return $return;
@@ -89,7 +84,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
-		$damage =& $this->getModifiedDamage();
+		$damage = $this->getDamage();
 		if ($targetPlayer->getShip()->isFederal()) { // do less damage to fed ships
 			$damage['MaxDamage'] = IRound($damage['MaxDamage'] * self::FED_SHIP_DAMAGE_MODIFIER);
 			$damage['Shield'] = IRound($damage['Shield'] * self::FED_SHIP_DAMAGE_MODIFIER);

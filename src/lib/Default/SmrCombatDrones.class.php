@@ -100,17 +100,12 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return 100;
 	}
 
-	public function &getModifiedDamage() {
-		$damage = $this->getDamage();
-		return $damage;
-	}
-
 	public function &getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
 		if (!$this->canShootForces()) {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		}
-		$damage =& $this->getModifiedDamage();
+		$damage = $this->getDamage();
 		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstForces($weaponPlayer, $forces) / 100);
 		$damage['Kamikaze'] = 0;
 		if ($weaponPlayer->isCombatDronesKamikazeOnMines()) { // If kamikaze then damage is same as MINE_ARMOUR
@@ -134,7 +129,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		}
-		$damage =& $this->getModifiedDamage();
+		$damage = $this->getDamage();
 		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPort($weaponPlayer, $port) / 100);
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
@@ -148,7 +143,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		}
-		$damage =& $this->getModifiedDamage();
+		$damage = $this->getDamage();
 		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet) / 100);
 		$planetMod = self::PLANET_DAMAGE_MOD;
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage'] * $planetMod);
@@ -163,7 +158,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
-		$damage =& $this->getModifiedDamage();
+		$damage = $this->getDamage();
 		if ($targetPlayer->getShip()->hasDCS()) {
 			$damage['MaxDamage'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
 			$damage['Shield'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
@@ -181,7 +176,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
-		$damage =& $this->getModifiedDamage();
+		$damage = $this->getDamage();
 
 		if ($targetPlayer->getShip()->hasDCS()) {
 			$damage['MaxDamage'] *= DCS_FORCE_DAMAGE_DECIMAL_PERCENT;
@@ -201,7 +196,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
-		$damage =& $this->getModifiedDamage();
+		$damage = $this->getDamage();
 
 		if ($targetPlayer->getShip()->hasDCS()) {
 			$damage['MaxDamage'] *= DCS_PORT_DAMAGE_DECIMAL_PERCENT;
@@ -220,7 +215,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
-		$damage =& $this->getModifiedDamage();
+		$damage = $this->getDamage();
 
 		if ($targetPlayer->getShip()->hasDCS()) {
 			$damage['MaxDamage'] *= DCS_PLANET_DAMAGE_DECIMAL_PERCENT;

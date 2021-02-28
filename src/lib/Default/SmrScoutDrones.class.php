@@ -35,11 +35,6 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function &getModifiedDamage() {
-		$damage = $this->getDamage();
-		return $damage;
-	}
-
 	public function &getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
 		$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		return $return;
@@ -75,7 +70,7 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
 		}
-		$damage =& $this->getModifiedDamage();
+		$damage = $this->getDamage();
 		$damage['Launched'] = ICeil($this->getNumberOfSDs() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
