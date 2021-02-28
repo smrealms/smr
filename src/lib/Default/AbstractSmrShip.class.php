@@ -934,10 +934,6 @@ abstract class AbstractSmrShip {
 		       $this->getShipTypeID() == SHIP_TYPE_DEATH_CRUISER;
 	}
 
-	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
-		return $this->shootPlayers(array($targetPlayer));
-	}
-
 	public function &shootPlayers(array $targetPlayers) {
 		$thisPlayer = $this->getPlayer();
 		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []);

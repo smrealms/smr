@@ -1150,10 +1150,6 @@ class SmrPlanet {
 		return count($this->getWeapons()) > 0;
 	}
 
-	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
-		return $this->shootPlayers(array($targetPlayer));
-	}
-
 	public function &shootPlayers(array $targetPlayers) {
 		$results = array('Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => array());
 		foreach ($targetPlayers as $targetPlayer) {

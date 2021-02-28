@@ -1198,11 +1198,6 @@ class AbstractSmrPort {
 		}
 	}
 
-
-	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
-		return $this->shootPlayers(array($targetPlayer));
-	}
-
 	public function &shootPlayers(array $targetPlayers) {
 		$results = array('Port' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => array());
 		foreach ($targetPlayers as $targetPlayer) {
