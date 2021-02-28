@@ -2731,12 +2731,12 @@ abstract class AbstractSmrPlayer {
 	}
 
 	private function setupMissionStep($missionID) {
-		$mission =& $this->missions[$missionID];
-		if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
+		$stepID = $this->missions[$missionID]['On Step'];
+		if ($stepID >= count(MISSIONS[$missionID]['Steps'])) {
 			// Nothing to do if this mission is already completed
 			return;
 		}
-		$step = MISSIONS[$missionID]['Steps'][$mission['On Step']];
+		$step = MISSIONS[$missionID]['Steps'][$stepID];
 		if (isset($step['PickSector'])) {
 			$realX = Plotter::getX($step['PickSector']['Type'], $step['PickSector']['X'], $this->getGameID());
 			if ($realX === false) {
@@ -2750,7 +2750,7 @@ abstract class AbstractSmrPlayer {
 				$this->deleteMission($missionID);
 				create_error('Cannot find a path to the destination!');
 			}
-			$mission['Sector'] = $path->getEndSectorID();
+			$this->missions[$missionID]['Sector'] = $path->getEndSectorID();
 		}
 	}
 
