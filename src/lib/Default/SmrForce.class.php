@@ -446,10 +446,6 @@ class SmrForce {
 		return SmrSession::getNewHREF($container);
 	}
 
-	public function &shootPlayer(AbstractSmrPlayer $targetPlayer, $minesAreAttacker) {
-		return $this->shootPlayers(array($targetPlayer), $minesAreAttacker);
-	}
-
 	public function &shootPlayers(array $targetPlayers, $minesAreAttacker) {
 		$results = array('TotalDamage' => 0);
 		if (!$this->exists()) {

@@ -1806,10 +1806,6 @@ abstract class AbstractSmrPlayer {
 		return $this->getTicker($tickerType) !== false;
 	}
 
-	public function &shootPlayer(AbstractSmrPlayer $targetPlayer) {
-		return $this->getShip()->shootPlayer($targetPlayer);
-	}
-
 	public function &shootForces(SmrForce $forces) {
 		return $this->getShip()->shootForces($forces);
 	}
