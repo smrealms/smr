@@ -37,9 +37,6 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 
 		return max(0, min(100, $modifiedAccuracy));
 	}
-	public function getMaxModifiedAccuracyAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
-		return $this->getModifiedAccuracyAgainstForcesUsingRandom($weaponPlayer, $forces, self::MAX_CDS_RAND);
-	}
 	public function getModifiedAccuracyAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
 		return $this->getModifiedAccuracyAgainstForcesUsingRandom($weaponPlayer, $forces, rand(3, self::MAX_CDS_RAND));
 	}
@@ -50,9 +47,6 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 
 		return max(0, min(100, $modifiedAccuracy));
 	}
-	public function getMaxModifiedAccuracyAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
-		return $this->getModifiedAccuracyAgainstPortUsingRandom($weaponPlayer, $port, self::MAX_CDS_RAND);
-	}
 	public function getModifiedAccuracyAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
 		return $this->getModifiedAccuracyAgainstPortUsingRandom($weaponPlayer, $port, rand(3, self::MAX_CDS_RAND));
 	}
@@ -62,9 +56,6 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		$modifiedAccuracy += $random;
 
 		return max(0, min(100, $modifiedAccuracy));
-	}
-	public function getMaxModifiedAccuracyAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) {
-		return $this->getModifiedAccuracyAgainstPlanetUsingRandom($weaponPlayer, $planet, self::MAX_CDS_RAND);
 	}
 	public function getModifiedAccuracyAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) {
 		return $this->getModifiedAccuracyAgainstPlanetUsingRandom($weaponPlayer, $planet, rand(3, self::MAX_CDS_RAND));
@@ -90,10 +81,6 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getMaxModifiedAccuracyAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
-		return $this->getModifiedAccuracyAgainstPlayerUsingRandom($weaponPlayer, $targetPlayer, self::MAX_CDS_RAND);
-	}
-
 	public function getModifiedForceAccuracyAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
 		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, rand(3, self::MAX_CDS_RAND));
 	}
@@ -110,14 +97,6 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 	}
 
 	protected function getModifiedPlanetAccuracyAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) {
-		return 100;
-	}
-
-	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, self::MAX_CDS_RAND);
-	}
-
-	public function getMaxModifiedPortAccuracyAgainstPlayer(SmrPort $forces, AbstractSmrPlayer $targetPlayer) {
 		return 100;
 	}
 

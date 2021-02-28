@@ -35,10 +35,6 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, 49);
-	}
-
 	public function &getModifiedDamage() {
 		$damage = $this->getDamage();
 		return $damage;

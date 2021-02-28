@@ -49,10 +49,6 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer, $minesAreAttacker) {
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, 49, $minesAreAttacker);
-	}
-
 	public function &getModifiedDamage() {
 		$damage = $this->getDamage();
 		return $damage;
