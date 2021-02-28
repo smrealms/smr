@@ -318,7 +318,7 @@ abstract class AbstractSmrShip {
 	public function setWeaponLocations(array $orderArray) {
 		$weapons = $this->weapons;
 		foreach ($orderArray as $newOrder => $oldOrder) {
-			$this->weapons[$newOrder] =& $weapons[$oldOrder];
+			$this->weapons[$newOrder] = $weapons[$oldOrder];
 		}
 		$this->hasChangedWeapons = true;
 	}
