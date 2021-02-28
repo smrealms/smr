@@ -934,7 +934,7 @@ abstract class AbstractSmrShip {
 		       $this->getShipTypeID() == SHIP_TYPE_DEATH_CRUISER;
 	}
 
-	public function &shootPlayers(array $targetPlayers) {
+	public function shootPlayers(array $targetPlayers) {
 		$thisPlayer = $this->getPlayer();
 		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []);
 		if ($thisPlayer->isDead()) {
@@ -943,14 +943,14 @@ abstract class AbstractSmrShip {
 		}
 		$results['DeadBeforeShot'] = false;
 		foreach ($this->weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] =& $weapon->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
+			$results['Weapons'][$orderID] = $weapon->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
 			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 			}
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
-			$results['Drones'] =& $thisCDs->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
+			$results['Drones'] = $thisCDs->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
@@ -959,7 +959,7 @@ abstract class AbstractSmrShip {
 		return $results;
 	}
 
-	public function &shootForces(SmrForce $forces) {
+	public function shootForces(SmrForce $forces) {
 		$thisPlayer = $this->getPlayer();
 		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []);
 		if ($thisPlayer->isDead()) {
@@ -968,7 +968,7 @@ abstract class AbstractSmrShip {
 		}
 		$results['DeadBeforeShot'] = false;
 		foreach ($this->weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] =& $weapon->shootForces($thisPlayer, $forces);
+			$results['Weapons'][$orderID] = $weapon->shootForces($thisPlayer, $forces);
 			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines'], array('Combat', 'Forces', 'Mines', 'Killed'), HOF_PUBLIC);
@@ -982,7 +982,7 @@ abstract class AbstractSmrShip {
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
-			$results['Drones'] =& $thisCDs->shootForces($thisPlayer, $forces);
+			$results['Drones'] = $thisCDs->shootForces($thisPlayer, $forces);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines'], array('Combat', 'Forces', 'Mines', 'Killed'), HOF_PUBLIC);
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['Mines'], array('Combat', 'Forces', 'Mines', 'Damage Done'), HOF_PUBLIC);
@@ -998,7 +998,7 @@ abstract class AbstractSmrShip {
 		return $results;
 	}
 
-	public function &shootPort(SmrPort $port) {
+	public function shootPort(SmrPort $port) {
 		$thisPlayer = $this->getPlayer();
 		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []);
 		if ($thisPlayer->isDead()) {
@@ -1007,14 +1007,14 @@ abstract class AbstractSmrShip {
 		}
 		$results['DeadBeforeShot'] = false;
 		foreach ($this->weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] =& $weapon->shootPort($thisPlayer, $port);
+			$results['Weapons'][$orderID] = $weapon->shootPort($thisPlayer, $port);
 			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 			}
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
-			$results['Drones'] =& $thisCDs->shootPort($thisPlayer, $port);
+			$results['Drones'] = $thisCDs->shootPort($thisPlayer, $port);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PORT));
@@ -1036,7 +1036,7 @@ abstract class AbstractSmrShip {
 		return $results;
 	}
 
-	public function &shootPlanet(SmrPlanet $planet, $delayed) {
+	public function shootPlanet(SmrPlanet $planet, $delayed) {
 		$thisPlayer = $this->getPlayer();
 		$results = array('Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []);
 		if ($thisPlayer->isDead()) {
@@ -1045,14 +1045,14 @@ abstract class AbstractSmrShip {
 		}
 		$results['DeadBeforeShot'] = false;
 		foreach ($this->weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] =& $weapon->shootPlanet($thisPlayer, $planet, $delayed);
+			$results['Weapons'][$orderID] = $weapon->shootPlanet($thisPlayer, $planet, $delayed);
 			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 			}
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
-			$results['Drones'] =& $thisCDs->shootPlanet($thisPlayer, $planet, $delayed);
+			$results['Drones'] = $thisCDs->shootPlanet($thisPlayer, $planet, $delayed);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLANET));
@@ -1061,7 +1061,7 @@ abstract class AbstractSmrShip {
 		return $results;
 	}
 
-	public function &doWeaponDamage(array $damage) {
+	public function doWeaponDamage(array $damage) {
 		$alreadyDead = $this->getPlayer()->isDead();
 		$armourDamage = 0;
 		$cdDamage = 0;
@@ -1091,7 +1091,7 @@ abstract class AbstractSmrShip {
 		return $return;
 	}
 
-	public function &doMinesDamage(array $damage) {
+	public function doMinesDamage(array $damage) {
 		$alreadyDead = $this->getPlayer()->isDead();
 		$armourDamage = 0;
 		$cdDamage = 0;

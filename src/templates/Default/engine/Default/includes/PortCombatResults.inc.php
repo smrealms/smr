@@ -1,5 +1,5 @@
 <?php
-$CombatPort =& $PortCombatResults['Port'];
+$CombatPort = $PortCombatResults['Port'];
 $TotalDamage = $PortCombatResults['TotalDamage'];
 if ($MinimalDisplay) {
 	echo $CombatPort->getDisplayName();
@@ -12,11 +12,13 @@ if ($MinimalDisplay) {
 }
 if (isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons'])) {
 	foreach ($PortCombatResults['Weapons'] as $WeaponResults) {
-		$ShootingWeapon =& $WeaponResults['Weapon'];
-		$ShotHit =& $WeaponResults['Hit'];
-		$ActualDamage =& $WeaponResults['ActualDamage'];
-		$WeaponDamage =& $WeaponResults['WeaponDamage'];
-		$TargetPlayer =& $WeaponResults['TargetPlayer'];
+		$ShootingWeapon = $WeaponResults['Weapon'];
+		$ShotHit = $WeaponResults['Hit'];
+		if ($ShotHit) {
+			$ActualDamage = $WeaponResults['ActualDamage'];
+			$WeaponDamage = $WeaponResults['WeaponDamage'];
+		}
+		$TargetPlayer = $WeaponResults['TargetPlayer'];
 
 		echo $CombatPort->getDisplayName() ?> fires an <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
@@ -61,10 +63,10 @@ if (isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons
 	}
 }
 if (isset($PortCombatResults['Drones'])) {
-	$Drones =& $PortCombatResults['Drones'];
-	$ActualDamage =& $Drones['ActualDamage'];
-	$WeaponDamage =& $Drones['WeaponDamage'];
-	$TargetPlayer =& $Drones['TargetPlayer'];
+	$Drones = $PortCombatResults['Drones'];
+	$ActualDamage = $Drones['ActualDamage'];
+	$WeaponDamage = $Drones['WeaponDamage'];
+	$TargetPlayer = $Drones['TargetPlayer'];
 
 	echo $CombatPort->getDisplayName();
 	if ($WeaponDamage['Launched'] == 0) {

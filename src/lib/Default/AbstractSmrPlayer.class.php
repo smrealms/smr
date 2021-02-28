@@ -1806,19 +1806,19 @@ abstract class AbstractSmrPlayer {
 		return $this->getTicker($tickerType) !== false;
 	}
 
-	public function &shootForces(SmrForce $forces) {
+	public function shootForces(SmrForce $forces) {
 		return $this->getShip()->shootForces($forces);
 	}
 
-	public function &shootPort(SmrPort $port) {
+	public function shootPort(SmrPort $port) {
 		return $this->getShip()->shootPort($port);
 	}
 
-	public function &shootPlanet(SmrPlanet $planet, $delayed) {
+	public function shootPlanet(SmrPlanet $planet, $delayed) {
 		return $this->getShip()->shootPlanet($planet, $delayed);
 	}
 
-	public function &shootPlayers(array $targetPlayers) {
+	public function shootPlayers(array $targetPlayers) {
 		return $this->getShip()->shootPlayers($targetPlayers);
 	}
 
@@ -2207,7 +2207,7 @@ abstract class AbstractSmrPlayer {
 		$this->setNewbieTurns(NEWBIE_TURNS_ON_DEATH);
 	}
 
-	public function &killPlayerByPlayer(AbstractSmrPlayer $killer) {
+	public function killPlayerByPlayer(AbstractSmrPlayer $killer) {
 		$return = array();
 		$msg = $this->getBBLink();
 
@@ -2359,7 +2359,7 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function &killPlayerByForces(SmrForce $forces) {
+	public function killPlayerByForces(SmrForce $forces) {
 		$return = array();
 		$owner = $forces->getOwner();
 		// send a message to the person who died
@@ -2397,7 +2397,7 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function &killPlayerByPort(SmrPort $port) {
+	public function killPlayerByPort(SmrPort $port) {
 		$return = array();
 		// send a message to the person who died
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by the defenses of ' . $port->getDisplayName());
@@ -2432,7 +2432,7 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function &killPlayerByPlanet(SmrPlanet $planet) {
+	public function killPlayerByPlanet(SmrPlanet $planet) {
 		$return = array();
 		// send a message to the person who died
 		$planetOwner = $planet->getOwner();

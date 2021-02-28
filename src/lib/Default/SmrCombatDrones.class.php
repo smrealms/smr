@@ -100,7 +100,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return 100;
 	}
 
-	public function &getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
+	public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
 		if (!$this->canShootForces()) {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
@@ -124,7 +124,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function &getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
+	public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
 		if (!$this->canShootPorts()) {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
@@ -138,7 +138,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function &getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) {
+	public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) {
 		if (!$this->canShootPlanets()) {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
@@ -153,7 +153,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
+	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
@@ -171,7 +171,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function &getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
+	public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
@@ -191,7 +191,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function &getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer) {
+	public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer) {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
@@ -210,7 +210,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function &getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) {
+	public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 			return $return;
@@ -229,41 +229,41 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function &shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
+	public function shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
 		$return = array('Weapon' => $this, 'TargetForces' => $forces, 'Hit' => true);
-		$this->doPlayerDamageToForce($return, $weaponPlayer, $forces);
+		$return = $this->doPlayerDamageToForce($return, $weaponPlayer, $forces);
 		if ($return['WeaponDamage']['Kamikaze'] > 0) {
 			$weaponPlayer->getShip()->decreaseCDs($return['WeaponDamage']['Kamikaze']);
 		}
 		return $return;
 	}
 
-	public function &shootPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
+	public function shootPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
 		$return = array('Weapon' => $this, 'TargetPort' => $port, 'Hit' => true);
 		return $this->doPlayerDamageToPort($return, $weaponPlayer, $port);
 	}
 
-	public function &shootPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet, $delayed) {
+	public function shootPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet, $delayed) {
 		$return = array('Weapon' => $this, 'TargetPlanet' => $planet, 'Hit' => true);
 		return $this->doPlayerDamageToPlanet($return, $weaponPlayer, $planet, $delayed);
 	}
 
-	public function &shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
+	public function shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
 		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true);
 		return $this->doPlayerDamageToPlayer($return, $weaponPlayer, $targetPlayer);
 	}
 
-	public function &shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
+	public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
 		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true);
 		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer);
 	}
 
-	public function &shootPlayerAsPort(SmrPort $forces, AbstractSmrPlayer $targetPlayer) {
+	public function shootPlayerAsPort(SmrPort $forces, AbstractSmrPlayer $targetPlayer) {
 		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true);
 		return $this->doPortDamageToPlayer($return, $forces, $targetPlayer);
 	}
 
-	public function &shootPlayerAsPlanet(SmrPlanet $forces, AbstractSmrPlayer $targetPlayer) {
+	public function shootPlayerAsPlanet(SmrPlanet $forces, AbstractSmrPlayer $targetPlayer) {
 		$return = array('Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true);
 		return $this->doPlanetDamageToPlayer($return, $forces, $targetPlayer);
 	}

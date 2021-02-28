@@ -1198,7 +1198,7 @@ class AbstractSmrPort {
 		}
 	}
 
-	public function &shootPlayers(array $targetPlayers) {
+	public function shootPlayers(array $targetPlayers) {
 		$results = array('Port' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => array());
 		foreach ($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
@@ -1214,7 +1214,7 @@ class AbstractSmrPort {
 			do {
 				$targetPlayer = array_rand_value($targetPlayers);
 			} while ($results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] > min($results['TotalShotsPerTargetPlayer']));
-			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPort($this, $targetPlayer);
+			$results['Weapons'][$orderID] = $weapon->shootPlayerAsPort($this, $targetPlayer);
 			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()]++;
 			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
@@ -1223,14 +1223,14 @@ class AbstractSmrPort {
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs(), true);
-			$results['Drones'] =& $thisCDs->shootPlayerAsPort($this, array_rand_value($targetPlayers));
+			$results['Drones'] = $thisCDs->shootPlayerAsPort($this, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		return $results;
 	}
 
-	public function &doWeaponDamage(array $damage) {
+	public function doWeaponDamage(array $damage) {
 		$alreadyDead = $this->isDestroyed();
 		$shieldDamage = 0;
 		$cdDamage = 0;
@@ -1339,7 +1339,7 @@ class AbstractSmrPort {
 		return $credits;
 	}
 
-	public function &killPortByPlayer(AbstractSmrPlayer $killer) {
+	public function killPortByPlayer(AbstractSmrPlayer $killer) {
 		$return = array();
 
 		// Port is destroyed, so empty the port of all trade goods

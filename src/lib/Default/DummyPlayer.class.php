@@ -53,17 +53,17 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$this->allianceID=$ID;
 	}
 
-	public function &killPlayerByPlayer(AbstractSmrPlayer $killer) {
+	public function killPlayerByPlayer(AbstractSmrPlayer $killer) {
 		$this->killPlayer($this->getSectorID());
 	}
 
-	public function &killPlayerByForces(SmrForce $forces) {
+	public function killPlayerByForces(SmrForce $forces) {
 	}
 
-	public function &killPlayerByPort(SmrPort $port) {
+	public function killPlayerByPort(SmrPort $port) {
 	}
 
-	public function &killPlayerByPlanet(SmrPlanet $planet) {
+	public function killPlayerByPlanet(SmrPlanet $planet) {
 	}
 
 	public function getShip() {
