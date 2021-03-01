@@ -1,1 +1,2 @@
-<?php $this->includeTemplate('includes/PlayerRankings.inc.php', array('RankingStat' => 'Assists')); ?>
+<?php
+$this->includeTemplate('includes/PlayerRankings.inc.php', array('RankingStat' => 'Assists'));

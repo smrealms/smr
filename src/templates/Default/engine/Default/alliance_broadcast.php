@@ -1,1 +1,2 @@
-<?php $this->includeTemplate('includes/CommonMessageSend.inc.php'); ?>
+<?php
+$this->includeTemplate('includes/CommonMessageSend.inc.php');
