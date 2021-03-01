@@ -40,9 +40,9 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 						} else {
 							?> destroying <?php
 							$DamageTypes = 0;
-							if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-							if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-							if ($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+							if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
+							if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+							if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 							if ($ActualDamage['Shield'] > 0) {
 								?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
@@ -59,7 +59,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 					} ?>.
 					<br /><?php
 					if ($ShotHit && $ActualDamage['KillingShot']) {
-						$this->includeTemplate('includes/TraderCombatKillMessage.inc.php',array('KillResults'=>$WeaponResults['KillResults'],'TargetPlayer'=>$TargetPlayer,'ShootingPlayer'=>$ShootingPlayer));
+						$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', array('KillResults'=>$WeaponResults['KillResults'], 'TargetPlayer'=>$TargetPlayer, 'ShootingPlayer'=>$ShootingPlayer));
 					}
 				}
 			}
@@ -69,9 +69,9 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 				$WeaponDamage = $Drones['WeaponDamage'];
 				$TargetPlayer = $Drones['TargetPlayer'];
 				$DamageTypes = 0;
-				if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-				if ($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+				if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
+				if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+				if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 				echo $ShootingPlayer->getDisplayName();
 				if ($WeaponDamage['Launched'] == 0) {
@@ -114,7 +114,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 				} ?>.
 				<br /><?php
 				if ($ActualDamage['KillingShot']) {
-					$this->includeTemplate('includes/TraderCombatKillMessage.inc.php',array('KillResults'=>$Drones['KillResults'],'TargetPlayer'=>$TargetPlayer,'ShootingPlayer'=>$ShootingPlayer));
+					$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', array('KillResults'=>$Drones['KillResults'], 'TargetPlayer'=>$TargetPlayer, 'ShootingPlayer'=>$ShootingPlayer));
 				}
 			}
 		}
@@ -130,4 +130,4 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 	}
 }
 $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
-This fleet <?php if ($TotalDamage > 0){ ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else{ ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br />
+This fleet <?php if ($TotalDamage > 0) { ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else { ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br />

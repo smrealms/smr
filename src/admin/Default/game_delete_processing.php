@@ -11,8 +11,7 @@ $history_db_sql = array();
 $action = Request::get('action');
 if (Request::get('save') == 'Yes') {
 	$save = true;
-}
-else {
+} else {
 	$save = false;
 }
 
@@ -21,14 +20,14 @@ if ($action == 'Yes') {
 	$game_id = $var['delete_game_id'];
 
 	if ($save) {
-		$db->query('SELECT * FROM alliance WHERE game_id = '.$db->escapeNumber($game_id));
+		$db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id));
 
 		while ($db->nextRecord()) {
 			$id = $db->getInt('alliance_id');
 			//we need info for forces
 			//populate alliance list
 			$db2->query('SELECT * FROM player
-						WHERE alliance_id = '.$db2->escapeNumber($id).'
+						WHERE alliance_id = '.$db2->escapeNumber($id) . '
 							AND game_id = '.$db2->escapeNumber($game_id));
 			$list = array(0);
 			while ($db2->nextRecord()) {
@@ -36,14 +35,13 @@ if ($action == 'Yes') {
 			}
 			$db2->query('SELECT sum(mines) as sum_m, sum(combat_drones) as cds, sum(scout_drones) as sds
 						FROM sector_has_forces
-						WHERE owner_id IN ('.$db2->escapeArray($list).') AND game_id = '.$db2->escapeNumber($game_id));
+						WHERE owner_id IN ('.$db2->escapeArray($list) . ') AND game_id = ' . $db2->escapeNumber($game_id));
 			if ($db2->nextRecord()) {
 
 				$mines = $db2->getInt('sum_m');
 				$cds = $db2->getInt('cds');
 				$sds = $db2->getInt('sds');
-			}
-			else {
+			} else {
 				$mines = 0;
 				$cds = 0;
 				$sds = 0;
@@ -56,7 +54,7 @@ if ($action == 'Yes') {
 			$deaths = $db->getInt('alliance_deaths');
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO alliance (game_id, alliance_id, leader_id, kills, deaths, alliance_name, mines, cds, sds) ' .
-								'VALUES ('.$db->escapeNumber($game_id).', '.$db->escapeNumber($id).', '.$db->escapeNumber($leader).', '.$db->escapeNumber($kills).', '.$db->escapeNumber($deaths).', ' . $db->escapeString($name) . ', '.$db->escapeNumber($mines).', '.$db->escapeNumber($cds).', '.$db->escapeNumber($sds).')';
+								'VALUES (' . $db->escapeNumber($game_id) . ', ' . $db->escapeNumber($id) . ', ' . $db->escapeNumber($leader) . ', ' . $db->escapeNumber($kills) . ', ' . $db->escapeNumber($deaths) . ', ' . $db->escapeString($name) . ', ' . $db->escapeNumber($mines) . ', ' . $db->escapeNumber($cds) . ', ' . $db->escapeNumber($sds) . ')';
 
 		}
 
@@ -65,56 +63,56 @@ if ($action == 'Yes') {
 	// these table is nothing worth without the players
 	//$smr_db_sql[] = 'DELETE FROM account_has_logs WHERE game_id = '.$game_id;
 
-	$smr_db_sql[] = 'UPDATE active_session SET game_id = 0 WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM alliance WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM alliance_bank_transactions WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM alliance_has_roles WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM alliance_thread WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM alliance_thread_topic WHERE game_id = '.$db->escapeNumber($game_id);
+	$smr_db_sql[] = 'UPDATE active_session SET game_id = 0 WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM alliance_bank_transactions WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM alliance_has_roles WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM alliance_thread WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($game_id);
 
 	if ($save) {
 
-		$db->query('SELECT * FROM alliance_vs_alliance WHERE game_id = '.$db->escapeNumber($game_id));
+		$db->query('SELECT * FROM alliance_vs_alliance WHERE game_id = ' . $db->escapeNumber($game_id));
 		while ($db->nextRecord()) {
 
 			$alliance_1 = $db->getInt('alliance_id_1');
 			$alliance_2 = $db->getInt('alliance_id_2');
 			$kills = $db->getInt('kills');
 			$history_db_sql[] = 'INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) ' .
-								'VALUES ('.$game_id.', '.$alliance_1.', '.$alliance_2.', '.$kills.')';
+								'VALUES (' . $game_id . ', ' . $alliance_1 . ', ' . $alliance_2 . ', ' . $kills . ')';
 
 		}
 
 	}
 
 
-	$smr_db_sql[] = 'DELETE FROM alliance_vs_alliance WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM anon_bank WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM anon_bank_transactions WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM bar_tender WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM blackjack WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM galactic_post_applications WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM galactic_post_article WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM galactic_post_paper WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM galactic_post_paper_content WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM galactic_post_writer WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM game_galaxy WHERE game_id = '.$db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM alliance_vs_alliance WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM anon_bank WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM anon_bank_transactions WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM bar_tender WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM blackjack WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM galactic_post_applications WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM galactic_post_writer WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($game_id);
 
 	if ($save) {
 		$game = SmrGame::getGame($game_id);
 		// insert into history db
 		$history_db_sql[] = 'INSERT INTO game (game_id, end_date, start_date, game_name, speed, type) VALUES ' .
-								'('.$db->escapeNumber($game_id).', '.$game->getEndTime().', '.$game->getStartTime().', ' . $db->escapeString($game->getGameName()) . ', '.$game->getGameSpeed().', '.$db->escapeString($game->getGameType()).')';
+								'(' . $db->escapeNumber($game_id) . ', ' . $game->getEndTime() . ', ' . $game->getStartTime() . ', ' . $db->escapeString($game->getGameName()) . ', ' . $game->getGameSpeed() . ', ' . $db->escapeString($game->getGameType()) . ')';
 	}
 
-	$smr_db_sql[] = 'DELETE FROM location WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM mb_exceptions WHERE value LIKE '.$db->escapeString($game_id.'%');
-	$smr_db_sql[] = 'DELETE FROM message WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM message_notify WHERE game_id = '.$db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM location WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM mb_exceptions WHERE value LIKE ' . $db->escapeString($game_id . '%');
+	$smr_db_sql[] = 'DELETE FROM message WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM message_notify WHERE game_id = ' . $db->escapeNumber($game_id);
 
 	if ($save) {
 
-		$db->query('SELECT * FROM news WHERE game_id = '.$game_id.' AND type = \'regular\'');
+		$db->query('SELECT * FROM news WHERE game_id = ' . $game_id . ' AND type = \'regular\'');
 		$id = 1;
 
 		while ($db->nextRecord()) {
@@ -124,17 +122,17 @@ if ($action == 'Yes') {
 			$msg = $db->getField('news_message');
 
 			// insert into history db
-			$history_db_sql[] = 'INSERT INTO news (game_id, news_id, time, message) VALUES ('.$game_id.', '.$id.', '.$time.', ' . $db->escapeString($msg) . ')';
+			$history_db_sql[] = 'INSERT INTO news (game_id, news_id, time, message) VALUES (' . $game_id . ', ' . $id . ', ' . $time . ', ' . $db->escapeString($msg) . ')';
 			$id++;
 
 		}
 	}
 
-	$smr_db_sql[] = 'DELETE FROM news WHERE game_id = '.$db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM news WHERE game_id = ' . $db->escapeNumber($game_id);
 
 	if ($save) {
 
-		$db->query('SELECT * FROM planet WHERE game_id = '.$db->escapeNumber($game_id));
+		$db->query('SELECT * FROM planet WHERE game_id = ' . $db->escapeNumber($game_id));
 
 		while ($db->nextRecord()) {
 
@@ -142,34 +140,34 @@ if ($action == 'Yes') {
 			$sector = $db->getInt('sector_id');
 			$owner = $db->getInt('owner_id');
 
-			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 1');
+			$db2->query('SELECT * FROM planet_has_building WHERE game_id = ' . $game_id . ' AND sector_id = ' . $sector . ' AND construction_id = 1');
 			if ($db2->nextRecord()) $gens = $db2->getInt('amount');
 			else $gens = 0;
 
-			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 2');
+			$db2->query('SELECT * FROM planet_has_building WHERE game_id = ' . $game_id . ' AND sector_id = ' . $sector . ' AND construction_id = 2');
 			if ($db2->nextRecord()) $hangs = $db2->getInt('amount');
 			else $hangs = 0;
 
-			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 3');
+			$db2->query('SELECT * FROM planet_has_building WHERE game_id = ' . $game_id . ' AND sector_id = ' . $sector . ' AND construction_id = 3');
 			if ($db2->nextRecord()) $turs = $db2->getInt('amount');
 			else $turs = 0;
 
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO planet (game_id, sector_id, owner_id, generators, hangers, turrets) VALUES ' .
-								'('.$game_id.', '.$sector.', '.$owner.', '.$gens.', '.$hangs.', '.$turs.')';
+								'(' . $game_id . ', ' . $sector . ', ' . $owner . ', ' . $gens . ', ' . $hangs . ', ' . $turs . ')';
 
 		}
 
 	}
 
-	$smr_db_sql[] = 'DELETE FROM planet WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM planet_is_building WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM planet_has_cargo WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM planet_has_building WHERE game_id = '.$db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM planet WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM planet_is_building WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM planet_has_cargo WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM planet_has_building WHERE game_id = ' . $db->escapeNumber($game_id);
 
 	if ($save) {
 
-		$db->query('SELECT * FROM player WHERE game_id = '.$game_id);
+		$db->query('SELECT * FROM player WHERE game_id = ' . $game_id);
 
 		while ($db->nextRecord()) {
 
@@ -187,48 +185,48 @@ if ($action == 'Yes') {
 
 			$amount = 0;
 			$smrCredits = 0;
-			$db2->query('SELECT sum(amount) as bounty_am, sum(smr_credits) as bounty_cred FROM bounty WHERE game_id = '.$game_id.' AND account_id = '.$acc_id.' AND claimer_id = 0');
+			$db2->query('SELECT sum(amount) as bounty_am, sum(smr_credits) as bounty_cred FROM bounty WHERE game_id = ' . $game_id . ' AND account_id = ' . $acc_id . ' AND claimer_id = 0');
 			if ($db2->nextRecord()) {
 				if (is_int($db2->getField('bounty_am'))) $amount = $db2->getInt('bounty_am');
 				if (is_int($db2->getField('bounty_cred'))) $smrCredits = $db2->getInt('bounty_cred');
 
 			}
 
-			$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$game_id.' AND account_id = '.$acc_id);
+			$db2->query('SELECT * FROM ship_has_name WHERE game_id = ' . $game_id . ' AND account_id = ' . $acc_id);
 			if ($db2->nextRecord()) $ship_name = $db2->getField('ship_name');
 			else $ship_name = 'None';
 
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO player (account_id, game_id, player_name, player_id, experience, ship, race, alignment, alliance_id, kills, deaths, bounty, bounty_cred, ship_name) ' .
-								'VALUES ('.$acc_id.', '.$game_id.', ' . $db->escapeString($name) . ', '.$id.', '.$exp.', '.$ship.', '.$race.', '.$align.', '.$alli.', '.$kills.', '.$deaths.', '.$amount.','.$smrCredits.', ' . $db->escapeString($ship_name) . ')';
+								'VALUES (' . $acc_id . ', ' . $game_id . ', ' . $db->escapeString($name) . ', ' . $id . ', ' . $exp . ', ' . $ship . ', ' . $race . ', ' . $align . ', ' . $alli . ', ' . $kills . ', ' . $deaths . ', ' . $amount . ',' . $smrCredits . ', ' . $db->escapeString($ship_name) . ')';
 
 		}
 
 	}
 
-	$smr_db_sql[] = 'DELETE FROM player WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM bounty WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_has_ticker WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_has_ticket WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_has_alliance_role WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_has_drinks WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_has_relation WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_has_unread_messages WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_plotted_course WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_read_thread WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_visited_port WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_visited_sector WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_votes_pact WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM player_votes_relation WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM plot_cache WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM port WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM port_has_goods WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM race_has_relation WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM race_has_voting WHERE game_id = '.$db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM bounty WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_has_ticker WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_has_alliance_role WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_has_relation WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_has_unread_messages WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_plotted_course WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_read_thread WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_visited_port WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_visited_sector WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_votes_pact WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM player_votes_relation WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM plot_cache WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM port WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM port_has_goods WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM race_has_relation WHERE game_id = ' . $db->escapeNumber($game_id);
+	$smr_db_sql[] = 'DELETE FROM race_has_voting WHERE game_id = ' . $db->escapeNumber($game_id);
 
 	if ($save) {
 
-		$db->query('SELECT * FROM sector WHERE game_id = '.$game_id);
+		$db->query('SELECT * FROM sector WHERE game_id = ' . $game_id);
 
 		while ($db->nextRecord()) {
 
@@ -238,15 +236,21 @@ if ($action == 'Yes') {
 			$gal_id = $db->getInt('galaxy_id');
 
 			$db2->query('SELECT sum(mines) as sum_mines, sum(combat_drones) as cds, sum(scout_drones) as sds FROM sector_has_forces ' .
-						'WHERE sector_id = '.$sector.' AND game_id = '.$game_id.' GROUP BY sector_id');
+						'WHERE sector_id = ' . $sector . ' AND game_id = ' . $game_id . ' GROUP BY sector_id');
 			if ($db2->nextRecord()) {
 
 				$mines = $db2->getInt('sum_mines');
 				$cds = $db2->getInt('cds');
 				$sds = $db2->getInt('sds');
-				if (!is_numeric($mines)) $mines = 0;
-				if (!is_numeric($cds)) $cds = 0;
-				if (!is_numeric($sds)) $sds = 0;
+				if (!is_numeric($mines)) {
+					$mines = 0;
+				}
+				if (!is_numeric($cds)) {
+					$cds = 0;
+				}
+				if (!is_numeric($sds)) {
+					$sds = 0;
+				}
 
 			} else {
 
@@ -258,32 +262,32 @@ if ($action == 'Yes') {
 
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO sector (game_id, sector_id, gal_id, mines, kills, combat, scouts) ' .
-								'VALUES ('.$game_id.','. $sector.','. $gal_id.','. $mines.','. $kills.','. $cds.','. $sds.')';
+								'VALUES (' . $game_id . ',' . $sector . ',' . $gal_id . ',' . $mines . ',' . $kills . ',' . $cds . ',' . $sds . ')';
 
 		}
 
 	}
 
-	$smr_db_sql[] = 'DELETE FROM sector WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM sector_has_forces WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_has_cargo WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_has_hardware WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_has_name WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_has_illusion WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_has_weapon WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_is_cloaked WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'UPDATE game SET end_time='.SmrSession::getTime().' WHERE game_id = '.$game_id.' AND end_time > '.SmrSession::getTime(); // Do not delete game placeholder, just make sure game is finished
-	$smr_db_sql[] = 'UPDATE active_session SET game_id = 0 WHERE game_id = '.$game_id;
+	$smr_db_sql[] = 'DELETE FROM sector WHERE game_id = ' . $game_id;
+	$smr_db_sql[] = 'DELETE FROM sector_has_forces WHERE game_id = ' . $game_id;
+	$smr_db_sql[] = 'DELETE FROM ship_has_cargo WHERE game_id = ' . $game_id;
+	$smr_db_sql[] = 'DELETE FROM ship_has_hardware WHERE game_id = ' . $game_id;
+	$smr_db_sql[] = 'DELETE FROM ship_has_name WHERE game_id = ' . $game_id;
+	$smr_db_sql[] = 'DELETE FROM ship_has_illusion WHERE game_id = ' . $game_id;
+	$smr_db_sql[] = 'DELETE FROM ship_has_weapon WHERE game_id = ' . $game_id;
+	$smr_db_sql[] = 'DELETE FROM ship_is_cloaked WHERE game_id = ' . $game_id;
+	$smr_db_sql[] = 'UPDATE game SET end_time=' . SmrSession::getTime() . ' WHERE game_id = ' . $game_id . ' AND end_time > ' . SmrSession::getTime(); // Do not delete game placeholder, just make sure game is finished
+	$smr_db_sql[] = 'UPDATE active_session SET game_id = 0 WHERE game_id = ' . $game_id;
 
 	// now do the sql stuff
-	foreach($smr_db_sql as $sql) {
+	foreach ($smr_db_sql as $sql) {
 
 		$db->query($sql);
 
 	}
 
 	$db = new SmrHistoryMySqlDatabase();
-	foreach($history_db_sql as $sql) {
+	foreach ($history_db_sql as $sql) {
 
 		$db->query($sql);
 

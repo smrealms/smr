@@ -25,7 +25,7 @@ if ($player->hasAlliance()) {
 	$template->assign('OurRank', $ourRank);
 }
 
-$expRanks = function (int $minRank, int $maxRank) use ($player, $db) : array {
+$expRanks = function(int $minRank, int $maxRank) use ($player, $db) : array {
 	$offset = $minRank - 1;
 	$limit = $maxRank - $offset;
 	$db->query('SELECT alliance_id, COALESCE(SUM(experience), 0) amount

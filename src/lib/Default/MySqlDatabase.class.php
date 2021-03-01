@@ -30,7 +30,7 @@ class MySqlDatabase {
 	}
 
 	public static function mysqliFactory(MySqlProperties $mysqlProperties): mysqli {
-		if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
+		if (!mysqli_report(MYSQLI_REPORT_ERROR|MYSQLI_REPORT_STRICT)) {
 			throw new RuntimeException('Failed to enable mysqli error reporting');
 		}
 		$mysql = new mysqli(
