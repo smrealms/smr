@@ -92,16 +92,20 @@ class SmrPlanet {
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
 
-	public static function createPlanet($gameID, $sectorID, $type = 1) {
-		if (!self::getPlanet($gameID, $sectorID)->exists()) {
+	public static function createPlanet($gameID, $sectorID, $type = 1, $inhabitableTime = null) {
+		if (self::getPlanet($gameID, $sectorID)->exists()) {
+			throw new Exception('Planet already exists in sector ' . $sectorID . ' game ' . $gameID);
+		}
+
+		if ($inhabitableTime === null) {
 			$minTime = SmrGame::getGame($gameID)->getStartTime();
 			$inhabitableTime = $minTime + pow(rand(45, 85), 3);
-
-			// insert planet into db
-			$db = MySqlDatabase::getInstance();
-			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time, planet_type_id)
-				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ', ' . $db->escapeNumber($type) . ')');
 		}
+
+		// insert planet into db
+		$db = MySqlDatabase::getInstance();
+		$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time, planet_type_id)
+				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ', ' . $db->escapeNumber($type) . ')');
 		return self::getPlanet($gameID, $sectorID, true);
 	}
 
