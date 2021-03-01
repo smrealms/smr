@@ -1,7 +1,7 @@
 <?php
 foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
-	$ShootingPlayer =& $TraderResults['Player'];
-	$TotalDamage =& $TraderResults['TotalDamage'];
+	$ShootingPlayer = $TraderResults['Player'];
+	$TotalDamage = $TraderResults['TotalDamage'];
 	if ($MinimalDisplay && !$ThisPlayer->equals($ShootingPlayer)) {
 		echo $ShootingPlayer->getDisplayName();
 		if ($TotalDamage > 0) {
@@ -17,11 +17,13 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 	} else {
 		if (isset($TraderResults['Weapons']) && is_array($TraderResults['Weapons'])) {
 			foreach ($TraderResults['Weapons'] as $WeaponResults) {
-				$ShootingWeapon =& $WeaponResults['Weapon'];
-				$ShotHit =& $WeaponResults['Hit'];
-				$ActualDamage =& $WeaponResults['ActualDamage'];
-				$WeaponDamage =& $WeaponResults['WeaponDamage'];
-				$TargetPlanet =& $WeaponResults['TargetPlanet'];
+				$ShootingWeapon = $WeaponResults['Weapon'];
+				$ShotHit = $WeaponResults['Hit'];
+				if ($ShotHit) {
+					$ActualDamage = $WeaponResults['ActualDamage'];
+					$WeaponDamage = $WeaponResults['WeaponDamage'];
+				}
+				$TargetPlanet = $WeaponResults['TargetPlanet'];
 
 				echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?>the debris that was once <?php } echo $TargetPlanet->getCombatName();
 				if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
@@ -66,10 +68,10 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 			}
 		}
 		if (isset($TraderResults['Drones'])) {
-			$Drones =& $TraderResults['Drones'];
-			$ActualDamage =& $Drones['ActualDamage'];
-			$WeaponDamage =& $Drones['WeaponDamage'];
-			$TargetPlanet =& $Drones['TargetPlanet'];
+			$Drones = $TraderResults['Drones'];
+			$ActualDamage = $Drones['ActualDamage'];
+			$WeaponDamage = $Drones['WeaponDamage'];
+			$TargetPlanet = $Drones['TargetPlanet'];
 			$DamageTypes = 0;
 			if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
 			if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
@@ -133,5 +135,5 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
 This fleet <?php if ($TotalDamage > 0){ ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else{ ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br /><?php
 foreach ($TraderTeamCombatResults['Downgrades'] as $structureID => $numDestroyed) { ?>
-	This team destroys <span class="red"><?php echo $numDestroyed; ?> </span><?php echo pluralise($TargetPlanet->getStructureTypes($structureID)->name(), $numDestroyed); ?>.<br /><?php
+	This team destroys <span class="red"><?php echo $numDestroyed; ?> </span><?php echo pluralise((new SmrPlanetStructureType($structureID, []))->name(), $numDestroyed); ?>.<br /><?php
 } ?>

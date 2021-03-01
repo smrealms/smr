@@ -47,6 +47,10 @@ class SmrPlanet {
 	protected $delayedCDsDelta = 0;
 	protected $delayedArmourDelta = 0;
 
+	public function __sleep() {
+		return ['sectorID', 'gameID', 'planetName', 'ownerID', 'typeID'];
+	}
+
 	public static function refreshCache() {
 		foreach (self::$CACHE_PLANETS as $gameID => &$gamePlanets) {
 			foreach ($gamePlanets as $sectorID => &$planet) {
@@ -1150,7 +1154,7 @@ class SmrPlanet {
 		return count($this->getWeapons()) > 0;
 	}
 
-	public function &shootPlayers(array $targetPlayers) {
+	public function shootPlayers(array $targetPlayers) {
 		$results = array('Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => array());
 		foreach ($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
@@ -1162,7 +1166,7 @@ class SmrPlanet {
 		$results['DeadBeforeShot'] = false;
 		$weapons = $this->getWeapons();
 		foreach ($weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
+			$results['Weapons'][$orderID] = $weapon->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
 			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
@@ -1170,7 +1174,7 @@ class SmrPlanet {
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs(), true);
-			$results['Drones'] =& $thisCDs->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
+			$results['Drones'] = $thisCDs->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
@@ -1210,7 +1214,7 @@ class SmrPlanet {
 		return $results;
 	}
 
-	public function &doWeaponDamage(array $damage, $delayed) {
+	public function doWeaponDamage(array $damage, $delayed) {
 		$alreadyDead = $this->isDestroyed(true);
 		$shieldDamage = 0;
 		$cdDamage = 0;
@@ -1283,7 +1287,7 @@ class SmrPlanet {
 		$this->db->query('DELETE FROM player_attacks_planet WHERE ' . $this->SQL);
 	}
 
-	public function &killPlanetByPlayer(AbstractSmrPlayer $killer) {
+	public function killPlanetByPlayer(AbstractSmrPlayer $killer) {
 		$return = array();
 		$this->creditCurrentAttackersForKill();
 

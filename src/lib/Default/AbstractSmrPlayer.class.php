@@ -1806,19 +1806,19 @@ abstract class AbstractSmrPlayer {
 		return $this->getTicker($tickerType) !== false;
 	}
 
-	public function &shootForces(SmrForce $forces) {
+	public function shootForces(SmrForce $forces) {
 		return $this->getShip()->shootForces($forces);
 	}
 
-	public function &shootPort(SmrPort $port) {
+	public function shootPort(SmrPort $port) {
 		return $this->getShip()->shootPort($port);
 	}
 
-	public function &shootPlanet(SmrPlanet $planet, $delayed) {
+	public function shootPlanet(SmrPlanet $planet, $delayed) {
 		return $this->getShip()->shootPlanet($planet, $delayed);
 	}
 
-	public function &shootPlayers(array $targetPlayers) {
+	public function shootPlayers(array $targetPlayers) {
 		return $this->getShip()->shootPlayers($targetPlayers);
 	}
 
@@ -2207,7 +2207,7 @@ abstract class AbstractSmrPlayer {
 		$this->setNewbieTurns(NEWBIE_TURNS_ON_DEATH);
 	}
 
-	public function &killPlayerByPlayer(AbstractSmrPlayer $killer) {
+	public function killPlayerByPlayer(AbstractSmrPlayer $killer) {
 		$return = array();
 		$msg = $this->getBBLink();
 
@@ -2359,7 +2359,7 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function &killPlayerByForces(SmrForce $forces) {
+	public function killPlayerByForces(SmrForce $forces) {
 		$return = array();
 		$owner = $forces->getOwner();
 		// send a message to the person who died
@@ -2397,7 +2397,7 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function &killPlayerByPort(SmrPort $port) {
+	public function killPlayerByPort(SmrPort $port) {
 		$return = array();
 		// send a message to the person who died
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by the defenses of ' . $port->getDisplayName());
@@ -2432,7 +2432,7 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function &killPlayerByPlanet(SmrPlanet $planet) {
+	public function killPlayerByPlanet(SmrPlanet $planet) {
 		$return = array();
 		// send a message to the person who died
 		$planetOwner = $planet->getOwner();
@@ -2731,12 +2731,12 @@ abstract class AbstractSmrPlayer {
 	}
 
 	private function setupMissionStep($missionID) {
-		$mission =& $this->missions[$missionID];
-		if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
+		$stepID = $this->missions[$missionID]['On Step'];
+		if ($stepID >= count(MISSIONS[$missionID]['Steps'])) {
 			// Nothing to do if this mission is already completed
 			return;
 		}
-		$step = MISSIONS[$missionID]['Steps'][$mission['On Step']];
+		$step = MISSIONS[$missionID]['Steps'][$stepID];
 		if (isset($step['PickSector'])) {
 			$realX = Plotter::getX($step['PickSector']['Type'], $step['PickSector']['X'], $this->getGameID());
 			if ($realX === false) {
@@ -2750,7 +2750,7 @@ abstract class AbstractSmrPlayer {
 				$this->deleteMission($missionID);
 				create_error('Cannot find a path to the destination!');
 			}
-			$mission['Sector'] = $path->getEndSectorID();
+			$this->missions[$missionID]['Sector'] = $path->getEndSectorID();
 		}
 	}
 

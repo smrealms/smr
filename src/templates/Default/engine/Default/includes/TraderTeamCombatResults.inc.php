@@ -1,19 +1,21 @@
 <?php
 if (is_array($TraderTeamCombatResults['Traders'])) {
 	foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
-		$ShootingPlayer =& $TraderResults['Player'];
-		$TotalDamage =& $TraderResults['TotalDamage'];
+		$ShootingPlayer = $TraderResults['Player'];
+		$TotalDamage = $TraderResults['TotalDamage'];
 
 		if ($TraderResults['DeadBeforeShot']) {
 			echo $ShootingPlayer->getDisplayName() ?> died before they were able to attack!<br /><?php
 		} else {
 			if (isset($TraderResults['Weapons']) && is_array($TraderResults['Weapons'])) {
 				foreach ($TraderResults['Weapons'] as $WeaponResults) {
-					$ShootingWeapon =& $WeaponResults['Weapon'];
-					$ShotHit =& $WeaponResults['Hit'];
-					$ActualDamage =& $WeaponResults['ActualDamage'];
-					$WeaponDamage =& $WeaponResults['WeaponDamage'];
-					$TargetPlayer =& $WeaponResults['TargetPlayer'];
+					$ShootingWeapon = $WeaponResults['Weapon'];
+					$ShotHit = $WeaponResults['Hit'];
+					if ($ShotHit) {
+						$ActualDamage = $WeaponResults['ActualDamage'];
+						$WeaponDamage = $WeaponResults['WeaponDamage'];
+					}
+					$TargetPlayer = $WeaponResults['TargetPlayer'];
 
 					echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php
 					if ($ShotHit && $ActualDamage['TargetAlreadyDead']) {
@@ -62,10 +64,10 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 				}
 			}
 			if (isset($TraderResults['Drones'])) {
-				$Drones =& $TraderResults['Drones'];
-				$ActualDamage =& $Drones['ActualDamage'];
-				$WeaponDamage =& $Drones['WeaponDamage'];
-				$TargetPlayer =& $Drones['TargetPlayer'];
+				$Drones = $TraderResults['Drones'];
+				$ActualDamage = $Drones['ActualDamage'];
+				$WeaponDamage = $Drones['WeaponDamage'];
+				$TargetPlayer = $Drones['TargetPlayer'];
 				$DamageTypes = 0;
 				if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
 				if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }

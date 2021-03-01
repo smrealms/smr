@@ -1,7 +1,7 @@
 <?php
 foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
-	$ShootingPlayer =& $TraderResults['Player'];
-	$TotalDamage =& $TraderResults['TotalDamage'];
+	$ShootingPlayer = $TraderResults['Player'];
+	$TotalDamage = $TraderResults['TotalDamage'];
 	if ($MinimalDisplay && !$ThisPlayer->equals($ShootingPlayer)) {
 		echo $ShootingPlayer->getDisplayName();
 		if ($TotalDamage > 0) {
@@ -17,11 +17,13 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 	} else {
 		if (isset($TraderResults['Weapons']) && is_array($TraderResults['Weapons'])) {
 			foreach ($TraderResults['Weapons'] as $WeaponResults) {
-				$ShootingWeapon =& $WeaponResults['Weapon'];
-				$ShotHit =& $WeaponResults['Hit'];
-				$ActualDamage =& $WeaponResults['ActualDamage'];
-				$WeaponDamage =& $WeaponResults['WeaponDamage'];
-				$TargetPort =& $WeaponResults['TargetPort'];
+				$ShootingWeapon = $WeaponResults['Weapon'];
+				$ShotHit = $WeaponResults['Hit'];
+				if ($ShotHit) {
+					$ActualDamage = $WeaponResults['ActualDamage'];
+					$WeaponDamage = $WeaponResults['WeaponDamage'];
+				}
+				$TargetPort = $WeaponResults['TargetPort'];
 
 				echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?>the remnants of <?php } echo $TargetPort->getDisplayName();
 				if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
@@ -66,10 +68,10 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 			}
 		}
 		if (isset($TraderResults['Drones'])) {
-			$Drones =& $TraderResults['Drones'];
-			$ActualDamage =& $Drones['ActualDamage'];
-			$WeaponDamage =& $Drones['WeaponDamage'];
-			$TargetPort =& $Drones['TargetPort'];
+			$Drones = $TraderResults['Drones'];
+			$ActualDamage = $Drones['ActualDamage'];
+			$WeaponDamage = $Drones['WeaponDamage'];
+			$TargetPort = $Drones['TargetPort'];
 
 			echo $ShootingPlayer->getDisplayName();
 			if ($WeaponDamage['Launched'] == 0) {

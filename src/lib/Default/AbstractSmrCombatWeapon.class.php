@@ -58,82 +58,82 @@ abstract class AbstractSmrCombatWeapon {
 		return array('MaxDamage' => $this->getMaxDamage(), 'Shield' => $this->getShieldDamage(), 'Armour' => $this->getArmourDamage(), 'Rollover' => $this->isDamageRollover());
 	}
 
-	abstract public function &getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces);
-	abstract public function &getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port);
-	abstract public function &getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet);
-	abstract public function &getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer);
-	abstract public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer);
-	abstract public function &getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer);
-	abstract public function &getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer);
+	abstract public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces);
+	abstract public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port);
+	abstract public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet);
+	abstract public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer);
+	abstract public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer);
+	abstract public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer);
+	abstract public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer);
 
-	protected function &doPlayerDamageToForce(array &$return, AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
-		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstForces($weaponPlayer,$forces);
-		$return['ActualDamage'] =& $forces->doWeaponDamage($return['WeaponDamage']);
+	protected function doPlayerDamageToForce(array $return, AbstractSmrPlayer $weaponPlayer, SmrForce $forces) {
+		$return['WeaponDamage'] = $this->getModifiedDamageAgainstForces($weaponPlayer,$forces);
+		$return['ActualDamage'] = $forces->doWeaponDamage($return['WeaponDamage']);
 		if ($return['ActualDamage']['KillingShot']) {
-			$return['KillResults'] =& $forces->killForcesByPlayer($weaponPlayer);
+			$return['KillResults'] = $forces->killForcesByPlayer($weaponPlayer);
 		}
 		return $return;
 	}
 
-	protected function &doPlayerDamageToPlayer(array &$return, AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
-		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPlayer($weaponPlayer,$targetPlayer);
-		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
+	protected function doPlayerDamageToPlayer(array $return, AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) {
+		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPlayer($weaponPlayer,$targetPlayer);
+		$return['ActualDamage'] = $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
 
 		if ($return['ActualDamage']['KillingShot']) {
-			$return['KillResults'] =& $targetPlayer->killPlayerByPlayer($weaponPlayer);
+			$return['KillResults'] = $targetPlayer->killPlayerByPlayer($weaponPlayer);
 		}
 		return $return;
 	}
 
-	protected function &doPlayerDamageToPort(array &$return, AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
-		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPort($weaponPlayer,$port);
-		$return['ActualDamage'] =& $port->doWeaponDamage($return['WeaponDamage']);
+	protected function doPlayerDamageToPort(array $return, AbstractSmrPlayer $weaponPlayer, SmrPort $port) {
+		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPort($weaponPlayer,$port);
+		$return['ActualDamage'] = $port->doWeaponDamage($return['WeaponDamage']);
 		if ($return['ActualDamage']['KillingShot']) {
-			$return['KillResults'] =& $port->killPortByPlayer($weaponPlayer);
+			$return['KillResults'] = $port->killPortByPlayer($weaponPlayer);
 		}
 		return $return;
 	}
 
-	protected function &doPlayerDamageToPlanet(array &$return, AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet, $delayed) {
-		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPlanet($weaponPlayer,$planet);
-		$return['ActualDamage'] =& $planet->doWeaponDamage($return['WeaponDamage'],$delayed);
+	protected function doPlayerDamageToPlanet(array $return, AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet, $delayed) {
+		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPlanet($weaponPlayer,$planet);
+		$return['ActualDamage'] = $planet->doWeaponDamage($return['WeaponDamage'],$delayed);
 		if ($return['ActualDamage']['KillingShot']) {
-			$return['KillResults'] =& $planet->killPlanetByPlayer($weaponPlayer);
+			$return['KillResults'] = $planet->killPlanetByPlayer($weaponPlayer);
 		}
 		return $return;
 	}
 
-	protected function &doPortDamageToPlayer(array &$return, SmrPort $port, AbstractSmrPlayer $targetPlayer) {
-		$return['WeaponDamage'] =& $this->getModifiedPortDamageAgainstPlayer($port,$targetPlayer);
-		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
+	protected function doPortDamageToPlayer(array $return, SmrPort $port, AbstractSmrPlayer $targetPlayer) {
+		$return['WeaponDamage'] = $this->getModifiedPortDamageAgainstPlayer($port,$targetPlayer);
+		$return['ActualDamage'] = $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
 
 		if ($return['ActualDamage']['KillingShot']) {
-			$return['KillResults'] =& $targetPlayer->killPlayerByPort($port);
+			$return['KillResults'] = $targetPlayer->killPlayerByPort($port);
 		}
 		return $return;
 	}
 
-	protected function &doPlanetDamageToPlayer(array &$return, SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) {
-		$return['WeaponDamage'] =& $this->getModifiedPlanetDamageAgainstPlayer($planet,$targetPlayer);
-		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
+	protected function doPlanetDamageToPlayer(array $return, SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) {
+		$return['WeaponDamage'] = $this->getModifiedPlanetDamageAgainstPlayer($planet,$targetPlayer);
+		$return['ActualDamage'] = $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
 
 		if ($return['ActualDamage']['KillingShot']) {
-			$return['KillResults'] =& $targetPlayer->killPlayerByPlanet($planet);
+			$return['KillResults'] = $targetPlayer->killPlayerByPlanet($planet);
 		}
 		return $return;
 	}
 
-	protected function &doForceDamageToPlayer(array &$return, SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
-		$return['WeaponDamage'] =& $this->getModifiedForceDamageAgainstPlayer($forces,$targetPlayer);
-		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
+	protected function doForceDamageToPlayer(array $return, SmrForce $forces, AbstractSmrPlayer $targetPlayer) {
+		$return['WeaponDamage'] = $this->getModifiedForceDamageAgainstPlayer($forces,$targetPlayer);
+		$return['ActualDamage'] = $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
 
 		if ($return['ActualDamage']['KillingShot']) {
-			$return['KillResults'] =& $targetPlayer->killPlayerByForces($forces);
+			$return['KillResults'] = $targetPlayer->killPlayerByForces($forces);
 		}
 		return $return;
 	}
 
-	abstract public function &shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces);
-	abstract public function &shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer);
-	abstract public function &shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer);
+	abstract public function shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces);
+	abstract public function shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer);
+	abstract public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer);
 }

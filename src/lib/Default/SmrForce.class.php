@@ -28,6 +28,10 @@ class SmrForce {
 	protected $isNew;
 	protected $hasChanged = false;
 
+	public function __sleep() {
+		return ['ownerID', 'sectorID', 'gameID'];
+	}
+
 	public static function refreshCache() {
 		foreach (self::$CACHE_FORCES as $gameID => &$gameForces) {
 			foreach ($gameForces as $sectorID => &$gameSectorForces) {
@@ -446,7 +450,7 @@ class SmrForce {
 		return SmrSession::getNewHREF($container);
 	}
 
-	public function &shootPlayers(array $targetPlayers, $minesAreAttacker) {
+	public function shootPlayers(array $targetPlayers, $minesAreAttacker) {
 		$results = array('TotalDamage' => 0);
 		if (!$this->exists()) {
 			$results['DeadBeforeShot'] = true;
@@ -456,20 +460,20 @@ class SmrForce {
 
 		if ($this->hasMines()) {
 			$thisMines = new SmrMines($this->getGameID(), $this->getMines());
-			$results['Results']['Mines'] =& $thisMines->shootPlayerAsForce($this, array_rand_value($targetPlayers), $minesAreAttacker);
+			$results['Results']['Mines'] = $thisMines->shootPlayerAsForce($this, array_rand_value($targetPlayers), $minesAreAttacker);
 			$results['TotalDamage'] += $results['Results']['Mines']['ActualDamage']['TotalDamage'];
 		}
 
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
-			$results['Results']['Drones'] =& $thisCDs->shootPlayerAsForce($this, array_rand_value($targetPlayers));
+			$results['Results']['Drones'] = $thisCDs->shootPlayerAsForce($this, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Results']['Drones']['ActualDamage']['TotalDamage'];
 		}
 
 		if (!$minesAreAttacker) {
 			if ($this->hasSDs()) {
 				$thisSDs = new SmrScoutDrones($this->getGameID(), $this->getSDs());
-				$results['Results']['Scouts'] =& $thisSDs->shootPlayerAsForce($this, array_rand_value($targetPlayers));
+				$results['Results']['Scouts'] = $thisSDs->shootPlayerAsForce($this, array_rand_value($targetPlayers));
 				$results['TotalDamage'] += $results['Results']['Scouts']['ActualDamage']['TotalDamage'];
 			}
 		}
@@ -478,7 +482,7 @@ class SmrForce {
 		return $results;
 	}
 
-	public function &doWeaponDamage(array $damage) {
+	public function doWeaponDamage(array $damage) {
 		$alreadyDead = !$this->exists();
 		$minesDamage = 0;
 		$cdDamage = 0;
@@ -531,7 +535,7 @@ class SmrForce {
 		return $actualDamage * SD_ARMOUR;
 	}
 
-	public function &killForcesByPlayer(AbstractSmrPlayer $killer) {
+	public function killForcesByPlayer(AbstractSmrPlayer $killer) {
 		$return = array();
 		return $return;
 	}

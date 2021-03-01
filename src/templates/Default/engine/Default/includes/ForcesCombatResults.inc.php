@@ -1,11 +1,11 @@
 <?php
 if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Results'])) {
 	foreach ($ForcesCombatResults['Results'] as $ForceType => $ForceResults) {
-		$ShootingWeapon =& $ForceResults['Weapon'];
-		$ShotHit =& $ForceResults['Hit'];
-		$ActualDamage =& $ForceResults['ActualDamage'];
-		$WeaponDamage =& $ForceResults['WeaponDamage'];
-		$TargetPlayer =& $ForceResults['TargetPlayer'];
+		$ShootingWeapon = $ForceResults['Weapon'];
+		$ShotHit = $ForceResults['Hit'];
+		$ActualDamage = $ForceResults['ActualDamage'];
+		$WeaponDamage = $ForceResults['WeaponDamage'];
+		$TargetPlayer = $ForceResults['TargetPlayer'];
 		?>
 		<span class="cds"><?php echo $ActualDamage['Launched'] ?? $WeaponDamage['Launched']; ?></span><?php
 		if ($ForceType == 'Mines') {
@@ -63,5 +63,5 @@ if (isset($ForcesCombatResults['ForcesDestroyed']) && $ForcesCombatResults['Forc
 	?>Forces are <span class="red">DESTROYED!</span><br /><?php
 }
 
-$TotalDamage =& $ForcesCombatResults['TotalDamage'] ?>
+$TotalDamage = $ForcesCombatResults['TotalDamage'] ?>
 The forces <?php if ($TotalDamage > 0){ ?>hit for a total of <span class="red"><?php echo number_format($TotalDamage) ?></span> damage in this round of combat<?php } else{ ?>do no damage this round<?php } ?>.
