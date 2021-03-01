@@ -16,7 +16,7 @@ class DummyShip extends AbstractSmrShip {
 	}
 
 	protected function doFullUNO() {
-		foreach($this->getMaxHardware() as $hardwareTypeID => $max) {
+		foreach ($this->getMaxHardware() as $hardwareTypeID => $max) {
 			$this->hardware[$hardwareTypeID] = $max;
 			$this->oldHardware[$hardwareTypeID] = $max;
 		}
@@ -46,8 +46,8 @@ class DummyShip extends AbstractSmrShip {
 	}
 
 	public function getIllusionShip() {
-		if(!isset($this->illusionShip)) {
-			$this->illusionShip=false;
+		if (!isset($this->illusionShip)) {
+			$this->illusionShip = false;
 		}
 		return $this->illusionShip;
 	}
@@ -57,20 +57,20 @@ class DummyShip extends AbstractSmrShip {
 		$db = MySqlDatabase::getInstance();
 		$db->query('REPLACE INTO cached_dummys ' .
 					'(type, id, info) ' .
-					'VALUES (\'DummyShip\', '.$db->escapeString($this->getPlayer()->getPlayerName()).', '.$db->escapeString($cache).')');
+					'VALUES (\'DummyShip\', ' . $db->escapeString($this->getPlayer()->getPlayerName()) . ', ' . $db->escapeString($cache) . ')');
 		unserialize($cache);
 	}
 
 	public static function getCachedDummyShip(AbstractSmrPlayer $player) {
-		if(!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()])) {
+		if (!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()])) {
 			$db = MySqlDatabase::getInstance();
 			$db->query('SELECT info FROM cached_dummys
 						WHERE type = \'DummyShip\'
 						AND id = ' . $db->escapeString($player->getPlayerName()) . ' LIMIT 1');
-			if($db->nextRecord()) {
+			if ($db->nextRecord()) {
 				$return = unserialize($db->getField('info'));
 				$return->regenerate($player);
-				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] =& $return;
+				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] = & $return;
 			} else {
 				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] = new DummyShip($player);
 			}
@@ -83,7 +83,7 @@ class DummyShip extends AbstractSmrShip {
 		$db->query('SELECT id FROM cached_dummys
 					WHERE type = \'DummyShip\'');
 		$dummyNames = array();
-		while($db->nextRecord()) {
+		while ($db->nextRecord()) {
 			$dummyNames[] = $db->getField('id');
 		}
 		return $dummyNames;
@@ -92,7 +92,7 @@ class DummyShip extends AbstractSmrShip {
 
 
 	public function __sleep() {
-		return array('gameID','weapons');
+		return array('gameID', 'weapons');
 	}
 
 	public function __wakeup() {

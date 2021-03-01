@@ -16,24 +16,24 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 						$WeaponDamage = $WeaponResults['WeaponDamage'];
 					}
 
-					echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at<?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once<?php } ?> the forces<?php
+					echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at<?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']) { ?> the debris that was once<?php } ?> the forces<?php
 					if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 						if (!$ShotHit) {
 							?> and misses<?php
 						} elseif ($ActualDamage['TotalDamage'] == 0) {
 							if ($WeaponDamage['Shield'] > 0) {
-								?> which proves ineffective against the <?php if ($ActualDamage['HasMines']){ ?>mines<?php } elseif ($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php }
+								?> which proves ineffective against the <?php if ($ActualDamage['HasMines']) { ?>mines<?php } elseif ($ActualDamage['HasCDs']) { ?>combat drones<?php } else { ?>scout drones<?php }
 							} elseif ($WeaponDamage['Armour'] > 0) {
-								?> which is deflected by the <?php if ($ActualDamage['HasMines']){ ?>mines<?php } elseif ($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php } ?> shields<?php
+								?> which is deflected by the <?php if ($ActualDamage['HasMines']) { ?>mines<?php } elseif ($ActualDamage['HasCDs']) { ?>combat drones<?php } else { ?>scout drones<?php } ?> shields<?php
 							} else {
 								?> but it cannot do any damage<?php
 							}
 						} else {
 							?> destroying <?php
 							$DamageTypes = 0;
-							if ($ActualDamage['NumMines'] > 0){ $DamageTypes = $DamageTypes+1; }
-							if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-							if ($ActualDamage['NumSDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+							if ($ActualDamage['NumMines'] > 0) { $DamageTypes = $DamageTypes + 1; }
+							if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+							if ($ActualDamage['NumSDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 							if ($ActualDamage['NumMines'] > 0) {
 								?><span class="red"><?php echo number_format($ActualDamage['NumMines']) ?></span> mines<?php
@@ -63,22 +63,22 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 				if ($WeaponDamage['Launched'] == 0) {
 					?> fails to launch their combat drones<?php
 				} else {
-					?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at<?php if ($ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } ?> the forces<?php
+					?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at<?php if ($ActualDamage['TargetAlreadyDead']) { ?> the debris that was once <?php } ?> the forces<?php
 					if (!$ActualDamage['TargetAlreadyDead']) {
 						if ($ActualDamage['TotalDamage'] == 0) {
 							if ($WeaponDamage['Shield'] > 0) {
-								?> which prove ineffective against the <?php if ($ActualDamage['HasMines']){ ?>mines<?php } elseif ($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php }
+								?> which prove ineffective against the <?php if ($ActualDamage['HasMines']) { ?>mines<?php } elseif ($ActualDamage['HasCDs']) { ?>combat drones<?php } else { ?>scout drones<?php }
 							} elseif ($WeaponDamage['Armour'] > 0) {
 								?> which is deflected by the <?php
-								if ($ActualDamage['HasMines']){ ?>mines<?php } elseif ($ActualDamage['HasCDs']){ ?>combat drones<?php } else{ ?>scout drones<?php } ?> shields<?php
+								if ($ActualDamage['HasMines']) { ?>mines<?php } elseif ($ActualDamage['HasCDs']) { ?>combat drones<?php } else { ?>scout drones<?php } ?> shields<?php
 							} else {
 								?> but they cannot do any damage<?php
 							}
 						} else {
 							$DamageTypes = 0;
-							if ($ActualDamage['NumMines'] > $WeaponDamage['Kamikaze']) { $DamageTypes = $DamageTypes+1; }
-							if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-							if ($ActualDamage['NumSDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+							if ($ActualDamage['NumMines'] > $WeaponDamage['Kamikaze']) { $DamageTypes = $DamageTypes + 1; }
+							if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+							if ($ActualDamage['NumSDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 							if ($WeaponDamage['Kamikaze'] == 0) {
 								?> destroying <?php
@@ -120,4 +120,4 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 	}
 }
 $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
-This fleet <?php if ($TotalDamage > 0){ ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else{ ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.
+This fleet <?php if ($TotalDamage > 0) { ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else { ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.

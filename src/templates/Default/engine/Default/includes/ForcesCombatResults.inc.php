@@ -16,7 +16,7 @@ if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Res
 			?> scout drones kamikaze themselves against <?php
 		}
 
-		if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php }
+		if ($ShotHit && $ActualDamage['TargetAlreadyDead']) { ?> the debris that was once <?php }
 		echo $TargetPlayer->getDisplayName();
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 			if (!$ShotHit) {
@@ -37,9 +37,9 @@ if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Res
 				?> destroying <?php
 			}
 			$DamageTypes = 0;
-			if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-			if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-			if ($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+			if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
+			if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+			if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 			if ($ActualDamage['Shield'] > 0) {
 				?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
@@ -55,7 +55,7 @@ if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Res
 		} ?>.
 		<br /><?php
 		if ($ShotHit && $ActualDamage['KillingShot']) {
-			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php',array('KillResults'=>$ForceResults['KillResults'],'TargetPlayer'=>$TargetPlayer));
+			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', array('KillResults'=>$ForceResults['KillResults'], 'TargetPlayer'=>$TargetPlayer));
 		}
 	}
 }
@@ -64,4 +64,4 @@ if (isset($ForcesCombatResults['ForcesDestroyed']) && $ForcesCombatResults['Forc
 }
 
 $TotalDamage = $ForcesCombatResults['TotalDamage'] ?>
-The forces <?php if ($TotalDamage > 0){ ?>hit for a total of <span class="red"><?php echo number_format($TotalDamage) ?></span> damage in this round of combat<?php } else{ ?>do no damage this round<?php } ?>.
+The forces <?php if ($TotalDamage > 0) { ?>hit for a total of <span class="red"><?php echo number_format($TotalDamage) ?></span> damage in this round of combat<?php } else { ?>do no damage this round<?php } ?>.

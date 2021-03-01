@@ -25,7 +25,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 				}
 				$TargetPlanet = $WeaponResults['TargetPlanet'];
 
-				echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?>the debris that was once <?php } echo $TargetPlanet->getCombatName();
+				echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']) { ?>the debris that was once <?php } echo $TargetPlanet->getCombatName();
 				if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 					if (!$ShotHit) {
 						?> and misses<?php
@@ -44,9 +44,9 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 					} else {
 						?> destroying <?php
 						$DamageTypes = 0;
-						if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-						if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-						if ($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+						if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
+						if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+						if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 						if ($ActualDamage['Shield'] > 0) {
 							?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
@@ -63,7 +63,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 				} ?>.
 				<br /><?php
 				if ($ShotHit && $ActualDamage['KillingShot']) {
-					$this->includeTemplate('includes/PlanetKillMessage.inc.php',array('KillResults'=>$WeaponResults['KillResults'],'TargetPlanet'=>$TargetPlanet));
+					$this->includeTemplate('includes/PlanetKillMessage.inc.php', array('KillResults'=>$WeaponResults['KillResults'], 'TargetPlanet'=>$TargetPlanet));
 				}
 			}
 		}
@@ -73,9 +73,9 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 			$WeaponDamage = $Drones['WeaponDamage'];
 			$TargetPlanet = $Drones['TargetPlanet'];
 			$DamageTypes = 0;
-			if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-			if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-			if ($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+			if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
+			if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+			if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 			echo $ShootingPlayer->getDisplayName();
 			if ($WeaponDamage['Launched'] == 0) {
@@ -118,7 +118,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 			} ?>.
 			<br /><?php
 			if ($ActualDamage['KillingShot']) {
-				$this->includeTemplate('includes/PlanetKillMessage.inc.php',array('KillResults'=>$Drones['KillResults'],'TargetPlanet'=>$TargetPlanet));
+				$this->includeTemplate('includes/PlanetKillMessage.inc.php', array('KillResults'=>$Drones['KillResults'], 'TargetPlanet'=>$TargetPlanet));
 			}
 		}
 	}
@@ -133,7 +133,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 	} ?>.<br /><br /><?php
 }
 $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
-This fleet <?php if ($TotalDamage > 0){ ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else{ ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br /><?php
+This fleet <?php if ($TotalDamage > 0) { ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else { ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br /><?php
 foreach ($TraderTeamCombatResults['Downgrades'] as $structureID => $numDestroyed) { ?>
 	This team destroys <span class="red"><?php echo $numDestroyed; ?> </span><?php echo pluralise((new SmrPlanetStructureType($structureID, []))->name(), $numDestroyed); ?>.<br /><?php
 } ?>
