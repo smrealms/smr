@@ -47,6 +47,10 @@ class SmrPlanet {
 	protected $delayedCDsDelta = 0;
 	protected $delayedArmourDelta = 0;
 
+	public function __sleep() {
+		return ['sectorID', 'gameID', 'planetName', 'ownerID', 'typeID'];
+	}
+
 	public static function refreshCache() {
 		foreach (self::$CACHE_PLANETS as $gameID => &$gamePlanets) {
 			foreach ($gamePlanets as $sectorID => &$planet) {

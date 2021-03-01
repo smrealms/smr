@@ -28,6 +28,10 @@ class SmrForce {
 	protected $isNew;
 	protected $hasChanged = false;
 
+	public function __sleep() {
+		return ['ownerID', 'sectorID', 'gameID'];
+	}
+
 	public static function refreshCache() {
 		foreach (self::$CACHE_FORCES as $gameID => &$gameForces) {
 			foreach ($gameForces as $sectorID => &$gameSectorForces) {
