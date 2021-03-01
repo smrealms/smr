@@ -25,7 +25,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 				}
 				$TargetPort = $WeaponResults['TargetPort'];
 
-				echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?>the remnants of <?php } echo $TargetPort->getDisplayName();
+				echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']) { ?>the remnants of <?php } echo $TargetPort->getDisplayName();
 				if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 					if (!$ShotHit) {
 						?> and misses every critical system<?php
@@ -44,9 +44,9 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 					} else {
 						?> destroying <?php
 						$DamageTypes = 0;
-						if ($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-						if ($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-						if ($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+						if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
+						if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+						if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 						if ($ActualDamage['Shield'] > 0) {
 							?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
@@ -63,7 +63,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
 				} ?>.
 				<br /><?php
 				if ($ShotHit && $ActualDamage['KillingShot']) {
-					$this->includeTemplate('includes/PortKillMessage.inc.php',array('KillResults'=>$WeaponResults['KillResults'],'TargetPort'=>$TargetPort,'ShootingPlayer'=>$ShootingPlayer));
+					$this->includeTemplate('includes/PortKillMessage.inc.php', array('KillResults'=>$WeaponResults['KillResults'], 'TargetPort'=>$TargetPort, 'ShootingPlayer'=>$ShootingPlayer));
 				}
 			}
 		}
