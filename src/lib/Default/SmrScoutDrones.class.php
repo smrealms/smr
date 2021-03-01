@@ -7,7 +7,6 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 		$this->gameTypeID = $gameTypeID;
 		$this->numberOfSDs = $numberOfSDs;
 		$this->name = 'Scout Drones';
-		$this->raceID = 0;
 		$this->maxDamage = 20;
 		$this->shieldDamage = 20;
 		$this->armourDamage = 20;

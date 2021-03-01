@@ -10,7 +10,6 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		$this->gameTypeID = $gameTypeID;
 		$this->numberOfMines = $numberOfMines;
 		$this->name = 'Mines';
-		$this->raceID = 0;
 		$this->maxDamage = 20;
 		$this->shieldDamage = 20;
 		$this->armourDamage = 20;
