@@ -121,17 +121,25 @@ class AbstractMenu {
 		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$container['view_game_id'] = $var['view_game_id'];
 		$container['game_name'] = $var['game_name'];
-		$menuItems[] = ['Link' => SmrSession::getNewHREF($container),
-		                'Text' => 'Game Details'];
+		$menuItems[] = [
+			'Link' => SmrSession::getNewHREF($container),
+			'Text' => 'Game Details',
+		];
 		$container['body'] = 'history_games_detail.php';
-		$menuItems[] = ['Link' => SmrSession::getNewHREF($container),
-		                'Text' => 'Extended Stats'];
+		$menuItems[] = [
+			'Link' => SmrSession::getNewHREF($container),
+			'Text' => 'Extended Stats',
+		];
 		$container['body'] = 'history_games_hof.php';
-		$menuItems[] = ['Link' => SmrSession::getNewHREF($container),
-		                'Text' => 'Hall of Fame'];
+		$menuItems[] = [
+			'Link' => SmrSession::getNewHREF($container),
+			'Text' => 'Hall of Fame',
+		];
 		$container['body'] = 'history_games_news.php';
-		$menuItems[] = ['Link' => SmrSession::getNewHREF($container),
-		                'Text' => 'Game News'];
+		$menuItems[] = [
+			'Link' => SmrSession::getNewHREF($container),
+			'Text' => 'Game News',
+		];
 		// make the selected index bold
 		$boldItem =& $menuItems[$selected_index]['Text'];
 		$boldItem = '<b>' . $boldItem . '</b>';

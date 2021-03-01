@@ -246,7 +246,7 @@ abstract class AbstractSmrAccount {
 	/**
 	 * Check if the account is disabled.
 	 */
-	public function isDisabled() : array | false {
+	public function isDisabled() : array|false {
 		$this->db->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
 			'WHERE ' . $this->SQL . ' LIMIT 1');
 		if ($this->db->nextRecord()) {
@@ -1125,7 +1125,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function addPoints(int $numPoints, SmrAccount $admin, int $reasonID, string $suspicion) : int | false {
+	public function addPoints(int $numPoints, SmrAccount $admin, int $reasonID, string $suspicion) : int|false {
 		//do we have points
 		$this->setPoints($this->getPoints() + $numPoints, SmrSession::getTime());
 		$totalPoints = $this->getPoints();

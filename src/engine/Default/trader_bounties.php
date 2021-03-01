@@ -14,5 +14,8 @@ foreach (array('HQ', 'UG') as $type) {
 	$template->assign('Bounty' . $type, $msg);
 }
 
-$template->assign('AllClaims', array($player->getClaimableBounties('HQ'),
-                                     $player->getClaimableBounties('UG')));
+$allClaims = [
+	$player->getClaimableBounties('HQ'),
+	$player->getClaimableBounties('UG'),
+];
+$template->assign('AllClaims', $allClaims);

@@ -15,8 +15,10 @@ $template->assign('SelectedGame', $selectedGameID);
 $db->query('SELECT game_name, game_id FROM game WHERE game_id IN (SELECT DISTINCT game_id FROM galactic_post_paper WHERE online_since IS NOT NULL) OR game_id=' . $db->escapeNumber($player->getGameID()) . ' ORDER BY game_id DESC');
 $publishedGames = array();
 while ($db->nextRecord()) {
-	$publishedGames[] = array('game_name' => $db->getField('game_name'),
-	                          'game_id' => $db->getInt('game_id'));
+	$publishedGames[] = [
+		'game_name' => $db->getField('game_name'),
+		'game_id' => $db->getInt('game_id'),
+	];
 }
 $template->assign('PublishedGames', $publishedGames);
 
@@ -29,8 +31,10 @@ while ($db->nextRecord()) {
 	$container['game_id'] = $selectedGameID;
 	$container['back'] = true;
 
-	$pastEditions[] = array('title' => $db->getField('title'),
-	                        'online_since' => $db->getInt('online_since'),
-	                        'href' => SmrSession::getNewHREF($container));
+	$pastEditions[] = [
+		'title' => $db->getField('title'),
+		'online_since' => $db->getInt('online_since'),
+		'href' => SmrSession::getNewHREF($container),
+	];
 }
 $template->assign('PastEditions', $pastEditions);

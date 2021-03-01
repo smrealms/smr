@@ -28,7 +28,7 @@ if ($player->hasAlliance()) {
 	$template->assign('OurRank', $ourRank);
 }
 
-$profitRanks = function (int $minRank, int $maxRank) use ($player, $db, $profitTypeEscaped) : array {
+$profitRanks = function(int $minRank, int $maxRank) use ($player, $db, $profitTypeEscaped) : array {
 	$offset = $minRank - 1;
 	$limit = $maxRank - $offset;
 	$db->query('SELECT alliance_id, COALESCE(SUM(amount), 0) amount

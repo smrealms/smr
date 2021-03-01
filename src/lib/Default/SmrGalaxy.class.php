@@ -340,7 +340,7 @@ class SmrGalaxy {
 	/**
 	 * Check if the galaxy contains a specific sector.
 	 */
-	public function contains(int | SmrSector $sectorID) : bool {
+	public function contains(int|SmrSector $sectorID) : bool {
 		if ($sectorID instanceof SmrSector) {
 			return $sectorID->getGalaxyID() == $this->getGalaxyID();
 		}

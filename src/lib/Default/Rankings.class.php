@@ -98,7 +98,7 @@ class Rankings {
 		global $player, $db;
 		$offset = $minRank - 1;
 		$limit = $maxRank - $offset;
-		$db->query('SELECT alliance_id, alliance_' . $stat . ' AS amount FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, alliance_name LIMIT ' . $offset. ', ' . $limit);
+		$db->query('SELECT alliance_id, alliance_' . $stat . ' AS amount FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, alliance_name LIMIT ' . $offset . ', ' . $limit);
 		return self::collectAllianceRankings($db, $player, $offset);
 	}
 

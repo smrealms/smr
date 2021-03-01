@@ -15,8 +15,10 @@ if (!isset($var['view_all'])) {
 
 $announcements = [];
 while ($db->nextRecord()) {
-	$announcements[] = ['Time' => $db->getInt('time'),
-	                    'Msg' => htmlentities($db->getField('msg'))];
+	$announcements[] = [
+		'Time' => $db->getInt('time'),
+		'Msg' => htmlentities($db->getField('msg')),
+	];
 }
 $template->assign('Announcements', $announcements);
 

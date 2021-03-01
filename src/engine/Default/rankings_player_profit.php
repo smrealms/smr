@@ -24,7 +24,7 @@ $template->assign('OurRank', $ourRank);
 
 $totalPlayers = $player->getGame()->getTotalPlayers();
 
-$profitRanks = function (int $minRank, int $maxRank) use ($player, $db, $profitTypeEscaped) : array {
+$profitRanks = function(int $minRank, int $maxRank) use ($player, $db, $profitTypeEscaped) : array {
 	$offset = $minRank - 1;
 	$limit = $maxRank - $offset;
 	$db->query('SELECT p.*, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $profitTypeEscaped . ' WHERE p.game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, player_name ASC LIMIT ' . $offset . ', ' . $limit);

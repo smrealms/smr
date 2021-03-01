@@ -96,7 +96,7 @@ if ($type == 'comp_share') {
 	}
 	$accountID = (int)$variable;
 	$template->assign('BanAccountID', $accountID);
-	$summary = 'Account ' . $accountID. ' has had the following IPs at the following times.';
+	$summary = 'Account ' . $accountID . ' has had the following IPs at the following times.';
 	$template->assign('Summary', $summary);
 	$db2->query('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($variable));
 	if ($db2->nextRecord()) {

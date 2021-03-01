@@ -9,8 +9,10 @@ $template->assign('SelectGameHREF', SmrSession::getNewHREF($container));
 $activeGames = array();
 $db->query('SELECT game_id, game_name FROM game WHERE join_time < ' . $db->escapeNumber(SmrSession::getTime()) . ' AND end_time > ' . $db->escapeNumber(SmrSession::getTime()) . ' ORDER BY start_time DESC');
 while ($db->nextRecord()) {
-	$activeGames[] = array('game_name' => $db->getField('game_name'),
-	                       'game_id' => $db->getInt('game_id'));
+	$activeGames[] = [
+		'game_name' => $db->getField('game_name'),
+		'game_id' => $db->getInt('game_id'),
+	];
 }
 $template->assign('ActiveGames', $activeGames);
 

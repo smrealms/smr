@@ -21,7 +21,7 @@ while ($db->nextRecord()) {
 	/**
 	 * @var $messagePlayer SmrPlayer | string
 	 */
-	$getName = function ($messagePlayer) use ($container, $account) : string {
+	$getName = function($messagePlayer) use ($container, $account) : string {
 		$name = $messagePlayer;
 		if ($messagePlayer instanceof SmrPlayer) {
 			$name = $messagePlayer->getAccount()->getLogin();
