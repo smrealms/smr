@@ -33,6 +33,11 @@
 			"docker-compose --env-file test/env up -d mysql-integration-test",
 			"@rebuild:integration-services"
 		],
+		"reset:integration-services": [
+			"docker-compose --env-file test/env stop mysql-integration-test",
+			"docker-compose --env-file test/env rm -f -v mysql-integration-test",
+			"@start:integration-services"
+		],
 		"rebuild:integration-services": [
 			"docker-compose --env-file test/env build smr-integration-test",
 			"docker-compose --env-file test/env run --rm flyway-integration-test"
