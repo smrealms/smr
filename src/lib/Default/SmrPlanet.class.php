@@ -13,46 +13,46 @@ class SmrPlanet {
 	const TIME_ATTACK_NEWS_COOLDOWN = 3600; // 1 hour
 	const MAX_STOCKPILE = 600;
 
-	protected $db;
-	protected $SQL;
+	protected MySqlDatabase $db;
+	protected string $SQL;
 
-	protected $exists;
-	protected $sectorID;
-	protected $gameID;
-	protected $planetName;
-	protected $ownerID;
-	protected $password;
-	protected $shields;
-	protected $armour;
-	protected $drones;
-	protected $credits;
-	protected $bonds;
-	protected $maturity;
-	protected $stockpile;
-	protected $buildings;
-	protected $inhabitableTime;
-	protected $currentlyBuilding;
-	protected $mountedWeapons;
-	protected $typeID;
-	protected $typeInfo;
+	protected bool $exists;
+	protected int $sectorID;
+	protected int $gameID;
+	protected string $planetName;
+	protected int $ownerID;
+	protected string $password;
+	protected int $shields;
+	protected int $armour;
+	protected int $drones;
+	protected int $credits;
+	protected int $bonds;
+	protected int $maturity;
+	protected array $stockpile;
+	protected array $buildings;
+	protected int $inhabitableTime;
+	protected array $currentlyBuilding;
+	protected array $mountedWeapons;
+	protected int $typeID;
+	protected SmrPlanetType $typeInfo;
 
-	protected $hasChanged = false;
-	protected $hasChangedFinancial = false; // for credits, bond, maturity
-	protected $hasChangedStockpile = false;
-	protected $hasChangedWeapons = array();
-	protected $hasChangedBuildings = array();
-	protected $hasStoppedBuilding = array();
-	protected $isNew = false;
+	protected bool $hasChanged = false;
+	protected bool $hasChangedFinancial = false; // for credits, bond, maturity
+	protected bool $hasChangedStockpile = false;
+	protected array $hasChangedWeapons = array();
+	protected array $hasChangedBuildings = array();
+	protected array $hasStoppedBuilding = array();
+	protected bool $isNew = false;
 
-	protected $delayedShieldsDelta = 0;
-	protected $delayedCDsDelta = 0;
-	protected $delayedArmourDelta = 0;
+	protected int $delayedShieldsDelta = 0;
+	protected int $delayedCDsDelta = 0;
+	protected int $delayedArmourDelta = 0;
 
 	public function __sleep() {
 		return ['sectorID', 'gameID', 'planetName', 'ownerID', 'typeID'];
 	}
 
-	public static function refreshCache() {
+	public static function refreshCache() : void {
 		foreach (self::$CACHE_PLANETS as $gameID => &$gamePlanets) {
 			foreach ($gamePlanets as $sectorID => &$planet) {
 				$planet = self::getPlanet($gameID, $sectorID, true);
@@ -60,11 +60,11 @@ class SmrPlanet {
 		}
 	}
 
-	public static function clearCache() {
+	public static function clearCache() : void {
 		self::$CACHE_PLANETS = array();
 	}
 
-	public static function savePlanets() {
+	public static function savePlanets() : void {
 		foreach (self::$CACHE_PLANETS as $gamePlanets) {
 			foreach ($gamePlanets as $planet) {
 				$planet->update();
@@ -72,7 +72,7 @@ class SmrPlanet {
 		}
 	}
 
-	public static function getGalaxyPlanets($gameID, $galaxyID, $forceUpdate = false) {
+	public static function getGalaxyPlanets(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
 		$db = MySqlDatabase::getInstance();
 		$db->query('SELECT planet.*, sector_id FROM sector LEFT JOIN planet USING (game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlanets = [];
@@ -86,14 +86,14 @@ class SmrPlanet {
 		return $galaxyPlanets;
 	}
 
-	public static function getPlanet($gameID, $sectorID, $forceUpdate = false, $db = null) {
+	public static function getPlanet(int $gameID, int $sectorID, bool $forceUpdate = false, MySqlDatabase $db = null) : self {
 		if ($forceUpdate || !isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
 			self::$CACHE_PLANETS[$gameID][$sectorID] = new SmrPlanet($gameID, $sectorID, $db);
 		}
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
 
-	public static function createPlanet($gameID, $sectorID, $type = 1, $inhabitableTime = null) {
+	public static function createPlanet(int $gameID, int $sectorID, int $typeID = 1, int $inhabitableTime = null) : self {
 		if (self::getPlanet($gameID, $sectorID)->exists()) {
 			throw new Exception('Planet already exists in sector ' . $sectorID . ' game ' . $gameID);
 		}
@@ -106,11 +106,11 @@ class SmrPlanet {
 		// insert planet into db
 		$db = MySqlDatabase::getInstance();
 		$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time, planet_type_id)
-				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ', ' . $db->escapeNumber($type) . ')');
+				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ', ' . $db->escapeNumber($typeID) . ')');
 		return self::getPlanet($gameID, $sectorID, true);
 	}
 
-	public static function removePlanet($gameID, $sectorID) {
+	public static function removePlanet(int $gameID, int $sectorID) : void {
 		$db = MySqlDatabase::getInstance();
 		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID);
 		$db->query('DELETE FROM planet WHERE ' . $SQL);
@@ -125,7 +125,7 @@ class SmrPlanet {
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
 
-	protected function __construct($gameID, $sectorID, $db = null) {
+	protected function __construct(int $gameID, int $sectorID, MySqlDatabase $db = null) {
 		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
@@ -138,8 +138,8 @@ class SmrPlanet {
 		}
 
 		if ($this->exists) {
-			$this->gameID = (int)$gameID;
-			$this->sectorID = (int)$sectorID;
+			$this->gameID = $gameID;
+			$this->sectorID = $sectorID;
 			$this->planetName = stripslashes($db->getField('planet_name'));
 			$this->ownerID = $db->getInt('owner_id');
 			$this->password = $db->getField('password');
@@ -157,7 +157,7 @@ class SmrPlanet {
 		}
 	}
 
-	public function getInterestRate() {
+	public function getInterestRate() : float {
 		$level = $this->getLevel();
 		if ($level < 9) {
 			return .0404;
@@ -178,7 +178,7 @@ class SmrPlanet {
 		}
 	}
 
-	public function checkBondMaturity($partial = false) {
+	public function checkBondMaturity(bool $partial = false) : void {
 		if ($this->getMaturity() > 0 && ($partial === true || $this->getMaturity() < SmrSession::getTime())) {
 			// calc the interest for the time
 			$interest = $this->getBonds() * $this->getInterestRate();
@@ -203,7 +203,7 @@ class SmrPlanet {
 		return IRound(BOND_TIME / $this->getGame()->getGameSpeed());
 	}
 
-	public function bond() {
+	public function bond() : void {
 		$this->checkBondMaturity(true);
 
 		// add it to bond
@@ -216,68 +216,68 @@ class SmrPlanet {
 		$this->setMaturity(SmrSession::getTime() + $this->getBondTime());
 	}
 
-	public function getGameID() {
+	public function getGameID() : int {
 		return $this->gameID;
 	}
 
-	public function getGame() {
+	public function getGame() : SmrGame {
 		return SmrGame::getGame($this->gameID);
 	}
 
-	public function getSectorID() {
+	public function getSectorID() : int {
 		return $this->sectorID;
 	}
 
-	public function getGalaxy() {
+	public function getGalaxy() : SmrGalaxy {
 		return SmrGalaxy::getGalaxyContaining($this->getGameID(), $this->getSectorID());
 	}
 
-	public function getOwnerID() {
+	public function getOwnerID() : int {
 		return $this->ownerID;
 	}
 
-	public function hasOwner() {
+	public function hasOwner() : bool {
 		return $this->ownerID != 0;
 	}
 
-	public function removeOwner() {
+	public function removeOwner() : void {
 		$this->setOwnerID(0);
 	}
 
-	public function setOwnerID($claimerID) {
-		if ($this->ownerID == $claimerID) {
+	public function setOwnerID(int $claimerID) : void {
+		if ($this->ownerID === $claimerID) {
 			return;
 		}
 		$this->ownerID = $claimerID;
 		$this->hasChanged = true;
 	}
 
-	public function getOwner() {
+	public function getOwner() : SmrPlayer {
 		return SmrPlayer::getPlayer($this->getOwnerID(), $this->getGameID());
 	}
 
-	public function getPassword() {
+	public function getPassword() : string {
 		return $this->password;
 	}
 
-	public function setPassword($password) {
-		if ($this->password == $password) {
+	public function setPassword(string $password) : void {
+		if ($this->password === $password) {
 			return;
 		}
 		$this->password = $password;
 		$this->hasChanged = true;
 	}
 
-	public function removePassword() {
+	public function removePassword() : void {
 		$this->setPassword('');
 	}
 
-	public function getCredits() {
+	public function getCredits() : int {
 		return $this->credits;
 	}
 
 	public function setCredits(int $num) : void {
-		if ($this->credits == $num) {
+		if ($this->credits === $num) {
 			return;
 		}
 		if ($num < 0) {
@@ -295,7 +295,7 @@ class SmrPlanet {
 	 * Returns the amount that was actually added to handle overflow.
 	 */
 	public function increaseCredits(int $num) : int {
-		if ($num == 0) {
+		if ($num === 0) {
 			return 0;
 		}
 		$newTotal = min($this->credits + $num, MAX_MONEY);
@@ -305,19 +305,19 @@ class SmrPlanet {
 	}
 
 	public function decreaseCredits(int $num) : void {
-		if ($num == 0) {
+		if ($num === 0) {
 			return;
 		}
 		$newTotal = $this->credits - $num;
 		$this->setCredits($newTotal);
 	}
 
-	public function getMaturity() {
+	public function getMaturity() : int {
 		return $this->maturity;
 	}
 
-	public function setMaturity($num) {
-		if ($this->maturity == $num) {
+	public function setMaturity(int $num) : void {
+		if ($this->maturity === $num) {
 			return;
 		}
 		if ($num < 0) {
@@ -327,12 +327,12 @@ class SmrPlanet {
 		$this->hasChangedFinancial = true;
 	}
 
-	public function getBonds() {
+	public function getBonds() : int {
 		return $this->bonds;
 	}
 
-	public function setBonds($num) {
-		if ($this->bonds == $num) {
+	public function setBonds(int $num) : void {
+		if ($this->bonds === $num) {
 			return;
 		}
 		if ($num < 0) {
@@ -342,21 +342,21 @@ class SmrPlanet {
 		$this->hasChangedFinancial = true;
 	}
 
-	public function increaseBonds($num) {
-		if ($num == 0) {
+	public function increaseBonds(int $num) : void {
+		if ($num === 0) {
 			return;
 		}
 		$this->setBonds($this->getBonds() + $num);
 	}
 
-	public function decreaseBonds($num) {
-		if ($num == 0) {
+	public function decreaseBonds(int $num) : void {
+		if ($num === 0) {
 			return;
 		}
 		$this->setBonds($this->getBonds() - $num);
 	}
 
-	public function checkForExcessDefense() {
+	public function checkForExcessDefense() : void {
 		if ($this->getShields() > $this->getMaxShields()) {
 			$this->setShields($this->getMaxShields());
 		}
@@ -378,25 +378,25 @@ class SmrPlanet {
 		}
 	}
 
-	public function getShields($delayed = false) {
+	public function getShields(bool $delayed = false) : int {
 		return $this->shields + ($delayed ? $this->delayedShieldsDelta : 0);
 	}
 
-	public function hasShields($delayed = false) {
+	public function hasShields(bool $delayed = false) : bool {
 		return $this->getShields($delayed) > 0;
 	}
 
-	public function setShields($shields) {
+	public function setShields(int $shields) : void {
 		$shields = max(0, min($shields, $this->getMaxShields()));
-		if ($this->shields == $shields) {
+		if ($this->shields === $shields) {
 			return;
 		}
 		$this->shields = $shields;
 		$this->hasChanged = true;
 	}
 
-	public function decreaseShields($number, $delayed = false) {
-		if ($number == 0) {
+	public function decreaseShields(int $number, bool $delayed = false) : void {
+		if ($number === 0) {
 			return;
 		}
 		if ($delayed === false) {
@@ -406,8 +406,8 @@ class SmrPlanet {
 		}
 	}
 
-	public function increaseShields($number, $delayed = false) {
-		if ($number == 0) {
+	public function increaseShields(int $number, bool $delayed = false) : void {
+		if ($number === 0) {
 			return;
 		}
 		if ($delayed === false) {
@@ -417,29 +417,29 @@ class SmrPlanet {
 		}
 	}
 
-	public function getMaxShields() {
+	public function getMaxShields() : int {
 		return $this->getBuilding(PLANET_GENERATOR) * PLANET_GENERATOR_SHIELDS;
 	}
 
-	public function getArmour($delayed = false) {
+	public function getArmour(bool $delayed = false) : int {
 		return $this->armour + ($delayed ? $this->delayedArmourDelta : 0);
 	}
 
-	public function hasArmour($delayed = false) {
+	public function hasArmour(bool $delayed = false) : bool {
 		return $this->getArmour($delayed) > 0;
 	}
 
-	public function setArmour($armour) {
+	public function setArmour(int $armour) : void {
 		$armour = max(0, min($armour, $this->getMaxArmour()));
-		if ($this->armour == $armour) {
+		if ($this->armour === $armour) {
 			return;
 		}
 		$this->armour = $armour;
 		$this->hasChanged = true;
 	}
 
-	public function decreaseArmour($number, $delayed = false) {
-		if ($number == 0) {
+	public function decreaseArmour(int $number, bool $delayed = false) : void {
+		if ($number === 0) {
 			return;
 		}
 		if ($delayed === false) {
@@ -449,8 +449,8 @@ class SmrPlanet {
 		}
 	}
 
-	public function increaseArmour($number, $delayed = false) {
-		if ($number == 0) {
+	public function increaseArmour(int $number, bool $delayed = false) : void {
+		if ($number === 0) {
 			return;
 		}
 		if ($delayed === false) {
@@ -460,29 +460,29 @@ class SmrPlanet {
 		}
 	}
 
-	public function getMaxArmour() {
+	public function getMaxArmour() : int {
 		return $this->getBuilding(PLANET_BUNKER) * PLANET_BUNKER_ARMOUR;
 	}
 
-	public function getCDs($delayed = false) {
+	public function getCDs(bool $delayed = false) : int {
 		return $this->drones + ($delayed ? $this->delayedCDsDelta : 0);
 	}
 
-	public function hasCDs($delayed = false) {
+	public function hasCDs(bool $delayed = false) : bool {
 		return $this->getCDs($delayed) > 0;
 	}
 
-	public function setCDs($combatDrones) {
+	public function setCDs(int $combatDrones) : void {
 		$combatDrones = max(0, min($combatDrones, $this->getMaxCDs()));
-		if ($this->drones == $combatDrones) {
+		if ($this->drones === $combatDrones) {
 			return;
 		}
 		$this->drones = $combatDrones;
 		$this->hasChanged = true;
 	}
 
-	public function decreaseCDs($number, $delayed = false) {
-		if ($number == 0) {
+	public function decreaseCDs(int $number, bool $delayed = false) : void {
+		if ($number === 0) {
 			return;
 		}
 		if ($delayed === false) {
@@ -492,8 +492,8 @@ class SmrPlanet {
 		}
 	}
 
-	public function increaseCDs($number, $delayed = false) {
-		if ($number == 0) {
+	public function increaseCDs(int $number, bool $delayed = false) : void {
+		if ($number === 0) {
 			return;
 		}
 		if ($delayed === false) {
@@ -503,15 +503,15 @@ class SmrPlanet {
 		}
 	}
 
-	public function getMaxCDs() {
+	public function getMaxCDs() : int {
 		return $this->getBuilding(PLANET_HANGAR) * PLANET_HANGAR_DRONES;
 	}
 
-	public function getMaxMountedWeapons() {
+	public function getMaxMountedWeapons() : int {
 		return $this->getBuilding(PLANET_WEAPON_MOUNT);
 	}
 
-	public function getMountedWeapons() {
+	public function getMountedWeapons() : array {
 		if (!isset($this->mountedWeapons)) {
 			$this->mountedWeapons = [];
 			if ($this->hasBuilding(PLANET_WEAPON_MOUNT)) {
@@ -529,24 +529,24 @@ class SmrPlanet {
 		return $this->mountedWeapons;
 	}
 
-	public function hasMountedWeapon($orderID) {
+	public function hasMountedWeapon(int $orderID) : bool {
 		$this->getMountedWeapons(); // Make sure array is initialized
 		return isset($this->mountedWeapons[$orderID]);
 	}
 
-	public function addMountedWeapon(SmrWeapon $weapon, $orderID) {
+	public function addMountedWeapon(SmrWeapon $weapon, int $orderID) : void {
 		$this->getMountedWeapons(); // Make sure array is initialized
 		$this->mountedWeapons[$orderID] = $weapon;
 		$this->hasChangedWeapons[$orderID] = true;
 	}
 
-	public function removeMountedWeapon($orderID) {
+	public function removeMountedWeapon(int $orderID) : void {
 		$this->getMountedWeapons(); // Make sure array is initialized
 		unset($this->mountedWeapons[$orderID]);
 		$this->hasChangedWeapons[$orderID] = true;
 	}
 
-	private function swapMountedWeapons($orderID1, $orderID2) {
+	private function swapMountedWeapons(int $orderID1, int $orderID2) : void {
 		$this->getMountedWeapons(); // Make sure array is initialized
 		if (isset($this->mountedWeapons[$orderID1])) {
 			$saveWeapon = $this->mountedWeapons[$orderID1];
@@ -565,14 +565,14 @@ class SmrPlanet {
 		$this->hasChangedWeapons[$orderID2] = true;
 	}
 
-	public function moveMountedWeaponUp($orderID) {
+	public function moveMountedWeaponUp(int $orderID) : void {
 		if ($orderID == 0) {
 			throw new Exception('Cannot move this weapon up!');
 		}
 		$this->swapMountedWeapons($orderID - 1, $orderID);
 	}
 
-	public function moveMountedWeaponDown($orderID) {
+	public function moveMountedWeaponDown(int $orderID) : void {
 		if ($orderID == $this->getMaxMountedWeapons() - 1) {
 			throw new Exception('Cannot move this weapon down!');
 		}
@@ -580,15 +580,15 @@ class SmrPlanet {
 	}
 
 
-	public function isDestroyed($delayed = false) {
+	public function isDestroyed(bool $delayed = false) : bool {
 		return !$this->hasCDs($delayed) && !$this->hasShields($delayed) && !$this->hasArmour($delayed);
 	}
 
-	public function exists() {
+	public function exists() : bool {
 		return $this->exists;
 	}
 
-	public function getStockpile($goodID = false) {
+	public function getStockpile(int $goodID = null) : int|array {
 		if (!isset($this->stockpile)) {
 			// initialize cargo array
 			$this->stockpile = array();
@@ -599,7 +599,7 @@ class SmrPlanet {
 				$this->stockpile[$this->db->getInt('good_id')] = $this->db->getInt('amount');
 			}
 		}
-		if ($goodID === false) {
+		if ($goodID === null) {
 			return $this->stockpile;
 		}
 		if (isset($this->stockpile[$goodID])) {
@@ -608,41 +608,41 @@ class SmrPlanet {
 		return 0;
 	}
 
-	public function hasStockpile($goodID = false) {
-		if ($goodID === false) {
-			$stockpile = $this->getStockpile($goodID);
+	public function hasStockpile(int $goodID = null) : bool {
+		if ($goodID === null) {
+			$stockpile = $this->getStockpile();
 			return count($stockpile) > 0 && max($stockpile) > 0;
 		} else {
 			return $this->getStockpile($goodID) > 0;
 		}
 	}
 
-	public function setStockpile($goodID, $amount) {
+	public function setStockpile(int $goodID, int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Trying to set negative stockpile.');
 		}
-		if ($this->getStockpile($goodID) == $amount) {
+		if ($this->getStockpile($goodID) === $amount) {
 			return;
 		}
 		$this->stockpile[$goodID] = $amount;
 		$this->hasChangedStockpile = true;
 	}
 
-	public function decreaseStockpile($goodID, $amount) {
+	public function decreaseStockpile(int $goodID, int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative stockpile.');
 		}
 		$this->setStockpile($goodID, $this->getStockpile($goodID) - $amount);
 	}
 
-	public function increaseStockpile($goodID, $amount) {
+	public function increaseStockpile(int $goodID, int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Trying to increase negative stockpile.');
 		}
 		$this->setStockpile($goodID, $this->getStockpile($goodID) + $amount);
 	}
 
-	public function getBuildings() {
+	public function getBuildings() : array {
 		if (!isset($this->buildings)) {
 			$this->buildings = array();
 
@@ -659,7 +659,7 @@ class SmrPlanet {
 		return $this->buildings;
 	}
 
-	public function getBuilding($buildingTypeID) {
+	public function getBuilding(int $buildingTypeID) : int {
 		$buildings = $this->getBuildings();
 		if (isset($buildings[$buildingTypeID])) {
 			return $buildings[$buildingTypeID];
@@ -667,12 +667,12 @@ class SmrPlanet {
 		return 0;
 	}
 
-	public function hasBuilding($buildingTypeID) {
+	public function hasBuilding(int $buildingTypeID) : bool {
 		return $this->getBuilding($buildingTypeID) > 0;
 	}
 
-	public function setBuilding($buildingTypeID, $number) {
-		if ($this->getBuilding($buildingTypeID) == $number) {
+	public function setBuilding(int $buildingTypeID, int $number) : void {
+		if ($this->getBuilding($buildingTypeID) === $number) {
 			return;
 		}
 
@@ -680,18 +680,18 @@ class SmrPlanet {
 		$this->hasChangedBuildings[$buildingTypeID] = true;
 	}
 
-	public function increaseBuilding($buildingTypeID, $number) {
+	public function increaseBuilding(int $buildingTypeID, int $number) : void {
 		$this->setBuilding($buildingTypeID, $this->getBuilding($buildingTypeID) + $number);
 	}
 
-	public function destroyBuilding($buildingTypeID, $number) {
+	public function destroyBuilding(int $buildingTypeID, int $number) : void {
 		if (!$this->hasBuilding($buildingTypeID)) {
 			throw new Exception('Trying to destroy a nonexistent building');
 		}
 		$this->setBuilding($buildingTypeID, $this->getBuilding($buildingTypeID) - $number);
 	}
 
-	public function getCurrentlyBuilding() {
+	public function getCurrentlyBuilding() : array {
 		if (!isset($this->currentlyBuilding)) {
 			$this->currentlyBuilding = array();
 
@@ -731,8 +731,8 @@ class SmrPlanet {
 		return $this->currentlyBuilding;
 	}
 
-	public function getMaxBuildings($buildingTypeID = false) {
-		if ($buildingTypeID === false) {
+	public function getMaxBuildings(int $buildingTypeID = null) : int|array {
+		if ($buildingTypeID === null) {
 			$structs = $this->typeInfo::STRUCTURES;
 			return array_combine(array_keys($structs),
 			                     array_column($structs, 'max_amount'));
@@ -740,12 +740,12 @@ class SmrPlanet {
 		return $this->getStructureTypes($buildingTypeID)->maxAmount();
 	}
 
-	public function getTypeID() {
+	public function getTypeID() : int {
 		return $this->typeID;
 	}
 
-	public function setTypeID($num) {
-		if (isset($this->typeID) && $this->typeID == $num) {
+	public function setTypeID(int $num) : void {
+		if (isset($this->typeID) && $this->typeID === $num) {
 			return;
 		}
 		$this->typeID = $num;
@@ -766,43 +766,43 @@ class SmrPlanet {
 		$this->update();
 	}
 
-	public function getTypeImage() {
+	public function getTypeImage() : string {
 		return $this->typeInfo->imageLink();
 	}
 
-	public function getTypeName() {
+	public function getTypeName() : string {
 		return $this->typeInfo->name();
 	}
 
-	public function getTypeDescription() {
+	public function getTypeDescription() : string {
 		return $this->typeInfo->description();
 	}
 
-	public function getMaxAttackers() {
+	public function getMaxAttackers() : int {
 		return $this->typeInfo->maxAttackers();
 	}
 
-	public function getMaxLanded() {
+	public function getMaxLanded() : int {
 		return $this->typeInfo->maxLanded();
 	}
 
-	public function getStructureTypes($structureID = false) {
+	public function getStructureTypes(int $structureID = null) : SmrPlanetStructureType|array {
 		return $this->typeInfo->structureTypes($structureID);
 	}
 
-	public function hasStructureType($structureID) {
+	public function hasStructureType(int $structureID) : bool {
 		return isset($this->getStructureTypes()[$structureID]);
 	}
 
 	/**
 	 * Specifies which menu options the planet has.
 	 */
-	public function hasMenuOption($option) {
+	public function hasMenuOption(string $option) : bool {
 		// We do not set options that are unavailable
 		return in_array($option, $this->typeInfo->menuOptions());
 	}
 
-	public function doDelayedUpdates() {
+	public function doDelayedUpdates() : void {
 		$this->setShields($this->getShields(true));
 		$this->delayedShieldsDelta = 0;
 		$this->setCDs($this->getCDs(true));
@@ -811,7 +811,7 @@ class SmrPlanet {
 		$this->delayedArmourDelta = 0;
 	}
 
-	public function update() {
+	public function update() : void {
 		if (!$this->exists()) {
 			return;
 		}
@@ -884,15 +884,15 @@ class SmrPlanet {
 		}
 	}
 
-	public function getLevel() {
+	public function getLevel() : float {
 		return array_sum($this->getBuildings()) / 3;
 	}
 
-	public function getMaxLevel() {
+	public function getMaxLevel() : float {
 		return array_sum($this->getMaxBuildings()) / 3;
 	}
 
-	public function accuracy() {
+	public function accuracy() : float {
 		if ($this->hasWeapons()) {
 			$weapons = $this->getWeapons();
 			return $weapons[0]->getModifiedPlanetAccuracy($this);
@@ -903,22 +903,22 @@ class SmrPlanet {
 	/**
 	 * Returns the accuracy bonus for mounted weaons (as a percent)
 	 */
-	public function getAccuracyBonus() {
+	public function getAccuracyBonus() : int {
 		return 5 * $this->getBuilding(PLANET_RADAR);
 	}
 
-	public function getRemainingStockpile($id) {
+	public function getRemainingStockpile(int $id) : int {
 		return self::MAX_STOCKPILE - $this->getStockpile($id);
 	}
 
 	/**
 	 * Returns true if there is a building in progress
 	 */
-	public function hasCurrentlyBuilding() {
+	public function hasCurrentlyBuilding() : bool {
 		return count($this->getCurrentlyBuilding()) > 0;
 	}
 
-	public function canBuild(AbstractSmrPlayer $constructor, $constructionID) {
+	public function canBuild(AbstractSmrPlayer $constructor, int $constructionID) : string|bool {
 		if ($this->hasCurrentlyBuilding()) {
 			return 'There is already a building in progress!';
 		}
@@ -945,26 +945,26 @@ class SmrPlanet {
 
 	// Modifier for planet building based on the number of buildings.
 	// The average value of this modifier should roughly be 1.
-	private function getCompletionModifier($constructionID) {
+	private function getCompletionModifier(int $constructionID) : float {
 		$currentBuildings = $this->getBuilding($constructionID);
 		$maxBuildings = $this->getMaxBuildings($constructionID);
 		return 0.01 + 2.97 * pow($currentBuildings / $maxBuildings, 2);
 	}
 
 	// Amount of exp gained to build the next building of this type
-	private function getConstructionExp($constructionID) {
+	private function getConstructionExp(int $constructionID) : int {
 		$expGain = $this->getStructureTypes($constructionID)->expGain();
 		return $expGain;
 	}
 
 	// Amount of time (in seconds) to build the next building of this type
-	public function getConstructionTime($constructionID) : int {
+	public function getConstructionTime(int $constructionID) : int {
 		$baseTime = $this->getStructureTypes($constructionID)->baseTime();
 		$constructionTime = ICeil($baseTime * $this->getCompletionModifier($constructionID) / $this->getGame()->getGameSpeed());
 		return $constructionTime;
 	}
 
-	public function startBuilding(AbstractSmrPlayer $constructor, $constructionID) {
+	public function startBuilding(AbstractSmrPlayer $constructor, int $constructionID) : void {
 		if (($message = $this->canBuild($constructor, $constructionID)) !== true) {
 			throw new Exception('Unable to start building: ' . $message);
 		}
@@ -991,7 +991,7 @@ class SmrPlanet {
 		);
 	}
 
-	public function stopBuilding($constructionID) {
+	public function stopBuilding(int $constructionID) : bool {
 		$matchingBuilding = false;
 		$latestFinish = 0;
 		foreach ($this->getCurrentlyBuilding() as $key => $building) {
@@ -1008,8 +1008,8 @@ class SmrPlanet {
 		return false;
 	}
 
-	public function setName($name) {
-		if ($this->planetName == $name) {
+	public function setName(string $name) : void {
+		if ($this->planetName === $name) {
 			return;
 		}
 		$this->planetName = $name;
@@ -1019,60 +1019,60 @@ class SmrPlanet {
 	/**
 	 * Returns the name of the planet, suitably escaped for HTML display.
 	 */
-	public function getDisplayName() {
+	public function getDisplayName() : string {
 		return htmlentities($this->planetName);
 	}
 
 	/**
 	 * Returns the name of the planet, intended for combat messages.
 	 */
-	public function getCombatName() {
+	public function getCombatName() : string {
 		return '<span style="color:yellow;font-variant:small-caps">' . $this->getDisplayName() . ' (#' . $this->getSectorID() . ')</span>';
 	}
 
-	public function isInhabitable() {
+	public function isInhabitable() : bool {
 		return $this->inhabitableTime <= SmrSession::getTime();
 	}
 
-	public function getInhabitableTime() {
+	public function getInhabitableTime() : int {
 		return $this->inhabitableTime;
 	}
 
-	public function getExamineHREF() {
+	public function getExamineHREF() : string {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_examine.php'));
 	}
 
-	public function getLandHREF() {
+	public function getLandHREF() : string {
 		return SmrSession::getNewHREF(create_container('planet_land_processing.php'));
 	}
 
-	public function getAttackHREF() {
+	public function getAttackHREF() : string {
 		return SmrSession::getNewHREF(create_container('planet_attack_processing.php'));
 	}
 
-	public function getBuildHREF($structureID) {
+	public function getBuildHREF(int $structureID) : string {
 		$container = create_container('planet_construction_processing.php');
 		$container['construction_id'] = $structureID;
 		$container['action'] = 'Build';
 		return SmrSession::getNewHREF($container);
 	}
 
-	public function getCancelHREF($structureID) {
+	public function getCancelHREF(int $structureID) : string {
 		$container = create_container('planet_construction_processing.php');
 		$container['construction_id'] = $structureID;
 		$container['action'] = 'Cancel';
 		return SmrSession::getNewHREF($container);
 	}
 
-	public function getFinancesHREF() {
+	public function getFinancesHREF() : string {
 		return SmrSession::getNewHREF(create_container('planet_financial_processing.php'));
 	}
 
-	public function getBondConfirmationHREF() {
+	public function getBondConfirmationHREF() : string {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_bond_confirmation.php'));
 	}
 
-	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers) {
+	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers) : void {
 		$trigger->increaseHOF(1, array('Combat', 'Planet', 'Number Of Triggers'), HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, array('Combat', 'Planet', 'Number Of Attacks'), HOF_PUBLIC);
@@ -1098,30 +1098,29 @@ class SmrPlanet {
 	}
 
 
-
-	public function getPlayers() {
+	public function getPlayers() : array {
 		return SmrPlayer::getPlanetPlayers($this->getGameID(), $this->getSectorID());
 	}
 
-	public function countPlayers() {
+	public function countPlayers() : int {
 		return count($this->getPlayers());
 	}
 
-	public function hasPlayers() {
-		return count($this->getPlayers()) > 0;
+	public function hasPlayers() : bool {
+		return $this->countPlayers() > 0;
 	}
 
-	public function getOtherTraders(AbstractSmrPlayer $player) {
+	public function getOtherTraders(AbstractSmrPlayer $player) : array {
 		$players = SmrPlayer::getPlanetPlayers($this->getGameID(), $this->getSectorID()); //Do not use & because we unset something and only want that in what we return
 		unset($players[$player->getAccountID()]);
 		return $players;
 	}
 
-	public function hasOtherTraders(AbstractSmrPlayer $player) {
+	public function hasOtherTraders(AbstractSmrPlayer $player) : bool {
 		return count($this->getOtherTraders($player)) > 0;
 	}
 
-	public function hasEnemyTraders(AbstractSmrPlayer $player) {
+	public function hasEnemyTraders(AbstractSmrPlayer $player) : bool {
 		if (!$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -1134,7 +1133,7 @@ class SmrPlanet {
 		return false;
 	}
 
-	public function hasFriendlyTraders(AbstractSmrPlayer $player) {
+	public function hasFriendlyTraders(AbstractSmrPlayer $player) : bool {
 		if (!$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -1147,7 +1146,7 @@ class SmrPlanet {
 		return false;
 	}
 
-	public function getWeapons() {
+	public function getWeapons() : array {
 		$weapons = $this->getMountedWeapons();
 		for ($i = 0; $i < $this->getBuilding(PLANET_TURRET); ++$i) {
 			$weapons[] = SmrWeapon::getWeapon(WEAPON_PLANET_TURRET);
@@ -1155,11 +1154,11 @@ class SmrPlanet {
 		return $weapons;
 	}
 
-	public function hasWeapons() {
+	public function hasWeapons() : bool {
 		return count($this->getWeapons()) > 0;
 	}
 
-	public function shootPlayers(array $targetPlayers) {
+	public function shootPlayers(array $targetPlayers) : array {
 		$results = array('Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => array());
 		foreach ($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
@@ -1189,7 +1188,7 @@ class SmrPlanet {
 	/**
 	 * Returns an array of structure losses due to damage taken.
 	 */
-	public function checkForDowngrade($damage) : array {
+	public function checkForDowngrade(int $damage) : array {
 		$results = [];
 		// For every 70 damage there is a 15% chance of destroying a structure.
 		// Which structure is destroyed depends on the ratio of buildings and
@@ -1219,7 +1218,7 @@ class SmrPlanet {
 		return $results;
 	}
 
-	public function doWeaponDamage(array $damage, $delayed) {
+	public function doWeaponDamage(array $damage, bool $delayed) : array {
 		$alreadyDead = $this->isDestroyed(true);
 		$shieldDamage = 0;
 		$cdDamage = 0;
@@ -1263,25 +1262,25 @@ class SmrPlanet {
 		return $return;
 	}
 
-	protected function doShieldDamage($damage, $delayed) {
+	protected function doShieldDamage(int $damage, bool $delayed) : int {
 		$actualDamage = min($this->getShields(true), $damage);
 		$this->decreaseShields($actualDamage, $delayed);
 		return $actualDamage;
 	}
 
-	protected function doCDDamage($damage, $delayed) {
+	protected function doCDDamage(int $damage, bool $delayed) : int {
 		$actualDamage = min($this->getCDs(true), IFloor($damage / CD_ARMOUR));
 		$this->decreaseCDs($actualDamage, $delayed);
 		return $actualDamage * CD_ARMOUR;
 	}
 
-	protected function doArmourDamage($damage, $delayed) {
+	protected function doArmourDamage(int $damage, bool $delayed) : int {
 		$actualDamage = min($this->getArmour(true), $damage);
 		$this->decreaseArmour($actualDamage, $delayed);
 		return $actualDamage;
 	}
 
-	public function creditCurrentAttackersForKill() {
+	public function creditCurrentAttackersForKill() : void {
 		//get all players involved for HoF
 		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(SmrSession::getTime() - self::TIME_TO_CREDIT_BUST));
 		while ($this->db->nextRecord()) {
@@ -1292,7 +1291,7 @@ class SmrPlanet {
 		$this->db->query('DELETE FROM player_attacks_planet WHERE ' . $this->SQL);
 	}
 
-	public function killPlanetByPlayer(AbstractSmrPlayer $killer) {
+	public function killPlanetByPlayer(AbstractSmrPlayer $killer) : array {
 		$return = array();
 		$this->creditCurrentAttackersForKill();
 
@@ -1302,4 +1301,5 @@ class SmrPlanet {
 		$this->removePassword();
 		return $return;
 	}
+
 }
