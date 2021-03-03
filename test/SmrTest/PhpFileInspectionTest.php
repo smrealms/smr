@@ -4,6 +4,9 @@ namespace SmrTest;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversNothing
+ */
 class PhpFileInspectionTest extends TestCase {
 
 	public function test_all_files_use_strict_type() {
