@@ -16,6 +16,7 @@ class SmrPlanet {
 	protected $db;
 	protected $SQL;
 
+	protected $exists;
 	protected $sectorID;
 	protected $gameID;
 	protected $planetName;
@@ -128,15 +129,15 @@ class SmrPlanet {
 		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
-		if (isset($db)) {
-			$planetExists = $db->hasField('planet_type_id');
+		if ($db !== null) {
+			$this->exists = $db->hasField('planet_type_id');
 		} else {
 			$db = $this->db;
 			$db->query('SELECT * FROM planet WHERE ' . $this->SQL);
-			$planetExists = $db->nextRecord();
+			$this->exists = $db->nextRecord();
 		}
 
-		if ($planetExists) {
+		if ($this->exists) {
 			$this->gameID = (int)$gameID;
 			$this->sectorID = (int)$sectorID;
 			$this->planetName = stripslashes($db->getField('planet_name'));
@@ -584,7 +585,7 @@ class SmrPlanet {
 	}
 
 	public function exists() {
-		return $this->getGameID() != null && $this->getSectorID() !== null;
+		return $this->exists;
 	}
 
 	public function getStockpile($goodID = false) {
