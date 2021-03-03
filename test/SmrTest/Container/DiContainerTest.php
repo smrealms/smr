@@ -13,7 +13,7 @@ use Smr\Container\DiContainer;
 class DiContainerTest extends TestCase {
 	private const PHPDI_COMPILED_CONTAINER_FILE = "/tmp/CompiledContainer.php";
 
-	protected function setup(): void {
+	protected function setUp(): void {
 		if (file_exists(self::PHPDI_COMPILED_CONTAINER_FILE)) {
 			unlink(self::PHPDI_COMPILED_CONTAINER_FILE);
 		}
