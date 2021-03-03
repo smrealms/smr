@@ -165,4 +165,108 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		// Test zero
 		self::assertSame("'i:0;'", $db->escapeObject(0));
 	}
+
+	public function test_lockTable_throws_if_read_other_table() {
+		$db = MySqlDatabase::getInstance();
+		$db->lockTable('player');
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage("Table 'account' was not locked with LOCK TABLES");
+		try {
+			$db->query('SELECT 1 FROM account LIMIT 1');
+		} catch (\RuntimeException $err) {
+			// Avoid leaving database in a locked state
+			$db->unlock();
+			throw $err;
+		}
+	}
+
+	public function test_lockTable_allows_read() {
+		$db = MySqlDatabase::getInstance();
+		$db->lockTable('ship_class');
+
+		// Perform a query on the locked table
+		$db->query('SELECT ship_class_name FROM ship_class WHERE ship_class_id = 1');
+		$db->requireRecord();
+		self::assertSame($db->getRow(), ['ship_class_name' => 'Hunter']);
+
+		// After unlock we can access other tables again
+		$db->unlock();
+		$db->query('SELECT 1 FROM account LIMIT 1');
+	}
+
+	public function test_requireRecord() {
+		$db = MySqlDatabase::getInstance();
+		// Create a query that returns one record
+		$db->query('SELECT 1');
+		$db->requireRecord();
+		self::assertSame($db->getRow(), [1 => '1']);
+	}
+
+	public function test_requireRecord_too_many_rows() {
+		$db = MySqlDatabase::getInstance();
+		// Create a query that returns two rows
+		$db->query('SELECT 1 UNION SELECT 2');
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('One record required, but found 2');
+		$db->requireRecord();
+	}
+
+	public function test_nextRecord_no_resource() {
+		$db = MySqlDatabase::getInstance();
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('No resource to get record from.');
+		// Call nextRecord before any query is made
+		$db->nextRecord();
+	}
+
+	public function test_nextRecord_no_result() {
+		$db = MySqlDatabase::getInstance();
+		// Construct a query that has an empty result set
+		$db->query('SELECT 1 FROM ship_class WHERE ship_class_id = 0');
+		self::assertFalse($db->nextRecord());
+	}
+
+	public function test_hasField() {
+		$db = MySqlDatabase::getInstance();
+		// Construct a query that has the field 'val', but not 'bla'
+		$db->query('SELECT 1 AS val');
+		$db->requireRecord();
+		self::assertTrue($db->hasField('val'));
+		self::assertFalse($db->hasField('bla'));
+	}
+
+	public function test_inversion_of_escape_and_get() {
+		$db = MySqlDatabase::getInstance();
+		// [value, escape function, getter, comparator, extra args]
+		$params = [
+			[true, 'escapeBoolean', 'getBoolean', 'assertSame', []],
+			[false, 'escapeBoolean', 'getBoolean', 'assertSame', []],
+			[3, 'escapeNumber', 'getInt', 'assertSame', []],
+			[3.14, 'escapeNumber', 'getFloat', 'assertSame', []],
+			['hello', 'escapeString', 'getField', 'assertSame', []],
+			// Test nullable objects
+			[null, 'escapeObject', 'getObject', 'assertSame', [false, true]],
+			// Test object with compression
+			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', [true]],
+			// Test object without compression
+			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', []],
+			// Microtime takes a float and returns a string because of DateTime::createFromFormat
+			[microtime(true), 'escapeMicrotime', 'getMicrotime', 'assertEquals', []],
+		];
+		foreach ($params as list($value, $escaper, $getter, $cmp, $args)) {
+			$db->query('SELECT ' . $db->$escaper($value, ...$args) . ' AS val');
+			$db->requireRecord();
+			self::$cmp($db->$getter('val', ...$args), $value);
+		}
+	}
+
+	public function test_getBoolean_with_non_boolean_field() {
+		$db = MySqlDatabase::getInstance();
+		$db->query('SELECT \'bla\'');
+		$db->requireRecord();
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('Field is not a boolean: bla');
+		$db->getBoolean('bla');
+	}
+
 }
