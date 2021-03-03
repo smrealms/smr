@@ -9,6 +9,7 @@ use MySqlDatabase;
 use mysqli;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
+use Smr\MySqlProperties;
 
 /**
  * Class MySqlDatabaseIntegrationTest
@@ -22,6 +23,28 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	protected function setUp(): void {
 		DiContainer::initializeContainer();
 		$this->container = DiContainer::getContainer();
+	}
+
+	public function test_mysql_factory() {
+		// Given mysql properties are retrieved from the container
+		$mysqlProperties = $this->container->get(MySqlProperties::class);
+		// When using the factory to retrieve a mysqli instance
+		$mysqlDatabase = MySqlDatabase::mysqliFactory($mysqlProperties);
+		// Then the connection is successful
+		self::assertNotNull($mysqlDatabase->server_info);
+	}
+
+	public function test__construct_happy_path() {
+		$mysqlDatabase = $this->container->get(MySqlDatabase::class);
+		$this->assertNotNull($mysqlDatabase);
+	}
+
+	public function test_getInstance_always_returns_new_instance() {
+		// Given a MySqlDatabase object
+		$original = MySqlDatabase::getInstance();
+		// When calling getInstance again
+		$second = MySqlDatabase::getInstance();
+		self::assertNotSame($second, $original);
 	}
 
 	public function test_performing_operations_on_closed_database_throws_error() {
