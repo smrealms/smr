@@ -36,4 +36,4 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
-          files: test/coverage.xml
+          files: test/coverage/clover.xml

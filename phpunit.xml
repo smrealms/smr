@@ -21,8 +21,9 @@
 			<directory suffix=".php">src/lib</directory>
 		</include>
 		<report>
-			<clover outputFile="test/coverage.xml" />
+			<clover outputFile="test/coverage/clover.xml" />
 			<text outputFile="php://stdout" showOnlySummary="true" />
+			<html outputDirectory="test/coverage/html" />
 		</report>
 	</coverage>
 </phpunit>
