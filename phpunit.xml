@@ -22,6 +22,7 @@
 		</include>
 		<report>
 			<clover outputFile="test/coverage.xml" />
+			<text outputFile="php://stdout" showOnlySummary="true" />
 		</report>
 	</coverage>
 </phpunit>
