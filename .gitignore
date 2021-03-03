@@ -33,5 +33,5 @@
 .phpunit*
 out/
 
-# Coverage file created by phpunit
-/test/coverage.xml
+# Coverage files created by phpunit
+/test/coverage
