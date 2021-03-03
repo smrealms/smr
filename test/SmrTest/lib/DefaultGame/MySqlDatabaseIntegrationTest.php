@@ -2,9 +2,6 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use DI\Container;
-use Error;
-use Exception;
 use MySqlDatabase;
 use mysqli;
 use PHPUnit\Framework\TestCase;
@@ -18,16 +15,16 @@ use Smr\MySqlProperties;
  * @package SmrTest\lib\DefaultGame
  */
 class MySqlDatabaseIntegrationTest extends TestCase {
-	private Container $container;
 
 	protected function setUp(): void {
+		// Start each test with a fresh container (and mysqli connection).
+		// This ensures the independence of each test.
 		DiContainer::initializeContainer();
-		$this->container = DiContainer::getContainer();
 	}
 
 	public function test_mysql_factory() {
 		// Given mysql properties are retrieved from the container
-		$mysqlProperties = $this->container->get(MySqlProperties::class);
+		$mysqlProperties = DiContainer::get(MySqlProperties::class);
 		// When using the factory to retrieve a mysqli instance
 		$mysqlDatabase = MySqlDatabase::mysqliFactory($mysqlProperties);
 		// Then the connection is successful
@@ -35,7 +32,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test__construct_happy_path() {
-		$mysqlDatabase = $this->container->get(MySqlDatabase::class);
+		$mysqlDatabase = DiContainer::get(MySqlDatabase::class);
 		$this->assertNotNull($mysqlDatabase);
 	}
 
@@ -49,7 +46,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 
 	public function test_performing_operations_on_closed_database_throws_error() {
 		// Expectations
-		$this->expectException(Error::class);
+		$this->expectException(\Error::class);
 		$this->expectExceptionMessage('Typed property MySqlDatabase::$dbConn must not be accessed before initialization');
 		// Given a mysql database instance
 		$mysqlDatabase = MySqlDatabase::getInstance();
@@ -61,7 +58,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 
 	public function test_getInstance_will_perform_reconnect_after_connection_closed() {
 		// Given an original mysql connection
-		$originalMysql = $this->container->get(mysqli::class);
+		$originalMysql = DiContainer::get(mysqli::class);
 		// And a mysql database instance
 		$mysqlDatabase = MySqlDatabase::getInstance();
 		// And disconnect is called
@@ -71,18 +68,18 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		// When performing a query
 		$mysqlDatabase->query("select 1");
 		// Then new mysqli instance is not the same as the initial mock
-		self::assertNotSame($originalMysql, $this->container->get(mysqli::class));
+		self::assertNotSame($originalMysql, DiContainer::get(mysqli::class));
 	}
 
 	public function test_getInstance_will_not_perform_reconnect_if_connection_not_closed() {
 		// Given an original mysql connection
-		$originalMysql = $this->container->get(mysqli::class);
+		$originalMysql = DiContainer::get(mysqli::class);
 		// And a mysql database instance
 		MySqlDatabase::getInstance();
 		// And get instance is called again
 		MySqlDatabase::getInstance();
 		// Then the two mysqli instances are the same
-		self::assertSame($originalMysql, $this->container->get(mysqli::class));
+		self::assertSame($originalMysql, DiContainer::get(mysqli::class));
 	}
 
 	public function test_escapeMicrotime() {
