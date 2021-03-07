@@ -11,6 +11,7 @@ abstract class SmrPlanetType {
 	abstract public function description();
 	abstract public function maxAttackers();
 	abstract public function maxLanded();
+	abstract public function menuOptions();
 
 	private array $structures;
 
@@ -42,13 +43,13 @@ abstract class SmrPlanetType {
 	/**
 	 * Access properties of structures that this planet type can build.
 	 */
-	public function structureTypes($structureID = false) {
+	public function structureTypes(int $structureID = null) : SmrPlanetStructureType|array {
 		if (!isset($this->structures)) {
 			foreach (static::STRUCTURES as $ID => $Info) {
 				$this->structures[$ID] = new SmrPlanetStructureType($ID, $Info);
 			}
 		}
-		if ($structureID === false) {
+		if ($structureID === null) {
 			return $this->structures;
 		} elseif (isset($this->structures[$structureID])) {
 			return $this->structures[$structureID];

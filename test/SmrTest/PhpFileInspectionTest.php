@@ -14,7 +14,7 @@ class PhpFileInspectionTest extends TestCase {
 		$output = [];
 		exec(ROOT . 'test/strict_types.sh', $output, $exit_code);
 		$this->assertSame(0, $exit_code, join("\n", $output));
-		$this->assertEquals(end($output), 'Success! No strict_type errors.');
+		$this->assertEquals('Success! No strict_type errors.', end($output));
 	}
 
 	public function test_all_files_pass_phplint() {
@@ -22,7 +22,7 @@ class PhpFileInspectionTest extends TestCase {
 		$output = [];
 		exec(ROOT . 'test/phplint.sh', $output, $exit_code);
 		$this->assertSame(0, $exit_code, join("\n", $output));
-		$this->assertEquals(end($output), 'Success! No linting errors.');
+		$this->assertEquals('Success! No linting errors.', end($output));
 	}
 
 }

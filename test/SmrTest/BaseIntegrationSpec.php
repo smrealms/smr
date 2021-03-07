@@ -36,7 +36,7 @@ class BaseIntegrationSpec extends TestCase {
 		$this->cleanUp();
 	}
 
-	private function cleanUp() {
+	protected function cleanUp() {
 		$implode = implode(",", self::$defaultPopulatedTables);
 		$query = "SELECT Concat('TRUNCATE TABLE ', TABLE_NAME, ';') FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'smr_live' and TABLE_NAME not in (${implode})";
 		$rs = self::$conn->query($query);
