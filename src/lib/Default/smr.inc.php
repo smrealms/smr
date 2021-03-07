@@ -895,12 +895,12 @@ function number_colour_format($number, $justSign = false) {
  *    'C' => 6, // 60% chance
  * );
  */
-function getWeightedRandom($choices) {
+function getWeightedRandom(array $choices) : string|int {
 	// Normalize the weights so that their sum is much larger than 1.
 	$maxWeight = max($choices);
-	foreach ($choices as $key => &$weight) {
-		$weight = IRound($weight * 1000 / $maxWeight);
-	} unset($weight);
+	foreach ($choices as $key => $weight) {
+		$choices[$key] = IRound($weight * 1000 / $maxWeight);
+	}
 
 	// Generate a random number that is lower than the sum of the weights.
 	$rand = rand(1, array_sum($choices));
@@ -913,4 +913,5 @@ function getWeightedRandom($choices) {
 			return $key;
 		}
 	}
+	throw new Exception('Internal error computing weights');
 }
