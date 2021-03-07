@@ -618,11 +618,11 @@ class SmrPlanet {
 	}
 
 	public function setStockpile(int $goodID, int $amount) : void {
-		if ($amount < 0) {
-			throw new Exception('Trying to set negative stockpile.');
-		}
 		if ($this->getStockpile($goodID) === $amount) {
 			return;
+		}
+		if ($amount < 0) {
+			throw new Exception('Trying to set negative stockpile.');
 		}
 		$this->stockpile[$goodID] = $amount;
 		$this->hasChangedStockpile = true;
