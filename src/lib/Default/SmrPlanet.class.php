@@ -675,6 +675,9 @@ class SmrPlanet {
 		if ($this->getBuilding($buildingTypeID) === $number) {
 			return;
 		}
+		if ($number < 0) {
+			throw new Exception('Cannot set negative number of buildings.');
+		}
 
 		$this->buildings[$buildingTypeID] = $number;
 		$this->hasChangedBuildings[$buildingTypeID] = true;
@@ -685,9 +688,6 @@ class SmrPlanet {
 	}
 
 	public function destroyBuilding(int $buildingTypeID, int $number) : void {
-		if (!$this->hasBuilding($buildingTypeID)) {
-			throw new Exception('Trying to destroy a nonexistent building');
-		}
 		$this->setBuilding($buildingTypeID, $this->getBuilding($buildingTypeID) - $number);
 	}
 

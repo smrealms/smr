@@ -5,6 +5,8 @@ namespace SmrTest\lib\DefaultGame;
 use SmrPlanet;
 use SmrTest\BaseIntegrationSpec;
 
+require_once(LIB . 'Default/smr.inc.php');
+
 /**
  * Class SmrPlanetIntegrationTest
  * @covers SmrPlanet
@@ -177,6 +179,64 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 
 		// Check remaining stockpile (ore: 600 - 40)
 		$this->assertSame(560, $planet->getRemainingStockpile(GOODS_ORE));
+	}
+
+	public function test_setStockpile_throws_when_negative() : void {
+		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Trying to set negative stockpile');
+		$planet->setStockpile(GOODS_ORE, -20);
+	}
+
+	public function test_setBuilding_throws_when_negative() : void {
+		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Cannot set negative number of buildings');
+		$planet->setBuilding(PLANET_HANGAR, -1);
+	}
+
+	public function test_destroyBuilding_throws_when_invalid() : void {
+		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Cannot set negative number of buildings');
+		$planet->destroyBuilding(PLANET_TURRET, 1);
+	}
+
+	public function test_checkForDowngrade() : void {
+		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
+
+		// If we don't do enough damage, we should never downgrade
+		$this->assertSame([], $planet->checkForDowngrade(0));
+
+		// With no buildings, this should always return empty
+		$this->assertSame([], $planet->checkForDowngrade(100 * SmrPlanet::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE));
+
+		// Give the planet 2 structures, and destroy them both
+		$planet->setBuilding(PLANET_GENERATOR, 2);
+		srand(95); // seed rand for reproducibility
+		$result = $planet->checkForDowngrade(2 * SmrPlanet::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
+		$this->assertSame([PLANET_GENERATOR => 2], $result);
+	}
+
+	public function test_buildings() : void {
+		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
+
+		// Tests with no buildings
+		$this->assertFalse($planet->hasBuilding(PLANET_HANGAR));
+		$this->assertSame(0, $planet->getBuilding(PLANET_HANGAR));
+		$this->assertSame(0.0, $planet->getLevel());
+
+		// Add some hangars
+		$planet->increaseBuilding(PLANET_HANGAR, 4);
+		$this->assertTrue($planet->hasBuilding(PLANET_HANGAR));
+		$this->assertSame(4, $planet->getBuilding(PLANET_HANGAR));
+		$this->assertSame(4/3, $planet->getLevel());
+
+		// Destroy some hangars
+		$planet->destroyBuilding(PLANET_HANGAR, 2);
+		$this->assertTrue($planet->hasBuilding(PLANET_HANGAR));
+		$this->assertSame(2, $planet->getBuilding(PLANET_HANGAR));
+		$this->assertSame(2/3, $planet->getLevel());
 	}
 
 }
