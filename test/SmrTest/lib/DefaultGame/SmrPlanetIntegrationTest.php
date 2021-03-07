@@ -36,9 +36,9 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	public function test_createPlanet_already_exists() : void {
+		SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Planet already exists');
-		SmrPlanet::createPlanet(1, 1, 1, 1);
 		SmrPlanet::createPlanet(1, 1, 1, 1);
 	}
 

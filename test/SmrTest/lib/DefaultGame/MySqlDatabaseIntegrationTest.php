@@ -45,14 +45,13 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_performing_operations_on_closed_database_throws_error() {
-		// Expectations
-		$this->expectException(\Error::class);
-		$this->expectExceptionMessage('Typed property MySqlDatabase::$dbConn must not be accessed before initialization');
 		// Given a mysql database instance
 		$mysqlDatabase = MySqlDatabase::getInstance();
 		// And disconnect is called
 		$mysqlDatabase->close();
 		// When calling database methods
+		$this->expectException(\Error::class);
+		$this->expectExceptionMessage('Typed property MySqlDatabase::$dbConn must not be accessed before initialization');
 		$mysqlDatabase->query("foo query");
 	}
 

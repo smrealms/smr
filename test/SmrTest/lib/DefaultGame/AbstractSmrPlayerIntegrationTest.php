@@ -33,10 +33,10 @@ class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	public function test_createPlayer_duplicate_name() : void {
-		$this->expectException(\Smr\UserException::class);
-		$this->expectExceptionMessage('That player name already exists.');
 		$name = 'test';
 		AbstractSmrPlayer::createPlayer(1, 1, $name, RACE_HUMAN, false);
+		$this->expectException(\Smr\UserException::class);
+		$this->expectExceptionMessage('That player name already exists.');
 		AbstractSmrPlayer::createPlayer(2, 1, $name, RACE_HUMAN, false);
 	}
 
