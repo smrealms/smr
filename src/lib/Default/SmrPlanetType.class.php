@@ -11,6 +11,7 @@ abstract class SmrPlanetType {
 	abstract public function description();
 	abstract public function maxAttackers();
 	abstract public function maxLanded();
+	abstract public function menuOptions();
 
 	private array $structures;
 
