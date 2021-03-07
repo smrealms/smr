@@ -918,7 +918,11 @@ class SmrPlanet {
 		return count($this->getCurrentlyBuilding()) > 0;
 	}
 
-	public function canBuild(AbstractSmrPlayer $constructor, int $constructionID) : string|bool {
+	/**
+	 * Returns the reason a build cannot be performed, or false if there is
+	 * no restriction.
+	 */
+	public function getBuildRestriction(AbstractSmrPlayer $constructor, int $constructionID) : string|false {
 		if ($this->hasCurrentlyBuilding()) {
 			return 'There is already a building in progress!';
 		}
@@ -928,6 +932,9 @@ class SmrPlanet {
 		$cost = $this->getStructureTypes($constructionID)->creditCost();
 		if ($constructor->getCredits() < $cost) {
 			return 'You do not have enough credits.';
+		}
+		if ($constructor->getTurns() < TURNS_TO_BUILD) {
+			return 'You do not have enough turns to build.';
 		}
 		foreach ($this->getStructureTypes($constructionID)->hardwareCost() as $hardwareID) {
 			if (!$constructor->getShip()->getHardware($hardwareID)) {
@@ -940,7 +947,7 @@ class SmrPlanet {
 				return 'There are not enough goods available.';
 			}
 		}
-		return true;
+		return false;
 	}
 
 	// Modifier for planet building based on the number of buildings.
@@ -964,17 +971,13 @@ class SmrPlanet {
 		return $constructionTime;
 	}
 
+	/**
+	 * @throws \Smr\UserException If the player cannot build the structure.
+	 */
 	public function startBuilding(AbstractSmrPlayer $constructor, int $constructionID) : void {
-		if (($message = $this->canBuild($constructor, $constructionID)) !== true) {
-			throw new Exception('Unable to start building: ' . $message);
-		}
-		$constructor->decreaseCredits($this->getStructureTypes($constructionID)->creditCost());
-		// take the goods that are needed
-		foreach ($this->getStructureTypes($constructionID)->goods() as $goodID => $amount) {
-			$this->decreaseStockpile($goodID, $amount);
-		}
-		foreach ($this->getStructureTypes($constructionID)->hardwareCost() as $hardwareID) {
-			$constructor->getShip()->setHardware($hardwareID, 0);
+		$restriction = $this->getBuildRestriction($constructor, $constructionID);
+		if ($restriction !== false) {
+			throw \Smr\UserException('Unable to start building: ' . $restriction);
 		}
 
 		// gets the time for the buildings
@@ -989,6 +992,16 @@ class SmrPlanet {
 			'Finishes' => $timeComplete,
 			'TimeRemaining' => $timeComplete - SmrSession::getTime()
 		);
+
+		// Consume the required resources
+		$constructor->decreaseCredits($this->getStructureTypes($constructionID)->creditCost());
+		$constructor->takeTurns(TURNS_TO_BUILD);
+		foreach ($this->getStructureTypes($constructionID)->goods() as $goodID => $amount) {
+			$this->decreaseStockpile($goodID, $amount);
+		}
+		foreach ($this->getStructureTypes($constructionID)->hardwareCost() as $hardwareID) {
+			$constructor->getShip()->setHardware($hardwareID, 0);
+		}
 	}
 
 	public function stopBuilding(int $constructionID) : bool {

@@ -43,7 +43,7 @@ You are currently building: <?php
 				<br /><?php echo format_time($ThisPlanet->getConstructionTime($StructureID), true); ?>
 		</td>
 			<td><?php
-				if ($ThisPlanet->canBuild($ThisPlayer, $StructureID) === true) { ?>
+				if ($ThisPlanet->getBuildRestriction($ThisPlayer, $StructureID) === false) { ?>
 					<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getBuildHREF($StructureID); ?>">Build (<?php echo TURNS_TO_BUILD; ?>)</a></div><?php
 				} ?>
 			</td>
