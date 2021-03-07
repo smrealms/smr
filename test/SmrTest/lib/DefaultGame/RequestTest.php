@@ -40,11 +40,11 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_getInt() {
 		// An index that exists, with default
-		$this->assertSame(Request::getInt('int', 3), 2);
+		$this->assertSame(2, Request::getInt('int', 3));
 		// An index that exists, no default
-		$this->assertSame(Request::getInt('int'), 2);
+		$this->assertSame(2, Request::getInt('int'));
 		// An index that doesn't exist, with default
-		$this->assertSame(Request::getInt('noexist', 3), 3);
+		$this->assertSame(3, Request::getInt('noexist', 3));
 	}
 
 	public function test_getInt_exception() {
@@ -58,11 +58,11 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_getFloat() {
 		// An index that exists, with default
-		$this->assertSame(Request::getFloat('float', 2.0), 3.14);
+		$this->assertSame(3.14, Request::getFloat('float', 2.0));
 		// An index that exists, no default
-		$this->assertSame(Request::getFloat('float'), 3.14);
+		$this->assertSame(3.14, Request::getFloat('float'));
 		// An index that doesn't exist, with default
-		$this->assertSame(Request::getFloat('noexist', 3.14), 3.14);
+		$this->assertSame(3.14, Request::getFloat('noexist', 3.14));
 	}
 
 	public function test_getFloat_exception() {
@@ -76,11 +76,11 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_getArray() {
 		// An index that exists, with default
-		$this->assertSame(Request::getArray('array_str', []), ['a', 'b', 'c']);
+		$this->assertSame(['a', 'b', 'c'], Request::getArray('array_str', []));
 		// An index that exists, no default
-		$this->assertSame(Request::getArray('array_str'), ['a', 'b', 'c']);
+		$this->assertSame(['a', 'b', 'c'], Request::getArray('array_str'));
 		// An index that doesn't exist, with default
-		$this->assertSame(Request::getArray('noexist', ['a']), ['a']);
+		$this->assertSame(['a'], Request::getArray('noexist', ['a']));
 	}
 
 	public function test_getArray_exception() {
@@ -94,11 +94,11 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_getIntArray() {
 		// An index that exists, with default
-		$this->assertSame(Request::getIntArray('array_int', []), [1, 2, 3]);
+		$this->assertSame([1, 2, 3], Request::getIntArray('array_int', []));
 		// An index that exists, no default
-		$this->assertSame(Request::getIntArray('array_int'), [1, 2, 3]);
+		$this->assertSame([1, 2, 3], Request::getIntArray('array_int'));
 		// An index that doesn't exist, with default
-		$this->assertSame(Request::getIntArray('noexist', [1]), [1]);
+		$this->assertSame([1], Request::getIntArray('noexist', [1]));
 	}
 
 	public function test_getIntArray_exception() {
@@ -112,11 +112,11 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_get() {
 		// An index that exists, with default
-		$this->assertSame(Request::get('str', 'foo'), 'ing');
+		$this->assertSame('ing', Request::get('str', 'foo'));
 		// An index that exists, no default
-		$this->assertSame(Request::get('str'), 'ing');
+		$this->assertSame('ing', Request::get('str'));
 		// An index that doesn't exist, with default
-		$this->assertSame(Request::get('noexist', 'foo'), 'foo');
+		$this->assertSame('foo', Request::get('noexist', 'foo'));
 	}
 
 	public function test_get_exception() {
@@ -132,18 +132,18 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 		global $var;
 		$var['var:str'] = 'ing';
 		// An index that exists in var but not request, no default
-		$this->assertSame(Request::getVar('var:str'), 'ing');
+		$this->assertSame('ing', Request::getVar('var:str'));
 		// An index that exists in var but not request, with default
-		$this->assertSame(Request::getVar('var:str', 'foo'), 'ing');
+		$this->assertSame('ing', Request::getVar('var:str', 'foo'));
 	}
 
 	public function test_getVar_no_var() {
 		// An index that exists in request but not var, no default
-		$this->assertSame(Request::getVar('str'), 'ing');
+		$this->assertSame('ing', Request::getVar('str'));
 		// An index that exists in request but not var, with default
-		$this->assertSame(Request::getVar('str', 'foo'), 'ing');
+		$this->assertSame('ing', Request::getVar('str', 'foo'));
 		// An index neither in request nor var, with default
-		$this->assertSame(Request::getVar('noexist', 'foo'), 'foo');
+		$this->assertSame('foo', Request::getVar('noexist', 'foo'));
 	}
 
 	public function test_getVar_exception_no_default() {
@@ -166,7 +166,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 		global $var;
 		$var['str'] = 'ing';
 		// An index that exists in both var and request, with the same value
-		$this->assertSame(Request::getVar('str'), 'ing');
+		$this->assertSame('ing', Request::getVar('str'));
 	}
 
 	//------------------------------------------------------------------------
@@ -175,18 +175,18 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 		global $var;
 		$var['var:int'] = 2;
 		// An index that exists in var but not request, no default
-		$this->assertSame(Request::getVarInt('var:int'), 2);
+		$this->assertSame(2, Request::getVarInt('var:int'));
 		// An index that exists in var but not request, with default
-		$this->assertSame(Request::getVarInt('var:int', 3), 2);
+		$this->assertSame(2, Request::getVarInt('var:int', 3));
 	}
 
 	public function test_getVarInt_no_var() {
 		// An index that exists in request but not var, no default
-		$this->assertSame(Request::getVarInt('int'), 2);
+		$this->assertSame(2, Request::getVarInt('int'));
 		// An index that exists in request but not var, with default
-		$this->assertSame(Request::getVarInt('int', 3), 2);
+		$this->assertSame(2, Request::getVarInt('int', 3));
 		// An index neither in request nor var, with default
-		$this->assertSame(Request::getVarInt('noexist', 3), 3);
+		$this->assertSame(3, Request::getVarInt('noexist', 3));
 	}
 
 	public function test_getVarInt_exception_no_default() {
@@ -209,7 +209,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 		global $var;
 		$var['int'] = 2;
 		// An index that exists in both var and request, with the same value
-		$this->assertSame(Request::getVarInt('int'), 2);
+		$this->assertSame(2, Request::getVarInt('int'));
 	}
 
 	//------------------------------------------------------------------------
@@ -218,18 +218,18 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 		global $var;
 		$var['var:array_int'] = [1, 2, 3];
 		// An index that exists in var but not request, no default
-		$this->assertSame(Request::getVarIntArray('var:array_int'), [1, 2, 3]);
+		$this->assertSame([1, 2, 3], Request::getVarIntArray('var:array_int'));
 		// An index that exists in var but not request, with default
-		$this->assertSame(Request::getVarIntArray('var:array_int', []), [1, 2, 3]);
+		$this->assertSame([1, 2, 3], Request::getVarIntArray('var:array_int', []));
 	}
 
 	public function test_getVarIntArray_no_var() {
 		// An index that exists in request but not var, no default
-		$this->assertSame(Request::getVarIntArray('array_int'), [1, 2, 3]);
+		$this->assertSame([1, 2, 3], Request::getVarIntArray('array_int'));
 		// An index that exists in request but not var, with default
-		$this->assertSame(Request::getVarIntArray('array_int', []), [1, 2, 3]);
+		$this->assertSame([1, 2, 3], Request::getVarIntArray('array_int', []));
 		// An index neither in request nor var, with default
-		$this->assertSame(Request::getVarIntArray('noexist', [1]), [1]);
+		$this->assertSame([1], Request::getVarIntArray('noexist', [1]));
 	}
 
 	public function test_getVarIntArray_exception_no_default() {
@@ -252,7 +252,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 		global $var;
 		$var['array_int'] = [1, 2, 3];
 		// An index that exists in both var and request, with the same value
-		$this->assertSame(Request::getVarIntArray('array_int'), [1, 2, 3]);
+		$this->assertSame([1, 2, 3], Request::getVarIntArray('array_int'));
 	}
 
 }

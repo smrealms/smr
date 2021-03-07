@@ -41,7 +41,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		$original = MySqlDatabase::getInstance();
 		// When calling getInstance again
 		$second = MySqlDatabase::getInstance();
-		self::assertNotSame($second, $original);
+		self::assertNotSame($original, $second);
 	}
 
 	public function test_performing_operations_on_closed_database_throws_error() {
@@ -186,7 +186,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		// Perform a query on the locked table
 		$db->query('SELECT ship_class_name FROM ship_class WHERE ship_class_id = 1');
 		$db->requireRecord();
-		self::assertSame($db->getRow(), ['ship_class_name' => 'Hunter']);
+		self::assertSame(['ship_class_name' => 'Hunter'], $db->getRow());
 
 		// After unlock we can access other tables again
 		$db->unlock();
@@ -198,7 +198,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		// Create a query that returns one record
 		$db->query('SELECT 1');
 		$db->requireRecord();
-		self::assertSame($db->getRow(), [1 => '1']);
+		self::assertSame([1 => '1'], $db->getRow());
 	}
 
 	public function test_requireRecord_too_many_rows() {
@@ -255,7 +255,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		foreach ($params as list($value, $escaper, $getter, $cmp, $args)) {
 			$db->query('SELECT ' . $db->$escaper($value, ...$args) . ' AS val');
 			$db->requireRecord();
-			self::$cmp($db->$getter('val', ...$args), $value);
+			self::$cmp($value, $db->$getter('val', ...$args));
 		}
 	}
 

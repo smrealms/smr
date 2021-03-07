@@ -22,14 +22,14 @@ class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 
 		$player = AbstractSmrPlayer::createPlayer($accountID, $gameID, $name, $raceID, $isNewbie, $isNpc);
 
-		$this->assertSame($player->getAccountID(), $accountID);
-		$this->assertSame($player->getGameID(), $gameID);
-		$this->assertSame($player->getPlayerName(), $name);
-		$this->assertSame($player->getRaceID(), $raceID);
-		$this->assertSame($player->hasNewbieStatus(), $isNewbie);
-		$this->assertSame($player->isNPC(), $isNpc);
-		$this->assertSame($player->getSectorID(), 1);
-		$this->assertSame($player->getPlayerID(), 1);
+		$this->assertSame($accountID, $player->getAccountID());
+		$this->assertSame($gameID, $player->getGameID());
+		$this->assertSame($name, $player->getPlayerName());
+		$this->assertSame($raceID, $player->getRaceID());
+		$this->assertSame($isNewbie, $player->hasNewbieStatus());
+		$this->assertSame($isNpc, $player->isNPC());
+		$this->assertSame(1, $player->getSectorID());
+		$this->assertSame(1, $player->getPlayerID());
 	}
 
 	public function test_createPlayer_duplicate_name() : void {
@@ -43,7 +43,7 @@ class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 	public function test_createPlayer_increment_playerid() : void {
 		AbstractSmrPlayer::createPlayer(1, 1, 'test1', RACE_HUMAN, false);
 		$player = AbstractSmrPlayer::createPlayer(2, 1, 'test2', RACE_HUMAN, false);
-		$this->assertSame($player->getPlayerID(), 2);
+		$this->assertSame(2, $player->getPlayerID());
 	}
 
 }
