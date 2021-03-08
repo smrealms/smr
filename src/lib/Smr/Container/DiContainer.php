@@ -24,7 +24,7 @@ class DiContainer {
 		$this->container = $this->buildContainer();
 	}
 
-	private function getDefinitions(): array {
+	private function getDefinitions() : array {
 		return [
 			/*
 			 * mysqli is a 3rd party library, and we do not have control over its constructor.
@@ -49,7 +49,7 @@ class DiContainer {
 		];
 	}
 
-	private function buildContainer(): Container {
+	private function buildContainer() : Container {
 		$builder = new ContainerBuilder();
 		$builder
 			->addDefinitions($this->getDefinitions())
@@ -67,18 +67,17 @@ class DiContainer {
 	 * Create a new DI\Container instance.
 	 * This needs to be done once during a bootstrapping script, like bootstrap.php
 	 */
-	public static function initializeContainer(): void {
+	public static function initializeContainer() : void {
 		self::$instance = new DiContainer();
 	}
 
 	/**
 	 * Retrieve the managed instance of $className, or construct a new instance with all dependencies.
 	 * @param string $className The name of the class to retrieve from the container.
-	 * @return mixed
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
-	public static function get(string $className) {
+	public static function get(string $className) : mixed {
 		return self::getContainer()->get($className);
 	}
 
@@ -86,20 +85,18 @@ class DiContainer {
 	 * Construct a fresh instance of $className. Dependencies will be retrieved from the container if they
 	 * are already managed, and created themselves if they are not.
 	 * @param string $className The name of the class to construct.
-	 * @return mixed
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
-	public static function make(string $className) {
+	public static function make(string $className) : mixed {
 		return self::getContainer()->make($className);
 	}
 
 	/**
 	 * Return the raw dependency injection Container instance for more robust
 	 * container management operations.
-	 * @return Container
 	 */
-	public static function getContainer(): Container {
+	public static function getContainer() : Container {
 		return self::$instance->container;
 	}
 }

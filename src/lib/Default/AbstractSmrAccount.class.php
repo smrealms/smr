@@ -391,9 +391,9 @@ abstract class AbstractSmrAccount {
 	}
 
 	/**
-	 * @return array|float
+	 * Returns either the entire HOF array or the value for the given typeList.
 	 */
-	public function getHOF(array $typeList = null) {
+	public function getHOF(array $typeList = null) : array|float {
 		$this->getHOFData();
 		if ($typeList == null) {
 			return $this->HOF;

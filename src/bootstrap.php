@@ -172,9 +172,8 @@ function random_string(int $length) : string {
 
 /**
  * Return the value of a random key from an array.
- * @return mixed
  */
-function array_rand_value(array $arr) {
+function array_rand_value(array $arr) : mixed {
 	if (empty($arr)) {
 		throw new Exception('Cannot pick random value from empty array!');
 	}
