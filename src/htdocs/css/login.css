@@ -119,15 +119,15 @@ table.nobord {
 div#small_menu {
 	position: relative;
 	margin: auto;
-	font-family: 'AD-MONO';
-	font-size: 9px;
-	white-space: nowrap;
-	letter-spacing: 2px;
 	width: 769px;
 	height: 11px;
 }
 
 div#small_menu div {
+	font-family: 'AD-MONO';
+	font-size: 9px;
+	letter-spacing: 2px;
+	white-space: nowrap;
 	transform: scaleY(0.8);
 	position: absolute;
 	top: 0px;
