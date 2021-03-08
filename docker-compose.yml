@@ -41,6 +41,8 @@ x-smr-cli: &smr-cli
         - smtp
     volumes:
         - ./config:/smr/config:ro
+        # Mount the source code instead of copying it.
+        - ./src:/smr/src
 
 x-mysql-common: &mysql-common
     image: mysql:8.0
