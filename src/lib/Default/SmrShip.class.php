@@ -196,13 +196,18 @@ class SmrShip extends AbstractSmrShip {
 
 	public function setIllusion(int $shipID, int $attack, int $defense) : void {
 		$this->db->query('REPLACE INTO ship_has_illusion VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($shipID) . ', ' . $this->db->escapeNumber($attack) . ', ' . $this->db->escapeNumber($defense) . ')');
+		unset($this->illusionShip); // will be reset by getIllusionShip
 	}
 
 	public function disableIllusion() : void {
 		$this->db->query('DELETE FROM ship_has_illusion WHERE ' . $this->SQL . ' LIMIT 1');
+		$this->illusionShip = false;
 	}
 
 	public function getIllusionShip() : array|false {
+		if (!$this->hasIllusion()) {
+			return false;
+		}
 		if (!isset($this->illusionShip)) {
 			$this->illusionShip = false;
 			$this->db->query('SELECT ship_has_illusion.*,ship_type.ship_name
@@ -218,7 +223,6 @@ class SmrShip extends AbstractSmrShip {
 			}
 		}
 		return $this->illusionShip;
-
 	}
 
 }
