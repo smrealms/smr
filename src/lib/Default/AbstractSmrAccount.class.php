@@ -88,6 +88,10 @@ abstract class AbstractSmrAccount {
 		return self::DEFAULT_HOTKEYS;
 	}
 
+	public static function clearCache() : void {
+		self::$CACHE_ACCOUNTS = [];
+	}
+
 	public static function getAccount(int $accountID, bool $forceUpdate = false) : SmrAccount {
 		if ($forceUpdate || !isset(self::$CACHE_ACCOUNTS[$accountID])) {
 			self::$CACHE_ACCOUNTS[$accountID] = new SmrAccount($accountID);
