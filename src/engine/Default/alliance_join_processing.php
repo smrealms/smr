@@ -2,9 +2,9 @@
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 
-$canJoin = $alliance->canJoinAlliance($player);
-if ($canJoin !== true) {
-	create_error($canJoin);
+$joinRestriction = $alliance->getJoinRestriction($player);
+if ($joinRestriction !== false) {
+	create_error($joinRestriction);
 }
 
 if (Request::get('password') != $alliance->getPassword()) {

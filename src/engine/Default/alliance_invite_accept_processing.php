@@ -9,9 +9,9 @@ try {
 
 // Make sure the player can join the new alliance before leaving the current one
 $newAlliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
-$canJoin = $newAlliance->canJoinAlliance($player, false);
-if ($canJoin !== true) {
-	create_error($canJoin);
+$joinRestriction = $newAlliance->getJoinRestriction($player, false);
+if ($joinRestriction !== false) {
+	create_error($joinRestriction);
 }
 
 // Leave current alliance
