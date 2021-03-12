@@ -6,7 +6,6 @@ use AbstractSmrPlayer;
 use SmrTest\BaseIntegrationSpec;
 
 /**
- * Class AbstractSmrPlayerTest
  * @covers AbstractSmrPlayer
  */
 class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {

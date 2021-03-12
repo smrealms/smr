@@ -8,8 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Smr\MySqlProperties;
 
 /**
- * Class MySqlPropertiesTest
- * @package SmrTest\lib\DefaultGame
  * @covers \Smr\MySqlProperties
  */
 class MySqlPropertiesTest extends TestCase {

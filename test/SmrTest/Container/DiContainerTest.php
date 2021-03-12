@@ -7,8 +7,6 @@ use Smr\Container\DiContainer;
 use Smr\MySqlProperties;
 
 /**
- * Class DiContainerTest
- * @package SmrTest\Container
  * @covers \Smr\Container\DiContainer
  */
 class DiContainerTest extends TestCase {

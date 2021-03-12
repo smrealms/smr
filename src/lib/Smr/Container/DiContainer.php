@@ -11,10 +11,8 @@ use Smr\MySqlProperties;
 use function DI\autowire;
 
 /**
- * Class DiContainer
  * A wrapper around the DI\Container functionality that will allow
  * static usage of container methods.
- * @package Smr\Container
  */
 class DiContainer {
 	private static DiContainer $instance;

@@ -8,7 +8,6 @@ use SmrTest\BaseIntegrationSpec;
 use Smr\SocialLogin\Facebook;
 
 /**
- * Class AbstractSmrAccountTest
  * @covers AbstractSmrAccount
  */
 class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {

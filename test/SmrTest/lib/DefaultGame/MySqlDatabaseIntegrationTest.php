@@ -9,10 +9,8 @@ use Smr\Container\DiContainer;
 use Smr\MySqlProperties;
 
 /**
- * Class MySqlDatabaseIntegrationTest
  * This is an integration test, but does not need to extend BaseIntegrationTest since we are not writing any data.
  * @covers MySqlDatabase
- * @package SmrTest\lib\DefaultGame
  */
 class MySqlDatabaseIntegrationTest extends TestCase {
 
