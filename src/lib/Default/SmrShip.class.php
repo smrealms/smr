@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 class SmrShip extends AbstractSmrShip {
-	protected static $CACHE_SHIPS = array();
+	protected static array $CACHE_SHIPS = [];
 
-	protected $db;
-	protected $SQL;
+	protected MySqlDatabase $db;
+	protected string $SQL;
 
-	protected $isCloaked;
+	protected bool $isCloaked;
 
-	public static function refreshCache() {
+	public static function refreshCache() : void {
 		foreach (self::$CACHE_SHIPS as &$gameShips) {
 			foreach ($gameShips as &$ship) {
 				$ship = self::getShip($ship->getPlayer(), true);
@@ -16,11 +16,11 @@ class SmrShip extends AbstractSmrShip {
 		}
 	}
 
-	public static function clearCache() {
+	public static function clearCache() : void {
 		self::$CACHE_SHIPS = array();
 	}
 
-	public static function saveShips() {
+	public static function saveShips() : void {
 		foreach (self::$CACHE_SHIPS as $gameShips) {
 			foreach ($gameShips as $ship) {
 				$ship->update();
@@ -28,7 +28,7 @@ class SmrShip extends AbstractSmrShip {
 		}
 	}
 
-	public static function getShip(AbstractSmrPlayer $player, $forceUpdate = false) {
+	public static function getShip(AbstractSmrPlayer $player, bool $forceUpdate = false) : self {
 		if ($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()])) {
 			$s = new SmrShip($player);
 			self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()] = $s;
@@ -49,7 +49,7 @@ class SmrShip extends AbstractSmrShip {
 	/**
 	 * Initialize the weapons onboard this ship.
 	 */
-	protected function loadWeapons() {
+	protected function loadWeapons() : void {
 		// determine weapon
 		$this->db->query('SELECT * FROM ship_has_weapon JOIN weapon_type USING (weapon_type_id)
 							WHERE ' . $this->SQL . '
@@ -68,7 +68,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->checkForExcessWeapons();
 	}
 
-	protected function loadCargo() {
+	protected function loadCargo() : void {
 		// initialize cargo array
 		$this->cargo = array();
 
@@ -81,7 +81,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->checkForExcessCargo();
 	}
 
-	protected function loadHardware() {
+	protected function loadHardware() : void {
 		$this->hardware = array();
 		$this->oldHardware = array();
 
@@ -101,11 +101,11 @@ class SmrShip extends AbstractSmrShip {
 		$this->checkForExcessHardware();
 	}
 
-	public function getAccountID() {
+	public function getAccountID() : int {
 		return $this->getPlayer()->getAccountID();
 	}
 
-	public function updateCargo() {
+	public function updateCargo() : void {
 		if ($this->hasChangedCargo === true) {
 			// write cargo info
 			foreach ($this->getCargo() as $id => $amount) {
@@ -122,7 +122,7 @@ class SmrShip extends AbstractSmrShip {
 		}
 	}
 
-	public function updateHardware() {
+	public function updateHardware() : void {
 		// write hardware info only for hardware that has changed
 		foreach ($this->hasChangedHardware as $hardwareTypeID => $hasChanged) {
 			if (!$hasChanged) {
@@ -138,7 +138,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->hasChangedHardware = array();
 	}
 
-	private function updateWeapon() {
+	private function updateWeapon() : void {
 		if ($this->hasChangedWeapons === true) {
 			// write weapon info
 			$this->db->query('DELETE FROM ship_has_weapon WHERE ' . $this->SQL);
@@ -150,7 +150,7 @@ class SmrShip extends AbstractSmrShip {
 		}
 	}
 
-	public function update() {
+	public function update() : void {
 		$this->updateHardware();
 		$this->updateWeapon();
 		$this->updateCargo();
@@ -158,7 +158,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->getPlayer()->update();
 	}
 
-	public function isCloaked() {
+	public function isCloaked() : bool {
 		if (!$this->hasCloak()) {
 			return false;
 		}
@@ -169,17 +169,17 @@ class SmrShip extends AbstractSmrShip {
 		return $this->isCloaked;
 	}
 
-	public function decloak() {
+	public function decloak() : void {
 		$this->isCloaked = false;
 		$this->db->query('DELETE FROM ship_is_cloaked WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
-	public function enableCloak() {
+	public function enableCloak() : void {
 		$this->isCloaked = true;
 		$this->db->query('REPLACE INTO ship_is_cloaked VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ')');
 	}
 
-	public function cloakOverload() {
+	public function cloakOverload() : bool {
 		// 1 in 25 chance of cloak being destroyed if active
 		if ($this->isCloaked() && rand(0, 99) < 5) {
 			$this->db->query('DELETE FROM ship_has_hardware
@@ -194,15 +194,15 @@ class SmrShip extends AbstractSmrShip {
 		return false;
 	}
 
-	public function setIllusion($shipID, $attack, $defense) {
+	public function setIllusion(int $shipID, int $attack, int $defense) : void {
 		$this->db->query('REPLACE INTO ship_has_illusion VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($shipID) . ', ' . $this->db->escapeNumber($attack) . ', ' . $this->db->escapeNumber($defense) . ')');
 	}
 
-	public function disableIllusion() {
+	public function disableIllusion() : void {
 		$this->db->query('DELETE FROM ship_has_illusion WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
-	public function getIllusionShip() {
+	public function getIllusionShip() : array|false {
 		if (!isset($this->illusionShip)) {
 			$this->illusionShip = false;
 			$this->db->query('SELECT ship_has_illusion.*,ship_type.ship_name
