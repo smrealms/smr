@@ -5,8 +5,6 @@ namespace SmrTest\lib\DefaultGame;
 use Request;
 
 /**
- * Class RequestTest
- * @package SmrTest\lib\DefaultGame
  * @covers Request
  */
 class RequestTest extends \PHPUnit\Framework\TestCase {

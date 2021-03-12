@@ -400,10 +400,7 @@ class SmrAlliance {
 		$this->flagshipID = $accountID;
 	}
 
-	/**
-	 * @return string|true
-	 */
-	public function canJoinAlliance(SmrPlayer $player, bool $doAllianceCheck = true) {
+	public function getJoinRestriction(SmrPlayer $player, bool $doAllianceCheck = true) : string|false {
 		if (!$player->getAccount()->isValidated()) {
 			return 'You cannot join an alliance until you validate your account.';
 		}
@@ -421,16 +418,16 @@ class SmrAlliance {
 		}
 		if ($this->getNumMembers() < $this->getGame()->getAllianceMaxPlayers()) {
 			if ($player->hasNewbieStatus()) {
-				return true;
+				return false;
 			}
 			$maxVets = $this->getGame()->getAllianceMaxVets();
 			if ($this->getNumMembers() < $maxVets) {
-				return true;
+				return false;
 			}
 			$this->db->query('SELECT status FROM player_joined_alliance WHERE account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' AND ' . $this->SQL);
 			if ($this->db->nextRecord()) {
 				if ($this->db->getField('status') == 'NEWBIE') {
-					return true;
+					return false;
 				}
 			}
 			$this->db->query('SELECT COUNT(*) AS num_orig_vets
@@ -438,7 +435,7 @@ class SmrAlliance {
 							JOIN player USING (account_id, alliance_id, game_id)
 							WHERE ' . $this->SQL . ' AND status=\'VETERAN\'');
 			if (!$this->db->nextRecord() || $this->db->getInt('num_orig_vets') < $maxVets) {
-				return true;
+				return false;
 			}
 		}
 		return 'There is not currently enough room for you in this alliance.';

@@ -8,8 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Smr\MySqlProperties;
 
 /**
- * Class MySqlPropertiesTest
- * @package SmrTest\lib\DefaultGame
  * @covers \Smr\MySqlProperties
  */
 class MySqlPropertiesTest extends TestCase {
@@ -22,39 +20,39 @@ class MySqlPropertiesTest extends TestCase {
 		// And the dotenv config will return the following array when loaded
 		$dotEnv
 			->expects(self::once())
-			->method("load")
+			->method('load')
 			->willReturn([
-				"MYSQL_HOST" => "host",
-				"MYSQL_USER" => "user",
-				"MYSQL_PASSWORD" => "pass",
-				"MYSQL_DATABASE" => "database",
+				'MYSQL_HOST' => 'host',
+				'MYSQL_USER' => 'user',
+				'MYSQL_PASSWORD' => 'pass',
+				'MYSQL_DATABASE' => 'database',
 			]);
 
 		// And we expect that the dotenv "required" method will be called with the following arguments
 		$dotEnv
 			->expects(self::once())
-			->method("required")
+			->method('required')
 			->with([
-				"MYSQL_HOST",
-				"MYSQL_USER",
-				"MYSQL_PASSWORD",
-				"MYSQL_DATABASE",
+				'MYSQL_HOST',
+				'MYSQL_USER',
+				'MYSQL_PASSWORD',
+				'MYSQL_DATABASE',
 			])
 			->willReturn($validator);
 
 		$validator
 			->expects(self::once())
-			->method("notEmpty")
+			->method('notEmpty')
 			->willReturnSelf();
 
 		// When constructing the properties class
 		$mysqlProperties = new MySqlProperties($dotEnv);
 
 		// Then the properties have expected values
-		self::assertEquals("host", $mysqlProperties->getHost());
-		self::assertEquals("user", $mysqlProperties->getUser());
-		self::assertEquals("pass", $mysqlProperties->getPassword());
-		self::assertEquals("database", $mysqlProperties->getDatabaseName());
+		self::assertEquals('host', $mysqlProperties->getHost());
+		self::assertEquals('user', $mysqlProperties->getUser());
+		self::assertEquals('pass', $mysqlProperties->getPassword());
+		self::assertEquals('database', $mysqlProperties->getDatabaseName());
 	}
 
 }

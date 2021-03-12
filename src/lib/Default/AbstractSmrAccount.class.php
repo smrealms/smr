@@ -88,6 +88,10 @@ abstract class AbstractSmrAccount {
 		return self::DEFAULT_HOTKEYS;
 	}
 
+	public static function clearCache() : void {
+		self::$CACHE_ACCOUNTS = [];
+	}
+
 	public static function getAccount(int $accountID, bool $forceUpdate = false) : SmrAccount {
 		if ($forceUpdate || !isset(self::$CACHE_ACCOUNTS[$accountID])) {
 			self::$CACHE_ACCOUNTS[$accountID] = new SmrAccount($accountID);
@@ -391,9 +395,9 @@ abstract class AbstractSmrAccount {
 	}
 
 	/**
-	 * @return array|float
+	 * Returns either the entire HOF array or the value for the given typeList.
 	 */
-	public function getHOF(array $typeList = null) {
+	public function getHOF(array $typeList = null) : array|float {
 		$this->getHOFData();
 		if ($typeList == null) {
 			return $this->HOF;

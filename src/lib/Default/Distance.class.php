@@ -44,10 +44,7 @@ class Distance {
 		return $this->distance + $this->numWarps * TURNS_WARP_SECTOR_EQUIVALENCE;
 	}
 
-	/**
-	 * @return integer
-	 */
-	public function getEndSectorID() {
+	public function getEndSectorID() : int {
 		return $this->path[count($this->path) - 1];
 	}
 
@@ -55,10 +52,7 @@ class Distance {
 		return SmrSector::getSector($this->gameID, $this->getEndSectorID());
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getPath() {
+	public function getPath() : array {
 		return $this->path;
 	}
 
@@ -68,10 +62,7 @@ class Distance {
 		$this->warpMap = array_flip($this->warpMap);
 	}
 
-	/**
-	 * @param integer $nextSector
-	 */
-	public function addToPath($nextSector) {
+	public function addToPath(int $nextSector) {
 		$this->incrementDistance();
 		$this->path[] = $nextSector;
 	}

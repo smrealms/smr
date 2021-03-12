@@ -8,7 +8,6 @@ use SmrTest\BaseIntegrationSpec;
 require_once(LIB . 'Default/smr.inc.php');
 
 /**
- * Class SmrPlanetIntegrationTest
  * @covers SmrPlanet
  */
 class SmrPlanetIntegrationTest extends BaseIntegrationSpec {

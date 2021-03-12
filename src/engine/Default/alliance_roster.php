@@ -78,9 +78,9 @@ if ($alliance->getAllianceID() == $player->getAllianceID()) {
 
 // If the player is already in an alliance, we don't want to print
 // any messages, so we simply omit the "join alliance" section.
-$canJoin = $player->hasAlliance() ? false : $alliance->canJoinAlliance($player);
-$template->assign('CanJoin', $canJoin);
-if ($canJoin === true) {
+$joinRestriction = $player->hasAlliance() ? true : $alliance->getJoinRestriction($player);
+$template->assign('JoinRestriction', $joinRestriction);
+if ($joinRestriction === false) {
 	$container = create_container('alliance_join_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$template->assign('JoinHREF', SmrSession::getNewHREF($container));

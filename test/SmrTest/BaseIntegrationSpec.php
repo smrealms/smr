@@ -14,10 +14,7 @@ class BaseIntegrationSpec extends TestCase {
 
 	public static function setUpBeforeClass(): void {
 		if (!isset(self::$conn)) {
-			$mysqlProperties = DiContainer::get(MySqlProperties::class);
-			print "\nAttempting to connect to MySQL at " . $mysqlProperties->getHost() . ": ";
 			self::$conn = DiContainer::make(mysqli::class);
-			print "Connected\n";
 			$query = "SELECT table_name FROM information_schema.tables WHERE table_rows > 0 AND TABLE_SCHEMA='smr_live'";
 			$rs = self::$conn->query($query);
 			$all = $rs->fetch_all();
