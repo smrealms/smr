@@ -18,7 +18,7 @@ class Plotter {
 			case 'Technology':
 				return Globals::getHardwareTypes($X);
 			case 'Ships':
-				return AbstractSmrShip::getBaseShip(Globals::getGameType($gameID), $X);
+				return AbstractSmrShip::getBaseShip($X);
 			case 'Weapons':
 				return SmrWeaponType::getWeaponType($X);
 			case 'Locations':

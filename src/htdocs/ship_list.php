@@ -4,8 +4,7 @@ try {
 
 	$template = new Template();
 
-	$gameType = ''; // no game type here
-	foreach (SmrShip::getAllBaseShips($gameType) as $ship) {
+	foreach (SmrShip::getAllBaseShips() as $ship) {
 		$shipArray[] = buildShipStats($ship);
 	}
 	$template->assign('shipArray', $shipArray);

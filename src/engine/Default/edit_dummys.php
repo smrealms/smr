@@ -1,9 +1,8 @@
 <?php declare(strict_types=1);
 $template->assign('PageTopic', 'Edit Dummys');
 
-//TODO add game type id
 $template->assign('CombatSimLink', SmrSession::getNewHREF(create_container('skeleton.php', 'combat_simulator.php')));
-$template->assign('BaseShips', AbstractSmrShip::getAllBaseShips(0));
+$template->assign('BaseShips', AbstractSmrShip::getAllBaseShips());
 $template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
 
 $template->assign('EditDummysLink', SmrSession::getNewHREF(create_container('skeleton.php', 'edit_dummys.php')));

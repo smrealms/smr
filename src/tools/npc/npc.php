@@ -573,7 +573,7 @@ function checkForShipUpgrade(AbstractSmrPlayer $player) {
 }
 
 function doShipUpgrade(AbstractSmrPlayer $player, $upgradeShipID) {
-	$plotNearest = plotToNearest($player, AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()), $upgradeShipID));
+	$plotNearest = plotToNearest($player, AbstractSmrShip::getBaseShip($upgradeShipID));
 
 	if ($plotNearest == true) { //We're already there!
 		//TODO: We're going to want to UNO after upgrading

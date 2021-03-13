@@ -42,18 +42,18 @@ abstract class AbstractSmrShip {
 	protected $hasChangedCargo = false;
 	protected $hasChangedHardware = array();
 
-	public static function getBaseShip($gameTypeID, $shipTypeID, $forceUpdate = false) {
-		if ($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID])) {
+	public static function getBaseShip($shipTypeID, $forceUpdate = false) {
+		if ($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$shipTypeID])) {
 			// determine ship
 			$db = MySqlDatabase::getInstance();
-			$db->query('SELECT * FROM ship_type WHERE ship_type_id = ' . $db->escapeNumber($shipTypeID) . ' LIMIT 1'); //TODO add game type id
+			$db->query('SELECT * FROM ship_type WHERE ship_type_id = ' . $db->escapeNumber($shipTypeID) . ' LIMIT 1');
 			if ($db->nextRecord()) {
-				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] = self::buildBaseShip($db);
+				self::$CACHE_BASE_SHIPS[$shipTypeID] = self::buildBaseShip($db);
 			} else {
-				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] = false;
+				self::$CACHE_BASE_SHIPS[$shipTypeID] = false;
 			}
 		}
-		return self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID];
+		return self::$CACHE_BASE_SHIPS[$shipTypeID];
 	}
 
 	protected static function buildBaseShip(MySqlDatabase $db) {
@@ -128,16 +128,16 @@ abstract class AbstractSmrShip {
 		return $ship;
 	}
 
-	public static function getAllBaseShips($gameTypeID) {
+	public static function getAllBaseShips() {
 		// determine ship
 		$db = MySqlDatabase::getInstance();
-		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC'); //TODO add game type id
+		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC');
 		while ($db->nextRecord()) {
-			if (!isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getInt('ship_type_id')])) {
-				self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getInt('ship_type_id')] = self::buildBaseShip($db);
+			if (!isset(self::$CACHE_BASE_SHIPS[$db->getInt('ship_type_id')])) {
+				self::$CACHE_BASE_SHIPS[$db->getInt('ship_type_id')] = self::buildBaseShip($db);
 			}
 		}
-		return self::$CACHE_BASE_SHIPS[$gameTypeID];
+		return self::$CACHE_BASE_SHIPS;
 	}
 
 	protected function __construct(AbstractSmrPlayer $player) {
@@ -147,7 +147,7 @@ abstract class AbstractSmrShip {
 	}
 
 	protected function regenerateBaseShip() {
-		$this->baseShip = AbstractSmrShip::getBaseShip(Globals::getGameType($this->gameID), $this->player->getShipTypeID());
+		$this->baseShip = AbstractSmrShip::getBaseShip($this->player->getShipTypeID());
 		$this->checkForExcess();
 	}
 
@@ -513,7 +513,7 @@ abstract class AbstractSmrShip {
 	}
 
 	public function getCostToUpgrade($upgradeShipID) {
-		$upgadeBaseShip = AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()), $upgradeShipID);
+		$upgadeBaseShip = AbstractSmrShip::getBaseShip($upgradeShipID);
 		return $upgadeBaseShip['Cost'] - IFloor($this->getCost() * SHIP_REFUND_PERCENT);
 	}
 
@@ -522,7 +522,7 @@ abstract class AbstractSmrShip {
 	}
 
 	protected function getCostToUNOAgainstShip($shipID) {
-		$baseShip = AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()), $shipID);
+		$baseShip = AbstractSmrShip::getBaseShip($shipID);
 		$cost = 0;
 		$hardwareTypes = array(HARDWARE_SHIELDS, HARDWARE_ARMOUR, HARDWARE_CARGO);
 		foreach ($hardwareTypes as $hardwareTypeID) {
