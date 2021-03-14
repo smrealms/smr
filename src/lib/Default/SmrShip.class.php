@@ -69,16 +69,14 @@ class SmrShip extends AbstractSmrShip {
 	}
 
 	protected function loadCargo() {
-		if (!isset($this->cargo)) {
-			// initialize cargo array
-			$this->cargo = array();
+		// initialize cargo array
+		$this->cargo = array();
 
-			// get cargo from db
-			$this->db->query('SELECT * FROM ship_has_cargo WHERE ' . $this->SQL);
-			while ($this->db->nextRecord()) {
-				// adding cargo and amount to array
-				$this->cargo[$this->db->getInt('good_id')] = $this->db->getInt('amount');
-			}
+		// get cargo from db
+		$this->db->query('SELECT * FROM ship_has_cargo WHERE ' . $this->SQL);
+		while ($this->db->nextRecord()) {
+			// adding cargo and amount to array
+			$this->cargo[$this->db->getInt('good_id')] = $this->db->getInt('amount');
 		}
 		$this->checkForExcessCargo();
 	}

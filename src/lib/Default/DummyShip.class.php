@@ -30,7 +30,7 @@ class DummyShip extends AbstractSmrShip {
 //			if(!isset($this->weapons[$i]))
 //				$this->weapons[$i] = SmrWeapon::getWeapon(1);
 //		}
-		$this->checkForExcessWeapons();
+		$this->checkForExcess();
 	}
 
 	public function decloak() {

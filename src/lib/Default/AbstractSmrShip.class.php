@@ -148,7 +148,6 @@ abstract class AbstractSmrShip {
 
 	protected function regenerateBaseShip() {
 		$this->baseShip = AbstractSmrShip::getBaseShip($this->player->getShipTypeID());
-		$this->checkForExcess();
 	}
 
 	public function checkForExcess() {
@@ -796,24 +795,17 @@ abstract class AbstractSmrShip {
 	}
 
 	public function getCargo($goodID = false) {
-		if ($goodID !== false) {
-			if (isset($this->cargo[$goodID])) {
-				return $this->cargo[$goodID];
-			}
-			$cargo = 0;
-			return $cargo;
+		if ($goodID === false) {
+			return $this->cargo;
 		}
-		return $this->cargo;
+		return $this->cargo[$goodID] ?? 0;
 	}
 
 	public function hasCargo($goodID = false) {
-		if ($goodID !== false) {
-			return $this->getCargo($goodID) > 0;
+		if ($goodID === false) {
+			return $this->getUsedHolds() > 0;
 		}
-		if (is_array($cargo = $this->getCargo())) {
-			return array_sum($cargo) > 0;
-		}
-		return false;
+		return $this->getCargo($goodID) > 0;
 	}
 
 	public function setCargo($goodID, $amount) {
