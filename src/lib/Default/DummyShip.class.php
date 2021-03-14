@@ -5,83 +5,39 @@ class DummyShip extends AbstractSmrShip {
 
 	public function __construct(AbstractSmrPlayer $player) {
 		parent::__construct($player);
-
-		$this->weapons = array();
-		$this->hardware = array();
-		$this->oldHardware = array();
-		$this->cargo = array();
-
-		$this->regenerate($player);
-		$this->doFullUNO();
-	}
-
-	protected function doFullUNO() {
-		foreach ($this->getMaxHardware() as $hardwareTypeID => $max) {
-			$this->hardware[$hardwareTypeID] = $max;
-			$this->oldHardware[$hardwareTypeID] = $max;
-		}
-	}
-
-	public function regenerate(AbstractSmrPlayer $player) {
-		$this->player = $player;
-		$this->regenerateBaseShip();
-		$this->doFullUNO();
-//		for($i=0;$i<$this->getHardpoints();++$i) {
-//			if(!isset($this->weapons[$i]))
-//				$this->weapons[$i] = SmrWeapon::getWeapon(1);
-//		}
-		$this->checkForExcess();
-	}
-
-	public function decloak() {
-	}
-
-	public function enableCloak() {
-	}
-
-	public function setIllusion($ship_id, $attack, $defense) {
-	}
-
-	public function disableIllusion() {
-	}
-
-	public function getIllusionShip() {
-		if (!isset($this->illusionShip)) {
-			$this->illusionShip = false;
-		}
-		return $this->illusionShip;
+		$this->setHardwareToMax();
 	}
 
 	public function cacheDummyShip() {
 		$cache = serialize($this);
 		$db = MySqlDatabase::getInstance();
-		$db->query('REPLACE INTO cached_dummys ' .
-					'(type, id, info) ' .
-					'VALUES (\'DummyShip\', ' . $db->escapeString($this->getPlayer()->getPlayerName()) . ', ' . $db->escapeString($cache) . ')');
-		unserialize($cache);
+		$db->query('REPLACE INTO cached_dummys (type, id, info)
+					VALUES (\'DummyShip\', ' . $db->escapeString($this->getPlayer()->getPlayerName()) . ', ' . $db->escapeString($cache) . ')');
 	}
 
 	public static function getCachedDummyShip(AbstractSmrPlayer $player) {
 		if (!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()])) {
+			$ship = new DummyShip($player);
+
+			// Load weapons from the dummy database cache, if available
 			$db = MySqlDatabase::getInstance();
-			$db->query('SELECT info FROM cached_dummys
-						WHERE type = \'DummyShip\'
+			$db->query('SELECT info FROM cached_dummys WHERE type = \'DummyShip\'
 						AND id = ' . $db->escapeString($player->getPlayerName()) . ' LIMIT 1');
 			if ($db->nextRecord()) {
-				$return = unserialize($db->getField('info'));
-				$return->regenerate($player);
-				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] =& $return;
-			} else {
-				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] = new DummyShip($player);
+				$cachedShip = unserialize($db->getField('info'));
+				foreach ($cachedShip->getWeapons() as $weapon) {
+					$ship->addWeapon($weapon);
+				}
 			}
+
+			self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] = $ship;
 		}
 		return self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()];
 	}
 
 	public static function getDummyShipNames() {
 		$db = MySqlDatabase::getInstance();
-		$db->query('SELECT id FROM cached_dummys
-					WHERE type = \'DummyShip\'');
+		$db->query('SELECT id FROM cached_dummys WHERE type = \'DummyShip\'');
 		$dummyNames = array();
 		while ($db->nextRecord()) {
 			$dummyNames[] = $db->getField('id');
@@ -89,12 +45,8 @@ class DummyShip extends AbstractSmrShip {
 		return $dummyNames;
 	}
 
-
-
 	public function __sleep() {
-		return array('gameID', 'weapons');
+		return array('weapons');
 	}
 
-	public function __wakeup() {
-	}
 }

@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-abstract class AbstractSmrShip {
+/**
+ * Properties and methods for a ship instance.
+ * Does not include the database layer (see SmrShip).
+ */
+class AbstractSmrShip {
 	protected static array $CACHE_BASE_SHIPS = [];
 
 	const SHIP_CLASS_HUNTER = 1;
@@ -33,15 +37,16 @@ abstract class AbstractSmrShip {
 	protected array $hardware;
 	protected array $oldHardware;
 
-	protected array $cargo;
-
-	protected array $weapons;
-
-	protected array|false $illusionShip;
+	protected array $cargo = [];
+	protected array $weapons = [];
+	protected array|false $illusionShip = false;
+	protected bool $isCloaked = false;
 
 	protected bool $hasChangedWeapons = false;
 	protected bool $hasChangedCargo = false;
 	protected array $hasChangedHardware = [];
+	protected bool $hasChangedCloak = false;
+	protected bool $hasChangedIllusion = false;
 
 	public static function getBaseShip(int $shipTypeID, bool $forceUpdate = false) : array {
 		if ($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$shipTypeID])) {
@@ -141,7 +146,7 @@ abstract class AbstractSmrShip {
 		return self::$CACHE_BASE_SHIPS;
 	}
 
-	protected function __construct(AbstractSmrPlayer $player) {
+	public function __construct(AbstractSmrPlayer $player) {
 		$this->player = $player;
 		$this->gameID = $player->getGameID();
 		$this->regenerateBaseShip();
@@ -389,30 +394,6 @@ abstract class AbstractSmrShip {
 		$this->addWeapon(SmrWeapon::getWeapon(WEAPON_TYPE_LASER));
 	}
 
-	public function hasCloak() : bool {
-		return $this->getHardware(HARDWARE_CLOAK) > 0;
-	}
-
-	public function canHaveCloak() : bool {
-		return $this->getMaxHardware(HARDWARE_CLOAK) > 0;
-	}
-
-
-	public function hasActiveIllusion() : bool {
-		if (!$this->hasIllusion()) {
-			return false;
-		}
-		return $this->getIllusionShip() !== false;
-	}
-
-	public function hasIllusion() : bool {
-		return $this->getHardware(HARDWARE_ILLUSION) > 0;
-	}
-
-	public function canHaveIllusion() : bool {
-		return $this->getMaxHardware(HARDWARE_ILLUSION) > 0;
-	}
-
 	public function hasJump() : bool {
 		return $this->getHardware(HARDWARE_JUMP) > 0;
 	}
@@ -437,38 +418,99 @@ abstract class AbstractSmrShip {
 		return $this->getMaxHardware(HARDWARE_SCANNER) > 0;
 	}
 
-	abstract public function decloak() : void;
+	public function hasCloak() : bool {
+		return $this->getHardware(HARDWARE_CLOAK) > 0;
+	}
 
-	abstract public function enableCloak() : void;
+	public function canHaveCloak() : bool {
+		return $this->getMaxHardware(HARDWARE_CLOAK) > 0;
+	}
 
-	abstract public function setIllusion(int $ship_id, int $attack, int $defense) : void;
+	public function isCloaked() : bool {
+		return $this->isCloaked;
+	}
 
-	abstract public function disableIllusion() : void;
+	public function decloak() : void {
+		if ($this->isCloaked === false) {
+			return;
+		}
+		$this->isCloaked = false;
+		$this->hasChangedCloak = true;
+	}
+
+	public function enableCloak() : void {
+		if ($this->hasCloak() === false) {
+			throw new Exception('Ship does not have the supported hardware!');
+		}
+		if ($this->isCloaked === true) {
+			return;
+		}
+		$this->isCloaked = true;
+		$this->hasChangedCloak = true;
+	}
+
+	public function hasIllusion() : bool {
+		return $this->getHardware(HARDWARE_ILLUSION) > 0;
+	}
+
+	public function canHaveIllusion() : bool {
+		return $this->getMaxHardware(HARDWARE_ILLUSION) > 0;
+	}
+
+	public function getIllusionShip() : array|false {
+		return $this->illusionShip;
+	}
+
+	public function hasActiveIllusion() : bool {
+		return $this->getIllusionShip() !== false;
+	}
+
+	public function setIllusion(int $ship_id, int $attack, int $defense) : void {
+		if ($this->hasIllusion() === false) {
+			throw new Exception('Ship does not have the supported hardware!');
+		}
+		$newIllusionShip = [
+			'ID' => $ship_id,
+			'Attack' => $attack,
+			'Defense' => $defense,
+		];
+		if ($this->getIllusionShip() === $newIllusionShip) {
+			return;
+		}
+		$this->illusionShip = $newIllusionShip;
+		$this->hasChangedIllusion = true;
+	}
+
+	public function disableIllusion() : void {
+		if ($this->getIllusionShip() === false) {
+			return;
+		}
+		$this->illusionShip = false;
+		$this->hasChangedIllusion = true;
+	}
 
 	public function getIllusionShipID() : int {
-		$this->getIllusionShip();
-		return $this->illusionShip['ID'];
+		return $this->getIllusionShip()['ID'];
 	}
 
 	public function getIllusionShipName() : string {
-		$this->getIllusionShip();
-		return $this->illusionShip['Name'];
+		return self::getBaseShip($this->getIllusionShip()['ID'])['Name'];
 	}
 
-	abstract public function getIllusionShip() : array|false;
-
 	public function getIllusionAttack() : int {
-		$this->getIllusionShip();
-		return $this->illusionShip['Attack'];
+		return $this->getIllusionShip()['Attack'];
 	}
 
 	public function getIllusionDefense() : int {
-		$this->getIllusionShip();
-		return $this->illusionShip['Defense'];
+		return $this->getIllusionShip()['Defense'];
 	}
 
 	public function getPlayer() : AbstractSmrPlayer {
 		return $this->player;
+	}
+
+	public function getAccountID() : int {
+		return $this->getPlayer()->getAccountID();
 	}
 
 	public function getGameID() : int {
