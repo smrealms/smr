@@ -87,6 +87,7 @@ const DEFAULT_DATE_FULL_LONG = 'l F jS Y ' . DEFAULT_DATE_TIME_SHORT;
 /*
  * Buyer restrictions for ships and weapons
  */
+const BUYER_RESTRICTION_NONE = 0;
 const BUYER_RESTRICTION_GOOD = 1;
 const BUYER_RESTRICTION_EVIL = 2;
 const BUYER_RESTRICTION_NEWBIE = 3;

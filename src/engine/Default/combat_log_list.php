@@ -14,35 +14,22 @@ if (!isset($var['action'])) {
 }
 $action = $var['action'];
 
-switch ($action) {
-	case COMBAT_LOG_PERSONAL:
-	case COMBAT_LOG_ALLIANCE:
-		$query = 'type=\'PLAYER\'';
-	break;
-	case COMBAT_LOG_PORT:
-		$query = 'type=\'PORT\'';
-	break;
-	case COMBAT_LOG_PLANET:
-		$query = 'type=\'PLANET\'';
-	break;
-	case COMBAT_LOG_SAVED:
-		$query = 'EXISTS(
+$query = match($action) {
+	COMBAT_LOG_PERSONAL, COMBAT_LOG_ALLIANCE => 'type=\'PLAYER\'',
+	COMBAT_LOG_PORT => 'type=\'PORT\'',
+	COMBAT_LOG_PLANET => 'type=\'PLANET\'',
+	COMBAT_LOG_SAVED => 'EXISTS(
 					SELECT 1
 					FROM player_saved_combat_logs
 					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND log_id = c.log_id
-				)';
-	break;
-	case COMBAT_LOG_FORCE:
-		$query = 'type=\'FORCE\'';
-	break;
-	default:
-}
+				)',
+	COMBAT_LOG_FORCE => 'type=\'FORCE\'',
+};
 if (isset($query) && $query) {
 	$query .= ' AND game_id=' . $db->escapeNumber($player->getGameID());
-	if ($action != COMBAT_LOG_PERSONAL
-		&& $player->hasAlliance()) {
+	if ($action != COMBAT_LOG_PERSONAL && $player->hasAlliance()) {
 		$query .= ' AND (attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ') ';
 	} else {
 		$query .= ' AND (attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ') ';
@@ -72,26 +59,14 @@ function getParticipantName($accountID, $sectorID) {
 }
 
 // For display purposes, describe the type of log
-switch ($action) {
-	case COMBAT_LOG_PERSONAL:
-		$type = ' personal';
-	break;
-	case COMBAT_LOG_ALLIANCE:
-		$type = ' alliance';
-	break;
-	case COMBAT_LOG_PORT:
-		$type = ' port';
-	break;
-	case COMBAT_LOG_PLANET:
-		$type = ' planet';
-	break;
-	case COMBAT_LOG_SAVED:
-		$type = ' saved';
-	break;
-	case COMBAT_LOG_FORCE:
-		$type = ' force';
-	break;
-}
+$type = match($action) {
+	COMBAT_LOG_PERSONAL => 'personal',
+	COMBAT_LOG_ALLIANCE => 'alliance',
+	COMBAT_LOG_PORT => 'port',
+	COMBAT_LOG_PLANET => 'planet',
+	COMBAT_LOG_SAVED => 'saved',
+	COMBAT_LOG_FORCE => 'force',
+};
 $template->assign('LogType', $type);
 
 // Construct the list of logs of this type

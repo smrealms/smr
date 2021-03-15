@@ -51,18 +51,11 @@ function getMessagePlayer($accountID, $gameID, $messageType = false) {
 		if (!empty($accountID)) {
 			$return = SmrPlayer::getPlayer($accountID, $gameID);
 		} else {
-			switch ($messageType) {
-				case MSG_ADMIN:
-					$return = '<span class="admin">Administrator</span>';
-				break;
-
-				case MSG_ALLIANCE:
-					$return = '<span class="green">Alliance Ambassador</span>';
-				break;
-
-				default:
-					$return = 'Unknown';
-			}
+			$return = match($messageType) {
+				MSG_ADMIN => '<span class="admin">Administrator</span>',
+				MSG_ALLIANCE => '<span class="green">Alliance Ambassador</span>',
+				default => 'Unknown',
+			};
 		}
 	}
 	return $return;

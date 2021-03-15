@@ -14,30 +14,24 @@ class Plotter {
 		// In all other cases, X is a numeric ID
 		$X = (int)$X;
 
-		switch ($xType) {
-			case 'Technology':
-				return Globals::getHardwareTypes($X);
-			case 'Ships':
-				return AbstractSmrShip::getBaseShip($X);
-			case 'Weapons':
-				return SmrWeaponType::getWeaponType($X);
-			case 'Locations':
-				return SmrLocation::getLocation($X);
-			case 'Sell Goods':
-			case 'Buy Goods':
-				// $X is the good ID
-				$good = Globals::getGood($X);
-				if (isset($player) && !$player->meetsAlignmentRestriction($good['AlignRestriction'])) {
-					create_error('You do not have the correct alignment to see this good!');
-				}
-				$good['TransactionType'] = explode(' ', $xType)[0];
-				return $good;
-			case 'Galaxies':
-				// $X is the galaxyID
-				return SmrGalaxy::getGalaxy($gameID, $X);
-			default:
-				return false;
-		}
+		// Helper function for plots to trade goods
+		$getGoodWithTransaction = function(int $goodID) use ($xType, $player) {
+			$good = Globals::getGood($goodID);
+			if (isset($player) && !$player->meetsAlignmentRestriction($good['AlignRestriction'])) {
+				create_error('You do not have the correct alignment to see this good!');
+			}
+			$good['TransactionType'] = explode(' ', $xType)[0]; // use 'Buy' or 'Sell'
+			return $good;
+		};
+
+		return match($xType) {
+			'Technology' => Globals::getHardwareTypes($X),
+			'Ships' => AbstractSmrShip::getBaseShip($X),
+			'Weapons' => SmrWeaponType::getWeaponType($X),
+			'Locations' => SmrLocation::getLocation($X),
+			'Sell Goods', 'Buy Goods' => $getGoodWithTransaction($X),
+			'Galaxies' => SmrGalaxy::getGalaxy($gameID, $X), // $X is the galaxyID
+		};
 	}
 
 	/**

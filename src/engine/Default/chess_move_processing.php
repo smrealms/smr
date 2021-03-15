@@ -12,29 +12,16 @@ if (!$chessGame->hasEnded()) {
 	if ($chessGame->isCurrentTurn($account->getAccountID())) {
 		$board = $chessGame->getBoard();
 		if ($board[$y][$x] != null) {
-			switch ($chessGame->tryMove($x, $y, $toX, $toY, $account->getAccountID(), ChessPiece::QUEEN)) {
-				case 0:
-					//Success
-				break;
-				case 1:
-					$container['MoveMessage'] = 'You have just checkmated your opponent, congratulations!';
-				break;
-				case 2:
-					$container['MoveMessage'] = 'There is no piece in that square.';
-				break;
-				case 3:
-					$container['MoveMessage'] = 'You cannot end your turn in check.';
-				break;
-				case 4:
-					$container['MoveMessage'] = 'It is not your turn to move.';
-				break;
-				case 5:
-					$container['MoveMessage'] = 'The game is over.';
-				break;
-				case 6:
-					$container['MoveMessage'] = 'That is not a valid move!';
-				break;
-			}
+			$result = $chessGame->tryMove($x, $y, $toX, $toY, $account->getAccountID(), ChessPiece::QUEEN);
+			$container['MoveMessage'] = match($result) {
+				0 => '', // valid move, no message
+				1 => 'You have just checkmated your opponent, congratulations!',
+				2 => 'There is no piece in that square.',
+				3 => 'You cannot end your turn in check.',
+				4 => 'It is not your turn to move.',
+				5 => 'The game is over.',
+				6 => 'That is not a valid move!',
+			};
 		}
 	} else {
 		$container['MoveMessage'] = 'It is not your turn to move.';
