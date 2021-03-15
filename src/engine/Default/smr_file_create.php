@@ -50,7 +50,7 @@ foreach ($hardwares as $hardware) {
 $file .= '[Ships]
 ; Name = Race,Cost,TPH,Hardpoints,Power,Class,+Equipment (Optional),+Restrictions(Optional)
 ; Restrictions:Align(Integer)' . EOL;
-foreach (AbstractSmrShip::getAllBaseShips(Globals::getGameType($gameID)) as $ship) {
+foreach (AbstractSmrShip::getAllBaseShips() as $ship) {
 	$file .= inify($ship['Name']) . '=' . Globals::getRaceName($ship['RaceID']) . ',' . $ship['Cost'] . ',' . $ship['Speed'] . ',' . $ship['Hardpoint'] . ',' . $ship['MaxPower'] . ',' . Globals::getShipClass($ship['ShipClassID']);
 	if ($ship['MaxHardware'] > 0) {
 		$shipEquip = ',ShipEquipment=';

@@ -204,6 +204,7 @@ const SHIP_TYPE_REDEEMER = 70;
 const SHIP_TYPE_RETALIATION = 71;
 const SHIP_TYPE_VENGEANCE = 72;
 const SHIP_TYPE_FURY = 75;
+const SHIP_TYPE_DEMONICA = 666;
 
 /*
  * Weapon types

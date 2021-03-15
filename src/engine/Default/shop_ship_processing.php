@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 $shipID = $var['ship_id'];
-$newShip = AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()), $shipID);
+$newShip = AbstractSmrShip::getBaseShip($shipID);
 $cost = $ship->getCostToUpgrade($shipID);
 
 if ($newShip['AlignRestriction'] == BUYER_RESTRICTION_EVIL && $player->getAlignment() > ALIGNMENT_EVIL) {

@@ -38,7 +38,7 @@ if (isset($XType)) { ?>
 					}
 				break;
 				case 'Ships':
-					$Ships = AbstractSmrShip::getAllBaseShips(Globals::getGameType($ThisPlayer->getGameID()));
+					$Ships = AbstractSmrShip::getAllBaseShips();
 					Sorter::sortByNumElement($Ships, 'Name');
 					foreach ($Ships as $Ship) {
 						?><option value="<?php echo $Ship['ShipTypeID']; ?>"><?php echo $Ship['Name']; ?></option><?php

@@ -39,7 +39,7 @@ if (isset($var['location_type_id'])) {
 
 
 	$template->assign('Location', $location);
-	$template->assign('Ships', AbstractSmrShip::getAllBaseShips($var['game_type_id']));
+	$template->assign('Ships', AbstractSmrShip::getAllBaseShips());
 	$template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
 
 
