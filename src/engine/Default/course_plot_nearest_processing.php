@@ -7,9 +7,6 @@ if (isset($var['RealX'])) {
 	$xType = Request::get('xtype');
 	$X = Request::get('X');
 	$realX = Plotter::getX($xType, $X, $player->getGameID(), $player);
-	if ($realX === false) {
-		create_error('Invalid search.');
-	}
 
 	$player->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest ' . $xType . ': ' . $X . '.');
 }

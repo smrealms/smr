@@ -235,14 +235,10 @@ class ChessGame {
 				$blanks = 0;
 			}
 		}
-		switch ($this->getCurrentTurnColour()) {
-			case self::PLAYER_WHITE:
-				$fen .= ' w ';
-			break;
-			case self::PLAYER_BLACK:
-				$fen .= ' b ';
-			break;
-		}
+		$fen .= match($this->getCurrentTurnColour()) {
+			self::PLAYER_WHITE => ' w ',
+			self::PLAYER_BLACK => ' b ',
+		};
 
 		// Castling
 		$castling = '';
@@ -269,14 +265,10 @@ class ChessGame {
 
 		if ($this->hasMoved[ChessPiece::PAWN][0] != -1) {
 			$fen .= chr(ord('a') + $this->hasMoved[ChessPiece::PAWN][0]);
-			switch ($this->hasMoved[ChessPiece::PAWN][1]) {
-				case 3:
-					$fen .= '6';
-				break;
-				case 4:
-					$fen .= '3';
-				break;
-			}
+			$fen .= match($this->hasMoved[ChessPiece::PAWN][1]) {
+				3 => '6',
+				4 => '3',
+			};
 		} else {
 			$fen .= '-';
 		}
@@ -850,7 +842,7 @@ class ChessGame {
 
 	public function resign($accountID) {
 		if ($this->hasEnded() || !$this->getColourForAccountID($accountID)) {
-			return false;
+			throw new Exception('Invalid resign conditions');
 		}
 		// If only 1 person has moved then just end the game.
 		if (count($this->getMoves()) < 2) {

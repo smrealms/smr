@@ -1,15 +1,9 @@
 <?php declare(strict_types=1);
 $port = $player->getSectorPort();
-switch ($var['PayoutType']) {
-	case 'Raze':
-		$credits = $port->razePort($player);
-	break;
-	case 'Loot':
-		$credits = $port->lootPort($player);
-	break;
-	default:
-		throw new Exception('Unknown payout type: ', $var['PayoutType']);
-}
+$credits = match($var['PayoutType']) {
+	'Raze' => $port->razePort($player),
+	'Loot' => $port->lootPort($player),
+};
 $player->log(LOG_TYPE_TRADING, 'Player Triggers Payout: ' . $var['PayoutType']);
 $port->update();
 $container = create_container('skeleton.php', 'current_sector.php');

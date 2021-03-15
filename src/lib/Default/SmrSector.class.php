@@ -262,17 +262,11 @@ class SmrSector {
 	public function enteringSector(AbstractSmrPlayer $player, $movementType) {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
-		switch ($movementType) {
-			case MOVEMENT_JUMP:
-				$message .= 'jumping into';
-			break;
-			case MOVEMENT_WARP:
-				$message .= 'warping into';
-			break;
-			case MOVEMENT_WALK:
-			default:
-				$message .= 'entering';
-		}
+		$message .= match($movementType) {
+			MOVEMENT_JUMP => 'jumping into',
+			MOVEMENT_WARP => 'warping into',
+			MOVEMENT_WALK => 'entering',
+		};
 		$message .= ' sector ' . Globals::getSectorBBLink($this->getSectorID());
 
 		$forces = $this->getForces();
@@ -284,17 +278,11 @@ class SmrSector {
 	public function leavingSector(AbstractSmrPlayer $player, $movementType) {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
-		switch ($movementType) {
-			case MOVEMENT_JUMP:
-				$message .= 'jumping from';
-			break;
-			case MOVEMENT_WARP:
-				$message .= 'warping from';
-			break;
-			case MOVEMENT_WALK:
-			default:
-				$message .= 'leaving';
-		}
+		$message .= match($movementType) {
+			MOVEMENT_JUMP => 'jumping from',
+			MOVEMENT_WARP => 'warping from',
+			MOVEMENT_WALK => 'leaving',
+		};
 		$message .= ' sector ' . Globals::getSectorBBLink($this->getSectorID());
 
 		// iterate over all scout drones in sector
@@ -492,13 +480,13 @@ class SmrSector {
 	}
 
 	protected static function oppositeDir($dir) {
-		switch ($dir) {
-			case 'Up': return 'Down';
-			case 'Down': return 'Up';
-			case 'Left': return 'Right';
-			case 'Right': return 'Left';
-			case 'Warp': return 'Warp';
-		}
+		return match($dir) {
+			'Up' => 'Down',
+			'Down' => 'Up',
+			'Left' => 'Right',
+			'Right' => 'Left',
+			'Warp' => 'Warp',
+		};
 	}
 
 	public function getLinkUp() {

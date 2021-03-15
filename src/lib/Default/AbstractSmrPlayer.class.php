@@ -735,34 +735,17 @@ abstract class AbstractSmrPlayer {
 
 		// If expires not specified, use default based on message type
 		if ($expires === false) {
-			switch ($messageTypeID) {
-				case MSG_GLOBAL: //We don't send globals to the box here or it gets done loads of times.
-					$expires = 3600; // 1h
-				break;
-				case MSG_PLAYER:
-					$expires = 86400 * 31;
-				break;
-				case MSG_PLANET:
-					$expires = 86400 * 7;
-				break;
-				case MSG_SCOUT:
-					$expires = 86400 * 3;
-				break;
-				case MSG_POLITICAL:
-					$expires = 86400 * 31;
-				break;
-				case MSG_ALLIANCE:
-					$expires = 86400 * 31;
-				break;
-				case MSG_ADMIN:
-					$expires = 86400 * 365;
-				break;
-				case MSG_CASINO:
-					$expires = 86400 * 31;
-				break;
-				default:
-					$expires = 86400 * 7;
-			}
+			$expires = match($messageTypeID) {
+				MSG_GLOBAL => 3600, // 1h
+				MSG_PLAYER => 86400 * 31, // 1 month
+				MSG_PLANET => 86400 * 7, // 1 week
+				MSG_SCOUT => 86400 * 3, // 3 days
+				MSG_POLITICAL => 86400 * 31, // 1 month
+				MSG_ALLIANCE => 86400 * 31, // 1 month
+				MSG_ADMIN => 86400 * 365, // 1 year
+				MSG_CASINO => 86400 * 31, // 1 month
+				default => 86400 * 7, // 1 week
+			};
 			$expires += SmrSession::getTime();
 		}
 
@@ -2497,15 +2480,11 @@ abstract class AbstractSmrPlayer {
 	 * Returns the CSS class color to use when displaying the player's turns
 	 */
 	public function getTurnsColor() {
-		switch ($this->getTurnsLevel()) {
-			case 'NONE':
-			case 'LOW':
-				return 'red';
-			case 'MEDIUM':
-				return 'yellow';
-			default:
-				return 'green';
-		}
+		return match($this->getTurnsLevel()) {
+			'NONE', 'LOW' => 'red',
+			'MEDIUM' => 'yellow',
+			'HIGH' => 'green',
+		};
 	}
 
 	public function getTurns() {
@@ -2739,9 +2718,6 @@ abstract class AbstractSmrPlayer {
 		$step = MISSIONS[$missionID]['Steps'][$stepID];
 		if (isset($step['PickSector'])) {
 			$realX = Plotter::getX($step['PickSector']['Type'], $step['PickSector']['X'], $this->getGameID());
-			if ($realX === false) {
-				throw new Exception('Invalid PickSector definition in mission: ' . $missionID);
-			}
 			$path = Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
 			if ($path === false) {
 				// Abandon the mission if it cannot be completed due to a
@@ -2866,9 +2842,6 @@ abstract class AbstractSmrPlayer {
 				continue;
 			}
 			$realX = Plotter::getX($mission['HasX']['Type'], $mission['HasX']['X'], $this->getGameID());
-			if ($realX === false) {
-				throw new Exception('Invalid HasX definition in mission: ' . $missionID);
-			}
 			if ($this->getSector()->hasX($realX)) {
 				$availableMissions[$missionID] = $mission;
 			}
