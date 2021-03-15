@@ -13,4 +13,5 @@ foreach ($councilMembers as $accountID) {
 }
 
 $container = create_container('skeleton.php', 'current_sector.php');
+$container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
 forward($container);
