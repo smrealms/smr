@@ -351,8 +351,10 @@ class AbstractSmrShip {
 
 	public function removeAllHardware() : void {
 		foreach (array_keys($this->hardware) as $hardwareTypeID) {
-			$this->setHardware($hardwareTypeID, 0);
+			$this->hasChangedHardware[$hardwareTypeID] = true;
 		}
+		$this->hardware = [];
+		$this->oldHardware = [];
 		$this->decloak();
 		$this->disableIllusion();
 	}
@@ -896,9 +898,9 @@ class AbstractSmrShip {
 	public function removeUnderAttack() : bool {
 		global $var;
 		$underAttack = $this->isUnderAttack();
-		$this->setOldShields($this->getShields());
-		$this->setOldCDs($this->getCDs());
-		$this->setOldArmour($this->getArmour());
+		foreach ($this->getHardware() as $hardwareID => $value) {
+			$this->setOldHardware($hardwareID, $value);
+		}
 		if (isset($var['UnderAttack'])) {
 			return $var['UnderAttack'];
 		}

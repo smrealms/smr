@@ -4,6 +4,7 @@ namespace SmrTest\lib\DefaultGame;
 
 use SmrShip;
 use AbstractSmrPlayer;
+use SmrWeapon;
 use SmrTest\BaseIntegrationSpec;
 
 /**
@@ -31,6 +32,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 			->willReturn(SHIP_TYPE_DEMONICA);
 	}
 
+
 	public function test_getShip() {
 		// Get the ship associated with this player
 		$original = SmrShip::getShip($this->player);
@@ -48,9 +50,167 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 		$ship = SmrShip::getShip($this->player, $forceUpdate);
 		self::assertNotSame($original, $ship);
 		// but it is still the same ship
-		self::assertSame($original->getGameID(), $ship->getGameID());
-		self::assertSame($original->getAccountID(), $ship->getAccountID());
-		self::assertSame($original->getShipTypeID(), $ship->getShipTypeID());
+		self::assertEquals($original, $ship);
+	}
+
+
+	public function test_updateHardware() {
+		$original = SmrShip::getShip($this->player);
+
+		// Add hardware
+		$original->setHardwareToMax();
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+
+		// Change some hardware
+		$original->decreaseShields(10);
+		$original->decreaseCDs(10);
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+
+		// Remove hardware
+		$original->removeAllHardware();
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+	}
+
+
+	public function test_updateWeapons() {
+		$original = SmrShip::getShip($this->player);
+
+		// Add a couple weapons
+		$original->addWeapon(SmrWeapon::getWeapon(WEAPON_TYPE_LASER));
+		$original->addWeapon(SmrWeapon::getWeapon(WEAPON_PORT_TURRET));
+		$original->addWeapon(SmrWeapon::getWeapon(WEAPON_TYPE_LASER));
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+
+		// Remove a weapon
+		$original->removeWeapon(1);
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+
+		// Remove all weapons
+		$original->removeAllWeapons();
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+	}
+
+
+	public function test_updateCargo() {
+		$original = SmrShip::getShip($this->player);
+		$original->setHardwareToMax();
+
+		// Add some cargo
+		$original->increaseCargo(GOODS_ORE, 15);
+		$original->increaseCargo(GOODS_WOOD, 5);
+		$original->increaseCargo(GOODS_FOOD, 10);
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+
+		// Modify existing cargo
+		$original->decreaseCargo(GOODS_ORE, 5); // decrease
+		$original->decreaseCargo(GOODS_WOOD, 5); // remove all
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+
+		// Remove all cargo
+		$original->removeAllCargo();
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+	}
+
+
+	public function test_updateCloak() {
+		$original = SmrShip::getShip($this->player);
+		$original->setHardwareToMax();
+
+		// Enable cloak
+		$original->enableCloak();
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+
+		// Disable cloak
+		$original->decloak();
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+	}
+
+
+	public function test_updateIllusion() {
+		$original = SmrShip::getShip($this->player);
+		$original->setHardwareToMax();
+
+		// Enable illusion
+		$original->setIllusion(SHIP_TYPE_DRUDGE, 2, 3);
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+
+		// Change illusion
+		$original->setIllusion(SHIP_TYPE_ROGUE, 5, 1);
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+
+		// Disable illusion
+		$original->disableIllusion();
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = SmrShip::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
 	}
 
 }
