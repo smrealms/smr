@@ -84,7 +84,6 @@ class SmrShip extends AbstractSmrShip {
 
 	protected function loadHardware() : void {
 		$this->hardware = array();
-		$this->oldHardware = array();
 
 		// get currently hardware from db
 		$db = MySqlDatabase::getInstance();
@@ -98,7 +97,6 @@ class SmrShip extends AbstractSmrShip {
 
 			// adding hardware to array
 			$this->hardware[$hardwareTypeID] = $db->getInt('amount');
-			$this->oldHardware[$hardwareTypeID] = $db->getInt('old_amount');
 		}
 		$this->checkForExcessHardware();
 	}
@@ -145,7 +143,7 @@ class SmrShip extends AbstractSmrShip {
 			}
 			$amount = $this->getHardware($hardwareTypeID);
 			if ($amount > 0) {
-				$db->query('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES(' . $db->escapeNumber($this->getAccountID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber($hardwareTypeID) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($this->getOldHardware($hardwareTypeID)) . ')');
+				$db->query('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount) VALUES(' . $db->escapeNumber($this->getAccountID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber($hardwareTypeID) . ', ' . $db->escapeNumber($amount) . ')');
 			} else {
 				$db->query('DELETE FROM ship_has_hardware WHERE ' . $this->SQL . ' AND hardware_type_id = ' . $db->escapeNumber($hardwareTypeID));
 			}

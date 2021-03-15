@@ -75,6 +75,7 @@ abstract class AbstractSmrPlayer {
 	protected $customShipName;
 	protected $storedDestinations;
 	protected $canFed;
+	protected bool $underAttack;
 
 	protected $visitedSectors;
 	protected $allianceRoles = array(
@@ -265,6 +266,7 @@ abstract class AbstractSmrPlayer {
 			$this->nameChanged = $db->getBoolean('name_changed');
 			$this->raceChanged = $db->getBoolean('race_changed');
 			$this->combatDronesKamikazeOnMines = $db->getBoolean('combat_drones_kamikaze_on_mines');
+			$this->underAttack = $db->getBoolean('under_attack');
 		} else {
 			throw new PlayerNotFoundException('Invalid accountID: ' . $accountID . ' OR gameID:' . $gameID);
 		}
@@ -2155,6 +2157,31 @@ abstract class AbstractSmrPlayer {
 		return $this->db->getInt('ranking');
 	}
 
+	public function isUnderAttack() : bool {
+		return $this->underAttack;
+	}
+
+	public function setUnderAttack(bool $value) : void {
+		if ($this->underAttack === $value) {
+			return;
+		}
+		$this->underAttack = $value;
+		$this->hasChanged = true;
+	}
+
+	public function removeUnderAttack() : bool {
+		global $var;
+		if (isset($var['UnderAttack'])) {
+			return $var['UnderAttack'];
+		}
+		$underAttack = $this->isUnderAttack();
+		if ($underAttack && !USING_AJAX) {
+			SmrSession::updateVar('UnderAttack', $underAttack); //Remember we are under attack for AJAX
+		}
+		$this->setUnderAttack(false);
+		return $underAttack;
+	}
+
 	public function killPlayer($sectorID) {
 		$sector = SmrSector::getSector($this->getGameID(), $sectorID);
 		//msg taken care of in trader_att_proc.php
@@ -2188,6 +2215,7 @@ abstract class AbstractSmrPlayer {
 		$this->setNewbieWarning(true);
 		$this->getShip()->getPod($this->hasNewbieStatus());
 		$this->setNewbieTurns(NEWBIE_TURNS_ON_DEATH);
+		$this->setUnderAttack(false);
 	}
 
 	public function killPlayerByPlayer(AbstractSmrPlayer $killer) {
@@ -3099,6 +3127,7 @@ abstract class AbstractSmrPlayer {
 				', name_changed = ' . $this->db->escapeBoolean($this->nameChanged) .
 				', race_changed = ' . $this->db->escapeBoolean($this->raceChanged) .
 				', combat_drones_kamikaze_on_mines = ' . $this->db->escapeBoolean($this->combatDronesKamikazeOnMines) .
+				', under_attack = ' . $this->db->escapeBoolean($this->underAttack) .
 				' WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->hasChanged = false;
 		}

@@ -57,7 +57,6 @@ if ($player->getExperience() > 0) {
 	}
 
 	$ship->decreaseArmour($damage);
-	$ship->removeUnderAttack(); // don't trigger attack warning
 
 	$container['msg'] = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise('unit', $amount) . ' of ' . $good_name . '. Due to your lack of piloting experience, the cargo pierces the hull of your ship as you clumsily try to jettison the goods through the bay doors, destroying <span class="red">' . $damage . '</span> ' . pluralise('plate', $damage) . ' of armour!';
 	// log action

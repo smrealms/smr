@@ -135,8 +135,8 @@ function NPCStuff() {
 
 				// Ensure the NPC doesn't think it's under attack at startup,
 				// since this could cause it to get stuck in a loop in Fed.
-				$player->getShip()->removeUnderAttack();
-				$player->getShip()->updateHardware();
+				$player->removeUnderAttack();
+				$player->update();
 			}
 
 			if (!isset($TRADE_ROUTE)) { //We only want to change trade route if there isn't already one set.
@@ -157,16 +157,10 @@ function NPCStuff() {
 			$fedContainer = null;
 			if (isset($var['url']) && $var['url'] == 'shop_ship_processing.php' && ($fedContainer = plotToFed($player, true)) !== true) { //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
 				processContainer($fedContainer);
-			} elseif ($player->getShip()->isUnderAttack() === true
-				&&($player->hasPlottedCourse() === false || $player->getPlottedCourse()->getEndSector()->offersFederalProtection() === false)
-				&&($fedContainer == null ? $fedContainer = plotToFed($player, true) : $fedContainer) !== true) { //We're under attack and need to plot course to fed.
-				// Get the lock, remove under attack and update.
-				acquire_lock($player->getSectorID());
-				$ship = $player->getShip(true);
-				$ship->removeUnderAttack();
-				$ship->updateHardware();
-				release_lock();
-
+			} elseif (!$underAttack && $player->isUnderAttack() === true
+				&& ($player->hasPlottedCourse() === false || $player->getPlottedCourse()->getEndSector()->offersFederalProtection() === false)
+				&& ($fedContainer == null ? $fedContainer = plotToFed($player, true) : $fedContainer) !== true) {
+				// We're under attack and need to plot course to fed.
 				debug('Under Attack');
 				$underAttack = true;
 				processContainer($fedContainer);

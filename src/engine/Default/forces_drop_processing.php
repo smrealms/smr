@@ -113,10 +113,10 @@ if ($change_mines != 0) {
 
 if ($change_combat_drones != 0) {
 	if ($change_combat_drones > 0) {
-		$ship->decreaseCDs($change_combat_drones, true);
+		$ship->decreaseCDs($change_combat_drones);
 		$forces->addCDs($change_combat_drones);
 	} else {
-		$ship->increaseCDs(-$change_combat_drones, true);
+		$ship->increaseCDs(-$change_combat_drones);
 		$forces->takeCDs(-$change_combat_drones);
 	}
 }

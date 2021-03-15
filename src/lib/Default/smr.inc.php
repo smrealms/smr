@@ -440,7 +440,7 @@ function do_voodoo() {
 	}
 
 	if (SmrSession::hasGame()) {
-		$template->assign('UnderAttack', $ship->removeUnderAttack());
+		$template->assign('UnderAttack', $player->removeUnderAttack());
 	}
 
 	if ($lock) { //Only save if we have the lock.
