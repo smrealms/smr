@@ -56,7 +56,7 @@ class AbstractSmrShip {
 			if ($db->nextRecord()) {
 				self::$CACHE_BASE_SHIPS[$shipTypeID] = self::buildBaseShip($db);
 			} else {
-				self::$CACHE_BASE_SHIPS[$shipTypeID] = false;
+				throw new Exception('Invalid shipTypeID: ' . $shipTypeID);
 			}
 		}
 		return self::$CACHE_BASE_SHIPS[$shipTypeID];
@@ -187,11 +187,9 @@ class AbstractSmrShip {
 
 	public function checkForExcessHardware() : void {
 		//check hardware to see if anything needs to be removed
-		if (is_array($hardware = $this->getHardware())) {
-			foreach ($hardware as $hardwareTypeID => $amount) {
-				if ($amount > ($max = $this->getMaxHardware($hardwareTypeID))) {
-					$this->setHardware($hardwareTypeID, $max);
-				}
+		foreach ($this->getHardware() as $hardwareTypeID => $amount) {
+			if ($amount > ($max = $this->getMaxHardware($hardwareTypeID))) {
+				$this->setHardware($hardwareTypeID, $max);
 			}
 		}
 	}

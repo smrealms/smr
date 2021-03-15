@@ -319,9 +319,6 @@ class AbstractSmrLocation {
 			return;
 		}
 		$ship = AbstractSmrShip::getBaseShip($shipTypeID);
-		if ($ship === false) {
-			throw new Exception('Invalid ship type id given');
-		}
 		$this->db->query('INSERT INTO location_sells_ships (location_type_id,ship_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($shipTypeID) . ')');
 		$this->shipsSold[$shipTypeID] = $ship;
 	}
