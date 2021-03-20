@@ -53,6 +53,14 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		$mysqlDatabase->query("foo query");
 	}
 
+	public function test_closing_database_returns_boolean() {
+		$db = MySqlDatabase::getInstance();
+		// Returns true when closing an open database connection
+		self::assertTrue($db->close());
+		// Returns false if the database has already been closed
+		self::assertFalse($db->close());
+	}
+
 	public function test_getInstance_will_perform_reconnect_after_connection_closed() {
 		// Given an original mysql connection
 		$originalMysql = DiContainer::get(mysqli::class);

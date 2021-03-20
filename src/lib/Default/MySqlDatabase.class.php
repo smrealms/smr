@@ -97,16 +97,21 @@ class MySqlDatabase {
 	 *
 	 * You must call MySqlDatabase::getInstance() again to retrieve a valid instance that
 	 * is reconnected to the database.
+	 *
+	 * @return bool Whether the underlying connection was closed by this call.
 	 */
-	public function close() {
-		if ($this->dbConn) {
-			$this->dbConn->close();
-			unset($this->dbConn);
-			// Set the mysqli instance in the dependency injection container to
-			// null so that the MySqlDatabase constructor will reconnect the
-			// next time it is called.
-			DiContainer::getContainer()->set(mysqli::class, null);
+	public function close() : bool {
+		if (!isset($this->dbConn)) {
+			// Connection is already closed; nothing to do.
+			return false;
 		}
+		$this->dbConn->close();
+		unset($this->dbConn);
+		// Set the mysqli instance in the dependency injection container to
+		// null so that the MySqlDatabase constructor will reconnect the
+		// next time it is called.
+		DiContainer::getContainer()->set(mysqli::class, null);
+		return true;
 	}
 
 	public function query($query) {
