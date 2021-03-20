@@ -76,74 +76,76 @@ require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_forces.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_8ball.php');
 
-// delete all seen stats that appear to be on (we do not want to take something for granted that happend while we were away)
-$db = MySqlDatabase::getInstance();
-$db->query('DELETE from irc_seen WHERE signed_off = 0');
-
 // just in case we need to exit for good
 $running = true;
 
 // after a timeout we start over
 while ($running) {
+
+	// delete all seen stats that appear to be on (we do not want to take
+	// something for granted that happend while we were away)
+	$db = MySqlDatabase::getInstance();
+	$db->query('DELETE from irc_seen WHERE signed_off = 0');
+
+	// Reset last ping each time we try connecting.
+	$last_ping = time();
+
+	echo_r('Connecting to ' . IRC_BOT_SERVER_ADDRESS);
+	$fp = fsockopen(IRC_BOT_SERVER_ADDRESS, IRC_BOT_SERVER_PORT);
+
+	if (!$fp) {
+		// network troubles
+		echo_r('There was an error connecting to ' . IRC_BOT_SERVER_ADDRESS . '/' . IRC_BOT_SERVER_PORT);
+
+		// sleep and try again!
+		sleep(60);
+		continue;
+	}
+
+	echo_r('Socket ' . $fp . ' is connected...');
+
 	try {
-		// Reset last ping each time we try connecting.
-		$last_ping = time();
-		echo_r('Connecting to ' . IRC_BOT_SERVER_ADDRESS);
-		$fp = fsockopen(IRC_BOT_SERVER_ADDRESS, IRC_BOT_SERVER_PORT);
-		if ($fp) {
-			echo_r('Socket ' . $fp . ' is connected... Identifying...');
+		echo_r('Identifying...');
+		safefputs($fp, 'NICK ' . IRC_BOT_NICK . EOL);
+		safefputs($fp, 'USER ' . IRC_BOT_USER . EOL);
 
-			safefputs($fp, 'NICK ' . IRC_BOT_NICK . EOL);
-			safefputs($fp, 'USER ' . IRC_BOT_USER . EOL);
+		sleep(3);
 
-			sleep(3);
+		safefputs($fp, 'NICKSERV IDENTIFY ' . IRC_BOT_PASS . EOL);
 
-			safefputs($fp, 'NICKSERV IDENTIFY ' . IRC_BOT_PASS . EOL);
+		sleep(5);
 
-			sleep(5);
+		if (!IRC_DEBUGGING) {
+			// join our public channels
+			$joinChannels = ['#smr', '#smr-bar'];
 
-			// join our public channel
-			if (!IRC_DEBUGGING) {
-				safefputs($fp, 'JOIN #smr' . EOL);
-				safefputs($fp, 'JOIN #smr-bar' . EOL);
+			// join all alliance channels
+			$db->query('SELECT channel
+						FROM irc_alliance_has_channel
+						JOIN game USING (game_id)
+						WHERE join_time < ' . time() . '
+							AND end_time > ' . time());
+			while ($db->nextRecord()) {
+				$joinChannels[] = $db->getField('channel');
+			}
+
+			// now do the actual joining
+			foreach ($joinChannels as $channel) {
+				safefputs($fp, 'JOIN ' . $channel . EOL);
 				sleep(1);
-				safefputs($fp, 'WHO #smr' . EOL);
-				safefputs($fp, 'WHO #smr-bar' . EOL);
-
-				// join all alliance channels
-				$db->query('SELECT channel
-							FROM irc_alliance_has_channel
-							JOIN game USING (game_id)
-							WHERE join_time < ' . time() . '
-								AND end_time > ' . time());
-				while ($db->nextRecord()) {
-					$alliance_channel = $db->getField('channel');
-					// join channels
-					safefputs($fp, 'JOIN ' . $alliance_channel . EOL);
-					sleep(1);
-					safefputs($fp, 'WHO ' . $alliance_channel . EOL);
-				}
-
+				safefputs($fp, 'WHO ' . $channel . EOL);
 			}
-
-			stream_set_blocking($fp, true);
-			while (!feof($fp)) {
-				readFromStream($fp);
-				// Close database connection between calls to avoid
-				// stale or timed out server errors.
-				$db->close();
-			}
-			fclose($fp); // close socket
-
-		} else {
-
-			// network troubles
-			echo_r('There was an error connecting to ' . IRC_BOT_SERVER_ADDRESS . '/' . IRC_BOT_SERVER_PORT);
-
-			// sleep and try again!
-			sleep(60);
-
 		}
+
+		stream_set_blocking($fp, true);
+		while (!feof($fp)) {
+			readFromStream($fp);
+			// Close database connection between calls to avoid
+			// stale or timed out server errors.
+			$db->close();
+		}
+		fclose($fp); // close socket
+
 	} catch (TimeoutException $e) {
 		// Ignore the timeout exception, we'll loop round and reconnect.
 	}
