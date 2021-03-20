@@ -47,7 +47,7 @@ if ($action == 'Buy') {
 	}
 
 	$player->increaseCredits(IRound($cost * CDS_REFUND_PERCENT) * $amount);
-	$ship->decreaseCDs($amount, true); // 2nd arg avoids under attack warning
+	$ship->decreaseCDs($amount);
 } else {
 	throw new Exception('Action must be either Buy or Sell.');
 }

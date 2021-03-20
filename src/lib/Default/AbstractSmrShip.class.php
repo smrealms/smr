@@ -34,13 +34,11 @@ class AbstractSmrShip {
 	protected int $gameID;
 	protected array $baseShip;
 
-	protected array $hardware;
-	protected array $oldHardware;
-
-	protected array $cargo = [];
 	protected array $weapons = [];
-	protected array|false $illusionShip = false;
+	protected array $cargo = [];
+	protected array $hardware = [];
 	protected bool $isCloaked = false;
+	protected array|false $illusionShip = false;
 
 	protected bool $hasChangedWeapons = false;
 	protected bool $hasChangedCargo = false;
@@ -201,7 +199,6 @@ class AbstractSmrShip {
 		foreach ($this->getMaxHardware() as $key => $max) {
 			$this->setHardware($key, $max);
 		}
-		$this->removeUnderAttack();
 	}
 
 	public function getPowerUsed() : int {
@@ -352,7 +349,6 @@ class AbstractSmrShip {
 			$this->hasChangedHardware[$hardwareTypeID] = true;
 		}
 		$this->hardware = [];
-		$this->oldHardware = [];
 		$this->decloak();
 		$this->disableIllusion();
 	}
@@ -363,18 +359,16 @@ class AbstractSmrShip {
 		$this->removeAllHardware();
 
 		if ($isNewbie) {
-			$this->setShields(75, true);
-			$this->setArmour(150, true);
+			$this->setShields(75);
+			$this->setArmour(150);
 			$this->setCargoHolds(40);
 			$this->setShipTypeID(SHIP_TYPE_NEWBIE_MERCHANT_VESSEL);
 		} else {
-			$this->setShields(50, true);
-			$this->setArmour(50, true);
+			$this->setShields(50);
+			$this->setArmour(50);
 			$this->setCargoHolds(5);
 			$this->setShipTypeID(SHIP_TYPE_ESCAPE_POD);
 		}
-
-		$this->removeUnderAttack();
 	}
 
 	public function giveStarterShip() : void {
@@ -388,8 +382,8 @@ class AbstractSmrShip {
 			$amount_armour = 50;
 		}
 		$this->setShipTypeID($shipID);
-		$this->setShields($amount_shields, true);
-		$this->setArmour($amount_armour, true);
+		$this->setShields($amount_shields);
+		$this->setArmour($amount_armour);
 		$this->setCargoHolds(40);
 		$this->addWeapon(SmrWeapon::getWeapon(WEAPON_TYPE_LASER));
 	}
@@ -607,21 +601,6 @@ class AbstractSmrShip {
 		$this->setHardware($hardwareTypeID, $this->getHardware($hardwareTypeID) + $amount);
 	}
 
-	public function getOldHardware(int $hardwareTypeID = null) : array|int {
-		if ($hardwareTypeID === null) {
-			return $this->oldHardware;
-		}
-		return $this->oldHardware[$hardwareTypeID] ?? 0;
-	}
-
-	public function setOldHardware(int $hardwareTypeID, int $amount) : void {
-		if ($this->getOldHardware($hardwareTypeID) == $amount) {
-			return;
-		}
-		$this->oldHardware[$hardwareTypeID] = $amount;
-		$this->hasChangedHardware[$hardwareTypeID] = true;
-	}
-
 	public function hasMaxHardware(int $hardwareTypeID) : bool {
 		return $this->getHardware($hardwareTypeID) == $this->getMaxHardware($hardwareTypeID);
 	}
@@ -637,10 +616,7 @@ class AbstractSmrShip {
 		return $this->getHardware(HARDWARE_SHIELDS);
 	}
 
-	public function setShields(int $amount, bool $updateOldAmount = false) : void {
-		if ($updateOldAmount && !$this->hasLostShields()) {
-			$this->setOldHardware(HARDWARE_SHIELDS, $amount);
-		}
+	public function setShields(int $amount) : void {
 		$this->setHardware(HARDWARE_SHIELDS, $amount);
 	}
 
@@ -652,20 +628,8 @@ class AbstractSmrShip {
 		$this->setShields($this->getShields() + $amount);
 	}
 
-	public function getOldShields() : int {
-		return $this->getOldHardware(HARDWARE_SHIELDS);
-	}
-
-	public function setOldShields(int $amount) : void {
-		$this->setOldHardware(HARDWARE_SHIELDS, $amount);
-	}
-
 	public function hasShields() : bool {
 		return $this->getShields() > 0;
-	}
-
-	public function hasLostShields() : bool {
-		return $this->getShields() < $this->getOldShields();
 	}
 
 	public function hasMaxShields() : bool {
@@ -680,10 +644,7 @@ class AbstractSmrShip {
 		return $this->getHardware(HARDWARE_ARMOUR);
 	}
 
-	public function setArmour(int $amount, bool $updateOldAmount = false) : void {
-		if ($updateOldAmount && !$this->hasLostArmour()) {
-			$this->setOldHardware(HARDWARE_ARMOUR, $amount);
-		}
+	public function setArmour(int $amount) : void {
 		$this->setHardware(HARDWARE_ARMOUR, $amount);
 	}
 
@@ -695,20 +656,8 @@ class AbstractSmrShip {
 		$this->setArmour($this->getArmour() + $amount);
 	}
 
-	public function getOldArmour() : int {
-		return $this->getOldHardware(HARDWARE_ARMOUR);
-	}
-
-	public function setOldArmour(int $amount) : void {
-		$this->setOldHardware(HARDWARE_ARMOUR, $amount);
-	}
-
 	public function hasArmour() : bool {
 		return $this->getArmour() > 0;
-	}
-
-	public function hasLostArmour() : bool {
-		return $this->getArmour() < $this->getOldArmour();
 	}
 
 	public function hasMaxArmour() : bool {
@@ -751,35 +700,16 @@ class AbstractSmrShip {
 		return $this->getHardware(HARDWARE_COMBAT);
 	}
 
-	public function setCDs(int $amount, bool $updateOldAmount = false) : void {
-		if ($updateOldAmount && !$this->hasLostCDs()) {
-			$this->setOldHardware(HARDWARE_COMBAT, $amount);
-		}
+	public function setCDs(int $amount) : void {
 		$this->setHardware(HARDWARE_COMBAT, $amount);
 	}
 
-	/**
-	 * Decreases the ship CDs. Use $updateOldAmount=true to prevent
-	 * this change from triggering `isUnderAttack`.
-	 */
-	public function decreaseCDs(int $amount, bool $updateOldAmount = false) : void {
-		$this->setCDs($this->getCDs() - $amount, $updateOldAmount);
+	public function decreaseCDs(int $amount) : void {
+		$this->setCDs($this->getCDs() - $amount);
 	}
 
 	public function increaseCDs(int $amount) : void {
 		$this->setCDs($this->getCDs() + $amount);
-	}
-
-	public function getOldCDs() : int {
-		return $this->getOldHardware(HARDWARE_COMBAT);
-	}
-
-	public function setOldCDs(int $amount) : void {
-		$this->setOldHardware(HARDWARE_COMBAT, $amount);
-	}
-
-	public function hasLostCDs() : bool {
-		return $this->getCDs() < $this->getOldCDs();
 	}
 
 	public function getMaxCDs() : int {
@@ -887,25 +817,6 @@ class AbstractSmrShip {
 
 	public function getMaxCargoHolds() : int {
 		return $this->getMaxHardware(HARDWARE_CARGO);
-	}
-
-	public function isUnderAttack() : bool {
-		return $this->hasLostShields() || $this->hasLostArmour() || $this->hasLostCDs();
-	}
-
-	public function removeUnderAttack() : bool {
-		global $var;
-		$underAttack = $this->isUnderAttack();
-		foreach ($this->getHardware() as $hardwareID => $value) {
-			$this->setOldHardware($hardwareID, $value);
-		}
-		if (isset($var['UnderAttack'])) {
-			return $var['UnderAttack'];
-		}
-		if ($underAttack && !USING_AJAX) {
-			SmrSession::updateVar('UnderAttack', $underAttack); //Remember we are under attack for AJAX
-		}
-		return $underAttack;
 	}
 
 	public function hasWeapons() : bool {
@@ -1097,6 +1008,10 @@ class AbstractSmrShip {
 		$cdDamage = 0;
 		$shieldDamage = 0;
 		if (!$alreadyDead) {
+			// Even if the weapon doesn't do any damage, it was fired at the
+			// player, so alert them that they're under attack.
+			$this->getPlayer()->setUnderAttack(true);
+
 			$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'], $damage['Shield']));
 			$damage['MaxDamage'] -= $shieldDamage;
 			if (!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover'])) {

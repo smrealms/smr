@@ -71,7 +71,6 @@ $results['Port'] = $port->shootPlayers($attackers);
 
 $account->log(LOG_TYPE_PORT_RAIDING, 'Player attacks port, the port does ' . $results['Port']['TotalDamage'] . ', their team does ' . $results['Attackers']['TotalDamage'] . ' and downgrades ' . $results['Attackers']['Downgrades'] . ' levels.', $port->getSectorID());
 
-$ship->removeUnderAttack(); //Don't show attacker the under attack message.
 $port->update();
 
 $serializedResults = serialize($results);

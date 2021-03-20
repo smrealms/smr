@@ -53,7 +53,6 @@ if ($var['func'] == 'Map') {
 	$type_hard = Request::getInt('type_hard');
 	$amount_hard = Request::getInt('amount_hard');
 	$ship->setHardware($type_hard, $amount_hard);
-	$ship->removeUnderAttack();
 } elseif ($var['func'] == 'Relations') {
 	$amount = Request::getInt('amount');
 	$race = Request::getInt('race');

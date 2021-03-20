@@ -73,8 +73,6 @@ $results = [
 	'Defenders' => teamAttack($fightingPlayers, 'Defenders', 'Attackers'),
 ];
 
-$ship->removeUnderAttack(); //Don't show attacker the under attack message.
-
 $account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'] . ' and the other team does ' . $results['Defenders']['TotalDamage'], $sector->getSectorID());
 
 $serializedResults = serialize($results);

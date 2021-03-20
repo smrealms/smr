@@ -35,7 +35,6 @@ $ship->setShipTypeID($shipID);
 
 
 // update again
-$ship->removeUnderAttack();
 $ship->update();
 $player->update();
 
