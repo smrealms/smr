@@ -9,7 +9,7 @@ function echo_r($message)
 			echo_r($msg);
 		}
 	} else {
-		echo date("d.m.Y H:i:s => ") . $message . EOL;
+		echo date("Y-m-d H:i:s => ") . $message . EOL;
 	}
 }
 
@@ -159,19 +159,6 @@ function safefputs($fp, $text) {
 function readFromStream($fp) {
 	global $last_ping;
 
-	$rdata = fgets($fp, 4096);
-	$rdata = preg_replace('/\s+/', ' ', $rdata);
-
-	// log for reports (if enabled via command line (-log)
-	if (IRC_LOGGING && strlen($rdata) > 0) {
-		write_log_message($rdata);
-	}
-
-	// remember the last time we got something from the server
-	if (strlen($rdata) > 0) {
-		$last_ping = time();
-	}
-
 	// timeout detection!
 	if ($last_ping < time() - 300) {
 		echo_r('TIMEOUT detected!');
@@ -182,8 +169,16 @@ function readFromStream($fp) {
 	// we simply do some poll stuff here
 	check_events($fp);
 
-	if (strlen($rdata) == 0) {
+	// try to get message from the server
+	$rdata = fgets($fp, 4096);
+	if ($rdata === false) { // no message or error
 		return false;
+	}
+	$rdata = preg_replace('/\s+/', ' ', $rdata);
+
+	// log for reports (if enabled via command line (-log)
+	if (IRC_LOGGING) {
+		write_log_message($rdata);
 	}
 
 	// required!!! otherwise timeout!
