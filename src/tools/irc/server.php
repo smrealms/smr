@@ -4,10 +4,14 @@
 // if we do not answer the ping from server we will be disconnected
 function server_ping($fp, $rdata)
 {
+	global $last_ping;
 
 	if (preg_match('/^PING\s:(.*)\s/i', $rdata, $msg)) {
 
 		$server = $msg[1];
+
+		// remember the last time we got a ping from the server
+		$last_ping = time();
 
 		// This message is very spammy
 		if (defined('IRC_BOT_VERBOSE_PING') && IRC_BOT_VERBOSE_PING) {
