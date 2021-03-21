@@ -28,10 +28,11 @@ jobs:
           # Needed by Codecov
           fetch-depth: 2
 
+      - name: Build test environment
+        run: composer run start:integration-services
+
       - name: Run tests
-        run: |
-          composer run start:integration-services
-          composer run test
+        run: composer run test
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
