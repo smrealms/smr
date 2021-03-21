@@ -3,6 +3,7 @@
 namespace SmrTest;
 
 use PHPUnit\Framework\TestCase;
+use Overtrue\PHPLint\Linter;
 
 /**
  * @coversNothing
@@ -18,11 +19,14 @@ class PhpFileInspectionTest extends TestCase {
 	}
 
 	public function test_all_files_pass_phplint() {
-		$exit_code = 1;
-		$output = [];
-		exec(ROOT . 'test/phplint.sh', $output, $exit_code);
-		$this->assertSame(0, $exit_code, join("\n", $output));
-		$this->assertEquals('Success! No linting errors.', end($output));
+		$paths = [ROOT];
+		$excludes = ['vendor'];
+		$linter = new Linter($paths, $excludes, warning: true);
+		$linter->setProcessLimit(8); // multiprocessing
+
+		// get errors
+		$errors = $linter->lint();
+		$this->assertEmpty($errors, print_r($errors, true));
 	}
 
 }
