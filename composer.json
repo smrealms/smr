@@ -60,6 +60,6 @@
 	},
 	"require-dev": {
 		"overtrue/phplint": "2.3.5",
-		"phpunit/phpunit": "9.5.3"
+		"phpunit/phpunit": "9.5.4"
 	}
 }
