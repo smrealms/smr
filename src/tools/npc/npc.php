@@ -465,7 +465,7 @@ function canWeUNO(AbstractSmrPlayer $player, $oppurtunisticOnly) {
 				}
 			}
 			if (isset($hardwareID)) {
-				$amount = min($ship->getMaxHardware($hardwareID) - $ship->getHardware($hardwareID), $amount);
+				$amount = min($ship->getType()->getMaxHardware($hardwareID) - $ship->getHardware($hardwareID), $amount);
 				return doUNO($hardwareID, $amount, $sector->getSectorID());
 			}
 		}
@@ -584,11 +584,11 @@ function checkForShipUpgrade(AbstractSmrPlayer $player) {
 }
 
 function doShipUpgrade(AbstractSmrPlayer $player, $upgradeShipID) {
-	$plotNearest = plotToNearest($player, AbstractSmrShip::getBaseShip($upgradeShipID));
+	$plotNearest = plotToNearest($player, SmrShipType::get($upgradeShipID));
 
 	if ($plotNearest == true) { //We're already there!
 		//TODO: We're going to want to UNO after upgrading
-		return Page::create('shop_ship_processing.php', '', array('ship_id'=>$upgradeShipID));
+		return Page::create('shop_ship_processing.php', '', ['ship_type_id' => $upgradeShipID]);
 	} //Otherwise return the plot
 	return $plotNearest;
 }

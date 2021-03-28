@@ -38,7 +38,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 		$original = SmrShip::getShip($this->player);
 		self::assertSame($this->player->getAccountID(), $original->getAccountID());
 		self::assertSame($this->player->getGameID(), $original->getGameID());
-		self::assertSame($this->player->getShipTypeID(), $original->getShipTypeID());
+		self::assertSame($this->player->getShipTypeID(), $original->getTypeID());
 
 		// Check that we get the exact same object if we get it again
 		$forceUpdate = false;

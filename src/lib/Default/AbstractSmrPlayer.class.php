@@ -436,7 +436,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	/**
-	 * Do not call directly. Use SmrShip::setShipTypeID instead.
+	 * Do not call directly. Use SmrShip::setTypeID instead.
 	 */
 	public function setShipTypeID(int $shipID) : void {
 		if ($this->shipID == $shipID) {

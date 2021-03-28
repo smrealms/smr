@@ -45,16 +45,16 @@ foreach ($hardwares as $hardware) {
 $file .= '[Ships]
 ; Name = Race,Cost,TPH,Hardpoints,Power,Class,+Equipment (Optional),+Restrictions(Optional)
 ; Restrictions:Align(Integer)' . EOL;
-foreach (AbstractSmrShip::getAllBaseShips() as $ship) {
-	$file .= inify($ship['Name']) . '=' . Globals::getRaceName($ship['RaceID']) . ',' . $ship['Cost'] . ',' . $ship['Speed'] . ',' . $ship['Hardpoint'] . ',' . $ship['MaxPower'] . ',' . Smr\ShipClass::getName($ship['ShipClassID']);
-	if ($ship['MaxHardware'] > 0) {
-		$shipEquip = ',ShipEquipment=';
-		foreach ($ship['MaxHardware'] as $hardwareID => $maxHardware) {
-			$shipEquip .= $hardwares[$hardwareID]['Name'] . '=' . $maxHardware . ';';
-		}
-		$file .= substr($shipEquip, 0, -1);
-		$file .= ',Restrictions=' . $ship['AlignRestriction'];
+foreach (SmrShipType::getAll() as $ship) {
+	$file .= inify($ship->getName()) . '=' . inify($ship->getRaceName()) . ',' . $ship->getCost() . ',' . $ship->getSpeed() . ',' . $ship->getHardpoints() . ',' . $ship->getMaxPower() . ',' . Smr\ShipClass::getName($ship->getClassID());
+	$shipEquip = [];
+	foreach ($ship->getAllMaxHardware() as $hardwareID => $maxHardware) {
+		$shipEquip[] = $hardwares[$hardwareID]['Name'] . '=' . $maxHardware;
 	}
+	if (!empty($shipEquip)) {
+		$file .= ',ShipEquipment=' . join(';', $shipEquip);
+	}
+	$file .= ',Restrictions=' . $ship->getRestriction();
 	$file .= EOL;
 }
 
@@ -80,7 +80,7 @@ foreach (SmrLocation::getAllLocations() as $location) {
 	if ($location->isShipSold()) {
 		$locSells .= 'Ships=';
 		foreach ($location->getShipsSold() as $locShip) {
-			$locSells .= $locShip['Name'] . ';';
+			$locSells .= $locShip->getName() . ';';
 		}
 		$locSells = substr($locSells, 0, -1) . ',';
 	}

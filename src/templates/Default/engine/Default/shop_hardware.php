@@ -10,7 +10,7 @@ if (isset($HardwareSold)) { ?>
 			<th>Action</th>
 		</tr><?php
 		foreach ($HardwareSold as $HardwareTypeID => $Hardware) {
-			$AmountToBuy = $ThisShip->getMaxHardware($HardwareTypeID) - $ThisShip->getHardware($HardwareTypeID); ?>
+			$AmountToBuy = $ThisShip->getType()->getMaxHardware($HardwareTypeID) - $ThisShip->getHardware($HardwareTypeID); ?>
 
 			<tr>
 				<td><?php echo $Hardware['Name']; ?></td>

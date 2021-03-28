@@ -17,7 +17,7 @@
 <br />
 
 <form method="POST" action="<?php echo $ShipHREF; ?>">
-	<select name="ship_id"><?php
+	<select name="ship_type_id"><?php
 		foreach ($ShipList as $ship) { ?>
 			<option value="<?php echo $ship['ID']; ?>"><?php echo $ship['Name']; ?></option><?php
 		} ?>

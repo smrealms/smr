@@ -38,10 +38,10 @@ if (isset($XType)) { ?>
 					}
 				break;
 				case 'Ships':
-					$Ships = AbstractSmrShip::getAllBaseShips();
-					Sorter::sortByNumElement($Ships, 'Name');
+					$Ships = SmrShipType::getAll();
+					Sorter::sortByNumMethod($Ships, 'getName');
 					foreach ($Ships as $Ship) {
-						?><option value="<?php echo $Ship['ShipTypeID']; ?>"><?php echo $Ship['Name']; ?></option><?php
+						?><option value="<?php echo $Ship->getTypeID(); ?>"><?php echo $Ship->getName(); ?></option><?php
 					}
 				break;
 				case 'Weapons':

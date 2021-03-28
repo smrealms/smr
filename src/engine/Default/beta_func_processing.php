@@ -23,12 +23,12 @@ if ($var['func'] == 'Map') {
 } elseif ($var['func'] == 'Money') {
 	$player->setCredits(50000000);
 } elseif ($var['func'] == 'Ship') {
-	$ship_id = Request::getInt('ship_id');
-	if ($ship_id <= 75 && $ship_id != 68) {
+	$shipTypeID = Request::getInt('ship_type_id');
+	if ($shipTypeID <= 75 && $shipTypeID != 68) {
 		// assign the new ship
 		$ship->decloak();
 		$ship->disableIllusion();
-		$ship->setShipTypeID($ship_id);
+		$ship->setTypeID($shipTypeID);
 		$ship->setHardwareToMax();
 	}
 } elseif ($var['func'] == 'Weapon') {

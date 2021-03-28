@@ -5,8 +5,8 @@ try {
 	$template = Smr\Template::getInstance();
 
 	$shipArray = [];
-	foreach (SmrShip::getAllBaseShips() as $ship) {
-		$shipArray[] = buildShipStats($ship);
+	foreach (SmrShipType::getAll() as $shipType) {
+		$shipArray[] = buildShipStats($shipType);
 	}
 	$template->assign('shipArray', $shipArray);
 
@@ -28,7 +28,7 @@ try {
 
 function buildShipStats($ship) {
 	//we want to put them all in an array so we dont have to have 15 td rows
-	$restriction = match($ship['AlignRestriction']) {
+	$restriction = match($ship->getRestriction()) {
 		BUYER_RESTRICTION_NONE => '',
 		BUYER_RESTRICTION_GOOD => '<span class="dgreen">Good</span>',
 		BUYER_RESTRICTION_EVIL => '<span class="red">Evil</span>',
@@ -37,24 +37,24 @@ function buildShipStats($ship) {
 
 	// Array key is the td class (sort key), and array value is the data value
 	$stat = [
-		'name' => $ship['Name'],
-		'race race' . $ship['RaceID'] => Globals::getRaceName($ship['RaceID']),
-		'class_' => Smr\ShipClass::getName($ship['ShipClassID']),
-		'cost' => number_format($ship['Cost']),
-		'speed' => $ship['Speed'],
-		'hardpoint' => $ship['Hardpoint'],
+		'name' => $ship->getName(),
+		'race race' . $ship->getRaceID() => Globals::getRaceName($ship->getRaceID()),
+		'class_' => Smr\ShipClass::getName($ship->getClassID()),
+		'cost' => number_format($ship->getCost()),
+		'speed' => $ship->getSpeed(),
+		'hardpoint' => $ship->getHardpoints(),
 		'restriction' => $restriction,
-		'shields' => $ship['MaxHardware'][HARDWARE_SHIELDS],
-		'armour' => $ship['MaxHardware'][HARDWARE_ARMOUR],
-		'cargo' => $ship['MaxHardware'][HARDWARE_CARGO],
-		'cds' => $ship['MaxHardware'][HARDWARE_COMBAT],
-		'scouts' => $ship['MaxHardware'][HARDWARE_SCOUT],
-		'mines' => $ship['MaxHardware'][HARDWARE_MINE],
-		'scanner' => $ship['MaxHardware'][HARDWARE_SCANNER] == 1 ? 'Yes' : '',
-		'cloak' => $ship['MaxHardware'][HARDWARE_CLOAK] == 1 ? 'Yes' : '',
-		'illusion' => $ship['MaxHardware'][HARDWARE_ILLUSION] == 1 ? 'Yes' : '',
-		'jump' => $ship['MaxHardware'][HARDWARE_JUMP] == 1 ? 'Yes' : '',
-		'scrambler' => $ship['MaxHardware'][HARDWARE_DCS] == 1 ? 'Yes' : '',
+		'shields' => $ship->getMaxHardware(HARDWARE_SHIELDS),
+		'armour' => $ship->getMaxHardware(HARDWARE_ARMOUR),
+		'cargo' => $ship->getMaxHardware(HARDWARE_CARGO),
+		'cds' => $ship->getMaxHardware(HARDWARE_COMBAT),
+		'scouts' => $ship->getMaxHardware(HARDWARE_SCOUT),
+		'mines' => $ship->getMaxHardware(HARDWARE_MINE),
+		'scanner' => $ship->canHaveScanner() ? 'Yes' : '',
+		'cloak' => $ship->canHaveCloak() ? 'Yes' : '',
+		'illusion' => $ship->canHaveIllusion() ? 'Yes' : '',
+		'jump' => $ship->canHaveJump() ? 'Yes' : '',
+		'scrambler' => $ship->canHaveDCS() ? 'Yes' : '',
 	];
 	return $stat;
 }

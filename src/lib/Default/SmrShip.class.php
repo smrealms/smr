@@ -55,7 +55,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->updateCargo();
 		$this->updateCloak();
 		$this->updateIllusion();
-		// note: SmrShip::setShipTypeID updates the SmrPlayer only
+		// note: SmrShip::setTypeID updates the SmrPlayer only
 		$this->getPlayer()->update();
 	}
 

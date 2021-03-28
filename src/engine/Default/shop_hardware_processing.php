@@ -24,7 +24,7 @@ if ($action == 'Buy') {
 	}
 
 	// chec for max. we can hold!
-	if ($amount > $ship->getMaxHardware($hardware_id) - $ship->getHardware($hardware_id)) {
+	if ($amount > $ship->getType()->getMaxHardware($hardware_id) - $ship->getHardware($hardware_id)) {
 		create_error('You can\'t buy more ' . $hardware_name . ' than you can transport!');
 	}
 
