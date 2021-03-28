@@ -171,6 +171,18 @@ function random_string(int $length) : string {
 }
 
 /**
+ * Generate a (non-cryptographic) random alphabetic string.
+ * This is slower for longer strings.
+ */
+function random_alphabetic_string(int $length) : string {
+	$result = '';
+	for ($i = 0; $i < $length; ++$i) {
+		$result .= chr(rand(ord('a'), ord('z')));
+	}
+	return $result;
+}
+
+/**
  * Return the value of a random key from an array.
  */
 function array_rand_value(array $arr) : mixed {

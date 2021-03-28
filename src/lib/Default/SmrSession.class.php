@@ -472,7 +472,7 @@ class SmrSession {
 			$container['PreviousRequestTime'] = isset(self::$var[$sn]) ? self::$var[$sn]['PreviousRequestTime'] : self::getMicroTime();
 		} else {
 			do {
-				$sn = substr(md5(strval(rand())), 0, 8);
+				$sn = random_alphabetic_string(6);
 			} while (isset(self::$var[$sn]));
 			$container['PreviousRequestTime'] = self::getMicroTime();
 		}
