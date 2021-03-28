@@ -1,4 +1,4 @@
-You are ranked as a <font size="4" color="greenyellow"><?php echo $ThisAccount->getRankName(); ?></font> player with a score of <span class="green"><?php echo number_format($ThisAccount->getScore()); ?></span>.<p>
+You are ranked as a <span style="font-size: 125%; color: greenyellow;"><?php echo $ThisAccount->getRankName(); ?></span> player with a score of <span class="green"><?php echo number_format($ThisAccount->getScore()); ?></span>.<br /><br />
 
 <table class="standard">
 	<tr>
