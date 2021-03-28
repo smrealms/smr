@@ -6,8 +6,7 @@ if (isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 } ?>
 
-<a href="<?php echo $ThisAccount->getUserRankingHREF(); ?>"><b class="yellow">Rankings</b></a>
-<br />You are ranked as <?php $this->doAn($ThisAccount->getRankName()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<br /><br />
+You are ranked as <?php $this->doAn($UserRankName); ?> <a style="font-size: 125%; color: greenyellow;" href="<?php echo $UserRankingLink; ?>"><?php echo $UserRankName ?></a> player.<br /><br />
 
 <div id="playGames" class="ajax"><?php
 	if (isset($Games['Play'])) { ?>

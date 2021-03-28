@@ -8,7 +8,7 @@ if (isset($var['msg'])) {
 	$template->assign('Message', $var['msg']);
 }
 
-$template->assign('UserRankingLink', SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_view.php')));
+$template->assign('UserRankingLink', $account->getUserRankingHREF());
 $template->assign('UserRankName', $account->getRankName());
 
 // ***************************************
