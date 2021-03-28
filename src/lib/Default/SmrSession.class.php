@@ -203,8 +203,9 @@ class SmrSession {
 		self::$db->query('DELETE FROM active_session WHERE last_accessed < ' . self::$db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
 		self::fetchVarInfo();
 
-		if (!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']])) {
-			$var = self::$var[$_REQUEST['sn']];
+		$sn = Request::get('sn', '');
+		if (!USING_AJAX && !empty($sn) && !empty(self::$var[$sn])) {
+			$var = self::$var[$sn];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
 			$loadDelay = self::URL_LOAD_DELAY[$currentPage] ?? 0;
 			$initialTimeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
