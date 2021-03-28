@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $template->assign('PageTopic', 'Log Console - Detail');
 
 // get the account_ids from last form
-$account_ids = SmrSession::getRequestVarIntArray('account_ids');
+$account_ids = $session->getRequestVarIntArray('account_ids');
 
 // get the log_type_ids for log types to be displayed
-$log_type_ids = SmrSession::getRequestVarIntArray('log_type_ids');
+$log_type_ids = $session->getRequestVarIntArray('log_type_ids');
 
 // nothing marked?
 if (count($account_ids) == 0) {
@@ -14,7 +16,7 @@ if (count($account_ids) == 0) {
 }
 $account_list = $db->escapeArray($account_ids);
 
-$action = SmrSession::getRequestVar('action');
+$action = $session->getRequestVar('action');
 $template->assign('Action', $action);
 if ($action == 'Delete') {
 

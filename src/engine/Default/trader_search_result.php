@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
-$player_id = SmrSession::getRequestVarInt('player_id');
+$session = SmrSession::getInstance();
+
+$player_id = $session->getRequestVarInt('player_id');
 // When clicking on a player name, only the 'player_id' is supplied
-$player_name = SmrSession::getRequestVar('player_name', '');
+$player_name = $session->getRequestVar('player_name', '');
 
 if (empty($player_name) && empty($player_id)) {
 	create_error('You must specify either a player name or ID!');

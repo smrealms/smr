@@ -21,54 +21,63 @@ class SmrSession {
 		'trader_examine.php' => .75
 	);
 
-	protected static MySqlDatabase $db;
+	protected MySqlDatabase $db;
 
-	private static ?string $session_id;
-	private static int $game_id;
-	private static array $var;
-	private static array $commonIDs = [];
-	private static bool $generate;
-	private static string $SN = '';
-	private static string $lastSN;
-	private static int $account_id;
-	public static int $last_accessed;
+	private string $sessionID;
+	private int $gameID;
+	private array $var;
+	private array $commonIDs = [];
+	private bool $generate;
+	private string $SN = '';
+	private string $lastSN;
+	private int $accountID;
+	private int $lastAccessed;
 
-	protected static ?array $previousAjaxReturns;
-	protected static array $ajaxReturns = array();
+	protected ?array $previousAjaxReturns;
+	protected array $ajaxReturns = array();
 
-	public static function init() : void {
-		// Return immediately if the SmrSession is already initialized
-		if (isset(self::$session_id)) {
-			return;
-		}
+	/**
+	 * Return the SmrSession in the DI container.
+	 * If one does not exist yet, it will be created.
+	 * This is the intended way to construct this class.
+	 */
+	public static function getInstance() : self {
+		return Smr\Container\DiContainer::get(self::class);
+	}
 
-		// Initialize the db connector here, since `init` is always called
-		self::$db = MySqlDatabase::getInstance();
+	/**
+	 * SmrSession constructor.
+	 * Not intended to be constructed by hand. Use SmrSession::getInstance().
+	 */
+	public function __construct() {
+
+		// Initialize the db connector here
+		$this->db = MySqlDatabase::getInstance();
 
 		// now try the cookie
 		if (isset($_COOKIE['session_id']) && strlen($_COOKIE['session_id']) === 32) {
-			self::$session_id = $_COOKIE['session_id'];
+			$this->sessionID = $_COOKIE['session_id'];
 		} else {
 			// create a new session id
 			do {
-				self::$session_id = md5(uniqid(strval(rand())));
-				self::$db->query('SELECT 1 FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
-			} while (self::$db->nextRecord()); //Make sure we haven't somehow clashed with someone else's session.
+				$this->sessionID = md5(uniqid(strval(rand())));
+				$this->db->query('SELECT 1 FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
+			} while ($this->db->nextRecord()); //Make sure we haven't somehow clashed with someone else's session.
 
 			// This is a minor hack to make sure that setcookie is not called
 			// for CLI programs and tests (to avoid "headers already sent").
 			if (headers_sent() === false) {
-				setcookie('session_id', self::$session_id);
+				setcookie('session_id', $this->sessionID);
 			}
 		}
 
 		// try to get current session
-		self::$db->query('DELETE FROM active_session WHERE last_accessed < ' . self::$db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
-		self::fetchVarInfo();
+		$this->db->query('DELETE FROM active_session WHERE last_accessed < ' . $this->db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
+		$this->fetchVarInfo();
 
 		$sn = Request::get('sn', '');
-		if (!USING_AJAX && !empty($sn) && !empty(self::$var[$sn])) {
-			$var = self::$var[$sn];
+		if (!USING_AJAX && !empty($sn) && !empty($this->var[$sn])) {
+			$var = $this->var[$sn];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
 			$loadDelay = self::URL_LOAD_DELAY[$currentPage] ?? 0;
 			$initialTimeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
@@ -78,154 +87,158 @@ class SmrSession {
 				usleep($sleepTime);
 			}
 			if (ENABLE_DEBUG) {
-				self::$db->query('INSERT INTO debug VALUES (' . self::$db->escapeString('Delay: ' . $currentPage) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber($initialTimeBetweenLoads) . ',' . self::$db->escapeNumber($timeBetweenLoads) . ')');
+				$this->db->query('INSERT INTO debug VALUES (' . $this->db->escapeString('Delay: ' . $currentPage) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($initialTimeBetweenLoads) . ',' . $this->db->escapeNumber($timeBetweenLoads) . ')');
 			}
 		}
 	}
 
-	public static function fetchVarInfo() : void {
-		self::$db->query('SELECT * FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
-		if (self::$db->nextRecord()) {
-			self::$generate = false;
-			self::$session_id = self::$db->getField('session_id');
-			self::$account_id = self::$db->getInt('account_id');
-			self::$game_id = self::$db->getInt('game_id');
-			self::$last_accessed = self::$db->getInt('last_accessed');
-			self::$lastSN = self::$db->getField('last_sn');
+	public function fetchVarInfo() : void {
+		$this->db->query('SELECT * FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
+		if ($this->db->nextRecord()) {
+			$this->generate = false;
+			$this->sessionID = $this->db->getField('session_id');
+			$this->accountID = $this->db->getInt('account_id');
+			$this->gameID = $this->db->getInt('game_id');
+			$this->lastAccessed = $this->db->getInt('last_accessed');
+			$this->lastSN = $this->db->getField('last_sn');
 			// We may not have ajax_returns if ajax was disabled
-			self::$previousAjaxReturns = self::$db->getObject('ajax_returns', true, true);
+			$this->previousAjaxReturns = $this->db->getObject('ajax_returns', true, true);
 
-			self::$var = self::$db->getObject('session_var', true);
+			$this->var = $this->db->getObject('session_var', true);
 
-			foreach (self::$var as $key => $value) {
+			foreach ($this->var as $key => $value) {
 				if ($value['Expires'] > 0 && $value['Expires'] <= Smr\Epoch::time()) { // Use 0 for infinity
 					//This link is no longer valid
-					unset(self::$var[$key]);
+					unset($this->var[$key]);
 				} elseif ($value['RemainingPageLoads'] < 0) {
 					//This link is no longer valid
-					unset(self::$var[$key]);
+					unset($this->var[$key]);
 				} else {
-					--self::$var[$key]['RemainingPageLoads'];
+					$this->var[$key]['RemainingPageLoads'] -= 1;
 					if (isset($value['CommonID'])) {
-						self::$commonIDs[$value['CommonID']] = $key;
+						$this->commonIDs[$value['CommonID']] = $key;
 					}
 				}
 			}
 		} else {
-			self::$generate = true;
-			self::$account_id = 0;
-			self::$game_id = 0;
-			self::$var = array();
+			$this->generate = true;
+			$this->accountID = 0;
+			$this->gameID = 0;
+			$this->var = array();
 		}
 	}
 
-	public static function update() : void {
-		foreach (self::$var as $key => $value) {
+	public function update() : void {
+		foreach ($this->var as $key => $value) {
 			if ($value['RemainingPageLoads'] <= 0) {
 				//This link was valid this load but will not be in the future, removing it now saves database space and data transfer.
-				unset(self::$var[$key]);
+				unset($this->var[$key]);
 			}
 		}
-		if (!self::$generate) {
-			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(Smr\Epoch::time()) : '') . ',session_var=' . self::$db->escapeObject(self::$var, true) .
-					',last_sn=' . self::$db->escapeString(self::$SN) .
-					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn=' . self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
+		if (!$this->generate) {
+			$this->db->query('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!USING_AJAX ? ',last_accessed=' . $this->db->escapeNumber(Smr\Epoch::time()) : '') . ',session_var=' . $this->db->escapeObject($this->var, true) .
+					',last_sn=' . $this->db->escapeString($this->SN) .
+					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . (USING_AJAX ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : '') . ' LIMIT 1');
 		} else {
-			self::$db->query('DELETE FROM active_session WHERE account_id = ' . self::$db->escapeNumber(self::$account_id) . ' AND game_id = ' . self::$db->escapeNumber(self::$game_id));
-			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(Smr\Epoch::time()) . ',' . self::$db->escapeObject(self::$var, true) . ')');
-			self::$generate = false;
+			$this->db->query('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID));
+			$this->db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . $this->db->escapeString($this->sessionID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ',' . $this->db->escapeObject($this->var, true) . ')');
+			$this->generate = false;
 		}
 	}
 
 	/**
 	 * Returns the Game ID associated with the session.
 	 */
-	public static function getGameID() : int {
-		return self::$game_id;
+	public function getGameID() : int {
+		return $this->gameID;
 	}
 
 	/**
 	 * Returns true if the session is inside a game, false otherwise.
 	 */
-	public static function hasGame() : bool {
-		return self::$game_id != 0;
+	public function hasGame() : bool {
+		return $this->gameID != 0;
 	}
 
-	public static function hasAccount() : bool {
-		return self::$account_id > 0;
+	public function hasAccount() : bool {
+		return $this->accountID > 0;
 	}
 
-	public static function getAccountID() : int {
-		return self::$account_id;
+	public function getAccountID() : int {
+		return $this->accountID;
 	}
 
-	public static function getAccount() : SmrAccount {
-		return SmrAccount::getAccount(self::$account_id);
+	public function getAccount() : SmrAccount {
+		return SmrAccount::getAccount($this->accountID);
 	}
 
 	/**
-	 * Sets the `account_id` attribute of this session.
+	 * Sets the `accountID` attribute of this session.
 	 */
-	public static function setAccount(AbstractSmrAccount $account) : void {
-		self::$account_id = $account->getAccountID();
+	public function setAccount(AbstractSmrAccount $account) : void {
+		$this->accountID = $account->getAccountID();
 	}
 
 	/**
-	 * Updates the `game_id` attribute of the session and deletes any other
+	 * Updates the `gameID` attribute of the session and deletes any other
 	 * active sessions in this game for this account.
 	 */
-	public static function updateGame(int $gameID) : void {
-		if (self::$game_id == $gameID) {
+	public function updateGame(int $gameID) : void {
+		if ($this->gameID == $gameID) {
 			return;
 		}
-		self::$game_id = $gameID;
-		self::$db->query('DELETE FROM active_session WHERE account_id = ' . self::$db->escapeNumber(self::$account_id) . ' AND game_id = ' . self::$game_id);
-		self::$db->query('UPDATE active_session SET game_id=' . self::$db->escapeNumber(self::$game_id) . ' WHERE session_id=' . self::$db->escapeString(self::$session_id));
+		$this->gameID = $gameID;
+		$this->db->query('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->gameID);
+		$this->db->query('UPDATE active_session SET game_id=' . $this->db->escapeNumber($this->gameID) . ' WHERE session_id=' . $this->db->escapeString($this->sessionID));
 	}
 
 	/**
 	 * Returns true if the current SN is different than the previous SN.
 	 */
-	public static function hasChangedSN() : bool {
-		return self::$SN != self::$lastSN;
+	public function hasChangedSN() : bool {
+		return $this->SN != $this->lastSN;
 	}
 
-	private static function updateSN() : void {
+	private function updateSN() : void {
 		if (!USING_AJAX) {
-			self::$db->query('UPDATE active_session SET last_sn=' . self::$db->escapeString(self::$SN) .
-				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
+			$this->db->query('UPDATE active_session SET last_sn=' . $this->db->escapeString($this->SN) .
+				' WHERE session_id=' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
 		}
 	}
 
-	public static function destroy() : void {
-		self::$db->query('DELETE FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id));
-		self::$session_id = null;
-		self::$account_id = 0;
-		self::$game_id = 0;
+	public function destroy() : void {
+		$this->db->query('DELETE FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID));
+		unset($this->sessionID);
+		unset($this->accountID);
+		unset($this->gameID);
+	}
+
+	public function getLastAccessed() : int {
+		return $this->lastAccessed;
 	}
 
 	/**
 	 * Retrieve the session var for the page given by $sn.
-	 * If $sn is not specified, use the current page (i.e. self::$SN).
+	 * If $sn is not specified, use the current page (i.e. $this->SN).
 	 */
-	public static function retrieveVar(string $sn = null) : Page|false {
+	public function retrieveVar(string $sn = null) : Page|false {
 		if (is_null($sn)) {
-			$sn = self::$SN;
+			$sn = $this->SN;
 		}
-		if (empty(self::$var[$sn])) {
+		if (empty($this->var[$sn])) {
 			return false;
 		}
-		self::$SN = $sn;
-		SmrSession::updateSN();
-		if (isset(self::$var[$sn]['body']) && isset(self::$var[$sn]['CommonID'])) {
-//			if(preg_match('/processing/',self::$var[$sn]['body']))
-			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for current page
-			unset(self::$var[$sn]['CommonID']);
+		$this->SN = $sn;
+		$this->updateSN();
+		if (isset($this->var[$sn]['body']) && isset($this->var[$sn]['CommonID'])) {
+//			if(preg_match('/processing/',$this->var[$sn]['body']))
+			unset($this->commonIDs[$this->var[$sn]['CommonID']]); //Do not store common id for current page
+			unset($this->var[$sn]['CommonID']);
 		}
 
-		self::$var[$sn]['RemainingPageLoads'] += 1; // Allow refreshing
-		self::$var[$sn]['Expires'] = 0; // Allow refreshing forever
-		return self::$var[$sn];
+		$this->var[$sn]['RemainingPageLoads'] += 1; // Allow refreshing
+		$this->var[$sn]['Expires'] = 0; // Allow refreshing forever
+		return $this->var[$sn];
 	}
 
 	/**
@@ -234,31 +247,31 @@ class SmrSession {
 	 * This is the recommended way to get $_REQUEST data for display pages.
 	 * For processing pages, see the Request class.
 	 */
-	public static function getRequestVar(string $varName, string $default = null) : string {
+	public function getRequestVar(string $varName, string $default = null) : string {
 		$result = Request::getVar($varName, $default);
-		self::updateVar($varName, $result);
+		$this->updateVar($varName, $result);
 		return $result;
 	}
 
-	public static function getRequestVarInt(string $varName, int $default = null) : int {
+	public function getRequestVarInt(string $varName, int $default = null) : int {
 		$result = Request::getVarInt($varName, $default);
-		self::updateVar($varName, $result);
+		$this->updateVar($varName, $result);
 		return $result;
 	}
 
-	public static function getRequestVarIntArray(string $varName, array $default = null) : array {
+	public function getRequestVarIntArray(string $varName, array $default = null) : array {
 		$result = Request::getVarIntArray($varName, $default);
-		self::updateVar($varName, $result);
+		$this->updateVar($varName, $result);
 		return $result;
 	}
 
-	public static function resetLink(Page $container, string $sn) : string {
+	public function resetLink(Page $container, string $sn) : string {
 		//Do not allow sharing SN, useful for forwarding.
 		global $lock;
-		if (isset(self::$var[$sn]['CommonID'])) {
-			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
+		if (isset($this->var[$sn]['CommonID'])) {
+			unset($this->commonIDs[$this->var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		}
-		self::$SN = $sn;
+		$this->SN = $sn;
 		if (!isset($container['Expires'])) {
 			$container['Expires'] = 0; // Lasts forever
 		}
@@ -266,70 +279,68 @@ class SmrSession {
 			$container['RemainingPageLoads'] = 1; // Allow refreshing
 		}
 		if (!isset($container['PreviousRequestTime'])) {
-			if (isset(self::$var[$sn]['PreviousRequestTime'])) {
-				$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime']; // Copy across the previous request time if not explicitly set.
+			if (isset($this->var[$sn]['PreviousRequestTime'])) {
+				$container['PreviousRequestTime'] = $this->var[$sn]['PreviousRequestTime']; // Copy across the previous request time if not explicitly set.
 			}
 		}
 
-		self::$var[$sn] = $container;
+		$this->var[$sn] = $container;
 		if (!$lock && !USING_AJAX) {
-			self::update();
+			$this->update();
 		}
 		return $sn;
 	}
 
-	public static function updateVar(string $key, mixed $value) : void {
+	public function updateVar(string $key, mixed $value) : void {
 		global $var;
 		if ($value === null) {
 			if (isset($var[$key])) {
 				unset($var[$key]);
 			}
-			if (isset($var[self::$SN][$key])) {
-				unset(self::$var[self::$SN][$key]);
+			if (isset($var[$this->SN][$key])) {
+				unset($this->var[$this->SN][$key]);
 			}
 		} else {
 			$var[$key] = $value;
-			self::$var[self::$SN][$key] = $value;
+			$this->var[$this->SN][$key] = $value;
 		}
 	}
 
-	public static function clearLinks() : void {
-		self::$var = array(self::$SN => self::$var[self::$SN]);
-		self::$commonIDs = array();
+	public function clearLinks() : void {
+		$this->var = array($this->SN => $this->var[$this->SN]);
+		$this->commonIDs = array();
 	}
 
-	public static function addLink(Page $container) : string {
-		$sn = self::generateSN($container);
-		self::$var[$sn] = $container;
+	public function addLink(Page $container) : string {
+		$sn = $this->generateSN($container);
+		$this->var[$sn] = $container;
 		return $sn;
 	}
 
-	protected static function generateSN(Page $container) : string {
-		if (isset(self::$commonIDs[$container['CommonID']])) {
-			$sn = self::$commonIDs[$container['CommonID']];
-			$container['PreviousRequestTime'] = isset(self::$var[$sn]) ? self::$var[$sn]['PreviousRequestTime'] : Smr\Epoch::microtime();
+	protected function generateSN(Page $container) : string {
+		if (isset($this->commonIDs[$container['CommonID']])) {
+			$sn = $this->commonIDs[$container['CommonID']];
+			$container['PreviousRequestTime'] = isset($this->var[$sn]) ? $this->var[$sn]['PreviousRequestTime'] : Smr\Epoch::microtime();
 		} else {
 			do {
 				$sn = random_alphabetic_string(6);
-			} while (isset(self::$var[$sn]));
+			} while (isset($this->var[$sn]));
 			$container['PreviousRequestTime'] = Smr\Epoch::microtime();
 		}
-		self::$commonIDs[$container['CommonID']] = $sn;
+		$this->commonIDs[$container['CommonID']] = $sn;
 		return $sn;
 	}
 
-	public static function addAjaxReturns(string $element, string $contents) : bool {
-		self::$ajaxReturns[$element] = $contents;
-		return isset(self::$previousAjaxReturns[$element]) && self::$previousAjaxReturns[$element] == $contents;
+	public function addAjaxReturns(string $element, string $contents) : bool {
+		$this->ajaxReturns[$element] = $contents;
+		return isset($this->previousAjaxReturns[$element]) && $this->previousAjaxReturns[$element] == $contents;
 	}
 
-	public static function saveAjaxReturns() : void {
-		if (empty(self::$ajaxReturns)) {
+	public function saveAjaxReturns() : void {
+		if (empty($this->ajaxReturns)) {
 			return;
 		}
-		self::$db->query('UPDATE active_session SET ajax_returns=' . self::$db->escapeObject(self::$ajaxReturns, true) .
-				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
+		$this->db->query('UPDATE active_session SET ajax_returns=' . $this->db->escapeObject($this->ajaxReturns, true) .
+				' WHERE session_id=' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
 	}
 }
-
-SmrSession::init();

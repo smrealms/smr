@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
-SmrSession::getRequestVarInt('game_id');
-SmrSession::getRequestVarInt('gal_on', 1);
-$focusSector = SmrSession::getRequestVarInt('focus_sector_id', 0);
+$session = SmrSession::getInstance();
+
+$session->getRequestVarInt('game_id');
+$session->getRequestVarInt('gal_on', 1);
+$focusSector = $session->getRequestVarInt('focus_sector_id', 0);
 
 $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 if (empty($galaxies)) {
@@ -41,7 +43,7 @@ $template->assign('LastSector', $lastSector);
 
 if (isset($var['message'])) {
 	$template->assign('Message', $var['message']);
-	SmrSession::updateVar('message', null); // Only show message once
+	$session->updateVar('message', null); // Only show message once
 }
 
 $container = Page::create('skeleton.php', '1.6/universe_create_sectors.php');

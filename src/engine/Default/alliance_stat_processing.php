@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
+
+$session = SmrSession::getInstance();
+
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id', $player->getAllianceID());
+	$session->updateVar('alliance_id', $player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
 if (Request::has('description')) {

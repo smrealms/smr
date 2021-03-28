@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 // If on a planet, forward to planet_main.php
 if ($player->isLandedOnPlanet()) {
 	Page::create('skeleton.php', 'planet_main.php', $var)->go();
@@ -52,7 +54,7 @@ doTickerAssigns($template, $player, $db);
 
 if (!isset($var['UnreadMissions'])) {
 	$unreadMissions = $player->markMissionsRead();
-	SmrSession::updateVar('UnreadMissions', $unreadMissions);
+	$session->updateVar('UnreadMissions', $unreadMissions);
 }
 $template->assign('UnreadMissions', $var['UnreadMissions']);
 
@@ -164,7 +166,7 @@ function checkForAttackMessage(&$msg) {
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {
 		// $msg now contains only the log_id, if there is one
-		SmrSession::updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
+		SmrSession::getInstance()->updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
 		if (!$template->hasTemplateVar('AttackResults')) {
 			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');
 			if ($db->nextRecord()) {

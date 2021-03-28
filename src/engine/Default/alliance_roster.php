@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id', $player->getAllianceID());
+	$session->updateVar('alliance_id', $player->getAllianceID());
 }
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());

@@ -63,7 +63,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		// Pre-initialize the SmrSession, since it uses 'rand', and we don't
 		// want it to interfere with our rand seed when we call `href`, which
 		// internally requires an SmrSession.
-		\SmrSession::init();
+		\SmrSession::getInstance();
 
 		// The Page should not be modified when href() is called
 		$expected = $page->getArrayCopy();

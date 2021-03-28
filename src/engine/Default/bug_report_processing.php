@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $steps = Request::get('steps');
 $subject = Request::get('subject');
 $error_msg = Request::get('error_msg');
@@ -33,7 +35,7 @@ if (!empty(BUG_REPORT_TO_ADDRESSES)) {
 
 $container = Page::create('skeleton.php');
 $container['msg'] = '<span class="admin">ADMIN</span>: Bug report submitted. Thank you for helping to improve the game!';
-if (SmrSession::hasGame()) {
+if ($session->hasGame()) {
 	$container['body'] = 'current_sector.php';
 } else {
 	$container['body'] = 'game_play.php';

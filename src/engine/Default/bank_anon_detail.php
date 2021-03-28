@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
-$account_num = SmrSession::getRequestVarInt('account_num');
-SmrSession::getRequestVarInt('maxValue', 0);
-SmrSession::getRequestVarInt('minValue', 0);
+$session = SmrSession::getInstance();
+
+$account_num = $session->getRequestVarInt('account_num');
+$session->getRequestVarInt('maxValue', 0);
+$session->getRequestVarInt('minValue', 0);
 
 $db->query('SELECT *
 			FROM anon_bank
@@ -12,7 +14,7 @@ $db->query('SELECT *
 // if they didn't come from the creation screen we need to check if the pw is correct
 if ($db->nextRecord()) {
 	if (!isset($var['allowed']) || $var['allowed'] != 'yes') {
-		SmrSession::getRequestVar('password');
+		$session->getRequestVar('password');
 		if ($db->getField('password') != $var['password']) {
 			create_error('Invalid password!');
 		}

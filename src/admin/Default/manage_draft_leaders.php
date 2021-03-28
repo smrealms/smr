@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $template->assign('PageTopic', 'Manage Draft Leaders');
 
 $container = Page::create('skeleton.php', 'manage_draft_leaders.php');
@@ -18,7 +20,7 @@ $template->assign('ActiveGames', $activeGames);
 
 if ($activeGames) {
 	// Set the selected game (or the first in the list if not selected yet)
-	$selectedGameID = SmrSession::getRequestVarInt('selected_game_id', $activeGames[0]['game_id']);
+	$selectedGameID = $session->getRequestVarInt('selected_game_id', $activeGames[0]['game_id']);
 	$template->assign('SelectedGame', $selectedGameID);
 
 	// Get the list of current draft leaders for the selected game
@@ -37,7 +39,7 @@ if ($activeGames) {
 
 // If we are selecting a different game, clear the processing message.
 if (Request::has('selected_game_id')) {
-	SmrSession::updateVar('processing_msg', null);
+	$session->updateVar('processing_msg', null);
 }
 // If we have just forwarded from the processing file, pass its message.
 if (isset($var['processing_msg'])) {

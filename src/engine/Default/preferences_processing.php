@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $container = Page::create('skeleton.php');
-if (SmrSession::hasGame()) {
+if ($session->hasGame()) {
 	$container['body'] = 'current_sector.php';
 } else {
 	$container['body'] = 'game_play.php';

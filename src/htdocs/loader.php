@@ -35,7 +35,8 @@ try {
 	//echo '<pre>';echo_r($session);echo'</pre>';
 	//exit;
 	// do we have a session?
-	if (!SmrSession::hasAccount()) {
+	$session = SmrSession::getInstance();
+	if (!$session->hasAccount()) {
 		header('Location: /login.php');
 		exit;
 	}
@@ -59,7 +60,7 @@ try {
 	}
 
 	// do we have such a container object in the db?
-	if (!($var = SmrSession::retrieveVar($sn))) {
+	if (!($var = $session->retrieveVar($sn))) {
 		if (!USING_AJAX) {
 			require_once(get_file_loc('smr.inc.php'));
 			create_error('Please avoid using the back button!');
@@ -80,17 +81,17 @@ try {
 		$overrideGameID = $var['GameID'];
 	}
 	if ($overrideGameID == 0) {
-		$overrideGameID = SmrSession::getGameID();
+		$overrideGameID = $session->getGameID();
 	}
 
 	require_once(get_file_loc('smr.inc.php'));
 
-	$account = SmrSession::getAccount();
+	$account = $session->getAccount();
 	// get reason for disabled user
 	require_once(LIB . 'Default/login_processing.inc.php');
 	if (($disabled = redirectIfDisabled($account)) !== false) {
 		// save session (incase we forward)
-		SmrSession::update();
+		$session->update();
 		if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
 			if (isset($var['do_reopen_account'])) {
 				// The user has attempted to re-validate their e-mail

@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 if (!isset($var['race_id'])) {
-	SmrSession::updateVar('race_id', $player->getRaceID());
+	$session->updateVar('race_id', $player->getRaceID());
 }
 $raceID = $var['race_id'];
 

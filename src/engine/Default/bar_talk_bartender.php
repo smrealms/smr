@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $template->assign('PageTopic', 'Talk to Bartender');
 Menu::bar();
 
@@ -11,7 +13,7 @@ if (!isset($var['Message'])) {
 	} else {
 		$message = 'I havent heard anything recently... got anything to tell me?';
 	}
-	SmrSession::updateVar('Message', $message);
+	$session->updateVar('Message', $message);
 }
 $template->assign('Message', bbifyMessage($var['Message']));
 

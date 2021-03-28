@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
+
+$session = SmrSession::getInstance();
+
 if (!isset($var['GameID'])) {
-	SmrSession::updateVar('GameID', $player->getGameID());
+	$session->updateVar('GameID', $player->getGameID());
 }
 $gameID = $var['GameID'];
 
@@ -13,7 +16,7 @@ doLottoNewsAssign($gameID, $template);
 
 
 if (!isset($var['LastNewsUpdate'])) {
-	SmrSession::updateVar('LastNewsUpdate', $player->getLastNewsUpdate());
+	$session->updateVar('LastNewsUpdate', $player->getLastNewsUpdate());
 }
 
 $db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > ' . $db->escapeNumber($var['LastNewsUpdate']) . ' AND type != \'lotto\' ORDER BY news_id DESC');

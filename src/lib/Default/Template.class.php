@@ -58,7 +58,8 @@ class Template {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$output = '<all>' . $ajaxXml . '</all>';
 			}
-			SmrSession::saveAjaxReturns();
+			$session = SmrSession::getInstance();
+			$session->saveAjaxReturns();
 		}
 
 		// Now that we are completely done processing, we can output
@@ -82,8 +83,9 @@ class Template {
 			$templateDir .= 'Default/';
 		}
 
-		if (SmrSession::hasGame()) {
-			$gameDir = Globals::getGameType(SmrSession::getGameID()) . '/';
+		$session = SmrSession::getInstance();
+		if ($session->hasGame()) {
+			$gameDir = Globals::getGameType($session->getGameID()) . '/';
 		} else {
 			$gameDir = 'Default/';
 		}
@@ -177,7 +179,8 @@ class Template {
 	}
 
 	protected function addJavascriptAlert($string) {
-		if (!SmrSession::addAjaxReturns('ALERT:' . $string, $string)) {
+		$session = SmrSession::getInstance();
+		if (!$session->addAjaxReturns('ALERT:' . $string, $string)) {
 			$this->jsAlerts[] = $string;
 		}
 	}
@@ -193,6 +196,8 @@ class Template {
 		if (empty($str)) {
 			return '';
 		}
+
+		$session = SmrSession::getInstance();
 
 		// To get inner html, we need to construct a separate DOMDocument.
 		// See PHP Bug #76285.
@@ -216,7 +221,7 @@ class Template {
 			foreach ($matchNodes as $node) {
 				$id = $node->getAttribute('id');
 				$inner = $getInnerHTML($node);
-				if (!SmrSession::addAjaxReturns($id, $inner) && $returnXml) {
+				if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
 					$xml .= '<' . $id . '>' . xmlify($inner) . '</' . $id . '>';
 				}
 			}
@@ -246,7 +251,7 @@ class Template {
 				$inner = $getInnerHTML($mid);
 				if (!$this->checkDisableAJAX($inner)) {
 					$id = $mid->getAttribute('id');
-					if (!SmrSession::addAjaxReturns($id, $inner) && $returnXml) {
+					if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
 						$xml .= '<' . $id . '>' . xmlify($inner) . '</' . $id . '>';
 					}
 				}
@@ -255,7 +260,7 @@ class Template {
 
 		$js = '';
 		foreach ($this->ajaxJS as $varName => $JSON) {
-			if (!SmrSession::addAjaxReturns('JS:' . $varName, $JSON) && $returnXml) {
+			if (!$session->addAjaxReturns('JS:' . $varName, $JSON) && $returnXml) {
 				$js .= '<' . $varName . '>' . xmlify($JSON) . '</' . $varName . '>';
 			}
 		}

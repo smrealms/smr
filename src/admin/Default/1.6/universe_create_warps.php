@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 if (isset($var['message'])) {
 	$template->assign('Message', $var['message']);
-	SmrSession::updateVar('message', null); // Only show message once
+	$session->updateVar('message', null); // Only show message once
 }
 
 $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);

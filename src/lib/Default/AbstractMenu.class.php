@@ -353,7 +353,7 @@ class AbstractMenu {
 	public static function news(Template $template) {
 		global $var;
 		$menuItems = array();
-		if (SmrSession::getGameID() == $var['GameID']) {
+		if (SmrSession::getInstance()->getGameID() == $var['GameID']) {
 			$menuItems[] = array('Link'=>Page::create('skeleton.php', 'news_read_current.php', array('GameID'=>$var['GameID']))->href(), 'Text'=>'Read Current News');
 		}
 		$menuItems[] = array('Link'=>Page::create('skeleton.php', 'news_read.php', array('GameID'=>$var['GameID']))->href(), 'Text'=>'Read Latest News');

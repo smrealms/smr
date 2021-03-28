@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 // ********************************
 // *
 // * V a l i d a t e d ?
@@ -12,7 +14,7 @@ if (!$account->isValidated()) {
 }
 
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id', $player->getAllianceID());
+	$session->updateVar('alliance_id', $player->getAllianceID());
 }
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
@@ -71,8 +73,8 @@ if ($db->getBoolean('positive_balance')) {
 	$template->assign('TotalWithdrawn', $totalWithdrawn);
 }
 
-$maxValue = SmrSession::getRequestVarInt('maxValue', 0);
-$minValue = SmrSession::getRequestVarInt('minValue', 0);
+$maxValue = $session->getRequestVarInt('maxValue', 0);
+$minValue = $session->getRequestVarInt('minValue', 0);
 
 if ($maxValue <= 0) {
 	$db->query('SELECT MAX(transaction_id) FROM alliance_bank_transactions

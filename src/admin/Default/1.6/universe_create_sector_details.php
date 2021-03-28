@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
-$editSectorID = SmrSession::getRequestVarInt('sector_edit');
+$session = SmrSession::getInstance();
+
+$editSectorID = $session->getRequestVarInt('sector_edit');
 $editSector = SmrSector::getSector($var['game_id'], $editSectorID);
 $template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')');
 $template->assign('EditSector', $editSector);

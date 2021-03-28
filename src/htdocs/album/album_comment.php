@@ -10,7 +10,9 @@ try {
 	require_once(LIB . 'Default/smr.inc.php');
 	require_once(LIB . 'Album/album_functions.php');
 
-	if (!SmrSession::hasAccount()) {
+	$session = SmrSession::getInstance();
+
+	if (!$session->hasAccount()) {
 		create_error_offline('You need to logged in to post comments!');
 	}
 
@@ -28,7 +30,7 @@ try {
 		create_error_offline('Picture ID has to be positive!');
 	}
 
-	$account = SmrSession::getAccount();
+	$account = $session->getAccount();
 
 	if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {
 		if (!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM)) {
@@ -38,7 +40,7 @@ try {
 		$container['account_id'] = $album_id;
 
 		$href = $container->href(true);
-		SmrSession::update();
+		$session->update();
 
 		header('Location: ' . $href);
 		exit;

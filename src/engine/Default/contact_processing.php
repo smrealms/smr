@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $receiver = Request::get('receiver');
 $subject = Request::get('subject');
 $msg = Request::get('msg');
@@ -16,7 +18,7 @@ $mail->addAddress($receiver);
 $mail->send();
 
 $container = Page::create('skeleton.php');
-if (SmrSession::hasGame()) {
+if ($session->hasGame()) {
 	$container['body'] = 'current_sector.php';
 } else {
 	$container['body'] = 'game_play.php';

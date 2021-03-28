@@ -2,13 +2,15 @@
 try {
 	require_once('../bootstrap.php');
 
+	$session = SmrSession::getInstance();
+
 	$gameID = Request::getInt('game');
-	if (!SmrSession::hasAccount() || !Globals::isValidGame($gameID)) {
+	if (!$session->hasAccount() || !Globals::isValidGame($gameID)) {
 		header('Location: /login.php');
 		exit;
 	}
 
-	$account = SmrSession::getAccount();
+	$account = $session->getAccount();
 	if (!SmrGame::getGame($gameID)->isEnabled() && !$account->hasPermission(PERMISSION_UNI_GEN)) {
 		header('location: /error.php?msg=You do not have permission to view this map!');
 		exit;

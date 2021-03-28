@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
-$numGals = SmrSession::getRequestVarInt('num_gals', 12);
+$session = SmrSession::getInstance();
+
+$numGals = $session->getRequestVarInt('num_gals', 12);
 
 $game = SmrGame::getGame($var['game_id']);
 $template->assign('PageTopic', 'Create Galaxies : ' . $game->getDisplayName());

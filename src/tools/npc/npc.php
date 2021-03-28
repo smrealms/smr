@@ -102,6 +102,8 @@ function NPCStuff() {
 	$underAttack = false;
 	$actions = -1;
 
+	$session = SmrSession::getInstance();
+
 	while (true) {
 		// Clear the $_REQUEST global, in case we had set it, to avoid
 		// contaminating subsequent page processing.
@@ -120,7 +122,7 @@ function NPCStuff() {
 			debug('Action #' . $actions);
 
 			//We have to reload player on each loop
-			$player = SmrPlayer::getPlayer(SmrSession::getAccountID(), SmrSession::getGameID(), true);
+			$player = SmrPlayer::getPlayer($session->getAccountID(), $session->getGameID(), true);
 			// Sanity check to be certain we actually have an NPC
 			if (!$player->isNPC()) {
 				throw new Exception('Player is not an NPC!');
@@ -349,11 +351,12 @@ function sleepNPC() {
 
 // Releases an NPC when it is done working
 function releaseNPC() {
-	if (!SmrSession::hasAccount()) {
+	$session = SmrSession::getInstance();
+	if (!$session->hasAccount()) {
 		debug('releaseNPC: no NPC to release');
 		return;
 	}
-	$login = SmrSession::getAccount()->getLogin();
+	$login = $session->getAccount()->getLogin();
 	$db = MySqlDatabase::getInstance();
 	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(false) . ' WHERE login=' . $db->escapeString($login));
 	if ($db->getChangedRows() > 0) {
@@ -361,7 +364,7 @@ function releaseNPC() {
 	} else {
 		debug('Failed to release NPC: ' . $login);
 	}
-	SmrSession::destroy();
+	$session->destroy();
 }
 
 function exitNPC() {
@@ -391,7 +394,10 @@ function changeNPCLogin() {
 	// recently they have taken an action.
 	debug('Choosing new NPC');
 	static $availableNpcs = null;
+
 	$db = MySqlDatabase::getInstance();
+	$session = SmrSession::getInstance();
+
 	if (is_null($availableNpcs)) {
 		// Make sure to select NPCs from active games only
 		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY last_turn_update ASC');
@@ -413,12 +419,11 @@ function changeNPCLogin() {
 
 	// Update session info for this chosen NPC
 	$account = SmrAccount::getAccount($npc['account_id']);
-	SmrSession::init();
-	SmrSession::setAccount($account);
-	SmrSession::updateGame($npc['game_id']);
+	$session->setAccount($account);
+	$session->updateGame($npc['game_id']);
 
 	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($account->getLogin()));
-	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . SmrSession::getGameID() . ')');
+	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . $session->getGameID() . ')');
 
 	throw new ForwardException;
 }
