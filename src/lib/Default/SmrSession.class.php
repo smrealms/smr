@@ -45,7 +45,6 @@ class SmrSession {
 			'feature_request.php' => self::ALWAYS_AVAILABLE,
 			'forces_list.php' => self::ALWAYS_AVAILABLE,
 			'forces_mass_refresh.php' => self::ALWAYS_AVAILABLE,
-			'government.php' => 1,
 			'hall_of_fame_player_new.php' => self::ALWAYS_AVAILABLE,
 			'hall_of_fame_player_detail.php' => self::ALWAYS_AVAILABLE,
 			'leave_newbie.php' => self::ALWAYS_AVAILABLE,
@@ -54,7 +53,7 @@ class SmrSession {
 			'message_view.php' => self::ALWAYS_AVAILABLE,
 			'message_send.php' => self::ALWAYS_AVAILABLE,
 			'news_read_advanced.php' => self::ALWAYS_AVAILABLE,
-			'news_read_current.php' => 1,
+			'news_read_current.php' => self::ALWAYS_AVAILABLE,
 			'news_read.php' => self::ALWAYS_AVAILABLE,
 			'planet_construction.php' => self::ALWAYS_AVAILABLE,
 			'planet_defense.php' => self::ALWAYS_AVAILABLE,
@@ -78,7 +77,6 @@ class SmrSession {
 			'rankings_race.php' => self::ALWAYS_AVAILABLE,
 			'rankings_sector_kill.php' => self::ALWAYS_AVAILABLE,
 			'rankings_view.php' => self::ALWAYS_AVAILABLE,
-			'sector_scan.php' => self::ALWAYS_AVAILABLE,
 			'trader_bounties.php' => self::ALWAYS_AVAILABLE,
 			'trader_relations.php' => self::ALWAYS_AVAILABLE,
 			'trader_savings.php' => self::ALWAYS_AVAILABLE,
@@ -126,21 +124,21 @@ class SmrSession {
 		'trader_examine.php' => .75
 	);
 
-	protected static $db;
+	protected static MySqlDatabase $db;
 
-	private static $session_id;
-	private static $game_id;
-	private static $var;
-	private static $commonIDs;
-	private static $generate;
-	private static $SN = '';
-	private static $lastSN;
-	private static $account_id;
-	public static $last_accessed;
+	private static ?string $session_id;
+	private static int $game_id;
+	private static array $var;
+	private static array $commonIDs;
+	private static bool $generate;
+	private static string $SN = '';
+	private static string $lastSN;
+	private static int $account_id;
+	public static int $last_accessed;
 	private static Time $pageRequestTime;
 
-	protected static $previousAjaxReturns;
-	protected static $ajaxReturns = array();
+	protected static array $previousAjaxReturns;
+	protected static array $ajaxReturns = array();
 
 	/**
 	 * Returns the time (in seconds) associated with this page request.
@@ -170,7 +168,7 @@ class SmrSession {
 		self::$pageRequestTime = new Time();
 	}
 
-	public static function init() {
+	public static function init() : void {
 		// Return immediately if the SmrSession is already initialized
 		if (isset(self::$session_id)) {
 			return;
@@ -203,8 +201,9 @@ class SmrSession {
 		self::$db->query('DELETE FROM active_session WHERE last_accessed < ' . self::$db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
 		self::fetchVarInfo();
 
-		if (!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']])) {
-			$var = self::$var[$_REQUEST['sn']];
+		$sn = Request::get('sn', '');
+		if (!USING_AJAX && !empty($sn) && !empty(self::$var[$sn])) {
+			$var = self::$var[$sn];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
 			$loadDelay = self::URL_LOAD_DELAY[$currentPage] ?? 0;
 			$initialTimeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
@@ -219,7 +218,7 @@ class SmrSession {
 		}
 	}
 
-	public static function fetchVarInfo() {
+	public static function fetchVarInfo() : void {
 		self::$db->query('SELECT * FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		if (self::$db->nextRecord()) {
 			self::$generate = false;
@@ -234,27 +233,27 @@ class SmrSession {
 			if (!empty($ajaxReturns)) {
 				self::$previousAjaxReturns = unserialize(gzuncompress($ajaxReturns));
 			}
-			self::$var = self::$db->getField('session_var');
-			if (self::$var != '') {
-				self::$var = unserialize(gzuncompress(self::$var));
-			}
-			if (!is_array(self::$var)) {
+
+			$var = self::$db->getField('session_var');
+			if ($var === '') {
 				self::$account_id = 0;
 				self::$game_id = 0;
 				self::$var = array();
 			} else {
-				foreach (self::$var as $key => $value) {
-					if ($value['Expires'] > 0 && $value['Expires'] <= self::getTime()) { // Use 0 for infinity
-						//This link is no longer valid
-						unset(self::$var[$key]);
-					} elseif ($value['RemainingPageLoads'] < 0) {
-						//This link is no longer valid
-						unset(self::$var[$key]);
-					} else {
-						--self::$var[$key]['RemainingPageLoads'];
-						if (isset($value['CommonID'])) {
-							self::$commonIDs[$value['CommonID']] = $key;
-						}
+				self::$var = unserialize(gzuncompress($var));
+			}
+
+			foreach (self::$var as $key => $value) {
+				if ($value['Expires'] > 0 && $value['Expires'] <= self::getTime()) { // Use 0 for infinity
+					//This link is no longer valid
+					unset(self::$var[$key]);
+				} elseif ($value['RemainingPageLoads'] < 0) {
+					//This link is no longer valid
+					unset(self::$var[$key]);
+				} else {
+					--self::$var[$key]['RemainingPageLoads'];
+					if (isset($value['CommonID'])) {
+						self::$commonIDs[$value['CommonID']] = $key;
 					}
 				}
 			}
@@ -267,7 +266,7 @@ class SmrSession {
 		}
 	}
 
-	public static function update() {
+	public static function update() : void {
 		foreach (self::$var as $key => $value) {
 			if ($value['RemainingPageLoads'] <= 0) {
 				//This link was valid this load but will not be in the future, removing it now saves database space and data transfer.
@@ -289,33 +288,33 @@ class SmrSession {
 	/**
 	 * Returns the Game ID associated with the session.
 	 */
-	public static function getGameID() {
+	public static function getGameID() : int {
 		return self::$game_id;
 	}
 
 	/**
 	 * Returns true if the session is inside a game, false otherwise.
 	 */
-	public static function hasGame() {
+	public static function hasGame() : bool {
 		return self::$game_id != 0;
 	}
 
-	public static function hasAccount() {
+	public static function hasAccount() : bool {
 		return self::$account_id > 0;
 	}
 
-	public static function getAccountID() {
+	public static function getAccountID() : int {
 		return self::$account_id;
 	}
 
-	public static function getAccount() {
+	public static function getAccount() : SmrAccount {
 		return SmrAccount::getAccount(self::$account_id);
 	}
 
 	/**
 	 * Sets the `account_id` attribute of this session.
 	 */
-	public static function setAccount(AbstractSmrAccount $account) {
+	public static function setAccount(AbstractSmrAccount $account) : void {
 		self::$account_id = $account->getAccountID();
 	}
 
@@ -323,7 +322,7 @@ class SmrSession {
 	 * Updates the `game_id` attribute of the session and deletes any other
 	 * active sessions in this game for this account.
 	 */
-	public static function updateGame($gameID) {
+	public static function updateGame(int $gameID) : void {
 		if (self::$game_id == $gameID) {
 			return;
 		}
@@ -335,18 +334,18 @@ class SmrSession {
 	/**
 	 * Returns true if the current SN is different than the previous SN.
 	 */
-	public static function hasChangedSN() {
+	public static function hasChangedSN() : bool {
 		return self::$SN != self::$lastSN;
 	}
 
-	private static function updateSN() {
+	private static function updateSN() : void {
 		if (!USING_AJAX) {
 			self::$db->query('UPDATE active_session SET last_sn=' . self::$db->escapeString(self::$SN) .
 				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		}
 	}
 
-	public static function destroy() {
+	public static function destroy() : void {
 		self::$db->query('DELETE FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id));
 		self::$session_id = null;
 		self::$account_id = 0;
@@ -357,7 +356,7 @@ class SmrSession {
 	 * Retrieve the session var for the page given by $sn.
 	 * If $sn is not specified, use the current page (i.e. self::$SN).
 	 */
-	public static function retrieveVar($sn = null) {
+	public static function retrieveVar(string $sn = null) : array|false {
 		if (is_null($sn)) {
 			$sn = self::$SN;
 		}
@@ -401,7 +400,8 @@ class SmrSession {
 		return $result;
 	}
 
-	public static function resetLink($container, $sn) { //Do not allow sharing SN, useful for forwarding.
+	public static function resetLink(array $container, string $sn) : string {
+		//Do not allow sharing SN, useful for forwarding.
 		global $lock;
 		if (isset(self::$var[$sn]['CommonID'])) {
 			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
@@ -426,7 +426,7 @@ class SmrSession {
 		return $sn;
 	}
 
-	public static function updateVar($key, $value) {
+	public static function updateVar(string $key, mixed $value) : void {
 		global $var;
 		if ($value === null) {
 			unset($var[$key]);
@@ -437,12 +437,15 @@ class SmrSession {
 		}
 	}
 
-	public static function clearLinks() {
+	public static function clearLinks() : void {
 		self::$var = array(self::$SN => self::$var[self::$SN]);
 		self::$commonIDs = array();
 	}
 
-	protected static function addLink($container, $sn = false) { // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
+	protected static function addLink(array $container, string $sn = null) : string {
+		// Container['ID'] MUST be unique to a specific action, if there will
+		// be two different outcomes from containers given the same ID then
+		// problems will likely arise.
 		if (!isset($container['Expires'])) {
 			$container['Expires'] = 0; // Lasts forever
 		}
@@ -451,7 +454,7 @@ class SmrSession {
 			$container['RemainingPageLoads'] = self::URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] ?? 1; // Allow refreshing
 		}
 
-		if ($sn === false) {
+		if ($sn === null) {
 			$sn = self::generateSN($container);
 		} else {
 			// If we've been provided an SN to use then copy over the existing 'PreviousRequestTime'
@@ -461,14 +464,14 @@ class SmrSession {
 		return $sn;
 	}
 
-	protected static function generateSN(&$container) {
+	protected static function generateSN(array &$container) : string {
 		$container['CommonID'] = self::getCommonID($container);
 		if (isset(self::$commonIDs[$container['CommonID']])) {
 			$sn = self::$commonIDs[$container['CommonID']];
 			$container['PreviousRequestTime'] = isset(self::$var[$sn]) ? self::$var[$sn]['PreviousRequestTime'] : self::getMicroTime();
 		} else {
 			do {
-				$sn = substr(md5(strval(rand())), 0, 8);
+				$sn = random_alphabetic_string(6);
 			} while (isset(self::$var[$sn]));
 			$container['PreviousRequestTime'] = self::getMicroTime();
 		}
@@ -476,7 +479,7 @@ class SmrSession {
 		return $sn;
 	}
 
-	protected static function getCommonID($commonContainer) {
+	protected static function getCommonID(array $commonContainer) : string {
 		unset($commonContainer['Expires']);
 		unset($commonContainer['RemainingPageLoads']);
 		unset($commonContainer['PreviousRequestTime']);
@@ -486,7 +489,7 @@ class SmrSession {
 		return md5(serialize($commonContainer));
 	}
 
-	public static function getNewHREF($container, $forceFullURL = false) {
+	public static function getNewHREF(array $container, bool $forceFullURL = false) : string {
 		$sn = self::addLink($container);
 		if ($forceFullURL === true || stripos($_SERVER['REQUEST_URI'], 'loader.php') === false) {
 			return '/loader.php?sn=' . $sn;
@@ -494,12 +497,12 @@ class SmrSession {
 		return '?sn=' . $sn;
 	}
 
-	public static function addAjaxReturns($element, $contents) {
+	public static function addAjaxReturns(string $element, string $contents) : bool {
 		self::$ajaxReturns[$element] = $contents;
 		return isset(self::$previousAjaxReturns[$element]) && self::$previousAjaxReturns[$element] == $contents;
 	}
 
-	public static function saveAjaxReturns() {
+	public static function saveAjaxReturns() : void {
 		if (empty(self::$ajaxReturns)) {
 			return;
 		}
