@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $submit = Request::getVar('submit');
-SmrSession::updateVar('submit', null);
+$session->updateVar('submit', null);
 
 if ($submit == 'Create Galaxies') {
 	for ($i = 1; $i <= $var['num_gals']; $i++) {

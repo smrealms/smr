@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $template->assign('PageTopic', 'Send Admin Message');
 
-$gameID = SmrSession::getRequestVarInt('SendGameID');
+$gameID = $session->getRequestVarInt('SendGameID');
 $container = Page::create('admin_message_send_processing.php');
 $container['SendGameID'] = $gameID;
 $template->assign('AdminMessageSendFormHref', $container->href());

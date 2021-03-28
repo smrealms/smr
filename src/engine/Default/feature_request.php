@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
+
+$session = SmrSession::getInstance();
+
 if (!Globals::isFeatureRequestOpen()) {
 	create_error('Feature requests are currently not being accepted.');
 }
 
 if (!isset($var['category'])) {
-	SmrSession::updateVar('category', 'New');
+	$session->updateVar('category', 'New');
 }
 $thisStatus = statusFromCategory($var['category']);
 

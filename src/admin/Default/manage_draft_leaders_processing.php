@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 // Get the selected game
 $gameId = $var['selected_game_id'];
 
 // Clear any messages from prior processing
-SmrSession::updateVar('processing_msg', null);
+$session->updateVar('processing_msg', null);
 
 // Get the POST variables
 $playerId = Request::getInt('player_id');
@@ -15,7 +17,7 @@ try {
 	$selectedPlayer = SmrPlayer::getPlayerByPlayerID($playerId, $gameId);
 } catch (PlayerNotFoundException $e) {
 	$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
-	SmrSession::updateVar('processing_msg', $msg);
+	$session->updateVar('processing_msg', $msg);
 	Page::create('skeleton.php', 'manage_draft_leaders.php', $var)->go();
 }
 
@@ -40,7 +42,7 @@ if ($action == "Assign") {
 }
 
 if (!empty($msg)) {
-	SmrSession::updateVar('processing_msg', $msg);
+	$session->updateVar('processing_msg', $msg);
 }
 
 // Pass entire $var so that the selected game remains selected

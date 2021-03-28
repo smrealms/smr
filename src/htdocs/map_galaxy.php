@@ -16,9 +16,9 @@ try {
 	// *
 	// ********************************
 
-
 	// do we have a session?
-	if (!SmrSession::hasAccount() || !SmrSession::hasGame()) {
+	$session = SmrSession::getInstance();
+	if (!$session->hasAccount() || !$session->hasGame()) {
 		header('Location: /login.php');
 		exit;
 	}
@@ -26,7 +26,7 @@ try {
 	if (Request::has('sector_id')) {
 		$sectorID = Request::getInt('sector_id');
 		try {
-			$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::getGameID(), $sectorID);
+			$galaxy = SmrGalaxy::getGalaxyContaining($session->getGameID(), $sectorID);
 		} catch (SectorNotFoundException $e) {
 			header('location: /error.php?msg=Invalid sector ID');
 			exit;
@@ -34,15 +34,15 @@ try {
 	} elseif (Request::has('galaxy_id')) {
 		$galaxyID = Request::getInt('galaxy_id');
 		try {
-			$galaxy = SmrGalaxy::getGalaxy(SmrSession::getGameID(), $galaxyID);
+			$galaxy = SmrGalaxy::getGalaxy($session->getGameID(), $galaxyID);
 		} catch (Exception $e) {
 			header('location: /error.php?msg=Invalid galaxy ID');
 			exit;
 		}
 	}
 
-	$account = SmrSession::getAccount();
-	$player = SmrPlayer::getPlayer($account->getAccountID(), SmrSession::getGameID());
+	$player = SmrPlayer::getPlayer($session->getAccountID(), $session->getGameID());
+	$account = $player->getAccount();
 
 	// Create a session to store temporary display options
 	// Garbage collect here often, since the page is slow anyways (see map_local.php)
@@ -67,7 +67,7 @@ try {
 	}
 
 	if (!isset($galaxyID) && !isset($sectorID)) {
-		$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::getGameID(), $player->getSectorID());
+		$galaxy = SmrGalaxy::getGalaxyContaining($player->getGameID(), $player->getSectorID());
 		if ($account->isCenterGalaxyMapOnPlayer()) {
 			$sectorID = $player->getSectorID();
 		}

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $template->assign('PageTopic', 'Bounty Payout');
 
 Menu::headquarters();
@@ -46,6 +48,6 @@ if (!isset($var['ClaimText'])) {
 		$claimText .= ('You have no claimable bounties<br /><br />');
 	}
 
-	SmrSession::updateVar('ClaimText', $claimText);
+	$session->updateVar('ClaimText', $claimText);
 }
 $template->assign('ClaimText', $var['ClaimText']);

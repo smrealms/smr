@@ -1,13 +1,15 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 //view anon acct activity.
 $template->assign('PageTopic', 'View Anonymous Account Info');
 
 $container = Page::create('skeleton.php', 'anon_acc_view_select.php');
 $template->assign('BackHREF', $container->href());
 
-$anonID = SmrSession::getRequestVarInt('anon_account');
-$gameID = SmrSession::getRequestVarInt('view_game_id');
+$anonID = $session->getRequestVarInt('anon_account');
+$gameID = $session->getRequestVarInt('view_game_id');
 
 $db->query('SELECT *
 			FROM anon_bank_transactions

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 Menu::galactic_post();
 $container = Page::create('galactic_post_write_article_processing.php');
 
@@ -9,8 +11,8 @@ if (isset($var['id'])) {
 	if (!isset($var['Preview'])) {
 		$db->query('SELECT title, text FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']) . ' LIMIT 1');
 		if ($db->nextRecord()) {
-			SmrSession::updateVar('PreviewTitle', $db->getField('title'));
-			SmrSession::updateVar('Preview', $db->getField('text'));
+			$session->updateVar('PreviewTitle', $db->getField('title'));
+			$session->updateVar('Preview', $db->getField('text'));
 		}
 	}
 } else {

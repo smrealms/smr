@@ -1,4 +1,7 @@
 <?php declare(strict_types=1);
+
+$session = SmrSession::getInstance();
+
 $body = htmlentities(trim(Request::get('body')), ENT_COMPAT, 'utf-8');
 $topic = Request::get('topic', ''); // only present for Create Thread
 $allEyesOnly = Request::has('allEyesOnly'); // only present for Create Thread
@@ -18,7 +21,7 @@ if ($action == 'Preview Thread' || $action == 'Preview Reply') {
 }
 
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id', $player->getAllianceID());
+	$session->updateVar('alliance_id', $player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
 

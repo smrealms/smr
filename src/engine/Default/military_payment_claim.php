@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $template->assign('PageTopic', 'Military Payment Center');
 
 Menu::headquarters();
@@ -21,7 +23,7 @@ if (!isset($var['ClaimText'])) {
 		$claimText = ('You have done nothing worthy of military payment.');
 	}
 
-	SmrSession::updateVar('ClaimText', $claimText);
+	$session->updateVar('ClaimText', $claimText);
 }
 
 $template->assign('ClaimText', $var['ClaimText']);

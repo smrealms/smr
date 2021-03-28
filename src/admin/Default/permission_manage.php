@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
-$admin_id = SmrSession::getRequestVarInt('admin_id', 0);
+$session = SmrSession::getInstance();
+
+$admin_id = $session->getRequestVarInt('admin_id', 0);
 
 $template->assign('PageTopic', 'Manage Admin Permissions');
 

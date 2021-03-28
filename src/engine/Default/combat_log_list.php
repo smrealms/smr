@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $template->assign('PageTopic', 'Combat Logs');
 Menu::combat_log();
 
@@ -10,7 +12,7 @@ if (isset($var['message'])) {
 
 // $var['action'] is the page log type
 if (!isset($var['action'])) {
-	SmrSession::updateVar('action', COMBAT_LOG_PERSONAL);
+	$session->updateVar('action', COMBAT_LOG_PERSONAL);
 }
 $action = $var['action'];
 

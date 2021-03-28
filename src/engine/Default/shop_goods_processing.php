@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 require_once(LIB . 'Default/shop_goods.inc.php');
 
+$session = SmrSession::getInstance();
+
 $amount = Request::getVarInt('amount');
 // no negative amounts are allowed
 if ($amount <= 0) {
@@ -64,12 +66,12 @@ if ($transaction === TRADER_BUYS && $player->getCredits() < $bargain_price) {
 $relations = $player->getRelation($port->getRaceID());
 
 if (!isset($var['ideal_price'])) {
-	SmrSession::updateVar('ideal_price', $port->getIdealPrice($good_id, $transaction, $amount, $relations));
+	$session->updateVar('ideal_price', $port->getIdealPrice($good_id, $transaction, $amount, $relations));
 }
 $ideal_price = $var['ideal_price'];
 
 if (!isset($var['offered_price'])) {
-	SmrSession::updateVar('offered_price', $port->getOfferPrice($ideal_price, $relations, $transaction));
+	$session->updateVar('offered_price', $port->getOfferPrice($ideal_price, $relations, $transaction));
 }
 $offered_price = $var['offered_price'];
 

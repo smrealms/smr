@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 // register game_id
-SmrSession::updateGame($var['game_id']);
+$session->updateGame($var['game_id']);
 
 $player = SmrPlayer::getPlayer($account->getAccountID(), $var['game_id']);
 $player->updateLastCPLAction();
@@ -14,7 +16,7 @@ $player->deletePlottedCourse();
 $player->update();
 
 // log
-$player->log(LOG_TYPE_GAME_ENTERING, 'Player entered game ' . SmrSession::getGameID());
+$player->log(LOG_TYPE_GAME_ENTERING, 'Player entered game ' . $player->getGameID());
 
 $container = Page::create('skeleton.php', 'current_sector.php');
 $container->go();

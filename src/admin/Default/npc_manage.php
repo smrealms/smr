@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $template->assign('PageTopic', 'Manage NPCs');
 
-$selectedGameID = SmrSession::getRequestVarInt('selected_game_id', 0);
+$selectedGameID = $session->getRequestVarInt('selected_game_id', 0);
 
 $container = Page::create('skeleton.php', 'npc_manage.php');
 $template->assign('SelectGameHREF', $container->href());

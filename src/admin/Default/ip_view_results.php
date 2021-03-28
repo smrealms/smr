@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
-$variable = SmrSession::getRequestVar('variable');
-$type = SmrSession::getRequestVar('type');
+
+$session = SmrSession::getInstance();
+
+$variable = $session->getRequestVar('variable');
+$type = $session->getRequestVar('type');
 
 $db2 = MySqlDatabase::getInstance();
 

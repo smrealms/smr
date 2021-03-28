@@ -4,7 +4,9 @@ try {
 	require_once('../bootstrap.php');
 	require_once(LIB . 'Default/smr.inc.php');
 
-	if (SmrSession::hasAccount()) {
+	$session = SmrSession::getInstance();
+
+	if ($session->hasAccount()) {
 		$msg = 'You\'re already logged in! Creating multis is against the rules!';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
@@ -159,7 +161,7 @@ try {
 	}
 
 	// register session
-	SmrSession::setAccount($account);
+	$session->setAccount($account);
 
 	// save ip
 	$account->updateIP();

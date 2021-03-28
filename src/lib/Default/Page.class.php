@@ -150,7 +150,7 @@ class Page extends ArrayObject {
 
 		// this sn identifies our container later
 		if (!is_null($sn)) {
-			SmrSession::resetLink($this, $sn);
+			SmrSession::getInstance()->resetLink($this, $sn);
 		}
 
 		// Note: if problems arise, maybe $this should be cloned.
@@ -211,7 +211,7 @@ class Page extends ArrayObject {
 		// be two different outcomes from containers given the same ID then
 		// problems will likely arise.
 		$copy['CommonID'] = $this->getCommonID();
-		$sn = SmrSession::addLink($copy);
+		$sn = SmrSession::getInstance()->addLink($copy);
 
 		if ($forceFullURL === true || stripos($_SERVER['REQUEST_URI'], 'loader.php') === false) {
 			return '/loader.php?sn=' . $sn;

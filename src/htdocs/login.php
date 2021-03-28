@@ -11,16 +11,13 @@ try {
 	// *
 	// ********************************
 
-
-	if (SmrSession::hasAccount()) {
-		// creates a new user account object
-		$account = SmrSession::getAccount();
-
+	$session = SmrSession::getInstance();
+	if ($session->hasAccount()) {
 		// update last login column
-		$account->updateLastLogin();
+		$session->getAccount()->updateLastLogin();
 
 		$href = Page::create('login_check_processing.php')->href(true);
-		SmrSession::update();
+		$session->update();
 
 		header('Location: ' . $href);
 		exit;

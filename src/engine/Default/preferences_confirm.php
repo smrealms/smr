@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
-$amount = SmrSession::getRequestVarInt('amount');
-$account_id = SmrSession::getRequestVarInt('account_id');
+$session = SmrSession::getInstance();
+
+$amount = $session->getRequestVarInt('amount');
+$account_id = $session->getRequestVarInt('account_id');
 if ($amount <= 0) {
 	create_error('You can only tranfer a positive amount!');
 }

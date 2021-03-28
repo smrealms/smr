@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $template->assign('PageTopic', 'Plot A Course');
 
 Menu::navigation($template, $player);
@@ -19,7 +21,7 @@ if ($ship->hasJump()) {
 $container = Page::create('skeleton.php', 'course_plot.php');
 $template->assign('PlotToNearestHREF', $container->href());
 
-$xtype = SmrSession::getRequestVar('xtype', 'Technology');
+$xtype = $session->getRequestVar('xtype', 'Technology');
 $template->assign('XType', $xtype);
 $template->assign('AllXTypes', array('Technology', 'Ships', 'Weapons', 'Locations', 'Sell Goods', 'Buy Goods', 'Galaxies'));
 

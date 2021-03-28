@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = SmrSession::getInstance();
+
 $game_id = $var['view_game_id'];
 $template->assign('PageTopic', 'Extended Stats : ' . $var['game_name']);
 Menu::history_games(1);
@@ -12,7 +14,7 @@ if (isset($container['action'])) {
 $template->assign('SelfHREF', $container->href());
 
 // Default page has no category (action) selected yet
-$action = SmrSession::getRequestVar('action', '');
+$action = $session->getRequestVar('action', '');
 if (!empty($action)) {
 	if ($action == 'Top Mined Sectors') {
 		$sql = 'mines'; $from = 'sector'; $dis = 'Mines';
