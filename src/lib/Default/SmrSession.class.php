@@ -243,7 +243,7 @@ class SmrSession {
 				self::$game_id = 0;
 				self::$var = array();
 			} else {
-				foreach (self::$var as $key => &$value) {
+				foreach (self::$var as $key => $value) {
 					if ($value['Expires'] > 0 && $value['Expires'] <= self::getTime()) { // Use 0 for infinity
 						//This link is no longer valid
 						unset(self::$var[$key]);
@@ -251,12 +251,12 @@ class SmrSession {
 						//This link is no longer valid
 						unset(self::$var[$key]);
 					} else {
-						--$value['RemainingPageLoads'];
+						--self::$var[$key]['RemainingPageLoads'];
 						if (isset($value['CommonID'])) {
 							self::$commonIDs[$value['CommonID']] = $key;
 						}
 					}
-				} unset($value);
+				}
 			}
 		} else {
 			self::$generate = true;
@@ -268,12 +268,12 @@ class SmrSession {
 	}
 
 	public static function update() {
-		foreach (self::$var as $key => &$value) {
+		foreach (self::$var as $key => $value) {
 			if ($value['RemainingPageLoads'] <= 0) {
 				//This link was valid this load but will not be in the future, removing it now saves database space and data transfer.
 				unset(self::$var[$key]);
 			}
-		} unset($value);
+		}
 		$compressed = gzcompress(serialize(self::$var));
 		if (!self::$generate) {
 			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(self::getTime()) : '') . ',session_var=' . self::$db->escapeBinary($compressed) .
