@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 $template->assign('PageTopic', 'Edit Dummys');
 
-$template->assign('CombatSimLink', SmrSession::getNewHREF(create_container('skeleton.php', 'combat_simulator.php')));
+$template->assign('CombatSimLink', Page::create('skeleton.php', 'combat_simulator.php')->href());
 $template->assign('BaseShips', AbstractSmrShip::getAllBaseShips());
 $template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
 
-$template->assign('EditDummysLink', SmrSession::getNewHREF(create_container('skeleton.php', 'edit_dummys.php')));
+$template->assign('EditDummysLink', Page::create('skeleton.php', 'edit_dummys.php')->href());
 
 $dummyPlayer = DummyPlayer::getCachedDummyPlayer($_REQUEST['dummy_name']);
 $dummyShip = $dummyPlayer->getShip();

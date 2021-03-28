@@ -2,9 +2,9 @@
 
 $costs = Globals::getBuyShipNameCosts();
 
-$container = create_container('buy_ship_name_processing.php');
+$container = Page::create('buy_ship_name_processing.php');
 $container['costs'] = $costs;
 
 $template->assign('PageTopic', 'Naming Your Ship');
 $template->assign('Costs', $costs);
-$template->assign('ShipNameFormHref', SmrSession::getNewHREF($container));
+$template->assign('ShipNameFormHref', $container->href());

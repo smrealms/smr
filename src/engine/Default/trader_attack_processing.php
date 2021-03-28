@@ -78,7 +78,7 @@ $account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' 
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLAYER\',' . $db->escapeNumber($sector->getSectorID()) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($var['target']) . ',' . $db->escapeNumber($targetPlayer->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
 
-$container = create_container('skeleton.php', 'trader_attack.php');
+$container = Page::create('skeleton.php', 'trader_attack.php');
 
 // If their target is dead there is no continue attack button
 if (!$targetPlayer->isDead()) {
@@ -94,4 +94,4 @@ if ($player->isDead()) {
 }
 
 $container['results'] = $serializedResults;
-forward($container);
+$container->go();

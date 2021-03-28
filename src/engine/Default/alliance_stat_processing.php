@@ -63,6 +63,6 @@ if (isset($url)) {
 }
 
 $alliance->update();
-$container = create_container('skeleton.php', 'alliance_roster.php');
+$container = Page::create('skeleton.php', 'alliance_roster.php');
 $container['alliance_id'] = $alliance_id;
-forward($container);
+$container->go();

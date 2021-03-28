@@ -33,9 +33,9 @@ if ($db->getNumRows() > 0) {
 		$games['Play'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT, $db->getInt('end_time'));
 		$games['Play'][$game_id]['Speed'] = $db->getFloat('game_speed');
 
-		$container = create_container('game_play_processing.php');
+		$container = Page::create('game_play_processing.php');
 		$container['game_id'] = $game_id;
-		$games['Play'][$game_id]['PlayGameLink'] = SmrSession::getNewHREF($container);
+		$games['Play'][$game_id]['PlayGameLink'] = $container->href();
 
 		// creates a new player object
 		$curr_player = SmrPlayer::getPlayer($account->getAccountID(), $game_id);
@@ -56,9 +56,9 @@ if ($db->getNumRows() > 0) {
 
 		// create a container that will hold next url and additional variables.
 
-		$container_game = create_container('skeleton.php', 'game_stats.php');
+		$container_game = Page::create('skeleton.php', 'game_stats.php');
 		$container_game['game_id'] = $game_id;
-		$games['Play'][$game_id]['GameStatsLink'] = SmrSession::getNewHREF($container_game);
+		$games['Play'][$game_id]['GameStatsLink'] = $container_game->href();
 		$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
 		$games['Play'][$game_id]['LastMovement'] = format_time(SmrSession::getTime() - $curr_player->getLastActive(), TRUE);
 
@@ -108,10 +108,10 @@ if ($db->getNumRows() > 0) {
 			'Credits' => $game->getCreditsNeeded(),
 		];
 		// create a container that will hold next url and additional variables.
-		$container = create_container('skeleton.php', 'game_join.php');
+		$container = Page::create('skeleton.php', 'game_join.php');
 		$container['game_id'] = $game_id;
 
-		$games['Join'][$game_id]['JoinGameLink'] = SmrSession::getNewHREF($container);
+		$games['Join'][$game_id]['JoinGameLink'] = $container->href();
 	}
 }
 
@@ -134,16 +134,16 @@ if ($db->getNumRows()) {
 		$games['Previous'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getField('game_type')];
 		$games['Previous'][$game_id]['Speed'] = $db->getFloat('game_speed');
 		// create a container that will hold next url and additional variables.
-		$container = create_container('skeleton.php');
+		$container = Page::create('skeleton.php');
 		$container['game_id'] = $container['GameID'] = $game_id;
 		$container['game_name'] = $games['Previous'][$game_id]['Name'];
 
 		$container['body'] = 'hall_of_fame_new.php';
-		$games['Previous'][$game_id]['PreviousGameHOFLink'] = SmrSession::getNewHREF($container);
+		$games['Previous'][$game_id]['PreviousGameHOFLink'] = $container->href();
 		$container['body'] = 'news_read.php';
-		$games['Previous'][$game_id]['PreviousGameNewsLink'] = SmrSession::getNewHREF($container);
+		$games['Previous'][$game_id]['PreviousGameNewsLink'] = $container->href();
 		$container['body'] = 'game_stats.php';
-		$games['Previous'][$game_id]['PreviousGameStatsLink'] = SmrSession::getNewHREF($container);
+		$games['Previous'][$game_id]['PreviousGameStatsLink'] = $container->href();
 	}
 }
 
@@ -163,19 +163,19 @@ foreach (Globals::getHistoryDatabases() as $databaseName => $oldColumn) {
 			$games['Previous'][$index]['Type'] = $db->getField('type');
 			$games['Previous'][$index]['Speed'] = $db->getFloat('speed');
 			// create a container that will hold next url and additional variables.
-			$container = create_container('skeleton.php');
+			$container = Page::create('skeleton.php');
 			$container['view_game_id'] = $game_id;
 			$container['HistoryDatabase'] = $databaseName;
 			$container['game_name'] = $games['Previous'][$index]['Name'];
 
 			$container['body'] = 'history_games.php';
-			$games['Previous'][$index]['PreviousGameLink'] = SmrSession::getNewHREF($container);
+			$games['Previous'][$index]['PreviousGameLink'] = $container->href();
 			$container['body'] = 'history_games_hof.php';
-			$games['Previous'][$index]['PreviousGameHOFLink'] = SmrSession::getNewHREF($container);
+			$games['Previous'][$index]['PreviousGameHOFLink'] = $container->href();
 			$container['body'] = 'history_games_news.php';
-			$games['Previous'][$index]['PreviousGameNewsLink'] = SmrSession::getNewHREF($container);
+			$games['Previous'][$index]['PreviousGameNewsLink'] = $container->href();
 			$container['body'] = 'history_games_detail.php';
-			$games['Previous'][$index]['PreviousGameStatsLink'] = SmrSession::getNewHREF($container);
+			$games['Previous'][$index]['PreviousGameStatsLink'] = $container->href();
 		}
 	}
 }
@@ -186,8 +186,8 @@ $template->assign('Games', $games);
 // ***************************************
 // ** Voting
 // ***************************************
-$container = create_container('skeleton.php', 'vote.php');
-$template->assign('VotingHref', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'vote.php');
+$template->assign('VotingHref', $container->href());
 
 $db->query('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(SmrSession::getTime()) . ' ORDER BY end DESC');
 if ($db->getNumRows() > 0) {
@@ -201,9 +201,9 @@ if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		$voteID = $db->getInt('vote_id');
 		$voting[$voteID]['ID'] = $voteID;
-		$container = create_container('vote_processing.php', 'game_play.php');
+		$container = Page::create('vote_processing.php', 'game_play.php');
 		$container['vote_id'] = $voteID;
-		$voting[$voteID]['HREF'] = SmrSession::getNewHREF($container);
+		$voting[$voteID]['HREF'] = $container->href();
 		$voting[$voteID]['Question'] = $db->getField('question');
 		$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - SmrSession::getTime(), true);
 		$voting[$voteID]['Options'] = array();
@@ -221,6 +221,6 @@ if ($db->getNumRows() > 0) {
 // ***************************************
 // ** Announcements View
 // ***************************************
-$container = create_container('skeleton.php', 'announcements.php');
+$container = Page::create('skeleton.php', 'announcements.php');
 $container['view_all'] = 'yes';
-$template->assign('OldAnnouncementsLink', SmrSession::getNewHREF($container));
+$template->assign('OldAnnouncementsLink', $container->href());

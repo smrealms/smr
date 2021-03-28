@@ -3032,13 +3032,13 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getLeaveNewbieProtectionHREF() {
-		return SmrSession::getNewHREF(create_container('leave_newbie_processing.php'));
+		return Page::create('leave_newbie_processing.php')->href();
 	}
 
 	public function getExamineTraderHREF() {
-		$container = create_container('skeleton.php', 'trader_examine.php');
+		$container = Page::create('skeleton.php', 'trader_examine.php');
 		$container['target'] = $this->getAccountID();
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function getAttackTraderHREF() {
@@ -3046,15 +3046,15 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getPlanetKickHREF() {
-		$container = create_container('planet_kick_processing.php', 'trader_attack_processing.php');
+		$container = Page::create('planet_kick_processing.php', 'trader_attack_processing.php');
 		$container['account_id'] = $this->getAccountID();
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function getTraderSearchHREF() {
-		$container = create_container('skeleton.php', 'trader_search_result.php');
+		$container = Page::create('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $this->getPlayerID();
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function getAllianceRosterHREF() {
@@ -3062,10 +3062,10 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getToggleWeaponHidingHREF($ajax = false) {
-		$container = create_container('toggle_processing.php');
+		$container = Page::create('toggle_processing.php');
 		$container['toggle'] = 'WeaponHiding';
 		$container['AJAX'] = $ajax;
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function isDisplayWeapons() {

@@ -98,9 +98,9 @@ if (Request::get('action') === TRADER_STEALS) {
 		$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 
 		$fineMessage = '<span class="red">A Federation patrol caught you loading stolen goods onto your ship!<br />The stolen goods have been confiscated and you have been fined ' . number_format($fine) . ' credits.</span><br /><br />';
-		$container = create_container('skeleton.php', 'shop_goods.php');
+		$container = Page::create('skeleton.php', 'shop_goods.php');
 		$container['trade_msg'] = $fineMessage;
-		forward($container);
+		$container->go();
 	}
 }
 
@@ -111,9 +111,9 @@ if ($transaction === TRADER_STEALS ||
 	  ($transaction === TRADER_SELLS && $bargain_price <= $ideal_price)))) {
 
 	// the url we going to
-	$container = create_container('skeleton.php');
-	transfer('ideal_price');
-	transfer('offered_price');
+	$container = Page::create('skeleton.php');
+	$container->addVar('ideal_price');
+	$container->addVar('offered_price');
 
 	// base xp is the amount you would get for a perfect trade.
 	// this is the absolut max. the real xp can only be smaller.
@@ -194,13 +194,13 @@ if ($transaction === TRADER_STEALS ||
 
 } else {
 	// does the trader try to outsmart us?
-	$container = create_container('skeleton.php', 'shop_goods_trade.php');
-	transfer('ideal_price');
-	transfer('offered_price');
+	$container = Page::create('skeleton.php', 'shop_goods_trade.php');
+	$container->addVar('ideal_price');
+	$container->addVar('offered_price');
 	check_bargain_number($amount, $ideal_price, $offered_price, $bargain_price, $container);
 
 	// transfer values to next page
-	transfer('good_id');
+	$container->addVar('good_id');
 
 	$container['amount'] = $amount;
 	$container['bargain_price'] = $bargain_price;
@@ -212,4 +212,4 @@ if (!isset($container['number_of_bargains']) || $container['number_of_bargains']
 }
 
 // go to next page
-forward($container);
+$container->go();

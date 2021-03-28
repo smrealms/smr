@@ -5,6 +5,6 @@ foreach (Request::getIntArray('role', []) as $accountID => $roleID) {
 					VALUES (' . $db->escapeNumber($accountID) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($roleID) . ',' . $db->escapeNumber($var['alliance_id']) . ')');
 }
 
-$container = create_container('skeleton.php', 'alliance_roster.php');
+$container = Page::create('skeleton.php', 'alliance_roster.php');
 $container['action'] = 'Show Alliance Roles';
-forward($container);
+$container->go();

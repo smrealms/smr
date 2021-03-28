@@ -75,10 +75,10 @@ if ($db->nextRecord()) {
 	$time_passed = SmrSession::getTime() - $last_changed;
 	$template->assign('TimePassed', $time_passed);
 
-	$container = create_container('album_approve_processing.php', '');
+	$container = Page::create('album_approve_processing.php', '');
 	$container['album_id'] = $album_id;
 	$container['approved'] = true;
-	$template->assign('ApproveHREF', SmrSession::getNewHREF($container));
+	$template->assign('ApproveHREF', $container->href());
 	$container['approved'] = false;
-	$template->assign('RejectHREF', SmrSession::getNewHREF($container));
+	$template->assign('RejectHREF', $container->href());
 }

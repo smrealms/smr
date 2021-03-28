@@ -52,9 +52,9 @@ $game->save();
 
 createNHA($game->getGameID()); //do the alliances/message stuff
 
-$container = create_container('skeleton.php', '1.6/universe_create_galaxies.php');
+$container = Page::create('skeleton.php', '1.6/universe_create_galaxies.php');
 $container['game_id'] = $game->getGameID();
-forward($container);
+$container->go();
 
 function createNHA($gameID) {
 	$db = MySqlDatabase::getInstance();

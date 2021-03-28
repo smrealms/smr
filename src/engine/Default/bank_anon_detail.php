@@ -63,10 +63,10 @@ $db->query($query);
 if ($db->getNumRows() > 0) {
 	$template->assign('MinValue', $minValue);
 	$template->assign('MaxValue', $maxValue);
-	$container = create_container('skeleton.php', 'bank_anon_detail.php');
+	$container = Page::create('skeleton.php', 'bank_anon_detail.php');
 	$container['allowed'] = 'yes';
 	$container['account_num'] = $account_num;
-	$template->assign('ShowHREF', SmrSession::getNewHREF($container));
+	$template->assign('ShowHREF', $container->href());
 
 	$transactions = [];
 	while ($db->nextRecord()) {
@@ -83,9 +83,9 @@ if ($db->getNumRows() > 0) {
 	$template->assign('Transactions', $transactions);
 }
 
-$container = create_container('bank_anon_detail_processing.php');
+$container = Page::create('bank_anon_detail_processing.php');
 $container['account_num'] = $account_num;
-$template->assign('TransactionHREF', SmrSession::getNewHREF($container));
+$template->assign('TransactionHREF', $container->href());
 
 $template->assign('PageTopic', 'Anonymous Account #' . $account_num);
 Menu::bank();

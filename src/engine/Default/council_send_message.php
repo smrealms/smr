@@ -7,6 +7,6 @@ $template->assign('PageTopic', 'Send message to Ruling Council of the ' . $raceN
 
 Menu::messages();
 
-$container = create_container('council_send_message_processing.php');
-transfer('race_id');
-$template->assign('SendHREF', SmrSession::getNewHREF($container));
+$container = Page::create('council_send_message_processing.php');
+$container->addVar('race_id');
+$template->assign('SendHREF', $container->href());

@@ -41,11 +41,11 @@ if (isset($var['ZoomDir'])) {
 	SmrSession::updateVar('ZoomDir', null);
 }
 
-$container = create_container('skeleton.php', 'map_local.php');
+$container = Page::create('skeleton.php', 'map_local.php');
 $container['ZoomDir'] = 'Expand';
-$template->assign('MapExpandHREF', SmrSession::getNewHREF($container));
+$template->assign('MapExpandHREF', $container->href());
 $container['ZoomDir'] = 'Shrink';
-$template->assign('MapShrinkHREF', SmrSession::getNewHREF($container));
+$template->assign('MapShrinkHREF', $container->href());
 
 
 $galaxy = $player->getSector()->getGalaxy();

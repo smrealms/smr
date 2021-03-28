@@ -62,4 +62,4 @@ foreach ($councilMembers as $accountID) {
   }
 }
 
-forward(create_container('skeleton.php', 'council_embassy.php'));
+Page::create('skeleton.php', 'council_embassy.php')->go();

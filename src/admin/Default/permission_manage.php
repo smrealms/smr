@@ -4,8 +4,8 @@ $admin_id = SmrSession::getRequestVarInt('admin_id', 0);
 
 $template->assign('PageTopic', 'Manage Admin Permissions');
 
-$container = create_container('skeleton.php', 'permission_manage.php');
-$selectAdminHREF = SmrSession::getNewHREF($container);
+$container = Page::create('skeleton.php', 'permission_manage.php');
+$selectAdminHREF = $container->href();
 $template->assign('SelectAdminHREF', $selectAdminHREF);
 
 $db->query('SELECT account_id, login
@@ -15,7 +15,7 @@ while ($db->nextRecord()) {
 	$accountID = $db->getInt('account_id');
 	$container['admin_id'] = $accountID;
 	$adminLinks[$accountID] = [
-		'href' => SmrSession::getNewHREF($container),
+		'href' => $container->href(),
 		'name' => $db->getField('login'),
 	];
 }
@@ -40,9 +40,9 @@ if (empty($admin_id)) {
 	$editAccount = SmrAccount::getAccount($admin_id);
 	$template->assign('EditAccount', $editAccount);
 
-	$container = create_container('permission_manage_processing.php');
+	$container = Page::create('permission_manage_processing.php');
 	$container['admin_id'] = $admin_id;
-	$processingHREF = SmrSession::getNewHREF($container);
+	$processingHREF = $container->href();
 	$template->assign('ProcessingHREF', $processingHREF);
 
 	$template->assign('PermissionCategories',

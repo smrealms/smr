@@ -14,13 +14,13 @@ if (isset($var['results'])) {
 	$template->assign('DiffMB', bytesToMB($var['diffBytes']));
 	$template->assign('Action', $var['action']);
 	$template->assign('EndedGames', $var['endedGames']);
-	$container = create_container('skeleton.php', 'db_cleanup.php');
-	$template->assign('BackHREF', SmrSession::getNewHREF($container));
+	$container = Page::create('skeleton.php', 'db_cleanup.php');
+	$template->assign('BackHREF', $container->href());
 } else {
 	// Create processing links
-	$container = create_container('db_cleanup_processing.php');
+	$container = Page::create('db_cleanup_processing.php');
 	$container['action'] = 'delete';
-	$template->assign('DeleteHREF', SmrSession::getNewHREF($container));
+	$template->assign('DeleteHREF', $container->href());
 	$container['action'] = 'preview';
-	$template->assign('PreviewHREF', SmrSession::getNewHREF($container));
+	$template->assign('PreviewHREF', $container->href());
 }

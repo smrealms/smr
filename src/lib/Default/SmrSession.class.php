@@ -5,111 +5,8 @@ if (!defined('USING_AJAX')) {
 }
 
 class SmrSession {
-	const ALWAYS_AVAILABLE = 999999;
-	const TIME_BEFORE_EXPIRY = 3600;
 
-	// Defines the number of pages that can be loaded after
-	// this page before the links on this page become invalid
-	// (i.e. before you get a back button error).
-	private const URL_DEFAULT_REMAINING_PAGE_LOADS = array(
-			'alliance_broadcast.php' => self::ALWAYS_AVAILABLE,
-			'alliance_forces.php' => self::ALWAYS_AVAILABLE,
-			'alliance_list.php' => self::ALWAYS_AVAILABLE,
-			'alliance_message_view.php' => self::ALWAYS_AVAILABLE,
-			'alliance_message.php' => self::ALWAYS_AVAILABLE,
-			'alliance_mod.php' => self::ALWAYS_AVAILABLE,
-			'alliance_option.php' => self::ALWAYS_AVAILABLE,
-			'alliance_pick.php' => self::ALWAYS_AVAILABLE,
-			'alliance_remove_member.php' => self::ALWAYS_AVAILABLE,
-			'alliance_roster.php' => self::ALWAYS_AVAILABLE,
-			'beta_functions.php' => self::ALWAYS_AVAILABLE,
-			'bug_report.php' => self::ALWAYS_AVAILABLE,
-			'cargo_dump.php' => self::ALWAYS_AVAILABLE,
-			'course_plot.php' => self::ALWAYS_AVAILABLE,
-			'changelog_view.php' => self::ALWAYS_AVAILABLE,
-			'chat_rules.php' => self::ALWAYS_AVAILABLE,
-			'chess_play.php' => self::ALWAYS_AVAILABLE,
-			'combat_log_list.php' => self::ALWAYS_AVAILABLE,
-			'combat_log_viewer.php' => self::ALWAYS_AVAILABLE,
-			'current_sector.php' => self::ALWAYS_AVAILABLE,
-			'configure_hardware.php' => self::ALWAYS_AVAILABLE,
-			'contact.php' => self::ALWAYS_AVAILABLE,
-			'council_embassy.php' => self::ALWAYS_AVAILABLE,
-			'council_list.php' => self::ALWAYS_AVAILABLE,
-			'council_politics.php' => self::ALWAYS_AVAILABLE,
-			'council_send_message.php' => self::ALWAYS_AVAILABLE,
-			'council_vote.php' => self::ALWAYS_AVAILABLE,
-			'current_players.php' => self::ALWAYS_AVAILABLE,
-			'donation.php' => self::ALWAYS_AVAILABLE,
-			'feature_request_comments.php' => self::ALWAYS_AVAILABLE,
-			'feature_request.php' => self::ALWAYS_AVAILABLE,
-			'forces_list.php' => self::ALWAYS_AVAILABLE,
-			'forces_mass_refresh.php' => self::ALWAYS_AVAILABLE,
-			'hall_of_fame_player_new.php' => self::ALWAYS_AVAILABLE,
-			'hall_of_fame_player_detail.php' => self::ALWAYS_AVAILABLE,
-			'leave_newbie.php' => self::ALWAYS_AVAILABLE,
-			'logoff.php' => self::ALWAYS_AVAILABLE,
-			'map_local.php' => self::ALWAYS_AVAILABLE,
-			'message_view.php' => self::ALWAYS_AVAILABLE,
-			'message_send.php' => self::ALWAYS_AVAILABLE,
-			'news_read_advanced.php' => self::ALWAYS_AVAILABLE,
-			'news_read_current.php' => self::ALWAYS_AVAILABLE,
-			'news_read.php' => self::ALWAYS_AVAILABLE,
-			'planet_construction.php' => self::ALWAYS_AVAILABLE,
-			'planet_defense.php' => self::ALWAYS_AVAILABLE,
-			'planet_financial.php' => self::ALWAYS_AVAILABLE,
-			'planet_main.php' => self::ALWAYS_AVAILABLE,
-			'planet_ownership.php' => self::ALWAYS_AVAILABLE,
-			'planet_stockpile.php' => self::ALWAYS_AVAILABLE,
-			'planet_list.php' => self::ALWAYS_AVAILABLE,
-			'planet_list_financial.php' => self::ALWAYS_AVAILABLE,
-			'preferences.php' => self::ALWAYS_AVAILABLE,
-			'rankings_alliance_death.php' => self::ALWAYS_AVAILABLE,
-			'rankings_alliance_experience.php' => self::ALWAYS_AVAILABLE,
-			'rankings_alliance_kills.php' => self::ALWAYS_AVAILABLE,
-			'rankings_alliance_vs_alliance.php' => self::ALWAYS_AVAILABLE,
-			'rankings_player_death.php' => self::ALWAYS_AVAILABLE,
-			'rankings_player_experience.php' => self::ALWAYS_AVAILABLE,
-			'rankings_player_kills.php' => self::ALWAYS_AVAILABLE,
-			'rankings_player_profit.php' => self::ALWAYS_AVAILABLE,
-			'rankings_race_death.php' => self::ALWAYS_AVAILABLE,
-			'rankings_race_kills.php' => self::ALWAYS_AVAILABLE,
-			'rankings_race.php' => self::ALWAYS_AVAILABLE,
-			'rankings_sector_kill.php' => self::ALWAYS_AVAILABLE,
-			'rankings_view.php' => self::ALWAYS_AVAILABLE,
-			'trader_bounties.php' => self::ALWAYS_AVAILABLE,
-			'trader_relations.php' => self::ALWAYS_AVAILABLE,
-			'trader_savings.php' => self::ALWAYS_AVAILABLE,
-			'trader_search_result.php' => self::ALWAYS_AVAILABLE,
-			'trader_search.php' => self::ALWAYS_AVAILABLE,
-			'trader_status.php' => self::ALWAYS_AVAILABLE,
-			'weapon_reorder.php' => self::ALWAYS_AVAILABLE,
-			//Processing pages
-			'alliance_message_add_processing.php' => self::ALWAYS_AVAILABLE,
-			'alliance_message_delete_processing.php' => self::ALWAYS_AVAILABLE,
-			'alliance_pick_processing.php' => self::ALWAYS_AVAILABLE,
-			'chess_move_processing.php' => self::ALWAYS_AVAILABLE,
-			'toggle_processing.php' => self::ALWAYS_AVAILABLE,
-			//Admin pages
-			'account_edit.php' => self::ALWAYS_AVAILABLE,
-			'album_moderate.php' => self::ALWAYS_AVAILABLE,
-			'box_view.php' => self::ALWAYS_AVAILABLE,
-			'changelog.php' => self::ALWAYS_AVAILABLE,
-			'comp_share.php' => self::ALWAYS_AVAILABLE,
-			'form_open.php' => self::ALWAYS_AVAILABLE,
-			'ip_view_results.php' => self::ALWAYS_AVAILABLE,
-			'ip_view.php' => self::ALWAYS_AVAILABLE,
-			'permission_manage.php' => self::ALWAYS_AVAILABLE,
-			'word_filter.php' => self::ALWAYS_AVAILABLE,
-			//Uni gen
-			'1.6/check_map.php' => self::ALWAYS_AVAILABLE,
-			'1.6/universe_create_locations.php' => self::ALWAYS_AVAILABLE,
-			'1.6/universe_create_planets.php' => self::ALWAYS_AVAILABLE,
-			'1.6/universe_create_ports.php' => self::ALWAYS_AVAILABLE,
-			'1.6/universe_create_sector_details.php' => self::ALWAYS_AVAILABLE,
-			'1.6/universe_create_sectors.php' => self::ALWAYS_AVAILABLE,
-			'1.6/universe_create_warps.php' => self::ALWAYS_AVAILABLE,
-		);
+	const TIME_BEFORE_EXPIRY = 3600;
 
 	private const URL_LOAD_DELAY = array(
 		'configure_hardware.php' => .4,
@@ -356,7 +253,7 @@ class SmrSession {
 	 * Retrieve the session var for the page given by $sn.
 	 * If $sn is not specified, use the current page (i.e. self::$SN).
 	 */
-	public static function retrieveVar(string $sn = null) : array|false {
+	public static function retrieveVar(string $sn = null) : Page|false {
 		if (is_null($sn)) {
 			$sn = self::$SN;
 		}
@@ -400,7 +297,7 @@ class SmrSession {
 		return $result;
 	}
 
-	public static function resetLink(array $container, string $sn) : string {
+	public static function resetLink(Page $container, string $sn) : string {
 		//Do not allow sharing SN, useful for forwarding.
 		global $lock;
 		if (isset(self::$var[$sn]['CommonID'])) {
@@ -429,8 +326,12 @@ class SmrSession {
 	public static function updateVar(string $key, mixed $value) : void {
 		global $var;
 		if ($value === null) {
-			unset($var[$key]);
-			unset(self::$var[self::$SN][$key]);
+			if (isset($var[$key])) {
+				unset($var[$key]);
+			}
+			if (isset($var[self::$SN][$key])) {
+				unset(self::$var[self::$SN][$key]);
+			}
 		} else {
 			$var[$key] = $value;
 			self::$var[self::$SN][$key] = $value;
@@ -442,30 +343,13 @@ class SmrSession {
 		self::$commonIDs = array();
 	}
 
-	protected static function addLink(array $container, string $sn = null) : string {
-		// Container['ID'] MUST be unique to a specific action, if there will
-		// be two different outcomes from containers given the same ID then
-		// problems will likely arise.
-		if (!isset($container['Expires'])) {
-			$container['Expires'] = 0; // Lasts forever
-		}
-		if (!isset($container['RemainingPageLoads'])) {
-			$pageURL = $container['url'] == 'skeleton.php' ? $container['body'] : $container['url'];
-			$container['RemainingPageLoads'] = self::URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] ?? 1; // Allow refreshing
-		}
-
-		if ($sn === null) {
-			$sn = self::generateSN($container);
-		} else {
-			// If we've been provided an SN to use then copy over the existing 'PreviousRequestTime'
-			$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime'];
-		}
+	public static function addLink(Page $container) : string {
+		$sn = self::generateSN($container);
 		self::$var[$sn] = $container;
 		return $sn;
 	}
 
-	protected static function generateSN(array &$container) : string {
-		$container['CommonID'] = self::getCommonID($container);
+	protected static function generateSN(Page $container) : string {
 		if (isset(self::$commonIDs[$container['CommonID']])) {
 			$sn = self::$commonIDs[$container['CommonID']];
 			$container['PreviousRequestTime'] = isset(self::$var[$sn]) ? self::$var[$sn]['PreviousRequestTime'] : self::getMicroTime();
@@ -477,24 +361,6 @@ class SmrSession {
 		}
 		self::$commonIDs[$container['CommonID']] = $sn;
 		return $sn;
-	}
-
-	protected static function getCommonID(array $commonContainer) : string {
-		unset($commonContainer['Expires']);
-		unset($commonContainer['RemainingPageLoads']);
-		unset($commonContainer['PreviousRequestTime']);
-		unset($commonContainer['CommonID']);
-		// NOTE: This ID will change if the order of elements in the container
-		// changes. If this causes unnecessary SN changes, sort the container!
-		return md5(serialize($commonContainer));
-	}
-
-	public static function getNewHREF(array $container, bool $forceFullURL = false) : string {
-		$sn = self::addLink($container);
-		if ($forceFullURL === true || stripos($_SERVER['REQUEST_URI'], 'loader.php') === false) {
-			return '/loader.php?sn=' . $sn;
-		}
-		return '?sn=' . $sn;
 	}
 
 	public static function addAjaxReturns(string $element, string $contents) : bool {

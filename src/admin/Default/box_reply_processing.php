@@ -4,14 +4,14 @@ $message = trim(Request::get('message'));
 $banPoints = Request::getInt('BanPoints');
 $rewardCredits = Request::getInt('RewardCredits');
 if (Request::get('action') == 'Preview message') {
-	$container = create_container('skeleton.php', 'box_reply.php');
+	$container = Page::create('skeleton.php', 'box_reply.php');
 	$container['BanPoints'] = $banPoints;
 	$container['RewardCredits'] = $rewardCredits;
-	transfer('game_id');
-	transfer('sender_id');
-	transfer('box_type_id');
+	$container->addVar('game_id');
+	$container->addVar('sender_id');
+	$container->addVar('box_type_id');
 	$container['Preview'] = $message;
-	forward($container);
+	$container->go();
 }
 
 SmrPlayer::sendMessageFromAdmin($var['game_id'], $var['sender_id'], $message);
@@ -25,4 +25,4 @@ if ($banPoints > 0) {
 	$senderAccount->addPoints($banPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 }
 
-forward(create_container('skeleton.php', 'box_view.php'));
+Page::create('skeleton.php', 'box_view.php')->go();

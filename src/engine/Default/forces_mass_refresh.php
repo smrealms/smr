@@ -12,6 +12,6 @@ foreach ($sectorForces as $sectorForce) {
 }
 
 $message = '[Force Check]'; //this notifies the CS to look for info.
-$container = create_container('skeleton.php', 'current_sector.php');
+$container = Page::create('skeleton.php', 'current_sector.php');
 $container['msg'] = $message;
-forward($container);
+$container->go();

@@ -5,7 +5,7 @@ function getHofCategories($hofTypes, $game_id, $account_id) {
 	$categories = [];
 	foreach ($hofTypes as $type => $value) {
 		// Make each category a link to view the subcategory page
-		$container = $var;
+		$container = Page::copy($var);
 		$container['view'] = $type;
 		if (!isset($var['type'])) {
 			$container['type'] = array();
@@ -13,7 +13,7 @@ function getHofCategories($hofTypes, $game_id, $account_id) {
 		$link = create_link($container, $type);
 
 		// Make the subcategory buttons
-		$container = $var;
+		$container = Page::copy($var);
 		if (!isset($var['type'])) {
 			$container['type'] = array();
 		}
@@ -32,7 +32,6 @@ function getHofCategories($hofTypes, $game_id, $account_id) {
 				$subcategories[] = create_submit_link($container, $subType . $rankMsg);
 			}
 		} else {
-			unset($container['view']);
 			$rank = getHofRank($type, $container['type'], $account_id, $game_id);
 			$subcategories[] = create_submit_link($container, 'View (#' . $rank['Rank'] . ')');
 		}
@@ -128,7 +127,7 @@ function displayHOFRow($rank, $accountID, $amount) {
 	$return = ('<tr>');
 	$return .= ('<td ' . $bold . '>' . $rank . '</td>');
 
-	$container = create_container('skeleton.php', 'hall_of_fame_player_detail.php');
+	$container = Page::create('skeleton.php', 'hall_of_fame_player_detail.php');
 	$container['account_id'] = $accountID;
 
 	if (isset($var['game_id'])) {
@@ -148,9 +147,13 @@ function displayHOFRow($rank, $accountID, $amount) {
 }
 
 function buildBreadcrumb(&$var, &$hofTypes, $hofName) {
-	$container = $var;
-	unset($container['type']);
-	unset($container['view']);
+	$container = Page::copy($var);
+	if (isset($container['type'])) {
+		unset($container['type']);
+	}
+	if (isset($container['view'])) {
+		unset($container['view']);
+	}
 	$viewing = '<span class="bold">Currently viewing: </span>' . create_link($container, $hofName);
 	$typeList = array();
 	if (isset($var['type'])) {
@@ -163,9 +166,11 @@ function buildBreadcrumb(&$var, &$hofTypes, $hofName) {
 				$typeList[] = $type;
 			}
 			$viewing .= ' &rarr; ';
-			$container = $var;
+			$container = Page::copy($var);
 			$container['type'] = $typeList;
-			unset($container['view']);
+			if (isset($container['view'])) {
+				unset($container['view']);
+			}
 			$viewing .= create_link($container, $type);
 
 			$hofTypes = $hofTypes[$type];
@@ -177,7 +182,7 @@ function buildBreadcrumb(&$var, &$hofTypes, $hofName) {
 			$typeList[] = $var['view'];
 			$var['type'] = $typeList;
 		}
-		$container = $var;
+		$container = Page::copy($var);
 		$viewing .= create_link($container, $var['view']);
 
 		if (is_array($hofTypes[$var['view']])) {

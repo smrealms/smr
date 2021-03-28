@@ -12,4 +12,4 @@ if (isset($var['Form'])) {
 	$ship->setWeaponLocations(Request::getIntArray('weapon_reorder'));
 }
 
-forward(create_container('skeleton.php', 'weapon_reorder.php'));
+Page::create('skeleton.php', 'weapon_reorder.php')->go();

@@ -26,6 +26,6 @@ switch ($type) {
 	break;
 }
 
-$container = create_container('skeleton.php', 'course_plot.php');
+$container = Page::create('skeleton.php', 'course_plot.php');
 
-forward($container);
+$container->go();

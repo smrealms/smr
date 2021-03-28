@@ -58,7 +58,7 @@ while ($db->nextRecord()) {
 }
 $template->assign('PlayerKills', $playerKills);
 
-$container = $var;
+$container = Page::copy($var);
 $container['body'] = 'history_alliance_detail.php';
 $container['selected_index'] = 0;
 

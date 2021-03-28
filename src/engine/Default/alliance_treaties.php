@@ -25,13 +25,13 @@ while ($db->nextRecord()) {
 		}
 	}
 	$otherAllianceID = $db->getInt('alliance_id_1');
-	$container = create_container('alliance_treaties_processing.php', '');
+	$container = Page::create('alliance_treaties_processing.php', '');
 	$container['alliance_id_1'] = $otherAllianceID;
 	$container['aa_access'] = $db->getField('aa_access');
 	$container['accept'] = true;
-	$acceptHREF = SmrSession::getNewHREF($container);
+	$acceptHREF = $container->href();
 	$container['accept'] = false;
-	$rejectHREF = SmrSession::getNewHREF($container);
+	$rejectHREF = $container->href();
 
 	$offers[] = [
 		'Alliance' => SmrAlliance::getAlliance($otherAllianceID, $player->getGameID()),
@@ -42,5 +42,5 @@ while ($db->nextRecord()) {
 }
 $template->assign('Offers', $offers);
 
-$container = create_container('skeleton.php', 'alliance_treaties_confirm.php');
-$template->assign('SendOfferHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'alliance_treaties_confirm.php');
+$template->assign('SendOfferHREF', $container->href());

@@ -120,4 +120,4 @@ if ($action == 'Ship') {
 	create_error('You must choose if you want to transfer to planet or to the ship!');
 }
 
-forward(create_container('skeleton.php', 'planet_defense.php'));
+Page::create('skeleton.php', 'planet_defense.php')->go();

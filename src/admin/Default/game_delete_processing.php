@@ -299,5 +299,4 @@ if ($action == 'Yes') {
 
 }
 $db = MySqlDatabase::getInstance();
-//forward em
-forward(create_container('skeleton.php', 'admin_tools.php'));
+Page::create('skeleton.php', 'admin_tools.php')->go();

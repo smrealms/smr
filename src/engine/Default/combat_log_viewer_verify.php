@@ -18,7 +18,7 @@ if (!$db->nextRecord()) {
 }
 
 // Player has permission, so go to the display page!
-$container = create_container('skeleton.php', 'combat_log_viewer.php');
+$container = Page::create('skeleton.php', 'combat_log_viewer.php');
 $container['log_ids'] = array($var['log_id']);
 $container['current_log'] = 0;
-forward($container);
+$container->go();

@@ -30,4 +30,4 @@ if (Request::has('transfer')) {
 	$planet->moveMountedWeaponDown(Request::getInt('move_down'));
 }
 
-forward(create_container('skeleton.php', 'planet_defense.php'));
+Page::create('skeleton.php', 'planet_defense.php')->go();

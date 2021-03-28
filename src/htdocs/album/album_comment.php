@@ -34,10 +34,10 @@ try {
 		if (!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM)) {
 			create_error_offline('You do not have permission to do that!');
 		}
-		$container = create_container('skeleton.php', 'album_moderate.php');
+		$container = Page::create('skeleton.php', 'album_moderate.php');
 		$container['account_id'] = $album_id;
 
-		$href = SmrSession::getNewHREF($container, true);
+		$href = $container->href(true);
 		SmrSession::update();
 
 		header('Location: ' . $href);

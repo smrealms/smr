@@ -9,10 +9,10 @@ Menu::galactic_post();
 
 $db2 = MySqlDatabase::getInstance();
 
-$container = create_container('skeleton.php', 'galactic_post_view_article.php');
-$template->assign('ViewArticlesHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'galactic_post_view_article.php');
+$template->assign('ViewArticlesHREF', $container->href());
 $container['body'] = 'galactic_post_make_paper.php';
-$template->assign('MakePaperHREF', SmrSession::getNewHREF($container));
+$template->assign('MakePaperHREF', $container->href());
 
 $db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 $papers = [];
@@ -35,19 +35,19 @@ while ($db->nextRecord()) {
 
 	if (!empty($published)) {
 	} elseif ($hasEnoughArticles) {
-		$container = create_container('galactic_post_make_current.php');
+		$container = Page::create('galactic_post_make_current.php');
 		$container['id'] = $paper_id;
-		$paper['PublishHREF'] = SmrSession::getNewHREF($container);
+		$paper['PublishHREF'] = $container->href();
 	}
 
-	$container = create_container('skeleton.php', 'galactic_post_delete_confirm.php');
+	$container = Page::create('skeleton.php', 'galactic_post_delete_confirm.php');
 	$container['paper'] = 'yes';
 	$container['id'] = $paper_id;
-	$paper['DeleteHREF'] = SmrSession::getNewHREF($container);
+	$paper['DeleteHREF'] = $container->href();
 
-	$container = create_container('skeleton.php', 'galactic_post_paper_edit.php');
+	$container = Page::create('skeleton.php', 'galactic_post_paper_edit.php');
 	$container['id'] = $paper_id;
-	$paper['EditHREF'] = SmrSession::getNewHREF($container);
+	$paper['EditHREF'] = $container->href();
 
 	$papers[] = $paper;
 }

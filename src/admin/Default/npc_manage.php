@@ -4,8 +4,8 @@ $template->assign('PageTopic', 'Manage NPCs');
 
 $selectedGameID = SmrSession::getRequestVarInt('selected_game_id', 0);
 
-$container = create_container('skeleton.php', 'npc_manage.php');
-$template->assign('SelectGameHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'npc_manage.php');
+$template->assign('SelectGameHREF', $container->href());
 
 $games = [];
 $db->query('SELECT game_id FROM game WHERE end_time > ' . $db->escapeNumber(SmrSession::getTime()) . ' AND enabled = ' . $db->escapeBoolean(true) . ' ORDER BY game_id DESC');
@@ -23,9 +23,9 @@ while ($db->nextRecord()) {
 $template->assign('Games', $games);
 $template->assign('SelectedGameID', $selectedGameID);
 
-$container = create_container('npc_manage_processing.php');
+$container = Page::create('npc_manage_processing.php');
 $container['selected_game_id'] = $selectedGameID;
-$template->assign('AddAccountHREF', SmrSession::getNewHREF($container));
+$template->assign('AddAccountHREF', $container->href());
 
 $npcs = [];
 $db->query('SELECT * FROM npc_logins JOIN account USING(login)');
@@ -42,7 +42,7 @@ while ($db->nextRecord()) {
 		'default_alliance' => htmlentities($db->getField('alliance_name')),
 		'active' => $db->getBoolean('active'),
 		'working' => $db->getBoolean('working'),
-		'href' => SmrSession::getNewHREF($container),
+		'href' => $container->href(),
 	];
 }
 

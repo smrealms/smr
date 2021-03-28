@@ -3,9 +3,9 @@
 $template->assign('PageTopic', 'Send Admin Message');
 
 $gameID = SmrSession::getRequestVarInt('SendGameID');
-$container = create_container('admin_message_send_processing.php');
+$container = Page::create('admin_message_send_processing.php');
 $container['SendGameID'] = $gameID;
-$template->assign('AdminMessageSendFormHref', SmrSession::getNewHREF($container));
+$template->assign('AdminMessageSendFormHref', $container->href());
 $template->assign('MessageGameID', $gameID);
 $template->assign('ExpireTime', $var['expire'] ?? 0.5);
 
@@ -26,5 +26,5 @@ if (isset($var['preview'])) {
 	$template->assign('Preview', $var['preview']);
 }
 
-$container = create_container('skeleton.php', 'admin_message_send_select.php');
-$template->assign('BackHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'admin_message_send_select.php');
+$template->assign('BackHREF', $container->href());

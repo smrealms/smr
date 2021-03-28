@@ -48,9 +48,9 @@ if ($action == 'Delete') {
 	// *********************************
 	// * L o g   T y p e s
 	// *********************************
-	$container = create_container('skeleton.php', 'log_console_detail.php');
+	$container = Page::create('skeleton.php', 'log_console_detail.php');
 	$container['account_ids'] = $account_ids;
-	$template->assign('UpdateHREF', SmrSession::getNewHREF($container));
+	$template->assign('UpdateHREF', $container->href());
 
 	$logTypes = [];
 	$db->query('SELECT * FROM log_type');
@@ -70,10 +70,10 @@ if ($action == 'Delete') {
 	// *********************************
 	// * N o t e s
 	// *********************************
-	$container = create_container('log_notes_processing.php', '');
+	$container = Page::create('log_notes_processing.php', '');
 	$container['account_ids'] = $account_ids;
 	$container['log_type_ids'] = $log_type_ids;
-	$template->assign('SaveHREF', SmrSession::getNewHREF($container));
+	$template->assign('SaveHREF', $container->href());
 
 	// get notes from db
 	$log_notes = array();
@@ -114,6 +114,6 @@ if ($action == 'Delete') {
 	$template->assign('Logs', $logs);
 }
 
-$container = create_container('skeleton.php', 'log_console.php');
+$container = Page::create('skeleton.php', 'log_console.php');
 $container['account_ids'] = $account_ids;
-$template->assign('BackHREF', SmrSession::getNewHREF($container));
+$template->assign('BackHREF', $container->href());

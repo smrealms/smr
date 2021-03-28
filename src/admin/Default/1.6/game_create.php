@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
 //get information
-$container = create_container('1.6/game_create_processing.php');
-$template->assign('CreateGalaxiesHREF', SmrSession::getNewHREF($container));
+$container = Page::create('1.6/game_create_processing.php');
+$template->assign('CreateGalaxiesHREF', $container->href());
 
-$container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
-$template->assign('EditGameHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', '1.6/universe_create_sectors.php');
+$template->assign('EditGameHREF', $container->href());
 
 $canEditStartedGames = $account->hasPermission(PERMISSION_EDIT_STARTED_GAMES);
 $template->assign('CanEditStartedGames', $canEditStartedGames);

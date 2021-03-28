@@ -32,7 +32,7 @@ if ($db->getNumRows()) {
 	}
 	$template->assign('LogTypes', $logTypes);
 
-	$template->assign('LogConsoleFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_console_detail.php')));
-	$template->assign('AnonAccessHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_anonymous_account.php')));
+	$template->assign('LogConsoleFormHREF', Page::create('skeleton.php', 'log_console_detail.php')->href());
+	$template->assign('AnonAccessHREF', Page::create('skeleton.php', 'log_anonymous_account.php')->href());
 }
 $template->assign('LoggedAccounts', $loggedAccounts);

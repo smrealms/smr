@@ -3,19 +3,19 @@
 $template->assign('PageTopic', 'Configure Hardware');
 
 if ($ship->hasCloak()) {
-	$container = create_container('configure_hardware_processing.php');
+	$container = Page::create('configure_hardware_processing.php');
 	if (!$ship->isCloaked()) {
 		$container['action'] = 'Enable';
 	} else {
 		$container['action'] = 'Disable';
 	}
-	$template->assign('ToggleCloakHREF', SmrSession::getNewHREF($container));
+	$template->assign('ToggleCloakHREF', $container->href());
 }
 
 if ($ship->hasIllusion()) {
-	$container = create_container('configure_hardware_processing.php');
+	$container = Page::create('configure_hardware_processing.php');
 	$container['action'] = 'Set Illusion';
-	$template->assign('SetIllusionFormHREF', SmrSession::getNewHREF($container));
+	$template->assign('SetIllusionFormHREF', $container->href());
 
 	$ships = array();
 	$db->query('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
@@ -24,11 +24,11 @@ if ($ship->hasIllusion()) {
 	}
 	$template->assign('IllusionShips', $ships);
 	$container['action'] = 'Disable Illusion';
-	$template->assign('DisableIllusionHref', SmrSession::getNewHREF($container));
+	$template->assign('DisableIllusionHref', $container->href());
 }
 
 if ($ship->hasJump()) {
-	$container = create_container('sector_jump_processing.php', '');
+	$container = Page::create('sector_jump_processing.php', '');
 	$container['target_page'] = 'current_sector.php';
-	$template->assign('JumpDriveFormLink', SmrSession::getNewHREF($container));
+	$template->assign('JumpDriveFormLink', $container->href());
 }

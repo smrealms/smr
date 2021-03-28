@@ -2,4 +2,4 @@
 
 $player->deleteMission($var['MissionID']);
 
-forward(create_container('skeleton.php', 'current_sector.php'));
+Page::create('skeleton.php', 'current_sector.php')->go();

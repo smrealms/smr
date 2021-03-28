@@ -19,7 +19,7 @@ try {
 		// update last login column
 		$account->updateLastLogin();
 
-		$href = SmrSession::getNewHREF(create_container('login_check_processing.php'), true);
+		$href = Page::create('login_check_processing.php')->href(true);
 		SmrSession::update();
 
 		header('Location: ' . $href);

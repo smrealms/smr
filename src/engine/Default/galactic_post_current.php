@@ -7,7 +7,7 @@ if ($db->nextRecord()) {
 	$paper_id = null;
 }
 
-$container = create_container('skeleton.php', 'galactic_post_read.php');
+$container = Page::create('skeleton.php', 'galactic_post_read.php');
 $container['paper_id'] = $paper_id;
 $container['game_id'] = $player->getGameID();
-forward($container);
+$container->go();

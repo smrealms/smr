@@ -2,7 +2,7 @@
 if (!isset($var['CheckType']) || $var['CheckType'] == 'Validate') {
 	// is account validated?
 	if (!$account->isValidated()) {
-		forward(create_container('skeleton.php', 'validate.php'));
+		Page::create('skeleton.php', 'validate.php')->go();
 	} else {
 		$var['CheckType'] = 'Announcements';
 	}
@@ -15,7 +15,7 @@ if ($var['CheckType'] == 'Announcements') {
 	$db->query('SELECT 1 FROM announcement WHERE time >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
 	// do we have announcements?
 	if ($db->nextRecord()) {
-		forward(create_container('skeleton.php', 'announcements.php'));
+		Page::create('skeleton.php', 'announcements.php')->go();
 	} else {
 		$var['CheckType'] = 'Updates';
 	}
@@ -25,8 +25,8 @@ if ($var['CheckType'] == 'Updates') {
 	$db->query('SELECT 1 FROM version WHERE went_live >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
 	// do we have updates?
 	if ($db->nextRecord()) {
-		forward(create_container('skeleton.php', 'changelog_view.php', array('Since' => $lastLogin)));
+		Page::create('skeleton.php', 'changelog_view.php', array('Since' => $lastLogin))->go();
 	}
 }
 
-forward(create_container('logged_in.php'));
+Page::create('logged_in.php')->go();

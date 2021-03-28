@@ -14,6 +14,6 @@ $template->assign('Rankings', Rankings::playerRanks('assists'));
 
 list($minRank, $maxRank) = Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
 
-$template->assign('FilterRankingsHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_player_assists.php')));
+$template->assign('FilterRankingsHREF', Page::create('skeleton.php', 'rankings_player_assists.php')->href());
 
 $template->assign('FilteredRankings', Rankings::playerRanks('assists', $minRank, $maxRank));

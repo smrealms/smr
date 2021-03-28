@@ -35,5 +35,5 @@ if ($var['accept']) {
 	$db->query('DELETE FROM alliance_treaties WHERE alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' AND alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 }
 
-$container = create_container('skeleton.php', 'alliance_treaties.php');
-forward($container);
+$container = Page::create('skeleton.php', 'alliance_treaties.php');
+$container->go();

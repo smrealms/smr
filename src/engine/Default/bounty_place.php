@@ -4,9 +4,9 @@ $template->assign('PageTopic', 'Place Bounty');
 
 Menu::headquarters();
 
-$container = create_container('bounty_place_processing.php');
-transfer('LocationID');
-$template->assign('SubmitHREF', SmrSession::getNewHREF($container));
+$container = Page::create('bounty_place_processing.php');
+$container->addVar('LocationID');
+$template->assign('SubmitHREF', $container->href());
 
 $bountyPlayers = [];
 $db->query('SELECT player_id, player_name FROM player JOIN account USING(account_id) WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id != ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY player_name');

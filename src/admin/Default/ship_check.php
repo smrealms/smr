@@ -12,7 +12,7 @@ $db->query('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware,
 
 $excessHardware = [];
 while ($db->nextRecord()) {
-	$container = create_container('ship_check_processing.php');
+	$container = Page::create('ship_check_processing.php');
 	$container['account_id'] = $db->getInt('account_id');
 	$container['hardware'] = $db->getInt('hardware_type_id');
 	$container['game_id'] = $db->getInt('game_id');
@@ -24,7 +24,7 @@ while ($db->nextRecord()) {
 		'hardware' => $db->getField('hardware_name'),
 		'amount' => $db->getInt('amount'),
 		'max_amount' => $db->getInt('max_amount'),
-		'fixHREF' => SmrSession::getNewHREF($container),
+		'fixHREF' => $container->href(),
 	];
 }
 $template->assign('ExcessHardware', $excessHardware);

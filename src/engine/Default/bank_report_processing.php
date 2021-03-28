@@ -24,7 +24,7 @@ if ($db->nextRecord()) {
 	$db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_BANK_REPORTER) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ')');
 }
 
-$container = create_container('skeleton.php', 'bank_report.php');
-transfer('alliance_id');
+$container = Page::create('skeleton.php', 'bank_report.php');
+$container->addVar('alliance_id');
 $container['sent_report'] = True;
-forward($container);
+$container->go();

@@ -5,7 +5,7 @@ if (!$player->getGame()->hasStarted()) {
 }
 
 if ($var['target_sector'] == $player->getSectorID()) {
-	forward(create_container('skeleton.php', $var['target_page']));
+	Page::create('skeleton.php', $var['target_page'])->go();
 }
 
 if ($sector->getWarp() == $var['target_sector']) {
@@ -24,7 +24,7 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	// get new sector object
 	$sector = $player->getSector();
 	$sector->markVisited($player);
-	forward(create_container('skeleton.php', $var['target_page']));
+	Page::create('skeleton.php', $var['target_page'])->go();
 }
 
 // you can't move while on planet
@@ -85,4 +85,4 @@ $sector->enteringSector($player, MOVEMENT_WALK);
 require('sector_mines.inc.php');
 
 // otherwise
-forward(create_container('skeleton.php', $var['target_page']));
+Page::create('skeleton.php', $var['target_page'])->go();

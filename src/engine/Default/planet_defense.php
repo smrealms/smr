@@ -2,15 +2,15 @@
 
 require('planet.inc.php');
 
-$container = create_container('planet_defense_processing.php');
+$container = Page::create('planet_defense_processing.php');
 $container['type_id'] = 1;
-$template->assign('TransferShieldsHref', SmrSession::getNewHREF($container));
+$template->assign('TransferShieldsHref', $container->href());
 
 $container['type_id'] = 4;
-$template->assign('TransferCDsHref', SmrSession::getNewHREF($container));
+$template->assign('TransferCDsHref', $container->href());
 
 $container['type_id'] = 2;
-$template->assign('TransferArmourHref', SmrSession::getNewHREF($container));
+$template->assign('TransferArmourHref', $container->href());
 
-$container = create_container('planet_defense_weapon_processing.php');
-$template->assign('WeaponProcessingHREF', SmrSession::getNewHREF($container));
+$container = Page::create('planet_defense_weapon_processing.php');
+$template->assign('WeaponProcessingHREF', $container->href());

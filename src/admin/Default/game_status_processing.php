@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$container = create_container('skeleton.php', 'admin_tools.php');
+$container = Page::create('skeleton.php', 'admin_tools.php');
 
 $action = Request::get('action');
 if ($action == 'Close') {
@@ -13,4 +13,4 @@ if ($action == 'Close') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have opened the server.';
 }
 
-forward($container);
+$container->go();

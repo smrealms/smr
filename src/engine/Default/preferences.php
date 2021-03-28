@@ -5,11 +5,11 @@ if (isset($var['reason'])) {
 	$template->assign('Reason', $var['reason']);
 }
 
-$template->assign('PreferencesFormHREF', SmrSession::getNewHREF(create_container('preferences_processing.php', '')));
+$template->assign('PreferencesFormHREF', Page::create('preferences_processing.php', '')->href());
 
-$template->assign('PreferencesConfirmFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'preferences_confirm.php')));
+$template->assign('PreferencesConfirmFormHREF', Page::create('skeleton.php', 'preferences_confirm.php')->href());
 
-$template->assign('ChatSharingHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'chat_sharing.php')));
+$template->assign('ChatSharingHREF', Page::create('skeleton.php', 'chat_sharing.php')->href());
 
 $transferAccounts = array();
 $db->query('SELECT account_id,hof_name FROM account WHERE validated = ' . $db->escapeBoolean(true) . ' ORDER BY hof_name');

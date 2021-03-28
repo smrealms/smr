@@ -3,11 +3,11 @@
 // update last login time
 $account->updateLastLogin();
 
-$container = create_container('skeleton.php');
+$container = Page::create('skeleton.php');
 if (SmrSession::hasGame()) {
 	$container['body'] = 'current_sector.php';
 } else {
 	$container['body'] = 'game_play.php';
 }
 
-forward($container);
+$container->go();

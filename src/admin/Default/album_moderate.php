@@ -43,25 +43,25 @@ $entry = [
 ];
 $template->assign('Entry', $entry);
 
-$template->assign('BackHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'album_moderate_select.php')));
+$template->assign('BackHREF', Page::create('skeleton.php', 'album_moderate_select.php')->href());
 
-$container = create_container('album_moderate_processing.php');
+$container = Page::create('album_moderate_processing.php');
 $container['account_id'] = $account_id;
 
 $container['task'] = 'reset_image';
-$template->assign('ResetImageHREF', SmrSession::getNewHREF($container));
+$template->assign('ResetImageHREF', $container->href());
 $container['task'] = 'reset_location';
-$template->assign('ResetLocationHREF', SmrSession::getNewHREF($container));
+$template->assign('ResetLocationHREF', $container->href());
 $container['task'] = 'reset_email';
-$template->assign('ResetEmailHREF', SmrSession::getNewHREF($container));
+$template->assign('ResetEmailHREF', $container->href());
 $container['task'] = 'reset_website';
-$template->assign('ResetWebsiteHREF', SmrSession::getNewHREF($container));
+$template->assign('ResetWebsiteHREF', $container->href());
 $container['task'] = 'reset_birthdate';
-$template->assign('ResetBirthdateHREF', SmrSession::getNewHREF($container));
+$template->assign('ResetBirthdateHREF', $container->href());
 $container['task'] = 'reset_other';
-$template->assign('ResetOtherHREF', SmrSession::getNewHREF($container));
+$template->assign('ResetOtherHREF', $container->href());
 $container['task'] = 'delete_comment';
-$template->assign('DeleteCommentHREF', SmrSession::getNewHREF($container));
+$template->assign('DeleteCommentHREF', $container->href());
 
 $default_email = 'Dear Photo Album User,' . EOL . EOL .
 				 'You have received this email as notification that the picture you submitted to the Space Merchant Realms Photo Album has been temporarily disabled due to a Photo Album Rules violation.' . EOL .

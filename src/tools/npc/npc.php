@@ -148,10 +148,10 @@ function NPCStuff() {
 				debug('Some evil person killed us, let\'s move on now.');
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES); //Change route
-				processContainer(create_container('death_processing.php'));
+				processContainer(Page::create('death_processing.php'));
 			}
 			if ($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning()) {
-				processContainer(create_container('newbie_warning_processing.php'));
+				processContainer(Page::create('newbie_warning_processing.php'));
 			}
 
 			$fedContainer = null;
@@ -338,7 +338,7 @@ function processContainer($container) {
 	debug('Executing container', $container);
 	// The next "page request" must occur at an updated time.
 	SmrSession::updateTime();
-	resetContainer($container);
+	$container->useAsGlobalVar();
 	acquire_lock($player->getSectorID()); // Lock now to skip var update in do_voodoo
 	do_voodoo();
 }
@@ -480,7 +480,7 @@ function doUNO($hardwareID, $amount) {
 		'amount' => $amount,
 		'action' => 'Buy',
 	];
-	return create_container('shop_hardware_processing.php', '', array('hardware_id'=>$hardwareID));
+	return Page::create('shop_hardware_processing.php', '', array('hardware_id'=>$hardwareID));
 }
 
 function tradeGoods($goodID, AbstractSmrPlayer $player, SmrPort $port) {
@@ -500,7 +500,7 @@ function tradeGoods($goodID, AbstractSmrPlayer $player, SmrPort $port) {
 	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
 
 	$_REQUEST = ['action' => $transaction];
-	return create_container('shop_goods_processing.php', '', array('offered_price'=>$offeredPrice, 'ideal_price'=>$idealPrice, 'amount'=>$amount, 'good_id'=>$goodID, 'bargain_price'=>$offeredPrice));
+	return Page::create('shop_goods_processing.php', '', array('offered_price'=>$offeredPrice, 'ideal_price'=>$idealPrice, 'amount'=>$amount, 'good_id'=>$goodID, 'bargain_price'=>$offeredPrice));
 }
 
 function dumpCargo($player) {
@@ -509,13 +509,13 @@ function dumpCargo($player) {
 	debug('Ship Cargo', $cargo);
 	foreach ($cargo as $goodID => $amount) {
 		if ($amount > 0) {
-			return create_container('cargo_dump_processing.php', '', array('good_id'=>$goodID, 'amount'=>$amount));
+			return Page::create('cargo_dump_processing.php', '', array('good_id'=>$goodID, 'amount'=>$amount));
 		}
 	}
 }
 
 function plotToSector($player, $sectorID) {
-	return create_container('course_plot_processing.php', '', array('from'=>$player->getSectorID(), 'to'=>$sectorID));
+	return Page::create('course_plot_processing.php', '', array('from'=>$player->getSectorID(), 'to'=>$sectorID));
 }
 
 function plotToFed($player, $plotToHQ = false) {
@@ -544,11 +544,11 @@ function plotToNearest(AbstractSmrPlayer $player, $realX) {
 		return true;
 	}
 
-	return create_container('course_plot_nearest_processing.php', '', array('RealX'=>$realX));
+	return Page::create('course_plot_nearest_processing.php', '', array('RealX'=>$realX));
 }
 function moveToSector($player, $targetSector) {
 	debug('Moving from #' . $player->getSectorID() . ' to #' . $targetSector);
-	return create_container('sector_move_processing.php', '', array('target_sector'=>$targetSector, 'target_page'=>''));
+	return Page::create('sector_move_processing.php', '', array('target_sector'=>$targetSector, 'target_page'=>''));
 }
 
 function checkForShipUpgrade(AbstractSmrPlayer $player) {
@@ -571,7 +571,7 @@ function doShipUpgrade(AbstractSmrPlayer $player, $upgradeShipID) {
 
 	if ($plotNearest == true) { //We're already there!
 		//TODO: We're going to want to UNO after upgrading
-		return create_container('shop_ship_processing.php', '', array('ship_id'=>$upgradeShipID));
+		return Page::create('shop_ship_processing.php', '', array('ship_id'=>$upgradeShipID));
 	} //Otherwise return the plot
 	return $plotNearest;
 }

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$container = create_container('skeleton.php');
+$container = Page::create('skeleton.php');
 if (SmrSession::hasGame()) {
 	$container['body'] = 'current_sector.php';
 } else {
@@ -284,4 +284,4 @@ if ($action == 'Save and resend validation code') {
 // Update the account in case it has changed
 $account->update();
 
-forward($container);
+$container->go();

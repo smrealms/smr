@@ -3,8 +3,8 @@ $template->assign('PageTopic', 'Viewing Reported Messages');
 
 require_once(get_file_loc('messages.inc.php'));
 
-$container = create_container('notify_delete_processing.php');
-$template->assign('DeleteHREF', SmrSession::getNewHREF($container));
+$container = Page::create('notify_delete_processing.php');
+$template->assign('DeleteHREF', $container->href());
 
 $db->query('SELECT * FROM message_notify');
 $messages = [];
@@ -13,7 +13,7 @@ while ($db->nextRecord()) {
 	$sender = getMessagePlayer($db->getInt('from_id'), $gameID);
 	$receiver = getMessagePlayer($db->getInt('to_id'), $gameID);
 
-	$container = create_container('skeleton.php', 'notify_reply.php');
+	$container = Page::create('skeleton.php', 'notify_reply.php');
 	$container['offender'] = $db->getInt('from_id');
 	$container['offended'] = $db->getInt('to_id');
 	$container['game_id'] = $gameID;

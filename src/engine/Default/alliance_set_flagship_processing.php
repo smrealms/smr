@@ -6,4 +6,4 @@ $alliance = $player->getAlliance();
 $alliance->setFlagshipID($flagshipID);
 $alliance->update();
 
-forward(create_container('skeleton.php', 'alliance_set_op.php'));
+Page::create('skeleton.php', 'alliance_set_op.php')->go();

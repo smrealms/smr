@@ -13,4 +13,4 @@ $db->query('INSERT INTO player_has_notes (account_id,game_id,note) VALUES(' .
 		$db->escapeNumber($player->getGameID()) . ',' .
 		$db->escapeBinary(gzcompress($note)) . ')');
 
-forward(create_container('skeleton.php', 'trader_status.php'));
+Page::create('skeleton.php', 'trader_status.php')->go();

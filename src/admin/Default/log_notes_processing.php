@@ -8,8 +8,8 @@ foreach ($var['account_ids'] as $account_id) {
 	}
 }
 
-$container = create_container('skeleton.php', 'log_console_detail.php');
-transfer('account_ids');
-transfer('log_type_ids');
+$container = Page::create('skeleton.php', 'log_console_detail.php');
+$container->addVar('account_ids');
+$container->addVar('log_type_ids');
 
-forward($container);
+$container->go();

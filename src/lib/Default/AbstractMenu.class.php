@@ -22,12 +22,12 @@ class AbstractMenu {
 		$links[] = ['bounty_place.php', 'Place Bounty'];
 
 		$menuItems = [];
-		$container = create_container('skeleton.php');
+		$container = Page::create('skeleton.php');
 		$container['LocationID'] = $var['LocationID'];
 		foreach ($links as $link) {
 			$container['body'] = $link[0];
 			$menuItems[] = [
-				'Link' => SmrSession::getNewHREF($container),
+				'Link' => $container->href(),
 				'Text' => $link[1],
 			];
 		}
@@ -105,11 +105,11 @@ class AbstractMenu {
 	public static function galactic_post() {
 		global $template, $player;
 		$menuItems = array();
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('galactic_post_current.php')), 'Text'=>'Current Edition');
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_past.php')), 'Text'=>'Past Editions');
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_write_article.php')), 'Text'=>'Write an article');
+		$menuItems[] = array('Link'=>Page::create('galactic_post_current.php')->href(), 'Text'=>'Current Edition');
+		$menuItems[] = array('Link'=>Page::create('skeleton.php', 'galactic_post_past.php')->href(), 'Text'=>'Past Editions');
+		$menuItems[] = array('Link'=>Page::create('skeleton.php', 'galactic_post_write_article.php')->href(), 'Text'=>'Write an article');
 		if ($player->isGPEditor()) {
-			$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post.php')), 'Text'=>'Editor Options');
+			$menuItems[] = array('Link'=>Page::create('skeleton.php', 'galactic_post.php')->href(), 'Text'=>'Editor Options');
 		}
 		$template->assign('MenuItems', $menuItems);
 	}
@@ -117,27 +117,27 @@ class AbstractMenu {
 	public static function history_games($selected_index) {
 		global $template, $var;
 		$menuItems = [];
-		$container = create_container('skeleton.php', 'history_games.php');
+		$container = Page::create('skeleton.php', 'history_games.php');
 		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$container['view_game_id'] = $var['view_game_id'];
 		$container['game_name'] = $var['game_name'];
 		$menuItems[] = [
-			'Link' => SmrSession::getNewHREF($container),
+			'Link' => $container->href(),
 			'Text' => 'Game Details',
 		];
 		$container['body'] = 'history_games_detail.php';
 		$menuItems[] = [
-			'Link' => SmrSession::getNewHREF($container),
+			'Link' => $container->href(),
 			'Text' => 'Extended Stats',
 		];
 		$container['body'] = 'history_games_hof.php';
 		$menuItems[] = [
-			'Link' => SmrSession::getNewHREF($container),
+			'Link' => $container->href(),
 			'Text' => 'Hall of Fame',
 		];
 		$container['body'] = 'history_games_news.php';
 		$menuItems[] = [
-			'Link' => SmrSession::getNewHREF($container),
+			'Link' => $container->href(),
 			'Text' => 'Game News',
 		];
 		// make the selected index bold
@@ -162,21 +162,21 @@ class AbstractMenu {
 	public static function combat_log() {
 		global $template;
 
-		$container = create_container('skeleton.php', 'combat_log_list.php');
+		$container = Page::create('skeleton.php', 'combat_log_list.php');
 		$menuItems = array();
 
 		$container['action'] = COMBAT_LOG_PERSONAL;
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF($container), 'Text'=>'Personal');
+		$menuItems[] = array('Link'=>$container->href(), 'Text'=>'Personal');
 		$container['action'] = COMBAT_LOG_ALLIANCE;
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF($container), 'Text'=>'Alliance');
+		$menuItems[] = array('Link'=>$container->href(), 'Text'=>'Alliance');
 		$container['action'] = COMBAT_LOG_FORCE;
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF($container), 'Text'=>'Force');
+		$menuItems[] = array('Link'=>$container->href(), 'Text'=>'Force');
 		$container['action'] = COMBAT_LOG_PORT;
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF($container), 'Text'=>'Port');
+		$menuItems[] = array('Link'=>$container->href(), 'Text'=>'Port');
 		$container['action'] = COMBAT_LOG_PLANET;
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF($container), 'Text'=>'Planet');
+		$menuItems[] = array('Link'=>$container->href(), 'Text'=>'Planet');
 		$container['action'] = COMBAT_LOG_SAVED;
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF($container), 'Text'=>'Saved');
+		$menuItems[] = array('Link'=>$container->href(), 'Text'=>'Saved');
 
 		$template->assign('MenuItems', $menuItems);
 	}
@@ -226,14 +226,14 @@ class AbstractMenu {
 
 		// player rankings
 		$menu_item = array();
-		$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Player Rankings', 'nav');
+		$menu_item['entry'] = create_link(Page::create('skeleton.php', 'rankings_player_experience.php'), 'Player Rankings', 'nav');
 
 		$menu_subitem = array();
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Experience', 'nav');
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_profit.php'), 'Profit', 'nav');
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_kills.php'), 'Kills', 'nav');
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_death.php'), 'Deaths', 'nav');
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_assists.php'), 'Assists', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_player_experience.php'), 'Experience', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_player_profit.php'), 'Profit', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_player_kills.php'), 'Kills', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_player_death.php'), 'Deaths', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_player_assists.php'), 'Assists', 'nav');
 
 		$menu_item['submenu'] = $menu_subitem;
 
@@ -241,14 +241,14 @@ class AbstractMenu {
 
 		// alliance rankings
 		$menu_item = array();
-		$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_alliance_experience.php'), 'Alliance Rankings', 'nav');
+		$menu_item['entry'] = create_link(Page::create('skeleton.php', 'rankings_alliance_experience.php'), 'Alliance Rankings', 'nav');
 
 		$menu_subitem = array();
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_experience.php'), 'Experience', 'nav');
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_profit.php'), 'Profit', 'nav');
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_kills.php'), 'Kills', 'nav');
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_death.php'), 'Deaths', 'nav');
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_vs_alliance.php'), 'Versus', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_alliance_experience.php'), 'Experience', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_alliance_profit.php'), 'Profit', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_alliance_kills.php'), 'Kills', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_alliance_death.php'), 'Deaths', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_alliance_vs_alliance.php'), 'Versus', 'nav');
 
 		$menu_item['submenu'] = $menu_subitem;
 
@@ -256,12 +256,12 @@ class AbstractMenu {
 
 		// racial rankings
 		$menu_item = array();
-		$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Racial Standings', 'nav');
+		$menu_item['entry'] = create_link(Page::create('skeleton.php', 'rankings_race.php'), 'Racial Standings', 'nav');
 
 		$menu_subitem = array();
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Experience', 'nav');
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_kills.php'), 'Kills', 'nav');
-		$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_death.php'), 'Deaths', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_race.php'), 'Experience', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_race_kills.php'), 'Kills', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_race_death.php'), 'Deaths', 'nav');
 
 		$menu_item['submenu'] = $menu_subitem;
 
@@ -269,7 +269,7 @@ class AbstractMenu {
 
 		// sector rankings
 		$menu_item = array();
-		$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_sector_kill.php'), 'Sector Kills', 'nav');
+		$menu_item['entry'] = create_link(Page::create('skeleton.php', 'rankings_sector_kill.php'), 'Sector Kills', 'nav');
 		$menu[] = $menu_item;
 
 		create_sub_menu($menu, $active_level1, $active_level2);
@@ -286,11 +286,11 @@ class AbstractMenu {
 		$links[] = ['bank_anon.php', 'Anonymous Account'];
 
 		$menuItems = [];
-		$container = create_container('skeleton.php');
+		$container = Page::create('skeleton.php');
 		foreach ($links as $link) {
 			$container['body'] = $link[0];
 			$menuItems[] = [
-				'Link' => SmrSession::getNewHREF($container),
+				'Link' => $container->href(),
 				'Text' => $link[1],
 			];
 		}
@@ -300,40 +300,40 @@ class AbstractMenu {
 	public static function council($race_id) {
 		global $player, $template;
 
-		$container = create_container('skeleton.php', 'council_list.php');
+		$container = Page::create('skeleton.php', 'council_list.php');
 		$menu_items = [];
 		$menu_items[] = [
-			'Link' => SmrSession::getNewHREF($container),
+			'Link' => $container->href(),
 			'Text' => 'View Council',
 		];
 
-		$container = create_container('skeleton.php');
+		$container = Page::create('skeleton.php');
 		$container['body'] = 'council_politics.php';
 		$container['race_id'] = $race_id;
 		$menu_items[] = [
-			'Link' => SmrSession::getNewHREF($container),
+			'Link' => $container->href(),
 			'Text' => 'Political Status',
 		];
 
 		$container['body'] = 'council_send_message.php';
 		$container['race_id'] = $race_id;
 		$menu_items[] = [
-			'Link' => SmrSession::getNewHREF($container),
+			'Link' => $container->href(),
 			'Text' => 'Send Message',
 		];
 
 		if ($player->getRaceID() == $race_id) {
 			if ($player->isOnCouncil()) {
-				$container = create_container('skeleton.php', 'council_vote.php');
+				$container = Page::create('skeleton.php', 'council_vote.php');
 				$menu_items[] = [
-					'Link' => SmrSession::getNewHREF($container),
+					'Link' => $container->href(),
 					'Text' => 'Voting Center',
 				];
 			}
 			if ($player->isPresident()) {
-				$container = create_container('skeleton.php', 'council_embassy.php');
+				$container = Page::create('skeleton.php', 'council_embassy.php');
 				$menu_items[] = [
-					'Link' => SmrSession::getNewHREF($container),
+					'Link' => $container->href(),
 					'Text' => 'Embassy',
 				];
 			}
@@ -354,10 +354,10 @@ class AbstractMenu {
 		global $var;
 		$menuItems = array();
 		if (SmrSession::getGameID() == $var['GameID']) {
-			$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'news_read_current.php', array('GameID'=>$var['GameID']))), 'Text'=>'Read Current News');
+			$menuItems[] = array('Link'=>Page::create('skeleton.php', 'news_read_current.php', array('GameID'=>$var['GameID']))->href(), 'Text'=>'Read Current News');
 		}
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'news_read.php', array('GameID'=>$var['GameID']))), 'Text'=>'Read Latest News');
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'news_read_advanced.php', array('GameID'=>$var['GameID']))), 'Text'=>'Advanced News');
+		$menuItems[] = array('Link'=>Page::create('skeleton.php', 'news_read.php', array('GameID'=>$var['GameID']))->href(), 'Text'=>'Read Latest News');
+		$menuItems[] = array('Link'=>Page::create('skeleton.php', 'news_read_advanced.php', array('GameID'=>$var['GameID']))->href(), 'Text'=>'Advanced News');
 
 		$template->assign('MenuItems', $menuItems);
 	}

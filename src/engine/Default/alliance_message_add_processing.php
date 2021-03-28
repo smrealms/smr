@@ -5,7 +5,7 @@ $allEyesOnly = Request::has('allEyesOnly'); // only present for Create Thread
 
 $action = Request::get('action');
 if ($action == 'Preview Thread' || $action == 'Preview Reply') {
-	$container = create_container('skeleton.php', '', $var);
+	$container = Page::create('skeleton.php', '', $var);
 	if (!isset($var['thread_index'])) {
 		$container['body'] = 'alliance_message.php';
 	} else {
@@ -14,7 +14,7 @@ if ($action == 'Preview Thread' || $action == 'Preview Reply') {
 	$container['preview'] = $body;
 	$container['topic'] = $topic;
 	$container['AllianceEyesOnly'] = $allEyesOnly;
-	forward($container);
+	$container->go();
 }
 
 if (!isset($var['alliance_id'])) {
@@ -84,7 +84,7 @@ $db->query('REPLACE INTO player_read_thread
 			(account_id, game_id, alliance_id, thread_id, time)
 			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(SmrSession::getTime() + 2) . ')');
 
-$container = create_container('skeleton.php');
+$container = Page::create('skeleton.php');
 $container['alliance_id'] = $alliance_id;
 if (isset($var['alliance_eyes'])) {
 	$container['alliance_eyes'] = $var['alliance_eyes'];
@@ -100,4 +100,4 @@ if (isset($var['thread_index'])) {
 	$container['body'] = 'alliance_message.php';
 }
 
-forward($container);
+$container->go();

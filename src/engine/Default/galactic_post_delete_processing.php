@@ -22,5 +22,5 @@ if (isset($var['article'])) {
 	}
 }
 
-$container = create_container('skeleton.php', 'galactic_post.php');
-forward($container);
+$container = Page::create('skeleton.php', 'galactic_post.php');
+$container->go();

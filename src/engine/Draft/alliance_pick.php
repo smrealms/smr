@@ -18,7 +18,7 @@ $db->query('SELECT * FROM player WHERE game_id=' . $db->escapeNumber($player->ge
 while ($db->nextRecord()) {
 	$pickPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
 	$players[] = array('Player' => $pickPlayer,
-						'HREF' => SmrSession::getNewHREF(create_container('alliance_pick_processing.php', '', array('PickedAccountID'=>$pickPlayer->getAccountID()))));
+						'HREF' => Page::create('alliance_pick_processing.php', '', array('PickedAccountID'=>$pickPlayer->getAccountID()))->href());
 }
 
 $template->assign('PickPlayers', $players);

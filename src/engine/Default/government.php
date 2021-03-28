@@ -40,7 +40,7 @@ $template->assign('AllBounties', getBounties('HQ'));
 $template->assign('MyBounties', $player->getClaimableBounties('HQ'));
 
 if ($player->getAlignment() > ALIGNMENT_EVIL && $player->getAlignment() <= ALIGNMENT_GOOD) {
-	$container = create_container('government_processing.php');
-	transfer('LocationID');
-	$template->assign('JoinHREF', SmrSession::getNewHREF($container));
+	$container = Page::create('government_processing.php');
+	$container->addVar('LocationID');
+	$template->assign('JoinHREF', $container->href());
 }

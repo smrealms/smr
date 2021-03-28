@@ -4,13 +4,13 @@ $change_title = Request::get('change_title');
 $change_message = Request::get('change_message');
 $affected_db = Request::get('affected_db');
 
-$container = create_container('skeleton.php', 'changelog.php');
+$container = Page::create('skeleton.php', 'changelog.php');
 
 if (Request::get('action') == 'Preview') {
 	$container['change_title'] = $change_title;
 	$container['change_message'] = $change_message;
 	$container['affected_db'] = $affected_db;
-	forward($container);
+	$container->go();
 }
 
 $db->lockTable('changelog');
@@ -31,4 +31,4 @@ $db->query('INSERT INTO changelog
 
 $db->unlock();
 
-forward($container);
+$container->go();

@@ -44,4 +44,4 @@ list($minRank, $maxRank) = Rankings::calculateMinMaxRanks($ourRank, $numAlliance
 
 $template->assign('FilteredRankings', $expRanks($minRank, $maxRank));
 
-$template->assign('FilterRankingsHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_alliance_experience.php')));
+$template->assign('FilterRankingsHREF', Page::create('skeleton.php', 'rankings_alliance_experience.php')->href());

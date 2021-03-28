@@ -11,4 +11,4 @@ if ($var['toggle'] == 'WeaponHiding') {
 }
 
 $body = $var['referrer'] ?? 'current_sector.php';
-forward(create_container('skeleton.php', $body));
+Page::create('skeleton.php', $body)->go();

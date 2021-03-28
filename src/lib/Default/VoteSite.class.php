@@ -145,10 +145,10 @@ class VoteSite {
 	public function getSN($accountID, $gameID) {
 		if ($this->freeTurnsReady($accountID, $gameID)) {
 			// This page will prepare the account for the voting callback.
-			$container = create_container('vote_link.php');
+			$container = Page::create('vote_link.php');
 			$container['link_id'] = $this->linkID;
 			$container['can_get_turns'] = true;
-			return SmrSession::getNewHREF($container, true);
+			return $container->href(true);
 		} else {
 			return false;
 		}

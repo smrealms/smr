@@ -22,7 +22,7 @@ if ($db->nextRecord()) {
 	$db2->query('SELECT response FROM alliance_has_op_response WHERE alliance_id=' . $db2->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL() . ' LIMIT 1');
 
 	$response = $db2->nextRecord() ? $db2->getField('response') : null;
-	$responseHREF = SmrSession::getNewHREF(create_container('alliance_op_response_processing.php'));
+	$responseHREF = Page::create('alliance_op_response_processing.php')->href();
 	$template->assign('OpResponseHREF', $responseHREF);
 
 	$responseInputs = array();
@@ -38,9 +38,9 @@ $role_id = $player->getAllianceRole($alliance->getAllianceID());
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 $db->requireRecord();
 if ($db->getBoolean('change_mod') || $db->getBoolean('change_pass')) {
-	$container = create_container('skeleton.php', 'alliance_stat.php');
+	$container = Page::create('skeleton.php', 'alliance_stat.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
-	$template->assign('EditHREF', SmrSession::getNewHREF($container));
+	$template->assign('EditHREF', $container->href());
 }
 
 $template->assign('DiscordServer', $alliance->getDiscordServer());

@@ -26,5 +26,5 @@ while ($db->nextRecord()) {
 }
 $template->assign('AnonLogs', $anon_logs);
 
-$container = create_container('skeleton.php', 'log_console.php');
-$template->assign('BackHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'log_console.php');
+$template->assign('BackHREF', $container->href());

@@ -7,5 +7,5 @@ if ($db->getNumRows() >= 8) {
 }
 $db->query('INSERT INTO galactic_post_paper_content (game_id, paper_id, article_id) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($var['paper_id']) . ', ' . $db->escapeNumber($var['id']) . ')');
 //we now have that article in the paper
-$container = create_container('skeleton.php', 'galactic_post_view_article.php');
-forward($container);
+$container = Page::create('skeleton.php', 'galactic_post_view_article.php');
+$container->go();

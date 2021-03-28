@@ -3,7 +3,7 @@ $template->assign('PageTopic', 'Newsletter');
 
 $template->assign('CurrentEmail', $account->getEmail());
 
-$processingContainer = create_container('newsletter_send_processing.php');
+$processingContainer = Page::create('newsletter_send_processing.php');
 
 // Get the most recent newsletter text for preview
 $db = MySqlDatabase::getInstance();
@@ -21,4 +21,4 @@ if ($db->nextRecord()) {
 }
 
 // Create the form for the populated processing container
-$template->assign('ProcessingHREF', SmrSession::getNewHREF($processingContainer));
+$template->assign('ProcessingHREF', $processingContainer->href());

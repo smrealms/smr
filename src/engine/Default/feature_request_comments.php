@@ -5,9 +5,9 @@ if (!Globals::isFeatureRequestOpen()) {
 
 $template->assign('PageTopic', 'Feature Request Comments');
 
-$container = $var;
+$container = Page::copy($var);
 $container['body'] = 'feature_request.php';
-$template->assign('BackHref', SmrSession::getNewHREF($container));
+$template->assign('BackHref', $container->href());
 
 $db->query('SELECT *
 			FROM feature_request
@@ -21,7 +21,7 @@ if ($db->getNumRows() > 0) {
 	// variables needed to set the status for this feature request
 	if ($featureModerator) {
 		$template->assign('FeatureRequestId', $var['RequestID']);
-		$template->assign('FeatureRequestStatusFormHREF', SmrSession::getNewHREF(create_container('feature_request_vote_processing.php')));
+		$template->assign('FeatureRequestStatusFormHREF', Page::create('feature_request_vote_processing.php')->href());
 	}
 
 	$featureRequestComments = array();
@@ -40,7 +40,7 @@ if ($db->getNumRows() > 0) {
 	$template->assign('Comments', $featureRequestComments);
 }
 
-$container = $var;
+$container = Page::copy($var);
 $container['url'] = 'feature_request_comment_processing.php';
 unset($container['body']);
-$template->assign('FeatureRequestCommentFormHREF', SmrSession::getNewHREF($container));
+$template->assign('FeatureRequestCommentFormHREF', $container->href());

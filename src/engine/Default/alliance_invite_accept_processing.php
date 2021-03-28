@@ -28,5 +28,5 @@ $player->joinAlliance($newAlliance->getAllianceID());
 // Delete the invitation now that the player has joined
 $invite->delete();
 
-$container = create_container('skeleton.php', 'alliance_mod.php');
-forward($container);
+$container = Page::create('skeleton.php', 'alliance_mod.php');
+$container->go();

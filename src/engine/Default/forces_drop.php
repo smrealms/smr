@@ -11,8 +11,8 @@ if (isset($var['owner_id'])) {
 
 $forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $owner_id);
 
-$container = create_container('forces_drop_processing.php');
+$container = Page::create('forces_drop_processing.php');
 $container['owner_id'] = $owner_id;
 
 $template->assign('Forces', $forces);
-$template->assign('SubmitHREF', SmrSession::getNewHREF($container));
+$template->assign('SubmitHREF', $container->href());

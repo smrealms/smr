@@ -3,9 +3,9 @@
 SmrSession::getRequestVarInt('gal_on');
 $template->assign('Galaxies', SmrGalaxy::getGameGalaxies($var['game_id']));
 
-$container = create_container('skeleton.php', '1.6/universe_create_ports.php');
-transfer('game_id');
-$template->assign('JumpGalaxyHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', '1.6/universe_create_ports.php');
+$container->addVar('game_id');
+$template->assign('JumpGalaxyHREF', $container->href());
 
 $galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 $template->assign('Galaxy', $galaxy);
@@ -31,10 +31,10 @@ if ($total > 0) {
 $template->assign('RacePercents', $racePercents);
 $template->assign('TotalPercent', array_sum($racePercents));
 
-$container = $var;
+$container = Page::copy($var);
 $container['url'] = '1.6/universe_create_save_processing.php';
 $container['body'] = '1.6/universe_create_sectors.php';
-$template->assign('CreateHREF', SmrSession::getNewHREF($container));
+$template->assign('CreateHREF', $container->href());
 
 $template->assign('TotalPorts', $totalPorts);
 $template->assign('Total', array_sum($totalPorts));

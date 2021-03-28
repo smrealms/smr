@@ -39,18 +39,18 @@ if (isset($var['process'])) {
 		$port->addCachePort($player->getAccountID());
 	}
 
-	$container = create_container('skeleton.php', 'bar_main.php');
-	transfer('LocationID');
+	$container = Page::create('skeleton.php', 'bar_main.php');
+	$container->addVar('LocationID');
 	$container['message'] = '<div class="center">Galaxy maps have been added. Enjoy!</div><br />';
-	forward($container);
+	$container->go();
 } else {
 	// This is a display page!
 	$template->assign('PageTopic', 'Buy Galaxy Maps');
 	Menu::bar();
 
 	//find what gal they want
-	$container = create_container('skeleton.php', 'bar_galmap_buy.php');
-	transfer('LocationID');
+	$container = Page::create('skeleton.php', 'bar_galmap_buy.php');
+	$container->addVar('LocationID');
 	$container['process'] = true;
-	$template->assign('BuyHREF', SmrSession::getNewHREF($container));
+	$template->assign('BuyHREF', $container->href());
 }

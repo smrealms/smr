@@ -18,12 +18,12 @@ class Menu extends AbstractMenu {
 		}
 
 		$menuItems = [];
-		$container = create_container('skeleton.php');
+		$container = Page::create('skeleton.php');
 		$container['LocationID'] = $var['LocationID'];
 		foreach ($links as $link) {
 			$container['body'] = $link[0];
 			$menuItems[] = [
-				'Link' => SmrSession::getNewHREF($container),
+				'Link' => $container->href(),
 				'Text' => $link[1],
 			];
 		}

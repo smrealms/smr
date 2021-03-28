@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$template->assign('ViewAllLocationsLink', SmrSession::getNewHREF(create_container('skeleton.php', 'location_edit.php')));
+$template->assign('ViewAllLocationsLink', Page::create('skeleton.php', 'location_edit.php')->href());
 
 if (isset($var['location_type_id'])) {
 	$location = SmrLocation::getLocation($var['location_type_id']);

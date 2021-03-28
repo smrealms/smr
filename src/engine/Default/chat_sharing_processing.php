@@ -2,7 +2,7 @@
 
 function error_on_page($message) {
 	$message = '<span class="bold red">ERROR:</span> ' . $message;
-	forward(create_container('skeleton.php', 'chat_sharing.php', array('message' => $message)));
+	Page::create('skeleton.php', 'chat_sharing.php', array('message' => $message))->go();
 }
 
 // Process adding a "share to" account
@@ -40,4 +40,4 @@ if (Request::has('remove_share_from')) {
 	$db->query('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND from_account_id=' . $db->escapeNumber(Request::getInt('remove_share_from')) . ' AND game_id=' . $db->escapeNumber(Request::getInt('game_id')));
 }
 
-forward(create_container('skeleton.php', 'chat_sharing.php'));
+Page::create('skeleton.php', 'chat_sharing.php')->go();

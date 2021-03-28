@@ -2,7 +2,7 @@
 
 // If on a planet, forward to planet_main.php
 if ($player->isLandedOnPlanet()) {
-	forward(create_container('skeleton.php', 'planet_main.php', $var));
+	Page::create('skeleton.php', 'planet_main.php', $var)->go();
 }
 
 $template->assign('SpaceView', true);

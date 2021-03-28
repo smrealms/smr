@@ -23,9 +23,9 @@ $template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
 $template->assign('Game', $game);
 
 if (SmrSession::getTime() >= $game->getJoinTime()) {
-	$container = create_container('game_join_processing.php');
-	transfer('game_id');
-	$template->assign('JoinGameFormHref', SmrSession::getNewHREF($container));
+	$container = Page::create('game_join_processing.php');
+	$container->addVar('game_id');
+	$template->assign('JoinGameFormHref', $container->href());
 }
 
 $races = [];

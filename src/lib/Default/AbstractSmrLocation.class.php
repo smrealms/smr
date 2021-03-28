@@ -385,15 +385,15 @@ class AbstractSmrLocation {
 	}
 
 	public function getExamineHREF() : string {
-		$container = create_container('skeleton.php', $this->getAction());
+		$container = Page::create('skeleton.php', $this->getAction());
 		$container['LocationID'] = $this->getTypeID();
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function getEditHREF() : string {
-		$container = create_container('skeleton.php', 'location_edit.php');
+		$container = Page::create('skeleton.php', 'location_edit.php');
 		$container['location_type_id'] = $this->getTypeID();
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function equals(SmrLocation $otherLocation) : bool {

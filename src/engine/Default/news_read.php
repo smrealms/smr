@@ -20,7 +20,7 @@ require_once(get_file_loc('news.inc.php'));
 doBreakingNewsAssign($gameID, $template);
 doLottoNewsAssign($gameID, $template);
 
-$template->assign('ViewNewsFormHref', SmrSession::getNewHREF(create_container('skeleton.php', 'news_read.php', array('GameID'=>$var['GameID']))));
+$template->assign('ViewNewsFormHref', Page::create('skeleton.php', 'news_read.php', array('GameID'=>$var['GameID']))->href());
 
 $db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type != \'lotto\' ORDER BY news_id DESC LIMIT ' . ($min_news - 1) . ', ' . ($max_news - $min_news + 1));
 $template->assign('NewsItems', getNewsItems($db));

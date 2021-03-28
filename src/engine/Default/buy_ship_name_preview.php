@@ -2,9 +2,9 @@
 
 $template->assign('PageTopic', 'Naming Your Ship');
 
-$container = create_container('buy_ship_name_preview_processing.php');
-transfer('ShipName');
-transfer('cost');
-$template->assign('ContinueHREF', SmrSession::getNewHREF($container));
+$container = Page::create('buy_ship_name_preview_processing.php');
+$container->addVar('ShipName');
+$container->addVar('cost');
+$template->assign('ContinueHREF', $container->href());
 
 $template->assign('ShipName', $var['ShipName']);

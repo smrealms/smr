@@ -16,12 +16,12 @@ $db->query('SELECT * FROM galactic_post_article WHERE article_id NOT IN (SELECT 
 while ($db->nextRecord()) {
 	$title = stripslashes($db->getField('title'));
 	$writer = SmrPlayer::getPlayer($db->getInt('writer_id'), $player->getGameID());
-	$container = create_container('skeleton.php', 'galactic_post_view_article.php');
+	$container = Page::create('skeleton.php', 'galactic_post_view_article.php');
 	$container['id'] = $db->getInt('article_id');
 	$articles[] = [
 		'title' => $title,
 		'writer' => $writer->getDisplayName(),
-		'link' => SmrSession::getNewHREF($container),
+		'link' => $container->href(),
 	];
 }
 $template->assign('Articles', $articles);
@@ -31,14 +31,14 @@ if (isset($var['id'])) {
 	$db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
 	$db->requireRecord();
 
-	$container = create_container('skeleton.php', 'galactic_post_write_article.php');
-	transfer('id');
-	$editHREF = SmrSession::getNewHREF($container);
+	$container = Page::create('skeleton.php', 'galactic_post_write_article.php');
+	$container->addVar('id');
+	$editHREF = $container->href();
 
-	$container = create_container('skeleton.php', 'galactic_post_delete_confirm.php');
+	$container = Page::create('skeleton.php', 'galactic_post_delete_confirm.php');
 	$container['article'] = 'yes';
-	transfer('id');
-	$deleteHREF = SmrSession::getNewHREF($container);
+	$container->addVar('id');
+	$deleteHREF = $container->href();
 
 	$selectedArticle = [
 		'title' => stripslashes($db->getField('title')),
@@ -48,30 +48,30 @@ if (isset($var['id'])) {
 	];
 	$template->assign('SelectedArticle', $selectedArticle);
 
-	$container = create_container('galactic_post_add_article_to_paper.php');
-	transfer('id');
+	$container = Page::create('galactic_post_add_article_to_paper.php');
+	$container->addVar('id');
 	$papers = [];
 	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 	while ($db->nextRecord()) {
 		$container['paper_id'] = $db->getInt('paper_id');
 		$papers[] = [
 			'title' => $db->getField('title'),
-			'addHREF' => SmrSession::getNewHREF($container),
+			'addHREF' => $container->href(),
 		];
 	}
 	$template->assign('Papers', $papers);
 
 	if (empty($papers)) {
-		$container = create_container('skeleton.php', 'galactic_post_make_paper.php');
-		$template->assign('MakePaperHREF', SmrSession::getNewHREF($container));
+		$container = Page::create('skeleton.php', 'galactic_post_make_paper.php');
+		$template->assign('MakePaperHREF', $container->href());
 	}
 
 	// breaking news options
 	$template->assign('AddedToNews', $var['added_to_breaking_news'] ?? false);
 	if (empty($var['added_to_breaking_news'])) {
-		$container = create_container('skeleton.php', 'galactic_post_view_article.php');
+		$container = Page::create('skeleton.php', 'galactic_post_view_article.php');
 		$container['news'] = $selectedArticle['text'];
-		transfer('id');
-		$template->assign('AddToNewsHREF', SmrSession::getNewHREF($container));
+		$container->addVar('id');
+		$template->assign('AddToNewsHREF', $container->href());
 	}
 }

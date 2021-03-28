@@ -2,9 +2,9 @@
 
 // If not deleting marked messages, we are deleting entire folders
 if (Request::get('action') == 'All Messages') {
-	$container = create_container('message_box_delete_processing.php');
-	transfer('folder_id');
-	forward($container);
+	$container = Page::create('message_box_delete_processing.php');
+	$container->addVar('folder_id');
+	$container->go();
 } else {
 	if (!Request::has('message_id')) {
 		create_error('You must choose the messages you want to delete.');
@@ -34,6 +34,6 @@ if (Request::get('action') == 'All Messages') {
 	}
 }
 
-$container = create_container('skeleton.php', 'message_view.php');
-transfer('folder_id');
-forward($container);
+$container = Page::create('skeleton.php', 'message_view.php');
+$container->addVar('folder_id');
+$container->go();

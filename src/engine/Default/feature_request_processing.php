@@ -17,4 +17,4 @@ $db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id,
 // vote for this feature
 $db->query('INSERT INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($featureRequestID) . ',\'YES\')');
 
-forward(create_container('skeleton.php', 'feature_request.php'));
+Page::create('skeleton.php', 'feature_request.php')->go();

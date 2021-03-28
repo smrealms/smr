@@ -3,8 +3,8 @@
 $template->assign('PageTopic', 'Change Log');
 
 if (isset($var['Since'])) {
-	$container = create_container('logged_in.php');
-	$template->assign('ContinueHREF', SmrSession::getNewHREF($container));
+	$container = Page::create('logged_in.php');
+	$template->assign('ContinueHREF', $container->href());
 }
 
 $db2 = MySqlDatabase::getInstance();

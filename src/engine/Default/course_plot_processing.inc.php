@@ -11,12 +11,12 @@ if ($player->getSectorID() == $startSectorID) {
 
 	if (!$player->isLandedOnPlanet()) {
 		// If the course can immediately be followed, display it on the current sector page
-		$container = create_container('skeleton.php', 'current_sector.php');
-		forward($container);
+		$container = Page::create('skeleton.php', 'current_sector.php');
+		$container->go();
 	}
 }
 
-$container = create_container('skeleton.php', 'course_plot_result.php');
+$container = Page::create('skeleton.php', 'course_plot_result.php');
 $container['Path'] = $path;
 $container['FullPath'] = $fullPath;
-forward($container);
+$container->go();

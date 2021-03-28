@@ -5,8 +5,8 @@ if (!$player->getSector()->hasLocation($var['LocationID'])) {
 }
 
 $location = SmrLocation::getLocation($var['LocationID']);
-$container = create_container('skeleton.php');
-transfer('LocationID');
+$container = Page::create('skeleton.php');
+$container->addVar('LocationID');
 if ($location->isHQ()) {
 	$container['body'] = 'government.php';
 	$type = 'HQ';
@@ -18,7 +18,7 @@ if ($location->isHQ()) {
 }
 // if we don't have a yes we leave immediatly
 if (Request::get('action') != 'Yes') {
-	forward($container);
+	$container->go();
 }
 
 // get values from container (validated in bounty_place_processing.php)
@@ -45,4 +45,4 @@ $placed->increaseHOF(1, array('Bounties', 'Received', 'Number'), HOF_PUBLIC);
 $player->update();
 $account->update();
 $placed->update();
-forward($container);
+$container->go();

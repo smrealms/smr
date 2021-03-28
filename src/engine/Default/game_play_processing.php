@@ -16,5 +16,5 @@ $player->update();
 // log
 $player->log(LOG_TYPE_GAME_ENTERING, 'Player entered game ' . SmrSession::getGameID());
 
-$container = create_container('skeleton.php', 'current_sector.php');
-forward($container);
+$container = Page::create('skeleton.php', 'current_sector.php');
+$container->go();

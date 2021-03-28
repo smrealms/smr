@@ -8,8 +8,8 @@ if (isset($var['msg'])) {
 
 $db->query('SELECT * FROM word_filter');
 if ($db->getNumRows()) {
-	$container = create_container('word_filter_del.php');
-	$template->assign('DelHREF', SmrSession::getNewHREF($container));
+	$container = Page::create('word_filter_del.php');
+	$template->assign('DelHREF', $container->href());
 
 	$filteredWords = [];
 	while ($db->nextRecord()) {
@@ -18,5 +18,5 @@ if ($db->getNumRows()) {
 	$template->assign('FilteredWords', $filteredWords);
 }
 
-$container = create_container('word_filter_add.php');
-$template->assign('AddHREF', SmrSession::getNewHREF($container));
+$container = Page::create('word_filter_add.php');
+$template->assign('AddHREF', $container->href());

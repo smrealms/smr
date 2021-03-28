@@ -18,12 +18,12 @@ if (!$db->nextRecord()) {
 
 $template->assign('MessageText', $db->getField('message_text'));
 
-$container = create_container('message_notify_processing.php', '');
-transfer('folder_id');
-transfer('message_id');
-transfer('sent_time');
-transfer('notified_time');
-$template->assign('ProcessingHREF', SmrSession::getNewHREF($container));
+$container = Page::create('message_notify_processing.php', '');
+$container->addVar('folder_id');
+$container->addVar('message_id');
+$container->addVar('sent_time');
+$container->addVar('notified_time');
+$template->assign('ProcessingHREF', $container->href());
 
 $template->assign('PageTopic', 'Report a Message');
 Menu::messages();

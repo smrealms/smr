@@ -27,8 +27,8 @@ if (!$game->hasStarted()) {
 }
 $game->save();
 
-$container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
+$container = Page::create('skeleton.php', '1.6/universe_create_sectors.php');
 $container['message'] = '<span class="green">SUCCESS: edited game details</span>';
-transfer('game_id');
-transfer('gal_on');
-forward($container);
+$container->addVar('game_id');
+$container->addVar('gal_on');
+$container->go();

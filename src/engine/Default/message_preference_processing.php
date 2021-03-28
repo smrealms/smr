@@ -6,6 +6,6 @@ if (Request::has('ignore_globals')) {
 	$player->setGroupScoutMessages(strtoupper(Request::get('group_scouts')));
 }
 
-$container = create_container('skeleton.php', 'message_view.php');
-transfer('folder_id');
-forward($container);
+$container = Page::create('skeleton.php', 'message_view.php');
+$container->addVar('folder_id');
+$container->go();

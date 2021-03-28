@@ -5,12 +5,12 @@ require_once(get_file_loc('messages.inc.php'));
 if (!isset($var['box_type_id'])) {
 	$template->assign('PageTopic', 'Viewing Message Boxes');
 
-	$container = create_container('skeleton.php', 'box_view.php');
+	$container = Page::create('skeleton.php', 'box_view.php');
 	$boxes = array();
 	foreach (getAdminBoxNames() as $boxTypeID => $boxName) {
 		$container['box_type_id'] = $boxTypeID;
 		$boxes[$boxTypeID] = array(
-			'ViewHREF' => SmrSession::getNewHREF($container),
+			'ViewHREF' => $container->href(),
 			'BoxName' => $boxName,
 			'TotalMessages' => 0,
 		);
@@ -26,13 +26,13 @@ if (!isset($var['box_type_id'])) {
 	$boxName = getAdminBoxNames()[$var['box_type_id']];
 	$template->assign('PageTopic', 'Viewing ' . $boxName);
 
-	$template->assign('BackHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'box_view.php')));
+	$template->assign('BackHREF', Page::create('skeleton.php', 'box_view.php')->href());
 	$db->query('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($var['box_type_id']) . ' ORDER BY send_time DESC');
 	$messages = array();
 	if ($db->getNumRows()) {
-		$container = create_container('box_delete_processing.php');
+		$container = Page::create('box_delete_processing.php');
 		$container['box_type_id'] = $var['box_type_id'];
-		$template->assign('DeleteHREF', SmrSession::getNewHREF($container));
+		$template->assign('DeleteHREF', $container->href());
 		while ($db->nextRecord()) {
 			$gameID = $db->getInt('game_id');
 			$validGame = $gameID > 0 && Globals::isValidGame($gameID);
@@ -51,11 +51,11 @@ if (!isset($var['box_type_id'])) {
 					$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
 					$senderName .= ' a.k.a ' . $senderPlayer->getDisplayName();
 					if ($account->hasPermission(PERMISSION_SEND_ADMIN_MESSAGE)) {
-						$container = create_container('skeleton.php', 'box_reply.php');
+						$container = Page::create('skeleton.php', 'box_reply.php');
 						$container['sender_id'] = $senderID;
 						$container['game_id'] = $gameID;
-						transfer('box_type_id');
-						$messages[$messageID]['ReplyHREF'] = SmrSession::getNewHREF($container);
+						$container->addVar('box_type_id');
+						$messages[$messageID]['ReplyHREF'] = $container->href();
 					}
 				}
 			}

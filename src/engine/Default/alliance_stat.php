@@ -8,7 +8,7 @@ $alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance_id);
 
-$container = create_container('alliance_stat_processing.php');
+$container = Page::create('alliance_stat_processing.php');
 $container['alliance_id'] = $alliance_id;
 
 $role_id = $player->getAllianceRole($alliance->getAllianceID());
@@ -23,7 +23,7 @@ if ($db->nextRecord()) {
 }
 $change_chat = $player->getAllianceID() == $alliance_id && $player->isAllianceLeader();
 
-$template->assign('FormHREF', SmrSession::getNewHREF($container));
+$template->assign('FormHREF', $container->href());
 $template->assign('Alliance', $alliance);
 
 $template->assign('CanChangeDescription', $change_mod || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION));

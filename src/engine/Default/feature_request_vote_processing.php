@@ -15,7 +15,7 @@ if ($action == 'Vote') {
 		$db->query('REPLACE INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber(Request::getInt('favourite')) . ',\'FAVOURITE\')');
 	}
 
-	forward(create_container('skeleton.php', 'feature_request.php'));
+	Page::create('skeleton.php', 'feature_request.php')->go();
 } elseif ($action == 'Set Status') {
 	if (!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST)) {
 		create_error('You do not have permission to do that');
@@ -54,5 +54,5 @@ if ($action == 'Vote') {
 					VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber($account->getAccountID()) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
 	}
 
-	forward(create_container('skeleton.php', 'feature_request.php'));
+	Page::create('skeleton.php', 'feature_request.php')->go();
 }

@@ -74,19 +74,19 @@ $logs = array();
 if ($db->getNumRows() > 0) {
 	// 'View' and 'Save' share the same form, so we use 'old_action' as a
 	// way to return to this page when we only want to save the logs.
-	$container = create_container('combat_log_list_processing.php');
+	$container = Page::create('combat_log_list_processing.php');
 	$container['old_action'] = $action;
-	$template->assign('LogFormHREF', SmrSession::getNewHREF($container));
+	$template->assign('LogFormHREF', $container->href());
 
 	// Set the links for the "view next/previous log list" buttons
-	$container = $var;
+	$container = Page::copy($var);
 	if ($page > 0) {
 		$container['page'] = $page - 1;
-		$template->assign('PreviousPage', SmrSession::getNewHREF($container));
+		$template->assign('PreviousPage', $container->href());
 	}
 	if (($page + 1) * COMBAT_LOGS_PER_PAGE < $totalLogs) {
 		$container['page'] = $page + 1;
-		$template->assign('NextPage', SmrSession::getNewHREF($container));
+		$template->assign('NextPage', $container->href());
 	}
 	// Saved logs
 	$template->assign('CanDelete', $action == COMBAT_LOG_SAVED);

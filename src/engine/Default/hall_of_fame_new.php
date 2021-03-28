@@ -12,11 +12,11 @@ if (empty($game_id)) {
 }
 $template->assign('PageTopic', $topic);
 
-$container = create_container('skeleton.php', 'hall_of_fame_player_detail.php');
+$container = Page::create('skeleton.php', 'hall_of_fame_player_detail.php');
 if (isset($game_id)) {
 	$container['game_id'] = $game_id;
 }
-$template->assign('PersonalHofHREF', SmrSession::getNewHREF($container));
+$template->assign('PersonalHofHREF', $container->href());
 
 $db->query('SELECT type FROM hof_visibility WHERE visibility != ' . $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';

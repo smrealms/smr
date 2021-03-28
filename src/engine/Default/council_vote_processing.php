@@ -42,4 +42,4 @@ if ($action == 'INC' || $action == 'DEC') {
 
 }
 
-forward(create_container('skeleton.php', 'council_vote.php'));
+Page::create('skeleton.php', 'council_vote.php')->go();

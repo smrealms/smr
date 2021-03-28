@@ -8,6 +8,6 @@ checkForLottoWinner($player->getGameID());
 $lottoInfo = getLottoInfo($player->getGameID());
 $template->assign('LottoInfo', $lottoInfo);
 
-$container = create_container('bar_lotto_buy_processing.php');
-transfer('LocationID');
-$template->assign('BuyTicketHREF', SmrSession::getNewHREF($container));
+$container = Page::create('bar_lotto_buy_processing.php');
+$container->addVar('LocationID');
+$template->assign('BuyTicketHREF', $container->href());

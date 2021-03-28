@@ -106,7 +106,7 @@ if ($sendMessage) {
 	$forces->ping($message, $player, true);
 }
 
-$container = create_container('skeleton.php', 'forces_attack.php');
+$container = Page::create('skeleton.php', 'forces_attack.php');
 
 // If their target is dead there is no continue attack button
 if ($forces->exists()) {
@@ -122,4 +122,4 @@ if ($player->isDead()) {
 }
 
 $container['results'] = $serializedResults;
-forward($container);
+$container->go();

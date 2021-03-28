@@ -12,4 +12,4 @@ if ($var['folder_id'] == MSG_SENT) {
 					AND msg_read = ' . $db->escapeBoolean(true));
 }
 
-forward(create_container('skeleton.php', 'message_box.php'));
+Page::create('skeleton.php', 'message_box.php')->go();

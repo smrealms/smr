@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-$container = create_container('skeleton.php', 'message_view.php');
-transfer('folder_id');
+$container = Page::create('skeleton.php', 'message_view.php');
+$container->addVar('folder_id');
 
 if (Request::get('action') == 'No') {
-	forward($container);
+	$container->go();
 }
 
 if (empty($var['message_id'])) {
@@ -32,4 +32,4 @@ $db->query('INSERT INTO message_notify
 			(notify_id, game_id, from_id, to_id, text, sent_time, notify_time)
 			VALUES ('.$notify_id . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->getInt('sender_id') . ', ' . $db->getInt('account_id') . ', ' . $db->escapeString($db->getField('message_text')) . ', ' . $var['sent_time'] . ', ' . $var['notified_time'] . ')');
 
-forward($container);
+$container->go();

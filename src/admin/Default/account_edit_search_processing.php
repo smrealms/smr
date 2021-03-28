@@ -27,10 +27,10 @@ $db->query('SELECT account_id FROM account WHERE account_id = ' . $db->escapeNum
 									   'hof_name LIKE ' . $db->escapeString(Request::get('hofname')) . ' OR ' .
 									   'validation_code LIKE ' . $db->escapeString(Request::get('val_code')));
 if ($db->nextRecord()) {
-	$container = create_container('skeleton.php', 'account_edit.php');
+	$container = Page::create('skeleton.php', 'account_edit.php');
 	$container['account_id'] = $db->getInt('account_id');
 } else {
-	$container = create_container('skeleton.php', 'account_edit_search.php');
+	$container = Page::create('skeleton.php', 'account_edit_search.php');
 	$container['errorMsg'] = 'No matching accounts were found!';
 }
-forward($container);
+$container->go();

@@ -4,7 +4,7 @@ $template->assign('PageTopic', 'Moderate Photo Album');
 
 require_once(LIB . 'Album/album_functions.php');
 
-$moderateHREF = SmrSession::getNewHREF(create_container('skeleton.php', 'album_moderate.php'));
+$moderateHREF = Page::create('skeleton.php', 'album_moderate.php')->href();
 $template->assign('ModerateHREF', $moderateHREF);
 
 // Get all accounts that are eligible for moderation

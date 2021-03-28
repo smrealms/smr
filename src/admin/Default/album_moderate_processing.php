@@ -54,6 +54,6 @@ if ($var['task'] == 'reset_image') {
 	create_error('No action chosen!');
 }
 
-$container = create_container('skeleton.php', 'album_moderate.php');
-transfer('account_id');
-forward($container);
+$container = Page::create('skeleton.php', 'album_moderate.php');
+$container->addVar('account_id');
+$container->go();

@@ -57,6 +57,6 @@ $player->log(LOG_TYPE_HARDWARE, 'Player ' . $action . 's ' . $amount . ' ' . $ha
 $player->update();
 $ship->updateHardware();
 
-$container = create_container('skeleton.php', 'shop_hardware.php');
-transfer('LocationID');
-forward($container);
+$container = Page::create('skeleton.php', 'shop_hardware.php');
+$container->addVar('LocationID');
+$container->go();

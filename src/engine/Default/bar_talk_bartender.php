@@ -15,10 +15,10 @@ if (!isset($var['Message'])) {
 }
 $template->assign('Message', bbifyMessage($var['Message']));
 
-$container = create_container('skeleton.php', 'bar_talk_bartender.php');
-transfer('LocationID');
-$template->assign('ListenHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'bar_talk_bartender.php');
+$container->addVar('LocationID');
+$template->assign('ListenHREF', $container->href());
 
-$container = create_container('bar_talk_bartender_processing.php');
-transfer('LocationID');
-$template->assign('ProcessingHREF', SmrSession::getNewHREF($container));
+$container = Page::create('bar_talk_bartender_processing.php');
+$container->addVar('LocationID');
+$template->assign('ProcessingHREF', $container->href());

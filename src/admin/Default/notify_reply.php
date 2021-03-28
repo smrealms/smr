@@ -3,11 +3,11 @@ $template->assign('PageTopic', 'Reply To Reported Messages');
 
 require_once(get_file_loc('messages.inc.php'));
 
-$container = create_container('notify_reply_processing.php');
-transfer('game_id');
-transfer('offended');
-transfer('offender');
-$template->assign('NotifyReplyFormHref', SmrSession::getNewHREF($container));
+$container = Page::create('notify_reply_processing.php');
+$container->addVar('game_id');
+$container->addVar('offended');
+$container->addVar('offender');
+$template->assign('NotifyReplyFormHref', $container->href());
 $offender = getMessagePlayer($var['offender'], $var['game_id']);
 $offended = getMessagePlayer($var['offended'], $var['game_id']);
 if (is_object($offender)) {

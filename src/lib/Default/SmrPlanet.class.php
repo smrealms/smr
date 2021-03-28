@@ -1052,37 +1052,37 @@ class SmrPlanet {
 	}
 
 	public function getExamineHREF() : string {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_examine.php'));
+		return Page::create('skeleton.php', 'planet_examine.php')->href();
 	}
 
 	public function getLandHREF() : string {
-		return SmrSession::getNewHREF(create_container('planet_land_processing.php'));
+		return Page::create('planet_land_processing.php')->href();
 	}
 
 	public function getAttackHREF() : string {
-		return SmrSession::getNewHREF(create_container('planet_attack_processing.php'));
+		return Page::create('planet_attack_processing.php')->href();
 	}
 
 	public function getBuildHREF(int $structureID) : string {
-		$container = create_container('planet_construction_processing.php');
+		$container = Page::create('planet_construction_processing.php');
 		$container['construction_id'] = $structureID;
 		$container['action'] = 'Build';
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function getCancelHREF(int $structureID) : string {
-		$container = create_container('planet_construction_processing.php');
+		$container = Page::create('planet_construction_processing.php');
 		$container['construction_id'] = $structureID;
 		$container['action'] = 'Cancel';
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function getFinancesHREF() : string {
-		return SmrSession::getNewHREF(create_container('planet_financial_processing.php'));
+		return Page::create('planet_financial_processing.php')->href();
 	}
 
 	public function getBondConfirmationHREF() : string {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_bond_confirmation.php'));
+		return Page::create('skeleton.php', 'planet_bond_confirmation.php')->href();
 	}
 
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers) : void {

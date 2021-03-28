@@ -20,6 +20,6 @@ foreach ($player->getTickers() as $ticker) {
 }
 $template->assign('Tickers', $tickers);
 
-$container = create_container('skeleton.php', 'bar_ticker_buy_processing.php');
-transfer('LocationID');
-$template->assign('BuyHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'bar_ticker_buy_processing.php');
+$container->addVar('LocationID');
+$template->assign('BuyHREF', $container->href());

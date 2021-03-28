@@ -4,12 +4,12 @@ $game = SmrGame::getGame($var['game_id']);
 $template->assign('PageTopic', 'Edit Galaxies : ' . $game->getDisplayName());
 $template->assign('GameEnabled', $game->isEnabled());
 
-$container = create_container('1.6/galaxies_edit_processing.php');
-transfer('game_id');
-transfer('gal_on');
+$container = Page::create('1.6/galaxies_edit_processing.php');
+$container->addVar('game_id');
+$container->addVar('gal_on');
 $submit = [
 	'value' => 'Edit Galaxies',
-	'href' => SmrSession::getNewHREF($container),
+	'href' => $container->href(),
 ];
 $template->assign('Submit', $submit);
 
@@ -25,7 +25,7 @@ foreach (SmrGalaxy::getGameGalaxies($var['game_id']) as $galaxy) {
 }
 $template->assign('Galaxies', $galaxies);
 
-$container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
-transfer('game_id');
-transfer('gal_on');
-$template->assign('BackHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', '1.6/universe_create_sectors.php');
+$container->addVar('game_id');
+$container->addVar('gal_on');
+$template->assign('BackHREF', $container->href());

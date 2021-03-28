@@ -107,4 +107,4 @@ if (Request::get('to_email') == '*') {
 	}
 }
 
-forward(create_container('skeleton.php', 'newsletter_send.php'));
+Page::create('skeleton.php', 'newsletter_send.php')->go();

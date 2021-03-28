@@ -5,10 +5,10 @@ if (!$sector->hasPort()) {
 }
 
 if ($sector->getPort()->isDestroyed()) {
-	forward(create_container('skeleton.php', 'port_attack.php'));
+	Page::create('skeleton.php', 'port_attack.php')->go();
 }
 
 $template->assign('PageTopic', 'Port Raid');
 
-$template->assign('PortAttackHREF', SmrSession::getNewHREF(create_container('port_attack_processing.php')));
+$template->assign('PortAttackHREF', Page::create('port_attack_processing.php')->href());
 $template->assign('Port', $sector->getPort());

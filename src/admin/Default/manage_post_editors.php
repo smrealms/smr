@@ -2,8 +2,8 @@
 
 $template->assign('PageTopic', 'Manage Galactic Post Editors');
 
-$container = create_container('skeleton.php', 'manage_post_editors.php');
-$template->assign('SelectGameHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'manage_post_editors.php');
+$template->assign('SelectGameHREF', $container->href());
 
 // Get the list of active games ordered by reverse start date
 $activeGames = array();
@@ -41,5 +41,5 @@ if (isset($var['processing_msg'])) {
 
 // Create the link to the processing file
 // Pass entire $var so the processing file knows the selected game
-$linkContainer = create_container('manage_post_editors_processing.php', '', $var);
-$template->assign('PostEditorHREF', SmrSession::getNewHREF($linkContainer));
+$linkContainer = Page::create('manage_post_editors_processing.php', '', $var);
+$template->assign('PostEditorHREF', $linkContainer->href());

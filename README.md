@@ -122,22 +122,22 @@ require_once(get_file_loc('SmrAlliance.class.php'));
 
 ## Links
 If possible use a function from Globals or a relevant object to generate links (eg Globals::getCurrentSectorHREF(), $otherPlayer->getExamineTraderHREF()), this is usually clearer and allows hooking into the hotkey system.
-To create a link you first create a "container" using the create_container() function from smr.inc.php declared as
+To create a link you first create a "container" using the Page::create() function from smr.inc.php declared as
 
 ```php
-create_container($file, $body = '', array $extra = array(), $remainingPageLoads = null)
+Page::create($file, $body = '', array $extra = array(), $remainingPageLoads = null)
 ```
 There are two common usages of this:
-- $container = create_container('skeleton.php', $displayOnlyPage) with $displayOnlyPage being something such as 'current_sector.php'
-- $container = create_container($processingPage) with $processingPage being something such as 'sector_move_processing.php'.
+- $container = Page::create('skeleton.php', $displayOnlyPage) with $displayOnlyPage being something such as 'current_sector.php'
+- $container = Page::create($processingPage) with $processingPage being something such as 'sector_move_processing.php'.
 
-You can then call SmrSession::getNewHREF($container) to get a HREF which will load the given page or SmrSession::generateSN($container) to get just the sn.
+You can then call $container->href() to get a HREF which will load the given page or SmrSession::generateSN($container) to get just the sn.
 Along with this you can also assign extra values to $container which will be available on the next page under $var
 
 ```php
-$container = create_container('sector_move_processing.php');
+$container = Page::create('sector_move_processing.php');
 $container['target_sector'] = 1;
-$link = SmrSession::getNewHREF($container);
+$link = $container->href();
 ```
 
 ## Global variables

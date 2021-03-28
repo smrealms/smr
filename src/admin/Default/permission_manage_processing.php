@@ -30,4 +30,4 @@ if (Request::get('action') == 'Change') {
 	}
 }
 
-forward(create_container('skeleton.php', 'permission_manage.php'));
+Page::create('skeleton.php', 'permission_manage.php')->go();

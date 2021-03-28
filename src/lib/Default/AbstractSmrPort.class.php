@@ -1025,42 +1025,42 @@ class AbstractSmrPort {
 	}
 
 	public function getRaidWarningHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'port_attack_warning.php'));
+		return Page::create('skeleton.php', 'port_attack_warning.php')->href();
 	}
 
 	public function getAttackHREF() {
-		$container = create_container('port_attack_processing.php');
+		$container = Page::create('port_attack_processing.php');
 		$container['port_id'] = $this->getSectorID();
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function getClaimHREF() {
-		$container = create_container('port_claim_processing.php');
+		$container = Page::create('port_claim_processing.php');
 		$container['port_id'] = $this->getSectorID();
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function getRazeHREF($justContainer = false) {
-		$container = create_container('port_payout_processing.php');
+		$container = Page::create('port_payout_processing.php');
 		$container['PayoutType'] = 'Raze';
-		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
+		return $justContainer === false ? $container->href() : $container;
 	}
 
 	public function getLootHREF($justContainer = false) {
 		if ($this->getCredits() > 0) {
-			$container = create_container('port_payout_processing.php');
+			$container = Page::create('port_payout_processing.php');
 			$container['PayoutType'] = 'Loot';
 		} else {
-			$container = create_container('skeleton.php', 'current_sector.php');
+			$container = Page::create('skeleton.php', 'current_sector.php');
 			$container['msg'] = 'This port has already been looted.';
 		}
-		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
+		return $justContainer === false ? $container->href() : $container;
 	}
 
 	public function getLootGoodHREF($boughtGoodID) {
-		$container = create_container('port_loot_processing.php');
+		$container = Page::create('port_loot_processing.php');
 		$container['GoodID'] = $boughtGoodID;
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 	public function isCachedVersion() {
 		return $this->cachedVersion;

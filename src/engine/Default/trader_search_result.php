@@ -37,46 +37,46 @@ function playerLinks(SmrPlayer $curr_player) {
 	global $player;
 	$result = array('Player' => $curr_player);
 
-	$container = create_container('skeleton.php', 'trader_search_result.php');
+	$container = Page::create('skeleton.php', 'trader_search_result.php');
 	$container['player_id'] = $curr_player->getPlayerID();
-	$result['SearchHREF'] = SmrSession::getNewHREF($container);
+	$result['SearchHREF'] = $container->href();
 
-	$container = create_container('skeleton.php', 'council_list.php');
+	$container = Page::create('skeleton.php', 'council_list.php');
 	$container['race_id'] = $curr_player->getRaceID();
-	$result['RaceHREF'] = SmrSession::getNewHREF($container);
+	$result['RaceHREF'] = $container->href();
 
-	$container = create_container('skeleton.php', 'message_send.php');
+	$container = Page::create('skeleton.php', 'message_send.php');
 	$container['receiver'] = $curr_player->getAccountID();
-	$result['MessageHREF'] = SmrSession::getNewHREF($container);
+	$result['MessageHREF'] = $container->href();
 
-	$container = create_container('skeleton.php', 'bounty_view.php');
+	$container = Page::create('skeleton.php', 'bounty_view.php');
 	$container['id'] = $curr_player->getAccountID();
-	$result['BountyHREF'] = SmrSession::getNewHREF($container);
+	$result['BountyHREF'] = $container->href();
 
-	$container = create_container('skeleton.php', 'hall_of_fame_player_detail.php');
+	$container = Page::create('skeleton.php', 'hall_of_fame_player_detail.php');
 	$container['account_id'] = $curr_player->getAccountID();
 	$container['game_id'] = $curr_player->getGameID();
 	$container['sending_page'] = 'search';
-	$result['HofHREF'] = SmrSession::getNewHREF($container);
+	$result['HofHREF'] = $container->href();
 
-	$container = create_container('skeleton.php', 'news_read_advanced.php');
+	$container = Page::create('skeleton.php', 'news_read_advanced.php');
 	$container['submit'] = 'Search For Player';
 	$container['playerName'] = $curr_player->getPlayerName();
-	$result['NewsHREF'] = SmrSession::getNewHREF($container);
+	$result['NewsHREF'] = $container->href();
 
 	if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-		$container = create_container('sector_jump_processing.php');
+		$container = Page::create('sector_jump_processing.php');
 		$container['to'] = $curr_player->getSectorID();
-		$result['JumpHREF'] = SmrSession::getNewHREF($container);
+		$result['JumpHREF'] = $container->href();
 	}
 
 	return $result;
 }
 
 if (empty($resultPlayer) && empty($similarPlayers)) {
-	$container = create_container('skeleton.php', 'trader_search.php');
+	$container = Page::create('skeleton.php', 'trader_search.php');
 	$container['empty_result'] = true;
-	forward($container);
+	$container->go();
 }
 
 if (!empty($resultPlayer)) {

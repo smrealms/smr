@@ -2,16 +2,16 @@
 
 $action = Request::get('action');
 if ($action == 'Preview Vote') {
-	$container = create_container('skeleton.php', 'vote_create.php');
+	$container = Page::create('skeleton.php', 'vote_create.php');
 	$container['PreviewVote'] = Request::get('question');
 	$container['Days'] = Request::getInt('days');
-	forward($container);
+	$container->go();
 }
 if ($action == 'Preview Option') {
-	$container = create_container('skeleton.php', 'vote_create.php');
+	$container = Page::create('skeleton.php', 'vote_create.php');
 	$container['PreviewOption'] = Request::get('option');
 	$container['VoteID'] = Request::getInt('vote');
-	forward($container);
+	$container->go();
 }
 
 if ($action == 'Create Vote') {
@@ -23,4 +23,4 @@ if ($action == 'Create Vote') {
 	$voteID = Request::getInt('vote');
 	$db->query('INSERT INTO voting_options (vote_id, text) VALUES(' . $db->escapeNumber($voteID) . ',' . $db->escapeString($option) . ')');
 }
-forward(create_container('skeleton.php', 'vote_create.php'));
+Page::create('skeleton.php', 'vote_create.php')->go();
