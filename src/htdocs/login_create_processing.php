@@ -168,7 +168,7 @@ try {
 		$account->sendValidationEmail();
 	}
 
-	forwardURL(create_container('login_processing.php'));
+	require('login_processing.php');
 } catch (Throwable $e) {
 	handleException($e);
 }

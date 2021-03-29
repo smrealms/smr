@@ -229,12 +229,6 @@ function forward($new_container) {
 	do_voodoo();
 }
 
-function forwardURL($new_container) {
-	resetContainer($new_container);
-	global $var;
-	require_once(get_file_loc($var['url']));
-}
-
 function transfer($what) {
 	global $var, $container;
 
