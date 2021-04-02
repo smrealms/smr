@@ -120,7 +120,7 @@ class Page extends ArrayObject {
 	 * accompany them.
 	 */
 	public static function create($file, $body = '', array|Page $extra = [], $remainingPageLoads = null) : self {
-		if ($extra instanceof ArrayObject) {
+		if ($extra instanceof Page) {
 			// to avoid making $container a reference to $extra
 			$extra = $extra->getArrayCopy();
 		}
@@ -173,7 +173,7 @@ class Page extends ArrayObject {
 	/**
 	 * Transfer data from $var into this container.
 	 */
-	function addVar(string $what) : void {
+	public function addVar(string $what) : void {
 		global $var;
 
 		// transfer this value to next container
@@ -210,7 +210,7 @@ class Page extends ArrayObject {
 		// 'CommonID' MUST be unique to a specific action. If there will
 		// be two different outcomes from containers given the same ID then
 		// problems will likely arise.
-		$copy['CommonID'] = self::getCommonID();
+		$copy['CommonID'] = $this->getCommonID();
 		$sn = SmrSession::addLink($copy);
 
 		if ($forceFullURL === true || stripos($_SERVER['REQUEST_URI'], 'loader.php') === false) {
