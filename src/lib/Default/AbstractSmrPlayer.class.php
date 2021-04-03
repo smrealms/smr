@@ -1595,7 +1595,7 @@ abstract class AbstractSmrPlayer {
 
 			if ($this->db->nextRecord()) {
 				// get the course back
-				$this->plottedCourse = unserialize($this->db->getField('course'));
+				$this->plottedCourse = $this->db->getObject('course');
 			} else {
 				$this->plottedCourse = false;
 			}
@@ -1624,7 +1624,7 @@ abstract class AbstractSmrPlayer {
 		if ($this->plottedCourse->getTotalSectors() > 0) {
 			$this->db->query('REPLACE INTO player_plotted_course
 				(account_id, game_id, course)
-				VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeBinary(serialize($this->plottedCourse)) . ')');
+				VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeObject($this->plottedCourse) . ')');
 		} elseif ($hadPlottedCourse) {
 			$this->deletePlottedCourse();
 		}

@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 
 if (isset($var['results'])) {
-	$results = unserialize($var['results']);
-	$template->assign('FullPortCombatResults', $results);
+	$template->assign('FullPortCombatResults', $var['results']);
 	$template->assign('AlreadyDestroyed', false);
 } else {
 	$template->assign('AlreadyDestroyed', true);

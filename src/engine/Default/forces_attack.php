@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
-$results = unserialize($var['results']);
-$template->assign('FullForceCombatResults', $results);
+$template->assign('FullForceCombatResults', $var['results']);
 
 if ($var['owner_id'] > 0) {
 	$template->assign('Target', SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']));

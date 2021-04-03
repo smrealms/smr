@@ -9,10 +9,9 @@ class DummyShip extends AbstractSmrShip {
 	}
 
 	public function cacheDummyShip() {
-		$cache = serialize($this);
 		$db = MySqlDatabase::getInstance();
 		$db->query('REPLACE INTO cached_dummys (type, id, info)
-					VALUES (\'DummyShip\', ' . $db->escapeString($this->getPlayer()->getPlayerName()) . ', ' . $db->escapeString($cache) . ')');
+					VALUES (\'DummyShip\', ' . $db->escapeString($this->getPlayer()->getPlayerName()) . ', ' . $db->escapeObject($this) . ')');
 	}
 
 	public static function getCachedDummyShip(AbstractSmrPlayer $player) {
@@ -24,7 +23,7 @@ class DummyShip extends AbstractSmrShip {
 			$db->query('SELECT info FROM cached_dummys WHERE type = \'DummyShip\'
 						AND id = ' . $db->escapeString($player->getPlayerName()) . ' LIMIT 1');
 			if ($db->nextRecord()) {
-				$cachedShip = unserialize($db->getField('info'));
+				$cachedShip = $db->getObject('info');
 				foreach ($cachedShip->getWeapons() as $weapon) {
 					$ship->addWeapon($weapon);
 				}

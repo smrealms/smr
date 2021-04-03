@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
-$results = unserialize($var['results']);
-$template->assign('TraderCombatResults', $results);
+
+$template->assign('TraderCombatResults', $var['results']);
 if ($var['target']) {
 	$template->assign('Target', SmrPlayer::getPlayer($var['target'], $player->getGameID()));
 }

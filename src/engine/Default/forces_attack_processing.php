@@ -97,8 +97,7 @@ if (!$bump) {
 }
 
 // Add this log to the `combat_logs` database table
-$serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getAccountID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getAccountID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeObject($results, true) . ')');
 $logId = $db->getInsertID();
 
 if ($sendMessage) {
@@ -121,5 +120,5 @@ if ($player->isDead()) {
 	$container['owner_id'] = 0;
 }
 
-$container['results'] = $serializedResults;
+$container['results'] = $results;
 $container->go();
