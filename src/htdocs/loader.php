@@ -21,7 +21,6 @@ try {
 	$player = null;
 	$ship = null;
 	$sector = null;
-	$container = null;
 	$var = null;
 	$lock = false;
 	$db = MySqlDatabase::getInstance();
@@ -95,16 +94,16 @@ try {
 		if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
 			if (isset($var['do_reopen_account'])) {
 				// The user has attempted to re-validate their e-mail
-				forward(create_container('invalid_email_processing.php'));
+				Page::create('invalid_email_processing.php')->go();
 			} else {
-				forward(create_container('skeleton.php', 'invalid_email.php'));
+				Page::create('skeleton.php', 'invalid_email.php')->go();
 			}
 		} elseif ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
 			if (isset($var['do_reopen_account'])) {
 				// The user has requested to reopen their account
 				$account->unbanAccount($account);
 			} else {
-				forward(create_container('skeleton.php', 'reopen_account.php'));
+				Page::create('skeleton.php', 'reopen_account.php')->go();
 			}
 		} else {
 			throw new Exception('Unexpected disabled reason');

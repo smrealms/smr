@@ -6,19 +6,19 @@ if (!ENABLE_BETA) {
 $template->assign('PageTopic', 'Beta Functions');
 
 // container for all links
-$container = create_container('beta_func_processing.php', 'beta_functions.php');
+$container = Page::create('beta_func_processing.php', 'beta_functions.php');
 
 // let them map all
 $container['func'] = 'Map';
-$template->assign('MapHREF', SmrSession::getNewHREF($container));
+$template->assign('MapHREF', $container->href());
 
 // let them get money
 $container['func'] = 'Money';
-$template->assign('MoneyHREF', SmrSession::getNewHREF($container));
+$template->assign('MoneyHREF', $container->href());
 
 //next time for ship
 $container['func'] = 'Ship';
-$template->assign('ShipHREF', SmrSession::getNewHREF($container));
+$template->assign('ShipHREF', $container->href());
 $shipList = [];
 $db->query('SELECT * FROM ship_type ORDER BY ship_name');
 while ($db->nextRecord()) {
@@ -31,7 +31,7 @@ $template->assign('ShipList', $shipList);
 
 //next weapons
 $container['func'] = 'Weapon';
-$template->assign('AddWeaponHREF', SmrSession::getNewHREF($container));
+$template->assign('AddWeaponHREF', $container->href());
 $weaponList = [];
 $db->query('SELECT * FROM weapon_type ORDER BY weapon_name');
 while ($db->nextRecord()) {
@@ -44,31 +44,31 @@ $template->assign('WeaponList', $weaponList);
 
 //Remove Weapons
 $container['func'] = 'RemWeapon';
-$template->assign('RemoveWeaponsHREF', SmrSession::getNewHREF($container));
+$template->assign('RemoveWeaponsHREF', $container->href());
 
 //allow to get full hardware
 $container['func'] = 'Uno';
-$template->assign('UnoHREF', SmrSession::getNewHREF($container));
+$template->assign('UnoHREF', $container->href());
 
 //move whereever you want
 $container['func'] = 'Warp';
-$template->assign('WarpHREF', SmrSession::getNewHREF($container));
+$template->assign('WarpHREF', $container->href());
 
 //set turns
 $container['func'] = 'Turns';
-$template->assign('TurnsHREF', SmrSession::getNewHREF($container));
+$template->assign('TurnsHREF', $container->href());
 
 //set experience
 $container['func'] = 'Exp';
-$template->assign('ExperienceHREF', SmrSession::getNewHREF($container));
+$template->assign('ExperienceHREF', $container->href());
 
 //Set alignment
 $container['func'] = 'Align';
-$template->assign('AlignmentHREF', SmrSession::getNewHREF($container));
+$template->assign('AlignmentHREF', $container->href());
 
 //add any type of hardware
 $container['func'] = 'Hard_add';
-$template->assign('HardwareHREF', SmrSession::getNewHREF($container));
+$template->assign('HardwareHREF', $container->href());
 $hardware = [];
 $db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
 while ($db->nextRecord()) {
@@ -81,23 +81,23 @@ $template->assign('Hardware', $hardware);
 
 //change personal relations
 $container['func'] = 'Relations';
-$template->assign('PersonalRelationsHREF', SmrSession::getNewHREF($container));
+$template->assign('PersonalRelationsHREF', $container->href());
 
 //change race relations
 $container['func'] = 'Race_Relations';
-$template->assign('RaceRelationsHREF', SmrSession::getNewHREF($container));
+$template->assign('RaceRelationsHREF', $container->href());
 
 //change race
 $container['func'] = 'Race';
-$template->assign('ChangeRaceHREF', SmrSession::getNewHREF($container));
+$template->assign('ChangeRaceHREF', $container->href());
 
 if ($sector->hasPlanet()) {
 	$container['func'] = 'planet_buildings';
-	$template->assign('MaxBuildingsHREF', SmrSession::getNewHREF($container));
+	$template->assign('MaxBuildingsHREF', $container->href());
 
 	$container['func'] = 'planet_defenses';
-	$template->assign('MaxDefensesHREF', SmrSession::getNewHREF($container));
+	$template->assign('MaxDefensesHREF', $container->href());
 
 	$container['func'] = 'planet_stockpile';
-	$template->assign('MaxStockpileHREF', SmrSession::getNewHREF($container));
+	$template->assign('MaxStockpileHREF', $container->href());
 }

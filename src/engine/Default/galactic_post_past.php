@@ -3,8 +3,8 @@
 $template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
 Menu::galactic_post();
 
-$container = create_container('skeleton.php', 'galactic_post_past.php');
-$template->assign('SelectGameHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'galactic_post_past.php');
+$template->assign('SelectGameHREF', $container->href());
 
 // View past editions of current game by default
 $selectedGameID = SmrSession::getRequestVarInt('selected_game_id', $player->getGameID());
@@ -26,7 +26,7 @@ $template->assign('PublishedGames', $publishedGames);
 $db->query('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id=' . $db->escapeNumber($selectedGameID));
 $pastEditions = array();
 while ($db->nextRecord()) {
-	$container = create_container('skeleton.php', 'galactic_post_read.php');
+	$container = Page::create('skeleton.php', 'galactic_post_read.php');
 	$container['paper_id'] = $db->getInt('paper_id');
 	$container['game_id'] = $selectedGameID;
 	$container['back'] = true;
@@ -34,7 +34,7 @@ while ($db->nextRecord()) {
 	$pastEditions[] = [
 		'title' => $db->getField('title'),
 		'online_since' => $db->getInt('online_since'),
-		'href' => SmrSession::getNewHREF($container),
+		'href' => $container->href(),
 	];
 }
 $template->assign('PastEditions', $pastEditions);

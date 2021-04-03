@@ -10,13 +10,13 @@ Menu::alliance($alliance->getAllianceID());
 // Create an array of links with descriptions
 $links = array();
 
-$container = create_container('skeleton.php', 'alliance_leave_confirm.php');
+$container = Page::create('skeleton.php', 'alliance_leave_confirm.php');
 $links[] = array(
 	'link' => create_link($container, 'Leave Alliance'),
 	'text' => 'Leave the alliance. Alliance leaders must hand over leadership before leaving.',
 );
 
-$container = create_container('alliance_share_maps_processing.php');
+$container = Page::create('alliance_share_maps_processing.php');
 $links[] = array(
 	'link' => create_link($container, 'Share Maps'),
 	'text' => 'Share your knowledge of the universe with your alliance mates.',

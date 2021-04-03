@@ -14,5 +14,5 @@ $db->query('UPDATE ship_has_hardware ' .
 				 'hardware_type_id = ' . $db->escapeNumber($hardware_id));
 
 //now erdirect back to page
-$container = create_container('skeleton.php', 'ship_check.php');
-forward($container);
+$container = Page::create('skeleton.php', 'ship_check.php');
+$container->go();

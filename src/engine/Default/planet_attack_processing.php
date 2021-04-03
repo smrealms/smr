@@ -108,7 +108,7 @@ foreach ($attackers as $attacker) {
 	}
 }
 
-$container = create_container('skeleton.php', 'planet_attack.php');
+$container = Page::create('skeleton.php', 'planet_attack.php');
 $container['sector_id'] = $planet->getSectorID();
 
 // If they died on the shot they get to see the results
@@ -117,4 +117,4 @@ if ($player->isDead()) {
 }
 
 $container['results'] = $serializedResults;
-forward($container);
+$container->go();

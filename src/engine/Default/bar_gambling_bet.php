@@ -18,6 +18,6 @@ if ($player->hasNewbieTurns()) {
 $template->assign('MaxBet', $maxBet);
 $template->assign('MaxBetMsg', $maxBetMsg);
 
-$container = create_container('bar_gambling_processing.php');
-transfer('LocationID');
-$template->assign('PlayHREF', SmrSession::getNewHREF($container));
+$container = Page::create('bar_gambling_processing.php');
+$container->addVar('LocationID');
+$template->assign('PlayHREF', $container->href());

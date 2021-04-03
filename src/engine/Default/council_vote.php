@@ -23,9 +23,9 @@ foreach (Globals::getRaces() as $raceID => $raceInfo) {
 	if ($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID()) {
 		continue;
 	}
-	$container = create_container('council_vote_processing.php', '', array('race_id' => $raceID));
+	$container = Page::create('council_vote_processing.php', '', array('race_id' => $raceID));
 	$voteRelations[$raceID] = array(
-		'HREF' => SmrSession::getNewHREF($container),
+		'HREF' => $container->href(),
 		'Increased' => $votedForRace == $raceID && $votedFor == 'INC',
 		'Decreased' => $votedForRace == $raceID && $votedFor == 'DEC',
 		'Relations' => $raceRelations[$raceID],
@@ -44,7 +44,7 @@ if ($db->getNumRows() > 0) {
 
 	while ($db->nextRecord()) {
 		$otherRaceID = $db->getInt('race_id_2');
-		$container = create_container('council_vote_processing.php', '', array('race_id' => $otherRaceID));
+		$container = Page::create('council_vote_processing.php', '', array('race_id' => $otherRaceID));
 
 		// get 'yes' votes
 		$db2->query('SELECT count(*) FROM player_votes_pact
@@ -75,7 +75,7 @@ if ($db->getNumRows() > 0) {
 		}
 
 		$voteTreaties[$otherRaceID] = array(
-			'HREF' => SmrSession::getNewHREF($container),
+			'HREF' => $container->href(),
 			'Type' => $db->getField('type'),
 			'EndTime' => $db->getInt('end_time'),
 			'For' => $votedFor == 'YES',

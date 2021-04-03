@@ -37,7 +37,7 @@ while ($db->nextRecord()) {
 }
 $template->assign('NewsAlliances', $newsAlliances);
 
-$template->assign('AdvancedNewsFormHref', SmrSession::getNewHREF(create_container('skeleton.php', 'news_read_advanced.php', $basicContainer)));
+$template->assign('AdvancedNewsFormHref', Page::create('skeleton.php', 'news_read_advanced.php', $basicContainer)->href());
 
 // No submit value when first navigating to the page
 $submit_value = SmrSession::getRequestVar('submit', '');

@@ -2,4 +2,4 @@
 
 $template->assign('PageTopic', 'IP Search');
 
-$template->assign('IpFormHref', SmrSession::getNewHREF(create_container('skeleton.php', 'ip_view_results.php')));
+$template->assign('IpFormHref', Page::create('skeleton.php', 'ip_view_results.php')->href());

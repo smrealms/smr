@@ -5,10 +5,10 @@ if (empty($var['message']) || $var['message'] == '') {
 }
 
 if (SmrSession::hasGame() && is_object($player) && $lock) {
-	$container = create_container('skeleton.php', 'current_sector.php');
+	$container = Page::create('skeleton.php', 'current_sector.php');
 	$errorMsg = '<span class="red bold">ERROR:</span> ' . $var['message'];
 	$container['errorMsg'] = $errorMsg;
-	forward($container);
+	$container->go();
 } else {
 	$template->assign('PageTopic', 'Error');
 	$template->assign('Message', $var['message']);

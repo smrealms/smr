@@ -4,9 +4,9 @@ $template->assign('PageTopic', 'Send Message');
 
 Menu::messages();
 
-$container = create_container('message_send_processing.php');
-transfer('receiver');
-$template->assign('MessageSendFormHref', SmrSession::getNewHREF($container));
+$container = Page::create('message_send_processing.php');
+$container->addVar('receiver');
+$template->assign('MessageSendFormHref', $container->href());
 
 if (!empty($var['receiver'])) {
 	$template->assign('Receiver', SmrPlayer::getPlayer($var['receiver'], $player->getGameID()));

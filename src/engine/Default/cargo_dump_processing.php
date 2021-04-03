@@ -24,7 +24,7 @@ if ($sector->offersFederalProtection()) {
 	create_error('You can\'t dump cargo in a Federal Sector!');
 }
 
-$container = create_container('skeleton.php', 'current_sector.php');
+$container = Page::create('skeleton.php', 'current_sector.php');
 
 if ($player->getExperience() > 0) {
 	// If they have any experience left, lose exp
@@ -69,4 +69,4 @@ $player->takeTurns(1, 1);
 $ship->decreaseCargo($good_id, $amount);
 $player->increaseHOF($amount, array('Trade', 'Goods', 'Jettisoned'), HOF_ALLIANCE);
 
-forward($container);
+$container->go();

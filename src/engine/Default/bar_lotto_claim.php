@@ -15,7 +15,7 @@ if ($db->nextRecord()) {
 	$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 }
 //offer another drink and such
-$container = create_container('skeleton.php', 'bar_main.php');
-transfer('LocationID');
+$container = Page::create('skeleton.php', 'bar_main.php');
+$container->addVar('LocationID');
 $container['message'] = $message;
-forward($container);
+$container->go();

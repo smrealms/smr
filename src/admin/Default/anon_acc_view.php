@@ -3,8 +3,8 @@
 //view anon acct activity.
 $template->assign('PageTopic', 'View Anonymous Account Info');
 
-$container = create_container('skeleton.php', 'anon_acc_view_select.php');
-$template->assign('BackHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'anon_acc_view_select.php');
+$template->assign('BackHREF', $container->href());
 
 $anonID = SmrSession::getRequestVarInt('anon_account');
 $gameID = SmrSession::getRequestVarInt('view_game_id');
@@ -26,7 +26,7 @@ while ($db->nextRecord()) {
 if (!$rows) {
 	$message = '<p><span class="red">Anon account #' . $anonID . ' in Game ' . $gameID . ' does NOT exist!</span></p>';
 	$container['message'] = $message;
-	forward($container);
+	$container->go();
 }
 $template->assign('Rows', $rows);
 $template->assign('AnonID', $anonID);

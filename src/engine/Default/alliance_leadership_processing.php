@@ -12,4 +12,4 @@ $db->query('UPDATE player_has_alliance_role SET role_id = ' . $db->escapeNumber(
 $playerMessage = 'You are now the leader of ' . $alliance->getAllianceBBLink() . '!';
 $player->sendMessageFromAllianceCommand($leader_id, $playerMessage);
 
-forward(create_container('skeleton.php', 'alliance_roster.php'));
+Page::create('skeleton.php', 'alliance_roster.php')->go();

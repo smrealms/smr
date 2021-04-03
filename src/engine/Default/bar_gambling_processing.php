@@ -195,8 +195,8 @@ if ($do == 'STAY') {
 	$win = check_for_win($dealerHand, $playerHand);
 }
 
-$container = create_container('bar_gambling_processing.php');
-transfer('LocationID');
+$container = Page::create('bar_gambling_processing.php');
+$container->addVar('LocationID');
 $container['bet'] = $bet;
 
 $message .= ('<div class="center">');
@@ -204,18 +204,18 @@ if ($playerHand->getValue() > 21) {
 	$message .= ('You have <span class="red"><b>BUSTED</b></span>');
 	$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
 	$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
-	$message .= '<p><a class="submitStyle" href="' . SmrSession::getNewHREF($container) . '">Play Some More ($' . $bet . ')</a></p>';
+	$message .= '<p><a class="submitStyle" href="' . $container->href() . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');
 } elseif (!isset($win) && $playerHand->getValue() < 21) {
 	$container['deck'] = $deck;
 	$container['player_hand'] = $playerHand;
 	$container['player_does'] = 'HIT';
 	$container['dealer_hand'] = $dealerHand;
-	$message .= '<form method="POST" action="' . SmrSession::getNewHREF($container) . '">';
+	$message .= '<form method="POST" action="' . $container->href() . '">';
 	$message .= '<input type="submit" name="action" value="HIT" />';
 	$message .= ('<br /><small><br /></small></form>');
 	$container['player_does'] = 'STAY';
-	$message .= '<form method="POST" action="' . SmrSession::getNewHREF($container) . '">';
+	$message .= '<form method="POST" action="' . $container->href() . '">';
 	$message .= '<input type="submit" name="action" value="STAY" />';
 	$message .= ('</form></div>');
 } elseif (isset($win)) {
@@ -242,7 +242,7 @@ if ($playerHand->getValue() > 21) {
 		$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
 	}
-	$message .= '<p><a class="submitStyle" href="' . SmrSession::getNewHREF($container) . '">Play Some More ($' . $bet . ')</a></p>';
+	$message .= '<p><a class="submitStyle" href="' . $container->href() . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');
 } elseif ($playerHand->getValue() == 21) {
 	if ($dealerHand->getValue() != 21) {
@@ -269,13 +269,13 @@ if ($playerHand->getValue() > 21) {
 		$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
 		$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
 	}
-	$message .= '<p><a class="submitStyle" href="' . SmrSession::getNewHREF($container) . '">Play Some More ($' . $bet . ')</a></p>';
+	$message .= '<p><a class="submitStyle" href="' . $container->href() . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');
 }
 
 $player->update();
-$container = create_container('skeleton.php', 'bar_gambling_bet.php');
-transfer('LocationID');
+$container = Page::create('skeleton.php', 'bar_gambling_bet.php');
+$container->addVar('LocationID');
 $container['message'] = $message;
 $container['AllowAjax'] = false;
-forward($container);
+$container->go();

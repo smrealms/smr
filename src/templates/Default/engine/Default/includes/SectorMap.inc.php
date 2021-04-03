@@ -28,7 +28,7 @@
 							foreach ($MovementTypes as $MovementType) {
 								if (isset($ToggleLink)) {
 									$ToggleLink['dir'] = $MovementType; ?>
-									<a onclick="ajaxLink('<?php echo SmrSession::getNewHREF($ToggleLink); ?>')" class="lm<?php echo $MovementType; ?>"><?php
+									<a onclick="ajaxLink('<?php echo $ToggleLink->href(); ?>')" class="lm<?php echo $MovementType; ?>"><?php
 								} ?>
 								<div class="lm<?php echo $MovementType; ?> <?php if ($Sector->getLink($MovementType)) { ?>con<?php } else { ?>wall<?php } ?>"></div><?php
 								if (isset($ToggleLink)) { ?>
@@ -129,7 +129,7 @@
 						<div class="lmsector"><?php echo $Sector->getSectorID(); ?></div><?php
 						if ($UniGen) {
 							$UniGen['sector_edit'] = $Sector->getSectorID(); ?>
-							<a class="move_hack" href="<?php echo SmrSession::getNewHREF($UniGen); ?>"></a><?php
+							<a class="move_hack" href="<?php echo $UniGen->href(); ?>"></a><?php
 						} elseif ($GalaxyMap) { ?>
 							<a class="move_hack" href="<?php echo $Sector->getGalaxyMapHREF(); ?>"></a><?php
 						} elseif ($isLinkedSector) { ?>

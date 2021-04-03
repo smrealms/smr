@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$processingHREF = SmrSession::getNewHREF(create_container('game_status_processing.php'));
+$processingHREF = Page::create('game_status_processing.php')->href();
 $template->assign('ProcessingHREF', $processingHREF);
 
 $db->query('SELECT * FROM game_disable');

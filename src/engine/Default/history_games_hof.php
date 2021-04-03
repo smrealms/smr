@@ -16,7 +16,7 @@ if (!isset($var['stat'])) {
 			continue;
 		}
 		$statDisplay = ucwords(str_replace('_', ' ', $stat));
-		$container = $var;
+		$container = Page::copy($var);
 		$container['stat'] = $stat;
 		$container['stat_display'] = $statDisplay;
 		$links[] = create_link($container, $statDisplay);
@@ -24,10 +24,10 @@ if (!isset($var['stat'])) {
 	$template->assign('Links', $links);
 } else {
 	// Link back to overview page
-	$container = $var;
+	$container = Page::copy($var);
 	unset($container['stat']);
 	unset($container['stat_display']);
-	$template->assign('BackHREF', SmrSession::getNewHREF($container));
+	$template->assign('BackHREF', $container->href());
 
 	$template->assign('StatName', $var['stat_display']);
 

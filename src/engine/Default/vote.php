@@ -13,9 +13,9 @@ if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		$voteID = $db->getInt('vote_id');
 		$voting[$voteID]['ID'] = $voteID;
-		$container = create_container('vote.php', 'vote_processing.php');
+		$container = Page::create('vote.php', 'vote_processing.php');
 		$container['vote_id'] = $voteID;
-		$voting[$voteID]['HREF'] = SmrSession::getNewHREF($container);
+		$voting[$voteID]['HREF'] = $container->href();
 		$voting[$voteID]['Question'] = $db->getField('question');
 		if ($db->getInt('end') > SmrSession::getTime()) {
 			$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - SmrSession::getTime(), true);

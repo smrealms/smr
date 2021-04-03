@@ -25,7 +25,7 @@ $num = $db->getInt('num');
 $message = ('<div class="center">Thanks for your purchase and good luck!  You currently');
 $message .= (' own ' . $num . ' ' . pluralise('ticket', $num) . '!</div><br />');
 
-$container = create_container('skeleton.php', 'bar_main.php');
-transfer('LocationID');
+$container = Page::create('skeleton.php', 'bar_main.php');
+$container->addVar('LocationID');
 $container['message'] = $message;
-forward($container);
+$container->go();

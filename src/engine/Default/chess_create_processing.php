@@ -3,4 +3,4 @@
 $challengePlayer = SmrPlayer::getPlayerByPlayerID(Request::getInt('player_id'), $player->getGameID());
 ChessGame::insertNewGame(SmrSession::getTime(), null, $player, $challengePlayer);
 
-forward(create_container('skeleton.php', 'chess.php'));
+Page::create('skeleton.php', 'chess.php')->go();

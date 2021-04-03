@@ -3,11 +3,11 @@
 $chessGame = ChessGame::getChessGame($var['ChessGameID']);
 $result = $chessGame->resign($player->getAccountID());
 
-$container = create_container('skeleton.php', 'current_sector.php');
+$container = Page::create('skeleton.php', 'current_sector.php');
 
 $container['msg'] = match($result) {
 	0 => '[color=green]Success:[/color] You have resigned from [chess=' . $var['ChessGameID'] . '].',
 	1 => '[color=green]Success:[/color] [chess=' . $var['ChessGameID'] . '] has been cancelled.',
 };
 
-forward($container);
+$container->go();

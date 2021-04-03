@@ -14,7 +14,7 @@ $template->assign('PageTopic', 'Confirmation');
 $template->assign('Amount', $amount);
 $template->assign('HofName', SmrAccount::getAccount($account_id)->getHofDisplayName());
 
-$container = create_container('preferences_processing.php');
+$container = Page::create('preferences_processing.php');
 $container['account_id'] = $account_id;
 $container['amount'] = $amount;
-$template->assign('SubmitHREF', SmrSession::getNewHREF($container));
+$template->assign('SubmitHREF', $container->href());

@@ -29,9 +29,9 @@ if ($showRoles) {
 	}
 	$template->assign('Roles', $roles);
 
-	$container = create_container('alliance_roles_save_processing.php');
+	$container = Page::create('alliance_roles_save_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
-	$template->assign('SaveAllianceRolesHREF', SmrSession::getNewHREF($container));
+	$template->assign('SaveAllianceRolesHREF', $container->href());
 }
 
 
@@ -51,9 +51,9 @@ $template->assign('AllianceExp', $db->getInt('alliance_xp'));
 $template->assign('AllianceAverageExp', $db->getInt('alliance_avg'));
 
 if ($account->getAccountID() == $alliance->getLeaderID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
-	$container = create_container('skeleton.php', 'alliance_stat.php');
+	$container = Page::create('skeleton.php', 'alliance_stat.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
-	$template->assign('EditAllianceDescriptionHREF', SmrSession::getNewHREF($container));
+	$template->assign('EditAllianceDescriptionHREF', $container->href());
 }
 
 $db->query('SELECT 1 FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
@@ -67,13 +67,13 @@ $template->assign('AlliancePlayers', $alliancePlayers);
 if ($alliance->getAllianceID() == $player->getAllianceID()) {
 	// Alliance members get to see active/inactive status of members
 	$template->assign('ActiveIDs', $alliance->getActiveIDs());
-	$container = create_container('skeleton.php', 'alliance_roster.php');
+	$container = Page::create('skeleton.php', 'alliance_roster.php');
 	if ($showRoles) {
 		$container['action'] = 'Hide Alliance Roles';
 	} else {
 		$container['action'] = 'Show Alliance Roles';
 	}
-	$template->assign('ToggleRolesHREF', SmrSession::getNewHREF($container));
+	$template->assign('ToggleRolesHREF', $container->href());
 }
 
 // If the player is already in an alliance, we don't want to print
@@ -81,7 +81,7 @@ if ($alliance->getAllianceID() == $player->getAllianceID()) {
 $joinRestriction = $player->hasAlliance() ? true : $alliance->getJoinRestriction($player);
 $template->assign('JoinRestriction', $joinRestriction);
 if ($joinRestriction === false) {
-	$container = create_container('alliance_join_processing.php');
+	$container = Page::create('alliance_join_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
-	$template->assign('JoinHREF', SmrSession::getNewHREF($container));
+	$template->assign('JoinHREF', $container->href());
 }

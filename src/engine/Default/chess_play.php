@@ -21,4 +21,4 @@ if (!$playerIsWhite) {
 $template->assign('FileCoords', $fileCoords);
 
 $template->assign('MoveMessage', $var['MoveMessage'] ?? '');
-$template->assign('ChessMoveHREF', SmrSession::getNewHREF(create_container('chess_move_processing.php', '', array('AJAX' => true, 'ChessGameID' => $var['ChessGameID']))));
+$template->assign('ChessMoveHREF', Page::create('chess_move_processing.php', '', array('AJAX' => true, 'ChessGameID' => $var['ChessGameID']))->href());

@@ -1242,14 +1242,14 @@ abstract class AbstractSmrAccount {
 
 	public function getToggleAJAXHREF() : string {
 		global $var;
-		return SmrSession::getNewHREF(create_container('toggle_processing.php', '', array('toggle'=>'AJAX', 'referrer'=>$var['body'])));
+		return Page::create('toggle_processing.php', '', array('toggle'=>'AJAX', 'referrer'=>$var['body']))->href();
 	}
 
 	public function getUserRankingHREF() : string {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_view.php'));
+		return Page::create('skeleton.php', 'rankings_view.php')->href();
 	}
 
 	public function getPersonalHofHREF() : string {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'hall_of_fame_player_detail.php', array('account_id' => $this->getAccountID())));
+		return Page::create('skeleton.php', 'hall_of_fame_player_detail.php', array('account_id' => $this->getAccountID()))->href();
 	}
 }

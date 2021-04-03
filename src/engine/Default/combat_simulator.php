@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 $template->assign('PageTopic','Combat Simulator');
 
-$template->assign('EditDummysLink',SmrSession::getNewHREF(create_container('skeleton.php','edit_dummys.php')));
+$template->assign('EditDummysLink', Page::create('skeleton.php','edit_dummys.php')->href());
 $template->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 
 $duplicates = false;
@@ -52,7 +52,7 @@ $template->assign('Defenders',$defenders);
 
 $template->assign('Duplicates',$duplicates);
 
-$template->assign('CombatSimHREF',SmrSession::getNewHREF(create_container('skeleton.php','combat_simulator.php')));
+$template->assign('CombatSimHREF', Page::create('skeleton.php','combat_simulator.php')->href());
 
 if (!empty($realAttackers) && !empty($realDefenders)) {
 	if(isset($_REQUEST['run'])) {

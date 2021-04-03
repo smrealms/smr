@@ -4,9 +4,9 @@ $gameID = $var['game_id'];
 $galaxies = SmrGalaxy::getGameGalaxies($gameID);
 
 // Prepare our forwarding container
-$container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
-transfer('gal_on');
-transfer('game_id');
+$container = Page::create('skeleton.php', '1.6/universe_create_sectors.php');
+$container->addVar('gal_on');
+$container->addVar('game_id');
 
 // Save the original sizes for later processing
 $origGals = [];
@@ -39,7 +39,7 @@ foreach ($galaxies as $i => $galaxy) {
 if ($galaxySizesUnchanged) {
 	SmrGalaxy::saveGalaxies();
 	$container['message'] = '<span class="green">SUCCESS: </span>Edited galaxies (sizes unchanged).';
-	forward($container);
+	$container->go();
 }
 
 
@@ -201,4 +201,4 @@ SmrGalaxy::saveGalaxies();
 SmrSector::saveSectors();
 
 $container['message'] = '<span class="green">SUCCESS: </span>Edited galaxies (sizes have changed).';
-forward($container);
+$container->go();

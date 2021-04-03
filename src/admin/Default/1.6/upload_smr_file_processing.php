@@ -114,6 +114,6 @@ foreach ($data as $key => $vals) {
 SmrSector::saveSectors();
 SmrPort::savePorts();
 
-$container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
-transfer('game_id');
-forward($container);
+$container = Page::create('skeleton.php', '1.6/universe_create_sectors.php');
+$container->addVar('game_id');
+$container->go();

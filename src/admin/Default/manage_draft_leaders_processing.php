@@ -16,7 +16,7 @@ try {
 } catch (PlayerNotFoundException $e) {
 	$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 	SmrSession::updateVar('processing_msg', $msg);
-	forward(create_container('skeleton.php', 'manage_draft_leaders.php', $var));
+	Page::create('skeleton.php', 'manage_draft_leaders.php', $var)->go();
 }
 
 $name = $selectedPlayer->getDisplayName();
@@ -44,4 +44,4 @@ if (!empty($msg)) {
 }
 
 // Pass entire $var so that the selected game remains selected
-forward(create_container('skeleton.php', 'manage_draft_leaders.php', $var));
+Page::create('skeleton.php', 'manage_draft_leaders.php', $var)->go();

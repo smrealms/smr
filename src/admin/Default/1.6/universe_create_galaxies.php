@@ -7,23 +7,23 @@ $template->assign('PageTopic', 'Create Galaxies : ' . $game->getDisplayName());
 $template->assign('GameEnabled', $game->isEnabled());
 
 // Link for updating the number of galaxies
-$container = create_container('skeleton.php', '1.6/universe_create_galaxies.php');
-transfer('game_id');
-$template->assign('UpdateNumGalsHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', '1.6/universe_create_galaxies.php');
+$container->addVar('game_id');
+$template->assign('UpdateNumGalsHREF', $container->href());
 
 // Link for creating galaxies
-$container = create_container('1.6/universe_create_save_processing.php', '1.6/universe_create_sectors.php');
-transfer('game_id');
-transfer('num_gals');
+$container = Page::create('1.6/universe_create_save_processing.php', '1.6/universe_create_sectors.php');
+$container->addVar('game_id');
+$container->addVar('num_gals');
 $submit = [
 	'value' => 'Create Galaxies',
-	'href' => SmrSession::getNewHREF($container),
+	'href' => $container->href(),
 ];
 $template->assign('Submit', $submit);
 
 // Link for creating universe from SMR file
 $container['url'] = '1.6/upload_smr_file_processing.php';
-$template->assign('UploadSmrFileHREF', SmrSession::getNewHREF($container));
+$template->assign('UploadSmrFileHREF', $container->href());
 
 //Galaxy Creation area
 $defaultNames = array(0, 'Alskant', 'Creonti', 'Human', 'Ik\'Thorne', 'Nijarin', 'Salvene', 'Thevian', 'WQ Human', 'Omar', 'Salzik', 'Manton', 'Livstar', 'Teryllia', 'Doriath', 'Anconus', 'Valheru', 'Sardine', 'Clacher', 'Tangeria');

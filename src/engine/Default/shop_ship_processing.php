@@ -40,6 +40,6 @@ $player->update();
 
 $player->log(LOG_TYPE_HARDWARE, 'Buys a ' . $ship->getName() . ' for ' . $cost . ' credits');
 
-$container = create_container('skeleton.php', 'current_sector.php');
-transfer('LocationID');
-forward($container);
+$container = Page::create('skeleton.php', 'current_sector.php');
+$container->addVar('LocationID');
+$container->go();

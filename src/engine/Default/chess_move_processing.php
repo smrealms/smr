@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-$container = create_container('skeleton.php', 'chess_play.php');
-transfer('ChessGameID');
+$container = Page::create('skeleton.php', 'chess_play.php');
+$container->addVar('ChessGameID');
 
 $chessGame = ChessGame::getChessGame($var['ChessGameID']);
 $x = Request::getInt('x');
@@ -30,4 +30,4 @@ if (!$chessGame->hasEnded()) {
 	$container['MoveMessage'] = 'This game is over.';
 }
 
-forward($container);
+$container->go();

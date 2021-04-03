@@ -21,4 +21,4 @@ if ($action == 'Build') {
 	$player->log(LOG_TYPE_PLANETS, 'Player cancels planet construction');
 }
 
-forward(create_container('skeleton.php', 'planet_construction.php'));
+Page::create('skeleton.php', 'planet_construction.php')->go();

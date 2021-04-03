@@ -3,9 +3,9 @@
 Menu::history_games($var['selected_index']);
 
 //offer a back button
-$container = $var;
+$container = Page::copy($var);
 $container['body'] = 'history_games.php';
-$template->assign('BackHREF', SmrSession::getNewHREF($container));
+$template->assign('BackHREF', $container->href());
 
 $game_id = $var['view_game_id'];
 $id = $var['alliance_id'];

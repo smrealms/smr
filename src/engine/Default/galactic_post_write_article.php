@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 Menu::galactic_post();
-$container = create_container('galactic_post_write_article_processing.php');
+$container = Page::create('galactic_post_write_article_processing.php');
 
 if (isset($var['id'])) {
 	$container['id'] = $var['id'];
@@ -20,4 +20,4 @@ if (isset($var['Preview'])) {
 	$template->assign('PreviewTitle', $var['PreviewTitle']);
 	$template->assign('Preview', $var['Preview']);
 }
-$template->assign('SubmitArticleHref', SmrSession::getNewHREF($container));
+$template->assign('SubmitArticleHref', $container->href());

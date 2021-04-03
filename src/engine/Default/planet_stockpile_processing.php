@@ -50,4 +50,4 @@ if ($action == 'Ship') {
 $planet->update();
 $ship->updateCargo();
 
-forward(create_container('skeleton.php', 'planet_stockpile.php'));
+Page::create('skeleton.php', 'planet_stockpile.php')->go();

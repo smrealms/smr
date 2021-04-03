@@ -9,9 +9,9 @@ if (!empty($var['paper_id'])) {
 
 	// Create link back to past editions
 	if (isset($var['back']) && $var['back']) {
-		$container = create_container('skeleton.php', 'galactic_post_past.php');
+		$container = Page::create('skeleton.php', 'galactic_post_past.php');
 		$container['game_id'] = $var['game_id'];
-		$template->assign('BackHREF', SmrSession::getNewHREF($container));
+		$template->assign('BackHREF', $container->href());
 	}
 
 	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);

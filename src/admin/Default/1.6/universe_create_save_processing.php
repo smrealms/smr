@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 $submit = Request::getVar('submit');
-unset($var['submit']);
+SmrSession::updateVar('submit', null);
 
 if ($submit == 'Create Galaxies') {
 	for ($i = 1; $i <= $var['num_gals']; $i++) {
@@ -244,9 +244,9 @@ if ($submit == 'Create Galaxies') {
 	SmrSector::saveSectors();
 }
 
-$container = $var;
+$container = Page::copy($var);
 $container['url'] = 'skeleton.php';
-forward($container);
+$container->go();
 
 
 function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) {

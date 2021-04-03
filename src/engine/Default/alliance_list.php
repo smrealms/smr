@@ -3,12 +3,12 @@
 $template->assign('PageTopic', 'List Of Alliances');
 
 if (!$player->hasAlliance()) {
-	$container = create_container('skeleton.php', 'alliance_create.php');
-	$template->assign('CreateAllianceHREF', SmrSession::getNewHREF($container));
+	$container = Page::create('skeleton.php', 'alliance_create.php');
+	$template->assign('CreateAllianceHREF', $container->href());
 }
 
 
-$container = create_container('skeleton.php');
+$container = Page::create('skeleton.php');
 
 // get list of alliances
 $db->query('SELECT
@@ -36,7 +36,7 @@ while ($db->nextRecord()) {
 	$container['alliance_id'] = $allianceID;
 
 	$alliances[$allianceID] = array(
-		'ViewHREF' => SmrSession::getNewHREF($container),
+		'ViewHREF' => $container->href(),
 		'Name' => htmlentities($db->getField('alliance_name')),
 		'TotalExperience' => $db->getInt('alliance_xp'),
 		'AverageExperience' => $db->getInt('alliance_avg'),

@@ -6,4 +6,4 @@ if (!$player->isLandedOnPlanet()) {
 $player->setLandedOnPlanet(false);
 $player->update();
 $player->log(LOG_TYPE_MOVEMENT, 'Player launches from planet');
-forward(create_container('skeleton.php', 'current_sector.php'));
+Page::create('skeleton.php', 'current_sector.php')->go();

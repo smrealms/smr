@@ -9,7 +9,7 @@ Menu::alliance($alliance->getAllianceID());
 // Get list of pending invitations
 $pendingInvites = array();
 foreach (SmrInvitation::getAll($player->getAllianceID(), $player->getGameID()) as $invite) {
-	$container = create_container('alliance_invite_cancel_processing.php');
+	$container = Page::create('alliance_invite_cancel_processing.php');
 	$container['invite'] = $invite;
 
 	$invited = $invite->getReceiver();
@@ -17,7 +17,7 @@ foreach (SmrInvitation::getAll($player->getAllianceID(), $player->getGameID()) a
 		'invited' => $invited->getDisplayName(true),
 		'invited_by' => $invite->getSender()->getDisplayName(),
 		'expires' => format_time($invite->getExpires() - SmrSession::getTime(), true),
-		'cancelHREF' => SmrSession::getNewHREF($container),
+		'cancelHREF' => $container->href(),
 	);
 }
 $template->assign('PendingInvites', $pendingInvites);
@@ -46,4 +46,4 @@ $template->assign('InvitePlayers', $invitePlayers);
 
 $template->assign('ThisGame', $game);
 $template->assign('ThisAlliance', $alliance);
-$template->assign('InviteHREF', SmrSession::getNewHREF(create_container('alliance_invite_player_processing.php')));
+$template->assign('InviteHREF', Page::create('alliance_invite_player_processing.php')->href());

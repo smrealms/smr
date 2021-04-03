@@ -19,12 +19,12 @@ foreach ($shipsSold as $shipTypeID => $shipSold) {
 $template->assign('ShipsUnavailable', $shipsUnavailable);
 
 if (!empty($shipsSold)) {
-	$container = create_container('skeleton.php', 'shop_ship.php');
-	transfer('LocationID');
+	$container = Page::create('skeleton.php', 'shop_ship.php');
+	$container->addVar('LocationID');
 
 	foreach (array_keys($shipsSold) as $shipTypeID) {
 		$container['ship_id'] = $shipTypeID;
-		$shipsSoldHREF[$shipTypeID] = SmrSession::getNewHREF($container);
+		$shipsSoldHREF[$shipTypeID] = $container->href();
 	}
 }
 $template->assign('ShipsSold', $shipsSold);
@@ -35,10 +35,10 @@ if (isset($var['ship_id'])) {
 	$compareShip['RealSpeed'] = $compareShip['Speed'] * $player->getGame()->getGameSpeed();
 	$compareShip['Turns'] = round($player->getTurns() * $compareShip['Speed'] / $ship->getSpeed());
 
-	$container = create_container('shop_ship_processing.php');
-	transfer('LocationID');
-	transfer('ship_id');
-	$compareShip['BuyHREF'] = SmrSession::getNewHREF($container);
+	$container = Page::create('shop_ship_processing.php');
+	$container->addVar('LocationID');
+	$container->addVar('ship_id');
+	$compareShip['BuyHREF'] = $container->href();
 
 	$template->assign('CompareShip', $compareShip);
 	$template->assign('TradeInValue', floor($ship->getCost() * SHIP_REFUND_PERCENT));

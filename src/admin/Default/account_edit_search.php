@@ -9,7 +9,7 @@ while ($db->nextRecord()) {
 	$games[$gameID] = $db->getField('game_name') . ' (' . $gameID . ')';
 }
 $template->assign('Games', $games);
-$template->assign('SearchHREF', SmrSession::getNewHREF(create_container('account_edit_search_processing.php')));
+$template->assign('SearchHREF', Page::create('account_edit_search_processing.php')->href());
 
 if (isset($var['errorMsg'])) {
 	$template->assign('ErrorMessage', $var['errorMsg']);

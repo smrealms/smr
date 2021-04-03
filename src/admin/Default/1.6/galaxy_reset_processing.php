@@ -16,8 +16,8 @@ foreach ($galaxy->getSectors() as $galSector) {
 
 SmrSector::saveSectors();
 
-$container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
-transfer('game_id');
-transfer('gal_on');
+$container = Page::create('skeleton.php', '1.6/universe_create_sectors.php');
+$container->addVar('game_id');
+$container->addVar('gal_on');
 $container['message'] = '<span class="green">Success</span> : reset galaxy.';
-forward($container);
+$container->go();

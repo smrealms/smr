@@ -25,11 +25,11 @@ $categoryTable = array();
 foreach ($requestCategories as $category => $description) {
 	$status = statusFromCategory($category);
 
-	$container = $var;
+	$container = Page::copy($var);
 	$container['category'] = $category;
 	$categoryTable[$category] = array(
 		'Selected' => $category == $var['category'],
-		'HREF' => SmrSession::getNewHREF($container),
+		'HREF' => $container->href(),
 		'Count' => getFeaturesCount($status, ($category == 'New') ? NEW_REQUEST_DAYS : false),
 		'Description' => $description
 	);
@@ -57,9 +57,9 @@ $db->query('SELECT * ' .
 if ($db->getNumRows() > 0) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$template->assign('FeatureModerator', $featureModerator);
-	$template->assign('FeatureRequestVoteFormHREF', SmrSession::getNewHREF(create_container('feature_request_vote_processing.php', '')));
+	$template->assign('FeatureRequestVoteFormHREF', Page::create('feature_request_vote_processing.php', '')->href());
 
-	$commentsContainer = $var;
+	$commentsContainer = Page::copy($var);
 	$commentsContainer['body'] = 'feature_request_comments.php';
 	$db2 = MySqlDatabase::getInstance();
 	$featureRequests = array();
@@ -91,12 +91,12 @@ if ($db->getNumRows() > 0) {
 			$featureRequests[$featureRequestID]['Comments'] = $db2->getInt('COUNT(*)');
 		}
 		$commentsContainer['RequestID'] = $featureRequestID;
-		$featureRequests[$featureRequestID]['CommentsHREF'] = SmrSession::getNewHREF($commentsContainer);
+		$featureRequests[$featureRequestID]['CommentsHREF'] = $commentsContainer->href();
 	}
 	$template->assign('FeatureRequests', $featureRequests);
 }
 
-$template->assign('FeatureRequestFormHREF', SmrSession::getNewHREF(create_container('feature_request_processing.php', '')));
+$template->assign('FeatureRequestFormHREF', Page::create('feature_request_processing.php', '')->href());
 
 function statusFromCategory($category) {
 	return ($category == 'New' || $category == 'All Open') ? 'Opened' : $category;

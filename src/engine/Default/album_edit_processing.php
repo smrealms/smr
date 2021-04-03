@@ -107,9 +107,9 @@ if (!empty($comment)) {
 	$db->unlock();
 }
 
-$container = create_container('skeleton.php', 'album_edit.php');
+$container = Page::create('skeleton.php', 'album_edit.php');
 $container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
-forward($container);
+$container->go();
 
 function php_link_check($url) {
 	/*	Purpose: Check HTTP Links

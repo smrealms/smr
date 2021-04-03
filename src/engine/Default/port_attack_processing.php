@@ -27,7 +27,7 @@ if (!$port->exists()) {
 
 
 if ($port->isDestroyed()) {
-	forward(create_container('skeleton.php', 'port_attack.php'));
+	Page::create('skeleton.php', 'port_attack.php')->go();
 }
 
 
@@ -82,7 +82,7 @@ foreach ($attackers as $attacker) {
 	}
 }
 
-$container = create_container('skeleton.php', 'port_attack.php');
+$container = Page::create('skeleton.php', 'port_attack.php');
 
 // If they died on the shot they get to see the results
 if ($player->isDead()) {
@@ -90,4 +90,4 @@ if ($player->isDead()) {
 }
 
 $container['results'] = $serializedResults;
-forward($container);
+$container->go();

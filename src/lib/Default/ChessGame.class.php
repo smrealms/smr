@@ -863,10 +863,10 @@ class ChessGame {
 	}
 
 	public function getPlayGameHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'chess_play.php', array('ChessGameID' => $this->chessGameID)));
+		return Page::create('skeleton.php', 'chess_play.php', array('ChessGameID' => $this->chessGameID))->href();
 	}
 
 	public function getResignHREF() {
-		return SmrSession::getNewHREF(create_container('chess_resign_processing.php', '', array('ChessGameID' => $this->chessGameID)));
+		return Page::create('chess_resign_processing.php', '', array('ChessGameID' => $this->chessGameID))->href();
 	}
 }

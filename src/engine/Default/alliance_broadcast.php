@@ -3,9 +3,9 @@ $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
-$container = create_container('message_send_processing.php');
+$container = Page::create('message_send_processing.php');
 $container['alliance_id'] = $var['alliance_id'];
-$template->assign('MessageSendFormHref', SmrSession::getNewHREF($container));
+$template->assign('MessageSendFormHref', $container->href());
 
 $template->assign('Receiver', 'Whole Alliance');
 if (isset($var['preview'])) {

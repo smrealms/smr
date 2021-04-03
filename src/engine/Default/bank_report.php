@@ -58,10 +58,10 @@ $text = '<div class="center"><br />Ending Balance: ' . number_format($balance) .
 $template->assign('BankReport', $text);
 
 if (!isset($var['sent_report'])) {
-	$container = create_container('bank_report_processing.php');
+	$container = Page::create('bank_report_processing.php');
 	$container['alliance_id'] = $alliance_id;
 	$container['text'] = $text;
-	$template->assign('SendReportHREF', SmrSession::getNewHREF($container));
+	$template->assign('SendReportHREF', $container->href());
 }
 
 $template->assign('PageTopic', 'Alliance Bank Report');

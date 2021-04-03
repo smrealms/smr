@@ -115,16 +115,16 @@ if ($action == 'logo') {
 	} elseif ($action == 'html') {
 		checkTextShipName($name, 128);
 		checkHtmlShipName($name);
-		$container = create_container('skeleton.php', 'buy_ship_name_preview.php');
+		$container = Page::create('skeleton.php', 'buy_ship_name_preview.php');
 		$container['ShipName'] = $name;
 		$container['cost'] = $cred_cost;
-		forward($container);
+		$container->go();
 	}
 }
 
 $player->setCustomShipName($name);
 $account->decreaseTotalSmrCredits($cred_cost);
 
-$container = create_container('skeleton.php', 'current_sector.php');
+$container = Page::create('skeleton.php', 'current_sector.php');
 $container['msg'] = 'Thanks for your purchase! Your ship is ready!';
-forward($container);
+$container->go();

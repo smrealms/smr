@@ -17,9 +17,9 @@ while ($db->nextRecord()) {
 $template->assign('Blacklist', $blacklist);
 
 if ($blacklist) {
-	$container = create_container('message_blacklist_del.php');
-	$template->assign('BlacklistDeleteHREF', SmrSession::getNewHREF($container));
+	$container = Page::create('message_blacklist_del.php');
+	$template->assign('BlacklistDeleteHREF', $container->href());
 }
 
-$container = create_container('message_blacklist_add.php');
-$template->assign('BlacklistAddHREF', SmrSession::getNewHREF($container));
+$container = Page::create('message_blacklist_add.php');
+$template->assign('BlacklistAddHREF', $container->href());

@@ -37,23 +37,23 @@ while ($db->nextRecord()) {
 }
 
 // Get links to other pages
-$container = create_container('skeleton.php', '1.6/universe_create_warps.php');
+$container = Page::create('skeleton.php', '1.6/universe_create_warps.php');
 $container['game_id'] = $var['game_id'];
 $galLinks = array();
 foreach ($galaxies as $gal) {
 	$container['gal_on'] = $gal->getGalaxyID();
-	$galLinks[$gal->getGalaxyID()] = SmrSession::getNewHREF($container);
+	$galLinks[$gal->getGalaxyID()] = $container->href();
 }
 $template->assign('GalLinks', $galLinks);
 
-$container = $var;
+$container = Page::copy($var);
 $container['url'] = '1.6/universe_create_save_processing.php';
 $container['body'] = '1.6/universe_create_warps.php';
-$template->assign('SubmitHREF', SmrSession::getNewHREF($container));
+$template->assign('SubmitHREF', $container->href());
 
-$container = $var;
+$container = Page::copy($var);
 $container['body'] = '1.6/universe_create_sectors.php';
-$template->assign('CancelHREF', SmrSession::getNewHREF($container));
+$template->assign('CancelHREF', $container->href());
 
 $template->assign('Galaxy', $galaxy);
 $template->assign('Galaxies', $galaxies);

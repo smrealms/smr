@@ -4,8 +4,8 @@ $template->assign('PageTopic', 'Alliance VS Alliance Rankings');
 
 Menu::rankings(1, 4);
 $db2 = MySqlDatabase::getInstance();
-$container = create_container('skeleton.php', 'rankings_alliance_vs_alliance.php');
-$template->assign('SubmitHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'rankings_alliance_vs_alliance.php');
+$template->assign('SubmitHREF', $container->href());
 
 $alliancer = SmrSession::getRequestVarIntArray('alliancer', []);
 $detailsAllianceID = SmrSession::getRequestVarInt('alliance_id', $player->getAllianceID());
@@ -40,7 +40,7 @@ foreach ($alliance_vs_ids as $curr_id) {
 	}
 	$alliance_vs[] = [
 		'ID' => $curr_id,
-		'DetailsHREF' => SmrSession::getNewHREF($container),
+		'DetailsHREF' => $container->href(),
 		'Name' => $curr_alliance->isNone() ? 'No Alliance' : $curr_alliance->getAllianceDisplayName(),
 		'Style' => $style,
 	];

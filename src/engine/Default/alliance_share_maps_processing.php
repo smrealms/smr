@@ -42,4 +42,4 @@ while ($db->nextRecord()) {
 	$cachedPort->addCachePorts($alliance_ids);
 }
 
-forward(create_container('skeleton.php', 'alliance_roster.php'));
+Page::create('skeleton.php', 'alliance_roster.php')->go();

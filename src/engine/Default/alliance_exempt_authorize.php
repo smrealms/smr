@@ -11,8 +11,8 @@ $db->query('SELECT * FROM alliance_bank_transactions WHERE request_exempt = 1 ' 
 			'AND alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND exempt = 0');
 $transactions = [];
 if ($db->getNumRows()) {
-	$container = create_container('bank_alliance_exempt_processing.php');
-	$template->assign('ExemptHREF', SmrSession::getNewHREF($container));
+	$container = Page::create('bank_alliance_exempt_processing.php');
+	$template->assign('ExemptHREF', $container->href());
 
 	$players = $alliance->getMembers();
 	while ($db->nextRecord()) {

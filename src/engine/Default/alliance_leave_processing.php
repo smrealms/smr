@@ -33,5 +33,5 @@ if ($action == 'YES') {
 
 }
 
-$container = create_container('skeleton.php', 'current_sector.php');
-forward($container);
+$container = Page::create('skeleton.php', 'current_sector.php');
+$container->go();

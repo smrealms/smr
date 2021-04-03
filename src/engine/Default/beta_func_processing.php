@@ -85,5 +85,5 @@ if ($var['func'] == 'Map') {
 	}
 }
 
-$container = create_container('skeleton.php', $var['body']);
-forward($container);
+$container = Page::create('skeleton.php', $var['body']);
+$container->go();

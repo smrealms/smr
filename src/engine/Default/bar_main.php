@@ -23,30 +23,30 @@ $db->query('SELECT prize FROM player_has_ticket WHERE ' . $player->getSQL() . ' 
 if ($db->nextRecord()) {
 	$winningTicket = $db->getInt('prize');
 
-	$container = create_container('bar_lotto_claim.php');
-	transfer('LocationID');
-	$template->assign('LottoClaimHREF', SmrSession::getNewHREF($container));
+	$container = Page::create('bar_lotto_claim.php');
+	$container->addVar('LocationID');
+	$template->assign('LottoClaimHREF', $container->href());
 }
 $template->assign('WinningTicket', $winningTicket);
 
 //get rid of drinks older than 30 mins
 $db->query('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(SmrSession::getTime() - 1800));
 
-$container = create_container('skeleton.php', 'bar_talk_bartender.php');
-transfer('LocationID');
-$template->assign('GossipHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'bar_talk_bartender.php');
+$container->addVar('LocationID');
+$template->assign('GossipHREF', $container->href());
 
-$container = create_container('bar_buy_drink_processing.php');
-transfer('LocationID');
+$container = Page::create('bar_buy_drink_processing.php');
+$container->addVar('LocationID');
 $container['action'] = 'drink';
-$template->assign('BuyDrinkHREF', SmrSession::getNewHREF($container));
+$template->assign('BuyDrinkHREF', $container->href());
 $container['action'] = 'water';
-$template->assign('BuyWaterHREF', SmrSession::getNewHREF($container));
+$template->assign('BuyWaterHREF', $container->href());
 
-$container = create_container('skeleton.php', 'bar_ticker_buy.php');
-transfer('LocationID');
-$template->assign('BuySystemHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'bar_ticker_buy.php');
+$container->addVar('LocationID');
+$template->assign('BuySystemHREF', $container->href());
 
-$container = create_container('skeleton.php', 'bar_galmap_buy.php');
-transfer('LocationID');
-$template->assign('BuyGalMapHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'bar_galmap_buy.php');
+$container->addVar('LocationID');
+$template->assign('BuyGalMapHREF', $container->href());

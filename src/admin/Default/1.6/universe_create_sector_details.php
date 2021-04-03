@@ -5,10 +5,10 @@ $editSector = SmrSector::getSector($var['game_id'], $editSectorID);
 $template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')');
 $template->assign('EditSector', $editSector);
 
-$container = $var;
+$container = Page::copy($var);
 $container['url'] = '1.6/universe_create_save_processing.php';
 $container['body'] = '1.6/universe_create_sector_details.php';
-$template->assign('EditHREF', SmrSession::getNewHREF($container));
+$template->assign('EditHREF', $container->href());
 
 $selectedPlanetType = 0;
 if ($editSector->hasPlanet()) {
@@ -42,9 +42,9 @@ if ($editSector->hasWarp()) {
 $template->assign('WarpGal', $warpGal);
 $template->assign('WarpSectorID', $warpSectorID);
 
-$container = $var;
+$container = Page::copy($var);
 $container['body'] = '1.6/universe_create_sectors.php';
-$template->assign('CancelHREF', SmrSession::getNewHREF($container));
+$template->assign('CancelHREF', $container->href());
 
 if (isset($var['message'])) {
 	$template->assign('Message', $var['message']);

@@ -55,7 +55,7 @@ try {
 	}
 
 	// this sn identifies our container later
-	$href = SmrSession::getNewHREF(create_container('login_check_processing.php'), true);
+	$href = Page::create('login_check_processing.php')->href(true);
 	SmrSession::update();
 
 	// get this user from db

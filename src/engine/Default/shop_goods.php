@@ -91,13 +91,13 @@ $template->assign('SearchedByFeds', $searchedByFeds);
 
 $player->setLastPort($player->getSectorID());
 
-$container = create_container('shop_goods_processing.php');
+$container = Page::create('shop_goods_processing.php');
 
 $boughtGoods = [];
 foreach ($port->getVisibleGoodsBought($player) as $goodID) {
 	$good = Globals::getGood($goodID);
 	$container['good_id'] = $goodID;
-	$good['HREF'] = SmrSession::getNewHREF($container);
+	$good['HREF'] = $container->href();
 
 	$amount = $port->getGoodAmount($goodID);
 	$good['PortAmount'] = $amount;
@@ -113,7 +113,7 @@ $soldGoods = [];
 foreach ($port->getVisibleGoodsSold($player) as $goodID) {
 	$good = Globals::getGood($goodID);
 	$container['good_id'] = $good['ID'];
-	$good['HREF'] = SmrSession::getNewHREF($container);
+	$good['HREF'] = $container->href();
 
 	$amount = $port->getGoodAmount($goodID);
 	$good['PortAmount'] = $amount;
@@ -128,5 +128,5 @@ foreach ($port->getVisibleGoodsSold($player) as $goodID) {
 $template->assign('BoughtGoods', $boughtGoods);
 $template->assign('SoldGoods', $soldGoods);
 
-$container = create_container('skeleton.php', 'current_sector.php');
-$template->assign('LeavePortHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'current_sector.php');
+$template->assign('LeavePortHREF', $container->href());

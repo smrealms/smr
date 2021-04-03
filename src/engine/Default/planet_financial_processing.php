@@ -38,4 +38,4 @@ elseif ($action == 'Confirm') {
 	$player->log(LOG_TYPE_BANK, 'Player bonds ' . $planet->getBonds() . ' credits at planet.');
 }
 
-forward(create_container('skeleton.php', 'planet_financial.php'));
+Page::create('skeleton.php', 'planet_financial.php')->go();

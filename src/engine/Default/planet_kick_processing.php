@@ -15,4 +15,4 @@ $player->sendMessage($planetPlayer->getAccountID(), MSG_PLAYER, $message, false)
 $planetPlayer->setLandedOnPlanet(false);
 $planetPlayer->update();
 
-forward(create_container('skeleton.php', 'planet_main.php'));
+Page::create('skeleton.php', 'planet_main.php')->go();

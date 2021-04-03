@@ -3,10 +3,10 @@
 $game = SmrGame::getGame($var['game_id']);
 $template->assign('PageTopic', 'Check Map : ' . $game->getDisplayName());
 
-$container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
-transfer('game_id');
-transfer('gal_on');
-$template->assign('BackHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', '1.6/universe_create_sectors.php');
+$container->addVar('game_id');
+$container->addVar('gal_on');
+$template->assign('BackHREF', $container->href());
 
 $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 

@@ -8,8 +8,8 @@ if (!$account->isValidated()) {
 $template->assign('PageTopic', 'Anonymous Account');
 Menu::bank();
 
-$container = create_container('skeleton.php', 'bank_anon_detail.php');
-$template->assign('AccessHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'bank_anon_detail.php');
+$template->assign('AccessHREF', $container->href());
 
 $template->assign('Message', $var['message'] ?? '');
 
@@ -36,11 +36,11 @@ while ($db->nextRecord()) {
 
 	$container['account_num'] = $anon['anon_id'];
 	$container['password'] = $anon['password'];
-	$anon['href'] = SmrSession::getNewHREF($container);
+	$anon['href'] = $container->href();
 
 	$ownedAnon[] = $anon;
 }
 $template->assign('OwnedAnon', $ownedAnon);
 
-$container = create_container('skeleton.php', 'bank_anon_create.php');
-$template->assign('CreateHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'bank_anon_create.php');
+$template->assign('CreateHREF', $container->href());

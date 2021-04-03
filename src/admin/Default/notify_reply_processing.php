@@ -4,16 +4,16 @@ $offenderBanPoints = Request::getInt('offenderBanPoints');
 $offendedReply = trim(Request::get('offendedReply'));
 $offendedBanPoints = Request::getInt('offendedBanPoints');
 if (Request::get('action') == 'Preview messages') {
-	$container = create_container('skeleton.php', 'notify_reply.php');
-	transfer('offender');
-	transfer('offended');
-	transfer('game_id');
-	transfer('sender_id');
+	$container = Page::create('skeleton.php', 'notify_reply.php');
+	$container->addVar('offender');
+	$container->addVar('offended');
+	$container->addVar('game_id');
+	$container->addVar('sender_id');
 	$container['PreviewOffender'] = $offenderReply;
 	$container['OffenderBanPoints'] = $offenderBanPoints;
 	$container['PreviewOffended'] = $offendedReply;
 	$container['OffendedBanPoints'] = $offendedBanPoints;
-	forward($container);
+	$container->go();
 }
 
 
@@ -39,4 +39,4 @@ if ($offendedReply != '') {
 		$offenderAccount->addPoints($offendedBanPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 	}
 }
-forward(create_container('skeleton.php', 'notify_view.php'));
+Page::create('skeleton.php', 'notify_view.php')->go();

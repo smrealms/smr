@@ -9,5 +9,5 @@ $template->assign('PageTopic', 'Bank');
 
 Menu::bank();
 
-$container = create_container('bank_personal_processing.php');
-$template->assign('ProcessingHREF', SmrSession::getNewHREF($container));
+$container = Page::create('bank_personal_processing.php');
+$template->assign('ProcessingHREF', $container->href());

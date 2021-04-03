@@ -39,4 +39,4 @@ if ($action == 'Take Ownership') {
 	$player->log(LOG_TYPE_PLANETS, 'Player sets planet password to ' . $password);
 }
 
-forward(create_container('skeleton.php', 'planet_ownership.php'));
+Page::create('skeleton.php', 'planet_ownership.php')->go();

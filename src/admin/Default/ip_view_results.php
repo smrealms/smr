@@ -4,11 +4,11 @@ $type = SmrSession::getRequestVar('type');
 
 $db2 = MySqlDatabase::getInstance();
 
-$container = create_container('skeleton.php', 'ip_view.php');
-$template->assign('BackHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'ip_view.php');
+$template->assign('BackHREF', $container->href());
 
-$container = create_container('account_close.php');
-$template->assign('CloseHREF', SmrSession::getNewHREF($container));
+$container = Page::create('account_close.php');
+$template->assign('CloseHREF', $container->href());
 
 $template->assign('type', $type);
 

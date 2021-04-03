@@ -104,18 +104,18 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 
 	public function getBuyHREF(SmrLocation $location) {
-		$container = create_container('shop_weapon_processing.php');
+		$container = Page::create('shop_weapon_processing.php');
 		$container['LocationID'] = $location->getTypeID();
 		$container['Weapon'] = $this;
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function getSellHREF(SmrLocation $location, $orderID) {
-		$container = create_container('shop_weapon_processing.php');
+		$container = Page::create('shop_weapon_processing.php');
 		$container['LocationID'] = $location->getTypeID();
 		$container['Weapon'] = $this;
 		$container['OrderID'] = $orderID;
-		return SmrSession::getNewHREF($container);
+		return $container->href();
 	}
 
 	public function getWeaponTypeID() {

@@ -10,10 +10,10 @@ $location = SmrLocation::getLocation($var['LocationID']);
 if ($location->isHardwareSold()) {
 	$hardwareSold = $location->getHardwareSold();
 	foreach ($hardwareSold as $hardwareTypeID => $hardware) {
-		$container = create_container('shop_hardware_processing.php');
-		transfer('LocationID');
+		$container = Page::create('shop_hardware_processing.php');
+		$container->addVar('LocationID');
 		$container['hardware_id'] = $hardwareTypeID;
-		$hardwareSold[$hardwareTypeID]['HREF'] = SmrSession::getNewHREF($container);
+		$hardwareSold[$hardwareTypeID]['HREF'] = $container->href();
 	}
 	$template->assign('HardwareSold', $hardwareSold);
 }

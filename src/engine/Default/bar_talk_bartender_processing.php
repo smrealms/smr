@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-$container = create_container('skeleton.php', 'bar_talk_bartender.php');
-transfer('LocationID');
+$container = Page::create('skeleton.php', 'bar_talk_bartender.php');
+$container->addVar('LocationID');
 
 $action = Request::get('action');
 
@@ -67,4 +67,4 @@ if ($action == 'tell') {
 	}
 }
 
-forward($container);
+$container->go();

@@ -7,4 +7,4 @@ if (!empty($note_ids)) {
 					AND note_id IN (' . $db->escapeArray($note_ids) . ')');
 }
 
-forward(create_container('skeleton.php', 'trader_status.php'));
+Page::create('skeleton.php', 'trader_status.php')->go();

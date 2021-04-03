@@ -43,4 +43,4 @@ $alliance->update();
 $player->joinAlliance($alliance->getAllianceID());
 $player->update();
 
-forward(create_container('skeleton.php', 'alliance_roster.php'));
+Page::create('skeleton.php', 'alliance_roster.php')->go();

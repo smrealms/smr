@@ -3,9 +3,9 @@
 SmrSession::getRequestVarInt('gal_on');
 $template->assign('Galaxies', SmrGalaxy::getGameGalaxies($var['game_id']));
 
-$container = create_container('skeleton.php', '1.6/universe_create_locations.php');
-transfer('game_id');
-$template->assign('JumpGalaxyHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', '1.6/universe_create_locations.php');
+$container->addVar('game_id');
+$template->assign('JumpGalaxyHREF', $container->href());
 
 $locations = SmrLocation::getAllLocations();
 
@@ -93,10 +93,10 @@ $template->assign('LocText', $locText);
 $template->assign('LocTypes', $categories->locTypes);
 
 // Form to make location changes
-$container = create_container('1.6/universe_create_save_processing.php',
+$container = Page::create('1.6/universe_create_save_processing.php',
                               '1.6/universe_create_sectors.php', $var);
-$template->assign('CreateLocationsFormHREF', SmrSession::getNewHREF($container));
+$template->assign('CreateLocationsFormHREF', $container->href());
 
 // HREF to cancel and return to the previous page
-$container = create_container('skeleton.php', '1.6/universe_create_sectors.php', $var);
-$template->assign('CancelHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', '1.6/universe_create_sectors.php', $var);
+$template->assign('CancelHREF', $container->href());

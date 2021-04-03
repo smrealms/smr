@@ -16,10 +16,10 @@ if (Request::has('exempt')) {
 				AND transaction_id IN (' . $db->escapeArray($trans_ids) . ')');
 }
 
-$container = create_container('skeleton.php');
+$container = Page::create('skeleton.php');
 if (isset($var['minVal'])) {
 	$container['body'] = 'bank_alliance.php';
 } else {
 	$container['body'] = 'alliance_exempt_authorize.php';
 }
-forward($container);
+$container->go();

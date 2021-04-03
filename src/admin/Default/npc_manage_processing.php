@@ -50,6 +50,6 @@ if (Request::has('add_npc_account')) {
 	$db->query('INSERT INTO npc_logins (login, player_name, alliance_name) VALUES(' . $db->escapeString($login) . ',' . $db->escapeString(Request::get('default_player_name')) . ',' . $db->escapeString(Request::get('default_alliance')) . ')');
 }
 
-$container = create_container('skeleton.php', 'npc_manage.php');
-transfer('selected_game_id');
-forward($container);
+$container = Page::create('skeleton.php', 'npc_manage.php');
+$container->addVar('selected_game_id');
+$container->go();

@@ -11,9 +11,9 @@ $template->assign('Amount', number_format($var['amount']));
 $template->assign('SmrCredits', number_format($var['SmrCredits']));
 $template->assign('BountyPlayer', $bountyPlayer->getLinkedDisplayName());
 
-$container = create_container('bounty_place_confirm_processing.php');
+$container = Page::create('bounty_place_confirm_processing.php');
 $container['account_id'] = $bountyPlayer->getAccountID();
-transfer('amount');
-transfer('SmrCredits');
-transfer('LocationID');
-$template->assign('ProcessingHREF', SmrSession::getNewHREF($container));
+$container->addVar('amount');
+$container->addVar('SmrCredits');
+$container->addVar('LocationID');
+$template->assign('ProcessingHREF', $container->href());

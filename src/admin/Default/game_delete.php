@@ -2,8 +2,8 @@
 
 $template->assign('PageTopic', 'Deleting A Game');
 
-$container = create_container('skeleton.php', 'game_delete_confirm.php');
-$template->assign('ConfirmHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'game_delete_confirm.php');
+$template->assign('ConfirmHREF', $container->href());
 
 $db->query('SELECT game_id, game_name FROM game ORDER BY game_id DESC');
 $games = [];

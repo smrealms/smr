@@ -1,8 +1,8 @@
 <?php
 if ($ThisPlayer->hasPlottedCourse()) {
 	$PlottedCourse = $ThisPlayer->getPlottedCourse();
-	$CancelCourseHREF = SmrSession::getNewHREF(create_container('course_plot_cancel_processing.php'));
-	$ReplotCourseHREF = SmrSession::getNewHREF(create_container('course_plot_processing.php', '', array('to' => $PlottedCourse->getEndSectorID(), 'from' => $ThisSector->getSectorID())));
+	$CancelCourseHREF = Page::create('course_plot_cancel_processing.php')->href();
+	$ReplotCourseHREF = Page::create('course_plot_processing.php', '', array('to' => $PlottedCourse->getEndSectorID(), 'from' => $ThisSector->getSectorID()))->href();
 	$NextSector = SmrSector::getSector($ThisPlayer->getGameID(), $PlottedCourse->getNextOnPath(), $ThisPlayer->getAccountID()); ?>
 	<table class="nobord fullwidth">
 		<tr>

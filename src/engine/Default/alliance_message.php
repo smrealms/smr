@@ -38,7 +38,7 @@ $threads = array();
 if ($db->getNumRows() > 0) {
 	$db2 = MySqlDatabase::getInstance();
 
-	$container = create_container('alliance_message_delete_processing.php');
+	$container = Page::create('alliance_message_delete_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 
 	$i = 0;
@@ -84,7 +84,7 @@ if ($db->getNumRows() > 0) {
 		$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $db2->getBoolean('mb_messages');
 		if ($threads[$i]['CanDelete']) {
 			$container['thread_id'] = $threadID;
-			$threads[$i]['DeleteHref'] = SmrSession::getNewHREF($container);
+			$threads[$i]['DeleteHref'] = $container->href();
 		}
 		$threads[$i]['Replies'] = $db->getInt('num_replies');
 		$thread_replies[$i] = $db->getInt('num_replies');
@@ -92,7 +92,7 @@ if ($db->getNumRows() > 0) {
 		++$i;
 	}
 
-	$container = create_container('skeleton.php', 'alliance_message_view.php');
+	$container = Page::create('skeleton.php', 'alliance_message_view.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$container['thread_ids'] = $thread_ids;
 	$container['thread_topics'] = $thread_topics;
@@ -100,15 +100,15 @@ if ($db->getNumRows() > 0) {
 	$container['alliance_eyes'] = $alliance_eyes;
 	for ($j = 0; $j < $i; $j++) {
 		$container['thread_index'] = $j;
-		$threads[$j]['ViewHref'] = SmrSession::getNewHREF($container);
+		$threads[$j]['ViewHref'] = $container->href();
 	}
 }
 $template->assign('Threads', $threads);
 
 if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-	$container = create_container('alliance_message_add_processing.php');
+	$container = Page::create('alliance_message_add_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
-	$template->assign('CreateNewThreadFormHref', SmrSession::getNewHREF($container));
+	$template->assign('CreateNewThreadFormHref', $container->href());
 }
 
 if (isset($var['preview'])) {

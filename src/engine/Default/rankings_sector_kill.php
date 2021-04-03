@@ -41,8 +41,8 @@ $db->query('SELECT ranking
 $db->requireRecord();
 $ourRank = $db->getInt('ranking');
 
-$container = create_container('skeleton.php', 'rankings_sector_kill.php');
-$template->assign('SubmitHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'rankings_sector_kill.php');
+$template->assign('SubmitHREF', $container->href());
 
 list($minRank, $maxRank) = Rankings::calculateMinMaxRanks($ourRank, $total_sector);
 

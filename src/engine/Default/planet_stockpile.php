@@ -8,7 +8,7 @@ foreach (Globals::getGoods() as $goodID => $good) {
 		continue;
 	}
 
-	$container = create_container('planet_stockpile_processing.php');
+	$container = Page::create('planet_stockpile_processing.php');
 	$container['good_id'] = $goodID;
 
 	$goodInfo[] = array(
@@ -17,7 +17,7 @@ foreach (Globals::getGoods() as $goodID => $good) {
 		'ShipAmount' => $ship->getCargo($goodID),
 		'PlanetAmount' => $planet->getStockpile($goodID),
 		'DefaultAmount' => min($ship->getCargo($goodID), $planet->getRemainingStockpile($goodID)),
-		'HREF' => SmrSession::getNewHREF($container),
+		'HREF' => $container->href(),
 	);
 }
 

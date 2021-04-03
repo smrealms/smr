@@ -15,9 +15,9 @@ function parseBoolean($check) {
 }
 
 function linkCombatLog($logID) {
-	$container = create_container('combat_log_viewer_verify.php');
+	$container = Page::create('combat_log_viewer_verify.php');
 	$container['log_id'] = $logID;
-	return '<a href="' . SmrSession::getNewHREF($container) . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
+	return '<a href="' . $container->href() . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
 }
 
 /**
@@ -56,7 +56,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$allianceID = (int)$default;
 				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
 				if ($disableBBLinks === false && $overrideGameID == SmrSession::getGameID()) {
-					$container = create_container('skeleton.php');
+					$container = Page::create('skeleton.php');
 					$container['alliance_id'] = $alliance->getAllianceID();
 					if (is_object($player) && $alliance->getAllianceID() == $player->getAllianceID()) {
 						$container['body'] = 'alliance_mod.php';
@@ -126,9 +126,9 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				$allianceID = (int)$default;
 				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
-				$container = create_container('alliance_invite_accept_processing.php');
+				$container = Page::create('alliance_invite_accept_processing.php');
 				$container['alliance_id'] = $alliance->getAllianceID();
-				return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::getNewHREF($container) . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
+				return '<div class="buttonA"><a class="buttonA" href="' . $container->href() . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
 			break;
 		}
 	} catch (Throwable $e) {
@@ -192,7 +192,7 @@ function bbifyMessage($message, $noLinks = false) {
 }
 
 function create_error($message) {
-	$container = create_container('skeleton.php', 'error.php');
+	$container = Page::create('skeleton.php', 'error.php');
 	$container['message'] = $message;
 	if (USING_AJAX) {
 		// To avoid the page just not refreshing when an error is encountered
@@ -200,60 +200,20 @@ function create_error($message) {
 		// appropriate error page.
 		global $template;
 		if (is_object($template) && method_exists($template, 'addJavascriptForAjax')) {
-			$errorHREF = SmrSession::getNewHREF($container);
+			$errorHREF = $container->href();
 			// json_encode the HREF as a safety precaution
 			$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($errorHREF));
 		}
 	}
-	forward($container);
+	$container->go();
 }
 
-function resetContainer($new_container, $sn = null) {
-	global $container, $var;
-
-	// this sn identifies our container later
-	if (!is_null($sn)) {
-		SmrSession::resetLink($new_container, $sn);
-	}
-
-	$var = $new_container;
-	$container = $new_container;
+function create_link(Page|string $container, $text, $class = null) {
+	return '<a' . ($class == null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($container) ? $container : $container->href()) . '">' . $text . '</a>';
 }
 
-function forward($new_container) {
-	global $sn;
-	if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
-		return overrideForward($new_container);
-	}
-	resetContainer($new_container, $sn);
-	do_voodoo();
-}
-
-function transfer($what) {
-	global $var, $container;
-
-	// transfer this value to next container
-	if (isset($var[$what])) {
-		$container[$what] = $var[$what];
-	}
-}
-
-function create_container($file, $body = '', array $extra = array(), $remainingPageLoads = null) {
-	$container = $extra;
-	$container['url'] = $file;
-	$container['body'] = $body;
-	if ($remainingPageLoads) {
-		$container['RemainingPageLoads'] = $remainingPageLoads;
-	}
-	return $container;
-}
-
-function create_link($container, $text, $class = null) {
-	return '<a' . ($class == null ? '' : ' class="' . $class . '"') . ' href="' . (is_array($container) ?SmrSession::getNewHREF($container) : $container) . '">' . $text . '</a>';
-}
-
-function create_submit_link($container, $text) {
-	return '<a href="' . SmrSession::getNewHREF($container) . '" class="submitStyle">' . $text . '</a>';
+function create_submit_link(Page $container, $text) {
+	return '<a href="' . $container->href() . '" class="submitStyle">' . $text . '</a>';
 }
 
 function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, $type = 'Game', $return_type = 'Normal') {
@@ -344,7 +304,7 @@ function pluralise($word, $count = 0) {
  * (see loader.php for the initialization of the globals).
  */
 function do_voodoo() {
-	global $lock, $var, $container, $player, $ship, $sector, $account, $db, $template;
+	global $lock, $var, $player, $ship, $sector, $account, $db, $template;
 
 	if (!defined('AJAX_CONTAINER')) {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
@@ -373,7 +333,7 @@ function do_voodoo() {
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::hasGame()) {
 		if (SmrGame::getGame(SmrSession::getGameID())->hasEnded()) {
-			forward(create_container('game_leave_processing.php', 'game_play.php', array('errorMsg' => 'The game has ended.')));
+			Page::create('game_leave_processing.php', 'game_play.php', array('errorMsg' => 'The game has ended.'))->go();
 		}
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
@@ -404,7 +364,7 @@ function do_voodoo() {
 		$player = SmrPlayer::getPlayer($account->getAccountID(), SmrSession::getGameID());
 
 		if ($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death'])) {
-			forward(create_container('death_processing.php'));
+			Page::create('death_processing.php')->go();
 		}
 
 		$ship = $player->getShip();
@@ -416,7 +376,7 @@ function do_voodoo() {
 		if (!$player->isDead() && $player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT &&
 			$player->getNewbieWarning() &&
 			$var['url'] != 'newbie_warning_processing.php')
-			forward(create_container('newbie_warning_processing.php'));
+			Page::create('newbie_warning_processing.php')->go();
 	}
 
 	// Initialize the template
@@ -579,7 +539,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 	$template->assign('FontSize', $account->getFontSize() - 20);
 	$template->assign('timeDisplay', date(DATE_FULL_SHORT_SPLIT, SmrSession::getTime()));
 
-	$container = create_container('skeleton.php');
+	$container = Page::create('skeleton.php');
 
 
 	if (SmrSession::hasGame()) {
@@ -593,62 +553,62 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 		$template->assign('PoliticsLink', Globals::getPoliticsHREF());
 
 		$container['body'] = 'combat_log_list.php';
-		$template->assign('CombatLogsLink', SmrSession::getNewHREF($container));
+		$template->assign('CombatLogsLink', $container->href());
 
 		$template->assign('PlanetLink', Globals::getPlanetListHREF($player->getAllianceID()));
 
 		$container['body'] = 'forces_list.php';
-		$template->assign('ForcesLink', SmrSession::getNewHREF($container));
+		$template->assign('ForcesLink', $container->href());
 
 		$template->assign('MessagesLink', Globals::getViewMessageBoxesHREF());
 
 		$container['body'] = 'news_read_current.php';
-		$template->assign('ReadNewsLink', SmrSession::getNewHREF($container));
+		$template->assign('ReadNewsLink', $container->href());
 
 		$container['body'] = 'galactic_post_current.php';
-		$template->assign('GalacticPostLink', SmrSession::getNewHREF($container));
+		$template->assign('GalacticPostLink', $container->href());
 
 		$container['body'] = 'trader_search.php';
-		$template->assign('SearchForTraderLink', SmrSession::getNewHREF($container));
+		$template->assign('SearchForTraderLink', $container->href());
 
 		$container['body'] = 'rankings_player_experience.php';
-		$template->assign('RankingsLink', SmrSession::getNewHREF($container));
+		$template->assign('RankingsLink', $container->href());
 
 		$container['body'] = 'hall_of_fame_new.php';
 		$container['game_id'] = $player->getGameID();
-		$template->assign('CurrentHallOfFameLink', SmrSession::getNewHREF($container));
+		$template->assign('CurrentHallOfFameLink', $container->href());
 	}
 
 	if (SmrSession::hasAccount()) {
-		$container = create_container('skeleton.php', 'hall_of_fame_new.php');
-		$template->assign('HallOfFameLink', SmrSession::getNewHREF($container));
+		$container = Page::create('skeleton.php', 'hall_of_fame_new.php');
+		$template->assign('HallOfFameLink', $container->href());
 
 		$template->assign('AccountID', SmrSession::getAccountID());
-		$template->assign('PlayGameLink', SmrSession::getNewHREF(create_container('game_leave_processing.php', 'game_play.php')));
+		$template->assign('PlayGameLink', Page::create('game_leave_processing.php', 'game_play.php')->href());
 
-		$template->assign('LogoutLink', SmrSession::getNewHREF(create_container('logoff.php')));
+		$template->assign('LogoutLink', Page::create('logoff.php')->href());
 	}
 
-	$container = create_container('game_leave_processing.php', 'admin_tools.php');
-	$template->assign('AdminToolsLink', SmrSession::getNewHREF($container));
+	$container = Page::create('game_leave_processing.php', 'admin_tools.php');
+	$template->assign('AdminToolsLink', $container->href());
 
-	$container = create_container('skeleton.php', 'preferences.php');
-	$template->assign('PreferencesLink', SmrSession::getNewHREF($container));
+	$container = Page::create('skeleton.php', 'preferences.php');
+	$template->assign('PreferencesLink', $container->href());
 
 	$container['body'] = 'album_edit.php';
-	$template->assign('EditPhotoLink', SmrSession::getNewHREF($container));
+	$template->assign('EditPhotoLink', $container->href());
 
 	$container['body'] = 'bug_report.php';
-	$template->assign('ReportABugLink', SmrSession::getNewHREF($container));
+	$template->assign('ReportABugLink', $container->href());
 
 	$container['body'] = 'contact.php';
-	$template->assign('ContactFormLink', SmrSession::getNewHREF($container));
+	$template->assign('ContactFormLink', $container->href());
 
 	$container['body'] = 'chat_rules.php';
-	$template->assign('IRCLink', SmrSession::getNewHREF($container));
+	$template->assign('IRCLink', $container->href());
 
 	$container['body'] = 'donation.php';
-	$template->assign('DonateLink', SmrSession::getNewHREF($container));
+	$template->assign('DonateLink', $container->href());
 
 
 
@@ -661,99 +621,99 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 				$messages[$db->getInt('message_type_id')] = $db->getInt('COUNT(*)');
 			}
 
-			$container = create_container('skeleton.php', 'message_view.php');
+			$container = Page::create('skeleton.php', 'message_view.php');
 
 			if (isset($messages[MSG_GLOBAL])) {
 				$container['folder_id'] = MSG_GLOBAL;
-				$template->assign('MessageGlobalLink', SmrSession::getNewHREF($container));
+				$template->assign('MessageGlobalLink', $container->href());
 				$template->assign('MessageGlobalNum', $messages[MSG_GLOBAL]);
 			}
 
 			if (isset($messages[MSG_PLAYER])) {
 				$container['folder_id'] = MSG_PLAYER;
-				$template->assign('MessagePersonalLink', SmrSession::getNewHREF($container));
+				$template->assign('MessagePersonalLink', $container->href());
 				$template->assign('MessagePersonalNum', $messages[MSG_PLAYER]);
 			}
 
 			if (isset($messages[MSG_SCOUT])) {
 				$container['folder_id'] = MSG_SCOUT;
-				$template->assign('MessageScoutLink', SmrSession::getNewHREF($container));
+				$template->assign('MessageScoutLink', $container->href());
 				$template->assign('MessageScoutNum', $messages[MSG_SCOUT]);
 			}
 
 			if (isset($messages[MSG_POLITICAL])) {
 				$container['folder_id'] = MSG_POLITICAL;
-				$template->assign('MessagePoliticalLink', SmrSession::getNewHREF($container));
+				$template->assign('MessagePoliticalLink', $container->href());
 				$template->assign('MessagePoliticalNum', $messages[MSG_POLITICAL]);
 			}
 
 			if (isset($messages[MSG_ALLIANCE])) {
 				$container['folder_id'] = MSG_ALLIANCE;
-				$template->assign('MessageAllianceLink', SmrSession::getNewHREF($container));
+				$template->assign('MessageAllianceLink', $container->href());
 				$template->assign('MessageAllianceNum', $messages[MSG_ALLIANCE]);
 			}
 
 			if (isset($messages[MSG_ADMIN])) {
 				$container['folder_id'] = MSG_ADMIN;
-				$template->assign('MessageAdminLink', SmrSession::getNewHREF($container));
+				$template->assign('MessageAdminLink', $container->href());
 				$template->assign('MessageAdminNum', $messages[MSG_ADMIN]);
 			}
 
 			if (isset($messages[MSG_CASINO])) {
 				$container['folder_id'] = MSG_CASINO;
-				$template->assign('MessageCasinoLink', SmrSession::getNewHREF($container));
+				$template->assign('MessageCasinoLink', $container->href());
 				$template->assign('MessageCasinoNum', $messages[MSG_CASINO]);
 			}
 
 			if (isset($messages[MSG_PLANET])) {
-				$container = create_container('planet_msg_processing.php');
-				$template->assign('MessagePlanetLink', SmrSession::getNewHREF($container));
+				$container = Page::create('planet_msg_processing.php');
+				$template->assign('MessagePlanetLink', $container->href());
 				$template->assign('MessagePlanetNum', $messages[MSG_PLANET]);
 			}
 		}
 
-		$container = create_container('skeleton.php', 'trader_search_result.php');
+		$container = Page::create('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $player->getPlayerID();
-		$template->assign('PlayerNameLink', SmrSession::getNewHREF($container));
+		$template->assign('PlayerNameLink', $container->href());
 
 		if (is_array(Globals::getHiddenPlayers()) && in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 			$template->assign('PlayerInvisible', true);
 		}
 
 		// ******* Hardware *******
-		$container = create_container('skeleton.php', 'configure_hardware.php');
+		$container = Page::create('skeleton.php', 'configure_hardware.php');
 
-		$template->assign('HardwareLink', SmrSession::getNewHREF($container));
+		$template->assign('HardwareLink', $container->href());
 
 		// ******* Forces *******
-		$template->assign('ForceDropLink', SmrSession::getNewHREF(create_container('skeleton.php', 'forces_drop.php')));
+		$template->assign('ForceDropLink', Page::create('skeleton.php', 'forces_drop.php')->href());
 
 		if ($ship->hasMines()) {
-			$container = create_container('forces_drop_processing.php');
+			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_mines'] = 1;
 			$container['referrer'] = $var['body'];
-			$template->assign('DropMineLink', SmrSession::getNewHREF($container));
+			$template->assign('DropMineLink', $container->href());
 		}
 		if ($ship->hasCDs()) {
-			$container = create_container('forces_drop_processing.php');
+			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_combat_drones'] = 1;
 			$container['referrer'] = $var['body'];
-			$template->assign('DropCDLink', SmrSession::getNewHREF($container));
+			$template->assign('DropCDLink', $container->href());
 		}
 
 		if ($ship->hasSDs()) {
-			$container = create_container('forces_drop_processing.php');
+			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_scout_drones'] = 1;
 			$container['referrer'] = $var['body'];
-			$template->assign('DropSDLink', SmrSession::getNewHREF($container));
+			$template->assign('DropSDLink', $container->href());
 		}
 
-		$template->assign('CargoJettisonLink', SmrSession::getNewHREF(create_container('skeleton.php', 'cargo_dump.php')));
+		$template->assign('CargoJettisonLink', Page::create('skeleton.php', 'cargo_dump.php')->href());
 
-		$template->assign('WeaponReorderLink', SmrSession::getNewHREF(create_container('skeleton.php', 'weapon_reorder.php')));
+		$template->assign('WeaponReorderLink', Page::create('skeleton.php', 'weapon_reorder.php')->href());
 
 	}
 
@@ -780,7 +740,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 	$db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
 	$version = '';
 	if ($db->nextRecord()) {
-		$container = create_container('skeleton.php', 'changelog_view.php');
+		$container = Page::create('skeleton.php', 'changelog_view.php');
 		$version = create_link($container, 'v' . $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level'));
 	}
 

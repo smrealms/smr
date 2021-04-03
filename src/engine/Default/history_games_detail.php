@@ -4,10 +4,12 @@ $game_id = $var['view_game_id'];
 $template->assign('PageTopic', 'Extended Stats : ' . $var['game_name']);
 Menu::history_games(1);
 
-$container = $var;
+$container = Page::copy($var);
 $container['body'] = 'history_games_detail.php';
-unset($container['action']);
-$template->assign('SelfHREF', SmrSession::getNewHREF($container));
+if (isset($container['action'])) {
+	unset($container['action']);
+}
+$template->assign('SelfHREF', $container->href());
 
 // Default page has no category (action) selected yet
 $action = SmrSession::getRequestVar('action', '');
@@ -41,7 +43,7 @@ if (!empty($action)) {
 	} else {
 		$template->assign('Name', 'Alliance');
 		$db->query('SELECT alliance_name, alliance_id, ' . $sql . ' as val FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25');
-		$container = $var;
+		$container = Page::copy($var);
 		$container['body'] = 'history_alliance_detail.php';
 		$container['selected_index'] = 1;
 		while ($db->nextRecord()) {

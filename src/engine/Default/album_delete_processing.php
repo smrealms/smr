@@ -10,11 +10,11 @@ if (Request::get('action') == 'Yes') {
 				WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
 }
 
-$container = create_container('skeleton.php');
+$container = Page::create('skeleton.php');
 if (!is_object($player)) {
 	$container['body'] = 'game_play.php';
 } else {
 	$container['body'] = 'current_sector.php';
 }
 
-forward($container);
+$container->go();

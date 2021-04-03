@@ -16,8 +16,8 @@ AND account_id != ' . $db->escapeNumber($player->getAccountID()) . '
 ORDER BY last_cpl_action DESC
 ');
 
-$container = create_container('alliance_remove_member_processing.php');
-$template->assign('BanishHREF', SmrSession::getNewHREF($container));
+$container = Page::create('alliance_remove_member_processing.php');
+$template->assign('BanishHREF', $container->href());
 
 $members = [];
 while ($db->nextRecord()) {

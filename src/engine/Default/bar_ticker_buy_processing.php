@@ -16,7 +16,7 @@ $db->query('REPLACE INTO player_has_ticker (game_id, account_id, type, expires) 
 $account->decreaseTotalSmrCredits(CREDITS_PER_TICKER);
 
 //offer another drink and such
-$container = create_container('skeleton.php', 'bar_main.php');
-transfer('LocationID');
+$container = Page::create('skeleton.php', 'bar_main.php');
+$container->addVar('LocationID');
 $container['message'] = '<div class="center">Your system has been added.  Enjoy!</div><br />';
-forward($container);
+$container->go();

@@ -87,7 +87,7 @@ if (isset($num_drinks) && $num_drinks > 15) {
 $player->increaseHOF(1, array('Bar', 'Drinks', 'Total'), HOF_PUBLIC);
 $message .= '</div>';
 
-$container = create_container('skeleton.php', 'bar_main.php');
-transfer('LocationID');
+$container = Page::create('skeleton.php', 'bar_main.php');
+$container->addVar('LocationID');
 $container['message'] = $message;
-forward($container);
+$container->go();

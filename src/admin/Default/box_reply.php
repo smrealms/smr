@@ -4,11 +4,11 @@ require_once(get_file_loc('messages.inc.php'));
 $boxName = getAdminBoxNames()[$var['box_type_id']];
 $template->assign('PageTopic', 'Reply To ' . $boxName);
 
-$container = create_container('box_reply_processing.php');
-transfer('game_id');
-transfer('sender_id');
-transfer('box_type_id');
-$template->assign('BoxReplyFormHref', SmrSession::getNewHREF($container));
+$container = Page::create('box_reply_processing.php');
+$container->addVar('game_id');
+$container->addVar('sender_id');
+$container->addVar('box_type_id');
+$template->assign('BoxReplyFormHref', $container->href());
 $template->assign('Sender', SmrPlayer::getPlayer($var['sender_id'], $var['game_id']));
 $template->assign('SenderAccount', SmrAccount::getAccount($var['sender_id']));
 if (isset($var['Preview'])) {
@@ -17,6 +17,6 @@ if (isset($var['Preview'])) {
 $template->assign('BanPoints', $var['BanPoints'] ?? 0);
 $template->assign('RewardCredits', $var['RewardCredits'] ?? 0);
 
-$container = create_container('skeleton.php', 'box_view.php');
-transfer('box_type_id');
-$template->assign('BackHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'box_view.php');
+$container->addVar('box_type_id');
+$template->assign('BackHREF', $container->href());

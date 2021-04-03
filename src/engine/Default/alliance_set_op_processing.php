@@ -2,7 +2,7 @@
 
 function error_on_page($error) {
 	$message = '<span class="bold red">ERROR:</span> ' . $error;
-	forward(create_container('skeleton.php', 'alliance_set_op.php', array('message' => $message)));
+	Page::create('skeleton.php', 'alliance_set_op.php', array('message' => $message))->go();
 }
 
 if (!empty($var['cancel'])) {
@@ -38,4 +38,4 @@ if (!empty($var['cancel'])) {
 	}
 }
 
-forward(create_container('skeleton.php', 'alliance_set_op.php'));
+Page::create('skeleton.php', 'alliance_set_op.php')->go();

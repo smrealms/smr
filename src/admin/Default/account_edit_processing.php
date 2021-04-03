@@ -196,9 +196,9 @@ if (!empty($delete)) {
 }
 
 //get his login name
-$container = create_container('skeleton.php', 'account_edit_search.php');
+$container = Page::create('skeleton.php', 'account_edit_search.php');
 $container['msg'] = 'You ' . join(' and ', $actions) . ' for the account of ' . $curr_account->getLogin() . '.';
 
 // Update the selected account in case it has been changed
 $curr_account->update();
-forward($container);
+$container->go();

@@ -5,9 +5,9 @@ $alliance_id_2 = $_REQUEST['proposedAlliance'];
 
 $db->query('SELECT alliance_id_1, alliance_id_2, game_id FROM alliance_treaties WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_1 = ' . $alliance_id_2 . ') AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($db->nextRecord()) {
-	$container = create_container('skeleton.php', 'alliance_treaties.php');
+	$container = Page::create('skeleton.php', 'alliance_treaties.php');
 	$container['message'] = '<span class="red bold">ERROR:</span> There is already an outstanding treaty with that alliance.';
-	forward($container);
+	$container->go();
 }
 
 $alliance1 = SmrAlliance::getAlliance($alliance_id_1, $player->getGameID());
@@ -30,12 +30,12 @@ $terms['mb_read'] = $terms['mb_read'] || $terms['mb_write'];
 $template->assign('Terms', $terms);
 
 // Create links for yes/no response
-$container = create_container('alliance_treaties_confirm_processing.php');
+$container = Page::create('alliance_treaties_confirm_processing.php');
 $container['proposedAlliance'] = $alliance_id_2;
 foreach ($terms as $term => $value) {
 	$container[$term] = $value;
 }
-$template->assign('YesHREF', SmrSession::getNewHREF($container));
+$template->assign('YesHREF', $container->href());
 
-$container = create_container('skeleton.php', 'alliance_treaties.php');
-$template->assign('NoHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'alliance_treaties.php');
+$template->assign('NoHREF', $container->href());

@@ -21,7 +21,7 @@ while ($db->nextRecord()) {
 	$allianceRoles[$roleID]['EditingRole'] = isset($var['role_id']) && $var['role_id'] == $roleID;
 	$allianceRoles[$roleID]['CreatingRole'] = false;
 	if ($allianceRoles[$roleID]['EditingRole']) {
-		$container = create_container('alliance_roles_processing.php');
+		$container = Page::create('alliance_roles_processing.php');
 		$allianceRoles[$roleID]['WithdrawalLimit'] = $db->getInt('with_per_day');
 		$allianceRoles[$roleID]['PositiveBalance'] = $db->getBoolean('positive_balance');
 		$allianceRoles[$roleID]['TreatyCreated'] = $db->getBoolean('treaty_created');
@@ -36,18 +36,18 @@ while ($db->nextRecord()) {
 		$allianceRoles[$roleID]['OpLeader'] = $db->getBoolean('op_leader');
 		$allianceRoles[$roleID]['ViewBondsInPlanetList'] = $db->getBoolean('view_bonds');
 	} else {
-		$container = create_container('skeleton.php', 'alliance_roles.php');
+		$container = Page::create('skeleton.php', 'alliance_roles.php');
 	}
 	$container['role_id'] = $roleID;
 	$container['alliance_id'] = $alliance->getAllianceID();
-	$allianceRoles[$roleID]['HREF'] = SmrSession::getNewHREF($container);
+	$allianceRoles[$roleID]['HREF'] = $container->href();
 }
 $template->assign('AllianceRoles', $allianceRoles);
-$container = create_container('alliance_roles_processing.php');
+$container = Page::create('alliance_roles_processing.php');
 $container['alliance_id'] = $alliance->getAllianceID();
 
 $template->assign('CreateRole', array(
-	'HREF' => SmrSession::getNewHREF($container),
+	'HREF' => $container->href(),
 	'RoleID' => '',
 	'Name' => '',
 	'CreatingRole' => true,

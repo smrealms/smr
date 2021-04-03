@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic', 'Send Admin Message');
 
-$template->assign('AdminMessageChooseGameFormHref', SmrSession::getNewHREF(create_container('skeleton.php', 'admin_message_send.php')));
+$template->assign('AdminMessageChooseGameFormHref', Page::create('skeleton.php', 'admin_message_send.php')->href());
 
 // Get a list of all games that have not yet ended
 $activeGames = array();

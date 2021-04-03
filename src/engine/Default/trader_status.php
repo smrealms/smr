@@ -4,20 +4,20 @@ $template->assign('PageTopic', 'Trader Status');
 Menu::trader();
 
 if ($player->hasNewbieTurns()) {
-	$container = create_container('skeleton.php', 'leave_newbie.php');
-	$template->assign('LeaveNewbieHREF', SmrSession::getNewHREF($container));
+	$container = Page::create('skeleton.php', 'leave_newbie.php');
+	$template->assign('LeaveNewbieHREF', $container->href());
 }
 
-$container = create_container('skeleton.php');
+$container = Page::create('skeleton.php');
 $container['body'] = 'trader_relations.php';
-$template->assign('RelationsHREF', SmrSession::getNewHREF($container));
+$template->assign('RelationsHREF', $container->href());
 
 $container['body'] = 'trader_savings.php';
-$template->assign('SavingsHREF', SmrSession::getNewHREF($container));
+$template->assign('SavingsHREF', $container->href());
 
 // Bounties
 $container['body'] = 'trader_bounties.php';
-$template->assign('BountiesHREF', SmrSession::getNewHREF($container));
+$template->assign('BountiesHREF', $container->href());
 
 $db->query('SELECT count(*) FROM bounty WHERE claimer_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
 $db->requireRecord();
@@ -25,7 +25,7 @@ $template->assign('BountiesClaimable', $db->getInt('count(*)'));
 
 // Ship
 $container['body'] = 'configure_hardware.php';
-$template->assign('HardwareHREF', SmrSession::getNewHREF($container));
+$template->assign('HardwareHREF', $container->href());
 
 $hardware = [];
 if ($ship->canHaveScanner()) {
@@ -56,10 +56,10 @@ if (!$db->nextRecord()) {
 $template->assign('NextLevelName', $db->getField('level_name'));
 
 $container['body'] = 'rankings_view.php';
-$template->assign('UserRankingsHREF', SmrSession::getNewHREF($container));
+$template->assign('UserRankingsHREF', $container->href());
 
-$container = create_container('note_delete_processing.php');
-$template->assign('NoteDeleteHREF', SmrSession::getNewHREF($container));
+$container = Page::create('note_delete_processing.php');
+$template->assign('NoteDeleteHREF', $container->href());
 
 $notes = [];
 $db->query('SELECT * FROM player_has_notes WHERE ' . $player->getSQL() . ' ORDER BY note_id DESC');
@@ -68,5 +68,5 @@ while ($db->nextRecord()) {
 }
 $template->assign('Notes', $notes);
 
-$container = create_container('note_add_processing.php');
-$template->assign('NoteAddHREF', SmrSession::getNewHREF($container));
+$container = Page::create('note_add_processing.php');
+$template->assign('NoteAddHREF', $container->href());

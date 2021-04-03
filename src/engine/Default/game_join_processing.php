@@ -100,6 +100,6 @@ $news = '[player=' . $player->getPlayerID() . '] has joined the game!';
 $db->query('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($gameID) . ', \'admin\', ' . $db->escapeNumber($player->getAccountID()) . ')');
 
 // Send the player directly into the game
-$container = create_container('game_play_processing.php');
-transfer('game_id');
-forward($container);
+$container = Page::create('game_play_processing.php');
+$container->addVar('game_id');
+$container->go();

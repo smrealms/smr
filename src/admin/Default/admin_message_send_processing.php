@@ -9,14 +9,14 @@ if ($game_id != ALL_GAMES_ID) {
 }
 
 if (Request::get('action') == 'Preview message') {
-	$container = create_container('skeleton.php', 'admin_message_send.php');
-	transfer('SendGameID');
+	$container = Page::create('skeleton.php', 'admin_message_send.php');
+	$container->addVar('SendGameID');
 	$container['preview'] = $message;
 	$container['expire'] = $expire;
 	if ($game_id != ALL_GAMES_ID) {
 		$container['account_id'] = $account_id;
 	}
-	forward($container);
+	$container->go();
 }
 
 if ($expire < 0) {
@@ -51,6 +51,6 @@ foreach ($receivers as $receiver) {
 }
 $msg = '<span class="green">SUCCESS: </span>Your message has been sent.';
 
-$container = create_container('skeleton.php', 'admin_tools.php');
+$container = Page::create('skeleton.php', 'admin_tools.php');
 $container['msg'] = $msg;
-forward($container);
+$container->go();

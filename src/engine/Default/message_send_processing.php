@@ -3,16 +3,16 @@
 $message = htmlentities(trim(Request::get('message')), ENT_COMPAT, 'utf-8');
 
 if (Request::get('action') == 'Preview message') {
-	$container = create_container('skeleton.php');
+	$container = Page::create('skeleton.php');
 	if (isset($var['alliance_id'])) {
 		$container['body'] = 'alliance_broadcast.php';
 	} else {
 		$container['body'] = 'message_send.php';
 	}
-	transfer('receiver');
-	transfer('alliance_id');
+	$container->addVar('receiver');
+	$container->addVar('alliance_id');
 	$container['preview'] = $message;
-	forward($container);
+	$container->go();
 }
 
 if (empty($message)) {
@@ -34,12 +34,12 @@ if (isset($var['alliance_id'])) {
 	$player->sendGlobalMessage($message);
 }
 
-$container = create_container('skeleton.php');
+$container = Page::create('skeleton.php');
 if (isset($var['alliance_id'])) {
 	$container['body'] = 'alliance_roster.php';
-	transfer('alliance_id');
+	$container->addVar('alliance_id');
 } else {
 	$container['body'] = 'current_sector.php';
 }
 $container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
-forward($container);
+$container->go();

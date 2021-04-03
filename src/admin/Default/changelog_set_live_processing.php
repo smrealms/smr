@@ -16,4 +16,4 @@ $patch = $db->getInt('patch_level') + 1;
 $db->query('INSERT IGNORE INTO version (version_id, major_version, minor_version, patch_level, went_live) VALUES
 			('.$db->escapeNumber($versionID) . ',' . $db->escapeNumber($major) . ',' . $db->escapeNumber($minor) . ',' . $db->escapeNumber($patch) . ',0);');
 
-forward(create_container('skeleton.php', 'changelog.php'));
+Page::create('skeleton.php', 'changelog.php')->go();

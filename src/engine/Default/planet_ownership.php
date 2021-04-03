@@ -2,8 +2,8 @@
 
 require('planet.inc.php');
 
-$container = create_container('planet_ownership_processing.php');
-$template->assign('ProcessingHREF', SmrSession::getNewHREF($container));
+$container = Page::create('planet_ownership_processing.php');
+$template->assign('ProcessingHREF', $container->href());
 
 $template->assign('Planet', $planet);
 $template->assign('Player', $player);

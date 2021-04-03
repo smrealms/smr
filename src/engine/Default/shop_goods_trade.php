@@ -27,14 +27,14 @@ if ($transaction === TRADER_SELLS) {
 	$template->assign('PortAction', 'offer you');
 }
 
-$container = create_container('shop_goods_processing.php');
-transfer('amount');
-transfer('good_id');
-transfer('offered_price');
-transfer('ideal_price');
-transfer('number_of_bargains');
-transfer('overall_number_of_bargains');
-$template->assign('BargainHREF', SmrSession::getNewHREF($container));
+$container = Page::create('shop_goods_processing.php');
+$container->addVar('amount');
+$container->addVar('good_id');
+$container->addVar('offered_price');
+$container->addVar('ideal_price');
+$container->addVar('number_of_bargains');
+$container->addVar('overall_number_of_bargains');
+$template->assign('BargainHREF', $container->href());
 
 $template->assign('BargainPrice', $bargain_price);
 $template->assign('OfferedPrice', $var['offered_price']);
@@ -43,8 +43,8 @@ $template->assign('Good', $portGood);
 $template->assign('Amount', $var['amount']);
 $template->assign('Port', $port);
 
-$container = create_container('skeleton.php', 'shop_goods.php');
-$template->assign('ShopHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'shop_goods.php');
+$template->assign('ShopHREF', $container->href());
 
-$container = create_container('skeleton.php', 'current_sector.php');
-$template->assign('LeaveHREF', SmrSession::getNewHREF($container));
+$container = Page::create('skeleton.php', 'current_sector.php');
+$template->assign('LeaveHREF', $container->href());

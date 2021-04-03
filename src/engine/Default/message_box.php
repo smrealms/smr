@@ -40,13 +40,13 @@ foreach (getMessageTypeNames() as $message_type_id => $message_type_name) {
 	$db->requireRecord();
 	$messageBox['MessageCount'] = $db->getInt('message_count');
 
-	$container = create_container('skeleton.php', 'message_view.php');
+	$container = Page::create('skeleton.php', 'message_view.php');
 	$container['folder_id'] = $message_type_id;
-	$messageBox['ViewHref'] = SmrSession::getNewHREF($container);
+	$messageBox['ViewHref'] = $container->href();
 
-	$container = create_container('message_box_delete_processing.php');
+	$container = Page::create('message_box_delete_processing.php');
 	$container['folder_id'] = $message_type_id;
-	$messageBox['DeleteHref'] = SmrSession::getNewHREF($container);
+	$messageBox['DeleteHref'] = $container->href();
 	$messageBoxes[] = $messageBox;
 }
 

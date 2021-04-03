@@ -121,22 +121,22 @@ if ($db->getNumRows() > 0) {
 
 	$template->assign('MinValue', $minValue);
 	$template->assign('MaxValue', $maxValue);
-	$container = create_container('skeleton.php', 'bank_alliance.php');
+	$container = Page::create('skeleton.php', 'bank_alliance.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
-	$template->assign('FilterTransactionsFormHREF', SmrSession::getNewHREF($container));
+	$template->assign('FilterTransactionsFormHREF', $container->href());
 
-	$container = create_container('bank_alliance_exempt_processing.php');
+	$container = Page::create('bank_alliance_exempt_processing.php');
 	$container['minVal'] = $minValue;
 	$container['maxVal'] = $maxValue;
-	$template->assign('ExemptTransactionsFormHREF', SmrSession::getNewHREF($container));
+	$template->assign('ExemptTransactionsFormHREF', $container->href());
 
 	$template->assign('Alliance', $alliance);
 }
 
-$container = create_container('skeleton.php', 'bank_report.php');
+$container = Page::create('skeleton.php', 'bank_report.php');
 $container['alliance_id'] = $alliance->getAllianceID();
-$template->assign('BankReportHREF', SmrSession::getNewHREF($container));
+$template->assign('BankReportHREF', $container->href());
 
-$container = create_container('bank_alliance_processing.php');
+$container = Page::create('bank_alliance_processing.php');
 $container['alliance_id'] = $alliance->getAllianceID();
-$template->assign('BankTransactionFormHREF', SmrSession::getNewHREF($container));
+$template->assign('BankTransactionFormHREF', $container->href());

@@ -8,4 +8,4 @@ if ($location->isHQ()) {
 	$player->setAlignment(-150);
 }
 
-forward(create_container('skeleton.php', 'current_sector.php'));
+Page::create('skeleton.php', 'current_sector.php')->go();

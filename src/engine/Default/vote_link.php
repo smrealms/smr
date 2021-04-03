@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$container = create_container('skeleton.php', 'current_sector.php');
+$container = Page::create('skeleton.php', 'current_sector.php');
 
 // Sanity check that we got here by means of allowing free turns
 if ($var['can_get_turns'] == true) {
@@ -15,4 +15,4 @@ if ($var['can_get_turns'] == true) {
 	}
 }
 
-forward($container);
+$container->go();

@@ -3,10 +3,10 @@
 // If here, we have hit either the 'Save', 'Delete', or 'View' form buttons.
 // Immediately return to the log list if we haven't selected any logs.
 if (!Request::has('id')) {
-	$container = create_container('skeleton.php', 'combat_log_list.php');
+	$container = Page::create('skeleton.php', 'combat_log_list.php');
 	$container['message'] = 'You must select at least one combat log!';
 	$container['action'] = $var['old_action'];
-	forward($container);
+	$container->go();
 }
 
 $submitAction = Request::get('action');
@@ -40,14 +40,14 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 	}
 
 	// Now that the logs have been saved/deleted, go back to the log list
-	$container = create_container('skeleton.php', 'combat_log_list.php');
+	$container = Page::create('skeleton.php', 'combat_log_list.php');
 	$container['message'] = $submitAction . 'd ' . $db->getChangedRows() . ' new logs.';
 	$container['action'] = $var['old_action'];
-	forward($container);
+	$container->go();
 } elseif ($submitAction == 'View') {
-	$container = create_container('skeleton.php', 'combat_log_viewer.php');
+	$container = Page::create('skeleton.php', 'combat_log_viewer.php');
 	$container['log_ids'] = $logIDs;
 	sort($container['log_ids']);
 	$container['current_log'] = 0;
-	forward($container);
+	$container->go();
 }

@@ -229,4 +229,4 @@ if (isset($var['referrer']) && $var['referrer'] == 'map_local.php') {
 } else {
 	$body = 'current_sector.php';
 }
-forward(create_container('skeleton.php', $body));
+Page::create('skeleton.php', $body)->go();

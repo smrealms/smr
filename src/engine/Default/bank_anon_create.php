@@ -3,5 +3,5 @@
 $template->assign('PageTopic', 'Create Anonymous Account');
 Menu::bank();
 
-$container = create_container('bank_anon_create_processing.php');
-$template->assign('CreateHREF', SmrSession::getNewHREF($container));
+$container = Page::create('bank_anon_create_processing.php');
+$template->assign('CreateHREF', $container->href());

@@ -4,7 +4,7 @@ $alliance = $player->getAlliance();
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
-$container = create_container('alliance_set_op_processing.php');
+$container = Page::create('alliance_set_op_processing.php');
 
 // Print any error messages that may have been created
 if (!empty($var['message'])) {
@@ -24,12 +24,12 @@ if ($db->nextRecord()) {
 	$container['cancel'] = true;
 }
 
-$template->assign('OpProcessingHREF', SmrSession::getNewHREF($container));
+$template->assign('OpProcessingHREF', $container->href());
 
 
 // Stuff for designating a flagship
 $template->assign('FlagshipID', $alliance->getFlagshipID());
 $template->assign('AlliancePlayers', $alliance->getMembers());
 
-$container = create_container('alliance_set_flagship_processing.php');
-$template->assign('FlagshipHREF', SmrSession::getNewHREF($container));
+$container = Page::create('alliance_set_flagship_processing.php');
+$template->assign('FlagshipHREF', $container->href());

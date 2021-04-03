@@ -11,13 +11,13 @@ $db->query('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article
 
 $articles = [];
 while ($db->nextRecord()) {
-	$container = create_container('galactic_post_paper_edit_processing.php');
+	$container = Page::create('galactic_post_paper_edit_processing.php');
 	$container['article_id'] = $db->getInt('article_id');
-	transfer('id');
+	$container->addVar('id');
 	$articles[] = [
 		'title' => bbifyMessage($db->getField('title')),
 		'text' => bbifyMessage($db->getField('text')),
-		'editHREF' => SmrSession::getNewHREF($container),
+		'editHREF' => $container->href(),
 	];
 }
 $template->assign('Articles', $articles);
