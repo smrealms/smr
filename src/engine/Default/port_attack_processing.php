@@ -73,8 +73,7 @@ $account->log(LOG_TYPE_PORT_RAIDING, 'Player attacks port, the port does ' . $re
 
 $port->update();
 
-$serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PORT\',' . $db->escapeNumber($port->getSectorID()) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $db->escapeNumber(PORT_ALLIANCE_ID) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PORT\',' . $db->escapeNumber($port->getSectorID()) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $db->escapeNumber(PORT_ALLIANCE_ID) . ',' . $db->escapeObject($results, true) . ')');
 $logId = $db->escapeString('[ATTACK_RESULTS]' . $db->getInsertID());
 foreach ($attackers as $attacker) {
 	if (!$player->equals($attacker)) {
@@ -89,5 +88,5 @@ if ($player->isDead()) {
 	$container['override_death'] = TRUE;
 }
 
-$container['results'] = $serializedResults;
+$container['results'] = $results;
 $container->go();

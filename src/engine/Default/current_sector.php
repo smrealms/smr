@@ -169,7 +169,7 @@ function checkForAttackMessage(&$msg) {
 			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');
 			if ($db->nextRecord()) {
 				if ($player->getSectorID() == $db->getInt('sector_id')) {
-					$results = unserialize(gzuncompress($db->getField('result')));
+					$results = $db->getObject('result', true);
 					$template->assign('AttackResultsType', $db->getField('type'));
 					$template->assign('AttackResults', $results);
 					$template->assign('AttackLogLink', linkCombatLog($msg));

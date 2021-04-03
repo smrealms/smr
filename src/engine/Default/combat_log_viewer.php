@@ -13,7 +13,7 @@ if (!$db->nextRecord()) {
 }
 $template->assign('CombatLogSector', $db->getInt('sector_id'));
 $template->assign('CombatLogTimestamp', date(DATE_FULL_SHORT, $db->getInt('timestamp')));
-$results = unserialize(gzuncompress($db->getField('result')));
+$results = $db->getObject('result', true);
 $template->assign('CombatResultsType', $db->getField('type'));
 $template->assign('CombatResults', $results);
 

@@ -1084,7 +1084,7 @@ class AbstractSmrPort {
 	}
 	public function addCachePorts(array $accountIDs) {
 		if (count($accountIDs) > 0 && $this->exists()) {
-			$cache = $this->db->escapeBinary(gzcompress(serialize($this)));
+			$cache = $this->db->escapeObject($this, true);
 			$cacheHash = $this->db->escapeString(md5($cache));
 			//give them the port info
 			$query = 'INSERT IGNORE INTO player_visited_port ' .
@@ -1119,7 +1119,7 @@ class AbstractSmrPort {
 							AND sector_id = ' . $db->escapeNumber($sectorID) . ' LIMIT 1');
 
 			if ($db->nextRecord()) {
-				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = unserialize(gzuncompress($db->getField('port_info')));
+				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = $db->getObject('port_info', true);
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]->setCachedTime($db->getInt('visited'));
 			} else {
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;
