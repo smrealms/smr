@@ -26,7 +26,7 @@ class SmrSession {
 	private static ?string $session_id;
 	private static int $game_id;
 	private static array $var;
-	private static array $commonIDs;
+	private static array $commonIDs = [];
 	private static bool $generate;
 	private static string $SN = '';
 	private static string $lastSN;
@@ -123,7 +123,6 @@ class SmrSession {
 			self::$account_id = self::$db->getInt('account_id');
 			self::$game_id = self::$db->getInt('game_id');
 			self::$last_accessed = self::$db->getInt('last_accessed');
-			self::$commonIDs = array();
 			self::$lastSN = self::$db->getField('last_sn');
 			// We may not have ajax_returns if ajax was disabled
 			$ajaxReturns = self::$db->getField('ajax_returns');
@@ -159,7 +158,6 @@ class SmrSession {
 			self::$account_id = 0;
 			self::$game_id = 0;
 			self::$var = array();
-			self::$commonIDs = array();
 		}
 	}
 
