@@ -382,16 +382,9 @@ function do_voodoo() {
 	// Initialize the template
 	$template = new Template();
 
-	if ($var['url'] != 'skeleton.php') {
-		require(get_file_loc($var['url']));
-	}
-	if ($var['body']) {
-		if ($var['body'] == 'error.php') { // infinite includes for error pages
-			require(get_file_loc($var['body']));
-		} else {
-			require_once(get_file_loc($var['body']));
-		}
-	}
+	// Execute the engine files.
+	// This is where the majority of the page-specific work is performed.
+	$var->process();
 
 	if (SmrSession::hasGame()) {
 		$template->assign('UnderAttack', $player->removeUnderAttack());
