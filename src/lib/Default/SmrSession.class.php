@@ -1,9 +1,5 @@
 <?php declare(strict_types=1);
 
-if (!defined('USING_AJAX')) {
-	define('USING_AJAX', false);
-}
-
 class SmrSession {
 
 	const TIME_BEFORE_EXPIRY = 3600;
