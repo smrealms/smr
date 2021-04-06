@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 $template->assign('PageTopic', 'Current Players');
 $db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(Smr\Epoch::time()));

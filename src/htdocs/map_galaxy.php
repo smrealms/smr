@@ -17,7 +17,7 @@ try {
 	// ********************************
 
 	// do we have a session?
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 	if (!$session->hasAccount() || !$session->hasGame()) {
 		header('Location: /login.php');
 		exit;

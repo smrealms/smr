@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 // Get the selected game
 $gameId = $var['selected_game_id'];

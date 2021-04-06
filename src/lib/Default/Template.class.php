@@ -58,7 +58,7 @@ class Template {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$output = '<all>' . $ajaxXml . '</all>';
 			}
-			$session = SmrSession::getInstance();
+			$session = Smr\Session::getInstance();
 			$session->saveAjaxReturns();
 		}
 
@@ -83,7 +83,7 @@ class Template {
 			$templateDir .= 'Default/';
 		}
 
-		$session = SmrSession::getInstance();
+		$session = Smr\Session::getInstance();
 		if ($session->hasGame()) {
 			$gameDir = Globals::getGameType($session->getGameID()) . '/';
 		} else {
@@ -179,7 +179,7 @@ class Template {
 	}
 
 	protected function addJavascriptAlert($string) {
-		$session = SmrSession::getInstance();
+		$session = Smr\Session::getInstance();
 		if (!$session->addAjaxReturns('ALERT:' . $string, $string)) {
 			$this->jsAlerts[] = $string;
 		}
@@ -197,7 +197,7 @@ class Template {
 			return '';
 		}
 
-		$session = SmrSession::getInstance();
+		$session = Smr\Session::getInstance();
 
 		// To get inner html, we need to construct a separate DOMDocument.
 		// See PHP Bug #76285.

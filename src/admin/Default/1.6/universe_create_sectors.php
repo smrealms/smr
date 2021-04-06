@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 $session->getRequestVarInt('game_id');
 $session->getRequestVarInt('gal_on', 1);

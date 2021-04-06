@@ -1,6 +1,16 @@
 <?php declare(strict_types=1);
 
-class SmrSession {
+namespace Smr;
+
+use AbstractSmrAccount;
+use MySqlDatabase;
+use Page;
+use Request;
+use Smr\Container\DiContainer;
+use Smr\Epoch;
+use SmrAccount;
+
+class Session {
 
 	const TIME_BEFORE_EXPIRY = 3600;
 
@@ -33,17 +43,17 @@ class SmrSession {
 	protected array $ajaxReturns = array();
 
 	/**
-	 * Return the SmrSession in the DI container.
+	 * Return the Smr\Session in the DI container.
 	 * If one does not exist yet, it will be created.
 	 * This is the intended way to construct this class.
 	 */
 	public static function getInstance() : self {
-		return Smr\Container\DiContainer::get(self::class);
+		return DiContainer::get(self::class);
 	}
 
 	/**
-	 * SmrSession constructor.
-	 * Not intended to be constructed by hand. Use SmrSession::getInstance().
+	 * Smr\Session constructor.
+	 * Not intended to be constructed by hand. Use Smr\Session::getInstance().
 	 */
 	public function __construct() {
 
@@ -103,7 +113,7 @@ class SmrSession {
 			$this->var = $this->db->getObject('session_var', true);
 
 			foreach ($this->var as $key => $value) {
-				if ($value['Expires'] > 0 && $value['Expires'] <= Smr\Epoch::time()) { // Use 0 for infinity
+				if ($value['Expires'] > 0 && $value['Expires'] <= Epoch::time()) { // Use 0 for infinity
 					//This link is no longer valid
 					unset($this->var[$key]);
 				} elseif ($value['RemainingPageLoads'] < 0) {
@@ -132,12 +142,12 @@ class SmrSession {
 			}
 		}
 		if (!$this->generate) {
-			$this->db->query('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!USING_AJAX ? ',last_accessed=' . $this->db->escapeNumber(Smr\Epoch::time()) : '') . ',session_var=' . $this->db->escapeObject($this->var, true) .
+			$this->db->query('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!USING_AJAX ? ',last_accessed=' . $this->db->escapeNumber(Epoch::time()) : '') . ',session_var=' . $this->db->escapeObject($this->var, true) .
 					',last_sn=' . $this->db->escapeString($this->SN) .
 					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . (USING_AJAX ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : '') . ' LIMIT 1');
 		} else {
 			$this->db->query('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID));
-			$this->db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . $this->db->escapeString($this->sessionID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ',' . $this->db->escapeObject($this->var, true) . ')');
+			$this->db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . $this->db->escapeString($this->sessionID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber(Epoch::time()) . ',' . $this->db->escapeObject($this->var, true) . ')');
 			$this->generate = false;
 		}
 	}
@@ -164,7 +174,7 @@ class SmrSession {
 		return $this->accountID;
 	}
 
-	public function getAccount() : SmrAccount {
+	public function getAccount() : AbstractSmrAccount {
 		return SmrAccount::getAccount($this->accountID);
 	}
 
@@ -316,12 +326,12 @@ class SmrSession {
 	protected function generateSN(Page $container) : string {
 		if (isset($this->commonIDs[$container['CommonID']])) {
 			$sn = $this->commonIDs[$container['CommonID']];
-			$container['PreviousRequestTime'] = isset($this->var[$sn]) ? $this->var[$sn]['PreviousRequestTime'] : Smr\Epoch::microtime();
+			$container['PreviousRequestTime'] = isset($this->var[$sn]) ? $this->var[$sn]['PreviousRequestTime'] : Epoch::microtime();
 		} else {
 			do {
 				$sn = random_alphabetic_string(6);
 			} while (isset($this->var[$sn]));
-			$container['PreviousRequestTime'] = Smr\Epoch::microtime();
+			$container['PreviousRequestTime'] = Epoch::microtime();
 		}
 		$this->commonIDs[$container['CommonID']] = $sn;
 		return $sn;

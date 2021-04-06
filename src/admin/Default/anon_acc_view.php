@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 //view anon acct activity.
 $template->assign('PageTopic', 'View Anonymous Account Info');

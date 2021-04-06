@@ -28,7 +28,7 @@ function linkCombatLog($logID) {
  */
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
 	global $overrideGameID, $disableBBLinks, $player, $account, $var;
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 	try {
 		switch ($tagName) {
 			case 'combatlog':
@@ -311,7 +311,7 @@ function do_voodoo() {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
 	}
 
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 	if (!AJAX_CONTAINER && USING_AJAX && $session->hasChangedSN()) {
 		exit;
 	}
@@ -455,7 +455,7 @@ function acquire_lock($sector) {
 	}
 
 	// Insert ourselves into the queue.
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber($session->getGameID()) . ',' . $db->escapeNumber($session->getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 	$lock = $db->getInsertID();
 
@@ -530,7 +530,7 @@ function doTickerAssigns($template, $player, $db) {
 }
 
 function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $var) {
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());

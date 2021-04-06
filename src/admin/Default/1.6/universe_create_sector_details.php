@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 $editSectorID = $session->getRequestVarInt('sector_edit');
 $editSector = SmrSector::getSector($var['game_id'], $editSectorID);

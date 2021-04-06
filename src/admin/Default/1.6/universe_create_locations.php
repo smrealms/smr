@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 $session->getRequestVarInt('gal_on');
 $template->assign('Galaxies', SmrGalaxy::getGameGalaxies($var['game_id']));

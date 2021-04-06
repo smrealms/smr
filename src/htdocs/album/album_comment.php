@@ -10,7 +10,7 @@ try {
 	require_once(LIB . 'Default/smr.inc.php');
 	require_once(LIB . 'Album/album_functions.php');
 
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 
 	if (!$session->hasAccount()) {
 		create_error_offline('You need to logged in to post comments!');

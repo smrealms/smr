@@ -5,7 +5,7 @@
  *
  * This class acts like an array, whose keys define the page properties.
  * Then we can either create an HREF so that it can be accessed by a future
- * http request (via the SmrSession), or forwarded to within the same request.
+ * http request (via the Smr\Session), or forwarded to within the same request.
  */
 class Page extends ArrayObject {
 
@@ -150,7 +150,7 @@ class Page extends ArrayObject {
 
 		// this sn identifies our container later
 		if (!is_null($sn)) {
-			SmrSession::getInstance()->resetLink($this, $sn);
+			Smr\Session::getInstance()->resetLink($this, $sn);
 		}
 
 		// Note: if problems arise, maybe $this should be cloned.
@@ -184,8 +184,8 @@ class Page extends ArrayObject {
 
 	/**
 	 * Create an HREF (based on a random SN) to link to this page.
-	 * The container is saved in the SmrSession under this SN so that on
-	 * the next request, we can grab the container out of the SmrSession.
+	 * The container is saved in the Smr\Session under this SN so that on
+	 * the next request, we can grab the container out of the Smr\Session.
 	 */
 	public function href(bool $forceFullURL = false) : string {
 
@@ -211,7 +211,7 @@ class Page extends ArrayObject {
 		// be two different outcomes from containers given the same ID then
 		// problems will likely arise.
 		$copy['CommonID'] = $this->getCommonID();
-		$sn = SmrSession::getInstance()->addLink($copy);
+		$sn = Smr\Session::getInstance()->addLink($copy);
 
 		if ($forceFullURL === true || stripos($_SERVER['REQUEST_URI'], 'loader.php') === false) {
 			return '/loader.php?sn=' . $sn;

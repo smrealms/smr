@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 $game_id = $var['view_game_id'];
 $template->assign('PageTopic', 'Extended Stats : ' . $var['game_name']);

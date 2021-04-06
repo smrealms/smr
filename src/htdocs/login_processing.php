@@ -10,7 +10,7 @@ try {
 	// *
 	// ********************************
 
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 	if (!$session->hasAccount()) {
 		if (Request::has('loginType')) {
 			$socialLogin = Smr\SocialLogin\SocialLogin::get(Request::get('loginType'))->login();
