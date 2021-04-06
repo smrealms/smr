@@ -199,9 +199,6 @@ class Page extends ArrayObject {
 		// would need to change globally first (no Page re-use).
 		$copy = self::copy($this);
 
-		if (!isset($copy['Expires'])) {
-			$copy['Expires'] = 0; // Lasts forever
-		}
 		if (!isset($copy['RemainingPageLoads'])) {
 			$pageURL = $copy['url'] == 'skeleton.php' ? $copy['body'] : $copy['url'];
 			$copy['RemainingPageLoads'] = self::URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] ?? 1; // Allow refreshing
@@ -226,7 +223,6 @@ class Page extends ArrayObject {
 	 */
 	private function getCommonID() : string {
 		$commonContainer = $this->getArrayCopy();
-		unset($commonContainer['Expires']);
 		unset($commonContainer['RemainingPageLoads']);
 		unset($commonContainer['PreviousRequestTime']);
 		unset($commonContainer['CommonID']);
