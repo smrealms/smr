@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 require_once('../bootstrap.php');
 
-SmrSession::getInstance()->updateGame(44);
+Smr\Session::getInstance()->updateGame(44);
 
 $db = MySqlDatabase::getInstance();
 $db->query('DELETE FROM player_hof WHERE type LIKE \'Chess%\'');

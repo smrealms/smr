@@ -4,7 +4,7 @@
 $account->updateLastLogin();
 
 $container = Page::create('skeleton.php');
-if (SmrSession::getInstance()->hasGame()) {
+if (Smr\Session::getInstance()->hasGame()) {
 	$container['body'] = 'current_sector.php';
 } else {
 	$container['body'] = 'game_play.php';

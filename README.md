@@ -131,7 +131,7 @@ There are two common usages of this:
 - $container = Page::create('skeleton.php', $displayOnlyPage) with $displayOnlyPage being something such as 'current_sector.php'
 - $container = Page::create($processingPage) with $processingPage being something such as 'sector_move_processing.php'.
 
-You can then call $container->href() to get a HREF which will load the given page or SmrSession::generateSN($container) to get just the sn.
+You can then call $container->href() to get a HREF which will load the given page or Smr\Session::generateSN($container) to get just the sn.
 Along with this you can also assign extra values to $container which will be available on the next page under $var
 
 ```php
@@ -150,7 +150,7 @@ simultaneously (doing so will cause database errors).
 
 ### $var
 $var contains all information passed using the $container from the previous page.
-This *can* be assigned to, but only using SmrSession::updateVar($name, $value)
+This *can* be assigned to, but only using Smr\Session::updateVar($name, $value)
 
 ### $template
 The global instance of the Template class should be the _only_ instance, and
@@ -173,7 +173,7 @@ be assigned to.
 
 
 ## Request variables
-For any page which takes input through POST or GET (or other forms?) they should store these values in $var using SmrSession::updateVar() and only access via $var, this is required as when auto-refresh updates the page it will *not* resend these inputs but still requires them to render the page correctly.
+For any page which takes input through POST or GET (or other forms?) they should store these values in $var using Smr\Session::updateVar() and only access via $var, this is required as when auto-refresh updates the page it will *not* resend these inputs but still requires them to render the page correctly.
 
 ## Abstract vs normal classes
 This initially started out to be used in the "standard" way for NPCs but that idea has since been discarded.

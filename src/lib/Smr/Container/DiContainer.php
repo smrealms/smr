@@ -9,7 +9,7 @@ use MySqlDatabase;
 use mysqli;
 use Smr\MySqlProperties;
 use Smr\Epoch;
-use SmrSession;
+use Smr\Session;
 use function DI\autowire;
 
 /**
@@ -47,7 +47,7 @@ class DiContainer {
 			Epoch::class => autowire(),
 			MySqlProperties::class => autowire(),
 			MySqlDatabase::class => autowire(),
-			SmrSession::class => autowire(),
+			Session::class => autowire(),
 		];
 	}
 

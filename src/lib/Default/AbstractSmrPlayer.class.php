@@ -709,7 +709,7 @@ abstract class AbstractSmrPlayer {
 		$db->query('SELECT account_id
 					FROM active_session
 					JOIN player USING (game_id, account_id)
-					WHERE active_session.last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - SmrSession::TIME_BEFORE_EXPIRY) . '
+					WHERE active_session.last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - Smr\Session::TIME_BEFORE_EXPIRY) . '
 						AND game_id = ' . $db->escapeNumber($this->getGameID()) . '
 						AND ignore_globals = \'FALSE\'
 						AND account_id != ' . $db->escapeNumber($this->getAccountID()));
@@ -2176,7 +2176,7 @@ abstract class AbstractSmrPlayer {
 		}
 		$underAttack = $this->isUnderAttack();
 		if ($underAttack && !USING_AJAX) {
-			SmrSession::getInstance()->updateVar('UnderAttack', $underAttack); //Remember we are under attack for AJAX
+			Smr\Session::getInstance()->updateVar('UnderAttack', $underAttack); //Remember we are under attack for AJAX
 		}
 		$this->setUnderAttack(false);
 		return $underAttack;

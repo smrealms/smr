@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 require_once(LIB . 'Default/shop_goods.inc.php');
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 $amount = Request::getVarInt('amount');
 // no negative amounts are allowed

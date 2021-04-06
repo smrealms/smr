@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 $amount = $session->getRequestVarInt('amount');
 $account_id = $session->getRequestVarInt('account_id');

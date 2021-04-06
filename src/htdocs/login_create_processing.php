@@ -4,7 +4,7 @@ try {
 	require_once('../bootstrap.php');
 	require_once(LIB . 'Default/smr.inc.php');
 
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 
 	if ($session->hasAccount()) {
 		$msg = 'You\'re already logged in! Creating multis is against the rules!';

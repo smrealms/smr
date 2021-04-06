@@ -35,7 +35,7 @@ try {
 	//echo '<pre>';echo_r($session);echo'</pre>';
 	//exit;
 	// do we have a session?
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 	if (!$session->hasAccount()) {
 		header('Location: /login.php');
 		exit;
@@ -70,7 +70,7 @@ try {
 	}
 
 	// Determine where to load game scripts from (in case we need a special
-	// game script from outside the current SmrSession game).
+	// game script from outside the current Smr\Session game).
 	// Must not call `get_file_loc` until after we have set $overrideGameID
 	// (unless we're exiting immediately with an error, as above).
 	$overrideGameID = 0;

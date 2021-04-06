@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 if (!isset($var['notified_time'])) {
 	$session->updateVar('notified_time', Smr\Epoch::time());

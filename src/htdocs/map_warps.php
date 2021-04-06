@@ -2,7 +2,7 @@
 try {
 	require_once('../bootstrap.php');
 
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 
 	$gameID = Request::getInt('game');
 	if (!$session->hasAccount() || !Globals::isValidGame($gameID)) {

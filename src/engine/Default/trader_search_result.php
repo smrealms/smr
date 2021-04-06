@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 $player_id = $session->getRequestVarInt('player_id');
 // When clicking on a player name, only the 'player_id' is supplied

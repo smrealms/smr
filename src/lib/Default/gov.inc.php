@@ -5,7 +5,7 @@
  */
 function getBounties($type) {
 	$db = MySqlDatabase::getInstance();
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 	$db->query('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' AND type =' . $db->escapeString($type) . ' AND claimer_id = 0 ORDER BY amount DESC');
 	$bounties = [];
 	while ($db->nextRecord()) {

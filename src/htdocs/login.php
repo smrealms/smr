@@ -11,7 +11,7 @@ try {
 	// *
 	// ********************************
 
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 	if ($session->hasAccount()) {
 		// update last login column
 		$session->getAccount()->updateLastLogin();

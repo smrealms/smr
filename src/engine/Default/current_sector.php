@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 // If on a planet, forward to planet_main.php
 if ($player->isLandedOnPlanet()) {
@@ -166,7 +166,7 @@ function checkForAttackMessage(&$msg) {
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {
 		// $msg now contains only the log_id, if there is one
-		SmrSession::getInstance()->updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
+		Smr\Session::getInstance()->updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
 		if (!$template->hasTemplateVar('AttackResults')) {
 			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');
 			if ($db->nextRecord()) {

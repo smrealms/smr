@@ -102,7 +102,7 @@ function NPCStuff() {
 	$underAttack = false;
 	$actions = -1;
 
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 
 	while (true) {
 		// Clear the $_REQUEST global, in case we had set it, to avoid
@@ -351,7 +351,7 @@ function sleepNPC() {
 
 // Releases an NPC when it is done working
 function releaseNPC() {
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 	if (!$session->hasAccount()) {
 		debug('releaseNPC: no NPC to release');
 		return;
@@ -395,7 +395,7 @@ function changeNPCLogin() {
 	static $availableNpcs = null;
 
 	$db = MySqlDatabase::getInstance();
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 
 	if (is_null($availableNpcs)) {
 		// Make sure to select NPCs from active games only

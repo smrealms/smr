@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 $body = htmlentities(trim(Request::get('body')), ENT_COMPAT, 'utf-8');
 $topic = Request::get('topic', ''); // only present for Create Thread

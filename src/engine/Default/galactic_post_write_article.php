@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$session = SmrSession::getInstance();
+$session = Smr\Session::getInstance();
 
 Menu::galactic_post();
 $container = Page::create('galactic_post_write_article_processing.php');

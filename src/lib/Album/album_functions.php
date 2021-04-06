@@ -61,7 +61,7 @@ function main_page() {
 
 function album_entry($album_id) {
 	$db = MySqlDatabase::getInstance();
-	$session = SmrSession::getInstance();
+	$session = Smr\Session::getInstance();
 
 	// list of all first letter nicks
 	create_link_list();

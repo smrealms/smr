@@ -4,7 +4,7 @@ if (empty($var['message']) || $var['message'] == '') {
 	$var['message'] = 'File not found';
 }
 
-if (SmrSession::getInstance()->hasGame() && is_object($player) && $lock) {
+if (Smr\Session::getInstance()->hasGame() && is_object($player) && $lock) {
 	$container = Page::create('skeleton.php', 'current_sector.php');
 	$errorMsg = '<span class="red bold">ERROR:</span> ' . $var['message'];
 	$container['errorMsg'] = $errorMsg;

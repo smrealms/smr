@@ -2,21 +2,21 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use SmrSession;
+use Smr\Session;
 use SmrTest\BaseIntegrationSpec;
 
 /**
- * @covers SmrSession
+ * @covers Smr\Session
  */
-class SmrSessionIntegrationTest extends BaseIntegrationSpec {
+class SessionIntegrationTest extends BaseIntegrationSpec {
 
-	private SmrSession $session;
+	private Session $session;
 
 	protected function setUp() : void {
-		// Start each test with a fresh container (and SmrSession).
+		// Start each test with a fresh container (and Smr\Session).
 		// This ensures the independence of each test.
 		\Smr\Container\DiContainer::initializeContainer();
-		$this->session = SmrSession::getInstance();
+		$this->session = Session::getInstance();
 	}
 
 	public function test_game() {
