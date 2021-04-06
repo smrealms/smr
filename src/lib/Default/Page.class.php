@@ -235,4 +235,19 @@ class Page extends ArrayObject {
 		return md5(serialize($commonContainer));
 	}
 
+	/**
+	 * Process this page by executing the 'url' and 'body' files.
+	 * Global variables are included here for convenience (and should be
+	 * synchronized with `do_voodoo`).
+	 */
+	public function process() : void {
+		global $lock, $var, $player, $ship, $sector, $account, $db, $template;
+		if ($this['url'] != 'skeleton.php') {
+			require(get_file_loc($this['url']));
+		}
+		if ($this['body']) {
+			require(get_file_loc($this['body']));
+		}
+	}
+
 }
