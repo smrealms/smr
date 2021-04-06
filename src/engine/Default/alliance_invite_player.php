@@ -16,7 +16,7 @@ foreach (SmrInvitation::getAll($player->getAllianceID(), $player->getGameID()) a
 	$pendingInvites[$invited->getAccountID()] = array(
 		'invited' => $invited->getDisplayName(true),
 		'invited_by' => $invite->getSender()->getDisplayName(),
-		'expires' => format_time($invite->getExpires() - SmrSession::getTime(), true),
+		'expires' => format_time($invite->getExpires() - Smr\Epoch::time(), true),
 		'cancelHREF' => $container->href(),
 	);
 }

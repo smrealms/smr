@@ -4,7 +4,7 @@ if ($player->getCredits() < 1000000) {
 	create_error('There once was a man with less than $1,000,000...wait...thats you!');
 }
 
-$time = SmrSession::getTime();
+$time = Smr\Epoch::time();
 while (true) {
 	//avoid double entries (since table is unique on game,account,time)
 	$db->query('SELECT 1 FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '

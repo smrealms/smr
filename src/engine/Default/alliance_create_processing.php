@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-if ($player->getAllianceJoinable() > SmrSession::getTime()) {
-	create_error('You cannot create an alliance for another ' . format_time($player->getAllianceJoinable() - SmrSession::getTime()) . '.');
+if ($player->getAllianceJoinable() > Smr\Epoch::time()) {
+	create_error('You cannot create an alliance for another ' . format_time($player->getAllianceJoinable() - Smr\Epoch::time()) . '.');
 }
 
 // trim input first

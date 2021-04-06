@@ -413,8 +413,8 @@ class SmrAlliance {
 		if (!$this->isRecruiting()) {
 			return 'This alliance is not currently accepting new recruits.';
 		}
-		if ($player->getAllianceJoinable() > SmrSession::getTime()) {
-			return 'You cannot join another alliance for ' . format_time($player->getAllianceJoinable() - SmrSession::getTime()) . '.';
+		if ($player->getAllianceJoinable() > Smr\Epoch::time()) {
+			return 'You cannot join another alliance for ' . format_time($player->getAllianceJoinable() - Smr\Epoch::time()) . '.';
 		}
 		if ($this->getNumMembers() < $this->getGame()->getAllianceMaxPlayers()) {
 			if ($player->hasNewbieStatus()) {
@@ -498,7 +498,7 @@ class SmrAlliance {
 		$this->db->query('SELECT account_id
 						FROM active_session
 						JOIN player USING(account_id, game_id)
-						WHERE '.$this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(SmrSession::getTime() - 600));
+						WHERE '.$this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(Smr\Epoch::time() - 600));
 
 		while ($this->db->nextRecord()) {
 			$activeIDs[] = $this->db->getInt('account_id');

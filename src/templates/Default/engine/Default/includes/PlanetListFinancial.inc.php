@@ -35,7 +35,7 @@ if (count($Planets) > 0) { ?>
 						<td class="sort_interest"><?php echo $Planet->getInterestRate() * 100; ?>%</td>
 						<?php
 						if ($Planet->getBonds() > 0) {
-							$matureTime = $Planet->getMaturity() - SmrSession::getTime(); ?>
+							$matureTime = $Planet->getMaturity() - Smr\Epoch::time(); ?>
 							<td class="sort_mature noWrap" data-sort_mature="<?php echo $matureTime; ?>">
 								<?php echo format_time($matureTime, true); ?>
 							</td><?php

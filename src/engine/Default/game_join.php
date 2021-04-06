@@ -22,7 +22,7 @@ if ($game->hasEnded()) {
 $template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
 $template->assign('Game', $game);
 
-if (SmrSession::getTime() >= $game->getJoinTime()) {
+if (Smr\Epoch::time() >= $game->getJoinTime()) {
 	$container = Page::create('game_join_processing.php');
 	$container->addVar('game_id');
 	$template->assign('JoinGameFormHref', $container->href());

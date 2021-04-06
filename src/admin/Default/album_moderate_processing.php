@@ -18,7 +18,7 @@ if ($var['task'] == 'reset_image') {
 
 	$db->query('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
-				VALUES ('.$db->escapeNumber($account_id) . ', ' . $db->escapeNumber($comment_id) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ', 0, ' . $db->escapeString('<span class="green">*** Picture disabled by an admin</span>') . ')');
+				VALUES ('.$db->escapeNumber($account_id) . ', ' . $db->escapeNumber($comment_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', 0, ' . $db->escapeString('<span class="green">*** Picture disabled by an admin</span>') . ')');
 	$db->unlock();
 
 	// get his email address and send the mail

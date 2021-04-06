@@ -22,7 +22,7 @@ if (!isset($var['ClaimText'])) {
 			$amount = $bounty['credits'];
 			$smrCredits = $bounty['smr_credits'];
 			// no interest on bounties
-			// $time = SmrSession::getTime();
+			// $time = Smr\Epoch::time();
 			// $days = ($time - $db->getField('time')) / 60 / 60 / 24;
 			// $amount = round($db->getField('amount') * pow(1.05,$days));
 

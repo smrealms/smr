@@ -53,7 +53,7 @@ try {
 	}
 
 	// get current time
-	$curr_time = SmrSession::getTime();
+	$curr_time = Smr\Epoch::time();
 
 	$comment = word_filter($comment);
 	$account->sendMessageToBox(BOX_ALBUM_COMMENTS, $comment);

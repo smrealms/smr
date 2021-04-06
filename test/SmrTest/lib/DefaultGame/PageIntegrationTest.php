@@ -60,6 +60,11 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		// Create an arbitrary Page
 		$page = Page::create('file');
 
+		// Pre-initialize the SmrSession, since it uses 'rand', and we don't
+		// want it to interfere with our rand seed when we call `href`, which
+		// internally requires an SmrSession.
+		\SmrSession::init();
+
 		// The Page should not be modified when href() is called
 		$expected = $page->getArrayCopy();
 		srand(0); // for a deterministic SN

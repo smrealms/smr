@@ -21,7 +21,7 @@ $actions = [];
 
 if (!empty($donation)) {
 	// add entry to account donated table
-	$db->query('INSERT INTO account_donated (account_id, time, amount) VALUES (' . $db->escapeNumber($account_id) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ' , ' . $db->escapeNumber($donation) . ')');
+	$db->query('INSERT INTO account_donated (account_id, time, amount) VALUES (' . $db->escapeNumber($account_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ' , ' . $db->escapeNumber($donation) . ')');
 
 	// add the credits to the players account - if requested
 	if (!empty($smr_credit)) {
@@ -86,7 +86,7 @@ if ($choise == 'reopen') {
 if (Request::has('mailban')) {
 	$mailban = Request::get('mailban');
 	if ($mailban == 'remove') {
-		$curr_account->setMailBanned(SmrSession::getTime());
+		$curr_account->setMailBanned(Smr\Epoch::time());
 		$actions[] = 'removed mailban';
 	} elseif ($mailban == 'add_days') {
 		$days = Request::getInt('mailban_days');
@@ -124,7 +124,7 @@ if (!empty($names)) {
 				//insert news message
 				$news = 'Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
 
-				$db->query('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($game_id) . ', \'admin\', ' . $db->escapeNumber($account_id) . ')');
+				$db->query('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($game_id) . ', \'admin\', ' . $db->escapeNumber($account_id) . ')');
 			} elseif ($db->getInt('account_id') != $account_id) {
 				$actions[] = 'have NOT changed player name to ' . htmlentities($new_name) . ' (already taken)';
 			}

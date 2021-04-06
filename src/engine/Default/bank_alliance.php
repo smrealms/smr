@@ -62,7 +62,7 @@ if ($db->getBoolean('positive_balance')) {
 	$template->assign('UnlimitedWithdrawal', true);
 } else {
 	$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
-				AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . $db->escapeNumber(SmrSession::getTime() - 86400));
+				AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . $db->escapeNumber(Smr\Epoch::time() - 86400));
 	if ($db->nextRecord()) {
 		$totalWithdrawn = $db->getInt('total');
 	}

@@ -32,47 +32,15 @@ class SmrSession {
 	private static string $lastSN;
 	private static int $account_id;
 	public static int $last_accessed;
-	private static Time $pageRequestTime;
 
 	protected static ?array $previousAjaxReturns;
 	protected static array $ajaxReturns = array();
-
-	/**
-	 * Returns the time (in seconds) associated with this page request.
-	 */
-	public static function getTime() : int {
-		return self::$pageRequestTime->getTime();
-	}
-
-	/**
-	 * Returns the time (in seconds, with microsecond-level precision)
-	 * associated with this page request.
-	 */
-	public static function getMicroTime() : float {
-		return self::$pageRequestTime->getMicroTime();
-	}
-
-	/**
-	 * Update the time associated with this page request.
-	 *
-	 * NOTE: This should never be called by normal page requests, and should
-	 * only be used by the CLI programs that run continuously.
-	 */
-	public static function updateTime() : void {
-		if (!defined('NPC_SCRIPT')) {
-			throw new Exception('Only call this function from CLI programs!');
-		}
-		self::$pageRequestTime = new Time();
-	}
 
 	public static function init() : void {
 		// Return immediately if the SmrSession is already initialized
 		if (isset(self::$session_id)) {
 			return;
 		}
-
-		// Initialize the page request time
-		self::$pageRequestTime = new Time();
 
 		// Initialize the db connector here, since `init` is always called
 		self::$db = MySqlDatabase::getInstance();
@@ -130,7 +98,7 @@ class SmrSession {
 			self::$var = self::$db->getObject('session_var', true);
 
 			foreach (self::$var as $key => $value) {
-				if ($value['Expires'] > 0 && $value['Expires'] <= self::getTime()) { // Use 0 for infinity
+				if ($value['Expires'] > 0 && $value['Expires'] <= Smr\Epoch::time()) { // Use 0 for infinity
 					//This link is no longer valid
 					unset(self::$var[$key]);
 				} elseif ($value['RemainingPageLoads'] < 0) {
@@ -159,12 +127,12 @@ class SmrSession {
 			}
 		}
 		if (!self::$generate) {
-			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(self::getTime()) : '') . ',session_var=' . self::$db->escapeObject(self::$var, true) .
+			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(Smr\Epoch::time()) : '') . ',session_var=' . self::$db->escapeObject(self::$var, true) .
 					',last_sn=' . self::$db->escapeString(self::$SN) .
 					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn=' . self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
 		} else {
 			self::$db->query('DELETE FROM active_session WHERE account_id = ' . self::$db->escapeNumber(self::$account_id) . ' AND game_id = ' . self::$db->escapeNumber(self::$game_id));
-			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(self::getTime()) . ',' . self::$db->escapeObject(self::$var, true) . ')');
+			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(Smr\Epoch::time()) . ',' . self::$db->escapeObject(self::$var, true) . ')');
 			self::$generate = false;
 		}
 	}
@@ -339,12 +307,12 @@ class SmrSession {
 	protected static function generateSN(Page $container) : string {
 		if (isset(self::$commonIDs[$container['CommonID']])) {
 			$sn = self::$commonIDs[$container['CommonID']];
-			$container['PreviousRequestTime'] = isset(self::$var[$sn]) ? self::$var[$sn]['PreviousRequestTime'] : self::getMicroTime();
+			$container['PreviousRequestTime'] = isset(self::$var[$sn]) ? self::$var[$sn]['PreviousRequestTime'] : Smr\Epoch::microtime();
 		} else {
 			do {
 				$sn = random_alphabetic_string(6);
 			} while (isset(self::$var[$sn]));
-			$container['PreviousRequestTime'] = self::getMicroTime();
+			$container['PreviousRequestTime'] = Smr\Epoch::microtime();
 		}
 		self::$commonIDs[$container['CommonID']] = $sn;
 		return $sn;

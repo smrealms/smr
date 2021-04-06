@@ -22,7 +22,7 @@ $db->query('SELECT end_time, game_id, game_name, game_speed, game_type
 			FROM game JOIN player USING (game_id)
 			WHERE account_id = '.$db->escapeNumber($account->getAccountID()) . '
 				AND enabled = \'TRUE\'
-				AND end_time >= ' . $db->escapeNumber(SmrSession::getTime()) . '
+				AND end_time >= ' . $db->escapeNumber(Smr\Epoch::time()) . '
 			ORDER BY start_time, game_id DESC');
 if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
@@ -49,7 +49,7 @@ if ($db->getNumRows() > 0) {
 		$db2 = MySqlDatabase::getInstance();
 		$db2->query('SELECT count(*) as num_playing
 					FROM player
-					WHERE last_cpl_action >= ' . $db->escapeNumber(SmrSession::getTime() - 600) . '
+					WHERE last_cpl_action >= ' . $db->escapeNumber(Smr\Epoch::time() - 600) . '
 						AND game_id = '.$db->escapeNumber($game_id));
 		$db2->nextRecord();
 		$games['Play'][$game_id]['NumberPlaying'] = $db2->getInt('num_playing');
@@ -60,7 +60,7 @@ if ($db->getNumRows() > 0) {
 		$container_game['game_id'] = $game_id;
 		$games['Play'][$game_id]['GameStatsLink'] = $container_game->href();
 		$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
-		$games['Play'][$game_id]['LastMovement'] = format_time(SmrSession::getTime() - $curr_player->getLastActive(), TRUE);
+		$games['Play'][$game_id]['LastMovement'] = format_time(Smr\Epoch::time() - $curr_player->getLastActive(), TRUE);
 
 	}
 }
@@ -78,13 +78,13 @@ if (count($game_id_list) > 0) {
 	$db->query('SELECT game_id
 				FROM game
 				WHERE game_id NOT IN (' . $db->escapeArray($game_id_list) . ')
-					AND end_time >= ' . $db->escapeNumber(SmrSession::getTime()) . '
+					AND end_time >= ' . $db->escapeNumber(Smr\Epoch::time()) . '
 					AND enabled = ' . $db->escapeBoolean(true) . '
 				ORDER BY start_time DESC');
 } else {
 	$db->query('SELECT game_id
 				FROM game
-				WHERE end_time >= ' . $db->escapeNumber(SmrSession::getTime()) . '
+				WHERE end_time >= ' . $db->escapeNumber(Smr\Epoch::time()) . '
 					AND enabled = ' . $db->escapeBoolean(true) . '
 				ORDER BY start_time DESC');
 }
@@ -123,7 +123,7 @@ $games['Previous'] = array();
 
 //New previous games
 $db->query('SELECT start_time, end_time, game_name, game_type, game_speed, game_id ' .
-		'FROM game WHERE enabled = \'TRUE\' AND end_time < ' . $db->escapeNumber(SmrSession::getTime()) . ' ORDER BY game_id DESC');
+		'FROM game WHERE enabled = \'TRUE\' AND end_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY game_id DESC');
 if ($db->getNumRows()) {
 	while ($db->nextRecord()) {
 		$game_id = $db->getInt('game_id');
@@ -189,7 +189,7 @@ $template->assign('Games', $games);
 $container = Page::create('skeleton.php', 'vote.php');
 $template->assign('VotingHref', $container->href());
 
-$db->query('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(SmrSession::getTime()) . ' ORDER BY end DESC');
+$db->query('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY end DESC');
 if ($db->getNumRows() > 0) {
 	$db2 = MySqlDatabase::getInstance();
 	$votedFor = array();
@@ -205,7 +205,7 @@ if ($db->getNumRows() > 0) {
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = $container->href();
 		$voting[$voteID]['Question'] = $db->getField('question');
-		$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - SmrSession::getTime(), true);
+		$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - Smr\Epoch::time(), true);
 		$voting[$voteID]['Options'] = array();
 		$db2->query('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db->escapeNumber($db->getInt('vote_id')) . ' GROUP BY option_id');
 		while ($db2->nextRecord()) {

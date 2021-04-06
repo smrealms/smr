@@ -126,7 +126,7 @@ class AbstractSmrPort {
 	}
 
 	protected function __construct($gameID, $sectorID, $db = null) {
-		$this->cachedTime = SmrSession::getTime();
+		$this->cachedTime = Smr\Epoch::time();
 		$this->db = MySqlDatabase::getInstance();
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
@@ -180,8 +180,8 @@ class AbstractSmrPort {
 			$defences += max(0, IRound(self::DEFENCES_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
 			$cds += max(0, IRound(self::CDS_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
 			// Defences restock (check for fed arrival)
-			if (SmrSession::getTime() < $this->getReinforceTime() + self::TIME_FEDS_STAY) {
-				$federalMod = (self::TIME_FEDS_STAY - (SmrSession::getTime() - $this->getReinforceTime())) / self::TIME_FEDS_STAY;
+			if (Smr\Epoch::time() < $this->getReinforceTime() + self::TIME_FEDS_STAY) {
+				$federalMod = (self::TIME_FEDS_STAY - (Smr\Epoch::time() - $this->getReinforceTime())) / self::TIME_FEDS_STAY;
 				$federalMod = max(0, IRound($federalMod * self::MAX_FEDS_BONUS));
 				$defences += $federalMod;
 				$cds += IRound($federalMod / 10);
@@ -232,7 +232,7 @@ class AbstractSmrPort {
 				$this->goodIDs[$transactionType][] = $goodID;
 				$this->goodIDs['All'][] = $goodID;
 
-				$secondsSinceLastUpdate = SmrSession::getTime() - $this->db->getInt('last_update');
+				$secondsSinceLastUpdate = Smr\Epoch::time() - $this->db->getInt('last_update');
 				$this->restockGood($goodID, $secondsSinceLastUpdate);
 			}
 		}
@@ -546,7 +546,7 @@ class AbstractSmrPort {
 
 		$this->goodAmounts[$goodID] = Globals::getGood($goodID)['Max'];
 		$this->cacheIsValid = false;
-		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount, last_update) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($this->getGoodAmount($goodID)) . ',' . $this->db->escapeNumber(SmrSession::getTime()) . ')');
+		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount, last_update) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($this->getGoodAmount($goodID)) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ')');
 		$this->db->query('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
 
@@ -638,12 +638,12 @@ class AbstractSmrPort {
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, array('Combat', 'Port', 'Number Of Attacks'), HOF_PUBLIC);
 			$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES
-							(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
+							(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
 		if (!$this->isUnderAttack()) {
 
 			//5 mins per port level
-			$nextReinforce = SmrSession::getTime() + $this->getLevel() * 300;
+			$nextReinforce = Smr\Epoch::time() + $this->getLevel() * 300;
 
 			$this->setReinforceTime($nextReinforce);
 			$this->updateAttackStarted();
@@ -665,7 +665,7 @@ class AbstractSmrPort {
 			}
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
 //			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
-			$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(SmrSession::getTime()) . ',' . $this->db->escapeString($newsMessage) . ',\'REGULAR\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
+			$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ',' . $this->db->escapeString($newsMessage) . ',\'REGULAR\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
 		}
 	}
 
@@ -912,7 +912,7 @@ class AbstractSmrPort {
 		if (!$this->isUnderAttack()) {
 			return 0;
 		}
-		return min(1, max(0, ($this->getReinforceTime() - SmrSession::getTime()) / ($this->getReinforceTime() - $this->getAttackStarted())));
+		return min(1, max(0, ($this->getReinforceTime() - Smr\Epoch::time()) / ($this->getReinforceTime() - $this->getAttackStarted())));
 	}
 
 	public function getReinforceTime() {
@@ -928,19 +928,19 @@ class AbstractSmrPort {
 	}
 
 	private function updateAttackStarted() {
-		$this->setAttackStarted(SmrSession::getTime());
+		$this->setAttackStarted(Smr\Epoch::time());
 	}
 
 	private function setAttackStarted($time) {
 		if ($this->attackStarted == $time) {
 			return;
 		}
-		$this->attackStarted = SmrSession::getTime();
+		$this->attackStarted = Smr\Epoch::time();
 		$this->hasChanged = true;
 	}
 
 	public function isUnderAttack() {
-		return ($this->getReinforceTime() >= SmrSession::getTime());
+		return ($this->getReinforceTime() >= Smr\Epoch::time());
 	}
 
 	public function isDestroyed() {
@@ -1194,7 +1194,7 @@ class AbstractSmrPort {
 		foreach ($this->goodAmountsChanged as $goodID => $doUpdate) {
 			if (!$doUpdate) { continue; }
 			$amount = $this->getGoodAmount($goodID);
-			$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(SmrSession::getTime()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
+			$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
 		}
 	}
 
@@ -1287,7 +1287,7 @@ class AbstractSmrPort {
 	protected function getAttackersToCredit() {
 		//get all players involved for HoF
 		$attackers = array();
-		$this->db->query('SELECT account_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(SmrSession::getTime() - self::TIME_TO_CREDIT_RAID));
+		$this->db->query('SELECT account_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_RAID));
 		while ($this->db->nextRecord()) {
 			$attackers[] = SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID());
 		}
@@ -1356,7 +1356,7 @@ class AbstractSmrPort {
 		} else {
 			$news .= $killer->getBBLink();
 		}
-		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
+		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
 		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ', $return['KillerBounty']);

@@ -234,7 +234,7 @@ if (isset($GameID)) { ?>
 			<td>Timezone:</td>
 			<td>
 				<select name="timez"><?php
-				$time = SmrSession::getTime();
+				$time = Smr\Epoch::time();
 				$offset = $ThisAccount->getOffset();
 				for ($i = -12; $i <= 11; $i++) {
 					?><option value="<?php echo $i; ?>"<?php if ($offset == $i) { ?> selected="selected"<?php } ?>><?php echo date(DATE_TIME_SHORT, $time + $i * 3600); ?></option><?php

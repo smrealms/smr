@@ -10,7 +10,7 @@ function checkPortTradeable($port, $player) {
 	if ($player->getRelation($port->getRaceID()) <= RELATIONS_WAR) {
 		return 'We will not trade with our enemies!';
 	}
-	if ($port->getReinforceTime() > SmrSession::getTime()) {
+	if ($port->getReinforceTime() > Smr\Epoch::time()) {
 		return 'We are still repairing damage caused during the last raid.';
 	}
 	return true;

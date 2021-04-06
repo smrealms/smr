@@ -45,7 +45,7 @@ try {
 		}
 
 		// Prevent getting additional turns until a valid free turns link is clicked again
-		$db->query('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($accountId) . ',' . $db->escapeNumber($linkId) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeBoolean(true) . ')');
+		$db->query('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($accountId) . ',' . $db->escapeNumber($linkId) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeBoolean(true) . ')');
 
 		$player->setLastTurnUpdate($player->getLastTurnUpdate() - VOTE_BONUS_TURNS_TIME); //Give turns via added time, no rounding errors.
 		$player->save();

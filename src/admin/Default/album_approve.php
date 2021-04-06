@@ -72,7 +72,7 @@ if ($db->nextRecord()) {
 	$template->assign('Birthdate', $birthdate);
 
 	// get the time that passed since the entry was last changed
-	$time_passed = SmrSession::getTime() - $last_changed;
+	$time_passed = Smr\Epoch::time() - $last_changed;
 	$template->assign('TimePassed', $time_passed);
 
 	$container = Page::create('album_approve_processing.php', '');
