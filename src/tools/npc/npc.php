@@ -122,7 +122,7 @@ function NPCStuff() {
 			debug('Action #' . $actions);
 
 			//We have to reload player on each loop
-			$player = SmrPlayer::getPlayer($session->getAccountID(), $session->getGameID(), true);
+			$player = $session->getPlayer(true);
 			// Sanity check to be certain we actually have an NPC
 			if (!$player->isNPC()) {
 				throw new Exception('Player is not an NPC!');

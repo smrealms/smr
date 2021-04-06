@@ -41,7 +41,7 @@ try {
 		}
 	}
 
-	$player = SmrPlayer::getPlayer($session->getAccountID(), $session->getGameID());
+	$player = $session->getPlayer();
 	$account = $player->getAccount();
 
 	// Create a session to store temporary display options

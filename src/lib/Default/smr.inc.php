@@ -364,7 +364,7 @@ function do_voodoo() {
 		}
 
 		// Now that they've acquire a lock we can move on
-		$player = SmrPlayer::getPlayer($account->getAccountID(), $session->getGameID());
+		$player = $session->getPlayer();
 
 		if ($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death'])) {
 			Page::create('death_processing.php')->go();

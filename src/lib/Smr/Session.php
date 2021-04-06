@@ -3,12 +3,14 @@
 namespace Smr;
 
 use AbstractSmrAccount;
+use AbstractSmrPlayer;
 use MySqlDatabase;
 use Page;
 use Request;
 use Smr\Container\DiContainer;
 use Smr\Epoch;
 use SmrAccount;
+use SmrPlayer;
 
 class Session {
 
@@ -173,6 +175,10 @@ class Session {
 
 	public function getAccount() : AbstractSmrAccount {
 		return SmrAccount::getAccount($this->accountID);
+	}
+
+	public function getPlayer(bool $forceUpdate = false) : AbstractSmrPlayer {
+		return SmrPlayer::getPlayer($this->accountID, $this->gameID, $forceUpdate);
 	}
 
 	/**
