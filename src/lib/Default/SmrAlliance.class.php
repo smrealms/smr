@@ -363,18 +363,13 @@ class SmrAlliance {
 		}
 	}
 
-	public function setAllianceDescription(string $description) : void {
+	public function setAllianceDescription(string $description, AbstractSmrPlayer $player) : void {
 		$description = word_filter($description);
 		if ($description == $this->description) {
 			return;
 		}
-		global $player, $account;
 		$boxDescription = 'Alliance ' . $this->getAllianceBBLink() . ' had their description changed to:' . EOL . EOL . $description;
-		if (is_object($player)) {
-			$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
-		} else {
-			$account->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
-		}
+		$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
 		$this->description = $description;
 	}
 

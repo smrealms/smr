@@ -37,7 +37,7 @@ if (Request::has('recruit_type')) {
 	$alliance->setRecruitType($recruitType, $password);
 }
 if (isset($description)) {
-	$alliance->setAllianceDescription($description);
+	$alliance->setAllianceDescription($description, $player);
 }
 if (isset($discordServer)) {
 	$alliance->setDiscordServer($discordServer);
