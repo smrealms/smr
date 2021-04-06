@@ -113,10 +113,7 @@ class Session {
 			$this->var = $this->db->getObject('session_var', true);
 
 			foreach ($this->var as $key => $value) {
-				if ($value['Expires'] > 0 && $value['Expires'] <= Epoch::time()) { // Use 0 for infinity
-					//This link is no longer valid
-					unset($this->var[$key]);
-				} elseif ($value['RemainingPageLoads'] < 0) {
+				if ($value['RemainingPageLoads'] < 0) {
 					//This link is no longer valid
 					unset($this->var[$key]);
 				} else {
@@ -243,7 +240,6 @@ class Session {
 		}
 
 		$this->var[$sn]['RemainingPageLoads'] += 1; // Allow refreshing
-		$this->var[$sn]['Expires'] = 0; // Allow refreshing forever
 		return $this->var[$sn];
 	}
 
@@ -278,9 +274,6 @@ class Session {
 			unset($this->commonIDs[$this->var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		}
 		$this->SN = $sn;
-		if (!isset($container['Expires'])) {
-			$container['Expires'] = 0; // Lasts forever
-		}
 		if (!isset($container['RemainingPageLoads'])) {
 			$container['RemainingPageLoads'] = 1; // Allow refreshing
 		}
