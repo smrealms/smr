@@ -14,5 +14,5 @@ Menu::council($raceID);
 
 // check for relations here
 require_once(get_file_loc('council.inc.php'));
-modifyRelations($raceID);
-checkPacts($raceID);
+modifyRelations($raceID, $player->getGameID());
+checkPacts($raceID, $player->getGameID());

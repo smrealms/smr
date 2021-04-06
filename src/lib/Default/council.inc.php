@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-function modifyRelations($race_id_1) {
-	global $player, $db;
+function modifyRelations(int $race_id_1, int $gameID) : void {
 
 	// Process any votes that ended prior to the start of today
 	$endtime = strtotime(date('Y-m-d'));
 
+	$db = MySqlDatabase::getInstance();
 	$db2 = MySqlDatabase::getInstance();
 
 	$db->query('SELECT * FROM player_votes_relation
 				WHERE time < '.$db->escapeNumber($endtime) . '
-					AND game_id = '.$db->escapeNumber($player->getGameID()) . '
+					AND game_id = '.$db->escapeNumber($gameID) . '
 					AND race_id_1 = '.$db->escapeNumber($race_id_1));
 	while ($db->nextRecord()) {
 		$account_id = $db->getInt('account_id');
@@ -26,7 +26,7 @@ function modifyRelations($race_id_1) {
 		$db2->query('SELECT * FROM race_has_relation ' .
 					'WHERE race_id_1 = ' . $db2->escapeNumber($race_id_1) . '
 						AND race_id_2 = ' . $db2->escapeNumber($race_id_2) . '
-						AND game_id = ' . $db2->escapeNumber($player->getGameID()));
+						AND game_id = ' . $db2->escapeNumber($gameID));
 		$db2->requireRecord();
 		$relation = $db2->getInt('relation') + $relation_modifier;
 
@@ -38,7 +38,7 @@ function modifyRelations($race_id_1) {
 
 		$db2->query('UPDATE race_has_relation
 					SET relation = ' . $db2->escapeNumber($relation) . '
-					WHERE game_id = '.$db2->escapeNumber($player->getGameID()) . '
+					WHERE game_id = '.$db2->escapeNumber($gameID) . '
 						AND (
 								race_id_1 = '.$db2->escapeNumber($race_id_1) . '
 								AND race_id_2 = '.$db2->escapeNumber($race_id_2) . '
@@ -49,19 +49,19 @@ function modifyRelations($race_id_1) {
 
 		$db2->query('DELETE FROM player_votes_relation
 					WHERE account_id = ' . $db2->escapeNumber($account_id) . '
-						AND game_id = ' . $db2->escapeNumber($player->getGameID()));
+						AND game_id = ' . $db2->escapeNumber($gameID));
 	}
 
 }
 
-function checkPacts($race_id_1) {
-	global $player, $db;
+function checkPacts(int $race_id_1, int $gameID) {
 
+	$db = MySqlDatabase::getInstance();
 	$db2 = MySqlDatabase::getInstance();
 
 	$db->query('SELECT * FROM race_has_voting
 				WHERE end_time < ' . $db->escapeNumber(Smr\Epoch::time()) . '
-					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND game_id = ' . $db->escapeNumber($gameID) . '
 					AND race_id_1 = ' . $db->escapeNumber($race_id_1));
 	while ($db->nextRecord()) {
 		$race_id_2 = $db->getInt('race_id_2');
@@ -69,7 +69,7 @@ function checkPacts($race_id_1) {
 
 		// get 'yes' votes
 		$db2->query('SELECT * FROM player_votes_pact
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					WHERE game_id = ' . $db->escapeNumber($gameID) . '
 						AND race_id_1 = ' . $db->escapeNumber($race_id_1) . '
 						AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
 						AND vote = \'YES\'');
@@ -77,7 +77,7 @@ function checkPacts($race_id_1) {
 
 		// get 'no' votes
 		$db2->query('SELECT * FROM player_votes_pact
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					WHERE game_id = ' . $db->escapeNumber($gameID) . '
 						AND race_id_1 = ' . $db->escapeNumber($race_id_1) . '
 						AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
 						AND vote = \'NO\'');
@@ -89,8 +89,8 @@ function checkPacts($race_id_1) {
 			if ($type == 'WAR') {
 				$currentlyParkedAccountIDs = array();
 				$raceFedSectors = array(
-										$race_id_1 => SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
-										$race_id_2 => SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_2)
+										$race_id_1 => SmrSector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
+										$race_id_2 => SmrSector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_2)
 									);
 				foreach ($raceFedSectors as $raceID => $fedSectors) {
 					$currentlyParkedAccountIDs[$raceID] = array(); //initialize
@@ -116,8 +116,8 @@ function checkPacts($race_id_1) {
 						}
 						$message .= ', you have ' . format_time(TIME_FOR_WAR_VOTE_FED_SAFETY) . ' to vacate our federal space, after that time you will no longer be protected (unless you have strong personal relations).';
 						foreach ($accountIDs as $accountID) {
-							$query .= '(' . $db2->escapeNumber($accountID) . ',' . $db2->escapeNumber($player->getGameID()) . ',' . $db2->escapeNumber($raceID) . ',' . $db2->escapeNumber($expireTime) . ',' . $db2->escapeBoolean(true) . '),';
-							SmrPlayer::sendMessageFromRace($raceID, $player->getGameID(), $accountID, $message, $expireTime);
+							$query .= '(' . $db2->escapeNumber($accountID) . ',' . $db2->escapeNumber($gameID) . ',' . $db2->escapeNumber($raceID) . ',' . $db2->escapeNumber($expireTime) . ',' . $db2->escapeBoolean(true) . '),';
+							SmrPlayer::sendMessageFromRace($raceID, $gameID, $accountID, $message, $expireTime);
 						}
 					}
 					$db2->query(substr($query, 0, -1));
@@ -125,7 +125,7 @@ function checkPacts($race_id_1) {
 
 				$db2->query('UPDATE race_has_relation
 							SET relation = LEAST(relation,' . $db2->escapeNumber(RELATIONS_VOTE_WAR) . ')
-							WHERE game_id = '.$db2->escapeNumber($player->getGameID()) . '
+							WHERE game_id = '.$db2->escapeNumber($gameID) . '
 								AND (
 										race_id_1 = '.$db2->escapeNumber($race_id_1) . '
 										AND race_id_2 = '.$db2->escapeNumber($race_id_2) . '
@@ -137,11 +137,11 @@ function checkPacts($race_id_1) {
 				// get news message
 				$news = 'The [race=' . $race_id_1 . '] have declared <span class="red">WAR</span> on the [race=' . $race_id_2 . ']';
 				$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
-							'(' . $db2->escapeNumber($player->getGameID()) . ', ' . $db2->escapeNumber(Smr\Epoch::time()) . ', ' . $db2->escapeString($news) . ')');
+							'(' . $db2->escapeNumber($gameID) . ', ' . $db2->escapeNumber(Smr\Epoch::time()) . ', ' . $db2->escapeString($news) . ')');
 			} elseif ($type == 'PEACE') {
 				// get 'yes' votes
 				$db2->query('SELECT * FROM player_votes_pact
-							WHERE game_id = '.$db2->escapeNumber($player->getGameID()) . '
+							WHERE game_id = '.$db2->escapeNumber($gameID) . '
 								AND race_id_1 = '.$db2->escapeNumber($race_id_2) . '
 								AND race_id_2 = '.$db2->escapeNumber($race_id_1) . '
 								AND vote = \'YES\'');
@@ -149,7 +149,7 @@ function checkPacts($race_id_1) {
 
 				// get 'no' votes
 				$db2->query('SELECT * FROM player_votes_pact
-							WHERE game_id = '.$db2->escapeNumber($player->getGameID()) . '
+							WHERE game_id = '.$db2->escapeNumber($gameID) . '
 								AND race_id_1 = '.$db2->escapeNumber($race_id_2) . '
 								AND race_id_2 = '.$db2->escapeNumber($race_id_1) . '
 								AND vote = \'NO\'');
@@ -159,7 +159,7 @@ function checkPacts($race_id_1) {
 				if ($rev_yes_votes > $rev_no_votes) {
 					$db2->query('UPDATE race_has_relation
 								SET relation = GREATEST(relation,'.$db2->escapeNumber(RELATIONS_VOTE_PEACE) . ')
-								WHERE game_id = '.$db2->escapeNumber($player->getGameID()) . '
+								WHERE game_id = '.$db2->escapeNumber($gameID) . '
 									AND (
 											race_id_1 = '.$db2->escapeNumber($race_id_1) . '
 											AND race_id_2 = '.$db2->escapeNumber($race_id_2) . '
@@ -171,27 +171,27 @@ function checkPacts($race_id_1) {
 					//get news message
 					$news = 'The [race=' . $race_id_1 . '] have signed a <span class="dgreen">PEACE</span> treaty with the [race=' . $race_id_2 . ']';
 					$db2->query('INSERT INTO news (game_id, time, news_message) VALUES
-								('.$db2->escapeNumber($player->getGameID()) . ', ' . $db2->escapeNumber(Smr\Epoch::time()) . ', ' . $db2->escapeString($news) . ')');
+								('.$db2->escapeNumber($gameID) . ', ' . $db2->escapeNumber(Smr\Epoch::time()) . ', ' . $db2->escapeString($news) . ')');
 				}
 			}
 		}
 
 		// delete vote and user votes
 		$db2->query('DELETE FROM race_has_voting
-					WHERE game_id = '.$db2->escapeNumber($player->getGameID()) . '
+					WHERE game_id = '.$db2->escapeNumber($gameID) . '
 						AND race_id_1 = '.$db2->escapeNumber($race_id_1) . '
 						AND race_id_2 = '.$db2->escapeNumber($race_id_2));
 		$db2->query('DELETE FROM player_votes_pact
-					WHERE game_id = '.$db2->escapeNumber($player->getGameID()) . '
+					WHERE game_id = '.$db2->escapeNumber($gameID) . '
 						AND race_id_1 = '.$db2->escapeNumber($race_id_1) . '
 						AND race_id_2 = '.$db2->escapeNumber($race_id_2));
 		// delete vote and user votes
 		$db2->query('DELETE FROM race_has_voting
-					WHERE game_id = '.$db2->escapeNumber($player->getGameID()) . '
+					WHERE game_id = '.$db2->escapeNumber($gameID) . '
 						AND race_id_1 = '.$db2->escapeNumber($race_id_2) . '
 						AND race_id_2 = '.$db2->escapeNumber($race_id_1));
 		$db2->query('DELETE FROM player_votes_pact
-					WHERE game_id = '.$db2->escapeNumber($player->getGameID()) . '
+					WHERE game_id = '.$db2->escapeNumber($gameID) . '
 						AND race_id_1 = '.$db2->escapeNumber($race_id_2) . '
 						AND race_id_2 = '.$db2->escapeNumber($race_id_1));
 	}
