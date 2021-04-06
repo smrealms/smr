@@ -4,7 +4,7 @@
 $initialBytes = $db->getDbBytes();
 
 $endedGameIDs = [];
-$db->query('SELECT game_id FROM game WHERE end_time < ' . $db->escapeNumber(SmrSession::getTime()));
+$db->query('SELECT game_id FROM game WHERE end_time < ' . $db->escapeNumber(Smr\Epoch::time()));
 while ($db->nextRecord()) {
 	$endedGameIDs[] = $db->getInt('game_id');
 }

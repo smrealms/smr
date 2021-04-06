@@ -37,6 +37,6 @@ if ($pickedPlayer->getSectorID() === 1) {
 $pickedPlayer->update();
 
 // Update the draft history
-$db->query('INSERT INTO draft_history (game_id, leader_account_id, picked_account_id, time) VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($pickedPlayer->getAccountID()) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ')');
+$db->query('INSERT INTO draft_history (game_id, leader_account_id, picked_account_id, time) VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($pickedPlayer->getAccountID()) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 
 Page::create('skeleton.php', 'alliance_pick.php')->go();

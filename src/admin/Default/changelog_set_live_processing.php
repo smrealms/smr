@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 $db->query('UPDATE version
-			SET went_live = ' . $db->escapeNumber(SmrSession::getTime()) . '
+			SET went_live = ' . $db->escapeNumber(Smr\Epoch::time()) . '
 			WHERE version_id = ' . $db->escapeNumber($var['version_id'])
 		   );
 

@@ -60,7 +60,7 @@ You are ranked as <?php $this->doAn($UserRankName); ?> <a style="font-size: 125%
 			foreach ($Games['Join'] as $Game) { ?>
 				<tr>
 					<td class="center">
-						<div class="buttonA"><a id="game_join_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>"><?php if (SmrSession::getTime() < $Game['JoinTime']) {?>View Info<?php } else { ?>Join Game<?php } ?></a></div>
+						<div class="buttonA"><a id="game_join_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>"><?php if (Smr\Epoch::time() < $Game['JoinTime']) {?>View Info<?php } else { ?>Join Game<?php } ?></a></div>
 					</td>
 					<td width="35%"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</td>
 					<td class="noWrap"><?php echo $Game['StartDate']; ?></td>

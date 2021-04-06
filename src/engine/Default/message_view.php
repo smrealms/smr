@@ -71,7 +71,7 @@ $messageBox['Messages'] = array();
 // Group scout messages if they wouldn't fit on a single page
 if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
 	// get rid of all old scout messages (>48h)
-	$db->query('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(SmrSession::getTime()) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
+	$db->query('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
 
 	$dispContainer = Page::create('skeleton.php', 'message_view.php');
 	$dispContainer['folder_id'] = MSG_SCOUT;

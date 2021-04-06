@@ -6,7 +6,7 @@ if (!$player->isPresident()) {
 
 $race_id = $var['race_id'];
 $type = strtoupper(Request::get('action'));
-$time = SmrSession::getTime() + TIME_FOR_COUNCIL_VOTE;
+$time = Smr\Epoch::time() + TIME_FOR_COUNCIL_VOTE;
 
 $db->query('SELECT count(*) FROM race_has_voting
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '

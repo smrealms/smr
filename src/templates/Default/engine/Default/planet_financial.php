@@ -27,7 +27,7 @@ if (!$ThisPlanet->hasOwner()) {
 	if ($ThisPlanet->getBonds() > 0) { ?>
 		Right now there are <?php echo number_format($ThisPlanet->getBonds()); ?> credits bonded<?php
 		if ($ThisPlanet->getMaturity() > 0) { ?>
-			and will come to maturity in <?php echo format_time($ThisPlanet->getMaturity() - SmrSession::getTime()); ?>.
+			and will come to maturity in <?php echo format_time($ThisPlanet->getMaturity() - Smr\Epoch::time()); ?>.
 			<br /><br /> <?php
 		}
 	} ?>

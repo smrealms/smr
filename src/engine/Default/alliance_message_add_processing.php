@@ -79,10 +79,10 @@ if ($reply_id == 1) {
 
 // and the body
 $db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time)
-			VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber($reply_id) . ', ' . $db->escapeString($body) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ')');
+			VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber($reply_id) . ', ' . $db->escapeString($body) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 $db->query('REPLACE INTO player_read_thread
 			(account_id, game_id, alliance_id, thread_id, time)
-			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(SmrSession::getTime() + 2) . ')');
+			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(Smr\Epoch::time() + 2) . ')');
 
 $container = Page::create('skeleton.php');
 $container['alliance_id'] = $alliance_id;

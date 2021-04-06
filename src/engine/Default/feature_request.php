@@ -52,7 +52,7 @@ $db->query('SELECT * ' .
 			'JOIN feature_request_comments super USING(feature_request_id) ' .
 			'WHERE comment_id = 1 ' .
 			'AND status = ' . $db->escapeString($thisStatus) .
-			($var['category'] == 'New' ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (SmrSession::getTime() - NEW_REQUEST_DAYS * 86400) . ')' : '') .
+			($var['category'] == 'New' ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Smr\Epoch::time() - NEW_REQUEST_DAYS * 86400) . ')' : '') .
 			' ORDER BY (SELECT MAX(posting_time) FROM feature_request_comments WHERE feature_request_id = super.feature_request_id) DESC');
 if ($db->getNumRows() > 0) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
@@ -110,7 +110,7 @@ function getFeaturesCount($status, $daysNew = false) {
 		JOIN feature_request_comments super USING(feature_request_id)
 		WHERE comment_id = 1
 		AND status = ' . $db->escapeString($status) .
-		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (SmrSession::getTime() - $daysNew * 86400) . ')' : '')
+		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Smr\Epoch::time() - $daysNew * 86400) . ')' : '')
 	);
 	$db->requireRecord();
 	return $db->getInt('count');

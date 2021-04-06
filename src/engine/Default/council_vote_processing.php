@@ -16,7 +16,7 @@ $race_id = $var['race_id'];
 if ($action == 'INC' || $action == 'DEC') {
 	$db->query('REPLACE INTO player_votes_relation
 				(account_id, game_id, race_id_1, race_id_2, action, time)
-				VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getRaceID()) . ', ' . $db->escapeNumber($race_id) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ')');
+				VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getRaceID()) . ', ' . $db->escapeNumber($race_id) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 } elseif ($action == 'YES' || $action == 'NO') {
 	$db->query('REPLACE INTO player_votes_pact
 			(account_id, game_id, race_id_1, race_id_2, vote)

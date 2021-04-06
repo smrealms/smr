@@ -63,7 +63,7 @@ if ($action == 'Deposit') {
 						AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND transaction = \'Payment\'
 						AND exempt = 0
-						AND time > ' . $db->escapeNumber(SmrSession::getTime() - 86400));
+						AND time > ' . $db->escapeNumber(Smr\Epoch::time() - 86400));
 		if ($db->nextRecord() && !is_null($db->getInt('total'))) {
 			$total = $db->getInt('total');
 		} else {
@@ -93,7 +93,7 @@ if ($db->nextRecord()) {
 $requestExempt = Request::has('requestExempt') ? 1 : 0;
 $db->query('INSERT INTO alliance_bank_transactions
 			(alliance_id, game_id, transaction_id, time, payee_id, reason, transaction, amount, request_exempt)
-			VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($next_id) . ', ' . $db->escapeNumber(SmrSession::getTime()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($message) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($requestExempt) . ')');
+			VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($next_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($message) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($requestExempt) . ')');
 
 // update player credits
 $player->update();

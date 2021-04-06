@@ -8,7 +8,7 @@ $container = Page::create('skeleton.php', 'npc_manage.php');
 $template->assign('SelectGameHREF', $container->href());
 
 $games = [];
-$db->query('SELECT game_id FROM game WHERE end_time > ' . $db->escapeNumber(SmrSession::getTime()) . ' AND enabled = ' . $db->escapeBoolean(true) . ' ORDER BY game_id DESC');
+$db->query('SELECT game_id FROM game WHERE end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND enabled = ' . $db->escapeBoolean(true) . ' ORDER BY game_id DESC');
 while ($db->nextRecord()) {
 	$gameID = $db->getInt('game_id');
 	if (empty($selectedGameID)) {

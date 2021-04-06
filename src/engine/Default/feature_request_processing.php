@@ -12,7 +12,7 @@ if (strlen($feature) > 500) {
 $db->query('INSERT INTO feature_request (feature_request_id) VALUES (NULL)');
 $featureRequestID = $db->getInsertID();
 $db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text) ' .
-								'VALUES(' . $db->escapeNumber($featureRequestID) . ', ' . $db->escapeNumber($account->getAccountID()) . ',' . $db->escapeNumber(SmrSession::getTime()) . ',' . $db->escapeBoolean(Request::has('anon')) . ',' . $db->escapeString(word_filter($feature)) . ')');
+								'VALUES(' . $db->escapeNumber($featureRequestID) . ', ' . $db->escapeNumber($account->getAccountID()) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeBoolean(Request::has('anon')) . ',' . $db->escapeString(word_filter($feature)) . ')');
 
 // vote for this feature
 $db->query('INSERT INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($featureRequestID) . ',\'YES\')');

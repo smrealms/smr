@@ -47,7 +47,7 @@ try {
 
 	while (true) {
 		// The next "page request" must occur at an updated time.
-		SmrSession::updateTime();
+		Smr\Epoch::update();
 
 		foreach (ChessGame::getNPCMoveGames(true) as $chessGame) {
 			debug('Looking at game: ' . $chessGame->getChessGameID());

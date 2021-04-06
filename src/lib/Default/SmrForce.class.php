@@ -109,8 +109,8 @@ class SmrForce {
 															LEAST('.$db->escapeNumber(self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY) . ', scout_drones*' . $db->escapeNumber(self::TIME_PER_SCOUT_ONLY) . '),
 															LEAST('.$db->escapeNumber($galaxyToTidy->getMaxForceTime()) . ', (combat_drones*' . $db->escapeNumber(self::TIME_PERCENT_PER_COMBAT) . '+scout_drones*' . $db->escapeNumber(self::TIME_PERCENT_PER_SCOUT) . '+mines*' . $db->escapeNumber(self::TIME_PERCENT_PER_MINE) . ')*' . $db->escapeNumber($galaxyToTidy->getMaxForceTime()) . ')
 														))
-						WHERE game_id = '.$db->escapeNumber($galaxyToTidy->getGameID()) . ' AND sector_id >= ' . $db->escapeNumber($galaxyToTidy->getStartSector()) . ' AND sector_id <= ' . $db->escapeNumber($galaxyToTidy->getEndSector()) . ' AND refresher != 0 AND refresh_at <= ' . $db->escapeNumber(SmrSession::getTime()));
-			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . $db->escapeNumber(SmrSession::getTime()));
+						WHERE game_id = '.$db->escapeNumber($galaxyToTidy->getGameID()) . ' AND sector_id >= ' . $db->escapeNumber($galaxyToTidy->getStartSector()) . ' AND sector_id <= ' . $db->escapeNumber($galaxyToTidy->getEndSector()) . ' AND refresher != 0 AND refresh_at <= ' . $db->escapeNumber(Smr\Epoch::time()));
+			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . $db->escapeNumber(Smr\Epoch::time()));
 		}
 	}
 
@@ -255,7 +255,7 @@ class SmrForce {
 	}
 
 	public function hasExpired() {
-		return $this->expire < SmrSession::getTime();
+		return $this->expire < Smr\Epoch::time();
 	}
 
 	public function getExpire() {
@@ -269,8 +269,8 @@ class SmrForce {
 		if ($time == $this->getExpire()) {
 			return;
 		}
-		if ($time > SmrSession::getTime() + $this->getMaxExpireTime()) {
-			$time = SmrSession::getTime() + $this->getMaxExpireTime();
+		if ($time > Smr\Epoch::time() + $this->getMaxExpireTime()) {
+			$time = Smr\Epoch::time() + $this->getMaxExpireTime();
 		}
 		$this->hasChanged = true;
 		$this->expire = $time;
@@ -286,7 +286,7 @@ class SmrForce {
 		} else {
 			$time = ($this->getCDs() * self::TIME_PERCENT_PER_COMBAT + $this->getSDs() * self::TIME_PERCENT_PER_SCOUT + $this->getMines() * self::TIME_PERCENT_PER_MINE) * $this->getMaxGalaxyExpireTime();
 		}
-		$this->setExpire(SmrSession::getTime() + $time);
+		$this->setExpire(Smr\Epoch::time() + $time);
 	}
 
 	public function getMaxExpireTime() {

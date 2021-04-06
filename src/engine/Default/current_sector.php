@@ -63,7 +63,7 @@ $template->assign('UnreadMissions', $var['UnreadMissions']);
 // *******************************************
 $game = SmrGame::getGame($player->getGameID());
 if (!$game->hasStarted()) {
-	$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - SmrSession::getTime()) . '!';
+	$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - Smr\Epoch::time()) . '!';
 } else {
 	$turnsMessage = match($player->getTurnsLevel()) {
 		'NONE' => '<span class="red">WARNING</span>: You have run out of turns!',
@@ -145,9 +145,9 @@ function checkForForceRefreshMessage(&$msg) {
 	if ($contains > 0) {
 		if (!$template->hasTemplateVar('ForceRefreshMessage')) {
 			$forceRefreshMessage = '';
-			$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . $db->escapeNumber(SmrSession::getTime()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
+			$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
 			if ($db->nextRecord()) {
-				$remainingTime = $db->getInt('refresh_at') - SmrSession::getTime();
+				$remainingTime = $db->getInt('refresh_at') - Smr\Epoch::time();
 				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
 				$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', \'[Force Check]\')');
 			} else {

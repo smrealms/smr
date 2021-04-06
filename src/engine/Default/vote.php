@@ -17,8 +17,8 @@ if ($db->getNumRows() > 0) {
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = $container->href();
 		$voting[$voteID]['Question'] = $db->getField('question');
-		if ($db->getInt('end') > SmrSession::getTime()) {
-			$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - SmrSession::getTime(), true);
+		if ($db->getInt('end') > Smr\Epoch::time()) {
+			$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - Smr\Epoch::time(), true);
 		} else {
 			$voting[$voteID]['EndDate'] = date(DATE_DATE_SHORT, $db->getInt('end'));
 		}

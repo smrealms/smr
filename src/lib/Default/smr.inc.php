@@ -452,21 +452,21 @@ function acquire_lock($sector) {
 	}
 
 	// Insert ourselves into the queue.
-	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber(SmrSession::getGameID()) . ',' . $db->escapeNumber(SmrSession::getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(SmrSession::getTime()) . ')');
+	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber(SmrSession::getGameID()) . ',' . $db->escapeNumber(SmrSession::getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 	$lock = $db->getInsertID();
 
 	for ($i = 0; $i < 250; ++$i) {
-		if (time() - SmrSession::getTime() >= LOCK_DURATION - LOCK_BUFFER) {
+		if (time() - Smr\Epoch::time() >= LOCK_DURATION - LOCK_BUFFER) {
 			break;
 		}
 		// If there is someone else before us in the queue we sleep for a while
-		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber(SmrSession::getGameID()) . ' AND timestamp > ' . $db->escapeNumber(SmrSession::getTime() - LOCK_DURATION));
+		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber(SmrSession::getGameID()) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 		$locksInQueue = -1;
 		if ($db->nextRecord() && ($locksInQueue = $db->getInt('COUNT(*)')) > 0) {
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber(SmrSession::getAccountID()) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(SmrSession::getTime() - LOCK_DURATION));
+			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber(SmrSession::getAccountID()) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 			if ($db->nextRecord() && $db->getInt('COUNT(*)') > 1) {
 				release_lock();
 				$locksFailed[$sector] = true;
@@ -488,7 +488,7 @@ function acquire_lock($sector) {
 function release_lock() {
 	global $db, $lock;
 	if ($lock) {
-		$db->query('DELETE from locks_queue WHERE lock_id=' . $db->escapeNumber($lock) . ' OR timestamp<' . $db->escapeNumber(SmrSession::getTime() - LOCK_DURATION));
+		$db->query('DELETE from locks_queue WHERE lock_id=' . $db->escapeNumber($lock) . ' OR timestamp<' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 	}
 
 	$lock = false;
@@ -498,7 +498,7 @@ function doTickerAssigns($template, $player, $db) {
 	//any ticker news?
 	if ($player->hasTickers()) {
 		$ticker = array();
-		$max = SmrSession::getTime() - 60;
+		$max = Smr\Epoch::time() - 60;
 		if ($player->hasTicker('NEWS')) {
 			//get recent news (5 mins)
 			$db->query('SELECT time,news_message FROM news WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time >= ' . $max . ' ORDER BY time DESC LIMIT 4');
@@ -513,7 +513,7 @@ function doTickerAssigns($template, $player, $db) {
 						AND game_id=' . $db->escapeNumber($player->getGameID()) . '
 						AND message_type_id=' . $db->escapeNumber(MSG_SCOUT) . '
 						AND send_time>=' . $db->escapeNumber($max) . '
-						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK') . ' AND expires > ' . $db->escapeNumber(SmrSession::getTime()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND receiver_delete = \'FALSE\'
+						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK') . ' AND expires > ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND receiver_delete = \'FALSE\'
 						ORDER BY send_time DESC
 						LIMIT 4');
 			while ($db->nextRecord()) {
@@ -530,7 +530,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 
 	$template->assign('FontSize', $account->getFontSize() - 20);
-	$template->assign('timeDisplay', date(DATE_FULL_SHORT_SPLIT, SmrSession::getTime()));
+	$template->assign('timeDisplay', date(DATE_FULL_SHORT_SPLIT, Smr\Epoch::time()));
 
 	$container = Page::create('skeleton.php');
 
@@ -738,7 +738,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 	}
 
 	$template->assign('Version', $version);
-	$template->assign('CurrentYear', date('Y', SmrSession::getTime()));
+	$template->assign('CurrentYear', date('Y', Smr\Epoch::time()));
 }
 
 /**

@@ -8,6 +8,7 @@ use Dotenv\Dotenv;
 use MySqlDatabase;
 use mysqli;
 use Smr\MySqlProperties;
+use Smr\Epoch;
 use function DI\autowire;
 
 /**
@@ -42,6 +43,7 @@ class DiContainer {
 			},
 			// Explicitly name all classes that are autowired, so we can take advantage of
 			// the compiled container feature for a performance boost
+			Epoch::class => autowire(),
 			MySqlProperties::class => autowire(),
 			MySqlDatabase::class => autowire()
 		];

@@ -179,13 +179,13 @@ class SmrPlanet {
 	}
 
 	public function checkBondMaturity(bool $partial = false) : void {
-		if ($this->getMaturity() > 0 && ($partial === true || $this->getMaturity() < SmrSession::getTime())) {
+		if ($this->getMaturity() > 0 && ($partial === true || $this->getMaturity() < Smr\Epoch::time())) {
 			// calc the interest for the time
 			$interest = $this->getBonds() * $this->getInterestRate();
 
-			if ($partial === true && $this->getMaturity() > SmrSession::getTime()) {
+			if ($partial === true && $this->getMaturity() > Smr\Epoch::time()) {
 				// Adjust interest based upon how much of the bond duration has passed.
-				$interest -= ($interest / $this->getBondTime()) * ($this->getMaturity() - SmrSession::getTime());
+				$interest -= ($interest / $this->getBondTime()) * ($this->getMaturity() - Smr\Epoch::time());
 			}
 
 			// transfer money to free avail cash
@@ -213,7 +213,7 @@ class SmrPlanet {
 		$this->setCredits(0);
 
 		// initialize time
-		$this->setMaturity(SmrSession::getTime() + $this->getBondTime());
+		$this->setMaturity(Smr\Epoch::time() + $this->getBondTime());
 	}
 
 	public function getGameID() : int {
@@ -702,7 +702,7 @@ class SmrPlanet {
 					'ConstructionID' => $this->db->getInt('construction_id'),
 					'ConstructorID' => $this->db->getInt('constructor_id'),
 					'Finishes' => $this->db->getInt('time_complete'),
-					'TimeRemaining' => $this->db->getInt('time_complete') - SmrSession::getTime(),
+					'TimeRemaining' => $this->db->getInt('time_complete') - Smr\Epoch::time(),
 				);
 			}
 
@@ -981,7 +981,7 @@ class SmrPlanet {
 		}
 
 		// gets the time for the buildings
-		$timeComplete = SmrSession::getTime() + $this->getConstructionTime($constructionID);
+		$timeComplete = Smr\Epoch::time() + $this->getConstructionTime($constructionID);
 		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, constructor_id, time_complete) ' .
 						'VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber($constructionID) . ', ' . $this->db->escapeNumber($constructor->getAccountID()) . ',' . $this->db->escapeNumber($timeComplete) . ')');
 
@@ -990,7 +990,7 @@ class SmrPlanet {
 			'ConstructionID' => $constructionID,
 			'ConstructorID' => $constructor->getAccountID(),
 			'Finishes' => $timeComplete,
-			'TimeRemaining' => $timeComplete - SmrSession::getTime()
+			'TimeRemaining' => $timeComplete - Smr\Epoch::time()
 		);
 
 		// Consume the required resources
@@ -1044,7 +1044,7 @@ class SmrPlanet {
 	}
 
 	public function isInhabitable() : bool {
-		return $this->inhabitableTime <= SmrSession::getTime();
+		return $this->inhabitableTime <= Smr\Epoch::time();
 	}
 
 	public function getInhabitableTime() : int {
@@ -1090,13 +1090,13 @@ class SmrPlanet {
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, array('Combat', 'Planet', 'Number Of Attacks'), HOF_PUBLIC);
 			$this->db->query('REPLACE INTO player_attacks_planet (game_id, account_id, sector_id, time, level) VALUES ' .
-					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
+					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
 
 		// Add each unique attack to news unless it was already added recently.
 		// Note: Attack uniqueness determined by planet owner.
 		$owner = $this->getOwner();
-		$this->db->query('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $this->db->escapeNumber($trigger->getGameID()) . ' AND dead_id=' . $this->db->escapeNumber($owner->getAccountID()) . ' AND time > ' . $this->db->escapeNumber(SmrSession::getTime() - self::TIME_ATTACK_NEWS_COOLDOWN) . ' LIMIT 1');
+		$this->db->query('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $this->db->escapeNumber($trigger->getGameID()) . ' AND dead_id=' . $this->db->escapeNumber($owner->getAccountID()) . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_ATTACK_NEWS_COOLDOWN) . ' LIMIT 1');
 		if ($this->db->getNumRows() == 0) {
 			if (count($attackers) >= 5) {
 				$text = count($attackers) . ' members of ' . $trigger->getAllianceBBLink() . ' have been spotted attacking ' .
@@ -1105,7 +1105,7 @@ class SmrPlanet {
 					$text .= ', a member of ' . $owner->getAllianceBBLink();
 				}
 				$text .= '.';
-				$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(SmrSession::getTime()) . ', ' . $this->db->escapeString($text) . ', \'BREAKING\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ')');
+				$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeString($text) . ', \'BREAKING\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ')');
 			}
 		}
 	}
@@ -1295,7 +1295,7 @@ class SmrPlanet {
 
 	public function creditCurrentAttackersForKill() : void {
 		//get all players involved for HoF
-		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(SmrSession::getTime() - self::TIME_TO_CREDIT_BUST));
+		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_BUST));
 		while ($this->db->nextRecord()) {
 			$currPlayer = SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID());
 			$currPlayer->increaseHOF($this->db->getInt('level'), array('Combat', 'Planet', 'Levels'), HOF_PUBLIC);

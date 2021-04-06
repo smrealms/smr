@@ -337,7 +337,7 @@ function processContainer($container) {
 	$previousContainer = $container;
 	debug('Executing container', $container);
 	// The next "page request" must occur at an updated time.
-	SmrSession::updateTime();
+	Smr\Epoch::update();
 	$container->useAsGlobalVar();
 	acquire_lock($player->getSectorID()); // Lock now to skip var update in do_voodoo
 	do_voodoo();
@@ -394,7 +394,7 @@ function changeNPCLogin() {
 	$db = MySqlDatabase::getInstance();
 	if (is_null($availableNpcs)) {
 		// Make sure to select NPCs from active games only
-		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(SmrSession::getTime()) . ' AND end_time > ' . $db->escapeNumber(SmrSession::getTime()) . ' ORDER BY last_turn_update ASC');
+		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY last_turn_update ASC');
 		while ($db->nextRecord()) {
 			$availableNpcs[] = [
 				'account_id' => $db->getInt('account_id'),

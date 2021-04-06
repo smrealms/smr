@@ -22,7 +22,7 @@ $template->assign('BanishHREF', $container->href());
 $members = [];
 while ($db->nextRecord()) {
 	// get the amount of time since last_active
-	$diff = 864000 + max(-864000, $db->getInt('last_cpl_action') - SmrSession::getTime());
+	$diff = 864000 + max(-864000, $db->getInt('last_cpl_action') - Smr\Epoch::time());
 	$lastActive = get_colored_text_range($diff, 864000, date(DATE_FULL_SHORT, $db->getInt('last_cpl_action')));
 
 	$members[] = [
