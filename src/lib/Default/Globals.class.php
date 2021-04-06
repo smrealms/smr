@@ -318,20 +318,18 @@ class Globals {
 		return $container->href();
 	}
 
-	public static function getCurrentSectorMoveHREF($toSector) {
-		return self::getSectorMoveHREF($toSector, 'current_sector.php');
+	public static function getCurrentSectorMoveHREF(AbstractSmrPlayer $player, int $toSector) : string {
+		return self::getSectorMoveHREF($player, $toSector, 'current_sector.php');
 	}
 
-	public static function getSectorMoveHREF($toSector, $targetPage) {
-		global $player;
+	public static function getSectorMoveHREF(AbstractSmrPlayer $player, int $toSector, string $targetPage) : string {
 		$container = Page::create('sector_move_processing.php');
 		$container['target_page'] = $targetPage;
 		$container['target_sector'] = $toSector;
 		return self::$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($toSector)] = $container->href();
 	}
 
-	public static function getSectorScanHREF($toSector) {
-		global $player;
+	public static function getSectorScanHREF(AbstractSmrPlayer $player, int $toSector) : string {
 		$container = Page::create('skeleton.php', 'sector_scan.php');
 		$container['target_sector'] = $toSector;
 		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = $container->href();

@@ -979,20 +979,20 @@ class SmrSector {
 		return $this->visited[$player->getAccountID()];
 	}
 
-	public function getLocalMapMoveHREF() {
-		return Globals::getSectorMoveHREF($this->getSectorID(), 'map_local.php');
+	public function getLocalMapMoveHREF(AbstractSmrPlayer $player) : string {
+		return Globals::getSectorMoveHREF($player, $this->getSectorID(), 'map_local.php');
 	}
 
-	public function getCurrentSectorMoveHREF() {
-		return Globals::getCurrentSectorMoveHREF($this->getSectorID());
+	public function getCurrentSectorMoveHREF(AbstractSmrPlayer $player) : string {
+		return Globals::getCurrentSectorMoveHREF($player, $this->getSectorID());
 	}
 
 	public function getGalaxyMapHREF() {
 		return '?sector_id=' . $this->getSectorID();
 	}
 
-	public function getScanSectorHREF() {
-		return Globals::getSectorScanHREF($this->getSectorID());
+	public function getSectorScanHREF(AbstractSmrPlayer $player) : string {
+		return Globals::getSectorScanHREF($player, $this->getSectorID());
 	}
 
 	public function hasX(/*Object*/ $x, AbstractSmrPlayer $player = null) {

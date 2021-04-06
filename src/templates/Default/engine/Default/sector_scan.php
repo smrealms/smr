@@ -33,5 +33,5 @@
 </table>
 <br />
 
-<a href="<?php echo $ScanSector->getScanSectorHREF(); ?>" class="submitStyle">Rescan #<?php echo $ScanSector->getSectorID(); ?></a>&nbsp;
-<a href="<?php echo $ScanSector->getCurrentSectorMoveHREF(); ?>" class="submitStyle">Enter #<?php echo $ScanSector->getSectorID(); ?> (<?php echo $Turns; ?>)</a>
+<a href="<?php echo $ScanSector->getSectorScanHREF($ThisPlayer); ?>" class="submitStyle">Rescan #<?php echo $ScanSector->getSectorID(); ?></a>&nbsp;
+<a href="<?php echo $ScanSector->getCurrentSectorMoveHREF($ThisPlayer); ?>" class="submitStyle">Enter #<?php echo $ScanSector->getSectorID(); ?> (<?php echo $Turns; ?>)</a>

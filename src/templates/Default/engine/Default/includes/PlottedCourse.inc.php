@@ -15,12 +15,12 @@ if ($ThisPlayer->hasPlottedCourse()) {
 			<td class="top right"><?php
 				if ($ThisSector->isLinked($NextSector->getSectorID())) { ?>
 					<div class="buttonA">
-						<a class="buttonA" href="<?php echo $NextSector->getCurrentSectorMoveHREF(); ?>">Follow Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>)</a>
+						<a class="buttonA" href="<?php echo $NextSector->getCurrentSectorMoveHREF($ThisPlayer); ?>">Follow Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>)</a>
 					</div><?php
 					if ($ThisShip->hasScanner()) { ?>
 						<br /><br />
 						<div class="buttonA">
-							<a class="buttonA" href="<?php echo $NextSector->getScanSectorHREF(); ?>">Scan Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>)</a>
+							<a class="buttonA" href="<?php echo $NextSector->getSectorScanHREF($ThisPlayer); ?>">Scan Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>)</a>
 						</div><?php
 					}
 				} else { ?>
