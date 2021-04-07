@@ -27,7 +27,7 @@ function linkCombatLog($logID) {
  * with action BBCODE_OUTPUT.
  */
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
-	global $overrideGameID, $disableBBLinks, $player, $account, $var;
+	global $overrideGameID, $disableBBLinks, $var;
 	$session = Smr\Session::getInstance();
 	try {
 		switch ($tagName) {
@@ -59,7 +59,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if ($disableBBLinks === false && $overrideGameID == $session->getGameID()) {
 					$container = Page::create('skeleton.php');
 					$container['alliance_id'] = $alliance->getAllianceID();
-					if (is_object($player) && $alliance->getAllianceID() == $player->getAllianceID()) {
+					if ($session->hasGame() && $alliance->getAllianceID() == $session->getPlayer()->getAllianceID()) {
 						$container['body'] = 'alliance_mod.php';
 					} else {
 						$container['body'] = 'alliance_roster.php';
@@ -77,6 +77,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 							return true;
 						}
 						$linked = $disableBBLinks === false && $overrideGameID == $session->getGameID();
+						$player = $session->hasGame() ? $session->getPlayer() : null;
 						return AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID, $player, $linked);
 					}
 				}
@@ -87,8 +88,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				$timeString = $default;
 				if ($timeString != '' && ($time = strtotime($timeString)) !== false) {
-					if (is_object($account)) {
-						$time += $account->getOffset() * 3600;
+					if ($session->hasAccount()) {
+						$time += $session->getAccount()->getOffset() * 3600;
 					}
 					return date(DATE_FULL_SHORT, $time);
 				}
@@ -116,7 +117,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					&& $session->hasGame()
 					&& $session->getGameID() == $overrideGameID
 					&& SmrSector::sectorExists($overrideGameID, $sectorID)) {
-					return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
+					return '<a href="' . Globals::getPlotCourseHREF($session->getPlayer()->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
 				}
 
 				return $sectorTag;
