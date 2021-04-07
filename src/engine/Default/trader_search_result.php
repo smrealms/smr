@@ -35,40 +35,40 @@ if (!empty($player_id)) {
 	}
 }
 
-function playerLinks(SmrPlayer $curr_player) {
-	global $player;
-	$result = array('Player' => $curr_player);
+function playerLinks(SmrPlayer $linkPlayer) {
+	$result = array('Player' => $linkPlayer);
 
 	$container = Page::create('skeleton.php', 'trader_search_result.php');
-	$container['player_id'] = $curr_player->getPlayerID();
+	$container['player_id'] = $linkPlayer->getPlayerID();
 	$result['SearchHREF'] = $container->href();
 
 	$container = Page::create('skeleton.php', 'council_list.php');
-	$container['race_id'] = $curr_player->getRaceID();
+	$container['race_id'] = $linkPlayer->getRaceID();
 	$result['RaceHREF'] = $container->href();
 
 	$container = Page::create('skeleton.php', 'message_send.php');
-	$container['receiver'] = $curr_player->getAccountID();
+	$container['receiver'] = $linkPlayer->getAccountID();
 	$result['MessageHREF'] = $container->href();
 
 	$container = Page::create('skeleton.php', 'bounty_view.php');
-	$container['id'] = $curr_player->getAccountID();
+	$container['id'] = $linkPlayer->getAccountID();
 	$result['BountyHREF'] = $container->href();
 
 	$container = Page::create('skeleton.php', 'hall_of_fame_player_detail.php');
-	$container['account_id'] = $curr_player->getAccountID();
-	$container['game_id'] = $curr_player->getGameID();
+	$container['account_id'] = $linkPlayer->getAccountID();
+	$container['game_id'] = $linkPlayer->getGameID();
 	$container['sending_page'] = 'search';
 	$result['HofHREF'] = $container->href();
 
 	$container = Page::create('skeleton.php', 'news_read_advanced.php');
 	$container['submit'] = 'Search For Player';
-	$container['playerName'] = $curr_player->getPlayerName();
+	$container['playerName'] = $linkPlayer->getPlayerName();
 	$result['NewsHREF'] = $container->href();
 
+	$player = Smr\Session::getInstance()->getPlayer();
 	if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 		$container = Page::create('sector_jump_processing.php');
-		$container['to'] = $curr_player->getSectorID();
+		$container['to'] = $linkPlayer->getSectorID();
 		$result['JumpHREF'] = $container->href();
 	}
 
