@@ -45,6 +45,9 @@
 		"test": [
 			"docker-compose --env-file test/env run --rm smr-integration-test"
 		],
+		"phpstan": [
+			"docker-compose --env-file test/env run --rm phpstan"
+		],
 		"stop": [
 			"docker-compose stop",
 			"docker-compose rm --force"
@@ -60,6 +63,7 @@
 	},
 	"require-dev": {
 		"overtrue/phplint": "2.3.5",
-		"phpunit/phpunit": "9.5.4"
+		"phpunit/phpunit": "9.5.4",
+		"phpstan/phpstan": "0.12.83"
 	}
 }
