@@ -199,7 +199,7 @@ if ($transaction === TRADER_STEALS ||
 	$container = Page::create('skeleton.php', 'shop_goods_trade.php');
 	$container->addVar('ideal_price');
 	$container->addVar('offered_price');
-	check_bargain_number($amount, $ideal_price, $offered_price, $bargain_price, $container);
+	check_bargain_number($amount, $ideal_price, $offered_price, $bargain_price, $container, $player);
 
 	// transfer values to next page
 	$container->addVar('good_id');

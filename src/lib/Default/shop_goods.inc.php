@@ -16,8 +16,8 @@ function checkPortTradeable($port, $player) {
 	return true;
 }
 
-function check_bargain_number($amount, $ideal_price, $offered_price, $bargain_price, &$container) {
-	global $var, $player;
+function check_bargain_number(int $amount, int $ideal_price, int $offered_price, int $bargain_price, Page $container, SmrPlayer $player) : void {
+	global $var;
 
 	$port = $player->getSectorPort();
 
