@@ -364,7 +364,6 @@ function releaseNPC() {
 	} else {
 		debug('Failed to release NPC: ' . $login);
 	}
-	$session->destroy();
 }
 
 function exitNPC() {
