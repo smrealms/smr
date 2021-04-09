@@ -141,11 +141,15 @@ if ($sector->hasPort()) {
 }
 
 function checkForForceRefreshMessage(&$msg) {
-	global $db, $player, $template;
+	global $template;
+
 	$contains = 0;
 	$msg = str_replace('[Force Check]', '', $msg, $contains);
 	if ($contains > 0) {
 		if (!$template->hasTemplateVar('ForceRefreshMessage')) {
+			$db = MySqlDatabase::getInstance();
+			$player = Smr\Session::getInstance()->getPlayer();
+
 			$forceRefreshMessage = '';
 			$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
 			if ($db->nextRecord()) {
@@ -161,15 +165,19 @@ function checkForForceRefreshMessage(&$msg) {
 }
 
 function checkForAttackMessage(&$msg) {
-	global $db, $player, $template;
+	global $template;
+
 	$contains = 0;
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {
 		// $msg now contains only the log_id, if there is one
-		Smr\Session::getInstance()->updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
+		$session = Smr\Session::getInstance();
+		$session->updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
 		if (!$template->hasTemplateVar('AttackResults')) {
+			$db = MySqlDatabase::getInstance();
 			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');
 			if ($db->nextRecord()) {
+				$player = $session->getPlayer();
 				if ($player->getSectorID() == $db->getInt('sector_id')) {
 					$results = $db->getObject('result', true);
 					$template->assign('AttackResultsType', $db->getField('type'));
