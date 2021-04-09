@@ -84,22 +84,26 @@ class Rankings {
 	 * Get a subset of rankings from the player table sorted by $stat.
 	 */
 	public static function playerRanks(string $stat, int $minRank = 1, int $maxRank = 10) : array {
-		global $player, $db;
+		$session = Smr\Session::getInstance();
+		$db = MySqlDatabase::getInstance();
+
 		$offset = $minRank - 1;
 		$limit = $maxRank - $offset;
-		$db->query('SELECT *, ' . $stat . ' AS amount FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, player_name LIMIT ' . $offset . ', ' . $limit);
-		return self::collectRankings($db, $player, $offset);
+		$db->query('SELECT *, ' . $stat . ' AS amount FROM player WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' ORDER BY amount DESC, player_name LIMIT ' . $offset . ', ' . $limit);
+		return self::collectRankings($db, $session->getPlayer(), $offset);
 	}
 
 	/**
 	 * Get a subset of rankings from the alliance table sorted by $stat.
 	 */
 	public static function allianceRanks(string $stat, int $minRank = 1, int $maxRank = 10) : array {
-		global $player, $db;
+		$session = Smr\Session::getInstance();
+		$db = MySqlDatabase::getInstance();
+
 		$offset = $minRank - 1;
 		$limit = $maxRank - $offset;
-		$db->query('SELECT alliance_id, alliance_' . $stat . ' AS amount FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, alliance_name LIMIT ' . $offset . ', ' . $limit);
-		return self::collectAllianceRankings($db, $player, $offset);
+		$db->query('SELECT alliance_id, alliance_' . $stat . ' AS amount FROM alliance WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' ORDER BY amount DESC, alliance_name LIMIT ' . $offset . ', ' . $limit);
+		return self::collectAllianceRankings($db, $session->getPlayer(), $offset);
 	}
 
 	public static function calculateMinMaxRanks($ourRank, $totalRanks) {
