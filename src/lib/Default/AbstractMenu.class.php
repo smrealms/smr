@@ -47,7 +47,10 @@ class AbstractMenu {
 	}
 
 	public static function alliance($alliance_id) {
-		global $player, $template, $db;
+		global $template;
+
+		$db = MySqlDatabase::getInstance();
+		$player = Smr\Session::getInstance()->getPlayer();
 
 		$in_alliance = ($alliance_id == $player->getAllianceID() || in_array($player->getAccountID(), Globals::getHiddenPlayers()));
 
@@ -103,7 +106,10 @@ class AbstractMenu {
 	}
 
 	public static function galactic_post() {
-		global $template, $player;
+		global $template;
+
+		$player = Smr\Session::getInstance()->getPlayer();
+
 		$menuItems = array();
 		$menuItems[] = array('Link'=>Page::create('galactic_post_current.php')->href(), 'Text'=>'Current Edition');
 		$menuItems[] = array('Link'=>Page::create('skeleton.php', 'galactic_post_past.php')->href(), 'Text'=>'Past Editions');
@@ -147,7 +153,10 @@ class AbstractMenu {
 	}
 
 	public static function messages() {
-		global $player, $template;
+		global $template;
+
+		$player = Smr\Session::getInstance()->getPlayer();
+
 		$menuItems = array();
 		$menuItems[] = array('Link'=>Globals::getViewMessageBoxesHREF(), 'Text'=>'View Messages');
 		$menuItems[] = array('Link'=>Globals::getSendGlobalMessageHREF(), 'Text'=>'Send Global Message');
@@ -182,7 +191,10 @@ class AbstractMenu {
 	}
 
 	public static function trader() {
-		global $player, $template;
+		global $template;
+
+		$player = Smr\Session::getInstance()->getPlayer();
+
 		$template->assign('MenuItems', array(
 						array('Link'=>Globals::getTraderStatusHREF(), 'Text'=>'Trader Status'),
 						array('Link'=>Globals::getPlanetListHREF($player->getAllianceID()), 'Text'=>'Planets'),
@@ -276,7 +288,9 @@ class AbstractMenu {
 	}
 
 	public static function bank() {
-		global $player, $template;
+		global $template;
+
+		$player = Smr\Session::getInstance()->getPlayer();
 
 		$links = [];
 		$links[] = ['bank_personal.php', 'Personal Account'];
@@ -298,25 +312,25 @@ class AbstractMenu {
 	}
 
 	public static function council($race_id) {
-		global $player, $template;
+		global $template;
+
+		$player = Smr\Session::getInstance()->getPlayer();
 
 		$container = Page::create('skeleton.php', 'council_list.php');
+		$container['race_id'] = $race_id;
 		$menu_items = [];
 		$menu_items[] = [
 			'Link' => $container->href(),
 			'Text' => 'View Council',
 		];
 
-		$container = Page::create('skeleton.php');
 		$container['body'] = 'council_politics.php';
-		$container['race_id'] = $race_id;
 		$menu_items[] = [
 			'Link' => $container->href(),
 			'Text' => 'Political Status',
 		];
 
 		$container['body'] = 'council_send_message.php';
-		$container['race_id'] = $race_id;
 		$menu_items[] = [
 			'Link' => $container->href(),
 			'Text' => 'Send Message',
