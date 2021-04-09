@@ -97,12 +97,13 @@ try {
 
 
 function NPCStuff() {
-	global $actions, $var, $previousContainer, $db, $player;
+	global $actions, $var, $previousContainer;
 
 	$underAttack = false;
 	$actions = -1;
 
 	$session = Smr\Session::getInstance();
+	$db = MySqlDatabase::getInstance();
 
 	while (true) {
 		// Clear the $_REQUEST global, in case we had set it, to avoid
@@ -313,10 +314,12 @@ function clearCaches() {
 }
 
 function debug($message, $debugObject = null) {
-	global $player, $var, $db;
+	global $var;
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL.var_export($debugObject, true) : '') . EOL;
 	if (NPC_LOG_TO_DATABASE) {
-		$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . (is_object($player) ? $player->getAccountID() : 0) . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
+		$accountID = Smr\Session::getInstance()->getAccountID();
+		$db = MySqlDatabase::getInstance();
+		$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . $accountID() . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
 
 		// On the first call to debug, we need to update the script_id retroactively
 		if (!defined('SCRIPT_ID')) {
@@ -327,7 +330,8 @@ function debug($message, $debugObject = null) {
 }
 
 function processContainer($container) {
-	global $forwardedContainer, $previousContainer, $player;
+	global $forwardedContainer, $previousContainer;
+	$player = Smr\Session::getInstance()->getPlayer();
 	if ($container == $previousContainer && $forwardedContainer['body'] != 'forces_attack.php') {
 		debug('We are executing the same container twice?', array('ForwardedContainer' => $forwardedContainer, 'Container' => $container));
 		if ($player->hasNewbieTurns() || $player->hasFederalProtection()) {
