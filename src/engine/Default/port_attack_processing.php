@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 if ($player->hasNewbieTurns()) {
 	create_error('You are under newbie protection!');
 }

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if ($player->getNewbieTurns() > 0) {
 	create_error('You can\'t take/drop forces under newbie protection!');
 }

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $container = Page::create('skeleton.php', 'message_blacklist.php');
 
 $entry_ids = Request::getIntArray('entry_ids', []);

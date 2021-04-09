@@ -3,6 +3,9 @@ if (!Globals::isFeatureRequestOpen()) {
 	create_error('Feature requests are currently not being accepted.');
 }
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $template->assign('PageTopic', 'Feature Request Comments');
 
 $container = Page::copy($var);

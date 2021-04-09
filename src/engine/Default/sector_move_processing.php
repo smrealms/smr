@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if (!$player->getGame()->hasStarted()) {
 	create_error('You cannot move until the game has started!');
 }

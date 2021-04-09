@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 
 $account_num = $session->getRequestVarInt('account_num');
 $session->getRequestVarInt('maxValue', 0);

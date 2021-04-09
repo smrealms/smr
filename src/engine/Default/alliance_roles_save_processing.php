@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 foreach (Request::getIntArray('role', []) as $accountID => $roleID) {
 	$db->query('REPLACE INTO player_has_alliance_role
 					(account_id, game_id, role_id, alliance_id)

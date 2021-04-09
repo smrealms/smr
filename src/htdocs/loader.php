@@ -17,8 +17,6 @@ try {
 	// ********************************
 
 	// We want these to be already defined as globals
-	$account = null;
-	$player = null;
 	$ship = null;
 	$sector = null;
 	$var = null;

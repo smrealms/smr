@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 // Adds a new note into the database
 $note = Request::get('note');
 if (strlen($note) > 1000) {

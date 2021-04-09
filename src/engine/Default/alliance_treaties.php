@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
-$template->assign('PageTopic', 'Alliance Treaties');
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 $alliance = $player->getAlliance();
+
+$template->assign('PageTopic', 'Alliance Treaties');
 Menu::alliance($alliance->getAllianceID());
 
 $alliances = [];

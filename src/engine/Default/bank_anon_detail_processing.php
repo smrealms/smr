@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $action = Request::get('action');
 if (!in_array($action, ['Deposit', 'Payment'])) {
 	throw new Exception('Invalid action submitted: ' . $action);

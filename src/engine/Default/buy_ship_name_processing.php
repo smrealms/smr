@@ -95,6 +95,10 @@ function checkHtmlShipName(string $name) : void {
 
 //-----------------------------------------------------
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 $action = Request::get('action');
 
 $cred_cost = $var['costs'][$action];

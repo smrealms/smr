@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $port = $player->getSectorPort();
 $credits = match($var['PayoutType']) {
 	'Raze' => $port->razePort($player),

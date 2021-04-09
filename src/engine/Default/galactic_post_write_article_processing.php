@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $title = trim(Request::get('title'));
 $message = trim(Request::get('message'));
 if (!$player->isGPEditor()) {
@@ -34,6 +37,6 @@ if (isset($var['id'])) {
 	$db->requireRecord();
 	$num = $db->getInt('article_id') + 1;
 	$db->query('INSERT INTO galactic_post_article (game_id, article_id, writer_id, title, text, last_modified) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($num) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($title) . ' , ' . $db->escapeString($message) . ' , ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
-	$db->query('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(Smr\Epoch::time()) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+	$db->query('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(Smr\Epoch::time()) . ' WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
 	Page::create('skeleton.php', 'galactic_post_read.php')->go();
 }

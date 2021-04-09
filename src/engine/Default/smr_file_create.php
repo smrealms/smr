@@ -4,6 +4,9 @@
 // code is read-only. This will help reduce sector lag and possible abuse.
 release_lock();
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false) {
 	$gameID = $var['AdminCreateGameID'];
 } else {

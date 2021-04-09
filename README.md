@@ -156,13 +156,6 @@ This *can* be assigned to, but only using Smr\Session::updateVar($name, $value)
 The global instance of the Template class should be the _only_ instance, and
 it is used to assign variables for display processing.
 
-### $account
-This contains the current SmrAccount object and should not be assigned to.
-
-### $player
-_[Scope: in game]_ This contains the current SmrPlayer object and should
-not be assigned to.
-
 ### $ship
 _[Scope: in game]_ This contains the current SmrShip object and should not be
 assigned to.

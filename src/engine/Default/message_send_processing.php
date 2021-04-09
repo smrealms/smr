@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $message = htmlentities(trim(Request::get('message')), ENT_COMPAT, 'utf-8');
 
 if (Request::get('action') == 'Preview message') {

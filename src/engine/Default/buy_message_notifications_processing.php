@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 if ($account->getTotalSmrCredits() < 1) {
 	create_error('You do not have enough SMR credits.');
 }

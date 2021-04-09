@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $comment = Request::get('comment');
 if (empty($comment)) {
 	create_error('We need a comment to add!');

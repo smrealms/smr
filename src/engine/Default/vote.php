@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 $template->assign('PageTopic', 'Voting');
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $db->query('SELECT * FROM voting ORDER BY end DESC');
 if ($db->getNumRows() > 0) {
 	$db2 = MySqlDatabase::getInstance();

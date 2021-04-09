@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$account = $session->getAccount();
 
 $container = Page::create('skeleton.php');
 if ($session->hasGame()) {
 	$container['body'] = 'current_sector.php';
+	$player = $session->getPlayer();
 } else {
 	$container['body'] = 'game_play.php';
 }

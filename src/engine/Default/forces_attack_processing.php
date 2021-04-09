@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 $forceOwner = $forces->getOwner();
 

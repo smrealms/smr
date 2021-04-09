@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $game = SmrGame::getGame($var['game_id']);
 
 // do we need credits for this game?

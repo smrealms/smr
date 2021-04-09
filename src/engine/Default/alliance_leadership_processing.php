@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 $leader_id = Request::getInt('leader_id');
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 $alliance = $player->getAlliance();
+
 $alliance->setLeaderID($leader_id);
 $alliance->update();
 

@@ -2,6 +2,7 @@
 require_once(LIB . 'Default/shop_goods.inc.php');
 
 $session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 
 $amount = Request::getVarInt('amount');
 // no negative amounts are allowed

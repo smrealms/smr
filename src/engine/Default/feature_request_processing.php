@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $feature = Request::get('feature');
 if (empty($feature)) {
 	create_error('We need at least a feature description!');

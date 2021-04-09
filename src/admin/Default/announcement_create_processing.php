@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $message = trim(Request::get('message'));
 if (Request::get('action') == 'Preview announcement') {
 	$container = Page::create('skeleton.php', 'announcement_create.php');

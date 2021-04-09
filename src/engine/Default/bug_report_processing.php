@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$account = $session->getAccount();
 
 $steps = Request::get('steps');
 $subject = Request::get('subject');
@@ -15,7 +16,8 @@ $message = 'Login: ' . $account->getLogin() . EOL .
 	'Steps to repeat: ' . $steps . $delim .
 	'Error Message: ' . $error_msg;
 
-if (is_object($player)) {
+if ($session->hasGame()) {
+	$player = $session->getPlayer();
 	$player->sendMessageToBox(BOX_BUGS_REPORTED, $message);
 } else {
 	$account->sendMessageToBox(BOX_BUGS_REPORTED, $message);

@@ -11,6 +11,9 @@ if (empty($var['message_id'])) {
 	create_error('Please click the small yellow icon to report a message!');
 }
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 // get next id
 $db->query('SELECT max(notify_id) FROM message_notify WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY notify_id DESC');
 if ($db->nextRecord()) {

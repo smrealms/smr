@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 //get the alliances
 if (!$player->hasAlliance()) {
 	create_error('You are not in an alliance!');

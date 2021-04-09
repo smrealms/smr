@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $message = '<div class="center">';
 
 if ($player->getCredits() < 10) {

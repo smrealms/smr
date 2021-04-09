@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$account = $session->getAccount();
 
 // register game_id
 $session->updateGame($var['game_id']);

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 
 $body = htmlentities(trim(Request::get('body')), ENT_COMPAT, 'utf-8');
 $topic = Request::get('topic', ''); // only present for Create Thread

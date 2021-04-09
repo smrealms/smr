@@ -3,6 +3,9 @@
 $template->assign('PageTopic', 'Announcements');
 
 if (!isset($var['view_all'])) {
+	$session = Smr\Session::getInstance();
+	$account = $session->getAccount();
+
 	$db->query('SELECT time, msg
 				FROM announcement
 				WHERE time > ' . $db->escapeNumber($account->getLastLogin()) . '

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $chessGame = ChessGame::getChessGame($var['ChessGameID']);
 $template->assign('ChessGame', $chessGame);
 

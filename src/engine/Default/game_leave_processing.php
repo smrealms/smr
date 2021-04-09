@@ -4,6 +4,7 @@ $session = Smr\Session::getInstance();
 
 // Reset the game ID if necessary
 if ($session->hasGame()) {
+	$account = $session->getAccount();
 	$account->log(LOG_TYPE_GAME_ENTERING, 'Player left game ' . $session->getGameID());
 	$session->updateGame(0);
 }

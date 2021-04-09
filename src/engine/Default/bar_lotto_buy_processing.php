@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if ($player->getCredits() < 1000000) {
 	create_error('There once was a man with less than $1,000,000...wait...thats you!');
 }

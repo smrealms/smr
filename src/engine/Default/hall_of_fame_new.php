@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 require_once(get_file_loc('hof.inc.php'));
+
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $game_id = null;
 if (isset($var['game_id'])) {
 	$game_id = $var['game_id'];

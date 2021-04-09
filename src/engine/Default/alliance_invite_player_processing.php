@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 $receiverID = Request::getInt('account_id');
 $addMessage = Request::get('message');
 $expireDays = Request::getInt('expire_days');

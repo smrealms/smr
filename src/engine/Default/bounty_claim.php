@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Bounty Payout');
 

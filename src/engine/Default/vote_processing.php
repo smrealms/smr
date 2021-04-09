@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 if ($account->getAccountID() == ACCOUNT_ID_NHL) {
 	create_error('This account is not allowed to cast a vote!');
 }

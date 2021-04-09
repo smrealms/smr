@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 $alliance = $player->getAlliance();
 $game = $player->getGame();
 

@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if (!is_numeric($var['PickedAccountID'])) {
 	create_error('You have to pick a player.');
 }

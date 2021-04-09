@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 require_once(get_file_loc('messages.inc.php'));
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 Menu::messages();
 
 $whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());

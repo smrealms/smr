@@ -2,6 +2,9 @@
 
 // NOTE: this is only for history database games
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $db->switchDatabases($var['HistoryDatabase']);
 
 $template->assign('PageTopic', 'Hall of Fame : ' . $var['game_name']);

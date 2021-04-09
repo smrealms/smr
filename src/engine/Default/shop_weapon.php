@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $location = SmrLocation::getLocation($var['LocationID']);
 $template->assign('PageTopic', $location->getName());
 $template->assign('ThisLocation', $location);

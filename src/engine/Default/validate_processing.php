@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $container = Page::create('skeleton.php', 'validate.php');
 
 if (Request::get('action') == "resend") {

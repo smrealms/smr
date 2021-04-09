@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$account = $session->getAccount();
 
 $account->log(LOG_TYPE_LOGIN, 'logged off from ' . getIpAddress());
 

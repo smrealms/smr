@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $action = Request::get('action');
 if ($action == 'Vote') {
 	if ($account->getAccountID() == ACCOUNT_ID_NHL) {

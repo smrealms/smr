@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 // Send the bank report to the alliance message board
 $alliance_id = $var['alliance_id'];
 $text = $var['text'];

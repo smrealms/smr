@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$account = $session->getAccount();
 
 if (!Globals::isFeatureRequestOpen()) {
 	create_error('Feature requests are currently not being accepted.');

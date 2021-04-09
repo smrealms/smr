@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 function error_on_page($message) {
 	$message = '<span class="bold red">ERROR:</span> ' . $message;
 	Page::create('skeleton.php', 'chat_sharing.php', array('message' => $message))->go();

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 require_once(get_file_loc('messages.inc.php'));
 
 if (!isset($var['box_type_id'])) {

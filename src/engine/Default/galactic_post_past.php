@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
 Menu::galactic_post();

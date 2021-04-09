@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 // Check that the invitation is registered in the database
 try {
 	$invite = SmrInvitation::get($var['alliance_id'], $player->getGameID(), $player->getAccountID());

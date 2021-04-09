@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
 
 // Checkbox inputs only post if they are checked

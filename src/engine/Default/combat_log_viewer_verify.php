@@ -4,6 +4,9 @@
 //  * Log must be from the current game
 //  * Attacker or defender is the player OR in the player's alliance
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $query = 'SELECT log_id FROM combat_logs WHERE log_id=' . $db->escapeNumber($var['log_id']) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND ';
 if ($player->hasAlliance()) {
 	$query .= '(attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ')';

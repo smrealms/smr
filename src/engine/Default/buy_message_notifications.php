@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 require_once(get_file_loc('messages.inc.php'));
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 if (isset($var['Message'])) {
 	$template->assign('Message', $var['Message']);
 }

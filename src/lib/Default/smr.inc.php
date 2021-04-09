@@ -306,7 +306,7 @@ function pluralise($word, $count = 0) {
  * (see loader.php for the initialization of the globals).
  */
 function do_voodoo() {
-	global $lock, $var, $player, $ship, $sector, $account, $db, $template;
+	global $lock, $var, $ship, $sector, $db, $template;
 
 	if (!defined('AJAX_CONTAINER')) {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
@@ -421,7 +421,7 @@ function do_voodoo() {
 	if ($account->getCssLink() != null) {
 		$template->assign('ExtraCSSLink', $account->getCssLink());
 	}
-	doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $var);
+	doSkeletonAssigns($template, $ship, $sector, $db, $var);
 
 	// Set ajax refresh time
 	$ajaxRefresh = $var['AllowAjax'] ?? true; // hack for bar_gambling_processing.php
@@ -530,8 +530,9 @@ function doTickerAssigns($template, $player, $db) {
 	}
 }
 
-function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $var) {
+function doSkeletonAssigns($template, $ship, $sector, $db, $var) {
 	$session = Smr\Session::getInstance();
+	$account = $session->getAccount();
 
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
@@ -543,6 +544,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 
 
 	if ($session->hasGame()) {
+		$player = $session->getPlayer();
 		$template->assign('GameName', SmrGame::getGame($session->getGameID())->getName());
 		$template->assign('GameID', $session->getGameID());
 
@@ -579,15 +581,13 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 		$template->assign('CurrentHallOfFameLink', $container->href());
 	}
 
-	if ($session->hasAccount()) {
-		$container = Page::create('skeleton.php', 'hall_of_fame_new.php');
-		$template->assign('HallOfFameLink', $container->href());
+	$container = Page::create('skeleton.php', 'hall_of_fame_new.php');
+	$template->assign('HallOfFameLink', $container->href());
 
-		$template->assign('AccountID', $session->getAccountID());
-		$template->assign('PlayGameLink', Page::create('game_leave_processing.php', 'game_play.php')->href());
+	$template->assign('AccountID', $account->getAccountID());
+	$template->assign('PlayGameLink', Page::create('game_leave_processing.php', 'game_play.php')->href());
 
-		$template->assign('LogoutLink', Page::create('logoff.php')->href());
-	}
+	$template->assign('LogoutLink', Page::create('logoff.php')->href());
 
 	$container = Page::create('game_leave_processing.php', 'admin_tools.php');
 	$template->assign('AdminToolsLink', $container->href());

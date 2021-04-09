@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $account_id = $var['account_id'];
 $curr_account = SmrAccount::getAccount($account_id);
 

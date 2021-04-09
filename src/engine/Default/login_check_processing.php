@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 if (!isset($var['CheckType']) || $var['CheckType'] == 'Validate') {
 	// is account validated?
 	if (!$account->isValidated()) {

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 // If not deleting marked messages, we are deleting entire folders
 if (Request::get('action') == 'All Messages') {
 	$container = Page::create('message_box_delete_processing.php');

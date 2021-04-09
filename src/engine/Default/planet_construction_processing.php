@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
 }

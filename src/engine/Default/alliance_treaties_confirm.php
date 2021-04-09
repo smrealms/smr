@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $alliance_id_1 = $player->getAllianceID();
 $alliance_id_2 = $_REQUEST['proposedAlliance'];
 

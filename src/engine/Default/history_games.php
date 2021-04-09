@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 //topic
 if (!isset($var['game_name']) || !isset($var['view_game_id'])) {
 	create_error('No game specified!');

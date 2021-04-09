@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 $timeUntilMaps = $player->getGame()->getStartTime() + TIME_MAP_BUY_WAIT - Smr\Epoch::time();
 if ($timeUntilMaps > 0) {
 	create_error('You cannot buy maps for another ' . format_time($timeUntilMaps) . '!');

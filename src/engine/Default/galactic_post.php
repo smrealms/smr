@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if (!$player->isGPEditor()) {
 	throw new Exception('Only the GP Editor is allowed to view this page!');
 }

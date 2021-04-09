@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 // Player has selected to become a deputy/smuggler
 $location = SmrLocation::getLocation($var['LocationID']);
 if ($location->isHQ()) {

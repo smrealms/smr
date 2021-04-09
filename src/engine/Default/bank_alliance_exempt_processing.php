@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 //only if we are coming from the bank screen do we unexempt selection first
 if (isset($var['minVal'])) {
 	for ($i = $var['minVal']; $i <= $var['maxVal']; $i++) {

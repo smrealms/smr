@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $db2 = MySqlDatabase::getInstance();
 if (isset($var['article'])) {
 	if (Request::get('action') == 'Yes') {

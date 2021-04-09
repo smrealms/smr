@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $template->assign('PageTopic', 'Negotiate Price');
 require_once(LIB . 'Default/shop_goods.inc.php');
 // creates needed objects

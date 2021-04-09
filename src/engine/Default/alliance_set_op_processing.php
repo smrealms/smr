@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 function error_on_page($error) {
 	$message = '<span class="bold red">ERROR:</span> ' . $error;
 	Page::create('skeleton.php', 'alliance_set_op.php', array('message' => $message))->go();

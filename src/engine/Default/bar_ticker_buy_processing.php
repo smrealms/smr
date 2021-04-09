@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 if ($account->getTotalSmrCredits() < CREDITS_PER_TICKER) {
 	create_error('You don\'t have enough SMR Credits. Donate to SMR to gain SMR Credits!');
 }

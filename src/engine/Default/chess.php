@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $chessGames = ChessGame::getOngoingPlayerGames($player);
 $template->assign('ChessGames', $chessGames);
 $template->assign('PageTopic', 'Casino');

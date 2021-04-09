@@ -9,6 +9,7 @@ Menu::headquarters();
 // We can only claim the payment once, so to prevent clobbering the message
 // upon AJAX refresh, we store it as a session variable when we first get it.
 if (!isset($var['ClaimText'])) {
+	$player = $session->getPlayer();
 	if ($player->hasMilitaryPayment()) {
 		$payment = $player->getMilitaryPayment();
 		$player->increaseHOF($payment, array('Military Payment', 'Money', 'Claimed'), HOF_PUBLIC);

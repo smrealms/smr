@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 
 Menu::galactic_post();
 $container = Page::create('galactic_post_write_article_processing.php');

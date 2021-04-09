@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Combat Logs');
 Menu::combat_log();

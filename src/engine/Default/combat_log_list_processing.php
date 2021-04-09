@@ -9,6 +9,9 @@ if (!Request::has('id')) {
 	$container->go();
 }
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $submitAction = Request::get('action');
 $logIDs = array_keys(Request::getArray('id'));
 

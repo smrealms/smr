@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $template->assign('FullForceCombatResults', $var['results']);
 
 if ($var['owner_id'] > 0) {

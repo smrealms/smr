@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 $player->setCustomShipName($var['ShipName']);
 $account->decreaseTotalSmrCredits($var['cost']);
 
