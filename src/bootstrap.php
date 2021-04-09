@@ -3,14 +3,18 @@
 use Smr\Container\DiContainer;
 
 function logException(Throwable $e) : void {
-	global $account, $var, $player;
+	global $var;
 	$message = '';
 	$delim = "\n\n-----------\n\n";
 
-	if (is_object($account)) {
+	$session = Smr\Session::getInstance();
+
+	if ($session->hasAccount()) {
+		$account = $session->getAccount();
 		$message .= 'Login: ' . $account->getLogin() . "\n" .
+			'E-Mail: ' . $account->getEmail() . "\n" .
 			'Account ID: ' . $account->getAccountID() . "\n" .
-			'E-Mail: ' . $account->getEmail() . $delim;
+			'Game ID: ' . $session->getGameID() . $delim;
 	}
 	$message .= 'Error Message: ' . $e . $delim;
 
@@ -56,11 +60,11 @@ function logException(Throwable $e) : void {
 	}
 
 	// Send error message to the in-game auto bugs mailbox
-	if (is_object($player) && method_exists($player, 'sendMessageToBox')) {
-		$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
-	} elseif (is_object($account) && method_exists($account, 'sendMessageToBox')) {
+	if ($session->hasGame()) {
+		$session->getPlayer()->sendMessageToBox(BOX_BUGS_AUTO, $message);
+	} elseif ($session->hasAccount()) {
 		// Will be logged without a game_id
-		$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
+		$session->getAccount()->sendMessageToBox(BOX_BUGS_AUTO, $message);
 	} else {
 		// Will be logged without a game_id or sender_id
 		SmrAccount::doMessageSendingToBox(0, BOX_BUGS_AUTO, $message, 0);
