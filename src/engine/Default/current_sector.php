@@ -12,7 +12,7 @@ $template->assign('SpaceView', true);
 
 $template->assign('PageTopic', 'Current Sector: ' . $player->getSectorID() . ' (' . $sector->getGalaxy()->getDisplayName() . ')');
 
-Menu::navigation($template, $player);
+Menu::navigation($player);
 
 
 // *******************************************
@@ -143,11 +143,10 @@ if ($sector->hasPort()) {
 }
 
 function checkForForceRefreshMessage(&$msg) {
-	global $template;
-
 	$contains = 0;
 	$msg = str_replace('[Force Check]', '', $msg, $contains);
 	if ($contains > 0) {
+		$template = Smr\Template::getInstance();
 		if (!$template->hasTemplateVar('ForceRefreshMessage')) {
 			$db = Smr\Database::getInstance();
 			$player = Smr\Session::getInstance()->getPlayer();
@@ -167,14 +166,14 @@ function checkForForceRefreshMessage(&$msg) {
 }
 
 function checkForAttackMessage(&$msg) {
-	global $template;
-
 	$contains = 0;
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {
 		// $msg now contains only the log_id, if there is one
 		$session = Smr\Session::getInstance();
 		$session->updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
+
+		$template = Smr\Template::getInstance();
 		if (!$template->hasTemplateVar('AttackResults')) {
 			$db = Smr\Database::getInstance();
 			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');

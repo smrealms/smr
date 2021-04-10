@@ -200,12 +200,10 @@ function create_error($message) {
 		// To avoid the page just not refreshing when an error is encountered
 		// during ajax updates, use javascript to auto-redirect to the
 		// appropriate error page.
-		global $template;
-		if (is_object($template) && method_exists($template, 'addJavascriptForAjax')) {
-			$errorHREF = $container->href();
-			// json_encode the HREF as a safety precaution
-			$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($errorHREF));
-		}
+		$errorHREF = $container->href();
+		// json_encode the HREF as a safety precaution
+		$template = Smr\Template::getInstance();
+		$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($errorHREF));
 	}
 	$container->go();
 }

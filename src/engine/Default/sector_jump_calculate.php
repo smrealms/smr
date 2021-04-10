@@ -4,7 +4,7 @@ $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Jump Drive');
-Menu::navigation($template, $player);
+Menu::navigation($player);
 
 $targetSector = SmrSector::getSector($player->getGameID(), $var['target']);
 $jumpInfo = $player->getJumpInfo($targetSector);

@@ -18,11 +18,11 @@ $template->assign('MaxNews', $max_news);
 
 $template->assign('PageTopic', 'Reading The News');
 
-Menu::news($template);
+Menu::news();
 
 require_once(get_file_loc('news.inc.php'));
-doBreakingNewsAssign($gameID, $template);
-doLottoNewsAssign($gameID, $template);
+doBreakingNewsAssign($gameID);
+doLottoNewsAssign($gameID);
 
 $template->assign('ViewNewsFormHref', Page::create('skeleton.php', 'news_read.php', array('GameID'=>$var['GameID']))->href());
 

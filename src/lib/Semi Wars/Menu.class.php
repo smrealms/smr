@@ -4,7 +4,7 @@ class Menu extends AbstractMenu {
 
 	// No bounties in Semi Wars games
 	public static function headquarters() {
-		global $var, $template;
+		global $var;
 
 		$links = [];
 		$location = SmrLocation::getLocation($var['LocationID']);
@@ -27,6 +27,8 @@ class Menu extends AbstractMenu {
 				'Text' => $link[1],
 			];
 		}
+
+		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', $menuItems);
 	}
 

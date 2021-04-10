@@ -101,4 +101,4 @@ require_once(get_file_loc('news.inc.php'));
 $template->assign('NewsItems', getNewsItems($db));
 
 $template->assign('PageTopic', 'Advanced News');
-Menu::news($template);
+Menu::news();

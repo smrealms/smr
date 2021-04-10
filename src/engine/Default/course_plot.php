@@ -5,7 +5,7 @@ $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Plot A Course');
 
-Menu::navigation($template, $player);
+Menu::navigation($player);
 
 $container = Page::create('course_plot_processing.php');
 

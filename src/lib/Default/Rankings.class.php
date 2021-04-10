@@ -107,7 +107,7 @@ class Rankings {
 	}
 
 	public static function calculateMinMaxRanks($ourRank, $totalRanks) {
-		global $var, $template;
+		global $var;
 		$session = Smr\Session::getInstance();
 		$minRank = $session->getRequestVarInt('min_rank', $ourRank - 5);
 		$maxRank = $session->getRequestVarInt('max_rank', $ourRank + 5);
@@ -118,6 +118,7 @@ class Rankings {
 
 		$maxRank = min($maxRank, $totalRanks);
 
+		$template = Smr\Template::getInstance();
 		$template->assign('MinRank', $minRank);
 		$template->assign('MaxRank', $maxRank);
 		$template->assign('TotalRanks', $totalRanks);

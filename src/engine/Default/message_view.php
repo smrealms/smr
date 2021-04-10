@@ -84,6 +84,7 @@ if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['T
 	$messageBox['ShowAllHref'] = $dispContainer->href();
 
 	displayScouts($messageBox, $player);
+	$template->unassign('NextPageHREF'); // always displaying all scout messages?
 } else {
 	while ($db->nextRecord()) {
 		displayMessage($messageBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $player->getGameID(), $db->getField('message_text'), $db->getInt('send_time'), $db->getBoolean('msg_read'), $var['folder_id']);
@@ -136,8 +137,6 @@ function displayScouts(&$messageBox, SmrPlayer $player) {
 
 	// In the default view (groups), we're always displaying all messages
 	$messageBox['NumberMessages'] = $db->getNumRows();
-	global $template;
-	$template->unassign('NextPageHREF');
 }
 
 function displayGrouped(&$messageBox, SmrPlayer $sender, $message_text, $first, $last, $star) {

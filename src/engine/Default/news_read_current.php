@@ -9,12 +9,11 @@ if (!isset($var['GameID'])) {
 $gameID = $var['GameID'];
 
 $template->assign('PageTopic', 'Current News');
-Menu::news($template);
+Menu::news();
 
 require_once(get_file_loc('news.inc.php'));
-doBreakingNewsAssign($gameID, $template);
-doLottoNewsAssign($gameID, $template);
-
+doBreakingNewsAssign($gameID);
+doLottoNewsAssign($gameID);
 
 if (!isset($var['LastNewsUpdate'])) {
 	$session->updateVar('LastNewsUpdate', $player->getLastNewsUpdate());
