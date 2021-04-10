@@ -449,7 +449,7 @@ function do_voodoo() {
 
 // This is hackish, but without row level locking it's the best we can do
 function acquire_lock($sector) {
-	global $db, $lock, $locksFailed;
+	global $lock, $locksFailed;
 
 	if ($lock) {
 		return true;
@@ -457,6 +457,7 @@ function acquire_lock($sector) {
 
 	// Insert ourselves into the queue.
 	$session = Smr\Session::getInstance();
+	$db = MySqlDatabase::getInstance();
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber($session->getGameID()) . ',' . $db->escapeNumber($session->getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 	$lock = $db->getInsertID();
 
@@ -491,8 +492,10 @@ function acquire_lock($sector) {
 }
 
 function release_lock() {
-	global $db, $lock;
+	global $lock;
+
 	if ($lock) {
+		$db = MySqlDatabase::getInstance();
 		$db->query('DELETE from locks_queue WHERE lock_id=' . $db->escapeNumber($lock) . ' OR timestamp<' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 	}
 

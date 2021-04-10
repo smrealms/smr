@@ -107,7 +107,7 @@ function statusFromCategory($category) {
 }
 
 function getFeaturesCount($status, $daysNew = false) {
-	global $db;
+	$db = MySqlDatabase::getInstance();
 	$db->query('
 		SELECT COUNT(*) AS count
 		FROM feature_request
