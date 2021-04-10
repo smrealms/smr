@@ -5,6 +5,7 @@
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
+$db = Smr\Database::getInstance();
 $db->switchDatabases($var['HistoryDatabase']);
 
 $template->assign('PageTopic', 'Hall of Fame : ' . $var['game_name']);

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
+
 $template->assign('PageTopic', 'Announcements');
 
 if (!isset($var['view_all'])) {

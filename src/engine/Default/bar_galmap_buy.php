@@ -24,6 +24,7 @@ if (isset($var['process'])) {
 	$high = $galaxy->getEndSector();
 
 	// Have they already got this map? (Are there any unexplored sectors?
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND ' . $player->getSQL() . ' LIMIT 1');
 	if (!$db->nextRecord()) {
 		create_error('You already have maps of this galaxy!');

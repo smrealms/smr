@@ -22,6 +22,7 @@ $template->assign('UserRankName', $account->getRankName());
 $games = array();
 $games['Play'] = array();
 $game_id_list = array();
+$db = Smr\Database::getInstance();
 $db->query('SELECT end_time, game_id, game_name, game_speed, game_type
 			FROM game JOIN player USING (game_id)
 			WHERE account_id = '.$db->escapeNumber($account->getAccountID()) . '

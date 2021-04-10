@@ -17,6 +17,7 @@ $template->assign('AccessHREF', $container->href());
 
 $template->assign('Message', $var['message'] ?? '');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM anon_bank
 			WHERE owner_id=' . $db->escapeNumber($player->getAccountID()) . '
 			AND game_id=' . $db->escapeNumber($player->getGameID()));

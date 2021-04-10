@@ -143,11 +143,6 @@ $link = $container->href();
 ## Global variables
 All pages are called with the following variables available (there may be more)
 
-### $db
-This is a global instance of the Smr\Database class. It can be used for
-database queries anywhere, but be careful to avoid using it in two places
-simultaneously (doing so will cause database errors).
-
 ### $var
 $var contains all information passed using the $container from the previous page.
 This *can* be assigned to, but only using Smr\Session::updateVar($name, $value)

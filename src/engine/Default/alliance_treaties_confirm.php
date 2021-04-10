@@ -6,6 +6,7 @@ $player = $session->getPlayer();
 $alliance_id_1 = $player->getAllianceID();
 $alliance_id_2 = $_REQUEST['proposedAlliance'];
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT alliance_id_1, alliance_id_2, game_id FROM alliance_treaties WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_1 = ' . $alliance_id_2 . ') AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($db->nextRecord()) {
 	$container = Page::create('skeleton.php', 'alliance_treaties.php');

@@ -10,6 +10,7 @@ $db2 = Smr\Database::getInstance();
 $first_entry = true;
 $link_set_live = true;
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM version ORDER BY version_id DESC');
 
 while ($db->nextRecord()) {

@@ -18,6 +18,7 @@ if (!empty($player_id)) {
 		// No player found, we'll return an empty result
 	}
 } else {
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND player_name = ' . $db->escapeString($player_name) . ' LIMIT 1');

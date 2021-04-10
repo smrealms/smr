@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
 $db->query('UPDATE version
 			SET went_live = ' . $db->escapeNumber(Smr\Epoch::time()) . '
 			WHERE version_id = ' . $db->escapeNumber($var['version_id'])

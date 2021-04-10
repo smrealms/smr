@@ -20,6 +20,7 @@ $template->assign('MoneyHREF', $container->href());
 $container['func'] = 'Ship';
 $template->assign('ShipHREF', $container->href());
 $shipList = [];
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM ship_type ORDER BY ship_name');
 while ($db->nextRecord()) {
 	$shipList[] = [

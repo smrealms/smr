@@ -4,6 +4,7 @@ $template->assign('PageTopic', 'Voting');
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM voting ORDER BY end DESC');
 if ($db->getNumRows() > 0) {
 	$db2 = Smr\Database::getInstance();

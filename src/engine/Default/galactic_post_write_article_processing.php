@@ -20,6 +20,7 @@ if (Request::get('action') == 'Preview article') {
 	$container->go();
 }
 
+$db = Smr\Database::getInstance();
 if (isset($var['id'])) {
 	// Editing an article
 	$db->query('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(Smr\Epoch::time()) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));

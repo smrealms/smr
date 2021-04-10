@@ -11,6 +11,7 @@ $race_id = $var['race_id'];
 $type = strtoupper(Request::get('action'));
 $time = Smr\Epoch::time() + TIME_FOR_COUNCIL_VOTE;
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT count(*) FROM race_has_voting
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));

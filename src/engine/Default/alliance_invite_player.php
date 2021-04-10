@@ -28,6 +28,7 @@ $template->assign('PendingInvites', $pendingInvites);
 // List those who joined the game most recently first.
 $invitePlayers = array();
 if ($alliance->getNumMembers() < $game->getAllianceMaxPlayers()) {
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT account_id FROM player
 	            WHERE game_id = '.$db->escapeNumber($player->getGameID()) . '
 	              AND alliance_id != '.$db->escapeNumber($alliance->getAllianceID()) . '

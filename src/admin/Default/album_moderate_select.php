@@ -8,6 +8,7 @@ $moderateHREF = Page::create('skeleton.php', 'album_moderate.php')->href();
 $template->assign('ModerateHREF', $moderateHREF);
 
 // Get all accounts that are eligible for moderation
+$db = Smr\Database::getInstance();
 $db->query('SELECT account_id FROM album WHERE Approved = \'YES\'');
 $approved = array();
 while ($db->nextRecord()) {

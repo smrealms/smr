@@ -11,5 +11,6 @@ if (empty($entry_ids)) {
 	$container->go();
 }
 
+$db = Smr\Database::getInstance();
 $db->query('DELETE FROM message_blacklist WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND entry_id IN (' . $db->escapeArray($entry_ids) . ')');
 $container->go();

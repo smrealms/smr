@@ -6,6 +6,7 @@ function bytesToMB($bytes) {
 	return round($bytes / (1024 * 1024), 1) . ' MB';
 }
 
+$db = Smr\Database::getInstance();
 $template->assign('DbSizeMB', bytesToMB($db->getDbBytes()));
 
 if (isset($var['results'])) {

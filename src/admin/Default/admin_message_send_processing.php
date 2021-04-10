@@ -27,6 +27,8 @@ if ($expire > 0) {
 	$expire = ($expire * 3600) + Smr\Epoch::time();
 }
 
+$db = Smr\Database::getInstance();
+
 $receivers = [];
 if ($game_id != ALL_GAMES_ID) {
 	if ($account_id == 0) {

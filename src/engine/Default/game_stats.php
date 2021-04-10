@@ -8,6 +8,7 @@ $template->assign('StatsGame', $statsGame);
 
 $template->assign('PageTopic', 'Game Stats: ' . $statsGame->getName() . ' (' . $gameID . ')');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT count(*) total_players, MAX(experience) max_exp, MAX(alignment) max_align, MIN(alignment) min_alignment, MAX(kills) max_kills FROM player WHERE game_id = ' . $gameID . ' ORDER BY experience DESC');
 if ($db->nextRecord()) {
 	$template->assign('TotalPlayers', $db->getInt('total_players'));

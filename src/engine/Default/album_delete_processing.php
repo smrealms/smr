@@ -4,6 +4,7 @@ $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
 if (Request::get('action') == 'Yes') {
+	$db = Smr\Database::getInstance();
 	$db->query('DELETE
 				FROM album
 				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');

@@ -6,6 +6,7 @@ $template->assign('AdminMessageChooseGameFormHref', Page::create('skeleton.php',
 
 // Get a list of all games that have not yet ended
 $activeGames = array();
+$db = Smr\Database::getInstance();
 $db->query('SELECT game_id FROM game WHERE end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY end_time DESC');
 while ($db->nextRecord()) {
 	$activeGames[] = SmrGame::getGame($db->getInt('game_id'));

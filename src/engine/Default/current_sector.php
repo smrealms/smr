@@ -31,6 +31,7 @@ $links['Warp'] = array('ID'=>$sector->getWarp());
 
 $unvisited = array();
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND ' . $player->getSQL());
 while ($db->nextRecord()) {
 	$unvisited[$db->getInt('sector_id')] = TRUE;

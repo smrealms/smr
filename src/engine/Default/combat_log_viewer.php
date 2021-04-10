@@ -6,6 +6,7 @@ if (!isset($var['log_ids']) && !isset($var['current_log'])) {
 
 // Set properties for the current display page
 $display_id = $var['log_ids'][$var['current_log']];
+$db = Smr\Database::getInstance();
 $db->query('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($display_id) . ' LIMIT 1');
 
 if (!$db->nextRecord()) {

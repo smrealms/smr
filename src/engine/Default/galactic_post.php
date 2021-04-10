@@ -10,6 +10,7 @@ if (!$player->isGPEditor()) {
 $template->assign('PageTopic', 'Galactic Post');
 Menu::galactic_post();
 
+$db = Smr\Database::getInstance();
 $db2 = Smr\Database::getInstance();
 
 $container = Page::create('skeleton.php', 'galactic_post_view_article.php');

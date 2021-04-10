@@ -18,6 +18,7 @@ $container['alliance_id'] = $alliance_id;
 
 $role_id = $player->getAllianceRole($alliance->getAllianceID());
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 if ($db->nextRecord()) {
 	$change_mod = $db->getBoolean('change_mod');

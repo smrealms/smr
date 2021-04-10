@@ -9,6 +9,7 @@ require_once(LIB . 'Album/album_functions.php');
 $account_id = $session->getRequestVarInt('account_id');
 
 // check if the given account really has an entry
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account_id) . ' AND Approved = \'YES\'');
 if ($db->nextRecord()) {
 	$disabled = $db->getBoolean('disabled');

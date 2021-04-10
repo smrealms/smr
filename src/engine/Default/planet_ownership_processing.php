@@ -16,6 +16,7 @@ if ($action == 'Take Ownership') {
 	}
 
 	// delete all previous ownerships
+	$db = Smr\Database::getInstance();
 	$db->query('UPDATE planet SET owner_id = 0, password = NULL
 				WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));

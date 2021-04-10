@@ -30,6 +30,8 @@ $basicContainer = array('GameID'=>$gameID);
 //			WHERE game_id = ' . $db->escapeNumber($gameID) . '
 //		)
 //	)');
+
+$db = Smr\Database::getInstance();
 $db->query('SELECT alliance_id, alliance_name
 			FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($gameID));

@@ -18,6 +18,7 @@ if ($ship->hasIllusion()) {
 	$template->assign('SetIllusionFormHREF', $container->href());
 
 	$ships = array();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
 	while ($db->nextRecord()) {
 		$ships[$db->getInt('ship_type_id')] = $db->getField('ship_name');

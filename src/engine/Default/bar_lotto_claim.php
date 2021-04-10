@@ -5,6 +5,7 @@ $player = $session->getPlayer();
 
 $message = '';
 //check if we really are a winner
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
 if ($db->nextRecord()) {
 	$prize = $db->getInt('prize');

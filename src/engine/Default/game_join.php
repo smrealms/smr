@@ -32,6 +32,7 @@ if (Smr\Epoch::time() >= $game->getJoinTime()) {
 }
 
 $races = [];
+$db = Smr\Database::getInstance();
 foreach ($game->getPlayableRaceIDs() as $raceID) {
 	// get number of traders in game
 	$db->query('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db->escapeNumber($raceID) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));

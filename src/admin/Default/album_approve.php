@@ -10,6 +10,7 @@ function get_album_nick($album_id) {
 
 $template->assign('PageTopic', 'Approve Album Entries');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT *
 			FROM album
 			WHERE approved = \'TBC\'

@@ -5,6 +5,7 @@ $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'View Forces');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT *
 			FROM sector_has_forces
 			WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '

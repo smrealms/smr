@@ -24,6 +24,7 @@ $template->assign('PageTopic', 'Bank');
 
 Menu::bank();
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM alliance_treaties WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND (alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 			AND aa_access = 1 AND official = \'TRUE\'');

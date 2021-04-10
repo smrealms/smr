@@ -14,6 +14,8 @@ if ($ticker !== false) {
 	$expires = $ticker['Expires'];
 }
 $expires += 5 * 86400;
+
+$db = Smr\Database::getInstance();
 $db->query('REPLACE INTO player_has_ticker (game_id, account_id, type, expires) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($type) . ', ' . $db->escapeNumber($expires) . ')');
 
 //take credits

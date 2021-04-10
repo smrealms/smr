@@ -32,6 +32,7 @@ if (!empty($action)) {
 	$template->assign('Description', $dis);
 
 	$rankings = [];
+	$db = Smr\Database::getInstance();
 	$db->switchDatabases($var['HistoryDatabase']);
 	if ($from != 'alliance') {
 		$template->assign('Name', 'Sector ID');
@@ -57,7 +58,6 @@ if (!empty($action)) {
 			];
 		}
 	}
+	$db->switchDatabaseToLive(); // restore database
 	$template->assign('Rankings', $rankings);
 }
-
-$db->switchDatabaseToLive(); // restore database

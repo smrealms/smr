@@ -5,6 +5,7 @@ $word_replacement = strtoupper(trim(Request::get('WordReplacement')));
 
 $container = Page::create('skeleton.php', 'word_filter.php');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT word_id FROM word_filter WHERE word_value=' . $db->escapeString($word) . ' LIMIT 1');
 if ($db->nextRecord()) {
 	$container['msg'] = '<span class="red bold">ERROR: </span>This word is already filtered!';

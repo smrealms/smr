@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
+
 $account_id = Request::getInt('account_id');
 $player_name = Request::get('player_name');
 $searchGameID = Request::getInt('game_id');

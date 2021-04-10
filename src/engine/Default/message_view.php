@@ -6,6 +6,7 @@ $player = $session->getPlayer();
 
 Menu::messages();
 
+$db = Smr\Database::getInstance();
 $whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
 if ($var['folder_id'] == MSG_SENT) {
 	$whereClause .= ' AND sender_id = ' . $db->escapeNumber($player->getAccountID()) . '

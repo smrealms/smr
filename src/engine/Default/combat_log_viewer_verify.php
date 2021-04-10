@@ -4,6 +4,7 @@
 //  * Log must be from the current game
 //  * Attacker or defender is the player OR in the player's alliance
 
+$db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 

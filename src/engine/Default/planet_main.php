@@ -13,6 +13,7 @@ if (isset($var['msg'])) {
 	$template->assign('Msg', bbifyMessage($var['msg']));
 }
 
+$db = Smr\Database::getInstance();
 doTickerAssigns($template, $player, $db);
 
 $template->assign('LaunchLink', Page::create('planet_launch_processing.php', '')->href());

@@ -60,6 +60,7 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 
 
 // check if we had a album entry so far
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 if ($db->nextRecord()) {
 	if (!$noPicture) {

@@ -26,6 +26,8 @@ if ($account->getAccountID() == $account_id) {
 } elseif (isset($hofPlayer) && $hofPlayer->sameAlliance($player)) {
 	$allowedVisibities[] = HOF_ALLIANCE;
 }
+
+$db = Smr\Database::getInstance();
 $db->query('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';
 const USER_SCORE_NAME = 'User Score';

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
+
 //first create the game
 $db->query('SELECT game_id FROM game WHERE game_name=' . $db->escapeString(Request::get('game_name')) . ' LIMIT 1');
 if ($db->nextRecord()) {

@@ -6,6 +6,7 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'Alliance Experience Rankings');
 Menu::rankings(1, 0);
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT count(*) FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 $db->requireRecord();

@@ -14,6 +14,7 @@ if (Request::get('action') == 'All Messages') {
 	}
 
 	$message_id_list = array();
+	$db = Smr\Database::getInstance();
 	foreach (Request::getArray('message_id') as $id) {
 		if ($temp = @unserialize(base64_decode($id))) {
 			$db->query('SELECT message_id FROM message

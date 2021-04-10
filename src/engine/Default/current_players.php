@@ -4,6 +4,7 @@ $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Current Players');
+$db = Smr\Database::getInstance();
 $db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(Smr\Epoch::time()));
 $db->query('SELECT count(*) count FROM active_session
 			WHERE last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - 600) . ' AND

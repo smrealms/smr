@@ -11,6 +11,7 @@ $template->assign('PageTopic', 'Ruling Council Of ' . $player->getRaceName());
 Menu::council($player->getRaceID());
 
 // determine for what we voted
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM player_votes_relation
 			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));

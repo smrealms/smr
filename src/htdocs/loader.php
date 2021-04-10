@@ -21,7 +21,6 @@ try {
 	$sector = null;
 	$var = null;
 	$lock = false;
-	$db = Smr\Database::getInstance();
 	$template = null;
 
 	// ********************************

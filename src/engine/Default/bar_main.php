@@ -22,6 +22,7 @@ if (isset($var['message'])) {
 
 $winningTicket = false;
 //check for winner
+$db = Smr\Database::getInstance();
 $db->query('SELECT prize FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0 LIMIT 1');
 if ($db->nextRecord()) {
 	$winningTicket = $db->getInt('prize');

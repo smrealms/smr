@@ -14,6 +14,7 @@ if (!empty($var['paper_id'])) {
 		$template->assign('BackHREF', $container->href());
 	}
 
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);
 	$db->requireRecord();
 	$paper_name = bbifyMessage($db->getField('title'));

@@ -10,6 +10,7 @@ $container = Page::create('skeleton.php', 'permission_manage.php');
 $selectAdminHREF = $container->href();
 $template->assign('SelectAdminHREF', $selectAdminHREF);
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT account_id, login
 			FROM account_has_permission JOIN account USING(account_id)
 			GROUP BY account_id');

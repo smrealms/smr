@@ -13,6 +13,7 @@ if (Request::get('action') == 'Preview') {
 	$container->go();
 }
 
+$db = Smr\Database::getInstance();
 $db->lockTable('changelog');
 
 $db->query('SELECT MAX(changelog_id)

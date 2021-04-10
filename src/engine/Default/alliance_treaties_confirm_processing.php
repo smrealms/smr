@@ -9,6 +9,7 @@ $alliance2 = SmrAlliance::getAlliance($var['proposedAlliance'], $player->getGame
 $alliance_id_1 = $alliance1->getAllianceID();
 $alliance_id_2 = $alliance2->getAllianceID();
 
+$db = Smr\Database::getInstance();
 $db->query('INSERT INTO alliance_treaties (alliance_id_1,alliance_id_2,game_id,trader_assist,trader_defend,trader_nap,raid_assist,planet_land,planet_nap,forces_nap,aa_access,mb_read,mb_write,mod_read,official)
 			VALUES (' . $db->escapeNumber($alliance_id_1) . ', ' . $db->escapeNumber($alliance_id_2) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeBoolean($var['trader_assist']) . ', ' .
 			$db->escapeBoolean($var['trader_defend']) . ', ' . $db->escapeBoolean($var['trader_nap']) . ', ' . $db->escapeBoolean($var['raid_assist']) . ', ' . $db->escapeBoolean($var['planet_land']) . ', ' . $db->escapeBoolean($var['planet_nap']) . ', ' .

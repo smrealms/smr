@@ -14,6 +14,7 @@ if ($action == 'YES') {
 	// Don't delete the Newbie Help Alliance!
 	if ($alliance->getNumMembers() == 1 && $alliance->getAllianceID() != NHA_ID) {
 		// Retain the alliance, but delete some auxilliary info
+		$db = Smr\Database::getInstance();
 		$db->query('DELETE FROM alliance_bank_transactions
 		            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 		            AND game_id = ' . $db->escapeNumber($player->getGameID()));

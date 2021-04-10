@@ -18,6 +18,7 @@ if (empty($thread_id)) {
 $template->assign('PageTopic', $var['thread_topics'][$thread_index]);
 Menu::alliance($alliance->getAllianceID());
 
+$db = Smr\Database::getInstance();
 $db->query('REPLACE INTO player_read_thread
 			(account_id, game_id, alliance_id, thread_id, time)
 			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance->getAllianceID()) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(Smr\Epoch::time() + 2) . ')');

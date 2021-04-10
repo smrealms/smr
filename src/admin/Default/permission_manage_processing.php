@@ -5,6 +5,7 @@ if (Request::get('action') == 'Change') {
 	$hadAdminTag = SmrAccount::getAccount($var['admin_id'])->hasPermission(PERMISSION_DISPLAY_ADMIN_TAG);
 
 	// delete everything first
+	$db = Smr\Database::getInstance();
 	$db->query('DELETE
 				FROM account_has_permission
 				WHERE account_id = ' . $db->escapeNumber($var['admin_id']));

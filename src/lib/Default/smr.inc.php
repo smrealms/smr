@@ -306,7 +306,7 @@ function pluralise($word, $count = 0) {
  * (see loader.php for the initialization of the globals).
  */
 function do_voodoo() {
-	global $lock, $var, $ship, $sector, $db, $template;
+	global $lock, $var, $ship, $sector, $template;
 
 	if (!defined('AJAX_CONTAINER')) {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
@@ -333,6 +333,8 @@ function do_voodoo() {
 	if (!defined('DATE_FULL_SHORT_SPLIT')) {
 		define('DATE_FULL_SHORT_SPLIT', DATE_DATE_SHORT . '\<b\r /\>' . DATE_TIME_SHORT);
 	}
+
+	$db = Smr\Database::getInstance();
 
 	// initialize objects we usually need, like player, ship
 	if ($session->hasGame()) {

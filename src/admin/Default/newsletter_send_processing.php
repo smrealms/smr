@@ -45,6 +45,7 @@ if (Request::get('to_email') == '*') {
 	ob_end_flush(); // turn off PHP output buffering
 
 	// Skip all smrealms.de addresses (NPC, multi) to avoid spamming ourselves.
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT account_id, email, login FROM account WHERE validated="TRUE" AND email NOT LIKE "%@smrealms.de" AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
 
 	$total = $db->getNumRows();

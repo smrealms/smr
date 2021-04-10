@@ -6,6 +6,7 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'Alliance VS Alliance Rankings');
 
 Menu::rankings(1, 4);
+$db = Smr\Database::getInstance();
 $db2 = Smr\Database::getInstance();
 $container = Page::create('skeleton.php', 'rankings_alliance_vs_alliance.php');
 $template->assign('SubmitHREF', $container->href());

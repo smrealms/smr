@@ -7,6 +7,7 @@ $alliance = $player->getAlliance();
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
+$db = Smr\Database::getInstance();
 $db->query('
 SELECT
 account_id,

@@ -7,6 +7,7 @@ $max_amount = $var['max_amount'];
 $account_id = $var['account_id'];
 
 //update it so they arent cheating
+$db = Smr\Database::getInstance();
 $db->query('UPDATE ship_has_hardware ' .
 		   'SET amount = ' . $db->escapeNumber($max_amount) . ' ' .
 		   'WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND ' .

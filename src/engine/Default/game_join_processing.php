@@ -75,6 +75,7 @@ $player->giveStartingRelations();
 
 // The `player_visited_sector` table holds *unvisited* sectors, so that once
 // all sectors are visited (the majority of the game), the table is empty.
+$db = Smr\Database::getInstance();
 $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
             SELECT ' . $db->escapeNumber($account->getAccountID()) . ', game_id, sector_id
               FROM sector WHERE game_id = ' . $db->escapeNumber($gameID));

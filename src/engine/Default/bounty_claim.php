@@ -21,6 +21,7 @@ if (!isset($var['ClaimText'])) {
 	if (!empty($bounties)) {
 		$claimText .= ('You have claimed the following bounties<br /><br />');
 
+		$db = Smr\Database::getInstance();
 		foreach ($bounties as $bounty) {
 			// get bounty id from db
 			$amount = $bounty['credits'];

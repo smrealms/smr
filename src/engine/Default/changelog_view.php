@@ -7,6 +7,7 @@ if (isset($var['Since'])) {
 	$template->assign('ContinueHREF', $container->href());
 }
 
+$db = Smr\Database::getInstance();
 $db2 = Smr\Database::getInstance();
 
 $db->query('SELECT *

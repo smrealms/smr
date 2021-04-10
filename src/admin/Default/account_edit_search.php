@@ -3,6 +3,7 @@
 $template->assign('PageTopic', 'Edit Account');
 
 $games = [];
+$db = Smr\Database::getInstance();
 $db->query('SELECT game_id, game_name FROM game WHERE enabled = \'TRUE\' ORDER BY game_id DESC');
 while ($db->nextRecord()) {
 	$gameID = $db->getInt('game_id');

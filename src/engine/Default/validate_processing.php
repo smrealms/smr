@@ -22,6 +22,7 @@ if (Request::get('action') != "skip") {
 	$account->update();
 
 	// delete the notification (when send)
+	$db = Smr\Database::getInstance();
 	$db->query('DELETE FROM notification
 				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . '
 				AND notification_type = \'validation_code\'');

@@ -6,6 +6,7 @@ if (isset($var['msg'])) {
 	$template->assign('Message', $var['msg']);
 }
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM word_filter');
 if ($db->getNumRows()) {
 	$container = Page::create('word_filter_del.php');

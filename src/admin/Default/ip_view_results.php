@@ -5,6 +5,7 @@ $session = Smr\Session::getInstance();
 $variable = $session->getRequestVar('variable');
 $type = $session->getRequestVar('type');
 
+$db = Smr\Database::getInstance();
 $db2 = Smr\Database::getInstance();
 
 $container = Page::create('skeleton.php', 'ip_view.php');

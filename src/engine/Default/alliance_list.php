@@ -14,6 +14,7 @@ if (!$player->hasAlliance()) {
 $container = Page::create('skeleton.php');
 
 // get list of alliances
+$db = Smr\Database::getInstance();
 $db->query('SELECT
 count(account_id) as alliance_member_count,
 sum(experience) as alliance_xp,

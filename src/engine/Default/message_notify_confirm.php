@@ -11,6 +11,7 @@ if (empty($var['message_id'])) {
 }
 
 // get message form db
+$db = Smr\Database::getInstance();
 $db->query('SELECT message_text
 			FROM message
 			WHERE message_id = ' . $db->escapeNumber($var['message_id']));

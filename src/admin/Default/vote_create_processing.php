@@ -14,6 +14,7 @@ if ($action == 'Preview Option') {
 	$container->go();
 }
 
+$db = Smr\Database::getInstance();
 if ($action == 'Create Vote') {
 	$question = trim(Request::get('question'));
 	$end = Smr\Epoch::time() + 86400 * Request::getInt('days');

@@ -15,6 +15,7 @@ $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 // get next id
+$db = Smr\Database::getInstance();
 $db->query('SELECT max(notify_id) FROM message_notify WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY notify_id DESC');
 if ($db->nextRecord()) {
 	$notify_id = $db->getInt('max(notify_id)') + 1;

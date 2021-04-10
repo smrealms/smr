@@ -43,6 +43,7 @@ if (isset($var['location_type_id'])) {
 	$template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
 
 
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM hardware_type');
 	$hardware = array();
 	while ($db->nextRecord()) {

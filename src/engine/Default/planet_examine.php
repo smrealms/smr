@@ -19,6 +19,7 @@ if (!$planetLand) {
 	if ($planet->hasOwner()) {
 		$ownerAllianceID = $planet->getOwner()->getAllianceID();
 	}
+	$db = Smr\Database::getInstance();
 	$db->query('
 		SELECT planet_land
 		FROM alliance_treaties

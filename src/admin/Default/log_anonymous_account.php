@@ -2,6 +2,7 @@
 
 $template->assign('PageTopic', 'Anonymous Account Access');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT account_id FROM account_has_logs GROUP BY account_id');
 $log_account_ids = [];
 while ($db->nextRecord()) {

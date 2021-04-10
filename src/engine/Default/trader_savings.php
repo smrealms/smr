@@ -8,6 +8,7 @@ $template->assign('PageTopic', 'Savings');
 Menu::trader();
 
 $anonAccounts = [];
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM anon_bank WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 while ($db->nextRecord()) {
 	$anonAccounts[] = [

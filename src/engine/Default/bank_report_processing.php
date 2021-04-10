@@ -8,6 +8,7 @@ $alliance_id = $var['alliance_id'];
 $text = $var['text'];
 
 // Check if the "Bank Statement" thread exists yet
+$db = Smr\Database::getInstance();
 $db->query('SELECT thread_id FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND topic = \'Bank Statement\' LIMIT 1');
 
 if ($db->nextRecord()) {

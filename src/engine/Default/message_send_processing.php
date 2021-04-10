@@ -23,6 +23,7 @@ if (empty($message)) {
 }
 
 if (isset($var['alliance_id'])) {
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT account_id FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_id = ' . $var['alliance_id'] . '

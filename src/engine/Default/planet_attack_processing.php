@@ -81,6 +81,7 @@ $results['Planet'] = $planet->shootPlayers($attackers);
 $account->log(LOG_TYPE_PLANET_BUSTING, 'Player attacks planet, the planet does ' . $results['Planet']['TotalDamage'] . ', their team does ' . $results['Attackers']['TotalDamage'] . ' and downgrades: ' . var_export($results['Attackers']['Downgrades'], true), $planet->getSectorID());
 
 // Add this log to the `combat_logs` database table
+$db = Smr\Database::getInstance();
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . Smr\Epoch::time() . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $planetOwner->getAccountID() . ',' . $planetOwner->getAllianceID() . ',' . $db->escapeObject($results, true) . ')');
 $logId = $db->getInsertID();
 

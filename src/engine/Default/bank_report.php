@@ -11,6 +11,7 @@ const WITHDRAW = 0;
 const DEPOSIT = 1;
 
 //get all transactions
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 if (!$db->getNumRows()) {
 	create_error('Your alliance has no recorded transactions.');

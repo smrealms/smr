@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 // Get initial storage size
+$db = Smr\Database::getInstance();
 $initialBytes = $db->getDbBytes();
 
 $endedGameIDs = [];

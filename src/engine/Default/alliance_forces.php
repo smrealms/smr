@@ -11,6 +11,7 @@ $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
+$db = Smr\Database::getInstance();
 $db->query('
 SELECT
 sum(mines) as tot_mines,

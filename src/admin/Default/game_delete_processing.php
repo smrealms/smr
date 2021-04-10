@@ -3,6 +3,7 @@
 create_error('Deleting games is disabled!');
 
 // additional db objects
+$db = Smr\Database::getInstance();
 $db2 = Smr\Database::getInstance();
 
 $smr_db_sql = array();

@@ -12,6 +12,7 @@ if (strlen($feature) > 500) {
 }
 
 // add this feature to db
+$db = Smr\Database::getInstance();
 $db->query('INSERT INTO feature_request (feature_request_id) VALUES (NULL)');
 $featureRequestID = $db->getInsertID();
 $db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text) ' .

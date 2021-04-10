@@ -8,6 +8,7 @@ $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
 //get rid of already approved entries
+$db = Smr\Database::getInstance();
 $db->query('UPDATE alliance_bank_transactions SET request_exempt = 0 WHERE exempt = 1');
 
 

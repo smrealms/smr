@@ -3,6 +3,7 @@
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
+$db = Smr\Database::getInstance();
 $db2 = Smr\Database::getInstance();
 if (isset($var['article'])) {
 	if (Request::get('action') == 'Yes') {

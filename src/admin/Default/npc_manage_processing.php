@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
+
 // Change active status of an NPC
 if (Request::has('active-submit')) {
 	// Toggle the activity of this NPC

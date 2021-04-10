@@ -10,6 +10,7 @@ Menu::planet_list($var['alliance_id'], 1);
 $viewBonds = true;
 if ($var['alliance_id'] != 0) {
 	$role_id = $player->getAllianceRole($var['alliance_id']);
+	$db = Smr\Database::getInstance();
 	$db->query('
 		SELECT *
 		FROM alliance_has_roles

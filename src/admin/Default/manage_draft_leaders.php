@@ -9,6 +9,7 @@ $template->assign('SelectGameHREF', $container->href());
 
 // Get the list of active Draft games ordered by reverse start date
 $activeGames = array();
+$db = Smr\Database::getInstance();
 $db->query('SELECT game_id, game_name FROM game WHERE game_type=' . $db->escapeNumber(SmrGame::GAME_TYPE_DRAFT) . ' AND join_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY start_time DESC');
 while ($db->nextRecord()) {
 	$activeGames[] = [

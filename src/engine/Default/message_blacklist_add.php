@@ -16,6 +16,7 @@ if (isset($var['account_id'])) {
 	}
 }
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT account_id FROM message_blacklist WHERE ' . $player->getSQL() . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted->getAccountID()) . ' LIMIT 1');
 
 if ($db->nextRecord()) {

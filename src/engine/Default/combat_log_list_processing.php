@@ -17,6 +17,7 @@ $logIDs = array_keys(Request::getArray('id'));
 
 // Do we need to save any logs (or delete any saved logs)?
 if ($submitAction == 'Save' || $submitAction == 'Delete') {
+	$db = Smr\Database::getInstance();
 	if ($submitAction == 'Save') {
 		//save the logs we checked
 		// Query means people can only save logs that they are allowd to view.

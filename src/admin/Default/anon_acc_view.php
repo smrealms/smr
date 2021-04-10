@@ -11,6 +11,7 @@ $template->assign('BackHREF', $container->href());
 $anonID = $session->getRequestVarInt('anon_account');
 $gameID = $session->getRequestVarInt('view_game_id');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT *
 			FROM anon_bank_transactions
 			JOIN player USING(account_id, game_id)
