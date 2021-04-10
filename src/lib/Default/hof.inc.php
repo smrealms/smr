@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 function getHofCategories($hofTypes, $game_id, $account_id) {
-	global $var;
+	$var = Smr\Session::getInstance()->getCurrentVar();
 	$categories = [];
 	foreach ($hofTypes as $type => $value) {
 		// Make each category a link to view the subcategory page
@@ -110,7 +110,7 @@ function getHofRank($view, $viewType, $accountID, $gameID) {
 }
 
 function displayHOFRow($rank, $accountID, $amount) {
-	global $var;
+	$var = Smr\Session::getInstance()->getCurrentVar();
 
 	$account = Smr\Session::getInstance()->getAccount();
 	if (isset($var['game_id']) && Globals::isValidGame($var['game_id'])) {

@@ -97,7 +97,7 @@ try {
 
 
 function NPCStuff() {
-	global $actions, $var, $previousContainer;
+	global $actions, $previousContainer;
 
 	$underAttack = false;
 	$actions = -1;
@@ -158,6 +158,7 @@ function NPCStuff() {
 			}
 
 			$fedContainer = null;
+			$var = $session->getCurrentVar();
 			if (isset($var['url']) && $var['url'] == 'shop_ship_processing.php' && ($fedContainer = plotToFed($player, true)) !== true) { //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
 				processContainer($fedContainer);
 			} elseif (!$underAttack && $player->isUnderAttack() === true
@@ -314,10 +315,11 @@ function clearCaches() {
 }
 
 function debug($message, $debugObject = null) {
-	global $var;
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL.var_export($debugObject, true) : '') . EOL;
 	if (NPC_LOG_TO_DATABASE) {
-		$accountID = Smr\Session::getInstance()->getAccountID();
+		$session = Smr\Session::getInstance();
+		$accountID = $session->getAccountID();
+		$var = $session->getCurrentVar();
 		$db = Smr\Database::getInstance();
 		$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . $accountID() . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
 
@@ -331,7 +333,8 @@ function debug($message, $debugObject = null) {
 
 function processContainer($container) {
 	global $forwardedContainer, $previousContainer;
-	$player = Smr\Session::getInstance()->getPlayer();
+	$session = Smr\Session::getInstance();
+	$player = $session->getPlayer();
 	if ($container == $previousContainer && $forwardedContainer['body'] != 'forces_attack.php') {
 		debug('We are executing the same container twice?', array('ForwardedContainer' => $forwardedContainer, 'Container' => $container));
 		if ($player->hasNewbieTurns() || $player->hasFederalProtection()) {
@@ -344,7 +347,7 @@ function processContainer($container) {
 	debug('Executing container', $container);
 	// The next "page request" must occur at an updated time.
 	Smr\Epoch::update();
-	$container->useAsGlobalVar();
+	$session->setCurrentVar($container, false);
 	acquire_lock($player->getSectorID()); // Lock now to skip var update in do_voodoo
 	do_voodoo();
 }

@@ -27,7 +27,7 @@ function linkCombatLog($logID) {
  * with action BBCODE_OUTPUT.
  */
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
-	global $overrideGameID, $disableBBLinks, $var;
+	global $overrideGameID, $disableBBLinks;
 	$session = Smr\Session::getInstance();
 	try {
 		switch ($tagName) {
@@ -111,8 +111,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$sectorID = (int)$default;
 				$sectorTag = '<span class="sectorColour">#' . $sectorID . '</span>';
 
-				// The use of $var here is for a corner case where an admin can check reported messages whilst being in-game.
-				// Ugly but working, probably want a better mechanism to check if more BBCode tags get added
 				if ($disableBBLinks === false
 					&& $session->hasGame()
 					&& $session->getGameID() == $overrideGameID

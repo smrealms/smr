@@ -6,7 +6,7 @@
 class AbstractMenu {
 
 	public static function headquarters() {
-		global $var;
+		$var = Smr\Session::getInstance()->getCurrentVar();
 
 		$links = [];
 		$location = SmrLocation::getLocation($var['LocationID']);
@@ -361,9 +361,11 @@ class AbstractMenu {
 	}
 
 	public static function news() {
-		global $var;
+		$session = Smr\Session::getInstance();
+		$var = $session->getCurrentVar();
+
 		$menuItems = array();
-		if (Smr\Session::getInstance()->getGameID() == $var['GameID']) {
+		if ($session->getGameID() == $var['GameID']) {
 			$menuItems[] = array('Link'=>Page::create('skeleton.php', 'news_read_current.php', array('GameID'=>$var['GameID']))->href(), 'Text'=>'Read Current News');
 		}
 		$menuItems[] = array('Link'=>Page::create('skeleton.php', 'news_read.php', array('GameID'=>$var['GameID']))->href(), 'Text'=>'Read Latest News');

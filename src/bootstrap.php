@@ -3,7 +3,6 @@
 use Smr\Container\DiContainer;
 
 function logException(Throwable $e) : void {
-	global $var;
 	$message = '';
 	$delim = "\n\n-----------\n\n";
 
@@ -18,7 +17,7 @@ function logException(Throwable $e) : void {
 	}
 	$message .= 'Error Message: ' . $e . $delim;
 
-	$message .= '$var: ' . var_export($var, true);
+	$message .= '$var: ' . var_export($session->getCurrentVar(), true);
 
 	// Don't display passwords input by users in the log message!
 	if (isset($_REQUEST['password'])) {

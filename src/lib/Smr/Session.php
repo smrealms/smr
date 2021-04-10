@@ -282,41 +282,40 @@ class Session {
 		return $result;
 	}
 
-	public function resetLink(Page $container, string $sn) : string {
+	/**
+	 * Replace the global $var with the given $container.
+	 */
+	public function setCurrentVar(Page $container, bool $allowUpdate = true) : void {
+		$var = $this->getCurrentVar();
+
 		//Do not allow sharing SN, useful for forwarding.
 		global $lock;
-		if (isset($this->var[$sn]['CommonID'])) {
-			unset($this->commonIDs[$this->var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
+		if (isset($var['CommonID'])) {
+			unset($this->commonIDs[$var['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		}
-		$this->SN = $sn;
 		if (!isset($container['RemainingPageLoads'])) {
 			$container['RemainingPageLoads'] = 1; // Allow refreshing
 		}
 		if (!isset($container['PreviousRequestTime'])) {
-			if (isset($this->var[$sn]['PreviousRequestTime'])) {
-				$container['PreviousRequestTime'] = $this->var[$sn]['PreviousRequestTime']; // Copy across the previous request time if not explicitly set.
+			if (isset($var['PreviousRequestTime'])) {
+				$container['PreviousRequestTime'] = $var['PreviousRequestTime']; // Copy across the previous request time if not explicitly set.
 			}
 		}
 
-		$this->var[$sn] = $container;
-		if (!$lock && !USING_AJAX) {
+		$var->exchangeArray($container);
+		if ($allowUpdate && !$lock && !USING_AJAX) {
 			$this->update();
 		}
-		return $sn;
 	}
 
 	public function updateVar(string $key, mixed $value) : void {
-		global $var;
+		$var = $this->getCurrentVar();
 		if ($value === null) {
 			if (isset($var[$key])) {
 				unset($var[$key]);
 			}
-			if (isset($var[$this->SN][$key])) {
-				unset($this->var[$this->SN][$key]);
-			}
 		} else {
 			$var[$key] = $value;
-			$this->var[$this->SN][$key] = $value;
 		}
 	}
 

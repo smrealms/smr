@@ -1241,7 +1241,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function getToggleAJAXHREF() : string {
-		global $var;
+		$var = Smr\Session::getInstance()->getCurrentVar();
 		return Page::create('toggle_processing.php', '', array('toggle'=>'AJAX', 'referrer'=>$var['body']))->href();
 	}
 

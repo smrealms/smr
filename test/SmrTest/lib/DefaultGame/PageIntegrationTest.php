@@ -3,6 +3,8 @@
 namespace SmrTest\lib\DefaultGame;
 
 use Page;
+use Smr\Container\DiContainer;
+use Smr\Session;
 
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest
@@ -10,6 +12,26 @@ use Page;
  * @covers Page
  */
 class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
+
+	protected function setUp() : void {
+		// Reset the DI container for each test to ensure independence.
+		DiContainer::initializeContainer();
+	}
+
+	/**
+	 * Insert a mock Session into the DI container to return the input $var
+	 * when getCurrentVar is called on it.
+	 */
+	private function setVar(array $var) : void {
+		$page = new Page($var);
+		$session = $this->createMock(Session::class);
+		$session
+			->method('getCurrentVar')
+			->willReturn($page);
+		DiContainer::getContainer()->set(Session::class, $session);
+	}
+
+	//------------------------------------------------------------------------
 
 	public function test_create() {
 		// Test create with $extra as array
@@ -43,19 +65,6 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertEquals($page, $copy);
 	}
 
-	public function test_useAsGlobalVar() {
-		// Create an arbitrary Page
-		$page = Page::create('file');
-
-		// Unset the global $var in case it has been set elsewhere
-		global $var;
-		$var = null;
-
-		// The global $var should be the same object as $page
-		$page->useAsGlobalVar();
-		self::assertSame($var, $page);
-	}
-
 	public function test_href() {
 		// Create an arbitrary Page
 		$page = Page::create('file');
@@ -63,7 +72,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		// Pre-initialize the Smr\Session, since it uses 'rand', and we don't
 		// want it to interfere with our rand seed when we call `href`, which
 		// internally requires an Smr\Session.
-		\Smr\Session::getInstance();
+		Session::getInstance();
 
 		// The Page should not be modified when href() is called
 		$expected = $page->getArrayCopy();
@@ -77,11 +86,8 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 	public function test_addVar() {
 		$page = Page::create('file');
 
-		// Unset the global $var in case it has been set elsewhere
-		global $var;
-		$var = Page::create('other');
-		$var['index1'] = 'value1';
-		$var['index2'] = 'value2';
+		// Mock the current global $var
+		$this->setVar(['index1' => 'value1', 'index2' => 'value2']);
 
 		// Using the default $dest in addVar should reuse $source
 		$page->addVar('index1');
@@ -96,6 +102,9 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 	public function test_addVar_missing_source_raises() {
 		// Create an arbitrary Page
 		$page = Page::create('file');
+
+		// Mock an empty global $var
+		$this->setVar([]);
 
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Could not find "does_not_exist" in var!');

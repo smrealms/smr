@@ -143,30 +143,14 @@ class Page extends ArrayObject {
 	}
 
 	/**
-	 * Use this container as the global variable $var.
-	 */
-	public function useAsGlobalVar($sn = null) {
-		global $var;
-
-		// this sn identifies our container later
-		if (!is_null($sn)) {
-			Smr\Session::getInstance()->resetLink($this, $sn);
-		}
-
-		// Note: if problems arise, maybe $this should be cloned.
-		$var = $this;
-	}
-
-	/**
 	 * Forward to the page identified by this container.
 	 */
 	public function go() : void {
-		global $sn;
 		if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
 			overrideForward($this);
 			return;
 		}
-		$this->useAsGlobalVar($sn);
+		Smr\Session::getInstance()->setCurrentVar($this);
 		do_voodoo();
 	}
 
@@ -175,7 +159,7 @@ class Page extends ArrayObject {
 	 * If $dest is not specified, keep the index named $source.
 	 */
 	public function addVar(string $source, string $dest = null) : void {
-		global $var;
+		$var = Smr\Session::getInstance()->getCurrentVar();
 
 		// transfer this value to next container
 		if (!isset($var[$source])) {
