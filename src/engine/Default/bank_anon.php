@@ -22,7 +22,7 @@ $db->query('SELECT * FROM anon_bank
 			AND game_id=' . $db->escapeNumber($player->getGameID()));
 
 $ownedAnon = [];
-$db2 = MySqlDatabase::getInstance();
+$db2 = Smr\Database::getInstance();
 while ($db->nextRecord()) {
 	$anon = [];
 	$anon['anon_id'] = $db->getInt('anon_id');

@@ -144,7 +144,7 @@ $link = $container->href();
 All pages are called with the following variables available (there may be more)
 
 ### $db
-This is a global instance of the SmrMySqlDatabase class. It can be used for
+This is a global instance of the Smr\Database class. It can be used for
 database queries anywhere, but be careful to avoid using it in two places
 simultaneously (doing so will cause database errors).
 

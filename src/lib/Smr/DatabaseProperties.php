@@ -4,11 +4,11 @@ namespace Smr;
 
 use Dotenv\Dotenv;
 
-class MySqlProperties {
-	private const CONFIG_MYSQL_HOST = "MYSQL_HOST";
-	private const CONFIG_MYSQL_USER = "MYSQL_USER";
-	private const CONFIG_MYSQL_PASSWORD = "MYSQL_PASSWORD";
-	private const CONFIG_MYSQL_DATABASE = "MYSQL_DATABASE";
+class DatabaseProperties {
+	private const CONFIG_HOST = "MYSQL_HOST";
+	private const CONFIG_USER = "MYSQL_USER";
+	private const CONFIG_PASSWORD = "MYSQL_PASSWORD";
+	private const CONFIG_DATABASE = "MYSQL_DATABASE";
 	private string $host;
 	private string $user;
 	private string $password;
@@ -18,19 +18,19 @@ class MySqlProperties {
 		$array = $config->load();
 		self::validateConfig($config);
 		[
-			self::CONFIG_MYSQL_HOST => $this->host,
-			self::CONFIG_MYSQL_USER => $this->user,
-			self::CONFIG_MYSQL_PASSWORD => $this->password,
-			self::CONFIG_MYSQL_DATABASE => $this->databaseName,
+			self::CONFIG_HOST => $this->host,
+			self::CONFIG_USER => $this->user,
+			self::CONFIG_PASSWORD => $this->password,
+			self::CONFIG_DATABASE => $this->databaseName,
 		] = $array;
 	}
 
 	private static function validateConfig(Dotenv $config) {
 		$config->required([
-			self::CONFIG_MYSQL_HOST,
-			self::CONFIG_MYSQL_USER,
-			self::CONFIG_MYSQL_PASSWORD,
-			self::CONFIG_MYSQL_DATABASE,
+			self::CONFIG_HOST,
+			self::CONFIG_USER,
+			self::CONFIG_PASSWORD,
+			self::CONFIG_DATABASE,
 		])->notEmpty();
 	}
 

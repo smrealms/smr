@@ -65,7 +65,7 @@ if ($db->getNumRows() > 0) {
 
 	$commentsContainer = Page::copy($var);
 	$commentsContainer['body'] = 'feature_request_comments.php';
-	$db2 = MySqlDatabase::getInstance();
+	$db2 = Smr\Database::getInstance();
 	$featureRequests = array();
 	while ($db->nextRecord()) {
 		$featureRequestID = $db->getInt('feature_request_id');
@@ -107,7 +107,7 @@ function statusFromCategory($category) {
 }
 
 function getFeaturesCount($status, $daysNew = false) {
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('
 		SELECT COUNT(*) AS count
 		FROM feature_request

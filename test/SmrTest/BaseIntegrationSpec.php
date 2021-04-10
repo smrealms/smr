@@ -5,7 +5,6 @@ namespace SmrTest;
 use mysqli;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
-use Smr\MySqlProperties;
 use Throwable;
 
 class BaseIntegrationSpec extends TestCase {

@@ -4,10 +4,10 @@ namespace Smr;
 
 use AbstractSmrAccount;
 use AbstractSmrPlayer;
-use MySqlDatabase;
 use Page;
 use Request;
 use Smr\Container\DiContainer;
+use Smr\Database;
 use Smr\Epoch;
 use SmrAccount;
 use SmrPlayer;
@@ -29,7 +29,7 @@ class Session {
 		'trader_examine.php' => .75
 	);
 
-	protected MySqlDatabase $db;
+	protected Database $db;
 
 	private string $sessionID;
 	private int $gameID;
@@ -60,7 +60,7 @@ class Session {
 	public function __construct() {
 
 		// Initialize the db connector here
-		$this->db = MySqlDatabase::getInstance();
+		$this->db = Database::getInstance();
 
 		// now try the cookie
 		if (isset($_COOKIE['session_id']) && strlen($_COOKIE['session_id']) === 32) {

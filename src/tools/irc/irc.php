@@ -84,7 +84,7 @@ while ($running) {
 
 	// delete all seen stats that appear to be on (we do not want to take
 	// something for granted that happend while we were away)
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('DELETE from irc_seen WHERE signed_off = 0');
 
 	// Reset last ping each time we try connecting.

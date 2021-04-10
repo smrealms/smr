@@ -17,10 +17,10 @@ class SmrWeaponType {
 	protected int $powerLevel;
 	protected int $buyerRestriction;
 
-	public static function getWeaponType(int $weaponTypeID, MySqlDatabase $db = null) : SmrWeaponType {
+	public static function getWeaponType(int $weaponTypeID, Smr\Database $db = null) : SmrWeaponType {
 		if (!isset(self::$CACHE_WEAPON_TYPES[$weaponTypeID])) {
 			if (is_null($db)) {
-				$db = MySqlDatabase::getInstance();
+				$db = Smr\Database::getInstance();
 				$db->query('SELECT * FROM weapon_type WHERE weapon_type_id = ' . $db->escapeNumber($weaponTypeID));
 				$db->requireRecord();
 			}
@@ -31,7 +31,7 @@ class SmrWeaponType {
 	}
 
 	public static function getAllWeaponTypes() : array {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT * FROM weapon_type');
 		$weapons = array();
 		while ($db->nextRecord()) {
@@ -45,7 +45,7 @@ class SmrWeaponType {
 	 * Returns all weapon types that are purchasable in the given game.
 	 */
 	public static function getAllSoldWeaponTypes(int $gameID) : array {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT DISTINCT weapon_type.* FROM weapon_type JOIN location_sells_weapons USING (weapon_type_id) JOIN location USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID));
 		$weapons = [];
 		while ($db->nextRecord()) {
@@ -55,7 +55,7 @@ class SmrWeaponType {
 		return $weapons;
 	}
 
-	protected function __construct(int $weaponTypeID, MySqlDatabase $db) {
+	protected function __construct(int $weaponTypeID, Smr\Database $db) {
 		$this->weaponTypeID = $weaponTypeID;
 		$this->name = $db->getField('weapon_name');
 		$this->raceID = $db->getInt('race_id');

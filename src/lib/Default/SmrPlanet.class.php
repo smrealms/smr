@@ -13,7 +13,7 @@ class SmrPlanet {
 	const TIME_ATTACK_NEWS_COOLDOWN = 3600; // 1 hour
 	const MAX_STOCKPILE = 600;
 
-	protected MySqlDatabase $db;
+	protected Smr\Database $db;
 	protected string $SQL;
 
 	protected bool $exists;
@@ -73,7 +73,7 @@ class SmrPlanet {
 	}
 
 	public static function getGalaxyPlanets(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT planet.*, sector_id FROM sector LEFT JOIN planet USING (game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlanets = [];
 		while ($db->nextRecord()) {
@@ -86,7 +86,7 @@ class SmrPlanet {
 		return $galaxyPlanets;
 	}
 
-	public static function getPlanet(int $gameID, int $sectorID, bool $forceUpdate = false, MySqlDatabase $db = null) : self {
+	public static function getPlanet(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\Database $db = null) : self {
 		if ($forceUpdate || !isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
 			self::$CACHE_PLANETS[$gameID][$sectorID] = new SmrPlanet($gameID, $sectorID, $db);
 		}
@@ -104,14 +104,14 @@ class SmrPlanet {
 		}
 
 		// insert planet into db
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time, planet_type_id)
 				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ', ' . $db->escapeNumber($typeID) . ')');
 		return self::getPlanet($gameID, $sectorID, true);
 	}
 
 	public static function removePlanet(int $gameID, int $sectorID) : void {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID);
 		$db->query('DELETE FROM planet WHERE ' . $SQL);
 		$db->query('DELETE FROM planet_has_weapon WHERE ' . $SQL);
@@ -125,8 +125,8 @@ class SmrPlanet {
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
 
-	protected function __construct(int $gameID, int $sectorID, MySqlDatabase $db = null) {
-		$this->db = MySqlDatabase::getInstance();
+	protected function __construct(int $gameID, int $sectorID, Smr\Database $db = null) {
+		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
 		if ($db !== null) {

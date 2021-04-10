@@ -5,9 +5,9 @@ namespace Smr\Container;
 use DI\Container;
 use DI\ContainerBuilder;
 use Dotenv\Dotenv;
-use MySqlDatabase;
 use mysqli;
-use Smr\MySqlProperties;
+use Smr\Database;
+use Smr\DatabaseProperties;
 use Smr\Epoch;
 use Smr\Session;
 use function DI\autowire;
@@ -33,11 +33,11 @@ class DiContainer {
 			 * PHP-DI cannot construct mysqli by itself, because all of its arguments are primitive types.
 			 * Therefore, we need to declare a provider factory for the container to use when constructing new instances.
 			 *
-			 * The factories themselves are able to use dependency injection as well, so we can provide the MySqlProperties
+			 * The factories themselves are able to use dependency injection as well, so we can provide the DatabaseProperties
 			 * typehint to make sure the container constructs an instance and provides it to the factory.
 			 */
-			mysqli::class => function(MySqlProperties $mysqlProperties): mysqli {
-				return MySqlDatabase::mysqliFactory($mysqlProperties);
+			mysqli::class => function(DatabaseProperties $dbProperties): mysqli {
+				return Database::mysqliFactory($dbProperties);
 			},
 			Dotenv::class => function(): Dotenv {
 				return Dotenv::createArrayBacked(CONFIG, 'env');
@@ -45,8 +45,8 @@ class DiContainer {
 			// Explicitly name all classes that are autowired, so we can take advantage of
 			// the compiled container feature for a performance boost
 			Epoch::class => autowire(),
-			MySqlProperties::class => autowire(),
-			MySqlDatabase::class => autowire(),
+			DatabaseProperties::class => autowire(),
+			Database::class => autowire(),
 			Session::class => autowire(),
 		];
 	}

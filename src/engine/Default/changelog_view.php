@@ -7,7 +7,7 @@ if (isset($var['Since'])) {
 	$template->assign('ContinueHREF', $container->href());
 }
 
-$db2 = MySqlDatabase::getInstance();
+$db2 = Smr\Database::getInstance();
 
 $db->query('SELECT *
 			FROM version

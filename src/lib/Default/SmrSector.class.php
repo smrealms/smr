@@ -37,7 +37,7 @@ class SmrSector {
 
 	public static function getGalaxySectors($gameID, $galaxyID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID])) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id=' . $db->escapeNumber($galaxyID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
 			while ($db->nextRecord()) {
@@ -51,7 +51,7 @@ class SmrSector {
 
 	public static function getLocationSectors($gameID, $locationTypeID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID])) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM location JOIN sector USING (game_id, sector_id) WHERE location_type_id = ' . $db->escapeNumber($locationTypeID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
 			while ($db->nextRecord()) {
@@ -93,7 +93,7 @@ class SmrSector {
 	}
 
 	protected function __construct($gameID, $sectorID, $create = false, $db = null) {
-		$this->db = MySqlDatabase::getInstance();
+		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
 		// Do we already have a database query for this sector?

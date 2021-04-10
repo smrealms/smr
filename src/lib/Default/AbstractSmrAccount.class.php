@@ -36,7 +36,7 @@ abstract class AbstractSmrAccount {
 		'AttackTrader' => array('f')
 	);
 
-	protected MySqlDatabase $db;
+	protected Smr\Database $db;
 
 	protected int $account_id;
 	protected string $login;
@@ -101,7 +101,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountByName(string $login, bool $forceUpdate = false) : ?SmrAccount {
 		if (empty($login)) { return null; }
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAccount($db->getInt('account_id'), $forceUpdate);
@@ -112,7 +112,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountByEmail(?string $email, bool $forceUpdate = false) : ?SmrAccount {
 		if (empty($email)) { return null; }
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT account_id FROM account WHERE email = ' . $db->escapeString($email) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAccount($db->getInt('account_id'), $forceUpdate);
@@ -123,7 +123,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false) : ?SmrAccount {
 		if (empty($id)) { return null; }
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT account_id FROM account where discord_id = ' . $db->escapeString($id) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAccount($db->getInt('account_id'), $forceUpdate);
@@ -134,7 +134,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false) : ?SmrAccount {
 		if (empty($nick)) { return null; }
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT account_id FROM account WHERE irc_nick = ' . $db->escapeString($nick) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAccount($db->getInt('account_id'), $forceUpdate);
@@ -145,7 +145,7 @@ abstract class AbstractSmrAccount {
 
 	public static function getAccountBySocialLogin(Smr\SocialLogin\SocialLogin $social, bool $forceUpdate = false) : ?SmrAccount {
 		if (!$social->isValid()) { return null; }
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT account_id FROM account JOIN account_auth USING(account_id)
 		            WHERE login_type = '.$db->escapeString($social->getLoginType()) . '
 		              AND auth_key = '.$db->escapeString($social->getUserID()) . ' LIMIT 1');
@@ -161,7 +161,7 @@ abstract class AbstractSmrAccount {
 			// Will throw if referral account doesn't exist
 			SmrAccount::getAccount($referral);
 		}
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 		$db->query('INSERT INTO account (login, password, email, validation_code, last_login, offset, referral_id, hof_name, hotkeys) VALUES(' .
 			$db->escapeString($login) . ', ' . $db->escapeString($passwordHash) . ', ' . $db->escapeString($email) . ', ' .
@@ -169,7 +169,7 @@ abstract class AbstractSmrAccount {
 		return self::getAccountByName($login);
 	}
 
-	public static function getUserScoreCaseStatement(MySqlDatabase $db) : array {
+	public static function getUserScoreCaseStatement(Smr\Database $db) : array {
 		$userRankingTypes = array();
 		$case = 'FLOOR(SUM(CASE type ';
 		foreach (self::USER_RANKINGS_SCORE as $userRankingScore) {
@@ -182,7 +182,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	protected function __construct(int $accountID) {
-		$this->db = MySqlDatabase::getInstance();
+		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID);
 		$this->db->query('SELECT * FROM account WHERE ' . $this->SQL . ' LIMIT 1');
 
@@ -611,7 +611,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public static function doMessageSendingToBox(int $senderID, int $boxTypeID, string $message, int $gameID = 0) : void {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		// send him the message
 		$db->query('INSERT INTO message_boxes
 			(box_type_id,game_id,message_text,

@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$db2 = MySqlDatabase::getInstance();
+$db2 = Smr\Database::getInstance();
 if (isset($var['article'])) {
 	if (Request::get('action') == 'Yes') {
 		$db->query('DELETE FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));

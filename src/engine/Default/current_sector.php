@@ -148,7 +148,7 @@ function checkForForceRefreshMessage(&$msg) {
 	$msg = str_replace('[Force Check]', '', $msg, $contains);
 	if ($contains > 0) {
 		if (!$template->hasTemplateVar('ForceRefreshMessage')) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$player = Smr\Session::getInstance()->getPlayer();
 
 			$forceRefreshMessage = '';
@@ -175,7 +175,7 @@ function checkForAttackMessage(&$msg) {
 		$session = Smr\Session::getInstance();
 		$session->updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
 		if (!$template->hasTemplateVar('AttackResults')) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');
 			if ($db->nextRecord()) {
 				$player = $session->getPlayer();

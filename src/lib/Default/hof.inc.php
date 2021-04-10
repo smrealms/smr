@@ -66,7 +66,7 @@ function applyHofVisibilityMask($amount, $vis, $gameID, $accountID) {
 }
 
 function getHofRank($view, $viewType, $accountID, $gameID) {
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	// If no game specified, show total amount from completed games only
 	$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Smr\Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
 

@@ -14,7 +14,7 @@ if (!isset($var['CheckType']) || $var['CheckType'] == 'Validate') {
 
 $lastLogin = $account->getLastLogin();
 
-$db = MySqlDatabase::getInstance();
+$db = Smr\Database::getInstance();
 if ($var['CheckType'] == 'Announcements') {
 	$db->query('SELECT 1 FROM announcement WHERE time >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
 	// do we have announcements?

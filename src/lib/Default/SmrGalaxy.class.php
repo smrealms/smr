@@ -5,7 +5,7 @@ class SmrGalaxy {
 
 	const TYPES = ['Racial', 'Neutral', 'Planet'];
 
-	protected MySqlDatabase $db;
+	protected Smr\Database $db;
 	protected string $SQL;
 
 	protected int $gameID;
@@ -23,7 +23,7 @@ class SmrGalaxy {
 
 	public static function getGameGalaxies(int $gameID, bool $forceUpdate = false) : array {
 		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY galaxy_id ASC');
 			$galaxies = array();
 			while ($db->nextRecord()) {
@@ -35,7 +35,7 @@ class SmrGalaxy {
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
 
-	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, MySqlDatabase $db = null) : SmrGalaxy {
+	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, Smr\Database $db = null) : SmrGalaxy {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new SmrGalaxy($gameID, $galaxyID, false, $db);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
@@ -59,8 +59,8 @@ class SmrGalaxy {
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
 	}
 
-	protected function __construct(int $gameID, int $galaxyID, bool $create = false, MySqlDatabase $db = null) {
-		$this->db = MySqlDatabase::getInstance();
+	protected function __construct(int $gameID, int $galaxyID, bool $create = false, Smr\Database $db = null) {
+		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND galaxy_id = ' . $this->db->escapeNumber($galaxyID);
 

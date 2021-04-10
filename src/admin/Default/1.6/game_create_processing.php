@@ -57,7 +57,7 @@ $container['game_id'] = $game->getGameID();
 $container->go();
 
 function createNHA($gameID) {
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 
 	// create the Newbie Help Alliance
 	$db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`, recruiting) VALUES

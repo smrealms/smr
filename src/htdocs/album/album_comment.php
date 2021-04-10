@@ -46,7 +46,7 @@ try {
 		exit;
 	}
 
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 
 	if (!isset($_GET['comment']) || empty($_GET['comment'])) {
 		create_error_offline('Please enter a comment.');

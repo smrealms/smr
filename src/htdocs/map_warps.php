@@ -30,7 +30,7 @@ try {
 	}
 
 	// The d3 graph links are the warp connections between galaxies
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT sector_id, warp FROM sector WHERE warp !=0 AND game_id = ' . $db->escapeNumber($gameID));
 	while ($db->nextRecord()) {
 		$warp1 = SmrSector::getSector($gameID, $db->getInt('sector_id'));

@@ -21,7 +21,7 @@ try {
 	$sector = null;
 	$var = null;
 	$lock = false;
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$template = null;
 
 	// ********************************

@@ -50,7 +50,7 @@ if ($db->getNumRows() > 0) {
 		// generate list of game_id that this player is joined
 		$game_id_list[] = $game_id;
 
-		$db2 = MySqlDatabase::getInstance();
+		$db2 = Smr\Database::getInstance();
 		$db2->query('SELECT count(*) as num_playing
 					FROM player
 					WHERE last_cpl_action >= ' . $db->escapeNumber(Smr\Epoch::time() - 600) . '
@@ -195,7 +195,7 @@ $template->assign('VotingHref', $container->href());
 
 $db->query('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY end DESC');
 if ($db->getNumRows() > 0) {
-	$db2 = MySqlDatabase::getInstance();
+	$db2 = Smr\Database::getInstance();
 	$votedFor = array();
 	$db2->query('SELECT * FROM voting_results WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	while ($db2->nextRecord()) {

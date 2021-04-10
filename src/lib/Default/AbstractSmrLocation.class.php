@@ -4,7 +4,7 @@ class AbstractSmrLocation {
 	protected static $CACHE_LOCATIONS = array();
 	protected static $CACHE_SECTOR_LOCATIONS = array();
 
-	protected MySqlDatabase $db;
+	protected Smr\Database $db;
 	protected string $SQL;
 
 	protected int $typeID;
@@ -30,7 +30,7 @@ class AbstractSmrLocation {
 
 	public static function getAllLocations(bool $forceUpdate = false) : array {
 		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM location_type ORDER BY location_type_id');
 			$locations = array();
 			while ($db->nextRecord()) {
@@ -43,7 +43,7 @@ class AbstractSmrLocation {
 	}
 
 	public static function getGalaxyLocations(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT location_type.*, sector_id FROM sector LEFT JOIN location USING(game_id, sector_id) LEFT JOIN location_type USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyLocations = [];
 		while ($db->nextRecord()) {
@@ -62,7 +62,7 @@ class AbstractSmrLocation {
 
 	public static function getSectorLocations(int $gameID, int $sectorID, bool $forceUpdate = false) : array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM location JOIN location_type USING (location_type_id) WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
 			$locations = array();
 			while ($db->nextRecord()) {
@@ -76,27 +76,27 @@ class AbstractSmrLocation {
 
 	public static function addSectorLocation(int $gameID, int $sectorID, SmrLocation $location) : void {
 		self::getSectorLocations($gameID, $sectorID); // make sure cache is populated
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('INSERT INTO location (game_id, sector_id, location_type_id)
 						values(' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($sectorID) . ',' . $db->escapeNumber($location->getTypeID()) . ')');
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$location->getTypeID()] = $location;
 	}
 
 	public static function removeSectorLocations(int $gameID, int $sectorID) : void {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('DELETE FROM location WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = [];
 	}
 
-	public static function getLocation(int $locationTypeID, bool $forceUpdate = false, MySqlDatabase $db = null) : SmrLocation {
+	public static function getLocation(int $locationTypeID, bool $forceUpdate = false, Smr\Database $db = null) : SmrLocation {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
 			self::$CACHE_LOCATIONS[$locationTypeID] = new SmrLocation($locationTypeID, $db);
 		}
 		return self::$CACHE_LOCATIONS[$locationTypeID];
 	}
 
-	protected function __construct(int $locationTypeID, ?MySqlDatabase $db = null) {
-		$this->db = MySqlDatabase::getInstance();
+	protected function __construct(int $locationTypeID, ?Smr\Database $db = null) {
+		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'location_type_id = ' . $this->db->escapeNumber($locationTypeID);
 
 		if (isset($db)) {

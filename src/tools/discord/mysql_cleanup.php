@@ -16,7 +16,7 @@ function mysql_cleanup(callable $func) {
 		}
 
 		// Then, close the mysql connection to prevent timeouts
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->close();
 	};
 

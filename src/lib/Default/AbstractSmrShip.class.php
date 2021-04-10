@@ -49,7 +49,7 @@ class AbstractSmrShip {
 	public static function getBaseShip(int $shipTypeID, bool $forceUpdate = false) : array {
 		if ($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$shipTypeID])) {
 			// determine ship
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM ship_type WHERE ship_type_id = ' . $db->escapeNumber($shipTypeID) . ' LIMIT 1');
 			if ($db->nextRecord()) {
 				self::$CACHE_BASE_SHIPS[$shipTypeID] = self::buildBaseShip($db);
@@ -60,7 +60,7 @@ class AbstractSmrShip {
 		return self::$CACHE_BASE_SHIPS[$shipTypeID];
 	}
 
-	protected static function buildBaseShip(MySqlDatabase $db) : array {
+	protected static function buildBaseShip(Smr\Database $db) : array {
 		$ship = array();
 		$ship['Type'] = 'Ship';
 		$ship['Name'] = $db->getField('ship_name');
@@ -104,7 +104,7 @@ class AbstractSmrShip {
 
 
 		// get supported hardware from db
-		$db2 = MySqlDatabase::getInstance();
+		$db2 = Smr\Database::getInstance();
 		$db2->query('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
 			'WHERE ship_type_id = ' . $db2->escapeNumber($ship['ShipTypeID']) . ' ORDER BY hardware_type_id');
 
@@ -134,7 +134,7 @@ class AbstractSmrShip {
 
 	public static function getAllBaseShips() : array {
 		// determine ship
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC');
 		while ($db->nextRecord()) {
 			if (!isset(self::$CACHE_BASE_SHIPS[$db->getInt('ship_type_id')])) {

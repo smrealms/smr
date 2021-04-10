@@ -3,7 +3,7 @@
 /**
  * Takes a populated query and returns the news items.
  */
-function getNewsItems(MySqlDatabase $db) {
+function getNewsItems(Smr\Database $db) {
 	$newsItems = [];
 	while ($db->nextRecord()) {
 		$message = bbifyMessage($db->getField('news_message'));
@@ -19,7 +19,7 @@ function getNewsItems(MySqlDatabase $db) {
 }
 
 function doBreakingNewsAssign($gameID, Template $template) {
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'breaking\' AND time > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_FOR_BREAKING_NEWS) . ' ORDER BY time DESC LIMIT 1');
 	if ($db->nextRecord()) {
 		$template->assign('BreakingNews', array('Time' => $db->getInt('time'), 'Message' => bbifyMessage($db->getField('news_message'))));
@@ -29,7 +29,7 @@ function doBreakingNewsAssign($gameID, Template $template) {
 function doLottoNewsAssign($gameID, Template $template) {
 	require_once(get_file_loc('bar.inc.php'));
 	checkForLottoWinner($gameID);
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'lotto\' ORDER BY time DESC LIMIT 1');
 	if ($db->nextRecord()) {
 		 $template->assign('LottoNews', array('Time' => $db->getInt('time'), 'Message' => bbifyMessage($db->getField('news_message'))));

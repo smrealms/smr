@@ -273,7 +273,7 @@ function word_filter($string) {
 	static $words;
 
 	if (!is_array($words)) {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT word_value, word_replacement FROM word_filter');
 		$words = array();
 		while ($db->nextRecord()) {
@@ -457,7 +457,7 @@ function acquire_lock($sector) {
 
 	// Insert ourselves into the queue.
 	$session = Smr\Session::getInstance();
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber($session->getGameID()) . ',' . $db->escapeNumber($session->getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 	$lock = $db->getInsertID();
 
@@ -495,7 +495,7 @@ function release_lock() {
 	global $lock;
 
 	if ($lock) {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('DELETE from locks_queue WHERE lock_id=' . $db->escapeNumber($lock) . ' OR timestamp<' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 	}
 

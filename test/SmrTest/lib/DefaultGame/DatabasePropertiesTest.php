@@ -5,12 +5,12 @@ namespace SmrTest;
 use Dotenv\Dotenv;
 use Dotenv\Validator;
 use PHPUnit\Framework\TestCase;
-use Smr\MySqlProperties;
+use Smr\DatabaseProperties;
 
 /**
- * @covers \Smr\MySqlProperties
+ * @covers \Smr\DatabaseProperties
  */
-class MySqlPropertiesTest extends TestCase {
+class DatabasePropertiesTest extends TestCase {
 
 	public function test_validate_config_happy_path() {
 		// Given a Dotenv object
@@ -46,13 +46,13 @@ class MySqlPropertiesTest extends TestCase {
 			->willReturnSelf();
 
 		// When constructing the properties class
-		$mysqlProperties = new MySqlProperties($dotEnv);
+		$dbProperties = new DatabaseProperties($dotEnv);
 
 		// Then the properties have expected values
-		self::assertEquals('host', $mysqlProperties->getHost());
-		self::assertEquals('user', $mysqlProperties->getUser());
-		self::assertEquals('pass', $mysqlProperties->getPassword());
-		self::assertEquals('database', $mysqlProperties->getDatabaseName());
+		self::assertEquals('host', $dbProperties->getHost());
+		self::assertEquals('user', $dbProperties->getUser());
+		self::assertEquals('pass', $dbProperties->getPassword());
+		self::assertEquals('database', $dbProperties->getDatabaseName());
 	}
 
 }

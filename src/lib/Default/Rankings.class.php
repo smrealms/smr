@@ -3,7 +3,7 @@
 class Rankings {
 	private function __construct() {}
 
-	public static function collectRaceRankings(MySqlDatabase $db, AbstractSmrPlayer $player) {
+	public static function collectRaceRankings(Smr\Database $db, AbstractSmrPlayer $player) {
 		$rankings = [];
 		$rank = 0;
 		while ($db->nextRecord()) {
@@ -28,7 +28,7 @@ class Rankings {
 		return $rankings;
 	}
 
-	public static function collectAllianceRankings(MySqlDatabase $db, AbstractSmrPlayer $player, $rank) {
+	public static function collectAllianceRankings(Smr\Database $db, AbstractSmrPlayer $player, $rank) {
 		$rankings = array();
 		while ($db->nextRecord()) {
 			// increase rank counter
@@ -52,7 +52,7 @@ class Rankings {
 		return $rankings;
 	}
 
-	public static function collectRankings(MySqlDatabase $db, AbstractSmrPlayer $player, $rank) {
+	public static function collectRankings(Smr\Database $db, AbstractSmrPlayer $player, $rank) {
 		$rankings = array();
 		while ($db->nextRecord()) {
 			// increase rank counter
@@ -85,7 +85,7 @@ class Rankings {
 	 */
 	public static function playerRanks(string $stat, int $minRank = 1, int $maxRank = 10) : array {
 		$session = Smr\Session::getInstance();
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 
 		$offset = $minRank - 1;
 		$limit = $maxRank - $offset;
@@ -98,7 +98,7 @@ class Rankings {
 	 */
 	public static function allianceRanks(string $stat, int $minRank = 1, int $maxRank = 10) : array {
 		$session = Smr\Session::getInstance();
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 
 		$offset = $minRank - 1;
 		$limit = $maxRank - $offset;

@@ -40,7 +40,7 @@ $query .= ' GROUP BY thread_id ORDER BY sendtime DESC';
 $db->query($query);
 $threads = array();
 if ($db->getNumRows() > 0) {
-	$db2 = MySqlDatabase::getInstance();
+	$db2 = Smr\Database::getInstance();
 
 	$container = Page::create('alliance_message_delete_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();

@@ -49,7 +49,7 @@ class AbstractMenu {
 	public static function alliance($alliance_id) {
 		global $template;
 
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$in_alliance = ($alliance_id == $player->getAllianceID() || in_array($player->getAccountID(), Globals::getHiddenPlayers()));

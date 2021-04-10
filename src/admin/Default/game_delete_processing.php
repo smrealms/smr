@@ -3,7 +3,7 @@
 create_error('Deleting games is disabled!');
 
 // additional db objects
-$db2 = MySqlDatabase::getInstance();
+$db2 = Smr\Database::getInstance();
 
 $smr_db_sql = array();
 $history_db_sql = array();
@@ -295,8 +295,8 @@ if ($action == 'Yes') {
 
 	// don't know why exactly we have to do that,
 	// but it seems that the db is used globally instead kept to each object
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 
 }
-$db = MySqlDatabase::getInstance();
+$db = Smr\Database::getInstance();
 Page::create('skeleton.php', 'admin_tools.php')->go();

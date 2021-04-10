@@ -6,7 +6,7 @@ class GameNotFoundException extends Exception {}
 class SmrGame {
 	protected static $CACHE_GAMES = array();
 
-	protected MySqlDatabase $db;
+	protected Smr\Database $db;
 
 	protected int $gameID;
 	protected string $name;
@@ -70,7 +70,7 @@ class SmrGame {
 	}
 
 	protected function __construct(int $gameID, bool $create = false) {
-		$this->db = MySqlDatabase::getInstance();
+		$this->db = Smr\Database::getInstance();
 
 		$this->db->query('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
 		if ($this->db->nextRecord()) {

@@ -2,7 +2,7 @@
 
 function main_page() {
 	// database object
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 
 	// list of all first letter nicks
 	create_link_list();
@@ -60,7 +60,7 @@ function main_page() {
 }
 
 function album_entry($album_id) {
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$session = Smr\Session::getInstance();
 
 	// list of all first letter nicks

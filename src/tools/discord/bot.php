@@ -44,7 +44,7 @@ require_once('commands/8ball.php');
 
 // Close the connection we may have opened during startup
 // to avoid a mysql timeout.
-$db = MySqlDatabase::getInstance();
+$db = Smr\Database::getInstance();
 $db->close();
 
 $discord->run();

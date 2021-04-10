@@ -5,8 +5,8 @@ function modifyRelations(int $race_id_1, int $gameID) : void {
 	// Process any votes that ended prior to the start of today
 	$endtime = strtotime(date('Y-m-d'));
 
-	$db = MySqlDatabase::getInstance();
-	$db2 = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
+	$db2 = Smr\Database::getInstance();
 
 	$db->query('SELECT * FROM player_votes_relation
 				WHERE time < '.$db->escapeNumber($endtime) . '
@@ -56,8 +56,8 @@ function modifyRelations(int $race_id_1, int $gameID) : void {
 
 function checkPacts(int $race_id_1, int $gameID) {
 
-	$db = MySqlDatabase::getInstance();
-	$db2 = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
+	$db2 = Smr\Database::getInstance();
 
 	$db->query('SELECT * FROM race_has_voting
 				WHERE end_time < ' . $db->escapeNumber(Smr\Epoch::time()) . '

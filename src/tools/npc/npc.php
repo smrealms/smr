@@ -74,7 +74,7 @@ const SHIP_UPGRADE_PATH = array(
 
 
 try {
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	debug('Script started');
 
 	// Make sure NPC's have been set up in the database
@@ -103,7 +103,7 @@ function NPCStuff() {
 	$actions = -1;
 
 	$session = Smr\Session::getInstance();
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 
 	while (true) {
 		// Clear the $_REQUEST global, in case we had set it, to avoid
@@ -318,7 +318,7 @@ function debug($message, $debugObject = null) {
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL.var_export($debugObject, true) : '') . EOL;
 	if (NPC_LOG_TO_DATABASE) {
 		$accountID = Smr\Session::getInstance()->getAccountID();
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . $accountID() . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
 
 		// On the first call to debug, we need to update the script_id retroactively
@@ -361,7 +361,7 @@ function releaseNPC() {
 		return;
 	}
 	$login = $session->getAccount()->getLogin();
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(false) . ' WHERE login=' . $db->escapeString($login));
 	if ($db->getChangedRows() > 0) {
 		debug('Released NPC: ' . $login);
@@ -398,7 +398,7 @@ function changeNPCLogin() {
 	debug('Choosing new NPC');
 	static $availableNpcs = null;
 
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$session = Smr\Session::getInstance();
 
 	if (is_null($availableNpcs)) {
@@ -627,7 +627,7 @@ function &findRoutes($player) {
 	$startSectorID = $galaxy->getStartSector();
 	$endSectorID = $galaxy->getEndSector();
 
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT routes FROM route_cache WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND max_ports=' . $db->escapeNumber($maxNumberOfPorts) . ' AND goods_allowed=' . $db->escapeObject($tradeGoods) . ' AND races_allowed=' . $db->escapeObject($tradeRaces) . ' AND start_sector_id=' . $db->escapeNumber($startSectorID) . ' AND end_sector_id=' . $db->escapeNumber($endSectorID) . ' AND routes_for_port=' . $db->escapeNumber($routesForPort) . ' AND max_distance=' . $db->escapeNumber($maxDistance));
 	if ($db->nextRecord()) {
 		$routes = $db->getObject('routes', true);
