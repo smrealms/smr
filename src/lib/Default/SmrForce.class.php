@@ -406,7 +406,9 @@ class SmrForce {
 	}
 
 	protected function getDropContainer() {
-		return array('url' => 'forces_drop_processing.php', 'owner_id' => $this->getOwnerID());
+		$container = Page::create('forces_drop_processing.php');
+		$container['owner_id'] = $this->getOwnerID();
+		return $container;
 	}
 
 	public function getDropSDHREF() {
