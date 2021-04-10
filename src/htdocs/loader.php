@@ -54,7 +54,7 @@ try {
 	}
 
 	// do we have such a container object in the db?
-	if (!($var = $session->retrieveVar($sn))) {
+	if ($session->findCurrentVar($sn) === false) {
 		if (!USING_AJAX) {
 			require_once(get_file_loc('smr.inc.php'));
 			create_error('Please avoid using the back button!');
@@ -62,6 +62,7 @@ try {
 			exit;
 		}
 	}
+	$var = $session->getCurrentVar();
 
 	// Determine where to load game scripts from (in case we need a special
 	// game script from outside the current Smr\Session game).

@@ -227,10 +227,10 @@ class Session {
 	}
 
 	/**
-	 * Retrieve the session var for the page given by $sn.
-	 * If $sn is not specified, use the current page (i.e. $this->SN).
+	 * Check if the session has a var associated with the given $sn.
+	 * If $sn is not specified, use the current SN (i.e. $this->SN).
 	 */
-	public function retrieveVar(string $sn = null) : Page|false {
+	public function findCurrentVar(string $sn = null) : bool {
 		if (is_null($sn)) {
 			$sn = $this->SN;
 		}
@@ -246,7 +246,16 @@ class Session {
 		}
 
 		$this->var[$sn]['RemainingPageLoads'] += 1; // Allow refreshing
-		return $this->var[$sn];
+
+		return true;
+	}
+
+	/**
+	 * Returns the session var associated with the current SN.
+	 * Must be called after Session::findCurrentVar sets the current SN.
+	 */
+	public function getCurrentVar() : Page {
+		return $this->var[$this->SN];
 	}
 
 	/**
