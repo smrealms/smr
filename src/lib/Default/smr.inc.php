@@ -304,7 +304,7 @@ function pluralise($word, $count = 0) {
  * (see loader.php for the initialization of the globals).
  */
 function do_voodoo() {
-	global $lock, $var, $sector;
+	global $lock, $var;
 
 	if (!defined('AJAX_CONTAINER')) {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
@@ -370,8 +370,6 @@ function do_voodoo() {
 			Page::create('death_processing.php')->go();
 		}
 
-		$sector = $player->getSector();
-
 		// update turns on that player
 		$player->updateTurns();
 
@@ -411,7 +409,7 @@ function do_voodoo() {
 
 	$template->assign('TemplateBody', $var['body']);
 	if ($session->hasGame()) {
-		$template->assign('ThisSector', $sector);
+		$template->assign('ThisSector', $player->getSector());
 		$template->assign('ThisPlayer', $player);
 		$template->assign('ThisShip', $player->getShip());
 	}
@@ -419,7 +417,7 @@ function do_voodoo() {
 	if ($account->getCssLink() != null) {
 		$template->assign('ExtraCSSLink', $account->getCssLink());
 	}
-	doSkeletonAssigns($template, $sector, $db, $var);
+	doSkeletonAssigns($template, $db, $var);
 
 	// Set ajax refresh time
 	$ajaxRefresh = $var['AllowAjax'] ?? true; // hack for bar_gambling_processing.php
@@ -531,7 +529,7 @@ function doTickerAssigns($template, $player, $db) {
 	}
 }
 
-function doSkeletonAssigns($template, $sector, $db, $var) {
+function doSkeletonAssigns($template, $db, $var) {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
 

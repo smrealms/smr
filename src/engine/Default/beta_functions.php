@@ -4,6 +4,8 @@ if (!ENABLE_BETA) {
 }
 
 $template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$sector = $session->getPlayer()->getSector();
 
 $template->assign('PageTopic', 'Beta Functions');
 

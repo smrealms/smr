@@ -2,6 +2,7 @@
 
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
+$sector = $player->getSector();
 
 if (isset($var['RealX'])) {
 	// This is only used by NPC's

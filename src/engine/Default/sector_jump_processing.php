@@ -2,6 +2,7 @@
 
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
+$sector = $player->getSector();
 
 if (!$player->getGame()->hasStarted()) {
 	create_error('You cannot move until the game has started!');

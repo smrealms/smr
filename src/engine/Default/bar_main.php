@@ -5,7 +5,7 @@ $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 //first check if there is a bar here
-if (!$sector->hasBar()) {
+if (!$player->getSector()->hasBar()) {
 	create_error('So two guys walk into this bar...');
 }
 

@@ -4,6 +4,7 @@ require_once(LIB . 'Default/shop_goods.inc.php');
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 $ship = $player->getShip();
+$sector = $player->getSector();
 
 $amount = Request::getVarInt('amount');
 // no negative amounts are allowed

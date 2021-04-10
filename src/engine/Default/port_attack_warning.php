@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$sector = $session->getPlayer()->getSector();
+
 if (!$sector->hasPort()) {
 	create_error('This sector does not have a port.');
 }

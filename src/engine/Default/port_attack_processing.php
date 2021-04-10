@@ -4,6 +4,7 @@ $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 $player = $session->getPlayer();
 $ship = $player->getShip();
+$sector = $player->getSector();
 
 if ($player->hasNewbieTurns()) {
 	create_error('You are under newbie protection!');

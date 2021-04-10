@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
+$sector = $player->getSector();
 
 // If on a planet, forward to planet_main.php
 if ($player->isLandedOnPlanet()) {

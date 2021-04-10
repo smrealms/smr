@@ -70,7 +70,7 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 }
 
 $player->actionTaken('BuyDrink', array(
-	'SectorID' => $sector->getSectorID(),
+	'SectorID' => $player->getSectorID(),
 	'Drink' => $drinkName
 ));
 

@@ -12,7 +12,7 @@ if ($player->isLandedOnPlanet()) {
 	create_error('You must first launch to drop forces!');
 }
 
-if ($sector->hasLocation()) {
+if ($player->getSector()->hasLocation()) {
 	create_error('You can\'t drop forces in a sector with a location!');
 }
 

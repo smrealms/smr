@@ -3,6 +3,7 @@
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 $player = $session->getPlayer();
+$sector = $player->getSector();
 
 if ($player->hasNewbieTurns()) {
 	create_error('You are under newbie protection.');
