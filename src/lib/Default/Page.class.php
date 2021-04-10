@@ -177,9 +177,10 @@ class Page extends ArrayObject {
 		global $var;
 
 		// transfer this value to next container
-		if (isset($var[$what])) {
-			$this[$what] = $var[$what];
+		if (!isset($var[$what])) {
+			throw new Exception('Could not find "' . $what . '" in var!');
 		}
+		$this[$what] = $var[$what];
 	}
 
 	/**

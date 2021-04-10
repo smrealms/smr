@@ -74,4 +74,14 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame($expected, $page->getArrayCopy());
 	}
 
+	public function test_addVar_missing_source_raises() {
+		// Create an arbitrary Page
+		$page = Page::create('file');
+
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Could not find "does_not_exist" in var!');
+		$page->addVar('does_not_exist');
+	}
+
+
 }
