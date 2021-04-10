@@ -10,6 +10,7 @@ if ($player->isDraftLeader()) {
 	);
 
 	// Reset Links with the added Draft option
+	$template = Smr\Template::getInstance();
 	$template->unassign('Links');
 	$template->assign('Links', $links);
 }

@@ -2,5 +2,6 @@
 
 require('planet.inc.php');
 
+$template = Smr\Template::getInstance();
 $template->assign('BondDuration', format_time($planet->getBondTime()));
 $template->assign('ReturnHREF', $planet->getFinancesHREF());

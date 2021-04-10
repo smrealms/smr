@@ -21,7 +21,6 @@ try {
 	$sector = null;
 	$var = null;
 	$lock = false;
-	$template = null;
 
 	// ********************************
 	// *

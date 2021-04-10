@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Deleting A Game');
 
 $container = Page::create('skeleton.php', 'game_delete_confirm.php');

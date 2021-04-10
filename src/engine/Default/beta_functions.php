@@ -3,6 +3,8 @@ if (!ENABLE_BETA) {
 	create_error('Beta functions are disabled.');
 }
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Beta Functions');
 
 // container for all links

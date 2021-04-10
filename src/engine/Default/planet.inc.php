@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 // Common code for all the planet display pages
 
+$template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 

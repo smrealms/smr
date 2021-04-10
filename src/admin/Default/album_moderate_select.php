@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Moderate Photo Album');
 
 require_once(LIB . 'Album/album_functions.php');

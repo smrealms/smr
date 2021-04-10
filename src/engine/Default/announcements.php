@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
 $db = Smr\Database::getInstance();
 
 $template->assign('PageTopic', 'Announcements');

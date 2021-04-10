@@ -237,7 +237,7 @@ class Page extends ArrayObject {
 	 * synchronized with `do_voodoo`).
 	 */
 	public function process() : void {
-		global $lock, $var, $ship, $sector, $template;
+		global $lock, $var, $ship, $sector;
 		if ($this['url'] != 'skeleton.php') {
 			require(get_file_loc($this['url']));
 		}

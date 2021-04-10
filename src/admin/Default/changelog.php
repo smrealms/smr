@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Change Log');
 
 $template->assign('ChangeTitle', $var['change_title'] ?? '');

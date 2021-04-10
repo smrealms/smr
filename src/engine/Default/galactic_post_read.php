@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 Menu::galactic_post();
 
 if (!empty($var['paper_id'])) {

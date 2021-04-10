@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $processingHREF = Page::create('game_status_processing.php')->href();
 $template->assign('ProcessingHREF', $processingHREF);
 

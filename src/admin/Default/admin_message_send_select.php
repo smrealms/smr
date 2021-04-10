@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Send Admin Message');
 
 $template->assign('AdminMessageChooseGameFormHref', Page::create('skeleton.php', 'admin_message_send.php')->href());

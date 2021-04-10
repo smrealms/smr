@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $raceName = Globals::getRaceName($var['race_id']);
 $template->assign('RaceName', $raceName);
 

@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
-$template->assign('PageTopic', 'Voting');
 
+$template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
+
+$template->assign('PageTopic', 'Voting');
 
 $db = Smr\Database::getInstance();
 $db->query('SELECT * FROM voting ORDER BY end DESC');

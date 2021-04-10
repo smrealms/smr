@@ -147,10 +147,6 @@ All pages are called with the following variables available (there may be more)
 $var contains all information passed using the $container from the previous page.
 This *can* be assigned to, but only using Smr\Session::updateVar($name, $value)
 
-### $template
-The global instance of the Template class should be the _only_ instance, and
-it is used to assign variables for display processing.
-
 ### $ship
 _[Scope: in game]_ This contains the current SmrShip object and should not be
 assigned to.

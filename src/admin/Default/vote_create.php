@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Create Vote');
 
 $template->assign('VoteFormHREF', Page::create('vote_create_processing.php', '')->href());

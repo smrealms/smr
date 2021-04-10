@@ -21,4 +21,5 @@ foreach (Globals::getGoods() as $goodID => $good) {
 	);
 }
 
+$template = Smr\Template::getInstance();
 $template->assign('GoodInfo', $goodInfo);

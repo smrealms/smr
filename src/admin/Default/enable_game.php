@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Enable New Games');
 
 // If we have just forwarded from the processing file, pass its message.

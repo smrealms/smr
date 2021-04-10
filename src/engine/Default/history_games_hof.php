@@ -2,6 +2,7 @@
 
 // NOTE: this is only for history database games
 
+$template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 

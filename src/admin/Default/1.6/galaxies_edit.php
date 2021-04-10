@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $game = SmrGame::getGame($var['game_id']);
 $template->assign('PageTopic', 'Edit Galaxies : ' . $game->getDisplayName());
 $template->assign('GameEnabled', $game->isEnabled());

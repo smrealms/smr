@@ -1,4 +1,7 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic','Combat Simulator');
 
 $template->assign('EditDummysLink', Page::create('skeleton.php','edit_dummys.php')->href());

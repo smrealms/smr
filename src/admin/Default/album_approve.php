@@ -8,6 +8,8 @@ function get_album_nick($album_id) {
 	return SmrAccount::getAccount($album_id)->getHofDisplayName();
 }
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Approve Album Entries');
 
 $db = Smr\Database::getInstance();

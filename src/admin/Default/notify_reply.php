@@ -1,4 +1,7 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Reply To Reported Messages');
 
 require_once(get_file_loc('messages.inc.php'));

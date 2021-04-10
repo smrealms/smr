@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 if (isset($var['results'])) {
 	$template->assign('FullPortCombatResults', $var['results']);
 	$template->assign('AlreadyDestroyed', false);

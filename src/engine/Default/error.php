@@ -10,6 +10,7 @@ if (Smr\Session::getInstance()->hasGame() && $lock) {
 	$container['errorMsg'] = $errorMsg;
 	$container->go();
 } else {
+	$template = Smr\Template::getInstance();
 	$template->assign('PageTopic', 'Error');
 	$template->assign('Message', $var['message']);
 }
