@@ -35,6 +35,7 @@ $template->assign('ShipsSold', $shipsSold);
 $template->assign('ShipsSoldHREF', $shipsSoldHREF);
 
 if (isset($var['ship_id'])) {
+	$ship = $player->getShip();
 	$compareShip = $shipsSold[$var['ship_id']];
 	$compareShip['RealSpeed'] = $compareShip['Speed'] * $player->getGame()->getGameSpeed();
 	$compareShip['Turns'] = round($player->getTurns() * $compareShip['Speed'] / $ship->getSpeed());

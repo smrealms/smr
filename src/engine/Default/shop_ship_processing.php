@@ -2,6 +2,7 @@
 
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
+$ship = $player->getShip();
 
 $shipID = $var['ship_id'];
 $newShip = AbstractSmrShip::getBaseShip($shipID);

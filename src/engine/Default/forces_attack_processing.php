@@ -2,6 +2,7 @@
 
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
+$ship = $player->getShip();
 
 $forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 $forceOwner = $forces->getOwner();

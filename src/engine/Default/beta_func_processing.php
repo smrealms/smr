@@ -2,6 +2,7 @@
 
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
+$ship = $player->getShip();
 
 if ($var['func'] == 'Map') {
 	$account_id = $player->getAccountID();

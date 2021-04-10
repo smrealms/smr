@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
+$ship = $player->getShip();
 
 $template->assign('PageTopic', 'Trader Status');
 

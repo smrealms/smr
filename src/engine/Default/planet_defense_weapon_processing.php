@@ -19,6 +19,7 @@ if (Request::has('transfer')) {
 		create_error('You must select a weapon to transfer!');
 	}
 	$shipOrderID = Request::getInt('ship_order' . $planetOrderID);
+	$ship = $player->getShip();
 	$weapon = $ship->getWeapons()[$shipOrderID];
 	$planet->addMountedWeapon($weapon, $planetOrderID);
 	$ship->removeWeapon($shipOrderID);

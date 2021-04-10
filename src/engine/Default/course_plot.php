@@ -14,7 +14,7 @@ $template->assign('PlotCourseFormLink', $container->href());
 $container['url'] = 'course_plot_nearest_processing.php';
 $template->assign('PlotNearestFormLink', $container->href());
 
-if ($ship->hasJump()) {
+if ($player->getShip()->hasJump()) {
 	$container = Page::create('sector_jump_processing.php');
 	$container['target_page'] = 'current_sector.php';
 	$template->assign('JumpDriveFormLink', $container->href());

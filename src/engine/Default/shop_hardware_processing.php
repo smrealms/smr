@@ -2,6 +2,7 @@
 
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
+$ship = $player->getShip();
 
 $action = Request::get('action');
 $amount = Request::getInt('amount');

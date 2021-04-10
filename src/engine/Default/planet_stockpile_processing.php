@@ -2,6 +2,7 @@
 
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
+$ship = $player->getShip();
 
 if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');

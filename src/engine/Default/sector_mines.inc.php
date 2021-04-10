@@ -11,6 +11,7 @@ foreach ($sectorForces as $forces) {
 }
 
 if ($mine_owner_id) {
+	$ship = $player->getShip();
 	if ($player->hasNewbieTurns() || $ship->getShipClassID() === SmrShip::SHIP_CLASS_SCOUT) {
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
 		$player->takeTurns($turns, $turns);

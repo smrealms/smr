@@ -304,7 +304,7 @@ function pluralise($word, $count = 0) {
  * (see loader.php for the initialization of the globals).
  */
 function do_voodoo() {
-	global $lock, $var, $ship, $sector;
+	global $lock, $var, $sector;
 
 	if (!defined('AJAX_CONTAINER')) {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
@@ -334,7 +334,6 @@ function do_voodoo() {
 
 	$db = Smr\Database::getInstance();
 
-	// initialize objects we usually need, like player, ship
 	if ($session->hasGame()) {
 		if (SmrGame::getGame($session->getGameID())->hasEnded()) {
 			Page::create('game_leave_processing.php', 'game_play.php', array('errorMsg' => 'The game has ended.'))->go();
@@ -371,7 +370,6 @@ function do_voodoo() {
 			Page::create('death_processing.php')->go();
 		}
 
-		$ship = $player->getShip();
 		$sector = $player->getSector();
 
 		// update turns on that player
@@ -415,13 +413,13 @@ function do_voodoo() {
 	if ($session->hasGame()) {
 		$template->assign('ThisSector', $sector);
 		$template->assign('ThisPlayer', $player);
-		$template->assign('ThisShip', $ship);
+		$template->assign('ThisShip', $player->getShip());
 	}
 	$template->assign('ThisAccount', $account);
 	if ($account->getCssLink() != null) {
 		$template->assign('ExtraCSSLink', $account->getCssLink());
 	}
-	doSkeletonAssigns($template, $ship, $sector, $db, $var);
+	doSkeletonAssigns($template, $sector, $db, $var);
 
 	// Set ajax refresh time
 	$ajaxRefresh = $var['AllowAjax'] ?? true; // hack for bar_gambling_processing.php
@@ -533,7 +531,7 @@ function doTickerAssigns($template, $player, $db) {
 	}
 }
 
-function doSkeletonAssigns($template, $ship, $sector, $db, $var) {
+function doSkeletonAssigns($template, $sector, $db, $var) {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
 
@@ -691,6 +689,7 @@ function doSkeletonAssigns($template, $ship, $sector, $db, $var) {
 		// ******* Forces *******
 		$template->assign('ForceDropLink', Page::create('skeleton.php', 'forces_drop.php')->href());
 
+		$ship = $player->getShip();
 		if ($ship->hasMines()) {
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();

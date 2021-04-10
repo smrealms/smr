@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$ship = $session->getPlayer()->getShip();
+
 if (isset($var['Up']) && is_numeric($var['Up'])) {
 	$ship->moveWeaponUp($var['Up']);
 }

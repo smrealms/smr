@@ -2,6 +2,7 @@
 
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
+$ship = $player->getShip();
 
 if ($player->getNewbieTurns() > 0) {
 	create_error('You can\'t take/drop forces under newbie protection!');
