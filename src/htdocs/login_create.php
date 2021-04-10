@@ -3,7 +3,7 @@
 try {
 	require_once('../bootstrap.php');
 
-	$template = new Template();
+	$template = Smr\Template::getInstance();
 	$template->assign('Body', 'login/login_create.php');
 	$template->display('login/skeleton.php');
 

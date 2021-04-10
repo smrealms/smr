@@ -51,7 +51,7 @@ try {
 	}
 
 	// Initialize the template
-	$template = new Template();
+	$template = Smr\Template::getInstance();
 
 	// Set temporary options
 	if ($player->hasAlliance()) {

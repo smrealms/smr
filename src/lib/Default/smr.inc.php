@@ -386,7 +386,7 @@ function do_voodoo() {
 	}
 
 	// Initialize the template
-	$template = new Template();
+	$template = Smr\Template::getInstance();
 
 	// Execute the engine files.
 	// This is where the majority of the page-specific work is performed.

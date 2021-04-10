@@ -1,5 +1,16 @@
 <?php declare(strict_types=1);
 
+namespace Smr;
+
+use DOMDocument;
+use DOMNode;
+use DOMXpath;
+use Exception;
+use Globals;
+use Smr\Container\DiContainer;
+use Smr\Session;
+use SmrAccount;
+
 class Template {
 	private $data = array();
 	private $ignoreMiddle = false;
@@ -9,6 +20,15 @@ class Template {
 	private $displayCalled = false;
 	private $listjsInclude = null;
 	private $jsSources = [];
+
+	/**
+	 * Return the Smr\Template in the DI container.
+	 * If one does not exist yet, it will be created.
+	 * This is the intended way to construct this class.
+	 */
+	public static function getInstance() : self {
+		return DiContainer::get(self::class);
+	}
 
 	public function __destruct() {
 		if (!$this->displayCalled && !empty($this->data)) {
@@ -58,7 +78,7 @@ class Template {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$output = '<all>' . $ajaxXml . '</all>';
 			}
-			$session = Smr\Session::getInstance();
+			$session = Session::getInstance();
 			$session->saveAjaxReturns();
 		}
 
@@ -83,7 +103,7 @@ class Template {
 			$templateDir .= 'Default/';
 		}
 
-		$session = Smr\Session::getInstance();
+		$session = Session::getInstance();
 		if ($session->hasGame()) {
 			$gameDir = Globals::getGameType($session->getGameID()) . '/';
 		} else {
@@ -179,7 +199,7 @@ class Template {
 	}
 
 	protected function addJavascriptAlert($string) {
-		$session = Smr\Session::getInstance();
+		$session = Session::getInstance();
 		if (!$session->addAjaxReturns('ALERT:' . $string, $string)) {
 			$this->jsAlerts[] = $string;
 		}
@@ -197,7 +217,7 @@ class Template {
 			return '';
 		}
 
-		$session = Smr\Session::getInstance();
+		$session = Session::getInstance();
 
 		// To get inner html, we need to construct a separate DOMDocument.
 		// See PHP Bug #76285.

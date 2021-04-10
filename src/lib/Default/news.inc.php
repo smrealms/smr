@@ -18,7 +18,7 @@ function getNewsItems(Smr\Database $db) {
 	return $newsItems;
 }
 
-function doBreakingNewsAssign($gameID, Template $template) {
+function doBreakingNewsAssign($gameID, Smr\Template $template) {
 	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'breaking\' AND time > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_FOR_BREAKING_NEWS) . ' ORDER BY time DESC LIMIT 1');
 	if ($db->nextRecord()) {
@@ -26,7 +26,7 @@ function doBreakingNewsAssign($gameID, Template $template) {
 	}
 }
 
-function doLottoNewsAssign($gameID, Template $template) {
+function doLottoNewsAssign($gameID, Smr\Template $template) {
 	require_once(get_file_loc('bar.inc.php'));
 	checkForLottoWinner($gameID);
 	$db = Smr\Database::getInstance();

@@ -10,6 +10,7 @@ use Smr\Database;
 use Smr\DatabaseProperties;
 use Smr\Epoch;
 use Smr\Session;
+use Smr\Template;
 use function DI\autowire;
 
 /**
@@ -48,6 +49,7 @@ class DiContainer {
 			DatabaseProperties::class => autowire(),
 			Database::class => autowire(),
 			Session::class => autowire(),
+			Template::class => autowire(),
 		];
 	}
 

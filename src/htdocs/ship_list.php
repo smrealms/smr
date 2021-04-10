@@ -2,7 +2,7 @@
 try {
 	require_once('../bootstrap.php');
 
-	$template = new Template();
+	$template = Smr\Template::getInstance();
 
 	foreach (SmrShip::getAllBaseShips() as $ship) {
 		$shipArray[] = buildShipStats($ship);

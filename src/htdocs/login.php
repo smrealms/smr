@@ -23,7 +23,7 @@ try {
 		exit;
 	}
 
-	$template = new Template();
+	$template = Smr\Template::getInstance();
 	if (Request::has('msg')) {
 		$template->assign('Message', htmlentities(trim(Request::get('msg')), ENT_COMPAT, 'utf-8'));
 	} elseif (Request::has('status')) {

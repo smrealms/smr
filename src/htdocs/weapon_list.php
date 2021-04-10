@@ -2,7 +2,7 @@
 try {
 	require_once('../bootstrap.php');
 
-	$template = new Template();
+	$template = Smr\Template::getInstance();
 
 	// Get a list of all the shops that sell each weapon
 	$weaponLocs = [];

@@ -13,7 +13,7 @@ try {
 	}
 	$socialLogin = $_SESSION['socialLogin'];
 
-	$template = new Template();
+	$template = Smr\Template::getInstance();
 	$template->assign('SocialLogin', $socialLogin);
 
 	// Pre-populate the login field if an account with this email exists.
