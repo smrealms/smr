@@ -133,7 +133,7 @@ function displayHOFRow($rank, $accountID, $amount) {
 	$container['account_id'] = $accountID;
 
 	if (isset($var['game_id'])) {
-		$container['game_id'] = $var['game_id'];
+		$container->addVar('game_id');
 	}
 
 	if (isset($hofPlayer) && is_object($hofPlayer)) {

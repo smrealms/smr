@@ -23,7 +23,7 @@ class AbstractMenu {
 
 		$menuItems = [];
 		$container = Page::create('skeleton.php');
-		$container['LocationID'] = $var['LocationID'];
+		$container->addVar('LocationID');
 		foreach ($links as $link) {
 			$container['body'] = $link[0];
 			$menuItems[] = [
@@ -121,12 +121,11 @@ class AbstractMenu {
 	}
 
 	public static function history_games($selected_index) {
-		global $var;
 		$menuItems = [];
 		$container = Page::create('skeleton.php', 'history_games.php');
-		$container['HistoryDatabase'] = $var['HistoryDatabase'];
-		$container['view_game_id'] = $var['view_game_id'];
-		$container['game_name'] = $var['game_name'];
+		$container->addVar('HistoryDatabase');
+		$container->addVar('view_game_id');
+		$container->addVar('game_name');
 		$menuItems[] = [
 			'Link' => $container->href(),
 			'Text' => 'Game Details',

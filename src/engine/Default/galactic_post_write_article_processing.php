@@ -15,7 +15,7 @@ if (Request::get('action') == 'Preview article') {
 	$container['PreviewTitle'] = $title;
 	$container['Preview'] = $message;
 	if (isset($var['id'])) {
-		$container['id'] = $var['id'];
+		$container->addVar('id');
 	}
 	$container->go();
 }

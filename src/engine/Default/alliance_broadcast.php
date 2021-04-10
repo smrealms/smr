@@ -9,7 +9,7 @@ $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
 $container = Page::create('message_send_processing.php');
-$container['alliance_id'] = $var['alliance_id'];
+$container->addVar('alliance_id');
 $template->assign('MessageSendFormHref', $container->href());
 
 $template->assign('Receiver', 'Whole Alliance');

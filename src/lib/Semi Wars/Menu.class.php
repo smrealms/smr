@@ -19,7 +19,7 @@ class Menu extends AbstractMenu {
 
 		$menuItems = [];
 		$container = Page::create('skeleton.php');
-		$container['LocationID'] = $var['LocationID'];
+		$container->addVar('LocationID');
 		foreach ($links as $link) {
 			$container['body'] = $link[0];
 			$menuItems[] = [

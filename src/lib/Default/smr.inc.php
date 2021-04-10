@@ -418,7 +418,7 @@ function do_voodoo() {
 	if ($account->getCssLink() != null) {
 		$template->assign('ExtraCSSLink', $account->getCssLink());
 	}
-	doSkeletonAssigns($template, $db, $var);
+	doSkeletonAssigns($template, $db);
 
 	// Set ajax refresh time
 	$ajaxRefresh = $var['AllowAjax'] ?? true; // hack for bar_gambling_processing.php
@@ -530,7 +530,7 @@ function doTickerAssigns($template, $player, $db) {
 	}
 }
 
-function doSkeletonAssigns($template, $db, $var) {
+function doSkeletonAssigns($template, $db) {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
 
@@ -693,14 +693,14 @@ function doSkeletonAssigns($template, $db, $var) {
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_mines'] = 1;
-			$container['referrer'] = $var['body'];
+			$container->addVar('body', 'referrer');
 			$template->assign('DropMineLink', $container->href());
 		}
 		if ($ship->hasCDs()) {
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_combat_drones'] = 1;
-			$container['referrer'] = $var['body'];
+			$container->addVar('body', 'referrer');
 			$template->assign('DropCDLink', $container->href());
 		}
 
@@ -708,7 +708,7 @@ function doSkeletonAssigns($template, $db, $var) {
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_scout_drones'] = 1;
-			$container['referrer'] = $var['body'];
+			$container->addVar('body', 'referrer');
 			$template->assign('DropSDLink', $container->href());
 		}
 

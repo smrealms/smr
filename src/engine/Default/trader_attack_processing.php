@@ -87,7 +87,7 @@ $container = Page::create('skeleton.php', 'trader_attack.php');
 
 // If their target is dead there is no continue attack button
 if (!$targetPlayer->isDead()) {
-	$container['target'] = $var['target'];
+	$container->addVar('target');
 } else {
 	$container['target'] = 0;
 }

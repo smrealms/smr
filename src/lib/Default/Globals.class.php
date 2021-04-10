@@ -483,23 +483,20 @@ class Globals {
 	}
 
 	public static function getBarMainHREF() {
-		global $var;
 		$container = Page::create('skeleton.php', 'bar_main.php');
-		$container['LocationID'] = $var['LocationID'];
+		$container->addVar('LocationID');
 		return $container->href();
 	}
 
 	public static function getBarLottoPlayHREF() {
-		global $var;
 		$container = Page::create('skeleton.php', 'bar_lotto_buy.php');
-		$container['LocationID'] = $var['LocationID'];
+		$container->addVar('LocationID');
 		return $container->href();
 	}
 
 	public static function getBarBlackjackHREF() {
-		global $var;
 		$container = Page::create('skeleton.php', 'bar_gambling_bet.php');
-		$container['LocationID'] = $var['LocationID'];
+		$container->addVar('LocationID');
 		return $container->href();
 	}
 

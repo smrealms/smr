@@ -36,7 +36,7 @@ if (!isset($var['box_type_id'])) {
 	$messages = array();
 	if ($db->getNumRows()) {
 		$container = Page::create('box_delete_processing.php');
-		$container['box_type_id'] = $var['box_type_id'];
+		$container->addVar('box_type_id');
 		$template->assign('DeleteHREF', $container->href());
 		while ($db->nextRecord()) {
 			$gameID = $db->getInt('game_id');

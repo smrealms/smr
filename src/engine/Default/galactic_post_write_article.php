@@ -8,7 +8,7 @@ Menu::galactic_post();
 $container = Page::create('galactic_post_write_article_processing.php');
 
 if (isset($var['id'])) {
-	$container['id'] = $var['id'];
+	$container->addVar('id');
 	$template->assign('PageTopic', 'Editing An Article');
 	if (!isset($var['Preview'])) {
 		$db = Smr\Database::getInstance();

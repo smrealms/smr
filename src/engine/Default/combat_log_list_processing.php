@@ -5,7 +5,7 @@
 if (!Request::has('id')) {
 	$container = Page::create('skeleton.php', 'combat_log_list.php');
 	$container['message'] = 'You must select at least one combat log!';
-	$container['action'] = $var['old_action'];
+	$container->addVar('old_action', 'action');
 	$container->go();
 }
 
@@ -46,7 +46,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 	// Now that the logs have been saved/deleted, go back to the log list
 	$container = Page::create('skeleton.php', 'combat_log_list.php');
 	$container['message'] = $submitAction . 'd ' . $db->getChangedRows() . ' new logs.';
-	$container['action'] = $var['old_action'];
+	$container->addVar('old_action', 'action');
 	$container->go();
 } elseif ($submitAction == 'View') {
 	$container = Page::create('skeleton.php', 'combat_log_viewer.php');

@@ -42,7 +42,7 @@ while ($db->nextRecord()) {
 
 // Get links to other pages
 $container = Page::create('skeleton.php', '1.6/universe_create_warps.php');
-$container['game_id'] = $var['game_id'];
+$container->addVar('game_id');
 $galLinks = array();
 foreach ($galaxies as $gal) {
 	$container['gal_on'] = $gal->getGalaxyID();
