@@ -74,6 +74,25 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame($expected, $page->getArrayCopy());
 	}
 
+	public function test_addVar() {
+		$page = Page::create('file');
+
+		// Unset the global $var in case it has been set elsewhere
+		global $var;
+		$var = Page::create('other');
+		$var['index1'] = 'value1';
+		$var['index2'] = 'value2';
+
+		// Using the default $dest in addVar should reuse $source
+		$page->addVar('index1');
+		self::assertSame('value1', $page['index1']);
+
+		// Specifying $dest should change the index in $page
+		$page->addVar('index2', 'index3');
+		self::assertSame('value2', $page['index3']);
+		self::assertFalse(isset($page['index2']));
+	}
+
 	public function test_addVar_missing_source_raises() {
 		// Create an arbitrary Page
 		$page = Page::create('file');

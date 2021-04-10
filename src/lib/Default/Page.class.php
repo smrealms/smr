@@ -171,16 +171,20 @@ class Page extends ArrayObject {
 	}
 
 	/**
-	 * Transfer data from $var into this container.
+	 * Transfer $var[$source] into this container with new name $dest.
+	 * If $dest is not specified, keep the index named $source.
 	 */
-	public function addVar(string $what) : void {
+	public function addVar(string $source, string $dest = null) : void {
 		global $var;
 
 		// transfer this value to next container
-		if (!isset($var[$what])) {
-			throw new Exception('Could not find "' . $what . '" in var!');
+		if (!isset($var[$source])) {
+			throw new Exception('Could not find "' . $source. '" in var!');
 		}
-		$this[$what] = $var[$what];
+		if ($dest === null) {
+			$dest = $source;
+		}
+		$this[$dest] = $var[$source];
 	}
 
 	/**
