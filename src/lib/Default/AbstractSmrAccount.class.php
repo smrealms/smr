@@ -801,7 +801,7 @@ abstract class AbstractSmrAccount {
 		return $this->ircNick;
 	}
 
-	public function setIrcNick(string $nick) : void {
+	public function setIrcNick(?string $nick) : void {
 		if ($this->ircNick === $nick) {
 			return;
 		}
@@ -813,7 +813,7 @@ abstract class AbstractSmrAccount {
 		return $this->discordId;
 	}
 
-	public function setDiscordId(string $id) : void {
+	public function setDiscordId(?string $id) : void {
 		if ($this->discordId === $id) {
 			return;
 		}
