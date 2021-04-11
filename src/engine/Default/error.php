@@ -4,7 +4,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
 if (empty($var['message']) || $var['message'] == '') {
-	$var['message'] = 'File not found';
+	throw new Exception('Error is missing a player message!');
 }
 
 if ($session->hasGame() && $lock) {
