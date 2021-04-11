@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$sector = $session->getPlayer()->getSector();
+
 if (isset($var['results'])) {
 	$template->assign('FullPortCombatResults', $var['results']);
 	$template->assign('AlreadyDestroyed', false);

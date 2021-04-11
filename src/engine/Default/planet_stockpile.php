@@ -2,6 +2,9 @@
 
 require('planet.inc.php');
 
+$session = Smr\Session::getInstance();
+$ship = $session->getPlayer()->getShip();
+
 $goodInfo = array();
 foreach (Globals::getGoods() as $goodID => $good) {
 	if (!$ship->hasCargo($goodID) && !$planet->hasStockpile($goodID)) {
@@ -21,4 +24,5 @@ foreach (Globals::getGoods() as $goodID => $good) {
 	);
 }
 
+$template = Smr\Template::getInstance();
 $template->assign('GoodInfo', $goodInfo);

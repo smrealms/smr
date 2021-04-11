@@ -1,4 +1,10 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+$ship = $player->getShip();
+
 if (!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }

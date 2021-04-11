@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 if (Request::get('action') == 'Yes') {
+	$db = Smr\Database::getInstance();
 	$db->query('DELETE
 				FROM album
 				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
@@ -11,10 +15,10 @@ if (Request::get('action') == 'Yes') {
 }
 
 $container = Page::create('skeleton.php');
-if (!is_object($player)) {
-	$container['body'] = 'game_play.php';
-} else {
+if ($session->hasGame()) {
 	$container['body'] = 'current_sector.php';
+} else {
+	$container['body'] = 'game_play.php';
 }
 
 $container->go();

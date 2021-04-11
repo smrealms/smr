@@ -5,7 +5,7 @@
  *
  * This class acts like an array, whose keys define the page properties.
  * Then we can either create an HREF so that it can be accessed by a future
- * http request (via the SmrSession), or forwarded to within the same request.
+ * http request (via the Smr\Session), or forwarded to within the same request.
  */
 class Page extends ArrayObject {
 
@@ -143,49 +143,38 @@ class Page extends ArrayObject {
 	}
 
 	/**
-	 * Use this container as the global variable $var.
-	 */
-	public function useAsGlobalVar($sn = null) {
-		global $var;
-
-		// this sn identifies our container later
-		if (!is_null($sn)) {
-			SmrSession::resetLink($this, $sn);
-		}
-
-		// Note: if problems arise, maybe $this should be cloned.
-		$var = $this;
-	}
-
-	/**
 	 * Forward to the page identified by this container.
 	 */
 	public function go() : void {
-		global $sn;
 		if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
 			overrideForward($this);
 			return;
 		}
-		$this->useAsGlobalVar($sn);
+		Smr\Session::getInstance()->setCurrentVar($this);
 		do_voodoo();
 	}
 
 	/**
-	 * Transfer data from $var into this container.
+	 * Transfer $var[$source] into this container with new name $dest.
+	 * If $dest is not specified, keep the index named $source.
 	 */
-	public function addVar(string $what) : void {
-		global $var;
+	public function addVar(string $source, string $dest = null) : void {
+		$var = Smr\Session::getInstance()->getCurrentVar();
 
 		// transfer this value to next container
-		if (isset($var[$what])) {
-			$this[$what] = $var[$what];
+		if (!isset($var[$source])) {
+			throw new Exception('Could not find "' . $source. '" in var!');
 		}
+		if ($dest === null) {
+			$dest = $source;
+		}
+		$this[$dest] = $var[$source];
 	}
 
 	/**
 	 * Create an HREF (based on a random SN) to link to this page.
-	 * The container is saved in the SmrSession under this SN so that on
-	 * the next request, we can grab the container out of the SmrSession.
+	 * The container is saved in the Smr\Session under this SN so that on
+	 * the next request, we can grab the container out of the Smr\Session.
 	 */
 	public function href(bool $forceFullURL = false) : string {
 
@@ -199,9 +188,6 @@ class Page extends ArrayObject {
 		// would need to change globally first (no Page re-use).
 		$copy = self::copy($this);
 
-		if (!isset($copy['Expires'])) {
-			$copy['Expires'] = 0; // Lasts forever
-		}
 		if (!isset($copy['RemainingPageLoads'])) {
 			$pageURL = $copy['url'] == 'skeleton.php' ? $copy['body'] : $copy['url'];
 			$copy['RemainingPageLoads'] = self::URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] ?? 1; // Allow refreshing
@@ -211,7 +197,7 @@ class Page extends ArrayObject {
 		// be two different outcomes from containers given the same ID then
 		// problems will likely arise.
 		$copy['CommonID'] = $this->getCommonID();
-		$sn = SmrSession::addLink($copy);
+		$sn = Smr\Session::getInstance()->addLink($copy);
 
 		if ($forceFullURL === true || stripos($_SERVER['REQUEST_URI'], 'loader.php') === false) {
 			return '/loader.php?sn=' . $sn;
@@ -226,7 +212,6 @@ class Page extends ArrayObject {
 	 */
 	private function getCommonID() : string {
 		$commonContainer = $this->getArrayCopy();
-		unset($commonContainer['Expires']);
 		unset($commonContainer['RemainingPageLoads']);
 		unset($commonContainer['PreviousRequestTime']);
 		unset($commonContainer['CommonID']);
@@ -241,7 +226,7 @@ class Page extends ArrayObject {
 	 * synchronized with `do_voodoo`).
 	 */
 	public function process() : void {
-		global $lock, $var, $player, $ship, $sector, $account, $db, $template;
+		global $lock;
 		if ($this['url'] != 'skeleton.php') {
 			require(get_file_loc($this['url']));
 		}

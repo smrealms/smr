@@ -1,7 +1,14 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 if (!is_numeric($var['PickedAccountID'])) {
 	create_error('You have to pick a player.');
 }
+
+$db = Smr\Database::getInstance();
 $db->query('SELECT 1
 			FROM draft_leaders
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '

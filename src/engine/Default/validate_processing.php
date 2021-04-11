@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $container = Page::create('skeleton.php', 'validate.php');
 
 if (Request::get('action') == "resend") {
@@ -19,6 +22,7 @@ if (Request::get('action') != "skip") {
 	$account->update();
 
 	// delete the notification (when send)
+	$db = Smr\Database::getInstance();
 	$db->query('DELETE FROM notification
 				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . '
 				AND notification_type = \'validation_code\'');

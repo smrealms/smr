@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $accountIDs = Request::getIntArray('account_id', []);
 
 if (empty($accountIDs)) {

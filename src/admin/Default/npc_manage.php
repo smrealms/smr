@@ -1,13 +1,17 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+
 $template->assign('PageTopic', 'Manage NPCs');
 
-$selectedGameID = SmrSession::getRequestVarInt('selected_game_id', 0);
+$selectedGameID = $session->getRequestVarInt('selected_game_id', 0);
 
 $container = Page::create('skeleton.php', 'npc_manage.php');
 $template->assign('SelectGameHREF', $container->href());
 
 $games = [];
+$db = Smr\Database::getInstance();
 $db->query('SELECT game_id FROM game WHERE end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND enabled = ' . $db->escapeBoolean(true) . ' ORDER BY game_id DESC');
 while ($db->nextRecord()) {
 	$gameID = $db->getInt('game_id');

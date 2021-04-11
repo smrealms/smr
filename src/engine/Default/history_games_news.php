@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 $template->assign('PageTopic', 'Game News : ' . $var['game_name']);
 Menu::history_games(3);
 
@@ -10,6 +13,7 @@ $template->assign('Min', $min);
 
 $template->assign('ShowHREF', Page::copy($var)->href());
 
+$db = Smr\Database::getInstance();
 $db->switchDatabases($var['HistoryDatabase']);
 $db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($var['view_game_id']) . ' AND news_id >= ' . $db->escapeNumber($min) . ' AND news_id <= ' . $db->escapeNumber($max));
 $rows = [];

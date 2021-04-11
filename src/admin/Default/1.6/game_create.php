@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 //get information
 $container = Page::create('1.6/game_create_processing.php');
 $template->assign('CreateGalaxiesHREF', $container->href());

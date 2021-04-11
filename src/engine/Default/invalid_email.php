@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $template->assign('PageTopic', 'Invalid E-mail Address');
 
 // This page should only be accessed by players whose accounts

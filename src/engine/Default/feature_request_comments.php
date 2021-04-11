@@ -3,12 +3,18 @@ if (!Globals::isFeatureRequestOpen()) {
 	create_error('Feature requests are currently not being accepted.');
 }
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$account = $session->getAccount();
+
 $template->assign('PageTopic', 'Feature Request Comments');
 
 $container = Page::copy($var);
 $container['body'] = 'feature_request.php';
 $template->assign('BackHref', $container->href());
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT *
 			FROM feature_request
 			JOIN feature_request_comments USING(feature_request_id)

@@ -1,6 +1,12 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $template->assign('PageTopic', 'Edit Photo');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 if ($db->nextRecord()) {
 	$day = $db->getInt('day');

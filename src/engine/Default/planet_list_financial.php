@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 Menu::planet_list($var['alliance_id'], 1);
 
 // Determine if the player can view bonds on the planet list.
@@ -7,6 +12,7 @@ Menu::planet_list($var['alliance_id'], 1);
 $viewBonds = true;
 if ($var['alliance_id'] != 0) {
 	$role_id = $player->getAllianceRole($var['alliance_id']);
+	$db = Smr\Database::getInstance();
 	$db->query('
 		SELECT *
 		FROM alliance_has_roles

@@ -9,7 +9,7 @@ class DummyShip extends AbstractSmrShip {
 	}
 
 	public function cacheDummyShip() {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('REPLACE INTO cached_dummys (type, id, info)
 					VALUES (\'DummyShip\', ' . $db->escapeString($this->getPlayer()->getPlayerName()) . ', ' . $db->escapeObject($this) . ')');
 	}
@@ -19,7 +19,7 @@ class DummyShip extends AbstractSmrShip {
 			$ship = new DummyShip($player);
 
 			// Load weapons from the dummy database cache, if available
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT info FROM cached_dummys WHERE type = \'DummyShip\'
 						AND id = ' . $db->escapeString($player->getPlayerName()) . ' LIMIT 1');
 			if ($db->nextRecord()) {
@@ -35,7 +35,7 @@ class DummyShip extends AbstractSmrShip {
 	}
 
 	public static function getDummyShipNames() {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT id FROM cached_dummys WHERE type = \'DummyShip\'');
 		$dummyNames = array();
 		while ($db->nextRecord()) {

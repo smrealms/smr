@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if (!$player->isPresident()) {
 	create_error('Only the president can view the embassy.');
 }

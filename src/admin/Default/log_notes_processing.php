@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 foreach ($var['account_ids'] as $account_id) {
 	if (empty(Request::get('notes'))) {
 		$db->query('DELETE FROM log_has_notes WHERE account_id = ' . $db->escapeNumber($account_id));

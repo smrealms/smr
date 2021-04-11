@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if (!$player->isOnCouncil()) {
 	create_error('You have to be on the council in order to vote.');
 }
@@ -8,6 +12,7 @@ $template->assign('PageTopic', 'Ruling Council Of ' . $player->getRaceName());
 Menu::council($player->getRaceID());
 
 // determine for what we voted
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM player_votes_relation
 			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
@@ -40,7 +45,7 @@ $db->query('SELECT * FROM race_has_voting
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
 if ($db->getNumRows() > 0) {
 
-	$db2 = MySqlDatabase::getInstance();
+	$db2 = Smr\Database::getInstance();
 
 	while ($db->nextRecord()) {
 		$otherRaceID = $db->getInt('race_id_2');

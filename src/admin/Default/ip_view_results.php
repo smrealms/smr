@@ -1,8 +1,13 @@
 <?php declare(strict_types=1);
-$variable = SmrSession::getRequestVar('variable');
-$type = SmrSession::getRequestVar('type');
 
-$db2 = MySqlDatabase::getInstance();
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+
+$variable = $session->getRequestVar('variable');
+$type = $session->getRequestVar('type');
+
+$db = Smr\Database::getInstance();
+$db2 = Smr\Database::getInstance();
 
 $container = Page::create('skeleton.php', 'ip_view.php');
 $template->assign('BackHREF', $container->href());

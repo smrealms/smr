@@ -44,6 +44,22 @@ x-smr-cli: &smr-cli
         # Mount the source code instead of copying it.
         - ./src:/smr/src
 
+# Base configuration for SMR testing tools
+x-smr-test: &smr-test
+    <<: *smr-common
+    command: /smr/vendor/bin/phpunit test
+    volumes:
+        - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
+        - ./test/env:/smr/config/env:ro
+        - ./phpunit.xml:/smr/phpunit.xml
+        # Mount the source code instead of copying it.
+        - ./src:/smr/src
+        - ./test:/smr/test
+    depends_on:
+        - mysql-integration-test
+    labels:
+        - "traefik.enable=false"
+
 x-mysql-common: &mysql-common
     image: mysql:8.0
     container_name: ${MYSQL_HOST}
@@ -118,21 +134,14 @@ services:
         <<: *mysql-common
 
     smr-integration-test:
-        <<: *smr-common
-        command: /smr/vendor/bin/phpunit test
+        <<: *smr-test
+        command: /smr/vendor/bin/phpunit --colors=always test
         environment:
             - XDEBUG_MODE=coverage
-        volumes:
-            - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
-            - ./test/env:/smr/config/env:ro
-            - ./phpunit.xml:/smr/phpunit.xml
-            # Mount the source code instead of copying it.
-            - ./src:/smr/src
-            - ./test:/smr/test
-        depends_on:
-            - mysql-integration-test
-        labels:
-            - "traefik.enable=false"
+
+    phpstan:
+        <<: *smr-test
+        command: /smr/vendor/bin/phpstan --memory-limit=4G --ansi --autoload-file=/smr/src/config.php analyse --level 0 src test
 
     pma:
         image: phpmyadmin/phpmyadmin

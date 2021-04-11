@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 
-$admin_id = SmrSession::getRequestVarInt('admin_id', 0);
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+
+$admin_id = $session->getRequestVarInt('admin_id', 0);
 
 $template->assign('PageTopic', 'Manage Admin Permissions');
 
@@ -8,6 +11,7 @@ $container = Page::create('skeleton.php', 'permission_manage.php');
 $selectAdminHREF = $container->href();
 $template->assign('SelectAdminHREF', $selectAdminHREF);
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT account_id, login
 			FROM account_has_permission JOIN account USING(account_id)
 			GROUP BY account_id');

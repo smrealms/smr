@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if (!$player->isGPEditor()) {
 	throw new Exception('Only the GP Editor is allowed to view this page!');
 }
@@ -7,7 +11,8 @@ if (!$player->isGPEditor()) {
 $template->assign('PageTopic', 'Galactic Post');
 Menu::galactic_post();
 
-$db2 = MySqlDatabase::getInstance();
+$db = Smr\Database::getInstance();
+$db2 = Smr\Database::getInstance();
 
 $container = Page::create('skeleton.php', 'galactic_post_view_article.php');
 $template->assign('ViewArticlesHREF', $container->href());

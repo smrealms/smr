@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 $change_title = Request::get('change_title');
 $change_message = Request::get('change_message');
 $affected_db = Request::get('affected_db');
@@ -13,6 +15,7 @@ if (Request::get('action') == 'Preview') {
 	$container->go();
 }
 
+$db = Smr\Database::getInstance();
 $db->lockTable('changelog');
 
 $db->query('SELECT MAX(changelog_id)

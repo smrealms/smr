@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+
 $game_id = $var['view_game_id'];
 $template->assign('PageTopic', 'Extended Stats : ' . $var['game_name']);
 Menu::history_games(1);
@@ -12,7 +16,7 @@ if (isset($container['action'])) {
 $template->assign('SelfHREF', $container->href());
 
 // Default page has no category (action) selected yet
-$action = SmrSession::getRequestVar('action', '');
+$action = $session->getRequestVar('action', '');
 if (!empty($action)) {
 	if ($action == 'Top Mined Sectors') {
 		$sql = 'mines'; $from = 'sector'; $dis = 'Mines';
@@ -30,6 +34,7 @@ if (!empty($action)) {
 	$template->assign('Description', $dis);
 
 	$rankings = [];
+	$db = Smr\Database::getInstance();
 	$db->switchDatabases($var['HistoryDatabase']);
 	if ($from != 'alliance') {
 		$template->assign('Name', 'Sector ID');
@@ -55,7 +60,6 @@ if (!empty($action)) {
 			];
 		}
 	}
+	$db->switchDatabaseToLive(); // restore database
 	$template->assign('Rankings', $rankings);
 }
-
-$db->switchDatabaseToLive(); // restore database

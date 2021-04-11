@@ -1,4 +1,7 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic','Combat Simulator');
 
 $template->assign('EditDummysLink', Page::create('skeleton.php','edit_dummys.php')->href());
@@ -74,7 +77,6 @@ if (!empty($realAttackers) && !empty($realDefenders)) {
 }
 
 function runAnAttack($realAttackers,$realDefenders) {
-	global $template;
 	$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0),
 					'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
 	foreach ($realAttackers as $accountID => $teamPlayer) {
@@ -87,5 +89,7 @@ function runAnAttack($realAttackers,$realDefenders) {
 		$results['Defenders']['Traders'][]  = $playerResults;
 		$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
 	}
+
+	$template = Smr\Template::getInstance();
 	$template->assign('TraderCombatResults',$results);
 }

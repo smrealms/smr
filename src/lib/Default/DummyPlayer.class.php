@@ -72,14 +72,14 @@ class DummyPlayer extends AbstractSmrPlayer {
 
 	public function cacheDummyPlayer() {
 		$this->getShip()->cacheDummyShip();
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('REPLACE INTO cached_dummys ' .
 					'(type, id, info) ' .
 					'VALUES (\'DummyPlayer\', '.$db->escapeString($this->getPlayerName()).', '.$db->escapeObject($this).')');
 	}
 
 	public static function &getCachedDummyPlayer($name) {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT info FROM cached_dummys
 					WHERE type = \'DummyPlayer\'
 						AND id = ' . $db->escapeString($name) . ' LIMIT 1');
@@ -94,7 +94,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 	}
 
 	public static function getDummyPlayerNames() {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT id FROM cached_dummys
 					WHERE type = \'DummyPlayer\'');
 		$dummyNames = array();

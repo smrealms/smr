@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$account = $session->getAccount();
+
 Menu::history_games($var['selected_index']);
 
 //offer a back button
@@ -9,6 +14,8 @@ $template->assign('BackHREF', $container->href());
 
 $game_id = $var['view_game_id'];
 $id = $var['alliance_id'];
+
+$db = Smr\Database::getInstance();
 $db->switchDatabases($var['HistoryDatabase']);
 $db->query('SELECT * FROM alliance WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id));
 $db->requireRecord();

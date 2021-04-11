@@ -4,7 +4,7 @@ namespace SmrTest\Container;
 
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
-use Smr\MySqlProperties;
+use Smr\DatabaseProperties;
 
 /**
  * @covers \Smr\Container\DiContainer
@@ -41,7 +41,7 @@ class DiContainerTest extends TestCase {
 		DiContainer::initializeContainer();
 
 		// The first get should construct a new object
-		$class = MySqlProperties::class;
+		$class = DatabaseProperties::class;
 		$instance1 = DiContainer::get($class);
 		self::assertInstanceOf($class, $instance1);
 

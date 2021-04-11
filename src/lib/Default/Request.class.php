@@ -2,7 +2,7 @@
 
 /**
  * Should be used for getting request data for processing pages.
- * For display pages, see SmrSession::getRequestVar.
+ * For display pages, see Smr\Session::getRequestVar.
  */
 class Request {
 
@@ -84,7 +84,7 @@ class Request {
 	 * This is useful for processing pages that need to handle data both from
 	 * posted form inputs and from container variables.
 	 *
-	 * Note that this does not save the result in $var (see SmrSession).
+	 * Note that this does not save the result in $var (see Smr\Session).
 	 */
 	public static function getVar(string $index, string $default = null) : string {
 		return self::getVarX($index, $default, 'get');
@@ -108,7 +108,7 @@ class Request {
 	 * Helper function to avoid code duplication in getVar* functions.
 	 */
 	private static function getVarX($index, $default, $func) {
-		global $var;
+		$var = Smr\Session::getInstance()->getCurrentVar();
 		if (isset($var[$index])) {
 			// An index may be present in both var and request. This indicates
 			// a logical error in the code, unless the values are the same,

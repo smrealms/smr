@@ -27,7 +27,8 @@ function linkCombatLog($logID) {
  * with action BBCODE_OUTPUT.
  */
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
-	global $overrideGameID, $disableBBLinks, $player, $account, $var;
+	global $overrideGameID, $disableBBLinks;
+	$session = Smr\Session::getInstance();
 	try {
 		switch ($tagName) {
 			case 'combatlog':
@@ -44,7 +45,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$playerID = (int)$default;
 				$bbPlayer = SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
 				$showAlliance = isset($tagParams['showalliance']) ? parseBoolean($tagParams['showalliance']) : false;
-				if ($disableBBLinks === false && $overrideGameID == SmrSession::getGameID()) {
+				if ($disableBBLinks === false && $overrideGameID == $session->getGameID()) {
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
 				}
 				return $bbPlayer->getDisplayName($showAlliance);
@@ -55,10 +56,10 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				$allianceID = (int)$default;
 				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
-				if ($disableBBLinks === false && $overrideGameID == SmrSession::getGameID()) {
+				if ($disableBBLinks === false && $overrideGameID == $session->getGameID()) {
 					$container = Page::create('skeleton.php');
 					$container['alliance_id'] = $alliance->getAllianceID();
-					if (is_object($player) && $alliance->getAllianceID() == $player->getAllianceID()) {
+					if ($session->hasGame() && $alliance->getAllianceID() == $session->getPlayer()->getAllianceID()) {
 						$container['body'] = 'alliance_mod.php';
 					} else {
 						$container['body'] = 'alliance_roster.php';
@@ -75,7 +76,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 						if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 							return true;
 						}
-						$linked = $disableBBLinks === false && $overrideGameID == SmrSession::getGameID();
+						$linked = $disableBBLinks === false && $overrideGameID == $session->getGameID();
+						$player = $session->hasGame() ? $session->getPlayer() : null;
 						return AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID, $player, $linked);
 					}
 				}
@@ -86,8 +88,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				$timeString = $default;
 				if ($timeString != '' && ($time = strtotime($timeString)) !== false) {
-					if (is_object($account)) {
-						$time += $account->getOffset() * 3600;
+					if ($session->hasAccount()) {
+						$time += $session->getAccount()->getOffset() * 3600;
 					}
 					return date(DATE_FULL_SHORT, $time);
 				}
@@ -109,13 +111,11 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$sectorID = (int)$default;
 				$sectorTag = '<span class="sectorColour">#' . $sectorID . '</span>';
 
-				// The use of $var here is for a corner case where an admin can check reported messages whilst being in-game.
-				// Ugly but working, probably want a better mechanism to check if more BBCode tags get added
 				if ($disableBBLinks === false
-					&& SmrSession::hasGame()
-					&& SmrSession::getGameID() == $overrideGameID
+					&& $session->hasGame()
+					&& $session->getGameID() == $overrideGameID
 					&& SmrSector::sectorExists($overrideGameID, $sectorID)) {
-					return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
+					return '<a href="' . Globals::getPlotCourseHREF($session->getPlayer()->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
 				}
 
 				return $sectorTag;
@@ -198,12 +198,10 @@ function create_error($message) {
 		// To avoid the page just not refreshing when an error is encountered
 		// during ajax updates, use javascript to auto-redirect to the
 		// appropriate error page.
-		global $template;
-		if (is_object($template) && method_exists($template, 'addJavascriptForAjax')) {
-			$errorHREF = $container->href();
-			// json_encode the HREF as a safety precaution
-			$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($errorHREF));
-		}
+		$errorHREF = $container->href();
+		// json_encode the HREF as a safety precaution
+		$template = Smr\Template::getInstance();
+		$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($errorHREF));
 	}
 	$container->go();
 }
@@ -271,7 +269,7 @@ function word_filter($string) {
 	static $words;
 
 	if (!is_array($words)) {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT word_value, word_replacement FROM word_filter');
 		$words = array();
 		while ($db->nextRecord()) {
@@ -304,18 +302,22 @@ function pluralise($word, $count = 0) {
  * (see loader.php for the initialization of the globals).
  */
 function do_voodoo() {
-	global $lock, $var, $player, $ship, $sector, $account, $db, $template;
+	global $lock;
+
+	$session = Smr\Session::getInstance();
+	$var = $session->getCurrentVar();
 
 	if (!defined('AJAX_CONTAINER')) {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
 	}
-	if (!AJAX_CONTAINER && USING_AJAX && SmrSession::hasChangedSN()) {
+
+	if (!AJAX_CONTAINER && USING_AJAX && $session->hasChangedSN()) {
 		exit;
 	}
 //	ob_clean();
 
 	// create account object
-	$account = SmrSession::getAccount();
+	$account = $session->getAccount();
 
 	if (!defined('DATE_DATE_SHORT')) {
 		define('DATE_DATE_SHORT', $account->getShortDateFormat());
@@ -330,14 +332,15 @@ function do_voodoo() {
 		define('DATE_FULL_SHORT_SPLIT', DATE_DATE_SHORT . '\<b\r /\>' . DATE_TIME_SHORT);
 	}
 
-	// initialize objects we usually need, like player, ship
-	if (SmrSession::hasGame()) {
-		if (SmrGame::getGame(SmrSession::getGameID())->hasEnded()) {
+	$db = Smr\Database::getInstance();
+
+	if ($session->hasGame()) {
+		if (SmrGame::getGame($session->getGameID())->hasEnded()) {
 			Page::create('game_leave_processing.php', 'game_play.php', array('errorMsg' => 'The game has ended.'))->go();
 		}
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
-		$db->query('SELECT sector_id FROM player WHERE account_id=' . $db->escapeNumber($account->getAccountID()) . ' AND game_id=' . $db->escapeNumber(SmrSession::getGameID()) . ' LIMIT 1');
+		$db->query('SELECT sector_id FROM player WHERE account_id=' . $db->escapeNumber($account->getAccountID()) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' LIMIT 1');
 		$db->requireRecord();
 		$sector_id = $db->getInt('sector_id');
 
@@ -350,8 +353,8 @@ function do_voodoo() {
 					create_error('Failed to acquire sector lock');
 				}
 				//Refetch var info in case it changed between grabbing lock.
-				SmrSession::fetchVarInfo();
-				if (!($var = SmrSession::retrieveVar())) {
+				$session->fetchVarInfo();
+				if ($session->findCurrentVar() === false) {
 					if (ENABLE_DEBUG) {
 						$db->query('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber($account->getAccountID()) . ',0,0)');
 					}
@@ -361,14 +364,11 @@ function do_voodoo() {
 		}
 
 		// Now that they've acquire a lock we can move on
-		$player = SmrPlayer::getPlayer($account->getAccountID(), SmrSession::getGameID());
+		$player = $session->getPlayer();
 
 		if ($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death'])) {
 			Page::create('death_processing.php')->go();
 		}
-
-		$ship = $player->getShip();
-		$sector = $player->getSector();
 
 		// update turns on that player
 		$player->updateTurns();
@@ -380,13 +380,13 @@ function do_voodoo() {
 	}
 
 	// Initialize the template
-	$template = new Template();
+	$template = Smr\Template::getInstance();
 
 	// Execute the engine files.
 	// This is where the majority of the page-specific work is performed.
 	$var->process();
 
-	if (SmrSession::hasGame()) {
+	if ($session->hasGame()) {
 		$template->assign('UnderAttack', $player->removeUnderAttack());
 	}
 
@@ -401,23 +401,23 @@ function do_voodoo() {
 			WeightedRandom::saveWeightedRandoms();
 		}
 		//Update session here to make sure current page $var is up to date before releasing lock.
-		SmrSession::update();
+		$session->update();
 		release_lock();
 	}
 
 	//Nothing below this point should require the lock.
 
 	$template->assign('TemplateBody', $var['body']);
-	if (SmrSession::hasGame()) {
-		$template->assign('ThisSector', $sector);
+	if ($session->hasGame()) {
+		$template->assign('ThisSector', $player->getSector());
 		$template->assign('ThisPlayer', $player);
-		$template->assign('ThisShip', $ship);
+		$template->assign('ThisShip', $player->getShip());
 	}
 	$template->assign('ThisAccount', $account);
 	if ($account->getCssLink() != null) {
 		$template->assign('ExtraCSSLink', $account->getCssLink());
 	}
-	doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $var);
+	doSkeletonAssigns($template, $db);
 
 	// Set ajax refresh time
 	$ajaxRefresh = $var['AllowAjax'] ?? true; // hack for bar_gambling_processing.php
@@ -426,7 +426,7 @@ function do_voodoo() {
 	}
 	if ($ajaxRefresh) {
 		// If we can refresh, specify the refresh interval in millisecs
-		if (SmrSession::hasGame() && $player->canFight()) {
+		if ($session->hasGame() && $player->canFight()) {
 			$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
 		} else {
 			$ajaxRefresh = AJAX_DEFAULT_REFRESH_TIME;
@@ -436,7 +436,7 @@ function do_voodoo() {
 
 	$template->display($var['url'], USING_AJAX || AJAX_CONTAINER);
 
-	SmrSession::update();
+	$session->update();
 
 	exit;
 }
@@ -445,14 +445,16 @@ function do_voodoo() {
 
 // This is hackish, but without row level locking it's the best we can do
 function acquire_lock($sector) {
-	global $db, $lock, $locksFailed;
+	global $lock, $locksFailed;
 
 	if ($lock) {
 		return true;
 	}
 
 	// Insert ourselves into the queue.
-	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber(SmrSession::getGameID()) . ',' . $db->escapeNumber(SmrSession::getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+	$session = Smr\Session::getInstance();
+	$db = Smr\Database::getInstance();
+	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber($session->getGameID()) . ',' . $db->escapeNumber($session->getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 	$lock = $db->getInsertID();
 
 	for ($i = 0; $i < 250; ++$i) {
@@ -460,13 +462,13 @@ function acquire_lock($sector) {
 			break;
 		}
 		// If there is someone else before us in the queue we sleep for a while
-		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber(SmrSession::getGameID()) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
+		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 		$locksInQueue = -1;
 		if ($db->nextRecord() && ($locksInQueue = $db->getInt('COUNT(*)')) > 0) {
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber(SmrSession::getAccountID()) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
+			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber($session->getAccountID()) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 			if ($db->nextRecord() && $db->getInt('COUNT(*)') > 1) {
 				release_lock();
 				$locksFailed[$sector] = true;
@@ -486,8 +488,10 @@ function acquire_lock($sector) {
 }
 
 function release_lock() {
-	global $db, $lock;
+	global $lock;
+
 	if ($lock) {
+		$db = Smr\Database::getInstance();
 		$db->query('DELETE from locks_queue WHERE lock_id=' . $db->escapeNumber($lock) . ' OR timestamp<' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 	}
 
@@ -525,7 +529,10 @@ function doTickerAssigns($template, $player, $db) {
 	}
 }
 
-function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $var) {
+function doSkeletonAssigns($template, $db) {
+	$session = Smr\Session::getInstance();
+	$account = $session->getAccount();
+
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 
@@ -535,9 +542,10 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 	$container = Page::create('skeleton.php');
 
 
-	if (SmrSession::hasGame()) {
-		$template->assign('GameName', SmrGame::getGame(SmrSession::getGameID())->getName());
-		$template->assign('GameID', SmrSession::getGameID());
+	if ($session->hasGame()) {
+		$player = $session->getPlayer();
+		$template->assign('GameName', SmrGame::getGame($session->getGameID())->getName());
+		$template->assign('GameID', $session->getGameID());
 
 		$template->assign('PlotCourseLink', Globals::getPlotCourseHREF());
 
@@ -572,15 +580,13 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 		$template->assign('CurrentHallOfFameLink', $container->href());
 	}
 
-	if (SmrSession::hasAccount()) {
-		$container = Page::create('skeleton.php', 'hall_of_fame_new.php');
-		$template->assign('HallOfFameLink', $container->href());
+	$container = Page::create('skeleton.php', 'hall_of_fame_new.php');
+	$template->assign('HallOfFameLink', $container->href());
 
-		$template->assign('AccountID', SmrSession::getAccountID());
-		$template->assign('PlayGameLink', Page::create('game_leave_processing.php', 'game_play.php')->href());
+	$template->assign('AccountID', $account->getAccountID());
+	$template->assign('PlayGameLink', Page::create('game_leave_processing.php', 'game_play.php')->href());
 
-		$template->assign('LogoutLink', Page::create('logoff.php')->href());
-	}
+	$template->assign('LogoutLink', Page::create('logoff.php')->href());
 
 	$container = Page::create('game_leave_processing.php', 'admin_tools.php');
 	$template->assign('AdminToolsLink', $container->href());
@@ -605,7 +611,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 
 
 
-	if (SmrSession::hasGame()) {
+	if ($session->hasGame()) {
 		$db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
 
 		if ($db->getNumRows()) {
@@ -681,18 +687,19 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 		// ******* Forces *******
 		$template->assign('ForceDropLink', Page::create('skeleton.php', 'forces_drop.php')->href());
 
+		$ship = $player->getShip();
 		if ($ship->hasMines()) {
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_mines'] = 1;
-			$container['referrer'] = $var['body'];
+			$container->addVar('body', 'referrer');
 			$template->assign('DropMineLink', $container->href());
 		}
 		if ($ship->hasCDs()) {
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_combat_drones'] = 1;
-			$container['referrer'] = $var['body'];
+			$container->addVar('body', 'referrer');
 			$template->assign('DropCDLink', $container->href());
 		}
 
@@ -700,7 +707,7 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_scout_drones'] = 1;
-			$container['referrer'] = $var['body'];
+			$container->addVar('body', 'referrer');
 			$template->assign('DropSDLink', $container->href());
 		}
 
@@ -714,9 +721,9 @@ function doSkeletonAssigns($template, $player, $ship, $sector, $db, $account, $v
 	$voteSites = array();
 	foreach (VoteSite::getAllSites() as $site) {
 		$voteSites[] = array(
-			'img' => $site->getLinkImg($account->getAccountID(), SmrSession::getGameID()),
-			'url' => $site->getLinkUrl($account->getAccountID(), SmrSession::getGameID()),
-			'sn' => $site->getSN($account->getAccountID(), SmrSession::getGameID()),
+			'img' => $site->getLinkImg($account->getAccountID(), $session->getGameID()),
+			'url' => $site->getLinkUrl($account->getAccountID(), $session->getGameID()),
+			'sn' => $site->getSN($account->getAccountID(), $session->getGameID()),
 		);
 	}
 	$template->assign('VoteSites', $voteSites);

@@ -1,7 +1,12 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 if (!isset($var['race_id'])) {
-	SmrSession::updateVar('race_id', $player->getRaceID());
+	$session->updateVar('race_id', $player->getRaceID());
 }
 $raceID = $var['race_id'];
 
@@ -12,5 +17,5 @@ Menu::council($raceID);
 
 // check for relations here
 require_once(get_file_loc('council.inc.php'));
-modifyRelations($raceID);
-checkPacts($raceID);
+modifyRelations($raceID, $player->getGameID());
+checkPacts($raceID, $player->getGameID());

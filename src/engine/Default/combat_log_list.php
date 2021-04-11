@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 $template->assign('PageTopic', 'Combat Logs');
 Menu::combat_log();
 
@@ -10,7 +16,7 @@ if (isset($var['message'])) {
 
 // $var['action'] is the page log type
 if (!isset($var['action'])) {
-	SmrSession::updateVar('action', COMBAT_LOG_PERSONAL);
+	$session->updateVar('action', COMBAT_LOG_PERSONAL);
 }
 $action = $var['action'];
 
@@ -46,17 +52,15 @@ if (isset($query) && $query) {
 	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
 }
 
-function getParticipantName($accountID, $sectorID) {
-	global $player;
+$getParticipantName = function($accountID, $sectorID) use ($player) : string {
 	if ($accountID == ACCOUNT_ID_PORT) {
 		return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">Port <span class="sectorColour">#' . $sectorID . '</span></a>';
 	}
 	if ($accountID == ACCOUNT_ID_PLANET) {
 		return '<span class="yellow">Planetary Defenses</span>';
 	}
-
 	return SmrPlayer::getPlayer($accountID, $player->getGameID())->getLinkedDisplayName(false);
-}
+};
 
 // For display purposes, describe the type of log
 $type = match($action) {
@@ -95,8 +99,8 @@ if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		$sectorID = $db->getInt('sector_id');
 		$logs[$db->getInt('log_id')] = array(
-			'Attacker' => getParticipantName($db->getInt('attacker_id'), $sectorID),
-			'Defender' => getParticipantName($db->getInt('defender_id'), $sectorID),
+			'Attacker' => $getParticipantName($db->getInt('attacker_id'), $sectorID),
+			'Defender' => $getParticipantName($db->getInt('defender_id'), $sectorID),
 			'Time' => $db->getInt('timestamp'),
 			'Sector' => $sectorID
 		);

@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 require_once(get_file_loc('hof.inc.php'));
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $account_id = $var['account_id'] ?? $account->getAccountID();
 $game_id = $var['game_id'] ?? null;
 
@@ -23,6 +27,8 @@ if ($account->getAccountID() == $account_id) {
 } elseif (isset($hofPlayer) && $hofPlayer->sameAlliance($player)) {
 	$allowedVisibities[] = HOF_ALLIANCE;
 }
+
+$db = Smr\Database::getInstance();
 $db->query('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';
 const USER_SCORE_NAME = 'User Score';

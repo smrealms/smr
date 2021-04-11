@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 function getHofCategories($hofTypes, $game_id, $account_id) {
-	global $var;
+	$var = Smr\Session::getInstance()->getCurrentVar();
 	$categories = [];
 	foreach ($hofTypes as $type => $value) {
 		// Make each category a link to view the subcategory page
@@ -52,11 +52,12 @@ function getHofCategories($hofTypes, $game_id, $account_id) {
  * - private stats for players who are not the current player
  */
 function applyHofVisibilityMask($amount, $vis, $gameID, $accountID) {
-	global $account, $player;
+	$session = Smr\Session::getInstance();
+	$account = $session->getAccount();
 	if (($vis == HOF_PRIVATE && $account->getAccountID() != $accountID) ||
 	    ($vis == HOF_ALLIANCE && isset($gameID) &&
 	     !SmrGame::getGame($gameID)->hasEnded() &&
-	     !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($player)))
+	     !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer())))
 	{
 		return '-';
 	} else {
@@ -65,8 +66,7 @@ function applyHofVisibilityMask($amount, $vis, $gameID, $accountID) {
 }
 
 function getHofRank($view, $viewType, $accountID, $gameID) {
-	global $account;
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	// If no game specified, show total amount from completed games only
 	$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Smr\Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
 
@@ -110,7 +110,9 @@ function getHofRank($view, $viewType, $accountID, $gameID) {
 }
 
 function displayHOFRow($rank, $accountID, $amount) {
-	global $account, $player, $var;
+	$var = Smr\Session::getInstance()->getCurrentVar();
+
+	$account = Smr\Session::getInstance()->getAccount();
 	if (isset($var['game_id']) && Globals::isValidGame($var['game_id'])) {
 		try {
 			$hofPlayer = SmrPlayer::getPlayer($accountID, $var['game_id']);
@@ -131,7 +133,7 @@ function displayHOFRow($rank, $accountID, $amount) {
 	$container['account_id'] = $accountID;
 
 	if (isset($var['game_id'])) {
-		$container['game_id'] = $var['game_id'];
+		$container->addVar('game_id');
 	}
 
 	if (isset($hofPlayer) && is_object($hofPlayer)) {

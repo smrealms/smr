@@ -1,6 +1,11 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $template->assign('PageTopic', 'Current Players');
+$db = Smr\Database::getInstance();
 $db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(Smr\Epoch::time()));
 $db->query('SELECT count(*) count FROM active_session
 			WHERE last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - 600) . ' AND
@@ -9,7 +14,7 @@ $count_real_last_active = 0;
 if ($db->nextRecord()) {
 	$count_real_last_active = $db->getInt('count');
 }
-if (SmrSession::$last_accessed < Smr\Epoch::time() - 600) {
+if ($session->getLastAccessed() < Smr\Epoch::time() - 600) {
 	++$count_real_last_active;
 }
 
@@ -51,7 +56,7 @@ $template->assign('Summary', $summary);
 
 $allRows = array();
 if ($count_last_active > 0) {
-	$db2 = MySqlDatabase::getInstance();
+	$db2 = Smr\Database::getInstance();
 	while ($db->nextRecord()) {
 		$row = array();
 

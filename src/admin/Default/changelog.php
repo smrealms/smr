@@ -1,15 +1,18 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Change Log');
 
 $template->assign('ChangeTitle', $var['change_title'] ?? '');
 $template->assign('ChangeMessage', $var['change_message'] ?? '');
 $template->assign('AffectedDb', $var['affected_db'] ?? '');
 
-$db2 = MySqlDatabase::getInstance();
+$db2 = Smr\Database::getInstance();
 $first_entry = true;
 $link_set_live = true;
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM version ORDER BY version_id DESC');
 
 while ($db->nextRecord()) {

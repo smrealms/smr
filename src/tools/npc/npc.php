@@ -74,7 +74,7 @@ const SHIP_UPGRADE_PATH = array(
 
 
 try {
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	debug('Script started');
 
 	// Make sure NPC's have been set up in the database
@@ -97,10 +97,12 @@ try {
 
 
 function NPCStuff() {
-	global $actions, $var, $previousContainer, $db, $player;
+	global $actions, $previousContainer;
 
 	$underAttack = false;
 	$actions = -1;
+
+	$session = Smr\Session::getInstance();
 
 	while (true) {
 		// Clear the $_REQUEST global, in case we had set it, to avoid
@@ -120,7 +122,7 @@ function NPCStuff() {
 			debug('Action #' . $actions);
 
 			//We have to reload player on each loop
-			$player = SmrPlayer::getPlayer(SmrSession::getAccountID(), SmrSession::getGameID(), true);
+			$player = $session->getPlayer(true);
 			// Sanity check to be certain we actually have an NPC
 			if (!$player->isNPC()) {
 				throw new Exception('Player is not an NPC!');
@@ -155,6 +157,7 @@ function NPCStuff() {
 			}
 
 			$fedContainer = null;
+			$var = $session->getCurrentVar();
 			if (isset($var['url']) && $var['url'] == 'shop_ship_processing.php' && ($fedContainer = plotToFed($player, true)) !== true) { //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
 				processContainer($fedContainer);
 			} elseif (!$underAttack && $player->isUnderAttack() === true
@@ -311,10 +314,13 @@ function clearCaches() {
 }
 
 function debug($message, $debugObject = null) {
-	global $player, $var, $db;
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL.var_export($debugObject, true) : '') . EOL;
 	if (NPC_LOG_TO_DATABASE) {
-		$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . (is_object($player) ? $player->getAccountID() : 0) . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
+		$session = Smr\Session::getInstance();
+		$accountID = $session->getAccountID();
+		$var = $session->getCurrentVar();
+		$db = Smr\Database::getInstance();
+		$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . $accountID() . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
 
 		// On the first call to debug, we need to update the script_id retroactively
 		if (!defined('SCRIPT_ID')) {
@@ -325,7 +331,9 @@ function debug($message, $debugObject = null) {
 }
 
 function processContainer($container) {
-	global $forwardedContainer, $previousContainer, $player;
+	global $forwardedContainer, $previousContainer;
+	$session = Smr\Session::getInstance();
+	$player = $session->getPlayer();
 	if ($container == $previousContainer && $forwardedContainer['body'] != 'forces_attack.php') {
 		debug('We are executing the same container twice?', array('ForwardedContainer' => $forwardedContainer, 'Container' => $container));
 		if ($player->hasNewbieTurns() || $player->hasFederalProtection()) {
@@ -338,7 +346,7 @@ function processContainer($container) {
 	debug('Executing container', $container);
 	// The next "page request" must occur at an updated time.
 	Smr\Epoch::update();
-	$container->useAsGlobalVar();
+	$session->setCurrentVar($container, false);
 	acquire_lock($player->getSectorID()); // Lock now to skip var update in do_voodoo
 	do_voodoo();
 }
@@ -349,19 +357,19 @@ function sleepNPC() {
 
 // Releases an NPC when it is done working
 function releaseNPC() {
-	if (!SmrSession::hasAccount()) {
+	$session = Smr\Session::getInstance();
+	if (!$session->hasAccount()) {
 		debug('releaseNPC: no NPC to release');
 		return;
 	}
-	$login = SmrSession::getAccount()->getLogin();
-	$db = MySqlDatabase::getInstance();
+	$login = $session->getAccount()->getLogin();
+	$db = Smr\Database::getInstance();
 	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(false) . ' WHERE login=' . $db->escapeString($login));
 	if ($db->getChangedRows() > 0) {
 		debug('Released NPC: ' . $login);
 	} else {
 		debug('Failed to release NPC: ' . $login);
 	}
-	SmrSession::destroy();
 }
 
 function exitNPC() {
@@ -391,7 +399,10 @@ function changeNPCLogin() {
 	// recently they have taken an action.
 	debug('Choosing new NPC');
 	static $availableNpcs = null;
-	$db = MySqlDatabase::getInstance();
+
+	$db = Smr\Database::getInstance();
+	$session = Smr\Session::getInstance();
+
 	if (is_null($availableNpcs)) {
 		// Make sure to select NPCs from active games only
 		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY last_turn_update ASC');
@@ -413,12 +424,11 @@ function changeNPCLogin() {
 
 	// Update session info for this chosen NPC
 	$account = SmrAccount::getAccount($npc['account_id']);
-	SmrSession::init();
-	SmrSession::setAccount($account);
-	SmrSession::updateGame($npc['game_id']);
+	$session->setAccount($account);
+	$session->updateGame($npc['game_id']);
 
 	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($account->getLogin()));
-	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . SmrSession::getGameID() . ')');
+	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . $session->getGameID() . ')');
 
 	throw new ForwardException;
 }
@@ -619,7 +629,7 @@ function &findRoutes($player) {
 	$startSectorID = $galaxy->getStartSector();
 	$endSectorID = $galaxy->getEndSector();
 
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT routes FROM route_cache WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND max_ports=' . $db->escapeNumber($maxNumberOfPorts) . ' AND goods_allowed=' . $db->escapeObject($tradeGoods) . ' AND races_allowed=' . $db->escapeObject($tradeRaces) . ' AND start_sector_id=' . $db->escapeNumber($startSectorID) . ' AND end_sector_id=' . $db->escapeNumber($endSectorID) . ' AND routes_for_port=' . $db->escapeNumber($routesForPort) . ' AND max_distance=' . $db->escapeNumber($maxDistance));
 	if ($db->nextRecord()) {
 		$routes = $db->getObject('routes', true);

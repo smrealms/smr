@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+
 $template->assign('PageTopic', 'Military Payment Center');
 
 Menu::headquarters();
@@ -7,6 +11,7 @@ Menu::headquarters();
 // We can only claim the payment once, so to prevent clobbering the message
 // upon AJAX refresh, we store it as a session variable when we first get it.
 if (!isset($var['ClaimText'])) {
+	$player = $session->getPlayer();
 	if ($player->hasMilitaryPayment()) {
 		$payment = $player->getMilitaryPayment();
 		$player->increaseHOF($payment, array('Military Payment', 'Money', 'Claimed'), HOF_PUBLIC);
@@ -21,7 +26,7 @@ if (!isset($var['ClaimText'])) {
 		$claimText = ('You have done nothing worthy of military payment.');
 	}
 
-	SmrSession::updateVar('ClaimText', $claimText);
+	$session->updateVar('ClaimText', $claimText);
 }
 
 $template->assign('ClaimText', $var['ClaimText']);

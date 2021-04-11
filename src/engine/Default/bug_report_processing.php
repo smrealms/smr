@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $steps = Request::get('steps');
 $subject = Request::get('subject');
 $error_msg = Request::get('error_msg');
@@ -13,7 +16,8 @@ $message = 'Login: ' . $account->getLogin() . EOL .
 	'Steps to repeat: ' . $steps . $delim .
 	'Error Message: ' . $error_msg;
 
-if (is_object($player)) {
+if ($session->hasGame()) {
+	$player = $session->getPlayer();
 	$player->sendMessageToBox(BOX_BUGS_REPORTED, $message);
 } else {
 	$account->sendMessageToBox(BOX_BUGS_REPORTED, $message);
@@ -33,7 +37,7 @@ if (!empty(BUG_REPORT_TO_ADDRESSES)) {
 
 $container = Page::create('skeleton.php');
 $container['msg'] = '<span class="admin">ADMIN</span>: Bug report submitted. Thank you for helping to improve the game!';
-if (SmrSession::hasGame()) {
+if ($session->hasGame()) {
 	$container['body'] = 'current_sector.php';
 } else {
 	$container['body'] = 'game_play.php';

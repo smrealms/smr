@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $container = Page::create('skeleton.php', 'bar_talk_bartender.php');
 $container->addVar('LocationID');
 
@@ -8,6 +11,7 @@ $action = Request::get('action');
 if ($action == 'tell') {
 	$gossip = Request::get('gossip_tell');
 	if (!empty($gossip)) {
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT message_id FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY message_id DESC LIMIT 1');
 		if ($db->nextRecord()) {
 			$amount = $db->getInt('message_id') + 1;

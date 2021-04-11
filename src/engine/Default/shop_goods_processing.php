@@ -1,6 +1,12 @@
 <?php declare(strict_types=1);
 require_once(LIB . 'Default/shop_goods.inc.php');
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+$ship = $player->getShip();
+$sector = $player->getSector();
+
 $amount = Request::getVarInt('amount');
 // no negative amounts are allowed
 if ($amount <= 0) {
@@ -64,12 +70,12 @@ if ($transaction === TRADER_BUYS && $player->getCredits() < $bargain_price) {
 $relations = $player->getRelation($port->getRaceID());
 
 if (!isset($var['ideal_price'])) {
-	SmrSession::updateVar('ideal_price', $port->getIdealPrice($good_id, $transaction, $amount, $relations));
+	$session->updateVar('ideal_price', $port->getIdealPrice($good_id, $transaction, $amount, $relations));
 }
 $ideal_price = $var['ideal_price'];
 
 if (!isset($var['offered_price'])) {
-	SmrSession::updateVar('offered_price', $port->getOfferPrice($ideal_price, $relations, $transaction));
+	$session->updateVar('offered_price', $port->getOfferPrice($ideal_price, $relations, $transaction));
 }
 $offered_price = $var['offered_price'];
 
@@ -197,7 +203,7 @@ if ($transaction === TRADER_STEALS ||
 	$container = Page::create('skeleton.php', 'shop_goods_trade.php');
 	$container->addVar('ideal_price');
 	$container->addVar('offered_price');
-	check_bargain_number($amount, $ideal_price, $offered_price, $bargain_price, $container);
+	check_bargain_number($amount, $ideal_price, $offered_price, $bargain_price, $container, $player);
 
 	// transfer values to next page
 	$container->addVar('good_id');

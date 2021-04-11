@@ -2,8 +2,8 @@
 
 require_once('../bootstrap.php');
 
-$db = MySqlDatabase::getInstance();
-$db2 = MySqlDatabase::getInstance();
+$db = Smr\Database::getInstance();
+$db2 = Smr\Database::getInstance();
 
 //$db->query('SELECT * FROM combat_logs WHERE type=\'PLAYER\' ORDER BY OCTET_LENGTH(result) DESC LIMIT 1');
 //if($db->nextRecord())

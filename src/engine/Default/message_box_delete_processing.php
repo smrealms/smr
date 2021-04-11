@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 if ($var['folder_id'] == MSG_SENT) {
 	$db->query('UPDATE message SET sender_delete = ' . $db->escapeBoolean(true) . '
 				WHERE sender_id = ' . $db->escapeNumber($player->getAccountID()) . '

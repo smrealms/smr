@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 $template->assign('PageTopic', 'Bounty Payout');
 
 Menu::headquarters();
@@ -17,6 +23,7 @@ if (!isset($var['ClaimText'])) {
 	if (!empty($bounties)) {
 		$claimText .= ('You have claimed the following bounties<br /><br />');
 
+		$db = Smr\Database::getInstance();
 		foreach ($bounties as $bounty) {
 			// get bounty id from db
 			$amount = $bounty['credits'];
@@ -46,6 +53,6 @@ if (!isset($var['ClaimText'])) {
 		$claimText .= ('You have no claimable bounties<br /><br />');
 	}
 
-	SmrSession::updateVar('ClaimText', $claimText);
+	$session->updateVar('ClaimText', $claimText);
 }
 $template->assign('ClaimText', $var['ClaimText']);

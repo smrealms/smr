@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 //get the alliances
 if (!$player->hasAlliance()) {
 	create_error('You are not in an alliance!');
@@ -7,6 +11,7 @@ if (!$player->hasAlliance()) {
 $alliance_id_1 = $var['alliance_id_1'];
 $alliance_id_2 = $player->getAllianceID();
 
+$db = Smr\Database::getInstance();
 if ($var['accept']) {
 	$db->query('UPDATE alliance_treaties SET official = \'TRUE\' WHERE alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' AND alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 

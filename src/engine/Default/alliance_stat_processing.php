@@ -1,6 +1,11 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id', $player->getAllianceID());
+	$session->updateVar('alliance_id', $player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
 if (Request::has('description')) {
@@ -34,7 +39,7 @@ if (Request::has('recruit_type')) {
 	$alliance->setRecruitType($recruitType, $password);
 }
 if (isset($description)) {
-	$alliance->setAllianceDescription($description);
+	$alliance->setAllianceDescription($description, $player);
 }
 if (isset($discordServer)) {
 	$alliance->setDiscordServer($discordServer);
@@ -44,6 +49,7 @@ if (isset($discordChannel)) {
 		$alliance->setDiscordChannel(null);
 	} else {
 		// no duplicates in a given game
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT * FROM alliance WHERE discord_channel =' . $db->escapeString($discordChannel) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			create_error('Another alliance is already using that Discord Channel ID!');

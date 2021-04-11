@@ -1,10 +1,8 @@
 <?php declare(strict_types=1);
-////////////////////////////////////////////////////////////
-//
-//	Script:		map_local.php
-//	Purpose:	Displays Local Map
-//
-////////////////////////////////////////////////////////////
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 
 if ($player->isLandedOnPlanet()) {
 	create_error('You are on a planet!');
@@ -38,7 +36,7 @@ if (isset($var['ZoomDir'])) {
 		$player->increaseZoom(1);
 	}
 	// Unset so that refreshing doesn't zoom again
-	SmrSession::updateVar('ZoomDir', null);
+	$session->updateVar('ZoomDir', null);
 }
 
 $container = Page::create('skeleton.php', 'map_local.php');

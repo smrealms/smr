@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 require('planet.inc.php');
 
 $container = Page::create('planet_defense_processing.php');

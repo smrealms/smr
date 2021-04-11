@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 // ********************************
 // *
 // * V a l i d a t e d ?
@@ -12,7 +18,7 @@ if (!$account->isValidated()) {
 }
 
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id', $player->getAllianceID());
+	$session->updateVar('alliance_id', $player->getAllianceID());
 }
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
@@ -20,6 +26,7 @@ $template->assign('PageTopic', 'Bank');
 
 Menu::bank();
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM alliance_treaties WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND (alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 			AND aa_access = 1 AND official = \'TRUE\'');
@@ -71,8 +78,8 @@ if ($db->getBoolean('positive_balance')) {
 	$template->assign('TotalWithdrawn', $totalWithdrawn);
 }
 
-$maxValue = SmrSession::getRequestVarInt('maxValue', 0);
-$minValue = SmrSession::getRequestVarInt('minValue', 0);
+$maxValue = $session->getRequestVarInt('maxValue', 0);
+$minValue = $session->getRequestVarInt('minValue', 0);
 
 if ($maxValue <= 0) {
 	$db->query('SELECT MAX(transaction_id) FROM alliance_bank_transactions

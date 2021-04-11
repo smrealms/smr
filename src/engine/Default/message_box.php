@@ -1,6 +1,11 @@
 <?php declare(strict_types=1);
-
 require_once(get_file_loc('messages.inc.php'));
+
+$template = Smr\Template::getInstance();
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 Menu::messages();
 
 $template->assign('PageTopic', 'View Messages');

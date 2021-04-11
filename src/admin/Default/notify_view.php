@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $template->assign('PageTopic', 'Viewing Reported Messages');
 
 require_once(get_file_loc('messages.inc.php'));
@@ -6,6 +11,7 @@ require_once(get_file_loc('messages.inc.php'));
 $container = Page::create('notify_delete_processing.php');
 $template->assign('DeleteHREF', $container->href());
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM message_notify');
 $messages = [];
 while ($db->nextRecord()) {

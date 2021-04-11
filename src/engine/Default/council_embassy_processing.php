@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 if (!$player->isPresident()) {
 	create_error('Only the president can view the embassy.');
 }
@@ -8,6 +12,7 @@ $race_id = $var['race_id'];
 $type = strtoupper(Request::get('action'));
 $time = Smr\Epoch::time() + TIME_FOR_COUNCIL_VOTE;
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT count(*) FROM race_has_voting
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));

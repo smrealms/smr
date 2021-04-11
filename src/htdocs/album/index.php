@@ -5,8 +5,8 @@ try {
 	require_once(LIB . 'Album/album_functions.php');
 
 	// database object
-	$db = MySqlDatabase::getInstance();
-	$db2 = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
+	$db2 = Smr\Database::getInstance();
 	?>
 	<!DOCTYPE html>
 	<html>

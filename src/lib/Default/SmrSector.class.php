@@ -37,7 +37,7 @@ class SmrSector {
 
 	public static function getGalaxySectors($gameID, $galaxyID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID])) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id=' . $db->escapeNumber($galaxyID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
 			while ($db->nextRecord()) {
@@ -51,7 +51,7 @@ class SmrSector {
 
 	public static function getLocationSectors($gameID, $locationTypeID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID])) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM location JOIN sector USING (game_id, sector_id) WHERE location_type_id = ' . $db->escapeNumber($locationTypeID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
 			while ($db->nextRecord()) {
@@ -93,7 +93,7 @@ class SmrSector {
 	}
 
 	protected function __construct($gameID, $sectorID, $create = false, $db = null) {
-		$this->db = MySqlDatabase::getInstance();
+		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
 		// Do we already have a database query for this sector?
@@ -979,20 +979,20 @@ class SmrSector {
 		return $this->visited[$player->getAccountID()];
 	}
 
-	public function getLocalMapMoveHREF() {
-		return Globals::getSectorMoveHREF($this->getSectorID(), 'map_local.php');
+	public function getLocalMapMoveHREF(AbstractSmrPlayer $player) : string {
+		return Globals::getSectorMoveHREF($player, $this->getSectorID(), 'map_local.php');
 	}
 
-	public function getCurrentSectorMoveHREF() {
-		return Globals::getCurrentSectorMoveHREF($this->getSectorID());
+	public function getCurrentSectorMoveHREF(AbstractSmrPlayer $player) : string {
+		return Globals::getCurrentSectorMoveHREF($player, $this->getSectorID());
 	}
 
 	public function getGalaxyMapHREF() {
 		return '?sector_id=' . $this->getSectorID();
 	}
 
-	public function getScanSectorHREF() {
-		return Globals::getSectorScanHREF($this->getSectorID());
+	public function getSectorScanHREF(AbstractSmrPlayer $player) : string {
+		return Globals::getSectorScanHREF($player, $this->getSectorID());
 	}
 
 	public function hasX(/*Object*/ $x, AbstractSmrPlayer $player = null) {

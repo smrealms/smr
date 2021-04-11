@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$account = $session->getAccount();
+
 if (!isset($var['CheckType']) || $var['CheckType'] == 'Validate') {
 	// is account validated?
 	if (!$account->isValidated()) {
@@ -10,7 +15,7 @@ if (!isset($var['CheckType']) || $var['CheckType'] == 'Validate') {
 
 $lastLogin = $account->getLastLogin();
 
-$db = MySqlDatabase::getInstance();
+$db = Smr\Database::getInstance();
 if ($var['CheckType'] == 'Announcements') {
 	$db->query('SELECT 1 FROM announcement WHERE time >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
 	// do we have announcements?

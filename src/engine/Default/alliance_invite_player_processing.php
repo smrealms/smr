@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 $receiverID = Request::getInt('account_id');
 $addMessage = Request::get('message');
 $expireDays = Request::getInt('expire_days');
@@ -7,6 +11,7 @@ $expireDays = Request::getInt('expire_days');
 $expires = Smr\Epoch::time() + 86400 * $expireDays;
 
 // If sender is mail banned or blacklisted by receiver, omit the custom message
+$db = Smr\Database::getInstance();
 $db->query('SELECT 1 FROM message_blacklist
             WHERE account_id='.$db->escapeNumber($receiverID) . '
               AND blacklisted_id='.$db->escapeNumber($player->getAccountID()));

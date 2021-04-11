@@ -2,17 +2,17 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use MySqlDatabase;
 use mysqli;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
-use Smr\MySqlProperties;
+use Smr\Database;
+use Smr\DatabaseProperties;
 
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest since we are not writing any data.
- * @covers MySqlDatabase
+ * @covers \Smr\Database
  */
-class MySqlDatabaseIntegrationTest extends TestCase {
+class DatabaseIntegrationTest extends TestCase {
 
 	protected function setUp(): void {
 		// Start each test with a fresh container (and mysqli connection).
@@ -20,41 +20,41 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 		DiContainer::initializeContainer();
 	}
 
-	public function test_mysql_factory() {
-		// Given mysql properties are retrieved from the container
-		$mysqlProperties = DiContainer::get(MySqlProperties::class);
+	public function test_mysqli_factory() {
+		// Given database properties are retrieved from the container
+		$dbProperties = DiContainer::get(DatabaseProperties::class);
 		// When using the factory to retrieve a mysqli instance
-		$mysqlDatabase = MySqlDatabase::mysqliFactory($mysqlProperties);
+		$mysql = Database::mysqliFactory($dbProperties);
 		// Then the connection is successful
-		self::assertNotNull($mysqlDatabase->server_info);
+		self::assertNotNull($mysql->server_info);
 	}
 
 	public function test__construct_happy_path() {
-		$mysqlDatabase = DiContainer::get(MySqlDatabase::class);
-		$this->assertNotNull($mysqlDatabase);
+		$db = DiContainer::get(Database::class);
+		$this->assertNotNull($db);
 	}
 
 	public function test_getInstance_always_returns_new_instance() {
-		// Given a MySqlDatabase object
-		$original = MySqlDatabase::getInstance();
+		// Given a Database object
+		$original = Database::getInstance();
 		// When calling getInstance again
-		$second = MySqlDatabase::getInstance();
+		$second = Database::getInstance();
 		self::assertNotSame($original, $second);
 	}
 
 	public function test_performing_operations_on_closed_database_throws_error() {
-		// Given a mysql database instance
-		$mysqlDatabase = MySqlDatabase::getInstance();
+		// Given a Database instance
+		$db = Database::getInstance();
 		// And disconnect is called
-		$mysqlDatabase->close();
+		$db->close();
 		// When calling database methods
 		$this->expectException(\Error::class);
-		$this->expectExceptionMessage('Typed property MySqlDatabase::$dbConn must not be accessed before initialization');
-		$mysqlDatabase->query("foo query");
+		$this->expectExceptionMessage('Typed property Smr\Database::$dbConn must not be accessed before initialization');
+		$db->query("foo query");
 	}
 
 	public function test_closing_database_returns_boolean() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// Returns true when closing an open database connection
 		self::assertTrue($db->close());
 		// Returns false if the database has already been closed
@@ -64,14 +64,14 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	public function test_getInstance_will_perform_reconnect_after_connection_closed() {
 		// Given an original mysql connection
 		$originalMysql = DiContainer::get(mysqli::class);
-		// And a mysql database instance
-		$mysqlDatabase = MySqlDatabase::getInstance();
+		// And a Database instance
+		$db = Database::getInstance();
 		// And disconnect is called
-		$mysqlDatabase->close();
-		// And mysql database is retrieved from the container
-		$mysqlDatabase = MySqlDatabase::getInstance();
+		$db->close();
+		// And Database is retrieved from the container
+		$db = Database::getInstance();
 		// When performing a query
-		$mysqlDatabase->query("select 1");
+		$db ->query("select 1");
 		// Then new mysqli instance is not the same as the initial mock
 		self::assertNotSame($originalMysql, DiContainer::get(mysqli::class));
 	}
@@ -79,16 +79,16 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	public function test_getInstance_will_not_perform_reconnect_if_connection_not_closed() {
 		// Given an original mysql connection
 		$originalMysql = DiContainer::get(mysqli::class);
-		// And a mysql database instance
-		MySqlDatabase::getInstance();
+		// And a Database instance
+		Database::getInstance();
 		// And get instance is called again
-		MySqlDatabase::getInstance();
+		Database::getInstance();
 		// Then the two mysqli instances are the same
 		self::assertSame($originalMysql, DiContainer::get(mysqli::class));
 	}
 
 	public function test_escapeMicrotime() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// The current microtime must not throw an exception
 		$db->escapeMicrotime(microtime(true));
 		// Check that the formatting preserves all digits
@@ -96,14 +96,14 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_escapeBoolean() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// Test both boolean values
 		self::assertSame("'TRUE'", $db->escapeBoolean(true));
 		self::assertSame("'FALSE'", $db->escapeBoolean(false));
 	}
 
 	public function test_escapeString() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// Test the empty string
 		self::assertSame("''", $db->escapeString(''));
 		self::assertSame('NULL', $db->escapeString('', true)); // nullable
@@ -115,13 +115,13 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_escapeString_null_throws() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		$this->expectException(\TypeError::class);
 		$db->escapeString(null);
 	}
 
 	public function test_escapeArray() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// Test a mixed array
 		self::assertSame("'a',2,'c'", $db->escapeArray(['a', 2, 'c']));
 		// Test a different implodeString
@@ -135,7 +135,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 
 	public function test_escapeArray_nested_array_throws() {
 		// Warning: It is dangerous to use nested arrays with escapeIndividually=false
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		$this->expectWarning();
 		$this->expectWarningMessage('Array to string conversion');
 		$db->escapeArray(['a', ['x', 9, 'y'], 2, 'c'], ':', false);
@@ -143,7 +143,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 
 	public function test_escapeNumber() {
 		// No escaping is done of numeric types
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// Test int
 		self::assertSame(42, $db->escapeNumber(42));
 		// Test float
@@ -153,14 +153,14 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_escapeNumber_nonnumeric_throws() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		$this->expectException(\RuntimeException::class);
 		$this->expectExceptionMessage('Not a number');
 		$db->escapeNumber('bla');
 	}
 
 	public function test_escapeObject() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// Test null
 		self::assertSame('NULL', $db->escapeObject(null, false, true));
 		// Test empty array
@@ -172,7 +172,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_lockTable_throws_if_read_other_table() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		$db->lockTable('player');
 		$this->expectException(\RuntimeException::class);
 		$this->expectExceptionMessage("Table 'account' was not locked with LOCK TABLES");
@@ -186,7 +186,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_lockTable_allows_read() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		$db->lockTable('ship_class');
 
 		// Perform a query on the locked table
@@ -200,7 +200,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_requireRecord() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// Create a query that returns one record
 		$db->query('SELECT 1');
 		$db->requireRecord();
@@ -208,7 +208,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_requireRecord_too_many_rows() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// Create a query that returns two rows
 		$db->query('SELECT 1 UNION SELECT 2');
 		$this->expectException(\RuntimeException::class);
@@ -217,7 +217,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_nextRecord_no_resource() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		$this->expectException(\RuntimeException::class);
 		$this->expectExceptionMessage('No resource to get record from.');
 		// Call nextRecord before any query is made
@@ -225,14 +225,14 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_nextRecord_no_result() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// Construct a query that has an empty result set
 		$db->query('SELECT 1 FROM ship_class WHERE ship_class_id = 0');
 		self::assertFalse($db->nextRecord());
 	}
 
 	public function test_hasField() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// Construct a query that has the field 'val', but not 'bla'
 		$db->query('SELECT 1 AS val');
 		$db->requireRecord();
@@ -241,7 +241,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_inversion_of_escape_and_get() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		// [value, escape function, getter, comparator, extra args]
 		$params = [
 			[true, 'escapeBoolean', 'getBoolean', 'assertSame', []],
@@ -266,7 +266,7 @@ class MySqlDatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test_getBoolean_with_non_boolean_field() {
-		$db = MySqlDatabase::getInstance();
+		$db = Database::getInstance();
 		$db->query('SELECT \'bla\'');
 		$db->requireRecord();
 		$this->expectException(\RuntimeException::class);

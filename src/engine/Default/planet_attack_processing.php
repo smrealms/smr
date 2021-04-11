@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+$ship = $player->getShip();
+
 if ($player->hasNewbieTurns()) {
 	create_error('You are under newbie protection!');
 }
@@ -47,7 +52,7 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forces' => array(),
 				'Forced' => false);
 
-$attackers = $sector->getFightingTradersAgainstPlanet($player, $planet);
+$attackers = $player->getSector()->getFightingTradersAgainstPlanet($player, $planet);
 
 $planet->attackedBy($player, $attackers);
 
@@ -77,6 +82,7 @@ $results['Planet'] = $planet->shootPlayers($attackers);
 $account->log(LOG_TYPE_PLANET_BUSTING, 'Player attacks planet, the planet does ' . $results['Planet']['TotalDamage'] . ', their team does ' . $results['Attackers']['TotalDamage'] . ' and downgrades: ' . var_export($results['Attackers']['Downgrades'], true), $planet->getSectorID());
 
 // Add this log to the `combat_logs` database table
+$db = Smr\Database::getInstance();
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . Smr\Epoch::time() . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $planetOwner->getAccountID() . ',' . $planetOwner->getAllianceID() . ',' . $db->escapeObject($results, true) . ')');
 $logId = $db->getInsertID();
 

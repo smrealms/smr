@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 require('planet.inc.php');
 
 $container = Page::create('planet_ownership_processing.php');

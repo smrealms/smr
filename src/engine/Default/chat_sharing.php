@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $template->assign('PageTopic', 'Chat Sharing Settings');
 
 if (isset($var['message'])) {
@@ -6,6 +11,7 @@ if (isset($var['message'])) {
 }
 
 $shareFrom = array();
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
 while ($db->nextRecord()) {
 	$fromAccountId = $db->getInt('from_account_id');

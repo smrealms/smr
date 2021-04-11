@@ -1,6 +1,12 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+
 if (!isset($var['GameID'])) {
-	SmrSession::updateVar('GameID', $player->getGameID());
+	$player = $session->getPlayer();
+	$session->updateVar('GameID', $player->getGameID());
 }
 $gameID = $var['GameID'];
 
@@ -26,6 +32,8 @@ $basicContainer = array('GameID'=>$gameID);
 //			WHERE game_id = ' . $db->escapeNumber($gameID) . '
 //		)
 //	)');
+
+$db = Smr\Database::getInstance();
 $db->query('SELECT alliance_id, alliance_name
 			FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($gameID));
@@ -40,10 +48,10 @@ $template->assign('NewsAlliances', $newsAlliances);
 $template->assign('AdvancedNewsFormHref', Page::create('skeleton.php', 'news_read_advanced.php', $basicContainer)->href());
 
 // No submit value when first navigating to the page
-$submit_value = SmrSession::getRequestVar('submit', '');
+$submit_value = $session->getRequestVar('submit', '');
 
 if ($submit_value == 'Search For Player') {
-	$p_name = SmrSession::getRequestVar('playerName');
+	$p_name = $session->getRequestVar('playerName');
 	$template->assign('ResultsFor', $p_name);
 	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $p_name . '%') . ' AND game_id = ' . $db->escapeNumber($gameID));
 	$IDs = array(0);
@@ -52,12 +60,12 @@ if ($submit_value == 'Search For Player') {
 	}
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (killer_id IN (' . $db->escapeArray($IDs) . ') OR dead_id IN (' . $db->escapeArray($IDs) . ')) ORDER BY news_id DESC');
 } elseif ($submit_value == 'Search For Alliance') {
-	$allianceID = SmrSession::getRequestVarInt('allianceID');
+	$allianceID = $session->getRequestVarInt('allianceID');
 	$template->assign('ResultsFor', $newsAlliances[$allianceID]['Name']);
 	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ')) ORDER BY news_id DESC');
 } elseif ($submit_value == 'Search For Players') {
-	$player1 = SmrSession::getRequestVar('player1');
-	$player2 = SmrSession::getRequestVar('player2');
+	$player1 = $session->getRequestVar('player1');
+	$player2 = $session->getRequestVar('player2');
 	$template->assign('ResultsFor', $player1 . ' vs. ' . $player2);
 	$db->query('SELECT * FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $player1 . '%') . ' AND game_id = ' . $db->escapeNumber($gameID));
 	$IDs = array(0);
@@ -77,8 +85,8 @@ if ($submit_value == 'Search For Player') {
 						(killer_id IN (' . $db->escapeArray($IDs2) . ') AND dead_id IN (' . $db->escapeArray($IDs) . '))
 					) ORDER BY news_id DESC');
 } elseif ($submit_value == 'Search For Alliances') {
-	$allianceID1 = SmrSession::getRequestVar('alliance1');
-	$allianceID2 = SmrSession::getRequestVar('alliance2');
+	$allianceID1 = $session->getRequestVar('alliance1');
+	$allianceID2 = $session->getRequestVar('alliance2');
 	$template->assign('ResultsFor', $newsAlliances[$allianceID1]['Name'] . ' vs. ' . $newsAlliances[$allianceID2]['Name']);
 	$db->query('SELECT * FROM news
 				WHERE game_id = ' . $db->escapeNumber($gameID) . '
@@ -95,4 +103,4 @@ require_once(get_file_loc('news.inc.php'));
 $template->assign('NewsItems', getNewsItems($db));
 
 $template->assign('PageTopic', 'Advanced News');
-Menu::news($template);
+Menu::news();

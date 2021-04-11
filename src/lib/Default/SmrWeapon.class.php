@@ -17,11 +17,11 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	protected bool $bonusDamage = false; // default
 	protected $damageRollover = false; // fixed for all SmrWeapons
 
-	public static function getWeapon(int $weaponTypeID, MySqlDatabase $db = null) : SmrWeapon {
+	public static function getWeapon(int $weaponTypeID, Smr\Database $db = null) : SmrWeapon {
 		return new SmrWeapon($weaponTypeID, $db);
 	}
 
-	protected function __construct(int $weaponTypeID, MySqlDatabase $db = null) {
+	protected function __construct(int $weaponTypeID, Smr\Database $db = null) {
 		$this->weaponType = SmrWeaponType::getWeaponType($weaponTypeID, $db);
 		$this->weaponTypeID = $weaponTypeID;
 		$this->name = $this->weaponType->getName();

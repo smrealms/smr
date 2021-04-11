@@ -1,8 +1,14 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 $alliance = $player->getAlliance();
+
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
+$db = Smr\Database::getInstance();
 $db->query('
 SELECT
 account_id,

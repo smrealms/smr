@@ -1,6 +1,13 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id', $player->getAllianceID());
+	$session->updateVar('alliance_id', $player->getAllianceID());
 }
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
@@ -36,7 +43,7 @@ $query .= ' GROUP BY thread_id ORDER BY sendtime DESC';
 $db->query($query);
 $threads = array();
 if ($db->getNumRows() > 0) {
-	$db2 = MySqlDatabase::getInstance();
+	$db2 = Smr\Database::getInstance();
 
 	$container = Page::create('alliance_message_delete_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();

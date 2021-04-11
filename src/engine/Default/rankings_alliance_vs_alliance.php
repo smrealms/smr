@@ -1,14 +1,20 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 $template->assign('PageTopic', 'Alliance VS Alliance Rankings');
 
 Menu::rankings(1, 4);
-$db2 = MySqlDatabase::getInstance();
+$db = Smr\Database::getInstance();
+$db2 = Smr\Database::getInstance();
 $container = Page::create('skeleton.php', 'rankings_alliance_vs_alliance.php');
 $template->assign('SubmitHREF', $container->href());
 
-$alliancer = SmrSession::getRequestVarIntArray('alliancer', []);
-$detailsAllianceID = SmrSession::getRequestVarInt('alliance_id', $player->getAllianceID());
+$alliancer = $session->getRequestVarIntArray('alliancer', []);
+$detailsAllianceID = $session->getRequestVarInt('alliance_id', $player->getAllianceID());
 
 // Get list of alliances that have kills or deaths
 $activeAlliances = [];

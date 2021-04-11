@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 if (isset($var['errorMsg'])) {
 	$template->assign('ErrorMessage', $var['errorMsg']);
 }

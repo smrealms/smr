@@ -2,4 +2,5 @@
 
 require('planet.inc.php');
 
+$template = Smr\Template::getInstance();
 $template->assign('Goods', Globals::getGoods());

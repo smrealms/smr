@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 // is account validated?
 if (!$account->isValidated()) {
 	create_error('You are not validated so you cannot use banks.');
@@ -13,12 +18,13 @@ $template->assign('AccessHREF', $container->href());
 
 $template->assign('Message', $var['message'] ?? '');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM anon_bank
 			WHERE owner_id=' . $db->escapeNumber($player->getAccountID()) . '
 			AND game_id=' . $db->escapeNumber($player->getGameID()));
 
 $ownedAnon = [];
-$db2 = MySqlDatabase::getInstance();
+$db2 = Smr\Database::getInstance();
 while ($db->nextRecord()) {
 	$anon = [];
 	$anon['anon_id'] = $db->getInt('anon_id');

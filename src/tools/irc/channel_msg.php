@@ -4,7 +4,7 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 	//Force $validationMessages to always be boolean.
 	$validationMessages = $validationMessages === true;
 
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 
 	// only registered users are allowed to use this command
 	$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
@@ -163,7 +163,7 @@ function channel_msg_seen($fp, $rdata)
 			return true;
 		}
 
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 
 		// if user provided more than 3 letters we do a wildcard search
 		if (strlen($seennick) > 3) {

@@ -1,8 +1,13 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $container = Page::create('skeleton.php');
-if (SmrSession::hasGame()) {
+if ($session->hasGame()) {
 	$container['body'] = 'current_sector.php';
+	$player = $session->getPlayer();
 } else {
 	$container['body'] = 'game_play.php';
 }
@@ -123,6 +128,7 @@ if ($action == 'Save and resend validation code') {
 	}
 
 } elseif ($action == 'Yes') {
+	$var = $session->getCurrentVar();
 	$account_id = $var['account_id'];
 	$amount = $var['amount'];
 

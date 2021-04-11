@@ -1,9 +1,16 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+$ship = $player->getShip();
+$sector = $player->getSector();
+
 if ($var['func'] == 'Map') {
 	$account_id = $player->getAccountID();
 	$game_id = $player->getGameID();
 	// delete all entries from the player_visited_sector/port table
+	$db = Smr\Database::getInstance();
 	$db->query('DELETE FROM player_visited_sector WHERE ' . $player->getSQL());
 
 	// add port infos
@@ -63,6 +70,7 @@ if ($var['func'] == 'Map') {
 	if ($player->getRaceID() == $race) {
 		create_error('You cannot change race relations with your own race.');
 	}
+	$db = Smr\Database::getInstance();
 	$db->query('UPDATE race_has_relation SET relation = ' . $db->escapeNumber($amount) . ' WHERE race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . ' AND race_id_2 = ' . $db->escapeNumber($race) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$db->query('UPDATE race_has_relation SET relation = ' . $db->escapeNumber($amount) . ' WHERE race_id_1 = ' . $db->escapeNumber($race) . ' AND race_id_2 = ' . $db->escapeNumber($player->getRaceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 } elseif ($var['func'] == 'Race') {

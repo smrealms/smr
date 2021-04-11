@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 // Get the player we're attacking
 $targetPlayer = SmrPlayer::getPlayer($var['target'], $player->getGameID());
 

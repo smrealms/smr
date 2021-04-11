@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+$ship = $player->getShip();
+
 $forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 $forceOwner = $forces->getOwner();
 
@@ -97,6 +102,7 @@ if (!$bump) {
 }
 
 // Add this log to the `combat_logs` database table
+$db = Smr\Database::getInstance();
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getAccountID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeObject($results, true) . ')');
 $logId = $db->getInsertID();
 

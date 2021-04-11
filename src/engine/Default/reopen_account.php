@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 // This page should only be accessed by players whose accounts
 // have been closed at their own request.
 $disabled = $account->isDisabled();

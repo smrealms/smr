@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
+
 $container = Page::create('skeleton.php', 'admin_tools.php');
 
 $action = Request::get('action');

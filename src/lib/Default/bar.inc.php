@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 function checkForLottoWinner($gameID) {
-	global $db;
 
 	// No more lotto winners after the game has ended
 	if (SmrGame::getGame($gameID)->hasEnded()) {
@@ -9,6 +8,7 @@ function checkForLottoWinner($gameID) {
 	}
 
 	// we check for a lotto winner...
+	$db = Smr\Database::getInstance();
 	$db->lockTable('player_has_ticket');
 	$lottoInfo = getLottoInfo($gameID);
 
@@ -49,9 +49,10 @@ function checkForLottoWinner($gameID) {
 }
 
 function getLottoInfo($gameID) {
-	global $db;
 	$amount = 1000000;
 	$firstBuy = Smr\Epoch::time();
+
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket
 				WHERE game_id = '.$db->escapeNumber($gameID) . ' AND time > 0');
 	$db->requireRecord();

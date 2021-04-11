@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+$sector = $player->getSector();
+
 if (isset($var['RealX'])) {
 	// This is only used by NPC's
 	$realX = $var['RealX'];

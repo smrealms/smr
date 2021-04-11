@@ -2,13 +2,15 @@
 try {
 	require_once('../bootstrap.php');
 
+	$session = Smr\Session::getInstance();
+
 	$gameID = Request::getInt('game');
-	if (!SmrSession::hasAccount() || !Globals::isValidGame($gameID)) {
+	if (!$session->hasAccount() || !Globals::isValidGame($gameID)) {
 		header('Location: /login.php');
 		exit;
 	}
 
-	$account = SmrSession::getAccount();
+	$account = $session->getAccount();
 	if (!SmrGame::getGame($gameID)->isEnabled() && !$account->hasPermission(PERMISSION_UNI_GEN)) {
 		header('location: /error.php?msg=You do not have permission to view this map!');
 		exit;
@@ -28,7 +30,7 @@ try {
 	}
 
 	// The d3 graph links are the warp connections between galaxies
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT sector_id, warp FROM sector WHERE warp !=0 AND game_id = ' . $db->escapeNumber($gameID));
 	while ($db->nextRecord()) {
 		$warp1 = SmrSector::getSector($gameID, $db->getInt('sector_id'));

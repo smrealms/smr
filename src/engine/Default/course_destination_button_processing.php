@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $type = Request::get('type');
 $sectorId = Request::getInt('sectorId');
 

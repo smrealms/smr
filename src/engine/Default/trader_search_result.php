@@ -1,8 +1,12 @@
 <?php declare(strict_types=1);
 
-$player_id = SmrSession::getRequestVarInt('player_id');
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
+$player_id = $session->getRequestVarInt('player_id');
 // When clicking on a player name, only the 'player_id' is supplied
-$player_name = SmrSession::getRequestVar('player_name', '');
+$player_name = $session->getRequestVar('player_name', '');
 
 if (empty($player_name) && empty($player_id)) {
 	create_error('You must specify either a player name or ID!');
@@ -15,6 +19,7 @@ if (!empty($player_id)) {
 		// No player found, we'll return an empty result
 	}
 } else {
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND player_name = ' . $db->escapeString($player_name) . ' LIMIT 1');
@@ -33,40 +38,40 @@ if (!empty($player_id)) {
 	}
 }
 
-function playerLinks(SmrPlayer $curr_player) {
-	global $player;
-	$result = array('Player' => $curr_player);
+function playerLinks(SmrPlayer $linkPlayer) {
+	$result = array('Player' => $linkPlayer);
 
 	$container = Page::create('skeleton.php', 'trader_search_result.php');
-	$container['player_id'] = $curr_player->getPlayerID();
+	$container['player_id'] = $linkPlayer->getPlayerID();
 	$result['SearchHREF'] = $container->href();
 
 	$container = Page::create('skeleton.php', 'council_list.php');
-	$container['race_id'] = $curr_player->getRaceID();
+	$container['race_id'] = $linkPlayer->getRaceID();
 	$result['RaceHREF'] = $container->href();
 
 	$container = Page::create('skeleton.php', 'message_send.php');
-	$container['receiver'] = $curr_player->getAccountID();
+	$container['receiver'] = $linkPlayer->getAccountID();
 	$result['MessageHREF'] = $container->href();
 
 	$container = Page::create('skeleton.php', 'bounty_view.php');
-	$container['id'] = $curr_player->getAccountID();
+	$container['id'] = $linkPlayer->getAccountID();
 	$result['BountyHREF'] = $container->href();
 
 	$container = Page::create('skeleton.php', 'hall_of_fame_player_detail.php');
-	$container['account_id'] = $curr_player->getAccountID();
-	$container['game_id'] = $curr_player->getGameID();
+	$container['account_id'] = $linkPlayer->getAccountID();
+	$container['game_id'] = $linkPlayer->getGameID();
 	$container['sending_page'] = 'search';
 	$result['HofHREF'] = $container->href();
 
 	$container = Page::create('skeleton.php', 'news_read_advanced.php');
 	$container['submit'] = 'Search For Player';
-	$container['playerName'] = $curr_player->getPlayerName();
+	$container['playerName'] = $linkPlayer->getPlayerName();
 	$result['NewsHREF'] = $container->href();
 
+	$player = Smr\Session::getInstance()->getPlayer();
 	if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 		$container = Page::create('sector_jump_processing.php');
-		$container['to'] = $curr_player->getSectorID();
+		$container['to'] = $linkPlayer->getSectorID();
 		$result['JumpHREF'] = $container->href();
 	}
 

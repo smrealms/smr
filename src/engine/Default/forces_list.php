@@ -1,7 +1,12 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $template->assign('PageTopic', 'View Forces');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT *
 			FROM sector_has_forces
 			WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '

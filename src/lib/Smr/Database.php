@@ -1,19 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr;
+
+use mysqli;
+use mysqli_result;
+use RuntimeException;
 use Smr\Container\DiContainer;
-use Smr\MySqlProperties;
+use Smr\DatabaseProperties;
 
-class MySqlDatabase {
+class Database {
 	private mysqli $dbConn;
-	private MySqlProperties $mysqlProperties;
+	private DatabaseProperties $dbProperties;
 	private string $selectedDbName;
-	/**
-	 * @var bool | mysqli_result
-	 */
-	private $dbResult = null;
-	private ?array $dbRecord = null;
+	private bool|mysqli_result $dbResult;
+	private ?array $dbRecord;
 
-	public static function getInstance(): MySqlDatabase {
+	public static function getInstance(): self {
 		return DiContainer::make(self::class);
 	}
 
@@ -29,15 +31,15 @@ class MySqlDatabase {
 		return $newMysqli;
 	}
 
-	public static function mysqliFactory(MySqlProperties $mysqlProperties): mysqli {
+	public static function mysqliFactory(DatabaseProperties $dbProperties): mysqli {
 		if (!mysqli_report(MYSQLI_REPORT_ERROR|MYSQLI_REPORT_STRICT)) {
 			throw new RuntimeException('Failed to enable mysqli error reporting');
 		}
 		$mysql = new mysqli(
-			$mysqlProperties->getHost(),
-			$mysqlProperties->getUser(),
-			$mysqlProperties->getPassword(),
-			$mysqlProperties->getDatabaseName());
+			$dbProperties->getHost(),
+			$dbProperties->getUser(),
+			$dbProperties->getPassword(),
+			$dbProperties->getDatabaseName());
 		$charset = $mysql->character_set_name();
 		if ($charset != 'utf8') {
 			throw new RuntimeException('Unexpected charset: ' . $charset);
@@ -46,19 +48,19 @@ class MySqlDatabase {
 	}
 
 	/**
-	 * MySqlDatabase constructor.
-	 * Not intended to be constructed by hand. If you need an instance of MySqlDatabase,
-	 * use MySqlDatabase::getInstance();
+	 * Database constructor.
+	 * Not intended to be constructed by hand. If you need an instance of Database,
+	 * use Database::getInstance();
 	 * @param ?mysqli $dbConn The mysqli instance (null if reconnect needed)
-	 * @param MySqlProperties $mysqlProperties The properties object that was used to construct the mysqli instance
+	 * @param DatabaseProperties $dbProperties The properties object that was used to construct the mysqli instance
 	 */
-	public function __construct(?mysqli $dbConn, MySqlProperties $mysqlProperties) {
+	public function __construct(?mysqli $dbConn, DatabaseProperties $dbProperties) {
 		if (is_null($dbConn)) {
 			$dbConn = self::reconnectMysql();
 		}
 		$this->dbConn = $dbConn;
-		$this->mysqlProperties = $mysqlProperties;
-		$this->selectedDbName = $mysqlProperties->getDatabaseName();
+		$this->dbProperties = $dbProperties;
+		$this->selectedDbName = $dbProperties->getDatabaseName();
 	}
 
 	/**
@@ -76,7 +78,7 @@ class MySqlDatabase {
 	 * Switch back to the configured live database
 	 */
 	public function switchDatabaseToLive() {
-		$this->switchDatabases($this->mysqlProperties->getDatabaseName());
+		$this->switchDatabases($this->dbProperties->getDatabaseName());
 	}
 
 	/**
@@ -92,10 +94,10 @@ class MySqlDatabase {
 	 * This should not be needed except perhaps by persistent connections
 	 *
 	 * Closes the connection to the MySQL database. After closing this connection,
-	 * this MySqlDatabase instance is no longer valid, and will subsequently throw exceptions when
+	 * this instance is no longer valid, and will subsequently throw exceptions when
 	 * attempting to perform database operations.
 	 *
-	 * You must call MySqlDatabase::getInstance() again to retrieve a valid instance that
+	 * You must call Database::getInstance() again to retrieve a valid instance that
 	 * is reconnected to the database.
 	 *
 	 * @return bool Whether the underlying connection was closed by this call.
@@ -108,8 +110,8 @@ class MySqlDatabase {
 		$this->dbConn->close();
 		unset($this->dbConn);
 		// Set the mysqli instance in the dependency injection container to
-		// null so that the MySqlDatabase constructor will reconnect the
-		// next time it is called.
+		// null so that the Database constructor will reconnect the next time
+		// it is called.
 		DiContainer::getContainer()->set(mysqli::class, null);
 		return true;
 	}
@@ -122,7 +124,7 @@ class MySqlDatabase {
 	 * Use to populate this instance with the next record of the active query.
 	 */
 	public function nextRecord(): bool {
-		if (!$this->dbResult) {
+		if (empty($this->dbResult)) {
 			$this->error('No resource to get record from.');
 		}
 		if ($this->dbRecord = $this->dbResult->fetch_assoc()) {

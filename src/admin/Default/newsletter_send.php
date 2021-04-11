@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $template->assign('PageTopic', 'Newsletter');
 
 $template->assign('CurrentEmail', $account->getEmail());
@@ -6,7 +11,7 @@ $template->assign('CurrentEmail', $account->getEmail());
 $processingContainer = Page::create('newsletter_send_processing.php');
 
 // Get the most recent newsletter text for preview
-$db = MySqlDatabase::getInstance();
+$db = Smr\Database::getInstance();
 $db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
 if ($db->nextRecord()) {
 	$id = $db->getInt('newsletter_id');

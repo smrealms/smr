@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Change Log');
 
 if (isset($var['Since'])) {
@@ -7,7 +9,8 @@ if (isset($var['Since'])) {
 	$template->assign('ContinueHREF', $container->href());
 }
 
-$db2 = MySqlDatabase::getInstance();
+$db = Smr\Database::getInstance();
+$db2 = Smr\Database::getInstance();
 
 $db->query('SELECT *
 			FROM version

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Computer Sharing');
 
 //future features
@@ -8,10 +10,11 @@ $skipClosedAccs = false;
 $skipExceptions = false;
 
 //extra db object and other vars
-$db2 = MySqlDatabase::getInstance();
+$db2 = Smr\Database::getInstance();
 $used = array();
 
 //check the db and get the info we need
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM multi_checking_cookie WHERE `use` = \'TRUE\'');
 $tables = [];
 while ($db->nextRecord()) {

@@ -1,4 +1,10 @@
 <?php declare(strict_types=1);
+
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 $body = htmlentities(trim(Request::get('body')), ENT_COMPAT, 'utf-8');
 $topic = Request::get('topic', ''); // only present for Create Thread
 $allEyesOnly = Request::has('allEyesOnly'); // only present for Create Thread
@@ -18,7 +24,7 @@ if ($action == 'Preview Thread' || $action == 'Preview Reply') {
 }
 
 if (!isset($var['alliance_id'])) {
-	SmrSession::updateVar('alliance_id', $player->getAllianceID());
+	$session->updateVar('alliance_id', $player->getAllianceID());
 }
 $alliance_id = $var['alliance_id'];
 
@@ -87,15 +93,15 @@ $db->query('REPLACE INTO player_read_thread
 $container = Page::create('skeleton.php');
 $container['alliance_id'] = $alliance_id;
 if (isset($var['alliance_eyes'])) {
-	$container['alliance_eyes'] = $var['alliance_eyes'];
+	$container->addVar('alliance_eyes');
 }
 if (isset($var['thread_index'])) {
 	$container['body'] = 'alliance_message_view.php';
 	$container['thread_index'] = $thread_index;
-	$container['thread_ids'] = $var['thread_ids'];
-	$container['thread_topics'] = $var['thread_topics'];
+	$container->addVar('thread_ids');
+	$container->addVar('thread_topics');
 	++$var['thread_replies'][$thread_index];
-	$container['thread_replies'] = $var['thread_replies'];
+	$container->addVar('thread_replies');
 } else {
 	$container['body'] = 'alliance_message.php';
 }

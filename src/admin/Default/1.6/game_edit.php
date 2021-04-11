@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 $template->assign('PageTopic', 'Edit Game Details');
 
 $gameID = $var['game_id'];

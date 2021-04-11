@@ -11,22 +11,19 @@ try {
 	// *
 	// ********************************
 
-
-	if (SmrSession::hasAccount()) {
-		// creates a new user account object
-		$account = SmrSession::getAccount();
-
+	$session = Smr\Session::getInstance();
+	if ($session->hasAccount()) {
 		// update last login column
-		$account->updateLastLogin();
+		$session->getAccount()->updateLastLogin();
 
 		$href = Page::create('login_check_processing.php')->href(true);
-		SmrSession::update();
+		$session->update();
 
 		header('Location: ' . $href);
 		exit;
 	}
 
-	$template = new Template();
+	$template = Smr\Template::getInstance();
 	if (Request::has('msg')) {
 		$template->assign('Message', htmlentities(trim(Request::get('msg')), ENT_COMPAT, 'utf-8'));
 	} elseif (Request::has('status')) {
@@ -39,7 +36,7 @@ try {
 
 	// Get recent non-admin game news
 	$gameNews = array();
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM news WHERE type != \'admin\' ORDER BY time DESC LIMIT 4');
 	while ($db->nextRecord()) {
 		$overrideGameID = $db->getInt('game_id'); //for bbifyMessage

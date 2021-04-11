@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 // get account_id from session
 $account_id = $var['account_id'];
 

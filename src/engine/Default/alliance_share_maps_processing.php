@@ -1,8 +1,12 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $alliance_ids = array();
 
 // get a list of alliance member
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM player
 			WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '

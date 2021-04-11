@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+$sector = $player->getSector();
+
 if ($player->hasNewbieTurns()) {
 	create_error('You are under newbie protection.');
 }
@@ -75,13 +81,14 @@ $results = [
 
 $account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'] . ' and the other team does ' . $results['Defenders']['TotalDamage'], $sector->getSectorID());
 
+$db = Smr\Database::getInstance();
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLAYER\',' . $db->escapeNumber($sector->getSectorID()) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($var['target']) . ',' . $db->escapeNumber($targetPlayer->getAllianceID()) . ',' . $db->escapeObject($results, true) . ')');
 
 $container = Page::create('skeleton.php', 'trader_attack.php');
 
 // If their target is dead there is no continue attack button
 if (!$targetPlayer->isDead()) {
-	$container['target'] = $var['target'];
+	$container->addVar('target');
 } else {
 	$container['target'] = 0;
 }

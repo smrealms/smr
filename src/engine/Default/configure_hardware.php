@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$ship = $session->getPlayer()->getShip();
+
 $template->assign('PageTopic', 'Configure Hardware');
 
 if ($ship->hasCloak()) {
@@ -18,6 +22,7 @@ if ($ship->hasIllusion()) {
 	$template->assign('SetIllusionFormHREF', $container->href());
 
 	$ships = array();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
 	while ($db->nextRecord()) {
 		$ships[$db->getInt('ship_type_id')] = $db->getField('ship_name');

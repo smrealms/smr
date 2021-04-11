@@ -2,7 +2,7 @@
 
 function main_page() {
 	// database object
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 
 	// list of all first letter nicks
 	create_link_list();
@@ -60,13 +60,13 @@ function main_page() {
 }
 
 function album_entry($album_id) {
-	// database object
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
+	$session = Smr\Session::getInstance();
 
 	// list of all first letter nicks
 	create_link_list();
 
-	if (SmrSession::hasAccount() && $album_id != SmrSession::getAccountID()) {
+	if ($session->hasAccount() && $album_id != $session->getAccountID()) {
 		$db->query('UPDATE album
 				SET page_views = page_views + 1
 				WHERE account_id = '.$db->escapeNumber($album_id) . ' AND
@@ -205,17 +205,17 @@ function album_entry($album_id) {
 		echo('<span style="font-size:85%;">[' . date(defined('DATE_FULL_SHORT') ?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $time) . '] &lt;' . $postee . '&gt; ' . $msg . '</span><br />');
 	}
 
-	if (SmrSession::hasAccount()) {
+	if ($session->hasAccount()) {
 		echo('<form action="album_comment.php">');
 		echo('<input type="hidden" name="album_id" value="' . $album_id . '">');
 		echo('<table>');
 		echo('<tr>');
-		echo('<td style="color:green; font-size:70%;">Nick:<br /><input type="text" size="10" name="nick" value="' . htmlspecialchars(get_album_nick(SmrSession::getAccountID())) . '" readonly></td>');
+		echo('<td style="color:green; font-size:70%;">Nick:<br /><input type="text" size="10" name="nick" value="' . htmlspecialchars(get_album_nick($session->getAccountID())) . '" readonly></td>');
 		echo('<td style="color:green; font-size:70%;">Comment:<br /><input type="text" size="50" name="comment"></td>');
 		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" value="Send"></td>');
 		$db->query('SELECT *
 					FROM account_has_permission
-					WHERE account_id = '.$db->escapeNumber(SmrSession::getAccountID()) . ' AND
+					WHERE account_id = '.$db->escapeNumber($session->getAccountID()) . ' AND
 						permission_id = '.$db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
 		if ($db->nextRecord()) {
 			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate"></td>');

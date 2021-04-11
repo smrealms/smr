@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 //get game id
 $gameID = $var['game_id'];
 
@@ -8,6 +11,7 @@ $template->assign('StatsGame', $statsGame);
 
 $template->assign('PageTopic', 'Game Stats: ' . $statsGame->getName() . ' (' . $gameID . ')');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT count(*) total_players, MAX(experience) max_exp, MAX(alignment) max_align, MIN(alignment) min_alignment, MAX(kills) max_kills FROM player WHERE game_id = ' . $gameID . ' ORDER BY experience DESC');
 if ($db->nextRecord()) {
 	$template->assign('TotalPlayers', $db->getInt('total_players'));
@@ -44,7 +48,7 @@ if ($db->getNumRows() > 0) {
 }
 
 function allianceTopTen($gameID, $field) {
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT alliance_id, SUM(' . $field . ') amount
 				FROM alliance
 				LEFT JOIN player USING (game_id, alliance_id)

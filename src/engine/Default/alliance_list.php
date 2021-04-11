@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $template->assign('PageTopic', 'List Of Alliances');
 
 if (!$player->hasAlliance()) {
@@ -11,6 +15,7 @@ if (!$player->hasAlliance()) {
 $container = Page::create('skeleton.php');
 
 // get list of alliances
+$db = Smr\Database::getInstance();
 $db->query('SELECT
 count(account_id) as alliance_member_count,
 sum(experience) as alliance_xp,

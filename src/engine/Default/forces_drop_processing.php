@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+$ship = $player->getShip();
+
 if ($player->getNewbieTurns() > 0) {
 	create_error('You can\'t take/drop forces under newbie protection!');
 }
@@ -8,7 +13,7 @@ if ($player->isLandedOnPlanet()) {
 	create_error('You must first launch to drop forces!');
 }
 
-if ($sector->hasLocation()) {
+if ($player->getSector()->hasLocation()) {
 	create_error('You can\'t drop forces in a sector with a location!');
 }
 

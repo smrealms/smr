@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
-$template->assign('PageTopic', 'Space Merchant Realms Chat');
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
 
+$template->assign('PageTopic', 'Space Merchant Realms Chat');
 
 $autoChannels = '#SMR';
 $nick = 'SMR-';

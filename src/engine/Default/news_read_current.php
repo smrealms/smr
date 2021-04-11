@@ -1,21 +1,27 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 if (!isset($var['GameID'])) {
-	SmrSession::updateVar('GameID', $player->getGameID());
+	$session->updateVar('GameID', $player->getGameID());
 }
 $gameID = $var['GameID'];
 
 $template->assign('PageTopic', 'Current News');
-Menu::news($template);
+Menu::news();
 
 require_once(get_file_loc('news.inc.php'));
-doBreakingNewsAssign($gameID, $template);
-doLottoNewsAssign($gameID, $template);
-
+doBreakingNewsAssign($gameID);
+doLottoNewsAssign($gameID);
 
 if (!isset($var['LastNewsUpdate'])) {
-	SmrSession::updateVar('LastNewsUpdate', $player->getLastNewsUpdate());
+	$session->updateVar('LastNewsUpdate', $player->getLastNewsUpdate());
 }
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > ' . $db->escapeNumber($var['LastNewsUpdate']) . ' AND type != \'lotto\' ORDER BY news_id DESC');
 $template->assign('NewsItems', getNewsItems($db));
 

@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 
 $joinRestriction = $alliance->getJoinRestriction($player);

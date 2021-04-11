@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if (isset($var['owner_id'])) {
 	$owner = SmrPlayer::getPlayer($var['owner_id'], $player->getGameID());
 	$template->assign('PageTopic', 'Change ' . htmlentities($owner->getPlayerName()) . '\'s Forces');

@@ -1,8 +1,11 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+
 $template->assign('PageTopic', 'Send Admin Message');
 
-$gameID = SmrSession::getRequestVarInt('SendGameID');
+$gameID = $session->getRequestVarInt('SendGameID');
 $container = Page::create('admin_message_send_processing.php');
 $container['SendGameID'] = $gameID;
 $template->assign('AdminMessageSendFormHref', $container->href());
@@ -12,6 +15,7 @@ $template->assign('ExpireTime', $var['expire'] ?? 0.5);
 if ($gameID != 20000) {
 	$game = SmrGame::getGame($gameID);
 	$gamePlayers = [['AccountID' => 0, 'Name' => 'All Players (' . $game->getName() . ')']];
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT account_id,player_id,player_name FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY player_name');
 	while ($db->nextRecord()) {
 		$gamePlayers[] = [

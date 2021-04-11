@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$account = $session->getAccount();
+
 $offenderReply = trim(Request::get('offenderReply'));
 $offenderBanPoints = Request::getInt('offenderBanPoints');
 $offendedReply = trim(Request::get('offendedReply'));

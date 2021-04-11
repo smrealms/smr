@@ -10,7 +10,8 @@ try {
 	// *
 	// ********************************
 
-	if (!SmrSession::hasAccount()) {
+	$session = Smr\Session::getInstance();
+	if (!$session->hasAccount()) {
 		if (Request::has('loginType')) {
 			$socialLogin = Smr\SocialLogin\SocialLogin::get(Request::get('loginType'))->login();
 			if (!$socialLogin->isValid()) {
@@ -21,7 +22,7 @@ try {
 			$account = SmrAccount::getAccountBySocialLogin($socialLogin);
 			if (!is_null($account)) {
 				// register session and continue to login
-				SmrSession::setAccount($account);
+				$session->setAccount($account);
 			} else {
 				// Let them create an account or link to existing
 				if (session_status() === PHP_SESSION_NONE) {
@@ -45,7 +46,7 @@ try {
 
 			$account = SmrAccount::getAccountByName($login);
 			if (is_object($account) && $account->checkPassword($password)) {
-				SmrSession::setAccount($account);
+				$session->setAccount($account);
 			} else {
 				$msg = 'Password is incorrect!';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -56,10 +57,10 @@ try {
 
 	// this sn identifies our container later
 	$href = Page::create('login_check_processing.php')->href(true);
-	SmrSession::update();
+	$session->update();
 
 	// get this user from db
-	$account = SmrSession::getAccount();
+	$account = $session->getAccount();
 
 	// If linking a social login to an existing account
 	if (Request::has('social')) {
@@ -89,7 +90,7 @@ try {
 	// * a u t o   n e w b i e   t u r n
 	// *
 	// *********************************
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM active_session ' .
 			   'WHERE last_accessed > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_NEWBIE_TIME));
 	if ($db->getNumRows() == 0) {

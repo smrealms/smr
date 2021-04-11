@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $feature = Request::get('feature');
 if (empty($feature)) {
 	create_error('We need at least a feature description!');
@@ -9,6 +12,7 @@ if (strlen($feature) > 500) {
 }
 
 // add this feature to db
+$db = Smr\Database::getInstance();
 $db->query('INSERT INTO feature_request (feature_request_id) VALUES (NULL)');
 $featureRequestID = $db->getInsertID();
 $db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text) ' .

@@ -3,7 +3,7 @@
 try {
 	require_once('../bootstrap.php');
 
-	$template = new Template();
+	$template = Smr\Template::getInstance();
 	$template->assign('Body', 'login/resend_password.php');
 	$template->display('login/skeleton.php');
 

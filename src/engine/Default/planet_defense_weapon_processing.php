@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
 }
@@ -15,6 +19,7 @@ if (Request::has('transfer')) {
 		create_error('You must select a weapon to transfer!');
 	}
 	$shipOrderID = Request::getInt('ship_order' . $planetOrderID);
+	$ship = $player->getShip();
 	$weapon = $ship->getWeapons()[$shipOrderID];
 	$planet->addMountedWeapon($weapon, $planetOrderID);
 	$ship->removeWeapon($shipOrderID);

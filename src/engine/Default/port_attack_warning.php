@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$sector = $session->getPlayer()->getSector();
+
 if (!$sector->hasPort()) {
 	create_error('This sector does not have a port.');
 }
@@ -7,6 +10,8 @@ if (!$sector->hasPort()) {
 if ($sector->getPort()->isDestroyed()) {
 	Page::create('skeleton.php', 'port_attack.php')->go();
 }
+
+$template = Smr\Template::getInstance();
 
 $template->assign('PageTopic', 'Port Raid');
 

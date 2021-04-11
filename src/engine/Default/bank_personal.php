@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 // is account validated?
 if (!$account->isValidated()) {
 	create_error('You are not validated so you cannot use banks.');

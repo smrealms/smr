@@ -1,4 +1,10 @@
 <?php declare(strict_types=1);
+
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 if (!$player->isOnCouncil()) {
 	create_error('You have to be on the council in order to vote.');
 }

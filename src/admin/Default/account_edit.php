@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$db = Smr\Database::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 $template->assign('PageTopic', 'Edit Account');
 
 $account_id = $var['account_id'];

@@ -1,7 +1,13 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $template->assign('PageTopic', 'Alliance Kill Rankings');
 Menu::rankings(1, 2);
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT count(*) FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 $db->requireRecord();

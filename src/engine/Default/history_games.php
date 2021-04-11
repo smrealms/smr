@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$account = $session->getAccount();
+
 //topic
 if (!isset($var['game_name']) || !isset($var['view_game_id'])) {
 	create_error('No game specified!');
@@ -9,6 +14,7 @@ $game_id = $var['view_game_id'];
 $template->assign('PageTopic', 'Old SMR Game : ' . $game_name);
 Menu::history_games(0);
 
+$db = Smr\Database::getInstance();
 $db->switchDatabases($var['HistoryDatabase']);
 $db->query('SELECT start_date, type, end_date, game_name, speed, game_id ' .
            'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));

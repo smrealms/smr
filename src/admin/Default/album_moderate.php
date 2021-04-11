@@ -1,12 +1,16 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+
 $template->assign('PageTopic', 'Moderate Photo Album');
 
 require_once(LIB . 'Album/album_functions.php');
 
-$account_id = SmrSession::getRequestVarInt('account_id');
+$account_id = $session->getRequestVarInt('account_id');
 
 // check if the given account really has an entry
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account_id) . ' AND Approved = \'YES\'');
 if ($db->nextRecord()) {
 	$disabled = $db->getBoolean('disabled');

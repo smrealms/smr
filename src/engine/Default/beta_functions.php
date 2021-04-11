@@ -3,6 +3,10 @@ if (!ENABLE_BETA) {
 	create_error('Beta functions are disabled.');
 }
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$sector = $session->getPlayer()->getSector();
+
 $template->assign('PageTopic', 'Beta Functions');
 
 // container for all links
@@ -20,6 +24,7 @@ $template->assign('MoneyHREF', $container->href());
 $container['func'] = 'Ship';
 $template->assign('ShipHREF', $container->href());
 $shipList = [];
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM ship_type ORDER BY ship_name');
 while ($db->nextRecord()) {
 	$shipList[] = [

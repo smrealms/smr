@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+$ship = $player->getShip();
+$sector = $player->getSector();
+
 if ($player->hasNewbieTurns()) {
 	create_error('You are under newbie protection!');
 }
@@ -73,6 +79,7 @@ $account->log(LOG_TYPE_PORT_RAIDING, 'Player attacks port, the port does ' . $re
 
 $port->update();
 
+$db = Smr\Database::getInstance();
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PORT\',' . $db->escapeNumber($port->getSectorID()) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $db->escapeNumber(PORT_ALLIANCE_ID) . ',' . $db->escapeObject($results, true) . ')');
 $logId = $db->escapeString('[ATTACK_RESULTS]' . $db->getInsertID());
 foreach ($attackers as $attacker) {

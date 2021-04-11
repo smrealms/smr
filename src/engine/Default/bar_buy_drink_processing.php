@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $message = '<div class="center">';
 
 if ($player->getCredits() < 10) {
@@ -66,7 +70,7 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 }
 
 $player->actionTaken('BuyDrink', array(
-	'SectorID' => $sector->getSectorID(),
+	'SectorID' => $player->getSectorID(),
 	'Drink' => $drinkName
 ));
 

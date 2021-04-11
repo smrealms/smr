@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('PageTopic', 'Database Cleanup');
 
 function bytesToMB($bytes) {
 	return round($bytes / (1024 * 1024), 1) . ' MB';
 }
 
+$db = Smr\Database::getInstance();
 $template->assign('DbSizeMB', bytesToMB($db->getDbBytes()));
 
 if (isset($var['results'])) {

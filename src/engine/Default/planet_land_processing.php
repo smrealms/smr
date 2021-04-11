@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 // is account validated?
 if (!$account->isValidated()) {
 	create_error('You are not validated so you can\'t land on a planet.');
@@ -22,6 +26,7 @@ if ($planet->getMaxLanded() != 0 && $planet->getMaxLanded() <= $planet->countPla
 
 if ($player->hasAlliance()) {
 	$role_id = $player->getAllianceRole();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 	$db->requireRecord();
 	if (!$db->getBoolean('planet_access')) {

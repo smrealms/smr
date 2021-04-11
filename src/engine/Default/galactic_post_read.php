@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 Menu::galactic_post();
 
 if (!empty($var['paper_id'])) {
@@ -10,10 +12,11 @@ if (!empty($var['paper_id'])) {
 	// Create link back to past editions
 	if (isset($var['back']) && $var['back']) {
 		$container = Page::create('skeleton.php', 'galactic_post_past.php');
-		$container['game_id'] = $var['game_id'];
+		$container->addVar('game_id');
 		$template->assign('BackHREF', $container->href());
 	}
 
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);
 	$db->requireRecord();
 	$paper_name = bbifyMessage($db->getField('title'));

@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+$player = $session->getPlayer();
+
 $amount = Request::getInt('amount');
 $smrCredits = Request::getInt('smrcredits');
 

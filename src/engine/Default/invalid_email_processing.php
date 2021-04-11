@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 if (Request::get('action') == "Resend Validation Code") {
 	$account->changeEmail($account->getEmail());
 } else {

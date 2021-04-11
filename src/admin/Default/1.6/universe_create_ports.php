@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-SmrSession::getRequestVarInt('gal_on');
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+
+$session->getRequestVarInt('gal_on');
 $template->assign('Galaxies', SmrGalaxy::getGameGalaxies($var['game_id']));
 
 $container = Page::create('skeleton.php', '1.6/universe_create_ports.php');

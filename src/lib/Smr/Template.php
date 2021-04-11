@@ -1,5 +1,16 @@
 <?php declare(strict_types=1);
 
+namespace Smr;
+
+use DOMDocument;
+use DOMNode;
+use DOMXpath;
+use Exception;
+use Globals;
+use Smr\Container\DiContainer;
+use Smr\Session;
+use SmrAccount;
+
 class Template {
 	private $data = array();
 	private $ignoreMiddle = false;
@@ -9,6 +20,15 @@ class Template {
 	private $displayCalled = false;
 	private $listjsInclude = null;
 	private $jsSources = [];
+
+	/**
+	 * Return the Smr\Template in the DI container.
+	 * If one does not exist yet, it will be created.
+	 * This is the intended way to construct this class.
+	 */
+	public static function getInstance() : self {
+		return DiContainer::get(self::class);
+	}
 
 	public function __destruct() {
 		if (!$this->displayCalled && !empty($this->data)) {
@@ -58,7 +78,8 @@ class Template {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$output = '<all>' . $ajaxXml . '</all>';
 			}
-			SmrSession::saveAjaxReturns();
+			$session = Session::getInstance();
+			$session->saveAjaxReturns();
 		}
 
 		// Now that we are completely done processing, we can output
@@ -82,8 +103,9 @@ class Template {
 			$templateDir .= 'Default/';
 		}
 
-		if (SmrSession::hasGame()) {
-			$gameDir = Globals::getGameType(SmrSession::getGameID()) . '/';
+		$session = Session::getInstance();
+		if ($session->hasGame()) {
+			$gameDir = Globals::getGameType($session->getGameID()) . '/';
 		} else {
 			$gameDir = 'Default/';
 		}
@@ -177,7 +199,8 @@ class Template {
 	}
 
 	protected function addJavascriptAlert($string) {
-		if (!SmrSession::addAjaxReturns('ALERT:' . $string, $string)) {
+		$session = Session::getInstance();
+		if (!$session->addAjaxReturns('ALERT:' . $string, $string)) {
 			$this->jsAlerts[] = $string;
 		}
 	}
@@ -193,6 +216,8 @@ class Template {
 		if (empty($str)) {
 			return '';
 		}
+
+		$session = Session::getInstance();
 
 		// To get inner html, we need to construct a separate DOMDocument.
 		// See PHP Bug #76285.
@@ -216,7 +241,7 @@ class Template {
 			foreach ($matchNodes as $node) {
 				$id = $node->getAttribute('id');
 				$inner = $getInnerHTML($node);
-				if (!SmrSession::addAjaxReturns($id, $inner) && $returnXml) {
+				if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
 					$xml .= '<' . $id . '>' . xmlify($inner) . '</' . $id . '>';
 				}
 			}
@@ -246,7 +271,7 @@ class Template {
 				$inner = $getInnerHTML($mid);
 				if (!$this->checkDisableAJAX($inner)) {
 					$id = $mid->getAttribute('id');
-					if (!SmrSession::addAjaxReturns($id, $inner) && $returnXml) {
+					if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
 						$xml .= '<' . $id . '>' . xmlify($inner) . '</' . $id . '>';
 					}
 				}
@@ -255,7 +280,7 @@ class Template {
 
 		$js = '';
 		foreach ($this->ajaxJS as $varName => $JSON) {
-			if (!SmrSession::addAjaxReturns('JS:' . $varName, $JSON) && $returnXml) {
+			if (!$session->addAjaxReturns('JS:' . $varName, $JSON) && $returnXml) {
 				$js .= '<' . $varName . '>' . xmlify($JSON) . '</' . $varName . '>';
 			}
 		}

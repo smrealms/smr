@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$account = $session->getAccount();
+
 $game = SmrGame::getGame($var['game_id']);
 
 // do we need credits for this game?
@@ -29,6 +34,7 @@ if (Smr\Epoch::time() >= $game->getJoinTime()) {
 }
 
 $races = [];
+$db = Smr\Database::getInstance();
 foreach ($game->getPlayableRaceIDs() as $raceID) {
 	// get number of traders in game
 	$db->query('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db->escapeNumber($raceID) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));

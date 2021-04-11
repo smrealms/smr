@@ -70,7 +70,7 @@ class AbstractSmrPort {
 	}
 
 	public static function getGalaxyPorts($gameID, $galaxyID, $forceUpdate = false) {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		// Use a left join so that we populate the cache for every sector
 		$db->query('SELECT port.*, sector_id FROM sector LEFT JOIN port USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPorts = [];
@@ -93,7 +93,7 @@ class AbstractSmrPort {
 	}
 
 	public static function removePort($gameID, $sectorID) {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
 		        AND sector_id = ' . $db->escapeNumber($sectorID);
 		$db->query('DELETE FROM port WHERE ' . $SQL);
@@ -127,7 +127,7 @@ class AbstractSmrPort {
 
 	protected function __construct($gameID, $sectorID, $db = null) {
 		$this->cachedTime = Smr\Epoch::time();
-		$this->db = MySqlDatabase::getInstance();
+		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
 		if (isset($db)) {
@@ -1110,7 +1110,7 @@ class AbstractSmrPort {
 	}
 	public static function getCachedPort($gameID, $sectorID, $accountID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID])) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT visited, port_info
 						FROM player_visited_port
 						JOIN port_info_cache USING (game_id,sector_id,port_info_hash)
@@ -1139,7 +1139,7 @@ class AbstractSmrPort {
 
 	public function __wakeup() {
 		$this->cachedVersion = true;
-		$this->db = MySqlDatabase::getInstance();
+		$this->db = Smr\Database::getInstance();
 	}
 
 	public function update() {

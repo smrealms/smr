@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 if (!isset($var['log_ids']) && !isset($var['current_log'])) {
 	create_error('You must select a combat log to view');
 }
 
 // Set properties for the current display page
 $display_id = $var['log_ids'][$var['current_log']];
+$db = Smr\Database::getInstance();
 $db->query('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($display_id) . ' LIMIT 1');
 
 if (!$db->nextRecord()) {

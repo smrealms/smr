@@ -1,9 +1,15 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $template->assign('PageTopic', 'Voting');
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM voting ORDER BY end DESC');
 if ($db->getNumRows() > 0) {
-	$db2 = MySqlDatabase::getInstance();
+	$db2 = Smr\Database::getInstance();
 	$votedFor = array();
 	$db2->query('SELECT * FROM voting_results WHERE account_id = ' . $db2->escapeNumber($account->getAccountID()));
 	while ($db2->nextRecord()) {

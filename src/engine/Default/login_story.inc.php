@@ -14,6 +14,7 @@ $story = array(
 	'This is the universe you find yourself in.',
 	'Space Merchant Realms is a game of speed, skill, and strategy. To make it to the top ranks, it takes a combination of leadership, persistence, courage, and cooperation. Will you quest for riches as a tradeship captain? Or seek fame and glory as an alliance fleet commander? Is the life of a pirate what you are after? Where will your destiny take you?'
 );
+$template = Smr\Template::getInstance();
 $template->assign('Story', $story);
 
 //$story = array();

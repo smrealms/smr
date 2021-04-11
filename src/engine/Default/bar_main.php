@@ -1,7 +1,12 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 //first check if there is a bar here
-if (!$sector->hasBar()) {
+if (!$player->getSector()->hasBar()) {
 	create_error('So two guys walk into this bar...');
 }
 
@@ -19,6 +24,7 @@ if (isset($var['message'])) {
 
 $winningTicket = false;
 //check for winner
+$db = Smr\Database::getInstance();
 $db->query('SELECT prize FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0 LIMIT 1');
 if ($db->nextRecord()) {
 	$winningTicket = $db->getInt('prize');

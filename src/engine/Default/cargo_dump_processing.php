@@ -1,4 +1,11 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+$ship = $player->getShip();
+$sector = $player->getSector();
+
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
 $amount = Request::getVarInt('amount');

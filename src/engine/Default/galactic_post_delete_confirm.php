@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 if (isset($var['article'])) {
 	$template->assign('PageTopic', 'Delete Article - Confirm');
 	$db->query('SELECT * FROM galactic_post_article WHERE article_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));

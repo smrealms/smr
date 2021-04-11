@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+$db = Smr\Database::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 $action = Request::get('action');
 if ($action == 'Marked Messages') {
 	if (!Request::has('message_id')) {
@@ -14,4 +18,5 @@ if ($action == 'Marked Messages') {
 	}
 	$db->query('DELETE FROM message_boxes WHERE box_type_id = ' . $db->escapeNumber($var['box_type_id']));
 }
+
 Page::create('skeleton.php', 'box_view.php')->go();

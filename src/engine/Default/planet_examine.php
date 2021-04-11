@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $template->assign('PageTopic', 'Examine Planet');
 
 $planet = $player->getSectorPlanet();
@@ -16,6 +20,7 @@ if (!$planetLand) {
 	if ($planet->hasOwner()) {
 		$ownerAllianceID = $planet->getOwner()->getAllianceID();
 	}
+	$db = Smr\Database::getInstance();
 	$db->query('
 		SELECT planet_land
 		FROM alliance_treaties

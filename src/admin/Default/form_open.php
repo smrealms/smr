@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
-$template->assign('PageTopic', 'Open/Close Forms');
+$template = Smr\Template::getInstance();
 
+$template->assign('PageTopic', 'Open/Close Forms');
 
 $container = Page::create('form_open_processing.php');
 $container['type'] = 'FEATURE';

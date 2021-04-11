@@ -2,6 +2,11 @@
 // include helper file
 require_once(LIB . 'Default/shop_goods.inc.php');
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+$ship = $player->getShip();
+
 // create object from port we can work with
 $port = $player->getSectorPort();
 

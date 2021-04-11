@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 require_once(get_file_loc('hof.inc.php'));
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
+
 $game_id = null;
 if (isset($var['game_id'])) {
 	$game_id = $var['game_id'];
@@ -18,6 +23,7 @@ if (isset($game_id)) {
 }
 $template->assign('PersonalHofHREF', $container->href());
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT type FROM hof_visibility WHERE visibility != ' . $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';
 const USER_SCORE_NAME = 'User Score';

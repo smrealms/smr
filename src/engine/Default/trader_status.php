@@ -1,4 +1,10 @@
 <?php declare(strict_types=1);
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+$ship = $player->getShip();
+
 $template->assign('PageTopic', 'Trader Status');
 
 Menu::trader();
@@ -19,6 +25,7 @@ $template->assign('SavingsHREF', $container->href());
 $container['body'] = 'trader_bounties.php';
 $template->assign('BountiesHREF', $container->href());
 
+$db = Smr\Database::getInstance();
 $db->query('SELECT count(*) FROM bounty WHERE claimer_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
 $db->requireRecord();
 $template->assign('BountiesClaimable', $db->getInt('count(*)'));

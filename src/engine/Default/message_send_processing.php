@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
+
 $message = htmlentities(trim(Request::get('message')), ENT_COMPAT, 'utf-8');
 
 if (Request::get('action') == 'Preview message') {
@@ -20,6 +23,7 @@ if (empty($message)) {
 }
 
 if (isset($var['alliance_id'])) {
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT account_id FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_id = ' . $var['alliance_id'] . '

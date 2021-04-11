@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 // check if our alignment is high enough
 if ($player->getAlignment() <= ALIGNMENT_EVIL) {
 	create_error('You are not allowed to enter our Government HQ!');

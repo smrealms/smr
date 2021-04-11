@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 $action = Request::get('action');
 if (!in_array($action, ['Deposit', 'Payment'])) {
 	throw new Exception('Invalid action submitted: ' . $action);
@@ -12,6 +17,7 @@ if ($amount <= 0) {
 }
 
 // Get the next transaction ID for this anon bank
+$db = Smr\Database::getInstance();
 $db->query('SELECT transaction_id FROM anon_bank_transactions WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num) . ' ORDER BY transaction_id DESC LIMIT 1');
 if ($db->nextRecord()) {
 	$trans_id = $db->getInt('transaction_id') + 1;

@@ -129,7 +129,7 @@ abstract class AbstractSmrPlayer {
 	 * for reducing the number of queries in galaxy-wide processing.
 	 */
 	public static function getGalaxyPlayers($gameID, $galaxyID, $forceUpdate = false) {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT player.*, sector_id FROM sector LEFT JOIN player USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlayers = [];
 		while ($db->nextRecord()) {
@@ -148,7 +148,7 @@ abstract class AbstractSmrPlayer {
 
 	public static function getSectorPlayers($gameID, $sectorID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
 			while ($db->nextRecord()) {
@@ -162,7 +162,7 @@ abstract class AbstractSmrPlayer {
 
 	public static function getPlanetPlayers($gameID, $sectorID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID])) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
 			while ($db->nextRecord()) {
@@ -176,7 +176,7 @@ abstract class AbstractSmrPlayer {
 
 	public static function getAlliancePlayers($gameID, $allianceID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID])) {
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY experience DESC');
 			$players = array();
 			while ($db->nextRecord()) {
@@ -196,7 +196,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public static function getPlayerByPlayerID($playerID, $gameID, $forceUpdate = false) {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_id = ' . $db->escapeNumber($playerID) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getPlayer($db->getInt('account_id'), $gameID, $forceUpdate, $db);
@@ -205,7 +205,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public static function getPlayerByPlayerName($playerName, $gameID, $forceUpdate = false) {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getPlayer($db->getInt('account_id'), $gameID, $forceUpdate, $db);
@@ -214,7 +214,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	protected function __construct($gameID, $accountID, $db = null) {
-		$this->db = MySqlDatabase::getInstance();
+		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
 		if (isset($db)) {
@@ -277,7 +277,7 @@ abstract class AbstractSmrPlayer {
 	 */
 	public static function createPlayer($accountID, $gameID, $playerName, $raceID, $isNewbie, $npc = false) {
 		$time = Smr\Epoch::time();
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->lockTable('player');
 
 		// Player names must be unique within each game
@@ -642,7 +642,7 @@ abstract class AbstractSmrPlayer {
 
 	protected static function doMessageSending($senderID, $receiverID, $gameID, $messageTypeID, $message, $expires, $senderDelete = false, $unread = true) {
 		$message = trim($message);
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		// send him the message
 		$db->query('INSERT INTO message
 			(account_id,game_id,message_type_id,message_text,
@@ -705,11 +705,11 @@ abstract class AbstractSmrPlayer {
 		$this->sendMessageToBox(BOX_GLOBALS, $message);
 
 		// send to all online player
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT account_id
 					FROM active_session
 					JOIN player USING (game_id, account_id)
-					WHERE active_session.last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - SmrSession::TIME_BEFORE_EXPIRY) . '
+					WHERE active_session.last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - Smr\Session::TIME_BEFORE_EXPIRY) . '
 						AND game_id = ' . $db->escapeNumber($this->getGameID()) . '
 						AND ignore_globals = \'FALSE\'
 						AND account_id != ' . $db->escapeNumber($this->getAccountID()));
@@ -2036,7 +2036,7 @@ abstract class AbstractSmrPlayer {
 	public static function getHOFVis() {
 		if (!isset(self::$HOFVis)) {
 			//Get Player HOF Vis
-			$db = MySqlDatabase::getInstance();
+			$db = Smr\Database::getInstance();
 			$db->query('SELECT type,visibility FROM hof_visibility');
 			self::$HOFVis = array();
 			while ($db->nextRecord()) {
@@ -2170,13 +2170,14 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function removeUnderAttack() : bool {
-		global $var;
+		$session = Smr\Session::getInstance();
+		$var = $session->getCurrentVar();
 		if (isset($var['UnderAttack'])) {
 			return $var['UnderAttack'];
 		}
 		$underAttack = $this->isUnderAttack();
 		if ($underAttack && !USING_AJAX) {
-			SmrSession::updateVar('UnderAttack', $underAttack); //Remember we are under attack for AJAX
+			$session->updateVar('UnderAttack', $underAttack); //Remember we are under attack for AJAX
 		}
 		$this->setUnderAttack(false);
 		return $underAttack;

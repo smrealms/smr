@@ -3,7 +3,7 @@
 class SmrAlliance {
 	protected static $CACHE_ALLIANCES = array();
 
-	protected MySqlDatabase $db;
+	protected Smr\Database $db;
 	protected string $SQL;
 
 	protected int $gameID;
@@ -39,7 +39,7 @@ class SmrAlliance {
 	}
 
 	public static function getAllianceByDiscordChannel(string $channel, bool $forceUpdate = false) : ?SmrAlliance {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT alliance_id, game_id FROM alliance JOIN game USING(game_id) WHERE discord_channel = ' . $db->escapeString($channel) . ' AND game.end_time > ' . $db->escapeNumber(time()) . ' ORDER BY game_id DESC LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAlliance($db->getInt('alliance_id'), $db->getInt('game_id'), $forceUpdate);
@@ -49,7 +49,7 @@ class SmrAlliance {
 	}
 
 	public static function getAllianceByIrcChannel(string $channel, bool $forceUpdate = false) : ?SmrAlliance {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAlliance($db->getInt('alliance_id'), $db->getInt('game_id'), $forceUpdate);
@@ -59,7 +59,7 @@ class SmrAlliance {
 	}
 
 	public static function getAllianceByName(string $name, int $gameID, bool $forceUpdate = false) : ?SmrAlliance {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 		$db->query('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return self::getAlliance($db->getInt('alliance_id'), $gameID, $forceUpdate);
@@ -69,7 +69,7 @@ class SmrAlliance {
 	}
 
 	protected function __construct(int $allianceID, int $gameID) {
-		$this->db = MySqlDatabase::getInstance();
+		$this->db = Smr\Database::getInstance();
 
 		$this->allianceID = $allianceID;
 		$this->gameID = $gameID;
@@ -106,7 +106,7 @@ class SmrAlliance {
 	 * Starts alliance with "closed" recruitment (for safety).
 	 */
 	public static function createAlliance(int $gameID, string $name) : SmrAlliance {
-		$db = MySqlDatabase::getInstance();
+		$db = Smr\Database::getInstance();
 
 		// check if the alliance name already exists
 		$db->query('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
@@ -363,18 +363,13 @@ class SmrAlliance {
 		}
 	}
 
-	public function setAllianceDescription(string $description) : void {
+	public function setAllianceDescription(string $description, AbstractSmrPlayer $player) : void {
 		$description = word_filter($description);
 		if ($description == $this->description) {
 			return;
 		}
-		global $player, $account;
 		$boxDescription = 'Alliance ' . $this->getAllianceBBLink() . ' had their description changed to:' . EOL . EOL . $description;
-		if (is_object($player)) {
-			$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
-		} else {
-			$account->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
-		}
+		$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
 		$this->description = $description;
 	}
 

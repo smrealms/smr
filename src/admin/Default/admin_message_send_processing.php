@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 const ALL_GAMES_ID = 20000;
 $message = trim(Request::get('message'));
 $expire = Request::getFloat('expire');
@@ -26,6 +28,8 @@ if ($expire < 0) {
 if ($expire > 0) {
 	$expire = ($expire * 3600) + Smr\Epoch::time();
 }
+
+$db = Smr\Database::getInstance();
 
 $receivers = [];
 if ($game_id != ALL_GAMES_ID) {

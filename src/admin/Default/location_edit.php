@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$template = Smr\Template::getInstance();
+
 $template->assign('ViewAllLocationsLink', Page::create('skeleton.php', 'location_edit.php')->href());
 
 if (isset($var['location_type_id'])) {
@@ -43,6 +45,7 @@ if (isset($var['location_type_id'])) {
 	$template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
 
 
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT * FROM hardware_type');
 	$hardware = array();
 	while ($db->nextRecord()) {

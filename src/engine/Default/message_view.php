@@ -1,7 +1,14 @@
 <?php declare(strict_types=1);
 require_once(get_file_loc('messages.inc.php'));
+
+$template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$player = $session->getPlayer();
+
 Menu::messages();
 
+$db = Smr\Database::getInstance();
 $whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
 if ($var['folder_id'] == MSG_SENT) {
 	$whereClause .= ' AND sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
@@ -79,9 +86,10 @@ if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['T
 	$messageBox['ShowAllHref'] = $dispContainer->href();
 
 	displayScouts($messageBox, $player);
+	$template->unassign('NextPageHREF'); // always displaying all scout messages?
 } else {
 	while ($db->nextRecord()) {
-		displayMessage($messageBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $db->getField('message_text'), $db->getInt('send_time'), $db->getBoolean('msg_read'), $var['folder_id']);
+		displayMessage($messageBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $player->getGameID(), $db->getField('message_text'), $db->getInt('send_time'), $db->getBoolean('msg_read'), $var['folder_id']);
 	}
 }
 if (!USING_AJAX) {
@@ -91,9 +99,9 @@ if (!USING_AJAX) {
 $template->assign('MessageBox', $messageBox);
 
 
-function displayScouts(&$messageBox, $player) {
+function displayScouts(&$messageBox, SmrPlayer $player) {
 	// Generate the group messages
-	$db = MySqlDatabase::getInstance();
+	$db = Smr\Database::getInstance();
 	$db->query('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
 					FROM message
 					JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
@@ -125,14 +133,12 @@ function displayScouts(&$messageBox, $player) {
 		$groupBox =& $messageBox['GroupedMessages'][$db->getInt('sender_id')];
 		// Limit the number of messages in each group
 		if (!isset($groupBox['Messages']) || count($groupBox['Messages']) < MESSAGE_SCOUT_GROUP_LIMIT) {
-			displayMessage($groupBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), stripslashes($db->getField('message_text')), $db->getInt('send_time'), $db->getBoolean('msg_read'), MSG_SCOUT);
+			displayMessage($groupBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $player->getGameID(), stripslashes($db->getField('message_text')), $db->getInt('send_time'), $db->getBoolean('msg_read'), MSG_SCOUT);
 		}
 	}
 
 	// In the default view (groups), we're always displaying all messages
 	$messageBox['NumberMessages'] = $db->getNumRows();
-	global $template;
-	$template->unassign('NextPageHREF');
 }
 
 function displayGrouped(&$messageBox, SmrPlayer $sender, $message_text, $first, $last, $star) {
@@ -153,9 +159,7 @@ function displayGrouped(&$messageBox, SmrPlayer $sender, $message_text, $first, 
 	$messageBox['Messages'][] = $message;
 }
 
-function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $message_text, $send_time, $msg_read, $type) {
-	global $player;
-
+function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $game_id, $message_text, $send_time, $msg_read, $type) {
 	$message = array();
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;
@@ -164,7 +168,7 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 
 	// Display the sender (except for scout messages)
 	if ($type != MSG_SCOUT) {
-		$sender = getMessagePlayer($sender_id, $player->getGameID(), $type);
+		$sender = getMessagePlayer($sender_id, $game_id, $type);
 		if ($sender instanceof SmrPlayer) {
 			$message['Sender'] = $sender;
 			$container = Page::create('skeleton.php', 'trader_search_result.php');
@@ -193,7 +197,7 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 	}
 
 	if ($type == MSG_SENT) {
-		$receiver = SmrPlayer::getPlayer($receiver_id, $player->getGameID());
+		$receiver = SmrPlayer::getPlayer($receiver_id, $game_id);
 		$container = Page::create('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $receiver->getPlayerID();
 		$message['ReceiverDisplayName'] = create_link($container, $receiver->getDisplayName());

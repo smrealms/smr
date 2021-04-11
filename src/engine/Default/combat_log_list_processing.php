@@ -5,15 +5,19 @@
 if (!Request::has('id')) {
 	$container = Page::create('skeleton.php', 'combat_log_list.php');
 	$container['message'] = 'You must select at least one combat log!';
-	$container['action'] = $var['old_action'];
+	$container->addVar('old_action', 'action');
 	$container->go();
 }
+
+$session = Smr\Session::getInstance();
+$player = $session->getPlayer();
 
 $submitAction = Request::get('action');
 $logIDs = array_keys(Request::getArray('id'));
 
 // Do we need to save any logs (or delete any saved logs)?
 if ($submitAction == 'Save' || $submitAction == 'Delete') {
+	$db = Smr\Database::getInstance();
 	if ($submitAction == 'Save') {
 		//save the logs we checked
 		// Query means people can only save logs that they are allowd to view.
@@ -42,7 +46,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 	// Now that the logs have been saved/deleted, go back to the log list
 	$container = Page::create('skeleton.php', 'combat_log_list.php');
 	$container['message'] = $submitAction . 'd ' . $db->getChangedRows() . ' new logs.';
-	$container['action'] = $var['old_action'];
+	$container->addVar('old_action', 'action');
 	$container->go();
 } elseif ($submitAction == 'View') {
 	$container = Page::create('skeleton.php', 'combat_log_viewer.php');
