@@ -3,6 +3,7 @@
 namespace Smr;
 
 use mysqli;
+use mysqli_result;
 use RuntimeException;
 use Smr\Container\DiContainer;
 use Smr\DatabaseProperties;
@@ -11,11 +12,8 @@ class Database {
 	private mysqli $dbConn;
 	private DatabaseProperties $dbProperties;
 	private string $selectedDbName;
-	/**
-	 * @var bool | mysqli_result
-	 */
-	private $dbResult = null;
-	private ?array $dbRecord = null;
+	private bool|mysqli_result $dbResult;
+	private ?array $dbRecord;
 
 	public static function getInstance(): self {
 		return DiContainer::make(self::class);
@@ -126,7 +124,7 @@ class Database {
 	 * Use to populate this instance with the next record of the active query.
 	 */
 	public function nextRecord(): bool {
-		if (!$this->dbResult) {
+		if (empty($this->dbResult)) {
 			$this->error('No resource to get record from.');
 		}
 		if ($this->dbRecord = $this->dbResult->fetch_assoc()) {
