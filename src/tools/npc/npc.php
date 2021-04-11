@@ -103,7 +103,6 @@ function NPCStuff() {
 	$actions = -1;
 
 	$session = Smr\Session::getInstance();
-	$db = Smr\Database::getInstance();
 
 	while (true) {
 		// Clear the $_REQUEST global, in case we had set it, to avoid
