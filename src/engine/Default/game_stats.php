@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $template = Smr\Template::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
 
 //get game id
 $gameID = $var['game_id'];

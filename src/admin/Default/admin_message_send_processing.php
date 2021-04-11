@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 const ALL_GAMES_ID = 20000;
 $message = trim(Request::get('message'));
 $expire = Request::getFloat('expire');

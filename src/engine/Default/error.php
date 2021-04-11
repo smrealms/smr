@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+
 if (empty($var['message']) || $var['message'] == '') {
 	$var['message'] = 'File not found';
 }
 
-if (Smr\Session::getInstance()->hasGame() && $lock) {
+if ($session->hasGame() && $lock) {
 	$container = Page::create('skeleton.php', 'current_sector.php');
 	$errorMsg = '<span class="red bold">ERROR:</span> ' . $var['message'];
 	$container['errorMsg'] = $errorMsg;

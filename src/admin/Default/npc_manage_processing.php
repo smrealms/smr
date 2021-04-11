@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $db = Smr\Database::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
 
 // Change active status of an NPC
 if (Request::has('active-submit')) {

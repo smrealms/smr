@@ -128,6 +128,7 @@ if ($action == 'Save and resend validation code') {
 	}
 
 } elseif ($action == 'Yes') {
+	$var = $session->getCurrentVar();
 	$account_id = $var['account_id'];
 	$amount = $var['amount'];
 

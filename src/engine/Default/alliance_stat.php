@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 if (!isset($var['alliance_id'])) {

@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 if (Request::get('action') == 'Change') {
+	$var = Smr\Session::getInstance()->getCurrentVar();
+
 	// Check to see if admin previously was displaying Admin tag
 	$hadAdminTag = SmrAccount::getAccount($var['admin_id'])->hasPermission(PERMISSION_DISPLAY_ADMIN_TAG);
 

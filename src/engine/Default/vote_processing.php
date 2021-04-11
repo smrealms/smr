@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $account = $session->getAccount();
 
 if ($account->getAccountID() == ACCOUNT_ID_NHL) {

@@ -4,6 +4,7 @@
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $account = $session->getAccount();
 
 $db = Smr\Database::getInstance();

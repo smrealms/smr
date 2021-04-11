@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 //get our variables
 $game_id = $var['game_id'];
 $hardware_id = $var['hardware'];

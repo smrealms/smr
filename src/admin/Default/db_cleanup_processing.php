@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 // Get initial storage size
 $db = Smr\Database::getInstance();
 $initialBytes = $db->getDbBytes();

@@ -26,6 +26,7 @@ if (Request::has('add')) {
 		error_on_page($e->getMessage());
 	}
 
+	$var = $session->getCurrentVar();
 	if (in_array($accountId, $var['share_to_ids'])) {
 		error_on_page('You are already sharing with this player!');
 	}

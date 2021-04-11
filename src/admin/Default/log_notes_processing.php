@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $db = Smr\Database::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
 
 foreach ($var['account_ids'] as $account_id) {
 	if (empty(Request::get('notes'))) {

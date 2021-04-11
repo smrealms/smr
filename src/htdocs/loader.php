@@ -17,7 +17,6 @@ try {
 	// ********************************
 
 	// We want these to be already defined as globals
-	$var = null;
 	$lock = false;
 
 	// ********************************

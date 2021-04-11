@@ -2,6 +2,7 @@
 
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 if ($var['folder_id'] == MSG_SENT) {

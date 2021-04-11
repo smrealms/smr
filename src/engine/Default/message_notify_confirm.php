@@ -2,6 +2,7 @@
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 
 if (!isset($var['notified_time'])) {
 	$session->updateVar('notified_time', Smr\Epoch::time());

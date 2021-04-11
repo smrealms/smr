@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $account = $session->getAccount();
 $player = $session->getPlayer();
 

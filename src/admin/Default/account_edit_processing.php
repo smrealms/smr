@@ -2,6 +2,7 @@
 
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $account = $session->getAccount();
 
 $account_id = $var['account_id'];

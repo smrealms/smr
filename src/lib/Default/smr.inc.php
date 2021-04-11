@@ -302,13 +302,15 @@ function pluralise($word, $count = 0) {
  * (see loader.php for the initialization of the globals).
  */
 function do_voodoo() {
-	global $lock, $var;
+	global $lock;
+
+	$session = Smr\Session::getInstance();
+	$var = $session->getCurrentVar();
 
 	if (!defined('AJAX_CONTAINER')) {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
 	}
 
-	$session = Smr\Session::getInstance();
 	if (!AJAX_CONTAINER && USING_AJAX && $session->hasChangedSN()) {
 		exit;
 	}
@@ -358,7 +360,6 @@ function do_voodoo() {
 					}
 					create_error('Please do not spam click!');
 				}
-				$var = $session->getCurrentVar();
 			}
 		}
 

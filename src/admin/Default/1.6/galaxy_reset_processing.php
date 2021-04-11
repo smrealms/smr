@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 $galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 
 // Efficiently construct the caches before proceeding

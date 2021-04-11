@@ -2,6 +2,7 @@
 
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $body = htmlentities(trim(Request::get('body')), ENT_COMPAT, 'utf-8');

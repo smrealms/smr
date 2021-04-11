@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 
 if (isset($var['message'])) {
 	$template->assign('Message', $var['message']);

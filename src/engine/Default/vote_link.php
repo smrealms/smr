@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+
 $container = Page::create('skeleton.php', 'current_sector.php');
 
 // Sanity check that we got here by means of allowing free turns
 if ($var['can_get_turns'] == true) {
-	$session = Smr\Session::getInstance();
 	$player = $session->getPlayer();
-
 	if ($player->getGame()->hasStarted()) {
 		// Allow vote
 		// Don't start the timeout until the vote actually goes through.

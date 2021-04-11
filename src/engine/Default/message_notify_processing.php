@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 $container = Page::create('skeleton.php', 'message_view.php');
 $container->addVar('folder_id');
 

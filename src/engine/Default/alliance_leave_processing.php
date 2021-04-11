@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+
 $action = $var['action'];
 if ($action == 'YES') {
-	$session = Smr\Session::getInstance();
 	$player = $session->getPlayer();
 	$alliance = $player->getAlliance();
 

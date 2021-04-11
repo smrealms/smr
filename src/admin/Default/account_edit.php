@@ -2,6 +2,7 @@
 
 $template = Smr\Template::getInstance();
 $db = Smr\Database::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
 
 $template->assign('PageTopic', 'Edit Account');
 

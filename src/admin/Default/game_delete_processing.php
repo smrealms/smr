@@ -18,6 +18,7 @@ if (Request::get('save') == 'Yes') {
 
 if ($action == 'Yes') {
 	// get game id
+	$var = Smr\Session::getInstance()->getCurrentVar();
 	$game_id = $var['delete_game_id'];
 
 	if ($save) {

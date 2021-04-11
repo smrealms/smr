@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $db = Smr\Database::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
 
 $gameID = $var['game_id'];
 $galaxies = SmrGalaxy::getGameGalaxies($gameID);

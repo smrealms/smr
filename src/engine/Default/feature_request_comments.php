@@ -5,6 +5,7 @@ if (!Globals::isFeatureRequestOpen()) {
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $account = $session->getAccount();
 
 $template->assign('PageTopic', 'Feature Request Comments');

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $template = Smr\Template::getInstance();
+$var = Smr\Session::getInstance()->getCurrentVar();
 
 if (!isset($var['log_ids']) && !isset($var['current_log'])) {
 	create_error('You must select a combat log to view');

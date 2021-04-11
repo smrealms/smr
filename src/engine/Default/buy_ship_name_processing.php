@@ -96,6 +96,7 @@ function checkHtmlShipName(string $name) : void {
 //-----------------------------------------------------
 
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $account = $session->getAccount();
 $player = $session->getPlayer();
 

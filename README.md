@@ -140,14 +140,6 @@ $container['target_sector'] = 1;
 $link = $container->href();
 ```
 
-## Global variables
-All pages are called with the following variables available (there may be more)
-
-### $var
-$var contains all information passed using the $container from the previous page.
-This *can* be assigned to, but only using Smr\Session::updateVar($name, $value)
-
-
 ## Request variables
 For any page which takes input through POST or GET (or other forms?) they should store these values in $var using Smr\Session::updateVar() and only access via $var, this is required as when auto-refresh updates the page it will *not* resend these inputs but still requires them to render the page correctly.
 

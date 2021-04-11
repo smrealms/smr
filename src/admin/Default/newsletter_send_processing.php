@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 // mailer
 $mail = setupMailer();
 $mail->setFrom('newsletter@smrealms.de', 'SMR Team');

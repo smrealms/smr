@@ -6,6 +6,7 @@
 
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $query = 'SELECT log_id FROM combat_logs WHERE log_id=' . $db->escapeNumber($var['log_id']) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND ';

@@ -2,6 +2,7 @@
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 
 $session->getRequestVarInt('game_id');
 $session->getRequestVarInt('gal_on', 1);

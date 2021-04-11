@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+$var = Smr\Session::getInstance()->getCurrentVar();
+
 // Get the dates ("|" sets hr/min/sec to 0)
 $join = DateTime::createFromFormat('d/m/Y|', Request::get('game_join'));
 $start = empty(Request::get('game_start')) ? $join :
