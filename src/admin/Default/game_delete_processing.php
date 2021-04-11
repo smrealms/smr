@@ -104,7 +104,7 @@ if ($action == 'Yes') {
 		$game = SmrGame::getGame($game_id);
 		// insert into history db
 		$history_db_sql[] = 'INSERT INTO game (game_id, end_date, start_date, game_name, speed, type) VALUES ' .
-								'(' . $db->escapeNumber($game_id) . ', ' . $game->getEndTime() . ', ' . $game->getStartTime() . ', ' . $db->escapeString($game->getGameName()) . ', ' . $game->getGameSpeed() . ', ' . $db->escapeString($game->getGameType()) . ')';
+								'(' . $db->escapeNumber($game_id) . ', ' . $game->getEndTime() . ', ' . $game->getStartTime() . ', ' . $db->escapeString($game->getName()) . ', ' . $game->getGameSpeed() . ', ' . $db->escapeString($game->getGameType()) . ')';
 	}
 
 	$smr_db_sql[] = 'DELETE FROM location WHERE game_id = ' . $db->escapeNumber($game_id);
