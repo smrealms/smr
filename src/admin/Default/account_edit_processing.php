@@ -101,8 +101,8 @@ if (Request::has('mailban')) {
 }
 
 if ($veteran_status != $curr_account->isVeteranForced()) {
-	$db->query('UPDATE account SET veteran = ' . $db->escapeString($veteran_status) . ' WHERE account_id = ' . $db->escapeNumber($account_id));
-	$actions[] = 'set the veteran status to ' . $db->escapeString($veteran_status);
+	$db->query('UPDATE account SET veteran = ' . $db->escapeBoolean($veteran_status) . ' WHERE account_id = ' . $db->escapeNumber($account_id));
+	$actions[] = 'set the veteran status to ' . $db->escapeBoolean($veteran_status);
 }
 
 if ($logging_status != $curr_account->isLoggingEnabled()) {
