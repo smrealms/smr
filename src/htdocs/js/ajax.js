@@ -136,7 +136,8 @@ var exec = function(s) {
 		if(sn===false) {
 			return;
 		}
-		updateRefreshRequest();
+		// Delay before first AJAX udpate
+		updateRefreshTimeout = setTimeout(updateRefreshRequest, refreshSpeed);
 	};
 
 	// The following section attempts to prevent users from taking multiple
