@@ -977,7 +977,7 @@ class SmrPlanet {
 	public function startBuilding(AbstractSmrPlayer $constructor, int $constructionID) : void {
 		$restriction = $this->getBuildRestriction($constructor, $constructionID);
 		if ($restriction !== false) {
-			throw \Smr\UserException('Unable to start building: ' . $restriction);
+			throw new \Smr\UserException('Unable to start building: ' . $restriction);
 		}
 
 		// gets the time for the buildings
