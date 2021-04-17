@@ -4,13 +4,7 @@ var exec = function(s) {
 };
 (function() {
 	"use strict";
-	var bindOne, updateRefreshTimeout, refreshSpeed, ajaxRunning = true, refreshReady = true, disableStartAJAX=true, xmlHttpRefresh, sn, updateRefresh, updateRefreshRequest, stopAJAX;
-
-	bindOne = function(func, arg) {
-		return function() {
-			return func.call(this, arg);
-		};
-	};
+	var updateRefreshTimeout, refreshSpeed, ajaxRunning = true, refreshReady = true, disableStartAJAX=true, xmlHttpRefresh, sn, stopAJAX;
 
 	// startAJAX
 	window.onfocus = function() {
@@ -52,7 +46,7 @@ var exec = function(s) {
 
 	// This is used as a jQuery.get callback, but we don't use the arguments
 	// (textStatus, jqXHR), so they are omitted here.
-	updateRefresh = function(data) {
+	function updateRefresh(data) {
 		$('all > *', data).each(function(i, e) {
 			if(e.tagName === 'JS') {
 				$(e.childNodes).each(function(i, e) {
@@ -78,21 +72,21 @@ var exec = function(s) {
 			clearTimeout(updateRefreshTimeout);
 			updateRefreshTimeout = setTimeout(updateRefreshRequest, refreshSpeed);
 		}
-	};
+	}
 
-	updateRefreshRequest = function() {
+	function updateRefreshRequest() {
 		if(ajaxRunning === true && refreshReady === true) {
 			refreshReady = false;
 			xmlHttpRefresh = $.get('', {sn:sn, ajax:1}, updateRefresh, 'xml');
 		}
-	};
+	}
 
 
 	//Chess
 	/*global availableMoves:true, submitMoveHREF:true */
-	var highlightMoves, submitMove;
+	var highlightMoves;
 
-	submitMove = function(data) {
+	function submitMove(data) {
 		var e = $(this);
 		data.toX = e.data('x');
 		data.toY = e.data('y');
@@ -101,7 +95,13 @@ var exec = function(s) {
 				highlightMoves();
 				updateRefresh(data);
 			}, 'xml');
-	};
+	}
+
+	function bindOne(func, arg) {
+		return function() {
+			return func.call(this, arg);
+		};
+	}
 
 	window.highlightMoves = highlightMoves = function() {
 		var e, x, y, boundSubmitMove, highlighted = $('.chessHighlight');
@@ -136,7 +136,8 @@ var exec = function(s) {
 		if(sn===false) {
 			return;
 		}
-		updateRefreshRequest();
+		// Delay before first AJAX udpate
+		updateRefreshTimeout = setTimeout(updateRefreshRequest, refreshSpeed);
 	};
 
 	// The following section attempts to prevent users from taking multiple
