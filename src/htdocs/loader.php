@@ -34,16 +34,8 @@ try {
 		exit;
 	}
 
-	// ********************************
-	// *
-	// * g e t   S e s s i o n
-	// *
-	// ********************************
-
-	$sn = $_REQUEST['sn'];
-
 	// check if we got a sn number with our url
-	if (empty($sn)) {
+	if (empty($session->getSN())) {
 		if (!USING_AJAX) {
 			require_once(get_file_loc('smr.inc.php'));
 			create_error('Your browser lost the SN. Try to reload the page!');
@@ -53,7 +45,7 @@ try {
 	}
 
 	// do we have such a container object in the db?
-	if ($session->findCurrentVar($sn) === false) {
+	if ($session->findCurrentVar() === false) {
 		if (!USING_AJAX) {
 			require_once(get_file_loc('smr.inc.php'));
 			create_error('Please avoid using the back button!');

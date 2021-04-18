@@ -36,7 +36,7 @@ class Session {
 	private array $var;
 	private array $commonIDs = [];
 	private bool $generate;
-	private string $SN = '';
+	private string $SN;
 	private string $lastSN;
 	private int $accountID;
 	private int $lastAccessed;
@@ -83,9 +83,9 @@ class Session {
 		$this->db->query('DELETE FROM active_session WHERE last_accessed < ' . $this->db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
 		$this->fetchVarInfo();
 
-		$sn = Request::get('sn', '');
-		if (!USING_AJAX && !empty($sn) && !empty($this->var[$sn])) {
-			$var = $this->var[$sn];
+		$this->SN = Request::get('sn', '');
+		if (!USING_AJAX && !empty($this->SN) && !empty($this->var[$this->SN])) {
+			$var = $this->var[$this->SN];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
 			$loadDelay = self::URL_LOAD_DELAY[$currentPage] ?? 0;
 			$initialTimeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
@@ -152,6 +152,13 @@ class Session {
 	}
 
 	/**
+	 * Uniquely identifies the session in the database.
+	 */
+	public function getSessionID() : string {
+		return $this->sessionID;
+	}
+
+	/**
 	 * Returns the Game ID associated with the session.
 	 */
 	public function getGameID() : int {
@@ -202,17 +209,17 @@ class Session {
 	}
 
 	/**
+	 * The SN is the URL parameter that defines the page being requested.
+	 */
+	public function getSN() : string {
+		return $this->SN;
+	}
+
+	/**
 	 * Returns true if the current SN is different than the previous SN.
 	 */
 	public function hasChangedSN() : bool {
 		return $this->SN != $this->lastSN;
-	}
-
-	private function updateSN() : void {
-		if (!USING_AJAX) {
-			$this->db->query('UPDATE active_session SET last_sn=' . $this->db->escapeString($this->SN) .
-				' WHERE session_id=' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
-		}
 	}
 
 	public function destroy() : void {
@@ -227,25 +234,20 @@ class Session {
 	}
 
 	/**
-	 * Check if the session has a var associated with the given $sn.
-	 * If $sn is not specified, use the current SN (i.e. $this->SN).
+	 * Check if the session has a var associated with the current SN.
 	 */
-	public function findCurrentVar(string $sn = null) : bool {
-		if (is_null($sn)) {
-			$sn = $this->SN;
-		}
-		if (empty($this->var[$sn])) {
+	public function findCurrentVar() : bool {
+		if (empty($this->var[$this->SN])) {
 			return false;
 		}
-		$this->SN = $sn;
-		$this->updateSN();
-		if (isset($this->var[$sn]['body']) && isset($this->var[$sn]['CommonID'])) {
-//			if(preg_match('/processing/',$this->var[$sn]['body']))
-			unset($this->commonIDs[$this->var[$sn]['CommonID']]); //Do not store common id for current page
-			unset($this->var[$sn]['CommonID']);
+		$var = $this->var[$this->SN];
+		if (isset($var['body']) && isset($var['CommonID'])) {
+//			if(preg_match('/processing/',$var['body']))
+			unset($this->commonIDs[$var['CommonID']]); //Do not store common id for current page
+			unset($var['CommonID']);
 		}
 
-		$this->var[$sn]['RemainingPageLoads'] += 1; // Allow refreshing
+		$var['RemainingPageLoads'] += 1; // Allow refreshing
 
 		return true;
 	}
