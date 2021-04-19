@@ -45,7 +45,7 @@ try {
 	}
 
 	// do we have such a container object in the db?
-	if ($session->findCurrentVar() === false) {
+	if ($session->hasCurrentVar() === false) {
 		if (!USING_AJAX) {
 			require_once(get_file_loc('smr.inc.php'));
 			create_error('Please avoid using the back button!');
