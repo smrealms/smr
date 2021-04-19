@@ -119,8 +119,11 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// We can now change the current var
 		$page2 = Page::create('another_page');
 		$session->setCurrentVar($page2);
-		// And $var should be updated automatically
-		self::assertSame('another_page', $var['url']);
+		// Old references to $var should not be modified
+		self::assertSame('some_page', $var['url']);
+		// But a new reference to $var should be updated
+		$var2 = $session->getCurrentVar();
+		self::assertSame('another_page', $var2['url']);
 
 		// If we destroy the Session, then the current var should no longer
 		// be accessible to a new Session.

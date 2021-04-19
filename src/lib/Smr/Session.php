@@ -287,7 +287,7 @@ class Session {
 	 * Replace the global $var with the given $container.
 	 */
 	public function setCurrentVar(Page $container, bool $allowUpdate = true) : void {
-		$var = $this->getCurrentVar();
+		$var = $this->hasCurrentVar() ? $this->getCurrentVar() : null;
 
 		//Do not allow sharing SN, useful for forwarding.
 		global $lock;
@@ -303,7 +303,7 @@ class Session {
 			}
 		}
 
-		$var->exchangeArray($container);
+		$this->var[$this->SN] = $container;
 		if ($allowUpdate && !$lock && !USING_AJAX) {
 			$this->update();
 		}
