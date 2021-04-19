@@ -17,7 +17,8 @@ function logException(Throwable $e) : void {
 	}
 	$message .= 'Error Message: ' . $e . $delim;
 
-	$message .= '$var: ' . var_export($session->getCurrentVar(), true);
+	$var = $session->hasCurrentVar() ? $session->getCurrentVar() : null;
+	$message .= '$var: ' . var_export($var, true);
 
 	// Don't display passwords input by users in the log message!
 	if (isset($_REQUEST['password'])) {
