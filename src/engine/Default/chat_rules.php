@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
+$player = $session->hasGame() ? $session->getPlayer() : null;
 
 $template->assign('PageTopic', 'Space Merchant Realms Chat');
 
