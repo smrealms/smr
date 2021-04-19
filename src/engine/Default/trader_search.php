@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 $template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 
 $template->assign('PageTopic', 'Search For Trader');
 $template->assign('TraderSearchHREF', Page::create('skeleton.php', 'trader_search_result.php')->href());

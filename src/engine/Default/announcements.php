@@ -2,6 +2,8 @@
 
 $template = Smr\Template::getInstance();
 $db = Smr\Database::getInstance();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 
 $template->assign('PageTopic', 'Announcements');
 

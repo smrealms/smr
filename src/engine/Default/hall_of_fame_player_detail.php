@@ -3,6 +3,7 @@ require_once(get_file_loc('hof.inc.php'));
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $account = $session->getAccount();
 
 $account_id = $var['account_id'] ?? $account->getAccountID();

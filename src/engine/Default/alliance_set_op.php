@@ -2,6 +2,7 @@
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 $alliance = $player->getAlliance();
 

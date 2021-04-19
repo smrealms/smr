@@ -2,6 +2,7 @@
 
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 //only if we are coming from the bank screen do we unexempt selection first

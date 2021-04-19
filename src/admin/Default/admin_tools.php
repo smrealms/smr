@@ -2,6 +2,7 @@
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $account = $session->getAccount();
 
 if (isset($var['errorMsg'])) {

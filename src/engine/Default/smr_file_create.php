@@ -5,6 +5,7 @@
 release_lock();
 
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false) {
