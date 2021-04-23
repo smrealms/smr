@@ -2,6 +2,7 @@
 
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $alliance_id = $var['alliance_id'] ?? $player->getAllianceID();

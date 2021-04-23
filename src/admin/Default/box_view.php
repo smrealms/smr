@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $account = $session->getAccount();
 
 require_once(get_file_loc('messages.inc.php'));

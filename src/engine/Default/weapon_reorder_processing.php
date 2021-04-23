@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $ship = $session->getPlayer()->getShip();
 
 if (isset($var['Up']) && is_numeric($var['Up'])) {

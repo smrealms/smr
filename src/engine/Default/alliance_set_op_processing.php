@@ -2,6 +2,7 @@
 
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 function error_on_page($error) {

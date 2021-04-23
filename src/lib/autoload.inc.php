@@ -14,7 +14,10 @@ function get_game_dir() {
 	} else {
 		if ($overrideGameID > 0) {
 			require_once(LIB . 'Default/SmrGame.class.php');
-			$storedDir = SmrGame::getGame($overrideGameID)->getGameType() . '/';
+			// Game types can have spaces in them, but their corresponding
+			// directories do not.
+			$gameType = SmrGame::getGame($overrideGameID)->getGameType();
+			$storedDir = str_replace(' ', '', $gameType) . '/';
 			$gameDir = $storedDir;
 		} else {
 			$gameDir = 'Default/';

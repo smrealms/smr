@@ -4,6 +4,7 @@ require_once(LIB . 'Default/shop_goods.inc.php');
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 $ship = $player->getShip();
 
