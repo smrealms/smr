@@ -35,7 +35,7 @@ while ($db->nextRecord()) {
 				WHERE game_id=' . $db2->escapeNumber($player->getGameID()) . '
 				AND anon_id=' . $db2->escapeNumber($db->getInt('anon_id')) . ' LIMIT 1');
 	if ($db2->nextRecord() && $db2->getInt('MAX(time)')) {
-		$anon['last_transaction'] = date(DATE_FULL_SHORT, $db2->getInt('MAX(time)'));
+		$anon['last_transaction'] = date($account->getDateTimeFormat(), $db2->getInt('MAX(time)'));
 	} else {
 		$anon['last_transaction'] = 'No transactions';
 	}

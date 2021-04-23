@@ -41,7 +41,7 @@ try {
 	while ($db->nextRecord()) {
 		$overrideGameID = $db->getInt('game_id'); //for bbifyMessage
 		$gameNews[] = [
-			'Time' => date(DEFAULT_DATE_FULL_SHORT_SPLIT, $db->getInt('time')),
+			'Time' => date(DEFAULT_DATE_TIME_FORMAT_SPLIT, $db->getInt('time')),
 			'Message' => bbifyMessage($db->getField('news_message')),
 		];
 	}

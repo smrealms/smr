@@ -53,7 +53,7 @@
 						</td>
 						<td class="shrink noWrap center"><?php
 							if ($SharedForceAlliance) {
-								?><span class="green"><?php echo date(DATE_FULL_SHORT, $Force->getExpire()); ?></span><?php
+								?><span class="green"><?php echo date($ThisAccount->getDateTimeFormat(), $Force->getExpire()); ?></span><?php
 							} else {
 								?><span class="red">WAR</span><?php
 							} ?>

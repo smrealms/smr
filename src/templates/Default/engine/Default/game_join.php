@@ -19,8 +19,8 @@ if ($Game->getDescription()) { ?>
 		<th>View Warp Chart</th>
 	</tr>
 	<tr class="center">
-		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT, $Game->getStartTime()); ?></td>
-		<td width="12%"><?php echo date(DATE_FULL_SHORT_SPLIT, $Game->getEndTime()); ?></td>
+		<td width="12%"><?php echo date($ThisAccount->getDateTimeFormatSplit(), $Game->getStartTime()); ?></td>
+		<td width="12%"><?php echo date($ThisAccount->getDateTimeFormatSplit(), $Game->getEndTime()); ?></td>
 		<td><?php echo $Game->getMaxTurns(); ?></td>
 		<td><?php echo $Game->getStartTurnHours(); ?></td>
 		<td><?php echo $Game->getMaxPlayers(); ?></td>

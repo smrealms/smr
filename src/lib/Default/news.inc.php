@@ -4,6 +4,9 @@
  * Takes a populated query and returns the news items.
  */
 function getNewsItems(Smr\Database $db) {
+	$session = Smr\Session::getInstance();
+	$account = $session->getAccount();
+
 	$newsItems = [];
 	while ($db->nextRecord()) {
 		$message = bbifyMessage($db->getField('news_message'));
@@ -11,7 +14,7 @@ function getNewsItems(Smr\Database $db) {
 			$message = '<span class="admin">ADMIN </span>' . $message;
 		}
 		$newsItems[] = [
-			'Date' => date(DATE_FULL_SHORT_SPLIT, $db->getInt('time')),
+			'Date' => date($account->getDateTimeFormatSplit(), $db->getInt('time')),
 			'Message' => $message,
 		];
 	}

@@ -52,8 +52,8 @@ while ($db->nextRecord()) {
 		'senderName' => $getName($sender),
 		'receiverName' => $getName($receiver),
 		'gameName' => $gameName,
-		'sentDate' => date(DATE_FULL_SHORT, $db->getInt('sent_time')),
-		'reportDate' => date(DATE_FULL_SHORT, $db->getInt('notify_time')),
+		'sentDate' => date($account->getDateTimeFormat(), $db->getInt('sent_time')),
+		'reportDate' => date($account->getDateTimeFormat(), $db->getInt('notify_time')),
 		'text' => bbifyMessage($db->getField('text')),
 	];
 }

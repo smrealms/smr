@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
+$account = $session->getAccount();
 $player = $session->getPlayer();
 
 $account_num = $session->getRequestVarInt('account_num');
@@ -80,7 +81,7 @@ if ($db->getNumRows() > 0) {
 		$transaction = $db->getField('transaction');
 		$amount = number_format($db->getInt('amount'));
 		$transactions[$db->getInt('transaction_id')] = [
-			'date' => date(DATE_FULL_SHORT_SPLIT, $db->getInt('time')),
+			'date' => date($account->getDateTimeFormatSplit(), $db->getInt('time')),
 			'payment' => $transaction == 'Payment' ? $amount : '',
 			'deposit' => $transaction == 'Deposit' ? $amount : '',
 			'link' => $transactionPlayer->getLinkedDisplayName(),

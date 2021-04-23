@@ -69,8 +69,8 @@ abstract class AbstractSmrAccount {
 	protected int $referrerID;
 	protected int $credits; // SMR credits
 	protected int $rewardCredits; // SMR reward credits
-	protected string $dateShort;
-	protected string $timeShort;
+	protected string $dateFormat;
+	protected string $timeFormat;
 	protected string $template;
 	protected string $colourScheme;
 	protected array $hotkeys;
@@ -233,8 +233,8 @@ abstract class AbstractSmrAccount {
 			$this->discordId = $this->db->getField('discord_id');
 			$this->ircNick = $this->db->getField('irc_nick');
 
-			$this->dateShort = $this->db->getField('date_short');
-			$this->timeShort = $this->db->getField('time_short');
+			$this->dateFormat = $this->db->getField('date_short');
+			$this->timeFormat = $this->db->getField('time_short');
 
 			$this->template = $this->db->getField('template');
 			$this->colourScheme = $this->db->getField('colour_scheme');
@@ -288,8 +288,8 @@ abstract class AbstractSmrAccount {
 			', hotkeys=' . $this->db->escapeObject($this->hotkeys) .
 			', last_login = ' . $this->db->escapeNumber($this->last_login) .
 			', logging = ' . $this->db->escapeBoolean($this->logging) .
-			', time_short = ' . $this->db->escapeString($this->timeShort) .
-			', date_short = ' . $this->db->escapeString($this->dateShort) .
+			', time_short = ' . $this->db->escapeString($this->timeFormat) .
+			', date_short = ' . $this->db->escapeString($this->dateFormat) .
 			', discord_id = ' . $this->db->escapeString($this->discordId, true) .
 			', irc_nick = ' . $this->db->escapeString($this->ircNick, true) .
 			', hof_name = ' . $this->db->escapeString($this->hofName) .
@@ -825,27 +825,43 @@ abstract class AbstractSmrAccount {
 		return URL . '/login_create.php?ref=' . $this->getAccountID();
 	}
 
-	public function getShortDateFormat() : string {
-		return $this->dateShort;
+	/**
+	 * Get the epoch format string including both date and time.
+	 */
+	public function getDateTimeFormat() : string {
+		return $this->getDateFormat() . ' ' . $this->getTimeFormat();
 	}
 
-	public function setShortDateFormat(string $format) : void {
-		if ($this->dateShort === $format) {
+	/**
+	 * Get the (HTML-only) epoch format string including both date and time,
+	 * split across two lines.
+	 */
+	public function getDateTimeFormatSplit() : string {
+		// We need to escape 'r' because it is a format specifier
+		return $this->getDateFormat() . '\<b\r /\>' . $this->getTimeFormat();
+	}
+
+	public function getDateFormat() : string {
+		return $this->dateFormat;
+	}
+
+	public function setDateFormat(string $format) : void {
+		if ($this->dateFormat === $format) {
 			return;
 		}
-		$this->dateShort = $format;
+		$this->dateFormat = $format;
 		$this->hasChanged = true;
 	}
 
-	public function getShortTimeFormat() : string {
-		return $this->timeShort;
+	public function getTimeFormat() : string {
+		return $this->timeFormat;
 	}
 
-	public function setShortTimeFormat(string $format) : void {
-		if ($this->timeShort === $format) {
+	public function setTimeFormat(string $format) : void {
+		if ($this->timeFormat === $format) {
 			return;
 		}
-		$this->timeShort = $format;
+		$this->timeFormat = $format;
 		$this->hasChanged = true;
 	}
 

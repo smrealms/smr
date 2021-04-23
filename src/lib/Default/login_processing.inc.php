@@ -16,7 +16,7 @@ function redirectIfDisabled(SmrAccount $account) {
 	// Otherwise, we redirect to the login page with a message
 	$msg = '<span class="red">Your account is disabled!</span><br />Reason: ' . $disabled['Reason'] . '<br /><br />It is set to ';
 	if ($disabled['Time'] > 0) {
-		$msg .= 'reopen on ' . date(DEFAULT_DATE_FULL_LONG, $disabled['Time']);
+		$msg .= 'reopen on ' . date($account->getDateTimeFormat(), $disabled['Time']);
 	} else {
 		$msg .= 'never reopen';
 	}

@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 $template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
 
 $template->assign('PageTopic', 'Computer Sharing');
 
@@ -72,7 +74,7 @@ while ($db->nextRecord()) {
 			$email = $db2->getField('email');
 			$valid = $db2->getBoolean('validated') ? 'Valid' : 'Invalid';
 			$common_ip = $db2->getField('common_ip');
-			$last_login = date(DATE_FULL_SHORT, $db2->getInt('last_login'));
+			$last_login = date($account->getDateTimeFormat(), $db2->getInt('last_login'));
 
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = ' . $db2->escapeNumber($currLinkAccId));
 			$isDisabled = $db2->nextRecord();

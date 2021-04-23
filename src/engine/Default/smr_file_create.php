@@ -24,7 +24,7 @@ if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false) {
 // make sure to update the SMR_FILE_VERSION!
 
 $file = ';SMR1.6 Sectors File v' . SMR_FILE_VERSION . '
-; Created on ' . date(DEFAULT_DATE_FULL_SHORT) . '
+; Created on ' . date(DEFAULT_DATE_TIME_FORMAT) . '
 [Races]
 ; Name = ID' . EOL;
 foreach (Globals::getRaces() as $race) {

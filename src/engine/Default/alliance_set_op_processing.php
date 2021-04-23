@@ -3,6 +3,7 @@
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
+$account = $session->getAccount();
 $player = $session->getPlayer();
 
 function error_on_page($error) {
@@ -37,7 +38,7 @@ if (!empty($var['cancel'])) {
 
 	// Send an alliance message that expires at the time of the op.
 	// Since the message is procedural, don't exclude this player.
-	$message = $player->getBBLink() . ' has scheduled an operation for ' . date(DATE_FULL_SHORT, $time) . '. Navigate to your Alliance console to respond!';
+	$message = $player->getBBLink() . ' has scheduled an operation for ' . date($account->getDateTimeFormat(), $time) . '. Navigate to your Alliance console to respond!';
 	foreach ($player->getAlliance()->getMemberIDs() as $memberAccountID) {
 		$player->sendMessageFromOpAnnounce($memberAccountID, $message, $time);
 	}

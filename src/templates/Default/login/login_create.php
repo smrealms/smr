@@ -31,7 +31,7 @@
 					<select name="timez" class="InputFields"><?php
 						$time = Smr\Epoch::time();
 						for ($i = -12; $i <= 11; $i++) {
-							?><option value="<?php echo $i; ?>"><?php echo date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600); ?></option><?php
+							?><option value="<?php echo $i; ?>"><?php echo date(DEFAULT_TIME_FORMAT, $time + $i * 3600); ?></option><?php
 						} ?>
 					</select>
 				</td>

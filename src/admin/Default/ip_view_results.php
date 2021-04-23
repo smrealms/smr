@@ -2,6 +2,7 @@
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$account = $session->getAccount();
 
 $variable = $session->getRequestVar('variable');
 $type = $session->getRequestVar('type');
@@ -118,7 +119,7 @@ if ($type == 'comp_share') {
 	while ($db->nextRecord()) {
 		$rows[] = [
 			'ip' => $db->getField('ip'),
-			'date' => date(DATE_FULL_SHORT, $db->getInt('time')),
+			'date' => date($account->getDateTimeFormat(), $db->getInt('time')),
 			'host' => $db->getField('host'),
 		];
 	}
@@ -232,7 +233,7 @@ if ($type == 'comp_share') {
 		$rows[] = [
 			'account_id' => $id,
 			'login' => $acc->getLogin(),
-			'date' => date(DATE_FULL_SHORT, $time),
+			'date' => date($account->getDateTimeFormat(), $time),
 			'ip' => $ip,
 			'host' => $host,
 			'names' => implode(', ', array_unique($names)),

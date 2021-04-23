@@ -76,13 +76,12 @@ const DISCORD_URL = 'https://discord.me/smrealms';
 const DISCORD_SERVER_ID = '376433706916642826';
 
 /*
- * Localisations
+ * Default date formatting specifiers
  */
-const DEFAULT_DATE_DATE_SHORT = 'j/n/Y';
-const DEFAULT_DATE_TIME_SHORT = 'g:i:s A';
-const DEFAULT_DATE_FULL_SHORT = DEFAULT_DATE_DATE_SHORT . ' ' . DEFAULT_DATE_TIME_SHORT;
-const DEFAULT_DATE_FULL_SHORT_SPLIT = DEFAULT_DATE_DATE_SHORT . '\<b\r /\>' . DEFAULT_DATE_TIME_SHORT;
-const DEFAULT_DATE_FULL_LONG = 'l F jS Y ' . DEFAULT_DATE_TIME_SHORT;
+const DEFAULT_DATE_FORMAT = 'j/n/Y';
+const DEFAULT_TIME_FORMAT = 'g:i:s A';
+const DEFAULT_DATE_TIME_FORMAT = DEFAULT_DATE_FORMAT . ' ' . DEFAULT_TIME_FORMAT;
+const DEFAULT_DATE_TIME_FORMAT_SPLIT = DEFAULT_DATE_FORMAT . '\<b\r /\>' . DEFAULT_TIME_FORMAT;
 
 /*
  * Buyer restrictions for ships and weapons

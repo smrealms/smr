@@ -2,6 +2,7 @@
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$account = $session->getAccount();
 
 $template->assign('PageTopic', 'Moderate Photo Album');
 
@@ -83,7 +84,7 @@ $comments = array();
 while ($db->nextRecord()) {
 	$comments[] = [
 		'id' => $db->getInt('comment_id'),
-		'date' => date(DATE_FULL_SHORT, $db->getInt('time')),
+		'date' => date($account->getDateTimeFormat(), $db->getInt('time')),
 		'postee' => get_album_nick($db->getInt('post_id')),
 		'msg' => stripslashes($db->getField('msg')),
 	];

@@ -4,7 +4,7 @@
 if (isset($OpTime)) { ?>
 	<table class="center nobord opResponse">
 		<tr><th>ENCRYPTED ALLIANCE TELEGRAM</th></tr>
-		<tr><td>Your leader has scheduled an important alliance operation for <?php echo date(DATE_FULL_SHORT, $OpTime); ?></td></tr>
+		<tr><td>Your leader has scheduled an important alliance operation for <?php echo date($ThisAccount->getDateTimeFormat(), $OpTime); ?></td></tr>
 		<tr><td><span id="countdown"><?php echo ucfirst(format_time($OpTime - Smr\Epoch::time())); ?></span></td></tr>
 		<tr><td><b>Will you join the operation?</b></td></tr>
 		<tr><td>

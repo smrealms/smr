@@ -37,7 +37,7 @@ if (!$VoteTreaties) { ?>
 				</form>
 			</td>
 			<td><?php echo $VoteInfo['YesVotes']; ?> / <?php echo $VoteInfo['NoVotes']; ?></td>
-			<td class="noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $VoteInfo['EndTime']); ?></td>
+			<td class="noWrap"><?php echo date($ThisAccount->getDateTimeFormatSplit(), $VoteInfo['EndTime']); ?></td>
 		</tr><?php
 	} ?>
 	</table><?php

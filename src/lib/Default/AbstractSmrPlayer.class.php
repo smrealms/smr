@@ -677,7 +677,7 @@ abstract class AbstractSmrPlayer {
 					$mail = setupMailer();
 					$mail->Subject = 'Message Notification';
 					$mail->setFrom('notifications@smrealms.de', 'SMR Notifications');
-					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getShortDateFormat() . ' ' . $receiverAccount->getShortTimeFormat(), Smr\Epoch::time()) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message, true);
+					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getDateTimeFormat(), Smr\Epoch::time()) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message, true);
 					$mail->msgHTML($bbifiedMessage);
 					$mail->AltBody = strip_tags($bbifiedMessage);
 					$mail->addAddress($receiverAccount->getEmail(), $receiverAccount->getHofName());

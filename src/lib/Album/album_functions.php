@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
 function main_page() {
-	// database object
 	$db = Smr\Database::getInstance();
+	$session = Smr\Session::getInstance();
 
 	// list of all first letter nicks
 	create_link_list();
@@ -40,6 +40,7 @@ function main_page() {
 	}
 
 	// latest picture
+	$dateFormat = $session->hasAccount() ? $session->getAccount()->getDateTimeFormat() : DEFAULT_DATE_TIME_FORMAT;
 	echo('<p><u>Latest Picture</u><br /><br />');
 	$db->query('SELECT *
 				FROM album
@@ -51,7 +52,7 @@ function main_page() {
 			$created = $db->getInt('created');
 			$nick = get_album_nick($db->getInt('account_id'));
 
-			echo('<span style="font-size:85%;"><b>[' . date(defined('DATE_FULL_SHORT') ?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $created) . ']</b> Picture of <a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> added</span><br />');
+			echo('<span style="font-size:85%;"><b>[' . date($dateFormat, $created) . ']</b> Picture of <a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> added</span><br />');
 		}
 	} else {
 		echo('<span style="font-size:85%;">no entries</span>');
@@ -194,6 +195,7 @@ function album_entry($album_id) {
 	echo('<td colspan="2">');
 	echo('<u>Comments</u><br /><br />');
 
+	$dateFormat = $session->hasAccount() ? $session->getAccount()->getDateTimeFormat() : DEFAULT_DATE_TIME_FORMAT;
 	$db->query('SELECT *
 				FROM album_has_comments
 				WHERE album_id = '.$db->escapeNumber($album_id));
@@ -202,7 +204,7 @@ function album_entry($album_id) {
 		$postee = get_album_nick($db->getInt('post_id'));
 		$msg = stripslashes($db->getField('msg'));
 
-		echo('<span style="font-size:85%;">[' . date(defined('DATE_FULL_SHORT') ?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $time) . '] &lt;' . $postee . '&gt; ' . $msg . '</span><br />');
+		echo('<span style="font-size:85%;">[' . date($dateFormat, $time) . '] &lt;' . $postee . '&gt; ' . $msg . '</span><br />');
 	}
 
 	if ($session->hasAccount()) {

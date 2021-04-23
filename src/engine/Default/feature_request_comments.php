@@ -36,7 +36,7 @@ if ($db->getNumRows() > 0) {
 		$featureRequestComments[$commentID] = array(
 								'CommentID' => $commentID,
 								'Message' => $db->getField('text'),
-								'Time' => date(DATE_FULL_SHORT, $db->getInt('posting_time')),
+								'Time' => date($account->getDateTimeFormat(), $db->getInt('posting_time')),
 								'Anonymous' => $db->getBoolean('anonymous')
 		);
 		if ($featureModerator || !$db->getBoolean('anonymous')) {

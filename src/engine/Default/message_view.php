@@ -89,7 +89,7 @@ if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['T
 	$template->unassign('NextPageHREF'); // always displaying all scout messages?
 } else {
 	while ($db->nextRecord()) {
-		displayMessage($messageBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $player->getGameID(), $db->getField('message_text'), $db->getInt('send_time'), $db->getBoolean('msg_read'), $var['folder_id']);
+		displayMessage($messageBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $player->getGameID(), $db->getField('message_text'), $db->getInt('send_time'), $db->getBoolean('msg_read'), $var['folder_id'], $player->getAccount());
 	}
 }
 if (!USING_AJAX) {
@@ -117,7 +117,7 @@ function displayScouts(&$messageBox, SmrPlayer $player) {
 		$totalUnread = $db->getInt('total_unread');
 		$message = 'Your forces have spotted ' . $sender->getBBLink() . ' passing your forces ' . $db->getInt('number') . ' ' . pluralise('time', $db->getInt('number'));
 		$message .= ($totalUnread > 0) ? ' (' . $totalUnread . ' unread).' : '.';
-		displayGrouped($messageBox, $sender, $message, $db->getInt('first'), $db->getInt('last'), $totalUnread > 0);
+		displayGrouped($messageBox, $sender, $message, $db->getInt('first'), $db->getInt('last'), $totalUnread > 0, $player->getAccount());
 	}
 
 	// Now display individual messages in each group
@@ -133,7 +133,7 @@ function displayScouts(&$messageBox, SmrPlayer $player) {
 		$groupBox =& $messageBox['GroupedMessages'][$db->getInt('sender_id')];
 		// Limit the number of messages in each group
 		if (!isset($groupBox['Messages']) || count($groupBox['Messages']) < MESSAGE_SCOUT_GROUP_LIMIT) {
-			displayMessage($groupBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $player->getGameID(), stripslashes($db->getField('message_text')), $db->getInt('send_time'), $db->getBoolean('msg_read'), MSG_SCOUT);
+			displayMessage($groupBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $player->getGameID(), stripslashes($db->getField('message_text')), $db->getInt('send_time'), $db->getBoolean('msg_read'), MSG_SCOUT, $player->getAccount());
 		}
 	}
 
@@ -141,7 +141,7 @@ function displayScouts(&$messageBox, SmrPlayer $player) {
 	$messageBox['NumberMessages'] = $db->getNumRows();
 }
 
-function displayGrouped(&$messageBox, SmrPlayer $sender, $message_text, $first, $last, $star) {
+function displayGrouped(&$messageBox, SmrPlayer $sender, $message_text, $first, $last, $star, SmrAccount $displayAccount) {
 	// Define a unique array so we can delete grouped messages
 	$array = array(
 		$sender->getAccountID(),
@@ -154,17 +154,17 @@ function displayGrouped(&$messageBox, SmrPlayer $sender, $message_text, $first, 
 	$message['Unread'] = $star;
 	$message['SenderID'] = $sender->getAccountID();
 	$message['SenderDisplayName'] = $sender->getLinkedDisplayName(false);
-	$message['SendTime'] = date(DATE_FULL_SHORT, $first) . " - " . date(DATE_FULL_SHORT, $last);
+	$message['SendTime'] = date($displayAccount->getDateTimeFormat(), $first) . " - " . date($displayAccount->getDateTimeFormat(), $last);
 	$message['Text'] = $message_text;
 	$messageBox['Messages'][] = $message;
 }
 
-function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $game_id, $message_text, $send_time, $msg_read, $type) {
+function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $game_id, $message_text, $send_time, $msg_read, $type, SmrAccount $displayAccount) {
 	$message = array();
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;
 	$message['Unread'] = !$msg_read;
-	$message['SendTime'] = date(DATE_FULL_SHORT, $send_time);
+	$message['SendTime'] = date($displayAccount->getDateTimeFormat(), $send_time);
 
 	// Display the sender (except for scout messages)
 	if ($type != MSG_SCOUT) {

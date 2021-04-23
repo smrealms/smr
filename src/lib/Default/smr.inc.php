@@ -88,10 +88,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				$timeString = $default;
 				if ($timeString != '' && ($time = strtotime($timeString)) !== false) {
-					if ($session->hasAccount()) {
-						$time += $session->getAccount()->getOffset() * 3600;
-					}
-					return date(DATE_FULL_SHORT, $time);
+					$time += $session->getAccount()->getOffset() * 3600;
+					return date($session->getAccount()->getDateTimeFormat(), $time);
 				}
 			break;
 			case 'chess':
@@ -319,19 +317,6 @@ function do_voodoo() {
 	// create account object
 	$account = $session->getAccount();
 
-	if (!defined('DATE_DATE_SHORT')) {
-		define('DATE_DATE_SHORT', $account->getShortDateFormat());
-	}
-	if (!defined('DATE_TIME_SHORT')) {
-		define('DATE_TIME_SHORT', $account->getShortTimeFormat());
-	}
-	if (!defined('DATE_FULL_SHORT')) {
-		define('DATE_FULL_SHORT', DATE_DATE_SHORT . ' ' . DATE_TIME_SHORT);
-	}
-	if (!defined('DATE_FULL_SHORT_SPLIT')) {
-		define('DATE_FULL_SHORT_SPLIT', DATE_DATE_SHORT . '\<b\r /\>' . DATE_TIME_SHORT);
-	}
-
 	$db = Smr\Database::getInstance();
 
 	if ($session->hasGame()) {
@@ -503,11 +488,12 @@ function doTickerAssigns($template, $player, $db) {
 	if ($player->hasTickers()) {
 		$ticker = array();
 		$max = Smr\Epoch::time() - 60;
+		$dateFormat = $player->getAccount()->getDateTimeFormat();
 		if ($player->hasTicker('NEWS')) {
 			//get recent news (5 mins)
 			$db->query('SELECT time,news_message FROM news WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time >= ' . $max . ' ORDER BY time DESC LIMIT 4');
 			while ($db->nextRecord()) {
-				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getInt('time')),
+				$ticker[] = array('Time' => date($dateFormat, $db->getInt('time')),
 								'Message'=>$db->getField('news_message'));
 			}
 		}
@@ -521,7 +507,7 @@ function doTickerAssigns($template, $player, $db) {
 						ORDER BY send_time DESC
 						LIMIT 4');
 			while ($db->nextRecord()) {
-				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getInt('send_time')),
+				$ticker[] = array('Time' => date($dateFormat, $db->getInt('send_time')),
 								'Message'=>$db->getField('message_text'));
 			}
 		}
@@ -537,7 +523,7 @@ function doSkeletonAssigns($template, $db) {
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 
 	$template->assign('FontSize', $account->getFontSize() - 20);
-	$template->assign('timeDisplay', date(DATE_FULL_SHORT_SPLIT, Smr\Epoch::time()));
+	$template->assign('timeDisplay', date($account->getDateTimeFormatSplit(), Smr\Epoch::time()));
 
 	$container = Page::create('skeleton.php');
 

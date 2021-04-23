@@ -53,7 +53,7 @@
 							<?php
 							$time = Smr\Epoch::time();
 								for ($i = -12; $i <= 11; $i++) {
-									echo('<option value="' . $i . '">' . date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600));
+									echo('<option value="' . $i . '">' . date(DEFAULT_TIME_FORMAT, $time + $i * 3600));
 								}
 							?>
 						</select>

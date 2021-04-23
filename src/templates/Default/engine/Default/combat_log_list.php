@@ -48,7 +48,7 @@ if (isset($Message)) {?>
 							<td class="center">
 								<input type="checkbox" value="on" name="id[<?php echo $LogID; ?>]">
 							</td>
-							<td class="sort_date noWrap"><?php echo date(DATE_FULL_SHORT, $Log['Time']); ?></td>
+							<td class="sort_date noWrap"><?php echo date($ThisAccount->getDateTimeFormat(), $Log['Time']); ?></td>
 							<td class="sort_sectorid center"><?php echo $Log['Sector']; ?></td>
 							<td class="sort_attacker"><?php echo $Log['Attacker']; ?></td>
 							<td class="sort_defender"><?php echo $Log['Defender']; ?></td>

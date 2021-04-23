@@ -237,7 +237,7 @@ if (isset($GameID)) { ?>
 				$time = Smr\Epoch::time();
 				$offset = $ThisAccount->getOffset();
 				for ($i = -12; $i <= 11; $i++) {
-					?><option value="<?php echo $i; ?>"<?php if ($offset == $i) { ?> selected="selected"<?php } ?>><?php echo date(DATE_TIME_SHORT, $time + $i * 3600); ?></option><?php
+					?><option value="<?php echo $i; ?>"<?php if ($offset == $i) { ?> selected="selected"<?php } ?>><?php echo date($ThisAccount->getTimeFormat(), $time + $i * 3600); ?></option><?php
 				} ?>
 				</select>
 			</td>
@@ -254,12 +254,12 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>Date Format:</td>
-			<td><input type="text" name="dateformat" value="<?php echo htmlspecialchars($ThisAccount->getShortDateFormat()); ?>" /><br />(Default: '<?php echo DEFAULT_DATE_DATE_SHORT; ?>')</td>
+			<td><input type="text" name="dateformat" value="<?php echo htmlspecialchars($ThisAccount->getDateFormat()); ?>" /><br />(Default: '<?php echo DEFAULT_DATE_FORMAT; ?>')</td>
 		</tr>
 
 		<tr>
 			<td>Time Format:</td>
-			<td><input type="text" name="timeformat" value="<?php echo htmlspecialchars($ThisAccount->getShortTimeFormat()); ?>" /><br />(Default: '<?php echo DEFAULT_DATE_TIME_SHORT; ?>')</td>
+			<td><input type="text" name="timeformat" value="<?php echo htmlspecialchars($ThisAccount->getTimeFormat()); ?>" /><br />(Default: '<?php echo DEFAULT_TIME_FORMAT; ?>')</td>
 		</tr>
 
 		<tr>
