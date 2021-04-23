@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 require_once(__DIR__ . '/../../bootstrap.php');
 require_once(LIB . 'Default/smr.inc.php');
 require_once(TOOLS . 'discord/GameLink.class.php');
@@ -12,13 +15,17 @@ function getCommandPrefix() : string {
 	return defined('COMMAND_PREFIX') ? COMMAND_PREFIX : '.';
 }
 
+$loggerLevel = defined('LOGGER_LEVEL') ? LOGGER_LEVEL : 'INFO';
+$logger = new Logger('discord');
+$logger->pushHandler(new StreamHandler('php://stdout', $loggerLevel));
+
 $discord = new Discord\DiscordCommandClient([
 	'token' => DISCORD_TOKEN,
 	'prefix' => getCommandPrefix(),
 	'description' => 'Your automated co-pilot in the Space Merchant Realms universe. Made with DiscordPHP ' . Discord\Discord::VERSION . '.',
 	'caseInsensitiveCommands' => true,
 	'discordOptions' => [
-		'loggerLevel' => defined('LOGGER_LEVEL') ? LOGGER_LEVEL : 'INFO',
+		'logger' => $logger,
 	],
 ]);
 
