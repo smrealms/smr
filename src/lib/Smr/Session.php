@@ -286,11 +286,10 @@ class Session {
 	/**
 	 * Replace the global $var with the given $container.
 	 */
-	public function setCurrentVar(Page $container, bool $allowUpdate = true) : void {
+	public function setCurrentVar(Page $container) : void {
 		$var = $this->hasCurrentVar() ? $this->getCurrentVar() : null;
 
 		//Do not allow sharing SN, useful for forwarding.
-		global $lock;
 		if (isset($var['CommonID'])) {
 			unset($this->commonIDs[$var['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		}
@@ -304,9 +303,6 @@ class Session {
 		}
 
 		$this->var[$this->SN] = $container;
-		if ($allowUpdate && !$lock && !USING_AJAX) {
-			$this->update();
-		}
 	}
 
 	public function updateVar(string $key, mixed $value) : void {
