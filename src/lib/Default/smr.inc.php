@@ -354,7 +354,7 @@ function do_voodoo() {
 				}
 				//Refetch var info in case it changed between grabbing lock.
 				$session->fetchVarInfo();
-				if ($session->findCurrentVar() === false) {
+				if ($session->hasCurrentVar() === false) {
 					if (ENABLE_DEBUG) {
 						$db->query('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber($account->getAccountID()) . ',0,0)');
 					}

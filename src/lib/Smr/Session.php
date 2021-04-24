@@ -79,11 +79,13 @@ class Session {
 			}
 		}
 
-		// try to get current session
+		// Delete any expired sessions
 		$this->db->query('DELETE FROM active_session WHERE last_accessed < ' . $this->db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
+
+		// try to get current session
+		$this->SN = Request::get('sn', '');
 		$this->fetchVarInfo();
 
-		$this->SN = Request::get('sn', '');
 		if (!USING_AJAX && !empty($this->SN) && !empty($this->var[$this->SN])) {
 			$var = $this->var[$this->SN];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
@@ -119,9 +121,19 @@ class Session {
 					//This link is no longer valid
 					unset($this->var[$key]);
 				} else {
-					$this->var[$key]['RemainingPageLoads'] -= 1;
-					if (isset($value['CommonID'])) {
-						$this->commonIDs[$value['CommonID']] = $key;
+					// The following is skipped for the current SN, because:
+					// a) If we decremented RemainingPageLoads, we wouldn't be
+					//    able to refresh the current page.
+					// b) If we register its CommonID and then subsequently
+					//    modify its data (which is quite common for the
+					//    "current var"), the CommonID is not updated. Then any
+					//    var with the same data as the original will wrongly
+					//    share its CommonID.
+					if ($key !== $this->SN) {
+						$this->var[$key]['RemainingPageLoads'] -= 1;
+						if (isset($value['CommonID'])) {
+							$this->commonIDs[$value['CommonID']] = $key;
+						}
 					}
 				}
 			}
@@ -236,25 +248,12 @@ class Session {
 	/**
 	 * Check if the session has a var associated with the current SN.
 	 */
-	public function findCurrentVar() : bool {
-		if (empty($this->var[$this->SN])) {
-			return false;
-		}
-		$var = $this->var[$this->SN];
-		if (isset($var['body']) && isset($var['CommonID'])) {
-//			if(preg_match('/processing/',$var['body']))
-			unset($this->commonIDs[$var['CommonID']]); //Do not store common id for current page
-			unset($var['CommonID']);
-		}
-
-		$var['RemainingPageLoads'] += 1; // Allow refreshing
-
-		return true;
+	public function hasCurrentVar() : bool {
+		return isset($this->var[$this->SN]);
 	}
 
 	/**
 	 * Returns the session var associated with the current SN.
-	 * Must be called after Session::findCurrentVar sets the current SN.
 	 */
 	public function getCurrentVar() : Page {
 		return $this->var[$this->SN];
@@ -287,11 +286,10 @@ class Session {
 	/**
 	 * Replace the global $var with the given $container.
 	 */
-	public function setCurrentVar(Page $container, bool $allowUpdate = true) : void {
-		$var = $this->getCurrentVar();
+	public function setCurrentVar(Page $container) : void {
+		$var = $this->hasCurrentVar() ? $this->getCurrentVar() : null;
 
 		//Do not allow sharing SN, useful for forwarding.
-		global $lock;
 		if (isset($var['CommonID'])) {
 			unset($this->commonIDs[$var['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		}
@@ -304,10 +302,7 @@ class Session {
 			}
 		}
 
-		$var->exchangeArray($container);
-		if ($allowUpdate && !$lock && !USING_AJAX) {
-			$this->update();
-		}
+		$this->var[$this->SN] = $container;
 	}
 
 	public function updateVar(string $key, mixed $value) : void {

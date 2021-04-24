@@ -87,7 +87,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 
 	public function test_current_var() {
 		// With an empty session, there should be no current var
-		self::assertFalse($this->session->findCurrentVar());
+		self::assertFalse($this->session->hasCurrentVar());
 
 		// Add a page to the session so that we can find it later.
 		// (This mimics Page::href but with better access to the SN.)
@@ -104,14 +104,14 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		$session = DiContainer::make(Session::class);
 
 		// Now we should be able to find this sn in the var
-		self::assertTrue($session->findCurrentVar());
+		self::assertTrue($session->hasCurrentVar());
 
 		// The current var should now be accessible
 		$var = $session->getCurrentVar();
 		self::assertSame('some_page', $var['url']);
 
-		// The CommonID metadata should be stripped
-		self::assertFalse(isset($var['CommonID']));
+		// The CommonID metadata should not be stripped
+		self::assertTrue(isset($var['CommonID']));
 		// The RemainingPageLoads should still be 1 because we effectively
 		// reloaded the page by creating a new Session.
 		self::assertSame(1, $var['RemainingPageLoads']);
@@ -119,14 +119,17 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// We can now change the current var
 		$page2 = Page::create('another_page');
 		$session->setCurrentVar($page2);
-		// And $var should be updated automatically
-		self::assertSame('another_page', $var['url']);
+		// Old references to $var should not be modified
+		self::assertSame('some_page', $var['url']);
+		// But a new reference to $var should be updated
+		$var2 = $session->getCurrentVar();
+		self::assertSame('another_page', $var2['url']);
 
 		// If we destroy the Session, then the current var should no longer
 		// be accessible to a new Session.
 		$session->destroy();
 		$session = DiContainer::make(Session::class);
-		self::assertFalse($session->findCurrentVar());
+		self::assertFalse($session->hasCurrentVar());
 	}
 
 }

@@ -17,7 +17,8 @@ function logException(Throwable $e) : void {
 	}
 	$message .= 'Error Message: ' . $e . $delim;
 
-	$message .= '$var: ' . var_export($session->getCurrentVar(), true);
+	$var = $session->hasCurrentVar() ? $session->getCurrentVar() : null;
+	$message .= '$var: ' . var_export($var, true);
 
 	// Don't display passwords input by users in the log message!
 	if (isset($_REQUEST['password'])) {
@@ -89,8 +90,9 @@ function handleException(Throwable $e) {
 	try {
 		logException($e);
 		$errorType = 'Unexpected Error!';
-	} catch (Throwable $e) {
-		error_log('Exception during logException: ' . $e);
+	} catch (Throwable $e2) {
+		error_log('Original exception: ' . $e);
+		error_log('Exception during logException: ' . $e2);
 		$errorType = 'This error cannot be automatically reported. Please notify an admin!';
 	}
 

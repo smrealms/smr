@@ -346,7 +346,7 @@ function processContainer($container) {
 	debug('Executing container', $container);
 	// The next "page request" must occur at an updated time.
 	Smr\Epoch::update();
-	$session->setCurrentVar($container, false);
+	$session->setCurrentVar($container);
 	acquire_lock($player->getSectorID()); // Lock now to skip var update in do_voodoo
 	do_voodoo();
 }
