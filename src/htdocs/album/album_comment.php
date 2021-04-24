@@ -18,9 +18,8 @@ try {
 
 	if (!isset($_GET['album_id']) || empty($_GET['album_id'])) {
 		create_error_offline('Which picture do you want comment?');
-	} else {
-		$album_id = $_GET['album_id'];
 	}
+	$album_id = $_GET['album_id'];
 
 	if (!is_numeric($album_id)) {
 		create_error_offline('Picture ID has to be numeric!');
@@ -50,9 +49,8 @@ try {
 
 	if (!isset($_GET['comment']) || empty($_GET['comment'])) {
 		create_error_offline('Please enter a comment.');
-	} else {
-		$comment = $_GET['comment'];
 	}
+	$comment = $_GET['comment'];
 
 	// get current time
 	$curr_time = Smr\Epoch::time();
