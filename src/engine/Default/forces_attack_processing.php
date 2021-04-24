@@ -26,13 +26,10 @@ if ($player->forceNAPAlliance($forceOwner)) {
 
 // The attack is processed slightly differently if the attacker bumped into mines
 // when moving into sector
-if ($var['action'] == 'attack') {
-	$bump = false;
-} elseif ($var['action'] == 'bump') {
-	$bump = true;
-} else {
-	create_error('Action must be either bump or attack');
-}
+$bump = match($var['action']) {
+	'attack' => false,
+	'bump' => true,
+};
 
 if ($bump) {
 	if (!$forces->hasMines()) {

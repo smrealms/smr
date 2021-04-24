@@ -13,15 +13,13 @@ if (!$player->getSector()->hasLocation($var['LocationID'])) {
 $location = SmrLocation::getLocation($var['LocationID']);
 $container = Page::create('skeleton.php');
 $container->addVar('LocationID');
-if ($location->isHQ()) {
-	$container['body'] = 'government.php';
-	$type = 'HQ';
-} elseif ($location->isUG()) {
-	$container['body'] = 'underground.php';
-	$type = 'UG';
-} else {
-	create_error('The location is not a UG or HQ, how did you get here?');
-}
+
+list($type, $body) = match(true) {
+	$location->isHQ() => ['HQ', 'government.php'],
+	$location->isUG() => ['UG', 'underground.php'],
+};
+$container['body'] = $body;
+
 // if we don't have a yes we leave immediatly
 if (Request::get('action') != 'Yes') {
 	$container->go();
