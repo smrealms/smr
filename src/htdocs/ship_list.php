@@ -4,6 +4,7 @@ try {
 
 	$template = Smr\Template::getInstance();
 
+	$shipArray = [];
 	foreach (SmrShip::getAllBaseShips() as $ship) {
 		$shipArray[] = buildShipStats($ship);
 	}

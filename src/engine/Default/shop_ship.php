@@ -23,6 +23,7 @@ foreach ($shipsSold as $shipTypeID => $shipSold) {
 }
 $template->assign('ShipsUnavailable', $shipsUnavailable);
 
+$shipsSoldHREF = [];
 if (!empty($shipsSold)) {
 	$container = Page::create('skeleton.php', 'shop_ship.php');
 	$container->addVar('LocationID');
