@@ -28,7 +28,7 @@ if (count($Threads) > 0) { ?>
 						} ?>
 					</td>
 					<td class="sort_replies center"><?php echo $Thread['Replies']; ?></td>
-					<td class="sort_lastReply noWrap" data-lastReply="<?php echo $Thread['SendTime']; ?>"><?php echo date(DATE_FULL_SHORT, $Thread['SendTime']); ?></td>
+					<td class="sort_lastReply noWrap" data-lastReply="<?php echo $Thread['SendTime']; ?>"><?php echo date($ThisAccount->getDateTimeFormat(), $Thread['SendTime']); ?></td>
 				</tr><?php
 			} ?>
 		</tbody>

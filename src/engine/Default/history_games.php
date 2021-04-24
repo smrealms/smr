@@ -20,8 +20,8 @@ $db->query('SELECT start_date, type, end_date, game_name, speed, game_id ' .
            'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
 $db->requireRecord();
 $template->assign('GameName', $game_name);
-$template->assign('Start', date(DATE_DATE_SHORT, $db->getInt('start_date')));
-$template->assign('End', date(DATE_DATE_SHORT, $db->getInt('end_date')));
+$template->assign('Start', date($account->getDateFormat(), $db->getInt('start_date')));
+$template->assign('End', date($account->getDateFormat(), $db->getInt('end_date')));
 $template->assign('Type', $db->getField('type'));
 $template->assign('Speed', $db->getFloat('speed'));
 

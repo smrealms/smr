@@ -26,7 +26,7 @@ if ($db->getNumRows() > 0) {
 		if ($db->getInt('end') > Smr\Epoch::time()) {
 			$voting[$voteID]['TimeRemaining'] = format_time($db->getInt('end') - Smr\Epoch::time(), true);
 		} else {
-			$voting[$voteID]['EndDate'] = date(DATE_DATE_SHORT, $db->getInt('end'));
+			$voting[$voteID]['EndDate'] = date($account->getDateFormat(), $db->getInt('end'));
 		}
 		$voting[$voteID]['Options'] = array();
 		$db2->query('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db2->escapeNumber($db->getInt('vote_id')) . ' GROUP BY option_id');

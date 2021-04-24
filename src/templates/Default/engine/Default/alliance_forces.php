@@ -57,7 +57,7 @@ if (empty($Forces)) { ?>
 			<td class="sort_cds center"><?php echo $Force->getCDs(); ?></td>
 			<td class="sort_sds center"><?php echo $Force->getSDs(); ?></td>
 			<td class="sort_mines center"><?php echo $Force->getMines(); ?></td>
-			<td class="sort_expire noWrap" data-expire="<?php echo $Force->getExpire(); ?>"><?php echo date(DATE_FULL_SHORT, $Force->getExpire()); ?></td>
+			<td class="sort_expire noWrap" data-expire="<?php echo $Force->getExpire(); ?>"><?php echo date($ThisAccount->getDateTimeFormat(), $Force->getExpire()); ?></td>
 		</tr><?php
 	} ?>
 	</table>

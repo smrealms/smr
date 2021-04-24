@@ -92,7 +92,7 @@ if (count($History) > 0) { ?>
 			<tr>
 				<td class="center"><?php echo $i + 1; ?></td>
 				<td><?php echo $Pick['Leader']->getDisplayName(); ?></td>
-				<td><?php echo date(DATE_FULL_SHORT, $Pick['Time']); ?></td>
+				<td><?php echo date($ThisAccount->getDateTimeFormat(), $Pick['Time']); ?></td>
 				<td><?php echo $Pick['Player']->getDisplayName(); ?></td>
 				<td><?php echo $Pick['Player']->getRaceName(); ?></td>
 				<td><?php echo $Pick['Player']->getAccount()->getHofDisplayName(true); ?></td>

@@ -37,7 +37,7 @@ if ($db->getNumRows() > 0) {
 		$games['Play'][$game_id]['ID'] = $game_id;
 		$games['Play'][$game_id]['Name'] = $db->getField('game_name');
 		$games['Play'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getInt('game_type')];
-		$games['Play'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT, $db->getInt('end_time'));
+		$games['Play'][$game_id]['EndDate'] = date($account->getDateTimeFormatSplit(), $db->getInt('end_time'));
 		$games['Play'][$game_id]['Speed'] = $db->getFloat('game_speed');
 
 		$container = Page::create('game_play_processing.php');
@@ -107,8 +107,8 @@ if ($db->getNumRows() > 0) {
 			'ID' => $game_id,
 			'Name' => $game->getName(),
 			'JoinTime' => $game->getJoinTime(),
-			'StartDate' => date(DATE_FULL_SHORT_SPLIT, $game->getStartTime()),
-			'EndDate' => date(DATE_FULL_SHORT_SPLIT, $game->getEndTime()),
+			'StartDate' => date($account->getDateTimeFormatSplit(), $game->getStartTime()),
+			'EndDate' => date($account->getDateTimeFormatSplit(), $game->getEndTime()),
 			'Players' => $game->getTotalPlayers(),
 			'Type' => $game->getGameType(),
 			'Speed' => $game->getGameSpeed(),
@@ -136,8 +136,8 @@ if ($db->getNumRows()) {
 		$game_id = $db->getInt('game_id');
 		$games['Previous'][$game_id]['ID'] = $game_id;
 		$games['Previous'][$game_id]['Name'] = $db->getField('game_name');
-		$games['Previous'][$game_id]['StartDate'] = date(DATE_DATE_SHORT, $db->getInt('start_time'));
-		$games['Previous'][$game_id]['EndDate'] = date(DATE_DATE_SHORT, $db->getInt('end_time'));
+		$games['Previous'][$game_id]['StartDate'] = date($account->getDateFormat(), $db->getInt('start_time'));
+		$games['Previous'][$game_id]['EndDate'] = date($account->getDateFormat(), $db->getInt('end_time'));
 		$games['Previous'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getField('game_type')];
 		$games['Previous'][$game_id]['Speed'] = $db->getFloat('game_speed');
 		// create a container that will hold next url and additional variables.
@@ -165,8 +165,8 @@ foreach (Globals::getHistoryDatabases() as $databaseName => $oldColumn) {
 			$index = $databaseName . $game_id;
 			$games['Previous'][$index]['ID'] = $game_id;
 			$games['Previous'][$index]['Name'] = $db->getField('game_name');
-			$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT, $db->getInt('start_date'));
-			$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT, $db->getInt('end_date'));
+			$games['Previous'][$index]['StartDate'] = date($account->getDateFormat(), $db->getInt('start_date'));
+			$games['Previous'][$index]['EndDate'] = date($account->getDateFormat(), $db->getInt('end_date'));
 			$games['Previous'][$index]['Type'] = $db->getField('type');
 			$games['Previous'][$index]['Speed'] = $db->getFloat('speed');
 			// create a container that will hold next url and additional variables.

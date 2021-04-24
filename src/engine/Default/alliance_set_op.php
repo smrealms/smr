@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
+$account = $session->getAccount();
 $player = $session->getPlayer();
 $alliance = $player->getAlliance();
 
@@ -23,7 +24,7 @@ $db->query('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNu
 if ($db->nextRecord()) {
 	// An op is already scheduled, so get the time
 	$time = $db->getInt('time');
-	$template->assign('OpDate', date(DATE_FULL_SHORT, $time));
+	$template->assign('OpDate', date($account->getDateTimeFormat(), $time));
 	$template->assign('OpCountdown', format_time($time - Smr\Epoch::time()));
 
 	// Add a cancel button

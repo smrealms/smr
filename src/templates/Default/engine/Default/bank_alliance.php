@@ -57,7 +57,7 @@ if (!empty($BankTransactions)) { ?>
 				foreach ($BankTransactions as $TransactionID => $BankTransaction) { ?>
 					<tr>
 						<td><?php echo number_format($TransactionID); ?></td>
-						<td class="noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $BankTransaction['Time']); ?></td>
+						<td class="noWrap"><?php echo date($ThisAccount->getDateTimeFormatSplit(), $BankTransaction['Time']); ?></td>
 						<td class="left"><?php
 							if ($BankTransaction['Exempt']) {
 								?>Alliance Funds c/o<br /><?php

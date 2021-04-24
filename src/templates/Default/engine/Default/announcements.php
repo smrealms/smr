@@ -8,7 +8,7 @@
 	foreach ($Announcements as $Announcement) { ?>
 		<tr>
 			<td class="shrink top noWrap">
-				<?php echo date(DATE_FULL_SHORT_SPLIT, $Announcement['Time']); ?>
+				<?php echo date($ThisAccount->getDateTimeFormatSplit(), $Announcement['Time']); ?>
 			</td>
 			<td class="top">
 				<?php echo bbifyMessage($Announcement['Msg']); ?>

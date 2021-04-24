@@ -33,7 +33,7 @@
 					<span class="red">CLOSED</span> (<?php echo $Disabled['Reason']; ?>)<br />
 					The account is set to <?php
 					if ($Disabled['Time'] > 0) { ?>
-						reopen on <?php echo date(DEFAULT_DATE_FULL_LONG, $Disabled['Time']); ?>.<?php
+						reopen on <?php echo date($ThisAccount->getDateTimeFormat(), $Disabled['Time']); ?>.<?php
 					} else { ?>
 						never reopen.<?php
 					}
@@ -206,7 +206,7 @@
 			<td><?php
 				if (count($ClosingHistory) > 0) {
 					foreach ($ClosingHistory as $Action) {
-						echo date(DATE_FULL_SHORT, $Action['Time']); ?> - <?php echo $Action['Action']; ?> by <?php echo $Action['AdminName']; ?><br /><?php
+						echo date($ThisAccount->getDateTimeFormat(), $Action['Time']); ?> - <?php echo $Action['Action']; ?> by <?php echo $Action['AdminName']; ?><br /><?php
 					}
 				} else { ?>
 					No activity.<?php
@@ -271,7 +271,7 @@
 					<table id="recentIPs" style="display:none"><?php
 						foreach ($RecentIPs as $RecentIP) { ?>
 							<tr>
-								<td><?php echo date(DATE_FULL_SHORT, $RecentIP['Time']); ?></td>
+								<td><?php echo date($ThisAccount->getDateTimeFormat(), $RecentIP['Time']); ?></td>
 								<td>&nbsp;</td>
 								<td><?php echo $RecentIP['IP']; ?></td>
 								<td>&nbsp;</td>

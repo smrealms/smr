@@ -99,7 +99,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 							if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
 								<span class="green">Online</span><?php
 							} elseif ($ThisPlayer->getAccountID() == $Alliance->getLeaderID() && $Disabled = SmrAccount::getAccount($AlliancePlayer->getAccountID())->isDisabled()) { ?>
-								<span class="red">Banned Until:<br/><?php echo date(DATE_FULL_SHORT_SPLIT, $Disabled['Time']); ?></span><?php
+								<span class="red">Banned Until:<br/><?php echo date($ThisAccount->getDateTimeFormatSplit(), $Disabled['Time']); ?></span><?php
 							} else { ?>
 								<span class="red">Offline</span><?php
 							} ?>

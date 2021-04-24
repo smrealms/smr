@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
 $template = Smr\Template::getInstance();
-$var = Smr\Session::getInstance()->getCurrentVar();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
+$account = $session->getAccount();
 
 if (!isset($var['log_ids']) && !isset($var['current_log'])) {
 	create_error('You must select a combat log to view');
@@ -16,7 +18,7 @@ if (!$db->nextRecord()) {
 	create_error('Combat log not found');
 }
 $template->assign('CombatLogSector', $db->getInt('sector_id'));
-$template->assign('CombatLogTimestamp', date(DATE_FULL_SHORT, $db->getInt('timestamp')));
+$template->assign('CombatLogTimestamp', date($account->getDateTimeFormat(), $db->getInt('timestamp')));
 $results = $db->getObject('result', true);
 $template->assign('CombatResultsType', $db->getField('type'));
 $template->assign('CombatResults', $results);

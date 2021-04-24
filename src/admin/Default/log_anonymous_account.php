@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 $template = Smr\Template::getInstance();
+$session = Smr\Session::getInstance();
+$account = $session->getAccount();
 
 $template->assign('PageTopic', 'Anonymous Account Access');
 
@@ -22,7 +24,7 @@ while ($db->nextRecord()) {
 	$anon_logs[$db->getInt('game_id')][$db->getInt('anon_id')][] = [
 		'login' => $db->getField('login'),
 		'amount' => number_format($db->getInt('amount')),
-		'date' => date(DATE_FULL_SHORT, $db->getInt('time')),
+		'date' => date($account->getDateTimeFormat(), $db->getInt('time')),
 		'type' => $transaction,
 		'color' => $transaction == 'payment' ? 'tomato' : 'green',
 	];

@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
+$account = $session->getAccount();
 
 $template->assign('PageTopic', 'Change Log');
 
@@ -27,7 +28,7 @@ while ($db->nextRecord()) {
 
 	// get human readable format for date
 	if ($went_live > 0) {
-		$went_live = date(DATE_FULL_SHORT, $went_live);
+		$went_live = date($account->getDateTimeFormat(), $went_live);
 	} else {
 		$went_live = 'never';
 	}

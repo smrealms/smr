@@ -9,7 +9,7 @@
 		} ?>
 	</select><br /><?php
 	if ($SelectedPlanetType) { ?>
-		<b>Habitable: </b><?php echo date(DATE_FULL_SHORT, $Planet->getInhabitableTime()); ?><br /><?php
+		<b>Habitable: </b><?php echo date($ThisAccount->getDateTimeFormat(), $Planet->getInhabitableTime()); ?><br /><?php
 	} ?>
 	<br />
 

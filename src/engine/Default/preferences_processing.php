@@ -146,8 +146,8 @@ if ($action == 'Save and resend validation code') {
 	$db->query('UPDATE account SET offset = ' . $db->escapeNumber($timez) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 } elseif ($action == 'Change Date Formats') {
-	$account->setShortDateFormat(Request::get('dateformat'));
-	$account->setShortTimeFormat(Request::get('timeformat'));
+	$account->setDateFormat(Request::get('dateformat'));
+	$account->setTimeFormat(Request::get('timeformat'));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your date formats.';
 } elseif ($action == 'Change Images') {
 	$account->setDisplayShipImages(Request::get('images') == 'Yes');

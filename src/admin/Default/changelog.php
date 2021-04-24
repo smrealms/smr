@@ -3,6 +3,7 @@
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
+$account = $session->getAccount();
 
 $template->assign('PageTopic', 'Change Log');
 
@@ -26,7 +27,7 @@ while ($db->nextRecord()) {
 		$link_set_live = false;
 
 		// get human readable format for date
-		$went_live = date(DATE_FULL_SHORT, $went_live);
+		$went_live = date($account->getDateTimeFormat(), $went_live);
 	} else {
 		if ($link_set_live) {
 			$container = Page::create('changelog_set_live_processing.php');
