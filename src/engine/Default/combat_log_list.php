@@ -45,10 +45,9 @@ if (isset($var['page'])) {
 	$page = $var['page'];
 }
 $db->query('SELECT count(*) as count FROM combat_logs c WHERE ' . $query . ' LIMIT 1');
-if ($db->nextRecord()) {
-	$totalLogs = $db->getInt('count');
-	$template->assign('TotalLogs', $totalLogs);
-}
+$db->requireRecord(); // count always returns a record
+$totalLogs = $db->getInt('count');
+$template->assign('TotalLogs', $totalLogs);
 
 $db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
 

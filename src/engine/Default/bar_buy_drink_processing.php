@@ -25,44 +25,43 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 	} else {
 		$db->query('SELECT drink_id, drink_name FROM bar_drink ORDER BY rand() LIMIT 1');
 	}
+	$db->requireRecord(); // the bar_drink table should not be empty
 
+	$drinkName = $db->getField('drink_name');
+	$drink_id = $db->getInt('drink_id');
+
+	$db->query('SELECT drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER by drink_id DESC LIMIT 1');
 	if ($db->nextRecord()) {
-		$drinkName = $db->getField('drink_name');
-		$drink_id = $db->getInt('drink_id');
-
-		$db->query('SELECT drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER by drink_id DESC LIMIT 1');
-		if ($db->nextRecord()) {
-			$curr_drink_id = $db->getInt('drink_id') + 1;
-		} else {
-			$curr_drink_id = 1;
-		}
-
-		if ($drink_id != 11 && $drink_id != 1) {
-			$message .= ('You have bought a ' . $drinkName . ' for $10');
-			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
-			$player->increaseHOF(1, array('Bar', 'Drinks', 'Alcoholic'), HOF_PUBLIC);
-		} else {
-			$message .= ('The bartender says, Ive got something special for ya.<br />');
-			$message .= ('The bartender turns around for a minute and whips up a ' . $drinkName . '.<br />');
-
-			if ($drink_id == 1) {
-				$message .= ('The bartender says that Spock himself gave him the directions to make this drink.<br />');
-			}
-
-			$message .= ('You drink the ' . $drinkName . ' and feel like like you have been drinking for hours.<br />');
-
-			if ($drink_id == 11) {
-				$message .= ('After drinking the ' . $drinkName . ' you feel like nothing can bring you down and like you are the best trader in the universe.<br />');
-			}
-
-			//has the power of 2 drinks
-			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
-			$curr_drink_id++;
-			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
-			$player->increaseHOF(1, array('Bar', 'Drinks', 'Special'), HOF_PUBLIC);
-		}
-
+		$curr_drink_id = $db->getInt('drink_id') + 1;
+	} else {
+		$curr_drink_id = 1;
 	}
+
+	if ($drink_id != 11 && $drink_id != 1) {
+		$message .= ('You have bought a ' . $drinkName . ' for $10');
+		$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+		$player->increaseHOF(1, array('Bar', 'Drinks', 'Alcoholic'), HOF_PUBLIC);
+	} else {
+		$message .= ('The bartender says, Ive got something special for ya.<br />');
+		$message .= ('The bartender turns around for a minute and whips up a ' . $drinkName . '.<br />');
+
+		if ($drink_id == 1) {
+			$message .= ('The bartender says that Spock himself gave him the directions to make this drink.<br />');
+		}
+
+		$message .= ('You drink the ' . $drinkName . ' and feel like like you have been drinking for hours.<br />');
+
+		if ($drink_id == 11) {
+			$message .= ('After drinking the ' . $drinkName . ' you feel like nothing can bring you down and like you are the best trader in the universe.<br />');
+		}
+
+		//has the power of 2 drinks
+		$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+		$curr_drink_id++;
+		$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+		$player->increaseHOF(1, array('Bar', 'Drinks', 'Special'), HOF_PUBLIC);
+	}
+
 	$db->query('SELECT count(*) FROM player_has_drinks WHERE ' . $player->getSQL());
 	$db->requireRecord();
 	$num_drinks = $db->getInt('count(*)');
