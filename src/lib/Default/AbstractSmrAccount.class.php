@@ -233,8 +233,8 @@ abstract class AbstractSmrAccount {
 			$this->discordId = $this->db->getField('discord_id');
 			$this->ircNick = $this->db->getField('irc_nick');
 
-			$this->dateFormat = $this->db->getField('date_short');
-			$this->timeFormat = $this->db->getField('time_short');
+			$this->dateFormat = $this->db->getField('date_format');
+			$this->timeFormat = $this->db->getField('time_format');
 
 			$this->template = $this->db->getField('template');
 			$this->colourScheme = $this->db->getField('colour_scheme');
@@ -288,8 +288,8 @@ abstract class AbstractSmrAccount {
 			', hotkeys=' . $this->db->escapeObject($this->hotkeys) .
 			', last_login = ' . $this->db->escapeNumber($this->last_login) .
 			', logging = ' . $this->db->escapeBoolean($this->logging) .
-			', time_short = ' . $this->db->escapeString($this->timeFormat) .
-			', date_short = ' . $this->db->escapeString($this->dateFormat) .
+			', time_format = ' . $this->db->escapeString($this->timeFormat) .
+			', date_format = ' . $this->db->escapeString($this->dateFormat) .
 			', discord_id = ' . $this->db->escapeString($this->discordId, true) .
 			', irc_nick = ' . $this->db->escapeString($this->ircNick, true) .
 			', hof_name = ' . $this->db->escapeString($this->hofName) .

@@ -237,12 +237,12 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 		$epoch = 1619228391;
 
 		// Test default formats
-		self::assertSame('24/4/2021', date($account->getDateFormat(), $epoch));
+		self::assertSame('2021-04-24', date($account->getDateFormat(), $epoch));
 		self::assertSame('1:39:51 AM', date($account->getTimeFormat(), $epoch));
 
 		// Test combined formats
-		self::assertSame('24/4/2021 1:39:51 AM', date($account->getDateTimeFormat(), $epoch));
-		self::assertSame('24/4/2021<br />1:39:51 AM', date($account->getDateTimeFormatSplit(), $epoch));
+		self::assertSame('2021-04-24 1:39:51 AM', date($account->getDateTimeFormat(), $epoch));
+		self::assertSame('2021-04-24<br />1:39:51 AM', date($account->getDateTimeFormatSplit(), $epoch));
 
 		// Now modify the formats
 		$account->setDateFormat('Y M D');
