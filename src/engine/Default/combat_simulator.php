@@ -21,9 +21,9 @@ if(isset($_POST['attackers']))
 			continue;
 		}
 		$usedNames[$attackerName] = true;
-		$attackers[$i] =& DummyPlayer::getCachedDummyPlayer($attackerName);
+		$attackers[$i] = DummyPlayer::getCachedDummyPlayer($attackerName);
 		$attackers[$i]->setAllianceID(1);
-		$realAttackers[$i] =& $attackers[$i];
+		$realAttackers[$i] = $attackers[$i];
 		++$i;
 	}
 
@@ -43,9 +43,9 @@ if(isset($_POST['defenders']))
 			continue;
 		}
 		$usedNames[$defenderName] = true;
-		$defenders[$i] =& DummyPlayer::getCachedDummyPlayer($defenderName);
+		$defenders[$i] = DummyPlayer::getCachedDummyPlayer($defenderName);
 		$defenders[$i]->setAllianceID(2);
-		$realDefenders[$i] =& $defenders[$i];
+		$realDefenders[$i] = $defenders[$i];
 		++$i;
 	}
 

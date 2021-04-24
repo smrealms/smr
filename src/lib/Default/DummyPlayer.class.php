@@ -78,18 +78,16 @@ class DummyPlayer extends AbstractSmrPlayer {
 					'VALUES (\'DummyPlayer\', '.$db->escapeString($this->getPlayerName()).', '.$db->escapeObject($this).')');
 	}
 
-	public static function &getCachedDummyPlayer($name) {
+	public static function getCachedDummyPlayer($name) {
 		$db = Smr\Database::getInstance();
 		$db->query('SELECT info FROM cached_dummys
 					WHERE type = \'DummyPlayer\'
 						AND id = ' . $db->escapeString($name) . ' LIMIT 1');
 		if($db->nextRecord()) {
-			$return = $db->getObject('info');
-			return $return;
+			return $db->getObject('info');
 		}
 		else {
-			$return = new DummyPlayer();
-			return $return;
+			return new DummyPlayer();
 		}
 	}
 
