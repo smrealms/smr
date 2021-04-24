@@ -42,7 +42,7 @@ if(isset($_POST['defenders']))
 			$duplicates = true;
 			continue;
 		}
-		$usedNames[$attackerName] = true;
+		$usedNames[$defenderName] = true;
 		$defenders[$i] =& DummyPlayer::getCachedDummyPlayer($defenderName);
 		$defenders[$i]->setAllianceID(2);
 		$realDefenders[$i] =& $defenders[$i];
