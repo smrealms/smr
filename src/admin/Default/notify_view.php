@@ -24,10 +24,7 @@ while ($db->nextRecord()) {
 	$container['offended'] = $db->getInt('to_id');
 	$container['game_id'] = $gameID;
 
-	/**
-	 * @var $messagePlayer SmrPlayer | string
-	 */
-	$getName = function($messagePlayer) use ($container, $account) : string {
+	$getName = function(SmrPlayer|string $messagePlayer) use ($container, $account) : string {
 		$name = $messagePlayer;
 		if ($messagePlayer instanceof SmrPlayer) {
 			$name = $messagePlayer->getAccount()->getLogin();

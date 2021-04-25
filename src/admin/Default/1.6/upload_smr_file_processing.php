@@ -2,11 +2,11 @@
 
 $var = Smr\Session::getInstance()->getCurrentVar();
 
-if ($_FILES['smr_file']['error'] == UPLOAD_ERR_OK) {
-	$ini_str = file_get_contents($_FILES['smr_file']['tmp_name']);
-} else {
+if ($_FILES['smr_file']['error'] !== UPLOAD_ERR_OK) {
 	create_error('Failed to upload SMR file!');
 }
+
+$ini_str = file_get_contents($_FILES['smr_file']['tmp_name']);
 
 // We only care about the sections after [Metadata], and the earlier
 // sections have invalid INI key characters (e.g. Creonti "Big Daddy", Salvene

@@ -13,18 +13,16 @@ $account_id = $session->getRequestVarInt('account_id');
 // check if the given account really has an entry
 $db = Smr\Database::getInstance();
 $db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account_id) . ' AND Approved = \'YES\'');
-if ($db->nextRecord()) {
-	$disabled = $db->getBoolean('disabled');
-	$location = stripslashes($db->getField('location'));
-	$email = stripslashes($db->getField('email'));
-	$website = stripslashes($db->getField('website'));
-	$day = $db->getField('day');
-	$month = $db->getField('month');
-	$year = $db->getField('year');
-	$other = nl2br(stripslashes($db->getField('other')));
-} else {
-	create_error('This User doesn\'t have an album entry or it needs to be approved first!');
-}
+$db->requireRecord();
+
+$disabled = $db->getBoolean('disabled');
+$location = stripslashes($db->getField('location'));
+$email = stripslashes($db->getField('email'));
+$website = stripslashes($db->getField('website'));
+$day = $db->getField('day');
+$month = $db->getField('month');
+$year = $db->getField('year');
+$other = nl2br(stripslashes($db->getField('other')));
 
 if (!empty($day) && !empty($month) && !empty($year)) {
 	$birthdate = $month . ' / ' . $day . ' / ' . $year;

@@ -33,24 +33,23 @@ $query = match($action) {
 				)',
 	COMBAT_LOG_FORCE => 'type=\'FORCE\'',
 };
-if (isset($query) && $query) {
-	$query .= ' AND game_id=' . $db->escapeNumber($player->getGameID());
-	if ($action != COMBAT_LOG_PERSONAL && $player->hasAlliance()) {
-		$query .= ' AND (attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ') ';
-	} else {
-		$query .= ' AND (attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ') ';
-	}
-	$page = 0;
-	if (isset($var['page'])) {
-		$page = $var['page'];
-	}
-	$db->query('SELECT count(*) as count FROM combat_logs c WHERE ' . $query . ' LIMIT 1');
-	if ($db->nextRecord()) {
-		$totalLogs = $db->getInt('count');
-		$template->assign('TotalLogs', $totalLogs);
-	}
-	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
+
+$query .= ' AND game_id=' . $db->escapeNumber($player->getGameID());
+if ($action != COMBAT_LOG_PERSONAL && $player->hasAlliance()) {
+	$query .= ' AND (attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ') ';
+} else {
+	$query .= ' AND (attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ') ';
 }
+$page = 0;
+if (isset($var['page'])) {
+	$page = $var['page'];
+}
+$db->query('SELECT count(*) as count FROM combat_logs c WHERE ' . $query . ' LIMIT 1');
+$db->requireRecord(); // count always returns a record
+$totalLogs = $db->getInt('count');
+$template->assign('TotalLogs', $totalLogs);
+
+$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
 
 $getParticipantName = function($accountID, $sectorID) use ($player) : string {
 	if ($accountID == ACCOUNT_ID_PORT) {

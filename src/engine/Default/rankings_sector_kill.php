@@ -29,9 +29,8 @@ if ($min_rank < 0) {
 }
 
 $db->query('SELECT max(sector_id) FROM sector WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-if ($db->nextRecord()) {
-	$total_sector = $db->getInt('max(sector_id)');
-}
+$db->requireRecord(); // we expect there to be at least 1 sector...
+$total_sector = $db->getInt('max(sector_id)');
 
 // Calculate the rank of the sector the player is currently in
 $db->query('SELECT ranking

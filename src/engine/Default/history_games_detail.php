@@ -18,19 +18,14 @@ $template->assign('SelfHREF', $container->href());
 // Default page has no category (action) selected yet
 $action = $session->getRequestVar('action', '');
 if (!empty($action)) {
-	if ($action == 'Top Mined Sectors') {
-		$sql = 'mines'; $from = 'sector'; $dis = 'Mines';
-	} elseif ($action == 'Sectors with most Forces') {
-		$sql = 'mines + combat + scouts'; $from = 'sector'; $dis = 'Forces';
-	} elseif ($action == 'Top Killing Sectors') {
-		$sql = 'kills'; $from = 'sector'; $dis = 'Kills';
-	} elseif ($action == 'Top Planets') {
-		$sql = 'ROUND((turrets + hangers + generators) / 3, 2)'; $from = 'planet'; $dis = 'Planet Level';
-	} elseif ($action == 'Top Alliance Kills') {
-		$sql = 'kills'; $from = 'alliance'; $dis = 'Kills';
-	} elseif ($action == 'Top Alliance Deaths') {
-		$sql = 'deaths'; $from = 'alliance'; $dis = 'Deaths';
-	}
+	list($sql, $from, $dis) = match($action) {
+		'Top Mined Sectors' => ['mines', 'sector', 'Mines'],
+		'Sectors with most Forces' => ['mines + combat + scouts', 'sector', 'Forces'],
+		'Top Killing Sectors' => ['kills', 'sector', 'Kills'],
+		'Top Planets' => ['ROUND((turrets + hangers + generators) / 3, 2)', 'planet', 'Planet Level'],
+		'Top Alliance Kills' => ['kills', 'alliance', 'Kills'],
+		'Top Alliance Deaths' => ['deaths', 'alliance', 'Deaths'],
+	};
 	$template->assign('Description', $dis);
 
 	$rankings = [];

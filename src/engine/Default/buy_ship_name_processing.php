@@ -8,7 +8,7 @@ function checkShipLogo(string $filename) : void {
 
 	// get dimensions
 	$size = getimagesize($_FILES['photo']['tmp_name']);
-	if (!isset($size)) {
+	if ($size === false) {
 		create_error('Uploaded file must be an image!');
 	}
 

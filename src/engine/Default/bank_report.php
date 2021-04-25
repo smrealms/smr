@@ -31,6 +31,7 @@ while ($db->nextRecord()) {
 
 //ordering
 $playerIDs = array_keys($trans);
+$totals = [];
 foreach ($trans as $accId => $transArray) {
 	$totals[$accId] = $transArray[DEPOSIT] - $transArray[WITHDRAW];
 }

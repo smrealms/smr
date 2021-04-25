@@ -50,6 +50,10 @@ if ($db->getNumRows() > 0) {
 
 	$i = 0;
 	$alliance_eyes = array();
+	$thread_ids = [];
+	$thread_topics = [];
+	$thread_replies = [];
+
 	while ($db->nextRecord()) {
 		$threadID = $db->getInt('thread_id');
 		$alliance_eyes[$i] = $db->getBoolean('alliance_only');

@@ -18,6 +18,7 @@ $link_set_live = true;
 $db = Smr\Database::getInstance();
 $db->query('SELECT * FROM version ORDER BY version_id DESC');
 
+$versions = [];
 while ($db->nextRecord()) {
 	$version_id = $db->getInt('version_id');
 	$version = $db->getInt('major_version') . '.' . $db->getInt('minor_version') . '.' . $db->getInt('patch_level');

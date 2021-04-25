@@ -34,7 +34,7 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 	$noPicture = false;
 	// get dimensions
 	$size = getimagesize($_FILES['photo']['tmp_name']);
-	if (!isset($size)) {
+	if ($size === false) {
 		create_error('Uploaded file must be an image!');
 	}
 

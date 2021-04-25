@@ -15,6 +15,7 @@ Menu::history_games(2);
 
 if (!isset($var['stat'])) {
 	// Display a list of stats available to view
+	$links = [];
 	$db->query('SHOW COLUMNS FROM player_has_stats');
 	while ($db->nextRecord()) {
 		$stat = $db->getField('Field');
