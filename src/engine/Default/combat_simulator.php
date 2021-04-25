@@ -12,8 +12,8 @@ $usedNames = array();
 $realAttackers = array();
 $attackers = array();
 $i = 1;
-if (isset($_POST['attackers'])) {
-	foreach ($_POST['attackers'] as $attackerName) {
+if (Request::has('attackers')) {
+	foreach (Request::getArray('attackers') as $attackerName) {
 		if ($attackerName == 'none') {
 			continue;
 		}
@@ -37,8 +37,8 @@ $template->assign('Attackers', $attackers);
 $i = 1;
 $realDefenders = array();
 $defenders = array();
-if (isset($_POST['defenders'])) {
-	foreach ($_POST['defenders'] as $defenderName) {
+if (Request::has('defenders')) {
+	foreach (Request::getArray('defenders') as $defenderName) {
 		if ($defenderName == 'none') {
 			continue;
 		}
@@ -64,10 +64,10 @@ $template->assign('Duplicates', $duplicates);
 $template->assign('CombatSimHREF', Page::create('skeleton.php', 'combat_simulator.php')->href());
 
 if (!empty($realAttackers) && !empty($realDefenders)) {
-	if (isset($_REQUEST['run'])) {
+	if (Request::has('run')) {
 		runAnAttack($realAttackers, $realDefenders);
 	}
-	if (isset($_REQUEST['death_run'])) {
+	if (Request::has('death_run')) {
 		while (count($realAttackers) > 0 && count($realDefenders) > 0) {
 			runAnAttack($realAttackers, $realDefenders);
 			foreach ($realAttackers as $key => $teamPlayer) {
