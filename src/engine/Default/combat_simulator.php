@@ -70,16 +70,16 @@ if (!empty($realAttackers) && !empty($realDefenders)) {
 	if (isset($_REQUEST['death_run'])) {
 		while (count($realAttackers) > 0 && count($realDefenders) > 0) {
 			runAnAttack($realAttackers, $realDefenders);
-			foreach ($realAttackers as $key => &$teamPlayer) {
+			foreach ($realAttackers as $key => $teamPlayer) {
 				if ($teamPlayer->isDead()) {
 					unset($realAttackers[$key]);
 				}
-			} unset($teamPlayer);
-			foreach ($realDefenders as $key => &$teamPlayer) {
+			}
+			foreach ($realDefenders as $key => $teamPlayer) {
 				if ($teamPlayer->isDead()) {
 					unset($realDefenders[$key]);
 				}
-			} unset($teamPlayer);
+			}
 		}
 	}
 }
