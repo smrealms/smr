@@ -83,8 +83,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 						AND id = ' . $db->escapeString($name) . ' LIMIT 1');
 		if ($db->nextRecord()) {
 			return $db->getObject('info');
-		}
-		else {
+		} else {
 			return new DummyPlayer();
 		}
 	}

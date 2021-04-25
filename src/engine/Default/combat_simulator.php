@@ -12,10 +12,11 @@ $usedNames = array();
 $realAttackers = array();
 $attackers = array();
 $i = 1;
-if (isset($_POST['attackers']))
+if (isset($_POST['attackers'])) {
 	foreach ($_POST['attackers'] as $attackerName) {
-		if ($attackerName == 'none')
+		if ($attackerName == 'none') {
 			continue;
+		}
 		if (isset($usedNames[$attackerName])) {
 			$duplicates = true;
 			continue;
@@ -26,18 +27,21 @@ if (isset($_POST['attackers']))
 		$realAttackers[$i] = $attackers[$i];
 		++$i;
 	}
+}
 
-for (;$i <= 10; ++$i)
+for (;$i <= 10; ++$i) {
 	$attackers[$i] = null;
+}
 $template->assign('Attackers', $attackers);
 
 $i = 1;
 $realDefenders = array();
 $defenders = array();
-if (isset($_POST['defenders']))
+if (isset($_POST['defenders'])) {
 	foreach ($_POST['defenders'] as $defenderName) {
-		if ($defenderName == 'none')
+		if ($defenderName == 'none') {
 			continue;
+		}
 		if (isset($usedNames[$defenderName])) {
 			$duplicates = true;
 			continue;
@@ -48,9 +52,11 @@ if (isset($_POST['defenders']))
 		$realDefenders[$i] = $defenders[$i];
 		++$i;
 	}
+}
 
-for (;$i <= 10; ++$i)
+for (;$i <= 10; ++$i) {
 	$defenders[$i] = null;
+}
 $template->assign('Defenders', $defenders);
 
 $template->assign('Duplicates', $duplicates);
@@ -65,12 +71,14 @@ if (!empty($realAttackers) && !empty($realDefenders)) {
 		while (count($realAttackers) > 0 && count($realDefenders) > 0) {
 			runAnAttack($realAttackers, $realDefenders);
 			foreach ($realAttackers as $key => &$teamPlayer) {
-				if ($teamPlayer->isDead())
+				if ($teamPlayer->isDead()) {
 					unset($realAttackers[$key]);
+				}
 			} unset($teamPlayer);
 			foreach ($realDefenders as $key => &$teamPlayer) {
-				if ($teamPlayer->isDead())
+				if ($teamPlayer->isDead()) {
 					unset($realDefenders[$key]);
+				}
 			} unset($teamPlayer);
 		}
 	}
