@@ -48,8 +48,6 @@ class DummyPlayer extends AbstractSmrPlayer {
 	}
 
 	public function setAllianceID($ID) {
-		if ($this->allianceID == $ID)
-			return;
 		$this->allianceID = $ID;
 	}
 
