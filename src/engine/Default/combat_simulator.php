@@ -2,21 +2,22 @@
 
 $template = Smr\Template::getInstance();
 
-$template->assign('PageTopic','Combat Simulator');
+$template->assign('PageTopic', 'Combat Simulator');
 
-$template->assign('EditDummysLink', Page::create('skeleton.php','edit_dummys.php')->href());
+$template->assign('EditDummysLink', Page::create('skeleton.php', 'edit_dummys.php')->href());
 $template->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 
 $duplicates = false;
 $usedNames = array();
 $realAttackers = array();
 $attackers = array();
-$i=1;
-if(isset($_POST['attackers']))
-	foreach($_POST['attackers'] as $attackerName) {
-		if($attackerName=='none')
+$i = 1;
+if (Request::has('attackers')) {
+	foreach (Request::getArray('attackers') as $attackerName) {
+		if ($attackerName == 'none') {
 			continue;
-		if(isset($usedNames[$attackerName])) {
+		}
+		if (isset($usedNames[$attackerName])) {
 			$duplicates = true;
 			continue;
 		}
@@ -26,19 +27,22 @@ if(isset($_POST['attackers']))
 		$realAttackers[$i] = $attackers[$i];
 		++$i;
 	}
+}
 
-for(;$i<=10;++$i)
+for (;$i <= 10; ++$i) {
 	$attackers[$i] = null;
-$template->assign('Attackers',$attackers);
+}
+$template->assign('Attackers', $attackers);
 
-$i=1;
+$i = 1;
 $realDefenders = array();
 $defenders = array();
-if(isset($_POST['defenders']))
-	foreach($_POST['defenders'] as $defenderName) {
-		if($defenderName=='none')
+if (Request::has('defenders')) {
+	foreach (Request::getArray('defenders') as $defenderName) {
+		if ($defenderName == 'none') {
 			continue;
-		if(isset($usedNames[$defenderName])) {
+		}
+		if (isset($usedNames[$defenderName])) {
 			$duplicates = true;
 			continue;
 		}
@@ -48,35 +52,39 @@ if(isset($_POST['defenders']))
 		$realDefenders[$i] = $defenders[$i];
 		++$i;
 	}
+}
 
-for(;$i<=10;++$i)
+for (;$i <= 10; ++$i) {
 	$defenders[$i] = null;
-$template->assign('Defenders',$defenders);
+}
+$template->assign('Defenders', $defenders);
 
-$template->assign('Duplicates',$duplicates);
+$template->assign('Duplicates', $duplicates);
 
-$template->assign('CombatSimHREF', Page::create('skeleton.php','combat_simulator.php')->href());
+$template->assign('CombatSimHREF', Page::create('skeleton.php', 'combat_simulator.php')->href());
 
 if (!empty($realAttackers) && !empty($realDefenders)) {
-	if(isset($_REQUEST['run'])) {
-		runAnAttack($realAttackers,$realDefenders);
+	if (Request::has('run')) {
+		runAnAttack($realAttackers, $realDefenders);
 	}
-	if(isset($_REQUEST['death_run'])) {
-		while(count($realAttackers)>0 && count($realDefenders)>0) {
-			runAnAttack($realAttackers,$realDefenders);
-			foreach($realAttackers as $key => &$teamPlayer) {
-				if($teamPlayer->isDead())
+	if (Request::has('death_run')) {
+		while (count($realAttackers) > 0 && count($realDefenders) > 0) {
+			runAnAttack($realAttackers, $realDefenders);
+			foreach ($realAttackers as $key => $teamPlayer) {
+				if ($teamPlayer->isDead()) {
 					unset($realAttackers[$key]);
-			} unset($teamPlayer);
-			foreach($realDefenders as $key => &$teamPlayer) {
-				if($teamPlayer->isDead())
+				}
+			}
+			foreach ($realDefenders as $key => $teamPlayer) {
+				if ($teamPlayer->isDead()) {
 					unset($realDefenders[$key]);
-			} unset($teamPlayer);
+				}
+			}
 		}
 	}
 }
 
-function runAnAttack($realAttackers,$realDefenders) {
+function runAnAttack($realAttackers, $realDefenders) {
 	$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0),
 					'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
 	foreach ($realAttackers as $accountID => $teamPlayer) {
@@ -86,10 +94,10 @@ function runAnAttack($realAttackers,$realDefenders) {
 	}
 	foreach ($realDefenders as $accountID => $teamPlayer) {
 		$playerResults = $teamPlayer->shootPlayers($realAttackers);
-		$results['Defenders']['Traders'][]  = $playerResults;
+		$results['Defenders']['Traders'][] = $playerResults;
 		$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
 	}
 
 	$template = Smr\Template::getInstance();
-	$template->assign('TraderCombatResults',$results);
+	$template->assign('TraderCombatResults', $results);
 }
