@@ -24,7 +24,6 @@ if ($action == 'Take Ownership') {
 	// set ownership
 	$planet->setOwnerID($player->getAccountID());
 	$planet->removePassword();
-	$planet->update();
 	$player->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.');
 } elseif ($action == 'Rename') {
 	$name = trim(Request::get('name'));
@@ -33,14 +32,12 @@ if ($action == 'Take Ownership') {
 	}
 	// rename planet
 	$planet->setName($name);
-	$planet->update();
 	$player->log(LOG_TYPE_PLANETS, 'Player renames planet to ' . $name . '.');
 
 } elseif ($action == 'Set Password') {
 	// set password
 	$password = Request::get('password');
 	$planet->setPassword($password);
-	$planet->update();
 	$player->log(LOG_TYPE_PLANETS, 'Player sets planet password to ' . $password);
 }
 

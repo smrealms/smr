@@ -28,5 +28,4 @@ if ($action == 'Deposit') {
 // log action
 $player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for personal account');
 
-$player->update();
 Page::create('skeleton.php', 'bank_personal.php')->go();

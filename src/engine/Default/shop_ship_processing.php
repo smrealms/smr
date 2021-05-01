@@ -39,10 +39,6 @@ $ship->disableIllusion();
 $ship->setShipTypeID($shipID);
 
 
-// update again
-$ship->update();
-$player->update();
-
 $player->log(LOG_TYPE_HARDWARE, 'Buys a ' . $ship->getName() . ' for ' . $cost . ' credits');
 
 $container = Page::create('skeleton.php', 'current_sector.php');

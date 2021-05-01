@@ -52,8 +52,4 @@ if ($action == 'Ship') {
 	$ship->decreaseCargo($var['good_id'], $amount);
 }
 
-// update both
-$planet->update();
-$ship->updateCargo();
-
 Page::create('skeleton.php', 'planet_stockpile.php')->go();
