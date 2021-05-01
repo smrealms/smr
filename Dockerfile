@@ -31,7 +31,7 @@ RUN MODE=$([ "$PHP_DEBUG" = "1" ] && echo "development" || echo "production") \
 # Install xdebug (use /tmp/xdebug for profiler output)
 RUN if [ "$PHP_DEBUG" = "1" ]; \
 	then \
-		pecl install xdebug-3.0.2 > /dev/null \
+		pecl install xdebug-3.0.4 > /dev/null \
 		&& docker-php-ext-enable xdebug \
 		&& echo "xdebug.output_dir = /tmp/xdebug" > "$PHP_INI_DIR/conf.d/xdebug.ini" \
 		&& mkdir /tmp/xdebug; \
@@ -46,7 +46,7 @@ RUN sed -i 's/AllowOverride All/AllowOverride None/g' /etc/apache2/conf-enabled/
 WORKDIR /smr/
 
 RUN curl -sS https://getcomposer.org/installer | \
-	php -- --install-dir=/usr/local/bin --filename=composer --version=2.0.9
+	php -- --install-dir=/usr/local/bin --filename=composer --version=2.0.13
 
 COPY composer.json .
 RUN MODE=$([ "$PHP_DEBUG" = "1" ] || echo "--no-dev") \
