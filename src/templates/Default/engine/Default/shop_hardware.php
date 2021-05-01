@@ -16,7 +16,7 @@ if (isset($HardwareSold)) { ?>
 				<td><?php echo $Hardware['Name']; ?></td>
 				<td><input form="buy<?php echo $HardwareTypeID; ?>" type="number" name="amount" value="<?php echo $AmountToBuy; ?>" size="5" onKeyUp="recalcOnKeyUp('buy',<?php echo $HardwareTypeID; ?>,<?php echo $Hardware['Cost']; ?>)" class="center"></td>
 				<td class="center"><?php echo number_format($Hardware['Cost']); ?></td>
-				<td><input type="number" name="total" disabled="disabled" value="<?php echo $AmountToBuy * $Hardware['Cost']; ?>" size="7" class="center"></td>
+				<td><input form="buy<?php echo $HardwareTypeID; ?>" type="number" name="total" disabled="disabled" value="<?php echo $AmountToBuy * $Hardware['Cost']; ?>" size="7" class="center"></td>
 				<td class="center">
 					<form method="POST" id="buy<?php echo $HardwareTypeID; ?>" action="<?php echo $Hardware['HREF']; ?>">
 						<input type="submit" name="action" value="Buy" />
