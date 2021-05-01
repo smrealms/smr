@@ -19,7 +19,6 @@ if (!isset($var['ClaimText'])) {
 		// add to our cash
 		$player->increaseCredits($payment);
 		$player->setMilitaryPayment(0);
-		$player->update();
 
 		$claimText = ('For your military activity you have been paid <span class="creds">' . number_format($payment) . '</span> credits.');
 	} else {

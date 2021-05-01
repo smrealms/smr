@@ -31,9 +31,8 @@ if ($player->getTurns() == 0) {
 }
 
 $player->log(LOG_TYPE_TRADING, 'Player Loots ' . $amount . ' ' . $good_name);
-$container = Page::create('skeleton.php', 'port_loot.php');
 $ship->increaseCargo($good_id, $amount);
-$ship->updateCargo();
 $port->decreaseGoodAmount($good_id, $amount);
-$port->update();
+
+$container = Page::create('skeleton.php', 'port_loot.php');
 $container->go();
