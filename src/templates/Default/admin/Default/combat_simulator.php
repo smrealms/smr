@@ -26,7 +26,7 @@
 		</tr>
 	</table>
 </form><?php
-if ($TraderCombatResults) {
+if (isset($TraderCombatResults)) {
 	$this->includeTemplate('includes/TraderFullCombatResults.inc.php');
 	?><br /><?php
 } ?>

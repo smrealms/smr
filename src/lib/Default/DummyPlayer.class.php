@@ -1,29 +1,41 @@
 <?php declare(strict_types=1);
 
 class DummyPlayer extends AbstractSmrPlayer {
-	public function __construct(int $gameID = 0, string $playerName = 'Dummy', int $raceID = 1, int $experience = 1000, int $alignment = 100, int $allianceID = 0, int $shipTypeID = 60) {
-		$this->gameID = (int)$gameID;
-		$this->playerName = (string)$playerName;
+
+	public function __construct(string $playerName, int $experience = 1000, int $shipTypeID = 60) {
+		$this->playerName = $playerName;
+		$this->experience = $experience;
+		$this->shipID = $shipTypeID;
+		$this->setConstantProperties();
+	}
+
+	/**
+	 * Sets properties that are needed for combat, but do not need to
+	 * be stored in the database.
+	 */
+	protected function setConstantProperties() : void {
+		$this->gameID = 0;
+		$this->accountID = 0;
+		$this->playerID = 0;
+		$this->alignment = 0;
+		$this->underAttack = false;
+		$this->npc = true;
 		$this->dead = false;
-		$this->raceID = (int)$raceID;
-		$this->experience = (int)$experience;
-		$this->alignment = (int)$alignment;
-		$this->allianceID = (int)$allianceID;
-		$this->shipID = (int)$shipTypeID;
 	}
 
-	public function killPlayer($sectorID) : void {
-		$this->setDead(true);
-		$this->getShip()->getPod();
+	public function __sleep() {
+		return ['playerName', 'experience', 'shipID'];
 	}
 
-	public function setAllianceID(int $ID) : void {
-		$this->allianceID = $ID;
+	public function __wakeup() {
+		$this->setConstantProperties();
 	}
+
+	public function increaseHOF(float $amount, array $typeList, string $visibility) : void {}
 
 	public function killPlayerByPlayer(AbstractSmrPlayer $killer) : array {
-		$this->killPlayer($this->getSectorID());
-		return [];
+		$this->dead = true;
+		return ['DeadExp' => 0, 'KillerCredits' => 0, 'KillerExp' => 0];
 	}
 
 	public function getShip(bool $forceUpdate = false) : AbstractSmrShip {
@@ -46,7 +58,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 		if ($db->nextRecord()) {
 			return $db->getObject('info');
 		} else {
-			return new DummyPlayer();
+			return new DummyPlayer($name);
 		}
 	}
 
@@ -60,4 +72,5 @@ class DummyPlayer extends AbstractSmrPlayer {
 		}
 		return $dummyNames;
 	}
+
 }

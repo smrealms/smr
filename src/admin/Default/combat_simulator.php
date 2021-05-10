@@ -23,7 +23,6 @@ if (Request::has('attackers')) {
 		}
 		$usedNames[$attackerName] = true;
 		$attackers[$i] = DummyPlayer::getCachedDummyPlayer($attackerName);
-		$attackers[$i]->setAllianceID(1);
 		$realAttackers[$i] = $attackers[$i];
 		++$i;
 	}
@@ -48,7 +47,6 @@ if (Request::has('defenders')) {
 		}
 		$usedNames[$defenderName] = true;
 		$defenders[$i] = DummyPlayer::getCachedDummyPlayer($defenderName);
-		$defenders[$i]->setAllianceID(2);
 		$realDefenders[$i] = $defenders[$i];
 		++$i;
 	}
@@ -65,11 +63,12 @@ $template->assign('CombatSimHREF', Page::create('skeleton.php', 'combat_simulato
 
 if (!empty($realAttackers) && !empty($realDefenders)) {
 	if (Request::has('run')) {
-		runAnAttack($realAttackers, $realDefenders);
+		$results = runAnAttack($realAttackers, $realDefenders);
+		$template->assign('TraderCombatResults', $results);
 	}
 	if (Request::has('death_run')) {
 		while (count($realAttackers) > 0 && count($realDefenders) > 0) {
-			runAnAttack($realAttackers, $realDefenders);
+			$results = runAnAttack($realAttackers, $realDefenders);
 			foreach ($realAttackers as $key => $teamPlayer) {
 				if ($teamPlayer->isDead()) {
 					unset($realAttackers[$key]);
@@ -81,10 +80,11 @@ if (!empty($realAttackers) && !empty($realDefenders)) {
 				}
 			}
 		}
+		$template->assign('TraderCombatResults', $results);
 	}
 }
 
-function runAnAttack($realAttackers, $realDefenders) {
+function runAnAttack(array $realAttackers, array $realDefenders) : array {
 	$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0),
 					'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
 	foreach ($realAttackers as $accountID => $teamPlayer) {
@@ -97,7 +97,5 @@ function runAnAttack($realAttackers, $realDefenders) {
 		$results['Defenders']['Traders'][] = $playerResults;
 		$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
 	}
-
-	$template = Smr\Template::getInstance();
-	$template->assign('TraderCombatResults', $results);
+	return $results;
 }
