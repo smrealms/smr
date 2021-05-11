@@ -21,12 +21,10 @@ if (Request::get('action') == 'Preview message') {
 	$container->go();
 }
 
-if ($expire < 0) {
-	create_error('Expire time cannot be negative!');
-}
+$expire = IRound($expire * 3600); // convert hours to seconds
 // When expire==0, message will not expire
 if ($expire > 0) {
-	$expire = ($expire * 3600) + Smr\Epoch::time();
+	$expire += Smr\Epoch::time();
 }
 
 $db = Smr\Database::getInstance();
