@@ -2255,11 +2255,11 @@ abstract class AbstractSmrPlayer {
 			$alignChangePerRelation = 0.04;
 		}
 
-		$return['KillerAlign'] = -$relation * $alignChangePerRelation; //Lose relations when killing a peaceful race
-		if ($return['KillerAlign'] > 0) {
-			$killer->increaseAlignment($return['KillerAlign']);
+		$killerAlignChange = IRound(-$relation * $alignChangePerRelation); //Lose relations when killing a peaceful race
+		if ($killerAlignChange > 0) {
+			$killer->increaseAlignment($killerAlignChange);
 		} else {
-			$killer->decreaseAlignment(-$return['KillerAlign']);
+			$killer->decreaseAlignment(-$killerAlignChange);
 		}
 		// War setting gives them military pay
 		if ($relation <= RELATIONS_WAR) {
@@ -2312,10 +2312,10 @@ abstract class AbstractSmrPlayer {
 			$killer->increaseHOF($return['KillerCredits'], array('Killing', 'NPC', 'Money', 'Gain'), HOF_PUBLIC);
 			$killer->increaseHOF($this->getShip()->getCost(), array('Killing', 'NPC', 'Money', 'Cost Of Ships Killed'), HOF_PUBLIC);
 
-			if ($return['KillerAlign'] > 0) {
-				$killer->increaseHOF($return['KillerAlign'], array('Killing', 'NPC', 'Alignment', 'Gain'), HOF_PUBLIC);
+			if ($killerAlignChange > 0) {
+				$killer->increaseHOF($killerAlignChange, array('Killing', 'NPC', 'Alignment', 'Gain'), HOF_PUBLIC);
 			} else {
-				$killer->increaseHOF(-$return['KillerAlign'], array('Killing', 'NPC', 'Alignment', 'Loss'), HOF_PUBLIC);
+				$killer->increaseHOF(-$killerAlignChange, array('Killing', 'NPC', 'Alignment', 'Loss'), HOF_PUBLIC);
 			}
 
 			$killer->increaseHOF($return['BountyGained']['Amount'], array('Killing', 'NPC', 'Money', 'Bounty Gained'), HOF_PUBLIC);
@@ -2331,10 +2331,10 @@ abstract class AbstractSmrPlayer {
 			$killer->increaseHOF($return['KillerCredits'], array('Killing', 'Money', 'Gain'), HOF_PUBLIC);
 			$killer->increaseHOF($this->getShip()->getCost(), array('Killing', 'Money', 'Cost Of Ships Killed'), HOF_PUBLIC);
 
-			if ($return['KillerAlign'] > 0) {
-				$killer->increaseHOF($return['KillerAlign'], array('Killing', 'Alignment', 'Gain'), HOF_PUBLIC);
+			if ($killerAlignChange > 0) {
+				$killer->increaseHOF($killerAlignChange, array('Killing', 'Alignment', 'Gain'), HOF_PUBLIC);
 			} else {
-				$killer->increaseHOF(-$return['KillerAlign'], array('Killing', 'Alignment', 'Loss'), HOF_PUBLIC);
+				$killer->increaseHOF(-$killerAlignChange, array('Killing', 'Alignment', 'Loss'), HOF_PUBLIC);
 			}
 
 			$killer->increaseHOF($return['BountyGained']['Amount'], array('Killing', 'Money', 'Bounty Gained'), HOF_PUBLIC);
