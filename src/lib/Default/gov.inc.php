@@ -3,7 +3,7 @@
 /**
  * Returns a list of all active (not claimable) bounties for given location $type.
  */
-function getBounties($type) {
+function getBounties(string $type) : array {
 	$db = Smr\Database::getInstance();
 	$session = Smr\Session::getInstance();
 	$db->query('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' AND type =' . $db->escapeString($type) . ' AND claimer_id = 0 ORDER BY amount DESC');

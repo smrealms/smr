@@ -119,7 +119,7 @@ const MISSIONS = array(
  * Searches for placeholders in template and replaces them with values
  * derived from the supplied data.
  */
-function replaceMissionTemplate(&$template, $key, array $data) : void {
+function replaceMissionTemplate(string|int &$template, string $key, array $data) : void {
 	if (!is_string($template)) {
 		return;
 	}

@@ -2,7 +2,7 @@
 
 class Plotter {
 
-	public static function getX($xType, $X, $gameID, $player = null) {
+	public static function getX(string $xType, int|string $X, int $gameID, SmrPlayer $player = null) : mixed {
 		// Special case for Location categories (i.e. Bar, HQ, SafeFed)
 		if (!is_numeric($X)) {
 			if ($xType != 'Locations') {
@@ -40,7 +40,7 @@ class Plotter {
 	 * is not true for findDistanceToX. If $x is not a SmrSector, then this
 	 * function does 2x the work.
 	 */
-	public static function findReversiblePathToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null) {
+	public static function findReversiblePathToX(mixed $x, SmrSector $sector, bool $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null) : Distance {
 		if ($x instanceof SmrSector) {
 
 			// To ensure reversibility, always plot lowest to highest.
@@ -85,7 +85,7 @@ class Plotter {
 	 * The resulting path prefers neighbors in their order in SmrSector->links,
 	 * (i.e. up, down, left, right).
 	 */
-	public static function findDistanceToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function findDistanceToX(mixed $x, SmrSector $sector, bool $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000) : Distance|array|false {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE - 1;
 
 		$checkSector = $sector;
@@ -173,7 +173,7 @@ class Plotter {
 		return $distances;
 	}
 
-	public static function calculatePortToPortDistances(array $sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function calculatePortToPortDistances(array $sectors, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000) : array {
 		$distances = array();
 		foreach ($sectors as $sec) {
 			if ($sec !== null) {
@@ -187,7 +187,7 @@ class Plotter {
 		return $distances;
 	}
 
-	public static function findDistanceToOtherPorts(SmrSector $sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
+	public static function findDistanceToOtherPorts(SmrSector $sector, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000) : array|false {
 		return self::findDistanceToX('Port', $sector, false, null, null, $distanceLimit, $lowLimit, $highLimit);
 	}
 }

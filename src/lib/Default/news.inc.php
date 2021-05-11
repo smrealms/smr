@@ -3,7 +3,7 @@
 /**
  * Takes a populated query and returns the news items.
  */
-function getNewsItems(Smr\Database $db) {
+function getNewsItems(Smr\Database $db) : array {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
 

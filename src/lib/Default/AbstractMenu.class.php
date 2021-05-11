@@ -5,7 +5,7 @@
  */
 class AbstractMenu {
 
-	public static function headquarters() {
+	public static function headquarters() : void {
 		$var = Smr\Session::getInstance()->getCurrentVar();
 
 		$links = [];
@@ -35,7 +35,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function planet_list($alliance_id, $selected_index) {
+	public static function planet_list(int $alliance_id, int $selected_index) : void {
 		$menuItems = array();
 		$menuItems[] = array('Link'=>Globals::getPlanetListHREF($alliance_id), 'Text'=>'Defense');
 		$menuItems[] = array('Link'=>Globals::getPlanetListFinancialHREF($alliance_id), 'Text'=>'Financial');
@@ -47,7 +47,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function alliance($alliance_id) {
+	public static function alliance(int $alliance_id) : void {
 		$db = Smr\Database::getInstance();
 		$player = Smr\Session::getInstance()->getPlayer();
 
@@ -105,7 +105,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function galactic_post() {
+	public static function galactic_post() : void {
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$menuItems = array();
@@ -120,7 +120,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function history_games($selected_index) {
+	public static function history_games(int $selected_index) : void {
 		$menuItems = [];
 		$container = Page::create('skeleton.php', 'history_games.php');
 		$container->addVar('HistoryDatabase');
@@ -153,7 +153,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function messages() {
+	public static function messages() : void {
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$menuItems = array();
@@ -168,7 +168,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function combat_log() {
+	public static function combat_log() : void {
 		$container = Page::create('skeleton.php', 'combat_log_list.php');
 		$menuItems = array();
 
@@ -189,7 +189,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function trader() {
+	public static function trader() : void {
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$template = Smr\Template::getInstance();
@@ -202,7 +202,7 @@ class AbstractMenu {
 						array('Link'=>Globals::getTraderBountiesHREF(), 'Text'=>'Bounties')));
 	}
 
-	public static function planet($planet) {
+	public static function planet(SmrPlanet $planet) : void {
 		$menu_array = array();
 		$menu_array[] = array('Link'=>Globals::getPlanetMainHREF(), 'Text'=>'Planet Main');
 		if ($planet->hasMenuOption('CONSTRUCTION')) {
@@ -229,7 +229,7 @@ class AbstractMenu {
 	 * $active_level1 - the id of the active menu on the first level
 	 * $active_level1 - the id of the active menu on the second level
 	 */
-	public static function rankings($active_level1 = 0, $active_level2 = 0) {
+	public static function rankings(int $active_level1 = 0, int $active_level2 = 0) : void {
 
 		$menu = array();
 
@@ -284,7 +284,7 @@ class AbstractMenu {
 		create_sub_menu($menu, $active_level1, $active_level2);
 	}
 
-	public static function bank() {
+	public static function bank() : void {
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$links = [];
@@ -308,7 +308,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function council($race_id) {
+	public static function council(int $race_id) : void {
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$container = Page::create('skeleton.php', 'council_list.php');
@@ -352,7 +352,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menu_items);
 	}
 
-	public static function bar() {
+	public static function bar() : void {
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', array(
 					array('Link'=>Globals::getBarMainHREF(), 'Text'=>'Bar Main'),
@@ -360,7 +360,7 @@ class AbstractMenu {
 					array('Link'=>Globals::getBarBlackjackHREF(), 'Text'=>'BlackJack')));
 	}
 
-	public static function news() {
+	public static function news() : void {
 		$session = Smr\Session::getInstance();
 		$var = $session->getCurrentVar();
 
@@ -375,7 +375,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function navigation(AbstractSmrPlayer $player) {
+	public static function navigation(AbstractSmrPlayer $player) : void {
 		$menuItems = array();
 		$menuItems[] = array('Link'=>Globals::getPlotCourseHREF(), 'Text'=>'Plot A Course');
 		if (!$player->isLandedOnPlanet()) {
@@ -389,7 +389,7 @@ class AbstractMenu {
 
 }
 
-function create_sub_menu($menu, $active_level1, $active_level2) {
+function create_sub_menu(array $menu, int $active_level1, int $active_level2) : void {
 	$return = ('<table class="fullwidth center">');
 	$return .= ('<tr>');
 	foreach ($menu as $number => $entry) {

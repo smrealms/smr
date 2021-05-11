@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
 class SmrForce {
-	protected static $CACHE_FORCES = array();
-	protected static $CACHE_SECTOR_FORCES = array();
-	protected static $TIDIED_UP = array();
+	protected static array $CACHE_FORCES = [];
+	protected static array $CACHE_SECTOR_FORCES = [];
+	protected static array $TIDIED_UP = [];
 
 	const LOWEST_MAX_EXPIRE_SCOUTS_ONLY = 432000; // 5 days
 	const TIME_PER_SCOUT_ONLY = 86400; // 1 = 1 day
@@ -14,25 +14,25 @@ class SmrForce {
 
 	protected static $refreshAllHREF;
 
-	protected $db;
-	protected $SQL;
+	protected Smr\Database $db;
+	protected string $SQL;
 
-	protected $ownerID;
-	protected $sectorID;
-	protected $gameID;
-	protected $combatDrones = 0;
-	protected $scoutDrones = 0;
-	protected $mines = 0;
-	protected $expire = 0;
+	protected int $ownerID;
+	protected int $sectorID;
+	protected int $gameID;
+	protected int $combatDrones = 0;
+	protected int $scoutDrones = 0;
+	protected int $mines = 0;
+	protected int $expire = 0;
 
-	protected $isNew;
-	protected $hasChanged = false;
+	protected bool $isNew;
+	protected bool $hasChanged = false;
 
 	public function __sleep() {
 		return ['ownerID', 'sectorID', 'gameID'];
 	}
 
-	public static function refreshCache() {
+	public static function refreshCache() : void {
 		foreach (self::$CACHE_FORCES as $gameID => &$gameForces) {
 			foreach ($gameForces as $sectorID => &$gameSectorForces) {
 				foreach ($gameSectorForces as $ownerID => &$forces) {
@@ -42,12 +42,12 @@ class SmrForce {
 		}
 	}
 
-	public static function clearCache() {
-		self::$CACHE_FORCES = array();
-		self::$CACHE_SECTOR_FORCES = array();
+	public static function clearCache() : void {
+		self::$CACHE_FORCES = [];
+		self::$CACHE_SECTOR_FORCES = [];
 	}
 
-	public static function saveForces() {
+	public static function saveForces() : void {
 		foreach (self::$CACHE_FORCES as $gameForces) {
 			foreach ($gameForces as $gameSectorForces) {
 				foreach ($gameSectorForces as $forces) {
@@ -57,7 +57,7 @@ class SmrForce {
 		}
 	}
 
-	public static function getGalaxyForces($gameID, $galaxyID, $forceUpdate = false) {
+	public static function getGalaxyForces(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
 		$db = Smr\Database::getInstance();
 		$db->query('SELECT sector_has_forces.*, sector_id FROM sector LEFT JOIN sector_has_forces USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyForces = [];
@@ -75,7 +75,7 @@ class SmrForce {
 		return $galaxyForces;
 	}
 
-	public static function getSectorForces($gameID, $sectorID, $forceUpdate = false) {
+	public static function getSectorForces(int $gameID, int $sectorID, bool $forceUpdate = false) : array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID][$sectorID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
 			$db = Smr\Database::getInstance();
@@ -90,7 +90,7 @@ class SmrForce {
 		return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID];
 	}
 
-	public static function getForce($gameID, $sectorID, $ownerID, $forceUpdate = false, $db = null) {
+	public static function getForce(int $gameID, int $sectorID, int $ownerID, bool $forceUpdate = false, Smr\Database $db = null) : self {
 		if ($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
 			$p = new SmrForce($gameID, $sectorID, $ownerID, $db);
@@ -99,7 +99,7 @@ class SmrForce {
 		return self::$CACHE_FORCES[$gameID][$sectorID][$ownerID];
 	}
 
-	public static function tidyUpForces(SmrGalaxy $galaxyToTidy) {
+	public static function tidyUpForces(SmrGalaxy $galaxyToTidy) : void {
 		if (!isset(self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()])) {
 			self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()] = true;
 			$db = Smr\Database::getInstance();
@@ -114,7 +114,7 @@ class SmrForce {
 		}
 	}
 
-	protected function __construct($gameID, $sectorID, $ownerID, $db = null) {
+	protected function __construct(int $gameID, int $sectorID, int $ownerID, Smr\Database $db = null) {
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND sector_id = '.$this->db->escapeNumber($sectorID) . '
@@ -139,89 +139,89 @@ class SmrForce {
 		}
 	}
 
-	public function exists() {
+	public function exists() : bool {
 		return ($this->hasCDs() || $this->hasSDs() || $this->hasMines()) && !$this->hasExpired();
 	}
 
-	public function canAcceptCDs() {
+	public function canAcceptCDs() : bool {
 		return $this->getCDs() < 50;
 	}
 
-	public function canAcceptSDs() {
+	public function canAcceptSDs() : bool {
 		return $this->getSDs() < 5;
 	}
 
-	public function canAcceptMines() {
+	public function canAcceptMines() : bool {
 		return $this->getMines() < 50;
 	}
 
-	public function hasCDs() {
+	public function hasCDs() : bool {
 		return $this->getCDs() > 0;
 	}
 
-	public function hasSDs() {
+	public function hasSDs() : bool {
 		return $this->getSDs() > 0;
 	}
 
-	public function hasMines() {
+	public function hasMines() : bool {
 		return $this->getMines() > 0;
 	}
 
-	public function getCDs() {
+	public function getCDs() : int {
 		return $this->combatDrones;
 	}
 
-	public function getSDs() {
+	public function getSDs() : int {
 		return $this->scoutDrones;
 	}
 
-	public function getMines() {
+	public function getMines() : int {
 		return $this->mines;
 	}
 
-	public function addMines($amount) {
+	public function addMines(int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Cannot add negative mines.');
 		}
 		$this->setMines($this->getMines() + $amount);
 	}
 
-	public function addCDs($amount) {
+	public function addCDs(int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Cannot add negative CDs.');
 		}
 		$this->setCDs($this->getCDs() + $amount);
 	}
 
-	public function addSDs($amount) {
+	public function addSDs(int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Cannot add negative SDs.');
 		}
 		$this->setSDs($this->getSDs() + $amount);
 	}
 
-	public function takeMines($amount) {
+	public function takeMines(int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Cannot take negative mines.');
 		}
 		$this->setMines($this->getMines() - $amount);
 	}
 
-	public function takeCDs($amount) {
+	public function takeCDs(int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Cannot take negative CDs.');
 		}
 		$this->setCDs($this->getCDs() - $amount);
 	}
 
-	public function takeSDs($amount) {
+	public function takeSDs(int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Cannot take negative SDs.');
 		}
 		$this->setSDs($this->getSDs() - $amount);
 	}
 
-	public function setMines($amount) {
+	public function setMines(int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Cannot set negative mines.');
 		}
@@ -232,7 +232,7 @@ class SmrForce {
 		$this->mines = $amount;
 	}
 
-	public function setCDs($amount) {
+	public function setCDs(int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Cannot set negative CDs.');
 		}
@@ -243,7 +243,7 @@ class SmrForce {
 		$this->combatDrones = $amount;
 	}
 
-	public function setSDs($amount) {
+	public function setSDs(int $amount) : void {
 		if ($amount < 0) {
 			throw new Exception('Cannot set negative SDs.');
 		}
@@ -254,7 +254,7 @@ class SmrForce {
 		$this->scoutDrones = $amount;
 	}
 
-	public function hasExpired() {
+	public function hasExpired() : bool {
 		return $this->expire < Smr\Epoch::time();
 	}
 
@@ -262,7 +262,7 @@ class SmrForce {
 		return $this->expire;
 	}
 
-	public function setExpire($time) {
+	public function setExpire(int $time) : void {
 		if ($time < 0) {
 			throw new Exception('Cannot set negative expiry.');
 		}
@@ -279,17 +279,17 @@ class SmrForce {
 		}
 	}
 
-	public function updateExpire() {
+	public function updateExpire() : void {
 		// Changed (26/10/05) - scout drones count * 2
 		if ($this->getCDs() == 0 && $this->getMines() == 0 && $this->getSDs() > 0) {
 			$time = self::TIME_PER_SCOUT_ONLY * $this->getSDs();
 		} else {
 			$time = ($this->getCDs() * self::TIME_PERCENT_PER_COMBAT + $this->getSDs() * self::TIME_PERCENT_PER_SCOUT + $this->getMines() * self::TIME_PERCENT_PER_MINE) * $this->getMaxGalaxyExpireTime();
 		}
-		$this->setExpire(Smr\Epoch::time() + $time);
+		$this->setExpire(Smr\Epoch::time() + IFloor($time));
 	}
 
-	public function getMaxExpireTime() {
+	public function getMaxExpireTime() : int {
 		if ($this->hasCDs() || $this->hasMines()) {
 			return $this->getMaxGalaxyExpireTime();
 		}
@@ -299,11 +299,11 @@ class SmrForce {
 		return 0;
 	}
 
-	public function getMaxGalaxyExpireTime() {
+	public function getMaxGalaxyExpireTime() : int {
 		return $this->getGalaxy()->getMaxForceTime();
 	}
 
-	public function getBumpTurnCost(AbstractSmrShip $ship) {
+	public function getBumpTurnCost(AbstractSmrShip $ship) : int {
 		$mines = $this->getMines();
 		if ($mines <= 1) {
 			return 0;
@@ -321,30 +321,30 @@ class SmrForce {
 		return $turns;
 	}
 
-	public function getAttackTurnCost(AbstractSmrShip $ship) {
+	public function getAttackTurnCost(AbstractSmrShip $ship) : int {
 		if ($ship->isFederal() || $ship->hasDCS()) {
 			return 2;
 		}
 		return 3;
 	}
 
-	public function getOwnerID() {
+	public function getOwnerID() : int {
 		return $this->ownerID;
 	}
 
-	public function getGameID() {
+	public function getGameID() : int {
 		return $this->gameID;
 	}
 
-	public function getSector() {
+	public function getSector() : SmrSector {
 		return SmrSector::getSector($this->getGameID(), $this->getSectorID());
 	}
 
-	public function getSectorID() {
+	public function getSectorID() : int {
 		return $this->sectorID;
 	}
 
-	public function ping($pingMessage, AbstractSmrPlayer $playerPinging, $skipCheck = false) {
+	public function ping(string $pingMessage, AbstractSmrPlayer $playerPinging, bool $skipCheck = false) : void {
 		if (!$this->hasSDs() && !$skipCheck) {
 			return;
 		}
@@ -354,15 +354,15 @@ class SmrForce {
 		}
 	}
 
-	public function getGalaxy() {
+	public function getGalaxy() : SmrGalaxy {
 		return SmrGalaxy::getGalaxyContaining($this->getGameID(), $this->getSectorID());
 	}
 
-	public function getOwner() {
+	public function getOwner() : AbstractSmrPlayer {
 		return SmrPlayer::getPlayer($this->getOwnerID(), $this->getGameID());
 	}
 
-	public function update() {
+	public function update() : void {
 		if (!$this->isNew) {
 			if (!$this->exists()) {
 				$this->db->query('DELETE FROM sector_has_forces WHERE ' . $this->SQL);
@@ -382,77 +382,77 @@ class SmrForce {
 	/**
 	 * Update the table fields associated with using Refresh All
 	 */
-	public function updateRefreshAll(SmrPlayer $player, $refreshTime) {
+	public function updateRefreshAll(SmrPlayer $player, int $refreshTime) : void {
 		$this->db->query('UPDATE sector_has_forces SET refresh_at=' . $this->db->escapeNumber($refreshTime) . ', refresher=' . $this->db->escapeNumber($player->getAccountID()) . ' WHERE ' . $this->SQL);
 	}
 
-	public function getExamineDropForcesHREF() {
+	public function getExamineDropForcesHREF() : string {
 		$container = Page::create('skeleton.php', 'forces_drop.php');
 		$container['owner_id'] = $this->getOwnerID();
 		return $container->href();
 	}
 
-	public function getAttackForcesHREF() {
+	public function getAttackForcesHREF() : string {
 		$container = Page::create('forces_attack_processing.php');
 		$container['action'] = 'attack';
 		$container['owner_id'] = $this->getOwnerID();
 		return $container->href();
 	}
 
-	public function getRefreshHREF() {
+	public function getRefreshHREF() : string {
 		$container = Page::create('forces_refresh_processing.php');
 		$container['owner_id'] = $this->getOwnerID();
 		return $container->href();
 	}
 
-	protected function getDropContainer() {
+	protected function getDropContainer() : Page {
 		$container = Page::create('forces_drop_processing.php');
 		$container['owner_id'] = $this->getOwnerID();
 		return $container;
 	}
 
-	public function getDropSDHREF() {
+	public function getDropSDHREF() : string {
 		$container = $this->getDropContainer();
 		$container['drop_scout_drones'] = 1;
 		return $container->href();
 	}
 
-	public function getTakeSDHREF() {
+	public function getTakeSDHREF() : string {
 		$container = $this->getDropContainer();
 		$container['take_scout_drones'] = 1;
 		return $container->href();
 	}
 
-	public function getDropCDHREF() {
+	public function getDropCDHREF() : string {
 		$container = $this->getDropContainer();
 		$container['drop_combat_drones'] = 1;
 		return $container->href();
 	}
 
-	public function getTakeCDHREF() {
+	public function getTakeCDHREF() : string {
 		$container = $this->getDropContainer();
 		$container['take_combat_drones'] = 1;
 		return $container->href();
 	}
 
-	public function getDropMineHREF() {
+	public function getDropMineHREF() : string {
 		$container = $this->getDropContainer();
 		$container['drop_mines'] = 1;
 		return $container->href();
 	}
 
-	public function getTakeMineHREF() {
+	public function getTakeMineHREF() : string {
 		$container = $this->getDropContainer();
 		$container['take_mines'] = 1;
 		return $container->href();
 	}
 
-	public static function getRefreshAllHREF() {
+	public static function getRefreshAllHREF() : string {
 		$container = Page::create('forces_mass_refresh.php');
 		return $container->href();
 	}
 
-	public function shootPlayers(array $targetPlayers, $minesAreAttacker) {
+	public function shootPlayers(array $targetPlayers, bool $minesAreAttacker) : array {
 		$results = array('TotalDamage' => 0);
 		if (!$this->exists()) {
 			$results['DeadBeforeShot'] = true;
@@ -484,7 +484,7 @@ class SmrForce {
 		return $results;
 	}
 
-	public function doWeaponDamage(array $damage) {
+	public function doWeaponDamage(array $damage) : array {
 		$alreadyDead = !$this->exists();
 		$minesDamage = 0;
 		$cdDamage = 0;
@@ -519,25 +519,25 @@ class SmrForce {
 		return $return;
 	}
 
-	protected function doMinesDamage($damage) {
+	protected function doMinesDamage(int $damage) : int {
 		$actualDamage = min($this->getMines(), IFloor($damage / MINE_ARMOUR));
 		$this->takeMines($actualDamage);
 		return $actualDamage * MINE_ARMOUR;
 	}
 
-	protected function doCDDamage($damage) {
+	protected function doCDDamage(int $damage) : int {
 		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
 		$this->takeCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
 
-	protected function doSDDamage($damage) {
+	protected function doSDDamage(int $damage) : int {
 		$actualDamage = min($this->getSDs(), IFloor($damage / SD_ARMOUR));
 		$this->takeSDs($actualDamage);
 		return $actualDamage * SD_ARMOUR;
 	}
 
-	public function killForcesByPlayer(AbstractSmrPlayer $killer) {
+	public function killForcesByPlayer(AbstractSmrPlayer $killer) : array {
 		$return = array();
 		return $return;
 	}

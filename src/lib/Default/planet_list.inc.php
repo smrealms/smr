@@ -2,7 +2,7 @@
 
 // The engine files for planet lists have a lot in common, so do
 // most of the work here.
-function planet_list_common($allianceId, $getPlanets) {
+function planet_list_common(int $allianceId, bool $getPlanets) : void {
 	$template = Smr\Template::getInstance();
 	$player = Smr\Session::getInstance()->getPlayer();
 

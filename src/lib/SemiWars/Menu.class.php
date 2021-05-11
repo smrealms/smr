@@ -3,7 +3,7 @@
 class Menu extends AbstractMenu {
 
 	// No bounties in Semi Wars games
-	public static function headquarters() {
+	public static function headquarters() : void {
 		$var = Smr\Session::getInstance()->getCurrentVar();
 
 		$links = [];

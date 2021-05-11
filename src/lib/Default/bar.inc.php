@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function checkForLottoWinner($gameID) {
+function checkForLottoWinner(int $gameID) : void {
 
 	// No more lotto winners after the game has ended
 	if (SmrGame::getGame($gameID)->hasEnded()) {
@@ -48,7 +48,7 @@ function checkForLottoWinner($gameID) {
 				VALUES ('.$db->escapeNumber($gameID) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeString($news_message) . ',\'lotto\',' . $db->escapeNumber($winner->getAccountID()) . ',' . $db->escapeNumber($winner->getAllianceID()) . ')');
 }
 
-function getLottoInfo($gameID) {
+function getLottoInfo(int $gameID) : array {
 	$amount = 1000000;
 	$firstBuy = Smr\Epoch::time();
 

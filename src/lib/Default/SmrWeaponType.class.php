@@ -67,35 +67,35 @@ class SmrWeaponType {
 		$this->buyerRestriction = $db->getInt('buyer_restriction');
 	}
 
-	public function getWeaponTypeID() {
+	public function getWeaponTypeID() : int {
 		return $this->weaponTypeID;
 	}
 
-	public function getName() {
+	public function getName() : string {
 		return $this->name;
 	}
 
-	public function getCost() {
+	public function getCost() : int {
 		return $this->cost;
 	}
 
-	public function getShieldDamage() {
+	public function getShieldDamage() : int {
 		return $this->shieldDamage;
 	}
 
-	public function getArmourDamage() {
+	public function getArmourDamage() : int {
 		return $this->armourDamage;
 	}
 
-	public function getAccuracy() {
+	public function getAccuracy() : int {
 		return $this->accuracy;
 	}
 
-	public function getPowerLevel() {
+	public function getPowerLevel() : int {
 		return $this->powerLevel;
 	}
 
-	public function getBuyerRestriction() {
+	public function getBuyerRestriction() : int {
 		return $this->buyerRestriction;
 	}
 
