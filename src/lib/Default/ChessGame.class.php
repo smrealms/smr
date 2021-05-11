@@ -745,12 +745,10 @@ class ChessGame {
 	}
 
 	public function getColourID($colour) {
-		if ($colour == self::PLAYER_WHITE) {
-			return $this->getWhiteID();
-		}
-		if ($colour == self::PLAYER_BLACK) {
-			return $this->getBlackID();
-		}
+		return match($colour) {
+			self::PLAYER_WHITE => $this->getWhiteID(),
+			self::PLAYER_BLACK => $this->getBlackID(),
+		};
 	}
 
 	public function getColourPlayer($colour) {
