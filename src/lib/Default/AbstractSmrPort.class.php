@@ -2,8 +2,8 @@
 class AbstractSmrPort {
 	use Traits\RaceID;
 
-	protected static $CACHE_PORTS = array();
-	protected static $CACHE_CACHED_PORTS = array();
+	protected static array $CACHE_PORTS = [];
+	protected static array $CACHE_CACHED_PORTS = [];
 
 	const DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE = 300; // single player
 	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325; // all attackers
@@ -28,35 +28,35 @@ class AbstractSmrPort {
 	const BASE_PAYOUT = 0.85; // fraction of credits for looting
 	const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
 
-	protected $db;
+	protected Smr\Database $db;
 
-	protected $gameID;
-	protected $sectorID;
-	protected $shields;
-	protected $combatDrones;
-	protected $armour;
-	protected $reinforceTime;
-	protected $attackStarted;
-	protected $level;
-	protected $credits;
-	protected $upgrade;
-	protected $experience;
+	protected int $gameID;
+	protected int $sectorID;
+	protected int $shields;
+	protected int $combatDrones;
+	protected int $armour;
+	protected int $reinforceTime;
+	protected int $attackStarted;
+	protected int $level;
+	protected int $credits;
+	protected int $upgrade;
+	protected int $experience;
 
-	protected $goodIDs = array('All' => [], TRADER_SELLS => [], TRADER_BUYS => []);
-	protected $goodAmounts;
-	protected $goodAmountsChanged = array();
-	protected $goodDistances;
+	protected array $goodIDs = array('All' => [], TRADER_SELLS => [], TRADER_BUYS => []);
+	protected array $goodAmounts;
+	protected array $goodAmountsChanged = [];
+	protected array $goodDistances;
 
-	protected $cachedVersion = false;
-	protected $cachedTime;
-	protected $cacheIsValid = true;
+	protected bool $cachedVersion = false;
+	protected int $cachedTime;
+	protected bool $cacheIsValid = true;
 
-	protected $SQL;
+	protected string $SQL;
 
-	protected $hasChanged = false;
-	protected $isNew = false;
+	protected bool $hasChanged = false;
+	protected bool $isNew = false;
 
-	public static function refreshCache() {
+	public static function refreshCache() : void {
 		foreach (self::$CACHE_PORTS as $gameID => &$gamePorts) {
 			foreach ($gamePorts as $sectorID => &$port) {
 				$port = self::getPort($gameID, $sectorID, true);
@@ -64,12 +64,12 @@ class AbstractSmrPort {
 		}
 	}
 
-	public static function clearCache() {
+	public static function clearCache() : void {
 		self::$CACHE_PORTS = array();
 		self::$CACHE_CACHED_PORTS = array();
 	}
 
-	public static function getGalaxyPorts($gameID, $galaxyID, $forceUpdate = false) {
+	public static function getGalaxyPorts(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
 		$db = Smr\Database::getInstance();
 		// Use a left join so that we populate the cache for every sector
 		$db->query('SELECT port.*, sector_id FROM sector LEFT JOIN port USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
@@ -85,14 +85,14 @@ class AbstractSmrPort {
 		return $galaxyPorts;
 	}
 
-	public static function getPort($gameID, $sectorID, $forceUpdate = false, $db = null) {
+	public static function getPort(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\Database $db = null) : self {
 		if ($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID, $sectorID, $db);
 		}
 		return self::$CACHE_PORTS[$gameID][$sectorID];
 	}
 
-	public static function removePort($gameID, $sectorID) {
+	public static function removePort(int $gameID, int $sectorID) : void {
 		$db = Smr\Database::getInstance();
 		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
 		        AND sector_id = ' . $db->escapeNumber($sectorID);
@@ -105,7 +105,7 @@ class AbstractSmrPort {
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
 
-	public static function createPort($gameID, $sectorID) {
+	public static function createPort(int $gameID, int $sectorID) : self {
 		if (!isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			$p = new SmrPort($gameID, $sectorID);
 			self::$CACHE_PORTS[$gameID][$sectorID] = $p;
@@ -113,7 +113,7 @@ class AbstractSmrPort {
 		return self::$CACHE_PORTS[$gameID][$sectorID];
 	}
 
-	public static function savePorts() {
+	public static function savePorts() : void {
 		foreach (self::$CACHE_PORTS as $gamePorts) {
 			foreach ($gamePorts as $port) {
 				$port->update();
@@ -121,11 +121,11 @@ class AbstractSmrPort {
 		}
 	}
 
-	public static function getBaseExperience($cargo, $distance) {
+	public static function getBaseExperience(int $cargo, int $distance) : float {
 		return ($cargo / 13) * $distance;
 	}
 
-	protected function __construct($gameID, $sectorID, $db = null) {
+	protected function __construct(int $gameID, int $sectorID, Smr\Database $db = null) {
 		$this->cachedTime = Smr\Epoch::time();
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
@@ -169,7 +169,7 @@ class AbstractSmrPort {
 		}
 	}
 
-	public function checkDefenses() {
+	public function checkDefenses() : void {
 		if (!$this->isUnderAttack()) {
 			$defences = self::BASE_DEFENCES + $this->getLevel() * self::DEFENCES_PER_LEVEL;
 			$cds = self::BASE_CDS + $this->getLevel() * self::CDS_PER_LEVEL;
@@ -199,7 +199,7 @@ class AbstractSmrPort {
 	/**
 	 * Used for the automatic resupplying of all goods over time
 	 */
-	private function restockGood($goodID, $secondsSinceLastUpdate) {
+	private function restockGood(int $goodID, int $secondsSinceLastUpdate) : void {
 		if ($secondsSinceLastUpdate <= 0) {
 			return;
 		}
@@ -219,7 +219,7 @@ class AbstractSmrPort {
 	}
 
 	// Sets the class members that identify port trade goods
-	private function getGoods() {
+	private function getGoods() : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot call getGoods on cached port');
 		}
@@ -238,7 +238,7 @@ class AbstractSmrPort {
 		}
 	}
 
-	private function getVisibleGoods($transaction, AbstractSmrPlayer $player = null) {
+	private function getVisibleGoods(string $transaction, AbstractSmrPlayer $player = null) : array {
 		$goodIDs = $this->goodIDs[$transaction];
 		if ($player == null) {
 			return $goodIDs;
@@ -253,45 +253,43 @@ class AbstractSmrPort {
 	/**
 	 * Get IDs of goods that can be sold by $player to the port
 	 */
-	public function getVisibleGoodsSold(AbstractSmrPlayer $player = null) {
+	public function getVisibleGoodsSold(AbstractSmrPlayer $player = null) : array {
 		return $this->getVisibleGoods(TRADER_SELLS, $player);
 	}
 
 	/**
 	 * Get IDs of goods that can be bought by $player from the port
 	 */
-	public function getVisibleGoodsBought(AbstractSmrPlayer $player = null) {
+	public function getVisibleGoodsBought(AbstractSmrPlayer $player = null) : array {
 		return $this->getVisibleGoods(TRADER_BUYS, $player);
 	}
 
-	public function getAllGoodIDs() {
+	public function getAllGoodIDs() : array {
 		return $this->goodIDs['All'];
 	}
 
 	/**
 	 * Get IDs of goods that can be sold to the port
 	 */
-	public function getSoldGoodIDs() {
+	public function getSoldGoodIDs() : array {
 		return $this->goodIDs[TRADER_SELLS];
 	}
 
 	/**
 	 * Get IDs of goods that can be bought from the port
 	 */
-	public function getBoughtGoodIDs() {
+	public function getBoughtGoodIDs() : array {
 		return $this->goodIDs[TRADER_BUYS];
 	}
 
-	public function getGood($goodID) {
-		if ($this->hasGood($goodID)) {
-			return Globals::getGood($goodID);
-		} else {
-			$return = false;
-			return $return;
+	public function getGood(int $goodID) : array|false {
+		if (!$this->hasGood($goodID)) {
+			return false;
 		}
+		return Globals::getGood($goodID);
 	}
 
-	public function getGoodDistance($goodID) {
+	public function getGoodDistance(int $goodID) : int {
 		if (!isset($this->goodDistances[$goodID])) {
 			$x = $this->getGood($goodID);
 			if ($x === false) {
@@ -315,22 +313,23 @@ class AbstractSmrPort {
 	 * Returns the transaction type for this good (Buy or Sell).
 	 * Note: this is the player's transaction, not the port's.
 	 */
-	public function getGoodTransaction($goodID) {
+	public function getGoodTransaction(int $goodID) : ?string {
 		foreach ([TRADER_BUYS, TRADER_SELLS] as $transaction) {
 			if ($this->hasGood($goodID, $transaction)) {
 				return $transaction;
 			}
 		}
+		return null; // port does not have this good
 	}
 
-	public function hasGood($goodID, $type = false) {
-		if ($type === false) {
+	public function hasGood(int $goodID, ?string $type = null) : bool {
+		if ($type === null) {
 			$type = 'All';
 		}
 		return in_array($goodID, $this->goodIDs[$type]);
 	}
 
-	private function setGoodAmount($goodID, $amount, $doUpdate = true) {
+	private function setGoodAmount(int $goodID, int $amount, bool $doUpdate = true) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -347,11 +346,11 @@ class AbstractSmrPort {
 		}
 	}
 
-	public function getGoodAmount($goodID) {
+	public function getGoodAmount(int $goodID) : int {
 		return $this->goodAmounts[$goodID];
 	}
 
-	public function decreaseGood(array $good, $amount, $doRefresh) {
+	public function decreaseGood(array $good, int $amount, bool $doRefresh) : void {
 		$this->setGoodAmount($good['ID'], $this->getGoodAmount($good['ID']) - $amount);
 		if ($doRefresh === true) {
 			//get id of goods to replenish
@@ -359,18 +358,18 @@ class AbstractSmrPort {
 		}
 	}
 
-	public function increaseGoodAmount($goodID, $amount) {
+	public function increaseGoodAmount(int $goodID, int $amount) : void {
 		$this->setGoodAmount($goodID, $this->getGoodAmount($goodID) + $amount);
 	}
 
-	public function decreaseGoodAmount($goodID, $amount) {
+	public function decreaseGoodAmount(int $goodID, int $amount) : void {
 		$this->setGoodAmount($goodID, $this->getGoodAmount($goodID) - $amount);
 	}
 
 	/**
 	 * Adds extra stock to goods in the tier above a good that was traded
 	 */
-	protected function refreshGoods($classTraded, $amountTraded) {
+	protected function refreshGoods(int $classTraded, int $amountTraded) : void {
 		$refreshAmount = IRound($amountTraded * self::REFRESH_PER_GOOD);
 		//refresh goods that need it
 		$refreshClass = $classTraded + 1;
@@ -382,7 +381,7 @@ class AbstractSmrPort {
 		}
 	}
 
-	protected function tradeGoods(array $good, $goodsTraded, $exp) {
+	protected function tradeGoods(array $good, int $goodsTraded, int $exp) : void {
 		$goodsTradedMoney = $goodsTraded * self::GOODS_TRADED_MONEY_MULTIPLIER;
 		$this->increaseUpgrade($goodsTradedMoney);
 		$this->increaseCredits($goodsTradedMoney);
@@ -390,7 +389,7 @@ class AbstractSmrPort {
 		$this->decreaseGood($good, $goodsTraded, true);
 	}
 
-	public function buyGoods(array $good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
+	public function buyGoods(array $good, int $goodsTraded, int $idealPrice, int $bargainPrice, int $exp) : void {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 		// Limit upgrade/credits to prevent massive increases in a single trade
 		$cappedBargainPrice = min(max($idealPrice, $goodsTraded * 1000), $bargainPrice);
@@ -398,15 +397,15 @@ class AbstractSmrPort {
 		$this->increaseCredits($cappedBargainPrice);
 	}
 
-	public function sellGoods(array $good, $goodsTraded, $exp) {
+	public function sellGoods(array $good, int $goodsTraded, int $exp) : void {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 	}
 
-	public function stealGoods(array $good, $goodsTraded) {
+	public function stealGoods(array $good, int $goodsTraded) : void {
 		$this->decreaseGood($good, $goodsTraded, false);
 	}
 
-	public function checkForUpgrade() {
+	public function checkForUpgrade() : int {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot upgrade a cached port!');
 		}
@@ -424,7 +423,7 @@ class AbstractSmrPort {
 	 * This function should only be used in universe creation to set
 	 * ports to a specific level.
 	 */
-	public function upgradeToLevel($level) {
+	public function upgradeToLevel(int $level) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot upgrade a cached port!');
 		}
@@ -441,8 +440,8 @@ class AbstractSmrPort {
 	 * If no level specified, will use the current port level.
 	 * This is useful for determining what trade goods to add/remove.
 	 */
-	protected function getGoodClassAtLevel($level = false) {
-		if ($level === false) {
+	protected function getGoodClassAtLevel(int $level = null) : int {
+		if ($level === null) {
 			$level = $this->getLevel();
 		}
 		if ($level <= 2) {
@@ -454,7 +453,7 @@ class AbstractSmrPort {
 		}
 	}
 
-	protected function selectAndAddGood($goodClass) {
+	protected function selectAndAddGood(int $goodClass) : array {
 		$GOODS = Globals::getGoods();
 		shuffle($GOODS);
 		foreach ($GOODS as $good) {
@@ -467,7 +466,7 @@ class AbstractSmrPort {
 		throw new Exception('Failed to add a good!');
 	}
 
-	protected function doUpgrade() {
+	protected function doUpgrade() : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot upgrade a cached port!');
 		}
@@ -483,7 +482,7 @@ class AbstractSmrPort {
 		}
 	}
 
-	public function getUpgradeRequirement() {
+	public function getUpgradeRequirement() : int {
 //		return round(exp($this->getLevel()/1.7)+3)*1000000;
 		return $this->getLevel() * 1000000;
 	}
@@ -494,7 +493,7 @@ class AbstractSmrPort {
 	 * Only modifies goods that need to change.
 	 * Returns false on invalid input.
 	 */
-	public function setPortGoods(array $goods) {
+	public function setPortGoods(array $goods) : bool {
 		// Validate the input list of goods to make sure we have the correct
 		// number of each good class for this port level.
 		$givenClasses = [];
@@ -530,7 +529,7 @@ class AbstractSmrPort {
 	 * NOTE: make sure to adjust the port level appropriately if
 	 * calling this function directly.
 	 */
-	public function addPortGood($goodID, $type) {
+	public function addPortGood(int $goodID, string $type) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -557,7 +556,7 @@ class AbstractSmrPort {
 	 * NOTE: make sure to adjust the port level appropriately if
 	 * calling this function directly.
 	 */
-	public function removePortGood($goodID) {
+	public function removePortGood(int $goodID) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -581,7 +580,7 @@ class AbstractSmrPort {
 	/**
 	 * Returns the number of port level downgrades due to damage taken.
 	 */
-	public function checkForDowngrade($damage) : int {
+	public function checkForDowngrade(int $damage) : int {
 		$numDowngrades = 0;
 		$numChances = floor($damage / self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
 		for ($i = 0; $i < $numChances; $i++) {
@@ -593,7 +592,7 @@ class AbstractSmrPort {
 		return $numDowngrades;
 	}
 
-	protected function selectAndRemoveGood($goodClass) {
+	protected function selectAndRemoveGood(int $goodClass) : void {
 		// Pick good to remove from the list of goods the port currently has
 		$goodIDs = $this->getAllGoodIDs();
 		shuffle($goodIDs);
@@ -608,7 +607,7 @@ class AbstractSmrPort {
 		throw new Exception('Failed to remove a good!');
 	}
 
-	protected function doDowngrade() {
+	protected function doDowngrade() : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot downgrade a cached port!');
 		}
@@ -629,7 +628,7 @@ class AbstractSmrPort {
 		$this->setUpgrade(0);
 	}
 
-	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers) {
+	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot attack a cached port!');
 		}
@@ -669,11 +668,11 @@ class AbstractSmrPort {
 		}
 	}
 
-	public function getDisplayName() {
+	public function getDisplayName() : string {
 		return '<span style="color:yellow;font-variant:small-caps">Port ' . $this->getSectorID() . '</span>';
 	}
 
-	public function setShields($shields) {
+	public function setShields(int $shields) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -687,7 +686,7 @@ class AbstractSmrPort {
 		$this->hasChanged = true;
 	}
 
-	public function setArmour($armour) {
+	public function setArmour(int $armour) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -701,7 +700,7 @@ class AbstractSmrPort {
 		$this->hasChanged = true;
 	}
 
-	public function setCDs($combatDrones) {
+	public function setCDs(int $combatDrones) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -715,7 +714,7 @@ class AbstractSmrPort {
 		$this->hasChanged = true;
 	}
 
-	public function setCreditsToDefault() {
+	public function setCreditsToDefault() : void {
 		$this->setCredits(2700000 + $this->getLevel() * 1500000 + pow($this->getLevel(), 2) * 300000);
 	}
 
@@ -730,21 +729,21 @@ class AbstractSmrPort {
 		$this->hasChanged = true;
 	}
 
-	public function decreaseCredits($credits) {
+	public function decreaseCredits(int $credits) : void {
 		if ($credits < 0) {
 			throw new Exception('Cannot decrease negative credits.');
 		}
 		$this->setCredits($this->getCredits() - $credits);
 	}
 
-	public function increaseCredits($credits) {
+	public function increaseCredits(int $credits) : void {
 		if ($credits < 0) {
 			throw new Exception('Cannot increase negative credits.');
 		}
 		$this->setCredits($this->getCredits() + $credits);
 	}
 
-	public function setUpgrade($upgrade) {
+	public function setUpgrade(int $upgrade) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -759,21 +758,21 @@ class AbstractSmrPort {
 		$this->checkForUpgrade();
 	}
 
-	public function decreaseUpgrade($upgrade) {
+	public function decreaseUpgrade(int $upgrade) : void {
 		if ($upgrade < 0) {
 			throw new Exception('Cannot decrease negative upgrade.');
 		}
 		$this->setUpgrade($this->getUpgrade() - $upgrade);
 	}
 
-	public function increaseUpgrade($upgrade) {
+	public function increaseUpgrade(int $upgrade) : void {
 		if ($upgrade < 0) {
 			throw new Exception('Cannot increase negative upgrade.');
 		}
 		$this->setUpgrade($this->getUpgrade() + $upgrade);
 	}
 
-	public function setLevel($level) {
+	public function setLevel(int $level) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -784,21 +783,21 @@ class AbstractSmrPort {
 		$this->hasChanged = true;
 	}
 
-	public function increaseLevel($level) {
+	public function increaseLevel(int $level) : void {
 		if ($level < 0) {
 			throw new Exception('Cannot increase negative level.');
 		}
 		$this->setLevel($this->getLevel() + $level);
 	}
 
-	public function decreaseLevel($level) {
+	public function decreaseLevel(int $level) : void {
 		if ($level < 0) {
 			throw new Exception('Cannot increase negative level.');
 		}
 		$this->setLevel($this->getLevel() - $level);
 	}
 
-	public function setExperience($experience) {
+	public function setExperience(int $experience) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -809,30 +808,30 @@ class AbstractSmrPort {
 		$this->hasChanged = true;
 	}
 
-	public function increaseExperience($experience) {
+	public function increaseExperience(int $experience) : void {
 		if ($experience < 0) {
 			throw new Exception('Cannot increase negative experience.');
 		}
 		$this->setExperience($this->getExperience() + $experience);
 	}
 
-	public function getGameID() {
+	public function getGameID() : int {
 		return $this->gameID;
 	}
 
-	public function getGame() {
+	public function getGame() : SmrGame {
 		return SmrGame::getGame($this->gameID);
 	}
 
-	public function getSectorID() {
+	public function getSectorID() : int {
 		return $this->sectorID;
 	}
 
-	public function getSector() {
+	public function getSector() : SmrSector {
 		return SmrSector::getSector($this->getGameID(), $this->getSectorID());
 	}
 
-	public function setRaceID($raceID) {
+	public function setRaceID(int $raceID) : void {
 		if ($this->raceID == $raceID) {
 			return;
 		}
@@ -843,56 +842,56 @@ class AbstractSmrPort {
 		$this->db->query('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
 
-	public function getLevel() {
+	public function getLevel() : int {
 		return $this->level;
 	}
 
-	public function getMaxLevel() {
+	public function getMaxLevel() : int {
 		// Hunter Wars redefines this, so use lazy static binding
 		return static::MAX_LEVEL;
 	}
 
-	public function getShields() {
+	public function getShields() : int {
 		return $this->shields;
 	}
 
-	public function hasShields() {
+	public function hasShields() : bool {
 		return ($this->getShields() > 0);
 	}
 
-	public function getCDs() {
+	public function getCDs() : int {
 		return $this->combatDrones;
 	}
 
-	public function hasCDs() {
+	public function hasCDs() : bool {
 		return ($this->getCDs() > 0);
 	}
 
-	public function getArmour() {
+	public function getArmour() : int {
 		return $this->armour;
 	}
 
-	public function hasArmour() {
+	public function hasArmour() : bool {
 		return ($this->getArmour() > 0);
 	}
 
-	public function getExperience() {
+	public function getExperience() : int {
 		return $this->experience;
 	}
 
-	public function getCredits() {
+	public function getCredits() : int {
 		return $this->credits;
 	}
 
-	public function getUpgrade() {
+	public function getUpgrade() : int {
 		return $this->upgrade;
 	}
 
-	public function getNumWeapons() {
+	public function getNumWeapons() : int {
 		return $this->getLevel() + 3;
 	}
 
-	public function getWeapons() {
+	public function getWeapons() : array {
 		$weapons = array();
 		for ($i = 0; $i < $this->getNumWeapons(); ++$i) {
 			$weapons[$i] = SmrWeapon::getWeapon(WEAPON_PORT_TURRET);
@@ -900,70 +899,74 @@ class AbstractSmrPort {
 		return $weapons;
 	}
 
-	public function getUpgradePercent() {
+	public function getUpgradePercent() : float {
 		return min(1, max(0, $this->upgrade / $this->getUpgradeRequirement()));
 	}
 
-	public function getCreditsPercent() {
+	public function getCreditsPercent() : float {
 		return min(1, max(0, $this->credits / 32000000));
 	}
 
-	public function getReinforcePercent() {
+	public function getReinforcePercent() : float {
 		if (!$this->isUnderAttack()) {
 			return 0;
 		}
 		return min(1, max(0, ($this->getReinforceTime() - Smr\Epoch::time()) / ($this->getReinforceTime() - $this->getAttackStarted())));
 	}
 
-	public function getReinforceTime() {
+	public function getReinforceTime() : int {
 		return $this->reinforceTime;
 	}
 
-	public function setReinforceTime($reinforceTime) {
-		$this->reinforceTime = $reinforceTime;
-	}
-
-	public function getAttackStarted() {
-		return $this->attackStarted;
-	}
-
-	private function updateAttackStarted() {
-		$this->setAttackStarted(Smr\Epoch::time());
-	}
-
-	private function setAttackStarted($time) {
-		if ($this->attackStarted == $time) {
+	public function setReinforceTime(int $reinforceTime) : void {
+		if ($this->reinforceTime == $reinforceTime) {
 			return;
 		}
-		$this->attackStarted = Smr\Epoch::time();
+		$this->reinforceTime = $reinforceTime;
 		$this->hasChanged = true;
 	}
 
-	public function isUnderAttack() {
+	public function getAttackStarted() : int {
+		return $this->attackStarted;
+	}
+
+	private function updateAttackStarted() : void {
+		$this->setAttackStarted(Smr\Epoch::time());
+	}
+
+	private function setAttackStarted(int $time) : void {
+		if ($this->attackStarted == $time) {
+			return;
+		}
+		$this->attackStarted = $time;
+		$this->hasChanged = true;
+	}
+
+	public function isUnderAttack() : bool {
 		return ($this->getReinforceTime() >= Smr\Epoch::time());
 	}
 
-	public function isDestroyed() {
+	public function isDestroyed() : bool {
 		return ($this->getArmour() < 1 && $this->isUnderAttack());
 	}
 
-	public function exists() {
+	public function exists() : bool {
 		return $this->isNew === false || $this->hasChanged === true;
 	}
 
-	public function decreaseShields($number) {
+	public function decreaseShields(int $number) : void {
 		$this->setShields($this->getShields() - $number);
 	}
 
-	public function decreaseCDs($number) {
+	public function decreaseCDs(int $number) : void {
 		$this->setCDs($this->getCDs() - $number);
 	}
 
-	public function decreaseArmour($number) {
+	public function decreaseArmour(int $number) : void {
 		$this->setArmour($this->getArmour() - $number);
 	}
 
-	public function getIdealPrice($goodID, $transactionType, $numGoods, $relations) : int {
+	public function getIdealPrice(int $goodID, string $transactionType, int $numGoods, int $relations) : int {
 		$supply = $this->getGoodAmount($goodID);
 		$dist = $this->getGoodDistance($goodID);
 		return self::idealPrice($goodID, $transactionType, $numGoods, $relations, $supply, $dist);
@@ -1024,29 +1027,29 @@ class AbstractSmrPort {
 		return max(0, min(1, $expPercent));
 	}
 
-	public function getRaidWarningHREF() {
+	public function getRaidWarningHREF() : string {
 		return Page::create('skeleton.php', 'port_attack_warning.php')->href();
 	}
 
-	public function getAttackHREF() {
+	public function getAttackHREF() : string {
 		$container = Page::create('port_attack_processing.php');
 		$container['port_id'] = $this->getSectorID();
 		return $container->href();
 	}
 
-	public function getClaimHREF() {
+	public function getClaimHREF() : string {
 		$container = Page::create('port_claim_processing.php');
 		$container['port_id'] = $this->getSectorID();
 		return $container->href();
 	}
 
-	public function getRazeHREF($justContainer = false) {
+	public function getRazeHREF(bool $justContainer = false) : string|Page {
 		$container = Page::create('port_payout_processing.php');
 		$container['PayoutType'] = 'Raze';
 		return $justContainer === false ? $container->href() : $container;
 	}
 
-	public function getLootHREF($justContainer = false) {
+	public function getLootHREF(bool $justContainer = false) : string|Page {
 		if ($this->getCredits() > 0) {
 			$container = Page::create('port_payout_processing.php');
 			$container['PayoutType'] = 'Loot';
@@ -1057,21 +1060,25 @@ class AbstractSmrPort {
 		return $justContainer === false ? $container->href() : $container;
 	}
 
-	public function getLootGoodHREF($boughtGoodID) {
+	public function getLootGoodHREF(int $boughtGoodID) : string {
 		$container = Page::create('port_loot_processing.php');
 		$container['GoodID'] = $boughtGoodID;
 		return $container->href();
 	}
-	public function isCachedVersion() {
+
+	public function isCachedVersion() : bool {
 		return $this->cachedVersion;
 	}
-	public function getCachedTime() {
+
+	public function getCachedTime() : int {
 		return $this->cachedTime;
 	}
-	protected function setCachedTime($cachedTime) {
-		return $this->cachedTime = $cachedTime;
+
+	protected function setCachedTime(int $cachedTime) : void {
+		$this->cachedTime = $cachedTime;
 	}
-	public function updateSectorPlayersCache() {
+
+	public function updateSectorPlayersCache() : void {
 		$accountIDs = array();
 		$sectorPlayers = $this->getSector()->getPlayers();
 		foreach ($sectorPlayers as $sectorPlayer) {
@@ -1079,10 +1086,12 @@ class AbstractSmrPort {
 		}
 		$this->addCachePorts($accountIDs);
 	}
-	public function addCachePort($accountID) {
+
+	public function addCachePort(int $accountID) : void {
 		$this->addCachePorts(array($accountID));
 	}
-	public function addCachePorts(array $accountIDs) {
+
+	public function addCachePorts(array $accountIDs) : bool {
 		if (count($accountIDs) > 0 && $this->exists()) {
 			$cache = $this->db->escapeObject($this, true);
 			$cacheHash = $this->db->escapeString(md5($cache));
@@ -1108,7 +1117,8 @@ class AbstractSmrPort {
 		}
 		return false;
 	}
-	public static function getCachedPort($gameID, $sectorID, $accountID, $forceUpdate = false) {
+
+	public static function getCachedPort(int $gameID, int $sectorID, int $accountID, bool $forceUpdate = false) : self|false {
 		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID])) {
 			$db = Smr\Database::getInstance();
 			$db->query('SELECT visited, port_info
@@ -1142,7 +1152,7 @@ class AbstractSmrPort {
 		$this->db = Smr\Database::getInstance();
 	}
 
-	public function update() {
+	public function update() : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -1198,7 +1208,7 @@ class AbstractSmrPort {
 		}
 	}
 
-	public function shootPlayers(array $targetPlayers) {
+	public function shootPlayers(array $targetPlayers) : array {
 		$results = array('Port' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => array());
 		foreach ($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
@@ -1230,7 +1240,7 @@ class AbstractSmrPort {
 		return $results;
 	}
 
-	public function doWeaponDamage(array $damage) {
+	public function doWeaponDamage(array $damage) : array {
 		$alreadyDead = $this->isDestroyed();
 		$shieldDamage = 0;
 		$cdDamage = 0;
@@ -1266,25 +1276,25 @@ class AbstractSmrPort {
 		return $return;
 	}
 
-	protected function doShieldDamage($damage) {
+	protected function doShieldDamage(int $damage) : int {
 		$actualDamage = min($this->getShields(), $damage);
 		$this->decreaseShields($actualDamage);
 		return $actualDamage;
 	}
 
-	protected function doCDDamage($damage) {
+	protected function doCDDamage(int $damage) : int {
 		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
 		$this->decreaseCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
 
-	protected function doArmourDamage($damage) {
+	protected function doArmourDamage(int $damage) : int {
 		$actualDamage = min($this->getArmour(), IFloor($damage));
 		$this->decreaseArmour($actualDamage);
 		return $actualDamage;
 	}
 
-	protected function getAttackersToCredit() {
+	protected function getAttackersToCredit() : array {
 		//get all players involved for HoF
 		$attackers = array();
 		$this->db->query('SELECT account_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_RAID));
@@ -1294,7 +1304,7 @@ class AbstractSmrPort {
 		return $attackers;
 	}
 
-	protected function creditCurrentAttackersForKill() {
+	protected function creditCurrentAttackersForKill() : void {
 		//get all players involved for HoF
 		$attackers = $this->getAttackersToCredit();
 		foreach ($attackers as $attacker) {
@@ -1303,7 +1313,7 @@ class AbstractSmrPort {
 		}
 	}
 
-	protected function payout(AbstractSmrPlayer $killer, $credits, $payoutType) {
+	protected function payout(AbstractSmrPlayer $killer, int $credits, string $payoutType) : bool {
 		if ($this->getCredits() == 0) {
 			return false;
 		}
@@ -1339,7 +1349,7 @@ class AbstractSmrPort {
 		return $credits;
 	}
 
-	public function killPortByPlayer(AbstractSmrPlayer $killer) {
+	public function killPortByPlayer(AbstractSmrPlayer $killer) : array {
 		$return = array();
 
 		// Port is destroyed, so empty the port of all trade goods
@@ -1369,10 +1379,10 @@ class AbstractSmrPort {
 		return $return;
 	}
 
-	public function hasX(/*Object*/ $x) {
+	public function hasX(mixed $x) : bool {
 		if (is_array($x) && $x['Type'] == 'Good') { // instanceof Good) - No Good class yet, so array is the best we can do
 			if (isset($x['ID'])) {
-				return $this->hasGood($x['ID'], $x['TransactionType'] ?? false);
+				return $this->hasGood($x['ID'], $x['TransactionType'] ?? null);
 			}
 		}
 		return false;
