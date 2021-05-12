@@ -6,8 +6,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	const DCS_DAMAGE_MODIFIER = .75;
 	protected $numberOfMines;
 
-	public function __construct($gameTypeID, $numberOfMines) {
-		$this->gameTypeID = $gameTypeID;
+	public function __construct($numberOfMines) {
 		$this->numberOfMines = $numberOfMines;
 		$this->name = 'Mines';
 		$this->maxDamage = 20;

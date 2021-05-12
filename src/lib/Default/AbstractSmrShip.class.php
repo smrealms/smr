@@ -890,7 +890,7 @@ class AbstractSmrShip {
 			}
 		}
 		if ($this->hasCDs()) {
-			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
+			$thisCDs = new SmrCombatDrones($this->getCDs());
 			$results['Drones'] = $thisCDs->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
@@ -922,7 +922,7 @@ class AbstractSmrShip {
 			}
 		}
 		if ($this->hasCDs()) {
-			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
+			$thisCDs = new SmrCombatDrones($this->getCDs());
 			$results['Drones'] = $thisCDs->shootForces($thisPlayer, $forces);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines'], array('Combat', 'Forces', 'Mines', 'Killed'), HOF_PUBLIC);
@@ -954,7 +954,7 @@ class AbstractSmrShip {
 			}
 		}
 		if ($this->hasCDs()) {
-			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
+			$thisCDs = new SmrCombatDrones($this->getCDs());
 			$results['Drones'] = $thisCDs->shootPort($thisPlayer, $port);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
@@ -992,7 +992,7 @@ class AbstractSmrShip {
 			}
 		}
 		if ($this->hasCDs()) {
-			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
+			$thisCDs = new SmrCombatDrones($this->getCDs());
 			$results['Drones'] = $thisCDs->shootPlanet($thisPlayer, $planet, $delayed);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}

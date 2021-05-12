@@ -4,8 +4,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 	const MAX_CDS_RAND = 54;
 	protected $numberOfCDs;
 
-	public function __construct($gameTypeID, $numberOfCDs, $portPlanetDrones = false) {
-		$this->gameTypeID = $gameTypeID;
+	public function __construct($numberOfCDs, $portPlanetDrones = false) {
 		$this->numberOfCDs = $numberOfCDs;
 		$this->name = 'Combat Drones';
 		if ($portPlanetDrones === false) {
