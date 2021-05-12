@@ -3,8 +3,7 @@
 class SmrScoutDrones extends AbstractSmrCombatWeapon {
 	protected $numberOfSDs;
 
-	public function __construct($gameTypeID, $numberOfSDs) {
-		$this->gameTypeID = $gameTypeID;
+	public function __construct($numberOfSDs) {
 		$this->numberOfSDs = $numberOfSDs;
 		$this->name = 'Scout Drones';
 		$this->maxDamage = 20;

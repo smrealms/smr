@@ -1190,7 +1190,7 @@ class SmrPlanet {
 			}
 		}
 		if ($this->hasCDs()) {
-			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs(), true);
+			$thisCDs = new SmrCombatDrones($this->getCDs(), true);
 			$results['Drones'] = $thisCDs->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $results['Drones']['ActualDamage']['TotalDamage'];

@@ -461,20 +461,20 @@ class SmrForce {
 		$results['DeadBeforeShot'] = false;
 
 		if ($this->hasMines()) {
-			$thisMines = new SmrMines($this->getGameID(), $this->getMines());
+			$thisMines = new SmrMines($this->getMines());
 			$results['Results']['Mines'] = $thisMines->shootPlayerAsForce($this, array_rand_value($targetPlayers), $minesAreAttacker);
 			$results['TotalDamage'] += $results['Results']['Mines']['ActualDamage']['TotalDamage'];
 		}
 
 		if ($this->hasCDs()) {
-			$thisCDs = new SmrCombatDrones($this->getGameID(), $this->getCDs());
+			$thisCDs = new SmrCombatDrones($this->getCDs());
 			$results['Results']['Drones'] = $thisCDs->shootPlayerAsForce($this, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Results']['Drones']['ActualDamage']['TotalDamage'];
 		}
 
 		if (!$minesAreAttacker) {
 			if ($this->hasSDs()) {
-				$thisSDs = new SmrScoutDrones($this->getGameID(), $this->getSDs());
+				$thisSDs = new SmrScoutDrones($this->getSDs());
 				$results['Results']['Scouts'] = $thisSDs->shootPlayerAsForce($this, array_rand_value($targetPlayers));
 				$results['TotalDamage'] += $results['Results']['Scouts']['ActualDamage']['TotalDamage'];
 			}

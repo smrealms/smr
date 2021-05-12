@@ -6,7 +6,6 @@ abstract class AbstractSmrCombatWeapon {
 	 */
 	const PLANET_DAMAGE_MOD = 0.2;
 
-	protected $gameTypeID;
 	protected $name;
 	protected $maxDamage;
 	protected $shieldDamage;
