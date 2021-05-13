@@ -287,10 +287,10 @@ class ChessGame {
 			$board[] = $row;
 		}
 		foreach ($pieces as $piece) {
-			if ($board[$piece->getY()][$piece->getX()] != null) {
+			if ($board[$piece->y][$piece->x] != null) {
 				throw new Exception('Two pieces found in the same tile.');
 			}
-			$board[$piece->getY()][$piece->getX()] = $piece;
+			$board[$piece->y][$piece->x] = $piece;
 		}
 		return $board;
 	}
@@ -356,7 +356,7 @@ class ChessGame {
 			$db->query('INSERT INTO chess_game_pieces' .
 			'(chess_game_id,account_id,piece_id,x,y)' .
 			'values' .
-			'(' . $db->escapeNumber($chessGameID) . ',' . $db->escapeNumber($p->accountID) . ',' . $db->escapeNumber($p->pieceID) . ',' . $db->escapeNumber($p->getX()) . ',' . $db->escapeNumber($p->getY()) . ');');
+			'(' . $db->escapeNumber($chessGameID) . ',' . $db->escapeNumber($p->accountID) . ',' . $db->escapeNumber($p->pieceID) . ',' . $db->escapeNumber($p->x) . ',' . $db->escapeNumber($p->y) . ');');
 		}
 	}
 
@@ -462,8 +462,8 @@ class ChessGame {
 		if ($p == null) {
 			throw new Exception('Trying to move non-existent piece: ' . var_export($board, true));
 		}
-		$p->setX($toX);
-		$p->setY($toY);
+		$p->x = $toX;
+		$p->y = $toY;
 
 		$oldPawnMovement = $hasMoved[ChessPiece::PAWN];
 		$nextPawnMovement = array(-1, -1);
@@ -482,7 +482,7 @@ class ChessGame {
 					throw new Exception('Cannot castle with non-existent castle.');
 				}
 				$board[$toY][$castling['ToX']] = $board[$y][$castling['X']];
-				$board[$toY][$castling['ToX']]->setX($castling['ToX']);
+				$board[$toY][$castling['ToX']]->x = $castling['ToX'];
 				$board[$y][$castling['X']] = null;
 			}
 		} elseif ($p->pieceID == ChessPiece::PAWN) {
@@ -546,8 +546,8 @@ class ChessGame {
 			throw new Exception('Trying to undo move of a non-existent piece: ' . var_export($board, true));
 		}
 		$board[$toY][$toX] = $moveInfo['PieceTaken'];
-		$p->setX($x);
-		$p->setY($y);
+		$p->x = $x;
+		$p->y = $y;
 
 		$hasMoved[ChessPiece::PAWN] = $moveInfo['OldPawnMovement'];
 		//Castling
@@ -560,7 +560,7 @@ class ChessGame {
 					throw new Exception('Cannot undo castle with non-existent castle.');
 				}
 				$board[$y][$castling['X']] = $board[$toY][$castling['ToX']];
-				$board[$y][$castling['X']]->setX($castling['X']);
+				$board[$y][$castling['X']]->x = $castling['X'];
 				$board[$toY][$castling['ToX']] = null;
 			}
 		} elseif ($moveInfo['EnPassant'] === true) {

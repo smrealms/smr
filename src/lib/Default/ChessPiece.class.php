@@ -8,41 +8,17 @@ class ChessPiece {
 	const KNIGHT = 5;
 	const PAWN = 6;
 
-	public $chessGameID;
-	public $accountID;
-	public $colour;
-	public $pieceID;
-	public $pieceNo;
-	private $x;
-	private $y;
-
-	public function __construct($chessGameID, $accountID, $colour, $pieceID, $x, $y, $pieceNo = -1) {
-		$this->chessGameID = $chessGameID;
-		$this->accountID = $accountID;
-		$this->colour = $colour;
-		$this->pieceID = $pieceID;
-		$this->pieceNo = $pieceNo;
-		$this->x = $x;
-		$this->y = $y;
+	public function __construct(
+		public int $chessGameID,
+		public int $accountID,
+		public string $colour,
+		public int $pieceID,
+		public int $x,
+		public int $y,
+		public int $pieceNo = -1) {
 	}
 
-	public function getX() {
-		return $this->x;
-	}
-
-	public function getY() {
-		return $this->y;
-	}
-
-	public function setX($x) {
-		$this->x = $x;
-	}
-
-	public function setY($y) {
-		$this->y = $y;
-	}
-
-	public function isSafeMove(array &$board, &$hasMoved, $toX = -1, $toY = -1) {
+	public function isSafeMove(array &$board, array &$hasMoved, int $toX = -1, int $toY = -1) : bool {
 		$x = $this->x;
 		$y = $this->y;
 		$moveInfo = ChessGame::movePiece($board, $hasMoved, $x, $y, $toX, $toY);
@@ -51,7 +27,7 @@ class ChessPiece {
 		return $safe;
 	}
 
-	public function isAttacking(array &$board, array &$hasMoved, $king, $x = -1, $y = -1) {
+	public function isAttacking(array &$board, array &$hasMoved, bool $king, int $x = -1, int $y = -1) : bool {
 		$moves = $this->getPossibleMoves($board, $hasMoved, null, true);
 		foreach ($moves as $move) {
 			$p = $board[$move[1]][$move[0]];
@@ -62,7 +38,7 @@ class ChessPiece {
 		return false;
 	}
 
-	public function getPossibleMoves(array &$board, array &$hasMoved, $forAccountID = null, $attackingCheck = false) {
+	public function getPossibleMoves(array &$board, array &$hasMoved, int $forAccountID = null, bool $attackingCheck = false) : array {
 		$moves = array();
 		if ($forAccountID == null || $this->accountID == $forAccountID) {
 			if ($this->pieceID == self::PAWN) {
@@ -189,7 +165,7 @@ class ChessPiece {
 		return $moves;
 	}
 
-	private function addMove($toX, $toY, array &$board, array &$moves, array &$hasMoved = null, $attackingCheck = true) {
+	private function addMove(int $toX, int $toY, array &$board, array &$moves, array &$hasMoved, bool $attackingCheck = true) : bool {
 		if (ChessGame::isValidCoord($toX, $toY, $board)) {
 			if (($board[$toY][$toX] == null || $board[$toY][$toX]->colour != $this->colour)) {
 				//We can only actually move to this position if it is safe to do so, however we can pass through it looking for a safe move so we still want to return true.
@@ -202,10 +178,7 @@ class ChessPiece {
 		return false;
 	}
 
-	public function promote($pawnPromotionPieceID, array &$board) {
-		if ($pawnPromotionPieceID == null) {
-			throw new Exception('Promotion piece cannot be null on a promote.');
-		}
+	public function promote(int $pawnPromotionPieceID, array &$board) : array {
 		$takenNos = array();
 		foreach ($board as $row) {
 			foreach ($row as $piece) {
@@ -221,15 +194,15 @@ class ChessPiece {
 		return array('PieceID' => $pawnPromotionPieceID, 'PieceNo' => $i);
 	}
 
-	public function getPieceLetter() {
+	public function getPieceLetter() : string {
 		return self::getLetterForPiece($this->pieceID, $this->colour);
 	}
 
-	public function getPieceSymbol() {
+	public function getPieceSymbol() : string {
 		return self::getSymbolForPiece($this->pieceID, $this->colour);
 	}
 
-	public static function getSymbolForPiece($pieceID, $colour) {
+	public static function getSymbolForPiece(int $pieceID, string $colour) : string {
 		return "&#" . (9811 + $pieceID + ($colour == ChessGame::PLAYER_WHITE ? 0 : 6)) . ";";
 	}
 
