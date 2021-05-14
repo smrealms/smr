@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function getMessageTypeNames($typeID = false) {
+function getMessageTypeNames(int $typeID = null) : array|string {
 	$typeNames = [
 		MSG_PLAYER => 'Player Messages',
 		MSG_PLANET => 'Planet Messages',
@@ -12,10 +12,10 @@ function getMessageTypeNames($typeID = false) {
 		MSG_CASINO => 'Casino Messages',
 		MSG_SENT => 'Sent Messages',
 	];
-	return $typeID === false ? $typeNames : $typeNames[$typeID];
+	return $typeID === null ? $typeNames : $typeNames[$typeID];
 }
 
-function getAdminBoxNames() {
+function getAdminBoxNames() : array {
 	return [
 		BOX_BUGS_AUTO => 'Automatic Bug Reports',
 		BOX_BUGS_REPORTED => 'Player Bug Reports',
@@ -26,7 +26,7 @@ function getAdminBoxNames() {
 	];
 }
 
-function getMessagePlayer($accountID, $gameID, $messageType = false) {
+function getMessagePlayer(int $accountID, int $gameID, int $messageType = null) : string|SmrPlayer {
 	if ($accountID == ACCOUNT_ID_PORT) {
 		$return = '<span class="yellow">Port Defenses</span>';
 	} else if ($accountID == ACCOUNT_ID_ADMIN) {
