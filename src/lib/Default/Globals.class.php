@@ -91,7 +91,6 @@ class Globals {
 																'Description' => self::$db->getField('race_description'),
 																'ImageLink' => 'images/race/race' . self::$db->getInt('race_id') . '.jpg',
 																'ImageHeadLink' => 'images/race/head/race' . self::$db->getInt('race_id') . '.jpg',
-																'ImageGraphLink' => 'images/race/graph/race' . self::$db->getInt('race_id') . '.gif',
 																);
 			}
 		}
@@ -108,10 +107,6 @@ class Globals {
 
 	public static function getRaceHeadImage($raceID) {
 		return Globals::getRaces()[$raceID]['ImageHeadLink'];
-		}
-
-	public static function getRaceGraphImage($raceID) {
-		return Globals::getRaces()[$raceID]['ImageGraphLink'];
 		}
 
 	public static function getColouredRaceNameForRace($raceID, $gameID, $fromRaceID, $linked = true) {
