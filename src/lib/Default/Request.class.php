@@ -87,38 +87,38 @@ class Request {
 	 * Note that this does not save the result in $var (see Smr\Session).
 	 */
 	public static function getVar(string $index, string $default = null) : string {
-		return self::getVarX($index, $default, 'get');
+		return self::getVarX($index, $default, [self::class, 'get']);
 	}
 
 	/**
 	 * Like getVar, but returns an int instead of a string.
 	 */
 	public static function getVarInt(string $index, int $default = null) : int {
-		return self::getVarX($index, $default, 'getInt');
+		return self::getVarX($index, $default, [self::class, 'getInt']);
 	}
 
 	/**
 	 * Like getVar, but returns an array of ints instead of a string.
 	 */
 	public static function getVarIntArray(string $index, array $default = null) : array {
-		return self::getVarX($index, $default, 'getIntArray');
+		return self::getVarX($index, $default, [self::class, 'getIntArray']);
 	}
 
 	/**
 	 * Helper function to avoid code duplication in getVar* functions.
 	 */
-	private static function getVarX($index, $default, $func) {
+	private static function getVarX(string $index, mixed $default, callable $func) : mixed {
 		$var = Smr\Session::getInstance()->getCurrentVar();
 		if (isset($var[$index])) {
 			// An index may be present in both var and request. This indicates
 			// a logical error in the code, unless the values are the same,
 			// which can occur if, e.g., player refreshes a page (this is OK).
-			if (self::has($index) && $var[$index] !== self::$func($index, $default)) {
+			if (self::has($index) && $var[$index] !== $func($index, $default)) {
 				throw new Exception('Index "' . $index . '" inconsistent between $var and $_REQUEST!');
 			}
 			return $var[$index];
 		}
-		return self::$func($index, $default);
+		return $func($index, $default);
 	}
 
 
