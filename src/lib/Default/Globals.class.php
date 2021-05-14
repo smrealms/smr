@@ -1,33 +1,29 @@
 <?php declare(strict_types=1);
 
 class Globals {
-	protected static $HIDDEN_PLAYERS = null;
-	protected static $LEVEL_REQUIREMENTS = null;
-	protected static $RACES = null;
-	protected static $GOODS = null;
-	protected static $HARDWARE_TYPES = null;
-	protected static $GAMES = array();
-	protected static $FEATURE_REQUEST_OPEN = null;
-	protected static $RACE_RELATIONS = array();
-	protected static $USER_RANKINGS = null;
-	protected static $SHIP_CLASSES = null;
-	protected static $AVAILABLE_LINKS = array();
-	protected static $db = null;
+	protected static array $HIDDEN_PLAYERS;
+	protected static array $LEVEL_REQUIREMENTS;
+	protected static array $RACES;
+	protected static array $GOODS;
+	protected static array $HARDWARE_TYPES;
+	protected static bool $FEATURE_REQUEST_OPEN;
+	protected static array $RACE_RELATIONS;
+	protected static array $USER_RANKINGS;
+	protected static array $SHIP_CLASSES;
+	protected static array $AVAILABLE_LINKS = [];
+	protected static Smr\Database $db;
 
-	private function __construct() {
-	}
-
-	protected static function initialiseDatabase() {
-		if (self::$db == null) {
+	protected static function initialiseDatabase() : void {
+		if (!isset(self::$db)) {
 			self::$db = Smr\Database::getInstance();
 		}
 	}
 
-	public static function getAvailableLinks() {
+	public static function getAvailableLinks() : array {
 		return self::$AVAILABLE_LINKS;
 	}
 
-	public static function canAccessPage($pageName, AbstractSmrPlayer $player, array $extraInfo) {
+	public static function canAccessPage(string $pageName, AbstractSmrPlayer $player, array $extraInfo) : void {
 		switch ($pageName) {
 			case 'AllianceMOTD':
 				if ($player->getAllianceID() != $extraInfo['AllianceID']) {
@@ -38,8 +34,8 @@ class Globals {
 		}
 	}
 
-	public static function getHiddenPlayers() {
-		if (self::$HIDDEN_PLAYERS == null) {
+	public static function getHiddenPlayers() : array {
+		if (!isset(self::$HIDDEN_PLAYERS)) {
 			self::initialiseDatabase();
 			self::$db->query('SELECT account_id FROM hidden_players');
 			self::$HIDDEN_PLAYERS = array(0); //stop errors
@@ -50,7 +46,7 @@ class Globals {
 		return self::$HIDDEN_PLAYERS;
 	}
 
-	public static function getGalacticPostEditorIDs($gameID) {
+	public static function getGalacticPostEditorIDs(int $gameID) : array {
 		self::initialiseDatabase();
 		$editorIDs = [];
 		self::$db->query('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . self::$db->escapeNumber($gameID));
@@ -60,8 +56,8 @@ class Globals {
 		return $editorIDs;
 	}
 
-	public static function getLevelRequirements() {
-		if (self::$LEVEL_REQUIREMENTS == null) {
+	public static function getLevelRequirements() : array {
+		if (!isset(self::$LEVEL_REQUIREMENTS)) {
 			self::initialiseDatabase();
 			self::$LEVEL_REQUIREMENTS = array();
 
@@ -77,8 +73,8 @@ class Globals {
 		return self::$LEVEL_REQUIREMENTS;
 	}
 
-	public static function getRaces() {
-		if (self::$RACES == null) {
+	public static function getRaces() : array {
+		if (!isset(self::$RACES)) {
 			self::initialiseDatabase();
 			self::$RACES = array();
 
@@ -97,24 +93,24 @@ class Globals {
 		return self::$RACES;
 	}
 
-	public static function getRaceName($raceID) {
+	public static function getRaceName(int $raceID) : string {
 		return Globals::getRaces()[$raceID]['Race Name'];
 	}
 
-	public static function getRaceImage($raceID) {
+	public static function getRaceImage(int $raceID) : string {
 		return Globals::getRaces()[$raceID]['ImageLink'];
-		}
+	}
 
-	public static function getRaceHeadImage($raceID) {
+	public static function getRaceHeadImage(int $raceID) : string {
 		return Globals::getRaces()[$raceID]['ImageHeadLink'];
-		}
+	}
 
-	public static function getColouredRaceNameForRace($raceID, $gameID, $fromRaceID, $linked = true) {
+	public static function getColouredRaceNameForRace(int $raceID, int $gameID, int $fromRaceID, bool $linked = true) : string {
 		$raceRelations = Globals::getRaceRelations($gameID, $fromRaceID);
 		return self::getColouredRaceName($raceID, $raceRelations[$raceID], $linked);
 	}
 
-	public static function getColouredRaceName($raceID, $relations, $linked = true) {
+	public static function getColouredRaceName(int $raceID, int $relations, bool $linked = true) : string {
 		$raceName = get_colored_text($relations, Globals::getRaceName($raceID));
 		if ($linked === true) {
 			$container = Page::create('skeleton.php', 'council_list.php', array('race_id' => $raceID));
@@ -123,8 +119,8 @@ class Globals {
 		return $raceName;
 	}
 
-	public static function getGoods() {
-		if (self::$GOODS == null) {
+	public static function getGoods() : array {
+		if (!isset(self::$GOODS)) {
 			self::initialiseDatabase();
 			self::$GOODS = array();
 
@@ -145,18 +141,20 @@ class Globals {
 		}
 		return self::$GOODS;
 	}
-	public static function getGood($goodID) {
+
+	public static function getGood(int $goodID) : array {
 		return Globals::getGoods()[$goodID];
 	}
-	public static function getGoodName($goodID) {
+
+	public static function getGoodName(int $goodID) : string {
 		if ($goodID == GOODS_NOTHING) {
 			return 'Nothing';
 		}
 		return Globals::getGoods()[$goodID]['Name'];
 	}
 
-	public static function getHardwareTypes($hardwareTypeID = false) {
-		if (self::$HARDWARE_TYPES == null) {
+	public static function getHardwareTypes(int $hardwareTypeID = null) : array {
+		if (!isset(self::$HARDWARE_TYPES)) {
 			self::initialiseDatabase();
 			self::$HARDWARE_TYPES = array();
 
@@ -171,21 +169,21 @@ class Globals {
 																			);
 			}
 		}
-		if ($hardwareTypeID === false) {
+		if ($hardwareTypeID === null) {
 			return self::$HARDWARE_TYPES;
 		}
 		return self::$HARDWARE_TYPES[$hardwareTypeID];
 	}
 
-	public static function getHardwareName($hardwareTypeID) {
+	public static function getHardwareName(int $hardwareTypeID) : string {
 		return Globals::getHardwareTypes()[$hardwareTypeID]['Name'];
 	}
 
-	public static function getHardwareCost($hardwareTypeID) {
+	public static function getHardwareCost(int $hardwareTypeID) : int {
 		return Globals::getHardwareTypes()[$hardwareTypeID]['Cost'];
 	}
 
-	public static function isValidGame($gameID) {
+	public static function isValidGame(int $gameID) : bool {
 		try {
 			SmrGame::getGame($gameID);
 			return true;
@@ -194,15 +192,12 @@ class Globals {
 		}
 	}
 
-	public static function getGameType($gameID) {
-		if (self::isValidGame($gameID)) {
-			return SmrGame::getGame($gameID)->getGameType();
-		}
-		return 0;
+	public static function getGameType(int $gameID) : string {
+		return SmrGame::getGame($gameID)->getGameType();
 	}
 
-	public static function isFeatureRequestOpen() {
-		if (self::$FEATURE_REQUEST_OPEN == null) {
+	public static function isFeatureRequestOpen() : bool {
+		if (!isset(self::$FEATURE_REQUEST_OPEN)) {
 			self::initialiseDatabase();
 			self::$db->query('SELECT open FROM open_forms WHERE type=\'FEATURE\'');
 			self::$db->nextRecord();
@@ -212,11 +207,7 @@ class Globals {
 		return self::$FEATURE_REQUEST_OPEN;
 	}
 
-	public static function getRaceRelations($gameID, $raceID) {
-		if (!isset(self::$RACE_RELATIONS[$gameID])) {
-			self::$RACE_RELATIONS[$gameID] = array();
-		}
-
+	public static function getRaceRelations(int $gameID, int $raceID) : array {
 		if (!isset(self::$RACE_RELATIONS[$gameID][$raceID])) {
 			self::initialiseDatabase();
 			//get relations
@@ -237,8 +228,8 @@ class Globals {
 	 * If specified, returns the Ship Class Name associated with the given ID.
 	 * Otherwise, returns an array of all Ship Class Names.
 	 */
-	public static function getShipClass($shipClassID = null) {
-		if (is_null(self::$SHIP_CLASSES)) {
+	public static function getShipClass(int $shipClassID = null) : array|string {
+		if (!isset(self::$SHIP_CLASSES)) {
 			self::initialiseDatabase();
 			self::$db->query('SELECT * FROM ship_class');
 			while (self::$db->nextRecord()) {
@@ -251,7 +242,7 @@ class Globals {
 		return self::$SHIP_CLASSES[$shipClassID];
 	}
 
-	public static function getUserRanking() {
+	public static function getUserRanking() : array {
 		if (!isset(self::$USER_RANKINGS)) {
 			self::initialiseDatabase();
 			self::$USER_RANKINGS = array();
@@ -263,51 +254,51 @@ class Globals {
 		return self::$USER_RANKINGS;
 	}
 
-	public static function getFeatureRequestHREF() {
+	public static function getFeatureRequestHREF() : string {
 		return Page::create('skeleton.php', 'feature_request.php')->href();
 	}
 
-	public static function getCurrentSectorHREF() {
+	public static function getCurrentSectorHREF() : string {
 		return self::$AVAILABLE_LINKS['CurrentSector'] = Page::create('skeleton.php', 'current_sector.php')->href();
 	}
 
-	public static function getLocalMapHREF() {
+	public static function getLocalMapHREF() : string {
 		return self::$AVAILABLE_LINKS['LocalMap'] = Page::create('skeleton.php', 'map_local.php')->href();
 	}
 
-	public static function getCurrentPlayersHREF() {
+	public static function getCurrentPlayersHREF() : string {
 		return self::$AVAILABLE_LINKS['CurrentPlayers'] = Page::create('skeleton.php', 'current_players.php')->href();
 	}
 
-	public static function getTradeHREF() {
+	public static function getTradeHREF() : string {
 		return self::$AVAILABLE_LINKS['EnterPort'] = Page::create('skeleton.php', 'shop_goods.php')->href();
 	}
 
-	public static function getAttackTraderHREF($accountID) {
+	public static function getAttackTraderHREF(int $accountID) : string {
 		$container = Page::create('trader_attack_processing.php');
 		$container['target'] = $accountID;
 		return self::$AVAILABLE_LINKS['AttackTrader'] = $container->href();
 	}
 
-	public static function getPodScreenHREF() {
+	public static function getPodScreenHREF() : string {
 		return Page::create('death_processing.php')->href();
 	}
 
-	public static function getBetaFunctionsHREF() { //BETA
+	public static function getBetaFunctionsHREF() : string { //BETA
 		return Page::create('skeleton.php', 'beta_functions.php')->href();
 	}
 
-	public static function getBugReportProcessingHREF() {
+	public static function getBugReportProcessingHREF() : string {
 		return Page::create('bug_report_processing.php')->href();
 	}
 
-	public static function getWeaponReorderHREF($weaponOrderID, $direction) {
+	public static function getWeaponReorderHREF(int $weaponOrderID, string $direction) : string {
 		$container = Page::create('weapon_reorder_processing.php');
 		$container[$direction] = $weaponOrderID;
 		return $container->href();
 	}
 
-	public static function getSmrFileCreateHREF($adminCreateGameID = false) {
+	public static function getSmrFileCreateHREF(int $adminCreateGameID = null) : string {
 		$container = Page::create('skeleton.php', 'smr_file_create.php');
 		$container['AdminCreateGameID'] = $adminCreateGameID;
 		return $container->href();
@@ -330,39 +321,39 @@ class Globals {
 		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = $container->href();
 	}
 
-	public static function getPlotCourseHREF($fromSector = false, $toSector = false) {
-		if ($fromSector === false && $toSector === false) {
+	public static function getPlotCourseHREF(int $fromSector = null, int $toSector = null) : string {
+		if ($fromSector === null && $toSector === null) {
 			return self::$AVAILABLE_LINKS['PlotCourse'] = Page::create('skeleton.php', 'course_plot.php')->href();
 		} else {
 			return Page::create('course_plot_processing.php', '', array('from'=>$fromSector, 'to'=>$toSector))->href();
 		}
 	}
 
-	public static function getPlanetMainHREF() {
+	public static function getPlanetMainHREF() : string {
 		return Page::create('skeleton.php', 'planet_main.php')->href();
 	}
 
-	public static function getPlanetConstructionHREF() {
+	public static function getPlanetConstructionHREF() : string {
 		return Page::create('skeleton.php', 'planet_construction.php')->href();
 	}
 
-	public static function getPlanetDefensesHREF() {
+	public static function getPlanetDefensesHREF() : string {
 		return Page::create('skeleton.php', 'planet_defense.php')->href();
 	}
 
-	public static function getPlanetOwnershipHREF() {
+	public static function getPlanetOwnershipHREF() : string {
 		return Page::create('skeleton.php', 'planet_ownership.php')->href();
 	}
 
-	public static function getPlanetStockpileHREF() {
+	public static function getPlanetStockpileHREF() : string {
 		return Page::create('skeleton.php', 'planet_stockpile.php')->href();
 	}
 
-	public static function getPlanetFinancesHREF() {
+	public static function getPlanetFinancesHREF() : string {
 		return Page::create('skeleton.php', 'planet_financial.php')->href();
 	}
 
-	public static function getAllianceHREF($allianceID = null) {
+	public static function getAllianceHREF(int $allianceID = null) : string {
 		if ($allianceID > 0) {
 			return self::getAllianceMotdHREF($allianceID);
 		} else {
@@ -370,136 +361,130 @@ class Globals {
 		}
 	}
 
-	public static function getAllianceBankHREF($allianceID = null) {
+	public static function getAllianceBankHREF(int $allianceID = null) : string {
 		$container = Page::create('skeleton.php', 'bank_alliance.php');
-		if ($allianceID != null) {
-			$container['alliance_id'] = $allianceID;
-		}
+		$container['alliance_id'] = $allianceID;
 		return $container->href();
 	}
 
-	public static function getAllianceRosterHREF($allianceID = null) {
+	public static function getAllianceRosterHREF($allianceID = null) : string {
 		$container = Page::create('skeleton.php', 'alliance_roster.php');
-		if ($allianceID != null) {
-			$container['alliance_id'] = $allianceID;
-		}
+		$container['alliance_id'] = $allianceID;
 		return $container->href();
 	}
 
-	public static function getAllianceListHREF() {
+	public static function getAllianceListHREF() : string {
 		return Page::create('skeleton.php', 'alliance_list.php')->href();
 	}
 
-	public static function getAllianceNewsHREF($allianceID) {
+	public static function getAllianceNewsHREF(int $allianceID) : string {
 		return Page::create('skeleton.php', 'news_read_advanced.php', array('allianceID'=>$allianceID, 'submit' => 'Search For Alliance'))->href();
 	}
 
-	public static function getAllianceMotdHREF($allianceID) {
+	public static function getAllianceMotdHREF(int $allianceID) : string {
 		return Page::create('skeleton.php', 'alliance_mod.php', array('alliance_id'=>$allianceID))->href();
 	}
 
-	public static function getAllianceMessageHREF($allianceID) {
+	public static function getAllianceMessageHREF(int $allianceID) : string {
 		return Page::create('skeleton.php', 'alliance_broadcast.php', array('alliance_id'=>$allianceID))->href();
 	}
 
-	public static function getAllianceMessageBoardHREF($allianceID) {
+	public static function getAllianceMessageBoardHREF(int $allianceID) : string {
 		return Page::create('skeleton.php', 'alliance_message.php', array('alliance_id'=>$allianceID))->href();
 	}
 
-	public static function getAllianceForcesHREF($allianceID) {
+	public static function getAllianceForcesHREF(int $allianceID) : string {
 		return Page::create('skeleton.php', 'alliance_forces.php', array('alliance_id'=>$allianceID))->href();
 	}
 
-	public static function getAllianceOptionsHREF($allianceID) {
+	public static function getAllianceOptionsHREF(int $allianceID) : string {
 		return Page::create('skeleton.php', 'alliance_option.php', array('alliance_id'=>$allianceID))->href();
 	}
 
-	public static function getPlanetListHREF($allianceID) {
+	public static function getPlanetListHREF(int $allianceID) : string {
 		return Page::create('skeleton.php', 'planet_list.php', array('alliance_id'=>$allianceID))->href();
 	}
 
-	public static function getPlanetListFinancialHREF($allianceID) {
+	public static function getPlanetListFinancialHREF(int $allianceID) : string {
 		return Page::create('skeleton.php', 'planet_list_financial.php', array('alliance_id'=>$allianceID))->href();
 	}
 
-	public static function getViewMessageBoxesHREF() {
+	public static function getViewMessageBoxesHREF() : string {
 		return Page::create('skeleton.php', 'message_box.php')->href();
 	}
 
-	public static function getSendGlobalMessageHREF() {
+	public static function getSendGlobalMessageHREF() : string {
 		return Page::create('skeleton.php', 'message_send.php')->href();
 	}
 
-	public static function getManageBlacklistHREF() {
+	public static function getManageBlacklistHREF() : string {
 		return Page::create('skeleton.php', 'message_blacklist.php')->href();
 	}
 
-	public static function getSendCouncilMessageHREF($raceID) {
+	public static function getSendCouncilMessageHREF(int $raceID) : string {
 		$container = Page::create('skeleton.php', 'council_send_message.php');
 		$container['race_id'] = $raceID;
 		$container['folder_id'] = MSG_POLITICAL;
 		return $container->href();
 	}
 
-	public static function getTraderStatusHREF() {
+	public static function getTraderStatusHREF() : string {
 		return Page::create('skeleton.php', 'trader_status.php')->href();
 	}
 
-	public static function getCouncilHREF($raceID = false) {
+	public static function getCouncilHREF(int $raceID = null) : string {
 		$container = Page::create('skeleton.php', 'council_list.php');
-		if ($raceID !== false) {
-			$container['race_id'] = $raceID;
-		}
+		$container['race_id'] = $raceID;
 		return $container->href();
 	}
 
-	public static function getTraderRelationsHREF() {
+	public static function getTraderRelationsHREF() : string {
 		return Page::create('skeleton.php', 'trader_relations.php')->href();
 	}
 
-	public static function getTraderBountiesHREF() {
+	public static function getTraderBountiesHREF() : string {
 		return Page::create('skeleton.php', 'trader_bounties.php')->href();
 	}
 
-	public static function getPoliticsHREF() {
+	public static function getPoliticsHREF() : string {
 		return Page::create('skeleton.php', 'council_list.php')->href();
 	}
 
-	public static function getCasinoHREF() {
+	public static function getCasinoHREF() : string {
 		return Page::create('skeleton.php', 'chess.php')->href();
 	}
 
-	public static function getChessHREF() {
+	public static function getChessHREF() : string {
 		return Page::create('skeleton.php', 'chess.php')->href();
 	}
 
-	public static function getChessCreateHREF() {
+	public static function getChessCreateHREF() : string {
 		return Page::create('chess_create_processing.php')->href();
 	}
 
-	public static function getBarMainHREF() {
+	public static function getBarMainHREF() : string {
 		$container = Page::create('skeleton.php', 'bar_main.php');
 		$container->addVar('LocationID');
 		return $container->href();
 	}
 
-	public static function getBarLottoPlayHREF() {
+	public static function getBarLottoPlayHREF() : string {
 		$container = Page::create('skeleton.php', 'bar_lotto_buy.php');
 		$container->addVar('LocationID');
 		return $container->href();
 	}
 
-	public static function getBarBlackjackHREF() {
+	public static function getBarBlackjackHREF() : string {
 		$container = Page::create('skeleton.php', 'bar_gambling_bet.php');
 		$container->addVar('LocationID');
 		return $container->href();
 	}
 
-	public static function getBuyMessageNotificationsHREF() {
+	public static function getBuyMessageNotificationsHREF() : string {
 		return Page::create('skeleton.php', 'buy_message_notifications.php')->href();
 	}
 
-	public static function getBuyShipNameHREF() {
+	public static function getBuyShipNameHREF() : string {
 		return Page::create('skeleton.php', 'buy_ship_name.php')->href();
 	}
 
@@ -511,15 +496,15 @@ class Globals {
 		];
 	}
 
-	public static function getSectorBBLink($sectorID) {
+	public static function getSectorBBLink(int $sectorID) : string {
 		return '[sector=' . $sectorID . ']';
 	}
 
-	public static function getAvailableTemplates() {
+	public static function getAvailableTemplates() : array {
 		return array_keys(CSS_URLS);
 	}
 
-	public static function getAvailableColourSchemes($templateName) {
+	public static function getAvailableColourSchemes(string $templateName) : array {
 		return array_keys(CSS_COLOUR_URLS[$templateName]);
 	}
 
@@ -528,7 +513,7 @@ class Globals {
 	 * game data. Array keys are database names and values are the columns in
 	 * the `account` table with the linked historical account ID's.
 	 */
-	public static function getHistoryDatabases() {
+	public static function getHistoryDatabases() : array {
 		if (defined('HISTORY_DATABASES')) {
 			return HISTORY_DATABASES;
 		} else {
