@@ -43,11 +43,9 @@ require_once('../bootstrap.php');
 
 								<h2>Board of Directors</h2>
 								<p>
-									President: Celina H&ouml;fner<br/>
-									Vice President: Clemens Riese<br/>
-									Vice President: Jannik Hahn<br/>
-									Treasurer: Alexander Detsch<br/>
-									Vice Treasurer: Adrian Schollmeyer<br/><br/>
+									President: Charly Schmidt<br/>
+									Vice President: Markus Blank<br/>
+									Treasurer: Adrian Schollmeyer<br/>
 									Register court: Amtsgericht Ilmenau<br/>
 									Registration number: 120483 (former: 483)
 								</p>
