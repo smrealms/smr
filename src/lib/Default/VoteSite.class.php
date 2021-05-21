@@ -5,15 +5,12 @@
  */
 class VoteSite {
 
-	private $linkID;
-	private $data;
-
 	// MPOGD no longer exists
 	//1 => array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'base_url' => 'http://www.mpogd.com/games/game.asp?ID=1145'),
 	// OMGN no longer do voting - the link actually just redirects to archive site.
 	//2 => array('default_img' => 'omgn.png', 'star_img' => 'omgn_vote.png', 'base_url' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30'),
 
-	private static function getAllSiteData() {
+	private static function getAllSiteData() : array {
 		// This can't be a static/constant attribute due to `url_func` closures.
 		// NOTE: array keys (a.k.a. link ID's) should never be changed!
 		return array(
@@ -41,7 +38,7 @@ class VoteSite {
 		);
 	}
 
-	public static function getAllSites() {
+	public static function getAllSites() : array {
 		static $ALL_SITES;
 		if (!isset($ALL_SITES)) {
 			$ALL_SITES = array(); // ensure this is set
@@ -56,7 +53,7 @@ class VoteSite {
 	 * Returns the earliest time (in seconds) until free turns
 	 * are available across all voting sites.
 	 */
-	public static function getMinTimeUntilFreeTurns($accountID) {
+	public static function getMinTimeUntilFreeTurns(int $accountID) : int {
 		$minWait = [];
 		foreach (self::getAllSites() as $site) {
 			if ($site->givesFreeTurns()) {
@@ -66,16 +63,15 @@ class VoteSite {
 		return min($minWait);
 	}
 
-	private function __construct($linkID, $siteData) {
-		$this->linkID = $linkID;
-		$this->data = $siteData;
-	}
+	private function __construct(
+		private int $linkID,
+		private array $data) {}
 
 	/**
 	 * Does this VoteSite have a voting callback that can be used
 	 * to award free turns?
 	 */
-	public function givesFreeTurns() {
+	public function givesFreeTurns() : bool {
 		return isset($this->data['img_star']);
 	}
 
@@ -83,7 +79,7 @@ class VoteSite {
 	 * Time until the account can get free turns from voting at this site.
 	 * If the time is 0, this site is eligible for free turns.
 	 */
-	public function getTimeUntilFreeTurns($accountID) {
+	public function getTimeUntilFreeTurns(int $accountID) : int {
 		if (!$this->givesFreeTurns()) {
 			throw new Exception('This vote site cannot award free turns!');
 		}
@@ -111,14 +107,14 @@ class VoteSite {
 	/**
 	 * Returns true if account can currently receive free turns at this site.
 	 */
-	private function freeTurnsReady($accountID, $gameID) {
+	private function freeTurnsReady(int $accountID, int $gameID) : bool {
 		return $this->givesFreeTurns() && $gameID != 0 && $this->getTimeUntilFreeTurns($accountID) <= 0;
 	}
 
 	/**
 	 * Returns the image to display for this voting site.
 	 */
-	public function getLinkImg($accountID, $gameID) {
+	public function getLinkImg(int $accountID, int $gameID) : string {
 		if ($this->freeTurnsReady($accountID, $gameID)) {
 			return $this->data['img_star'];
 		} else {
@@ -129,7 +125,7 @@ class VoteSite {
 	/**
 	 * Returns the URL that should be used for this voting site.
 	 */
-	public function getLinkUrl($accountID, $gameID) {
+	public function getLinkUrl(int $accountID, int $gameID) : string {
 		$baseUrl = $this->data['url_base'];
 		if ($this->freeTurnsReady($accountID, $gameID)) {
 			return $this->data['url_func']($baseUrl, $accountID, $gameID, $this->linkID);
@@ -142,16 +138,15 @@ class VoteSite {
 	 * Returns the SN to redirect the current page to if free turns are
 	 * available; otherwise, returns false.
 	 */
-	public function getSN($accountID, $gameID) {
-		if ($this->freeTurnsReady($accountID, $gameID)) {
-			// This page will prepare the account for the voting callback.
-			$container = Page::create('vote_link.php');
-			$container['link_id'] = $this->linkID;
-			$container['can_get_turns'] = true;
-			return $container->href(true);
-		} else {
+	public function getSN(int $accountID, int $gameID) : string|false {
+		if (!$this->freeTurnsReady($accountID, $gameID)) {
 			return false;
 		}
+		// This page will prepare the account for the voting callback.
+		$container = Page::create('vote_link.php');
+		$container['link_id'] = $this->linkID;
+		$container['can_get_turns'] = true;
+		return $container->href(true);
 	}
 
 }
