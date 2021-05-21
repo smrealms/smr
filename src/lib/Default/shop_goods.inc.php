@@ -1,21 +1,5 @@
 <?php declare(strict_types=1);
 
-function checkPortTradeable($port, $player) {
-	if ($port->getSectorID() != $player->getSectorID()) {
-		return 'That port is not in this sector!';
-	}
-	if (!$port->exists()) {
-		return 'There is no port in this sector!';
-	}
-	if ($player->getRelation($port->getRaceID()) <= RELATIONS_WAR) {
-		return 'We will not trade with our enemies!';
-	}
-	if ($port->getReinforceTime() > Smr\Epoch::time()) {
-		return 'We are still repairing damage caused during the last raid.';
-	}
-	return true;
-}
-
 function check_bargain_number(int $amount, int $ideal_price, int $offered_price, int $bargain_price, Page $container, SmrPlayer $player) : void {
 	$var = Smr\Session::getInstance()->getCurrentVar();
 

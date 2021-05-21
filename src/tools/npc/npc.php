@@ -218,9 +218,9 @@ function NPCStuff() {
 							$goodID = $sellRoute->getGoodID();
 
 							$port = $player->getSector()->getPort();
-							$tradeable = checkPortTradeable($port, $player);
+							$tradeRestriction = $port->getTradeRestriction($player);
 
-							if ($tradeable === true && $port->getGoodAmount($goodID) >= $ship->getCargo($sellRoute->getGoodID())) { //TODO: Sell what we can rather than forcing sell all at once?
+							if ($tradeRestriction === false && $port->getGoodAmount($goodID) >= $ship->getCargo($sellRoute->getGoodID())) { //TODO: Sell what we can rather than forcing sell all at once?
 								//Sell goods
 								debug('Sell Goods');
 								processContainer(tradeGoods($goodID, $player, $port));
@@ -246,9 +246,9 @@ function NPCStuff() {
 						$goodID = $buyRoute->getGoodID();
 
 						$port = $player->getSector()->getPort();
-						$tradeable = checkPortTradeable($port, $player);
+						$tradeRestriction = $port->getTradeRestriction($player);
 
-						if ($tradeable === true && $port->getGoodAmount($goodID) >= $ship->getEmptyHolds()) { //Buy goods
+						if ($tradeRestriction === false && $port->getGoodAmount($goodID) >= $ship->getEmptyHolds()) { //Buy goods
 							debug('Buy Goods');
 							processContainer(tradeGoods($goodID, $player, $port));
 						} else {

@@ -966,6 +966,22 @@ class AbstractSmrPort {
 		$this->setArmour($this->getArmour() - $number);
 	}
 
+	public function getTradeRestriction(SmrPlayer $player) : string|false {
+		if (!$this->exists()) {
+			return 'There is no port in this sector!';
+		}
+		if ($this->getSectorID() != $player->getSectorID()) {
+			return 'That port is not in this sector!';
+		}
+		if ($player->getRelation($this->getRaceID()) <= RELATIONS_WAR) {
+			return 'We will not trade with our enemies!';
+		}
+		if ($this->isUnderAttack()) {
+			return 'We are still repairing damage caused during the last raid.';
+		}
+		return false;
+	}
+
 	public function getIdealPrice(int $goodID, string $transactionType, int $numGoods, int $relations) : int {
 		$supply = $this->getGoodAmount($goodID);
 		$dist = $this->getGoodDistance($goodID);
