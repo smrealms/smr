@@ -757,14 +757,18 @@ class ChessGame {
 		return SmrPlayer::getPlayer($this->getColourID($colour), $this->getGameID());
 	}
 
-	public function getColourForAccountID(int $accountID) : string|false {
-		if ($accountID == $this->getWhiteID()) {
-			return self::PLAYER_WHITE;
-		}
-		if ($accountID == $this->getBlackID()) {
-			return self::PLAYER_BLACK;
-		}
-		return false;
+	public function getColourForAccountID(int $accountID) : string {
+		return match($accountID) {
+			$this->getWhiteID() => self::PLAYER_WHITE,
+			$this->getBlackID() => self::PLAYER_BLACK,
+		};
+	}
+
+	/**
+	 * Is the given account ID one of the two players of this game?
+	 */
+	public function isPlayer(int $accountID) : bool {
+		return $accountID === $this->getWhiteID() || $accountID === $this->getBlackID();
 	}
 
 	public function getEndDate() : ?int {
@@ -838,7 +842,7 @@ class ChessGame {
 	}
 
 	public function resign(int $accountID) : int {
-		if ($this->hasEnded() || !$this->getColourForAccountID($accountID)) {
+		if ($this->hasEnded() || !$this->isPlayer($accountID)) {
 			throw new Exception('Invalid resign conditions');
 		}
 		// If only 1 person has moved then just end the game.
