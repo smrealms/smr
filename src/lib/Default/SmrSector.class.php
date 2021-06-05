@@ -16,7 +16,7 @@ class SmrSector {
 	protected int $battles;
 	protected int $galaxyID;
 	protected array $visited = [];
-	protected array $links;
+	protected array $links = [];
 	protected int $warp;
 
 	protected bool $hasChanged = false;
@@ -112,7 +112,6 @@ class SmrSector {
 			$this->galaxyID = $db->getInt('galaxy_id');
 			$this->battles = $db->getInt('battles');
 
-			$this->links = array();
 			if ($db->getInt('link_up')) {
 				$this->links['Up'] = $db->getInt('link_up');
 			}
@@ -128,7 +127,6 @@ class SmrSector {
 			$this->warp = $db->getInt('warp');
 		} elseif ($create) {
 			$this->battles = 0;
-			$this->links = array();
 			$this->warp = 0;
 			$this->isNew = true;
 			return;
@@ -328,9 +326,6 @@ class SmrSector {
 
 	public function getNumberOfLinks() : int {
 		$num = 0;
-		if (!is_array($this->getLinks())) {
-			return $num;
-		}
 		foreach ($this->getLinks() as $link) {
 			if ($link !== 0) {
 				$num++;
