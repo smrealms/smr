@@ -204,7 +204,7 @@ function create_error(string $message) : void {
 }
 
 function create_link(Page|string $container, string $text, string $class = null) : string {
-	return '<a' . ($class == null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($container) ? $container : $container->href()) . '">' . $text . '</a>';
+	return '<a' . ($class === null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($container) ? $container : $container->href()) . '">' . $text . '</a>';
 }
 
 function create_submit_link(Page $container, string $text) : string {
@@ -212,7 +212,7 @@ function create_submit_link(Page $container, string $text) : string {
 }
 
 function get_colored_text_range(float $value, float $maxValue, string $text = null, float $minValue = 0, string $type = 'Game', string $return_type = 'Normal') : string {
-	if ($text == null) {
+	if ($text === null) {
 		$text = number_format($value);
 	}
 	if ($maxValue - $minValue == 0) {

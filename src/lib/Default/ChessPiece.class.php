@@ -40,18 +40,18 @@ class ChessPiece {
 
 	public function getPossibleMoves(array &$board, array &$hasMoved, int $forAccountID = null, bool $attackingCheck = false) : array {
 		$moves = array();
-		if ($forAccountID == null || $this->accountID == $forAccountID) {
+		if ($forAccountID === null || $this->accountID == $forAccountID) {
 			if ($this->pieceID == self::PAWN) {
 				$dirY = $this->colour == ChessGame::PLAYER_BLACK ? 1 : -1;
 				$moveY = $this->y + $dirY;
 				//Pawn forward movement is not attacking - so don't check it if doing an attacking check.
 				if (!$attackingCheck) {
-					if (ChessGame::isValidCoord($this->x, $moveY, $board) && $board[$moveY][$this->x] == null && $this->isSafeMove($board, $hasMoved, $this->x, $moveY)) {
+					if (ChessGame::isValidCoord($this->x, $moveY, $board) && $board[$moveY][$this->x] === null && $this->isSafeMove($board, $hasMoved, $this->x, $moveY)) {
 						$moves[] = array($this->x, $moveY);
 					}
 					$doubleMoveY = $moveY + $dirY;
 					if ($this->y - $dirY == 0 || $this->y - $dirY * 2 == count($board)) { //Double move first move
-						if ($board[$moveY][$this->x] == null && $board[$doubleMoveY][$this->x] == null && $this->isSafeMove($board, $hasMoved, $this->x, $doubleMoveY)) {
+						if ($board[$moveY][$this->x] === null && $board[$doubleMoveY][$this->x] === null && $this->isSafeMove($board, $hasMoved, $this->x, $doubleMoveY)) {
 							$moves[] = array($this->x, $doubleMoveY);
 						}
 					}
@@ -78,13 +78,13 @@ class ChessPiece {
 				//Castling is not attacking - so don't check it if doing an attacking check.
 				if (!$attackingCheck && !$hasMoved[$this->colour][ChessPiece::KING] && !ChessGame::isPlayerChecked($board, $hasMoved, $this->colour)) {
 					if (!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] &&
-							ChessGame::isValidCoord($this->x - 1, $this->y, $board) && $board[$this->y][$this->x - 1] == null &&
-							ChessGame::isValidCoord($this->x - 3, $this->y, $board) && $board[$this->y][$this->x - 3] == null &&
+							ChessGame::isValidCoord($this->x - 1, $this->y, $board) && $board[$this->y][$this->x - 1] === null &&
+							ChessGame::isValidCoord($this->x - 3, $this->y, $board) && $board[$this->y][$this->x - 3] === null &&
 							$this->isSafeMove($board, $hasMoved, $this->x - 1, $this->y)) {
 						$this->addMove($this->x - 2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
 					}
 					if (!$hasMoved[$this->colour][ChessPiece::ROOK]['King'] &&
-							ChessGame::isValidCoord($this->x + 1, $this->y, $board) && $board[$this->y][$this->x + 1] == null &&
+							ChessGame::isValidCoord($this->x + 1, $this->y, $board) && $board[$this->y][$this->x + 1] === null &&
 							$this->isSafeMove($board, $hasMoved, $this->x + 1, $this->y)) {
 						$this->addMove($this->x + 2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
 					}
@@ -92,54 +92,54 @@ class ChessPiece {
 			} elseif ($this->pieceID == self::QUEEN) {
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(--$moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Left
+				while ($this->addMove(--$moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Left
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(++$moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Right
+				while ($this->addMove(++$moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Right
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove($moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up
+				while ($this->addMove($moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Up
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove($moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Down
+				while ($this->addMove($moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Down
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(--$moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up-Left
+				while ($this->addMove(--$moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Up-Left
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(++$moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up-Right
+				while ($this->addMove(++$moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Up-Right
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(--$moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Down-Left
+				while ($this->addMove(--$moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Down-Left
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(++$moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up-Left
+				while ($this->addMove(++$moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Up-Left
 			} elseif ($this->pieceID == self::ROOK) {
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(--$moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Left
+				while ($this->addMove(--$moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Left
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(++$moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Right
+				while ($this->addMove(++$moveX, $moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Right
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove($moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up
+				while ($this->addMove($moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Up
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove($moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Down
+				while ($this->addMove($moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Down
 			} elseif ($this->pieceID == self::BISHOP) {
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(--$moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up-Left
+				while ($this->addMove(--$moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Up-Left
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(++$moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up-Right
+				while ($this->addMove(++$moveX, --$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Up-Right
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(--$moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Down-Left
+				while ($this->addMove(--$moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Down-Left
 				$moveX = $this->x;
 				$moveY = $this->y;
-				while ($this->addMove(++$moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] == null); //Up-Left
+				while ($this->addMove(++$moveX, ++$moveY, $board, $moves, $hasMoved, $attackingCheck) && $board[$moveY][$moveX] === null); //Up-Left
 			} elseif ($this->pieceID == self::KNIGHT) {
 				$moveX = $this->x - 1;
 				$moveY = $this->y - 2;
@@ -167,9 +167,9 @@ class ChessPiece {
 
 	private function addMove(int $toX, int $toY, array &$board, array &$moves, array &$hasMoved, bool $attackingCheck = true) : bool {
 		if (ChessGame::isValidCoord($toX, $toY, $board)) {
-			if (($board[$toY][$toX] == null || $board[$toY][$toX]->colour != $this->colour)) {
+			if (($board[$toY][$toX] === null || $board[$toY][$toX]->colour != $this->colour)) {
 				//We can only actually move to this position if it is safe to do so, however we can pass through it looking for a safe move so we still want to return true.
-				if (($attackingCheck == true || $this->isSafeMove($board, $hasMoved, $toX, $toY))) {
+				if (($attackingCheck === true || $this->isSafeMove($board, $hasMoved, $toX, $toY))) {
 					$moves[] = array($toX, $toY);
 				}
 				return true;
