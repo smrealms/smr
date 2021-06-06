@@ -12,14 +12,14 @@ use Smr\Session;
 use SmrAccount;
 
 class Template {
-	private $data = array();
-	private $ignoreMiddle = false;
-	private $nestedIncludes = 0;
-	private $ajaxJS = array();
-	protected $jsAlerts = array();
-	private $displayCalled = false;
-	private $listjsInclude = null;
-	private $jsSources = [];
+	private array $data = [];
+	private bool $ignoreMiddle = false;
+	private int $nestedIncludes = 0;
+	private array $ajaxJS = [];
+	protected array $jsAlerts = [];
+	private bool $displayCalled = false;
+	private ?string $listjsInclude = null;
+	private array $jsSources = [];
 
 	/**
 	 * Return the Smr\Template in the DI container.
@@ -36,11 +36,11 @@ class Template {
 		}
 	}
 
-	public function hasTemplateVar($var) {
+	public function hasTemplateVar(string $var) : bool {
 		return isset($this->data[$var]);
 	}
 
-	public function assign($var, $value) {
+	public function assign(string $var, mixed $value) : void {
 		if (!isset($this->data[$var])) {
 			$this->data[$var] = $value;
 		} else {
@@ -49,7 +49,7 @@ class Template {
 		}
 	}
 
-	public function unassign($var) {
+	public function unassign(string $var) : void {
 		unset($this->data[$var]);
 	}
 
@@ -57,7 +57,7 @@ class Template {
 	 * Displays the template HTML. Stores any ajax-enabled elements for future
 	 * comparison, and outputs modified elements in XML for ajax if requested.
 	 */
-	public function display($templateName, $outputXml = false) {
+	public function display(string $templateName, bool $outputXml = false) : void {
 		// If we already started output buffering before calling `display`,
 		// we may have unwanted content in the buffer that we need to remove
 		// before we send the Content-Type headers below.
@@ -95,7 +95,7 @@ class Template {
 	}
 
 
-	protected function getTemplateLocation($templateName) {
+	protected function getTemplateLocation(string $templateName) : string {
 		$templateDir = TEMPLATES_DIR;
 		if (isset($this->data['ThisAccount']) && is_object($this->data['ThisAccount']) && $this->data['ThisAccount'] instanceof SmrAccount) {
 			$templateDir .= $this->data['ThisAccount']->getTemplate() . '/';
@@ -135,7 +135,7 @@ class Template {
 		}
 	}
 
-	protected function includeTemplate($templateName, array $assignVars = null) {
+	protected function includeTemplate(string $templateName, array $assignVars = null) : void {
 		if ($this->nestedIncludes > 15) {
 			throw new Exception('Nested more than 15 template includes, is something wrong?');
 		}
@@ -157,11 +157,11 @@ class Template {
 	 * input data (i.e. we don't want to AJAX update a form that they may
 	 * have already started filling out).
 	 */
-	protected function checkDisableAJAX($html) {
+	protected function checkDisableAJAX(string $html) : bool {
 		return preg_match('/<input (?![^>]*(submit|hidden|image))/i', $html) != 0;
 	}
 
-	protected function doDamageTypeReductionDisplay(&$damageTypes) {
+	protected function doDamageTypeReductionDisplay(int &$damageTypes) : void {
 		if ($damageTypes == 3) {
 			echo ', ';
 		} elseif ($damageTypes == 2) {
@@ -170,7 +170,7 @@ class Template {
 		$damageTypes--;
 	}
 
-	protected function doAn($wordAfter) {
+	protected function doAn(string $wordAfter) : void {
 		$char = strtoupper($wordAfter[0]);
 		if ($char == 'A' || $char == 'E' || $char == 'I' || $char == 'O' || $char == 'U') {
 			echo 'an';
@@ -182,14 +182,14 @@ class Template {
 	/**
 	 * Sets a listjs_include.js function to call at the end of the HTML body.
 	 */
-	public function setListjsInclude($func) {
+	public function setListjsInclude(string $func) : void {
 		$this->listjsInclude = $func;
 	}
 
 	/*
 	 * EVAL is special (well, will be when needed and implemented in the javascript).
 	 */
-	public function addJavascriptForAjax($varName, $obj) {
+	public function addJavascriptForAjax(string $varName, mixed $obj) {
 		if ($varName == 'EVAL') {
 			if (!isset($this->ajaxJS['EVAL'])) {
 				return $this->ajaxJS['EVAL'] = $obj;
@@ -203,7 +203,7 @@ class Template {
 		return $this->ajaxJS[$varName] = json_encode($obj);
 	}
 
-	protected function addJavascriptAlert($string) {
+	protected function addJavascriptAlert(string $string) : void {
 		$session = Session::getInstance();
 		if (!$session->addAjaxReturns('ALERT:' . $string, $string)) {
 			$this->jsAlerts[] = $string;
@@ -213,11 +213,11 @@ class Template {
 	/**
 	 * Registers a JS target for inclusion at the end of the HTML body.
 	 */
-	protected function addJavascriptSource($src) {
+	protected function addJavascriptSource(string $src) : void {
 		array_push($this->jsSources, $src);
 	}
 
-	protected function convertHtmlToAjaxXml($str, $returnXml) {
+	protected function convertHtmlToAjaxXml(string $str, bool $returnXml) : string {
 		if (empty($str)) {
 			return '';
 		}
@@ -298,7 +298,7 @@ class Template {
 		return $xml;
 	}
 
-	public function ignoreMiddle() {
+	public function ignoreMiddle() : void {
 		$this->ignoreMiddle = true;
 	}
 }
