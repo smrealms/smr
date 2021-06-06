@@ -152,8 +152,13 @@ class Template {
 		$this->nestedIncludes--;
 	}
 
+	/**
+	 * Check if the HTML includes input elements where the user is able to
+	 * input data (i.e. we don't want to AJAX update a form that they may
+	 * have already started filling out).
+	 */
 	protected function checkDisableAJAX($html) {
-		return preg_match('/<input' . '[^>]*' . '[^(submit)(hidden)(image)]' . '[^>]*' . '>/i', $html) != 0;
+		return preg_match('/<input (?![^>]*(submit|hidden|image))/i', $html) != 0;
 	}
 
 	protected function doDamageTypeReductionDisplay(&$damageTypes) {
