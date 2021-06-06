@@ -15,28 +15,28 @@ class WeightedRandom {
 
 	const WEIGHTING_CHANGE = 50; // as a percent
 
-	protected $db;
+	protected Smr\Database $db;
 
-	protected $gameID;
-	protected $accountID;
-	protected $type;
-	protected $typeID;
-	protected $weighting;
+	protected int $gameID;
+	protected int $accountID;
+	protected string $type;
+	protected int $typeID;
+	protected float $weighting;
 
-	protected $hasChanged = false;
+	protected bool $hasChanged = false;
 
-	public static function getWeightedRandom($gameID, $accountID, $type, $typeID, $forceUpdate = false) {
+	public static function getWeightedRandom(int $gameID, int $accountID, string $type, int $typeID, bool $forceUpdate = false) : self {
 		if ($forceUpdate || !isset(self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID])) {
 			self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID] = new WeightedRandom($gameID, $accountID, $type, $typeID);
 		}
 		return self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID];
 	}
 
-	public static function getWeightedRandomForPlayer(AbstractSmrPlayer $player, $type, $typeID, $forceUpdate = false) {
+	public static function getWeightedRandomForPlayer(AbstractSmrPlayer $player, string $type, int $typeID, bool $forceUpdate = false) : self {
 		return self::getWeightedRandom($player->getGameID(), $player->getAccountID(), $type, $typeID, $forceUpdate);
 	}
 
-	public static function saveWeightedRandoms() {
+	public static function saveWeightedRandoms() : void {
 		foreach (self::$CACHE_RANDOMS as $gameRandoms) {
 			foreach ($gameRandoms as $accountRandoms) {
 				foreach ($accountRandoms as $typeRandoms) {
@@ -48,7 +48,7 @@ class WeightedRandom {
 		}
 	}
 
-	protected function __construct($gameID, $accountID, $type, $typeID) {
+	protected function __construct(int $gameID, int $accountID, string $type, int $typeID) {
 		$this->gameID = $gameID;
 		$this->accountID = $accountID;
 		$this->type = $type;
@@ -63,23 +63,23 @@ class WeightedRandom {
 		}
 	}
 
-	public function getGameID() {
+	public function getGameID() : int {
 		return $this->gameID;
 	}
 
-	public function getAccountID() {
+	public function getAccountID() : int {
 		return $this->accountID;
 	}
 
-	public function getType() {
+	public function getType() : string {
 		return $this->type;
 	}
 
-	public function getTypeID() {
+	public function getTypeID() : int {
 		return $this->typeID;
 	}
 
-	public function getWeighting() {
+	public function getWeighting() : float {
 		return $this->weighting;
 	}
 
@@ -87,7 +87,7 @@ class WeightedRandom {
 	 * Given $successChance as the base percent chance that an event happens,
 	 * reduce that chance by the current weighting, and then check the result.
 	 */
-	public function flipWeightedCoin($successChance) : bool {
+	public function flipWeightedCoin(float $successChance) : bool {
 		// The weighting update formulas below only work in the range [0, 100].
 		$successChance = min(100, max(0, $successChance));
 
@@ -106,7 +106,7 @@ class WeightedRandom {
 		return $success;
 	}
 
-	public function update() {
+	public function update() : void {
 		if ($this->hasChanged === true) {
 			$this->db->query('REPLACE INTO weighted_random (game_id,account_id,type,type_id,weighting)
 							values

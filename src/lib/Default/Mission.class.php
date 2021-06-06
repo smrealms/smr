@@ -2,19 +2,19 @@
 
 class Mission {
 
-	public static function getAcceptHREF($missionID) {
+	public static function getAcceptHREF(int $missionID) : string {
 		return Page::create('mission_accept_processing.php', '', ['MissionID' => $missionID])->href();
 	}
 
-	public static function getDeclineHREF($missionID) {
+	public static function getDeclineHREF(int $missionID) : string {
 		return Page::create('mission_decline_processing.php', '', ['MissionID' => $missionID])->href();
 	}
 
-	public static function getAbandonHREF($missionID) {
+	public static function getAbandonHREF(int $missionID) : string {
 		return Page::create('mission_abandon_processing.php', '', ['MissionID' => $missionID])->href();
 	}
 
-	public static function getClaimRewardHREF($missionID) {
+	public static function getClaimRewardHREF(int $missionID) : string {
 		return Page::create('mission_claim_processing.php', '', ['MissionID' => $missionID])->href();
 	}
 

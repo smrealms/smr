@@ -1,25 +1,16 @@
 <?php declare(strict_types=1);
 
 class Council {
-	protected static $COUNCILS = array();
-	protected static $PRESIDENTS = array();
-	protected static $db = null;
-
-	private function __construct() {
-	}
-
-	protected static function initialiseDatabase() {
-		if (self::$db == null) {
-			self::$db = Smr\Database::getInstance();
-		}
-	}
+	protected static array $COUNCILS = [];
+	protected static array $PRESIDENTS = [];
+	protected static Smr\Database $db;
 
 	/**
 	 * Returns an array of Account ID's of the Council for this race.
 	 */
-	public static function getRaceCouncil($gameID, $raceID) {
+	public static function getRaceCouncil(int $gameID, int $raceID) : array {
 		if (!isset(self::$COUNCILS[$gameID][$raceID])) {
-			self::initialiseDatabase();
+			self::$db = Smr\Database::getInstance();
 			self::$COUNCILS[$gameID][$raceID] = array();
 			self::$PRESIDENTS[$gameID][$raceID] = false;
 
@@ -52,15 +43,12 @@ class Council {
 	/**
 	 * Returns the Account ID of the President for this race (or false if no President).
 	 */
-	public static function getPresidentID($gameID, $raceID) {
-		if (!isset(self::$PRESIDENTS[$gameID][$raceID])) {
-			self::initialiseDatabase();
-			self::getRaceCouncil($gameID, $raceID); // determines the president
-		}
+	public static function getPresidentID(int $gameID, int $raceID) : int|false {
+		self::getRaceCouncil($gameID, $raceID); // determines the president
 		return self::$PRESIDENTS[$gameID][$raceID];
 	}
 
-	public static function isOnCouncil($gameID, $raceID, $accountID) {
+	public static function isOnCouncil(int $gameID, int $raceID, int $accountID) : bool {
 		return in_array($accountID, self::getRaceCouncil($gameID, $raceID));
 	}
 }

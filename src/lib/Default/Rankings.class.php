@@ -1,9 +1,8 @@
 <?php declare(strict_types=1);
 
 class Rankings {
-	private function __construct() {}
 
-	public static function collectRaceRankings(Smr\Database $db, AbstractSmrPlayer $player) {
+	public static function collectRaceRankings(Smr\Database $db, AbstractSmrPlayer $player) : array {
 		$rankings = [];
 		$rank = 0;
 		while ($db->nextRecord()) {
@@ -28,7 +27,7 @@ class Rankings {
 		return $rankings;
 	}
 
-	public static function collectAllianceRankings(Smr\Database $db, AbstractSmrPlayer $player, $rank) {
+	public static function collectAllianceRankings(Smr\Database $db, AbstractSmrPlayer $player, int $rank) : array {
 		$rankings = array();
 		while ($db->nextRecord()) {
 			// increase rank counter
@@ -52,7 +51,7 @@ class Rankings {
 		return $rankings;
 	}
 
-	public static function collectRankings(Smr\Database $db, AbstractSmrPlayer $player, $rank) {
+	public static function collectRankings(Smr\Database $db, AbstractSmrPlayer $player, int $rank) : array {
 		$rankings = array();
 		while ($db->nextRecord()) {
 			// increase rank counter
@@ -106,7 +105,7 @@ class Rankings {
 		return self::collectAllianceRankings($db, $session->getPlayer(), $offset);
 	}
 
-	public static function calculateMinMaxRanks($ourRank, $totalRanks) {
+	public static function calculateMinMaxRanks(int $ourRank, int $totalRanks) : array {
 		$session = Smr\Session::getInstance();
 		$minRank = $session->getRequestVarInt('min_rank', $ourRank - 5);
 		$maxRank = $session->getRequestVarInt('max_rank', $ourRank + 5);

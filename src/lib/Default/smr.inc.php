@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function htmliseMessage($message) {
+function htmliseMessage(string $message) : string {
 	$message = htmlentities($message, ENT_COMPAT, 'utf-8');
 	$message = str_replace('&lt;br /&gt;', '<br />', $message);
 	return $message;
@@ -14,7 +14,7 @@ function parseBoolean($check) {
 	return (bool)$check;
 }
 
-function linkCombatLog($logID) {
+function linkCombatLog(int $logID) : string {
 	$container = Page::create('combat_log_viewer_verify.php');
 	$container['log_id'] = $logID;
 	return '<a href="' . $container->href() . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
@@ -138,16 +138,15 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 	return htmlspecialchars($tagParams['_tag']) . $tagContent . htmlspecialchars($tagParams['_endtag']);
 }
 
-function xmlify($str) {
-	$xml = htmlspecialchars($str, ENT_XML1, 'utf-8');
-	return $xml;
+function xmlify(string $str) : string {
+	return htmlspecialchars($str, ENT_XML1, 'utf-8');
 }
 
-function inify($text) {
+function inify(string $text) : string {
 	return str_replace(',', '', html_entity_decode($text));
 }
 
-function bbifyMessage($message, $noLinks = false) {
+function bbifyMessage(string $message, bool $noLinks = false) : string {
 	static $bbParser;
 	if (!isset($bbParser)) {
 		$bbParser = new \Nbbc\BBCode();
@@ -189,7 +188,7 @@ function bbifyMessage($message, $noLinks = false) {
 	return $message;
 }
 
-function create_error($message) {
+function create_error(string $message) : void {
 	$container = Page::create('skeleton.php', 'error.php');
 	$container['message'] = $message;
 	if (USING_AJAX) {
@@ -204,16 +203,16 @@ function create_error($message) {
 	$container->go();
 }
 
-function create_link(Page|string $container, $text, $class = null) {
-	return '<a' . ($class == null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($container) ? $container : $container->href()) . '">' . $text . '</a>';
+function create_link(Page|string $container, string $text, string $class = null) : string {
+	return '<a' . ($class === null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($container) ? $container : $container->href()) . '">' . $text . '</a>';
 }
 
-function create_submit_link(Page $container, $text) {
+function create_submit_link(Page $container, string $text) : string {
 	return '<a href="' . $container->href() . '" class="submitStyle">' . $text . '</a>';
 }
 
-function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, $type = 'Game', $return_type = 'Normal') {
-	if ($text == null) {
+function get_colored_text_range(float $value, float $maxValue, string $text = null, float $minValue = 0, string $type = 'Game', string $return_type = 'Normal') : string {
+	if ($text === null) {
 		$text = number_format($value);
 	}
 	if ($maxValue - $minValue == 0) {
@@ -257,13 +256,14 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 		}
 		return $colour . $text;
 	}
+	throw new Exception('Unknown type: ' . $type);
 }
 
-function get_colored_text($value, $text = null, $type = 'Game', $return_type = 'Normal') {
+function get_colored_text(float $value, string $text = null, string $type = 'Game', string $return_type = 'Normal') : string {
 	return get_colored_text_range($value, 300, $text, -300, $type, $return_type);
 }
 
-function word_filter($string) {
+function word_filter(string $string) : string {
 	static $words;
 
 	if (!is_array($words)) {
@@ -284,7 +284,7 @@ function word_filter($string) {
 }
 
 // choose correct pluralization based on amount
-function pluralise($word, $count = 0) {
+function pluralise(string $word, float $count = 0) : string {
 	if ($count == 1) {
 		return $word;
 	}
@@ -299,7 +299,7 @@ function pluralise($word, $count = 0) {
  * It is also responsible for setting most of the global variables
  * (see loader.php for the initialization of the globals).
  */
-function do_voodoo() {
+function do_voodoo() : void {
 	global $lock;
 
 	$session = Smr\Session::getInstance();
@@ -429,7 +429,7 @@ function do_voodoo() {
 //xdebug_dump_function_profile(2);
 
 // This is hackish, but without row level locking it's the best we can do
-function acquire_lock($sector) {
+function acquire_lock(int $sector) : bool {
 	global $lock, $locksFailed;
 
 	if ($lock) {
@@ -472,7 +472,7 @@ function acquire_lock($sector) {
 	return false;
 }
 
-function release_lock() {
+function release_lock() : void {
 	global $lock;
 
 	if ($lock) {
@@ -483,7 +483,7 @@ function release_lock() {
 	$lock = false;
 }
 
-function doTickerAssigns($template, $player, $db) {
+function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database $db) : void {
 	//any ticker news?
 	if ($player->hasTickers()) {
 		$ticker = array();
@@ -515,7 +515,7 @@ function doTickerAssigns($template, $player, $db) {
 	}
 }
 
-function doSkeletonAssigns($template, $db) {
+function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
 
@@ -742,7 +742,7 @@ function doSkeletonAssigns($template, $db) {
  * If seconds is zero, will return only "now".
  * If seconds is <60, will prefix "less than" or "<" (HTML-safe).
  */
-function format_time($seconds, $short = false) {
+function format_time(int $seconds, bool $short = false) : string {
 	if ($seconds == 0) {
 		return "now";
 	}
@@ -804,7 +804,7 @@ function format_time($seconds, $short = false) {
 	return $result;
 }
 
-function number_colour_format($number, $justSign = false) {
+function number_colour_format(float $number, bool $justSign = false) : string {
 	$formatted = '<span';
 	if ($number > 0) {
 		$formatted .= ' class="green">+';

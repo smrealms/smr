@@ -8,17 +8,8 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->hasGame() ? $session->getPlayer() : null;
 
-if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false) {
-	$gameID = $var['AdminCreateGameID'];
-} else {
-	$gameID = $player->getGameID();
-}
-
-if (isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false) {
-	$adminCreate = true;
-} else {
-	$adminCreate = false;
-}
+$gameID = $var['AdminCreateGameID'] ?? $player->getGameID();
+$adminCreate = isset($var['AdminCreateGameID']);
 
 // NOTE: If the format of this file is changed in an incompatible way,
 // make sure to update the SMR_FILE_VERSION!

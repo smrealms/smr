@@ -54,7 +54,7 @@ function modifyRelations(int $race_id_1, int $gameID) : void {
 
 }
 
-function checkPacts(int $race_id_1, int $gameID) {
+function checkPacts(int $race_id_1, int $gameID) : void {
 
 	$db = Smr\Database::getInstance();
 	$db2 = Smr\Database::getInstance();

@@ -11,9 +11,9 @@ $ship = $player->getShip();
 // create object from port we can work with
 $port = $player->getSectorPort();
 
-$tradeable = checkPortTradeable($port, $player);
-if ($tradeable !== true) {
-	create_error($tradeable);
+$tradeRestriction = $port->getTradeRestriction($player);
+if ($tradeRestriction !== false) {
+	create_error($tradeRestriction);
 }
 
 // topic

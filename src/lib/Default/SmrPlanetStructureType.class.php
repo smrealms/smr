@@ -98,28 +98,44 @@ class SmrPlanetStructureType {
 	/**
 	 * Return a list of possible planet structure types
 	 */
-	static function getTypes() {
+	static function getTypes() : array {
 		return array_keys(self::INFO);
 	}
 
 	// Functions that do not require the planet type to be known
-	public function structureID() { return $this->ID; }
-	public function name() { return self::INFO[$this->ID]['name']; }
-	public function image() { return self::INFO[$this->ID]['image']; }
-	public function tooltip() { return self::INFO[$this->ID]['tooltip']; }
-	public function summary() { return self::INFO[$this->ID]['summary']; }
-	public function goods() { return self::GOODS[$this->ID]; }
-	public function hardwareCost() {
-		if (isset(self::INFO[$this->ID]['hardware_cost'])) {
-			return self::INFO[$this->ID]['hardware_cost'];
-		} else {
-			return [];
-		}
+	public function structureID() : int {
+		return $this->ID;
+	}
+	public function name() : string {
+		return self::INFO[$this->ID]['name'];
+	}
+	public function image() : string {
+		return self::INFO[$this->ID]['image'];
+	}
+	public function tooltip() : string {
+		return self::INFO[$this->ID]['tooltip'];
+	}
+	public function summary() : string {
+		return self::INFO[$this->ID]['summary'];
+	}
+	public function goods() : array {
+		return self::GOODS[$this->ID];
+	}
+	public function hardwareCost() : array {
+		return self::INFO[$this->ID]['hardware_cost'] ?? [];
 	}
 
 	// Functions that require the planet type to be known
-	public function maxAmount() { return $this->planetTypeInfo['max_amount']; }
-	public function creditCost() { return $this->planetTypeInfo['credit_cost']; }
-	public function baseTime() { return $this->planetTypeInfo['base_time']; }
-	public function expGain() { return $this->planetTypeInfo['exp_gain']; }
+	public function maxAmount() : int {
+		return $this->planetTypeInfo['max_amount'];
+	}
+	public function creditCost() : int {
+		return $this->planetTypeInfo['credit_cost'];
+	}
+	public function baseTime() : int {
+		return $this->planetTypeInfo['base_time'];
+	}
+	public function expGain() : int {
+		return $this->planetTypeInfo['exp_gain'];
+	}
 }

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function redirectIfDisabled(SmrAccount $account) {
+function redirectIfDisabled(SmrAccount $account) : array|false {
 	// We skip the redirect for specific disabled reasons, because they are
 	// handled elsewhere.
 	$skipReasons = [

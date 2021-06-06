@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function getHofCategories($hofTypes, $game_id, $account_id) {
+function getHofCategories(array $hofTypes, ?int $game_id, int $account_id) : array {
 	$var = Smr\Session::getInstance()->getCurrentVar();
 	$categories = [];
 	foreach ($hofTypes as $type => $value) {
@@ -51,7 +51,7 @@ function getHofCategories($hofTypes, $game_id, $account_id) {
  * - alliance stats in live games for players not in your alliance
  * - private stats for players who are not the current player
  */
-function applyHofVisibilityMask($amount, $vis, $gameID, $accountID) {
+function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $accountID) : string|float {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
 	if (($vis == HOF_PRIVATE && $account->getAccountID() != $accountID) ||
@@ -65,7 +65,7 @@ function applyHofVisibilityMask($amount, $vis, $gameID, $accountID) {
 	}
 }
 
-function getHofRank($view, $viewType, $accountID, $gameID) {
+function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID) : array {
 	$db = Smr\Database::getInstance();
 	// If no game specified, show total amount from completed games only
 	$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Smr\Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
@@ -109,7 +109,7 @@ function getHofRank($view, $viewType, $accountID, $gameID) {
 	return $rank;
 }
 
-function displayHOFRow($rank, $accountID, $amount) {
+function displayHOFRow(int $rank, int $accountID, float|string $amount) : string {
 	$var = Smr\Session::getInstance()->getCurrentVar();
 
 	$account = Smr\Session::getInstance()->getAccount();
@@ -148,7 +148,7 @@ function displayHOFRow($rank, $accountID, $amount) {
 	return $return;
 }
 
-function buildBreadcrumb(&$var, &$hofTypes, $hofName) {
+function buildBreadcrumb(Page $var, array &$hofTypes, string $hofName) : string {
 	$container = Page::copy($var);
 	if (isset($container['type'])) {
 		unset($container['type']);
