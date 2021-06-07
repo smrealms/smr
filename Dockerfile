@@ -16,7 +16,7 @@ RUN rm -rf node_modules
 
 #---------------------------
 
-FROM php:8.0.6-apache
+FROM php:8.0.7-apache
 RUN apt-get --quiet=2 update \
 	&& apt-get --quiet=2 install zip unzip \
 	&& rm -rf /var/lib/apt/lists/* \
