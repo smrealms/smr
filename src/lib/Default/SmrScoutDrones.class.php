@@ -6,7 +6,6 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 	public function __construct(int $numberOfSDs) {
 		$this->numberOfSDs = $numberOfSDs;
 		$this->name = 'Scout Drones';
-		$this->maxDamage = 20;
 		$this->shieldDamage = 20;
 		$this->armourDamage = 20;
 		$this->accuracy = 100;

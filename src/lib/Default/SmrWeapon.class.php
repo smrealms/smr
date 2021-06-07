@@ -96,13 +96,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $armourDamage;
 	}
 
-	/**
-	 * (Override) Return the max weapon damage possible in a single round.
-	 */
-	public function getMaxDamage() : int {
-		return max($this->getShieldDamage(), $this->getArmourDamage());
-	}
-
 	public function getBuyHREF(SmrLocation $location) : string {
 		$container = Page::create('shop_weapon_processing.php');
 		$container['LocationID'] = $location->getTypeID();

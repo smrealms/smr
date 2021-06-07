@@ -9,7 +9,6 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	public function __construct(int $numberOfMines) {
 		$this->numberOfMines = $numberOfMines;
 		$this->name = 'Mines';
-		$this->maxDamage = 20;
 		$this->shieldDamage = 20;
 		$this->armourDamage = 20;
 		$this->accuracy = 100;

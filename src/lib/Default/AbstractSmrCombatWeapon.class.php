@@ -7,7 +7,6 @@ abstract class AbstractSmrCombatWeapon {
 	const PLANET_DAMAGE_MOD = 0.2;
 
 	protected string $name;
-	protected int $maxDamage;
 	protected int $shieldDamage;
 	protected int $armourDamage;
 	protected int $accuracy;
@@ -21,8 +20,11 @@ abstract class AbstractSmrCombatWeapon {
 		return $this->name;
 	}
 
+	/**
+	 * Return the max weapon damage possible in a single round.
+	 */
 	public function getMaxDamage() : int {
-		return $this->maxDamage;
+		return max($this->getShieldDamage(), $this->getArmourDamage());
 	}
 
 	public function getShieldDamage() : int {

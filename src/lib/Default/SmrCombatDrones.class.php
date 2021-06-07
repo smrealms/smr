@@ -8,11 +8,9 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		$this->numberOfCDs = $numberOfCDs;
 		$this->name = 'Combat Drones';
 		if ($portPlanetDrones === false) {
-			$this->maxDamage = 2;
 			$this->shieldDamage = 2;
 			$this->armourDamage = 2;
 		} else {
-			$this->maxDamage = 1;
 			$this->shieldDamage = 1;
 			$this->armourDamage = 1;
 		}
