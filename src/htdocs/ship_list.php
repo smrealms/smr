@@ -39,7 +39,7 @@ function buildShipStats($ship) {
 	$stat = [
 		'name' => $ship['Name'],
 		'race race' . $ship['RaceID'] => Globals::getRaceName($ship['RaceID']),
-		'class_' => Globals::getShipClass($ship['ShipClassID']),
+		'class_' => Smr\ShipClass::getName($ship['ShipClassID']),
 		'cost' => number_format($ship['Cost']),
 		'speed' => $ship['Speed'],
 		'hardpoint' => $ship['Hardpoint'],

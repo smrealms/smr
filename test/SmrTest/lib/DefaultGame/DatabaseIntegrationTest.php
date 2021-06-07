@@ -187,12 +187,12 @@ class DatabaseIntegrationTest extends TestCase {
 
 	public function test_lockTable_allows_read() {
 		$db = Database::getInstance();
-		$db->lockTable('ship_class');
+		$db->lockTable('good');
 
 		// Perform a query on the locked table
-		$db->query('SELECT ship_class_name FROM ship_class WHERE ship_class_id = 1');
+		$db->query('SELECT good_name FROM good WHERE good_id = 1');
 		$db->requireRecord();
-		self::assertSame(['ship_class_name' => 'Hunter'], $db->getRow());
+		self::assertSame(['good_name' => 'Wood'], $db->getRow());
 
 		// After unlock we can access other tables again
 		$db->unlock();
@@ -227,7 +227,7 @@ class DatabaseIntegrationTest extends TestCase {
 	public function test_nextRecord_no_result() {
 		$db = Database::getInstance();
 		// Construct a query that has an empty result set
-		$db->query('SELECT 1 FROM ship_class WHERE ship_class_id = 0');
+		$db->query('SELECT 1 FROM good WHERE good_id = 0');
 		self::assertFalse($db->nextRecord());
 	}
 

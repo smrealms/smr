@@ -9,7 +9,6 @@ class Globals {
 	protected static bool $FEATURE_REQUEST_OPEN;
 	protected static array $RACE_RELATIONS;
 	protected static array $USER_RANKINGS;
-	protected static array $SHIP_CLASSES;
 	protected static array $AVAILABLE_LINKS = [];
 	protected static Smr\Database $db;
 
@@ -222,24 +221,6 @@ class Globals {
 			}
 		}
 		return self::$RACE_RELATIONS[$gameID][$raceID];
-	}
-
-	/**
-	 * If specified, returns the Ship Class Name associated with the given ID.
-	 * Otherwise, returns an array of all Ship Class Names.
-	 */
-	public static function getShipClass(int $shipClassID = null) : array|string {
-		if (!isset(self::$SHIP_CLASSES)) {
-			self::initialiseDatabase();
-			self::$db->query('SELECT * FROM ship_class');
-			while (self::$db->nextRecord()) {
-				self::$SHIP_CLASSES[self::$db->getInt('ship_class_id')] = self::$db->getField('ship_class_name');
-			}
-		}
-		if (is_null($shipClassID)) {
-			return self::$SHIP_CLASSES;
-		}
-		return self::$SHIP_CLASSES[$shipClassID];
 	}
 
 	public static function getUserRanking() : array {

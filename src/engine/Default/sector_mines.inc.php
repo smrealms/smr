@@ -12,7 +12,7 @@ foreach ($sectorForces as $forces) {
 
 if ($mine_owner_id) {
 	$ship = $player->getShip();
-	if ($player->hasNewbieTurns() || $ship->getShipClassID() === SmrShip::SHIP_CLASS_SCOUT) {
+	if ($player->hasNewbieTurns() || $ship->getShipClassID() === Smr\ShipClass::SCOUT) {
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
 		$player->takeTurns($turns, $turns);
 		$container = Page::create('skeleton.php', 'current_sector.php');
