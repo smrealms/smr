@@ -1,27 +1,22 @@
 <?php declare(strict_types=1);
 
 class SmrCombatDrones extends AbstractSmrCombatWeapon {
+	use Traits\CombatWeaponForce;
+
 	const MAX_CDS_RAND = 54;
-	protected int $numberOfCDs;
 
 	public function __construct(int $numberOfCDs, bool $portPlanetDrones = false) {
-		$this->numberOfCDs = $numberOfCDs;
+		$this->amount = $numberOfCDs;
 		$this->name = 'Combat Drones';
 		if ($portPlanetDrones === false) {
-			$this->maxDamage = 2;
 			$this->shieldDamage = 2;
 			$this->armourDamage = 2;
 		} else {
-			$this->maxDamage = 1;
 			$this->shieldDamage = 1;
 			$this->armourDamage = 1;
 		}
 		$this->accuracy = 3;
 		$this->damageRollover = true;
-	}
-
-	public function getNumberOfCDs() : int {
-		return $this->numberOfCDs;
 	}
 
 	public function getModifiedAccuracy() : float {
@@ -106,7 +101,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		}
 		$damage = $this->getDamage();
-		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstForces($weaponPlayer, $forces) / 100);
+		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstForces($weaponPlayer, $forces) / 100);
 		$damage['Kamikaze'] = 0;
 		if ($weaponPlayer->isCombatDronesKamikazeOnMines()) { // If kamikaze then damage is same as MINE_ARMOUR
 			$damage['Kamikaze'] = min($damage['Launched'], $forces->getMines());
@@ -130,7 +125,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		}
 		$damage = $this->getDamage();
-		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPort($weaponPlayer, $port) / 100);
+		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstPort($weaponPlayer, $port) / 100);
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
@@ -144,7 +139,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		}
 		$damage = $this->getDamage();
-		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet) / 100);
+		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet) / 100);
 		$planetMod = self::PLANET_DAMAGE_MOD;
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage'] * $planetMod);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield'] * $planetMod);
@@ -164,7 +159,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			$damage['Shield'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
 			$damage['Armour'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
 		}
-		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPlayer($weaponPlayer, $targetPlayer) / 100);
+		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstPlayer($weaponPlayer, $targetPlayer) / 100);
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
@@ -184,7 +179,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			$damage['Armour'] *= DCS_FORCE_DAMAGE_DECIMAL_PERCENT;
 		}
 
-		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
+		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
@@ -203,7 +198,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			$damage['Shield'] *= DCS_PORT_DAMAGE_DECIMAL_PERCENT;
 			$damage['Armour'] *= DCS_PORT_DAMAGE_DECIMAL_PERCENT;
 		}
-		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedPortAccuracyAgainstPlayer($port, $targetPlayer) / 100);
+		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedPortAccuracyAgainstPlayer($port, $targetPlayer) / 100);
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
@@ -222,7 +217,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			$damage['Shield'] *= DCS_PLANET_DAMAGE_DECIMAL_PERCENT;
 			$damage['Armour'] *= DCS_PLANET_DAMAGE_DECIMAL_PERCENT;
 		}
-		$damage['Launched'] = ICeil($this->getNumberOfCDs() * $this->getModifiedPlanetAccuracyAgainstPlayer($planet, $targetPlayer) / 100);
+		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedPlanetAccuracyAgainstPlayer($planet, $targetPlayer) / 100);
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);

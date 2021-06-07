@@ -31,7 +31,7 @@ abstract class AbstractSmrPlayer {
 	protected int $lastSectorID;
 	protected int $newbieTurns;
 	protected bool $dead;
-	protected bool $npc;
+	protected bool $npc = false; // initialized for legacy combat logs
 	protected bool $newbieStatus;
 	protected bool $newbieWarning;
 	protected bool $landedOnPlanet;
@@ -1669,7 +1669,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function __sleep() {
-		return array('accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName');
+		return array('accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName', 'npc');
 	}
 
 	public function &getStoredDestinations() : array {

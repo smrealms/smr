@@ -6,32 +6,19 @@ abstract class AbstractSmrCombatWeapon {
 	 */
 	const PLANET_DAMAGE_MOD = 0.2;
 
-	protected string $name;
-	protected int $maxDamage;
-	protected int $shieldDamage;
-	protected int $armourDamage;
-	protected int $accuracy;
 	protected bool $damageRollover;
 
-	public function getBaseAccuracy() : int {
-		return $this->accuracy;
-	}
-
-	public function getName() : string {
-		return $this->name;
-	}
-
+	/**
+	 * Return the max weapon damage possible in a single round.
+	 */
 	public function getMaxDamage() : int {
-		return $this->maxDamage;
+		return max($this->getShieldDamage(), $this->getArmourDamage());
 	}
 
-	public function getShieldDamage() : int {
-		return $this->shieldDamage;
-	}
-
-	public function getArmourDamage() : int {
-		return $this->armourDamage;
-	}
+	abstract public function getBaseAccuracy() : int;
+	abstract public function getName() : string;
+	abstract public function getShieldDamage() : int;
+	abstract public function getArmourDamage() : int;
 
 	public function isDamageRollover() : bool {
 		return $this->damageRollover;
