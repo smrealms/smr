@@ -6,19 +6,14 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	const TOTAL_ENEMY_MINES_MODIFIER = 25;
 	const FED_SHIP_DAMAGE_MODIFIER = .5;
 	const DCS_DAMAGE_MODIFIER = .75;
-	protected int $numberOfMines;
 
 	public function __construct(int $numberOfMines) {
-		$this->numberOfMines = $numberOfMines;
+		$this->amount = $numberOfMines;
 		$this->name = 'Mines';
 		$this->shieldDamage = 20;
 		$this->armourDamage = 20;
 		$this->accuracy = 100;
 		$this->damageRollover = false;
-	}
-
-	public function getNumberOfMines() : int {
-		return $this->numberOfMines;
 	}
 
 	public function getModifiedAccuracy() : float {
@@ -95,7 +90,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 			$damage['Shield'] = IRound($damage['Shield'] * self::DCS_DAMAGE_MODIFIER);
 			$damage['Armour'] = IRound($damage['Armour'] * self::DCS_DAMAGE_MODIFIER);
 		}
-		$damage['Launched'] = ICeil($this->getNumberOfMines() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer, $minesAreAttacker) / 100);
+		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer, $minesAreAttacker) / 100);
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);

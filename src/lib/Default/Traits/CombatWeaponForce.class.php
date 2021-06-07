@@ -12,6 +12,7 @@ trait CombatWeaponForce {
 	protected int $shieldDamage;
 	protected int $armourDamage;
 	protected int $accuracy;
+	protected int $amount;
 
 	public function getBaseAccuracy() : int {
 		return $this->accuracy;
@@ -27,6 +28,13 @@ trait CombatWeaponForce {
 
 	public function getArmourDamage() : int {
 		return $this->armourDamage;
+	}
+
+	/**
+	 * Returns the amount of this type of force.
+	 */
+	public function getAmount() : int {
+		return $this->amount;
 	}
 
 }

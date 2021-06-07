@@ -3,19 +3,13 @@
 class SmrScoutDrones extends AbstractSmrCombatWeapon {
 	use Traits\CombatWeaponForce;
 
-	protected int $numberOfSDs;
-
 	public function __construct(int $numberOfSDs) {
-		$this->numberOfSDs = $numberOfSDs;
+		$this->amount = $numberOfSDs;
 		$this->name = 'Scout Drones';
 		$this->shieldDamage = 20;
 		$this->armourDamage = 20;
 		$this->accuracy = 100;
 		$this->damageRollover = false;
-	}
-
-	public function getNumberOfSDs() : int {
-		return $this->numberOfSDs;
 	}
 
 	public function getModifiedAccuracy() : float {
@@ -70,7 +64,7 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 			return $return;
 		}
 		$damage = $this->getDamage();
-		$damage['Launched'] = ICeil($this->getNumberOfSDs() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
+		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
 		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
