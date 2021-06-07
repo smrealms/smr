@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 class SmrCombatDrones extends AbstractSmrCombatWeapon {
+	use Traits\CombatWeaponForce;
+
 	const MAX_CDS_RAND = 54;
 	protected int $numberOfCDs;
 

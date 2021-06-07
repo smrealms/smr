@@ -24,7 +24,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	protected function __construct(int $weaponTypeID, Smr\Database $db = null) {
 		$this->weaponType = SmrWeaponType::getWeaponType($weaponTypeID, $db);
 		$this->weaponTypeID = $weaponTypeID;
-		$this->name = $this->weaponType->getName();
 		$this->raceID = $this->weaponType->getRaceID();
 	}
 
@@ -53,18 +52,19 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 
 	/**
-	 * (Override) Return weapon name suitable for HTML display.
+	 * Return weapon name suitable for HTML display.
 	 * The name is displayed in green with pluses if enhancements are present.
 	 */
 	public function getName() : string {
+		$name = $this->weaponType->getName();
 		if ($this->hasEnhancements()) {
-			return '<span class="green">' . $this->name . str_repeat('+', $this->getNumberOfEnhancements()) . '</span>';
+			$name = '<span class="green">' . $name . str_repeat('+', $this->getNumberOfEnhancements()) . '</span>';
 		}
-		return $this->name;
+		return $name;
 	}
 
 	/**
-	 * (Override) Return the weapon base accuracy.
+	 * Return the weapon base accuracy.
 	 */
 	public function getBaseAccuracy() : int {
 		$baseAccuracy = $this->weaponType->getAccuracy();
@@ -75,7 +75,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 
 	/**
-	 * (Override) Return the weapon shield damage.
+	 * Return the weapon shield damage.
 	 */
 	public function getShieldDamage() : int {
 		$shieldDamage = $this->weaponType->getShieldDamage();
@@ -86,7 +86,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 
 	/**
-	 * (Override) Return the weapon armour damage.
+	 * Return the weapon armour damage.
 	 */
 	public function getArmourDamage() : int {
 		$armourDamage = $this->weaponType->getArmourDamage();

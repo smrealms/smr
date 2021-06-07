@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 class SmrMines extends AbstractSmrCombatWeapon {
+	use Traits\CombatWeaponForce;
+
 	const TOTAL_ENEMY_MINES_MODIFIER = 25;
 	const FED_SHIP_DAMAGE_MODIFIER = .5;
 	const DCS_DAMAGE_MODIFIER = .75;
