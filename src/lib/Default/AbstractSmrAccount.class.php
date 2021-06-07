@@ -4,9 +4,8 @@
 class AccountNotFoundException extends Exception {}
 
 abstract class AbstractSmrAccount {
+
 	const USER_RANKINGS_EACH_STAT_POW = .9;
-	const USER_RANKINGS_TOTAL_SCORE_POW = .3;
-	const USER_RANKINGS_RANK_BOUNDARY = 5.2;
 	protected const USER_RANKINGS_SCORE = array(
 		// [Stat, a, b]
 		// Used as: pow(Stat * a, USER_RANKINGS_EACH_STAT_POW) * b
@@ -413,12 +412,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function getRankName() : string {
-		$rankings = Globals::getUserRanking();
-		if (isset($rankings[$this->getRank()])) {
-			return $rankings[$this->getRank()];
-		} else {
-			return end($rankings);
-		}
+		return Smr\UserRanking::getName($this->getRank());
 	}
 
 	public function getScore() : int {
@@ -452,10 +446,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function getRank() : int {
-		$rank = ICeil(pow($this->getScore(), self::USER_RANKINGS_TOTAL_SCORE_POW) / self::USER_RANKINGS_RANK_BOUNDARY);
-		if ($rank < 1) {
-			$rank = 1;
-		}
+		$rank = Smr\UserRanking::getRankFromScore($this->getScore());
 		if ($rank > $this->maxRankAchieved) {
 			$this->updateMaxRankAchieved($rank);
 		}

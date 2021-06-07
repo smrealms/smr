@@ -8,7 +8,6 @@ class Globals {
 	protected static array $HARDWARE_TYPES;
 	protected static bool $FEATURE_REQUEST_OPEN;
 	protected static array $RACE_RELATIONS;
-	protected static array $USER_RANKINGS;
 	protected static array $AVAILABLE_LINKS = [];
 	protected static Smr\Database $db;
 
@@ -221,18 +220,6 @@ class Globals {
 			}
 		}
 		return self::$RACE_RELATIONS[$gameID][$raceID];
-	}
-
-	public static function getUserRanking() : array {
-		if (!isset(self::$USER_RANKINGS)) {
-			self::initialiseDatabase();
-			self::$USER_RANKINGS = array();
-			self::$db->query('SELECT `rank`, rank_name FROM user_rankings ORDER BY `rank`');
-			while (self::$db->nextRecord()) {
-				self::$USER_RANKINGS[self::$db->getInt('rank')] = self::$db->getField('rank_name');
-			}
-		}
-		return self::$USER_RANKINGS;
 	}
 
 	public static function getFeatureRequestHREF() : string {
