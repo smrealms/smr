@@ -199,7 +199,7 @@ var exec = function(s) {
 				sn = getURLParameter('sn', link);
 				updateRefresh(data);
 			}, 'xml');
-	}
+	};
 
 	window.toggleWepD = function(link) {
 		"use strict";
