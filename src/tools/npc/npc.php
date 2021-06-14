@@ -103,6 +103,7 @@ function NPCStuff() {
 	$actions = -1;
 
 	$session = Smr\Session::getInstance();
+	$session->setCurrentVar(new Page()); // initialize empty var
 
 	while (true) {
 		// Clear the $_REQUEST global, in case we had set it, to avoid
@@ -463,7 +464,8 @@ function canWeUNO(AbstractSmrPlayer $player, $oppurtunisticOnly) {
 				}
 			}
 			if (isset($hardwareID)) {
-				return doUNO($hardwareID, min($ship->getMaxHardware($hardwareID) - $ship->getHardware($hardwareID), $amount));
+				$amount = min($ship->getMaxHardware($hardwareID) - $ship->getHardware($hardwareID), $amount);
+				return doUNO($hardwareID, $amount, $sector->getSectorID());
 			}
 		}
 	}
@@ -484,13 +486,17 @@ function canWeUNO(AbstractSmrPlayer $player, $oppurtunisticOnly) {
 	}
 }
 
-function doUNO($hardwareID, $amount) {
+function doUNO(int $hardwareID, int $amount, int $sectorID) : Page {
 	debug('Buying ' . $amount . ' units of "' . Globals::getHardwareName($hardwareID) . '"');
 	$_REQUEST = [
 		'amount' => $amount,
 		'action' => 'Buy',
 	];
-	return Page::create('shop_hardware_processing.php', '', array('hardware_id'=>$hardwareID));
+	$vars = [
+		'hardware_id' => $hardwareID,
+		'LocationID' => $sectorID,
+	];
+	return Page::create('shop_hardware_processing.php', '', $vars);
 }
 
 function tradeGoods($goodID, AbstractSmrPlayer $player, SmrPort $port) {
