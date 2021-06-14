@@ -15,7 +15,7 @@ $shipsSold = $location->getShipsSold();
 $timeUntilUnlock = $player->getGame()->timeUntilShipUnlock();
 $shipsUnavailable = [];
 foreach ($shipsSold as $shipTypeID => $shipSold) {
-	if ($timeUntilUnlock > 0 && ($shipSold['ShipClassID'] == SmrShip::SHIP_CLASS_RAIDER || $shipSold['ShipTypeID'] == SHIP_TYPE_PLANETARY_SUPER_FREIGHTER)) {
+	if ($timeUntilUnlock > 0 && ($shipSold['ShipClassID'] == Smr\ShipClass::RAIDER || $shipSold['ShipTypeID'] == SHIP_TYPE_PLANETARY_SUPER_FREIGHTER)) {
 		$shipSold['TimeUntilUnlock'] = $timeUntilUnlock;
 		$shipsUnavailable[] = $shipSold;
 		unset($shipsSold[$shipTypeID]);

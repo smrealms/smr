@@ -6,10 +6,10 @@ You are ranked as a <span style="font-size: 125%; color: greenyellow;"><?php ech
 		<th>Points Required</th>
 	</tr>
 	<?php
-	foreach (Globals::getUserRanking() as $rankID => $rankName) { ?>
+	foreach (Smr\UserRanking::getAllNames() as $rank => $rankName) { ?>
 		<tr>
 			<td><?php echo $rankName; ?></td>
-			<td class="center"><?php echo ceil(pow((max(0, $rankID - 1)) * SmrAccount::USER_RANKINGS_RANK_BOUNDARY, 1 / SmrAccount::USER_RANKINGS_TOTAL_SCORE_POW)); ?></td>
+			<td class="center"><?php echo Smr\UserRanking::getMinScoreForRank($rank); ?></td>
 		</tr><?php
 	} ?>
 </table>

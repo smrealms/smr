@@ -4,6 +4,7 @@ namespace SmrTest\lib\DefaultGame;
 
 use AbstractSmrShip;
 use AbstractSmrPlayer;
+use Smr\ShipClass;
 
 /**
  * This test is expected to not make any changes to the database.
@@ -32,7 +33,7 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 		$ship = new AbstractSmrShip($this->player);
 		self::assertSame('Demonica', $ship->getName());
 		self::assertSame(SHIP_TYPE_DEMONICA, $ship->getShipTypeID());
-		self::assertSame(AbstractSmrShip::SHIP_CLASS_HUNTER, $ship->getShipClassID());
+		self::assertSame(ShipClass::HUNTER, $ship->getShipClassID());
 		self::assertSame(6, $ship->getHardpoints());
 		self::assertSame(10, $ship->getSpeed());
 		self::assertSame(0, $ship->getCost());

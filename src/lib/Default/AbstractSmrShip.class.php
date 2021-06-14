@@ -7,10 +7,6 @@
 class AbstractSmrShip {
 	protected static array $CACHE_BASE_SHIPS = [];
 
-	const SHIP_CLASS_HUNTER = 1;
-	const SHIP_CLASS_RAIDER = 3;
-	const SHIP_CLASS_SCOUT = 4;
-
 	// Player exp gained for each point of damage done
 	const EXP_PER_DAMAGE_PLAYER = 0.375;
 	const EXP_PER_DAMAGE_PLANET = 1.0; // note that planet damage is reduced
