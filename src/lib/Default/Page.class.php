@@ -119,7 +119,7 @@ class Page extends ArrayObject {
 	 * This is the standard method to package linked pages and the data to
 	 * accompany them.
 	 */
-	public static function create($file, $body = '', Page|array $extra = [], $remainingPageLoads = null) : self {
+	public static function create(string $file, string $body = '', Page|array $extra = [], int $remainingPageLoads = null) : self {
 		if ($extra instanceof Page) {
 			// to avoid making $container a reference to $extra
 			$extra = $extra->getArrayCopy();
