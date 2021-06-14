@@ -103,6 +103,7 @@ function NPCStuff() {
 	$actions = -1;
 
 	$session = Smr\Session::getInstance();
+	$session->setCurrentVar(new Page()); // initialize empty var
 
 	while (true) {
 		// Clear the $_REQUEST global, in case we had set it, to avoid
