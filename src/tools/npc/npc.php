@@ -74,20 +74,6 @@ const SHIP_UPGRADE_PATH = array(
 
 
 try {
-	$db = Smr\Database::getInstance();
-	debug('Script started');
-
-	// Make sure NPC's have been set up in the database
-	$db->query('SELECT 1 FROM npc_logins LIMIT 1');
-	if (!$db->nextRecord()) {
-		debug('No NPCs have been created yet!');
-		exit;
-	}
-
-	try {
-		changeNPCLogin();
-	} catch (ForwardException $e) {}
-
 	NPCStuff();
 } catch (Throwable $e) {
 	logException($e);
@@ -99,11 +85,26 @@ try {
 function NPCStuff() {
 	global $actions, $previousContainer;
 
-	$underAttack = false;
-	$actions = -1;
-
 	$session = Smr\Session::getInstance();
 	$session->setCurrentVar(new Page()); // initialize empty var
+
+	debug('Script started');
+
+	// Make sure NPC's have been set up in the database
+	$db = Smr\Database::getInstance();
+	$db->query('SELECT 1 FROM npc_logins LIMIT 1');
+	if (!$db->nextRecord()) {
+		debug('No NPCs have been created yet!');
+		return;
+	}
+
+	// Load the first available NPC
+	try {
+		changeNPCLogin();
+	} catch (ForwardException $e) {}
+
+	$underAttack = false;
+	$actions = -1;
 
 	while (true) {
 		// Clear the $_REQUEST global, in case we had set it, to avoid
