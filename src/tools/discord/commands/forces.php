@@ -3,7 +3,7 @@
 require_once(TOOLS . 'chat_helpers/channel_msg_forces.php');
 
 $fn_forces = function($message, $params) {
-	$link = new GameLink($message->channel, $message->author);
+	$link = new GameLink($message);
 	if (!$link->valid) {
 		return;
 	}
@@ -11,7 +11,7 @@ $fn_forces = function($message, $params) {
 	// print the next expiring forces
 	$option = $params[0] ?? null;
 	$results = shared_channel_msg_forces($link->player, $option);
-	$message->channel->sendMessage(join(EOL, $results))
+	$message->reply(join(EOL, $results))
 		->done(null, 'logException');
 };
 

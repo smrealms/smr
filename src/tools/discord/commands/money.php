@@ -3,7 +3,7 @@
 require_once(TOOLS . 'chat_helpers/channel_msg_money.php');
 
 $fn_money = function($message) {
-	$link = new GameLink($message->channel, $message->author);
+	$link = new GameLink($message);
 	if (!$link->valid) {
 		return;
 	}
@@ -11,7 +11,7 @@ $fn_money = function($message) {
 	$result = shared_channel_msg_money($link->player);
 	if ($result) {
 		$text = implode(EOL, $result);
-		$message->channel->sendMessage($text)->done(null, 'logException');
+		$message->reply($text)->done(null, 'logException');
 	}
 };
 

@@ -5,41 +5,38 @@ require_once(TOOLS . 'chat_helpers/channel_msg_op_list.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_op_turns.php');
 
 $fn_op = function($message) {
-	$link = new GameLink($message->channel, $message->author);
+	$link = new GameLink($message);
 	if (!$link->valid) {
 		return;
 	}
-	$player = $link->player;
 
 	// print info about the next op
-	$results = shared_channel_msg_op_info($player);
-	$message->channel->sendMessage(join(EOL, $results))
+	$results = shared_channel_msg_op_info($link->player);
+	$message->reply(join(EOL, $results))
 		->done(null, 'logException');
 };
 
 $fn_op_list = function($message) {
-	$link = new GameLink($message->channel, $message->author);
+	$link = new GameLink($message);
 	if (!$link->valid) {
 		return;
 	}
-	$player = $link->player;
 
 	// print list of attendees
-	$results = shared_channel_msg_op_list($player);
-	$message->channel->sendMessage(join(EOL, $results))
+	$results = shared_channel_msg_op_list($link->player);
+	$message->reply(join(EOL, $results))
 		->done(null, 'logException');
 };
 
 $fn_op_turns = function($message) {
-	$link = new GameLink($message->channel, $message->author);
+	$link = new GameLink($message);
 	if (!$link->valid) {
 		return;
 	}
-	$player = $link->player;
 
 	// print list of attendees
-	$results = shared_channel_msg_op_turns($player);
-	$message->channel->sendMessage(join(EOL, $results))
+	$results = shared_channel_msg_op_turns($link->player);
+	$message->reply(join(EOL, $results))
 		->done(null, 'logException');
 };
 

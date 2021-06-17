@@ -16,14 +16,13 @@ function get_turns_message($player) {
 }
 
 $fn_turns = function($message) {
-	$link = new GameLink($message->channel, $message->author);
+	$link = new GameLink($message);
 	if (!$link->valid) {
 		return;
 	}
-	$player = $link->player;
 
-	$results = array_map('get_turns_message', $player->getSharingPlayers(true));
-	$message->channel->sendMessage(join("\n", $results))
+	$results = array_map('get_turns_message', $link->player->getSharingPlayers(true));
+	$message->reply(join("\n", $results))
 		->done(null, 'logException');
 };
 
