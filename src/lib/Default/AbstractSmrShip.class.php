@@ -629,7 +629,7 @@ class AbstractSmrShip {
 	}
 
 	public function hasMaxShields() : bool {
-		return $this->getShields() == $this->getMaxShields();
+		return $this->hasMaxHardware(HARDWARE_SHIELDS);
 	}
 
 	public function getMaxShields() : int {
@@ -657,7 +657,7 @@ class AbstractSmrShip {
 	}
 
 	public function hasMaxArmour() : bool {
-		return $this->getArmour() == $this->getMaxArmour();
+		return $this->hasMaxHardware(HARDWARE_ARMOUR);
 	}
 
 	public function getMaxArmour() : int {
@@ -808,7 +808,7 @@ class AbstractSmrShip {
 	}
 
 	public function hasMaxCargoHolds() : bool {
-		return $this->getCargoHolds() === $this->getMaxCargoHolds();
+		return $this->hasMaxHardware(HARDWARE_CARGO);
 	}
 
 	public function getMaxCargoHolds() : int {
