@@ -34,18 +34,18 @@ $forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var[
 
 // check max on that stack
 $at_max = false;
-if ($forces->getMines() + $change_mines > 50) {
-	$change_mines = 50 - $forces->getMines();
+if ($forces->getMines() + $change_mines > SmrForce::MAX_MINES) {
+	$change_mines = SmrForce::MAX_MINES - $forces->getMines();
 	$at_max = $change_mines == 0;
 }
 
-if ($forces->getCDs() + $change_combat_drones > 50) {
-	$change_combat_drones = 50 - $forces->getCDs();
+if ($forces->getCDs() + $change_combat_drones > SmrForce::MAX_CDS) {
+	$change_combat_drones = SmrForce::MAX_CDS - $forces->getCDs();
 	$at_max = $change_combat_drones == 0;
 }
 
-if ($forces->getSDs() + $change_scout_drones > 5) {
-	$change_scout_drones = 5 - $forces->getSDs();
+if ($forces->getSDs() + $change_scout_drones > SmrForce::MAX_SDS) {
+	$change_scout_drones = SmrForce::MAX_SDS - $forces->getSDs();
 	$at_max = $change_scout_drones == 0;
 }
 
