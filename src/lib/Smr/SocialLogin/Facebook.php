@@ -15,7 +15,7 @@ class Facebook extends SocialLogin {
 			'clientId' => FACEBOOK_APP_ID,
 			'clientSecret' => FACEBOOK_APP_SECRET,
 			'redirectUri' => $this->getRedirectUrl(),
-			'graphApiVersion' => 'v3.2',
+			'graphApiVersion' => 'v11.0',
 		]);
 	}
 
