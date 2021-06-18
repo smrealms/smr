@@ -668,16 +668,16 @@ class AbstractSmrShip {
 		return !$this->hasArmour() && !$this->hasShields();
 	}
 
-	public function canAcceptCDs() : bool {
-		return $this->getCDs() < $this->getMaxCDs();
+	public function hasMaxCDs() : bool {
+		return $this->hasMaxHardware(HARDWARE_COMBAT);
 	}
 
-	public function canAcceptSDs() : bool {
-		return $this->getSDs() < $this->getMaxSDs();
+	public function hasMaxSDs() : bool {
+		return $this->hasMaxHardware(HARDWARE_SCOUT);
 	}
 
-	public function canAcceptMines() : bool {
-		return $this->getMines() < $this->getMaxMines();
+	public function hasMaxMines() : bool {
+		return $this->hasMaxHardware(HARDWARE_MINE);
 	}
 
 	public function hasCDs() : bool {

@@ -25,29 +25,29 @@
 
 					<tr>
 						<td class="center shrink noWrap"><?php
-							if ($SharedForceAlliance && $ThisShip->canAcceptMines() && $Force->hasMines()) {
+							if ($SharedForceAlliance && !$ThisShip->hasMaxMines() && $Force->hasMines()) {
 								?><a href="<?php echo $Force->getTakeMineHREF() ?>">[-]</a><?php
 							}
 							echo$Force->getMines();
-							if ($SharedForceAlliance && $ThisShip->hasMines() && $Force->canAcceptMines()) {
+							if ($SharedForceAlliance && $ThisShip->hasMines() && !$Force->hasMaxMines()) {
 								?><a href="<?php echo $Force->getDropMineHREF() ?>">[+]</a><?php
 							} ?>
 						</td>
 						<td class="center shrink noWrap"><?php
-							if ($SharedForceAlliance && $ThisShip->canAcceptCDs() && $Force->hasCDs()) {
+							if ($SharedForceAlliance && !$ThisShip->hasMaxCDs() && $Force->hasCDs()) {
 								?><a href="<?php echo $Force->getTakeCDHREF() ?>">[-]</a><?php
 							}
 							echo $Force->getCDs();
-							if ($SharedForceAlliance && $ThisShip->hasCDs() && $Force->canAcceptCDs()) {
+							if ($SharedForceAlliance && $ThisShip->hasCDs() && !$Force->hasMaxCDs()) {
 								?><a href="<?php echo $Force->getDropCDHREF() ?>">[+]</a><?php
 							} ?>
 						</td>
 						<td class="center shrink noWrap"><?php
-							if ($SharedForceAlliance && $ThisShip->canAcceptSDs() && $Force->hasSDs()) {
+							if ($SharedForceAlliance && !$ThisShip->hasMaxSDs() && $Force->hasSDs()) {
 								?><a href="<?php echo $Force->getTakeSDHREF() ?>">[-]</a><?php
 							}
 							echo $Force->getSDs();
-							if ($SharedForceAlliance && $ThisShip->hasSDs() && $Force->canAcceptSDs()) {
+							if ($SharedForceAlliance && $ThisShip->hasSDs() && !$Force->hasMaxSDs()) {
 								?><a href="<?php echo $Force->getDropSDHREF() ?>">[+]</a><?php
 							} ?>
 						</td>

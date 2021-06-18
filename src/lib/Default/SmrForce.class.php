@@ -12,6 +12,10 @@ class SmrForce {
 	const TIME_PERCENT_PER_MINE = 0.02; // 1/50th
 	const REFRESH_ALL_TIME_PER_STACK = 1; // 1 second
 
+	const MAX_MINES = 50;
+	const MAX_CDS = 50;
+	const MAX_SDS = 5;
+
 	protected static $refreshAllHREF;
 
 	protected Smr\Database $db;
@@ -143,16 +147,16 @@ class SmrForce {
 		return ($this->hasCDs() || $this->hasSDs() || $this->hasMines()) && !$this->hasExpired();
 	}
 
-	public function canAcceptCDs() : bool {
-		return $this->getCDs() < 50;
+	public function hasMaxCDs() : bool {
+		return $this->getCDs() >= self::MAX_CDS;
 	}
 
-	public function canAcceptSDs() : bool {
-		return $this->getSDs() < 5;
+	public function hasMaxSDs() : bool {
+		return $this->getSDs() >= self::MAX_SDS;
 	}
 
-	public function canAcceptMines() : bool {
-		return $this->getMines() < 50;
+	public function hasMaxMines() : bool {
+		return $this->getMines() >= self::MAX_MINES;
 	}
 
 	public function hasCDs() : bool {
