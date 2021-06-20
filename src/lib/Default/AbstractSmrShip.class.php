@@ -526,9 +526,10 @@ class AbstractSmrShip {
 		$oldSpeed = $this->getSpeed();
 		$this->getPlayer()->setShipTypeID($shipTypeID);
 		$this->regenerateBaseShip();
-		$newSpeed = $this->getSpeed();
+		$this->checkForExcess();
 
 		// Update the player's turns to account for the speed change
+		$newSpeed = $this->getSpeed();
 		$oldTurns = $this->getPlayer()->getTurns();
 		$this->getPlayer()->setTurns(IRound($oldTurns * $newSpeed / $oldSpeed));
 	}
