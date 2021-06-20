@@ -221,7 +221,7 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.webgrind.rule=PathPrefix(`/webgrind`)"
-            - "traefik.http.routers.webgrind.middlewares=strip-pathprefix@file"
+            - "traefik.http.routers.webgrind.middlewares=slash-then-strip@file"
         volumes:
             # Webgrind looks for Xdebug profiler files in /tmp by default
             - ./vol_xdebug:/tmp
