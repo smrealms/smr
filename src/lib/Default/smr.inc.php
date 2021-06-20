@@ -727,7 +727,7 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 	$version = '';
 	if ($db->nextRecord()) {
 		$container = Page::create('skeleton.php', 'changelog_view.php');
-		$version = create_link($container, 'v' . $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level'));
+		$version = create_link($container, 'v' . $db->getInt('major_version') . '.' . $db->getInt('minor_version') . '.' . $db->getInt('patch_level'));
 	}
 
 	$template->assign('Version', $version);

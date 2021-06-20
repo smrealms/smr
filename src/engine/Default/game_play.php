@@ -138,7 +138,7 @@ if ($db->getNumRows()) {
 		$games['Previous'][$game_id]['Name'] = $db->getField('game_name');
 		$games['Previous'][$game_id]['StartDate'] = date($account->getDateFormat(), $db->getInt('start_time'));
 		$games['Previous'][$game_id]['EndDate'] = date($account->getDateFormat(), $db->getInt('end_time'));
-		$games['Previous'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getField('game_type')];
+		$games['Previous'][$game_id]['Type'] = SmrGame::GAME_TYPES[$db->getInt('game_type')];
 		$games['Previous'][$game_id]['Speed'] = $db->getFloat('game_speed');
 		// create a container that will hold next url and additional variables.
 		$container = Page::create('skeleton.php');
