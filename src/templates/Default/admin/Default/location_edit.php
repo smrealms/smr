@@ -73,10 +73,10 @@ if (isset($Locations)) {
 		</td>
 		<td>
 			<table><?php
-			foreach ($Location->getWeaponsSold() as $Weapon) { ?>
+			foreach ($Location->getWeaponsSold() as $WeaponSold) { ?>
 					<tr>
-						<td><?php echo $Weapon->getName(); ?></td>
-						<td><input type="checkbox" name="remove_weapons[]" value="<?php echo $Weapon->getWeaponTypeID(); ?>" /></td>
+						<td><?php echo $WeaponSold->getName(); ?></td>
+						<td><input type="checkbox" name="remove_weapons[]" value="<?php echo $WeaponSold->getWeaponTypeID(); ?>" /></td>
 					</tr><?php
 				} ?>
 				<tr>
