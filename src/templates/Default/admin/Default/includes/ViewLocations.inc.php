@@ -16,7 +16,7 @@ foreach ($Locations as $Location) { ?>
 	</td>
 	<td><?php
 		foreach ($Location->getShipsSold() as $Ship) {
-			echo $Ship['Name'] ?><br /><?php
+			echo $Ship->getName() ?><br /><?php
 		} ?>
 	</td>
 	<td>

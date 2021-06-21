@@ -84,7 +84,7 @@ if (isset($GameID)) { ?>
 	} ?>
 	Open : <?php echo $ThisShip->getOpenWeaponSlots(); ?><br />
 	Total Damage: (<?php echo $ThisShip->getTotalShieldDamage(); ?>/<?php echo $ThisShip->getTotalArmourDamage(); ?>)<br />
-	Power Used: <?php echo $ThisShip->getPowerUsed(); ?>/<?php echo $ThisShip->getMaxPower(); ?><br /><br /><?php
+	Power Used: <?php echo $ThisShip->getPowerUsed(); ?>/<?php echo $ThisShip->getType()->getMaxPower(); ?><br /><br /><?php
 	if (ENABLE_BETA) {
 		?><a href="<?php echo Globals::getBetaFunctionsHREF(); ?>"><span class="bold">Beta Functions</span></a><?php
 	}

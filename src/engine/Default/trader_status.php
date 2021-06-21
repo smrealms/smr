@@ -3,7 +3,6 @@
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
-$ship = $player->getShip();
 
 $template->assign('PageTopic', 'Trader Status');
 
@@ -35,20 +34,21 @@ $container['body'] = 'configure_hardware.php';
 $template->assign('HardwareHREF', $container->href());
 
 $hardware = [];
-if ($ship->canHaveScanner()) {
-	$hardware[] = 'Scanner';
+$shipType = $player->getShip()->getType();
+if ($shipType->canHaveScanner()) {
+	$hardware[] = Globals::getHardwareTypes(HARDWARE_SCANNER)['Name'];
 }
-if ($ship->canHaveIllusion()) {
-	$hardware[] = 'Illusion Generator';
+if ($shipType->canHaveIllusion()) {
+	$hardware[] = Globals::getHardwareTypes(HARDWARE_ILLUSION)['Name'];
 }
-if ($ship->canHaveCloak()) {
-	$hardware[] = 'Cloaking Device';
+if ($shipType->canHaveCloak()) {
+	$hardware[] = Globals::getHardwareTypes(HARDWARE_CLOAK)['Name'];
 }
-if ($ship->canHaveJump()) {
-	$hardware[] = 'Jump Drive';
+if ($shipType->canHaveJump()) {
+	$hardware[] = Globals::getHardwareTypes(HARDWARE_JUMP)['Name'];
 }
-if ($ship->canHaveDCS()) {
-	$hardware[] = 'Drone Scrambler';
+if ($shipType->canHaveDCS()) {
+	$hardware[] = Globals::getHardwareTypes(HARDWARE_DCS)['Name'];
 }
 if (empty($hardware)) {
 	$hardware[] = 'none';

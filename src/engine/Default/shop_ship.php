@@ -14,40 +14,58 @@ $shipsSold = $location->getShipsSold();
 // Note: Only Raider-class ships and PSF can be locked.
 $timeUntilUnlock = $player->getGame()->timeUntilShipUnlock();
 $shipsUnavailable = [];
-foreach ($shipsSold as $shipTypeID => $shipSold) {
-	if ($timeUntilUnlock > 0 && ($shipSold['ShipClassID'] == Smr\ShipClass::RAIDER || $shipSold['ShipTypeID'] == SHIP_TYPE_PLANETARY_SUPER_FREIGHTER)) {
-		$shipSold['TimeUntilUnlock'] = $timeUntilUnlock;
-		$shipsUnavailable[] = $shipSold;
-		unset($shipsSold[$shipTypeID]);
+foreach ($shipsSold as $shipTypeID => $shipType) {
+	if ($timeUntilUnlock > 0 && ($shipType->getClassID() === Smr\ShipClass::RAIDER || $shipType->getTypeID() === SHIP_TYPE_PLANETARY_SUPER_FREIGHTER)) {
+		$shipsUnavailable[] = [
+			'Name' => $shipType->getName(),
+			'TimeUntilUnlock' => $timeUntilUnlock,
+		];
+		unset($shipsSold[$shipTypeID]); // remove from available ships
 	}
 }
 $template->assign('ShipsUnavailable', $shipsUnavailable);
-
-$shipsSoldHREF = [];
-if (!empty($shipsSold)) {
-	$container = Page::create('skeleton.php', 'shop_ship.php');
-	$container->addVar('LocationID');
-
-	foreach (array_keys($shipsSold) as $shipTypeID) {
-		$container['ship_id'] = $shipTypeID;
-		$shipsSoldHREF[$shipTypeID] = $container->href();
-	}
-}
 $template->assign('ShipsSold', $shipsSold);
+
+$container = Page::create('skeleton.php', 'shop_ship.php');
+$container->addVar('LocationID');
+$shipsSoldHREF = [];
+foreach (array_keys($shipsSold) as $shipTypeID) {
+	$container['ship_type_id'] = $shipTypeID;
+	$shipsSoldHREF[$shipTypeID] = $container->href();
+}
 $template->assign('ShipsSoldHREF', $shipsSoldHREF);
 
-if (isset($var['ship_id'])) {
+if (isset($var['ship_type_id'])) {
 	$ship = $player->getShip();
-	$compareShip = $shipsSold[$var['ship_id']];
-	$compareShip['RealSpeed'] = $compareShip['Speed'] * $player->getGame()->getGameSpeed();
-	$compareShip['Turns'] = round($player->getTurns() * $compareShip['Speed'] / $ship->getSpeed());
+	$compareShip = SmrShipType::get($var['ship_type_id']);
+
+	$shipDiffs = [];
+	foreach (Globals::getHardwareTypes() as $hardwareTypeID => $hardware) {
+		$shipDiffs[$hardware['Name']] = [
+			'Old' => $ship->getType()->getMaxHardware($hardwareTypeID),
+			'New' => $compareShip->getMaxHardware($hardwareTypeID),
+		];
+	}
+	$shipDiffs['Hardpoints'] = [
+		'Old' => $ship->getHardpoints(),
+		'New' => $compareShip->getHardpoints(),
+	];
+	$shipDiffs['Speed'] = [
+		'Old' => $ship->getRealSpeed(),
+		'New' => $compareShip->getSpeed() * $player->getGame()->getGameSpeed(),
+	];
+	$shipDiffs['Turns'] = [
+		'Old' => $player->getTurns(),
+		'New' => round($player->getTurns() * $compareShip->getSpeed() / $ship->getType()->getSpeed()),
+	];
+	$template->assign('ShipDiffs', $shipDiffs);
 
 	$container = Page::create('shop_ship_processing.php');
 	$container->addVar('LocationID');
-	$container->addVar('ship_id');
-	$compareShip['BuyHREF'] = $container->href();
+	$container->addVar('ship_type_id');
+	$template->assign('BuyHREF', $container->href());
 
 	$template->assign('CompareShip', $compareShip);
-	$template->assign('TradeInValue', floor($ship->getCost() * SHIP_REFUND_PERCENT));
-	$template->assign('TotalCost', $ship->getCostToUpgrade($compareShip['ShipTypeID']));
+	$template->assign('TradeInValue', $ship->getRefundValue());
+	$template->assign('TotalCost', $ship->getCostToUpgrade($compareShip->getTypeID()));
 }

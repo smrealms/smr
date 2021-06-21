@@ -8,13 +8,13 @@ if (count($ShipsSold) > 0) { ?>
 			<th>Cost</th>
 			<th>Action</th>
 		</tr><?php
-		foreach ($ShipsSold as $ShipSold) { ?>
+		foreach ($ShipsSold as $ShipTypeID => $ShipType) { ?>
 			<tr>
-				<td><?php echo $ShipSold['Name']; ?></td>
-				<td class="center"><?php echo number_format($ShipSold['Cost']); ?></td>
+				<td><?php echo $ShipType->getName(); ?></td>
+				<td class="center"><?php echo number_format($ShipType->getCost()); ?></td>
 				<td>
 					<div class="buttonA">
-						<a class="buttonA" href="<?php echo $ShipsSoldHREF[$ShipSold['ShipTypeID']]; ?>">View Details</a>
+						<a class="buttonA" href="<?php echo $ShipsSoldHREF[$ShipTypeID]; ?>">View Details</a>
 					</div>
 				</td>
 			</tr><?php
@@ -46,35 +46,17 @@ if (isset($CompareShip)) { ?>
 		<tr>
 			<th>&nbsp;</th>
 			<th><?php echo $ThisShip->getName(); ?></th>
-			<th><?php echo $CompareShip['Name']; ?></th>
+			<th><?php echo $CompareShip->getName(); ?></th>
 			<th>Change</th>
 		</tr><?php
-		foreach (Globals::getHardwareTypes() as $HardwareTypeID => $Hardware) { ?>
+		foreach ($ShipDiffs as $Label => $Diff) { ?>
 			<tr class="center">
-				<td class="left"><?php echo $Hardware['Name']; ?></td>
-				<td><?php echo $ThisShip->getMaxHardware($HardwareTypeID); ?></td>
-				<td><?php echo $CompareShip['MaxHardware'][$HardwareTypeID]; ?></td>
-				<td><?php echo number_colour_format($CompareShip['MaxHardware'][$HardwareTypeID] - $ThisShip->getMaxHardware($HardwareTypeID)); ?></td>
+				<td class="left"><?php echo $Label; ?></td>
+				<td><?php echo $Diff['Old']; ?></td>
+				<td><?php echo $Diff['New']; ?></td>
+				<td><?php echo number_colour_format($Diff['New'] - $Diff['Old']); ?></td>
 			</tr><?php
 		} ?>
-		<tr class="center">
-			<td class="left">Hardpoints</td>
-			<td><?php echo $ThisShip->getHardpoints(); ?></td>
-			<td><?php echo $CompareShip['Hardpoint']; ?></td>
-			<td><?php echo number_colour_format($CompareShip['Hardpoint'] - $ThisShip->getHardpoints()); ?></td>
-		</tr>
-		<tr class="center">
-			<td class="left">Speed</td>
-			<td><?php echo $ThisShip->getRealSpeed(); ?></td>
-			<td><?php echo $CompareShip['RealSpeed']; ?></td>
-			<td><?php echo number_colour_format($CompareShip['RealSpeed'] - $ThisShip->getRealSpeed()); ?></td>
-		</tr>
-		<tr class="center">
-			<td class="left">Turns</td>
-			<td><?php echo $ThisPlayer->getTurns() ?></td>
-			<td><?php echo $CompareShip['Turns']; ?></td>
-			<td><?php echo number_colour_format($CompareShip['Turns'] - $ThisPlayer->getTurns()); ?></td>
-		</tr>
 	</table><br />
 
 	<table class="nobord">
@@ -82,8 +64,8 @@ if (isset($CompareShip)) { ?>
 			<td colspan="2"><hr style="width:200px"></td>
 		</tr>
 		<tr>
-			<td class="right"><?php echo $CompareShip['Name']; ?> Cost</td>
-			<td class="right red"><?php echo number_format($CompareShip['Cost']); ?></td>
+			<td class="right"><?php echo $CompareShip->getName(); ?> Cost</td>
+			<td class="right red"><?php echo number_format($CompareShip->getCost()); ?></td>
 		</tr>
 		<tr>
 			<td class="right"><?php echo $ThisShip->getName(); ?> Trade-In</td>
@@ -107,7 +89,7 @@ if (isset($CompareShip)) { ?>
 		<tr>
 			<td class="right" colspan="2">
 				<div class="buttonA">
-					<a class="buttonA" href="<?php echo $CompareShip['BuyHREF']; ?>">Buy</a>
+					<a class="buttonA" href="<?php echo $BuyHREF; ?>">Buy</a>
 				</div>
 			</td>
 		</tr>

@@ -5,19 +5,19 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 $ship = $player->getShip();
 
-$shipID = $var['ship_id'];
-$newShip = AbstractSmrShip::getBaseShip($shipID);
-$cost = $ship->getCostToUpgrade($shipID);
+$shipTypeID = $var['ship_type_id'];
+$newShipType = SmrShipType::get($shipTypeID);
+$cost = $ship->getCostToUpgrade($shipTypeID);
 
-if ($newShip['AlignRestriction'] == BUYER_RESTRICTION_EVIL && $player->getAlignment() > ALIGNMENT_EVIL) {
+if ($newShipType->getRestriction() == BUYER_RESTRICTION_EVIL && $player->getAlignment() > ALIGNMENT_EVIL) {
 	create_error('You can\'t buy smuggler ships!');
 }
 
-if ($newShip['AlignRestriction'] == BUYER_RESTRICTION_GOOD && $player->getAlignment() < ALIGNMENT_GOOD) {
+if ($newShipType->getRestriction() == BUYER_RESTRICTION_GOOD && $player->getAlignment() < ALIGNMENT_GOOD) {
 	create_error('You can\'t buy federal ships!');
 }
 
-if ($newShip['RaceID'] != RACE_NEUTRAL && $player->getRaceID() != $newShip['RaceID']) {
+if ($newShipType->getRaceID() != RACE_NEUTRAL && $player->getRaceID() != $newShipType->getRaceID()) {
 	create_error('You can\'t buy other race\'s ships!');
 }
 
@@ -36,10 +36,9 @@ if ($cost > 0) {
 // assign the new ship
 $ship->decloak();
 $ship->disableIllusion();
-$ship->setShipTypeID($shipID);
+$ship->setTypeID($shipTypeID);
 
-
-$player->log(LOG_TYPE_HARDWARE, 'Buys a ' . $ship->getName() . ' for ' . $cost . ' credits');
+$player->log(LOG_TYPE_HARDWARE, 'Buys a ' . $newShipType->getName() . ' for ' . $cost . ' credits');
 
 $container = Page::create('skeleton.php', 'current_sector.php');
 $container->addVar('LocationID');

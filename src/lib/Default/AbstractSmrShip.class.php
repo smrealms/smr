@@ -5,7 +5,6 @@
  * Does not include the database layer (see SmrShip).
  */
 class AbstractSmrShip {
-	protected static array $CACHE_BASE_SHIPS = [];
 
 	// Player exp gained for each point of damage done
 	const EXP_PER_DAMAGE_PLAYER = 0.375;
@@ -28,7 +27,7 @@ class AbstractSmrShip {
 	protected AbstractSmrPlayer $player;
 
 	protected int $gameID;
-	protected array $baseShip;
+	protected SmrShipType $shipType;
 
 	protected array $weapons = [];
 	protected array $cargo = [];
@@ -42,112 +41,14 @@ class AbstractSmrShip {
 	protected bool $hasChangedCloak = false;
 	protected bool $hasChangedIllusion = false;
 
-	public static function getBaseShip(int $shipTypeID, bool $forceUpdate = false) : array {
-		if ($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$shipTypeID])) {
-			// determine ship
-			$db = Smr\Database::getInstance();
-			$db->query('SELECT * FROM ship_type WHERE ship_type_id = ' . $db->escapeNumber($shipTypeID) . ' LIMIT 1');
-			if ($db->nextRecord()) {
-				self::$CACHE_BASE_SHIPS[$shipTypeID] = self::buildBaseShip($db);
-			} else {
-				throw new Exception('Invalid shipTypeID: ' . $shipTypeID);
-			}
-		}
-		return self::$CACHE_BASE_SHIPS[$shipTypeID];
-	}
-
-	protected static function buildBaseShip(Smr\Database $db) : array {
-		$ship = array();
-		$ship['Type'] = 'Ship';
-		$ship['Name'] = $db->getField('ship_name');
-		$ship['ShipTypeID'] = $db->getInt('ship_type_id');
-		$ship['ShipClassID'] = $db->getInt('ship_class_id');
-		$ship['RaceID'] = $db->getInt('race_id');
-		$ship['Hardpoint'] = $db->getInt('hardpoint');
-		$ship['Speed'] = $db->getInt('speed');
-		$ship['Cost'] = $db->getInt('cost');
-		$ship['AlignRestriction'] = $db->getInt('buyer_restriction');
-		$ship['Level'] = $db->getInt('lvl_needed');
-
-		$maxPower = 0;
-		switch ($ship['Hardpoint']) {
-			default:
-				$maxPower += 1 * $ship['Hardpoint'] - 10;
-			case 10:
-				$maxPower += 2;
-			case 9:
-				$maxPower += 2;
-			case 8:
-				$maxPower += 2;
-			case 7:
-				$maxPower += 2;
-			case 6:
-				$maxPower += 3;
-			case 5:
-				$maxPower += 3;
-			case 4:
-				$maxPower += 3;
-			case 3:
-				$maxPower += 4;
-			case 2:
-				$maxPower += 4;
-			case 1:
-				$maxPower += 5;
-			case 0:
-				$maxPower += 0;
-		}
-		$ship['MaxPower'] = $maxPower;
-
-
-		// get supported hardware from db
-		$db2 = Smr\Database::getInstance();
-		$db2->query('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
-			'WHERE ship_type_id = ' . $db2->escapeNumber($ship['ShipTypeID']) . ' ORDER BY hardware_type_id');
-
-		while ($db2->nextRecord()) {
-			// adding hardware to array
-			$ship['MaxHardware'][$db2->getInt('hardware_type_id')] = $db2->getInt('max_amount');
-		}
-
-		$ship['BaseMR'] = IRound(
-								700 -
-								(
-									(
-										$ship['MaxHardware'][HARDWARE_SHIELDS]
-										+$ship['MaxHardware'][HARDWARE_ARMOUR]
-										+$ship['MaxHardware'][HARDWARE_COMBAT] * 3
-									) / 25
-									+(
-										$ship['MaxHardware'][HARDWARE_CARGO] / 100
-										-$ship['Speed'] * 5
-										+$ship['Hardpoint'] * 5
-										+$ship['MaxHardware'][HARDWARE_COMBAT] / 5
-									)
-								)
-							);
-		return $ship;
-	}
-
-	public static function getAllBaseShips() : array {
-		// determine ship
-		$db = Smr\Database::getInstance();
-		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC');
-		while ($db->nextRecord()) {
-			if (!isset(self::$CACHE_BASE_SHIPS[$db->getInt('ship_type_id')])) {
-				self::$CACHE_BASE_SHIPS[$db->getInt('ship_type_id')] = self::buildBaseShip($db);
-			}
-		}
-		return self::$CACHE_BASE_SHIPS;
-	}
-
 	public function __construct(AbstractSmrPlayer $player) {
 		$this->player = $player;
 		$this->gameID = $player->getGameID();
-		$this->regenerateBaseShip();
+		$this->regenerateShipType();
 	}
 
-	protected function regenerateBaseShip() : void {
-		$this->baseShip = AbstractSmrShip::getBaseShip($this->player->getShipTypeID());
+	protected function regenerateShipType() : void {
+		$this->shipType = SmrShipType::get($this->player->getShipTypeID());
 	}
 
 	public function checkForExcess() : void {
@@ -157,7 +58,7 @@ class AbstractSmrShip {
 	}
 
 	public function checkForExcessWeapons() : void {
-		while ($this->hasWeapons() && ($this->getPowerUsed() > $this->getMaxPower() || $this->getNumWeapons() > $this->getHardpoints())) {
+		while ($this->hasWeapons() && ($this->getPowerUsed() > $this->getType()->getMaxPower() || $this->getNumWeapons() > $this->getHardpoints())) {
 			//erase the first weapon 1 at a time until we are okay
 			$this->removeLastWeapon();
 		}
@@ -182,9 +83,8 @@ class AbstractSmrShip {
 	public function checkForExcessHardware() : void {
 		//check hardware to see if anything needs to be removed
 		foreach ($this->getHardware() as $hardwareTypeID => $amount) {
-			if ($amount > ($max = $this->getMaxHardware($hardwareTypeID))) {
-				$this->setHardware($hardwareTypeID, $max);
-			}
+			$max = $this->shipType->getMaxHardware($hardwareTypeID);
+			$this->setHardware($hardwareTypeID, min($amount, $max));
 		}
 	}
 
@@ -192,8 +92,8 @@ class AbstractSmrShip {
 	 * Set all hardware to its maximum value for this ship.
 	 */
 	public function setHardwareToMax() : void {
-		foreach ($this->getMaxHardware() as $key => $max) {
-			$this->setHardware($key, $max);
+		foreach ($this->shipType->getAllMaxHardware() as $hardwareTypeID => $max) {
+			$this->setHardware($hardwareTypeID, $max);
 		}
 	}
 
@@ -206,7 +106,7 @@ class AbstractSmrShip {
 	}
 
 	public function getRemainingPower() : int {
-		return $this->getMaxPower() - $this->getPowerUsed();
+		return $this->getType()->getMaxPower() - $this->getPowerUsed();
 	}
 
 	/**
@@ -214,10 +114,6 @@ class AbstractSmrShip {
 	 */
 	public function checkPowerAvailable(int $powerLevel) : bool {
 		return $this->getRemainingPower() >= $powerLevel;
-	}
-
-	public function getMaxPower() : int {
-		return $this->baseShip['MaxPower'];
 	}
 
 	public function hasIllegalGoods() : bool {
@@ -358,12 +254,12 @@ class AbstractSmrShip {
 			$this->setShields(75);
 			$this->setArmour(150);
 			$this->setCargoHolds(40);
-			$this->setShipTypeID(SHIP_TYPE_NEWBIE_MERCHANT_VESSEL);
+			$this->setTypeID(SHIP_TYPE_NEWBIE_MERCHANT_VESSEL);
 		} else {
 			$this->setShields(50);
 			$this->setArmour(50);
 			$this->setCargoHolds(5);
-			$this->setShipTypeID(SHIP_TYPE_ESCAPE_POD);
+			$this->setTypeID(SHIP_TYPE_ESCAPE_POD);
 		}
 	}
 
@@ -377,7 +273,7 @@ class AbstractSmrShip {
 			$amount_shields = 50;
 			$amount_armour = 50;
 		}
-		$this->setShipTypeID($shipID);
+		$this->setTypeID($shipID);
 		$this->setShields($amount_shields);
 		$this->setArmour($amount_armour);
 		$this->setCargoHolds(40);
@@ -388,32 +284,16 @@ class AbstractSmrShip {
 		return $this->getHardware(HARDWARE_JUMP) > 0;
 	}
 
-	public function canHaveJump() : bool {
-		return $this->getMaxHardware(HARDWARE_JUMP) > 0;
-	}
-
 	public function hasDCS() : bool {
 		return $this->getHardware(HARDWARE_DCS) > 0;
-	}
-
-	public function canHaveDCS() : bool {
-		return $this->getMaxHardware(HARDWARE_DCS) > 0;
 	}
 
 	public function hasScanner() : bool {
 		return $this->getHardware(HARDWARE_SCANNER) > 0;
 	}
 
-	public function canHaveScanner() : bool {
-		return $this->getMaxHardware(HARDWARE_SCANNER) > 0;
-	}
-
 	public function hasCloak() : bool {
 		return $this->getHardware(HARDWARE_CLOAK) > 0;
-	}
-
-	public function canHaveCloak() : bool {
-		return $this->getMaxHardware(HARDWARE_CLOAK) > 0;
 	}
 
 	public function isCloaked() : bool {
@@ -443,10 +323,6 @@ class AbstractSmrShip {
 		return $this->getHardware(HARDWARE_ILLUSION) > 0;
 	}
 
-	public function canHaveIllusion() : bool {
-		return $this->getMaxHardware(HARDWARE_ILLUSION) > 0;
-	}
-
 	public function getIllusionShip() : array|false {
 		return $this->illusionShip;
 	}
@@ -455,12 +331,12 @@ class AbstractSmrShip {
 		return $this->getIllusionShip() !== false;
 	}
 
-	public function setIllusion(int $ship_id, int $attack, int $defense) : void {
+	public function setIllusion(int $shipTypeID, int $attack, int $defense) : void {
 		if ($this->hasIllusion() === false) {
 			throw new Exception('Ship does not have the supported hardware!');
 		}
 		$newIllusionShip = [
-			'ID' => $ship_id,
+			'ID' => $shipTypeID,
 			'Attack' => $attack,
 			'Defense' => $defense,
 		];
@@ -484,7 +360,7 @@ class AbstractSmrShip {
 	}
 
 	public function getIllusionShipName() : string {
-		return self::getBaseShip($this->getIllusionShip()['ID'])['Name'];
+		return SmrShipType::get($this->getIllusionShip()['ID'])->getName();
 	}
 
 	public function getIllusionAttack() : int {
@@ -511,72 +387,80 @@ class AbstractSmrShip {
 		return SmrGame::getGame($this->gameID);
 	}
 
-	public function getShipTypeID() : int {
-		return $this->baseShip['ShipTypeID'];
-	}
-
-	public function getShipClassID() : int {
-		return $this->baseShip['ShipClassID'];
-	}
-
 	/**
 	 * Switch to a new ship, updating player turns accordingly.
 	 */
-	public function setShipTypeID(int $shipTypeID) : void {
-		$oldSpeed = $this->getSpeed();
+	public function setTypeID(int $shipTypeID) : void {
+		$oldSpeed = $this->shipType->getSpeed();
 		$this->getPlayer()->setShipTypeID($shipTypeID);
-		$this->regenerateBaseShip();
+		$this->regenerateShipType();
 		$this->checkForExcess();
 
 		// Update the player's turns to account for the speed change
-		$newSpeed = $this->getSpeed();
+		$newSpeed = $this->shipType->getSpeed();
 		$oldTurns = $this->getPlayer()->getTurns();
 		$this->getPlayer()->setTurns(IRound($oldTurns * $newSpeed / $oldSpeed));
 	}
 
+	public function getType() : SmrShipType {
+		return $this->shipType;
+	}
+
+	public function getTypeID() : int {
+		return $this->shipType->getTypeID();
+	}
+
+	public function getClassID() : int {
+		return $this->shipType->getClassID();
+	}
+
 	public function getName() : string {
-		return $this->baseShip['Name'];
+		return $this->shipType->getName();
 	}
 
 	public function getCost() : int {
-		return $this->baseShip['Cost'];
+		return $this->shipType->getCost();
 	}
 
-	public function getCostToUpgrade(int $upgradeShipID) : int {
-		$upgadeBaseShip = AbstractSmrShip::getBaseShip($upgradeShipID);
-		return $upgadeBaseShip['Cost'] - IFloor($this->getCost() * SHIP_REFUND_PERCENT);
+	public function getHardpoints() : int {
+		return $this->shipType->getHardpoints();
 	}
 
-	public function getCostToUpgradeAndUNO(int $upgradeShipID) : int {
-		return $this->getCostToUpgrade($upgradeShipID) + $this->getCostToUNOAgainstShip($upgradeShipID);
+	/**
+	 * Trade-in value of the ship
+	 */
+	public function getRefundValue() : int {
+		return IFloor($this->getCost() * SHIP_REFUND_PERCENT);
 	}
 
-	protected function getCostToUNOAgainstShip(int $shipID) : int {
-		$baseShip = AbstractSmrShip::getBaseShip($shipID);
+	public function getCostToUpgrade(int $otherShipTypeID) : int {
+		$otherShipType = SmrShipType::get($otherShipTypeID);
+		return $otherShipType->getCost() - $this->getRefundValue();
+	}
+
+	public function getCostToUpgradeAndUNO(int $otherShipTypeID) : int {
+		return $this->getCostToUpgrade($otherShipTypeID) + $this->getCostToUNOAgainstShip($otherShipTypeID);
+	}
+
+	protected function getCostToUNOAgainstShip(int $otherShipTypeID) : int {
+		$otherShipType = SmrShipType::get($otherShipTypeID);
 		$cost = 0;
 		$hardwareTypes = array(HARDWARE_SHIELDS, HARDWARE_ARMOUR, HARDWARE_CARGO);
 		foreach ($hardwareTypes as $hardwareTypeID) {
-			$cost += max(0, $baseShip['MaxHardware'][$hardwareTypeID] - $this->getHardware($hardwareTypeID)) * Globals::getHardwareCost($hardwareTypeID);
+			$cost += max(0, $otherShipType->getMaxHardware($hardwareTypeID) - $this->getHardware($hardwareTypeID)) * Globals::getHardwareCost($hardwareTypeID);
 		}
 		return $cost;
 	}
 
 	public function getCostToUNO() : int {
-		return $this->getCostToUNOAgainstShip($this->getShipTypeID());
-	}
-
-	/**
-	 * Returns the base ship speed (unmodified by the game speed).
-	 */
-	public function getSpeed() : int {
-		return $this->baseShip['Speed'];
+		return $this->getCostToUNOAgainstShip($this->getTypeID());
 	}
 
 	/**
 	 * Returns the ship speed modified by the game speed.
 	 */
 	public function getRealSpeed() : float {
-		return $this->getSpeed() * $this->getGame()->getGameSpeed();
+		return $this->shipType->getSpeed() * $this->getGame()->getGameSpeed();
 	}
 
 	public function getHardware(int $hardwareTypeID = null) : array|int {
@@ -599,14 +483,7 @@ class AbstractSmrShip {
 	}
 
 	public function hasMaxHardware(int $hardwareTypeID) : bool {
-		return $this->getHardware($hardwareTypeID) == $this->getMaxHardware($hardwareTypeID);
-	}
-
-	public function getMaxHardware(int $hardwareTypeID = null) : array|int {
-		if ($hardwareTypeID === null) {
-			return $this->baseShip['MaxHardware'];
-		}
-		return $this->baseShip['MaxHardware'][$hardwareTypeID];
+		return $this->getHardware($hardwareTypeID) == $this->shipType->getMaxHardware($hardwareTypeID);
 	}
 
 	public function getShields() : int {
@@ -634,7 +511,7 @@ class AbstractSmrShip {
 	}
 
 	public function getMaxShields() : int {
-		return $this->getMaxHardware(HARDWARE_SHIELDS);
+		return $this->shipType->getMaxHardware(HARDWARE_SHIELDS);
 	}
 
 	public function getArmour() : int {
@@ -662,7 +539,7 @@ class AbstractSmrShip {
 	}
 
 	public function getMaxArmour() : int {
-		return $this->getMaxHardware(HARDWARE_ARMOUR);
+		return $this->shipType->getMaxHardware(HARDWARE_ARMOUR);
 	}
 
 	public function isDead() : bool {
@@ -710,7 +587,7 @@ class AbstractSmrShip {
 	}
 
 	public function getMaxCDs() : int {
-		return $this->getMaxHardware(HARDWARE_COMBAT);
+		return $this->shipType->getMaxHardware(HARDWARE_COMBAT);
 	}
 
 	public function getSDs() : int {
@@ -730,7 +607,7 @@ class AbstractSmrShip {
 	}
 
 	public function getMaxSDs() : int {
-		return $this->getMaxHardware(HARDWARE_SCOUT);
+		return $this->shipType->getMaxHardware(HARDWARE_SCOUT);
 	}
 
 	public function getMines() : int {
@@ -750,7 +627,7 @@ class AbstractSmrShip {
 	}
 
 	public function getMaxMines() : int {
-		return $this->getMaxHardware(HARDWARE_MINE);
+		return $this->shipType->getMaxHardware(HARDWARE_MINE);
 	}
 
 	public function getCargoHolds() : int {
@@ -813,7 +690,7 @@ class AbstractSmrShip {
 	}
 
 	public function getMaxCargoHolds() : int {
-		return $this->getMaxHardware(HARDWARE_CARGO);
+		return $this->shipType->getMaxHardware(HARDWARE_CARGO);
 	}
 
 	public function hasWeapons() : bool {
@@ -840,10 +717,6 @@ class AbstractSmrShip {
 		return $this->getOpenWeaponSlots() > 0;
 	}
 
-	public function getHardpoints() : int {
-		return $this->baseShip['Hardpoint'];
-	}
-
 	public function getTotalShieldDamage() : int {
 		$shieldDamage = 0;
 		foreach ($this->getWeapons() as $weapon) {
@@ -861,15 +734,15 @@ class AbstractSmrShip {
 	}
 
 	public function isFederal() : bool {
-		return $this->getShipTypeID() === SHIP_TYPE_FEDERAL_DISCOVERY ||
-		       $this->getShipTypeID() === SHIP_TYPE_FEDERAL_WARRANT ||
-		       $this->getShipTypeID() === SHIP_TYPE_FEDERAL_ULTIMATUM;
+		return $this->getTypeID() === SHIP_TYPE_FEDERAL_DISCOVERY ||
+		       $this->getTypeID() === SHIP_TYPE_FEDERAL_WARRANT ||
+		       $this->getTypeID() === SHIP_TYPE_FEDERAL_ULTIMATUM;
 	}
 
 	public function isUnderground() : bool {
-		return $this->getShipTypeID() === SHIP_TYPE_THIEF ||
-		       $this->getShipTypeID() === SHIP_TYPE_ASSASSIN ||
-		       $this->getShipTypeID() === SHIP_TYPE_DEATH_CRUISER;
+		return $this->getTypeID() === SHIP_TYPE_THIEF ||
+		       $this->getTypeID() === SHIP_TYPE_ASSASSIN ||
+		       $this->getTypeID() === SHIP_TYPE_DEATH_CRUISER;
 	}
 
 	public function shootPlayers(array $targetPlayers) : array {
@@ -1090,7 +963,7 @@ class AbstractSmrShip {
 							) / 25
 							+(
 								$this->getCargoHolds() / 100
-								-$this->getSpeed() * 5
+								-$this->shipType->getSpeed() * 5
 								+($this->getHardpoints()/*+$ship['Increases']['Ship Power']*/) * 5
 								/*+(
 									$ship['Increases']['Mines']

@@ -23,9 +23,9 @@
 					} ?>
 				</select>
 				Ship:
-				<select name="ship_id"><?php
-					foreach ($BaseShips as $BaseShip) {
-						?><option value="<?php echo $BaseShip['ShipTypeID']; ?>"<?php if ($BaseShip['ShipTypeID'] == $DummyPlayer->getShipTypeID()) { ?> selected="selected"<?php } ?>><?php echo $BaseShip['Name']; ?></option><?php
+				<select name="ship_type_id"><?php
+					foreach ($ShipTypes as $ShipType) {
+						?><option value="<?php echo $ShipType->getTypeID(); ?>"<?php if ($ShipType->getTypeID() == $DummyPlayer->getShipTypeID()) { ?> selected="selected"<?php } ?>><?php echo $ShipType->getName(); ?></option><?php
 					} ?>
 				</select><br /><?php
 

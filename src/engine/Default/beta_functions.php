@@ -24,27 +24,20 @@ $template->assign('MoneyHREF', $container->href());
 $container['func'] = 'Ship';
 $template->assign('ShipHREF', $container->href());
 $shipList = [];
-$db = Smr\Database::getInstance();
-$db->query('SELECT * FROM ship_type ORDER BY ship_name');
-while ($db->nextRecord()) {
-	$shipList[] = [
-		'ID' => $db->getInt('ship_type_id'),
-		'Name' => $db->getField('ship_name'),
-	];
+foreach (SmrShipType::getAll() as $shipTypeID => $shipType) {
+	$shipList[$shipTypeID] = $shipType->getName();
 }
+asort($shipList); // sort by name
 $template->assign('ShipList', $shipList);
 
 //next weapons
 $container['func'] = 'Weapon';
 $template->assign('AddWeaponHREF', $container->href());
 $weaponList = [];
-$db->query('SELECT * FROM weapon_type ORDER BY weapon_name');
-while ($db->nextRecord()) {
-	$weaponList[] = [
-		'ID' => $db->getInt('weapon_type_id'),
-		'Name' => $db->getField('weapon_name'),
-	];
+foreach (SmrWeaponType::getAllWeaponTypes() as $weaponTypeID => $weaponType) {
+	$weaponList[$weaponTypeID] = $weaponType->getName();
 }
+asort($weaponList); // sort by name
 $template->assign('WeaponList', $weaponList);
 
 //Remove Weapons
@@ -75,12 +68,8 @@ $template->assign('AlignmentHREF', $container->href());
 $container['func'] = 'Hard_add';
 $template->assign('HardwareHREF', $container->href());
 $hardware = [];
-$db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
-while ($db->nextRecord()) {
-	$hardware[] = [
-		'ID' => $db->getInt('hardware_type_id'),
-		'Name' => $db->getField('hardware_name'),
-	];
+foreach (Globals::getHardwareTypes() as $hardwareTypeID => $hardwareType) {
+	$hardware[$hardwareTypeID] = $hardwareType['Name'];
 }
 $template->assign('Hardware', $hardware);
 

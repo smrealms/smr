@@ -32,10 +32,10 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 	public function test_base_ship_properties_are_set_correctly() {
 		$ship = new AbstractSmrShip($this->player);
 		self::assertSame('Demonica', $ship->getName());
-		self::assertSame(SHIP_TYPE_DEMONICA, $ship->getShipTypeID());
-		self::assertSame(ShipClass::HUNTER, $ship->getShipClassID());
+		self::assertSame(SHIP_TYPE_DEMONICA, $ship->getTypeID());
+		self::assertSame(ShipClass::HUNTER, $ship->getClassID());
 		self::assertSame(6, $ship->getHardpoints());
-		self::assertSame(10, $ship->getSpeed());
+		self::assertSame(10, $ship->getType()->getSpeed());
 		self::assertSame(0, $ship->getCost());
 	}
 
@@ -153,31 +153,31 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(5, $ship->getSDs());
 
 		// Cloak
-		self::assertTrue($ship->canHaveCloak());
+		self::assertTrue($ship->getType()->canHaveCloak());
 		self::assertFalse($ship->hasCloak());
 		$ship->increaseHardware(HARDWARE_CLOAK, 1);
 		self::assertTrue($ship->hasCloak());
 
 		// Illusion
-		self::assertTrue($ship->canHaveIllusion());
+		self::assertTrue($ship->getType()->canHaveIllusion());
 		self::assertFalse($ship->hasIllusion());
 		$ship->increaseHardware(HARDWARE_ILLUSION, 1);
 		self::assertTrue($ship->hasIllusion());
 
 		// Jump
-		self::assertTrue($ship->canHaveJump());
+		self::assertTrue($ship->getType()->canHaveJump());
 		self::assertFalse($ship->hasJump());
 		$ship->increaseHardware(HARDWARE_JUMP, 1);
 		self::assertTrue($ship->hasJump());
 
 		// Scanner
-		self::assertTrue($ship->canHaveScanner());
+		self::assertTrue($ship->getType()->canHaveScanner());
 		self::assertFalse($ship->hasScanner());
 		$ship->increaseHardware(HARDWARE_SCANNER, 1);
 		self::assertTrue($ship->hasScanner());
 
 		// DCs
-		self::assertTrue($ship->canHaveDCs());
+		self::assertTrue($ship->getType()->canHaveDCs());
 		self::assertFalse($ship->hasDCs());
 		$ship->increaseHardware(HARDWARE_DCS, 1);
 		self::assertTrue($ship->hasDCs());

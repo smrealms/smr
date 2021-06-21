@@ -26,7 +26,7 @@ class Plotter {
 
 		return match($xType) {
 			'Technology' => Globals::getHardwareTypes($X),
-			'Ships' => AbstractSmrShip::getBaseShip($X),
+			'Ships' => SmrShipType::get($X),
 			'Weapons' => SmrWeaponType::getWeaponType($X),
 			'Locations' => SmrLocation::getLocation($X),
 			'Sell Goods', 'Buy Goods' => $getGoodWithTransaction($X),

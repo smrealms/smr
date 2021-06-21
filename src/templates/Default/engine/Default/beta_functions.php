@@ -8,8 +8,8 @@
 <form method="POST" action="<?php echo $AddWeaponHREF; ?>">
 	<input type="number" name="amount" value="1" style="width:75px" />&nbsp;
 	<select name="weapon_id"><?php
-		foreach ($WeaponList as $weapon) { ?>
-			<option value="<?php echo $weapon['ID']; ?>"><?php echo $weapon['Name']; ?></option><?php
+		foreach ($WeaponList as $weaponTypeID => $weaponName) { ?>
+			<option value="<?php echo $weaponTypeID; ?>"><?php echo $weaponName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
 	<input type="submit" value="Add Weapon(s)" />
@@ -17,9 +17,9 @@
 <br />
 
 <form method="POST" action="<?php echo $ShipHREF; ?>">
-	<select name="ship_id"><?php
-		foreach ($ShipList as $ship) { ?>
-			<option value="<?php echo $ship['ID']; ?>"><?php echo $ship['Name']; ?></option><?php
+	<select name="ship_type_id"><?php
+		foreach ($ShipList as $shipTypeID => $shipName) { ?>
+			<option value="<?php echo $shipTypeID; ?>"><?php echo $shipName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
 	<input type="submit" value="Change Ship" />
@@ -29,8 +29,8 @@
 <form method="POST" action="<?php echo $HardwareHREF; ?>">
 	<input type="number" name="amount_hard" value="0" style="width:75px" />&nbsp;
 	<select name="type_hard"><?php
-		foreach ($Hardware as $item) { ?>
-			<option value="<?php echo $item['ID']; ?>"><?php echo $item['Name']; ?></option><?php
+		foreach ($Hardware as $hardwareTypeID => $hardwareName) { ?>
+			<option value="<?php echo $hardwareTypeID; ?>"><?php echo $hardwareName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
 	<input type="submit" value="Set Hardware" />

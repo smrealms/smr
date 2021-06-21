@@ -4,7 +4,7 @@ $name = Request::get('dummy_name');
 $dummyPlayer = DummyPlayer::getCachedDummyPlayer($name);
 $dummyPlayer->setPlayerName($name);
 $dummyPlayer->setExperience(Request::getInt('exp'));
-$dummyPlayer->setShipTypeID(Request::getInt('ship_id'));
+$dummyPlayer->setShipTypeID(Request::getInt('ship_type_id'));
 $dummyShip = $dummyPlayer->getShip();
 $dummyShip->removeAllWeapons();
 foreach (Request::getIntArray('weapons', []) as $weaponTypeID) {

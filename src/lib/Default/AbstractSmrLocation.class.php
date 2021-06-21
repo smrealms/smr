@@ -298,9 +298,10 @@ class AbstractSmrLocation {
 	public function getShipsSold() : array {
 		if (!isset($this->shipsSold)) {
 			$this->shipsSold = array();
-			$this->db->query('SELECT * FROM location_sells_ships WHERE ' . $this->SQL);
+			$this->db->query('SELECT * FROM location_sells_ships JOIN ship_type USING (ship_type_id) WHERE ' . $this->SQL);
 			while ($this->db->nextRecord()) {
-				$this->shipsSold[$this->db->getInt('ship_type_id')] = AbstractSmrShip::getBaseShip($this->db->getInt('ship_type_id'));
+				$shipTypeID = $this->db->getInt('ship_type_id');
+				$this->shipsSold[$shipTypeID] = SmrShipType::get($shipTypeID, $this->db);
 			}
 		}
 		return $this->shipsSold;
@@ -318,7 +319,7 @@ class AbstractSmrLocation {
 		if ($this->isShipSold($shipTypeID)) {
 			return;
 		}
-		$ship = AbstractSmrShip::getBaseShip($shipTypeID);
+		$ship = SmrShipType::get($shipTypeID);
 		$this->db->query('INSERT INTO location_sells_ships (location_type_id,ship_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($shipTypeID) . ')');
 		$this->shipsSold[$shipTypeID] = $ship;
 	}
@@ -404,13 +405,11 @@ class AbstractSmrLocation {
 		if ($x instanceof SmrWeaponType) {
 			return $this->isWeaponSold($x->getWeaponTypeID());
 		}
-		if (is_array($x)) {
-			if ($x['Type'] == 'Ship') { // instanceof Ship)
-				return $this->isShipSold($x['ShipTypeID']);
-			}
-			if ($x['Type'] == 'Hardware') { // instanceof ShipEquipment)
-				return $this->isHardwareSold($x['ID']);
-			}
+		if ($x instanceof SmrShipType) {
+			return $this->isShipSold($x->getTypeID());
+		}
+		if (is_array($x) && $x['Type'] == 'Hardware') { // instanceof ShipEquipment)
+			return $this->isHardwareSold($x['ID']);
 		}
 		if (is_string($x)) {
 			if ($x == 'Bank') {

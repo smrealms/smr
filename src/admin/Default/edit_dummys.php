@@ -5,7 +5,7 @@ $template = Smr\Template::getInstance();
 $template->assign('PageTopic', 'Edit Dummys');
 
 $template->assign('CombatSimLink', Page::create('skeleton.php', 'combat_simulator.php')->href());
-$template->assign('BaseShips', AbstractSmrShip::getAllBaseShips());
+$template->assign('ShipTypes', SmrShipType::getAll());
 $template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
 
 $template->assign('SelectDummysLink', Page::create('skeleton.php', 'edit_dummys.php')->href());

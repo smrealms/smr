@@ -52,10 +52,10 @@ if (isset($Locations)) {
 		</td>
 		<td>
 			<table><?php
-			foreach ($Location->getShipsSold() as $Ship) { ?>
+			foreach ($Location->getShipsSold() as $ShipTypeSold) { ?>
 					<tr>
-						<td><?php echo $Ship['Name'] ?></td>
-						<td><input type="checkbox" name="remove_ships[]" value="<?php echo $Ship['ShipTypeID']; ?>" /></td>
+						<td><?php echo $ShipTypeSold->getName(); ?></td>
+						<td><input type="checkbox" name="remove_ships[]" value="<?php echo $ShipTypeSold->getTypeID(); ?>" /></td>
 					</tr><?php
 				} ?>
 				<tr>
@@ -63,8 +63,8 @@ if (isset($Locations)) {
 					<td>
 						<select name="add_ship_id">
 							<option value="0">None</option><?php
-							foreach ($Ships as $Ship) { ?>
-								<option value="<?php echo $Ship['ShipTypeID']; ?>"><?php echo $Ship['Name']; ?></option><?php
+							foreach ($ShipTypes as $ShipType) { ?>
+								<option value="<?php echo $ShipType->getTypeID(); ?>"><?php echo $ShipType->getName(); ?></option><?php
 							} ?>
 					</select>
 					</td>
