@@ -20,15 +20,14 @@ Menu::alliance($alliance->getAllianceID());
 // Check to see if an alliance op is scheduled
 // Display it for 1 hour past start time (late arrivals, etc.)
 $db = Smr\Database::getInstance();
-$db->query('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND time > ' . $db->escapeNumber(Smr\Epoch::time() - 3600) . ' LIMIT 1');
-if ($db->nextRecord()) {
-	$template->assign('OpTime', $db->getInt('time'));
+$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND time > ' . $db->escapeNumber(Smr\Epoch::time() - 3600) . ' LIMIT 1');
+if ($dbResult->hasRecord()) {
+	$template->assign('OpTime', $dbResult->record()->getInt('time'));
 
 	// Has player responded yet?
-	$db2 = Smr\Database::getInstance();
-	$db2->query('SELECT response FROM alliance_has_op_response WHERE alliance_id=' . $db2->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL() . ' LIMIT 1');
+	$dbResult2 = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL() . ' LIMIT 1');
 
-	$response = $db2->nextRecord() ? $db2->getField('response') : null;
+	$response = $dbResult2->hasRecord() ? $dbResult2->record()->getField('response') : null;
 	$responseHREF = Page::create('alliance_op_response_processing.php')->href();
 	$template->assign('OpResponseHREF', $responseHREF);
 
@@ -42,9 +41,9 @@ if ($db->nextRecord()) {
 
 // Does the player have edit permission?
 $role_id = $player->getAllianceRole($alliance->getAllianceID());
-$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
-$db->requireRecord();
-if ($db->getBoolean('change_mod') || $db->getBoolean('change_pass')) {
+$dbResult = $db->read('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
+$dbRecord = $dbResult->record();
+if ($dbRecord->getBoolean('change_mod') || $dbRecord->getBoolean('change_pass')) {
 	$container = Page::create('skeleton.php', 'alliance_stat.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$template->assign('EditHREF', $container->href());

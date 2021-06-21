@@ -14,18 +14,20 @@ function shared_channel_msg_money(SmrPlayer $player) : array {
 
 	// get money on ships and personal bank accounts
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT sum(credits) as total_onship, sum(bank) as total_onbank FROM player WHERE alliance_id = ' . $player->getAllianceID() . ' AND game_id = ' . $player->getGameID());
+	$dbResult = $db->read('SELECT sum(credits) as total_onship, sum(bank) as total_onbank FROM player WHERE alliance_id = ' . $player->getAllianceID() . ' AND game_id = ' . $player->getGameID());
 
-	if ($db->nextRecord()) {
-		$result[] = 'Alliance members carry a total of ' . number_format($db->getInt('total_onship')) . ' credits with them';
-		$result[] = 'and keep a total of ' . number_format($db->getInt('total_onbank')) . ' credits in their personal bank accounts.';
+	if ($dbResult->hasRecord()) {
+		$dbRecord = $dbResult->record();
+		$result[] = 'Alliance members carry a total of ' . number_format($dbRecord->getInt('total_onship')) . ' credits with them';
+		$result[] = 'and keep a total of ' . number_format($dbRecord->getInt('total_onbank')) . ' credits in their personal bank accounts.';
 	}
 
 	// get money on planets
-	$db->query('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds FROM planet WHERE game_id = ' . $player->getGameID() . ' AND owner_id IN (SELECT account_id FROM player WHERE alliance_id = ' . $player->getAllianceID() . ' AND game_id = ' . $player->getGameID() . ')');
-	if ($db->nextRecord()) {
-		$result[] = 'There is a total of ' . number_format($db->getInt('total_credits')) . ' credits on the planets';
-		$result[] = 'and ' . number_format($db->getInt('total_bonds')) . ' credits in bonds.';
+	$dbResult = $db->read('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds FROM planet WHERE game_id = ' . $player->getGameID() . ' AND owner_id IN (SELECT account_id FROM player WHERE alliance_id = ' . $player->getAllianceID() . ' AND game_id = ' . $player->getGameID() . ')');
+	if ($dbResult->hasRecord()) {
+		$dbRecord = $dbResult->record();
+		$result[] = 'There is a total of ' . number_format($dbRecord->getInt('total_credits')) . ' credits on the planets';
+		$result[] = 'and ' . number_format($dbRecord->getInt('total_bonds')) . ' credits in bonds.';
 	}
 
 	return $result;

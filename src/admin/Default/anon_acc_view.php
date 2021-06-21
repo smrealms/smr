@@ -13,18 +13,18 @@ $anonID = $session->getRequestVarInt('anon_account');
 $gameID = $session->getRequestVarInt('view_game_id');
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT *
+$dbResult = $db->read('SELECT *
 			FROM anon_bank_transactions
 			JOIN player USING(account_id, game_id)
 			WHERE anon_id = '.$db->escapeNumber($anonID) . '
 				AND game_id = '.$db->escapeNumber($gameID) . '
 			ORDER BY transaction_id');
 $rows = [];
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	$rows[] = [
-		'player_name' => $db->getField('player_name'),
-		'transaction' => $db->getField('transaction'),
-		'amount' => $db->getInt('amount'),
+		'player_name' => $dbRecord->getField('player_name'),
+		'transaction' => $dbRecord->getField('transaction'),
+		'amount' => $dbRecord->getInt('amount'),
 	];
 }
 if (!$rows) {

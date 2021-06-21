@@ -45,18 +45,18 @@ class DummyPlayer extends AbstractSmrPlayer {
 	public function cacheDummyPlayer() : void {
 		$this->getShip()->cacheDummyShip();
 		$db = Smr\Database::getInstance();
-		$db->query('REPLACE INTO cached_dummys ' .
+		$db->write('REPLACE INTO cached_dummys ' .
 					'(type, id, info) ' .
 					'VALUES (\'DummyPlayer\', ' . $db->escapeString($this->getPlayerName()) . ', ' . $db->escapeObject($this) . ')');
 	}
 
 	public static function getCachedDummyPlayer(string $name) : self {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT info FROM cached_dummys
+		$dbResult = $db->read('SELECT info FROM cached_dummys
 					WHERE type = \'DummyPlayer\'
 						AND id = ' . $db->escapeString($name) . ' LIMIT 1');
-		if ($db->nextRecord()) {
-			return $db->getObject('info');
+		if ($dbResult->hasRecord()) {
+			return $dbResult->record()->getObject('info');
 		} else {
 			return new DummyPlayer($name);
 		}
@@ -64,11 +64,11 @@ class DummyPlayer extends AbstractSmrPlayer {
 
 	public static function getDummyPlayerNames() : array {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT id FROM cached_dummys
+		$dbResult = $db->read('SELECT id FROM cached_dummys
 					WHERE type = \'DummyPlayer\'');
 		$dummyNames = array();
-		while ($db->nextRecord()) {
-			$dummyNames[] = $db->getField('id');
+		foreach ($dbResult->records() as $dbRecord) {
+			$dummyNames[] = $dbRecord->getField('id');
 		}
 		return $dummyNames;
 	}

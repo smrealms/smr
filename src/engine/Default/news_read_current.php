@@ -22,7 +22,7 @@ if (!isset($var['LastNewsUpdate'])) {
 }
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > ' . $db->escapeNumber($var['LastNewsUpdate']) . ' AND type != \'lotto\' ORDER BY news_id DESC');
-$template->assign('NewsItems', getNewsItems($db));
+$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > ' . $db->escapeNumber($var['LastNewsUpdate']) . ' AND type != \'lotto\' ORDER BY news_id DESC');
+$template->assign('NewsItems', getNewsItems($dbResult));
 
 $player->updateLastNewsUpdate();

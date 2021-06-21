@@ -31,20 +31,20 @@ $links[] = array(
 $role_id = $player->getAllianceRole($alliance->getAllianceID());
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
-$db->requireRecord();
+$dbResult = $db->read('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
+$dbRecord = $dbResult->record();
 
 $container['url'] = 'skeleton.php';
 $container['alliance_id'] = $alliance->getAllianceID();
 
-if ($db->getBoolean('change_pass')) {
+if ($dbRecord->getBoolean('change_pass')) {
 	$container['body'] = 'alliance_invite_player.php';
 	$links[] = array(
 		'link' => create_link($container, 'Invite Player'),
 		'text' => 'Invite a player to the alliance.',
 	);
 }
-if ($db->getBoolean('remove_member')) {
+if ($dbRecord->getBoolean('remove_member')) {
 	$container['body'] = 'alliance_remove_member.php';
 	$links[] = array(
 		'link' => create_link($container, 'Remove Member'),
@@ -58,35 +58,35 @@ if ($player->isAllianceLeader()) {
 		'text' => 'Hand over leadership of the alliance to an alliance mate.',
 	);
 }
-if ($db->getBoolean('change_pass') || $db->getBoolean('change_mod')) {
+if ($dbRecord->getBoolean('change_pass') || $dbRecord->getBoolean('change_mod')) {
 	$container['body'] = 'alliance_stat.php';
 	$links[] = array(
 		'link' => create_link($container, 'Change Alliance Stats'),
 		'text' => 'Change the password, description or message of the day for the alliance.',
 	);
 }
-if ($db->getBoolean('change_roles')) {
+if ($dbRecord->getBoolean('change_roles')) {
 	$container['body'] = 'alliance_roles.php';
 	$links[] = array(
 		'link' => create_link($container, 'Define Alliance Roles'),
 		'text' => 'Each member in your alliance can fit into a specific role, a task. Here you can define the roles that you can assign to them.',
 	);
 }
-if ($db->getBoolean('exempt_with')) {
+if ($dbRecord->getBoolean('exempt_with')) {
 	$container['body'] = 'alliance_exempt_authorize.php';
 	$links[] = array(
 		'link' => create_link($container, 'Exempt Bank Transactions'),
 		'text' => 'Here you can set certain alliance account transactions as exempt. This makes them not count against, or for, the player making the transaction in the bank report.',
 	);
 }
-if ($db->getBoolean('treaty_entry')) {
+if ($dbRecord->getBoolean('treaty_entry')) {
 	$container['body'] = 'alliance_treaties.php';
 	$links[] = array(
 		'link' => create_link($container, 'Negotiate Treaties'),
 		'text' => 'Negotitate treaties with other alliances.',
 	);
 }
-if ($db->getBoolean('op_leader')) {
+if ($dbRecord->getBoolean('op_leader')) {
 	$container['body'] = 'alliance_set_op.php';
 	$links[] = array(
 		'link' => create_link($container, 'Schedule Operation'),

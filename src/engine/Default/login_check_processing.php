@@ -17,9 +17,9 @@ $lastLogin = $account->getLastLogin();
 
 $db = Smr\Database::getInstance();
 if ($var['CheckType'] == 'Announcements') {
-	$db->query('SELECT 1 FROM announcement WHERE time >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
+	$dbResult = $db->read('SELECT 1 FROM announcement WHERE time >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
 	// do we have announcements?
-	if ($db->nextRecord()) {
+	if ($dbResult->hasRecord()) {
 		Page::create('skeleton.php', 'announcements.php')->go();
 	} else {
 		$var['CheckType'] = 'Updates';
@@ -27,9 +27,9 @@ if ($var['CheckType'] == 'Announcements') {
 }
 
 if ($var['CheckType'] == 'Updates') {
-	$db->query('SELECT 1 FROM version WHERE went_live >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
+	$dbResult = $db->read('SELECT 1 FROM version WHERE went_live >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
 	// do we have updates?
-	if ($db->nextRecord()) {
+	if ($dbResult->hasRecord()) {
 		Page::create('skeleton.php', 'changelog_view.php', array('Since' => $lastLogin))->go();
 	}
 }

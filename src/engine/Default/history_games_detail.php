@@ -33,25 +33,25 @@ if (!empty($action)) {
 	$db->switchDatabases($var['HistoryDatabase']);
 	if ($from != 'alliance') {
 		$template->assign('Name', 'Sector ID');
-		$db->query('SELECT ' . $sql . ' as val, sector_id FROM ' . $from . ' WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY val DESC LIMIT 25');
-		while ($db->nextRecord()) {
+		$dbResult = $db->read('SELECT ' . $sql . ' as val, sector_id FROM ' . $from . ' WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY val DESC LIMIT 25');
+		foreach ($dbResult->records() as $dbRecord) {
 			$rankings[] = [
-				'name' => $db->getInt('sector_id'),
-				'value' => $db->getField('val'),
+				'name' => $dbRecord->getInt('sector_id'),
+				'value' => $dbRecord->getField('val'),
 			];
 		}
 	} else {
 		$template->assign('Name', 'Alliance');
-		$db->query('SELECT alliance_name, alliance_id, ' . $sql . ' as val FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25');
+		$dbResult = $db->read('SELECT alliance_name, alliance_id, ' . $sql . ' as val FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25');
 		$container = Page::copy($var);
 		$container['body'] = 'history_alliance_detail.php';
 		$container['selected_index'] = 1;
-		while ($db->nextRecord()) {
-			$name = htmlentities($db->getField('alliance_name'));
-			$container['alliance_id'] = $db->getInt('alliance_id');
+		foreach ($dbResult->records() as $dbRecord) {
+			$name = htmlentities($dbRecord->getField('alliance_name'));
+			$container['alliance_id'] = $dbRecord->getInt('alliance_id');
 			$rankings[] = [
 				'name' => create_link($container, $name),
-				'value' => $db->getField('val'),
+				'value' => $dbRecord->getField('val'),
 			];
 		}
 	}

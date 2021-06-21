@@ -16,7 +16,7 @@ $container = Page::create('skeleton.php');
 
 // get list of alliances
 $db = Smr\Database::getInstance();
-$db->query('SELECT
+$dbResult = $db->read('SELECT
 count(account_id) as alliance_member_count,
 sum(experience) as alliance_xp,
 floor(avg(experience)) as alliance_avg,
@@ -31,21 +31,21 @@ ORDER BY alliance_name ASC'
 );
 
 $alliances = array();
-while ($db->nextRecord()) {
-	if ($db->getInt('alliance_id') != $player->getAllianceID()) {
+foreach ($dbResult->records() as $dbRecord) {
+	if ($dbRecord->getInt('alliance_id') != $player->getAllianceID()) {
 		$container['body'] = 'alliance_roster.php';
 	} else {
 		$container['body'] = 'alliance_mod.php';
 	}
-	$allianceID = $db->getInt('alliance_id');
+	$allianceID = $dbRecord->getInt('alliance_id');
 	$container['alliance_id'] = $allianceID;
 
 	$alliances[$allianceID] = array(
 		'ViewHREF' => $container->href(),
-		'Name' => htmlentities($db->getField('alliance_name')),
-		'TotalExperience' => $db->getInt('alliance_xp'),
-		'AverageExperience' => $db->getInt('alliance_avg'),
-		'Members' => $db->getInt('alliance_member_count'),
+		'Name' => htmlentities($dbRecord->getField('alliance_name')),
+		'TotalExperience' => $dbRecord->getInt('alliance_xp'),
+		'AverageExperience' => $dbRecord->getInt('alliance_avg'),
+		'Members' => $dbRecord->getInt('alliance_member_count'),
 	);
 }
 $template->assign('Alliances', $alliances);

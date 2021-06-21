@@ -18,17 +18,17 @@ if (Request::get('action') == 'Preview') {
 $db = Smr\Database::getInstance();
 $db->lockTable('changelog');
 
-$db->query('SELECT MAX(changelog_id)
+$dbResult = $db->read('SELECT MAX(changelog_id)
 			FROM changelog
 			WHERE version_id = ' . $db->escapeNumber($var['version_id'])
 		   );
-if ($db->nextRecord()) {
-	$changelog_id = $db->getInt('MAX(changelog_id)') + 1;
+if ($dbResult->hasRecord()) {
+	$changelog_id = $dbResult->record()->getInt('MAX(changelog_id)') + 1;
 } else {
 	$changelog_id = 1;
 }
 
-$db->query('INSERT INTO changelog
+$db->write('INSERT INTO changelog
 			(version_id, changelog_id, change_title, change_message, affected_db)
 			VALUES (' . $db->escapeNumber($var['version_id']) . ', ' . $db->escapeNumber($changelog_id) . ', ' . $db->escapeString($change_title) . ', ' . $db->escapeString($change_message) . ', ' . $db->escapeString($affected_db) . ')');
 

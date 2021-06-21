@@ -10,24 +10,24 @@ Menu::alliance($alliance->getAllianceID());
 
 //get rid of already approved entries
 $db = Smr\Database::getInstance();
-$db->query('UPDATE alliance_bank_transactions SET request_exempt = 0 WHERE exempt = 1');
+$db->write('UPDATE alliance_bank_transactions SET request_exempt = 0 WHERE exempt = 1');
 
 
-$db->query('SELECT * FROM alliance_bank_transactions WHERE request_exempt = 1 ' .
+$dbResult = $db->read('SELECT * FROM alliance_bank_transactions WHERE request_exempt = 1 ' .
 			'AND alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND exempt = 0');
 $transactions = [];
-if ($db->getNumRows()) {
+if ($dbResult->hasRecord()) {
 	$container = Page::create('bank_alliance_exempt_processing.php');
 	$template->assign('ExemptHREF', $container->href());
 
 	$players = $alliance->getMembers();
-	while ($db->nextRecord()) {
+	foreach ($dbResult->records() as $dbRecord) {
 		$transactions[] = [
-			'type' => $db->getField('transaction') == 'Payment' ? 'Withdraw' : 'Deposit',
-			'player' => $players[$db->getInt('payee_id')]->getDisplayName(),
-			'reason' => $db->getField('reason'),
-			'amount' => number_format($db->getInt('amount')),
-			'transactionID' => $db->getInt('transaction_id'),
+			'type' => $dbRecord->getField('transaction') == 'Payment' ? 'Withdraw' : 'Deposit',
+			'player' => $players[$dbRecord->getInt('payee_id')]->getDisplayName(),
+			'reason' => $dbRecord->getField('reason'),
+			'amount' => number_format($dbRecord->getInt('amount')),
+			'transactionID' => $dbRecord->getInt('transaction_id'),
 		];
 	}
 }

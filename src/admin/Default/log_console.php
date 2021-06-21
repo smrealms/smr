@@ -9,35 +9,36 @@ $template->assign('PageTopic', 'Log Console');
 $loggedAccounts = array();
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT account_id as account_id, login, count(*) as number_of_entries
+$dbResult = $db->read('SELECT account_id as account_id, login, count(*) as number_of_entries
 			FROM account_has_logs
 			JOIN account USING(account_id)
 			GROUP BY account_id');
-if ($db->getNumRows()) {
-	$db2 = Smr\Database::getInstance();
-	while ($db->nextRecord()) {
-		$accountID = $db->getInt('account_id');
-		$loggedAccounts[$accountID] = array('AccountID' => $accountID,
-								'Login' => $db->getField('login'),
-								'TotalEntries' => $db->getInt('number_of_entries'),
-								'Checked' => isset($var['account_ids']) && in_array($accountID, $var['account_ids']),
-								'Notes' => '');
+foreach ($dbResult->records() as $dbRecord) {
+	$accountID = $dbRecord->getInt('account_id');
+	$loggedAccounts[$accountID] = [
+		'AccountID' => $accountID,
+		'Login' => $dbRecord->getField('login'),
+		'TotalEntries' => $dbRecord->getInt('number_of_entries'),
+		'Checked' => isset($var['account_ids']) && in_array($accountID, $var['account_ids']),
+		'Notes' => '',
+	];
 
-		$db2->query('SELECT notes FROM log_has_notes WHERE account_id = ' . $db2->escapeNumber($accountID));
-		if ($db2->nextRecord()) {
-			$loggedAccounts[$accountID]['Notes'] = nl2br($db2->getField('notes'));
-		}
+	$dbResult2 = $db->read('SELECT notes FROM log_has_notes WHERE account_id = ' . $db->escapeNumber($accountID));
+	if ($dbResult2->hasRecord()) {
+		$loggedAccounts[$accountID]['Notes'] = nl2br($dbResult2->record()->getField('notes'));
 	}
+}
+$template->assign('LoggedAccounts', $loggedAccounts);
 
+if (count($loggedAccounts) > 0) {
 	// put hidden fields in for log type to have all fields selected on next page.
 	$logTypes = array();
-	$db->query('SELECT log_type_id FROM log_type');
-	while ($db->nextRecord()) {
-		$logTypes[] = $db->getInt('log_type_id');
+	$dbResult = $db->read('SELECT log_type_id FROM log_type');
+	foreach ($dbResult->records() as $dbRecord) {
+		$logTypes[] = $dbRecord->getInt('log_type_id');
 	}
 	$template->assign('LogTypes', $logTypes);
 
 	$template->assign('LogConsoleFormHREF', Page::create('skeleton.php', 'log_console_detail.php')->href());
 	$template->assign('AnonAccessHREF', Page::create('skeleton.php', 'log_anonymous_account.php')->href());
 }
-$template->assign('LoggedAccounts', $loggedAccounts);

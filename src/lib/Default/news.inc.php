@@ -3,18 +3,18 @@
 /**
  * Takes a populated query and returns the news items.
  */
-function getNewsItems(Smr\Database $db) : array {
+function getNewsItems(Smr\DatabaseResult $dbResult) : array {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
 
 	$newsItems = [];
-	while ($db->nextRecord()) {
-		$message = bbifyMessage($db->getField('news_message'));
-		if ($db->getField('type') == 'admin') {
+	foreach ($dbResult->records() as $dbRecord) {
+		$message = bbifyMessage($dbRecord->getField('news_message'));
+		if ($dbRecord->getField('type') == 'admin') {
 			$message = '<span class="admin">ADMIN </span>' . $message;
 		}
 		$newsItems[] = [
-			'Date' => date($account->getDateTimeFormatSplit(), $db->getInt('time')),
+			'Date' => date($account->getDateTimeFormatSplit(), $dbRecord->getInt('time')),
 			'Message' => $message,
 		];
 	}
@@ -23,10 +23,11 @@ function getNewsItems(Smr\Database $db) : array {
 
 function doBreakingNewsAssign(int $gameID) : void {
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'breaking\' AND time > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_FOR_BREAKING_NEWS) . ' ORDER BY time DESC LIMIT 1');
-	if ($db->nextRecord()) {
+	$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'breaking\' AND time > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_FOR_BREAKING_NEWS) . ' ORDER BY time DESC LIMIT 1');
+	if ($dbResult->hasRecord()) {
+		$dbRecord = $dbResult->record();
 		$template = Smr\Template::getInstance();
-		$template->assign('BreakingNews', array('Time' => $db->getInt('time'), 'Message' => bbifyMessage($db->getField('news_message'))));
+		$template->assign('BreakingNews', array('Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getField('news_message'))));
 	}
 }
 
@@ -34,9 +35,10 @@ function doLottoNewsAssign(int $gameID) : void {
 	require_once(get_file_loc('bar.inc.php'));
 	checkForLottoWinner($gameID);
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'lotto\' ORDER BY time DESC LIMIT 1');
-	if ($db->nextRecord()) {
+	$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'lotto\' ORDER BY time DESC LIMIT 1');
+	if ($dbResult->hasRecord()) {
+		$dbRecord = $dbResult->record();
 		$template = Smr\Template::getInstance();
-		$template->assign('LottoNews', array('Time' => $db->getInt('time'), 'Message' => bbifyMessage($db->getField('news_message'))));
+		$template->assign('LottoNews', array('Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getField('news_message'))));
 	}
 }

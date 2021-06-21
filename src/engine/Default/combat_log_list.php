@@ -44,12 +44,11 @@ $page = 0;
 if (isset($var['page'])) {
 	$page = $var['page'];
 }
-$db->query('SELECT count(*) as count FROM combat_logs c WHERE ' . $query . ' LIMIT 1');
-$db->requireRecord(); // count always returns a record
-$totalLogs = $db->getInt('count');
+$dbResult = $db->read('SELECT count(*) as count FROM combat_logs c WHERE ' . $query . ' LIMIT 1');
+$totalLogs = $dbResult->record()->getInt('count'); // count always returns a record
 $template->assign('TotalLogs', $totalLogs);
 
-$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
+$dbResult = $db->read('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
 
 $getParticipantName = function($accountID, $sectorID) use ($player) : string {
 	if ($accountID == ACCOUNT_ID_PORT) {
@@ -74,7 +73,7 @@ $template->assign('LogType', $type);
 
 // Construct the list of logs of this type
 $logs = array();
-if ($db->getNumRows() > 0) {
+if ($dbResult->hasRecord()) {
 	// 'View' and 'Save' share the same form, so we use 'old_action' as a
 	// way to return to this page when we only want to save the logs.
 	$container = Page::create('combat_log_list_processing.php');
@@ -95,12 +94,12 @@ if ($db->getNumRows() > 0) {
 	$template->assign('CanDelete', $action == COMBAT_LOG_SAVED);
 	$template->assign('CanSave', $action != COMBAT_LOG_SAVED);
 
-	while ($db->nextRecord()) {
-		$sectorID = $db->getInt('sector_id');
-		$logs[$db->getInt('log_id')] = array(
-			'Attacker' => $getParticipantName($db->getInt('attacker_id'), $sectorID),
-			'Defender' => $getParticipantName($db->getInt('defender_id'), $sectorID),
-			'Time' => $db->getInt('timestamp'),
+	foreach ($dbResult->records() as $dbRecord) {
+		$sectorID = $dbRecord->getInt('sector_id');
+		$logs[$dbRecord->getInt('log_id')] = array(
+			'Attacker' => $getParticipantName($dbRecord->getInt('attacker_id'), $sectorID),
+			'Defender' => $getParticipantName($dbRecord->getInt('defender_id'), $sectorID),
+			'Time' => $dbRecord->getInt('timestamp'),
 			'Sector' => $sectorID
 		);
 	}

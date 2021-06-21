@@ -7,9 +7,9 @@ try {
 	// Get a list of all the shops that sell each weapon
 	$weaponLocs = [];
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT weapon_type_id, location_type.* FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) JOIN location_type USING (location_type_id) WHERE location_type_id != ' . $db->escapeNumber(RACE_WARS_WEAPONS));
-	while ($db->nextRecord()) {
-		$weaponLocs[$db->getInt('weapon_type_id')][] = SmrLocation::getLocation($db->getInt('location_type_id'), false, $db)->getName();
+	$dbResult = $db->read('SELECT weapon_type_id, location_type.* FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) JOIN location_type USING (location_type_id) WHERE location_type_id != ' . $db->escapeNumber(RACE_WARS_WEAPONS));
+	foreach ($dbResult->records() as $dbRecord) {
+		$weaponLocs[$dbRecord->getInt('weapon_type_id')][] = SmrLocation::getLocation($dbRecord->getInt('location_type_id'), false, $dbRecord)->getName();
 	}
 
 	// Get a list of all locations that sell weapons

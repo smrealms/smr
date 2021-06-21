@@ -73,38 +73,34 @@ function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID)
 	$vis = HOF_PUBLIC;
 	$rank = array('Amount'=>0, 'Rank'=>0);
 	if ($view == DONATION_NAME) {
-		$db->query('SELECT SUM(amount) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID) . ' GROUP BY account_id LIMIT 1');
+		$dbResult = $db->read('SELECT SUM(amount) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID) . ' GROUP BY account_id LIMIT 1');
 	} else if ($view == USER_SCORE_NAME) {
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
-		$query = 'SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x ORDER BY amount DESC';
-		$db->query($query);
+		$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x ORDER BY amount DESC');
 	} else {
-		$db->query('SELECT visibility FROM hof_visibility WHERE type=' . $db->escapeArray($viewType, ':', false) . ' LIMIT 1');
-		if (!$db->nextRecord()) {
+		$dbResult = $db->read('SELECT visibility FROM hof_visibility WHERE type=' . $db->escapeArray($viewType, ':', false) . ' LIMIT 1');
+		if (!$dbResult->hasRecord()) {
 			return $rank;
 		}
-		$vis = $db->getField('visibility');
-		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . ' AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id LIMIT 1');
+		$vis = $dbResult->record()->getField('visibility');
+		$dbResult = $db->read('SELECT SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . ' AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id LIMIT 1');
 	}
 
 	$realAmount = 0;
-	if ($db->nextRecord()) {
-		if ($db->getField('amount') != null) {
-			$realAmount = $db->getFloat('amount');
-		}
+	if ($dbResult->hasRecord()) {
+		$realAmount = $dbResult->record()->getFloat('amount');
 	}
 	$rank['Amount'] = applyHofVisibilityMask($realAmount, $vis, $gameID, $accountID);
 
 	if ($view == DONATION_NAME) {
-		$db->query('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');
+		$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');
 	} else if ($view == USER_SCORE_NAME) {
-		$query = 'SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . '>' . $db->escapeNumber($rank['Amount']) . ') x';
-		$db->query($query);
+		$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . '>' . $db->escapeNumber($rank['Amount']) . ') x');
 	} else {
-		$db->query('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
+		$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
 	}
-	if ($db->nextRecord()) {
-		$rank['Rank'] = $db->getInt('rank') + 1;
+	if ($dbResult->hasRecord()) {
+		$rank['Rank'] = $dbResult->record()->getInt('rank') + 1;
 	}
 	return $rank;
 }

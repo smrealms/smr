@@ -7,8 +7,8 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 	$db = Smr\Database::getInstance();
 
 	// only registered users are allowed to use this command
-	$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
-	if (!$db->nextRecord()) {
+	$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+	if (!$dbResult->hasRecord()) {
 
 		global $actions;
 
@@ -19,7 +19,7 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 		return true;
 	}
 
-	$registeredNick = $db->getField('registered_nick');
+	$registeredNick = $dbResult->record()->getField('registered_nick');
 
 	// get alliance_id and game_id for this channel
 	$alliance = SmrAlliance::getAllianceByIrcChannel($channel, true);
@@ -167,26 +167,27 @@ function channel_msg_seen($fp, $rdata)
 
 		// if user provided more than 3 letters we do a wildcard search
 		if (strlen($seennick) > 3) {
-			$db->query('SELECT * FROM irc_seen WHERE nick LIKE ' . $db->escapeString('%' . $seennick . '%') . ' AND channel = ' . $db->escapeString($channel) . ' ORDER BY signed_on DESC');
+			$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick LIKE ' . $db->escapeString('%' . $seennick . '%') . ' AND channel = ' . $db->escapeString($channel) . ' ORDER BY signed_on DESC');
 		} else {
-			$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($seennick) . ' AND channel = ' . $db->escapeString($channel));
+			$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($seennick) . ' AND channel = ' . $db->escapeString($channel));
 		}
 
 		// get only one result. shouldn't match more than one
-		if ($db->nextRecord()) {
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
 
-			$seennick = $db->getField('nick');
-			$seenuser = $db->getField('user');
-			$seenhost = $db->getField('host');
-			$signed_on = $db->getInt('signed_on');
-			$signed_off = $db->getInt('signed_off');
+			$seennick = $dbRecord->getField('nick');
+			$seenuser = $dbRecord->getField('user');
+			$seenhost = $dbRecord->getField('host');
+			$signed_on = $dbRecord->getInt('signed_on');
+			$signed_off = $dbRecord->getInt('signed_off');
 
 			if ($signed_off > 0) {
 
-				$seen_id = $db->getInt('seen_id');
+				$seen_id = $dbRecord->getInt('seen_id');
 
 				// remember who did the !seen command
-				$db->query('UPDATE irc_seen
+				$db->write('UPDATE irc_seen
 							SET seen_count = seen_count + 1,
 								seen_by = ' . $db->escapeString($nick) . '
 							WHERE seen_id = ' . $seen_id);

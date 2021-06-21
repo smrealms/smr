@@ -11,35 +11,36 @@ $session->getRequestVarInt('maxValue', 0);
 $session->getRequestVarInt('minValue', 0);
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT *
+$dbResult = $db->read('SELECT *
 			FROM anon_bank
 			WHERE anon_id=' . $db->escapeNumber($account_num) . '
 			AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 
-// if they didn't come from the creation screen we need to check if the pw is correct
-if ($db->nextRecord()) {
-	if (!isset($var['allowed']) || $var['allowed'] != 'yes') {
-		$session->getRequestVar('password');
-		if ($db->getField('password') != $var['password']) {
-			create_error('Invalid password!');
-		}
-	}
-} else {
+if (!$dbResult->hasRecord()) {
 	create_error('This anonymous account does not exist!');
 }
+$dbRecord = $dbResult->record();
 
-$balance = $db->getInt('amount');
+// if they didn't come from the creation screen we need to check if the pw is correct
+if (!isset($var['allowed']) || $var['allowed'] != 'yes') {
+	$session->getRequestVar('password');
+	if ($dbRecord->getField('password') != $var['password']) {
+		create_error('Invalid password!');
+	}
+}
+
+$balance = $dbRecord->getInt('amount');
 $template->assign('Balance', $balance);
 
 if ($var['maxValue'] > 0) {
 	$maxValue = $var['maxValue'];
 } else {
-	$db->query('SELECT MAX(transaction_id) FROM anon_bank_transactions
+	$dbResult = $db->read('SELECT MAX(transaction_id) FROM anon_bank_transactions
 				WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
 				AND anon_id=' . $db->escapeNumber($account_num)
 				);
-	if ($db->nextRecord()) {
-		$maxValue = $db->getInt('MAX(transaction_id)');
+	if ($dbResult->hasRecord()) {
+		$maxValue = $dbResult->record()->getInt('MAX(transaction_id)');
 	} else {
 		$maxValue = 5;
 	}
@@ -64,10 +65,10 @@ if ($maxValue > 0 && $minValue > 0) {
 	$query .= ' ORDER BY time LIMIT 10';
 }
 
-$db->query($query);
+$dbResult = $db->read($query);
 
 // only if we have at least one result
-if ($db->getNumRows() > 0) {
+if ($dbResult->hasRecord()) {
 	$template->assign('MinValue', $minValue);
 	$template->assign('MaxValue', $maxValue);
 	$container = Page::create('skeleton.php', 'bank_anon_detail.php');
@@ -76,12 +77,12 @@ if ($db->getNumRows() > 0) {
 	$template->assign('ShowHREF', $container->href());
 
 	$transactions = [];
-	while ($db->nextRecord()) {
-		$transactionPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
-		$transaction = $db->getField('transaction');
-		$amount = number_format($db->getInt('amount'));
-		$transactions[$db->getInt('transaction_id')] = [
-			'date' => date($account->getDateTimeFormatSplit(), $db->getInt('time')),
+	foreach ($dbResult->records() as $dbRecord) {
+		$transactionPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+		$transaction = $dbRecord->getField('transaction');
+		$amount = number_format($dbRecord->getInt('amount'));
+		$transactions[$dbRecord->getInt('transaction_id')] = [
+			'date' => date($account->getDateTimeFormatSplit(), $dbRecord->getInt('time')),
 			'payment' => $transaction == 'Payment' ? $amount : '',
 			'deposit' => $transaction == 'Deposit' ? $amount : '',
 			'link' => $transactionPlayer->getLinkedDisplayName(),

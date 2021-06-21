@@ -12,17 +12,17 @@ $account_id = $session->getRequestVarInt('account_id');
 
 // check if the given account really has an entry
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account_id) . ' AND Approved = \'YES\'');
-$db->requireRecord();
+$dbResult = $db->read('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account_id) . ' AND Approved = \'YES\'');
+$dbRecord = $dbResult->record();
 
-$disabled = $db->getBoolean('disabled');
-$location = stripslashes($db->getField('location'));
-$email = stripslashes($db->getField('email'));
-$website = stripslashes($db->getField('website'));
-$day = $db->getField('day');
-$month = $db->getField('month');
-$year = $db->getField('year');
-$other = nl2br(stripslashes($db->getField('other')));
+$disabled = $dbRecord->getBoolean('disabled');
+$location = stripslashes($dbRecord->getField('location'));
+$email = stripslashes($dbRecord->getField('email'));
+$website = stripslashes($dbRecord->getField('website'));
+$day = $dbRecord->getField('day');
+$month = $dbRecord->getField('month');
+$year = $dbRecord->getField('year');
+$other = nl2br(stripslashes($dbRecord->getField('other')));
 
 if (!empty($day) && !empty($month) && !empty($year)) {
 	$birthdate = $month . ' / ' . $day . ' / ' . $year;
@@ -75,16 +75,16 @@ $default_email = 'Dear Photo Album User,' . EOL . EOL .
 				 'Admin Team';
 $template->assign('DisableEmail', $default_email);
 
-$db->query('SELECT *
+$dbResult = $db->read('SELECT *
 			FROM album_has_comments
 			WHERE album_id = '.$db->escapeNumber($account_id));
 $comments = array();
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	$comments[] = [
-		'id' => $db->getInt('comment_id'),
-		'date' => date($account->getDateTimeFormat(), $db->getInt('time')),
-		'postee' => get_album_nick($db->getInt('post_id')),
-		'msg' => stripslashes($db->getField('msg')),
+		'id' => $dbRecord->getInt('comment_id'),
+		'date' => date($account->getDateTimeFormat(), $dbRecord->getInt('time')),
+		'postee' => get_album_nick($dbRecord->getInt('post_id')),
+		'msg' => stripslashes($dbRecord->getField('msg')),
 	];
 }
 $template->assign('Comments', $comments);

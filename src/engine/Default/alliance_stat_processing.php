@@ -50,8 +50,8 @@ if (isset($discordChannel)) {
 	} else {
 		// no duplicates in a given game
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT * FROM alliance WHERE discord_channel =' . $db->escapeString($discordChannel) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
-		if ($db->nextRecord()) {
+		$dbResult = $db->read('SELECT 1 FROM alliance WHERE discord_channel =' . $db->escapeString($discordChannel) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
 			create_error('Another alliance is already using that Discord Channel ID!');
 		}
 

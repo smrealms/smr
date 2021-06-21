@@ -11,9 +11,9 @@ Menu::alliance($alliance->getAllianceID());
 
 $alliances = [];
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY alliance_name');
-while ($db->nextRecord()) {
-	$alliances[$db->getInt('alliance_id')] = htmlentities($db->getField('alliance_name'));
+$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY alliance_name');
+foreach ($dbResult->records() as $dbRecord) {
+	$alliances[$dbRecord->getInt('alliance_id')] = htmlentities($dbRecord->getField('alliance_name'));
 }
 $template->assign('Alliances', $alliances);
 
@@ -22,18 +22,18 @@ if (isset($var['message'])) {
 }
 
 $offers = [];
-$db->query('SELECT * FROM alliance_treaties WHERE alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND official = \'FALSE\'');
-while ($db->nextRecord()) {
+$dbResult = $db->read('SELECT * FROM alliance_treaties WHERE alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND official = \'FALSE\'');
+foreach ($dbResult->records() as $dbRecord) {
 	$offerTerms = [];
 	foreach (array_keys(SmrTreaty::TYPES) as $term) {
-		if ($db->getBoolean($term)) {
+		if ($dbRecord->getBoolean($term)) {
 			$offerTerms[] = $term;
 		}
 	}
-	$otherAllianceID = $db->getInt('alliance_id_1');
+	$otherAllianceID = $dbRecord->getInt('alliance_id_1');
 	$container = Page::create('alliance_treaties_processing.php', '');
 	$container['alliance_id_1'] = $otherAllianceID;
-	$container['aa_access'] = $db->getField('aa_access');
+	$container['aa_access'] = $dbRecord->getField('aa_access');
 	$container['accept'] = true;
 	$acceptHREF = $container->href();
 	$container['accept'] = false;

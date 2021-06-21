@@ -10,7 +10,7 @@ class DummyShip extends AbstractSmrShip {
 
 	public function cacheDummyShip() : void {
 		$db = Smr\Database::getInstance();
-		$db->query('REPLACE INTO cached_dummys (type, id, info)
+		$db->write('REPLACE INTO cached_dummys (type, id, info)
 					VALUES (\'DummyShip\', ' . $db->escapeString($this->getPlayer()->getPlayerName()) . ', ' . $db->escapeObject($this) . ')');
 	}
 
@@ -20,10 +20,10 @@ class DummyShip extends AbstractSmrShip {
 
 			// Load weapons from the dummy database cache, if available
 			$db = Smr\Database::getInstance();
-			$db->query('SELECT info FROM cached_dummys WHERE type = \'DummyShip\'
+			$dbResult = $db->read('SELECT info FROM cached_dummys WHERE type = \'DummyShip\'
 						AND id = ' . $db->escapeString($player->getPlayerName()) . ' LIMIT 1');
-			if ($db->nextRecord()) {
-				$cachedShip = $db->getObject('info');
+			if ($dbResult->hasRecord()) {
+				$cachedShip = $dbResult->record()->getObject('info');
 				foreach ($cachedShip->getWeapons() as $weapon) {
 					$ship->addWeapon($weapon);
 				}
@@ -36,10 +36,10 @@ class DummyShip extends AbstractSmrShip {
 
 	public static function getDummyShipNames() : array {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT id FROM cached_dummys WHERE type = \'DummyShip\'');
+		$dbResult = $db->read('SELECT id FROM cached_dummys WHERE type = \'DummyShip\'');
 		$dummyNames = array();
-		while ($db->nextRecord()) {
-			$dummyNames[] = $db->getField('id');
+		foreach ($dbResult->records() as $dbRecord) {
+			$dummyNames[] = $dbRecord->getField('id');
 		}
 		return $dummyNames;
 	}

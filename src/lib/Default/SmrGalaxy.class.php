@@ -24,20 +24,20 @@ class SmrGalaxy {
 	public static function getGameGalaxies(int $gameID, bool $forceUpdate = false) : array {
 		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
 			$db = Smr\Database::getInstance();
-			$db->query('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY galaxy_id ASC');
+			$dbResult = $db->read('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY galaxy_id ASC');
 			$galaxies = array();
-			while ($db->nextRecord()) {
-				$galaxyID = $db->getInt('galaxy_id');
-				$galaxies[$galaxyID] = self::getGalaxy($gameID, $galaxyID, $forceUpdate, $db);
+			foreach ($dbResult->records() as $dbRecord) {
+				$galaxyID = $dbRecord->getInt('galaxy_id');
+				$galaxies[$galaxyID] = self::getGalaxy($gameID, $galaxyID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_GAME_GALAXIES[$gameID] = $galaxies;
 		}
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
 
-	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, Smr\Database $db = null) : SmrGalaxy {
+	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null) : SmrGalaxy {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
-			$g = new SmrGalaxy($gameID, $galaxyID, false, $db);
+			$g = new SmrGalaxy($gameID, $galaxyID, false, $dbRecord);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
 		}
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
@@ -59,27 +59,27 @@ class SmrGalaxy {
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
 	}
 
-	protected function __construct(int $gameID, int $galaxyID, bool $create = false, Smr\Database $db = null) {
+	protected function __construct(int $gameID, int $galaxyID, bool $create = false, Smr\DatabaseRecord $dbRecord = null) {
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND galaxy_id = ' . $this->db->escapeNumber($galaxyID);
 
-		if (isset($db)) {
-			$this->isNew = false;
-		} else {
-			$db = $this->db;
-			$db->query('SELECT * FROM game_galaxy WHERE ' . $this->SQL);
-			$this->isNew = !$db->nextRecord();
+		if ($dbRecord === null) {
+			$dbResult = $this->db->read('SELECT * FROM game_galaxy WHERE ' . $this->SQL);
+			if ($dbResult->hasRecord()) {
+				$dbRecord = $dbResult->record();
+			}
 		}
+		$this->isNew = $dbRecord === null;
 
 		$this->gameID = $gameID;
 		$this->galaxyID = $galaxyID;
 		if (!$this->isNew) {
-			$this->name = $db->getField('galaxy_name');
-			$this->width = $db->getInt('width');
-			$this->height = $db->getInt('height');
-			$this->galaxyType = $db->getField('galaxy_type');
-			$this->maxForceTime = $db->getInt('max_force_time');
+			$this->name = $dbRecord->getField('galaxy_name');
+			$this->width = $dbRecord->getInt('width');
+			$this->height = $dbRecord->getInt('height');
+			$this->galaxyType = $dbRecord->getField('galaxy_type');
+			$this->maxForceTime = $dbRecord->getInt('max_force_time');
 		} elseif ($create === false) {
 			throw new Exception('No such galaxy: ' . $gameID . '-' . $galaxyID);
 		}
@@ -87,7 +87,7 @@ class SmrGalaxy {
 
 	public function save() : void {
 		if ($this->isNew) {
-				$this->db->query('INSERT INTO game_galaxy (game_id,galaxy_id,galaxy_name,width,height,galaxy_type,max_force_time)
+				$this->db->write('INSERT INTO game_galaxy (game_id,galaxy_id,galaxy_name,width,height,galaxy_type,max_force_time)
 									values
 									(' . $this->db->escapeNumber($this->getGameID()) .
 									',' . $this->db->escapeNumber($this->getGalaxyID()) .
@@ -97,7 +97,7 @@ class SmrGalaxy {
 									',' . $this->db->escapeString($this->getGalaxyType()) .
 									',' . $this->db->escapeNumber($this->getMaxForceTime()) . ')');
 		} elseif ($this->hasChanged) {
-				$this->db->query('UPDATE game_galaxy SET galaxy_name = ' . $this->db->escapeString($this->getName()) .
+				$this->db->write('UPDATE game_galaxy SET galaxy_name = ' . $this->db->escapeString($this->getName()) .
 										', width = ' . $this->db->escapeNumber($this->getWidth()) .
 										', height = ' . $this->db->escapeNumber($this->getHeight()) .
 										', galaxy_type = ' . $this->db->escapeString($this->getGalaxyType()) .

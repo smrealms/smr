@@ -38,11 +38,11 @@ $template->assign('SubmitValue', 'Create Game');
 
 $games = array();
 if ($canEditStartedGames) {
-	$db->query('SELECT game_id FROM game ORDER BY end_time DESC');
+	$dbResult = $db->read('SELECT game_id FROM game ORDER BY end_time DESC');
 } else {
-	$db->query('SELECT game_id FROM game WHERE join_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY end_time DESC');
+	$dbResult = $db->read('SELECT game_id FROM game WHERE join_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY end_time DESC');
 }
-while ($db->nextRecord()) {
-	$games[] = SmrGame::getGame($db->getInt('game_id'));
+foreach ($dbResult->records() as $dbRecord) {
+	$games[] = SmrGame::getGame($dbRecord->getInt('game_id'));
 }
 $template->assign('EditGames', $games);

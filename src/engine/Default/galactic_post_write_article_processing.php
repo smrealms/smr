@@ -24,7 +24,7 @@ if (Request::get('action') == 'Preview article') {
 $db = Smr\Database::getInstance();
 if (isset($var['id'])) {
 	// Editing an article
-	$db->query('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(Smr\Epoch::time()) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
+	$db->write('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(Smr\Epoch::time()) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
 	Page::create('skeleton.php', 'galactic_post_view_article.php')->go();
 } else {
 	// Adding a new article
@@ -35,10 +35,10 @@ if (isset($var['id'])) {
 		}
 	}
 
-	$db->query('SELECT MAX(article_id) article_id FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
-	$db->requireRecord();
-	$num = $db->getInt('article_id') + 1;
-	$db->query('INSERT INTO galactic_post_article (game_id, article_id, writer_id, title, text, last_modified) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($num) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($title) . ' , ' . $db->escapeString($message) . ' , ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
-	$db->query('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(Smr\Epoch::time()) . ' WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
+	$dbResult = $db->read('SELECT MAX(article_id) article_id FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
+	$num = $dbResult->record()->getInt('article_id') + 1;
+
+	$db->write('INSERT INTO galactic_post_article (game_id, article_id, writer_id, title, text, last_modified) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($num) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($title) . ' , ' . $db->escapeString($message) . ' , ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+	$db->write('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(Smr\Epoch::time()) . ' WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
 	Page::create('skeleton.php', 'galactic_post_read.php')->go();
 }

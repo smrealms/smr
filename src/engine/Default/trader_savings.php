@@ -10,11 +10,11 @@ Menu::trader();
 
 $anonAccounts = [];
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM anon_bank WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-while ($db->nextRecord()) {
+$dbResult = $db->read('SELECT * FROM anon_bank WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+foreach ($dbResult->records() as $dbRecord) {
 	$anonAccounts[] = [
-		'ID' => $db->getInt('anon_id'),
-		'Password' => $db->getField('password'),
+		'ID' => $dbRecord->getInt('anon_id'),
+		'Password' => $dbRecord->getField('password'),
 	];
 }
 $template->assign('AnonAccounts', $anonAccounts);
@@ -24,15 +24,13 @@ checkForLottoWinner($player->getGameID());
 $template->assign('LottoInfo', getLottoInfo($player->getGameID()));
 
 // Number of active lotto tickets this player has
-$db->query('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time > 0');
-$db->requireRecord();
-$tickets = $db->getInt('count(*)');
+$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time > 0');
+$tickets = $dbResult->record()->getInt('count(*)');
 $template->assign('LottoTickets', $tickets);
 
 // Number of active lotto tickets all players have
-$db->query('SELECT count(*) FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time > 0');
-$db->requireRecord();
-$tickets_tot = $db->getInt('count(*)');
+$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time > 0');
+$tickets_tot = $dbResult->record()->getInt('count(*)');
 if ($tickets == 0) {
 	$win_chance = 0;
 } else {
@@ -41,6 +39,5 @@ if ($tickets == 0) {
 $template->assign('LottoWinChance', $win_chance);
 
 // Number of winning lotto tickets this player has to claim
-$db->query('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
-$db->requireRecord();
-$template->assign('WinningTickets', $db->getInt('count(*)'));
+$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
+$template->assign('WinningTickets', $dbResult->record()->getInt('count(*)'));

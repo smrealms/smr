@@ -17,12 +17,12 @@ $template->assign('ShowHREF', Page::copy($var)->href());
 
 $db = Smr\Database::getInstance();
 $db->switchDatabases($var['HistoryDatabase']);
-$db->query('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($var['view_game_id']) . ' AND news_id >= ' . $db->escapeNumber($min) . ' AND news_id <= ' . $db->escapeNumber($max));
+$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($var['view_game_id']) . ' AND news_id >= ' . $db->escapeNumber($min) . ' AND news_id <= ' . $db->escapeNumber($max));
 $rows = [];
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	$rows[] = [
-		'time' => date($account->getDateTimeFormat(), $db->getInt('time')),
-		'news' => $db->getField('message'),
+		'time' => date($account->getDateTimeFormat(), $dbRecord->getInt('time')),
+		'news' => $dbRecord->getField('message'),
 	];
 }
 $template->assign('Rows', $rows);

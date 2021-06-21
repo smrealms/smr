@@ -20,9 +20,9 @@ class SmrEnhancedWeaponEvent {
 	public static function getShopEvents(int $gameID, int $sectorID, int $locationID) : array {
 		$events = [];
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT * FROM location_sells_special WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND location_type_id = ' . $db->escapeNumber($locationID) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' AND expires > ' . $db->escapeNumber(Smr\Epoch::time()));
-		while ($db->nextRecord()) {
-			$events[] = self::getEventFromDatabase($db);
+		$dbResult = $db->read('SELECT * FROM location_sells_special WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND location_type_id = ' . $db->escapeNumber($locationID) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' AND expires > ' . $db->escapeNumber(Smr\Epoch::time()));
+		foreach ($dbResult->records() as $dbRecord) {
+			$events[] = self::getEventFromDatabase($dbRecord);
 		}
 		return $events;
 	}
@@ -36,13 +36,13 @@ class SmrEnhancedWeaponEvent {
 	public static function getLatestEvent(int $gameID) : SmrEnhancedWeaponEvent {
 		// First, remove any expired events from the database
 		$db = Smr\Database::getInstance();
-		$db->query('DELETE FROM location_sells_special WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));
+		$db->write('DELETE FROM location_sells_special WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));
 
 		// Next, check if an existing event can be advertised
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT * FROM location_sells_special WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY expires DESC LIMIT 1');
-		if ($db->nextRecord()) {
-			$event = self::getEventFromDatabase($db);
+		$dbResult = $db->read('SELECT * FROM location_sells_special WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY expires DESC LIMIT 1');
+		if ($dbResult->hasRecord()) {
+			$event = self::getEventFromDatabase($dbResult->record());
 			// Don't advertise if the event expires within one GRACE_PERIOD
 			if (Smr\Epoch::time() < $event->getExpireTime() - self::GRACE_PERIOD) {
 				return $event;
@@ -64,10 +64,10 @@ class SmrEnhancedWeaponEvent {
 		$weaponTypeID = array_rand(SmrWeaponType::getAllSoldWeaponTypes($gameID));
 
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT location_type_id, sector_id FROM location JOIN location_sells_weapons USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND weapon_type_id = ' . $db->escapeNumber($weaponTypeID) . ' ORDER BY RAND() LIMIT 1');
-		$db->requireRecord();
-		$locationTypeID = $db->getInt('location_type_id');
-		$sectorID = $db->getInt('sector_id');
+		$dbResult = $db->read('SELECT location_type_id, sector_id FROM location JOIN location_sells_weapons USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND weapon_type_id = ' . $db->escapeNumber($weaponTypeID) . ' ORDER BY RAND() LIMIT 1');
+		$dbRecord = $dbResult->record();
+		$locationTypeID = $dbRecord->getInt('location_type_id');
+		$sectorID = $dbRecord->getInt('sector_id');
 
 		$expires = Smr\Epoch::time() + self::DURATION;
 
@@ -84,7 +84,7 @@ class SmrEnhancedWeaponEvent {
 			$bonusDamage = true;
 		}
 
-		$db->query('INSERT INTO location_sells_special (game_id, sector_id, location_type_id, weapon_type_id, expires, bonus_accuracy, bonus_damage) VALUES (' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($sectorID) . ',' . $db->escapeNumber($locationTypeID) . ',' . $db->escapeNumber($weaponTypeID) . ',' . $db->escapeNumber($expires) . ',' . $db->escapeBoolean($bonusAccuracy) . ',' . $db->escapeBoolean($bonusDamage) . ')');
+		$db->write('INSERT INTO location_sells_special (game_id, sector_id, location_type_id, weapon_type_id, expires, bonus_accuracy, bonus_damage) VALUES (' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($sectorID) . ',' . $db->escapeNumber($locationTypeID) . ',' . $db->escapeNumber($weaponTypeID) . ',' . $db->escapeNumber($expires) . ',' . $db->escapeBoolean($bonusAccuracy) . ',' . $db->escapeBoolean($bonusDamage) . ')');
 
 		return new SmrEnhancedWeaponEvent($gameID, $weaponTypeID, $locationTypeID, $sectorID, $expires, $bonusAccuracy, $bonusDamage);
 	}
@@ -92,8 +92,16 @@ class SmrEnhancedWeaponEvent {
 	/**
 	 * Convenience function to instantiate an event from a query result.
 	 */
-	private static function getEventFromDatabase(Smr\Database $db) : SmrEnhancedWeaponEvent {
-		return new SmrEnhancedWeaponEvent($db->getInt('game_id'), $db->getInt('weapon_type_id'), $db->getInt('location_type_id'), $db->getInt('sector_id'), $db->getInt('expires'), $db->getBoolean('bonus_accuracy'), $db->getBoolean('bonus_damage'));
+	private static function getEventFromDatabase(Smr\DatabaseRecord $dbRecord) : SmrEnhancedWeaponEvent {
+		return new SmrEnhancedWeaponEvent(
+			$dbRecord->getInt('game_id'),
+			$dbRecord->getInt('weapon_type_id'),
+			$dbRecord->getInt('location_type_id'),
+			$dbRecord->getInt('sector_id'),
+			$dbRecord->getInt('expires'),
+			$dbRecord->getBoolean('bonus_accuracy'),
+			$dbRecord->getBoolean('bonus_damage'),
+		);
 	}
 
 	protected function __construct(int $gameID, int $weaponTypeID, int $locationTypeID, int $sectorID, int $expires, bool $bonusAccuracy, bool $bonusDamage) {

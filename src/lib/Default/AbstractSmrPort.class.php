@@ -72,11 +72,11 @@ class AbstractSmrPort {
 	public static function getGalaxyPorts(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
 		$db = Smr\Database::getInstance();
 		// Use a left join so that we populate the cache for every sector
-		$db->query('SELECT port.*, sector_id FROM sector LEFT JOIN port USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT port.*, sector_id FROM sector LEFT JOIN port USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPorts = [];
-		while ($db->nextRecord()) {
-			$sectorID = $db->getInt('sector_id');
-			$port = self::getPort($gameID, $sectorID, $forceUpdate, $db);
+		foreach ($dbResult->records() as $dbRecord) {
+			$sectorID = $dbRecord->getInt('sector_id');
+			$port = self::getPort($gameID, $sectorID, $forceUpdate, $dbRecord);
 			// Only return those ports that exist
 			if ($port->exists()) {
 				$galaxyPorts[$sectorID] = $port;
@@ -85,9 +85,9 @@ class AbstractSmrPort {
 		return $galaxyPorts;
 	}
 
-	public static function getPort(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\Database $db = null) : self {
+	public static function getPort(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null) : self {
 		if ($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
-			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID, $sectorID, $db);
+			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID, $sectorID, $dbRecord);
 		}
 		return self::$CACHE_PORTS[$gameID][$sectorID];
 	}
@@ -96,11 +96,11 @@ class AbstractSmrPort {
 		$db = Smr\Database::getInstance();
 		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
 		        AND sector_id = ' . $db->escapeNumber($sectorID);
-		$db->query('DELETE FROM port WHERE ' . $SQL);
-		$db->query('DELETE FROM port_has_goods WHERE ' . $SQL);
-		$db->query('DELETE FROM player_visited_port WHERE ' . $SQL);
-		$db->query('DELETE FROM player_attacks_port WHERE ' . $SQL);
-		$db->query('DELETE FROM port_info_cache WHERE ' . $SQL);
+		$db->write('DELETE FROM port WHERE ' . $SQL);
+		$db->write('DELETE FROM port_has_goods WHERE ' . $SQL);
+		$db->write('DELETE FROM player_visited_port WHERE ' . $SQL);
+		$db->write('DELETE FROM player_attacks_port WHERE ' . $SQL);
+		$db->write('DELETE FROM port_info_cache WHERE ' . $SQL);
 		self::$CACHE_PORTS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
@@ -125,32 +125,32 @@ class AbstractSmrPort {
 		return ($cargo / 13) * $distance;
 	}
 
-	protected function __construct(int $gameID, int $sectorID, Smr\Database $db = null) {
+	protected function __construct(int $gameID, int $sectorID, Smr\DatabaseRecord $dbRecord = null) {
 		$this->cachedTime = Smr\Epoch::time();
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
-		if (isset($db)) {
-			$this->isNew = !$db->hasField('game_id');
-		} else {
-			$db = $this->db;
-			$db->query('SELECT * FROM port WHERE ' . $this->SQL . ' LIMIT 1');
-			$this->isNew = !$db->nextRecord();
+		if ($dbRecord === null) {
+			$dbResult = $this->db->read('SELECT * FROM port WHERE ' . $this->SQL . ' LIMIT 1');
+			if ($dbResult->hasRecord()) {
+				$dbRecord = $dbResult->record();
+			}
 		}
+		$this->isNew = $dbRecord === null;
 
-		$this->gameID = (int)$gameID;
-		$this->sectorID = (int)$sectorID;
+		$this->gameID = $gameID;
+		$this->sectorID = $sectorID;
 		if (!$this->isNew) {
-			$this->shields = $db->getInt('shields');
-			$this->combatDrones = $db->getInt('combat_drones');
-			$this->armour = $db->getInt('armour');
-			$this->reinforceTime = $db->getInt('reinforce_time');
-			$this->attackStarted = $db->getInt('attack_started');
-			$this->raceID = $db->getInt('race_id');
-			$this->level = $db->getInt('level');
-			$this->credits = $db->getInt('credits');
-			$this->upgrade = $db->getInt('upgrade');
-			$this->experience = $db->getInt('experience');
+			$this->shields = $dbRecord->getInt('shields');
+			$this->combatDrones = $dbRecord->getInt('combat_drones');
+			$this->armour = $dbRecord->getInt('armour');
+			$this->reinforceTime = $dbRecord->getInt('reinforce_time');
+			$this->attackStarted = $dbRecord->getInt('attack_started');
+			$this->raceID = $dbRecord->getInt('race_id');
+			$this->level = $dbRecord->getInt('level');
+			$this->credits = $dbRecord->getInt('credits');
+			$this->upgrade = $dbRecord->getInt('upgrade');
+			$this->experience = $dbRecord->getInt('experience');
 
 			$this->checkDefenses();
 			$this->getGoods();
@@ -192,7 +192,7 @@ class AbstractSmrPort {
 			if ($this->getCredits() == 0) {
 				$this->setCreditsToDefault();
 			}
-			$this->db->query('DELETE FROM player_attacks_port WHERE ' . $this->SQL);
+			$this->db->write('DELETE FROM player_attacks_port WHERE ' . $this->SQL);
 		}
 	}
 
@@ -224,15 +224,15 @@ class AbstractSmrPort {
 			throw new Exception('Cannot call getGoods on cached port');
 		}
 		if (empty($this->goodIDs['All'])) {
-			$this->db->query('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC');
-			while ($this->db->nextRecord()) {
-				$goodID = $this->db->getInt('good_id');
-				$transactionType = $this->db->getField('transaction_type');
-				$this->goodAmounts[$goodID] = $this->db->getInt('amount');
+			$dbResult = $this->db->read('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC');
+			foreach ($dbResult->records() as $dbRecord) {
+				$goodID = $dbRecord->getInt('good_id');
+				$transactionType = $dbRecord->getField('transaction_type');
+				$this->goodAmounts[$goodID] = $dbRecord->getInt('amount');
 				$this->goodIDs[$transactionType][] = $goodID;
 				$this->goodIDs['All'][] = $goodID;
 
-				$secondsSinceLastUpdate = Smr\Epoch::time() - $this->db->getInt('last_update');
+				$secondsSinceLastUpdate = Smr\Epoch::time() - $dbRecord->getInt('last_update');
 				$this->restockGood($goodID, $secondsSinceLastUpdate);
 			}
 		}
@@ -545,8 +545,8 @@ class AbstractSmrPort {
 
 		$this->goodAmounts[$goodID] = Globals::getGood($goodID)['Max'];
 		$this->cacheIsValid = false;
-		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount, last_update) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($this->getGoodAmount($goodID)) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ')');
-		$this->db->query('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
+		$this->db->write('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount, last_update) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($this->getGoodAmount($goodID)) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ')');
+		$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
 
 	/**
@@ -573,8 +573,8 @@ class AbstractSmrPort {
 		}
 
 		$this->cacheIsValid = false;
-		$this->db->query('DELETE FROM port_has_goods WHERE ' . $this->SQL . ' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
-		$this->db->query('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
+		$this->db->write('DELETE FROM port_has_goods WHERE ' . $this->SQL . ' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
+		$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
 
 	/**
@@ -636,7 +636,7 @@ class AbstractSmrPort {
 		$trigger->increaseHOF(1, array('Combat', 'Port', 'Number Of Triggers'), HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, array('Combat', 'Port', 'Number Of Attacks'), HOF_PUBLIC);
-			$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES
+			$this->db->write('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES
 							(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
 		if (!$this->isUnderAttack()) {
@@ -664,7 +664,7 @@ class AbstractSmrPort {
 			}
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
 //			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
-			$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ',' . $this->db->escapeString($newsMessage) . ',\'REGULAR\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
+			$this->db->write('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ',' . $this->db->escapeString($newsMessage) . ',\'REGULAR\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
 		}
 	}
 
@@ -839,7 +839,7 @@ class AbstractSmrPort {
 		$this->hasChanged = true;
 		$this->cacheIsValid = false;
 		// route_cache tells NPC's where they can trade
-		$this->db->query('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
+		$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
 
 	public function getLevel() : int {
@@ -1119,14 +1119,14 @@ class AbstractSmrPort {
 				$query .= '(' . $accountID . ', ' . $this->getGameID() . ', ' . $this->getSectorID() . ', 0, \'\'),';
 			}
 			$query = substr($query, 0, -1);
-			$this->db->query($query);
+			$this->db->write($query);
 
-			$this->db->query('INSERT IGNORE INTO port_info_cache
+			$this->db->write('INSERT IGNORE INTO port_info_cache
 						(game_id, sector_id, port_info_hash, port_info)
 						VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $cacheHash . ', ' . $cache . ')');
 
 			// We can't use the SQL member here because CachePorts don't have it
-			$this->db->query('UPDATE player_visited_port SET visited=' . $this->db->escapeNumber($this->getCachedTime()) . ', port_info_hash=' . $cacheHash . ' WHERE visited<=' . $this->db->escapeNumber($this->getCachedTime()) . ' AND account_id IN (' . $this->db->escapeArray($accountIDs) . ') AND sector_id=' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT ' . count($accountIDs));
+			$this->db->write('UPDATE player_visited_port SET visited=' . $this->db->escapeNumber($this->getCachedTime()) . ', port_info_hash=' . $cacheHash . ' WHERE visited<=' . $this->db->escapeNumber($this->getCachedTime()) . ' AND account_id IN (' . $this->db->escapeArray($accountIDs) . ') AND sector_id=' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT ' . count($accountIDs));
 
 			unset($cache);
 			return true;
@@ -1137,16 +1137,17 @@ class AbstractSmrPort {
 	public static function getCachedPort(int $gameID, int $sectorID, int $accountID, bool $forceUpdate = false) : self|false {
 		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID])) {
 			$db = Smr\Database::getInstance();
-			$db->query('SELECT visited, port_info
+			$dbResult = $db->read('SELECT visited, port_info
 						FROM player_visited_port
 						JOIN port_info_cache USING (game_id,sector_id,port_info_hash)
 						WHERE account_id = ' . $db->escapeNumber($accountID) . '
 							AND game_id = ' . $db->escapeNumber($gameID) . '
 							AND sector_id = ' . $db->escapeNumber($sectorID) . ' LIMIT 1');
 
-			if ($db->nextRecord()) {
-				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = $db->getObject('port_info', true);
-				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]->setCachedTime($db->getInt('visited'));
+			if ($dbResult->hasRecord()) {
+				$dbRecord = $dbResult->record();
+				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = $dbRecord->getObject('port_info', true);
+				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]->setCachedTime($dbRecord->getInt('visited'));
 			} else {
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;
 			}
@@ -1184,7 +1185,7 @@ class AbstractSmrPort {
 		// If any fields in the `port` table have changed, update table
 		if ($this->hasChanged) {
 			if ($this->isNew === false) {
-				$this->db->query('UPDATE port SET experience = ' . $this->db->escapeNumber($this->getExperience()) .
+				$this->db->write('UPDATE port SET experience = ' . $this->db->escapeNumber($this->getExperience()) .
 								', shields = ' . $this->db->escapeNumber($this->getShields()) .
 								', armour = ' . $this->db->escapeNumber($this->getArmour()) .
 								', combat_drones = ' . $this->db->escapeNumber($this->getCDs()) .
@@ -1196,7 +1197,7 @@ class AbstractSmrPort {
 								', race_id = ' . $this->db->escapeNumber($this->getRaceID()) . '
 								WHERE ' . $this->SQL . ' LIMIT 1');
 			} else {
-				$this->db->query('INSERT INTO port (game_id,sector_id,experience,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)
+				$this->db->write('INSERT INTO port (game_id,sector_id,experience,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)
 								values
 								(' . $this->db->escapeNumber($this->getGameID()) .
 								',' . $this->db->escapeNumber($this->getSectorID()) .
@@ -1220,7 +1221,7 @@ class AbstractSmrPort {
 		foreach ($this->goodAmountsChanged as $goodID => $doUpdate) {
 			if (!$doUpdate) { continue; }
 			$amount = $this->getGoodAmount($goodID);
-			$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
+			$this->db->write('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
 		}
 	}
 
@@ -1313,9 +1314,9 @@ class AbstractSmrPort {
 	protected function getAttackersToCredit() : array {
 		//get all players involved for HoF
 		$attackers = array();
-		$this->db->query('SELECT account_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_RAID));
-		while ($this->db->nextRecord()) {
-			$attackers[] = SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID());
+		$dbResult = $this->db->read('SELECT account_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_RAID));
+		foreach ($dbResult->records() as $dbRecord) {
+			$attackers[] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $this->getGameID());
 		}
 		return $attackers;
 	}
@@ -1382,7 +1383,7 @@ class AbstractSmrPort {
 		} else {
 			$news .= $killer->getBBLink();
 		}
-		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
+		$this->db->write('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
 		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ', $return['KillerBounty']);

@@ -13,15 +13,15 @@ $viewBonds = true;
 if ($var['alliance_id'] != 0) {
 	$role_id = $player->getAllianceRole($var['alliance_id']);
 	$db = Smr\Database::getInstance();
-	$db->query('
-		SELECT *
+	$dbResult = $db->read('
+		SELECT 1
 		FROM alliance_has_roles
 		WHERE alliance_id = ' . $db->escapeNumber($var['alliance_id']) . '
 		AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-		AND role_id = ' . $db->escapeNumber($role_id)
+		AND role_id = ' . $db->escapeNumber($role_id) . '
+		AND view_bonds = 1'
 	);
-	$db->requireRecord();
-	$viewBonds = $db->getBoolean('view_bonds');
+	$viewBonds = $dbResult->hasRecord();
 }
 $template->assign('CanViewBonds', $viewBonds);
 

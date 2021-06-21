@@ -49,53 +49,56 @@ $template->assign('CanVote', $canVote);
 
 if ($canVote) {
 	$featureVotes = array();
-	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = ' . $account->getAccountID());
-	while ($db->nextRecord()) {
-		$featureVotes[$db->getInt('feature_request_id')] = $db->getField('vote_type');
+	$dbResult = $db->read('SELECT * FROM account_votes_for_feature WHERE account_id = ' . $account->getAccountID());
+	foreach ($dbResult->records() as $dbRecord) {
+		$featureVotes[$dbRecord->getInt('feature_request_id')] = $dbRecord->getField('vote_type');
 	}
 }
-$db->query('SELECT * ' .
+$dbResult = $db->read('SELECT * ' .
 			'FROM feature_request ' .
 			'JOIN feature_request_comments super USING(feature_request_id) ' .
 			'WHERE comment_id = 1 ' .
 			'AND status = ' . $db->escapeString($thisStatus) .
 			($var['category'] == 'New' ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Smr\Epoch::time() - NEW_REQUEST_DAYS * 86400) . ')' : '') .
 			' ORDER BY (SELECT MAX(posting_time) FROM feature_request_comments WHERE feature_request_id = super.feature_request_id) DESC');
-if ($db->getNumRows() > 0) {
+if ($dbResult->hasRecord()) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$template->assign('FeatureModerator', $featureModerator);
 	$template->assign('FeatureRequestVoteFormHREF', Page::create('feature_request_vote_processing.php', '')->href());
 
 	$commentsContainer = Page::copy($var);
 	$commentsContainer['body'] = 'feature_request_comments.php';
-	$db2 = Smr\Database::getInstance();
 	$featureRequests = array();
-	while ($db->nextRecord()) {
-		$featureRequestID = $db->getInt('feature_request_id');
-		$featureRequests[$featureRequestID] = array(
-								'RequestID' => $featureRequestID,
-								'Message' => $db->getField('text'),
-								'Votes' => array('FAVOURITE'=>$db->getInt('fav'), 'YES'=>$db->getInt('yes'), 'NO'=>$db->getInt('no')),
-								'VotedFor' => $featureVotes[$featureRequestID] ?? false,
-		);
+	foreach ($dbResult->records() as $dbRecord) {
+		$featureRequestID = $dbRecord->getInt('feature_request_id');
+		$featureRequests[$featureRequestID] = [
+			'RequestID' => $featureRequestID,
+			'Message' => $dbRecord->getField('text'),
+			'Votes' => [
+				'FAVOURITE' => $dbRecord->getInt('fav'),
+				'YES' => $dbRecord->getInt('yes'),
+				'NO' => $dbRecord->getInt('no'),
+			],
+			'VotedFor' => $featureVotes[$featureRequestID] ?? false,
+		];
 		if ($featureModerator) {
-			$featureRequests[$featureRequestID]['RequestAccount'] = SmrAccount::getAccount($db->getInt('poster_id'));
+			$featureRequests[$featureRequestID]['RequestAccount'] = SmrAccount::getAccount($dbRecord->getInt('poster_id'));
 		}
 
 		if ($canVote) {
-			$db2->query('SELECT COUNT(*), vote_type
+			$dbResult2 = $db->read('SELECT COUNT(*), vote_type
 						FROM account_votes_for_feature
-						WHERE feature_request_id=' . $db2->escapeNumber($featureRequestID) . '
+						WHERE feature_request_id=' . $db->escapeNumber($featureRequestID) . '
 						GROUP BY vote_type');
-			while ($db2->nextRecord()) {
-				$featureRequests[$featureRequestID]['Votes'][$db2->getField('vote_type')] = $db2->getInt('COUNT(*)');
+			foreach ($dbResult2->records() as $dbRecord2) {
+				$featureRequests[$featureRequestID]['Votes'][$dbRecord2->getField('vote_type')] = $dbRecord2->getInt('COUNT(*)');
 			}
 		}
-		$db2->query('SELECT COUNT(*)
+		$dbResult2 = $db->read('SELECT COUNT(*)
 					FROM feature_request_comments
-					WHERE feature_request_id=' . $db2->escapeNumber($featureRequestID));
-		while ($db2->nextRecord()) {
-			$featureRequests[$featureRequestID]['Comments'] = $db2->getInt('COUNT(*)');
+					WHERE feature_request_id=' . $db->escapeNumber($featureRequestID));
+		foreach ($dbResult2->records() as $dbRecord2) {
+			$featureRequests[$featureRequestID]['Comments'] = $dbRecord2->getInt('COUNT(*)');
 		}
 		$commentsContainer['RequestID'] = $featureRequestID;
 		$featureRequests[$featureRequestID]['CommentsHREF'] = $commentsContainer->href();
@@ -111,7 +114,7 @@ function statusFromCategory(string $category) : string {
 
 function getFeaturesCount(string $status, int|false $daysNew = false) : int {
 	$db = Smr\Database::getInstance();
-	$db->query('
+	$dbResult = $db->read('
 		SELECT COUNT(*) AS count
 		FROM feature_request
 		JOIN feature_request_comments super USING(feature_request_id)
@@ -119,6 +122,5 @@ function getFeaturesCount(string $status, int|false $daysNew = false) : int {
 		AND status = ' . $db->escapeString($status) .
 		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Smr\Epoch::time() - $daysNew * 86400) . ')' : '')
 	);
-	$db->requireRecord();
-	return $db->getInt('count');
+	return $dbResult->record()->getInt('count');
 }

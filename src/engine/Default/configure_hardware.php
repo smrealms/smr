@@ -23,9 +23,9 @@ if ($ship->hasIllusion()) {
 
 	$ships = array();
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
-	while ($db->nextRecord()) {
-		$ships[$db->getInt('ship_type_id')] = $db->getField('ship_name');
+	$dbResult = $db->read('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
+	foreach ($dbResult->records() as $dbRecord) {
+		$ships[$dbRecord->getInt('ship_type_id')] = $dbRecord->getField('ship_name');
 	}
 	$template->assign('IllusionShips', $ships);
 	$container['action'] = 'Disable Illusion';

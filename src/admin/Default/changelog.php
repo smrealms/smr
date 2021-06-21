@@ -11,18 +11,17 @@ $template->assign('ChangeTitle', $var['change_title'] ?? '');
 $template->assign('ChangeMessage', $var['change_message'] ?? '');
 $template->assign('AffectedDb', $var['affected_db'] ?? '');
 
-$db2 = Smr\Database::getInstance();
 $first_entry = true;
 $link_set_live = true;
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM version ORDER BY version_id DESC');
+$dbResult = $db->read('SELECT * FROM version ORDER BY version_id DESC');
 
 $versions = [];
-while ($db->nextRecord()) {
-	$version_id = $db->getInt('version_id');
-	$version = $db->getInt('major_version') . '.' . $db->getInt('minor_version') . '.' . $db->getInt('patch_level');
-	$went_live = $db->getInt('went_live');
+foreach ($dbResult->records() as $dbRecord) {
+	$version_id = $dbRecord->getInt('version_id');
+	$version = $dbRecord->getInt('major_version') . '.' . $dbRecord->getInt('minor_version') . '.' . $dbRecord->getInt('patch_level');
+	$went_live = $dbRecord->getInt('went_live');
 	if ($went_live > 0) {
 		// from this point on we don't create links to set a version to live
 		$link_set_live = false;
@@ -39,15 +38,15 @@ while ($db->nextRecord()) {
 		}
 	}
 
-	$db2->query('SELECT *
+	$dbResult2 = $db->read('SELECT *
 				FROM changelog
 				WHERE version_id = '.$db->escapeNumber($version_id) . '
 				ORDER BY changelog_id');
 	$changes = [];
-	while ($db2->nextRecord()) {
+	foreach ($dbResult2->records() as $dbRecord2) {
 		$changes[] = [
-			'title' => $db2->getField('change_title'),
-			'message' => $db2->getField('change_message'),
+			'title' => $dbRecord2->getField('change_title'),
+			'message' => $dbRecord2->getField('change_message'),
 		];
 	}
 

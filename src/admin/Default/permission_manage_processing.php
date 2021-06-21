@@ -8,14 +8,14 @@ if (Request::get('action') == 'Change') {
 
 	// delete everything first
 	$db = Smr\Database::getInstance();
-	$db->query('DELETE
+	$db->write('DELETE
 				FROM account_has_permission
 				WHERE account_id = ' . $db->escapeNumber($var['admin_id']));
 
 	// Grant permissions
 	$permissions = Request::getIntArray('permission_ids', []);
 	foreach ($permissions as $permission_id) {
-		$db->query('REPLACE
+		$db->write('REPLACE
 						INTO account_has_permission
 						(account_id, permission_id)
 						VALUES (' . $db->escapeNumber($var['admin_id']) . ', ' . $db->escapeNumber($permission_id) . ')');
@@ -25,11 +25,11 @@ if (Request::get('action') == 'Change') {
 	if (in_array(PERMISSION_DISPLAY_ADMIN_TAG, $permissions)) {
 		// This might overwrite an existing unrelated tag.
 		$tag = '<span class="blue">Admin</span>';
-		$db->query('REPLACE INTO cpl_tag (account_id, tag, custom) VALUES (' . $db->escapeNumber($var['admin_id']) . ',' . $db->escapeString($tag) . ',0)');
+		$db->write('REPLACE INTO cpl_tag (account_id, tag, custom) VALUES (' . $db->escapeNumber($var['admin_id']) . ',' . $db->escapeString($tag) . ',0)');
 	} elseif ($hadAdminTag) {
 		// Only delete the tag if they previously had an admin tag;
 		// otherwise we might accidentally delete an unrelated tag.
-		$db->query('DELETE FROM cpl_tag WHERE custom=0 AND account_id=' . $db->escapeNumber($var['admin_id']));
+		$db->write('DELETE FROM cpl_tag WHERE custom=0 AND account_id=' . $db->escapeNumber($var['admin_id']));
 	}
 }
 

@@ -19,11 +19,11 @@ foreach ($RACES as $raceID => $raceInfo) {
 	if ($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID()) {
 		continue;
 	}
-	$db->query('SELECT 1 FROM race_has_voting
+	$dbResult = $db->read('SELECT 1 FROM race_has_voting
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
 				AND race_id_2 = ' . $db->escapeNumber($raceID));
-	if ($db->getNumRows() > 0) {
+	if ($dbResult->hasRecord()) {
 		continue;
 	}
 	$voteRaces[$raceID] = Page::create('council_embassy_processing.php', '', array('race_id' => $raceID))->href();

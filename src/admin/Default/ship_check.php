@@ -5,7 +5,7 @@ $template = Smr\Template::getInstance();
 $template->assign('PageTopic', 'Ship Integrity Check');
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware, hardware_type ' .
+$dbResult = $db->read('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware, hardware_type ' .
 		   'WHERE ship_type_support_hardware.ship_type_id = player.ship_type_id AND ' .
 				 'player.account_id = ship_has_hardware.account_id AND ' .
 				 'player.game_id = ship_has_hardware.game_id AND ' .
@@ -14,19 +14,19 @@ $db->query('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware,
 				 'amount > max_amount');
 
 $excessHardware = [];
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	$container = Page::create('ship_check_processing.php');
-	$container['account_id'] = $db->getInt('account_id');
-	$container['hardware'] = $db->getInt('hardware_type_id');
-	$container['game_id'] = $db->getInt('game_id');
-	$container['max_amount'] = $db->getInt('max_amount');
+	$container['account_id'] = $dbRecord->getInt('account_id');
+	$container['hardware'] = $dbRecord->getInt('hardware_type_id');
+	$container['game_id'] = $dbRecord->getInt('game_id');
+	$container['max_amount'] = $dbRecord->getInt('max_amount');
 
 	$excessHardware[] = [
-		'player' => htmlentities($db->getField('player_name')),
-		'game_id' => $db->getInt('game_id'),
-		'hardware' => $db->getField('hardware_name'),
-		'amount' => $db->getInt('amount'),
-		'max_amount' => $db->getInt('max_amount'),
+		'player' => htmlentities($dbRecord->getField('player_name')),
+		'game_id' => $dbRecord->getInt('game_id'),
+		'hardware' => $dbRecord->getField('hardware_name'),
+		'amount' => $dbRecord->getInt('amount'),
+		'max_amount' => $dbRecord->getInt('max_amount'),
 		'fixHREF' => $container->href(),
 	];
 }

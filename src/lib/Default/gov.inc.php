@@ -6,13 +6,13 @@
 function getBounties(string $type) : array {
 	$db = Smr\Database::getInstance();
 	$session = Smr\Session::getInstance();
-	$db->query('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' AND type =' . $db->escapeString($type) . ' AND claimer_id = 0 ORDER BY amount DESC');
+	$dbResult = $db->read('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' AND type =' . $db->escapeString($type) . ' AND claimer_id = 0 ORDER BY amount DESC');
 	$bounties = [];
-	while ($db->nextRecord()) {
+	foreach ($dbResult->records() as $dbRecord) {
 		$bounties[] = [
-			'player' => SmrPlayer::getPlayer($db->getInt('account_id'), $session->getGameID()),
-			'credits' => $db->getInt('amount'),
-			'smr_credits' => $db->getInt('smr_credits')
+			'player' => SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $session->getGameID()),
+			'credits' => $dbRecord->getInt('amount'),
+			'smr_credits' => $dbRecord->getInt('smr_credits')
 		];
 	}
 	return $bounties;

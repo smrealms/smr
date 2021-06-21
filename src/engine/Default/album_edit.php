@@ -8,25 +8,26 @@ $account = $session->getAccount();
 $template->assign('PageTopic', 'Edit Photo');
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
-if ($db->nextRecord()) {
-	$day = $db->getInt('day');
-	$month = $db->getInt('month');
-	$year = $db->getInt('year');
-	$albumEntry['Location'] = stripslashes($db->getField('location'));
-	$albumEntry['Email'] = stripslashes($db->getField('email'));
-	$albumEntry['Website'] = stripslashes($db->getField('website'));
+$dbResult = $db->read('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+if ($dbResult->hasRecord()) {
+	$dbRecord = $dbResult->record();
+	$day = $dbRecord->getInt('day');
+	$month = $dbRecord->getInt('month');
+	$year = $dbRecord->getInt('year');
+	$albumEntry['Location'] = stripslashes($dbRecord->getField('location'));
+	$albumEntry['Email'] = stripslashes($dbRecord->getField('email'));
+	$albumEntry['Website'] = stripslashes($dbRecord->getField('website'));
 	$albumEntry['Day'] = $day > 0 ? $day : '';
 	$albumEntry['Month'] = $month > 0 ? $month : '';
 	$albumEntry['Year'] = $year > 0 ? $year : '';
-	$albumEntry['Other'] = stripslashes($db->getField('other'));
-	$approved = $db->getField('approved');
+	$albumEntry['Other'] = stripslashes($dbRecord->getField('other'));
+	$approved = $dbRecord->getField('approved');
 
 	if ($approved == 'TBC') {
 		$albumEntry['Status'] = ('<span style="color:orange;">Waiting approval</span>');
 	} elseif ($approved == 'NO') {
 		$albumEntry['Status'] = ('<span class="red">Approval denied</span>');
-	} elseif ($db->getBoolean('disabled')) {
+	} elseif ($dbRecord->getBoolean('disabled')) {
 		$albumEntry['Status'] = ('<span class="red">Disabled</span>');
 	} elseif ($approved == 'YES') {
 		$albumEntry['Status'] = ('<a href="album/?nick=' . urlencode($account->getHofName()) . '" class="dgreen">Online</a>');

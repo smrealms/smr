@@ -14,10 +14,10 @@ if ($action == 'Vote') {
 		foreach (Request::getArray('vote') as $requestID => $vote) {
 			$query .= '(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($requestID) . ',' . $db->escapeString($vote) . '),';
 		}
-		$db->query(substr($query, 0, -1));
+		$db->write(substr($query, 0, -1));
 	}
 	if (Request::has('favourite')) {
-		$db->query('REPLACE INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber(Request::getInt('favourite')) . ',\'FAVOURITE\')');
+		$db->write('REPLACE INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber(Request::getInt('favourite')) . ',\'FAVOURITE\')');
 	}
 
 	Page::create('skeleton.php', 'feature_request.php')->go();
@@ -34,7 +34,7 @@ if ($action == 'Vote') {
 	}
 	$setStatusIDs = Request::getIntArray('set_status_ids');
 
-	$db->query('UPDATE feature_request fr SET status = ' . $db->escapeString($status) . '
+	$db->write('UPDATE feature_request fr SET status = ' . $db->escapeString($status) . '
 			, fav = (
 				SELECT COUNT(feature_request_id)
 				FROM account_votes_for_feature
@@ -55,7 +55,7 @@ if ($action == 'Vote') {
 			)
 			WHERE feature_request_id IN (' . $db->escapeArray($setStatusIDs) . ')');
 	foreach ($setStatusIDs as $featureID) {
-		$db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text)
+		$db->write('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text)
 					VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber($account->getAccountID()) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
 	}
 

@@ -18,8 +18,8 @@ $template->assign('ChatSharingHREF', Page::create('skeleton.php', 'chat_sharing.
 
 $transferAccounts = array();
 $db = Smr\Database::getInstance();
-$db->query('SELECT account_id,hof_name FROM account WHERE validated = ' . $db->escapeBoolean(true) . ' ORDER BY hof_name');
-while ($db->nextRecord()) {
-	$transferAccounts[$db->getInt('account_id')] = htmlspecialchars($db->getField('hof_name'));
+$dbResult = $db->read('SELECT account_id,hof_name FROM account WHERE validated = ' . $db->escapeBoolean(true) . ' ORDER BY hof_name');
+foreach ($dbResult->records() as $dbRecord) {
+	$transferAccounts[$dbRecord->getInt('account_id')] = htmlspecialchars($dbRecord->getField('hof_name'));
 }
 $template->assign('TransferAccounts', $transferAccounts);

@@ -39,13 +39,11 @@ function server_msg_307($fp, $rdata)
 		echo_r('[SERVER_307] ' . $server . ' said that ' . $nick . ' is registered');
 
 		$db = Smr\Database::getInstance();
-		$db2 = Smr\Database::getInstance();
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
+		foreach ($dbResult->record() as $dbRecord) {
+			$seen_id = $dbRecord->getInt('seen_id');
 
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
-		while ($db->nextRecord()) {
-			$seen_id = $db->getInt('seen_id');
-
-			$db2->query('UPDATE irc_seen SET ' .
+			$db->write('UPDATE irc_seen SET ' .
 						'registered = 1 ' .
 						'WHERE seen_id = ' . $seen_id);
 		}
@@ -70,13 +68,12 @@ function server_msg_318($fp, $rdata)
 		echo_r('[SERVER_318] ' . $server . ' end of /WHOIS for ' . $nick);
 
 		$db = Smr\Database::getInstance();
-		$db2 = Smr\Database::getInstance();
 
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered IS NULL');
-		while ($db->nextRecord()) {
-			$seen_id = $db->getInt('seen_id');
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered IS NULL');
+		foreach ($dbResult->records() as $dbRecord) {
+			$seen_id = $dbRecord->getInt('seen_id');
 
-			$db2->query('UPDATE irc_seen SET ' .
+			$db->write('UPDATE irc_seen SET ' .
 						'registered = 0 ' .
 						'WHERE seen_id = ' . $seen_id);
 		}
@@ -93,8 +90,8 @@ function server_msg_318($fp, $rdata)
 				unset($actions[$key]);
 
 				// so we should do a callback but need to check first if the guy has registered
-				$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($action[1]));
-				if ($db->nextRecord()) {
+				$dbResult = $db->read('SELECT 1 FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($action[1]));
+				if ($dbResult->hasRecord()) {
 					//Forward to a NICKSERV INFO call.
 					$action[0] = 'NICKSERV_INFO';
 					$action[4] = time();
@@ -133,13 +130,13 @@ function server_msg_352($fp, $rdata)
 		$db = Smr\Database::getInstance();
 
 		// check if we have seen this user before
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
 
-		if ($db->nextRecord()) {
+		if ($dbResult->hasRecord()) {
 			// exiting nick?
-			$seen_id = $db->getInt('seen_id');
+			$seen_id = $dbResult->record()->getInt('seen_id');
 
-			$db->query('UPDATE irc_seen SET ' .
+			$db->write('UPDATE irc_seen SET ' .
 					   'signed_on = ' . time() . ', ' .
 					   'signed_off = 0, ' .
 					   'user = ' . $db->escapeString($user) . ', ' .
@@ -149,7 +146,7 @@ function server_msg_352($fp, $rdata)
 
 		} else {
 			// new nick?
-			$db->query('INSERT INTO irc_seen (nick, user, host, channel, signed_on) ' .
+			$db->write('INSERT INTO irc_seen (nick, user, host, channel, signed_on) ' .
 					   'VALUES(' . $db->escapeString($nick) . ', ' . $db->escapeString($user) . ', ' . $db->escapeString($host) . ', ' . $db->escapeString($channel) . ', ' . time() . ')');
 		}
 
@@ -176,12 +173,12 @@ function server_msg_401($fp, $rdata)
 		$db = Smr\Database::getInstance();
 
 		// get the user in question
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND signed_off = 0');
-		if ($db->nextRecord()) {
-			$seen_id = $db->getInt('seen_id');
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND signed_off = 0');
+		if ($dbResult->hasRecord()) {
+			$seen_id = $dbResult->record()->getInt('seen_id');
 
 			// maybe he left without us noticing, so we fix this now
-			$db->query('UPDATE irc_seen SET ' .
+			$db->write('UPDATE irc_seen SET ' .
 					   'signed_off = ' . time() . ', ' .
 					   'WHERE seen_id = ' . $seen_id);
 

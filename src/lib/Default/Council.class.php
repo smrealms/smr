@@ -3,36 +3,35 @@
 class Council {
 	protected static array $COUNCILS = [];
 	protected static array $PRESIDENTS = [];
-	protected static Smr\Database $db;
 
 	/**
 	 * Returns an array of Account ID's of the Council for this race.
 	 */
 	public static function getRaceCouncil(int $gameID, int $raceID) : array {
 		if (!isset(self::$COUNCILS[$gameID][$raceID])) {
-			self::$db = Smr\Database::getInstance();
 			self::$COUNCILS[$gameID][$raceID] = array();
 			self::$PRESIDENTS[$gameID][$raceID] = false;
 
 			// Require council members to have > 0 exp to ensure that players
 			// cannot perform council activities before the game starts.
 			$i = 1;
-			self::$db->query('SELECT account_id, alignment
+			$db = Smr\Database::getInstance();
+			$dbResult = $db->read('SELECT account_id, alignment
 								FROM player
-								WHERE game_id = ' . self::$db->escapeNumber($gameID) . '
-									AND race_id = ' . self::$db->escapeNumber($raceID) . '
+								WHERE game_id = ' . $db->escapeNumber($gameID) . '
+									AND race_id = ' . $db->escapeNumber($raceID) . '
 									AND npc = \'FALSE\'
 									AND experience > 0
 								ORDER by experience DESC
 								LIMIT ' . MAX_COUNCIL_MEMBERS);
-			while (self::$db->nextRecord()) {
+			foreach ($dbResult->records() as $dbRecord) {
 				// Add this player to the council
-				self::$COUNCILS[$gameID][$raceID][$i++] = self::$db->getInt('account_id');
+				self::$COUNCILS[$gameID][$raceID][$i++] = $dbRecord->getInt('account_id');
 
 				// Determine if this player is also the president
 				if (self::$PRESIDENTS[$gameID][$raceID] === false) {
-					if (self::$db->getInt('alignment') >= ALIGNMENT_PRESIDENT) {
-						self::$PRESIDENTS[$gameID][$raceID] = self::$db->getInt('account_id');
+					if ($dbRecord->getInt('alignment') >= ALIGNMENT_PRESIDENT) {
+						self::$PRESIDENTS[$gameID][$raceID] = $dbRecord->getInt('account_id');
 					}
 				}
 			}

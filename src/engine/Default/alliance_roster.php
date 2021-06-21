@@ -26,13 +26,13 @@ if ($showRoles) {
 	$roles = array();
 
 	// get all roles from db for faster access later
-	$db->query('SELECT role_id, role
+	$dbResult = $db->read('SELECT role_id, role
 				FROM alliance_has_roles
 				WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 				AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 				ORDER BY role_id');
-	while ($db->nextRecord()) {
-		$roles[$db->getInt('role_id')] = $db->getField('role');
+	foreach ($dbResult->records() as $dbRecord) {
+		$roles[$dbRecord->getInt('role_id')] = $dbRecord->getField('role');
 	}
 	$template->assign('Roles', $roles);
 
@@ -44,7 +44,7 @@ if ($showRoles) {
 
 // If the alliance is the player's alliance they get live information
 // Otherwise it comes from the cache.
-$db->query('SELECT
+$dbResult = $db->read('SELECT
 	SUM(experience) AS alliance_xp,
 	FLOOR(AVG(experience)) AS alliance_avg
 	FROM player
@@ -52,10 +52,10 @@ $db->query('SELECT
 	AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
 	GROUP BY alliance_id'
 );
+$dbRecord = $dbResult->record();
 
-$db->requireRecord();
-$template->assign('AllianceExp', $db->getInt('alliance_xp'));
-$template->assign('AllianceAverageExp', $db->getInt('alliance_avg'));
+$template->assign('AllianceExp', $dbRecord->getInt('alliance_xp'));
+$template->assign('AllianceAverageExp', $dbRecord->getInt('alliance_avg'));
 
 if ($account->getAccountID() == $alliance->getLeaderID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
 	$container = Page::create('skeleton.php', 'alliance_stat.php');
@@ -63,9 +63,9 @@ if ($account->getAccountID() == $alliance->getLeaderID() || $account->hasPermiss
 	$template->assign('EditAllianceDescriptionHREF', $container->href());
 }
 
-$db->query('SELECT 1 FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
+$dbResult = $db->read('SELECT 1 FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
 			AND role_id = ' . $db->escapeNumber($player->getAllianceRole()) . ' AND change_roles = \'TRUE\'');
-$allowed = $db->nextRecord();
+$allowed = $dbResult->hasRecord();
 $template->assign('CanChangeRoles', $allowed);
 
 $alliancePlayers = $alliance->getMembers();

@@ -11,9 +11,9 @@ Menu::bar();
 // We save the displayed message in session since it is randomized
 if (!isset($var['Message'])) {
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT * FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY rand() LIMIT 1');
-	if ($db->nextRecord()) {
-		$message = 'I heard... ' . htmlentities(word_filter($db->getField('message'))) . '<br /><br />Got anything else to tell me?';
+	$dbResult = $db->read('SELECT message FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY rand() LIMIT 1');
+	if ($dbResult->hasRecord()) {
+		$message = 'I heard... ' . htmlentities(word_filter($dbResult->record()->getField('message'))) . '<br /><br />Got anything else to tell me?';
 	} else {
 		$message = 'I havent heard anything recently... got anything to tell me?';
 	}

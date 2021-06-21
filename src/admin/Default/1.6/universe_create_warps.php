@@ -26,10 +26,10 @@ foreach ($galaxies as $gal1) {
 }
 
 //get totals
-$db->query('SELECT sector_id, warp FROM sector WHERE warp != 0 AND game_id=' . $db->escapeNumber($var['game_id']));
-while ($db->nextRecord()) {
-	$warp1 = SmrSector::getSector($var['game_id'], $db->getInt('sector_id'));
-	$warp2 = SmrSector::getSector($var['game_id'], $db->getInt('warp'));
+$dbResult = $db->read('SELECT sector_id, warp FROM sector WHERE warp != 0 AND game_id=' . $db->escapeNumber($var['game_id']));
+foreach ($dbResult->records() as $dbRecord) {
+	$warp1 = SmrSector::getSector($var['game_id'], $dbRecord->getInt('sector_id'));
+	$warp2 = SmrSector::getSector($var['game_id'], $dbRecord->getInt('warp'));
 	if ($warp1->getGalaxyID() == $warp2->getGalaxyID()) {
 		// For warps within the same galaxy, even though there will be two
 		// sectors with warps, we still consider this as "one warp" (pair).

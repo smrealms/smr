@@ -31,13 +31,13 @@ if ($account->getAccountID() == $account_id) {
 }
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') ORDER BY type');
+$dbResult = $db->read('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';
 const USER_SCORE_NAME = 'User Score';
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	$hof =& $hofTypes;
-	$typeList = explode(':', $db->getField('type'));
+	$typeList = explode(':', $dbRecord->getField('type'));
 	foreach ($typeList as $type) {
 		if (!isset($hof[$type])) {
 			$hof[$type] = array();

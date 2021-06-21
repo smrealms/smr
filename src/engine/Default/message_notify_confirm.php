@@ -14,14 +14,14 @@ if (empty($var['message_id'])) {
 
 // get message form db
 $db = Smr\Database::getInstance();
-$db->query('SELECT message_text
+$dbResult = $db->read('SELECT message_text
 			FROM message
 			WHERE message_id = ' . $db->escapeNumber($var['message_id']));
-if (!$db->nextRecord()) {
+if (!$dbResult->hasRecord()) {
 	create_error('Could not find the message you selected!');
 }
 
-$template->assign('MessageText', $db->getField('message_text'));
+$template->assign('MessageText', $dbResult->record()->getField('message_text'));
 
 $container = Page::create('message_notify_processing.php', '');
 $container->addVar('folder_id');

@@ -23,14 +23,13 @@ class GameLink
 		if ($message->channel->is_private) {
 			// Get the most recent enabled game, since there is no other way to determine the game ID
 			$db = Smr\Database::getInstance();
-			$db->query('SELECT MAX(game_id) FROM game WHERE enabled=' . $db->escapeBoolean(true) . ' AND end_time > ' . $db->escapeNumber(time()));
-			if ($db->nextRecord()) {
-				$game_id = $db->getInt('MAX(game_id)');
-			} else {
+			$dbResult = $db->read('SELECT MAX(game_id) FROM game WHERE enabled=' . $db->escapeBoolean(true) . ' AND end_time > ' . $db->escapeNumber(time()));
+			if (!$dbResult->hasRecord()) {
 				$message->reply('Could not find any games!')
 					->done(null, 'logException');
 				return;
 			}
+			$game_id = $dbResult->record()->getInt('MAX(game_id)');
 
 			$this->player = SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
 		} else {

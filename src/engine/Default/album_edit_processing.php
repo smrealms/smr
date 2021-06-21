@@ -61,14 +61,14 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 
 // check if we had a album entry so far
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
-if ($db->nextRecord()) {
+$dbResult = $db->read('SELECT 1 FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+if ($dbResult->hasRecord()) {
 	if (!$noPicture) {
 		$comment = '<span class="green">*** Picture changed</span>';
 	}
 
 	// change album entry
-	$db->query('UPDATE album
+	$db->write('UPDATE album
 				SET location = ' . $db->escapeString($location) . ',
 					email = ' . $db->escapeString($email) . ',
 					website= ' . $db->escapeString($website) . ',
@@ -90,7 +90,7 @@ if ($db->nextRecord()) {
 	$comment = '<span class="green">*** Picture added</span>';
 
 	// add album entry
-	$db->query('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved)
+	$db->write('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved)
 				VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($location) . ', ' . $db->escapeString($email) . ', ' . $db->escapeString($website) . ', ' . $db->escapeNumber($day) . ', ' . $db->escapeNumber($month) . ', ' . $db->escapeNumber($year) . ', ' . $db->escapeString($other) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', \'TBC\')');
 }
 
@@ -98,14 +98,14 @@ if (!empty($comment)) {
 	// check if we have comments for this album already
 	$db->lockTable('album_has_comments');
 
-	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
-	if ($db->nextRecord()) {
-		$comment_id = $db->getInt('MAX(comment_id)') + 1;
+	$dbResult = $db->read('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
+	if ($dbResult->hasRecord()) {
+		$comment_id = $dbResult->record()->getInt('MAX(comment_id)') + 1;
 	} else {
 		$comment_id = 1;
 	}
 
-	$db->query('INSERT INTO album_has_comments
+	$db->write('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
 				VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($comment_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', 0, ' . $db->escapeString($comment) . ')');
 	$db->unlock();

@@ -83,11 +83,11 @@ $account->log(LOG_TYPE_PLANET_BUSTING, 'Player attacks planet, the planet does '
 
 // Add this log to the `combat_logs` database table
 $db = Smr\Database::getInstance();
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . Smr\Epoch::time() . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $planetOwner->getAccountID() . ',' . $planetOwner->getAllianceID() . ',' . $db->escapeObject($results, true) . ')');
+$db->write('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . Smr\Epoch::time() . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $planetOwner->getAccountID() . ',' . $planetOwner->getAllianceID() . ',' . $db->escapeObject($results, true) . ')');
 $logId = $db->getInsertID();
 
 if ($planet->isDestroyed()) {
-	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = ' . $db->escapeNumber($planet->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	$db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = ' . $db->escapeNumber($planet->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$planet->removeOwner();
 	$planet->removePassword();
 
@@ -109,7 +109,7 @@ if ($planetOwner->hasAlliance()) {
 // Update sector messages for attackers
 foreach ($attackers as $attacker) {
 	if (!$player->equals($attacker)) {
-		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ',' . $db->escapeString('[ATTACK_RESULTS]' . $logId) . ')');
+		$db->write('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ',' . $db->escapeString('[ATTACK_RESULTS]' . $logId) . ')');
 	}
 }
 

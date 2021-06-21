@@ -12,27 +12,25 @@ $template->assign('PageTopic', 'Galactic Post');
 Menu::galactic_post();
 
 $db = Smr\Database::getInstance();
-$db2 = Smr\Database::getInstance();
 
 $container = Page::create('skeleton.php', 'galactic_post_view_article.php');
 $template->assign('ViewArticlesHREF', $container->href());
 $container['body'] = 'galactic_post_make_paper.php';
 $template->assign('MakePaperHREF', $container->href());
 
-$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
+$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 $papers = [];
-while ($db->nextRecord()) {
-	$paper_name = $db->getField('title');
-	$paper_id = $db->getInt('paper_id');
-	$published = $db->getInt('online_since');
+foreach ($dbResult->records() as $dbRecord) {
+	$paper_name = $dbRecord->getField('title');
+	$paper_id = $dbRecord->getInt('paper_id');
+	$published = $dbRecord->getInt('online_since');
 
-	$db2->query('SELECT count(*) FROM galactic_post_paper_content WHERE paper_id = ' . $db2->escapeNumber($paper_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	$db2->nextRecord();
-	$numArticles = $db2->getInt('count(*)');
+	$dbResult2 = $db->read('SELECT count(*) FROM galactic_post_paper_content WHERE paper_id = ' . $db->escapeNumber($paper_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	$numArticles = $dbResult2->record()->getInt('count(*)');
 	$hasEnoughArticles = $numArticles > 2 && $numArticles < 9;
 
 	$paper = [
-		'title' => $db->getField('title'),
+		'title' => $dbRecord->getField('title'),
 		'num_articles' => $numArticles,
 		'color' => $hasEnoughArticles ? 'green' : 'red',
 		'published' => !empty($published) && $published > 0,

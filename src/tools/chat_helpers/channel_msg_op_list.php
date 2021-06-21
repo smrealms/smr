@@ -3,28 +3,28 @@
 function shared_channel_msg_op_list(SmrPlayer $player) : array {
 	// get the op info from db
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT 1
+	$dbResult = $db->read('SELECT 1
 				FROM alliance_has_op
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	if (!$db->nextRecord()) {
+	if (!$dbResult->hasRecord()) {
 		return array('Your leader has not scheduled an op.');
 	}
 
 	$yes = array();
 	$no = array();
 	$maybe = array();
-	$db->query('SELECT account_id, response
+	$dbResult = $db->read('SELECT account_id, response
 				FROM alliance_has_op_response
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	while ($db->nextRecord()) {
-		$respondingPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), true);
+	foreach ($dbResult->records() as $dbRecord) {
+		$respondingPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), true);
 		// check that the player is still in this alliance
 		if (!$player->sameAlliance($respondingPlayer)) {
 			continue;
 		}
-		switch ($db->getField('response')) {
+		switch ($dbRecord->getField('response')) {
 			case 'YES':
 				$yes[] = $respondingPlayer;
 			break;

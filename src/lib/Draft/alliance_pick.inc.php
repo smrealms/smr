@@ -4,12 +4,12 @@
 // including their current size and if the leader can pick teammates.
 function get_draft_teams(int $gameId) : array {
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT account_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($gameId));
+	$dbResult = $db->read('SELECT account_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($gameId));
 
 	// Get team leader, alliance, and alliance size
 	$teams = array();
-	while ($db->nextRecord()) {
-		$leader = SmrPlayer::getPlayer($db->getInt('account_id'), $gameId);
+	foreach ($dbResult->records() as $dbRecord) {
+		$leader = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $gameId);
 		$alliance = $leader->getAlliance();
 		if (!$leader->hasAlliance() || $alliance->getAllianceID() == NHA_ID) {
 			// Special case for leaders who haven't made their own alliance yet,

@@ -38,8 +38,8 @@ function redirectIfDisabled(SmrAccount $account) : array|false {
 function redirectIfOffline(SmrAccount $account) : void {
 	// Check if the game is offline
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT * FROM game_disable');
-	$offline = $db->nextRecord();
+	$dbResult = $db->read('SELECT reason FROM game_disable');
+	$offline = $dbResult->hasRecord();
 
 	// Skip redirect if we're not offline or if account has admin permission
 	if ($offline === false || $account->hasPermission(PERMISSION_GAME_OPEN_CLOSE)) {
@@ -54,7 +54,7 @@ function redirectIfOffline(SmrAccount $account) : void {
 	if (session_status() === PHP_SESSION_NONE) {
 		session_start();
 	}
-	$_SESSION['login_msg'] = '<span class="red">Space Merchant Realms is temporarily offline.<br />' . $db->getField('reason') . '</span>';
+	$_SESSION['login_msg'] = '<span class="red">Space Merchant Realms is temporarily offline.<br />' . $dbResult->record()->getField('reason') . '</span>';
 
 	header('location: /login.php?status=offline');
 	exit;

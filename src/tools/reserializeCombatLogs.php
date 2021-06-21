@@ -3,12 +3,11 @@
 require_once('../bootstrap.php');
 
 $db = Smr\Database::getInstance();
-$db2 = Smr\Database::getInstance();
 
-//$db->query('SELECT * FROM combat_logs WHERE type=\'PLAYER\' ORDER BY OCTET_LENGTH(result) DESC LIMIT 1');
-//if($db->nextRecord())
+//$dbResult = $db->read('SELECT * FROM combat_logs WHERE type=\'PLAYER\' ORDER BY OCTET_LENGTH(result) DESC LIMIT 1');
+//if ($dbResult->hasRecord())
 //{
-//	$x = $db->getField('result');
+//	$x = $dbResult->record()->getField('result');
 //	$y = gzuncompress($x);
 //	var_dump($y);
 //
@@ -20,7 +19,7 @@ $db2 = Smr\Database::getInstance();
 //	var_dump(strlen(bzcompress($z)));
 //}
 
-$db->query('SELECT result,log_id FROM combat_logs');
-while ($db->nextRecord()) {
-	$db2->query('UPDATE combat_logs SET result=' . $db2->escapeObject($db->getObject('result', true), true) . ' WHERE log_id=' . $db->getField('log_id'));
+$dbResult = $db->read('SELECT result,log_id FROM combat_logs');
+foreach ($dbResult->records() as $dbRecord) {
+	$db->write('UPDATE combat_logs SET result=' . $db->escapeObject($dbRecord->getObject('result', true), true) . ' WHERE log_id=' . $dbRecord->getField('log_id'));
 }

@@ -89,10 +89,10 @@ class VoteSite {
 			$WAIT_TIMES = array(); // ensure this is set
 			$activeLinkIDs = array_keys(self::getAllSites());
 			$db = Smr\Database::getInstance();
-			$db->query('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountID) . ' AND link_id IN (' . join(',', $activeLinkIDs) . ') LIMIT ' . $db->escapeNumber(count($activeLinkIDs)));
-			while ($db->nextRecord()) {
+			$dbResult = $db->read('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountID) . ' AND link_id IN (' . join(',', $activeLinkIDs) . ') LIMIT ' . $db->escapeNumber(count($activeLinkIDs)));
+			foreach ($dbResult->records() as $dbRecord) {
 				// 'timeout' is the last time the player claimed free turns (or 0, if unclaimed)
-				$WAIT_TIMES[$db->getInt('link_id')] = ($db->getInt('timeout') + TIME_BETWEEN_VOTING) - Smr\Epoch::time();
+				$WAIT_TIMES[$dbRecord->getInt('link_id')] = ($dbRecord->getInt('timeout') + TIME_BETWEEN_VOTING) - Smr\Epoch::time();
 			}
 			// If not in the vote_link database, this site is eligible now.
 			foreach ($activeLinkIDs as $linkID) {

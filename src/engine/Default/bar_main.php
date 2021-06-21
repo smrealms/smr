@@ -25,9 +25,9 @@ if (isset($var['message'])) {
 $winningTicket = false;
 //check for winner
 $db = Smr\Database::getInstance();
-$db->query('SELECT prize FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0 LIMIT 1');
-if ($db->nextRecord()) {
-	$winningTicket = $db->getInt('prize');
+$dbResult = $db->read('SELECT prize FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0 LIMIT 1');
+if ($dbResult->hasRecord()) {
+	$winningTicket = $dbResult->record()->getInt('prize');
 
 	$container = Page::create('bar_lotto_claim.php');
 	$container->addVar('LocationID');
@@ -36,7 +36,7 @@ if ($db->nextRecord()) {
 $template->assign('WinningTicket', $winningTicket);
 
 //get rid of drinks older than 30 mins
-$db->query('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(Smr\Epoch::time() - 1800));
+$db->write('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(Smr\Epoch::time() - 1800));
 
 $container = Page::create('skeleton.php', 'bar_talk_bartender.php');
 $container->addVar('LocationID');

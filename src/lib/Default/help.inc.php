@@ -3,15 +3,14 @@
 function echo_nav($topic_id) {
 	// database object
 	$db = Smr\Database::getInstance();
-	$db2 = Smr\Database::getInstance();
-	$db3 = Smr\Database::getInstance();
 
 	// get current entry
-	$db->query('SELECT * FROM manual WHERE topic_id = ' . $db->escapeNumber($topic_id));
-	if ($db->nextRecord()) {
-		$parent_topic_id = $db->getInt('parent_topic_id');
-		$order_id = $db->getInt('order_id');
-		$topic = stripslashes($db->getField('topic'));
+	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = ' . $db->escapeNumber($topic_id));
+	if ($dbResult->hasRecord()) {
+		$dbRecord = $dbResult->record();
+		$parent_topic_id = $dbRecord->getInt('parent_topic_id');
+		$order_id = $dbRecord->getInt('order_id');
+		$topic = stripslashes($dbRecord->getField('topic'));
 
 		echo ('<table>');
 		echo ('<tr>');
@@ -19,61 +18,67 @@ function echo_nav($topic_id) {
 		// **************************
 		// **  PREVIOUS
 		// **************************
-		$db2->query('SELECT * FROM manual WHERE parent_topic_id = ' . $db2->escapeNumber($parent_topic_id) . ' AND order_id = ' . $db2->escapeNumber($order_id - 1));
+		$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($parent_topic_id) . ' AND order_id = ' . $db->escapeNumber($order_id - 1));
 
 		// no result?
-		if (!$db2->getNumRows())
-			$db2->query('SELECT * FROM manual WHERE topic_id = ' . $db2->escapeNumber($parent_topic_id));
+		if (!$dbResult->hasRecord()) {
+			$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = ' . $db->escapeNumber($parent_topic_id));
+		}
 
 		echo ('<th width="32">');
-		if ($db2->nextRecord()) {
-			$previous_topic_id = $db2->getInt('topic_id');
-			$previous_topic = stripslashes($db2->getField('topic'));
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
+			$previous_topic_id = $dbRecord->getInt('topic_id');
+			$previous_topic = stripslashes($dbRecord->getField('topic'));
 			echo ('<a href="/manual.php?' . $previous_topic_id . '"><img src="/images/help/previous.jpg" width="32" height="32" border="0"></a>');
-		} else
+		} else {
 			echo ('<img src="/images/help/empty.jpg" width="32" height="32">');
+		}
 		echo ('</th>');
 
 		// **************************
 		// **  UP
 		// **************************
-		$db2->query('SELECT * FROM manual WHERE topic_id = ' . $db2->escapeNumber($parent_topic_id));
+		$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = ' . $db->escapeNumber($parent_topic_id));
 		echo ('<th width="32">');
-		if ($db2->nextRecord()) {
-			$up_topic_id = $db2->getInt('topic_id');
-			$up_topic = stripslashes($db2->getField('topic'));
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
+			$up_topic_id = $dbRecord->getInt('topic_id');
+			$up_topic = stripslashes($dbRecord->getField('topic'));
 			echo ('<a href="/manual.php?' . $up_topic_id . '"><img src="/images/help/up.jpg" width="32" height="32" border="0"></a>');
-		} else
+		} else {
 			echo ('<img src="/images/help/empty.jpg" width="32" height="32">');
+		}
 		echo ('</th>');
 
 		// **************************
 		// **  NEXT
 		// **************************
-		$db2->query('SELECT * FROM manual WHERE parent_topic_id = ' . $db2->escapeNumber($topic_id) . ' AND order_id = 1');
+		$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($topic_id) . ' AND order_id = 1');
 
-		if (!$db2->getNumRows())
-			$db2->query('SELECT * FROM manual WHERE parent_topic_id = ' . $db2->escapeNumber($parent_topic_id) . ' AND order_id = ' . $db2->escapeNumber($order_id + 1));
+		if (!$dbResult->hasRecord()) {
+			$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($parent_topic_id) . ' AND order_id = ' . $db->escapeNumber($order_id + 1));
+		}
 
 		$seenParentIDs = array(0);
 		$curr_parent_topic_id = $parent_topic_id;
-		while (!$db2->getNumRows() && !in_array($curr_parent_topic_id, $seenParentIDs)) {
+		while (!$dbResult->hasRecord() && !in_array($curr_parent_topic_id, $seenParentIDs)) {
 			$seenParentIDs[] = $curr_parent_topic_id;
-			$db3->query('SELECT * FROM manual WHERE topic_id = ' . $db3->escapeNumber($parent_topic_id));
-			$db3->nextRecord();
-			$curr_order_id = $db3->getInt('order_id');
-			$curr_parent_topic_id = $db3->getInt('parent_topic_id');
+			$dbResult2 = $db->read('SELECT * FROM manual WHERE topic_id = ' . $db->escapeNumber($parent_topic_id));
+			$dbRecord2 = $dbResult2->record();
+			$curr_order_id = $dbRecord2->getInt('order_id');
+			$curr_parent_topic_id = $dbRecord2->getInt('parent_topic_id');
 
-			$db2->query('SELECT * FROM manual WHERE parent_topic_id = ' . $db2->escapeNumber($parent_topic_id) . ' AND order_id = ' . $db2->escapeNumber($curr_order_id + 1));
+			$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($parent_topic_id) . ' AND order_id = ' . $db->escapeNumber($curr_order_id + 1));
 		}
 
 		echo ('<th width="32">');
-		if ($db2->nextRecord()) {
-			$next_topic_id = $db2->getInt('topic_id');
-			$next_topic = stripslashes($db2->getField('topic'));
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
+			$next_topic_id = $dbRecord->getInt('topic_id');
+			$next_topic = stripslashes($dbRecord->getField('topic'));
 			echo ('<a href="/manual.php?' . $next_topic_id . '"><img src="/images/help/next.jpg" width="32" height="32" border="0"></a>');
-		}
-		else {
+		} else {
 			echo ('<img src="/images/help/empty.jpg" width="32" height="32">');
 		}
 		echo ('</th>');
@@ -103,19 +108,21 @@ function echo_content($topic_id) {
 	$db = Smr\Database::getInstance();
 
 	// get current entry
-	$db->query('SELECT * FROM manual WHERE topic_id = ' . $topic_id);
-	if ($db->nextRecord()) {
-		$parent_topic_id = $db->getInt('parent_topic_id');
-		$order_id = $db->getInt('order_id');
-		$topic = stripslashes($db->getField('topic'));
-		$text = stripslashes($db->getField('text'));
+	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = ' . $topic_id);
+	if ($dbResult->hasRecord()) {
+		$dbRecord = $dbResult->record();
+		$parent_topic_id = $dbRecord->getInt('parent_topic_id');
+		$order_id = $dbRecord->getInt('order_id');
+		$topic = stripslashes($dbRecord->getField('topic'));
+		$text = stripslashes($dbRecord->getField('text'));
 
 		echo ('<div id="help_content">');
 		echo ('<h1>' . get_numbering($topic_id) . $topic . '</h1>');
 		echo ('<p>' . $text . '<p>');
 		echo ('</div>');
-	} else
+	} else {
 		echo ('Invalid Topic!');
+	}
 }
 
 function echo_subsection($topic_id) {
@@ -123,8 +130,8 @@ function echo_subsection($topic_id) {
 	$db = Smr\Database::getInstance();
 	$return = '';
 	// check if there are subsections
-	$db->query('SELECT * FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($topic_id) . ' ORDER BY order_id');
-	if ($db->getNumRows()) {
+	$dbResult = $db->read('SELECT 1 FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($topic_id) . ' ORDER BY order_id');
+	if ($dbResult->hasRecord()) {
 		echo ('<hr noshade width="75%" size="1" class="center"/>');
 		echo ('<div id="help_menu">');
 		echo ('<h2>Subsections:</h2>');
@@ -141,13 +148,13 @@ function echo_menu($topic_id) {
 	// database object
 	$db = Smr\Database::getInstance();
 
-	$db->query('SELECT * FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($topic_id) . ' ORDER BY order_id');
-	if ($db->getNumRows()) {
+	$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($topic_id) . ' ORDER BY order_id');
+	if ($dbResult->hasRecord()) {
 		echo ('<ul type="disc">');
-		while ($db->nextRecord()) {
-			$sub_topic_id = $db->getInt('topic_id');
-			$order_id = $db->getInt('order_id');
-			$sub_topic = stripslashes($db->getField('topic'));
+		foreach ($dbResult->records() as $dbRecord) {
+			$sub_topic_id = $dbRecord->getInt('topic_id');
+			$order_id = $dbRecord->getInt('order_id');
+			$sub_topic = stripslashes($dbRecord->getField('topic'));
 
 			echo ('<li><a href="/manual.php?' . $sub_topic_id . '">' . get_numbering($sub_topic_id) . $sub_topic . '</a></li>');
 			echo_menu($sub_topic_id);
@@ -160,10 +167,11 @@ function echo_menu($topic_id) {
 function get_numbering($topic_id) {
 	$db = Smr\Database::getInstance();
 
-	$db->query('SELECT * FROM manual WHERE topic_id = ' . $db->escapeNumber($topic_id));
-	if ($db->nextRecord()) {
-		$up_topic_id = $db->getInt('parent_topic_id');
-		$order_id = $db->getInt('order_id');
+	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = ' . $db->escapeNumber($topic_id));
+	if ($dbResult->hasRecord()) {
+		$dbRecord = $dbResult->record();
+		$up_topic_id = $dbRecord->getInt('parent_topic_id');
+		$order_id = $dbRecord->getInt('order_id');
 
 		return get_numbering($up_topic_id) . $order_id . '. ';
 	}

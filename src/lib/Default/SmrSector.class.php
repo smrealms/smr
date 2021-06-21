@@ -16,7 +16,7 @@ class SmrSector {
 	protected int $battles;
 	protected int $galaxyID;
 	protected array $visited = [];
-	protected array $links = [];
+	protected array $links;
 	protected int $warp;
 
 	protected bool $hasChanged = false;
@@ -38,11 +38,11 @@ class SmrSector {
 	public static function getGalaxySectors(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID])) {
 			$db = Smr\Database::getInstance();
-			$db->query('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id=' . $db->escapeNumber($galaxyID) . ' ORDER BY sector_id ASC');
+			$dbResult = $db->read('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id=' . $db->escapeNumber($galaxyID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
-			while ($db->nextRecord()) {
-				$sectorID = $db->getInt('sector_id');
-				$sectors[$sectorID] = self::getSector($gameID, $sectorID, $forceUpdate, $db);
+			foreach ($dbResult->records() as $dbRecord) {
+				$sectorID = $dbRecord->getInt('sector_id');
+				$sectors[$sectorID] = self::getSector($gameID, $sectorID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID] = $sectors;
 		}
@@ -52,20 +52,20 @@ class SmrSector {
 	public static function getLocationSectors(int $gameID, int $locationTypeID, bool $forceUpdate = false) : array {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID])) {
 			$db = Smr\Database::getInstance();
-			$db->query('SELECT * FROM location JOIN sector USING (game_id, sector_id) WHERE location_type_id = ' . $db->escapeNumber($locationTypeID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY sector_id ASC');
+			$dbResult = $db->read('SELECT * FROM location JOIN sector USING (game_id, sector_id) WHERE location_type_id = ' . $db->escapeNumber($locationTypeID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
-			while ($db->nextRecord()) {
-				$sectorID = $db->getInt('sector_id');
-				$sectors[$sectorID] = self::getSector($gameID, $sectorID, $forceUpdate, $db);
+			foreach ($dbResult->records() as $dbRecord) {
+				$sectorID = $dbRecord->getInt('sector_id');
+				$sectors[$sectorID] = self::getSector($gameID, $sectorID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID] = $sectors;
 		}
 		return self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID];
 	}
 
-	public static function getSector(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\Database $db = null) : self {
+	public static function getSector(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null) : self {
 		if (!isset(self::$CACHE_SECTORS[$gameID][$sectorID]) || $forceUpdate) {
-			self::$CACHE_SECTORS[$gameID][$sectorID] = new SmrSector($gameID, $sectorID, false, $db);
+			self::$CACHE_SECTORS[$gameID][$sectorID] = new SmrSector($gameID, $sectorID, false, $dbRecord);
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
@@ -92,44 +92,38 @@ class SmrSector {
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
 
-	protected function __construct(int $gameID, int $sectorID, bool $create = false, Smr\Database $db = null) {
+	protected function __construct(int $gameID, int $sectorID, bool $create = false, Smr\DatabaseRecord $dbRecord = null) {
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
-		// Do we already have a database query for this sector?
-		if (isset($db)) {
-			$sectorExists = true;
-		} else {
-			$db = $this->db;
-			$db->query('SELECT * FROM sector WHERE ' . $this->SQL . ' LIMIT 1');
-			$sectorExists = $db->nextRecord();
+		// Do we already have a database record for this sector?
+		if ($dbRecord === null) {
+			$dbResult = $this->db->read('SELECT * FROM sector WHERE ' . $this->SQL . ' LIMIT 1');
+			if ($dbResult->hasRecord()) {
+				$dbRecord = $dbResult->record();
+			}
 		}
+		$sectorExists = $dbRecord !== null;
 
-		$this->gameID = (int)$gameID;
-		$this->sectorID = (int)$sectorID;
+		$this->gameID = $gameID;
+		$this->sectorID = $sectorID;
 
 		if ($sectorExists) {
-			$this->galaxyID = $db->getInt('galaxy_id');
-			$this->battles = $db->getInt('battles');
+			$this->galaxyID = $dbRecord->getInt('galaxy_id');
+			$this->battles = $dbRecord->getInt('battles');
 
-			if ($db->getInt('link_up')) {
-				$this->links['Up'] = $db->getInt('link_up');
-			}
-			if ($db->getInt('link_down')) {
-				$this->links['Down'] = $db->getInt('link_down');
-			}
-			if ($db->getInt('link_left')) {
-				$this->links['Left'] = $db->getInt('link_left');
-			}
-			if ($db->getInt('link_right')) {
-				$this->links['Right'] = $db->getInt('link_right');
-			}
-			$this->warp = $db->getInt('warp');
+			$this->links = [
+				'Up' => $dbRecord->getInt('link_up'),
+				'Down' => $dbRecord->getInt('link_down'),
+				'Left' => $dbRecord->getInt('link_left'),
+				'Right' => $dbRecord->getInt('link_right'),
+			];
+			$this->warp = $dbRecord->getInt('warp');
 		} elseif ($create) {
 			$this->battles = 0;
+			$this->links = [];
 			$this->warp = 0;
 			$this->isNew = true;
-			return;
 		} else {
 			throw new SectorNotFoundException('No sector ' . $sectorID . ' in game ' . $gameID);
 		}
@@ -137,7 +131,7 @@ class SmrSector {
 
 	public function update() : void {
 		if ($this->isNew) {
-			$this->db->query('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right,warp)
+			$this->db->write('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right,warp)
 								values
 								(' . $this->db->escapeNumber($this->getSectorID()) .
 								',' . $this->db->escapeNumber($this->getGameID()) .
@@ -149,7 +143,7 @@ class SmrSector {
 								',' . $this->db->escapeNumber($this->getWarp()) .
 								')');
 		} elseif ($this->hasChanged) {
-			$this->db->query('UPDATE sector SET battles = ' . $this->db->escapeNumber($this->getBattles()) .
+			$this->db->write('UPDATE sector SET battles = ' . $this->db->escapeNumber($this->getBattles()) .
 									', galaxy_id=' . $this->db->escapeNumber($this->getGalaxyID()) .
 									', link_up=' . $this->db->escapeNumber($this->getLinkUp()) .
 									', link_right=' . $this->db->escapeNumber($this->getLinkRight()) .
@@ -169,7 +163,7 @@ class SmrSector {
 
 		//now delete the entry from visited
 		if (!$this->isVisited($player)) {
-			$this->db->query('DELETE FROM player_visited_sector WHERE ' . $this->SQL . '
+			$this->db->write('DELETE FROM player_visited_sector WHERE ' . $this->SQL . '
 								 AND account_id = ' . $this->db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
 		}
 		$this->visited[$player->getAccountID()] = true;
@@ -287,7 +281,7 @@ class SmrSector {
 		foreach ($this->getForces() as $force) {
 			$force->ping($message, $player);
 		}
-		$this->db->query('UPDATE sector_has_forces SET refresher = 0 WHERE ' . $this->SQL . '
+		$this->db->write('UPDATE sector_has_forces SET refresher = 0 WHERE ' . $this->SQL . '
 								AND refresher = ' . $this->db->escapeNumber($player->getAccountID()));
 	}
 
@@ -970,8 +964,8 @@ class SmrSector {
 			return true;
 		}
 		if (!isset($this->visited[$player->getAccountID()])) {
-			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE ' . $this->SQL . ' AND account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
-			$this->visited[$player->getAccountID()] = !$this->db->nextRecord();
+			$dbResult = $this->db->read('SELECT 1 FROM player_visited_sector WHERE ' . $this->SQL . ' AND account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
+			$this->visited[$player->getAccountID()] = !$dbResult->hasRecord();
 		}
 		return $this->visited[$player->getAccountID()];
 	}

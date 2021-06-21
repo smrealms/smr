@@ -15,31 +15,31 @@ $player->decreaseCredits(10);
 if (isset($var['action']) && $var['action'] != 'drink') {
 	$drinkName = 'water';
 	$message .= 'You ask the bartender for some water and you quickly down it.<br />You don\'t feel quite so intoxicated anymore.<br />';
-	$db->query('DELETE FROM player_has_drinks WHERE ' . $player->getSQL() . ' LIMIT 1');
+	$db->write('DELETE FROM player_has_drinks WHERE ' . $player->getSQL() . ' LIMIT 1');
 	$player->increaseHOF(1, array('Bar', 'Drinks', 'Water'), HOF_PUBLIC);
 } else {
 	$random = rand(1, 20);
 	//only get Azool or Spock drink if they are very lucky
 	if ($random != 1) {
-		$db->query('SELECT drink_id, drink_name FROM bar_drink WHERE drink_id != 1 && drink_id != 11 ORDER BY rand() LIMIT 1');
+		$dbResult = $db->read('SELECT drink_id, drink_name FROM bar_drink WHERE drink_id != 1 && drink_id != 11 ORDER BY rand() LIMIT 1');
 	} else {
-		$db->query('SELECT drink_id, drink_name FROM bar_drink ORDER BY rand() LIMIT 1');
+		$dbResult = $db->read('SELECT drink_id, drink_name FROM bar_drink ORDER BY rand() LIMIT 1');
 	}
-	$db->requireRecord(); // the bar_drink table should not be empty
+	$dbRecord = $dbResult->record(); // the bar_drink table should not be empty
 
-	$drinkName = $db->getField('drink_name');
-	$drink_id = $db->getInt('drink_id');
+	$drinkName = $dbRecord->getField('drink_name');
+	$drink_id = $dbRecord->getInt('drink_id');
 
-	$db->query('SELECT drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER by drink_id DESC LIMIT 1');
-	if ($db->nextRecord()) {
-		$curr_drink_id = $db->getInt('drink_id') + 1;
+	$dbResult = $db->read('SELECT drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER by drink_id DESC LIMIT 1');
+	if ($dbResult->hasRecord()) {
+		$curr_drink_id = $dbResult->record()->getInt('drink_id') + 1;
 	} else {
 		$curr_drink_id = 1;
 	}
 
 	if ($drink_id != 11 && $drink_id != 1) {
 		$message .= ('You have bought a ' . $drinkName . ' for $10');
-		$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+		$db->write('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 		$player->increaseHOF(1, array('Bar', 'Drinks', 'Alcoholic'), HOF_PUBLIC);
 	} else {
 		$message .= ('The bartender says, Ive got something special for ya.<br />');
@@ -56,15 +56,14 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 		}
 
 		//has the power of 2 drinks
-		$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+		$db->write('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 		$curr_drink_id++;
-		$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+		$db->write('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 		$player->increaseHOF(1, array('Bar', 'Drinks', 'Special'), HOF_PUBLIC);
 	}
 
-	$db->query('SELECT count(*) FROM player_has_drinks WHERE ' . $player->getSQL());
-	$db->requireRecord();
-	$num_drinks = $db->getInt('count(*)');
+	$dbResult = $db->read('SELECT count(*) FROM player_has_drinks WHERE ' . $player->getSQL());
+	$num_drinks = $dbResult->record()->getInt('count(*)');
 	//display woozy message
 	$message .= '<br />You feel a little W' . str_repeat('oO', $num_drinks) . 'zy<br />';
 }
@@ -85,7 +84,7 @@ if (isset($num_drinks) && $num_drinks > 15) {
 	$player->increaseHOF(1, array('Bar', 'Robbed', 'Number Of Times'), HOF_PUBLIC);
 	$player->increaseHOF($lostCredits, array('Bar', 'Robbed', 'Money Lost'), HOF_PUBLIC);
 
-	$db->query('DELETE FROM player_has_drinks WHERE ' . $player->getSQL());
+	$db->write('DELETE FROM player_has_drinks WHERE ' . $player->getSQL());
 
 }
 $player->increaseHOF(1, array('Bar', 'Drinks', 'Total'), HOF_PUBLIC);

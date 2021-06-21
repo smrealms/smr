@@ -7,9 +7,9 @@ $db = Smr\Database::getInstance();
 $initialBytes = $db->getDbBytes();
 
 $endedGameIDs = [];
-$db->query('SELECT game_id FROM game WHERE end_time < ' . $db->escapeNumber(Smr\Epoch::time()));
-while ($db->nextRecord()) {
-	$endedGameIDs[] = $db->getInt('game_id');
+$dbResult = $db->read('SELECT game_id FROM game WHERE end_time < ' . $db->escapeNumber(Smr\Epoch::time()));
+foreach ($dbResult->records() as $dbRecord) {
+	$endedGameIDs[] = $dbRecord->getInt('game_id');
 }
 rsort($endedGameIDs);
 
@@ -27,17 +27,19 @@ $tablesToClean = [
 
 if ($var['action'] == 'delete') {
 	$action = 'DELETE';
+	$method = 'write';
 } else {
 	$action = 'SELECT 1';
+	$method = 'read';
 }
 
 $rowsDeleted = [];
 foreach ($tablesToClean as $table) {
-	$db->query($action . ' FROM ' . $table . ' WHERE game_id IN (' . $db->escapeArray($endedGameIDs) . ')');
+	$db->$method($action . ' FROM ' . $table . ' WHERE game_id IN (' . $db->escapeArray($endedGameIDs) . ')');
 	$rowsDeleted[$table] = $db->getChangedRows();
 }
 
-$db->query($action . ' FROM npc_logs');
+$db->$method($action . ' FROM npc_logs');
 $rowsDeleted['npc_logs'] = $db->getChangedRows();
 
 // Get difference in storage size

@@ -62,9 +62,9 @@ $template->assign('NoteDeleteHREF', $container->href());
 
 $notes = [];
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM player_has_notes WHERE ' . $player->getSQL() . ' ORDER BY note_id DESC');
-while ($db->nextRecord()) {
-	$notes[$db->getInt('note_id')] = $db->getField('note');
+$dbResult = $db->read('SELECT * FROM player_has_notes WHERE ' . $player->getSQL() . ' ORDER BY note_id DESC');
+foreach ($dbResult->records() as $dbRecord) {
+	$notes[$dbRecord->getInt('note_id')] = $dbRecord->getField('note');
 }
 $template->assign('Notes', $notes);
 

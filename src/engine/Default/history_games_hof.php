@@ -16,9 +16,9 @@ Menu::history_games(2);
 if (!isset($var['stat'])) {
 	// Display a list of stats available to view
 	$links = [];
-	$db->query('SHOW COLUMNS FROM player_has_stats');
-	while ($db->nextRecord()) {
-		$stat = $db->getField('Field');
+	$dbResult = $db->read('SHOW COLUMNS FROM player_has_stats');
+	foreach ($dbResult->records() as $dbRecord) {
+		$stat = $dbRecord->getField('Field');
 		if ($stat == 'account_id' || $stat == 'game_id') {
 			continue;
 		}
@@ -40,13 +40,13 @@ if (!isset($var['stat'])) {
 
 	// Rankings display
 	$oldAccountId = $account->getOldAccountID($var['HistoryDatabase']);
-	$db->query('SELECT * FROM player_has_stats JOIN player USING(account_id, game_id) WHERE game_id=' . $db->escapeNumber($var['view_game_id']) . ' ORDER BY player_has_stats.' . $var['stat'] . ' DESC LIMIT 25');
+	$dbResult = $db->read('SELECT * FROM player_has_stats JOIN player USING(account_id, game_id) WHERE game_id=' . $db->escapeNumber($var['view_game_id']) . ' ORDER BY player_has_stats.' . $var['stat'] . ' DESC LIMIT 25');
 	$rankings = [];
-	while ($db->nextRecord()) {
+	foreach ($dbResult->records() as $dbRecord) {
 		$rankings[] = [
-			'bold' => $db->getInt('account_id') == $oldAccountId ? 'class="bold"' : '',
-			'name' => $db->getField('player_name'),
-			'stat' => $db->getInt($var['stat']),
+			'bold' => $dbRecord->getInt('account_id') == $oldAccountId ? 'class="bold"' : '',
+			'name' => $dbRecord->getField('player_name'),
+			'stat' => $dbRecord->getInt($var['stat']),
 		];
 	}
 	$template->assign('Rankings', $rankings);

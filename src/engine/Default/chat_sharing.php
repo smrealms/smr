@@ -13,10 +13,10 @@ if (isset($var['message'])) {
 
 $shareFrom = array();
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
-while ($db->nextRecord()) {
-	$fromAccountId = $db->getInt('from_account_id');
-	$gameId = $db->getInt('game_id');
+$dbResult = $db->read('SELECT * FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
+foreach ($dbResult->records() as $dbRecord) {
+	$fromAccountId = $dbRecord->getInt('from_account_id');
+	$gameId = $dbRecord->getInt('game_id');
 	try {
 		$otherPlayer = SmrPlayer::getPlayer($fromAccountId, $player->getGameID());
 	} catch (PlayerNotFoundException $e) {
@@ -34,10 +34,10 @@ while ($db->nextRecord()) {
 }
 
 $shareTo = array();
-$db->query('SELECT * FROM account_shares_info WHERE from_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
-while ($db->nextRecord()) {
-	$gameId = $db->getInt('game_id');
-	$toAccountId = $db->getInt('to_account_id');
+$dbResult = $db->read('SELECT * FROM account_shares_info WHERE from_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
+foreach ($dbResult->records() as $dbRecord) {
+	$gameId = $dbRecord->getInt('game_id');
+	$toAccountId = $dbRecord->getInt('to_account_id');
 	try {
 		$otherPlayer = SmrPlayer::getPlayer($toAccountId, $player->getGameID());
 	} catch (PlayerNotFoundException $e) {

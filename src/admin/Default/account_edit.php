@@ -14,55 +14,55 @@ $template->assign('EditFormHREF', Page::create('account_edit_processing.php', ''
 $template->assign('ResetFormHREF', Page::create('skeleton.php', 'account_edit_search.php')->href());
 
 $editingPlayers = array();
-$db->query('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY game_id ASC');
-while ($db->nextRecord()) {
-	$editingPlayers[] = SmrPlayer::getPlayer($curr_account->getAccountID(), $db->getInt('game_id'), false, $db);
+$dbResult = $db->read('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY game_id ASC');
+foreach ($dbResult->records() as $dbRecord) {
+	$editingPlayers[] = SmrPlayer::getPlayer($curr_account->getAccountID(), $dbRecord->getInt('game_id'), false, $dbRecord);
 }
 $template->assign('EditingPlayers', $editingPlayers);
 
 $template->assign('Disabled', $curr_account->isDisabled());
 
 $banReasons = array();
-$db->query('SELECT * FROM closing_reason');
-while ($db->nextRecord()) {
-	$reason = $db->getField('reason');
+$dbResult = $db->read('SELECT * FROM closing_reason');
+foreach ($dbResult->records() as $dbRecord) {
+	$reason = $dbRecord->getField('reason');
 	if (strlen($reason) > 61) {
 		$reason = substr($reason, 0, 61) . '...';
 	}
-	$banReasons[$db->getInt('reason_id')] = $reason;
+	$banReasons[$dbRecord->getInt('reason_id')] = $reason;
 }
 $template->assign('BanReasons', $banReasons);
 
 $closingHistory = array();
-$db->query('SELECT * FROM account_has_closing_history WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY time DESC');
-while ($db->nextRecord()) {
+$dbResult = $db->read('SELECT * FROM account_has_closing_history WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY time DESC');
+foreach ($dbResult->records() as $dbRecord) {
 	// if an admin did it we get his/her name
-	$admin_id = $db->getInt('admin_id');
+	$admin_id = $dbRecord->getInt('admin_id');
 	if ($admin_id > 0) {
 		$admin = SmrAccount::getAccount($admin_id)->getLogin();
 	} else {
 		$admin = 'System';
 	}
 	$closingHistory[] = array(
-		'Time' => $db->getInt('time'),
-		'Action' => $db->getField('action'),
+		'Time' => $dbRecord->getInt('time'),
+		'Action' => $dbRecord->getField('action'),
 		'AdminName' => $admin
 	);
 }
 $template->assign('ClosingHistory', $closingHistory);
 
-$db->query('SELECT * FROM account_exceptions WHERE account_id = ' . $curr_account->getAccountID());
-if ($db->nextRecord()) {
-	$template->assign('Exception', $db->getField('reason'));
+$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $curr_account->getAccountID());
+if ($dbResult->hasRecord()) {
+	$template->assign('Exception', $dbResult->record()->getField('reason'));
 }
 
 $recentIPs = array();
-$db->query('SELECT ip, time, host FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY time DESC');
-while ($db->nextRecord()) {
+$dbResult = $db->read('SELECT ip, time, host FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY time DESC');
+foreach ($dbResult->records() as $dbRecord) {
 	$recentIPs[] = array(
-		'IP' => $db->getField('ip'),
-		'Time' => $db->getField('time'),
-		'Host' => $db->getField('host')
+		'IP' => $dbRecord->getField('ip'),
+		'Time' => $dbRecord->getField('time'),
+		'Host' => $dbRecord->getField('host')
 	);
 }
 $template->assign('RecentIPs', $recentIPs);

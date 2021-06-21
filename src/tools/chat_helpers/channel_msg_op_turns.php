@@ -3,22 +3,22 @@
 function shared_channel_msg_op_turns(SmrPlayer $player) : array {
 	// get the op from db
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT 1
+	$dbResult = $db->read('SELECT 1
 				FROM alliance_has_op
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	if (!$db->nextRecord()) {
+	if (!$dbResult->hasRecord()) {
 		return array('There is no op scheduled.');
 	}
 
 	$oppers = array();
-	$db->query('SELECT account_id
+	$dbResult = $db->read('SELECT account_id
 				FROM alliance_has_op_response
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND response = \'YES\'');
-	while ($db->nextRecord()) {
-		$attendeePlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), true);
+	foreach ($dbResult->records() as $dbRecord) {
+		$attendeePlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), true);
 		// check that the player is still in this alliance
 		if (!$player->sameAlliance($attendeePlayer)) {
 			continue;

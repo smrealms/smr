@@ -74,8 +74,8 @@ if ($action == 'Save and resend validation code') {
 	}
 
 	//no duplicates
-	$db->query('SELECT * FROM account WHERE hof_name = ' . $db->escapeString($HoF_name) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-	if ($db->nextRecord()) {
+	$dbResult = $db->read('SELECT 1 FROM account WHERE hof_name = ' . $db->escapeString($HoF_name) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
+	if ($dbResult->hasRecord()) {
 		create_error('Someone is already using that name!');
 	}
 
@@ -91,8 +91,8 @@ if ($action == 'Save and resend validation code') {
 
 	} else {
 		// no duplicates
-		$db->query('SELECT * FROM account WHERE discord_id =' . $db->escapeString($discordId) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-		if ($db->nextRecord()) {
+		$dbResult = $db->read('SELECT 1 FROM account WHERE discord_id =' . $db->escapeString($discordId) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
 			create_error('Someone is already using that Discord User ID!');
 		}
 
@@ -116,8 +116,8 @@ if ($action == 'Save and resend validation code') {
 	} else {
 
 		// no duplicates
-		$db->query('SELECT * FROM account WHERE irc_nick = ' . $db->escapeString($ircNick) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-		if ($db->nextRecord()) {
+		$dbResult = $db->read('SELECT 1 FROM account WHERE irc_nick = ' . $db->escapeString($ircNick) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
 			create_error('Someone is already using that nick!');
 		}
 
@@ -143,7 +143,7 @@ if ($action == 'Save and resend validation code') {
 } elseif ($action == 'Change Timezone') {
 	$timez = Request::getInt('timez');
 
-	$db->query('UPDATE account SET offset = ' . $db->escapeNumber($timez) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+	$db->write('UPDATE account SET offset = ' . $db->escapeNumber($timez) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 } elseif ($action == 'Change Date Formats') {
 	$account->setDateFormat(Request::get('dateformat'));
@@ -221,8 +221,8 @@ if ($action == 'Save and resend validation code') {
 	// Check if name is in use.
 	// The player_name field has case-insensitive collation, so check against ID
 	// to allow player to change the case of their name.
-	$db->query('SELECT 1 FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND player_name=' . $db->escapeString($player_name) . ' AND player_id != ' . $db->escapeNumber($player->getPlayerID()) . ' LIMIT 1');
-	if ($db->getNumRows()) {
+	$dbResult = $db->read('SELECT 1 FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND player_name=' . $db->escapeString($player_name) . ' AND player_id != ' . $db->escapeNumber($player->getPlayerID()) . ' LIMIT 1');
+	if ($dbResult->hasRecord()) {
 		create_error('Name is already being used in this game!');
 	}
 
@@ -238,7 +238,7 @@ if ($action == 'Save and resend validation code') {
 	$player->setPlayerNameByPlayer($player_name);
 
 	$news = 'Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink();
-	$db->query('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\', ' . $db->escapeNumber($player->getAccountID()) . ')');
+	$db->write('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\', ' . $db->escapeNumber($player->getAccountID()) . ')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 } elseif ($action == 'change_race') {
 	if (!$player->canChangeRace()) {
@@ -265,11 +265,11 @@ if ($action == 'Save and resend validation code') {
 	$player->setRaceChanged(true);
 
 	// Reset relations
-	$db->query('DELETE FROM player_has_relation WHERE ' . $player->getSQL());
+	$db->write('DELETE FROM player_has_relation WHERE ' . $player->getSQL());
 	$player->giveStartingRelations();
 
 	$news = 'Please be advised that ' . $player->getBBLink() . ' has changed their race from [race=' . $oldRaceID . '] to [race=' . $player->getRaceID() . ']';
-	$db->query('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\', ' . $db->escapeNumber($player->getAccountID()) . ')');
+	$db->write('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($player->getGameID()) . ', \'admin\', ' . $db->escapeNumber($player->getAccountID()) . ')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player race.';
 } elseif ($action == 'Update Colours') {
 	$friendlyColour = Request::get('friendly_color');

@@ -19,11 +19,11 @@ if (!empty($var['message'])) {
 
 // get the op from db
 $db = Smr\Database::getInstance();
-$db->query('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND  game_id=' . $db->escapeNumber($player->getGameID()));
+$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND  game_id=' . $db->escapeNumber($player->getGameID()));
 
-if ($db->nextRecord()) {
+if ($dbResult->hasRecord()) {
 	// An op is already scheduled, so get the time
-	$time = $db->getInt('time');
+	$time = $dbResult->record()->getInt('time');
 	$template->assign('OpDate', date($account->getDateTimeFormat(), $time));
 	$template->assign('OpCountdown', format_time($time - Smr\Epoch::time()));
 

@@ -21,18 +21,18 @@ $template->assign('PageTopic', $var['thread_topics'][$thread_index]);
 Menu::alliance($alliance->getAllianceID());
 
 $db = Smr\Database::getInstance();
-$db->query('REPLACE INTO player_read_thread
+$db->write('REPLACE INTO player_read_thread
 			(account_id, game_id, alliance_id, thread_id, time)
 			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance->getAllianceID()) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(Smr\Epoch::time() + 2) . ')');
 
 $mbWrite = true;
 if ($alliance->getAllianceID() != $player->getAllianceID()) {
-	$db->query('SELECT mb_read FROM alliance_treaties
+	$dbResult = $db->read('SELECT 1 FROM alliance_treaties
 					WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')' .
 					' AND (alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')' .
 					' AND game_id = ' . $db->escapeNumber($player->getGameID()) .
 					' AND mb_write = 1 AND official = \'TRUE\'');
-	$mbWrite = $db->nextRecord();
+	$mbWrite = $dbResult->hasRecord();
 }
 
 $container = Page::create('skeleton.php', 'alliance_message_view.php', $var);
@@ -51,35 +51,35 @@ $thread['AllianceEyesOnly'] = is_array($var['alliance_eyes']) && $var['alliance_
 //for report type (system sent) messages
 $players[ACCOUNT_ID_PLANET] = 'Planet Reporter';
 $players[ACCOUNT_ID_BANK_REPORTER] = 'Bank Reporter';
-$db->query('SELECT account_id
+$dbResult = $db->read('SELECT player.*
 			FROM player
 			JOIN alliance_thread USING (game_id)
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_thread.alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND alliance_thread.thread_id = ' . $db->escapeNumber($thread_id));
-while ($db->nextRecord()) {
-	$players[$db->getInt('account_id')] = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID())->getLinkedDisplayName(false);
+foreach ($dbResult->records() as $dbRecord) {
+	$accountID = $dbRecord->getInt('account_id');
+	$players[$accountID] = SmrPlayer::getPlayer($accountID, $player->getGameID(), false, $dbRecord)->getLinkedDisplayName(false);
 }
 
-$db->query('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
-$db->requireRecord();
-$thread['CanDelete'] = $db->getBoolean('mb_messages');
+$dbResult = $db->read('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
+$thread['CanDelete'] = $dbResult->record()->getBoolean('mb_messages');
 
-$db->query('SELECT text, sender_id, time, reply_id
+$dbResult = $db->read('SELECT text, sender_id, time, reply_id
 FROM alliance_thread
 WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
 AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 AND thread_id=' . $db->escapeNumber($thread_id) . '
 ORDER BY reply_id LIMIT ' . $var['thread_replies'][$thread_index]);
 
-$thread['CanDelete'] = $db->getNumRows() > 1 && $thread['CanDelete'];
+$thread['CanDelete'] = $dbResult->getNumRecords() > 1 && $thread['CanDelete'];
 $thread['Replies'] = array();
 $container = Page::create('alliance_message_delete_processing.php', '', $var);
 $container['thread_id'] = $thread_id;
-while ($db->nextRecord()) {
-	$thread['Replies'][$db->getInt('reply_id')] = array('Sender' => $players[$db->getInt('sender_id')], 'Message' => $db->getField('text'), 'SendTime' => $db->getInt('time'));
+foreach ($dbResult->records() as $dbRecord) {
+	$thread['Replies'][$dbRecord->getInt('reply_id')] = array('Sender' => $players[$dbRecord->getInt('sender_id')], 'Message' => $dbRecord->getField('text'), 'SendTime' => $dbRecord->getInt('time'));
 	if ($thread['CanDelete']) {
-		$container['reply_id'] = $db->getInt('reply_id');
-		$thread['Replies'][$db->getInt('reply_id')]['DeleteHref'] = $container->href();
+		$container['reply_id'] = $dbRecord->getInt('reply_id');
+		$thread['Replies'][$dbRecord->getInt('reply_id')]['DeleteHref'] = $container->href();
 	}
 }
 

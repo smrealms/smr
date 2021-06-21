@@ -71,20 +71,20 @@ function channel_msg_op_cancel($fp, $rdata, $account, $player)
 
 		// get the op from db
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT 1
+		$dbResult = $db->read('SELECT 1
 					FROM alliance_has_op
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID());
-		if (!$db->nextRecord()) {
+		if (!$dbResult->hasRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
 		}
 
 		// just get rid of op
-		$db->query('DELETE FROM alliance_has_op
+		$db->write('DELETE FROM alliance_has_op
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID());
-		$db->query('DELETE FROM alliance_has_op_response
+		$db->write('DELETE FROM alliance_has_op_response
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID());
 
@@ -118,11 +118,11 @@ function channel_msg_op_set($fp, $rdata, $account, $player)
 
 		// get the op from db
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT time
+		$dbResult = $db->read('SELECT 1
 					FROM alliance_has_op
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND  game_id = ' . $player->getGameID());
-		if ($db->nextRecord()) {
+		if ($dbResult->hasRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :There is already an OP scheduled. Cancel it first!' . EOL);
 			return true;
 		}
@@ -133,7 +133,7 @@ function channel_msg_op_set($fp, $rdata, $account, $player)
 		}
 
 		// add op to db
-		$db->query('INSERT INTO alliance_has_op (alliance_id, game_id, time)
+		$db->write('INSERT INTO alliance_has_op (alliance_id, game_id, time)
 					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $db->escapeNumber($op_time) . ')');
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The OP has been scheduled.' . EOL);
@@ -186,16 +186,16 @@ function channel_msg_op_response($fp, $rdata, $account, $player) {
 
 		// get the op info from db
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT 1
+		$dbResult = $db->read('SELECT 1
 					FROM alliance_has_op
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID());
-		if (!$db->nextRecord()) {
+		if (!$dbResult->hasRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
 		}
 
-		$db->query('REPLACE INTO alliance_has_op_response (alliance_id, game_id, account_id, response)
+		$db->write('REPLACE INTO alliance_has_op_response (alliance_id, game_id, account_id, response)
 					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $player->getAccountID() . ', ' . $db->escapeString($response) . ')');
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the ' . $response . ' list.' . EOL);
@@ -238,21 +238,21 @@ function channel_op_notification($fp, $rdata, $nick, $channel) {
 
 	$db = Smr\Database::getInstance();
 	// check if there is an upcoming op
-	$db->query('SELECT 1
+	$dbResult = $db->read('SELECT 1
 				FROM alliance_has_op
 				WHERE alliance_id = ' . $player->getAllianceID() . '
 					AND game_id = ' . $player->getGameID() . '
 					AND time > ' . time());
-	if (!$db->nextRecord()) {
+	if (!$dbResult->hasRecord()) {
 		return true;
 	}
 
-	$db->query('SELECT 1
+	$dbResult = $db->read('SELECT 1
 				FROM alliance_has_op_response
 				WHERE alliance_id = ' . $player->getAllianceID() . '
 					AND game_id = ' . $player->getGameID() . '
 					AND account_id = ' . $player->getAccountID());
-	if (!$db->nextRecord()) {
+	if (!$dbResult->hasRecord()) {
 		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
 	}
 

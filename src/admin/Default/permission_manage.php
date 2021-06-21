@@ -13,15 +13,15 @@ $template->assign('SelectAdminHREF', $selectAdminHREF);
 
 $adminLinks = [];
 $db = Smr\Database::getInstance();
-$db->query('SELECT account_id, login
+$dbResult = $db->read('SELECT account_id, login
 			FROM account_has_permission JOIN account USING(account_id)
 			GROUP BY account_id');
-while ($db->nextRecord()) {
-	$accountID = $db->getInt('account_id');
+foreach ($dbResult->records() as $dbRecord) {
+	$accountID = $dbRecord->getInt('account_id');
 	$container['admin_id'] = $accountID;
 	$adminLinks[$accountID] = [
 		'href' => $container->href(),
-		'name' => $db->getField('login'),
+		'name' => $dbRecord->getField('login'),
 	];
 }
 $template->assign('AdminLinks', $adminLinks);
@@ -29,14 +29,14 @@ $template->assign('AdminLinks', $adminLinks);
 if (empty($admin_id)) {
 	// If we don't have an account_id here display an account list
 	$validatedAccounts = [];
-	$db->query('SELECT account_id, login
+	$dbResult = $db->read('SELECT account_id, login
 				FROM account
 				WHERE validated = '.$db->escapeBoolean(true) . '
 				ORDER BY login');
-	while ($db->nextRecord()) {
-		$accountID = $db->getInt('account_id');
+	foreach ($dbResult->records() as $dbRecord) {
+		$accountID = $dbRecord->getInt('account_id');
 		if (!array_key_exists($accountID, $adminLinks)) {
-			$validatedAccounts[$accountID] = $db->getField('login');
+			$validatedAccounts[$accountID] = $dbRecord->getField('login');
 		}
 	}
 	$template->assign('ValidatedAccounts', $validatedAccounts);

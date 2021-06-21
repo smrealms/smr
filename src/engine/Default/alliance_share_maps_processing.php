@@ -5,32 +5,20 @@ $player = $session->getPlayer();
 
 $alliance_ids = array();
 
-// get a list of alliance member
-$db = Smr\Database::getInstance();
-$db->query('SELECT * FROM player
-			WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND account_id != ' . $db->escapeNumber($player->getAccountID()));
-while ($db->nextRecord()) {
-	// an array for later use
-	$alliance_ids[] = $db->getInt('account_id');
-}
+// get a list of alliance member (remove current player)
+$memberIDs = $player->getAlliance()->getMemberIDs();
+$alliance_ids = array_diff($memberIDs, [$player->getAccountID()]);
 
 // end here if we are alone in the alliance
 if (empty($alliance_ids)) {
 	create_error('Who exactly are you sharing maps with?');
 }
 
-$unvisitedSectors = array(0);
-
-// get the sectors the user hasn't visited yet
-$db->query('SELECT sector_id FROM player_visited_sector WHERE ' . $player->getSQL());
-while ($db->nextRecord()) {
-	$unvisitedSectors[] = $db->getInt('sector_id');
-}
+$unvisitedSectors = $player->getUnvisitedSectors();
 
 // delete all visited sectors from the table of all our alliance mates
-$db->query('DELETE
+$db = Smr\Database::getInstance();
+$db->write('DELETE
 			FROM player_visited_sector
 			WHERE account_id IN (' . $db->escapeArray($alliance_ids) . ')
 				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
@@ -40,9 +28,9 @@ $db->query('DELETE
 unset($unvisitedSectors);
 
 // get a list of all visited ports
-$db->query('SELECT sector_id FROM player_visited_port WHERE ' . $player->getSQL());
-while ($db->nextRecord()) {
-	$cachedPort = SmrPort::getCachedPort($player->getGameID(), $db->getInt('sector_id'), $player->getAccountID());
+$dbResult = $db->read('SELECT sector_id FROM player_visited_port WHERE ' . $player->getSQL());
+foreach ($dbResult->records() as $dbRecord) {
+	$cachedPort = SmrPort::getCachedPort($player->getGameID(), $dbRecord->getInt('sector_id'), $player->getAccountID());
 	$cachedPort->addCachePorts($alliance_ids);
 }
 

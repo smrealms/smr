@@ -2,8 +2,8 @@
 require_once('../bootstrap.php');
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT account_id,sector_id,game_id FROM player_visited_port');
-while ($db->nextRecord()) {
-	SmrPort::getCachedPort($db->getInt('game_id'), $db->getInt('sector_id'), $db->getInt('account_id'))->addCachePort($db->getInt('account_id'));
+$dbResult = $db->read('SELECT account_id,sector_id,game_id FROM player_visited_port');
+foreach ($dbResult->records() as $dbRecord) {
+	SmrPort::getCachedPort($dbRecord->getInt('game_id'), $dbRecord->getInt('sector_id'), $dbRecord->getInt('account_id'))->addCachePort($dbRecord->getInt('account_id'));
 	SmrPort::clearCache();
 }

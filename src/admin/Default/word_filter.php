@@ -11,14 +11,14 @@ if (isset($var['msg'])) {
 }
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM word_filter');
-if ($db->getNumRows()) {
+$dbResult = $db->read('SELECT * FROM word_filter');
+if ($dbResult->hasRecord()) {
 	$container = Page::create('word_filter_del.php');
 	$template->assign('DelHREF', $container->href());
 
 	$filteredWords = [];
-	while ($db->nextRecord()) {
-		$filteredWords[] = $db->getRow();
+	foreach ($dbResult->records() as $dbRecord) {
+		$filteredWords[] = $dbRecord->getRow();
 	}
 	$template->assign('FilteredWords', $filteredWords);
 }

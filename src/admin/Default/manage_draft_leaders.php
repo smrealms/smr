@@ -12,11 +12,11 @@ $template->assign('SelectGameHREF', $container->href());
 // Get the list of active Draft games ordered by reverse start date
 $activeGames = array();
 $db = Smr\Database::getInstance();
-$db->query('SELECT game_id, game_name FROM game WHERE game_type=' . $db->escapeNumber(SmrGame::GAME_TYPE_DRAFT) . ' AND join_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY start_time DESC');
-while ($db->nextRecord()) {
+$dbResult = $db->read('SELECT game_id, game_name FROM game WHERE game_type=' . $db->escapeNumber(SmrGame::GAME_TYPE_DRAFT) . ' AND join_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY start_time DESC');
+foreach ($dbResult->records() as $dbRecord) {
 	$activeGames[] = [
-		'game_name' => $db->getField('game_name'),
-		'game_id' => $db->getInt('game_id'),
+		'game_name' => $dbRecord->getField('game_name'),
+		'game_id' => $dbRecord->getInt('game_id'),
 	];
 }
 $template->assign('ActiveGames', $activeGames);
@@ -28,10 +28,10 @@ if ($activeGames) {
 
 	// Get the list of current draft leaders for the selected game
 	$currentLeaders = array();
-	$db->query('SELECT account_id, home_sector_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($selectedGameID));
-	while ($db->nextRecord()) {
-		$homeSectorID = $db->getInt('home_sector_id');
-		$leader = SmrPlayer::getPlayer($db->getInt('account_id'), $selectedGameID);
+	$dbResult = $db->read('SELECT account_id, home_sector_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($selectedGameID));
+	foreach ($dbResult->records() as $dbRecord) {
+		$homeSectorID = $dbRecord->getInt('home_sector_id');
+		$leader = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $selectedGameID);
 		$currentLeaders[] = [
 			'Name' => $leader->getDisplayName(),
 			'HomeSectorID' => $homeSectorID === 0 ? 'None' : $homeSectorID,

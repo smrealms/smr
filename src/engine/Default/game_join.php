@@ -37,15 +37,14 @@ $races = [];
 $db = Smr\Database::getInstance();
 foreach ($game->getPlayableRaceIDs() as $raceID) {
 	// get number of traders in game
-	$db->query('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db->escapeNumber($raceID) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
-	$db->requireRecord();
+	$dbResult = $db->read('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db->escapeNumber($raceID) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
 
 	$race = Globals::getRaces()[$raceID];
 	$races[$raceID] = [
 		'ID' => $raceID,
 		'Name' => $race['Race Name'],
 		'Description' => $race['Description'],
-		'NumberOfPlayers' => $db->getInt('number_of_race'),
+		'NumberOfPlayers' => $dbResult->record()->getInt('number_of_race'),
 		'Selected' => false,
 	];
 }
