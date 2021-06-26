@@ -24,10 +24,7 @@ $template->assign('SavingsHREF', $container->href());
 $container['body'] = 'trader_bounties.php';
 $template->assign('BountiesHREF', $container->href());
 
-$db = Smr\Database::getInstance();
-$db->query('SELECT count(*) FROM bounty WHERE claimer_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
-$db->requireRecord();
-$template->assign('BountiesClaimable', $db->getInt('count(*)'));
+$template->assign('BountiesClaimable', count($player->getClaimableBounties()));
 
 // Ship
 $container['body'] = 'configure_hardware.php';
@@ -55,12 +52,7 @@ if (empty($hardware)) {
 }
 $template->assign('Hardware', $hardware);
 
-$db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $db->escapeNumber($player->getExperience()) . ' ORDER BY requirement ASC LIMIT 1');
-if (!$db->nextRecord()) {
-	$db->query('SELECT level_name,requirement FROM level ORDER BY requirement DESC LIMIT 1');
-	$db->requireRecord();
-}
-$template->assign('NextLevelName', $db->getField('level_name'));
+$template->assign('NextLevelName', $player->getNextLevel()['Name']);
 
 $container['body'] = 'rankings_view.php';
 $template->assign('UserRankingsHREF', $container->href());
@@ -69,6 +61,7 @@ $container = Page::create('note_delete_processing.php');
 $template->assign('NoteDeleteHREF', $container->href());
 
 $notes = [];
+$db = Smr\Database::getInstance();
 $db->query('SELECT * FROM player_has_notes WHERE ' . $player->getSQL() . ' ORDER BY note_id DESC');
 while ($db->nextRecord()) {
 	$notes[$db->getInt('note_id')] = $db->getField('note');
