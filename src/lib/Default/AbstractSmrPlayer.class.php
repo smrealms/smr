@@ -1051,17 +1051,21 @@ abstract class AbstractSmrPlayer {
 		return 100 - $this->getNextLevelPercentAcquired();
 	}
 
-	public function getNextLevelExperience() : int {
-		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
-		if (!isset($LEVELS_REQUIREMENTS[$this->getLevelID() + 1])) {
-			return $this->getThisLevelExperience(); //Return current level experience if on last level.
+	public function getNextLevel() : array {
+		$LEVELS = Globals::getLevelRequirements();
+		if (!isset($LEVELS[$this->getLevelID() + 1])) {
+			return $LEVELS[$this->getLevelID()]; //Return current level experience if on last level.
 		}
-		return $LEVELS_REQUIREMENTS[$this->getLevelID() + 1]['Requirement'];
+		return $LEVELS[$this->getLevelID() + 1];
+	}
+
+	public function getNextLevelExperience() : int {
+		return $this->getNextLevel()['Requirement'];
 	}
 
 	public function getThisLevelExperience() : int {
-		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
-		return $LEVELS_REQUIREMENTS[$this->getLevelID()]['Requirement'];
+		$LEVELS = Globals::getLevelRequirements();
+		return $LEVELS[$this->getLevelID()]['Requirement'];
 	}
 
 	public function setExperience(int $experience) : void {
@@ -1849,11 +1853,18 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	// Get bounties that can be claimed by this player
-	// Type must be 'HQ' or 'UG'
-	public function getClaimableBounties(string $type) : array {
+	/**
+	 * Get bounties that can be claimed by this player.
+	 * If specified, $type must be 'HQ' or 'UG'.
+	 */
+	public function getClaimableBounties(string $type = null) : array {
 		$bounties = array();
-		$this->db->query('SELECT * FROM bounty WHERE claimer_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' AND type=' . $this->db->escapeString($type));
+		$query = 'SELECT * FROM bounty WHERE claimer_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID());
+		$query .= match($type) {
+			'HQ', 'UG' => ' AND type=' . $this->db->escapeString($type),
+			null => '',
+		};
+		$this->db->query($query);
 		while ($this->db->nextRecord()) {
 			$bounties[] = array(
 				'player' => SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID()),
