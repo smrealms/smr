@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function shared_channel_msg_op_turns($player) {
+function shared_channel_msg_op_turns(SmrPlayer $player) : array {
 	// get the op from db
 	$db = Smr\Database::getInstance();
 	$db->query('SELECT 1

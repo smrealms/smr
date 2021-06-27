@@ -88,7 +88,7 @@ class ChessGame {
 		}
 	}
 
-	public static function isValidCoord(int $x, int $y, array &$board) {
+	public static function isValidCoord(int $x, int $y, array &$board) : bool {
 		return $y < count($board) && $y >= 0 && $x < count($board[$y]) && $x >= 0;
 	}
 
@@ -356,7 +356,7 @@ class ChessGame {
 		return $chessGameID;
 	}
 
-	private static function insertPieces($chessGameID, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) : void {
+	private static function insertPieces(int $chessGameID, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) : void {
 		$db = Smr\Database::getInstance();
 		$pieces = self::getStandardGame($chessGameID, $whitePlayer, $blackPlayer);
 		foreach ($pieces as $p) {
@@ -367,7 +367,7 @@ class ChessGame {
 		}
 	}
 
-	private function createMove(int $pieceID, int $startX, int $startY, int $endX, int $endY, ?int $pieceTaken, ?string $checking, string $playerColour, ?string $castling, bool $enPassant, ?int $promotionPieceID) {
+	private function createMove(int $pieceID, int $startX, int $startY, int $endX, int $endY, ?int $pieceTaken, ?string $checking, string $playerColour, ?string $castling, bool $enPassant, ?int $promotionPieceID) : string {
 		// This move will be set as the most recent move
 		$this->lastMove = [
 			'From' => ['X' => $startX, 'Y' => $startY],

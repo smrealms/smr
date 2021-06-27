@@ -718,7 +718,7 @@ class AbstractSmrPort {
 		$this->setCredits(2700000 + $this->getLevel() * 1500000 + pow($this->getLevel(), 2) * 300000);
 	}
 
-	public function setCredits($credits) {
+	public function setCredits(int $credits) : void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}

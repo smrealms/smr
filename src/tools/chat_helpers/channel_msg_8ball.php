@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function shared_channel_msg_8ball() {
+function shared_channel_msg_8ball() : string {
 	static $answers = array(
 		'Signs point to yes.',
 		'Yes.',

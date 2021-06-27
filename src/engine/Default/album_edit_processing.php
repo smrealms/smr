@@ -115,7 +115,7 @@ $container = Page::create('skeleton.php', 'album_edit.php');
 $container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
 $container->go();
 
-function php_link_check($url) {
+function php_link_check(string $url) : string|false {
 	/*	Purpose: Check HTTP Links
 	*	Usage:	$var = phpLinkCheck(absoluteURI)
 	*					$var['Status-Code'] will return the HTTP status code

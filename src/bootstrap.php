@@ -84,7 +84,7 @@ function logException(Throwable $e) : void {
 	}
 }
 
-function handleException(Throwable $e) {
+function handleException(Throwable $e) : void {
 	// The real error message may display sensitive information, so we
 	// need to catch any exceptions that are thrown while logging the error.
 	try {
@@ -110,7 +110,7 @@ function exception_error_handler($errno, $errstr, $errfile, $errline) {
 	throw new ErrorException($errstr, $errno, E_ERROR, $errfile, $errline);
 }
 
-function setupMailer() {
+function setupMailer() : \PHPMailer\PHPMailer\PHPMailer {
 	$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 	if (!empty(SMTP_HOSTNAME)) {
 		$mail->isSMTP();
@@ -119,7 +119,7 @@ function setupMailer() {
 	return $mail;
 }
 
-function getIpAddress() {
+function getIpAddress() : string {
 	foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'] as $key) {
 		if (array_key_exists($key, $_SERVER) === true) {
 			foreach (explode(',', $_SERVER[$key]) as $ip) {

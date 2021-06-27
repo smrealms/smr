@@ -262,7 +262,7 @@ class SmrForce {
 		return $this->expire < Smr\Epoch::time();
 	}
 
-	public function getExpire() {
+	public function getExpire() : int {
 		return $this->expire;
 	}
 

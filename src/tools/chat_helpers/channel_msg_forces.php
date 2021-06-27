@@ -2,7 +2,7 @@
 
 require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
 
-function shared_channel_msg_forces($player, $option) {
+function shared_channel_msg_forces(SmrPlayer $player, ?string $option) : array {
 	$db = Smr\Database::getInstance();
 	if (empty($option)) {
 		$db->query('SELECT sector_has_forces.sector_id AS sector, expire_time
