@@ -13,8 +13,8 @@ if ($action == 'Build') {
 	// now start the construction
 	try {
 		$planet->startBuilding($player, $var['construction_id']);
-	} catch (\Smr\UserException $message) {
-		create_error($message);
+	} catch (\Smr\UserException $err) {
+		create_error($err->getMessage());
 	}
 	$player->increaseHOF(1, array('Planet', 'Buildings', 'Started'), HOF_ALLIANCE);
 
