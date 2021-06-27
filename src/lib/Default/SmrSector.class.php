@@ -317,7 +317,7 @@ class SmrSector {
 	}
 
 	public function setGalaxyID(int $galaxyID) : void {
-		if ($this->galaxyID == $galaxyID) {
+		if (isset($this->galaxyID) && $this->galaxyID == $galaxyID) {
 			return;
 		}
 		$this->galaxyID = $galaxyID;
