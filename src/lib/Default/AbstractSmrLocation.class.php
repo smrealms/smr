@@ -44,18 +44,14 @@ class AbstractSmrLocation {
 
 	public static function getGalaxyLocations(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT location_type.*, sector_id FROM sector LEFT JOIN location USING(game_id, sector_id) LEFT JOIN location_type USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT location_type.*, sector_id FROM location LEFT JOIN sector USING(game_id, sector_id) LEFT JOIN location_type USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyLocations = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
-			if (!$dbRecord->hasField('location_type_id')) {
-				self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = [];
-			} else {
-				$locationTypeID = $dbRecord->getInt('location_type_id');
-				$location = self::getLocation($locationTypeID, $forceUpdate, $dbRecord);
-				self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$locationTypeID] = $location;
-				$galaxyLocations[$sectorID][$locationTypeID] = $location;
-			}
+			$locationTypeID = $dbRecord->getInt('location_type_id');
+			$location = self::getLocation($locationTypeID, $forceUpdate, $dbRecord);
+			self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$locationTypeID] = $location;
+			$galaxyLocations[$sectorID][$locationTypeID] = $location;
 		}
 		return $galaxyLocations;
 	}
@@ -63,7 +59,7 @@ class AbstractSmrLocation {
 	public static function getSectorLocations(int $gameID, int $sectorID, bool $forceUpdate = false) : array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM location JOIN location_type USING (location_type_id) WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
+			$dbResult = $db->read('SELECT * FROM location LEFT JOIN location_type USING (location_type_id) WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
 			$locations = array();
 			foreach ($dbResult->records() as $dbRecord) {
 				$locationTypeID = $dbRecord->getInt('location_type_id');

@@ -129,18 +129,14 @@ abstract class AbstractSmrPlayer {
 	 */
 	public static function getGalaxyPlayers(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT player.*, sector_id FROM sector LEFT JOIN player USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT player.* FROM player LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlayers = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
-			if (!$dbRecord->hasField('account_id')) {
-				self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] = [];
-			} else {
-				$accountID = $dbRecord->getInt('account_id');
-				$player = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
-				self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID][$accountID] = $player;
-				$galaxyPlayers[$sectorID][$accountID] = $player;
-			}
+			$accountID = $dbRecord->getInt('account_id');
+			$player = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
+			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID][$accountID] = $player;
+			$galaxyPlayers[$sectorID][$accountID] = $player;
 		}
 		return $galaxyPlayers;
 	}

@@ -72,7 +72,7 @@ class AbstractSmrPort {
 	public static function getGalaxyPorts(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
 		$db = Smr\Database::getInstance();
 		// Use a left join so that we populate the cache for every sector
-		$dbResult = $db->read('SELECT port.*, sector_id FROM sector LEFT JOIN port USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT port.* FROM port LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPorts = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');

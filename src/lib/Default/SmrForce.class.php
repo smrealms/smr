@@ -63,18 +63,14 @@ class SmrForce {
 
 	public static function getGalaxyForces(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT sector_has_forces.*, sector_id FROM sector LEFT JOIN sector_has_forces USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT sector_has_forces.* FROM sector_has_forces LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyForces = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
-			if (!$dbRecord->hasField('owner_id')) {
-				self::$CACHE_SECTOR_FORCES[$gameID][$sectorID] = [];
-			} else {
-				$ownerID = $dbRecord->getInt('owner_id');
-				$force = self::getForce($gameID, $sectorID, $ownerID, $forceUpdate, $dbRecord);
-				self::$CACHE_SECTOR_FORCES[$gameID][$sectorID][$ownerID] = $force;
-				$galaxyForces[$sectorID][$ownerID] = $force;
-			}
+			$ownerID = $dbRecord->getInt('owner_id');
+			$force = self::getForce($gameID, $sectorID, $ownerID, $forceUpdate, $dbRecord);
+			self::$CACHE_SECTOR_FORCES[$gameID][$sectorID][$ownerID] = $force;
+			$galaxyForces[$sectorID][$ownerID] = $force;
 		}
 		return $galaxyForces;
 	}

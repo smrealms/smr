@@ -74,14 +74,11 @@ class SmrPlanet {
 
 	public static function getGalaxyPlanets(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT planet.*, sector_id FROM sector LEFT JOIN planet USING (game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT planet.* FROM planet LEFT JOIN sector USING (game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlanets = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
-			$planet = self::getPlanet($gameID, $sectorID, $forceUpdate, $dbRecord);
-			if ($planet->exists()) {
-				$galaxyPlanets[$sectorID] = $planet;
-			}
+			$galaxyPlanets[$sectorID] = self::getPlanet($gameID, $sectorID, $forceUpdate, $dbRecord);
 		}
 		return $galaxyPlanets;
 	}
