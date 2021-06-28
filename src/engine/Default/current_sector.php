@@ -173,20 +173,25 @@ function checkForAttackMessage(string &$msg) : void {
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {
 		// $msg now contains only the log_id, if there is one
+		if (!is_numeric($msg)) {
+			throw new Exception('Improperly formatted attack message: ' . $msg);
+		}
+		$logID = (int)$msg;
+
 		$session = Smr\Session::getInstance();
 		$session->updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
 
 		$template = Smr\Template::getInstance();
 		if (!$template->hasTemplateVar('AttackResults')) {
 			$db = Smr\Database::getInstance();
-			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');
+			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($logID) . ' LIMIT 1');
 			if ($db->nextRecord()) {
 				$player = $session->getPlayer();
 				if ($player->getSectorID() == $db->getInt('sector_id')) {
 					$results = $db->getObject('result', true);
 					$template->assign('AttackResultsType', $db->getField('type'));
 					$template->assign('AttackResults', $results);
-					$template->assign('AttackLogLink', linkCombatLog($msg));
+					$template->assign('AttackLogLink', linkCombatLog($logID));
 				}
 			}
 		}
