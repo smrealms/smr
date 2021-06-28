@@ -4,7 +4,7 @@ namespace Smr;
 
 use DOMDocument;
 use DOMNode;
-use DOMXpath;
+use DOMXPath;
 use Exception;
 use Globals;
 use Smr\Container\DiContainer;
@@ -239,7 +239,7 @@ class Template {
 		$xml = '';
 		$dom = new DOMDocument();
 		$dom->loadHTML($str);
-		$xpath = new DOMXpath($dom);
+		$xpath = new DOMXPath($dom);
 		$ajaxSelectors = array('//span[@id]', '//*[contains(@class,"ajax")]');
 		foreach ($ajaxSelectors as $selector) {
 			$matchNodes = $xpath->query($selector);
@@ -263,7 +263,7 @@ class Template {
 				// Skip if middle_panel has ajax-enabled children.
 				$domMid = new DOMDocument();
 				$domMid->appendChild($domMid->importNode($mid, true));
-				$xpathMid = new DOMXpath($domMid);
+				$xpathMid = new DOMXPath($domMid);
 				foreach ($ajaxSelectors as $selector) {
 					if (count($xpathMid->query($selector)) > 0) {
 						$doAjaxMiddle = false;
