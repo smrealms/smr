@@ -12,9 +12,9 @@ class SocialLoginNotFound extends \Exception {}
  */
 abstract class SocialLogin {
 
-	private $userID = null;
-	private $email = null;
-	private $valid = false;
+	private ?string $userID = null;
+	private ?string $email = null;
+	private bool $valid = false;
 
 	/**
 	 * Provides the canonical name of the platform to use in string comparison.

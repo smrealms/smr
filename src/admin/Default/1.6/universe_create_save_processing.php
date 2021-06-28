@@ -252,7 +252,7 @@ $container['url'] = 'skeleton.php';
 $container->go();
 
 
-function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) {
+function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) : bool {
 	if (!$location->isHQ()) {
 		return (count($sector->getLocations()) < 4 && !$sector->offersFederalProtection());
 	} else {
@@ -262,7 +262,7 @@ function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) {
 	}
 }
 
-function addLocationToSector(SmrLocation $location, SmrSector $sector) {
+function addLocationToSector(SmrLocation $location, SmrSector $sector) : bool {
 	if ($sector->hasLocation($location->getTypeID())) {
 		return false;
 	}

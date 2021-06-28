@@ -51,7 +51,7 @@ foreach ($fightingPlayers as $teamPlayers) {
 $player->takeTurns(3);
 $player->update();
 
-function teamAttack($fightingPlayers, $attack, $defend) {
+function teamAttack(array $fightingPlayers, string $attack, string $defend) : array {
 	$results = ['Traders' => [], 'TotalDamage' => 0];
 	foreach ($fightingPlayers[$attack] as $accountID => $teamPlayer) {
 		$playerResults = $teamPlayer->shootPlayers($fightingPlayers[$defend]);

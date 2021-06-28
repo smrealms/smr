@@ -4,7 +4,7 @@
 class GameNotFoundException extends Exception {}
 
 class SmrGame {
-	protected static $CACHE_GAMES = array();
+	protected static array $CACHE_GAMES = [];
 
 	protected Smr\Database $db;
 

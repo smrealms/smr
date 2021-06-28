@@ -105,11 +105,11 @@ if ($db->getNumRows() > 0) {
 
 $template->assign('FeatureRequestFormHREF', Page::create('feature_request_processing.php', '')->href());
 
-function statusFromCategory($category) {
+function statusFromCategory(string $category) : string {
 	return ($category == 'New' || $category == 'All Open') ? 'Opened' : $category;
 }
 
-function getFeaturesCount($status, $daysNew = false) {
+function getFeaturesCount(string $status, int|false $daysNew = false) : int {
 	$db = Smr\Database::getInstance();
 	$db->query('
 		SELECT COUNT(*) AS count

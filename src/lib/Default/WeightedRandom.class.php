@@ -11,7 +11,7 @@
  * future events are more likely.
  */
 class WeightedRandom {
-	protected static $CACHE_RANDOMS = array();
+	protected static array $CACHE_RANDOMS = [];
 
 	const WEIGHTING_CHANGE = 50; // as a percent
 

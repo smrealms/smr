@@ -58,7 +58,7 @@ $container = Page::create('skeleton.php', '1.6/universe_create_galaxies.php');
 $container['game_id'] = $game->getGameID();
 $container->go();
 
-function createNHA($gameID) {
+function createNHA(int $gameID) : void {
 	$db = Smr\Database::getInstance();
 
 	// create the Newbie Help Alliance

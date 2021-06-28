@@ -14,7 +14,7 @@ abstract class AbstractSmrAccount {
 		array(array('Killing', 'Kills'), 1000, 1)
 		);
 
-	protected static $CACHE_ACCOUNTS = array();
+	protected static array $CACHE_ACCOUNTS = [];
 	protected const DEFAULT_HOTKEYS = array(
 		'MoveUp' => array('w', 'up'),
 		'ScanUp' => array('shift+w', 'shift+up'),

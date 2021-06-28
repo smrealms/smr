@@ -3,7 +3,7 @@
 // Use this exception to help override container forwarding for NPC's
 class ForwardException extends Exception {}
 
-function overrideForward($container) {
+function overrideForward(Page $container) : void {
 	global $forwardedContainer;
 	$forwardedContainer = $container;
 	if ($container['body'] == 'error.php') {
@@ -82,7 +82,7 @@ try {
 }
 
 
-function NPCStuff() {
+function NPCStuff() : void {
 	global $actions, $previousContainer;
 
 	$session = Smr\Session::getInstance();
@@ -103,6 +103,7 @@ function NPCStuff() {
 		changeNPCLogin();
 	} catch (ForwardException $e) {}
 
+	$tradeRoute = null;
 	$underAttack = false;
 	$actions = -1;
 
@@ -120,7 +121,6 @@ function NPCStuff() {
 		}
 
 		try {
-			$TRADE_ROUTE =& $GLOBALS['TRADE_ROUTE'];
 			debug('Action #' . $actions);
 
 			//We have to reload player on each loop
@@ -143,15 +143,15 @@ function NPCStuff() {
 				$player->update();
 			}
 
-			if (!isset($TRADE_ROUTE)) { //We only want to change trade route if there isn't already one set.
+			if ($tradeRoute === null) { //We only want to change trade route if there isn't already one set.
 				$TRADE_ROUTES =& findRoutes($player);
-				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
+				$tradeRoute = changeRoute($TRADE_ROUTES);
 			}
 
 			if ($player->isDead()) {
 				debug('Some evil person killed us, let\'s move on now.');
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
-				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES); //Change route
+				$tradeRoute = changeRoute($TRADE_ROUTES); //Change route
 				processContainer(Page::create('death_processing.php'));
 			}
 			if ($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning()) {
@@ -201,10 +201,10 @@ function NPCStuff() {
 			} elseif (($container = canWeUNO($player, false)) !== false) { //We need to UNO and have enough money to do it properly so let's do it sooner rather than later.
 				debug('We need to UNO, so off we go!');
 				processContainer($container);
-			} elseif ($TRADE_ROUTE instanceof \Routes\Route) {
+			} elseif ($tradeRoute instanceof \Routes\Route) {
 				debug('Trade Route');
-				$forwardRoute = $TRADE_ROUTE->getForwardRoute();
-				$returnRoute = $TRADE_ROUTE->getReturnRoute();
+				$forwardRoute = $tradeRoute->getForwardRoute();
+				$returnRoute = $tradeRoute->getReturnRoute();
 				if ($forwardRoute->getBuySectorId() == $player->getSectorID() || $returnRoute->getBuySectorId() == $player->getSectorID()) {
 					if ($forwardRoute->getBuySectorId() == $player->getSectorID()) {
 						$buyRoute = $forwardRoute;
@@ -228,7 +228,7 @@ function NPCStuff() {
 								processContainer(tradeGoods($goodID, $player, $port));
 							} else {
 								//Move to next route or fed.
-								if (($TRADE_ROUTE =& changeRoute($TRADE_ROUTES)) === false) {
+								if (($tradeRoute = changeRoute($TRADE_ROUTES)) === false) {
 									debug('Changing Route Failed');
 									processContainer(plotToFed($player));
 								} else {
@@ -255,7 +255,7 @@ function NPCStuff() {
 							processContainer(tradeGoods($goodID, $player, $port));
 						} else {
 							//Move to next route or fed.
-							if (($TRADE_ROUTE =& changeRoute($TRADE_ROUTES)) === false) {
+							if (($tradeRoute = changeRoute($TRADE_ROUTES)) === false) {
 								debug('Changing Route Failed');
 								processContainer(plotToFed($player));
 							} else {
@@ -293,12 +293,16 @@ function NPCStuff() {
 				}
 				release_lock();
 			}
+
 			//Clean up the caches as the data may get changed by other players
 			clearCaches();
+
 			//Clear up some global vars
 			global $locksFailed;
 			$locksFailed = array();
 			$_REQUEST = array();
+			$tradeRoute = null;
+
 			//Have a sleep between actions
 			sleepNPC();
 		}
@@ -307,7 +311,7 @@ function NPCStuff() {
 	exitNPC();
 }
 
-function clearCaches() {
+function clearCaches() : void {
 	SmrSector::clearCache();
 	SmrPlayer::clearCache();
 	SmrShip::clearCache();
@@ -315,7 +319,7 @@ function clearCaches() {
 	SmrPort::clearCache();
 }
 
-function debug($message, $debugObject = null) {
+function debug(string $message, mixed $debugObject = null) : void {
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL.var_export($debugObject, true) : '') . EOL;
 	if (NPC_LOG_TO_DATABASE) {
 		$session = Smr\Session::getInstance();
@@ -332,7 +336,7 @@ function debug($message, $debugObject = null) {
 	}
 }
 
-function processContainer($container) {
+function processContainer(Page $container) : void {
 	global $forwardedContainer, $previousContainer;
 	$session = Smr\Session::getInstance();
 	$player = $session->getPlayer();
@@ -353,12 +357,12 @@ function processContainer($container) {
 	do_voodoo();
 }
 
-function sleepNPC() {
+function sleepNPC() : void {
 	usleep(rand(MIN_SLEEP_TIME, MAX_SLEEP_TIME)); //Sleep for a random time
 }
 
 // Releases an NPC when it is done working
-function releaseNPC() {
+function releaseNPC() : void {
 	$session = Smr\Session::getInstance();
 	if (!$session->hasAccount()) {
 		debug('releaseNPC: no NPC to release');
@@ -374,14 +378,14 @@ function releaseNPC() {
 	}
 }
 
-function exitNPC() {
+function exitNPC() : void {
 	debug('Exiting NPC script.');
 	releaseNPC();
 	release_lock();
 	exit;
 }
 
-function changeNPCLogin() {
+function changeNPCLogin() : void {
 	global $actions, $previousContainer;
 	if ($actions > 0) {
 		debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage());
@@ -389,7 +393,6 @@ function changeNPCLogin() {
 	}
 
 	$actions = -1;
-	$GLOBALS['TRADE_ROUTE'] = null;
 
 	// Release previous NPC, if any
 	releaseNPC();
@@ -435,7 +438,7 @@ function changeNPCLogin() {
 	throw new ForwardException;
 }
 
-function canWeUNO(AbstractSmrPlayer $player, $oppurtunisticOnly) {
+function canWeUNO(AbstractSmrPlayer $player, bool $oppurtunisticOnly) : Page|false {
 	if ($player->getCredits() < MINUMUM_RESERVE_CREDITS) {
 		return false;
 	}
@@ -485,6 +488,7 @@ function canWeUNO(AbstractSmrPlayer $player, $oppurtunisticOnly) {
 			return plotToNearest($player, Globals::getHardwareTypes($hardwareArrayID));
 		}
 	}
+	throw new Exception('Should not get here!');
 }
 
 function doUNO(int $hardwareID, int $amount, int $sectorID) : Page {
@@ -500,7 +504,7 @@ function doUNO(int $hardwareID, int $amount, int $sectorID) : Page {
 	return Page::create('shop_hardware_processing.php', '', $vars);
 }
 
-function tradeGoods($goodID, AbstractSmrPlayer $player, SmrPort $port) {
+function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port) : Page {
 	sleepNPC(); //We have an extra sleep at port to make the NPC more vulnerable.
 	$ship = $player->getShip();
 	$relations = $player->getRelation($port->getRaceID());
@@ -520,7 +524,7 @@ function tradeGoods($goodID, AbstractSmrPlayer $player, SmrPort $port) {
 	return Page::create('shop_goods_processing.php', '', array('offered_price'=>$offeredPrice, 'ideal_price'=>$idealPrice, 'amount'=>$amount, 'good_id'=>$goodID, 'bargain_price'=>$offeredPrice));
 }
 
-function dumpCargo($player) {
+function dumpCargo(SmrPlayer $player) : Page {
 	$ship = $player->getShip();
 	$cargo = $ship->getCargo();
 	debug('Ship Cargo', $cargo);
@@ -529,13 +533,14 @@ function dumpCargo($player) {
 			return Page::create('cargo_dump_processing.php', '', array('good_id'=>$goodID, 'amount'=>$amount));
 		}
 	}
+	throw new Exception('Called dumpCargo without any cargo!');
 }
 
-function plotToSector($player, $sectorID) {
+function plotToSector(SmrPlayer $player, int $sectorID) : Page {
 	return Page::create('course_plot_processing.php', '', array('from'=>$player->getSectorID(), 'to'=>$sectorID));
 }
 
-function plotToFed($player, $plotToHQ = false) {
+function plotToFed(SmrPlayer $player, bool $plotToHQ = false) : Page {
 	debug('Plotting To Fed', $plotToHQ);
 
 	// Always drop illegal goods before heading to fed space
@@ -548,12 +553,11 @@ function plotToFed($player, $plotToHQ = false) {
 	if ($player->getSector()->hasLocation($fedLocID)) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
 		changeNPCLogin();
-		return true;
 	}
 	return plotToNearest($player, SmrLocation::getLocation($fedLocID));
 }
 
-function plotToNearest(AbstractSmrPlayer $player, $realX) {
+function plotToNearest(AbstractSmrPlayer $player, mixed $realX) : Page|bool {
 	debug('Plotting To: ', $realX); //TODO: Can we make the debug output a bit nicer?
 
 	if ($player->getSector()->hasX($realX)) { //Check if current sector has what we're looking for before we attempt to plot and get error.
@@ -563,12 +567,13 @@ function plotToNearest(AbstractSmrPlayer $player, $realX) {
 
 	return Page::create('course_plot_nearest_processing.php', '', array('RealX'=>$realX));
 }
-function moveToSector($player, $targetSector) {
+
+function moveToSector(SmrPlayer $player, int $targetSector) : Page {
 	debug('Moving from #' . $player->getSectorID() . ' to #' . $targetSector);
 	return Page::create('sector_move_processing.php', '', array('target_sector'=>$targetSector, 'target_page'=>''));
 }
 
-function checkForShipUpgrade(AbstractSmrPlayer $player) {
+function checkForShipUpgrade(AbstractSmrPlayer $player) : Page|false {
 	foreach (SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
 		if ($player->getShipTypeID() == $upgradeShipID) {
 			//We can't upgrade, only downgrade.
@@ -583,7 +588,7 @@ function checkForShipUpgrade(AbstractSmrPlayer $player) {
 	return false;
 }
 
-function doShipUpgrade(AbstractSmrPlayer $player, $upgradeShipID) {
+function doShipUpgrade(AbstractSmrPlayer $player, int $upgradeShipID) : Page {
 	$plotNearest = plotToNearest($player, SmrShipType::get($upgradeShipID));
 
 	if ($plotNearest == true) { //We're already there!
@@ -593,20 +598,18 @@ function doShipUpgrade(AbstractSmrPlayer $player, $upgradeShipID) {
 	return $plotNearest;
 }
 
-function &changeRoute(array &$tradeRoutes) {
-	$false = false;
+function changeRoute(array &$tradeRoutes) : Routes\Route|false {
 	if (count($tradeRoutes) == 0) {
-		return $false;
+		return false;
 	}
 	$routeKey = array_rand($tradeRoutes);
-	$tradeRoute =& $tradeRoutes[$routeKey];
+	$tradeRoute = $tradeRoutes[$routeKey];
 	unset($tradeRoutes[$routeKey]);
-	$GLOBALS['TRADE_ROUTE'] =& $tradeRoute;
 	debug('Switched route', $tradeRoute);
 	return $tradeRoute;
 }
 
-function &findRoutes($player) {
+function &findRoutes(SmrPlayer $player) : array {
 	debug('Finding Routes');
 
 	$tradeGoods = array(GOODS_NOTHING => false);

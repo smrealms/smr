@@ -37,9 +37,9 @@ $template->assign('Galaxy', $galaxy);
 // but it will identify all other categories that it is in.
 // If multi-category locations becomes common, this code should be modified.
 class Categories {
-	public $locTypes = array();
-	private $locAdded = array(); // list of locs added to a category
-	public function addLoc($locID, $category) {
+	public array $locTypes = [];
+	private array $locAdded = []; // list of locs added to a category
+	public function addLoc(int $locID, string $category) : string {
 		if (!$this->added($locID)) {
 			$this->locTypes[$category][] = $locID;
 			$this->locAdded[] = $locID;
@@ -48,7 +48,7 @@ class Categories {
 			return "<b>Also in $category</b><br />";
 		}
 	}
-	public function added($locID) {
+	public function added(int $locID) : bool {
 		return in_array($locID, $this->locAdded);
 	}
 }

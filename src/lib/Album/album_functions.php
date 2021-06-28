@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function main_page() {
+function main_page() : void {
 	$db = Smr\Database::getInstance();
 	$session = Smr\Session::getInstance();
 
@@ -60,7 +60,7 @@ function main_page() {
 	echo('</p>');
 }
 
-function album_entry($album_id) {
+function album_entry(int $album_id) : void {
 	$db = Smr\Database::getInstance();
 	$session = Smr\Session::getInstance();
 
@@ -236,7 +236,7 @@ function album_entry($album_id) {
 
 }
 
-function search_result($album_ids) {
+function search_result(array $album_ids) : void {
 
 	// list of all first letter nicks
 	create_link_list();
@@ -263,7 +263,7 @@ function search_result($album_ids) {
 	echo('</table>');
 }
 
-function create_link_list() {
+function create_link_list() : void {
 	echo('<div class="center" style="font-size:80%;">[ ');
 	echo('<a href="?nick=%">All</a> | ');
 	echo('<a href="?nick=A">A</a> | ');
@@ -297,7 +297,7 @@ function create_link_list() {
 
 
 
-function get_album_nick($album_id) {
+function get_album_nick(int $album_id) : string {
 	if ($album_id == 0) {
 		return 'System';
 	}

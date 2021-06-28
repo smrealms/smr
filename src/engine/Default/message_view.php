@@ -99,7 +99,7 @@ if (!USING_AJAX) {
 $template->assign('MessageBox', $messageBox);
 
 
-function displayScouts(&$messageBox, SmrPlayer $player) {
+function displayScouts(array &$messageBox, SmrPlayer $player) : void {
 	// Generate the group messages
 	$db = Smr\Database::getInstance();
 	$db->query('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
@@ -141,7 +141,7 @@ function displayScouts(&$messageBox, SmrPlayer $player) {
 	$messageBox['NumberMessages'] = $db->getNumRows();
 }
 
-function displayGrouped(&$messageBox, SmrPlayer $sender, $message_text, $first, $last, $star, SmrAccount $displayAccount) {
+function displayGrouped(array &$messageBox, SmrPlayer $sender, string $message_text, int $first, int $last, bool $star, SmrAccount $displayAccount) : void {
 	// Define a unique array so we can delete grouped messages
 	$array = array(
 		$sender->getAccountID(),
@@ -159,7 +159,7 @@ function displayGrouped(&$messageBox, SmrPlayer $sender, $message_text, $first, 
 	$messageBox['Messages'][] = $message;
 }
 
-function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $game_id, $message_text, $send_time, $msg_read, $type, SmrAccount $displayAccount) {
+function displayMessage(array &$messageBox, int $message_id, int $receiver_id, int $sender_id, int $game_id, string $message_text, int $send_time, bool $msg_read, int $type, SmrAccount $displayAccount) : void {
 	$message = array();
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;

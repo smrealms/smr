@@ -25,7 +25,7 @@ class DatabaseProperties {
 		] = $array;
 	}
 
-	private static function validateConfig(Dotenv $config) {
+	private static function validateConfig(Dotenv $config) : void {
 		$config->required([
 			self::CONFIG_HOST,
 			self::CONFIG_USER,
@@ -34,19 +34,19 @@ class DatabaseProperties {
 		])->notEmpty();
 	}
 
-	public function getHost(): string {
+	public function getHost() : string {
 		return $this->host;
 	}
 
-	public function getUser(): string {
+	public function getUser() : string {
 		return $this->user;
 	}
 
-	public function getPassword(): string {
+	public function getPassword() : string {
 		return $this->password;
 	}
 
-	public function getDatabaseName(): string {
+	public function getDatabaseName() : string {
 		return $this->databaseName;
 	}
 }

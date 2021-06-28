@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function get_turns_message($player) {
+function get_turns_message(SmrPlayer $player) : string {
 	// turns only update when the player is active, so calculate current turns
 	$turns = min($player->getTurns() + $player->getTurnsGained(time(), true),
 	             $player->getMaxTurns());
