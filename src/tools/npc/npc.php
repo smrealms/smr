@@ -103,6 +103,7 @@ function NPCStuff() : void {
 		changeNPCLogin();
 	} catch (ForwardException $e) {}
 
+	$tradeRoute = null;
 	$underAttack = false;
 	$actions = -1;
 
@@ -120,7 +121,6 @@ function NPCStuff() : void {
 		}
 
 		try {
-			$TRADE_ROUTE =& $GLOBALS['TRADE_ROUTE'];
 			debug('Action #' . $actions);
 
 			//We have to reload player on each loop
@@ -143,15 +143,15 @@ function NPCStuff() : void {
 				$player->update();
 			}
 
-			if (!isset($TRADE_ROUTE)) { //We only want to change trade route if there isn't already one set.
+			if ($tradeRoute === null) { //We only want to change trade route if there isn't already one set.
 				$TRADE_ROUTES =& findRoutes($player);
-				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
+				$tradeRoute = changeRoute($TRADE_ROUTES);
 			}
 
 			if ($player->isDead()) {
 				debug('Some evil person killed us, let\'s move on now.');
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
-				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES); //Change route
+				$tradeRoute = changeRoute($TRADE_ROUTES); //Change route
 				processContainer(Page::create('death_processing.php'));
 			}
 			if ($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning()) {
@@ -201,10 +201,10 @@ function NPCStuff() : void {
 			} elseif (($container = canWeUNO($player, false)) !== false) { //We need to UNO and have enough money to do it properly so let's do it sooner rather than later.
 				debug('We need to UNO, so off we go!');
 				processContainer($container);
-			} elseif ($TRADE_ROUTE instanceof \Routes\Route) {
+			} elseif ($tradeRoute instanceof \Routes\Route) {
 				debug('Trade Route');
-				$forwardRoute = $TRADE_ROUTE->getForwardRoute();
-				$returnRoute = $TRADE_ROUTE->getReturnRoute();
+				$forwardRoute = $tradeRoute->getForwardRoute();
+				$returnRoute = $tradeRoute->getReturnRoute();
 				if ($forwardRoute->getBuySectorId() == $player->getSectorID() || $returnRoute->getBuySectorId() == $player->getSectorID()) {
 					if ($forwardRoute->getBuySectorId() == $player->getSectorID()) {
 						$buyRoute = $forwardRoute;
@@ -228,7 +228,7 @@ function NPCStuff() : void {
 								processContainer(tradeGoods($goodID, $player, $port));
 							} else {
 								//Move to next route or fed.
-								if (($TRADE_ROUTE =& changeRoute($TRADE_ROUTES)) === false) {
+								if (($tradeRoute = changeRoute($TRADE_ROUTES)) === false) {
 									debug('Changing Route Failed');
 									processContainer(plotToFed($player));
 								} else {
@@ -255,7 +255,7 @@ function NPCStuff() : void {
 							processContainer(tradeGoods($goodID, $player, $port));
 						} else {
 							//Move to next route or fed.
-							if (($TRADE_ROUTE =& changeRoute($TRADE_ROUTES)) === false) {
+							if (($tradeRoute = changeRoute($TRADE_ROUTES)) === false) {
 								debug('Changing Route Failed');
 								processContainer(plotToFed($player));
 							} else {
@@ -293,12 +293,16 @@ function NPCStuff() : void {
 				}
 				release_lock();
 			}
+
 			//Clean up the caches as the data may get changed by other players
 			clearCaches();
+
 			//Clear up some global vars
 			global $locksFailed;
 			$locksFailed = array();
 			$_REQUEST = array();
+			$tradeRoute = null;
+
 			//Have a sleep between actions
 			sleepNPC();
 		}
@@ -389,7 +393,6 @@ function changeNPCLogin() : void {
 	}
 
 	$actions = -1;
-	$GLOBALS['TRADE_ROUTE'] = null;
 
 	// Release previous NPC, if any
 	releaseNPC();
@@ -595,15 +598,13 @@ function doShipUpgrade(AbstractSmrPlayer $player, int $upgradeShipID) : Page {
 	return $plotNearest;
 }
 
-function &changeRoute(array &$tradeRoutes) : Routes\Route|false {
-	$false = false;
+function changeRoute(array &$tradeRoutes) : Routes\Route|false {
 	if (count($tradeRoutes) == 0) {
-		return $false;
+		return false;
 	}
 	$routeKey = array_rand($tradeRoutes);
-	$tradeRoute =& $tradeRoutes[$routeKey];
+	$tradeRoute = $tradeRoutes[$routeKey];
 	unset($tradeRoutes[$routeKey]);
-	$GLOBALS['TRADE_ROUTE'] =& $tradeRoute;
 	debug('Switched route', $tradeRoute);
 	return $tradeRoute;
 }
