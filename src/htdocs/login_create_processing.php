@@ -43,8 +43,6 @@ try {
 		}
 	}
 
-	// db object
-	$db = Smr\Database::getInstance();
 	$login = trim(Request::get('login'));
 	$password = trim(Request::get('password'));
 	if (strstr($login, '\'')) {
@@ -122,13 +120,11 @@ try {
 		exit;
 	}
 
-	$db->query('SELECT * FROM account WHERE login = ' . $db->escapeString($login));
-	if ($db->getNumRows() > 0) {
+	if (SmrAccount::getAccountByName($login) != null) {
 		$msg = 'This user name is already registered.';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
-
 
 	if (SmrAccount::getAccountByEmail($email) != null) {
 		$msg = 'This email address is already registered.';
