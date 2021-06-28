@@ -1,0 +1,15 @@
+# Distributed PHPStan config
+parameters:
+    level: 0
+    paths:
+        - src
+        - test
+    bootstrapFiles:
+        - src/config.php
+
+    # Stricter analysis
+    polluteScopeWithLoopInitialAssignments: false
+    polluteScopeWithAlwaysIterableForeach: false
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true

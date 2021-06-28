@@ -52,6 +52,7 @@ x-smr-test: &smr-test
         - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
         - ./test/env:/smr/config/env:ro
         - ./phpunit.xml:/smr/phpunit.xml
+        - ./phpstan.neon.dist:/smr/phpstan.neon.dist
         # Mount the source code instead of copying it.
         - ./src:/smr/src
         - ./test:/smr/test
@@ -141,7 +142,7 @@ services:
 
     phpstan:
         <<: *smr-test
-        command: /smr/vendor/bin/phpstan --memory-limit=4G --ansi --autoload-file=/smr/src/config.php analyse --level 0 src test
+        command: /smr/vendor/bin/phpstan --memory-limit=4G --ansi analyse
 
     pma:
         image: phpmyadmin/phpmyadmin
