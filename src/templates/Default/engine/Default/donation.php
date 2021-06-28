@@ -38,6 +38,6 @@ if (isset($GameID)) { ?>
 	<h2>Ship Name</h2>
 	<p>Customise your ship name, or even spray on your favourite logo!</p>
 	<div class="buttonA">
-		<a class="buttonA" href="<?php echo Globals::getBuyShipNameHref(); ?>">Customize Ship Name (<?php echo min(Globals::getBuyShipNameCosts()); ?>-<?php echo max(Globals::getBuyShipNameCosts()); ?> SMR Credits)</a>
+		<a class="buttonA" href="<?php echo Globals::getBuyShipNameHREF(); ?>">Customize Ship Name (<?php echo min(Globals::getBuyShipNameCosts()); ?>-<?php echo max(Globals::getBuyShipNameCosts()); ?> SMR Credits)</a>
 	</div><?php
 }

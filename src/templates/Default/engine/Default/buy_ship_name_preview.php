@@ -12,5 +12,5 @@
 	<br />
 	<a href="<?php echo $ContinueHREF; ?>" class="submitStyle">Continue </a>
 	&nbsp;&nbsp;
-	<a href="<?php echo Globals::getBuyShipNameHref(); ?>" class="submitStyle">Back</a>
+	<a href="<?php echo Globals::getBuyShipNameHREF(); ?>" class="submitStyle">Back</a>
 </div>
