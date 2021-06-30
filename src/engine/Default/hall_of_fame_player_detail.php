@@ -37,7 +37,7 @@ const USER_SCORE_NAME = 'User Score';
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
 foreach ($dbResult->records() as $dbRecord) {
 	$hof =& $hofTypes;
-	$typeList = explode(':', $dbRecord->getField('type'));
+	$typeList = explode(':', $dbRecord->getString('type'));
 	foreach ($typeList as $type) {
 		if (!isset($hof[$type])) {
 			$hof[$type] = array();

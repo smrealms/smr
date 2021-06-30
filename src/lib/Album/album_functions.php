@@ -78,13 +78,13 @@ function album_entry(int $album_id) : void {
 					approved = \'YES\'');
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
-		$location = stripslashes($dbRecord->getField('location'));
-		$email = stripslashes($dbRecord->getField('email'));
-		$website = stripslashes($dbRecord->getField('website'));
-		$day = $dbRecord->getField('day');
-		$month = $dbRecord->getField('month');
-		$year = $dbRecord->getField('year');
-		$other = nl2br(stripslashes($dbRecord->getField('other')));
+		$location = $dbRecord->getField('location');
+		$email = $dbRecord->getField('email');
+		$website = $dbRecord->getField('website');
+		$day = $dbRecord->getInt('day');
+		$month = $dbRecord->getInt('month');
+		$year = $dbRecord->getInt('year');
+		$other = nl2br($dbRecord->getString('other'));
 		$page_views = $dbRecord->getInt('page_views');
 		$disabled = $dbRecord->getBoolean('disabled');
 	} else {
@@ -111,7 +111,7 @@ function album_entry(int $album_id) : void {
 				LIMIT 1');
 	echo '<td class="center" style="width: 30%" valign="middle">';
 	if ($dbResult->hasRecord()) {
-		$priv_nick = $dbResult->record()->getField('hof_name');
+		$priv_nick = $dbResult->record()->getString('hof_name');
 		echo '<a href="?nick=' . urlencode($priv_nick) . '"><img src="/images/album/rew.jpg" alt="' . $priv_nick . '" border="0"></a>&nbsp;&nbsp;&nbsp;';
 	}
 	echo '</td>';
@@ -125,7 +125,7 @@ function album_entry(int $album_id) : void {
 				LIMIT 1');
 	echo '<td class="center" style="width: 30%" valign="middle">';
 	if ($dbResult->hasRecord()) {
-		$next_nick = $dbResult->record()->getField('hof_name');
+		$next_nick = $dbResult->record()->getString('hof_name');
 		echo '&nbsp;&nbsp;&nbsp;<a href="?nick=' . urlencode($next_nick) . '"><img src="/images/album/fwd.jpg" alt="' . $next_nick . '" border="0"></a>';
 	}
 	echo '</td>';
@@ -201,7 +201,7 @@ function album_entry(int $album_id) : void {
 	foreach ($dbResult->records() as $dbRecord) {
 		$time = $dbRecord->getInt('time');
 		$postee = get_album_nick($dbRecord->getInt('post_id'));
-		$msg = stripslashes($dbRecord->getField('msg'));
+		$msg = $dbRecord->getString('msg');
 
 		echo('<span style="font-size:85%;">[' . date($dateFormat, $time) . '] &lt;' . $postee . '&gt; ' . $msg . '</span><br />');
 	}

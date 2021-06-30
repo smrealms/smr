@@ -82,7 +82,7 @@ function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID)
 		if (!$dbResult->hasRecord()) {
 			return $rank;
 		}
-		$vis = $dbResult->record()->getField('visibility');
+		$vis = $dbResult->record()->getString('visibility');
 		$dbResult = $db->read('SELECT SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . ' AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id LIMIT 1');
 	}
 

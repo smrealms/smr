@@ -25,7 +25,7 @@ $announcements = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$announcements[] = [
 		'Time' => $dbRecord->getInt('time'),
-		'Msg' => htmlentities($dbRecord->getField('msg')),
+		'Msg' => htmlentities($dbRecord->getString('msg')),
 	];
 }
 $template->assign('Announcements', $announcements);

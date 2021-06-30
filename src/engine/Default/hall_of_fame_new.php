@@ -31,7 +31,7 @@ const USER_SCORE_NAME = 'User Score';
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
 foreach ($dbResult->records() as $dbRecord) {
 	$hof =& $hofTypes;
-	$typeList = explode(':', $dbRecord->getField('type'));
+	$typeList = explode(':', $dbRecord->getString('type'));
 	foreach ($typeList as $type) {
 		if (!isset($hof[$type])) {
 			$hof[$type] = array();
@@ -63,7 +63,7 @@ if (!isset($var['view'])) {
 	} else {
 		$dbResult = $db->read('SELECT visibility FROM hof_visibility WHERE type = ' . $db->escapeArray($viewType, ':', false) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
-			$vis = $dbResult->record()->getField('visibility');
+			$vis = $dbResult->record()->getString('visibility');
 		}
 		$dbResult = $db->read('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 	}

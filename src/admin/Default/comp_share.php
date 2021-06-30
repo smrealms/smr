@@ -19,7 +19,7 @@ $dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE `use` = \'TRUE\
 $tables = [];
 foreach ($dbResult->records() as $dbRecord) {
 	//get info about linked IDs
-	$accountIDs = explode('-', $dbRecord->getField('array'));
+	$accountIDs = explode('-', $dbRecord->getString('array'));
 
 	//make sure this is good data.
 	$cookieVersion = array_shift($accountIDs);

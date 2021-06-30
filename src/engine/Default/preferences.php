@@ -20,6 +20,6 @@ $transferAccounts = array();
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT account_id,hof_name FROM account WHERE validated = ' . $db->escapeBoolean(true) . ' ORDER BY hof_name');
 foreach ($dbResult->records() as $dbRecord) {
-	$transferAccounts[$dbRecord->getInt('account_id')] = htmlspecialchars($dbRecord->getField('hof_name'));
+	$transferAccounts[$dbRecord->getInt('account_id')] = htmlspecialchars($dbRecord->getString('hof_name'));
 }
 $template->assign('TransferAccounts', $transferAccounts);

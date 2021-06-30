@@ -14,13 +14,13 @@ if ($dbResult->hasRecord()) {
 	$day = $dbRecord->getInt('day');
 	$month = $dbRecord->getInt('month');
 	$year = $dbRecord->getInt('year');
-	$albumEntry['Location'] = stripslashes($dbRecord->getField('location'));
-	$albumEntry['Email'] = stripslashes($dbRecord->getField('email'));
-	$albumEntry['Website'] = stripslashes($dbRecord->getField('website'));
+	$albumEntry['Location'] = $dbRecord->getField('location');
+	$albumEntry['Email'] = $dbRecord->getField('email');
+	$albumEntry['Website'] = $dbRecord->getField('website');
 	$albumEntry['Day'] = $day > 0 ? $day : '';
 	$albumEntry['Month'] = $month > 0 ? $month : '';
 	$albumEntry['Year'] = $year > 0 ? $year : '';
-	$albumEntry['Other'] = stripslashes($dbRecord->getField('other'));
+	$albumEntry['Other'] = $dbRecord->getField('other');
 	$approved = $dbRecord->getField('approved');
 
 	if ($approved == 'TBC') {

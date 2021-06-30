@@ -51,7 +51,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		'gameName' => $gameName,
 		'sentDate' => date($account->getDateTimeFormat(), $dbRecord->getInt('sent_time')),
 		'reportDate' => date($account->getDateTimeFormat(), $dbRecord->getInt('notify_time')),
-		'text' => bbifyMessage($dbRecord->getField('text')),
+		'text' => bbifyMessage($dbRecord->getString('text')),
 	];
 }
 $template->assign('Messages', $messages);

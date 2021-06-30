@@ -388,7 +388,7 @@ abstract class AbstractSmrAccount {
 			$this->HOF = array();
 			foreach ($dbResult->records() as $dbRecord) {
 				$hof =& $this->HOF;
-				$typeList = explode(':', $dbRecord->getField('type'));
+				$typeList = explode(':', $dbRecord->getString('type'));
 				foreach ($typeList as $type) {
 					if (!isset($hof[$type])) {
 						$hof[$type] = array();

@@ -9,7 +9,7 @@ function getNewsItems(Smr\DatabaseResult $dbResult) : array {
 
 	$newsItems = [];
 	foreach ($dbResult->records() as $dbRecord) {
-		$message = bbifyMessage($dbRecord->getField('news_message'));
+		$message = bbifyMessage($dbRecord->getString('news_message'));
 		if ($dbRecord->getField('type') == 'admin') {
 			$message = '<span class="admin">ADMIN </span>' . $message;
 		}
@@ -27,7 +27,7 @@ function doBreakingNewsAssign(int $gameID) : void {
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
 		$template = Smr\Template::getInstance();
-		$template->assign('BreakingNews', array('Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getField('news_message'))));
+		$template->assign('BreakingNews', array('Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getString('news_message'))));
 	}
 }
 
@@ -39,6 +39,6 @@ function doLottoNewsAssign(int $gameID) : void {
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
 		$template = Smr\Template::getInstance();
-		$template->assign('LottoNews', array('Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getField('news_message'))));
+		$template->assign('LottoNews', array('Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getString('news_message'))));
 	}
 }

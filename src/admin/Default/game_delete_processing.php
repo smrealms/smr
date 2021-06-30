@@ -182,7 +182,7 @@ if ($action == 'Yes') {
 
 			// get info we want
 			$acc_id = $dbRecord->getInt('account_id');
-			$name = stripslashes($dbRecord->getField('player_name'));
+			$name = $dbRecord->getString('player_name');
 			$id = $dbRecord->getInt('player_id');
 			$exp = $dbRecord->getInt('experience');
 			$ship = $dbRecord->getInt('ship_type_id');

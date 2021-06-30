@@ -102,7 +102,7 @@ if (!empty($protectionMessage)) {
 
 $dbResult = $db->read('SELECT * FROM sector_message WHERE ' . $player->getSQL());
 if ($dbResult->hasRecord()) {
-	$msg = $dbResult->record()->getField('message');
+	$msg = $dbResult->record()->getString('message');
 	$db->write('DELETE FROM sector_message WHERE ' . $player->getSQL());
 	checkForForceRefreshMessage($msg);
 	checkForAttackMessage($msg);

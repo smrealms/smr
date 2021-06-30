@@ -87,7 +87,7 @@ if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['T
 	$template->unassign('NextPageHREF'); // always displaying all scout messages?
 } else {
 	foreach ($dbResult->records() as $dbRecord) {
-		displayMessage($messageBox, $dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getField('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), $var['folder_id'], $player->getAccount());
+		displayMessage($messageBox, $dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), $var['folder_id'], $player->getAccount());
 	}
 }
 if (!USING_AJAX) {
@@ -131,7 +131,7 @@ function displayScouts(array &$messageBox, SmrPlayer $player) : void {
 		$groupBox =& $messageBox['GroupedMessages'][$dbRecord->getInt('sender_id')];
 		// Limit the number of messages in each group
 		if (!isset($groupBox['Messages']) || count($groupBox['Messages']) < MESSAGE_SCOUT_GROUP_LIMIT) {
-			displayMessage($groupBox, $dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), stripslashes($dbRecord->getField('message_text')), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), MSG_SCOUT, $player->getAccount());
+			displayMessage($groupBox, $dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), stripslashes($dbRecord->getString('message_text')), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), MSG_SCOUT, $player->getAccount());
 		}
 	}
 

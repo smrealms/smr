@@ -39,7 +39,7 @@ arsort($totals, SORT_NUMERIC);
 $dbResult = $db->read('SELECT * FROM player WHERE account_id IN (' . $db->escapeArray($playerIDs) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
 $players[0] = 'Alliance Funds';
 foreach ($dbResult->records() as $dbRecord) {
-	$players[$dbRecord->getInt('account_id')] = htmlentities($dbRecord->getField('player_name'));
+	$players[$dbRecord->getInt('account_id')] = htmlentities($dbRecord->getString('player_name'));
 }
 
 //format it this way so its easy to send to the alliance MB if requested.

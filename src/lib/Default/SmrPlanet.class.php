@@ -137,7 +137,7 @@ class SmrPlanet {
 		if ($this->exists) {
 			$this->gameID = $gameID;
 			$this->sectorID = $sectorID;
-			$this->planetName = stripslashes($dbRecord->getField('planet_name'));
+			$this->planetName = $dbRecord->getString('planet_name');
 			$this->ownerID = $dbRecord->getInt('owner_id');
 			$this->password = $dbRecord->getField('password');
 			$this->shields = $dbRecord->getInt('shields');

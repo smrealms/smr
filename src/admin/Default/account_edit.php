@@ -25,7 +25,7 @@ $template->assign('Disabled', $curr_account->isDisabled());
 $banReasons = array();
 $dbResult = $db->read('SELECT * FROM closing_reason');
 foreach ($dbResult->records() as $dbRecord) {
-	$reason = $dbRecord->getField('reason');
+	$reason = $dbRecord->getString('reason');
 	if (strlen($reason) > 61) {
 		$reason = substr($reason, 0, 61) . '...';
 	}

@@ -22,7 +22,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$container['max_amount'] = $dbRecord->getInt('max_amount');
 
 	$excessHardware[] = [
-		'player' => htmlentities($dbRecord->getField('player_name')),
+		'player' => htmlentities($dbRecord->getString('player_name')),
 		'game_id' => $dbRecord->getInt('game_id'),
 		'hardware' => $dbRecord->getField('hardware_name'),
 		'amount' => $dbRecord->getInt('amount'),

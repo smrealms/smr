@@ -101,7 +101,7 @@ if ($action == 'Delete') {
 	foreach ($dbResult->records() as $dbRecord) {
 		$account_id = $dbRecord->getInt('account_id');
 		$microtime = $dbRecord->getMicrotime('microtime');
-		$message = stripslashes($dbRecord->getField('message'));
+		$message = $dbRecord->getString('message');
 		$log_type_id = $dbRecord->getInt('log_type_id');
 		$sector_id = $dbRecord->getInt('sector_id');
 

@@ -81,8 +81,8 @@ class SmrAlliance {
 		if ($allianceID != 0) {
 			$dbResult = $this->db->read('SELECT * FROM alliance WHERE ' . $this->SQL);
 			$dbRecord = $dbResult->record();
-			$this->allianceName = $dbRecord->getField('alliance_name');
-			$this->password = stripslashes($dbRecord->getField('alliance_password'));
+			$this->allianceName = $dbRecord->getString('alliance_name');
+			$this->password = $dbRecord->getField('alliance_password');
 			$this->recruiting = $dbRecord->getBoolean('recruiting');
 			$this->description = $dbRecord->getField('alliance_description');
 			$this->leaderID = $dbRecord->getInt('leader_id');

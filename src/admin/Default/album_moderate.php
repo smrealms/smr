@@ -16,13 +16,13 @@ $dbResult = $db->read('SELECT * FROM album WHERE account_id = ' . $db->escapeNum
 $dbRecord = $dbResult->record();
 
 $disabled = $dbRecord->getBoolean('disabled');
-$location = stripslashes($dbRecord->getField('location'));
-$email = stripslashes($dbRecord->getField('email'));
-$website = stripslashes($dbRecord->getField('website'));
-$day = $dbRecord->getField('day');
-$month = $dbRecord->getField('month');
-$year = $dbRecord->getField('year');
-$other = nl2br(stripslashes($dbRecord->getField('other')));
+$location = $dbRecord->getField('location');
+$email = $dbRecord->getField('email');
+$website = $dbRecord->getField('website');
+$day = $dbRecord->getInt('day');
+$month = $dbRecord->getInt('month');
+$year = $dbRecord->getInt('year');
+$other = nl2br($dbRecord->getString('other'));
 
 if (!empty($day) && !empty($month) && !empty($year)) {
 	$birthdate = $month . ' / ' . $day . ' / ' . $year;
@@ -84,7 +84,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		'id' => $dbRecord->getInt('comment_id'),
 		'date' => date($account->getDateTimeFormat(), $dbRecord->getInt('time')),
 		'postee' => get_album_nick($dbRecord->getInt('post_id')),
-		'msg' => stripslashes($dbRecord->getField('msg')),
+		'msg' => $dbRecord->getString('msg'),
 	];
 }
 $template->assign('Comments', $comments);

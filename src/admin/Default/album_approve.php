@@ -22,14 +22,14 @@ $dbResult = $db->read('SELECT *
 if ($dbResult->hasRecord()) {
 	$dbRecord = $dbResult->record();
 	$album_id = $dbRecord->getInt('account_id');
-	$location = stripslashes($dbRecord->getField('location'));
-	$email = stripslashes($dbRecord->getField('email'));
-	$website = stripslashes($dbRecord->getField('website'));
-	$day = $dbRecord->getField('day');
-	$month = $dbRecord->getField('month');
-	$year = $dbRecord->getField('year');
-	$other = nl2br(stripslashes($dbRecord->getField('other')));
-	$last_changed = $dbRecord->getField('last_changed');
+	$location = $dbRecord->getField('location');
+	$email = $dbRecord->getField('email');
+	$website = $dbRecord->getField('website');
+	$day = $dbRecord->getInt('day');
+	$month = $dbRecord->getInt('month');
+	$year = $dbRecord->getInt('year');
+	$other = nl2br($dbRecord->getString('other'));
+	$last_changed = $dbRecord->getInt('last_changed');
 	$disabled = $dbRecord->getBoolean('disabled');
 
 	if (empty($location)) {

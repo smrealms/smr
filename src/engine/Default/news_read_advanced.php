@@ -20,7 +20,7 @@ $dbResult = $db->read('SELECT alliance_id, alliance_name
 $newsAlliances = array();
 $newsAlliances[0] = array('ID' => 0, 'Name' => 'None');
 foreach ($dbResult->records() as $dbRecord) {
-	$newsAlliances[$dbRecord->getInt('alliance_id')] = array('ID' => $dbRecord->getInt('alliance_id'), 'Name' => htmlentities($dbRecord->getField('alliance_name')));
+	$newsAlliances[$dbRecord->getInt('alliance_id')] = array('ID' => $dbRecord->getInt('alliance_id'), 'Name' => htmlentities($dbRecord->getString('alliance_name')));
 }
 $template->assign('NewsAlliances', $newsAlliances);
 

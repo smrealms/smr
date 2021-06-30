@@ -20,7 +20,7 @@ $dbResult = $db->read('SELECT * FROM anon_bank_transactions
             ORDER BY game_id DESC, anon_id ASC');
 $anon_logs = [];
 foreach ($dbResult->records() as $dbRecord) {
-	$transaction = strtolower($dbRecord->getField('transaction'));
+	$transaction = strtolower($dbRecord->getString('transaction'));
 	$anon_logs[$dbRecord->getInt('game_id')][$dbRecord->getInt('anon_id')][] = [
 		'login' => $dbRecord->getField('login'),
 		'amount' => number_format($dbRecord->getInt('amount')),

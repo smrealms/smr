@@ -42,7 +42,7 @@ try {
 		$overrideGameID = $dbRecord->getInt('game_id'); //for bbifyMessage
 		$gameNews[] = [
 			'Time' => date(DEFAULT_DATE_TIME_FORMAT_SPLIT, $dbRecord->getInt('time')),
-			'Message' => bbifyMessage($dbRecord->getField('news_message')),
+			'Message' => bbifyMessage($dbRecord->getString('news_message')),
 		];
 	}
 	$template->assign('GameNews', $gameNews);

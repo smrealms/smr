@@ -211,7 +211,7 @@ if ($type == 'comp_share') {
 		$ip = $dbRecord->getField('ip');
 		$host = $dbRecord->getField('host');
 
-		if ($id == $last_id && $ip == $last_ip) {
+		if ($id === $last_id && $ip === $last_ip) {
 			continue;
 		}
 		$acc = SmrAccount::getAccount($id);
@@ -220,7 +220,7 @@ if ($type == 'comp_share') {
 		$dbResult2 = $db->read('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($id));
 		$names = array();
 		foreach ($dbResult2->records() as $dbRecord2) {
-			$names[] = stripslashes($dbRecord2->getField('player_name'));
+			$names[] = $dbRecord2->getString('player_name');
 		}
 		$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($id));
 		if ($dbResult2->hasRecord()) {

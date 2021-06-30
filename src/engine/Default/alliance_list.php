@@ -42,7 +42,7 @@ foreach ($dbResult->records() as $dbRecord) {
 
 	$alliances[$allianceID] = array(
 		'ViewHREF' => $container->href(),
-		'Name' => htmlentities($dbRecord->getField('alliance_name')),
+		'Name' => htmlentities($dbRecord->getString('alliance_name')),
 		'TotalExperience' => $dbRecord->getInt('alliance_xp'),
 		'AverageExperience' => $dbRecord->getInt('alliance_avg'),
 		'Members' => $dbRecord->getInt('alliance_member_count'),

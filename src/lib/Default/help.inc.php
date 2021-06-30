@@ -10,7 +10,7 @@ function echo_nav($topic_id) {
 		$dbRecord = $dbResult->record();
 		$parent_topic_id = $dbRecord->getInt('parent_topic_id');
 		$order_id = $dbRecord->getInt('order_id');
-		$topic = stripslashes($dbRecord->getField('topic'));
+		$topic = stripslashes($dbRecord->getString('topic'));
 
 		echo ('<table>');
 		echo ('<tr>');
@@ -29,7 +29,7 @@ function echo_nav($topic_id) {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$previous_topic_id = $dbRecord->getInt('topic_id');
-			$previous_topic = stripslashes($dbRecord->getField('topic'));
+			$previous_topic = stripslashes($dbRecord->getString('topic'));
 			echo ('<a href="/manual.php?' . $previous_topic_id . '"><img src="/images/help/previous.jpg" width="32" height="32" border="0"></a>');
 		} else {
 			echo ('<img src="/images/help/empty.jpg" width="32" height="32">');
@@ -44,7 +44,7 @@ function echo_nav($topic_id) {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$up_topic_id = $dbRecord->getInt('topic_id');
-			$up_topic = stripslashes($dbRecord->getField('topic'));
+			$up_topic = stripslashes($dbRecord->getString('topic'));
 			echo ('<a href="/manual.php?' . $up_topic_id . '"><img src="/images/help/up.jpg" width="32" height="32" border="0"></a>');
 		} else {
 			echo ('<img src="/images/help/empty.jpg" width="32" height="32">');
@@ -76,7 +76,7 @@ function echo_nav($topic_id) {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$next_topic_id = $dbRecord->getInt('topic_id');
-			$next_topic = stripslashes($dbRecord->getField('topic'));
+			$next_topic = stripslashes($dbRecord->getString('topic'));
 			echo ('<a href="/manual.php?' . $next_topic_id . '"><img src="/images/help/next.jpg" width="32" height="32" border="0"></a>');
 		} else {
 			echo ('<img src="/images/help/empty.jpg" width="32" height="32">');
@@ -113,8 +113,8 @@ function echo_content($topic_id) {
 		$dbRecord = $dbResult->record();
 		$parent_topic_id = $dbRecord->getInt('parent_topic_id');
 		$order_id = $dbRecord->getInt('order_id');
-		$topic = stripslashes($dbRecord->getField('topic'));
-		$text = stripslashes($dbRecord->getField('text'));
+		$topic = stripslashes($dbRecord->getString('topic'));
+		$text = stripslashes($dbRecord->getString('text'));
 
 		echo ('<div id="help_content">');
 		echo ('<h1>' . get_numbering($topic_id) . $topic . '</h1>');
@@ -154,7 +154,7 @@ function echo_menu($topic_id) {
 		foreach ($dbResult->records() as $dbRecord) {
 			$sub_topic_id = $dbRecord->getInt('topic_id');
 			$order_id = $dbRecord->getInt('order_id');
-			$sub_topic = stripslashes($dbRecord->getField('topic'));
+			$sub_topic = stripslashes($dbRecord->getString('topic'));
 
 			echo ('<li><a href="/manual.php?' . $sub_topic_id . '">' . get_numbering($sub_topic_id) . $sub_topic . '</a></li>');
 			echo_menu($sub_topic_id);

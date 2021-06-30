@@ -19,6 +19,14 @@ class DatabaseRecord {
 		return $this->dbRecord[$name];
 	}
 
+	/**
+	 * Get a string-only field from the database record.
+	 * If the field can be null, use `getField` instead.
+	 */
+	public function getString(string $name) : string {
+		return $this->dbRecord[$name];
+	}
+
 	public function getBoolean(string $name) : bool {
 		return match($this->dbRecord[$name]) {
 			'TRUE' => true,

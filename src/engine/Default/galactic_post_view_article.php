@@ -21,7 +21,7 @@ if (isset($var['news'])) {
 $articles = [];
 $dbResult = $db->read('SELECT * FROM galactic_post_article WHERE article_id NOT IN (SELECT article_id FROM galactic_post_paper_content) AND game_id = ' . $db->escapeNumber($player->getGameID()));
 foreach ($dbResult->records() as $dbRecord) {
-	$title = stripslashes($dbRecord->getField('title'));
+	$title = $dbRecord->getString('title');
 	$writer = SmrPlayer::getPlayer($dbRecord->getInt('writer_id'), $player->getGameID());
 	$container = Page::create('skeleton.php', 'galactic_post_view_article.php');
 	$container['id'] = $dbRecord->getInt('article_id');
@@ -48,8 +48,8 @@ if (isset($var['id'])) {
 	$deleteHREF = $container->href();
 
 	$selectedArticle = [
-		'title' => stripslashes($dbRecord->getField('title')),
-		'text' => stripslashes($dbRecord->getField('text')),
+		'title' => $dbRecord->getString('title'),
+		'text' => $dbRecord->getString('text'),
 		'editHREF' => $editHREF,
 		'deleteHREF' => $deleteHREF,
 	];

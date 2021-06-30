@@ -19,7 +19,7 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 		return true;
 	}
 
-	$registeredNick = $dbResult->record()->getField('registered_nick');
+	$registeredNick = $dbResult->record()->getString('registered_nick');
 
 	// get alliance_id and game_id for this channel
 	$alliance = SmrAlliance::getAllianceByIrcChannel($channel, true);

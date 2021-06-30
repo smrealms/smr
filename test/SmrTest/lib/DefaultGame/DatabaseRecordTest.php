@@ -28,6 +28,19 @@ class DatabaseRecordTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(null, $record->getField('name'));
 	}
 
+	public function test_getString() {
+		// Construct a record with a string value
+		$record = new DatabaseRecord(['name' => 'value_string']);
+		self::assertSame('value_string', $record->getString('name'));
+	}
+
+	public function test_getString_with_null_value() {
+		// Construct a record with a null value
+		$record = new DatabaseRecord(['name' => null]);
+		$this->expectException(\TypeError::class);
+		$record->getString('name');
+	}
+
 	public function test_getBoolean() {
 		$record = new DatabaseRecord([
 			'name_true' => 'TRUE',

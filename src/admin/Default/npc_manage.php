@@ -42,8 +42,8 @@ foreach ($dbResult->records() as $dbRecord) {
 
 	$npcs[$accountID] = [
 		'login' => $login,
-		'default_player_name' => htmlentities($dbRecord->getField('player_name')),
-		'default_alliance' => htmlentities($dbRecord->getField('alliance_name')),
+		'default_player_name' => htmlentities($dbRecord->getString('player_name')),
+		'default_alliance' => htmlentities($dbRecord->getString('alliance_name')),
 		'active' => $dbRecord->getBoolean('active'),
 		'working' => $dbRecord->getBoolean('working'),
 		'href' => $container->href(),
