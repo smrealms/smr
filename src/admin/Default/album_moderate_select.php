@@ -11,10 +11,10 @@ $template->assign('ModerateHREF', $moderateHREF);
 
 // Get all accounts that are eligible for moderation
 $db = Smr\Database::getInstance();
-$db->query('SELECT account_id FROM album WHERE Approved = \'YES\'');
+$dbResult = $db->read('SELECT account_id FROM album WHERE Approved = \'YES\'');
 $approved = array();
-while ($db->nextRecord()) {
-	$accountId = $db->getInt('account_id');
+foreach ($dbResult->records() as $dbRecord) {
+	$accountId = $dbRecord->getInt('account_id');
 	$approved[$accountId] = get_album_nick($accountId);
 }
 $template->assign('Approved', $approved);

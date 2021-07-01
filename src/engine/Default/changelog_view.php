@@ -13,18 +13,17 @@ if (isset($var['Since'])) {
 }
 
 $db = Smr\Database::getInstance();
-$db2 = Smr\Database::getInstance();
 
-$db->query('SELECT *
+$dbResult = $db->read('SELECT *
 			FROM version
 			WHERE went_live > ' . (isset($var['Since']) ? $db->escapeNumber($var['Since']) : '0') . '
 			ORDER BY version_id DESC');
 
 $versions = [];
-while ($db->nextRecord()) {
-	$version_id = $db->getInt('version_id');
-	$version = $db->getInt('major_version') . '.' . $db->getInt('minor_version') . '.' . $db->getInt('patch_level');
-	$went_live = $db->getInt('went_live');
+foreach ($dbResult->records() as $dbRecord) {
+	$version_id = $dbRecord->getInt('version_id');
+	$version = $dbRecord->getInt('major_version') . '.' . $dbRecord->getInt('minor_version') . '.' . $dbRecord->getInt('patch_level');
+	$went_live = $dbRecord->getInt('went_live');
 
 	// get human readable format for date
 	if ($went_live > 0) {
@@ -33,15 +32,15 @@ while ($db->nextRecord()) {
 		$went_live = 'never';
 	}
 
-	$db2->query('SELECT *
+	$dbResult2 = $db->read('SELECT *
 				FROM changelog
-				WHERE version_id = ' . $db2->escapeNumber($version_id) . '
+				WHERE version_id = ' . $db->escapeNumber($version_id) . '
 				ORDER BY changelog_id');
 	$changes = [];
-	while ($db2->nextRecord()) {
+	foreach ($dbResult2->records() as $dbRecord2) {
 		$changes[] = [
-			'title' => $db2->getField('change_title'),
-			'message' => $db2->getField('change_message'),
+			'title' => $dbRecord2->getField('change_title'),
+			'message' => $dbRecord2->getField('change_message'),
 		];
 	}
 

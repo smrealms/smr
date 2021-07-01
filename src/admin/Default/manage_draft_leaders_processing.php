@@ -31,13 +31,13 @@ if ($action == "Assign") {
 	if ($selectedPlayer->isDraftLeader()) {
 		$msg = "<span class='red'>ERROR: </span>$name is already a draft leader in game $game!";
 	} else {
-		$db->query('INSERT INTO draft_leaders (account_id, game_id, home_sector_id) VALUES (' . $db->escapeNumber($accountId) . ', ' . $db->escapeNumber($gameId) . ', ' . $db->escapeNumber($homeSectorID) . ')');
+		$db->write('INSERT INTO draft_leaders (account_id, game_id, home_sector_id) VALUES (' . $db->escapeNumber($accountId) . ', ' . $db->escapeNumber($gameId) . ', ' . $db->escapeNumber($homeSectorID) . ')');
 	}
 } elseif ($action == "Remove") {
 	if (!$selectedPlayer->isDraftLeader()) {
 		$msg = "<span class='red'>ERROR: </span>$name is not a draft leader in game $game!";
 	} else {
-		$db->query('DELETE FROM draft_leaders WHERE ' . $selectedPlayer->getSQL());
+		$db->write('DELETE FROM draft_leaders WHERE ' . $selectedPlayer->getSQL());
 	}
 } else {
 	$msg = "<span class='red'>ERROR: </span>Do not know action '$action'!";

@@ -44,7 +44,7 @@ if (!isset($var['ClaimText'])) {
 			$player->increaseHOF($smrCredits, array('Bounties', 'Claimed', 'SMR Credits'), HOF_PUBLIC);
 
 			// delete bounty
-			$db->query('DELETE FROM bounty
+			$db->write('DELETE FROM bounty
 						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 							AND claimer_id = ' . $db->escapeNumber($player->getAccountID()) . '
 							AND bounty_id = ' . $db->escapeNumber($bounty['bounty_id']));

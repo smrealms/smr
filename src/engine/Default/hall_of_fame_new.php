@@ -25,13 +25,13 @@ if (isset($game_id)) {
 $template->assign('PersonalHofHREF', $container->href());
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT type FROM hof_visibility WHERE visibility != ' . $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
+$dbResult = $db->read('SELECT type FROM hof_visibility WHERE visibility != ' . $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';
 const USER_SCORE_NAME = 'User Score';
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	$hof =& $hofTypes;
-	$typeList = explode(':', $db->getField('type'));
+	$typeList = explode(':', $dbRecord->getString('type'));
 	foreach ($typeList as $type) {
 		if (!isset($hof[$type])) {
 			$hof[$type] = array();
@@ -54,26 +54,26 @@ if (!isset($var['view'])) {
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];
 	if ($var['view'] == DONATION_NAME) {
-		$db->query('SELECT account_id, SUM(amount) as amount FROM account_donated
+		$dbResult = $db->read('SELECT account_id, SUM(amount) as amount FROM account_donated
 					GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 	} elseif ($var['view'] == USER_SCORE_NAME) {
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
 		$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
-		$db->query($query);
+		$dbResult = $db->read($query);
 	} else {
-		$db->query('SELECT visibility FROM hof_visibility WHERE type = ' . $db->escapeArray($viewType, ':', false) . ' LIMIT 1');
-		if ($db->nextRecord()) {
-			$vis = $db->getField('visibility');
+		$dbResult = $db->read('SELECT visibility FROM hof_visibility WHERE type = ' . $db->escapeArray($viewType, ':', false) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
+			$vis = $dbResult->record()->getString('visibility');
 		}
-		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
+		$dbResult = $db->read('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 	}
 	$rows = [];
-	while ($db->nextRecord()) {
-		$accountID = $db->getInt('account_id');
+	foreach ($dbResult->records() as $dbRecord) {
+		$accountID = $dbRecord->getInt('account_id');
 		if ($accountID == $account->getAccountID()) {
 			$foundMe = true;
 		}
-		$amount = applyHofVisibilityMask($db->getFloat('amount'), $vis, $game_id, $accountID);
+		$amount = applyHofVisibilityMask($dbRecord->getFloat('amount'), $vis, $game_id, $accountID);
 		$rows[] = displayHOFRow($rank++, $accountID, $amount);
 	}
 	if (!$foundMe) {

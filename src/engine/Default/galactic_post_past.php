@@ -17,28 +17,28 @@ $template->assign('SelectedGame', $selectedGameID);
 // Get the list of games with published papers
 // Add the current game to this list no matter what
 $db = Smr\Database::getInstance();
-$db->query('SELECT game_name, game_id FROM game WHERE game_id IN (SELECT DISTINCT game_id FROM galactic_post_paper WHERE online_since IS NOT NULL) OR game_id=' . $db->escapeNumber($player->getGameID()) . ' ORDER BY game_id DESC');
+$dbResult = $db->read('SELECT game_name, game_id FROM game WHERE game_id IN (SELECT DISTINCT game_id FROM galactic_post_paper WHERE online_since IS NOT NULL) OR game_id=' . $db->escapeNumber($player->getGameID()) . ' ORDER BY game_id DESC');
 $publishedGames = array();
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	$publishedGames[] = [
-		'game_name' => $db->getField('game_name'),
-		'game_id' => $db->getInt('game_id'),
+		'game_name' => $dbRecord->getField('game_name'),
+		'game_id' => $dbRecord->getInt('game_id'),
 	];
 }
 $template->assign('PublishedGames', $publishedGames);
 
 // Get the list of published papers for the selected game
-$db->query('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id=' . $db->escapeNumber($selectedGameID));
+$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id=' . $db->escapeNumber($selectedGameID));
 $pastEditions = array();
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	$container = Page::create('skeleton.php', 'galactic_post_read.php');
-	$container['paper_id'] = $db->getInt('paper_id');
+	$container['paper_id'] = $dbRecord->getInt('paper_id');
 	$container['game_id'] = $selectedGameID;
 	$container['back'] = true;
 
 	$pastEditions[] = [
-		'title' => $db->getField('title'),
-		'online_since' => $db->getInt('online_since'),
+		'title' => $dbRecord->getField('title'),
+		'online_since' => $dbRecord->getInt('online_since'),
 		'href' => $container->href(),
 	];
 }

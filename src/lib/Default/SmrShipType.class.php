@@ -21,40 +21,40 @@ class SmrShipType {
 	private array $maxHardware = [];
 	private int $baseManeuverability;
 
-	public static function get(int $shipTypeID, Smr\Database $db = null) : self {
+	public static function get(int $shipTypeID, Smr\DatabaseRecord $dbRecord = null) : self {
 		if (!isset(self::$CACHE_SHIP_TYPES[$shipTypeID])) {
-			if ($db === null) {
+			if ($dbRecord === null) {
 				$db = Smr\Database::getInstance();
-				$db->query('SELECT * FROM ship_type WHERE ship_type_id = ' . $db->escapeNumber($shipTypeID));
-				$db->requireRecord();
-			} elseif ($shipTypeID !== $db->getInt('ship_type_id')) {
+				$dbResult = $db->read('SELECT * FROM ship_type WHERE ship_type_id = ' . $db->escapeNumber($shipTypeID));
+				$dbRecord = $dbResult->record();
+			} elseif ($shipTypeID !== $dbRecord->getInt('ship_type_id')) {
 				throw new Exception('Database result mismatch');
 			}
-			self::$CACHE_SHIP_TYPES[$shipTypeID] = new self($db);
+			self::$CACHE_SHIP_TYPES[$shipTypeID] = new self($dbRecord);
 		}
 		return self::$CACHE_SHIP_TYPES[$shipTypeID];
 	}
 
 	public static function getAll() : array {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC');
-		while ($db->nextRecord()) {
+		$dbResult = $db->read('SELECT * FROM ship_type ORDER BY ship_type_id ASC');
+		foreach ($dbResult->records() as $dbRecord) {
 			// populate the cache
-			self::get($db->getInt('ship_type_id'), $db);
+			self::get($dbRecord->getInt('ship_type_id'), $dbRecord);
 		}
 		return self::$CACHE_SHIP_TYPES;
 	}
 
-	protected function __construct(Smr\Database $db) {
-		$this->name = $db->getField('ship_name');
-		$this->typeID = $db->getInt('ship_type_id');
-		$this->classID = $db->getInt('ship_class_id');
-		$this->raceID = $db->getInt('race_id');
-		$this->hardpoints = $db->getInt('hardpoint');
-		$this->speed = $db->getInt('speed');
-		$this->cost = $db->getInt('cost');
-		$this->restriction = $db->getInt('buyer_restriction');
-		$this->levelNeeded = $db->getInt('lvl_needed');
+	protected function __construct(Smr\DatabaseRecord $dbRecord) {
+		$this->name = $dbRecord->getField('ship_name');
+		$this->typeID = $dbRecord->getInt('ship_type_id');
+		$this->classID = $dbRecord->getInt('ship_class_id');
+		$this->raceID = $dbRecord->getInt('race_id');
+		$this->hardpoints = $dbRecord->getInt('hardpoint');
+		$this->speed = $dbRecord->getInt('speed');
+		$this->cost = $dbRecord->getInt('cost');
+		$this->restriction = $dbRecord->getInt('buyer_restriction');
+		$this->levelNeeded = $dbRecord->getInt('lvl_needed');
 
 		$maxPower = 0;
 		switch ($this->hardpoints) {
@@ -87,13 +87,13 @@ class SmrShipType {
 
 
 		// get supported hardware from db
-		$db2 = Smr\Database::getInstance();
-		$db2->query('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
-			'WHERE ship_type_id = ' . $db2->escapeNumber($this->typeID) . ' ORDER BY hardware_type_id');
+		$db = Smr\Database::getInstance();
+		$dbResult = $db->read('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
+			'WHERE ship_type_id = ' . $db->escapeNumber($this->typeID) . ' ORDER BY hardware_type_id');
 
-		while ($db2->nextRecord()) {
+		foreach ($dbResult->records() as $dbRecord2) {
 			// adding hardware to array
-			$this->maxHardware[$db2->getInt('hardware_type_id')] = $db2->getInt('max_amount');
+			$this->maxHardware[$dbRecord2->getInt('hardware_type_id')] = $dbRecord2->getInt('max_amount');
 		}
 
 		$this->baseManeuverability = IRound(

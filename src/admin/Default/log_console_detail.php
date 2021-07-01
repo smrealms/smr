@@ -23,8 +23,8 @@ $template->assign('Action', $action);
 if ($action == 'Delete') {
 
 	// get rid of all entries
-	$db->query('DELETE FROM account_has_logs WHERE account_id IN (' . $account_list . ')');
-	$db->query('DELETE FROM log_has_notes WHERE account_id IN (' . $account_list . ')');
+	$db->write('DELETE FROM account_has_logs WHERE account_id IN (' . $account_list . ')');
+	$db->write('DELETE FROM log_has_notes WHERE account_id IN (' . $account_list . ')');
 
 } else {
 	// *********************************
@@ -39,10 +39,10 @@ if ($action == 'Delete') {
 		// assign it a color
 		$color = $avail_colors[$i % count($avail_colors)];
 
-		$db->query('SELECT login FROM account WHERE account_id = ' . $db->escapeNumber($id));
-		if ($db->nextRecord()) {
+		$dbResult = $db->read('SELECT login FROM account WHERE account_id = ' . $db->escapeNumber($id));
+		if ($dbResult->hasRecord()) {
 			$colors[$id] = [
-				'name' => $db->getField('login'),
+				'name' => $dbResult->record()->getField('login'),
 				'color' => $color,
 			];
 		}
@@ -57,9 +57,9 @@ if ($action == 'Delete') {
 	$template->assign('UpdateHREF', $container->href());
 
 	$logTypes = [];
-	$db->query('SELECT * FROM log_type');
-	while ($db->nextRecord()) {
-		$logTypes[$db->getInt('log_type_id')] = $db->getField('log_type_entry');
+	$dbResult = $db->read('SELECT * FROM log_type');
+	foreach ($dbResult->records() as $dbRecord) {
+		$logTypes[$dbRecord->getInt('log_type_id')] = $dbRecord->getField('log_type_entry');
 	}
 	$template->assign('LogTypes', $logTypes);
 
@@ -81,9 +81,9 @@ if ($action == 'Delete') {
 
 	// get notes from db
 	$log_notes = array();
-	$db->query('SELECT * FROM log_has_notes WHERE account_id IN (' . $account_list . ')');
-	while ($db->nextRecord()) {
-		$log_notes[] = $db->getField('notes');
+	$dbResult = $db->read('SELECT * FROM log_has_notes WHERE account_id IN (' . $account_list . ')');
+	foreach ($dbResult->records() as $dbRecord) {
+		$log_notes[] = $dbRecord->getField('notes');
 	}
 
 	// get rid of double values
@@ -97,13 +97,13 @@ if ($action == 'Delete') {
 	// * L o g   T a b l e
 	// *********************************
 	$logs = [];
-	$db->query('SELECT * FROM account_has_logs WHERE account_id IN (' . $account_list . ') AND log_type_id IN (' . $db->escapeArray($log_type_id_list) . ') ORDER BY microtime DESC');
-	while ($db->nextRecord()) {
-		$account_id = $db->getInt('account_id');
-		$microtime = $db->getMicrotime('microtime');
-		$message = stripslashes($db->getField('message'));
-		$log_type_id = $db->getInt('log_type_id');
-		$sector_id = $db->getInt('sector_id');
+	$dbResult = $db->read('SELECT * FROM account_has_logs WHERE account_id IN (' . $account_list . ') AND log_type_id IN (' . $db->escapeArray($log_type_id_list) . ') ORDER BY microtime DESC');
+	foreach ($dbResult->records() as $dbRecord) {
+		$account_id = $dbRecord->getInt('account_id');
+		$microtime = $dbRecord->getMicrotime('microtime');
+		$message = $dbRecord->getString('message');
+		$log_type_id = $dbRecord->getInt('log_type_id');
+		$sector_id = $dbRecord->getInt('sector_id');
 
 		$date = DateTime::createFromFormat("U.u", $microtime)->format('Y-m-d H:i:s.u');
 

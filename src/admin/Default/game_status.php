@@ -6,8 +6,8 @@ $processingHREF = Page::create('game_status_processing.php')->href();
 $template->assign('ProcessingHREF', $processingHREF);
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM game_disable');
-if (!$db->getNumRows()) {
+$dbResult = $db->read('SELECT 1 FROM game_disable');
+if (!$dbResult->hasRecord()) {
 	$template->assign('PageTopic', 'Close Server');
 	$template->assign('ServerIsOpen', true);
 } else {

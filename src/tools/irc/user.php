@@ -15,16 +15,15 @@ function user_quit($fp, $rdata)
 
 		// database object
 		$db = Smr\Database::getInstance();
-		$db2 = Smr\Database::getInstance();
 
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 
 		// sign off all nicks
-		while ($db->nextRecord()) {
+		foreach ($dbResult->records() as $dbRecord) {
 
-			$seen_id = $db->getInt('seen_id');
+			$seen_id = $dbRecord->getInt('seen_id');
 
-			$db2->query('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
+			$db->write('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
 
 		}
 
@@ -53,20 +52,19 @@ function user_nick($fp, $rdata)
 
 		// database object
 		$db = Smr\Database::getInstance();
-		$db2 = Smr\Database::getInstance();
 
 		$channel_list = array();
 
 		// 'sign off' all active old_nicks (multiple channels)
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND signed_off = 0');
-		while ($db->nextRecord()) {
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND signed_off = 0');
+		foreach ($dbResult->records() as $dbRecord) {
 
-			$seen_id = $db->getInt('seen_id');
+			$seen_id = $dbRecord->getInt('seen_id');
 
 			// remember channels where this nick was active
-			array_push($channel_list, $db->getField('channel'));
+			array_push($channel_list, $dbRecord->getField('channel'));
 
-			$db2->query('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
+			$db->write('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
 
 		}
 
@@ -74,13 +72,13 @@ function user_nick($fp, $rdata)
 		foreach ($channel_list as $channel) {
 
 			// 'sign in' the new nick
-			$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($new_nick) . ' AND channel = ' . $db->escapeString($channel));
+			$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($new_nick) . ' AND channel = ' . $db->escapeString($channel));
 
-			if ($db->nextRecord()) {
+			if ($dbResult->hasRecord()) {
 				// exiting nick?
-				$seen_id = $db->getInt('seen_id');
+				$seen_id = $dbResult->record()->getInt('seen_id');
 
-				$db->query('UPDATE irc_seen SET ' .
+				$db->write('UPDATE irc_seen SET ' .
 						   'signed_on = ' . time() . ', ' .
 						   'signed_off = 0, ' .
 						   'user = ' . $db->escapeString($user) . ', ' .
@@ -90,7 +88,7 @@ function user_nick($fp, $rdata)
 
 			} else {
 				// new nick?
-				$db->query('INSERT INTO irc_seen (nick, user, host, channel, signed_on) VALUES(' . $db->escapeString($new_nick) . ', ' . $db->escapeString($user) . ', ' . $db->escapeString($host) . ', ' . $db->escapeString($channel) . ', ' . time() . ')');
+				$db->write('INSERT INTO irc_seen (nick, user, host, channel, signed_on) VALUES(' . $db->escapeString($new_nick) . ', ' . $db->escapeString($user) . ', ' . $db->escapeString($host) . ', ' . $db->escapeString($channel) . ', ' . time() . ')');
 			}
 
 		}

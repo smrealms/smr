@@ -14,34 +14,34 @@ $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT *
+$dbResult = $db->read('SELECT *
 FROM alliance_has_roles
 WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 ORDER BY role_id
 ');
 $allianceRoles = array();
-while ($db->nextRecord()) {
-	$roleID = $db->getInt('role_id');
+foreach ($dbResult->records() as $dbRecord) {
+	$roleID = $dbRecord->getInt('role_id');
 	$allianceRoles[$roleID]['RoleID'] = $roleID;
-	$allianceRoles[$roleID]['Name'] = $db->getField('role');
+	$allianceRoles[$roleID]['Name'] = $dbRecord->getField('role');
 	$allianceRoles[$roleID]['EditingRole'] = isset($var['role_id']) && $var['role_id'] == $roleID;
 	$allianceRoles[$roleID]['CreatingRole'] = false;
 	if ($allianceRoles[$roleID]['EditingRole']) {
 		$container = Page::create('alliance_roles_processing.php');
-		$allianceRoles[$roleID]['WithdrawalLimit'] = $db->getInt('with_per_day');
-		$allianceRoles[$roleID]['PositiveBalance'] = $db->getBoolean('positive_balance');
-		$allianceRoles[$roleID]['TreatyCreated'] = $db->getBoolean('treaty_created');
-		$allianceRoles[$roleID]['RemoveMember'] = $db->getBoolean('remove_member');
-		$allianceRoles[$roleID]['ChangePass'] = $db->getBoolean('change_pass');
-		$allianceRoles[$roleID]['ChangeMod'] = $db->getBoolean('change_mod');
-		$allianceRoles[$roleID]['ChangeRoles'] = $db->getBoolean('change_roles');
-		$allianceRoles[$roleID]['PlanetAccess'] = $db->getBoolean('planet_access');
-		$allianceRoles[$roleID]['ModerateMessageboard'] = $db->getBoolean('mb_messages');
-		$allianceRoles[$roleID]['ExemptWithdrawals'] = $db->getBoolean('exempt_with');
-		$allianceRoles[$roleID]['SendAllianceMessage'] = $db->getBoolean('send_alliance_msg');
-		$allianceRoles[$roleID]['OpLeader'] = $db->getBoolean('op_leader');
-		$allianceRoles[$roleID]['ViewBondsInPlanetList'] = $db->getBoolean('view_bonds');
+		$allianceRoles[$roleID]['WithdrawalLimit'] = $dbRecord->getInt('with_per_day');
+		$allianceRoles[$roleID]['PositiveBalance'] = $dbRecord->getBoolean('positive_balance');
+		$allianceRoles[$roleID]['TreatyCreated'] = $dbRecord->getBoolean('treaty_created');
+		$allianceRoles[$roleID]['RemoveMember'] = $dbRecord->getBoolean('remove_member');
+		$allianceRoles[$roleID]['ChangePass'] = $dbRecord->getBoolean('change_pass');
+		$allianceRoles[$roleID]['ChangeMod'] = $dbRecord->getBoolean('change_mod');
+		$allianceRoles[$roleID]['ChangeRoles'] = $dbRecord->getBoolean('change_roles');
+		$allianceRoles[$roleID]['PlanetAccess'] = $dbRecord->getBoolean('planet_access');
+		$allianceRoles[$roleID]['ModerateMessageboard'] = $dbRecord->getBoolean('mb_messages');
+		$allianceRoles[$roleID]['ExemptWithdrawals'] = $dbRecord->getBoolean('exempt_with');
+		$allianceRoles[$roleID]['SendAllianceMessage'] = $dbRecord->getBoolean('send_alliance_msg');
+		$allianceRoles[$roleID]['OpLeader'] = $dbRecord->getBoolean('op_leader');
+		$allianceRoles[$roleID]['ViewBondsInPlanetList'] = $dbRecord->getBoolean('view_bonds');
 	} else {
 		$container = Page::create('skeleton.php', 'alliance_roles.php');
 	}

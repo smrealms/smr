@@ -25,32 +25,30 @@ function main_page() : void {
 
 	// most hits
 	echo('<p><u>Top 5 Pictures</u><br /><br />');
-	$db->query('SELECT *
+	$dbResult = $db->read('SELECT *
 				FROM album
 				WHERE approved = \'YES\'
 				ORDER BY page_views DESC
 				LIMIT 5');
-	if ($db->getNumRows()) {
-		while ($db->nextRecord()) {
-			$page_views = $db->getInt('page_views');
-			$nick = get_album_nick($db->getInt('account_id'));
+	foreach ($dbResult->records() as $dbRecord) {
+		$page_views = $dbRecord->getInt('page_views');
+		$nick = get_album_nick($dbRecord->getInt('account_id'));
 
-			echo('<a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> (' . $page_views . ')<br />');
-		}
+		echo('<a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> (' . $page_views . ')<br />');
 	}
 
 	// latest picture
 	$dateFormat = $session->hasAccount() ? $session->getAccount()->getDateTimeFormat() : DEFAULT_DATE_TIME_FORMAT;
 	echo('<p><u>Latest Picture</u><br /><br />');
-	$db->query('SELECT *
+	$dbResult = $db->read('SELECT *
 				FROM album
 				WHERE approved = \'YES\'
 				ORDER BY created DESC
 				LIMIT 5');
-	if ($db->getNumRows()) {
-		while ($db->nextRecord()) {
-			$created = $db->getInt('created');
-			$nick = get_album_nick($db->getInt('account_id'));
+	if ($dbResult->hasRecord()) {
+		foreach ($dbResult->records() as $dbRecord) {
+			$created = $dbRecord->getInt('created');
+			$nick = get_album_nick($dbRecord->getInt('account_id'));
 
 			echo('<span style="font-size:85%;"><b>[' . date($dateFormat, $created) . ']</b> Picture of <a href="?nick=' . urlencode($nick) . '">' . $nick . '</a> added</span><br />');
 		}
@@ -68,26 +66,27 @@ function album_entry(int $album_id) : void {
 	create_link_list();
 
 	if ($session->hasAccount() && $album_id != $session->getAccountID()) {
-		$db->query('UPDATE album
+		$db->write('UPDATE album
 				SET page_views = page_views + 1
 				WHERE account_id = '.$db->escapeNumber($album_id) . ' AND
 					approved = \'YES\'');
 	}
 
-	$db->query('SELECT *
+	$dbResult = $db->read('SELECT *
 				FROM album
 				WHERE account_id = '.$db->escapeNumber($album_id) . ' AND
 					approved = \'YES\'');
-	if ($db->nextRecord()) {
-		$location = stripslashes($db->getField('location'));
-		$email = stripslashes($db->getField('email'));
-		$website = stripslashes($db->getField('website'));
-		$day = $db->getField('day');
-		$month = $db->getField('month');
-		$year = $db->getField('year');
-		$other = nl2br(stripslashes($db->getField('other')));
-		$page_views = $db->getInt('page_views');
-		$disabled = $db->getBoolean('disabled');
+	if ($dbResult->hasRecord()) {
+		$dbRecord = $dbResult->record();
+		$location = $dbRecord->getField('location');
+		$email = $dbRecord->getField('email');
+		$website = $dbRecord->getField('website');
+		$day = $dbRecord->getInt('day');
+		$month = $dbRecord->getInt('month');
+		$year = $dbRecord->getInt('year');
+		$other = nl2br($dbRecord->getString('other'));
+		$page_views = $dbRecord->getInt('page_views');
+		$disabled = $dbRecord->getBoolean('disabled');
 	} else {
 		echo('<h1>Error</h1>');
 		echo('This user doesn\'t have an entry in our album!');
@@ -104,29 +103,29 @@ function album_entry(int $album_id) : void {
 	echo('<table style="width: 100%">');
 	echo('<tr>');
 
-	$db->query('SELECT hof_name
+	$dbResult = $db->read('SELECT hof_name
 				FROM album JOIN account USING(account_id)
 				WHERE hof_name < ' . $db->escapeString($nick) . ' AND
 					approved = \'YES\'
 				ORDER BY hof_name DESC
 				LIMIT 1');
 	echo '<td class="center" style="width: 30%" valign="middle">';
-	if ($db->nextRecord()) {
-		$priv_nick = $db->getField('hof_name');
+	if ($dbResult->hasRecord()) {
+		$priv_nick = $dbResult->record()->getString('hof_name');
 		echo '<a href="?nick=' . urlencode($priv_nick) . '"><img src="/images/album/rew.jpg" alt="' . $priv_nick . '" border="0"></a>&nbsp;&nbsp;&nbsp;';
 	}
 	echo '</td>';
 	echo('<td class="center" valign="middle"><span style="font-size:150%;">' . $nick . '</span><br /><span style="font-size:75%;">Views: ' . $page_views . '</span></td>');
 
-	$db->query('SELECT hof_name
+	$dbResult = $db->read('SELECT hof_name
 				FROM album JOIN account USING(account_id)
 				WHERE hof_name > ' . $db->escapeString($nick) . ' AND
 					approved = \'YES\'
 				ORDER BY hof_name
 				LIMIT 1');
 	echo '<td class="center" style="width: 30%" valign="middle">';
-	if ($db->nextRecord()) {
-		$next_nick = $db->getField('hof_name');
+	if ($dbResult->hasRecord()) {
+		$next_nick = $dbResult->record()->getString('hof_name');
 		echo '&nbsp;&nbsp;&nbsp;<a href="?nick=' . urlencode($next_nick) . '"><img src="/images/album/fwd.jpg" alt="' . $next_nick . '" border="0"></a>';
 	}
 	echo '</td>';
@@ -196,13 +195,13 @@ function album_entry(int $album_id) : void {
 	echo('<u>Comments</u><br /><br />');
 
 	$dateFormat = $session->hasAccount() ? $session->getAccount()->getDateTimeFormat() : DEFAULT_DATE_TIME_FORMAT;
-	$db->query('SELECT *
+	$dbResult = $db->read('SELECT *
 				FROM album_has_comments
 				WHERE album_id = '.$db->escapeNumber($album_id));
-	while ($db->nextRecord()) {
-		$time = $db->getInt('time');
-		$postee = get_album_nick($db->getInt('post_id'));
-		$msg = stripslashes($db->getField('msg'));
+	foreach ($dbResult->records() as $dbRecord) {
+		$time = $dbRecord->getInt('time');
+		$postee = get_album_nick($dbRecord->getInt('post_id'));
+		$msg = $dbRecord->getString('msg');
 
 		echo('<span style="font-size:85%;">[' . date($dateFormat, $time) . '] &lt;' . $postee . '&gt; ' . $msg . '</span><br />');
 	}
@@ -215,11 +214,11 @@ function album_entry(int $album_id) : void {
 		echo('<td style="color:green; font-size:70%;">Nick:<br /><input type="text" size="10" name="nick" value="' . htmlspecialchars(get_album_nick($session->getAccountID())) . '" readonly></td>');
 		echo('<td style="color:green; font-size:70%;">Comment:<br /><input type="text" size="50" name="comment"></td>');
 		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" value="Send"></td>');
-		$db->query('SELECT *
+		$dbResult = $db->read('SELECT 1
 					FROM account_has_permission
 					WHERE account_id = '.$db->escapeNumber($session->getAccountID()) . ' AND
 						permission_id = '.$db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
-		if ($db->nextRecord()) {
+		if ($dbResult->hasRecord()) {
 			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate"></td>');
 		}
 

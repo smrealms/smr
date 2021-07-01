@@ -35,10 +35,10 @@ class Globals {
 	public static function getHiddenPlayers() : array {
 		if (!isset(self::$HIDDEN_PLAYERS)) {
 			self::initialiseDatabase();
-			self::$db->query('SELECT account_id FROM hidden_players');
+			$dbResult = self::$db->read('SELECT account_id FROM hidden_players');
 			self::$HIDDEN_PLAYERS = array(0); //stop errors
-			while (self::$db->nextRecord()) {
-				self::$HIDDEN_PLAYERS[] = self::$db->getInt('account_id');
+			foreach ($dbResult->records() as $dbRecord) {
+				self::$HIDDEN_PLAYERS[] = $dbRecord->getInt('account_id');
 			}
 		}
 		return self::$HIDDEN_PLAYERS;
@@ -47,9 +47,9 @@ class Globals {
 	public static function getGalacticPostEditorIDs(int $gameID) : array {
 		self::initialiseDatabase();
 		$editorIDs = [];
-		self::$db->query('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . self::$db->escapeNumber($gameID));
-		while (self::$db->nextRecord()) {
-			$editorIDs[] = self::$db->getInt('account_id');
+		$dbResult = self::$db->read('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . self::$db->escapeNumber($gameID));
+		foreach ($dbResult->records() as $dbRecord) {
+			$editorIDs[] = $dbRecord->getInt('account_id');
 		}
 		return $editorIDs;
 	}
@@ -60,12 +60,12 @@ class Globals {
 			self::$LEVEL_REQUIREMENTS = array();
 
 			// determine user level
-			self::$db->query('SELECT * FROM level ORDER BY level_id ASC');
-			while (self::$db->nextRecord()) {
-				self::$LEVEL_REQUIREMENTS[self::$db->getInt('level_id')] = array(
-																				'Name' => self::$db->getField('level_name'),
-																				'Requirement' => self::$db->getInt('requirement')
-																				);
+			$dbResult = self::$db->read('SELECT * FROM level ORDER BY level_id ASC');
+			foreach ($dbResult->records() as $dbRecord) {
+				self::$LEVEL_REQUIREMENTS[$dbRecord->getInt('level_id')] = array(
+					'Name' => $dbRecord->getField('level_name'),
+					'Requirement' => $dbRecord->getInt('requirement'),
+				);
 			}
 		}
 		return self::$LEVEL_REQUIREMENTS;
@@ -77,15 +77,15 @@ class Globals {
 			self::$RACES = array();
 
 			// determine user level
-			self::$db->query('SELECT race_id,race_name,race_description FROM race ORDER BY race_id');
-			while (self::$db->nextRecord()) {
-				self::$RACES[self::$db->getInt('race_id')] = array(
-																'Race ID' => self::$db->getInt('race_id'),
-																'Race Name' => self::$db->getField('race_name'),
-																'Description' => self::$db->getField('race_description'),
-																'ImageLink' => 'images/race/race' . self::$db->getInt('race_id') . '.jpg',
-																'ImageHeadLink' => 'images/race/head/race' . self::$db->getInt('race_id') . '.jpg',
-																);
+			$dbResult = self::$db->read('SELECT race_id,race_name,race_description FROM race ORDER BY race_id');
+			foreach ($dbResult->records() as $dbRecord) {
+				self::$RACES[$dbRecord->getInt('race_id')] = array(
+					'Race ID' => $dbRecord->getInt('race_id'),
+					'Race Name' => $dbRecord->getField('race_name'),
+					'Description' => $dbRecord->getField('race_description'),
+					'ImageLink' => 'images/race/race' . $dbRecord->getInt('race_id') . '.jpg',
+					'ImageHeadLink' => 'images/race/head/race' . $dbRecord->getInt('race_id') . '.jpg',
+				);
 			}
 		}
 		return self::$RACES;
@@ -123,18 +123,18 @@ class Globals {
 			self::$GOODS = array();
 
 			// determine user level
-			self::$db->query('SELECT * FROM good ORDER BY good_id');
-			while (self::$db->nextRecord()) {
-				self::$GOODS[self::$db->getInt('good_id')] = array(
-																'Type' => 'Good',
-																'ID' => self::$db->getInt('good_id'),
-																'Name' => self::$db->getField('good_name'),
-																'Max' => self::$db->getInt('max_amount'),
-																'BasePrice' => self::$db->getInt('base_price'),
-																'Class' => self::$db->getInt('good_class'),
-																'ImageLink' => 'images/port/' . self::$db->getInt('good_id') . '.png',
-																'AlignRestriction' => self::$db->getInt('align_restriction')
-															);
+			$dbResult = self::$db->read('SELECT * FROM good ORDER BY good_id');
+			foreach ($dbResult->records() as $dbRecord) {
+				self::$GOODS[$dbRecord->getInt('good_id')] = array(
+					'Type' => 'Good',
+					'ID' => $dbRecord->getInt('good_id'),
+					'Name' => $dbRecord->getField('good_name'),
+					'Max' => $dbRecord->getInt('max_amount'),
+					'BasePrice' => $dbRecord->getInt('base_price'),
+					'Class' => $dbRecord->getInt('good_class'),
+					'ImageLink' => 'images/port/' . $dbRecord->getInt('good_id') . '.png',
+					'AlignRestriction' => $dbRecord->getInt('align_restriction'),
+				);
 			}
 		}
 		return self::$GOODS;
@@ -157,14 +157,14 @@ class Globals {
 			self::$HARDWARE_TYPES = array();
 
 			// determine user level
-			self::$db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
-			while (self::$db->nextRecord()) {
-				self::$HARDWARE_TYPES[self::$db->getInt('hardware_type_id')] = array(
-																			'Type' => 'Hardware',
-																			'ID' => self::$db->getInt('hardware_type_id'),
-																			'Name' => self::$db->getField('hardware_name'),
-																			'Cost' => self::$db->getInt('cost')
-																			);
+			$dbResult = self::$db->read('SELECT * FROM hardware_type ORDER BY hardware_type_id');
+			foreach ($dbResult->records() as $dbRecord) {
+				self::$HARDWARE_TYPES[$dbRecord->getInt('hardware_type_id')] = array(
+					'Type' => 'Hardware',
+					'ID' => $dbRecord->getInt('hardware_type_id'),
+					'Name' => $dbRecord->getField('hardware_name'),
+					'Cost' => $dbRecord->getInt('cost'),
+				);
 			}
 		}
 		if ($hardwareTypeID === null) {
@@ -197,10 +197,9 @@ class Globals {
 	public static function isFeatureRequestOpen() : bool {
 		if (!isset(self::$FEATURE_REQUEST_OPEN)) {
 			self::initialiseDatabase();
-			self::$db->query('SELECT open FROM open_forms WHERE type=\'FEATURE\'');
-			self::$db->nextRecord();
+			$dbResult = self::$db->read('SELECT open FROM open_forms WHERE type=\'FEATURE\'');
 
-			self::$FEATURE_REQUEST_OPEN = self::$db->getBoolean('open');
+			self::$FEATURE_REQUEST_OPEN = $dbResult->record()->getBoolean('open');
 		}
 		return self::$FEATURE_REQUEST_OPEN;
 	}
@@ -214,9 +213,9 @@ class Globals {
 			foreach ($RACES as $otherRaceID => $raceArray) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;
 			}
-			self::$db->query('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . self::$db->escapeNumber($raceID) . ' AND game_id=' . self::$db->escapeNumber($gameID) . ' LIMIT ' . count($RACES));
-			while (self::$db->nextRecord()) {
-				self::$RACE_RELATIONS[$gameID][$raceID][self::$db->getInt('race_id_2')] = self::$db->getInt('relation');
+			$dbResult = self::$db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . self::$db->escapeNumber($raceID) . ' AND game_id=' . self::$db->escapeNumber($gameID) . ' LIMIT ' . count($RACES));
+			foreach ($dbResult->records() as $dbRecord) {
+				self::$RACE_RELATIONS[$gameID][$raceID][$dbRecord->getInt('race_id_2')] = $dbRecord->getInt('relation');
 			}
 		}
 		return self::$RACE_RELATIONS[$gameID][$raceID];

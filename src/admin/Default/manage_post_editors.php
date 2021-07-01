@@ -12,11 +12,11 @@ $template->assign('SelectGameHREF', $container->href());
 // Get the list of active games ordered by reverse start date
 $activeGames = array();
 $db = Smr\Database::getInstance();
-$db->query('SELECT game_id, game_name FROM game WHERE join_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY start_time DESC');
-while ($db->nextRecord()) {
+$dbResult = $db->read('SELECT game_id, game_name FROM game WHERE join_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY start_time DESC');
+foreach ($dbResult->records() as $dbRecord) {
 	$activeGames[] = [
-		'game_name' => $db->getField('game_name'),
-		'game_id' => $db->getInt('game_id'),
+		'game_name' => $dbRecord->getField('game_name'),
+		'game_id' => $dbRecord->getInt('game_id'),
 	];
 }
 $template->assign('ActiveGames', $activeGames);

@@ -92,8 +92,8 @@ function NPCStuff() : void {
 
 	// Make sure NPC's have been set up in the database
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT 1 FROM npc_logins LIMIT 1');
-	if (!$db->nextRecord()) {
+	$dbResult = $db->read('SELECT 1 FROM npc_logins LIMIT 1');
+	if (!$dbResult->hasRecord()) {
 		debug('No NPCs have been created yet!');
 		return;
 	}
@@ -326,12 +326,12 @@ function debug(string $message, mixed $debugObject = null) : void {
 		$accountID = $session->getAccountID();
 		$var = $session->getCurrentVar();
 		$db = Smr\Database::getInstance();
-		$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . $accountID . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
+		$db->write('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . $accountID . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
 
 		// On the first call to debug, we need to update the script_id retroactively
 		if (!defined('SCRIPT_ID')) {
 			define('SCRIPT_ID', $db->getInsertID());
-			$db->query('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
+			$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
 		}
 	}
 }
@@ -370,7 +370,7 @@ function releaseNPC() : void {
 	}
 	$login = $session->getAccount()->getLogin();
 	$db = Smr\Database::getInstance();
-	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(false) . ' WHERE login=' . $db->escapeString($login));
+	$db->write('UPDATE npc_logins SET working=' . $db->escapeBoolean(false) . ' WHERE login=' . $db->escapeString($login));
 	if ($db->getChangedRows() > 0) {
 		debug('Released NPC: ' . $login);
 	} else {
@@ -410,11 +410,11 @@ function changeNPCLogin() : void {
 
 	if (is_null($availableNpcs)) {
 		// Make sure to select NPCs from active games only
-		$db->query('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY last_turn_update ASC');
-		while ($db->nextRecord()) {
+		$dbResult = $db->read('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY last_turn_update ASC');
+		foreach ($dbResult->records() as $dbRecord) {
 			$availableNpcs[] = [
-				'account_id' => $db->getInt('account_id'),
-				'game_id' => $db->getInt('game_id'),
+				'account_id' => $dbRecord->getInt('account_id'),
+				'game_id' => $dbRecord->getInt('game_id'),
 			];
 		}
 	}
@@ -432,7 +432,7 @@ function changeNPCLogin() : void {
 	$session->setAccount($account);
 	$session->updateGame($npc['game_id']);
 
-	$db->query('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($account->getLogin()));
+	$db->write('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($account->getLogin()));
 	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . $session->getGameID() . ')');
 
 	throw new ForwardException;
@@ -640,9 +640,9 @@ function &findRoutes(SmrPlayer $player) : array {
 	$endSectorID = $galaxy->getEndSector();
 
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT routes FROM route_cache WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND max_ports=' . $db->escapeNumber($maxNumberOfPorts) . ' AND goods_allowed=' . $db->escapeObject($tradeGoods) . ' AND races_allowed=' . $db->escapeObject($tradeRaces) . ' AND start_sector_id=' . $db->escapeNumber($startSectorID) . ' AND end_sector_id=' . $db->escapeNumber($endSectorID) . ' AND routes_for_port=' . $db->escapeNumber($routesForPort) . ' AND max_distance=' . $db->escapeNumber($maxDistance));
-	if ($db->nextRecord()) {
-		$routes = $db->getObject('routes', true);
+	$dbResult = $db->read('SELECT routes FROM route_cache WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND max_ports=' . $db->escapeNumber($maxNumberOfPorts) . ' AND goods_allowed=' . $db->escapeObject($tradeGoods) . ' AND races_allowed=' . $db->escapeObject($tradeRaces) . ' AND start_sector_id=' . $db->escapeNumber($startSectorID) . ' AND end_sector_id=' . $db->escapeNumber($endSectorID) . ' AND routes_for_port=' . $db->escapeNumber($routesForPort) . ' AND max_distance=' . $db->escapeNumber($maxDistance));
+	if ($dbResult->hasRecord()) {
+		$routes = $dbResult->record()->getObject('routes', true);
 		debug('Using Cached Routes: #' . count($routes));
 		return $routes;
 	} else {
@@ -676,7 +676,7 @@ function &findRoutes(SmrPlayer $player) : array {
 			changeNPCLogin();
 		}
 
-		$db->query('INSERT INTO route_cache ' .
+		$db->write('INSERT INTO route_cache ' .
 				'(game_id, max_ports, goods_allowed, races_allowed, start_sector_id, end_sector_id, routes_for_port, max_distance, routes)' .
 				' VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($maxNumberOfPorts) . ', ' . $db->escapeObject($tradeGoods) . ', ' . $db->escapeObject($tradeRaces) . ', ' . $db->escapeNumber($startSectorID) . ', ' . $db->escapeNumber($endSectorID) . ', ' . $db->escapeNumber($routesForPort) . ', ' . $db->escapeNumber($maxDistance) . ', ' . $db->escapeObject($routesMerged, true) . ')');
 		debug('Found Routes: #' . count($routesMerged));

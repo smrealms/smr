@@ -6,24 +6,24 @@ $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Current Players');
 $db = Smr\Database::getInstance();
-$db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(Smr\Epoch::time()));
-$db->query('SELECT count(*) count FROM active_session
+$db->write('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(Smr\Epoch::time()));
+$dbResult = $db->read('SELECT count(*) count FROM active_session
 			WHERE last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - 600) . ' AND
 				game_id = ' . $db->escapeNumber($player->getGameID()));
 $count_real_last_active = 0;
-if ($db->nextRecord()) {
-	$count_real_last_active = $db->getInt('count');
+if ($dbResult->hasRecord()) {
+	$count_real_last_active = $dbResult->record()->getInt('count');
 }
 if ($session->getLastAccessed() < Smr\Epoch::time() - 600) {
 	++$count_real_last_active;
 }
 
 
-$db->query('SELECT * FROM player
+$dbResult = $db->read('SELECT * FROM player
 		WHERE last_cpl_action >= ' . $db->escapeNumber(Smr\Epoch::time() - 600) . '
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 		ORDER BY experience DESC, player_name DESC');
-$count_last_active = $db->getNumRows();
+$count_last_active = $dbResult->getNumRecords();
 
 // fix it if some1 is using the logoff button
 if ($count_real_last_active < $count_last_active) {
@@ -55,44 +55,41 @@ $summary .= '<br />The traders listed in <span class="italic">italics</span> are
 $template->assign('Summary', $summary);
 
 $allRows = array();
-if ($count_last_active > 0) {
-	$db2 = Smr\Database::getInstance();
-	while ($db->nextRecord()) {
-		$row = array();
+foreach ($dbResult->records() as $dbRecord) {
+	$row = array();
 
-		$curr_player = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
-		$row['player'] = $curr_player;
+	$curr_player = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+	$row['player'] = $curr_player;
 
-		// How should we style the row for this player?
-		$class = '';
-		if ($player->equals($curr_player)) {
-			$class .= 'bold';
-		}
-		if ($curr_player->hasNewbieStatus()) {
-			$class .= ' newbie';
-		}
-		if ($class != '') {
-			$class = ' class="' . trim($class) . '"';
-		}
-		$row['tr_class'] = $class;
-
-		// What should the player name be displayed as?
-		$container = Page::create('skeleton.php', 'trader_search_result.php');
-		$container['player_id'] = $curr_player->getPlayerID();
-		$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
-		$db2->query('SELECT * FROM cpl_tag WHERE account_id = ' . $db2->escapeNumber($curr_player->getAccountID()) . ' ORDER BY custom DESC');
-		while ($db2->nextRecord()) {
-			if (!empty($db2->getField('custom_rank'))) {
-				$name = $db2->getField('custom_rank') . ' ' . $curr_player->getDisplayName();
-			}
-			if (!empty($db2->getField('tag'))) {
-				$name .= ' ' . $db2->getField('tag');
-			}
-		}
-		$row['name_link'] = create_link($container, $name);
-
-		$allRows[] = $row;
+	// How should we style the row for this player?
+	$class = '';
+	if ($player->equals($curr_player)) {
+		$class .= 'bold';
 	}
+	if ($curr_player->hasNewbieStatus()) {
+		$class .= ' newbie';
+	}
+	if ($class != '') {
+		$class = ' class="' . trim($class) . '"';
+	}
+	$row['tr_class'] = $class;
+
+	// What should the player name be displayed as?
+	$container = Page::create('skeleton.php', 'trader_search_result.php');
+	$container['player_id'] = $curr_player->getPlayerID();
+	$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
+	$dbResult2 = $db->read('SELECT * FROM cpl_tag WHERE account_id = ' . $db->escapeNumber($curr_player->getAccountID()) . ' ORDER BY custom DESC');
+	foreach ($dbResult2->records() as $dbRecord2) {
+		if (!empty($dbRecord2->getField('custom_rank'))) {
+			$name = $dbRecord2->getField('custom_rank') . ' ' . $curr_player->getDisplayName();
+		}
+		if (!empty($dbRecord2->getField('tag'))) {
+			$name .= ' ' . $dbRecord2->getField('tag');
+		}
+	}
+	$row['name_link'] = create_link($container, $name);
+
+	$allRows[] = $row;
 }
 
 $template->assign('AllRows', $allRows);

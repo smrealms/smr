@@ -19,19 +19,18 @@ if (!empty($var['paper_id'])) {
 	}
 
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);
-	$db->requireRecord();
-	$paper_name = bbifyMessage($db->getField('title'));
+	$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);
+	$paper_name = bbifyMessage($dbResult->record()->getString('title'));
 	$template->assign('PageTopic', 'Reading <i>Galactic Post</i> Edition : ' . $paper_name);
 
 	//now get the articles in this paper.
-	$db->query('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING(game_id, article_id) WHERE paper_id = ' . $db->escapeNumber($var['paper_id']) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
+	$dbResult = $db->read('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING(game_id, article_id) WHERE paper_id = ' . $db->escapeNumber($var['paper_id']) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
 
 	$articles = [];
-	while ($db->nextRecord()) {
+	foreach ($dbResult->records() as $dbRecord) {
 		$articles[] = [
-			'title' => $db->getField('title'),
-			'text' => $db->getField('text'),
+			'title' => $dbRecord->getString('title'),
+			'text' => $dbRecord->getString('text'),
 		];
 	}
 

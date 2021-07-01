@@ -21,11 +21,11 @@ if (!isset($var['box_type_id'])) {
 			'TotalMessages' => 0,
 		);
 	}
-	$db->query('SELECT count(message_id), box_type_id
+	$dbResult = $db->read('SELECT count(message_id), box_type_id
 				FROM message_boxes
 				GROUP BY box_type_id');
-	while ($db->nextRecord()) {
-		$boxes[$db->getInt('box_type_id')]['TotalMessages'] = $db->getInt('count(message_id)');
+	foreach ($dbResult->records() as $dbRecord) {
+		$boxes[$dbRecord->getInt('box_type_id')]['TotalMessages'] = $dbRecord->getInt('count(message_id)');
 	}
 	$template->assign('Boxes', $boxes);
 } else {
@@ -33,21 +33,21 @@ if (!isset($var['box_type_id'])) {
 	$template->assign('PageTopic', 'Viewing ' . $boxName);
 
 	$template->assign('BackHREF', Page::create('skeleton.php', 'box_view.php')->href());
-	$db->query('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($var['box_type_id']) . ' ORDER BY send_time DESC');
+	$dbResult = $db->read('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($var['box_type_id']) . ' ORDER BY send_time DESC');
 	$messages = array();
-	if ($db->getNumRows()) {
+	if ($dbResult->hasRecord()) {
 		$container = Page::create('box_delete_processing.php');
 		$container->addVar('box_type_id');
 		$template->assign('DeleteHREF', $container->href());
-		while ($db->nextRecord()) {
-			$gameID = $db->getInt('game_id');
+		foreach ($dbResult->records() as $dbRecord) {
+			$gameID = $dbRecord->getInt('game_id');
 			$validGame = $gameID > 0 && Globals::isValidGame($gameID);
-			$messageID = $db->getInt('message_id');
+			$messageID = $dbRecord->getInt('message_id');
 			$messages[$messageID] = array(
 				'ID' => $messageID
 			);
 
-			$senderID = $db->getInt('sender_id');
+			$senderID = $dbRecord->getInt('sender_id');
 			if ($senderID == 0) {
 				$senderName = 'User not logged in';
 			} else {
@@ -75,8 +75,8 @@ if (!isset($var['box_type_id'])) {
 				$messages[$messageID]['GameName'] = SmrGame::getGame($gameID)->getDisplayName();
 			}
 
-			$messages[$messageID]['SendTime'] = date($account->getDateTimeFormat(), $db->getInt('send_time'));
-			$messages[$messageID]['Message'] = bbifyMessage(htmliseMessage($db->getField('message_text')));
+			$messages[$messageID]['SendTime'] = date($account->getDateTimeFormat(), $dbRecord->getInt('send_time'));
+			$messages[$messageID]['Message'] = bbifyMessage(htmliseMessage($dbRecord->getString('message_text')));
 		}
 		$template->assign('Messages', $messages);
 	}

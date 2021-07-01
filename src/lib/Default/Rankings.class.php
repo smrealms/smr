@@ -2,37 +2,31 @@
 
 class Rankings {
 
-	public static function collectRaceRankings(Smr\Database $db, AbstractSmrPlayer $player) : array {
+	public static function collectRaceRankings(Smr\DatabaseResult $dbResult, AbstractSmrPlayer $player) : array {
 		$rankings = [];
-		$rank = 0;
-		while ($db->nextRecord()) {
-			// increase rank counter
-			$rank++;
-
-			$race_id = $db->getInt('race_id');
+		foreach ($dbResult->records() as $index => $dbRecord) {
+			$race_id = $dbRecord->getInt('race_id');
 			if ($player->getRaceID() == $race_id) {
 				$style = ' class="bold"';
 			} else {
 				$style = '';
 			}
 
-			$rankings[$rank] = [
+			$rankings[$index + 1] = [
 				'style' => $style,
-				'race_id' => $db->getInt('race_id'),
-				'amount' => $db->getInt('amount'),
-				'amount_avg' => IRound($db->getInt('amount') / $db->getInt('num_players')),
-				'num_players' => $db->getInt('num_players'),
+				'race_id' => $dbRecord->getInt('race_id'),
+				'amount' => $dbRecord->getInt('amount'),
+				'amount_avg' => IRound($dbRecord->getInt('amount') / $dbRecord->getInt('num_players')),
+				'num_players' => $dbRecord->getInt('num_players'),
 			];
 		}
 		return $rankings;
 	}
 
-	public static function collectAllianceRankings(Smr\Database $db, AbstractSmrPlayer $player, int $rank) : array {
+	public static function collectAllianceRankings(Smr\DatabaseResult $dbResult, AbstractSmrPlayer $player, int $startRank) : array {
 		$rankings = array();
-		while ($db->nextRecord()) {
-			// increase rank counter
-			$rank++;
-			$currentAlliance = SmrAlliance::getAlliance($db->getInt('alliance_id'), $player->getGameID());
+		foreach ($dbResult->records() as $index => $dbRecord) {
+			$currentAlliance = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id'), $player->getGameID());
 
 			$class = '';
 			if ($player->getAllianceID() == $currentAlliance->getAllianceID()) {
@@ -41,22 +35,19 @@ class Rankings {
 				$class = ' class="red"';
 			}
 
-			$rankings[$rank] = array(
-				'Rank' => $rank,
+			$rankings[$startRank + $index] = array(
 				'Alliance' => $currentAlliance,
 				'Class' => $class,
-				'Value' => $db->getInt('amount')
+				'Value' => $dbRecord->getInt('amount')
 			);
 		}
 		return $rankings;
 	}
 
-	public static function collectRankings(Smr\Database $db, AbstractSmrPlayer $player, int $rank) : array {
+	public static function collectRankings(Smr\DatabaseResult $dbResult, AbstractSmrPlayer $player, int $startRank) : array {
 		$rankings = array();
-		while ($db->nextRecord()) {
-			// increase rank counter
-			$rank++;
-			$currentPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
+		foreach ($dbResult->records() as $index => $dbRecord) {
+			$currentPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 
 			$class = '';
 			if ($player->equals($currentPlayer)) {
@@ -69,11 +60,10 @@ class Rankings {
 				$class = ' class="' . trim($class) . '"';
 			}
 
-			$rankings[$rank] = array(
-				'Rank' => $rank,
+			$rankings[$startRank + $index] = array(
 				'Player' => $currentPlayer,
 				'Class' => $class,
-				'Value' => $db->getInt('amount')
+				'Value' => $dbRecord->getInt('amount')
 			);
 		}
 		return $rankings;
@@ -88,8 +78,8 @@ class Rankings {
 
 		$offset = $minRank - 1;
 		$limit = $maxRank - $offset;
-		$db->query('SELECT *, ' . $stat . ' AS amount FROM player WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' ORDER BY amount DESC, player_name LIMIT ' . $offset . ', ' . $limit);
-		return self::collectRankings($db, $session->getPlayer(), $offset);
+		$dbResult = $db->read('SELECT *, ' . $stat . ' AS amount FROM player WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' ORDER BY amount DESC, player_name LIMIT ' . $offset . ', ' . $limit);
+		return self::collectRankings($dbResult, $session->getPlayer(), $minRank);
 	}
 
 	/**
@@ -101,8 +91,8 @@ class Rankings {
 
 		$offset = $minRank - 1;
 		$limit = $maxRank - $offset;
-		$db->query('SELECT alliance_id, alliance_' . $stat . ' AS amount FROM alliance WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' ORDER BY amount DESC, alliance_name LIMIT ' . $offset . ', ' . $limit);
-		return self::collectAllianceRankings($db, $session->getPlayer(), $offset);
+		$dbResult = $db->read('SELECT alliance_id, alliance_' . $stat . ' AS amount FROM alliance WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' ORDER BY amount DESC, alliance_name LIMIT ' . $offset . ', ' . $limit);
+		return self::collectAllianceRankings($dbResult, $session->getPlayer(), $minRank);
 	}
 
 	public static function calculateMinMaxRanks(int $ourRank, int $totalRanks) : array {

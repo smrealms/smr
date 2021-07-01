@@ -72,25 +72,26 @@ class SmrGame {
 	protected function __construct(int $gameID, bool $create = false) {
 		$this->db = Smr\Database::getInstance();
 
-		$this->db->query('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
-		if ($this->db->nextRecord()) {
-			$this->gameID = $this->db->getInt('game_id');
-			$this->name = $this->db->getField('game_name');
-			$this->description = $this->db->getField('game_description');
-			$this->joinTime = $this->db->getInt('join_time');
-			$this->startTime = $this->db->getInt('start_time');
-			$this->endTime = $this->db->getInt('end_time');
-			$this->maxPlayers = $this->db->getInt('max_players');
-			$this->maxTurns = $this->db->getInt('max_turns');
-			$this->startTurnHours = $this->db->getInt('start_turns');
-			$this->gameTypeID = $this->db->getInt('game_type');
-			$this->creditsNeeded = $this->db->getInt('credits_needed');
-			$this->gameSpeed = $this->db->getFloat('game_speed');
-			$this->enabled = $this->db->getBoolean('enabled');
-			$this->ignoreStats = $this->db->getBoolean('ignore_stats');
-			$this->allianceMaxPlayers = $this->db->getInt('alliance_max_players');
-			$this->allianceMaxVets = $this->db->getInt('alliance_max_vets');
-			$this->startingCredits = $this->db->getInt('starting_credits');
+		$dbResult = $this->db->read('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
+			$this->gameID = $dbRecord->getInt('game_id');
+			$this->name = $dbRecord->getField('game_name');
+			$this->description = $dbRecord->getField('game_description');
+			$this->joinTime = $dbRecord->getInt('join_time');
+			$this->startTime = $dbRecord->getInt('start_time');
+			$this->endTime = $dbRecord->getInt('end_time');
+			$this->maxPlayers = $dbRecord->getInt('max_players');
+			$this->maxTurns = $dbRecord->getInt('max_turns');
+			$this->startTurnHours = $dbRecord->getInt('start_turns');
+			$this->gameTypeID = $dbRecord->getInt('game_type');
+			$this->creditsNeeded = $dbRecord->getInt('credits_needed');
+			$this->gameSpeed = $dbRecord->getFloat('game_speed');
+			$this->enabled = $dbRecord->getBoolean('enabled');
+			$this->ignoreStats = $dbRecord->getBoolean('ignore_stats');
+			$this->allianceMaxPlayers = $dbRecord->getInt('alliance_max_players');
+			$this->allianceMaxVets = $dbRecord->getInt('alliance_max_vets');
+			$this->startingCredits = $dbRecord->getInt('starting_credits');
 		} elseif ($create === true) {
 			$this->gameID = $gameID;
 			$this->isNew = true;
@@ -102,7 +103,7 @@ class SmrGame {
 
 	public function save() : void {
 		if ($this->isNew) {
-			$this->db->query('INSERT INTO game (game_id,game_name,game_description,join_time,start_time,end_time,max_players,max_turns,start_turns,game_type,credits_needed,game_speed,enabled,ignore_stats,alliance_max_players,alliance_max_vets,starting_credits)
+			$this->db->write('INSERT INTO game (game_id,game_name,game_description,join_time,start_time,end_time,max_players,max_turns,start_turns,game_type,credits_needed,game_speed,enabled,ignore_stats,alliance_max_players,alliance_max_vets,starting_credits)
 									VALUES
 									(' . $this->db->escapeNumber($this->getGameID()) .
 										',' . $this->db->escapeString($this->getName()) .
@@ -122,7 +123,7 @@ class SmrGame {
 										',' . $this->db->escapeNumber($this->getAllianceMaxVets()) .
 										',' . $this->db->escapeNumber($this->getStartingCredits()) . ')');
 		} elseif ($this->hasChanged) {
-			$this->db->query('UPDATE game SET game_name = ' . $this->db->escapeString($this->getName()) .
+			$this->db->write('UPDATE game SET game_name = ' . $this->db->escapeString($this->getName()) .
 										', game_description = ' . $this->db->escapeString($this->getDescription()) .
 										', join_time = ' . $this->db->escapeNumber($this->getJoinTime()) .
 										', start_time = ' . $this->db->escapeNumber($this->getStartTime()) .
@@ -360,9 +361,8 @@ class SmrGame {
 
 	public function getTotalPlayers() : int {
 		if (!isset($this->totalPlayers)) {
-			$this->db->query('SELECT count(*) FROM player WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()));
-			$this->db->nextRecord();
-			$this->totalPlayers = $this->db->getInt('count(*)');
+			$dbResult = $this->db->read('SELECT count(*) FROM player WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			$this->totalPlayers = $dbResult->record()->getInt('count(*)');
 		}
 		return $this->totalPlayers;
 	}
@@ -397,7 +397,7 @@ class SmrGame {
 				} else {
 					$amount = $relations;
 				}
-				$this->db->query('REPLACE INTO race_has_relation (game_id, race_id_1, race_id_2, relation)
+				$this->db->write('REPLACE INTO race_has_relation (game_id, race_id_1, race_id_2, relation)
 				                  VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($race1['Race ID']) . ',' . $this->db->escapeNumber($race2['Race ID']) . ',' . $this->db->escapeNumber($amount) . ')');
 			}
 		}
@@ -410,15 +410,15 @@ class SmrGame {
 	public function getPlayableRaceIDs() : array {
 		if (!isset($this->playableRaceIDs)) {
 			// Get a unique set of HQ's available in game
-			$this->db->query('SELECT DISTINCT location_type_id
+			$dbResult = $this->db->read('SELECT DISTINCT location_type_id
 				FROM location
 				WHERE location_type_id > ' . $this->db->escapeNumber(UNDERGROUND) . '
 					AND location_type_id < ' . $this->db->escapeNumber(FED) . '
 					AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
 				ORDER BY location_type_id');
 			$this->playableRaceIDs = array();
-			while ($this->db->nextRecord()) {
-				$this->playableRaceIDs[] = $this->db->getInt('location_type_id') - 101;
+			foreach ($dbResult->records() as $dbRecord) {
+				$this->playableRaceIDs[] = $dbRecord->getInt('location_type_id') - 101;
 			}
 		}
 		return $this->playableRaceIDs;

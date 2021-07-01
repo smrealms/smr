@@ -86,7 +86,7 @@ foreach ($galaxies as $i => $galaxy) {
 				// Remove this sector and everything in it
 				$delSector = SmrSector::getSector($gameID, $oldID);
 				$delSector->removeAllFixtures();
-				$db->query('DELETE FROM sector WHERE ' . $delSector->getSQL());
+				$db->write('DELETE FROM sector WHERE ' . $delSector->getSQL());
 			}
 		}
 	}
@@ -102,7 +102,7 @@ foreach ($galaxies as $galaxy) {
 		}
 	}
 }
-$db->query('UPDATE sector SET warp = 0 WHERE game_id = ' . $db->escapeNumber($gameID));
+$db->write('UPDATE sector SET warp = 0 WHERE game_id = ' . $db->escapeNumber($gameID));
 
 // Many sectors will have their IDs shifted up or down, so we need to modify
 // the primary keys for the sector table as well as planets, ports, etc.
@@ -132,22 +132,22 @@ while ($needsUpdate) {
 		$SQL = 'SET sector_id = ' . $db->escapeNumber($newID) . ' WHERE ' . $oldSector->getSQL();
 
 		if ($oldSector->hasPlanet()) {
-			$db->query('UPDATE planet ' . $SQL);
-			$db->query('UPDATE planet_has_building ' . $SQL);
-			$db->query('UPDATE planet_has_cargo ' . $SQL);
-			$db->query('UPDATE planet_has_weapon ' . $SQL);
+			$db->write('UPDATE planet ' . $SQL);
+			$db->write('UPDATE planet_has_building ' . $SQL);
+			$db->write('UPDATE planet_has_cargo ' . $SQL);
+			$db->write('UPDATE planet_has_weapon ' . $SQL);
 		}
 
 		if ($oldSector->hasPort()) {
-			$db->query('UPDATE port ' . $SQL);
-			$db->query('UPDATE port_has_goods ' . $SQL);
+			$db->write('UPDATE port ' . $SQL);
+			$db->write('UPDATE port_has_goods ' . $SQL);
 		}
 
 		if ($oldSector->hasLocation()) {
-			$db->query('UPDATE location ' . $SQL);
+			$db->write('UPDATE location ' . $SQL);
 		}
 
-		$db->query('UPDATE sector ' . $SQL);
+		$db->write('UPDATE sector ' . $SQL);
 		unset($needsUpdate[$newID]);
 	}
 }

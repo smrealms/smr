@@ -33,18 +33,18 @@ $receivers = [];
 if ($game_id != ALL_GAMES_ID) {
 	if ($account_id == 0) {
 		// Send to all players in the requested game
-		$db->query('SELECT account_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
-		while ($db->nextRecord()) {
-			$receivers[] = [$game_id, $db->getInt('account_id')];
+		$dbResult = $db->read('SELECT account_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
+		foreach ($dbResult->records() as $dbRecord) {
+			$receivers[] = [$game_id, $dbRecord->getInt('account_id')];
 		}
 	} else {
 		$receivers[] = [$game_id, $account_id];
 	}
 } else {
 	//send to all players in games that haven't ended yet
-	$db->query('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(Smr\Epoch::time()));
-	while ($db->nextRecord()) {
-		$receivers[] = [$db->getInt('game_id'), $db->getInt('account_id')];
+	$dbResult = $db->read('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(Smr\Epoch::time()));
+	foreach ($dbResult->records() as $dbRecord) {
+		$receivers[] = [$dbRecord->getInt('game_id'), $dbRecord->getInt('account_id')];
 	}
 }
 // Send the messages

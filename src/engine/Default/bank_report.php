@@ -14,19 +14,19 @@ const DEPOSIT = 1;
 
 //get all transactions
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-if (!$db->getNumRows()) {
+$dbResult = $db->read('SELECT * FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+if (!$dbResult->hasRecord()) {
 	create_error('Your alliance has no recorded transactions.');
 }
 $trans = array();
-while ($db->nextRecord()) {
-	$transType = ($db->getField('transaction') == 'Payment') ? WITHDRAW : DEPOSIT;
-	$payeeId = ($db->getInt('exempt')) ? 0 : $db->getInt('payee_id');
+foreach ($dbResult->records() as $dbRecord) {
+	$transType = ($dbRecord->getField('transaction') == 'Payment') ? WITHDRAW : DEPOSIT;
+	$payeeId = ($dbRecord->getInt('exempt')) ? 0 : $dbRecord->getInt('payee_id');
 	// initialize payee if necessary
 	if (!isset($trans[$payeeId])) {
 		$trans[$payeeId] = array(WITHDRAW => 0, DEPOSIT => 0);
 	}
-	$trans[$payeeId][$transType] += $db->getInt('amount');
+	$trans[$payeeId][$transType] += $dbRecord->getInt('amount');
 }
 
 //ordering
@@ -36,10 +36,10 @@ foreach ($trans as $accId => $transArray) {
 	$totals[$accId] = $transArray[DEPOSIT] - $transArray[WITHDRAW];
 }
 arsort($totals, SORT_NUMERIC);
-$db->query('SELECT * FROM player WHERE account_id IN (' . $db->escapeArray($playerIDs) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
+$dbResult = $db->read('SELECT * FROM player WHERE account_id IN (' . $db->escapeArray($playerIDs) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
 $players[0] = 'Alliance Funds';
-while ($db->nextRecord()) {
-	$players[$db->getInt('account_id')] = htmlentities($db->getField('player_name'));
+foreach ($dbResult->records() as $dbRecord) {
+	$players[$dbRecord->getInt('account_id')] = htmlentities($dbRecord->getString('player_name'));
 }
 
 //format it this way so its easy to send to the alliance MB if requested.

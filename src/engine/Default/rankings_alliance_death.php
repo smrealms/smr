@@ -8,14 +8,13 @@ $template->assign('PageTopic', 'Alliance Death Rankings');
 Menu::rankings(1, 3);
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT count(*) FROM alliance
+$dbResult = $db->read('SELECT count(*) FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-$db->requireRecord();
-$numAlliances = $db->getInt('count(*)');
+$numAlliances = $dbResult->record()->getInt('count(*)');
 
 $ourRank = 0;
 if ($player->hasAlliance()) {
-	$db->query('SELECT ranking
+	$dbResult = $db->read('SELECT ranking
 				FROM (
 					SELECT alliance_id,
 					ROW_NUMBER() OVER (ORDER BY alliance_deaths DESC, alliance_name ASC) AS ranking
@@ -24,8 +23,7 @@ if ($player->hasAlliance()) {
 				) t
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID())
 	);
-	$db->requireRecord();
-	$ourRank = $db->getInt('ranking');
+	$ourRank = $dbResult->record()->getInt('ranking');
 	$template->assign('OurRank', $ourRank);
 }
 

@@ -8,7 +8,6 @@ $variable = $session->getRequestVar('variable');
 $type = $session->getRequestVar('type');
 
 $db = Smr\Database::getInstance();
-$db2 = Smr\Database::getInstance();
 
 $container = Page::create('skeleton.php', 'ip_view.php');
 $template->assign('BackHREF', $container->href());
@@ -29,13 +28,13 @@ if ($type == 'comp_share') {
 	//=========================================================
 
 	//we are listing ALL IPs
-	$db->query('SELECT * FROM account_has_ip GROUP BY ip, account_id ORDER BY ip');
+	$dbResult = $db->read('SELECT * FROM account_has_ip GROUP BY ip, account_id ORDER BY ip');
 	$ip_array = array();
 	//make sure we have enough but not too mant to reduce lag
-	while ($db->nextRecord()) {
-		$id = $db->getInt('account_id');
-		$ip = $db->getField('ip');
-		$host = $db->getField('host');
+	foreach ($dbResult->records() as $dbRecord) {
+		$id = $dbRecord->getInt('account_id');
+		$ip = $dbRecord->getField('ip');
+		$host = $dbRecord->getField('host');
 		$ip_array[] = array('ip' => $ip, 'id' => $id, 'host' => $host);
 	}
 
@@ -67,9 +66,9 @@ if ($type == 'comp_share') {
 		$row['matches'] = $matches;
 
 		if ($matches) {
-			$db2->query('SELECT * FROM account_exceptions WHERE account_id = ' . $db2->escapeNumber($account_id));
-			if ($db2->nextRecord()) {
-				$ex = $db2->getField('reason');
+			$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($account_id));
+			if ($dbResult2->hasRecord()) {
+				$ex = $dbResult2->record()->getField('reason');
 			} else {
 				$ex = '';
 			}
@@ -104,9 +103,9 @@ if ($type == 'comp_share') {
 	$template->assign('BanAccountID', $accountID);
 	$summary = 'Account ' . $accountID . ' has had the following IPs at the following times.';
 	$template->assign('Summary', $summary);
-	$db2->query('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($variable));
-	if ($db2->nextRecord()) {
-		$ex = $db2->getField('reason');
+	$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($variable));
+	if ($dbResult->hasRecord()) {
+		$ex = $dbResult->record()->getField('reason');
 		$template->assign('Exception', $ex);
 	}
 	$viewAccount = SmrAccount::getAccount($accountID);
@@ -115,12 +114,12 @@ if ($type == 'comp_share') {
 		$template->assign('CloseReason', $disabled['Reason']);
 	}
 	$rows = [];
-	$db->query('SELECT * FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($variable) . ' ORDER BY time');
-	while ($db->nextRecord()) {
+	$dbResult = $db->read('SELECT * FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($variable) . ' ORDER BY time');
+	foreach ($dbResult->records() as $dbRecord) {
 		$rows[] = [
-			'ip' => $db->getField('ip'),
-			'date' => date($account->getDateTimeFormat(), $db->getInt('time')),
-			'host' => $db->getField('host'),
+			'ip' => $dbRecord->getField('ip'),
+			'date' => date($account->getDateTimeFormat(), $dbRecord->getInt('time')),
+			'host' => $dbRecord->getField('host'),
 		];
 	}
 	$template->assign('Rows', $rows);
@@ -137,7 +136,7 @@ if ($type == 'comp_share') {
 			$host = 'unknown';
 		}
 		$summary = 'The following accounts have the IP address ' . $ip . ' (' . $host . ')';
-		$db->query('SELECT * FROM account_has_ip WHERE ip = ' . $db->escapeString($ip) . ' ORDER BY account_id');
+		$dbResult = $db->read('SELECT * FROM account_has_ip WHERE ip = ' . $db->escapeString($ip) . ' ORDER BY account_id');
 
 	} elseif ($type == 'alliance_ips') {
 		//=========================================================
@@ -150,21 +149,21 @@ if ($type == 'comp_share') {
 		$allianceID = (int)$allianceID;
 		$gameID = (int)$gameID;
 		$name = SmrAlliance::getAlliance($allianceID, $gameID)->getAllianceDisplayName();
-		$db->query('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND alliance_id = ' . $db->escapeNumber($allianceID) . ' ORDER BY ip');
+		$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND alliance_id = ' . $db->escapeNumber($allianceID) . ' ORDER BY ip');
 		$summary = 'Listing all IPs for alliance ' . $name . ' in game with ID ' . $gameID;
 
 	} elseif ($type == 'wild_log') {
 		//=========================================================
 		// List all IPs for a wildcard login name
 		//=========================================================
-		$db->query('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login LIKE ' . $db->escapeString($variable) . ' ORDER BY login, ip');
+		$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login LIKE ' . $db->escapeString($variable) . ' ORDER BY login, ip');
 		$summary = 'Listing all IPs for login names LIKE ' . $variable;
 
 	} elseif ($type == 'wild_in') {
 		//=========================================================
 		// List all IPs for a wildcard ingame name
 		//=========================================================
-		$db->query('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name LIKE ' . $db->escapeString($variable) . ' ORDER BY player_name, ip');
+		$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name LIKE ' . $db->escapeString($variable) . ' ORDER BY player_name, ip');
 		$summary = 'Listing all IPs for ingame names LIKE ' . $variable;
 
 	} elseif ($type == 'compare') {
@@ -172,7 +171,7 @@ if ($type == 'comp_share') {
 		// List all IPs for specified players
 		//=========================================================
 		$list = preg_split('/[,]+[\s]/', $variable);
-		$db->query('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name IN (' . $db->escapeArray($list) . ') ORDER BY ip');
+		$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name IN (' . $db->escapeArray($list) . ') ORDER BY ip');
 		$summary = 'Listing all IPs for ingame names ' . $variable;
 
 	} elseif ($type == 'compare_log') {
@@ -180,22 +179,24 @@ if ($type == 'comp_share') {
 		// List all IPs for specified logins
 		//=========================================================
 		$list = preg_split('/[,]+[\s]/', $variable);
-		$db->query('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login IN (' . $db->escapeArray($list) . ') ORDER BY ip');
+		$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login IN (' . $db->escapeArray($list) . ') ORDER BY ip');
 		$summary = 'Listing all IPs for logins ' . $variable;
 
 	} elseif ($type == 'wild_ip') {
 		//=========================================================
 		// Wildcard IP search
 		//=========================================================
-		$db->query('SELECT * FROM account_has_ip WHERE ip LIKE ' . $db->escapeString($variable) . ' GROUP BY account_id, ip ORDER BY time DESC, ip');
+		$dbResult = $db->read('SELECT * FROM account_has_ip WHERE ip LIKE ' . $db->escapeString($variable) . ' GROUP BY account_id, ip ORDER BY time DESC, ip');
 		$summary = 'Listing all IPs LIKE ' . $variable;
 
 	} elseif ($type == 'wild_host') {
 		//=========================================================
 		// Wildcard host search
 		//=========================================================
-		$db->query('SELECT * FROM account_has_ip WHERE host LIKE ' . $db->escapeString($variable) . ' GROUP BY account_id, ip ORDER BY time, ip');
+		$dbResult = $db->read('SELECT * FROM account_has_ip WHERE host LIKE ' . $db->escapeString($variable) . ' GROUP BY account_id, ip ORDER BY time, ip');
 		$summary = 'Listing all hosts LIKE ' . $variable;
+	} else {
+		throw new Exception('Unknown type: ' . $type);
 	}
 	$template->assign('Summary', $summary);
 
@@ -204,26 +205,26 @@ if ($type == 'comp_share') {
 	$last_ip = null;
 
 	$rows = [];
-	while ($db->nextRecord()) {
-		$id = $db->getInt('account_id');
-		$time = $db->getInt('time');
-		$ip = $db->getField('ip');
-		$host = $db->getField('host');
+	foreach ($dbResult->records() as $dbRecord) {
+		$id = $dbRecord->getInt('account_id');
+		$time = $dbRecord->getInt('time');
+		$ip = $dbRecord->getField('ip');
+		$host = $dbRecord->getField('host');
 
-		if ($id == $last_id && $ip == $last_ip) {
+		if ($id === $last_id && $ip === $last_ip) {
 			continue;
 		}
 		$acc = SmrAccount::getAccount($id);
 		$disabled = $acc->isDisabled();
 		$close_reason = $disabled ? $disabled['Reason'] : '';
-		$db2->query('SELECT * FROM player WHERE account_id = ' . $db2->escapeNumber($id));
+		$dbResult2 = $db->read('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($id));
 		$names = array();
-		while ($db2->nextRecord()) {
-			$names[] = stripslashes($db2->getField('player_name'));
+		foreach ($dbResult2->records() as $dbRecord2) {
+			$names[] = $dbRecord2->getString('player_name');
 		}
-		$db2->query('SELECT * FROM account_exceptions WHERE account_id = ' . $db2->escapeNumber($id));
-		if ($db2->nextRecord()) {
-			$ex = $db2->getField('reason');
+		$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($id));
+		if ($dbResult2->hasRecord()) {
+			$ex = $dbResult2->record()->getField('reason');
 		} else {
 			$ex = '';
 		}

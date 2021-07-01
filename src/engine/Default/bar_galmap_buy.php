@@ -27,8 +27,8 @@ if (isset($var['process'])) {
 
 	// Have they already got this map? (Are there any unexplored sectors?
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT * FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND ' . $player->getSQL() . ' LIMIT 1');
-	if (!$db->nextRecord()) {
+	$dbResult = $db->read('SELECT 1 FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND ' . $player->getSQL() . ' LIMIT 1');
+	if (!$dbResult->hasRecord()) {
 		create_error('You already have maps of this galaxy!');
 	}
 
@@ -38,7 +38,7 @@ if (isset($var['process'])) {
 	//now give maps
 
 	// delete all entries from the player_visited_sector/port table
-	$db->query('DELETE FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND ' . $player->getSQL());
+	$db->write('DELETE FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND ' . $player->getSQL());
 	//start section
 
 	// add port infos

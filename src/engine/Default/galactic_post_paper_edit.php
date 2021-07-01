@@ -9,20 +9,19 @@ $template->assign('PageTopic', 'Edit Paper');
 Menu::galactic_post();
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM galactic_post_paper WHERE paper_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-$db->requireRecord();
-$template->assign('PaperTitle', bbifyMessage($db->getField('title')));
+$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE paper_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+$template->assign('PaperTitle', bbifyMessage($dbResult->record()->getString('title')));
 
-$db->query('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE paper_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+$dbResult = $db->read('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE paper_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 
 $articles = [];
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	$container = Page::create('galactic_post_paper_edit_processing.php');
-	$container['article_id'] = $db->getInt('article_id');
+	$container['article_id'] = $dbRecord->getInt('article_id');
 	$container->addVar('id');
 	$articles[] = [
-		'title' => bbifyMessage($db->getField('title')),
-		'text' => bbifyMessage($db->getField('text')),
+		'title' => bbifyMessage($dbRecord->getString('title')),
+		'text' => bbifyMessage($dbRecord->getString('text')),
 		'editHREF' => $container->href(),
 	];
 }

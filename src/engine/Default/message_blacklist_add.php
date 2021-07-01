@@ -18,14 +18,14 @@ if (isset($var['account_id'])) {
 }
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT account_id FROM message_blacklist WHERE ' . $player->getSQL() . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted->getAccountID()) . ' LIMIT 1');
+$dbResult = $db->read('SELECT 1 FROM message_blacklist WHERE ' . $player->getSQL() . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted->getAccountID()) . ' LIMIT 1');
 
-if ($db->nextRecord()) {
+if ($dbResult->hasRecord()) {
 	$container['msg'] = '<span class="red bold">ERROR: </span>Player is already blacklisted.';
 	$container->go();
 }
 
-$db->query('INSERT INTO message_blacklist (game_id,account_id,blacklisted_id) VALUES (' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($blacklisted->getAccountID()) . ')');
+$db->write('INSERT INTO message_blacklist (game_id,account_id,blacklisted_id) VALUES (' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($blacklisted->getAccountID()) . ')');
 
 $container['msg'] = $blacklisted->getDisplayName() . ' has been added to your blacklist.';
 $container->go();

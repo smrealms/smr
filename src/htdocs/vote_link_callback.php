@@ -24,9 +24,9 @@ try {
 	// Is the player allowed to get free turns from this link right now?
 	// If player clicked a valid free turns link, they have `turns_claimed=false`
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountId) . ' AND link_id=' . $db->escapeNumber($linkId) . ' AND turns_claimed=' . $db->escapeBoolean(false) . ' LIMIT 1');
+	$dbResult = $db->read('SELECT 1 FROM vote_links WHERE account_id=' . $db->escapeNumber($accountId) . ' AND link_id=' . $db->escapeNumber($linkId) . ' AND turns_claimed=' . $db->escapeBoolean(false) . ' LIMIT 1');
 
-	if ($db->nextRecord()) {
+	if ($dbResult->hasRecord()) {
 		// Eligibility was checked when `turns_claimed` was set to false.
 		// So give free turns now!
 		$player = SmrPlayer::getPlayer($accountId, $gameId);
@@ -39,13 +39,13 @@ try {
 		// Now that we are locked, check the database again to make sure turns
 		// weren't claimed while we were waiting for the lock.
 		// This prevents players from manually spamming the callback for lots of free turns.
-		$db->query('SELECT timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountId) . ' AND link_id=' . $db->escapeNumber($linkId) . ' AND turns_claimed=' . $db->escapeBoolean(false) . ' LIMIT 1');
-		if (!$db->nextRecord()) {
+		$dbResult = $db->read('SELECT 1 FROM vote_links WHERE account_id=' . $db->escapeNumber($accountId) . ' AND link_id=' . $db->escapeNumber($linkId) . ' AND turns_claimed=' . $db->escapeBoolean(false) . ' LIMIT 1');
+		if (!$dbResult->hasRecord()) {
 			exit;
 		}
 
 		// Prevent getting additional turns until a valid free turns link is clicked again
-		$db->query('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($accountId) . ',' . $db->escapeNumber($linkId) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeBoolean(true) . ')');
+		$db->write('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($accountId) . ',' . $db->escapeNumber($linkId) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeBoolean(true) . ')');
 
 		$player->setLastTurnUpdate($player->getLastTurnUpdate() - VOTE_BONUS_TURNS_TIME); //Give turns via added time, no rounding errors.
 		$player->save();

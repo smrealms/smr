@@ -13,7 +13,7 @@ $profitType = array('Trade', 'Money', 'Profit');
 $profitTypeEscaped = $db->escapeArray($profitType, ':', false);
 
 // what rank are we?
-$db->query('SELECT ranking
+$dbResult = $db->read('SELECT ranking
 			FROM (
 				SELECT player_id,
 				ROW_NUMBER() OVER (ORDER BY COALESCE(ph.amount, 0) DESC, player_name ASC) AS ranking
@@ -23,8 +23,7 @@ $db->query('SELECT ranking
 			) t
 			WHERE player_id = ' . $db->escapeNumber($player->getPlayerID())
 );
-$db->requireRecord();
-$ourRank = $db->getInt('ranking');
+$ourRank = $dbResult->record()->getInt('ranking');
 $template->assign('OurRank', $ourRank);
 
 $totalPlayers = $player->getGame()->getTotalPlayers();
@@ -32,8 +31,8 @@ $totalPlayers = $player->getGame()->getTotalPlayers();
 $profitRanks = function(int $minRank, int $maxRank) use ($player, $db, $profitTypeEscaped) : array {
 	$offset = $minRank - 1;
 	$limit = $maxRank - $offset;
-	$db->query('SELECT p.*, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $profitTypeEscaped . ' WHERE p.game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, player_name ASC LIMIT ' . $offset . ', ' . $limit);
-	return Rankings::collectRankings($db, $player, $offset);
+	$dbResult = $db->read('SELECT p.*, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $profitTypeEscaped . ' WHERE p.game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, player_name ASC LIMIT ' . $offset . ', ' . $limit);
+	return Rankings::collectRankings($dbResult, $player, $minRank);
 };
 
 $template->assign('Rankings', $profitRanks(1, 10));

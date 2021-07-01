@@ -17,14 +17,14 @@ class SmrWeaponType {
 	protected int $powerLevel;
 	protected int $buyerRestriction;
 
-	public static function getWeaponType(int $weaponTypeID, Smr\Database $db = null) : SmrWeaponType {
+	public static function getWeaponType(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null) : SmrWeaponType {
 		if (!isset(self::$CACHE_WEAPON_TYPES[$weaponTypeID])) {
-			if (is_null($db)) {
+			if ($dbRecord === null) {
 				$db = Smr\Database::getInstance();
-				$db->query('SELECT * FROM weapon_type WHERE weapon_type_id = ' . $db->escapeNumber($weaponTypeID));
-				$db->requireRecord();
+				$dbResult = $db->read('SELECT * FROM weapon_type WHERE weapon_type_id = ' . $db->escapeNumber($weaponTypeID));
+				$dbRecord = $dbResult->record();
 			}
-			$weapon = new SmrWeaponType($weaponTypeID, $db);
+			$weapon = new SmrWeaponType($weaponTypeID, $dbRecord);
 			self::$CACHE_WEAPON_TYPES[$weaponTypeID] = $weapon;
 		}
 		return self::$CACHE_WEAPON_TYPES[$weaponTypeID];
@@ -32,11 +32,11 @@ class SmrWeaponType {
 
 	public static function getAllWeaponTypes() : array {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT * FROM weapon_type');
+		$dbResult = $db->read('SELECT * FROM weapon_type');
 		$weapons = array();
-		while ($db->nextRecord()) {
-			$weaponTypeID = $db->getInt('weapon_type_id');
-			$weapons[$weaponTypeID] = self::getWeaponType($weaponTypeID, $db);
+		foreach ($dbResult->records() as $dbRecord) {
+			$weaponTypeID = $dbRecord->getInt('weapon_type_id');
+			$weapons[$weaponTypeID] = self::getWeaponType($weaponTypeID, $dbRecord);
 		}
 		return $weapons;
 	}
@@ -46,25 +46,25 @@ class SmrWeaponType {
 	 */
 	public static function getAllSoldWeaponTypes(int $gameID) : array {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT DISTINCT weapon_type.* FROM weapon_type JOIN location_sells_weapons USING (weapon_type_id) JOIN location USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID));
+		$dbResult = $db->read('SELECT DISTINCT weapon_type.* FROM weapon_type JOIN location_sells_weapons USING (weapon_type_id) JOIN location USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID));
 		$weapons = [];
-		while ($db->nextRecord()) {
-			$weaponTypeID = $db->getInt('weapon_type_id');
-			$weapons[$weaponTypeID] = self::getWeaponType($weaponTypeID, $db);
+		foreach ($dbResult->records() as $dbRecord) {
+			$weaponTypeID = $dbRecord->getInt('weapon_type_id');
+			$weapons[$weaponTypeID] = self::getWeaponType($weaponTypeID, $dbRecord);
 		}
 		return $weapons;
 	}
 
-	protected function __construct(int $weaponTypeID, Smr\Database $db) {
+	protected function __construct(int $weaponTypeID, Smr\DatabaseRecord $dbRecord) {
 		$this->weaponTypeID = $weaponTypeID;
-		$this->name = $db->getField('weapon_name');
-		$this->raceID = $db->getInt('race_id');
-		$this->cost = $db->getInt('cost');
-		$this->shieldDamage = $db->getInt('shield_damage');
-		$this->armourDamage = $db->getInt('armour_damage');
-		$this->accuracy = $db->getInt('accuracy');
-		$this->powerLevel = $db->getInt('power_level');
-		$this->buyerRestriction = $db->getInt('buyer_restriction');
+		$this->name = $dbRecord->getField('weapon_name');
+		$this->raceID = $dbRecord->getInt('race_id');
+		$this->cost = $dbRecord->getInt('cost');
+		$this->shieldDamage = $dbRecord->getInt('shield_damage');
+		$this->armourDamage = $dbRecord->getInt('armour_damage');
+		$this->accuracy = $dbRecord->getInt('accuracy');
+		$this->powerLevel = $dbRecord->getInt('power_level');
+		$this->buyerRestriction = $dbRecord->getInt('buyer_restriction');
 	}
 
 	public function getWeaponTypeID() : int {

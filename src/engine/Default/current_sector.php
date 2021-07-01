@@ -35,9 +35,9 @@ $links['Warp'] = array('ID'=>$sector->getWarp());
 $unvisited = array();
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND ' . $player->getSQL());
-while ($db->nextRecord()) {
-	$unvisited[$db->getInt('sector_id')] = TRUE;
+$dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND ' . $player->getSQL());
+foreach ($dbResult->records() as $dbRecord) {
+	$unvisited[$dbRecord->getInt('sector_id')] = TRUE;
 }
 
 foreach ($links as $key => $linkArray) {
@@ -100,10 +100,10 @@ if (!empty($protectionMessage)) {
 
 //enableProtectionDependantRefresh($template,$player);
 
-$db->query('SELECT * FROM sector_message WHERE ' . $player->getSQL());
-if ($db->nextRecord()) {
-	$msg = $db->getField('message');
-	$db->query('DELETE FROM sector_message WHERE ' . $player->getSQL());
+$dbResult = $db->read('SELECT * FROM sector_message WHERE ' . $player->getSQL());
+if ($dbResult->hasRecord()) {
+	$msg = $dbResult->record()->getString('message');
+	$db->write('DELETE FROM sector_message WHERE ' . $player->getSQL());
 	checkForForceRefreshMessage($msg);
 	checkForAttackMessage($msg);
 }
@@ -155,11 +155,11 @@ function checkForForceRefreshMessage(string &$msg) : void {
 			$player = Smr\Session::getInstance()->getPlayer();
 
 			$forceRefreshMessage = '';
-			$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
-			if ($db->nextRecord()) {
-				$remainingTime = $db->getInt('refresh_at') - Smr\Epoch::time();
+			$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
+			if ($dbResult->hasRecord()) {
+				$remainingTime = $dbResult->record()->getInt('refresh_at') - Smr\Epoch::time();
 				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
-				$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', \'[Force Check]\')');
+				$db->write('REPLACE INTO sector_message (game_id, account_id, message) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', \'[Force Check]\')');
 			} else {
 				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
 			}
@@ -184,12 +184,13 @@ function checkForAttackMessage(string &$msg) : void {
 		$template = Smr\Template::getInstance();
 		if (!$template->hasTemplateVar('AttackResults')) {
 			$db = Smr\Database::getInstance();
-			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($logID) . ' LIMIT 1');
-			if ($db->nextRecord()) {
+			$dbResult = $db->read('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($logID) . ' LIMIT 1');
+			if ($dbResult->hasRecord()) {
+				$dbRecord = $dbResult->record();
 				$player = $session->getPlayer();
-				if ($player->getSectorID() == $db->getInt('sector_id')) {
-					$results = $db->getObject('result', true);
-					$template->assign('AttackResultsType', $db->getField('type'));
+				if ($player->getSectorID() == $dbRecord->getInt('sector_id')) {
+					$results = $dbRecord->getObject('result', true);
+					$template->assign('AttackResultsType', $dbRecord->getField('type'));
 					$template->assign('AttackResults', $results);
 					$template->assign('AttackLogLink', linkCombatLog($logID));
 				}

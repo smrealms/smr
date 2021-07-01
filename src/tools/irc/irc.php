@@ -85,7 +85,7 @@ while ($running) {
 	// delete all seen stats that appear to be on (we do not want to take
 	// something for granted that happend while we were away)
 	$db = Smr\Database::getInstance();
-	$db->query('DELETE from irc_seen WHERE signed_off = 0');
+	$db->write('DELETE from irc_seen WHERE signed_off = 0');
 
 	// Reset last ping each time we try connecting.
 	$last_ping = time();
@@ -120,13 +120,13 @@ while ($running) {
 			$joinChannels = ['#smr', '#smr-bar'];
 
 			// join all alliance channels
-			$db->query('SELECT channel
+			$dbResult = $db->read('SELECT channel
 						FROM irc_alliance_has_channel
 						JOIN game USING (game_id)
 						WHERE join_time < ' . time() . '
 							AND end_time > ' . time());
-			while ($db->nextRecord()) {
-				$joinChannels[] = $db->getField('channel');
+			foreach ($dbResult->records() as $dbRecord) {
+				$joinChannels[] = $dbRecord->getField('channel');
 			}
 
 			// now do the actual joining
@@ -187,6 +187,13 @@ function readFromStream($fp) {
 	if (server_ping($fp, $rdata)) {
 		return;
 	}
+
+	// Since we close the database connection between polls, we will need
+	// to reconnect before doing anything that requires the database. Note
+	// that everything above this point does *not* need the database, but
+	// we *may* need it beyond this point.
+	$db = Smr\Database::getInstance();
+	$db->reconnect();
 
 	// server msg
 	if (server_msg_307($fp, $rdata)) {

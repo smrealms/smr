@@ -12,17 +12,18 @@ $processingContainer = Page::create('newsletter_send_processing.php');
 
 // Get the most recent newsletter text for preview
 $db = Smr\Database::getInstance();
-$db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
-if ($db->nextRecord()) {
-	$id = $db->getInt('newsletter_id');
+$dbResult = $db->read('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
+if ($dbResult->hasRecord()) {
+	$dbRecord = $dbResult->record();
+	$id = $dbRecord->getInt('newsletter_id');
 	$template->assign('NewsletterId', $id);
 	$template->assign('DefaultSubject', 'Space Merchant Realms Newsletter #' . $id);
 
 	// Give both the template and processing container access to the message
-	$processingContainer['newsletter_html'] = $db->getField('newsletter_html');
-	$processingContainer['newsletter_text'] = $db->getField('newsletter_text');
-	$template->assign('NewsletterHtml', $db->getField('newsletter_html'));
-	$template->assign('NewsletterText', $db->getField('newsletter_text'));
+	$processingContainer['newsletter_html'] = $dbRecord->getField('newsletter_html');
+	$processingContainer['newsletter_text'] = $dbRecord->getField('newsletter_text');
+	$template->assign('NewsletterHtml', $dbRecord->getField('newsletter_html'));
+	$template->assign('NewsletterText', $dbRecord->getField('newsletter_text'));
 }
 
 // Create the form for the populated processing container

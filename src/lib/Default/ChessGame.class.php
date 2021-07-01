@@ -27,14 +27,14 @@ class ChessGame {
 
 	public static function getNPCMoveGames(bool $forceUpdate = false) : array {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT chess_game_id
+		$dbResult = $db->read('SELECT chess_game_id
 					FROM npc_logins
 					JOIN account USING(login)
 					JOIN chess_game ON account_id = black_id OR account_id = white_id
 					WHERE end_time > ' . Smr\Epoch::time() . ' OR end_time IS NULL;');
 		$games = array();
-		while ($db->nextRecord()) {
-			$game = self::getChessGame($db->getInt('chess_game_id'), $forceUpdate);
+		foreach ($dbResult->records() as $dbRecord) {
+			$game = self::getChessGame($dbRecord->getInt('chess_game_id'), $forceUpdate);
 			if ($game->getCurrentTurnAccount()->isNPC()) {
 				$games[] = $game;
 			}
@@ -44,20 +44,20 @@ class ChessGame {
 
 	public static function getOngoingPlayerGames(AbstractSmrPlayer $player) : array {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . Smr\Epoch::time() . ' OR end_time IS NULL);');
+		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . Smr\Epoch::time() . ' OR end_time IS NULL);');
 		$games = array();
-		while ($db->nextRecord()) {
-			$games[] = self::getChessGame($db->getInt('chess_game_id'));
+		foreach ($dbResult->records() as $dbRecord) {
+			$games[] = self::getChessGame($dbRecord->getInt('chess_game_id'));
 		}
 		return $games;
 	}
 
 	public static function getAccountGames(int $accountID) : array {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');
+		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');
 		$games = array();
-		while ($db->nextRecord()) {
-			$games[] = self::getChessGame($db->getInt('chess_game_id'));
+		foreach ($dbResult->records() as $dbRecord) {
+			$games[] = self::getChessGame($dbRecord->getInt('chess_game_id'));
 		}
 		return $games;
 	}
@@ -71,21 +71,21 @@ class ChessGame {
 
 	public function __construct(int $chessGameID) {
 		$this->db = Smr\Database::getInstance();
-		$this->db->query('SELECT *
+		$dbResult = $this->db->read('SELECT *
 						FROM chess_game
 						WHERE chess_game_id=' . $this->db->escapeNumber($chessGameID) . ' LIMIT 1;');
-		if ($this->db->nextRecord()) {
-			$this->chessGameID = $chessGameID;
-			$this->gameID = $this->db->getInt('game_id');
-			$this->startDate = $this->db->getInt('start_time');
-			$this->endDate = $this->db->getInt('end_time');
-			$this->whiteID = $this->db->getInt('white_id');
-			$this->blackID = $this->db->getInt('black_id');
-			$this->winner = $this->db->getInt('winner_id');
-			$this->resetHasMoved();
-		} else {
+		if (!$dbResult->hasRecord()) {
 			throw new Exception('Chess game not found: ' . $chessGameID);
 		}
+		$dbRecord = $dbResult->record();
+		$this->chessGameID = $chessGameID;
+		$this->gameID = $dbRecord->getInt('game_id');
+		$this->startDate = $dbRecord->getInt('start_time');
+		$this->endDate = $dbRecord->getInt('end_time');
+		$this->whiteID = $dbRecord->getInt('white_id');
+		$this->blackID = $dbRecord->getInt('black_id');
+		$this->winner = $dbRecord->getInt('winner_id');
+		$this->resetHasMoved();
 	}
 
 	public static function isValidCoord(int $x, int $y, array &$board) : bool {
@@ -125,16 +125,15 @@ class ChessGame {
 
 	public function rerunGame(bool $debugInfo = false) : void {
 		$db = Smr\Database::getInstance();
-		$db2 = Smr\Database::getInstance();
 
-		$db->query('UPDATE chess_game
+		$db->write('UPDATE chess_game
 					SET end_time = NULL, winner_id = 0
 					WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
-		$db->query('DELETE FROM chess_game_pieces WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ';');
+		$db->write('DELETE FROM chess_game_pieces WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ';');
 		self::insertPieces($this->chessGameID, $this->getWhitePlayer(), $this->getBlackPlayer());
 
-		$db->query('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
-		$db2->query('DELETE FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ';');
+		$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
+		$db->write('DELETE FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ';');
 		$this->moves = array();
 		unset($this->board);
 		unset($this->endDate);
@@ -142,11 +141,17 @@ class ChessGame {
 		$this->resetHasMoved();
 
 		try {
-			while ($db->nextRecord()) {
+			foreach ($dbResult->records() as $dbRecord) {
+				$start_x = $dbRecord->getInt('start_x');
+				$start_y = $dbRecord->getInt('start_y');
+				$end_x = $dbRecord->getInt('end_x');
+				$end_y = $dbRecord->getInt('end_y');
+				$moveAccountID = $dbRecord->getInt('move_id') % 2 == 1 ? $this->getWhiteID() : $this->getBlackID();
+				$promotePieceID = $dbRecord->getInt('promote_piece_id');
 				if ($debugInfo === true) {
-					echo 'x=', $db->getInt('start_x'), ', y=', $db->getInt('start_y'), ', endX=', $db->getInt('end_x'), ', endY=', $db->getInt('end_y'), ', forAccountID=', $db->getInt('move_id') % 2 == 1 ? $this->getWhiteID() : $this->getBlackID(), EOL;
+					echo 'x=', $start_x, ', y=', $start_y, ', endX=', $end_x, ', endY=', $end_y, ', forAccountID=', $moveAccountID, EOL;
 				}
-				if (0 != $this->tryMove($db->getInt('start_x'), $db->getInt('start_y'), $db->getInt('end_x'), $db->getInt('end_y'), $db->getInt('move_id') % 2 == 1 ? $this->getWhiteID() : $this->getBlackID(), $db->getInt('promote_piece_id'))) {
+				if (0 != $this->tryMove($start_x, $start_y, $end_x, $end_y, $moveAccountID, $promotePieceID)) {
 					break;
 				}
 			}
@@ -160,11 +165,11 @@ class ChessGame {
 
 	public function getBoard() : array {
 		if (!isset($this->board)) {
-			$this->db->query('SELECT * FROM chess_game_pieces WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
+			$dbResult = $this->db->read('SELECT * FROM chess_game_pieces WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 			$pieces = array();
-			while ($this->db->nextRecord()) {
-				$accountID = $this->db->getInt('account_id');
-				$pieces[] = new ChessPiece($this->chessGameID, $accountID, $this->getColourForAccountID($accountID), $this->db->getInt('piece_id'), $this->db->getInt('x'), $this->db->getInt('y'), $this->db->getInt('piece_no'));
+			foreach ($dbResult->records() as $dbRecord) {
+				$accountID = $dbRecord->getInt('account_id');
+				$pieces[] = new ChessPiece($this->chessGameID, $accountID, $this->getColourForAccountID($accountID), $dbRecord->getInt('piece_id'), $dbRecord->getInt('x'), $dbRecord->getInt('y'), $dbRecord->getInt('piece_no'));
 			}
 			$this->board = $this->parsePieces($pieces);
 		}
@@ -190,20 +195,20 @@ class ChessGame {
 
 	public function getMoves() : array {
 		if (!isset($this->moves)) {
-			$this->db->query('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
+			$dbResult = $this->db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
 			$this->moves = array();
 			$mate = false;
-			while ($this->db->nextRecord()) {
+			foreach ($dbResult->records() as $dbRecord) {
 				$pieceTakenID = null;
-				if ($this->db->hasField('piece_taken')) {
-					$pieceTakenID = $this->db->getInt('piece_taken');
+				if ($dbRecord->hasField('piece_taken')) {
+					$pieceTakenID = $dbRecord->getInt('piece_taken');
 				}
 				$promotionPieceID = null;
-				if ($this->db->hasField('promote_piece_id')) {
-					$promotionPieceID = $this->db->getInt('promote_piece_id');
+				if ($dbRecord->hasField('promote_piece_id')) {
+					$promotionPieceID = $dbRecord->getInt('promote_piece_id');
 				}
-				$this->moves[] = $this->createMove($this->db->getInt('piece_id'), $this->db->getInt('start_x'), $this->db->getInt('start_y'), $this->db->getInt('end_x'), $this->db->getInt('end_y'), $pieceTakenID, $this->db->getField('checked'), $this->db->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK, $this->db->getField('castling'), $this->db->getBoolean('en_passant'), $promotionPieceID);
-				$mate = $this->db->getField('checked') == 'MATE';
+				$this->moves[] = $this->createMove($dbRecord->getInt('piece_id'), $dbRecord->getInt('start_x'), $dbRecord->getInt('start_y'), $dbRecord->getInt('end_x'), $dbRecord->getInt('end_y'), $pieceTakenID, $dbRecord->getField('checked'), $dbRecord->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK, $dbRecord->getField('castling'), $dbRecord->getBoolean('en_passant'), $promotionPieceID);
+				$mate = $dbRecord->getField('checked') == 'MATE';
 			}
 			if (!$mate && $this->hasEnded()) {
 				if ($this->getWinner() != 0) {
@@ -346,7 +351,7 @@ class ChessGame {
 
 	public static function insertNewGame(int $startDate, ?int $endDate, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) : int {
 		$db = Smr\Database::getInstance();
-		$db->query('INSERT INTO chess_game' .
+		$db->write('INSERT INTO chess_game' .
 				'(start_time,end_time,white_id,black_id,game_id)' .
 				'values' .
 				'(' . $db->escapeNumber($startDate) . ',' . ($endDate === null ? 'NULL' : $db->escapeNumber($endDate)) . ',' . $db->escapeNumber($whitePlayer->getAccountID()) . ',' . $db->escapeNumber($blackPlayer->getAccountID()) . ',' . $db->escapeNumber($whitePlayer->getGameID()) . ');');
@@ -360,7 +365,7 @@ class ChessGame {
 		$db = Smr\Database::getInstance();
 		$pieces = self::getStandardGame($chessGameID, $whitePlayer, $blackPlayer);
 		foreach ($pieces as $p) {
-			$db->query('INSERT INTO chess_game_pieces' .
+			$db->write('INSERT INTO chess_game_pieces' .
 			'(chess_game_id,account_id,piece_id,x,y)' .
 			'values' .
 			'(' . $db->escapeNumber($chessGameID) . ',' . $db->escapeNumber($p->accountID) . ',' . $db->escapeNumber($p->pieceID) . ',' . $db->escapeNumber($p->x) . ',' . $db->escapeNumber($p->y) . ');');
@@ -671,7 +676,7 @@ class ChessGame {
 					$otherPlayer->increaseHOF(1, array($chessType, 'Moves', 'Opponent Pawns Promoted', $piecePromotedSymbol), HOF_PUBLIC);
 				}
 
-				$this->db->query('INSERT INTO chess_game_moves
+				$this->db->write('INSERT INTO chess_game_moves
 								(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken,castling,en_passant,promote_piece_id)
 								VALUES
 								(' . $this->db->escapeNumber($p->chessGameID) . ',' . $this->db->escapeNumber($pieceID) . ',' . $this->db->escapeNumber($x) . ',' . $this->db->escapeNumber($y) . ',' . $this->db->escapeNumber($toX) . ',' . $this->db->escapeNumber($toY) . ',' . $this->db->escapeString($checking, true) . ',' . ($moveInfo['PieceTaken'] === null ? 'NULL' : $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID)) . ',' . $this->db->escapeString($castlingType, true) . ',' . $this->db->escapeBoolean($moveInfo['EnPassant']) . ',' . ($moveInfo['PawnPromotion'] == false ? 'NULL' : $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID'])) . ');');
@@ -679,7 +684,7 @@ class ChessGame {
 
 				$currentPlayer->increaseHOF(1, array($chessType, 'Moves', 'Total Taken'), HOF_PUBLIC);
 				if ($moveInfo['PieceTaken'] != null) {
-					$this->db->query('DELETE FROM chess_game_pieces
+					$this->db->write('DELETE FROM chess_game_pieces
 									WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND account_id=' . $this->db->escapeNumber($moveInfo['PieceTaken']->accountID) . ' AND piece_id=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID) . ' AND piece_no=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceNo) . ';');
 
 					$pieceTakenSymbol = $moveInfo['PieceTaken']->getPieceSymbol();
@@ -688,12 +693,12 @@ class ChessGame {
 					$currentPlayer->increaseHOF(1, array($chessType, 'Moves', 'Opponent Pieces Taken', $pieceTakenSymbol), HOF_PUBLIC);
 					$otherPlayer->increaseHOF(1, array($chessType, 'Moves', 'Own Pieces Taken', $pieceTakenSymbol), HOF_PUBLIC);
 				}
-				$this->db->query('UPDATE chess_game_pieces
+				$this->db->write('UPDATE chess_game_pieces
 							SET x=' . $this->db->escapeNumber($toX) . ', y=' . $this->db->escapeNumber($toY) .
 								($moveInfo['PawnPromotion'] !== false ? ', piece_id=' . $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID']) . ', piece_no=' . $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceNo']) : '') . '
 							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND account_id=' . $this->db->escapeNumber($p->accountID) . ' AND piece_id=' . $this->db->escapeNumber($pieceID) . ' AND piece_no=' . $this->db->escapeNumber($pieceNo) . ';');
 				if ($moveInfo['Castling'] !== false) {
-					$this->db->query('UPDATE chess_game_pieces
+					$this->db->write('UPDATE chess_game_pieces
 								SET x=' . $this->db->escapeNumber($moveInfo['Castling']['ToX']) . '
 								WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND account_id=' . $this->db->escapeNumber($p->accountID) . ' AND x = ' . $this->db->escapeNumber($moveInfo['Castling']['X']) . ' AND y = ' . $this->db->escapeNumber($y) . ';');
 				}
@@ -786,7 +791,7 @@ class ChessGame {
 	public function setWinner(int $accountID) : array {
 		$this->winner = $accountID;
 		$this->endDate = Smr\Epoch::time();
-		$this->db->query('UPDATE chess_game
+		$this->db->write('UPDATE chess_game
 						SET end_time=' . $this->db->escapeNumber(Smr\Epoch::time()) . ', winner_id=' . $this->db->escapeNumber($this->winner) . '
 						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 		$winnerColour = $this->getColourForAccountID($accountID);
@@ -848,7 +853,7 @@ class ChessGame {
 		// If only 1 person has moved then just end the game.
 		if (count($this->getMoves()) < 2) {
 			$this->endDate = Smr\Epoch::time();
-			$this->db->query('UPDATE chess_game
+			$this->db->write('UPDATE chess_game
 							SET end_time=' . $this->db->escapeNumber(Smr\Epoch::time()) . '
 							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 			return 1;

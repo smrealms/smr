@@ -3,12 +3,12 @@
 function get_seedlist(SmrPlayer $player) : array {
 	// Return the seedlist
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT sector_id FROM alliance_has_seedlist
+	$dbResult = $db->read('SELECT sector_id FROM alliance_has_seedlist
 						WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 							AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$seedlist = array();
-	while ($db->nextRecord()) {
-		$seedlist[] = $db->getInt('sector_id');
+	foreach ($dbResult->records() as $dbRecord) {
+		$seedlist[] = $dbRecord->getInt('sector_id');
 	}
 	return $seedlist;
 }
@@ -53,12 +53,12 @@ function shared_channel_msg_seedlist_add(SmrPlayer$player, ?array $sectors) : ar
 	$db = Smr\Database::getInstance();
 	foreach ($sectors as $sector) {
 		// check if the sector is a part of the game
-		$db->query('SELECT sector_id
+		$dbResult = $db->read('SELECT 1
 					FROM sector
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND  sector_id = ' . $db->escapeNumber($sector)
 		);
-		if (!$db->nextRecord()) {
+		if (!$dbResult->hasRecord()) {
 			$result[] = "WARNING: The sector '$sector' does not exist in the current game.";
 			continue;
 		}
@@ -70,7 +70,7 @@ function shared_channel_msg_seedlist_add(SmrPlayer$player, ?array $sectors) : ar
 		}
 
 		// add sector to db (and the current seedlist)
-		$db->query('INSERT INTO alliance_has_seedlist
+		$db->write('INSERT INTO alliance_has_seedlist
 					(alliance_id, game_id, sector_id)
 					VALUES (' . $db->escapeNumber($player->getAllianceID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($sector) . ')');
 		$currentSeedlist[] = $sector;
@@ -108,7 +108,7 @@ function shared_channel_msg_seedlist_del(SmrPlayer $player, ?array $sectors) : a
 
 	// remove sectors from the db
 	$db = Smr\Database::getInstance();
-	$db->query('DELETE FROM alliance_has_seedlist
+	$db->write('DELETE FROM alliance_has_seedlist
 				WHERE alliance_id = ' . $player->getAllianceID() . '
 					AND game_id = ' . $player->getGameID() . '
 					AND sector_id IN (' . $db->escapeArray($sectors) . ')'

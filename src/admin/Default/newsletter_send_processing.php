@@ -48,9 +48,9 @@ if (Request::get('to_email') == '*') {
 
 	// Skip all smrealms.de addresses (NPC, multi) to avoid spamming ourselves.
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT account_id, email, login FROM account WHERE validated="TRUE" AND email NOT LIKE "%@smrealms.de" AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
+	$dbResult = $db->read('SELECT account_id, email, login FROM account WHERE validated="TRUE" AND email NOT LIKE "%@smrealms.de" AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
 
-	$total = $db->getNumRows();
+	$total = $dbResult->getNumRecords();
 	echo 'Will send ' . $total . ' mails...<br /><br />';
 
 	// counter
@@ -61,11 +61,11 @@ if (Request::get('to_email') == '*') {
 	// --enable-safe-mode). However, you may hit a browser or HTTP timeout.
 	set_time_limit(0);
 
-	while ($db->nextRecord()) {
+	foreach ($dbResult->records() as $dbRecord) {
 		// get account data
-		$account_id = $db->getInt('account_id');
-		$to_email = $db->getField('email');
-		$to_name = $db->getField('login');
+		$account_id = $dbRecord->getInt('account_id');
+		$to_email = $dbRecord->getField('email');
+		$to_name = $dbRecord->getField('login');
 
 		// Reset the message body with personalized salutation, if requested
 		$salutation = trim(Request::get('salutation'));

@@ -21,8 +21,8 @@ if (!$planetLand) {
 		$ownerAllianceID = $planet->getOwner()->getAllianceID();
 	}
 	$db = Smr\Database::getInstance();
-	$db->query('
-		SELECT planet_land
+	$dbResult = $db->read('
+		SELECT 1
 		FROM alliance_treaties
 		WHERE (alliance_id_1 = ' . $db->escapeNumber($ownerAllianceID) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 		AND (alliance_id_2 = ' . $db->escapeNumber($ownerAllianceID) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
@@ -30,6 +30,6 @@ if (!$planetLand) {
 		AND planet_land = 1
 		AND official = ' . $db->escapeBoolean(true)
 	);
-	$planetLand = $db->nextRecord();
+	$planetLand = $dbResult->hasRecord();
 }
 $template->assign('PlanetLand', $planetLand);

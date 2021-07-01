@@ -34,12 +34,12 @@ class DatabaseIntegrationTest extends TestCase {
 		$this->assertNotNull($db);
 	}
 
-	public function test_getInstance_always_returns_new_instance() {
+	public function test_getInstance_always_returns_same_instance() {
 		// Given a Database object
 		$original = Database::getInstance();
 		// When calling getInstance again
 		$second = Database::getInstance();
-		self::assertNotSame($original, $second);
+		self::assertSame($original, $second);
 	}
 
 	public function test_performing_operations_on_closed_database_throws_error() {
@@ -50,7 +50,7 @@ class DatabaseIntegrationTest extends TestCase {
 		// When calling database methods
 		$this->expectException(\Error::class);
 		$this->expectExceptionMessage('Typed property Smr\Database::$dbConn must not be accessed before initialization');
-		$db->query("foo query");
+		$db->read("foo query");
 	}
 
 	public function test_closing_database_returns_boolean() {
@@ -61,28 +61,27 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertFalse($db->close());
 	}
 
-	public function test_getInstance_will_perform_reconnect_after_connection_closed() {
+	public function test_reconnect_after_connection_closed() {
 		// Given an original mysql connection
 		$originalMysql = DiContainer::get(mysqli::class);
 		// And a Database instance
 		$db = Database::getInstance();
 		// And disconnect is called
 		$db->close();
-		// And Database is retrieved from the container
-		$db = Database::getInstance();
-		// When performing a query
-		$db ->query("select 1");
+		// And Database is usable again after reconnecting
+		$db->reconnect();
+		$db->read("SELECT 1");
 		// Then new mysqli instance is not the same as the initial mock
 		self::assertNotSame($originalMysql, DiContainer::get(mysqli::class));
 	}
 
-	public function test_getInstance_will_not_perform_reconnect_if_connection_not_closed() {
+	public function test_reconnect_when_connection_not_closed() {
 		// Given an original mysql connection
 		$originalMysql = DiContainer::get(mysqli::class);
 		// And a Database instance
-		Database::getInstance();
-		// And get instance is called again
-		Database::getInstance();
+		$db = Database::getInstance();
+		// And reconnect is called before closing the connection
+		$db->reconnect();
 		// Then the two mysqli instances are the same
 		self::assertSame($originalMysql, DiContainer::get(mysqli::class));
 	}
@@ -177,7 +176,7 @@ class DatabaseIntegrationTest extends TestCase {
 		$this->expectException(\RuntimeException::class);
 		$this->expectExceptionMessage("Table 'account' was not locked with LOCK TABLES");
 		try {
-			$db->query('SELECT 1 FROM account LIMIT 1');
+			$db->read('SELECT 1 FROM account LIMIT 1');
 		} catch (\RuntimeException $err) {
 			// Avoid leaving database in a locked state
 			$db->unlock();
@@ -190,54 +189,12 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->lockTable('good');
 
 		// Perform a query on the locked table
-		$db->query('SELECT good_name FROM good WHERE good_id = 1');
-		$db->requireRecord();
-		self::assertSame(['good_name' => 'Wood'], $db->getRow());
+		$result = $db->read('SELECT good_name FROM good WHERE good_id = 1');
+		self::assertSame(['good_name' => 'Wood'], $result->record()->getRow());
 
 		// After unlock we can access other tables again
 		$db->unlock();
-		$db->query('SELECT 1 FROM account LIMIT 1');
-	}
-
-	public function test_requireRecord() {
-		$db = Database::getInstance();
-		// Create a query that returns one record
-		$db->query('SELECT 1');
-		$db->requireRecord();
-		self::assertSame([1 => '1'], $db->getRow());
-	}
-
-	public function test_requireRecord_too_many_rows() {
-		$db = Database::getInstance();
-		// Create a query that returns two rows
-		$db->query('SELECT 1 UNION SELECT 2');
-		$this->expectException(\RuntimeException::class);
-		$this->expectExceptionMessage('One record required, but found 2');
-		$db->requireRecord();
-	}
-
-	public function test_nextRecord_no_resource() {
-		$db = Database::getInstance();
-		$this->expectException(\RuntimeException::class);
-		$this->expectExceptionMessage('No resource to get record from.');
-		// Call nextRecord before any query is made
-		$db->nextRecord();
-	}
-
-	public function test_nextRecord_no_result() {
-		$db = Database::getInstance();
-		// Construct a query that has an empty result set
-		$db->query('SELECT 1 FROM good WHERE good_id = 0');
-		self::assertFalse($db->nextRecord());
-	}
-
-	public function test_hasField() {
-		$db = Database::getInstance();
-		// Construct a query that has the field 'val', but not 'bla'
-		$db->query('SELECT 1 AS val');
-		$db->requireRecord();
-		self::assertTrue($db->hasField('val'));
-		self::assertFalse($db->hasField('bla'));
+		$db->read('SELECT 1 FROM account LIMIT 1');
 	}
 
 	public function test_inversion_of_escape_and_get() {
@@ -248,8 +205,10 @@ class DatabaseIntegrationTest extends TestCase {
 			[false, 'escapeBoolean', 'getBoolean', 'assertSame', []],
 			[3, 'escapeNumber', 'getInt', 'assertSame', []],
 			[3.14, 'escapeNumber', 'getFloat', 'assertSame', []],
+			['hello', 'escapeString', 'getString', 'assertSame', []],
 			['hello', 'escapeString', 'getField', 'assertSame', []],
 			// Test nullable objects
+			[null, 'escapeString', 'getField', 'assertSame', [true]],
 			[null, 'escapeObject', 'getObject', 'assertSame', [false, true]],
 			// Test object with compression
 			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', [true]],
@@ -259,19 +218,9 @@ class DatabaseIntegrationTest extends TestCase {
 			[microtime(true), 'escapeMicrotime', 'getMicrotime', 'assertEquals', []],
 		];
 		foreach ($params as list($value, $escaper, $getter, $cmp, $args)) {
-			$db->query('SELECT ' . $db->$escaper($value, ...$args) . ' AS val');
-			$db->requireRecord();
-			self::$cmp($value, $db->$getter('val', ...$args));
+			$result = $db->read('SELECT ' . $db->$escaper($value, ...$args) . ' AS val');
+			self::$cmp($value, $result->record()->$getter('val', ...$args));
 		}
-	}
-
-	public function test_getBoolean_with_non_boolean_field() {
-		$db = Database::getInstance();
-		$db->query('SELECT \'bla\'');
-		$db->requireRecord();
-		$this->expectException(\RuntimeException::class);
-		$this->expectExceptionMessage('Field is not a boolean: bla');
-		$db->getBoolean('bla');
 	}
 
 }

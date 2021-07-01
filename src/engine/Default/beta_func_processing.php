@@ -11,12 +11,12 @@ if ($var['func'] == 'Map') {
 	$game_id = $player->getGameID();
 	// delete all entries from the player_visited_sector/port table
 	$db = Smr\Database::getInstance();
-	$db->query('DELETE FROM player_visited_sector WHERE ' . $player->getSQL());
+	$db->write('DELETE FROM player_visited_sector WHERE ' . $player->getSQL());
 
 	// add port infos
-	$db->query('SELECT * FROM port WHERE game_id = ' . $db->escapeNumber($game_id));
-	while ($db->nextRecord()) {
-		$port = SmrPort::getPort($game_id, $db->getInt('sector_id'), false, $db);
+	$dbResult = $db->read('SELECT * FROM port WHERE game_id = ' . $db->escapeNumber($game_id));
+	foreach ($dbResult->records() as $dbRecord) {
+		$port = SmrPort::getPort($game_id, $dbRecord->getInt('sector_id'), false, $dbRecord);
 		$port->addCachePort($account_id);
 	}
 
@@ -71,8 +71,8 @@ if ($var['func'] == 'Map') {
 		create_error('You cannot change race relations with your own race.');
 	}
 	$db = Smr\Database::getInstance();
-	$db->query('UPDATE race_has_relation SET relation = ' . $db->escapeNumber($amount) . ' WHERE race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . ' AND race_id_2 = ' . $db->escapeNumber($race) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	$db->query('UPDATE race_has_relation SET relation = ' . $db->escapeNumber($amount) . ' WHERE race_id_1 = ' . $db->escapeNumber($race) . ' AND race_id_2 = ' . $db->escapeNumber($player->getRaceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	$db->write('UPDATE race_has_relation SET relation = ' . $db->escapeNumber($amount) . ' WHERE race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . ' AND race_id_2 = ' . $db->escapeNumber($race) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	$db->write('UPDATE race_has_relation SET relation = ' . $db->escapeNumber($amount) . ' WHERE race_id_1 = ' . $db->escapeNumber($race) . ' AND race_id_2 = ' . $db->escapeNumber($player->getRaceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 } elseif ($var['func'] == 'Race') {
 	$race = Request::getInt('race');
 	$player->setRaceID($race);

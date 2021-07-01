@@ -40,9 +40,10 @@ class SmrAlliance {
 
 	public static function getAllianceByDiscordChannel(string $channel, bool $forceUpdate = false) : ?SmrAlliance {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT alliance_id, game_id FROM alliance JOIN game USING(game_id) WHERE discord_channel = ' . $db->escapeString($channel) . ' AND game.end_time > ' . $db->escapeNumber(time()) . ' ORDER BY game_id DESC LIMIT 1');
-		if ($db->nextRecord()) {
-			return self::getAlliance($db->getInt('alliance_id'), $db->getInt('game_id'), $forceUpdate);
+		$dbResult = $db->read('SELECT alliance_id, game_id FROM alliance JOIN game USING(game_id) WHERE discord_channel = ' . $db->escapeString($channel) . ' AND game.end_time > ' . $db->escapeNumber(time()) . ' ORDER BY game_id DESC LIMIT 1');
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
+			return self::getAlliance($dbRecord->getInt('alliance_id'), $dbRecord->getInt('game_id'), $forceUpdate);
 		} else {
 			return null;
 		}
@@ -50,9 +51,10 @@ class SmrAlliance {
 
 	public static function getAllianceByIrcChannel(string $channel, bool $forceUpdate = false) : ?SmrAlliance {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel) . ' LIMIT 1');
-		if ($db->nextRecord()) {
-			return self::getAlliance($db->getInt('alliance_id'), $db->getInt('game_id'), $forceUpdate);
+		$dbResult = $db->read('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
+			return self::getAlliance($dbRecord->getInt('alliance_id'), $dbRecord->getInt('game_id'), $forceUpdate);
 		} else {
 			return null;
 		}
@@ -60,9 +62,10 @@ class SmrAlliance {
 
 	public static function getAllianceByName(string $name, int $gameID, bool $forceUpdate = false) : ?SmrAlliance {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
-		if ($db->nextRecord()) {
-			return self::getAlliance($db->getInt('alliance_id'), $gameID, $forceUpdate);
+		$dbResult = $db->read('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
+			return self::getAlliance($dbRecord->getInt('alliance_id'), $gameID, $forceUpdate);
 		} else {
 			return null;
 		}
@@ -76,21 +79,21 @@ class SmrAlliance {
 		$this->SQL = 'alliance_id=' . $this->db->escapeNumber($allianceID) . ' AND game_id=' . $this->db->escapeNumber($gameID);
 
 		if ($allianceID != 0) {
-			$this->db->query('SELECT * FROM alliance WHERE ' . $this->SQL);
-			$this->db->nextRecord();
-			$this->allianceName = $this->db->getField('alliance_name');
-			$this->password = stripslashes($this->db->getField('alliance_password'));
-			$this->recruiting = $this->db->getBoolean('recruiting');
-			$this->description = $this->db->getField('alliance_description');
-			$this->leaderID = $this->db->getInt('leader_id');
-			$this->bank = $this->db->getInt('alliance_account');
-			$this->kills = $this->db->getInt('alliance_kills');
-			$this->deaths = $this->db->getInt('alliance_deaths');
-			$this->motd = $this->db->getField('mod');
-			$this->imgSrc = $this->db->getField('img_src');
-			$this->discordServer = $this->db->getField('discord_server');
-			$this->discordChannel = $this->db->getField('discord_channel');
-			$this->flagshipID = $this->db->getInt('flagship_id');
+			$dbResult = $this->db->read('SELECT * FROM alliance WHERE ' . $this->SQL);
+			$dbRecord = $dbResult->record();
+			$this->allianceName = $dbRecord->getString('alliance_name');
+			$this->password = $dbRecord->getField('alliance_password');
+			$this->recruiting = $dbRecord->getBoolean('recruiting');
+			$this->description = $dbRecord->getField('alliance_description');
+			$this->leaderID = $dbRecord->getInt('leader_id');
+			$this->bank = $dbRecord->getInt('alliance_account');
+			$this->kills = $dbRecord->getInt('alliance_kills');
+			$this->deaths = $dbRecord->getInt('alliance_deaths');
+			$this->motd = $dbRecord->getField('mod');
+			$this->imgSrc = $dbRecord->getField('img_src');
+			$this->discordServer = $dbRecord->getField('discord_server');
+			$this->discordChannel = $dbRecord->getField('discord_channel');
+			$this->flagshipID = $dbRecord->getInt('flagship_id');
 
 			if (empty($this->kills)) {
 				$this->kills = 0;
@@ -109,21 +112,20 @@ class SmrAlliance {
 		$db = Smr\Database::getInstance();
 
 		// check if the alliance name already exists
-		$db->query('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
-		if ($db->getNumRows() > 0) {
+		$dbResult = $db->read('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
 			create_error('That alliance name already exists!');
 		}
 
 		// get the next alliance id (ignoring reserved ID's)
-		$db->query('SELECT max(alliance_id) FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (alliance_id < ' . $db->escapeNumber(NHA_ID) . ' OR alliance_id > ' . $db->escapeNumber(NHA_ID + 7) . ') LIMIT 1');
-		$db->requireRecord();
-		$allianceID = $db->getInt('max(alliance_id)') + 1;
+		$dbResult = $db->read('SELECT max(alliance_id) FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (alliance_id < ' . $db->escapeNumber(NHA_ID) . ' OR alliance_id > ' . $db->escapeNumber(NHA_ID + 7) . ') LIMIT 1');
+		$allianceID = $dbResult->record()->getInt('max(alliance_id)') + 1;
 		if ($allianceID >= NHA_ID && $allianceID <= NHA_ID + 7) {
 			$allianceID = NHA_ID + 8;
 		}
 
 		// actually create the alliance here
-		$db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_password, recruiting) VALUES(' . $db->escapeNumber($allianceID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeString($name) . ', \'\', \'FALSE\')');
+		$db->write('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_password, recruiting) VALUES(' . $db->escapeNumber($allianceID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeString($name) . ', \'\', \'FALSE\')');
 
 		return self::getAlliance($allianceID, $gameID);
 	}
@@ -208,9 +210,9 @@ class SmrAlliance {
 
 	public function getIrcChannel() : string {
 		if (!isset($this->ircChannel)) {
-			$this->db->query('SELECT channel FROM irc_alliance_has_channel WHERE ' . $this->SQL);
-			if ($this->db->nextRecord()) {
-				$this->ircChannel = $this->db->getField('channel');
+			$dbResult = $this->db->read('SELECT channel FROM irc_alliance_has_channel WHERE ' . $this->SQL);
+			if ($dbResult->hasRecord()) {
+				$this->ircChannel = $dbResult->record()->getField('channel');
 			} else {
 				$this->ircChannel = '';
 			}
@@ -231,9 +233,9 @@ class SmrAlliance {
 				create_error('Please enter a valid irc channel for your alliance.');
 			}
 
-			$this->db->query('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($ircChannel) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ');');
+			$this->db->write('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($ircChannel) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ');');
 		} else {
-			$this->db->query('DELETE FROM irc_alliance_has_channel WHERE ' . $this->SQL);
+			$this->db->write('DELETE FROM irc_alliance_has_channel WHERE ' . $this->SQL);
 		}
 		$this->ircChannel = $ircChannel;
 	}
@@ -419,17 +421,17 @@ class SmrAlliance {
 			if ($this->getNumMembers() < $maxVets) {
 				return false;
 			}
-			$this->db->query('SELECT status FROM player_joined_alliance WHERE account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' AND ' . $this->SQL);
-			if ($this->db->nextRecord()) {
-				if ($this->db->getField('status') == 'NEWBIE') {
+			$dbResult = $this->db->read('SELECT status FROM player_joined_alliance WHERE account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' AND ' . $this->SQL);
+			if ($dbResult->hasRecord()) {
+				if ($dbResult->record()->getField('status') == 'NEWBIE') {
 					return false;
 				}
 			}
-			$this->db->query('SELECT COUNT(*) AS num_orig_vets
+			$dbResult = $this->db->read('SELECT COUNT(*) AS num_orig_vets
 							FROM player_joined_alliance
 							JOIN player USING (account_id, alliance_id, game_id)
 							WHERE ' . $this->SQL . ' AND status=\'VETERAN\'');
-			if (!$this->db->nextRecord() || $this->db->getInt('num_orig_vets') < $maxVets) {
+			if (!$dbResult->hasRecord() || $dbResult->record()->getInt('num_orig_vets') < $maxVets) {
 				return false;
 			}
 		}
@@ -451,7 +453,7 @@ class SmrAlliance {
 	}
 
 	public function update() : void {
-		$this->db->query('UPDATE alliance SET
+		$this->db->write('UPDATE alliance SET
 								alliance_password = ' . $this->db->escapeString($this->password) . ',
 								recruiting = ' . $this->db->escapeBoolean($this->recruiting) . ',
 								alliance_account = ' . $this->db->escapeNumber($this->bank) . ',
@@ -476,12 +478,12 @@ class SmrAlliance {
 
 	public function getMemberIDs() : array {
 		if (!isset($this->memberList)) {
-			$this->db->query('SELECT account_id FROM player WHERE ' . $this->SQL);
+			$dbResult = $this->db->read('SELECT account_id FROM player WHERE ' . $this->SQL);
 
 			//we have the list of players put them in an array now
 			$this->memberList = array();
-			while ($this->db->nextRecord()) {
-				$this->memberList[] = $this->db->getInt('account_id');
+			foreach ($dbResult->records() as $dbRecord) {
+				$this->memberList[] = $dbRecord->getInt('account_id');
 			}
 		}
 		return $this->memberList;
@@ -490,13 +492,13 @@ class SmrAlliance {
 	public function getActiveIDs() : array {
 		$activeIDs = array();
 
-		$this->db->query('SELECT account_id
+		$dbResult = $this->db->read('SELECT account_id
 						FROM active_session
 						JOIN player USING(account_id, game_id)
 						WHERE '.$this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(Smr\Epoch::time() - 600));
 
-		while ($this->db->nextRecord()) {
-			$activeIDs[] = $this->db->getInt('account_id');
+		foreach ($dbResult->records() as $dbRecord) {
+			$activeIDs[] = $dbRecord->getInt('account_id');
 		}
 
 		return $activeIDs;
@@ -506,7 +508,7 @@ class SmrAlliance {
 	 * Return all planets owned by members of this alliance.
 	 */
 	public function getPlanets() : array {
-		$this->db->query('SELECT planet.*
+		$dbResult = $this->db->read('SELECT planet.*
 			FROM player
 			JOIN planet ON player.game_id = planet.game_id AND player.account_id = planet.owner_id
 			WHERE player.game_id=' . $this->db->escapeNumber($this->gameID) . '
@@ -514,8 +516,8 @@ class SmrAlliance {
 			ORDER BY planet.sector_id
 		');
 		$planets = array();
-		while ($this->db->nextRecord()) {
-			$planets[] = SmrPlanet::getPlanet($this->gameID, $this->db->getInt('sector_id'), false, $this->db);
+		foreach ($dbResult->records() as $dbRecord) {
+			$planets[] = SmrPlanet::getPlanet($this->gameID, $dbRecord->getInt('sector_id'), false, $dbRecord);
 		}
 		return $planets;
 	}
@@ -525,10 +527,10 @@ class SmrAlliance {
 	 */
 	public function getSeedlist() : array {
 		if (!isset($this->seedlist)) {
-			$this->db->query('SELECT sector_id FROM alliance_has_seedlist WHERE ' . $this->SQL);
+			$dbResult = $this->db->read('SELECT sector_id FROM alliance_has_seedlist WHERE ' . $this->SQL);
 			$this->seedlist = array();
-			while ($this->db->nextRecord()) {
-				$this->seedlist[] = $this->db->getInt('sector_id');
+			foreach ($dbResult->records() as $dbRecord) {
+				$this->seedlist[] = $dbRecord->getInt('sector_id');
 			}
 		}
 		return $this->seedlist;
@@ -559,7 +561,7 @@ class SmrAlliance {
 		$sendAllMsg = TRUE;
 		$opLeader = TRUE;
 		$viewBonds = TRUE;
-		$db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds) ' .
+		$db->write('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds) ' .
 			'VALUES (' . $db->escapeNumber($this->getAllianceID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber(ALLIANCE_ROLE_LEADER) . ', \'Leader\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 
 		switch ($newMemberPermission) {
@@ -593,7 +595,7 @@ class SmrAlliance {
 				$viewBonds = FALSE;
 			break;
 		}
-		$db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds) ' .
+		$db->write('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds) ' .
 					'VALUES (' . $db->escapeNumber($this->getAllianceID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber(ALLIANCE_ROLE_NEW_MEMBER) . ', \'New Member\', ' . $db->escapeNumber($withPerDay) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 
 	}

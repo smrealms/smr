@@ -43,15 +43,15 @@ if (!isset($var['role_id'])) {
 	$db->lockTable('alliance_has_roles');
 
 	// get last id
-	$db->query('SELECT MAX(role_id)
+	$dbResult = $db->read('SELECT MAX(role_id)
 				FROM alliance_has_roles
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND alliance_id = ' . $db->escapeNumber($alliance_id));
-	if ($db->nextRecord()) {
-		$role_id = $db->getInt('MAX(role_id)') + 1;
+	if ($dbResult->hasRecord()) {
+		$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
 	}
 
-	$db->query('INSERT INTO alliance_has_roles
+	$db->write('INSERT INTO alliance_has_roles
 				(alliance_id, game_id, role_id, role, with_per_day, positive_balance, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds)
 				VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString(Request::get('role')) . ', ' . $db->escapeNumber($withPerDay) . ',' . $db->escapeBoolean($positiveBalance) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 
@@ -64,13 +64,13 @@ if (!isset($var['role_id'])) {
 		} elseif ($var['role_id'] == ALLIANCE_ROLE_NEW_MEMBER) {
 			create_error('You cannot delete the new member role.');
 		}
-		$db->query('DELETE FROM alliance_has_roles
+		$db->write('DELETE FROM alliance_has_roles
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
 					AND role_id = ' . $db->escapeNumber($var['role_id']));
 	// otherwise we update it
 	} else {
-		$db->query('UPDATE alliance_has_roles
+		$db->write('UPDATE alliance_has_roles
 					SET role = ' . $db->escapeString(Request::get('role')) . ',
 					with_per_day = ' . $db->escapeNumber($withPerDay) . ',
 					positive_balance = ' . $db->escapeBoolean($positiveBalance) . ',

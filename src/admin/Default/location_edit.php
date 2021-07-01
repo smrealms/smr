@@ -41,20 +41,10 @@ if (isset($var['location_type_id'])) {
 		$location->setUG(isset($_REQUEST['ug']));
 	}
 
-
 	$template->assign('Location', $location);
 	$template->assign('ShipTypes', SmrShipType::getAll());
 	$template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
-
-
-	$db = Smr\Database::getInstance();
-	$db->query('SELECT * FROM hardware_type');
-	$hardware = array();
-	while ($db->nextRecord()) {
-		$hardware[$db->getInt('hardware_type_id')] = array('ID' => $db->getInt('hardware_type_id'),
-														'Name' => $db->getField('hardware_name'));
-	}
-	$template->assign('AllHardware', $hardware);
+	$template->assign('AllHardware', Globals::getHardwareTypes());
 } else {
 	$template->assign('Locations', SmrLocation::getAllLocations());
 }

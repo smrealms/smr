@@ -30,13 +30,13 @@ $template->assign('PendingInvites', $pendingInvites);
 $invitePlayers = array();
 if ($alliance->getNumMembers() < $game->getAllianceMaxPlayers()) {
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT account_id FROM player
+	$dbResult = $db->read('SELECT * FROM player
 	            WHERE game_id = '.$db->escapeNumber($player->getGameID()) . '
 	              AND alliance_id != '.$db->escapeNumber($alliance->getAllianceID()) . '
 	              AND npc = '.$db->escapeBoolean(false) . '
 	            ORDER BY player_id DESC');
-	while ($db->nextRecord()) {
-		$invitePlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID());
+	foreach ($dbResult->records() as $dbRecord) {
+		$invitePlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 		if (array_key_exists($invitePlayer->getAccountID(), $pendingInvites)) {
 			// Don't display players we've already invited
 			continue;

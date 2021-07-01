@@ -13,13 +13,14 @@ Menu::council($player->getRaceID());
 
 // determine for what we voted
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM player_votes_relation
+$dbResult = $db->read('SELECT * FROM player_votes_relation
 			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
 $votedForRace = -1;
-if ($db->nextRecord()) {
-	$votedForRace = $db->getInt('race_id_2');
-	$votedFor = $db->getField('action');
+if ($dbResult->hasRecord()) {
+	$dbRecord = $dbResult->record();
+	$votedForRace = $dbRecord->getInt('race_id_2');
+	$votedFor = $dbRecord->getField('action');
 }
 
 $voteRelations = array();
@@ -39,55 +40,49 @@ foreach (Globals::getRaces() as $raceID => $raceInfo) {
 $template->assign('VoteRelations', $voteRelations);
 
 $voteTreaties = array();
-$db->query('SELECT * FROM race_has_voting
+$dbResult = $db->read('SELECT * FROM race_has_voting
 			WHERE '.$db->escapeNumber(Smr\Epoch::time()) . ' < end_time
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
-if ($db->getNumRows() > 0) {
 
-	$db2 = Smr\Database::getInstance();
+foreach ($dbResult->records() as $dbRecord) {
+	$otherRaceID = $dbRecord->getInt('race_id_2');
+	$container = Page::create('council_vote_processing.php', '', array('race_id' => $otherRaceID));
 
-	while ($db->nextRecord()) {
-		$otherRaceID = $db->getInt('race_id_2');
-		$container = Page::create('council_vote_processing.php', '', array('race_id' => $otherRaceID));
+	// get 'yes' votes
+	$dbResult2 = $db->read('SELECT count(*) FROM player_votes_pact
+				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
+					AND race_id_2 = ' . $db->escapeNumber($otherRaceID) . '
+					AND vote = \'YES\'');
+	$yesVotes = $dbResult2->record()->getInt('count(*)');
 
-		// get 'yes' votes
-		$db2->query('SELECT count(*) FROM player_votes_pact
-					WHERE game_id = ' . $db2->escapeNumber($player->getGameID()) . '
-						AND race_id_1 = ' . $db2->escapeNumber($player->getRaceID()) . '
-						AND race_id_2 = ' . $db2->escapeNumber($otherRaceID) . '
-						AND vote = \'YES\'');
-		$db2->nextRecord();
-		$yesVotes = $db2->getInt('count(*)');
+	// get 'no' votes
+	$dbResult2 = $db->read('SELECT count(*) FROM player_votes_pact
+				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
+					AND race_id_2 = ' . $db->escapeNumber($otherRaceID) . '
+					AND vote = \'NO\'');
+	$noVotes = $dbResult2->record()->getInt('count(*)');
 
-		// get 'no' votes
-		$db2->query('SELECT count(*) FROM player_votes_pact
-					WHERE game_id = ' . $db2->escapeNumber($player->getGameID()) . '
-						AND race_id_1 = ' . $db2->escapeNumber($player->getRaceID()) . '
-						AND race_id_2 = ' . $db2->escapeNumber($otherRaceID) . '
-						AND vote = \'NO\'');
-		$db2->nextRecord();
-		$noVotes = $db2->getInt('count(*)');
-
-		$db2->query('SELECT vote FROM player_votes_pact
-					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
-						AND race_id_2 = '.$db->escapeNumber($otherRaceID));
-		$votedFor = '';
-		if ($db2->nextRecord()) {
-			$votedFor = $db2->getField('vote');
-		}
-
-		$voteTreaties[$otherRaceID] = array(
-			'HREF' => $container->href(),
-			'Type' => $db->getField('type'),
-			'EndTime' => $db->getInt('end_time'),
-			'For' => $votedFor == 'YES',
-			'Against' => $votedFor == 'NO',
-			'NoVotes' => $noVotes,
-			'YesVotes' => $yesVotes
-		);
+	$dbResult2 = $db->read('SELECT vote FROM player_votes_pact
+				WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
+					AND race_id_2 = ' . $db->escapeNumber($otherRaceID));
+	$votedFor = '';
+	if ($dbResult2->hasRecord()) {
+		$votedFor = $dbResult2->record()->getField('vote');
 	}
+
+	$voteTreaties[$otherRaceID] = array(
+		'HREF' => $container->href(),
+		'Type' => $dbRecord->getField('type'),
+		'EndTime' => $dbRecord->getInt('end_time'),
+		'For' => $votedFor == 'YES',
+		'Against' => $votedFor == 'NO',
+		'NoVotes' => $noVotes,
+		'YesVotes' => $yesVotes
+	);
 }
 $template->assign('VoteTreaties', $voteTreaties);

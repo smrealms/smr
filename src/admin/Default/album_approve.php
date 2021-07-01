@@ -13,24 +13,24 @@ $template = Smr\Template::getInstance();
 $template->assign('PageTopic', 'Approve Album Entries');
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT *
+$dbResult = $db->read('SELECT *
 			FROM album
 			WHERE approved = \'TBC\'
 			ORDER BY last_changed
 			LIMIT 1');
 
-if ($db->nextRecord()) {
-
-	$album_id = $db->getInt('account_id');
-	$location = stripslashes($db->getField('location'));
-	$email = stripslashes($db->getField('email'));
-	$website = stripslashes($db->getField('website'));
-	$day = $db->getField('day');
-	$month = $db->getField('month');
-	$year = $db->getField('year');
-	$other = nl2br(stripslashes($db->getField('other')));
-	$last_changed = $db->getField('last_changed');
-	$disabled = $db->getBoolean('disabled');
+if ($dbResult->hasRecord()) {
+	$dbRecord = $dbResult->record();
+	$album_id = $dbRecord->getInt('account_id');
+	$location = $dbRecord->getField('location');
+	$email = $dbRecord->getField('email');
+	$website = $dbRecord->getField('website');
+	$day = $dbRecord->getInt('day');
+	$month = $dbRecord->getInt('month');
+	$year = $dbRecord->getInt('year');
+	$other = nl2br($dbRecord->getString('other'));
+	$last_changed = $dbRecord->getInt('last_changed');
+	$disabled = $dbRecord->getBoolean('disabled');
 
 	if (empty($location)) {
 		$location = 'N/A';

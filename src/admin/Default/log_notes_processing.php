@@ -5,9 +5,9 @@ $var = Smr\Session::getInstance()->getCurrentVar();
 
 foreach ($var['account_ids'] as $account_id) {
 	if (empty(Request::get('notes'))) {
-		$db->query('DELETE FROM log_has_notes WHERE account_id = ' . $db->escapeNumber($account_id));
+		$db->write('DELETE FROM log_has_notes WHERE account_id = ' . $db->escapeNumber($account_id));
 	} else {
-		$db->query('REPLACE INTO log_has_notes (account_id, notes) VALUES(' . $db->escapeNumber($account_id) . ', ' . $db->escapeString(Request::get('notes')) . ')');
+		$db->write('REPLACE INTO log_has_notes (account_id, notes) VALUES(' . $db->escapeNumber($account_id) . ', ' . $db->escapeString(Request::get('notes')) . ')');
 	}
 }
 

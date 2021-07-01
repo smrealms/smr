@@ -6,9 +6,9 @@
 		<th>Average <?php echo $RankingStat; ?></th>
 		<th>Total Members</th>
 	</tr><?php
-	foreach ($Rankings as $Ranking) { ?>
+	foreach ($Rankings as $Rank => $Ranking) { ?>
 		<tr<?php echo $Ranking['Class']; ?>>
-			<td class="top"><?php echo $Ranking['Rank']; ?></td>
+			<td class="top"><?php echo $Rank; ?></td>
 			<td class="top left"><?php echo $Ranking['Alliance']->getAllianceDisplayName(true); ?></td>
 			<td class="top"><?php echo number_format($Ranking['Value']); ?></td>
 			<td class="top"><?php echo number_format($Ranking['Value'] / max(1, $Ranking['Alliance']->getNumMembers())); ?></td>

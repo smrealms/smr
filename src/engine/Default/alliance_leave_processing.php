@@ -17,19 +17,19 @@ if ($action == 'YES') {
 	if ($alliance->getNumMembers() == 1 && $alliance->getAllianceID() != NHA_ID) {
 		// Retain the alliance, but delete some auxilliary info
 		$db = Smr\Database::getInstance();
-		$db->query('DELETE FROM alliance_bank_transactions
+		$db->write('DELETE FROM alliance_bank_transactions
 		            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 		            AND game_id = ' . $db->escapeNumber($player->getGameID()));
-		$db->query('DELETE FROM alliance_thread
+		$db->write('DELETE FROM alliance_thread
 		            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 		            AND game_id = ' . $db->escapeNumber($player->getGameID()));
-		$db->query('DELETE FROM alliance_thread_topic
+		$db->write('DELETE FROM alliance_thread_topic
 		            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 		            AND game_id = ' . $db->escapeNumber($player->getGameID()));
-		$db->query('DELETE FROM alliance_has_roles
+		$db->write('DELETE FROM alliance_has_roles
 		            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 		            AND game_id = ' . $db->escapeNumber($player->getGameID()));
-		$db->query('UPDATE alliance SET leader_id = 0, discord_channel = NULL
+		$db->write('UPDATE alliance SET leader_id = 0, discord_channel = NULL
 		            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 		            AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	}

@@ -11,17 +11,15 @@ $skipUnusedAccs = true;
 $skipClosedAccs = false;
 $skipExceptions = false;
 
-//extra db object and other vars
-$db2 = Smr\Database::getInstance();
 $used = array();
 
 //check the db and get the info we need
 $db = Smr\Database::getInstance();
-$db->query('SELECT * FROM multi_checking_cookie WHERE `use` = \'TRUE\'');
+$dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE `use` = \'TRUE\'');
 $tables = [];
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	//get info about linked IDs
-	$accountIDs = explode('-', $db->getField('array'));
+	$accountIDs = explode('-', $dbRecord->getString('array'));
 
 	//make sure this is good data.
 	$cookieVersion = array_shift($accountIDs);
@@ -32,7 +30,7 @@ while ($db->nextRecord()) {
 	//how many are they linked to?
 	$rows = count($accountIDs);
 
-	$currTabAccId = $db->getInt('account_id');
+	$currTabAccId = $dbRecord->getInt('account_id');
 
 	//if this account was listed with another we can skip it.
 	if (isset($used[$currTabAccId])) {
@@ -40,48 +38,55 @@ while ($db->nextRecord()) {
 	}
 
 	if ($rows > 1) {
-		$db2->query('SELECT account_id, login FROM account WHERE account_id =' . $db2->escapeNumber($currTabAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db2->escapeNumber(Smr\Epoch::time() - 86400 * 30) : '') . ' LIMIT 1');
-		if ($db2->nextRecord()) {
-			$currTabAccLogin = $db2->getField('login');
-		} else {
+		$dbResult2 = $db->read('SELECT login FROM account WHERE account_id =' . $db->escapeNumber($currTabAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - 86400 * 30) : '') . ' LIMIT 1');
+		if (!$dbResult2->hasRecord()) {
 			continue;
 		}
+		$currTabAccLogin = $dbResult2->record()->getField('login');
 
 		if ($skipClosedAccs) {
-			$db2->query('SELECT * FROM account_is_closed WHERE account_id = ' . $db2->escapeNumber($currTabAccId));
-			if ($db2->nextRecord()) {
+			$dbResult2 = $db->read('SELECT 1 FROM account_is_closed WHERE account_id = ' . $db->escapeNumber($currTabAccId));
+			if ($dbResult2->hasRecord()) {
 				continue;
 			}
 		}
 
 		if ($skipExceptions) {
-			$db2->query('SELECT * FROM account_exceptions WHERE account_id = ' . $db2->escapeNumber($currTabAccId));
-			if ($db2->nextRecord()) {
+			$dbResult2 = $db->read('SELECT 1 FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($currTabAccId));
+			if ($dbResult2->hasRecord()) {
 				continue;
 			}
 		}
 
 		$rows = [];
 		foreach ($accountIDs as $currLinkAccId) {
-			$db2->query('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db2->escapeNumber($currLinkAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db2->escapeNumber(Smr\Epoch::time() - 86400 * 30) : ''));
-			if ($db2->nextRecord()) {
-				$currLinkAccLogin = $db2->getField('login');
-			} else {
+			$dbResult2 = $db->read('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db->escapeNumber($currLinkAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - 86400 * 30) : ''));
+			if (!$dbResult2->hasRecord()) {
 				continue;
 			}
+			$dbRecord2 = $dbResult2->record();
+			$currLinkAccLogin = $dbRecord->getField('login');
 
-			$style = $db2->getBoolean('validated') ? '' : ' style="text-decoration:line-through;"';
-			$email = $db2->getField('email');
-			$valid = $db2->getBoolean('validated') ? 'Valid' : 'Invalid';
-			$common_ip = $db2->getField('common_ip');
-			$last_login = date($account->getDateTimeFormat(), $db2->getInt('last_login'));
+			$style = $dbRecord2->getBoolean('validated') ? '' : ' style="text-decoration:line-through;"';
+			$email = $dbRecord2->getField('email');
+			$valid = $dbRecord2->getBoolean('validated') ? 'Valid' : 'Invalid';
+			$common_ip = $dbRecord2->getField('common_ip');
+			$last_login = date($account->getDateTimeFormat(), $dbRecord2->getInt('last_login'));
 
-			$db2->query('SELECT * FROM account_is_closed WHERE account_id = ' . $db2->escapeNumber($currLinkAccId));
-			$isDisabled = $db2->nextRecord();
-			$suspicion = $db2->getField('suspicion');
+			$dbResult2 = $db->read('SELECT * FROM account_is_closed WHERE account_id = ' . $db->escapeNumber($currLinkAccId));
+			$isDisabled = $dbResult2->hasRecord();
+			if ($isDisabled) {
+				$suspicion = $dbResult2->record()->getField('suspicion');
+			} else {
+				$suspicion = '';
+			}
 
-			$db2->query('SELECT * FROM account_exceptions WHERE account_id = ' . $db2->escapeNumber($currLinkAccId));
-			$exception = $db2->nextRecord() ? $db2->getField('reason') : '';
+			$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($currLinkAccId));
+			if ($dbResult2->hasRecord()) {
+				$exception = $dbResult2->record()->getField('reason');
+			} else {
+				$exception = '';
+			}
 
 			$used[$currLinkAccId] = TRUE;
 

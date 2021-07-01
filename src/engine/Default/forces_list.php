@@ -7,7 +7,7 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'View Forces');
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT *
+$dbResult = $db->read('SELECT *
 			FROM sector_has_forces
 			WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
@@ -15,7 +15,7 @@ $db->query('SELECT *
 			ORDER BY sector_id ASC');
 
 $forces = array();
-while ($db->nextRecord()) {
-	$forces[] = SmrForce::getForce($player->getGameID(), $db->getInt('sector_id'), $db->getInt('owner_id'), false, $db);
+foreach ($dbResult->records() as $dbRecord) {
+	$forces[] = SmrForce::getForce($player->getGameID(), $dbRecord->getInt('sector_id'), $dbRecord->getInt('owner_id'), false, $dbRecord);
 }
 $template->assign('Forces', $forces);

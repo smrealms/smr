@@ -7,7 +7,7 @@ $var = Smr\Session::getInstance()->getCurrentVar();
 if (Request::has('active-submit')) {
 	// Toggle the activity of this NPC
 	$active = Request::has('active');
-	$db->query('UPDATE npc_logins SET active=' . $db->escapeBoolean($active) . ' WHERE login=' . $db->escapeString($var['login']));
+	$db->write('UPDATE npc_logins SET active=' . $db->escapeBoolean($active) . ' WHERE login=' . $db->escapeString($var['login']));
 }
 
 // Create a new NPC player in a selected game
@@ -50,7 +50,7 @@ if (Request::has('add_npc_account')) {
 	$npcAccount = SmrAccount::createAccount($login, '', 'NPC@smrealms.de', 0, 0);
 	$npcAccount->setValidated(true);
 	$npcAccount->update();
-	$db->query('INSERT INTO npc_logins (login, player_name, alliance_name) VALUES(' . $db->escapeString($login) . ',' . $db->escapeString(Request::get('default_player_name')) . ',' . $db->escapeString(Request::get('default_alliance')) . ')');
+	$db->write('INSERT INTO npc_logins (login, player_name, alliance_name) VALUES(' . $db->escapeString($login) . ',' . $db->escapeString(Request::get('default_player_name')) . ',' . $db->escapeString(Request::get('default_alliance')) . ')');
 }
 
 $container = Page::create('skeleton.php', 'npc_manage.php');

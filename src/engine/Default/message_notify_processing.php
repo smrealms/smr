@@ -18,24 +18,25 @@ $player = $session->getPlayer();
 
 // get next id
 $db = Smr\Database::getInstance();
-$db->query('SELECT max(notify_id) FROM message_notify WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY notify_id DESC');
-if ($db->nextRecord()) {
-	$notify_id = $db->getInt('max(notify_id)') + 1;
+$dbResult = $db->read('SELECT max(notify_id) FROM message_notify WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY notify_id DESC');
+if ($dbResult->hasRecord()) {
+	$notify_id = $dbResult->record()->getInt('max(notify_id)') + 1;
 } else {
 	$notify_id = 1;
 }
 
 // get message form db
-$db->query('SELECT account_id, sender_id, message_text
+$dbResult = $db->read('SELECT account_id, sender_id, message_text
 			FROM message
 			WHERE message_id = ' . $var['message_id'] . ' AND receiver_delete = \'FALSE\'');
-if (!$db->nextRecord()) {
+if (!$dbResult->hasRecord()) {
 	create_error('Could not find the message you selected!');
 }
+$dbRecord = $dbResult->record();
 
 // insert
-$db->query('INSERT INTO message_notify
+$db->write('INSERT INTO message_notify
 			(notify_id, game_id, from_id, to_id, text, sent_time, notify_time)
-			VALUES ('.$notify_id . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->getInt('sender_id') . ', ' . $db->getInt('account_id') . ', ' . $db->escapeString($db->getField('message_text')) . ', ' . $var['sent_time'] . ', ' . $var['notified_time'] . ')');
+			VALUES ('.$notify_id . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $dbRecord->getInt('sender_id') . ', ' . $dbRecord->getInt('account_id') . ', ' . $db->escapeString($dbRecord->getField('message_text')) . ', ' . $var['sent_time'] . ', ' . $var['notified_time'] . ')');
 
 $container->go();

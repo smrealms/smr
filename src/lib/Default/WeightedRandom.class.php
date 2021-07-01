@@ -55,9 +55,9 @@ class WeightedRandom {
 		$this->typeID = $typeID;
 
 		$this->db = Smr\Database::getInstance();
-		$this->db->query('SELECT weighting FROM weighted_random WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND account_id = ' . $this->db->escapeNumber($accountID) . ' AND type = ' . $this->db->escapeString($type) . ' AND type_id = ' . $this->db->escapeNumber($typeID) . ' LIMIT 1');
-		if ($this->db->nextRecord()) {
-			$this->weighting = $this->db->getInt('weighting');
+		$dbResult = $this->db->read('SELECT weighting FROM weighted_random WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND account_id = ' . $this->db->escapeNumber($accountID) . ' AND type = ' . $this->db->escapeString($type) . ' AND type_id = ' . $this->db->escapeNumber($typeID) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
+			$this->weighting = $dbResult->record()->getInt('weighting');
 		} else {
 			$this->weighting = 0;
 		}
@@ -108,7 +108,7 @@ class WeightedRandom {
 
 	public function update() : void {
 		if ($this->hasChanged === true) {
-			$this->db->query('REPLACE INTO weighted_random (game_id,account_id,type,type_id,weighting)
+			$this->db->write('REPLACE INTO weighted_random (game_id,account_id,type,type_id,weighting)
 							values
 							(' . $this->db->escapeNumber($this->getGameID()) .
 							',' . $this->db->escapeNumber($this->getAccountID()) .

@@ -7,24 +7,24 @@ $account = $session->getAccount();
 $template->assign('PageTopic', 'Anonymous Account Access');
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT account_id FROM account_has_logs GROUP BY account_id');
+$dbResult = $db->read('SELECT account_id FROM account_has_logs GROUP BY account_id');
 $log_account_ids = [];
-while ($db->nextRecord()) {
-	$log_account_ids[] = $db->getInt('account_id');
+foreach ($dbResult->records() as $dbRecord) {
+	$log_account_ids[] = $dbRecord->getInt('account_id');
 }
 
 // get all anon bank transactions that are logged in an array
-$db->query('SELECT * FROM anon_bank_transactions
+$dbResult = $db->read('SELECT * FROM anon_bank_transactions
             JOIN account USING(account_id)
             WHERE account_id IN ('.$db->escapeArray($log_account_ids) . ')
             ORDER BY game_id DESC, anon_id ASC');
 $anon_logs = [];
-while ($db->nextRecord()) {
-	$transaction = strtolower($db->getField('transaction'));
-	$anon_logs[$db->getInt('game_id')][$db->getInt('anon_id')][] = [
-		'login' => $db->getField('login'),
-		'amount' => number_format($db->getInt('amount')),
-		'date' => date($account->getDateTimeFormat(), $db->getInt('time')),
+foreach ($dbResult->records() as $dbRecord) {
+	$transaction = strtolower($dbRecord->getString('transaction'));
+	$anon_logs[$dbRecord->getInt('game_id')][$dbRecord->getInt('anon_id')][] = [
+		'login' => $dbRecord->getField('login'),
+		'amount' => number_format($dbRecord->getInt('amount')),
+		'date' => date($account->getDateTimeFormat(), $dbRecord->getInt('time')),
 		'type' => $transaction,
 		'color' => $transaction == 'payment' ? 'tomato' : 'green',
 	];

@@ -6,7 +6,6 @@ try {
 
 	// database object
 	$db = Smr\Database::getInstance();
-	$db2 = Smr\Database::getInstance();
 	?>
 	<!DOCTYPE html>
 	<html>
@@ -43,27 +42,27 @@ try {
 	if (!empty($_GET['nick'])) {
 		$query = urldecode($_GET['nick']);
 
-		$db->query('SELECT account_id as album_id
+		$dbResult = $db->read('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
 					WHERE hof_name LIKE '.$db->escapeString($query . '%') . ' AND
 						  approved = \'YES\'
 					ORDER BY hof_name');
 
-		if ($db->getNumRows() > 1) {
-			$db2->query('SELECT account_id as album_id
+		if ($dbResult->getNumRecords() > 1) {
+			$dbResult2 = $db->read('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
 					WHERE hof_name = '.$db->escapeString($query) . ' AND
 						  approved = \'YES\'
 					ORDER BY hof_name');
 
-			if ($db2->nextRecord()) {
-				album_entry($db2->getInt('album_id'));
+			if ($dbResult2->hasRecord()) {
+				album_entry($dbResult2->record()->getInt('album_id'));
 			} else {
 				// get all id's and build array
 				$album_ids = array();
 
-				while ($db->nextRecord()) {
-					$album_ids[] = $db->getInt('album_id');
+				foreach ($dbResult->records() as $dbRecord) {
+					$album_ids[] = $dbRecord->getInt('album_id');
 				}
 
 				// double check if we have id's
@@ -74,12 +73,8 @@ try {
 				}
 			}
 
-		} elseif ($db->getNumRows() == 1) {
-			if ($db->nextRecord()) {
-				album_entry($db->getInt('album_id'));
-			} else {
-				main_page();
-			}
+		} elseif ($dbResult->getNumRecords() == 1) {
+			album_entry($dbResult->record()->getInt('album_id'));
 		} else {
 			main_page();
 		}

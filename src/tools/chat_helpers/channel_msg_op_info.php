@@ -3,13 +3,13 @@
 function shared_channel_msg_op_info(SmrPlayer $player) : array {
 	// get the op from db
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT time FROM alliance_has_op WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	if (!$db->nextRecord()) {
+	$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	if (!$dbResult->hasRecord()) {
 		return array('Your leader has not scheduled an operation.');
 	}
 
 	// check if the op has already started
-	$opTime = $db->getInt('time');
+	$opTime = $dbResult->record()->getInt('time');
 	if ($opTime < time()) {
 		return array('The op started ' . format_time(time() - $opTime, true) . ' ago!');
 	}
@@ -18,9 +18,9 @@ function shared_channel_msg_op_info(SmrPlayer $player) : array {
 	$getOpInfoMessage = function($player) use ($opTime) {
 		// have we signed up?
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT response FROM alliance_has_op_response WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());
-		if ($db->nextRecord()) {
-			$msg = $player->getPlayerName() . ' is on the ' . $db->getField('response') . ' list.';
+		$dbResult = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());
+		if ($dbResult->hasRecord()) {
+			$msg = $player->getPlayerName() . ' is on the ' . $dbResult->record()->getField('response') . ' list.';
 		} else {
 			$msg = $player->getPlayerName() . ' has not signed up for this one.';
 		}

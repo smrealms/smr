@@ -15,12 +15,12 @@ $container['body'] = 'feature_request.php';
 $template->assign('BackHref', $container->href());
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT *
+$dbResult = $db->read('SELECT *
 			FROM feature_request
 			JOIN feature_request_comments USING(feature_request_id)
 			WHERE feature_request_id = ' . $db->escapeNumber($var['RequestID']) . '
 			ORDER BY comment_id ASC');
-if ($db->getNumRows() > 0) {
+if ($dbResult->hasRecord()) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$template->assign('FeatureModerator', $featureModerator);
 
@@ -31,16 +31,16 @@ if ($db->getNumRows() > 0) {
 	}
 
 	$featureRequestComments = array();
-	while ($db->nextRecord()) {
-		$commentID = $db->getInt('comment_id');
+	foreach ($dbResult->records() as $dbRecord) {
+		$commentID = $dbRecord->getInt('comment_id');
 		$featureRequestComments[$commentID] = array(
 								'CommentID' => $commentID,
-								'Message' => $db->getField('text'),
-								'Time' => date($account->getDateTimeFormat(), $db->getInt('posting_time')),
-								'Anonymous' => $db->getBoolean('anonymous')
+								'Message' => $dbRecord->getField('text'),
+								'Time' => date($account->getDateTimeFormat(), $dbRecord->getInt('posting_time')),
+								'Anonymous' => $dbRecord->getBoolean('anonymous')
 		);
-		if ($featureModerator || !$db->getBoolean('anonymous')) {
-			$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($db->getInt('poster_id'));
+		if ($featureModerator || !$dbRecord->getBoolean('anonymous')) {
+			$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($dbRecord->getInt('poster_id'));
 		}
 	}
 	$template->assign('Comments', $featureRequestComments);

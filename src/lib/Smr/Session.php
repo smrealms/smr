@@ -69,8 +69,8 @@ class Session {
 			// create a new session id
 			do {
 				$this->sessionID = md5(uniqid(strval(rand())));
-				$this->db->query('SELECT 1 FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
-			} while ($this->db->nextRecord()); //Make sure we haven't somehow clashed with someone else's session.
+				$dbResult = $this->db->read('SELECT 1 FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
+			} while ($dbResult->hasRecord()); //Make sure we haven't somehow clashed with someone else's session.
 
 			// This is a minor hack to make sure that setcookie is not called
 			// for CLI programs and tests (to avoid "headers already sent").
@@ -80,7 +80,7 @@ class Session {
 		}
 
 		// Delete any expired sessions
-		$this->db->query('DELETE FROM active_session WHERE last_accessed < ' . $this->db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
+		$this->db->write('DELETE FROM active_session WHERE last_accessed < ' . $this->db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
 
 		// try to get current session
 		$this->SN = Request::get('sn', '');
@@ -97,24 +97,25 @@ class Session {
 				usleep($sleepTime);
 			}
 			if (ENABLE_DEBUG) {
-				$this->db->query('INSERT INTO debug VALUES (' . $this->db->escapeString('Delay: ' . $currentPage) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($initialTimeBetweenLoads) . ',' . $this->db->escapeNumber($timeBetweenLoads) . ')');
+				$this->db->write('INSERT INTO debug VALUES (' . $this->db->escapeString('Delay: ' . $currentPage) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($initialTimeBetweenLoads) . ',' . $this->db->escapeNumber($timeBetweenLoads) . ')');
 			}
 		}
 	}
 
 	public function fetchVarInfo() : void {
-		$this->db->query('SELECT * FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
-		if ($this->db->nextRecord()) {
+		$dbResult = $this->db->read('SELECT * FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
 			$this->generate = false;
-			$this->sessionID = $this->db->getField('session_id');
-			$this->accountID = $this->db->getInt('account_id');
-			$this->gameID = $this->db->getInt('game_id');
-			$this->lastAccessed = $this->db->getInt('last_accessed');
-			$this->lastSN = $this->db->getField('last_sn');
+			$this->sessionID = $dbRecord->getField('session_id');
+			$this->accountID = $dbRecord->getInt('account_id');
+			$this->gameID = $dbRecord->getInt('game_id');
+			$this->lastAccessed = $dbRecord->getInt('last_accessed');
+			$this->lastSN = $dbRecord->getField('last_sn');
 			// We may not have ajax_returns if ajax was disabled
-			$this->previousAjaxReturns = $this->db->getObject('ajax_returns', true, true);
+			$this->previousAjaxReturns = $dbRecord->getObject('ajax_returns', true, true);
 
-			$this->var = $this->db->getObject('session_var', true);
+			$this->var = $dbRecord->getObject('session_var', true);
 
 			foreach ($this->var as $key => $value) {
 				if ($value['RemainingPageLoads'] < 0) {
@@ -153,12 +154,12 @@ class Session {
 			}
 		}
 		if (!$this->generate) {
-			$this->db->query('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!USING_AJAX ? ',last_accessed=' . $this->db->escapeNumber(Epoch::time()) : '') . ',session_var=' . $this->db->escapeObject($this->var, true) .
+			$this->db->write('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!USING_AJAX ? ',last_accessed=' . $this->db->escapeNumber(Epoch::time()) : '') . ',session_var=' . $this->db->escapeObject($this->var, true) .
 					',last_sn=' . $this->db->escapeString($this->SN) .
 					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . (USING_AJAX ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : '') . ' LIMIT 1');
 		} else {
-			$this->db->query('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID));
-			$this->db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . $this->db->escapeString($this->sessionID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber(Epoch::time()) . ',' . $this->db->escapeObject($this->var, true) . ')');
+			$this->db->write('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID));
+			$this->db->write('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . $this->db->escapeString($this->sessionID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber(Epoch::time()) . ',' . $this->db->escapeObject($this->var, true) . ')');
 			$this->generate = false;
 		}
 	}
@@ -216,8 +217,8 @@ class Session {
 			return;
 		}
 		$this->gameID = $gameID;
-		$this->db->query('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->gameID);
-		$this->db->query('UPDATE active_session SET game_id=' . $this->db->escapeNumber($this->gameID) . ' WHERE session_id=' . $this->db->escapeString($this->sessionID));
+		$this->db->write('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->gameID);
+		$this->db->write('UPDATE active_session SET game_id=' . $this->db->escapeNumber($this->gameID) . ' WHERE session_id=' . $this->db->escapeString($this->sessionID));
 	}
 
 	/**
@@ -235,7 +236,7 @@ class Session {
 	}
 
 	public function destroy() : void {
-		$this->db->query('DELETE FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID));
+		$this->db->write('DELETE FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID));
 		unset($this->sessionID);
 		unset($this->accountID);
 		unset($this->gameID);
@@ -350,7 +351,7 @@ class Session {
 		if (empty($this->ajaxReturns)) {
 			return;
 		}
-		$this->db->query('UPDATE active_session SET ajax_returns=' . $this->db->escapeObject($this->ajaxReturns, true) .
+		$this->db->write('UPDATE active_session SET ajax_returns=' . $this->db->escapeObject($this->ajaxReturns, true) .
 				' WHERE session_id=' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
 	}
 }

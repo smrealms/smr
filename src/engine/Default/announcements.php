@@ -11,21 +11,21 @@ if (!isset($var['view_all'])) {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
 
-	$db->query('SELECT time, msg
+	$dbResult = $db->read('SELECT time, msg
 				FROM announcement
 				WHERE time > ' . $db->escapeNumber($account->getLastLogin()) . '
 				ORDER BY time DESC');
 } else {
-	$db->query('SELECT time, msg
+	$dbResult = $db->read('SELECT time, msg
 				FROM announcement
 				ORDER BY time DESC');
 }
 
 $announcements = [];
-while ($db->nextRecord()) {
+foreach ($dbResult->records() as $dbRecord) {
 	$announcements[] = [
-		'Time' => $db->getInt('time'),
-		'Msg' => htmlentities($db->getField('msg')),
+		'Time' => $dbRecord->getInt('time'),
+		'Msg' => htmlentities($dbRecord->getString('msg')),
 	];
 }
 $template->assign('Announcements', $announcements);

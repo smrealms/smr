@@ -21,7 +21,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 	if ($submitAction == 'Save') {
 		//save the logs we checked
 		// Query means people can only save logs that they are allowd to view.
-		$db->query('INSERT IGNORE INTO player_saved_combat_logs (account_id, game_id, log_id)
+		$db->write('INSERT IGNORE INTO player_saved_combat_logs (account_id, game_id, log_id)
 					SELECT ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', log_id
 					FROM combat_logs
 					WHERE log_id IN (' . $db->escapeArray($logIDs) . ')
@@ -36,7 +36,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 						)
 					LIMIT ' . count($logIDs));
 	} elseif ($submitAction == 'Delete') {
-		$db->query('DELETE FROM player_saved_combat_logs
+		$db->write('DELETE FROM player_saved_combat_logs
 					WHERE log_id IN (' . $db->escapeArray($logIDs) . ')
 						AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '

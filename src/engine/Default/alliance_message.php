@@ -20,12 +20,12 @@ if ($alliance->getAllianceID() != $player->getAllianceID()) {
 	if (!in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 		$in_alliance = FALSE;
 	}
-	$db->query('SELECT mb_read FROM alliance_treaties
+	$dbResult = $db->read('SELECT 1 FROM alliance_treaties
 				WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 				AND (alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND mb_write = 1 AND official = \'TRUE\' LIMIT 1');
-	$mbWrite = $db->nextRecord();
+	$mbWrite = $dbResult->hasRecord();
 }
 $query = 'SELECT
 	alliance_only, topic, thread_id,
@@ -40,10 +40,9 @@ if (!$in_alliance) {
 	$query .= ' AND alliance_only = ' . $db->escapeBoolean(false);
 }
 $query .= ' GROUP BY thread_id ORDER BY sendtime DESC';
-$db->query($query);
+$dbResult = $db->read($query);
 $threads = array();
-if ($db->getNumRows() > 0) {
-	$db2 = Smr\Database::getInstance();
+if ($dbResult->hasRecord()) {
 
 	$container = Page::create('alliance_message_delete_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
@@ -54,26 +53,26 @@ if ($db->getNumRows() > 0) {
 	$thread_topics = [];
 	$thread_replies = [];
 
-	while ($db->nextRecord()) {
-		$threadID = $db->getInt('thread_id');
-		$alliance_eyes[$i] = $db->getBoolean('alliance_only');
+	foreach ($dbResult->records() as $dbRecord) {
+		$threadID = $dbRecord->getInt('thread_id');
+		$alliance_eyes[$i] = $dbRecord->getBoolean('alliance_only');
 		$threads[$i]['ThreadID'] = $threadID;
 
 		$thread_ids[$i] = $threadID;
-		$thread_topics[$i] = $db->getField('topic');
+		$thread_topics[$i] = $dbRecord->getField('topic');
 
-		$threads[$i]['Topic'] = $db->getField('topic');
+		$threads[$i]['Topic'] = $dbRecord->getField('topic');
 
-		$db2->query('SELECT time
+		$dbResult2 = $db->read('SELECT time
 					FROM player_read_thread
 					WHERE ' . $player->getSQL() . '
-					AND alliance_id =' . $db2->escapeNumber($alliance->getAllianceID()) . '
-					AND thread_id=' . $db2->escapeNumber($threadID) . '
-					AND time>' . $db2->escapeNumber($db->getInt('sendtime')) . ' LIMIT 1');
-		$threads[$i]['Unread'] = $db2->getNumRows() == 0;
+					AND alliance_id =' . $db->escapeNumber($alliance->getAllianceID()) . '
+					AND thread_id=' . $db->escapeNumber($threadID) . '
+					AND time>' . $db->escapeNumber($dbRecord->getInt('sendtime')) . ' LIMIT 1');
+		$threads[$i]['Unread'] = !$dbResult2->hasRecord();
 
 		// Determine the thread author display name
-		$sender_id = $db->getInt('sender_id');
+		$sender_id = $dbRecord->getInt('sender_id');
 		if ($sender_id == ACCOUNT_ID_PLANET) {
 			$playerName = 'Planet Reporter';
 		} elseif ($sender_id == ACCOUNT_ID_BANK_REPORTER) {
@@ -90,16 +89,15 @@ if ($db->getNumRows() > 0) {
 		}
 		$threads[$i]['Sender'] = $playerName;
 
-		$db2->query('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
-		$db2->nextRecord();
-		$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $db2->getBoolean('mb_messages');
+		$dbResult2 = $db->read('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
+		$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $dbResult2->record()->getBoolean('mb_messages');
 		if ($threads[$i]['CanDelete']) {
 			$container['thread_id'] = $threadID;
 			$threads[$i]['DeleteHref'] = $container->href();
 		}
-		$threads[$i]['Replies'] = $db->getInt('num_replies');
-		$thread_replies[$i] = $db->getInt('num_replies');
-		$threads[$i]['SendTime'] = $db->getInt('sendtime');
+		$threads[$i]['Replies'] = $dbRecord->getInt('num_replies');
+		$thread_replies[$i] = $dbRecord->getInt('num_replies');
+		$threads[$i]['SendTime'] = $dbRecord->getInt('sendtime');
 		++$i;
 	}
 

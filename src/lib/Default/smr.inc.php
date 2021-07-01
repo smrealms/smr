@@ -268,10 +268,10 @@ function word_filter(string $string) : string {
 
 	if (!is_array($words)) {
 		$db = Smr\Database::getInstance();
-		$db->query('SELECT word_value, word_replacement FROM word_filter');
+		$dbResult = $db->read('SELECT word_value, word_replacement FROM word_filter');
 		$words = array();
-		while ($db->nextRecord()) {
-			$row = $db->getRow();
+		foreach ($dbResult->records() as $dbRecord) {
+			$row = $dbRecord->getRow();
 			$words[] = array('word_value' => '/' . str_replace('/', '\/', $row['word_value']) . '/i', 'word_replacement'=> $row['word_replacement']);
 		}
 	}
@@ -325,9 +325,8 @@ function do_voodoo() : void {
 		}
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
-		$db->query('SELECT sector_id FROM player WHERE account_id=' . $db->escapeNumber($account->getAccountID()) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' LIMIT 1');
-		$db->requireRecord();
-		$sector_id = $db->getInt('sector_id');
+		$dbResult = $db->read('SELECT sector_id FROM player WHERE account_id=' . $db->escapeNumber($account->getAccountID()) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' LIMIT 1');
+		$sector_id = $dbResult->record()->getInt('sector_id');
 
 		global $locksFailed;
 		if (!USING_AJAX //AJAX should never do anything that requires a lock.
@@ -341,7 +340,7 @@ function do_voodoo() : void {
 				$session->fetchVarInfo();
 				if ($session->hasCurrentVar() === false) {
 					if (ENABLE_DEBUG) {
-						$db->query('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber($account->getAccountID()) . ',0,0)');
+						$db->write('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber($account->getAccountID()) . ',0,0)');
 					}
 					create_error('Please do not spam click!');
 				}
@@ -439,7 +438,7 @@ function acquire_lock(int $sector) : bool {
 	// Insert ourselves into the queue.
 	$session = Smr\Session::getInstance();
 	$db = Smr\Database::getInstance();
-	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber($session->getGameID()) . ',' . $db->escapeNumber($session->getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+	$db->write('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber($session->getGameID()) . ',' . $db->escapeNumber($session->getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 	$lock = $db->getInsertID();
 
 	for ($i = 0; $i < 250; ++$i) {
@@ -447,14 +446,14 @@ function acquire_lock(int $sector) : bool {
 			break;
 		}
 		// If there is someone else before us in the queue we sleep for a while
-		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
+		$dbResult = $db->read('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 		$locksInQueue = -1;
-		if ($db->nextRecord() && ($locksInQueue = $db->getInt('COUNT(*)')) > 0) {
+		if (($locksInQueue = $dbResult->record()->getInt('COUNT(*)')) > 0) {
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber($session->getAccountID()) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
-			if ($db->nextRecord() && $db->getInt('COUNT(*)') > 1) {
+			$dbResult = $db->read('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber($session->getAccountID()) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
+			if ($dbResult->record()->getInt('COUNT(*)') > 1) {
 				release_lock();
 				$locksFailed[$sector] = true;
 				create_error('Multiple actions cannot be performed at the same time!');
@@ -477,7 +476,7 @@ function release_lock() : void {
 
 	if ($lock) {
 		$db = Smr\Database::getInstance();
-		$db->query('DELETE from locks_queue WHERE lock_id=' . $db->escapeNumber($lock) . ' OR timestamp<' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
+		$db->write('DELETE from locks_queue WHERE lock_id=' . $db->escapeNumber($lock) . ' OR timestamp<' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 	}
 
 	$lock = false;
@@ -491,14 +490,16 @@ function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database
 		$dateFormat = $player->getAccount()->getDateTimeFormat();
 		if ($player->hasTicker('NEWS')) {
 			//get recent news (5 mins)
-			$db->query('SELECT time,news_message FROM news WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time >= ' . $max . ' ORDER BY time DESC LIMIT 4');
-			while ($db->nextRecord()) {
-				$ticker[] = array('Time' => date($dateFormat, $db->getInt('time')),
-								'Message'=>$db->getField('news_message'));
+			$dbResult = $db->read('SELECT time,news_message FROM news WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time >= ' . $max . ' ORDER BY time DESC LIMIT 4');
+			foreach ($dbResult->records() as $dbRecord) {
+				$ticker[] = [
+					'Time' => date($dateFormat, $dbRecord->getInt('time')),
+					'Message' => $dbRecord->getField('news_message'),
+				];
 			}
 		}
 		if ($player->hasTicker('SCOUT')) {
-			$db->query('SELECT message_text,send_time FROM message
+			$dbResult = $db->read('SELECT message_text,send_time FROM message
 						WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . '
 						AND game_id=' . $db->escapeNumber($player->getGameID()) . '
 						AND message_type_id=' . $db->escapeNumber(MSG_SCOUT) . '
@@ -506,9 +507,11 @@ function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database
 						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK') . ' AND expires > ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND receiver_delete = \'FALSE\'
 						ORDER BY send_time DESC
 						LIMIT 4');
-			while ($db->nextRecord()) {
-				$ticker[] = array('Time' => date($dateFormat, $db->getInt('send_time')),
-								'Message'=>$db->getField('message_text'));
+			foreach ($dbResult->records() as $dbRecord) {
+				$ticker[] = [
+					'Time' => date($dateFormat, $dbRecord->getInt('send_time')),
+					'Message' => $dbRecord->getField('message_text'),
+				];
 			}
 		}
 		$template->assign('Ticker', $ticker);
@@ -598,12 +601,12 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 
 
 	if ($session->hasGame()) {
-		$db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
+		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
 
-		if ($db->getNumRows()) {
+		if ($dbResult->hasRecord()) {
 			$messages = array();
-			while ($db->nextRecord()) {
-				$messages[$db->getInt('message_type_id')] = $db->getInt('COUNT(*)');
+			foreach ($dbResult->records() as $dbRecord) {
+				$messages[$dbRecord->getInt('message_type_id')] = $dbRecord->getInt('COUNT(*)');
 			}
 
 			$container = Page::create('skeleton.php', 'message_view.php');
@@ -723,11 +726,12 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 	}
 
 	// ------- VERSION --------
-	$db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
+	$dbResult = $db->read('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
 	$version = '';
-	if ($db->nextRecord()) {
+	if ($dbResult->hasRecord()) {
+		$dbRecord = $dbResult->record();
 		$container = Page::create('skeleton.php', 'changelog_view.php');
-		$version = create_link($container, 'v' . $db->getInt('major_version') . '.' . $db->getInt('minor_version') . '.' . $db->getInt('patch_level'));
+		$version = create_link($container, 'v' . $dbRecord->getInt('major_version') . '.' . $dbRecord->getInt('minor_version') . '.' . $dbRecord->getInt('patch_level'));
 	}
 
 	$template->assign('Version', $version);

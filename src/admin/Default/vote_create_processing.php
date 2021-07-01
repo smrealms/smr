@@ -18,10 +18,10 @@ $db = Smr\Database::getInstance();
 if ($action == 'Create Vote') {
 	$question = trim(Request::get('question'));
 	$end = Smr\Epoch::time() + 86400 * Request::getInt('days');
-	$db->query('INSERT INTO voting (question, end) VALUES(' . $db->escapeString($question) . ',' . $db->escapeNumber($end) . ')');
+	$db->write('INSERT INTO voting (question, end) VALUES(' . $db->escapeString($question) . ',' . $db->escapeNumber($end) . ')');
 } elseif ($action == 'Add Option') {
 	$option = trim(Request::get('option'));
 	$voteID = Request::getInt('vote');
-	$db->query('INSERT INTO voting_options (vote_id, text) VALUES(' . $db->escapeNumber($voteID) . ',' . $db->escapeString($option) . ')');
+	$db->write('INSERT INTO voting_options (vote_id, text) VALUES(' . $db->escapeNumber($voteID) . ',' . $db->escapeString($option) . ')');
 }
 Page::create('skeleton.php', 'vote_create.php')->go();

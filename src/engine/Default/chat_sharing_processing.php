@@ -32,17 +32,17 @@ if (Request::has('add')) {
 	}
 
 	$gameId = Request::has('all_games') ? '0' : $player->getGameID();
-	$db->query('INSERT INTO account_shares_info (to_account_id, from_account_id, game_id) VALUES (' . $db->escapeNumber($accountId) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($gameId) . ')');
+	$db->write('INSERT INTO account_shares_info (to_account_id, from_account_id, game_id) VALUES (' . $db->escapeNumber($accountId) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($gameId) . ')');
 }
 
 // Process removing a "share to" account
 if (Request::has('remove_share_to')) {
-	$db->query('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber(Request::getInt('remove_share_to')) . ' AND from_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber(Request::getInt('game_id')));
+	$db->write('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber(Request::getInt('remove_share_to')) . ' AND from_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber(Request::getInt('game_id')));
 }
 
 // Process removing a "share from" account
 if (Request::has('remove_share_from')) {
-	$db->query('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND from_account_id=' . $db->escapeNumber(Request::getInt('remove_share_from')) . ' AND game_id=' . $db->escapeNumber(Request::getInt('game_id')));
+	$db->write('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND from_account_id=' . $db->escapeNumber(Request::getInt('remove_share_from')) . ' AND game_id=' . $db->escapeNumber(Request::getInt('game_id')));
 }
 
 Page::create('skeleton.php', 'chat_sharing.php')->go();

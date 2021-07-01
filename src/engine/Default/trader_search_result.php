@@ -20,21 +20,22 @@ if (!empty($player_id)) {
 	}
 } else {
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT * FROM player
+	$dbResult = $db->read('SELECT * FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND player_name = ' . $db->escapeString($player_name) . ' LIMIT 1');
-	if ($db->nextRecord()) {
-		$resultPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
+	if ($dbResult->hasRecord()) {
+		$dbRecord = $dbResult->record();
+		$resultPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 	}
 
-	$db->query('SELECT * FROM player
+	$dbResult = $db->read('SELECT * FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND player_name LIKE ' . $db->escapeString('%' . $player_name . '%') . '
 					AND player_name != ' . $db->escapeString($player_name) . '
 				ORDER BY player_name LIMIT 5');
 	$similarPlayers = array();
-	while ($db->nextRecord()) {
-		$similarPlayers[] = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
+	foreach ($dbResult->records() as $dbRecord) {
+		$similarPlayers[] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 	}
 }
 

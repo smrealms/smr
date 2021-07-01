@@ -23,15 +23,13 @@ if ($var['folder_id'] == MSG_SENT) {
 if ($var['folder_id'] == MSG_SENT) {
 	$messageBox['UnreadMessages'] = 0;
 } else {
-	$db->query('SELECT count(*) as count
+	$dbResult = $db->read('SELECT count(*) as count
 				FROM message ' . $whereClause . '
 					AND msg_read = ' . $db->escapeBoolean(false));
-	$db->requireRecord();
-	$messageBox['UnreadMessages'] = $db->getInt('count');
+	$messageBox['UnreadMessages'] = $dbResult->record()->getInt('count');
 }
-$db->query('SELECT count(*) as count FROM message ' . $whereClause);
-$db->requireRecord();
-$messageBox['TotalMessages'] = $db->getInt('count');
+$dbResult = $db->read('SELECT count(*) as count FROM message ' . $whereClause);
+$messageBox['TotalMessages'] = $dbResult->record()->getInt('count');
 $messageBox['Type'] = $var['folder_id'];
 
 $page = 0;
@@ -67,18 +65,18 @@ $container = Page::create('message_delete_processing.php');
 $container->addVar('folder_id');
 $messageBox['DeleteFormHref'] = $container->href();
 
-$db->query('SELECT * FROM message ' .
+$dbResult = $db->read('SELECT * FROM message ' .
 			$whereClause . '
 			ORDER BY send_time DESC
 			LIMIT ' . ($page * MESSAGES_PER_PAGE) . ', ' . MESSAGES_PER_PAGE);
 
-$messageBox['NumberMessages'] = $db->getNumRows();
+$messageBox['NumberMessages'] = $dbResult->getNumRecords();
 $messageBox['Messages'] = array();
 
 // Group scout messages if they wouldn't fit on a single page
 if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
 	// get rid of all old scout messages (>48h)
-	$db->query('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
+	$db->write('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
 
 	$dispContainer = Page::create('skeleton.php', 'message_view.php');
 	$dispContainer['folder_id'] = MSG_SCOUT;
@@ -88,12 +86,12 @@ if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['T
 	displayScouts($messageBox, $player);
 	$template->unassign('NextPageHREF'); // always displaying all scout messages?
 } else {
-	while ($db->nextRecord()) {
-		displayMessage($messageBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $player->getGameID(), $db->getField('message_text'), $db->getInt('send_time'), $db->getBoolean('msg_read'), $var['folder_id'], $player->getAccount());
+	foreach ($dbResult->records() as $dbRecord) {
+		displayMessage($messageBox, $dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), $var['folder_id'], $player->getAccount());
 	}
 }
 if (!USING_AJAX) {
-	$db->query('UPDATE message SET msg_read = \'TRUE\'
+	$db->write('UPDATE message SET msg_read = \'TRUE\'
 				WHERE message_type_id = ' . $db->escapeNumber($var['folder_id']) . ' AND ' . $player->getSQL());
 }
 $template->assign('MessageBox', $messageBox);
@@ -102,7 +100,7 @@ $template->assign('MessageBox', $messageBox);
 function displayScouts(array &$messageBox, SmrPlayer $player) : void {
 	// Generate the group messages
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
+	$dbResult = $db->read('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
 					FROM message
 					JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
 					WHERE message.account_id = ' . $db->escapeNumber($player->getAccountID()) . '
@@ -112,33 +110,33 @@ function displayScouts(array &$messageBox, SmrPlayer $player) : void {
 					GROUP BY sender_id
 					ORDER BY last DESC');
 
-	while ($db->nextRecord()) {
-		$sender = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), false, $db);
-		$totalUnread = $db->getInt('total_unread');
-		$message = 'Your forces have spotted ' . $sender->getBBLink() . ' passing your forces ' . $db->getInt('number') . ' ' . pluralise('time', $db->getInt('number'));
+	foreach ($dbResult->records() as $dbRecord) {
+		$sender = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+		$totalUnread = $dbRecord->getInt('total_unread');
+		$message = 'Your forces have spotted ' . $sender->getBBLink() . ' passing your forces ' . $dbRecord->getInt('number') . ' ' . pluralise('time', $dbRecord->getInt('number'));
 		$message .= ($totalUnread > 0) ? ' (' . $totalUnread . ' unread).' : '.';
-		displayGrouped($messageBox, $sender, $message, $db->getInt('first'), $db->getInt('last'), $totalUnread > 0, $player->getAccount());
+		displayGrouped($messageBox, $sender, $message, $dbRecord->getInt('first'), $dbRecord->getInt('last'), $totalUnread > 0, $player->getAccount());
 	}
 
 	// Now display individual messages in each group
 	// Perform a single query to minimize query overhead
-	$db->query('SELECT message_id, account_id, sender_id, message_text, send_time, msg_read
+	$dbResult = $db->read('SELECT message_id, account_id, sender_id, message_text, send_time, msg_read
 					FROM message
 					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
 					AND receiver_delete = ' . $db->escapeBoolean(false) . '
 					ORDER BY send_time DESC');
-	while ($db->nextRecord()) {
-		$groupBox =& $messageBox['GroupedMessages'][$db->getInt('sender_id')];
+	foreach ($dbResult->records() as $dbRecord) {
+		$groupBox =& $messageBox['GroupedMessages'][$dbRecord->getInt('sender_id')];
 		// Limit the number of messages in each group
 		if (!isset($groupBox['Messages']) || count($groupBox['Messages']) < MESSAGE_SCOUT_GROUP_LIMIT) {
-			displayMessage($groupBox, $db->getInt('message_id'), $db->getInt('account_id'), $db->getInt('sender_id'), $player->getGameID(), stripslashes($db->getField('message_text')), $db->getInt('send_time'), $db->getBoolean('msg_read'), MSG_SCOUT, $player->getAccount());
+			displayMessage($groupBox, $dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), MSG_SCOUT, $player->getAccount());
 		}
 	}
 
 	// In the default view (groups), we're always displaying all messages
-	$messageBox['NumberMessages'] = $db->getNumRows();
+	$messageBox['NumberMessages'] = $dbResult->getNumRecords();
 }
 
 function displayGrouped(array &$messageBox, SmrPlayer $sender, string $message_text, int $first, int $last, bool $star, SmrAccount $displayAccount) : void {

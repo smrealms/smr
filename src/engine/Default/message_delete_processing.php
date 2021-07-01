@@ -18,24 +18,24 @@ if (Request::get('action') == 'All Messages') {
 	$db = Smr\Database::getInstance();
 	foreach (Request::getArray('message_id') as $id) {
 		if ($temp = @unserialize(base64_decode($id))) {
-			$db->query('SELECT message_id FROM message
+			$dbResult = $db->read('SELECT message_id FROM message
 						WHERE sender_id = ' . $db->escapeNumber($temp[0]) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND send_time >= ' . $db->escapeNumber($temp[1]) . '
 						AND send_time <= ' . $db->escapeNumber($temp[2]) . '
 						AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . ' AND receiver_delete = ' . $db->escapeBoolean(false));
-			while ($db->nextRecord()) {
-				$message_id_list[] = $db->getInt('message_id');
+			foreach ($dbResult->records() as $dbRecord) {
+				$message_id_list[] = $dbRecord->getInt('message_id');
 			}
 		} else {
 			$message_id_list[] = $id;
 		}
 	}
 	if ($var['folder_id'] == MSG_SENT) {
-		$db->query('UPDATE message SET sender_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN (' . $db->escapeArray($message_id_list) . ')');
+		$db->write('UPDATE message SET sender_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN (' . $db->escapeArray($message_id_list) . ')');
 	} else {
-		$db->query('UPDATE message SET receiver_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN (' . $db->escapeArray($message_id_list) . ')');
+		$db->write('UPDATE message SET receiver_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN (' . $db->escapeArray($message_id_list) . ')');
 	}
 }
 

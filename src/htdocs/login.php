@@ -37,12 +37,12 @@ try {
 	// Get recent non-admin game news
 	$gameNews = array();
 	$db = Smr\Database::getInstance();
-	$db->query('SELECT * FROM news WHERE type != \'admin\' ORDER BY time DESC LIMIT 4');
-	while ($db->nextRecord()) {
-		$overrideGameID = $db->getInt('game_id'); //for bbifyMessage
+	$dbResult = $db->read('SELECT * FROM news WHERE type != \'admin\' ORDER BY time DESC LIMIT 4');
+	foreach ($dbResult->records() as $dbRecord) {
+		$overrideGameID = $dbRecord->getInt('game_id'); //for bbifyMessage
 		$gameNews[] = [
-			'Time' => date(DEFAULT_DATE_TIME_FORMAT_SPLIT, $db->getInt('time')),
-			'Message' => bbifyMessage($db->getField('news_message')),
+			'Time' => date(DEFAULT_DATE_TIME_FORMAT_SPLIT, $dbRecord->getInt('time')),
+			'Message' => bbifyMessage($dbRecord->getString('news_message')),
 		];
 	}
 	$template->assign('GameNews', $gameNews);

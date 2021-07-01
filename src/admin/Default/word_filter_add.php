@@ -6,13 +6,13 @@ $word_replacement = strtoupper(trim(Request::get('WordReplacement')));
 $container = Page::create('skeleton.php', 'word_filter.php');
 
 $db = Smr\Database::getInstance();
-$db->query('SELECT word_id FROM word_filter WHERE word_value=' . $db->escapeString($word) . ' LIMIT 1');
-if ($db->nextRecord()) {
+$dbResult = $db->read('SELECT 1 FROM word_filter WHERE word_value=' . $db->escapeString($word) . ' LIMIT 1');
+if ($dbResult->hasRecord()) {
 	$container['msg'] = '<span class="red bold">ERROR: </span>This word is already filtered!';
 	$container->go();
 }
 
-$db->query('INSERT INTO word_filter(word_value,word_replacement) VALUES (' . $db->escapeString($word) . ',' . $db->escapeString($word_replacement) . ')');
+$db->write('INSERT INTO word_filter(word_value,word_replacement) VALUES (' . $db->escapeString($word) . ',' . $db->escapeString($word_replacement) . ')');
 
 $container['msg'] = '<span class="yellow">' . $word . '</span> will now be replaced with <span class="yellow">' . $word_replacement . '</span>.';
 $container->go();
