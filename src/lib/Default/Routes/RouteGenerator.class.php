@@ -10,13 +10,13 @@ class RouteGenerator {
 	static array $moneyRoutes;
 	static array $dontAddWorseThan;
 
-	private static function initialize() {
+	private static function initialize() : void {
 		self::$expRoutes = [];
 		self::$moneyRoutes = [];
 		self::$dontAddWorseThan = [0, 0];
 	}
 
-	public static function generateMultiPortRoutes($maxNumPorts, array $sectors, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes) : array {
+	public static function generateMultiPortRoutes(int $maxNumPorts, array $sectors, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes) : array {
 		self::initialize();
 		$routeLists = self::findOneWayRoutes($sectors, $distances, $routesForPort, $goods, $races);
 		$totalTasks = 0;

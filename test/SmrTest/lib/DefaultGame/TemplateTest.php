@@ -11,13 +11,13 @@ use SmrTest\TestUtils;
  */
 class TemplateTest extends \PHPUnit\Framework\TestCase {
 
-	protected function setUp(): void {
+	protected function setUp() : void {
 		// Start each test with a fresh container (and Template instance).
 		// This ensures the independence of each test.
 		DiContainer::initializeContainer();
 	}
 
-	public function test_assign_unassign() {
+	public function test_assign_unassign() : void {
 		$template = Template::getInstance();
 		$template->assign('foo', 'bar');
 		$this->assertTrue($template->hasTemplateVar('foo'));
@@ -25,7 +25,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 		$this->assertFalse($template->hasTemplateVar('foo'));
 	}
 
-	public function test_assign_same_variable_twice_throws() {
+	public function test_assign_same_variable_twice_throws() : void {
 		$template = Template::getInstance();
 		$template->assign('foo', 'bar');
 		$this->expectException(\Exception::class);
@@ -41,7 +41,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider checkDisableAJAX_provider
 	 */
-	public function test_checkDisableAJAX(string $html, bool $expected) {
+	public function test_checkDisableAJAX(string $html, bool $expected) : void {
 		$template = Template::getInstance();
 		$method = TestUtils::getPrivateMethod($template, 'checkDisableAJAX');
 		$this->assertSame($expected, $method->invoke($template, $html));
@@ -64,7 +64,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider convertHtmlToAjaxXml_provider
 	 */
-	public function test_convertHtmlToAjaxXml(string $html, string $expected) {
+	public function test_convertHtmlToAjaxXml(string $html, string $expected) : void {
 		$template = Template::getInstance();
 		$method = TestUtils::getPrivateMethod($template, 'convertHtmlToAjaxXml');
 		$this->assertSame($expected, $method->invoke($template, $html, true));

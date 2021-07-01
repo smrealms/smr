@@ -9,7 +9,7 @@ use SmrMines;
  */
 class SmrMinesTest extends \PHPUnit\Framework\TestCase {
 
-	public function test_getMaxDamage() {
+	public function test_getMaxDamage() : void {
 		$mines = new SmrMines(100); // doesn't matter how many
 		$this->assertSame(20, $mines->getMaxDamage());
 	}

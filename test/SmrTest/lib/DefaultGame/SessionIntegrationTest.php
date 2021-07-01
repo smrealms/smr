@@ -28,7 +28,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		$_COOKIE = [];
 	}
 
-	public function test_game() {
+	public function test_game() : void {
 		// Sessions are initialized with no game
 		self::assertFalse($this->session->hasGame());
 		self::assertSame(0, $this->session->getGameID());
@@ -40,7 +40,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame($gameID, $this->session->getGameID());
 	}
 
-	public function test_account() {
+	public function test_account() : void {
 		// Sessions are initialized with no account
 		self::assertFalse($this->session->hasAccount());
 		self::assertSame(0, $this->session->getAccountID());
@@ -55,7 +55,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame(7, $this->session->getAccountID());
 	}
 
-	public function test_getSN() {
+	public function test_getSN() : void {
 		// If there is no 'sn' parameter of the $_REQUEST superglobal,
 		// then we get an empty SN.
 		self::assertSame('', $this->session->getSN());
@@ -67,7 +67,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame($sn, $session->getSN());
 	}
 
-	public function test_getSessionID() {
+	public function test_getSessionID() : void {
 		// The default Session ID is a random 32-length string
 		self::assertSame(32, strlen($this->session->getSessionID()));
 
@@ -85,7 +85,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertNotEquals($sessionID, $session->getSessionID());
 	}
 
-	public function test_current_var() {
+	public function test_current_var() : void {
 		// With an empty session, there should be no current var
 		self::assertFalse($this->session->hasCurrentVar());
 

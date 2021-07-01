@@ -188,7 +188,7 @@ class SmrAlliance {
 		return SmrPlayer::getPlayer($this->getLeaderID(), $this->getGameID());
 	}
 
-	public function setLeaderID($leaderID) : void {
+	public function setLeaderID(int $leaderID) : void {
 		$this->leaderID = $leaderID;
 	}
 

@@ -155,7 +155,7 @@ class Database {
 		return $this->dbConn->insert_id;
 	}
 
-	public function escape($escape) {
+	public function escape(mixed $escape) : mixed {
 		if (is_bool($escape)) {
 			return $this->escapeBoolean($escape);
 		}
@@ -180,7 +180,7 @@ class Database {
 		return '\'' . $this->dbConn->real_escape_string($string) . '\'';
 	}
 
-	public function escapeBinary($binary) {
+	public function escapeBinary(string $binary) : string {
 		return '0x' . bin2hex($binary);
 	}
 

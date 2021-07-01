@@ -15,7 +15,7 @@ class EpochTest extends \PHPUnit\Framework\TestCase {
 	 * other tests.
 	 * @runInSeparateProcess
 	 */
-	public function test_update_cli() {
+	public function test_update_cli() : void {
 		// Set the NPC_SCRIPT variable as if this were a CLI program
 		define('NPC_SCRIPT', true);
 
@@ -34,7 +34,7 @@ class EpochTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * update should throw if called without NPC_SCRIPT defined.
 	 */
-	public function test_update() {
+	public function test_update() : void {
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Only call this function from CLI programs');
 		Epoch::update();
@@ -44,7 +44,7 @@ class EpochTest extends \PHPUnit\Framework\TestCase {
 	 * We can't check the time/microtime values, but we can ensure that
 	 * the rounded values are identical.
 	 */
-	public function test_time_microtime_equality() {
+	public function test_time_microtime_equality() : void {
 		$this->assertEquals(Epoch::time(), floor(Epoch::microtime()));
 	}
 

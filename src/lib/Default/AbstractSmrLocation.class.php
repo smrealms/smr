@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
+
 class AbstractSmrLocation {
-	protected static $CACHE_ALL_LOCATIONS;
-	protected static $CACHE_LOCATIONS = array();
-	protected static $CACHE_SECTOR_LOCATIONS = array();
+	protected static array $CACHE_ALL_LOCATIONS;
+	protected static array $CACHE_LOCATIONS = [];
+	protected static array $CACHE_SECTOR_LOCATIONS = [];
 
 	protected Smr\Database $db;
 	protected string $SQL;
@@ -397,7 +398,7 @@ class AbstractSmrLocation {
 		return $this->getTypeID() == $otherLocation->getTypeID();
 	}
 
-	public function hasX(/*Object*/ $x, AbstractSmrPlayer $player = null) : bool {
+	public function hasX(mixed $x, AbstractSmrPlayer $player = null) : bool {
 		if ($x instanceof SmrWeaponType) {
 			return $this->isWeaponSold($x->getWeaponTypeID());
 		}

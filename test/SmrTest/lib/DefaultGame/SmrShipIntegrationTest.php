@@ -12,7 +12,7 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SmrShipIntegrationTest extends BaseIntegrationSpec {
 
-	private $player;
+	private AbstractSmrPlayer $player;
 
 	protected function setUp() : void {
 		// Start each test with an empty ship cache
@@ -33,7 +33,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_getShip() {
+	public function test_getShip() : void {
 		// Get the ship associated with this player
 		$original = SmrShip::getShip($this->player);
 		self::assertSame($this->player->getAccountID(), $original->getAccountID());
@@ -54,7 +54,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_updateHardware() {
+	public function test_updateHardware() : void {
 		$original = SmrShip::getShip($this->player);
 
 		// Add hardware
@@ -87,7 +87,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_updateWeapons() {
+	public function test_updateWeapons() : void {
 		$original = SmrShip::getShip($this->player);
 
 		// Add a couple weapons
@@ -121,7 +121,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_updateCargo() {
+	public function test_updateCargo() : void {
 		$original = SmrShip::getShip($this->player);
 		$original->setHardwareToMax();
 
@@ -157,7 +157,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_updateCloak() {
+	public function test_updateCloak() : void {
 		$original = SmrShip::getShip($this->player);
 		$original->setHardwareToMax();
 
@@ -181,7 +181,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_updateIllusion() {
+	public function test_updateIllusion() : void {
 		$original = SmrShip::getShip($this->player);
 		$original->setHardwareToMax();
 

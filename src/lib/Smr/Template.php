@@ -189,7 +189,7 @@ class Template {
 	/*
 	 * EVAL is special (well, will be when needed and implemented in the javascript).
 	 */
-	public function addJavascriptForAjax(string $varName, mixed $obj) {
+	public function addJavascriptForAjax(string $varName, mixed $obj) : string {
 		if ($varName == 'EVAL') {
 			if (!isset($this->ajaxJS['EVAL'])) {
 				return $this->ajaxJS['EVAL'] = $obj;
