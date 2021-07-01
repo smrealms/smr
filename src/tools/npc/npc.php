@@ -159,17 +159,16 @@ function NPCStuff() : void {
 				processContainer(Page::create('newbie_warning_processing.php'));
 			}
 
-			$fedContainer = null;
 			$var = $session->getCurrentVar();
-			if (isset($var['url']) && $var['url'] == 'shop_ship_processing.php' && ($fedContainer = plotToFed($player, true)) !== true) { //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
-				processContainer($fedContainer);
+			if (isset($var['url']) && $var['url'] == 'shop_ship_processing.php' && ($container = canWeUNO($player, false)) !== false) {
+				//We just bought a ship, we should UNO now if we can
+				processContainer($container);
 			} elseif (!$underAttack && $player->isUnderAttack() === true
-				&& ($player->hasPlottedCourse() === false || $player->getPlottedCourse()->getEndSector()->offersFederalProtection() === false)
-				&& ($fedContainer == null ? $fedContainer = plotToFed($player, true) : $fedContainer) !== true) {
+				&& ($player->hasPlottedCourse() === false || $player->getPlottedCourse()->getEndSector()->offersFederalProtection() === false)) {
 				// We're under attack and need to plot course to fed.
 				debug('Under Attack');
 				$underAttack = true;
-				processContainer($fedContainer);
+				processContainer(plotToFed($player, true));
 			} elseif ($player->hasPlottedCourse() === true && $player->getPlottedCourse()->getEndSector()->offersFederalProtection()) { //We have a route to fed to follow, figure it's probably a damned sensible thing to follow.
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
@@ -485,6 +484,8 @@ function canWeUNO(AbstractSmrPlayer $player, bool $oppurtunisticOnly) : Page|fal
 	foreach ($hardwareArray as $hardwareArrayID) {
 		if (!$ship->hasMaxHardware($hardwareArrayID)) {
 			$hardwareNeededID = $hardwareArrayID;
+			// It's okay to return false if we're already at a shop, since we
+			// decided above that we don't want to buy anything here.
 			return plotToNearest($player, Globals::getHardwareTypes($hardwareArrayID));
 		}
 	}
@@ -550,19 +551,20 @@ function plotToFed(SmrPlayer $player, bool $plotToHQ = false) : Page {
 	}
 
 	$fedLocID = $player->getRaceID() + ($plotToHQ ? LOCATION_GROUP_RACIAL_HQS : LOCATION_GROUP_RACIAL_BEACONS);
-	if ($player->getSector()->hasLocation($fedLocID)) {
+	$container = plotToNearest($player, SmrLocation::getLocation($fedLocID));
+	if ($container === false) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
 		changeNPCLogin();
 	}
-	return plotToNearest($player, SmrLocation::getLocation($fedLocID));
+	return $container;
 }
 
-function plotToNearest(AbstractSmrPlayer $player, mixed $realX) : Page|bool {
+function plotToNearest(AbstractSmrPlayer $player, mixed $realX) : Page|false {
 	debug('Plotting To: ', $realX); //TODO: Can we make the debug output a bit nicer?
 
 	if ($player->getSector()->hasX($realX)) { //Check if current sector has what we're looking for before we attempt to plot and get error.
 		debug('Already available in sector');
-		return true;
+		return false;
 	}
 
 	return Page::create('course_plot_nearest_processing.php', '', array('RealX'=>$realX));
@@ -591,8 +593,7 @@ function checkForShipUpgrade(AbstractSmrPlayer $player) : Page|false {
 function doShipUpgrade(AbstractSmrPlayer $player, int $upgradeShipID) : Page {
 	$plotNearest = plotToNearest($player, SmrShipType::get($upgradeShipID));
 
-	if ($plotNearest == true) { //We're already there!
-		//TODO: We're going to want to UNO after upgrading
+	if ($plotNearest === false) { //We're already there!
 		return Page::create('shop_ship_processing.php', '', ['ship_type_id' => $upgradeShipID]);
 	} //Otherwise return the plot
 	return $plotNearest;
