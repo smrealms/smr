@@ -16,8 +16,6 @@ class SmrForce {
 	const MAX_CDS = 50;
 	const MAX_SDS = 5;
 
-	protected static $refreshAllHREF;
-
 	protected Smr\Database $db;
 	protected string $SQL;
 
