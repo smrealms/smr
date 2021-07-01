@@ -14,12 +14,12 @@ function get_draft_teams(int $gameId) : array {
 		if (!$leader->hasAlliance() || $alliance->getAllianceID() == NHA_ID) {
 			// Special case for leaders who haven't made their own alliance yet,
 			// or are still in the Newbie Help Alliance.
-			$teams[$leader->getAccountId()] = [
+			$teams[$leader->getAccountID()] = [
 				'Leader' => $leader,
 				'Size' => 0,
 			];
 		} else {
-			$teams[$leader->getAccountId()] = [
+			$teams[$leader->getAccountID()] = [
 				'Leader' => $leader,
 				'Alliance' => $alliance,
 				'Size' => $alliance->getNumMembers(),
