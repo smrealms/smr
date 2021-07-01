@@ -1804,7 +1804,7 @@ abstract class AbstractSmrPlayer {
 		return $this->militaryPayment;
 	}
 
-	public function hasMilitaryPayment() : int {
+	public function hasMilitaryPayment() : bool {
 		return $this->getMilitaryPayment() > 0;
 	}
 
