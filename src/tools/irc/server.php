@@ -40,7 +40,7 @@ function server_msg_307($fp, $rdata)
 
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
-		foreach ($dbResult->record() as $dbRecord) {
+		foreach ($dbResult->records() as $dbRecord) {
 			$seen_id = $dbRecord->getInt('seen_id');
 
 			$db->write('UPDATE irc_seen SET ' .
