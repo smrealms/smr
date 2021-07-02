@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function channel_msg_op($fp, $rdata)
+function channel_msg_op($fp, string $rdata) : bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op(\s*help)?\s$/i', $rdata, $msg)) {
@@ -29,7 +29,7 @@ function channel_msg_op($fp, $rdata)
 
 }
 
-function channel_msg_op_info($fp, $rdata, $account, $player)
+function channel_msg_op_info($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op info\s$/i', $rdata, $msg)) {
 
@@ -51,7 +51,7 @@ function channel_msg_op_info($fp, $rdata, $account, $player)
 	return false;
 }
 
-function channel_msg_op_cancel($fp, $rdata, $account, $player)
+function channel_msg_op_cancel($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op cancel\s$/i', $rdata, $msg)) {
@@ -97,7 +97,7 @@ function channel_msg_op_cancel($fp, $rdata, $account, $player)
 
 }
 
-function channel_msg_op_set($fp, $rdata, $account, $player)
+function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op set (.*)\s$/i', $rdata, $msg)) {
@@ -145,7 +145,7 @@ function channel_msg_op_set($fp, $rdata, $account, $player)
 
 }
 
-function channel_msg_op_turns($fp, $rdata, $account, $player)
+function channel_msg_op_turns($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op turns\s$/i', $rdata, $msg)) {
 
@@ -172,7 +172,7 @@ function channel_msg_op_turns($fp, $rdata, $account, $player)
 	return false;
 }
 
-function channel_msg_op_response($fp, $rdata, $account, $player) {
+function channel_msg_op_response($fp, string $rdata, AbstractSmrPlayer $player) : bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op (yes|no|maybe)\s$/i', $rdata, $msg)) {
 
@@ -208,7 +208,7 @@ function channel_msg_op_response($fp, $rdata, $account, $player) {
 
 }
 
-function channel_msg_op_list($fp, $rdata, $account, $player)
+function channel_msg_op_list($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op list\s$/i', $rdata, $msg)) {
 
@@ -230,9 +230,9 @@ function channel_msg_op_list($fp, $rdata, $account, $player)
 	return false;
 }
 
-function channel_op_notification($fp, $rdata, $nick, $channel) {
+function channel_op_notification($fp, string $rdata, string $nick, string $channel) : bool {
 	echo_r('[OP_ATTENDANCE_CHECK] ' . $nick);
-	if (check_for_registration($account, $player, $fp, $nick, $channel, 'channel_op_notification($fp, \'' . $rdata . '\', \'' . $nick . '\', \'' . $channel . '\');', false)) {
+	if (check_for_registration($player, $fp, $nick, $channel, 'channel_op_notification($fp, \'' . $rdata . '\', \'' . $nick . '\', \'' . $channel . '\');', false)) {
 		return true;
 	}
 

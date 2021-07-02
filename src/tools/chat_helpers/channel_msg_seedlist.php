@@ -27,7 +27,7 @@ function shared_channel_msg_seedlist(SmrPlayer $player) : array {
 	}
 }
 
-function shared_channel_msg_seedlist_add(SmrPlayer$player, ?array $sectors) : array {
+function shared_channel_msg_seedlist_add(SmrPlayer $player, ?array $sectors) : array {
 	// check if $nick is leader
 	if (!$player->isAllianceLeader(true)) {
 		return array('Only the leader of the alliance manages the seedlist.');

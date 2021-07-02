@@ -2,7 +2,7 @@
 
 // very important
 // if we do not answer the ping from server we will be disconnected
-function server_ping($fp, $rdata)
+function server_ping($fp, string $rdata) : bool
 {
 	global $last_ping;
 
@@ -27,7 +27,7 @@ function server_ping($fp, $rdata)
 }
 
 // part of a whois msg
-function server_msg_307($fp, $rdata)
+function server_msg_307($fp, string $rdata) : bool
 {
 
 	// :alpha.theairlock.net 307 Caretaker MrSpock :is identified for this nick
@@ -56,7 +56,7 @@ function server_msg_307($fp, $rdata)
 }
 
 // end of whois list
-function server_msg_318($fp, $rdata)
+function server_msg_318($fp, string $rdata) : bool
 {
 
 	// :ice.coldfront.net 318 Caretaker MrSpock :End of /WHOIS list.
@@ -113,7 +113,7 @@ function server_msg_318($fp, $rdata)
 }
 
 // response to WHO
-function server_msg_352($fp, $rdata)
+function server_msg_352($fp, string $rdata) : bool
 {
 
 	// :ice.coldfront.net 352 Caretaker #KMFDM caretaker coldfront-425DB813.dip.t-dialin.net ice.coldfront.net Caretaker Hr :0 Official SMR bot
@@ -159,7 +159,7 @@ function server_msg_352($fp, $rdata)
 }
 
 // unknown user
-function server_msg_401($fp, $rdata)
+function server_msg_401($fp, string $rdata) : bool
 {
 
 	// :ice.coldfront.net 401 Caretaker MrSpock :No such nick/channel

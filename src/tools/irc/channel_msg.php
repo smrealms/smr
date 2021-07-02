@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function check_for_registration(&$account, &$player, $fp, $nick, $channel, $callback, $validationMessages = true) {
+function check_for_registration(AbstractSmrPlayer &$player, $fp, string $nick, string $channel, string $callback, bool $validationMessages = true) : bool {
 	//Force $validationMessages to always be boolean.
 	$validationMessages = $validationMessages === true;
 
@@ -65,7 +65,7 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 	return false;
 }
 
-function channel_msg_with_registration($fp, $rdata)
+function channel_msg_with_registration($fp, string $rdata) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd)\s/i', $rdata, $msg)) {
 
@@ -80,52 +80,52 @@ function channel_msg_with_registration($fp, $rdata)
 			return true;
 		}
 
-		if (check_for_registration($account, $player, $fp, $nick, $channel, 'channel_msg_with_registration($fp, \'' . $rdata . '\');')) {
+		if (check_for_registration($player, $fp, $nick, $channel, 'channel_msg_with_registration($fp, \'' . $rdata . '\');')) {
 			return true;
 		}
 
-		if (channel_msg_money($fp, $rdata, $account, $player)) {
+		if (channel_msg_money($fp, $rdata, $player)) {
 			return true;
 		}
-		if (channel_msg_forces($fp, $rdata, $account, $player)) {
-			return true;
-		}
-
-		if (channel_msg_seed($fp, $rdata, $account, $player)) {
-			return true;
-		}
-		if (channel_msg_seedlist_add($fp, $rdata, $account, $player)) {
-			return true;
-		}
-		if (channel_msg_seedlist_del($fp, $rdata, $account, $player)) {
+		if (channel_msg_forces($fp, $rdata, $player)) {
 			return true;
 		}
 
-		if (channel_msg_op_info($fp, $rdata, $account, $player)) {
+		if (channel_msg_seed($fp, $rdata, $player)) {
 			return true;
 		}
-		if (channel_msg_op_cancel($fp, $rdata, $account, $player)) {
+		if (channel_msg_seedlist_add($fp, $rdata, $player)) {
 			return true;
 		}
-		if (channel_msg_op_set($fp, $rdata, $account, $player)) {
+		if (channel_msg_seedlist_del($fp, $rdata, $player)) {
 			return true;
 		}
-		if (channel_msg_op_turns($fp, $rdata, $account, $player)) {
+
+		if (channel_msg_op_info($fp, $rdata, $player)) {
 			return true;
 		}
-		if (channel_msg_op_response($fp, $rdata, $account, $player)) {
+		if (channel_msg_op_cancel($fp, $rdata, $player)) {
 			return true;
 		}
-		if (channel_msg_op_list($fp, $rdata, $account, $player)) {
+		if (channel_msg_op_set($fp, $rdata, $player)) {
 			return true;
 		}
-		if (channel_msg_sd_set($fp, $rdata, $account, $player)) {
+		if (channel_msg_op_turns($fp, $rdata, $player)) {
 			return true;
 		}
-		if (channel_msg_sd_del($fp, $rdata, $account, $player)) {
+		if (channel_msg_op_response($fp, $rdata, $player)) {
 			return true;
 		}
-		if (channel_msg_sd_list($fp, $rdata, $account, $player)) {
+		if (channel_msg_op_list($fp, $rdata, $player)) {
+			return true;
+		}
+		if (channel_msg_sd_set($fp, $rdata)) {
+			return true;
+		}
+		if (channel_msg_sd_del($fp, $rdata)) {
+			return true;
+		}
+		if (channel_msg_sd_list($fp, $rdata, $player)) {
 			return true;
 		}
 
@@ -136,7 +136,7 @@ function channel_msg_with_registration($fp, $rdata)
 }
 
 
-function channel_msg_seen($fp, $rdata)
+function channel_msg_seen($fp, string $rdata) : bool
 {
 
 	// <Caretaker> MrSpock, Azool (Azool@smrealms.rulez) was last seen quitting #smr
@@ -210,7 +210,7 @@ function channel_msg_seen($fp, $rdata)
 
 }
 
-function channel_msg_money($fp, $rdata, $account, $player)
+function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!money\s$/i', $rdata, $msg)) {
@@ -234,7 +234,7 @@ function channel_msg_money($fp, $rdata, $account, $player)
 	return false;
 }
 
-function channel_msg_timer($fp, $rdata)
+function channel_msg_timer($fp, string $rdata) : bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (.*) :!timer(\s\d+)?(\s.+)?\s$/i', $rdata, $msg)) {
@@ -285,7 +285,7 @@ function channel_msg_timer($fp, $rdata)
 
 }
 
-function channel_msg_8ball($fp, $rdata)
+function channel_msg_8ball($fp, string $rdata) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!8ball (.*)\s$/i', $rdata, $msg)) {
 
@@ -305,7 +305,7 @@ function channel_msg_8ball($fp, $rdata)
 	return false;
 }
 
-function channel_msg_forces($fp, $rdata, $account, $player)
+function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!forces(.*)\s$/i', $rdata, $msg)) {
 
@@ -328,7 +328,7 @@ function channel_msg_forces($fp, $rdata, $account, $player)
 	return false;
 }
 
-function channel_msg_help($fp, $rdata)
+function channel_msg_help($fp, string $rdata) : bool
 {
 
 	// global help?

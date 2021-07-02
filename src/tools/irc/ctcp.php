@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function ctcp_version($fp, $rdata)
+function ctcp_version($fp, string $rdata) : bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'VERSION' . chr(1) . '\s$/i', $rdata, $msg)) {
@@ -21,7 +21,7 @@ function ctcp_version($fp, $rdata)
 
 }
 
-function ctcp_finger($fp, $rdata)
+function ctcp_finger($fp, string $rdata) : bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'FINGER' . chr(1) . '\s$/i', $rdata, $msg)) {
@@ -42,7 +42,7 @@ function ctcp_finger($fp, $rdata)
 
 }
 
-function ctcp_time($fp, $rdata)
+function ctcp_time($fp, string $rdata) : bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'TIME' . chr(1) . '\s$/i', $rdata, $msg)) {
@@ -63,7 +63,7 @@ function ctcp_time($fp, $rdata)
 
 }
 
-function ctcp_ping($fp, $rdata)
+function ctcp_ping($fp, string $rdata) : bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'PING\s(.*)' . chr(1) . '\s$/i', $rdata, $msg)) {
