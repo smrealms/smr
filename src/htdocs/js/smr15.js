@@ -167,3 +167,8 @@ function togglePassword(select) {
 	}
 	$("#password-input").prop("disabled", !showPassword);
 }
+
+// Used by message_view.php
+function toggleScoutGroup(senderID) {
+	$('#group'+senderID).toggle();
+}
