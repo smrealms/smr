@@ -16,11 +16,21 @@ class SmrSector {
 	protected int $battles;
 	protected int $galaxyID;
 	protected array $visited = [];
-	protected array $links;
+	protected array $links = [];
 	protected int $warp;
 
 	protected bool $hasChanged = false;
 	protected bool $isNew = false;
+
+	/**
+	 * Maps the SmrSector link direction names to database columns.
+	 */
+	protected const LINK_DIR_MAPPING = [
+		'Up' => 'link_up',
+		'Down' => 'link_down',
+		'Left' => 'link_left',
+		'Right' => 'link_right',
+	];
 
 	/**
 	 * Constructs the sector to determine if it exists.
@@ -112,16 +122,15 @@ class SmrSector {
 			$this->galaxyID = $dbRecord->getInt('galaxy_id');
 			$this->battles = $dbRecord->getInt('battles');
 
-			$this->links = [
-				'Up' => $dbRecord->getInt('link_up'),
-				'Down' => $dbRecord->getInt('link_down'),
-				'Left' => $dbRecord->getInt('link_left'),
-				'Right' => $dbRecord->getInt('link_right'),
-			];
+			foreach (self::LINK_DIR_MAPPING as $dir => $dbColumn) {
+				$link = $dbRecord->getInt($dbColumn);
+				if ($link !== 0) {
+					$this->links[$dir] = $link;
+				}
+			}
 			$this->warp = $dbRecord->getInt('warp');
 		} elseif ($create) {
 			$this->battles = 0;
-			$this->links = [];
 			$this->warp = 0;
 			$this->isNew = true;
 		} else {
@@ -322,13 +331,7 @@ class SmrSector {
 	 * Returns the number of linked sectors (excluding warps)
 	 */
 	public function getNumberOfLinks() : int {
-		$num = 0;
-		foreach ($this->getLinks() as $link) {
-			if ($link !== 0) {
-				$num++;
-			}
-		}
-		return $num;
+		return count($this->links);
 	}
 
 	/**
