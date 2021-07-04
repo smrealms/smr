@@ -24,7 +24,7 @@ try {
 
 	function readFromEngine(bool $block = true) : void {
 		global $fromEngine;
-		stream_set_blocking($fromEngine, $block == true ? 1 : 0);
+		stream_set_blocking($fromEngine, $block);
 		while (($s = fgets($fromEngine)) !== false) {
 			debug('<-- ' . trim($s));
 			stream_set_blocking($fromEngine, 0);
