@@ -147,12 +147,12 @@ while ($running) {
 
 function safefputs($fp, string $text) : void {
 	stream_set_blocking($fp, false);
-	while (readFromStream($fp) !== false);
+	while (readFromStream($fp));
 	fputs($fp, $text);
 	stream_set_blocking($fp, true);
 }
 
-function readFromStream($fp) : ?false {
+function readFromStream($fp) : bool {
 	global $last_ping;
 
 	// timeout detection!
@@ -179,7 +179,7 @@ function readFromStream($fp) : ?false {
 
 	// required!!! otherwise timeout!
 	if (server_ping($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// Since we close the database connection between polls, we will need
@@ -191,101 +191,101 @@ function readFromStream($fp) : ?false {
 
 	// server msg
 	if (server_msg_307($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (server_msg_318($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (server_msg_352($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (server_msg_401($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	//Are they using a linked nick instead
 	if (notice_nickserv_registered_user($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (notice_nickserv_unknown_user($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// some nice things
 	if (ctcp_version($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (ctcp_finger($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (ctcp_time($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (ctcp_ping($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	if (invite($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// join and part
 	if (channel_join($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_part($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// nick change and quit
 	if (user_nick($rdata)) {
-		return;
+		return true;
 	}
 	if (user_quit($rdata)) {
-		return;
+		return true;
 	}
 
 	if (channel_action_slap($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// channel msg (!xyz) without registration
 	if (channel_msg_help($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_seedlist($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_op($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_timer($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_8ball($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_seen($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_sd($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// channel msg (!xyz) with registration
 	if (channel_msg_with_registration($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// MrSpock can use this to send commands as caretaker
 	if (query_command($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 
 	// debug
 	if (IRC_DEBUGGING) {
 		echo_r('[UNKNOWN] ' . $rdata);
-		return;
+		return true;
 	}
 }
