@@ -285,17 +285,17 @@ if ($action == 'Yes') {
 
 	// now do the sql stuff
 	foreach ($smr_db_sql as $sql) {
-
 		$db->write($sql);
-
 	}
 
-	$db = new SmrHistoryMySqlDatabase();
+	// Note that the `smr_live_history` database does not currently exist,
+	// but if we decided to enable this tool to archive SMR 1.6 games,
+	// we could create it.
+	$db->switchDatabases('smr_live_history');
 	foreach ($history_db_sql as $sql) {
-
 		$db->write($sql);
-
 	}
+	$db->switchDatabaseToLive();
 
 	// don't know why exactly we have to do that,
 	// but it seems that the db is used globally instead kept to each object

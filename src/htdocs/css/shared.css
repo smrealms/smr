@@ -425,8 +425,8 @@ a.lmUp:hover div, a.lmLeft:hover div, a.lmRight:hover div, a.lmDown:hover div {
 	text-align: center;
 	position: absolute;
 	top: 28px;
-	left: 0px;
-	width: 120px;
+	left: 5px; /* leave room for sector walls */
+	width: 110px;
 	height: 18px;
 	z-index: 2;
 }

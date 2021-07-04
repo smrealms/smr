@@ -150,11 +150,11 @@ function bbifyMessage(string $message, bool $noLinks = false) : string {
 	static $bbParser;
 	if (!isset($bbParser)) {
 		$bbParser = new \Nbbc\BBCode();
-		$bbParser->SetEnableSmileys(false);
-		$bbParser->RemoveRule('wiki');
-		$bbParser->RemoveRule('img');
-		$bbParser->SetURLTarget('_blank');
-		$bbParser->SetURLTargetable('override');
+		$bbParser->setEnableSmileys(false);
+		$bbParser->removeRule('wiki');
+		$bbParser->removeRule('img');
+		$bbParser->setURLTarget('_blank');
+		$bbParser->setURLTargetable('override');
 		$bbParser->setEscapeContent(false); // don't escape HTML, needed for News etc.
 		$smrRule = array(
 				'mode' => \Nbbc\BBCode::BBCODE_MODE_CALLBACK,
@@ -164,13 +164,13 @@ function bbifyMessage(string $message, bool $noLinks = false) : string {
 				'end_tag' => \Nbbc\BBCode::BBCODE_PROHIBIT,
 				'content' => \Nbbc\BBCode::BBCODE_PROHIBIT,
 			);
-		$bbParser->AddRule('combatlog', $smrRule);
-		$bbParser->AddRule('player', $smrRule);
-		$bbParser->AddRule('alliance', $smrRule);
-		$bbParser->AddRule('race', $smrRule);
-		$bbParser->AddRule('servertimetouser', $smrRule);
-		$bbParser->AddRule('chess', $smrRule);
-		$bbParser->AddRule('sector', $smrRule);
+		$bbParser->addRule('combatlog', $smrRule);
+		$bbParser->addRule('player', $smrRule);
+		$bbParser->addRule('alliance', $smrRule);
+		$bbParser->addRule('race', $smrRule);
+		$bbParser->addRule('servertimetouser', $smrRule);
+		$bbParser->addRule('chess', $smrRule);
+		$bbParser->addRule('sector', $smrRule);
 		$bbParser->addRule('join_alliance', $smrRule);
 	}
 	global $disableBBLinks;

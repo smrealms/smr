@@ -177,10 +177,10 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 		self::assertTrue($ship->hasScanner());
 
 		// DCs
-		self::assertTrue($ship->getType()->canHaveDCs());
-		self::assertFalse($ship->hasDCs());
+		self::assertTrue($ship->getType()->canHaveDCS());
+		self::assertFalse($ship->hasDCS());
 		$ship->increaseHardware(HARDWARE_DCS, 1);
-		self::assertTrue($ship->hasDCs());
+		self::assertTrue($ship->hasDCS());
 	}
 
 }

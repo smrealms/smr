@@ -208,7 +208,4 @@ var exec = function(s) {
 		$.get(link, {ajax: 1});
 	};
 
-	window.toggleScoutGroup = function(senderID) {
-		$('#group'+senderID).toggle();
-	};
 })();
