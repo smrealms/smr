@@ -318,6 +318,9 @@ class SmrSector {
 		$this->hasChanged = true;
 	}
 
+	/**
+	 * Returns the number of linked sectors (excluding warps)
+	 */
 	public function getNumberOfLinks() : int {
 		$num = 0;
 		foreach ($this->getLinks() as $link) {
@@ -328,6 +331,9 @@ class SmrSector {
 		return $num;
 	}
 
+	/**
+	 * Returns the number of linked sectors (including warps)
+	 */
 	public function getNumberOfConnections() : int {
 		$links = $this->getNumberOfLinks();
 		if ($this->hasWarp()) {
@@ -425,6 +431,9 @@ class SmrSector {
 		if ($this->getLink($name) == $linkID) {
 			return;
 		}
+		if ($linkID == $this->sectorID) {
+			throw new Exception('Sector must not link to itself!');
+		}
 		if ($linkID == 0) {
 			unset($this->links[$name]);
 		} else {
@@ -437,12 +446,8 @@ class SmrSector {
 	 * Cannot be used for Warps
 	 */
 	public function setLinkSector(string $dir, SmrSector $linkSector) : void {
-		if ($this->getLink($dir) == $linkSector->getSectorID() || $linkSector->equals($this)) {
-			return;
-		}
 		$this->setLink($dir, $linkSector->getSectorID());
 		$linkSector->setLink(self::oppositeDir($dir), $this->getSectorID());
-		$this->hasChanged = true;
 	}
 
 	/**
@@ -471,7 +476,7 @@ class SmrSector {
 		}
 	}
 
-	protected static function oppositeDir(string $dir) : string {
+	public static function oppositeDir(string $dir) : string {
 		return match($dir) {
 			'Up' => 'Down',
 			'Down' => 'Up',
@@ -560,9 +565,7 @@ class SmrSector {
 		}
 
 		// Can only have 1 warp per sector
-		foreach ([[$warp, $this], [$this, $warp]] as $sectors) {
-			$A = $sectors[0];
-			$B = $sectors[1];
+		foreach ([[$warp, $this], [$this, $warp]] as list($A, $B)) {
 			if ($A->hasWarp() && $A->getWarp() != $B->getSectorID()) {
 				throw new Exception('Sector ' . $A->getSectorID() . ' already has a warp (to ' . $A->getWarp() . ')!');
 			}
