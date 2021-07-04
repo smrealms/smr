@@ -1026,7 +1026,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getExperience() {
+	public function getExperience() : int {
 		return $this->experience;
 	}
 
@@ -1553,7 +1553,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Set any starting personal relations bonuses or penalties.
 	 */
-	public function giveStartingRelations() {
+	public function giveStartingRelations() : void {
 		if ($this->getRaceID() === RACE_ALSKANT) {
 			// Give Alskants bonus personal relations to start.
 			foreach (Globals::getRaces() as $raceID => $raceInfo) {
@@ -2080,7 +2080,7 @@ abstract class AbstractSmrPlayer {
 		$this->setHOF($this->getHOF($typeList) - $amount, $typeList, $visibility);
 	}
 
-	public function setHOF(float $amount, array $typeList, string $visibility) {
+	public function setHOF(float $amount, array $typeList, string $visibility) : void {
 		if (is_array($this->getHOF($typeList))) {
 			throw new Exception('Trying to overwrite a HOF type: ' . implode(':', $typeList));
 		}
@@ -2884,7 +2884,7 @@ abstract class AbstractSmrPlayer {
 		$this->getAccount()->log($log_type_id, $msg, $this->getSectorID());
 	}
 
-	public function actionTaken($actionID, array $values) {
+	public function actionTaken(string $actionID, array $values) : void {
 		if (!in_array($actionID, MISSION_ACTIONS)) {
 			throw new Exception('Unknown action: ' . $actionID);
 		}

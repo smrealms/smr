@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function query_command($fp, $rdata)
+function query_command($fp, string $rdata) : bool
 {
 
 	// :MrSpock!mrspock@coldfront-120CBD34.dip.t-dialin.net PRIVMSG Caretaker :Test

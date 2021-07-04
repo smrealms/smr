@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function channel_action_slap($fp, $rdata)
+function channel_action_slap($fp, string $rdata) : bool
 {
 
 	// :MrSpock!mrspock@coldfront-25B201B9.dip.t-dialin.net PRIVMSG #rod : ACTION slaps Caretaker around a bit with a large trout
@@ -30,5 +30,7 @@ function channel_action_slap($fp, $rdata)
 		return true;
 
 	}
+
+	return false;
 
 }

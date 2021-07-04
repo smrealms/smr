@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function check_events($fp)
+function check_events($fp) : void
 {
 	global $events;
 

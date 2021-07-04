@@ -33,7 +33,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 
 	//------------------------------------------------------------------------
 
-	public function test_create() {
+	public function test_create() : void {
 		// Test create with $extra as array
 		$page = Page::create('file', 'body', ['extra' => 'data']);
 		// Check that the expected keys of the ArrayObject are set
@@ -56,7 +56,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(2, $page3['RemainingPageLoads']);
 	}
 
-	public function test_copy() {
+	public function test_copy() : void {
 		// Create an arbitrary Page
 		$page = Page::create('file');
 		// The copy should be equal, but not the same
@@ -65,7 +65,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertEquals($page, $copy);
 	}
 
-	public function test_href() {
+	public function test_href() : void {
 		// Create an arbitrary Page
 		$page = Page::create('file');
 
@@ -83,7 +83,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame($expected, $page->getArrayCopy());
 	}
 
-	public function test_addVar() {
+	public function test_addVar() : void {
 		$page = Page::create('file');
 
 		// Mock the current global $var
@@ -99,7 +99,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertFalse(isset($page['index2']));
 	}
 
-	public function test_addVar_missing_source_raises() {
+	public function test_addVar_missing_source_raises() : void {
 		// Create an arbitrary Page
 		$page = Page::create('file');
 

@@ -22,15 +22,15 @@ try {
 	$toEngine =& $pipes[0];
 	$fromEngine =& $pipes[1];
 
-	function readFromEngine($block = true) {
+	function readFromEngine(bool $block = true) : void {
 		global $fromEngine;
-		stream_set_blocking($fromEngine, $block == true ? 1 : 0);
+		stream_set_blocking($fromEngine, $block);
 		while (($s = fgets($fromEngine)) !== false) {
 			debug('<-- ' . trim($s));
 			stream_set_blocking($fromEngine, 0);
 		}
 	}
-	function writeToEngine($s, $block = true, $read = true) {
+	function writeToEngine(string $s, bool $block = true, bool $read = true) : void {
 		global $toEngine;
 		debug('--> ' . $s);
 		fputs($toEngine, $s . EOL);

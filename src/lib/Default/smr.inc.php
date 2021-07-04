@@ -6,7 +6,7 @@ function htmliseMessage(string $message) : string {
 	return $message;
 }
 
-function parseBoolean($check) {
+function parseBoolean(mixed $check) : bool {
 	// Only negative strings are not implicitly converted to the correct bool
 	if (is_string($check) && (strcasecmp($check, 'NO') == 0 || strcasecmp($check, 'FALSE') == 0)) {
 		return false;

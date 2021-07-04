@@ -334,7 +334,7 @@ class Globals {
 		return $container->href();
 	}
 
-	public static function getAllianceRosterHREF($allianceID = null) : string {
+	public static function getAllianceRosterHREF(int $allianceID = null) : string {
 		$container = Page::create('skeleton.php', 'alliance_roster.php');
 		$container['alliance_id'] = $allianceID;
 		return $container->href();

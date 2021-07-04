@@ -1235,7 +1235,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function unbanAccount(SmrAccount $admin = null, string $currException = null) {
+	public function unbanAccount(SmrAccount $admin = null, string $currException = null) : void {
 		$adminID = 0;
 		if ($admin !== null) {
 			$adminID = $admin->getAccountID();

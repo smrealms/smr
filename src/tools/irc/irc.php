@@ -2,19 +2,13 @@
 
 class TimeoutException extends Exception {}
 
-function echo_r($message)
+function echo_r(string $message) : void
 {
-	if (is_array($message)) {
-		foreach ($message as $msg) {
-			echo_r($msg);
-		}
-	} else {
-		echo date("Y-m-d H:i:s => ") . $message . EOL;
-	}
+	echo date("Y-m-d H:i:s => ") . $message . EOL;
 }
 
 // not keeping the filehandle might not be the wisest idea.
-function write_log_message($msg)
+function write_log_message(string $msg) : void
 {
 	$logFile = fopen("/var/log/irc/" . date("Ymd") . ".log", "a+");
 	fwrite($logFile, round(microtime(true) * 1000) . ' ' . $msg . EOL);
@@ -151,14 +145,14 @@ while ($running) {
 	}
 } // end of while running
 
-function safefputs($fp, $text) {
+function safefputs($fp, string $text) : void {
 	stream_set_blocking($fp, false);
-	while (readFromStream($fp) !== false);
+	while (readFromStream($fp));
 	fputs($fp, $text);
 	stream_set_blocking($fp, true);
 }
 
-function readFromStream($fp) {
+function readFromStream($fp) : bool {
 	global $last_ping;
 
 	// timeout detection!
@@ -185,7 +179,7 @@ function readFromStream($fp) {
 
 	// required!!! otherwise timeout!
 	if (server_ping($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// Since we close the database connection between polls, we will need
@@ -197,101 +191,101 @@ function readFromStream($fp) {
 
 	// server msg
 	if (server_msg_307($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (server_msg_318($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (server_msg_352($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (server_msg_401($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	//Are they using a linked nick instead
 	if (notice_nickserv_registered_user($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (notice_nickserv_unknown_user($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// some nice things
 	if (ctcp_version($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (ctcp_finger($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (ctcp_time($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (ctcp_ping($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	if (invite($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// join and part
 	if (channel_join($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_part($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// nick change and quit
-	if (user_nick($fp, $rdata)) {
-		return;
+	if (user_nick($rdata)) {
+		return true;
 	}
-	if (user_quit($fp, $rdata)) {
-		return;
+	if (user_quit($rdata)) {
+		return true;
 	}
 
 	if (channel_action_slap($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// channel msg (!xyz) without registration
 	if (channel_msg_help($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_seedlist($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_op($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_timer($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_8ball($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_seen($fp, $rdata)) {
-		return;
+		return true;
 	}
 	if (channel_msg_sd($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// channel msg (!xyz) with registration
 	if (channel_msg_with_registration($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 	// MrSpock can use this to send commands as caretaker
 	if (query_command($fp, $rdata)) {
-		return;
+		return true;
 	}
 
 
 	// debug
 	if (IRC_DEBUGGING) {
 		echo_r('[UNKNOWN] ' . $rdata);
-		return;
+		return true;
 	}
 }

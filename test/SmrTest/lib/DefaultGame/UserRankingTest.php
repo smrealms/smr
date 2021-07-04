@@ -9,21 +9,21 @@ use Smr\UserRanking;
  */
 class UserRankingTest extends \PHPUnit\Framework\TestCase {
 
-	public function test_getName() {
+	public function test_getName() : void {
 		$this->assertSame('Expert', UserRanking::getName(6));
 	}
 
-	public function test_getAllNames() {
+	public function test_getAllNames() : void {
 		$this->assertSame('Expert', UserRanking::getAllNames()[6]);
 	}
 
-	public function test_rank_limits() {
+	public function test_rank_limits() : void {
 		$ranks = array_keys(UserRanking::getAllNames());
 		$this->assertSame(UserRanking::MIN_RANK, min($ranks));
 		$this->assertSame(UserRanking::MAX_RANK, max($ranks));
 	}
 
-	public function test_score_limits() {
+	public function test_score_limits() : void {
 		// test the lowest possible score
 		$rank = UserRanking::getRankFromScore(0);
 		$this->assertSame(UserRanking::MIN_RANK, $rank);
@@ -32,7 +32,7 @@ class UserRankingTest extends \PHPUnit\Framework\TestCase {
 		$this->assertSame(UserRanking::MAX_RANK, $rank);
 	}
 
-	public function test_getMinScoreForRank() {
+	public function test_getMinScoreForRank() : void {
 		// test all ranks
 		foreach (UserRanking::getAllNames() as $rank => $name) {
 			$minScore = UserRanking::getMinScoreForRank($rank);
