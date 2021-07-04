@@ -103,6 +103,7 @@ function NPCStuff() : void {
 		changeNPCLogin();
 	} catch (ForwardException $e) {}
 
+	$allTradeRoutes = [];
 	$tradeRoute = null;
 	$underAttack = false;
 	$actions = -1;
@@ -131,6 +132,7 @@ function NPCStuff() : void {
 			}
 			$player->updateTurns();
 
+			// Are we starting with a new NPC?
 			if ($actions == 0) {
 				if ($player->getTurns() <= rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
@@ -141,17 +143,16 @@ function NPCStuff() : void {
 				// since this could cause it to get stuck in a loop in Fed.
 				$player->removeUnderAttack();
 				$player->update();
-			}
 
-			if ($tradeRoute === null) { //We only want to change trade route if there isn't already one set.
-				$TRADE_ROUTES =& findRoutes($player);
-				$tradeRoute = changeRoute($TRADE_ROUTES);
+				// Initialize the trade route for this NPC
+				$allTradeRoutes = findRoutes($player);
+				$tradeRoute = changeRoute($allTradeRoutes);
 			}
 
 			if ($player->isDead()) {
 				debug('Some evil person killed us, let\'s move on now.');
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
-				$tradeRoute = changeRoute($TRADE_ROUTES); //Change route
+				$tradeRoute = changeRoute($allTradeRoutes);
 				processContainer(Page::create('death_processing.php'));
 			}
 			if ($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning()) {
@@ -228,7 +229,7 @@ function NPCStuff() : void {
 								processContainer(tradeGoods($goodID, $player, $port));
 							} else {
 								//Move to next route or fed.
-								if (($tradeRoute = changeRoute($TRADE_ROUTES)) === false) {
+								if (($tradeRoute = changeRoute($allTradeRoutes)) === false) {
 									debug('Changing Route Failed');
 									processContainer(plotToFed($player));
 								} else {
@@ -255,7 +256,7 @@ function NPCStuff() : void {
 							processContainer(tradeGoods($goodID, $player, $port));
 						} else {
 							//Move to next route or fed.
-							if (($tradeRoute = changeRoute($TRADE_ROUTES)) === false) {
+							if (($tradeRoute = changeRoute($allTradeRoutes)) === false) {
 								debug('Changing Route Failed');
 								processContainer(plotToFed($player));
 							} else {
@@ -301,7 +302,6 @@ function NPCStuff() : void {
 			global $locksFailed;
 			$locksFailed = array();
 			$_REQUEST = array();
-			$tradeRoute = null;
 
 			//Have a sleep between actions
 			sleepNPC();
@@ -609,7 +609,7 @@ function changeRoute(array &$tradeRoutes) : Routes\Route|false {
 	return $tradeRoute;
 }
 
-function &findRoutes(SmrPlayer $player) : array {
+function findRoutes(SmrPlayer $player) : array {
 	debug('Finding Routes');
 
 	$tradeGoods = array(GOODS_NOTHING => false);
