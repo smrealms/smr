@@ -12,7 +12,7 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SmrShipIntegrationTest extends BaseIntegrationSpec {
 
-	private AbstractSmrPlayer $player;
+	private \PHPUnit\Framework\MockObject\MockObject $player;
 
 	protected function setUp() : void {
 		// Start each test with an empty ship cache
