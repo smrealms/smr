@@ -16,11 +16,21 @@ class SmrSector {
 	protected int $battles;
 	protected int $galaxyID;
 	protected array $visited = [];
-	protected array $links;
+	protected array $links = [];
 	protected int $warp;
 
 	protected bool $hasChanged = false;
 	protected bool $isNew = false;
+
+	/**
+	 * Maps the SmrSector link direction names to database columns.
+	 */
+	protected const LINK_DIR_MAPPING = [
+		'Up' => 'link_up',
+		'Down' => 'link_down',
+		'Left' => 'link_left',
+		'Right' => 'link_right',
+	];
 
 	/**
 	 * Constructs the sector to determine if it exists.
@@ -112,16 +122,15 @@ class SmrSector {
 			$this->galaxyID = $dbRecord->getInt('galaxy_id');
 			$this->battles = $dbRecord->getInt('battles');
 
-			$this->links = [
-				'Up' => $dbRecord->getInt('link_up'),
-				'Down' => $dbRecord->getInt('link_down'),
-				'Left' => $dbRecord->getInt('link_left'),
-				'Right' => $dbRecord->getInt('link_right'),
-			];
+			foreach (self::LINK_DIR_MAPPING as $dir => $dbColumn) {
+				$link = $dbRecord->getInt($dbColumn);
+				if ($link !== 0) {
+					$this->links[$dir] = $link;
+				}
+			}
 			$this->warp = $dbRecord->getInt('warp');
 		} elseif ($create) {
 			$this->battles = 0;
-			$this->links = [];
 			$this->warp = 0;
 			$this->isNew = true;
 		} else {
@@ -318,16 +327,16 @@ class SmrSector {
 		$this->hasChanged = true;
 	}
 
+	/**
+	 * Returns the number of linked sectors (excluding warps)
+	 */
 	public function getNumberOfLinks() : int {
-		$num = 0;
-		foreach ($this->getLinks() as $link) {
-			if ($link !== 0) {
-				$num++;
-			}
-		}
-		return $num;
+		return count($this->links);
 	}
 
+	/**
+	 * Returns the number of linked sectors (including warps)
+	 */
 	public function getNumberOfConnections() : int {
 		$links = $this->getNumberOfLinks();
 		if ($this->hasWarp()) {
@@ -425,6 +434,9 @@ class SmrSector {
 		if ($this->getLink($name) == $linkID) {
 			return;
 		}
+		if ($linkID == $this->sectorID) {
+			throw new Exception('Sector must not link to itself!');
+		}
 		if ($linkID == 0) {
 			unset($this->links[$name]);
 		} else {
@@ -437,12 +449,8 @@ class SmrSector {
 	 * Cannot be used for Warps
 	 */
 	public function setLinkSector(string $dir, SmrSector $linkSector) : void {
-		if ($this->getLink($dir) == $linkSector->getSectorID() || $linkSector->equals($this)) {
-			return;
-		}
 		$this->setLink($dir, $linkSector->getSectorID());
 		$linkSector->setLink(self::oppositeDir($dir), $this->getSectorID());
-		$this->hasChanged = true;
 	}
 
 	/**
@@ -471,7 +479,7 @@ class SmrSector {
 		}
 	}
 
-	protected static function oppositeDir(string $dir) : string {
+	public static function oppositeDir(string $dir) : string {
 		return match($dir) {
 			'Up' => 'Down',
 			'Down' => 'Up',
@@ -560,9 +568,7 @@ class SmrSector {
 		}
 
 		// Can only have 1 warp per sector
-		foreach ([[$warp, $this], [$this, $warp]] as $sectors) {
-			$A = $sectors[0];
-			$B = $sectors[1];
+		foreach ([[$warp, $this], [$this, $warp]] as list($A, $B)) {
 			if ($A->hasWarp() && $A->getWarp() != $B->getSectorID()) {
 				throw new Exception('Sector ' . $A->getSectorID() . ' already has a warp (to ' . $A->getWarp() . ')!');
 			}

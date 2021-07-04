@@ -109,12 +109,10 @@ class Plotter {
 			$distanceQ[$warpAddIndex][] = $d;
 		}
 		foreach ($checkSector->getLinks() as $nextSector) {
-			if ($nextSector !== 0) {
-				$visitedSectors[$nextSector] = true;
-				$d = new Distance($gameID, $checkSector->getSectorID());
-				$d->addToPath($nextSector);
-				$distanceQ[0][] = $d;
-			}
+			$visitedSectors[$nextSector] = true;
+			$d = new Distance($gameID, $checkSector->getSectorID());
+			$d->addToPath($nextSector);
+			$distanceQ[0][] = $d;
 		}
 		$maybeWarps = 0;
 		while ($maybeWarps <= TURNS_WARP_SECTOR_EQUIVALENCE) {
