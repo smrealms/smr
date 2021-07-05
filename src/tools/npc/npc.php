@@ -109,10 +109,6 @@ function NPCStuff() : void {
 	$actions = -1;
 
 	while (true) {
-		// Clear the $_REQUEST global, in case we had set it, to avoid
-		// contaminating subsequent page processing.
-		$_REQUEST = [];
-
 		$actions++;
 
 		// Avoid infinite loops by restricting the number of actions
@@ -233,7 +229,7 @@ function NPCStuff() : void {
 									processContainer(plotToFed($player));
 								} else {
 									debug('Route Changed');
-									continue;
+									throw new ForwardException;
 								}
 							}
 						} elseif ($ship->hasCargo($buyRoute->getGoodID()) === true) { //We've bought goods, plot to sell
@@ -260,7 +256,7 @@ function NPCStuff() : void {
 								processContainer(plotToFed($player));
 							} else {
 								debug('Route Changed');
-								continue;
+								throw new ForwardException;
 							}
 						}
 					}
@@ -280,6 +276,7 @@ function NPCStuff() : void {
 				processContainer(moveToSector($player,$moveTo));
 			}
 			*/
+			throw new Exception('NPC failed to perform any action');
 		} catch (ForwardException $e) {
 			global $lock;
 			if ($lock) { //only save if we have the lock.
@@ -297,7 +294,7 @@ function NPCStuff() : void {
 			//Clean up the caches as the data may get changed by other players
 			clearCaches();
 
-			//Clear up some global vars
+			//Clear up some global vars to avoid contaminating subsequent pages
 			global $locksFailed;
 			$locksFailed = array();
 			$_REQUEST = array();
