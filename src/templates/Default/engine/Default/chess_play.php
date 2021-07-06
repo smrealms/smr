@@ -70,3 +70,7 @@
 			}).addClass("lastMove");');
 	} ?>
 </script>
+
+<?php
+$this->addJavascriptSource('/js/chess_play.js');
+?>

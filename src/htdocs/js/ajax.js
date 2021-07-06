@@ -1,36 +1,47 @@
+"use strict";
+
 // We declare and use this function to make clear to the minifier that the eval will not effect the later parts of the script despite being called there.
 var exec = function(s) {
 	eval(s);
 };
+
 (function() {
-	"use strict";
-	var updateRefreshTimeout, refreshSpeed, ajaxRunning = true, refreshReady = true, disableStartAJAX=true, xmlHttpRefresh, sn, stopAJAX;
+	var updateRefreshTimeout, refreshSpeed, refreshReady = true, xmlHttpRefresh, sn;
 
-	// startAJAX
-	window.onfocus = function() {
-		// Start the Ajax updates if startRefresh has been called
-		if(!disableStartAJAX) {
-			ajaxRunning = true;
-			clearTimeout(updateRefreshTimeout);
-			updateRefreshRequest();
-		}
-	};
+	/**
+	 * Turn off AJAX auto-refresh by default. It can only be enabled by
+	 * a call to `setupRefresh`.
+	 */
+	var refreshEnabled = false;
 
-	// pauseAJAX
-	window.onblur = function() {
-		// Pause the Ajax updates
-		ajaxRunning = false;
-	};
-
-	window.onunload = stopAJAX = function() {
-		// Stop the Ajax updates
+	/**
+	 * Schedule the next AJAX auto-refresh.
+	 */
+	function scheduleRefresh() {
+		// Remove any existing refresh schedule
 		clearTimeout(updateRefreshTimeout);
-		disableStartAJAX=true;
-		ajaxRunning = false;
+		// Delay before first AJAX udpate to avoid rapid re-triggers.
+		updateRefreshTimeout = setTimeout(updateRefreshRequest, refreshSpeed);
+	}
+
+	/**
+	 * Stops AJAX auto-refresh and cancels the current request.
+	 * Can be restarted with `scheduleRefresh()`.
+	 */
+	function cancelRefresh() {
+		clearTimeout(updateRefreshTimeout);
 		if (xmlHttpRefresh !== undefined) {
 			xmlHttpRefresh.abort();
 		}
-	};
+	}
+
+	/**
+	 * Disables AJAX auto-refresh permanently on this page.
+	 */
+	function disableRefresh() {
+		refreshEnabled = false;
+		cancelRefresh();
+	}
 
 	function getURLParameter(paramName, href) {
 		if ( href.indexOf("?") > -1 ) {
@@ -68,65 +79,30 @@ var exec = function(s) {
 			}
 		});
 		refreshReady = true;
-		if(ajaxRunning === true) {
-			clearTimeout(updateRefreshTimeout);
-			updateRefreshTimeout = setTimeout(updateRefreshRequest, refreshSpeed);
-		}
+		scheduleRefresh();
 	}
 
 	function updateRefreshRequest() {
-		if(ajaxRunning === true && refreshReady === true) {
+		if (refreshEnabled === true && refreshReady === true) {
 			refreshReady = false;
 			xmlHttpRefresh = $.get('', {sn:sn, ajax:1}, updateRefresh, 'xml');
 		}
 	}
 
+	/**
+	 * Set up the AJAX auto-refresh for this page.
+	 * Specify refreshSpeed in milliseconds.
+	 */
+	window.initRefresh = function(_refreshSpeed) {
+		// If auto-refresh is disabled in preferences, then this function is
+		// not called, so make sure the refresh is enabled ONLY if this
+		// function is called.
+		refreshEnabled = true;
 
-	//Chess
-	/*global availableMoves:true, submitMoveHREF:true */
-	var highlightMoves;
-
-	function submitMove(data) {
-		var e = $(this);
-		data.toX = e.data('x');
-		data.toY = e.data('y');
-		$.get(submitMoveHREF, data, function(data) {
-				sn = getURLParameter('sn', submitMoveHREF);
-				highlightMoves();
-				updateRefresh(data);
-			}, 'xml');
-	}
-
-	function bindOne(func, arg) {
-		return function() {
-			return func.call(this, arg);
-		};
-	}
-
-	window.highlightMoves = highlightMoves = function() {
-		var e, x, y, boundSubmitMove, highlighted = $('.chessHighlight');
-		if(highlighted.length === 0) {
-			e = $(this);
-			x = e.data('x');
-			y = e.data('y');
-			boundSubmitMove = bindOne(submitMove, {x:x,y:y});
-			$(availableMoves[y][x]).addClass('chessHighlight').each(function(i, e) {
-				e.onclick = boundSubmitMove;
-			});
-		}
-		else {
-			highlighted.removeClass('chessHighlight').each(function(i, e){
-				e.onclick = highlightMoves;
-			});
-		}
-	};
-
-
-	//Globals
-	window.startRefresh = function(_refreshSpeed) {
-		// If auto-refresh is disabled in preferences, then this function is not called,
-		// so make sure the refresh is enabled ONLY if this function is called.
-		disableStartAJAX = false;
+		// Similarly, we only need event listeners when refresh is enabled.
+		window.onfocus = scheduleRefresh;
+		window.onblur = cancelRefresh;
+		window.onunload = cancelRefresh;
 
 		if(!_refreshSpeed) {
 			return;
@@ -136,8 +112,7 @@ var exec = function(s) {
 		if(sn===false) {
 			return;
 		}
-		// Delay before first AJAX udpate
-		updateRefreshTimeout = setTimeout(updateRefreshRequest, refreshSpeed);
+		scheduleRefresh();
 	};
 
 	// The following section attempts to prevent users from taking multiple
@@ -159,7 +134,7 @@ var exec = function(s) {
 			if(linkFollowed !== true) {
 				linkFollowed = true;
 				location.href = href;
-				stopAJAX();
+				disableRefresh();
 			}
 		};
 	};
@@ -170,7 +145,7 @@ var exec = function(s) {
 				e.preventDefault();
 			} else {
 				linkFollowed = true;
-				stopAJAX();
+				disableRefresh();
 			}
 		});
 		// Prevent further actions after a link is clicked.
@@ -188,23 +163,35 @@ var exec = function(s) {
 			if(linkFollowed !== true) {
 				linkFollowed = true;
 				location.href = this.href;
-				stopAJAX();
+				disableRefresh();
 			}
 			e.preventDefault();
 		});
 	});
 
-	window.ajaxLink = function(link) {
-		$.get(link, {ajax: 1}, function(data) {
+	/**
+	 * Perform a generic AJAX update.
+	 * Auto-refresh is stopped during the request, and started back up
+	 * (if not disabled) after the request completes.
+	 */
+	window.ajaxLink = function(link, callback=null, params=null) {
+		cancelRefresh();
+		if (params === null) {
+			params = {ajax: 1};
+		}
+		$.get(link, params, function(data) {
 				sn = getURLParameter('sn', link);
 				updateRefresh(data);
+				if (callback !== null) {
+					callback();
+				}
 			}, 'xml');
 	};
 
 	window.toggleWepD = function(link) {
-		"use strict";
 		$('.wep1:visible').slideToggle(600);
 		$('.wep1:hidden').fadeToggle(600);
+		// Omit updateRefresh here so that we can smoothly animate the change
 		$.get(link, {ajax: 1});
 	};
 
