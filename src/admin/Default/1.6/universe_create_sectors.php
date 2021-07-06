@@ -62,6 +62,18 @@ $container['submit'] = 'Toggle Link';
 $container['AJAX'] = true;
 $template->assign('ToggleLink', $container);
 
+$container = Page::create('1.6/drag_location.php');
+$container->addVar('game_id');
+$container->addVar('gal_on');
+$container['AJAX'] = true;
+$template->assign('DragLocationHREF', $container->href());
+
+$container = Page::create('1.6/drag_planet.php');
+$container->addVar('game_id');
+$container->addVar('gal_on');
+$container['AJAX'] = true;
+$template->assign('DragPlanetHREF', $container->href());
+
 $container = Page::create('skeleton.php', '1.6/universe_create_sector_details.php');
 $container->addVar('game_id');
 $container->addVar('gal_on');
