@@ -1,6 +1,6 @@
-FROM php:7.4.14-cli-alpine
+FROM php:8.0.7-cli-alpine
 
-RUN curl -L -O https://phpdoc.org/phpDocumentor.phar
+RUN curl -L -O https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.1.0/phpDocumentor.phar
 RUN chmod +x phpDocumentor.phar
 RUN mv phpDocumentor.phar /usr/local/bin/phpdoc
 
