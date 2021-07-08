@@ -92,6 +92,9 @@ class AbstractSmrLocation {
 		$db->write('UPDATE location SET sector_id = ' . $db->escapeNumber($newSectorID) . ' WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($oldSectorID) . ' AND location_type_id = ' . $location->getTypeID());
 		unset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$oldSectorID][$location->getTypeID()]);
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$newSectorID][$location->getTypeID()] = $location;
+
+		// Preserve the same element order that we'd have in getSectorLocations
+		ksort(self::$CACHE_SECTOR_LOCATIONS[$gameID][$newSectorID]);
 	}
 
 	public static function removeSectorLocations(int $gameID, int $sectorID) : void {
