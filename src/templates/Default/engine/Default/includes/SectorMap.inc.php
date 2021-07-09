@@ -28,7 +28,7 @@
 							foreach ($MovementTypes as $MovementType) {
 								if (isset($ToggleLink)) {
 									$ToggleLink['dir'] = $MovementType; ?>
-									<a onclick="ajaxLink('<?php echo $ToggleLink->href(); ?>')" class="lm<?php echo $MovementType; ?>"><?php
+									<a onclick="ajaxLink('<?php echo $ToggleLink->href(); ?>', setupDragDrop)" class="lm<?php echo $MovementType; ?>"><?php
 								} ?>
 								<div class="lm<?php echo $MovementType; ?> <?php if ($Sector->getLink($MovementType)) { ?>con<?php } else { ?>wall<?php } ?>"></div><?php
 								if (isset($ToggleLink)) { ?>
@@ -36,24 +36,35 @@
 								}
 							}
 							if ($Sector->hasLocation() || $Sector->hasPlanet()) { ?>
-								<div class="lmloc"><?php
-								if ($Sector->hasLocation()) {
+								<div class="lmlocs"><?php
 									foreach ($Sector->getLocations() as $Location) {
 										if ($isCurrentSector && $Location->hasAction() && !$GalaxyMap) {
 											?><a href="<?php echo $Location->getExamineHREF() ?>"><?php
 										} ?>
-											<img src="<?php echo $Location->getImage() ?>" width="16" height="16" alt="<?php echo $Location->getName() ?>" title="<?php echo $Location->getName() ?>" /><?php
+										<img src="<?php echo $Location->getImage() ?>" width="16" height="16" alt="<?php echo $Location->getName() ?>" title="<?php echo $Location->getName() ?>" <?php
+											if ($UniGen) { ?>
+												class="drag_loc"
+												data-href="<?php echo $DragLocationHREF; ?>"
+												data-sector="<?php echo $Sector->getSectorID(); ?>"
+												data-loc="<?php echo $Location->getTypeID(); ?>" <?php
+											} ?>
+										/><?php
 										if ($isCurrentSector && $Location->hasAction() && !$GalaxyMap) { ?></a><?php }
 									}
-								}
-								if ($Sector->hasPlanet()) {
-									$planet = $Sector->getPlanet();
-									if ($isCurrentSector && !$GalaxyMap) {
-										?><a href="<?php echo $planet->getExamineHREF(); ?>"><?php
+									if ($Sector->hasPlanet()) {
+										$planet = $Sector->getPlanet();
+										if ($isCurrentSector && !$GalaxyMap) {
+											?><a href="<?php echo $planet->getExamineHREF(); ?>"><?php
+										} ?>
+										<img title="<?php echo $planet->getTypeName() ?>" alt="Planet" src="<?php echo $planet->getTypeImage() ?>" width="16" height="16" <?php
+											if ($UniGen) { ?>
+												class="drag_loc"
+												data-href="<?php echo $DragPlanetHREF; ?>"
+												data-sector="<?php echo $Sector->getSectorID(); ?>" <?php
+											} ?>
+										/><?php
+										if ($isCurrentSector && !$GalaxyMap) { ?></a><?php }
 									} ?>
-									<img title="<?php echo $planet->getTypeName() ?>" alt="Planet" src="<?php echo $planet->getTypeImage() ?>" width="16" height="16"/><?php
-									if ($isCurrentSector && !$GalaxyMap) { ?></a><?php }
-								} ?>
 								</div><?php
 							}
 							if ((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($MapPlayer)) {

@@ -79,6 +79,24 @@ class AbstractSmrLocation {
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$location->getTypeID()] = $location;
 	}
 
+	public static function moveSectorLocation(int $gameID, int $oldSectorID, int $newSectorID, SmrLocation $location) : void {
+		if ($oldSectorID === $newSectorID) {
+			return;
+		}
+
+		// Make sure cache is populated
+		self::getSectorLocations($gameID, $oldSectorID);
+		self::getSectorLocations($gameID, $newSectorID);
+
+		$db = Smr\Database::getInstance();
+		$db->write('UPDATE location SET sector_id = ' . $db->escapeNumber($newSectorID) . ' WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($oldSectorID) . ' AND location_type_id = ' . $location->getTypeID());
+		unset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$oldSectorID][$location->getTypeID()]);
+		self::$CACHE_SECTOR_LOCATIONS[$gameID][$newSectorID][$location->getTypeID()] = $location;
+
+		// Preserve the same element order that we'd have in getSectorLocations
+		ksort(self::$CACHE_SECTOR_LOCATIONS[$gameID][$newSectorID]);
+	}
+
 	public static function removeSectorLocations(int $gameID, int $sectorID) : void {
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM location WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
