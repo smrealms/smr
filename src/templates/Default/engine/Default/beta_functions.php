@@ -64,8 +64,8 @@
 <form method="POST" action="<?php echo $PersonalRelationsHREF; ?>">
 	<input type="number" name="amount" value="0" style="width:75px" />&nbsp;
 	<select name="race"><?php
-		foreach (Globals::getRaces() as $race) { ?>
-			<option value="<?php echo $race['Race ID']; ?>"><?php echo $race['Race Name']; ?></option><?php
+		foreach (Smr\Race::getAllNames() as $raceID => $raceName) { ?>
+			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
 	<input type="submit" value="Set Personal Relations" />
@@ -75,10 +75,9 @@
 <form method="POST" action="<?php echo $RaceRelationsHREF; ?>">
 	<input type="number" name="amount" value="0" min="<?php echo MIN_GLOBAL_RELATIONS; ?>" max="<?php echo MAX_GLOBAL_RELATIONS; ?>" style="width:75px" />&nbsp;
 	<select name="race"><?php
-		foreach (Globals::getRaces() as $race) {
-			if ($race['Race ID'] == $ThisPlayer->getRaceID()) continue;
-			if ($race['Race ID'] == RACE_NEUTRAL) continue; ?>
-			<option value="<?php echo $race['Race ID']; ?>"><?php echo $race['Race Name']; ?></option><?php
+		foreach (Smr\Race::getPlayableNames() as $raceID => $raceName) {
+			if ($raceID == $ThisPlayer->getRaceID()) continue; ?>
+			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
 	<input type="submit" value="Set Political Relations" />
@@ -87,10 +86,9 @@
 
 <form method="POST" action="<?php echo $ChangeRaceHREF; ?>">
 	<select name="race"><?php
-		foreach (Globals::getRaces() as $race) {
-			if ($race['Race ID'] == $ThisPlayer->getRaceID()) continue;
-			if ($race['Race ID'] == RACE_NEUTRAL) continue; ?>
-			<option value="<?php echo $race['Race ID']; ?>"><?php echo $race['Race Name']; ?></option><?php
+		foreach (Smr\Race::getPlayableNames() as $raceID => $raceName) {
+			if ($raceID == $ThisPlayer->getRaceID()) continue; ?>
+			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
 	<input type="submit" value="Change Race" />

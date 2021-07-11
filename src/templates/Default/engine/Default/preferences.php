@@ -67,7 +67,7 @@ if (isset($GameID)) { ?>
 					<td>
 						<select name="race_id"><?php
 							foreach ($ThisPlayer->getGame()->getPlayableRaceIDs() as $RaceID) {
-								?><option value="<?php echo $RaceID; ?>" <?php if ($RaceID == $ThisPlayer->getRaceID()) { ?> selected<?php } ?>><?php echo Globals::getRaceName($RaceID); ?></option><?php
+								?><option value="<?php echo $RaceID; ?>" <?php if ($RaceID == $ThisPlayer->getRaceID()) { ?> selected<?php } ?>><?php echo Smr\Race::getName($RaceID); ?></option><?php
 							} ?>
 						</select>
 						<br />

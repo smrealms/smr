@@ -38,7 +38,7 @@ function buildShipStats(SmrShipType $ship) : array {
 	// Array key is the td class (sort key), and array value is the data value
 	$stat = [
 		'name' => $ship->getName(),
-		'race race' . $ship->getRaceID() => Globals::getRaceName($ship->getRaceID()),
+		'race race' . $ship->getRaceID() => Smr\Race::getName($ship->getRaceID()),
 		'class_' => Smr\ShipClass::getName($ship->getClassID()),
 		'cost' => number_format($ship->getCost()),
 		'speed' => $ship->getSpeed(),

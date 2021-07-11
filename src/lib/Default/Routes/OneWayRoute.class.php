@@ -2,6 +2,8 @@
 
 namespace Routes;
 
+use Smr\Race;
+
 class OneWayRoute extends Route {
 	private int $sellSectorId;
 	private int $buySectorId;
@@ -99,6 +101,6 @@ class OneWayRoute extends Route {
 	}
 
 	public function getRouteString() : string {
-		return $this->buySectorId . ' (' . \Globals::getRaceName($this->buyPortRace) . ') buy ' . \Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->distance->getDistance() . ($this->distance->getNumWarps() > 0 ? ' + ' . $this->distance->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . \Globals::getRaceName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
+		return $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . \Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->distance->getDistance() . ($this->distance->getNumWarps() > 0 ? ' + ' . $this->distance->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
 	}
 }

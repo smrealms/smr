@@ -42,10 +42,9 @@ function getMessagePlayer(int $accountID, int $gameID, int $messageType = null) 
 	} else if ($accountID == ACCOUNT_ID_OP_ANNOUNCE || $accountID == ACCOUNT_ID_ALLIANCE_COMMAND) {
 		$return = '<span class="green">Alliance Command</span>';
 	} else {
-		foreach (Globals::getRaces() as $raceID => $raceInfo) {
+		foreach (Smr\Race::getAllNames() as $raceID => $raceName) {
 			if ($accountID == ACCOUNT_ID_GROUP_RACES + $raceID) {
-				$return = '<span class="yellow">' . $raceInfo['Race Name'] . ' Government</span>';
-				return $return;
+				return '<span class="yellow">' . $raceName . ' Government</span>';
 			}
 		}
 		if (!empty($accountID)) {

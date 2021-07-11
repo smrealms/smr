@@ -10,7 +10,7 @@ if (!isset($var['race_id'])) {
 }
 $raceID = $var['race_id'];
 
-$template->assign('PageTopic', 'Ruling Council Of ' . Globals::getRaceName($raceID));
+$template->assign('PageTopic', 'Ruling Council Of ' . Smr\Race::getName($raceID));
 $template->assign('RaceID', $raceID);
 
 Menu::council($raceID);

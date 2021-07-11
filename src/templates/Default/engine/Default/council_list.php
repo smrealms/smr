@@ -27,7 +27,7 @@
 	} ?>
 	<br /><br />
 
-	<img src="<?php echo Globals::getRaceImage($RaceID); ?>" width="212" height="270" /><br /><br />
+	<img src="<?php echo Smr\Race::getImage($RaceID); ?>" width="212" height="270" /><br /><br />
 
 	<h3>Council Members</h3><br /><?php
 	$CouncilMembers = Council::getRaceCouncil($ThisPlayer->getGameID(), $RaceID);
@@ -63,10 +63,8 @@
 <br /><br />
 
 <b>View Council For:</b><br /><?php
-foreach (Globals::getRaces() as $RaceID => $RaceInfo) {
-	if ($RaceID != RACE_NEUTRAL) { ?>
-		<span class="smallFont"><?php
-			echo $ThisPlayer->getColouredRaceName($RaceID, true); ?>
-		</span><br /><?php
-	}
+foreach (Smr\Race::getPlayableIDs() as $RaceID) { ?>
+	<span class="smallFont"><?php
+		echo $ThisPlayer->getColouredRaceName($RaceID, true); ?>
+	</span><br /><?php
 } ?>

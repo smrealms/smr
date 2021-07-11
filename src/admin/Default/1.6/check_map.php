@@ -35,8 +35,8 @@ $tradeGoods = [GOODS_NOTHING => false];
 foreach (array_keys(Globals::getGoods()) as $goodID) {
 	$tradeGoods[$goodID] = true;
 }
-$tradeRaces = [RACE_NEUTRAL => true];
-foreach (array_keys(Globals::getRaces()) as $raceID) {
+$tradeRaces = [];
+foreach (Smr\Race::getAllIDs() as $raceID) {
 	$tradeRaces[$raceID] = true;
 }
 

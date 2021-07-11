@@ -13,7 +13,7 @@
 					foreach ($PeaceRaces as $RaceID => $raceInfo) { ?>
 						<tr>
 							<td>
-								<img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="100" height="106" /><br /><?php
+								<img src="<?php echo Smr\Race::getHeadImage($RaceID); ?>" width="100" height="106" /><br /><?php
 								echo Globals::getColouredRaceNameForRace($RaceID, $ThisPlayer->getGameID(), $ThisPlayer->getRaceID()); ?>
 							</td>
 						</tr><?php
@@ -25,7 +25,7 @@
 					foreach ($NeutralRaces as $RaceID => $raceInfo) { ?>
 						<tr>
 							<td>
-								<img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="100" height="106" /><br /><?php
+								<img src="<?php echo Smr\Race::getHeadImage($RaceID); ?>" width="100" height="106" /><br /><?php
 								echo Globals::getColouredRaceNameForRace($RaceID, $ThisPlayer->getGameID(), $ThisPlayer->getRaceID()); ?>
 							</td>
 						</tr><?php
@@ -37,7 +37,7 @@
 					foreach ($WarRaces as $RaceID => $raceInfo) { ?>
 						<tr>
 							<td>
-								<img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="100" height="106" /><br /><?php
+								<img src="<?php echo Smr\Race::getHeadImage($RaceID); ?>" width="100" height="106" /><br /><?php
 								echo Globals::getColouredRaceNameForRace($RaceID, $ThisPlayer->getGameID(), $ThisPlayer->getRaceID()); ?>
 							</td>
 						</tr><?php

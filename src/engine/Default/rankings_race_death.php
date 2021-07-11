@@ -9,5 +9,5 @@ $template->assign('PageTopic', 'Racial Standings');
 Menu::rankings(2, 2);
 
 $db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT race_id, sum(deaths) as amount, count(*) as num_players FROM player JOIN race USING(race_id) WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' GROUP BY race_id ORDER BY amount DESC, race_name ASC');
+$dbResult = $db->read('SELECT race_id, sum(deaths) as amount, count(*) as num_players FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' GROUP BY race_id ORDER BY amount DESC');
 $template->assign('Ranks', Rankings::collectRaceRankings($dbResult, $player));

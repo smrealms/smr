@@ -10,7 +10,7 @@ if (!isset($var['race_id'])) {
 }
 $raceID = $var['race_id'];
 
-$template->assign('PageTopic', 'Ruling Council Of ' . Globals::getRaceName($raceID));
+$template->assign('PageTopic', 'Ruling Council Of ' . Smr\Race::getName($raceID));
 
 // echo menu
 Menu::council($raceID);
@@ -20,8 +20,8 @@ $raceRelations = Globals::getRaceRelations($player->getGameID(), $raceID);
 $peaceRaces = array();
 $neutralRaces = array();
 $warRaces = array();
-foreach (Globals::getRaces() as $otherRaceID => $raceInfo) {
-	if ($otherRaceID != RACE_NEUTRAL && $raceID != $otherRaceID) {
+foreach (Smr\Race::getPlayableIDs() as $otherRaceID) {
+	if ($raceID != $otherRaceID) {
 		if ($raceRelations[$otherRaceID] >= RELATIONS_PEACE) {
 			$peaceRaces[$otherRaceID] = $raceInfo;
 		} elseif ($raceRelations[$otherRaceID] <= RELATIONS_WAR) {

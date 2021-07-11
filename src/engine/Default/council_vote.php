@@ -25,8 +25,8 @@ if ($dbResult->hasRecord()) {
 
 $voteRelations = array();
 $raceRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
-foreach (Globals::getRaces() as $raceID => $raceInfo) {
-	if ($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID()) {
+foreach (Smr\Race::getPlayableIDs() as $raceID) {
+	if ($raceID == $player->getRaceID()) {
 		continue;
 	}
 	$container = Page::create('council_vote_processing.php', '', array('race_id' => $raceID));

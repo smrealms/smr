@@ -2,6 +2,8 @@
 
 namespace Traits;
 
+use Smr\Race;
+
 /**
  * Implements the interface for classes that need a $raceID property.
  */
@@ -13,6 +15,6 @@ trait RaceID {
 	}
 
 	public function getRaceName() : string {
-		return \Globals::getRaceName($this->raceID);
+		return Race::getName($this->raceID);
 	}
 }

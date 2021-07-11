@@ -18,8 +18,8 @@ $file = ';SMR1.6 Sectors File v' . SMR_FILE_VERSION . '
 ; Created on ' . date(DEFAULT_DATE_TIME_FORMAT) . '
 [Races]
 ; Name = ID' . EOL;
-foreach (Globals::getRaces() as $race) {
-	$file .= inify($race['Race Name']) . '=' . $race['Race ID'] . EOL;
+foreach (Smr\Race::getAllNames() as $raceID => $raceName) {
+	$file .= inify($raceName) . '=' . $raceID . EOL;
 }
 
 $file .= '[Goods]

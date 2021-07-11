@@ -23,9 +23,9 @@
 	<body onload="resetBoxes()">
 		<div id="container">
 			<form id="raceform" name="raceform" style="text-align:center;"><?php
-				foreach (Globals::getRaces() as $raceID => $race) { ?>
-					<input type="checkbox" id="race<?php echo $raceID; ?>" name="races" value="<?php echo $race['Race Name']; ?>" onClick="raceToggle()">
-					<label for="race<?php echo $raceID; ?>" class="race<?php echo $raceID; ?>"><?php echo $race['Race Name']; ?></label>&thinsp;<?php
+				foreach (Smr\Race::getAllNames() as $raceID => $raceName) { ?>
+					<input type="checkbox" id="race<?php echo $raceID; ?>" name="races" value="<?php echo $raceName; ?>" onClick="raceToggle()">
+					<label for="race<?php echo $raceID; ?>" class="race<?php echo $raceID; ?>"><?php echo $raceName; ?></label>&thinsp;<?php
 				} ?>
 			</form>
 			<table id="data-list" class="standard center">
@@ -39,8 +39,8 @@
 							<span class="sort" data-sort="race">Race</span><br />
 							<select onchange="filterSelect(this)">
 								<option>All</option><?php
-								foreach (Globals::getRaces() as $raceId => $raceData) { ?>
-									<option class="race<?php echo $raceId; ?>"><?php echo $raceData['Race Name']; ?></option><?php
+								foreach (Smr\Race::getAllNames() as $raceId => $raceName) { ?>
+									<option class="race<?php echo $raceId; ?>"><?php echo $raceName; ?></option><?php
 								} ?>
 							</select>
 						</th>
