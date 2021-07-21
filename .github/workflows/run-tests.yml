@@ -1,13 +1,13 @@
 name: Run Tests
 
 on:
-  # Run tests for pull requests or pushes to the master branch
+  # Run tests for pull requests or pushes to the main branch
   pull_request:
     branches:
-      - master
+      - main
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build-and-test:

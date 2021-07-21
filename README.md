@@ -1,7 +1,7 @@
-[![Travis Build](https://travis-ci.org/smrealms/smr.svg?branch=master)](https://travis-ci.org/smrealms/smr)
-[![Test Coverage](https://codecov.io/gh/smrealms/smr/branch/master/graph/badge.svg)](https://codecov.io/gh/smrealms/smr)
+[![Travis Build](https://travis-ci.org/smrealms/smr.svg?branch=main)](https://travis-ci.org/smrealms/smr)
+[![Test Coverage](https://codecov.io/gh/smrealms/smr/branch/main/graph/badge.svg)](https://codecov.io/gh/smrealms/smr)
 [![Docker Build](https://img.shields.io/docker/build/smrealms/smr.svg)](https://cloud.docker.com/swarm/smrealms/repository/docker/smrealms/smr)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/smrealms/smr/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/smrealms/smr/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/smrealms/smr/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/smrealms/smr/?branch=main)
 
 # Installation
 
