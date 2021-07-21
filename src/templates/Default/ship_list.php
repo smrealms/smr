@@ -33,8 +33,8 @@
 							<span class="sort" data-sort="race">Race</span><br />
 							<select onchange="filterSelect(this)">
 								<option>All</option><?php
-								foreach (Globals::getRaces() as $raceId => $raceData) { ?>
-									<option class="race<?php echo $raceId; ?>"><?php echo $raceData['Race Name']; ?></option><?php
+								foreach (Smr\Race::getAllNames() as $raceId => $raceName) { ?>
+									<option class="race<?php echo $raceId; ?>"><?php echo $raceName; ?></option><?php
 								} ?>
 							</select>
 						</th>

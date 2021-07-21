@@ -36,13 +36,13 @@ if (empty($player_name)) {
 	create_error('You must enter a player name!');
 }
 
-$race_id = Request::getInt('race_id');
-if (empty($race_id) || $race_id == RACE_NEUTRAL) {
-	create_error('Please choose a race!');
-}
-
 $gameID = $var['game_id'];
 $game = SmrGame::getGame($gameID);
+
+$race_id = Request::getInt('race_id');
+if (!in_array($race_id, $game->getPlayableRaceIDs())) {
+	create_error('Please choose a race!');
+}
 
 // does it cost SMR Credits to join this game?
 $creditsNeeded = $game->getCreditsNeeded();

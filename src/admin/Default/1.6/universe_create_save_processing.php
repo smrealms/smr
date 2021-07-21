@@ -124,11 +124,11 @@ if ($submit == 'Create Galaxies') {
 
 	$totalRaceDist = 0;
 	$numRacePorts = array();
-	foreach (Globals::getRaces() as $race) {
-		$racePercent = Request::getInt('race' . $race['Race ID']);
+	foreach (Smr\Race::getAllIDs() as $raceID) {
+		$racePercent = Request::getInt('race' . $raceID);
 		if (!empty($racePercent)) {
 			$totalRaceDist += $racePercent;
-			$numRacePorts[$race['Race ID']] = ceil($racePercent / 100 * $totalPorts);
+			$numRacePorts[$raceID] = ceil($racePercent / 100 * $totalPorts);
 		}
 	}
 	$assignedPorts = array_sum($numRacePorts);

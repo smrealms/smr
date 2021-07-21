@@ -387,18 +387,18 @@ class SmrGame {
 		if ($relations < MIN_GLOBAL_RELATIONS || $relations > MAX_GLOBAL_RELATIONS) {
 			throw new Exception('Invalid relations: ' . $relations);
 		}
-		foreach (Globals::getRaces() as $race1) {
-			foreach (Globals::getRaces() as $race2) {
-				if ($race1['Race ID'] == $race2['Race ID']) {
+		foreach (Smr\Race::getAllIDs() as $raceID1) {
+			foreach (Smr\Race::getAllIDs() as $raceID2) {
+				if ($raceID1 == $raceID2) {
 					// Max relations for a race with itself
 					$amount = MAX_GLOBAL_RELATIONS;
-				} elseif ($race1['Race ID'] == RACE_NEUTRAL || $race2['Race ID'] == RACE_NEUTRAL) {
+				} elseif ($raceID1 == RACE_NEUTRAL || $raceID2 == RACE_NEUTRAL) {
 					$amount = 0; //0 relations with neutral
 				} else {
 					$amount = $relations;
 				}
 				$this->db->write('REPLACE INTO race_has_relation (game_id, race_id_1, race_id_2, relation)
-				                  VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($race1['Race ID']) . ',' . $this->db->escapeNumber($race2['Race ID']) . ',' . $this->db->escapeNumber($amount) . ')');
+				                  VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID1) . ',' . $this->db->escapeNumber($raceID2) . ',' . $this->db->escapeNumber($amount) . ')');
 			}
 		}
 	}

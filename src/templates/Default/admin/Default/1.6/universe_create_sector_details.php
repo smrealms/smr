@@ -22,8 +22,8 @@
 	</select>&nbsp;
 
 	<select name="port_race"><?php
-		foreach (Globals::getRaces() as $race) { ?>
-		<option value="<?php echo $race['Race ID']; ?>" <?php echo ($race['Race ID'] == $SelectedPortRaceID ? 'selected' : ''); ?>><?php echo $race['Race Name']; ?></option><?php
+		foreach (Smr\Race::getAllNames() as $raceID => $raceName) { ?>
+		<option value="<?php echo $raceID; ?>" <?php echo ($raceID == $SelectedPortRaceID ? 'selected' : ''); ?>><?php echo $raceName; ?></option><?php
 	} ?>
 	</select>
 	<br />

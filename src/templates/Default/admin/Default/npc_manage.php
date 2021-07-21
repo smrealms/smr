@@ -34,11 +34,8 @@ if (!empty($SelectedGameID)) { ?>
 						<td><input required name="player_name" value="<?php echo $npc['default_player_name']; ?>" /></td>
 						<td>
 							<select name="race_id"><?php
-								foreach (Globals::getRaces() as $raceID => $race) {
-									if ($raceID == RACE_NEUTRAL) {
-										continue;
-									} ?>
-									<option value="<?php echo $raceID; ?>"><?php echo $race['Race Name']; ?></option><?php
+								foreach (Smr\Race::getPlayableIDs() as $raceID) { ?>
+									<option value="<?php echo $raceID; ?>"><?php echo Smr\Race::getName($raceID); ?></option><?php
 								} ?>
 							</select>
 						</td>

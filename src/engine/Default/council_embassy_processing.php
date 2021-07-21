@@ -54,9 +54,8 @@ if ($type == 'PEACE') {
 $color = ($type == 'PEACE' ? 'dgreen' : 'red');
 $type_fancy = "<span class=\"$color\">$type</span>";
 $message = $player->getLevelName() . " " . $player->getBBLink()
-           . " has initiated a vote for $type_fancy with the "
-           . Globals::getRaceName($race_id)
-           . "! You have " . format_time(TIME_FOR_COUNCIL_VOTE)
+           . " has initiated a vote for $type_fancy with the [race=$race_id]!"
+           . "You have " . format_time(TIME_FOR_COUNCIL_VOTE)
            . " to cast your vote.";
 
 foreach ($councilMembers as $accountID) {

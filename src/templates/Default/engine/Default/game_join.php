@@ -91,15 +91,10 @@ if (!isset($JoinGameFormHref)) { ?>
 					<li>The <span class="yellow">weapons</span> you can arm your ship with - you can only buy weapons from your own race and races you have peace with.</li>
 				</ul>
 				Races that appear strongest may have certain disadvantages while races that appear weakest have special benefits. Listed below are some of the basic characteristics of each race.<br />
-				<ul>
-					<li><span class="yellow">Alskant</span> - Large variety of hardware but no dedicated warship. Trade bonuses with all races.</li>
-					<li><span class="yellow">Creonti</span> - Cute and cuddly with lots of firepower. Reinforced ships with heavy armour plating.</li>
-					<li><span class="yellow">Human</span> - Jump drive technology which enables fast inter-galactic movement.</li>
-					<li><span class="yellow">Ik'Thorne</span> - Most overall defense, relying heavily on swarms of combat drones.</li>
-					<li><span class="yellow">Salvene</span> - Illusion Generator technology which allows ships to mask their full strength.</li>
-					<li><span class="yellow">Thevian</span> - Fastest racial ships in the universe.</li>
-					<li><span class="yellow">WQ Human</span> - Cloaking Device technology which allows ships to hide from lower level traders.</li>
-					<li><span class="yellow">Nijarin</span> - High firepower and Drone Communication Scrambler technology offsets lower defenses.</li>
+				<ul><?php
+					foreach ($Races as $Race) { ?>
+						<li><span class="yellow"><?php echo $Race['Name']; ?></span> - <?php echo $Race['ShortDescription']; ?></li><?php
+					} ?>
 				</ul>
 				A full description and ship list for each race can be found on the SMR Wiki <a href="<?php echo WIKI_URL; ?>/game-guide/races" target="_blank">Races<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Races"/></a> page.
 				<br /><br />
@@ -120,8 +115,8 @@ if (!isset($JoinGameFormHref)) { ?>
 						<td>
 						<select name="race_id" OnChange="showRaceInfo(this);">
 							<?php /*<option value="1">[please select]</option> */
-							foreach ($Races as $Race) {
-								?><option value="<?php echo $Race['ID']; if ($Race['Selected']) { ?>" selected="selected<?php } ?>"><?php echo $Race['Name']; ?> (<?php echo $Race['NumberOfPlayers']; ?> Traders)<?php
+							foreach ($Races as $RaceID => $Race) {
+								?><option value="<?php echo $RaceID; if ($Race['Selected']) { ?>" selected="selected<?php } ?>"><?php echo $Race['Name']; ?> (<?php echo $Race['NumberOfPlayers']; ?> Traders)<?php
 							} ?>
 						</select>
 						</td>
@@ -136,8 +131,8 @@ if (!isset($JoinGameFormHref)) { ?>
 						<td colspan="2" style="width:300px; height:315px;" class="top">
 							<div id="race_descr">
 								<?php
-								foreach ($Races as $Race) { ?>
-									<span class="race_descr<?php echo $Race['ID']; if (!$Race['Selected']) { ?> hide<?php } ?>"><?php echo $Race['Description']; ?></span><?php
+								foreach ($Races as $RaceID => $Race) { ?>
+									<span class="race_descr<?php echo $RaceID; if (!$Race['Selected']) { ?> hide<?php } ?>"><?php echo $Race['LongDescription']; ?></span><?php
 								} ?>
 							</div>
 						</td>

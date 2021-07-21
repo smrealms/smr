@@ -860,8 +860,7 @@ abstract class AbstractSmrPlayer {
 	public function canBeProtectedByRace(int $raceID) : bool {
 		if (!isset($this->canFed)) {
 			$this->canFed = array();
-			$RACES = Globals::getRaces();
-			foreach ($RACES as $raceID2 => $raceName) {
+			foreach (Smr\Race::getAllIDs() as $raceID2) {
 				$this->canFed[$raceID2] = $this->getRelation($raceID2) >= ALIGN_FED_PROTECTION;
 			}
 			$dbResult = $this->db->read('SELECT race_id, allowed FROM player_can_fed
@@ -1180,7 +1179,7 @@ abstract class AbstractSmrPlayer {
 	public function getLevelName() : string {
 		$level_name = Globals::getLevelRequirements()[$this->getLevelID()]['Name'];
 		if ($this->isPresident()) {
-			$level_name = '<img src="images/council_president.png" title="' . Globals::getRaceName($this->getRaceID()) . ' President" height="12" width="16" />&nbsp;' . $level_name;
+			$level_name = '<img src="images/council_president.png" title="' . Smr\Race::getName($this->getRaceID()) . ' President" height="12" width="16" />&nbsp;' . $level_name;
 		}
 		return $level_name;
 	}
@@ -1433,12 +1432,11 @@ abstract class AbstractSmrPlayer {
 	protected function getPersonalRelationsData() : void {
 		if (!isset($this->personalRelations)) {
 			//get relations
-			$RACES = Globals::getRaces();
 			$this->personalRelations = array();
-			foreach ($RACES as $raceID => $raceName) {
+			foreach (Smr\Race::getAllIDs() as $raceID) {
 				$this->personalRelations[$raceID] = 0;
 			}
-			$dbResult = $this->db->read('SELECT race_id,relation FROM player_has_relation WHERE ' . $this->SQL . ' LIMIT ' . count($RACES));
+			$dbResult = $this->db->read('SELECT race_id,relation FROM player_has_relation WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->personalRelations[$dbRecord->getInt('race_id')] = $dbRecord->getInt('relation');
 			}
@@ -1464,11 +1462,10 @@ abstract class AbstractSmrPlayer {
 	public function getRelations() : array {
 		if (!isset($this->relations)) {
 			//get relations
-			$RACES = Globals::getRaces();
 			$raceRelations = Globals::getRaceRelations($this->getGameID(), $this->getRaceID());
 			$personalRels = $this->getPersonalRelations(); // make sure they're initialised.
 			$this->relations = array();
-			foreach ($RACES as $raceID => $raceName) {
+			foreach (Smr\Race::getAllIDs() as $raceID) {
 				$this->relations[$raceID] = $personalRels[$raceID] + $raceRelations[$raceID];
 			}
 		}
@@ -1556,7 +1553,7 @@ abstract class AbstractSmrPlayer {
 	public function giveStartingRelations() : void {
 		if ($this->getRaceID() === RACE_ALSKANT) {
 			// Give Alskants bonus personal relations to start.
-			foreach (Globals::getRaces() as $raceID => $raceInfo) {
+			foreach (Smr\Race::getAllIDs() as $raceID) {
 				$this->setRelations(ALSKANT_BONUS_RELATIONS, $raceID);
 			}
 		}

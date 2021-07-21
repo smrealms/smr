@@ -30,11 +30,10 @@ Menu::headquarters();
 
 $warRaces = [];
 if ($raceID != RACE_NEUTRAL) {
-	$races = Globals::getRaces();
 	$raceRelations = Globals::getRaceRelations($player->getGameID(), $raceID);
 	foreach ($raceRelations as $otherRaceID => $relation) {
 		if ($relation <= RELATIONS_WAR) {
-			$warRaces[] = $races[$otherRaceID]['Race Name'];
+			$warRaces[] = Smr\Race::getName($otherRaceID);
 		}
 	}
 }

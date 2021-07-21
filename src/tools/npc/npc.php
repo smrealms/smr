@@ -621,7 +621,7 @@ function findRoutes(SmrPlayer $player) : array {
 
 	// Only allow NPCs to trade at ports of their race and neutral ports
 	$tradeRaces = array();
-	foreach (Globals::getRaces() as $raceID => $race) {
+	foreach (Smr\Race::getAllIDs() as $raceID) {
 		$tradeRaces[$raceID] = false;
 	}
 	$tradeRaces[$player->getRaceID()] = true;

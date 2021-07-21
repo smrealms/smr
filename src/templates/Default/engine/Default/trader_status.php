@@ -27,9 +27,9 @@
 			</a>
 
 			<br /><?php
-			foreach (Globals::getRaces() as $raceID => $raceInfo) {
+			foreach (Smr\Race::getAllNames() as $raceID => $raceName) {
 				if ($ThisPlayer->getPersonalRelation($raceID) != 0) {
-					echo $raceInfo['Race Name'] . ' : ' . get_colored_text($ThisPlayer->getPersonalRelation($raceID)) . '<br />';
+					echo $raceName . ' : ' . get_colored_text($ThisPlayer->getPersonalRelation($raceID)) . '<br />';
 				}
 			} ?>
 

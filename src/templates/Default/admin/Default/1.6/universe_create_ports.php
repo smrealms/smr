@@ -46,9 +46,9 @@
 						<th>Port Race</th>
 						<th>% Distribution</th>
 					</tr><?php
-					foreach (Globals::getRaces() as $raceID => $race) { ?>
+					foreach (Smr\Race::getAllNames() as $raceID => $raceName) { ?>
 						<tr>
-							<td class="right"><?php echo $race['Race Name']; ?></td>
+							<td class="right"><?php echo $raceName; ?></td>
 							<td><input class="center" type="number" size="5" name="race<?php echo $raceID; ?>" value="<?php echo $RacePercents[$raceID]; ?>" onInput="raceCalc();" /></td>
 						</tr><?php
 					} ?>

@@ -39,11 +39,10 @@ foreach ($game->getPlayableRaceIDs() as $raceID) {
 	// get number of traders in game
 	$dbResult = $db->read('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db->escapeNumber($raceID) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
 
-	$race = Globals::getRaces()[$raceID];
 	$races[$raceID] = [
-		'ID' => $raceID,
-		'Name' => $race['Race Name'],
-		'Description' => $race['Description'],
+		'Name' => Smr\Race::getName($raceID),
+		'ShortDescription' => Smr\RaceDetails::getShortDescription($raceID),
+		'LongDescription' => Smr\RaceDetails::getLongDescription($raceID),
 		'NumberOfPlayers' => $dbResult->record()->getInt('number_of_race'),
 		'Selected' => false,
 	];

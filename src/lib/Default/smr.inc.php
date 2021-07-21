@@ -70,9 +70,9 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'race':
 				$raceNameID = $default;
-				foreach (Globals::getRaces() as $raceID => $raceInfo) {
+				foreach (Smr\Race::getAllNames() as $raceID => $raceName) {
 					if ((is_numeric($raceNameID) && $raceNameID == $raceID)
-						|| $raceNameID == $raceInfo['Race Name']) {
+						|| $raceNameID == $raceName) {
 						if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 							return true;
 						}

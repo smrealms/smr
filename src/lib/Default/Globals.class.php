@@ -71,45 +71,13 @@ class Globals {
 		return self::$LEVEL_REQUIREMENTS;
 	}
 
-	public static function getRaces() : array {
-		if (!isset(self::$RACES)) {
-			self::initialiseDatabase();
-			self::$RACES = array();
-
-			// determine user level
-			$dbResult = self::$db->read('SELECT race_id,race_name,race_description FROM race ORDER BY race_id');
-			foreach ($dbResult->records() as $dbRecord) {
-				self::$RACES[$dbRecord->getInt('race_id')] = array(
-					'Race ID' => $dbRecord->getInt('race_id'),
-					'Race Name' => $dbRecord->getField('race_name'),
-					'Description' => $dbRecord->getField('race_description'),
-					'ImageLink' => 'images/race/race' . $dbRecord->getInt('race_id') . '.jpg',
-					'ImageHeadLink' => 'images/race/head/race' . $dbRecord->getInt('race_id') . '.jpg',
-				);
-			}
-		}
-		return self::$RACES;
-	}
-
-	public static function getRaceName(int $raceID) : string {
-		return Globals::getRaces()[$raceID]['Race Name'];
-	}
-
-	public static function getRaceImage(int $raceID) : string {
-		return Globals::getRaces()[$raceID]['ImageLink'];
-	}
-
-	public static function getRaceHeadImage(int $raceID) : string {
-		return Globals::getRaces()[$raceID]['ImageHeadLink'];
-	}
-
 	public static function getColouredRaceNameForRace(int $raceID, int $gameID, int $fromRaceID, bool $linked = true) : string {
 		$raceRelations = Globals::getRaceRelations($gameID, $fromRaceID);
 		return self::getColouredRaceName($raceID, $raceRelations[$raceID], $linked);
 	}
 
 	public static function getColouredRaceName(int $raceID, int $relations, bool $linked = true) : string {
-		$raceName = get_colored_text($relations, Globals::getRaceName($raceID));
+		$raceName = get_colored_text($relations, Smr\Race::getName($raceID));
 		if ($linked === true) {
 			$container = Page::create('skeleton.php', 'council_list.php', array('race_id' => $raceID));
 			$raceName = create_link($container, $raceName);
@@ -208,12 +176,11 @@ class Globals {
 		if (!isset(self::$RACE_RELATIONS[$gameID][$raceID])) {
 			self::initialiseDatabase();
 			//get relations
-			$RACES = Globals::getRaces();
 			self::$RACE_RELATIONS[$gameID][$raceID] = array();
-			foreach ($RACES as $otherRaceID => $raceArray) {
+			foreach (Smr\Race::getAllIDs() as $otherRaceID) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;
 			}
-			$dbResult = self::$db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . self::$db->escapeNumber($raceID) . ' AND game_id=' . self::$db->escapeNumber($gameID) . ' LIMIT ' . count($RACES));
+			$dbResult = self::$db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . self::$db->escapeNumber($raceID) . ' AND game_id=' . self::$db->escapeNumber($gameID));
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$dbRecord->getInt('race_id_2')] = $dbRecord->getInt('relation');
 			}

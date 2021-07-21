@@ -14,9 +14,8 @@ $template->assign('PageTopic', 'Ruling Council Of ' . $player->getRaceName());
 Menu::council($player->getRaceID());
 
 $voteRaces = array();
-$RACES = Globals::getRaces();
-foreach ($RACES as $raceID => $raceInfo) {
-	if ($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID()) {
+foreach (Smr\Race::getPlayableIDs() as $raceID) {
+	if ($raceID == $player->getRaceID()) {
 		continue;
 	}
 	$dbResult = $db->read('SELECT 1 FROM race_has_voting
