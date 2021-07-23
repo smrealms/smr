@@ -12,26 +12,30 @@ class BarDrink {
 
 	private const DRINK_NAMES = [
 		'Spooky Midnight Special',
-		'Jack Daniels',
-		'Rastapus',
-		'Bud-Ice',
-		'Thevian Vodka Vortex',
-		'Small Pot o\' Ale',
+		'Azoolian Sunrise Special',
+		'Big Momma Mojito',
+		'Cosmic Crush',
+		'Federal Berry Fizz',
+		'Flux Punch',
+		'Holy Hand Squeezed Gimlet',
+		'Little Julep Torpedo',
+		'Medium Cargo Cherry Chiller',
+		'Pod Giver',
+		'Stellar Side Car',
+		'Smuggler\'s Salty Swizzler',
+		'Alskant Space Shandy',
+		'Creonti "Big Daiquiri"',
+		'Human Bourbon Bruiser',
+		'Ik\'Thorne Buttery Burst',
 		self::SALVENE_SWAMP_SODA,
-		'Nyquill',
-		'Martian Martini',
-		'The Wild West',
-		'Azoolian Midnight Special',
-		'Tequila Sunrise',
-		'Corona',
-		'MoonSpinner',
-		'PodGiver',
-		'DeadRock',
+		'Thevian Vodka Vortex',
+		'West Quadrant Colada',
+		'Nijarin Ion Martini',
 	];
 
 	private const SPECIAL_DRINK_MESSAGES = [
 		'Spooky Midnight Special' => 'Suddenly the secrets of the universe become manifestly clear and you are at peace.',
-		'Azoolian Midnight Special' => 'At the bottom of the glass, you see a reflection of the best trader in the universe, and it is you.',
+		'Azoolian Sunrise Special' => 'At the bottom of the glass, you see a reflection of the best trader in the universe, and it is you.',
 	];
 
 	public static function isSpecial(string $drink) : bool {
