@@ -67,7 +67,7 @@ foreach ($locations as $location) {
 	if ($location->isShipSold()) {
 		$extra .= $categories->addLoc($location->getTypeID(), 'Ships');
 		foreach ($location->getShipsSold() as $shipSold) {
-			$extra .= $shipSold['Name'] . '<br />';
+			$extra .= $shipSold->getName() . '<br />';
 		}
 	}
 	if ($location->isHardwareSold()) {
