@@ -12,10 +12,20 @@ if ($player->getCredits() < 10) {
 }
 $player->decreaseCredits(10);
 
+$dbResult = $db->read('SELECT drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER by drink_id DESC LIMIT 1');
+if ($dbResult->hasRecord()) {
+	$curr_drink_id = $dbResult->record()->getInt('drink_id');
+} else {
+	$curr_drink_id = 0;
+}
+
 if (isset($var['action']) && $var['action'] != 'drink') {
 	$drinkName = 'water';
-	$message .= 'You ask the bartender for some water and you quickly down it.<br />You don\'t feel quite so intoxicated anymore.<br />';
-	$db->write('DELETE FROM player_has_drinks WHERE ' . $player->getSQL() . ' LIMIT 1');
+	$message .= 'You ask the bartender for some water and you quickly down it.<br />';
+	if ($curr_drink_id > 0) {
+		$message .= 'You don\'t feel quite so intoxicated anymore.<br />';
+		$db->write('DELETE FROM player_has_drinks WHERE ' . $player->getSQL() . ' LIMIT 1');
+	}
 	$player->increaseHOF(1, array('Bar', 'Drinks', 'Water'), HOF_PUBLIC);
 } else {
 	$random = rand(1, 20);
@@ -30,16 +40,11 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 	$drinkName = $dbRecord->getField('drink_name');
 	$drink_id = $dbRecord->getInt('drink_id');
 
-	$dbResult = $db->read('SELECT drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER by drink_id DESC LIMIT 1');
-	if ($dbResult->hasRecord()) {
-		$curr_drink_id = $dbResult->record()->getInt('drink_id') + 1;
-	} else {
-		$curr_drink_id = 1;
-	}
+	$curr_drink_id++;
+	$db->write('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 
 	if ($drink_id != 11 && $drink_id != 1) {
 		$message .= ('You have bought a ' . $drinkName . ' for $10');
-		$db->write('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 		$player->increaseHOF(1, array('Bar', 'Drinks', 'Alcoholic'), HOF_PUBLIC);
 	} else {
 		$message .= ('The bartender says, Ive got something special for ya.<br />');
@@ -56,7 +61,6 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 		}
 
 		//has the power of 2 drinks
-		$db->write('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 		$curr_drink_id++;
 		$db->write('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 		$player->increaseHOF(1, array('Bar', 'Drinks', 'Special'), HOF_PUBLIC);
