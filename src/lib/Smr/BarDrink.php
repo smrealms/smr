@@ -7,6 +7,9 @@ namespace Smr;
  */
 class BarDrink {
 
+	// Special drink used in missions
+	public const SALVENE_SWAMP_SODA = 'Salvene Swamp Soda';
+
 	private const DRINK_NAMES = [
 		'Spooky Midnight Special',
 		'Jack Daniels',
@@ -14,7 +17,7 @@ class BarDrink {
 		'Bud-Ice',
 		'Thevian Vodka Vortex',
 		'Small Pot o\' Ale',
-		'Salvene Swamp Water',
+		self::SALVENE_SWAMP_SODA,
 		'Nyquill',
 		'Martian Martini',
 		'The Wild West',
