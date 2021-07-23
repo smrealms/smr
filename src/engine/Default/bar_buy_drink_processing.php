@@ -22,47 +22,33 @@ if ($dbResult->hasRecord()) {
 if (isset($var['action']) && $var['action'] != 'drink') {
 	$drinkName = 'water';
 	$message .= 'You ask the bartender for some water and you quickly down it.<br />';
+	// have they been drinking recently?
 	if ($curr_drink_id > 0) {
 		$message .= 'You don\'t feel quite so intoxicated anymore.<br />';
 		$db->write('DELETE FROM player_has_drinks WHERE ' . $player->getSQL() . ' LIMIT 1');
 	}
 	$player->increaseHOF(1, array('Bar', 'Drinks', 'Water'), HOF_PUBLIC);
 } else {
-	$random = rand(1, 20);
-	//only get Azool or Spock drink if they are very lucky
-	if ($random != 1) {
-		$dbResult = $db->read('SELECT drink_id, drink_name FROM bar_drink WHERE drink_id != 1 && drink_id != 11 ORDER BY rand() LIMIT 1');
+	// choose which drink to serve
+	if (rand(1, 20) == 1) {
+		//only have a chance at special drinks if they are very lucky
+		$drinkList = Smr\BarDrink::getAll();
 	} else {
-		$dbResult = $db->read('SELECT drink_id, drink_name FROM bar_drink ORDER BY rand() LIMIT 1');
+		$drinkList = Smr\BarDrink::getCommon();
 	}
-	$dbRecord = $dbResult->record(); // the bar_drink table should not be empty
-
-	$drinkName = $dbRecord->getField('drink_name');
-	$drink_id = $dbRecord->getInt('drink_id');
+	$drinkName = $drinkList[array_rand($drinkList)];
 
 	$curr_drink_id++;
 	$db->write('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 
-	if ($drink_id != 11 && $drink_id != 1) {
+	if (!Smr\BarDrink::isSpecial($drinkName)) {
 		$message .= ('You have bought a ' . $drinkName . ' for $10');
 		$player->increaseHOF(1, array('Bar', 'Drinks', 'Alcoholic'), HOF_PUBLIC);
 	} else {
-		$message .= ('The bartender says, Ive got something special for ya.<br />');
-		$message .= ('The bartender turns around for a minute and whips up a ' . $drinkName . '.<br />');
-
-		if ($drink_id == 1) {
-			$message .= ('The bartender says that Spock himself gave him the directions to make this drink.<br />');
-		}
-
-		$message .= ('You drink the ' . $drinkName . ' and feel like like you have been drinking for hours.<br />');
-
-		if ($drink_id == 11) {
-			$message .= ('After drinking the ' . $drinkName . ' you feel like nothing can bring you down and like you are the best trader in the universe.<br />');
-		}
-
-		//has the power of 2 drinks
-		$curr_drink_id++;
-		$db->write('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+		$message .= 'The bartender says, "I\'ve got something special for ya."<br />'
+			. 'They turn around for a minute and whip up a ' . $drinkName . '.<br />'
+			. 'You take a long, deep draught and feel like you have been drinking for hours.<br />'
+			. Smr\BarDrink::getSpecialMessage($drinkName) . '<br />';
 		$player->increaseHOF(1, array('Bar', 'Drinks', 'Special'), HOF_PUBLIC);
 	}
 
