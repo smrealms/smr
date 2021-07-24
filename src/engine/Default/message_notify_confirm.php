@@ -5,7 +5,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
 if (!isset($var['notified_time'])) {
-	$session->updateVar('notified_time', Smr\Epoch::time());
+	$var['notified_time'] = Smr\Epoch::time();
 }
 
 if (empty($var['message_id'])) {

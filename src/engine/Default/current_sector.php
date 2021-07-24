@@ -58,8 +58,7 @@ $template->assign('Sectors', $links);
 doTickerAssigns($template, $player, $db);
 
 if (!isset($var['UnreadMissions'])) {
-	$unreadMissions = $player->markMissionsRead();
-	$session->updateVar('UnreadMissions', $unreadMissions);
+	$var['UnreadMissions'] = $player->markMissionsRead();
 }
 $template->assign('UnreadMissions', $var['UnreadMissions']);
 
@@ -179,7 +178,8 @@ function checkForAttackMessage(string &$msg) : void {
 		$logID = (int)$msg;
 
 		$session = Smr\Session::getInstance();
-		$session->updateVar('AttackMessage', '[ATTACK_RESULTS]' . $msg);
+		$var = $session->getCurrentVar();
+		$var['AttackMessage'] = '[ATTACK_RESULTS]' . $msg;
 
 		$template = Smr\Template::getInstance();
 		if (!$template->hasTemplateVar('AttackResults')) {

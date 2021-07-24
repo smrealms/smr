@@ -25,7 +25,7 @@ if (!isset($var['ClaimText'])) {
 		$claimText = ('You have done nothing worthy of military payment.');
 	}
 
-	$session->updateVar('ClaimText', $claimText);
+	$var['ClaimText'] = $claimText;
 }
 
 $template->assign('ClaimText', $var['ClaimText']);

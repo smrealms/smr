@@ -5,10 +5,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-if (!isset($var['alliance_id'])) {
-	$session->updateVar('alliance_id', $player->getAllianceID());
-}
-$alliance_id = $var['alliance_id'];
+$alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
 
 if (isset($var['reply_id'])) {
 	$db->write('DELETE FROM alliance_thread
@@ -26,5 +23,5 @@ if (isset($var['reply_id'])) {
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
 				AND thread_id = ' . $db->escapeNumber($var['thread_id']));
-	Page::create('skeleton.php', 'alliance_message.php')->go();
+	Page::create('skeleton.php', 'alliance_message.php', ['alliance_id' => $alliance_id])->go();
 }

@@ -45,7 +45,7 @@ $template->assign('LastSector', $lastSector);
 
 if (isset($var['message'])) {
 	$template->assign('Message', $var['message']);
-	$session->updateVar('message', null); // Only show message once
+	unset($var['message']); // Only show message once
 }
 
 $container = Page::create('skeleton.php', '1.6/universe_create_sectors.php');

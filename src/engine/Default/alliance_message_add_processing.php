@@ -23,10 +23,7 @@ if ($action == 'Preview Thread' || $action == 'Preview Reply') {
 	$container->go();
 }
 
-if (!isset($var['alliance_id'])) {
-	$session->updateVar('alliance_id', $player->getAllianceID());
-}
-$alliance_id = $var['alliance_id'];
+$alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
 
 // it could be we got kicked during writing the msg
 if (!$player->hasAlliance()) {

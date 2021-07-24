@@ -5,10 +5,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-if (!isset($var['GameID'])) {
-	$session->updateVar('GameID', $player->getGameID());
-}
-$gameID = $var['GameID'];
+$gameID = $var['GameID'] ?? $player->getGameID();
 
 $template->assign('PageTopic', 'Current News');
 Menu::news();
@@ -18,7 +15,7 @@ doBreakingNewsAssign($gameID);
 doLottoNewsAssign($gameID);
 
 if (!isset($var['LastNewsUpdate'])) {
-	$session->updateVar('LastNewsUpdate', $player->getLastNewsUpdate());
+	$var['LastNewsUpdate'] = $player->getLastNewsUpdate();
 }
 
 $db = Smr\Database::getInstance();

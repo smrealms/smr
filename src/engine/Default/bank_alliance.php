@@ -17,11 +17,9 @@ if (!$account->isValidated()) {
 	create_error('You are not validated so you cannot use banks.');
 }
 
-if (!isset($var['alliance_id'])) {
-	$session->updateVar('alliance_id', $player->getAllianceID());
-}
+$allianceID = $var['alliance_id'] ?? $player->getAllianceID();
 
-$alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
 $template->assign('PageTopic', 'Bank');
 
 Menu::bank();

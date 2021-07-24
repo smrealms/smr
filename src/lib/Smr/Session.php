@@ -268,19 +268,22 @@ class Session {
 	 */
 	public function getRequestVar(string $varName, string $default = null) : string {
 		$result = Request::getVar($varName, $default);
-		$this->updateVar($varName, $result);
+		$var = $this->getCurrentVar();
+		$var[$varName] = $result;
 		return $result;
 	}
 
 	public function getRequestVarInt(string $varName, int $default = null) : int {
 		$result = Request::getVarInt($varName, $default);
-		$this->updateVar($varName, $result);
+		$var = $this->getCurrentVar();
+		$var[$varName] = $result;
 		return $result;
 	}
 
 	public function getRequestVarIntArray(string $varName, array $default = null) : array {
 		$result = Request::getVarIntArray($varName, $default);
-		$this->updateVar($varName, $result);
+		$var = $this->getCurrentVar();
+		$var[$varName] = $result;
 		return $result;
 	}
 
@@ -304,17 +307,6 @@ class Session {
 		}
 
 		$this->var[$this->SN] = $container;
-	}
-
-	public function updateVar(string $key, mixed $value) : void {
-		$var = $this->getCurrentVar();
-		if ($value === null) {
-			if (isset($var[$key])) {
-				unset($var[$key]);
-			}
-		} else {
-			$var[$key] = $value;
-		}
 	}
 
 	public function clearLinks() : void {

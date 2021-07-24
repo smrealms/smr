@@ -13,8 +13,8 @@ if (isset($var['news'])) {
 	$db->write('INSERT INTO news (game_id, time, news_message, type) ' .
 		'VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeString($var['news']) . ', \'BREAKING\')');
 	// avoid multiple insertion on ajax updates
-	$session->updateVar('news', null);
-	$session->updateVar('added_to_breaking_news', true);
+	unset($var['news']);
+	$var['added_to_breaking_news'] = true;
 }
 
 // Get the articles that are not already in a paper

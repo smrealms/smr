@@ -40,13 +40,14 @@ if ($activeGames) {
 	$template->assign('CurrentLeaders', $currentLeaders);
 }
 
-// If we are selecting a different game, clear the processing message.
-if (Request::has('selected_game_id')) {
-	$session->updateVar('processing_msg', null);
-}
-// If we have just forwarded from the processing file, pass its message.
 if (isset($var['processing_msg'])) {
-	$template->assign('ProcessingMsg', $var['processing_msg']);
+	if (Request::has('selected_game_id')) {
+		// If we are selecting a different game, clear the processing message.
+		unset($var['processing_msg']);
+	} else {
+		// If we have just forwarded from the processing file, pass its message.
+		$template->assign('ProcessingMsg', $var['processing_msg']);
+	}
 }
 
 // Create the link to the processing file

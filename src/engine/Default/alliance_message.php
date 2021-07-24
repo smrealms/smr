@@ -6,11 +6,9 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-if (!isset($var['alliance_id'])) {
-	$session->updateVar('alliance_id', $player->getAllianceID());
-}
+$allianceID = $var['alliance_id'] ?? $player->getAllianceID();
 
-$alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
