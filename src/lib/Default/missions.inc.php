@@ -66,7 +66,7 @@ const MISSIONS = array(
 				'Detail' => array(
 					'SectorID' => '<Sector>'
 				),
-				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the Salvene Swamp Water in this bar is awful! Go to the Sal...*Hiccup*...the Salvene HQ, they\'ll know a good bar.',
+				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' in this bar is awful! Go to the Sal...*Hiccup*...the Salvene HQ, they\'ll know a good bar.',
 				'Task' => 'Go to the Salvene HQ at [sector=<Sector>]'
 			),
 			array(
@@ -78,24 +78,24 @@ const MISSIONS = array(
 				'Detail' => array(
 					'SectorID' => '<Sector>'
 				),
-				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in [sector=<Sector>] does the best Salvene Swamp Water around!',
-				'Task' => 'Go to the bar at [sector=<Sector>] and buy a Salvene Swamp Water from the bartender. This may take many tries.'
+				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in [sector=<Sector>] does the best ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' around!',
+				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.'
 			),
 			array(
 				'Step' => 'BuyDrink',
 				'Detail' => array(
 					'SectorID' => '<Sector>',
-					'Drink' => 'Salvene Swamp Water'
+					'Drink' => Smr\BarDrink::SALVENE_SWAMP_SODA,
 				),
-				'Text' => 'Here we are! Now let\'s get this Salvene Swamp Water.',
-				'Task' => 'Go to the bar at [sector=<Sector>] and buy a Salvene Swamp Water from the bartender. This may take many tries.'
+				'Text' => 'Here we are! Now let\'s get this ' . Smr\BarDrink::SALVENE_SWAMP_SODA . '.',
+				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.'
 			),
 			array(
 				'Step' => 'EnterSector',
 				'Detail' => array(
 					'SectorID' => '<Starting Sector>'
 				),
-				'Text' => 'Finally! A true Salvene Swamp Water, let\'s return to that drunk!',
+				'Text' => 'Finally! A true ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ', let\'s return to that drunk!',
 				'Task' => 'Return to [sector=<Starting Sector>] to claim your reward.'
 			),
 			array(
@@ -108,7 +108,7 @@ const MISSIONS = array(
 				'Detail' => array(
 					'SectorID' => '<Starting Sector>'
 				),
-				'Text' => 'You hand the Salvene Swamp water to the drunk!'
+				'Text' => 'You hand the ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' to the drunk!'
 			)
 		)
 	)
