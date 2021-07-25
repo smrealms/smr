@@ -1,7 +1,11 @@
 <?php declare(strict_types=1);
 
-// very important
-// if we do not answer the ping from server we will be disconnected
+/**
+ * Very important!
+ * If we do not answer the ping from server we will be disconnected
+ *
+ * @param resource $fp
+ */
 function server_ping($fp, string $rdata) : bool
 {
 	global $last_ping;
@@ -23,10 +27,13 @@ function server_ping($fp, string $rdata) : bool
 	}
 
 	return false;
-
 }
 
-// part of a whois msg
+/**
+ * Part of a whois msg
+ *
+ * @param resource $fp
+ */
 function server_msg_307($fp, string $rdata) : bool
 {
 
@@ -52,10 +59,13 @@ function server_msg_307($fp, string $rdata) : bool
 	}
 
 	return false;
-
 }
 
-// end of whois list
+/**
+ * End of whois list
+ *
+ * @param resource $fp
+ */
 function server_msg_318($fp, string $rdata) : bool
 {
 
@@ -109,10 +119,13 @@ function server_msg_318($fp, string $rdata) : bool
 	}
 
 	return false;
-
 }
 
-// response to WHO
+/**
+ * Response to WHO
+ *
+ * @param resource $fp
+ */
 function server_msg_352($fp, string $rdata) : bool
 {
 
@@ -151,14 +164,16 @@ function server_msg_352($fp, string $rdata) : bool
 		}
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
-// unknown user
+/**
+ * Unknown user
+ *
+ * @param resource $fp
+ */
 function server_msg_401($fp, string $rdata) : bool
 {
 
@@ -188,5 +203,4 @@ function server_msg_401($fp, string $rdata) : bool
 	}
 
 	return false;
-
 }

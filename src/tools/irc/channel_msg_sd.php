@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_sd($fp, string $rdata) : bool
 {
 
@@ -19,13 +22,14 @@ function channel_msg_sd($fp, string $rdata) : bool
 		fputs($fp, 'PRIVMSG ' . $channel . ' :  !sd del <sector>        Removes the given sector from the supply/demand list' . EOL);
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_sd_set($fp, string $rdata) : bool
 {
 
@@ -61,13 +65,14 @@ function channel_msg_sd_set($fp, string $rdata) : bool
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The supply/demand of ' . $sd . ' for sector ' . $sector . ' has been recorded' . EOL);
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_sd_del($fp, string $rdata) : bool
 {
 
@@ -97,13 +102,14 @@ function channel_msg_sd_del($fp, string $rdata) : bool
 		}
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_sd_list($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 
@@ -142,9 +148,7 @@ function channel_msg_sd_list($fp, string $rdata, AbstractSmrPlayer $player) : bo
 		}
 
 		return true;
-
 	}
 
 	return false;
-
 }

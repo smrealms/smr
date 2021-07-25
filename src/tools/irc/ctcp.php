@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @param resource $fp
+ */
 function ctcp_version($fp, string $rdata) : bool
 {
 
@@ -14,13 +17,14 @@ function ctcp_version($fp, string $rdata) : bool
 
 		fputs($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'VERSION SMR BOT Version 1.0!' . chr(1) . EOL);
 		return true;
-
 	}
 
 	return false;
-
 }
 
+/**
+ * @param resource $fp
+ */
 function ctcp_finger($fp, string $rdata) : bool
 {
 
@@ -35,13 +39,14 @@ function ctcp_finger($fp, string $rdata) : bool
 
 		fputs($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'FINGER Go finger yourself!' . chr(1) . EOL);
 		return true;
-
 	}
 
 	return false;
-
 }
 
+/**
+ * @param resource $fp
+ */
 function ctcp_time($fp, string $rdata) : bool
 {
 
@@ -56,13 +61,14 @@ function ctcp_time($fp, string $rdata) : bool
 
 		fputs($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'TIME You don\'t know what time it is? Me neither!' . chr(1) . EOL);
 		return true;
-
 	}
 
 	return false;
-
 }
 
+/**
+ * @param resource $fp
+ */
 function ctcp_ping($fp, string $rdata) : bool
 {
 
@@ -78,9 +84,7 @@ function ctcp_ping($fp, string $rdata) : bool
 
 		fputs($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'PING ' . time() . chr(1) . EOL);
 		return true;
-
 	}
 
 	return false;
-
 }

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @param resource $fp
+ */
 function check_for_registration(AbstractSmrPlayer &$player, $fp, string $nick, string $channel, string $callback, bool $validationMessages = true) : bool {
 	//Force $validationMessages to always be boolean.
 	$validationMessages = $validationMessages === true;
@@ -65,6 +68,9 @@ function check_for_registration(AbstractSmrPlayer &$player, $fp, string $nick, s
 	return false;
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_with_registration($fp, string $rdata) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd)\s/i', $rdata, $msg)) {
@@ -132,10 +138,12 @@ function channel_msg_with_registration($fp, string $rdata) : bool
 	}
 
 	return false;
-
 }
 
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_seen($fp, string $rdata) : bool
 {
 
@@ -198,18 +206,18 @@ function channel_msg_seen($fp, string $rdata) : bool
 			}
 
 			return true;
-
 		}
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', I don\'t remember seeing ' . $seennick . '.' . EOL);
 		return true;
-
 	}
 
 	return false;
-
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 
@@ -234,6 +242,9 @@ function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player) : bool
 	return false;
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_timer($fp, string $rdata) : bool
 {
 
@@ -257,7 +268,6 @@ function channel_msg_timer($fp, string $rdata) : bool
 			}
 
 			return true;
-
 		}
 
 		if (!is_numeric($msg[5])) {
@@ -278,13 +288,14 @@ function channel_msg_timer($fp, string $rdata) : bool
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The timer has been started and will go off in ' . $countdown . ' minute(s).' . EOL);
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_8ball($fp, string $rdata) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!8ball (.*)\s$/i', $rdata, $msg)) {
@@ -305,6 +316,9 @@ function channel_msg_8ball($fp, string $rdata) : bool
 	return false;
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!forces(.*)\s$/i', $rdata, $msg)) {
@@ -328,6 +342,9 @@ function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player) : boo
 	return false;
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_help($fp, string $rdata) : bool
 {
 
@@ -346,12 +363,6 @@ function channel_msg_help($fp, string $rdata) : bool
 		fputs($fp, 'NOTICE ' . $nick . ' :If you want his services in your channel please invite him using \'/invite ' . IRC_BOT_NICK . ' #channel\'' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' : ' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :Available public commands commands:' . EOL);
-		//		fputs($fp, 'NOTICE '.$nick.' :!rank <nickname>         Displays the rank of the specified trader'.EOL);
-		//		fputs($fp, 'NOTICE '.$nick.' :!level <rank>            Displays the experience requirement for the specified level'.EOL);
-		//		fputs($fp, 'NOTICE '.$nick.' :!weapon level <level> <order>  Displays all weapons that have power level equal to <level> in the order specified (See !help weapon level)'.EOL);
-		//		fputs($fp, 'NOTICE '.$nick.' :!weapon name <name>           Displays the weapon closest matching <name>'.EOL);
-		//		fputs($fp, 'NOTICE '.$nick.' :!weapon range <object> <lower_limit> <upper_limit> <order>'.EOL);
-		//		fputs($fp, 'NOTICE '.$nick.' :                         Displays all weapons that have <object> great than <lower_limit> and <object> less than <upper_limit> in order (see !help weapon range)'.EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seen <nickname>         Displays the last time <nickname> was seen' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !timer <mins> <msg>      Starts a countdown which will send a notice to the channel with the <msg> in <mins> minutes' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !8ball <question>        Display one of the famous 8ball answers to your <question>' . EOL);
@@ -383,37 +394,8 @@ function channel_msg_help($fp, string $rdata) : bool
 			fputs($fp, 'NOTICE ' . $nick . ' :There is no help available for this command! Try !help' . EOL);
 		}
 
-		//		if ($topic == 'login')
-		//			fputs($fp, 'NOTICE '.$nick.' :No help available yet! Ask MrSpock!'.EOL);
-		//		elseif ($topic == '!rank')
-		//			fputs($fp, 'NOTICE '.$nick.' :No help available yet! Ask MrSpock!'.EOL);
-		//		elseif ($topic == '!level')
-		//			fputs($fp, 'NOTICE '.$nick.' :No help available yet! Ask MrSpock!'.EOL);
-		//		elseif ($topic == 'weapon level') {
-		//
-		//			fputs($fp, 'NOTICE '.$nick.' :Syntax !weapon level <level> <order>'.EOL);
-		//			fputs($fp, 'NOTICE '.$nick.' :Returns all weapons that are level <level> in order <order>'.EOL);
-		//			fputs($fp, 'NOTICE '.$nick.' :Example !weapon level 4 shield_damage would return the level 4 power weapons ordered by the amount of shield damage they do.'.EOL);
-		//			fputs($fp, 'NOTICE '.$nick.' :<order> options are cost, shield_damage, armour_damage, buyer_restriction, race_id, accuracy, and weapon_name'.EOL);
-		//			fputs($fp, 'NOTICE '.$nick.' :All "order" commands must be spelt correctly'.EOL);
-		//			fputs($fp, 'NOTICE '.$nick.' :See Azool for additional help on this topic'.EOL);
-		//
-		//		} elseif ($topic == 'weapon range') {
-		//
-		//			fputs($fp, 'NOTICE '.$nick.' :Syntax !weapon range <object> <cost1> <cost2> <order>'.EOL);
-		//			fputs($fp, 'NOTICE '.$nick.' :Returns all weapons that have <object> greater than <lower_limit> and less than <upper_limit> in the order <order>'.EOL);
-		//			fputs($fp, 'NOTICE '.$nick.' :Example !weapon range cost_range 100000 200000 shield_damage would return all weapons whose costs are between 100000 and 200000 ordered by the amount of shield damage they do.'.EOL);
-		//			fputs($fp, 'NOTICE '.$nick.' :<object> and <order> options are cost, shield_damage, armour_damage, buyer_restriction, race_id, accuracy, power_level, and weapon_name'.EOL);
-		//			fputs($fp, 'NOTICE '.$nick.' :All "order" and "object" commands must be spelt correctly'.EOL);
-		//			fputs($fp, 'NOTICE '.$nick.' :See Azool for additional help on this topic'.EOL);
-		//
-		//		} else
-		//			fputs($fp, 'NOTICE '.$nick.' :There is no help available for this command! Try !help'.EOL);
-
 		return true;
-
 	}
 
 	return false;
-
 }

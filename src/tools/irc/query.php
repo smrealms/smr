@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @param resource $fp
+ */
 function query_command($fp, string $rdata) : bool
 {
 
@@ -15,7 +18,6 @@ function query_command($fp, string $rdata) : bool
 		fputs($fp, $text . EOL);
 
 		return true;
-
 	}
 
 	return false;

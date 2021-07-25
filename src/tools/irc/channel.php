@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @param resource $fp
+ */
 function channel_join($fp, string $rdata) : bool
 {
 
@@ -54,13 +57,14 @@ function channel_join($fp, string $rdata) : bool
 		channel_op_notification($fp, $rdata, $nick, $channel);
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_part($fp, string $rdata) : bool
 {
 
@@ -88,15 +92,11 @@ function channel_part($fp, string $rdata) : bool
 			$db->write('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
 
 		} else {
-
 			// we don't know this one, but who cares? he just left anyway...
-
 		}
 
 		return true;
-
 	}
 
 	return false;
-
 }

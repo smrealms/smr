@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @param resource $fp
+ */
 function channel_action_slap($fp, string $rdata) : bool
 {
 

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_seed($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seed\s$/i', $rdata, $msg)) {
@@ -22,6 +25,9 @@ function channel_msg_seed($fp, string $rdata, AbstractSmrPlayer $player) : bool
 	return false;
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_seedlist($fp, string $rdata) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist(\s*help)?\s$/i', $rdata, $msg)) {
@@ -44,6 +50,9 @@ function channel_msg_seedlist($fp, string $rdata) : bool
 	return false;
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_seedlist_add($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist add (.*)\s$/i', $rdata, $msg)) {
@@ -67,6 +76,9 @@ function channel_msg_seedlist_add($fp, string $rdata, AbstractSmrPlayer $player)
 	return false;
 }
 
+/**
+ * @param resource $fp
+ */
 function channel_msg_seedlist_del($fp, string $rdata, AbstractSmrPlayer $player) : bool
 {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist del (.*)\s$/i', $rdata, $msg)) {
