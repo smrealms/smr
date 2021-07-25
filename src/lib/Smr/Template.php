@@ -97,18 +97,13 @@ class Template {
 
 	protected function getTemplateLocation(string $templateName) : string {
 		$templateDir = TEMPLATES_DIR;
-		if (isset($this->data['ThisAccount']) && is_object($this->data['ThisAccount']) && $this->data['ThisAccount'] instanceof SmrAccount) {
+		if (isset($this->data['ThisAccount'])) {
 			$templateDir .= $this->data['ThisAccount']->getTemplate() . '/';
 		} else {
 			$templateDir .= 'Default/';
 		}
 
-		$session = Session::getInstance();
-		if ($session->hasGame()) {
-			$gameDir = Globals::getGameType($session->getGameID()) . '/';
-		} else {
-			$gameDir = 'Default/';
-		}
+		$gameDir = get_game_dir(); // defined in the autoloader
 
 		if (file_exists($templateDir . 'engine/' . $gameDir . $templateName)) {
 			return $templateDir . 'engine/' . $gameDir . $templateName;
