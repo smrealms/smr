@@ -132,4 +132,33 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertFalse($session->hasCurrentVar());
 	}
 
+	public function test_getRequestVar() : void {
+		// Initialize the current var so that we can update it
+		$page = Page::create('some_page');
+		$this->session->setCurrentVar($page);
+
+		// Prepare request values
+		$_REQUEST = [
+			'str' => 'foo',
+			'int' => 4,
+			'arr' => [5, 6],
+		];
+
+		// Check the following conditions:
+		// 1. The index is not set in the current var beforehand
+		// 2. We return the expected value from getRequestVar
+		// 3. The value is stored in the current var afterwards
+		self::assertArrayNotHasKey('str', $this->session->getCurrentVar());
+		self::assertSame('foo', $this->session->getRequestVar('str'));
+		self::assertSame('foo', $this->session->getCurrentVar()['str']);
+
+		self::assertArrayNotHasKey('int', $this->session->getCurrentVar());
+		self::assertSame(4, $this->session->getRequestVarInt('int'));
+		self::assertSame(4, $this->session->getCurrentVar()['int']);
+
+		self::assertArrayNotHasKey('arr', $this->session->getCurrentVar());
+		self::assertSame([5, 6], $this->session->getRequestVarIntArray('arr'));
+		self::assertSame([5, 6], $this->session->getCurrentVar()['arr']);
+	}
+
 }

@@ -7,7 +7,7 @@ $var = $session->getCurrentVar();
 
 if (isset($var['message'])) {
 	$template->assign('Message', $var['message']);
-	$session->updateVar('message', null); // Only show message once
+	unset($var['message']); // Only show message once
 }
 
 $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);

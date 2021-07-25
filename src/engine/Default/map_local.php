@@ -37,7 +37,7 @@ if (isset($var['ZoomDir'])) {
 		$player->increaseZoom(1);
 	}
 	// Unset so that refreshing doesn't zoom again
-	$session->updateVar('ZoomDir', null);
+	unset($var['ZoomDir']);
 }
 
 $container = Page::create('skeleton.php', 'map_local.php');

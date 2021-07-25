@@ -4,7 +4,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
 $submit = Request::getVar('submit');
-$session->updateVar('submit', null);
+$var['submit'] = null; // clear if set
 
 if ($submit == 'Create Galaxies') {
 	for ($i = 1; $i <= $var['num_gals']; $i++) {

@@ -141,7 +141,7 @@ $link = $container->href();
 ```
 
 ## Request variables
-For any page which takes input through POST or GET (or other forms?) they should store these values in $var using Smr\Session::updateVar() and only access via $var, this is required as when auto-refresh updates the page it will *not* resend these inputs but still requires them to render the page correctly.
+For any page which takes input through POST or GET, these values must be accessed using `Smr\Session::getRequestVar()` and relatives, which will store the value in `$var`. This is required because auto-refresh updates of the page will *not* resend these inputs, but they are still required to render the page correctly.
 
 ## Abstract vs normal classes
 This initially started out to be used in the "standard" way for NPCs but that idea has since been discarded.

@@ -53,6 +53,6 @@ if (!isset($var['ClaimText'])) {
 		$claimText .= ('You have no claimable bounties<br /><br />');
 	}
 
-	$session->updateVar('ClaimText', $claimText);
+	$var['ClaimText'] = $claimText;
 }
 $template->assign('ClaimText', $var['ClaimText']);

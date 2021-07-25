@@ -4,13 +4,7 @@ $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
-if (!isset($var['GameID'])) {
-	$player = $session->getPlayer();
-	$session->updateVar('GameID', $player->getGameID());
-}
-$gameID = $var['GameID'];
-
-$basicContainer = array('GameID'=>$gameID);
+$gameID = $var['GameID'] ?? $session->getPlayer()->getGameID();
 
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT alliance_id, alliance_name
@@ -24,7 +18,7 @@ foreach ($dbResult->records() as $dbRecord) {
 }
 $template->assign('NewsAlliances', $newsAlliances);
 
-$template->assign('AdvancedNewsFormHref', Page::create('skeleton.php', 'news_read_advanced.php', $basicContainer)->href());
+$template->assign('AdvancedNewsFormHref', Page::create('skeleton.php', 'news_read_advanced.php', ['GameID' => $gameID])->href());
 
 // No submit value when first navigating to the page
 $submit_value = $session->getRequestVar('submit', '');

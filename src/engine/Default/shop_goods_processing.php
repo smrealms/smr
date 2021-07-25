@@ -70,12 +70,12 @@ if ($transaction === TRADER_BUYS && $player->getCredits() < $bargain_price) {
 $relations = $player->getRelation($port->getRaceID());
 
 if (!isset($var['ideal_price'])) {
-	$session->updateVar('ideal_price', $port->getIdealPrice($good_id, $transaction, $amount, $relations));
+	$var['ideal_price'] = $port->getIdealPrice($good_id, $transaction, $amount, $relations);
 }
 $ideal_price = $var['ideal_price'];
 
 if (!isset($var['offered_price'])) {
-	$session->updateVar('offered_price', $port->getOfferPrice($ideal_price, $relations, $transaction));
+	$var['offered_price'] = $port->getOfferPrice($ideal_price, $relations, $transaction);
 }
 $offered_price = $var['offered_price'];
 

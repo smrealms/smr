@@ -4,10 +4,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-if (!isset($var['alliance_id'])) {
-	$session->updateVar('alliance_id', $player->getAllianceID());
-}
-$alliance_id = $var['alliance_id'];
+$alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
 if (Request::has('description')) {
 	$description = trim(Request::get('description'));
 }

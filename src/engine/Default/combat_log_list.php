@@ -16,7 +16,7 @@ if (isset($var['message'])) {
 
 // $var['action'] is the page log type
 if (!isset($var['action'])) {
-	$session->updateVar('action', COMBAT_LOG_PERSONAL);
+	$var['action'] = COMBAT_LOG_PERSONAL;
 }
 $action = $var['action'];
 

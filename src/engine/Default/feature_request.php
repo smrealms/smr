@@ -11,7 +11,7 @@ if (!Globals::isFeatureRequestOpen()) {
 }
 
 if (!isset($var['category'])) {
-	$session->updateVar('category', 'New');
+	$var['category'] = 'New';
 }
 $thisStatus = statusFromCategory($var['category']);
 

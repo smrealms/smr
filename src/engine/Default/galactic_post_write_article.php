@@ -16,8 +16,8 @@ if (isset($var['id'])) {
 		$dbResult = $db->read('SELECT title, text FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			$session->updateVar('PreviewTitle', $dbRecord->getField('title'));
-			$session->updateVar('Preview', $dbRecord->getField('text'));
+			$var['PreviewTitle'] = $dbRecord->getField('title');
+			$var['Preview'] = $dbRecord->getField('text');
 		}
 	}
 } else {

@@ -17,7 +17,7 @@ if (!isset($var['Message'])) {
 	} else {
 		$message = 'I havent heard anything recently... got anything to tell me?';
 	}
-	$session->updateVar('Message', $message);
+	$var['Message'] = $message;
 }
 $template->assign('Message', bbifyMessage($var['Message']));
 

@@ -6,7 +6,7 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 if (!isset($var['alliance_id'])) {
-	$session->updateVar('alliance_id', $player->getAllianceID());
+	$var['alliance_id'] = $player->getAllianceID();
 }
 
 $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());

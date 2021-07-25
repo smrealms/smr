@@ -5,10 +5,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-if (!isset($var['race_id'])) {
-	$session->updateVar('race_id', $player->getRaceID());
-}
-$raceID = $var['race_id'];
+$raceID = $var['race_id'] ?? $player->getRaceID();
 
 $template->assign('PageTopic', 'Ruling Council Of ' . Smr\Race::getName($raceID));
 
