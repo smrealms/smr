@@ -8,7 +8,7 @@ $ship = $player->getShip();
 // get good name, id, ...
 $good_id = $var['GoodID'];
 $good_name = Globals::getGoodName($good_id);
-$amount = Request::getInt('amount');
+$amount = Smr\Request::getInt('amount');
 if ($amount <= 0) {
 	create_error('You must enter an amount > 0!');
 }

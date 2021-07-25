@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$password = trim(Request::get('password'));
+$password = trim(Smr\Request::get('password'));
 
 if (empty($password)) {
 	create_error('You cannot use a blank password!');

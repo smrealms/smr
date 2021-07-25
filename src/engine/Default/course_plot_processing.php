@@ -3,8 +3,8 @@
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$start = Request::getVarInt('from');
-$target = Request::getVarInt('to');
+$start = Smr\Request::getVarInt('from');
+$target = Smr\Request::getVarInt('to');
 
 // perform some basic checks on both numbers
 if (empty($start) || empty($target)) {

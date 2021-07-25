@@ -5,7 +5,7 @@ $player = $session->getPlayer();
 
 $container = Page::create('skeleton.php', 'message_blacklist.php');
 
-$entry_ids = Request::getIntArray('entry_ids', []);
+$entry_ids = Smr\Request::getIntArray('entry_ids', []);
 if (empty($entry_ids)) {
 	$container['msg'] = '<span class="red bold">ERROR: </span>No entries selected for deletion.';
 	$container->go();

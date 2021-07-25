@@ -11,7 +11,7 @@ if ($joinRestriction !== false) {
 	create_error($joinRestriction);
 }
 
-if (Request::get('password') != $alliance->getPassword()) {
+if (Smr\Request::get('password') != $alliance->getPassword()) {
 	create_error('Incorrect Password!');
 }
 

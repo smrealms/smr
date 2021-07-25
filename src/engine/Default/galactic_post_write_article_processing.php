@@ -4,14 +4,14 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$title = trim(Request::get('title'));
-$message = trim(Request::get('message'));
+$title = trim(Smr\Request::get('title'));
+$message = trim(Smr\Request::get('message'));
 if (!$player->isGPEditor()) {
 	$title = htmlentities($title, ENT_COMPAT, 'utf-8');
 	$message = htmlentities($message, ENT_COMPAT, 'utf-8');
 }
 
-if (Request::get('action') == 'Preview article') {
+if (Smr\Request::get('action') == 'Preview article') {
 	$container = Page::create('skeleton.php', 'galactic_post_write_article.php');
 	$container['PreviewTitle'] = $title;
 	$container['Preview'] = $message;

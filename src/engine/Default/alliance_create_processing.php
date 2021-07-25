@@ -8,7 +8,7 @@ if ($player->getAllianceJoinable() > Smr\Epoch::time()) {
 }
 
 // trim input first
-$name = trim(Request::get('name'));
+$name = trim(Smr\Request::get('name'));
 if (empty($name)) {
 	throw new Exception('No alliance name entered');
 }
@@ -20,10 +20,10 @@ for ($i = 0; $i < strlen($name); $i++) {
 	}
 }
 
-$password = trim(Request::get('password', ''));
-$description = Request::get('description');
-$recruitType = Request::get('recruit_type');
-$perms = Request::get('Perms');
+$password = trim(Smr\Request::get('password', ''));
+$description = Smr\Request::get('description');
+$recruitType = Smr\Request::get('recruit_type');
+$perms = Smr\Request::get('Perms');
 
 $name2 = strtolower($name);
 if ($name2 == 'none' || $name2 == '(none)' || $name2 == '( none )' || $name2 == 'no alliance') {

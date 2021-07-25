@@ -8,23 +8,23 @@ $player = $session->getPlayer();
 $alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
 
 // Checkbox inputs only post if they are checked
-$unlimited = Request::has('unlimited');
-$positiveBalance = Request::has('positive');
-$changePass = Request::has('changePW');
-$removeMember = Request::has('removeMember');
-$changeMOD = Request::has('changeMoD');
-$changeRoles = Request::has('changeRoles') || (isset($var['role_id']) && $var['role_id'] == ALLIANCE_ROLE_LEADER); //Leader can always change roles.
-$planetAccess = Request::has('planets');
-$mbMessages = Request::has('mbMessages');
-$exemptWith = Request::has('exemptWithdrawals');
-$sendAllMsg = Request::has('sendAllMsg');
-$viewBonds = Request::has('viewBonds');
-$opLeader = Request::has('opLeader');
+$unlimited = Smr\Request::has('unlimited');
+$positiveBalance = Smr\Request::has('positive');
+$changePass = Smr\Request::has('changePW');
+$removeMember = Smr\Request::has('removeMember');
+$changeMOD = Smr\Request::has('changeMoD');
+$changeRoles = Smr\Request::has('changeRoles') || (isset($var['role_id']) && $var['role_id'] == ALLIANCE_ROLE_LEADER); //Leader can always change roles.
+$planetAccess = Smr\Request::has('planets');
+$mbMessages = Smr\Request::has('mbMessages');
+$exemptWith = Smr\Request::has('exemptWithdrawals');
+$sendAllMsg = Smr\Request::has('sendAllMsg');
+$viewBonds = Smr\Request::has('viewBonds');
+$opLeader = Smr\Request::has('opLeader');
 
 if ($unlimited) {
 	$withPerDay = ALLIANCE_BANK_UNLIMITED;
 } else {
-	$withPerDay = Request::getInt('maxWith');
+	$withPerDay = Smr\Request::getInt('maxWith');
 }
 if ($withPerDay < 0 && $withPerDay != ALLIANCE_BANK_UNLIMITED) {
 	create_error('You must enter a number for max withdrawals per 24 hours.');
@@ -36,7 +36,7 @@ if ($withPerDay == ALLIANCE_BANK_UNLIMITED && $positiveBalance) {
 // with empty role the user wants to create a new entry
 if (!isset($var['role_id'])) {
 	// role empty too? that doesn't make sence
-	if (empty(Request::get('role'))) {
+	if (empty(Smr\Request::get('role'))) {
 		create_error('You must enter a role name if you want to create a new one.');
 	}
 
@@ -53,12 +53,12 @@ if (!isset($var['role_id'])) {
 
 	$db->write('INSERT INTO alliance_has_roles
 				(alliance_id, game_id, role_id, role, with_per_day, positive_balance, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds)
-				VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString(Request::get('role')) . ', ' . $db->escapeNumber($withPerDay) . ',' . $db->escapeBoolean($positiveBalance) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
+				VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString(Smr\Request::get('role')) . ', ' . $db->escapeNumber($withPerDay) . ',' . $db->escapeBoolean($positiveBalance) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
 
 	$db->unlock();
 } else {
 	// if no role is given we delete that entry
-	if (empty(Request::get('role'))) {
+	if (empty(Smr\Request::get('role'))) {
 		if ($var['role_id'] == ALLIANCE_ROLE_LEADER) {
 			create_error('You cannot delete the leader role.');
 		} elseif ($var['role_id'] == ALLIANCE_ROLE_NEW_MEMBER) {
@@ -71,7 +71,7 @@ if (!isset($var['role_id'])) {
 	// otherwise we update it
 	} else {
 		$db->write('UPDATE alliance_has_roles
-					SET role = ' . $db->escapeString(Request::get('role')) . ',
+					SET role = ' . $db->escapeString(Smr\Request::get('role')) . ',
 					with_per_day = ' . $db->escapeNumber($withPerDay) . ',
 					positive_balance = ' . $db->escapeBoolean($positiveBalance) . ',
 					remove_member = ' . $db->escapeBoolean($removeMember) . ',

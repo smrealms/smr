@@ -3,10 +3,10 @@
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-if (Request::get('action') == "Resend Validation Code") {
+if (Smr\Request::get('action') == "Resend Validation Code") {
 	$account->changeEmail($account->getEmail());
 } else {
-	$account->changeEmail(Request::get('email'));
+	$account->changeEmail(Smr\Request::get('email'));
 }
 $account->update();
 Page::create('skeleton.php', 'validate.php')->go();

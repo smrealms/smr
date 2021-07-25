@@ -5,11 +5,11 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$body = htmlentities(trim(Request::get('body')), ENT_COMPAT, 'utf-8');
-$topic = Request::get('topic', ''); // only present for Create Thread
-$allEyesOnly = Request::has('allEyesOnly'); // only present for Create Thread
+$body = htmlentities(trim(Smr\Request::get('body')), ENT_COMPAT, 'utf-8');
+$topic = Smr\Request::get('topic', ''); // only present for Create Thread
+$allEyesOnly = Smr\Request::has('allEyesOnly'); // only present for Create Thread
 
-$action = Request::get('action');
+$action = Smr\Request::get('action');
 if ($action == 'Preview Thread' || $action == 'Preview Reply') {
 	$container = Page::create('skeleton.php', '', $var);
 	if (!isset($var['thread_index'])) {

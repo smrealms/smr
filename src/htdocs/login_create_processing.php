@@ -11,7 +11,7 @@ try {
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
-	$socialLogin = Request::has('socialReg');
+	$socialLogin = Smr\Request::has('socialReg');
 	if ($socialLogin) {
 		session_start();
 		if (!$_SESSION['socialLogin']) {
@@ -23,7 +23,7 @@ try {
 
 	//Check the captcha if it's a standard registration.
 	if (!$socialLogin && !empty(RECAPTCHA_PRIVATE)) {
-		if (!Request::has('g-recaptcha-response')) {
+		if (!Smr\Request::has('g-recaptcha-response')) {
 			$msg = 'Please make sure to complete the recaptcha!';
 			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
@@ -32,7 +32,7 @@ try {
 		$reCaptcha = new \ReCaptcha\ReCaptcha(RECAPTCHA_PRIVATE);
 		// Was there a reCAPTCHA response?
 		$resp = $reCaptcha->verify(
-			Request::get('g-recaptcha-response'),
+			Smr\Request::get('g-recaptcha-response'),
 			$_SERVER['REMOTE_ADDR']
 		);
 
@@ -43,8 +43,8 @@ try {
 		}
 	}
 
-	$login = trim(Request::get('login'));
-	$password = trim(Request::get('password'));
+	$login = trim(Smr\Request::get('login'));
+	$password = trim(Smr\Request::get('password'));
 	if (strstr($login, '\'')) {
 		$msg = 'Illegal character in login detected! Don\'t use the apostrophe.';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -55,7 +55,7 @@ try {
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
-	if (!Request::has('agreement') || empty(Request::get('agreement'))) {
+	if (!Smr\Request::has('agreement') || empty(Smr\Request::get('agreement'))) {
 		$msg = 'You must accept the agreement!';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
@@ -73,7 +73,7 @@ try {
 		exit;
 	}
 
-	$pass_verify = Request::get('pass_verify');
+	$pass_verify = Smr\Request::get('pass_verify');
 	if ($password != $pass_verify) {
 		$msg = 'The passwords you entered do not match.';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -85,7 +85,7 @@ try {
 	// 2. social account creation without an associated e-mail
 	// In these two cases, we still need to validate the input address.
 	if (!$socialLogin || empty($_SESSION['socialLogin']->getEmail())) {
-		$email = trim(Request::get('email'));
+		$email = trim(Smr\Request::get('email'));
 		$validatedBySocial = false;
 	} else {
 		$email = $_SESSION['socialLogin']->getEmail();
@@ -132,10 +132,10 @@ try {
 		exit;
 	}
 
-	$referral = Request::getInt('referral_id');
+	$referral = Smr\Request::getInt('referral_id');
 
 	// create account
-	$timez = Request::getInt('timez');
+	$timez = Smr\Request::getInt('timez');
 
 	// creates a new user account object
 	try {

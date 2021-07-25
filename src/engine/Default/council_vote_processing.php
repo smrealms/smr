@@ -9,7 +9,7 @@ if (!$player->isOnCouncil()) {
 	create_error('You have to be on the council in order to vote.');
 }
 
-$action = strtoupper(Request::get('action'));
+$action = strtoupper(Smr\Request::get('action'));
 
 if ($action == 'INCREASE') {
 	$action = 'INC';

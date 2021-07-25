@@ -5,18 +5,18 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 // If not deleting marked messages, we are deleting entire folders
-if (Request::get('action') == 'All Messages') {
+if (Smr\Request::get('action') == 'All Messages') {
 	$container = Page::create('message_box_delete_processing.php');
 	$container->addVar('folder_id');
 	$container->go();
 } else {
-	if (!Request::has('message_id')) {
+	if (!Smr\Request::has('message_id')) {
 		create_error('You must choose the messages you want to delete.');
 	}
 
 	$message_id_list = array();
 	$db = Smr\Database::getInstance();
-	foreach (Request::getArray('message_id') as $id) {
+	foreach (Smr\Request::getArray('message_id') as $id) {
 		if ($temp = @unserialize(base64_decode($id))) {
 			$dbResult = $db->read('SELECT message_id FROM message
 						WHERE sender_id = ' . $db->escapeNumber($temp[0]) . '

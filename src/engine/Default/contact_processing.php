@@ -3,9 +3,9 @@
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$receiver = Request::get('receiver');
-$subject = Request::get('subject');
-$msg = Request::get('msg');
+$receiver = Smr\Request::get('receiver');
+$subject = Smr\Request::get('subject');
+$msg = Smr\Request::get('msg');
 
 $mail = setupMailer();
 $mail->Subject = PAGE_PREFIX . $subject;

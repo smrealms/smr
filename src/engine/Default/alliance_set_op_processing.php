@@ -23,7 +23,7 @@ if (!empty($var['cancel'])) {
 	// so they may get an errant alliance message icon if logged in.
 } else {
 	// schedule an op
-	$date = Request::get('date');
+	$date = Smr\Request::get('date');
 	if (empty($date)) {
 		error_on_page('You must specify a date for the operation!');
 	}

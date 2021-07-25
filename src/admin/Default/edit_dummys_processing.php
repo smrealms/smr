@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-$name = Request::get('dummy_name');
+$name = Smr\Request::get('dummy_name');
 $dummyPlayer = DummyPlayer::getCachedDummyPlayer($name);
 $dummyPlayer->setPlayerName($name);
-$dummyPlayer->setExperience(Request::getInt('exp'));
-$dummyPlayer->setShipTypeID(Request::getInt('ship_type_id'));
+$dummyPlayer->setExperience(Smr\Request::getInt('exp'));
+$dummyPlayer->setShipTypeID(Smr\Request::getInt('ship_type_id'));
 $dummyShip = $dummyPlayer->getShip();
 $dummyShip->removeAllWeapons();
-foreach (Request::getIntArray('weapons', []) as $weaponTypeID) {
+foreach (Smr\Request::getIntArray('weapons', []) as $weaponTypeID) {
 	if ($weaponTypeID != 0) {
 		$dummyShip->addWeapon(SmrWeapon::getWeapon($weaponTypeID));
 	}

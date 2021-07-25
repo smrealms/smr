@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-$leader_id = Request::getInt('leader_id');
+$leader_id = Smr\Request::getInt('leader_id');
 
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();

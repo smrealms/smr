@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-if (Request::get('action') == 'Yes') {
+if (Smr\Request::get('action') == 'Yes') {
 	$db = Smr\Database::getInstance();
 	$db->write('DELETE
 				FROM album

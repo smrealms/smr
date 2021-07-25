@@ -8,11 +8,11 @@
 					<table class="center" border="0">
 						<tr>
 								<th class="right">Username:</th>
-								<td><input required name="login" type="text" class="InputFields" value="<?php echo Request::has('login') ? htmlspecialchars(Request::get('login')) : ''; ?>" /></td>
+								<td><input required name="login" type="text" class="InputFields" value="<?php echo Smr\Request::has('login') ? htmlspecialchars(Smr\Request::get('login')) : ''; ?>" /></td>
 						</tr>
 						<tr>
 								<th class="right">Password Reset Code:</th>
-								<td><input required name="password_reset" type="text" class="InputFields" value="<?php echo Request::has('resetcode') ? htmlspecialchars(Request::get('resetcode')) : ''; ?>" /></td>
+								<td><input required name="password_reset" type="text" class="InputFields" value="<?php echo Smr\Request::has('resetcode') ? htmlspecialchars(Smr\Request::get('resetcode')) : ''; ?>" /></td>
 						</tr>
 						<tr>
 								<th class="right">New Password:</th>

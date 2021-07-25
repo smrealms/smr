@@ -4,11 +4,11 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-$offenderReply = trim(Request::get('offenderReply'));
-$offenderBanPoints = Request::getInt('offenderBanPoints');
-$offendedReply = trim(Request::get('offendedReply'));
-$offendedBanPoints = Request::getInt('offendedBanPoints');
-if (Request::get('action') == 'Preview messages') {
+$offenderReply = trim(Smr\Request::get('offenderReply'));
+$offenderBanPoints = Smr\Request::getInt('offenderBanPoints');
+$offendedReply = trim(Smr\Request::get('offendedReply'));
+$offendedBanPoints = Smr\Request::getInt('offendedBanPoints');
+if (Smr\Request::get('action') == 'Preview messages') {
 	$container = Page::create('skeleton.php', 'notify_reply.php');
 	$container->addVar('offender');
 	$container->addVar('offended');

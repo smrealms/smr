@@ -7,8 +7,8 @@ $db = Smr\Database::getInstance();
 $smr_db_sql = array();
 $history_db_sql = array();
 
-$action = Request::get('action');
-if (Request::get('save') == 'Yes') {
+$action = Smr\Request::get('action');
+if (Smr\Request::get('save') == 'Yes') {
 	$save = true;
 } else {
 	$save = false;

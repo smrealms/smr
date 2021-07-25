@@ -8,8 +8,8 @@ $var = $session->getCurrentVar();
 $game_id = $var['selected_game_id'];
 
 // Get the POST variables
-$player_id = Request::getInt('player_id');
-$action = Request::get('submit');
+$player_id = Smr\Request::getInt('player_id');
+$action = Smr\Request::get('submit');
 
 // Pass entire $var so that the selected game remains selected
 $container = Page::create('skeleton.php', 'manage_post_editors.php', $var);

@@ -16,7 +16,7 @@ if ($var['action'] == 'Enable') {
 } elseif ($var['action'] == 'Disable') {
 	$ship->decloak();
 } elseif ($var['action'] == 'Set Illusion') {
-	$ship->setIllusion(Request::getInt('ship_type_id'), Request::getInt('attack'), Request::getInt('defense'));
+	$ship->setIllusion(Smr\Request::getInt('ship_type_id'), Smr\Request::getInt('attack'), Smr\Request::getInt('defense'));
 } elseif ($var['action'] == 'Disable Illusion') {
 	$ship->disableIllusion();
 }

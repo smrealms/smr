@@ -2,13 +2,13 @@
 try {
 	require_once('../bootstrap.php');
 
-	if (empty(Request::get('email'))) {
+	if (empty(Smr\Request::get('email'))) {
 		header('Location: /error.php?msg=' . rawurlencode('You must specify an e-mail address!'));
 		exit;
 	}
 
 	// get this user from db
-	$account = SmrAccount::getAccountByEmail(Request::get('email'));
+	$account = SmrAccount::getAccountByEmail(Smr\Request::get('email'));
 	if ($account == null) {
 		// unknown user
 		header('Location: /error.php?msg=' . rawurlencode('The specified e-mail address is not registered!'));

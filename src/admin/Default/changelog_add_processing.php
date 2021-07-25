@@ -2,13 +2,13 @@
 
 $var = Smr\Session::getInstance()->getCurrentVar();
 
-$change_title = Request::get('change_title');
-$change_message = Request::get('change_message');
-$affected_db = Request::get('affected_db');
+$change_title = Smr\Request::get('change_title');
+$change_message = Smr\Request::get('change_message');
+$affected_db = Smr\Request::get('affected_db');
 
 $container = Page::create('skeleton.php', 'changelog.php');
 
-if (Request::get('action') == 'Preview') {
+if (Smr\Request::get('action') == 'Preview') {
 	$container['change_title'] = $change_title;
 	$container['change_message'] = $change_message;
 	$container['affected_db'] = $affected_db;

@@ -29,7 +29,7 @@ require_once('../bootstrap.php');
 
 							<h1>ERROR</h1>
 
-							<p class="big bold"><?php echo (addslashes(htmlentities(Request::get('msg', ''), ENT_NOQUOTES, 'utf-8'))); ?>
+							<p class="big bold"><?php echo (addslashes(htmlentities(Smr\Request::get('msg', ''), ENT_NOQUOTES, 'utf-8'))); ?>
 							</p>
 							<br /><br /><br />
 							<p><small>If the error was caused by something you entered, press back and try again.</small></p>

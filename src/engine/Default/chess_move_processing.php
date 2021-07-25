@@ -8,10 +8,10 @@ $container = Page::create('skeleton.php', 'chess_play.php');
 $container->addVar('ChessGameID');
 
 $chessGame = ChessGame::getChessGame($var['ChessGameID']);
-$x = Request::getInt('x');
-$y = Request::getInt('y');
-$toX = Request::getInt('toX');
-$toY = Request::getInt('toY');
+$x = Smr\Request::getInt('x');
+$y = Smr\Request::getInt('y');
+$toX = Smr\Request::getInt('toX');
+$toY = Smr\Request::getInt('toY');
 if (!$chessGame->hasEnded()) {
 	if ($chessGame->isCurrentTurn($player->getAccountID())) {
 		$board = $chessGame->getBoard();

@@ -4,8 +4,8 @@ $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 $player = $session->getPlayer();
 
-$amount = Request::getInt('amount');
-$smrCredits = Request::getInt('smrcredits');
+$amount = Smr\Request::getInt('amount');
+$smrCredits = Smr\Request::getInt('smrcredits');
 
 if ($player->getCredits() < $amount) {
 	create_error('You dont have that much money.');
@@ -22,7 +22,7 @@ if ($amount <= 0 && $smrCredits <= 0) {
 $container = Page::create('skeleton.php', 'bounty_place_confirm.php');
 $container['amount'] = $amount;
 $container['SmrCredits'] = $smrCredits;
-$container['player_id'] = Request::getInt('player_id');
+$container['player_id'] = Smr\Request::getInt('player_id');
 $container->addVar('LocationID');
 
 $container->go();

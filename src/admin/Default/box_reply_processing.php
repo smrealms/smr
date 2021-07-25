@@ -4,10 +4,10 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-$message = trim(Request::get('message'));
-$banPoints = Request::getInt('BanPoints');
-$rewardCredits = Request::getInt('RewardCredits');
-if (Request::get('action') == 'Preview message') {
+$message = trim(Smr\Request::get('message'));
+$banPoints = Smr\Request::getInt('BanPoints');
+$rewardCredits = Smr\Request::getInt('RewardCredits');
+if (Smr\Request::get('action') == 'Preview message') {
 	$container = Page::create('skeleton.php', 'box_reply.php');
 	$container['BanPoints'] = $banPoints;
 	$container['RewardCredits'] = $rewardCredits;

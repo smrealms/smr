@@ -3,20 +3,20 @@
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$type = Request::get('type');
-$sectorId = Request::getInt('sectorId');
+$type = Smr\Request::get('type');
+$sectorId = Smr\Request::getInt('sectorId');
 
 switch ($type) {
 	case 'add':
-		$label = trim(Request::get('label'));
+		$label = trim(Smr\Request::get('label'));
 		$player->addDestinationButton($sectorId, $label);
 	break;
 
 	case 'move':
 		// These are submitted as floats by ui.draggable.position JS, but
 		// we (and the browser) only accept integer positions.
-		$offsetTop = Request::getInt('offsetTop');
-		$offsetLeft = Request::getInt('offsetLeft');
+		$offsetTop = Smr\Request::getInt('offsetTop');
+		$offsetLeft = Smr\Request::getInt('offsetLeft');
 		$player->moveDestinationButton($sectorId, $offsetTop, $offsetLeft);
 	break;
 

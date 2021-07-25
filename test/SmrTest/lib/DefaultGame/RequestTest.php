@@ -3,12 +3,12 @@
 namespace SmrTest\lib\DefaultGame;
 
 use Page;
-use Request;
 use Smr\Container\DiContainer;
+use Smr\Request;
 use Smr\Session;
 
 /**
- * @covers Request
+ * @covers Smr\Request
  */
 class RequestTest extends \PHPUnit\Framework\TestCase {
 

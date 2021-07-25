@@ -7,19 +7,19 @@ $player = $session->getPlayer();
 
 $alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
 
-$amount = Request::getInt('amount');
+$amount = Smr\Request::getInt('amount');
 
 // no negative amounts are allowed
 if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');
 }
-$message = Request::get('message');
+$message = Smr\Request::get('message');
 if (empty($message)) {
 	$message = 'No reason specified';
 }
 
 $alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
-$action = Request::get('action');
+$action = Smr\Request::get('action');
 if ($action == 'Deposit') {
 	if ($player->getCredits() < $amount) {
 		create_error('You don\'t own that much money!');
@@ -92,7 +92,7 @@ if ($dbResult->hasRecord()) {
 }
 
 // save log
-$requestExempt = Request::has('requestExempt') ? 1 : 0;
+$requestExempt = Smr\Request::has('requestExempt') ? 1 : 0;
 $db->write('INSERT INTO alliance_bank_transactions
 			(alliance_id, game_id, transaction_id, time, payee_id, reason, transaction, amount, request_exempt)
 			VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($next_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($message) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($requestExempt) . ')');

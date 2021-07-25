@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+namespace Smr;
+
+use Exception;
+
 /**
  * Should be used for getting request data for processing pages.
  * For display pages, see Smr\Session::getRequestVar.
@@ -108,7 +112,7 @@ class Request {
 	 * Helper function to avoid code duplication in getVar* functions.
 	 */
 	private static function getVarX(string $index, mixed $default, callable $func) : mixed {
-		$var = Smr\Session::getInstance()->getCurrentVar();
+		$var = Session::getInstance()->getCurrentVar();
 		if (isset($var[$index])) {
 			// An index may be present in both var and request. This indicates
 			// a logical error in the code, unless the values are the same,

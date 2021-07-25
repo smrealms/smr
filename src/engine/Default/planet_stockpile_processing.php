@@ -9,14 +9,14 @@ if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
 }
 
-$amount = Request::getInt('amount');
+$amount = Smr\Request::getInt('amount');
 if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');
 }
 
 // get a planet from the sector where the player is in
 $planet = $player->getSectorPlanet();
-$action = Request::get('action');
+$action = Smr\Request::get('action');
 // transfer to ship
 if ($action == 'Ship') {
 

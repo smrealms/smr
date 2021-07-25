@@ -5,7 +5,7 @@ $var = Smr\Session::getInstance()->getCurrentVar();
 $container = Page::create('skeleton.php', 'message_view.php');
 $container->addVar('folder_id');
 
-if (Request::get('action') == 'No') {
+if (Smr\Request::get('action') == 'No') {
 	$container->go();
 }
 

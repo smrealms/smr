@@ -3,14 +3,14 @@
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 const ALL_GAMES_ID = 20000;
-$message = trim(Request::get('message'));
-$expire = Request::getFloat('expire');
+$message = trim(Smr\Request::get('message'));
+$expire = Smr\Request::getFloat('expire');
 $game_id = $var['SendGameID'];
 if ($game_id != ALL_GAMES_ID) {
-	$account_id = Request::getInt('account_id');
+	$account_id = Smr\Request::getInt('account_id');
 }
 
-if (Request::get('action') == 'Preview message') {
+if (Smr\Request::get('action') == 'Preview message') {
 	$container = Page::create('skeleton.php', 'admin_message_send.php');
 	$container->addVar('SendGameID');
 	$container['preview'] = $message;

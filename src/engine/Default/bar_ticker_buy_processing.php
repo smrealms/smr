@@ -7,7 +7,7 @@ $player = $session->getPlayer();
 if ($account->getTotalSmrCredits() < CREDITS_PER_TICKER) {
 	create_error('You don\'t have enough SMR Credits. Donate to SMR to gain SMR Credits!');
 }
-$type = Request::get('type');
+$type = Smr\Request::get('type');
 $expires = Smr\Epoch::time();
 $ticker = $player->getTicker($type);
 if ($ticker !== false) {
