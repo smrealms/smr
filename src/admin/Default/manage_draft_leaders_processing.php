@@ -8,9 +8,9 @@ $var = $session->getCurrentVar();
 $gameId = $var['selected_game_id'];
 
 // Get the POST variables
-$playerId = Request::getInt('player_id');
-$homeSectorID = Request::getInt('home_sector_id');
-$action = Request::get('submit');
+$playerId = Smr\Request::getInt('player_id');
+$homeSectorID = Smr\Request::getInt('home_sector_id');
+$action = Smr\Request::get('submit');
 
 // Pass entire $var so that the selected game remains selected
 $container = Page::create('skeleton.php', 'manage_draft_leaders.php', $var);

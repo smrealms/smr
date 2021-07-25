@@ -5,8 +5,8 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 $ship = $player->getShip();
 
-$action = Request::get('action');
-$amount = Request::getInt('amount');
+$action = Smr\Request::get('action');
+$amount = Smr\Request::getInt('amount');
 
 $hardware_id = $var['hardware_id'];
 $hardware_name = Globals::getHardwareName($hardware_id);

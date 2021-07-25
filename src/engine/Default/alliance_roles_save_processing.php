@@ -4,7 +4,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-foreach (Request::getIntArray('role', []) as $accountID => $roleID) {
+foreach (Smr\Request::getIntArray('role', []) as $accountID => $roleID) {
 	$db = Smr\Database::getInstance();
 	$db->write('REPLACE INTO player_has_alliance_role
 					(account_id, game_id, role_id, alliance_id)

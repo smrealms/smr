@@ -5,7 +5,7 @@ $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 $alliance_id_1 = $player->getAllianceID();
-$alliance_id_2 = $_REQUEST['proposedAlliance'];
+$alliance_id_2 = Smr\Request::getInt('proposedAlliance');
 
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT 1 FROM alliance_treaties WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_1 = ' . $alliance_id_2 . ') AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
@@ -25,7 +25,7 @@ Menu::alliance($alliance1->getAllianceID());
 // Get the terms selected for this offer
 $terms = [];
 foreach (array_keys(SmrTreaty::TYPES) as $type) {
-	$terms[$type] = isset($_REQUEST[$type]);
+	$terms[$type] = Smr\Request::has($type);
 }
 // A few terms get added automatically if a more restrictive term has
 // been selected.

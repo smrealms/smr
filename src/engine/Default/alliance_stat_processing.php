@@ -5,23 +5,23 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
-if (Request::has('description')) {
-	$description = trim(Request::get('description'));
+if (Smr\Request::has('description')) {
+	$description = trim(Smr\Request::get('description'));
 }
-if (Request::has('discord_server')) {
-	$discordServer = trim(Request::get('discord_server'));
+if (Smr\Request::has('discord_server')) {
+	$discordServer = trim(Smr\Request::get('discord_server'));
 }
-if (Request::has('discord_channel')) {
-	$discordChannel = trim(Request::get('discord_channel'));
+if (Smr\Request::has('discord_channel')) {
+	$discordChannel = trim(Smr\Request::get('discord_channel'));
 }
-if (Request::has('irc')) {
-	$irc = trim(Request::get('irc'));
+if (Smr\Request::has('irc')) {
+	$irc = trim(Smr\Request::get('irc'));
 }
-if (Request::has('mod')) {
-	$mod = trim(Request::get('mod'));
+if (Smr\Request::has('mod')) {
+	$mod = trim(Smr\Request::get('mod'));
 }
-if (Request::has('url')) {
-	$url = trim(Request::get('url'));
+if (Smr\Request::has('url')) {
+	$url = trim(Smr\Request::get('url'));
 }
 
 // Prevent XSS attacks
@@ -30,9 +30,9 @@ if (isset($url) && preg_match('/"/', $url)) {
 }
 
 $alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
-if (Request::has('recruit_type')) {
-	$recruitType = Request::get('recruit_type');
-	$password = Request::get('password', '');
+if (Smr\Request::has('recruit_type')) {
+	$recruitType = Smr\Request::get('recruit_type');
+	$password = Smr\Request::get('password', '');
 	$alliance->setRecruitType($recruitType, $password);
 }
 if (isset($description)) {

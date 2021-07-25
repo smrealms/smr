@@ -9,7 +9,7 @@ if (!$player->isPresident()) {
 }
 
 $race_id = $var['race_id'];
-$type = strtoupper(Request::get('action'));
+$type = strtoupper(Smr\Request::get('action'));
 $time = Smr\Epoch::time() + TIME_FOR_COUNCIL_VOTE;
 
 $db = Smr\Database::getInstance();

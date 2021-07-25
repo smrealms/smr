@@ -4,9 +4,9 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
 // Move a location from one sector to another
-$targetSectorID = Request::getInt('TargetSectorID');
-$origSectorID = Request::getInt('OrigSectorID');
-$locationTypeID = Request::getInt('LocationTypeID');
+$targetSectorID = Smr\Request::getInt('TargetSectorID');
+$origSectorID = Smr\Request::getInt('OrigSectorID');
+$locationTypeID = Smr\Request::getInt('LocationTypeID');
 $targetSector = SmrSector::getSector($var['game_id'], $targetSectorID);
 
 // Skip if target sector already has the same location

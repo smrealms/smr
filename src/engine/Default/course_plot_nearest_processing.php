@@ -9,8 +9,8 @@ if (isset($var['RealX'])) {
 	// This is only used by NPC's
 	$realX = $var['RealX'];
 } else {
-	$xType = Request::get('xtype');
-	$X = Request::get('X');
+	$xType = Smr\Request::get('xtype');
+	$X = Smr\Request::get('X');
 	$realX = Plotter::getX($xType, $X, $player->getGameID(), $player);
 
 	$player->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest ' . $xType . ': ' . $X . '.');

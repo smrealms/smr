@@ -4,9 +4,9 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$message = htmlentities(trim(Request::get('message')), ENT_COMPAT, 'utf-8');
+$message = htmlentities(trim(Smr\Request::get('message')), ENT_COMPAT, 'utf-8');
 
-if (Request::get('action') == 'Preview message') {
+if (Smr\Request::get('action') == 'Preview message') {
 	$container = Page::create('skeleton.php');
 	if (isset($var['alliance_id'])) {
 		$container['body'] = 'alliance_broadcast.php';

@@ -4,9 +4,9 @@ $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 $player = $session->getPlayer();
 
-$receiverID = Request::getInt('account_id');
-$addMessage = Request::get('message');
-$expireDays = Request::getInt('expire_days');
+$receiverID = Smr\Request::getInt('account_id');
+$addMessage = Smr\Request::get('message');
+$expireDays = Smr\Request::getInt('expire_days');
 
 $expires = Smr\Epoch::time() + 86400 * $expireDays;
 

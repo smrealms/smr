@@ -19,8 +19,8 @@ foreach ($dbResult->records() as $index => $dbRecord) {
 }
 $template->assign('TopTen', $topTen);
 
-$min_rank = Request::getInt('min_rank', 1);
-$max_rank = Request::getInt('max_rank', 10);
+$min_rank = Smr\Request::getInt('min_rank', 1);
+$max_rank = Smr\Request::getInt('max_rank', 10);
 
 if ($min_rank < 0) {
 	$min_rank = 1;

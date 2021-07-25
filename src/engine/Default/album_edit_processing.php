@@ -3,11 +3,11 @@
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$location = Request::get('location');
-$email = Request::get('email');
+$location = Smr\Request::get('location');
+$email = Smr\Request::get('email');
 
 // get website (and validate it)
-$website = Request::get('website');
+$website = Smr\Request::get('website');
 if ($website != '') {
 	// add http:// if missing
 	if (!preg_match('=://=', $website)) {
@@ -22,11 +22,11 @@ if ($website != '') {
 	}
 }
 
-$other = Request::get('other');
+$other = Smr\Request::get('other');
 
-$day = Request::getInt('day');
-$month = Request::getInt('month');
-$year = Request::getInt('year');
+$day = Smr\Request::getInt('day');
+$month = Smr\Request::getInt('month');
+$year = Smr\Request::getInt('year');
 
 // check if we have an image
 $noPicture = true;

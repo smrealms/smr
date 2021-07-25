@@ -2,7 +2,8 @@
 
 namespace Smr\SocialLogin;
 
-use \League\OAuth2\Client\Provider\Facebook as FacebookProvider;
+use League\OAuth2\Client\Provider\Facebook as FacebookProvider;
+use Smr\Request;
 
 class Facebook extends SocialLogin {
 
@@ -33,13 +34,13 @@ class Facebook extends SocialLogin {
 	}
 
 	public function login() : SocialLogin {
-		if ($_SESSION['FacebookToken'] != \Request::get('state')) {
+		if ($_SESSION['FacebookToken'] != Request::get('state')) {
 			throw new \Exception('Unexpected token received from Facebook');
 		}
 		$provider = $this->getFacebookObj();
 		$accessToken = $provider->getAccessToken(
 			'authorization_code',
-			['code' => \Request::get('code')],
+			['code' => Request::get('code')],
 		);
 		$userInfo = $provider->getResourceOwner($accessToken);
 		$this->setCredentials($userInfo->getId(), $userInfo->getEmail());

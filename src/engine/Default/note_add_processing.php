@@ -4,7 +4,7 @@ $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 // Adds a new note into the database
-$note = Request::get('note');
+$note = Smr\Request::get('note');
 if (strlen($note) > 1000) {
 	create_error('Note cannot be longer than 1000 characters.');
 }

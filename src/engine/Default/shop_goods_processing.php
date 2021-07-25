@@ -7,13 +7,13 @@ $player = $session->getPlayer();
 $ship = $player->getShip();
 $sector = $player->getSector();
 
-$amount = Request::getVarInt('amount');
+$amount = Smr\Request::getVarInt('amount');
 // no negative amounts are allowed
 if ($amount <= 0) {
 	create_error('You must enter an amount > 0!');
 }
 
-$bargain_price = Request::getVarInt('bargain_price', 0);
+$bargain_price = Smr\Request::getVarInt('bargain_price', 0);
 // no negative amounts are allowed
 if ($bargain_price < 0) {
 	create_error('Negative prices are not allowed!');
@@ -84,14 +84,14 @@ if ($ideal_price == 0 || $offered_price == 0) {
 	create_error('Port calculation error...buy more goods.');
 }
 
-if (Request::get('action') === TRADER_STEALS) {
+if (Smr\Request::get('action') === TRADER_STEALS) {
 	if (!$ship->isUnderground()) {
 		throw new Exception('Player tried to steal in a non-underground ship!');
 	}
 	if ($transaction !== TRADER_BUYS) {
 		throw new Exception('Player tried to steal a good the port does not sell!');
 	}
-	$transaction = Request::get('action');
+	$transaction = Smr\Request::get('action');
 
 	// Small chance to get caught stealing
 	$catchChancePercent = $port->getMaxLevel() - $port->getLevel() + 1;

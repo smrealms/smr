@@ -13,7 +13,7 @@ if (isset($var['Down']) && is_numeric($var['Down'])) {
 }
 
 if (isset($var['Form'])) {
-	$ship->setWeaponLocations(Request::getIntArray('weapon_reorder'));
+	$ship->setWeaponLocations(Smr\Request::getIntArray('weapon_reorder'));
 }
 
 Page::create('skeleton.php', 'weapon_reorder.php')->go();

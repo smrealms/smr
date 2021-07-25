@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$action = Request::get('action');
+$action = Smr\Request::get('action');
 if ($action == 'Yes!') {
 	$player->setNewbieTurns(0);
 	$player->setNewbieWarning(false);

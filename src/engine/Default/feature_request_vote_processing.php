@@ -4,20 +4,20 @@ $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$action = Request::get('action');
+$action = Smr\Request::get('action');
 if ($action == 'Vote') {
 	if ($account->getAccountID() == ACCOUNT_ID_NHL) {
 		create_error('This account is not allowed to cast a vote!');
 	}
-	if (Request::has('vote')) {
+	if (Smr\Request::has('vote')) {
 		$query = 'REPLACE INTO account_votes_for_feature VALUES ';
-		foreach (Request::getArray('vote') as $requestID => $vote) {
+		foreach (Smr\Request::getArray('vote') as $requestID => $vote) {
 			$query .= '(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($requestID) . ',' . $db->escapeString($vote) . '),';
 		}
 		$db->write(substr($query, 0, -1));
 	}
-	if (Request::has('favourite')) {
-		$db->write('REPLACE INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber(Request::getInt('favourite')) . ',\'FAVOURITE\')');
+	if (Smr\Request::has('favourite')) {
+		$db->write('REPLACE INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber(Smr\Request::getInt('favourite')) . ',\'FAVOURITE\')');
 	}
 
 	Page::create('skeleton.php', 'feature_request.php')->go();
@@ -25,14 +25,14 @@ if ($action == 'Vote') {
 	if (!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST)) {
 		create_error('You do not have permission to do that');
 	}
-	if (!Request::has('status')) {
+	if (!Smr\Request::has('status')) {
 		create_error('You have to select a status to set');
 	}
-	$status = Request::get('status');
-	if (!Request::has('set_status_ids')) {
+	$status = Smr\Request::get('status');
+	if (!Smr\Request::has('set_status_ids')) {
 		create_error('You have to select a feature');
 	}
-	$setStatusIDs = Request::getIntArray('set_status_ids');
+	$setStatusIDs = Smr\Request::getIntArray('set_status_ids');
 
 	$db->write('UPDATE feature_request fr SET status = ' . $db->escapeString($status) . '
 			, fav = (

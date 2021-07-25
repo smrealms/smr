@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-$game = SmrGame::getGame(Request::getInt('game_id'));
+$game = SmrGame::getGame(Smr\Request::getInt('game_id'));
 $game->setEnabled(true);
 $game->save(); // because next page queries database
 

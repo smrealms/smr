@@ -4,12 +4,12 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$action = Request::get('action');
+$action = Smr\Request::get('action');
 if (!in_array($action, ['Deposit', 'Payment'])) {
 	throw new Exception('Invalid action submitted: ' . $action);
 }
 
-$amount = Request::getInt('amount');
+$amount = Smr\Request::getInt('amount');
 $account_num = $var['account_num'];
 // no negative amounts are allowed
 if ($amount <= 0) {

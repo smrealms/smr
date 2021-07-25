@@ -9,7 +9,7 @@ if (!$player->getGame()->hasStarted()) {
 	create_error('You cannot move until the game has started!');
 }
 
-$target = Request::getVarInt('target');
+$target = Smr\Request::getVarInt('target');
 
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
@@ -38,7 +38,7 @@ if (!SmrSector::sectorExists($player->getGameID(), $target)) {
 }
 
 // If the Calculate Turn Cost button was pressed
-if (Request::get('action', '') == 'Calculate Turn Cost') {
+if (Smr\Request::get('action', '') == 'Calculate Turn Cost') {
 	$container = Page::create('skeleton.php', 'sector_jump_calculate.php');
 	$container['target'] = $target;
 	$container->go();

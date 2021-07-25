@@ -11,7 +11,7 @@ $template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
 $template->assign('SelectDummysLink', Page::create('skeleton.php', 'edit_dummys.php')->href());
 $template->assign('EditDummysLink', Page::create('edit_dummys_processing.php')->href());
 
-$name = Request::get('dummy_name', 'New Dummy');
+$name = Smr\Request::get('dummy_name', 'New Dummy');
 $dummyPlayer = DummyPlayer::getCachedDummyPlayer($name);
 $dummyShip = $dummyPlayer->getShip();
 

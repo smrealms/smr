@@ -100,7 +100,7 @@ $var = $session->getCurrentVar();
 $account = $session->getAccount();
 $player = $session->getPlayer();
 
-$action = Request::get('action');
+$action = Smr\Request::get('action');
 
 $cred_cost = $var['costs'][$action];
 if ($account->getTotalSmrCredits() < $cred_cost) {
@@ -113,7 +113,7 @@ if ($action == 'logo') {
 	$name = '<img style="padding:3px;" src="upload/' . $filename . '">';
 } else {
 	// Player submitted a text or HTML ship name
-	$name = Request::get('ship_name');
+	$name = Smr\Request::get('ship_name');
 	if ($action == 'text') {
 		checkTextShipName($name, 48);
 		$name = htmlentities($name, ENT_NOQUOTES, 'utf-8');

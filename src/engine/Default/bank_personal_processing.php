@@ -3,8 +3,8 @@
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$amount = Request::getInt('amount');
-$action = Request::get('action');
+$amount = Smr\Request::getInt('amount');
+$action = Smr\Request::get('action');
 
 // no negative amounts are allowed
 if ($amount <= 0) {

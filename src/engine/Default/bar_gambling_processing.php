@@ -62,7 +62,7 @@ if (isset($var['player_does'])) {
 }
 //new game if $do == nothing
 if ($do == 'nothing') {
-	$bet = Request::getVarInt('bet');
+	$bet = Smr\Request::getVarInt('bet');
 	if ($player->getCredits() < $bet) {
 		create_error('Not even enough to play BlackJack...you need to trade!');
 	}

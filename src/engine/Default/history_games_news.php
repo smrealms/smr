@@ -8,8 +8,8 @@ $account = $session->getAccount();
 $template->assign('PageTopic', 'Game News : ' . $var['game_name']);
 Menu::history_games(3);
 
-$min = Request::getInt('min', 1);
-$max = Request::getInt('max', 50);
+$min = Smr\Request::getInt('min', 1);
+$max = Smr\Request::getInt('max', 50);
 $template->assign('Max', $max);
 $template->assign('Min', $min);
 

@@ -2,7 +2,8 @@
 
 namespace Smr\SocialLogin;
 
-use \League\OAuth2\Client\Provider\Google as GoogleProvider;
+use League\OAuth2\Client\Provider\Google as GoogleProvider;
+use Smr\Request;
 
 class Google extends SocialLogin {
 
@@ -32,13 +33,13 @@ class Google extends SocialLogin {
 	}
 
 	public function login() : SocialLogin {
-		if ($_SESSION['GoogleToken'] != \Request::get('state')) {
+		if ($_SESSION['GoogleToken'] != Request::get('state')) {
 			throw new \Exception('Unexpected token received from Google');
 		}
 		$provider = $this->getGoogleObj();
 		$accessToken = $provider->getAccessToken(
 			'authorization_code',
-			['code' => \Request::get('code')],
+			['code' => Request::get('code')],
 		);
 		$userInfo = $provider->getResourceOwner($accessToken);
 		$this->setCredentials($userInfo->getId(), $userInfo->getEmail());

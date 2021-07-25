@@ -6,8 +6,8 @@ $var = $session->getCurrentVar();
 
 $gameID = $var['GameID'] ?? $session->getPlayer()->getGameID();
 
-$min_news = Request::getInt('min_news', 1);
-$max_news = Request::getInt('max_news', 50);
+$min_news = Smr\Request::getInt('min_news', 1);
+$max_news = Smr\Request::getInt('max_news', 50);
 if ($min_news > $max_news) {
 	create_error('The first number must be lower than the second number!');
 }

@@ -6,10 +6,10 @@ $player = $session->getPlayer();
 $container = Page::create('skeleton.php', 'bar_talk_bartender.php');
 $container->addVar('LocationID');
 
-$action = Request::get('action');
+$action = Smr\Request::get('action');
 
 if ($action == 'tell') {
-	$gossip = Request::get('gossip_tell');
+	$gossip = Smr\Request::get('gossip_tell');
 	if (!empty($gossip)) {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT message_id FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY message_id DESC LIMIT 1');
@@ -31,7 +31,7 @@ if ($action == 'tell') {
 	$cost = $event->getWeapon()->getCost();
 
 	// Tip needs to be more than a specific fraction of the weapon cost
-	$tip = Request::getInt('tip');
+	$tip = Smr\Request::getInt('tip');
 	$player->decreaseCredits($tip);
 	$container['Message'] = '<i>The bartender notices your ' . number_format($tip) . ' credit tip.</i><br /><br />';
 

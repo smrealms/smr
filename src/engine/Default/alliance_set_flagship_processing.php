@@ -4,7 +4,7 @@ $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 $alliance = $player->getAlliance();
 
-$flagshipID = Request::getInt('flagship_id');
+$flagshipID = Smr\Request::getInt('flagship_id');
 
 $alliance->setFlagshipID($flagshipID);
 $alliance->update();

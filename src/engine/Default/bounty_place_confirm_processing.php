@@ -21,7 +21,7 @@ list($type, $body) = match(true) {
 $container['body'] = $body;
 
 // if we don't have a yes we leave immediatly
-if (Request::get('action') != 'Yes') {
+if (Smr\Request::get('action') != 'Yes') {
 	$container->go();
 }
 

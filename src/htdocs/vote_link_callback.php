@@ -4,14 +4,14 @@
 try {
 	require_once('../bootstrap.php');
 
-	if (Request::has('account') && Request::has('game') && Request::has('link')) {
+	if (Smr\Request::has('account') && Smr\Request::has('game') && Smr\Request::has('link')) {
 		// callback from TWG
-		$accountId = Request::getInt('account');
-		$gameId = Request::getInt('game');
-		$linkId = Request::getInt('link');
-	} elseif (Request::has('votedef')) {
+		$accountId = Smr\Request::getInt('account');
+		$gameId = Smr\Request::getInt('game');
+		$linkId = Smr\Request::getInt('link');
+	} elseif (Smr\Request::has('votedef')) {
 		// callback from DOG
-		$data = explode(',', Request::get('votedef'));
+		$data = explode(',', Smr\Request::get('votedef'));
 		$accountId = (int)$data[0];
 		$gameId = (int)$data[1];
 		$linkId = (int)$data[2];

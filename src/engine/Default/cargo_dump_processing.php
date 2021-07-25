@@ -8,7 +8,7 @@ $sector = $player->getSector();
 
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
-$amount = Request::getVarInt('amount');
+$amount = Smr\Request::getVarInt('amount');
 
 if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');

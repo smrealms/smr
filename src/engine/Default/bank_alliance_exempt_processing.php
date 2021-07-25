@@ -11,8 +11,8 @@ if (isset($var['minVal'])) {
 				AND transaction_id BETWEEN ' . $db->escapeNumber($var['minVal']) . ' AND ' . $db->escapeNumber($var['maxVal']));
 }
 
-if (Request::has('exempt')) {
-	$trans_ids = array_keys(Request::getArray('exempt'));
+if (Smr\Request::has('exempt')) {
+	$trans_ids = array_keys(Smr\Request::getArray('exempt'));
 	$db->write('UPDATE alliance_bank_transactions SET exempt = 1, request_exempt = 0 WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 				AND transaction_id IN (' . $db->escapeArray($trans_ids) . ')');
 }

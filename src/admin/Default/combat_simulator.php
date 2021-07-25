@@ -12,8 +12,8 @@ $usedNames = array();
 $realAttackers = array();
 $attackers = array();
 $i = 1;
-if (Request::has('attackers')) {
-	foreach (Request::getArray('attackers') as $attackerName) {
+if (Smr\Request::has('attackers')) {
+	foreach (Smr\Request::getArray('attackers') as $attackerName) {
 		if ($attackerName == 'none') {
 			continue;
 		}
@@ -36,8 +36,8 @@ $template->assign('Attackers', $attackers);
 $i = 1;
 $realDefenders = array();
 $defenders = array();
-if (Request::has('defenders')) {
-	foreach (Request::getArray('defenders') as $defenderName) {
+if (Smr\Request::has('defenders')) {
+	foreach (Smr\Request::getArray('defenders') as $defenderName) {
 		if ($defenderName == 'none') {
 			continue;
 		}
@@ -62,11 +62,11 @@ $template->assign('Duplicates', $duplicates);
 $template->assign('CombatSimHREF', Page::create('skeleton.php', 'combat_simulator.php')->href());
 
 if (!empty($realAttackers) && !empty($realDefenders)) {
-	if (Request::has('run')) {
+	if (Smr\Request::has('run')) {
 		$results = runAnAttack($realAttackers, $realDefenders);
 		$template->assign('TraderCombatResults', $results);
 	}
-	if (Request::has('death_run')) {
+	if (Smr\Request::has('death_run')) {
 		while (count($realAttackers) > 0 && count($realDefenders) > 0) {
 			$results = runAnAttack($realAttackers, $realDefenders);
 			foreach ($realAttackers as $key => $teamPlayer) {

@@ -2,7 +2,7 @@
 
 // If here, we have hit either the 'Save', 'Delete', or 'View' form buttons.
 // Immediately return to the log list if we haven't selected any logs.
-if (!Request::has('id')) {
+if (!Smr\Request::has('id')) {
 	$container = Page::create('skeleton.php', 'combat_log_list.php');
 	$container['message'] = 'You must select at least one combat log!';
 	$container->addVar('old_action', 'action');
@@ -12,8 +12,8 @@ if (!Request::has('id')) {
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$submitAction = Request::get('action');
-$logIDs = array_keys(Request::getArray('id'));
+$submitAction = Smr\Request::get('action');
+$logIDs = array_keys(Smr\Request::getArray('id'));
 
 // Do we need to save any logs (or delete any saved logs)?
 if ($submitAction == 'Save' || $submitAction == 'Delete') {

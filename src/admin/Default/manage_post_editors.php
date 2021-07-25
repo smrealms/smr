@@ -36,7 +36,7 @@ if ($activeGames) {
 }
 
 if (isset($var['processing_msg'])) {
-	if (Request::has('game_id')) {
+	if (Smr\Request::has('game_id')) {
 		// If we are selecting a different game, clear the processing message.
 		unset($var['processing_msg']);
 	} else {

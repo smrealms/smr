@@ -5,7 +5,7 @@ $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
 // trim input now
-$player_name = trim(Request::get('player_name'));
+$player_name = trim(Smr\Request::get('player_name'));
 
 if (strpos($player_name, 'NPC') === 0) {
 	create_error('Player names cannot begin with "NPC".');
@@ -39,7 +39,7 @@ if (empty($player_name)) {
 $gameID = $var['game_id'];
 $game = SmrGame::getGame($gameID);
 
-$race_id = Request::getInt('race_id');
+$race_id = Smr\Request::getInt('race_id');
 if (!in_array($race_id, $game->getPlayableRaceIDs())) {
 	create_error('Please choose a race!');
 }

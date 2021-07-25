@@ -8,37 +8,35 @@ $template->assign('ViewAllLocationsLink', Page::create('skeleton.php', 'location
 
 if (isset($var['location_type_id'])) {
 	$location = SmrLocation::getLocation($var['location_type_id']);
-	if (isset($_REQUEST['save'])) {
-		if ($_REQUEST['add_ship_id'] != 0) {
-			$location->addShipSold($_REQUEST['add_ship_id']);
+	if (Smr\Request::has('save')) {
+		$addShipID = Smr\Request::getInt('add_ship_id');
+		if ($addShipID != 0) {
+			$location->addShipSold($addShipID);
 		}
-		if ($_REQUEST['add_weapon_id'] != 0) {
-			$location->addWeaponSold($_REQUEST['add_weapon_id']);
+		$addWeaponID = Smr\Request::getInt('add_weapon_id');
+		if ($addWeaponID != 0) {
+			$location->addWeaponSold($addWeaponID);
 		}
-		if ($_REQUEST['add_hardware_id'] != 0) {
-			$location->addHardwareSold($_REQUEST['add_hardware_id']);
-		}
-		if (isset($_REQUEST['remove_ships']) && is_array($_REQUEST['remove_ships'])) {
-			foreach ($_REQUEST['remove_ships'] as $shipTypeID) {
-				$location->removeShipSold($shipTypeID);
-			}
-		}
-		if (isset($_REQUEST['remove_weapons']) && is_array($_REQUEST['remove_weapons'])) {
-			foreach ($_REQUEST['remove_weapons'] as $weaponTypeID) {
-				$location->removeWeaponSold($weaponTypeID);
-			}
-		}
-		if (isset($_REQUEST['remove_hardware']) && is_array($_REQUEST['remove_hardware'])) {
-			foreach ($_REQUEST['remove_hardware'] as $hardwareTypeID) {
-				$location->removeHardwareSold($hardwareTypeID);
-			}
+		$addHardwareID = Smr\Request::getInt('add_hardware_id');
+		if ($addHardwareID != 0) {
+			$location->addHardwareSold($addHardwareID);
 		}
 
-		$location->setFed(isset($_REQUEST['fed']));
-		$location->setBar(isset($_REQUEST['bar']));
-		$location->setBank(isset($_REQUEST['bank']));
-		$location->setHQ(isset($_REQUEST['hq']));
-		$location->setUG(isset($_REQUEST['ug']));
+		foreach (Smr\Request::getIntArray('remove_ships', []) as $shipTypeID) {
+			$location->removeShipSold($shipTypeID);
+		}
+		foreach (Smr\Request::getIntArray('remove_weapons', []) as $weaponTypeID) {
+			$location->removeWeaponSold($weaponTypeID);
+		}
+		foreach (Smr\Request::getIntArray('remove_hardware', []) as $hardwareTypeID) {
+			$location->removeHardwareSold($hardwareTypeID);
+		}
+
+		$location->setFed(Smr\Request::has('fed'));
+		$location->setBar(Smr\Request::has('bar'));
+		$location->setBank(Smr\Request::has('bank'));
+		$location->setHQ(Smr\Request::has('hq'));
+		$location->setUG(Smr\Request::has('ug'));
 	}
 
 	$template->assign('Location', $location);
