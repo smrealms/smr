@@ -8,7 +8,7 @@ $player = $session->getPlayer();
 $gameID = $var['GameID'] ?? $player->getGameID();
 
 $template->assign('PageTopic', 'Current News');
-Menu::news();
+Menu::news($gameID);
 
 require_once(get_file_loc('news.inc.php'));
 doBreakingNewsAssign($gameID);

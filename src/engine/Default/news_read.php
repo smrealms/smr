@@ -16,7 +16,7 @@ $template->assign('MaxNews', $max_news);
 
 $template->assign('PageTopic', 'Reading The News');
 
-Menu::news();
+Menu::news($gameID);
 
 require_once(get_file_loc('news.inc.php'));
 doBreakingNewsAssign($gameID);

@@ -361,16 +361,24 @@ class AbstractMenu {
 					array('Link'=>Globals::getBarBlackjackHREF(), 'Text'=>'BlackJack')));
 	}
 
-	public static function news() : void {
+	public static function news(int $gameID) : void {
 		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
 
 		$menuItems = array();
-		if ($session->getGameID() == $var['GameID']) {
-			$menuItems[] = array('Link'=>Page::create('skeleton.php', 'news_read_current.php', array('GameID'=>$var['GameID']))->href(), 'Text'=>'Read Current News');
+		if ($session->getGameID() == $gameID) {
+			$menuItems[] = [
+				'Link' => Page::create('skeleton.php', 'news_read_current.php', ['GameID' => $gameID])->href(),
+				'Text' => 'Read Current News',
+			];
 		}
-		$menuItems[] = array('Link'=>Page::create('skeleton.php', 'news_read.php', array('GameID'=>$var['GameID']))->href(), 'Text'=>'Read Latest News');
-		$menuItems[] = array('Link'=>Page::create('skeleton.php', 'news_read_advanced.php', array('GameID'=>$var['GameID']))->href(), 'Text'=>'Advanced News');
+		$menuItems[] = [
+			'Link' => Page::create('skeleton.php', 'news_read.php', ['GameID' => $gameID])->href(),
+			'Text' => 'Read Latest News',
+		];
+		$menuItems[] = [
+			'Link' => Page::create('skeleton.php', 'news_read_advanced.php', ['GameID' => $gameID])->href(),
+			'Text' => 'Advanced News',
+		];
 
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', $menuItems);
