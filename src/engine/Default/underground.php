@@ -19,7 +19,7 @@ if (!$location->isUG()) {
 
 $template->assign('PageTopic', $location->getName());
 
-Menu::headquarters();
+Menu::headquarters($var['LocationID']);
 
 require_once(get_file_loc('gov.inc.php'));
 $template->assign('AllBounties', getBounties('UG'));

@@ -5,11 +5,9 @@
  */
 class AbstractMenu {
 
-	public static function headquarters() : void {
-		$var = Smr\Session::getInstance()->getCurrentVar();
-
+	public static function headquarters(int $locationTypeID) : void {
 		$links = [];
-		$location = SmrLocation::getLocation($var['LocationID']);
+		$location = SmrLocation::getLocation($locationTypeID);
 		if ($location->isHQ()) {
 			$links[] = ['government.php', 'Government'];
 			$links[] = ['military_payment_claim.php', 'Claim Military Payment'];
@@ -23,7 +21,7 @@ class AbstractMenu {
 
 		$menuItems = [];
 		$container = Page::create('skeleton.php');
-		$container->addVar('LocationID');
+		$container['LocationID'] = $locationTypeID;
 		foreach ($links as $link) {
 			$container['body'] = $link[0];
 			$menuItems[] = [
