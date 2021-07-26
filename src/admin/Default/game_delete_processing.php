@@ -230,7 +230,6 @@ if ($action == 'Yes') {
 	$smr_db_sql[] = 'DELETE FROM player_visited_sector WHERE game_id = ' . $db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM player_votes_pact WHERE game_id = ' . $db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM player_votes_relation WHERE game_id = ' . $db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM plot_cache WHERE game_id = ' . $db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM port WHERE game_id = ' . $db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM port_has_goods WHERE game_id = ' . $db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM race_has_relation WHERE game_id = ' . $db->escapeNumber($game_id);
