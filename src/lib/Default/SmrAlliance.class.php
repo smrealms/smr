@@ -110,11 +110,12 @@ class SmrAlliance {
 	 */
 	public static function createAlliance(int $gameID, string $name) : SmrAlliance {
 		$db = Smr\Database::getInstance();
+		$db->lockTable('alliance');
 
 		// check if the alliance name already exists
-		$dbResult = $db->read('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			create_error('That alliance name already exists!');
+		if (self::getAllianceByName($name, $gameID) !== null) {
+			$db->unlock();
+			throw new Smr\UserException('That alliance name already exists.');
 		}
 
 		// get the next alliance id (ignoring reserved ID's)
@@ -126,6 +127,7 @@ class SmrAlliance {
 
 		// actually create the alliance here
 		$db->write('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_password, recruiting) VALUES(' . $db->escapeNumber($allianceID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeString($name) . ', \'\', \'FALSE\')');
+		$db->unlock();
 
 		return self::getAlliance($allianceID, $gameID);
 	}

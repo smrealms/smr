@@ -279,7 +279,7 @@ abstract class AbstractSmrPlayer {
 		try {
 			self::getPlayerByPlayerName($playerName, $gameID);
 			$db->unlock();
-			throw new \Smr\UserException('That player name already exists.');
+			throw new Smr\UserException('That player name already exists.');
 		} catch (PlayerNotFoundException $e) {
 			// Player name does not yet exist, we may proceed
 		}
