@@ -3,6 +3,9 @@
 // Use this exception to help override container forwarding for NPC's
 class ForwardException extends Exception {}
 
+/**
+ * @return never
+ */
 function overrideForward(Page $container) : void {
 	global $forwardedContainer;
 	$forwardedContainer = $container;
@@ -332,6 +335,9 @@ function debug(string $message, mixed $debugObject = null) : void {
 	}
 }
 
+/**
+ * @return never
+ */
 function processContainer(Page $container) : void {
 	global $forwardedContainer, $previousContainer;
 	$session = Smr\Session::getInstance();

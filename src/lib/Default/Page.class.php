@@ -144,11 +144,12 @@ class Page extends ArrayObject {
 
 	/**
 	 * Forward to the page identified by this container.
+	 *
+	 * @return never
 	 */
 	public function go() : void {
 		if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
 			overrideForward($this);
-			return;
 		}
 		Smr\Session::getInstance()->setCurrentVar($this);
 		do_voodoo();
