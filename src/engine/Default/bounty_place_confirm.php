@@ -7,7 +7,7 @@ $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Place Bounty');
 
-Menu::headquarters();
+Menu::headquarters($var['LocationID']);
 
 // get this guy from db
 $bountyPlayer = SmrPlayer::getPlayerByPlayerID($var['player_id'], $player->getGameID());

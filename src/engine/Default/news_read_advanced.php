@@ -69,4 +69,4 @@ require_once(get_file_loc('news.inc.php'));
 $template->assign('NewsItems', getNewsItems($dbResult));
 
 $template->assign('PageTopic', 'Advanced News');
-Menu::news();
+Menu::news($gameID);

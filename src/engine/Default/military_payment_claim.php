@@ -6,7 +6,7 @@ $var = $session->getCurrentVar();
 
 $template->assign('PageTopic', 'Military Payment Center');
 
-Menu::headquarters();
+Menu::headquarters($var['LocationID']);
 
 // We can only claim the payment once, so to prevent clobbering the message
 // upon AJAX refresh, we store it as a session variable when we first get it.

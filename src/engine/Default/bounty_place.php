@@ -2,11 +2,12 @@
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Place Bounty');
 
-Menu::headquarters();
+Menu::headquarters($var['LocationID']);
 
 $container = Page::create('bounty_place_processing.php');
 $container->addVar('LocationID');

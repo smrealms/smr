@@ -8,7 +8,7 @@ $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Bounty Payout');
 
-Menu::headquarters();
+Menu::headquarters($var['LocationID']);
 
 if (!isset($var['ClaimText'])) {
 	// Determine if we're claiming Fed or UG bounties

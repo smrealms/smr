@@ -26,7 +26,7 @@ if ($player->getRelation($raceID) <= RELATIONS_WAR) {
 $template->assign('PageTopic', $location->getName());
 
 // header menu
-Menu::headquarters();
+Menu::headquarters($var['LocationID']);
 
 $warRaces = [];
 if ($raceID != RACE_NEUTRAL) {
