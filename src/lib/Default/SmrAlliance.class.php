@@ -94,13 +94,6 @@ class SmrAlliance {
 			$this->discordServer = $dbRecord->getField('discord_server');
 			$this->discordChannel = $dbRecord->getField('discord_channel');
 			$this->flagshipID = $dbRecord->getInt('flagship_id');
-
-			if (empty($this->kills)) {
-				$this->kills = 0;
-			}
-			if (empty($this->deaths)) {
-				$this->deaths = 0;
-			}
 		}
 	}
 
