@@ -46,7 +46,7 @@ RUN sed -i 's/AllowOverride All/AllowOverride None/g' /etc/apache2/conf-enabled/
 WORKDIR /smr/
 
 RUN curl -sS https://getcomposer.org/installer | \
-	php -- --install-dir=/usr/local/bin --filename=composer --version=2.0.14
+	php -- --install-dir=/usr/local/bin --filename=composer --version=2.1.5
 
 COPY composer.json .
 RUN MODE=$([ "$PHP_DEBUG" = "1" ] || echo "--no-dev") \
