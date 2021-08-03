@@ -63,7 +63,7 @@
 	},
 	"require-dev": {
 		"overtrue/phplint": "3.0.3",
-		"phpunit/phpunit": "9.5.7",
+		"phpunit/phpunit": "9.5.8",
 		"phpstan/phpstan": "0.12.94"
 	}
 }
