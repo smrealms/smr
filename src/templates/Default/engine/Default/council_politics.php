@@ -10,7 +10,7 @@
 		<tr>
 			<td>
 				<table class="center"><?php
-					foreach ($PeaceRaces as $RaceID => $raceInfo) { ?>
+					foreach ($PeaceRaces as $RaceID) { ?>
 						<tr>
 							<td>
 								<img src="<?php echo Smr\Race::getHeadImage($RaceID); ?>" width="100" height="106" /><br /><?php
@@ -22,7 +22,7 @@
 			</td>
 			<td>
 				<table class="center"><?php
-					foreach ($NeutralRaces as $RaceID => $raceInfo) { ?>
+					foreach ($NeutralRaces as $RaceID) { ?>
 						<tr>
 							<td>
 								<img src="<?php echo Smr\Race::getHeadImage($RaceID); ?>" width="100" height="106" /><br /><?php
@@ -34,7 +34,7 @@
 			</td>
 			<td>
 				<table class="center"><?php
-					foreach ($WarRaces as $RaceID => $raceInfo) { ?>
+					foreach ($WarRaces as $RaceID) { ?>
 						<tr>
 							<td>
 								<img src="<?php echo Smr\Race::getHeadImage($RaceID); ?>" width="100" height="106" /><br /><?php

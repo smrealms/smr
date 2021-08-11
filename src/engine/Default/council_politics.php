@@ -20,11 +20,11 @@ $warRaces = array();
 foreach (Smr\Race::getPlayableIDs() as $otherRaceID) {
 	if ($raceID != $otherRaceID) {
 		if ($raceRelations[$otherRaceID] >= RELATIONS_PEACE) {
-			$peaceRaces[$otherRaceID] = $raceInfo;
+			$peaceRaces[] = $otherRaceID;
 		} elseif ($raceRelations[$otherRaceID] <= RELATIONS_WAR) {
-			$warRaces[$otherRaceID] = $raceInfo;
+			$warRaces[] = $otherRaceID;
 		} else {
-			$neutralRaces[$otherRaceID] = $raceInfo;
+			$neutralRaces[] = $otherRaceID;
 		}
 	}
 }
