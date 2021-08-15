@@ -8,16 +8,17 @@ $template->assign('PageTopic', 'Assist Rankings');
 
 Menu::rankings(0, 4);
 
+$rankedStats = Rankings::playerStats('assists', $player->getGameID());
+
 // what rank are we?
-$ourRank = $player->getAssistsRank();
+$ourRank = Rankings::ourRank($rankedStats, $player->getPlayerID());
 $template->assign('OurRank', $ourRank);
 
-$totalPlayers = $player->getGame()->getTotalPlayers();
+$template->assign('Rankings', Rankings::collectRankings($rankedStats, $player));
 
-$template->assign('Rankings', Rankings::playerRanks('assists'));
-
+$totalPlayers = count($rankedStats);
 list($minRank, $maxRank) = Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
 
 $template->assign('FilterRankingsHREF', Page::create('skeleton.php', 'rankings_player_assists.php')->href());
 
-$template->assign('FilteredRankings', Rankings::playerRanks('assists', $minRank, $maxRank));
+$template->assign('FilteredRankings', Rankings::collectRankings($rankedStats, $player, $minRank, $maxRank));

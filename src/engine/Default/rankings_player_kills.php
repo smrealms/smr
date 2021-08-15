@@ -8,16 +8,17 @@ $template->assign('PageTopic', 'Kill Rankings');
 
 Menu::rankings(0, 2);
 
+$rankedStats = Rankings::playerStats('kills', $player->getGameID());
+
 // what rank are we?
-$ourRank = $player->getKillsRank();
+$ourRank = Rankings::ourRank($rankedStats, $player->getPlayerID());
 $template->assign('OurRank', $ourRank);
 
-$totalPlayers = $player->getGame()->getTotalPlayers();
+$template->assign('Rankings', Rankings::collectRankings($rankedStats, $player));
 
-$template->assign('Rankings', Rankings::playerRanks('kills'));
-
+$totalPlayers = count($rankedStats);
 list($minRank, $maxRank) = Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
 
 $template->assign('FilterRankingsHREF', Page::create('skeleton.php', 'rankings_player_kills.php')->href());
 
-$template->assign('FilteredRankings', Rankings::playerRanks('kills', $minRank, $maxRank));
+$template->assign('FilteredRankings', Rankings::collectRankings($rankedStats, $player, $minRank, $maxRank));

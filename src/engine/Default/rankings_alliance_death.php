@@ -7,30 +7,18 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'Alliance Death Rankings');
 Menu::rankings(1, 3);
 
-$db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT count(*) FROM alliance
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-$numAlliances = $dbResult->record()->getInt('count(*)');
-
+$rankedStats = Rankings::allianceStats('deaths', $player->getGameID());
 $ourRank = 0;
 if ($player->hasAlliance()) {
-	$dbResult = $db->read('SELECT ranking
-				FROM (
-					SELECT alliance_id,
-					ROW_NUMBER() OVER (ORDER BY alliance_deaths DESC, alliance_name ASC) AS ranking
-					FROM alliance
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				) t
-				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID())
-	);
-	$ourRank = $dbResult->record()->getInt('ranking');
+	$ourRank = Rankings::ourRank($rankedStats, $player->getAllianceID());
 	$template->assign('OurRank', $ourRank);
 }
 
-$template->assign('Rankings', Rankings::allianceRanks('deaths'));
+$template->assign('Rankings', Rankings::collectAllianceRankings($rankedStats, $player));
 
+$numAlliances = count($rankedStats);
 list($minRank, $maxRank) = Rankings::calculateMinMaxRanks($ourRank, $numAlliances);
 
-$template->assign('FilteredRankings', Rankings::allianceRanks('deaths', $minRank, $maxRank));
+$template->assign('FilteredRankings', Rankings::collectAllianceRankings($rankedStats, $player, $minRank, $maxRank));
 
 $template->assign('FilterRankingsHREF', Page::create('skeleton.php', 'rankings_alliance_death.php')->href());
