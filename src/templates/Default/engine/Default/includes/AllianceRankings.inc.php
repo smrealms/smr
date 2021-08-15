@@ -1,5 +1,5 @@
 <div class="center">
-	<p>Here are the rankings of alliances by their <?php echo strtolower($RankingStat); ?>.</p><?php
+	<p>Here are the rankings of alliances by their <?php echo $RankingStat; ?>.</p><?php
 	if (isset($OurRank)) { ?>
 		<p>Your alliance is ranked <?php echo number_format($OurRank); ?> out of <?php echo number_format($TotalRanks); ?> alliances.</p><?php
 	}
