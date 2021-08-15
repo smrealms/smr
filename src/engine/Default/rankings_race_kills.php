@@ -8,6 +8,5 @@ $template->assign('PageTopic', 'Racial Standings');
 
 Menu::rankings(2, 1);
 
-$db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT race_id, sum(kills) as amount, count(*) as num_players FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' GROUP BY race_id ORDER BY amount DESC');
-$template->assign('Ranks', Rankings::collectRaceRankings($dbResult, $player));
+$rankedStats = Rankings::raceStats('kills', $player->getGameID());
+$template->assign('Ranks', Rankings::collectRaceRankings($rankedStats, $player));

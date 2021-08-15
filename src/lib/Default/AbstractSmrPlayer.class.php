@@ -2124,35 +2124,6 @@ abstract class AbstractSmrPlayer {
 		$hof = $amount;
 	}
 
-	public function getExperienceRank() : int {
-		return $this->computeRanking('experience');
-	}
-
-	public function getKillsRank() : int {
-		return $this->computeRanking('kills');
-	}
-
-	public function getDeathsRank() : int {
-		return $this->computeRanking('deaths');
-	}
-
-	public function getAssistsRank() : int {
-		return $this->computeRanking('assists');
-	}
-
-	private function computeRanking(string $dbField) : int {
-		$dbResult = $this->db->read('SELECT ranking
-			FROM (
-				SELECT player_id,
-				ROW_NUMBER() OVER (ORDER BY ' . $dbField . ' DESC, player_name ASC) AS ranking
-				FROM player
-				WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
-			) t
-			WHERE player_id = ' . $this->db->escapeNumber($this->getPlayerID())
-		);
-		return $dbResult->record()->getInt('ranking');
-	}
-
 	public function isUnderAttack() : bool {
 		return $this->underAttack;
 	}

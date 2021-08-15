@@ -242,6 +242,7 @@ class AbstractMenu {
 		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_player_kills.php'), 'Kills', 'nav');
 		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_player_death.php'), 'Deaths', 'nav');
 		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_player_assists.php'), 'Assists', 'nav');
+		$menu_subitem[] = create_link(Page::create('skeleton.php', 'rankings_player_npc_kills.php'), 'NPC Kills', 'nav');
 
 		$menu_item['submenu'] = $menu_subitem;
 
