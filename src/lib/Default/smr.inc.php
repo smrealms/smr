@@ -349,6 +349,7 @@ function do_voodoo() : void {
 					}
 					create_error('Please do not spam click!');
 				}
+				$var = $session->getCurrentVar();
 			}
 		}
 
