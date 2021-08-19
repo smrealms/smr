@@ -282,10 +282,7 @@ function readFromStream($fp) : bool {
 		return true;
 	}
 
-
-	// debug
-	if (IRC_DEBUGGING) {
-		echo_r('[UNKNOWN] ' . $rdata);
-		return true;
-	}
+	// If here, we have some unhandled response (print and move on)
+	echo_r('[UNKNOWN] ' . $rdata);
+	return true;
 }
