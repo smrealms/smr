@@ -597,7 +597,10 @@ function doShipUpgrade(AbstractSmrPlayer $player, int $upgradeShipID) : Page {
 	$plotNearest = plotToNearest($player, SmrShipType::get($upgradeShipID));
 
 	if ($plotNearest === false) { //We're already there!
-		return Page::create('shop_ship_processing.php', '', ['ship_type_id' => $upgradeShipID]);
+		// We need a LocationID in the var to process the page, but it's only
+		// used for display, so it doesn't matter for NPCs what the value is.
+		return Page::create('shop_ship_processing.php', '',
+			['ship_type_id' => $upgradeShipID, 'LocationID' => -1]);
 	} //Otherwise return the plot
 	return $plotNearest;
 }
