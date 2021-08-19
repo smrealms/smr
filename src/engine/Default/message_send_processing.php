@@ -10,11 +10,13 @@ if (Smr\Request::get('action') == 'Preview message') {
 	$container = Page::create('skeleton.php');
 	if (isset($var['alliance_id'])) {
 		$container['body'] = 'alliance_broadcast.php';
+		$container->addVar('alliance_id');
 	} else {
 		$container['body'] = 'message_send.php';
+		if (isset($var['receiver'])) {
+			$container->addVar('receiver');
+		}
 	}
-	$container->addVar('receiver');
-	$container->addVar('alliance_id');
 	$container['preview'] = $message;
 	$container->go();
 }
@@ -33,7 +35,7 @@ if (isset($var['alliance_id'])) {
 		$player->sendMessage($dbRecord->getInt('account_id'), MSG_ALLIANCE, $message, false);
 	}
 	$player->sendMessage($player->getAccountID(), MSG_ALLIANCE, $message, true, false);
-} elseif (!empty($var['receiver'])) {
+} elseif (isset($var['receiver'])) {
 	$player->sendMessage($var['receiver'], MSG_PLAYER, $message);
 } else {
 	$player->sendGlobalMessage($message);
