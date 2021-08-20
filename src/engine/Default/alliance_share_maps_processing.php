@@ -10,7 +10,7 @@ $memberIDs = $player->getAlliance()->getMemberIDs();
 $alliance_ids = array_diff($memberIDs, [$player->getAccountID()]);
 
 // end here if we are alone in the alliance
-if (empty($alliance_ids)) {
+if (count($alliance_ids) == 0) {
 	create_error('Who exactly are you sharing maps with?');
 }
 
@@ -18,11 +18,14 @@ $unvisitedSectors = $player->getUnvisitedSectors();
 
 // delete all visited sectors from the table of all our alliance mates
 $db = Smr\Database::getInstance();
-$db->write('DELETE
+$query = 'DELETE
 			FROM player_visited_sector
 			WHERE account_id IN (' . $db->escapeArray($alliance_ids) . ')
-				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND sector_id NOT IN (' . $db->escapeArray($unvisitedSectors) . ')');
+				AND game_id = ' . $db->escapeNumber($player->getGameID());
+if (count($unvisitedSectors) > 0) {
+	$query .= ' AND sector_id NOT IN (' . $db->escapeArray($unvisitedSectors) . ')';
+}
+$db->write($query);
 
 // free some memory
 unset($unvisitedSectors);
