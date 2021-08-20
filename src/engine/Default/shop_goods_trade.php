@@ -11,7 +11,7 @@ require_once(LIB . 'Default/shop_goods.inc.php');
 $port = $player->getSectorPort();
 // get values from request
 $good_id = $var['good_id'];
-$portGood = $port->getGood($good_id);
+$portGood = Globals::getGood($good_id);
 $transaction = $port->getGoodTransaction($good_id);
 
 // Has the player failed a bargain?

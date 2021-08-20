@@ -282,24 +282,10 @@ class AbstractSmrPort {
 		return $this->goodIDs[TRADER_BUYS];
 	}
 
-	public function getGood(int $goodID) : array|false {
-		if (!$this->hasGood($goodID)) {
-			return false;
-		}
-		return Globals::getGood($goodID);
-	}
-
 	public function getGoodDistance(int $goodID) : int {
 		if (!isset($this->goodDistances[$goodID])) {
-			$x = $this->getGood($goodID);
-			if ($x === false) {
-				throw new Exception('This port does not have this good!');
-			}
-			if ($this->hasGood($goodID, TRADER_BUYS)) {
-				$x['TransactionType'] = TRADER_SELLS;
-			} else {
-				$x['TransactionType'] = TRADER_BUYS;
-			}
+			$x = Globals::getGood($goodID);
+			$x['TransactionType'] = $this->getGoodTransaction($goodID);
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
 			if (is_object($di)) {
 				$di = $di->getRelativeDistance();
@@ -334,7 +320,7 @@ class AbstractSmrPort {
 			throw new Exception('Cannot update a cached port!');
 		}
 		// The new amount must be between 0 and the max for this good
-		$amount = max(0, min($amount, $this->getGood($goodID)['Max']));
+		$amount = max(0, min($amount, Globals::getGood($goodID)['Max']));
 		if ($this->getGoodAmount($goodID) == $amount) {
 			return;
 		}
