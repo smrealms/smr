@@ -40,16 +40,16 @@ if ($player->getRelation($port->getRaceID()) < RELATIONS_WAR) {
 }
 
 // does the port actually buy or sell this good?
-$transaction = $port->getGoodTransaction($good_id);
-if (empty($transaction)) {
+if (!$port->hasGood($good_id)) {
 	create_error('I don\'t trade in that good.');
 }
 
-$portGood = $port->getGood($good_id);
 // check if there are enough left at port
 if ($port->getGoodAmount($good_id) < $amount) {
 	create_error('I\'m short of ' . $good_name . '. So I\'m not going to sell you ' . $amount . ' pcs.');
 }
+
+$transaction = $port->getGoodTransaction($good_id);
 
 // does we have what we are going to sell?
 if ($transaction === TRADER_SELLS && $amount > $ship->getCargo($good_id)) {
@@ -128,6 +128,7 @@ if ($transaction === TRADER_STEALS ||
 	// if offered equals ideal we get a problem (division by zero)
 	$gained_exp = IRound($port->calculateExperiencePercent($ideal_price, $bargain_price, $transaction) * $base_xp);
 
+	$portGood = Globals::getGood($good_id);
 	if ($transaction === TRADER_BUYS) {
 		$msg_transaction = 'bought';
 		$ship->increaseCargo($good_id, $amount);
