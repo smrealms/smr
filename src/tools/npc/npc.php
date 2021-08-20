@@ -450,27 +450,24 @@ function canWeUNO(AbstractSmrPlayer $player, bool $oppurtunisticOnly) : Page|fal
 	}
 	$sector = $player->getSector();
 
-	// We buy armour in preference to shields as it's cheaper.
-	// We buy cargo holds last if we have no newbie turns because we'd rather not die
-	$hardwareArray = array(HARDWARE_ARMOUR, HARDWARE_SHIELDS, HARDWARE_CARGO);
-
-	$amount = 0;
+	if ($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO) {
+		// Buy cargo holds first if we have plenty of newbie turns left.
+		$hardwareArray = [HARDWARE_CARGO, HARDWARE_ARMOUR, HARDWARE_SHIELDS];
+	} else {
+		// We buy armour in preference to shields as it's cheaper.
+		// We buy cargo holds last if we have no newbie turns because we'd rather not die
+		$hardwareArray = [HARDWARE_ARMOUR, HARDWARE_SHIELDS, HARDWARE_CARGO];
+	}
 
 	foreach ($sector->getLocations() as $location) {
-		if ($location->isHardwareSold()) {
-			$hardwareSold = $location->getHardwareSold();
-			if ($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardwareSold[HARDWARE_CARGO]) && ($amount = IFloor(($player->getCredits() - MINUMUM_RESERVE_CREDITS) / Globals::getHardwareCost(HARDWARE_CARGO))) > 0) { // Buy cargo holds first if we have plenty of newbie turns left.
-				$hardwareID = HARDWARE_CARGO;
-			} else {
-				foreach ($hardwareArray as $hardwareArrayID) {
-					if (!$ship->hasMaxHardware($hardwareArrayID) && isset($hardwareSold[$hardwareArrayID]) && ($amount = IFloor(($player->getCredits() - MINUMUM_RESERVE_CREDITS) / Globals::getHardwareCost($hardwareArrayID))) > 0) {
-						$hardwareID = $hardwareArrayID;
-						break;
-					}
-				}
+		foreach ($hardwareArray as $hardwareID) {
+			if (!$location->isHardwareSold($hardwareID)) {
+				continue;
 			}
-			if (isset($hardwareID)) {
-				$amount = min($ship->getType()->getMaxHardware($hardwareID) - $ship->getHardware($hardwareID), $amount);
+			$amountCanBuy = IFloor(($player->getCredits() - MINUMUM_RESERVE_CREDITS) / Globals::getHardwareCost($hardwareID));
+			$amountNeeded = $ship->getType()->getMaxHardware($hardwareID) - $ship->getHardware($hardwareID);
+			$amount = min($amountCanBuy, $amountNeeded);
+			if ($amount > 0) {
 				return doUNO($hardwareID, $amount, $sector->getSectorID());
 			}
 		}
