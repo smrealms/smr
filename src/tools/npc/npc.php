@@ -459,11 +459,11 @@ function canWeUNO(AbstractSmrPlayer $player, bool $oppurtunisticOnly) : Page|fal
 	foreach ($sector->getLocations() as $location) {
 		if ($location->isHardwareSold()) {
 			$hardwareSold = $location->getHardwareSold();
-			if ($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardwareSold[HARDWARE_CARGO]) && ($amount = floor(($player->getCredits() - MINUMUM_RESERVE_CREDITS) / Globals::getHardwareCost(HARDWARE_CARGO))) > 0) { // Buy cargo holds first if we have plenty of newbie turns left.
+			if ($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardwareSold[HARDWARE_CARGO]) && ($amount = IFloor(($player->getCredits() - MINUMUM_RESERVE_CREDITS) / Globals::getHardwareCost(HARDWARE_CARGO))) > 0) { // Buy cargo holds first if we have plenty of newbie turns left.
 				$hardwareID = HARDWARE_CARGO;
 			} else {
 				foreach ($hardwareArray as $hardwareArrayID) {
-					if (!$ship->hasMaxHardware($hardwareArrayID) && isset($hardwareSold[$hardwareArrayID]) && ($amount = floor(($player->getCredits() - MINUMUM_RESERVE_CREDITS) / Globals::getHardwareCost($hardwareArrayID))) > 0) {
+					if (!$ship->hasMaxHardware($hardwareArrayID) && isset($hardwareSold[$hardwareArrayID]) && ($amount = IFloor(($player->getCredits() - MINUMUM_RESERVE_CREDITS) / Globals::getHardwareCost($hardwareArrayID))) > 0) {
 						$hardwareID = $hardwareArrayID;
 						break;
 					}
