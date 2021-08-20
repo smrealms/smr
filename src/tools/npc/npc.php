@@ -481,12 +481,11 @@ function canWeUNO(AbstractSmrPlayer $player, bool $oppurtunisticOnly) : Page|fal
 		return false; //Only do non-oppurtunistic UNO if we have the money to do it properly!
 	}
 
-	foreach ($hardwareArray as $hardwareArrayID) {
-		if (!$ship->hasMaxHardware($hardwareArrayID)) {
-			$hardwareNeededID = $hardwareArrayID;
+	foreach ($hardwareArray as $hardwareID) {
+		if (!$ship->hasMaxHardware($hardwareID)) {
 			// It's okay to return false if we're already at a shop, since we
 			// decided above that we don't want to buy anything here.
-			return plotToNearest($player, Globals::getHardwareTypes($hardwareArrayID));
+			return plotToNearest($player, Globals::getHardwareTypes($hardwareID));
 		}
 	}
 	throw new Exception('Should not get here!');
