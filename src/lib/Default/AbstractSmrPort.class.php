@@ -313,13 +313,13 @@ class AbstractSmrPort {
 	 * Returns the transaction type for this good (Buy or Sell).
 	 * Note: this is the player's transaction, not the port's.
 	 */
-	public function getGoodTransaction(int $goodID) : ?string {
+	public function getGoodTransaction(int $goodID) : string {
 		foreach ([TRADER_BUYS, TRADER_SELLS] as $transaction) {
 			if ($this->hasGood($goodID, $transaction)) {
 				return $transaction;
 			}
 		}
-		return null; // port does not have this good
+		throw new Exception('Port does not trade goodID ' . $goodID);
 	}
 
 	public function hasGood(int $goodID, ?string $type = null) : bool {

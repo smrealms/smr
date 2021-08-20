@@ -40,8 +40,7 @@ if ($player->getRelation($port->getRaceID()) < RELATIONS_WAR) {
 }
 
 // does the port actually buy or sell this good?
-$transaction = $port->getGoodTransaction($good_id);
-if (empty($transaction)) {
+if (!$port->hasGood($good_id)) {
 	create_error('I don\'t trade in that good.');
 }
 
@@ -50,6 +49,8 @@ $portGood = $port->getGood($good_id);
 if ($port->getGoodAmount($good_id) < $amount) {
 	create_error('I\'m short of ' . $good_name . '. So I\'m not going to sell you ' . $amount . ' pcs.');
 }
+
+$transaction = $port->getGoodTransaction($good_id);
 
 // does we have what we are going to sell?
 if ($transaction === TRADER_SELLS && $amount > $ship->getCargo($good_id)) {
