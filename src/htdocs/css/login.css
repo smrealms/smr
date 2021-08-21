@@ -183,7 +183,13 @@ ul#main_menu li a {
 	vertical-align: top;
 }
 
-.recaptchatable #recaptcha_response_field {
-	background:white;
-	color: black;
+/* Account registration note section */
+div.register-note {
+	padding-left: 22px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	border: 2px solid #024b12;
+	border-radius: 12px;
+	color: #80c870;
+	background-color: #00000045; /* black with 27% opacity */
 }
