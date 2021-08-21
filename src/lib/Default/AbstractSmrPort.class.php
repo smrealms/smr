@@ -285,7 +285,11 @@ class AbstractSmrPort {
 	public function getGoodDistance(int $goodID) : int {
 		if (!isset($this->goodDistances[$goodID])) {
 			$x = Globals::getGood($goodID);
-			$x['TransactionType'] = $this->getGoodTransaction($goodID);
+			// Calculate distance to the opposite of the offered transaction
+			$x['TransactionType'] = match($this->getGoodTransaction($goodID)) {
+				TRADER_BUYS => TRADER_SELLS,
+				TRADER_SELLS => TRADER_BUYS,
+			};
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
 			if (is_object($di)) {
 				$di = $di->getRelativeDistance();
