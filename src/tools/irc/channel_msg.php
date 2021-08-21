@@ -3,7 +3,7 @@
 /**
  * @param resource $fp
  */
-function check_for_registration(AbstractSmrPlayer &$player, $fp, string $nick, string $channel, string $callback, bool $validationMessages = true) : bool {
+function check_for_registration($fp, string $nick, string $channel, callable $callback, bool $validationMessages = true) : AbstractSmrPlayer|false {
 	//Force $validationMessages to always be boolean.
 	$validationMessages = $validationMessages === true;
 
@@ -19,7 +19,7 @@ function check_for_registration(AbstractSmrPlayer &$player, $fp, string $nick, s
 		fputs($fp, 'WHOIS ' . $nick . EOL);
 		array_push($actions, array('MSG_318', $channel, $nick, $callback, time(), $validationMessages));
 
-		return true;
+		return false;
 	}
 
 	$registeredNick = $dbResult->record()->getString('registered_nick');
@@ -30,7 +30,7 @@ function check_for_registration(AbstractSmrPlayer &$player, $fp, string $nick, s
 		if ($validationMessages === true) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
 		}
-		return true;
+		return false;
 	}
 
 	// get smr account
@@ -43,7 +43,7 @@ function check_for_registration(AbstractSmrPlayer &$player, $fp, string $nick, s
 			if ($validationMessages === true) {
 				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
 			}
-			return true;
+			return false;
 		}
 	}
 
@@ -54,7 +54,7 @@ function check_for_registration(AbstractSmrPlayer &$player, $fp, string $nick, s
 		if ($validationMessages === true) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
 		}
-		return true;
+		return false;
 	}
 
 	// is the user part of this alliance? (no need to check for 0, cannot happen at this point in code)
@@ -62,10 +62,10 @@ function check_for_registration(AbstractSmrPlayer &$player, $fp, string $nick, s
 		if ($validationMessages === true) {
 			fputs($fp, 'KICK ' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
 		}
-		return true;
+		return false;
 	}
 
-	return false;
+	return $player;
 }
 
 /**
@@ -86,7 +86,10 @@ function channel_msg_with_registration($fp, string $rdata) : bool
 			return true;
 		}
 
-		if (check_for_registration($player, $fp, $nick, $channel, 'channel_msg_with_registration($fp, \'' . $rdata . '\');')) {
+		$callback = function() use($fp, $rdata) : bool {
+			return channel_msg_with_registration($fp, $rdata);
+		};
+		if (($player = check_for_registration($fp, $nick, $channel, $callback)) === false) {
 			return true;
 		}
 

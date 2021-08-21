@@ -27,24 +27,18 @@ function notice_nickserv_registered_user($fp, string $rdata) : bool
 
 			// is that a callback for our nick?
 			if ($action[0] == 'NICKSERV_INFO' && $nick == $action[2]) {
-
-				echo_r('Callback found: ' . $action[3]);
-
 				unset($actions[$key]);
 
-				eval($action[3]);
-
+				echo_r('Callback found: ' . $action[3]);
+				$action[3]();
 			}
 
 		}
 
-
 		return true;
-
 	}
 
 	return false;
-
 }
 
 function notice_nickserv_unknown_user($fp, string $rdata) : bool
@@ -74,11 +68,9 @@ function notice_nickserv_unknown_user($fp, string $rdata) : bool
 			}
 
 		}
-
 		return true;
 
 	}
 
 	return false;
-
 }

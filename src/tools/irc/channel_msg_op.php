@@ -248,7 +248,11 @@ function channel_msg_op_list($fp, string $rdata, AbstractSmrPlayer $player) : bo
  */
 function channel_op_notification($fp, string $rdata, string $nick, string $channel) : bool {
 	echo_r('[OP_ATTENDANCE_CHECK] ' . $nick);
-	if (check_for_registration($player, $fp, $nick, $channel, 'channel_op_notification($fp, \'' . $rdata . '\', \'' . $nick . '\', \'' . $channel . '\');', false)) {
+
+	$callback = function() use($fp, $rdata, $nick, $channel) : bool {
+		return channel_op_notification($fp, $rdata, $nick, $channel);
+	};
+	if (($player = check_for_registration($fp, $nick, $channel, $callback, false)) === false) {
 		return true;
 	}
 
