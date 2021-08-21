@@ -95,8 +95,6 @@ function server_msg_318($fp, string $rdata) : bool
 			// is that a callback for our nick?
 			if ($action[0] == 'MSG_318' && $nick == $action[2]) {
 
-				echo_r('Callback found: ' . $action[3]);
-
 				unset($actions[$key]);
 
 				// so we should do a callback but need to check first if the guy has registered
