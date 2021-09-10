@@ -43,11 +43,15 @@ class DiContainer {
 			Dotenv::class => function(): Dotenv {
 				return Dotenv::createArrayBacked(CONFIG, 'env');
 			},
+			'DatabaseName' => function(DatabaseProperties $dbProperties): string {
+				return $dbProperties->getDatabaseName();
+			},
 			// Explicitly name all classes that are autowired, so we can take advantage of
 			// the compiled container feature for a performance boost
 			Epoch::class => autowire(),
 			DatabaseProperties::class => autowire(),
-			Database::class => autowire(),
+			Database::class => autowire()
+				->constructorParameter('dbName', \DI\get('DatabaseName')),
 			Session::class => autowire(),
 			Template::class => autowire(),
 		];
