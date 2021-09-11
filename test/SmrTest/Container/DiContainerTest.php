@@ -12,33 +12,29 @@ use Smr\DatabaseProperties;
 class DiContainerTest extends TestCase {
 	private const PHPDI_COMPILED_CONTAINER_FILE = "/tmp/CompiledContainer.php";
 
-	protected function setUp() : void {
+	protected function tearDown() : void {
 		if (file_exists(self::PHPDI_COMPILED_CONTAINER_FILE)) {
 			unlink(self::PHPDI_COMPILED_CONTAINER_FILE);
 		}
 	}
 
 	public function test_compilation_enabled_true() : void {
-		// Given environment variable is turned off
-		unset($_ENV["DISABLE_PHPDI_COMPILATION"]);
-		// And the container is built
-		DiContainer::initializeContainer();
+		// Given the container is built with compilation enabled
+		DiContainer::initialize(true);
 		// Then
 		self::assertFileExists(self::PHPDI_COMPILED_CONTAINER_FILE);
 	}
 
 	public function test_compilation_enabled_false() : void {
-		// Given environment variable is turned on
-		$_ENV["DISABLE_PHPDI_COMPILATION"] = "true";
-		// And the container is built
-		DiContainer::initializeContainer();
+		// Given the container is built with compilation disabled
+		DiContainer::initialize(false);
 		// Then
 		self::assertFileDoesNotExist(self::PHPDI_COMPILED_CONTAINER_FILE);
 	}
 
 	public function test_container_get_and_make() : void {
 		// Start with a fresh container
-		DiContainer::initializeContainer();
+		DiContainer::initialize(false);
 
 		// The first get should construct a new object
 		$class = DatabaseProperties::class;

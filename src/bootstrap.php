@@ -206,4 +206,4 @@ require_once(LIB . 'autoload.inc.php');
 spl_autoload_register('get_class_loc');
 
 // Set up dependency injection container
-DiContainer::initializeContainer();
+DiContainer::initialize(getenv('DISABLE_PHPDI_COMPILATION') !== "true");
