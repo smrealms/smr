@@ -51,4 +51,12 @@ class DiContainerTest extends TestCase {
 		self::assertEquals($instance1, $instance3);
 	}
 
+	public function test_factory_DatabaseName() : void {
+		// Start with a fresh container
+		DiContainer::initialize(false);
+		// Then make sure the 'DatabaseName' is as expected
+		$dbName = DiContainer::get('DatabaseName');
+		self::assertSame($dbName, 'smr_live_test');
+	}
+
 }
