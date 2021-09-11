@@ -231,6 +231,12 @@ class Template {
 			return trim(@$dom->saveHTML());
 		};
 
+		// Helper function to canonicalize making an XML element,
+		// with its inner content properly escaped.
+		$xmlify = function(string $id, string $str) : string {
+			return '<' . $id . '>' . htmlspecialchars($str, ENT_XML1, 'utf-8') . '</' . $id . '>';
+		};
+
 		$xml = '';
 		$dom = new DOMDocument();
 		$dom->loadHTML($str);
@@ -242,7 +248,7 @@ class Template {
 				$id = $node->getAttribute('id');
 				$inner = $getInnerHTML($node);
 				if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
-					$xml .= '<' . $id . '>' . xmlify($inner) . '</' . $id . '>';
+					$xml .= $xmlify($id, $inner);
 				}
 			}
 		}
@@ -272,7 +278,7 @@ class Template {
 				if (!$this->checkDisableAJAX($inner)) {
 					$id = $mid->getAttribute('id');
 					if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
-						$xml .= '<' . $id . '>' . xmlify($inner) . '</' . $id . '>';
+						$xml .= $xmlify($id, $inner);
 					}
 				}
 			}
@@ -281,7 +287,7 @@ class Template {
 		$js = '';
 		foreach ($this->ajaxJS as $varName => $JSON) {
 			if (!$session->addAjaxReturns('JS:' . $varName, $JSON) && $returnXml) {
-				$js .= '<' . $varName . '>' . xmlify($JSON) . '</' . $varName . '>';
+				$js .= $xmlify($varName, $JSON);
 			}
 		}
 		if ($returnXml && count($this->jsAlerts) > 0) {
