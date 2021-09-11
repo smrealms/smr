@@ -83,6 +83,10 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 			['<div id="middle_panel"><input type="submit"></div>', '<middle_panel>&lt;input type="submit"&gt;</middle_panel>'],
 			// Middle panel with ajax disabled by a specific input type
 			['<div id="middle_panel"><form id="foo"><input type="checkbox"></form></div>', ''],
+			// Middle panel with ajax disabled by a span with an id
+			['<div id="middle_panel"><span id="foo">Test</span></div>', '<foo>Test</foo>'],
+			// Middle panel with ajax disabled by the ajax class
+			['<div id="middle_panel"><div id="bar" class="ajax">Hello</div></div>', '<bar>Hello</bar>'],
 			// Empty string
 			['', ''],
 		];
