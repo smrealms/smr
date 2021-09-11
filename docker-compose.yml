@@ -97,7 +97,7 @@ services:
             - ./vol_xdebug:/tmp/xdebug
         environment:
             - XDEBUG_MODE
-            - DISABLE_PHPDI_COMPILATION="true"
+            - DISABLE_PHPDI_COMPILATION=true
 
     smtp:
         image: mwader/postfix-relay

@@ -25,7 +25,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	protected function setUp() : void {
 		// Reset the DI container for each test to ensure independence.
-		DiContainer::initializeContainer();
+		DiContainer::initialize(false);
 	}
 
 	/**

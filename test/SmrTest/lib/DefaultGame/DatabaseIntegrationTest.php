@@ -17,7 +17,7 @@ class DatabaseIntegrationTest extends TestCase {
 	protected function setUp() : void {
 		// Start each test with a fresh container (and mysqli connection).
 		// This ensures the independence of each test.
-		DiContainer::initializeContainer();
+		DiContainer::initialize(false);
 	}
 
 	public function test_mysqli_factory() : void {

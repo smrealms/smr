@@ -48,11 +48,11 @@ class Database {
 	 * Not intended to be constructed by hand. If you need an instance of Database,
 	 * use Database::getInstance();
 	 * @param mysqli $dbConn The mysqli instance
-	 * @param DatabaseProperties $dbProperties The properties object that was used to construct the mysqli instance
+	 * @param DatabaseProperties $dbName The name of the database that was used to construct the mysqli instance
 	 */
 	public function __construct(
 		private mysqli $dbConn,
-		private DatabaseProperties $dbProperties,
+		private string $dbName,
 	) {}
 
 	/**
@@ -69,14 +69,14 @@ class Database {
 	 * Switch back to the configured live database
 	 */
 	public function switchDatabaseToLive() : void {
-		$this->switchDatabases($this->dbProperties->getDatabaseName());
+		$this->switchDatabases($this->dbName);
 	}
 
 	/**
-	 * Returns the size of the live database in bytes.
+	 * Returns the size of the current database in bytes.
 	 */
 	public function getDbBytes() : int {
-		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=' . $this->escapeString($this->dbProperties->getDatabaseName());
+		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=(SELECT database())';
 		return $this->read($query)->record()->getInt('db_bytes');
 	}
 

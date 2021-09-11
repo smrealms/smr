@@ -14,7 +14,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 	protected function setUp() : void {
 		// Start each test with a fresh container (and Template instance).
 		// This ensures the independence of each test.
-		DiContainer::initializeContainer();
+		DiContainer::initialize(false);
 	}
 
 	public function test_assign_unassign() : void {

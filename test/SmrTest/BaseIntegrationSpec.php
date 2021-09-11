@@ -14,7 +14,7 @@ class BaseIntegrationSpec extends TestCase {
 	public static function setUpBeforeClass() : void {
 		if (!isset(self::$conn)) {
 			self::$conn = DiContainer::make(mysqli::class);
-			$query = "SELECT table_name FROM information_schema.tables WHERE table_rows > 0 AND TABLE_SCHEMA='smr_live'";
+			$query = "SELECT table_name FROM information_schema.tables WHERE table_rows > 0 AND TABLE_SCHEMA='smr_live_test'";
 			$rs = self::$conn->query($query);
 			$all = $rs->fetch_all();
 			array_walk_recursive($all, function($a) {
@@ -34,7 +34,7 @@ class BaseIntegrationSpec extends TestCase {
 
 	protected function cleanUp() : void {
 		$implode = implode(",", self::$defaultPopulatedTables);
-		$query = "SELECT Concat('TRUNCATE TABLE ', TABLE_NAME, ';') FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'smr_live' and TABLE_NAME not in (${implode})";
+		$query = "SELECT Concat('TRUNCATE TABLE ', TABLE_NAME, ';') FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'smr_live_test' and TABLE_NAME not in (${implode})";
 		$rs = self::$conn->query($query);
 		$all = $rs->fetch_all();
 		foreach ($all as $truncate) {

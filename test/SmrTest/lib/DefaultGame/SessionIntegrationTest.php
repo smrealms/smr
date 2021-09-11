@@ -17,7 +17,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 	protected function setUp() : void {
 		// Start each test with a fresh container (and Smr\Session).
 		// This ensures the independence of each test.
-		DiContainer::initializeContainer();
+		DiContainer::initialize(false);
 		$this->session = Session::getInstance();
 	}
 
