@@ -475,38 +475,40 @@ a.lmUp:hover div, a.lmLeft:hover div, a.lmRight:hover div, a.lmDown:hover div {
 }
 
 table.chess {
-	border-collapse: separate;
-	border-spacing: 0px;
-    white-space: nowrap;
+	border-collapse: collapse;
+	white-space: nowrap;
 }
 
 .chess td {
-	font-size: 37px;
-	text-align: center;
-	border: 4px solid;
+	padding: 0px;
 }
 
-.chess td.whiteSquare {
-	width: 44px;
-	height: 44px;
+.chess td div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 37px;
+	border: 4px solid;
+	width: 50px;
+	height: 50px;
 	color: black;
+}
+
+.chess td.whiteSquare div {
 	background-color: white;
 	border-color: white;
 }
 
-.chess td.blackSquare {
-	width: 44px;
-	height: 44px;
-	color: black;
+.chess td.blackSquare div {
 	background-color: #999;
 	border-color: #999;
 }
 
-.chess td.lastMove {
+.chess td div.lastMove {
 	border: 4px green ridge;
 }
 
-.chess td.chessHighlight {
+.chess td.chessHighlight > div {
 	border: 4px orange ridge;
 }
 
@@ -514,7 +516,8 @@ td.chessOutline {
 	border: none;
 	font-size: 18px;
 	width: 10px;
-	padding: 0px 3px;
+	padding: 3px;
+	text-align: center;
 }
 
 div.chat, table#moveTable td {

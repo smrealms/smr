@@ -188,9 +188,21 @@ class ChessGame {
 		return $board;
 	}
 
-	public function getLastMove() {
+	public function getLastMove() : ?array {
 		$this->getMoves();
 		return $this->lastMove;
+	}
+
+	/**
+	 * Determines if a board square is part of the last move
+	 * (returns true for both the 'To' and 'From' squares).
+	 */
+	public function isLastMoveSquare(int $x, int $y) : bool {
+		$lastMove = $this->getLastMove();
+		if ($lastMove === null) {
+			return false;
+		}
+		return ($x == $lastMove['From']['X'] && $y == $lastMove['From']['Y']) || ($x == $lastMove['To']['X'] && $y == $lastMove['To']['Y']);
 	}
 
 	public function getMoves() : array {
