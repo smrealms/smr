@@ -64,8 +64,11 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider convertHtmlToAjaxXml_provider
 	 */
-	public function test_convertHtmlToAjaxXml(string $html, string $expected) : void {
+	public function test_convertHtmlToAjaxXml(string $html, string $expected, bool $ignoreMiddle = false) : void {
 		$template = Template::getInstance();
+		if ($ignoreMiddle) {
+			$template->ignoreMiddle();
+		}
 		$method = TestUtils::getPrivateMethod($template, 'convertHtmlToAjaxXml');
 		$this->assertSame($expected, $method->invoke($template, $html, true));
 	}
@@ -83,9 +86,38 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 			['<div id="middle_panel"><input type="submit"></div>', '<middle_panel>&lt;input type="submit"&gt;</middle_panel>'],
 			// Middle panel with ajax disabled by a specific input type
 			['<div id="middle_panel"><form id="foo"><input type="checkbox"></form></div>', ''],
+			// Middle panel with ajax disabled by a span with an id
+			['<div id="middle_panel"><span id="foo">Test</span></div>', '<foo>Test</foo>'],
+			// Middle panel with ajax disabled by the ajax class
+			['<div id="middle_panel"><div id="bar" class="ajax">Hello</div></div>', '<bar>Hello</bar>'],
+			// Middle panel disabled by ignoreMiddle
+			['<div id="middle_panel">Foo</div>', '', true],
 			// Empty string
 			['', ''],
 		];
+	}
+
+	public function test_addJavascriptForAjax() : void {
+		$template = Template::getInstance();
+
+		// Make sure the added JS data is properly json-encoded
+		$data = ['a' => 1, 'b' => 2];
+		$result = $template->addJavascriptForAjax('test', $data);
+		self::assertSame('{"a":1,"b":2}', $result);
+
+		// This adds a special hook into convertHtmlToAjaxXml
+		$method = TestUtils::getPrivateMethod($template, 'convertHtmlToAjaxXml');
+		$result = $method->invoke($template, '<body></body>', true);
+		self::assertSame('<JS><test>{"a":1,"b":2}</test></JS>', $result);
+	}
+
+	public function test_addJavascriptForAjax_duplicate() : void {
+		$template = Template::getInstance();
+		// Call once successfully
+		$template->addJavascriptForAjax('test', '');
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Trying to set javascript val twice: test');
+		$template->addJavascriptForAjax('test', '');
 	}
 
 }

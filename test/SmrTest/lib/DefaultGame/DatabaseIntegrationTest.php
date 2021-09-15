@@ -53,6 +53,16 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->read("foo query");
 	}
 
+	public function test_getDbBytes() : void {
+		$db = Database::getInstance();
+		$bytes = $db->getDbBytes();
+		// This value will need to change whenever database migrations are
+		// added that modify the base table size. If that becomes too onerous,
+		// we can do a fuzzier comparison. Until then, this is a useful check
+		// that the test database is properly reset between invocations.
+		self::assertSame($bytes, 729944);
+	}
+
 	public function test_closing_database_returns_boolean() : void {
 		$db = Database::getInstance();
 		// Returns true when closing an open database connection
@@ -168,6 +178,14 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame('\'s:0:\"\";\'', $db->escapeObject(''));
 		// Test zero
 		self::assertSame("'i:0;'", $db->escapeObject(0));
+	}
+
+	public function test_write_throws_on_wrong_query_type() : void {
+		// Queries that return a result should not use the 'write' method
+		$db = Database::getInstance();
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('Wrong query type');
+		$db->write('SELECT 1');
 	}
 
 	public function test_lockTable_throws_if_read_other_table() : void {
