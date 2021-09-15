@@ -10,8 +10,10 @@
 						<tr>
 							<td class="chessOutline"><?php echo 8 - $Y; ?></td><?php
 							foreach ($Row as $X => $Cell) { ?>
-								<td id="c<?php echo $X . $Y; ?>" data-x="<?php echo $X; ?>" data-y="<?php echo $Y; ?>" class="ajax<?php if (($X + $Y) % 2 == 0) { ?> whiteSquare<?php } else { ?> blackSquare<?php } ?>" onClick="highlightMoves.call(this)"><?php
-									if ($Cell == null) { ?>&nbsp;<?php } else { ?><span class="pointer"><?php echo $Cell->getPieceSymbol(); ?></span><?php } ?>
+								<td id="c<?php echo $X . $Y; ?>" data-x="<?php echo $X; ?>" data-y="<?php echo $Y; ?>" class="ajax<?php if (($X + $Y) % 2 == 0) { ?> whiteSquare<?php } else { ?> blackSquare<?php } ?>" onClick="highlightMoves.call(this)">
+									<div<?php if ($ChessGame->isLastMoveSquare($X, $Y)) { ?> class="lastMove"<?php } ?>><?php
+										if ($Cell !== null) { ?><span class="pointer lastMove"><?php echo $Cell->getPieceSymbol(); ?></span><?php } ?>
+									</div>
 								</td><?php
 							} ?>
 						</tr><?php
@@ -59,16 +61,8 @@
 			}
 		}
 	} ?>
-	var submitMoveHREF = <?php echo $this->addJavascriptForAjax('submitMoveHREF', $ChessMoveHREF); ?>,
-		availableMoves = <?php echo $this->addJavascriptForAjax('availableMoves', $AvailableMoves); ?>;<?php
-	$LastMove = $ChessGame->getLastMove();
-	if ($LastMove != null) {
-		echo $this->addJavascriptForAjax('EVAL', '
-			$("table.chess td").removeClass("lastMove").filter(function() {
-				var x = $(this).data("x"), y = $(this).data("y");
-				return (x == ' . $LastMove['From']['X'] . ' && y == ' . $LastMove['From']['Y'] . ') || (x == ' . $LastMove['To']['X'] . ' && y == ' . $LastMove['To']['Y'] . ')
-			}).addClass("lastMove");');
-	} ?>
+	var submitMoveHREF = <?php echo $this->addJavascriptForAjax('submitMoveHREF', $ChessMoveHREF); ?>;
+	var availableMoves = <?php echo $this->addJavascriptForAjax('availableMoves', $AvailableMoves); ?>;
 </script>
 
 <?php
