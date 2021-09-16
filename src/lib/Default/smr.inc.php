@@ -138,10 +138,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 	return htmlspecialchars($tagParams['_tag']) . $tagContent . htmlspecialchars($tagParams['_endtag']);
 }
 
-function xmlify(string $str) : string {
-	return htmlspecialchars($str, ENT_XML1, 'utf-8');
-}
-
 function inify(string $text) : string {
 	return str_replace(',', '', html_entity_decode($text));
 }

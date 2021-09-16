@@ -219,16 +219,18 @@ class Template {
 
 		$session = Session::getInstance();
 
-		// To get inner html, we need to construct a separate DOMDocument.
-		// See PHP Bug #76285.
-		$getInnerHTML = function(DOMNode $node) {
-			$dom = new DOMDocument();
-			$dom->formatOutput = false;
+		$getInnerHTML = function(DOMNode $node) : string {
+			$innerHTML = '';
 			foreach ($node->childNodes as $child) {
-				$dom->appendChild($dom->importNode($child, true));
+				$innerHTML .= $child->ownerDocument->saveHTML($child);
 			}
-			// Trim to remove trailing newlines
-			return trim(@$dom->saveHTML());
+			return $innerHTML;
+		};
+
+		// Helper function to canonicalize making an XML element,
+		// with its inner content properly escaped.
+		$xmlify = function(string $id, string $str) : string {
+			return '<' . $id . '>' . htmlspecialchars($str, ENT_XML1, 'utf-8') . '</' . $id . '>';
 		};
 
 		$xml = '';
@@ -242,7 +244,7 @@ class Template {
 				$id = $node->getAttribute('id');
 				$inner = $getInnerHTML($node);
 				if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
-					$xml .= '<' . $id . '>' . xmlify($inner) . '</' . $id . '>';
+					$xml .= $xmlify($id, $inner);
 				}
 			}
 		}
@@ -256,11 +258,8 @@ class Template {
 				$doAjaxMiddle = false;
 			} else {
 				// Skip if middle_panel has ajax-enabled children.
-				$domMid = new DOMDocument();
-				$domMid->appendChild($domMid->importNode($mid, true));
-				$xpathMid = new DOMXPath($domMid);
 				foreach ($ajaxSelectors as $selector) {
-					if (count($xpathMid->query($selector)) > 0) {
+					if (count($xpath->query($selector, $mid)) > 0) {
 						$doAjaxMiddle = false;
 						break;
 					}
@@ -272,7 +271,7 @@ class Template {
 				if (!$this->checkDisableAJAX($inner)) {
 					$id = $mid->getAttribute('id');
 					if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
-						$xml .= '<' . $id . '>' . xmlify($inner) . '</' . $id . '>';
+						$xml .= $xmlify($id, $inner);
 					}
 				}
 			}
@@ -281,7 +280,7 @@ class Template {
 		$js = '';
 		foreach ($this->ajaxJS as $varName => $JSON) {
 			if (!$session->addAjaxReturns('JS:' . $varName, $JSON) && $returnXml) {
-				$js .= '<' . $varName . '>' . xmlify($JSON) . '</' . $varName . '>';
+				$js .= $xmlify($varName, $JSON);
 			}
 		}
 		if ($returnXml && count($this->jsAlerts) > 0) {
