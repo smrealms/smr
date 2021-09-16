@@ -1301,12 +1301,12 @@ class AbstractSmrPort {
 		return $actualDamage;
 	}
 
-	protected function getAttackersToCredit() : array {
+	public function getAttackersToCredit() : array {
 		//get all players involved for HoF
 		$attackers = array();
-		$dbResult = $this->db->read('SELECT account_id FROM player_attacks_port WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_RAID));
+		$dbResult = $this->db->read('SELECT player.* FROM player_attacks_port JOIN player USING (game_id, account_id) WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . ' AND player_attacks_port.sector_id = ' . $this->db->escapeNumber($this->sectorID) . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_RAID));
 		foreach ($dbResult->records() as $dbRecord) {
-			$attackers[] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $this->getGameID());
+			$attackers[] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $this->getGameID(), false, $dbRecord);
 		}
 		return $attackers;
 	}

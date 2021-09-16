@@ -5,6 +5,10 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $port = $player->getSectorPort();
+if (!$port->isDestroyed()) {
+	create_error('The port is no longer defenceless!');
+}
+
 $credits = match($var['PayoutType']) {
 	'Raze' => $port->razePort($player),
 	'Loot' => $port->lootPort($player),
