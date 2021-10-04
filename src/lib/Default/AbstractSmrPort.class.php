@@ -56,14 +56,6 @@ class AbstractSmrPort {
 	protected bool $hasChanged = false;
 	protected bool $isNew = false;
 
-	public static function refreshCache() : void {
-		foreach (self::$CACHE_PORTS as $gameID => &$gamePorts) {
-			foreach ($gamePorts as $sectorID => &$port) {
-				$port = self::getPort($gameID, $sectorID, true);
-			}
-		}
-	}
-
 	public static function clearCache() : void {
 		self::$CACHE_PORTS = array();
 		self::$CACHE_CACHED_PORTS = array();

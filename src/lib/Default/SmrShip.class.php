@@ -9,14 +9,6 @@ class SmrShip extends AbstractSmrShip {
 
 	protected string $SQL;
 
-	public static function refreshCache() : void {
-		foreach (self::$CACHE_SHIPS as &$gameShips) {
-			foreach ($gameShips as &$ship) {
-				$ship = self::getShip($ship->getPlayer(), true);
-			}
-		}
-	}
-
 	public static function clearCache() : void {
 		self::$CACHE_SHIPS = array();
 	}

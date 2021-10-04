@@ -91,14 +91,6 @@ abstract class AbstractSmrPlayer {
 	protected static array $hasHOFVisChanged = [];
 	protected array $hasBountyChanged = [];
 
-	public static function refreshCache() : void {
-		foreach (self::$CACHE_PLAYERS as $gameID => &$gamePlayers) {
-			foreach ($gamePlayers as $accountID => &$player) {
-				$player = self::getPlayer($accountID, $gameID, true);
-			}
-		}
-	}
-
 	public static function clearCache() : void {
 		self::$CACHE_PLAYERS = array();
 		self::$CACHE_SECTOR_PLAYERS = array();

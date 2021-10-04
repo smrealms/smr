@@ -34,16 +34,6 @@ class SmrForce {
 		return ['ownerID', 'sectorID', 'gameID'];
 	}
 
-	public static function refreshCache() : void {
-		foreach (self::$CACHE_FORCES as $gameID => &$gameForces) {
-			foreach ($gameForces as $sectorID => &$gameSectorForces) {
-				foreach ($gameSectorForces as $ownerID => &$forces) {
-					$forces = self::getForce($gameID, $sectorID, $ownerID, true);
-				}
-			}
-		}
-	}
-
 	public static function clearCache() : void {
 		self::$CACHE_FORCES = [];
 		self::$CACHE_SECTOR_FORCES = [];
