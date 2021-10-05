@@ -44,10 +44,6 @@ class SmrPlanet {
 	protected array $hasStoppedBuilding = array();
 	protected bool $isNew = false;
 
-	protected int $delayedShieldsDelta = 0;
-	protected int $delayedCDsDelta = 0;
-	protected int $delayedArmourDelta = 0;
-
 	public function __sleep() {
 		return ['sectorID', 'gameID', 'planetName', 'ownerID', 'typeID'];
 	}
@@ -367,12 +363,12 @@ class SmrPlanet {
 		}
 	}
 
-	public function getShields(bool $delayed = false) : int {
-		return $this->shields + ($delayed ? $this->delayedShieldsDelta : 0);
+	public function getShields() : int {
+		return $this->shields;
 	}
 
-	public function hasShields(bool $delayed = false) : bool {
-		return $this->getShields($delayed) > 0;
+	public function hasShields() : bool {
+		return $this->getShields() > 0;
 	}
 
 	public function setShields(int $shields) : void {
@@ -384,38 +380,30 @@ class SmrPlanet {
 		$this->hasChanged = true;
 	}
 
-	public function decreaseShields(int $number, bool $delayed = false) : void {
+	public function decreaseShields(int $number) : void {
 		if ($number === 0) {
 			return;
 		}
-		if ($delayed === false) {
-			$this->setShields($this->getShields() - $number);
-		} else {
-			$this->delayedShieldsDelta -= $number;
-		}
+		$this->setShields($this->getShields() - $number);
 	}
 
-	public function increaseShields(int $number, bool $delayed = false) : void {
+	public function increaseShields(int $number) : void {
 		if ($number === 0) {
 			return;
 		}
-		if ($delayed === false) {
-			$this->setShields($this->getShields() + $number);
-		} else {
-			$this->delayedShieldsDelta += $number;
-		}
+		$this->setShields($this->getShields() + $number);
 	}
 
 	public function getMaxShields() : int {
 		return $this->getBuilding(PLANET_GENERATOR) * PLANET_GENERATOR_SHIELDS;
 	}
 
-	public function getArmour(bool $delayed = false) : int {
-		return $this->armour + ($delayed ? $this->delayedArmourDelta : 0);
+	public function getArmour() : int {
+		return $this->armour;
 	}
 
-	public function hasArmour(bool $delayed = false) : bool {
-		return $this->getArmour($delayed) > 0;
+	public function hasArmour() : bool {
+		return $this->getArmour() > 0;
 	}
 
 	public function setArmour(int $armour) : void {
@@ -427,38 +415,30 @@ class SmrPlanet {
 		$this->hasChanged = true;
 	}
 
-	public function decreaseArmour(int $number, bool $delayed = false) : void {
+	public function decreaseArmour(int $number) : void {
 		if ($number === 0) {
 			return;
 		}
-		if ($delayed === false) {
-			$this->setArmour($this->getArmour() - $number);
-		} else {
-			$this->delayedArmourDelta -= $number;
-		}
+		$this->setArmour($this->getArmour() - $number);
 	}
 
-	public function increaseArmour(int $number, bool $delayed = false) : void {
+	public function increaseArmour(int $number) : void {
 		if ($number === 0) {
 			return;
 		}
-		if ($delayed === false) {
-			$this->setArmour($this->getArmour() + $number);
-		} else {
-			$this->delayedArmourDelta += $number;
-		}
+		$this->setArmour($this->getArmour() + $number);
 	}
 
 	public function getMaxArmour() : int {
 		return $this->getBuilding(PLANET_BUNKER) * PLANET_BUNKER_ARMOUR;
 	}
 
-	public function getCDs(bool $delayed = false) : int {
-		return $this->drones + ($delayed ? $this->delayedCDsDelta : 0);
+	public function getCDs() : int {
+		return $this->drones;
 	}
 
-	public function hasCDs(bool $delayed = false) : bool {
-		return $this->getCDs($delayed) > 0;
+	public function hasCDs() : bool {
+		return $this->getCDs() > 0;
 	}
 
 	public function setCDs(int $combatDrones) : void {
@@ -470,26 +450,18 @@ class SmrPlanet {
 		$this->hasChanged = true;
 	}
 
-	public function decreaseCDs(int $number, bool $delayed = false) : void {
+	public function decreaseCDs(int $number) : void {
 		if ($number === 0) {
 			return;
 		}
-		if ($delayed === false) {
-			$this->setCDs($this->getCDs() - $number);
-		} else {
-			$this->delayedCDsDelta -= $number;
-		}
+		$this->setCDs($this->getCDs() - $number);
 	}
 
-	public function increaseCDs(int $number, bool $delayed = false) : void {
+	public function increaseCDs(int $number) : void {
 		if ($number === 0) {
 			return;
 		}
-		if ($delayed === false) {
-			$this->setCDs($this->getCDs() + $number);
-		} else {
-			$this->delayedCDsDelta += $number;
-		}
+		$this->setCDs($this->getCDs() + $number);
 	}
 
 	public function getMaxCDs() : int {
@@ -569,8 +541,8 @@ class SmrPlanet {
 	}
 
 
-	public function isDestroyed(bool $delayed = false) : bool {
-		return !$this->hasCDs($delayed) && !$this->hasShields($delayed) && !$this->hasArmour($delayed);
+	public function isDestroyed() : bool {
+		return !$this->hasCDs() && !$this->hasShields() && !$this->hasArmour();
 	}
 
 	public function exists() : bool {
@@ -791,20 +763,10 @@ class SmrPlanet {
 		return in_array($option, $this->typeInfo->menuOptions());
 	}
 
-	public function doDelayedUpdates() : void {
-		$this->setShields($this->getShields(true));
-		$this->delayedShieldsDelta = 0;
-		$this->setCDs($this->getCDs(true));
-		$this->delayedCDsDelta = 0;
-		$this->setArmour($this->getArmour(true));
-		$this->delayedArmourDelta = 0;
-	}
-
 	public function update() : void {
 		if (!$this->exists()) {
 			return;
 		}
-		$this->doDelayedUpdates();
 		if ($this->hasChanged) {
 			$this->db->write('UPDATE planet SET
 									owner_id = ' . $this->db->escapeNumber($this->ownerID) . ',
@@ -1220,65 +1182,65 @@ class SmrPlanet {
 		return $results;
 	}
 
-	public function takeDamage(array $damage, bool $delayed) : array {
-		$alreadyDead = $this->isDestroyed(true);
+	public function takeDamage(array $damage) : array {
+		$alreadyDead = $this->isDestroyed();
 		$shieldDamage = 0;
 		$cdDamage = 0;
 		$armourDamage = 0;
 		if (!$alreadyDead) {
-			if ($damage['Shield'] || !$this->hasShields(true)) {
-				$shieldDamage = $this->takeDamageToShields(min($damage['MaxDamage'], $damage['Shield']), $delayed);
+			if ($damage['Shield'] || !$this->hasShields()) {
+				$shieldDamage = $this->takeDamageToShields(min($damage['MaxDamage'], $damage['Shield']));
 				$damage['Shield'] -= $shieldDamage;
 				$damage['MaxDamage'] -= $shieldDamage;
 
-				if (!$this->hasShields(true) && ($shieldDamage == 0 || $damage['Rollover'])) {
-					if ($this->hasCDs(true)) {
-						$cdDamage = $this->takeDamageToCDs(min($damage['MaxDamage'], $damage['Armour']), $delayed);
+				if (!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover'])) {
+					if ($this->hasCDs()) {
+						$cdDamage = $this->takeDamageToCDs(min($damage['MaxDamage'], $damage['Armour']));
 						$damage['Armour'] -= $cdDamage;
 						$damage['MaxDamage'] -= $cdDamage;
 					}
-					if ($this->hasArmour(true) && ($cdDamage == 0 || $damage['Rollover'])) {
-						$armourDamage = $this->takeDamageToArmour(min($damage['MaxDamage'], $damage['Armour']), $delayed);
+					if ($this->hasArmour() && ($cdDamage == 0 || $damage['Rollover'])) {
+						$armourDamage = $this->takeDamageToArmour(min($damage['MaxDamage'], $damage['Armour']));
 						$damage['Armour'] -= $armourDamage;
 						$damage['MaxDamage'] -= $armourDamage;
 					}
 				}
 
 			} else { // hit drones behind shields - we should only use this reduced damage branch if we cannot hit shields.
-				$cdDamage = $this->takeDamageToCDs(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT), $delayed);
+				$cdDamage = $this->takeDamageToCDs(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
 			}
 		}
 
 		$return = array(
-			'KillingShot' => !$alreadyDead && $this->isDestroyed(true),
+			'KillingShot' => !$alreadyDead && $this->isDestroyed(),
 			'TargetAlreadyDead' => $alreadyDead,
 			'Shield' => $shieldDamage,
 			'Armour' => $armourDamage,
-			'HasShields' => $this->hasShields(true),
-			'HasArmour' => $this->hasArmour(true),
+			'HasShields' => $this->hasShields(),
+			'HasArmour' => $this->hasArmour(),
 			'CDs' => $cdDamage,
 			'NumCDs' => $cdDamage / CD_ARMOUR,
-			'HasCDs' => $this->hasCDs(true),
+			'HasCDs' => $this->hasCDs(),
 			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage
 		);
 		return $return;
 	}
 
-	protected function takeDamageToShields(int $damage, bool $delayed) : int {
-		$actualDamage = min($this->getShields(true), $damage);
-		$this->decreaseShields($actualDamage, $delayed);
+	protected function takeDamageToShields(int $damage) : int {
+		$actualDamage = min($this->getShields(), $damage);
+		$this->decreaseShields($actualDamage);
 		return $actualDamage;
 	}
 
-	protected function takeDamageToCDs(int $damage, bool $delayed) : int {
-		$actualDamage = min($this->getCDs(true), IFloor($damage / CD_ARMOUR));
-		$this->decreaseCDs($actualDamage, $delayed);
+	protected function takeDamageToCDs(int $damage) : int {
+		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
+		$this->decreaseCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
 
-	protected function takeDamageToArmour(int $damage, bool $delayed) : int {
-		$actualDamage = min($this->getArmour(true), $damage);
-		$this->decreaseArmour($actualDamage, $delayed);
+	protected function takeDamageToArmour(int $damage) : int {
+		$actualDamage = min($this->getArmour(), $damage);
+		$this->decreaseArmour($actualDamage);
 		return $actualDamage;
 	}
 

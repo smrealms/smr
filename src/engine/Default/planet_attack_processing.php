@@ -63,7 +63,7 @@ foreach ($attackers as $attacker) {
 
 $totalShieldDamage = 0;
 foreach ($attackers as $attacker) {
-	$playerResults = $attacker->shootPlanet($planet, false);
+	$playerResults = $attacker->shootPlanet($planet);
 	$results['Attackers']['Traders'][$attacker->getAccountID()] = $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 	foreach ($playerResults['Weapons'] as $weapon) {

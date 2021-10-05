@@ -80,9 +80,9 @@ abstract class AbstractSmrCombatWeapon {
 		return $return;
 	}
 
-	protected function doPlayerDamageToPlanet(array $return, AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet, bool $delayed) : array {
+	protected function doPlayerDamageToPlanet(array $return, AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) : array {
 		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPlanet($weaponPlayer, $planet);
-		$return['ActualDamage'] = $planet->takeDamage($return['WeaponDamage'], $delayed);
+		$return['ActualDamage'] = $planet->takeDamage($return['WeaponDamage']);
 		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] = $planet->killPlanetByPlayer($weaponPlayer);
 		}
