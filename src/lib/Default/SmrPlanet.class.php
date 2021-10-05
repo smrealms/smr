@@ -52,14 +52,6 @@ class SmrPlanet {
 		return ['sectorID', 'gameID', 'planetName', 'ownerID', 'typeID'];
 	}
 
-	public static function refreshCache() : void {
-		foreach (self::$CACHE_PLANETS as $gameID => &$gamePlanets) {
-			foreach ($gamePlanets as $sectorID => &$planet) {
-				$planet = self::getPlanet($gameID, $sectorID, true);
-			}
-		}
-	}
-
 	public static function clearCache() : void {
 		self::$CACHE_PLANETS = array();
 	}

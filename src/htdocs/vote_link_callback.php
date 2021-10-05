@@ -34,7 +34,7 @@ try {
 		// Lock the sector to ensure the player gets the turns
 		// Refresh player after lock is acquired in case any values are stale
 		acquire_lock($player->getSectorID());
-		SmrPlayer::refreshCache();
+		$player = SmrPlayer::getPlayer($accountId, $gameId, true);
 
 		// Now that we are locked, check the database again to make sure turns
 		// weren't claimed while we were waiting for the lock.
