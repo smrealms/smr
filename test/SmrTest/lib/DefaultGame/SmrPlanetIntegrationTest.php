@@ -238,4 +238,85 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame(2/3, $planet->getLevel());
 	}
 
+	public function test_defenses() : void {
+		// Make a Defense World planet
+		$planet = SmrPlanet::createPlanet(1, 1, 4, 1);
+
+		// Add buildings so that we can add defenses
+		$planet->increaseBuilding(PLANET_GENERATOR, 1);
+		$planet->increaseBuilding(PLANET_HANGAR, 1);
+		$planet->increaseBuilding(PLANET_BUNKER, 1);
+
+		// Make sure there are no defenses to start
+		self::assertSame(0, $planet->getShields());
+		self::assertFalse($planet->hasShields());
+		self::assertSame(0, $planet->getCDs());
+		self::assertFalse($planet->hasCDs());
+		self::assertSame(0, $planet->getArmour());
+		self::assertFalse($planet->hasArmour());
+
+		// Increase shields
+		$planet->increaseShields(10);
+		self::assertSame(10, $planet->getShields());
+		self::assertTrue($planet->hasShields());
+
+		// Don't increase shields
+		$planet->increaseShields(0);
+		self::assertSame(10, $planet->getShields());
+
+		// Decrease shields
+		$planet->decreaseShields(2);
+		self::assertSame(8, $planet->getShields());
+
+		// Make sure we can't go above the Generator limit
+		$planet->setShields(PLANET_GENERATOR_SHIELDS + 1);
+		self::assertSame(PLANET_GENERATOR_SHIELDS, $planet->getShields());
+
+		// Make sure we can't go below 0 shields
+		$planet->setShields(-1);
+		self::assertSame(0, $planet->getShields());
+
+		// Increase CDs
+		$planet->increaseCDs(5);
+		self::assertSame(5, $planet->getCDs());
+		self::assertTrue($planet->hasCDs());
+
+		// Don't increase CDs
+		$planet->increaseCDs(0);
+		self::assertSame(5, $planet->getCDs());
+
+		// Decrease CDs
+		$planet->decreaseCDs(3);
+		self::assertSame(2, $planet->getCDs());
+
+		// Make sure we can't go above the Hangar limit
+		$planet->setCDs(PLANET_HANGAR_DRONES + 1);
+		self::assertSame(PLANET_HANGAR_DRONES, $planet->getCDs());
+
+		// Make sure we can't go below 0 CDs
+		$planet->setCDs(-1);
+		self::assertSame(0, $planet->getCDs());
+
+		// Increase armour
+		$planet->increaseArmour(15);
+		self::assertSame(15, $planet->getArmour());
+		self::assertTrue($planet->hasArmour());
+
+		// Don't increase armour
+		$planet->increaseArmour(0);
+		self::assertSame(15, $planet->getArmour());
+
+		// Decrease armour
+		$planet->decreaseArmour(4);
+		self::assertSame(11, $planet->getArmour());
+
+		// Make sure we can't go above the Bunker limit
+		$planet->setArmour(PLANET_BUNKER_ARMOUR + 1);
+		self::assertSame(PLANET_BUNKER_ARMOUR, $planet->getArmour());
+
+		// Make sure we can't go below 0 armour
+		$planet->setArmour(-1);
+		self::assertSame(0, $planet->getArmour());
+	}
+
 }
