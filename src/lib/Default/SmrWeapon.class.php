@@ -307,12 +307,12 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $return;
 	}
 
-	public function shootPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet, bool $delayed) : array {
+	public function shootPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) : array {
 		$return = array('Weapon' => $this, 'TargetPlanet' => $planet, 'Hit' => false);
 		$modifiedAccuracy = $this->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet);
 		if ($this->checkHit($weaponPlayer, $modifiedAccuracy)) {
 			$return['Hit'] = true;
-			return $this->doPlayerDamageToPlanet($return, $weaponPlayer, $planet, $delayed);
+			return $this->doPlayerDamageToPlanet($return, $weaponPlayer, $planet);
 		}
 		return $return;
 	}
