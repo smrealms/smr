@@ -472,21 +472,21 @@ class SmrForce {
 		return $results;
 	}
 
-	public function doWeaponDamage(array $damage) : array {
+	public function takeDamage(array $damage) : array {
 		$alreadyDead = !$this->exists();
 		$minesDamage = 0;
 		$cdDamage = 0;
 		$sdDamage = 0;
 		if (!$alreadyDead) {
-			$minesDamage = $this->doMinesDamage(min($damage['MaxDamage'], $damage['Armour']));
+			$minesDamage = $this->takeDamageToMines(min($damage['MaxDamage'], $damage['Armour']));
 			$damage['Armour'] -= $minesDamage;
 			$damage['MaxDamage'] -= $minesDamage;
 			if (!$this->hasMines() && ($minesDamage == 0 || $damage['Rollover'])) {
-				$cdDamage = $this->doCDDamage(min($damage['MaxDamage'], $damage['Armour']));
+				$cdDamage = $this->takeDamageToCDs(min($damage['MaxDamage'], $damage['Armour']));
 				$damage['Armour'] -= $cdDamage;
 				$damage['MaxDamage'] -= $cdDamage;
 				if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
-					$sdDamage = $this->doSDDamage(min($damage['MaxDamage'], $damage['Armour']));
+					$sdDamage = $this->takeDamageToSDs(min($damage['MaxDamage'], $damage['Armour']));
 				}
 			}
 		}
@@ -507,19 +507,19 @@ class SmrForce {
 		return $return;
 	}
 
-	protected function doMinesDamage(int $damage) : int {
+	protected function takeDamageToMines(int $damage) : int {
 		$actualDamage = min($this->getMines(), IFloor($damage / MINE_ARMOUR));
 		$this->takeMines($actualDamage);
 		return $actualDamage * MINE_ARMOUR;
 	}
 
-	protected function doCDDamage(int $damage) : int {
+	protected function takeDamageToCDs(int $damage) : int {
 		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
 		$this->takeCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
 
-	protected function doSDDamage(int $damage) : int {
+	protected function takeDamageToSDs(int $damage) : int {
 		$actualDamage = min($this->getSDs(), IFloor($damage / SD_ARMOUR));
 		$this->takeSDs($actualDamage);
 		return $actualDamage * SD_ARMOUR;

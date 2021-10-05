@@ -1239,25 +1239,25 @@ class AbstractSmrPort {
 		return $results;
 	}
 
-	public function doWeaponDamage(array $damage) : array {
+	public function takeDamage(array $damage) : array {
 		$alreadyDead = $this->isDestroyed();
 		$shieldDamage = 0;
 		$cdDamage = 0;
 		$armourDamage = 0;
 		if (!$alreadyDead) {
 			if ($damage['Shield'] || !$this->hasShields()) {
-				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'], $damage['Shield']));
+				$shieldDamage = $this->takeDamageToShields(min($damage['MaxDamage'], $damage['Shield']));
 				$damage['MaxDamage'] -= $shieldDamage;
 				if (!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover'])) {
-					$cdDamage = $this->doCDDamage(min($damage['MaxDamage'], $damage['Armour']));
+					$cdDamage = $this->takeDamageToCDs(min($damage['MaxDamage'], $damage['Armour']));
 					$damage['Armour'] -= $cdDamage;
 					$damage['MaxDamage'] -= $cdDamage;
 					if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
-						$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'], $damage['Armour']));
+						$armourDamage = $this->takeDamageToArmour(min($damage['MaxDamage'], $damage['Armour']));
 					}
 				}
 			} else { //hit drones behind shields
-				$cdDamage = $this->doCDDamage(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
+				$cdDamage = $this->takeDamageToCDs(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
 			}
 		}
 
@@ -1275,19 +1275,19 @@ class AbstractSmrPort {
 		return $return;
 	}
 
-	protected function doShieldDamage(int $damage) : int {
+	protected function takeDamageToShields(int $damage) : int {
 		$actualDamage = min($this->getShields(), $damage);
 		$this->decreaseShields($actualDamage);
 		return $actualDamage;
 	}
 
-	protected function doCDDamage(int $damage) : int {
+	protected function takeDamageToCDs(int $damage) : int {
 		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
 		$this->decreaseCDs($actualDamage);
 		return $actualDamage * CD_ARMOUR;
 	}
 
-	protected function doArmourDamage(int $damage) : int {
+	protected function takeDamageToArmour(int $damage) : int {
 		$actualDamage = min($this->getArmour(), IFloor($damage));
 		$this->decreaseArmour($actualDamage);
 		return $actualDamage;

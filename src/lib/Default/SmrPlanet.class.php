@@ -1220,32 +1220,32 @@ class SmrPlanet {
 		return $results;
 	}
 
-	public function doWeaponDamage(array $damage, bool $delayed) : array {
+	public function takeDamage(array $damage, bool $delayed) : array {
 		$alreadyDead = $this->isDestroyed(true);
 		$shieldDamage = 0;
 		$cdDamage = 0;
 		$armourDamage = 0;
 		if (!$alreadyDead) {
 			if ($damage['Shield'] || !$this->hasShields(true)) {
-				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'], $damage['Shield']), $delayed);
+				$shieldDamage = $this->takeDamageToShields(min($damage['MaxDamage'], $damage['Shield']), $delayed);
 				$damage['Shield'] -= $shieldDamage;
 				$damage['MaxDamage'] -= $shieldDamage;
 
 				if (!$this->hasShields(true) && ($shieldDamage == 0 || $damage['Rollover'])) {
 					if ($this->hasCDs(true)) {
-						$cdDamage = $this->doCDDamage(min($damage['MaxDamage'], $damage['Armour']), $delayed);
+						$cdDamage = $this->takeDamageToCDs(min($damage['MaxDamage'], $damage['Armour']), $delayed);
 						$damage['Armour'] -= $cdDamage;
 						$damage['MaxDamage'] -= $cdDamage;
 					}
 					if ($this->hasArmour(true) && ($cdDamage == 0 || $damage['Rollover'])) {
-						$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'], $damage['Armour']), $delayed);
+						$armourDamage = $this->takeDamageToArmour(min($damage['MaxDamage'], $damage['Armour']), $delayed);
 						$damage['Armour'] -= $armourDamage;
 						$damage['MaxDamage'] -= $armourDamage;
 					}
 				}
 
 			} else { // hit drones behind shields - we should only use this reduced damage branch if we cannot hit shields.
-				$cdDamage = $this->doCDDamage(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT), $delayed);
+				$cdDamage = $this->takeDamageToCDs(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT), $delayed);
 			}
 		}
 
@@ -1264,19 +1264,19 @@ class SmrPlanet {
 		return $return;
 	}
 
-	protected function doShieldDamage(int $damage, bool $delayed) : int {
+	protected function takeDamageToShields(int $damage, bool $delayed) : int {
 		$actualDamage = min($this->getShields(true), $damage);
 		$this->decreaseShields($actualDamage, $delayed);
 		return $actualDamage;
 	}
 
-	protected function doCDDamage(int $damage, bool $delayed) : int {
+	protected function takeDamageToCDs(int $damage, bool $delayed) : int {
 		$actualDamage = min($this->getCDs(true), IFloor($damage / CD_ARMOUR));
 		$this->decreaseCDs($actualDamage, $delayed);
 		return $actualDamage * CD_ARMOUR;
 	}
 
-	protected function doArmourDamage(int $damage, bool $delayed) : int {
+	protected function takeDamageToArmour(int $damage, bool $delayed) : int {
 		$actualDamage = min($this->getArmour(true), $damage);
 		$this->decreaseArmour($actualDamage, $delayed);
 		return $actualDamage;
