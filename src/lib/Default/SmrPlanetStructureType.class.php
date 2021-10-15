@@ -5,13 +5,10 @@
  */
 class SmrPlanetStructureType {
 
-	private int $ID;
-	private array $planetTypeInfo;
-
-	public function __construct(int $ID, array $planetTypeInfo) {
-		$this->ID = $ID;
-		$this->planetTypeInfo = $planetTypeInfo;
-	}
+	public function __construct(
+		private int $ID,
+		private array $planetTypeInfo,
+	) {}
 
 	/**
 	 * Trade goods required to build each type of structure.
