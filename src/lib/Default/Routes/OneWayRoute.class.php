@@ -5,30 +5,22 @@ namespace Routes;
 use Smr\Race;
 
 class OneWayRoute extends Route {
-	private int $sellSectorId;
-	private int $buySectorId;
-	private int $sellDi;
-	private int $buyDi;
-	private \Distance $distance;
-	private int $goodId;
-	private int $sellPortRace;
-	private int $buyPortRace;
 
 	/**
 	 * Construct a one-way route for buying a specific trade good at one port
 	 * and selling it at another.
 	 * NOTE: Transactions are from the perspective of the player (not the port).
 	 */
-	public function __construct(int $_sellSectorId, int $_buySectorId, int $_sellPortRace, int $_buyPortRace, int $_sellDi, int $_buyDi, \Distance $_distance, int $_goodId) {
-		$this->sellSectorId = $_sellSectorId;
-		$this->buySectorId = $_buySectorId;
-		$this->sellDi = $_sellDi;
-		$this->buyDi = $_buyDi;
-		$this->distance = $_distance;
-		$this->goodId = $_goodId;
-		$this->sellPortRace = $_sellPortRace;
-		$this->buyPortRace = $_buyPortRace;
-	}
+	public function __construct(
+		private int $sellSectorId,
+		private int $buySectorId,
+		private int $sellPortRace,
+		private int $buyPortRace,
+		private int $sellDi,
+		private int $buyDi,
+		private \Distance $distance,
+		private int $goodId,
+	) {}
 
 	public function getSellSectorId() : int {
 		return $this->sellSectorId;
