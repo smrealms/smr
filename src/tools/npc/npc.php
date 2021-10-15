@@ -151,7 +151,7 @@ function NPCStuff() : void {
 			if ($player->isDead()) {
 				debug('Some evil person killed us, let\'s move on now.');
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
-				$tradeRoute = changeRoute($allTradeRoutes);
+				$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
 				processContainer(Page::create('death_processing.php'));
 			}
 			if ($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning()) {
@@ -601,13 +601,38 @@ function doShipUpgrade(AbstractSmrPlayer $player, int $upgradeShipID) : Page {
 	return $plotNearest;
 }
 
-function changeRoute(array &$tradeRoutes) : Routes\Route|false {
+function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : Routes\Route|false {
+	// Remove any route from the pool of available routes if it contains
+	// either of the sectors in the $routeToAvoid (i.e. we died on it,
+	// so don't go back!).
+	if ($routeToAvoid !== null) {
+		$avoidSectorIDs = array_unique([
+			$routeToAvoid->getForwardRoute()->getSellSectorId(),
+			$routeToAvoid->getForwardRoute()->getBuySectorId(),
+			$routeToAvoid->getReturnRoute()->getSellSectorId(),
+			$routeToAvoid->getReturnRoute()->getBuySectorId(),
+		]);
+		foreach ($tradeRoutes as $key => $route) {
+			foreach ($avoidSectorIDs as $avoidSectorID) {
+				if ($route->containsPort($avoidSectorID)) {
+					unset($tradeRoutes[$key]);
+					break;
+				}
+			}
+		}
+	}
+
 	if (count($tradeRoutes) == 0) {
 		return false;
 	}
+
+	// Pick a random route
 	$routeKey = array_rand($tradeRoutes);
 	$tradeRoute = $tradeRoutes[$routeKey];
+
+	// Remove the route we chose so that we don't pick it again later.
 	unset($tradeRoutes[$routeKey]);
+
 	debug('Switched route', $tradeRoute);
 	return $tradeRoute;
 }
