@@ -1,23 +1,26 @@
 <p>This is a level <?php echo $Port->getLevel(); ?> port run by the <?php echo $ThisPlayer->getColouredRaceName($Port->getRaceID(), true); ?>.<br />
 Your relations with them are <?php echo get_colored_text($ThisPlayer->getRelation($Port->getRaceID())); ?>.</p>
-<br />
 
 <?php
-if (!empty($TradeMsg)) {
-	echo $TradeMsg;
-}
-if ($SearchedByFeds) {
-	if ($IllegalsFound) { ?>
-		<span class="red">
-			The Federation searched your ship and illegal goods were found!<br />
-			All illegal goods have been removed from your ship and you have been fined <?php echo number_format($TotalFine); ?> credits.
-		</span><?php
-	} else { ?>
-		<span class="blue">The Federation searched your ship and no illegal goods where found!</span><?php
-	} ?>
-	<br /><br /><?php
+if (!empty($TradeMsg)) { ?>
+	<p><?php echo $TradeMsg; ?></p><?php
 }
 
+if ($SearchedByFeds) { ?>
+	<p><?php
+		if ($IllegalsFound) { ?>
+			<span class="red">
+				The Federation searched your ship and illegal goods were found!<br />
+				All illegal goods have been removed from your ship and you have been fined <?php echo number_format($TotalFine); ?> credits.
+			</span><?php
+		} else { ?>
+			<span class="blue">The Federation searched your ship and no illegal goods where found!</span><?php
+		} ?>
+	</p><?php
+} ?>
+
+<br />
+<?php
 if ($BoughtGoods) { ?>
 	<h2>The port sells you the following:</h2>
 	<table class="standard">
@@ -47,7 +50,7 @@ if ($BoughtGoods) { ?>
 			</tr><?php
 		} ?>
 	</table>
-	<p>&nbsp;</p><?php
+	<br /><br /><?php
 }
 
 if ($SoldGoods) { ?>
@@ -76,7 +79,7 @@ if ($SoldGoods) { ?>
 			</tr><?php
 		} ?>
 	</table>
-	<p>&nbsp;</p><?php
+	<br /><br /><?php
 } ?>
 
 <a href="<?php echo $LeavePortHREF; ?>" class="submitStyle">Leave Port</a>
