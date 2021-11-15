@@ -7,8 +7,8 @@ $account = $session->getAccount();
 // trim input now
 $player_name = trim(Smr\Request::get('player_name'));
 
-if (strpos($player_name, 'NPC') === 0) {
-	create_error('Player names cannot begin with "NPC".');
+if (strpos($player_name, '[NPC]') !== false) {
+	create_error('Player names cannot contain "[NPC]".');
 }
 
 $limited_char = 0;
