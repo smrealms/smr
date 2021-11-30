@@ -31,7 +31,7 @@ RUN MODE=$([ "$PHP_DEBUG" = "1" ] && echo "development" || echo "production") \
 # Install xdebug (use /tmp/xdebug for profiler output)
 RUN if [ "$PHP_DEBUG" = "1" ]; \
 	then \
-		pecl install xdebug-3.0.4 > /dev/null \
+		pecl install xdebug-3.1.1 > /dev/null \
 		&& docker-php-ext-enable xdebug \
 		&& echo "xdebug.output_dir = /tmp/xdebug" > "$PHP_INI_DIR/conf.d/xdebug.ini" \
 		&& mkdir /tmp/xdebug; \
