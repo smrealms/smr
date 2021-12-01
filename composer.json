@@ -3,11 +3,11 @@
 	"description": "SMR",
 	"license": "AGPL-3.0",
 	"require": {
-		"abraham/twitteroauth": "^3.1",
+		"abraham/twitteroauth": "3.2.0",
 		"ext-curl": "*",
 		"ext-json": "*",
 		"ext-mysqli": "*",
-		"google/recaptcha": "^1.1",
+		"google/recaptcha": "1.2.4",
 		"league/oauth2-facebook": "2.0.5",
 		"league/oauth2-google": "4.0.0",
 		"php": "^8.0",
