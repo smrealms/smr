@@ -1,9 +1,6 @@
 <?php declare(strict_types=1);
 require_once('missions.inc.php');
 
-// Exception thrown when a player cannot be found in the database
-class PlayerNotFoundException extends Exception {}
-
 abstract class AbstractSmrPlayer {
 	use Traits\RaceID;
 
@@ -189,7 +186,7 @@ abstract class AbstractSmrPlayer {
 			$dbRecord = $dbResult->record();
 			return self::getPlayer($dbRecord->getInt('account_id'), $gameID, $forceUpdate, $dbRecord);
 		}
-		throw new PlayerNotFoundException('Player ID not found.');
+		throw new Smr\Exceptions\PlayerNotFound('Player ID not found.');
 	}
 
 	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false) : self {
@@ -199,7 +196,7 @@ abstract class AbstractSmrPlayer {
 			$dbRecord = $dbResult->record();
 			return self::getPlayer($dbRecord->getInt('account_id'), $gameID, $forceUpdate, $dbRecord);
 		}
-		throw new PlayerNotFoundException('Player Name not found.');
+		throw new Smr\Exceptions\PlayerNotFound('Player Name not found.');
 	}
 
 	protected function __construct(int $gameID, int $accountID, Smr\DatabaseRecord $dbRecord = null) {
@@ -213,7 +210,7 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 		if ($dbRecord === null) {
-			throw new PlayerNotFoundException('Invalid accountID: ' . $accountID . ' OR gameID:' . $gameID);
+			throw new Smr\Exceptions\PlayerNotFound('Invalid accountID: ' . $accountID . ' OR gameID:' . $gameID);
 		}
 
 		$this->accountID = $accountID;
@@ -271,8 +268,8 @@ abstract class AbstractSmrPlayer {
 		try {
 			self::getPlayerByPlayerName($playerName, $gameID);
 			$db->unlock();
-			throw new Smr\UserException('That player name already exists.');
-		} catch (PlayerNotFoundException $e) {
+			throw new Smr\Exceptions\UserError('That player name already exists.');
+		} catch (Smr\Exceptions\PlayerNotFound $e) {
 			// Player name does not yet exist, we may proceed
 		}
 
@@ -314,7 +311,7 @@ abstract class AbstractSmrPlayer {
 			try {
 				$otherPlayer = SmrPlayer::getPlayer($dbRecord->getInt('from_account_id'),
 				                                    $this->getGameID(), $forceUpdate);
-			} catch (PlayerNotFoundException $e) {
+			} catch (Smr\Exceptions\PlayerNotFound $e) {
 				// Skip players that have not joined this game
 				continue;
 			}
@@ -1370,7 +1367,7 @@ abstract class AbstractSmrPlayer {
 			// Do not throw an exception if the NHL account doesn't exist.
 			try {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
-			} catch (AccountNotFoundException $e) {
+			} catch (Smr\Exceptions\AccountNotFound $e) {
 				if ($alliance->getLeaderID() != ACCOUNT_ID_NHL) {
 					throw $e;
 				}

@@ -3,9 +3,9 @@
 namespace SmrTest\lib\DefaultGame;
 
 use AbstractSmrAccount;
-use AccountNotFoundException;
-use SmrTest\BaseIntegrationSpec;
+use Smr\Exceptions\AccountNotFound;
 use Smr\SocialLogin\Facebook;
+use SmrTest\BaseIntegrationSpec;
 
 /**
  * @covers AbstractSmrAccount
@@ -30,7 +30,7 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	public function test_createAccount_throws_if_referrer_does_not_exist() : void {
-		$this->expectException(AccountNotFoundException::class);
+		$this->expectException(AccountNotFound::class);
 		$this->expectExceptionMessage('Account ID 123 does not exist');
 		AbstractSmrAccount::createAccount('test', 'test', 'test@test.com', 9, 123);
 	}
@@ -53,7 +53,7 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	public function test_get_account_by_account_id_no_account_found_throws_exception() : void {
-		$this->expectException(AccountNotFoundException::class);
+		$this->expectException(AccountNotFound::class);
 		// Given there is no account record
 		// When performing an account lookup by id
 		AbstractSmrAccount::getAccount(123);

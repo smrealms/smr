@@ -153,7 +153,7 @@ class Globals {
 		try {
 			SmrGame::getGame($gameID);
 			return true;
-		} catch (GameNotFoundException $e) {
+		} catch (Smr\Exceptions\GameNotFound $e) {
 			return false;
 		}
 	}

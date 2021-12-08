@@ -1,8 +1,5 @@
 <?php declare(strict_types=1);
 
-// Exception thrown when an account cannot be found in the database
-class AccountNotFoundException extends Exception {}
-
 abstract class AbstractSmrAccount {
 
 	const USER_RANKINGS_EACH_STAT_POW = .9;
@@ -248,7 +245,7 @@ abstract class AbstractSmrAccount {
 				$this->hofName = $this->login;
 			}
 		} else {
-			throw new AccountNotFoundException('Account ID ' . $accountID . ' does not exist!');
+			throw new Smr\Exceptions\AccountNotFound('Account ID ' . $accountID . ' does not exist!');
 		}
 	}
 

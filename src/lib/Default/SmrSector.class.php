@@ -1,8 +1,5 @@
 <?php declare(strict_types=1);
 
-// Exception thrown when a sector cannot be found in the database
-class SectorNotFoundException extends Exception {}
-
 class SmrSector {
 	protected static array $CACHE_SECTORS = [];
 	protected static array $CACHE_GALAXY_SECTORS = [];
@@ -40,7 +37,7 @@ class SmrSector {
 		try {
 			self::getSector($gameID, $sectorID);
 			return true;
-		} catch (SectorNotFoundException $e) {
+		} catch (Smr\Exceptions\SectorNotFound $e) {
 			return false;
 		}
 	}
@@ -134,7 +131,7 @@ class SmrSector {
 			$this->warp = 0;
 			$this->isNew = true;
 		} else {
-			throw new SectorNotFoundException('No sector ' . $sectorID . ' in game ' . $gameID);
+			throw new Smr\Exceptions\SectorNotFound('No sector ' . $sectorID . ' in game ' . $gameID);
 		}
 	}
 

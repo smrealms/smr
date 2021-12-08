@@ -1,8 +1,5 @@
 <?php declare(strict_types=1);
 
-// Exception thrown when a game cannot be found in the database
-class GameNotFoundException extends Exception {}
-
 class SmrGame {
 	protected static array $CACHE_GAMES = [];
 
@@ -97,7 +94,7 @@ class SmrGame {
 			$this->isNew = true;
 			return;
 		} else {
-			throw new GameNotFoundException('No such game: ' . $gameID);
+			throw new Smr\Exceptions\GameNotFound('No such game: ' . $gameID);
 		}
 	}
 

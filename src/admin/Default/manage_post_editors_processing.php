@@ -16,7 +16,7 @@ $container = Page::create('skeleton.php', 'manage_post_editors.php', $var);
 
 try {
 	$selected_player = SmrPlayer::getPlayerByPlayerID($player_id, $game_id);
-} catch (PlayerNotFoundException $e) {
+} catch (Smr\Exceptions\PlayerNotFound $e) {
 	$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 	$container['processing_msg'] = $msg;
 	$container->go();

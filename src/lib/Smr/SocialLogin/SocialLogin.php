@@ -3,11 +3,6 @@
 namespace Smr\SocialLogin;
 
 /**
- * Exception thrown when a SocialLogin type cannot be found
- */
-class SocialLoginNotFound extends \Exception {}
-
-/**
  * Defines the methods to be implemented by each social login platform.
  */
 abstract class SocialLogin {
@@ -32,7 +27,7 @@ abstract class SocialLogin {
 		} elseif ($loginType === Google::getLoginType()) {
 			return new Google();
 		} else {
-			throw new SocialLoginNotFound('Unknown social login type: ' . $loginType);
+			throw new \Smr\Exceptions\SocialLoginInvalidType('Unknown social login type: ' . $loginType);
 		}
 	}
 

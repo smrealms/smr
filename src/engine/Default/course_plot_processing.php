@@ -18,7 +18,7 @@ if ($start == $target) {
 try {
 	$startSector = SmrSector::getSector($player->getGameID(), $start);
 	$targetSector = SmrSector::getSector($player->getGameID(), $target);
-} catch (SectorNotFoundException $e) {
+} catch (Smr\Exceptions\SectorNotFound $e) {
 	create_error('The sectors have to exist!');
 }
 

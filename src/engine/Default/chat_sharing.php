@@ -19,7 +19,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$gameId = $dbRecord->getInt('game_id');
 	try {
 		$otherPlayer = SmrPlayer::getPlayer($fromAccountId, $player->getGameID());
-	} catch (PlayerNotFoundException $e) {
+	} catch (Smr\Exceptions\PlayerNotFound $e) {
 		// Player has not joined this game yet
 		$otherPlayer = null;
 	}
@@ -40,7 +40,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$toAccountId = $dbRecord->getInt('to_account_id');
 	try {
 		$otherPlayer = SmrPlayer::getPlayer($toAccountId, $player->getGameID());
-	} catch (PlayerNotFoundException $e) {
+	} catch (Smr\Exceptions\PlayerNotFound $e) {
 		// Player has not joined this game yet
 		$otherPlayer = null;
 	}

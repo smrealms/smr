@@ -108,7 +108,7 @@ class SmrAlliance {
 		// check if the alliance name already exists
 		if (self::getAllianceByName($name, $gameID) !== null) {
 			$db->unlock();
-			throw new Smr\UserException('That alliance name already exists.');
+			throw new Smr\Exceptions\UserError('That alliance name already exists.');
 		}
 
 		// get the next alliance id (ignoring reserved ID's)

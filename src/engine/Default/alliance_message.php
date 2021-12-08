@@ -81,7 +81,7 @@ if ($dbResult->hasRecord()) {
 			try {
 				$author = SmrPlayer::getPlayer($sender_id, $player->getGameID());
 				$playerName = $author->getLinkedDisplayName(false);
-			} catch (PlayerNotFoundException $e) {
+			} catch (Smr\Exceptions\PlayerNotFound $e) {
 				$playerName = 'Unknown'; // default
 			}
 		}

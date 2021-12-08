@@ -923,12 +923,12 @@ class SmrPlanet {
 	}
 
 	/**
-	 * @throws \Smr\UserException If the player cannot build the structure.
+	 * @throws \Smr\Exceptions\UserError If the player cannot build the structure.
 	 */
 	public function startBuilding(AbstractSmrPlayer $constructor, int $constructionID) : void {
 		$restriction = $this->getBuildRestriction($constructor, $constructionID);
 		if ($restriction !== false) {
-			throw new \Smr\UserException('Unable to start building: ' . $restriction);
+			throw new \Smr\Exceptions\UserError('Unable to start building: ' . $restriction);
 		}
 
 		// gets the time for the buildings

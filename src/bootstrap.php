@@ -97,7 +97,7 @@ function handleException(Throwable $e) : void {
 	// The real error message may display sensitive information, so we
 	// need to catch any exceptions that are thrown while logging the error.
 	try {
-		if ($e instanceof Smr\UserException) {
+		if ($e instanceof Smr\Exceptions\UserError) {
 			create_error($e->getMessage());
 		}
 		logException($e);
