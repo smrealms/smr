@@ -1,4 +1,4 @@
-FROM php:8.0.13-cli-alpine as builder
+FROM php:8.1.0-cli-alpine as builder
 
 RUN curl -L -O https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.1.1/phpDocumentor.phar
 RUN chmod +x phpDocumentor.phar
