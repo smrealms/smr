@@ -144,10 +144,8 @@ class Page extends ArrayObject {
 
 	/**
 	 * Forward to the page identified by this container.
-	 *
-	 * @return never
 	 */
-	public function go() : void {
+	public function go() : never {
 		if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
 			overrideForward($this);
 		}

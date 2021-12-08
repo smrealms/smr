@@ -184,10 +184,7 @@ function bbifyMessage(string $message, bool $noLinks = false) : string {
 	return $message;
 }
 
-/**
- * @return never
- */
-function create_error(string $message) : void {
+function create_error(string $message) : never {
 	$container = Page::create('skeleton.php', 'error.php');
 	$container['message'] = $message;
 	if (USING_AJAX) {
@@ -297,10 +294,8 @@ function pluralise(string $word, float $count = 0) : string {
  * This function is a hack around the old style http forward mechanism.
  * It is also responsible for setting most of the global variables
  * (see loader.php for the initialization of the globals).
- *
- * @return never
  */
-function do_voodoo() : void {
+function do_voodoo() : never {
 	global $lock;
 
 	$session = Smr\Session::getInstance();
