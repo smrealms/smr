@@ -16,11 +16,7 @@ if (Smr\Request::has('create_npc_player')) {
 	$gameID = $var['selected_game_id'];
 	$playerName = Smr\Request::get('player_name');
 	$raceID = Smr\Request::getInt('race_id');
-	try {
-		$npcPlayer = SmrPlayer::createPlayer($accountID, $gameID, $playerName, $raceID, false, true);
-	} catch (\Smr\UserException $err) {
-		create_error($err->getMessage());
-	}
+	$npcPlayer = SmrPlayer::createPlayer($accountID, $gameID, $playerName, $raceID, false, true);
 
 	$npcPlayer->getShip()->setHardwareToMax();
 	$npcPlayer->giveStartingTurns();

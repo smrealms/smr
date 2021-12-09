@@ -11,11 +11,7 @@ $planet = $player->getSectorPlanet();
 $action = $var['action'];
 if ($action == 'Build') {
 	// now start the construction
-	try {
-		$planet->startBuilding($player, $var['construction_id']);
-	} catch (\Smr\UserException $err) {
-		create_error($err->getMessage());
-	}
+	$planet->startBuilding($player, $var['construction_id']);
 	$player->increaseHOF(1, array('Planet', 'Buildings', 'Started'), HOF_ALLIANCE);
 
 	$player->log(LOG_TYPE_PLANETS, 'Player starts a ' . $planet->getStructureTypes($var['construction_id'])->name() . ' on planet.');

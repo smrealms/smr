@@ -35,11 +35,7 @@ if ($name != $filteredName) {
 }
 
 // create the alliance
-try {
-	$alliance = SmrAlliance::createAlliance($player->getGameID(), $name);
-} catch (Smr\UserException $err) {
-	create_error($err->getMessage());
-}
+$alliance = SmrAlliance::createAlliance($player->getGameID(), $name);
 $alliance->setRecruitType($recruitType, $password);
 $alliance->setAllianceDescription($description, $player);
 $alliance->setLeaderID($player->getAccountID());
