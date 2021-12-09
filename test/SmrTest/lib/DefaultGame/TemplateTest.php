@@ -94,6 +94,8 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 			['<div id="middle_panel">Foo</div>', '', true],
 			// Empty string
 			['', ''],
+			// Ajax-enabled elements both outside and inside middle panel
+			['<span id="foo">Test</span><div id="middle_panel">Foo</div>', '<foo>Test</foo><middle_panel>Foo</middle_panel>']
 		];
 	}
 
