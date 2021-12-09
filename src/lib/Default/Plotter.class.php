@@ -18,7 +18,7 @@ class Plotter {
 		$getGoodWithTransaction = function(int $goodID) use ($xType, $player) {
 			$good = Globals::getGood($goodID);
 			if (isset($player) && !$player->meetsAlignmentRestriction($good['AlignRestriction'])) {
-				throw new Smr\Exceptions\UserError('You do not have the correct alignment to see this good!');
+				throw new Exception('Player trying to access alignment-restricted good!');
 			}
 			$good['TransactionType'] = explode(' ', $xType)[0]; // use 'Buy' or 'Sell'
 			return $good;
