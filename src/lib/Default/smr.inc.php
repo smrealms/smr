@@ -330,7 +330,7 @@ function do_voodoo() : never {
 			) {
 			if (!$lock && !isset($locksFailed[$sector_id])) {
 				if (!acquire_lock($sector_id)) {
-					create_error('Failed to acquire sector lock');
+					throw new Smr\Exceptions\UserError('Failed to acquire sector lock');
 				}
 				//Refetch var info in case it changed between grabbing lock.
 				$session->fetchVarInfo();
@@ -338,7 +338,7 @@ function do_voodoo() : never {
 					if (ENABLE_DEBUG) {
 						$db->write('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber($account->getAccountID()) . ',0,0)');
 					}
-					create_error('Please do not spam click!');
+					throw new Smr\Exceptions\UserError('Please do not spam click!');
 				}
 				$var = $session->getCurrentVar();
 			}
@@ -453,7 +453,7 @@ function acquire_lock(int $sector) : bool {
 			if ($dbResult->record()->getInt('COUNT(*)') > 1) {
 				release_lock();
 				$locksFailed[$sector] = true;
-				create_error('Multiple actions cannot be performed at the same time!');
+				throw new Smr\Exceptions\UserError('Multiple actions cannot be performed at the same time!');
 			}
 
 			usleep(25000 * $locksInQueue);

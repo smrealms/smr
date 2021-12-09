@@ -19,7 +19,7 @@ function check_bargain_number(int $amount, int $ideal_price, int $offered_price,
 		if ($container['number_of_bargains'] > $container['overall_number_of_bargains']) {
 			$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 			$player->increaseHOF(1, array('Trade', 'Results', 'Epic Fail'), HOF_PUBLIC);
-			create_error('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
+			throw new Smr\Exceptions\UserError('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
 		}
 
 		$port_off = IRound($offered_price * 100 / $ideal_price);

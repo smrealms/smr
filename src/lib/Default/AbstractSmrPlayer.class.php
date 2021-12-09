@@ -683,7 +683,7 @@ abstract class AbstractSmrPlayer {
 	public function sendGlobalMessage(string $message, bool $canBeIgnored = true) : void {
 		if ($canBeIgnored) {
 			if ($this->getAccount()->isMailBanned()) {
-				create_error('You are currently banned from sending messages');
+				throw new Smr\Exceptions\UserError('You are currently banned from sending messages');
 			}
 		}
 		$this->sendMessageToBox(BOX_GLOBALS, $message);
@@ -711,7 +711,7 @@ abstract class AbstractSmrPlayer {
 		//get expire time
 		if ($canBeIgnored) {
 			if ($this->getAccount()->isMailBanned()) {
-				create_error('You are currently banned from sending messages');
+				throw new Smr\Exceptions\UserError('You are currently banned from sending messages');
 			}
 			// Don't send messages to players ignoring us
 			$dbResult = $this->db->read('SELECT 1 FROM message_blacklist WHERE account_id=' . $this->db->escapeNumber($receiverID) . ' AND blacklisted_id=' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
@@ -1643,7 +1643,7 @@ abstract class AbstractSmrPlayer {
 	public function getJumpInfo(SmrSector $targetSector) : array {
 		$path = Plotter::findDistanceToX($targetSector, $this->getSector(), true);
 		if ($path === false) {
-			create_error('Unable to plot from ' . $this->getSectorID() . ' to ' . $targetSector->getSectorID() . '.');
+			throw new Smr\Exceptions\UserError('Unable to plot from ' . $this->getSectorID() . ' to ' . $targetSector->getSectorID() . '.');
 		}
 		$distance = $path->getRelativeDistance();
 
@@ -1675,7 +1675,7 @@ abstract class AbstractSmrPlayer {
 	public function moveDestinationButton(int $sectorID, int $offsetTop, int $offsetLeft) : void {
 
 		if ($offsetLeft < 0 || $offsetLeft > 500 || $offsetTop < 0 || $offsetTop > 300) {
-			create_error('The saved sector must be in the box!');
+			throw new Smr\Exceptions\UserError('The saved sector must be in the box!');
 		}
 
 		$storedDestinations =& $this->getStoredDestinations();
@@ -1692,19 +1692,19 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 
-		create_error('You do not have a saved sector for #' . $sectorID);
+		throw new Smr\Exceptions\UserError('You do not have a saved sector for #' . $sectorID);
 	}
 
 	public function addDestinationButton(int $sectorID, string $label) : void {
 
 		if (!SmrSector::sectorExists($this->getGameID(), $sectorID)) {
-			create_error('You want to add a non-existent sector?');
+			throw new Smr\Exceptions\UserError('You want to add a non-existent sector?');
 		}
 
 		// sector already stored ?
 		foreach ($this->getStoredDestinations() as $sd) {
 			if ($sd['SectorID'] == $sectorID) {
-				create_error('Sector already stored!');
+				throw new Smr\Exceptions\UserError('Sector already stored!');
 			}
 		}
 
@@ -2709,7 +2709,7 @@ abstract class AbstractSmrPlayer {
 				// sector that does not exist or cannot be reached.
 				// (Probably shouldn't bestow this mission in the first place)
 				$this->deleteMission($missionID);
-				create_error('Cannot find a path to the destination!');
+				throw new Smr\Exceptions\UserError('Cannot find a path to the destination!');
 			}
 			$this->missions[$missionID]['Sector'] = $path->getEndSectorID();
 		}

@@ -225,7 +225,7 @@ class SmrAlliance {
 				$ircChannel = '#' . $ircChannel;
 			}
 			if ($ircChannel == '#smr' || $ircChannel == '#smr-bar') {
-				create_error('Please enter a valid irc channel for your alliance.');
+				throw new Smr\Exceptions\UserError('Please enter a valid irc channel for your alliance.');
 			}
 
 			$this->db->write('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($ircChannel) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ');');

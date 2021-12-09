@@ -656,16 +656,16 @@ abstract class AbstractSmrAccount {
 
 		// check if the host got a MX or at least an A entry
 		if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
-			create_error('This is not a valid email address! The domain ' . $host . ' does not exist.');
+			throw new Smr\Exceptions\UserError('This is not a valid email address! The domain ' . $host . ' does not exist.');
 		}
 
 		if (strstr($email, ' ')) {
-			create_error('The email is invalid! It cannot contain any spaces.');
+			throw new Smr\Exceptions\UserError('The email is invalid! It cannot contain any spaces.');
 		}
 
 		$dbResult = $this->db->read('SELECT 1 FROM account WHERE email = ' . $this->db->escapeString($email) . ' and account_id != ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
-			create_error('This email address is already registered.');
+			throw new Smr\Exceptions\UserError('This email address is already registered.');
 		}
 
 		$this->setEmail($email);
