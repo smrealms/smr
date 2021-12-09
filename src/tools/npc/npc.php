@@ -3,10 +3,7 @@
 // Use this exception to help override container forwarding for NPC's
 class ForwardException extends Exception {}
 
-/**
- * @return never
- */
-function overrideForward(Page $container) : void {
+function overrideForward(Page $container) : never {
 	global $forwardedContainer;
 	$forwardedContainer = $container;
 	if ($container['body'] == 'error.php') {
@@ -335,10 +332,7 @@ function debug(string $message, mixed $debugObject = null) : void {
 	}
 }
 
-/**
- * @return never
- */
-function processContainer(Page $container) : void {
+function processContainer(Page $container) : never {
 	global $forwardedContainer, $previousContainer;
 	$session = Smr\Session::getInstance();
 	$player = $session->getPlayer();
