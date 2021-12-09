@@ -47,7 +47,6 @@ x-smr-cli: &smr-cli
 # Base configuration for SMR testing tools
 x-smr-test: &smr-test
     <<: *smr-common
-    command: /smr/vendor/bin/phpunit test
     volumes:
         - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
         - ./test/env:/smr/config/env:ro
