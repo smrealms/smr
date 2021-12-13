@@ -1,8 +1,5 @@
 <?php declare(strict_types=1);
 
-// Exception thrown when an alliance invitation cannot be found in the database
-class InvitationNotFoundException extends Exception {}
-
 /**
  * Object interfacing with the alliance_invites_player table.
  */
@@ -48,7 +45,7 @@ class SmrInvitation {
 		if ($dbResult->hasRecord()) {
 			return new SmrInvitation($dbResult->record());
 		}
-		throw new InvitationNotFoundException();
+		throw new Smr\Exceptions\AllianceInvitationNotFound;
 	}
 
 	public function __construct(Smr\DatabaseRecord $dbRecord) {

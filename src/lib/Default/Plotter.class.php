@@ -18,7 +18,7 @@ class Plotter {
 		$getGoodWithTransaction = function(int $goodID) use ($xType, $player) {
 			$good = Globals::getGood($goodID);
 			if (isset($player) && !$player->meetsAlignmentRestriction($good['AlignRestriction'])) {
-				create_error('You do not have the correct alignment to see this good!');
+				throw new Exception('Player trying to access alignment-restricted good!');
 			}
 			$good['TransactionType'] = explode(' ', $xType)[0]; // use 'Buy' or 'Sell'
 			return $good;
@@ -54,7 +54,7 @@ class Plotter {
 			}
 			$path = Plotter::findDistanceToX($end, $start, $useFirst, $needsToHaveBeenExploredBy, $player);
 			if ($path === false) {
-				create_error('Unable to plot from ' . $sector->getSectorID() . ' to ' . $x->getSectorID() . '.');
+				throw new Smr\Exceptions\UserError('Unable to plot from ' . $sector->getSectorID() . ' to ' . $x->getSectorID() . '.');
 			}
 			// Reverse if we plotted $x -> $sector (since we want $sector -> $x)
 			if ($reverse) {
@@ -66,7 +66,7 @@ class Plotter {
 			// At this point we don't know what sector $x will be at
 			$path = Plotter::findDistanceToX($x, $sector, $useFirst, $needsToHaveBeenExploredBy, $player);
 			if ($path === false) {
-				create_error('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
+				throw new Smr\Exceptions\UserError('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
 			}
 			// Now that we know where $x is, make sure path is reversible
 			// (i.e. start sector < end sector)

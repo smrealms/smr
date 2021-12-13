@@ -60,11 +60,7 @@ if ($isNewbie) {
 }
 
 // insert into player table.
-try {
-	$player = SmrPlayer::createPlayer($account->getAccountID(), $gameID, $player_name, $race_id, $isNewbie);
-} catch (Smr\UserException $err) {
-	create_error($err->getMessage());
-}
+$player = SmrPlayer::createPlayer($account->getAccountID(), $gameID, $player_name, $race_id, $isNewbie);
 
 // Equip the ship
 $player->getShip()->giveStarterShip();

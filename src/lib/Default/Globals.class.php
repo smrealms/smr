@@ -26,7 +26,7 @@ class Globals {
 			case 'AllianceMOTD':
 				if ($player->getAllianceID() != $extraInfo['AllianceID']) {
 					logException(new Exception('Tried to access page without permission.'));
-					create_error('You cannot access this page.');
+					throw new Smr\Exceptions\UserError('You cannot access this page.');
 				}
 			break;
 		}
@@ -153,7 +153,7 @@ class Globals {
 		try {
 			SmrGame::getGame($gameID);
 			return true;
-		} catch (GameNotFoundException $e) {
+		} catch (Smr\Exceptions\GameNotFound $e) {
 			return false;
 		}
 	}

@@ -9,7 +9,7 @@ function planet_list_common(int $allianceId, bool $getPlanets) : void {
 	$playerOnly = $allianceId == 0;
 	if ($playerOnly && $player->hasAlliance()) {
 		// This page doesn't support this combination
-		create_error('Internal error. Please report this to an admin!');
+		throw new Exception('Sanity check failed!');
 	}
 	$template->assign('PlayerOnly', $playerOnly);
 

@@ -84,10 +84,22 @@ function logException(Throwable $e) : void {
 	}
 }
 
+/**
+ * Handles all user-facing exceptions.
+ *
+ * If the error is fatal, the exception is logged and the player is redirected
+ * to an appropriate error page.
+ *
+ * If the error is just informational (e.g. the user input an invalid value),
+ * then the message is displayed on the page without being logged.
+ */
 function handleException(Throwable $e) : void {
 	// The real error message may display sensitive information, so we
 	// need to catch any exceptions that are thrown while logging the error.
 	try {
+		if ($e instanceof Smr\Exceptions\UserError) {
+			create_error($e->getMessage());
+		}
 		logException($e);
 		$errorType = 'Unexpected Error!';
 	} catch (Throwable $e2) {

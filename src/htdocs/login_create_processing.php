@@ -140,7 +140,7 @@ try {
 	// creates a new user account object
 	try {
 		$account = SmrAccount::createAccount($login, $password, $email, $timez, $referral);
-	} catch (AccountNotFoundException $e) {
+	} catch (Smr\Exceptions\AccountNotFound $e) {
 		$msg = 'Invalid referral account ID!';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;

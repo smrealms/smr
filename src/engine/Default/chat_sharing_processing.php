@@ -22,7 +22,7 @@ if (Smr\Request::has('add')) {
 
 	try {
 		$accountId = SmrPlayer::getPlayerByPlayerID($addPlayerID, $player->getGameID())->getAccountID();
-	} catch (PlayerNotFoundException $e) {
+	} catch (Smr\Exceptions\PlayerNotFound $e) {
 		error_on_page($e->getMessage());
 	}
 

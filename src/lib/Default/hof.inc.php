@@ -112,7 +112,7 @@ function displayHOFRow(int $rank, int $accountID, float|string $amount) : string
 	if (isset($var['game_id']) && Globals::isValidGame($var['game_id'])) {
 		try {
 			$hofPlayer = SmrPlayer::getPlayer($accountID, $var['game_id']);
-		} catch (PlayerNotFoundException $e) {
+		} catch (Smr\Exceptions\PlayerNotFound $e) {
 			$hofAccount = SmrAccount::getAccount($accountID);
 		}
 	} else {

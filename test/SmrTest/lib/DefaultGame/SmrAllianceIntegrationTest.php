@@ -4,7 +4,7 @@ namespace SmrTest\lib\DefaultGame;
 
 use SmrAlliance;
 use SmrTest\BaseIntegrationSpec;
-use Smr\UserException;
+use Smr\Exceptions\UserError;
 
 /**
  * @covers SmrAlliance
@@ -26,7 +26,7 @@ class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 	public function test_createAlliance_duplicate_name() : void {
 		$name = 'test';
 		SmrAlliance::createAlliance(1, $name);
-		$this->expectException(UserException::class);
+		$this->expectException(UserError::class);
 		$this->expectExceptionMessage('That alliance name already exists.');
 		SmrAlliance::createAlliance(1, $name);
 	}

@@ -1,9 +1,6 @@
 <?php declare(strict_types=1);
 require_once('missions.inc.php');
 
-// Exception thrown when a player cannot be found in the database
-class PlayerNotFoundException extends Exception {}
-
 abstract class AbstractSmrPlayer {
 	use Traits\RaceID;
 
@@ -189,7 +186,7 @@ abstract class AbstractSmrPlayer {
 			$dbRecord = $dbResult->record();
 			return self::getPlayer($dbRecord->getInt('account_id'), $gameID, $forceUpdate, $dbRecord);
 		}
-		throw new PlayerNotFoundException('Player ID not found.');
+		throw new Smr\Exceptions\PlayerNotFound('Player ID not found.');
 	}
 
 	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false) : self {
@@ -199,7 +196,7 @@ abstract class AbstractSmrPlayer {
 			$dbRecord = $dbResult->record();
 			return self::getPlayer($dbRecord->getInt('account_id'), $gameID, $forceUpdate, $dbRecord);
 		}
-		throw new PlayerNotFoundException('Player Name not found.');
+		throw new Smr\Exceptions\PlayerNotFound('Player Name not found.');
 	}
 
 	protected function __construct(int $gameID, int $accountID, Smr\DatabaseRecord $dbRecord = null) {
@@ -213,7 +210,7 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 		if ($dbRecord === null) {
-			throw new PlayerNotFoundException('Invalid accountID: ' . $accountID . ' OR gameID:' . $gameID);
+			throw new Smr\Exceptions\PlayerNotFound('Invalid accountID: ' . $accountID . ' OR gameID:' . $gameID);
 		}
 
 		$this->accountID = $accountID;
@@ -271,8 +268,8 @@ abstract class AbstractSmrPlayer {
 		try {
 			self::getPlayerByPlayerName($playerName, $gameID);
 			$db->unlock();
-			throw new Smr\UserException('That player name already exists.');
-		} catch (PlayerNotFoundException $e) {
+			throw new Smr\Exceptions\UserError('That player name already exists.');
+		} catch (Smr\Exceptions\PlayerNotFound $e) {
 			// Player name does not yet exist, we may proceed
 		}
 
@@ -314,7 +311,7 @@ abstract class AbstractSmrPlayer {
 			try {
 				$otherPlayer = SmrPlayer::getPlayer($dbRecord->getInt('from_account_id'),
 				                                    $this->getGameID(), $forceUpdate);
-			} catch (PlayerNotFoundException $e) {
+			} catch (Smr\Exceptions\PlayerNotFound $e) {
 				// Skip players that have not joined this game
 				continue;
 			}
@@ -686,7 +683,7 @@ abstract class AbstractSmrPlayer {
 	public function sendGlobalMessage(string $message, bool $canBeIgnored = true) : void {
 		if ($canBeIgnored) {
 			if ($this->getAccount()->isMailBanned()) {
-				create_error('You are currently banned from sending messages');
+				throw new Smr\Exceptions\UserError('You are currently banned from sending messages');
 			}
 		}
 		$this->sendMessageToBox(BOX_GLOBALS, $message);
@@ -714,7 +711,7 @@ abstract class AbstractSmrPlayer {
 		//get expire time
 		if ($canBeIgnored) {
 			if ($this->getAccount()->isMailBanned()) {
-				create_error('You are currently banned from sending messages');
+				throw new Smr\Exceptions\UserError('You are currently banned from sending messages');
 			}
 			// Don't send messages to players ignoring us
 			$dbResult = $this->db->read('SELECT 1 FROM message_blacklist WHERE account_id=' . $this->db->escapeNumber($receiverID) . ' AND blacklisted_id=' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
@@ -1370,7 +1367,7 @@ abstract class AbstractSmrPlayer {
 			// Do not throw an exception if the NHL account doesn't exist.
 			try {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
-			} catch (AccountNotFoundException $e) {
+			} catch (Smr\Exceptions\AccountNotFound $e) {
 				if ($alliance->getLeaderID() != ACCOUNT_ID_NHL) {
 					throw $e;
 				}
@@ -1646,7 +1643,7 @@ abstract class AbstractSmrPlayer {
 	public function getJumpInfo(SmrSector $targetSector) : array {
 		$path = Plotter::findDistanceToX($targetSector, $this->getSector(), true);
 		if ($path === false) {
-			create_error('Unable to plot from ' . $this->getSectorID() . ' to ' . $targetSector->getSectorID() . '.');
+			throw new Smr\Exceptions\UserError('Unable to plot from ' . $this->getSectorID() . ' to ' . $targetSector->getSectorID() . '.');
 		}
 		$distance = $path->getRelativeDistance();
 
@@ -1678,7 +1675,7 @@ abstract class AbstractSmrPlayer {
 	public function moveDestinationButton(int $sectorID, int $offsetTop, int $offsetLeft) : void {
 
 		if ($offsetLeft < 0 || $offsetLeft > 500 || $offsetTop < 0 || $offsetTop > 300) {
-			create_error('The saved sector must be in the box!');
+			throw new Smr\Exceptions\UserError('The saved sector must be in the box!');
 		}
 
 		$storedDestinations =& $this->getStoredDestinations();
@@ -1695,19 +1692,19 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 
-		create_error('You do not have a saved sector for #' . $sectorID);
+		throw new Smr\Exceptions\UserError('You do not have a saved sector for #' . $sectorID);
 	}
 
 	public function addDestinationButton(int $sectorID, string $label) : void {
 
 		if (!SmrSector::sectorExists($this->getGameID(), $sectorID)) {
-			create_error('You want to add a non-existent sector?');
+			throw new Smr\Exceptions\UserError('You want to add a non-existent sector?');
 		}
 
 		// sector already stored ?
 		foreach ($this->getStoredDestinations() as $sd) {
 			if ($sd['SectorID'] == $sectorID) {
-				create_error('Sector already stored!');
+				throw new Smr\Exceptions\UserError('Sector already stored!');
 			}
 		}
 
@@ -2712,7 +2709,7 @@ abstract class AbstractSmrPlayer {
 				// sector that does not exist or cannot be reached.
 				// (Probably shouldn't bestow this mission in the first place)
 				$this->deleteMission($missionID);
-				create_error('Cannot find a path to the destination!');
+				throw new Smr\Exceptions\UserError('Cannot find a path to the destination!');
 			}
 			$this->missions[$missionID]['Sector'] = $path->getEndSectorID();
 		}

@@ -17,7 +17,7 @@ $container = Page::create('skeleton.php', 'manage_draft_leaders.php', $var);
 
 try {
 	$selectedPlayer = SmrPlayer::getPlayerByPlayerID($playerId, $gameId);
-} catch (PlayerNotFoundException $e) {
+} catch (Smr\Exceptions\PlayerNotFound $e) {
 	$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 	$container['processing_msg'] = $msg;
 	$container->go();
