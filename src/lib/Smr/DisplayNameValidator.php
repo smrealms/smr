@@ -1,0 +1,38 @@
+<?php declare(strict_types=1);
+
+namespace Smr;
+
+/**
+ * Displayed names (player names, Hall of Fame names, etc.) must all follow a
+ * basic set of rules, which are defined here.
+ */
+class DisplayNameValidator {
+
+	public static function validate($name) : void {
+		if (empty($name)) {
+			throw new Exceptions\UserError('You must enter a name!');
+		}
+
+		// Prevent any attempts to imitate NPCs
+		if (strpos($name, '[NPC]') !== false) {
+			throw new Exceptions\UserError('Names cannot contain "[NPC]".');
+		}
+
+		// Only allow printable ascii (no control chars, extended ascii)
+		if (!ctype_print($name)) {
+			throw new Exceptions\UserError('Names must contain only standard printable characters.');
+		}
+
+		// Allow only a limited number of non-alphanumeric characters
+		$specialCharCount = 0;
+		foreach (str_split($name) as $char) {
+			if (!ctype_alnum($char)) {
+				$specialCharCount += 1;
+			}
+		}
+		if ($specialCharCount > 4) {
+			throw new Exceptions\UserError('You cannot use a name with more than 4 special characters.');
+		}
+	}
+
+}
