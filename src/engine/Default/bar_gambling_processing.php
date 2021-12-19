@@ -7,7 +7,7 @@ $player = $session->getPlayer();
 // blackjack
 $message = '';
 
-function create_card(Blackjack\Card $card, bool $show) : string {
+function create_card(Smr\Blackjack\Card $card, bool $show) : string {
 	//only display what the card really is if they want to
 	$card_height = 100;
 	$card_width = 125;
@@ -33,7 +33,7 @@ function create_card(Blackjack\Card $card, bool $show) : string {
 	return $return;
 }
 
-function check_for_win(Blackjack\Hand $dealerHand, Blackjack\Hand $playerHand) : string {
+function check_for_win(Smr\Blackjack\Hand $dealerHand, Smr\Blackjack\Hand $playerHand) : string {
 	$comp = $dealerHand->getValue();
 	$play = $playerHand->getValue();
 
@@ -51,9 +51,9 @@ function check_for_win(Blackjack\Hand $dealerHand, Blackjack\Hand $playerHand) :
 	}
 }
 
-$deck = $var['deck'] ?? new Blackjack\Deck();
-$playerHand = $var['player_hand'] ?? new Blackjack\Hand();
-$dealerHand = $var['dealer_hand'] ?? new Blackjack\Hand();
+$deck = $var['deck'] ?? new Smr\Blackjack\Deck();
+$playerHand = $var['player_hand'] ?? new Smr\Blackjack\Hand();
+$dealerHand = $var['dealer_hand'] ?? new Smr\Blackjack\Hand();
 
 if (isset($var['player_does'])) {
 	$do = $var['player_does'];
