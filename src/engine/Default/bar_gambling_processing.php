@@ -81,10 +81,10 @@ if ($do == 'nothing') {
 	$player->decreaseCredits($bet);
 
 	//first we deal some cards...player,ai,player,ai
-	$playerHand->drawCard($deck);
-	$dealerHand->drawCard($deck);
-	$playerHand->drawCard($deck);
-	$dealerHand->drawCard($deck);
+	$playerHand->addCard($deck->drawCard());
+	$dealerHand->addCard($deck->drawCard());
+	$playerHand->addCard($deck->drawCard());
+	$dealerHand->addCard($deck->drawCard());
 }
 
 if (isset($var['bet'])) {
@@ -92,7 +92,7 @@ if (isset($var['bet'])) {
 }
 
 if ($do == 'HIT') {
-	$playerHand->drawCard($deck);
+	$playerHand->addCard($deck->drawCard());
 }
 
 //only display if we wont display later..
@@ -145,7 +145,7 @@ if ($do == 'STAY' || $playerHand->getValue() == 21) {
 
 	if (!$playerHand->hasBlackjack()) {
 		while ($dealerHand->getValue() < 17) {
-			$dealerHand->drawCard($deck);
+			$dealerHand->addCard($deck->drawCard());
 		}
 	}
 	$win = check_for_win($dealerHand, $playerHand);

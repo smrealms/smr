@@ -11,14 +11,6 @@ class Hand {
 	private int $value = 0;
 
 	/**
-	 * Add a hand to this card by drawing it from $deck.
-	 */
-	public function drawCard(Deck $deck) : void {
-		$this->cards[] = $deck->drawCard();
-		$this->updateValue();
-	}
-
-	/**
 	 * Return the hand's total blackjack value.
 	 */
 	public function getValue() : int {
@@ -44,9 +36,13 @@ class Hand {
 	}
 
 	/**
-	 * Update the stored value of this hand.
+	 * Add a card to this hand.
 	 */
-	private function updateValue() : void {
+	public function addCard(Card $card) : void {
+		// add the card to the hand
+		$this->cards[] = $card;
+
+		// update the total value of the hand
 		$numAces11 = 0; // Aces have a value of 11 by default
 		$value = 0;
 		foreach ($this->cards as $card) {
