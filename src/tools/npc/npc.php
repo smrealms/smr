@@ -143,6 +143,26 @@ function NPCStuff() : void {
 				// Initialize the trade route for this NPC
 				$allTradeRoutes = findRoutes($player);
 				$tradeRoute = changeRoute($allTradeRoutes);
+
+				// Start the NPC with max hardware
+				$player->getShip()->setHardwareToMax();
+
+				// Equip the ship with as many lasers as it can hold
+				$weaponIDs = [
+					WEAPON_TYPE_PLANETARY_PULSE_LASER,
+					WEAPON_TYPE_HUGE_PULSE_LASER,
+					WEAPON_TYPE_HUGE_PULSE_LASER,
+					WEAPON_TYPE_LARGE_PULSE_LASER,
+					WEAPON_TYPE_LARGE_PULSE_LASER,
+					WEAPON_TYPE_LARGE_PULSE_LASER,
+					WEAPON_TYPE_LASER,
+				];
+				$player->getShip()->removeAllWeapons();
+				while ($player->getShip()->hasOpenWeaponSlots()) {
+					$weapon = SmrWeapon::getWeapon(array_shift($weaponIDs));
+					$player->getShip()->addWeapon($weapon);
+				}
+				$player->getShip()->update();
 			}
 
 			if ($player->isDead()) {
@@ -155,11 +175,7 @@ function NPCStuff() : void {
 				processContainer(Page::create('newbie_warning_processing.php'));
 			}
 
-			$var = $session->getCurrentVar();
-			if (isset($var['url']) && $var['url'] == 'shop_ship_processing.php' && ($container = canWeUNO($player, false)) !== false) {
-				//We just bought a ship, we should UNO now if we can
-				processContainer($container);
-			} elseif (!$underAttack && $player->isUnderAttack() === true
+			if (!$underAttack && $player->isUnderAttack() === true
 				&& ($player->hasPlottedCourse() === false || $player->getPlottedCourse()->getEndSector()->offersFederalProtection() === false)) {
 				// We're under attack and need to plot course to fed.
 				debug('Under Attack');
@@ -168,9 +184,6 @@ function NPCStuff() : void {
 			} elseif ($player->hasPlottedCourse() === true && $player->getPlottedCourse()->getEndSector()->offersFederalProtection()) { //We have a route to fed to follow, figure it's probably a damned sensible thing to follow.
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif (($container = canWeUNO($player, true)) !== false) { //We have money and are at a uno, let's uno!
-				debug('We\'re UNOing');
-				processContainer($container);
 			} elseif ($player->hasPlottedCourse() === true) { //We have a route to follow, figure it's probably a sensible thing to follow.
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
@@ -191,11 +204,8 @@ function NPCStuff() : void {
 				}
 				$ship = $player->getShip();
 				processContainer(plotToFed($player, !$ship->hasMaxShields() || !$ship->hasMaxArmour() || !$ship->hasMaxCargoHolds()));
-			} elseif (($container = checkForShipUpgrade($player)) !== false) { //We have money and are at a uno, let's uno!
+			} elseif (($container = checkForShipUpgrade($player)) !== false) {
 				debug('We\'re reshipping!');
-				processContainer($container);
-			} elseif (($container = canWeUNO($player, false)) !== false) { //We need to UNO and have enough money to do it properly so let's do it sooner rather than later.
-				debug('We need to UNO, so off we go!');
 				processContainer($container);
 			} elseif ($tradeRoute instanceof \Routes\Route) {
 				debug('Trade Route');
@@ -280,6 +290,12 @@ function NPCStuff() : void {
 		} catch (ForwardException $e) {
 			$actions++; // we took an action
 		} catch (FinalActionException $e) {
+			if ($player->getSector()->offersFederalProtection() && !$player->hasFederalProtection()) {
+				debug('Disarming so we can get Fed protection');
+				$player->getShip()->setCDs(0);
+				$player->getShip()->removeAllWeapons();
+				$player->getShip()->update();
+			}
 			// switch to a new NPC if we haven't taken any actions yet
 			if ($actions > 0) {
 				debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage());
@@ -436,70 +452,6 @@ function changeNPCLogin() : void {
 
 	$db->write('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($account->getLogin()));
 	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . $session->getGameID() . ')');
-}
-
-function canWeUNO(AbstractSmrPlayer $player, bool $oppurtunisticOnly) : Page|false {
-	if ($player->getCredits() < MINUMUM_RESERVE_CREDITS) {
-		return false;
-	}
-	$ship = $player->getShip();
-	if ($ship->hasMaxShields() && $ship->hasMaxArmour() && $ship->hasMaxCargoHolds()) {
-		return false;
-	}
-	$sector = $player->getSector();
-
-	if ($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO) {
-		// Buy cargo holds first if we have plenty of newbie turns left.
-		$hardwareArray = [HARDWARE_CARGO, HARDWARE_ARMOUR, HARDWARE_SHIELDS];
-	} else {
-		// We buy armour in preference to shields as it's cheaper.
-		// We buy cargo holds last if we have no newbie turns because we'd rather not die
-		$hardwareArray = [HARDWARE_ARMOUR, HARDWARE_SHIELDS, HARDWARE_CARGO];
-	}
-
-	foreach ($sector->getLocations() as $location) {
-		foreach ($hardwareArray as $hardwareID) {
-			if (!$location->isHardwareSold($hardwareID)) {
-				continue;
-			}
-			$amountCanBuy = IFloor(($player->getCredits() - MINUMUM_RESERVE_CREDITS) / Globals::getHardwareCost($hardwareID));
-			$amountNeeded = $ship->getType()->getMaxHardware($hardwareID) - $ship->getHardware($hardwareID);
-			$amount = min($amountCanBuy, $amountNeeded);
-			if ($amount > 0) {
-				return doUNO($hardwareID, $amount, $sector->getSectorID());
-			}
-		}
-	}
-
-	if ($oppurtunisticOnly === true) {
-		return false;
-	}
-
-	if ($player->getCredits() - $ship->getCostToUNO() < MINUMUM_RESERVE_CREDITS) {
-		return false; //Only do non-oppurtunistic UNO if we have the money to do it properly!
-	}
-
-	foreach ($hardwareArray as $hardwareID) {
-		if (!$ship->hasMaxHardware($hardwareID)) {
-			// It's okay to return false if we're already at a shop, since we
-			// decided above that we don't want to buy anything here.
-			return plotToNearest($player, Globals::getHardwareTypes($hardwareID));
-		}
-	}
-	throw new Exception('Should not get here!');
-}
-
-function doUNO(int $hardwareID, int $amount, int $sectorID) : Page {
-	debug('Buying ' . $amount . ' units of "' . Globals::getHardwareName($hardwareID) . '"');
-	$_REQUEST = [
-		'amount' => $amount,
-		'action' => 'Buy',
-	];
-	$vars = [
-		'hardware_id' => $hardwareID,
-		'LocationID' => $sectorID,
-	];
-	return Page::create('shop_hardware_processing.php', '', $vars);
 }
 
 function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port) : Page {
