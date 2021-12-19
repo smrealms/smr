@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Blackjack;
+namespace Smr\Blackjack;
 
 /**
  * Deck of Blackjack cards to be drawn from.
@@ -11,21 +11,24 @@ class Deck {
 	const NUM_DECKS = 1;
 	const MAX_CARDS = 52 * self::NUM_DECKS;
 
-	private array $drawnCardIDs = [];
+	private array $cardIDs = [];
+
+	public function __construct() {
+		$this->cardIDs = range(0, self::MAX_CARDS - 1);
+
+		// Shuffle the cards so that we can draw them randomly
+		shuffle($this->cardIDs);
+	}
 
 	/**
 	 * Draw a random card from this deck.
 	 */
 	public function drawCard() : Card {
-		if (count($this->drawnCardIDs) === self::MAX_CARDS) {
+		if (empty($this->cardIDs)) {
 			throw new \Exception('No cards left to draw from this deck!');
 		}
-		while ($cardID = rand(0, self::MAX_CARDS - 1)) {
-			if (!in_array($cardID, $this->drawnCardIDs)) {
-				break;
-			}
-		}
-		$this->drawnCardIDs[] = $cardID;
+		// since the cards are already shuffled, pop off the next one
+		$cardID = array_pop($this->cardIDs);
 		return new Card($cardID);
 	}
 

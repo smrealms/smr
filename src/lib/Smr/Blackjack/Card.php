@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Blackjack;
+namespace Smr\Blackjack;
 
 /**
  * Classic playing card for blackjack.
@@ -13,13 +13,6 @@ class Card {
 	private const RANK_QUEEN = 12;
 	private const RANK_KING = 13;
 
-	// Mapping between ranks and display/suit name
-	private const RANK_NAMES = [
-		self::RANK_ACE => 'A',
-		self::RANK_JACK => 'J',
-		self::RANK_QUEEN => 'Q',
-		self::RANK_KING => 'K',
-	];
 	private const SUITS = ['hearts', 'clubs', 'diamonds', 'spades'];
 
 	private int $cardID; // unique ID in all the decks (0-indexed)
@@ -42,16 +35,12 @@ class Card {
 	 * Return the card's blackjack value.
 	 */
 	public function getValue() : int {
-		if ($this->rank == self::RANK_JACK ||
-		    $this->rank == self::RANK_QUEEN ||
-		    $this->rank == self::RANK_KING) {
-			return 10;
-		} elseif ($this->isAce()) {
-			return 11;
-		} else {
+		return match($this->rank) {
+			self::RANK_ACE => 11,
+			self::RANK_JACK, self::RANK_QUEEN, self::RANK_KING => 10,
 			// For normal pip (non-face) cards, value and rank are the same.
-			return $this->rank;
-		}
+			default => $this->rank,
+		};
 	}
 
 	public function isAce() : bool {
@@ -68,11 +57,13 @@ class Card {
 	 * Returns the rank name of this card (of the 13 ranks).
 	 */
 	public function getRankName() : string {
-		if (isset(self::RANK_NAMES[$this->rank])) {
-			return self::RANK_NAMES[$this->rank];
-		} else {
+		return match($this->rank) {
+			self::RANK_ACE => 'A',
+			self::RANK_JACK => 'J',
+			self::RANK_QUEEN => 'Q',
+			self::RANK_KING => 'K',
 			// For normal pip (non-face) cards, name and rank are the same.
-			return (string)$this->rank;
-		}
+			default => (string)$this->rank,
+		};
 	}
 }
