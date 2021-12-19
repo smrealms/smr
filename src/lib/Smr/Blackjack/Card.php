@@ -35,16 +35,12 @@ class Card {
 	 * Return the card's blackjack value.
 	 */
 	public function getValue() : int {
-		if ($this->rank == self::RANK_JACK ||
-		    $this->rank == self::RANK_QUEEN ||
-		    $this->rank == self::RANK_KING) {
-			return 10;
-		} elseif ($this->isAce()) {
-			return 11;
-		} else {
+		return match($this->rank) {
+			self::RANK_ACE => 11,
+			self::RANK_JACK, self::RANK_QUEEN, self::RANK_KING => 10,
 			// For normal pip (non-face) cards, value and rank are the same.
-			return $this->rank;
-		}
+			default => $this->rank,
+		};
 	}
 
 	public function isAce() : bool {
