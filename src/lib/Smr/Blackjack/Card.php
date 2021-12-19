@@ -13,13 +13,6 @@ class Card {
 	private const RANK_QUEEN = 12;
 	private const RANK_KING = 13;
 
-	// Mapping between ranks and display/suit name
-	private const RANK_NAMES = [
-		self::RANK_ACE => 'A',
-		self::RANK_JACK => 'J',
-		self::RANK_QUEEN => 'Q',
-		self::RANK_KING => 'K',
-	];
 	private const SUITS = ['hearts', 'clubs', 'diamonds', 'spades'];
 
 	private int $cardID; // unique ID in all the decks (0-indexed)
@@ -68,11 +61,13 @@ class Card {
 	 * Returns the rank name of this card (of the 13 ranks).
 	 */
 	public function getRankName() : string {
-		if (isset(self::RANK_NAMES[$this->rank])) {
-			return self::RANK_NAMES[$this->rank];
-		} else {
+		return match($this->rank) {
+			self::RANK_ACE => 'A',
+			self::RANK_JACK => 'J',
+			self::RANK_QUEEN => 'Q',
+			self::RANK_KING => 'K',
 			// For normal pip (non-face) cards, name and rank are the same.
-			return (string)$this->rank;
-		}
+			default => (string)$this->rank,
+		};
 	}
 }
