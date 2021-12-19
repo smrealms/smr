@@ -47,31 +47,7 @@ if ($action == 'Save and resend validation code') {
 } elseif ($action == 'Change Name') {
 	$HoF_name = trim(Smr\Request::get('HoF_name'));
 
-	$limited_char = 0;
-	for ($i = 0; $i < strlen($HoF_name); $i++) {
-		// disallow certain ascii chars
-		if (ord($HoF_name[$i]) < 32 || ord($HoF_name[$i]) > 127) {
-			create_error('Your Hall Of Fame name contains invalid characters!');
-		}
-
-		// numbers 48..57
-		// Letters 65..90
-		// letters 97..122
-		if (!((ord($HoF_name[$i]) >= 48 && ord($HoF_name[$i]) <= 57) ||
-			(ord($HoF_name[$i]) >= 65 && ord($HoF_name[$i]) <= 90) ||
-			(ord($HoF_name[$i]) >= 97 && ord($HoF_name[$i]) <= 122))) {
-			$limited_char += 1;
-		}
-	}
-
-	if ($limited_char > 4) {
-		create_error('You cannot use a name with more than 4 special characters.');
-	}
-
-	//disallow blank names
-	if (empty($HoF_name) || $HoF_name == '') {
-		create_error('You Hall of Fame name must contain characters!');
-	}
+	Smr\DisplayNameValidator::validate($HoF_name);
 
 	//no duplicates
 	$dbResult = $db->read('SELECT 1 FROM account WHERE hof_name = ' . $db->escapeString($HoF_name) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
@@ -102,18 +78,15 @@ if ($action == 'Save and resend validation code') {
 } elseif ($action == 'Change IRC Nick') {
 	$ircNick = trim(Smr\Request::get('irc_nick'));
 
-	for ($i = 0; $i < strlen($ircNick); $i++) {
-		// disallow certain ascii chars (and whitespace!)
-		if (ord($ircNick[$i]) < 33 || ord($ircNick[$i]) > 127) {
-			create_error('Your IRC Nick contains invalid characters!');
-		}
-	}
-
 	// here you can delete your registered irc nick
-	if (empty($ircNick) || $ircNick == '') {
+	if (empty($ircNick)) {
 		$account->setIrcNick(null);
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have deleted your irc nick.';
 	} else {
+		// Disallow control characters and spaces
+		if (!ctype_graph($ircNick)) {
+			create_error('Your IRC Nick may only contain visible printed characters!');
+		}
 
 		// no duplicates
 		$dbResult = $db->read('SELECT 1 FROM account WHERE irc_nick = ' . $db->escapeString($ircNick) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
@@ -193,30 +166,7 @@ if ($action == 'Save and resend validation code') {
 		create_error('Your player already has that name!');
 	}
 
-	$limited_char = 0;
-	for ($i = 0; $i < strlen($player_name); $i++) {
-		// disallow certain ascii chars
-		if (ord($player_name[$i]) < 32 || ord($player_name[$i]) > 127) {
-			create_error('The player name contains invalid characters!');
-		}
-
-		// numbers 48..57
-		// Letters 65..90
-		// letters 97..122
-		if (!((ord($player_name[$i]) >= 48 && ord($player_name[$i]) <= 57) ||
-			(ord($player_name[$i]) >= 65 && ord($player_name[$i]) <= 90) ||
-			(ord($player_name[$i]) >= 97 && ord($player_name[$i]) <= 122))) {
-			$limited_char += 1;
-		}
-	}
-
-	if ($limited_char > 4) {
-		create_error('You cannot use a name with more than 4 special characters.');
-	}
-
-	if (empty($player_name)) {
-		create_error('You must enter a player name!');
-	}
+	Smr\DisplayNameValidator::validate($player_name);
 
 	// Check if name is in use.
 	// The player_name field has case-insensitive collation, so check against ID
