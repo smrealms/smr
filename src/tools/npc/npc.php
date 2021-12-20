@@ -3,6 +3,9 @@
 // Use this exception to help override container forwarding for NPC's
 class ForwardException extends Exception {}
 
+// Use this exception to indicate that an NPC has taken its final action
+class FinalActionException extends Exception {}
+
 function overrideForward(Page $container) : never {
 	global $forwardedContainer;
 	$forwardedContainer = $container;
@@ -83,41 +86,38 @@ try {
 
 
 function NPCStuff() : void {
-	global $actions, $previousContainer;
+	global $previousContainer;
 
 	$session = Smr\Session::getInstance();
 	$session->setCurrentVar(new Page()); // initialize empty var
 
 	debug('Script started');
 
-	// Make sure NPC's have been set up in the database
-	$db = Smr\Database::getInstance();
-	$dbResult = $db->read('SELECT 1 FROM npc_logins LIMIT 1');
-	if (!$dbResult->hasRecord()) {
-		debug('No NPCs have been created yet!');
-		return;
-	}
-
 	// Load the first available NPC
-	try {
-		changeNPCLogin();
-	} catch (ForwardException $e) {}
-
-	$allTradeRoutes = [];
-	$tradeRoute = null;
-	$underAttack = false;
-	$actions = -1;
+	$changeNPC = true;
 
 	while (true) {
-		$actions++;
-
-		// Avoid infinite loops by restricting the number of actions
-		if ($actions > NPC_MAX_ACTIONS) {
-			debug('Reached maximum number of actions: ' . NPC_MAX_ACTIONS);
+		if ($changeNPC) {
 			changeNPCLogin();
+
+			// Reset tracking variables
+			$changeNPC = false;
+			$allTradeRoutes = [];
+			$tradeRoute = null;
+			$underAttack = false;
+			$actions = 0;
+
+			// We chose a new NPC, we don't care what we were doing beforehand.
+			$previousContainer = null;
 		}
 
 		try {
+			// Avoid infinite loops by restricting the number of actions
+			if ($actions > NPC_MAX_ACTIONS) {
+				debug('Reached maximum number of actions: ' . NPC_MAX_ACTIONS);
+				throw new FinalActionException;
+			}
+
 			debug('Action #' . $actions);
 
 			//We have to reload player on each loop
@@ -132,7 +132,7 @@ function NPCStuff() : void {
 			if ($actions == 0) {
 				if ($player->getTurns() <= rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
-					changeNPCLogin();
+					throw new FinalActionException;
 				}
 
 				// Ensure the NPC doesn't think it's under attack at startup,
@@ -183,11 +183,11 @@ function NPCStuff() : void {
 				}
 				if ($player->hasNewbieTurns()) { //We have newbie turns, we can just wait here.
 					debug('We have newbie turns, let\'s just switch to another NPC.');
-					changeNPCLogin();
+					throw new FinalActionException;
 				}
 				if ($player->hasFederalProtection()) {
 					debug('We are in fed, time to switch to another NPC.');
-					changeNPCLogin();
+					throw new FinalActionException;
 				}
 				$ship = $player->getShip();
 				processContainer(plotToFed($player, !$ship->hasMaxShields() || !$ship->hasMaxArmour() || !$ship->hasMaxCargoHolds()));
@@ -278,30 +278,40 @@ function NPCStuff() : void {
 			*/
 			throw new Exception('NPC failed to perform any action');
 		} catch (ForwardException $e) {
-			global $lock;
-			if ($lock) { //only save if we have the lock.
-				SmrSector::saveSectors();
-				SmrShip::saveShips();
-				SmrPlayer::savePlayers();
-				SmrForce::saveForces();
-				SmrPort::savePorts();
-				if (class_exists('WeightedRandom', false)) {
-					WeightedRandom::saveWeightedRandoms();
-				}
-				release_lock();
+			$actions++; // we took an action
+		} catch (FinalActionException $e) {
+			// switch to a new NPC if we haven't taken any actions yet
+			if ($actions > 0) {
+				debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage());
+				exitNPC();
 			}
-
-			//Clean up the caches as the data may get changed by other players
-			clearCaches();
-
-			//Clear up some global vars to avoid contaminating subsequent pages
-			global $locksFailed;
-			$locksFailed = array();
-			$_REQUEST = array();
-
-			//Have a sleep between actions
-			sleepNPC();
+			$changeNPC = true;
 		}
+
+		// Save any changes that we made during this action
+		global $lock;
+		if ($lock) { //only save if we have the lock.
+			SmrSector::saveSectors();
+			SmrShip::saveShips();
+			SmrPlayer::savePlayers();
+			SmrForce::saveForces();
+			SmrPort::savePorts();
+			if (class_exists('WeightedRandom', false)) {
+				WeightedRandom::saveWeightedRandoms();
+			}
+			release_lock();
+		}
+
+		//Clean up the caches as the data may get changed by other players
+		clearCaches();
+
+		//Clear up some global vars to avoid contaminating subsequent pages
+		global $locksFailed;
+		$locksFailed = array();
+		$_REQUEST = array();
+
+		//Have a sleep between actions
+		sleepNPC();
 	}
 	debug('Actions Finished.');
 	exitNPC();
@@ -382,19 +392,8 @@ function exitNPC() : void {
 }
 
 function changeNPCLogin() : void {
-	global $actions, $previousContainer;
-	if ($actions > 0) {
-		debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage());
-		exitNPC();
-	}
-
-	$actions = -1;
-
 	// Release previous NPC, if any
 	releaseNPC();
-
-	// We chose a new NPC, we don't care what we were doing beforehand.
-	$previousContainer = null;
 
 	// Lacking a convenient way to get up-to-date turns, order NPCs by how
 	// recently they have taken an action.
@@ -405,6 +404,13 @@ function changeNPCLogin() : void {
 	$session = Smr\Session::getInstance();
 
 	if (is_null($availableNpcs)) {
+		// Make sure NPC's have been set up in the database
+		$dbResult = $db->read('SELECT 1 FROM npc_logins LIMIT 1');
+		if (!$dbResult->hasRecord()) {
+			debug('No NPCs have been created yet!');
+			exitNPC();
+		}
+
 		// Make sure to select NPCs from active games only
 		$dbResult = $db->read('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY last_turn_update ASC');
 		foreach ($dbResult->records() as $dbRecord) {
@@ -430,8 +436,6 @@ function changeNPCLogin() : void {
 
 	$db->write('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($account->getLogin()));
 	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . $session->getGameID() . ')');
-
-	throw new ForwardException;
 }
 
 function canWeUNO(AbstractSmrPlayer $player, bool $oppurtunisticOnly) : Page|false {
@@ -547,7 +551,7 @@ function plotToFed(SmrPlayer $player, bool $plotToHQ = false) : Page {
 	$container = plotToNearest($player, SmrLocation::getLocation($fedLocID));
 	if ($container === false) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
-		changeNPCLogin();
+		throw new FinalActionException;
 	}
 	return $container;
 }
@@ -695,7 +699,7 @@ function findRoutes(SmrPlayer $player) : array {
 
 		if (count($routesMerged) == 0) {
 			debug('Could not find any routes! Try another NPC.');
-			changeNPCLogin();
+			throw new FinalActionException;
 		}
 
 		$db->write('INSERT INTO route_cache ' .
