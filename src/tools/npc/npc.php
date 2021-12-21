@@ -138,11 +138,13 @@ function NPCStuff() : void {
 				// Ensure the NPC doesn't think it's under attack at startup,
 				// since this could cause it to get stuck in a loop in Fed.
 				$player->removeUnderAttack();
-				$player->update();
 
 				// Initialize the trade route for this NPC
 				$allTradeRoutes = findRoutes($player);
 				$tradeRoute = changeRoute($allTradeRoutes);
+
+				// Upgrade ships if we can
+				checkForShipUpgrade($player);
 
 				// Start the NPC with max hardware
 				$player->getShip()->setHardwareToMax();
@@ -162,6 +164,9 @@ function NPCStuff() : void {
 					$weapon = SmrWeapon::getWeapon(array_shift($weaponIDs));
 					$player->getShip()->addWeapon($weapon);
 				}
+
+				// Update database (not essential to have a lock here)
+				$player->update();
 				$player->getShip()->update();
 			}
 
@@ -180,14 +185,17 @@ function NPCStuff() : void {
 				// We're under attack and need to plot course to fed.
 				debug('Under Attack');
 				$underAttack = true;
-				processContainer(plotToFed($player, true));
-			} elseif ($player->hasPlottedCourse() === true && $player->getPlottedCourse()->getEndSector()->offersFederalProtection()) { //We have a route to fed to follow, figure it's probably a damned sensible thing to follow.
+				processContainer(plotToFed($player));
+			} elseif ($player->hasPlottedCourse() === true && $player->getPlottedCourse()->getEndSector()->offersFederalProtection()) {
+				// We have a route to fed to follow
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif ($player->hasPlottedCourse() === true) { //We have a route to follow, figure it's probably a sensible thing to follow.
+			} elseif ($player->hasPlottedCourse() === true) {
+				// We have a route to follow
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif ($player->getTurns() < NPC_LOW_TURNS || ($player->getTurns() < $player->getMaxTurns() / 2 && $player->getNewbieTurns() < NPC_LOW_NEWBIE_TURNS) || $underAttack) { //We're low on turns or have been under attack and need to plot course to fed
+			} elseif ($player->getTurns() < NPC_LOW_TURNS || ($player->getTurns() < $player->getMaxTurns() / 2 && $player->getNewbieTurns() < NPC_LOW_NEWBIE_TURNS) || $underAttack) {
+				// We're low on turns or have been under attack and need to plot course to fed
 				if ($player->getTurns() < NPC_LOW_TURNS) {
 					debug('Low Turns:' . $player->getTurns());
 				}
@@ -202,11 +210,7 @@ function NPCStuff() : void {
 					debug('We are in fed, time to switch to another NPC.');
 					throw new FinalActionException;
 				}
-				$ship = $player->getShip();
-				processContainer(plotToFed($player, !$ship->hasMaxShields() || !$ship->hasMaxArmour() || !$ship->hasMaxCargoHolds()));
-			} elseif (($container = checkForShipUpgrade($player)) !== false) {
-				debug('We\'re reshipping!');
-				processContainer($container);
+				processContainer(plotToFed($player));
 			} elseif ($tradeRoute instanceof \Routes\Route) {
 				debug('Trade Route');
 				$forwardRoute = $tradeRoute->getForwardRoute();
@@ -490,8 +494,8 @@ function plotToSector(SmrPlayer $player, int $sectorID) : Page {
 	return Page::create('course_plot_processing.php', '', array('from'=>$player->getSectorID(), 'to'=>$sectorID));
 }
 
-function plotToFed(SmrPlayer $player, bool $plotToHQ = false) : Page {
-	debug('Plotting To Fed', $plotToHQ);
+function plotToFed(SmrPlayer $player) : Page {
+	debug('Plotting To Fed');
 
 	// Always drop illegal goods before heading to fed space
 	if ($player->getShip()->hasIllegalGoods()) {
@@ -499,7 +503,7 @@ function plotToFed(SmrPlayer $player, bool $plotToHQ = false) : Page {
 		processContainer(dumpCargo($player));
 	}
 
-	$fedLocID = $player->getRaceID() + ($plotToHQ ? LOCATION_GROUP_RACIAL_HQS : LOCATION_GROUP_RACIAL_BEACONS);
+	$fedLocID = $player->getRaceID() + LOCATION_GROUP_RACIAL_BEACONS;
 	$container = plotToNearest($player, SmrLocation::getLocation($fedLocID));
 	if ($container === false) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
@@ -524,31 +528,21 @@ function moveToSector(SmrPlayer $player, int $targetSector) : Page {
 	return Page::create('sector_move_processing.php', '', array('target_sector'=>$targetSector, 'target_page'=>''));
 }
 
-function checkForShipUpgrade(AbstractSmrPlayer $player) : Page|false {
+function checkForShipUpgrade(AbstractSmrPlayer $player) : void {
 	foreach (SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
 		if ($player->getShipTypeID() == $upgradeShipID) {
 			//We can't upgrade, only downgrade.
-			return false;
+			return;
 		}
 		$cost = $player->getShip()->getCostToUpgrade($upgradeShipID);
-		if ($cost <= 0 || $player->getCredits() - $cost > MINUMUM_RESERVE_CREDITS) {
-			return doShipUpgrade($player, $upgradeShipID);
+		$balance = $player->getCredits() - $cost;
+		if ($balance > MINUMUM_RESERVE_CREDITS) {
+			debug('Upgrading to ship type: ' . $upgradeShipID);
+			$player->setCredits($balance);
+			$player->getShip()->setTypeID($upgradeShipID);
+			return;
 		}
 	}
-	debug('Could not find a ship on the upgrade path.');
-	return false;
-}
-
-function doShipUpgrade(AbstractSmrPlayer $player, int $upgradeShipID) : Page {
-	$plotNearest = plotToNearest($player, SmrShipType::get($upgradeShipID));
-
-	if ($plotNearest === false) { //We're already there!
-		// We need a LocationID in the var to process the page, but it's only
-		// used for display, so it doesn't matter for NPCs what the value is.
-		return Page::create('shop_ship_processing.php', '',
-			['ship_type_id' => $upgradeShipID, 'LocationID' => -1]);
-	} //Otherwise return the plot
-	return $plotNearest;
 }
 
 function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : Routes\Route|false {
