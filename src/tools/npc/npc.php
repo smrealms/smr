@@ -3,6 +3,9 @@
 // Use this exception to help override container forwarding for NPC's
 class ForwardException extends Exception {}
 
+// Use this exception to indicate that an NPC has taken its final action
+class FinalActionException extends Exception {}
+
 function overrideForward(Page $container) : never {
 	global $forwardedContainer;
 	$forwardedContainer = $container;
@@ -36,38 +39,58 @@ set_error_handler("exception_error_handler");
 const SHIP_UPGRADE_PATH = array(
 	RACE_ALSKANT => array(
 		SHIP_TYPE_TRADE_MASTER,
+		SHIP_TYPE_DEEP_SPACER,
+		SHIP_TYPE_DEAL_MAKER,
 		SHIP_TYPE_TRIP_MAKER,
 		SHIP_TYPE_SMALL_TIMER
 	),
 	RACE_CREONTI => array(
+		SHIP_TYPE_DEVASTATOR,
+		SHIP_TYPE_JUGGERNAUT,
+		SHIP_TYPE_GOLIATH,
 		SHIP_TYPE_LEVIATHAN,
 		SHIP_TYPE_MEDIUM_CARGO_HULK
 	),
 	RACE_HUMAN => array(
+		SHIP_TYPE_DESTROYER,
+		SHIP_TYPE_BORDER_CRUISER,
 		SHIP_TYPE_AMBASSADOR,
 		SHIP_TYPE_RENAISSANCE,
 		SHIP_TYPE_LIGHT_FREIGHTER
 	),
 	RACE_IKTHORNE => array(
+		SHIP_TYPE_MOTHER_SHIP,
+		SHIP_TYPE_ADVANCED_CARRIER,
 		SHIP_TYPE_FAVOURED_OFFSPRING,
 		SHIP_TYPE_PROTO_CARRIER,
 		SHIP_TYPE_TINY_DELIGHT
 	),
 	RACE_SALVENE => array(
+		SHIP_TYPE_EATER_OF_SOULS,
+		SHIP_TYPE_RAVAGER,
+		SHIP_TYPE_PREDATOR,
 		SHIP_TYPE_DRUDGE,
 		SHIP_TYPE_HATCHLINGS_DUE
 	),
 	RACE_THEVIAN => array(
+		SHIP_TYPE_ASSAULT_CRAFT,
+		SHIP_TYPE_CARAPACE,
+		SHIP_TYPE_BOUNTY_HUNTER,
 		SHIP_TYPE_EXPEDITER,
 		SHIP_TYPE_SWIFT_VENTURE
 	),
 	RACE_WQHUMAN => array(
+		SHIP_TYPE_DARK_MIRAGE,
 		SHIP_TYPE_BLOCKADE_RUNNER,
-		SHIP_TYPE_NEGOTIATOR,
+		SHIP_TYPE_ROGUE,
+		SHIP_TYPE_RESISTANCE,
 		SHIP_TYPE_SLIP_FREIGHTER
 	),
 	RACE_NIJARIN => array(
+		SHIP_TYPE_FURY,
+		SHIP_TYPE_VINDICATOR,
 		SHIP_TYPE_VENGEANCE,
+		SHIP_TYPE_RETALIATION,
 		SHIP_TYPE_REDEEMER
 	)
 );
@@ -83,41 +106,38 @@ try {
 
 
 function NPCStuff() : void {
-	global $actions, $previousContainer;
+	global $previousContainer;
 
 	$session = Smr\Session::getInstance();
 	$session->setCurrentVar(new Page()); // initialize empty var
 
 	debug('Script started');
 
-	// Make sure NPC's have been set up in the database
-	$db = Smr\Database::getInstance();
-	$dbResult = $db->read('SELECT 1 FROM npc_logins LIMIT 1');
-	if (!$dbResult->hasRecord()) {
-		debug('No NPCs have been created yet!');
-		return;
-	}
-
 	// Load the first available NPC
-	try {
-		changeNPCLogin();
-	} catch (ForwardException $e) {}
-
-	$allTradeRoutes = [];
-	$tradeRoute = null;
-	$underAttack = false;
-	$actions = -1;
+	$changeNPC = true;
 
 	while (true) {
-		$actions++;
-
-		// Avoid infinite loops by restricting the number of actions
-		if ($actions > NPC_MAX_ACTIONS) {
-			debug('Reached maximum number of actions: ' . NPC_MAX_ACTIONS);
+		if ($changeNPC) {
 			changeNPCLogin();
+
+			// Reset tracking variables
+			$changeNPC = false;
+			$allTradeRoutes = [];
+			$tradeRoute = null;
+			$underAttack = false;
+			$actions = 0;
+
+			// We chose a new NPC, we don't care what we were doing beforehand.
+			$previousContainer = null;
 		}
 
 		try {
+			// Avoid infinite loops by restricting the number of actions
+			if ($actions > NPC_MAX_ACTIONS) {
+				debug('Reached maximum number of actions: ' . NPC_MAX_ACTIONS);
+				throw new FinalActionException;
+			}
+
 			debug('Action #' . $actions);
 
 			//We have to reload player on each loop
@@ -132,17 +152,42 @@ function NPCStuff() : void {
 			if ($actions == 0) {
 				if ($player->getTurns() <= rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
-					changeNPCLogin();
+					throw new FinalActionException;
 				}
 
 				// Ensure the NPC doesn't think it's under attack at startup,
 				// since this could cause it to get stuck in a loop in Fed.
 				$player->removeUnderAttack();
-				$player->update();
 
 				// Initialize the trade route for this NPC
 				$allTradeRoutes = findRoutes($player);
 				$tradeRoute = changeRoute($allTradeRoutes);
+
+				// Upgrade ships if we can
+				checkForShipUpgrade($player);
+
+				// Start the NPC with max hardware
+				$player->getShip()->setHardwareToMax();
+
+				// Equip the ship with as many lasers as it can hold
+				$weaponIDs = [
+					WEAPON_TYPE_PLANETARY_PULSE_LASER,
+					WEAPON_TYPE_HUGE_PULSE_LASER,
+					WEAPON_TYPE_HUGE_PULSE_LASER,
+					WEAPON_TYPE_LARGE_PULSE_LASER,
+					WEAPON_TYPE_LARGE_PULSE_LASER,
+					WEAPON_TYPE_LARGE_PULSE_LASER,
+					WEAPON_TYPE_LASER,
+				];
+				$player->getShip()->removeAllWeapons();
+				while ($player->getShip()->hasOpenWeaponSlots()) {
+					$weapon = SmrWeapon::getWeapon(array_shift($weaponIDs));
+					$player->getShip()->addWeapon($weapon);
+				}
+
+				// Update database (not essential to have a lock here)
+				$player->update();
+				$player->getShip()->update();
 			}
 
 			if ($player->isDead()) {
@@ -155,26 +200,22 @@ function NPCStuff() : void {
 				processContainer(Page::create('newbie_warning_processing.php'));
 			}
 
-			$var = $session->getCurrentVar();
-			if (isset($var['url']) && $var['url'] == 'shop_ship_processing.php' && ($container = canWeUNO($player, false)) !== false) {
-				//We just bought a ship, we should UNO now if we can
-				processContainer($container);
-			} elseif (!$underAttack && $player->isUnderAttack() === true
+			if (!$underAttack && $player->isUnderAttack() === true
 				&& ($player->hasPlottedCourse() === false || $player->getPlottedCourse()->getEndSector()->offersFederalProtection() === false)) {
 				// We're under attack and need to plot course to fed.
 				debug('Under Attack');
 				$underAttack = true;
-				processContainer(plotToFed($player, true));
-			} elseif ($player->hasPlottedCourse() === true && $player->getPlottedCourse()->getEndSector()->offersFederalProtection()) { //We have a route to fed to follow, figure it's probably a damned sensible thing to follow.
+				processContainer(plotToFed($player));
+			} elseif ($player->hasPlottedCourse() === true && $player->getPlottedCourse()->getEndSector()->offersFederalProtection()) {
+				// We have a route to fed to follow
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif (($container = canWeUNO($player, true)) !== false) { //We have money and are at a uno, let's uno!
-				debug('We\'re UNOing');
-				processContainer($container);
-			} elseif ($player->hasPlottedCourse() === true) { //We have a route to follow, figure it's probably a sensible thing to follow.
+			} elseif ($player->hasPlottedCourse() === true) {
+				// We have a route to follow
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif ($player->getTurns() < NPC_LOW_TURNS || ($player->getTurns() < $player->getMaxTurns() / 2 && $player->getNewbieTurns() < NPC_LOW_NEWBIE_TURNS) || $underAttack) { //We're low on turns or have been under attack and need to plot course to fed
+			} elseif ($player->getTurns() < NPC_LOW_TURNS || ($player->getTurns() < $player->getMaxTurns() / 2 && $player->getNewbieTurns() < NPC_LOW_NEWBIE_TURNS) || $underAttack) {
+				// We're low on turns or have been under attack and need to plot course to fed
 				if ($player->getTurns() < NPC_LOW_TURNS) {
 					debug('Low Turns:' . $player->getTurns());
 				}
@@ -183,20 +224,13 @@ function NPCStuff() : void {
 				}
 				if ($player->hasNewbieTurns()) { //We have newbie turns, we can just wait here.
 					debug('We have newbie turns, let\'s just switch to another NPC.');
-					changeNPCLogin();
+					throw new FinalActionException;
 				}
 				if ($player->hasFederalProtection()) {
 					debug('We are in fed, time to switch to another NPC.');
-					changeNPCLogin();
+					throw new FinalActionException;
 				}
-				$ship = $player->getShip();
-				processContainer(plotToFed($player, !$ship->hasMaxShields() || !$ship->hasMaxArmour() || !$ship->hasMaxCargoHolds()));
-			} elseif (($container = checkForShipUpgrade($player)) !== false) { //We have money and are at a uno, let's uno!
-				debug('We\'re reshipping!');
-				processContainer($container);
-			} elseif (($container = canWeUNO($player, false)) !== false) { //We need to UNO and have enough money to do it properly so let's do it sooner rather than later.
-				debug('We need to UNO, so off we go!');
-				processContainer($container);
+				processContainer(plotToFed($player));
 			} elseif ($tradeRoute instanceof \Routes\Route) {
 				debug('Trade Route');
 				$forwardRoute = $tradeRoute->getForwardRoute();
@@ -224,7 +258,7 @@ function NPCStuff() : void {
 								processContainer(tradeGoods($goodID, $player, $port));
 							} else {
 								//Move to next route or fed.
-								if (($tradeRoute = changeRoute($allTradeRoutes)) === false) {
+								if (($tradeRoute = changeRoute($allTradeRoutes)) === null) {
 									debug('Changing Route Failed');
 									processContainer(plotToFed($player));
 								} else {
@@ -251,7 +285,7 @@ function NPCStuff() : void {
 							processContainer(tradeGoods($goodID, $player, $port));
 						} else {
 							//Move to next route or fed.
-							if (($tradeRoute = changeRoute($allTradeRoutes)) === false) {
+							if (($tradeRoute = changeRoute($allTradeRoutes)) === null) {
 								debug('Changing Route Failed');
 								processContainer(plotToFed($player));
 							} else {
@@ -278,30 +312,46 @@ function NPCStuff() : void {
 			*/
 			throw new Exception('NPC failed to perform any action');
 		} catch (ForwardException $e) {
-			global $lock;
-			if ($lock) { //only save if we have the lock.
-				SmrSector::saveSectors();
-				SmrShip::saveShips();
-				SmrPlayer::savePlayers();
-				SmrForce::saveForces();
-				SmrPort::savePorts();
-				if (class_exists('WeightedRandom', false)) {
-					WeightedRandom::saveWeightedRandoms();
-				}
-				release_lock();
+			$actions++; // we took an action
+		} catch (FinalActionException $e) {
+			if ($player->getSector()->offersFederalProtection() && !$player->hasFederalProtection()) {
+				debug('Disarming so we can get Fed protection');
+				$player->getShip()->setCDs(0);
+				$player->getShip()->removeAllWeapons();
+				$player->getShip()->update();
 			}
-
-			//Clean up the caches as the data may get changed by other players
-			clearCaches();
-
-			//Clear up some global vars to avoid contaminating subsequent pages
-			global $locksFailed;
-			$locksFailed = array();
-			$_REQUEST = array();
-
-			//Have a sleep between actions
-			sleepNPC();
+			// switch to a new NPC if we haven't taken any actions yet
+			if ($actions > 0) {
+				debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage());
+				exitNPC();
+			}
+			$changeNPC = true;
 		}
+
+		// Save any changes that we made during this action
+		global $lock;
+		if ($lock) { //only save if we have the lock.
+			SmrSector::saveSectors();
+			SmrShip::saveShips();
+			SmrPlayer::savePlayers();
+			SmrForce::saveForces();
+			SmrPort::savePorts();
+			if (class_exists('WeightedRandom', false)) {
+				WeightedRandom::saveWeightedRandoms();
+			}
+			release_lock();
+		}
+
+		//Clean up the caches as the data may get changed by other players
+		clearCaches();
+
+		//Clear up some global vars to avoid contaminating subsequent pages
+		global $locksFailed;
+		$locksFailed = array();
+		$_REQUEST = array();
+
+		//Have a sleep between actions
+		sleepNPC();
 	}
 	debug('Actions Finished.');
 	exitNPC();
@@ -382,19 +432,8 @@ function exitNPC() : void {
 }
 
 function changeNPCLogin() : void {
-	global $actions, $previousContainer;
-	if ($actions > 0) {
-		debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage());
-		exitNPC();
-	}
-
-	$actions = -1;
-
 	// Release previous NPC, if any
 	releaseNPC();
-
-	// We chose a new NPC, we don't care what we were doing beforehand.
-	$previousContainer = null;
 
 	// Lacking a convenient way to get up-to-date turns, order NPCs by how
 	// recently they have taken an action.
@@ -405,6 +444,13 @@ function changeNPCLogin() : void {
 	$session = Smr\Session::getInstance();
 
 	if (is_null($availableNpcs)) {
+		// Make sure NPC's have been set up in the database
+		$dbResult = $db->read('SELECT 1 FROM npc_logins LIMIT 1');
+		if (!$dbResult->hasRecord()) {
+			debug('No NPCs have been created yet!');
+			exitNPC();
+		}
+
 		// Make sure to select NPCs from active games only
 		$dbResult = $db->read('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY last_turn_update ASC');
 		foreach ($dbResult->records() as $dbRecord) {
@@ -430,72 +476,6 @@ function changeNPCLogin() : void {
 
 	$db->write('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($account->getLogin()));
 	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . $session->getGameID() . ')');
-
-	throw new ForwardException;
-}
-
-function canWeUNO(AbstractSmrPlayer $player, bool $oppurtunisticOnly) : Page|false {
-	if ($player->getCredits() < MINUMUM_RESERVE_CREDITS) {
-		return false;
-	}
-	$ship = $player->getShip();
-	if ($ship->hasMaxShields() && $ship->hasMaxArmour() && $ship->hasMaxCargoHolds()) {
-		return false;
-	}
-	$sector = $player->getSector();
-
-	if ($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO) {
-		// Buy cargo holds first if we have plenty of newbie turns left.
-		$hardwareArray = [HARDWARE_CARGO, HARDWARE_ARMOUR, HARDWARE_SHIELDS];
-	} else {
-		// We buy armour in preference to shields as it's cheaper.
-		// We buy cargo holds last if we have no newbie turns because we'd rather not die
-		$hardwareArray = [HARDWARE_ARMOUR, HARDWARE_SHIELDS, HARDWARE_CARGO];
-	}
-
-	foreach ($sector->getLocations() as $location) {
-		foreach ($hardwareArray as $hardwareID) {
-			if (!$location->isHardwareSold($hardwareID)) {
-				continue;
-			}
-			$amountCanBuy = IFloor(($player->getCredits() - MINUMUM_RESERVE_CREDITS) / Globals::getHardwareCost($hardwareID));
-			$amountNeeded = $ship->getType()->getMaxHardware($hardwareID) - $ship->getHardware($hardwareID);
-			$amount = min($amountCanBuy, $amountNeeded);
-			if ($amount > 0) {
-				return doUNO($hardwareID, $amount, $sector->getSectorID());
-			}
-		}
-	}
-
-	if ($oppurtunisticOnly === true) {
-		return false;
-	}
-
-	if ($player->getCredits() - $ship->getCostToUNO() < MINUMUM_RESERVE_CREDITS) {
-		return false; //Only do non-oppurtunistic UNO if we have the money to do it properly!
-	}
-
-	foreach ($hardwareArray as $hardwareID) {
-		if (!$ship->hasMaxHardware($hardwareID)) {
-			// It's okay to return false if we're already at a shop, since we
-			// decided above that we don't want to buy anything here.
-			return plotToNearest($player, Globals::getHardwareTypes($hardwareID));
-		}
-	}
-	throw new Exception('Should not get here!');
-}
-
-function doUNO(int $hardwareID, int $amount, int $sectorID) : Page {
-	debug('Buying ' . $amount . ' units of "' . Globals::getHardwareName($hardwareID) . '"');
-	$_REQUEST = [
-		'amount' => $amount,
-		'action' => 'Buy',
-	];
-	$vars = [
-		'hardware_id' => $hardwareID,
-		'LocationID' => $sectorID,
-	];
-	return Page::create('shop_hardware_processing.php', '', $vars);
 }
 
 function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port) : Page {
@@ -534,8 +514,8 @@ function plotToSector(SmrPlayer $player, int $sectorID) : Page {
 	return Page::create('course_plot_processing.php', '', array('from'=>$player->getSectorID(), 'to'=>$sectorID));
 }
 
-function plotToFed(SmrPlayer $player, bool $plotToHQ = false) : Page {
-	debug('Plotting To Fed', $plotToHQ);
+function plotToFed(SmrPlayer $player) : Page {
+	debug('Plotting To Fed');
 
 	// Always drop illegal goods before heading to fed space
 	if ($player->getShip()->hasIllegalGoods()) {
@@ -543,11 +523,11 @@ function plotToFed(SmrPlayer $player, bool $plotToHQ = false) : Page {
 		processContainer(dumpCargo($player));
 	}
 
-	$fedLocID = $player->getRaceID() + ($plotToHQ ? LOCATION_GROUP_RACIAL_HQS : LOCATION_GROUP_RACIAL_BEACONS);
+	$fedLocID = $player->getRaceID() + LOCATION_GROUP_RACIAL_BEACONS;
 	$container = plotToNearest($player, SmrLocation::getLocation($fedLocID));
 	if ($container === false) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
-		changeNPCLogin();
+		throw new FinalActionException;
 	}
 	return $container;
 }
@@ -568,34 +548,24 @@ function moveToSector(SmrPlayer $player, int $targetSector) : Page {
 	return Page::create('sector_move_processing.php', '', array('target_sector'=>$targetSector, 'target_page'=>''));
 }
 
-function checkForShipUpgrade(AbstractSmrPlayer $player) : Page|false {
+function checkForShipUpgrade(AbstractSmrPlayer $player) : void {
 	foreach (SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
 		if ($player->getShipTypeID() == $upgradeShipID) {
 			//We can't upgrade, only downgrade.
-			return false;
+			return;
 		}
 		$cost = $player->getShip()->getCostToUpgrade($upgradeShipID);
-		if ($cost <= 0 || $player->getCredits() - $cost > MINUMUM_RESERVE_CREDITS) {
-			return doShipUpgrade($player, $upgradeShipID);
+		$balance = $player->getCredits() - $cost;
+		if ($balance > MINUMUM_RESERVE_CREDITS) {
+			debug('Upgrading to ship type: ' . $upgradeShipID);
+			$player->setCredits($balance);
+			$player->getShip()->setTypeID($upgradeShipID);
+			return;
 		}
 	}
-	debug('Could not find a ship on the upgrade path.');
-	return false;
 }
 
-function doShipUpgrade(AbstractSmrPlayer $player, int $upgradeShipID) : Page {
-	$plotNearest = plotToNearest($player, SmrShipType::get($upgradeShipID));
-
-	if ($plotNearest === false) { //We're already there!
-		// We need a LocationID in the var to process the page, but it's only
-		// used for display, so it doesn't matter for NPCs what the value is.
-		return Page::create('shop_ship_processing.php', '',
-			['ship_type_id' => $upgradeShipID, 'LocationID' => -1]);
-	} //Otherwise return the plot
-	return $plotNearest;
-}
-
-function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : Routes\Route|false {
+function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : ?Routes\Route {
 	// Remove any route from the pool of available routes if it contains
 	// either of the sectors in the $routeToAvoid (i.e. we died on it,
 	// so don't go back!).
@@ -617,7 +587,7 @@ function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : R
 	}
 
 	if (count($tradeRoutes) == 0) {
-		return false;
+		return null;
 	}
 
 	// Pick a random route
@@ -695,7 +665,7 @@ function findRoutes(SmrPlayer $player) : array {
 
 		if (count($routesMerged) == 0) {
 			debug('Could not find any routes! Try another NPC.');
-			changeNPCLogin();
+			throw new FinalActionException;
 		}
 
 		$db->write('INSERT INTO route_cache ' .
