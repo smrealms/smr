@@ -258,7 +258,7 @@ function NPCStuff() : void {
 								processContainer(tradeGoods($goodID, $player, $port));
 							} else {
 								//Move to next route or fed.
-								if (($tradeRoute = changeRoute($allTradeRoutes)) === false) {
+								if (($tradeRoute = changeRoute($allTradeRoutes)) === null) {
 									debug('Changing Route Failed');
 									processContainer(plotToFed($player));
 								} else {
@@ -285,7 +285,7 @@ function NPCStuff() : void {
 							processContainer(tradeGoods($goodID, $player, $port));
 						} else {
 							//Move to next route or fed.
-							if (($tradeRoute = changeRoute($allTradeRoutes)) === false) {
+							if (($tradeRoute = changeRoute($allTradeRoutes)) === null) {
 								debug('Changing Route Failed');
 								processContainer(plotToFed($player));
 							} else {
@@ -565,7 +565,7 @@ function checkForShipUpgrade(AbstractSmrPlayer $player) : void {
 	}
 }
 
-function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : Routes\Route|false {
+function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : ?Routes\Route {
 	// Remove any route from the pool of available routes if it contains
 	// either of the sectors in the $routeToAvoid (i.e. we died on it,
 	// so don't go back!).
@@ -587,7 +587,7 @@ function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : R
 	}
 
 	if (count($tradeRoutes) == 0) {
-		return false;
+		return null;
 	}
 
 	// Pick a random route
