@@ -5,7 +5,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$chessGame = ChessGame::getChessGame($var['ChessGameID']);
+$chessGame = Smr\Chess\ChessGame::getChessGame($var['ChessGameID']);
 $result = $chessGame->resign($player->getAccountID());
 
 $container = Page::create('skeleton.php', 'current_sector.php');

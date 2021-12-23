@@ -49,10 +49,10 @@ try {
 		// The next "page request" must occur at an updated time.
 		Smr\Epoch::update();
 
-		foreach (ChessGame::getNPCMoveGames(true) as $chessGame) {
+		foreach (Smr\Chess\ChessGame::getNPCMoveGames(true) as $chessGame) {
 			debug('Looking at game: ' . $chessGame->getChessGameID());
 			writeToEngine('position fen ' . $chessGame->getFENString(), false);
-			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() == ChessGame::PLAYER_WHITE ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);
+			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() == Smr\Chess\ChessGame::PLAYER_WHITE ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);
 			stream_set_blocking($fromEngine, 1);
 			while (stripos($move = trim(fgets($fromEngine)), 'bestmove') !== 0) {
 				debug('<-- ' . $move);

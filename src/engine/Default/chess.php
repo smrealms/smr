@@ -4,7 +4,7 @@ $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$chessGames = ChessGame::getOngoingPlayerGames($player);
+$chessGames = Smr\Chess\ChessGame::getOngoingPlayerGames($player);
 $template->assign('ChessGames', $chessGames);
 $template->assign('PageTopic', 'Casino');
 

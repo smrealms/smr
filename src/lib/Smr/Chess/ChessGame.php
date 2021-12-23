@@ -1,8 +1,14 @@
 <?php declare(strict_types=1);
-/**
- * @author Page
- *
- */
+
+namespace Smr\Chess;
+
+use AbstractSmrPlayer;
+use Exception;
+use Page;
+use SmrAccount;
+use SmrPlayer;
+use Smr;
+
 class ChessGame {
 	const GAMETYPE_STANDARD = 'Standard';
 	const PLAYER_BLACK = 'Black';
@@ -64,7 +70,7 @@ class ChessGame {
 
 	public static function getChessGame(int $chessGameID, bool $forceUpdate = false) : self {
 		if ($forceUpdate || !isset(self::$CACHE_CHESS_GAMES[$chessGameID])) {
-			self::$CACHE_CHESS_GAMES[$chessGameID] = new ChessGame($chessGameID);
+			self::$CACHE_CHESS_GAMES[$chessGameID] = new self($chessGameID);
 		}
 		return self::$CACHE_CHESS_GAMES[$chessGameID];
 	}
@@ -641,7 +647,7 @@ class ChessGame {
 				$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 				$currentPlayer = $this->getCurrentTurnPlayer();
 
-				$moveInfo = ChessGame::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY, $pawnPromotionPiece);
+				$moveInfo = self::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY, $pawnPromotionPiece);
 
 				//We have taken the move, we should refresh $p
 				$p = $this->board[$toY][$toX];
