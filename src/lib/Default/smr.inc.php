@@ -176,7 +176,9 @@ function bbifyMessage(string $message, bool $noLinks = false) : string {
 		$disableBBLinks = false;
 	}
 	if (strpos($message, '[') !== false) { //We have BBCode so let's do a full parse.
-		$message = $bbParser->parse($message);
+		// TODO: deprecation warnings suppressed until PHP 8.1 fix merged!
+		// See https://github.com/vanilla/nbbc/pull/24.
+		$message = @$bbParser->parse($message);
 		$message = str_replace('&lt;br /&gt;', '<br />', $message);
 	} else { //Otherwise just convert newlines
 		$message = nl2br($message, true);
