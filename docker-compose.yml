@@ -13,7 +13,7 @@ x-smr-common: &smr-common
     build:
         context: .
         args:
-            - PHP_DEBUG
+            - NO_DEV
     container_name: ${SMR_HOST}
     networks:
         - frontend
@@ -33,7 +33,7 @@ x-smr-cli: &smr-cli
     build:
         context: .
         args:
-            - PHP_DEBUG
+            - NO_DEV
     networks:
         - backend
     depends_on:

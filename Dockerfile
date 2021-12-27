@@ -22,16 +22,16 @@ RUN apt-get --quiet=2 update \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& docker-php-ext-install mysqli opcache > /dev/null
 
-# Set the baseline php.ini version based on the value of PHP_DEBUG
-ARG PHP_DEBUG=0
-RUN MODE=$([ "$PHP_DEBUG" = "1" ] && echo "development" || echo "production") \
+# Set the baseline php.ini version (default to production)
+ARG NO_DEV=1
+RUN MODE=$([ "$NO_DEV" = "0" ] && echo "development" || echo "production") \
 	&& echo "Using $MODE php.ini" \
 	&& mv "$PHP_INI_DIR/php.ini-$MODE" "$PHP_INI_DIR/php.ini"
 
 # Install xdebug (use /tmp/xdebug for profiler output)
-RUN if [ "$PHP_DEBUG" = "1" ]; \
+RUN if [ "$NO_DEV" = "0" ]; \
 	then \
-		pecl install xdebug-3.1.1 > /dev/null \
+		pecl install xdebug-3.1.2 > /dev/null \
 		&& docker-php-ext-enable xdebug \
 		&& echo "xdebug.output_dir = /tmp/xdebug" > "$PHP_INI_DIR/conf.d/xdebug.ini" \
 		&& mkdir /tmp/xdebug; \
@@ -46,11 +46,10 @@ RUN sed -i 's/AllowOverride All/AllowOverride None/g' /etc/apache2/conf-enabled/
 WORKDIR /smr/
 
 RUN curl -sS https://getcomposer.org/installer | \
-	php -- --install-dir=/usr/local/bin --filename=composer --version=2.1.14
+	php -- --install-dir=/usr/local/bin --filename=composer --version=2.2.1
 
 COPY composer.json .
-RUN MODE=$([ "$PHP_DEBUG" = "1" ] || echo "--no-dev") \
-	&& composer update $MODE --quiet --no-interaction
+RUN COMPOSER_NO_DEV=$NO_DEV composer update --quiet --no-interaction
 
 COPY --from=builder /smr .
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/src/htdocs" /var/www/html

@@ -6,4 +6,4 @@ MYSQL_PASSWORD=smr
 MYSQL_HOST=smr-mysql-test
 MYSQL_DATABASE=smr_live_test
 SMR_HOST=smr-game-test
-PHP_DEBUG=1
+NO_DEV=0
