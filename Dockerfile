@@ -49,7 +49,7 @@ RUN curl -sS https://getcomposer.org/installer | \
 	php -- --install-dir=/usr/local/bin --filename=composer --version=2.2.1
 
 COPY composer.json .
-RUN COMPOSER_NO_DEV=$NO_DEV composer update --quiet --no-interaction
+RUN COMPOSER_NO_DEV=$NO_DEV composer update --no-interaction
 
 COPY --from=builder /smr .
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/src/htdocs" /var/www/html
