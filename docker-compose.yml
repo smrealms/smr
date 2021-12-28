@@ -46,7 +46,7 @@ x-smr-cli: &smr-cli
 
 # Base configuration for SMR testing tools
 x-smr-test: &smr-test
-    <<: *smr-common
+    <<: *smr-cli
     volumes:
         - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
         - ./test/env:/smr/config/env:ro
@@ -57,8 +57,6 @@ x-smr-test: &smr-test
         - ./test:/smr/test
     depends_on:
         - mysql-integration-test
-    labels:
-        - "traefik.enable=false"
 
 x-mysql-common: &mysql-common
     image: mysql:8.0
