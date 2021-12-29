@@ -606,7 +606,7 @@ class ChessGame {
 		$y = 8 - $move[1];
 		$toX = ord($move[2]) - $aVal;
 		$toY = 8 - $move[3];
-		$pawnPromotionPiece = null;
+		$pawnPromotionPiece = ChessPiece::QUEEN;
 		if (isset($move[4])) {
 			$pawnPromotionPiece = ChessPiece::getPieceForLetter($move[4]);
 		}
