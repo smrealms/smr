@@ -457,22 +457,11 @@ class ChessGame {
 
 	public static function isCastling(int $x, int $toX) : array|false {
 		$movement = $toX - $x;
-		if (abs($movement) == 2) {
-			//To the left.
-			if ($movement == -2) {
-				return array('Type' => 'Queen',
-						'X' => 0,
-						'ToX' => 3
-					);
-			} //To the right
-			elseif ($movement == 2) {
-				return array('Type' => 'King',
-						'X' => 7,
-						'ToX' => 5
-					);
-			}
-		}
-		return false;
+		return match($movement) {
+			-2 => ['Type' => 'Queen', 'X' => 0, 'ToX' => 3],
+			2 => ['Type' => 'King', 'X' => 7, 'ToX' => 5],
+			default => false,
+		};
 	}
 
 	public static function movePiece(array &$board, array &$hasMoved, int $x, int $y, int $toX, int $toY, int $pawnPromotionPiece = ChessPiece::QUEEN) : array {
@@ -506,7 +495,7 @@ class ChessGame {
 				$hasMoved[$p->colour][ChessPiece::KING] = true;
 				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = true;
 				if ($board[$y][$castling['X']] === null) {
-					throw new Exception('Cannot castle with non-existent castle.');
+					throw new Exception('Cannot castle with non-existent rook.');
 				}
 				$board[$toY][$castling['ToX']] = $board[$y][$castling['X']];
 				$board[$toY][$castling['ToX']]->x = $castling['ToX'];
