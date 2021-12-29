@@ -97,7 +97,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return is_numeric($default);
 				}
 				$chessGameID = (int)$default;
-				$chessGame = ChessGame::getChessGame($chessGameID);
+				$chessGame = Smr\Chess\ChessGame::getChessGame($chessGameID);
 				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
 			break;
 

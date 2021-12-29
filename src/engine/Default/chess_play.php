@@ -5,7 +5,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$chessGame = ChessGame::getChessGame($var['ChessGameID']);
+$chessGame = Smr\Chess\ChessGame::getChessGame($var['ChessGameID']);
 $template->assign('ChessGame', $chessGame);
 
 // Board orientation depends on the player's color.

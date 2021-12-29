@@ -7,7 +7,7 @@ $player = $session->getPlayer();
 $container = Page::create('skeleton.php', 'chess_play.php');
 $container->addVar('ChessGameID');
 
-$chessGame = ChessGame::getChessGame($var['ChessGameID']);
+$chessGame = Smr\Chess\ChessGame::getChessGame($var['ChessGameID']);
 $x = Smr\Request::getInt('x');
 $y = Smr\Request::getInt('y');
 $toX = Smr\Request::getInt('toX');
@@ -16,7 +16,8 @@ if (!$chessGame->hasEnded()) {
 	if ($chessGame->isCurrentTurn($player->getAccountID())) {
 		$board = $chessGame->getBoard();
 		if ($board[$y][$x] != null) {
-			$result = $chessGame->tryMove($x, $y, $toX, $toY, $player->getAccountID(), ChessPiece::QUEEN);
+			$colour = $chessGame->getColourForAccountID($player->getAccountID());
+			$result = $chessGame->tryMove($x, $y, $toX, $toY, $colour, Smr\Chess\ChessPiece::QUEEN);
 			$container['MoveMessage'] = match($result) {
 				0 => '', // valid move, no message
 				1 => 'You have just checkmated your opponent, congratulations!',
