@@ -136,7 +136,7 @@ class ChessGame {
 					SET end_time = NULL, winner_id = 0
 					WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 		$db->write('DELETE FROM chess_game_pieces WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ';');
-		self::insertPieces($this->chessGameID, $this->getWhitePlayer(), $this->getBlackPlayer());
+		self::insertPieces($this->chessGameID);
 
 		$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
 		$db->write('DELETE FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ';');
@@ -174,8 +174,7 @@ class ChessGame {
 			$dbResult = $this->db->read('SELECT * FROM chess_game_pieces WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 			$pieces = array();
 			foreach ($dbResult->records() as $dbRecord) {
-				$accountID = $dbRecord->getInt('account_id');
-				$pieces[] = new ChessPiece($this->getColourForAccountID($accountID), $dbRecord->getInt('piece_id'), $dbRecord->getInt('x'), $dbRecord->getInt('y'), $dbRecord->getInt('piece_no'));
+				$pieces[] = new ChessPiece($dbRecord->getString('colour'), $dbRecord->getInt('piece_id'), $dbRecord->getInt('x'), $dbRecord->getInt('y'), $dbRecord->getInt('piece_no'));
 			}
 			$this->board = $this->parsePieces($pieces);
 		}
@@ -373,19 +372,18 @@ class ChessGame {
 				'(' . $db->escapeNumber($startDate) . ',' . ($endDate === null ? 'NULL' : $db->escapeNumber($endDate)) . ',' . $db->escapeNumber($whitePlayer->getAccountID()) . ',' . $db->escapeNumber($blackPlayer->getAccountID()) . ',' . $db->escapeNumber($whitePlayer->getGameID()) . ');');
 		$chessGameID = $db->getInsertID();
 
-		self::insertPieces($chessGameID, $whitePlayer, $blackPlayer);
+		self::insertPieces($chessGameID);
 		return $chessGameID;
 	}
 
-	private static function insertPieces(int $chessGameID, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) : void {
+	private static function insertPieces(int $chessGameID) : void {
 		$db = Smr\Database::getInstance();
 		$pieces = self::getStandardGame();
 		foreach ($pieces as $p) {
-			$pieceOwner = $p->colour === self::PLAYER_WHITE ? $whitePlayer : $blackPlayer;
 			$db->write('INSERT INTO chess_game_pieces' .
-			'(chess_game_id,account_id,piece_id,x,y)' .
+			'(chess_game_id,colour,piece_id,x,y)' .
 			'values' .
-			'(' . $db->escapeNumber($chessGameID) . ',' . $db->escapeNumber($pieceOwner->getAccountID()) . ',' . $db->escapeNumber($p->pieceID) . ',' . $db->escapeNumber($p->x) . ',' . $db->escapeNumber($p->y) . ');');
+			'(' . $db->escapeNumber($chessGameID) . ',' . $db->escapeString($p->colour) . ',' . $db->escapeNumber($p->pieceID) . ',' . $db->escapeNumber($p->x) . ',' . $db->escapeNumber($p->y) . ');');
 		}
 	}
 
@@ -702,9 +700,8 @@ class ChessGame {
 				$currentPlayer->increaseHOF(1, array($chessType, 'Moves', 'Total Taken'), HOF_PUBLIC);
 				if ($moveInfo['PieceTaken'] != null) {
 					// Get the owner of the taken piece
-					$takenOwnerID = self::getColourID($moveInfo['PieceTaken']->colour);
 					$this->db->write('DELETE FROM chess_game_pieces
-									WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND account_id=' . $this->db->escapeNumber($takenOwnerID) . ' AND piece_id=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID) . ' AND piece_no=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceNo) . ';');
+									WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($moveInfo['PieceTaken']->colour) . ' AND piece_id=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID) . ' AND piece_no=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceNo) . ';');
 
 					$pieceTakenSymbol = $moveInfo['PieceTaken']->getPieceSymbol();
 					$currentPlayer->increaseHOF(1, array($chessType, 'Moves', 'Opponent Pieces Taken', 'Total'), HOF_PUBLIC);
@@ -713,15 +710,14 @@ class ChessGame {
 					$otherPlayer->increaseHOF(1, array($chessType, 'Moves', 'Own Pieces Taken', $pieceTakenSymbol), HOF_PUBLIC);
 				}
 
-				$pieceOwnerID = self::getColourID($p->colour);
 				$this->db->write('UPDATE chess_game_pieces
 							SET x=' . $this->db->escapeNumber($toX) . ', y=' . $this->db->escapeNumber($toY) .
 								($moveInfo['PawnPromotion'] !== false ? ', piece_id=' . $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID']) . ', piece_no=' . $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceNo']) : '') . '
-							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND account_id=' . $this->db->escapeNumber($pieceOwnerID) . ' AND piece_id=' . $this->db->escapeNumber($pieceID) . ' AND piece_no=' . $this->db->escapeNumber($pieceNo) . ';');
+							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour) . ' AND piece_id=' . $this->db->escapeNumber($pieceID) . ' AND piece_no=' . $this->db->escapeNumber($pieceNo) . ';');
 				if ($moveInfo['Castling'] !== false) {
 					$this->db->write('UPDATE chess_game_pieces
 								SET x=' . $this->db->escapeNumber($moveInfo['Castling']['ToX']) . '
-								WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND account_id=' . $this->db->escapeNumber($pieceOwnerID) . ' AND x = ' . $this->db->escapeNumber($moveInfo['Castling']['X']) . ' AND y = ' . $this->db->escapeNumber($y) . ';');
+								WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour) . ' AND x = ' . $this->db->escapeNumber($moveInfo['Castling']['X']) . ' AND y = ' . $this->db->escapeNumber($y) . ';');
 				}
 				$return = 0;
 				if ($checking == 'MATE') {
