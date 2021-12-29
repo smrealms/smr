@@ -156,21 +156,13 @@ class Database {
 	}
 
 	public function escape(mixed $escape) : mixed {
-		if (is_bool($escape)) {
-			return $this->escapeBoolean($escape);
-		}
-		if (is_numeric($escape)) {
-			return $this->escapeNumber($escape);
-		}
-		if (is_string($escape)) {
-			return $this->escapeString($escape);
-		}
-		if (is_array($escape)) {
-			return $this->escapeArray($escape);
-		}
-		if (is_object($escape)) {
-			return $this->escapeObject($escape);
-		}
+		return match(true) {
+			is_bool($escape) => $this->escapeBoolean($escape),
+			is_numeric($escape) => $this->escapeNumber($escape),
+			is_string($escape) => $this->escapeString($escape),
+			is_array($escape) => $this->escapeArray($escape),
+			is_object($escape) => $this->escapeObject($escape),
+		};
 	}
 
 	public function escapeString(?string $string, bool $nullable = false) : string {
