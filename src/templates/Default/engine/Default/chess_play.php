@@ -47,12 +47,13 @@
 
 <script><?php
 	$AvailableMoves = array_pad(array(), count($Board), array());
-	foreach ($Board as $Y => $Row) {
-		foreach ($Row as $X => $Cell) {
-			$AvailableMoves[$Y][$X] = array();
-			if ($Cell != null) {
-				if ($ChessGame->isCurrentTurn($ThisAccount->getAccountID())) {
-					$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $ThisAccount->getAccountID());
+	if ($ChessGame->isCurrentTurn($ThisAccount->getAccountID())) {
+		$Colour = $ChessGame->getColourForAccountID($ThisAccount->getAccountID());
+		foreach ($Board as $Y => $Row) {
+			foreach ($Row as $X => $Cell) {
+				$AvailableMoves[$Y][$X] = array();
+				if ($Cell != null) {
+					$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $Colour);
 					foreach ($Moves as $Move) {
 						$AvailableMoves[$Y][$X][] = '#c' . $Move[0] . $Move[1];
 					}

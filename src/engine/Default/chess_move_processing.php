@@ -16,7 +16,8 @@ if (!$chessGame->hasEnded()) {
 	if ($chessGame->isCurrentTurn($player->getAccountID())) {
 		$board = $chessGame->getBoard();
 		if ($board[$y][$x] != null) {
-			$result = $chessGame->tryMove($x, $y, $toX, $toY, $player->getAccountID(), Smr\Chess\ChessPiece::QUEEN);
+			$colour = $chessGame->getColourForAccountID($player->getAccountID());
+			$result = $chessGame->tryMove($x, $y, $toX, $toY, $colour, Smr\Chess\ChessPiece::QUEEN);
 			$container['MoveMessage'] = match($result) {
 				0 => '', // valid move, no message
 				1 => 'You have just checkmated your opponent, congratulations!',

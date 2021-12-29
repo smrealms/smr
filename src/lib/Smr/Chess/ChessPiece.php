@@ -11,8 +11,6 @@ class ChessPiece {
 	const PAWN = 6;
 
 	public function __construct(
-		public int $chessGameID,
-		public int $accountID,
 		public string $colour,
 		public int $pieceID,
 		public int $x,
@@ -40,9 +38,9 @@ class ChessPiece {
 		return false;
 	}
 
-	public function getPossibleMoves(array &$board, array &$hasMoved, int $forAccountID = null, bool $attackingCheck = false) : array {
+	public function getPossibleMoves(array &$board, array &$hasMoved, string $forColour = null, bool $attackingCheck = false) : array {
 		$moves = array();
-		if ($forAccountID === null || $this->accountID == $forAccountID) {
+		if ($forColour === null || $this->colour === $forColour) {
 			if ($this->pieceID == self::PAWN) {
 				$dirY = $this->colour == ChessGame::PLAYER_BLACK ? 1 : -1;
 				$moveY = $this->y + $dirY;
