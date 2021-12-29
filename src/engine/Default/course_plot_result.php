@@ -6,7 +6,7 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $path = $var['Path'];
-$fullPath = $var['FullPath'];
+$fullPath = implode(' - ', $path->getPath());
 
 $template->assign('PageTopic', 'Plot A Course');
 Menu::navigation($player);

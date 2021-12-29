@@ -94,9 +94,9 @@
 								</div><?php
 							}
 						}
-						if (($isVisited && $Sector->hasWarp()) || (!$UniGen && ($MapPlayer->isPartOfCourse($Sector) || ($MapPlayer->hasPlottedCourse() && $isCurrentSector)))) { ?>
+						if (($isVisited && $Sector->hasWarp()) || (!$UniGen && $MapPlayer->isPartOfCourse($Sector))) { ?>
 							<div class="lmp"><?php
-								if (!$UniGen && ($MapPlayer->isPartOfCourse($Sector) || ($MapPlayer->hasPlottedCourse() && $isCurrentSector))) {
+								if (!$UniGen && $MapPlayer->isPartOfCourse($Sector)) {
 									?><img title="Course" alt="Course" src="images/plot_icon.gif" width="16" height="16"/><?php
 								}
 								if ($isVisited) {

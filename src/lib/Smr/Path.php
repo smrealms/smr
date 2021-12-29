@@ -1,35 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr;
+
 /**
  * Class used to keep track of paths between two sectors.
  * Used by the Plotter class to store the state of a plotted course.
  */
-class Distance {
-	private int $gameID;
-	private int $distance = -1; //First sector added will be the start and a distance of 0
+class Path {
+	private array $path;
 	private int $numWarps = 0;
-	private array $path = [];
 	private array $warpMap = [];
 
-	public function __construct(int $gameID, int $_startSectorId) {
-		$this->gameID = $gameID;
-		$this->addToPath($_startSectorId);
+	public function __construct(int $startSectorID) {
+		$this->path = [$startSectorID];
 	}
 
-	protected function incrementDistance() : void {
-		$this->distance++;
-	}
-
-	protected function incrementNumWarps() : void {
-		$this->numWarps++;
-	}
-
-	public function getDistance() : int {
-		return $this->distance;
-	}
-
-	public function getTotalSectors() : int {
-		return $this->getDistance() + $this->getNumWarps();
+	/**
+	 * Returns the number of sectors to get to the end of the path
+	 * (does not include the start sector).
+	 */
+	public function getLength() : int {
+		return count($this->path) - 1;
 	}
 
 	public function getNumWarps() : int {
@@ -37,19 +28,15 @@ class Distance {
 	}
 
 	public function getTurns() : int {
-		return $this->distance * TURNS_PER_SECTOR + $this->numWarps * TURNS_PER_WARP;
+		return $this->getLength() * TURNS_PER_SECTOR + $this->numWarps * (TURNS_PER_WARP - TURNS_PER_SECTOR);
 	}
 
-	public function getRelativeDistance() : int {
-		return $this->distance + $this->numWarps * TURNS_WARP_SECTOR_EQUIVALENCE;
+	public function getDistance() : int {
+		return $this->getLength() + $this->numWarps * (TURNS_WARP_SECTOR_EQUIVALENCE - 1);
 	}
 
 	public function getEndSectorID() : int {
 		return $this->path[count($this->path) - 1];
-	}
-
-	public function getEndSector() : SmrSector {
-		return SmrSector::getSector($this->gameID, $this->getEndSectorID());
 	}
 
 	public function getPath() : array {
@@ -62,32 +49,36 @@ class Distance {
 		$this->warpMap = array_flip($this->warpMap);
 	}
 
-	public function addToPath(int $nextSector) : void {
-		$this->incrementDistance();
+	/**
+	 * Add a neighboring sector to the path.
+	 */
+	public function addLink(int $nextSector) : void {
 		$this->path[] = $nextSector;
 	}
 
-	public function addWarpToPath(int $sectorAfterWarp, int $sectorBeforeWarp) : void {
-		$this->incrementNumWarps();
-		$this->path[] = $sectorAfterWarp;
-		$this->warpMap[$sectorBeforeWarp] = $sectorAfterWarp;
+	/**
+	 * Add a warp to the path.
+	 */
+	public function addWarp(int $nextSector) : void {
+		$this->warpMap[$this->getEndSectorID()] = $nextSector;
+		$this->numWarps++;
+		$this->path[] = $nextSector;
 	}
 
 	public function getNextOnPath() : int {
+		return $this->path[1];
+	}
+
+	public function getStartSectorID() : int {
 		return $this->path[0];
 	}
 
 	public function followPath() : void {
-		$nextSectorID = array_shift($this->path);
+		$nextSectorID = $this->getNextOnPath();
 		if (in_array($nextSectorID, $this->warpMap)) {
 			$this->numWarps--;
-		} else {
-			$this->distance--;
 		}
-	}
-
-	public function removeStart() : int {
-		return array_shift($this->path);
+		array_shift($this->path);
 	}
 
 	public function isInPath(int $sectorID) : bool {
@@ -100,14 +91,12 @@ class Distance {
 	 */
 	public function skipToSector(int $sectorID) : self {
 		$position = array_search($sectorID, $this->path);
-		if ($position !== false) {
-			// The resulting path does not include sectorID, i.e. (sectorID,end]
-			$this->path = array_slice($this->path, $position + 1);
-			$this->numWarps = count(array_intersect($this->path, array_values($this->warpMap)));
-			$this->distance = count($this->path) - $this->numWarps;
-			return $this;
-		} else {
-			throw new Exception('Cannot skip to sector not in path!');
+		if ($position === false) {
+			throw new \Exception('Cannot skip to sector not in path!');
 		}
+		// The resulting path does include sectorID, i.e. [sectorID,end]
+		$this->path = array_slice($this->path, $position);
+		$this->numWarps = count(array_intersect($this->path, array_keys($this->warpMap)));
+		return $this;
 	}
 }

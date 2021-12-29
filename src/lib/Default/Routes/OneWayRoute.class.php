@@ -2,6 +2,7 @@
 
 namespace Routes;
 
+use Smr\Path;
 use Smr\Race;
 
 class OneWayRoute extends Route {
@@ -18,7 +19,7 @@ class OneWayRoute extends Route {
 		private int $buyPortRace,
 		private int $sellDi,
 		private int $buyDi,
-		private \Distance $distance,
+		private Path $path,
 		private int $goodId,
 	) {}
 
@@ -46,8 +47,8 @@ class OneWayRoute extends Route {
 		return $this->buyDi;
 	}
 
-	public function getDistance() : \Distance {
-		return $this->distance;
+	public function getPath() : Path {
+		return $this->path;
 	}
 
 	public function getGoodID() : int {
@@ -77,7 +78,7 @@ class OneWayRoute extends Route {
 		} else {
 			$tradeTurns = 2 * TURNS_PER_TRADE;
 		}
-		return $this->distance->getTurns() + $tradeTurns;
+		return $this->path->getTurns() + $tradeTurns;
 	}
 
 	public function containsPort(int $sectorID) : bool {
@@ -93,6 +94,6 @@ class OneWayRoute extends Route {
 	}
 
 	public function getRouteString() : string {
-		return $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . \Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->distance->getDistance() . ($this->distance->getNumWarps() > 0 ? ' + ' . $this->distance->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
+		return $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . \Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->path->getDistance() . ($this->path->getNumWarps() > 0 ? ' + ' . $this->path->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
 	}
 }

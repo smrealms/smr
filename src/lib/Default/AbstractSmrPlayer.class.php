@@ -63,8 +63,7 @@ abstract class AbstractSmrPlayer {
 	protected bool $forceDropMessages;
 	protected string $groupScoutMessages;
 	protected bool $ignoreGlobals;
-	protected Distance|false $plottedCourse;
-	protected int $plottedCourseFrom;
+	protected Smr\Path|false $plottedCourse;
 	protected bool $nameChanged;
 	protected bool $raceChanged;
 	protected bool $combatDronesKamikazeOnMines;
@@ -1576,7 +1575,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getPlottedCourse() : Distance|false {
+	public function getPlottedCourse() : Smr\Path|false {
 		if (!isset($this->plottedCourse)) {
 			// check if we have a course plotted
 			$dbResult = $this->db->read('SELECT course FROM player_plotted_course WHERE ' . $this->SQL . ' LIMIT 1');
@@ -1590,10 +1589,11 @@ abstract class AbstractSmrPlayer {
 		}
 
 		// Update the plotted course if we have moved since the last query
-		if ($this->plottedCourse !== false && (!isset($this->plottedCourseFrom) || $this->plottedCourseFrom != $this->getSectorID())) {
-			$this->plottedCourseFrom = $this->getSectorID();
-
-			if ($this->plottedCourse->getNextOnPath() == $this->getSectorID()) {
+		if ($this->plottedCourse !== false && $this->plottedCourse->getStartSectorID() != $this->getSectorID()) {
+			if ($this->plottedCourse->getEndSectorID() == $this->getSectorID()) {
+				// We have reached our destination
+				$this->deletePlottedCourse();
+			} elseif ($this->plottedCourse->getNextOnPath() == $this->getSectorID()) {
 				// We have walked into the next sector of the course
 				$this->plottedCourse->followPath();
 				$this->setPlottedCourse($this->plottedCourse);
@@ -1606,32 +1606,22 @@ abstract class AbstractSmrPlayer {
 		return $this->plottedCourse;
 	}
 
-	public function setPlottedCourse(Distance $plottedCourse) : void {
-		$hadPlottedCourse = $this->hasPlottedCourse();
+	public function setPlottedCourse(Smr\Path $plottedCourse) : void {
 		$this->plottedCourse = $plottedCourse;
-		if ($this->plottedCourse->getTotalSectors() > 0) {
-			$this->db->write('REPLACE INTO player_plotted_course
-				(account_id, game_id, course)
-				VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeObject($this->plottedCourse) . ')');
-		} elseif ($hadPlottedCourse) {
-			$this->deletePlottedCourse();
-		}
+		$this->db->write('REPLACE INTO player_plotted_course
+			(account_id, game_id, course)
+			VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeObject($this->plottedCourse) . ')');
 	}
 
 	public function hasPlottedCourse() : bool {
 		return $this->getPlottedCourse() !== false;
 	}
 
-	public function isPartOfCourse(SmrSector|int $sectorOrSectorID) : bool {
+	public function isPartOfCourse(SmrSector $sector) : bool {
 		if (!$this->hasPlottedCourse()) {
 			return false;
 		}
-		if ($sectorOrSectorID instanceof SmrSector) {
-			$sectorID = $sectorOrSectorID->getSectorID();
-		} else {
-			$sectorID = $sectorOrSectorID;
-		}
-		return $this->getPlottedCourse()->isInPath($sectorID);
+		return $this->getPlottedCourse()->isInPath($sector->getSectorID());
 	}
 
 	public function deletePlottedCourse() : void {
@@ -1645,7 +1635,7 @@ abstract class AbstractSmrPlayer {
 		if ($path === false) {
 			throw new Smr\Exceptions\UserError('Unable to plot from ' . $this->getSectorID() . ' to ' . $targetSector->getSectorID() . '.');
 		}
-		$distance = $path->getRelativeDistance();
+		$distance = $path->getDistance();
 
 		$turnCost = max(TURNS_JUMP_MINIMUM, IRound($distance * TURNS_PER_JUMP_DISTANCE));
 		$maxMisjump = max(0, IRound(($distance - $turnCost) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $this->getLevelID() * MISJUMP_LEVEL_FACTOR)));
