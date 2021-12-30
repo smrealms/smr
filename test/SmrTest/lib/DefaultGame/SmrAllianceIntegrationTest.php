@@ -11,6 +11,11 @@ use Smr\Exceptions\UserError;
  */
 class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 
+	protected function setUp() : void {
+		// Start each test with an empty alliance cache
+		SmrAlliance::clearCache();
+	}
+
 	public function test_createAlliance() : void {
 		// Test arbitrary input
 		$gameID = 42;

@@ -31,6 +31,10 @@ class SmrAlliance {
 	const RECRUIT_CLOSED = "closed";
 	const RECRUIT_PASSWORD = "password";
 
+	public static function clearCache() : void {
+		self::$CACHE_ALLIANCES = [];
+	}
+
 	public static function getAlliance(int $allianceID, int $gameID, bool $forceUpdate = false) : SmrAlliance {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
 			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new SmrAlliance($allianceID, $gameID);
