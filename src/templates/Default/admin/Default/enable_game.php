@@ -10,7 +10,7 @@ if (empty($DisabledGames)) { ?>
 } else { ?>
 
 	<p>Select the game you would like to enable.<br />
-	This will make it visible to all players.</p>
+	This will make it visible to all players, and will create the Newbie Help Alliance.</p>
 
 	<form method="POST" action="<?php echo $EnableGameHREF; ?>">
 		<table class="standard">
