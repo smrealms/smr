@@ -14,7 +14,7 @@ if ($action == 'YES') {
 
 	// will this alliance be empty if we leave? (means one member right now)
 	// Don't delete the Newbie Help Alliance!
-	if ($alliance->getNumMembers() == 1 && $alliance->getAllianceID() != NHA_ID) {
+	if ($alliance->getNumMembers() == 1 && !$alliance->isNHA()) {
 		// Retain the alliance, but delete some auxilliary info
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM alliance_bank_transactions

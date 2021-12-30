@@ -20,7 +20,7 @@ if ($pickedPlayer->isDraftLeader()) {
 }
 
 if ($pickedPlayer->hasAlliance()) {
-	if ($pickedPlayer->getAllianceID() == NHA_ID) {
+	if ($pickedPlayer->getAlliance()->isNHA()) {
 		$pickedPlayer->leaveAlliance();
 	} else {
 		create_error('Picked player already has an alliance.');
