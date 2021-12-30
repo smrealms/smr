@@ -449,7 +449,7 @@ const ALLIANCE_BANK_UNLIMITED = -1;
 
 const UNI_GEN_LOCATION_SLOTS = 9;
 
-const NHA_ID = 302;
+const NHA_ALLIANCE_NAME = 'Newbie Help Alliance';
 
 const CLOSE_ACCOUNT_BY_REQUEST_REASON = 'User Request';
 const CLOSE_ACCOUNT_INVALID_EMAIL_REASON = 'Invalid email';

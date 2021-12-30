@@ -18,7 +18,7 @@ class createNHATest extends BaseIntegrationSpec {
 		createNHA($gameID);
 
 		// Reload NHA and make sure relevant properties are set
-		$alliance = SmrAlliance::getAlliance(NHA_ID, $gameID, true);
+		$alliance = SmrAlliance::getAllianceByName(NHA_ALLIANCE_NAME, $gameID, true);
 		self::assertSame(ACCOUNT_ID_NHL, $alliance->getLeaderID());
 		self::assertSame('Newbie Help Alliance', $alliance->getAllianceName());
 		self::assertSame(DISCORD_SERVER_ID, $alliance->getDiscordServer());

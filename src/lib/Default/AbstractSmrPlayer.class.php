@@ -1331,7 +1331,6 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function leaveAlliance(AbstractSmrPlayer $kickedBy = null) : void {
-		$allianceID = $this->getAllianceID();
 		$alliance = $this->getAlliance();
 		if ($kickedBy != null) {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
@@ -1346,7 +1345,8 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 
-		if (!$this->isAllianceLeader() && $allianceID != NHA_ID) { // Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
+		// Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
+		if (!$this->isAllianceLeader() && !$alliance->isNHA()) {
 			$this->setAllianceJoinable(Smr\Epoch::time() + self::TIME_FOR_ALLIANCE_SWITCH);
 			$alliance->getLeader()->setAllianceJoinable(Smr\Epoch::time() + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
 		}

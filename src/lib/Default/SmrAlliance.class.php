@@ -105,7 +105,7 @@ class SmrAlliance {
 	 * Create an alliance and return the new object.
 	 * Starts alliance with "closed" recruitment (for safety).
 	 */
-	public static function createAlliance(int $gameID, string $name) : SmrAlliance {
+	public static function createAlliance(int $gameID, string $name, bool $allowNHA = false) : SmrAlliance {
 		$db = Smr\Database::getInstance();
 		$db->lockTable('alliance');
 
@@ -115,12 +115,14 @@ class SmrAlliance {
 			throw new Smr\Exceptions\UserError('That alliance name already exists.');
 		}
 
-		// get the next alliance id (ignoring reserved ID's)
-		$dbResult = $db->read('SELECT max(alliance_id) FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (alliance_id < ' . $db->escapeNumber(NHA_ID) . ' OR alliance_id > ' . $db->escapeNumber(NHA_ID + 7) . ') LIMIT 1');
-		$allianceID = $dbResult->record()->getInt('max(alliance_id)') + 1;
-		if ($allianceID >= NHA_ID && $allianceID <= NHA_ID + 7) {
-			$allianceID = NHA_ID + 8;
+		if (!$allowNHA && trim($name) === NHA_ALLIANCE_NAME) {
+			$db->unlock();
+			throw new Smr\Exceptions\UserError('That alliance name is reserved.');
 		}
+
+		// get the next alliance id (ignoring reserved ID's)
+		$dbResult = $db->read('SELECT max(alliance_id) FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID));
+		$allianceID = $dbResult->record()->getInt('max(alliance_id)') + 1;
 
 		// actually create the alliance here
 		$db->write('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_password, recruiting) VALUES(' . $db->escapeNumber($allianceID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeString($name) . ', \'\', \'FALSE\')');
@@ -134,6 +136,13 @@ class SmrAlliance {
 	 */
 	public function isNone() : bool {
 		return $this->allianceID == 0;
+	}
+
+	/**
+	 * Returns true if the alliance is the Newbie Help Alliance.
+	 */
+	public function isNHA() : bool {
+		return $this->allianceName === NHA_ALLIANCE_NAME;
 	}
 
 	public function getAllianceID() : int {
@@ -364,13 +373,15 @@ class SmrAlliance {
 		}
 	}
 
-	public function setAllianceDescription(string $description, AbstractSmrPlayer $player) : void {
+	public function setAllianceDescription(string $description, AbstractSmrPlayer $player = null) : void {
 		$description = word_filter($description);
 		if ($description == $this->description) {
 			return;
 		}
-		$boxDescription = 'Alliance ' . $this->getAllianceBBLink() . ' had their description changed to:' . EOL . EOL . $description;
-		$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
+		if ($player !== null) {
+			$boxDescription = 'Alliance ' . $this->getAllianceBBLink() . ' had their description changed to:' . EOL . EOL . $description;
+			$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS, $boxDescription);
+		}
 		$this->description = $description;
 	}
 

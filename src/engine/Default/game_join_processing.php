@@ -55,7 +55,8 @@ $player->getSector()->markVisited($player);
 
 if ($isNewbie || $account->getAccountID() == ACCOUNT_ID_NHL) {
 	// If player is a newb (or NHL), set alliance to be Newbie Help Allaince
-	$player->joinAlliance(NHA_ID);
+	$NHA = SmrAlliance::getAllianceByName(NHA_ALLIANCE_NAME, $gameID);
+	$player->joinAlliance($NHA->getAllianceID());
 
 	//we need to send them some messages
 	$message = 'Welcome to Space Merchant Realms! You have been automatically placed into the <u>' . $player->getAllianceBBLink() . '</u>, which is led by a veteran player who can assist you while you learn the basics of the game. Your alliance leader is denoted with a star on your alliance roster.<br />
