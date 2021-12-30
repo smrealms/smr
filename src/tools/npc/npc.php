@@ -200,17 +200,19 @@ function NPCStuff() : void {
 				processContainer(Page::create('newbie_warning_processing.php'));
 			}
 
-			if (!$underAttack && $player->isUnderAttack() === true
-				&& ($player->hasPlottedCourse() === false || $player->getPlottedCourse()->getEndSector()->offersFederalProtection() === false)) {
+			// Do we have a plot that ends in Fed?
+			$hasPlotToFed = $player->hasPlottedCourse() && SmrSector::getSector($player->getGameID(), $player->getPlottedCourse()->getEndSectorID())->offersFederalProtection();
+
+			if (!$underAttack && $player->isUnderAttack() && !$hasPlotToFed) {
 				// We're under attack and need to plot course to fed.
 				debug('Under Attack');
 				$underAttack = true;
 				processContainer(plotToFed($player));
-			} elseif ($player->hasPlottedCourse() === true && $player->getPlottedCourse()->getEndSector()->offersFederalProtection()) {
+			} elseif ($hasPlotToFed) {
 				// We have a route to fed to follow
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif ($player->hasPlottedCourse() === true) {
+			} elseif ($player->hasPlottedCourse()) {
 				// We have a route to follow
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));

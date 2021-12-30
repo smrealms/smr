@@ -284,7 +284,7 @@ class AbstractSmrPort {
 			};
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
 			if (is_object($di)) {
-				$di = $di->getRelativeDistance();
+				$di = $di->getDistance();
 			}
 			$this->goodDistances[$goodID] = max(1, $di);
 		}
