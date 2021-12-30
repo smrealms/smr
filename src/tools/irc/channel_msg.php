@@ -25,8 +25,9 @@ function check_for_registration($fp, string $nick, string $channel, callable $ca
 	$registeredNick = $dbResult->record()->getString('registered_nick');
 
 	// get alliance_id and game_id for this channel
-	$alliance = SmrAlliance::getAllianceByIrcChannel($channel, true);
-	if ($alliance == null) {
+	try {
+		$alliance = SmrAlliance::getAllianceByIrcChannel($channel, true);
+	} catch (Smr\Exceptions\AllianceNotFound) {
 		if ($validationMessages === true) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
 		}

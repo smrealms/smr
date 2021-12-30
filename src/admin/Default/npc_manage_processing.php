@@ -26,8 +26,9 @@ if (Smr\Request::has('create_npc_player')) {
 	$npcPlayer->setAlignment(rand(-300, 300));
 
 	$allianceName = Smr\Request::get('player_alliance');
-	$alliance = SmrAlliance::getAllianceByName($allianceName, $gameID);
-	if (is_null($alliance)) {
+	try {
+		$alliance = SmrAlliance::getAllianceByName($allianceName, $gameID);
+	} catch (Smr\Exceptions\AllianceNotFound) {
 		$alliance = SmrAlliance::createAlliance($gameID, $allianceName);
 		$alliance->setLeaderID($npcPlayer->getAccountID());
 		$alliance->update();

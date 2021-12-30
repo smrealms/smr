@@ -35,44 +35,41 @@ class SmrAlliance {
 		self::$CACHE_ALLIANCES = [];
 	}
 
-	public static function getAlliance(int $allianceID, int $gameID, bool $forceUpdate = false) : SmrAlliance {
+	public static function getAlliance(int $allianceID, int $gameID, bool $forceUpdate = false) : self {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
 			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new SmrAlliance($allianceID, $gameID);
 		}
 		return self::$CACHE_ALLIANCES[$gameID][$allianceID];
 	}
 
-	public static function getAllianceByDiscordChannel(string $channel, bool $forceUpdate = false) : ?SmrAlliance {
+	public static function getAllianceByDiscordChannel(string $channel, bool $forceUpdate = false) : self {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT alliance_id, game_id FROM alliance JOIN game USING(game_id) WHERE discord_channel = ' . $db->escapeString($channel) . ' AND game.end_time > ' . $db->escapeNumber(time()) . ' ORDER BY game_id DESC LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return self::getAlliance($dbRecord->getInt('alliance_id'), $dbRecord->getInt('game_id'), $forceUpdate);
-		} else {
-			return null;
 		}
+		throw new Smr\Exceptions\AllianceNotFound('Alliance Discord Channel not found');
 	}
 
-	public static function getAllianceByIrcChannel(string $channel, bool $forceUpdate = false) : ?SmrAlliance {
+	public static function getAllianceByIrcChannel(string $channel, bool $forceUpdate = false) : self {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return self::getAlliance($dbRecord->getInt('alliance_id'), $dbRecord->getInt('game_id'), $forceUpdate);
-		} else {
-			return null;
 		}
+		throw new Smr\Exceptions\AllianceNotFound('Alliance IRC Channel not found');
 	}
 
-	public static function getAllianceByName(string $name, int $gameID, bool $forceUpdate = false) : ?SmrAlliance {
+	public static function getAllianceByName(string $name, int $gameID, bool $forceUpdate = false) : self {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return self::getAlliance($dbRecord->getInt('alliance_id'), $gameID, $forceUpdate);
-		} else {
-			return null;
 		}
+		throw new Smr\Exceptions\AllianceNotFound('Alliance name not found');
 	}
 
 	protected function __construct(int $allianceID, int $gameID) {
@@ -110,9 +107,12 @@ class SmrAlliance {
 		$db->lockTable('alliance');
 
 		// check if the alliance name already exists
-		if (self::getAllianceByName($name, $gameID) !== null) {
+		try {
+			self::getAllianceByName($name, $gameID);
 			$db->unlock();
 			throw new Smr\Exceptions\UserError('That alliance name already exists.');
+		} catch (Smr\Exceptions\AllianceNotFound) {
+			// alliance with this name does not yet exist
 		}
 
 		if (!$allowNHA && trim($name) === NHA_ALLIANCE_NAME) {
