@@ -241,7 +241,7 @@ function createNHA(int $gameID) : void {
 	$db->write('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($allianceID) . ', 22, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 
 	$db->write('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($allianceID) . ', 23, \'Weapons\')');
-	$text = 'SMR has a wide variety of weapons with which to arm your ships, and information on weapon capabilities can be found <a href="weapon_list.php" target="_blank"><b><u>here</b></u></a>.<br />
+	$text = 'SMR has a wide variety of weapons with which to arm your ships, and information on weapon capabilities can be found <a href="weapon_list.php" target="_blank"><b><u>here</u></b></a>.<br />
 	<br />
 	There are a few things to consider when choosing weapons, and the weapon combination that works for one player may not be suited to the style or the needs of another.<br />
 	<br />
