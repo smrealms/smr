@@ -63,6 +63,10 @@ class SmrGame {
 		return self::$CACHE_GAMES[$gameID];
 	}
 
+	public static function clearCache() : void {
+		self::$CACHE_GAMES = [];
+	}
+
 	public static function saveGames() : void {
 		foreach (self::$CACHE_GAMES as $game) {
 			$game->save();
