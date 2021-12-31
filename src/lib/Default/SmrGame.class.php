@@ -56,10 +56,9 @@ class SmrGame {
 		}
 	}
 
-	public static function getGame(int $gameID, bool $forceUpdate = false) : SmrGame {
+	public static function getGame(int $gameID, bool $forceUpdate = false) : self {
 		if ($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
-			$g = new SmrGame($gameID);
-			self::$CACHE_GAMES[$gameID] = $g;
+			self::$CACHE_GAMES[$gameID] = new self($gameID);
 		}
 		return self::$CACHE_GAMES[$gameID];
 	}
@@ -70,10 +69,9 @@ class SmrGame {
 		}
 	}
 
-	public static function createGame(int $gameID) : SmrGame {
+	public static function createGame(int $gameID) : self {
 		if (!isset(self::$CACHE_GAMES[$gameID])) {
-			$g = new SmrGame($gameID, true);
-			self::$CACHE_GAMES[$gameID] = $g;
+			self::$CACHE_GAMES[$gameID] = new self($gameID, true);
 		}
 		return self::$CACHE_GAMES[$gameID];
 	}
@@ -380,7 +378,7 @@ class SmrGame {
 		return count(SmrGalaxy::getGameGalaxies($this->getGameID()));
 	}
 
-	public function equals(SmrGame $otherGame) : bool {
+	public function equals(self $otherGame) : bool {
 		return $otherGame->getGameID() == $this->getGameID();
 	}
 
