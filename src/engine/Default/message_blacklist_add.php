@@ -11,7 +11,7 @@ if (isset($var['account_id'])) {
 } else {
 	try {
 		$blacklisted = SmrPlayer::getPlayerByPlayerName(Smr\Request::get('PlayerName'), $player->getGameID());
-	} catch (Smr\Exceptions\PlayerNotFound $e) {
+	} catch (Smr\Exceptions\PlayerNotFound) {
 		$container['msg'] = '<span class="red bold">ERROR: </span>Player does not exist.';
 		$container->go();
 	}

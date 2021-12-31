@@ -313,9 +313,9 @@ function NPCStuff() : void {
 			}
 			*/
 			throw new Exception('NPC failed to perform any action');
-		} catch (ForwardException $e) {
+		} catch (ForwardException) {
 			$actions++; // we took an action
-		} catch (FinalActionException $e) {
+		} catch (FinalActionException) {
 			if ($player->getSector()->offersFederalProtection() && !$player->hasFederalProtection()) {
 				debug('Disarming so we can get Fed protection');
 				$player->getShip()->setCDs(0);

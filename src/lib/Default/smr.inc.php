@@ -129,7 +129,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				return '<div class="buttonA"><a class="buttonA" href="' . $container->href() . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
 			break;
 		}
-	} catch (Throwable $e) {
+	} catch (Throwable) {
 		// If there's an error, we will silently display the original text
 	}
 	if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
