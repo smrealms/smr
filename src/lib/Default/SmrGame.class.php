@@ -44,6 +44,18 @@ class SmrGame {
 		self::GAME_TYPE_NEWBIE => 'Newbie',
 	];
 
+	/**
+	 * Attempts to construct the game to determine if it exists.
+	 */
+	public static function gameExists(int $gameID) : bool {
+		try {
+			self::getGame($gameID);
+			return true;
+		} catch (Smr\Exceptions\GameNotFound) {
+			return false;
+		}
+	}
+
 	public static function getGame(int $gameID, bool $forceUpdate = false) : SmrGame {
 		if ($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID);

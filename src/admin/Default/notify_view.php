@@ -38,7 +38,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		return $name;
 	};
 
-	if (!Globals::isValidGame($gameID)) {
+	if (!SmrGame::gameExists($gameID)) {
 		$gameName = 'Game ' . $gameID . ' no longer exists';
 	} else {
 		$gameName = SmrGame::getGame($gameID)->getDisplayName();
