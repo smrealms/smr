@@ -158,10 +158,6 @@ class Globals {
 		}
 	}
 
-	public static function getGameType(int $gameID) : string {
-		return SmrGame::getGame($gameID)->getGameType();
-	}
-
 	public static function isFeatureRequestOpen() : bool {
 		if (!isset(self::$FEATURE_REQUEST_OPEN)) {
 			self::initialiseDatabase();
