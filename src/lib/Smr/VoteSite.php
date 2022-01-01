@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+namespace Smr;
+
+use Page;
+
 /**
  * Handles links to external game voting sites.
  */
@@ -47,7 +51,7 @@ class VoteSite {
 		if (!isset($ALL_SITES)) {
 			$ALL_SITES = array(); // ensure this is set
 			foreach (self::getAllSiteData() as $linkID => $siteData) {
-				$ALL_SITES[$linkID] = new VoteSite($linkID, $siteData);
+				$ALL_SITES[$linkID] = new self($linkID, $siteData);
 			}
 		}
 		return $ALL_SITES;
@@ -85,18 +89,18 @@ class VoteSite {
 	 */
 	public function getTimeUntilFreeTurns(int $accountID) : int {
 		if (!$this->givesFreeTurns()) {
-			throw new Exception('This vote site cannot award free turns!');
+			throw new \Exception('This vote site cannot award free turns!');
 		}
 
 		static $WAIT_TIMES;
 		if (!isset($WAIT_TIMES)) {
 			$WAIT_TIMES = array(); // ensure this is set
 			$activeLinkIDs = array_keys(self::getAllSites());
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountID) . ' AND link_id IN (' . join(',', $activeLinkIDs) . ') LIMIT ' . $db->escapeNumber(count($activeLinkIDs)));
 			foreach ($dbResult->records() as $dbRecord) {
 				// 'timeout' is the last time the player claimed free turns (or 0, if unclaimed)
-				$WAIT_TIMES[$dbRecord->getInt('link_id')] = ($dbRecord->getInt('timeout') + TIME_BETWEEN_VOTING) - Smr\Epoch::time();
+				$WAIT_TIMES[$dbRecord->getInt('link_id')] = ($dbRecord->getInt('timeout') + TIME_BETWEEN_VOTING) - Epoch::time();
 			}
 			// If not in the vote_link database, this site is eligible now.
 			foreach ($activeLinkIDs as $linkID) {
