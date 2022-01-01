@@ -5,6 +5,11 @@
  */
 class VoteSite {
 
+	// NOTE: link IDs should never be changed!
+	private const LINK_ID_TWG = 3;
+	private const LINK_ID_DOG = 4;
+	private const LINK_ID_PBBG = 5;
+
 	// MPOGD no longer exists
 	//1 => array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'base_url' => 'http://www.mpogd.com/games/game.asp?ID=1145'),
 	// OMGN no longer do voting - the link actually just redirects to archive site.
@@ -12,9 +17,8 @@ class VoteSite {
 
 	private static function getAllSiteData() : array {
 		// This can't be a static/constant attribute due to `url_func` closures.
-		// NOTE: array keys (a.k.a. link ID's) should never be changed!
 		return array(
-			3 => array(
+			self::LINK_ID_TWG => [
 				'img_default' => 'twg.png',
 				'img_star' => 'twg_vote.png',
 				'url_base' => 'http://topwebgames.com/in.aspx?ID=136',
@@ -22,19 +26,19 @@ class VoteSite {
 					$query = array('account' => $accountId, 'game' => $gameId, 'link' => $linkId, 'alwaysreward' => 1);
 					return $baseUrl . '&' . http_build_query($query);
 				},
-			),
-			4 => array(
+			],
+			self::LINK_ID_DOG => [
 				'img_default' => 'dog.png',
 				'img_star' => 'dog_vote.png',
 				'url_base' => 'http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315',
 				'url_func' => function($baseUrl, $accountId, $gameId, $linkId) {
 					return "$baseUrl&votedef=$accountId,$gameId,$linkId";
 				},
-			),
-			5 => array(
+			],
+			self::LINK_ID_PBBG => [
 				'img_default' => 'pbbg.png',
 				'url_base' => 'https://pbbg.com/games/space-merchant-realms',
-			),
+			],
 		);
 	}
 
