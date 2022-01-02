@@ -65,9 +65,9 @@ foreach ($dbResult->records() as $dbRecord) {
 				continue;
 			}
 			$dbRecord2 = $dbResult2->record();
-			$currLinkAccLogin = $dbRecord->getField('login');
+			$currLinkAccLogin = $dbRecord2->getField('login');
 
-			$style = $dbRecord2->getBoolean('validated') ? '' : ' style="text-decoration:line-through;"';
+			$style = $dbRecord2->getBoolean('validated') ? '' : 'text-decoration:line-through;';
 			$email = $dbRecord2->getField('email');
 			$valid = $dbRecord2->getBoolean('validated') ? 'Valid' : 'Invalid';
 			$common_ip = $dbRecord2->getField('common_ip');
