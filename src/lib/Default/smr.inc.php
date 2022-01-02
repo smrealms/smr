@@ -574,7 +574,7 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 
 	$template->assign('LogoutLink', Page::create('logoff.php')->href());
 
-	$container = Page::create('game_leave_processing.php', 'admin_tools.php');
+	$container = Page::create('game_leave_processing.php', 'admin/admin_tools.php');
 	$template->assign('AdminToolsLink', $container->href());
 
 	$container = Page::create('skeleton.php', 'preferences.php');

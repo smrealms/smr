@@ -55,15 +55,12 @@ function get_file_loc(string $fileName) : string {
 		return $cache[$cacheKey];
 	}
 
-	$startPaths = array(ENGINE, ADMIN);
-	$midPaths = array($gameDir, 'Default/');
-	foreach ($midPaths as $midPath) {
-		foreach ($startPaths as $startPath) {
-			$filePath = $startPath . $midPath . $fileName;
-			if (is_file($filePath) && is_readable($filePath)) {
-				$cache[$cacheKey] = $filePath;
-				return $filePath;
-			}
+	$gameDirs = array_unique([$gameDir, 'Default/']);
+	foreach ($gameDirs as $gameDir) {
+		$filePath = ENGINE . $gameDir . $fileName;
+		if (is_file($filePath) && is_readable($filePath)) {
+			$cache[$cacheKey] = $filePath;
+			return $filePath;
 		}
 	}
 
