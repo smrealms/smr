@@ -1,11 +1,21 @@
 <?php declare(strict_types=1);
 
-	function modifyRelations(int $race_id_1, int $gameID) : void {
+namespace Smr;
+
+use SmrPlayer;
+use SmrSector;
+
+/**
+ * Collection of functions to help process council voting.
+ */
+class CouncilVoting {
+
+	public static function modifyRelations(int $race_id_1, int $gameID) : void {
 
 		// Process any votes that ended prior to the start of today
 		$endtime = strtotime(date('Y-m-d'));
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		$dbResult = $db->read('SELECT * FROM player_votes_relation
 				WHERE time < '.$db->escapeNumber($endtime) . '
@@ -51,12 +61,12 @@
 		}
 	}
 
-	function checkPacts(int $race_id_1, int $gameID) : void {
+	public static function checkPacts(int $race_id_1, int $gameID) : void {
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		$dbResult = $db->read('SELECT * FROM race_has_voting
-				WHERE end_time < ' . $db->escapeNumber(Smr\Epoch::time()) . '
+				WHERE end_time < ' . $db->escapeNumber(Epoch::time()) . '
 					AND game_id = ' . $db->escapeNumber($gameID) . '
 					AND race_id_1 = ' . $db->escapeNumber($race_id_1));
 		foreach ($dbResult->records() as $dbRecord) {
@@ -102,7 +112,7 @@
 					}
 
 					if (count($currentlyParkedAccountIDs[$race_id_1]) + count($currentlyParkedAccountIDs[$race_id_2]) > 0) {
-						$expireTime = Smr\Epoch::time() + TIME_FOR_WAR_VOTE_FED_SAFETY;
+						$expireTime = Epoch::time() + TIME_FOR_WAR_VOTE_FED_SAFETY;
 						$query = 'REPLACE INTO player_can_fed (account_id, game_id, race_id, expiry, allowed) VALUES ';
 						foreach ($currentlyParkedAccountIDs as $raceID => $accountIDs) {
 							if ($raceID == $race_id_1) {
@@ -133,7 +143,7 @@
 					// get news message
 					$news = 'The [race=' . $race_id_1 . '] have declared <span class="red">WAR</span> on the [race=' . $race_id_2 . ']';
 					$db->write('INSERT INTO news (game_id, time, news_message) VALUES ' .
-							'(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeString($news) . ')');
+							'(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(Epoch::time()) . ', ' . $db->escapeString($news) . ')');
 				} elseif ($type == 'PEACE') {
 					// get 'yes' votes
 					$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
@@ -167,7 +177,7 @@
 						//get news message
 						$news = 'The [race=' . $race_id_1 . '] have signed a <span class="dgreen">PEACE</span> treaty with the [race=' . $race_id_2 . ']';
 						$db->write('INSERT INTO news (game_id, time, news_message) VALUES
-								(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeString($news) . ')');
+								(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(Epoch::time()) . ', ' . $db->escapeString($news) . ')');
 					}
 				}
 			}
@@ -192,3 +202,5 @@
 						AND race_id_2 = ' . $db->escapeNumber($race_id_1));
 		}
 	}
+
+}
