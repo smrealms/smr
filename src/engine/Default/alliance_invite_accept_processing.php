@@ -7,7 +7,7 @@ $player = $session->getPlayer();
 // Check that the invitation is registered in the database
 try {
 	$invite = SmrInvitation::get($var['alliance_id'], $player->getGameID(), $player->getAccountID());
-} catch (Smr\Exceptions\AllianceInvitationNotFound $e) {
+} catch (Smr\Exceptions\AllianceInvitationNotFound) {
 	create_error('Your invitation to join this alliance has expired or been canceled!');
 }
 

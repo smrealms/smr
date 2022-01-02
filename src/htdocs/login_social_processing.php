@@ -14,7 +14,7 @@ try {
 		require_once('../bootstrap.php');
 		try {
 			header('Location: ' . Smr\SocialLogin\SocialLogin::get($type)->getLoginUrl());
-		} catch (Smr\Exceptions\SocialLoginInvalidType $e) {
+		} catch (Smr\Exceptions\SocialLoginInvalidType) {
 			header('location: /error.php?msg=' . urlencode('Unknown social login type'));
 		}
 	}

@@ -140,7 +140,7 @@ while ($running) {
 		}
 		fclose($fp); // close socket
 
-	} catch (TimeoutException $e) {
+	} catch (TimeoutException) {
 		// Ignore the timeout exception, we'll loop round and reconnect.
 	}
 } // end of while running

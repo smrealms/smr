@@ -13,7 +13,7 @@ $game_id = $var['game_id'] ?? null;
 if (isset($game_id)) {
 	try {
 		$hofPlayer = SmrPlayer::getPlayer($account_id, $game_id);
-	} catch (Smr\Exceptions\PlayerNotFound $e) {
+	} catch (Smr\Exceptions\PlayerNotFound) {
 		create_error('That player has not yet joined this game.');
 	}
 	$template->assign('PageTopic', htmlentities($hofPlayer->getPlayerName()) . '\'s Personal Hall of Fame: ' . SmrGame::getGame($game_id)->getDisplayName());

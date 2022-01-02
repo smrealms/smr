@@ -38,9 +38,9 @@ class GameLink
 			// Get the approved channel
 			// force update in case the ID has been changed in-game
 			$channel_id = $message->channel->id;
-			$alliance = SmrAlliance::getAllianceByDiscordChannel($channel_id, true);
-
-			if (is_null($alliance)) {
+			try {
+				$alliance = SmrAlliance::getAllianceByDiscordChannel($channel_id, true);
+			} catch (Smr\Exceptions\AllianceNotFound) {
 				$message->reply("There is no SMR alliance associated with this Discord Channel ID. To set this up (you must have permission to set this for your alliance), go to `Change Alliance Stats` and set `$channel_id` as your `Discord Channel ID`.\n\n-- If this Discord Channel is public, you probably want to choose a different channel for your alliance.\n-- If you are not in an alliance (or if your alliance doesn't want a channel), send your command again in a direct message to me.")
 					->done(null, 'logException');
 				return;

@@ -27,7 +27,7 @@ try {
 		$sectorID = Smr\Request::getInt('sector_id');
 		try {
 			$galaxy = SmrGalaxy::getGalaxyContaining($session->getGameID(), $sectorID);
-		} catch (Smr\Exceptions\SectorNotFound $e) {
+		} catch (Smr\Exceptions\SectorNotFound) {
 			header('location: /error.php?msg=Invalid sector ID');
 			exit;
 		}
@@ -35,7 +35,7 @@ try {
 		$galaxyID = Smr\Request::getInt('galaxy_id');
 		try {
 			$galaxy = SmrGalaxy::getGalaxy($session->getGameID(), $galaxyID);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			header('location: /error.php?msg=Invalid galaxy ID');
 			exit;
 		}

@@ -19,8 +19,12 @@ $template->assign('PlayerID', $player->getPlayerID());
 $template->assign('CanPick', $teams[$player->getAccountID()]['CanPick']);
 
 // If players were placed into the NHA, they are still eligible to be picked
-$NHA = SmrAlliance::getAllianceByName(NHA_ALLIANCE_NAME, $player->getGameID());
-$NHAID = $NHA === null ? 0 : $NHA->getAllianceID();
+try {
+	$NHA = SmrAlliance::getAllianceByName(NHA_ALLIANCE_NAME, $player->getGameID());
+	$NHAID = $NHA->getAllianceID();
+} catch (Smr\Exceptions\AllianceNotFound) {
+	$NHAID = 0;
+}
 
 // Get a list of players still in the pick pool
 $players = array();

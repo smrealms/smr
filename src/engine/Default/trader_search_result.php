@@ -15,7 +15,7 @@ if (empty($player_name) && empty($player_id)) {
 if (!empty($player_id)) {
 	try {
 		$resultPlayer = SmrPlayer::getPlayerByPlayerID($player_id, $player->getGameID());
-	} catch (Smr\Exceptions\PlayerNotFound $e) {
+	} catch (Smr\Exceptions\PlayerNotFound) {
 		// No player found, we'll return an empty result
 	}
 } else {

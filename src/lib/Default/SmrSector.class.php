@@ -37,7 +37,7 @@ class SmrSector {
 		try {
 			self::getSector($gameID, $sectorID);
 			return true;
-		} catch (Smr\Exceptions\SectorNotFound $e) {
+		} catch (Smr\Exceptions\SectorNotFound) {
 			return false;
 		}
 	}
