@@ -208,7 +208,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>Discord User ID:</td>
-			<td><input type="text" name="discord_id" value="<?php echo htmlspecialchars($ThisAccount->getDiscordId()); ?>" size=50 /></td>
+			<td><input type="text" name="discord_id" value="<?php echo htmlspecialchars($ThisAccount->getDiscordId() ?? ''); ?>" size=50 /></td>
 		</tr>
 
 		<tr>
@@ -218,7 +218,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>IRC Nick:</td>
-			<td><input type="text" name="irc_nick" value="<?php echo htmlspecialchars($ThisAccount->getIrcNick()); ?>" size="50" /></td>
+			<td><input type="text" name="irc_nick" value="<?php echo htmlspecialchars($ThisAccount->getIrcNick() ?? ''); ?>" size="50" /></td>
 		</tr>
 
 		<tr>
@@ -351,7 +351,7 @@ if (isset($GameID)) { ?>
 		<tr>
 			<td class="top">Add CSS Link:</td>
 			<td>
-				<input type="url" size="50" name="csslink" value="<?php echo htmlspecialchars($ThisAccount->getCssLink()); ?>"><br />
+				<input type="url" size="50" name="csslink" value="<?php echo htmlspecialchars($ThisAccount->getCssLink() ?? ''); ?>"><br />
 				Specifies a CSS file to load in addition to the CSS Template.<br />
 				If trying to link to a local file you may have to change your browser's security settings.<br />
 				Warning: only add a CSS link if you know what you're doing!
