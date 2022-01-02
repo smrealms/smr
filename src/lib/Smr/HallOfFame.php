@@ -1,7 +1,19 @@
 <?php declare(strict_types=1);
 
-	function getHofCategories(array $hofTypes, ?int $game_id, int $account_id) : array {
-		$var = Smr\Session::getInstance()->getCurrentVar();
+namespace Smr;
+
+use Page;
+use SmrAccount;
+use SmrGame;
+use SmrPlayer;
+
+/**
+ * Collection of functions to help display the Hall of Fame tables.
+ */
+class HallOfFame {
+
+	public static function getHofCategories(array $hofTypes, ?int $game_id, int $account_id) : array {
+		$var = Session::getInstance()->getCurrentVar();
 		$categories = [];
 		foreach ($hofTypes as $type => $value) {
 			// Make each category a link to view the subcategory page
@@ -24,7 +36,7 @@
 					$container['view'] = $subType;
 					$rankType = $container['type'];
 					$rankType[] = $subType;
-					$rank = getHofRank($subType, $rankType, $account_id, $game_id);
+					$rank = self::getHofRank($subType, $rankType, $account_id, $game_id);
 					$rankMsg = '';
 					if ($rank['Rank'] != 0) {
 						$rankMsg = ' (#' . $rank['Rank'] . ')';
@@ -32,7 +44,7 @@
 					$subcategories[] = create_submit_link($container, $subType . $rankMsg);
 				}
 			} else {
-				$rank = getHofRank($type, $container['type'], $account_id, $game_id);
+				$rank = self::getHofRank($type, $container['type'], $account_id, $game_id);
 				$subcategories[] = create_submit_link($container, 'View (#' . $rank['Rank'] . ')');
 			}
 
@@ -51,8 +63,8 @@
 	 * - alliance stats in live games for players not in your alliance
 	 * - private stats for players who are not the current player
 	 */
-	function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $accountID) : string|float {
-		$session = Smr\Session::getInstance();
+	public static function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $accountID) : string|float {
+		$session = Session::getInstance();
 		$account = $session->getAccount();
 		if (($vis == HOF_PRIVATE && $account->getAccountID() != $accountID) ||
 		    ($vis == HOF_ALLIANCE && isset($gameID) &&
@@ -65,10 +77,10 @@
 		}
 	}
 
-	function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID) : array {
-		$db = Smr\Database::getInstance();
+	public static function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID) : array {
+		$db = Database::getInstance();
 		// If no game specified, show total amount from completed games only
-		$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Smr\Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
+		$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
 
 		$vis = HOF_PUBLIC;
 		$rank = array('Amount'=>0, 'Rank'=>0);
@@ -90,7 +102,7 @@
 		if ($dbResult->hasRecord()) {
 			$realAmount = $dbResult->record()->getFloat('amount');
 		}
-		$rank['Amount'] = applyHofVisibilityMask($realAmount, $vis, $gameID, $accountID);
+		$rank['Amount'] = self::applyHofVisibilityMask($realAmount, $vis, $gameID, $accountID);
 
 		if ($view == DONATION_NAME) {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');
@@ -105,14 +117,14 @@
 		return $rank;
 	}
 
-	function displayHOFRow(int $rank, int $accountID, float|string $amount) : string {
-		$var = Smr\Session::getInstance()->getCurrentVar();
+	public static function displayHOFRow(int $rank, int $accountID, float|string $amount) : string {
+		$var = Session::getInstance()->getCurrentVar();
 
-		$account = Smr\Session::getInstance()->getAccount();
+		$account = Session::getInstance()->getAccount();
 		if (isset($var['game_id']) && SmrGame::gameExists($var['game_id'])) {
 			try {
 				$hofPlayer = SmrPlayer::getPlayer($accountID, $var['game_id']);
-			} catch (Smr\Exceptions\PlayerNotFound) {
+			} catch (Exceptions\PlayerNotFound) {
 				$hofAccount = SmrAccount::getAccount($accountID);
 			}
 		} else {
@@ -144,7 +156,7 @@
 		return $return;
 	}
 
-	function buildBreadcrumb(Page $var, array &$hofTypes, string $hofName) : string {
+	public static function buildBreadcrumb(Page $var, array &$hofTypes, string $hofName) : string {
 		$container = Page::copy($var);
 		if (isset($container['type'])) {
 			unset($container['type']);
@@ -191,3 +203,5 @@
 		$viewing .= '<br /><br />';
 		return $viewing;
 	}
+
+}

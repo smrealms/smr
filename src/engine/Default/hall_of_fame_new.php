@@ -1,5 +1,4 @@
 <?php declare(strict_types=1);
-require_once(get_file_loc('hof.inc.php'));
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
@@ -40,10 +39,10 @@ foreach ($dbResult->records() as $dbRecord) {
 	}
 	$hof = true;
 }
-$template->assign('Breadcrumb', buildBreadcrumb($var, $hofTypes, isset($game_id) ? 'Current HoF' : 'Global HoF'));
+$template->assign('Breadcrumb', Smr\HallOfFame::buildBreadcrumb($var, $hofTypes, isset($game_id) ? 'Current HoF' : 'Global HoF'));
 
 if (!isset($var['view'])) {
-	$categories = getHofCategories($hofTypes, $game_id, $account->getAccountID());
+	$categories = Smr\HallOfFame::getHofCategories($hofTypes, $game_id, $account->getAccountID());
 	$template->assign('Categories', $categories);
 } else {
 	$gameIDSql = ' AND game_id ' . (isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Smr\Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
@@ -73,12 +72,12 @@ if (!isset($var['view'])) {
 		if ($accountID == $account->getAccountID()) {
 			$foundMe = true;
 		}
-		$amount = applyHofVisibilityMask($dbRecord->getFloat('amount'), $vis, $game_id, $accountID);
-		$rows[] = displayHOFRow($rank++, $accountID, $amount);
+		$amount = Smr\HallOfFame::applyHofVisibilityMask($dbRecord->getFloat('amount'), $vis, $game_id, $accountID);
+		$rows[] = Smr\HallOfFame::displayHOFRow($rank++, $accountID, $amount);
 	}
 	if (!$foundMe) {
-		$rank = getHofRank($var['view'], $viewType, $account->getAccountID(), $game_id);
-		$rows[] = displayHOFRow($rank['Rank'], $account->getAccountID(), $rank['Amount']);
+		$rank = Smr\HallOfFame::getHofRank($var['view'], $viewType, $account->getAccountID(), $game_id);
+		$rows[] = Smr\HallOfFame::displayHOFRow($rank['Rank'], $account->getAccountID(), $rank['Amount']);
 	}
 	$template->assign('Rows', $rows);
 }
