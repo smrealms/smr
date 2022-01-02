@@ -6,14 +6,12 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-require_once(get_file_loc('messages.inc.php'));
-
 if (!isset($var['box_type_id'])) {
 	$template->assign('PageTopic', 'Viewing Message Boxes');
 
 	$container = Page::create('skeleton.php', 'box_view.php');
 	$boxes = array();
-	foreach (getAdminBoxNames() as $boxTypeID => $boxName) {
+	foreach (Smr\Messages::getAdminBoxNames() as $boxTypeID => $boxName) {
 		$container['box_type_id'] = $boxTypeID;
 		$boxes[$boxTypeID] = array(
 			'ViewHREF' => $container->href(),
@@ -29,7 +27,7 @@ if (!isset($var['box_type_id'])) {
 	}
 	$template->assign('Boxes', $boxes);
 } else {
-	$boxName = getAdminBoxNames()[$var['box_type_id']];
+	$boxName = Smr\Messages::getAdminBoxNames()[$var['box_type_id']];
 	$template->assign('PageTopic', 'Viewing ' . $boxName);
 
 	$template->assign('BackHREF', Page::create('skeleton.php', 'box_view.php')->href());

@@ -1,5 +1,4 @@
 <?php declare(strict_types=1);
-require_once(get_file_loc('messages.inc.php'));
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
@@ -20,7 +19,7 @@ $notifyTypeIDs = array(MSG_PLAYER);
 $messageBoxes = array();
 foreach ($notifyTypeIDs as $messageTypeID) {
 	$messageBox = array();
-	$messageBox['Name'] = getMessageTypeNames($messageTypeID);
+	$messageBox['Name'] = Smr\Messages::getMessageTypeNames($messageTypeID);
 
 	$messageBox['MessagesRemaining'] = $account->getMessageNotifications($messageTypeID);
 	$messageBox['MessagesPerCredit'] = MESSAGES_PER_CREDIT[$messageTypeID];

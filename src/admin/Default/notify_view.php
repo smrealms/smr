@@ -6,8 +6,6 @@ $account = $session->getAccount();
 
 $template->assign('PageTopic', 'Viewing Reported Messages');
 
-require_once(get_file_loc('messages.inc.php'));
-
 $container = Page::create('notify_delete_processing.php');
 $template->assign('DeleteHREF', $container->href());
 
@@ -16,8 +14,8 @@ $dbResult = $db->read('SELECT * FROM message_notify');
 $messages = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$gameID = $dbRecord->getInt('game_id');
-	$sender = getMessagePlayer($dbRecord->getInt('from_id'), $gameID);
-	$receiver = getMessagePlayer($dbRecord->getInt('to_id'), $gameID);
+	$sender = Smr\Messages::getMessagePlayer($dbRecord->getInt('from_id'), $gameID);
+	$receiver = Smr\Messages::getMessagePlayer($dbRecord->getInt('to_id'), $gameID);
 
 	$container = Page::create('skeleton.php', 'notify_reply.php');
 	$container['offender'] = $dbRecord->getInt('from_id');

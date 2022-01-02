@@ -1,6 +1,15 @@
 <?php declare(strict_types=1);
 
-	function getMessageTypeNames(int $typeID = null) : array|string {
+namespace Smr;
+
+use SmrPlayer;
+
+/**
+ * Collection of functions to help display messages and message boxes.
+ */
+class Messages {
+
+	public static function getMessageTypeNames(int $typeID = null) : array|string {
 		$typeNames = [
 			MSG_PLAYER => 'Player Messages',
 			MSG_PLANET => 'Planet Messages',
@@ -15,7 +24,7 @@
 		return $typeID === null ? $typeNames : $typeNames[$typeID];
 	}
 
-	function getAdminBoxNames() : array {
+	public static function getAdminBoxNames() : array {
 		return [
 			BOX_BUGS_AUTO => 'Automatic Bug Reports',
 			BOX_BUGS_REPORTED => 'Player Bug Reports',
@@ -26,7 +35,7 @@
 		];
 	}
 
-	function getMessagePlayer(int $accountID, int $gameID, int $messageType = null) : string|SmrPlayer {
+	public static function getMessagePlayer(int $accountID, int $gameID, int $messageType = null) : string|SmrPlayer {
 		if ($accountID == ACCOUNT_ID_PORT) {
 			$return = '<span class="yellow">Port Defenses</span>';
 		} else if ($accountID == ACCOUNT_ID_ADMIN) {
@@ -42,7 +51,7 @@
 		} else if ($accountID == ACCOUNT_ID_OP_ANNOUNCE || $accountID == ACCOUNT_ID_ALLIANCE_COMMAND) {
 			$return = '<span class="green">Alliance Command</span>';
 		} else {
-			foreach (Smr\Race::getAllNames() as $raceID => $raceName) {
+			foreach (Race::getAllNames() as $raceID => $raceName) {
 				if ($accountID == ACCOUNT_ID_GROUP_RACES + $raceID) {
 					return '<span class="yellow">' . $raceName . ' Government</span>';
 				}
@@ -59,3 +68,5 @@
 		}
 		return $return;
 	}
+
+}

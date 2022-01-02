@@ -652,8 +652,7 @@ abstract class AbstractSmrPlayer {
 			case MSG_PLAYER:
 				$receiverAccount = SmrAccount::getAccount($receiverID);
 				if ($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isLoggedIn()) {
-					require_once(get_file_loc('messages.inc.php'));
-					$sender = getMessagePlayer($senderID, $gameID, $messageTypeID);
+					$sender = Smr\Messages::getMessagePlayer($senderID, $gameID, $messageTypeID);
 					if ($sender instanceof SmrPlayer) {
 						$sender = $sender->getDisplayName();
 					}

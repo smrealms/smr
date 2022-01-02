@@ -5,15 +5,13 @@ $var = Smr\Session::getInstance()->getCurrentVar();
 
 $template->assign('PageTopic', 'Reply To Reported Messages');
 
-require_once(get_file_loc('messages.inc.php'));
-
 $container = Page::create('notify_reply_processing.php');
 $container->addVar('game_id');
 $container->addVar('offended');
 $container->addVar('offender');
 $template->assign('NotifyReplyFormHref', $container->href());
-$offender = getMessagePlayer($var['offender'], $var['game_id']);
-$offended = getMessagePlayer($var['offended'], $var['game_id']);
+$offender = Smr\Messages::getMessagePlayer($var['offender'], $var['game_id']);
+$offended = Smr\Messages::getMessagePlayer($var['offended'], $var['game_id']);
 if (is_object($offender)) {
 	$template->assign('OffenderAccount', $offender->getAccount());
 }

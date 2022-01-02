@@ -3,8 +3,7 @@
 $template = Smr\Template::getInstance();
 $var = Smr\Session::getInstance()->getCurrentVar();
 
-require_once(get_file_loc('messages.inc.php'));
-$boxName = getAdminBoxNames()[$var['box_type_id']];
+$boxName = Smr\Messages::getAdminBoxNames()[$var['box_type_id']];
 $template->assign('PageTopic', 'Reply To ' . $boxName);
 
 $container = Page::create('box_reply_processing.php');
