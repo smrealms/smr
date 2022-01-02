@@ -74,8 +74,7 @@ try {
 
 	$account = $session->getAccount();
 	// get reason for disabled user
-	require_once(LIB . 'Default/login_processing.inc.php');
-	if (($disabled = redirectIfDisabled($account)) !== false) {
+	if (($disabled = Smr\Login\Redirect::redirectIfDisabled($account)) !== false) {
 		// save session (incase we forward)
 		$session->update();
 		if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {

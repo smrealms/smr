@@ -1,6 +1,16 @@
 <?php declare(strict_types=1);
 
-	function redirectIfDisabled(SmrAccount $account) : array|false {
+namespace Smr\Login;
+
+use Smr;
+use SmrAccount;
+
+/**
+ * Collection of functions to help with login redirection.
+ */
+class Redirect {
+
+	public static function redirectIfDisabled(SmrAccount $account) : array|false {
 		// We skip the redirect for specific disabled reasons, because they are
 		// handled elsewhere.
 		$skipReasons = [
@@ -35,7 +45,7 @@
 		exit;
 	}
 
-	function redirectIfOffline(SmrAccount $account) : void {
+	public static function redirectIfOffline(SmrAccount $account) : void {
 		// Check if the game is offline
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT reason FROM game_disable');
@@ -59,3 +69,5 @@
 		header('location: /login.php?status=offline');
 		exit;
 	}
+
+}
