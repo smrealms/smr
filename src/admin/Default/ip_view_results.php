@@ -19,7 +19,7 @@ $template->assign('type', $type);
 
 if ($type == 'comp_share') {
 	//another script for comp share
-	require(get_file_loc('comp_share.php'));
+	require('comp_share.php');
 	return;
 
 } elseif ($type == 'list') {
