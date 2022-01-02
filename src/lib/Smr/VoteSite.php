@@ -9,7 +9,6 @@ use Page;
  */
 class VoteSite {
 
-	private static array $CACHE_SITES = [];
 	private static ?array $CACHE_TIMEOUTS = null;
 
 	// NOTE: link IDs should never be changed!
@@ -56,21 +55,17 @@ class VoteSite {
 	}
 
 	public static function clearCache() : void {
-		self::$CACHE_SITES = [];
 		self::$CACHE_TIMEOUTS = null;
 	}
 
-	public static function getSite(int $linkID) {
-		if (!isset(self::$CACHE_SITES[$linkID])) {
-			self::$CACHE_SITES[$linkID] = new self($linkID, self::getSiteData($linkID));
-		}
-		return self::$CACHE_SITES[$linkID];
+	public static function getSite(int $linkID, int $accountID) {
+		return new self($linkID, $accountID, self::getSiteData($linkID));
 	}
 
-	public static function getAllSites() : array {
+	public static function getAllSites(int $accountID) : array {
 		$allSites = [];
 		foreach (self::ACTIVE_LINKS as $linkID) {
-			$allSites[$linkID] = self::getSite($linkID);
+			$allSites[$linkID] = self::getSite($linkID, $accountID);
 		}
 		return $allSites;
 	}
@@ -81,9 +76,9 @@ class VoteSite {
 	 */
 	public static function getMinTimeUntilFreeTurns(int $accountID) : int {
 		$waitTimes = [];
-		foreach (self::getAllSites() as $site) {
+		foreach (self::getAllSites($accountID) as $site) {
 			if ($site->givesFreeTurns()) {
-				$waitTimes[] = $site->getTimeUntilFreeTurns($accountID);
+				$waitTimes[] = $site->getTimeUntilFreeTurns();
 			}
 		}
 		return min($waitTimes);
@@ -91,6 +86,7 @@ class VoteSite {
 
 	private function __construct(
 		private int $linkID,
+		private int $accountID,
 		private array $data) {}
 
 	/**
@@ -105,7 +101,7 @@ class VoteSite {
 	 * Time until the account can get free turns from voting at this site.
 	 * If the time is 0, this site is eligible for free turns.
 	 */
-	public function getTimeUntilFreeTurns(int $accountID) : int {
+	public function getTimeUntilFreeTurns() : int {
 		if (!$this->givesFreeTurns()) {
 			throw new \Exception('This vote site cannot award free turns!');
 		}
@@ -114,7 +110,7 @@ class VoteSite {
 		if (!isset(self::$CACHE_TIMEOUTS)) {
 			self::$CACHE_TIMEOUTS = []; // ensure this is set
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountID) . ' AND link_id IN (' . $db->escapeArray(self::ACTIVE_LINKS) . ')');
+			$dbResult = $db->read('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($this->accountID) . ' AND link_id IN (' . $db->escapeArray(self::ACTIVE_LINKS) . ')');
 			foreach ($dbResult->records() as $dbRecord) {
 				// 'timeout' is the last time the player claimed free turns (or 0, if unclaimed)
 				self::$CACHE_TIMEOUTS[$dbRecord->getInt('link_id')] = $dbRecord->getInt('timeout');
@@ -129,8 +125,8 @@ class VoteSite {
 	/**
 	 * Returns true if account can currently receive free turns at this site.
 	 */
-	private function freeTurnsReady(int $accountID, int $gameID) : bool {
-		return $this->givesFreeTurns() && $gameID != 0 && $this->getTimeUntilFreeTurns($accountID) <= 0;
+	private function freeTurnsReady(int $gameID) : bool {
+		return $this->givesFreeTurns() && $gameID != 0 && $this->getTimeUntilFreeTurns() <= 0;
 	}
 
 	/**
@@ -138,37 +134,37 @@ class VoteSite {
 	 * for free turns, so that we will accept incoming votes. This ensures
 	 * that voting is done through an authenticated SMR session.
 	 */
-	public function setLinkClicked(int $accountID) : void {
+	public function setLinkClicked() : void {
 		// We assume that the site is eligible for free turns.
 		// Don't start the timeout until the vote actually goes through.
 		$db = Database::getInstance();
-		$db->write('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($accountID) . ',' . $db->escapeNumber($this->linkID) . ',' . $db->escapeNumber(0) . ',' . $db->escapeBoolean(false) . ')');
+		$db->write('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($this->accountID) . ',' . $db->escapeNumber($this->linkID) . ',' . $db->escapeNumber(0) . ',' . $db->escapeBoolean(false) . ')');
 	}
 
 	/**
 	 * Checks if setLinkClicked has been called since the last time
 	 * free turns were awarded.
 	 */
-	public function isLinkClicked(int $accountID) : bool {
+	public function isLinkClicked() : bool {
 		// This is intentionally not cached so that we can re-check as needed.
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM vote_links WHERE account_id = ' . $db->escapeNumber($accountID) . ' AND link_id = ' . $db->escapeNumber($this->linkID) . ' AND timeout = 0 AND turns_claimed = ' . $db->escapeBoolean(false));
+		$dbResult = $db->read('SELECT 1 FROM vote_links WHERE account_id = ' . $db->escapeNumber($this->accountID) . ' AND link_id = ' . $db->escapeNumber($this->linkID) . ' AND timeout = 0 AND turns_claimed = ' . $db->escapeBoolean(false));
 		return $dbResult->hasRecord();
 	}
 
 	/**
 	 * Register that the player has been awarded their free turns.
 	 */
-	public function setFreeTurnsAwarded(int $accountID) : void {
+	public function setFreeTurnsAwarded() : void {
 		$db = Database::getInstance();
-		$db->write('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($accountID) . ',' . $db->escapeNumber($this->linkID) . ',' . $db->escapeNumber(Epoch::time()) . ',' . $db->escapeBoolean(true) . ')');
+		$db->write('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($this->accountID) . ',' . $db->escapeNumber($this->linkID) . ',' . $db->escapeNumber(Epoch::time()) . ',' . $db->escapeBoolean(true) . ')');
 	}
 
 	/**
 	 * Returns the image to display for this voting site.
 	 */
-	public function getLinkImg(int $accountID, int $gameID) : string {
-		if ($this->freeTurnsReady($accountID, $gameID)) {
+	public function getLinkImg(int $gameID) : string {
+		if ($this->freeTurnsReady($gameID)) {
 			return $this->data['img_star'];
 		} else {
 			return $this->data['img_default'];
@@ -178,10 +174,10 @@ class VoteSite {
 	/**
 	 * Returns the URL that should be used for this voting site.
 	 */
-	public function getLinkUrl(int $accountID, int $gameID) : string {
+	public function getLinkUrl(int $gameID) : string {
 		$baseUrl = $this->data['url_base'];
-		if ($this->freeTurnsReady($accountID, $gameID)) {
-			return $this->data['url_func']($baseUrl, $accountID, $gameID, $this->linkID);
+		if ($this->freeTurnsReady($gameID)) {
+			return $this->data['url_func']($baseUrl, $this->accountID, $gameID, $this->linkID);
 		} else {
 			return $baseUrl;
 		}
@@ -191,8 +187,8 @@ class VoteSite {
 	 * Returns the SN to redirect the current page to if free turns are
 	 * available; otherwise, returns false.
 	 */
-	public function getSN(int $accountID, int $gameID) : string|false {
-		if (!$this->freeTurnsReady($accountID, $gameID)) {
+	public function getSN(int $gameID) : string|false {
+		if (!$this->freeTurnsReady($gameID)) {
 			return false;
 		}
 		// This page will prepare the account for the voting callback.

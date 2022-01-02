@@ -705,11 +705,11 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 
 	// ------- VOTING --------
 	$voteSites = array();
-	foreach (Smr\VoteSite::getAllSites() as $site) {
+	foreach (Smr\VoteSite::getAllSites($account->getAccountID()) as $site) {
 		$voteSites[] = array(
-			'img' => $site->getLinkImg($account->getAccountID(), $session->getGameID()),
-			'url' => $site->getLinkUrl($account->getAccountID(), $session->getGameID()),
-			'sn' => $site->getSN($account->getAccountID(), $session->getGameID()),
+			'img' => $site->getLinkImg($session->getGameID()),
+			'url' => $site->getLinkUrl($session->getGameID()),
+			'sn' => $site->getSN($session->getGameID()),
 		);
 	}
 	$template->assign('VoteSites', $voteSites);

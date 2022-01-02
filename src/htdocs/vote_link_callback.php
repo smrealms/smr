@@ -23,8 +23,8 @@ try {
 
 	// Is the player allowed to get free turns from this link right now?
 	// Check if player clicked a valid free turns link.
-	$voteSite = Smr\VoteSite::getSite($linkId);
-	if (!$voteSite->isLinkClicked($accountId)) {
+	$voteSite = Smr\VoteSite::getSite($linkId, $accountId);
+	if (!$voteSite->isLinkClicked()) {
 		return;
 	}
 
@@ -40,12 +40,12 @@ try {
 	// Now that we are locked, check the database again to make sure turns
 	// weren't claimed while we were waiting for the lock.
 	// This prevents players from spamming the callback for lots of free turns.
-	if ($voteSite->isLinkClicked($accountId)) {
+	if ($voteSite->isLinkClicked()) {
 		return;
 	}
 
 	// Prevent getting additional turns until a valid free turns link is clicked again
-	$voteSite->setFreeTurnsAwarded($accountId);
+	$voteSite->setFreeTurnsAwarded();
 
 	//Give turns via added time, no rounding errors.
 	$player->setLastTurnUpdate($player->getLastTurnUpdate() - VOTE_BONUS_TURNS_TIME);
