@@ -55,7 +55,7 @@ function get_file_loc(string $fileName) : string {
 		return $cache[$cacheKey];
 	}
 
-	$startPaths = array(ENGINE, LIB, ADMIN);
+	$startPaths = array(ENGINE, ADMIN);
 	$midPaths = array($gameDir, 'Default/');
 	foreach ($midPaths as $midPath) {
 		foreach ($startPaths as $startPath) {
@@ -65,11 +65,6 @@ function get_file_loc(string $fileName) : string {
 				return $filePath;
 			}
 		}
-	}
-	$filePath = WWW . $fileName;
-	if (is_file($filePath) && is_readable($filePath)) {
-		$cache[$cacheKey] = $filePath;
-		return WWW . $fileName;
 	}
 
 	//We haven't matched on anything
