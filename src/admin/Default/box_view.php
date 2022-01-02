@@ -41,7 +41,7 @@ if (!isset($var['box_type_id'])) {
 		$template->assign('DeleteHREF', $container->href());
 		foreach ($dbResult->records() as $dbRecord) {
 			$gameID = $dbRecord->getInt('game_id');
-			$validGame = $gameID > 0 && Globals::isValidGame($gameID);
+			$validGame = $gameID > 0 && SmrGame::gameExists($gameID);
 			$messageID = $dbRecord->getInt('message_id');
 			$messages[$messageID] = array(
 				'ID' => $messageID

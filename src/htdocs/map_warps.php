@@ -5,7 +5,7 @@ try {
 	$session = Smr\Session::getInstance();
 
 	$gameID = Smr\Request::getInt('game');
-	if (!$session->hasAccount() || !Globals::isValidGame($gameID)) {
+	if (!$session->hasAccount() || !SmrGame::gameExists($gameID)) {
 		header('Location: /login.php');
 		exit;
 	}

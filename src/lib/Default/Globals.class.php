@@ -149,19 +149,6 @@ class Globals {
 		return Globals::getHardwareTypes()[$hardwareTypeID]['Cost'];
 	}
 
-	public static function isValidGame(int $gameID) : bool {
-		try {
-			SmrGame::getGame($gameID);
-			return true;
-		} catch (Smr\Exceptions\GameNotFound) {
-			return false;
-		}
-	}
-
-	public static function getGameType(int $gameID) : string {
-		return SmrGame::getGame($gameID)->getGameType();
-	}
-
 	public static function isFeatureRequestOpen() : bool {
 		if (!isset(self::$FEATURE_REQUEST_OPEN)) {
 			self::initialiseDatabase();
