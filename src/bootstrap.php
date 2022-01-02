@@ -217,5 +217,8 @@ require_once(ROOT . 'vendor/autoload.php');
 require_once(LIB . 'autoload.inc.php');
 spl_autoload_register('get_class_loc');
 
+// Load common functions
+require_once(LIB . 'Default/smr.inc.php');
+
 // Set up dependency injection container
 DiContainer::initialize(getenv('DISABLE_PHPDI_COMPILATION') !== "true");

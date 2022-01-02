@@ -4,7 +4,6 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 require_once(__DIR__ . '/../../bootstrap.php');
-require_once(LIB . 'Default/smr.inc.php');
 require_once(TOOLS . 'discord/GameLink.class.php');
 require_once(TOOLS . 'discord/mysql_cleanup.php');
 require_once(CONFIG . 'discord/config.specific.php');

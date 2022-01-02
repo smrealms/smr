@@ -7,7 +7,6 @@ function create_error_offline(string $msg) : void {
 
 try {
 	require_once('../../bootstrap.php');
-	require_once(LIB . 'Default/smr.inc.php');
 	require_once(LIB . 'Album/album_functions.php');
 
 	$session = Smr\Session::getInstance();

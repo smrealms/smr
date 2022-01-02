@@ -19,8 +19,6 @@ try {
 		exit;
 	}
 
-	require_once(LIB . 'Default/smr.inc.php');
-
 	// Is the player allowed to get free turns from this link right now?
 	// Check if player clicked a valid free turns link.
 	$voteSite = Smr\VoteSite::getSite($linkId, $accountId);

@@ -122,7 +122,7 @@ require_once(get_file_loc('SmrAlliance.class.php'));
 
 ## Links
 If possible use a function from Globals or a relevant object to generate links (eg Globals::getCurrentSectorHREF(), $otherPlayer->getExamineTraderHREF()), this is usually clearer and allows hooking into the hotkey system.
-To create a link you first create a "container" using the Page::create() function from smr.inc.php declared as
+To create a link you first create a "container" using the Page::create() function declared as
 
 ```php
 Page::create($file, $body = '', array $extra = array(), $remainingPageLoads = null)

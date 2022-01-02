@@ -3,7 +3,6 @@
 try {
 
 	require_once('../bootstrap.php');
-	require_once(LIB . 'Default/smr.inc.php');
 
 	// ********************************
 	// *
