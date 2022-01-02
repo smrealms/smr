@@ -1,15 +1,26 @@
 <?php declare(strict_types=1);
 
-	// The engine files for planet lists have a lot in common, so do
-	// most of the work here.
-	function planet_list_common(int $allianceId, bool $getPlanets) : void {
-		$template = Smr\Template::getInstance();
-		$player = Smr\Session::getInstance()->getPlayer();
+namespace Smr;
+
+use SmrAlliance;
+
+/**
+ * Collection of functions to help prepare Planet List pages.
+ */
+class PlanetList {
+
+	/**
+	 * The engine files for planet lists have a lot in common, so do
+	 * most of the work here.
+	 */
+	public static function common(int $allianceId, bool $getPlanets) : void {
+		$template = Template::getInstance();
+		$player = Session::getInstance()->getPlayer();
 
 		$playerOnly = $allianceId == 0;
 		if ($playerOnly && $player->hasAlliance()) {
 			// This page doesn't support this combination
-			throw new Exception('Sanity check failed!');
+			throw new \Exception('Sanity check failed!');
 		}
 		$template->assign('PlayerOnly', $playerOnly);
 
@@ -41,3 +52,5 @@
 			$template->assign('AllPlanets', $allPlanets);
 		}
 	}
+
+}
