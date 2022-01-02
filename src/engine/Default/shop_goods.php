@@ -1,6 +1,4 @@
 <?php declare(strict_types=1);
-// include helper file
-require_once(LIB . 'Default/shop_goods.inc.php');
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
