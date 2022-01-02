@@ -21,8 +21,7 @@ $template->assign('PageTopic', $location->getName());
 
 Menu::headquarters($var['LocationID']);
 
-require_once(get_file_loc('gov.inc.php'));
-$template->assign('AllBounties', getBounties('UG'));
+$template->assign('AllBounties', Smr\Bounties::getMostWanted('UG'));
 $template->assign('MyBounties', $player->getClaimableBounties('UG'));
 
 if ($player->getAlignment() < ALIGNMENT_GOOD && $player->getAlignment() >= ALIGNMENT_EVIL) {

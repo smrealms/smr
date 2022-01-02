@@ -39,8 +39,7 @@ if ($raceID != RACE_NEUTRAL) {
 }
 $template->assign('WarRaces', $warRaces);
 
-require_once(get_file_loc('gov.inc.php'));
-$template->assign('AllBounties', getBounties('HQ'));
+$template->assign('AllBounties', Smr\Bounties::getMostWanted('HQ'));
 $template->assign('MyBounties', $player->getClaimableBounties('HQ'));
 
 if ($player->getAlignment() > ALIGNMENT_EVIL && $player->getAlignment() <= ALIGNMENT_GOOD) {
