@@ -1,5 +1,4 @@
 <?php declare(strict_types=1);
-require_once(get_file_loc('hof.inc.php'));
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
@@ -46,23 +45,23 @@ foreach ($dbResult->records() as $dbRecord) {
 	}
 	$hof = true;
 }
-$template->assign('Breadcrumb', buildBreadcrumb($var, $hofTypes, 'Personal HoF'));
+$template->assign('Breadcrumb', Smr\HallOfFame::buildBreadcrumb($var, $hofTypes, 'Personal HoF'));
 
 if (!isset($var['view'])) {
-	$categories = getHofCategories($hofTypes, $game_id, $account_id);
+	$categories = Smr\HallOfFame::getHofCategories($hofTypes, $game_id, $account_id);
 	$template->assign('Categories', $categories);
 } else {
 	// Category rankings page
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];
 
-	$hofRank = getHofRank($var['view'], $viewType, $account_id, $game_id);
-	$rows = [displayHOFRow($hofRank['Rank'], $account_id, $hofRank['Amount'])];
+	$hofRank = Smr\HallOfFame::getHofRank($var['view'], $viewType, $account_id, $game_id);
+	$rows = [Smr\HallOfFame::displayHOFRow($hofRank['Rank'], $account_id, $hofRank['Amount'])];
 
 	if ($account->getAccountID() != $account_id) {
 		//current player's score.
-		$playerRank = getHofRank($var['view'], $viewType, $account->getAccountID(), $game_id);
-		$row = displayHOFRow($playerRank['Rank'], $account->getAccountID(), $playerRank['Amount']);
+		$playerRank = Smr\HallOfFame::getHofRank($var['view'], $viewType, $account->getAccountID(), $game_id);
+		$row = Smr\HallOfFame::displayHOFRow($playerRank['Rank'], $account->getAccountID(), $playerRank['Amount']);
 		if ($playerRank['Rank'] >= $hofRank['Rank']) {
 			$rows[] = $row;
 		} else {

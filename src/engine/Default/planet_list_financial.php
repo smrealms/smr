@@ -25,5 +25,4 @@ if ($var['alliance_id'] != 0) {
 }
 $template->assign('CanViewBonds', $viewBonds);
 
-require_once(get_file_loc('planet_list.inc.php'));
-planet_list_common($var['alliance_id'], $viewBonds);
+Smr\PlanetList::common($var['alliance_id'], $viewBonds);

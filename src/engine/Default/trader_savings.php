@@ -19,9 +19,8 @@ foreach ($dbResult->records() as $dbRecord) {
 }
 $template->assign('AnonAccounts', $anonAccounts);
 
-require_once(get_file_loc('bar.inc.php'));
-checkForLottoWinner($player->getGameID());
-$template->assign('LottoInfo', getLottoInfo($player->getGameID()));
+Smr\Lotto::checkForLottoWinner($player->getGameID());
+$template->assign('LottoInfo', Smr\Lotto::getLottoInfo($player->getGameID()));
 
 // Number of active lotto tickets this player has
 $dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time > 0');

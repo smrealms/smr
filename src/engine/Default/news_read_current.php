@@ -10,9 +10,8 @@ $gameID = $var['GameID'] ?? $player->getGameID();
 $template->assign('PageTopic', 'Current News');
 Menu::news($gameID);
 
-require_once(get_file_loc('news.inc.php'));
-doBreakingNewsAssign($gameID);
-doLottoNewsAssign($gameID);
+Smr\News::doBreakingNewsAssign($gameID);
+Smr\News::doLottoNewsAssign($gameID);
 
 if (!isset($var['LastNewsUpdate'])) {
 	$var['LastNewsUpdate'] = $player->getLastNewsUpdate();
@@ -20,6 +19,6 @@ if (!isset($var['LastNewsUpdate'])) {
 
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > ' . $db->escapeNumber($var['LastNewsUpdate']) . ' AND type != \'lotto\' ORDER BY news_id DESC');
-$template->assign('NewsItems', getNewsItems($dbResult));
+$template->assign('NewsItems', Smr\News::getNewsItems($dbResult));
 
 $player->updateLastNewsUpdate();

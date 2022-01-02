@@ -65,8 +65,7 @@ if ($submit_value == 'Search For Player') {
 	$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY news_id DESC LIMIT 50');
 }
 
-require_once(get_file_loc('news.inc.php'));
-$template->assign('NewsItems', getNewsItems($dbResult));
+$template->assign('NewsItems', Smr\News::getNewsItems($dbResult));
 
 $template->assign('PageTopic', 'Advanced News');
 Menu::news($gameID);

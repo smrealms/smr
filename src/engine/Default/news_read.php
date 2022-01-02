@@ -18,12 +18,11 @@ $template->assign('PageTopic', 'Reading The News');
 
 Menu::news($gameID);
 
-require_once(get_file_loc('news.inc.php'));
-doBreakingNewsAssign($gameID);
-doLottoNewsAssign($gameID);
+Smr\News::doBreakingNewsAssign($gameID);
+Smr\News::doLottoNewsAssign($gameID);
 
 $template->assign('ViewNewsFormHref', Page::create('skeleton.php', 'news_read.php', ['GameID' => $gameID])->href());
 
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type != \'lotto\' ORDER BY news_id DESC LIMIT ' . ($min_news - 1) . ', ' . ($max_news - $min_news + 1));
-$template->assign('NewsItems', getNewsItems($dbResult));
+$template->assign('NewsItems', Smr\News::getNewsItems($dbResult));

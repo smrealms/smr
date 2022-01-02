@@ -1,5 +1,4 @@
 <?php declare(strict_types=1);
-require_once(get_file_loc('messages.inc.php'));
 
 $template = Smr\Template::getInstance();
 $db = Smr\Database::getInstance();
@@ -11,7 +10,7 @@ Menu::messages();
 $template->assign('PageTopic', 'View Messages');
 
 $messageBoxes = array();
-foreach (getMessageTypeNames() as $message_type_id => $message_type_name) {
+foreach (Smr\Messages::getMessageTypeNames() as $message_type_id => $message_type_name) {
 	$messageBox = [];
 	$messageBox['Name'] = $message_type_name;
 

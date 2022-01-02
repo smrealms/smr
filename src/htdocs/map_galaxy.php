@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 try {
 	require_once('../bootstrap.php');
-	require_once(get_file_loc('smr.inc.php'));
 
 	// avoid site caching
 	header('Expires: Mon, 03 Nov 1976 16:10:00 GMT');

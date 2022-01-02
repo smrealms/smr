@@ -1,5 +1,4 @@
 <?php declare(strict_types=1);
-require_once(get_file_loc('messages.inc.php'));
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
@@ -52,7 +51,7 @@ if ($page == 0 && !USING_AJAX) {
 	$player->setMessagesRead($messageBox['Type']);
 }
 
-$messageBox['Name'] = getMessageTypeNames($var['folder_id']);
+$messageBox['Name'] = Smr\Messages::getMessageTypeNames($var['folder_id']);
 $template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
 if ($messageBox['Type'] == MSG_GLOBAL || $messageBox['Type'] == MSG_SCOUT) {
@@ -166,7 +165,7 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 
 	// Display the sender (except for scout messages)
 	if ($type != MSG_SCOUT) {
-		$sender = getMessagePlayer($sender_id, $game_id, $type);
+		$sender = Smr\Messages::getMessagePlayer($sender_id, $game_id, $type);
 		if ($sender instanceof SmrPlayer) {
 			$message['Sender'] = $sender;
 			$container = Page::create('skeleton.php', 'trader_search_result.php');

@@ -8,7 +8,7 @@ if (!is_numeric($var['PickedAccountID'])) {
 	create_error('You have to pick a player.');
 }
 
-require_once(get_file_loc('alliance_pick.inc.php'));
+require_once(LIB . 'Draft/alliance_pick.inc.php');
 $teams = get_draft_teams($player->getGameID());
 if (!$teams[$player->getAccountID()]['CanPick']) {
 	create_error('You have to wait for others to pick first.');

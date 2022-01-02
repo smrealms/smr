@@ -5,8 +5,6 @@ namespace SmrTest\lib\DefaultGame;
 use SmrPlanet;
 use SmrTest\BaseIntegrationSpec;
 
-require_once(LIB . 'Default/smr.inc.php');
-
 /**
  * @covers SmrPlanet
  */
