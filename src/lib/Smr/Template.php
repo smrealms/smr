@@ -96,38 +96,32 @@ class Template {
 
 
 	protected function getTemplateLocation(string $templateName) : string {
-		$templateDir = TEMPLATES_DIR;
 		if (isset($this->data['ThisAccount'])) {
-			$templateDir .= $this->data['ThisAccount']->getTemplate() . '/';
+			$templateDir = $this->data['ThisAccount']->getTemplate() . '/';
 		} else {
-			$templateDir .= 'Default/';
+			$templateDir = 'Default/';
 		}
+		$templateDirs = array_unique([$templateDir, 'Default/']);
+		$srcDirs = ['engine/', 'admin/'];
+		$gameDirs = array_unique([get_game_dir(), 'Default/']);
 
-		$gameDir = get_game_dir(); // defined in the autoloader
-
-		if (file_exists($templateDir . 'engine/' . $gameDir . $templateName)) {
-			return $templateDir . 'engine/' . $gameDir . $templateName;
-		} elseif (file_exists($templateDir . 'engine/Default/' . $templateName)) {
-			return $templateDir . 'engine/Default/' . $templateName;
-		} elseif (file_exists(TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName)) {
-			return TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName;
-		} elseif (file_exists(TEMPLATES_DIR . 'Default/engine/Default/' . $templateName)) {
-			return TEMPLATES_DIR . 'Default/engine/Default/' . $templateName;
-		} elseif (file_exists($templateDir . 'admin/' . $gameDir . $templateName)) {
-			return $templateDir . 'admin/' . $gameDir . $templateName;
-		} elseif (file_exists($templateDir . 'admin/Default/' . $templateName)) {
-			return $templateDir . 'admin/Default/' . $templateName;
-		} elseif (file_exists(TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName)) {
-			return TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName;
-		} elseif (file_exists(TEMPLATES_DIR . 'Default/admin/Default/' . $templateName)) {
-			return TEMPLATES_DIR . 'Default/admin/Default/' . $templateName;
-		} elseif (file_exists($templateDir . $templateName)) {
-			return $templateDir . $templateName;
-		} elseif (file_exists(TEMPLATES_DIR . 'Default/' . $templateName)) {
-			return TEMPLATES_DIR . 'Default/' . $templateName;
-		} else {
-			throw new Exception('No template found for ' . $templateName);
+		foreach ($gameDirs as $gameDir) {
+			foreach ($srcDirs as $srcDir) {
+				foreach ($templateDirs as $templateDir) {
+					$filePath = TEMPLATES . $templateDir . $srcDir . $gameDir . $templateName;
+					if (is_file($filePath)) {
+						return $filePath;
+					}
+				}
+			}
 		}
+		foreach ($templateDirs as $templateDir) {
+			$filePath = TEMPLATES . $templateDir . $templateName;
+			if (is_file($filePath)) {
+				return $filePath;
+			}
+		}
+		throw new Exception('No template found for ' . $templateName);
 	}
 
 	protected function includeTemplate(string $templateName, array $assignVars = null) : void {

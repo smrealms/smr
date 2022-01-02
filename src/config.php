@@ -11,7 +11,7 @@ const UPLOAD = WWW . 'upload/';
 const ADMIN = ROOT . 'src/admin/';
 const TOOLS = ROOT . 'src/tools/';
 const CONFIG = ROOT . 'config/';
-const TEMPLATES_DIR = ROOT . 'src/templates/';
+const TEMPLATES = ROOT . 'src/templates/';
 
 // Define server-specific constants
 require_once(CONFIG . 'config.specific.php');
