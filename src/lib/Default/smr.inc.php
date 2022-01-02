@@ -169,12 +169,10 @@ function bbifyMessage(string $message, bool $noLinks = false) : string {
 		$bbParser->addRule('sector', $smrRule);
 		$bbParser->addRule('join_alliance', $smrRule);
 	}
+
 	global $disableBBLinks;
-	if ($noLinks === true) {
-		$disableBBLinks = true;
-	} else {
-		$disableBBLinks = false;
-	}
+	$disableBBLinks = $noLinks;
+
 	if (strpos($message, '[') !== false) { //We have BBCode so let's do a full parse.
 		// TODO: deprecation warnings suppressed until PHP 8.1 fix merged!
 		// See https://github.com/vanilla/nbbc/pull/24.
