@@ -39,8 +39,7 @@ class News {
 	}
 
 	public static function doLottoNewsAssign(int $gameID) : void {
-		require_once(get_file_loc('bar.inc.php'));
-		checkForLottoWinner($gameID);
+		Lotto::checkForLottoWinner($gameID);
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'lotto\' ORDER BY time DESC LIMIT 1');
 		if ($dbResult->hasRecord()) {

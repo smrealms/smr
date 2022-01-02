@@ -1,6 +1,16 @@
 <?php declare(strict_types=1);
 
-	function checkForLottoWinner(int $gameID) : void {
+namespace Smr;
+
+use SmrGame;
+use SmrPlayer;
+
+/**
+ * Collection of functions to help with Lotto processing.
+ */
+class Lotto {
+
+	public static function checkForLottoWinner(int $gameID) : void {
 
 		// No more lotto winners after the game has ended
 		if (SmrGame::getGame($gameID)->hasEnded()) {
@@ -8,9 +18,9 @@
 		}
 
 		// we check for a lotto winner...
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->lockTable('player_has_ticket');
-		$lottoInfo = getLottoInfo($gameID);
+		$lottoInfo = self::getLottoInfo($gameID);
 
 		if ($lottoInfo['TimeRemaining'] > 0) {
 			// Drawing is not closed yet
@@ -44,14 +54,14 @@
 		$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($gameID));
 		$db->write('INSERT INTO news
 				(game_id, time, news_message, type, dead_id, dead_alliance)
-				VALUES ('.$db->escapeNumber($gameID) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeString($news_message) . ',\'lotto\',' . $db->escapeNumber($winner->getAccountID()) . ',' . $db->escapeNumber($winner->getAllianceID()) . ')');
+				VALUES ('.$db->escapeNumber($gameID) . ', ' . $db->escapeNumber(Epoch::time()) . ', ' . $db->escapeString($news_message) . ',\'lotto\',' . $db->escapeNumber($winner->getAccountID()) . ',' . $db->escapeNumber($winner->getAllianceID()) . ')');
 	}
 
-	function getLottoInfo(int $gameID) : array {
+	public static function getLottoInfo(int $gameID) : array {
 		$amount = 1000000;
-		$firstBuy = Smr\Epoch::time();
+		$firstBuy = Epoch::time();
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT count(*) as num, min(time) as time FROM player_has_ticket
 				WHERE game_id = '.$db->escapeNumber($gameID) . ' AND time > 0');
 		$dbRecord = $dbResult->record();
@@ -60,5 +70,7 @@
 			$firstBuy = $dbRecord->getInt('time');
 		}
 		//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
-		return array('Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - Smr\Epoch::time());
+		return array('Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - Epoch::time());
 	}
+
+}
