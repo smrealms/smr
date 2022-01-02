@@ -9,19 +9,28 @@ use Page;
  */
 class VoteSite {
 
+	private static array $CACHE_SITES = [];
+	private static ?array $CACHE_TIMEOUTS = null;
+
 	// NOTE: link IDs should never be changed!
-	private const LINK_ID_TWG = 3;
-	private const LINK_ID_DOG = 4;
-	private const LINK_ID_PBBG = 5;
+	const LINK_ID_TWG = 3;
+	const LINK_ID_DOG = 4;
+	const LINK_ID_PBBG = 5;
+
+	const ACTIVE_LINKS = [
+		self::LINK_ID_TWG,
+		self::LINK_ID_DOG,
+		self::LINK_ID_PBBG,
+	];
 
 	// MPOGD no longer exists
 	//1 => array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'base_url' => 'http://www.mpogd.com/games/game.asp?ID=1145'),
 	// OMGN no longer do voting - the link actually just redirects to archive site.
 	//2 => array('default_img' => 'omgn.png', 'star_img' => 'omgn_vote.png', 'base_url' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30'),
 
-	private static function getAllSiteData() : array {
+	private static function getSiteData(int $linkID) : array {
 		// This can't be a static/constant attribute due to `url_func` closures.
-		return array(
+		return match($linkID) {
 			self::LINK_ID_TWG => [
 				'img_default' => 'twg.png',
 				'img_star' => 'twg_vote.png',
@@ -43,18 +52,27 @@ class VoteSite {
 				'img_default' => 'pbbg.png',
 				'url_base' => 'https://pbbg.com/games/space-merchant-realms',
 			],
-		);
+		};
+	}
+
+	public static function clearCache() : void {
+		self::$CACHE_SITES = [];
+		self::$CACHE_TIMEOUTS = null;
+	}
+
+	public static function getSite(int $linkID) {
+		if (!isset(self::$CACHE_SITES[$linkID])) {
+			self::$CACHE_SITES[$linkID] = new self($linkID, self::getSiteData($linkID));
+		}
+		return self::$CACHE_SITES[$linkID];
 	}
 
 	public static function getAllSites() : array {
-		static $ALL_SITES;
-		if (!isset($ALL_SITES)) {
-			$ALL_SITES = array(); // ensure this is set
-			foreach (self::getAllSiteData() as $linkID => $siteData) {
-				$ALL_SITES[$linkID] = new self($linkID, $siteData);
-			}
+		$allSites = [];
+		foreach (self::ACTIVE_LINKS as $linkID) {
+			$allSites[$linkID] = self::getSite($linkID);
 		}
-		return $ALL_SITES;
+		return $allSites;
 	}
 
 	/**
@@ -62,13 +80,13 @@ class VoteSite {
 	 * are available across all voting sites.
 	 */
 	public static function getMinTimeUntilFreeTurns(int $accountID) : int {
-		$minWait = [];
+		$waitTimes = [];
 		foreach (self::getAllSites() as $site) {
 			if ($site->givesFreeTurns()) {
-				$minWait[] = $site->getTimeUntilFreeTurns($accountID);
+				$waitTimes[] = $site->getTimeUntilFreeTurns($accountID);
 			}
 		}
-		return min($minWait);
+		return min($waitTimes);
 	}
 
 	private function __construct(
@@ -92,24 +110,20 @@ class VoteSite {
 			throw new \Exception('This vote site cannot award free turns!');
 		}
 
-		static $WAIT_TIMES;
-		if (!isset($WAIT_TIMES)) {
-			$WAIT_TIMES = array(); // ensure this is set
-			$activeLinkIDs = array_keys(self::getAllSites());
+		// Populate timeout cache from the database
+		if (!isset(self::$CACHE_TIMEOUTS)) {
+			self::$CACHE_TIMEOUTS = []; // ensure this is set
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountID) . ' AND link_id IN (' . join(',', $activeLinkIDs) . ') LIMIT ' . $db->escapeNumber(count($activeLinkIDs)));
+			$dbResult = $db->read('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountID) . ' AND link_id IN (' . $db->escapeArray(self::ACTIVE_LINKS) . ')');
 			foreach ($dbResult->records() as $dbRecord) {
 				// 'timeout' is the last time the player claimed free turns (or 0, if unclaimed)
-				$WAIT_TIMES[$dbRecord->getInt('link_id')] = ($dbRecord->getInt('timeout') + TIME_BETWEEN_VOTING) - Epoch::time();
-			}
-			// If not in the vote_link database, this site is eligible now.
-			foreach ($activeLinkIDs as $linkID) {
-				if (!isset($WAIT_TIMES[$linkID])) {
-					$WAIT_TIMES[$linkID] = 0;
-				}
+				self::$CACHE_TIMEOUTS[$dbRecord->getInt('link_id')] = $dbRecord->getInt('timeout');
 			}
 		}
-		return $WAIT_TIMES[$this->linkID];
+
+		// If not in the vote_link database, this site is eligible now.
+		$lastClaimTime = self::$CACHE_TIMEOUTS[$this->linkID] ?? 0;
+		return $lastClaimTime + TIME_BETWEEN_VOTING - Epoch::time();
 	}
 
 	/**
@@ -117,6 +131,37 @@ class VoteSite {
 	 */
 	private function freeTurnsReady(int $accountID, int $gameID) : bool {
 		return $this->givesFreeTurns() && $gameID != 0 && $this->getTimeUntilFreeTurns($accountID) <= 0;
+	}
+
+	/**
+	 * Register that the player has clicked on a vote site that is eligible
+	 * for free turns, so that we will accept incoming votes. This ensures
+	 * that voting is done through an authenticated SMR session.
+	 */
+	public function setLinkClicked(int $accountID) : void {
+		// We assume that the site is eligible for free turns.
+		// Don't start the timeout until the vote actually goes through.
+		$db = Database::getInstance();
+		$db->write('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($accountID) . ',' . $db->escapeNumber($this->linkID) . ',' . $db->escapeNumber(0) . ',' . $db->escapeBoolean(false) . ')');
+	}
+
+	/**
+	 * Checks if setLinkClicked has been called since the last time
+	 * free turns were awarded.
+	 */
+	public function isLinkClicked(int $accountID) : bool {
+		// This is intentionally not cached so that we can re-check as needed.
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT 1 FROM vote_links WHERE account_id = ' . $db->escapeNumber($accountID) . ' AND link_id = ' . $db->escapeNumber($this->linkID) . ' AND timeout = 0 AND turns_claimed = ' . $db->escapeBoolean(false));
+		return $dbResult->hasRecord();
+	}
+
+	/**
+	 * Register that the player has been awarded their free turns.
+	 */
+	public function setFreeTurnsAwarded(int $accountID) : void {
+		$db = Database::getInstance();
+		$db->write('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($accountID) . ',' . $db->escapeNumber($this->linkID) . ',' . $db->escapeNumber(Epoch::time()) . ',' . $db->escapeBoolean(true) . ')');
 	}
 
 	/**
@@ -153,8 +198,7 @@ class VoteSite {
 		// This page will prepare the account for the voting callback.
 		$container = Page::create('vote_link.php');
 		$container['link_id'] = $this->linkID;
-		$container['can_get_turns'] = true;
-		return $container->href(true);
+		return $container->href();
 	}
 
 }
