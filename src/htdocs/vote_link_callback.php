@@ -40,8 +40,8 @@ try {
 	// Now that we are locked, check the database again to make sure turns
 	// weren't claimed while we were waiting for the lock.
 	// This prevents players from spamming the callback for lots of free turns.
-	if ($voteSite->isLinkClicked()) {
-		return;
+	if (!$voteSite->isLinkClicked()) {
+		throw new Exception('Account ID ' . $accountId . ' attempted vote link abuse');
 	}
 
 	// Prevent getting additional turns until a valid free turns link is clicked again
