@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+namespace Smr;
+
 class AdminPermissions {
 
 	// The array keys must not be changed because they are referred to

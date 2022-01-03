@@ -38,6 +38,17 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 		}
 	}
 
+	public function test_doAn() : void {
+		$template = Template::getInstance();
+		$method = TestUtils::getPrivateMethod($template, 'doAn');
+
+		// Test vowel and consonant first letters, lowercase and uppercase
+		$this->assertSame('a', $method->invoke($template, 'Car'));
+		$this->assertSame('a', $method->invoke($template, 'house'));
+		$this->assertSame('an', $method->invoke($template, 'Egg'));
+		$this->assertSame('an', $method->invoke($template, 'apple'));
+	}
+
 	/**
 	 * @dataProvider checkDisableAJAX_provider
 	 */
