@@ -156,12 +156,12 @@ class Template {
 		$damageTypes--;
 	}
 
-	protected function doAn(string $wordAfter) : void {
+	protected function doAn(string $wordAfter) : string {
 		$char = strtoupper($wordAfter[0]);
-		if ($char == 'A' || $char == 'E' || $char == 'I' || $char == 'O' || $char == 'U') {
-			echo 'an';
+		if (str_contains('AEIOU', $char)) {
+			return 'an';
 		} else {
-			echo 'a';
+			return 'a';
 		}
 	}
 
