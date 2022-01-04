@@ -149,7 +149,7 @@ class AbstractSmrShip {
 	}
 
 	public function getAttackRatingWithMaxCDs() : int {
-		return IRound(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getMaxCDs() * .7) / 40);
+		return IRound(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getMaxCDs() * 2) / 40);
 	}
 
 	public function getDefenseRating() : int {
