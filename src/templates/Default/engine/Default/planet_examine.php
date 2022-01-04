@@ -54,9 +54,9 @@
 <br />
 <div class="center"><?php
 	if (!$PlanetLand) { ?>
-		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getAttackHREF(); ?>">Attack Planet (3)</a></div><?php
+		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getAttackHREF(); ?>">Attack Planet (<?php echo TURNS_TO_SHOOT_PLANET; ?>)</a></div><?php
 	} elseif ($ThisPlanet->isInhabitable()) { ?>
-		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getLandHREF(); ?>">Land on Planet (1)</a></div><?php
+		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getLandHREF(); ?>">Land on Planet (<?php echo TURNS_TO_LAND; ?>)</a></div><?php
 	} else { ?>
 		The planet is <span class="uninhab">uninhabitable</span> at this time.<?php
 	} ?>

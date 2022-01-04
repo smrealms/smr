@@ -358,7 +358,11 @@ const TURNS_JUMP_MINIMUM = 10;
 
 const TURNS_TO_CLOAK = 1;
 const TURNS_TO_SHOOT_PORT = 2;
+const TURNS_TO_SHOOT_PLANET = 3;
+const TURNS_TO_SHOOT_SHIP = 3;
+const TURNS_TO_LAND = 1;
 const TURNS_TO_BUILD = 1;
+const TURNS_TO_DUMP_CARGO = 1;
 
 /*
  * Special locations

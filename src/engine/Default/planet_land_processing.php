@@ -10,7 +10,7 @@ if (!$account->isValidated()) {
 }
 
 // do we have enough turns?
-if ($player->getTurns() == 0) {
+if ($player->getTurns() < TURNS_TO_LAND) {
 	create_error('You don\'t have enough turns to land on planet.');
 }
 
@@ -35,6 +35,6 @@ if ($player->hasAlliance()) {
 	}
 }
 $player->setLandedOnPlanet(true);
-$player->takeTurns(1, 1);
+$player->takeTurns(TURNS_TO_LAND);
 $player->log(LOG_TYPE_MOVEMENT, 'Player lands at planet');
 Page::create('skeleton.php', 'planet_main.php')->go();
