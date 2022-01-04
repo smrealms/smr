@@ -102,7 +102,7 @@ class SmrShipType {
 									(
 										$this->maxHardware[HARDWARE_SHIELDS]
 										+ $this->maxHardware[HARDWARE_ARMOUR]
-										+ $this->maxHardware[HARDWARE_COMBAT] * 3
+										+ $this->maxHardware[HARDWARE_COMBAT] * CD_ARMOUR
 									) / 25
 									+ $this->maxHardware[HARDWARE_CARGO] / 100
 									- $this->speed * 5

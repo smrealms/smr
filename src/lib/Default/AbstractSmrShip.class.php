@@ -153,11 +153,11 @@ class AbstractSmrShip {
 	}
 
 	public function getDefenseRating() : int {
-		return IRound((($this->getShields() + $this->getArmour()) / 100) + (($this->getCDs() * 3) / 100));
+		return IRound(($this->getShields() + $this->getArmour() + $this->getCDs() * CD_ARMOUR) / 100);
 	}
 
 	public function getMaxDefenseRating() : int {
-		return IRound((($this->getMaxShields() + $this->getMaxArmour()) / 100) + (($this->getMaxCDs() * 3) / 100));
+		return IRound(($this->getMaxShields() + $this->getMaxArmour() + $this->getMaxCDs() * CD_ARMOUR) / 100);
 	}
 
 	public function getShieldLow() : int { return IFloor($this->getShields() / 100) * 100; }
@@ -959,7 +959,7 @@ class AbstractSmrShip {
 							(
 								$this->getShields()
 								+$this->getArmour()
-								+$this->getCDs() * 3
+								+$this->getCDs() * CD_ARMOUR
 							) / 25
 							+(
 								$this->getCargoHolds() / 100
