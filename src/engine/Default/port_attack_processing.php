@@ -53,7 +53,7 @@ $port->attackedBy($player, $attackers);
 
 // take the turns and decloak all attackers
 foreach ($attackers as $attacker) {
-	$attacker->takeTurns(TURNS_TO_SHOOT_PORT, 0);
+	$attacker->takeTurns(TURNS_TO_SHOOT_PORT);
 	$attacker->getShip()->decloak();
 }
 

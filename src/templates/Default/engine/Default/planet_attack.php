@@ -17,7 +17,7 @@ if (!$OverrideDeath && !$Planet->isDestroyed()) { ?>
 			?><a href="<?php echo Globals::getPodScreenHREF() ?>" class="buttonA">Let there be pod</a><?php
 		} else { ?>
 			<a href="<?php echo Globals::getCurrentSectorHREF() ?>" class="buttonA">Current Sector</a>&nbsp;
-			<a href="<?php echo $Planet->getLandHREF(); ?>" class="buttonA">Land on Planet (1)</a><?php
+			<a href="<?php echo $Planet->getLandHREF(); ?>" class="buttonA">Land on Planet (<?php echo TURNS_TO_LAND; ?>)</a><?php
 		} ?>
 	</div><?php
 } ?>

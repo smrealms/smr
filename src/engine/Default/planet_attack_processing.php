@@ -14,7 +14,7 @@ if ($player->hasFederalProtection()) {
 if ($player->isLandedOnPlanet()) {
 	create_error('You cannot attack planets whilst on a planet!');
 }
-if ($player->getTurns() < 3) {
+if ($player->getTurns() < TURNS_TO_SHOOT_PLANET) {
 	create_error('You do not have enough turns to attack this planet!');
 }
 if (!$ship->hasWeapons() && !$ship->hasCDs()) {
@@ -39,7 +39,7 @@ if ($player->forceNAPAlliance($planetOwner)) {
 }
 
 // take the turns
-$player->takeTurns(3, 0);
+$player->takeTurns(TURNS_TO_SHOOT_PLANET);
 
 
 // ********************************

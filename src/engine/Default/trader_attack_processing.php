@@ -15,7 +15,7 @@ if ($player->hasFederalProtection()) {
 if ($player->isLandedOnPlanet()) {
 	create_error('You cannot attack whilst on a planet!');
 }
-if ($player->getTurns() < 3) {
+if ($player->getTurns() < TURNS_TO_SHOOT_SHIP) {
 	create_error('You have insufficient turns to perform that action.');
 }
 if (!$player->canFight()) {
@@ -48,7 +48,7 @@ foreach ($fightingPlayers as $teamPlayers) {
 }
 
 // Take off the 3 turns for attacking
-$player->takeTurns(3);
+$player->takeTurns(TURNS_TO_SHOOT_SHIP);
 $player->update();
 
 function teamAttack(array $fightingPlayers, string $attack, string $defend) : array {

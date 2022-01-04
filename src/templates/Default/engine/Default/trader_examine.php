@@ -21,7 +21,7 @@ if ($ThisPlayer->hasNewbieTurns()) {
 	$canAttack = true;
 	$fightingPlayers = $ThisSector->getFightingTraders($ThisPlayer, $TargetPlayer, true);
 	if (count($fightingPlayers['Defenders']) > 0) {
-		?><p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (3)</a></p><?php
+		?><p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (<?php echo TURNS_TO_SHOOT_SHIP; ?>)</a></p><?php
 	} else {
 		?><p class="big red">You have no targets!</p><?php
 	}

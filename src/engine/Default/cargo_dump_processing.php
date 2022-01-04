@@ -18,7 +18,7 @@ if ($player->isLandedOnPlanet()) {
 	create_error('You can\'t dump cargo while on a planet!');
 }
 
-if ($player->getTurns() < 1) {
+if ($player->getTurns() < TURNS_TO_DUMP_CARGO) {
 	create_error('You do not have enough turns to dump cargo!');
 }
 
@@ -71,7 +71,7 @@ if ($player->getExperience() > 0) {
 }
 
 // take turn
-$player->takeTurns(1, 1);
+$player->takeTurns(TURNS_TO_DUMP_CARGO, TURNS_TO_DUMP_CARGO);
 
 $ship->decreaseCargo($good_id, $amount);
 $player->increaseHOF($amount, array('Trade', 'Goods', 'Jettisoned'), HOF_ALLIANCE);
