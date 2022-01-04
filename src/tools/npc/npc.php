@@ -164,7 +164,8 @@ function NPCStuff() : void {
 				checkForShipUpgrade($player);
 
 				// Start the NPC with max hardware
-				$player->getShip()->setHardwareToMax();
+				$ship = $player->getShip();
+				$ship->setHardwareToMax();
 
 				// Equip the ship with as many lasers as it can hold
 				$weaponIDs = [
@@ -176,15 +177,23 @@ function NPCStuff() : void {
 					WEAPON_TYPE_LARGE_PULSE_LASER,
 					WEAPON_TYPE_LASER,
 				];
-				$player->getShip()->removeAllWeapons();
-				while ($player->getShip()->hasOpenWeaponSlots()) {
+				$ship->removeAllWeapons();
+				while ($ship->hasOpenWeaponSlots()) {
 					$weapon = SmrWeapon::getWeapon(array_shift($weaponIDs));
-					$player->getShip()->addWeapon($weapon);
+					$ship->addWeapon($weapon);
+				}
+
+				// Enable special hardware
+				if ($ship->hasCloak()) {
+					$ship->enableCloak();
+				}
+				if ($ship->hasIllusion()) {
+					$ship->setIllusion(array_rand(SHIP_UPGRADE_PATH[$player->getRaceID()]), rand(8, 25), rand(6, 20));
 				}
 
 				// Update database (not essential to have a lock here)
 				$player->update();
-				$player->getShip()->update();
+				$ship->update();
 			}
 
 			if ($player->isDead()) {
