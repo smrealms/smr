@@ -222,21 +222,17 @@ function NPCStuff() : void {
 				// We have a route to follow
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif ($player->getTurns() < NPC_LOW_TURNS || ($player->getTurns() < $player->getMaxTurns() / 2 && $player->getNewbieTurns() < NPC_LOW_NEWBIE_TURNS) || $underAttack) {
+			} elseif ($player->getTurns() < NPC_LOW_TURNS || $underAttack) {
 				// We're low on turns or have been under attack and need to plot course to fed
+				if ($player->hasFederalProtection()) {
+					debug('We are in fed, time to switch to another NPC.');
+					throw new FinalActionException;
+				}
 				if ($player->getTurns() < NPC_LOW_TURNS) {
 					debug('Low Turns:' . $player->getTurns());
 				}
 				if ($underAttack) {
 					debug('Fedding after attack.');
-				}
-				if ($player->hasNewbieTurns()) { //We have newbie turns, we can just wait here.
-					debug('We have newbie turns, let\'s just switch to another NPC.');
-					throw new FinalActionException;
-				}
-				if ($player->hasFederalProtection()) {
-					debug('We are in fed, time to switch to another NPC.');
-					throw new FinalActionException;
 				}
 				processContainer(plotToFed($player));
 			} elseif ($tradeRoute instanceof \Routes\Route) {
