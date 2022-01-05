@@ -202,9 +202,6 @@ function NPCStuff() : void {
 				$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
 				processContainer(Page::create('death_processing.php'));
 			}
-			if ($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning()) {
-				processContainer(Page::create('newbie_warning_processing.php'));
-			}
 
 			// Do we have a plot that ends in Fed?
 			$hasPlotToFed = $player->hasPlottedCourse() && SmrSector::getSector($player->getGameID(), $player->getPlottedCourse()->getEndSectorID())->offersFederalProtection();

@@ -22,6 +22,9 @@ if (Smr\Request::has('create_npc_player')) {
 	$npcPlayer->giveStartingTurns();
 	$npcPlayer->setCredits(SmrGame::getGame($gameID)->getStartingCredits());
 
+	// Prevent them from triggering the newbie warning page
+	$npcPlayer->setNewbieWarning(false);
+
 	// Give a random alignment
 	$npcPlayer->setAlignment(rand(-300, 300));
 
