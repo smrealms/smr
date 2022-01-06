@@ -14,7 +14,7 @@
 		"php-di/php-di": "6.3.5",
 		"phpmailer/phpmailer": "6.5.3",
 		"team-reflex/discord-php": "6.0.3",
-		"vanilla/nbbc": "2.2.4",
+		"vanilla/nbbc": "2.3",
 		"vlucas/phpdotenv": "5.4.1"
 	},
 	"autoload": {
