@@ -6,6 +6,16 @@
 abstract class SmrPlanetType {
 	const MAX_LANDED_UNLIMITED = 0;
 	const DEFAULT_MENU_OPTIONS = ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP', 'FINANCE'];
+
+	/**
+	 * Returns the properties of all the structures this planet type can build.
+	 *
+	 * We could access static::STRUCTURES directly (late static binding), but
+	 * that confuses static analyzers, since there is no STRUCTURES const in
+	 * the base class (nor should there be).
+	 */
+	abstract protected function getStructureData() : array;
+
 	abstract public function name() : string;
 	abstract public function imageLink() : string;
 	abstract public function description() : string;
@@ -44,7 +54,7 @@ abstract class SmrPlanetType {
 	 */
 	public function structureTypes(int $structureID = null) : SmrPlanetStructureType|array {
 		if (!isset($this->structures)) {
-			foreach (static::STRUCTURES as $ID => $Info) {
+			foreach ($this->getStructureData() as $ID => $Info) {
 				$this->structures[$ID] = new SmrPlanetStructureType($ID, $Info);
 			}
 		}
@@ -79,6 +89,9 @@ class TerranPlanet extends SmrPlanetType {
 			'exp_gain' => 540,
 		],
 	];
+	protected function getStructureData() : array {
+		return self::STRUCTURES;
+	}
 	public function name() : string {
 		return "Terran Planet";
 	}
@@ -120,6 +133,9 @@ class AridPlanet extends SmrPlanetType {
 			'exp_gain' => 180,
 		],
 	];
+	protected function getStructureData() : array {
+		return self::STRUCTURES;
+	}
 	public function name() : string {
 		return "Arid Planet";
 	}
@@ -161,6 +177,9 @@ class DwarfPlanet extends SmrPlanetType {
 			'exp_gain' => 540,
 		],
 	];
+	protected function getStructureData() : array {
+		return self::STRUCTURES;
+	}
 	public function name() : string {
 		return "Dwarf Planet";
 	}
@@ -214,6 +233,9 @@ class ProtoPlanet extends SmrPlanetType {
 			'exp_gain' => 540,
 		],
 	];
+	protected function getStructureData() : array {
+		return self::STRUCTURES;
+	}
 	public function name() : string {
 		return "Protoplanet";
 	}
@@ -261,6 +283,9 @@ class DefenseWorld extends SmrPlanetType {
 			'exp_gain' => 9,
 		],
 	];
+	protected function getStructureData() : array {
+		return self::STRUCTURES;
+	}
 	public function name() : string {
 		return "Defense World";
 	}
