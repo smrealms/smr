@@ -8,12 +8,17 @@ networks:
         name: backend
         external: false
 
-# Base configuration for `smr` (production) and `smr-dev` (testing).
-x-smr-common: &smr-common
+# Builds a local smr image for use in other services
+x-smr-builder: &smr-builder
     build:
         context: .
         args:
             - NO_DEV
+    image: local/smr
+
+# Base configuration for `smr` (production) and `smr-dev` (testing).
+x-smr-common: &smr-common
+    <<: *smr-builder
     container_name: ${SMR_HOST}
     networks:
         - frontend
@@ -30,10 +35,7 @@ x-smr-common: &smr-common
 
 # Base configuration for the SMR command line tools
 x-smr-cli: &smr-cli
-    build:
-        context: .
-        args:
-            - NO_DEV
+    <<: *smr-builder
     networks:
         - backend
     depends_on:
