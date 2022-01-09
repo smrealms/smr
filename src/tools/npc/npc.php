@@ -557,7 +557,7 @@ function checkForShipUpgrade(AbstractSmrPlayer $player) : void {
 		}
 		$cost = $player->getShip()->getCostToUpgrade($upgradeShipID);
 		$balance = $player->getCredits() - $cost;
-		if ($balance > MINUMUM_RESERVE_CREDITS) {
+		if ($balance > MINIMUM_RESERVE_CREDITS) {
 			debug('Upgrading to ship type: ' . $upgradeShipID);
 			$player->setCredits($balance);
 			$player->getShip()->setTypeID($upgradeShipID);
