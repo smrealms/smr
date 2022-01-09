@@ -164,7 +164,8 @@ function NPCStuff() : void {
 				checkForShipUpgrade($player);
 
 				// Start the NPC with max hardware
-				$player->getShip()->setHardwareToMax();
+				$ship = $player->getShip();
+				$ship->setHardwareToMax();
 
 				// Equip the ship with as many lasers as it can hold
 				$weaponIDs = [
@@ -176,15 +177,23 @@ function NPCStuff() : void {
 					WEAPON_TYPE_LARGE_PULSE_LASER,
 					WEAPON_TYPE_LASER,
 				];
-				$player->getShip()->removeAllWeapons();
-				while ($player->getShip()->hasOpenWeaponSlots()) {
+				$ship->removeAllWeapons();
+				while ($ship->hasOpenWeaponSlots()) {
 					$weapon = SmrWeapon::getWeapon(array_shift($weaponIDs));
-					$player->getShip()->addWeapon($weapon);
+					$ship->addWeapon($weapon);
+				}
+
+				// Enable special hardware
+				if ($ship->hasCloak()) {
+					$ship->enableCloak();
+				}
+				if ($ship->hasIllusion()) {
+					$ship->setIllusion(array_rand(SHIP_UPGRADE_PATH[$player->getRaceID()]), rand(8, 25), rand(6, 20));
 				}
 
 				// Update database (not essential to have a lock here)
 				$player->update();
-				$player->getShip()->update();
+				$ship->update();
 			}
 
 			if ($player->isDead()) {
@@ -192,9 +201,6 @@ function NPCStuff() : void {
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
 				$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
 				processContainer(Page::create('death_processing.php'));
-			}
-			if ($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning()) {
-				processContainer(Page::create('newbie_warning_processing.php'));
 			}
 
 			// Do we have a plot that ends in Fed?
@@ -213,21 +219,17 @@ function NPCStuff() : void {
 				// We have a route to follow
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif ($player->getTurns() < NPC_LOW_TURNS || ($player->getTurns() < $player->getMaxTurns() / 2 && $player->getNewbieTurns() < NPC_LOW_NEWBIE_TURNS) || $underAttack) {
+			} elseif ($player->getTurns() < NPC_LOW_TURNS || $underAttack) {
 				// We're low on turns or have been under attack and need to plot course to fed
+				if ($player->hasFederalProtection()) {
+					debug('We are in fed, time to switch to another NPC.');
+					throw new FinalActionException;
+				}
 				if ($player->getTurns() < NPC_LOW_TURNS) {
 					debug('Low Turns:' . $player->getTurns());
 				}
 				if ($underAttack) {
 					debug('Fedding after attack.');
-				}
-				if ($player->hasNewbieTurns()) { //We have newbie turns, we can just wait here.
-					debug('We have newbie turns, let\'s just switch to another NPC.');
-					throw new FinalActionException;
-				}
-				if ($player->hasFederalProtection()) {
-					debug('We are in fed, time to switch to another NPC.');
-					throw new FinalActionException;
 				}
 				processContainer(plotToFed($player));
 			} elseif ($tradeRoute instanceof \Routes\Route) {
@@ -555,7 +557,7 @@ function checkForShipUpgrade(AbstractSmrPlayer $player) : void {
 		}
 		$cost = $player->getShip()->getCostToUpgrade($upgradeShipID);
 		$balance = $player->getCredits() - $cost;
-		if ($balance > MINUMUM_RESERVE_CREDITS) {
+		if ($balance > MINIMUM_RESERVE_CREDITS) {
 			debug('Upgrading to ship type: ' . $upgradeShipID);
 			$player->setCredits($balance);
 			$player->getShip()->setTypeID($upgradeShipID);

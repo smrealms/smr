@@ -29,9 +29,6 @@ x-smr-common: &smr-common
     depends_on:
         - mysql
         - smtp
-    volumes:
-        - ./vol_upload:/smr/src/htdocs/upload
-        - ./config:/smr/config:ro
 
 # Base configuration for the SMR command line tools
 x-smr-cli: &smr-cli
@@ -86,6 +83,9 @@ x-mysql-common: &mysql-common
 services:
     smr:
         <<: *smr-common
+        volumes:
+            - ./vol_upload:/smr/src/htdocs/upload
+            - ./config:/smr/config:ro
         environment:
             - XDEBUG_MODE
 
