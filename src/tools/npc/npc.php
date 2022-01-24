@@ -160,45 +160,17 @@ function NPCStuff() : void {
 				$allTradeRoutes = findRoutes($player);
 				$tradeRoute = changeRoute($allTradeRoutes);
 
-				// Upgrade ships if we can
-				checkForShipUpgrade($player);
-
-				// Start the NPC with max hardware
-				$ship = $player->getShip();
-				$ship->setHardwareToMax();
-
-				// Equip the ship with as many lasers as it can hold
-				$weaponIDs = [
-					WEAPON_TYPE_PLANETARY_PULSE_LASER,
-					WEAPON_TYPE_HUGE_PULSE_LASER,
-					WEAPON_TYPE_HUGE_PULSE_LASER,
-					WEAPON_TYPE_LARGE_PULSE_LASER,
-					WEAPON_TYPE_LARGE_PULSE_LASER,
-					WEAPON_TYPE_LARGE_PULSE_LASER,
-					WEAPON_TYPE_LASER,
-				];
-				$ship->removeAllWeapons();
-				while ($ship->hasOpenWeaponSlots()) {
-					$weapon = SmrWeapon::getWeapon(array_shift($weaponIDs));
-					$ship->addWeapon($weapon);
-				}
-
-				// Enable special hardware
-				if ($ship->hasCloak()) {
-					$ship->enableCloak();
-				}
-				if ($ship->hasIllusion()) {
-					$ship->setIllusion(array_rand(SHIP_UPGRADE_PATH[$player->getRaceID()]), rand(8, 25), rand(6, 20));
-				}
+				// Upgrade ship if possible, reset hardware to max, etc.
+				setupShip($player);
 
 				// Update database (not essential to have a lock here)
 				$player->update();
-				$ship->update();
 			}
 
 			if ($player->isDead()) {
 				debug('Some evil person killed us, let\'s move on now.');
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
+				setupShip($player); // reship before continuing
 				$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
 				processContainer(Page::create('death_processing.php'));
 			}
@@ -564,6 +536,43 @@ function checkForShipUpgrade(AbstractSmrPlayer $player) : void {
 			return;
 		}
 	}
+}
+
+function setupShip(AbstractSmrPlayer $player) : void {
+	// Upgrade ships if we can
+	checkForShipUpgrade($player);
+
+	// Start the NPC with max hardware
+	$ship = $player->getShip();
+	$ship->setHardwareToMax();
+
+	// Equip the ship with as many lasers as it can hold
+	$weaponIDs = [
+		WEAPON_TYPE_PLANETARY_PULSE_LASER,
+		WEAPON_TYPE_HUGE_PULSE_LASER,
+		WEAPON_TYPE_HUGE_PULSE_LASER,
+		WEAPON_TYPE_LARGE_PULSE_LASER,
+		WEAPON_TYPE_LARGE_PULSE_LASER,
+		WEAPON_TYPE_LARGE_PULSE_LASER,
+		WEAPON_TYPE_LASER,
+	];
+	$ship->removeAllWeapons();
+	while ($ship->hasOpenWeaponSlots()) {
+		$weapon = SmrWeapon::getWeapon(array_shift($weaponIDs));
+		$ship->addWeapon($weapon);
+	}
+
+	// Enable special hardware
+	if ($ship->hasCloak()) {
+		$ship->enableCloak();
+	}
+	if ($ship->hasIllusion()) {
+		$ship->setIllusion(array_rand(SHIP_UPGRADE_PATH[$player->getRaceID()]), rand(8, 25), rand(6, 20));
+	}
+
+	// Update database (not essential to have a lock here)
+	$player->update();
+	$ship->update();
 }
 
 function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : ?Routes\Route {
