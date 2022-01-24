@@ -154,7 +154,7 @@ function NPCStuff() : void {
 
 				// Ensure the NPC doesn't think it's under attack at startup,
 				// since this could cause it to get stuck in a loop in Fed.
-				$player->removeUnderAttack();
+				$player->setUnderAttack(false);
 
 				// Initialize the trade route for this NPC
 				$allTradeRoutes = findRoutes($player);
