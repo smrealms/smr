@@ -38,6 +38,6 @@ if (isset($ExtraCSSLink)) {
 	} ?>
 </style>
 <link rel="stylesheet" href="/css/colorpicker.css" />
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+<script src="<?php echo JQUERY_URL; ?>"></script>
+<script src="<?php echo JQUERYUI_URL; ?>"></script>
 <script src="/js/smr15.js"></script>
