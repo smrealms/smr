@@ -12,9 +12,9 @@ var svg = d3.select("body")
 		.attr("viewBox", [0, 0, width, height])
 		.classed("svg-content", true)
 		// Enable zoom and pan
-		.call(d3.zoom().on("zoom", function () {
-			$("g.nodes").attr("transform", d3.event.transform);
-			$("g.links").attr("transform", d3.event.transform);
+		.call(d3.zoom().on("zoom", function (event) {
+			$("g.nodes").attr("transform", event.transform);
+			$("g.links").attr("transform", event.transform);
 		}));
 
 // Load the link data into the svg
@@ -83,21 +83,21 @@ simulation.on("tick", function () {
 		.attr("y", function(d) { return d.y + 4; });
 });
 
-function dragstarted(d) {
-	if (!d3.event.active) {
+function dragstarted(event, d) {
+	if (!event.active) {
 		simulation.alphaTarget(0.3).restart();
 	}
 	d.fx = d.x;
 	d.fy = d.y;
 }
 
-function dragged(d) {
-	d.fx = d3.event.x;
-	d.fy = d3.event.y;
+function dragged(event, d) {
+	d.fx = event.x;
+	d.fy = event.y;
 }
 
-function dragended(d) {
-	if (!d3.event.active) {
+function dragended(event, d) {
+	if (!event.active) {
 		simulation.alphaTarget(0);
 	}
 	d.fx = null;

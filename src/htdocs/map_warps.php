@@ -63,7 +63,7 @@ try {
 	</head>
 
 	<body>
-		<script src="https://d3js.org/d3.v5.min.js"></script>
+		<script src="https://d3js.org/d3.v7.min.js"></script>
 		<script src="<?php echo JQUERY_URL; ?>"></script>
 		<script>
 			const graph = <?php echo $data; ?>;
