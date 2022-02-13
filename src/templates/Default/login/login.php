@@ -116,5 +116,5 @@ if (isset($Story)) { ?>
 </div>
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="<?php echo JQUERY_URL; ?>"></script>
 <script src="/js/login.js"></script>
