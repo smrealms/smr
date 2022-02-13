@@ -172,29 +172,6 @@ table.csForces th.header {
    color: #00FF00;
 }
 
-/* Friend vs Foe shades */
-
-.enemy, .enemy:hover  {
-	color: #FF0000;
-}
-.enemyBack, .enemyBack:hover {
-	background-color: #FF0000;
-}
-
-.friendly, .friendly:hover {
-	color: #00AA00;
-}
-.friendlyBack, .friendlyBack:hover {
-	background-color: #00AA00;
-}
-
-.neutral, .neutral:hover {
-	color: #FFD800;
-}
-.neutralBack, .neutralBack:hover {
-	background-color: #FFD800;
-}
-
 /* Op response table */
 table.opResponse {
 	border: 2px solid #BB0808;
