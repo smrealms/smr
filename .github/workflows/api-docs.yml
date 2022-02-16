@@ -13,7 +13,7 @@ jobs:
       - name: Build API Docs
         uses: ./.github/actions/api-docs
       - name: Publish API Docs
-        uses: JamesIves/github-pages-deploy-action@v4.2.3
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
           ssh-key: ${{ secrets.API_DOCS_DEPLOY_KEY }}
           repository-name: smrealms/api-docs
