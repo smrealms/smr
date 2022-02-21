@@ -1,11 +1,5 @@
 <?php declare(strict_types=1);
 
-function htmliseMessage(string $message) : string {
-	$message = htmlentities($message, ENT_COMPAT, 'utf-8');
-	$message = str_replace('&lt;br /&gt;', '<br />', $message);
-	return $message;
-}
-
 function parseBoolean(mixed $check) : bool {
 	// Only negative strings are not implicitly converted to the correct bool
 	if (is_string($check) && (strcasecmp($check, 'NO') == 0 || strcasecmp($check, 'FALSE') == 0)) {

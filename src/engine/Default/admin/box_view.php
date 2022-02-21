@@ -74,7 +74,7 @@ if (!isset($var['box_type_id'])) {
 			}
 
 			$messages[$messageID]['SendTime'] = date($account->getDateTimeFormat(), $dbRecord->getInt('send_time'));
-			$messages[$messageID]['Message'] = bbifyMessage(htmliseMessage($dbRecord->getString('message_text')));
+			$messages[$messageID]['Message'] = nl2br(htmlentities($dbRecord->getString('message_text')));
 		}
 		$template->assign('Messages', $messages);
 	}
