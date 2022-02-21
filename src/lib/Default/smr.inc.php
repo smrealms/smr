@@ -175,7 +175,6 @@ function bbifyMessage(string $message, bool $noLinks = false) : string {
 
 	if (strpos($message, '[') !== false) { //We have BBCode so let's do a full parse.
 		$message = $bbParser->parse($message);
-		$message = str_replace('&lt;br /&gt;', '<br />', $message);
 	} else { //Otherwise just convert newlines
 		$message = nl2br($message, true);
 	}
