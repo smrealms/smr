@@ -74,6 +74,12 @@ $container->addVar('gal_on');
 $container['AJAX'] = true;
 $template->assign('DragPlanetHREF', $container->href());
 
+$container = Page::create('admin/unigen/drag_warp.php');
+$container->addVar('game_id');
+$container->addVar('gal_on');
+$container['AJAX'] = true;
+$template->assign('DragWarpHREF', $container->href());
+
 $container = Page::create('skeleton.php', 'admin/unigen/universe_create_sector_details.php');
 $container->addVar('game_id');
 $container->addVar('gal_on');

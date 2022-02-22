@@ -102,7 +102,15 @@
 								if ($isVisited) {
 									if ($Sector->hasWarp()) {
 										if ($GalaxyMap) { ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php } elseif ($isCurrentSector) { ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapMoveHREF($ThisPlayer); ?>"><?php } ?>
-											<img title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxy()->getDisplayName(); ?>)" alt="Warp to #<?php echo $Sector->getWarp(); ?>" src="images/warp.png" width="16" height="16" /><?php
+											<img src="images/warp.png" width="16" height="16"
+												title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxy()->getDisplayName(); ?>)"
+												alt="Warp to #<?php echo $Sector->getWarp(); ?>" <?php
+												if ($UniGen) { ?>
+													class="drag_loc"
+													data-href="<?php echo $DragWarpHREF; ?>"
+													data-sector="<?php echo $Sector->getSectorID(); ?>" <?php
+												} ?>
+											/><?php
 										if ($isCurrentSector || $GalaxyMap) { ?></a><?php }
 									}
 								} ?>
