@@ -351,13 +351,12 @@ function do_voodoo() : never {
 			Page::create('newbie_warning_processing.php')->go();
 	}
 
-	// Initialize the template
-	$template = Smr\Template::getInstance();
-
 	// Execute the engine files.
 	// This is where the majority of the page-specific work is performed.
 	$var->process();
 
+	// Populate the template
+	$template = Smr\Template::getInstance();
 	if ($session->hasGame()) {
 		$template->assign('UnderAttack', $player->removeUnderAttack());
 	}
