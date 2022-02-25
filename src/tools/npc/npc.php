@@ -121,7 +121,6 @@ function NPCStuff() : void {
 			$changeNPC = false;
 			$allTradeRoutes = [];
 			$tradeRoute = null;
-			$underAttack = false;
 			$actions = 0;
 
 			// We chose a new NPC, we don't care what we were doing beforehand.
@@ -178,10 +177,9 @@ function NPCStuff() : void {
 			// Do we have a plot that ends in Fed?
 			$hasPlotToFed = $player->hasPlottedCourse() && SmrSector::getSector($player->getGameID(), $player->getPlottedCourse()->getEndSectorID())->offersFederalProtection();
 
-			if (!$underAttack && $player->isUnderAttack() && !$hasPlotToFed) {
+			if ($player->isUnderAttack() && !$hasPlotToFed) {
 				// We're under attack and need to plot course to fed.
 				debug('Under Attack');
-				$underAttack = true;
 				processContainer(plotToFed($player));
 			} elseif ($hasPlotToFed) {
 				// We have a route to fed to follow
@@ -191,7 +189,7 @@ function NPCStuff() : void {
 				// We have a route to follow
 				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif ($player->getTurns() < NPC_LOW_TURNS || $underAttack) {
+			} elseif ($player->getTurns() < NPC_LOW_TURNS) {
 				// We're low on turns or have been under attack and need to plot course to fed
 				if ($player->hasFederalProtection()) {
 					debug('We are in fed, time to switch to another NPC.');
@@ -199,9 +197,6 @@ function NPCStuff() : void {
 				}
 				if ($player->getTurns() < NPC_LOW_TURNS) {
 					debug('Low Turns:' . $player->getTurns());
-				}
-				if ($underAttack) {
-					debug('Fedding after attack.');
 				}
 				processContainer(plotToFed($player));
 			} elseif ($tradeRoute instanceof \Routes\Route) {
