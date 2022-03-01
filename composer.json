@@ -13,7 +13,7 @@
 		"php": "^8.0",
 		"php-di/php-di": "6.3.5",
 		"phpmailer/phpmailer": "6.6.0",
-		"team-reflex/discord-php": "6.0.3",
+		"team-reflex/discord-php": "7.0.3",
 		"vanilla/nbbc": "2.3.1",
 		"vlucas/phpdotenv": "5.4.1"
 	},
