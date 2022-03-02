@@ -65,6 +65,6 @@
 		"overtrue/phplint": "4.1.0",
 		"phpunit/phpunit": "9.5.16",
 		"phpunit/php-code-coverage": "9.2.14",
-		"phpstan/phpstan": "1.4.6"
+		"phpstan/phpstan": "1.4.7"
 	}
 }
