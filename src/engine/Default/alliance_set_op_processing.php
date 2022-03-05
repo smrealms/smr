@@ -34,7 +34,11 @@ if (!empty($var['cancel'])) {
 	}
 
 	// add op to db
-	$db->write('INSERT INTO alliance_has_op (alliance_id, game_id, time) VALUES (' . $db->escapeNumber($player->getAllianceID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($time) . ')');
+	$db->insert('alliance_has_op', [
+		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'time' => $db->escapeNumber($time),
+	]);
 
 	// Send an alliance message that expires at the time of the op.
 	// Since the message is procedural, don't exclude this player.

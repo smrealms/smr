@@ -327,7 +327,12 @@ function do_voodoo() : never {
 				$session->fetchVarInfo();
 				if ($session->hasCurrentVar() === false) {
 					if (ENABLE_DEBUG) {
-						$db->write('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber($account->getAccountID()) . ',0,0)');
+						$db->insert('debug', [
+							'debug_type' => $db->escapeString('SPAM'),
+							'account_id' => $db->escapeNumber($account->getAccountID()),
+							'value' => 0,
+							'value_2' => 0,
+						]);
 					}
 					throw new Smr\Exceptions\UserError('Please do not spam click!');
 				}
@@ -426,8 +431,12 @@ function acquire_lock(int $sector) : bool {
 	// Insert ourselves into the queue.
 	$session = Smr\Session::getInstance();
 	$db = Smr\Database::getInstance();
-	$db->write('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber($session->getGameID()) . ',' . $db->escapeNumber($session->getAccountID()) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ')');
-	$lock = $db->getInsertID();
+	$lock = $db->insert('locks_queue', [
+		'game_id' => $db->escapeNumber($session->getGameID()),
+		'account_id' => $db->escapeNumber($session->getAccountID()),
+		'sector_id' => $db->escapeNumber($sector),
+		'timestamp' => $db->escapeNumber(Smr\Epoch::time()),
+	]);
 
 	for ($i = 0; $i < 250; ++$i) {
 		if (time() - Smr\Epoch::time() >= LOCK_DURATION - LOCK_BUFFER) {

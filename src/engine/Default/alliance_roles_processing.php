@@ -51,10 +51,24 @@ if (!isset($var['role_id'])) {
 		$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
 	}
 
-	$db->write('INSERT INTO alliance_has_roles
-				(alliance_id, game_id, role_id, role, with_per_day, positive_balance, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, op_leader, view_bonds)
-				VALUES (' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString(Smr\Request::get('role')) . ', ' . $db->escapeNumber($withPerDay) . ',' . $db->escapeBoolean($positiveBalance) . ', ' . $db->escapeBoolean($removeMember) . ', ' . $db->escapeBoolean($changePass) . ', ' . $db->escapeBoolean($changeMOD) . ', ' . $db->escapeBoolean($changeRoles) . ', ' . $db->escapeBoolean($planetAccess) . ', ' . $db->escapeBoolean($exemptWith) . ', ' . $db->escapeBoolean($mbMessages) . ', ' . $db->escapeBoolean($sendAllMsg) . ', ' . $db->escapeBoolean($opLeader) . ', ' . $db->escapeBoolean($viewBonds) . ')');
-
+	$db->insert('alliance_has_roles', [
+		'alliance_id' => $db->escapeNumber($alliance_id),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'role_id' => $db->escapeNumber($role_id),
+		'role' => $db->escapeString(Smr\Request::get('role')),
+		'with_per_day' => $db->escapeNumber($withPerDay),
+		'positive_balance' => $db->escapeBoolean($positiveBalance),
+		'remove_member' => $db->escapeBoolean($removeMember),
+		'change_pass' => $db->escapeBoolean($changePass),
+		'change_mod' => $db->escapeBoolean($changeMOD),
+		'change_roles' => $db->escapeBoolean($changeRoles),
+		'planet_access' => $db->escapeBoolean($planetAccess),
+		'exempt_with' => $db->escapeBoolean($exemptWith),
+		'mb_messages' => $db->escapeBoolean($mbMessages),
+		'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
+		'op_leader' => $db->escapeBoolean($opLeader),
+		'view_bonds' => $db->escapeBoolean($viewBonds),
+	]);
 	$db->unlock();
 } else {
 	// if no role is given we delete that entry

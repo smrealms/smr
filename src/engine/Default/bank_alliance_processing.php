@@ -93,9 +93,17 @@ if ($dbResult->hasRecord()) {
 
 // save log
 $requestExempt = Smr\Request::has('requestExempt') ? 1 : 0;
-$db->write('INSERT INTO alliance_bank_transactions
-			(alliance_id, game_id, transaction_id, time, payee_id, reason, transaction, amount, request_exempt)
-			VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($next_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($message) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($requestExempt) . ')');
+$db->insert('alliance_bank_transactions', [
+	'alliance_id' => $db->escapeNumber($alliance_id),
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'transaction_id' => $db->escapeNumber($next_id),
+	'time' => $db->escapeNumber(Smr\Epoch::time()),
+	'payee_id' => $db->escapeNumber($player->getAccountID()),
+	'reason' => $db->escapeString($message),
+	'transaction' => $db->escapeString($action),
+	'amount' => $db->escapeNumber($amount),
+	'request_exempt' => $db->escapeNumber($requestExempt),
+]);
 
 // update player credits
 $player->update();

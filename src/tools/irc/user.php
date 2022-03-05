@@ -88,7 +88,13 @@ function user_nick(string $rdata) : bool
 
 			} else {
 				// new nick?
-				$db->write('INSERT INTO irc_seen (nick, user, host, channel, signed_on) VALUES(' . $db->escapeString($new_nick) . ', ' . $db->escapeString($user) . ', ' . $db->escapeString($host) . ', ' . $db->escapeString($channel) . ', ' . time() . ')');
+				$db->insert('irc_seen', [
+					'nick' => $db->escapeString($new_nick),
+					'user' => $db->escapeString($user),
+					'host' => $db->escapeString($host),
+					'channel' => $db->escapeString($channel),
+					'signed_on' => $db->escapeNumber(time()),
+				]);
 			}
 
 		}

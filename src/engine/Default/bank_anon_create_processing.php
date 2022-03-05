@@ -14,7 +14,13 @@ $dbResult = $db->read('SELECT MAX(anon_id) FROM anon_bank WHERE game_id = ' . $d
 if ($dbResult->hasRecord()) {
 	$new_acc = $dbResult->record()->getInt('MAX(anon_id)') + 1;
 }
-$db->write('INSERT INTO anon_bank (game_id, anon_id, owner_id, password, amount) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($new_acc) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($password) . ', 0)');
+$db->insert('anon_bank', [
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'anon_id' => $db->escapeNumber($new_acc),
+	'owner_id' => $db->escapeNumber($player->getAccountID()),
+	'password' => $db->escapeString($password),
+	'amount' => 0,
+]);
 
 $container = Page::create('skeleton.php', 'bank_anon.php');
 $container['message'] = '<p>Account #' . $new_acc . ' has been opened for you.</p>';

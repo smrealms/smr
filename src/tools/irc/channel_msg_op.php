@@ -141,8 +141,11 @@ function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player) : boo
 		}
 
 		// add op to db
-		$db->write('INSERT INTO alliance_has_op (alliance_id, game_id, time)
-					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $db->escapeNumber($op_time) . ')');
+		$db->insert('alliance_has_op', [
+			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'time' => $db->escapeNumber($op_time),
+		]);
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The OP has been scheduled.' . EOL);
 		return true;

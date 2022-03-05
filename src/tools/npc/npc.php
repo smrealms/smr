@@ -340,11 +340,18 @@ function debug(string $message, mixed $debugObject = null) : void {
 		$accountID = $session->getAccountID();
 		$var = $session->getCurrentVar();
 		$db = Smr\Database::getInstance();
-		$db->write('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ?SCRIPT_ID:0) . ', ' . $accountID . ',NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString(var_export($var, true)) . ')');
+		$logID = $db->insert('npc_logs', [
+			'script_id' => $db->escapeNumber(defined('SCRIPT_ID') ? SCRIPT_ID : 0),
+			'npc_id' => $db->escapeNumber($accountID),
+			'time' => 'NOW()',
+			'message' => $db->escapeString($message),
+			'debug_info' => $db->escapeString(var_export($debugObject, true)),
+			'var' => $db->escapeString(var_export($var, true)),
+		]);
 
 		// On the first call to debug, we need to update the script_id retroactively
 		if (!defined('SCRIPT_ID')) {
-			define('SCRIPT_ID', $db->getInsertID());
+			define('SCRIPT_ID', $logID);
 			$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
 		}
 	}
@@ -673,9 +680,17 @@ function findRoutes(SmrPlayer $player) : array {
 			throw new FinalActionException;
 		}
 
-		$db->write('INSERT INTO route_cache ' .
-				'(game_id, max_ports, goods_allowed, races_allowed, start_sector_id, end_sector_id, routes_for_port, max_distance, routes)' .
-				' VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($maxNumberOfPorts) . ', ' . $db->escapeObject($tradeGoods) . ', ' . $db->escapeObject($tradeRaces) . ', ' . $db->escapeNumber($startSectorID) . ', ' . $db->escapeNumber($endSectorID) . ', ' . $db->escapeNumber($routesForPort) . ', ' . $db->escapeNumber($maxDistance) . ', ' . $db->escapeObject($routesMerged, true) . ')');
+		$db->insert('route_cache', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'max_ports' => $db->escapeNumber($maxNumberOfPorts),
+			'goods_allowed' => $db->escapeObject($tradeGoods),
+			'races_allowed' => $db->escapeObject($tradeRaces),
+			'start_sector_id' => $db->escapeNumber($startSectorID),
+			'end_sector_id' => $db->escapeNumber($endSectorID),
+			'routes_for_port' => $db->escapeNumber($routesForPort),
+			'max_distance' => $db->escapeNumber($maxDistance),
+			'routes' => $db->escapeObject($routesMerged, true),
+		]);
 		debug('Found Routes: #' . count($routesMerged));
 		return $routesMerged;
 	}

@@ -31,9 +31,13 @@ if ($var['accept']) {
 				$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
 			}
 			$allianceName = SmrAlliance::getAlliance($alliance_id_B, $player->getGameID())->getAllianceName();
-			$db->write('INSERT INTO alliance_has_roles
-				(alliance_id, game_id, role_id, role, treaty_created)
-				VALUES (' . $db->escapeNumber($alliance_id_A) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString($allianceName) . ',1)');
+			$db->insert('alliance_has_roles', [
+				'alliance_id' => $db->escapeNumber($alliance_id_A),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'role_id' => $db->escapeNumber($role_id),
+				'role' => $db->escapeString($allianceName),
+				'treaty_created' => 1,
+			]);
 		}
 	}
 } else {

@@ -12,6 +12,10 @@ if (Smr\Request::get('action') == 'Preview announcement') {
 
 // put the msg into the database
 $db = Smr\Database::getInstance();
-$db->write('INSERT INTO announcement (time, admin_id, msg) VALUES(' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($message) . ')');
+$db->insert('announcement', [
+	'time' => $db->escapeNumber(Smr\Epoch::time()),
+	'admin_id' => $db->escapeNumber($account->getAccountID()),
+	'msg' => $db->escapeString($message),
+]);
 
 Page::create('skeleton.php', 'admin/admin_tools.php')->go();

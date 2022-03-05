@@ -645,8 +645,15 @@ class AbstractSmrPort {
 				$newsMessage .= 'a bounty of <span class="creds">' . $bounty . '</span> credits for the death of ' . $trigger->getBBLink();
 			}
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
-//			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
-			$this->db->write('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ',' . $this->db->escapeString($newsMessage) . ',\'REGULAR\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
+
+			$this->db->insert('news', [
+				'game_id' => $this->db->escapeNumber($this->getGameID()),
+				'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+				'news_message' => $this->db->escapeString($newsMessage),
+				'killer_id' => $this->db->escapeNumber($trigger->getAccountID()),
+				'killer_alliance' => $this->db->escapeNumber($trigger->getAllianceID()),
+				'dead_id' => $this->db->escapeNumber(ACCOUNT_ID_PORT),
+			]);
 		}
 	}
 
@@ -1179,20 +1186,20 @@ class AbstractSmrPort {
 								', race_id = ' . $this->db->escapeNumber($this->getRaceID()) . '
 								WHERE ' . $this->SQL . ' LIMIT 1');
 			} else {
-				$this->db->write('INSERT INTO port (game_id,sector_id,experience,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)
-								values
-								(' . $this->db->escapeNumber($this->getGameID()) .
-								',' . $this->db->escapeNumber($this->getSectorID()) .
-								',' . $this->db->escapeNumber($this->getExperience()) .
-								',' . $this->db->escapeNumber($this->getShields()) .
-								',' . $this->db->escapeNumber($this->getArmour()) .
-								',' . $this->db->escapeNumber($this->getCDs()) .
-								',' . $this->db->escapeNumber($this->getLevel()) .
-								',' . $this->db->escapeNumber($this->getCredits()) .
-								',' . $this->db->escapeNumber($this->getUpgrade()) .
-								',' . $this->db->escapeNumber($this->getReinforceTime()) .
-								',' . $this->db->escapeNumber($this->getAttackStarted()) .
-								',' . $this->db->escapeNumber($this->getRaceID()) . ')');
+				$this->db->insert('port', [
+					'game_id' => $this->db->escapeNumber($this->getGameID()),
+					'sector_id' => $this->db->escapeNumber($this->getSectorID()),
+					'experience' => $this->db->escapeNumber($this->getExperience()),
+					'shields' => $this->db->escapeNumber($this->getShields()),
+					'armour' => $this->db->escapeNumber($this->getArmour()),
+					'combat_drones' => $this->db->escapeNumber($this->getCDs()),
+					'level' => $this->db->escapeNumber($this->getLevel()),
+					'credits' => $this->db->escapeNumber($this->getCredits()),
+					'upgrade' => $this->db->escapeNumber($this->getUpgrade()),
+					'reinforce_time' => $this->db->escapeNumber($this->getReinforceTime()),
+					'attack_started' => $this->db->escapeNumber($this->getAttackStarted()),
+					'race_id' => $this->db->escapeNumber($this->getRaceID()),
+				]);
 				$this->isNew = false;
 			}
 			$this->hasChanged = false;
@@ -1365,7 +1372,15 @@ class AbstractSmrPort {
 		} else {
 			$news .= $killer->getBBLink();
 		}
-		$this->db->write('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
+		$this->db->insert('news', [
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'news_message' => $this->db->escapeString($news),
+			'killer_id' => $this->db->escapeNumber($killer->getAccountID()),
+			'killer_alliance' => $this->db->escapeNumber($killer->getAllianceID()),
+			'dead_id' => $this->db->escapeNumber(ACCOUNT_ID_PORT),
+		]);
+
 		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ', $return['KillerBounty']);

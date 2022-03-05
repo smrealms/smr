@@ -10,8 +10,12 @@ $template->assign('PageTopic', 'Viewing Articles');
 Menu::galactic_post();
 
 if (isset($var['news'])) {
-	$db->write('INSERT INTO news (game_id, time, news_message, type) ' .
-		'VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeString($var['news']) . ', \'BREAKING\')');
+	$db->insert('news', [
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'time' => $db->escapeNumber(Smr\Epoch::time()),
+		'news_message' => $db->escapeString($var['news']),
+		'type' => $db->escapeString('breaking'),
+	]);
 	// avoid multiple insertion on ajax updates
 	unset($var['news']);
 	$var['added_to_breaking_news'] = true;

@@ -82,7 +82,17 @@ $results = [
 $account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'] . ' and the other team does ' . $results['Defenders']['TotalDamage'], $sector->getSectorID());
 
 $db = Smr\Database::getInstance();
-$db->write('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLAYER\',' . $db->escapeNumber($sector->getSectorID()) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($var['target']) . ',' . $db->escapeNumber($targetPlayer->getAllianceID()) . ',' . $db->escapeObject($results, true) . ')');
+$db->insert('combat_logs', [
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'type' => $db->escapeString('PLAYER'),
+	'sector_id' => $db->escapeNumber($sector->getSectorID()),
+	'timestamp' => $db->escapeNumber(Smr\Epoch::time()),
+	'attacker_id' => $db->escapeNumber($player->getAccountID()),
+	'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
+	'defender_id' => $db->escapeNumber($var['target']),
+	'defender_alliance_id' => $db->escapeNumber($targetPlayer->getAllianceID()),
+	'result' => $db->escapeObject($results, true),
+]);
 
 $container = Page::create('skeleton.php', 'trader_attack.php');
 

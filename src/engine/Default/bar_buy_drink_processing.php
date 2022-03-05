@@ -39,7 +39,12 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 	$drinkName = $drinkList[array_rand($drinkList)];
 
 	$curr_drink_id++;
-	$db->write('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+	$db->insert('player_has_drinks', [
+		'account_id' => $db->escapeNumber($player->getAccountID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'drink_id' => $db->escapeNumber($curr_drink_id),
+		'time' => $db->escapeNumber(Smr\Epoch::time()),
+	]);
 
 	if (!Smr\BarDrink::isSpecial($drinkName)) {
 		$message .= ('You have bought a ' . $drinkName . ' for $10');

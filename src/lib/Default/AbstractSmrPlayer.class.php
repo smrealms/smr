@@ -281,9 +281,18 @@ abstract class AbstractSmrPlayer {
 		}
 
 		$startSectorID = 0; // Temporarily put player into non-existent sector
-		$db->write('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, sector_id, last_cpl_action, last_active, npc, newbie_status)
-					VALUES(' . $db->escapeNumber($accountID) . ', ' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($playerID) . ', ' . $db->escapeString($playerName) . ', ' . $db->escapeNumber($raceID) . ', ' . $db->escapeNumber($startSectorID) . ', ' . $db->escapeNumber($time) . ', ' . $db->escapeNumber($time) . ',' . $db->escapeBoolean($npc) . ',' . $db->escapeBoolean($isNewbie) . ')');
-
+		$db->insert('player', [
+			'account_id' => $db->escapeNumber($accountID),
+			'game_id' => $db->escapeNumber($gameID),
+			'player_id' => $db->escapeNumber($playerID),
+			'player_name' => $db->escapeString($playerName),
+			'race_id' => $db->escapeNumber($raceID),
+			'sector_id' => $db->escapeNumber($startSectorID),
+			'last_cpl_action' => $db->escapeNumber($time),
+			'last_active' => $db->escapeNumber($time),
+			'npc' => $db->escapeBoolean($npc),
+			'newbie_status' => $db->escapeBoolean($isNewbie),
+		]);
 		$db->unlock();
 
 		$player = SmrPlayer::getPlayer($accountID, $gameID);
@@ -626,21 +635,17 @@ abstract class AbstractSmrPlayer {
 	protected static function doMessageSending(int $senderID, int $receiverID, int $gameID, int $messageTypeID, string $message, int $expires, bool $senderDelete = false, bool $unread = true) : int {
 		$message = trim($message);
 		$db = Smr\Database::getInstance();
-		// send him the message
-		$db->write('INSERT INTO message
-			(account_id,game_id,message_type_id,message_text,
-			sender_id,send_time,expire_time,sender_delete) VALUES(' .
-			$db->escapeNumber($receiverID) . ',' .
-			$db->escapeNumber($gameID) . ',' .
-			$db->escapeNumber($messageTypeID) . ',' .
-			$db->escapeString($message) . ',' .
-			$db->escapeNumber($senderID) . ',' .
-			$db->escapeNumber(Smr\Epoch::time()) . ',' .
-			$db->escapeNumber($expires) . ',' .
-			$db->escapeBoolean($senderDelete) . ')'
-		);
 		// Keep track of the message_id so it can be returned
-		$insertID = $db->getInsertID();
+		$insertID = $db->insert('message', [
+			'account_id' => $db->escapeNumber($receiverID),
+			'game_id' => $db->escapeNumber($gameID),
+			'message_type_id' => $db->escapeNumber($messageTypeID),
+			'message_text' => $db->escapeString($message),
+			'sender_id' => $db->escapeNumber($senderID),
+			'send_time' => $db->escapeNumber(Smr\Epoch::time()),
+			'expire_time' => $db->escapeNumber($expires),
+			'sender_delete' => $db->escapeBoolean($senderDelete),
+		]);
 
 		if ($unread === true) {
 			// give him the message icon
@@ -1375,7 +1380,12 @@ abstract class AbstractSmrPlayer {
 		} else {
 			$roleID = ALLIANCE_ROLE_LEADER;
 		}
-		$this->db->write('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($roleID) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+		$this->db->insert('player_has_alliance_role', [
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'account_id' => $this->db->escapeNumber($this->getAccountID()),
+			'role_id' => $this->db->escapeNumber($roleID),
+			'alliance_id' => $this->db->escapeNumber($this->getAllianceID()),
+		]);
 
 		$this->actionTaken('JoinAlliance', array('Alliance' => $alliance));
 	}
@@ -1704,10 +1714,14 @@ abstract class AbstractSmrPlayer {
 			'OffsetLeft' => 1
 		);
 
-		$this->db->write('
-			INSERT INTO player_stored_sector (account_id, game_id, sector_id, label, offset_top, offset_left)
-			VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($sectorID) . ',' . $this->db->escapeString($label) . ',1,1)'
-		);
+		$this->db->insert('player_stored_sector', [
+			'account_id' => $this->db->escapeNumber($this->getAccountID()),
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'sector_id' => $this->db->escapeNumber($sectorID),
+			'label' => $this->db->escapeString($label),
+			'offset_top' => 1,
+			'offset_left' => 1,
+		]);
 	}
 
 	public function deleteDestinationButton(int $sectorID) : void {
@@ -2179,7 +2193,15 @@ abstract class AbstractSmrPlayer {
 		}
 		$msg .= ' in Sector&nbsp;' . Globals::getSectorBBLink($this->getSectorID());
 		$this->getSector()->increaseBattles(1);
-		$this->db->write('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ',' . $this->db->escapeString($msg) . ',\'regular\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+		$this->db->insert('news', [
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'news_message' => $this->db->escapeString($msg),
+			'killer_id' => $this->db->escapeNumber($killer->getAccountID()),
+			'killer_alliance' => $this->db->escapeNumber($killer->getAllianceID()),
+			'dead_id' => $this->db->escapeNumber($this->getAccountID()),
+			'dead_alliance' => $this->db->escapeNumber($this->getAllianceID()),
+		]);
 
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
 		self::sendMessageFromFedClerk($this->getGameID(), $killer->getAccountID(), 'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
@@ -2330,8 +2352,15 @@ abstract class AbstractSmrPlayer {
 		}
 		$news_message .= ' was destroyed by ' . $owner->getBBLink() . '\'s forces in sector ' . Globals::getSectorBBLink($forces->getSectorID());
 		// insert the news entry
-		$this->db->write('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
-						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+		$this->db->insert('news', [
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'news_message' => $this->db->escapeString($news_message),
+			'killer_id' => $this->db->escapeNumber($owner->getAccountID()),
+			'killer_alliance' => $this->db->escapeNumber($owner->getAllianceID()),
+			'dead_id' => $this->db->escapeNumber($this->getAccountID()),
+			'dead_alliance' => $this->db->escapeNumber($this->getAllianceID()),
+		]);
 
 		// Player loses 15% experience
 		$expLossPercentage = .15;
@@ -2366,8 +2395,14 @@ abstract class AbstractSmrPlayer {
 		}
 		$news_message .= ' was destroyed while invading ' . $port->getDisplayName() . '.';
 		// insert the news entry
-		$this->db->write('INSERT INTO news (game_id, time, news_message,killer_id,dead_id,dead_alliance)
-						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+		$this->db->insert('news', [
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'news_message' => $this->db->escapeString($news_message),
+			'killer_id' => $this->db->escapeNumber(ACCOUNT_ID_PORT),
+			'dead_id' => $this->db->escapeNumber($this->getAccountID()),
+			'dead_alliance' => $this->db->escapeNumber($this->getAllianceID()),
+		]);
 
 		// Player loses between 15% and 20% experience
 		$expLossPercentage = .20 - .05 * ($port->getLevel() - 1) / ($port->getMaxLevel() - 1);
@@ -2403,8 +2438,15 @@ abstract class AbstractSmrPlayer {
 		}
 		$news_message .= ' was destroyed by ' . $planet->getCombatName() . '\'s planetary defenses in sector ' . Globals::getSectorBBLink($planet->getSectorID()) . '.';
 		// insert the news entry
-		$this->db->write('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
-						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($planetOwner->getAccountID()) . ',' . $this->db->escapeNumber($planetOwner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
+		$this->db->insert('news', [
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'news_message' => $this->db->escapeString($news_message),
+			'killer_id' => $this->db->escapeNumber($planetOwner->getAccountID()),
+			'killer_alliance' => $this->db->escapeNumber($planetOwner->getAllianceID()),
+			'dead_id' => $this->db->escapeNumber($this->getAccountID()),
+			'dead_alliance' => $this->db->escapeNumber($this->getAllianceID()),
+		]);
 
 		// Player loses between 15% and 20% experience
 		$expLossPercentage = .20 - .05 * $planet->getLevel() / $planet->getMaxLevel();
@@ -3092,7 +3134,15 @@ abstract class AbstractSmrPlayer {
 				$bounty = $this->getBounty($key);
 				if ($bounty['New'] === true) {
 					if ($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0) {
-						$this->db->write('INSERT INTO bounty (account_id,game_id,type,amount,smr_credits,claimer_id,time) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeString($bounty['Type']) . ',' . $this->db->escapeNumber($bounty['Amount']) . ',' . $this->db->escapeNumber($bounty['SmrCredits']) . ',' . $this->db->escapeNumber($bounty['Claimer']) . ',' . $this->db->escapeNumber($bounty['Time']) . ')');
+						$this->db->insert('bounty', [
+							'account_id' => $this->db->escapeNumber($this->getAccountID()),
+							'game_id' => $this->db->escapeNumber($this->getGameID()),
+							'type' => $this->db->escapeString($bounty['Type']),
+							'amount' => $this->db->escapeNumber($bounty['Amount']),
+							'smr_credits' => $this->db->escapeNumber($bounty['SmrCredits']),
+							'claimer_id' => $this->db->escapeNumber($bounty['Claimer']),
+							'time' => $this->db->escapeNumber($bounty['Time']),
+						]);
 					}
 				} else {
 					if ($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0) {
@@ -3120,7 +3170,10 @@ abstract class AbstractSmrPlayer {
 		if (!empty(self::$hasHOFVisChanged)) {
 			foreach (self::$hasHOFVisChanged as $hofType => $changeType) {
 				if ($changeType == self::HOF_NEW) {
-					$this->db->write('INSERT INTO hof_visibility (type, visibility) VALUES (' . $this->db->escapeString($hofType) . ',' . $this->db->escapeString(self::$HOFVis[$hofType]) . ')');
+					$this->db->insert('hof_visibility', [
+						'type' => $this->db->escapeString($hofType),
+						'visibility' => $this->db->escapeString(self::$HOFVis[$hofType]),
+					]);
 				} else {
 					$this->db->write('UPDATE hof_visibility SET visibility = ' . $this->db->escapeString(self::$HOFVis[$hofType]) . ' WHERE type = ' . $this->db->escapeString($hofType) . ' LIMIT 1');
 				}
@@ -3143,7 +3196,12 @@ abstract class AbstractSmrPlayer {
 				$amount = $this->getHOF($tempTypeList);
 				if ($hofChanged == self::HOF_NEW) {
 					if ($amount > 0) {
-						$this->db->write('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeArray($tempTypeList, ':', false) . ',' . $this->db->escapeNumber($amount) . ')');
+						$this->db->insert('player_hof', [
+							'account_id' => $this->db->escapeNumber($this->getAccountID()),
+							'game_id' => $this->db->escapeNumber($this->getGameID()),
+							'type' => $this->db->escapeArray($tempTypeList, ':', false),
+							'amount' => $this->db->escapeNumber($amount),
+						]);
 					}
 				} elseif ($hofChanged == self::HOF_CHANGED) {
 					$this->db->write('UPDATE player_hof

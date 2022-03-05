@@ -164,9 +164,17 @@ abstract class AbstractSmrAccount {
 		}
 		$db = Smr\Database::getInstance();
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
-		$db->write('INSERT INTO account (login, password, email, validation_code, last_login, offset, referral_id, hof_name, hotkeys) VALUES(' .
-			$db->escapeString($login) . ', ' . $db->escapeString($passwordHash) . ', ' . $db->escapeString($email) . ', ' .
-			$db->escapeString(random_string(10)) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeNumber($timez) . ',' . $db->escapeNumber($referral) . ',' . $db->escapeString($login) . ',' . $db->escapeObject([]) . ')');
+		$db->insert('account', [
+			'login' => $db->escapeString($login),
+			'password' => $db->escapeString($passwordHash),
+			'email' => $db->escapeString($email),
+			'validation_code' => $db->escapeString(random_string(10)),
+			'last_login' => $db->escapeNumber(Smr\Epoch::time()),
+			'offset' => $db->escapeNumber($timez),
+			'referral_id' => $db->escapeNumber($referral),
+			'hof_name' => $db->escapeString($login),
+			'hotkeys' => $db->escapeObject([]),
+		]);
 		return self::getAccountByName($login);
 	}
 
@@ -484,9 +492,13 @@ abstract class AbstractSmrAccount {
 
 	public function log(int $log_type_id, string $msg, int $sector_id = 0) : void {
 		if ($this->isLoggingEnabled()) {
-			$this->db->write('INSERT INTO account_has_logs ' .
-				'(account_id, microtime, log_type_id, message, sector_id) ' .
-				'VALUES(' . $this->db->escapeNumber($this->account_id) . ', ' . $this->db->escapeMicrotime(Smr\Epoch::microtime()) . ', ' . $this->db->escapeNumber($log_type_id) . ', ' . $this->db->escapeString($msg) . ', ' . $this->db->escapeNumber($sector_id) . ')');
+			$this->db->insert('account_has_logs', [
+				'account_id' => $this->db->escapeNumber($this->account_id),
+				'microtime' => $this->db->escapeMicrotime(Smr\Epoch::microtime()),
+				'log_type_id' => $this->db->escapeNumber($log_type_id),
+				'message' => $this->db->escapeString($msg),
+				'sector_id' => $this->db->escapeNumber($sector_id),
+			]);
 		}
 	}
 
@@ -608,16 +620,13 @@ abstract class AbstractSmrAccount {
 
 	public static function doMessageSendingToBox(int $senderID, int $boxTypeID, string $message, int $gameID = 0) : void {
 		$db = Smr\Database::getInstance();
-		// send him the message
-		$db->write('INSERT INTO message_boxes
-			(box_type_id,game_id,message_text,
-			sender_id,send_time) VALUES (' .
-			$db->escapeNumber($boxTypeID) . ',' .
-			$db->escapeNumber($gameID) . ',' .
-			$db->escapeString($message) . ',' .
-			$db->escapeNumber($senderID) . ',' .
-			$db->escapeNumber(Smr\Epoch::time()) . ')'
-		);
+		$db->insert('message_boxes', [
+			'box_type_id' => $db->escapeNumber($boxTypeID),
+			'game_id' => $db->escapeNumber($gameID),
+			'message_text' => $db->escapeString($message),
+			'sender_id' => $db->escapeNumber($senderID),
+			'send_time' => $db->escapeNumber(Smr\Epoch::time()),
+		]);
 	}
 
 	public function getAccountID() : int {
@@ -935,7 +944,11 @@ abstract class AbstractSmrAccount {
 			}
 			return;
 		}
-		$this->db->write('INSERT INTO account_auth values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeString($loginType) . ',' . $this->db->escapeString($authKey) . ');');
+		$this->db->insert('account_auth', [
+			'account_id' => $this->db->escapeNumber($this->getAccountID()),
+			'login_type' => $this->db->escapeString($loginType),
+			'auth_key' => $this->db->escapeString($authKey),
+		]);
 	}
 
 	public function generatePasswordReset() : void {
@@ -1127,7 +1140,11 @@ abstract class AbstractSmrAccount {
 			return;
 		}
 		if ($this->points == 0) {
-			$this->db->write('INSERT INTO account_has_points (account_id, points, last_update) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($numPoints) . ', ' . $this->db->escapeNumber($lastUpdate ?? Smr\Epoch::time()) . ')');
+			$this->db->insert('account_has_points', [
+				'account_id' => $this->db->escapeNumber($this->getAccountID()),
+				'points' => $this->db->escapeNumber($numPoints),
+				'last_update' => $this->db->escapeNumber($lastUpdate ?? Smr\Epoch::time()),
+			]);
 		} elseif ($numPoints <= 0) {
 			$this->db->write('DELETE FROM account_has_points WHERE ' . $this->SQL . ' LIMIT 1');
 		} else {
@@ -1210,9 +1227,12 @@ abstract class AbstractSmrAccount {
 		$this->db->write('DELETE FROM active_session WHERE ' . $this->SQL . ' LIMIT 1');
 		$this->db->unlock();
 
-		$this->db->write('INSERT INTO account_has_closing_history
-						(account_id, time, admin_id, action)
-						VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeNumber($admin->getAccountID()) . ', ' . $this->db->escapeString('Closed') . ');');
+		$this->db->insert('account_has_closing_history', [
+			'account_id' => $this->db->escapeNumber($this->getAccountID()),
+			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'admin_id' => $this->db->escapeNumber($admin->getAccountID()),
+			'action' => $this->db->escapeString('Closed'),
+		]);
 		$this->db->write('UPDATE player SET newbie_turns = 1
 						WHERE ' . $this->SQL . '
 						AND newbie_turns = 0
@@ -1238,9 +1258,12 @@ abstract class AbstractSmrAccount {
 			$adminID = $admin->getAccountID();
 		}
 		$this->db->write('DELETE FROM account_is_closed WHERE ' . $this->SQL . ' LIMIT 1');
-		$this->db->write('INSERT INTO account_has_closing_history
-						(account_id, time, admin_id, action)
-						VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeNumber($adminID) . ', ' . $this->db->escapeString('Opened') . ')');
+		$this->db->insert('account_has_closing_history', [
+			'account_id' => $this->db->escapeNumber($this->getAccountID()),
+			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'admin_id' => $this->db->escapeNumber($adminID),
+			'action' => $this->db->escapeString('Opened'),
+		]);
 		$this->db->write('UPDATE player SET last_turn_update = GREATEST(' . $this->db->escapeNumber(Smr\Epoch::time()) . ', last_turn_update) WHERE ' . $this->SQL);
 		if ($admin !== null) {
 			$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account reopened by ' . $admin->getLogin() . '.');

@@ -40,9 +40,12 @@ class Lotto {
 
 		// Delete all tickets and re-insert the winning ticket
 		$db->write('DELETE FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($gameID));
-		$db->write('INSERT INTO player_has_ticket (game_id, account_id, time, prize) '
-		           .'VALUES (' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($winner_id) . ',\'0\',' . $db->escapeNumber($lottoInfo['Prize']) . ')');
-
+		$db->insert('player_has_ticket', [
+			'game_id' => $db->escapeNumber($gameID),
+			'account_id' => $db->escapeNumber($winner_id),
+			'time' => 0,
+			'prize' => $db->escapeNumber($lottoInfo['Prize']),
+		]);
 		$db->unlock();
 
 		// create news msg
@@ -52,9 +55,14 @@ class Lotto {
 		$news_message = $winner->getBBLink() . ' has won the lotto! The jackpot was ' . number_format($lottoInfo['Prize']) . '. ' . $winner->getBBLink() . ' can report to any bar to claim their prize before the next drawing!';
 		// insert the news entry
 		$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($gameID));
-		$db->write('INSERT INTO news
-				(game_id, time, news_message, type, dead_id, dead_alliance)
-				VALUES ('.$db->escapeNumber($gameID) . ', ' . $db->escapeNumber(Epoch::time()) . ', ' . $db->escapeString($news_message) . ',\'lotto\',' . $db->escapeNumber($winner->getAccountID()) . ',' . $db->escapeNumber($winner->getAllianceID()) . ')');
+		$db->insert('news', [
+			'game_id' => $db->escapeNumber($gameID),
+			'time' => $db->escapeNumber(Epoch::time()),
+			'news_message' => $db->escapeString($news_message),
+			'type' => $db->escapeString('lotto'),
+			'dead_id' => $db->escapeNumber($winner->getAccountID()),
+			'dead_alliance' => $db->escapeNumber($winner->getAllianceID()),
+		]);
 	}
 
 	public static function getLottoInfo(int $gameID) : array {

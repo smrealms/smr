@@ -72,7 +72,13 @@ $player->getShip()->update();
 
 // Announce the player joining in the news
 $news = '[player=' . $player->getPlayerID() . '] has joined the game!';
-$db->write('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($gameID) . ', \'admin\', ' . $db->escapeNumber($player->getAccountID()) . ')');
+$db->insert('news', [
+	'time' => $db->escapeNumber(Smr\Epoch::time()),
+	'news_message' => $db->escapeString($news),
+	'game_id' => $db->escapeNumber($gameID),
+	'type' => $db->escapeString('admin'),
+	'killer_id' => $db->escapeNumber($player->getAccountID()),
+]);
 
 // Send the player directly into the game
 $container = Page::create('game_play_processing.php');

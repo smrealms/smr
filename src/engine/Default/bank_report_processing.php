@@ -25,8 +25,21 @@ if ($dbResult->hasRecord()) {
 	} else {
 		$thread_id = 1;
 	}
-	$db->write('INSERT INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', \'Bank Statement\')');
-	$db->write('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_BANK_REPORTER) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+	$db->insert('alliance_thread_topic', [
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'alliance_id' => $db->escapeNumber($alliance_id),
+		'thread_id' => $db->escapeNumber($thread_id),
+		'topic' => $db->escapeString('Bank Statement'),
+	]);
+	$db->insert('alliance_thread', [
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'alliance_id' => $db->escapeNumber($alliance_id),
+		'thread_id' => $db->escapeNumber($thread_id),
+		'reply_id' => 1,
+		'text' => $db->escapeString($text),
+		'sender_id' => $db->escapeNumber(ACCOUNT_ID_BANK_REPORTER),
+		'time' => $db->escapeNumber(Smr\Epoch::time()),
+	]);
 }
 
 $container = Page::create('skeleton.php', 'bank_report.php');

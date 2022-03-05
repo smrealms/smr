@@ -6,12 +6,7 @@ try {
 	// bot config
 	require_once(CONFIG . 'npc/config.specific.php');
 
-	$db = Smr\Database::getInstance();
-
 	debug('Script started');
-	define('SCRIPT_ID', $db->getInsertID());
-	$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
-
 	define('NPC_SCRIPT', true);
 
 	$descriptorSpec = array(
@@ -84,5 +79,18 @@ try {
 function debug($message, $debugObject = null) {
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
 	$db = Smr\Database::getInstance();
-	$db->write('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES (' . (defined('SCRIPT_ID') ? SCRIPT_ID : 0) . ', 0, NOW(),' . $db->escapeString($message) . ',' . $db->escapeString(var_export($debugObject, true)) . ',' . $db->escapeString('') . ')');
+	$logID = $db->insert('npc_logs', [
+		'script_id' => defined('SCRIPT_ID') ? SCRIPT_ID : 0,
+		'npc_id' => 0,
+		'time' => 'NOW()',
+		'message' => $db->escapeString($message),
+		'debug_info' => $db->escapeString(var_export($debugObject, true)),
+		'var' => $db->escapeString(''),
+	]);
+
+	// On the first call to debug, we need to update the script_id retroactively
+	if (!defined('SCRIPT_ID')) {
+		define('SCRIPT_ID', $logID);
+		$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
+	}
 }

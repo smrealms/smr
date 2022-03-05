@@ -38,7 +38,14 @@ if (isset($var['id'])) {
 	$dbResult = $db->read('SELECT MAX(article_id) article_id FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 	$num = $dbResult->record()->getInt('article_id') + 1;
 
-	$db->write('INSERT INTO galactic_post_article (game_id, article_id, writer_id, title, text, last_modified) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($num) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($title) . ' , ' . $db->escapeString($message) . ' , ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+	$db->insert('galactic_post_article', [
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'article_id' => $db->escapeNumber($num),
+		'writer_id' => $db->escapeNumber($player->getAccountID()),
+		'title' => $db->escapeString($title),
+		'text' => $db->escapeString($message),
+		'last_modified' => $db->escapeNumber(Smr\Epoch::time()),
+	]);
 	$db->write('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(Smr\Epoch::time()) . ' WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
 	Page::create('skeleton.php', 'galactic_post_read.php')->go();
 }

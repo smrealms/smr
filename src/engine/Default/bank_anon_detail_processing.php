@@ -47,8 +47,15 @@ if ($action == 'Deposit') {
 $player->update();
 
 // Log the bank transaction
-$db->write('INSERT INTO anon_bank_transactions (account_id, game_id, anon_id, transaction_id, transaction, amount, time)
-			VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($account_num) . ', ' . $db->escapeNumber($trans_id) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+$db->insert('anon_bank_transactions', [
+	'account_id' => $db->escapeNumber($player->getAccountID()),
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'anon_id' => $db->escapeNumber($account_num),
+	'transaction_id' => $db->escapeNumber($trans_id),
+	'transaction' => $db->escapeString($action),
+	'amount' => $db->escapeNumber($amount),
+	'time' => $db->escapeNumber(Smr\Epoch::time()),
+]);
 
 // Log the player action
 $player->log(LOG_TYPE_BANK, $action . ' of ' . $amount . ' credits in anonymous account #' . $account_num);

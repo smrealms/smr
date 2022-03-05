@@ -67,9 +67,13 @@ try {
 		$comment_id = 1;
 	}
 
-	$db->write('INSERT INTO album_has_comments
-				(album_id, comment_id, time, post_id, msg)
-				VALUES ('.$db->escapeNumber($album_id) . ', ' . $db->escapeNumber($comment_id) . ', ' . $db->escapeNumber($curr_time) . ', ' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($comment) . ')');
+	$db->insert('album_has_comments', [
+		'album_id' => $db->escapeNumber($album_id),
+		'comment_id' => $db->escapeNumber($comment_id),
+		'time' => $db->escapeNumber($curr_time),
+		'post_id' => $db->escapeNumber($account->getAccountID()),
+		'msg' => $db->escapeString($comment),
+	]);
 	$db->unlock();
 
 	header('Location: /album/?nick=' . urlencode(get_album_nick($album_id)));

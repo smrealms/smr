@@ -80,11 +80,22 @@ $account->log(LOG_TYPE_PORT_RAIDING, 'Player attacks port, the port does ' . $re
 $port->update();
 
 $db = Smr\Database::getInstance();
-$db->write('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PORT\',' . $db->escapeNumber($port->getSectorID()) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $db->escapeNumber(PORT_ALLIANCE_ID) . ',' . $db->escapeObject($results, true) . ')');
-$logId = $db->escapeString('[ATTACK_RESULTS]' . $db->getInsertID());
+$logId = $db->insert('combat_logs', [
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'type' => $db->escapeString('PORT'),
+	'sector_id' => $db->escapeNumber($port->getSectorID()),
+	'timestamp' => $db->escapeNumber(Smr\Epoch::time()),
+	'attacker_id' => $db->escapeNumber($player->getAccountID()),
+	'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
+	'defender_id' => $db->escapeNumber(ACCOUNT_ID_PORT),
+	'defender_alliance_id' => $db->escapeNumber(PORT_ALLIANCE_ID),
+	'result' => $db->escapeObject($results, true),
+]);
+
+$sectorMessage = '[ATTACK_RESULTS]' . $logId;
 foreach ($attackers as $attacker) {
 	if (!$player->equals($attacker)) {
-		$db->write('REPLACE INTO sector_message VALUES(' . $db->escapeNumber($attacker->getAccountID()) . ',' . $db->escapeNumber($attacker->getGameID()) . ',' . $logId . ')');
+		$db->write('REPLACE INTO sector_message VALUES(' . $db->escapeNumber($attacker->getAccountID()) . ',' . $db->escapeNumber($attacker->getGameID()) . ',' . $db->escapeString($sectorMessage) . ')');
 	}
 }
 
