@@ -5,7 +5,10 @@
  */
 class GameLink
 {
-	public bool $valid = false;  // identifies if the message is linked to game data
+	/**
+	 * Identifies if the message is linked to game data
+	 */
+	public bool $valid = false;
 	public SmrPlayer $player;
 
 	function __construct(Discord\Parts\Channel\Message $message) {
