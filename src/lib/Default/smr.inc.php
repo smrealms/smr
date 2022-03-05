@@ -347,8 +347,9 @@ function do_voodoo() : never {
 
 		if (!$player->isDead() && $player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT &&
 			$player->getNewbieWarning() &&
-			$var['url'] != 'newbie_warning_processing.php')
+			$var['url'] != 'newbie_warning_processing.php') {
 			Page::create('newbie_warning_processing.php')->go();
+		}
 	}
 
 	// Execute the engine files.
