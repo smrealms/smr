@@ -90,17 +90,21 @@ function echo_nav($topic_id) {
 
 		echo ('<tr>');
 		echo ('<td colspan="5">');
-		if (isset($previous_topic_id) && $previous_topic_id > 0)
+		if (isset($previous_topic_id) && $previous_topic_id > 0) {
 			echo ('<b>Previous:</b> <a href="/manual.php?' . $previous_topic_id . '">' . get_numbering($previous_topic_id) . $previous_topic . '</a>&nbsp;&nbsp;&nbsp;');
-		if (isset($up_topic_id) && $up_topic_id > 0)
+		}
+		if (isset($up_topic_id) && $up_topic_id > 0) {
 			echo ('<b>Up:</b> <a href="/manual.php?' . $up_topic_id . '">' . get_numbering($up_topic_id) . $up_topic . '</a>&nbsp;&nbsp;&nbsp;');
-		if (isset($next_topic_id) && $next_topic_id > 0)
+		}
+		if (isset($next_topic_id) && $next_topic_id > 0) {
 			echo ('<b>Next:</b> <a href="/manual.php?' . $next_topic_id . '">' . get_numbering($next_topic_id) . $next_topic . '</a>');
+		}
 		echo ('</tr>');
 
 		echo ('</table>');
-	} else
+	} else {
 		echo ('Invalid Topic!');
+	}
 }
 
 function echo_content($topic_id) {
