@@ -101,7 +101,7 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 		$ship = new AbstractSmrShip($this->player);
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Ship does not have the supported hardware!');
-		$ship->setIllusion(SHIP_TYPE_THIEF, 12, 13);;
+		$ship->setIllusion(SHIP_TYPE_THIEF, 12, 13);
 	}
 
 	public function test_hardware() : void {
