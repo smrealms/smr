@@ -162,7 +162,7 @@ class Page extends ArrayObject {
 
 		// transfer this value to next container
 		if (!isset($var[$source])) {
-			throw new Exception('Could not find "' . $source. '" in var!');
+			throw new Exception('Could not find "' . $source . '" in var!');
 		}
 		if ($dest === null) {
 			$dest = $source;
