@@ -975,7 +975,7 @@ class AbstractSmrPort {
 		$supply = $this->getGoodAmount($goodID);
 		$dist = $this->getGoodDistance($goodID);
 		return self::idealPrice($goodID, $transactionType, $numGoods, $relations, $supply, $dist);
-}
+	}
 
 	/**
 	 * Generic ideal price calculation, given all parameters as input.

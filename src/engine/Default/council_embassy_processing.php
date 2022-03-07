@@ -63,7 +63,7 @@ foreach ($councilMembers as $accountID) {
 	if ($player->getAccountID() != $accountID) {
 		SmrPlayer::sendMessageFromRace($player->getRaceID(), $player->getGameID(),
 		                               $accountID, $message, $time);
-  }
+	}
 }
 
 Page::create('skeleton.php', 'council_embassy.php')->go();

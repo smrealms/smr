@@ -41,5 +41,5 @@ function get_draft_teams(int $gameId): array {
 		}
 	}
 
-  return $teams;
+	return $teams;
 }
