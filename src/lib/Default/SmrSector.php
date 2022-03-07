@@ -564,7 +564,7 @@ class SmrSector {
 		}
 
 		// Can only have 1 warp per sector
-		foreach ([[$warp, $this], [$this, $warp]] as list($A, $B)) {
+		foreach ([[$warp, $this], [$this, $warp]] as [$A, $B]) {
 			if ($A->hasWarp() && $A->getWarp() != $B->getSectorID()) {
 				throw new Exception('Sector ' . $A->getSectorID() . ' already has a warp (to ' . $A->getWarp() . ')!');
 			}

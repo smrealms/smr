@@ -331,7 +331,7 @@ abstract class AbstractSmrAccount {
 				time = ' . $this->db->escapeNumber($delete_time) . ' AND
 				ip = ' . $this->db->escapeString($delete_ip));
 		}
-		list($fi, $se, $th, $fo) = preg_split('/[.\s,]/', $curr_ip, 4);
+		[$fi, $se, $th, $fo] = preg_split('/[.\s,]/', $curr_ip, 4);
 		if ($curr_ip != 'unknown' && $curr_ip != 'unknown...' && $curr_ip != 'unknown, unknown') {
 			$curr_ip = $fi . '.' . $se . '.' . $th . '.' . $fo;
 			$host = gethostbyaddr($curr_ip);
@@ -661,7 +661,7 @@ abstract class AbstractSmrAccount {
 	 */
 	public function changeEmail(string $email): void {
 		// get user and host for the provided address
-		list($user, $host) = explode('@', $email);
+		[$user, $host] = explode('@', $email);
 
 		// check if the host got a MX or at least an A entry
 		if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {

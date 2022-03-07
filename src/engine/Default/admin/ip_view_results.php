@@ -142,7 +142,7 @@ if ($type == 'comp_share') {
 		//=========================================================
 		// List all IPs for a specific alliance
 		//=========================================================
-		list ($allianceID, $gameID) = preg_split('/[\/]/', $variable);
+		[$allianceID, $gameID] = preg_split('/[\/]/', $variable);
 		if (!is_numeric($gameID) || !is_numeric($allianceID)) {
 			create_error('Incorrect format used.');
 		}

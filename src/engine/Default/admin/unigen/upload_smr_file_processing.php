@@ -28,7 +28,7 @@ if ($version !== SMR_FILE_VERSION) {
 
 // Create the galaxies
 foreach ($data['Galaxies'] as $galID => $details) {
-	list($width, $height, $type, $name, $maxForceTime) = explode(',', $details);
+	[$width, $height, $type, $name, $maxForceTime] = explode(',', $details);
 	$galaxy = SmrGalaxy::createGalaxy($var['game_id'], $galID);
 	$galaxy->setWidth(str2int($width));
 	$galaxy->setHeight(str2int($height));

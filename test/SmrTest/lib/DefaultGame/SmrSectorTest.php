@@ -89,7 +89,7 @@ class SmrSectorTest extends TestCase {
 		$sector1->setWarp($sector2);
 
 		// Then we should have updated warps
-		foreach ([[$sector1, $sector2], [$sector2, $sector1]] as list($sectorA, $sectorB)) {
+		foreach ([[$sector1, $sector2], [$sector2, $sector1]] as [$sectorA, $sectorB]) {
 			self::assertTrue($sectorA->hasWarp());
 			self::assertSame($sectorB->getSectorID(), $sectorA->getWarp());
 			self::assertSame(1, $sectorA->getNumberOfConnections());

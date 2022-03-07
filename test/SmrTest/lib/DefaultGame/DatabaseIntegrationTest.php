@@ -239,7 +239,7 @@ class DatabaseIntegrationTest extends TestCase {
 			// Microtime takes a float and returns a string because of DateTime::createFromFormat
 			[microtime(true), 'escapeMicrotime', 'getMicrotime', 'assertEquals', []],
 		];
-		foreach ($params as list($value, $escaper, $getter, $cmp, $args)) {
+		foreach ($params as [$value, $escaper, $getter, $cmp, $args]) {
 			$result = $db->read('SELECT ' . $db->$escaper($value, ...$args) . ' AS val');
 			self::$cmp($value, $result->record()->$getter('val', ...$args));
 		}

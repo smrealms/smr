@@ -149,7 +149,7 @@ if ($action == 'Save and resend validation code') {
 		$account->setDefaultCSSEnabled(false);
 	} else {
 		$account->setDefaultCSSEnabled(true);
-		list($cssTemplate, $cssColourScheme) = explode(' - ', $cssTemplateAndColor);
+		[$cssTemplate, $cssColourScheme] = explode(' - ', $cssTemplateAndColor);
 		$account->setTemplate($cssTemplate);
 		$account->setColourScheme($cssColourScheme);
 	}

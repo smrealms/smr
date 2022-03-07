@@ -104,7 +104,7 @@ try {
 	}
 
 	// get user and host for the provided address
-	list($user, $host) = explode('@', $email);
+	[$user, $host] = explode('@', $email);
 
 	// check if the host got a MX or at least an A entry
 	if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {

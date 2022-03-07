@@ -31,7 +31,7 @@ if ($player->hasAlliance()) {
 $template->assign('Rankings', Rankings::collectAllianceRankings($rankedStats, $player));
 
 $numAlliances = count($rankedStats);
-list($minRank, $maxRank) = Rankings::calculateMinMaxRanks($ourRank, $numAlliances);
+[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $numAlliances);
 
 $template->assign('FilteredRankings', Rankings::collectAllianceRankings($rankedStats, $player, $minRank, $maxRank));
 
