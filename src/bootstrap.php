@@ -52,7 +52,7 @@ function logException(Throwable $e): void {
 
 	if (ENABLE_DEBUG) {
 		// Display error message on the page (redundant with error_log for CLI)
-		if (php_sapi_name() !== 'cli') {
+		if (PHP_SAPI !== 'cli') {
 			echo nl2br($message);
 		}
 		// Skip remaining log methods (too disruptive during development)
