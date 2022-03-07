@@ -2,12 +2,13 @@
 
 namespace SmrTest\lib\DefaultGame\Blackjack;
 
+use PHPUnit\Framework\TestCase;
 use Smr\Blackjack\Card;
 
 /**
  * @covers Smr\Blackjack\Card
  */
-class CardTest extends \PHPUnit\Framework\TestCase {
+class CardTest extends TestCase {
 
 	public function test_getCardID(): void {
 		// should be the same as the input cardID

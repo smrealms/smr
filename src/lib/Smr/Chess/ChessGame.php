@@ -6,6 +6,8 @@ use AbstractSmrPlayer;
 use Exception;
 use Page;
 use Smr;
+use Smr\Database;
+use Smr\Epoch;
 use SmrAccount;
 use SmrPlayer;
 
@@ -32,12 +34,12 @@ class ChessGame {
 	private ?array $lastMove = null;
 
 	public static function getNPCMoveGames(bool $forceUpdate = false): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT chess_game_id
 					FROM npc_logins
 					JOIN account USING(login)
 					JOIN chess_game ON account_id = black_id OR account_id = white_id
-					WHERE end_time > ' . Smr\Epoch::time() . ' OR end_time IS NULL;');
+					WHERE end_time > ' . Epoch::time() . ' OR end_time IS NULL;');
 		$games = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$game = self::getChessGame($dbRecord->getInt('chess_game_id'), $forceUpdate);
@@ -49,8 +51,8 @@ class ChessGame {
 	}
 
 	public static function getOngoingPlayerGames(AbstractSmrPlayer $player): array {
-		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . Smr\Epoch::time() . ' OR end_time IS NULL);');
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . Epoch::time() . ' OR end_time IS NULL);');
 		$games = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$games[] = self::getChessGame($dbRecord->getInt('chess_game_id'));
@@ -59,7 +61,7 @@ class ChessGame {
 	}
 
 	public static function getAccountGames(int $accountID): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');
 		$games = [];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -76,7 +78,7 @@ class ChessGame {
 	}
 
 	public function __construct(int $chessGameID) {
-		$this->db = Smr\Database::getInstance();
+		$this->db = Database::getInstance();
 		$dbResult = $this->db->read('SELECT *
 						FROM chess_game
 						WHERE chess_game_id=' . $this->db->escapeNumber($chessGameID) . ' LIMIT 1;');
@@ -130,7 +132,7 @@ class ChessGame {
 	}
 
 	public function rerunGame(bool $debugInfo = false): void {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		$db->write('UPDATE chess_game
 					SET end_time = NULL, winner_id = 0
@@ -365,7 +367,7 @@ class ChessGame {
 	}
 
 	public static function insertNewGame(int $startDate, ?int $endDate, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer): int {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$chessGameID = $db->insert('chess_game', [
 			'start_time' => $db->escapeNumber($startDate),
 			'end_time' => $endDate === null ? 'NULL' : $db->escapeNumber($endDate),
@@ -379,7 +381,7 @@ class ChessGame {
 	}
 
 	private static function insertPieces(int $chessGameID): void {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$pieces = self::getStandardGame();
 		foreach ($pieces as $p) {
 			$db->insert('chess_game_pieces', [
@@ -800,7 +802,7 @@ class ChessGame {
 	}
 
 	public function hasEnded(): bool {
-		return $this->endDate != 0 && $this->endDate <= Smr\Epoch::time();
+		return $this->endDate != 0 && $this->endDate <= Epoch::time();
 	}
 
 	public function getWinner(): int {
@@ -809,9 +811,9 @@ class ChessGame {
 
 	public function setWinner(int $accountID): array {
 		$this->winner = $accountID;
-		$this->endDate = Smr\Epoch::time();
+		$this->endDate = Epoch::time();
 		$this->db->write('UPDATE chess_game
-						SET end_time=' . $this->db->escapeNumber(Smr\Epoch::time()) . ', winner_id=' . $this->db->escapeNumber($this->winner) . '
+						SET end_time=' . $this->db->escapeNumber(Epoch::time()) . ', winner_id=' . $this->db->escapeNumber($this->winner) . '
 						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 		$winnerColour = $this->getColourForAccountID($accountID);
 		$winningPlayer = $this->getColourPlayer($winnerColour);
@@ -871,9 +873,9 @@ class ChessGame {
 		}
 		// If only 1 person has moved then just end the game.
 		if (count($this->getMoves()) < 2) {
-			$this->endDate = Smr\Epoch::time();
+			$this->endDate = Epoch::time();
 			$this->db->write('UPDATE chess_game
-							SET end_time=' . $this->db->escapeNumber(Smr\Epoch::time()) . '
+							SET end_time=' . $this->db->escapeNumber(Epoch::time()) . '
 							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 			return 1;
 		} else {

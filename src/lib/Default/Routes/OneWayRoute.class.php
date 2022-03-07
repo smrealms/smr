@@ -2,8 +2,10 @@
 
 namespace Routes;
 
+use Globals;
 use Smr\Path;
 use Smr\Race;
+use SmrPort;
 
 class OneWayRoute extends Route {
 
@@ -62,9 +64,9 @@ class OneWayRoute extends Route {
 	public function getMoneyMultiplierSum(): int {
 		$numGoods = 1;
 		$relations = 1000; // assume max relations
-		$supply = \Globals::getGood($this->goodId)['Max']; // assume max supply
-		$buyPrice = \SmrPort::idealPrice($this->goodId, TRADER_BUYS, $numGoods, $relations, $supply, $this->buyDi);
-		$sellPrice = \SmrPort::idealPrice($this->goodId, TRADER_SELLS, $numGoods, $relations, $supply, $this->sellDi);
+		$supply = Globals::getGood($this->goodId)['Max']; // assume max supply
+		$buyPrice = SmrPort::idealPrice($this->goodId, TRADER_BUYS, $numGoods, $relations, $supply, $this->buyDi);
+		$sellPrice = SmrPort::idealPrice($this->goodId, TRADER_SELLS, $numGoods, $relations, $supply, $this->sellDi);
 		return $sellPrice - $buyPrice;
 	}
 
@@ -94,6 +96,6 @@ class OneWayRoute extends Route {
 	}
 
 	public function getRouteString(): string {
-		return $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . \Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->path->getDistance() . ($this->path->getNumWarps() > 0 ? ' + ' . $this->path->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
+		return $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->path->getDistance() . ($this->path->getNumWarps() > 0 ? ' + ' . $this->path->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
 	}
 }

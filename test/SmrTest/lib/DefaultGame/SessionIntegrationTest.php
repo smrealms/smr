@@ -2,6 +2,7 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use AbstractSmrAccount;
 use Page;
 use Smr\Container\DiContainer;
 use Smr\Session;
@@ -46,7 +47,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame(0, $this->session->getAccountID());
 
 		// Now update the account
-		$account = $this->createMock(\AbstractSmrAccount::class);
+		$account = $this->createMock(AbstractSmrAccount::class);
 		$account
 			->method('getAccountID')
 			->willReturn(7);

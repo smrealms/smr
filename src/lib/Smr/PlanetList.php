@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Exception;
 use SmrAlliance;
 
 /**
@@ -20,7 +21,7 @@ class PlanetList {
 		$playerOnly = $allianceId == 0;
 		if ($playerOnly && $player->hasAlliance()) {
 			// This page doesn't support this combination
-			throw new \Exception('Sanity check failed!');
+			throw new Exception('Sanity check failed!');
 		}
 		$template->assign('PlayerOnly', $playerOnly);
 

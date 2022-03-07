@@ -2,12 +2,13 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use Smr\AdminPermissions;
 
 /**
  * @covers Smr\AdminPermissions
  */
-class AdminPermissionsTest extends \PHPUnit\Framework\TestCase {
+class AdminPermissionsTest extends TestCase {
 
 	public function test_getPermissionInfo(): void {
 		// Spot check one of the permissions

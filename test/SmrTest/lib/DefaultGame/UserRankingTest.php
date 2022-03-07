@@ -2,12 +2,13 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use Smr\UserRanking;
 
 /**
  * @covers Smr\UserRanking
  */
-class UserRankingTest extends \PHPUnit\Framework\TestCase {
+class UserRankingTest extends TestCase {
 
 	public function test_getName(): void {
 		$this->assertSame('Expert', UserRanking::getName(6));

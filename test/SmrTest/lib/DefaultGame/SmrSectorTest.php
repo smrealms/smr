@@ -2,12 +2,14 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use SmrSector;
 
 /**
  * @covers SmrSector
  */
-class SmrSectorTest extends \PHPUnit\Framework\TestCase {
+class SmrSectorTest extends TestCase {
 
 	protected function setUp(): void {
 		SmrSector::clearCache();
@@ -66,7 +68,7 @@ class SmrSectorTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_cannot_link_to_self(): void {
 		$sector = SmrSector::createSector(1, 1);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Sector must not link to itself!');
 		$sector->setLink('Up', $sector->getSectorID());
 	}
@@ -107,7 +109,7 @@ class SmrSectorTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_cannot_warp_to_self(): void {
 		$sector = SmrSector::createSector(1, 1);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Sector must not warp to itself!');
 		$sector->setWarp($sector);
 	}
@@ -121,7 +123,7 @@ class SmrSectorTest extends \PHPUnit\Framework\TestCase {
 		$sector1->setWarp($sector2);
 
 		// Then we cannot set a 2nd warp
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Sector 1 already has a warp (to 2)');
 		$sector1->setWarp($sector3);
 	}

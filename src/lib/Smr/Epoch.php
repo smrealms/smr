@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Exception;
 use Smr\Container\DiContainer;
 
 /**
@@ -66,7 +67,7 @@ class Epoch {
 	 */
 	public static function update(): void {
 		if (!defined('NPC_SCRIPT')) {
-			throw new \Exception('Only call this function from CLI programs!');
+			throw new Exception('Only call this function from CLI programs!');
 		}
 		DiContainer::getContainer()->set(self::class, new self());
 	}

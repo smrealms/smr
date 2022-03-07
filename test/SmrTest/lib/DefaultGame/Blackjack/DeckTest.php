@@ -2,12 +2,14 @@
 
 namespace SmrTest\lib\DefaultGame\Blackjack;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use Smr\Blackjack\Deck;
 
 /**
  * @covers Smr\Blackjack\Deck
  */
-class DeckTest extends \PHPUnit\Framework\TestCase {
+class DeckTest extends TestCase {
 
 	public function test_drawCard(): void {
 		// test drawing a random card
@@ -22,7 +24,7 @@ class DeckTest extends \PHPUnit\Framework\TestCase {
 		for ($i = 0; $i < Deck::MAX_CARDS; $i++) {
 			$deck->drawCard();
 		}
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No cards left to draw from this deck!');
 		$deck->drawCard();
 	}

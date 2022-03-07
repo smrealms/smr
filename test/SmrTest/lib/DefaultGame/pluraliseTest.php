@@ -2,10 +2,12 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers ::pluralise
  */
-class pluraliseTest extends \PHPUnit\Framework\TestCase {
+class pluraliseTest extends TestCase {
 
 	/**
 	 * @dataProvider pluralise_provider

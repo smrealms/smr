@@ -2,11 +2,14 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Error;
 use mysqli;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\DatabaseProperties;
+use TypeError;
 
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest since we are not writing any data.
@@ -49,7 +52,7 @@ class DatabaseIntegrationTest extends TestCase {
 		// And disconnect is called
 		$db->close();
 		// When calling database methods
-		$this->expectException(\Error::class);
+		$this->expectException(Error::class);
 		$this->expectExceptionMessage('Typed property Smr\Database::$dbConn must not be accessed before initialization');
 		$db->read('foo query');
 	}
@@ -126,7 +129,7 @@ class DatabaseIntegrationTest extends TestCase {
 
 	public function test_escapeString_null_throws(): void {
 		$db = Database::getInstance();
-		$this->expectException(\TypeError::class);
+		$this->expectException(TypeError::class);
 		$db->escapeString(null);
 	}
 
@@ -164,7 +167,7 @@ class DatabaseIntegrationTest extends TestCase {
 
 	public function test_escapeNumber_nonnumeric_throws(): void {
 		$db = Database::getInstance();
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Not a number');
 		$db->escapeNumber('bla');
 	}
@@ -184,7 +187,7 @@ class DatabaseIntegrationTest extends TestCase {
 	public function test_write_throws_on_wrong_query_type(): void {
 		// Queries that return a result should not use the 'write' method
 		$db = Database::getInstance();
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Wrong query type');
 		$db->write('SELECT 1');
 	}
@@ -192,7 +195,7 @@ class DatabaseIntegrationTest extends TestCase {
 	public function test_lockTable_throws_if_read_other_table(): void {
 		$db = Database::getInstance();
 		$db->lockTable('player');
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage("Table 'account' was not locked with LOCK TABLES");
 		try {
 			$db->read('SELECT 1 FROM account LIMIT 1');

@@ -2,6 +2,8 @@
 
 namespace Smr\Blackjack;
 
+use Exception;
+
 /**
  * Deck of Blackjack cards to be drawn from.
  */
@@ -25,7 +27,7 @@ class Deck {
 	 */
 	public function drawCard(): Card {
 		if (empty($this->cardIDs)) {
-			throw new \Exception('No cards left to draw from this deck!');
+			throw new Exception('No cards left to draw from this deck!');
 		}
 		// since the cards are already shuffled, pop off the next one
 		$cardID = array_pop($this->cardIDs);

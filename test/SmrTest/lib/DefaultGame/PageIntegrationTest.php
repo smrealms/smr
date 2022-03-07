@@ -2,7 +2,9 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
 use Page;
+use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Session;
 
@@ -12,7 +14,7 @@ use Smr\Session;
  *
  * @covers Page
  */
-class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
+class PageIntegrationTest extends TestCase {
 
 	protected function setUp(): void {
 		// Reset the DI container for each test to ensure independence.
@@ -107,7 +109,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		// Mock an empty global $var
 		$this->setVar([]);
 
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Could not find "does_not_exist" in var!');
 		$page->addVar('does_not_exist');
 	}

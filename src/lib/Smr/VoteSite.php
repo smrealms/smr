@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Exception;
 use Page;
 
 /**
@@ -103,7 +104,7 @@ class VoteSite {
 	 */
 	public function getTimeUntilFreeTurns(): int {
 		if (!$this->givesFreeTurns()) {
-			throw new \Exception('This vote site cannot award free turns!');
+			throw new Exception('This vote site cannot award free turns!');
 		}
 
 		// Populate timeout cache from the database

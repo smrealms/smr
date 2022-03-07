@@ -2,6 +2,8 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
+use Globals;
 use SmrPlanet;
 use SmrTest\BaseIntegrationSpec;
 
@@ -34,7 +36,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 
 	public function test_createPlanet_already_exists(): void {
 		SmrPlanet::createPlanet(1, 1, 1, 1);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Planet already exists');
 		SmrPlanet::createPlanet(1, 1, 1, 1);
 	}
@@ -136,7 +138,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->assertFalse($planet->hasStockpile());
 		$this->assertSame([], $planet->getStockpile());
-		foreach (array_keys(\Globals::getGoods()) as $goodID) {
+		foreach (array_keys(Globals::getGoods()) as $goodID) {
 			$this->assertFalse($planet->hasStockpile($goodID));
 			$this->assertSame(0, $planet->getStockpile($goodID));
 		}
@@ -150,7 +152,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$planet->increaseStockpile(GOODS_ORE, 50);
 		$this->assertTrue($planet->hasStockpile());
 		$this->assertSame([GOODS_ORE => 50], $planet->getStockpile());
-		foreach (array_keys(\Globals::getGoods()) as $goodID) {
+		foreach (array_keys(Globals::getGoods()) as $goodID) {
 			if ($goodID === GOODS_ORE) {
 				$this->assertTrue($planet->hasStockpile($goodID));
 				$this->assertSame(50, $planet->getStockpile($goodID));
@@ -164,7 +166,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$planet->decreaseStockpile(GOODS_ORE, 10);
 		$this->assertTrue($planet->hasStockpile());
 		$this->assertSame([GOODS_ORE => 40], $planet->getStockpile());
-		foreach (array_keys(\Globals::getGoods()) as $goodID) {
+		foreach (array_keys(Globals::getGoods()) as $goodID) {
 			if ($goodID === GOODS_ORE) {
 				$this->assertTrue($planet->hasStockpile($goodID));
 				$this->assertSame(40, $planet->getStockpile($goodID));
@@ -180,21 +182,21 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 
 	public function test_setStockpile_throws_when_negative(): void {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Trying to set negative stockpile');
 		$planet->setStockpile(GOODS_ORE, -20);
 	}
 
 	public function test_setBuilding_throws_when_negative(): void {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Cannot set negative number of buildings');
 		$planet->setBuilding(PLANET_HANGAR, -1);
 	}
 
 	public function test_destroyBuilding_throws_when_invalid(): void {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Cannot set negative number of buildings');
 		$planet->destroyBuilding(PLANET_TURRET, 1);
 	}

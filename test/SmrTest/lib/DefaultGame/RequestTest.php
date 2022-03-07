@@ -2,7 +2,9 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
 use Page;
+use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Request;
 use Smr\Session;
@@ -10,7 +12,7 @@ use Smr\Session;
 /**
  * @covers Smr\Request
  */
-class RequestTest extends \PHPUnit\Framework\TestCase {
+class RequestTest extends TestCase {
 
 	public static function setUpBeforeClass(): void {
 		$_REQUEST = [
@@ -63,7 +65,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_getInt_exception(): void {
 		// An index that doesn't exist, no default
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getInt('noexist');
 	}
@@ -81,7 +83,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_getFloat_exception(): void {
 		// An index that doesn't exist, no default
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getFloat('noexist');
 	}
@@ -99,7 +101,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_getArray_exception(): void {
 		// An index that doesn't exist, no default
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getArray('noexist');
 	}
@@ -117,7 +119,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_getIntArray_exception(): void {
 		// An index that doesn't exist, no default
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getIntArray('noexist');
 	}
@@ -135,7 +137,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_get_exception(): void {
 		// An index that doesn't exist, no default
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::get('noexist');
 	}
@@ -163,7 +165,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function test_getVar_exception_no_default(): void {
 		$this->setVar([]);
 		// An index that doesn't exist in request or var, no default
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getVar('noexist');
 	}
@@ -171,7 +173,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function test_getVar_exception_index_in_both(): void {
 		$this->setVar(['str' => 'ing:var']);
 		// An index that exists in both var and request, with different values
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Index "str" inconsistent between $var and $_REQUEST!');
 		Request::getVar('str');
 	}
@@ -205,7 +207,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function test_getVarInt_exception_no_default(): void {
 		$this->setVar([]);
 		// An index that doesn't exist in request or var, no default
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getVarInt('noexist');
 	}
@@ -213,7 +215,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function test_getVarInt_exception_index_in_both(): void {
 		$this->setVar(['int' => 3]);
 		// An index that exists in both var and request, with different values
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Index "int" inconsistent between $var and $_REQUEST!');
 		Request::getVarInt('int');
 	}
@@ -247,7 +249,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function test_getVarIntArray_exception_no_default(): void {
 		$this->setVar([]);
 		// An index that doesn't exist in request or var, no default
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getVarIntArray('noexist');
 	}
@@ -255,7 +257,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function test_getVarIntArray_exception_index_in_both(): void {
 		$this->setVar(['array_int' => [4, 5, 6]]);
 		// An index that exists in both var and request, with different values
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Index "array_int" inconsistent between $var and $_REQUEST!');
 		Request::getVarIntArray('array_int');
 	}

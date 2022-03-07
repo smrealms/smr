@@ -2,6 +2,9 @@
 
 namespace Smr\SocialLogin;
 
+use Exception;
+use Smr\Exceptions\SocialLoginInvalidType;
+
 /**
  * Defines the methods to be implemented by each social login platform.
  */
@@ -27,7 +30,7 @@ abstract class SocialLogin {
 		} elseif ($loginType === Google::getLoginType()) {
 			return new Google();
 		} else {
-			throw new \Smr\Exceptions\SocialLoginInvalidType('Unknown social login type: ' . $loginType);
+			throw new SocialLoginInvalidType('Unknown social login type: ' . $loginType);
 		}
 	}
 
@@ -35,7 +38,7 @@ abstract class SocialLogin {
 		// All social logins use a session for authentication
 		if (session_status() === PHP_SESSION_NONE) {
 			if (!session_start()) {
-				throw new \Exception('Failed to start social login session');
+				throw new Exception('Failed to start social login session');
 			}
 		}
 	}

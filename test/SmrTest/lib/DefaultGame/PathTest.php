@@ -2,12 +2,14 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use Smr\Path;
 
 /**
  * @covers Smr\Path
  */
-class PathTest extends \PHPUnit\Framework\TestCase {
+class PathTest extends TestCase {
 
 	private static function make_complex_path(): Path {
 		// Create a path with multiple links and warps
@@ -110,7 +112,7 @@ class PathTest extends \PHPUnit\Framework\TestCase {
 	public function test_skipToSector_not_in_path(): void {
 		// Try to skip to a sector that isn't in the path
 		$path = new Path(1);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Cannot skip to sector not in path!');
 		$path->skipToSector(2);
 	}

@@ -2,6 +2,8 @@
 
 namespace Smr;
 
+use Exception;
+
 /**
  * Class used to keep track of paths between two sectors.
  * Used by the Plotter class to store the state of a plotted course.
@@ -92,7 +94,7 @@ class Path {
 	public function skipToSector(int $sectorID): self {
 		$position = array_search($sectorID, $this->path);
 		if ($position === false) {
-			throw new \Exception('Cannot skip to sector not in path!');
+			throw new Exception('Cannot skip to sector not in path!');
 		}
 		// The resulting path does include sectorID, i.e. [sectorID,end]
 		$this->path = array_slice($this->path, $position);

@@ -2,12 +2,13 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use Smr\BarDrink;
 
 /**
  * @covers Smr\BarDrink
  */
-class BarDrinkTest extends \PHPUnit\Framework\TestCase {
+class BarDrinkTest extends TestCase {
 
 	public function test_getAll(): void {
 		// all drinks are either special or common

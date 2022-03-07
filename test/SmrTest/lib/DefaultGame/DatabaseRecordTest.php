@@ -2,12 +2,16 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use ArrayObject;
+use PHPUnit\Framework\TestCase;
 use Smr\DatabaseRecord;
+use TypeError;
+use UnhandledMatchError;
 
 /**
  * @covers \Smr\DatabaseRecord
  */
-class DatabaseRecordTest extends \PHPUnit\Framework\TestCase {
+class DatabaseRecordTest extends TestCase {
 
 	public function test_hasField(): void {
 		// Construct a record that has the field 'foo', but not 'bla'
@@ -37,7 +41,7 @@ class DatabaseRecordTest extends \PHPUnit\Framework\TestCase {
 	public function test_getString_with_null_value(): void {
 		// Construct a record with a null value
 		$record = new DatabaseRecord(['name' => null]);
-		$this->expectException(\TypeError::class);
+		$this->expectException(TypeError::class);
 		$record->getString('name');
 	}
 
@@ -52,7 +56,7 @@ class DatabaseRecordTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_getBoolean_with_non_boolean_field(): void {
 		$record = new DatabaseRecord(['name' => 'NONBOOLEAN']);
-		$this->expectException(\UnhandledMatchError::class);
+		$this->expectException(UnhandledMatchError::class);
 		$record->getBoolean('name');
 	}
 
@@ -75,13 +79,13 @@ class DatabaseRecordTest extends \PHPUnit\Framework\TestCase {
 	public function test_getObject(): void {
 		// Construct a record with various types of objects
 		$record = new DatabaseRecord([
-			'name' => serialize(new \ArrayObject(['a' => 1, 'b' => 2])),
+			'name' => serialize(new ArrayObject(['a' => 1, 'b' => 2])),
 			'name_null' => null,
 			'name_compressed' => gzcompress(serialize(['c', 'd'])),
 		]);
 		// Class objects must be compared here with Equals instead of Same
 		// since the two objects will not be the same instance.
-		self::assertEquals(new \ArrayObject(['a' => 1, 'b' => 2]), $record->getObject('name'));
+		self::assertEquals(new ArrayObject(['a' => 1, 'b' => 2]), $record->getObject('name'));
 		self::assertSame(null, $record->getObject('name_null', nullable: true));
 		self::assertSame(['c', 'd'], $record->getObject('name_compressed', compressed: true));
 	}

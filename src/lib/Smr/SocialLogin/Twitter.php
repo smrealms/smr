@@ -2,6 +2,8 @@
 
 namespace Smr\SocialLogin;
 
+use Abraham\TwitterOAuth\TwitterOAuth;
+use Exception;
 use Smr\Request;
 
 class Twitter extends SocialLogin {
@@ -10,8 +12,8 @@ class Twitter extends SocialLogin {
 		return 'Twitter';
 	}
 
-	private static function getTwitterObj(?array $token = null): \Abraham\TwitterOAuth\TwitterOAuth {
-		return new \Abraham\TwitterOAuth\TwitterOAuth(
+	private static function getTwitterObj(?array $token = null): TwitterOAuth {
+		return new TwitterOAuth(
 			TWITTER_CONSUMER_KEY,
 			TWITTER_CONSUMER_SECRET,
 			$token['oauth_token'] ?? null,
@@ -33,7 +35,7 @@ class Twitter extends SocialLogin {
 
 	public function login(): SocialLogin {
 		if ($_SESSION['TwitterToken']['oauth_token'] != Request::get('oauth_token')) {
-			throw new \Exception('Unexpected token received from Twitter');
+			throw new Exception('Unexpected token received from Twitter');
 		}
 		$helper = self::getTwitterObj($_SESSION['TwitterToken']);
 		$accessToken = $helper->oauth('oauth/access_token',

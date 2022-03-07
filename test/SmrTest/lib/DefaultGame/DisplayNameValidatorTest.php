@@ -2,13 +2,14 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use Smr\DisplayNameValidator;
 use Smr\Exceptions\UserError;
 
 /**
  * @covers Smr\DisplayNameValidator
  */
-class DisplayNameValidatorTest extends \PHPUnit\Framework\TestCase {
+class DisplayNameValidatorTest extends TestCase {
 
 	/**
 	 * @dataProvider invalid_name_provider

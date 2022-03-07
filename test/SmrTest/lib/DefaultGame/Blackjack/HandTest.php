@@ -2,13 +2,14 @@
 
 namespace SmrTest\lib\DefaultGame\Blackjack;
 
+use PHPUnit\Framework\TestCase;
 use Smr\Blackjack\Card;
 use Smr\Blackjack\Hand;
 
 /**
  * @covers Smr\Blackjack\Hand
  */
-class HandTest extends \PHPUnit\Framework\TestCase {
+class HandTest extends TestCase {
 
 	public function test_getValue(): void {
 		// test that ace values update properly

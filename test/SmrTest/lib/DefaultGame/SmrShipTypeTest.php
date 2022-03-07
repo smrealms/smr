@@ -2,13 +2,14 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use Smr\ShipClass;
 use SmrShipType;
 
 /**
  * @covers SmrShipType
  */
-class SmrShipTypeTest extends \PHPUnit\Framework\TestCase {
+class SmrShipTypeTest extends TestCase {
 
 	public function test_one_ship_properties(): void {
 		// Test all properties of one particular ship (Fed Ult)

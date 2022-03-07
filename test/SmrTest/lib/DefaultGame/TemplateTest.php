@@ -2,6 +2,8 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Template;
 use SmrTest\TestUtils;
@@ -9,7 +11,7 @@ use SmrTest\TestUtils;
 /**
  * @covers Smr\Template
  */
-class TemplateTest extends \PHPUnit\Framework\TestCase {
+class TemplateTest extends TestCase {
 
 	protected function setUp(): void {
 		// Start each test with a fresh container (and Template instance).
@@ -28,7 +30,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 	public function test_assign_same_variable_twice_throws(): void {
 		$template = Template::getInstance();
 		$template->assign('foo', 'bar');
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Cannot re-assign template variable \'foo\'!');
 		try {
 			$template->assign('foo', 'barbar');
@@ -128,7 +130,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 		$template = Template::getInstance();
 		// Call once successfully
 		$template->addJavascriptForAjax('test', '');
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Trying to set javascript val twice: test');
 		$template->addJavascriptForAjax('test', '');
 	}

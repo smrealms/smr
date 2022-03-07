@@ -2,6 +2,8 @@
 
 namespace Routes;
 
+use Globals;
+
 class RouteGenerator {
 
 	const EXP_ROUTE = 0;
@@ -85,7 +87,7 @@ class RouteGenerator {
 					$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $targetPort->getPort()->getRaceID(), 0, 0, $distance, GOODS_NOTHING);
 				}
 
-				foreach (\Globals::getGoods() as $goodId => $value) {
+				foreach (Globals::getGoods() as $goodId => $value) {
 					if ($goods[$goodId] === true) {
 						if ($currentPort->hasGood($goodId, TRADER_SELLS) && $targetPort->hasGood($goodId, TRADER_BUYS)) {
 							$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $targetPort->getRaceID(), $currentPort->getGoodDistance($goodId), $targetPort->getGoodDistance($goodId), $distance, $goodId);
@@ -114,7 +116,7 @@ class RouteGenerator {
 					continue;
 				}
 
-				foreach (\Globals::getGoods() as $goodId => $value) {
+				foreach (Globals::getGoods() as $goodId => $value) {
 					if ($goods[$goodId] === true) {
 						if ($currentPort->hasGood($goodId, TRADER_SELLS) && $targetPort->hasGood($goodId, TRADER_BUYS)) {
 							$owr = new OneWayRoute($currentSectorId, $targetSectorId, $currentPort->getRaceID(), $targetPort->getRaceID(), $currentPort->getGoodDistance($goodId), $targetPort->getGoodDistance($goodId), $distance, $goodId);

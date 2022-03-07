@@ -2,12 +2,13 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use Smr\Race;
 
 /**
  * @covers Smr\Race
  */
-class RaceTest extends \PHPUnit\Framework\TestCase {
+class RaceTest extends TestCase {
 
 	public function test_getPlayableIDs(): void {
 		$ids = Race::getPlayableIDs();

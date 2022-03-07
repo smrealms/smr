@@ -2,12 +2,14 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use Smr\Epoch;
 
 /**
  * @covers Smr\Epoch
  */
-class EpochTest extends \PHPUnit\Framework\TestCase {
+class EpochTest extends TestCase {
 
 	/**
 	 * Test that the `update` function works properly when NPC_SCRIPT is set.
@@ -35,7 +37,7 @@ class EpochTest extends \PHPUnit\Framework\TestCase {
 	 * update should throw if called without NPC_SCRIPT defined.
 	 */
 	public function test_update(): void {
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Only call this function from CLI programs');
 		Epoch::update();
 	}

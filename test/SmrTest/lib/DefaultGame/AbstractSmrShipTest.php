@@ -4,6 +4,8 @@ namespace SmrTest\lib\DefaultGame;
 
 use AbstractSmrPlayer;
 use AbstractSmrShip;
+use Exception;
+use PHPUnit\Framework\TestCase;
 use Smr\ShipClass;
 
 /**
@@ -11,7 +13,7 @@ use Smr\ShipClass;
  *
  * @covers AbstractSmrShip
  */
-class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
+class AbstractSmrShipTest extends TestCase {
 
 	private \PHPUnit\Framework\MockObject\MockObject $player;
 
@@ -63,7 +65,7 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_cloak_throws_when_missing_hardware(): void {
 		$ship = new AbstractSmrShip($this->player);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Ship does not have the supported hardware!');
 		$ship->enableCloak();
 	}
@@ -100,7 +102,7 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_illusion_throws_when_missing_hardware(): void {
 		$ship = new AbstractSmrShip($this->player);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Ship does not have the supported hardware!');
 		$ship->setIllusion(SHIP_TYPE_THIEF, 12, 13);
 	}

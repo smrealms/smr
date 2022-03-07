@@ -2,13 +2,15 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Smr\Database;
 use Smr\DatabaseResult;
 
 /**
  * @covers \Smr\DatabaseResult
  */
-class DatabaseResultTest extends \PHPUnit\Framework\TestCase {
+class DatabaseResultTest extends TestCase {
 
 	/**
 	 * Create and run a trivial query that returns $num rows
@@ -37,14 +39,14 @@ class DatabaseResultTest extends \PHPUnit\Framework\TestCase {
 
 	public function test_record_too_many_rows(): void {
 		$result = $this->runQuery(2);
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('One record required, but found 2');
 		$result->record();
 	}
 
 	public function test_record_too_few_rows(): void {
 		$result = $this->runQuery(0);
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('One record required, but found 0');
 		$result->record();
 	}

@@ -2,6 +2,7 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
 use Smr\VoteSite;
 use SmrTest\BaseIntegrationSpec;
 
@@ -20,7 +21,7 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		$site = VoteSite::getSite(VoteSite::LINK_ID_PBBG, 1);
 
 		// Make sure it raises an exception if we call getTimeUntilFreeTurns
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('This vote site cannot award free turns!');
 		$site->getTimeUntilFreeTurns();
 	}

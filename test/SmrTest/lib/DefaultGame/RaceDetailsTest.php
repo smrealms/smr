@@ -2,13 +2,14 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use Smr\Race;
 use Smr\RaceDetails;
 
 /**
  * @covers Smr\RaceDetails
  */
-class RaceDetailsTest extends \PHPUnit\Framework\TestCase {
+class RaceDetailsTest extends TestCase {
 
 	public function test_getShortDescription(): void {
 		// Check that a description exists for all playable races

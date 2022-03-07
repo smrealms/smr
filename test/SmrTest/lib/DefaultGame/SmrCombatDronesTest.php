@@ -2,12 +2,13 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use SmrCombatDrones;
 
 /**
  * @covers SmrCombatDrones
  */
-class SmrCombatDronesTest extends \PHPUnit\Framework\TestCase {
+class SmrCombatDronesTest extends TestCase {
 
 	public function test_getMaxDamage(): void {
 		// regular drones

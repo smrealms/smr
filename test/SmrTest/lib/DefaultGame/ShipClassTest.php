@@ -2,12 +2,13 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use Smr\ShipClass;
 
 /**
  * @covers Smr\ShipClass
  */
-class ShipClassTest extends \PHPUnit\Framework\TestCase {
+class ShipClassTest extends TestCase {
 
 	public function test_getName(): void {
 		$this->assertSame('Trader', ShipClass::getName(2));

@@ -2,6 +2,8 @@
 
 namespace Smr;
 
+use Smr\Exceptions\UserError;
+
 /**
  * Displayed names (player names, Hall of Fame names, etc.) must all follow a
  * basic set of rules, which are defined here.
@@ -10,17 +12,17 @@ class DisplayNameValidator {
 
 	public static function validate($name): void {
 		if (empty($name)) {
-			throw new Exceptions\UserError('You must enter a name!');
+			throw new UserError('You must enter a name!');
 		}
 
 		// Prevent any attempts to imitate NPCs
 		if (strpos($name, '[NPC]') !== false) {
-			throw new Exceptions\UserError('Names cannot contain "[NPC]".');
+			throw new UserError('Names cannot contain "[NPC]".');
 		}
 
 		// Only allow printable ascii (no control chars, extended ascii)
 		if (!ctype_print($name)) {
-			throw new Exceptions\UserError('Names must contain only standard printable characters.');
+			throw new UserError('Names must contain only standard printable characters.');
 		}
 
 		// Allow only a limited number of non-alphanumeric characters
@@ -31,7 +33,7 @@ class DisplayNameValidator {
 			}
 		}
 		if ($specialCharCount > 4) {
-			throw new Exceptions\UserError('You cannot use a name with more than 4 special characters.');
+			throw new UserError('You cannot use a name with more than 4 special characters.');
 		}
 	}
 
