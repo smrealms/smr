@@ -128,7 +128,7 @@ if ($forces->exists()) {
 
 // If they died on the shot they get to see the results
 if ($player->isDead()) {
-	$container['override_death'] = TRUE;
+	$container['override_death'] = true;
 	$container['owner_id'] = 0;
 }
 

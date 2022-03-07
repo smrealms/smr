@@ -37,7 +37,7 @@ $unvisited = [];
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND ' . $player->getSQL());
 foreach ($dbResult->records() as $dbRecord) {
-	$unvisited[$dbRecord->getInt('sector_id')] = TRUE;
+	$unvisited[$dbRecord->getInt('sector_id')] = true;
 }
 
 foreach ($links as $key => $linkArray) {

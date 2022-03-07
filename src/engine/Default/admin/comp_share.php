@@ -88,7 +88,7 @@ foreach ($dbResult->records() as $dbRecord) {
 				$exception = '';
 			}
 
-			$used[$currLinkAccId] = TRUE;
+			$used[$currLinkAccId] = true;
 
 			$rows[] = [
 				'name' => $currLinkAccLogin . ' (' . $currLinkAccId . ')',

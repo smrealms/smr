@@ -64,7 +64,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$container_game['game_id'] = $game_id;
 	$games['Play'][$game_id]['GameStatsLink'] = $container_game->href();
 	$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
-	$games['Play'][$game_id]['LastMovement'] = format_time(Smr\Epoch::time() - $curr_player->getLastActive(), TRUE);
+	$games['Play'][$game_id]['LastMovement'] = format_time(Smr\Epoch::time() - $curr_player->getLastActive(), true);
 
 }
 

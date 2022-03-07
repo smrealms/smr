@@ -568,16 +568,16 @@ class SmrAlliance {
 
 		// Create leader role
 		$withPerDay = ALLIANCE_BANK_UNLIMITED;
-		$removeMember = TRUE;
-		$changePass = TRUE;
-		$changeMOD = TRUE;
-		$changeRoles = TRUE;
-		$planetAccess = TRUE;
-		$exemptWith = TRUE;
-		$mbMessages = TRUE;
-		$sendAllMsg = TRUE;
-		$opLeader = TRUE;
-		$viewBonds = TRUE;
+		$removeMember = true;
+		$changePass = true;
+		$changeMOD = true;
+		$changeRoles = true;
+		$planetAccess = true;
+		$exemptWith = true;
+		$mbMessages = true;
+		$sendAllMsg = true;
+		$opLeader = true;
+		$viewBonds = true;
 		$db->insert('alliance_has_roles', [
 			'alliance_id' => $db->escapeNumber($this->getAllianceID()),
 			'game_id' => $db->escapeNumber($this->getGameID()),
@@ -603,29 +603,29 @@ class SmrAlliance {
 			break;
 			case 'none':
 				$withPerDay = 0;
-				$removeMember = FALSE;
-				$changePass = FALSE;
-				$changeMOD = FALSE;
-				$changeRoles = FALSE;
-				$planetAccess = FALSE;
-				$exemptWith = FALSE;
-				$mbMessages = FALSE;
-				$sendAllMsg = FALSE;
-				$opLeader = FALSE;
-				$viewBonds = FALSE;
+				$removeMember = false;
+				$changePass = false;
+				$changeMOD = false;
+				$changeRoles = false;
+				$planetAccess = false;
+				$exemptWith = false;
+				$mbMessages = false;
+				$sendAllMsg = false;
+				$opLeader = false;
+				$viewBonds = false;
 			break;
 			case 'basic':
 				$withPerDay = ALLIANCE_BANK_UNLIMITED;
-				$removeMember = FALSE;
-				$changePass = FALSE;
-				$changeMOD = FALSE;
-				$changeRoles = FALSE;
-				$planetAccess = TRUE;
-				$exemptWith = FALSE;
-				$mbMessages = FALSE;
-				$sendAllMsg = FALSE;
-				$opLeader = FALSE;
-				$viewBonds = FALSE;
+				$removeMember = false;
+				$changePass = false;
+				$changeMOD = false;
+				$changeRoles = false;
+				$planetAccess = true;
+				$exemptWith = false;
+				$mbMessages = false;
+				$sendAllMsg = false;
+				$opLeader = false;
+				$viewBonds = false;
 			break;
 		}
 		$db->insert('alliance_has_roles', [

@@ -110,7 +110,7 @@ if ($do != 'STAY' && $playerHand->getValue() != 21) {
 			if ($i == 4 || $i == 7 || $i == 10) {
 				$message .= ('</tr><tr>');
 			}
-			$message .= create_card($card, TRUE);
+			$message .= create_card($card, true);
 			//get curr val of this card...for the at least part
 			$ai_val = $card->getValue();
 		} else {
@@ -120,9 +120,9 @@ if ($do != 'STAY' && $playerHand->getValue() != 21) {
 				$message .= ('</tr><tr>');
 			}
 			if ($dealerHand->getValue() == 21 || $playerHand->getValue() >= 21) {
-				$message .= create_card($card, TRUE);
+				$message .= create_card($card, true);
 			} else {
-				$message .= create_card($card, FALSE);
+				$message .= create_card($card, false);
 			}
 		}
 		$i++;
@@ -162,7 +162,7 @@ if ($do == 'STAY' || $playerHand->getValue() == 21) {
 		if ($i == 4 || $i == 7 || $i == 10) {
 			$message .= ('</tr><tr>');
 		}
-		$message .= create_card($card, TRUE);
+		$message .= create_card($card, true);
 		$i++;
 	}
 	$message .= ('</tr></table><div class="center">');
@@ -183,7 +183,7 @@ foreach ($playerHand->getCards() as $key => $card) {
 	if ($i == 4 || $i == 7 || $i == 10) {
 		$message .= ('</tr><tr>');
 	}
-	$message .= create_card($card, TRUE);
+	$message .= create_card($card, true);
 	$i++;
 }
 $message .= ('</tr></table>');

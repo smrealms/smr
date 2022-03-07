@@ -103,7 +103,7 @@ $container = Page::create('skeleton.php', 'port_attack.php');
 
 // If they died on the shot they get to see the results
 if ($player->isDead()) {
-	$container['override_death'] = TRUE;
+	$container['override_death'] = true;
 }
 
 $container['results'] = $results;
