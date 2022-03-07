@@ -24,12 +24,12 @@ foreach ($dbResult->records() as $dbRecord) {
 		$otherPlayer = null;
 	}
 	$shareFrom[$fromAccountId] = [
-		'Player ID'   => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
+		'Player ID' => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
 		'Player Name' => $otherPlayer == null ?
 		                 '<b>Account</b>: ' . SmrAccount::getAccount($fromAccountId)->getHofDisplayName() :
 		                 $otherPlayer->getDisplayName(),
-		'All Games'   => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
-		'Game ID'     => $gameId,
+		'All Games' => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
+		'Game ID' => $gameId,
 	];
 }
 
@@ -45,12 +45,12 @@ foreach ($dbResult->records() as $dbRecord) {
 		$otherPlayer = null;
 	}
 	$shareTo[$toAccountId] = [
-		'Player ID'   => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
+		'Player ID' => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
 		'Player Name' => $otherPlayer == null ?
 		                 '<b>Account</b>: ' . SmrAccount::getAccount($toAccountId)->getHofDisplayName() :
 		                 $otherPlayer->getDisplayName(),
-		'All Games'   => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
-		'Game ID'     => $gameId,
+		'All Games' => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
+		'Game ID' => $gameId,
 	];
 }
 

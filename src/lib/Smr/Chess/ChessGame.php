@@ -398,7 +398,7 @@ class ChessGame {
 		// This move will be set as the most recent move
 		$this->lastMove = [
 			'From' => ['X' => $startX, 'Y' => $startY],
-			'To'   => ['X' => $endX, 'Y' => $endY],
+			'To' => ['X' => $endX, 'Y' => $endY],
 		];
 
 		$otherPlayerColour = self::getOtherColour($playerColour);

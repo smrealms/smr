@@ -46,7 +46,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$history[] = [
 		'Leader' => $leader,
 		'Player' => $pickedPlayer,
-		'Time'   => $dbRecord->getInt('time'),
+		'Time' => $dbRecord->getInt('time'),
 	];
 }
 
