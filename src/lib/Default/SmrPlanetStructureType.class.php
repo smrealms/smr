@@ -92,13 +92,6 @@ class SmrPlanetStructureType {
 		],
 	];
 
-	/**
-	 * Return a list of possible planet structure types
-	 */
-	static function getTypes(): array {
-		return array_keys(self::INFO);
-	}
-
 	// Functions that do not require the planet type to be known
 	public function structureID(): int {
 		return $this->ID;
