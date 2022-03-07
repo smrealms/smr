@@ -16,7 +16,7 @@ class DummyShip extends AbstractSmrShip {
 
 	public static function getCachedDummyShip(AbstractSmrPlayer $player): self {
 		if (!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()])) {
-			$ship = new DummyShip($player);
+			$ship = new self($player);
 
 			// Load weapons from the dummy database cache, if available
 			$db = Smr\Database::getInstance();

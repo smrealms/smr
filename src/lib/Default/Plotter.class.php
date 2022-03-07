@@ -52,7 +52,7 @@ class Plotter {
 				$start = $sector;
 				$end = $x;
 			}
-			$path = Plotter::findDistanceToX($end, $start, $useFirst, $needsToHaveBeenExploredBy, $player);
+			$path = self::findDistanceToX($end, $start, $useFirst, $needsToHaveBeenExploredBy, $player);
 			if ($path === false) {
 				throw new Smr\Exceptions\UserError('Unable to plot from ' . $sector->getSectorID() . ' to ' . $x->getSectorID() . '.');
 			}
@@ -64,7 +64,7 @@ class Plotter {
 		} else {
 
 			// At this point we don't know what sector $x will be at
-			$path = Plotter::findDistanceToX($x, $sector, $useFirst, $needsToHaveBeenExploredBy, $player);
+			$path = self::findDistanceToX($x, $sector, $useFirst, $needsToHaveBeenExploredBy, $player);
 			if ($path === false) {
 				throw new Smr\Exceptions\UserError('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
 			}
@@ -72,7 +72,7 @@ class Plotter {
 			// (i.e. start sector < end sector)
 			if ($path->getEndSectorID() < $sector->getSectorID()) {
 				$endSector = SmrSector::getSector($sector->getGameID(), $path->getEndSectorID());
-				$path = Plotter::findDistanceToX($sector, $endSector, true);
+				$path = self::findDistanceToX($sector, $endSector, true);
 				$path->reversePath();
 			}
 

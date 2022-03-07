@@ -18,7 +18,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	protected bool $damageRollover = false; // fixed for all SmrWeapons
 
 	public static function getWeapon(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null): SmrWeapon {
-		return new SmrWeapon($weaponTypeID, $dbRecord);
+		return new self($weaponTypeID, $dbRecord);
 	}
 
 	protected function __construct(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null) {

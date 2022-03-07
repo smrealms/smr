@@ -124,7 +124,7 @@ class Page extends ArrayObject {
 			// to avoid making $container a reference to $extra
 			$extra = $extra->getArrayCopy();
 		}
-		$container = new Page($extra);
+		$container = new self($extra);
 		$container['url'] = $file;
 		$container['body'] = $body;
 		if ($remainingPageLoads !== null) {

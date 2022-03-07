@@ -78,7 +78,7 @@ class DiContainer {
 	 * This needs to be done once during a bootstrapping script, like bootstrap.php
 	 */
 	public static function initialize($enableCompilation): void {
-		self::$instance = new DiContainer($enableCompilation);
+		self::$instance = new self($enableCompilation);
 	}
 
 	/**

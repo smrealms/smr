@@ -94,14 +94,14 @@ class SmrEnhancedWeaponEvent {
 			'bonus_damage' => $db->escapeBoolean($bonusDamage),
 		]);
 
-		return new SmrEnhancedWeaponEvent($gameID, $weaponTypeID, $locationTypeID, $sectorID, $expires, $bonusAccuracy, $bonusDamage);
+		return new self($gameID, $weaponTypeID, $locationTypeID, $sectorID, $expires, $bonusAccuracy, $bonusDamage);
 	}
 
 	/**
 	 * Convenience function to instantiate an event from a query result.
 	 */
 	private static function getEventFromDatabase(Smr\DatabaseRecord $dbRecord): SmrEnhancedWeaponEvent {
-		return new SmrEnhancedWeaponEvent(
+		return new self(
 			$dbRecord->getInt('game_id'),
 			$dbRecord->getInt('weapon_type_id'),
 			$dbRecord->getInt('location_type_id'),

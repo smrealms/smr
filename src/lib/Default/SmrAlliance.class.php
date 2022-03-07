@@ -37,7 +37,7 @@ class SmrAlliance {
 
 	public static function getAlliance(int $allianceID, int $gameID, bool $forceUpdate = false): self {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
-			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new SmrAlliance($allianceID, $gameID);
+			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new self($allianceID, $gameID);
 		}
 		return self::$CACHE_ALLIANCES[$gameID][$allianceID];
 	}

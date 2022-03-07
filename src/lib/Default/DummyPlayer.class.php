@@ -58,7 +58,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 		if ($dbResult->hasRecord()) {
 			return $dbResult->record()->getObject('info');
 		} else {
-			return new DummyPlayer($name);
+			return new self($name);
 		}
 	}
 

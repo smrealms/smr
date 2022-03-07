@@ -72,7 +72,7 @@ class SmrSector {
 
 	public static function getSector(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_SECTORS[$gameID][$sectorID]) || $forceUpdate) {
-			self::$CACHE_SECTORS[$gameID][$sectorID] = new SmrSector($gameID, $sectorID, false, $dbRecord);
+			self::$CACHE_SECTORS[$gameID][$sectorID] = new self($gameID, $sectorID, false, $dbRecord);
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
@@ -93,7 +93,7 @@ class SmrSector {
 
 	public static function createSector(int $gameID, int $sectorID): self {
 		if (!isset(self::$CACHE_SECTORS[$gameID][$sectorID])) {
-			$s = new SmrSector($gameID, $sectorID, true);
+			$s = new self($gameID, $sectorID, true);
 			self::$CACHE_SECTORS[$gameID][$sectorID] = $s;
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
@@ -397,7 +397,7 @@ class SmrSector {
 	}
 
 	public function getNeighbourSector(string $dir): self {
-		return SmrSector::getSector($this->getGameID(), $this->getNeighbourID($dir));
+		return self::getSector($this->getGameID(), $this->getNeighbourID($dir));
 	}
 
 	public function getLinks(): array {
@@ -418,7 +418,7 @@ class SmrSector {
 
 	public function getLinkSector(string $name): self|false {
 		if ($this->hasLink($name)) {
-			return SmrSector::getSector($this->getGameID(), $this->getLink($name));
+			return self::getSector($this->getGameID(), $this->getLink($name));
 		}
 		return false;
 	}
@@ -541,7 +541,7 @@ class SmrSector {
 	}
 
 	public function getWarpSector(): self {
-		return SmrSector::getSector($this->getGameID(), $this->getWarp());
+		return self::getSector($this->getGameID(), $this->getWarp());
 	}
 
 	public function hasWarp(): bool {

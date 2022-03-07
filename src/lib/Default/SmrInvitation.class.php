@@ -35,7 +35,7 @@ class SmrInvitation {
 		$dbResult = $db->read('SELECT * FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID));
 		$invites = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$invites[] = new SmrInvitation($dbRecord);
+			$invites[] = new self($dbRecord);
 		}
 		return $invites;
 	}
@@ -50,7 +50,7 @@ class SmrInvitation {
 
 		$dbResult = $db->read('SELECT * FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND account_id=' . $db->escapeNumber($receiverAccountID));
 		if ($dbResult->hasRecord()) {
-			return new SmrInvitation($dbResult->record());
+			return new self($dbResult->record());
 		}
 		throw new Smr\Exceptions\AllianceInvitationNotFound;
 	}

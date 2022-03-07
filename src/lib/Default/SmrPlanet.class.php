@@ -73,7 +73,7 @@ class SmrPlanet {
 
 	public static function getPlanet(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
-			self::$CACHE_PLANETS[$gameID][$sectorID] = new SmrPlanet($gameID, $sectorID, $dbRecord);
+			self::$CACHE_PLANETS[$gameID][$sectorID] = new self($gameID, $sectorID, $dbRecord);
 		}
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}

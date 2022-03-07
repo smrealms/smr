@@ -72,7 +72,7 @@ class Globals {
 	}
 
 	public static function getColouredRaceNameForRace(int $raceID, int $gameID, int $fromRaceID, bool $linked = true): string {
-		$raceRelations = Globals::getRaceRelations($gameID, $fromRaceID);
+		$raceRelations = self::getRaceRelations($gameID, $fromRaceID);
 		return self::getColouredRaceName($raceID, $raceRelations[$raceID], $linked);
 	}
 
@@ -109,14 +109,14 @@ class Globals {
 	}
 
 	public static function getGood(int $goodID): array {
-		return Globals::getGoods()[$goodID];
+		return self::getGoods()[$goodID];
 	}
 
 	public static function getGoodName(int $goodID): string {
 		if ($goodID == GOODS_NOTHING) {
 			return 'Nothing';
 		}
-		return Globals::getGoods()[$goodID]['Name'];
+		return self::getGoods()[$goodID]['Name'];
 	}
 
 	public static function getHardwareTypes(int $hardwareTypeID = null): array {
@@ -142,11 +142,11 @@ class Globals {
 	}
 
 	public static function getHardwareName(int $hardwareTypeID): string {
-		return Globals::getHardwareTypes()[$hardwareTypeID]['Name'];
+		return self::getHardwareTypes()[$hardwareTypeID]['Name'];
 	}
 
 	public static function getHardwareCost(int $hardwareTypeID): int {
-		return Globals::getHardwareTypes()[$hardwareTypeID]['Cost'];
+		return self::getHardwareTypes()[$hardwareTypeID]['Cost'];
 	}
 
 	public static function isFeatureRequestOpen(): bool {

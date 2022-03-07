@@ -24,7 +24,7 @@ class SmrWeaponType {
 				$dbResult = $db->read('SELECT * FROM weapon_type WHERE weapon_type_id = ' . $db->escapeNumber($weaponTypeID));
 				$dbRecord = $dbResult->record();
 			}
-			$weapon = new SmrWeaponType($weaponTypeID, $dbRecord);
+			$weapon = new self($weaponTypeID, $dbRecord);
 			self::$CACHE_WEAPON_TYPES[$weaponTypeID] = $weapon;
 		}
 		return self::$CACHE_WEAPON_TYPES[$weaponTypeID];

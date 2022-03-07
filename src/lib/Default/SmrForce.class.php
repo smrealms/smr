@@ -81,7 +81,7 @@ class SmrForce {
 	public static function getForce(int $gameID, int $sectorID, int $ownerID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
-			$p = new SmrForce($gameID, $sectorID, $ownerID, $dbRecord);
+			$p = new self($gameID, $sectorID, $ownerID, $dbRecord);
 			self::$CACHE_FORCES[$gameID][$sectorID][$ownerID] = $p;
 		}
 		return self::$CACHE_FORCES[$gameID][$sectorID][$ownerID];

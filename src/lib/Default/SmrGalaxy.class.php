@@ -37,7 +37,7 @@ class SmrGalaxy {
 
 	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): SmrGalaxy {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
-			$g = new SmrGalaxy($gameID, $galaxyID, false, $dbRecord);
+			$g = new self($gameID, $galaxyID, false, $dbRecord);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
 		}
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
@@ -53,7 +53,7 @@ class SmrGalaxy {
 
 	public static function createGalaxy(int $gameID, int $galaxyID): SmrGalaxy {
 		if (!isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
-			$g = new SmrGalaxy($gameID, $galaxyID, true);
+			$g = new self($gameID, $galaxyID, true);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
 		}
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
@@ -171,7 +171,7 @@ class SmrGalaxy {
 		if (!isset($this->startSector)) {
 			$this->startSector = 1;
 			if ($this->getGalaxyID() != 1) {
-				$galaxies = SmrGalaxy::getGameGalaxies($this->getGameID());
+				$galaxies = self::getGameGalaxies($this->getGameID());
 				for ($i = 1; $i < $this->getGalaxyID(); $i++) {
 					$this->startSector += $galaxies[$i]->getSize();
 				}
