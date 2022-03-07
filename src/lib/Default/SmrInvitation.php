@@ -43,7 +43,7 @@ class SmrInvitation {
 	/**
 	 * Get the alliance invitation for a single recipient, if not expired
 	 */
-	static public function get(int $allianceID, int $gameID, int $receiverAccountID): SmrInvitation {
+	static public function get(int $allianceID, int $gameID, int $receiverAccountID): self {
 		// Remove any expired invitations
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));

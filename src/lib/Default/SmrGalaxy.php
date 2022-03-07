@@ -35,7 +35,7 @@ class SmrGalaxy {
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
 
-	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): SmrGalaxy {
+	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new self($gameID, $galaxyID, false, $dbRecord);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
@@ -51,7 +51,7 @@ class SmrGalaxy {
 		}
 	}
 
-	public static function createGalaxy(int $gameID, int $galaxyID): SmrGalaxy {
+	public static function createGalaxy(int $gameID, int $galaxyID): self {
 		if (!isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new self($gameID, $galaxyID, true);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
@@ -347,7 +347,7 @@ class SmrGalaxy {
 		return $sectorID >= $this->getStartSector() && $sectorID <= $this->getEndSector();
 	}
 
-	public static function getGalaxyContaining(int $gameID, int $sectorID): SmrGalaxy {
+	public static function getGalaxyContaining(int $gameID, int $sectorID): self {
 		return SmrSector::getSector($gameID, $sectorID)->getGalaxy();
 	}
 

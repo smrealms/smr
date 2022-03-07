@@ -22,7 +22,7 @@ abstract class SocialLogin {
 	/**
 	 * Returns a SocialLogin class of the given derived type.
 	 */
-	public static function get(string $loginType): SocialLogin {
+	public static function get(string $loginType): self {
 		if ($loginType === Facebook::getLoginType()) {
 			return new Facebook();
 		} elseif ($loginType === Twitter::getLoginType()) {
@@ -68,7 +68,7 @@ abstract class SocialLogin {
 	/**
 	 * Authenticates with the social platform.
 	 */
-	abstract public function login(): SocialLogin;
+	abstract public function login(): self;
 
 	/**
 	 * Returns true if the authentication was successful.

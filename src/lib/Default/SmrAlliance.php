@@ -102,7 +102,7 @@ class SmrAlliance {
 	 * Create an alliance and return the new object.
 	 * Starts alliance with "closed" recruitment (for safety).
 	 */
-	public static function createAlliance(int $gameID, string $name, bool $allowNHA = false): SmrAlliance {
+	public static function createAlliance(int $gameID, string $name, bool $allowNHA = false): self {
 		$db = Smr\Database::getInstance();
 		$db->lockTable('alliance');
 

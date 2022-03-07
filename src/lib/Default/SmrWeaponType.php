@@ -17,7 +17,7 @@ class SmrWeaponType {
 	protected int $powerLevel;
 	protected int $buyerRestriction;
 
-	public static function getWeaponType(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null): SmrWeaponType {
+	public static function getWeaponType(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_WEAPON_TYPES[$weaponTypeID])) {
 			if ($dbRecord === null) {
 				$db = Smr\Database::getInstance();

@@ -33,7 +33,7 @@ class SmrEnhancedWeaponEvent {
 	 * This function also does the work of cleaning up expired events and
 	 * creating new ones when necessary.
 	 */
-	public static function getLatestEvent(int $gameID): SmrEnhancedWeaponEvent {
+	public static function getLatestEvent(int $gameID): self {
 		// First, remove any expired events from the database
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM location_sells_special WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));
@@ -59,7 +59,7 @@ class SmrEnhancedWeaponEvent {
 	 * Events are generated randomly across all weapon types available in the
 	 * game, and then randomly across locations that offer that weapon type.
 	 */
-	private static function createEvent(int $gameID): SmrEnhancedWeaponEvent {
+	private static function createEvent(int $gameID): self {
 		// First, randomly select a weapon type to enhance
 		$weaponTypeID = array_rand(SmrWeaponType::getAllSoldWeaponTypes($gameID));
 
@@ -100,7 +100,7 @@ class SmrEnhancedWeaponEvent {
 	/**
 	 * Convenience function to instantiate an event from a query result.
 	 */
-	private static function getEventFromDatabase(Smr\DatabaseRecord $dbRecord): SmrEnhancedWeaponEvent {
+	private static function getEventFromDatabase(Smr\DatabaseRecord $dbRecord): self {
 		return new self(
 			$dbRecord->getInt('game_id'),
 			$dbRecord->getInt('weapon_type_id'),
