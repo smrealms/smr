@@ -100,7 +100,7 @@ if ($dbResult->hasRecord()) {
 			'Attacker' => $getParticipantName($dbRecord->getInt('attacker_id'), $sectorID),
 			'Defender' => $getParticipantName($dbRecord->getInt('defender_id'), $sectorID),
 			'Time' => $dbRecord->getInt('timestamp'),
-			'Sector' => $sectorID
+			'Sector' => $sectorID,
 		];
 	}
 }

@@ -20,7 +20,7 @@ class AbstractSmrPort {
 	const BASE_REFRESH_PER_HOUR = [
 		'1' => 150,
 		'2' => 110,
-		'3' => 70
+		'3' => 70,
 	];
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
@@ -1277,7 +1277,7 @@ class AbstractSmrPort {
 						'NumCDs' => $cdDamage / CD_ARMOUR,
 						'HasCDs' => $this->hasCDs(),
 						'Armour' => $armourDamage,
-						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage
+						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 		return $return;
 	}

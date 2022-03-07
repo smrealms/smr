@@ -8,47 +8,47 @@ class SmrTreaty {
 	const TYPES = [
 		'trader_assist' => [
 			'Assist - Trader Attacks',
-			'Assist your ally in attacking traders.'
+			'Assist your ally in attacking traders.',
 		],
 		'raid_assist' => [
 			'Assist - Planet &amp; Port Attacks',
-			'Assist your ally in attacking planets and ports.'
+			'Assist your ally in attacking planets and ports.',
 		],
 		'trader_defend' => [
 			'Defend - Trader Attacks',
-			'Defend your ally when they are attacked.'
+			'Defend your ally when they are attacked.',
 		],
 		'trader_nap' => [
 			'Non Aggression - Traders',
-			'Cease Fire against Traders.'
+			'Cease Fire against Traders.',
 		],
 		'planet_nap' => [
 			'Non Aggression - Planets',
-			'Cease Fire against Planets.'
+			'Cease Fire against Planets.',
 		],
 		'forces_nap' => [
 			'Non Aggression - Forces',
-			'Cease Fire against Forces. Also allows refreshing of allied forces.'
+			'Cease Fire against Forces. Also allows refreshing of allied forces.',
 		],
 		'aa_access' => [
 			'Alliance Account Access',
-			'Restrictions can be set in the roles section.'
+			'Restrictions can be set in the roles section.',
 		],
 		'mb_read' => [
 			'Message Board Read Rights',
-			'Allow your ally to read your message board.'
+			'Allow your ally to read your message board.',
 		],
 		'mb_write' => [
 			'Message Board Write Rights',
-			'Allow your ally to post on your message board.'
+			'Allow your ally to post on your message board.',
 		],
 		'mod_read' => [
 			'Message of the Day Read Rights',
-			'Allow your ally to read your message of the day.'
+			'Allow your ally to read your message of the day.',
 		],
 		'planet_land' => [
 			'Planet Landing Rights',
-			'Allow your ally to land on your planets.'
+			'Allow your ally to land on your planets.',
 		],
 	];
 }

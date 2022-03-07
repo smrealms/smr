@@ -11,7 +11,7 @@ try {
 
 	$descriptorSpec = [
 		0 => ['pipe', 'r'], // stdin is a pipe that the child will read from
-		1 => ['pipe', 'w']  // stdout is a pipe that the child will write to
+		1 => ['pipe', 'w'], // stdout is a pipe that the child will write to
 	];
 	$engine = proc_open(UCI_CHESS_ENGINE, $descriptorSpec, $pipes);
 	$toEngine =& $pipes[0];

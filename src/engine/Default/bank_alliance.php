@@ -113,7 +113,7 @@ if ($dbResult->hasRecord()) {
 			'TransactionType' => $dbRecord->getField('transaction'),
 			'Withdrawal' => $dbRecord->getField('transaction') == 'Payment' ? $dbRecord->getInt('amount') : '',
 			'Deposit' => $dbRecord->getField('transaction') == 'Deposit' ? $dbRecord->getInt('amount') : '',
-			'Exempt' => $dbRecord->getInt('exempt') == 1
+			'Exempt' => $dbRecord->getInt('exempt') == 1,
 		];
 	}
 	$template->assign('BankTransactions', $bankTransactions);

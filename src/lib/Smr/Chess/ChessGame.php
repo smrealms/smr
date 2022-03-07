@@ -115,17 +115,17 @@ class ChessGame {
 				ChessPiece::KING => false,
 				ChessPiece::ROOK => [
 					'Queen' => false,
-					'King' => false
-				]
+					'King' => false,
+				],
 			],
 			self::PLAYER_BLACK => [
 				ChessPiece::KING => false,
 				ChessPiece::ROOK => [
 					'Queen' => false,
-					'King' => false
-				]
+					'King' => false,
+				],
 			],
-			ChessPiece::PAWN => [-1, -1]
+			ChessPiece::PAWN => [-1, -1],
 		];
 	}
 
@@ -547,7 +547,7 @@ class ChessGame {
 				'RookMoved' => $rookMoved,
 				'RookTaken' => $rookTaken,
 				'OldPawnMovement' => $oldPawnMovement,
-				'PawnPromotion' => $pawnPromotion
+				'PawnPromotion' => $pawnPromotion,
 			];
 	}
 

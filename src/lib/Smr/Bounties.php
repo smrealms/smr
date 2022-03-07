@@ -21,7 +21,7 @@ class Bounties {
 			$bounties[] = [
 				'player' => SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $session->getGameID()),
 				'credits' => $dbRecord->getInt('amount'),
-				'smr_credits' => $dbRecord->getInt('smr_credits')
+				'smr_credits' => $dbRecord->getInt('smr_credits'),
 			];
 		}
 		return $bounties;

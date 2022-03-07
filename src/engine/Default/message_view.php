@@ -143,7 +143,7 @@ function displayGrouped(SmrPlayer $sender, string $message_text, int $first, int
 	$array = [
 		$sender->getAccountID(),
 		$first,
-		$last
+		$last,
 	];
 
 	$message = [];

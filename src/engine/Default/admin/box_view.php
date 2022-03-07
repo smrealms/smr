@@ -42,7 +42,7 @@ if (!isset($var['box_type_id'])) {
 			$validGame = $gameID > 0 && SmrGame::gameExists($gameID);
 			$messageID = $dbRecord->getInt('message_id');
 			$messages[$messageID] = [
-				'ID' => $messageID
+				'ID' => $messageID,
 			];
 
 			$senderID = $dbRecord->getInt('sender_id');

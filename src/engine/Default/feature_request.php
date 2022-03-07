@@ -38,7 +38,7 @@ foreach ($requestCategories as $category => $description) {
 		'Selected' => $category == $var['category'],
 		'HREF' => $container->href(),
 		'Count' => getFeaturesCount($status, ($category == 'New') ? NEW_REQUEST_DAYS : false),
-		'Description' => $description
+		'Description' => $description,
 	];
 }
 $template->assign('CategoryTable', $categoryTable);

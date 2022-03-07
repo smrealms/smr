@@ -74,7 +74,7 @@ abstract class AbstractSmrPlayer {
 
 	protected array $unvisitedSectors;
 	protected array $allianceRoles = [
-		0 => 0
+		0 => 0,
 	];
 
 	protected bool $draftLeader;
@@ -1664,7 +1664,7 @@ abstract class AbstractSmrPlayer {
 					'Label' => $dbRecord->getField('label'),
 					'SectorID' => $dbRecord->getInt('sector_id'),
 					'OffsetTop' => $dbRecord->getInt('offset_top'),
-					'OffsetLeft' => $dbRecord->getInt('offset_left')
+					'OffsetLeft' => $dbRecord->getInt('offset_left'),
 				];
 			}
 		}
@@ -1711,7 +1711,7 @@ abstract class AbstractSmrPlayer {
 			'Label' => $label,
 			'SectorID' => (int)$sectorID,
 			'OffsetTop' => 1,
-			'OffsetLeft' => 1
+			'OffsetLeft' => 1,
 		];
 
 		$this->db->insert('player_stored_sector', [
@@ -2258,7 +2258,7 @@ abstract class AbstractSmrPlayer {
 		$alignmentDiff = abs($this->getAlignment() - $killer->getAlignment());
 		$return['BountyGained'] = [
 			'Type' => 'None',
-			'Amount' => 0
+			'Amount' => 0,
 		];
 		if ($alignmentDiff >= 200) {
 			// If the podded players alignment makes them deputy or member then set bounty
@@ -2676,7 +2676,7 @@ abstract class AbstractSmrPlayer {
 					'Unread' => $dbRecord->getBoolean('unread'),
 					'Expires' => $dbRecord->getInt('step_fails'),
 					'Sector' => $dbRecord->getInt('mission_sector'),
-					'Starting Sector' => $dbRecord->getInt('starting_sector')
+					'Starting Sector' => $dbRecord->getInt('starting_sector'),
 				];
 				$this->rebuildMission($missionID);
 			}
@@ -2769,7 +2769,7 @@ abstract class AbstractSmrPlayer {
 			'Unread' => true,
 			'Expires' => (Smr\Epoch::time() + 86400),
 			'Sector' => $sector,
-			'Starting Sector' => $this->getSectorID()
+			'Starting Sector' => $this->getSectorID(),
 		];
 
 		$this->missions[$missionID] =& $mission;

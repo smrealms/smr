@@ -9,7 +9,7 @@ const MISSION_ACTIONS = [
 	'DisbandAlliance',
 	'KickPlayer',
 	'PlayerKicked',
-	'BuyDrink'
+	'BuyDrink',
 ];
 
 //REQUIREMENTS
@@ -54,32 +54,32 @@ const MISSIONS = [
 		'Time Limit' => 0,
 		'HasX' => [
 			'Type' => 'Locations',
-			'X' => 'Bar'
+			'X' => 'Bar',
 		],
 		'Steps' => [
 			[
 				'Step' => 'EnterSector',
 				'PickSector' => [
 					'Type' => 'Locations',
-					'X' => RACE_SALVENE + LOCATION_GROUP_RACIAL_HQS
+					'X' => RACE_SALVENE + LOCATION_GROUP_RACIAL_HQS,
 				],
 				'Detail' => [
-					'SectorID' => '<Sector>'
+					'SectorID' => '<Sector>',
 				],
 				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' in this bar is awful! Go to the Sal...*Hiccup*...the Salvene HQ, they\'ll know a good bar.',
-				'Task' => 'Go to the Salvene HQ at [sector=<Sector>]'
+				'Task' => 'Go to the Salvene HQ at [sector=<Sector>]',
 			],
 			[
 				'Step' => 'EnterSector',
 				'PickSector' => [
 					'Type' => 'Locations',
-					'X' => 'Bar'
+					'X' => 'Bar',
 				],
 				'Detail' => [
-					'SectorID' => '<Sector>'
+					'SectorID' => '<Sector>',
 				],
 				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in [sector=<Sector>] does the best ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' around!',
-				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.'
+				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.',
 			],
 			[
 				'Step' => 'BuyDrink',
@@ -88,30 +88,30 @@ const MISSIONS = [
 					'Drink' => Smr\BarDrink::SALVENE_SWAMP_SODA,
 				],
 				'Text' => 'Here we are! Now let\'s get this ' . Smr\BarDrink::SALVENE_SWAMP_SODA . '.',
-				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.'
+				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.',
 			],
 			[
 				'Step' => 'EnterSector',
 				'Detail' => [
-					'SectorID' => '<Starting Sector>'
+					'SectorID' => '<Starting Sector>',
 				],
 				'Text' => 'Finally! A true ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ', let\'s return to that drunk!',
-				'Task' => 'Return to [sector=<Starting Sector>] to claim your reward.'
+				'Task' => 'Return to [sector=<Starting Sector>] to claim your reward.',
 			],
 			[
 				'Step' => 'Claim',
 				'Rewards' => [
 					'Credits' => 500000,
 					'Experience' => 1000,
-					'Text' => '*Hiccup* For your...service *Hiccup* to me, take these *Hiccup* 500,000 credits and 1,000 experience *Hiccup*!'
+					'Text' => '*Hiccup* For your...service *Hiccup* to me, take these *Hiccup* 500,000 credits and 1,000 experience *Hiccup*!',
 				],
 				'Detail' => [
-					'SectorID' => '<Starting Sector>'
+					'SectorID' => '<Starting Sector>',
 				],
-				'Text' => 'You hand the ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' to the drunk!'
-			]
-		]
-	]
+				'Text' => 'You hand the ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' to the drunk!',
+			],
+		],
+	],
 ];
 
 /**

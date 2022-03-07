@@ -950,7 +950,7 @@ class SmrPlanet {
 			'ConstructionID' => $constructionID,
 			'ConstructorID' => $constructor->getAccountID(),
 			'Finishes' => $timeComplete,
-			'TimeRemaining' => $timeComplete - Smr\Epoch::time()
+			'TimeRemaining' => $timeComplete - Smr\Epoch::time(),
 		];
 
 		// Consume the required resources
@@ -1239,7 +1239,7 @@ class SmrPlanet {
 			'CDs' => $cdDamage,
 			'NumCDs' => $cdDamage / CD_ARMOUR,
 			'HasCDs' => $this->hasCDs(),
-			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage
+			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 		return $return;
 	}

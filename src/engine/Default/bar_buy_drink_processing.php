@@ -65,7 +65,7 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 
 $player->actionTaken('BuyDrink', [
 	'SectorID' => $player->getSectorID(),
-	'Drink' => $drinkName
+	'Drink' => $drinkName,
 ]);
 
 //see if the player blacksout or not

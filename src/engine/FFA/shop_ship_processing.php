@@ -14,7 +14,7 @@ $bannedShips = [
 	SHIP_TYPE_MOTHER_SHIP,
 
 	SHIP_TYPE_FEDERAL_ULTIMATUM,
-	SHIP_TYPE_DEATH_CRUISER
+	SHIP_TYPE_DEATH_CRUISER,
 ];
 
 if (in_array($shipID, $bannedShips)) {

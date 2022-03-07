@@ -8,7 +8,7 @@ abstract class AbstractSmrAccount {
 		// Used as: pow(Stat * a, USER_RANKINGS_EACH_STAT_POW) * b
 		[['Trade', 'Experience', 'Total'], .1, 0.5],
 		[['Trade', 'Money', 'Profit'], 0.00005, 0.5],
-		[['Killing', 'Kills'], 1000, 1]
+		[['Killing', 'Kills'], 1000, 1],
 	];
 
 	protected static array $CACHE_ACCOUNTS = [];
@@ -29,7 +29,7 @@ abstract class AbstractSmrAccount {
 		'PlotCourse' => ['3'],
 		'CurrentPlayers' => ['4'],
 		'EnterPort' => ['q'],
-		'AttackTrader' => ['f']
+		'AttackTrader' => ['f'],
 	];
 
 	protected Smr\Database $db;
@@ -275,7 +275,7 @@ abstract class AbstractSmrAccount {
 			}
 			return ['Time' => $expireTime,
 				'Reason' => $dbRecord->getField('reason'),
-				'ReasonID' => $dbRecord->getInt('reason_id')
+				'ReasonID' => $dbRecord->getInt('reason_id'),
 			];
 		} else {
 			return false;

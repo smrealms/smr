@@ -46,7 +46,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$closingHistory[] = [
 		'Time' => $dbRecord->getInt('time'),
 		'Action' => $dbRecord->getField('action'),
-		'AdminName' => $admin
+		'AdminName' => $admin,
 	];
 }
 $template->assign('ClosingHistory', $closingHistory);
@@ -62,7 +62,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$recentIPs[] = [
 		'IP' => $dbRecord->getField('ip'),
 		'Time' => $dbRecord->getField('time'),
-		'Host' => $dbRecord->getField('host')
+		'Host' => $dbRecord->getField('host'),
 	];
 }
 $template->assign('RecentIPs', $recentIPs);

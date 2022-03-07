@@ -82,7 +82,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		'For' => $votedFor == 'YES',
 		'Against' => $votedFor == 'NO',
 		'NoVotes' => $noVotes,
-		'YesVotes' => $yesVotes
+		'YesVotes' => $yesVotes,
 	];
 }
 $template->assign('VoteTreaties', $voteTreaties);

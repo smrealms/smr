@@ -509,7 +509,7 @@ class SmrForce {
 						'SDs' => $sdDamage,
 						'NumSDs' => $sdDamage / SD_ARMOUR,
 						'HasSDs' => $this->hasSDs(),
-						'TotalDamage' => $minesDamage + $cdDamage + $sdDamage
+						'TotalDamage' => $minesDamage + $cdDamage + $sdDamage,
 		];
 		return $return;
 	}

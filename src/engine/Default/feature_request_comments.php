@@ -37,7 +37,7 @@ if ($dbResult->hasRecord()) {
 								'CommentID' => $commentID,
 								'Message' => $dbRecord->getField('text'),
 								'Time' => date($account->getDateTimeFormat(), $dbRecord->getInt('posting_time')),
-								'Anonymous' => $dbRecord->getBoolean('anonymous')
+								'Anonymous' => $dbRecord->getBoolean('anonymous'),
 		];
 		if ($featureModerator || !$dbRecord->getBoolean('anonymous')) {
 			$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($dbRecord->getInt('poster_id'));

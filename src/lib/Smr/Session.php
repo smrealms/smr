@@ -26,7 +26,7 @@ class Session {
 		'sector_scan.php' => .4,
 		'shop_goods_processing.php' => .4,
 		'trader_attack_processing.php' => .75,
-		'trader_examine.php' => .75
+		'trader_examine.php' => .75,
 	];
 
 	protected Database $db;
