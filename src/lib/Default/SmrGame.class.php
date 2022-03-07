@@ -427,7 +427,7 @@ class SmrGame {
 					AND location_type_id < ' . $this->db->escapeNumber(FED) . '
 					AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
 				ORDER BY location_type_id');
-			$this->playableRaceIDs = array();
+			$this->playableRaceIDs = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->playableRaceIDs[] = $dbRecord->getInt('location_type_id') - 101;
 			}

@@ -73,9 +73,9 @@ abstract class AbstractSmrPlayer {
 	protected bool $underAttack;
 
 	protected array $unvisitedSectors;
-	protected array $allianceRoles = array(
+	protected array $allianceRoles = [
 		0 => 0
-	);
+	];
 
 	protected bool $draftLeader;
 	protected string|false $gpWriter;
@@ -88,8 +88,8 @@ abstract class AbstractSmrPlayer {
 	protected array $hasBountyChanged = [];
 
 	public static function clearCache() : void {
-		self::$CACHE_PLAYERS = array();
-		self::$CACHE_SECTOR_PLAYERS = array();
+		self::$CACHE_PLAYERS = [];
+		self::$CACHE_SECTOR_PLAYERS = [];
 	}
 
 	public static function savePlayers() : void {
@@ -133,7 +133,7 @@ abstract class AbstractSmrPlayer {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
-			$players = array();
+			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
 				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
@@ -147,7 +147,7 @@ abstract class AbstractSmrPlayer {
 		if ($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
-			$players = array();
+			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
 				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
@@ -161,7 +161,7 @@ abstract class AbstractSmrPlayer {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY experience DESC');
-			$players = array();
+			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
 				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
@@ -305,7 +305,7 @@ abstract class AbstractSmrPlayer {
 	 * Skips players who are not in the same alliance as this player.
 	 */
 	public function getSharingPlayers(bool $forceUpdate = false) : array {
-		$results = array($this);
+		$results = [$this];
 
 		// Only return this player if not in an alliance
 		if (!$this->hasAlliance()) {
@@ -851,7 +851,7 @@ abstract class AbstractSmrPlayer {
 
 	public function canBeProtectedByRace(int $raceID) : bool {
 		if (!isset($this->canFed)) {
-			$this->canFed = array();
+			$this->canFed = [];
 			foreach (Smr\Race::getAllIDs() as $raceID2) {
 				$this->canFed[$raceID2] = $this->getRelation($raceID2) >= ALIGN_FED_PROTECTION;
 			}
@@ -1122,7 +1122,7 @@ abstract class AbstractSmrPlayer {
 		}
 		$newExperience = $this->experience + $experience;
 		$this->setExperience($newExperience);
-		$this->increaseHOF($experience, array('Experience', 'Total', 'Gain'), HOF_PUBLIC);
+		$this->increaseHOF($experience, ['Experience', 'Total', 'Gain'], HOF_PUBLIC);
 	}
 	public function decreaseExperience(int $experience) : void {
 		if ($experience < 0) {
@@ -1133,7 +1133,7 @@ abstract class AbstractSmrPlayer {
 		}
 		$newExperience = $this->experience - $experience;
 		$this->setExperience($newExperience);
-		$this->increaseHOF($experience, array('Experience', 'Total', 'Loss'), HOF_PUBLIC);
+		$this->increaseHOF($experience, ['Experience', 'Total', 'Loss'], HOF_PUBLIC);
 	}
 
 	public function isLandedOnPlanet() : bool {
@@ -1338,12 +1338,12 @@ abstract class AbstractSmrPlayer {
 		$alliance = $this->getAlliance();
 		if ($kickedBy != null) {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
-			$this->actionTaken('PlayerKicked', array('Alliance' => $alliance, 'Player' => $kickedBy));
-			$kickedBy->actionTaken('KickPlayer', array('Alliance' => $alliance, 'Player' => $this));
+			$this->actionTaken('PlayerKicked', ['Alliance' => $alliance, 'Player' => $kickedBy]);
+			$kickedBy->actionTaken('KickPlayer', ['Alliance' => $alliance, 'Player' => $this]);
 		} elseif ($this->isAllianceLeader()) {
-			$this->actionTaken('DisbandAlliance', array('Alliance' => $alliance));
+			$this->actionTaken('DisbandAlliance', ['Alliance' => $alliance]);
 		} else {
-			$this->actionTaken('LeaveAlliance', array('Alliance' => $alliance));
+			$this->actionTaken('LeaveAlliance', ['Alliance' => $alliance]);
 			if ($alliance->getLeaderID() != 0 && $alliance->getLeaderID() != ACCOUNT_ID_NHL) {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I left your alliance!', false);
 			}
@@ -1387,7 +1387,7 @@ abstract class AbstractSmrPlayer {
 			'alliance_id' => $this->db->escapeNumber($this->getAllianceID()),
 		]);
 
-		$this->actionTaken('JoinAlliance', array('Alliance' => $alliance));
+		$this->actionTaken('JoinAlliance', ['Alliance' => $alliance]);
 	}
 
 	public function getAllianceJoinable() : int {
@@ -1429,7 +1429,7 @@ abstract class AbstractSmrPlayer {
 	protected function getPersonalRelationsData() : void {
 		if (!isset($this->personalRelations)) {
 			//get relations
-			$this->personalRelations = array();
+			$this->personalRelations = [];
 			foreach (Smr\Race::getAllIDs() as $raceID) {
 				$this->personalRelations[$raceID] = 0;
 			}
@@ -1461,7 +1461,7 @@ abstract class AbstractSmrPlayer {
 			//get relations
 			$raceRelations = Globals::getRaceRelations($this->getGameID(), $this->getRaceID());
 			$personalRels = $this->getPersonalRelations(); // make sure they're initialised.
-			$this->relations = array();
+			$this->relations = [];
 			foreach (Smr\Race::getAllIDs() as $raceID) {
 				$this->relations[$raceID] = $personalRels[$raceID] + $raceRelations[$raceID];
 			}
@@ -1648,24 +1648,24 @@ abstract class AbstractSmrPlayer {
 
 		$turnCost = max(TURNS_JUMP_MINIMUM, IRound($distance * TURNS_PER_JUMP_DISTANCE));
 		$maxMisjump = max(0, IRound(($distance - $turnCost) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $this->getLevelID() * MISJUMP_LEVEL_FACTOR)));
-		return array('turn_cost' => $turnCost, 'max_misjump' => $maxMisjump);
+		return ['turn_cost' => $turnCost, 'max_misjump' => $maxMisjump];
 	}
 
 	public function __sleep() {
-		return array('accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName', 'npc');
+		return ['accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName', 'npc'];
 	}
 
 	public function &getStoredDestinations() : array {
 		if (!isset($this->storedDestinations)) {
-			$this->storedDestinations = array();
+			$this->storedDestinations = [];
 			$dbResult = $this->db->read('SELECT * FROM player_stored_sector WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
-				$this->storedDestinations[] = array(
+				$this->storedDestinations[] = [
 					'Label' => $dbRecord->getField('label'),
 					'SectorID' => $dbRecord->getInt('sector_id'),
 					'OffsetTop' => $dbRecord->getInt('offset_top'),
 					'OffsetLeft' => $dbRecord->getInt('offset_left')
-				);
+				];
 			}
 		}
 		return $this->storedDestinations;
@@ -1707,12 +1707,12 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 
-		$this->storedDestinations[] = array(
+		$this->storedDestinations[] = [
 			'Label' => $label,
 			'SectorID' => (int)$sectorID,
 			'OffsetTop' => 1,
 			'OffsetLeft' => 1
-		);
+		];
 
 		$this->db->insert('player_stored_sector', [
 			'account_id' => $this->db->escapeNumber($this->getAccountID()),
@@ -1742,7 +1742,7 @@ abstract class AbstractSmrPlayer {
 
 	public function getTickers() : array {
 		if (!isset($this->tickers)) {
-			$this->tickers = array();
+			$this->tickers = [];
 			//get ticker info
 			$dbResult = $this->db->read('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL . ' AND expires > ' . $this->db->escapeNumber(Smr\Epoch::time()));
 			foreach ($dbResult->records() as $dbRecord) {
@@ -1821,17 +1821,17 @@ abstract class AbstractSmrPlayer {
 
 	protected function getBountiesData() : void {
 		if (!isset($this->bounties)) {
-			$this->bounties = array();
+			$this->bounties = [];
 			$dbResult = $this->db->read('SELECT * FROM bounty WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
-				$this->bounties[$dbRecord->getInt('bounty_id')] = array(
+				$this->bounties[$dbRecord->getInt('bounty_id')] = [
 							'Amount' => $dbRecord->getInt('amount'),
 							'SmrCredits' => $dbRecord->getInt('smr_credits'),
 							'Type' => $dbRecord->getField('type'),
 							'Claimer' => $dbRecord->getInt('claimer_id'),
 							'Time' => $dbRecord->getInt('time'),
 							'ID' => $dbRecord->getInt('bounty_id'),
-							'New' => false);
+							'New' => false];
 			}
 		}
 	}
@@ -1841,7 +1841,7 @@ abstract class AbstractSmrPlayer {
 	 * If specified, $type must be 'HQ' or 'UG'.
 	 */
 	public function getClaimableBounties(string $type = null) : array {
-		$bounties = array();
+		$bounties = [];
 		$query = 'SELECT * FROM bounty WHERE claimer_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID());
 		$query .= match($type) {
 			'HQ', 'UG' => ' AND type=' . $this->db->escapeString($type),
@@ -1849,12 +1849,12 @@ abstract class AbstractSmrPlayer {
 		};
 		$dbResult = $this->db->read($query);
 		foreach ($dbResult->records() as $dbRecord) {
-			$bounties[] = array(
+			$bounties[] = [
 				'player' => SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $this->getGameID()),
 				'bounty_id' => $dbRecord->getInt('bounty_id'),
 				'credits' => $dbRecord->getInt('amount'),
 				'smr_credits' => $dbRecord->getInt('smr_credits'),
-			);
+			];
 		}
 		return $bounties;
 	}
@@ -1886,13 +1886,13 @@ abstract class AbstractSmrPlayer {
 	}
 
 	protected function createBounty(string $type) : array {
-		$bounty = array('Amount' => 0,
+		$bounty = ['Amount' => 0,
 						'SmrCredits' => 0,
 						'Type' => $type,
 						'Claimer' => 0,
 						'Time' => Smr\Epoch::time(),
 						'ID' => $this->getNextBountyID(),
-						'New' => true);
+						'New' => true];
 		$this->setBounty($bounty);
 		return $bounty;
 	}
@@ -2006,13 +2006,13 @@ abstract class AbstractSmrPlayer {
 		if (!isset($this->HOF)) {
 			//Get Player HOF
 			$dbResult = $this->db->read('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
-			$this->HOF = array();
+			$this->HOF = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$hof =& $this->HOF;
 				$typeList = explode(':', $dbRecord->getString('type'));
 				foreach ($typeList as $type) {
 					if (!isset($hof[$type])) {
-						$hof[$type] = array();
+						$hof[$type] = [];
 					}
 					$hof =& $hof[$type];
 				}
@@ -2027,7 +2027,7 @@ abstract class AbstractSmrPlayer {
 			//Get Player HOF Vis
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT type,visibility FROM hof_visibility');
-			self::$HOFVis = array();
+			self::$HOFVis = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$HOFVis[$dbRecord->getField('type')] = $dbRecord->getField('visibility');
 			}
@@ -2098,10 +2098,10 @@ abstract class AbstractSmrPlayer {
 		$new = false;
 		foreach ($typeList as $type) {
 			if (!isset($hofChanged[$type])) {
-				$hofChanged[$type] = array();
+				$hofChanged[$type] = [];
 			}
 			if (!isset($hof[$type])) {
-				$hof[$type] = array();
+				$hof[$type] = [];
 				$new = true;
 			}
 			$hof =& $hof[$type];
@@ -2157,11 +2157,11 @@ abstract class AbstractSmrPlayer {
 		}
 
 		// record death stat
-		$this->increaseHOF(1, array('Dying', 'Deaths'), HOF_PUBLIC);
+		$this->increaseHOF(1, ['Dying', 'Deaths'], HOF_PUBLIC);
 		//record cost of ship lost
-		$this->increaseHOF($this->getShip()->getCost(), array('Dying', 'Money', 'Cost Of Ships Lost'), HOF_PUBLIC);
+		$this->increaseHOF($this->getShip()->getCost(), ['Dying', 'Money', 'Cost Of Ships Lost'], HOF_PUBLIC);
 		// reset turns since last death
-		$this->setHOF(0, array('Movement', 'Turns Used', 'Since Last Death'), HOF_ALLIANCE);
+		$this->setHOF(0, ['Movement', 'Turns Used', 'Since Last Death'], HOF_ALLIANCE);
 
 		// Reset credits to starting amount + ship insurance
 		$credits = $this->getGame()->getStartingCredits();
@@ -2179,7 +2179,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function killPlayerByPlayer(AbstractSmrPlayer $killer) : array {
-		$return = array();
+		$return = [];
 		$msg = $this->getBBLink();
 
 		if ($this->hasCustomShipName()) {
@@ -2256,10 +2256,10 @@ abstract class AbstractSmrPlayer {
 
 		// If the alignment difference is greater than 200 then a bounty may be set
 		$alignmentDiff = abs($this->getAlignment() - $killer->getAlignment());
-		$return['BountyGained'] = array(
+		$return['BountyGained'] = [
 			'Type' => 'None',
 			'Amount' => 0
-		);
+		];
 		if ($alignmentDiff >= 200) {
 			// If the podded players alignment makes them deputy or member then set bounty
 			if ($this->getAlignment() >= 100) {
@@ -2275,47 +2275,47 @@ abstract class AbstractSmrPlayer {
 		}
 
 		if ($this->isNPC()) {
-			$killer->increaseHOF($return['KillerExp'], array('Killing', 'NPC', 'Experience', 'Gained'), HOF_PUBLIC);
-			$killer->increaseHOF($this->getExperience(), array('Killing', 'NPC', 'Experience', 'Of Traders Killed'), HOF_PUBLIC);
+			$killer->increaseHOF($return['KillerExp'], ['Killing', 'NPC', 'Experience', 'Gained'], HOF_PUBLIC);
+			$killer->increaseHOF($this->getExperience(), ['Killing', 'NPC', 'Experience', 'Of Traders Killed'], HOF_PUBLIC);
 
-			$killer->increaseHOF($return['DeadExp'], array('Killing', 'Experience', 'Lost By NPCs Killed'), HOF_PUBLIC);
+			$killer->increaseHOF($return['DeadExp'], ['Killing', 'Experience', 'Lost By NPCs Killed'], HOF_PUBLIC);
 
-			$killer->increaseHOF($return['KillerCredits'], array('Killing', 'NPC', 'Money', 'Lost By Traders Killed'), HOF_PUBLIC);
-			$killer->increaseHOF($return['KillerCredits'], array('Killing', 'NPC', 'Money', 'Gain'), HOF_PUBLIC);
-			$killer->increaseHOF($this->getShip()->getCost(), array('Killing', 'NPC', 'Money', 'Cost Of Ships Killed'), HOF_PUBLIC);
+			$killer->increaseHOF($return['KillerCredits'], ['Killing', 'NPC', 'Money', 'Lost By Traders Killed'], HOF_PUBLIC);
+			$killer->increaseHOF($return['KillerCredits'], ['Killing', 'NPC', 'Money', 'Gain'], HOF_PUBLIC);
+			$killer->increaseHOF($this->getShip()->getCost(), ['Killing', 'NPC', 'Money', 'Cost Of Ships Killed'], HOF_PUBLIC);
 
 			if ($killerAlignChange > 0) {
-				$killer->increaseHOF($killerAlignChange, array('Killing', 'NPC', 'Alignment', 'Gain'), HOF_PUBLIC);
+				$killer->increaseHOF($killerAlignChange, ['Killing', 'NPC', 'Alignment', 'Gain'], HOF_PUBLIC);
 			} else {
-				$killer->increaseHOF(-$killerAlignChange, array('Killing', 'NPC', 'Alignment', 'Loss'), HOF_PUBLIC);
+				$killer->increaseHOF(-$killerAlignChange, ['Killing', 'NPC', 'Alignment', 'Loss'], HOF_PUBLIC);
 			}
 
-			$killer->increaseHOF($return['BountyGained']['Amount'], array('Killing', 'NPC', 'Money', 'Bounty Gained'), HOF_PUBLIC);
+			$killer->increaseHOF($return['BountyGained']['Amount'], ['Killing', 'NPC', 'Money', 'Bounty Gained'], HOF_PUBLIC);
 
-			$killer->increaseHOF(1, array('Killing', 'NPC Kills'), HOF_PUBLIC);
+			$killer->increaseHOF(1, ['Killing', 'NPC Kills'], HOF_PUBLIC);
 		} else {
-			$killer->increaseHOF($return['KillerExp'], array('Killing', 'Experience', 'Gained'), HOF_PUBLIC);
-			$killer->increaseHOF($this->getExperience(), array('Killing', 'Experience', 'Of Traders Killed'), HOF_PUBLIC);
+			$killer->increaseHOF($return['KillerExp'], ['Killing', 'Experience', 'Gained'], HOF_PUBLIC);
+			$killer->increaseHOF($this->getExperience(), ['Killing', 'Experience', 'Of Traders Killed'], HOF_PUBLIC);
 
-			$killer->increaseHOF($return['DeadExp'], array('Killing', 'Experience', 'Lost By Traders Killed'), HOF_PUBLIC);
+			$killer->increaseHOF($return['DeadExp'], ['Killing', 'Experience', 'Lost By Traders Killed'], HOF_PUBLIC);
 
-			$killer->increaseHOF($return['KillerCredits'], array('Killing', 'Money', 'Lost By Traders Killed'), HOF_PUBLIC);
-			$killer->increaseHOF($return['KillerCredits'], array('Killing', 'Money', 'Gain'), HOF_PUBLIC);
-			$killer->increaseHOF($this->getShip()->getCost(), array('Killing', 'Money', 'Cost Of Ships Killed'), HOF_PUBLIC);
+			$killer->increaseHOF($return['KillerCredits'], ['Killing', 'Money', 'Lost By Traders Killed'], HOF_PUBLIC);
+			$killer->increaseHOF($return['KillerCredits'], ['Killing', 'Money', 'Gain'], HOF_PUBLIC);
+			$killer->increaseHOF($this->getShip()->getCost(), ['Killing', 'Money', 'Cost Of Ships Killed'], HOF_PUBLIC);
 
 			if ($killerAlignChange > 0) {
-				$killer->increaseHOF($killerAlignChange, array('Killing', 'Alignment', 'Gain'), HOF_PUBLIC);
+				$killer->increaseHOF($killerAlignChange, ['Killing', 'Alignment', 'Gain'], HOF_PUBLIC);
 			} else {
-				$killer->increaseHOF(-$killerAlignChange, array('Killing', 'Alignment', 'Loss'), HOF_PUBLIC);
+				$killer->increaseHOF(-$killerAlignChange, ['Killing', 'Alignment', 'Loss'], HOF_PUBLIC);
 			}
 
-			$killer->increaseHOF($return['BountyGained']['Amount'], array('Killing', 'Money', 'Bounty Gained'), HOF_PUBLIC);
+			$killer->increaseHOF($return['BountyGained']['Amount'], ['Killing', 'Money', 'Bounty Gained'], HOF_PUBLIC);
 
 			if ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus()) { //Newbie kill
-				$killer->increaseHOF(1, array('Killing', 'Newbie Kills'), HOF_PUBLIC);
+				$killer->increaseHOF(1, ['Killing', 'Newbie Kills'], HOF_PUBLIC);
 			} else {
 				$killer->increaseKills(1);
-				$killer->increaseHOF(1, array('Killing', 'Kills'), HOF_PUBLIC);
+				$killer->increaseHOF(1, ['Killing', 'Kills'], HOF_PUBLIC);
 
 				if ($killer->hasAlliance()) {
 					$this->db->write('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($killer->getGameID()) . ' LIMIT 1');
@@ -2326,20 +2326,20 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 
-		$this->increaseHOF($return['BountyGained']['Amount'], array('Dying', 'Players', 'Money', 'Bounty Gained By Killer'), HOF_PUBLIC);
-		$this->increaseHOF($return['KillerExp'], array('Dying', 'Players', 'Experience', 'Gained By Killer'), HOF_PUBLIC);
-		$this->increaseHOF($return['DeadExp'], array('Dying', 'Experience', 'Lost'), HOF_PUBLIC);
-		$this->increaseHOF($return['DeadExp'], array('Dying', 'Players', 'Experience', 'Lost'), HOF_PUBLIC);
-		$this->increaseHOF($return['KillerCredits'], array('Dying', 'Players', 'Money Lost'), HOF_PUBLIC);
-		$this->increaseHOF($this->getShip()->getCost(), array('Dying', 'Players', 'Money', 'Cost Of Ships Lost'), HOF_PUBLIC);
-		$this->increaseHOF(1, array('Dying', 'Players', 'Deaths'), HOF_PUBLIC);
+		$this->increaseHOF($return['BountyGained']['Amount'], ['Dying', 'Players', 'Money', 'Bounty Gained By Killer'], HOF_PUBLIC);
+		$this->increaseHOF($return['KillerExp'], ['Dying', 'Players', 'Experience', 'Gained By Killer'], HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], ['Dying', 'Experience', 'Lost'], HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], ['Dying', 'Players', 'Experience', 'Lost'], HOF_PUBLIC);
+		$this->increaseHOF($return['KillerCredits'], ['Dying', 'Players', 'Money Lost'], HOF_PUBLIC);
+		$this->increaseHOF($this->getShip()->getCost(), ['Dying', 'Players', 'Money', 'Cost Of Ships Lost'], HOF_PUBLIC);
+		$this->increaseHOF(1, ['Dying', 'Players', 'Deaths'], HOF_PUBLIC);
 
 		$this->killPlayer($this->getSectorID());
 		return $return;
 	}
 
 	public function killPlayerByForces(SmrForce $forces) : array {
-		$return = array();
+		$return = [];
 		$owner = $forces->getOwner();
 		// send a message to the person who died
 		self::sendMessageFromFedClerk($this->getGameID(), $owner->getAccountID(), 'Your forces <span class="red">DESTROYED </span>' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($forces->getSectorID()));
@@ -2373,18 +2373,18 @@ abstract class AbstractSmrPlayer {
 		$this->incrementAllianceVsDeaths(ALLIANCE_VS_FORCES);
 		$owner->incrementAllianceVsKills(ALLIANCE_VS_FORCES);
 
-		$this->increaseHOF($return['DeadExp'], array('Dying', 'Experience', 'Lost'), HOF_PUBLIC);
-		$this->increaseHOF($return['DeadExp'], array('Dying', 'Forces', 'Experience Lost'), HOF_PUBLIC);
-		$this->increaseHOF($return['LostCredits'], array('Dying', 'Forces', 'Money Lost'), HOF_PUBLIC);
-		$this->increaseHOF($this->getShip()->getCost(), array('Dying', 'Forces', 'Cost Of Ships Lost'), HOF_PUBLIC);
-		$this->increaseHOF(1, array('Dying', 'Forces', 'Deaths'), HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], ['Dying', 'Experience', 'Lost'], HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], ['Dying', 'Forces', 'Experience Lost'], HOF_PUBLIC);
+		$this->increaseHOF($return['LostCredits'], ['Dying', 'Forces', 'Money Lost'], HOF_PUBLIC);
+		$this->increaseHOF($this->getShip()->getCost(), ['Dying', 'Forces', 'Cost Of Ships Lost'], HOF_PUBLIC);
+		$this->increaseHOF(1, ['Dying', 'Forces', 'Deaths'], HOF_PUBLIC);
 
 		$this->killPlayer($forces->getSectorID());
 		return $return;
 	}
 
 	public function killPlayerByPort(SmrPort $port) : array {
-		$return = array();
+		$return = [];
 		// send a message to the person who died
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by the defenses of ' . $port->getDisplayName());
 
@@ -2414,18 +2414,18 @@ abstract class AbstractSmrPlayer {
 		// alliance vs. alliance stats
 		$this->incrementAllianceVsDeaths(ALLIANCE_VS_PORTS);
 
-		$this->increaseHOF($return['DeadExp'], array('Dying', 'Experience', 'Lost'), HOF_PUBLIC);
-		$this->increaseHOF($return['DeadExp'], array('Dying', 'Ports', 'Experience Lost'), HOF_PUBLIC);
-		$this->increaseHOF($return['LostCredits'], array('Dying', 'Ports', 'Money Lost'), HOF_PUBLIC);
-		$this->increaseHOF($this->getShip()->getCost(), array('Dying', 'Ports', 'Cost Of Ships Lost'), HOF_PUBLIC);
-		$this->increaseHOF(1, array('Dying', 'Ports', 'Deaths'), HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], ['Dying', 'Experience', 'Lost'], HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], ['Dying', 'Ports', 'Experience Lost'], HOF_PUBLIC);
+		$this->increaseHOF($return['LostCredits'], ['Dying', 'Ports', 'Money Lost'], HOF_PUBLIC);
+		$this->increaseHOF($this->getShip()->getCost(), ['Dying', 'Ports', 'Cost Of Ships Lost'], HOF_PUBLIC);
+		$this->increaseHOF(1, ['Dying', 'Ports', 'Deaths'], HOF_PUBLIC);
 
 		$this->killPlayer($port->getSectorID());
 		return $return;
 	}
 
 	public function killPlayerByPlanet(SmrPlanet $planet) : array {
-		$return = array();
+		$return = [];
 		// send a message to the person who died
 		$planetOwner = $planet->getOwner();
 		self::sendMessageFromFedClerk($this->getGameID(), $planetOwner->getAccountID(), 'Your planet <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($planet->getSectorID()));
@@ -2459,11 +2459,11 @@ abstract class AbstractSmrPlayer {
 		$this->incrementAllianceVsDeaths(ALLIANCE_VS_PLANETS);
 		$planetOwner->incrementAllianceVsKills(ALLIANCE_VS_PLANETS);
 
-		$this->increaseHOF($return['DeadExp'], array('Dying', 'Experience', 'Lost'), HOF_PUBLIC);
-		$this->increaseHOF($return['DeadExp'], array('Dying', 'Planets', 'Experience Lost'), HOF_PUBLIC);
-		$this->increaseHOF($return['LostCredits'], array('Dying', 'Planets', 'Money Lost'), HOF_PUBLIC);
-		$this->increaseHOF($this->getShip()->getCost(), array('Dying', 'Planets', 'Cost Of Ships Lost'), HOF_PUBLIC);
-		$this->increaseHOF(1, array('Dying', 'Planets', 'Deaths'), HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], ['Dying', 'Experience', 'Lost'], HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], ['Dying', 'Planets', 'Experience Lost'], HOF_PUBLIC);
+		$this->increaseHOF($return['LostCredits'], ['Dying', 'Planets', 'Money Lost'], HOF_PUBLIC);
+		$this->increaseHOF($this->getShip()->getCost(), ['Dying', 'Planets', 'Cost Of Ships Lost'], HOF_PUBLIC);
+		$this->increaseHOF(1, ['Dying', 'Planets', 'Deaths'], HOF_PUBLIC);
 
 		$this->killPlayer($planet->getSectorID());
 		return $return;
@@ -2534,9 +2534,9 @@ abstract class AbstractSmrPlayer {
 
 		$this->setTurns($this->getTurns() - $take);
 		$this->setNewbieTurns($this->getNewbieTurns() - $takeNewbie);
-		$this->increaseHOF($take, array('Movement', 'Turns Used', 'Since Last Death'), HOF_ALLIANCE);
-		$this->increaseHOF($take, array('Movement', 'Turns Used', 'Total'), HOF_ALLIANCE);
-		$this->increaseHOF($takeNewbie, array('Movement', 'Turns Used', 'Newbie'), HOF_ALLIANCE);
+		$this->increaseHOF($take, ['Movement', 'Turns Used', 'Since Last Death'], HOF_ALLIANCE);
+		$this->increaseHOF($take, ['Movement', 'Turns Used', 'Total'], HOF_ALLIANCE);
+		$this->increaseHOF($takeNewbie, ['Movement', 'Turns Used', 'Newbie'], HOF_ALLIANCE);
 
 		// Player has taken an action
 		$this->setLastActive(Smr\Epoch::time());
@@ -2667,17 +2667,17 @@ abstract class AbstractSmrPlayer {
 	public function getMissions() : array {
 		if (!isset($this->missions)) {
 			$dbResult = $this->db->read('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
-			$this->missions = array();
+			$this->missions = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$missionID = $dbRecord->getInt('mission_id');
-				$this->missions[$missionID] = array(
+				$this->missions[$missionID] = [
 					'On Step' => $dbRecord->getInt('on_step'),
 					'Progress' => $dbRecord->getInt('progress'),
 					'Unread' => $dbRecord->getBoolean('unread'),
 					'Expires' => $dbRecord->getInt('step_fails'),
 					'Sector' => $dbRecord->getInt('mission_sector'),
 					'Starting Sector' => $dbRecord->getInt('starting_sector')
-				);
+				];
 				$this->rebuildMission($missionID);
 			}
 		}
@@ -2763,14 +2763,14 @@ abstract class AbstractSmrPlayer {
 		}
 		$sector = 0;
 
-		$mission = array(
+		$mission = [
 			'On Step' => $step,
 			'Progress' => 0,
 			'Unread' => true,
 			'Expires' => (Smr\Epoch::time() + 86400),
 			'Sector' => $sector,
 			'Starting Sector' => $this->getSectorID()
-		);
+		];
 
 		$this->missions[$missionID] =& $mission;
 		$this->setupMissionStep($missionID);
@@ -2809,7 +2809,7 @@ abstract class AbstractSmrPlayer {
 
 	public function markMissionsRead() : array {
 		$this->getMissions();
-		$unreadMissions = array();
+		$unreadMissions = [];
 		foreach ($this->missions as $missionID => &$mission) {
 			if ($mission['Unread']) {
 				$unreadMissions[] = $missionID;
@@ -2852,7 +2852,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getAvailableMissions() : array {
-		$availableMissions = array();
+		$availableMissions = [];
 		foreach (MISSIONS as $missionID => $mission) {
 			if ($this->hasMission($missionID)) {
 				continue;
@@ -2996,7 +2996,7 @@ abstract class AbstractSmrPlayer {
 	// Get an array of goods that are visible to the player
 	public function getVisibleGoods() : array {
 		$goods = Globals::getGoods();
-		$visibleGoods = array();
+		$visibleGoods = [];
 		foreach ($goods as $key => $good) {
 			if ($this->meetsAlignmentRestriction($good['AlignRestriction'])) {
 				$visibleGoods[$key] = $good;
@@ -3010,7 +3010,7 @@ abstract class AbstractSmrPlayer {
 	 */
 	public function getUnvisitedSectors() : array {
 		if (!isset($this->unvisitedSectors)) {
-			$this->unvisitedSectors = array();
+			$this->unvisitedSectors = [];
 			// Note that this table actually has entries for the *unvisited* sectors!
 			$dbResult = $this->db->read('SELECT sector_id FROM player_visited_sector WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
@@ -3186,7 +3186,7 @@ abstract class AbstractSmrPlayer {
 	 * This should only be called by `saveHOF` (and recursively) to
 	 * ensure that the `hasHOFChanged` attribute is properly cleared.
 	 */
-	protected function doHOFSave(array $hasChangedList, array $typeList = array()) {
+	protected function doHOFSave(array $hasChangedList, array $typeList = []) {
 		foreach ($hasChangedList as $type => $hofChanged) {
 			$tempTypeList = $typeList;
 			$tempTypeList[] = $type;

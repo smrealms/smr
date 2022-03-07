@@ -10,7 +10,7 @@ $container = Page::create('skeleton.php', 'admin/manage_post_editors.php');
 $template->assign('SelectGameHREF', $container->href());
 
 // Get the list of active games ordered by reverse start date
-$activeGames = array();
+$activeGames = [];
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT game_id, game_name FROM game WHERE join_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY start_time DESC');
 foreach ($dbResult->records() as $dbRecord) {
@@ -27,7 +27,7 @@ if ($activeGames) {
 	$template->assign('SelectedGame', $selectedGameID);
 
 	// Get the list of current editors for the selected game
-	$currentEditors = array();
+	$currentEditors = [];
 	foreach (Globals::getGalacticPostEditorIDs($selectedGameID) as $editorID) {
 		$editor = SmrPlayer::getPlayer($editorID, $selectedGameID);
 		$currentEditors[] = $editor->getDisplayName();

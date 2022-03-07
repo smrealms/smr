@@ -50,8 +50,8 @@ class Lotto {
 
 		// create news msg
 		$winner = SmrPlayer::getPlayer($winner_id, $gameID);
-		$winner->increaseHOF($lottoInfo['Prize'], array('Bar', 'Lotto', 'Money', 'Winnings'), HOF_PUBLIC);
-		$winner->increaseHOF(1, array('Bar', 'Lotto', 'Results', 'Wins'), HOF_PUBLIC);
+		$winner->increaseHOF($lottoInfo['Prize'], ['Bar', 'Lotto', 'Money', 'Winnings'], HOF_PUBLIC);
+		$winner->increaseHOF(1, ['Bar', 'Lotto', 'Results', 'Wins'], HOF_PUBLIC);
 		$news_message = $winner->getBBLink() . ' has won the lotto! The jackpot was ' . number_format($lottoInfo['Prize']) . '. ' . $winner->getBBLink() . ' can report to any bar to claim their prize before the next drawing!';
 		// insert the news entry
 		$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($gameID));
@@ -78,7 +78,7 @@ class Lotto {
 			$firstBuy = $dbRecord->getInt('time');
 		}
 		//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
-		return array('Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - Epoch::time());
+		return ['Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - Epoch::time()];
 	}
 
 }

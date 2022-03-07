@@ -34,16 +34,16 @@ $account_id = $var['account_id'];
 $player->decreaseCredits($amount);
 $account->decreaseSmrCredits($smrCredits);
 
-$player->increaseHOF($smrCredits, array('Bounties', 'Placed', 'SMR Credits'), HOF_PUBLIC);
-$player->increaseHOF($amount, array('Bounties', 'Placed', 'Money'), HOF_PUBLIC);
-$player->increaseHOF(1, array('Bounties', 'Placed', 'Number'), HOF_PUBLIC);
+$player->increaseHOF($smrCredits, ['Bounties', 'Placed', 'SMR Credits'], HOF_PUBLIC);
+$player->increaseHOF($amount, ['Bounties', 'Placed', 'Money'], HOF_PUBLIC);
+$player->increaseHOF(1, ['Bounties', 'Placed', 'Number'], HOF_PUBLIC);
 
 $placed = SmrPlayer::getPlayer($account_id, $player->getGameID());
 $placed->increaseCurrentBountyAmount($type, $amount);
 $placed->increaseCurrentBountySmrCredits($type, $smrCredits);
-$placed->increaseHOF($smrCredits, array('Bounties', 'Received', 'SMR Credits'), HOF_PUBLIC);
-$placed->increaseHOF($amount, array('Bounties', 'Received', 'Money'), HOF_PUBLIC);
-$placed->increaseHOF(1, array('Bounties', 'Received', 'Number'), HOF_PUBLIC);
+$placed->increaseHOF($smrCredits, ['Bounties', 'Received', 'SMR Credits'], HOF_PUBLIC);
+$placed->increaseHOF($amount, ['Bounties', 'Received', 'Money'], HOF_PUBLIC);
+$placed->increaseHOF(1, ['Bounties', 'Received', 'Number'], HOF_PUBLIC);
 
 //Update for top bounties list
 $player->update();

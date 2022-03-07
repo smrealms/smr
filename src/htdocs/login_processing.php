@@ -122,10 +122,10 @@ try {
 			$old = explode('-', $dbResult->record()->getField('array'));
 			//get rid of old version cookie since it isn't optimal.
 			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) {
-				$old = array();
+				$old = [];
 			}
 		} else {
-			$old = array();
+			$old = [];
 		}
 		$old[0] = MULTI_CHECKING_COOKIE_VERSION;
 		if (!in_array($account->getAccountID(), $old)) {
@@ -138,7 +138,7 @@ try {
 		$cookie = explode('-', $_COOKIE['Session_Info']);
 		//check for current version
 		if ($cookie[0] != MULTI_CHECKING_COOKIE_VERSION) {
-			$cookie = array();
+			$cookie = [];
 		}
 		$cookie[0] = MULTI_CHECKING_COOKIE_VERSION;
 		//add this acc to the cookie if it isn't there
@@ -151,10 +151,10 @@ try {
 			//convert to array
 			$old = explode('-', $dbResult->record()->getField('array'));
 			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) {
-				$old = array();
+				$old = [];
 			}
 		} else {
-			$old = array();
+			$old = [];
 		}
 		$old[0] = MULTI_CHECKING_COOKIE_VERSION;
 		//merge arrays...but keys are all different so we go through each value
@@ -180,7 +180,7 @@ try {
 	//get rid of expired messages
 	$db->write('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND expire_time != 0');
 	// Mark message as read if it was sent to self as a mass mail.
-	$db->write('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND account_id = sender_id AND message_type_id IN (' . $db->escapeArray(array(MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL)) . ');');
+	$db->write('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND account_id = sender_id AND message_type_id IN (' . $db->escapeArray([MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL]) . ');');
 	//check to see if we need to remove player_has_unread
 	$db->write('DELETE FROM player_has_unread_messages WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$db->write('

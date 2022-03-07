@@ -14,7 +14,7 @@ $dbResult = $db->read('SELECT *
 			AND expire_time >= '.$db->escapeNumber(Smr\Epoch::time()) . '
 			ORDER BY sector_id ASC');
 
-$forces = array();
+$forces = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$forces[] = SmrForce::getForce($player->getGameID(), $dbRecord->getInt('sector_id'), $dbRecord->getInt('owner_id'), false, $dbRecord);
 }

@@ -4,7 +4,7 @@ $var = Smr\Session::getInstance()->getCurrentVar();
 
 $shipID = $var['ship_id'];
 
-$bannedShips = array(
+$bannedShips = [
 	SHIP_TYPE_ASSAULT_CRAFT,
 	SHIP_TYPE_DARK_MIRAGE,
 	SHIP_TYPE_DESTROYER,
@@ -15,7 +15,7 @@ $bannedShips = array(
 
 	SHIP_TYPE_FEDERAL_ULTIMATUM,
 	SHIP_TYPE_DEATH_CRUISER
-);
+];
 
 if (in_array($shipID, $bannedShips)) {
 	create_error('No top racial for you, ah na na na na!');

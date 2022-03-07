@@ -37,7 +37,7 @@ class DummyShip extends AbstractSmrShip {
 	public static function getDummyShipNames() : array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT id FROM cached_dummys WHERE type = \'DummyShip\'');
-		$dummyNames = array();
+		$dummyNames = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$dummyNames[] = $dbRecord->getField('id');
 		}
@@ -45,7 +45,7 @@ class DummyShip extends AbstractSmrShip {
 	}
 
 	public function __sleep() {
-		return array('weapons');
+		return ['weapons'];
 	}
 
 }

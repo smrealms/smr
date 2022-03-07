@@ -33,7 +33,7 @@ class AbstractSmrLocation {
 		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM location_type ORDER BY location_type_id');
-			$locations = array();
+			$locations = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$locationTypeID = $dbRecord->getInt('location_type_id');
 				$locations[$locationTypeID] = SmrLocation::getLocation($locationTypeID, $forceUpdate, $dbRecord);
@@ -61,7 +61,7 @@ class AbstractSmrLocation {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM location LEFT JOIN location_type USING (location_type_id) WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
-			$locations = array();
+			$locations = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$locationTypeID = $dbRecord->getInt('location_type_id');
 				$locations[$locationTypeID] = self::getLocation($locationTypeID, $forceUpdate, $dbRecord);
@@ -280,7 +280,7 @@ class AbstractSmrLocation {
 
 	public function getHardwareSold() : array {
 		if (!isset($this->hardwareSold)) {
-			$this->hardwareSold = array();
+			$this->hardwareSold = [];
 			$dbResult = $this->db->read('SELECT hardware_type_id FROM location_sells_hardware WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->hardwareSold[$dbRecord->getInt('hardware_type_id')] = Globals::getHardwareTypes($dbRecord->getInt('hardware_type_id'));
@@ -322,7 +322,7 @@ class AbstractSmrLocation {
 
 	public function getShipsSold() : array {
 		if (!isset($this->shipsSold)) {
-			$this->shipsSold = array();
+			$this->shipsSold = [];
 			$dbResult = $this->db->read('SELECT * FROM location_sells_ships JOIN ship_type USING (ship_type_id) WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
 				$shipTypeID = $dbRecord->getInt('ship_type_id');
@@ -362,7 +362,7 @@ class AbstractSmrLocation {
 
 	public function getWeaponsSold() : array {
 		if (!isset($this->weaponsSold)) {
-			$this->weaponsSold = array();
+			$this->weaponsSold = [];
 			$dbResult = $this->db->read('SELECT * FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
 				$weaponTypeID = $dbRecord->getInt('weapon_type_id');
@@ -401,7 +401,7 @@ class AbstractSmrLocation {
 	}
 
 	public function getLinkedLocations() : array {
-		$linkedLocations = array();
+		$linkedLocations = [];
 		if ($this->isHQ()) {
 			if ($this->getTypeID() == LOCATION_TYPE_FEDERAL_HQ) {
 				$linkedLocations[] = SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_BEACON);

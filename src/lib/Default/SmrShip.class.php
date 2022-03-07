@@ -10,7 +10,7 @@ class SmrShip extends AbstractSmrShip {
 	protected string $SQL;
 
 	public static function clearCache() : void {
-		self::$CACHE_SHIPS = array();
+		self::$CACHE_SHIPS = [];
 	}
 
 	public static function saveShips() : void {
@@ -61,7 +61,7 @@ class SmrShip extends AbstractSmrShip {
 							WHERE ' . $this->SQL . '
 							ORDER BY order_id LIMIT ' . $db->escapeNumber($this->getHardpoints()));
 
-		$this->weapons = array();
+		$this->weapons = [];
 		// generate list of weapon names the user transports
 		foreach ($dbResult->records() as $dbRecord) {
 			$weaponTypeID = $dbRecord->getInt('weapon_type_id');
@@ -75,7 +75,7 @@ class SmrShip extends AbstractSmrShip {
 	}
 
 	protected function loadHardware() : void {
-		$this->hardware = array();
+		$this->hardware = [];
 
 		// get currently hardware from db
 		$db = Smr\Database::getInstance();
@@ -95,7 +95,7 @@ class SmrShip extends AbstractSmrShip {
 
 	protected function loadCargo() : void {
 		// initialize cargo array
-		$this->cargo = array();
+		$this->cargo = [];
 
 		// get cargo from db
 		$db = Smr\Database::getInstance();
@@ -140,7 +140,7 @@ class SmrShip extends AbstractSmrShip {
 				$db->write('DELETE FROM ship_has_hardware WHERE ' . $this->SQL . ' AND hardware_type_id = ' . $db->escapeNumber($hardwareTypeID));
 			}
 		}
-		$this->hasChangedHardware = array();
+		$this->hasChangedHardware = [];
 	}
 
 	private function updateWeapons() : void {

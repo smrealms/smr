@@ -7,7 +7,7 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'Alliance Profit Rankings');
 Menu::rankings(1, 1);
 
-$profitType = array('Trade', 'Money', 'Profit');
+$profitType = ['Trade', 'Money', 'Profit'];
 
 $db = Smr\Database::getInstance();
 $rankedStats = [];

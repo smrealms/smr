@@ -33,64 +33,64 @@ require_once(CONFIG . 'npc/config.specific.php');
 // and to attempt to shut down the NPCs cleanly on errors.
 set_error_handler("exception_error_handler");
 
-const SHIP_UPGRADE_PATH = array(
-	RACE_ALSKANT => array(
+const SHIP_UPGRADE_PATH = [
+	RACE_ALSKANT => [
 		SHIP_TYPE_TRADE_MASTER,
 		SHIP_TYPE_DEEP_SPACER,
 		SHIP_TYPE_DEAL_MAKER,
 		SHIP_TYPE_TRIP_MAKER,
 		SHIP_TYPE_SMALL_TIMER
-	),
-	RACE_CREONTI => array(
+	],
+	RACE_CREONTI => [
 		SHIP_TYPE_DEVASTATOR,
 		SHIP_TYPE_JUGGERNAUT,
 		SHIP_TYPE_GOLIATH,
 		SHIP_TYPE_LEVIATHAN,
 		SHIP_TYPE_MEDIUM_CARGO_HULK
-	),
-	RACE_HUMAN => array(
+	],
+	RACE_HUMAN => [
 		SHIP_TYPE_DESTROYER,
 		SHIP_TYPE_BORDER_CRUISER,
 		SHIP_TYPE_AMBASSADOR,
 		SHIP_TYPE_RENAISSANCE,
 		SHIP_TYPE_LIGHT_FREIGHTER
-	),
-	RACE_IKTHORNE => array(
+	],
+	RACE_IKTHORNE => [
 		SHIP_TYPE_MOTHER_SHIP,
 		SHIP_TYPE_ADVANCED_CARRIER,
 		SHIP_TYPE_FAVOURED_OFFSPRING,
 		SHIP_TYPE_PROTO_CARRIER,
 		SHIP_TYPE_TINY_DELIGHT
-	),
-	RACE_SALVENE => array(
+	],
+	RACE_SALVENE => [
 		SHIP_TYPE_EATER_OF_SOULS,
 		SHIP_TYPE_RAVAGER,
 		SHIP_TYPE_PREDATOR,
 		SHIP_TYPE_DRUDGE,
 		SHIP_TYPE_HATCHLINGS_DUE
-	),
-	RACE_THEVIAN => array(
+	],
+	RACE_THEVIAN => [
 		SHIP_TYPE_ASSAULT_CRAFT,
 		SHIP_TYPE_CARAPACE,
 		SHIP_TYPE_BOUNTY_HUNTER,
 		SHIP_TYPE_EXPEDITER,
 		SHIP_TYPE_SWIFT_VENTURE
-	),
-	RACE_WQHUMAN => array(
+	],
+	RACE_WQHUMAN => [
 		SHIP_TYPE_DARK_MIRAGE,
 		SHIP_TYPE_BLOCKADE_RUNNER,
 		SHIP_TYPE_ROGUE,
 		SHIP_TYPE_RESISTANCE,
 		SHIP_TYPE_SLIP_FREIGHTER
-	),
-	RACE_NIJARIN => array(
+	],
+	RACE_NIJARIN => [
 		SHIP_TYPE_FURY,
 		SHIP_TYPE_VINDICATOR,
 		SHIP_TYPE_VENGEANCE,
 		SHIP_TYPE_RETALIATION,
 		SHIP_TYPE_REDEEMER
-	)
-);
+	]
+];
 
 
 try {
@@ -315,8 +315,8 @@ function NPCStuff() : void {
 
 		//Clear up some global vars to avoid contaminating subsequent pages
 		global $locksFailed;
-		$locksFailed = array();
-		$_REQUEST = array();
+		$locksFailed = [];
+		$_REQUEST = [];
 
 		//Have a sleep between actions
 		sleepNPC();
@@ -362,7 +362,7 @@ function processContainer(Page $container) : never {
 	$session = Smr\Session::getInstance();
 	$player = $session->getPlayer();
 	if ($container == $previousContainer && $forwardedContainer['body'] != 'forces_attack.php') {
-		debug('We are executing the same container twice?', array('ForwardedContainer' => $forwardedContainer, 'Container' => $container));
+		debug('We are executing the same container twice?', ['ForwardedContainer' => $forwardedContainer, 'Container' => $container]);
 		if ($player->hasNewbieTurns() || $player->hasFederalProtection()) {
 			// Only throw the exception if we have protection, otherwise let's hope that the NPC will be able to find its way to safety rather than dying in the open.
 			throw new Exception('We are executing the same container twice?');
@@ -470,7 +470,7 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port) : Pag
 	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
 
 	$_REQUEST = ['action' => $transaction];
-	return Page::create('shop_goods_processing.php', '', array('offered_price'=>$offeredPrice, 'ideal_price'=>$idealPrice, 'amount'=>$amount, 'good_id'=>$goodID, 'bargain_price'=>$offeredPrice));
+	return Page::create('shop_goods_processing.php', '', ['offered_price'=>$offeredPrice, 'ideal_price'=>$idealPrice, 'amount'=>$amount, 'good_id'=>$goodID, 'bargain_price'=>$offeredPrice]);
 }
 
 function dumpCargo(SmrPlayer $player) : Page {
@@ -479,14 +479,14 @@ function dumpCargo(SmrPlayer $player) : Page {
 	debug('Ship Cargo', $cargo);
 	foreach ($cargo as $goodID => $amount) {
 		if ($amount > 0) {
-			return Page::create('cargo_dump_processing.php', '', array('good_id'=>$goodID, 'amount'=>$amount));
+			return Page::create('cargo_dump_processing.php', '', ['good_id'=>$goodID, 'amount'=>$amount]);
 		}
 	}
 	throw new Exception('Called dumpCargo without any cargo!');
 }
 
 function plotToSector(SmrPlayer $player, int $sectorID) : Page {
-	return Page::create('course_plot_processing.php', '', array('from'=>$player->getSectorID(), 'to'=>$sectorID));
+	return Page::create('course_plot_processing.php', '', ['from'=>$player->getSectorID(), 'to'=>$sectorID]);
 }
 
 function plotToFed(SmrPlayer $player) : Page {
@@ -515,12 +515,12 @@ function plotToNearest(AbstractSmrPlayer $player, mixed $realX) : Page|false {
 		return false;
 	}
 
-	return Page::create('course_plot_nearest_processing.php', '', array('RealX'=>$realX));
+	return Page::create('course_plot_nearest_processing.php', '', ['RealX'=>$realX]);
 }
 
 function moveToSector(SmrPlayer $player, int $targetSector) : Page {
 	debug('Moving from #' . $player->getSectorID() . ' to #' . $targetSector);
-	return Page::create('sector_move_processing.php', '', array('target_sector'=>$targetSector, 'target_page'=>''));
+	return Page::create('sector_move_processing.php', '', ['target_sector'=>$targetSector, 'target_page'=>'']);
 }
 
 function checkForShipUpgrade(AbstractSmrPlayer $player) : void {
@@ -616,7 +616,7 @@ function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : ?
 function findRoutes(SmrPlayer $player) : array {
 	debug('Finding Routes');
 
-	$tradeGoods = array(GOODS_NOTHING => false);
+	$tradeGoods = [GOODS_NOTHING => false];
 	foreach (Globals::getGoods() as $goodID => $good) {
 		if ($player->meetsAlignmentRestriction($good['AlignRestriction'])) {
 			$tradeGoods[$goodID] = true;
@@ -626,7 +626,7 @@ function findRoutes(SmrPlayer $player) : array {
 	}
 
 	// Only allow NPCs to trade at ports of their race and neutral ports
-	$tradeRaces = array();
+	$tradeRaces = [];
 	foreach (Smr\Race::getAllIDs() as $raceID) {
 		$tradeRaces[$raceID] = false;
 	}
@@ -651,7 +651,7 @@ function findRoutes(SmrPlayer $player) : array {
 		return $routes;
 	} else {
 		debug('Generating Routes');
-		$allSectors = array();
+		$allSectors = [];
 		foreach (SmrGalaxy::getGameGalaxies($player->getGameID()) as $galaxy) {
 			$allSectors += $galaxy->getSectors(); //Merge arrays
 		}
@@ -666,7 +666,7 @@ function findRoutes(SmrPlayer $player) : array {
 
 		unset($distances);
 
-		$routesMerged = array();
+		$routesMerged = [];
 		foreach ($allRoutes[\Routes\RouteGenerator::MONEY_ROUTE] as $multi => $routesByMulti) {
 			$routesMerged += $routesByMulti; //Merge arrays
 		}

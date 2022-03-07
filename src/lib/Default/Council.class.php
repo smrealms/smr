@@ -9,7 +9,7 @@ class Council {
 	 */
 	public static function getRaceCouncil(int $gameID, int $raceID) : array {
 		if (!isset(self::$COUNCILS[$gameID][$raceID])) {
-			self::$COUNCILS[$gameID][$raceID] = array();
+			self::$COUNCILS[$gameID][$raceID] = [];
 			self::$PRESIDENTS[$gameID][$raceID] = false;
 
 			// Require council members to have > 0 exp to ensure that players

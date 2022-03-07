@@ -172,7 +172,7 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 		 */
 		$isValid = 'isValid';
 		$getUserId = 'getUserId';
-		$socialLogin = $this->createPartialMock(Facebook::class, array($isValid, $getUserId));
+		$socialLogin = $this->createPartialMock(Facebook::class, [$isValid, $getUserId]);
 		$socialLogin
 			->expects(self::once())
 			->method($isValid)
@@ -211,7 +211,7 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 		 */
 		$isValid = 'isValid';
 		$getUserId = 'getUserId';
-		$socialLogin = $this->createPartialMock(Facebook::class, array($isValid, $getUserId));
+		$socialLogin = $this->createPartialMock(Facebook::class, [$isValid, $getUserId]);
 		$socialLogin
 			->expects(self::once())
 			->method($isValid)

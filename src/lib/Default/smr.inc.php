@@ -146,14 +146,14 @@ function bbifyMessage(string $message, bool $noLinks = false) : string {
 		$bbParser->setURLTarget('_blank');
 		$bbParser->setURLTargetable('override');
 		$bbParser->setEscapeContent(false); // don't escape HTML, needed for News etc.
-		$smrRule = array(
+		$smrRule = [
 				'mode' => \Nbbc\BBCode::BBCODE_MODE_CALLBACK,
 				'method' => 'smrBBCode',
 				'class' => 'link',
-				'allow_in' => Array('listitem', 'block', 'columns', 'inline'),
+				'allow_in' => ['listitem', 'block', 'columns', 'inline'],
 				'end_tag' => \Nbbc\BBCode::BBCODE_PROHIBIT,
 				'content' => \Nbbc\BBCode::BBCODE_PROHIBIT,
-			);
+			];
 		$bbParser->addRule('combatlog', $smrRule);
 		$bbParser->addRule('player', $smrRule);
 		$bbParser->addRule('alliance', $smrRule);
@@ -256,10 +256,10 @@ function word_filter(string $string) : string {
 	if (!is_array($words)) {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT word_value, word_replacement FROM word_filter');
-		$words = array();
+		$words = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$row = $dbRecord->getRow();
-			$words[] = array('word_value' => '/' . str_replace('/', '\/', $row['word_value']) . '/i', 'word_replacement'=> $row['word_replacement']);
+			$words[] = ['word_value' => '/' . str_replace('/', '\/', $row['word_value']) . '/i', 'word_replacement'=> $row['word_replacement']];
 		}
 	}
 
@@ -308,7 +308,7 @@ function do_voodoo() : never {
 
 	if ($session->hasGame()) {
 		if (SmrGame::getGame($session->getGameID())->hasEnded()) {
-			Page::create('game_leave_processing.php', 'game_play.php', array('errorMsg' => 'The game has ended.'))->go();
+			Page::create('game_leave_processing.php', 'game_play.php', ['errorMsg' => 'The game has ended.'])->go();
 		}
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
@@ -482,7 +482,7 @@ function release_lock() : void {
 function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database $db) : void {
 	//any ticker news?
 	if ($player->hasTickers()) {
-		$ticker = array();
+		$ticker = [];
 		$max = Smr\Epoch::time() - 60;
 		$dateFormat = $player->getAccount()->getDateTimeFormat();
 		if ($player->hasTicker('NEWS')) {
@@ -601,7 +601,7 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
 
 		if ($dbResult->hasRecord()) {
-			$messages = array();
+			$messages = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$messages[$dbRecord->getInt('message_type_id')] = $dbRecord->getInt('COUNT(*)');
 			}
@@ -704,13 +704,13 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 	}
 
 	// ------- VOTING --------
-	$voteSites = array();
+	$voteSites = [];
 	foreach (Smr\VoteSite::getAllSites($account->getAccountID()) as $site) {
-		$voteSites[] = array(
+		$voteSites[] = [
 			'img' => $site->getLinkImg($session->getGameID()),
 			'url' => $site->getLinkUrl($session->getGameID()),
 			'sn' => $site->getSN($session->getGameID()),
-		);
+		];
 	}
 	$template->assign('VoteSites', $voteSites);
 

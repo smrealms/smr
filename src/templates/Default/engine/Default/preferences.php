@@ -370,8 +370,8 @@ if (isset($GameID)) { ?>
 		<tr>
 			<th colspan="2">Hotkeys (Use space to separate multiple hotkeys)</th>
 		</tr><?php
-		$MovementTypes = array('Up', 'Left', 'Right', 'Down', 'Warp');
-		$MovementSubTypes = array('Move', 'Scan');
+		$MovementTypes = ['Up', 'Left', 'Right', 'Down', 'Warp'];
+		$MovementSubTypes = ['Move', 'Scan'];
 		foreach ($MovementTypes as $MovementType) {
 			foreach ($MovementSubTypes as $MovementSubType) {
 				$FullMovement = $MovementSubType . $MovementType; ?>

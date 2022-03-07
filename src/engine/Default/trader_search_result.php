@@ -33,14 +33,14 @@ if (!empty($player_id)) {
 					AND player_name LIKE ' . $db->escapeString('%' . $player_name . '%') . '
 					AND player_name != ' . $db->escapeString($player_name) . '
 				ORDER BY player_name LIMIT 5');
-	$similarPlayers = array();
+	$similarPlayers = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$similarPlayers[] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 	}
 }
 
 function playerLinks(SmrPlayer $linkPlayer) : array {
-	$result = array('Player' => $linkPlayer);
+	$result = ['Player' => $linkPlayer];
 
 	$container = Page::create('skeleton.php', 'trader_search_result.php');
 	$container['player_id'] = $linkPlayer->getPlayerID();
@@ -91,7 +91,7 @@ if (!empty($resultPlayer)) {
 }
 
 if (!empty($similarPlayers)) {
-	$similarPlayersLinks = array();
+	$similarPlayersLinks = [];
 	foreach ($similarPlayers as $similarPlayer) {
 		$similarPlayersLinks[] = playerLinks($similarPlayer);
 	}

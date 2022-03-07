@@ -27,7 +27,7 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 		$message .= 'You don\'t feel quite so intoxicated anymore.<br />';
 		$db->write('DELETE FROM player_has_drinks WHERE ' . $player->getSQL() . ' LIMIT 1');
 	}
-	$player->increaseHOF(1, array('Bar', 'Drinks', 'Water'), HOF_PUBLIC);
+	$player->increaseHOF(1, ['Bar', 'Drinks', 'Water'], HOF_PUBLIC);
 } else {
 	// choose which drink to serve
 	if (rand(1, 20) == 1) {
@@ -48,13 +48,13 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 
 	if (!Smr\BarDrink::isSpecial($drinkName)) {
 		$message .= ('You have bought a ' . $drinkName . ' for $10');
-		$player->increaseHOF(1, array('Bar', 'Drinks', 'Alcoholic'), HOF_PUBLIC);
+		$player->increaseHOF(1, ['Bar', 'Drinks', 'Alcoholic'], HOF_PUBLIC);
 	} else {
 		$message .= 'The bartender says, "I\'ve got something special for ya."<br />'
 			. 'They turn around for a minute and whip up a ' . $drinkName . '.<br />'
 			. 'You take a long, deep draught and feel like you have been drinking for hours.<br />'
 			. Smr\BarDrink::getSpecialMessage($drinkName) . '<br />';
-		$player->increaseHOF(1, array('Bar', 'Drinks', 'Special'), HOF_PUBLIC);
+		$player->increaseHOF(1, ['Bar', 'Drinks', 'Special'], HOF_PUBLIC);
 	}
 
 	$dbResult = $db->read('SELECT count(*) FROM player_has_drinks WHERE ' . $player->getSQL());
@@ -63,10 +63,10 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 	$message .= '<br />You feel a little W' . str_repeat('oO', $num_drinks) . 'zy<br />';
 }
 
-$player->actionTaken('BuyDrink', array(
+$player->actionTaken('BuyDrink', [
 	'SectorID' => $player->getSectorID(),
 	'Drink' => $drinkName
-));
+]);
 
 //see if the player blacksout or not
 if (isset($num_drinks) && $num_drinks > 15) {
@@ -76,13 +76,13 @@ if (isset($num_drinks) && $num_drinks > 15) {
 	$message .= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lostCredits) . ' credits</span><br />';
 
 	$player->decreaseCredits($lostCredits);
-	$player->increaseHOF(1, array('Bar', 'Robbed', 'Number Of Times'), HOF_PUBLIC);
-	$player->increaseHOF($lostCredits, array('Bar', 'Robbed', 'Money Lost'), HOF_PUBLIC);
+	$player->increaseHOF(1, ['Bar', 'Robbed', 'Number Of Times'], HOF_PUBLIC);
+	$player->increaseHOF($lostCredits, ['Bar', 'Robbed', 'Money Lost'], HOF_PUBLIC);
 
 	$db->write('DELETE FROM player_has_drinks WHERE ' . $player->getSQL());
 
 }
-$player->increaseHOF(1, array('Bar', 'Drinks', 'Total'), HOF_PUBLIC);
+$player->increaseHOF(1, ['Bar', 'Drinks', 'Total'], HOF_PUBLIC);
 $message .= '</div>';
 
 $container = Page::create('skeleton.php', 'bar_main.php');

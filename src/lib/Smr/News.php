@@ -34,7 +34,7 @@ class News {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$template = Template::getInstance();
-			$template->assign('BreakingNews', array('Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getString('news_message'))));
+			$template->assign('BreakingNews', ['Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getString('news_message'))]);
 		}
 	}
 
@@ -45,7 +45,7 @@ class News {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$template = Template::getInstance();
-			$template->assign('LottoNews', array('Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getString('news_message'))));
+			$template->assign('LottoNews', ['Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getString('news_message'))]);
 		}
 	}
 

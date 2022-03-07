@@ -8,7 +8,7 @@ $template->assign('PageTopic', 'Create Vote');
 
 $template->assign('VoteFormHREF', Page::create('admin/vote_create_processing.php', '')->href());
 
-$voting = array();
+$voting = [];
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(Smr\Epoch::time()));
 foreach ($dbResult->records() as $dbRecord) {

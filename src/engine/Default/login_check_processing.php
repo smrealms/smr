@@ -30,7 +30,7 @@ if ($var['CheckType'] == 'Updates') {
 	$dbResult = $db->read('SELECT 1 FROM version WHERE went_live >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
 	// do we have updates?
 	if ($dbResult->hasRecord()) {
-		Page::create('skeleton.php', 'changelog_view.php', array('Since' => $lastLogin))->go();
+		Page::create('skeleton.php', 'changelog_view.php', ['Since' => $lastLogin])->go();
 	}
 }
 

@@ -58,7 +58,7 @@ try {
 				album_entry($dbResult2->record()->getInt('album_id'));
 			} else {
 				// get all id's and build array
-				$album_ids = array();
+				$album_ids = [];
 
 				foreach ($dbResult->records() as $dbRecord) {
 					$album_ids[] = $dbRecord->getInt('album_id');

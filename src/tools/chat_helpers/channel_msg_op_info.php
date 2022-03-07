@@ -5,13 +5,13 @@ function shared_channel_msg_op_info(SmrPlayer $player) : array {
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	if (!$dbResult->hasRecord()) {
-		return array('Your leader has not scheduled an operation.');
+		return ['Your leader has not scheduled an operation.'];
 	}
 
 	// check if the op has already started
 	$opTime = $dbResult->record()->getInt('time');
 	if ($opTime < time()) {
-		return array('The op started ' . format_time(time() - $opTime, true) . ' ago!');
+		return ['The op started ' . format_time(time() - $opTime, true) . ' ago!'];
 	}
 
 	// function to return op info message for each player

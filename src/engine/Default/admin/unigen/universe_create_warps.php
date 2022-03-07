@@ -17,9 +17,9 @@ $template->assign('PageTopic', 'Warps for Galaxy : ' . $galaxy->getDisplayName()
 
 
 // Initialize warps array
-$warps = array();
+$warps = [];
 foreach ($galaxies as $gal1) {
-	$warps[$gal1->getGalaxyID()] = array();
+	$warps[$gal1->getGalaxyID()] = [];
 	foreach ($galaxies as $gal2) {
 		$warps[$gal1->getGalaxyID()][$gal2->getGalaxyID()] = 0;
 	}
@@ -44,7 +44,7 @@ foreach ($dbResult->records() as $dbRecord) {
 // Get links to other pages
 $container = Page::create('skeleton.php', 'admin/unigen/universe_create_warps.php');
 $container->addVar('game_id');
-$galLinks = array();
+$galLinks = [];
 foreach ($galaxies as $gal) {
 	$container['gal_on'] = $gal->getGalaxyID();
 	$galLinks[$gal->getGalaxyID()] = $container->href();

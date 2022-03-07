@@ -64,14 +64,14 @@ class RouteGenerator {
 	}
 
 	private static function findOneWayRoutes(array $sectors, array $distances, int $routesForPort, array $goods, array $races) : array {
-		$routes = array();
+		$routes = [];
 		foreach ($distances as $currentSectorId => $d) {
 			$currentPort = $sectors[$currentSectorId]->getPort();
 			$raceID = $currentPort->getRaceID();
 			if ($races[$raceID] === false) {
 				continue;
 			}
-			$rl = array();
+			$rl = [];
 			foreach ($d as $targetSectorId => $distance) {
 				$targetPort = $sectors[$targetSectorId]->getPort();
 				if (!$races[$targetPort->getRaceID()]) {

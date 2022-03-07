@@ -10,7 +10,7 @@ $container = Page::create('skeleton.php', 'admin/manage_draft_leaders.php');
 $template->assign('SelectGameHREF', $container->href());
 
 // Get the list of active Draft games ordered by reverse start date
-$activeGames = array();
+$activeGames = [];
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT game_id, game_name FROM game WHERE game_type=' . $db->escapeNumber(SmrGame::GAME_TYPE_DRAFT) . ' AND join_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY start_time DESC');
 foreach ($dbResult->records() as $dbRecord) {
@@ -27,7 +27,7 @@ if ($activeGames) {
 	$template->assign('SelectedGame', $selectedGameID);
 
 	// Get the list of current draft leaders for the selected game
-	$currentLeaders = array();
+	$currentLeaders = [];
 	$dbResult = $db->read('SELECT account_id, home_sector_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($selectedGameID));
 	foreach ($dbResult->records() as $dbRecord) {
 		$homeSectorID = $dbRecord->getInt('home_sector_id');

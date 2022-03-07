@@ -34,7 +34,7 @@ try {
 	}
 
 	// Get recent non-admin game news
-	$gameNews = array();
+	$gameNews = [];
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT * FROM news WHERE type != \'admin\' ORDER BY time DESC LIMIT 4');
 	foreach ($dbResult->records() as $dbRecord) {

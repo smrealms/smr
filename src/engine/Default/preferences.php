@@ -16,7 +16,7 @@ $template->assign('PreferencesConfirmFormHREF', Page::create('skeleton.php', 'pr
 
 $template->assign('ChatSharingHREF', Page::create('skeleton.php', 'chat_sharing.php')->href());
 
-$transferAccounts = array();
+$transferAccounts = [];
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT account_id,hof_name FROM account WHERE validated = ' . $db->escapeBoolean(true) . ' ORDER BY hof_name');
 foreach ($dbResult->records() as $dbRecord) {

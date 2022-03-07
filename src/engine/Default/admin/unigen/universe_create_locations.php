@@ -14,7 +14,7 @@ $template->assign('JumpGalaxyHREF', $container->href());
 $locations = SmrLocation::getAllLocations();
 
 // Initialize all location counts to zero
-$totalLocs = array();
+$totalLocs = [];
 foreach ($locations as $location) {
 	$totalLocs[$location->getTypeID()] = 0;
 }
@@ -62,7 +62,7 @@ foreach ($locations as $location) {
 }
 
 // Set any extra information to be displayed with each location
-$locText = array();
+$locText = [];
 $categories = new Categories();
 foreach ($locations as $location) {
 	$extra = '<span class="small"><br />';

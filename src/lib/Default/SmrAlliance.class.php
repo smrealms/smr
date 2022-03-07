@@ -497,7 +497,7 @@ class SmrAlliance {
 			$dbResult = $this->db->read('SELECT account_id FROM player WHERE ' . $this->SQL);
 
 			//we have the list of players put them in an array now
-			$this->memberList = array();
+			$this->memberList = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->memberList[] = $dbRecord->getInt('account_id');
 			}
@@ -506,7 +506,7 @@ class SmrAlliance {
 	}
 
 	public function getActiveIDs() : array {
-		$activeIDs = array();
+		$activeIDs = [];
 
 		$dbResult = $this->db->read('SELECT account_id
 						FROM active_session
@@ -531,7 +531,7 @@ class SmrAlliance {
 			AND player.alliance_id=' . $this->db->escapeNumber($this->allianceID) . '
 			ORDER BY planet.sector_id
 		');
-		$planets = array();
+		$planets = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$planets[] = SmrPlanet::getPlanet($this->gameID, $dbRecord->getInt('sector_id'), false, $dbRecord);
 		}
@@ -544,7 +544,7 @@ class SmrAlliance {
 	public function getSeedlist() : array {
 		if (!isset($this->seedlist)) {
 			$dbResult = $this->db->read('SELECT sector_id FROM alliance_has_seedlist WHERE ' . $this->SQL);
-			$this->seedlist = array();
+			$this->seedlist = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->seedlist[] = $dbRecord->getInt('sector_id');
 			}

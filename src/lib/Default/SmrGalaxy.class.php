@@ -25,7 +25,7 @@ class SmrGalaxy {
 		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY galaxy_id ASC');
-			$galaxies = array();
+			$galaxies = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$galaxyID = $dbRecord->getInt('galaxy_id');
 				$galaxies[$galaxyID] = self::getGalaxy($gameID, $galaxyID, $forceUpdate, $dbRecord);
@@ -234,9 +234,9 @@ class SmrGalaxy {
 			}
 		}
 
-		$mapSectors = array();
+		$mapSectors = [];
 		for ($i = 0; (is_null($dist) || $i < 2 * $dist + 1) && $i < $this->getHeight(); $i++) {
-			$mapSectors[$i] = array();
+			$mapSectors[$i] = [];
 			// get left most sector for this row
 			$rowLeft = $i == 0 ? $topLeft : $rowLeft->getNeighbourSector('Down');
 
@@ -290,7 +290,7 @@ class SmrGalaxy {
 	 */
 	public function setConnectivity(float $connectivity) : bool {
 		// Only set down/right, otherwise we double-hit every link
-		$linkDirs = array('Down', 'Right');
+		$linkDirs = ['Down', 'Right'];
 
 		$problem = true;
 		$problemTimes = 0;

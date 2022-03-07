@@ -68,7 +68,7 @@ class SmrForce {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM sector_has_forces WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY expire_time ASC');
-			$forces = array();
+			$forces = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$ownerID = $dbRecord->getInt('owner_id');
 				$forces[$ownerID] = self::getForce($gameID, $sectorID, $ownerID, $forceUpdate, $dbRecord);
@@ -448,7 +448,7 @@ class SmrForce {
 	}
 
 	public function shootPlayers(array $targetPlayers, bool $minesAreAttacker) : array {
-		$results = array('TotalDamage' => 0);
+		$results = ['TotalDamage' => 0];
 		if (!$this->exists()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
@@ -497,7 +497,7 @@ class SmrForce {
 				}
 			}
 		}
-		$return = array(
+		$return = [
 						'KillingShot' => !$alreadyDead && !$this->exists(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Mines' => $minesDamage,
@@ -510,7 +510,7 @@ class SmrForce {
 						'NumSDs' => $sdDamage / SD_ARMOUR,
 						'HasSDs' => $this->hasSDs(),
 						'TotalDamage' => $minesDamage + $cdDamage + $sdDamage
-		);
+		];
 		return $return;
 	}
 
@@ -533,7 +533,7 @@ class SmrForce {
 	}
 
 	public function killForcesByPlayer(AbstractSmrPlayer $killer) : array {
-		$return = array();
+		$return = [];
 		return $return;
 	}
 }

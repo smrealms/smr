@@ -70,7 +70,7 @@ $dbResult = $db->read('SELECT * FROM message ' .
 			LIMIT ' . ($page * MESSAGES_PER_PAGE) . ', ' . MESSAGES_PER_PAGE);
 
 $messageBox['NumberMessages'] = $dbResult->getNumRecords();
-$messageBox['Messages'] = array();
+$messageBox['Messages'] = [];
 
 // Group scout messages if they wouldn't fit on a single page
 if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
@@ -140,13 +140,13 @@ function displayScouts(array &$messageBox, SmrPlayer $player) : void {
 
 function displayGrouped(SmrPlayer $sender, string $message_text, int $first, int $last, bool $star, SmrAccount $displayAccount) : array {
 	// Define a unique array so we can delete grouped messages
-	$array = array(
+	$array = [
 		$sender->getAccountID(),
 		$first,
 		$last
-	);
+	];
 
-	$message = array();
+	$message = [];
 	$message['ID'] = base64_encode(serialize($array));
 	$message['Unread'] = $star;
 	$message['SenderID'] = $sender->getAccountID();
@@ -157,7 +157,7 @@ function displayGrouped(SmrPlayer $sender, string $message_text, int $first, int
 }
 
 function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $game_id, string $message_text, int $send_time, bool $msg_read, int $type, SmrAccount $displayAccount) : array {
-	$message = array();
+	$message = [];
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;
 	$message['Unread'] = !$msg_read;

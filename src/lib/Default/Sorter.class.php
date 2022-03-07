@@ -29,24 +29,24 @@ class Sorter {
 	public static function sortByStrProp(array &$array, $property, $reverseOrder = false) {
 		self::$sortKey = $property;
 		self::$reverseOrder = $reverseOrder;
-		usort($array, array(__CLASS__, 'cmpStrProp'));
+		usort($array, [__CLASS__, 'cmpStrProp']);
 	}
 
 	public static function sortByNumElement(array &$array, $property, $reverseOrder = false) {
 		self::$sortKey = $property;
 		self::$reverseOrder = $reverseOrder;
-		uasort($array, array(__CLASS__, 'cmpNumElement'));
+		uasort($array, [__CLASS__, 'cmpNumElement']);
 	}
 
 	public static function sortByNumProp(array &$array, $property, $reverseOrder = false) {
 		self::$sortKey = $property;
 		self::$reverseOrder = $reverseOrder;
-		uasort($array, array(__CLASS__, 'cmpNumProp'));
+		uasort($array, [__CLASS__, 'cmpNumProp']);
 	}
 
 	public static function sortByNumMethod(array &$array, $method, $reverseOrder = false) {
 		self::$sortKey = $method;
 		self::$reverseOrder = $reverseOrder;
-		uasort($array, array(__CLASS__, 'cmpNumMethod'));
+		uasort($array, [__CLASS__, 'cmpNumMethod']);
 	}
 }

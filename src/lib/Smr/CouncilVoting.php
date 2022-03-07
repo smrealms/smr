@@ -93,13 +93,13 @@ class CouncilVoting {
 			// more yes than no?
 			if ($yes_votes > $no_votes) {
 				if ($type == 'WAR') {
-					$currentlyParkedAccountIDs = array();
-					$raceFedSectors = array(
+					$currentlyParkedAccountIDs = [];
+					$raceFedSectors = [
 						$race_id_1 => SmrSector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
 						$race_id_2 => SmrSector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_2)
-					);
+					];
 					foreach ($raceFedSectors as $raceID => $fedSectors) {
-						$currentlyParkedAccountIDs[$raceID] = array(); //initialize
+						$currentlyParkedAccountIDs[$raceID] = []; //initialize
 						$otherRaceID = $raceID == $race_id_1 ? $race_id_2 : $race_id_1;
 						foreach ($fedSectors as $fedSector) {
 							$sectorPlayers = $fedSector->getPlayers();

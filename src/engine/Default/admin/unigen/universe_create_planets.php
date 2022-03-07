@@ -12,14 +12,14 @@ $container->addVar('game_id');
 $template->assign('JumpGalaxyHREF', $container->href());
 
 // Get a list of all available planet types
-$allowedTypes = array();
+$allowedTypes = [];
 foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $PlanetTypeID) {
 	$allowedTypes[$PlanetTypeID] = SmrPlanetType::getTypeInfo($PlanetTypeID)->name();
 }
 $template->assign('AllowedTypes', $allowedTypes);
 
 // Initialize all planet counts to zero
-$numberOfPlanets = array();
+$numberOfPlanets = [];
 foreach (array_keys($allowedTypes) as $ID) {
 	$numberOfPlanets[$ID] = 0;
 }

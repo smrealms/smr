@@ -15,13 +15,13 @@ $dbResult = $db->read('SELECT * FROM alliance_bank_transactions WHERE alliance_i
 if (!$dbResult->hasRecord()) {
 	create_error('Your alliance has no recorded transactions.');
 }
-$trans = array();
+$trans = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$transType = ($dbRecord->getField('transaction') == 'Payment') ? WITHDRAW : DEPOSIT;
 	$payeeId = ($dbRecord->getInt('exempt')) ? 0 : $dbRecord->getInt('payee_id');
 	// initialize payee if necessary
 	if (!isset($trans[$payeeId])) {
-		$trans[$payeeId] = array(WITHDRAW => 0, DEPOSIT => 0);
+		$trans[$payeeId] = [WITHDRAW => 0, DEPOSIT => 0];
 	}
 	$trans[$payeeId][$transType] += $dbRecord->getInt('amount');
 }

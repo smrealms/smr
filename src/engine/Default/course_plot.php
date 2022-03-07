@@ -25,7 +25,7 @@ $template->assign('PlotToNearestHREF', $container->href());
 
 $xtype = $session->getRequestVar('xtype', 'Technology');
 $template->assign('XType', $xtype);
-$template->assign('AllXTypes', array('Technology', 'Ships', 'Weapons', 'Locations', 'Sell Goods', 'Buy Goods', 'Galaxies'));
+$template->assign('AllXTypes', ['Technology', 'Ships', 'Weapons', 'Locations', 'Sell Goods', 'Buy Goods', 'Galaxies']);
 
 
 // get saved destinations

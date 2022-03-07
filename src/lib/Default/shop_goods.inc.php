@@ -11,14 +11,14 @@ function check_bargain_number(int $amount, int $ideal_price, int $offered_price,
 	if (isset($var['overall_number_of_bargains'])) {
 		// lose relations for bad bargain
 		$player->decreaseRelationsByTrade($amount, $port->getRaceID());
-		$player->increaseHOF(1, array('Trade', 'Results', 'Fail'), HOF_PUBLIC);
+		$player->increaseHOF(1, ['Trade', 'Results', 'Fail'], HOF_PUBLIC);
 		// transfer values
 		$container->addVar('overall_number_of_bargains');
 
 		// does we have enough of it?
 		if ($container['number_of_bargains'] > $container['overall_number_of_bargains']) {
 			$player->decreaseRelationsByTrade($amount, $port->getRaceID());
-			$player->increaseHOF(1, array('Trade', 'Results', 'Epic Fail'), HOF_PUBLIC);
+			$player->increaseHOF(1, ['Trade', 'Results', 'Epic Fail'], HOF_PUBLIC);
 			throw new Smr\Exceptions\UserError('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
 		}
 

@@ -5,7 +5,7 @@
 require_once('SmrPlanetType.class.php');
 
 class SmrPlanet {
-	protected static $CACHE_PLANETS = array();
+	protected static $CACHE_PLANETS = [];
 
 	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 100;
 	const CHANCE_TO_DOWNGRADE = 15; // percent
@@ -39,9 +39,9 @@ class SmrPlanet {
 	protected bool $hasChanged = false;
 	protected bool $hasChangedFinancial = false; // for credits, bond, maturity
 	protected bool $hasChangedStockpile = false;
-	protected array $hasChangedWeapons = array();
-	protected array $hasChangedBuildings = array();
-	protected array $hasStoppedBuilding = array();
+	protected array $hasChangedWeapons = [];
+	protected array $hasChangedBuildings = [];
+	protected array $hasStoppedBuilding = [];
 	protected bool $isNew = false;
 
 	public function __sleep() {
@@ -49,7 +49,7 @@ class SmrPlanet {
 	}
 
 	public static function clearCache() : void {
-		self::$CACHE_PLANETS = array();
+		self::$CACHE_PLANETS = [];
 	}
 
 	public static function savePlanets() : void {
@@ -556,7 +556,7 @@ class SmrPlanet {
 	public function getStockpile(int $goodID = null) : int|array {
 		if (!isset($this->stockpile)) {
 			// initialize cargo array
-			$this->stockpile = array();
+			$this->stockpile = [];
 			// get supplies from db
 			$dbResult = $this->db->read('SELECT good_id, amount FROM planet_has_cargo WHERE ' . $this->SQL);
 			// adding cargo and amount to array
@@ -609,7 +609,7 @@ class SmrPlanet {
 
 	public function getBuildings() : array {
 		if (!isset($this->buildings)) {
-			$this->buildings = array();
+			$this->buildings = [];
 
 			// get buildingss from db
 			$dbResult = $this->db->read('SELECT construction_id, amount FROM planet_has_building WHERE ' . $this->SQL);
@@ -658,17 +658,17 @@ class SmrPlanet {
 
 	public function getCurrentlyBuilding() : array {
 		if (!isset($this->currentlyBuilding)) {
-			$this->currentlyBuilding = array();
+			$this->currentlyBuilding = [];
 
 			$dbResult = $this->db->read('SELECT * FROM planet_is_building WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
-				$this->currentlyBuilding[$dbRecord->getInt('building_slot_id')] = array(
+				$this->currentlyBuilding[$dbRecord->getInt('building_slot_id')] = [
 					'BuildingSlotID' => $dbRecord->getInt('building_slot_id'),
 					'ConstructionID' => $dbRecord->getInt('construction_id'),
 					'ConstructorID' => $dbRecord->getInt('constructor_id'),
 					'Finishes' => $dbRecord->getInt('time_complete'),
 					'TimeRemaining' => $dbRecord->getInt('time_complete') - Smr\Epoch::time(),
-				);
+				];
 			}
 
 			// Check if construction has completed
@@ -677,9 +677,9 @@ class SmrPlanet {
 					unset($this->currentlyBuilding[$id]);
 					$expGain = $this->getConstructionExp($building['ConstructionID']);
 					$player = SmrPlayer::getPlayer($building['ConstructorID'], $this->getGameID());
-					$player->increaseHOF(1, array('Planet', 'Buildings', 'Built'), HOF_ALLIANCE);
+					$player->increaseHOF(1, ['Planet', 'Buildings', 'Built'], HOF_ALLIANCE);
 					$player->increaseExperience($expGain);
-					$player->increaseHOF($expGain, array('Planet', 'Buildings', 'Experience'), HOF_ALLIANCE);
+					$player->increaseHOF($expGain, ['Planet', 'Buildings', 'Experience'], HOF_ALLIANCE);
 					$this->hasStoppedBuilding[] = $building['BuildingSlotID'];
 					$this->increaseBuilding($building['ConstructionID'], 1);
 
@@ -822,7 +822,7 @@ class SmrPlanet {
 		if (count($this->hasStoppedBuilding) > 0) {
 			$this->db->write('DELETE FROM planet_is_building WHERE ' . $this->SQL . '
 								AND building_slot_id IN (' . $this->db->escapeArray($this->hasStoppedBuilding) . ') LIMIT ' . count($this->hasStoppedBuilding));
-			$this->hasStoppedBuilding = array();
+			$this->hasStoppedBuilding = [];
 		}
 		// write building info
 		foreach ($this->hasChangedBuildings as $id => $hasChanged) {
@@ -945,13 +945,13 @@ class SmrPlanet {
 			'time_complete' => $this->db->escapeNumber($timeComplete),
 		]);
 
-		$this->currentlyBuilding[$insertID] = array(
+		$this->currentlyBuilding[$insertID] = [
 			'BuildingSlotID' => $insertID,
 			'ConstructionID' => $constructionID,
 			'ConstructorID' => $constructor->getAccountID(),
 			'Finishes' => $timeComplete,
 			'TimeRemaining' => $timeComplete - Smr\Epoch::time()
-		);
+		];
 
 		// Consume the required resources
 		$constructor->decreaseCredits($this->getStructureTypes($constructionID)->creditCost());
@@ -1046,9 +1046,9 @@ class SmrPlanet {
 	}
 
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers) : void {
-		$trigger->increaseHOF(1, array('Combat', 'Planet', 'Number Of Triggers'), HOF_PUBLIC);
+		$trigger->increaseHOF(1, ['Combat', 'Planet', 'Number Of Triggers'], HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
-			$attacker->increaseHOF(1, array('Combat', 'Planet', 'Number Of Attacks'), HOF_PUBLIC);
+			$attacker->increaseHOF(1, ['Combat', 'Planet', 'Number Of Attacks'], HOF_PUBLIC);
 			$this->db->write('REPLACE INTO player_attacks_planet (game_id, account_id, sector_id, time, level) VALUES ' .
 					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
@@ -1141,7 +1141,7 @@ class SmrPlanet {
 	}
 
 	public function shootPlayers(array $targetPlayers) : array {
-		$results = array('Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => array());
+		$results = ['Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => []];
 		foreach ($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 		}
@@ -1229,7 +1229,7 @@ class SmrPlanet {
 			}
 		}
 
-		$return = array(
+		$return = [
 			'KillingShot' => !$alreadyDead && $this->isDestroyed(),
 			'TargetAlreadyDead' => $alreadyDead,
 			'Shield' => $shieldDamage,
@@ -1240,7 +1240,7 @@ class SmrPlanet {
 			'NumCDs' => $cdDamage / CD_ARMOUR,
 			'HasCDs' => $this->hasCDs(),
 			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage
-		);
+		];
 		return $return;
 	}
 
@@ -1267,14 +1267,14 @@ class SmrPlanet {
 		$dbResult = $this->db->read('SELECT account_id,level FROM player_attacks_planet WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_BUST));
 		foreach ($dbResult->records() as $dbRecord) {
 			$currPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $this->getGameID());
-			$currPlayer->increaseHOF($dbRecord->getInt('level'), array('Combat', 'Planet', 'Levels'), HOF_PUBLIC);
-			$currPlayer->increaseHOF(1, array('Combat', 'Planet', 'Completed'), HOF_PUBLIC);
+			$currPlayer->increaseHOF($dbRecord->getInt('level'), ['Combat', 'Planet', 'Levels'], HOF_PUBLIC);
+			$currPlayer->increaseHOF(1, ['Combat', 'Planet', 'Completed'], HOF_PUBLIC);
 		}
 		$this->db->write('DELETE FROM player_attacks_planet WHERE ' . $this->SQL);
 	}
 
 	public function killPlanetByPlayer(AbstractSmrPlayer $killer) : array {
-		$return = array();
+		$return = [];
 		$this->creditCurrentAttackersForKill();
 
 		//kick everyone from planet

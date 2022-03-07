@@ -72,7 +72,7 @@ $type = match($action) {
 $template->assign('LogType', $type);
 
 // Construct the list of logs of this type
-$logs = array();
+$logs = [];
 if ($dbResult->hasRecord()) {
 	// 'View' and 'Save' share the same form, so we use 'old_action' as a
 	// way to return to this page when we only want to save the logs.
@@ -96,12 +96,12 @@ if ($dbResult->hasRecord()) {
 
 	foreach ($dbResult->records() as $dbRecord) {
 		$sectorID = $dbRecord->getInt('sector_id');
-		$logs[$dbRecord->getInt('log_id')] = array(
+		$logs[$dbRecord->getInt('log_id')] = [
 			'Attacker' => $getParticipantName($dbRecord->getInt('attacker_id'), $sectorID),
 			'Defender' => $getParticipantName($dbRecord->getInt('defender_id'), $sectorID),
 			'Time' => $dbRecord->getInt('timestamp'),
 			'Sector' => $sectorID
-		);
+		];
 	}
 }
 $template->assign('Logs', $logs);

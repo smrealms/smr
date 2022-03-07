@@ -66,7 +66,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT id FROM cached_dummys
 					WHERE type = \'DummyPlayer\'');
-		$dummyNames = array();
+		$dummyNames = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$dummyNames[] = $dbRecord->getField('id');
 		}

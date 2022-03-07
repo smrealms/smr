@@ -20,14 +20,14 @@ class HallOfFame {
 			$container = Page::copy($var);
 			$container['view'] = $type;
 			if (!isset($var['type'])) {
-				$container['type'] = array();
+				$container['type'] = [];
 			}
 			$link = create_link($container, $type);
 
 			// Make the subcategory buttons
 			$container = Page::copy($var);
 			if (!isset($var['type'])) {
-				$container['type'] = array();
+				$container['type'] = [];
 			}
 			$container['type'][] = $type;
 			$subcategories = [];
@@ -83,7 +83,7 @@ class HallOfFame {
 		$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
 
 		$vis = HOF_PUBLIC;
-		$rank = array('Amount'=>0, 'Rank'=>0);
+		$rank = ['Amount'=>0, 'Rank'=>0];
 		if ($view == DONATION_NAME) {
 			$dbResult = $db->read('SELECT SUM(amount) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID) . ' GROUP BY account_id LIMIT 1');
 		} else if ($view == USER_SCORE_NAME) {
@@ -165,7 +165,7 @@ class HallOfFame {
 			unset($container['view']);
 		}
 		$viewing = '<span class="bold">Currently viewing: </span>' . create_link($container, $hofName);
-		$typeList = array();
+		$typeList = [];
 		if (isset($var['type'])) {
 			foreach ($var['type'] as $type) {
 				if (!is_array($hofTypes[$type])) {

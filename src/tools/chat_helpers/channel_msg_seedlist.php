@@ -6,7 +6,7 @@ function get_seedlist(SmrPlayer $player) : array {
 	$dbResult = $db->read('SELECT sector_id FROM alliance_has_seedlist
 						WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 							AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	$seedlist = array();
+	$seedlist = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$seedlist[] = $dbRecord->getInt('sector_id');
 	}
@@ -19,9 +19,9 @@ function shared_channel_msg_seedlist(SmrPlayer $player) : array {
 	$seedlist = get_seedlist($player);
 
 	if (count($seedlist) == 0) {
-		return array('Your alliance has not set up a seedlist yet.');
+		return ['Your alliance has not set up a seedlist yet.'];
 	} else {
-		$result = array('Your alliance has a ' . count($seedlist) . ' sector seedlist:');
+		$result = ['Your alliance has a ' . count($seedlist) . ' sector seedlist:'];
 		$result[] = join(' ', $seedlist);
 		return $result;
 	}
@@ -30,21 +30,21 @@ function shared_channel_msg_seedlist(SmrPlayer $player) : array {
 function shared_channel_msg_seedlist_add(SmrPlayer $player, ?array $sectors) : array {
 	// check if $nick is leader
 	if (!$player->isAllianceLeader(true)) {
-		return array('Only the leader of the alliance manages the seedlist.');
+		return ['Only the leader of the alliance manages the seedlist.'];
 	}
 
 	if (empty($sectors)) {
-		return array('You must specify sectors to add.');
+		return ['You must specify sectors to add.'];
 	}
 
 	// see if the sectors are numeric
 	foreach ($sectors as $sector) {
 		if (!is_numeric($sector)) {
-			return array("The specified sector '$sector' is not numeric.");
+			return ["The specified sector '$sector' is not numeric."];
 		}
 	}
 
-	$result = array();
+	$result = [];
 
 	// Get the initial seedlist
 	$currentSeedlist = get_seedlist($player);
@@ -90,11 +90,11 @@ function shared_channel_msg_seedlist_add(SmrPlayer $player, ?array $sectors) : a
 function shared_channel_msg_seedlist_del(SmrPlayer $player, ?array $sectors) : array {
 	// check if $nick is leader
 	if (!$player->isAllianceLeader(true)) {
-		return array('Only the leader of the alliance manages the seedlist.');
+		return ['Only the leader of the alliance manages the seedlist.'];
 	}
 
 	if (empty($sectors)) {
-		return array('You must specify sectors to delete.');
+		return ['You must specify sectors to delete.'];
 	}
 
 	if (count($sectors) === 1 && $sectors[0] === "all") {
@@ -104,7 +104,7 @@ function shared_channel_msg_seedlist_del(SmrPlayer $player, ?array $sectors) : a
 	// see if the sectors are numeric
 	foreach ($sectors as $sector) {
 		if (!is_numeric($sector)) {
-			return array("The specified sector '$sector' is not numeric.");
+			return ["The specified sector '$sector' is not numeric."];
 		}
 	}
 
@@ -116,5 +116,5 @@ function shared_channel_msg_seedlist_del(SmrPlayer $player, ?array $sectors) : a
 					AND sector_id IN (' . $db->escapeArray($sectors) . ')'
 	);
 
-	return array('The following sectors have been removed from the seedlist:' . implode(' ', $sectors));
+	return ['The following sectors have been removed from the seedlist:' . implode(' ', $sectors)];
 }

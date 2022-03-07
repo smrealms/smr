@@ -45,10 +45,10 @@ if (!empty($var['trade_msg'])) {
 	$rand = rand(1, 100);
 	if ($rand <= $baseChance) {
 		$searchedByFeds = true;
-		$player->increaseHOF(1, array('Trade', 'Search', 'Total'), HOF_PUBLIC);
+		$player->increaseHOF(1, ['Trade', 'Search', 'Total'], HOF_PUBLIC);
 		if ($ship->hasIllegalGoods()) {
 			$template->assign('IllegalsFound', true);
-			$player->increaseHOF(1, array('Trade', 'Search', 'Caught', 'Number Of Times'), HOF_PUBLIC);
+			$player->increaseHOF(1, ['Trade', 'Search', 'Caught', 'Number Of Times'], HOF_PUBLIC);
 			//find the fine
 			//get base for ports that dont happen to trade that good
 			$GOODS = Globals::getGoods();
@@ -56,8 +56,8 @@ if (!empty($var['trade_msg'])) {
 			    (($ship->getCargo(GOODS_SLAVES) * $GOODS[GOODS_SLAVES]['BasePrice']) +
 			     ($ship->getCargo(GOODS_WEAPONS) * $GOODS[GOODS_WEAPONS]['BasePrice']) +
 			     ($ship->getCargo(GOODS_NARCOTICS) * $GOODS[GOODS_NARCOTICS]['BasePrice']));
-			$player->increaseHOF($ship->getCargo(GOODS_SLAVES) + $ship->getCargo(GOODS_WEAPONS) + $ship->getCargo(GOODS_NARCOTICS), array('Trade', 'Search', 'Caught', 'Goods Confiscated'), HOF_PUBLIC);
-			$player->increaseHOF($totalFine, array('Trade', 'Search', 'Caught', 'Amount Fined'), HOF_PUBLIC);
+			$player->increaseHOF($ship->getCargo(GOODS_SLAVES) + $ship->getCargo(GOODS_WEAPONS) + $ship->getCargo(GOODS_NARCOTICS), ['Trade', 'Search', 'Caught', 'Goods Confiscated'], HOF_PUBLIC);
+			$player->increaseHOF($totalFine, ['Trade', 'Search', 'Caught', 'Amount Fined'], HOF_PUBLIC);
 			$template->assign('TotalFine', $totalFine);
 
 			if ($fine > $player->getCredits()) {
@@ -85,7 +85,7 @@ if (!empty($var['trade_msg'])) {
 
 		} else {
 			$template->assign('IllegalsFound', false);
-			$player->increaseHOF(1, array('Trade', 'Search', 'Times Found Innocent'), HOF_PUBLIC);
+			$player->increaseHOF(1, ['Trade', 'Search', 'Times Found Innocent'], HOF_PUBLIC);
 			$player->increaseAlignment(1);
 			$player->log(LOG_TYPE_TRADING, 'Player gains alignment at port');
 		}

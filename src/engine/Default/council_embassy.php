@@ -13,7 +13,7 @@ $template->assign('PageTopic', 'Ruling Council Of ' . $player->getRaceName());
 
 Menu::council($player->getRaceID());
 
-$voteRaces = array();
+$voteRaces = [];
 foreach (Smr\Race::getPlayableIDs() as $raceID) {
 	if ($raceID == $player->getRaceID()) {
 		continue;
@@ -25,6 +25,6 @@ foreach (Smr\Race::getPlayableIDs() as $raceID) {
 	if ($dbResult->hasRecord()) {
 		continue;
 	}
-	$voteRaces[$raceID] = Page::create('council_embassy_processing.php', '', array('race_id' => $raceID))->href();
+	$voteRaces[$raceID] = Page::create('council_embassy_processing.php', '', ['race_id' => $raceID])->href();
 }
 $template->assign('VoteRaceHrefs', $voteRaces);

@@ -35,7 +35,7 @@ class VoteSite {
 				'img_star' => 'twg_vote.png',
 				'url_base' => 'http://topwebgames.com/in.aspx?ID=136',
 				'url_func' => function($baseUrl, $accountId, $gameId, $linkId) {
-					$query = array('account' => $accountId, 'game' => $gameId, 'link' => $linkId, 'alwaysreward' => 1);
+					$query = ['account' => $accountId, 'game' => $gameId, 'link' => $linkId, 'alwaysreward' => 1];
 					return $baseUrl . '&' . http_build_query($query);
 				},
 			],

@@ -53,7 +53,7 @@ function user_nick(string $rdata) : bool
 		// database object
 		$db = Smr\Database::getInstance();
 
-		$channel_list = array();
+		$channel_list = [];
 
 		// 'sign off' all active old_nicks (multiple channels)
 		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND signed_off = 0');

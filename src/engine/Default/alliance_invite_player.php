@@ -10,24 +10,24 @@ $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
 // Get list of pending invitations
-$pendingInvites = array();
+$pendingInvites = [];
 foreach (SmrInvitation::getAll($player->getAllianceID(), $player->getGameID()) as $invite) {
 	$container = Page::create('alliance_invite_cancel_processing.php');
 	$container['invite'] = $invite;
 
 	$invited = $invite->getReceiver();
-	$pendingInvites[$invited->getAccountID()] = array(
+	$pendingInvites[$invited->getAccountID()] = [
 		'invited' => $invited->getDisplayName(true),
 		'invited_by' => $invite->getSender()->getDisplayName(),
 		'expires' => format_time($invite->getExpires() - Smr\Epoch::time(), true),
 		'cancelHREF' => $container->href(),
-	);
+	];
 }
 $template->assign('PendingInvites', $pendingInvites);
 
 // Get list of players eligible to join this alliance.
 // List those who joined the game most recently first.
-$invitePlayers = array();
+$invitePlayers = [];
 if ($alliance->getNumMembers() < $game->getAllianceMaxPlayers()) {
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT * FROM player

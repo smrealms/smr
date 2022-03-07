@@ -91,17 +91,17 @@ class Plotter {
 
 		$checkSector = $sector;
 		$gameID = $sector->getGameID();
-		$distances = array();
+		$distances = [];
 		$sectorsTravelled = 0;
-		$visitedSectors = array();
+		$visitedSectors = [];
 		$visitedSectors[$checkSector->getSectorID()] = true;
 		if ($x == 'Distance') {
 			$distances[0][$checkSector->getSectorID()] = new Smr\Path($checkSector->getSectorID());
 		}
 
-		$distanceQ = array();
+		$distanceQ = [];
 		for ($i = 0; $i <= TURNS_WARP_SECTOR_EQUIVALENCE; $i++) {
-			$distanceQ[] = array();
+			$distanceQ[] = [];
 		}
 		//Warps first as a slight optimisation due to how visitedSectors is set.
 		if ($checkSector->hasWarp() === true) {
@@ -122,9 +122,9 @@ class Plotter {
 				return $distances;
 			}
 			if ($x == 'Distance') {
-				$distances[$sectorsTravelled] = array();
+				$distances[$sectorsTravelled] = [];
 			}
-			$distanceQ[] = array();
+			$distanceQ[] = [];
 			if (count($q = array_shift($distanceQ)) === 0) {
 				$maybeWarps++;
 				continue;
@@ -172,7 +172,7 @@ class Plotter {
 	}
 
 	public static function calculatePortToPortDistances(array $sectors, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000) : array {
-		$distances = array();
+		$distances = [];
 		foreach ($sectors as $sec) {
 			if ($sec !== null) {
 				if ($sec->getSectorID() >= $lowLimit && $sec->getSectorID() <= $highLimit) {

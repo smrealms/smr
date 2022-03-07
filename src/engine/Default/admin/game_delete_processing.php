@@ -4,8 +4,8 @@ create_error('Deleting games is disabled!');
 
 $db = Smr\Database::getInstance();
 
-$smr_db_sql = array();
-$history_db_sql = array();
+$smr_db_sql = [];
+$history_db_sql = [];
 
 $action = Smr\Request::get('action');
 if (Smr\Request::get('save') == 'Yes') {
@@ -29,7 +29,7 @@ if ($action == 'Yes') {
 			$dbResult2 = $db->read('SELECT * FROM player
 						WHERE alliance_id = '.$db->escapeNumber($id) . '
 							AND game_id = '.$db->escapeNumber($game_id));
-			$list = array(0);
+			$list = [0];
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$list[] = $dbRecord2->getInt('account_id');
 			}

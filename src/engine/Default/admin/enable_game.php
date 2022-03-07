@@ -14,7 +14,7 @@ if (isset($var['processing_msg'])) {
 // Get the list of disabled games
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT game_name, game_id FROM game WHERE enabled=' . $db->escapeBoolean(false));
-$disabledGames = array();
+$disabledGames = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$disabledGames[$dbRecord->getInt('game_id')] = $dbRecord->getField('game_name');
 }

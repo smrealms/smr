@@ -67,9 +67,9 @@ $sendMessage = $forces->hasSDs();
 // *
 // ********************************
 
-$results = array('Attackers' => array('TotalDamage' => 0),
-				'Forces' => array(),
-				'Forced' => $bump);
+$results = ['Attackers' => ['TotalDamage' => 0],
+				'Forces' => [],
+				'Forced' => $bump];
 
 $attackers = $player->getSector()->getFightingTradersAgainstForces($player, $bump);
 
@@ -86,7 +86,7 @@ if ($bump) {
 	$results['Forces'] = $forces->shootPlayers($attackers, $bump);
 }
 
-$results['Attackers'] = array('TotalDamage' => 0);
+$results['Attackers'] = ['TotalDamage' => 0];
 foreach ($attackers as $attacker) {
 	$playerResults = $attacker->shootForces($forces);
 	$results['Attackers']['Traders'][$attacker->getAccountID()] = $playerResults;

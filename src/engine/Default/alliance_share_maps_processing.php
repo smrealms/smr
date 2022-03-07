@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$alliance_ids = array();
+$alliance_ids = [];
 
 // get a list of alliance member (remove current player)
 $memberIDs = $player->getAlliance()->getMemberIDs();

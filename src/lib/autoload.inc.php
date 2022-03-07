@@ -50,7 +50,7 @@ function get_class_loc(string $className) : void {
 function get_file_loc(string $fileName) : string {
 	$gameDir = get_game_dir();
 
-	static $cache = array();
+	static $cache = [];
 	$cacheKey = $gameDir . $fileName;
 	if (isset($cache[$cacheKey])) {
 		return $cache[$cacheKey];

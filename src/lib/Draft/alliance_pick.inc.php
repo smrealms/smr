@@ -7,7 +7,7 @@ function get_draft_teams(int $gameId) : array {
 	$dbResult = $db->read('SELECT account_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($gameId));
 
 	// Get team leader, alliance, and alliance size
-	$teams = array();
+	$teams = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$leader = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $gameId);
 		if (!$leader->hasAlliance() || $leader->getAlliance()->isNHA()) {

@@ -11,7 +11,7 @@ if (isset($var['message'])) {
 	$template->assign('Message', $var['message']);
 }
 
-$shareFrom = array();
+$shareFrom = [];
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT * FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
 foreach ($dbResult->records() as $dbRecord) {
@@ -23,17 +23,17 @@ foreach ($dbResult->records() as $dbRecord) {
 		// Player has not joined this game yet
 		$otherPlayer = null;
 	}
-	$shareFrom[$fromAccountId] = array(
+	$shareFrom[$fromAccountId] = [
 		'Player ID'   => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
 		'Player Name' => $otherPlayer == null ?
 		                 '<b>Account</b>: ' . SmrAccount::getAccount($fromAccountId)->getHofDisplayName() :
 		                 $otherPlayer->getDisplayName(),
 		'All Games'   => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
 		'Game ID'     => $gameId,
-	);
+	];
 }
 
-$shareTo = array();
+$shareTo = [];
 $dbResult = $db->read('SELECT * FROM account_shares_info WHERE from_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
 foreach ($dbResult->records() as $dbRecord) {
 	$gameId = $dbRecord->getInt('game_id');
@@ -44,17 +44,17 @@ foreach ($dbResult->records() as $dbRecord) {
 		// Player has not joined this game yet
 		$otherPlayer = null;
 	}
-	$shareTo[$toAccountId] = array(
+	$shareTo[$toAccountId] = [
 		'Player ID'   => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
 		'Player Name' => $otherPlayer == null ?
 		                 '<b>Account</b>: ' . SmrAccount::getAccount($toAccountId)->getHofDisplayName() :
 		                 $otherPlayer->getDisplayName(),
 		'All Games'   => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
 		'Game ID'     => $gameId,
-	);
+	];
 }
 
 $template->assign('ShareFrom', $shareFrom);
 $template->assign('ShareTo', $shareTo);
 
-$template->assign('ProcessingHREF', Page::create('chat_sharing_processing.php', '', array('share_to_ids' => array_keys($shareTo)))->href());
+$template->assign('ProcessingHREF', Page::create('chat_sharing_processing.php', '', ['share_to_ids' => array_keys($shareTo)])->href());

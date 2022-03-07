@@ -11,7 +11,7 @@ $skipUnusedAccs = true;
 $skipClosedAccs = false;
 $skipExceptions = false;
 
-$used = array();
+$used = [];
 
 //check the db and get the info we need
 $db = Smr\Database::getInstance();

@@ -6,7 +6,7 @@ $player = $session->getPlayer();
 
 function error_on_page(string $message) : never {
 	$message = '<span class="bold red">ERROR:</span> ' . $message;
-	Page::create('skeleton.php', 'chat_sharing.php', array('message' => $message))->go();
+	Page::create('skeleton.php', 'chat_sharing.php', ['message' => $message])->go();
 }
 
 // Process adding a "share to" account

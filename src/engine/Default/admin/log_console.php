@@ -6,7 +6,7 @@ $var = $session->getCurrentVar();
 
 $template->assign('PageTopic', 'Log Console');
 
-$loggedAccounts = array();
+$loggedAccounts = [];
 
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT account_id as account_id, login, count(*) as number_of_entries
@@ -32,7 +32,7 @@ $template->assign('LoggedAccounts', $loggedAccounts);
 
 if (count($loggedAccounts) > 0) {
 	// put hidden fields in for log type to have all fields selected on next page.
-	$logTypes = array();
+	$logTypes = [];
 	$dbResult = $db->read('SELECT log_type_id FROM log_type');
 	foreach ($dbResult->records() as $dbRecord) {
 		$logTypes[] = $dbRecord->getInt('log_type_id');

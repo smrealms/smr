@@ -8,12 +8,12 @@ function shared_channel_msg_op_list(SmrPlayer $player) : array {
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	if (!$dbResult->hasRecord()) {
-		return array('Your leader has not scheduled an op.');
+		return ['Your leader has not scheduled an op.'];
 	}
 
-	$yes = array();
-	$no = array();
-	$maybe = array();
+	$yes = [];
+	$no = [];
+	$maybe = [];
 	$dbResult = $db->read('SELECT account_id, response
 				FROM alliance_has_op_response
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
@@ -38,10 +38,10 @@ function shared_channel_msg_op_list(SmrPlayer $player) : array {
 	}
 
 	if ((count($yes) + count($no) + count($maybe)) == 0) {
-		return array('No one has signed up for the upcoming op.');
+		return ['No one has signed up for the upcoming op.'];
 	}
 
-	$results = array();
+	$results = [];
 	if (count($yes) > 0) {
 		$results[] = 'YES (' . count($yes) . '):';
 		foreach ($yes as $attendee) {

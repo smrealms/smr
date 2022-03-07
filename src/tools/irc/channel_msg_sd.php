@@ -60,7 +60,7 @@ function channel_msg_sd_set($fp, string $rdata) : bool
 		}
 
 		// add new entry
-		array_push($sds, array($sector, $sd, time(), $channel));
+		array_push($sds, [$sector, $sd, time(), $channel]);
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The supply/demand of ' . $sd . ' for sector ' . $sector . ' has been recorded' . EOL);
 

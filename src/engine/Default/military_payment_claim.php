@@ -14,7 +14,7 @@ if (!isset($var['ClaimText'])) {
 	$player = $session->getPlayer();
 	if ($player->hasMilitaryPayment()) {
 		$payment = $player->getMilitaryPayment();
-		$player->increaseHOF($payment, array('Military Payment', 'Money', 'Claimed'), HOF_PUBLIC);
+		$player->increaseHOF($payment, ['Military Payment', 'Money', 'Claimed'], HOF_PUBLIC);
 
 		// add to our cash
 		$player->increaseCredits($payment);

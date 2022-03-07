@@ -21,7 +21,7 @@ $showRoles = $varAction == 'Show Alliance Roles';
 $template->assign('ShowRoles', $showRoles);
 if ($showRoles) {
 	// initialize with text
-	$roles = array();
+	$roles = [];
 
 	// get all roles from db for faster access later
 	$dbResult = $db->read('SELECT role_id, role

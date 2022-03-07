@@ -21,13 +21,13 @@ require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
 require_once(CONFIG . 'irc/config.specific.php');
 
 // timer events
-$events = array();
+$events = [];
 
 // supply/demand list
-$sds = array();
+$sds = [];
 
 // on<something> actions
-$actions = array();
+$actions = [];
 
 $logging = false;
 $debugging = false;

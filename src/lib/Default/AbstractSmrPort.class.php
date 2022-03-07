@@ -17,11 +17,11 @@ class AbstractSmrPort {
 	const DEFENCES_PER_LEVEL = 700;
 	const DEFENCES_PER_TEN_MIL_CREDITS = 250;
 	const MAX_LEVEL = 9;
-	const BASE_REFRESH_PER_HOUR = array(
+	const BASE_REFRESH_PER_HOUR = [
 		'1' => 150,
 		'2' => 110,
 		'3' => 70
-	);
+	];
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
 	const GOODS_TRADED_MONEY_MULTIPLIER = 50;
@@ -42,7 +42,7 @@ class AbstractSmrPort {
 	protected int $upgrade;
 	protected int $experience;
 
-	protected array $goodIDs = array('All' => [], TRADER_SELLS => [], TRADER_BUYS => []);
+	protected array $goodIDs = ['All' => [], TRADER_SELLS => [], TRADER_BUYS => []];
 	protected array $goodAmounts;
 	protected array $goodAmountsChanged = [];
 	protected array $goodDistances;
@@ -57,8 +57,8 @@ class AbstractSmrPort {
 	protected bool $isNew = false;
 
 	public static function clearCache() : void {
-		self::$CACHE_PORTS = array();
-		self::$CACHE_CACHED_PORTS = array();
+		self::$CACHE_PORTS = [];
+		self::$CACHE_CACHED_PORTS = [];
 	}
 
 	public static function getGalaxyPorts(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
@@ -615,9 +615,9 @@ class AbstractSmrPort {
 			throw new Exception('Cannot attack a cached port!');
 		}
 
-		$trigger->increaseHOF(1, array('Combat', 'Port', 'Number Of Triggers'), HOF_PUBLIC);
+		$trigger->increaseHOF(1, ['Combat', 'Port', 'Number Of Triggers'], HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
-			$attacker->increaseHOF(1, array('Combat', 'Port', 'Number Of Attacks'), HOF_PUBLIC);
+			$attacker->increaseHOF(1, ['Combat', 'Port', 'Number Of Attacks'], HOF_PUBLIC);
 			$this->db->write('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES
 							(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
@@ -881,7 +881,7 @@ class AbstractSmrPort {
 	}
 
 	public function getWeapons() : array {
-		$weapons = array();
+		$weapons = [];
 		for ($i = 0; $i < $this->getNumWeapons(); ++$i) {
 			$weapons[$i] = SmrWeapon::getWeapon(WEAPON_PORT_TURRET);
 		}
@@ -1084,7 +1084,7 @@ class AbstractSmrPort {
 	}
 
 	public function updateSectorPlayersCache() : void {
-		$accountIDs = array();
+		$accountIDs = [];
 		$sectorPlayers = $this->getSector()->getPlayers();
 		foreach ($sectorPlayers as $sectorPlayer) {
 			$accountIDs[] = $sectorPlayer->getAccountID();
@@ -1093,7 +1093,7 @@ class AbstractSmrPort {
 	}
 
 	public function addCachePort(int $accountID) : void {
-		$this->addCachePorts(array($accountID));
+		$this->addCachePorts([$accountID]);
 	}
 
 	public function addCachePorts(array $accountIDs) : bool {
@@ -1150,7 +1150,7 @@ class AbstractSmrPort {
 		// We omit `goodAmounts` and `goodDistances` so that the hash of the
 		// serialized object is the same for all players. This greatly improves
 		// cache efficiency.
-		return array('gameID', 'sectorID', 'raceID', 'level', 'goodIDs');
+		return ['gameID', 'sectorID', 'raceID', 'level', 'goodIDs'];
 	}
 
 	public function __wakeup() {
@@ -1215,7 +1215,7 @@ class AbstractSmrPort {
 	}
 
 	public function shootPlayers(array $targetPlayers) : array {
-		$results = array('Port' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => array());
+		$results = ['Port' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => []];
 		foreach ($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
@@ -1268,7 +1268,7 @@ class AbstractSmrPort {
 			}
 		}
 
-		$return = array(
+		$return = [
 						'KillingShot' => !$alreadyDead && $this->isDestroyed(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Shield' => $shieldDamage,
@@ -1278,7 +1278,7 @@ class AbstractSmrPort {
 						'HasCDs' => $this->hasCDs(),
 						'Armour' => $armourDamage,
 						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage
-		);
+		];
 		return $return;
 	}
 
@@ -1302,7 +1302,7 @@ class AbstractSmrPort {
 
 	public function getAttackersToCredit() : array {
 		//get all players involved for HoF
-		$attackers = array();
+		$attackers = [];
 		$dbResult = $this->db->read('SELECT player.* FROM player_attacks_port JOIN player USING (game_id, account_id) WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . ' AND player_attacks_port.sector_id = ' . $this->db->escapeNumber($this->sectorID) . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_RAID));
 		foreach ($dbResult->records() as $dbRecord) {
 			$attackers[] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $this->getGameID(), false, $dbRecord);
@@ -1314,8 +1314,8 @@ class AbstractSmrPort {
 		//get all players involved for HoF
 		$attackers = $this->getAttackersToCredit();
 		foreach ($attackers as $attacker) {
-			$attacker->increaseHOF($this->level, array('Combat', 'Port', 'Levels Raided'), HOF_PUBLIC);
-			$attacker->increaseHOF(1, array('Combat', 'Port', 'Total Raided'), HOF_PUBLIC);
+			$attacker->increaseHOF($this->level, ['Combat', 'Port', 'Levels Raided'], HOF_PUBLIC);
+			$attacker->increaseHOF(1, ['Combat', 'Port', 'Total Raided'], HOF_PUBLIC);
 		}
 	}
 
@@ -1324,10 +1324,10 @@ class AbstractSmrPort {
 			return false;
 		}
 		$killer->increaseCredits($credits);
-		$killer->increaseHOF($credits, array('Combat', 'Port', 'Money', 'Gained'), HOF_PUBLIC);
+		$killer->increaseHOF($credits, ['Combat', 'Port', 'Money', 'Gained'], HOF_PUBLIC);
 		$attackers = $this->getAttackersToCredit();
 		foreach ($attackers as $attacker) {
-			$attacker->increaseHOF(1, array('Combat', 'Port', $payoutType), HOF_PUBLIC);
+			$attacker->increaseHOF(1, ['Combat', 'Port', $payoutType], HOF_PUBLIC);
 		}
 		$this->setCredits(0);
 		return true;
@@ -1356,7 +1356,7 @@ class AbstractSmrPort {
 	}
 
 	public function killPortByPlayer(AbstractSmrPlayer $killer) : array {
-		$return = array();
+		$return = [];
 
 		// Port is destroyed, so empty the port of all trade goods
 		foreach ($this->getAllGoodIDs() as $goodID) {
@@ -1384,11 +1384,11 @@ class AbstractSmrPort {
 		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ', $return['KillerBounty']);
-		$killer->increaseHOF($return['KillerBounty'], array('Combat', 'Port', 'Bounties', 'Gained'), HOF_PUBLIC);
+		$killer->increaseHOF($return['KillerBounty'], ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
 
 		$return['KillerRelations'] = 45;
 		$killer->decreaseRelations($return['KillerRelations'], $this->getRaceID());
-		$killer->increaseHOF($return['KillerRelations'], array('Combat', 'Port', 'Relation', 'Loss'), HOF_PUBLIC);
+		$killer->increaseHOF($return['KillerRelations'], ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
 
 		return $return;
 	}

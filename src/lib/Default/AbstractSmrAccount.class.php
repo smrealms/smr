@@ -3,34 +3,34 @@
 abstract class AbstractSmrAccount {
 
 	const USER_RANKINGS_EACH_STAT_POW = .9;
-	protected const USER_RANKINGS_SCORE = array(
+	protected const USER_RANKINGS_SCORE = [
 		// [Stat, a, b]
 		// Used as: pow(Stat * a, USER_RANKINGS_EACH_STAT_POW) * b
-		array(array('Trade', 'Experience', 'Total'), .1, 0.5),
-		array(array('Trade', 'Money', 'Profit'), 0.00005, 0.5),
-		array(array('Killing', 'Kills'), 1000, 1)
-		);
+		[['Trade', 'Experience', 'Total'], .1, 0.5],
+		[['Trade', 'Money', 'Profit'], 0.00005, 0.5],
+		[['Killing', 'Kills'], 1000, 1]
+	];
 
 	protected static array $CACHE_ACCOUNTS = [];
-	protected const DEFAULT_HOTKEYS = array(
-		'MoveUp' => array('w', 'up'),
-		'ScanUp' => array('shift+w', 'shift+up'),
-		'MoveLeft' => array('a', 'left'),
-		'ScanLeft' => array('shift+a', 'shift+left'),
-		'MoveRight' => array('d', 'right'),
-		'ScanRight' => array('shift+d', 'shift+right'),
-		'MoveDown' => array('s', 'down'),
-		'ScanDown' => array('shift+s', 'shift+down'),
-		'MoveWarp' => array('e', '0'),
-		'ScanWarp' => array('shift+e', 'shift+0'),
-		'ScanCurrent' => array('shift+1'),
-		'CurrentSector' => array('1'),
-		'LocalMap' => array('2'),
-		'PlotCourse' => array('3'),
-		'CurrentPlayers' => array('4'),
-		'EnterPort' => array('q'),
-		'AttackTrader' => array('f')
-	);
+	protected const DEFAULT_HOTKEYS = [
+		'MoveUp' => ['w', 'up'],
+		'ScanUp' => ['shift+w', 'shift+up'],
+		'MoveLeft' => ['a', 'left'],
+		'ScanLeft' => ['shift+a', 'shift+left'],
+		'MoveRight' => ['d', 'right'],
+		'ScanRight' => ['shift+d', 'shift+right'],
+		'MoveDown' => ['s', 'down'],
+		'ScanDown' => ['shift+s', 'shift+down'],
+		'MoveWarp' => ['e', '0'],
+		'ScanWarp' => ['shift+e', 'shift+0'],
+		'ScanCurrent' => ['shift+1'],
+		'CurrentSector' => ['1'],
+		'LocalMap' => ['2'],
+		'PlotCourse' => ['3'],
+		'CurrentPlayers' => ['4'],
+		'EnterPort' => ['q'],
+		'AttackTrader' => ['f']
+	];
 
 	protected Smr\Database $db;
 
@@ -60,7 +60,7 @@ abstract class AbstractSmrAccount {
 	protected bool $defaultCSSEnabled;
 	protected ?array $messageNotifications;
 	protected bool $centerGalaxyMapOnPlayer;
-	protected array $oldAccountIDs = array();
+	protected array $oldAccountIDs = [];
 	protected int $maxRankAchieved;
 	protected int $referrerID;
 	protected int $credits; // SMR credits
@@ -179,7 +179,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public static function getUserScoreCaseStatement(Smr\Database $db) : array {
-		$userRankingTypes = array();
+		$userRankingTypes = [];
 		$case = 'FLOOR(SUM(CASE type ';
 		foreach (self::USER_RANKINGS_SCORE as $userRankingScore) {
 			$userRankingType = $db->escapeArray($userRankingScore[0], ':', false);
@@ -187,7 +187,7 @@ abstract class AbstractSmrAccount {
 			$case .= ' WHEN ' . $userRankingType . ' THEN POW(amount*' . $userRankingScore[1] . ',' . SmrAccount::USER_RANKINGS_EACH_STAT_POW . ')*' . $userRankingScore[2];
 		}
 		$case .= ' END))';
-		return array('CASE' => $case, 'IN' => join(',', $userRankingTypes));
+		return ['CASE' => $case, 'IN' => join(',', $userRankingTypes)];
 	}
 
 	protected function __construct(int $accountID) {
@@ -273,10 +273,10 @@ abstract class AbstractSmrAccount {
 				$this->unbanAccount();
 				return false;
 			}
-			return array('Time' => $expireTime,
+			return ['Time' => $expireTime,
 				'Reason' => $dbRecord->getField('reason'),
 				'ReasonID' => $dbRecord->getInt('reason_id')
-			);
+			];
 		} else {
 			return false;
 		}
@@ -390,13 +390,13 @@ abstract class AbstractSmrAccount {
 		if (!isset($this->HOF)) {
 			//Get Player HOF
 			$dbResult = $this->db->read('SELECT type,sum(amount) as amount FROM player_hof WHERE ' . $this->SQL . ' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = \'FALSE\') GROUP BY type');
-			$this->HOF = array();
+			$this->HOF = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$hof =& $this->HOF;
 				$typeList = explode(':', $dbRecord->getString('type'));
 				foreach ($typeList as $type) {
 					if (!isset($hof[$type])) {
-						$hof[$type] = array();
+						$hof[$type] = [];
 					}
 					$hof =& $hof[$type];
 				}
@@ -444,14 +444,14 @@ abstract class AbstractSmrAccount {
 			$gameID = $player->getGameID();
 		}
 		if (!isset($this->individualScores[$gameID])) {
-			$this->individualScores[$gameID] = array();
+			$this->individualScores[$gameID] = [];
 			foreach (self::USER_RANKINGS_SCORE as $statScore) {
 				if ($player == null) {
 					$stat = $this->getHOF($statScore[0]);
 				} else {
 					$stat = $player->getHOF($statScore[0]);
 				}
-				$this->individualScores[$gameID][] = array('Stat'=>$statScore[0], 'Score'=>pow($stat * $statScore[1], self::USER_RANKINGS_EACH_STAT_POW) * $statScore[2]);
+				$this->individualScores[$gameID][] = ['Stat'=>$statScore[0], 'Score'=>pow($stat * $statScore[1], self::USER_RANKINGS_EACH_STAT_POW) * $statScore[2]];
 			}
 		}
 		return $this->individualScores[$gameID];
@@ -1012,7 +1012,7 @@ abstract class AbstractSmrAccount {
 			if (isset($this->hotkeys[$hotkeyType])) {
 				return $this->hotkeys[$hotkeyType];
 			} else {
-				return array();
+				return [];
 			}
 		}
 		return $this->hotkeys;
@@ -1097,7 +1097,7 @@ abstract class AbstractSmrAccount {
 
 	public function getPermissions() : array {
 		if (!isset($this->permissions)) {
-			$this->permissions = array();
+			$this->permissions = [];
 			$dbResult = $this->db->read('SELECT permission_id FROM account_has_permission WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->permissions[$dbRecord->getInt('permission_id')] = true;
@@ -1282,7 +1282,7 @@ abstract class AbstractSmrAccount {
 
 	public function getToggleAJAXHREF() : string {
 		$var = Smr\Session::getInstance()->getCurrentVar();
-		return Page::create('toggle_processing.php', '', array('toggle'=>'AJAX', 'referrer'=>$var['body']))->href();
+		return Page::create('toggle_processing.php', '', ['toggle'=>'AJAX', 'referrer'=>$var['body']])->href();
 	}
 
 	public function getUserRankingHREF() : string {
@@ -1290,6 +1290,6 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function getPersonalHofHREF() : string {
-		return Page::create('skeleton.php', 'hall_of_fame_player_detail.php', array('account_id' => $this->getAccountID()))->href();
+		return Page::create('skeleton.php', 'hall_of_fame_player_detail.php', ['account_id' => $this->getAccountID()])->href();
 	}
 }

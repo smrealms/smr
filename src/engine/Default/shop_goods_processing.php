@@ -132,32 +132,32 @@ if ($transaction === TRADER_STEALS ||
 		$msg_transaction = 'bought';
 		$ship->increaseCargo($good_id, $amount);
 		$player->decreaseCredits($bargain_price);
-		$player->increaseHOF($amount, array('Trade', 'Goods', 'Bought'), HOF_ALLIANCE);
-		$player->increaseHOF($gained_exp, array('Trade', 'Experience', 'Buying'), HOF_PUBLIC);
-		$player->decreaseHOF($bargain_price, array('Trade', 'Money', 'Profit'), HOF_PUBLIC);
-		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Buying'), HOF_PUBLIC);
+		$player->increaseHOF($amount, ['Trade', 'Goods', 'Bought'], HOF_ALLIANCE);
+		$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Buying'], HOF_PUBLIC);
+		$player->decreaseHOF($bargain_price, ['Trade', 'Money', 'Profit'], HOF_PUBLIC);
+		$player->increaseHOF($bargain_price, ['Trade', 'Money', 'Buying'], HOF_PUBLIC);
 		$port->buyGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
 	} elseif ($transaction === TRADER_SELLS) {
 		$msg_transaction = 'sold';
 		$ship->decreaseCargo($good_id, $amount);
 		$player->increaseCredits($bargain_price);
-		$player->increaseHOF($amount, array('Trade', 'Goods', 'Sold'), HOF_ALLIANCE);
-		$player->increaseHOF($gained_exp, array('Trade', 'Experience', 'Selling'), HOF_PUBLIC);
-		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Profit'), HOF_PUBLIC);
-		$player->increaseHOF($bargain_price, array('Trade', 'Money', 'Selling'), HOF_PUBLIC);
+		$player->increaseHOF($amount, ['Trade', 'Goods', 'Sold'], HOF_ALLIANCE);
+		$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Selling'], HOF_PUBLIC);
+		$player->increaseHOF($bargain_price, ['Trade', 'Money', 'Profit'], HOF_PUBLIC);
+		$player->increaseHOF($bargain_price, ['Trade', 'Money', 'Selling'], HOF_PUBLIC);
 		$port->sellGoods($portGood, $amount, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
 	} elseif ($transaction === TRADER_STEALS) {
 		$msg_transaction = 'stolen';
 		$ship->increaseCargo($good_id, $amount);
-		$player->increaseHOF($amount, array('Trade', 'Goods', 'Stolen'), HOF_ALLIANCE);
-		$player->increaseHOF($gained_exp, array('Trade', 'Experience', 'Stealing'), HOF_PUBLIC);
+		$player->increaseHOF($amount, ['Trade', 'Goods', 'Stolen'], HOF_ALLIANCE);
+		$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Stealing'], HOF_PUBLIC);
 		$port->stealGoods($portGood, $amount);
 	}
 
-	$player->increaseHOF($gained_exp, array('Trade', 'Experience', 'Total'), HOF_PUBLIC);
-	$player->increaseHOF(1, array('Trade', 'Results', 'Success'), HOF_PUBLIC);
+	$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Total'], HOF_PUBLIC);
+	$player->increaseHOF(1, ['Trade', 'Results', 'Success'], HOF_PUBLIC);
 
 	// log action
 	$player->log(LOG_TYPE_TRADING, $transaction . 's ' . $amount . ' ' . $good_name . ' for ' . $bargain_price . ' credits and ' . $gained_exp . ' experience');

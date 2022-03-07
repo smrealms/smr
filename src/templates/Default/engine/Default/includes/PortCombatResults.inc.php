@@ -58,7 +58,7 @@ if (isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons
 		} ?>.
 		<br /><?php
 		if ($ShotHit && $ActualDamage['KillingShot']) {
-			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', array('KillResults'=>$WeaponResults['KillResults'], 'TargetPlayer'=>$TargetPlayer));
+			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults'=>$WeaponResults['KillResults'], 'TargetPlayer'=>$TargetPlayer]);
 		}
 	}
 }
@@ -109,7 +109,7 @@ if (isset($PortCombatResults['Drones'])) {
 	} ?>.
 	<br /><?php
 	if ($ActualDamage['KillingShot']) {
-		$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', array('KillResults'=>$Drones['KillResults'], 'TargetPlayer'=>$TargetPlayer));
+		$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults'=>$Drones['KillResults'], 'TargetPlayer'=>$TargetPlayer]);
 	}
 }
 

@@ -30,7 +30,7 @@ $container['url'] = 'admin/unigen/upload_smr_file_processing.php';
 $template->assign('UploadSmrFileHREF', $container->href());
 
 //Galaxy Creation area
-$defaultNames = array(0, 'Alskant', 'Creonti', 'Human', 'Ik\'Thorne', 'Nijarin', 'Salvene', 'Thevian', 'WQ Human', 'Omar', 'Salzik', 'Manton', 'Livstar', 'Teryllia', 'Doriath', 'Anconus', 'Valheru', 'Sardine', 'Clacher', 'Tangeria');
+$defaultNames = [0, 'Alskant', 'Creonti', 'Human', 'Ik\'Thorne', 'Nijarin', 'Salvene', 'Thevian', 'WQ Human', 'Omar', 'Salzik', 'Manton', 'Livstar', 'Teryllia', 'Doriath', 'Anconus', 'Valheru', 'Sardine', 'Clacher', 'Tangeria'];
 $template->assign('NumGals', $numGals);
 
 $galaxies = [];

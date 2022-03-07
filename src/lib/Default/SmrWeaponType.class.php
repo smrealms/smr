@@ -33,7 +33,7 @@ class SmrWeaponType {
 	public static function getAllWeaponTypes() : array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM weapon_type');
-		$weapons = array();
+		$weapons = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$weaponTypeID = $dbRecord->getInt('weapon_type_id');
 			$weapons[$weaponTypeID] = self::getWeaponType($weaponTypeID, $dbRecord);

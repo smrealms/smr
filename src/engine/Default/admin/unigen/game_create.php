@@ -36,7 +36,7 @@ $defaultGame = [
 $template->assign('Game', $defaultGame);
 $template->assign('SubmitValue', 'Create Game');
 
-$games = array();
+$games = [];
 if ($canEditStartedGames) {
 	$dbResult = $db->read('SELECT game_id FROM game ORDER BY end_time DESC');
 } else {

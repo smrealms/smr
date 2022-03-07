@@ -231,7 +231,7 @@ class Template {
 
 		// Use relative xpath selectors so that they can be reused when we
 		// pass the middle panel as the xpath query's context node.
-		$ajaxSelectors = array('.//span[@id]', './/*[contains(@class,"ajax")]');
+		$ajaxSelectors = ['.//span[@id]', './/*[contains(@class,"ajax")]'];
 
 		foreach ($ajaxSelectors as $selector) {
 			$matchNodes = $xpath->query($selector);

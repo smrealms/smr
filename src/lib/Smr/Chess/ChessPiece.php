@@ -39,7 +39,7 @@ class ChessPiece {
 	}
 
 	public function getPossibleMoves(array &$board, array &$hasMoved, string $forColour = null, bool $attackingCheck = false) : array {
-		$moves = array();
+		$moves = [];
 		if ($forColour === null || $this->colour === $forColour) {
 			if ($this->pieceID == self::PAWN) {
 				$dirY = $this->colour == ChessGame::PLAYER_BLACK ? 1 : -1;
@@ -47,12 +47,12 @@ class ChessPiece {
 				//Pawn forward movement is not attacking - so don't check it if doing an attacking check.
 				if (!$attackingCheck) {
 					if (ChessGame::isValidCoord($this->x, $moveY, $board) && $board[$moveY][$this->x] === null && $this->isSafeMove($board, $hasMoved, $this->x, $moveY)) {
-						$moves[] = array($this->x, $moveY);
+						$moves[] = [$this->x, $moveY];
 					}
 					$doubleMoveY = $moveY + $dirY;
 					if ($this->y - $dirY == 0 || $this->y - $dirY * 2 == count($board)) { //Double move first move
 						if ($board[$moveY][$this->x] === null && $board[$doubleMoveY][$this->x] === null && $this->isSafeMove($board, $hasMoved, $this->x, $doubleMoveY)) {
-							$moves[] = array($this->x, $doubleMoveY);
+							$moves[] = [$this->x, $doubleMoveY];
 						}
 					}
 				}
@@ -63,7 +63,7 @@ class ChessPiece {
 							((($hasMoved[self::PAWN][0] == $moveX && $hasMoved[self::PAWN][1] == $this->y) ||
 							($board[$moveY][$moveX] != null && $board[$moveY][$moveX]->colour != $this->colour))
 							&& $this->isSafeMove($board, $hasMoved, $moveX, $moveY))) {
-							$moves[] = array($moveX, $moveY);
+							$moves[] = [$moveX, $moveY];
 						}
 					}
 				}
@@ -170,7 +170,7 @@ class ChessPiece {
 			if (($board[$toY][$toX] === null || $board[$toY][$toX]->colour != $this->colour)) {
 				//We can only actually move to this position if it is safe to do so, however we can pass through it looking for a safe move so we still want to return true.
 				if (($attackingCheck === true || $this->isSafeMove($board, $hasMoved, $toX, $toY))) {
-					$moves[] = array($toX, $toY);
+					$moves[] = [$toX, $toY];
 				}
 				return true;
 			}
@@ -179,7 +179,7 @@ class ChessPiece {
 	}
 
 	public function promote(int $pawnPromotionPieceID, array &$board) : array {
-		$takenNos = array();
+		$takenNos = [];
 		foreach ($board as $row) {
 			foreach ($row as $piece) {
 				if ($piece != null && $piece->pieceID == $pawnPromotionPieceID && $piece->colour == $this->colour) {
@@ -191,7 +191,7 @@ class ChessPiece {
 		while (isset($takenNos[$i])) {
 			$i++;
 		}
-		return array('PieceID' => $pawnPromotionPieceID, 'PieceNo' => $i);
+		return ['PieceID' => $pawnPromotionPieceID, 'PieceNo' => $i];
 	}
 
 	public function getPieceLetter() : string {

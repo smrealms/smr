@@ -23,23 +23,23 @@ if ($dbResult->hasRecord()) {
 	$votedFor = $dbRecord->getField('action');
 }
 
-$voteRelations = array();
+$voteRelations = [];
 $raceRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
 foreach (Smr\Race::getPlayableIDs() as $raceID) {
 	if ($raceID == $player->getRaceID()) {
 		continue;
 	}
-	$container = Page::create('council_vote_processing.php', '', array('race_id' => $raceID));
-	$voteRelations[$raceID] = array(
+	$container = Page::create('council_vote_processing.php', '', ['race_id' => $raceID]);
+	$voteRelations[$raceID] = [
 		'HREF' => $container->href(),
 		'Increased' => $votedForRace == $raceID && $votedFor == 'INC',
 		'Decreased' => $votedForRace == $raceID && $votedFor == 'DEC',
 		'Relations' => $raceRelations[$raceID],
-	);
+	];
 }
 $template->assign('VoteRelations', $voteRelations);
 
-$voteTreaties = array();
+$voteTreaties = [];
 $dbResult = $db->read('SELECT * FROM race_has_voting
 			WHERE '.$db->escapeNumber(Smr\Epoch::time()) . ' < end_time
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
@@ -47,7 +47,7 @@ $dbResult = $db->read('SELECT * FROM race_has_voting
 
 foreach ($dbResult->records() as $dbRecord) {
 	$otherRaceID = $dbRecord->getInt('race_id_2');
-	$container = Page::create('council_vote_processing.php', '', array('race_id' => $otherRaceID));
+	$container = Page::create('council_vote_processing.php', '', ['race_id' => $otherRaceID]);
 
 	// get 'yes' votes
 	$dbResult2 = $db->read('SELECT count(*) FROM player_votes_pact
@@ -75,7 +75,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		$votedFor = $dbResult2->record()->getField('vote');
 	}
 
-	$voteTreaties[$otherRaceID] = array(
+	$voteTreaties[$otherRaceID] = [
 		'HREF' => $container->href(),
 		'Type' => $dbRecord->getField('type'),
 		'EndTime' => $dbRecord->getInt('end_time'),
@@ -83,6 +83,6 @@ foreach ($dbResult->records() as $dbRecord) {
 		'Against' => $votedFor == 'NO',
 		'NoVotes' => $noVotes,
 		'YesVotes' => $yesVotes
-	);
+	];
 }
 $template->assign('VoteTreaties', $voteTreaties);

@@ -4,10 +4,10 @@ function shared_channel_msg_money(SmrPlayer $player) : array {
 	// Insist the player is in an alliance, otherwise this reports data
 	// for ALL allianceless (i.e. alliance=0) players.
 	if (!$player->hasAlliance()) {
-		return array('This command can only be used when you are in an alliance.');
+		return ['This command can only be used when you are in an alliance.'];
 	}
 
-	$result = array();
+	$result = [];
 
 	// get money from AA
 	$result[] = 'The alliance has ' . number_format($player->getAlliance(true)->getBank()) . ' credits in the bank account.';

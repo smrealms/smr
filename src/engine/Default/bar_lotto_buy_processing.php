@@ -25,8 +25,8 @@ $db->insert('player_has_ticket', [
 	'time' => $db->escapeNumber($time),
 ]);
 $player->decreaseCredits(1000000);
-$player->increaseHOF(1000000, array('Bar', 'Lotto', 'Money', 'Spent'), HOF_PUBLIC);
-$player->increaseHOF(1, array('Bar', 'Lotto', 'Tickets Bought'), HOF_PUBLIC);
+$player->increaseHOF(1000000, ['Bar', 'Lotto', 'Money', 'Spent'], HOF_PUBLIC);
+$player->increaseHOF(1, ['Bar', 'Lotto', 'Tickets Bought'], HOF_PUBLIC);
 $dbResult = $db->read('SELECT count(*) as num FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time > 0 GROUP BY account_id');
 $num = $dbResult->record()->getInt('num');
 $message = ('<div class="center">Thanks for your purchase and good luck!  You currently');

@@ -8,7 +8,7 @@ $template->assign('PageTopic', 'Bounties');
 
 Menu::trader();
 
-foreach (array('HQ', 'UG') as $type) {
+foreach (['HQ', 'UG'] as $type) {
 	if ($player->hasCurrentBounty($type)) {
 		$bounty = $player->getCurrentBounty($type);
 		$msg = number_format($bounty['Amount']) . ' credits and ' . number_format($bounty['SmrCredits']) . ' SMR credits';

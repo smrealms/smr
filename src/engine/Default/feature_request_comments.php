@@ -30,15 +30,15 @@ if ($dbResult->hasRecord()) {
 		$template->assign('FeatureRequestStatusFormHREF', Page::create('feature_request_vote_processing.php')->href());
 	}
 
-	$featureRequestComments = array();
+	$featureRequestComments = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$commentID = $dbRecord->getInt('comment_id');
-		$featureRequestComments[$commentID] = array(
+		$featureRequestComments[$commentID] = [
 								'CommentID' => $commentID,
 								'Message' => $dbRecord->getField('text'),
 								'Time' => date($account->getDateTimeFormat(), $dbRecord->getInt('posting_time')),
 								'Anonymous' => $dbRecord->getBoolean('anonymous')
-		);
+		];
 		if ($featureModerator || !$dbRecord->getBoolean('anonymous')) {
 			$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($dbRecord->getInt('poster_id'));
 		}

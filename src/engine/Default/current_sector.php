@@ -25,14 +25,14 @@ Menu::navigation($player);
 // *******************************************
 
 // Sector links
-$links = array();
-$links['Up'] = array('ID'=>$sector->getLinkUp());
-$links['Right'] = array('ID'=>$sector->getLinkRight());
-$links['Down'] = array('ID'=>$sector->getLinkDown());
-$links['Left'] = array('ID'=>$sector->getLinkLeft());
-$links['Warp'] = array('ID'=>$sector->getWarp());
+$links = [];
+$links['Up'] = ['ID'=>$sector->getLinkUp()];
+$links['Right'] = ['ID'=>$sector->getLinkRight()];
+$links['Down'] = ['ID'=>$sector->getLinkDown()];
+$links['Left'] = ['ID'=>$sector->getLinkLeft()];
+$links['Warp'] = ['ID'=>$sector->getWarp()];
 
-$unvisited = array();
+$unvisited = [];
 
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND ' . $player->getSQL());

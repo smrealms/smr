@@ -10,7 +10,7 @@ $allianceID = $var['alliance_id'] ?? $player->getAllianceID();
 $alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
 $template->assign('Alliance', $alliance);
 
-Globals::canAccessPage('AllianceMOTD', $player, array('AllianceID' => $alliance->getAllianceID()));
+Globals::canAccessPage('AllianceMOTD', $player, ['AllianceID' => $alliance->getAllianceID()]);
 
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
@@ -29,8 +29,8 @@ if ($dbResult->hasRecord()) {
 	$responseHREF = Page::create('alliance_op_response_processing.php')->href();
 	$template->assign('OpResponseHREF', $responseHREF);
 
-	$responseInputs = array();
-	foreach (array('Yes', 'Maybe', 'No') as $option) {
+	$responseInputs = [];
+	foreach (['Yes', 'Maybe', 'No'] as $option) {
 		$style = strtoupper($option) == $response ? 'style="background: green"' : '';
 		$responseInputs[$option] = $style;
 	}

@@ -14,7 +14,7 @@ class Page extends ArrayObject {
 	// Defines the number of pages that can be loaded after
 	// this page before the links on this page become invalid
 	// (i.e. before you get a back button error).
-	private const URL_DEFAULT_REMAINING_PAGE_LOADS = array(
+	private const URL_DEFAULT_REMAINING_PAGE_LOADS = [
 			'alliance_broadcast.php' => self::ALWAYS_AVAILABLE,
 			'alliance_forces.php' => self::ALWAYS_AVAILABLE,
 			'alliance_list.php' => self::ALWAYS_AVAILABLE,
@@ -112,7 +112,7 @@ class Page extends ArrayObject {
 			'admin/unigen/universe_create_sector_details.php' => self::ALWAYS_AVAILABLE,
 			'admin/unigen/universe_create_sectors.php' => self::ALWAYS_AVAILABLE,
 			'admin/unigen/universe_create_warps.php' => self::ALWAYS_AVAILABLE,
-		);
+		];
 
 	/**
 	 * Create a new Page object.

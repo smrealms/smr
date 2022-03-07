@@ -57,7 +57,7 @@ class Rankings {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 
-		$rankings = array();
+		$rankings = [];
 		foreach ($rankedStats as $allianceID => $dbRecord) {
 			$currentAlliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
 
@@ -68,11 +68,11 @@ class Rankings {
 				$class = ' class="red"';
 			}
 
-			$rankings[$currRank++] = array(
+			$rankings[$currRank++] = [
 				'Alliance' => $currentAlliance,
 				'Class' => $class,
 				'Value' => $dbRecord->getInt('amount'),
-			);
+			];
 		}
 		return $rankings;
 	}
@@ -84,7 +84,7 @@ class Rankings {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 
-		$rankings = array();
+		$rankings = [];
 		foreach ($rankedStats as $dbRecord) {
 			$currentPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 
@@ -99,11 +99,11 @@ class Rankings {
 				$class = ' class="' . trim($class) . '"';
 			}
 
-			$rankings[$currRank++] = array(
+			$rankings[$currRank++] = [
 				'Player' => $currentPlayer,
 				'Class' => $class,
 				'Value' => $dbRecord->getInt('amount'),
-			);
+			];
 		}
 		return $rankings;
 	}

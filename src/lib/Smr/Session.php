@@ -16,7 +16,7 @@ class Session {
 
 	const TIME_BEFORE_EXPIRY = 3600;
 
-	private const URL_LOAD_DELAY = array(
+	private const URL_LOAD_DELAY = [
 		'configure_hardware.php' => .4,
 		'forces_drop.php' => .4,
 		'forces_drop_processing.php' => .5,
@@ -27,7 +27,7 @@ class Session {
 		'shop_goods_processing.php' => .4,
 		'trader_attack_processing.php' => .75,
 		'trader_examine.php' => .75
-	);
+	];
 
 	protected Database $db;
 
@@ -42,7 +42,7 @@ class Session {
 	private int $lastAccessed;
 
 	protected ?array $previousAjaxReturns;
-	protected array $ajaxReturns = array();
+	protected array $ajaxReturns = [];
 
 	/**
 	 * Return the Smr\Session in the DI container.
@@ -148,7 +148,7 @@ class Session {
 			$this->generate = true;
 			$this->accountID = 0;
 			$this->gameID = 0;
-			$this->var = array();
+			$this->var = [];
 		}
 	}
 
@@ -322,8 +322,8 @@ class Session {
 	}
 
 	public function clearLinks() : void {
-		$this->var = array($this->SN => $this->var[$this->SN]);
-		$this->commonIDs = array();
+		$this->var = [$this->SN => $this->var[$this->SN]];
+		$this->commonIDs = [];
 	}
 
 	public function addLink(Page $container) : string {

@@ -14,7 +14,7 @@ if (Smr\Request::get('action') == 'All Messages') {
 		create_error('You must choose the messages you want to delete.');
 	}
 
-	$message_id_list = array();
+	$message_id_list = [];
 	$db = Smr\Database::getInstance();
 	foreach (Smr\Request::getArray('message_id') as $id) {
 		if ($temp = @unserialize(base64_decode($id))) {
