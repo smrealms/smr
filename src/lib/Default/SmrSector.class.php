@@ -815,7 +815,7 @@ class SmrSector {
 	 * Is the $player's alliance flagship in this sector?
 	 */
 	public function hasAllianceFlagship(AbstractSmrPlayer $player = null): bool {
-		if (is_null($player) || !$player->hasAlliance() || !$player->getAlliance()->hasFlagship()) {
+		if ($player === null || !$player->hasAlliance() || !$player->getAlliance()->hasFlagship()) {
 			return false;
 		}
 		$flagshipID = $player->getAlliance()->getFlagshipID();

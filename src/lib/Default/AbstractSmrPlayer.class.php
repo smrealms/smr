@@ -2940,7 +2940,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function sameAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
-		return $this->equals($otherPlayer) || (!is_null($otherPlayer) && $this->getGameID() == $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() == $otherPlayer->getAllianceID());
+		return $this->equals($otherPlayer) || ($otherPlayer !== null && $this->getGameID() == $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() == $otherPlayer->getAllianceID());
 	}
 
 	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer = null): bool {

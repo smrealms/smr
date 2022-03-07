@@ -25,7 +25,7 @@ class Request {
 	public static function getInt(string $index, int $default = null): int {
 		if (self::has($index)) {
 			return (int)$_REQUEST[$index];
-		} elseif (!is_null($default)) {
+		} elseif ($default !== null) {
 			return $default;
 		}
 		throw new Exception('No request variable "' . $index . '"');
@@ -37,7 +37,7 @@ class Request {
 	public static function getFloat(string $index, float $default = null): float {
 		if (self::has($index)) {
 			return (float)$_REQUEST[$index];
-		} elseif (!is_null($default)) {
+		} elseif ($default !== null) {
 			return $default;
 		}
 		throw new Exception('No request variable "' . $index . '"');
@@ -49,7 +49,7 @@ class Request {
 	public static function getArray(string $index, array $default = null): array {
 		if (self::has($index)) {
 			return $_REQUEST[$index];
-		} elseif (!is_null($default)) {
+		} elseif ($default !== null) {
 			return $default;
 		}
 		throw new Exception('No request variable "' . $index . '"');
@@ -65,7 +65,7 @@ class Request {
 				$result[$key] = (int)$value;
 			}
 			return $result;
-		} elseif (!is_null($default)) {
+		} elseif ($default !== null) {
 			return $default;
 		}
 		throw new Exception('No request variable "' . $index . '"');
@@ -77,7 +77,7 @@ class Request {
 	public static function get(string $index, string $default = null): string {
 		if (self::has($index)) {
 			return $_REQUEST[$index];
-		} elseif (!is_null($default)) {
+		} elseif ($default !== null) {
 			return $default;
 		}
 		throw new Exception('No request variable "' . $index . '"');

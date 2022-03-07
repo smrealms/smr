@@ -418,7 +418,7 @@ function changeNPCLogin(): void {
 	$db = Smr\Database::getInstance();
 	$session = Smr\Session::getInstance();
 
-	if (is_null($availableNpcs)) {
+	if ($availableNpcs === null) {
 		// Make sure NPC's have been set up in the database
 		$dbResult = $db->read('SELECT 1 FROM npc_logins LIMIT 1');
 		if (!$dbResult->hasRecord()) {

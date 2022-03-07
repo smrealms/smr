@@ -221,27 +221,27 @@ class SmrGalaxy {
 	 * construct the cache efficiently before calling this.
 	 */
 	public function getMapSectors(int $centerSectorID = null, int $dist = null): array {
-		if (is_null($centerSectorID)) {
+		if ($centerSectorID === null) {
 			$topLeft = SmrSector::getSector($this->getGameID(), $this->getStartSector());
 		} else {
 			$topLeft = SmrSector::getSector($this->getGameID(), $centerSectorID);
 			// go left then up
-			for ($i = 0; (is_null($dist) || $i < $dist) && $i < floor($this->getWidth() / 2); $i++) {
+			for ($i = 0; ($dist === null || $i < $dist) && $i < floor($this->getWidth() / 2); $i++) {
 				$topLeft = $topLeft->getNeighbourSector('Left');
 			}
-			for ($i = 0; (is_null($dist) || $i < $dist) && $i < floor($this->getHeight() / 2); $i++) {
+			for ($i = 0; ($dist === null || $i < $dist) && $i < floor($this->getHeight() / 2); $i++) {
 				$topLeft = $topLeft->getNeighbourSector('Up');
 			}
 		}
 
 		$mapSectors = [];
-		for ($i = 0; (is_null($dist) || $i < 2 * $dist + 1) && $i < $this->getHeight(); $i++) {
+		for ($i = 0; ($dist === null || $i < 2 * $dist + 1) && $i < $this->getHeight(); $i++) {
 			$mapSectors[$i] = [];
 			// get left most sector for this row
 			$rowLeft = $i == 0 ? $topLeft : $rowLeft->getNeighbourSector('Down');
 
 			// iterate through the columns
-			for ($j = 0; (is_null($dist) || $j < 2 * $dist + 1) && $j < $this->getWidth(); $j++) {
+			for ($j = 0; ($dist === null || $j < 2 * $dist + 1) && $j < $this->getWidth(); $j++) {
 				$nextSec = $j == 0 ? $rowLeft : $nextSec->getNeighbourSector('Right');
 				$mapSectors[$i][$j] = $nextSec;
 			}
