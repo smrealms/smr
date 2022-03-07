@@ -9,6 +9,7 @@ use Smr\Session;
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest
  * since we are not (or should not be!) writing any data.
+ *
  * @covers Page
  */
 class PageIntegrationTest extends \PHPUnit\Framework\TestCase {

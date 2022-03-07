@@ -8,6 +8,7 @@ use Smr\ShipClass;
 
 /**
  * This test is expected to not make any changes to the database.
+ *
  * @covers AbstractSmrShip
  */
 class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {

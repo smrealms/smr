@@ -10,6 +10,7 @@ use Smr\DatabaseProperties;
 
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest since we are not writing any data.
+ *
  * @covers \Smr\Database
  */
 class DatabaseIntegrationTest extends TestCase {
