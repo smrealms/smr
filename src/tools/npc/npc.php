@@ -17,7 +17,7 @@ function overrideForward(Page $container): never {
 	}
 	// We have to throw the exception to get back up the stack,
 	// otherwise we quickly hit problems of overflowing the stack.
-	throw new ForwardException;
+	throw new ForwardException();
 }
 const OVERRIDE_FORWARD = true;
 
@@ -131,7 +131,7 @@ function NPCStuff(): void {
 			// Avoid infinite loops by restricting the number of actions
 			if ($actions > NPC_MAX_ACTIONS) {
 				debug('Reached maximum number of actions: ' . NPC_MAX_ACTIONS);
-				throw new FinalActionException;
+				throw new FinalActionException();
 			}
 
 			debug('Action #' . $actions);
@@ -148,7 +148,7 @@ function NPCStuff(): void {
 			if ($actions == 0) {
 				if ($player->getTurns() <= rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
-					throw new FinalActionException;
+					throw new FinalActionException();
 				}
 
 				// Ensure the NPC doesn't think it's under attack at startup,
@@ -193,7 +193,7 @@ function NPCStuff(): void {
 				// We're low on turns or have been under attack and need to plot course to fed
 				if ($player->hasFederalProtection()) {
 					debug('We are in fed, time to switch to another NPC.');
-					throw new FinalActionException;
+					throw new FinalActionException();
 				}
 				if ($player->getTurns() < NPC_LOW_TURNS) {
 					debug('Low Turns:' . $player->getTurns());
@@ -231,7 +231,7 @@ function NPCStuff(): void {
 									processContainer(plotToFed($player));
 								} else {
 									debug('Route Changed');
-									throw new ForwardException;
+									throw new ForwardException();
 								}
 							}
 						} elseif ($ship->hasCargo($buyRoute->getGoodID()) === true) { //We've bought goods, plot to sell
@@ -258,7 +258,7 @@ function NPCStuff(): void {
 								processContainer(plotToFed($player));
 							} else {
 								debug('Route Changed');
-								throw new ForwardException;
+								throw new ForwardException();
 							}
 						}
 					}
@@ -502,7 +502,7 @@ function plotToFed(SmrPlayer $player): Page {
 	$container = plotToNearest($player, SmrLocation::getLocation($fedLocID));
 	if ($container === false) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
-		throw new FinalActionException;
+		throw new FinalActionException();
 	}
 	return $container;
 }
@@ -677,7 +677,7 @@ function findRoutes(SmrPlayer $player): array {
 
 		if (count($routesMerged) == 0) {
 			debug('Could not find any routes! Try another NPC.');
-			throw new FinalActionException;
+			throw new FinalActionException();
 		}
 
 		$db->insert('route_cache', [

@@ -52,7 +52,7 @@ class SmrInvitation {
 		if ($dbResult->hasRecord()) {
 			return new self($dbResult->record());
 		}
-		throw new Smr\Exceptions\AllianceInvitationNotFound;
+		throw new Smr\Exceptions\AllianceInvitationNotFound();
 	}
 
 	public function __construct(Smr\DatabaseRecord $dbRecord) {

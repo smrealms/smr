@@ -46,7 +46,7 @@ abstract class SmrPlanetType {
 			throw new Exception("Planet type ID does not exist: $typeID");
 		}
 		$planetType = self::PLANET_TYPES[$typeID];
-		return new $planetType;
+		return new $planetType();
 	}
 
 	/**
