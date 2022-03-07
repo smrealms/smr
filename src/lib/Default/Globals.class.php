@@ -246,7 +246,7 @@ class Globals {
 		if ($fromSector === null && $toSector === null) {
 			return self::$AVAILABLE_LINKS['PlotCourse'] = Page::create('skeleton.php', 'course_plot.php')->href();
 		} else {
-			return Page::create('course_plot_processing.php', '', ['from'=>$fromSector, 'to'=>$toSector])->href();
+			return Page::create('course_plot_processing.php', '', ['from' => $fromSector, 'to' => $toSector])->href();
 		}
 	}
 
@@ -299,35 +299,35 @@ class Globals {
 	}
 
 	public static function getAllianceNewsHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'news_read_advanced.php', ['allianceID'=>$allianceID, 'submit' => 'Search For Alliance'])->href();
+		return Page::create('skeleton.php', 'news_read_advanced.php', ['allianceID' => $allianceID, 'submit' => 'Search For Alliance'])->href();
 	}
 
 	public static function getAllianceMotdHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'alliance_mod.php', ['alliance_id'=>$allianceID])->href();
+		return Page::create('skeleton.php', 'alliance_mod.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getAllianceMessageHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'alliance_broadcast.php', ['alliance_id'=>$allianceID])->href();
+		return Page::create('skeleton.php', 'alliance_broadcast.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getAllianceMessageBoardHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'alliance_message.php', ['alliance_id'=>$allianceID])->href();
+		return Page::create('skeleton.php', 'alliance_message.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getAllianceForcesHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'alliance_forces.php', ['alliance_id'=>$allianceID])->href();
+		return Page::create('skeleton.php', 'alliance_forces.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getAllianceOptionsHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'alliance_option.php', ['alliance_id'=>$allianceID])->href();
+		return Page::create('skeleton.php', 'alliance_option.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getPlanetListHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'planet_list.php', ['alliance_id'=>$allianceID])->href();
+		return Page::create('skeleton.php', 'planet_list.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getPlanetListFinancialHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'planet_list_financial.php', ['alliance_id'=>$allianceID])->href();
+		return Page::create('skeleton.php', 'planet_list_financial.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getViewMessageBoxesHREF(): string {

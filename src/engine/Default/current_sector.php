@@ -26,11 +26,11 @@ Menu::navigation($player);
 
 // Sector links
 $links = [];
-$links['Up'] = ['ID'=>$sector->getLinkUp()];
-$links['Right'] = ['ID'=>$sector->getLinkRight()];
-$links['Down'] = ['ID'=>$sector->getLinkDown()];
-$links['Left'] = ['ID'=>$sector->getLinkLeft()];
-$links['Warp'] = ['ID'=>$sector->getWarp()];
+$links['Up'] = ['ID' => $sector->getLinkUp()];
+$links['Right'] = ['ID' => $sector->getLinkRight()];
+$links['Down'] = ['ID' => $sector->getLinkDown()];
+$links['Left'] = ['ID' => $sector->getLinkLeft()];
+$links['Warp'] = ['ID' => $sector->getWarp()];
 
 $unvisited = [];
 

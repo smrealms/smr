@@ -334,7 +334,7 @@ function clearCaches(): void {
 }
 
 function debug(string $message, mixed $debugObject = null): void {
-	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL . var_export($debugObject, true) : '') . EOL;
+	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
 	if (NPC_LOG_TO_DATABASE) {
 		$session = Smr\Session::getInstance();
 		$accountID = $session->getAccountID();
@@ -470,7 +470,7 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page
 	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
 
 	$_REQUEST = ['action' => $transaction];
-	return Page::create('shop_goods_processing.php', '', ['offered_price'=>$offeredPrice, 'ideal_price'=>$idealPrice, 'amount'=>$amount, 'good_id'=>$goodID, 'bargain_price'=>$offeredPrice]);
+	return Page::create('shop_goods_processing.php', '', ['offered_price' => $offeredPrice, 'ideal_price' => $idealPrice, 'amount' => $amount, 'good_id' => $goodID, 'bargain_price' => $offeredPrice]);
 }
 
 function dumpCargo(SmrPlayer $player): Page {
@@ -479,14 +479,14 @@ function dumpCargo(SmrPlayer $player): Page {
 	debug('Ship Cargo', $cargo);
 	foreach ($cargo as $goodID => $amount) {
 		if ($amount > 0) {
-			return Page::create('cargo_dump_processing.php', '', ['good_id'=>$goodID, 'amount'=>$amount]);
+			return Page::create('cargo_dump_processing.php', '', ['good_id' => $goodID, 'amount' => $amount]);
 		}
 	}
 	throw new Exception('Called dumpCargo without any cargo!');
 }
 
 function plotToSector(SmrPlayer $player, int $sectorID): Page {
-	return Page::create('course_plot_processing.php', '', ['from'=>$player->getSectorID(), 'to'=>$sectorID]);
+	return Page::create('course_plot_processing.php', '', ['from' => $player->getSectorID(), 'to' => $sectorID]);
 }
 
 function plotToFed(SmrPlayer $player): Page {
@@ -515,12 +515,12 @@ function plotToNearest(AbstractSmrPlayer $player, mixed $realX): Page|false {
 		return false;
 	}
 
-	return Page::create('course_plot_nearest_processing.php', '', ['RealX'=>$realX]);
+	return Page::create('course_plot_nearest_processing.php', '', ['RealX' => $realX]);
 }
 
 function moveToSector(SmrPlayer $player, int $targetSector): Page {
 	debug('Moving from #' . $player->getSectorID() . ' to #' . $targetSector);
-	return Page::create('sector_move_processing.php', '', ['target_sector'=>$targetSector, 'target_page'=>'']);
+	return Page::create('sector_move_processing.php', '', ['target_sector' => $targetSector, 'target_page' => '']);
 }
 
 function checkForShipUpgrade(AbstractSmrPlayer $player): void {

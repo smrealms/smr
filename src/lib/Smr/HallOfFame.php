@@ -83,7 +83,7 @@ class HallOfFame {
 		$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
 
 		$vis = HOF_PUBLIC;
-		$rank = ['Amount'=>0, 'Rank'=>0];
+		$rank = ['Amount' => 0, 'Rank' => 0];
 		if ($view == DONATION_NAME) {
 			$dbResult = $db->read('SELECT SUM(amount) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID) . ' GROUP BY account_id LIMIT 1');
 		} elseif ($view == USER_SCORE_NAME) {

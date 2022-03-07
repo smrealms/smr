@@ -451,7 +451,7 @@ abstract class AbstractSmrAccount {
 				} else {
 					$stat = $player->getHOF($statScore[0]);
 				}
-				$this->individualScores[$gameID][] = ['Stat'=>$statScore[0], 'Score'=>pow($stat * $statScore[1], self::USER_RANKINGS_EACH_STAT_POW) * $statScore[2]];
+				$this->individualScores[$gameID][] = ['Stat' => $statScore[0], 'Score' => pow($stat * $statScore[1], self::USER_RANKINGS_EACH_STAT_POW) * $statScore[2]];
 			}
 		}
 		return $this->individualScores[$gameID];
@@ -1282,7 +1282,7 @@ abstract class AbstractSmrAccount {
 
 	public function getToggleAJAXHREF(): string {
 		$var = Smr\Session::getInstance()->getCurrentVar();
-		return Page::create('toggle_processing.php', '', ['toggle'=>'AJAX', 'referrer'=>$var['body']])->href();
+		return Page::create('toggle_processing.php', '', ['toggle' => 'AJAX', 'referrer' => $var['body']])->href();
 	}
 
 	public function getUserRankingHREF(): string {

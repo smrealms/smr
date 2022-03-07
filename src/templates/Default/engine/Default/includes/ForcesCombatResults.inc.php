@@ -55,7 +55,7 @@ if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Res
 		} ?>.
 		<br /><?php
 		if ($ShotHit && $ActualDamage['KillingShot']) {
-			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults'=>$ForceResults['KillResults'], 'TargetPlayer'=>$TargetPlayer]);
+			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $ForceResults['KillResults'], 'TargetPlayer' => $TargetPlayer]);
 		}
 	}
 }

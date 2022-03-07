@@ -227,13 +227,13 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$planet->increaseBuilding(PLANET_HANGAR, 4);
 		$this->assertTrue($planet->hasBuilding(PLANET_HANGAR));
 		$this->assertSame(4, $planet->getBuilding(PLANET_HANGAR));
-		$this->assertSame(4/3, $planet->getLevel());
+		$this->assertSame(4 / 3, $planet->getLevel());
 
 		// Destroy some hangars
 		$planet->destroyBuilding(PLANET_HANGAR, 2);
 		$this->assertTrue($planet->hasBuilding(PLANET_HANGAR));
 		$this->assertSame(2, $planet->getBuilding(PLANET_HANGAR));
-		$this->assertSame(2/3, $planet->getLevel());
+		$this->assertSame(2 / 3, $planet->getLevel());
 	}
 
 	public function test_defenses(): void {

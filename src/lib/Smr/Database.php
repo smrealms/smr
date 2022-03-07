@@ -28,7 +28,7 @@ class Database {
 	 * Not intended to be used outside the DI context.
 	 */
 	public static function mysqliFactory(DatabaseProperties $dbProperties): mysqli {
-		if (!mysqli_report(MYSQLI_REPORT_ERROR|MYSQLI_REPORT_STRICT)) {
+		if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
 			throw new RuntimeException('Failed to enable mysqli error reporting');
 		}
 		$mysql = new mysqli(

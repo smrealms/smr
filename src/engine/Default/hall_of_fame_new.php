@@ -27,7 +27,7 @@ $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT type FROM hof_visibility WHERE visibility != ' . $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';
 const USER_SCORE_NAME = 'User Score';
-$hofTypes = [DONATION_NAME=>true, USER_SCORE_NAME=>true];
+$hofTypes = [DONATION_NAME => true, USER_SCORE_NAME => true];
 foreach ($dbResult->records() as $dbRecord) {
 	$hof =& $hofTypes;
 	$typeList = explode(':', $dbRecord->getString('type'));

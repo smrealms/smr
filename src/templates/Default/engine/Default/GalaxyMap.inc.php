@@ -56,7 +56,7 @@
 		</div>
 
 		<div class="gal_map_main">
-			<?php $this->includeTemplate('includes/SectorMap.inc.php', ['GalaxyMap'=>true]); ?>
+			<?php $this->includeTemplate('includes/SectorMap.inc.php', ['GalaxyMap' => true]); ?>
 		</div>
 	</body>
 </html>

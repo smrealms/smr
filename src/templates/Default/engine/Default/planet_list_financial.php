@@ -4,6 +4,6 @@ if (!$CanViewBonds) { ?>
 		You do not have permission to view planet financials!
 	</div><?php
 } else {
-	$this->includeTemplate('planet_list.inc.php', ['ExtraInclude'=>'includes/PlanetListFinancial.inc.php']);
+	$this->includeTemplate('planet_list.inc.php', ['ExtraInclude' => 'includes/PlanetListFinancial.inc.php']);
 }
 ?>

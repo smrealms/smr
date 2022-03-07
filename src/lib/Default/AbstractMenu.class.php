@@ -35,8 +35,8 @@ class AbstractMenu {
 
 	public static function planet_list(int $alliance_id, int $selected_index): void {
 		$menuItems = [];
-		$menuItems[] = ['Link'=>Globals::getPlanetListHREF($alliance_id), 'Text'=>'Defense'];
-		$menuItems[] = ['Link'=>Globals::getPlanetListFinancialHREF($alliance_id), 'Text'=>'Financial'];
+		$menuItems[] = ['Link' => Globals::getPlanetListHREF($alliance_id), 'Text' => 'Defense'];
+		$menuItems[] = ['Link' => Globals::getPlanetListFinancialHREF($alliance_id), 'Text' => 'Financial'];
 		// make the selected index bold
 		$boldItem =& $menuItems[$selected_index]['Text'];
 		$boldItem = '<span class="bold">' . $boldItem . '</span>';
@@ -81,24 +81,24 @@ class AbstractMenu {
 
 		$menuItems = [];
 		if ($canReadMotd) {
-			$menuItems[] = ['Link'=>Globals::getAllianceMotdHREF($alliance_id), 'Text'=>'Message of the Day'];
+			$menuItems[] = ['Link' => Globals::getAllianceMotdHREF($alliance_id), 'Text' => 'Message of the Day'];
 		}
-		$menuItems[] = ['Link'=>Globals::getAllianceRosterHREF($alliance_id), 'Text'=>'Roster'];
+		$menuItems[] = ['Link' => Globals::getAllianceRosterHREF($alliance_id), 'Text' => 'Roster'];
 		if ($send_alliance_msg) {
-			$menuItems[] = ['Link'=>Globals::getAllianceMessageHREF($alliance_id), 'Text'=>'Send Message'];
+			$menuItems[] = ['Link' => Globals::getAllianceMessageHREF($alliance_id), 'Text' => 'Send Message'];
 		}
 		if ($canReadMb) {
-			$menuItems[] = ['Link'=>Globals::getAllianceMessageBoardHREF($alliance_id), 'Text'=>'Message Board'];
+			$menuItems[] = ['Link' => Globals::getAllianceMessageBoardHREF($alliance_id), 'Text' => 'Message Board'];
 		}
 		if ($canSeePlanetList) {
-			$menuItems[] = ['Link'=>Globals::getPlanetListHREF($alliance_id), 'Text'=>'Planets'];
+			$menuItems[] = ['Link' => Globals::getPlanetListHREF($alliance_id), 'Text' => 'Planets'];
 		}
 		if ($in_alliance) {
-			$menuItems[] = ['Link'=>Globals::getAllianceForcesHREF($alliance_id), 'Text'=>'Forces'];
-			$menuItems[] = ['Link'=>Globals::getAllianceOptionsHREF($alliance_id), 'Text'=>'Options'];
+			$menuItems[] = ['Link' => Globals::getAllianceForcesHREF($alliance_id), 'Text' => 'Forces'];
+			$menuItems[] = ['Link' => Globals::getAllianceOptionsHREF($alliance_id), 'Text' => 'Options'];
 		}
-		$menuItems[] = ['Link'=>Globals::getAllianceListHREF(), 'Text'=>'List Alliances'];
-		$menuItems[] = ['Link'=>Globals::getAllianceNewsHREF($alliance_id), 'Text'=>'View News'];
+		$menuItems[] = ['Link' => Globals::getAllianceListHREF(), 'Text' => 'List Alliances'];
+		$menuItems[] = ['Link' => Globals::getAllianceNewsHREF($alliance_id), 'Text' => 'View News'];
 
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', $menuItems);
@@ -108,11 +108,11 @@ class AbstractMenu {
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$menuItems = [];
-		$menuItems[] = ['Link'=>Page::create('galactic_post_current.php')->href(), 'Text'=>'Current Edition'];
-		$menuItems[] = ['Link'=>Page::create('skeleton.php', 'galactic_post_past.php')->href(), 'Text'=>'Past Editions'];
-		$menuItems[] = ['Link'=>Page::create('skeleton.php', 'galactic_post_write_article.php')->href(), 'Text'=>'Write an article'];
+		$menuItems[] = ['Link' => Page::create('galactic_post_current.php')->href(), 'Text' => 'Current Edition'];
+		$menuItems[] = ['Link' => Page::create('skeleton.php', 'galactic_post_past.php')->href(), 'Text' => 'Past Editions'];
+		$menuItems[] = ['Link' => Page::create('skeleton.php', 'galactic_post_write_article.php')->href(), 'Text' => 'Write an article'];
 		if ($player->isGPEditor()) {
-			$menuItems[] = ['Link'=>Page::create('skeleton.php', 'galactic_post.php')->href(), 'Text'=>'Editor Options'];
+			$menuItems[] = ['Link' => Page::create('skeleton.php', 'galactic_post.php')->href(), 'Text' => 'Editor Options'];
 		}
 
 		$template = Smr\Template::getInstance();
@@ -156,12 +156,12 @@ class AbstractMenu {
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$menuItems = [];
-		$menuItems[] = ['Link'=>Globals::getViewMessageBoxesHREF(), 'Text'=>'View Messages'];
-		$menuItems[] = ['Link'=>Globals::getSendGlobalMessageHREF(), 'Text'=>'Send Global Message'];
+		$menuItems[] = ['Link' => Globals::getViewMessageBoxesHREF(), 'Text' => 'View Messages'];
+		$menuItems[] = ['Link' => Globals::getSendGlobalMessageHREF(), 'Text' => 'Send Global Message'];
 		if ($player->isOnCouncil()) {
-			$menuItems[] = ['Link'=>Globals::getSendCouncilMessageHREF($player->getRaceID()), 'Text'=>'Send Council Message'];
+			$menuItems[] = ['Link' => Globals::getSendCouncilMessageHREF($player->getRaceID()), 'Text' => 'Send Council Message'];
 		}
-		$menuItems[] = ['Link'=>Globals::getManageBlacklistHREF(), 'Text'=>'Manage Blacklist'];
+		$menuItems[] = ['Link' => Globals::getManageBlacklistHREF(), 'Text' => 'Manage Blacklist'];
 
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', $menuItems);
@@ -172,17 +172,17 @@ class AbstractMenu {
 		$menuItems = [];
 
 		$container['action'] = COMBAT_LOG_PERSONAL;
-		$menuItems[] = ['Link'=>$container->href(), 'Text'=>'Personal'];
+		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Personal'];
 		$container['action'] = COMBAT_LOG_ALLIANCE;
-		$menuItems[] = ['Link'=>$container->href(), 'Text'=>'Alliance'];
+		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Alliance'];
 		$container['action'] = COMBAT_LOG_FORCE;
-		$menuItems[] = ['Link'=>$container->href(), 'Text'=>'Force'];
+		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Force'];
 		$container['action'] = COMBAT_LOG_PORT;
-		$menuItems[] = ['Link'=>$container->href(), 'Text'=>'Port'];
+		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Port'];
 		$container['action'] = COMBAT_LOG_PLANET;
-		$menuItems[] = ['Link'=>$container->href(), 'Text'=>'Planet'];
+		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Planet'];
 		$container['action'] = COMBAT_LOG_SAVED;
-		$menuItems[] = ['Link'=>$container->href(), 'Text'=>'Saved'];
+		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Saved'];
 
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', $menuItems);
@@ -193,31 +193,31 @@ class AbstractMenu {
 
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', [
-						['Link'=>Globals::getTraderStatusHREF(), 'Text'=>'Trader Status'],
-						['Link'=>Globals::getPlanetListHREF($player->getAllianceID()), 'Text'=>'Planets'],
-						['Link'=>Globals::getAllianceHREF($player->getAllianceID()), 'Text'=>'Alliance'],
-						['Link'=>Globals::getCouncilHREF(), 'Text'=>'Politics'],
-						['Link'=>Globals::getTraderRelationsHREF(), 'Text'=>'Relations'],
-						['Link'=>Globals::getTraderBountiesHREF(), 'Text'=>'Bounties']]);
+						['Link' => Globals::getTraderStatusHREF(), 'Text' => 'Trader Status'],
+						['Link' => Globals::getPlanetListHREF($player->getAllianceID()), 'Text' => 'Planets'],
+						['Link' => Globals::getAllianceHREF($player->getAllianceID()), 'Text' => 'Alliance'],
+						['Link' => Globals::getCouncilHREF(), 'Text' => 'Politics'],
+						['Link' => Globals::getTraderRelationsHREF(), 'Text' => 'Relations'],
+						['Link' => Globals::getTraderBountiesHREF(), 'Text' => 'Bounties']]);
 	}
 
 	public static function planet(SmrPlanet $planet): void {
 		$menu_array = [];
-		$menu_array[] = ['Link'=>Globals::getPlanetMainHREF(), 'Text'=>'Planet Main'];
+		$menu_array[] = ['Link' => Globals::getPlanetMainHREF(), 'Text' => 'Planet Main'];
 		if ($planet->hasMenuOption('CONSTRUCTION')) {
-			$menu_array[] = ['Link'=>Globals::getPlanetConstructionHREF(), 'Text'=>'Construction'];
+			$menu_array[] = ['Link' => Globals::getPlanetConstructionHREF(), 'Text' => 'Construction'];
 		}
 		if ($planet->hasMenuOption('DEFENSE')) {
-			$menu_array[] = ['Link'=>Globals::getPlanetDefensesHREF(), 'Text'=>'Defense'];
+			$menu_array[] = ['Link' => Globals::getPlanetDefensesHREF(), 'Text' => 'Defense'];
 		}
 		if ($planet->hasMenuOption('OWNERSHIP')) {
-			$menu_array[] = ['Link'=>Globals::getPlanetOwnershipHREF(), 'Text'=>'Ownership'];
+			$menu_array[] = ['Link' => Globals::getPlanetOwnershipHREF(), 'Text' => 'Ownership'];
 		}
 		if ($planet->hasMenuOption('STOCKPILE')) {
-			$menu_array[] = ['Link'=>Globals::getPlanetStockpileHREF(), 'Text'=>'Stockpile'];
+			$menu_array[] = ['Link' => Globals::getPlanetStockpileHREF(), 'Text' => 'Stockpile'];
 		}
 		if ($planet->hasMenuOption('FINANCE')) {
-			$menu_array[] = ['Link'=>Globals::getPlanetFinancesHREF(), 'Text'=>'Financial'];
+			$menu_array[] = ['Link' => Globals::getPlanetFinancesHREF(), 'Text' => 'Financial'];
 		}
 
 		$template = Smr\Template::getInstance();
@@ -355,9 +355,9 @@ class AbstractMenu {
 	public static function bar(): void {
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', [
-					['Link'=>Globals::getBarMainHREF(), 'Text'=>'Bar Main'],
-					['Link'=>Globals::getBarLottoPlayHREF(), 'Text'=>'Lotto'],
-					['Link'=>Globals::getBarBlackjackHREF(), 'Text'=>'BlackJack']]);
+					['Link' => Globals::getBarMainHREF(), 'Text' => 'Bar Main'],
+					['Link' => Globals::getBarLottoPlayHREF(), 'Text' => 'Lotto'],
+					['Link' => Globals::getBarBlackjackHREF(), 'Text' => 'BlackJack']]);
 	}
 
 	public static function news(int $gameID): void {
@@ -385,11 +385,11 @@ class AbstractMenu {
 
 	public static function navigation(AbstractSmrPlayer $player): void {
 		$menuItems = [];
-		$menuItems[] = ['Link'=>Globals::getPlotCourseHREF(), 'Text'=>'Plot A Course'];
+		$menuItems[] = ['Link' => Globals::getPlotCourseHREF(), 'Text' => 'Plot A Course'];
 		if (!$player->isLandedOnPlanet()) {
-			$menuItems[] = ['Link'=>Globals::getLocalMapHREF(), 'Text'=>'Local Map'];
+			$menuItems[] = ['Link' => Globals::getLocalMapHREF(), 'Text' => 'Local Map'];
 		}
-		$menuItems[] = ['Link'=>'map_galaxy.php" target="gal_map', 'Text'=>'Galaxy Map'];
+		$menuItems[] = ['Link' => 'map_galaxy.php" target="gal_map', 'Text' => 'Galaxy Map'];
 
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', $menuItems);

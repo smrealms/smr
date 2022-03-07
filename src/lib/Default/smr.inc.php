@@ -259,7 +259,7 @@ function word_filter(string $string): string {
 		$words = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$row = $dbRecord->getRow();
-			$words[] = ['word_value' => '/' . str_replace('/', '\/', $row['word_value']) . '/i', 'word_replacement'=> $row['word_replacement']];
+			$words[] = ['word_value' => '/' . str_replace('/', '\/', $row['word_value']) . '/i', 'word_replacement' => $row['word_replacement']];
 		}
 	}
 

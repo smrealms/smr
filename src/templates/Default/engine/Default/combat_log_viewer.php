@@ -15,16 +15,16 @@ Sector <?php echo $CombatLogSector ?><br />
 
 <?php
 if ($CombatResultsType == 'PLAYER') {
-	$this->includeTemplate('includes/TraderFullCombatResults.inc.php', ['TraderCombatResults'=>$CombatResults]);
+	$this->includeTemplate('includes/TraderFullCombatResults.inc.php', ['TraderCombatResults' => $CombatResults]);
 } elseif ($CombatResultsType == 'FORCE') {
-	$this->includeTemplate('includes/ForceFullCombatResults.inc.php', ['FullForceCombatResults'=>$CombatResults]);
+	$this->includeTemplate('includes/ForceFullCombatResults.inc.php', ['FullForceCombatResults' => $CombatResults]);
 } elseif ($CombatResultsType == 'PORT') {
-	$this->includeTemplate('includes/PortFullCombatResults.inc.php', ['FullPortCombatResults'=>$CombatResults,
-	                                                                  'MinimalDisplay'=>false,
-	                                                                  'AlreadyDestroyed'=>false]);
+	$this->includeTemplate('includes/PortFullCombatResults.inc.php', ['FullPortCombatResults' => $CombatResults,
+	                                                                  'MinimalDisplay' => false,
+	                                                                  'AlreadyDestroyed' => false]);
 } elseif ($CombatResultsType == 'PLANET') {
-	$this->includeTemplate('includes/PlanetFullCombatResults.inc.php', ['FullPlanetCombatResults'=>$CombatResults,
-	                                                                    'MinimalDisplay'=>false,
-	                                                                    'AlreadyDestroyed'=>false]);
+	$this->includeTemplate('includes/PlanetFullCombatResults.inc.php', ['FullPlanetCombatResults' => $CombatResults,
+	                                                                    'MinimalDisplay' => false,
+	                                                                    'AlreadyDestroyed' => false]);
 }
 ?>

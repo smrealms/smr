@@ -18,7 +18,7 @@
 		<th>Edit</th>
 	</tr><?php
 if (isset($Locations)) {
-	$this->includeTemplate('admin/includes/ViewLocations.inc.php', ['Locations'=>$Locations]);
+	$this->includeTemplate('admin/includes/ViewLocations.inc.php', ['Locations' => $Locations]);
 } else { ?>
 	<tr>
 		<td><input name="name" type="text" value="<?php echo htmlspecialchars($Location->getName()); ?>" /></td>

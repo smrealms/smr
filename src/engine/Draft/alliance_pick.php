@@ -32,7 +32,7 @@ $dbResult = $db->read('SELECT * FROM player WHERE game_id=' . $db->escapeNumber(
 foreach ($dbResult->records() as $dbRecord) {
 	$pickPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 	$players[] = ['Player' => $pickPlayer,
-						'HREF' => Page::create('alliance_pick_processing.php', '', ['PickedAccountID'=>$pickPlayer->getAccountID()])->href()];
+						'HREF' => Page::create('alliance_pick_processing.php', '', ['PickedAccountID' => $pickPlayer->getAccountID()])->href()];
 }
 
 $template->assign('PickPlayers', $players);
