@@ -54,8 +54,8 @@ if ($var['task'] == 'reset_image') {
 	if (Smr\Request::has('comment_ids')) {
 		$db->write('DELETE
 					FROM album_has_comments
-					WHERE album_id = '.$db->escapeNumber($account_id) . ' AND
-						  comment_id IN ('.$db->escapeArray(Smr\Request::getIntArray('comment_ids')) . ')');
+					WHERE album_id = ' . $db->escapeNumber($account_id) . ' AND
+						  comment_id IN (' . $db->escapeArray(Smr\Request::getIntArray('comment_ids')) . ')');
 	}
 } else {
 	create_error('No action chosen!');

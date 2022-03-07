@@ -820,7 +820,7 @@ abstract class AbstractSmrPlayer {
 
 	public function setMessagesRead(int $messageTypeID): void {
 		$this->db->write('DELETE FROM player_has_unread_messages
-							WHERE '.$this->SQL . ' AND message_type_id = ' . $this->db->escapeNumber($messageTypeID));
+							WHERE ' . $this->SQL . ' AND message_type_id = ' . $this->db->escapeNumber($messageTypeID));
 	}
 
 	public function getSafeAttackRating(): int {
@@ -2778,7 +2778,7 @@ abstract class AbstractSmrPlayer {
 
 		$this->db->write('
 			REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,unread,starting_sector,mission_sector,step_fails)
-			VALUES ('.$this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($missionID) . ',' . $this->db->escapeNumber($mission['On Step']) . ',' . $this->db->escapeNumber($mission['Progress']) . ',' . $this->db->escapeBoolean($mission['Unread']) . ',' . $this->db->escapeNumber($mission['Starting Sector']) . ',' . $this->db->escapeNumber($mission['Sector']) . ',' . $this->db->escapeNumber($mission['Expires']) . ')'
+			VALUES (' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($missionID) . ',' . $this->db->escapeNumber($mission['On Step']) . ',' . $this->db->escapeNumber($mission['Progress']) . ',' . $this->db->escapeBoolean($mission['Unread']) . ',' . $this->db->escapeNumber($mission['Starting Sector']) . ',' . $this->db->escapeNumber($mission['Sector']) . ',' . $this->db->escapeNumber($mission['Expires']) . ')'
 		);
 	}
 

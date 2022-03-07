@@ -109,7 +109,7 @@ foreach (SmrLocation::getAllLocations() as $location) {
 $file .= '[Metadata]
 FileVersion=' . SMR_FILE_VERSION . '
 [Game]
-Name='.inify(SmrGame::getGame($gameID)->getName()) . '
+Name=' . inify(SmrGame::getGame($gameID)->getName()) . '
 [Galaxies]
 ';
 $galaxies = SmrGalaxy::getGameGalaxies($gameID);

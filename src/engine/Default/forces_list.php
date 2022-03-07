@@ -11,7 +11,7 @@ $dbResult = $db->read('SELECT *
 			FROM sector_has_forces
 			WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-			AND expire_time >= '.$db->escapeNumber(Smr\Epoch::time()) . '
+			AND expire_time >= ' . $db->escapeNumber(Smr\Epoch::time()) . '
 			ORDER BY sector_id ASC');
 
 $forces = [];

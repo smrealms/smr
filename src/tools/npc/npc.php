@@ -334,7 +334,7 @@ function clearCaches(): void {
 }
 
 function debug(string $message, mixed $debugObject = null): void {
-	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL.var_export($debugObject, true) : '') . EOL;
+	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL . var_export($debugObject, true) : '') . EOL;
 	if (NPC_LOG_TO_DATABASE) {
 		$session = Smr\Session::getInstance();
 		$accountID = $session->getAccountID();

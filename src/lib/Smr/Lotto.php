@@ -71,7 +71,7 @@ class Lotto {
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT count(*) as num, min(time) as time FROM player_has_ticket
-				WHERE game_id = '.$db->escapeNumber($gameID) . ' AND time > 0');
+				WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > 0');
 		$dbRecord = $dbResult->record();
 		if ($dbRecord->getInt('num') > 0) {
 			$amount += $dbRecord->getInt('num') * 1000000 * .9;

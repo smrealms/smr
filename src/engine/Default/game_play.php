@@ -27,7 +27,7 @@ $game_id_list = [];
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT end_time, game_id, game_name, game_speed, game_type
 			FROM game JOIN player USING (game_id)
-			WHERE account_id = '.$db->escapeNumber($account->getAccountID()) . '
+			WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . '
 				AND enabled = \'TRUE\'
 				AND end_time >= ' . $db->escapeNumber(Smr\Epoch::time()) . '
 			ORDER BY start_time, game_id DESC');
@@ -55,7 +55,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$result2 = $db->read('SELECT count(*) as num_playing
 					FROM player
 					WHERE last_cpl_action >= ' . $db->escapeNumber(Smr\Epoch::time() - 600) . '
-						AND game_id = '.$db->escapeNumber($game_id));
+						AND game_id = ' . $db->escapeNumber($game_id));
 	$games['Play'][$game_id]['NumberPlaying'] = $result2->record()->getInt('num_playing');
 
 	// create a container that will hold next url and additional variables.

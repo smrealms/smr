@@ -31,9 +31,9 @@ $invitePlayers = [];
 if ($alliance->getNumMembers() < $game->getAllianceMaxPlayers()) {
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT * FROM player
-	            WHERE game_id = '.$db->escapeNumber($player->getGameID()) . '
-	              AND alliance_id != '.$db->escapeNumber($alliance->getAllianceID()) . '
-	              AND npc = '.$db->escapeBoolean(false) . '
+	            WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+	              AND alliance_id != ' . $db->escapeNumber($alliance->getAllianceID()) . '
+	              AND npc = ' . $db->escapeBoolean(false) . '
 	            ORDER BY player_id DESC');
 	foreach ($dbResult->records() as $dbRecord) {
 		$invitePlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);

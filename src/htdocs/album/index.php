@@ -43,14 +43,14 @@ try {
 
 		$dbResult = $db->read('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
-					WHERE hof_name LIKE '.$db->escapeString($query . '%') . ' AND
+					WHERE hof_name LIKE ' . $db->escapeString($query . '%') . ' AND
 						  approved = \'YES\'
 					ORDER BY hof_name');
 
 		if ($dbResult->getNumRecords() > 1) {
 			$dbResult2 = $db->read('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
-					WHERE hof_name = '.$db->escapeString($query) . ' AND
+					WHERE hof_name = ' . $db->escapeString($query) . ' AND
 						  approved = \'YES\'
 					ORDER BY hof_name');
 

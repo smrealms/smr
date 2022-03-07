@@ -327,9 +327,9 @@ abstract class AbstractSmrAccount {
 			$delete_ip = $dbRecord->getField('ip');
 
 			$this->db->write('DELETE FROM account_has_ip
-				WHERE '.$this->SQL . ' AND
-				time = '.$this->db->escapeNumber($delete_time) . ' AND
-				ip = '.$this->db->escapeString($delete_ip));
+				WHERE ' . $this->SQL . ' AND
+				time = ' . $this->db->escapeNumber($delete_time) . ' AND
+				ip = ' . $this->db->escapeString($delete_ip));
 		}
 		list($fi, $se, $th, $fo) = preg_split('/[.\s,]/', $curr_ip, 4);
 		if ($curr_ip != 'unknown' && $curr_ip != 'unknown...' && $curr_ip != 'unknown, unknown') {
@@ -697,7 +697,7 @@ abstract class AbstractSmrAccount {
 	public function sendValidationEmail(): void {
 		// remember when we sent validation code
 		$this->db->write('REPLACE INTO notification (notification_type, account_id, time)
-				VALUES(\'validation_code\', '.$this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ')');
+				VALUES(\'validation_code\', ' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ')');
 
 		$emailMessage =
 			'Your validation code is: ' . $this->getValidationCode() . EOL . EOL .
@@ -1226,7 +1226,7 @@ abstract class AbstractSmrAccount {
 	public function banAccount(int $expireTime, SmrAccount $admin, int $reasonID, string $suspicion, bool $removeExceptions = false): void {
 		$this->db->write('REPLACE INTO account_is_closed
 					(account_id, reason_id, suspicion, expires)
-					VALUES('.$this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($reasonID) . ', ' . $this->db->escapeString($suspicion) . ', ' . $this->db->escapeNumber($expireTime) . ')');
+					VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($reasonID) . ', ' . $this->db->escapeString($suspicion) . ', ' . $this->db->escapeNumber($expireTime) . ')');
 		$this->db->lockTable('active_session');
 		$this->db->write('DELETE FROM active_session WHERE ' . $this->SQL . ' LIMIT 1');
 		$this->db->unlock();

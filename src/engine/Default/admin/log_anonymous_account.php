@@ -16,7 +16,7 @@ foreach ($dbResult->records() as $dbRecord) {
 // get all anon bank transactions that are logged in an array
 $dbResult = $db->read('SELECT * FROM anon_bank_transactions
             JOIN account USING(account_id)
-            WHERE account_id IN ('.$db->escapeArray($log_account_ids) . ')
+            WHERE account_id IN (' . $db->escapeArray($log_account_ids) . ')
             ORDER BY game_id DESC, anon_id ASC');
 $anon_logs = [];
 foreach ($dbResult->records() as $dbRecord) {

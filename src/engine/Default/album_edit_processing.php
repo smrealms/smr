@@ -170,8 +170,8 @@ function php_link_check(string $url): string|false {
 	} else {
 		$head = '';
 		$httpRequest = 'HEAD ' . $url['path'] . ' HTTP/1.1' . EOL
-								.'Host: ' . $url['host'] . EOL
-								.'Connection: close' . EOL . EOL;
+								. 'Host: ' . $url['host'] . EOL
+								. 'Connection: close' . EOL . EOL;
 		fputs($fp, $httpRequest);
 		while (!feof($fp)) {
 			$head .= fgets($fp, 1024);

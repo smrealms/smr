@@ -16,8 +16,8 @@ $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT *
 			FROM anon_bank_transactions
 			JOIN player USING(account_id, game_id)
-			WHERE anon_id = '.$db->escapeNumber($anonID) . '
-				AND game_id = '.$db->escapeNumber($gameID) . '
+			WHERE anon_id = ' . $db->escapeNumber($anonID) . '
+				AND game_id = ' . $db->escapeNumber($gameID) . '
 			ORDER BY transaction_id');
 $rows = [];
 foreach ($dbResult->records() as $dbRecord) {

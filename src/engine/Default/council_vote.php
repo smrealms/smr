@@ -41,7 +41,7 @@ $template->assign('VoteRelations', $voteRelations);
 
 $voteTreaties = [];
 $dbResult = $db->read('SELECT * FROM race_has_voting
-			WHERE '.$db->escapeNumber(Smr\Epoch::time()) . ' < end_time
+			WHERE ' . $db->escapeNumber(Smr\Epoch::time()) . ' < end_time
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
 

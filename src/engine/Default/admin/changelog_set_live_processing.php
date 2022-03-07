@@ -17,6 +17,6 @@ $major = $dbRecord->getInt('major_version');
 $minor = $dbRecord->getInt('minor_version');
 $patch = $dbRecord->getInt('patch_level') + 1;
 $db->write('INSERT IGNORE INTO version (version_id, major_version, minor_version, patch_level, went_live) VALUES
-			('.$db->escapeNumber($versionID) . ',' . $db->escapeNumber($major) . ',' . $db->escapeNumber($minor) . ',' . $db->escapeNumber($patch) . ',0);');
+			(' . $db->escapeNumber($versionID) . ',' . $db->escapeNumber($major) . ',' . $db->escapeNumber($minor) . ',' . $db->escapeNumber($patch) . ',0);');
 
 Page::create('skeleton.php', 'admin/changelog.php')->go();

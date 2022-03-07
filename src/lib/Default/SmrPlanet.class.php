@@ -774,7 +774,7 @@ class SmrPlanet {
 		if ($this->hasChanged) {
 			$this->db->write('UPDATE planet SET
 									owner_id = ' . $this->db->escapeNumber($this->ownerID) . ',
-									password = '.$this->db->escapeString($this->password) . ',
+									password = ' . $this->db->escapeString($this->password) . ',
 									planet_name = ' . $this->db->escapeString($this->planetName) . ',
 									shields = ' . $this->db->escapeNumber($this->shields) . ',
 									armour = ' . $this->db->escapeNumber($this->armour) . ',
