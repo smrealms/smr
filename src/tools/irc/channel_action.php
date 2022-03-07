@@ -3,8 +3,7 @@
 /**
  * @param resource $fp
  */
-function channel_action_slap($fp, string $rdata): bool
-{
+function channel_action_slap($fp, string $rdata): bool {
 
 	// :MrSpock!mrspock@coldfront-25B201B9.dip.t-dialin.net PRIVMSG #rod : ACTION slaps Caretaker around a bit with a large trout
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:.ACTION slaps ' . IRC_BOT_NICK . '/i', $rdata, $msg)) {

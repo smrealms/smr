@@ -3,8 +3,7 @@
 /**
  * Holds information linking the received message and the game data
  */
-class GameLink
-{
+class GameLink {
 	/**
 	 * Identifies if the message is linked to game data
 	 */

@@ -2,14 +2,12 @@
 
 class TimeoutException extends Exception {}
 
-function echo_r(string $message): void
-{
+function echo_r(string $message): void {
 	echo date('Y-m-d H:i:s => ') . $message . EOL;
 }
 
 // not keeping the filehandle might not be the wisest idea.
-function write_log_message(string $msg): void
-{
+function write_log_message(string $msg): void {
 	$logFile = fopen('/var/log/irc/' . date('Ymd') . '.log', 'a+');
 	fwrite($logFile, round(microtime(true) * 1000) . ' ' . $msg . EOL);
 	fclose($logFile);

@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
-function user_quit(string $rdata): bool
-{
+function user_quit(string $rdata): bool {
 
 	// :Fubar!Mibbit@coldfront-77C78B7B.dyn.optonline.net QUIT :Quit: http://www.mibbit.com ajax IRC Client
 	if (preg_match('/^:(.*)!(.*)@(.*)\sQUIT\s:(.*)\s$/i', $rdata, $msg)) {
@@ -38,8 +37,7 @@ function user_quit(string $rdata): bool
 /**
  * Someone changed his nick
  */
-function user_nick(string $rdata): bool
-{
+function user_nick(string $rdata): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sNICK\s:(.*)\s$/i', $rdata, $msg)) {
 

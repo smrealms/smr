@@ -3,8 +3,7 @@
 /**
  * @param resource $fp
  */
-function channel_msg_seed($fp, string $rdata, AbstractSmrPlayer $player): bool
-{
+function channel_msg_seed($fp, string $rdata, AbstractSmrPlayer $player): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seed\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -28,8 +27,7 @@ function channel_msg_seed($fp, string $rdata, AbstractSmrPlayer $player): bool
 /**
  * @param resource $fp
  */
-function channel_msg_seedlist($fp, string $rdata): bool
-{
+function channel_msg_seedlist($fp, string $rdata): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist(\s*help)?\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -53,8 +51,7 @@ function channel_msg_seedlist($fp, string $rdata): bool
 /**
  * @param resource $fp
  */
-function channel_msg_seedlist_add($fp, string $rdata, AbstractSmrPlayer $player): bool
-{
+function channel_msg_seedlist_add($fp, string $rdata, AbstractSmrPlayer $player): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist add (.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -79,8 +76,7 @@ function channel_msg_seedlist_add($fp, string $rdata, AbstractSmrPlayer $player)
 /**
  * @param resource $fp
  */
-function channel_msg_seedlist_del($fp, string $rdata, AbstractSmrPlayer $player): bool
-{
+function channel_msg_seedlist_del($fp, string $rdata, AbstractSmrPlayer $player): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist del (.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];

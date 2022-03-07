@@ -3,8 +3,7 @@
 /**
  * @param resource $fp
  */
-function channel_msg_op($fp, string $rdata): bool
-{
+function channel_msg_op($fp, string $rdata): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op(\s*help)?\s$/i', $rdata, $msg)) {
 
@@ -33,8 +32,7 @@ function channel_msg_op($fp, string $rdata): bool
 /**
  * @param resource $fp
  */
-function channel_msg_op_info($fp, string $rdata, AbstractSmrPlayer $player): bool
-{
+function channel_msg_op_info($fp, string $rdata, AbstractSmrPlayer $player): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op info\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -58,8 +56,7 @@ function channel_msg_op_info($fp, string $rdata, AbstractSmrPlayer $player): boo
 /**
  * @param resource $fp
  */
-function channel_msg_op_cancel($fp, string $rdata, AbstractSmrPlayer $player): bool
-{
+function channel_msg_op_cancel($fp, string $rdata, AbstractSmrPlayer $player): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op cancel\s$/i', $rdata, $msg)) {
 
@@ -105,8 +102,7 @@ function channel_msg_op_cancel($fp, string $rdata, AbstractSmrPlayer $player): b
 /**
  * @param resource $fp
  */
-function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player): bool
-{
+function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op set (.*)\s$/i', $rdata, $msg)) {
 
@@ -157,8 +153,7 @@ function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player): bool
 /**
  * @param resource $fp
  */
-function channel_msg_op_turns($fp, string $rdata, AbstractSmrPlayer $player): bool
-{
+function channel_msg_op_turns($fp, string $rdata, AbstractSmrPlayer $player): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op turns\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -224,8 +219,7 @@ function channel_msg_op_response($fp, string $rdata, AbstractSmrPlayer $player):
 /**
  * @param resource $fp
  */
-function channel_msg_op_list($fp, string $rdata, AbstractSmrPlayer $player): bool
-{
+function channel_msg_op_list($fp, string $rdata, AbstractSmrPlayer $player): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op list\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];

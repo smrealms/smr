@@ -72,8 +72,7 @@ function check_for_registration($fp, string $nick, string $channel, callable $ca
 /**
  * @param resource $fp
  */
-function channel_msg_with_registration($fp, string $rdata): bool
-{
+function channel_msg_with_registration($fp, string $rdata): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd)\s/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -148,8 +147,7 @@ function channel_msg_with_registration($fp, string $rdata): bool
 /**
  * @param resource $fp
  */
-function channel_msg_seen($fp, string $rdata): bool
-{
+function channel_msg_seen($fp, string $rdata): bool {
 
 	// <Caretaker> MrSpock, Azool (Azool@smrealms.rulez) was last seen quitting #smr
 	// 2 days 10 hours 43 minutes ago (05.10. 05:04) stating 'Some people follow their dreams,
@@ -222,8 +220,7 @@ function channel_msg_seen($fp, string $rdata): bool
 /**
  * @param resource $fp
  */
-function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player): bool
-{
+function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!money\s$/i', $rdata, $msg)) {
 
@@ -249,8 +246,7 @@ function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player): bool
 /**
  * @param resource $fp
  */
-function channel_msg_timer($fp, string $rdata): bool
-{
+function channel_msg_timer($fp, string $rdata): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (.*) :!timer(\s\d+)?(\s.+)?\s$/i', $rdata, $msg)) {
 
@@ -300,8 +296,7 @@ function channel_msg_timer($fp, string $rdata): bool
 /**
  * @param resource $fp
  */
-function channel_msg_8ball($fp, string $rdata): bool
-{
+function channel_msg_8ball($fp, string $rdata): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!8ball (.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -323,8 +318,7 @@ function channel_msg_8ball($fp, string $rdata): bool
 /**
  * @param resource $fp
  */
-function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player): bool
-{
+function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!forces(.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -349,8 +343,7 @@ function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player): bool
 /**
  * @param resource $fp
  */
-function channel_msg_help($fp, string $rdata): bool
-{
+function channel_msg_help($fp, string $rdata): bool {
 
 	// global help?
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!help\s$/i', $rdata, $msg)) {
