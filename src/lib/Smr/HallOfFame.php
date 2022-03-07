@@ -86,7 +86,7 @@ class HallOfFame {
 		$rank = ['Amount'=>0, 'Rank'=>0];
 		if ($view == DONATION_NAME) {
 			$dbResult = $db->read('SELECT SUM(amount) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID) . ' GROUP BY account_id LIMIT 1');
-		} else if ($view == USER_SCORE_NAME) {
+		} elseif ($view == USER_SCORE_NAME) {
 			$statements = SmrAccount::getUserScoreCaseStatement($db);
 			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x ORDER BY amount DESC');
 		} else {
@@ -106,7 +106,7 @@ class HallOfFame {
 
 		if ($view == DONATION_NAME) {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');
-		} else if ($view == USER_SCORE_NAME) {
+		} elseif ($view == USER_SCORE_NAME) {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . '>' . $db->escapeNumber($rank['Amount']) . ') x');
 		} else {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
@@ -146,7 +146,7 @@ class HallOfFame {
 
 		if (isset($hofPlayer) && is_object($hofPlayer)) {
 			$return .= ('<td ' . $bold . '>' . create_link($container, htmlentities($hofPlayer->getPlayerName())) . '</td>');
-		} else if (isset($hofAccount) && is_object($hofAccount)) {
+		} elseif (isset($hofAccount) && is_object($hofAccount)) {
 			$return .= ('<td ' . $bold . '>' . create_link($container, $hofAccount->getHofDisplayName()) . '</td>');
 		} else {
 			$return .= ('<td ' . $bold . '>Unknown</td>');

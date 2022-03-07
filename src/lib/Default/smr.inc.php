@@ -214,7 +214,7 @@ function get_colored_text_range(float $value, float $maxValue, string $text = nu
 			if (strlen($g_component) == 1) {
 				$g_component = '0' . $g_component;
 			}
-		} else if ($normalisedValue > 0) {
+		} elseif ($normalisedValue > 0) {
 			$g_component = 'ff';
 			$r_component = dechex(255 - $normalisedValue);
 			if (strlen($r_component) == 1) {
@@ -809,7 +809,7 @@ function number_colour_format(float $number, bool $justSign = false): string {
 	$formatted = '<span';
 	if ($number > 0) {
 		$formatted .= ' class="green">+';
-	} else if ($number < 0) {
+	} elseif ($number < 0) {
 		$formatted .= ' class="red">-';
 	} else {
 		$formatted .= '>';
