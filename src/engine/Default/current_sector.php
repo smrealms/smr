@@ -144,7 +144,7 @@ if ($sector->hasPort()) {
 	$template->assign('PortIsAtWar', $player->getRelation($port->getRaceID()) < RELATIONS_WAR);
 }
 
-function checkForForceRefreshMessage(string &$msg) : void {
+function checkForForceRefreshMessage(string &$msg): void {
 	$contains = 0;
 	$msg = str_replace('[Force Check]', '', $msg, $contains);
 	if ($contains > 0) {
@@ -167,7 +167,7 @@ function checkForForceRefreshMessage(string &$msg) : void {
 	}
 }
 
-function checkForAttackMessage(string &$msg) : void {
+function checkForAttackMessage(string &$msg): void {
 	$contains = 0;
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {

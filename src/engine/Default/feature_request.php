@@ -108,11 +108,11 @@ if ($dbResult->hasRecord()) {
 
 $template->assign('FeatureRequestFormHREF', Page::create('feature_request_processing.php', '')->href());
 
-function statusFromCategory(string $category) : string {
+function statusFromCategory(string $category): string {
 	return ($category == 'New' || $category == 'All Open') ? 'Opened' : $category;
 }
 
-function getFeaturesCount(string $status, int|false $daysNew = false) : int {
+function getFeaturesCount(string $status, int|false $daysNew = false): int {
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('
 		SELECT COUNT(*) AS count

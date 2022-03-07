@@ -12,7 +12,7 @@ use Smr\DatabaseProperties;
  */
 class DatabasePropertiesTest extends TestCase {
 
-	public function test_validate_config_happy_path() : void {
+	public function test_validate_config_happy_path(): void {
 		// Given a Dotenv object
 		$dotEnv = $this->createMock(Dotenv::class);
 		$validator = $this->createMock(Validator::class);

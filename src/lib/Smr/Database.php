@@ -19,7 +19,7 @@ class Database {
 	 * If one does not exist yet, it will be created.
 	 * This is the intended way to construct this class.
 	 */
-	public static function getInstance() : self {
+	public static function getInstance(): self {
 		return DiContainer::get(self::class);
 	}
 
@@ -27,7 +27,7 @@ class Database {
 	 * Used by the DI container to construct a mysqli instance.
 	 * Not intended to be used outside the DI context.
 	 */
-	public static function mysqliFactory(DatabaseProperties $dbProperties) : mysqli {
+	public static function mysqliFactory(DatabaseProperties $dbProperties): mysqli {
 		if (!mysqli_report(MYSQLI_REPORT_ERROR|MYSQLI_REPORT_STRICT)) {
 			throw new RuntimeException('Failed to enable mysqli error reporting');
 		}
@@ -61,21 +61,21 @@ class Database {
 	 *
 	 * @param string $databaseName The name of the database to switch to
 	 */
-	public function switchDatabases(string $databaseName) : void {
+	public function switchDatabases(string $databaseName): void {
 		$this->dbConn->select_db($databaseName);
 	}
 
 	/**
 	 * Switch back to the configured live database
 	 */
-	public function switchDatabaseToLive() : void {
+	public function switchDatabaseToLive(): void {
 		$this->switchDatabases($this->dbName);
 	}
 
 	/**
 	 * Returns the size of the current database in bytes.
 	 */
-	public function getDbBytes() : int {
+	public function getDbBytes(): int {
 		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=(SELECT database())';
 		return $this->read($query)->record()->getInt('db_bytes');
 	}
@@ -92,7 +92,7 @@ class Database {
 	 *
 	 * @return bool Whether the underlying connection was closed by this call.
 	 */
-	public function close() : bool {
+	public function close(): bool {
 		if (!isset($this->dbConn)) {
 			// Connection is already closed; nothing to do.
 			return false;
@@ -111,7 +111,7 @@ class Database {
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
-	public function reconnect() : void {
+	public function reconnect(): void {
 		if (isset($this->dbConn)) {
 			return; // No reconnect needed
 		}
@@ -124,7 +124,7 @@ class Database {
 	 * Perform a write-only query on the database.
 	 * Used for UPDATE, DELETE, REPLACE and INSERT queries, for example.
 	 */
-	public function write(string $query) : void {
+	public function write(string $query): void {
 		$result = $this->dbConn->query($query);
 		if ($result !== true) {
 			throw new RuntimeException('Wrong query type');
@@ -135,7 +135,7 @@ class Database {
 	 * Perform a read-only query on the database.
 	 * Used for SELECT queries, for example.
 	 */
-	public function read(string $query) : DatabaseResult {
+	public function read(string $query): DatabaseResult {
 		return new DatabaseResult($this->dbConn->query($query));
 	}
 
@@ -145,30 +145,30 @@ class Database {
 	 * @param array<string, mixed> $fields
 	 * @return int Insert ID of auto-incrementing column, if applicable
 	 */
-	public function insert(string $table, array $fields) : int {
+	public function insert(string $table, array $fields): int {
 		$query = 'INSERT INTO ' . $table . ' (' . join(', ', array_keys($fields))
 			. ') VALUES (' . join(', ', array_values($fields)) . ')';
 		$this->write($query);
 		return $this->getInsertID();
 	}
 
-	public function lockTable(string $table) : void {
+	public function lockTable(string $table): void {
 		$this->write('LOCK TABLES ' . $table . ' WRITE');
 	}
 
-	public function unlock() : void {
+	public function unlock(): void {
 		$this->write('UNLOCK TABLES');
 	}
 
-	public function getChangedRows() : int {
+	public function getChangedRows(): int {
 		return $this->dbConn->affected_rows;
 	}
 
-	public function getInsertID() : int {
+	public function getInsertID(): int {
 		return $this->dbConn->insert_id;
 	}
 
-	public function escape(mixed $escape) : mixed {
+	public function escape(mixed $escape): mixed {
 		return match(true) {
 			is_bool($escape) => $this->escapeBoolean($escape),
 			is_numeric($escape) => $this->escapeNumber($escape),
@@ -178,14 +178,14 @@ class Database {
 		};
 	}
 
-	public function escapeString(?string $string, bool $nullable = false) : string {
+	public function escapeString(?string $string, bool $nullable = false): string {
 		if ($nullable === true && ($string === null || $string === '')) {
 			return 'NULL';
 		}
 		return '\'' . $this->dbConn->real_escape_string($string) . '\'';
 	}
 
-	public function escapeBinary(string $binary) : string {
+	public function escapeBinary(string $binary): string {
 		return '0x' . bin2hex($binary);
 	}
 
@@ -193,7 +193,7 @@ class Database {
 	 * Warning: If escaping a nested array, use escapeIndividually=true,
 	 * but beware that the escaped array is flattened!
 	 */
-	public function escapeArray(array $array, string $delimiter = ',', bool $escapeIndividually = true) : string {
+	public function escapeArray(array $array, string $delimiter = ',', bool $escapeIndividually = true): string {
 		if ($escapeIndividually) {
 			$string = join($delimiter, array_map(function($item) { return $this->escape($item); }, $array));
 		} else {
@@ -202,7 +202,7 @@ class Database {
 		return $string;
 	}
 
-	public function escapeNumber(mixed $num) : mixed {
+	public function escapeNumber(mixed $num): mixed {
 		// Numbers need not be quoted in MySQL queries, so if we know $num is
 		// numeric, we can simply return its value (no quoting or escaping).
 		if (!is_numeric($num)) {
@@ -211,12 +211,12 @@ class Database {
 		return $num;
 	}
 
-	public function escapeMicrotime(float $microtime) : string {
+	public function escapeMicrotime(float $microtime): string {
 		// Retain all digits of precision for storing in a MySQL bigint
 		return sprintf('%d', $microtime * 1E6);
 	}
 
-	public function escapeBoolean(bool $bool) : string {
+	public function escapeBoolean(bool $bool): string {
 		// We store booleans as an enum
 		if ($bool) {
 			return '\'TRUE\'';
@@ -225,7 +225,7 @@ class Database {
 		}
 	}
 
-	public function escapeObject(mixed $object, bool $compress = false, bool $nullable = false) : string {
+	public function escapeObject(mixed $object, bool $compress = false, bool $nullable = false): string {
 		if ($nullable === true && $object === null) {
 			return 'NULL';
 		}

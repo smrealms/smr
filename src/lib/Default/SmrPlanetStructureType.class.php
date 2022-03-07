@@ -95,44 +95,44 @@ class SmrPlanetStructureType {
 	/**
 	 * Return a list of possible planet structure types
 	 */
-	static function getTypes() : array {
+	static function getTypes(): array {
 		return array_keys(self::INFO);
 	}
 
 	// Functions that do not require the planet type to be known
-	public function structureID() : int {
+	public function structureID(): int {
 		return $this->ID;
 	}
-	public function name() : string {
+	public function name(): string {
 		return self::INFO[$this->ID]['name'];
 	}
-	public function image() : string {
+	public function image(): string {
 		return self::INFO[$this->ID]['image'];
 	}
-	public function tooltip() : string {
+	public function tooltip(): string {
 		return self::INFO[$this->ID]['tooltip'];
 	}
-	public function summary() : string {
+	public function summary(): string {
 		return self::INFO[$this->ID]['summary'];
 	}
-	public function goods() : array {
+	public function goods(): array {
 		return self::GOODS[$this->ID];
 	}
-	public function hardwareCost() : array {
+	public function hardwareCost(): array {
 		return self::INFO[$this->ID]['hardware_cost'] ?? [];
 	}
 
 	// Functions that require the planet type to be known
-	public function maxAmount() : int {
+	public function maxAmount(): int {
 		return $this->planetTypeInfo['max_amount'];
 	}
-	public function creditCost() : int {
+	public function creditCost(): int {
 		return $this->planetTypeInfo['credit_cost'];
 	}
-	public function baseTime() : int {
+	public function baseTime(): int {
 		return $this->planetTypeInfo['base_time'];
 	}
-	public function expGain() : int {
+	public function expGain(): int {
 		return $this->planetTypeInfo['exp_gain'];
 	}
 }

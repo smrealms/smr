@@ -9,7 +9,7 @@ use Smr\Path;
  */
 class PathTest extends \PHPUnit\Framework\TestCase {
 
-	private static function make_complex_path() : Path {
+	private static function make_complex_path(): Path {
 		// Create a path with multiple links and warps
 		$path = new Path(1);
 		$path->addLink(2);
@@ -20,13 +20,13 @@ class PathTest extends \PHPUnit\Framework\TestCase {
 		return $path;
 	}
 
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		// Constructor creates a 1-element path
 		$path = new Path(42);
 		self::assertSame([42], $path->getPath());
 	}
 
-	public function test_getLength() : void {
+	public function test_getLength(): void {
 		// Length should always be one less than the path size
 		$path = new Path(1);
 		self::assertSame(0, $path->getLength());
@@ -34,14 +34,14 @@ class PathTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(1, $path->getLength());
 	}
 
-	public function test_isInPath() : void {
+	public function test_isInPath(): void {
 		// Test if sector IDs are in the path
 		$path = new Path(42);
 		self::assertTrue($path->isInPath(42));
 		self::assertFalse($path->isInPath(43));
 	}
 
-	public function test_addLink() : void {
+	public function test_addLink(): void {
 		// Links increase the distance and turns by 1
 		$path = new Path(1);
 		$path->addLink(2);
@@ -50,7 +50,7 @@ class PathTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(1, $path->getDistance());
 	}
 
-	public function test_addWarp() : void {
+	public function test_addWarp(): void {
 		// Warps increase the distance and turns by 5
 		$path = new Path(1);
 		$path->addWarp(100);
@@ -60,14 +60,14 @@ class PathTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(1, $path->getNumWarps());
 	}
 
-	public function test_getStartSectorID() : void {
+	public function test_getStartSectorID(): void {
 		// Check the start sector of a 2-sector path
 		$path = new Path(1);
 		$path->addLink(2);
 		self::assertSame(1, $path->getStartSectorID());
 	}
 
-	public function test_getNextOnPath() : void {
+	public function test_getNextOnPath(): void {
 		// Check the next sector of a 3-sector path
 		$path = new Path(1);
 		$path->addLink(2);
@@ -75,7 +75,7 @@ class PathTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(2, $path->getNextOnPath());
 	}
 
-	public function test_getEndSectorID() : void {
+	public function test_getEndSectorID(): void {
 		// Check the end sector of a 3-sector path
 		$path = new Path(1);
 		$path->addLink(2);
@@ -83,7 +83,7 @@ class PathTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(3, $path->getEndSectorID());
 	}
 
-	public function test_followPath() : void {
+	public function test_followPath(): void {
 		// Check that following a path updates both the path array and
 		// the warps bookkeeping
 		$path = self::make_complex_path();
@@ -98,7 +98,7 @@ class PathTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(1, $path->getNumWarps());
 	}
 
-	public function test_skipToSector() : void {
+	public function test_skipToSector(): void {
 		// Check that skipping to a sector in the middle of a path updates
 		// both the path array and the warps bookkeeping
 		$path = self::make_complex_path();
@@ -107,7 +107,7 @@ class PathTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(1, $path->getNumWarps());
 	}
 
-	public function test_skipToSector_not_in_path() : void {
+	public function test_skipToSector_not_in_path(): void {
 		// Try to skip to a sector that isn't in the path
 		$path = new Path(1);
 		$this->expectException(\Exception::class);
@@ -115,7 +115,7 @@ class PathTest extends \PHPUnit\Framework\TestCase {
 		$path->skipToSector(2);
 	}
 
-	public function test_reversePath() : void {
+	public function test_reversePath(): void {
 		// Try reversing a path with multiple links and warps
 		$path = self::make_complex_path();
 		$path->reversePath();

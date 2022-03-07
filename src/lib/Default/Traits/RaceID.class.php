@@ -10,11 +10,11 @@ use Smr\Race;
 trait RaceID {
 	protected int $raceID;
 
-	public function getRaceID() : int {
+	public function getRaceID(): int {
 		return $this->raceID;
 	}
 
-	public function getRaceName() : string {
+	public function getRaceName(): string {
 		return Race::getName($this->raceID);
 	}
 }

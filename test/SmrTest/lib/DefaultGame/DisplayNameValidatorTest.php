@@ -13,13 +13,13 @@ class DisplayNameValidatorTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider invalid_name_provider
 	 */
-	public function test_invalid_name(string $name, string $exception) : void {
+	public function test_invalid_name(string $name, string $exception): void {
 		$this->expectException(UserError::class);
 		$this->expectExceptionMessage($exception);
 		DisplayNameValidator::validate($name);
 	}
 
-	public function invalid_name_provider() : array {
+	public function invalid_name_provider(): array {
 		return [
 			// empty string
 			['', 'You must enter a name!'],
@@ -42,13 +42,13 @@ class DisplayNameValidatorTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider valid_name_provider
 	 */
-	public function test_valid_name(string $name) : void {
+	public function test_valid_name(string $name): void {
 		// test that an exception is not thrown
 		DisplayNameValidator::validate($name);
 		$this->addToAssertionCount(1);
 	}
 
-	public function valid_name_provider() : array {
+	public function valid_name_provider(): array {
 		return [
 			// normal alphanumeric
 			['aBc123'],

@@ -11,48 +11,48 @@ abstract class AbstractSmrCombatWeapon {
 	/**
 	 * Return the max weapon damage possible in a single round.
 	 */
-	public function getMaxDamage() : int {
+	public function getMaxDamage(): int {
 		return max($this->getShieldDamage(), $this->getArmourDamage());
 	}
 
-	abstract public function getBaseAccuracy() : int;
-	abstract public function getName() : string;
-	abstract public function getShieldDamage() : int;
-	abstract public function getArmourDamage() : int;
+	abstract public function getBaseAccuracy(): int;
+	abstract public function getName(): string;
+	abstract public function getShieldDamage(): int;
+	abstract public function getArmourDamage(): int;
 
-	public function isDamageRollover() : bool {
+	public function isDamageRollover(): bool {
 		return $this->damageRollover;
 	}
 
-	public function canShootForces() : bool {
+	public function canShootForces(): bool {
 		return true;
 	}
 
-	public function canShootPorts() : bool {
+	public function canShootPorts(): bool {
 		return true;
 	}
 
-	public function canShootPlanets() : bool {
+	public function canShootPlanets(): bool {
 		return true;
 	}
 
-	public function canShootTraders() : bool {
+	public function canShootTraders(): bool {
 		return true;
 	}
 
-	public function getDamage() : array {
+	public function getDamage(): array {
 		return ['MaxDamage' => $this->getMaxDamage(), 'Shield' => $this->getShieldDamage(), 'Armour' => $this->getArmourDamage(), 'Rollover' => $this->isDamageRollover()];
 	}
 
-	abstract public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) : array;
-	abstract public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) : array;
-	abstract public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) : array;
-	abstract public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer) : array;
-	abstract public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) : array;
-	abstract public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer) : array;
-	abstract public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) : array;
+	abstract public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array;
+	abstract public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port): array;
+	abstract public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet): array;
+	abstract public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer): array;
+	abstract public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array;
+	abstract public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer): array;
+	abstract public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): array;
 
-	protected function doPlayerDamageToForce(array $return, AbstractSmrPlayer $weaponPlayer, SmrForce $forces) : array {
+	protected function doPlayerDamageToForce(array $return, AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array {
 		$return['WeaponDamage'] = $this->getModifiedDamageAgainstForces($weaponPlayer, $forces);
 		$return['ActualDamage'] = $forces->takeDamage($return['WeaponDamage']);
 		if ($return['ActualDamage']['KillingShot']) {
@@ -61,7 +61,7 @@ abstract class AbstractSmrCombatWeapon {
 		return $return;
 	}
 
-	protected function doPlayerDamageToPlayer(array $return, AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) : array {
+	protected function doPlayerDamageToPlayer(array $return, AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array {
 		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPlayer($weaponPlayer, $targetPlayer);
 		$return['ActualDamage'] = $targetPlayer->getShip()->takeDamage($return['WeaponDamage']);
 
@@ -71,7 +71,7 @@ abstract class AbstractSmrCombatWeapon {
 		return $return;
 	}
 
-	protected function doPlayerDamageToPort(array $return, AbstractSmrPlayer $weaponPlayer, SmrPort $port) : array {
+	protected function doPlayerDamageToPort(array $return, AbstractSmrPlayer $weaponPlayer, SmrPort $port): array {
 		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPort($weaponPlayer, $port);
 		$return['ActualDamage'] = $port->takeDamage($return['WeaponDamage']);
 		if ($return['ActualDamage']['KillingShot']) {
@@ -80,7 +80,7 @@ abstract class AbstractSmrCombatWeapon {
 		return $return;
 	}
 
-	protected function doPlayerDamageToPlanet(array $return, AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) : array {
+	protected function doPlayerDamageToPlanet(array $return, AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet): array {
 		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPlanet($weaponPlayer, $planet);
 		$return['ActualDamage'] = $planet->takeDamage($return['WeaponDamage']);
 		if ($return['ActualDamage']['KillingShot']) {
@@ -89,7 +89,7 @@ abstract class AbstractSmrCombatWeapon {
 		return $return;
 	}
 
-	protected function doPortDamageToPlayer(array $return, SmrPort $port, AbstractSmrPlayer $targetPlayer) : array {
+	protected function doPortDamageToPlayer(array $return, SmrPort $port, AbstractSmrPlayer $targetPlayer): array {
 		$return['WeaponDamage'] = $this->getModifiedPortDamageAgainstPlayer($port, $targetPlayer);
 		$return['ActualDamage'] = $targetPlayer->getShip()->takeDamage($return['WeaponDamage']);
 
@@ -99,7 +99,7 @@ abstract class AbstractSmrCombatWeapon {
 		return $return;
 	}
 
-	protected function doPlanetDamageToPlayer(array $return, SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) : array {
+	protected function doPlanetDamageToPlayer(array $return, SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): array {
 		$return['WeaponDamage'] = $this->getModifiedPlanetDamageAgainstPlayer($planet, $targetPlayer);
 		$return['ActualDamage'] = $targetPlayer->getShip()->takeDamage($return['WeaponDamage']);
 
@@ -109,7 +109,7 @@ abstract class AbstractSmrCombatWeapon {
 		return $return;
 	}
 
-	protected function doForceDamageToPlayer(array $return, SmrForce $forces, AbstractSmrPlayer $targetPlayer) : array {
+	protected function doForceDamageToPlayer(array $return, SmrForce $forces, AbstractSmrPlayer $targetPlayer): array {
 		$return['WeaponDamage'] = $this->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer);
 		$return['ActualDamage'] = $targetPlayer->getShip()->takeDamage($return['WeaponDamage']);
 
@@ -119,7 +119,7 @@ abstract class AbstractSmrCombatWeapon {
 		return $return;
 	}
 
-	abstract public function shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) : array;
-	abstract public function shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) : array;
-	abstract public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer) : array;
+	abstract public function shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array;
+	abstract public function shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array;
+	abstract public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer): array;
 }

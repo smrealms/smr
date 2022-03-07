@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function shared_channel_msg_op_info(SmrPlayer $player) : array {
+function shared_channel_msg_op_info(SmrPlayer $player): array {
 	// get the op from db
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));

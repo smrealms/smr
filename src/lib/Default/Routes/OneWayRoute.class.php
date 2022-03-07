@@ -23,43 +23,43 @@ class OneWayRoute extends Route {
 		private int $goodId,
 	) {}
 
-	public function getSellSectorId() : int {
+	public function getSellSectorId(): int {
 		return $this->sellSectorId;
 	}
 
-	public function getBuySectorId() : int {
+	public function getBuySectorId(): int {
 		return $this->buySectorId;
 	}
 
-	public function getSellPortRace() : int {
+	public function getSellPortRace(): int {
 		return $this->sellPortRace;
 	}
 
-	public function getBuyPortRace() : int {
+	public function getBuyPortRace(): int {
 		return $this->buyPortRace;
 	}
 
-	public function getSellDi() : int {
+	public function getSellDi(): int {
 		return $this->sellDi;
 	}
 
-	public function getBuyDi() : int {
+	public function getBuyDi(): int {
 		return $this->buyDi;
 	}
 
-	public function getPath() : Path {
+	public function getPath(): Path {
 		return $this->path;
 	}
 
-	public function getGoodID() : int {
+	public function getGoodID(): int {
 		return $this->goodId;
 	}
 
-	public function getOverallExpMultiplier() : float {
+	public function getOverallExpMultiplier(): float {
 		return ($this->buyDi + $this->sellDi) / $this->getTurnsForRoute();
 	}
 
-	public function getMoneyMultiplierSum() : int {
+	public function getMoneyMultiplierSum(): int {
 		$numGoods = 1;
 		$relations = 1000; // assume max relations
 		$supply = \Globals::getGood($this->goodId)['Max']; // assume max supply
@@ -68,11 +68,11 @@ class OneWayRoute extends Route {
 		return $sellPrice - $buyPrice;
 	}
 
-	public function getExpMultiplierSum() : int {
+	public function getExpMultiplierSum(): int {
 		return $this->buyDi + $this->sellDi;
 	}
 
-	public function getTurnsForRoute() : int {
+	public function getTurnsForRoute(): int {
 		if ($this->goodId === GOODS_NOTHING) {
 			$tradeTurns = 0;
 		} else {
@@ -81,19 +81,19 @@ class OneWayRoute extends Route {
 		return $this->path->getTurns() + $tradeTurns;
 	}
 
-	public function containsPort(int $sectorID) : bool {
+	public function containsPort(int $sectorID): bool {
 		return $this->sellSectorId == $sectorID || $this->buySectorId == $sectorID;
 	}
 
-	public function getForwardRoute() : ?OneWayRoute {
+	public function getForwardRoute(): ?OneWayRoute {
 		return null;
 	}
 
-	public function getReturnRoute() : ?OneWayRoute {
+	public function getReturnRoute(): ?OneWayRoute {
 		return null;
 	}
 
-	public function getRouteString() : string {
+	public function getRouteString(): string {
 		return $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . \Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->path->getDistance() . ($this->path->getNumWarps() > 0 ? ' + ' . $this->path->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
 	}
 }

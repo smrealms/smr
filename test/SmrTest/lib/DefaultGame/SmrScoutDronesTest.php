@@ -9,7 +9,7 @@ use SmrScoutDrones;
  */
 class SmrScoutDronesTest extends \PHPUnit\Framework\TestCase {
 
-	public function test_getMaxDamage() : void {
+	public function test_getMaxDamage(): void {
 		$sds = new SmrScoutDrones(100); // doesn't matter how many
 		$this->assertSame(20, $sds->getMaxDamage());
 	}

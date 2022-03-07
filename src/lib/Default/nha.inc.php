@@ -3,7 +3,7 @@
 /**
  * Create the Newbie Help Alliance and populate its Message Board
  */
-function createNHA(int $gameID) : void {
+function createNHA(int $gameID): void {
 
 	$alliance = SmrAlliance::createAlliance($gameID, NHA_ALLIANCE_NAME, true);
 	$alliance->createDefaultRoles();

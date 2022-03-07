@@ -19,32 +19,32 @@ class Path {
 	 * Returns the number of sectors to get to the end of the path
 	 * (does not include the start sector).
 	 */
-	public function getLength() : int {
+	public function getLength(): int {
 		return count($this->path) - 1;
 	}
 
-	public function getNumWarps() : int {
+	public function getNumWarps(): int {
 		return $this->numWarps;
 	}
 
-	public function getTurns() : int {
+	public function getTurns(): int {
 		return $this->getLength() * TURNS_PER_SECTOR + $this->numWarps * (TURNS_PER_WARP - TURNS_PER_SECTOR);
 	}
 
-	public function getDistance() : int {
+	public function getDistance(): int {
 		return $this->getLength() + $this->numWarps * (TURNS_WARP_SECTOR_EQUIVALENCE - 1);
 	}
 
-	public function getEndSectorID() : int {
+	public function getEndSectorID(): int {
 		return $this->path[count($this->path) - 1];
 	}
 
-	public function getPath() : array {
+	public function getPath(): array {
 		return $this->path;
 	}
 
 	// NOTE: this assumes 2-way warps
-	public function reversePath() : void {
+	public function reversePath(): void {
 		$this->path = array_reverse($this->path);
 		$this->warpMap = array_flip($this->warpMap);
 	}
@@ -52,28 +52,28 @@ class Path {
 	/**
 	 * Add a neighboring sector to the path.
 	 */
-	public function addLink(int $nextSector) : void {
+	public function addLink(int $nextSector): void {
 		$this->path[] = $nextSector;
 	}
 
 	/**
 	 * Add a warp to the path.
 	 */
-	public function addWarp(int $nextSector) : void {
+	public function addWarp(int $nextSector): void {
 		$this->warpMap[$this->getEndSectorID()] = $nextSector;
 		$this->numWarps++;
 		$this->path[] = $nextSector;
 	}
 
-	public function getNextOnPath() : int {
+	public function getNextOnPath(): int {
 		return $this->path[1];
 	}
 
-	public function getStartSectorID() : int {
+	public function getStartSectorID(): int {
 		return $this->path[0];
 	}
 
-	public function followPath() : void {
+	public function followPath(): void {
 		$nextSectorID = $this->getNextOnPath();
 		if (in_array($nextSectorID, $this->warpMap)) {
 			$this->numWarps--;
@@ -81,7 +81,7 @@ class Path {
 		array_shift($this->path);
 	}
 
-	public function isInPath(int $sectorID) : bool {
+	public function isInPath(int $sectorID): bool {
 		return in_array($sectorID, $this->getPath());
 	}
 
@@ -89,7 +89,7 @@ class Path {
 	 * If the given sector is in the path, then return the segment
 	 * of the path that comes after the given sector.
 	 */
-	public function skipToSector(int $sectorID) : self {
+	public function skipToSector(int $sectorID): self {
 		$position = array_search($sectorID, $this->path);
 		if ($position === false) {
 			throw new \Exception('Cannot skip to sector not in path!');

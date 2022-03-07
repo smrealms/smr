@@ -10,12 +10,12 @@ use SmrTest\BaseIntegrationSpec;
  */
 class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 
-	protected function tearDown() : void {
+	protected function tearDown(): void {
 		VoteSite::clearCache();
 		parent::tearDown();
 	}
 
-	public function test_getTimeUntilFreeTurns_invalid() : void {
+	public function test_getTimeUntilFreeTurns_invalid(): void {
 		// Get a vote site that is not configured to award free turns
 		$site = VoteSite::getSite(VoteSite::LINK_ID_PBBG, 1);
 
@@ -25,7 +25,7 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		$site->getTimeUntilFreeTurns();
 	}
 
-	public function test_vote_callback_workflow() : void {
+	public function test_vote_callback_workflow(): void {
 		// Get a vote site that is configured to award free turns
 		$site = VoteSite::getSite(VoteSite::LINK_ID_TWG, 1);
 
@@ -48,7 +48,7 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame(TIME_BETWEEN_VOTING, $site->getTimeUntilFreeTurns());
 	}
 
-	public function test_vote_button_properties() : void {
+	public function test_vote_button_properties(): void {
 		// Set some arbitrary test data
 		$accountID = 7;
 		$gameID = 42;
@@ -114,7 +114,7 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		}
 	}
 
-	public function test_getMinTimeUntilFreeTurns() : void {
+	public function test_getMinTimeUntilFreeTurns(): void {
 		// Set arbitrary test data
 		$accountID = 9;
 

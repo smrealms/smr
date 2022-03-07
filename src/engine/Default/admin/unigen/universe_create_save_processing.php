@@ -259,7 +259,7 @@ $container['url'] = 'skeleton.php';
 $container->go();
 
 
-function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) : bool {
+function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location): bool {
 	if ($location->isHQ()) {
 		// Only add HQs to empty sectors
 		return !$sector->hasLocation();
@@ -271,7 +271,7 @@ function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) : bo
 	return count($sector->getLocations()) < 4 && !$sector->offersFederalProtection() && !$sector->hasLocation($location->getTypeID());
 }
 
-function addLocationToSector(SmrLocation $location, SmrSector $sector) : void {
+function addLocationToSector(SmrLocation $location, SmrSector $sector): void {
 	$sector->addLocation($location); //insert the location
 	if ($location->isHQ()) {
 		//only playable races have extra locations to add

@@ -3,7 +3,7 @@
 class Menu extends AbstractMenu {
 
 	// No bounties in Semi Wars games
-	public static function headquarters(int $locationTypeID) : void {
+	public static function headquarters(int $locationTypeID): void {
 		$links = [];
 		$location = SmrLocation::getLocation($locationTypeID);
 		if ($location->isHQ()) {

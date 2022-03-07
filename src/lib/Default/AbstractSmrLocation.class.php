@@ -23,13 +23,13 @@ class AbstractSmrLocation {
 	protected array $shipsSold;
 	protected array $weaponsSold;
 
-	public static function clearCache() : void {
+	public static function clearCache(): void {
 		self::$CACHE_ALL_LOCATIONS = [];
 		self::$CACHE_LOCATIONS = [];
 		self::$CACHE_SECTOR_LOCATIONS = [];
 	}
 
-	public static function getAllLocations(bool $forceUpdate = false) : array {
+	public static function getAllLocations(bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM location_type ORDER BY location_type_id');
@@ -43,7 +43,7 @@ class AbstractSmrLocation {
 		return self::$CACHE_ALL_LOCATIONS;
 	}
 
-	public static function getGalaxyLocations(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
+	public static function getGalaxyLocations(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT location_type.*, sector_id FROM location LEFT JOIN sector USING(game_id, sector_id) LEFT JOIN location_type USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyLocations = [];
@@ -57,7 +57,7 @@ class AbstractSmrLocation {
 		return $galaxyLocations;
 	}
 
-	public static function getSectorLocations(int $gameID, int $sectorID, bool $forceUpdate = false) : array {
+	public static function getSectorLocations(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM location LEFT JOIN location_type USING (location_type_id) WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
@@ -71,7 +71,7 @@ class AbstractSmrLocation {
 		return self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID];
 	}
 
-	public static function addSectorLocation(int $gameID, int $sectorID, SmrLocation $location) : void {
+	public static function addSectorLocation(int $gameID, int $sectorID, SmrLocation $location): void {
 		self::getSectorLocations($gameID, $sectorID); // make sure cache is populated
 		$db = Smr\Database::getInstance();
 		$db->insert('location', [
@@ -82,7 +82,7 @@ class AbstractSmrLocation {
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$location->getTypeID()] = $location;
 	}
 
-	public static function moveSectorLocation(int $gameID, int $oldSectorID, int $newSectorID, SmrLocation $location) : void {
+	public static function moveSectorLocation(int $gameID, int $oldSectorID, int $newSectorID, SmrLocation $location): void {
 		if ($oldSectorID === $newSectorID) {
 			return;
 		}
@@ -100,13 +100,13 @@ class AbstractSmrLocation {
 		ksort(self::$CACHE_SECTOR_LOCATIONS[$gameID][$newSectorID]);
 	}
 
-	public static function removeSectorLocations(int $gameID, int $sectorID) : void {
+	public static function removeSectorLocations(int $gameID, int $sectorID): void {
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM location WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = [];
 	}
 
-	public static function getLocation(int $locationTypeID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null) : SmrLocation {
+	public static function getLocation(int $locationTypeID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): SmrLocation {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
 			self::$CACHE_LOCATIONS[$locationTypeID] = new SmrLocation($locationTypeID, $dbRecord);
 		}
@@ -135,11 +135,11 @@ class AbstractSmrLocation {
 		}
 	}
 
-	public function getTypeID() : int {
+	public function getTypeID(): int {
 		return $this->typeID;
 	}
 
-	public function getRaceID() : int {
+	public function getRaceID(): int {
 		if ($this->isFed() && $this->getTypeID() != LOCATION_TYPE_FEDERAL_BEACON) {
 			return $this->getTypeID() - LOCATION_GROUP_RACIAL_BEACONS;
 		}
@@ -149,11 +149,11 @@ class AbstractSmrLocation {
 		return RACE_NEUTRAL;
 	}
 
-	public function getName() : string {
+	public function getName(): string {
 		return $this->name;
 	}
 
-	public function setName(string $name) : void {
+	public function setName(string $name): void {
 		$name = htmlentities($name, ENT_COMPAT, 'utf-8');
 		if ($this->name === $name) {
 			return;
@@ -162,19 +162,19 @@ class AbstractSmrLocation {
 		$this->db->write('UPDATE location_type SET location_name=' . $this->db->escapeString($this->name) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
-	public function hasAction() : bool {
+	public function hasAction(): bool {
 		return $this->processor !== null;
 	}
 
-	public function getAction() : ?string {
+	public function getAction(): ?string {
 		return $this->processor;
 	}
 
-	public function getImage() : string {
+	public function getImage(): string {
 		return $this->image;
 	}
 
-	public function isFed() : bool {
+	public function isFed(): bool {
 		if (!isset($this->fed)) {
 			$dbResult = $this->db->read('SELECT 1 FROM location_is_fed WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->fed = $dbResult->hasRecord();
@@ -182,7 +182,7 @@ class AbstractSmrLocation {
 		return $this->fed;
 	}
 
-	public function setFed(bool $bool) : void {
+	public function setFed(bool $bool): void {
 		if ($this->fed === $bool) {
 			return;
 		}
@@ -194,7 +194,7 @@ class AbstractSmrLocation {
 		$this->fed = $bool;
 	}
 
-	public function isBank() : bool {
+	public function isBank(): bool {
 		if (!isset($this->bank)) {
 			$dbResult = $this->db->read('SELECT 1 FROM location_is_bank WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->bank = $dbResult->hasRecord();
@@ -202,7 +202,7 @@ class AbstractSmrLocation {
 		return $this->bank;
 	}
 
-	public function setBank(bool $bool) : void {
+	public function setBank(bool $bool): void {
 		if ($this->bank === $bool) {
 			return;
 		}
@@ -216,7 +216,7 @@ class AbstractSmrLocation {
 		$this->bank = $bool;
 	}
 
-	public function isBar() : bool {
+	public function isBar(): bool {
 		if (!isset($this->bar)) {
 			$dbResult = $this->db->read('SELECT 1 FROM location_is_bar WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->bar = $dbResult->hasRecord();
@@ -224,7 +224,7 @@ class AbstractSmrLocation {
 		return $this->bar;
 	}
 
-	public function setBar(bool $bool) : void {
+	public function setBar(bool $bool): void {
 		if ($this->bar === $bool) {
 			return;
 		}
@@ -236,7 +236,7 @@ class AbstractSmrLocation {
 		$this->bar = $bool;
 	}
 
-	public function isHQ() : bool {
+	public function isHQ(): bool {
 		if (!isset($this->HQ)) {
 			$dbResult = $this->db->read('SELECT * FROM location_is_hq WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->HQ = $dbResult->hasRecord();
@@ -244,7 +244,7 @@ class AbstractSmrLocation {
 		return $this->HQ;
 	}
 
-	public function setHQ(bool $bool) : void {
+	public function setHQ(bool $bool): void {
 		if ($this->HQ === $bool) {
 			return;
 		}
@@ -256,7 +256,7 @@ class AbstractSmrLocation {
 		$this->HQ = $bool;
 	}
 
-	public function isUG() : bool {
+	public function isUG(): bool {
 		if (!isset($this->UG)) {
 			$dbResult = $this->db->read('SELECT * FROM location_is_ug WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->UG = $dbResult->hasRecord();
@@ -264,7 +264,7 @@ class AbstractSmrLocation {
 		return $this->UG;
 	}
 
-	public function setUG(bool $bool) : void {
+	public function setUG(bool $bool): void {
 		if ($this->UG === $bool) {
 			return;
 		}
@@ -278,7 +278,7 @@ class AbstractSmrLocation {
 		$this->UG = $bool;
 	}
 
-	public function getHardwareSold() : array {
+	public function getHardwareSold(): array {
 		if (!isset($this->hardwareSold)) {
 			$this->hardwareSold = [];
 			$dbResult = $this->db->read('SELECT hardware_type_id FROM location_sells_hardware WHERE ' . $this->SQL);
@@ -289,7 +289,7 @@ class AbstractSmrLocation {
 		return $this->hardwareSold;
 	}
 
-	public function isHardwareSold(int $hardwareTypeID = null) : bool {
+	public function isHardwareSold(int $hardwareTypeID = null): bool {
 		$hardware = $this->getHardwareSold();
 		if ($hardwareTypeID === null) {
 			return count($hardware) != 0;
@@ -297,7 +297,7 @@ class AbstractSmrLocation {
 		return isset($hardware[$hardwareTypeID]);
 	}
 
-	public function addHardwareSold(int $hardwareTypeID) : void {
+	public function addHardwareSold(int $hardwareTypeID): void {
 		if ($this->isHardwareSold($hardwareTypeID)) {
 			return;
 		}
@@ -312,7 +312,7 @@ class AbstractSmrLocation {
 		$this->hardwareSold[$hardwareTypeID] = Globals::getHardwareTypes($hardwareTypeID);
 	}
 
-	public function removeHardwareSold(int $hardwareTypeID) : void {
+	public function removeHardwareSold(int $hardwareTypeID): void {
 		if (!$this->isHardwareSold($hardwareTypeID)) {
 			return;
 		}
@@ -320,7 +320,7 @@ class AbstractSmrLocation {
 		unset($this->hardwareSold[$hardwareTypeID]);
 	}
 
-	public function getShipsSold() : array {
+	public function getShipsSold(): array {
 		if (!isset($this->shipsSold)) {
 			$this->shipsSold = [];
 			$dbResult = $this->db->read('SELECT * FROM location_sells_ships JOIN ship_type USING (ship_type_id) WHERE ' . $this->SQL);
@@ -332,7 +332,7 @@ class AbstractSmrLocation {
 		return $this->shipsSold;
 	}
 
-	public function isShipSold(int $shipTypeID = null) : bool {
+	public function isShipSold(int $shipTypeID = null): bool {
 		$ships = $this->getShipsSold();
 		if ($shipTypeID === null) {
 			return count($ships) != 0;
@@ -340,7 +340,7 @@ class AbstractSmrLocation {
 		return isset($ships[$shipTypeID]);
 	}
 
-	public function addShipSold(int $shipTypeID) : void {
+	public function addShipSold(int $shipTypeID): void {
 		if ($this->isShipSold($shipTypeID)) {
 			return;
 		}
@@ -352,7 +352,7 @@ class AbstractSmrLocation {
 		$this->shipsSold[$shipTypeID] = $ship;
 	}
 
-	public function removeShipSold(int $shipTypeID) : void {
+	public function removeShipSold(int $shipTypeID): void {
 		if (!$this->isShipSold($shipTypeID)) {
 			return;
 		}
@@ -360,7 +360,7 @@ class AbstractSmrLocation {
 		unset($this->shipsSold[$shipTypeID]);
 	}
 
-	public function getWeaponsSold() : array {
+	public function getWeaponsSold(): array {
 		if (!isset($this->weaponsSold)) {
 			$this->weaponsSold = [];
 			$dbResult = $this->db->read('SELECT * FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
@@ -372,7 +372,7 @@ class AbstractSmrLocation {
 		return $this->weaponsSold;
 	}
 
-	public function isWeaponSold(int $weaponTypeID = null) : bool {
+	public function isWeaponSold(int $weaponTypeID = null): bool {
 		$weapons = $this->getWeaponsSold();
 		if ($weaponTypeID === null) {
 			return count($weapons) != 0;
@@ -380,7 +380,7 @@ class AbstractSmrLocation {
 		return isset($weapons[$weaponTypeID]);
 	}
 
-	public function addWeaponSold(int $weaponTypeID) : void {
+	public function addWeaponSold(int $weaponTypeID): void {
 		if ($this->isWeaponSold($weaponTypeID)) {
 			return;
 		}
@@ -392,7 +392,7 @@ class AbstractSmrLocation {
 		$this->weaponsSold[$weaponTypeID] = $weapon;
 	}
 
-	public function removeWeaponSold(int $weaponTypeID) : void {
+	public function removeWeaponSold(int $weaponTypeID): void {
 		if (!$this->isWeaponSold($weaponTypeID)) {
 			return;
 		}
@@ -400,7 +400,7 @@ class AbstractSmrLocation {
 		unset($this->weaponsSold[$weaponTypeID]);
 	}
 
-	public function getLinkedLocations() : array {
+	public function getLinkedLocations(): array {
 		$linkedLocations = [];
 		if ($this->isHQ()) {
 			if ($this->getTypeID() == LOCATION_TYPE_FEDERAL_HQ) {
@@ -416,23 +416,23 @@ class AbstractSmrLocation {
 		return $linkedLocations;
 	}
 
-	public function getExamineHREF() : string {
+	public function getExamineHREF(): string {
 		$container = Page::create('skeleton.php', $this->getAction());
 		$container['LocationID'] = $this->getTypeID();
 		return $container->href();
 	}
 
-	public function getEditHREF() : string {
+	public function getEditHREF(): string {
 		$container = Page::create('skeleton.php', 'location_edit.php');
 		$container['location_type_id'] = $this->getTypeID();
 		return $container->href();
 	}
 
-	public function equals(SmrLocation $otherLocation) : bool {
+	public function equals(SmrLocation $otherLocation): bool {
 		return $this->getTypeID() == $otherLocation->getTypeID();
 	}
 
-	public function hasX(mixed $x, AbstractSmrPlayer $player = null) : bool {
+	public function hasX(mixed $x, AbstractSmrPlayer $player = null): bool {
 		if ($x instanceof SmrWeaponType) {
 			return $this->isWeaponSold($x->getWeaponTypeID());
 		}

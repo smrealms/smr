@@ -21,7 +21,7 @@ class SmrGalaxy {
 	protected bool $hasChanged = false;
 	protected bool $isNew = false;
 
-	public static function getGameGalaxies(int $gameID, bool $forceUpdate = false) : array {
+	public static function getGameGalaxies(int $gameID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY galaxy_id ASC');
@@ -35,7 +35,7 @@ class SmrGalaxy {
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
 
-	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null) : SmrGalaxy {
+	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): SmrGalaxy {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new SmrGalaxy($gameID, $galaxyID, false, $dbRecord);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
@@ -43,7 +43,7 @@ class SmrGalaxy {
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
 	}
 
-	public static function saveGalaxies() : void {
+	public static function saveGalaxies(): void {
 		foreach (self::$CACHE_GALAXIES as $gameGalaxies) {
 			foreach ($gameGalaxies as $galaxy) {
 				$galaxy->save();
@@ -51,7 +51,7 @@ class SmrGalaxy {
 		}
 	}
 
-	public static function createGalaxy(int $gameID, int $galaxyID) : SmrGalaxy {
+	public static function createGalaxy(int $gameID, int $galaxyID): SmrGalaxy {
 		if (!isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new SmrGalaxy($gameID, $galaxyID, true);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
@@ -85,7 +85,7 @@ class SmrGalaxy {
 		}
 	}
 
-	public function save() : void {
+	public function save(): void {
 		if ($this->isNew) {
 			$this->db->insert('game_galaxy', [
 				'game_id' => $this->db->escapeNumber($this->getGameID()),
@@ -108,15 +108,15 @@ class SmrGalaxy {
 		$this->hasChanged = false;
 	}
 
-	public function getGameID() : int {
+	public function getGameID(): int {
 		return $this->gameID;
 	}
 
-	public function getGalaxyID() : int {
+	public function getGalaxyID(): int {
 		return $this->galaxyID;
 	}
 
-	public function getGalaxyMapHREF() : string {
+	public function getGalaxyMapHREF(): string {
 		return 'map_galaxy.php?galaxy_id=' . $this->getGalaxyID();
 	}
 
@@ -124,18 +124,18 @@ class SmrGalaxy {
 	 * Returns the galaxy name.
 	 * Use getDisplayName for an HTML-safe version.
 	 */
-	public function getName() : string {
+	public function getName(): string {
 		return $this->name;
 	}
 
 	/**
 	 * Returns the galaxy name, suitable for HTML display.
 	 */
-	public function getDisplayName() : string {
+	public function getDisplayName(): string {
 		return htmlentities($this->name);
 	}
 
-	public function setName(string $name) : void {
+	public function setName(string $name): void {
 		if (!$this->isNew && $this->name === $name) {
 			return;
 		}
@@ -143,11 +143,11 @@ class SmrGalaxy {
 		$this->hasChanged = true;
 	}
 
-	public function getWidth() : int {
+	public function getWidth(): int {
 		return $this->width;
 	}
 
-	public function setWidth(int $width) : void {
+	public function setWidth(int $width): void {
 		if (!$this->isNew && $this->width === $width) {
 			return;
 		}
@@ -155,11 +155,11 @@ class SmrGalaxy {
 		$this->hasChanged = true;
 	}
 
-	public function getHeight() : int {
+	public function getHeight(): int {
 		return $this->height;
 	}
 
-	public function setHeight(int $height) : void {
+	public function setHeight(int $height): void {
 		if (!$this->isNew && $this->height === $height) {
 			return;
 		}
@@ -167,7 +167,7 @@ class SmrGalaxy {
 		$this->hasChanged = true;
 	}
 
-	public function getStartSector() : int {
+	public function getStartSector(): int {
 		if (!isset($this->startSector)) {
 			$this->startSector = 1;
 			if ($this->getGalaxyID() != 1) {
@@ -180,35 +180,35 @@ class SmrGalaxy {
 		return $this->startSector;
 	}
 
-	public function getEndSector() : int {
+	public function getEndSector(): int {
 		return $this->getStartSector() + $this->getSize() - 1;
 	}
 
-	public function getSize() : int {
+	public function getSize(): int {
 		return $this->getHeight() * $this->getWidth();
 	}
 
-	public function getSectors() : array {
+	public function getSectors(): array {
 		return SmrSector::getGalaxySectors($this->getGameID(), $this->getGalaxyID());
 	}
 
-	public function getPorts() : array {
+	public function getPorts(): array {
 		return SmrPort::getGalaxyPorts($this->getGameID(), $this->getGalaxyID());
 	}
 
-	public function getLocations() : array {
+	public function getLocations(): array {
 		return SmrLocation::getGalaxyLocations($this->getGameID(), $this->getGalaxyID());
 	}
 
-	public function getPlanets() : array {
+	public function getPlanets(): array {
 		return SmrPlanet::getGalaxyPlanets($this->getGameID(), $this->getGalaxyID());
 	}
 
-	public function getForces() : array {
+	public function getForces(): array {
 		return SmrForce::getGalaxyForces($this->getGameID(), $this->getGalaxyID());
 	}
 
-	public function getPlayers() : array {
+	public function getPlayers(): array {
 		return SmrPlayer::getGalaxyPlayers($this->getGameID(), $this->getGalaxyID());
 	}
 
@@ -220,7 +220,7 @@ class SmrGalaxy {
 	 * NOTE: This routine queries sectors inefficiently. You may want to
 	 * construct the cache efficiently before calling this.
 	 */
-	public function getMapSectors(int $centerSectorID = null, int $dist = null) : array {
+	public function getMapSectors(int $centerSectorID = null, int $dist = null): array {
 		if (is_null($centerSectorID)) {
 			$topLeft = SmrSector::getSector($this->getGameID(), $this->getStartSector());
 		} else {
@@ -249,11 +249,11 @@ class SmrGalaxy {
 		return $mapSectors;
 	}
 
-	public function getGalaxyType() : string {
+	public function getGalaxyType(): string {
 		return $this->galaxyType;
 	}
 
-	public function setGalaxyType(string $galaxyType) : void {
+	public function setGalaxyType(string $galaxyType): void {
 		if (!$this->isNew && $this->galaxyType === $galaxyType) {
 			return;
 		}
@@ -261,11 +261,11 @@ class SmrGalaxy {
 		$this->hasChanged = true;
 	}
 
-	public function getMaxForceTime() : int {
+	public function getMaxForceTime(): int {
 		return $this->maxForceTime;
 	}
 
-	public function setMaxForceTime(int $maxForceTime) : void {
+	public function setMaxForceTime(int $maxForceTime): void {
 		if (!$this->isNew && $this->maxForceTime === $maxForceTime) {
 			return;
 		}
@@ -273,7 +273,7 @@ class SmrGalaxy {
 		$this->hasChanged = true;
 	}
 
-	public function generateSectors() : void {
+	public function generateSectors(): void {
 		$sectorID = $this->getStartSector();
 		for ($i = 0; $i < $this->getSize(); $i++) {
 			$sector = SmrSector::createSector($this->gameID, $sectorID);
@@ -288,7 +288,7 @@ class SmrGalaxy {
 	 * Randomly set the connections between all galaxy sectors.
 	 * $connectivity = (average) percent of connections to enable.
 	 */
-	public function setConnectivity(float $connectivity) : bool {
+	public function setConnectivity(float $connectivity): bool {
 		// Only set down/right, otherwise we double-hit every link
 		$linkDirs = ['Down', 'Right'];
 
@@ -327,7 +327,7 @@ class SmrGalaxy {
 	/**
 	 * Returns the sector connectivity of the galaxy as a percent.
 	 */
-	public function getConnectivity() : float {
+	public function getConnectivity(): float {
 		$totalLinks = 0;
 		foreach ($this->getSectors() as $galSector) {
 			$totalLinks += $galSector->getNumberOfLinks();
@@ -340,18 +340,18 @@ class SmrGalaxy {
 	/**
 	 * Check if the galaxy contains a specific sector.
 	 */
-	public function contains(int|SmrSector $sectorID) : bool {
+	public function contains(int|SmrSector $sectorID): bool {
 		if ($sectorID instanceof SmrSector) {
 			return $sectorID->getGalaxyID() == $this->getGalaxyID();
 		}
 		return $sectorID >= $this->getStartSector() && $sectorID <= $this->getEndSector();
 	}
 
-	public static function getGalaxyContaining(int $gameID, int $sectorID) : SmrGalaxy {
+	public static function getGalaxyContaining(int $gameID, int $sectorID): SmrGalaxy {
 		return SmrSector::getSector($gameID, $sectorID)->getGalaxy();
 	}
 
-	public function equals(SmrGalaxy $otherGalaxy) : bool {
+	public function equals(SmrGalaxy $otherGalaxy): bool {
 		return $otherGalaxy->getGalaxyID() == $this->getGalaxyID() && $otherGalaxy->getGameID() == $this->getGameID();
 	}
 }

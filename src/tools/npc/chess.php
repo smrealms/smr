@@ -17,7 +17,7 @@ try {
 	$toEngine =& $pipes[0];
 	$fromEngine =& $pipes[1];
 
-	function readFromEngine(bool $block = true) : void {
+	function readFromEngine(bool $block = true): void {
 		global $fromEngine;
 		stream_set_blocking($fromEngine, $block);
 		while (($s = fgets($fromEngine)) !== false) {
@@ -25,7 +25,7 @@ try {
 			stream_set_blocking($fromEngine, 0);
 		}
 	}
-	function writeToEngine(string $s, bool $block = true, bool $read = true) : void {
+	function writeToEngine(string $s, bool $block = true, bool $read = true): void {
 		global $toEngine;
 		debug('--> ' . $s);
 		fputs($toEngine, $s . EOL);

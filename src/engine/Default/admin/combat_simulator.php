@@ -84,7 +84,7 @@ if (!empty($realAttackers) && !empty($realDefenders)) {
 	}
 }
 
-function runAnAttack(array $realAttackers, array $realDefenders) : array {
+function runAnAttack(array $realAttackers, array $realDefenders): array {
 	$results = ['Attackers' => ['Traders' => [], 'TotalDamage' => 0],
 					'Defenders' => ['Traders' => [], 'TotalDamage' => 0]];
 	foreach ($realAttackers as $accountID => $teamPlayer) {

@@ -24,7 +24,7 @@ class Race {
 	 *
 	 * @return array<int>
 	 */
-	public static function getAllIDs() : array {
+	public static function getAllIDs(): array {
 		return \array_keys(self::RACE_NAMES);
 	}
 
@@ -33,7 +33,7 @@ class Race {
 	 *
 	 * @return array<int, string>
 	 */
-	public static function getAllNames() : array {
+	public static function getAllNames(): array {
 		return self::RACE_NAMES;
 	}
 
@@ -46,7 +46,7 @@ class Race {
 	 *
 	 * @return array<int>
 	 */
-	public static function getPlayableIDs() : array {
+	public static function getPlayableIDs(): array {
 		$names = self::RACE_NAMES;
 		unset($names[RACE_NEUTRAL]);
 		return \array_keys($names);
@@ -61,27 +61,27 @@ class Race {
 	 *
 	 * @return array<int, string>
 	 */
-	public static function getPlayableNames() : array {
+	public static function getPlayableNames(): array {
 		$names = self::RACE_NAMES;
 		unset($names[RACE_NEUTRAL]);
 		return $names;
 	}
 
-	public static function getName(int $raceID) : string {
+	public static function getName(int $raceID): string {
 		return self::RACE_NAMES[$raceID];
 	}
 
 	/**
 	 * Relative path to racial image file.
 	 */
-	public static function getImage(int $raceID) : string {
+	public static function getImage(int $raceID): string {
 		return 'images/race/race' . $raceID . '.jpg';
 	}
 
 	/**
 	 * Relative path to racial image file (portrait version).
 	 */
-	public static function getHeadImage(int $raceID) : string {
+	public static function getHeadImage(int $raceID): string {
 		return 'images/race/head/race' . $raceID . '.jpg';
 	}
 

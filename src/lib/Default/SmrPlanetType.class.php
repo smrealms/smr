@@ -14,14 +14,14 @@ abstract class SmrPlanetType {
 	 * that confuses static analyzers, since there is no STRUCTURES const in
 	 * the base class (nor should there be).
 	 */
-	abstract protected function getStructureData() : array;
+	abstract protected function getStructureData(): array;
 
-	abstract public function name() : string;
-	abstract public function imageLink() : string;
-	abstract public function description() : string;
-	abstract public function maxAttackers() : int;
-	abstract public function maxLanded() : int;
-	abstract public function menuOptions() : array;
+	abstract public function name(): string;
+	abstract public function imageLink(): string;
+	abstract public function description(): string;
+	abstract public function maxAttackers(): int;
+	abstract public function maxLanded(): int;
+	abstract public function menuOptions(): array;
 
 	private array $structures;
 
@@ -41,7 +41,7 @@ abstract class SmrPlanetType {
 	 * Returns an instance of the planet type from the given $typeID.
 	 * This is the intended method to construct an SmrPlanetType.
 	 */
-	public static function getTypeInfo(int $typeID) : self {
+	public static function getTypeInfo(int $typeID): self {
 		if (!isset(self::PLANET_TYPES[$typeID])) {
 			throw new Exception("Planet type ID does not exist: $typeID");
 		}
@@ -52,7 +52,7 @@ abstract class SmrPlanetType {
 	/**
 	 * Access properties of structures that this planet type can build.
 	 */
-	public function structureTypes(int $structureID = null) : SmrPlanetStructureType|array {
+	public function structureTypes(int $structureID = null): SmrPlanetStructureType|array {
 		if (!isset($this->structures)) {
 			foreach ($this->getStructureData() as $ID => $Info) {
 				$this->structures[$ID] = new SmrPlanetStructureType($ID, $Info);
@@ -89,25 +89,25 @@ class TerranPlanet extends SmrPlanetType {
 			'exp_gain' => 540,
 		],
 	];
-	protected function getStructureData() : array {
+	protected function getStructureData(): array {
 		return self::STRUCTURES;
 	}
-	public function name() : string {
+	public function name(): string {
 		return "Terran Planet";
 	}
-	public function imageLink() : string {
+	public function imageLink(): string {
 		return "images/planet1.png";
 	}
-	public function description() : string {
+	public function description(): string {
 		return "A lush world, with forests, seas, sweeping meadows, and indigenous lifeforms.";
 	}
-	public function maxAttackers() : int {
+	public function maxAttackers(): int {
 		return 10;
 	}
-	public function maxLanded() : int {
+	public function maxLanded(): int {
 		return self::MAX_LANDED_UNLIMITED;
 	}
-	public function menuOptions() : array {
+	public function menuOptions(): array {
 		return self::DEFAULT_MENU_OPTIONS;
 	}
 }
@@ -133,25 +133,25 @@ class AridPlanet extends SmrPlanetType {
 			'exp_gain' => 180,
 		],
 	];
-	protected function getStructureData() : array {
+	protected function getStructureData(): array {
 		return self::STRUCTURES;
 	}
-	public function name() : string {
+	public function name(): string {
 		return "Arid Planet";
 	}
-	public function imageLink() : string {
+	public function imageLink(): string {
 		return "images/planet2.png";
 	}
-	public function description() : string {
+	public function description(): string {
 		return "A world mostly devoid of surface water, but capable of supporting life.";
 	}
-	public function maxAttackers() : int {
+	public function maxAttackers(): int {
 		return 5;
 	}
-	public function maxLanded() : int {
+	public function maxLanded(): int {
 		return 5;
 	}
-	public function menuOptions() : array {
+	public function menuOptions(): array {
 		return ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP'];
 	}
 }
@@ -177,25 +177,25 @@ class DwarfPlanet extends SmrPlanetType {
 			'exp_gain' => 540,
 		],
 	];
-	protected function getStructureData() : array {
+	protected function getStructureData(): array {
 		return self::STRUCTURES;
 	}
-	public function name() : string {
+	public function name(): string {
 		return "Dwarf Planet";
 	}
-	public function imageLink() : string {
+	public function imageLink(): string {
 		return "images/planet3.png";
 	}
-	public function description() : string {
+	public function description(): string {
 		return "A smaller than usual planet, with no native life present.";
 	}
-	public function maxAttackers() : int {
+	public function maxAttackers(): int {
 		return 5;
 	}
-	public function maxLanded() : int {
+	public function maxLanded(): int {
 		return self::MAX_LANDED_UNLIMITED;
 	}
-	public function menuOptions() : array {
+	public function menuOptions(): array {
 		return self::DEFAULT_MENU_OPTIONS;
 	}
 }
@@ -233,25 +233,25 @@ class ProtoPlanet extends SmrPlanetType {
 			'exp_gain' => 540,
 		],
 	];
-	protected function getStructureData() : array {
+	protected function getStructureData(): array {
 		return self::STRUCTURES;
 	}
-	public function name() : string {
+	public function name(): string {
 		return "Protoplanet";
 	}
-	public function imageLink() : string {
+	public function imageLink(): string {
 		return "images/planet5.png";
 	}
-	public function description() : string {
+	public function description(): string {
 		return "A developing planet, not yet able to support the infrastructure of advanced technologies.";
 	}
-	public function maxAttackers() : int {
+	public function maxAttackers(): int {
 		return 5;
 	}
-	public function maxLanded() : int {
+	public function maxLanded(): int {
 		return 5;
 	}
-	public function menuOptions() : array {
+	public function menuOptions(): array {
 		return self::DEFAULT_MENU_OPTIONS;
 	}
 }
@@ -283,25 +283,25 @@ class DefenseWorld extends SmrPlanetType {
 			'exp_gain' => 9,
 		],
 	];
-	protected function getStructureData() : array {
+	protected function getStructureData(): array {
 		return self::STRUCTURES;
 	}
-	public function name() : string {
+	public function name(): string {
 		return "Defense World";
 	}
-	public function imageLink() : string {
+	public function imageLink(): string {
 		return "images/planet4.png";
 	}
-	public function description() : string {
+	public function description(): string {
 		return "A fully armed and operational battle station loaded with excessive firepower.";
 	}
-	public function maxAttackers() : int {
+	public function maxAttackers(): int {
 		return 10;
 	}
-	public function maxLanded() : int {
+	public function maxLanded(): int {
 		return self::MAX_LANDED_UNLIMITED;
 	}
-	public function menuOptions() : array {
+	public function menuOptions(): array {
 		return self::DEFAULT_MENU_OPTIONS;
 	}
 }

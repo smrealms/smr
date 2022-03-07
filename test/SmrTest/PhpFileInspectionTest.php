@@ -10,7 +10,7 @@ use Overtrue\PHPLint\Linter;
  */
 class PhpFileInspectionTest extends TestCase {
 
-	public function test_all_files_use_strict_type() : void {
+	public function test_all_files_use_strict_type(): void {
 		$exit_code = 1;
 		$output = [];
 		exec(ROOT . 'test/strict_types.sh', $output, $exit_code);
@@ -18,7 +18,7 @@ class PhpFileInspectionTest extends TestCase {
 		$this->assertEquals('Success! No strict_type errors.', end($output));
 	}
 
-	public function test_all_files_pass_phplint() : void {
+	public function test_all_files_pass_phplint(): void {
 		$paths = [ROOT];
 		$excludes = ['vendor'];
 		$linter = new Linter($paths, $excludes, warning: true);

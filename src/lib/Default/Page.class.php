@@ -119,7 +119,7 @@ class Page extends ArrayObject {
 	 * This is the standard method to package linked pages and the data to
 	 * accompany them.
 	 */
-	public static function create(string $file, string $body = '', Page|array $extra = [], int $remainingPageLoads = null) : self {
+	public static function create(string $file, string $body = '', Page|array $extra = [], int $remainingPageLoads = null): self {
 		if ($extra instanceof Page) {
 			// to avoid making $container a reference to $extra
 			$extra = $extra->getArrayCopy();
@@ -138,14 +138,14 @@ class Page extends ArrayObject {
 	 * This may be useful for reusing a Page object without modifying the
 	 * original.
 	 */
-	public static function copy(Page $other) : self {
+	public static function copy(Page $other): self {
 		return clone $other;
 	}
 
 	/**
 	 * Forward to the page identified by this container.
 	 */
-	public function go() : never {
+	public function go(): never {
 		if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
 			overrideForward($this);
 		}
@@ -157,7 +157,7 @@ class Page extends ArrayObject {
 	 * Transfer $var[$source] into this container with new name $dest.
 	 * If $dest is not specified, keep the index named $source.
 	 */
-	public function addVar(string $source, string $dest = null) : void {
+	public function addVar(string $source, string $dest = null): void {
 		$var = Smr\Session::getInstance()->getCurrentVar();
 
 		// transfer this value to next container
@@ -175,7 +175,7 @@ class Page extends ArrayObject {
 	 * The container is saved in the Smr\Session under this SN so that on
 	 * the next request, we can grab the container out of the Smr\Session.
 	 */
-	public function href(bool $forceFullURL = false) : string {
+	public function href(bool $forceFullURL = false): string {
 
 		// We need to make a clone of this object for two reasons:
 		// 1. The object saved in the session is not modified if we use this
@@ -209,7 +209,7 @@ class Page extends ArrayObject {
 	 * containers are equivalent (apart from page-load tracking metadata, which
 	 * we strip out to prevent false differences).
 	 */
-	private function getCommonID() : string {
+	private function getCommonID(): string {
 		$commonContainer = $this->getArrayCopy();
 		unset($commonContainer['RemainingPageLoads']);
 		unset($commonContainer['PreviousRequestTime']);
@@ -224,7 +224,7 @@ class Page extends ArrayObject {
 	 * Global variables are included here for convenience (and should be
 	 * synchronized with `do_voodoo`).
 	 */
-	public function process() : void {
+	public function process(): void {
 		global $lock;
 		if ($this['url'] != 'skeleton.php') {
 			require(get_file_loc($this['url']));

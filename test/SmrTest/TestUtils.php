@@ -18,7 +18,7 @@ class TestUtils {
 	 * @param string $name The name of your private/protected method
 	 * @return \ReflectionMethod The method you want to test
 	 */
-	public static function getPrivateMethod(object $obj, string $name) : \ReflectionMethod {
+	public static function getPrivateMethod(object $obj, string $name): \ReflectionMethod {
 		$class = new \ReflectionClass($obj);
 		$method = $class->getMethod($name);
 		$method->setAccessible(true);

@@ -13,32 +13,32 @@ class Hand {
 	/**
 	 * Return the hand's total blackjack value.
 	 */
-	public function getValue() : int {
+	public function getValue(): int {
 		return $this->value;
 	}
 
 	/**
 	 * Return the number of cards in this hand.
 	 */
-	public function getNumCards() : int {
+	public function getNumCards(): int {
 		return count($this->cards);
 	}
 
-	public function getCards() : array {
+	public function getCards(): array {
 		return $this->cards;
 	}
 
 	/**
 	 * Does this hand have Blackjack?
 	 */
-	public function hasBlackjack() : bool {
+	public function hasBlackjack(): bool {
 		return $this->getNumCards() == 2 && $this->getValue() == 21;
 	}
 
 	/**
 	 * Add a card to this hand.
 	 */
-	public function addCard(Card $card) : void {
+	public function addCard(Card $card): void {
 		// add the card to the hand
 		$this->cards[] = $card;
 

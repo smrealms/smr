@@ -12,7 +12,7 @@ require_once(LIB . 'Default/nha.inc.php');
  */
 class createNHATest extends BaseIntegrationSpec {
 
-	public function test_createNHA() : void {
+	public function test_createNHA(): void {
 		// Create the NHA
 		$gameID = 1;
 		createNHA($gameID);

@@ -87,12 +87,12 @@ abstract class AbstractSmrPlayer {
 	protected static array $hasHOFVisChanged = [];
 	protected array $hasBountyChanged = [];
 
-	public static function clearCache() : void {
+	public static function clearCache(): void {
 		self::$CACHE_PLAYERS = [];
 		self::$CACHE_SECTOR_PLAYERS = [];
 	}
 
-	public static function savePlayers() : void {
+	public static function savePlayers(): void {
 		foreach (self::$CACHE_PLAYERS as $gamePlayers) {
 			foreach ($gamePlayers as $player) {
 				$player->save();
@@ -100,7 +100,7 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public static function getSectorPlayersByAlliances(int $gameID, int $sectorID, array $allianceIDs, bool $forceUpdate = false) : array {
+	public static function getSectorPlayersByAlliances(int $gameID, int $sectorID, array $allianceIDs, bool $forceUpdate = false): array {
 		$players = self::getSectorPlayers($gameID, $sectorID, $forceUpdate); // Don't use & as we do an unset
 		foreach ($players as $accountID => $player) {
 			if (!in_array($player->getAllianceID(), $allianceIDs)) {
@@ -115,7 +115,7 @@ abstract class AbstractSmrPlayer {
 	 * but for an entire galaxy rather than a single sector. This is useful
 	 * for reducing the number of queries in galaxy-wide processing.
 	 */
-	public static function getGalaxyPlayers(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
+	public static function getGalaxyPlayers(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT player.* FROM player LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlayers = [];
@@ -129,7 +129,7 @@ abstract class AbstractSmrPlayer {
 		return $galaxyPlayers;
 	}
 
-	public static function getSectorPlayers(int $gameID, int $sectorID, bool $forceUpdate = false) : array {
+	public static function getSectorPlayers(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
@@ -143,7 +143,7 @@ abstract class AbstractSmrPlayer {
 		return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID];
 	}
 
-	public static function getPlanetPlayers(int $gameID, int $sectorID, bool $forceUpdate = false) : array {
+	public static function getPlanetPlayers(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
@@ -157,7 +157,7 @@ abstract class AbstractSmrPlayer {
 		return self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID];
 	}
 
-	public static function getAlliancePlayers(int $gameID, int $allianceID, bool $forceUpdate = false) : array {
+	public static function getAlliancePlayers(int $gameID, int $allianceID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY experience DESC');
@@ -171,14 +171,14 @@ abstract class AbstractSmrPlayer {
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
-	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null) : self {
+	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_PLAYERS[$gameID][$accountID])) {
 			self::$CACHE_PLAYERS[$gameID][$accountID] = new SmrPlayer($gameID, $accountID, $dbRecord);
 		}
 		return self::$CACHE_PLAYERS[$gameID][$accountID];
 	}
 
-	public static function getPlayerByPlayerID(int $playerID, int $gameID, bool $forceUpdate = false) : self {
+	public static function getPlayerByPlayerID(int $playerID, int $gameID, bool $forceUpdate = false): self {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_id = ' . $db->escapeNumber($playerID) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
@@ -188,7 +188,7 @@ abstract class AbstractSmrPlayer {
 		throw new Smr\Exceptions\PlayerNotFound('Player ID not found.');
 	}
 
-	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false) : self {
+	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false): self {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
@@ -258,7 +258,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Insert a new player into the database. Returns the new player object.
 	 */
-	public static function createPlayer(int $accountID, int $gameID, string $playerName, int $raceID, bool $isNewbie, bool $npc = false) : self {
+	public static function createPlayer(int $accountID, int $gameID, string $playerName, int $raceID, bool $isNewbie, bool $npc = false): self {
 		$time = Smr\Epoch::time();
 		$db = Smr\Database::getInstance();
 		$db->lockTable('player');
@@ -304,7 +304,7 @@ abstract class AbstractSmrPlayer {
 	 * Get array of players whose info can be accessed by this player.
 	 * Skips players who are not in the same alliance as this player.
 	 */
-	public function getSharingPlayers(bool $forceUpdate = false) : array {
+	public function getSharingPlayers(bool $forceUpdate = false): array {
 		$results = [$this];
 
 		// Only return this player if not in an alliance
@@ -332,15 +332,15 @@ abstract class AbstractSmrPlayer {
 		return $results;
 	}
 
-	public function getSQL() : string {
+	public function getSQL(): string {
 		return $this->SQL;
 	}
 
-	public function getZoom() : int {
+	public function getZoom(): int {
 		return $this->zoom;
 	}
 
-	protected function setZoom(int $zoom) : void {
+	protected function setZoom(int $zoom): void {
 		// Set the zoom level between [1, 9]
 		$zoom = max(1, min(9, $zoom));
 		if ($this->zoom == $zoom) {
@@ -350,25 +350,25 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function increaseZoom(int $zoom) : void {
+	public function increaseZoom(int $zoom): void {
 		if ($zoom < 0) {
 			throw new Exception('Trying to increase negative zoom.');
 		}
 		$this->setZoom($this->getZoom() + $zoom);
 	}
 
-	public function decreaseZoom(int $zoom) : void {
+	public function decreaseZoom(int $zoom): void {
 		if ($zoom < 0) {
 			throw new Exception('Trying to decrease negative zoom.');
 		}
 		$this->setZoom($this->getZoom() - $zoom);
 	}
 
-	public function getAttackColour() : string {
+	public function getAttackColour(): string {
 		return $this->attackColour;
 	}
 
-	public function setAttackColour(string $colour) : void {
+	public function setAttackColour(string $colour): void {
 		if ($this->attackColour == $colour) {
 			return;
 		}
@@ -376,11 +376,11 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function isIgnoreGlobals() : bool {
+	public function isIgnoreGlobals(): bool {
 		return $this->ignoreGlobals;
 	}
 
-	public function setIgnoreGlobals(bool $bool) : void {
+	public function setIgnoreGlobals(bool $bool): void {
 		if ($this->ignoreGlobals == $bool) {
 			return;
 		}
@@ -388,31 +388,31 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getAccount() : SmrAccount {
+	public function getAccount(): SmrAccount {
 		return SmrAccount::getAccount($this->getAccountID());
 	}
 
-	public function getAccountID() : int {
+	public function getAccountID(): int {
 		return $this->accountID;
 	}
 
-	public function getGameID() : int {
+	public function getGameID(): int {
 		return $this->gameID;
 	}
 
-	public function getGame() : SmrGame {
+	public function getGame(): SmrGame {
 		return SmrGame::getGame($this->gameID);
 	}
 
-	public function getNewbieTurns() : int {
+	public function getNewbieTurns(): int {
 		return $this->newbieTurns;
 	}
 
-	public function hasNewbieTurns() : bool {
+	public function hasNewbieTurns(): bool {
 		return $this->getNewbieTurns() > 0;
 	}
 
-	public function setNewbieTurns(int $newbieTurns) : void {
+	public function setNewbieTurns(int $newbieTurns): void {
 		if ($this->newbieTurns == $newbieTurns) {
 			return;
 		}
@@ -420,18 +420,18 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getShip(bool $forceUpdate = false) : AbstractSmrShip {
+	public function getShip(bool $forceUpdate = false): AbstractSmrShip {
 		return SmrShip::getShip($this, $forceUpdate);
 	}
 
-	public function getShipTypeID() : int {
+	public function getShipTypeID(): int {
 		return $this->shipID;
 	}
 
 	/**
 	 * Do not call directly. Use SmrShip::setTypeID instead.
 	 */
-	public function setShipTypeID(int $shipID) : void {
+	public function setShipTypeID(int $shipID): void {
 		if ($this->shipID == $shipID) {
 			return;
 		}
@@ -439,11 +439,11 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function hasCustomShipName() : bool {
+	public function hasCustomShipName(): bool {
 		return $this->getCustomShipName() !== false;
 	}
 
-	public function getCustomShipName() : string|false {
+	public function getCustomShipName(): string|false {
 		if (!isset($this->customShipName)) {
 			$dbResult = $this->db->read('SELECT * FROM ship_has_name WHERE ' . $this->SQL . ' LIMIT 1');
 			if ($dbResult->hasRecord()) {
@@ -455,7 +455,7 @@ abstract class AbstractSmrPlayer {
 		return $this->customShipName;
 	}
 
-	public function setCustomShipName(string $name) : void {
+	public function setCustomShipName(string $name): void {
 		$this->db->write('REPLACE INTO ship_has_name (game_id, account_id, ship_name)
 			VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeString($name) . ')');
 	}
@@ -464,7 +464,7 @@ abstract class AbstractSmrPlayer {
 	 * Get planet owned by this player.
 	 * Returns false if this player does not own a planet.
 	 */
-	public function getPlanet() : SmrPlanet|false {
+	public function getPlanet(): SmrPlanet|false {
 		$dbResult = $this->db->read('SELECT * FROM planet WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . ' AND owner_id=' . $this->db->escapeNumber($this->getAccountID()));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -474,23 +474,23 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function getSectorPlanet() : SmrPlanet {
+	public function getSectorPlanet(): SmrPlanet {
 		return SmrPlanet::getPlanet($this->getGameID(), $this->getSectorID());
 	}
 
-	public function getSectorPort() : SmrPort {
+	public function getSectorPort(): SmrPort {
 		return SmrPort::getPort($this->getGameID(), $this->getSectorID());
 	}
 
-	public function getSectorID() : int {
+	public function getSectorID(): int {
 		return $this->sectorID;
 	}
 
-	public function getSector() : SmrSector {
+	public function getSector(): SmrSector {
 		return SmrSector::getSector($this->getGameID(), $this->getSectorID());
 	}
 
-	public function setSectorID(int $sectorID) : void {
+	public function setSectorID(int $sectorID): void {
 		if ($this->sectorID == $sectorID) {
 			return;
 		}
@@ -508,11 +508,11 @@ abstract class AbstractSmrPlayer {
 		$port->addCachePort($this->getAccountID()); //Add the port of sector we are now in.
 	}
 
-	public function getLastSectorID() : int {
+	public function getLastSectorID(): int {
 		return $this->lastSectorID;
 	}
 
-	public function setLastSectorID(int $lastSectorID) : void {
+	public function setLastSectorID(int $lastSectorID): void {
 		if ($this->lastSectorID == $lastSectorID) {
 			return;
 		}
@@ -520,7 +520,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getHome() : int {
+	public function getHome(): int {
 		// get his home sector
 		$hq_id = GOVERNMENT + $this->getRaceID();
 		$raceHqSectors = SmrSector::getLocationSectors($this->getGameID(), $hq_id);
@@ -532,18 +532,18 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function isDead() : bool {
+	public function isDead(): bool {
 		return $this->dead;
 	}
 
-	public function isNPC() : bool {
+	public function isNPC(): bool {
 		return $this->npc;
 	}
 
 	/**
 	 * Does the player have Newbie status?
 	 */
-	public function hasNewbieStatus() : bool {
+	public function hasNewbieStatus(): bool {
 		return $this->newbieStatus;
 	}
 
@@ -551,7 +551,7 @@ abstract class AbstractSmrPlayer {
 	 * Update the player's newbie status if it has changed.
 	 * This function queries the account, so use sparingly.
 	 */
-	public function updateNewbieStatus() : void {
+	public function updateNewbieStatus(): void {
 		$accountNewbieStatus = !$this->getAccount()->isVeteran();
 		if ($this->newbieStatus != $accountNewbieStatus) {
 			$this->newbieStatus = $accountNewbieStatus;
@@ -562,19 +562,19 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Has this player been designated as the alliance flagship?
 	 */
-	public function isFlagship() : bool {
+	public function isFlagship(): bool {
 		return $this->hasAlliance() && $this->getAlliance()->getFlagshipID() == $this->getAccountID();
 	}
 
-	public function isPresident() : bool {
+	public function isPresident(): bool {
 		return Council::getPresidentID($this->getGameID(), $this->getRaceID()) == $this->getAccountID();
 	}
 
-	public function isOnCouncil() : bool {
+	public function isOnCouncil(): bool {
 		return Council::isOnCouncil($this->getGameID(), $this->getRaceID(), $this->getAccountID());
 	}
 
-	public function isDraftLeader() : bool {
+	public function isDraftLeader(): bool {
 		if (!isset($this->draftLeader)) {
 			$dbResult = $this->db->read('SELECT 1 FROM draft_leaders WHERE ' . $this->SQL . ' LIMIT 1');
 			$this->draftLeader = $dbResult->hasRecord();
@@ -582,7 +582,7 @@ abstract class AbstractSmrPlayer {
 		return $this->draftLeader;
 	}
 
-	public function getGPWriter() : string|false {
+	public function getGPWriter(): string|false {
 		if (!isset($this->gpWriter)) {
 			$this->gpWriter = false;
 			$dbResult = $this->db->read('SELECT position FROM galactic_post_writer WHERE ' . $this->SQL);
@@ -593,15 +593,15 @@ abstract class AbstractSmrPlayer {
 		return $this->gpWriter;
 	}
 
-	public function isGPEditor() : bool {
+	public function isGPEditor(): bool {
 		return $this->getGPWriter() == 'editor';
 	}
 
-	public function isForceDropMessages() : bool {
+	public function isForceDropMessages(): bool {
 		return $this->forceDropMessages;
 	}
 
-	public function setForceDropMessages(bool $bool) : void {
+	public function setForceDropMessages(bool $bool): void {
 		if ($this->forceDropMessages == $bool) {
 			return;
 		}
@@ -609,7 +609,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getScoutMessageGroupLimit() : int {
+	public function getScoutMessageGroupLimit(): int {
 		return match($this->groupScoutMessages) {
 			'ALWAYS' => 0,
 			'AUTO' => MESSAGES_PER_PAGE,
@@ -617,11 +617,11 @@ abstract class AbstractSmrPlayer {
 		};
 	}
 
-	public function getGroupScoutMessages() : string {
+	public function getGroupScoutMessages(): string {
 		return $this->groupScoutMessages;
 	}
 
-	public function setGroupScoutMessages(string $setting) : void {
+	public function setGroupScoutMessages(string $setting): void {
 		if ($this->groupScoutMessages == $setting) {
 			return;
 		}
@@ -632,7 +632,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * @return int Message ID
 	 */
-	protected static function doMessageSending(int $senderID, int $receiverID, int $gameID, int $messageTypeID, string $message, int $expires, bool $senderDelete = false, bool $unread = true) : int {
+	protected static function doMessageSending(int $senderID, int $receiverID, int $gameID, int $messageTypeID, string $message, int $expires, bool $senderDelete = false, bool $unread = true): int {
 		$message = trim($message);
 		$db = Smr\Database::getInstance();
 		// Keep track of the message_id so it can be returned
@@ -678,12 +678,12 @@ abstract class AbstractSmrPlayer {
 		return $insertID;
 	}
 
-	public function sendMessageToBox(int $boxTypeID, string $message) : void {
+	public function sendMessageToBox(int $boxTypeID, string $message): void {
 		// send him the message
 		SmrAccount::doMessageSendingToBox($this->getAccountID(), $boxTypeID, $message, $this->getGameID());
 	}
 
-	public function sendGlobalMessage(string $message, bool $canBeIgnored = true) : void {
+	public function sendGlobalMessage(string $message, bool $canBeIgnored = true): void {
 		if ($canBeIgnored) {
 			if ($this->getAccount()->isMailBanned()) {
 				throw new Smr\Exceptions\UserError('You are currently banned from sending messages');
@@ -710,7 +710,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * @return int|false Message ID (false if not sent due to ignores)
 	 */
-	public function sendMessage(int $receiverID, int $messageTypeID, string $message, bool $canBeIgnored = true, bool $unread = true, int $expires = null, bool $senderDelete = false) : int|false {
+	public function sendMessage(int $receiverID, int $messageTypeID, string $message, bool $canBeIgnored = true, bool $unread = true, int $expires = null, bool $senderDelete = false): int|false {
 		//get expire time
 		if ($canBeIgnored) {
 			if ($this->getAccount()->isMailBanned()) {
@@ -750,7 +750,7 @@ abstract class AbstractSmrPlayer {
 		return self::doMessageSending($this->getAccountID(), $receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $senderDelete, $unread);
 	}
 
-	public function sendMessageFromOpAnnounce(int $receiverID, string $message, int $expires = null) : void {
+	public function sendMessageFromOpAnnounce(int $receiverID, string $message, int $expires = null): void {
 		// get expire time if not set
 		if ($expires === null) {
 			$expires = Smr\Epoch::time() + 86400 * 14;
@@ -758,31 +758,31 @@ abstract class AbstractSmrPlayer {
 		self::doMessageSending(ACCOUNT_ID_OP_ANNOUNCE, $receiverID, $this->getGameID(), MSG_ALLIANCE, $message, $expires);
 	}
 
-	public function sendMessageFromAllianceCommand(int $receiverID, string $message) : void {
+	public function sendMessageFromAllianceCommand(int $receiverID, string $message): void {
 		$expires = Smr\Epoch::time() + 86400 * 365;
 		self::doMessageSending(ACCOUNT_ID_ALLIANCE_COMMAND, $receiverID, $this->getGameID(), MSG_PLAYER, $message, $expires);
 	}
 
-	public static function sendMessageFromPlanet(int $gameID, int $receiverID, string $message) : void {
+	public static function sendMessageFromPlanet(int $gameID, int $receiverID, string $message): void {
 		//get expire time
 		$expires = Smr\Epoch::time() + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PLANET, $receiverID, $gameID, MSG_PLANET, $message, $expires);
 	}
 
-	public static function sendMessageFromPort(int $gameID, int $receiverID, string $message) : void {
+	public static function sendMessageFromPort(int $gameID, int $receiverID, string $message): void {
 		//get expire time
 		$expires = Smr\Epoch::time() + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PORT, $receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 
-	public static function sendMessageFromFedClerk(int $gameID, int $receiverID, string $message) : void {
+	public static function sendMessageFromFedClerk(int $gameID, int $receiverID, string $message): void {
 		$expires = Smr\Epoch::time() + 86400 * 365;
 		self::doMessageSending(ACCOUNT_ID_FED_CLERK, $receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 
-	public static function sendMessageFromAdmin(int $gameID, int $receiverID, string $message, int $expires = null) : void {
+	public static function sendMessageFromAdmin(int $gameID, int $receiverID, string $message, int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Smr\Epoch::time() + 86400 * 365;
@@ -791,7 +791,7 @@ abstract class AbstractSmrPlayer {
 		self::doMessageSending(ACCOUNT_ID_ADMIN, $receiverID, $gameID, MSG_ADMIN, $message, $expires);
 	}
 
-	public static function sendMessageFromAllianceAmbassador(int $gameID, int $receiverID, string $message, int $expires = null) : void {
+	public static function sendMessageFromAllianceAmbassador(int $gameID, int $receiverID, string $message, int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Smr\Epoch::time() + 86400 * 31;
@@ -800,7 +800,7 @@ abstract class AbstractSmrPlayer {
 		self::doMessageSending(ACCOUNT_ID_ALLIANCE_AMBASSADOR, $receiverID, $gameID, MSG_ALLIANCE, $message, $expires);
 	}
 
-	public static function sendMessageFromCasino(int $gameID, int $receiverID, string $message, int $expires = null) : void {
+	public static function sendMessageFromCasino(int $gameID, int $receiverID, string $message, int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Smr\Epoch::time() + 86400 * 7;
@@ -809,7 +809,7 @@ abstract class AbstractSmrPlayer {
 		self::doMessageSending(ACCOUNT_ID_CASINO, $receiverID, $gameID, MSG_CASINO, $message, $expires);
 	}
 
-	public static function sendMessageFromRace(int $raceID, int $gameID, int $receiverID, string $message, int $expires = null) : void {
+	public static function sendMessageFromRace(int $raceID, int $gameID, int $receiverID, string $message, int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Smr\Epoch::time() + 86400 * 5;
@@ -818,16 +818,16 @@ abstract class AbstractSmrPlayer {
 		self::doMessageSending(ACCOUNT_ID_GROUP_RACES + $raceID, $receiverID, $gameID, MSG_POLITICAL, $message, $expires);
 	}
 
-	public function setMessagesRead(int $messageTypeID) : void {
+	public function setMessagesRead(int $messageTypeID): void {
 		$this->db->write('DELETE FROM player_has_unread_messages
 							WHERE '.$this->SQL . ' AND message_type_id = ' . $this->db->escapeNumber($messageTypeID));
 	}
 
-	public function getSafeAttackRating() : int {
+	public function getSafeAttackRating(): int {
 		return max(0, min(8, IFloor($this->getAlignment() / 150) + 4));
 	}
 
-	public function hasFederalProtection() : bool {
+	public function hasFederalProtection(): bool {
 		$sector = SmrSector::getSector($this->getGameID(), $this->getSectorID());
 		if (!$sector->offersFederalProtection()) {
 			return false;
@@ -849,7 +849,7 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	public function canBeProtectedByRace(int $raceID) : bool {
+	public function canBeProtectedByRace(int $raceID): bool {
 		if (!isset($this->canFed)) {
 			$this->canFed = [];
 			foreach (Smr\Race::getAllIDs() as $raceID2) {
@@ -868,14 +868,14 @@ abstract class AbstractSmrPlayer {
 	 * Returns a boolean identifying if the player can currently
 	 * participate in battles.
 	 */
-	public function canFight() : bool {
+	public function canFight(): bool {
 		return !($this->hasNewbieTurns() ||
 		         $this->isDead() ||
 		         $this->isLandedOnPlanet() ||
 		         $this->hasFederalProtection());
 	}
 
-	public function setDead(bool $bool) : void {
+	public function setDead(bool $bool): void {
 		if ($this->dead == $bool) {
 			return;
 		}
@@ -883,18 +883,18 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getKills() : int {
+	public function getKills(): int {
 		return $this->kills;
 	}
 
-	public function increaseKills(int $kills) : void {
+	public function increaseKills(int $kills): void {
 		if ($kills < 0) {
 			throw new Exception('Trying to increase negative kills.');
 		}
 		$this->setKills($this->kills + $kills);
 	}
 
-	public function setKills(int $kills) : void {
+	public function setKills(int $kills): void {
 		if ($this->kills == $kills) {
 			return;
 		}
@@ -902,18 +902,18 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getDeaths() : int {
+	public function getDeaths(): int {
 		return $this->deaths;
 	}
 
-	public function increaseDeaths(int $deaths) : void {
+	public function increaseDeaths(int $deaths): void {
 		if ($deaths < 0) {
 			throw new Exception('Trying to increase negative deaths.');
 		}
 		$this->setDeaths($this->getDeaths() + $deaths);
 	}
 
-	public function setDeaths(int $deaths) : void {
+	public function setDeaths(int $deaths): void {
 		if ($this->deaths == $deaths) {
 			return;
 		}
@@ -921,11 +921,11 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getAssists() : int {
+	public function getAssists(): int {
 		return $this->assists;
 	}
 
-	public function increaseAssists(int $assists) : void {
+	public function increaseAssists(int $assists): void {
 		if ($assists < 1) {
 			throw new Exception('Must increase by a positive number.');
 		}
@@ -933,11 +933,11 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getAlignment() : int {
+	public function getAlignment(): int {
 		return $this->alignment;
 	}
 
-	public function increaseAlignment(int $align) : void {
+	public function increaseAlignment(int $align): void {
 		if ($align < 0) {
 			throw new Exception('Trying to increase negative align.');
 		}
@@ -948,7 +948,7 @@ abstract class AbstractSmrPlayer {
 		$this->setAlignment($align);
 	}
 
-	public function decreaseAlignment(int $align) : void {
+	public function decreaseAlignment(int $align): void {
 		if ($align < 0) {
 			throw new Exception('Trying to decrease negative align.');
 		}
@@ -959,7 +959,7 @@ abstract class AbstractSmrPlayer {
 		$this->setAlignment($align);
 	}
 
-	public function setAlignment(int $align) : void {
+	public function setAlignment(int $align): void {
 		if ($this->alignment == $align) {
 			return;
 		}
@@ -967,11 +967,11 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getCredits() : int {
+	public function getCredits(): int {
 		return $this->credits;
 	}
 
-	public function getBank() : int {
+	public function getBank(): int {
 		return $this->bank;
 	}
 
@@ -979,7 +979,7 @@ abstract class AbstractSmrPlayer {
 	 * Increases personal bank account up to the maximum allowed credits.
 	 * Returns the amount that was actually added to handle overflow.
 	 */
-	public function increaseBank(int $credits) : int {
+	public function increaseBank(int $credits): int {
 		if ($credits == 0) {
 			return 0;
 		}
@@ -992,7 +992,7 @@ abstract class AbstractSmrPlayer {
 		return $actualAdded;
 	}
 
-	public function decreaseBank(int $credits) : void {
+	public function decreaseBank(int $credits): void {
 		if ($credits == 0) {
 			return;
 		}
@@ -1003,7 +1003,7 @@ abstract class AbstractSmrPlayer {
 		$this->setBank($newTotal);
 	}
 
-	public function setBank(int $credits) : void {
+	public function setBank(int $credits): void {
 		if ($this->bank == $credits) {
 			return;
 		}
@@ -1017,7 +1017,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getExperience() : int {
+	public function getExperience(): int {
 		return $this->experience;
 	}
 
@@ -1025,18 +1025,18 @@ abstract class AbstractSmrPlayer {
 	 * Returns the percent progress towards the next level.
 	 * This value is rounded because it is used primarily in HTML img widths.
 	 */
-	public function getNextLevelPercentAcquired() : int {
+	public function getNextLevelPercentAcquired(): int {
 		if ($this->getNextLevelExperience() == $this->getThisLevelExperience()) {
 			return 100;
 		}
 		return max(0, min(100, IRound(($this->getExperience() - $this->getThisLevelExperience()) / ($this->getNextLevelExperience() - $this->getThisLevelExperience()) * 100)));
 	}
 
-	public function getNextLevelPercentRemaining() : int {
+	public function getNextLevelPercentRemaining(): int {
 		return 100 - $this->getNextLevelPercentAcquired();
 	}
 
-	public function getNextLevel() : array {
+	public function getNextLevel(): array {
 		$LEVELS = Globals::getLevelRequirements();
 		if (!isset($LEVELS[$this->getLevelID() + 1])) {
 			return $LEVELS[$this->getLevelID()]; //Return current level experience if on last level.
@@ -1044,16 +1044,16 @@ abstract class AbstractSmrPlayer {
 		return $LEVELS[$this->getLevelID() + 1];
 	}
 
-	public function getNextLevelExperience() : int {
+	public function getNextLevelExperience(): int {
 		return $this->getNextLevel()['Requirement'];
 	}
 
-	public function getThisLevelExperience() : int {
+	public function getThisLevelExperience(): int {
 		$LEVELS = Globals::getLevelRequirements();
 		return $LEVELS[$this->getLevelID()]['Requirement'];
 	}
 
-	public function setExperience(int $experience) : void {
+	public function setExperience(int $experience): void {
 		if ($this->experience == $experience) {
 			return;
 		}
@@ -1075,7 +1075,7 @@ abstract class AbstractSmrPlayer {
 	 * Increases onboard credits up to the maximum allowed credits.
 	 * Returns the amount that was actually added to handle overflow.
 	 */
-	public function increaseCredits(int $credits) : int {
+	public function increaseCredits(int $credits): int {
 		if ($credits == 0) {
 			return 0;
 		}
@@ -1088,7 +1088,7 @@ abstract class AbstractSmrPlayer {
 		return $actualAdded;
 	}
 
-	public function decreaseCredits(int $credits) : void {
+	public function decreaseCredits(int $credits): void {
 		if ($credits == 0) {
 			return;
 		}
@@ -1099,7 +1099,7 @@ abstract class AbstractSmrPlayer {
 		$this->setCredits($newTotal);
 	}
 
-	public function setCredits(int $credits) : void {
+	public function setCredits(int $credits): void {
 		if ($this->credits == $credits) {
 			return;
 		}
@@ -1113,7 +1113,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function increaseExperience(int $experience) : void {
+	public function increaseExperience(int $experience): void {
 		if ($experience < 0) {
 			throw new Exception('Trying to increase negative experience.');
 		}
@@ -1124,7 +1124,7 @@ abstract class AbstractSmrPlayer {
 		$this->setExperience($newExperience);
 		$this->increaseHOF($experience, ['Experience', 'Total', 'Gain'], HOF_PUBLIC);
 	}
-	public function decreaseExperience(int $experience) : void {
+	public function decreaseExperience(int $experience): void {
 		if ($experience < 0) {
 			throw new Exception('Trying to decrease negative experience.');
 		}
@@ -1136,11 +1136,11 @@ abstract class AbstractSmrPlayer {
 		$this->increaseHOF($experience, ['Experience', 'Total', 'Loss'], HOF_PUBLIC);
 	}
 
-	public function isLandedOnPlanet() : bool {
+	public function isLandedOnPlanet(): bool {
 		return $this->landedOnPlanet;
 	}
 
-	public function setLandedOnPlanet(bool $bool) : void {
+	public function setLandedOnPlanet(bool $bool): void {
 		if ($this->landedOnPlanet == $bool) {
 			return;
 		}
@@ -1151,7 +1151,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Returns the numerical level of the player (e.g. 1-50).
 	 */
-	public function getLevelID() : int {
+	public function getLevelID(): int {
 		// The level is cached for performance reasons unless `setExperience`
 		// is called and the player's experience changes.
 		if (!isset($this->level)) {
@@ -1168,7 +1168,7 @@ abstract class AbstractSmrPlayer {
 		return $this->level;
 	}
 
-	public function getLevelName() : string {
+	public function getLevelName(): string {
 		$level_name = Globals::getLevelRequirements()[$this->getLevelID()]['Name'];
 		if ($this->isPresident()) {
 			$level_name = '<img src="images/council_president.png" title="' . Smr\Race::getName($this->getRaceID()) . ' President" height="12" width="16" />&nbsp;' . $level_name;
@@ -1176,11 +1176,11 @@ abstract class AbstractSmrPlayer {
 		return $level_name;
 	}
 
-	public function getMaxLevel() : int {
+	public function getMaxLevel(): int {
 		return max(array_keys(Globals::getLevelRequirements()));
 	}
 
-	public function getPlayerID() : int {
+	public function getPlayerID(): int {
 		return $this->playerID;
 	}
 
@@ -1188,11 +1188,11 @@ abstract class AbstractSmrPlayer {
 	 * Returns the player name.
 	 * Use getDisplayName or getLinkedDisplayName for HTML-safe versions.
 	 */
-	public function getPlayerName() : string {
+	public function getPlayerName(): string {
 		return $this->playerName;
 	}
 
-	public function setPlayerName(string $name) : void {
+	public function setPlayerName(string $name): void {
 		$this->playerName = $name;
 		$this->hasChanged = true;
 	}
@@ -1200,7 +1200,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Returns the decorated player name, suitable for HTML display.
 	 */
-	public function getDisplayName(bool $includeAlliance = false) : string {
+	public function getDisplayName(bool $includeAlliance = false): string {
 		$name = htmlentities($this->playerName) . ' (' . $this->getPlayerID() . ')';
 		$return = get_colored_text($this->getAlignment(), $name);
 		if ($this->isNPC()) {
@@ -1212,11 +1212,11 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function getBBLink() : string {
+	public function getBBLink(): string {
 			return '[player=' . $this->getPlayerID() . ']';
 	}
 
-	public function getLinkedDisplayName(bool $includeAlliance = true) : string {
+	public function getLinkedDisplayName(bool $includeAlliance = true): string {
 		$return = '<a href="' . $this->getTraderSearchHREF() . '">' . $this->getDisplayName() . '</a>';
 		if ($includeAlliance) {
 			$return .= ' (' . $this->getAllianceDisplayName(true) . ')';
@@ -1228,34 +1228,34 @@ abstract class AbstractSmrPlayer {
 	 * Use this method when the player is changing their own name.
 	 * This will flag the player as having used their free name change.
 	 */
-	public function setPlayerNameByPlayer(string $playerName) : void {
+	public function setPlayerNameByPlayer(string $playerName): void {
 		$this->setPlayerName($playerName);
 		$this->setNameChanged(true);
 	}
 
-	public function isNameChanged() : bool {
+	public function isNameChanged(): bool {
 		return $this->nameChanged;
 	}
 
-	public function setNameChanged(bool $bool) : void {
+	public function setNameChanged(bool $bool): void {
 		$this->nameChanged = $bool;
 		$this->hasChanged = true;
 	}
 
-	public function isRaceChanged() : bool {
+	public function isRaceChanged(): bool {
 		return $this->raceChanged;
 	}
 
-	public function setRaceChanged(bool $raceChanged) : void {
+	public function setRaceChanged(bool $raceChanged): void {
 		$this->raceChanged = $raceChanged;
 		$this->hasChanged = true;
 	}
 
-	public function canChangeRace() : bool {
+	public function canChangeRace(): bool {
 		return !$this->isRaceChanged() && (Smr\Epoch::time() - $this->getGame()->getStartTime() < TIME_FOR_RACE_CHANGE);
 	}
 
-	public static function getColouredRaceNameOrDefault(int $otherRaceID, AbstractSmrPlayer $player = null, bool $linked = false) : string {
+	public static function getColouredRaceNameOrDefault(int $otherRaceID, AbstractSmrPlayer $player = null, bool $linked = false): string {
 		$relations = 0;
 		if ($player !== null) {
 			$relations = $player->getRelation($otherRaceID);
@@ -1263,11 +1263,11 @@ abstract class AbstractSmrPlayer {
 		return Globals::getColouredRaceName($otherRaceID, $relations, $linked);
 	}
 
-	public function getColouredRaceName(int $otherRaceID, bool $linked = false) : string {
+	public function getColouredRaceName(int $otherRaceID, bool $linked = false): string {
 		return self::getColouredRaceNameOrDefault($otherRaceID, $this, $linked);
 	}
 
-	public function setRaceID(int $raceID) : void {
+	public function setRaceID(int $raceID): void {
 		if ($this->raceID == $raceID) {
 			return;
 		}
@@ -1275,23 +1275,23 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function isAllianceLeader(bool $forceUpdate = false) : bool {
+	public function isAllianceLeader(bool $forceUpdate = false): bool {
 		return $this->getAccountID() == $this->getAlliance($forceUpdate)->getLeaderID();
 	}
 
-	public function getAlliance(bool $forceUpdate = false) : SmrAlliance {
+	public function getAlliance(bool $forceUpdate = false): SmrAlliance {
 		return SmrAlliance::getAlliance($this->getAllianceID(), $this->getGameID(), $forceUpdate);
 	}
 
-	public function getAllianceID() : int {
+	public function getAllianceID(): int {
 		return $this->allianceID;
 	}
 
-	public function hasAlliance() : bool {
+	public function hasAlliance(): bool {
 		return $this->getAllianceID() != 0;
 	}
 
-	protected function setAllianceID(int $ID) : void {
+	protected function setAllianceID(int $ID): void {
 		if ($this->allianceID == $ID) {
 			return;
 		}
@@ -1304,11 +1304,11 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getAllianceBBLink() : string {
+	public function getAllianceBBLink(): string {
 		return $this->hasAlliance() ? $this->getAlliance()->getAllianceBBLink() : $this->getAllianceDisplayName();
 	}
 
-	public function getAllianceDisplayName(bool $linked = false, bool $includeAllianceID = false) : string {
+	public function getAllianceDisplayName(bool $linked = false, bool $includeAllianceID = false): string {
 		if ($this->hasAlliance()) {
 			return $this->getAlliance()->getAllianceDisplayName($linked, $includeAllianceID);
 		} else {
@@ -1316,7 +1316,7 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function getAllianceRole(int $allianceID = null) : int {
+	public function getAllianceRole(int $allianceID = null): int {
 		if ($allianceID === null) {
 			$allianceID = $this->getAllianceID();
 		}
@@ -1334,7 +1334,7 @@ abstract class AbstractSmrPlayer {
 		return $this->allianceRoles[$allianceID];
 	}
 
-	public function leaveAlliance(AbstractSmrPlayer $kickedBy = null) : void {
+	public function leaveAlliance(AbstractSmrPlayer $kickedBy = null): void {
 		$alliance = $this->getAlliance();
 		if ($kickedBy != null) {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
@@ -1362,7 +1362,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Join an alliance (used for both Leader and New Member roles)
 	 */
-	public function joinAlliance(int $allianceID) : void {
+	public function joinAlliance(int $allianceID): void {
 		$this->setAllianceID($allianceID);
 		$alliance = $this->getAlliance();
 
@@ -1390,11 +1390,11 @@ abstract class AbstractSmrPlayer {
 		$this->actionTaken('JoinAlliance', ['Alliance' => $alliance]);
 	}
 
-	public function getAllianceJoinable() : int {
+	public function getAllianceJoinable(): int {
 		return $this->allianceJoinable;
 	}
 
-	private function setAllianceJoinable(int $time) : void {
+	private function setAllianceJoinable(int $time): void {
 		if ($this->allianceJoinable == $time) {
 			return;
 		}
@@ -1405,7 +1405,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Invites player with $accountID to this player's alliance.
 	 */
-	public function sendAllianceInvitation(int $accountID, string $message, int $expires) : void {
+	public function sendAllianceInvitation(int $accountID, string $message, int $expires): void {
 		if (!$this->hasAlliance()) {
 			throw new Exception('Must be in an alliance to send alliance invitations');
 		}
@@ -1414,11 +1414,11 @@ abstract class AbstractSmrPlayer {
 		SmrInvitation::send($this->getAllianceID(), $this->getGameID(), $accountID, $this->getAccountID(), $messageID, $expires);
 	}
 
-	public function isCombatDronesKamikazeOnMines() : bool {
+	public function isCombatDronesKamikazeOnMines(): bool {
 		return $this->combatDronesKamikazeOnMines;
 	}
 
-	public function setCombatDronesKamikazeOnMines(bool $bool) : void {
+	public function setCombatDronesKamikazeOnMines(bool $bool): void {
 		if ($this->combatDronesKamikazeOnMines == $bool) {
 			return;
 		}
@@ -1426,7 +1426,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	protected function getPersonalRelationsData() : void {
+	protected function getPersonalRelationsData(): void {
 		if (!isset($this->personalRelations)) {
 			//get relations
 			$this->personalRelations = [];
@@ -1440,7 +1440,7 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function getPersonalRelations() : array {
+	public function getPersonalRelations(): array {
 		$this->getPersonalRelationsData();
 		return $this->personalRelations;
 	}
@@ -1448,7 +1448,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Get personal relations with a race
 	 */
-	public function getPersonalRelation(int $raceID) : int {
+	public function getPersonalRelation(int $raceID): int {
 		$rels = $this->getPersonalRelations();
 		return $rels[$raceID];
 	}
@@ -1456,7 +1456,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Get total relations with all races (personal + political)
 	 */
-	public function getRelations() : array {
+	public function getRelations(): array {
 		if (!isset($this->relations)) {
 			//get relations
 			$raceRelations = Globals::getRaceRelations($this->getGameID(), $this->getRaceID());
@@ -1472,7 +1472,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Get total relations with a race (personal + political)
 	 */
-	public function getRelation(int $raceID) : int {
+	public function getRelation(int $raceID): int {
 		$rels = $this->getRelations();
 		return $rels[$raceID];
 	}
@@ -1481,7 +1481,7 @@ abstract class AbstractSmrPlayer {
 	 * Increases personal relations from trading $numGoods units with the race
 	 * of the port given by $raceID.
 	 */
-	public function increaseRelationsByTrade(int $numGoods, int $raceID) : void {
+	public function increaseRelationsByTrade(int $numGoods, int $raceID): void {
 		$relations = ICeil(min($numGoods, 300) / 30);
 		//Cap relations to a max of 1 after 500 have been reached
 		if ($this->getPersonalRelation($raceID) + $relations >= 500) {
@@ -1494,7 +1494,7 @@ abstract class AbstractSmrPlayer {
 	 * Decreases personal relations from trading failures, e.g. rejected
 	 * bargaining and getting caught stealing.
 	 */
-	public function decreaseRelationsByTrade(int $numGoods, int $raceID) : void {
+	public function decreaseRelationsByTrade(int $numGoods, int $raceID): void {
 		$relations = ICeil(min($numGoods, 300) / 30);
 		$this->decreaseRelations($relations, $raceID);
 	}
@@ -1502,7 +1502,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Increase personal relations.
 	 */
-	public function increaseRelations(int $relations, int $raceID) : void {
+	public function increaseRelations(int $relations, int $raceID): void {
 		if ($relations < 0) {
 			throw new Exception('Trying to increase negative relations.');
 		}
@@ -1516,7 +1516,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Decrease personal relations.
 	 */
-	public function decreaseRelations(int $relations, int $raceID) : void {
+	public function decreaseRelations(int $relations, int $raceID): void {
 		if ($relations < 0) {
 			throw new Exception('Trying to decrease negative relations.');
 		}
@@ -1530,7 +1530,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Set personal relations.
 	 */
-	public function setRelations(int $relations, int $raceID) : void {
+	public function setRelations(int $relations, int $raceID): void {
 		$this->getRelations();
 		if ($this->personalRelations[$raceID] == $relations) {
 			return;
@@ -1547,7 +1547,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Set any starting personal relations bonuses or penalties.
 	 */
-	public function giveStartingRelations() : void {
+	public function giveStartingRelations(): void {
 		if ($this->getRaceID() === RACE_ALSKANT) {
 			// Give Alskants bonus personal relations to start.
 			foreach (Smr\Race::getAllIDs() as $raceID) {
@@ -1556,11 +1556,11 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function getLastNewsUpdate() : int {
+	public function getLastNewsUpdate(): int {
 		return $this->lastNewsUpdate;
 	}
 
-	private function setLastNewsUpdate(int $time) : void {
+	private function setLastNewsUpdate(int $time): void {
 		if ($this->lastNewsUpdate == $time) {
 			return;
 		}
@@ -1568,15 +1568,15 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function updateLastNewsUpdate() : void {
+	public function updateLastNewsUpdate(): void {
 		$this->setLastNewsUpdate(Smr\Epoch::time());
 	}
 
-	public function getLastPort() : int {
+	public function getLastPort(): int {
 		return $this->lastPort;
 	}
 
-	public function setLastPort(int $lastPort) : void {
+	public function setLastPort(int $lastPort): void {
 		if ($this->lastPort == $lastPort) {
 			return;
 		}
@@ -1584,7 +1584,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getPlottedCourse() : Smr\Path|false {
+	public function getPlottedCourse(): Smr\Path|false {
 		if (!isset($this->plottedCourse)) {
 			// check if we have a course plotted
 			$dbResult = $this->db->read('SELECT course FROM player_plotted_course WHERE ' . $this->SQL . ' LIMIT 1');
@@ -1615,31 +1615,31 @@ abstract class AbstractSmrPlayer {
 		return $this->plottedCourse;
 	}
 
-	public function setPlottedCourse(Smr\Path $plottedCourse) : void {
+	public function setPlottedCourse(Smr\Path $plottedCourse): void {
 		$this->plottedCourse = $plottedCourse;
 		$this->db->write('REPLACE INTO player_plotted_course
 			(account_id, game_id, course)
 			VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeObject($this->plottedCourse) . ')');
 	}
 
-	public function hasPlottedCourse() : bool {
+	public function hasPlottedCourse(): bool {
 		return $this->getPlottedCourse() !== false;
 	}
 
-	public function isPartOfCourse(SmrSector $sector) : bool {
+	public function isPartOfCourse(SmrSector $sector): bool {
 		if (!$this->hasPlottedCourse()) {
 			return false;
 		}
 		return $this->getPlottedCourse()->isInPath($sector->getSectorID());
 	}
 
-	public function deletePlottedCourse() : void {
+	public function deletePlottedCourse(): void {
 		$this->plottedCourse = false;
 		$this->db->write('DELETE FROM player_plotted_course WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
 	// Computes the turn cost and max misjump between current and target sector
-	public function getJumpInfo(SmrSector $targetSector) : array {
+	public function getJumpInfo(SmrSector $targetSector): array {
 		$path = Plotter::findDistanceToX($targetSector, $this->getSector(), true);
 		if ($path === false) {
 			throw new Smr\Exceptions\UserError('Unable to plot from ' . $this->getSectorID() . ' to ' . $targetSector->getSectorID() . '.');
@@ -1655,7 +1655,7 @@ abstract class AbstractSmrPlayer {
 		return ['accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName', 'npc'];
 	}
 
-	public function &getStoredDestinations() : array {
+	public function &getStoredDestinations(): array {
 		if (!isset($this->storedDestinations)) {
 			$this->storedDestinations = [];
 			$dbResult = $this->db->read('SELECT * FROM player_stored_sector WHERE ' . $this->SQL);
@@ -1671,7 +1671,7 @@ abstract class AbstractSmrPlayer {
 		return $this->storedDestinations;
 	}
 
-	public function moveDestinationButton(int $sectorID, int $offsetTop, int $offsetLeft) : void {
+	public function moveDestinationButton(int $sectorID, int $offsetTop, int $offsetLeft): void {
 
 		if ($offsetLeft < 0 || $offsetLeft > 500 || $offsetTop < 0 || $offsetTop > 300) {
 			throw new Smr\Exceptions\UserError('The saved sector must be in the box!');
@@ -1694,7 +1694,7 @@ abstract class AbstractSmrPlayer {
 		throw new Smr\Exceptions\UserError('You do not have a saved sector for #' . $sectorID);
 	}
 
-	public function addDestinationButton(int $sectorID, string $label) : void {
+	public function addDestinationButton(int $sectorID, string $label): void {
 
 		if (!SmrSector::sectorExists($this->getGameID(), $sectorID)) {
 			throw new Smr\Exceptions\UserError('You want to add a non-existent sector?');
@@ -1724,7 +1724,7 @@ abstract class AbstractSmrPlayer {
 		]);
 	}
 
-	public function deleteDestinationButton(int $sectorID) : void {
+	public function deleteDestinationButton(int $sectorID): void {
 
 		foreach ($this->getStoredDestinations() as $key => $sd) {
 			if ($sd['SectorID'] == $sectorID) {
@@ -1740,7 +1740,7 @@ abstract class AbstractSmrPlayer {
 		throw new Exception('Could not find stored destination');
 	}
 
-	public function getTickers() : array {
+	public function getTickers(): array {
 		if (!isset($this->tickers)) {
 			$this->tickers = [];
 			//get ticker info
@@ -1757,11 +1757,11 @@ abstract class AbstractSmrPlayer {
 		return $this->tickers;
 	}
 
-	public function hasTickers() : bool {
+	public function hasTickers(): bool {
 		return count($this->getTickers()) > 0;
 	}
 
-	public function getTicker(string $tickerType) : array|false {
+	public function getTicker(string $tickerType): array|false {
 		$tickers = $this->getTickers();
 		if (isset($tickers[$tickerType])) {
 			return $tickers[$tickerType];
@@ -1769,35 +1769,35 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	public function hasTicker(string $tickerType) : bool {
+	public function hasTicker(string $tickerType): bool {
 		return $this->getTicker($tickerType) !== false;
 	}
 
-	public function shootForces(SmrForce $forces) : array {
+	public function shootForces(SmrForce $forces): array {
 		return $this->getShip()->shootForces($forces);
 	}
 
-	public function shootPort(SmrPort $port) : array {
+	public function shootPort(SmrPort $port): array {
 		return $this->getShip()->shootPort($port);
 	}
 
-	public function shootPlanet(SmrPlanet $planet) : array {
+	public function shootPlanet(SmrPlanet $planet): array {
 		return $this->getShip()->shootPlanet($planet);
 	}
 
-	public function shootPlayers(array $targetPlayers) : array {
+	public function shootPlayers(array $targetPlayers): array {
 		return $this->getShip()->shootPlayers($targetPlayers);
 	}
 
-	public function getMilitaryPayment() : int {
+	public function getMilitaryPayment(): int {
 		return $this->militaryPayment;
 	}
 
-	public function hasMilitaryPayment() : bool {
+	public function hasMilitaryPayment(): bool {
 		return $this->getMilitaryPayment() > 0;
 	}
 
-	public function setMilitaryPayment(int $amount) : void {
+	public function setMilitaryPayment(int $amount): void {
 		if ($this->militaryPayment == $amount) {
 			return;
 		}
@@ -1805,21 +1805,21 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function increaseMilitaryPayment(int $amount) : void {
+	public function increaseMilitaryPayment(int $amount): void {
 		if ($amount < 0) {
 			throw new Exception('Trying to increase negative military payment.');
 		}
 		$this->setMilitaryPayment($this->getMilitaryPayment() + $amount);
 	}
 
-	public function decreaseMilitaryPayment(int $amount) : void {
+	public function decreaseMilitaryPayment(int $amount): void {
 		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative military payment.');
 		}
 		$this->setMilitaryPayment($this->getMilitaryPayment() - $amount);
 	}
 
-	protected function getBountiesData() : void {
+	protected function getBountiesData(): void {
 		if (!isset($this->bounties)) {
 			$this->bounties = [];
 			$dbResult = $this->db->read('SELECT * FROM bounty WHERE ' . $this->SQL);
@@ -1840,7 +1840,7 @@ abstract class AbstractSmrPlayer {
 	 * Get bounties that can be claimed by this player.
 	 * If specified, $type must be 'HQ' or 'UG'.
 	 */
-	public function getClaimableBounties(string $type = null) : array {
+	public function getClaimableBounties(string $type = null): array {
 		$bounties = [];
 		$query = 'SELECT * FROM bounty WHERE claimer_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID());
 		$query .= match($type) {
@@ -1859,33 +1859,33 @@ abstract class AbstractSmrPlayer {
 		return $bounties;
 	}
 
-	public function getBounties() : array {
+	public function getBounties(): array {
 		$this->getBountiesData();
 		return $this->bounties;
 	}
 
-	public function hasBounties() : bool {
+	public function hasBounties(): bool {
 		return count($this->getBounties()) > 0;
 	}
 
-	protected function getBounty(int $bountyID) : array {
+	protected function getBounty(int $bountyID): array {
 		if (!$this->hasBounty($bountyID)) {
 			throw new Exception('BountyID does not exist: ' . $bountyID);
 		}
 		return $this->bounties[$bountyID];
 	}
 
-	public function hasBounty(int $bountyID) : bool {
+	public function hasBounty(int $bountyID): bool {
 		$bounties = $this->getBounties();
 		return isset($bounties[$bountyID]);
 	}
 
-	protected function getBountyAmount(int $bountyID) : int {
+	protected function getBountyAmount(int $bountyID): int {
 		$bounty = $this->getBounty($bountyID);
 		return $bounty['Amount'];
 	}
 
-	protected function createBounty(string $type) : array {
+	protected function createBounty(string $type): array {
 		$bounty = ['Amount' => 0,
 						'SmrCredits' => 0,
 						'Type' => $type,
@@ -1897,7 +1897,7 @@ abstract class AbstractSmrPlayer {
 		return $bounty;
 	}
 
-	protected function getNextBountyID() : int {
+	protected function getNextBountyID(): int {
 		$keys = array_keys($this->getBounties());
 		if (count($keys) > 0) {
 			return max($keys) + 1;
@@ -1906,18 +1906,18 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	protected function setBounty(array $bounty) : void {
+	protected function setBounty(array $bounty): void {
 		$this->bounties[$bounty['ID']] = $bounty;
 		$this->hasBountyChanged[$bounty['ID']] = true;
 	}
 
-	protected function setBountyAmount(int $bountyID, int $amount) : void {
+	protected function setBountyAmount(int $bountyID, int $amount): void {
 		$bounty = $this->getBounty($bountyID);
 		$bounty['Amount'] = $amount;
 		$this->setBounty($bounty);
 	}
 
-	public function getCurrentBounty(string $type) : array {
+	public function getCurrentBounty(string $type): array {
 		$bounties = $this->getBounties();
 		foreach ($bounties as $bounty) {
 			if ($bounty['Claimer'] == 0 && $bounty['Type'] == $type) {
@@ -1927,7 +1927,7 @@ abstract class AbstractSmrPlayer {
 		return $this->createBounty($type);
 	}
 
-	public function hasCurrentBounty(string $type) : bool {
+	public function hasCurrentBounty(string $type): bool {
 		$bounties = $this->getBounties();
 		foreach ($bounties as $bounty) {
 			if ($bounty['Claimer'] == 0 && $bounty['Type'] == $type) {
@@ -1937,12 +1937,12 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	protected function getCurrentBountyAmount(string $type) : int {
+	protected function getCurrentBountyAmount(string $type): int {
 		$bounty = $this->getCurrentBounty($type);
 		return $bounty['Amount'];
 	}
 
-	protected function setCurrentBountyAmount(string $type, int $amount) : void {
+	protected function setCurrentBountyAmount(string $type, int $amount): void {
 		$bounty = $this->getCurrentBounty($type);
 		if ($bounty['Amount'] == $amount) {
 			return;
@@ -1951,26 +1951,26 @@ abstract class AbstractSmrPlayer {
 		$this->setBounty($bounty);
 	}
 
-	public function increaseCurrentBountyAmount(string $type, int $amount) : void {
+	public function increaseCurrentBountyAmount(string $type, int $amount): void {
 		if ($amount < 0) {
 			throw new Exception('Trying to increase negative current bounty.');
 		}
 		$this->setCurrentBountyAmount($type, $this->getCurrentBountyAmount($type) + $amount);
 	}
 
-	public function decreaseCurrentBountyAmount(string $type, int $amount) : void {
+	public function decreaseCurrentBountyAmount(string $type, int $amount): void {
 		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative current bounty.');
 		}
 		$this->setCurrentBountyAmount($type, $this->getCurrentBountyAmount($type) - $amount);
 	}
 
-	protected function getCurrentBountySmrCredits(string $type) : int {
+	protected function getCurrentBountySmrCredits(string $type): int {
 		$bounty = $this->getCurrentBounty($type);
 		return $bounty['SmrCredits'];
 	}
 
-	protected function setCurrentBountySmrCredits(string $type, int $credits) : void {
+	protected function setCurrentBountySmrCredits(string $type, int $credits): void {
 		$bounty = $this->getCurrentBounty($type);
 		if ($bounty['SmrCredits'] == $credits) {
 			return;
@@ -1979,21 +1979,21 @@ abstract class AbstractSmrPlayer {
 		$this->setBounty($bounty);
 	}
 
-	public function increaseCurrentBountySmrCredits(string $type, int $credits) : void {
+	public function increaseCurrentBountySmrCredits(string $type, int $credits): void {
 		if ($credits < 0) {
 			throw new Exception('Trying to increase negative current bounty.');
 		}
 		$this->setCurrentBountySmrCredits($type, $this->getCurrentBountySmrCredits($type) + $credits);
 	}
 
-	public function decreaseCurrentBountySmrCredits(string $type, int $credits) : void {
+	public function decreaseCurrentBountySmrCredits(string $type, int $credits): void {
 		if ($credits < 0) {
 			throw new Exception('Trying to decrease negative current bounty.');
 		}
 		$this->setCurrentBountySmrCredits($type, $this->getCurrentBountySmrCredits($type) - $credits);
 	}
 
-	public function setBountiesClaimable(AbstractSmrPlayer $claimer) : void {
+	public function setBountiesClaimable(AbstractSmrPlayer $claimer): void {
 		foreach ($this->getBounties() as $bounty) {
 			if ($bounty['Claimer'] == 0) {
 				$bounty['Claimer'] = $claimer->getAccountID();
@@ -2002,7 +2002,7 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	protected function getHOFData() : void {
+	protected function getHOFData(): void {
 		if (!isset($this->HOF)) {
 			//Get Player HOF
 			$dbResult = $this->db->read('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
@@ -2022,7 +2022,7 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public static function getHOFVis() : void {
+	public static function getHOFVis(): void {
 		if (!isset(self::$HOFVis)) {
 			//Get Player HOF Vis
 			$db = Smr\Database::getInstance();
@@ -2034,7 +2034,7 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function getHOF(array $typeList = null) : array|float {
+	public function getHOF(array $typeList = null): array|float {
 		$this->getHOFData();
 		if ($typeList == null) {
 			return $this->HOF;
@@ -2049,7 +2049,7 @@ abstract class AbstractSmrPlayer {
 		return $hof;
 	}
 
-	public function increaseHOF(float $amount, array $typeList, string $visibility) : void {
+	public function increaseHOF(float $amount, array $typeList, string $visibility): void {
 		if ($amount < 0) {
 			throw new Exception('Trying to increase negative HOF: ' . implode(':', $typeList));
 		}
@@ -2059,7 +2059,7 @@ abstract class AbstractSmrPlayer {
 		$this->setHOF($this->getHOF($typeList) + $amount, $typeList, $visibility);
 	}
 
-	public function decreaseHOF(float $amount, array $typeList, string $visibility) : void {
+	public function decreaseHOF(float $amount, array $typeList, string $visibility): void {
 		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative HOF: ' . implode(':', $typeList));
 		}
@@ -2069,7 +2069,7 @@ abstract class AbstractSmrPlayer {
 		$this->setHOF($this->getHOF($typeList) - $amount, $typeList, $visibility);
 	}
 
-	public function setHOF(float $amount, array $typeList, string $visibility) : void {
+	public function setHOF(float $amount, array $typeList, string $visibility): void {
 		if (is_array($this->getHOF($typeList))) {
 			throw new Exception('Trying to overwrite a HOF type: ' . implode(':', $typeList));
 		}
@@ -2116,11 +2116,11 @@ abstract class AbstractSmrPlayer {
 		$hof = $amount;
 	}
 
-	public function isUnderAttack() : bool {
+	public function isUnderAttack(): bool {
 		return $this->underAttack;
 	}
 
-	public function setUnderAttack(bool $value) : void {
+	public function setUnderAttack(bool $value): void {
 		if ($this->underAttack === $value) {
 			return;
 		}
@@ -2128,7 +2128,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function removeUnderAttack() : bool {
+	public function removeUnderAttack(): bool {
 		$session = Smr\Session::getInstance();
 		$var = $session->getCurrentVar();
 		if (isset($var['UnderAttack'])) {
@@ -2142,7 +2142,7 @@ abstract class AbstractSmrPlayer {
 		return $underAttack;
 	}
 
-	public function killPlayer(int $sectorID) : void {
+	public function killPlayer(int $sectorID): void {
 		$sector = SmrSector::getSector($this->getGameID(), $sectorID);
 		//msg taken care of in trader_att_proc.php
 		// forget plotted course
@@ -2178,7 +2178,7 @@ abstract class AbstractSmrPlayer {
 		$this->setUnderAttack(false);
 	}
 
-	public function killPlayerByPlayer(AbstractSmrPlayer $killer) : array {
+	public function killPlayerByPlayer(AbstractSmrPlayer $killer): array {
 		$return = [];
 		$msg = $this->getBBLink();
 
@@ -2338,7 +2338,7 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function killPlayerByForces(SmrForce $forces) : array {
+	public function killPlayerByForces(SmrForce $forces): array {
 		$return = [];
 		$owner = $forces->getOwner();
 		// send a message to the person who died
@@ -2383,7 +2383,7 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function killPlayerByPort(SmrPort $port) : array {
+	public function killPlayerByPort(SmrPort $port): array {
 		$return = [];
 		// send a message to the person who died
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by the defenses of ' . $port->getDisplayName());
@@ -2424,7 +2424,7 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function killPlayerByPlanet(SmrPlanet $planet) : array {
+	public function killPlayerByPlanet(SmrPlanet $planet): array {
 		$return = [];
 		// send a message to the person who died
 		$planetOwner = $planet->getOwner();
@@ -2469,17 +2469,17 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function incrementAllianceVsKills(int $otherID) : void {
+	public function incrementAllianceVsKills(int $otherID): void {
 		$values = [$this->getGameID(), $this->getAllianceID(), $otherID, 1];
 		$this->db->write('INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) VALUES (' . $this->db->escapeArray($values) . ') ON DUPLICATE KEY UPDATE kills = kills + 1');
 	}
 
-	public function incrementAllianceVsDeaths(int $otherID) : void {
+	public function incrementAllianceVsDeaths(int $otherID): void {
 		$values = [$this->getGameID(), $otherID, $this->getAllianceID(), 1];
 		$this->db->write('INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) VALUES (' . $this->db->escapeArray($values) . ') ON DUPLICATE KEY UPDATE kills = kills + 1');
 	}
 
-	public function getTurnsLevel() : string {
+	public function getTurnsLevel(): string {
 		if (!$this->hasTurns()) {
 			return 'NONE';
 		}
@@ -2495,7 +2495,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Returns the CSS class color to use when displaying the player's turns
 	 */
-	public function getTurnsColor() : string {
+	public function getTurnsColor(): string {
 		return match($this->getTurnsLevel()) {
 			'NONE', 'LOW' => 'red',
 			'MEDIUM' => 'yellow',
@@ -2503,19 +2503,19 @@ abstract class AbstractSmrPlayer {
 		};
 	}
 
-	public function getTurns() : int {
+	public function getTurns(): int {
 		return $this->turns;
 	}
 
-	public function hasTurns() : bool {
+	public function hasTurns(): bool {
 		return $this->turns > 0;
 	}
 
-	public function getMaxTurns() : int {
+	public function getMaxTurns(): int {
 		return $this->getGame()->getMaxTurns();
 	}
 
-	public function setTurns(int $turns) : void {
+	public function setTurns(int $turns): void {
 		if ($this->turns == $turns) {
 			return;
 		}
@@ -2524,7 +2524,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function takeTurns(int $take, int $takeNewbie = 0) : void {
+	public function takeTurns(int $take, int $takeNewbie = 0): void {
 		if ($take < 0 || $takeNewbie < 0) {
 			throw new Exception('Trying to take negative turns.');
 		}
@@ -2543,7 +2543,7 @@ abstract class AbstractSmrPlayer {
 		$this->updateLastCPLAction();
 	}
 
-	public function giveTurns(int $give, int $giveNewbie = 0) : void {
+	public function giveTurns(int $give, int $giveNewbie = 0): void {
 		if ($give < 0 || $giveNewbie < 0) {
 			throw new Exception('Trying to give negative turns.');
 		}
@@ -2555,7 +2555,7 @@ abstract class AbstractSmrPlayer {
 	 * Calculate the time in seconds between the given time and when the
 	 * player will be at max turns.
 	 */
-	public function getTimeUntilMaxTurns(int $time, bool $forceUpdate = false) : int {
+	public function getTimeUntilMaxTurns(int $time, bool $forceUpdate = false): int {
 		$timeDiff = $time - $this->getLastTurnUpdate();
 		$turnsDiff = $this->getMaxTurns() - $this->getTurns();
 		$ship = $this->getShip($forceUpdate);
@@ -2567,7 +2567,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Grant the player their starting turns.
 	 */
-	public function giveStartingTurns() : void {
+	public function giveStartingTurns(): void {
 		$startTurns = IFloor($this->getShip()->getRealSpeed() * $this->getGame()->getStartTurnHours());
 		$this->giveTurns($startTurns);
 		$this->setLastTurnUpdate($this->getGame()->getStartTime());
@@ -2575,14 +2575,14 @@ abstract class AbstractSmrPlayer {
 
 	// Turns only update when player is active.
 	// Calculate turns gained between given time and the last turn update
-	public function getTurnsGained(int $time, bool $forceUpdate = false) : int {
+	public function getTurnsGained(int $time, bool $forceUpdate = false): int {
 		$timeDiff = $time - $this->getLastTurnUpdate();
 		$ship = $this->getShip($forceUpdate);
 		$extraTurns = IFloor($timeDiff * $ship->getRealSpeed() / 3600);
 		return $extraTurns;
 	}
 
-	public function updateTurns() : void {
+	public function updateTurns(): void {
 		// is account validated?
 		if (!$this->getAccount()->isValidated()) {
 			return;
@@ -2600,11 +2600,11 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function getLastTurnUpdate() : int {
+	public function getLastTurnUpdate(): int {
 		return $this->lastTurnUpdate;
 	}
 
-	public function setLastTurnUpdate(int $time) : void {
+	public function setLastTurnUpdate(int $time): void {
 		if ($this->lastTurnUpdate == $time) {
 			return;
 		}
@@ -2612,11 +2612,11 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getLastActive() : int {
+	public function getLastActive(): int {
 		return $this->lastActive;
 	}
 
-	public function setLastActive(int $lastActive) : void {
+	public function setLastActive(int $lastActive): void {
 		if ($this->lastActive == $lastActive) {
 			return;
 		}
@@ -2624,11 +2624,11 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getLastCPLAction() : int {
+	public function getLastCPLAction(): int {
 		return $this->lastCPLAction;
 	}
 
-	public function setLastCPLAction(int $time) : void {
+	public function setLastCPLAction(int $time): void {
 		if ($this->lastCPLAction == $time) {
 			return;
 		}
@@ -2636,11 +2636,11 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function updateLastCPLAction() : void {
+	public function updateLastCPLAction(): void {
 		$this->setLastCPLAction(Smr\Epoch::time());
 	}
 
-	public function setNewbieWarning(bool $bool) : void {
+	public function setNewbieWarning(bool $bool): void {
 		if ($this->newbieWarning == $bool) {
 			return;
 		}
@@ -2648,15 +2648,15 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getNewbieWarning() : bool {
+	public function getNewbieWarning(): bool {
 		return $this->newbieWarning;
 	}
 
-	public function isDisplayMissions() : bool {
+	public function isDisplayMissions(): bool {
 		return $this->displayMissions;
 	}
 
-	public function setDisplayMissions(bool $bool) : void {
+	public function setDisplayMissions(bool $bool): void {
 		if ($this->displayMissions == $bool) {
 			return;
 		}
@@ -2664,7 +2664,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getMissions() : array {
+	public function getMissions(): array {
 		if (!isset($this->missions)) {
 			$dbResult = $this->db->read('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
 			$this->missions = [];
@@ -2684,7 +2684,7 @@ abstract class AbstractSmrPlayer {
 		return $this->missions;
 	}
 
-	public function getActiveMissions() : array {
+	public function getActiveMissions(): array {
 		$missions = $this->getMissions();
 		foreach ($missions as $missionID => $mission) {
 			if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
@@ -2694,7 +2694,7 @@ abstract class AbstractSmrPlayer {
 		return $missions;
 	}
 
-	protected function getMission(int $missionID) : array|false {
+	protected function getMission(int $missionID): array|false {
 		$missions = $this->getMissions();
 		if (isset($missions[$missionID])) {
 			return $missions[$missionID];
@@ -2702,11 +2702,11 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	protected function hasMission(int $missionID) : bool {
+	protected function hasMission(int $missionID): bool {
 		return $this->getMission($missionID) !== false;
 	}
 
-	protected function updateMission(int $missionID) : bool {
+	protected function updateMission(int $missionID): bool {
 		$this->getMissions();
 		if (isset($this->missions[$missionID])) {
 			$mission = $this->missions[$missionID];
@@ -2725,7 +2725,7 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	private function setupMissionStep(int $missionID) : void {
+	private function setupMissionStep(int $missionID): void {
 		$stepID = $this->missions[$missionID]['On Step'];
 		if ($stepID >= count(MISSIONS[$missionID]['Steps'])) {
 			// Nothing to do if this mission is already completed
@@ -2750,12 +2750,12 @@ abstract class AbstractSmrPlayer {
 	 * Declining a mission will permanently hide it from the player
 	 * by adding it in its completed state.
 	 */
-	public function declineMission(int $missionID) : void {
+	public function declineMission(int $missionID): void {
 		$finishedStep = count(MISSIONS[$missionID]['Steps']);
 		$this->addMission($missionID, $finishedStep);
 	}
 
-	public function addMission(int $missionID, int $step = 0) : void {
+	public function addMission(int $missionID, int $step = 0): void {
 		$this->getMissions();
 
 		if (isset($this->missions[$missionID])) {
@@ -2782,7 +2782,7 @@ abstract class AbstractSmrPlayer {
 		);
 	}
 
-	private function rebuildMission(int $missionID) : void {
+	private function rebuildMission(int $missionID): void {
 		$mission = $this->missions[$missionID];
 		$this->missions[$missionID]['Name'] = MISSIONS[$missionID]['Name'];
 
@@ -2797,7 +2797,7 @@ abstract class AbstractSmrPlayer {
 		$this->missions[$missionID]['Task'] = $currentStep;
 	}
 
-	public function deleteMission(int $missionID) : void {
+	public function deleteMission(int $missionID): void {
 		$this->getMissions();
 		if (isset($this->missions[$missionID])) {
 			unset($this->missions[$missionID]);
@@ -2807,7 +2807,7 @@ abstract class AbstractSmrPlayer {
 		throw new Exception('Mission with ID not found: ' . $missionID);
 	}
 
-	public function markMissionsRead() : array {
+	public function markMissionsRead(): array {
 		$this->getMissions();
 		$unreadMissions = [];
 		foreach ($this->missions as $missionID => &$mission) {
@@ -2820,7 +2820,7 @@ abstract class AbstractSmrPlayer {
 		return $unreadMissions;
 	}
 
-	public function claimMissionReward(int $missionID) : string {
+	public function claimMissionReward(int $missionID): string {
 		$this->getMissions();
 		$mission =& $this->missions[$missionID];
 		if ($mission === false) {
@@ -2851,7 +2851,7 @@ abstract class AbstractSmrPlayer {
 		return $rewardText;
 	}
 
-	public function getAvailableMissions() : array {
+	public function getAvailableMissions(): array {
 		$availableMissions = [];
 		foreach (MISSIONS as $missionID => $mission) {
 			if ($this->hasMission($missionID)) {
@@ -2868,11 +2868,11 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Log a player action in the current sector to the admin log console.
 	 */
-	public function log(int $log_type_id, string $msg) : void {
+	public function log(int $log_type_id, string $msg): void {
 		$this->getAccount()->log($log_type_id, $msg, $this->getSectorID());
 	}
 
-	public function actionTaken(string $actionID, array $values) : void {
+	public function actionTaken(string $actionID, array $values): void {
 		if (!in_array($actionID, MISSION_ACTIONS)) {
 			throw new Exception('Unknown action: ' . $actionID);
 		}
@@ -2913,7 +2913,7 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function canSeeAny(array $otherPlayerArray) : bool {
+	public function canSeeAny(array $otherPlayerArray): bool {
 		foreach ($otherPlayerArray as $otherPlayer) {
 			if ($this->canSee($otherPlayer)) {
 				return true;
@@ -2922,7 +2922,7 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	public function canSee(AbstractSmrPlayer $otherPlayer) : bool {
+	public function canSee(AbstractSmrPlayer $otherPlayer): bool {
 		if (!$otherPlayer->getShip()->isCloaked()) {
 			return true;
 		}
@@ -2935,55 +2935,55 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	public function equals(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function equals(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $otherPlayer !== null && $this->getAccountID() == $otherPlayer->getAccountID() && $this->getGameID() == $otherPlayer->getGameID();
 	}
 
-	public function sameAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function sameAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->equals($otherPlayer) || (!is_null($otherPlayer) && $this->getGameID() == $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() == $otherPlayer->getAllianceID());
 	}
 
-	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function forceNAPAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function forceNAPAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function planetNAPAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function planetNAPAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderNAPAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function traderNAPAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderMAPAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function traderMAPAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->traderAttackTraderAlliance($otherPlayer) && $this->traderDefendTraderAlliance($otherPlayer);
 	}
 
-	public function traderAttackTraderAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function traderAttackTraderAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderDefendTraderAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function traderDefendTraderAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackForceAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function traderAttackForceAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackPortAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function traderAttackPortAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackPlanetAlliance(AbstractSmrPlayer $otherPlayer = null) : bool {
+	public function traderAttackPlanetAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function meetsAlignmentRestriction(int $restriction) : bool {
+	public function meetsAlignmentRestriction(int $restriction): bool {
 		if ($restriction < 0) {
 			return $this->getAlignment() <= $restriction;
 		}
@@ -2994,7 +2994,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	// Get an array of goods that are visible to the player
-	public function getVisibleGoods() : array {
+	public function getVisibleGoods(): array {
 		$goods = Globals::getGoods();
 		$visibleGoods = [];
 		foreach ($goods as $key => $good) {
@@ -3008,7 +3008,7 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Returns an array of all unvisited sectors.
 	 */
-	public function getUnvisitedSectors() : array {
+	public function getUnvisitedSectors(): array {
 		if (!isset($this->unvisitedSectors)) {
 			$this->unvisitedSectors = [];
 			// Note that this table actually has entries for the *unvisited* sectors!
@@ -3024,48 +3024,48 @@ abstract class AbstractSmrPlayer {
 	 * Check if player has visited the input sector.
 	 * Note that this populates the list of *all* unvisited sectors!
 	 */
-	public function hasVisitedSector(int $sectorID) : bool {
+	public function hasVisitedSector(int $sectorID): bool {
 		return !in_array($sectorID, $this->getUnvisitedSectors());
 	}
 
-	public function getLeaveNewbieProtectionHREF() : string {
+	public function getLeaveNewbieProtectionHREF(): string {
 		return Page::create('leave_newbie_processing.php')->href();
 	}
 
-	public function getExamineTraderHREF() : string {
+	public function getExamineTraderHREF(): string {
 		$container = Page::create('skeleton.php', 'trader_examine.php');
 		$container['target'] = $this->getAccountID();
 		return $container->href();
 	}
 
-	public function getAttackTraderHREF() : string {
+	public function getAttackTraderHREF(): string {
 		return Globals::getAttackTraderHREF($this->getAccountID());
 	}
 
-	public function getPlanetKickHREF() : string {
+	public function getPlanetKickHREF(): string {
 		$container = Page::create('planet_kick_processing.php', 'trader_attack_processing.php');
 		$container['account_id'] = $this->getAccountID();
 		return $container->href();
 	}
 
-	public function getTraderSearchHREF() : string {
+	public function getTraderSearchHREF(): string {
 		$container = Page::create('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $this->getPlayerID();
 		return $container->href();
 	}
 
-	public function getAllianceRosterHREF() : string {
+	public function getAllianceRosterHREF(): string {
 		return Globals::getAllianceRosterHREF($this->getAllianceID());
 	}
 
-	public function getToggleWeaponHidingHREF(bool $ajax = false) : string {
+	public function getToggleWeaponHidingHREF(bool $ajax = false): string {
 		$container = Page::create('toggle_processing.php');
 		$container['toggle'] = 'WeaponHiding';
 		$container['AJAX'] = $ajax;
 		return $container->href();
 	}
 
-	public function isDisplayWeapons() : bool {
+	public function isDisplayWeapons(): bool {
 		return $this->displayWeapons;
 	}
 
@@ -3074,7 +3074,7 @@ abstract class AbstractSmrPlayer {
 	 * This updates the player database directly because it is used with AJAX,
 	 * which does not acquire a sector lock.
 	 */
-	public function setDisplayWeapons(bool $bool) : void {
+	public function setDisplayWeapons(bool $bool): void {
 		if ($this->displayWeapons == $bool) {
 			return;
 		}
@@ -3082,11 +3082,11 @@ abstract class AbstractSmrPlayer {
 		$this->db->write('UPDATE player SET display_weapons=' . $this->db->escapeBoolean($this->displayWeapons) . ' WHERE ' . $this->SQL);
 	}
 
-	public function update() : void {
+	public function update(): void {
 		$this->save();
 	}
 
-	public function save() : void {
+	public function save(): void {
 		if ($this->hasChanged === true) {
 			$this->db->write('UPDATE player SET player_name=' . $this->db->escapeString($this->playerName) .
 				', player_id=' . $this->db->escapeNumber($this->playerID) .
@@ -3162,7 +3162,7 @@ abstract class AbstractSmrPlayer {
 		$this->saveHOF();
 	}
 
-	public function saveHOF() : void {
+	public function saveHOF(): void {
 		if (count($this->hasHOFChanged) > 0) {
 			$this->doHOFSave($this->hasHOFChanged);
 			$this->hasHOFChanged = [];

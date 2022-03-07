@@ -10,14 +10,14 @@ use Smr\Race;
  */
 class RaceDetailsTest extends \PHPUnit\Framework\TestCase {
 
-	public function test_getShortDescription() : void {
+	public function test_getShortDescription(): void {
 		// Check that a description exists for all playable races
 		foreach (Race::getPlayableIDs() as $raceID) {
 			self::assertNotEmpty(RaceDetails::getShortDescription($raceID));
 		}
 	}
 
-	public function test_getLongDescription() : void {
+	public function test_getLongDescription(): void {
 		// Check that a description exists for all playable races
 		foreach (Race::getPlayableIDs() as $raceID) {
 			self::assertNotEmpty(RaceDetails::getLongDescription($raceID));

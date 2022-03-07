@@ -10,7 +10,7 @@ use SmrPlayer;
  */
 class Lotto {
 
-	public static function checkForLottoWinner(int $gameID) : void {
+	public static function checkForLottoWinner(int $gameID): void {
 
 		// No more lotto winners after the game has ended
 		if (SmrGame::getGame($gameID)->hasEnded()) {
@@ -65,7 +65,7 @@ class Lotto {
 		]);
 	}
 
-	public static function getLottoInfo(int $gameID) : array {
+	public static function getLottoInfo(int $gameID): array {
 		$amount = 1000000;
 		$firstBuy = Epoch::time();
 

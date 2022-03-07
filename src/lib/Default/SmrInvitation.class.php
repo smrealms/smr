@@ -12,7 +12,7 @@ class SmrInvitation {
 	private int $messageID;
 	private int $expires;
 
-	static public function send(int $allianceID, int $gameID, int $receiverAccountID, int $senderAccountID, int $messageID, int $expires) : void {
+	static public function send(int $allianceID, int $gameID, int $receiverAccountID, int $senderAccountID, int $messageID, int $expires): void {
 		$db = Smr\Database::getInstance();
 		$db->insert('alliance_invites_player', [
 			'game_id' => $db->escapeNumber($gameID),
@@ -27,7 +27,7 @@ class SmrInvitation {
 	/**
 	 * Get all unexpired invitations for the given alliance
 	 */
-	static public function getAll(int $allianceID, int $gameID) : array {
+	static public function getAll(int $allianceID, int $gameID): array {
 		// Remove any expired invitations
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));
@@ -43,7 +43,7 @@ class SmrInvitation {
 	/**
 	 * Get the alliance invitation for a single recipient, if not expired
 	 */
-	static public function get(int $allianceID, int $gameID, int $receiverAccountID) : SmrInvitation {
+	static public function get(int $allianceID, int $gameID, int $receiverAccountID): SmrInvitation {
 		// Remove any expired invitations
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));
@@ -64,21 +64,21 @@ class SmrInvitation {
 		$this->expires = $dbRecord->getInt('expires');
 	}
 
-	public function delete() : void {
+	public function delete(): void {
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($this->allianceID) . ' AND game_id=' . $db->escapeNumber($this->gameID) . ' AND account_id=' . $db->escapeNumber($this->receiverAccountID));
 		$db->write('DELETE FROM message WHERE message_id=' . $db->escapeNumber($this->messageID));
 	}
 
-	public function getSender() : SmrPlayer {
+	public function getSender(): SmrPlayer {
 		return SmrPlayer::getPlayer($this->senderAccountID, $this->gameID);
 	}
 
-	public function getReceiver() : SmrPlayer {
+	public function getReceiver(): SmrPlayer {
 		return SmrPlayer::getPlayer($this->receiverAccountID, $this->gameID);
 	}
 
-	public function getExpires() : int {
+	public function getExpires(): int {
 		return $this->expires;
 	}
 

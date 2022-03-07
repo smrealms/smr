@@ -3,7 +3,7 @@
 /**
  * @param resource $fp
  */
-function query_command($fp, string $rdata) : bool
+function query_command($fp, string $rdata): bool
 {
 
 	// :MrSpock!mrspock@coldfront-120CBD34.dip.t-dialin.net PRIVMSG Caretaker :Test

@@ -17,7 +17,7 @@ class SmrWeaponType {
 	protected int $powerLevel;
 	protected int $buyerRestriction;
 
-	public static function getWeaponType(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null) : SmrWeaponType {
+	public static function getWeaponType(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null): SmrWeaponType {
 		if (!isset(self::$CACHE_WEAPON_TYPES[$weaponTypeID])) {
 			if ($dbRecord === null) {
 				$db = Smr\Database::getInstance();
@@ -30,7 +30,7 @@ class SmrWeaponType {
 		return self::$CACHE_WEAPON_TYPES[$weaponTypeID];
 	}
 
-	public static function getAllWeaponTypes() : array {
+	public static function getAllWeaponTypes(): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM weapon_type');
 		$weapons = [];
@@ -44,7 +44,7 @@ class SmrWeaponType {
 	/**
 	 * Returns all weapon types that are purchasable in the given game.
 	 */
-	public static function getAllSoldWeaponTypes(int $gameID) : array {
+	public static function getAllSoldWeaponTypes(int $gameID): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT DISTINCT weapon_type.* FROM weapon_type JOIN location_sells_weapons USING (weapon_type_id) JOIN location USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID));
 		$weapons = [];
@@ -67,35 +67,35 @@ class SmrWeaponType {
 		$this->buyerRestriction = $dbRecord->getInt('buyer_restriction');
 	}
 
-	public function getWeaponTypeID() : int {
+	public function getWeaponTypeID(): int {
 		return $this->weaponTypeID;
 	}
 
-	public function getName() : string {
+	public function getName(): string {
 		return $this->name;
 	}
 
-	public function getCost() : int {
+	public function getCost(): int {
 		return $this->cost;
 	}
 
-	public function getShieldDamage() : int {
+	public function getShieldDamage(): int {
 		return $this->shieldDamage;
 	}
 
-	public function getArmourDamage() : int {
+	public function getArmourDamage(): int {
 		return $this->armourDamage;
 	}
 
-	public function getAccuracy() : int {
+	public function getAccuracy(): int {
 		return $this->accuracy;
 	}
 
-	public function getPowerLevel() : int {
+	public function getPowerLevel(): int {
 		return $this->powerLevel;
 	}
 
-	public function getBuyerRestriction() : int {
+	public function getBuyerRestriction(): int {
 		return $this->buyerRestriction;
 	}
 

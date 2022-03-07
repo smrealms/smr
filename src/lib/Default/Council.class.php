@@ -7,7 +7,7 @@ class Council {
 	/**
 	 * Returns an array of Account ID's of the Council for this race.
 	 */
-	public static function getRaceCouncil(int $gameID, int $raceID) : array {
+	public static function getRaceCouncil(int $gameID, int $raceID): array {
 		if (!isset(self::$COUNCILS[$gameID][$raceID])) {
 			self::$COUNCILS[$gameID][$raceID] = [];
 			self::$PRESIDENTS[$gameID][$raceID] = false;
@@ -42,12 +42,12 @@ class Council {
 	/**
 	 * Returns the Account ID of the President for this race (or false if no President).
 	 */
-	public static function getPresidentID(int $gameID, int $raceID) : int|false {
+	public static function getPresidentID(int $gameID, int $raceID): int|false {
 		self::getRaceCouncil($gameID, $raceID); // determines the president
 		return self::$PRESIDENTS[$gameID][$raceID];
 	}
 
-	public static function isOnCouncil(int $gameID, int $raceID, int $accountID) : bool {
+	public static function isOnCouncil(int $gameID, int $raceID, int $accountID): bool {
 		return in_array($accountID, self::getRaceCouncil($gameID, $raceID));
 	}
 }

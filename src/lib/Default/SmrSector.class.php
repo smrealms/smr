@@ -33,7 +33,7 @@ class SmrSector {
 	 * Constructs the sector to determine if it exists.
 	 * Returns a boolean value.
 	 */
-	public static function sectorExists(int $gameID, int $sectorID) : bool {
+	public static function sectorExists(int $gameID, int $sectorID): bool {
 		try {
 			self::getSector($gameID, $sectorID);
 			return true;
@@ -42,7 +42,7 @@ class SmrSector {
 		}
 	}
 
-	public static function getGalaxySectors(int $gameID, int $galaxyID, bool $forceUpdate = false) : array {
+	public static function getGalaxySectors(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id=' . $db->escapeNumber($galaxyID) . ' ORDER BY sector_id ASC');
@@ -56,7 +56,7 @@ class SmrSector {
 		return self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID];
 	}
 
-	public static function getLocationSectors(int $gameID, int $locationTypeID, bool $forceUpdate = false) : array {
+	public static function getLocationSectors(int $gameID, int $locationTypeID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM location JOIN sector USING (game_id, sector_id) WHERE location_type_id = ' . $db->escapeNumber($locationTypeID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY sector_id ASC');
@@ -70,20 +70,20 @@ class SmrSector {
 		return self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID];
 	}
 
-	public static function getSector(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null) : self {
+	public static function getSector(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_SECTORS[$gameID][$sectorID]) || $forceUpdate) {
 			self::$CACHE_SECTORS[$gameID][$sectorID] = new SmrSector($gameID, $sectorID, false, $dbRecord);
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
 
-	public static function clearCache() : void {
+	public static function clearCache(): void {
 		self::$CACHE_LOCATION_SECTORS = [];
 		self::$CACHE_GALAXY_SECTORS = [];
 		self::$CACHE_SECTORS = [];
 	}
 
-	public static function saveSectors() : void {
+	public static function saveSectors(): void {
 		foreach (self::$CACHE_SECTORS as $gameSectors) {
 			foreach ($gameSectors as $sector) {
 				$sector->update();
@@ -91,7 +91,7 @@ class SmrSector {
 		}
 	}
 
-	public static function createSector(int $gameID, int $sectorID) : self {
+	public static function createSector(int $gameID, int $sectorID): self {
 		if (!isset(self::$CACHE_SECTORS[$gameID][$sectorID])) {
 			$s = new SmrSector($gameID, $sectorID, true);
 			self::$CACHE_SECTORS[$gameID][$sectorID] = $s;
@@ -135,7 +135,7 @@ class SmrSector {
 		}
 	}
 
-	public function update() : void {
+	public function update(): void {
 		if ($this->isNew) {
 			$this->db->insert('sector', [
 				'sector_id' => $this->db->escapeNumber($this->getSectorID()),
@@ -161,7 +161,7 @@ class SmrSector {
 		$this->hasChanged = false;
 	}
 
-	public function markVisited(AbstractSmrPlayer $player) : void {
+	public function markVisited(AbstractSmrPlayer $player): void {
 		if ($this->hasPort()) {
 			$this->getPort()->addCachePort($player->getAccountID());
 		}
@@ -174,7 +174,7 @@ class SmrSector {
 		$this->visited[$player->getAccountID()] = true;
 	}
 
-	public function hasWeaponShop() : bool {
+	public function hasWeaponShop(): bool {
 		foreach ($this->getLocations() as $location) {
 			if ($location->isWeaponSold()) {
 				return true;
@@ -183,7 +183,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function hasHQ() : bool {
+	public function hasHQ(): bool {
 		foreach ($this->getLocations() as $location) {
 			if ($location->isHQ()) {
 				return true;
@@ -192,7 +192,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function hasUG() : bool {
+	public function hasUG(): bool {
 		foreach ($this->getLocations() as $location) {
 			if ($location->isUG()) {
 				return true;
@@ -201,7 +201,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function hasShipShop() : bool {
+	public function hasShipShop(): bool {
 		foreach ($this->getLocations() as $location) {
 			if ($location->isShipSold()) {
 				return true;
@@ -210,7 +210,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function offersFederalProtection() : bool {
+	public function offersFederalProtection(): bool {
 		foreach ($this->getLocations() as $location) {
 			if ($location->isFed()) {
 				return true;
@@ -219,7 +219,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function getFedRaceIDs() : array {
+	public function getFedRaceIDs(): array {
 		$raceIDs = [];
 		foreach ($this->getLocations() as $location) {
 			if ($location->isFed()) {
@@ -229,7 +229,7 @@ class SmrSector {
 		return $raceIDs;
 	}
 
-	public function hasBar() : bool {
+	public function hasBar(): bool {
 		foreach ($this->getLocations() as $location) {
 			if ($location->isBar()) {
 				return true;
@@ -238,7 +238,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function hasHardwareShop() : bool {
+	public function hasHardwareShop(): bool {
 		foreach ($this->getLocations() as $location) {
 			if ($location->isHardwareSold()) {
 				return true;
@@ -247,7 +247,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function hasBank() : bool {
+	public function hasBank(): bool {
 		foreach ($this->getLocations() as $location) {
 			if ($location->isBank()) {
 				return true;
@@ -256,7 +256,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function enteringSector(AbstractSmrPlayer $player, int $movementType) : void {
+	public function enteringSector(AbstractSmrPlayer $player, int $movementType): void {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
 		$message .= match($movementType) {
@@ -272,7 +272,7 @@ class SmrSector {
 		}
 	}
 
-	public function leavingSector(AbstractSmrPlayer $player, int $movementType) : void {
+	public function leavingSector(AbstractSmrPlayer $player, int $movementType): void {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
 		$message .= match($movementType) {
@@ -290,7 +290,7 @@ class SmrSector {
 								AND refresher = ' . $this->db->escapeNumber($player->getAccountID()));
 	}
 
-	public function diedHere(AbstractSmrPlayer $player) : void {
+	public function diedHere(AbstractSmrPlayer $player): void {
 		// iterate over all scout drones in sector
 		foreach ($this->getForces() as $force) {
 			// send scout messages to user
@@ -299,23 +299,23 @@ class SmrSector {
 		}
 	}
 
-	public function getSQL() : string {
+	public function getSQL(): string {
 		return $this->SQL;
 	}
 
-	public function getGameID() : int {
+	public function getGameID(): int {
 		return $this->gameID;
 	}
 
-	public function getSectorID() : int {
+	public function getSectorID(): int {
 		return $this->sectorID;
 	}
 
-	public function getGalaxyID() : int {
+	public function getGalaxyID(): int {
 		return $this->galaxyID;
 	}
 
-	public function setGalaxyID(int $galaxyID) : void {
+	public function setGalaxyID(int $galaxyID): void {
 		if (isset($this->galaxyID) && $this->galaxyID == $galaxyID) {
 			return;
 		}
@@ -326,14 +326,14 @@ class SmrSector {
 	/**
 	 * Returns the number of linked sectors (excluding warps)
 	 */
-	public function getNumberOfLinks() : int {
+	public function getNumberOfLinks(): int {
 		return count($this->links);
 	}
 
 	/**
 	 * Returns the number of linked sectors (including warps)
 	 */
-	public function getNumberOfConnections() : int {
+	public function getNumberOfConnections(): int {
 		$links = $this->getNumberOfLinks();
 		if ($this->hasWarp()) {
 			$links++;
@@ -341,11 +341,11 @@ class SmrSector {
 		return $links;
 	}
 
-	public function getGalaxy() : SmrGalaxy {
+	public function getGalaxy(): SmrGalaxy {
 		return SmrGalaxy::getGalaxy($this->getGameID(), $this->getGalaxyID());
 	}
 
-	public function getNeighbourID(string $dir) : int {
+	public function getNeighbourID(string $dir): int {
 		if ($this->hasLink($dir)) {
 			return $this->getLink($dir);
 		}
@@ -382,7 +382,7 @@ class SmrSector {
 		return $neighbour;
 	}
 
-	public function getSectorDirection(int $sectorID) : string {
+	public function getSectorDirection(int $sectorID): string {
 		if ($sectorID == $this->getSectorID()) {
 			return 'Current';
 		}
@@ -396,27 +396,27 @@ class SmrSector {
 		return 'None';
 	}
 
-	public function getNeighbourSector(string $dir) : self {
+	public function getNeighbourSector(string $dir): self {
 		return SmrSector::getSector($this->getGameID(), $this->getNeighbourID($dir));
 	}
 
-	public function getLinks() : array {
+	public function getLinks(): array {
 		return $this->links;
 	}
 
-	public function isLinked(int $sectorID) : bool {
+	public function isLinked(int $sectorID): bool {
 		return in_array($sectorID, $this->links) || $sectorID == $this->getWarp();
 	}
 
-	public function getLink(string $name) : int {
+	public function getLink(string $name): int {
 		return $this->links[$name] ?? 0;
 	}
 
-	public function hasLink(string $name) : bool {
+	public function hasLink(string $name): bool {
 		return $this->getLink($name) != 0;
 	}
 
-	public function getLinkSector(string $name) : self|false {
+	public function getLinkSector(string $name): self|false {
 		if ($this->hasLink($name)) {
 			return SmrSector::getSector($this->getGameID(), $this->getLink($name));
 		}
@@ -426,7 +426,7 @@ class SmrSector {
 	/**
 	 * Cannot be used for Warps
 	 */
-	public function setLink(string $name, int $linkID) : void {
+	public function setLink(string $name, int $linkID): void {
 		if ($this->getLink($name) == $linkID) {
 			return;
 		}
@@ -444,7 +444,7 @@ class SmrSector {
 	/**
 	 * Cannot be used for Warps
 	 */
-	public function setLinkSector(string $dir, SmrSector $linkSector) : void {
+	public function setLinkSector(string $dir, SmrSector $linkSector): void {
 		$this->setLink($dir, $linkSector->getSectorID());
 		$linkSector->setLink(self::oppositeDir($dir), $this->getSectorID());
 	}
@@ -452,14 +452,14 @@ class SmrSector {
 	/**
 	 * Cannot be used for Warps
 	 */
-	public function enableLink(string $dir) : void {
+	public function enableLink(string $dir): void {
 		$this->setLinkSector($dir, $this->getNeighbourSector($dir));
 	}
 
 	/**
 	 * Cannot be used for Warps
 	 */
-	public function disableLink(string $dir) : void {
+	public function disableLink(string $dir): void {
 		$this->setLink($dir, 0);
 		$this->getNeighbourSector($dir)->setLink(self::oppositeDir($dir), 0);
 	}
@@ -467,7 +467,7 @@ class SmrSector {
 	/**
 	 * Cannot be used for Warps
 	 */
-	public function toggleLink(string $dir) : void {
+	public function toggleLink(string $dir): void {
 		if ($this->hasLink($dir)) {
 			$this->disableLink($dir);
 		} else {
@@ -475,7 +475,7 @@ class SmrSector {
 		}
 	}
 
-	public static function oppositeDir(string $dir) : string {
+	public static function oppositeDir(string $dir): string {
 		return match($dir) {
 			'Up' => 'Down',
 			'Down' => 'Up',
@@ -485,66 +485,66 @@ class SmrSector {
 		};
 	}
 
-	public function getLinkUp() : int {
+	public function getLinkUp(): int {
 		return $this->getLink('Up');
 	}
 
-	public function setLinkUp(int $linkID) : void {
+	public function setLinkUp(int $linkID): void {
 		$this->setLink('Up', $linkID);
 	}
 
-	public function hasLinkUp() : bool {
+	public function hasLinkUp(): bool {
 		return $this->hasLink('Up');
 	}
 
-	public function getLinkDown() : int {
+	public function getLinkDown(): int {
 		return $this->getLink('Down');
 	}
 
-	public function setLinkDown(int $linkID) : void {
+	public function setLinkDown(int $linkID): void {
 		$this->setLink('Down', $linkID);
 	}
 
-	public function hasLinkDown() : bool {
+	public function hasLinkDown(): bool {
 		return $this->hasLink('Down');
 	}
 
-	public function getLinkLeft() : int {
+	public function getLinkLeft(): int {
 		return $this->getLink('Left');
 	}
 
-	public function hasLinkLeft() : bool {
+	public function hasLinkLeft(): bool {
 		return $this->hasLink('Left');
 	}
 
-	public function setLinkLeft(int $linkID) : void {
+	public function setLinkLeft(int $linkID): void {
 		$this->setLink('Left', $linkID);
 	}
 
-	public function getLinkRight() : int {
+	public function getLinkRight(): int {
 		return $this->getLink('Right');
 	}
 
-	public function hasLinkRight() : bool {
+	public function hasLinkRight(): bool {
 		return $this->hasLink('Right');
 	}
 
-	public function setLinkRight(int $linkID) : void {
+	public function setLinkRight(int $linkID): void {
 		$this->setLink('Right', $linkID);
 	}
 
 	/**
 	 * Returns the warp sector if the sector has a warp; returns 0 otherwise.
 	 */
-	public function getWarp() : int {
+	public function getWarp(): int {
 		return $this->warp;
 	}
 
-	public function getWarpSector() : self {
+	public function getWarpSector(): self {
 		return SmrSector::getSector($this->getGameID(), $this->getWarp());
 	}
 
-	public function hasWarp() : bool {
+	public function hasWarp(): bool {
 		return $this->getWarp() != 0;
 	}
 
@@ -552,7 +552,7 @@ class SmrSector {
 	 * Set the warp sector for both $this and $warp to ensure
 	 * a consistent 2-way warp.
 	 */
-	public function setWarp(SmrSector $warp) : void {
+	public function setWarp(SmrSector $warp): void {
 		if ($this->getWarp() == $warp->getSectorID() &&
 		    $warp->getWarp() == $this->getSectorID()) {
 			// Warps are already set correctly!
@@ -582,7 +582,7 @@ class SmrSector {
 	/**
 	 * Remove the warp sector for both sides of the warp.
 	 */
-	public function removeWarp() : void {
+	public function removeWarp(): void {
 		if (!$this->hasWarp()) {
 			return;
 		}
@@ -600,34 +600,34 @@ class SmrSector {
 		}
 	}
 
-	public function hasPort() : bool {
+	public function hasPort(): bool {
 		return $this->getPort()->exists();
 	}
 
-	public function getPort() : SmrPort {
+	public function getPort(): SmrPort {
 		return SmrPort::getPort($this->getGameID(), $this->getSectorID());
 	}
 
-	public function createPort() : SmrPort {
+	public function createPort(): SmrPort {
 		return SmrPort::createPort($this->getGameID(), $this->getSectorID());
 	}
 
-	public function removePort() : void {
+	public function removePort(): void {
 		SmrPort::removePort($this->getGameID(), $this->getSectorID());
 	}
 
-	public function hasCachedPort(AbstractSmrPlayer $player = null) : bool {
+	public function hasCachedPort(AbstractSmrPlayer $player = null): bool {
 		return $this->getCachedPort($player) !== false;
 	}
 
-	public function getCachedPort(AbstractSmrPlayer $player = null) : SmrPort|false {
+	public function getCachedPort(AbstractSmrPlayer $player = null): SmrPort|false {
 		if ($player === null) {
 			return false;
 		}
 		return SmrPort::getCachedPort($this->getGameID(), $this->getSectorID(), $player->getAccountID());
 	}
 
-	public function hasAnyLocationsWithAction() : bool {
+	public function hasAnyLocationsWithAction(): bool {
 		$locations = SmrLocation::getSectorLocations($this->getGameID(), $this->getSectorID());
 		$hasAction = false;
 		foreach ($locations as $location) {
@@ -638,7 +638,7 @@ class SmrSector {
 		return $hasAction;
 	}
 
-	public function hasLocation(int $locationTypeID = null) : bool {
+	public function hasLocation(int $locationTypeID = null): bool {
 		$locations = $this->getLocations();
 		if (count($locations) == 0) {
 			return false;
@@ -654,31 +654,31 @@ class SmrSector {
 		return false;
 	}
 
-	public function getLocations() : array {
+	public function getLocations(): array {
 		return SmrLocation::getSectorLocations($this->getGameID(), $this->getSectorID());
 	}
 
-	public function addLocation(SmrLocation $location) : void {
+	public function addLocation(SmrLocation $location): void {
 		SmrLocation::addSectorLocation($this->getGameID(), $this->getSectorID(), $location);
 	}
 
-	public function removeAllLocations() : void {
+	public function removeAllLocations(): void {
 		SmrLocation::removeSectorLocations($this->getGameID(), $this->getSectorID());
 	}
 
-	public function hasPlanet() : bool {
+	public function hasPlanet(): bool {
 		return $this->getPlanet()->exists();
 	}
 
-	public function getPlanet() : SmrPlanet {
+	public function getPlanet(): SmrPlanet {
 		return SmrPlanet::getPlanet($this->getGameID(), $this->getSectorID());
 	}
 
-	public function createPlanet(int $type = 1) : SmrPlanet {
+	public function createPlanet(int $type = 1): SmrPlanet {
 		return SmrPlanet::createPlanet($this->getGameID(), $this->getSectorID(), $type);
 	}
 
-	public function removePlanet() : void {
+	public function removePlanet(): void {
 		SmrPlanet::removePlanet($this->getGameID(), $this->getSectorID());
 	}
 
@@ -686,7 +686,7 @@ class SmrSector {
 	 * Removes ports, planets, locations, and warps from this sector.
 	 * NOTE: This should only be used by the universe generator!
 	 */
-	public function removeAllFixtures() : void {
+	public function removeAllFixtures(): void {
 		if ($this->hasPort()) {
 			$this->removePort();
 		}
@@ -701,11 +701,11 @@ class SmrSector {
 		}
 	}
 
-	public function hasForces() : bool {
+	public function hasForces(): bool {
 		return count($this->getForces()) > 0;
 	}
 
-	public function hasEnemyForces(AbstractSmrPlayer $player = null) : bool {
+	public function hasEnemyForces(AbstractSmrPlayer $player = null): bool {
 		if ($player == null || !$this->hasForces()) {
 			return false;
 		}
@@ -717,7 +717,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function getEnemyForces(AbstractSmrPlayer $player) : array {
+	public function getEnemyForces(AbstractSmrPlayer $player): array {
 		$enemyForces = [];
 		foreach ($this->getForces() as $force) {
 			if (!$player->forceNAPAlliance($force->getOwner())) {
@@ -730,7 +730,7 @@ class SmrSector {
 	/**
 	 * Returns true if any forces in this sector belong to $player.
 	 */
-	public function hasPlayerForces(AbstractSmrPlayer $player) : bool {
+	public function hasPlayerForces(AbstractSmrPlayer $player): bool {
 		foreach ($this->getForces() as $force) {
 			if ($player->getAccountID() == $force->getOwnerID()) {
 				return true;
@@ -739,7 +739,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function hasFriendlyForces(AbstractSmrPlayer $player = null) : bool {
+	public function hasFriendlyForces(AbstractSmrPlayer $player = null): bool {
 		if ($player == null || !$this->hasForces()) {
 			return false;
 		}
@@ -751,7 +751,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function getFriendlyForces(AbstractSmrPlayer $player) : array {
+	public function getFriendlyForces(AbstractSmrPlayer $player): array {
 		$friendlyForces = [];
 		foreach ($this->getForces() as $force) {
 			if ($player->forceNAPAlliance($force->getOwner())) {
@@ -761,29 +761,29 @@ class SmrSector {
 		return $friendlyForces;
 	}
 
-	public function getForces() : array {
+	public function getForces(): array {
 		return SmrForce::getSectorForces($this->getGameID(), $this->getSectorID());
 	}
 
-	public function getPlayers() : array {
+	public function getPlayers(): array {
 		return SmrPlayer::getSectorPlayers($this->getGameID(), $this->getSectorID());
 	}
 
-	public function hasPlayers() : bool {
+	public function hasPlayers(): bool {
 		return count($this->getPlayers()) > 0;
 	}
 
-	public function getOtherTraders(AbstractSmrPlayer $player) : array {
+	public function getOtherTraders(AbstractSmrPlayer $player): array {
 		$players = SmrPlayer::getSectorPlayers($this->getGameID(), $this->getSectorID()); //Do not use & because we unset something and only want that in what we return
 		unset($players[$player->getAccountID()]);
 		return $players;
 	}
 
-	public function hasOtherTraders(AbstractSmrPlayer $player) : bool {
+	public function hasOtherTraders(AbstractSmrPlayer $player): bool {
 		return count($this->getOtherTraders($player)) > 0;
 	}
 
-	public function hasEnemyTraders(AbstractSmrPlayer $player = null) : bool {
+	public function hasEnemyTraders(AbstractSmrPlayer $player = null): bool {
 		if ($player == null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -798,7 +798,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function hasFriendlyTraders(AbstractSmrPlayer $player = null) : bool {
+	public function hasFriendlyTraders(AbstractSmrPlayer $player = null): bool {
 		if ($player == null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -814,7 +814,7 @@ class SmrSector {
 	/**
 	 * Is the $player's alliance flagship in this sector?
 	 */
-	public function hasAllianceFlagship(AbstractSmrPlayer $player = null) : bool {
+	public function hasAllianceFlagship(AbstractSmrPlayer $player = null): bool {
 		if (is_null($player) || !$player->hasAlliance() || !$player->getAlliance()->hasFlagship()) {
 			return false;
 		}
@@ -827,7 +827,7 @@ class SmrSector {
 		return false;
 	}
 
-	public function hasProtectedTraders(AbstractSmrPlayer $player = null) : bool {
+	public function hasProtectedTraders(AbstractSmrPlayer $player = null): bool {
 		if ($player == null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -841,12 +841,12 @@ class SmrSector {
 		return false;
 	}
 
-	public function getFightingTradersAgainstForces(AbstractSmrPlayer $attackingPlayer, bool $bump) : array {
+	public function getFightingTradersAgainstForces(AbstractSmrPlayer $attackingPlayer, bool $bump): array {
 		// Whether bumping or attacking, only the current player fires at forces
 		return [$attackingPlayer];
 	}
 
-	public function getFightingTradersAgainstPort(AbstractSmrPlayer $attackingPlayer, SmrPort $defendingPort) : array {
+	public function getFightingTradersAgainstPort(AbstractSmrPlayer $attackingPlayer, SmrPort $defendingPort): array {
 		$fightingPlayers = [];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		foreach ($alliancePlayers as $accountID => $player) {
@@ -859,7 +859,7 @@ class SmrSector {
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, MAXIMUM_PORT_FLEET_SIZE);
 	}
 
-	public function getFightingTradersAgainstPlanet(AbstractSmrPlayer $attackingPlayer, SmrPlanet $defendingPlanet) : array {
+	public function getFightingTradersAgainstPlanet(AbstractSmrPlayer $attackingPlayer, SmrPlanet $defendingPlanet): array {
 		$fightingPlayers = [];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		if (count($alliancePlayers) > 0) {
@@ -875,7 +875,7 @@ class SmrSector {
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, min($defendingPlanet->getMaxAttackers(), MAXIMUM_PLANET_FLEET_SIZE));
 	}
 
-	public function getFightingTraders(AbstractSmrPlayer $attackingPlayer, AbstractSmrPlayer $defendingPlayer, bool $checkForCloak = false) : array {
+	public function getFightingTraders(AbstractSmrPlayer $attackingPlayer, AbstractSmrPlayer $defendingPlayer, bool $checkForCloak = false): array {
 		if ($attackingPlayer->traderNAPAlliance($defendingPlayer)) {
 			throw new Exception('These traders are NAPed.');
 		}
@@ -905,7 +905,7 @@ class SmrSector {
 		return $fightingPlayers;
 	}
 
-	public static function limitFightingTraders(array $fightingPlayers, AbstractSmrPlayer $keepPlayer, int $maximumFleetSize) : array {
+	public static function limitFightingTraders(array $fightingPlayers, AbstractSmrPlayer $keepPlayer, int $maximumFleetSize): array {
 		// Cap fleets to the required size
 		$fleet_size = count($fightingPlayers);
 		if ($fleet_size > $maximumFleetSize) {
@@ -920,7 +920,7 @@ class SmrSector {
 		return $fightingPlayers;
 	}
 
-	public function getPotentialFightingTraders(AbstractSmrPlayer $attackingPlayer) : array {
+	public function getPotentialFightingTraders(AbstractSmrPlayer $attackingPlayer): array {
 		$fightingPlayers = [];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		foreach ($alliancePlayers as $accountID => $player) {
@@ -933,11 +933,11 @@ class SmrSector {
 		return $fightingPlayers;
 	}
 
-	public function getBattles() : int {
+	public function getBattles(): int {
 		return $this->battles;
 	}
 
-	public function setBattles(int $amount) : void {
+	public function setBattles(int $amount): void {
 		if ($this->battles == $amount) {
 			return;
 		}
@@ -945,23 +945,23 @@ class SmrSector {
 		$this->hasChanged = true;
 	}
 
-	public function decreaseBattles(int $amount) : void {
+	public function decreaseBattles(int $amount): void {
 		$this->setBattles($this->battles - $amount);
 	}
 
-	public function increaseBattles(int $amount) : void {
+	public function increaseBattles(int $amount): void {
 		$this->setBattles($this->battles + $amount);
 	}
 
-	public function equals(SmrSector $otherSector) : bool {
+	public function equals(SmrSector $otherSector): bool {
 		return $otherSector->getSectorID() == $this->getSectorID() && $otherSector->getGameID() == $this->getGameID();
 	}
 
-	public function isLinkedSector(SmrSector $otherSector) : bool {
+	public function isLinkedSector(SmrSector $otherSector): bool {
 		return $otherSector->getGameID() == $this->getGameID() && $this->isLinked($otherSector->getSectorID());
 	}
 
-	public function isVisited(AbstractSmrPlayer $player = null) : bool {
+	public function isVisited(AbstractSmrPlayer $player = null): bool {
 		if ($player === null) {
 			return true;
 		}
@@ -972,23 +972,23 @@ class SmrSector {
 		return $this->visited[$player->getAccountID()];
 	}
 
-	public function getLocalMapMoveHREF(AbstractSmrPlayer $player) : string {
+	public function getLocalMapMoveHREF(AbstractSmrPlayer $player): string {
 		return Globals::getSectorMoveHREF($player, $this->getSectorID(), 'map_local.php');
 	}
 
-	public function getCurrentSectorMoveHREF(AbstractSmrPlayer $player) : string {
+	public function getCurrentSectorMoveHREF(AbstractSmrPlayer $player): string {
 		return Globals::getCurrentSectorMoveHREF($player, $this->getSectorID());
 	}
 
-	public function getGalaxyMapHREF() : string {
+	public function getGalaxyMapHREF(): string {
 		return '?sector_id=' . $this->getSectorID();
 	}
 
-	public function getSectorScanHREF(AbstractSmrPlayer $player) : string {
+	public function getSectorScanHREF(AbstractSmrPlayer $player): string {
 		return Globals::getSectorScanHREF($player, $this->getSectorID());
 	}
 
-	public function hasX(mixed $x, AbstractSmrPlayer $player = null) : bool {
+	public function hasX(mixed $x, AbstractSmrPlayer $player = null): bool {
 		if ($x instanceof SmrSector) {
 			return $this->equals($x);
 		}

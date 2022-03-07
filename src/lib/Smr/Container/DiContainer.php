@@ -25,7 +25,7 @@ class DiContainer {
 		$this->container = $this->buildContainer($enableCompilation);
 	}
 
-	private function getDefinitions() : array {
+	private function getDefinitions(): array {
 		return [
 			/*
 			 * mysqli is a 3rd party library, and we do not have control over its constructor.
@@ -57,7 +57,7 @@ class DiContainer {
 		];
 	}
 
-	private function buildContainer(bool $enableCompilation) : Container {
+	private function buildContainer(bool $enableCompilation): Container {
 		$builder = new ContainerBuilder();
 		$builder
 			->addDefinitions($this->getDefinitions())
@@ -77,7 +77,7 @@ class DiContainer {
 	 * Create a new DI\Container instance.
 	 * This needs to be done once during a bootstrapping script, like bootstrap.php
 	 */
-	public static function initialize($enableCompilation) : void {
+	public static function initialize($enableCompilation): void {
 		self::$instance = new DiContainer($enableCompilation);
 	}
 
@@ -87,7 +87,7 @@ class DiContainer {
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
-	public static function get(string $className) : mixed {
+	public static function get(string $className): mixed {
 		return self::getContainer()->get($className);
 	}
 
@@ -98,7 +98,7 @@ class DiContainer {
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
-	public static function make(string $className) : mixed {
+	public static function make(string $className): mixed {
 		return self::getContainer()->make($className);
 	}
 
@@ -106,7 +106,7 @@ class DiContainer {
 	 * Return the raw dependency injection Container instance for more robust
 	 * container management operations.
 	 */
-	public static function getContainer() : Container {
+	public static function getContainer(): Container {
 		return self::$instance->container;
 	}
 }

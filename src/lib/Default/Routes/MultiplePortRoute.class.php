@@ -9,11 +9,11 @@ class MultiplePortRoute extends Route {
 		private OneWayRoute $returnRoute,
 	) {}
 
-	public function getForwardRoute() : ?OneWayRoute {
+	public function getForwardRoute(): ?OneWayRoute {
 		return $this->forwardRoute;
 	}
 
-	public function getReturnRoute() : ?OneWayRoute {
+	public function getReturnRoute(): ?OneWayRoute {
 		return $this->returnRoute;
 	}
 }

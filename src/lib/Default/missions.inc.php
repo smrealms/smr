@@ -119,7 +119,7 @@ const MISSIONS = [
  * Searches for placeholders in template and replaces them with values
  * derived from the supplied data.
  */
-function replaceMissionTemplate(string|int &$template, string $key, array $data) : void {
+function replaceMissionTemplate(string|int &$template, string $key, array $data): void {
 	if (!is_string($template)) {
 		return;
 	}
@@ -128,7 +128,7 @@ function replaceMissionTemplate(string|int &$template, string $key, array $data)
 	$template = str_replace($search, $replace, $template);
 }
 
-function checkMissionRequirements(array $values, array $requirements) : bool {
+function checkMissionRequirements(array $values, array $requirements): bool {
 	foreach ($requirements as $reqName => $reqValue) {
 		if ($values[$reqName] != $reqValue) {
 			return false;

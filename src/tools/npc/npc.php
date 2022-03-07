@@ -6,7 +6,7 @@ class ForwardException extends Exception {}
 // Use this exception to indicate that an NPC has taken its final action
 class FinalActionException extends Exception {}
 
-function overrideForward(Page $container) : never {
+function overrideForward(Page $container): never {
 	global $forwardedContainer;
 	$forwardedContainer = $container;
 	if ($container['body'] == 'error.php') {
@@ -102,7 +102,7 @@ try {
 }
 
 
-function NPCStuff() : void {
+function NPCStuff(): void {
 	global $previousContainer;
 
 	$session = Smr\Session::getInstance();
@@ -325,7 +325,7 @@ function NPCStuff() : void {
 	exitNPC();
 }
 
-function clearCaches() : void {
+function clearCaches(): void {
 	SmrSector::clearCache();
 	SmrPlayer::clearCache();
 	SmrShip::clearCache();
@@ -333,7 +333,7 @@ function clearCaches() : void {
 	SmrPort::clearCache();
 }
 
-function debug(string $message, mixed $debugObject = null) : void {
+function debug(string $message, mixed $debugObject = null): void {
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ?EOL.var_export($debugObject, true) : '') . EOL;
 	if (NPC_LOG_TO_DATABASE) {
 		$session = Smr\Session::getInstance();
@@ -357,7 +357,7 @@ function debug(string $message, mixed $debugObject = null) : void {
 	}
 }
 
-function processContainer(Page $container) : never {
+function processContainer(Page $container): never {
 	global $forwardedContainer, $previousContainer;
 	$session = Smr\Session::getInstance();
 	$player = $session->getPlayer();
@@ -378,12 +378,12 @@ function processContainer(Page $container) : never {
 	do_voodoo();
 }
 
-function sleepNPC() : void {
+function sleepNPC(): void {
 	usleep(rand(MIN_SLEEP_TIME, MAX_SLEEP_TIME)); //Sleep for a random time
 }
 
 // Releases an NPC when it is done working
-function releaseNPC() : void {
+function releaseNPC(): void {
 	$session = Smr\Session::getInstance();
 	if (!$session->hasAccount()) {
 		debug('releaseNPC: no NPC to release');
@@ -399,14 +399,14 @@ function releaseNPC() : void {
 	}
 }
 
-function exitNPC() : void {
+function exitNPC(): void {
 	debug('Exiting NPC script.');
 	releaseNPC();
 	release_lock();
 	exit;
 }
 
-function changeNPCLogin() : void {
+function changeNPCLogin(): void {
 	// Release previous NPC, if any
 	releaseNPC();
 
@@ -453,7 +453,7 @@ function changeNPCLogin() : void {
 	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . $session->getGameID() . ')');
 }
 
-function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port) : Page {
+function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page {
 	sleepNPC(); //We have an extra sleep at port to make the NPC more vulnerable.
 	$ship = $player->getShip();
 	$relations = $player->getRelation($port->getRaceID());
@@ -473,7 +473,7 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port) : Pag
 	return Page::create('shop_goods_processing.php', '', ['offered_price'=>$offeredPrice, 'ideal_price'=>$idealPrice, 'amount'=>$amount, 'good_id'=>$goodID, 'bargain_price'=>$offeredPrice]);
 }
 
-function dumpCargo(SmrPlayer $player) : Page {
+function dumpCargo(SmrPlayer $player): Page {
 	$ship = $player->getShip();
 	$cargo = $ship->getCargo();
 	debug('Ship Cargo', $cargo);
@@ -485,11 +485,11 @@ function dumpCargo(SmrPlayer $player) : Page {
 	throw new Exception('Called dumpCargo without any cargo!');
 }
 
-function plotToSector(SmrPlayer $player, int $sectorID) : Page {
+function plotToSector(SmrPlayer $player, int $sectorID): Page {
 	return Page::create('course_plot_processing.php', '', ['from'=>$player->getSectorID(), 'to'=>$sectorID]);
 }
 
-function plotToFed(SmrPlayer $player) : Page {
+function plotToFed(SmrPlayer $player): Page {
 	debug('Plotting To Fed');
 
 	// Always drop illegal goods before heading to fed space
@@ -507,7 +507,7 @@ function plotToFed(SmrPlayer $player) : Page {
 	return $container;
 }
 
-function plotToNearest(AbstractSmrPlayer $player, mixed $realX) : Page|false {
+function plotToNearest(AbstractSmrPlayer $player, mixed $realX): Page|false {
 	debug('Plotting To: ', $realX); //TODO: Can we make the debug output a bit nicer?
 
 	if ($player->getSector()->hasX($realX)) { //Check if current sector has what we're looking for before we attempt to plot and get error.
@@ -518,12 +518,12 @@ function plotToNearest(AbstractSmrPlayer $player, mixed $realX) : Page|false {
 	return Page::create('course_plot_nearest_processing.php', '', ['RealX'=>$realX]);
 }
 
-function moveToSector(SmrPlayer $player, int $targetSector) : Page {
+function moveToSector(SmrPlayer $player, int $targetSector): Page {
 	debug('Moving from #' . $player->getSectorID() . ' to #' . $targetSector);
 	return Page::create('sector_move_processing.php', '', ['target_sector'=>$targetSector, 'target_page'=>'']);
 }
 
-function checkForShipUpgrade(AbstractSmrPlayer $player) : void {
+function checkForShipUpgrade(AbstractSmrPlayer $player): void {
 	foreach (SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
 		if ($player->getShipTypeID() == $upgradeShipID) {
 			//We can't upgrade, only downgrade.
@@ -540,7 +540,7 @@ function checkForShipUpgrade(AbstractSmrPlayer $player) : void {
 	}
 }
 
-function setupShip(AbstractSmrPlayer $player) : void {
+function setupShip(AbstractSmrPlayer $player): void {
 	// Upgrade ships if we can
 	checkForShipUpgrade($player);
 
@@ -577,7 +577,7 @@ function setupShip(AbstractSmrPlayer $player) : void {
 	$ship->update();
 }
 
-function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : ?Routes\Route {
+function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null): ?Routes\Route {
 	// Remove any route from the pool of available routes if it contains
 	// either of the sectors in the $routeToAvoid (i.e. we died on it,
 	// so don't go back!).
@@ -613,7 +613,7 @@ function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null) : ?
 	return $tradeRoute;
 }
 
-function findRoutes(SmrPlayer $player) : array {
+function findRoutes(SmrPlayer $player): array {
 	debug('Finding Routes');
 
 	$tradeGoods = [GOODS_NOTHING => false];

@@ -21,11 +21,11 @@ class ShipClass {
 		self::STARTER => 'Starter',
 	];
 
-	public static function getName(int $shipClassID) : string {
+	public static function getName(int $shipClassID): string {
 		return self::NAMES[$shipClassID];
 	}
 
-	public static function getAllNames() : array {
+	public static function getAllNames(): array {
 		return self::NAMES;
 	}
 

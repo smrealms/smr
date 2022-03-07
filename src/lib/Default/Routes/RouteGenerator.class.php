@@ -10,13 +10,13 @@ class RouteGenerator {
 	static array $moneyRoutes;
 	static array $dontAddWorseThan;
 
-	private static function initialize() : void {
+	private static function initialize(): void {
 		self::$expRoutes = [];
 		self::$moneyRoutes = [];
 		self::$dontAddWorseThan = [0, 0];
 	}
 
-	public static function generateMultiPortRoutes(int $maxNumPorts, array $sectors, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes) : array {
+	public static function generateMultiPortRoutes(int $maxNumPorts, array $sectors, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes): array {
 		self::initialize();
 		$routeLists = self::findOneWayRoutes($sectors, $distances, $routesForPort, $goods, $races);
 		$totalTasks = 0;
@@ -35,7 +35,7 @@ class RouteGenerator {
 		return $allRoutes;
 	}
 
-	private static function startRoutesToContinue(int $maxNumPorts, int $startSectorId, array $forwardRoutes, array $routeLists) : void {
+	private static function startRoutesToContinue(int $maxNumPorts, int $startSectorId, array $forwardRoutes, array $routeLists): void {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentStepBuySector = $currentStepRoute->getBuySectorId();
 			if ($currentStepBuySector > $startSectorId) { // Not already checked
@@ -44,7 +44,7 @@ class RouteGenerator {
 		}
 	}
 
-	private static function getContinueRoutes(int $maxNumPorts, int $startSectorId, Route $routeToContinue, array $forwardRoutes, array $routeLists, bool $lastGoodIsNothing) : void {
+	private static function getContinueRoutes(int $maxNumPorts, int $startSectorId, Route $routeToContinue, array $forwardRoutes, array $routeLists, bool $lastGoodIsNothing): void {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentStepBuySector = $currentStepRoute->getBuySectorId();
 			if ($lastGoodIsNothing && ($lastGoodIsNothing = GOODS_NOTHING === $currentStepRoute->getGoodID())) {
@@ -63,7 +63,7 @@ class RouteGenerator {
 		}
 	}
 
-	private static function findOneWayRoutes(array $sectors, array $distances, int $routesForPort, array $goods, array $races) : array {
+	private static function findOneWayRoutes(array $sectors, array $distances, int $routesForPort, array $goods, array $races): array {
 		$routes = [];
 		foreach ($distances as $currentSectorId => $d) {
 			$currentPort = $sectors[$currentSectorId]->getPort();
@@ -98,7 +98,7 @@ class RouteGenerator {
 		return $routes;
 	}
 
-	public static function generateOneWayRoutes(array $sectors, array $distances, array $goods, array $races, int $routesForPort) : array {
+	public static function generateOneWayRoutes(array $sectors, array $distances, array $goods, array $races, int $routesForPort): array {
 		self::initialize();
 		foreach ($distances as $currentSectorId => $d) {
 			$currentPort = $sectors[$currentSectorId]->getPort();
@@ -134,7 +134,7 @@ class RouteGenerator {
 		return $allRoutes;
 	}
 
-	private static function addExpRoute(Route $r) : void {
+	private static function addExpRoute(Route $r): void {
 		$overallMultiplier = strval($r->getOverallExpMultiplier()); // array keys must be string or int
 		if ($overallMultiplier > self::$dontAddWorseThan[self::EXP_ROUTE]) {
 			if (isset(self::$expRoutes[$overallMultiplier])) {
@@ -145,7 +145,7 @@ class RouteGenerator {
 		}
 	}
 
-	private static function addMoneyRoute(Route $r) : void {
+	private static function addMoneyRoute(Route $r): void {
 		$overallMultiplier = strval($r->getOverallMoneyMultiplier()); // array keys must be string or int
 		if ($overallMultiplier > self::$dontAddWorseThan[self::MONEY_ROUTE]) {
 			if (isset(self::$moneyRoutes[$overallMultiplier])) {
@@ -156,7 +156,7 @@ class RouteGenerator {
 		}
 	}
 
-	private static function trimRoutes(int $trimToBestXRoutes) : void {
+	private static function trimRoutes(int $trimToBestXRoutes): void {
 		$i = 0;
 		krsort(self::$expRoutes, SORT_NUMERIC);
 		foreach (self::$expRoutes as $multi => $routesByMulti) {

@@ -8,13 +8,13 @@ class DummyShip extends AbstractSmrShip {
 		$this->setHardwareToMax();
 	}
 
-	public function cacheDummyShip() : void {
+	public function cacheDummyShip(): void {
 		$db = Smr\Database::getInstance();
 		$db->write('REPLACE INTO cached_dummys (type, id, info)
 					VALUES (\'DummyShip\', ' . $db->escapeString($this->getPlayer()->getPlayerName()) . ', ' . $db->escapeObject($this) . ')');
 	}
 
-	public static function getCachedDummyShip(AbstractSmrPlayer $player) : self {
+	public static function getCachedDummyShip(AbstractSmrPlayer $player): self {
 		if (!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()])) {
 			$ship = new DummyShip($player);
 
@@ -34,7 +34,7 @@ class DummyShip extends AbstractSmrShip {
 		return self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()];
 	}
 
-	public static function getDummyShipNames() : array {
+	public static function getDummyShipNames(): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT id FROM cached_dummys WHERE type = \'DummyShip\'');
 		$dummyNames = [];

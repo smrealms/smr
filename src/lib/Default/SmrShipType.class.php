@@ -21,7 +21,7 @@ class SmrShipType {
 	private array $maxHardware = [];
 	private int $baseManeuverability;
 
-	public static function get(int $shipTypeID, Smr\DatabaseRecord $dbRecord = null) : self {
+	public static function get(int $shipTypeID, Smr\DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_SHIP_TYPES[$shipTypeID])) {
 			if ($dbRecord === null) {
 				$db = Smr\Database::getInstance();
@@ -35,7 +35,7 @@ class SmrShipType {
 		return self::$CACHE_SHIP_TYPES[$shipTypeID];
 	}
 
-	public static function getAll() : array {
+	public static function getAll(): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM ship_type ORDER BY ship_type_id ASC');
 		foreach ($dbResult->records() as $dbRecord) {
@@ -112,69 +112,69 @@ class SmrShipType {
 							);
 	}
 
-	public function getTypeID() : int {
+	public function getTypeID(): int {
 		return $this->typeID;
 	}
 
-	public function getClassID() : int {
+	public function getClassID(): int {
 		return $this->classID;
 	}
 
-	public function getName() : string {
+	public function getName(): string {
 		return $this->name;
 	}
 
-	public function getCost() : int {
+	public function getCost(): int {
 		return $this->cost;
 	}
 
-	public function getRestriction() : int {
+	public function getRestriction(): int {
 		return $this->restriction;
 	}
 
 	/**
 	 * Return the base ship speed (unmodified by the game speed)
 	 */
-	public function getSpeed() : int {
+	public function getSpeed(): int {
 		return $this->speed;
 	}
 
-	public function getHardpoints() : int {
+	public function getHardpoints(): int {
 		return $this->hardpoints;
 	}
 
 	/**
 	 * Return the maximum weapon power
 	 */
-	public function getMaxPower() : int {
+	public function getMaxPower(): int {
 		return $this->maxPower;
 	}
 
-	public function getMaxHardware(int $hardwareTypeID) : int {
+	public function getMaxHardware(int $hardwareTypeID): int {
 		return $this->maxHardware[$hardwareTypeID];
 	}
 
-	public function getAllMaxHardware() : array {
+	public function getAllMaxHardware(): array {
 		return $this->maxHardware;
 	}
 
-	public function canHaveJump() : bool {
+	public function canHaveJump(): bool {
 		return $this->getMaxHardware(HARDWARE_JUMP) > 0;
 	}
 
-	public function canHaveDCS() : bool {
+	public function canHaveDCS(): bool {
 		return $this->getMaxHardware(HARDWARE_DCS) > 0;
 	}
 
-	public function canHaveScanner() : bool {
+	public function canHaveScanner(): bool {
 		return $this->getMaxHardware(HARDWARE_SCANNER) > 0;
 	}
 
-	public function canHaveCloak() : bool {
+	public function canHaveCloak(): bool {
 		return $this->getMaxHardware(HARDWARE_CLOAK) > 0;
 	}
 
-	public function canHaveIllusion() : bool {
+	public function canHaveIllusion(): bool {
 		return $this->getMaxHardware(HARDWARE_ILLUSION) > 0;
 	}
 

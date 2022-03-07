@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function parseBoolean(mixed $check) : bool {
+function parseBoolean(mixed $check): bool {
 	// Only negative strings are not implicitly converted to the correct bool
 	if (is_string($check) && (strcasecmp($check, 'NO') == 0 || strcasecmp($check, 'FALSE') == 0)) {
 		return false;
@@ -8,7 +8,7 @@ function parseBoolean(mixed $check) : bool {
 	return (bool)$check;
 }
 
-function linkCombatLog(int $logID) : string {
+function linkCombatLog(int $logID): string {
 	$container = Page::create('combat_log_viewer_verify.php');
 	$container['log_id'] = $logID;
 	return '<a href="' . $container->href() . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
@@ -132,11 +132,11 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 	return htmlspecialchars($tagParams['_tag']) . $tagContent . htmlspecialchars($tagParams['_endtag']);
 }
 
-function inify(string $text) : string {
+function inify(string $text): string {
 	return str_replace(',', '', html_entity_decode($text));
 }
 
-function bbifyMessage(string $message, bool $noLinks = false) : string {
+function bbifyMessage(string $message, bool $noLinks = false): string {
 	static $bbParser;
 	if (!isset($bbParser)) {
 		$bbParser = new \Nbbc\BBCode();
@@ -175,7 +175,7 @@ function bbifyMessage(string $message, bool $noLinks = false) : string {
 	return $message;
 }
 
-function create_error(string $message) : never {
+function create_error(string $message): never {
 	$container = Page::create('skeleton.php', 'error.php');
 	$container['message'] = $message;
 	if (USING_AJAX) {
@@ -190,15 +190,15 @@ function create_error(string $message) : never {
 	$container->go();
 }
 
-function create_link(Page|string $container, string $text, string $class = null) : string {
+function create_link(Page|string $container, string $text, string $class = null): string {
 	return '<a' . ($class === null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($container) ? $container : $container->href()) . '">' . $text . '</a>';
 }
 
-function create_submit_link(Page $container, string $text) : string {
+function create_submit_link(Page $container, string $text): string {
 	return '<a href="' . $container->href() . '" class="submitStyle">' . $text . '</a>';
 }
 
-function get_colored_text_range(float $value, float $maxValue, string $text = null, float $minValue = 0, string $type = 'Game', string $return_type = 'Normal') : string {
+function get_colored_text_range(float $value, float $maxValue, string $text = null, float $minValue = 0, string $type = 'Game', string $return_type = 'Normal'): string {
 	if ($text === null) {
 		$text = number_format($value);
 	}
@@ -246,11 +246,11 @@ function get_colored_text_range(float $value, float $maxValue, string $text = nu
 	throw new Exception('Unknown type: ' . $type);
 }
 
-function get_colored_text(float $value, string $text = null, string $type = 'Game', string $return_type = 'Normal') : string {
+function get_colored_text(float $value, string $text = null, string $type = 'Game', string $return_type = 'Normal'): string {
 	return get_colored_text_range($value, 300, $text, -300, $type, $return_type);
 }
 
-function word_filter(string $string) : string {
+function word_filter(string $string): string {
 	static $words;
 
 	if (!is_array($words)) {
@@ -271,7 +271,7 @@ function word_filter(string $string) : string {
 }
 
 // choose correct pluralization based on amount
-function pluralise(string $word, float $count = 0) : string {
+function pluralise(string $word, float $count = 0): string {
 	if ($count == 1) {
 		return $word;
 	}
@@ -286,7 +286,7 @@ function pluralise(string $word, float $count = 0) : string {
  * It is also responsible for setting most of the global variables
  * (see loader.php for the initialization of the globals).
  */
-function do_voodoo() : never {
+function do_voodoo(): never {
 	global $lock;
 
 	$session = Smr\Session::getInstance();
@@ -421,7 +421,7 @@ function do_voodoo() : never {
 //xdebug_dump_function_profile(2);
 
 // This is hackish, but without row level locking it's the best we can do
-function acquire_lock(int $sector) : bool {
+function acquire_lock(int $sector): bool {
 	global $lock, $locksFailed;
 
 	if ($lock) {
@@ -468,7 +468,7 @@ function acquire_lock(int $sector) : bool {
 	return false;
 }
 
-function release_lock() : void {
+function release_lock(): void {
 	global $lock;
 
 	if ($lock) {
@@ -479,7 +479,7 @@ function release_lock() : void {
 	$lock = false;
 }
 
-function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database $db) : void {
+function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database $db): void {
 	//any ticker news?
 	if ($player->hasTickers()) {
 		$ticker = [];
@@ -515,7 +515,7 @@ function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database
 	}
 }
 
-function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
+function doSkeletonAssigns(Smr\Template $template, Smr\Database $db): void {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
 
@@ -743,7 +743,7 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
  * If seconds is zero, will return only "now".
  * If seconds is <60, will prefix "less than" or "<" (HTML-safe).
  */
-function format_time(int $seconds, bool $short = false) : string {
+function format_time(int $seconds, bool $short = false): string {
 	if ($seconds == 0) {
 		return "now";
 	}
@@ -805,7 +805,7 @@ function format_time(int $seconds, bool $short = false) : string {
 	return $result;
 }
 
-function number_colour_format(float $number, bool $justSign = false) : string {
+function number_colour_format(float $number, bool $justSign = false): string {
 	$formatted = '<span';
 	if ($number > 0) {
 		$formatted .= ' class="green">+';
@@ -836,7 +836,7 @@ function number_colour_format(float $number, bool $justSign = false) : string {
  *    'C' => 6, // 60% chance
  * );
  */
-function getWeightedRandom(array $choices) : string|int {
+function getWeightedRandom(array $choices): string|int {
 	// Normalize the weights so that their sum is much larger than 1.
 	$maxWeight = max($choices);
 	foreach ($choices as $key => $weight) {

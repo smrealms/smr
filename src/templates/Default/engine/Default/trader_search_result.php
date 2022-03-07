@@ -1,6 +1,6 @@
 <?php
 
-function DisplayResult(array $Links, SmrPlayer $Player) : void { ?>
+function DisplayResult(array $Links, SmrPlayer $Player): void { ?>
 	<table class="standard" width="88%">
 		<tr>
 			<th>Name</th>

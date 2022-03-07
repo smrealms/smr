@@ -39,7 +39,7 @@ if (!empty($player_id)) {
 	}
 }
 
-function playerLinks(SmrPlayer $linkPlayer) : array {
+function playerLinks(SmrPlayer $linkPlayer): array {
 	$result = ['Player' => $linkPlayer];
 
 	$container = Page::create('skeleton.php', 'trader_search_result.php');

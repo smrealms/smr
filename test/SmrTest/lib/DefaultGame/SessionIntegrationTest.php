@@ -14,21 +14,21 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 
 	private Session $session;
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		// Start each test with a fresh container (and Smr\Session).
 		// This ensures the independence of each test.
 		DiContainer::initialize(false);
 		$this->session = Session::getInstance();
 	}
 
-	protected function tearDown() : void {
+	protected function tearDown(): void {
 		parent::tearDown();
 		// Clear superglobals to avoid impacting other tests
 		$_REQUEST = [];
 		$_COOKIE = [];
 	}
 
-	public function test_game() : void {
+	public function test_game(): void {
 		// Sessions are initialized with no game
 		self::assertFalse($this->session->hasGame());
 		self::assertSame(0, $this->session->getGameID());
@@ -40,7 +40,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame($gameID, $this->session->getGameID());
 	}
 
-	public function test_account() : void {
+	public function test_account(): void {
 		// Sessions are initialized with no account
 		self::assertFalse($this->session->hasAccount());
 		self::assertSame(0, $this->session->getAccountID());
@@ -55,7 +55,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame(7, $this->session->getAccountID());
 	}
 
-	public function test_getSN() : void {
+	public function test_getSN(): void {
 		// If there is no 'sn' parameter of the $_REQUEST superglobal,
 		// then we get an empty SN.
 		self::assertSame('', $this->session->getSN());
@@ -67,7 +67,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame($sn, $session->getSN());
 	}
 
-	public function test_getSessionID() : void {
+	public function test_getSessionID(): void {
 		// The default Session ID is a random 32-length string
 		self::assertSame(32, strlen($this->session->getSessionID()));
 
@@ -85,7 +85,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertNotEquals($sessionID, $session->getSessionID());
 	}
 
-	public function test_current_var() : void {
+	public function test_current_var(): void {
 		// With an empty session, there should be no current var
 		self::assertFalse($this->session->hasCurrentVar());
 
@@ -132,7 +132,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertFalse($session->hasCurrentVar());
 	}
 
-	public function test_getRequestVar() : void {
+	public function test_getRequestVar(): void {
 		// Initialize the current var so that we can update it
 		$page = Page::create('some_page');
 		$this->session->setCurrentVar($page);

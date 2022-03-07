@@ -3,7 +3,7 @@
 /**
  * @param resource $fp
  */
-function invite($fp, string $rdata) : void {
+function invite($fp, string $rdata): void {
 
 	// :MrSpock!mrspock@coldfront-425DB813.dip.t-dialin.net INVITE Caretaker :#fe
 	if (preg_match('/^:(.*)!(.*)@(.*) INVITE ' . IRC_BOT_NICK . ' :(.*)\s$/i', $rdata, $msg)) {

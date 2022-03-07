@@ -6,7 +6,7 @@
  * NOTE: If a class is used before $overrideGameID is defined,
  * it will include the wrong version of the class.
  */
-function get_game_dir() : string {
+function get_game_dir(): string {
 	global $overrideGameID;
 	static $storedDir;
 	if (isset($storedDir)) {
@@ -31,7 +31,7 @@ function get_game_dir() : string {
  * Includes the correct game-specific version of a class file.
  * Try to avoid calling this before `$overrideGameID` is set!
  */
-function get_class_loc(string $className) : void {
+function get_class_loc(string $className): void {
 	$className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
 	$classFile = LIB . get_game_dir() . $className . '.class.php';
 	if (!is_file($classFile)) {
@@ -47,7 +47,7 @@ function get_class_loc(string $className) : void {
  * Try to avoid calling this before `$overrideGameID` is set!
  * Note: This is only intended to be used in Page::process.
  */
-function get_file_loc(string $fileName) : string {
+function get_file_loc(string $fileName): string {
 	$gameDir = get_game_dir();
 
 	static $cache = [];

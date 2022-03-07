@@ -10,7 +10,7 @@ use SmrAccount;
  */
 class Redirect {
 
-	public static function redirectIfDisabled(SmrAccount $account) : array|false {
+	public static function redirectIfDisabled(SmrAccount $account): array|false {
 		// We skip the redirect for specific disabled reasons, because they are
 		// handled elsewhere.
 		$skipReasons = [
@@ -45,7 +45,7 @@ class Redirect {
 		exit;
 	}
 
-	public static function redirectIfOffline(SmrAccount $account) : void {
+	public static function redirectIfOffline(SmrAccount $account): void {
 		// Check if the game is offline
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT reason FROM game_disable');

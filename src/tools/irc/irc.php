@@ -2,13 +2,13 @@
 
 class TimeoutException extends Exception {}
 
-function echo_r(string $message) : void
+function echo_r(string $message): void
 {
 	echo date("Y-m-d H:i:s => ") . $message . EOL;
 }
 
 // not keeping the filehandle might not be the wisest idea.
-function write_log_message(string $msg) : void
+function write_log_message(string $msg): void
 {
 	$logFile = fopen("/var/log/irc/" . date("Ymd") . ".log", "a+");
 	fwrite($logFile, round(microtime(true) * 1000) . ' ' . $msg . EOL);
@@ -143,14 +143,14 @@ while ($running) {
 	}
 } // end of while running
 
-function safefputs($fp, string $text) : void {
+function safefputs($fp, string $text): void {
 	stream_set_blocking($fp, false);
 	while (readFromStream($fp));
 	fputs($fp, $text);
 	stream_set_blocking($fp, true);
 }
 
-function readFromStream($fp) : bool {
+function readFromStream($fp): bool {
 	global $last_ping;
 
 	// timeout detection!

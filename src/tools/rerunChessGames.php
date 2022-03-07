@@ -17,7 +17,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	echoChessMoves($game);
 }
 
-function echoChessMoves(Smr\Chess\ChessGame $game) : void {
+function echoChessMoves(Smr\Chess\ChessGame $game): void {
 	echo 'Moves: ' . EOL;
 	$moves = $game->getMoves();
 	foreach ($moves as $move) {

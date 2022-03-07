@@ -16,16 +16,16 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		$this->damageRollover = false;
 	}
 
-	public function getModifiedAccuracy() : float {
+	public function getModifiedAccuracy(): float {
 		$modifiedAccuracy = $this->getBaseAccuracy();
 		return $modifiedAccuracy;
 	}
 
-	public function getModifiedForceAccuracyAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker) : float {
+	public function getModifiedForceAccuracyAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker): float {
 		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, rand(1, 7) * rand(1, 7), $minesAreAttacker);
 	}
 
-	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(SmrForce $forces, AbstractSmrPlayer $targetPlayer, int $random, bool $minesAreAttacker) : float {
+	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(SmrForce $forces, AbstractSmrPlayer $targetPlayer, int $random, bool $minesAreAttacker): float {
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy -= $targetPlayer->getLevelID() + $random;
 		if ($minesAreAttacker) {
@@ -43,37 +43,37 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) : array {
+	public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array {
 		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
-	public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port) : array {
+	public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port): array {
 		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
-	public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet) : array {
+	public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet): array {
 		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
-	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) : array {
+	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
-	public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer) : array {
+	public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
-	public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer) : array {
+	public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
-	public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false) : array {
+	public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 			return $return;
@@ -97,24 +97,24 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces) : array {
+	public function shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array {
 		$return = ['Weapon' => $this, 'TargetForces' => $forces];
 		return $return;
 	}
 
-	public function shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer) : array {
+	public function shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false];
 		return $return;
 	}
 
-	public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false) : array {
+	public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
 		$return = $this->doForceDamageToPlayer($return, $forces, $targetPlayer, $minesAreAttacker);
 		$forces->takeMines($return['ActualDamage']['Launched']);
 		return $return;
 	}
 
-	protected function doForceDamageToPlayer(array $return, SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false) : array {
+	protected function doForceDamageToPlayer(array $return, SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false): array {
 		$return['WeaponDamage'] = $this->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer, $minesAreAttacker);
 		$return['ActualDamage'] = $targetPlayer->getShip()->takeDamageFromMines($return['WeaponDamage']);
 		$return['ActualDamage']['Launched'] = ICeil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['MaxDamage']);

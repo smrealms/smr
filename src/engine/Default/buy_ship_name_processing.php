@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function checkShipLogo(string $filename) : void {
+function checkShipLogo(string $filename): void {
 	// check if we have an image
 	if ($_FILES['photo']['error'] != UPLOAD_ERR_OK) {
 		create_error('Error while uploading');
@@ -36,7 +36,7 @@ function checkShipLogo(string $filename) : void {
 	}
 }
 
-function checkTextShipName(string $name, int $max_len) : void {
+function checkTextShipName(string $name, int $max_len): void {
 	if (empty($name)) {
 		create_error('Please enter a ship name!');
 	}
@@ -53,7 +53,7 @@ function checkTextShipName(string $name, int $max_len) : void {
 	}
 }
 
-function checkHtmlShipName(string $name) : void {
+function checkHtmlShipName(string $name): void {
 	//check for some bad html
 	if (preg_match('/(\<span[^\>]*id\s*=)|(class\s*=\s*"[^"]*ajax)/i', $name) > 0) {
 		create_error('You have used html that is not allowed.');

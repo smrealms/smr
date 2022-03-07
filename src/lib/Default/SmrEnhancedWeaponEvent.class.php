@@ -17,7 +17,7 @@ class SmrEnhancedWeaponEvent {
 	/**
 	 * Return all the valid events for the given location in a sector.
 	 */
-	public static function getShopEvents(int $gameID, int $sectorID, int $locationID) : array {
+	public static function getShopEvents(int $gameID, int $sectorID, int $locationID): array {
 		$events = [];
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM location_sells_special WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND location_type_id = ' . $db->escapeNumber($locationID) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' AND expires > ' . $db->escapeNumber(Smr\Epoch::time()));
@@ -33,7 +33,7 @@ class SmrEnhancedWeaponEvent {
 	 * This function also does the work of cleaning up expired events and
 	 * creating new ones when necessary.
 	 */
-	public static function getLatestEvent(int $gameID) : SmrEnhancedWeaponEvent {
+	public static function getLatestEvent(int $gameID): SmrEnhancedWeaponEvent {
 		// First, remove any expired events from the database
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM location_sells_special WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));
@@ -59,7 +59,7 @@ class SmrEnhancedWeaponEvent {
 	 * Events are generated randomly across all weapon types available in the
 	 * game, and then randomly across locations that offer that weapon type.
 	 */
-	private static function createEvent(int $gameID) : SmrEnhancedWeaponEvent {
+	private static function createEvent(int $gameID): SmrEnhancedWeaponEvent {
 		// First, randomly select a weapon type to enhance
 		$weaponTypeID = array_rand(SmrWeaponType::getAllSoldWeaponTypes($gameID));
 
@@ -100,7 +100,7 @@ class SmrEnhancedWeaponEvent {
 	/**
 	 * Convenience function to instantiate an event from a query result.
 	 */
-	private static function getEventFromDatabase(Smr\DatabaseRecord $dbRecord) : SmrEnhancedWeaponEvent {
+	private static function getEventFromDatabase(Smr\DatabaseRecord $dbRecord): SmrEnhancedWeaponEvent {
 		return new SmrEnhancedWeaponEvent(
 			$dbRecord->getInt('game_id'),
 			$dbRecord->getInt('weapon_type_id'),
@@ -123,15 +123,15 @@ class SmrEnhancedWeaponEvent {
 		$this->weapon->setBonusAccuracy($bonusAccuracy);
 	}
 
-	public function getSectorID() : int {
+	public function getSectorID(): int {
 		return $this->sectorID;
 	}
 
-	public function getExpireTime() : int {
+	public function getExpireTime(): int {
 		return $this->expires;
 	}
 
-	public function getWeapon() : SmrWeapon {
+	public function getWeapon(): SmrWeapon {
 		return $this->weapon;
 	}
 
@@ -139,7 +139,7 @@ class SmrEnhancedWeaponEvent {
 	 * Returns the amount of time left in the event as a percent of the
 	 * total duration of the event.
 	 */
-	public function getDurationRemainingPercent() : float {
+	public function getDurationRemainingPercent(): float {
 		return max(0, min(100, ($this->expires - Smr\Epoch::time()) / self::DURATION * 100));
 	}
 

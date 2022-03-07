@@ -14,7 +14,7 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 
 	private \PHPUnit\Framework\MockObject\MockObject $player;
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		// Create mock player that will be needed to create any ship
 		$this->player = $this->createMock(AbstractSmrPlayer::class);
 		$this->player
@@ -29,7 +29,7 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 			->willReturn(SHIP_TYPE_DEMONICA);
 	}
 
-	public function test_base_ship_properties_are_set_correctly() : void {
+	public function test_base_ship_properties_are_set_correctly(): void {
 		$ship = new AbstractSmrShip($this->player);
 		self::assertSame('Demonica', $ship->getName());
 		self::assertSame(SHIP_TYPE_DEMONICA, $ship->getTypeID());
@@ -39,7 +39,7 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(0, $ship->getCost());
 	}
 
-	public function test_cloak() : void {
+	public function test_cloak(): void {
 		$ship = new AbstractSmrShip($this->player);
 
 		// ships are initially uncloaked
@@ -60,14 +60,14 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 		self::assertFalse($ship->isCloaked());
 	}
 
-	public function test_cloak_throws_when_missing_hardware() : void {
+	public function test_cloak_throws_when_missing_hardware(): void {
 		$ship = new AbstractSmrShip($this->player);
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Ship does not have the supported hardware!');
 		$ship->enableCloak();
 	}
 
-	public function test_illusion_generator() : void {
+	public function test_illusion_generator(): void {
 		$ship = new AbstractSmrShip($this->player);
 
 		// ship has no IG initially
@@ -97,14 +97,14 @@ class AbstractSmrShipTest extends \PHPUnit\Framework\TestCase {
 		self::assertFalse($ship->getIllusionShip());
 	}
 
-	public function test_illusion_throws_when_missing_hardware() : void {
+	public function test_illusion_throws_when_missing_hardware(): void {
 		$ship = new AbstractSmrShip($this->player);
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Ship does not have the supported hardware!');
 		$ship->setIllusion(SHIP_TYPE_THIEF, 12, 13);
 	}
 
-	public function test_hardware() : void {
+	public function test_hardware(): void {
 		$ship = new AbstractSmrShip($this->player);
 
 		// shields

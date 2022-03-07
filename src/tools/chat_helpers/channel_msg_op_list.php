@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function shared_channel_msg_op_list(SmrPlayer $player) : array {
+function shared_channel_msg_op_list(SmrPlayer $player): array {
 	// get the op info from db
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT 1

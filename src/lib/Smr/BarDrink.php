@@ -38,7 +38,7 @@ class BarDrink {
 		'Azoolian Sunrise Special' => 'At the bottom of the glass, you see a reflection of the best trader in the universe, and it is you.',
 	];
 
-	public static function isSpecial(string $drink) : bool {
+	public static function isSpecial(string $drink): bool {
 		return array_key_exists($drink, self::SPECIAL_DRINK_MESSAGES);
 	}
 
@@ -46,7 +46,7 @@ class BarDrink {
 	 * Returns the message displayed to the player when they buy a special
 	 * bar drink with the given name.
 	 */
-	public static function getSpecialMessage(string $drink) : string {
+	public static function getSpecialMessage(string $drink): string {
 		return self::SPECIAL_DRINK_MESSAGES[$drink];
 	}
 
@@ -55,7 +55,7 @@ class BarDrink {
 	 *
 	 * @return array<string>
 	 */
-	public static function getAll() : array {
+	public static function getAll(): array {
 		return self::DRINK_NAMES;
 	}
 
@@ -64,7 +64,7 @@ class BarDrink {
 	 *
 	 * @return array<string>
 	 */
-	public static function getSpecial() : array {
+	public static function getSpecial(): array {
 		return array_keys(self::SPECIAL_DRINK_MESSAGES);
 	}
 
@@ -73,7 +73,7 @@ class BarDrink {
 	 *
 	 * @return array<string>
 	 */
-	public static function getCommon() : array {
+	public static function getCommon(): array {
 		// Remove the special drinks
 		return array_diff(self::DRINK_NAMES, self::getSpecial());
 	}

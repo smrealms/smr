@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function get_album_nick(int $album_id) : string {
+function get_album_nick(int $album_id): string {
 	if ($album_id == 0) {
 		return 'System';
 	}

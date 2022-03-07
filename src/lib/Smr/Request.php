@@ -15,14 +15,14 @@ class Request {
 	 * Note that this must be used for checkboxes, since the element is not
 	 * posted if a box is unchecked.
 	 */
-	public static function has(string $index) : bool {
+	public static function has(string $index): bool {
 		return isset($_REQUEST[$index]);
 	}
 
 	/**
 	 * Returns index value as an integer.
 	 */
-	public static function getInt(string $index, int $default = null) : int {
+	public static function getInt(string $index, int $default = null): int {
 		if (self::has($index)) {
 			return (int)$_REQUEST[$index];
 		} elseif (!is_null($default)) {
@@ -34,7 +34,7 @@ class Request {
 	/**
 	 * Returns index value as a float.
 	 */
-	public static function getFloat(string $index, float $default = null) : float {
+	public static function getFloat(string $index, float $default = null): float {
 		if (self::has($index)) {
 			return (float)$_REQUEST[$index];
 		} elseif (!is_null($default)) {
@@ -46,7 +46,7 @@ class Request {
 	/**
 	 * Returns index value as an array of strings.
 	 */
-	public static function getArray(string $index, array $default = null) : array {
+	public static function getArray(string $index, array $default = null): array {
 		if (self::has($index)) {
 			return $_REQUEST[$index];
 		} elseif (!is_null($default)) {
@@ -58,7 +58,7 @@ class Request {
 	/**
 	 * Returns index value as an array of integers.
 	 */
-	public static function getIntArray(string $index, array $default = null) : array {
+	public static function getIntArray(string $index, array $default = null): array {
 		if (self::has($index)) {
 			$result = [];
 			foreach ($_REQUEST[$index] as $key => $value) {
@@ -74,7 +74,7 @@ class Request {
 	/**
 	 * Returns index value as a string.
 	 */
-	public static function get(string $index, string $default = null) : string {
+	public static function get(string $index, string $default = null): string {
 		if (self::has($index)) {
 			return $_REQUEST[$index];
 		} elseif (!is_null($default)) {
@@ -90,28 +90,28 @@ class Request {
 	 *
 	 * Note that this does not save the result in $var (see Smr\Session).
 	 */
-	public static function getVar(string $index, string $default = null) : string {
+	public static function getVar(string $index, string $default = null): string {
 		return self::getVarX($index, $default, [self::class, 'get']);
 	}
 
 	/**
 	 * Like getVar, but returns an int instead of a string.
 	 */
-	public static function getVarInt(string $index, int $default = null) : int {
+	public static function getVarInt(string $index, int $default = null): int {
 		return self::getVarX($index, $default, [self::class, 'getInt']);
 	}
 
 	/**
 	 * Like getVar, but returns an array of ints instead of a string.
 	 */
-	public static function getVarIntArray(string $index, array $default = null) : array {
+	public static function getVarIntArray(string $index, array $default = null): array {
 		return self::getVarX($index, $default, [self::class, 'getIntArray']);
 	}
 
 	/**
 	 * Helper function to avoid code duplication in getVar* functions.
 	 */
-	private static function getVarX(string $index, mixed $default, callable $func) : mixed {
+	private static function getVarX(string $index, mixed $default, callable $func): mixed {
 		$var = Session::getInstance()->getCurrentVar();
 		if (isset($var[$index])) {
 			// An index may be present in both var and request. This indicates

@@ -10,12 +10,12 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 
-	protected function tearDown() : void {
+	protected function tearDown(): void {
 		SmrPlanet::clearCache();
 		parent::tearDown();
 	}
 
-	public function test_createPlanet() : void {
+	public function test_createPlanet(): void {
 		// Test arbitrary input
 		$sectorID = 2;
 		$gameID = 42;
@@ -32,14 +32,14 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame($inhabitableTime, $planet->getInhabitableTime());
 	}
 
-	public function test_createPlanet_already_exists() : void {
+	public function test_createPlanet_already_exists(): void {
 		SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Planet already exists');
 		SmrPlanet::createPlanet(1, 1, 1, 1);
 	}
 
-	public function test_removePlanet() : void {
+	public function test_removePlanet(): void {
 		// Check that planet exists
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->assertTrue($planet->exists());
@@ -49,7 +49,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertFalse($planet->exists());
 	}
 
-	public function test_name() : void {
+	public function test_name(): void {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		// Check default name
 		$this->assertSame('Unknown', $planet->getDisplayName());
@@ -59,7 +59,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame('Test&amp;', $planet->getDisplayName());
 	}
 
-	public function test_owner() : void {
+	public function test_owner(): void {
 		// Check default owner
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->assertFalse($planet->hasOwner());
@@ -77,7 +77,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame(0, $planet->getOwnerID());
 	}
 
-	public function test_password() : void {
+	public function test_password(): void {
 		// Check default password
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->assertSame('', $planet->getPassword());
@@ -92,7 +92,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame('', $planet->getPassword());
 	}
 
-	public function test_credits() : void {
+	public function test_credits(): void {
 		// Check default credits
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->assertSame(0, $planet->getCredits());
@@ -106,7 +106,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame(100, $planet->getCredits());
 	}
 
-	public function test_bonds() : void {
+	public function test_bonds(): void {
 		// Check default bond
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->assertSame(0, $planet->getBonds());
@@ -120,7 +120,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame(100, $planet->getBonds());
 	}
 
-	public function test_bond_maturity() : void {
+	public function test_bond_maturity(): void {
 		// Check default maturity
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->assertSame(0, $planet->getMaturity());
@@ -131,7 +131,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame($maturity, $planet->getMaturity());
 	}
 
-	public function test_stockpile() : void {
+	public function test_stockpile(): void {
 		// Check default stockpile
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->assertFalse($planet->hasStockpile());
@@ -178,28 +178,28 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame(560, $planet->getRemainingStockpile(GOODS_ORE));
 	}
 
-	public function test_setStockpile_throws_when_negative() : void {
+	public function test_setStockpile_throws_when_negative(): void {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Trying to set negative stockpile');
 		$planet->setStockpile(GOODS_ORE, -20);
 	}
 
-	public function test_setBuilding_throws_when_negative() : void {
+	public function test_setBuilding_throws_when_negative(): void {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Cannot set negative number of buildings');
 		$planet->setBuilding(PLANET_HANGAR, -1);
 	}
 
-	public function test_destroyBuilding_throws_when_invalid() : void {
+	public function test_destroyBuilding_throws_when_invalid(): void {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Cannot set negative number of buildings');
 		$planet->destroyBuilding(PLANET_TURRET, 1);
 	}
 
-	public function test_checkForDowngrade() : void {
+	public function test_checkForDowngrade(): void {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 
 		// If we don't do enough damage, we should never downgrade
@@ -215,7 +215,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame([PLANET_GENERATOR => 2], $result);
 	}
 
-	public function test_buildings() : void {
+	public function test_buildings(): void {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 
 		// Tests with no buildings
@@ -236,7 +236,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame(2/3, $planet->getLevel());
 	}
 
-	public function test_defenses() : void {
+	public function test_defenses(): void {
 		// Make a Defense World planet
 		$planet = SmrPlanet::createPlanet(1, 1, 4, 1);
 

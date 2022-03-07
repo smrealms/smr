@@ -23,7 +23,7 @@ class Deck {
 	/**
 	 * Draw a random card from this deck.
 	 */
-	public function drawCard() : Card {
+	public function drawCard(): Card {
 		if (empty($this->cardIDs)) {
 			throw new \Exception('No cards left to draw from this deck!');
 		}

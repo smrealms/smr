@@ -10,7 +10,7 @@ require_once(CONFIG . 'discord/config.specific.php');
 
 error_reporting(E_ALL);
 
-function getCommandPrefix() : string {
+function getCommandPrefix(): string {
 	return defined('COMMAND_PREFIX') ? COMMAND_PREFIX : '.';
 }
 

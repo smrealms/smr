@@ -15,7 +15,7 @@ class DatabaseResult {
 	 * Use to iterate over the records from the result set.
 	 * @return \Generator<DatabaseRecord>
 	 */
-	public function records() : \Generator {
+	public function records(): \Generator {
 		foreach ($this->dbResult as $dbRecord) {
 			yield new DatabaseRecord($dbRecord);
 		}
@@ -24,18 +24,18 @@ class DatabaseResult {
 	/**
 	 * Use when exactly one record is expected from the result set.
 	 */
-	public function record() : DatabaseRecord {
+	public function record(): DatabaseRecord {
 		if ($this->getNumRecords() != 1) {
 			throw new \RuntimeException('One record required, but found ' . $this->getNumRecords());
 		}
 		return new DatabaseRecord($this->dbResult->fetch_assoc());
 	}
 
-	public function getNumRecords() : int {
+	public function getNumRecords(): int {
 		return $this->dbResult->num_rows;
 	}
 
-	public function hasRecord() : bool {
+	public function hasRecord(): bool {
 		return $this->getNumRecords() > 0;
 	}
 

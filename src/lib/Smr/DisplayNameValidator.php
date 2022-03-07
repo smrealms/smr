@@ -8,7 +8,7 @@ namespace Smr;
  */
 class DisplayNameValidator {
 
-	public static function validate($name) : void {
+	public static function validate($name): void {
 		if (empty($name)) {
 			throw new Exceptions\UserError('You must enter a name!');
 		}

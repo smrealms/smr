@@ -47,7 +47,7 @@ class SmrGame {
 	/**
 	 * Attempts to construct the game to determine if it exists.
 	 */
-	public static function gameExists(int $gameID) : bool {
+	public static function gameExists(int $gameID): bool {
 		try {
 			self::getGame($gameID);
 			return true;
@@ -56,24 +56,24 @@ class SmrGame {
 		}
 	}
 
-	public static function getGame(int $gameID, bool $forceUpdate = false) : self {
+	public static function getGame(int $gameID, bool $forceUpdate = false): self {
 		if ($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
 			self::$CACHE_GAMES[$gameID] = new self($gameID);
 		}
 		return self::$CACHE_GAMES[$gameID];
 	}
 
-	public static function clearCache() : void {
+	public static function clearCache(): void {
 		self::$CACHE_GAMES = [];
 	}
 
-	public static function saveGames() : void {
+	public static function saveGames(): void {
 		foreach (self::$CACHE_GAMES as $game) {
 			$game->save();
 		}
 	}
 
-	public static function createGame(int $gameID) : self {
+	public static function createGame(int $gameID): self {
 		if (!isset(self::$CACHE_GAMES[$gameID])) {
 			self::$CACHE_GAMES[$gameID] = new self($gameID, true);
 		}
@@ -112,7 +112,7 @@ class SmrGame {
 		}
 	}
 
-	public function save() : void {
+	public function save(): void {
 		if ($this->isNew) {
 			$this->db->insert('game', [
 				'game_id' => $this->db->escapeNumber($this->getGameID()),
@@ -156,15 +156,15 @@ class SmrGame {
 		$this->hasChanged = false;
 	}
 
-	public function getGameID() : int {
+	public function getGameID(): int {
 		return $this->gameID;
 	}
 
-	public function getName() : string {
+	public function getName(): string {
 		return $this->name;
 	}
 
-	public function setName(string $name) : void {
+	public function setName(string $name): void {
 		if (!$this->isNew && $this->name === $name) {
 			return;
 		}
@@ -172,11 +172,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getDescription() : string {
+	public function getDescription(): string {
 		return $this->description;
 	}
 
-	public function setDescription(string $description) : void {
+	public function setDescription(string $description): void {
 		if (!$this->isNew && $this->description === $description) {
 			return;
 		}
@@ -184,7 +184,7 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function hasStarted() : bool {
+	public function hasStarted(): bool {
 		return Smr\Epoch::time() >= $this->getStartTime();
 	}
 
@@ -192,11 +192,11 @@ class SmrGame {
 	 * Returns the epoch time when the game starts,
 	 * i.e. when players can move, turns are gained, etc.
 	 */
-	public function getStartTime() : int {
+	public function getStartTime(): int {
 		return $this->startTime;
 	}
 
-	public function setStartTime(int $startTime) : void {
+	public function setStartTime(int $startTime): void {
 		if (!$this->isNew && $this->startTime === $startTime) {
 			return;
 		}
@@ -207,11 +207,11 @@ class SmrGame {
 	/**
 	 * Returns the epoch time when players can begin to join the game.
 	 */
-	public function getJoinTime() : int {
+	public function getJoinTime(): int {
 		return $this->joinTime;
 	}
 
-	public function setJoinTime(int $joinTime) : void {
+	public function setJoinTime(int $joinTime): void {
 		if (!$this->isNew && $this->joinTime === $joinTime) {
 			return;
 		}
@@ -219,18 +219,18 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function hasEnded() : bool {
+	public function hasEnded(): bool {
 		return $this->getEndTime() < Smr\Epoch::time();
 	}
 
 	/**
 	 * Returns the epoch time when the game ends.
 	 */
-	public function getEndTime() : int {
+	public function getEndTime(): int {
 		return $this->endTime;
 	}
 
-	public function setEndTime(int $endTime) : void {
+	public function setEndTime(int $endTime): void {
 		if (!$this->isNew && $this->endTime === $endTime) {
 			return;
 		}
@@ -238,11 +238,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getMaxPlayers() : int {
+	public function getMaxPlayers(): int {
 		return $this->maxPlayers;
 	}
 
-	public function setMaxPlayers(int $maxPlayers) : void {
+	public function setMaxPlayers(int $maxPlayers): void {
 		if (!$this->isNew && $this->maxPlayers === $maxPlayers) {
 			return;
 		}
@@ -250,11 +250,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getMaxTurns() : int {
+	public function getMaxTurns(): int {
 		return $this->maxTurns;
 	}
 
-	public function setMaxTurns(int $int) : void {
+	public function setMaxTurns(int $int): void {
 		if (!$this->isNew && $this->maxTurns === $int) {
 			return;
 		}
@@ -262,11 +262,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getStartTurnHours() : int {
+	public function getStartTurnHours(): int {
 		return $this->startTurnHours;
 	}
 
-	public function setStartTurnHours(int $int) : void {
+	public function setStartTurnHours(int $int): void {
 		if (!$this->isNew && $this->startTurnHours === $int) {
 			return;
 		}
@@ -274,11 +274,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getGameType() : string {
+	public function getGameType(): string {
 		return self::GAME_TYPES[$this->gameTypeID];
 	}
 
-	public function setGameTypeID(int $gameTypeID) : void {
+	public function setGameTypeID(int $gameTypeID): void {
 		if (!$this->isNew && $this->gameTypeID === $gameTypeID) {
 			return;
 		}
@@ -286,11 +286,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getCreditsNeeded() : int {
+	public function getCreditsNeeded(): int {
 		return $this->creditsNeeded;
 	}
 
-	public function setCreditsNeeded(int $creditsNeeded) : void {
+	public function setCreditsNeeded(int $creditsNeeded): void {
 		if (!$this->isNew && $this->creditsNeeded === $creditsNeeded) {
 			return;
 		}
@@ -298,11 +298,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getGameSpeed() : float {
+	public function getGameSpeed(): float {
 		return $this->gameSpeed;
 	}
 
-	public function setGameSpeed(float $gameSpeed) : void {
+	public function setGameSpeed(float $gameSpeed): void {
 		if (!$this->isNew && $this->gameSpeed === $gameSpeed) {
 			return;
 		}
@@ -310,11 +310,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function isEnabled() : bool {
+	public function isEnabled(): bool {
 		return $this->enabled;
 	}
 
-	public function setEnabled(bool $bool) : void {
+	public function setEnabled(bool $bool): void {
 		if (!$this->isNew && $this->enabled === $bool) {
 			return;
 		}
@@ -322,11 +322,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function isIgnoreStats() : bool {
+	public function isIgnoreStats(): bool {
 		return $this->ignoreStats;
 	}
 
-	public function setIgnoreStats(bool $bool) : void {
+	public function setIgnoreStats(bool $bool): void {
 		if (!$this->isNew && $this->ignoreStats === $bool) {
 			return;
 		}
@@ -334,11 +334,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getAllianceMaxPlayers() : int {
+	public function getAllianceMaxPlayers(): int {
 		return $this->allianceMaxPlayers;
 	}
 
-	public function setAllianceMaxPlayers(int $int) : void {
+	public function setAllianceMaxPlayers(int $int): void {
 		if (!$this->isNew && $this->allianceMaxPlayers === $int) {
 			return;
 		}
@@ -346,11 +346,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getAllianceMaxVets() : int {
+	public function getAllianceMaxVets(): int {
 		return $this->allianceMaxVets;
 	}
 
-	public function setAllianceMaxVets(int $int) : void {
+	public function setAllianceMaxVets(int $int): void {
 		if (!$this->isNew && $this->allianceMaxVets === $int) {
 			return;
 		}
@@ -358,11 +358,11 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getStartingCredits() : int {
+	public function getStartingCredits(): int {
 		return $this->startingCredits;
 	}
 
-	public function setStartingCredits(int $int) : void {
+	public function setStartingCredits(int $int): void {
 		if (!$this->isNew && $this->startingCredits === $int) {
 			return;
 		}
@@ -370,7 +370,7 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
-	public function getTotalPlayers() : int {
+	public function getTotalPlayers(): int {
 		if (!isset($this->totalPlayers)) {
 			$dbResult = $this->db->read('SELECT count(*) FROM player WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()));
 			$this->totalPlayers = $dbResult->record()->getInt('count(*)');
@@ -378,23 +378,23 @@ class SmrGame {
 		return $this->totalPlayers;
 	}
 
-	public function getNumberOfGalaxies() : int {
+	public function getNumberOfGalaxies(): int {
 		return count(SmrGalaxy::getGameGalaxies($this->getGameID()));
 	}
 
-	public function equals(self $otherGame) : bool {
+	public function equals(self $otherGame): bool {
 		return $otherGame->getGameID() == $this->getGameID();
 	}
 
 	// Convenience function for printing the game name with id
-	public function getDisplayName() : string {
+	public function getDisplayName(): string {
 		return $this->getName() . " (" . $this->getGameID() . ")";
 	}
 
 	/**
 	 * Set the starting political relations between races.
 	 */
-	public function setStartingRelations(int $relations) : void {
+	public function setStartingRelations(int $relations): void {
 		if ($relations < MIN_GLOBAL_RELATIONS || $relations > MAX_GLOBAL_RELATIONS) {
 			throw new Exception('Invalid relations: ' . $relations);
 		}
@@ -418,7 +418,7 @@ class SmrGame {
 	 * Get the list of playable Race IDs based on which Racial HQ's
 	 * are locations in this game.
 	 */
-	public function getPlayableRaceIDs() : array {
+	public function getPlayableRaceIDs(): array {
 		if (!isset($this->playableRaceIDs)) {
 			// Get a unique set of HQ's available in game
 			$dbResult = $this->db->read('SELECT DISTINCT location_type_id
@@ -438,7 +438,7 @@ class SmrGame {
 	/**
 	 * Returns the time (in seconds) until restricted ships are unlocked.
 	 */
-	public function timeUntilShipUnlock() : int {
+	public function timeUntilShipUnlock(): int {
 		return $this->getStartTime() + TIME_FOR_RAIDER_UNLOCK - Smr\Epoch::time();
 	}
 

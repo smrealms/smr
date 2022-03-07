@@ -50,7 +50,7 @@ $template->assign('TotalLogs', $totalLogs);
 
 $dbResult = $db->read('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
 
-$getParticipantName = function($accountID, $sectorID) use ($player) : string {
+$getParticipantName = function($accountID, $sectorID) use ($player): string {
 	if ($accountID == ACCOUNT_ID_PORT) {
 		return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">Port <span class="sectorColour">#' . $sectorID . '</span></a>';
 	}

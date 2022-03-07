@@ -7,11 +7,11 @@ use Smr\Request;
 
 class Facebook extends SocialLogin {
 
-	public static function getLoginType() : string {
+	public static function getLoginType(): string {
 		return 'Facebook';
 	}
 
-	private function getFacebookObj() : FacebookProvider {
+	private function getFacebookObj(): FacebookProvider {
 		return new FacebookProvider([
 			'clientId' => FACEBOOK_APP_ID,
 			'clientSecret' => FACEBOOK_APP_SECRET,
@@ -20,7 +20,7 @@ class Facebook extends SocialLogin {
 		]);
 	}
 
-	public function getLoginUrl() : string {
+	public function getLoginUrl(): string {
 		if (empty(FACEBOOK_APP_ID)) {
 			// No facebook app specified. Continuing would throw an exception.
 			return URL;
@@ -33,7 +33,7 @@ class Facebook extends SocialLogin {
 		return $authUrl;
 	}
 
-	public function login() : SocialLogin {
+	public function login(): SocialLogin {
 		if ($_SESSION['FacebookToken'] != Request::get('state')) {
 			throw new \Exception('Unexpected token received from Facebook');
 		}

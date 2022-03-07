@@ -4,7 +4,7 @@ $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-function error_on_page(string $message) : never {
+function error_on_page(string $message): never {
 	$message = '<span class="bold red">ERROR:</span> ' . $message;
 	Page::create('skeleton.php', 'chat_sharing.php', ['message' => $message])->go();
 }

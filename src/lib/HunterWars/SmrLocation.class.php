@@ -2,7 +2,7 @@
 
 class SmrLocation extends AbstractSmrLocation {
 
-	public function getShipsSold() : array {
+	public function getShipsSold(): array {
 		if (!isset($this->shipsSold)) {
 			// Generate the full ship list from the base class
 			parent::getShipsSold();

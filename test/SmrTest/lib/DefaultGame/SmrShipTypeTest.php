@@ -10,7 +10,7 @@ use Smr\ShipClass;
  */
 class SmrShipTypeTest extends \PHPUnit\Framework\TestCase {
 
-	public function test_one_ship_properties() : void {
+	public function test_one_ship_properties(): void {
 		// Test all properties of one particular ship (Fed Ult)
 		$shipType = SmrShipType::get(SHIP_TYPE_FEDERAL_ULTIMATUM);
 
@@ -42,14 +42,14 @@ class SmrShipTypeTest extends \PHPUnit\Framework\TestCase {
 		}
 	}
 
-	public function test_getAll_matches_get() : void {
+	public function test_getAll_matches_get(): void {
 		// Check that we get the same ship type from get and getAll
 		$shipType1 = SmrShipType::get(SHIP_TYPE_GALACTIC_SEMI);
 		$shipType2 = SmrShipType::getAll()[SHIP_TYPE_GALACTIC_SEMI];
 		$this->assertSame($shipType1, $shipType2);
 	}
 
-	public function test_can_have_special_hardware() : void {
+	public function test_can_have_special_hardware(): void {
 		// Demonica has all special hardware
 		$shipType = SmrShipType::get(SHIP_TYPE_DEMONICA);
 		$this->assertTrue($shipType->canHaveJump());

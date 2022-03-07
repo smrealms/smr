@@ -13,7 +13,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 	 * Sets properties that are needed for combat, but do not need to
 	 * be stored in the database.
 	 */
-	protected function setConstantProperties() : void {
+	protected function setConstantProperties(): void {
 		$this->gameID = 0;
 		$this->accountID = 0;
 		$this->playerID = 0;
@@ -31,18 +31,18 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$this->setConstantProperties();
 	}
 
-	public function increaseHOF(float $amount, array $typeList, string $visibility) : void {}
+	public function increaseHOF(float $amount, array $typeList, string $visibility): void {}
 
-	public function killPlayerByPlayer(AbstractSmrPlayer $killer) : array {
+	public function killPlayerByPlayer(AbstractSmrPlayer $killer): array {
 		$this->dead = true;
 		return ['DeadExp' => 0, 'KillerCredits' => 0, 'KillerExp' => 0];
 	}
 
-	public function getShip(bool $forceUpdate = false) : AbstractSmrShip {
+	public function getShip(bool $forceUpdate = false): AbstractSmrShip {
 		return DummyShip::getCachedDummyShip($this);
 	}
 
-	public function cacheDummyPlayer() : void {
+	public function cacheDummyPlayer(): void {
 		$this->getShip()->cacheDummyShip();
 		$db = Smr\Database::getInstance();
 		$db->write('REPLACE INTO cached_dummys ' .
@@ -50,7 +50,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 					'VALUES (\'DummyPlayer\', ' . $db->escapeString($this->getPlayerName()) . ', ' . $db->escapeObject($this) . ')');
 	}
 
-	public static function getCachedDummyPlayer(string $name) : self {
+	public static function getCachedDummyPlayer(string $name): self {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT info FROM cached_dummys
 					WHERE type = \'DummyPlayer\'
@@ -62,7 +62,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 		}
 	}
 
-	public static function getDummyPlayerNames() : array {
+	public static function getDummyPlayerNames(): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT id FROM cached_dummys
 					WHERE type = \'DummyPlayer\'');

@@ -26,7 +26,7 @@ try {
 	handleException($e);
 }
 
-function buildShipStats(SmrShipType $ship) : array {
+function buildShipStats(SmrShipType $ship): array {
 	//we want to put them all in an array so we dont have to have 15 td rows
 	$restriction = match($ship->getRestriction()) {
 		BUYER_RESTRICTION_NONE => '',

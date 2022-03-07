@@ -9,7 +9,7 @@ use SmrPlayer;
  */
 class Messages {
 
-	public static function getMessageTypeNames(int $typeID = null) : array|string {
+	public static function getMessageTypeNames(int $typeID = null): array|string {
 		$typeNames = [
 			MSG_PLAYER => 'Player Messages',
 			MSG_PLANET => 'Planet Messages',
@@ -24,7 +24,7 @@ class Messages {
 		return $typeID === null ? $typeNames : $typeNames[$typeID];
 	}
 
-	public static function getAdminBoxNames() : array {
+	public static function getAdminBoxNames(): array {
 		return [
 			BOX_BUGS_AUTO => 'Automatic Bug Reports',
 			BOX_BUGS_REPORTED => 'Player Bug Reports',
@@ -35,7 +35,7 @@ class Messages {
 		];
 	}
 
-	public static function getMessagePlayer(int $accountID, int $gameID, int $messageType = null) : string|SmrPlayer {
+	public static function getMessagePlayer(int $accountID, int $gameID, int $messageType = null): string|SmrPlayer {
 		if ($accountID == ACCOUNT_ID_PORT) {
 			$return = '<span class="yellow">Port Defenses</span>';
 		} else if ($accountID == ACCOUNT_ID_ADMIN) {

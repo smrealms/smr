@@ -3,7 +3,7 @@
 /**
  * @param resource $fp
  */
-function channel_msg_sd($fp, string $rdata) : bool
+function channel_msg_sd($fp, string $rdata): bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!sd(\s*help)?\s$/i', $rdata, $msg)) {
@@ -30,7 +30,7 @@ function channel_msg_sd($fp, string $rdata) : bool
 /**
  * @param resource $fp
  */
-function channel_msg_sd_set($fp, string $rdata) : bool
+function channel_msg_sd_set($fp, string $rdata): bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!sd set (\d+) (\d+)\s$/i', $rdata, $msg)) {
@@ -73,7 +73,7 @@ function channel_msg_sd_set($fp, string $rdata) : bool
 /**
  * @param resource $fp
  */
-function channel_msg_sd_del($fp, string $rdata) : bool
+function channel_msg_sd_del($fp, string $rdata): bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!sd del (\d+)\s$/i', $rdata, $msg)) {
@@ -110,7 +110,7 @@ function channel_msg_sd_del($fp, string $rdata) : bool
 /**
  * @param resource $fp
  */
-function channel_msg_sd_list($fp, string $rdata, AbstractSmrPlayer $player) : bool
+function channel_msg_sd_list($fp, string $rdata, AbstractSmrPlayer $player): bool
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!sd list\s$/i', $rdata, $msg)) {

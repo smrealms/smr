@@ -13,7 +13,7 @@ class PlanetList {
 	 * The engine files for planet lists have a lot in common, so do
 	 * most of the work here.
 	 */
-	public static function common(int $allianceId, bool $getPlanets) : void {
+	public static function common(int $allianceId, bool $getPlanets): void {
 		$template = Template::getInstance();
 		$player = Session::getInstance()->getPlayer();
 

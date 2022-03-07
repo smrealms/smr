@@ -44,7 +44,7 @@ if ($dbResult->hasRecord()) {
 	$template->assign('KillRankings', $killRankings);
 }
 
-function allianceTopTen(int $gameID, string $field) : array {
+function allianceTopTen(int $gameID, string $field): array {
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT alliance_id, SUM(' . $field . ') amount
 				FROM alliance

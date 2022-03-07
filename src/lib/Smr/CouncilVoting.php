@@ -10,7 +10,7 @@ use SmrSector;
  */
 class CouncilVoting {
 
-	public static function modifyRelations(int $race_id_1, int $gameID) : void {
+	public static function modifyRelations(int $race_id_1, int $gameID): void {
 
 		// Process any votes that ended prior to the start of today
 		$endtime = strtotime(date('Y-m-d'));
@@ -61,7 +61,7 @@ class CouncilVoting {
 		}
 	}
 
-	public static function checkPacts(int $race_id_1, int $gameID) : void {
+	public static function checkPacts(int $race_id_1, int $gameID): void {
 
 		$db = Database::getInstance();
 

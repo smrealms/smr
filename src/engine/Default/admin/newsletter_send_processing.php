@@ -10,7 +10,7 @@ $mail->Encoding = 'base64';
 
 $mail->Subject = Smr\Request::get('subject');
 
-function set_mail_body(PHPMailer\PHPMailer\PHPMailer $mail, ?string $newsletterHtml, ?string $newsletterText, ?string $salutation) : void {
+function set_mail_body(PHPMailer\PHPMailer\PHPMailer $mail, ?string $newsletterHtml, ?string $newsletterText, ?string $salutation): void {
 	// Prepend the salutation if one is given
 	if ($salutation) {
 		if (!empty($newsletterHtml)) {

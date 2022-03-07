@@ -10,7 +10,7 @@ use Smr\Blackjack\Hand;
  */
 class HandTest extends \PHPUnit\Framework\TestCase {
 
-	public function test_getValue() : void {
+	public function test_getValue(): void {
 		// test that ace values update properly
 		$hand = new Hand();
 		$hand->addCard(new Card(0)); // ace of hearts
@@ -29,7 +29,7 @@ class HandTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(14, $hand->getValue());
 	}
 
-	public function test_getNumCards() : void {
+	public function test_getNumCards(): void {
 		// start with an empty hand
 		$hand = new Hand();
 		self::assertSame(0, $hand->getNumCards());
@@ -43,7 +43,7 @@ class HandTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(2, $hand->getNumCards());
 	}
 
-	public function test_getCards() : void {
+	public function test_getCards(): void {
 		// start with an empty hand
 		$hand = new Hand();
 		self::assertSame([], $hand->getCards());
@@ -56,7 +56,7 @@ class HandTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame($cards, $hand->getCards());
 	}
 
-	public function test_hasBlackjack() : void {
+	public function test_hasBlackjack(): void {
 		// add 2 cards that add to 21 (blackjack)
 		$hand = new Hand();
 		$hand->addCard(new Card(0)); // ace of hearts

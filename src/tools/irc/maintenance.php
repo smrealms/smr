@@ -3,7 +3,7 @@
 /**
  * @param resource $fp
  */
-function check_events($fp) : void
+function check_events($fp): void
 {
 	global $events;
 

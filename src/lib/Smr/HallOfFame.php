@@ -12,7 +12,7 @@ use SmrPlayer;
  */
 class HallOfFame {
 
-	public static function getHofCategories(array $hofTypes, ?int $game_id, int $account_id) : array {
+	public static function getHofCategories(array $hofTypes, ?int $game_id, int $account_id): array {
 		$var = Session::getInstance()->getCurrentVar();
 		$categories = [];
 		foreach ($hofTypes as $type => $value) {
@@ -63,7 +63,7 @@ class HallOfFame {
 	 * - alliance stats in live games for players not in your alliance
 	 * - private stats for players who are not the current player
 	 */
-	public static function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $accountID) : string|float {
+	public static function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $accountID): string|float {
 		$session = Session::getInstance();
 		$account = $session->getAccount();
 		if (($vis == HOF_PRIVATE && $account->getAccountID() != $accountID) ||
@@ -77,7 +77,7 @@ class HallOfFame {
 		}
 	}
 
-	public static function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID) : array {
+	public static function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID): array {
 		$db = Database::getInstance();
 		// If no game specified, show total amount from completed games only
 		$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
@@ -117,7 +117,7 @@ class HallOfFame {
 		return $rank;
 	}
 
-	public static function displayHOFRow(int $rank, int $accountID, float|string $amount) : string {
+	public static function displayHOFRow(int $rank, int $accountID, float|string $amount): string {
 		$var = Session::getInstance()->getCurrentVar();
 
 		$account = Session::getInstance()->getAccount();
@@ -156,7 +156,7 @@ class HallOfFame {
 		return $return;
 	}
 
-	public static function buildBreadcrumb(Page $var, array &$hofTypes, string $hofName) : string {
+	public static function buildBreadcrumb(Page $var, array &$hofTypes, string $hofName): string {
 		$container = Page::copy($var);
 		if (isset($container['type'])) {
 			unset($container['type']);

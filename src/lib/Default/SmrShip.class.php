@@ -9,11 +9,11 @@ class SmrShip extends AbstractSmrShip {
 
 	protected string $SQL;
 
-	public static function clearCache() : void {
+	public static function clearCache(): void {
 		self::$CACHE_SHIPS = [];
 	}
 
-	public static function saveShips() : void {
+	public static function saveShips(): void {
 		foreach (self::$CACHE_SHIPS as $gameShips) {
 			foreach ($gameShips as $ship) {
 				$ship->update();
@@ -21,7 +21,7 @@ class SmrShip extends AbstractSmrShip {
 		}
 	}
 
-	public static function getShip(AbstractSmrPlayer $player, bool $forceUpdate = false) : self {
+	public static function getShip(AbstractSmrPlayer $player, bool $forceUpdate = false): self {
 		if ($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()])) {
 			$s = new SmrShip($player);
 			self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()] = $s;
@@ -41,7 +41,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->loadIllusion();
 	}
 
-	public function update() : void {
+	public function update(): void {
 		$this->updateHardware();
 		$this->updateWeapons();
 		$this->updateCargo();
@@ -54,7 +54,7 @@ class SmrShip extends AbstractSmrShip {
 	/**
 	 * Initialize the weapons onboard this ship.
 	 */
-	protected function loadWeapons() : void {
+	protected function loadWeapons(): void {
 		// determine weapon
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM ship_has_weapon JOIN weapon_type USING (weapon_type_id)
@@ -74,7 +74,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->checkForExcessWeapons();
 	}
 
-	protected function loadHardware() : void {
+	protected function loadHardware(): void {
 		$this->hardware = [];
 
 		// get currently hardware from db
@@ -93,7 +93,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->checkForExcessHardware();
 	}
 
-	protected function loadCargo() : void {
+	protected function loadCargo(): void {
 		// initialize cargo array
 		$this->cargo = [];
 
@@ -107,7 +107,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->checkForExcessCargo();
 	}
 
-	public function updateCargo() : void {
+	public function updateCargo(): void {
 		if ($this->hasChangedCargo === false) {
 			return;
 		}
@@ -126,7 +126,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->hasChangedCargo = false;
 	}
 
-	public function updateHardware() : void {
+	public function updateHardware(): void {
 		// write hardware info only for hardware that has changed
 		$db = Smr\Database::getInstance();
 		foreach ($this->hasChangedHardware as $hardwareTypeID => $hasChanged) {
@@ -143,7 +143,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->hasChangedHardware = [];
 	}
 
-	private function updateWeapons() : void {
+	private function updateWeapons(): void {
 		if ($this->hasChangedWeapons === false) {
 			return;
 		}
@@ -163,7 +163,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->hasChangedWeapons = false;
 	}
 
-	public function loadCloak() : void {
+	public function loadCloak(): void {
 		$this->isCloaked = false;
 		if ($this->hasCloak() === false) {
 			return;
@@ -173,7 +173,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->isCloaked = $dbResult->hasRecord();
 	}
 
-	public function updateCloak() : void {
+	public function updateCloak(): void {
 		if ($this->hasChangedCloak === false) {
 			return;
 		}
@@ -189,7 +189,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->hasChangedCloak = false;
 	}
 
-	public function loadIllusion() : void {
+	public function loadIllusion(): void {
 		$this->illusionShip = false;
 		if ($this->hasIllusion() === false) {
 			return;
@@ -206,7 +206,7 @@ class SmrShip extends AbstractSmrShip {
 		}
 	}
 
-	public function updateIllusion() : void {
+	public function updateIllusion(): void {
 		if ($this->hasChangedIllusion === false) {
 			return;
 		}

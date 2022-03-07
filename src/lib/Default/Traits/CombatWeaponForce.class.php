@@ -14,26 +14,26 @@ trait CombatWeaponForce {
 	protected int $accuracy;
 	protected int $amount;
 
-	public function getBaseAccuracy() : int {
+	public function getBaseAccuracy(): int {
 		return $this->accuracy;
 	}
 
-	public function getName() : string {
+	public function getName(): string {
 		return $this->name;
 	}
 
-	public function getShieldDamage() : int {
+	public function getShieldDamage(): int {
 		return $this->shieldDamage;
 	}
 
-	public function getArmourDamage() : int {
+	public function getArmourDamage(): int {
 		return $this->armourDamage;
 	}
 
 	/**
 	 * Returns the amount of this type of force.
 	 */
-	public function getAmount() : int {
+	public function getAmount(): int {
 		return $this->amount;
 	}
 

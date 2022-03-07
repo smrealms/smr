@@ -27,14 +27,14 @@ class Card {
 		$this->rank = ($this->cardID % 52) % 13 + 1;
 	}
 
-	public function getCardID() : int {
+	public function getCardID(): int {
 		return $this->cardID;
 	}
 
 	/**
 	 * Return the card's blackjack value.
 	 */
-	public function getValue() : int {
+	public function getValue(): int {
 		return match($this->rank) {
 			self::RANK_ACE => 11,
 			self::RANK_JACK, self::RANK_QUEEN, self::RANK_KING => 10,
@@ -43,11 +43,11 @@ class Card {
 		};
 	}
 
-	public function isAce() : bool {
+	public function isAce(): bool {
 		return $this->rank == self::RANK_ACE;
 	}
 
-	public function getSuitName() : string {
+	public function getSuitName(): string {
 		$deckID = $this->cardID % 52; //which card is this in the deck?
 		$suitID = floor($deckID / 13);
 		return self::SUITS[$suitID];
@@ -56,7 +56,7 @@ class Card {
 	/**
 	 * Returns the rank name of this card (of the 13 ranks).
 	 */
-	public function getRankName() : string {
+	public function getRankName(): string {
 		return match($this->rank) {
 			self::RANK_ACE => 'A',
 			self::RANK_JACK => 'J',
