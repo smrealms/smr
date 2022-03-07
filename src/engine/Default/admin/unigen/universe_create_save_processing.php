@@ -225,8 +225,15 @@ if ($submit == 'Create Galaxies') {
 		}
 	}
 	$editSector->removeAllLocations();
-	foreach ($locationsToAdd as $locationToAdd) {
-		addLocationToSector($locationToAdd, $editSector);
+	foreach ($locationsToAdd as $locationToAddID => $locationToAdd) {
+		// Skip duplicate locations
+		if (!$editSector->hasLocation($locationToAddID)) {
+			if (Smr\Request::has('add_linked_locs')) {
+				addLocationToSector($locationToAdd, $editSector);
+			} else {
+				$editSector->addLocation($locationToAdd);
+			}
+		}
 	}
 
 	// update warp
@@ -253,20 +260,18 @@ $container->go();
 
 
 function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) : bool {
-	if (!$location->isHQ()) {
-		return (count($sector->getLocations()) < 4 && !$sector->offersFederalProtection());
-	} else {
-		//HQs are here
-		//find a sector where there are no locations yet
+	if ($location->isHQ()) {
+		// Only add HQs to empty sectors
 		return !$sector->hasLocation();
 	}
+	// Otherwise, sector must meet these conditions:
+	// 1. Does not already have this location
+	// 2. Has fewer than 4 other locations
+	// 3. Does not offer Fed protection
+	return count($sector->getLocations()) < 4 && !$sector->offersFederalProtection() && !$sector->hasLocation($location->getTypeID());
 }
 
-function addLocationToSector(SmrLocation $location, SmrSector $sector) : bool {
-	if ($sector->hasLocation($location->getTypeID())) {
-		return false;
-	}
-
+function addLocationToSector(SmrLocation $location, SmrSector $sector) : void {
 	$sector->addLocation($location); //insert the location
 	if ($location->isHQ()) {
 		//only playable races have extra locations to add
@@ -305,5 +310,4 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector) : bool {
 			$tempFedSectors = array();
 		}
 	}
-	return true;
 }

@@ -61,6 +61,8 @@
 	<br />
 
 	<h2>Locations</h2>
+	<input type="checkbox" name="add_linked_locs" />
+	Automatically add linked locations for Headquarters
 	<table class="shrink">
 		<tr>
 			<td class="center noWrap">

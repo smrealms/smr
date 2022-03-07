@@ -53,6 +53,14 @@ class Categories {
 	}
 }
 
+// Remove any linked locations, as they will be added automatically
+// with any corresponding HQs.
+foreach ($locations as $location) {
+	foreach ($location->getLinkedLocations() as $linkedLoc) {
+		unset($locations[$linkedLoc->getTypeID()]);
+	}
+}
+
 // Set any extra information to be displayed with each location
 $locText = array();
 $categories = new Categories();
@@ -84,6 +92,9 @@ foreach ($locations as $location) {
 	}
 	if ($location->isHQ() || $location->isUG() || $location->isFed()) {
 		$extra .= $categories->addLoc($location->getTypeID(), 'Headquarters');
+		foreach ($location->getLinkedLocations() as $linkedLoc) {
+			$extra .= $linkedLoc->getName() . '<br />';
+		}
 	}
 	if (!$categories->added($location->getTypeID())) {
 		// Anything that doesn't fit the other categories
