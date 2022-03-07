@@ -55,6 +55,7 @@ x-smr-test: &smr-test
         - ./test/env:/smr/config/env:ro
         - ./phpunit.xml:/smr/phpunit.xml
         - ./phpstan.neon.dist:/smr/phpstan.neon.dist
+        - ./phpcs.xml:/smr/phpcs.xml
         # Mount the source code instead of copying it.
         - ./src:/smr/src
         - ./test:/smr/test
@@ -146,6 +147,10 @@ services:
     phpstan:
         <<: *smr-test
         command: vendor/bin/phpstan --memory-limit=4G --ansi analyse
+
+    phpcs:
+        <<: *smr-test
+        command: vendor/bin/phpcs
 
     pma:
         image: phpmyadmin/phpmyadmin

@@ -1,0 +1,89 @@
+<ruleset>
+    <!-- Show (p)rogress and (s)niff codes. -->
+    <arg value="ps" />
+    <arg name="basepath" value="." />
+    <arg name="colors" />
+    <config name="memory_limit" value="4G" />
+
+    <file>src/</file>
+    <file>test/</file>
+
+    <rule ref="vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml">
+        <!-- We do not expect every method/class to have a docstring. -->
+        <exclude name="PSR2R.Commenting.DocBlock" />
+
+        <!-- We do not expect every docstring to document all params. -->
+        <exclude name="PSR2R.Commenting.DocBlockParam" />
+
+        <!-- Erroneous sniff. Static and self are not interchangeable. -->
+        <exclude name="PSR2R.PHP.PreferStaticOverSelf" />
+
+        <!-- Multiple empty lines can be useful for readability. -->
+        <exclude name="PSR2R.WhiteSpace.EmptyLines" />
+
+        <!-- Personal preference for parentheses around require/echo. -->
+        <exclude name="PSR2R.WhiteSpace.LanguageConstructSpacing" />
+
+        <!-- Jump statements on a single line can help keep code compact. -->
+        <exclude name="SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing" />
+
+        <!-- Trailing comma in multi-line function calls can be misleading. -->
+        <exclude name="SlevomatCodingStandard.Functions.RequireTrailingCommaInCall" />
+
+        <!-- Erroneous sniff. Disables a real language feature. -->
+        <exclude name="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
+
+        <!-- We do not demand that all constants have a docstring. -->
+        <exclude name="Spryker.Commenting.DocBlockConst" />
+
+        <!-- Docstring for return void is redundant with typehint. -->
+        <exclude name="Spryker.Commenting.DocBlockReturnVoid" />
+
+        <!-- We do not expect that all class vars have a docstring. -->
+        <exclude name="Spryker.Commenting.DocBlockVar" />
+
+        <!-- Prevents compact class declarations. -->
+        <exclude name="Squiz.WhiteSpace.MemberVarSpacing" />
+    </rule>
+
+    <!-- PHP/HTML intermixing in templates breaks indentation depth calculation. -->
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <exclude-pattern>src/templates/*</exclude-pattern>
+    </rule>
+
+    <!-- Inline control structures useful in templates for HTML formatting. -->
+    <rule ref="PEAR.ControlStructures.ControlSignature">
+        <exclude-pattern>src/templates/*</exclude-pattern>
+    </rule>
+    <rule ref="Generic.ControlStructures.InlineControlStructure">
+        <exclude-pattern>src/templates/*</exclude-pattern>
+    </rule>
+    <rule ref="Spryker.ControlStructures.NoInlineAssignment">
+        <exclude-pattern>src/templates/*</exclude-pattern>
+    </rule>
+
+    <!-- Some templates break the parser. -->
+    <rule ref="Internal.Exception">
+        <exclude-pattern>src/templates/*</exclude-pattern>
+    </rule>
+
+    <!-- Some templates will have no PHP code. -->
+    <rule ref="Internal.NoCodeFound">
+        <exclude-pattern>src/templates/*</exclude-pattern>
+    </rule>
+
+    <!-- Temporary until all classes are migrated to the PSR-4 autoloader. -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <severity>0</severity>
+    </rule>
+
+    <!-- PHPUnit convention is snake_case for test methods. -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName">
+        <exclude-pattern>test/*</exclude-pattern>
+    </rule>
+
+    <!-- Closing tags used in templates since PHP/HTML are intermixed. -->
+    <rule ref="Zend.Files.ClosingTag">
+        <exclude-pattern>src/templates/*</exclude-pattern>
+    </rule>
+</ruleset>
