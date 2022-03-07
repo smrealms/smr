@@ -28,7 +28,7 @@ try {
 	function writeToEngine(string $s, bool $block = true, bool $read = true): void {
 		global $toEngine;
 		debug('--> ' . $s);
-		fputs($toEngine, $s . EOL);
+		fwrite($toEngine, $s . EOL);
 		if ($read === true) {
 			readFromEngine($block);
 		}

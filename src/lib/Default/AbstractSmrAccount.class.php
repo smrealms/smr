@@ -187,7 +187,7 @@ abstract class AbstractSmrAccount {
 			$case .= ' WHEN ' . $userRankingType . ' THEN POW(amount*' . $userRankingScore[1] . ',' . SmrAccount::USER_RANKINGS_EACH_STAT_POW . ')*' . $userRankingScore[2];
 		}
 		$case .= ' END))';
-		return ['CASE' => $case, 'IN' => join(',', $userRankingTypes)];
+		return ['CASE' => $case, 'IN' => implode(',', $userRankingTypes)];
 	}
 
 	protected function __construct(int $accountID) {

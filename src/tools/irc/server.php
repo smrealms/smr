@@ -21,7 +21,7 @@ function server_ping($fp, string $rdata): bool {
 			echo_r('[PING] from ' . $server);
 		}
 
-		fputs($fp, 'PONG ' . $server . EOL);
+		fwrite($fp, 'PONG ' . $server . EOL);
 		return true;
 	}
 
@@ -100,9 +100,9 @@ function server_msg_318($fp, string $rdata): bool {
 					$action[0] = 'NICKSERV_INFO';
 					$action[4] = time();
 					array_push($actions, $action);
-					fputs($fp, 'NICKSERV INFO ' . $nick . EOL);
+					fwrite($fp, 'NICKSERV INFO ' . $nick . EOL);
 				} elseif ($action[5] === true) {
-					fputs($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
+					fwrite($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
 				}
 
 			}

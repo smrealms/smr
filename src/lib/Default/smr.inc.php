@@ -789,7 +789,7 @@ function format_time(int $seconds, bool $short = false): string {
 		$result = $parts[0];
 	} else {
 		// e.g. 5h, 10m and 30s
-		$result = join(', ', array_slice($parts, 0, -1)) . ' and ' . end($parts);
+		$result = implode(', ', array_slice($parts, 0, -1)) . ' and ' . end($parts);
 	}
 
 	if ($seconds < 60) {

@@ -14,7 +14,7 @@ function query_command($fp, string $rdata): bool {
 		echo_r('[QUERY] by ' . $nick . ': ' . $text);
 
 		// relay msg as our own
-		fputs($fp, $text . EOL);
+		fwrite($fp, $text . EOL);
 
 		return true;
 	}

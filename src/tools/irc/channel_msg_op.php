@@ -14,14 +14,14 @@ function channel_msg_op($fp, string $rdata): bool {
 
 		echo_r('[OP] by ' . $nick . ' in ' . $channel);
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :The !op command can be used to manage an upcoming op.' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :The following sub commands are available:' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !op info         Displays the time left until next op' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !op list         Displays a list of players who have signed up' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !op yes/no/maybe Sign you up for the upcoming OP' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !op set <time>   The leader can set up an OP. <time> has to be a unix timestamp. Use http://www.epochconverter.com' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !op cancel       The leader can cancel the OP' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !op turns        The leader can get a turn count of all attendees during OP' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :The !op command can be used to manage an upcoming op.' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :The following sub commands are available:' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :  !op info         Displays the time left until next op' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :  !op list         Displays a list of players who have signed up' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :  !op yes/no/maybe Sign you up for the upcoming OP' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :  !op set <time>   The leader can set up an OP. <time> has to be a unix timestamp. Use http://www.epochconverter.com' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :  !op cancel       The leader can cancel the OP' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :  !op turns        The leader can get a turn count of all attendees during OP' . EOL);
 
 		return true;
 	}
@@ -45,7 +45,7 @@ function channel_msg_op_info($fp, string $rdata, AbstractSmrPlayer $player): boo
 		// announce signup status
 		$result = shared_channel_msg_op_info($player);
 		foreach ($result as $line) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
@@ -69,7 +69,7 @@ function channel_msg_op_cancel($fp, string $rdata, AbstractSmrPlayer $player): b
 
 		// check if $nick is leader
 		if (!$player->isAllianceLeader(true)) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', only the leader of the alliance can cancel an OP.' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', only the leader of the alliance can cancel an OP.' . EOL);
 			return true;
 		}
 
@@ -80,7 +80,7 @@ function channel_msg_op_cancel($fp, string $rdata, AbstractSmrPlayer $player): b
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID());
 		if (!$dbResult->hasRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
 		}
 
@@ -92,7 +92,7 @@ function channel_msg_op_cancel($fp, string $rdata, AbstractSmrPlayer $player): b
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID());
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :The OP has been canceled.' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :The OP has been canceled.' . EOL);
 		return true;
 	}
 
@@ -116,7 +116,7 @@ function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player): bool
 
 		// check if $nick is leader
 		if (!$player->isAllianceLeader(true)) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', only the leader of the alliance can setup an OP.' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', only the leader of the alliance can setup an OP.' . EOL);
 			return true;
 		}
 
@@ -127,12 +127,12 @@ function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player): bool
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND  game_id = ' . $player->getGameID());
 		if ($dbResult->hasRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :There is already an OP scheduled. Cancel it first!' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :There is already an OP scheduled. Cancel it first!' . EOL);
 			return true;
 		}
 
 		if (!is_numeric($op_time)) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :The <time> needs to be a unix timestamp. See http://www.epochconverter.com for a converter.' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :The <time> needs to be a unix timestamp. See http://www.epochconverter.com for a converter.' . EOL);
 			return true;
 		}
 
@@ -143,7 +143,7 @@ function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player): bool
 			'time' => $db->escapeNumber($op_time),
 		]);
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :The OP has been scheduled.' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :The OP has been scheduled.' . EOL);
 		return true;
 	}
 
@@ -164,13 +164,13 @@ function channel_msg_op_turns($fp, string $rdata, AbstractSmrPlayer $player): bo
 		echo_r('[OP_TURNS] by ' . $nick . ' in ' . $channel);
 
 		if (!$player->isAllianceLeader(true)) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', only the leader of the alliance can use this command.' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', only the leader of the alliance can use this command.' . EOL);
 			return true;
 		}
 
 		$result = shared_channel_msg_op_turns($player);
 		foreach ($result as $line) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
@@ -201,14 +201,14 @@ function channel_msg_op_response($fp, string $rdata, AbstractSmrPlayer $player):
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID());
 		if (!$dbResult->hasRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
 		}
 
 		$db->write('REPLACE INTO alliance_has_op_response (alliance_id, game_id, account_id, response)
 					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $player->getAccountID() . ', ' . $db->escapeString($response) . ')');
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the ' . $response . ' list.' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the ' . $response . ' list.' . EOL);
 
 		return true;
 	}
@@ -231,7 +231,7 @@ function channel_msg_op_list($fp, string $rdata, AbstractSmrPlayer $player): boo
 
 		$result = shared_channel_msg_op_list($player);
 		foreach ($result as $line) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
@@ -270,7 +270,7 @@ function channel_op_notification($fp, string $rdata, string $nick, string $chann
 					AND game_id = ' . $player->getGameID() . '
 					AND account_id = ' . $player->getAccountID());
 	if (!$dbResult->hasRecord()) {
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
 	}
 
 	return true;

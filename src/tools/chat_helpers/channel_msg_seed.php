@@ -22,7 +22,7 @@ function get_seed_message(SmrPlayer $player): string {
 	if (count($missingSeeds) == 0) {
 		return $player->getPlayerName() . ' has seeded all sectors.';
 	} else {
-		return $player->getPlayerName() . ' (' . count($missingSeeds) . ' missing) : ' . join(' ', $missingSeeds);
+		return $player->getPlayerName() . ' (' . count($missingSeeds) . ' missing) : ' . implode(' ', $missingSeeds);
 	}
 }
 

@@ -2,7 +2,7 @@
 <br /><br />
 
 <h2>Missing Locations</h2>
-<?php echo join('<br />', $MissingLocNames); ?>
+<?php echo implode('<br />', $MissingLocNames); ?>
 <br /><br />
 
 <?php

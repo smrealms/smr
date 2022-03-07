@@ -144,7 +144,7 @@ while ($running) {
 function safefputs($fp, string $text): void {
 	stream_set_blocking($fp, false);
 	while (readFromStream($fp));
-	fputs($fp, $text);
+	fwrite($fp, $text);
 	stream_set_blocking($fp, true);
 }
 

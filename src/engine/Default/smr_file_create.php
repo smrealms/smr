@@ -52,7 +52,7 @@ foreach (SmrShipType::getAll() as $ship) {
 		$shipEquip[] = $hardwares[$hardwareID]['Name'] . '=' . $maxHardware;
 	}
 	if (!empty($shipEquip)) {
-		$file .= ',ShipEquipment=' . join(';', $shipEquip);
+		$file .= ',ShipEquipment=' . implode(';', $shipEquip);
 	}
 	$file .= ',Restrictions=' . $ship->getRestriction();
 	$file .= EOL;
@@ -146,11 +146,11 @@ foreach ($galaxies as $galaxy) {
 			$file .= 'Port Level=' . $port->getLevel() . EOL;
 			$file .= 'Port Race=' . $port->getRaceID() . EOL;
 			if (!empty($port->getSoldGoodIDs())) {
-				$file .= 'Buys=' . join(',', $port->getSoldGoodIDs()) . EOL;
+				$file .= 'Buys=' . implode(',', $port->getSoldGoodIDs()) . EOL;
 			}
 
 			if (!empty($port->getBoughtGoodIDs())) {
-				$file .= 'Sells=' . join(',', $port->getBoughtGoodIDs()) . EOL;
+				$file .= 'Sells=' . implode(',', $port->getBoughtGoodIDs()) . EOL;
 			}
 		}
 		if ($sector->hasPlanet()) {

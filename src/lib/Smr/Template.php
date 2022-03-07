@@ -29,7 +29,7 @@ class Template {
 
 	public function __destruct() {
 		if (!$this->displayCalled && !empty($this->data)) {
-			error_log('Template destroyed before displaying the following assigned keys: ' . join(', ', array_keys($this->data)));
+			error_log('Template destroyed before displaying the following assigned keys: ' . implode(', ', array_keys($this->data)));
 		}
 	}
 

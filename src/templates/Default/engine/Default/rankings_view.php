@@ -18,7 +18,7 @@ You are ranked as a <span style="font-size: 125%; color: greenyellow;"><?php ech
 <b>Extended Scores</b>
 <br /><?php
 foreach ($ThisAccount->getIndividualScores() as $statScore) {
-	echo join(' - ', $statScore['Stat']); ?>, has a stat of <?php echo number_format($ThisAccount->getHOF($statScore['Stat'])); ?> and a score of <span class="green"><?php echo number_format(round($statScore['Score'])); ?></span><br /><?php
+	echo implode(' - ', $statScore['Stat']); ?>, has a stat of <?php echo number_format($ThisAccount->getHOF($statScore['Stat'])); ?> and a score of <span class="green"><?php echo number_format(round($statScore['Score'])); ?></span><br /><?php
 }
 
 if (Smr\Session::getInstance()->hasGame()) { ?>
@@ -26,7 +26,7 @@ if (Smr\Session::getInstance()->hasGame()) { ?>
 	<b>Current Game Extended Stats</b>
 	<br /><?php
 	foreach ($ThisAccount->getIndividualScores($ThisPlayer) as $statScore) {
-		echo join(' - ', $statScore['Stat']); ?>, has a stat of <?php echo number_format($ThisPlayer->getHOF($statScore['Stat'])); ?> and a score of <span class="green"><?php echo number_format(round($statScore['Score'])); ?></span><br /><?php
+		echo implode(' - ', $statScore['Stat']); ?>, has a stat of <?php echo number_format($ThisPlayer->getHOF($statScore['Stat'])); ?> and a score of <span class="green"><?php echo number_format(round($statScore['Score'])); ?></span><br /><?php
 	}
 } ?>
 

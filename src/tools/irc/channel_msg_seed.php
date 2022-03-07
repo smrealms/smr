@@ -15,7 +15,7 @@ function channel_msg_seed($fp, string $rdata, AbstractSmrPlayer $player): bool {
 
 		$result = shared_channel_msg_seed($player);
 		foreach ($result as $line) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
@@ -37,10 +37,10 @@ function channel_msg_seedlist($fp, string $rdata): bool {
 
 		echo_r('[SEEDLIST] by ' . $nick . ' in ' . $channel);
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :The !seedlist command enables alliance leader to add or remove sectors to the seedlist' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :The following sub commands are available:' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !seedlist add <sector1> <sector2> ...       Adds <sector> to the seedlist' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !seedlist del <sector1> <sector2> ...       Removes <sector> from seedlist' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :The !seedlist command enables alliance leader to add or remove sectors to the seedlist' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :The following sub commands are available:' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :  !seedlist add <sector1> <sector2> ...       Adds <sector> to the seedlist' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :  !seedlist del <sector1> <sector2> ...       Removes <sector> from seedlist' . EOL);
 
 		return true;
 	}
@@ -64,7 +64,7 @@ function channel_msg_seedlist_add($fp, string $rdata, AbstractSmrPlayer $player)
 
 		$result = shared_channel_msg_seedlist_add($player, $sectors);
 		foreach ($result as $line) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
@@ -89,7 +89,7 @@ function channel_msg_seedlist_del($fp, string $rdata, AbstractSmrPlayer $player)
 
 		$result = shared_channel_msg_seedlist_del($player, $sectors);
 		foreach ($result as $line) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;

@@ -27,7 +27,7 @@ function channel_action_slap($fp, string $rdata): bool {
 			'deflects the slap and deals ' . rand(1, 999999) . ' damage to ' . $nick,
 			'steals the trout and throws it back in the river',
 		];
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . chr(1) . 'ACTION ' . $slap_responses[rand(0, count($slap_responses) - 1)] . chr(1) . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :' . chr(1) . 'ACTION ' . $slap_responses[rand(0, count($slap_responses) - 1)] . chr(1) . EOL);
 
 		return true;
 

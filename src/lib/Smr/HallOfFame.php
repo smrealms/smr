@@ -50,7 +50,7 @@ class HallOfFame {
 
 			$categories[] = [
 				'link' => $link,
-				'subcategories' => join('&#32;', $subcategories),
+				'subcategories' => implode('&#32;', $subcategories),
 			];
 		}
 		return $categories;

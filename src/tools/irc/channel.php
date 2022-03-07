@@ -28,9 +28,9 @@ function channel_join($fp, string $rdata): bool {
 			$seen_by = $dbRecord->getField('seen_by');
 
 			if ($seen_count > 1) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_count . ' players were looking for you, the last one being ' . $seen_by . EOL);
+				fwrite($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_count . ' players were looking for you, the last one being ' . $seen_by . EOL);
 			} elseif ($seen_count > 0) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_by . ' was looking for you.' . EOL);
+				fwrite($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_by . ' was looking for you.' . EOL);
 			}
 
 			$db->write('UPDATE irc_seen
@@ -54,7 +54,7 @@ function channel_join($fp, string $rdata): bool {
 			]);
 
 			if ($nick != IRC_BOT_NICK) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :Welcome, ' . $nick . '! Most players are using Discord (' . DISCORD_URL . ') instead of IRC, but the two platforms are linked by discordbot. Anything you say here will be relayed to the Discord channel and vice versa.' . EOL);
+				fwrite($fp, 'PRIVMSG ' . $channel . ' :Welcome, ' . $nick . '! Most players are using Discord (' . DISCORD_URL . ') instead of IRC, but the two platforms are linked by discordbot. Anything you say here will be relayed to the Discord channel and vice versa.' . EOL);
 			}
 		}
 

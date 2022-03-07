@@ -93,7 +93,7 @@ foreach ($dbResult->records() as $dbRecord) {
 			$rows[] = [
 				'name' => $currLinkAccLogin . ' (' . $currLinkAccId . ')',
 				'account_id' => $currLinkAccId,
-				'associated_ids' => join('-', $accountIDs),
+				'associated_ids' => implode('-', $accountIDs),
 				'style' => $style,
 				'color' => $isDisabled ? 'red' : '',
 				'common_ip' => $common_ip,

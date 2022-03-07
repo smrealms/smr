@@ -11,7 +11,7 @@ $fn_forces = function($message, $params) {
 	// print the next expiring forces
 	$option = $params[0] ?? null;
 	$results = shared_channel_msg_forces($link->player, $option);
-	$message->reply(join(EOL, $results))
+	$message->reply(implode(EOL, $results))
 		->done(null, 'logException');
 };
 

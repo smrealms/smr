@@ -14,7 +14,7 @@ class PhpFileInspectionTest extends TestCase {
 		$exit_code = 1;
 		$output = [];
 		exec(ROOT . 'test/strict_types.sh', $output, $exit_code);
-		$this->assertSame(0, $exit_code, join("\n", $output));
+		$this->assertSame(0, $exit_code, implode("\n", $output));
 		$this->assertEquals('Success! No strict_type errors.', end($output));
 	}
 

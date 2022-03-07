@@ -16,9 +16,9 @@ function invite($fp, string $rdata): void {
 		echo_r('[INVITE] by ' . $nick . ' for ' . $channel);
 
 		// join channel where they want us
-		fputs($fp, 'JOIN ' . $channel . EOL);
+		fwrite($fp, 'JOIN ' . $channel . EOL);
 		sleep(1);
-		fputs($fp, 'WHO ' . $channel . EOL);
+		fwrite($fp, 'WHO ' . $channel . EOL);
 
 	}
 

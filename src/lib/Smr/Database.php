@@ -144,8 +144,8 @@ class Database {
 	 * @return int Insert ID of auto-incrementing column, if applicable
 	 */
 	public function insert(string $table, array $fields): int {
-		$query = 'INSERT INTO ' . $table . ' (' . join(', ', array_keys($fields))
-			. ') VALUES (' . join(', ', array_values($fields)) . ')';
+		$query = 'INSERT INTO ' . $table . ' (' . implode(', ', array_keys($fields))
+			. ') VALUES (' . implode(', ', array_values($fields)) . ')';
 		$this->write($query);
 		return $this->getInsertID();
 	}
@@ -193,9 +193,9 @@ class Database {
 	 */
 	public function escapeArray(array $array, string $delimiter = ',', bool $escapeIndividually = true): string {
 		if ($escapeIndividually) {
-			$string = join($delimiter, array_map(function($item) { return $this->escape($item); }, $array));
+			$string = implode($delimiter, array_map(function($item) { return $this->escape($item); }, $array));
 		} else {
-			$string = $this->escape(join($delimiter, $array));
+			$string = $this->escape(implode($delimiter, $array));
 		}
 		return $string;
 	}

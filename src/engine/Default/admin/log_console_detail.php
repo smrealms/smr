@@ -89,7 +89,7 @@ if ($action == 'Delete') {
 	$log_notes = array_unique($log_notes);
 
 	// flattens array
-	$flat_notes = join(EOL, $log_notes);
+	$flat_notes = implode(EOL, $log_notes);
 	$template->assign('FlatNotes', $flat_notes);
 
 	// *********************************

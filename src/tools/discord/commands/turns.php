@@ -22,7 +22,7 @@ $fn_turns = function($message) {
 	}
 
 	$results = array_map('get_turns_message', $link->player->getSharingPlayers(true));
-	$message->reply(join("\n", $results))
+	$message->reply(implode("\n", $results))
 		->done(null, 'logException');
 };
 

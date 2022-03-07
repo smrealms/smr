@@ -12,7 +12,7 @@ $fn_op = function($message) {
 
 	// print info about the next op
 	$results = shared_channel_msg_op_info($link->player);
-	$message->reply(join(EOL, $results))
+	$message->reply(implode(EOL, $results))
 		->done(null, 'logException');
 };
 
@@ -24,7 +24,7 @@ $fn_op_list = function($message) {
 
 	// print list of attendees
 	$results = shared_channel_msg_op_list($link->player);
-	$message->reply(join(EOL, $results))
+	$message->reply(implode(EOL, $results))
 		->done(null, 'logException');
 };
 
@@ -36,7 +36,7 @@ $fn_op_turns = function($message) {
 
 	// print list of attendees
 	$results = shared_channel_msg_op_turns($link->player);
-	$message->reply(join(EOL, $results))
+	$message->reply(implode(EOL, $results))
 		->done(null, 'logException');
 };
 

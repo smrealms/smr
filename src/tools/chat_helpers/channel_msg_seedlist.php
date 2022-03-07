@@ -22,7 +22,7 @@ function shared_channel_msg_seedlist(SmrPlayer $player): array {
 		return ['Your alliance has not set up a seedlist yet.'];
 	} else {
 		$result = ['Your alliance has a ' . count($seedlist) . ' sector seedlist:'];
-		$result[] = join(' ', $seedlist);
+		$result[] = implode(' ', $seedlist);
 		return $result;
 	}
 }
