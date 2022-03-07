@@ -10,7 +10,7 @@ class GameLink {
 	public bool $valid = false;
 	public SmrPlayer $player;
 
-	function __construct(Discord\Parts\Channel\Message $message) {
+	public function __construct(Discord\Parts\Channel\Message $message) {
 
 		// force update in case the ID has been changed in-game
 		$user_id = $message->author->id;
