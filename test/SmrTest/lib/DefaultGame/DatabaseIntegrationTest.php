@@ -248,7 +248,7 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame(0, $db->insert('debug', []));
 
 		// Non-zero insert ID when table has an auto-increment column
-		for ($i = 1; $i <=3; $i++) {
+		for ($i = 1; $i <= 3; $i++) {
 			self::assertSame($i, $db->insert('newsletter', []));
 		}
 
