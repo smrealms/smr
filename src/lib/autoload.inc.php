@@ -13,7 +13,7 @@ function get_game_dir(): string {
 		$gameDir = $storedDir;
 	} else {
 		if ($overrideGameID > 0) {
-			require_once(LIB . 'Default/SmrGame.class.php');
+			require_once(LIB . 'Default/SmrGame.php');
 			// Game types can have spaces in them, but their corresponding
 			// directories do not.
 			$gameType = SmrGame::getGame($overrideGameID)->getGameType();
@@ -33,10 +33,10 @@ function get_game_dir(): string {
  */
 function get_class_loc(string $className): void {
 	$className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
-	$classFile = LIB . get_game_dir() . $className . '.class.php';
+	$classFile = LIB . get_game_dir() . $className . '.php';
 	if (!is_file($classFile)) {
 		// Fallback to Default directory
-		$classFile = LIB . 'Default/' . $className . '.class.php';
+		$classFile = LIB . 'Default/' . $className . '.php';
 	}
 	require($classFile);
 }
