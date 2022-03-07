@@ -31,10 +31,7 @@ $dbResult = $db->read('SELECT count(*) as count FROM message ' . $whereClause);
 $messageBox['TotalMessages'] = $dbResult->record()->getInt('count');
 $messageBox['Type'] = $var['folder_id'];
 
-$page = 0;
-if (isset ($var['page'])) {
-	$page = $var['page'];
-}
+$page = $var['page'] ?? 0;
 
 $container = Page::copy($var);
 $container['page'] = $page - 1;

@@ -5,10 +5,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-$game_id = null;
-if (isset($var['game_id'])) {
-	$game_id = $var['game_id'];
-}
+$game_id = $var['game_id'] ?? null;
 
 if (empty($game_id)) {
 	$topic = 'All Time Hall of Fame';

@@ -40,10 +40,8 @@ if ($action != COMBAT_LOG_PERSONAL && $player->hasAlliance()) {
 } else {
 	$query .= ' AND (attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ') ';
 }
-$page = 0;
-if (isset($var['page'])) {
-	$page = $var['page'];
-}
+
+$page = $var['page'] ?? 0;
 $dbResult = $db->read('SELECT count(*) as count FROM combat_logs c WHERE ' . $query . ' LIMIT 1');
 $totalLogs = $dbResult->record()->getInt('count'); // count always returns a record
 $template->assign('TotalLogs', $totalLogs);
