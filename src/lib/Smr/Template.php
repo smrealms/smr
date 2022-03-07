@@ -7,7 +7,6 @@ use DOMNode;
 use DOMXPath;
 use Exception;
 use Smr\Container\DiContainer;
-use Smr\Session;
 
 class Template {
 	private array $data = [];

@@ -5,7 +5,6 @@ namespace Smr;
 use mysqli;
 use RuntimeException;
 use Smr\Container\DiContainer;
-use Smr\DatabaseProperties;
 
 /**
  * Wraps an active connection to the database.
