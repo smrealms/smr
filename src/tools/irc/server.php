@@ -85,7 +85,6 @@ function server_msg_318($fp, string $rdata): bool {
 						'WHERE seen_id = ' . $seen_id);
 		}
 
-
 		global $actions;
 		foreach ($actions as $key => $action) {
 

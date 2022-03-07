@@ -527,7 +527,6 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db): void {
 
 	$container = Page::create('skeleton.php');
 
-
 	if ($session->hasGame()) {
 		$player = $session->getPlayer();
 		$template->assign('GameName', SmrGame::getGame($session->getGameID())->getName());
@@ -594,8 +593,6 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db): void {
 
 	$container['body'] = 'donation.php';
 	$template->assign('DonateLink', $container->href());
-
-
 
 	if ($session->hasGame()) {
 		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');

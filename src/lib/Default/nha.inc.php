@@ -131,7 +131,6 @@ function createNHA(int $gameID): void {
 	You should also contribute to the webboard if you have an opinion or something you feel needs discussed, but please use the search function before starting new topics to make sure you are not repeating what someone else has posted somewhere else.';
 	$db->write('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($allianceID) . ', 12, 1, ' . $db->escapeString($text) . ', ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
 
-
 	$db->write('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($allianceID) . ', 13, \'Alignment\')');
 	$text = ' 	Alignment has a couple of functions, the main ones being for trading purposes and determining which restricted ships and weapons you can buy.<br />
 	<br />

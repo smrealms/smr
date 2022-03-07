@@ -89,7 +89,6 @@ class CouncilVoting {
 						AND vote = \'NO\'');
 			$no_votes = $dbResult2->getNumRecords();
 
-
 			// more yes than no?
 			if ($yes_votes > $no_votes) {
 				if ($type == 'WAR') {

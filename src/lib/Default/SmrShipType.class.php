@@ -85,7 +85,6 @@ class SmrShipType {
 		}
 		$this->maxPower = $maxPower;
 
-
 		// get supported hardware from db
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
