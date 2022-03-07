@@ -7,7 +7,7 @@
 	</tr><?php
 	foreach ($Teams as $Team) {
 		// boldface this row if it is the current player's alliance
-		$Class = ($Team['Leader']->getPlayerID() == $PlayerID) ? "bold" : ""; ?>
+		$Class = ($Team['Leader']->getPlayerID() == $PlayerID) ? 'bold' : ''; ?>
 		<tr class="<?php echo $Class; ?>">
 			<td><?php echo $Team['Leader']->getLinkedDisplayName(false); ?></td><?php
 			// The leader may not have made an alliance yet

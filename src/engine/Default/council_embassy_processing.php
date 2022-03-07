@@ -53,10 +53,10 @@ if ($type == 'PEACE') {
 // Construct the message to be sent to the council members.
 $color = ($type == 'PEACE' ? 'dgreen' : 'red');
 $type_fancy = "<span class=\"$color\">$type</span>";
-$message = $player->getLevelName() . " " . $player->getBBLink()
+$message = $player->getLevelName() . ' ' . $player->getBBLink()
            . " has initiated a vote for $type_fancy with the [race=$race_id]!"
-           . " You have " . format_time(TIME_FOR_COUNCIL_VOTE)
-           . " to cast your vote.";
+           . ' You have ' . format_time(TIME_FOR_COUNCIL_VOTE)
+           . ' to cast your vote.';
 
 foreach ($councilMembers as $accountID) {
 	// don't send to the player who started the vote

@@ -151,7 +151,7 @@ function displayGrouped(SmrPlayer $sender, string $message_text, int $first, int
 	$message['Unread'] = $star;
 	$message['SenderID'] = $sender->getAccountID();
 	$message['SenderDisplayName'] = $sender->getLinkedDisplayName(false);
-	$message['SendTime'] = date($displayAccount->getDateTimeFormat(), $first) . " - " . date($displayAccount->getDateTimeFormat(), $last);
+	$message['SendTime'] = date($displayAccount->getDateTimeFormat(), $first) . ' - ' . date($displayAccount->getDateTimeFormat(), $last);
 	$message['Text'] = $message_text;
 	return $message;
 }

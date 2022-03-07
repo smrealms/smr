@@ -12,7 +12,7 @@ class Menu extends AbstractMenu {
 		} elseif ($location->isUG()) {
 			$links[] = ['underground.php', 'Underground'];
 		} else {
-			throw new Exception("Location is not HQ or UG: " . $location->getName());
+			throw new Exception('Location is not HQ or UG: ' . $location->getName());
 		}
 
 		$menuItems = [];

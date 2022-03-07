@@ -104,7 +104,7 @@ if ($action == 'Delete') {
 		$log_type_id = $dbRecord->getInt('log_type_id');
 		$sector_id = $dbRecord->getInt('sector_id');
 
-		$date = DateTime::createFromFormat("U.u", $microtime)->format('Y-m-d H:i:s.u');
+		$date = DateTime::createFromFormat('U.u', $microtime)->format('Y-m-d H:i:s.u');
 
 		$logs[] = [
 			'date' => $date,

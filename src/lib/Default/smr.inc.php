@@ -745,7 +745,7 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db): void {
  */
 function format_time(int $seconds, bool $short = false): string {
 	if ($seconds == 0) {
-		return "now";
+		return 'now';
 	}
 
 	if ($seconds < 0) {

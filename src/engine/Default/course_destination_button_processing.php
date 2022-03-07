@@ -25,7 +25,7 @@ switch ($type) {
 	break;
 
 	default:
-		create_error("42 would be the right answer !!!");
+		create_error('42 would be the right answer !!!');
 	break;
 }
 

@@ -203,7 +203,7 @@ class ChessPiece {
 	}
 
 	public static function getSymbolForPiece(int $pieceID, string $colour): string {
-		return "&#" . (9811 + $pieceID + ($colour == ChessGame::PLAYER_WHITE ? 0 : 6)) . ";";
+		return '&#' . (9811 + $pieceID + ($colour == ChessGame::PLAYER_WHITE ? 0 : 6)) . ';';
 	}
 
 	public static function getLetterForPiece(int $pieceID, string $colour): string {

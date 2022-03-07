@@ -10,7 +10,7 @@ use Smr\DatabaseProperties;
  * @covers \Smr\Container\DiContainer
  */
 class DiContainerTest extends TestCase {
-	private const PHPDI_COMPILED_CONTAINER_FILE = "/tmp/CompiledContainer.php";
+	private const PHPDI_COMPILED_CONTAINER_FILE = '/tmp/CompiledContainer.php';
 
 	protected function tearDown(): void {
 		if (file_exists(self::PHPDI_COMPILED_CONTAINER_FILE)) {

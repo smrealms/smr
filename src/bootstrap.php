@@ -224,4 +224,4 @@ spl_autoload_register('get_class_loc');
 require_once(LIB . 'Default/smr.inc.php');
 
 // Set up dependency injection container
-DiContainer::initialize(getenv('DISABLE_PHPDI_COMPILATION') !== "true");
+DiContainer::initialize(getenv('DISABLE_PHPDI_COMPILATION') !== 'true');

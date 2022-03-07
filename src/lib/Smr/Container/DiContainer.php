@@ -66,7 +66,7 @@ class DiContainer {
 		if ($enableCompilation) {
 			// The CompiledContainer.php will be saved to the /tmp directory on the Docker container once
 			// during its lifecycle (first request)
-			$builder->enableCompilation("/tmp");
+			$builder->enableCompilation('/tmp');
 		}
 		// TODO: deprecation warnings suppressed until PHP 8.1 supported!
 		// See https://github.com/PHP-DI/PHP-DI/pull/794.

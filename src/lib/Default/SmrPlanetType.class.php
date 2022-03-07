@@ -93,13 +93,13 @@ class TerranPlanet extends SmrPlanetType {
 		return self::STRUCTURES;
 	}
 	public function name(): string {
-		return "Terran Planet";
+		return 'Terran Planet';
 	}
 	public function imageLink(): string {
-		return "images/planet1.png";
+		return 'images/planet1.png';
 	}
 	public function description(): string {
-		return "A lush world, with forests, seas, sweeping meadows, and indigenous lifeforms.";
+		return 'A lush world, with forests, seas, sweeping meadows, and indigenous lifeforms.';
 	}
 	public function maxAttackers(): int {
 		return 10;
@@ -137,13 +137,13 @@ class AridPlanet extends SmrPlanetType {
 		return self::STRUCTURES;
 	}
 	public function name(): string {
-		return "Arid Planet";
+		return 'Arid Planet';
 	}
 	public function imageLink(): string {
-		return "images/planet2.png";
+		return 'images/planet2.png';
 	}
 	public function description(): string {
-		return "A world mostly devoid of surface water, but capable of supporting life.";
+		return 'A world mostly devoid of surface water, but capable of supporting life.';
 	}
 	public function maxAttackers(): int {
 		return 5;
@@ -181,13 +181,13 @@ class DwarfPlanet extends SmrPlanetType {
 		return self::STRUCTURES;
 	}
 	public function name(): string {
-		return "Dwarf Planet";
+		return 'Dwarf Planet';
 	}
 	public function imageLink(): string {
-		return "images/planet3.png";
+		return 'images/planet3.png';
 	}
 	public function description(): string {
-		return "A smaller than usual planet, with no native life present.";
+		return 'A smaller than usual planet, with no native life present.';
 	}
 	public function maxAttackers(): int {
 		return 5;
@@ -237,13 +237,13 @@ class ProtoPlanet extends SmrPlanetType {
 		return self::STRUCTURES;
 	}
 	public function name(): string {
-		return "Protoplanet";
+		return 'Protoplanet';
 	}
 	public function imageLink(): string {
-		return "images/planet5.png";
+		return 'images/planet5.png';
 	}
 	public function description(): string {
-		return "A developing planet, not yet able to support the infrastructure of advanced technologies.";
+		return 'A developing planet, not yet able to support the infrastructure of advanced technologies.';
 	}
 	public function maxAttackers(): int {
 		return 5;
@@ -287,13 +287,13 @@ class DefenseWorld extends SmrPlanetType {
 		return self::STRUCTURES;
 	}
 	public function name(): string {
-		return "Defense World";
+		return 'Defense World';
 	}
 	public function imageLink(): string {
-		return "images/planet4.png";
+		return 'images/planet4.png';
 	}
 	public function description(): string {
-		return "A fully armed and operational battle station loaded with excessive firepower.";
+		return 'A fully armed and operational battle station loaded with excessive firepower.';
 	}
 	public function maxAttackers(): int {
 		return 10;

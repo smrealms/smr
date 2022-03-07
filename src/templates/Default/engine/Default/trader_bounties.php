@@ -24,7 +24,7 @@ You have the following bounties on your head:<br /><br />
 		foreach ($AllClaims as $Claims) { ?>
 			<td style="width:50%" class="top"><?php
 				if (empty($Claims)) {
-					echo "None";
+					echo 'None';
 				}
 				foreach ($Claims as $Claim) {
 					echo $Claim['player']->getLinkedDisplayName(); ?> : <span class="creds"><?php echo number_format($Claim['credits']); ?></span> credits and <span class="yellow"><?php echo number_format($Claim['smr_credits']); ?></span> SMR credits<br />

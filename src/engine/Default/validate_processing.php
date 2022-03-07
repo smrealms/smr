@@ -5,14 +5,14 @@ $account = $session->getAccount();
 
 $container = Page::create('skeleton.php', 'validate.php');
 
-if (Smr\Request::get('action') == "resend") {
+if (Smr\Request::get('action') == 'resend') {
 	$account->sendValidationEmail();
 	$container['msg'] = '<span class="green">The validation code has been resent to your e-mail address!</span>';
 	$container->go();
 }
 
 // Only skip validation check if we explicitly chose to validate later
-if (Smr\Request::get('action') != "skip") {
+if (Smr\Request::get('action') != 'skip') {
 	if ($account->getValidationCode() != Smr\Request::get('validation_code')) {
 		$container['msg'] = '<span class="red">The validation code you entered is incorrect!</span>';
 		$container->go();

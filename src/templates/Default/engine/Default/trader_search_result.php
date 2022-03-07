@@ -71,7 +71,7 @@ function DisplayResult(array $Links, SmrPlayer $Player): void { ?>
 
 if (isset($ResultPlayerLinks)) {
 	DisplayResult([$ResultPlayerLinks], $Player);
-	echo "<br /><br />";
+	echo '<br /><br />';
 }
 if (isset($SimilarPlayersLinks)) {
 	DisplayResult($SimilarPlayersLinks, $Player);

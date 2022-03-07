@@ -5,10 +5,10 @@ namespace Smr;
 use Dotenv\Dotenv;
 
 class DatabaseProperties {
-	private const CONFIG_HOST = "MYSQL_HOST";
-	private const CONFIG_USER = "MYSQL_USER";
-	private const CONFIG_PASSWORD = "MYSQL_PASSWORD";
-	private const CONFIG_DATABASE = "MYSQL_DATABASE";
+	private const CONFIG_HOST = 'MYSQL_HOST';
+	private const CONFIG_USER = 'MYSQL_USER';
+	private const CONFIG_PASSWORD = 'MYSQL_PASSWORD';
+	private const CONFIG_DATABASE = 'MYSQL_DATABASE';
 	private string $host;
 	private string $user;
 	private string $password;

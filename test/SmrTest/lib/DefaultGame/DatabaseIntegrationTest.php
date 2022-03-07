@@ -50,7 +50,7 @@ class DatabaseIntegrationTest extends TestCase {
 		// When calling database methods
 		$this->expectException(\Error::class);
 		$this->expectExceptionMessage('Typed property Smr\Database::$dbConn must not be accessed before initialization');
-		$db->read("foo query");
+		$db->read('foo query');
 	}
 
 	public function test_getDbBytes(): void {
@@ -80,7 +80,7 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->close();
 		// And Database is usable again after reconnecting
 		$db->reconnect();
-		$db->read("SELECT 1");
+		$db->read('SELECT 1');
 		// Then new mysqli instance is not the same as the initial mock
 		self::assertNotSame($originalMysql, DiContainer::get(mysqli::class));
 	}
@@ -101,7 +101,7 @@ class DatabaseIntegrationTest extends TestCase {
 		// The current microtime must not throw an exception
 		$db->escapeMicrotime(microtime(true));
 		// Check that the formatting preserves all digits
-		self::assertSame("1608455259123456", $db->escapeMicrotime(1608455259.123456));
+		self::assertSame('1608455259123456', $db->escapeMicrotime(1608455259.123456));
 	}
 
 	public function test_escapeBoolean(): void {

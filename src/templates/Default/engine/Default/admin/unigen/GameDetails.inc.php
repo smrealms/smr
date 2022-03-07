@@ -67,8 +67,8 @@
 	<tr>
 		<td class="right">Ignore Stats</td>
 		<td>
-			Yes: <input type="radio" name="ignore_stats" value="Yes" <?php if ($Game['ignoreStats']) { echo "checked"; } ?> /><br />
-			No: <input type="radio" name="ignore_stats" value="No" <?php if (!$Game['ignoreStats']) { echo "checked"; } ?> /><br />
+			Yes: <input type="radio" name="ignore_stats" value="Yes" <?php if ($Game['ignoreStats']) { echo 'checked'; } ?> /><br />
+			No: <input type="radio" name="ignore_stats" value="No" <?php if (!$Game['ignoreStats']) { echo 'checked'; } ?> /><br />
 		</td>
 	</tr>
 	<tr>

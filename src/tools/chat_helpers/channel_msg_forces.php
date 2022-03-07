@@ -15,11 +15,11 @@ function shared_channel_msg_forces(SmrPlayer $player, ?string $option): array {
 				)
 			ORDER BY expire_time ASC LIMIT 1'
 		);
-	} elseif ($option == "seedlist") {
+	} elseif ($option == 'seedlist') {
 		// are we restricting to the seedlist?
 		$seedlist = get_seedlist($player);
 		if (count($seedlist) == 0) {
-			return ["Your alliance does not have a seedlist yet."];
+			return ['Your alliance does not have a seedlist yet.'];
 		}
 		$dbResult = $db->read('SELECT sector_has_forces.sector_id AS sector, expire_time
 			FROM sector_has_forces

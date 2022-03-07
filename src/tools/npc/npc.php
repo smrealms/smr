@@ -31,7 +31,7 @@ require_once(CONFIG . 'npc/config.specific.php');
 
 // Raise exceptions for all types of errors for improved error reporting
 // and to attempt to shut down the NPCs cleanly on errors.
-set_error_handler("exception_error_handler");
+set_error_handler('exception_error_handler');
 
 const SHIP_UPGRADE_PATH = [
 	RACE_ALSKANT => [

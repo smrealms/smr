@@ -19,7 +19,7 @@ require_once(CONFIG . 'config.specific.php');
 if (ENABLE_BETA && !ENABLE_DEBUG) {
 	// Everything raises an exception in beta mode (for e-mail notifications).
 	// However, in debug mode, we prefer to use xdebug's handler.
-	set_error_handler("exception_error_handler");
+	set_error_handler('exception_error_handler');
 }
 
 // Change the browser title based on the server config

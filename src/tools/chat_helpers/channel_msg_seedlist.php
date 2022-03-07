@@ -97,7 +97,7 @@ function shared_channel_msg_seedlist_del(SmrPlayer $player, ?array $sectors): ar
 		return ['You must specify sectors to delete.'];
 	}
 
-	if (count($sectors) === 1 && $sectors[0] === "all") {
+	if (count($sectors) === 1 && $sectors[0] === 'all') {
 		$sectors = get_seedlist($player);
 	}
 

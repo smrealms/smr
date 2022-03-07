@@ -388,7 +388,7 @@ class SmrGame {
 
 	// Convenience function for printing the game name with id
 	public function getDisplayName(): string {
-		return $this->getName() . " (" . $this->getGameID() . ")";
+		return $this->getName() . ' (' . $this->getGameID() . ')';
 	}
 
 	/**

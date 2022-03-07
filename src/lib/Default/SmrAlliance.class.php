@@ -27,9 +27,9 @@ class SmrAlliance {
 	protected array $seedlist;
 
 	// Recruit type constants
-	const RECRUIT_OPEN = "open";
-	const RECRUIT_CLOSED = "closed";
-	const RECRUIT_PASSWORD = "password";
+	const RECRUIT_OPEN = 'open';
+	const RECRUIT_CLOSED = 'closed';
+	const RECRUIT_PASSWORD = 'password';
 
 	public static function clearCache(): void {
 		self::$CACHE_ALLIANCES = [];
@@ -354,9 +354,9 @@ class SmrAlliance {
 	public static function allRecruitTypes(): array {
 		// The first type is the default option when creating new alliances
 		return [
-			self::RECRUIT_PASSWORD => "Players can join by password or invitation",
-			self::RECRUIT_CLOSED => "Players can join by invitation only",
-			self::RECRUIT_OPEN => "Anyone can join (no password needed)",
+			self::RECRUIT_PASSWORD => 'Players can join by password or invitation',
+			self::RECRUIT_CLOSED => 'Players can join by invitation only',
+			self::RECRUIT_OPEN => 'Anyone can join (no password needed)',
 		];
 	}
 

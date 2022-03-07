@@ -14,7 +14,7 @@ class AbstractMenu {
 		} elseif ($location->isUG()) {
 			$links[] = ['underground.php', 'Underground'];
 		} else {
-			throw new Exception("Location is not HQ or UG: " . $location->getName());
+			throw new Exception('Location is not HQ or UG: ' . $location->getName());
 		}
 		$links[] = ['bounty_claim.php', 'Claim Bounty'];
 		$links[] = ['bounty_place.php', 'Place Bounty'];

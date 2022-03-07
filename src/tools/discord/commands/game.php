@@ -7,7 +7,7 @@ $fn_game = function($message) {
 	}
 
 	$game = SmrGame::getGame($link->player->getGameID(), true);
-	$msg = "I am linked to game `" . $game->getDisplayName() . "` in this channel.";
+	$msg = 'I am linked to game `' . $game->getDisplayName() . '` in this channel.';
 
 	$message->reply($msg)->done(null, 'logException');
 };

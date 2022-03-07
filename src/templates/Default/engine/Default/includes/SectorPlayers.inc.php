@@ -3,12 +3,12 @@ function getPlayerOptionClass($player, $other) {
 	// Returns the CSS relational class of player "other" relative to "player".
 	if (!$player->traderNAPAlliance($other)) {
 		if ($other->canFight()) {
-			return "enemy";
+			return 'enemy';
 		} else {
-			return "neutral";
+			return 'neutral';
 		}
 	} else {
-		return "friendly";
+		return 'friendly';
 	}
 }
 ?>
