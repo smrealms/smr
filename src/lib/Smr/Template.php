@@ -6,10 +6,8 @@ use DOMDocument;
 use DOMNode;
 use DOMXPath;
 use Exception;
-use Globals;
 use Smr\Container\DiContainer;
 use Smr\Session;
-use SmrAccount;
 
 class Template {
 	private array $data = [];

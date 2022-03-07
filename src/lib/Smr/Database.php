@@ -3,7 +3,6 @@
 namespace Smr;
 
 use mysqli;
-use mysqli_result;
 use RuntimeException;
 use Smr\Container\DiContainer;
 use Smr\DatabaseProperties;
