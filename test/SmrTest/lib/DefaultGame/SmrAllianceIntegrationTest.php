@@ -2,10 +2,10 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Smr\Exceptions\AllianceNotFound;
+use Smr\Exceptions\UserError;
 use SmrAlliance;
 use SmrTest\BaseIntegrationSpec;
-use Smr\Exceptions\UserError;
-use Smr\Exceptions\AllianceNotFound;
 
 /**
  * @covers SmrAlliance

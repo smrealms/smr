@@ -2,8 +2,8 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use SmrShipType;
 use Smr\ShipClass;
+use SmrShipType;
 
 /**
  * @covers SmrShipType

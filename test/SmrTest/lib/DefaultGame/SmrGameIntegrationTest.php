@@ -3,8 +3,8 @@
 namespace SmrTest\lib\DefaultGame;
 
 use Globals;
-use SmrGame;
 use Smr\Race;
+use SmrGame;
 use SmrTest\BaseIntegrationSpec;
 
 /**

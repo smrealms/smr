@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 require_once(__DIR__ . '/../../bootstrap.php');
 require_once(TOOLS . 'discord/GameLink.class.php');

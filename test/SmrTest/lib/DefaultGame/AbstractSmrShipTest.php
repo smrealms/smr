@@ -2,8 +2,8 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use AbstractSmrShip;
 use AbstractSmrPlayer;
+use AbstractSmrShip;
 use Smr\ShipClass;
 
 /**

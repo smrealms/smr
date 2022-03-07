@@ -2,10 +2,10 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use SmrShip;
 use AbstractSmrPlayer;
-use SmrWeapon;
+use SmrShip;
 use SmrTest\BaseIntegrationSpec;
+use SmrWeapon;
 
 /**
  * @covers SmrShip

@@ -2,8 +2,8 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use Smr\RaceDetails;
 use Smr\Race;
+use Smr\RaceDetails;
 
 /**
  * @covers Smr\RaceDetails

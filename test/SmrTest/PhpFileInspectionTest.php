@@ -2,8 +2,8 @@
 
 namespace SmrTest;
 
-use PHPUnit\Framework\TestCase;
 use Overtrue\PHPLint\Linter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversNothing

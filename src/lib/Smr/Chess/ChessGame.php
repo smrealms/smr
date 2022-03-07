@@ -5,9 +5,9 @@ namespace Smr\Chess;
 use AbstractSmrPlayer;
 use Exception;
 use Page;
+use Smr;
 use SmrAccount;
 use SmrPlayer;
-use Smr;
 
 class ChessGame {
 	const GAMETYPE_STANDARD = 'Standard';
