@@ -151,8 +151,14 @@ class SmrShip extends AbstractSmrShip {
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM ship_has_weapon WHERE ' . $this->SQL);
 		foreach ($this->weapons as $orderID => $weapon) {
-			$db->write('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id, bonus_accuracy, bonus_damage)
-							VALUES(' . $db->escapeNumber($this->getAccountID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber($orderID) . ', ' . $db->escapeNumber($weapon->getWeaponTypeID()) . ', ' . $db->escapeBoolean($weapon->hasBonusAccuracy()) . ', ' . $db->escapeBoolean($weapon->hasBonusDamage()) . ')');
+			$db->insert('ship_has_weapon', [
+				'account_id' => $db->escapeNumber($this->getAccountID()),
+				'game_id' => $db->escapeNumber($this->getGameID()),
+				'order_id' => $db->escapeNumber($orderID),
+				'weapon_type_id' => $db->escapeNumber($weapon->getWeaponTypeID()),
+				'bonus_accuracy' => $db->escapeBoolean($weapon->hasBonusAccuracy()),
+				'bonus_damage' => $db->escapeBoolean($weapon->hasBonusDamage()),
+			]);
 		}
 		$this->hasChangedWeapons = false;
 	}
@@ -175,7 +181,10 @@ class SmrShip extends AbstractSmrShip {
 		if ($this->isCloaked === false) {
 			$db->write('DELETE FROM ship_is_cloaked WHERE ' . $this->SQL . ' LIMIT 1');
 		} else {
-			$db->write('INSERT INTO ship_is_cloaked VALUES(' . $db->escapeNumber($this->getAccountID()) . ', ' . $db->escapeNumber($this->getGameID()) . ')');
+			$db->insert('ship_is_cloaked', [
+				'account_id' => $db->escapeNumber($this->getAccountID()),
+				'game_id' => $db->escapeNumber($this->getGameID()),
+			]);
 		}
 		$this->hasChangedCloak = false;
 	}

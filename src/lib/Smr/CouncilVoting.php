@@ -142,8 +142,11 @@ class CouncilVoting {
 
 					// get news message
 					$news = 'The [race=' . $race_id_1 . '] have declared <span class="red">WAR</span> on the [race=' . $race_id_2 . ']';
-					$db->write('INSERT INTO news (game_id, time, news_message) VALUES ' .
-							'(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(Epoch::time()) . ', ' . $db->escapeString($news) . ')');
+					$db->insert('news', [
+						'game_id' => $db->escapeNumber($gameID),
+						'time' => $db->escapeNumber(Epoch::time()),
+						'news_message' => $db->escapeString($news),
+					]);
 				} elseif ($type == 'PEACE') {
 					// get 'yes' votes
 					$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
@@ -176,8 +179,11 @@ class CouncilVoting {
 
 						//get news message
 						$news = 'The [race=' . $race_id_1 . '] have signed a <span class="dgreen">PEACE</span> treaty with the [race=' . $race_id_2 . ']';
-						$db->write('INSERT INTO news (game_id, time, news_message) VALUES
-								(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(Epoch::time()) . ', ' . $db->escapeString($news) . ')');
+						$db->insert('news', [
+							'game_id' => $db->escapeNumber($gameID),
+							'time' => $db->escapeNumber(Epoch::time()),
+							'news_message' => $db->escapeString($news),
+						]);
 					}
 				}
 			}

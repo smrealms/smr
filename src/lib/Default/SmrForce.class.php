@@ -359,8 +359,15 @@ class SmrForce {
 				$this->db->write('UPDATE sector_has_forces SET combat_drones = ' . $this->db->escapeNumber($this->combatDrones) . ', scout_drones = ' . $this->db->escapeNumber($this->scoutDrones) . ', mines = ' . $this->db->escapeNumber($this->mines) . ', expire_time = ' . $this->db->escapeNumber($this->expire) . ' WHERE ' . $this->SQL);
 			}
 		} elseif ($this->exists()) {
-			$this->db->write('INSERT INTO sector_has_forces (game_id, sector_id, owner_id, combat_drones, scout_drones, mines, expire_time)
-								VALUES('.$this->db->escapeNumber($this->gameID) . ', ' . $this->db->escapeNumber($this->sectorID) . ', ' . $this->db->escapeNumber($this->ownerID) . ', ' . $this->db->escapeNumber($this->combatDrones) . ', ' . $this->db->escapeNumber($this->scoutDrones) . ', ' . $this->db->escapeNumber($this->mines) . ', ' . $this->db->escapeNumber($this->expire) . ')');
+			$this->db->insert('sector_has_forces', [
+				'game_id' => $this->db->escapeNumber($this->gameID),
+				'sector_id' => $this->db->escapeNumber($this->sectorID),
+				'owner_id' => $this->db->escapeNumber($this->ownerID),
+				'combat_drones' => $this->db->escapeNumber($this->combatDrones),
+				'scout_drones' => $this->db->escapeNumber($this->scoutDrones),
+				'mines' => $this->db->escapeNumber($this->mines),
+				'expire_time' => $this->db->escapeNumber($this->expire),
+			]);
 			$this->isNew = false;
 		}
 		// This instance is now in sync with the database

@@ -87,17 +87,17 @@ class SmrGalaxy {
 
 	public function save() : void {
 		if ($this->isNew) {
-				$this->db->write('INSERT INTO game_galaxy (game_id,galaxy_id,galaxy_name,width,height,galaxy_type,max_force_time)
-									values
-									(' . $this->db->escapeNumber($this->getGameID()) .
-									',' . $this->db->escapeNumber($this->getGalaxyID()) .
-									',' . $this->db->escapeString($this->getName()) .
-									',' . $this->db->escapeNumber($this->getWidth()) .
-									',' . $this->db->escapeNumber($this->getHeight()) .
-									',' . $this->db->escapeString($this->getGalaxyType()) .
-									',' . $this->db->escapeNumber($this->getMaxForceTime()) . ')');
+			$this->db->insert('game_galaxy', [
+				'game_id' => $this->db->escapeNumber($this->getGameID()),
+				'galaxy_id' => $this->db->escapeNumber($this->getGalaxyID()),
+				'galaxy_name' => $this->db->escapeString($this->getName()),
+				'width' => $this->db->escapeNumber($this->getWidth()),
+				'height' => $this->db->escapeNumber($this->getHeight()),
+				'galaxy_type' => $this->db->escapeString($this->getGalaxyType()),
+				'max_force_time' => $this->db->escapeNumber($this->getMaxForceTime()),
+			]);
 		} elseif ($this->hasChanged) {
-				$this->db->write('UPDATE game_galaxy SET galaxy_name = ' . $this->db->escapeString($this->getName()) .
+			$this->db->write('UPDATE game_galaxy SET galaxy_name = ' . $this->db->escapeString($this->getName()) .
 										', width = ' . $this->db->escapeNumber($this->getWidth()) .
 										', height = ' . $this->db->escapeNumber($this->getHeight()) .
 										', galaxy_type = ' . $this->db->escapeString($this->getGalaxyType()) .

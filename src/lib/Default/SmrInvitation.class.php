@@ -14,7 +14,14 @@ class SmrInvitation {
 
 	static public function send(int $allianceID, int $gameID, int $receiverAccountID, int $senderAccountID, int $messageID, int $expires) : void {
 		$db = Smr\Database::getInstance();
-		$db->write('INSERT INTO alliance_invites_player (game_id, account_id, alliance_id, invited_by_id, expires, message_id) VALUES(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($receiverAccountID) . ', ' . $db->escapeNumber($allianceID) . ', ' . $db->escapeNumber($senderAccountID) . ', ' . $db->escapeNumber($expires) . ', ' . $db->escapeNumber($messageID) . ')');
+		$db->insert('alliance_invites_player', [
+			'game_id' => $db->escapeNumber($gameID),
+			'account_id' => $db->escapeNumber($receiverAccountID),
+			'alliance_id' => $db->escapeNumber($allianceID),
+			'invited_by_id' => $db->escapeNumber($senderAccountID),
+			'expires' => $db->escapeNumber($expires),
+			'message_id' => $db->escapeNumber($messageID),
+		]);
 	}
 
 	/**

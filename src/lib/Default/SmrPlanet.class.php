@@ -90,8 +90,12 @@ class SmrPlanet {
 
 		// insert planet into db
 		$db = Smr\Database::getInstance();
-		$db->write('INSERT INTO planet (game_id, sector_id, inhabitable_time, planet_type_id)
-				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ', ' . $db->escapeNumber($typeID) . ')');
+		$db->insert('planet', [
+			'game_id' => $db->escapeNumber($gameID),
+			'sector_id' => $db->escapeNumber($sectorID),
+			'inhabitable_time' => $db->escapeNumber($inhabitableTime),
+			'planet_type_id' => $db->escapeNumber($typeID),
+		]);
 		return self::getPlanet($gameID, $sectorID, true);
 	}
 
@@ -933,11 +937,16 @@ class SmrPlanet {
 
 		// gets the time for the buildings
 		$timeComplete = Smr\Epoch::time() + $this->getConstructionTime($constructionID);
-		$this->db->write('INSERT INTO planet_is_building (game_id, sector_id, construction_id, constructor_id, time_complete) ' .
-						'VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber($constructionID) . ', ' . $this->db->escapeNumber($constructor->getAccountID()) . ',' . $this->db->escapeNumber($timeComplete) . ')');
+		$insertID = $this->db->insert('planet_is_building', [
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'sector_id' => $this->db->escapeNumber($this->getSectorID()),
+			'construction_id' => $this->db->escapeNumber($constructionID),
+			'constructor_id' => $this->db->escapeNumber($constructor->getAccountID()),
+			'time_complete' => $this->db->escapeNumber($timeComplete),
+		]);
 
-		$this->currentlyBuilding[$this->db->getInsertID()] = array(
-			'BuildingSlotID' => $this->db->getInsertID(),
+		$this->currentlyBuilding[$insertID] = array(
+			'BuildingSlotID' => $insertID,
 			'ConstructionID' => $constructionID,
 			'ConstructorID' => $constructor->getAccountID(),
 			'Finishes' => $timeComplete,
@@ -1056,7 +1065,16 @@ class SmrPlanet {
 					$text .= ', a member of ' . $owner->getAllianceBBLink();
 				}
 				$text .= '.';
-				$this->db->write('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeString($text) . ', \'BREAKING\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ')');
+				$this->db->insert('news', [
+					'game_id' => $this->db->escapeNumber($this->getGameID()),
+					'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+					'news_message' => $this->db->escapeString($text),
+					'type' => $this->db->escapeString('breaking'),
+					'killer_id' => $this->db->escapeNumber($trigger->getAccountID()),
+					'killer_alliance' => $this->db->escapeNumber($trigger->getAllianceID()),
+					'dead_id' => $this->db->escapeNumber($owner->getAccountID()),
+					'dead_alliance' => $this->db->escapeNumber($owner->getAllianceID()),
+				]);
 			}
 		}
 	}

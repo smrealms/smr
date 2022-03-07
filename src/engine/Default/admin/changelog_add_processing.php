@@ -28,10 +28,13 @@ if ($dbResult->hasRecord()) {
 	$changelog_id = 1;
 }
 
-$db->write('INSERT INTO changelog
-			(version_id, changelog_id, change_title, change_message, affected_db)
-			VALUES (' . $db->escapeNumber($var['version_id']) . ', ' . $db->escapeNumber($changelog_id) . ', ' . $db->escapeString($change_title) . ', ' . $db->escapeString($change_message) . ', ' . $db->escapeString($affected_db) . ')');
-
+$db->insert('changelog', [
+	'version_id' => $db->escapeNumber($var['version_id']),
+	'changelog_id' => $db->escapeNumber($changelog_id),
+	'change_title' => $db->escapeString($change_title),
+	'change_message' => $db->escapeString($change_message),
+	'affected_db' => $db->escapeString($affected_db),
+]);
 $db->unlock();
 
 $container->go();

@@ -74,8 +74,11 @@ class AbstractSmrLocation {
 	public static function addSectorLocation(int $gameID, int $sectorID, SmrLocation $location) : void {
 		self::getSectorLocations($gameID, $sectorID); // make sure cache is populated
 		$db = Smr\Database::getInstance();
-		$db->write('INSERT INTO location (game_id, sector_id, location_type_id)
-						values(' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($sectorID) . ',' . $db->escapeNumber($location->getTypeID()) . ')');
+		$db->insert('location', [
+			'game_id' => $db->escapeNumber($gameID),
+			'sector_id' => $db->escapeNumber($sectorID),
+			'location_type_id' => $db->escapeNumber($location->getTypeID()),
+		]);
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$location->getTypeID()] = $location;
 	}
 
@@ -204,7 +207,9 @@ class AbstractSmrLocation {
 			return;
 		}
 		if ($bool) {
-			$this->db->write('INSERT INTO location_is_bank (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
+			$this->db->insert('location_is_bank', [
+				'location_type_id' => $this->db->escapeNumber($this->getTypeID()),
+			]);
 		} else {
 			$this->db->write('DELETE FROM location_is_bank WHERE ' . $this->SQL . ' LIMIT 1');
 		}
@@ -264,7 +269,9 @@ class AbstractSmrLocation {
 			return;
 		}
 		if ($bool) {
-			$this->db->write('INSERT INTO location_is_ug (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
+			$this->db->insert('location_is_ug', [
+				'location_type_id' => $this->db->escapeNumber($this->getTypeID()),
+			]);
 		} else {
 			$this->db->write('DELETE FROM location_is_ug WHERE ' . $this->SQL . ' LIMIT 1');
 		}
@@ -298,7 +305,10 @@ class AbstractSmrLocation {
 		if (!$dbResult->hasRecord()) {
 			throw new Exception('Invalid hardware type id given');
 		}
-		$this->db->write('INSERT INTO location_sells_hardware (location_type_id,hardware_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($hardwareTypeID) . ')');
+		$this->db->insert('location_sells_hardware', [
+			'location_type_id' => $this->db->escapeNumber($this->getTypeID()),
+			'hardware_type_id' => $this->db->escapeNumber($hardwareTypeID),
+		]);
 		$this->hardwareSold[$hardwareTypeID] = Globals::getHardwareTypes($hardwareTypeID);
 	}
 
@@ -335,7 +345,10 @@ class AbstractSmrLocation {
 			return;
 		}
 		$ship = SmrShipType::get($shipTypeID);
-		$this->db->write('INSERT INTO location_sells_ships (location_type_id,ship_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($shipTypeID) . ')');
+		$this->db->insert('location_sells_ships', [
+			'location_type_id' => $this->db->escapeNumber($this->getTypeID()),
+			'ship_type_id' => $this->db->escapeNumber($shipTypeID),
+		]);
 		$this->shipsSold[$shipTypeID] = $ship;
 	}
 
@@ -372,7 +385,10 @@ class AbstractSmrLocation {
 			return;
 		}
 		$weapon = SmrWeapon::getWeapon($weaponTypeID);
-		$this->db->write('INSERT INTO location_sells_weapons (location_type_id,weapon_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($weaponTypeID) . ')');
+		$this->db->insert('location_sells_weapons', [
+			'location_type_id' => $this->db->escapeNumber($this->getTypeID()),
+			'weapon_type_id' => $this->db->escapeNumber($weaponTypeID),
+		]);
 		$this->weaponsSold[$weaponTypeID] = $weapon;
 	}
 

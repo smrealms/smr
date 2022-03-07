@@ -35,8 +35,14 @@ if (!$dbResult->hasRecord()) {
 $dbRecord = $dbResult->record();
 
 // insert
-$db->write('INSERT INTO message_notify
-			(notify_id, game_id, from_id, to_id, text, sent_time, notify_time)
-			VALUES ('.$notify_id . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $dbRecord->getInt('sender_id') . ', ' . $dbRecord->getInt('account_id') . ', ' . $db->escapeString($dbRecord->getField('message_text')) . ', ' . $var['sent_time'] . ', ' . $var['notified_time'] . ')');
+$db->insert('message_notify', [
+	'notify_id' => $db->escapeNumber($notify_id),
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'from_id' => $dbRecord->getInt('sender_id'),
+	'to_id' => $dbRecord->getInt('account_id'),
+	'text' => $db->escapeString($dbRecord->getField('message_text')),
+	'sent_time' => $db->escapeNumber($var['sent_time']),
+	'notify_time' => $db->escapeNumber($var['notified_time']),
+]);
 
 $container->go();

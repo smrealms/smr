@@ -84,7 +84,15 @@ class SmrEnhancedWeaponEvent {
 			$bonusDamage = true;
 		}
 
-		$db->write('INSERT INTO location_sells_special (game_id, sector_id, location_type_id, weapon_type_id, expires, bonus_accuracy, bonus_damage) VALUES (' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($sectorID) . ',' . $db->escapeNumber($locationTypeID) . ',' . $db->escapeNumber($weaponTypeID) . ',' . $db->escapeNumber($expires) . ',' . $db->escapeBoolean($bonusAccuracy) . ',' . $db->escapeBoolean($bonusDamage) . ')');
+		$db->insert('location_sells_special', [
+			'game_id' => $db->escapeNumber($gameID),
+			'sector_id' => $db->escapeNumber($sectorID),
+			'location_type_id' => $db->escapeNumber($locationTypeID),
+			'weapon_type_id' => $db->escapeNumber($weaponTypeID),
+			'expires' => $db->escapeNumber($expires),
+			'bonus_accuracy' => $db->escapeBoolean($bonusAccuracy),
+			'bonus_damage' => $db->escapeBoolean($bonusDamage),
+		]);
 
 		return new SmrEnhancedWeaponEvent($gameID, $weaponTypeID, $locationTypeID, $sectorID, $expires, $bonusAccuracy, $bonusDamage);
 	}

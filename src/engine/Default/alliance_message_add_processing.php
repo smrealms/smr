@@ -76,13 +76,25 @@ if ($reply_id == 1) {
 		create_error('This topic exist already!');
 	}
 
-	$db->write('INSERT INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic, alliance_only)
-				VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeString($topic) . ', ' . $db->escapeBoolean($allEyesOnly) . ')');
+	$db->insert('alliance_thread_topic', [
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'alliance_id' => $db->escapeNumber($alliance_id),
+		'thread_id' => $db->escapeNumber($thread_id),
+		'topic' => $db->escapeString($topic),
+		'alliance_only' => $db->escapeBoolean($allEyesOnly),
+	]);
 }
 
 // and the body
-$db->write('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time)
-			VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber($reply_id) . ', ' . $db->escapeString($body) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+$db->insert('alliance_thread', [
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'alliance_id' => $db->escapeNumber($alliance_id),
+	'thread_id' => $db->escapeNumber($thread_id),
+	'reply_id' => $db->escapeNumber($reply_id),
+	'text' => $db->escapeString($body),
+	'sender_id' => $db->escapeNumber($player->getAccountID()),
+	'time' => $db->escapeNumber(Smr\Epoch::time()),
+]);
 $db->write('REPLACE INTO player_read_thread
 			(account_id, game_id, alliance_id, thread_id, time)
 			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(Smr\Epoch::time() + 2) . ')');

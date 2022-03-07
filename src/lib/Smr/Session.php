@@ -97,7 +97,12 @@ class Session {
 				usleep($sleepTime);
 			}
 			if (ENABLE_DEBUG) {
-				$this->db->write('INSERT INTO debug VALUES (' . $this->db->escapeString('Delay: ' . $currentPage) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($initialTimeBetweenLoads) . ',' . $this->db->escapeNumber($timeBetweenLoads) . ')');
+				$this->db->insert('debug', [
+					'debug_type' => $this->db->escapeString('Delay: ' . $currentPage),
+					'account_id' => $this->db->escapeNumber($this->accountID),
+					'value' => $this->db->escapeNumber($initialTimeBetweenLoads),
+					'value_2' => $this->db->escapeNumber($timeBetweenLoads),
+				]);
 			}
 		}
 	}
@@ -159,7 +164,13 @@ class Session {
 					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . (USING_AJAX ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : '') . ' LIMIT 1');
 		} else {
 			$this->db->write('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID));
-			$this->db->write('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . $this->db->escapeString($this->sessionID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber(Epoch::time()) . ',' . $this->db->escapeObject($this->var, true) . ')');
+			$this->db->insert('active_session', [
+				'session_id' => $this->db->escapeString($this->sessionID),
+				'account_id' => $this->db->escapeNumber($this->accountID),
+				'game_id' => $this->db->escapeNumber($this->gameID),
+				'last_accessed' => $this->db->escapeNumber(Epoch::time()),
+				'session_var' => $this->db->escapeObject($this->var, true),
+			]);
 			$this->generate = false;
 		}
 	}

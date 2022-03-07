@@ -26,7 +26,11 @@ $actions = [];
 
 if (!empty($donation)) {
 	// add entry to account donated table
-	$db->write('INSERT INTO account_donated (account_id, time, amount) VALUES (' . $db->escapeNumber($account_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ' , ' . $db->escapeNumber($donation) . ')');
+	$db->insert('account_donated', [
+		'account_id' => $db->escapeNumber($account_id),
+		'time' => $db->escapeNumber(Smr\Epoch::time()),
+		'amount' => $db->escapeNumber($donation),
+	]);
 
 	// add the credits to the players account - if requested
 	if (!empty($smr_credit)) {
@@ -48,8 +52,9 @@ if (Smr\Request::has('special_close')) {
 	if ($dbResult->hasRecord()) {
 		$reasonID = $dbResult->record()->getInt('reason_id');
 	} else {
-		$db->write('INSERT INTO closing_reason (reason) VALUES(' . $db->escapeString($specialClose) . ')');
-		$reasonID = $db->getInsertID();
+		$reasonID = $db->insert('closing_reason', [
+			'reason' => $db->escapeString($specialClose),
+		]);
 	}
 
 	$closeByRequestNote = Smr\Request::get('close_by_request_note');
@@ -68,8 +73,9 @@ if ($choise == 'reopen') {
 	$actions[] = 'reopened account and removed ' . $points . ' points';
 } elseif ($points > 0) {
 	if ($choise == 'individual') {
-		$db->write('INSERT INTO closing_reason (reason) VALUES(' . $db->escapeString($reason_msg) . ')');
-		$reason_id = $db->getInsertID();
+		$reason_id = $db->insert('closing_reason', [
+			'reason' => $db->escapeString($reason_msg),
+		]);
 	} else {
 		$reason_id = $reason_pre_select;
 	}
@@ -111,7 +117,10 @@ if ($logging_status != $curr_account->isLoggingEnabled()) {
 }
 
 if ($except != 'Add An Exception' && $except != '') {
-	$db->write('INSERT INTO account_exceptions (account_id, reason) VALUES (' . $db->escapeNumber($account_id) . ', ' . $db->escapeString($except) . ')');
+	$db->insert('account_exceptions', [
+		'account_id' => $db->escapeNumber($account_id),
+		'reason' => $db->escapeString($except),
+	]);
 	$actions[] = 'added the exception ' . $except;
 }
 
@@ -129,7 +138,13 @@ if (!empty($names)) {
 				//insert news message
 				$news = 'Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
 
-				$db->write('INSERT INTO news (time, news_message, game_id, type, killer_id) VALUES (' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeString($news) . ',' . $db->escapeNumber($game_id) . ', \'admin\', ' . $db->escapeNumber($account_id) . ')');
+				$db->insert('news', [
+					'time' => $db->escapeNumber(Smr\Epoch::time()),
+					'news_message' => $db->escapeString($news),
+					'game_id' => $db->escapeNumber($game_id),
+					'type' => $db->escapeString('admin'),
+					'killer_id' => $db->escapeNumber($account_id),
+				]);
 			} elseif ($dbResult->record()->getInt('account_id') != $account_id) {
 				$actions[] = 'have NOT changed player name to ' . htmlentities($new_name) . ' (already taken)';
 			}

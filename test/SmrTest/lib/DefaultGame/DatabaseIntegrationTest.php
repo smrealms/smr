@@ -241,4 +241,26 @@ class DatabaseIntegrationTest extends TestCase {
 		}
 	}
 
+	public function test_insert() : void {
+		$db = Database::getInstance();
+
+		// Zero insert ID when table does not have an auto-increment column
+		self::assertSame(0, $db->insert('debug', []));
+
+		// Non-zero insert ID when table has an auto-increment column
+		for ($i = 1; $i <= 3; $i++) {
+			self::assertSame($i, $db->insert('newsletter', []));
+		}
+
+		// Non-empty fields are successfully recovered
+		$logID = $db->insert('newsletter', [
+			'newsletter_text' => $db->escapeString('foo'),
+			'newsletter_html' => $db->escapeString('bar'),
+		]);
+		$result = $db->read('SELECT * FROM newsletter WHERE newsletter_id = ' . $logID);
+		$record = $result->record();
+		self::assertSame('foo', $record->getString('newsletter_text'));
+		self::assertSame('bar', $record->getString('newsletter_html'));
+	}
+
 }

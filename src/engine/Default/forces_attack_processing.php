@@ -100,8 +100,17 @@ if (!$bump) {
 
 // Add this log to the `combat_logs` database table
 $db = Smr\Database::getInstance();
-$db->write('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getAccountID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeObject($results, true) . ')');
-$logId = $db->getInsertID();
+$logId = $db->insert('combat_logs', [
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'type' => $db->escapeString('FORCE'),
+	'sector_id' => $db->escapeNumber($forces->getSectorID()),
+	'timestamp' => $db->escapeNumber(Smr\Epoch::time()),
+	'attacker_id' => $db->escapeNumber($player->getAccountID()),
+	'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
+	'defender_id' => $db->escapeNumber($forceOwner->getAccountID()),
+	'defender_alliance_id' => $db->escapeNumber($forceOwner->getAllianceID()),
+	'result' => $db->escapeObject($results, true),
+]);
 
 if ($sendMessage) {
 	$message = 'Your forces in sector ' . Globals::getSectorBBLink($forces->getSectorID()) . ' are under <span class="red">attack</span> by ' . $player->getBBLink() . '! [combatlog=' . $logId . ']';

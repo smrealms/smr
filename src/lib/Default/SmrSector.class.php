@@ -137,17 +137,16 @@ class SmrSector {
 
 	public function update() : void {
 		if ($this->isNew) {
-			$this->db->write('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right,warp)
-								values
-								(' . $this->db->escapeNumber($this->getSectorID()) .
-								',' . $this->db->escapeNumber($this->getGameID()) .
-								',' . $this->db->escapeNumber($this->getGalaxyID()) .
-								',' . $this->db->escapeNumber($this->getLinkUp()) .
-								',' . $this->db->escapeNumber($this->getLinkDown()) .
-								',' . $this->db->escapeNumber($this->getLinkLeft()) .
-								',' . $this->db->escapeNumber($this->getLinkRight()) .
-								',' . $this->db->escapeNumber($this->getWarp()) .
-								')');
+			$this->db->insert('sector', [
+				'sector_id' => $this->db->escapeNumber($this->getSectorID()),
+				'game_id' => $this->db->escapeNumber($this->getGameID()),
+				'galaxy_id' => $this->db->escapeNumber($this->getGalaxyID()),
+				'link_up' => $this->db->escapeNumber($this->getLinkUp()),
+				'link_down' => $this->db->escapeNumber($this->getLinkDown()),
+				'link_left' => $this->db->escapeNumber($this->getLinkLeft()),
+				'link_right' => $this->db->escapeNumber($this->getLinkRight()),
+				'warp' => $this->db->escapeNumber($this->getWarp()),
+			]);
 		} elseif ($this->hasChanged) {
 			$this->db->write('UPDATE sector SET battles = ' . $this->db->escapeNumber($this->getBattles()) .
 									', galaxy_id=' . $this->db->escapeNumber($this->getGalaxyID()) .

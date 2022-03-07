@@ -70,9 +70,11 @@ function shared_channel_msg_seedlist_add(SmrPlayer $player, ?array $sectors) : a
 		}
 
 		// add sector to db (and the current seedlist)
-		$db->write('INSERT INTO alliance_has_seedlist
-					(alliance_id, game_id, sector_id)
-					VALUES (' . $db->escapeNumber($player->getAllianceID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($sector) . ')');
+		$db->insert('alliance_has_seedlist', [
+			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'sector_id' => $db->escapeNumber($sector),
+		]);
 		$currentSeedlist[] = $sector;
 	}
 

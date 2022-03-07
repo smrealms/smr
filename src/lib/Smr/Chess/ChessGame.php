@@ -366,11 +366,13 @@ class ChessGame {
 
 	public static function insertNewGame(int $startDate, ?int $endDate, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer) : int {
 		$db = Smr\Database::getInstance();
-		$db->write('INSERT INTO chess_game' .
-				'(start_time,end_time,white_id,black_id,game_id)' .
-				'values' .
-				'(' . $db->escapeNumber($startDate) . ',' . ($endDate === null ? 'NULL' : $db->escapeNumber($endDate)) . ',' . $db->escapeNumber($whitePlayer->getAccountID()) . ',' . $db->escapeNumber($blackPlayer->getAccountID()) . ',' . $db->escapeNumber($whitePlayer->getGameID()) . ');');
-		$chessGameID = $db->getInsertID();
+		$chessGameID = $db->insert('chess_game', [
+			'start_time' => $db->escapeNumber($startDate),
+			'end_time' => $endDate === null ? 'NULL' : $db->escapeNumber($endDate),
+			'white_id' => $db->escapeNumber($whitePlayer->getAccountID()),
+			'black_id' => $db->escapeNumber($blackPlayer->getAccountID()),
+			'game_id' => $db->escapeNumber($whitePlayer->getGameID()),
+		]);
 
 		self::insertPieces($chessGameID);
 		return $chessGameID;
@@ -380,10 +382,13 @@ class ChessGame {
 		$db = Smr\Database::getInstance();
 		$pieces = self::getStandardGame();
 		foreach ($pieces as $p) {
-			$db->write('INSERT INTO chess_game_pieces' .
-			'(chess_game_id,colour,piece_id,x,y)' .
-			'values' .
-			'(' . $db->escapeNumber($chessGameID) . ',' . $db->escapeString($p->colour) . ',' . $db->escapeNumber($p->pieceID) . ',' . $db->escapeNumber($p->x) . ',' . $db->escapeNumber($p->y) . ');');
+			$db->insert('chess_game_pieces', [
+				'chess_game_id' => $db->escapeNumber($chessGameID),
+				'colour' => $db->escapeString($p->colour),
+				'piece_id' => $db->escapeNumber($p->pieceID),
+				'x' => $db->escapeNumber($p->x),
+				'y' => $db->escapeNumber($p->y),
+			]);
 		}
 	}
 
@@ -680,11 +685,19 @@ class ChessGame {
 					$otherPlayer->increaseHOF(1, array($chessType, 'Moves', 'Opponent Pawns Promoted', $piecePromotedSymbol), HOF_PUBLIC);
 				}
 
-				$this->db->write('INSERT INTO chess_game_moves
-								(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken,castling,en_passant,promote_piece_id)
-								VALUES
-								(' . $this->db->escapeNumber($this->chessGameID) . ',' . $this->db->escapeNumber($pieceID) . ',' . $this->db->escapeNumber($x) . ',' . $this->db->escapeNumber($y) . ',' . $this->db->escapeNumber($toX) . ',' . $this->db->escapeNumber($toY) . ',' . $this->db->escapeString($checking, true) . ',' . ($moveInfo['PieceTaken'] === null ? 'NULL' : $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID)) . ',' . $this->db->escapeString($castlingType, true) . ',' . $this->db->escapeBoolean($moveInfo['EnPassant']) . ',' . ($moveInfo['PawnPromotion'] == false ? 'NULL' : $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID'])) . ');');
-
+				$this->db->insert('chess_game_moves', [
+					'chess_game_id' => $this->db->escapeNumber($this->chessGameID),
+					'piece_id' => $this->db->escapeNumber($pieceID),
+					'start_x' => $this->db->escapeNumber($x),
+					'start_y' => $this->db->escapeNumber($y),
+					'end_x' => $this->db->escapeNumber($toX),
+					'end_y' => $this->db->escapeNumber($toY),
+					'checked' => $this->db->escapeString($checking, true),
+					'piece_taken' => $moveInfo['PieceTaken'] === null ? 'NULL' : $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID),
+					'castling' => $this->db->escapeString($castlingType, true),
+					'en_passant' => $this->db->escapeBoolean($moveInfo['EnPassant']),
+					'promote_piece_id' => $moveInfo['PawnPromotion'] == false ? 'NULL' : $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID']),
+				]);
 
 				$currentPlayer->increaseHOF(1, array($chessType, 'Moves', 'Total Taken'), HOF_PUBLIC);
 				if ($moveInfo['PieceTaken'] != null) {

@@ -12,7 +12,10 @@ if ($dbResult->hasRecord()) {
 	$container->go();
 }
 
-$db->write('INSERT INTO word_filter(word_value,word_replacement) VALUES (' . $db->escapeString($word) . ',' . $db->escapeString($word_replacement) . ')');
+$db->insert('word_filter', [
+	'word_value' => $db->escapeString($word),
+	'word_replacement' => $db->escapeString($word_replacement),
+]);
 
 $container['msg'] = '<span class="yellow">' . $word . '</span> will now be replaced with <span class="yellow">' . $word_replacement . '</span>.';
 $container->go();

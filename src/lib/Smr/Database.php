@@ -139,6 +139,19 @@ class Database {
 		return new DatabaseResult($this->dbConn->query($query));
 	}
 
+	/**
+	 * INSERT a row into $table.
+	 *
+	 * @param array<string, mixed> $fields
+	 * @return int Insert ID of auto-incrementing column, if applicable
+	 */
+	public function insert(string $table, array $fields) : int {
+		$query = 'INSERT INTO ' . $table . ' (' . join(', ', array_keys($fields))
+			. ') VALUES (' . join(', ', array_values($fields)) . ')';
+		$this->write($query);
+		return $this->getInsertID();
+	}
+
 	public function lockTable(string $table) : void {
 		$this->write('LOCK TABLES ' . $table . ' WRITE');
 	}

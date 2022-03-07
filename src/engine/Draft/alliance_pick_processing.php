@@ -40,6 +40,11 @@ $pickedPlayer->update();
 
 // Update the draft history
 $db = Smr\Database::getInstance();
-$db->write('INSERT INTO draft_history (game_id, leader_account_id, picked_account_id, time) VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($pickedPlayer->getAccountID()) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+$db->insert('draft_history', [
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'leader_account_id' => $db->escapeNumber($player->getAccountID()),
+	'picked_account_id' => $db->escapeNumber($pickedPlayer->getAccountID()),
+	'time' => $db->escapeNumber(Smr\Epoch::time()),
+]);
 
 Page::create('skeleton.php', 'alliance_pick.php')->go();

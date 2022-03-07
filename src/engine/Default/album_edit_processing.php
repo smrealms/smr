@@ -90,8 +90,19 @@ if ($dbResult->hasRecord()) {
 	$comment = '<span class="green">*** Picture added</span>';
 
 	// add album entry
-	$db->write('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved)
-				VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($location) . ', ' . $db->escapeString($email) . ', ' . $db->escapeString($website) . ', ' . $db->escapeNumber($day) . ', ' . $db->escapeNumber($month) . ', ' . $db->escapeNumber($year) . ', ' . $db->escapeString($other) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', \'TBC\')');
+	$db->insert('album', [
+		'account_id' => $db->escapeNumber($account->getAccountID()),
+		'location' => $db->escapeString($location),
+		'email' => $db->escapeString($email),
+		'website' => $db->escapeString($website),
+		'day' => $db->escapeNumber($day),
+		'month' => $db->escapeNumber($month),
+		'year' => $db->escapeNumber($year),
+		'other' => $db->escapeString($other),
+		'created' => $db->escapeNumber(Smr\Epoch::time()),
+		'last_changed' => $db->escapeNumber(Smr\Epoch::time()),
+		'approved' => $db->escapeString('TBC'),
+	]);
 }
 
 if (!empty($comment)) {
@@ -105,9 +116,13 @@ if (!empty($comment)) {
 		$comment_id = 1;
 	}
 
-	$db->write('INSERT INTO album_has_comments
-				(album_id, comment_id, time, post_id, msg)
-				VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($comment_id) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ', 0, ' . $db->escapeString($comment) . ')');
+	$db->insert('album_has_comments', [
+		'album_id' => $db->escapeNumber($account->getAccountID()),
+		'comment_id' => $db->escapeNumber($comment_id),
+		'time' => $db->escapeNumber(Smr\Epoch::time()),
+		'post_id' => 0,
+		'msg' => $db->escapeString($comment),
+	]);
 	$db->unlock();
 }
 

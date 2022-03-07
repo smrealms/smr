@@ -32,7 +32,11 @@ if ($action == "Assign") {
 	if ($selectedPlayer->isDraftLeader()) {
 		$msg = "<span class='red'>ERROR: </span>$name is already a draft leader in game $game!";
 	} else {
-		$db->write('INSERT INTO draft_leaders (account_id, game_id, home_sector_id) VALUES (' . $db->escapeNumber($accountId) . ', ' . $db->escapeNumber($gameId) . ', ' . $db->escapeNumber($homeSectorID) . ')');
+		$db->insert('draft_leaders', [
+			'account_id' => $db->escapeNumber($accountId),
+			'game_id' => $db->escapeNumber($gameId),
+			'home_sector_id' => $db->escapeNumber($homeSectorID),
+		]);
 	}
 } elseif ($action == "Remove") {
 	if (!$selectedPlayer->isDraftLeader()) {

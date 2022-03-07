@@ -25,7 +25,11 @@ if ($dbResult->hasRecord()) {
 	$container->go();
 }
 
-$db->write('INSERT INTO message_blacklist (game_id,account_id,blacklisted_id) VALUES (' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($blacklisted->getAccountID()) . ')');
+$db->insert('message_blacklist', [
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'account_id' => $db->escapeNumber($player->getAccountID()),
+	'blacklisted_id' => $db->escapeNumber($blacklisted->getAccountID()),
+]);
 
 $container['msg'] = $blacklisted->getDisplayName() . ' has been added to your blacklist.';
 $container->go();

@@ -19,7 +19,11 @@ while (true) {
 	$time++;
 }
 
-$db->write('INSERT INTO player_has_ticket (game_id, account_id, time) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($time) . ')');
+$db->insert('player_has_ticket', [
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'account_id' => $db->escapeNumber($player->getAccountID()),
+	'time' => $db->escapeNumber($time),
+]);
 $player->decreaseCredits(1000000);
 $player->increaseHOF(1000000, array('Bar', 'Lotto', 'Money', 'Spent'), HOF_PUBLIC);
 $player->increaseHOF(1, array('Bar', 'Lotto', 'Tickets Bought'), HOF_PUBLIC);

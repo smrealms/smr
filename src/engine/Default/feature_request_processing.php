@@ -13,12 +13,20 @@ if (strlen($feature) > 500) {
 
 // add this feature to db
 $db = Smr\Database::getInstance();
-$db->write('INSERT INTO feature_request (feature_request_id) VALUES (NULL)');
-$featureRequestID = $db->getInsertID();
-$db->write('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text) ' .
-								'VALUES(' . $db->escapeNumber($featureRequestID) . ', ' . $db->escapeNumber($account->getAccountID()) . ',' . $db->escapeNumber(Smr\Epoch::time()) . ',' . $db->escapeBoolean(Smr\Request::has('anon')) . ',' . $db->escapeString(word_filter($feature)) . ')');
+$featureRequestID = $db->insert('feature_request', []);
+$db->insert('feature_request_comments', [
+	'feature_request_id' => $db->escapeNumber($featureRequestID),
+	'poster_id' => $db->escapeNumber($account->getAccountID()),
+	'posting_time' => $db->escapeNumber(Smr\Epoch::time()),
+	'anonymous' => $db->escapeBoolean(Smr\Request::has('anon')),
+	'text' => $db->escapeString(word_filter($feature)),
+]);
 
 // vote for this feature
-$db->write('INSERT INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($featureRequestID) . ',\'YES\')');
+$db->insert('account_votes_for_feature', [
+	'account_id' => $db->escapeNumber($account->getAccountID()),
+	'feature_request_id' => $db->escapeNumber($featureRequestID),
+	'vote_type' => $db->escapeString('YES'),
+]);
 
 Page::create('skeleton.php', 'feature_request.php')->go();
