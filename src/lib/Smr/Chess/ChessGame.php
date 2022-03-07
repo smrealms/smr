@@ -159,7 +159,7 @@ class ChessGame {
 				if ($debugInfo === true) {
 					echo 'x=', $start_x, ', y=', $start_y, ', endX=', $end_x, ', endY=', $end_y, ', colour=', $colour, EOL;
 				}
-				if (0 != $this->tryMove($start_x, $start_y, $end_x, $end_y, $colour, $promotePieceID)) {
+				if ($this->tryMove($start_x, $start_y, $end_x, $end_y, $colour, $promotePieceID) != 0) {
 					break;
 				}
 			}

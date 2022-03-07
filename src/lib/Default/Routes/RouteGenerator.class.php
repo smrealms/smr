@@ -49,7 +49,7 @@ class RouteGenerator {
 	private static function getContinueRoutes(int $maxNumPorts, int $startSectorId, Route $routeToContinue, array $forwardRoutes, array $routeLists, bool $lastGoodIsNothing): void {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentStepBuySector = $currentStepRoute->getBuySectorId();
-			if ($lastGoodIsNothing && ($lastGoodIsNothing = GOODS_NOTHING === $currentStepRoute->getGoodID())) {
+			if ($lastGoodIsNothing && ($lastGoodIsNothing = $currentStepRoute->getGoodID() === GOODS_NOTHING)) {
 				continue; // Don't do two nothings in a row
 			}
 			if ($currentStepBuySector >= $startSectorId) { // Not already checked or back to start
