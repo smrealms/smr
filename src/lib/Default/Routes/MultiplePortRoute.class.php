@@ -5,11 +5,11 @@ namespace Routes;
 class MultiplePortRoute extends Route {
 
 	public function __construct(
-		private OneWayRoute $forwardRoute,
+		private Route $forwardRoute,
 		private OneWayRoute $returnRoute,
 	) {}
 
-	public function getForwardRoute() : ?OneWayRoute {
+	public function getForwardRoute() : ?Route {
 		return $this->forwardRoute;
 	}
 

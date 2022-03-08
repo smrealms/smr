@@ -63,6 +63,9 @@ class RouteGenerator {
 		}
 	}
 
+	/**
+	 * @return array<int, array<OneWayRoute>>
+	 */
 	private static function findOneWayRoutes(array $sectors, array $distances, int $routesForPort, array $goods, array $races) : array {
 		$routes = array();
 		foreach ($distances as $currentSectorId => $d) {

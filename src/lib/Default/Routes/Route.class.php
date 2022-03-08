@@ -28,7 +28,7 @@ abstract class Route {
 		return ($route != null && $route->containsPort($sectorID)) || (($route = $this->getForwardRoute()) != null && $route->containsPort($sectorID));
 	}
 
-	public abstract function getForwardRoute() : ?OneWayRoute;
+	public abstract function getForwardRoute() : ?Route;
 
 	public abstract function getReturnRoute() : ?OneWayRoute;
 
