@@ -69,8 +69,7 @@ class HallOfFame {
 		if (($vis == HOF_PRIVATE && $account->getAccountID() != $accountID) ||
 		    ($vis == HOF_ALLIANCE && isset($gameID) &&
 		     !SmrGame::getGame($gameID)->hasEnded() &&
-		     !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer())))
-		{
+		     !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer()))) {
 			return '-';
 		} else {
 			return $amount;

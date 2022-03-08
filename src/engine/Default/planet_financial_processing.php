@@ -9,8 +9,8 @@ if (!$player->isLandedOnPlanet()) {
 $planet = $player->getSectorPlanet();
 $action = Smr\Request::get('action');
 
-// Player has requested a planetary fund transaction
 if ($action == 'Deposit' || $action == 'Withdraw') {
+	// Player has requested a planetary fund transaction
 	$amount = Smr\Request::getInt('amount');
 	if ($amount <= 0) {
 		create_error('You must actually enter an amount > 0!');
@@ -32,10 +32,8 @@ if ($action == 'Deposit' || $action == 'Withdraw') {
 		$planet->decreaseCredits($amount);
 	}
 	$player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits at planet');
-}
-
-// Player has confirmed the request to bond
-elseif ($action == 'Confirm') {
+} elseif ($action == 'Confirm') {
+	// Player has confirmed the request to bond
 	$planet->bond();
 
 	// save to db

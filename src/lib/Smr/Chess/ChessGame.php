@@ -266,7 +266,7 @@ class ChessGame {
 				$blanks = 0;
 			}
 		}
-		$fen .= match($this->getCurrentTurnColour()) {
+		$fen .= match ($this->getCurrentTurnColour()) {
 			self::PLAYER_WHITE => ' w ',
 			self::PLAYER_BLACK => ' b ',
 		};
@@ -296,7 +296,7 @@ class ChessGame {
 
 		if ($this->hasMoved[ChessPiece::PAWN][0] != -1) {
 			$fen .= chr(ord('a') + $this->hasMoved[ChessPiece::PAWN][0]);
-			$fen .= match($this->hasMoved[ChessPiece::PAWN][1]) {
+			$fen .= match ($this->hasMoved[ChessPiece::PAWN][1]) {
 				3 => '6',
 				4 => '3',
 			};
@@ -464,7 +464,7 @@ class ChessGame {
 
 	public static function isCastling(int $x, int $toX): array|false {
 		$movement = $toX - $x;
-		return match($movement) {
+		return match ($movement) {
 			-2 => ['Type' => 'Queen', 'X' => 0, 'ToX' => 3],
 			2 => ['Type' => 'King', 'X' => 7, 'ToX' => 5],
 			default => false,
@@ -511,14 +511,12 @@ class ChessGame {
 		} elseif ($p->pieceID == ChessPiece::PAWN) {
 			if ($toY == 0 || $toY == 7) {
 				$pawnPromotion = $p->promote($pawnPromotionPiece, $board);
-			}
-			//Double move to track?
-			elseif (($y == 1 || $y == 6) && ($toY == 3 || $toY == 4)) {
+			} elseif (($y == 1 || $y == 6) && ($toY == 3 || $toY == 4)) {
+				//Double move to track?
 				$nextPawnMovement = [$toX, $toY];
-			}
-			//En passant?
-			elseif ($hasMoved[ChessPiece::PAWN][0] == $toX &&
+			} elseif ($hasMoved[ChessPiece::PAWN][0] == $toX &&
 					($hasMoved[ChessPiece::PAWN][1] == 3 && $toY == 2 || $hasMoved[ChessPiece::PAWN][1] == 4 && $toY == 5)) {
+				//En passant?
 				$enPassant = true;
 				$pieceTaken = $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
 				if ($board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] === null) {
@@ -774,7 +772,7 @@ class ChessGame {
 	}
 
 	public function getColourID(string $colour): int {
-		return match($colour) {
+		return match ($colour) {
 			self::PLAYER_WHITE => $this->getWhiteID(),
 			self::PLAYER_BLACK => $this->getBlackID(),
 		};
@@ -785,7 +783,7 @@ class ChessGame {
 	}
 
 	public function getColourForAccountID(int $accountID): string {
-		return match($accountID) {
+		return match ($accountID) {
 			$this->getWhiteID() => self::PLAYER_WHITE,
 			$this->getBlackID() => self::PLAYER_BLACK,
 		};
@@ -862,7 +860,7 @@ class ChessGame {
 	}
 
 	public static function getOtherColour(string $colour): string {
-		return match($colour) {
+		return match ($colour) {
 			self::PLAYER_WHITE => self::PLAYER_BLACK,
 			self::PLAYER_BLACK => self::PLAYER_WHITE,
 		};

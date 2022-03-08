@@ -611,7 +611,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getScoutMessageGroupLimit(): int {
-		return match($this->groupScoutMessages) {
+		return match ($this->groupScoutMessages) {
 			'ALWAYS' => 0,
 			'AUTO' => MESSAGES_PER_PAGE,
 			'NEVER' => PHP_INT_MAX,
@@ -728,7 +728,7 @@ abstract class AbstractSmrPlayer {
 
 		// If expires not specified, use default based on message type
 		if ($expires === null) {
-			$expires = match($messageTypeID) {
+			$expires = match ($messageTypeID) {
 				MSG_GLOBAL => 3600, // 1h
 				MSG_PLAYER => 86400 * 31, // 1 month
 				MSG_PLANET => 86400 * 7, // 1 week
@@ -1844,7 +1844,7 @@ abstract class AbstractSmrPlayer {
 	public function getClaimableBounties(string $type = null): array {
 		$bounties = [];
 		$query = 'SELECT * FROM bounty WHERE claimer_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID());
-		$query .= match($type) {
+		$query .= match ($type) {
 			'HQ', 'UG' => ' AND type=' . $this->db->escapeString($type),
 			null => '',
 		};
@@ -2499,7 +2499,7 @@ abstract class AbstractSmrPlayer {
 	 * Returns the CSS class color to use when displaying the player's turns
 	 */
 	public function getTurnsColor(): string {
-		return match($this->getTurnsLevel()) {
+		return match ($this->getTurnsLevel()) {
 			'NONE', 'LOW' => 'red',
 			'MEDIUM' => 'yellow',
 			'HIGH' => 'green',

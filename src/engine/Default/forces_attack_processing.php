@@ -26,7 +26,7 @@ if ($player->forceNAPAlliance($forceOwner)) {
 
 // The attack is processed slightly differently if the attacker bumped into mines
 // when moving into sector
-$bump = match($var['action']) {
+$bump = match ($var['action']) {
 	'attack' => false,
 	'bump' => true,
 };

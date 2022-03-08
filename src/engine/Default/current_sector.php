@@ -71,7 +71,7 @@ $game = SmrGame::getGame($player->getGameID());
 if (!$game->hasStarted()) {
 	$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - Smr\Epoch::time()) . '!';
 } else {
-	$turnsMessage = match($player->getTurnsLevel()) {
+	$turnsMessage = match ($player->getTurnsLevel()) {
 		'NONE' => '<span class="red">WARNING</span>: You have run out of turns!',
 		'LOW' => '<span class="red">WARNING</span>: You are almost out of turns!',
 		'MEDIUM' => '<span class="yellow">WARNING</span>: You are running out of turns!',

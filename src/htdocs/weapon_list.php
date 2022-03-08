@@ -20,7 +20,7 @@ try {
 	// Get all the properties to display for each weapon
 	$weapons = [];
 	foreach (SmrWeaponType::getAllWeaponTypes() as $weapon) {
-		$restrictions = match($weapon->getBuyerRestriction()) {
+		$restrictions = match ($weapon->getBuyerRestriction()) {
 			BUYER_RESTRICTION_NONE => [],
 			BUYER_RESTRICTION_GOOD => ['<div class="dgreen">Good</div>'],
 			BUYER_RESTRICTION_EVIL => ['<div class="red">Evil</div>'],

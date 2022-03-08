@@ -20,7 +20,7 @@ if (!isset($var['action'])) {
 }
 $action = $var['action'];
 
-$query = match($action) {
+$query = match ($action) {
 	COMBAT_LOG_PERSONAL, COMBAT_LOG_ALLIANCE => 'type=\'PLAYER\'',
 	COMBAT_LOG_PORT => 'type=\'PORT\'',
 	COMBAT_LOG_PLANET => 'type=\'PLANET\'',
@@ -59,7 +59,7 @@ $getParticipantName = function($accountID, $sectorID) use ($player): string {
 };
 
 // For display purposes, describe the type of log
-$type = match($action) {
+$type = match ($action) {
 	COMBAT_LOG_PERSONAL => 'personal',
 	COMBAT_LOG_ALLIANCE => 'alliance',
 	COMBAT_LOG_PORT => 'port',

@@ -30,7 +30,7 @@ class VoteSite {
 
 	private static function getSiteData(int $linkID): array {
 		// This can't be a static/constant attribute due to `url_func` closures.
-		return match($linkID) {
+		return match ($linkID) {
 			self::LINK_ID_TWG => [
 				'img_default' => 'twg.png',
 				'img_star' => 'twg_vote.png',

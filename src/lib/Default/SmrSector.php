@@ -260,7 +260,7 @@ class SmrSector {
 	public function enteringSector(AbstractSmrPlayer $player, int $movementType): void {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
-		$message .= match($movementType) {
+		$message .= match ($movementType) {
 			MOVEMENT_JUMP => 'jumping into',
 			MOVEMENT_WARP => 'warping into',
 			MOVEMENT_WALK => 'entering',
@@ -276,7 +276,7 @@ class SmrSector {
 	public function leavingSector(AbstractSmrPlayer $player, int $movementType): void {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
-		$message .= match($movementType) {
+		$message .= match ($movementType) {
 			MOVEMENT_JUMP => 'jumping from',
 			MOVEMENT_WARP => 'warping from',
 			MOVEMENT_WALK => 'leaving',
@@ -477,7 +477,7 @@ class SmrSector {
 	}
 
 	public static function oppositeDir(string $dir): string {
-		return match($dir) {
+		return match ($dir) {
 			'Up' => 'Down',
 			'Down' => 'Up',
 			'Left' => 'Right',

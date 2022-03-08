@@ -103,9 +103,8 @@ if ($action == 'Ship') {
 		$planet->increaseCDs($amount);
 		$ship->decreaseCDs($amount);
 		$player->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' drones on planet.');
-	}
 	// does the user wish to transfare armour?
-	elseif ($type_id == HARDWARE_ARMOUR) {
+	} elseif ($type_id == HARDWARE_ARMOUR) {
 		// do we want transfer more than we have?
 		if ($amount >= $ship->getArmour()) {
 			create_error('You can\'t transfer more armour than what you carry minus one!');

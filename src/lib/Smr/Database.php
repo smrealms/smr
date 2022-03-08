@@ -167,7 +167,7 @@ class Database {
 	}
 
 	public function escape(mixed $escape): mixed {
-		return match(true) {
+		return match (true) {
 			is_bool($escape) => $this->escapeBoolean($escape),
 			is_numeric($escape) => $this->escapeNumber($escape),
 			is_string($escape) => $this->escapeString($escape),

@@ -35,7 +35,7 @@ class Card {
 	 * Return the card's blackjack value.
 	 */
 	public function getValue(): int {
-		return match($this->rank) {
+		return match ($this->rank) {
 			self::RANK_ACE => 11,
 			self::RANK_JACK, self::RANK_QUEEN, self::RANK_KING => 10,
 			// For normal pip (non-face) cards, value and rank are the same.
@@ -57,7 +57,7 @@ class Card {
 	 * Returns the rank name of this card (of the 13 ranks).
 	 */
 	public function getRankName(): string {
-		return match($this->rank) {
+		return match ($this->rank) {
 			self::RANK_ACE => 'A',
 			self::RANK_JACK => 'J',
 			self::RANK_QUEEN => 'Q',

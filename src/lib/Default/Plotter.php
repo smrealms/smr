@@ -24,7 +24,7 @@ class Plotter {
 			return $good;
 		};
 
-		return match($xType) {
+		return match ($xType) {
 			'Technology' => Globals::getHardwareTypes($X),
 			'Ships' => SmrShipType::get($X),
 			'Weapons' => SmrWeaponType::getWeaponType($X),

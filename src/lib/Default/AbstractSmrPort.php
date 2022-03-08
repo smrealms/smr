@@ -279,7 +279,7 @@ class AbstractSmrPort {
 		if (!isset($this->goodDistances[$goodID])) {
 			$x = Globals::getGood($goodID);
 			// Calculate distance to the opposite of the offered transaction
-			$x['TransactionType'] = match($this->getGoodTransaction($goodID)) {
+			$x['TransactionType'] = match ($this->getGoodTransaction($goodID)) {
 				TRADER_BUYS => TRADER_SELLS,
 				TRADER_SELLS => TRADER_BUYS,
 			};
@@ -1209,7 +1209,9 @@ class AbstractSmrPort {
 		// Update the port good amounts if they have been changed
 		// (Note: `restockGoods` alone does not trigger this)
 		foreach ($this->goodAmountsChanged as $goodID => $doUpdate) {
-			if (!$doUpdate) { continue; }
+			if (!$doUpdate) {
+				continue;
+			}
 			$amount = $this->getGoodAmount($goodID);
 			$this->db->write('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
 		}

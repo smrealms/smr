@@ -208,7 +208,7 @@ class ChessPiece {
 	}
 
 	public static function getLetterForPiece(int $pieceID, string $colour): string {
-		$letter = match($pieceID) {
+		$letter = match ($pieceID) {
 			self::KING => 'k',
 			self::QUEEN => 'q',
 			self::ROOK => 'r',
@@ -223,7 +223,7 @@ class ChessPiece {
 	}
 
 	public static function getPieceForLetter(string $letter): int {
-		return match(strtolower($letter)) {
+		return match (strtolower($letter)) {
 			'k' => self::KING,
 			'q' => self::QUEEN,
 			'r' => self::ROOK,

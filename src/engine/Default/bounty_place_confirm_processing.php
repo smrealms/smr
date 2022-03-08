@@ -14,7 +14,7 @@ $location = SmrLocation::getLocation($var['LocationID']);
 $container = Page::create('skeleton.php');
 $container->addVar('LocationID');
 
-[$type, $body] = match(true) {
+[$type, $body] = match (true) {
 	$location->isHQ() => ['HQ', 'government.php'],
 	$location->isUG() => ['UG', 'underground.php'],
 };

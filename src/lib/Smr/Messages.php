@@ -59,7 +59,7 @@ class Messages {
 			if (!empty($accountID)) {
 				$return = SmrPlayer::getPlayer($accountID, $gameID);
 			} else {
-				$return = match($messageType) {
+				$return = match ($messageType) {
 					MSG_ADMIN => '<span class="admin">Administrator</span>',
 					MSG_ALLIANCE => '<span class="green">Alliance Ambassador</span>',
 					default => 'Unknown',

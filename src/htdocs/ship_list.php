@@ -28,7 +28,7 @@ try {
 
 function buildShipStats(SmrShipType $ship): array {
 	//we want to put them all in an array so we dont have to have 15 td rows
-	$restriction = match($ship->getRestriction()) {
+	$restriction = match ($ship->getRestriction()) {
 		BUYER_RESTRICTION_NONE => '',
 		BUYER_RESTRICTION_GOOD => '<span class="dgreen">Good</span>',
 		BUYER_RESTRICTION_EVIL => '<span class="red">Evil</span>',

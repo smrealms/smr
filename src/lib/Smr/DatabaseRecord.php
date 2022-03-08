@@ -28,7 +28,7 @@ class DatabaseRecord {
 	}
 
 	public function getBoolean(string $name): bool {
-		return match($this->dbRecord[$name]) {
+		return match ($this->dbRecord[$name]) {
 			'TRUE' => true,
 			'FALSE' => false,
 		};
