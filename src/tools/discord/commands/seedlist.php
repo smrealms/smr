@@ -41,11 +41,13 @@ $fn_seedlist_del = function($message, $sectors) {
 $cmd_seedlist = $discord->registerCommand('seedlist', mysql_cleanup($fn_seedlist), ['description' => 'Print the entire seedlist']);
 
 $cmd_seedlist->registerSubCommand('add', mysql_cleanup($fn_seedlist_add),
-	['description' => 'Add space-delimited list of sectors to the seedlist',
-	 'usage' => '[sectors]',
+	[
+		'description' => 'Add space-delimited list of sectors to the seedlist',
+		'usage' => '[sectors]',
 	]);
 
 $cmd_seedlist->registerSubCommand('del', mysql_cleanup($fn_seedlist_del),
-	['description' => 'Delete space-delimited list of sectors (or all sectors) from the seedlist',
-	 'usage' => '[sectors|all]',
+	[
+		'description' => 'Delete space-delimited list of sectors (or all sectors) from the seedlist',
+		'usage' => '[sectors|all]',
 	]);

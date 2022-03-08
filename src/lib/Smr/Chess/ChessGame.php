@@ -543,14 +543,15 @@ class ChessGame {
 		}
 
 		$hasMoved[ChessPiece::PAWN] = $nextPawnMovement;
-		return ['Castling' => $castling,
-				'PieceTaken' => $pieceTaken,
-				'EnPassant' => $enPassant,
-				'RookMoved' => $rookMoved,
-				'RookTaken' => $rookTaken,
-				'OldPawnMovement' => $oldPawnMovement,
-				'PawnPromotion' => $pawnPromotion,
-			];
+		return [
+			'Castling' => $castling,
+			'PieceTaken' => $pieceTaken,
+			'EnPassant' => $enPassant,
+			'RookMoved' => $rookMoved,
+			'RookTaken' => $rookTaken,
+			'OldPawnMovement' => $oldPawnMovement,
+			'PawnPromotion' => $pawnPromotion,
+		];
 	}
 
 	public static function undoMovePiece(array &$board, array &$hasMoved, int $x, int $y, int $toX, int $toY, array $moveInfo): void {

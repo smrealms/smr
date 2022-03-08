@@ -1886,13 +1886,15 @@ abstract class AbstractSmrPlayer {
 	}
 
 	protected function createBounty(string $type): array {
-		$bounty = ['Amount' => 0,
-						'SmrCredits' => 0,
-						'Type' => $type,
-						'Claimer' => 0,
-						'Time' => Smr\Epoch::time(),
-						'ID' => $this->getNextBountyID(),
-						'New' => true];
+		$bounty = [
+			'Amount' => 0,
+			'SmrCredits' => 0,
+			'Type' => $type,
+			'Claimer' => 0,
+			'Time' => Smr\Epoch::time(),
+			'ID' => $this->getNextBountyID(),
+			'New' => true,
+		];
 		$this->setBounty($bounty);
 		return $bounty;
 	}

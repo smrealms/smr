@@ -273,7 +273,8 @@ abstract class AbstractSmrAccount {
 				$this->unbanAccount();
 				return false;
 			}
-			return ['Time' => $expireTime,
+			return [
+				'Time' => $expireTime,
 				'Reason' => $dbRecord->getField('reason'),
 				'ReasonID' => $dbRecord->getInt('reason_id'),
 			];

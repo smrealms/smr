@@ -31,8 +31,10 @@ $players = [];
 $dbResult = $db->read('SELECT * FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_id=0 OR alliance_id=' . $db->escapeNumber($NHAID) . ') AND account_id NOT IN (SELECT account_id FROM draft_leaders WHERE draft_leaders.game_id=player.game_id) AND account_id NOT IN (SELECT picked_account_id FROM draft_history WHERE draft_history.game_id=player.game_id) AND account_id != ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ';');
 foreach ($dbResult->records() as $dbRecord) {
 	$pickPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
-	$players[] = ['Player' => $pickPlayer,
-						'HREF' => Page::create('alliance_pick_processing.php', '', ['PickedAccountID' => $pickPlayer->getAccountID()])->href()];
+	$players[] = [
+		'Player' => $pickPlayer,
+		'HREF' => Page::create('alliance_pick_processing.php', '', ['PickedAccountID' => $pickPlayer->getAccountID()])->href(),
+	];
 }
 
 $template->assign('PickPlayers', $players);
