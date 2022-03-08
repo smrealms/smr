@@ -466,7 +466,7 @@ class AbstractSmrPort {
 	}
 
 	public function getUpgradeRequirement(): int {
-//		return round(exp($this->getLevel()/1.7)+3)*1000000;
+		//return round(exp($this->getLevel()/1.7)+3)*1000000;
 		return $this->getLevel() * 1000000;
 	}
 

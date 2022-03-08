@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 try {
-	require_once('../bootstrap.php');
-?>
+	require_once('../bootstrap.php'); ?>
 
 <!DOCTYPE html>
 <html>

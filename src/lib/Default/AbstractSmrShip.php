@@ -830,7 +830,7 @@ class AbstractSmrShip {
 		}
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PORT));
 		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Port', 'Damage Done'], HOF_PUBLIC);
-//		$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in SmrPortt::attackedBy()
+		//$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in SmrPort::attackedBy()
 
 		// Change alignment if we reach a damage threshold.
 		// Increase if player and port races are at war; decrease otherwise.
@@ -868,7 +868,7 @@ class AbstractSmrShip {
 		}
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLANET));
 		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Planet', 'Damage Done'], HOF_PUBLIC);
-//		$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots')); //in SmrPlanet::attackedBy()
+		//$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots')); //in SmrPlanet::attackedBy()
 		return $results;
 	}
 

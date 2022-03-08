@@ -45,5 +45,5 @@ function shared_channel_msg_seed(SmrPlayer $player): array {
 	// Prepend the total number of sectors to seed
 	array_unshift($result, "There are $numSectors sectors in the seedlist.");
 
-  return $result;
+	return $result;
 }

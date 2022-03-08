@@ -71,8 +71,8 @@ if (!isset($var['role_id'])) {
 	]);
 	$db->unlock();
 } else {
-	// if no role is given we delete that entry
 	if (empty(Smr\Request::get('role'))) {
+		// if no role is given we delete that entry
 		if ($var['role_id'] == ALLIANCE_ROLE_LEADER) {
 			create_error('You cannot delete the leader role.');
 		} elseif ($var['role_id'] == ALLIANCE_ROLE_NEW_MEMBER) {
@@ -82,8 +82,8 @@ if (!isset($var['role_id'])) {
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
 					AND role_id = ' . $db->escapeNumber($var['role_id']));
-	// otherwise we update it
 	} else {
+		// otherwise we update it
 		$db->write('UPDATE alliance_has_roles
 					SET role = ' . $db->escapeString(Smr\Request::get('role')) . ',
 					with_per_day = ' . $db->escapeNumber($withPerDay) . ',

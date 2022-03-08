@@ -301,7 +301,7 @@ function do_voodoo(): never {
 	if (!AJAX_CONTAINER && USING_AJAX && $session->hasChangedSN()) {
 		exit;
 	}
-//	ob_clean();
+	//ob_clean();
 
 	// create account object
 	$account = $session->getAccount();
@@ -319,8 +319,8 @@ function do_voodoo(): never {
 
 		global $locksFailed;
 		if (!USING_AJAX //AJAX should never do anything that requires a lock.
-//			&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
-			) {
+			//&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
+		) {
 			if (!$lock && !isset($locksFailed[$sector_id])) {
 				if (!acquire_lock($sector_id)) {
 					throw new Smr\Exceptions\UserError('Failed to acquire sector lock');

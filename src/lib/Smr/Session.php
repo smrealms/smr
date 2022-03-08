@@ -90,7 +90,7 @@ class Session {
 			$initialTimeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
 			while (($timeBetweenLoads = microtime(true) - $var['PreviousRequestTime']) < $loadDelay) {
 				$sleepTime = IRound(($loadDelay - $timeBetweenLoads) * 1000000);
-			//	echo 'Sleeping for: ' . $sleepTime . 'us';
+				//echo 'Sleeping for: ' . $sleepTime . 'us';
 				usleep($sleepTime);
 			}
 			if (ENABLE_DEBUG) {
