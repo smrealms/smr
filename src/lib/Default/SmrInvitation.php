@@ -12,7 +12,7 @@ class SmrInvitation {
 	private int $messageID;
 	private int $expires;
 
-	static public function send(int $allianceID, int $gameID, int $receiverAccountID, int $senderAccountID, int $messageID, int $expires): void {
+	public static function send(int $allianceID, int $gameID, int $receiverAccountID, int $senderAccountID, int $messageID, int $expires): void {
 		$db = Smr\Database::getInstance();
 		$db->insert('alliance_invites_player', [
 			'game_id' => $db->escapeNumber($gameID),
@@ -27,7 +27,7 @@ class SmrInvitation {
 	/**
 	 * Get all unexpired invitations for the given alliance
 	 */
-	static public function getAll(int $allianceID, int $gameID): array {
+	public static function getAll(int $allianceID, int $gameID): array {
 		// Remove any expired invitations
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));
@@ -43,7 +43,7 @@ class SmrInvitation {
 	/**
 	 * Get the alliance invitation for a single recipient, if not expired
 	 */
-	static public function get(int $allianceID, int $gameID, int $receiverAccountID): self {
+	public static function get(int $allianceID, int $gameID, int $receiverAccountID): self {
 		// Remove any expired invitations
 		$db = Smr\Database::getInstance();
 		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));
