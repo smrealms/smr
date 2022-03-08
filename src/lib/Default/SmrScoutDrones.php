@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class SmrScoutDrones extends AbstractSmrCombatWeapon {
+
 	use Traits\CombatWeaponForce;
 
 	public function __construct(int $numberOfSDs) {
@@ -87,4 +88,5 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 		$forces->takeSDs($return['WeaponDamage']['Launched']);
 		return $return;
 	}
+
 }

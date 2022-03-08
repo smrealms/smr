@@ -12,6 +12,7 @@ use SmrAccount;
 use SmrPlayer;
 
 class ChessGame {
+
 	public const PLAYER_BLACK = 'Black';
 	public const PLAYER_WHITE = 'White';
 	protected static array $CACHE_CHESS_GAMES = [];
@@ -896,4 +897,5 @@ class ChessGame {
 	public function getResignHREF(): string {
 		return Page::create('chess_resign_processing.php', '', ['ChessGameID' => $this->chessGameID])->href();
 	}
+
 }

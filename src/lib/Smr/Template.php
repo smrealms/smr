@@ -9,6 +9,7 @@ use Exception;
 use Smr\Container\DiContainer;
 
 class Template {
+
 	private array $data = [];
 	private bool $ignoreMiddle = false;
 	private int $nestedIncludes = 0;
@@ -287,4 +288,5 @@ class Template {
 	public function ignoreMiddle(): void {
 		$this->ignoreMiddle = true;
 	}
+
 }

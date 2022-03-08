@@ -128,4 +128,5 @@ class SmrPlanetStructureType {
 	public function expGain(): int {
 		return $this->planetTypeInfo['exp_gain'];
 	}
+
 }

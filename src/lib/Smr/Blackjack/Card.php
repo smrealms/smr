@@ -66,4 +66,5 @@ class Card {
 			default => (string)$this->rank,
 		};
 	}
+
 }

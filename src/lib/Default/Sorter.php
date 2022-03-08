@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 class Sorter {
+
 	private static $sortKey;
 	private static $reverseOrder;
 
@@ -49,4 +50,5 @@ class Sorter {
 		self::$reverseOrder = $reverseOrder;
 		uasort($array, [__CLASS__, 'cmpNumMethod']);
 	}
+
 }

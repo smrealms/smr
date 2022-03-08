@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 class AbstractSmrPort {
+
 	use Traits\RaceID;
 
 	protected static array $CACHE_PORTS = [];
@@ -1401,4 +1402,5 @@ class AbstractSmrPort {
 		}
 		return false;
 	}
+
 }

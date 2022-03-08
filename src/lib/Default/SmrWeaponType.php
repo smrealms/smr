@@ -4,6 +4,7 @@
  * Defines the base weapon types for ships/planets.
  */
 class SmrWeaponType {
+
 	use Traits\RaceID;
 
 	protected static array $CACHE_WEAPON_TYPES = [];

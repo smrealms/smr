@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
-class TimeoutException extends Exception {}
+class TimeoutException extends Exception {
+}
 
 function echo_r(string $message): void {
 	echo date('Y-m-d H:i:s => ') . $message . EOL;

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class SmrForce {
+
 	protected static array $CACHE_FORCES = [];
 	protected static array $CACHE_SECTOR_FORCES = [];
 	protected static array $TIDIED_UP = [];
@@ -536,4 +537,5 @@ class SmrForce {
 		$return = [];
 		return $return;
 	}
+
 }

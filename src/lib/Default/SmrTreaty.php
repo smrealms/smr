@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class SmrTreaty {
+
 	/**
 	 * For each treaty type (as given by the columns in the alliance_treaties
 	 * database table), provides an array with a display title and description.
@@ -51,4 +52,5 @@ class SmrTreaty {
 			'Allow your ally to land on your planets.',
 		],
 	];
+
 }

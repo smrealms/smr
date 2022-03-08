@@ -189,5 +189,6 @@ class Plotter {
 	public static function findDistanceToOtherPorts(SmrSector $sector, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array|false {
 		return self::findDistanceToX('Port', $sector, false, null, null, $distanceLimit, $lowLimit, $highLimit);
 	}
+
 }
 

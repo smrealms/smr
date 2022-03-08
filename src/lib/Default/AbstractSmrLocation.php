@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class AbstractSmrLocation {
+
 	protected static array $CACHE_ALL_LOCATIONS;
 	protected static array $CACHE_LOCATIONS = [];
 	protected static array $CACHE_SECTOR_LOCATIONS = [];
@@ -473,4 +474,5 @@ class AbstractSmrLocation {
 		}
 		return false;
 	}
+
 }

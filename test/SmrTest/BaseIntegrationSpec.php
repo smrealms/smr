@@ -8,6 +8,7 @@ use Smr\Container\DiContainer;
 use Throwable;
 
 class BaseIntegrationSpec extends TestCase {
+
 	protected static mysqli $conn;
 	private static array $defaultPopulatedTables = [];
 
@@ -41,4 +42,5 @@ class BaseIntegrationSpec extends TestCase {
 			self::$conn->query($truncate[0]);
 		}
 	}
+
 }

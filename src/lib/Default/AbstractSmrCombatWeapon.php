@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 abstract class AbstractSmrCombatWeapon {
+
 	/**
 	 * Reduce the damage done to planets by this factor
 	 */
@@ -122,4 +123,5 @@ abstract class AbstractSmrCombatWeapon {
 	abstract public function shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array;
 	abstract public function shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array;
 	abstract public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer): array;
+
 }

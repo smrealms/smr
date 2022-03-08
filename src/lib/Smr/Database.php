@@ -232,4 +232,5 @@ class Database {
 		}
 		return $this->escapeString(serialize($object));
 	}
+
 }

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class SmrAlliance {
+
 	protected static array $CACHE_ALLIANCES = [];
 
 	protected Smr\Database $db;

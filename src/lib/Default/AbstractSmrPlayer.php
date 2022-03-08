@@ -2,6 +2,7 @@
 require_once('missions.inc.php');
 
 abstract class AbstractSmrPlayer {
+
 	use Traits\RaceID;
 
 	protected const TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;

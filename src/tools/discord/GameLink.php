@@ -4,6 +4,7 @@
  * Holds information linking the received message and the game data
  */
 class GameLink {
+
 	/**
 	 * Identifies if the message is linked to game data
 	 */
@@ -60,4 +61,5 @@ class GameLink {
 		// If here, we did not trigger one of the error messages
 		$this->valid = true;
 	}
+
 }

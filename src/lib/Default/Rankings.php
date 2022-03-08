@@ -200,4 +200,5 @@ class Rankings {
 
 		return [$minRank, $maxRank];
 	}
+
 }

@@ -4,6 +4,7 @@
  * Defines a concrete realization of a weapon type for ships/planets.
  */
 class SmrWeapon extends AbstractSmrCombatWeapon {
+
 	use Traits\RaceID;
 
 	protected const BONUS_DAMAGE = 15; // additive bonus

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class SmrSector {
+
 	protected static array $CACHE_SECTORS = [];
 	protected static array $CACHE_GALAXY_SECTORS = [];
 	protected static array $CACHE_LOCATION_SECTORS = [];
@@ -1021,4 +1022,5 @@ class SmrSector {
 		}
 		return false;
 	}
+
 }

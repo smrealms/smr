@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class SmrGame {
+
 	protected static array $CACHE_GAMES = [];
 
 	protected Smr\Database $db;

@@ -3,6 +3,7 @@
 namespace Smr\Chess;
 
 class ChessPiece {
+
 	public const KING = 1;
 	public const QUEEN = 2;
 	public const ROOK = 3;
@@ -231,4 +232,5 @@ class ChessPiece {
 			'p' => self::PAWN,
 		};
 	}
+
 }

@@ -18,6 +18,7 @@ use function DI\autowire;
  * static usage of container methods.
  */
 class DiContainer {
+
 	private static DiContainer $instance;
 	private Container $container;
 
@@ -109,4 +110,5 @@ class DiContainer {
 	public static function getContainer(): Container {
 		return self::$instance->container;
 	}
+
 }

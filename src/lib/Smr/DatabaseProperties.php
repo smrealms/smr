@@ -5,6 +5,7 @@ namespace Smr;
 use Dotenv\Dotenv;
 
 class DatabaseProperties {
+
 	private const CONFIG_HOST = 'MYSQL_HOST';
 	private const CONFIG_USER = 'MYSQL_USER';
 	private const CONFIG_PASSWORD = 'MYSQL_PASSWORD';
@@ -49,4 +50,5 @@ class DatabaseProperties {
 	public function getDatabaseName(): string {
 		return $this->databaseName;
 	}
+
 }

@@ -355,4 +355,5 @@ class Session {
 		$this->db->write('UPDATE active_session SET ajax_returns=' . $this->db->escapeObject($this->ajaxReturns, true) .
 				' WHERE session_id=' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
 	}
+
 }

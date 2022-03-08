@@ -4,6 +4,7 @@
  * Defines the base ship types
  */
 class SmrShipType {
+
 	use Traits\RaceID;
 
 	private static array $CACHE_SHIP_TYPES = [];

@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 class SmrGalaxy {
+
 	protected static array $CACHE_GALAXIES = [];
 	protected static array $CACHE_GAME_GALAXIES = [];
 
@@ -354,4 +355,5 @@ class SmrGalaxy {
 	public function equals(SmrGalaxy $otherGalaxy): bool {
 		return $otherGalaxy->getGalaxyID() == $this->getGalaxyID() && $otherGalaxy->getGameID() == $this->getGameID();
 	}
+
 }

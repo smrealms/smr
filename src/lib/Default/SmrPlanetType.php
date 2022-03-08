@@ -4,6 +4,7 @@
  * Defines intrinsic properties of planet types.
  */
 abstract class SmrPlanetType {
+
 	protected const MAX_LANDED_UNLIMITED = 0;
 	protected const DEFAULT_MENU_OPTIONS = ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP', 'FINANCE'];
 
@@ -66,9 +67,11 @@ abstract class SmrPlanetType {
 			throw new Exception("Structure not supported on this planet type: $structureID");
 		}
 	}
+
 }
 
 class TerranPlanet extends SmrPlanetType {
+
 	public const STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 25,
@@ -110,9 +113,11 @@ class TerranPlanet extends SmrPlanetType {
 	public function menuOptions(): array {
 		return self::DEFAULT_MENU_OPTIONS;
 	}
+
 }
 
 class AridPlanet extends SmrPlanetType {
+
 	public const STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 25,
@@ -154,9 +159,11 @@ class AridPlanet extends SmrPlanetType {
 	public function menuOptions(): array {
 		return ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP'];
 	}
+
 }
 
 class DwarfPlanet extends SmrPlanetType {
+
 	public const STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 10,
@@ -198,9 +205,11 @@ class DwarfPlanet extends SmrPlanetType {
 	public function menuOptions(): array {
 		return self::DEFAULT_MENU_OPTIONS;
 	}
+
 }
 
 class ProtoPlanet extends SmrPlanetType {
+
 	public const STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 5,
@@ -254,9 +263,11 @@ class ProtoPlanet extends SmrPlanetType {
 	public function menuOptions(): array {
 		return self::DEFAULT_MENU_OPTIONS;
 	}
+
 }
 
 class DefenseWorld extends SmrPlanetType {
+
 	public const STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 800,
@@ -304,4 +315,5 @@ class DefenseWorld extends SmrPlanetType {
 	public function menuOptions(): array {
 		return self::DEFAULT_MENU_OPTIONS;
 	}
+
 }

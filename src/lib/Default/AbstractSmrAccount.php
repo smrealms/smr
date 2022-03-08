@@ -1294,4 +1294,5 @@ abstract class AbstractSmrAccount {
 	public function getPersonalHofHREF(): string {
 		return Page::create('skeleton.php', 'hall_of_fame_player_detail.php', ['account_id' => $this->getAccountID()])->href();
 	}
+
 }

@@ -8,6 +8,7 @@ use Smr\Race;
  * Implements the interface for classes that need a $raceID property.
  */
 trait RaceID {
+
 	protected int $raceID;
 
 	public function getRaceID(): int {
@@ -17,4 +18,5 @@ trait RaceID {
 	public function getRaceName(): string {
 		return Race::getName($this->raceID);
 	}
+
 }

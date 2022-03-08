@@ -114,5 +114,4 @@ class PageIntegrationTest extends TestCase {
 		$page->addVar('does_not_exist');
 	}
 
-
 }

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class Globals {
+
 	protected static array $HIDDEN_PLAYERS;
 	protected static array $LEVEL_REQUIREMENTS;
 	protected static array $RACES;

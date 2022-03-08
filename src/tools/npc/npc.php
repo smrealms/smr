@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
 // Use this exception to help override container forwarding for NPC's
-class ForwardException extends Exception {}
+class ForwardException extends Exception {
+}
 
 // Use this exception to indicate that an NPC has taken its final action
-class FinalActionException extends Exception {}
+class FinalActionException extends Exception {
+}
 
 function overrideForward(Page $container): never {
 	global $forwardedContainer;

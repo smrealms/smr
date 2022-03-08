@@ -125,5 +125,4 @@ class Request {
 		return $func($index, $default);
 	}
 
-
 }

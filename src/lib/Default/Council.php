@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class Council {
+
 	protected static array $COUNCILS = [];
 	protected static array $PRESIDENTS = [];
 
@@ -50,4 +51,5 @@ class Council {
 	public static function isOnCouncil(int $gameID, int $raceID, int $accountID): bool {
 		return in_array($accountID, self::getRaceCouncil($gameID, $raceID));
 	}
+
 }

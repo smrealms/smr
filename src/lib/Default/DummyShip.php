@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class DummyShip extends AbstractSmrShip {
+
 	protected static array $CACHED_DUMMY_SHIPS;
 
 	public function __construct(AbstractSmrPlayer $player) {

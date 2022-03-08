@@ -7,4 +7,5 @@ namespace Smr\Exceptions;
  * It should only encompass errors that can be triggered by otherwise
  * valid user input (i.e. NOT internal errors, request forgery, etc.).
  */
-class UserError extends \RuntimeException {}
+class UserError extends \RuntimeException {
+}

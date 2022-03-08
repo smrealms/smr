@@ -3,6 +3,7 @@
 namespace Routes;
 
 abstract class Route {
+
 	public function getOverallExpMultiplier(): float {
 		return $this->getExpMultiplierSum() / $this->getTurnsForRoute();
 	}
@@ -35,4 +36,5 @@ abstract class Route {
 	public function getRouteString(): string {
 		return $this->getForwardRoute()->getRouteString() . "\r\n" . $this->getReturnRoute()->getRouteString();
 	}
+
 }

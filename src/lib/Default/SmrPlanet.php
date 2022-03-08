@@ -5,6 +5,7 @@
 require_once('SmrPlanetType.php');
 
 class SmrPlanet {
+
 	protected static $CACHE_PLANETS = [];
 
 	public const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 100;

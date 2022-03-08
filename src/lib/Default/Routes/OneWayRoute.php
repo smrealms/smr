@@ -98,4 +98,5 @@ class OneWayRoute extends Route {
 	public function getRouteString(): string {
 		return $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->path->getDistance() . ($this->path->getNumWarps() > 0 ? ' + ' . $this->path->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
 	}
+
 }

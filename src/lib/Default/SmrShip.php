@@ -5,6 +5,7 @@
  * Loads and saves ship properties from/to the database.
  */
 class SmrShip extends AbstractSmrShip {
+
 	protected static array $CACHE_SHIPS = [];
 
 	protected string $SQL;

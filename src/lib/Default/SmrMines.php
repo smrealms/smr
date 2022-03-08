@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class SmrMines extends AbstractSmrCombatWeapon {
+
 	use Traits\CombatWeaponForce;
 
 	protected const TOTAL_ENEMY_MINES_MODIFIER = 25;
@@ -124,4 +125,5 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		}
 		return $return;
 	}
+
 }

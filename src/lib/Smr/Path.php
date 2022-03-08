@@ -9,6 +9,7 @@ use Exception;
  * Used by the Plotter class to store the state of a plotted course.
  */
 class Path {
+
 	private array $path;
 	private int $numWarps = 0;
 	private array $warpMap = [];
@@ -101,4 +102,5 @@ class Path {
 		$this->numWarps = count(array_intersect($this->path, array_keys($this->warpMap)));
 		return $this;
 	}
+
 }

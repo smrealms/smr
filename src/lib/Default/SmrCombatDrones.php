@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 class SmrCombatDrones extends AbstractSmrCombatWeapon {
+
 	use Traits\CombatWeaponForce;
 
 	protected const MAX_CDS_RAND = 54;
@@ -262,4 +263,5 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
 		return $this->doPlanetDamageToPlayer($return, $forces, $targetPlayer);
 	}
+
 }
