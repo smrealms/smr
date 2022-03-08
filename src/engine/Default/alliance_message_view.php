@@ -49,8 +49,10 @@ if (isset($var['thread_ids'][$thread_index + 1])) {
 $thread = [];
 $thread['AllianceEyesOnly'] = is_array($var['alliance_eyes']) && $var['alliance_eyes'][$thread_index];
 //for report type (system sent) messages
-$players[ACCOUNT_ID_PLANET] = 'Planet Reporter';
-$players[ACCOUNT_ID_BANK_REPORTER] = 'Bank Reporter';
+$players = [
+	ACCOUNT_ID_PLANET => 'Planet Reporter',
+	ACCOUNT_ID_BANK_REPORTER => 'Bank Reporter',
+];
 $dbResult = $db->read('SELECT player.*
 			FROM player
 			JOIN alliance_thread USING (game_id)

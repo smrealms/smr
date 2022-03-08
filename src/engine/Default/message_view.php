@@ -19,6 +19,7 @@ if ($var['folder_id'] == MSG_SENT) {
 					AND receiver_delete = ' . $db->escapeBoolean(false);
 }
 
+$messageBox = [];
 if ($var['folder_id'] == MSG_SENT) {
 	$messageBox['UnreadMessages'] = 0;
 } else {
