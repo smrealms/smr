@@ -32,4 +32,3 @@ try {
 } catch (Throwable $e) {
 	handleException($e);
 }
-?>
