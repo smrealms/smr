@@ -30,25 +30,25 @@ class Sorter {
 	public static function sortByStrProp(array &$array, $property, $reverseOrder = false) {
 		self::$sortKey = $property;
 		self::$reverseOrder = $reverseOrder;
-		usort($array, [__CLASS__, 'cmpStrProp']);
+		usort($array, [self::class, 'cmpStrProp']);
 	}
 
 	public static function sortByNumElement(array &$array, $property, $reverseOrder = false) {
 		self::$sortKey = $property;
 		self::$reverseOrder = $reverseOrder;
-		uasort($array, [__CLASS__, 'cmpNumElement']);
+		uasort($array, [self::class, 'cmpNumElement']);
 	}
 
 	public static function sortByNumProp(array &$array, $property, $reverseOrder = false) {
 		self::$sortKey = $property;
 		self::$reverseOrder = $reverseOrder;
-		uasort($array, [__CLASS__, 'cmpNumProp']);
+		uasort($array, [self::class, 'cmpNumProp']);
 	}
 
 	public static function sortByNumMethod(array &$array, $method, $reverseOrder = false) {
 		self::$sortKey = $method;
 		self::$reverseOrder = $reverseOrder;
-		uasort($array, [__CLASS__, 'cmpNumMethod']);
+		uasort($array, [self::class, 'cmpNumMethod']);
 	}
 
 }
