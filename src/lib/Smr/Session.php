@@ -55,7 +55,6 @@ class Session {
 	 * Not intended to be constructed by hand. Use Smr\Session::getInstance().
 	 */
 	public function __construct() {
-
 		// Initialize the db connector here
 		$this->db = Database::getInstance();
 
