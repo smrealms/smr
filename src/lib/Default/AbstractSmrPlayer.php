@@ -672,7 +672,7 @@ abstract class AbstractSmrPlayer {
 					$receiverAccount->decreaseMessageNotifications($messageTypeID, 1);
 					$receiverAccount->update();
 				}
-			break;
+				break;
 		}
 
 		return $insertID;
@@ -2837,10 +2837,10 @@ abstract class AbstractSmrPlayer {
 			switch ($rewardItem) {
 				case 'Credits':
 					$this->increaseCredits($amount);
-				break;
+					break;
 				case 'Experience':
 					$this->increaseExperience($amount);
-				break;
+					break;
 			}
 		}
 		$rewardText = $mission['Task']['Rewards']['Text'];

@@ -357,25 +357,25 @@ class SmrSector {
 				if ($neighbour < $galaxy->getStartSector()) {
 					$neighbour += $galaxy->getSize();
 				}
-			break;
+				break;
 			case 'Down':
 				$neighbour += $galaxy->getWidth();
 				if ($neighbour > $galaxy->getEndSector()) {
 					$neighbour -= $galaxy->getSize();
 				}
-			break;
+				break;
 			case 'Left':
 				$neighbour -= 1;
 				if ((1 + $neighbour - $galaxy->getStartSector()) % $galaxy->getWidth() == 0) {
 					$neighbour += $galaxy->getWidth();
 				}
-			break;
+				break;
 			case 'Right':
 				$neighbour += 1;
 				if (($neighbour - $galaxy->getStartSector()) % $galaxy->getWidth() == 0) {
 					$neighbour -= $galaxy->getWidth();
 				}
-			break;
+				break;
 			default:
 				throw new Exception($dir . ': is not a valid direction');
 		}

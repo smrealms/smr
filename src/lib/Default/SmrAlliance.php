@@ -600,7 +600,7 @@ class SmrAlliance {
 		switch ($newMemberPermission) {
 			case 'full':
 				//do nothing, perms already set above.
-			break;
+				break;
 			case 'none':
 				$withPerDay = 0;
 				$removeMember = false;
@@ -613,7 +613,7 @@ class SmrAlliance {
 				$sendAllMsg = false;
 				$opLeader = false;
 				$viewBonds = false;
-			break;
+				break;
 			case 'basic':
 				$withPerDay = ALLIANCE_BANK_UNLIMITED;
 				$removeMember = false;
@@ -626,7 +626,7 @@ class SmrAlliance {
 				$sendAllMsg = false;
 				$opLeader = false;
 				$viewBonds = false;
-			break;
+				break;
 		}
 		$db->insert('alliance_has_roles', [
 			'alliance_id' => $db->escapeNumber($this->getAllianceID()),

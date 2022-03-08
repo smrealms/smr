@@ -36,21 +36,21 @@ if (isset($XType)) { ?>
 					foreach ($Hardwares as $Hardware) {
 						?><option value="<?php echo $Hardware['ID']; ?>"><?php echo $Hardware['Name']; ?></option><?php
 					}
-				break;
+					break;
 				case 'Ships':
 					$Ships = SmrShipType::getAll();
 					Sorter::sortByNumMethod($Ships, 'getName');
 					foreach ($Ships as $Ship) {
 						?><option value="<?php echo $Ship->getTypeID(); ?>"><?php echo $Ship->getName(); ?></option><?php
 					}
-				break;
+					break;
 				case 'Weapons':
 					$Weapons = SmrWeaponType::getAllSoldWeaponTypes($ThisPlayer->getGameID());
 					Sorter::sortByNumMethod($Weapons, 'getName');
 					foreach ($Weapons as $Weapon) {
 						?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?></option><?php
 					}
-				break;
+					break;
 				case 'Locations':
 					?><option value="Bank">Any Bank</option>
 					<option value="Bar">Any Bar</option>
@@ -65,20 +65,20 @@ if (isset($XType)) { ?>
 					foreach ($Locations as $Location) {
 						?><option value="<?php echo $Location->getTypeID(); ?>"><?php echo $Location->getName(); ?></option><?php
 					}
-				break;
+					break;
 				case 'Sell Goods':
 				case 'Buy Goods':
 					$Goods = $ThisPlayer->getVisibleGoods();
 					foreach ($Goods as $Good) {
 						?><option value="<?php echo $Good['ID']; ?>"><?php echo $Good['Name']; ?></option><?php
 					}
-				break;
+					break;
 				case 'Galaxies':
 					$Galaxies = SmrGalaxy::getGameGalaxies($ThisPlayer->getGameID());
 					foreach ($Galaxies as $Galaxy) {
 						?><option value="<?php echo $Galaxy->getGalaxyID(); ?>"><?php echo $Galaxy->getDisplayName(); ?></option><?php
 					}
-				break;
+					break;
 				default:
 			} ?>
 		</select>&nbsp;

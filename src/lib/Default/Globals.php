@@ -28,7 +28,7 @@ class Globals {
 					logException(new Exception('Tried to access page without permission.'));
 					throw new Smr\Exceptions\UserError('You cannot access this page.');
 				}
-			break;
+				break;
 		}
 	}
 

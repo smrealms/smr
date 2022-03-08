@@ -75,7 +75,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 						return AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID, $player, $linked);
 					}
 				}
-			break;
+				break;
+
 			case 'servertimetouser':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
@@ -85,7 +86,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					$time += $session->getAccount()->getOffset() * 3600;
 					return date($session->getAccount()->getDateTimeFormat(), $time);
 				}
-			break;
+				break;
+
 			case 'chess':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
