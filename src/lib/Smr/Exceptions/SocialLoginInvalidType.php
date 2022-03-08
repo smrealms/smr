@@ -7,4 +7,3 @@ namespace Smr\Exceptions;
  */
 class SocialLoginInvalidType extends \Exception {
 }
-
