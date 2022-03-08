@@ -8,9 +8,9 @@ class RouteGenerator {
 
 	public const EXP_ROUTE = 0;
 	public const MONEY_ROUTE = 1;
-	static array $expRoutes;
-	static array $moneyRoutes;
-	static array $dontAddWorseThan;
+	private static array $expRoutes;
+	private static array $moneyRoutes;
+	private static array $dontAddWorseThan;
 
 	private static function initialize(): void {
 		self::$expRoutes = [];
