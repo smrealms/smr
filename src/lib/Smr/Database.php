@@ -42,9 +42,9 @@ class Database {
 	}
 
 	/**
-	 * Database constructor.
 	 * Not intended to be constructed by hand. If you need an instance of Database,
 	 * use Database::getInstance();
+	 *
 	 * @param mysqli $dbConn The mysqli instance
 	 * @param string $dbName The name of the database that was used to construct the mysqli instance
 	 */
