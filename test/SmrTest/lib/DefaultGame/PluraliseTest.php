@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers ::pluralise
  */
-class pluraliseTest extends TestCase {
+class PluraliseTest extends TestCase {
 
 	/**
 	 * @dataProvider pluralise_provider

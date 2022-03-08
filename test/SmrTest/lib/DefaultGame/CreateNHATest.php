@@ -10,7 +10,7 @@ require_once(LIB . 'Default/nha.inc.php');
 /**
  * @covers ::createNHA
  */
-class createNHATest extends BaseIntegrationSpec {
+class CreateNHATest extends BaseIntegrationSpec {
 
 	public function test_createNHA(): void {
 		// Create the NHA
