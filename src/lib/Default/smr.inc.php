@@ -446,8 +446,8 @@ function acquire_lock(int $sector): bool {
 		}
 		// If there is someone else before us in the queue we sleep for a while
 		$dbResult = $db->read('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
-		$locksInQueue = -1;
-		if (($locksInQueue = $dbResult->record()->getInt('COUNT(*)')) > 0) {
+		$locksInQueue = $dbResult->record()->getInt('COUNT(*)');
+		if ($locksInQueue > 0) {
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
@@ -815,7 +815,8 @@ function number_colour_format(float $number, bool $justSign = false): string {
 	}
 	if ($justSign === false) {
 		$decimalPlaces = 0;
-		if (($pos = strpos((string)$number, '.')) !== false) {
+		$pos = strpos((string)$number, '.');
+		if ($pos !== false) {
 			$decimalPlaces = strlen(substr((string)$number, $pos + 1));
 		}
 		$formatted .= number_format(abs($number), $decimalPlaces);

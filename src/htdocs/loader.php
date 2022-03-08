@@ -69,7 +69,8 @@ try {
 
 	$account = $session->getAccount();
 	// get reason for disabled user
-	if (($disabled = Smr\Login\Redirect::redirectIfDisabled($account)) !== false) {
+	$disabled = Smr\Login\Redirect::redirectIfDisabled($account);
+	if ($disabled !== false) {
 		// save session (incase we forward)
 		$session->update();
 		if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {

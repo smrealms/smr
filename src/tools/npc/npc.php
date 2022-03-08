@@ -226,7 +226,8 @@ function NPCStuff(): void {
 								processContainer(tradeGoods($goodID, $player, $port));
 							} else {
 								//Move to next route or fed.
-								if (($tradeRoute = changeRoute($allTradeRoutes)) === null) {
+								$tradeRoute = changeRoute($allTradeRoutes);
+								if ($tradeRoute === null) {
 									debug('Changing Route Failed');
 									processContainer(plotToFed($player));
 								} else {
@@ -253,7 +254,8 @@ function NPCStuff(): void {
 							processContainer(tradeGoods($goodID, $player, $port));
 						} else {
 							//Move to next route or fed.
-							if (($tradeRoute = changeRoute($allTradeRoutes)) === null) {
+							$tradeRoute = changeRoute($allTradeRoutes);
+							if ($tradeRoute === null) {
 								debug('Changing Route Failed');
 								processContainer(plotToFed($player));
 							} else {

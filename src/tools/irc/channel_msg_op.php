@@ -249,7 +249,8 @@ function channel_op_notification($fp, string $rdata, string $nick, string $chann
 	$callback = function() use($fp, $rdata, $nick, $channel): bool {
 		return channel_op_notification($fp, $rdata, $nick, $channel);
 	};
-	if (($player = check_for_registration($fp, $nick, $channel, $callback, false)) === false) {
+	$player = check_for_registration($fp, $nick, $channel, $callback, false);
+	if ($player === false) {
 		return true;
 	}
 

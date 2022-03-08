@@ -89,7 +89,8 @@ function channel_msg_with_registration($fp, string $rdata): bool {
 		$callback = function() use($fp, $rdata): bool {
 			return channel_msg_with_registration($fp, $rdata);
 		};
-		if (($player = check_for_registration($fp, $nick, $channel, $callback)) === false) {
+		$player = check_for_registration($fp, $nick, $channel, $callback);
+		if ($player === false) {
 			return true;
 		}
 

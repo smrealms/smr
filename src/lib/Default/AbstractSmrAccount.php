@@ -688,7 +688,8 @@ abstract class AbstractSmrAccount {
 		$this->sendValidationEmail();
 
 		// Remove an "Invalid email" ban (may or may not have one)
-		if ($disabled = $this->isDisabled()) {
+		$disabled = $this->isDisabled();
+		if ($disabled !== false) {
 			if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
 				$this->unbanAccount($this);
 			}
