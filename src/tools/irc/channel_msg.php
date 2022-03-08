@@ -271,13 +271,12 @@ function channel_msg_timer($fp, string $rdata): bool {
 			return true;
 		}
 
-		if (!is_numeric($msg[5])) {
+		$countdown = $msg[5];
+		if (!is_numeric($countdown)) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :I need to know in how many minutes the timer needs to go off. Example: !timer 25 message to channel' . EOL);
 		}
 
-		$countdown = intval($msg[5]);
 		$message = 'ALERT! ALERT! ALERT!';
-
 		if (isset($msg[6])) {
 			$message .= ' ' . $msg[6];
 		}
