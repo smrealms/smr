@@ -31,7 +31,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				$logID = (int)$default;
 				return linkCombatLog($logID);
-			break;
+
 			case 'player':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
@@ -43,7 +43,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
 				}
 				return $bbPlayer->getDisplayName($showAlliance);
-			break;
+
 			case 'alliance':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
@@ -61,7 +61,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return create_link($container, $alliance->getAllianceDisplayName());
 				}
 				return $alliance->getAllianceDisplayName();
-			break;
+
 			case 'race':
 				$raceNameID = $default;
 				foreach (Smr\Race::getAllNames() as $raceID => $raceName) {
@@ -95,7 +95,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$chessGameID = (int)$default;
 				$chessGame = Smr\Chess\ChessGame::getChessGame($chessGameID);
 				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
-			break;
 
 			case 'sector':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
@@ -111,9 +110,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					&& SmrSector::sectorExists($overrideGameID, $sectorID)) {
 					return '<a href="' . Globals::getPlotCourseHREF($session->getPlayer()->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
 				}
-
 				return $sectorTag;
-			break;
+
 			case 'join_alliance':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
@@ -123,7 +121,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$container = Page::create('alliance_invite_accept_processing.php');
 				$container['alliance_id'] = $alliance->getAllianceID();
 				return '<div class="buttonA"><a class="buttonA" href="' . $container->href() . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
-			break;
 		}
 	} catch (Throwable) {
 		// If there's an error, we will silently display the original text
