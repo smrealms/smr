@@ -7,12 +7,12 @@
 class AbstractSmrShip {
 
 	// Player exp gained for each point of damage done
-	const EXP_PER_DAMAGE_PLAYER = 0.375;
-	const EXP_PER_DAMAGE_PLANET = 1.0; // note that planet damage is reduced
-	const EXP_PER_DAMAGE_PORT = 0.15;
-	const EXP_PER_DAMAGE_FORCE = 0.075;
+	protected const EXP_PER_DAMAGE_PLAYER = 0.375;
+	protected const EXP_PER_DAMAGE_PLANET = 1.0; // note that planet damage is reduced
+	protected const EXP_PER_DAMAGE_PORT = 0.15;
+	protected const EXP_PER_DAMAGE_FORCE = 0.075;
 
-	const STARTER_SHIPS = [
+	protected const STARTER_SHIPS = [
 		RACE_NEUTRAL => SHIP_TYPE_GALACTIC_SEMI,
 		RACE_ALSKANT => SHIP_TYPE_SMALL_TIMER,
 		RACE_CREONTI => SHIP_TYPE_MEDIUM_CARGO_HULK,

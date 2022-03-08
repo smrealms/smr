@@ -2,7 +2,7 @@
 
 abstract class AbstractSmrAccount {
 
-	const USER_RANKINGS_EACH_STAT_POW = .9;
+	protected const USER_RANKINGS_EACH_STAT_POW = .9;
 	protected const USER_RANKINGS_SCORE = [
 		// [Stat, a, b]
 		// Used as: pow(Stat * a, USER_RANKINGS_EACH_STAT_POW) * b

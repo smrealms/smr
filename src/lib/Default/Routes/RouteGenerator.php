@@ -6,8 +6,8 @@ use Globals;
 
 class RouteGenerator {
 
-	const EXP_ROUTE = 0;
-	const MONEY_ROUTE = 1;
+	public const EXP_ROUTE = 0;
+	public const MONEY_ROUTE = 1;
 	static array $expRoutes;
 	static array $moneyRoutes;
 	static array $dontAddWorseThan;

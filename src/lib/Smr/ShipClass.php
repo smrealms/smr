@@ -7,13 +7,13 @@ namespace Smr;
  */
 class ShipClass {
 
-	const HUNTER = 1;
-	const TRADER = 2;
-	const RAIDER = 3;
-	const SCOUT = 4;
-	const STARTER = 5;
+	public const HUNTER = 1;
+	public const TRADER = 2;
+	public const RAIDER = 3;
+	public const SCOUT = 4;
+	public const STARTER = 5;
 
-	const NAMES = [
+	public const NAMES = [
 		self::HUNTER => 'Hunter',
 		self::TRADER => 'Trader',
 		self::RAIDER => 'Raider',

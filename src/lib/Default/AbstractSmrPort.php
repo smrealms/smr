@@ -5,28 +5,28 @@ class AbstractSmrPort {
 	protected static array $CACHE_PORTS = [];
 	protected static array $CACHE_CACHED_PORTS = [];
 
-	const DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE = 300; // single player
-	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325; // all attackers
-	const CHANCE_TO_DOWNGRADE = 1;
-	const TIME_FEDS_STAY = 1800;
-	const MAX_FEDS_BONUS = 4000;
-	const BASE_CDS = 725;
-	const CDS_PER_LEVEL = 100;
-	const CDS_PER_TEN_MIL_CREDITS = 25;
-	const BASE_DEFENCES = 500;
-	const DEFENCES_PER_LEVEL = 700;
-	const DEFENCES_PER_TEN_MIL_CREDITS = 250;
-	const MAX_LEVEL = 9;
-	const BASE_REFRESH_PER_HOUR = [
+	public const DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE = 300; // single player
+	protected const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325; // all attackers
+	protected const CHANCE_TO_DOWNGRADE = 1;
+	protected const TIME_FEDS_STAY = 1800;
+	protected const MAX_FEDS_BONUS = 4000;
+	protected const BASE_CDS = 725;
+	protected const CDS_PER_LEVEL = 100;
+	protected const CDS_PER_TEN_MIL_CREDITS = 25;
+	protected const BASE_DEFENCES = 500;
+	protected const DEFENCES_PER_LEVEL = 700;
+	protected const DEFENCES_PER_TEN_MIL_CREDITS = 250;
+	public const MAX_LEVEL = 9;
+	protected const BASE_REFRESH_PER_HOUR = [
 		'1' => 150,
 		'2' => 110,
 		'3' => 70,
 	];
-	const REFRESH_PER_GOOD = .9;
-	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
-	const GOODS_TRADED_MONEY_MULTIPLIER = 50;
-	const BASE_PAYOUT = 0.85; // fraction of credits for looting
-	const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
+	protected const REFRESH_PER_GOOD = .9;
+	protected const TIME_TO_CREDIT_RAID = 10800; // 3 hours
+	protected const GOODS_TRADED_MONEY_MULTIPLIER = 50;
+	protected const BASE_PAYOUT = 0.85; // fraction of credits for looting
+	public const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
 
 	protected Smr\Database $db;
 

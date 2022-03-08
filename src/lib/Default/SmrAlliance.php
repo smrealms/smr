@@ -27,9 +27,9 @@ class SmrAlliance {
 	protected array $seedlist;
 
 	// Recruit type constants
-	const RECRUIT_OPEN = 'open';
-	const RECRUIT_CLOSED = 'closed';
-	const RECRUIT_PASSWORD = 'password';
+	public const RECRUIT_OPEN = 'open';
+	public const RECRUIT_CLOSED = 'closed';
+	public const RECRUIT_PASSWORD = 'password';
 
 	public static function clearCache(): void {
 		self::$CACHE_ALLIANCES = [];

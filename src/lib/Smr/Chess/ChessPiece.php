@@ -3,12 +3,12 @@
 namespace Smr\Chess;
 
 class ChessPiece {
-	const KING = 1;
-	const QUEEN = 2;
-	const ROOK = 3;
-	const BISHOP = 4;
-	const KNIGHT = 5;
-	const PAWN = 6;
+	public const KING = 1;
+	public const QUEEN = 2;
+	public const ROOK = 3;
+	public const BISHOP = 4;
+	public const KNIGHT = 5;
+	public const PAWN = 6;
 
 	public function __construct(
 		public string $colour,

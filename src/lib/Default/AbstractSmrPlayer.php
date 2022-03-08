@@ -4,13 +4,13 @@ require_once('missions.inc.php');
 abstract class AbstractSmrPlayer {
 	use Traits\RaceID;
 
-	const TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;
-	const TIME_FOR_ALLIANCE_SWITCH = 0;
+	protected const TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;
+	protected const TIME_FOR_ALLIANCE_SWITCH = 0;
 
-	const SHIP_INSURANCE_FRACTION = 0.25; // ship value regained on death
+	protected const SHIP_INSURANCE_FRACTION = 0.25; // ship value regained on death
 
-	const HOF_CHANGED = 1;
-	const HOF_NEW = 2;
+	protected const HOF_CHANGED = 1;
+	protected const HOF_NEW = 2;
 
 	protected static array $CACHE_SECTOR_PLAYERS = [];
 	protected static array $CACHE_PLANET_PLAYERS = [];

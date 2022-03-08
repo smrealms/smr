@@ -13,7 +13,7 @@ class SmrPlanetStructureType {
 	/**
 	 * Trade goods required to build each type of structure.
 	 */
-	const GOODS = [
+	protected const GOODS = [
 		PLANET_GENERATOR => [
 			GOODS_WOOD => 20,
 			GOODS_ORE => 15,

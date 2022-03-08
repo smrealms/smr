@@ -5,8 +5,8 @@
  */
 class SmrEnhancedWeaponEvent {
 
-	const GRACE_PERIOD = 3600; // 1 hour
-	const DURATION = 21600; // 6 hours
+	protected const GRACE_PERIOD = 3600; // 1 hour
+	protected const DURATION = 21600; // 6 hours
 
 	protected int $gameID;
 	protected int $sectorID;

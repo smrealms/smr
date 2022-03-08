@@ -13,7 +13,7 @@
 class WeightedRandom {
 	protected static array $CACHE_RANDOMS = [];
 
-	const WEIGHTING_CHANGE = 50; // as a percent
+	protected const WEIGHTING_CHANGE = 50; // as a percent
 
 	protected Smr\Database $db;
 

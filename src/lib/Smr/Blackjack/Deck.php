@@ -10,8 +10,8 @@ use Exception;
 class Deck {
 
 	// We can have multiple decks of cards
-	const NUM_DECKS = 1;
-	const MAX_CARDS = 52 * self::NUM_DECKS;
+	public const NUM_DECKS = 1;
+	public const MAX_CARDS = 52 * self::NUM_DECKS;
 
 	private array $cardIDs = [];
 

@@ -6,10 +6,10 @@
 class SmrWeapon extends AbstractSmrCombatWeapon {
 	use Traits\RaceID;
 
-	const BONUS_DAMAGE = 15; // additive bonus
-	const BONUS_ACCURACY = 4; // additive bonus
+	protected const BONUS_DAMAGE = 15; // additive bonus
+	protected const BONUS_ACCURACY = 4; // additive bonus
 
-	const HIGHEST_POWER_LEVEL = 5; // must track the highest power level in db
+	protected const HIGHEST_POWER_LEVEL = 5; // must track the highest power level in db
 
 	protected int $weaponTypeID;
 	protected SmrWeaponType $weaponType;

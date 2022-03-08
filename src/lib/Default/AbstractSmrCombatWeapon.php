@@ -4,7 +4,7 @@ abstract class AbstractSmrCombatWeapon {
 	/**
 	 * Reduce the damage done to planets by this factor
 	 */
-	const PLANET_DAMAGE_MOD = 0.2;
+	protected const PLANET_DAMAGE_MOD = 0.2;
 
 	protected bool $damageRollover;
 

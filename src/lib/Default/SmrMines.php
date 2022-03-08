@@ -3,9 +3,9 @@
 class SmrMines extends AbstractSmrCombatWeapon {
 	use Traits\CombatWeaponForce;
 
-	const TOTAL_ENEMY_MINES_MODIFIER = 25;
-	const FED_SHIP_DAMAGE_MODIFIER = .5;
-	const DCS_DAMAGE_MODIFIER = .75;
+	protected const TOTAL_ENEMY_MINES_MODIFIER = 25;
+	protected const FED_SHIP_DAMAGE_MODIFIER = .5;
+	protected const DCS_DAMAGE_MODIFIER = .75;
 
 	public function __construct(int $numberOfMines) {
 		$this->amount = $numberOfMines;

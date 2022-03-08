@@ -4,8 +4,8 @@
  * Defines intrinsic properties of planet types.
  */
 abstract class SmrPlanetType {
-	const MAX_LANDED_UNLIMITED = 0;
-	const DEFAULT_MENU_OPTIONS = ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP', 'FINANCE'];
+	protected const MAX_LANDED_UNLIMITED = 0;
+	protected const DEFAULT_MENU_OPTIONS = ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP', 'FINANCE'];
 
 	/**
 	 * Returns the properties of all the structures this planet type can build.
@@ -29,7 +29,7 @@ abstract class SmrPlanetType {
 	 * Associates the planet_type_id with the planet class.
 	 * These indices must not be changed!
 	 */
-	const PLANET_TYPES = [
+	public const PLANET_TYPES = [
 		1 => TerranPlanet::class,
 		2 => AridPlanet::class,
 		3 => DwarfPlanet::class,
@@ -69,7 +69,7 @@ abstract class SmrPlanetType {
 }
 
 class TerranPlanet extends SmrPlanetType {
-	const STRUCTURES = [
+	public const STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 25,
 			'base_time' => 10800,
@@ -113,7 +113,7 @@ class TerranPlanet extends SmrPlanetType {
 }
 
 class AridPlanet extends SmrPlanetType {
-	const STRUCTURES = [
+	public const STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 25,
 			'base_time' => 10800,
@@ -157,7 +157,7 @@ class AridPlanet extends SmrPlanetType {
 }
 
 class DwarfPlanet extends SmrPlanetType {
-	const STRUCTURES = [
+	public const STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 10,
 			'base_time' => 10800,
@@ -201,7 +201,7 @@ class DwarfPlanet extends SmrPlanetType {
 }
 
 class ProtoPlanet extends SmrPlanetType {
-	const STRUCTURES = [
+	public const STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 5,
 			'base_time' => 10800,
@@ -257,7 +257,7 @@ class ProtoPlanet extends SmrPlanetType {
 }
 
 class DefenseWorld extends SmrPlanetType {
-	const STRUCTURES = [
+	public const STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 800,
 			'base_time' => 2700,

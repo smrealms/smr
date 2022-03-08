@@ -11,7 +11,7 @@ use SmrPlayer;
 
 class Session {
 
-	const TIME_BEFORE_EXPIRY = 3600;
+	public const TIME_BEFORE_EXPIRY = 3600;
 
 	private const URL_LOAD_DELAY = [
 		'configure_hardware.php' => .4,

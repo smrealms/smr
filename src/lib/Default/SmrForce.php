@@ -5,16 +5,16 @@ class SmrForce {
 	protected static array $CACHE_SECTOR_FORCES = [];
 	protected static array $TIDIED_UP = [];
 
-	const LOWEST_MAX_EXPIRE_SCOUTS_ONLY = 432000; // 5 days
-	const TIME_PER_SCOUT_ONLY = 86400; // 1 = 1 day
-	const TIME_PERCENT_PER_SCOUT = 0.02; // 1/50th
-	const TIME_PERCENT_PER_COMBAT = 0.02; // 1/50th
-	const TIME_PERCENT_PER_MINE = 0.02; // 1/50th
-	const REFRESH_ALL_TIME_PER_STACK = 1; // 1 second
+	protected const LOWEST_MAX_EXPIRE_SCOUTS_ONLY = 432000; // 5 days
+	protected const TIME_PER_SCOUT_ONLY = 86400; // 1 = 1 day
+	protected const TIME_PERCENT_PER_SCOUT = 0.02; // 1/50th
+	protected const TIME_PERCENT_PER_COMBAT = 0.02; // 1/50th
+	protected const TIME_PERCENT_PER_MINE = 0.02; // 1/50th
+	public const REFRESH_ALL_TIME_PER_STACK = 1; // 1 second
 
-	const MAX_MINES = 50;
-	const MAX_CDS = 50;
-	const MAX_SDS = 5;
+	public const MAX_MINES = 50;
+	public const MAX_CDS = 50;
+	public const MAX_SDS = 5;
 
 	protected Smr\Database $db;
 	protected string $SQL;

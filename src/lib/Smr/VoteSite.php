@@ -13,11 +13,11 @@ class VoteSite {
 	private static ?array $CACHE_TIMEOUTS = null;
 
 	// NOTE: link IDs should never be changed!
-	const LINK_ID_TWG = 3;
-	const LINK_ID_DOG = 4;
-	const LINK_ID_PBBG = 5;
+	public const LINK_ID_TWG = 3;
+	public const LINK_ID_DOG = 4;
+	public const LINK_ID_PBBG = 5;
 
-	const ACTIVE_LINKS = [
+	public const ACTIVE_LINKS = [
 		self::LINK_ID_TWG,
 		self::LINK_ID_DOG,
 		self::LINK_ID_PBBG,

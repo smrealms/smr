@@ -12,9 +12,8 @@ use SmrAccount;
 use SmrPlayer;
 
 class ChessGame {
-	const GAMETYPE_STANDARD = 'Standard';
-	const PLAYER_BLACK = 'Black';
-	const PLAYER_WHITE = 'White';
+	public const PLAYER_BLACK = 'Black';
+	public const PLAYER_WHITE = 'White';
 	protected static array $CACHE_CHESS_GAMES = [];
 
 	private Smr\Database $db;

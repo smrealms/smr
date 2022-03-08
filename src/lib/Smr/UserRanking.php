@@ -7,7 +7,7 @@ namespace Smr;
  */
 class UserRanking {
 
-	const NAMES = [
+	public const NAMES = [
 		1 => 'Newbie',
 		2 => 'Beginner',
 		3 => 'Fledgling',
@@ -19,11 +19,11 @@ class UserRanking {
 		9 => 'Grandmaster',
 	];
 
-	const MIN_RANK = 1;
-	const MAX_RANK = 9;
+	public const MIN_RANK = 1;
+	public const MAX_RANK = 9;
 
-	const SCORE_POW = .3;
-	const SCORE_POW_RANK_INCREMENT = 5.2;
+	public const SCORE_POW = .3;
+	public const SCORE_POW_RANK_INCREMENT = 5.2;
 
 	/**
 	 * Given a score, return the associated rank

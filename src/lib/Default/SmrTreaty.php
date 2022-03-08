@@ -5,7 +5,7 @@ class SmrTreaty {
 	 * For each treaty type (as given by the columns in the alliance_treaties
 	 * database table), provides an array with a display title and description.
 	 */
-	const TYPES = [
+	public const TYPES = [
 		'trader_assist' => [
 			'Assist - Trader Attacks',
 			'Assist your ally in attacking traders.',

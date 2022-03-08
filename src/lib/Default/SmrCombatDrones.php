@@ -3,7 +3,7 @@
 class SmrCombatDrones extends AbstractSmrCombatWeapon {
 	use Traits\CombatWeaponForce;
 
-	const MAX_CDS_RAND = 54;
+	protected const MAX_CDS_RAND = 54;
 
 	public function __construct(int $numberOfCDs, bool $portPlanetDrones = false) {
 		$this->amount = $numberOfCDs;
