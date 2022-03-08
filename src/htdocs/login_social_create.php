@@ -19,9 +19,11 @@ try {
 	// Pre-populate the login field if an account with this email exists.
 	// (Also disable creating a new account because they would just get
 	// an "Email already registered" error anyway.)
-	$account = SmrAccount::getAccountByEmail($socialLogin->getEmail());
-	if (!is_null($account)) {
+	try {
+		$account = SmrAccount::getAccountByEmail($socialLogin->getEmail());
 		$template->assign('MatchingLogin', $account->getLogin());
+	} catch (Smr\Exceptions\AccountNotFound) {
+		// Proceed without matching account
 	}
 
 	$template->assign('Body', 'login/login_social_create.php');

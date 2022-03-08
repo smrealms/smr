@@ -18,11 +18,10 @@ try {
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
 			}
-			$account = SmrAccount::getAccountBySocialLogin($socialLogin);
-			if (!is_null($account)) {
-				// register session and continue to login
-				$session->setAccount($account);
-			} else {
+
+			try {
+				$account = SmrAccount::getAccountBySocialLogin($socialLogin);
+			} catch (Smr\Exceptions\AccountNotFound) {
 				// Let them create an account or link to existing
 				if (session_status() === PHP_SESSION_NONE) {
 					session_start();
@@ -43,15 +42,20 @@ try {
 				exit;
 			}
 
-			$account = SmrAccount::getAccountByName($login);
-			if (is_object($account) && $account->checkPassword($password)) {
-				$session->setAccount($account);
-			} else {
+			try {
+				// Throw an exception if account isn't found or password is wrong
+				$account = SmrAccount::getAccountByName($login);
+				if (!$account->checkPassword($password)) {
+					throw new Smr\Exceptions\AccountNotFound('Wrong password');
+				}
+			} catch (Smr\Exceptions\AccountNotFound) {
 				$msg = 'Password is incorrect!';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
 			}
 		}
+		// register session and continue to login
+		$session->setAccount($account);
 	}
 
 	// this sn identifies our container later

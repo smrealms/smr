@@ -8,8 +8,9 @@ try {
 	}
 
 	// get this user from db
-	$account = SmrAccount::getAccountByEmail(Smr\Request::get('email'));
-	if ($account == null) {
+	try {
+		$account = SmrAccount::getAccountByEmail(Smr\Request::get('email'));
+	} catch (Smr\Exceptions\AccountNotFound) {
 		// unknown user
 		header('Location: /error.php?msg=' . rawurlencode('The specified e-mail address is not registered!'));
 		exit;

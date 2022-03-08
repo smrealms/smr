@@ -64,12 +64,15 @@ if ($action == 'Save and resend validation code') {
 	if (empty($discordId)) {
 		$account->setDiscordId(null);
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have deleted your Discord User ID.';
-
 	} else {
 		// no duplicates
-		$dbResult = $db->read('SELECT 1 FROM account WHERE discord_id =' . $db->escapeString($discordId) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			create_error('Someone is already using that Discord User ID!');
+		try {
+			$other = SmrAccount::getAccountByDiscordId($discordId);
+			if ($account->getAccountID() != $other->getAccountID()) {
+				create_error('Someone is already using that Discord User ID!');
+			}
+		} catch (Smr\Exceptions\AccountNotFound) {
+			// Proceed, this Discord ID is not in use
 		}
 
 		$account->setDiscordId($discordId);
@@ -89,9 +92,13 @@ if ($action == 'Save and resend validation code') {
 		}
 
 		// no duplicates
-		$dbResult = $db->read('SELECT 1 FROM account WHERE irc_nick = ' . $db->escapeString($ircNick) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			create_error('Someone is already using that nick!');
+		try {
+			$other = SmrAccount::getAccountByIrcNick($ircNick);
+			if ($account->getAccountID() != $other->getAccountID()) {
+				create_error('Someone is already using that IRC nick!');
+			}
+		} catch (Smr\Exceptions\AccountNotFound) {
+			// Proceed, this IRC nick is not in use
 		}
 
 		// save irc nick in db and set message

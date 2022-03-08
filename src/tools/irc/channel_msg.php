@@ -35,12 +35,12 @@ function check_for_registration($fp, string $nick, string $channel, callable $ca
 	}
 
 	// get smr account
-	$account = SmrAccount::getAccountByIrcNick($nick, true);
-	if ($account == null) {
-		if ($registeredNick != '') {
+	try {
+		$account = SmrAccount::getAccountByIrcNick($nick, true);
+	} catch (Smr\Exceptions\AccountNotFound) {
+		try {
 			$account = SmrAccount::getAccountByIrcNick($registeredNick, true);
-		}
-		if ($account == null) {
+		} catch (Smr\Exceptions\AccountNotFound) {
 			if ($validationMessages === true) {
 				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
 			}
