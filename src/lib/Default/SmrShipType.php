@@ -109,7 +109,7 @@ class SmrShipType {
 									+ $this->hardpoints * 5
 									+ $this->maxHardware[HARDWARE_COMBAT] / 5
 								)
-							);
+		);
 	}
 
 	public function getTypeID(): int {

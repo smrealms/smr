@@ -73,8 +73,10 @@ try {
 			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
-		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),
-		                        $_SESSION['socialLogin']->getUserID());
+		$account->addAuthMethod(
+			$_SESSION['socialLogin']->getLoginType(),
+			$_SESSION['socialLogin']->getUserID()
+		);
 		session_destroy();
 	}
 
@@ -185,8 +187,7 @@ try {
 	$db->write('DELETE FROM player_has_unread_messages WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$db->write('
 		INSERT INTO player_has_unread_messages (game_id, account_id, message_type_id)
-		SELECT game_id, account_id, message_type_id FROM message WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND msg_read = ' . $db->escapeBoolean(false) . ' AND receiver_delete = ' . $db->escapeBoolean(false)
-	);
+		SELECT game_id, account_id, message_type_id FROM message WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND msg_read = ' . $db->escapeBoolean(false) . ' AND receiver_delete = ' . $db->escapeBoolean(false));
 
 	header('Location: ' . $href);
 	exit;

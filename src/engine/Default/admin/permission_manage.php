@@ -50,6 +50,5 @@ if (empty($admin_id)) {
 	$processingHREF = $container->href();
 	$template->assign('ProcessingHREF', $processingHREF);
 
-	$template->assign('PermissionCategories',
-	                  Smr\AdminPermissions::getPermissionsByCategory());
+	$template->assign('PermissionCategories', Smr\AdminPermissions::getPermissionsByCategory());
 }

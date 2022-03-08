@@ -13,8 +13,7 @@ function shared_channel_msg_forces(SmrPlayer $player, ?string $option): array {
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 				)
-			ORDER BY expire_time ASC LIMIT 1'
-		);
+			ORDER BY expire_time ASC LIMIT 1');
 	} elseif ($option == 'seedlist') {
 		// are we restricting to the seedlist?
 		$seedlist = get_seedlist($player);
@@ -30,8 +29,7 @@ function shared_channel_msg_forces(SmrPlayer $player, ?string $option): array {
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 				)
-			ORDER BY expire_time ASC LIMIT 1'
-		);
+			ORDER BY expire_time ASC LIMIT 1');
 	} else {
 		// did we get a galaxy name?
 		$dbResult = $db->read('SELECT galaxy_id FROM game_galaxy WHERE galaxy_name = ' . $db->escapeString($option));
@@ -49,8 +47,7 @@ function shared_channel_msg_forces(SmrPlayer $player, ?string $option): array {
 							WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 								AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 						)
-					ORDER BY expire_time ASC LIMIT 1'
-		);
+					ORDER BY expire_time ASC LIMIT 1');
 	}
 
 	if ($dbResult->hasRecord()) {

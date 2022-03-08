@@ -152,8 +152,10 @@ try {
 	}
 	$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give $2 worth of "reward" credits for joining.
 	if ($socialLogin) {
-		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),
-		                        $_SESSION['socialLogin']->getUserID());
+		$account->addAuthMethod(
+			$_SESSION['socialLogin']->getLoginType(),
+			$_SESSION['socialLogin']->getUserID()
+		);
 		if ($validatedBySocial) {
 			$account->setValidated(true);
 			$account->update();

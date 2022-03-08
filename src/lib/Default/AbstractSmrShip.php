@@ -972,8 +972,7 @@ class AbstractSmrShip {
 								+ $this->getCDs() / 5
 							)
 						)
-					)
-					);
+		));
 	}
 
 }

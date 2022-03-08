@@ -5,8 +5,7 @@ $var = Smr\Session::getInstance()->getCurrentVar();
 $db = Smr\Database::getInstance();
 $db->write('UPDATE version
 			SET went_live = ' . $db->escapeNumber(Smr\Epoch::time()) . '
-			WHERE version_id = ' . $db->escapeNumber($var['version_id'])
-		   );
+			WHERE version_id = ' . $db->escapeNumber($var['version_id']));
 
 // Initialize the next version (since the version set live is not always the
 // last one, we INSERT IGNORE to skip this step in this case).

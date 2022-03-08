@@ -10,5 +10,4 @@ createNHA($game->getGameID());
 
 $msg = '<span class="green">SUCCESS: </span>Enabled game ' . $game->getDisplayName();
 
-Page::create('skeleton.php', 'admin/enable_game.php',
-             ['processing_msg' => $msg])->go();
+Page::create('skeleton.php', 'admin/enable_game.php', ['processing_msg' => $msg])->go();

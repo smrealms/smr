@@ -318,8 +318,7 @@ abstract class AbstractSmrPlayer {
 		$dbResult = $this->db->read('SELECT from_account_id FROM account_shares_info WHERE to_account_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND (game_id=0 OR game_id=' . $this->db->escapeNumber($this->getGameID()) . ')');
 		foreach ($dbResult->records() as $dbRecord) {
 			try {
-				$otherPlayer = SmrPlayer::getPlayer($dbRecord->getInt('from_account_id'),
-				                                    $this->getGameID(), $forceUpdate);
+				$otherPlayer = SmrPlayer::getPlayer($dbRecord->getInt('from_account_id'), $this->getGameID(), $forceUpdate);
 			} catch (Smr\Exceptions\PlayerNotFound) {
 				// Skip players that have not joined this game
 				continue;
@@ -1686,8 +1685,7 @@ abstract class AbstractSmrPlayer {
 				$this->db->write('
 					UPDATE player_stored_sector
 						SET offset_left = ' . $this->db->escapeNumber($offsetLeft) . ', offset_top=' . $this->db->escapeNumber($offsetTop) . '
-					WHERE ' . $this->SQL . ' AND sector_id = ' . $this->db->escapeNumber($sectorID)
-				);
+					WHERE ' . $this->SQL . ' AND sector_id = ' . $this->db->escapeNumber($sectorID));
 				return;
 			}
 		}
@@ -1732,8 +1730,7 @@ abstract class AbstractSmrPlayer {
 				$this->db->write('
 					DELETE FROM player_stored_sector
 					WHERE ' . $this->SQL . '
-					AND sector_id = ' . $this->db->escapeNumber($sectorID)
-				);
+					AND sector_id = ' . $this->db->escapeNumber($sectorID));
 				unset($this->storedDestinations[$key]);
 				return;
 			}
@@ -2721,8 +2718,7 @@ abstract class AbstractSmrPlayer {
 					starting_sector = ' . $this->db->escapeNumber($mission['Starting Sector']) . ',
 					mission_sector = ' . $this->db->escapeNumber($mission['Sector']) . ',
 					step_fails = ' . $this->db->escapeNumber($mission['Expires']) . '
-				WHERE ' . $this->SQL . ' AND mission_id = ' . $this->db->escapeNumber($missionID) . ' LIMIT 1'
-			);
+				WHERE ' . $this->SQL . ' AND mission_id = ' . $this->db->escapeNumber($missionID) . ' LIMIT 1');
 			return true;
 		}
 		return false;
@@ -2781,8 +2777,7 @@ abstract class AbstractSmrPlayer {
 
 		$this->db->write('
 			REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,unread,starting_sector,mission_sector,step_fails)
-			VALUES (' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($missionID) . ',' . $this->db->escapeNumber($mission['On Step']) . ',' . $this->db->escapeNumber($mission['Progress']) . ',' . $this->db->escapeBoolean($mission['Unread']) . ',' . $this->db->escapeNumber($mission['Starting Sector']) . ',' . $this->db->escapeNumber($mission['Sector']) . ',' . $this->db->escapeNumber($mission['Expires']) . ')'
-		);
+			VALUES (' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($missionID) . ',' . $this->db->escapeNumber($mission['On Step']) . ',' . $this->db->escapeNumber($mission['Progress']) . ',' . $this->db->escapeBoolean($mission['Unread']) . ',' . $this->db->escapeNumber($mission['Starting Sector']) . ',' . $this->db->escapeNumber($mission['Sector']) . ',' . $this->db->escapeNumber($mission['Expires']) . ')');
 	}
 
 	private function rebuildMission(int $missionID): void {

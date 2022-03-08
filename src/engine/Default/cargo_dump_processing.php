@@ -46,8 +46,10 @@ if ($player->getExperience() > 0) {
 	$good_distance = max(1, $good_distance);
 
 	// Don't lose more exp than you have
-	$lost_xp = min($player->getExperience(),
-	               IRound(SmrPort::getBaseExperience($amount, $good_distance)));
+	$lost_xp = min(
+		$player->getExperience(),
+		IRound(SmrPort::getBaseExperience($amount, $good_distance))
+	);
 	$player->decreaseExperience($lost_xp);
 	$player->increaseHOF($lost_xp, ['Trade', 'Experience', 'Jettisoned'], HOF_PUBLIC);
 

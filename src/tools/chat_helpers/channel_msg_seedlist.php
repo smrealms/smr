@@ -56,8 +56,7 @@ function shared_channel_msg_seedlist_add(SmrPlayer $player, ?array $sectors): ar
 		$dbResult = $db->read('SELECT 1
 					FROM sector
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND  sector_id = ' . $db->escapeNumber($sector)
-		);
+						AND  sector_id = ' . $db->escapeNumber($sector));
 		if (!$dbResult->hasRecord()) {
 			$result[] = "WARNING: The sector '$sector' does not exist in the current game.";
 			continue;
@@ -113,8 +112,7 @@ function shared_channel_msg_seedlist_del(SmrPlayer $player, ?array $sectors): ar
 	$db->write('DELETE FROM alliance_has_seedlist
 				WHERE alliance_id = ' . $player->getAllianceID() . '
 					AND game_id = ' . $player->getGameID() . '
-					AND sector_id IN (' . $db->escapeArray($sectors) . ')'
-	);
+					AND sector_id IN (' . $db->escapeArray($sectors) . ')');
 
 	return ['The following sectors have been removed from the seedlist:' . implode(' ', $sectors)];
 }

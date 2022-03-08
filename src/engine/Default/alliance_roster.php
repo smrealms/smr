@@ -48,8 +48,7 @@ $dbResult = $db->read('SELECT
 	FROM player
 	WHERE alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 	AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
-	GROUP BY alliance_id'
-);
+	GROUP BY alliance_id');
 $dbRecord = $dbResult->record();
 
 $template->assign('AllianceExp', $dbRecord->getInt('alliance_xp'));

@@ -38,8 +38,10 @@ class Twitter extends SocialLogin {
 			throw new Exception('Unexpected token received from Twitter');
 		}
 		$helper = self::getTwitterObj($_SESSION['TwitterToken']);
-		$accessToken = $helper->oauth('oauth/access_token',
-		                              ['oauth_verifier' => Request::get('oauth_verifier')]);
+		$accessToken = $helper->oauth(
+			'oauth/access_token',
+			['oauth_verifier' => Request::get('oauth_verifier')]
+		);
 		$auth = self::getTwitterObj($accessToken);
 		$userInfo = $auth->get('account/verify_credentials', ['include_email' => 'true']);
 		if ($auth->getLastHttpCode() == 200) {

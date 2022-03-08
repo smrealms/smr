@@ -33,7 +33,8 @@ class Database {
 			$dbProperties->getHost(),
 			$dbProperties->getUser(),
 			$dbProperties->getPassword(),
-			$dbProperties->getDatabaseName());
+			$dbProperties->getDatabaseName()
+		);
 		$charset = $mysql->character_set_name();
 		if ($charset != 'utf8') {
 			throw new RuntimeException('Unexpected charset: ' . $charset);

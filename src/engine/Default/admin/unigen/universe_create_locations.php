@@ -110,8 +110,11 @@ $template->assign('LocText', $locText);
 $template->assign('LocTypes', $categories->locTypes);
 
 // Form to make location changes
-$container = Page::create('admin/unigen/universe_create_save_processing.php',
-                          'admin/unigen/universe_create_sectors.php', $var);
+$container = Page::create(
+	'admin/unigen/universe_create_save_processing.php',
+	'admin/unigen/universe_create_sectors.php',
+	$var
+);
 $template->assign('CreateLocationsFormHREF', $container->href());
 
 // HREF to cancel and return to the previous page

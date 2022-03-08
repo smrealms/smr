@@ -43,8 +43,7 @@ if ($type == 'PEACE') {
 
 // Send vote announcement to members of the player's council (war votes)
 // or both races' councils (peace votes).
-$councilMembers = Council::getRaceCouncil($player->getGameID(),
-                                          $player->getRaceID());
+$councilMembers = Council::getRaceCouncil($player->getGameID(), $player->getRaceID());
 if ($type == 'PEACE') {
 	$otherCouncil = Council::getRaceCouncil($player->getGameID(), $race_id);
 	$councilMembers = array_merge($councilMembers, $otherCouncil);
@@ -54,15 +53,14 @@ if ($type == 'PEACE') {
 $color = ($type == 'PEACE' ? 'dgreen' : 'red');
 $type_fancy = "<span class=\"$color\">$type</span>";
 $message = $player->getLevelName() . ' ' . $player->getBBLink()
-           . " has initiated a vote for $type_fancy with the [race=$race_id]!"
-           . ' You have ' . format_time(TIME_FOR_COUNCIL_VOTE)
-           . ' to cast your vote.';
+	. " has initiated a vote for $type_fancy with the [race=$race_id]!"
+	. ' You have ' . format_time(TIME_FOR_COUNCIL_VOTE)
+	. ' to cast your vote.';
 
 foreach ($councilMembers as $accountID) {
 	// don't send to the player who started the vote
 	if ($player->getAccountID() != $accountID) {
-		SmrPlayer::sendMessageFromRace($player->getRaceID(), $player->getGameID(),
-		                               $accountID, $message, $time);
+		SmrPlayer::sendMessageFromRace($player->getRaceID(), $player->getGameID(), $accountID, $message, $time);
 	}
 }
 

@@ -23,8 +23,10 @@ function shared_channel_msg_op_turns(SmrPlayer $player): array {
 		if (!$player->sameAlliance($attendeePlayer)) {
 			continue;
 		}
-		$turns = min($attendeePlayer->getTurns() + $attendeePlayer->getTurnsGained(time(), true),
-		             $attendeePlayer->getMaxTurns());
+		$turns = min(
+			$attendeePlayer->getTurns() + $attendeePlayer->getTurnsGained(time(), true),
+			$attendeePlayer->getMaxTurns()
+		);
 		$oppers[$attendeePlayer->getPlayerName()] = $turns;
 	}
 
