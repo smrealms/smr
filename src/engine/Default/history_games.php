@@ -17,7 +17,7 @@ Menu::history_games(0);
 $db = Smr\Database::getInstance();
 $db->switchDatabases($var['HistoryDatabase']);
 $dbResult = $db->read('SELECT start_date, type, end_date, game_name, speed, game_id ' .
-           'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
+	'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
 $dbRecord = $dbResult->record();
 $template->assign('GameName', $game_name);
 $template->assign('Start', date($account->getDateFormat(), $dbRecord->getInt('start_date')));
