@@ -63,12 +63,13 @@ class Session {
 		$this->db = Database::getInstance();
 
 		// now try the cookie
-		if (isset($_COOKIE['session_id']) && strlen($_COOKIE['session_id']) === 32) {
+		$idLength = 32;
+		if (isset($_COOKIE['session_id']) && strlen($_COOKIE['session_id']) === $idLength) {
 			$this->sessionID = $_COOKIE['session_id'];
 		} else {
 			// create a new session id
 			do {
-				$this->sessionID = md5(uniqid(strval(rand())));
+				$this->sessionID = random_string($idLength);
 				$dbResult = $this->db->read('SELECT 1 FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
 			} while ($dbResult->hasRecord()); //Make sure we haven't somehow clashed with someone else's session.
 

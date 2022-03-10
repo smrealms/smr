@@ -58,12 +58,12 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 			VoteSite::LINK_ID_TWG => [
 				'img' => 'twg_vote.png',
 				'url' => 'http://topwebgames.com/in.aspx?ID=136&account=7&game=42&link=3&alwaysreward=1',
-				'sn' => '?sn=buyayw',
+				'sn' => '?sn=gbuyay',
 			],
 			VoteSite::LINK_ID_DOG => [
 				'img' => 'dog_vote.png',
 				'url' => 'http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315&votedef=7,42,4',
-				'sn' => '?sn=npclry',
+				'sn' => '?sn=wnpclr',
 			],
 			VoteSite::LINK_ID_PBBG => [
 				'img' => 'pbbg.png',
