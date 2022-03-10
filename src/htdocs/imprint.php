@@ -44,8 +44,8 @@ require_once('../bootstrap.php');
 								<h2>Board of Directors</h2>
 								<p>
 									President: Charly Schmidt<br/>
-									Vice President: Markus Blank<br/>
-									Treasurer: Adrian Schollmeyer<br/>
+									Vice President: Franca Bittner<br/>
+									Treasurer: Markus Blank<br/>
 									Register court: Amtsgericht Ilmenau<br/>
 									Registration number: 120483 (former: 483)
 								</p>
