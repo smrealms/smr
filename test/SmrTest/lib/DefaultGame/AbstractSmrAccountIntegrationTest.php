@@ -68,19 +68,18 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame($original, $account);
 	}
 
-	public function test_get_account_by_name_returns_null_when_no_account_name_provided() : void {
-		// When retrieving account by empty string name
-		$account = AbstractSmrAccount::getAccountByName('');
-		// Then the record is null
-		$this->assertNull($account);
+	public function test_get_account_by_name_throws_when_no_account_name_provided() : void {
+		// When retrieving account by empty string name, exception is thrown
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account login not found');
+		AbstractSmrAccount::getAccountByName('');
 	}
 
-	public function test_get_account_by_name_returns_null_when_no_record_found() : void {
-		// Given no record exists
-		// When retrieving account by name
-		$account = AbstractSmrAccount::getAccountByName('any');
-		// Then the record is null
-		$this->assertNull($account);
+	public function test_get_account_by_name_throws_when_no_record_found() : void {
+		// When retrieving account by name, exception is thrown if no record exists
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account login not found');
+		AbstractSmrAccount::getAccountByName('does_not_exist');
 	}
 
 	public function test_get_account_by_email_happy_path() : void {
@@ -92,19 +91,18 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame($original, $account);
 	}
 
-	public function test_get_account_by_email_returns_null_when_no_email_provided() : void {
-		// When retrieving account by null email
-		$account = AbstractSmrAccount::getAccountByEmail(null);
-		// Then the record is null
-		$this->assertNull($account);
+	public function test_get_account_by_email_throws_when_no_email_provided() : void {
+		// When retrieving account by empty string email, exception is thrown
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account email not found');
+		AbstractSmrAccount::getAccountByEmail('');
 	}
 
-	public function test_get_account_by_email_returns_null_when_no_record_found() : void {
-		// Given no record exists
-		// When retrieving account by email
-		$account = AbstractSmrAccount::getAccountByEmail('any');
-		// Then the record is null
-		$this->assertNull($account);
+	public function test_get_account_by_email_throws_when_no_record_found() : void {
+		// When retrieving account by email, exception is thrown if no record exists
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account email not found');
+		AbstractSmrAccount::getAccountByEmail('does_not_exist');
 	}
 
 	public function test_get_account_by_discord_happy_path() : void {
@@ -119,19 +117,18 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame($original->getAccountID(), $account->getAccountID());
 	}
 
-	public function test_get_account_by_discord_returns_null_when_no_discord_provided() : void {
-		// When retrieving account by null discord
-		$account = AbstractSmrAccount::getAccountByDiscordId(null);
-		// Then the record is null
-		$this->assertNull($account);
+	public function test_get_account_by_discord_throws_when_no_discord_provided() : void {
+		// When retrieving account by empty string discord ID, exception is thrown
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account discord ID not found');
+		AbstractSmrAccount::getAccountByDiscordId('');
 	}
 
-	public function test_get_account_by_discord_returns_null_when_no_record_found() : void {
-		// Given no record exists
-		// When retrieving account by discord
-		$account = AbstractSmrAccount::getAccountByDiscordId('any');
-		// Then the record is null
-		$this->assertNull($account);
+	public function test_get_account_by_discord_throws_when_no_record_found() : void {
+		// When retrieving account by discord, exception is thrown if no record exists.
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account discord ID not found');
+		AbstractSmrAccount::getAccountByDiscordId('does_not_exist');
 	}
 
 	public function test_get_account_by_irc_happy_path() : void {
@@ -146,19 +143,18 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame($original->getAccountID(), $account->getAccountID());
 	}
 
-	public function test_get_account_by_irc_returns_null_when_no_irc_provided() : void {
-		// When retrieving account by null irc
-		$account = AbstractSmrAccount::getAccountByIrcNick(null);
-		// Then the record is null
-		$this->assertNull($account);
+	public function test_get_account_by_irc_throws_when_no_irc_provided() : void {
+		// When retrieving account by empty string irc, exception is thrown
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account IRC nick not found');
+		AbstractSmrAccount::getAccountByIrcNick('');
 	}
 
 	public function test_get_account_by_irc_returns_null_when_no_record_found() : void {
-		// Given no record exists
-		// When retrieving account by irc
-		$account = AbstractSmrAccount::getAccountByIrcNick('any');
-		// Then the record is null
-		$this->assertNull($account);
+		// When retrieving account by irc, exception is thrown if no record exists.
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account IRC nick not found');
+		AbstractSmrAccount::getAccountByIrcNick('does_not_exist');
 	}
 
 	public function test_get_account_by_social_happy_path() : void {
@@ -191,20 +187,20 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame($original->getAccountID(), $account->getAccountID());
 	}
 
-	public function test_get_account_by_social_returns_null_when_social_invalid() : void {
+	public function test_get_account_by_social_throws_when_social_invalid() : void {
 		// Given an invalid social login
 		$socialLogin = $this->createMock(Facebook::class);
 		$socialLogin
 			->expects(self::once())
 			->method('isValid')
 			->willReturn(false);
-		// When retrieving account by null social
-		$account = AbstractSmrAccount::getAccountBySocialLogin($socialLogin);
-		// Then the record is null
-		$this->assertNull($account);
+		// When retrieving account by invalid social, exception is thrown
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account social login not found');
+		AbstractSmrAccount::getAccountBySocialLogin($socialLogin);
 	}
 
-	public function test_get_account_by_social_returns_null_when_no_record_found() : void {
+	public function test_get_account_by_social_throws_when_no_record_found() : void {
 		// Given no record exists
 		// And a valid social login
 		/*
@@ -224,10 +220,10 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 			->expects(self::once())
 			->method($getUserId)
 			->willReturn('123');
-		// When retrieving account by social
-		$account = AbstractSmrAccount::getAccountBySocialLogin($socialLogin);
-		// Then the record is null
-		$this->assertNull($account);
+		// When retrieving account by social, exception is thrown if no record exists
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account social login not found');
+		AbstractSmrAccount::getAccountBySocialLogin($socialLogin);
 	}
 
 	public function test_date_format_methods() : void {

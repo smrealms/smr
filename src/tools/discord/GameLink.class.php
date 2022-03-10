@@ -15,9 +15,10 @@ class GameLink
 
 		// force update in case the ID has been changed in-game
 		$user_id = $message->author->id;
-		$account = SmrAccount::getAccountByDiscordId($user_id, true);
 
-		if (is_null($account)) {
+		try {
+			$account = SmrAccount::getAccountByDiscordId($user_id, true);
+		} catch (Smr\Exceptions\AccountNotFound) {
 			$message->reply("There is no SMR account associated with your Discord User ID. To set this up, go to `Preferences` in-game and set `$user_id` as your `Discord User ID`.")
 				->done(null, 'logException');
 			return;

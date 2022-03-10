@@ -119,16 +119,22 @@ try {
 		exit;
 	}
 
-	if (SmrAccount::getAccountByName($login) != null) {
+	try {
+		SmrAccount::getAccountByName($login);
 		$msg = 'This user name is already registered.';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
+	} catch (Smr\Exceptions\AccountNotFound) {
+		// Proceed, login is not yet registered
 	}
 
-	if (SmrAccount::getAccountByEmail($email) != null) {
+	try {
+		SmrAccount::getAccountByEmail($email);
 		$msg = 'This email address is already registered.';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
+	} catch (Smr\Exceptions\AccountNotFound) {
+		// Proceed, email is not yet registered
 	}
 
 	$referral = Smr\Request::getInt('referral_id');

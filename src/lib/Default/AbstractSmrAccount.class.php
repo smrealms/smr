@@ -95,66 +95,66 @@ abstract class AbstractSmrAccount {
 		return self::$CACHE_ACCOUNTS[$accountID];
 	}
 
-	public static function getAccountByName(string $login, bool $forceUpdate = false) : ?SmrAccount {
-		if (empty($login)) { return null; }
-		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login) . ' LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			$accountID = $dbResult->record()->getInt('account_id');
-			return self::getAccount($accountID, $forceUpdate);
-		} else {
-			return null;
+	public static function getAccountByName(string $login, bool $forceUpdate = false) : SmrAccount {
+		if (!empty($login)) {
+			$db = Smr\Database::getInstance();
+			$dbResult = $db->read('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login) . ' LIMIT 1');
+			if ($dbResult->hasRecord()) {
+				$accountID = $dbResult->record()->getInt('account_id');
+				return self::getAccount($accountID, $forceUpdate);
+			}
 		}
+		throw new Smr\Exceptions\AccountNotFound('Account login not found.');
 	}
 
-	public static function getAccountByEmail(?string $email, bool $forceUpdate = false) : ?SmrAccount {
-		if (empty($email)) { return null; }
-		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT account_id FROM account WHERE email = ' . $db->escapeString($email) . ' LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			$accountID = $dbResult->record()->getInt('account_id');
-			return self::getAccount($accountID, $forceUpdate);
-		} else {
-			return null;
+	public static function getAccountByEmail(?string $email, bool $forceUpdate = false) : SmrAccount {
+		if (!empty($email)) {
+			$db = Smr\Database::getInstance();
+			$dbResult = $db->read('SELECT account_id FROM account WHERE email = ' . $db->escapeString($email) . ' LIMIT 1');
+			if ($dbResult->hasRecord()) {
+				$accountID = $dbResult->record()->getInt('account_id');
+				return self::getAccount($accountID, $forceUpdate);
+			}
 		}
+		throw new Smr\Exceptions\AccountNotFound('Account email not found.');
 	}
 
-	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false) : ?SmrAccount {
-		if (empty($id)) { return null; }
-		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT account_id FROM account where discord_id = ' . $db->escapeString($id) . ' LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			$accountID = $dbResult->record()->getInt('account_id');
-			return self::getAccount($accountID, $forceUpdate);
-		} else {
-			return null;
+	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false) : SmrAccount {
+		if (!empty($id)) {
+			$db = Smr\Database::getInstance();
+			$dbResult = $db->read('SELECT account_id FROM account where discord_id = ' . $db->escapeString($id) . ' LIMIT 1');
+			if ($dbResult->hasRecord()) {
+				$accountID = $dbResult->record()->getInt('account_id');
+				return self::getAccount($accountID, $forceUpdate);
+			}
 		}
+		throw new Smr\Exceptions\AccountNotFound('Account discord ID not found.');
 	}
 
-	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false) : ?SmrAccount {
-		if (empty($nick)) { return null; }
-		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT account_id FROM account WHERE irc_nick = ' . $db->escapeString($nick) . ' LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			$accountID = $dbResult->record()->getInt('account_id');
-			return self::getAccount($accountID, $forceUpdate);
-		} else {
-			return null;
+	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false) : SmrAccount {
+		if (!empty($nick)) {
+			$db = Smr\Database::getInstance();
+			$dbResult = $db->read('SELECT account_id FROM account WHERE irc_nick = ' . $db->escapeString($nick) . ' LIMIT 1');
+			if ($dbResult->hasRecord()) {
+				$accountID = $dbResult->record()->getInt('account_id');
+				return self::getAccount($accountID, $forceUpdate);
+			}
 		}
+		throw new Smr\Exceptions\AccountNotFound('Account IRC nick not found.');
 	}
 
-	public static function getAccountBySocialLogin(Smr\SocialLogin\SocialLogin $social, bool $forceUpdate = false) : ?SmrAccount {
-		if (!$social->isValid()) { return null; }
-		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT account_id FROM account JOIN account_auth USING(account_id)
-		            WHERE login_type = '.$db->escapeString($social->getLoginType()) . '
-		              AND auth_key = '.$db->escapeString($social->getUserID()) . ' LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			$accountID = $dbResult->record()->getInt('account_id');
-			return self::getAccount($accountID, $forceUpdate);
-		} else {
-			return null;
+	public static function getAccountBySocialLogin(Smr\SocialLogin\SocialLogin $social, bool $forceUpdate = false) : SmrAccount {
+		if ($social->isValid()) {
+			$db = Smr\Database::getInstance();
+			$dbResult = $db->read('SELECT account_id FROM account JOIN account_auth USING(account_id)
+				WHERE login_type = ' . $db->escapeString($social->getLoginType()) . '
+				AND auth_key = ' . $db->escapeString($social->getUserID()) . ' LIMIT 1');
+			if ($dbResult->hasRecord()) {
+				$accountID = $dbResult->record()->getInt('account_id');
+				return self::getAccount($accountID, $forceUpdate);
+			}
 		}
+		throw new Smr\Exceptions\AccountNotFound('Account social login not found.');
 	}
 
 	public static function createAccount(string $login, string $password, string $email, int $timez, int $referral) : SmrAccount {
@@ -672,9 +672,13 @@ abstract class AbstractSmrAccount {
 			throw new Smr\Exceptions\UserError('The email is invalid! It cannot contain any spaces.');
 		}
 
-		$dbResult = $this->db->read('SELECT 1 FROM account WHERE email = ' . $this->db->escapeString($email) . ' and account_id != ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			throw new Smr\Exceptions\UserError('This email address is already registered.');
+		try {
+			$other = self::getAccountByEmail($email);
+			if ($this->getAccountID() != $other->getAccountID()) {
+				throw new Smr\Exceptions\UserError('This email address is already registered.');
+			}
+		} catch (Smr\Exceptions\AccountNotFound) {
+			// Proceed, this email is not yet in use
 		}
 
 		$this->setEmail($email);
