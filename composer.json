@@ -63,7 +63,7 @@
 	},
 	"require-dev": {
 		"overtrue/phplint": "4.1.0",
-		"phpunit/phpunit": "9.5.16",
+		"phpunit/phpunit": "9.5.18",
 		"phpunit/php-code-coverage": "9.2.15",
 		"phpstan/phpstan": "1.4.9"
 	}
