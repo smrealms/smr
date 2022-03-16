@@ -80,4 +80,19 @@ class HandTest extends TestCase {
 		self::assertFalse($hand->hasBlackjack());
 	}
 
+	public function test_hasBusted(): void {
+		// add 3 cards that add to 22 (busted)
+		$hand = new Hand();
+		$hand->addCard(new Card(1)); // 2 of hearts
+		$hand->addCard(new Card(11)); // queen of hearts
+		$hand->addCard(new Card(12)); // king of hearts
+		self::assertTrue($hand->hasBusted());
+
+		// add 2 cards that add to 21 (not busted)
+		$hand = new Hand();
+		$hand->addCard(new Card(0)); // ace of hearts
+		$hand->addCard(new Card(12)); // king of hearts
+		self::assertFalse($hand->hasBusted());
+	}
+
 }
