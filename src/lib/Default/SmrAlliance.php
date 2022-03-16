@@ -339,13 +339,11 @@ class SmrAlliance {
 	}
 
 	public function getRecruitType(): string {
-		if (!$this->isRecruiting()) {
-			return self::RECRUIT_CLOSED;
-		} elseif (empty($this->getPassword())) {
-			return self::RECRUIT_OPEN;
-		} else {
-			return self::RECRUIT_PASSWORD;
-		}
+		return match (true) {
+			!$this->isRecruiting() => self::RECRUIT_CLOSED,
+			empty($this->getPassword()) => self::RECRUIT_OPEN,
+			default => self::RECRUIT_PASSWORD,
+		};
 	}
 
 	/**
@@ -375,9 +373,8 @@ class SmrAlliance {
 	public function getDescription(): string {
 		if (empty($this->description)) {
 			return '';
-		} else {
-			return htmlentities($this->description);
 		}
+		return htmlentities($this->description);
 	}
 
 	public function setAllianceDescription(string $description, AbstractSmrPlayer $player = null): void {

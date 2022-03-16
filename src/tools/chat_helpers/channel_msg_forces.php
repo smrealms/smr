@@ -50,13 +50,12 @@ function shared_channel_msg_forces(SmrPlayer $player, ?string $option): array {
 					ORDER BY expire_time ASC LIMIT 1');
 	}
 
-	if ($dbResult->hasRecord()) {
-		$dbRecord = $dbResult->record();
-		$sectorId = $dbRecord->getInt('sector');
-		$expire = $dbRecord->getInt('expire_time');
-
-		return ['Forces in sector ' . $sectorId . ' will expire in ' . format_time($expire - time())];
-	} else {
+	if (!$dbResult->hasRecord()) {
 		return ['Your alliance does not own any forces in these sectors.'];
 	}
+	$dbRecord = $dbResult->record();
+	$sectorId = $dbRecord->getInt('sector');
+	$expire = $dbRecord->getInt('expire_time');
+
+	return ['Forces in sector ' . $sectorId . ' will expire in ' . format_time($expire - time())];
 }

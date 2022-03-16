@@ -61,11 +61,11 @@ abstract class SmrPlanetType {
 		}
 		if ($structureID === null) {
 			return $this->structures;
-		} elseif (isset($this->structures[$structureID])) {
-			return $this->structures[$structureID];
-		} else {
-			throw new Exception("Structure not supported on this planet type: $structureID");
 		}
+		if (isset($this->structures[$structureID])) {
+			return $this->structures[$structureID];
+		}
+		throw new Exception("Structure not supported on this planet type: $structureID");
 	}
 
 }

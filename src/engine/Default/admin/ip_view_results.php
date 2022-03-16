@@ -21,8 +21,9 @@ if ($type == 'comp_share') {
 	//another script for comp share
 	require('comp_share.php');
 	return;
+}
 
-} elseif ($type == 'list') {
+if ($type == 'list') {
 	//=========================================================
 	// List all IPs
 	//=========================================================

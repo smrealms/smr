@@ -20,11 +20,10 @@ function shared_channel_msg_seedlist(SmrPlayer $player): array {
 
 	if (count($seedlist) == 0) {
 		return ['Your alliance has not set up a seedlist yet.'];
-	} else {
-		$result = ['Your alliance has a ' . count($seedlist) . ' sector seedlist:'];
-		$result[] = implode(' ', $seedlist);
-		return $result;
 	}
+	$result = ['Your alliance has a ' . count($seedlist) . ' sector seedlist:'];
+	$result[] = implode(' ', $seedlist);
+	return $result;
 }
 
 function shared_channel_msg_seedlist_add(SmrPlayer $player, ?array $sectors): array {

@@ -246,9 +246,8 @@ class Globals {
 	public static function getPlotCourseHREF(int $fromSector = null, int $toSector = null): string {
 		if ($fromSector === null && $toSector === null) {
 			return self::$AVAILABLE_LINKS['PlotCourse'] = Page::create('skeleton.php', 'course_plot.php')->href();
-		} else {
-			return Page::create('course_plot_processing.php', '', ['from' => $fromSector, 'to' => $toSector])->href();
 		}
+		return Page::create('course_plot_processing.php', '', ['from' => $fromSector, 'to' => $toSector])->href();
 	}
 
 	public static function getPlanetMainHREF(): string {
@@ -278,9 +277,8 @@ class Globals {
 	public static function getAllianceHREF(int $allianceID = null): string {
 		if ($allianceID > 0) {
 			return self::getAllianceMotdHREF($allianceID);
-		} else {
-			return self::getAllianceListHREF();
 		}
+		return self::getAllianceListHREF();
 	}
 
 	public static function getAllianceBankHREF(int $allianceID = null): string {
@@ -436,11 +434,10 @@ class Globals {
 	 * the `account` table with the linked historical account ID's.
 	 */
 	public static function getHistoryDatabases(): array {
-		if (defined('HISTORY_DATABASES')) {
-			return HISTORY_DATABASES;
-		} else {
+		if (!defined('HISTORY_DATABASES')) {
 			return [];
 		}
+		return HISTORY_DATABASES;
 	}
 
 }

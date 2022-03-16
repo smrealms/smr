@@ -469,9 +469,8 @@ abstract class AbstractSmrPlayer {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return SmrPlanet::getPlanet($this->getGameID(), $dbRecord->getInt('sector_id'), false, $dbRecord);
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public function getSectorPlanet(): SmrPlanet {
@@ -524,12 +523,12 @@ abstract class AbstractSmrPlayer {
 		// get his home sector
 		$hq_id = GOVERNMENT + $this->getRaceID();
 		$raceHqSectors = SmrSector::getLocationSectors($this->getGameID(), $hq_id);
-		if (!empty($raceHqSectors)) {
-			// If race has multiple HQ's for some reason, use the first one
-			return key($raceHqSectors);
-		} else {
+		if (empty($raceHqSectors)) {
+			// No HQ, default to sector 1
 			return 1;
 		}
+		// If race has multiple HQ's for some reason, use the first one
+		return key($raceHqSectors);
 	}
 
 	public function isDead(): bool {
@@ -1309,11 +1308,10 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getAllianceDisplayName(bool $linked = false, bool $includeAllianceID = false): string {
-		if ($this->hasAlliance()) {
-			return $this->getAlliance()->getAllianceDisplayName($linked, $includeAllianceID);
-		} else {
+		if (!$this->hasAlliance()) {
 			return 'No Alliance';
 		}
+		return $this->getAlliance()->getAllianceDisplayName($linked, $includeAllianceID);
 	}
 
 	public function getAllianceRole(int $allianceID = null): int {
@@ -1898,12 +1896,10 @@ abstract class AbstractSmrPlayer {
 	}
 
 	protected function getNextBountyID(): int {
-		$keys = array_keys($this->getBounties());
-		if (count($keys) > 0) {
-			return max($keys) + 1;
-		} else {
+		if (!$this->hasBounties()) {
 			return 0;
 		}
+		return max(array_keys($this->getBounties())) + 1;
 	}
 
 	protected function setBounty(array $bounty): void {

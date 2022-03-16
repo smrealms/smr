@@ -235,12 +235,11 @@ class AbstractSmrPort {
 		$goodIDs = $this->goodIDs[$transaction];
 		if ($player == null) {
 			return $goodIDs;
-		} else {
-			return array_filter($goodIDs, function($goodID) use ($player) {
-				$good = Globals::getGood($goodID);
-				return $player->meetsAlignmentRestriction($good['AlignRestriction']);
-			});
 		}
+		return array_filter($goodIDs, function($goodID) use ($player) {
+			$good = Globals::getGood($goodID);
+			return $player->meetsAlignmentRestriction($good['AlignRestriction']);
+		});
 	}
 
 	/**
@@ -427,13 +426,11 @@ class AbstractSmrPort {
 		if ($level === null) {
 			$level = $this->getLevel();
 		}
-		if ($level <= 2) {
-			return 1;
-		} elseif ($level <= 6) {
-			return 2;
-		} else {
-			return 3;
-		}
+		return match (true) {
+			$level <= 2 => 1,
+			$level <= 6 => 2,
+			$level >= 7 => 3,
+		};
 	}
 
 	protected function selectAndAddGood(int $goodClass): array {

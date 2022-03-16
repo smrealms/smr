@@ -149,23 +149,16 @@ class SmrPlanet {
 
 	public function getInterestRate(): float {
 		$level = $this->getLevel();
-		if ($level < 9) {
-			return .0404;
-		} elseif ($level < 19) {
-			return .0609;
-		} elseif ($level < 29) {
-			return .1236;
-		} elseif ($level < 39) {
-			return .050625;
-		} elseif ($level < 49) {
-			return .0404;
-		} elseif ($level < 59) {
-			return .030225;
-		} elseif ($level < 69) {
-			return .0201;
-		} else {
-			return .018081;
-		}
+		return match (true) {
+			$level < 9 => .0404,
+			$level < 19 => .0609,
+			$level < 29 => .1236,
+			$level < 39 => .050625,
+			$level < 49 => .0404,
+			$level < 59 => .030225,
+			$level < 69 => .0201,
+			default => .018081,
+		};
 	}
 
 	public function checkBondMaturity(bool $partial = false): void {
@@ -578,9 +571,8 @@ class SmrPlanet {
 		if ($goodID === null) {
 			$stockpile = $this->getStockpile();
 			return count($stockpile) > 0 && max($stockpile) > 0;
-		} else {
-			return $this->getStockpile($goodID) > 0;
 		}
+		return $this->getStockpile($goodID) > 0;
 	}
 
 	public function setStockpile(int $goodID, int $amount): void {

@@ -262,25 +262,24 @@ abstract class AbstractSmrAccount {
 	 */
 	public function isDisabled(): array|false {
 		$dbResult = $this->db->read('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE ' . $this->SQL . ' LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			$dbRecord = $dbResult->record();
-			// get the expire time
-			$expireTime = $dbRecord->getInt('expires');
-
-			// are we over this time?
-			if ($expireTime > 0 && $expireTime < Smr\Epoch::time()) {
-				// get rid of the expire entry
-				$this->unbanAccount();
-				return false;
-			}
-			return [
-				'Time' => $expireTime,
-				'Reason' => $dbRecord->getField('reason'),
-				'ReasonID' => $dbRecord->getInt('reason_id'),
-			];
-		} else {
+		if (!$dbResult->hasRecord()) {
 			return false;
 		}
+		$dbRecord = $dbResult->record();
+		// get the expire time
+		$expireTime = $dbRecord->getInt('expires');
+
+		// are we over this time?
+		if ($expireTime > 0 && $expireTime < Smr\Epoch::time()) {
+			// get rid of the expire entry
+			$this->unbanAccount();
+			return false;
+		}
+		return [
+			'Time' => $expireTime,
+			'Reason' => $dbRecord->getField('reason'),
+			'ReasonID' => $dbRecord->getInt('reason_id'),
+		];
 	}
 
 	public function update(): void {
@@ -791,9 +790,8 @@ abstract class AbstractSmrAccount {
 		$hofDisplayName = htmlspecialchars($this->getHofName());
 		if ($linked) {
 			return '<a href="' . $this->getPersonalHofHREF() . '">' . $hofDisplayName . '</a>';
-		} else {
-			return $hofDisplayName;
 		}
+		return $hofDisplayName;
 	}
 
 	public function getHofName(): string {
@@ -1011,11 +1009,7 @@ abstract class AbstractSmrAccount {
 
 	public function getHotkeys(string $hotkeyType = null): array {
 		if ($hotkeyType !== null) {
-			if (isset($this->hotkeys[$hotkeyType])) {
-				return $this->hotkeys[$hotkeyType];
-			} else {
-				return [];
-			}
+			return $this->hotkeys[$hotkeyType] ?? [];
 		}
 		return $this->hotkeys;
 	}

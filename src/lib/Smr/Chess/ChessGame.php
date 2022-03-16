@@ -870,6 +870,7 @@ class ChessGame {
 		if ($this->hasEnded() || !$this->isPlayer($accountID)) {
 			throw new Exception('Invalid resign conditions');
 		}
+
 		// If only 1 person has moved then just end the game.
 		if (count($this->getMoves()) < 2) {
 			$this->endDate = Epoch::time();
@@ -877,15 +878,15 @@ class ChessGame {
 							SET end_time=' . $this->db->escapeNumber(Epoch::time()) . '
 							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 			return 1;
-		} else {
-			$loserColour = $this->getColourForAccountID($accountID);
-			$winnerAccountID = $this->getColourID(self::getOtherColour($loserColour));
-			$results = $this->setWinner($winnerAccountID);
-			$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
-			$results['Loser']->increaseHOF(1, [$chessType, 'Games', 'Resigned'], HOF_PUBLIC);
-			SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getPlayerID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
-			return 0;
 		}
+
+		$loserColour = $this->getColourForAccountID($accountID);
+		$winnerAccountID = $this->getColourID(self::getOtherColour($loserColour));
+		$results = $this->setWinner($winnerAccountID);
+		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
+		$results['Loser']->increaseHOF(1, [$chessType, 'Games', 'Resigned'], HOF_PUBLIC);
+		SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getPlayerID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
+		return 0;
 	}
 
 	public function getPlayGameHREF(): string {

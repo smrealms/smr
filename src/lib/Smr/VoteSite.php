@@ -165,11 +165,10 @@ class VoteSite {
 	 * Returns the image to display for this voting site.
 	 */
 	public function getLinkImg(int $gameID): string {
-		if ($this->freeTurnsReady($gameID)) {
-			return $this->data['img_star'];
-		} else {
+		if (!$this->freeTurnsReady($gameID)) {
 			return $this->data['img_default'];
 		}
+		return $this->data['img_star'];
 	}
 
 	/**
@@ -177,11 +176,10 @@ class VoteSite {
 	 */
 	public function getLinkUrl(int $gameID): string {
 		$baseUrl = $this->data['url_base'];
-		if ($this->freeTurnsReady($gameID)) {
-			return $this->data['url_func']($baseUrl, $this->accountID, $gameID, $this->linkID);
-		} else {
+		if (!$this->freeTurnsReady($gameID)) {
 			return $baseUrl;
 		}
+		return $this->data['url_func']($baseUrl, $this->accountID, $gameID, $this->linkID);
 	}
 
 	/**

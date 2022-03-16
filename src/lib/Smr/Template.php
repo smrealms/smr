@@ -156,11 +156,7 @@ class Template {
 
 	protected function doAn(string $wordAfter): string {
 		$char = strtoupper($wordAfter[0]);
-		if (str_contains('AEIOU', $char)) {
-			return 'an';
-		} else {
-			return 'a';
-		}
+		return str_contains('AEIOU', $char) ? 'an' : 'a';
 	}
 
 	/**

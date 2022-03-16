@@ -123,25 +123,22 @@ class AbstractSmrShip {
 	public function getDisplayAttackRating(): int {
 		if ($this->hasActiveIllusion()) {
 			return $this->getIllusionAttack();
-		} else {
-			return $this->getAttackRating();
 		}
+		return $this->getAttackRating();
 	}
 
 	public function getDisplayDefenseRating(): int {
 		if ($this->hasActiveIllusion()) {
 			return $this->getIllusionDefense();
-		} else {
-			return $this->getDefenseRating();
 		}
+		return $this->getDefenseRating();
 	}
 
 	public function getDisplayName(): string {
 		if ($this->hasActiveIllusion()) {
 			return $this->getIllusionShipName();
-		} else {
-			return $this->getName();
 		}
+		return $this->getName();
 	}
 
 	public function getAttackRating(): int {
