@@ -37,8 +37,7 @@ if ($var['maxValue'] > 0) {
 } else {
 	$dbResult = $db->read('SELECT MAX(transaction_id) FROM anon_bank_transactions
 				WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
-				AND anon_id=' . $db->escapeNumber($account_num)
-				);
+				AND anon_id=' . $db->escapeNumber($account_num));
 	if ($dbResult->hasRecord()) {
 		$maxValue = $dbResult->record()->getInt('MAX(transaction_id)');
 	} else {

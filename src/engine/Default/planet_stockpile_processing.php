@@ -17,8 +17,8 @@ if ($amount <= 0) {
 // get a planet from the sector where the player is in
 $planet = $player->getSectorPlanet();
 $action = Smr\Request::get('action');
-// transfer to ship
 if ($action == 'Ship') {
+	// transfer to ship
 
 	// do we want transfer more than we have?
 	if ($amount > $planet->getStockpile($var['good_id'])) {
@@ -35,8 +35,9 @@ if ($action == 'Ship') {
 	$ship->increaseCargo($var['good_id'], $amount);
 	$player->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' ' . Globals::getGoodName($var['good_id']) . ' from planet.');
 
-// transfer to planet
 } elseif ($action == 'Planet') {
+	// transfer to planet
+
 	// do we want transfer more than we have?
 	if ($amount > $ship->getCargo($var['good_id'])) {
 		create_error('You can\'t store more than you carry!');

@@ -2,7 +2,7 @@
 
 // Closes the mysql connection after a command has executed.
 // This is necessary to prevent a blocking mysql timeout error.
-function mysql_cleanup(callable $func) : callable {
+function mysql_cleanup(callable $func): callable {
 
 	// Create a new closure that wraps the original closure
 	$func_wrapper = function($message, $params) use ($func) {

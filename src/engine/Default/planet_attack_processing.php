@@ -48,9 +48,9 @@ $player->takeTurns(TURNS_TO_SHOOT_PLANET);
 // *
 // ********************************
 
-$results = array('Attackers' => array('TotalDamage' => 0),
-				'Forces' => array(),
-				'Forced' => false);
+$results = ['Attackers' => ['TotalDamage' => 0],
+				'Forces' => [],
+				'Forced' => false];
 
 $attackers = $player->getSector()->getFightingTradersAgainstPlanet($player, $planet);
 
@@ -127,7 +127,7 @@ $container['sector_id'] = $planet->getSectorID();
 
 // If they died on the shot they get to see the results
 if ($player->isDead()) {
-	$container['override_death'] = TRUE;
+	$container['override_death'] = true;
 }
 
 $container['results'] = $results;

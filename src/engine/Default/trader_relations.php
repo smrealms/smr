@@ -8,8 +8,8 @@ $template->assign('PageTopic', 'Trader Relations');
 
 Menu::trader();
 
-$politicalRelations = array();
-$personalRelations = array();
+$politicalRelations = [];
+$personalRelations = [];
 
 $raceRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
 foreach (Smr\Race::getAllNames() as $raceID => $raceName) {

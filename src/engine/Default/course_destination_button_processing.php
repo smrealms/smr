@@ -10,7 +10,7 @@ switch ($type) {
 	case 'add':
 		$label = trim(Smr\Request::get('label'));
 		$player->addDestinationButton($sectorId, $label);
-	break;
+		break;
 
 	case 'move':
 		// These are submitted as floats by ui.draggable.position JS, but
@@ -18,15 +18,14 @@ switch ($type) {
 		$offsetTop = Smr\Request::getInt('offsetTop');
 		$offsetLeft = Smr\Request::getInt('offsetLeft');
 		$player->moveDestinationButton($sectorId, $offsetTop, $offsetLeft);
-	break;
+		break;
 
 	case 'delete':
 		$player->deleteDestinationButton($sectorId);
-	break;
+		break;
 
 	default:
-		create_error("42 would be the right answer !!!");
-	break;
+		create_error('42 would be the right answer !!!');
 }
 
 $container = Page::create('skeleton.php', 'course_plot.php');

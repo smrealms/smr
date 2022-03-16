@@ -7,13 +7,13 @@
 		<tr>
 			<td class="top">
 				Attackers<br />
-				<?php $this->includeTemplate('admin/includes/CombatSimTeamDetails.inc.php', array('Team'=>$Attackers, 'MemberDescription'=>'Attacker', 'MemberInputName'=>'attackers')); ?>
+				<?php $this->includeTemplate('admin/includes/CombatSimTeamDetails.inc.php', ['Team' => $Attackers, 'MemberDescription' => 'Attacker', 'MemberInputName' => 'attackers']); ?>
 			</td>
 		</tr>
 		<tr>
 			<td class="top">
 				Defenders<br />
-				<?php $this->includeTemplate('admin/includes/CombatSimTeamDetails.inc.php', array('Team'=>$Defenders, 'MemberDescription'=>'Defender', 'MemberInputName'=>'defenders')); ?>
+				<?php $this->includeTemplate('admin/includes/CombatSimTeamDetails.inc.php', ['Team' => $Defenders, 'MemberDescription' => 'Defender', 'MemberInputName' => 'defenders']); ?>
 			</td>
 		</tr>
 		<tr>

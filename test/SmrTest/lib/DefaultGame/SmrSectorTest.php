@@ -2,18 +2,20 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use SmrSector;
 
 /**
  * @covers SmrSector
  */
-class SmrSectorTest extends \PHPUnit\Framework\TestCase {
+class SmrSectorTest extends TestCase {
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		SmrSector::clearCache();
 	}
 
-	public function test_setLink() : void {
+	public function test_setLink(): void {
 		// Construct a new sector
 		$sector = SmrSector::createSector(1, 1);
 
@@ -43,7 +45,7 @@ class SmrSectorTest extends \PHPUnit\Framework\TestCase {
 		self::assertFalse($sector->hasLink($dir));
 	}
 
-	public function test_setLinkSector() : void {
+	public function test_setLinkSector(): void {
 		// Construct two new sectors
 		$sector1 = SmrSector::createSector(1, 1);
 		$sector2 = SmrSector::createSector(1, 2);
@@ -64,14 +66,14 @@ class SmrSectorTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame($sector1->getSectorID(), $sector2->getLink($oppositeDir));
 	}
 
-	public function test_cannot_link_to_self() : void {
+	public function test_cannot_link_to_self(): void {
 		$sector = SmrSector::createSector(1, 1);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Sector must not link to itself!');
 		$sector->setLink('Up', $sector->getSectorID());
 	}
 
-	public function test_setWarp() : void {
+	public function test_setWarp(): void {
 		// Construct two new sectors
 		$sector1 = SmrSector::createSector(1, 1);
 		$sector2 = SmrSector::createSector(1, 2);
@@ -87,7 +89,7 @@ class SmrSectorTest extends \PHPUnit\Framework\TestCase {
 		$sector1->setWarp($sector2);
 
 		// Then we should have updated warps
-		foreach ([[$sector1, $sector2], [$sector2, $sector1]] as list($sectorA, $sectorB)) {
+		foreach ([[$sector1, $sector2], [$sector2, $sector1]] as [$sectorA, $sectorB]) {
 			self::assertTrue($sectorA->hasWarp());
 			self::assertSame($sectorB->getSectorID(), $sectorA->getWarp());
 			self::assertSame(1, $sectorA->getNumberOfConnections());
@@ -105,14 +107,14 @@ class SmrSectorTest extends \PHPUnit\Framework\TestCase {
 		}
 	}
 
-	public function test_cannot_warp_to_self() : void {
+	public function test_cannot_warp_to_self(): void {
 		$sector = SmrSector::createSector(1, 1);
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Sector must not warp to itself!');
 		$sector->setWarp($sector);
 	}
 
-	public function test_cannot_have_multiple_warps() : void {
+	public function test_cannot_have_multiple_warps(): void {
 		$sector1 = SmrSector::createSector(1, 1);
 		$sector2 = SmrSector::createSector(1, 2);
 		$sector3 = SmrSector::createSector(1, 3);
@@ -121,12 +123,12 @@ class SmrSectorTest extends \PHPUnit\Framework\TestCase {
 		$sector1->setWarp($sector2);
 
 		// Then we cannot set a 2nd warp
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Sector 1 already has a warp (to 2)');
 		$sector1->setWarp($sector3);
 	}
 
-	public function test_getSectorDirection() : void {
+	public function test_getSectorDirection(): void {
 		$sector1 = SmrSector::createSector(1, 1);
 		$sector2 = SmrSector::createSector(1, 2);
 

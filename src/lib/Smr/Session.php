@@ -6,17 +6,14 @@ use AbstractSmrAccount;
 use AbstractSmrPlayer;
 use Page;
 use Smr\Container\DiContainer;
-use Smr\Database;
-use Smr\Epoch;
-use Smr\Request;
 use SmrAccount;
 use SmrPlayer;
 
 class Session {
 
-	const TIME_BEFORE_EXPIRY = 3600;
+	public const TIME_BEFORE_EXPIRY = 3600;
 
-	private const URL_LOAD_DELAY = array(
+	private const URL_LOAD_DELAY = [
 		'configure_hardware.php' => .4,
 		'forces_drop.php' => .4,
 		'forces_drop_processing.php' => .5,
@@ -26,8 +23,8 @@ class Session {
 		'sector_scan.php' => .4,
 		'shop_goods_processing.php' => .4,
 		'trader_attack_processing.php' => .75,
-		'trader_examine.php' => .75
-	);
+		'trader_examine.php' => .75,
+	];
 
 	protected Database $db;
 
@@ -42,14 +39,14 @@ class Session {
 	private int $lastAccessed;
 
 	protected ?array $previousAjaxReturns;
-	protected array $ajaxReturns = array();
+	protected array $ajaxReturns = [];
 
 	/**
 	 * Return the Smr\Session in the DI container.
 	 * If one does not exist yet, it will be created.
 	 * This is the intended way to construct this class.
 	 */
-	public static function getInstance() : self {
+	public static function getInstance(): self {
 		return DiContainer::get(self::class);
 	}
 
@@ -58,7 +55,6 @@ class Session {
 	 * Not intended to be constructed by hand. Use Smr\Session::getInstance().
 	 */
 	public function __construct() {
-
 		// Initialize the db connector here
 		$this->db = Database::getInstance();
 
@@ -94,7 +90,7 @@ class Session {
 			$initialTimeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
 			while (($timeBetweenLoads = microtime(true) - $var['PreviousRequestTime']) < $loadDelay) {
 				$sleepTime = IRound(($loadDelay - $timeBetweenLoads) * 1000000);
-			//	echo 'Sleeping for: ' . $sleepTime . 'us';
+				//echo 'Sleeping for: ' . $sleepTime . 'us';
 				usleep($sleepTime);
 			}
 			if (ENABLE_DEBUG) {
@@ -108,7 +104,7 @@ class Session {
 		}
 	}
 
-	public function fetchVarInfo() : void {
+	public function fetchVarInfo(): void {
 		$dbResult = $this->db->read('SELECT * FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -148,11 +144,11 @@ class Session {
 			$this->generate = true;
 			$this->accountID = 0;
 			$this->gameID = 0;
-			$this->var = array();
+			$this->var = [];
 		}
 	}
 
-	public function update() : void {
+	public function update(): void {
 		foreach ($this->var as $key => $value) {
 			if ($value['RemainingPageLoads'] <= 0) {
 				//This link was valid this load but will not be in the future, removing it now saves database space and data transfer.
@@ -179,44 +175,44 @@ class Session {
 	/**
 	 * Uniquely identifies the session in the database.
 	 */
-	public function getSessionID() : string {
+	public function getSessionID(): string {
 		return $this->sessionID;
 	}
 
 	/**
 	 * Returns the Game ID associated with the session.
 	 */
-	public function getGameID() : int {
+	public function getGameID(): int {
 		return $this->gameID;
 	}
 
 	/**
 	 * Returns true if the session is inside a game, false otherwise.
 	 */
-	public function hasGame() : bool {
+	public function hasGame(): bool {
 		return $this->gameID != 0;
 	}
 
-	public function hasAccount() : bool {
+	public function hasAccount(): bool {
 		return $this->accountID > 0;
 	}
 
-	public function getAccountID() : int {
+	public function getAccountID(): int {
 		return $this->accountID;
 	}
 
-	public function getAccount() : AbstractSmrAccount {
+	public function getAccount(): AbstractSmrAccount {
 		return SmrAccount::getAccount($this->accountID);
 	}
 
-	public function getPlayer(bool $forceUpdate = false) : AbstractSmrPlayer {
+	public function getPlayer(bool $forceUpdate = false): AbstractSmrPlayer {
 		return SmrPlayer::getPlayer($this->accountID, $this->gameID, $forceUpdate);
 	}
 
 	/**
 	 * Sets the `accountID` attribute of this session.
 	 */
-	public function setAccount(AbstractSmrAccount $account) : void {
+	public function setAccount(AbstractSmrAccount $account): void {
 		$this->accountID = $account->getAccountID();
 	}
 
@@ -224,7 +220,7 @@ class Session {
 	 * Updates the `gameID` attribute of the session and deletes any other
 	 * active sessions in this game for this account.
 	 */
-	public function updateGame(int $gameID) : void {
+	public function updateGame(int $gameID): void {
 		if ($this->gameID == $gameID) {
 			return;
 		}
@@ -236,39 +232,39 @@ class Session {
 	/**
 	 * The SN is the URL parameter that defines the page being requested.
 	 */
-	public function getSN() : string {
+	public function getSN(): string {
 		return $this->SN;
 	}
 
 	/**
 	 * Returns true if the current SN is different than the previous SN.
 	 */
-	public function hasChangedSN() : bool {
+	public function hasChangedSN(): bool {
 		return $this->SN != $this->lastSN;
 	}
 
-	public function destroy() : void {
+	public function destroy(): void {
 		$this->db->write('DELETE FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID));
 		unset($this->sessionID);
 		unset($this->accountID);
 		unset($this->gameID);
 	}
 
-	public function getLastAccessed() : int {
+	public function getLastAccessed(): int {
 		return $this->lastAccessed;
 	}
 
 	/**
 	 * Check if the session has a var associated with the current SN.
 	 */
-	public function hasCurrentVar() : bool {
+	public function hasCurrentVar(): bool {
 		return isset($this->var[$this->SN]);
 	}
 
 	/**
 	 * Returns the session var associated with the current SN.
 	 */
-	public function getCurrentVar() : Page {
+	public function getCurrentVar(): Page {
 		return $this->var[$this->SN];
 	}
 
@@ -278,21 +274,21 @@ class Session {
 	 * This is the recommended way to get $_REQUEST data for display pages.
 	 * For processing pages, see the Request class.
 	 */
-	public function getRequestVar(string $varName, string $default = null) : string {
+	public function getRequestVar(string $varName, string $default = null): string {
 		$result = Request::getVar($varName, $default);
 		$var = $this->getCurrentVar();
 		$var[$varName] = $result;
 		return $result;
 	}
 
-	public function getRequestVarInt(string $varName, int $default = null) : int {
+	public function getRequestVarInt(string $varName, int $default = null): int {
 		$result = Request::getVarInt($varName, $default);
 		$var = $this->getCurrentVar();
 		$var[$varName] = $result;
 		return $result;
 	}
 
-	public function getRequestVarIntArray(string $varName, array $default = null) : array {
+	public function getRequestVarIntArray(string $varName, array $default = null): array {
 		$result = Request::getVarIntArray($varName, $default);
 		$var = $this->getCurrentVar();
 		$var[$varName] = $result;
@@ -302,7 +298,7 @@ class Session {
 	/**
 	 * Replace the global $var with the given $container.
 	 */
-	public function setCurrentVar(Page $container) : void {
+	public function setCurrentVar(Page $container): void {
 		$var = $this->hasCurrentVar() ? $this->getCurrentVar() : null;
 
 		//Do not allow sharing SN, useful for forwarding.
@@ -321,18 +317,18 @@ class Session {
 		$this->var[$this->SN] = $container;
 	}
 
-	public function clearLinks() : void {
-		$this->var = array($this->SN => $this->var[$this->SN]);
-		$this->commonIDs = array();
+	public function clearLinks(): void {
+		$this->var = [$this->SN => $this->var[$this->SN]];
+		$this->commonIDs = [];
 	}
 
-	public function addLink(Page $container) : string {
+	public function addLink(Page $container): string {
 		$sn = $this->generateSN($container);
 		$this->var[$sn] = $container;
 		return $sn;
 	}
 
-	protected function generateSN(Page $container) : string {
+	protected function generateSN(Page $container): string {
 		if (isset($this->commonIDs[$container['CommonID']])) {
 			$sn = $this->commonIDs[$container['CommonID']];
 			$container['PreviousRequestTime'] = isset($this->var[$sn]) ? $this->var[$sn]['PreviousRequestTime'] : Epoch::microtime();
@@ -346,16 +342,17 @@ class Session {
 		return $sn;
 	}
 
-	public function addAjaxReturns(string $element, string $contents) : bool {
+	public function addAjaxReturns(string $element, string $contents): bool {
 		$this->ajaxReturns[$element] = $contents;
 		return isset($this->previousAjaxReturns[$element]) && $this->previousAjaxReturns[$element] == $contents;
 	}
 
-	public function saveAjaxReturns() : void {
+	public function saveAjaxReturns(): void {
 		if (empty($this->ajaxReturns)) {
 			return;
 		}
 		$this->db->write('UPDATE active_session SET ajax_returns=' . $this->db->escapeObject($this->ajaxReturns, true) .
 				' WHERE session_id=' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
 	}
+
 }

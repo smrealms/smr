@@ -77,8 +77,8 @@ $template->assign('DisableEmail', $default_email);
 
 $dbResult = $db->read('SELECT *
 			FROM album_has_comments
-			WHERE album_id = '.$db->escapeNumber($account_id));
-$comments = array();
+			WHERE album_id = ' . $db->escapeNumber($account_id));
+$comments = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$comments[] = [
 		'id' => $dbRecord->getInt('comment_id'),

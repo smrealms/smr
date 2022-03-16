@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function parseBoolean(mixed $check) : bool {
+function parseBoolean(mixed $check): bool {
 	// Only negative strings are not implicitly converted to the correct bool
 	if (is_string($check) && (strcasecmp($check, 'NO') == 0 || strcasecmp($check, 'FALSE') == 0)) {
 		return false;
@@ -8,7 +8,7 @@ function parseBoolean(mixed $check) : bool {
 	return (bool)$check;
 }
 
-function linkCombatLog(int $logID) : string {
+function linkCombatLog(int $logID): string {
 	$container = Page::create('combat_log_viewer_verify.php');
 	$container['log_id'] = $logID;
 	return '<a href="' . $container->href() . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
@@ -31,7 +31,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				$logID = (int)$default;
 				return linkCombatLog($logID);
-			break;
+
 			case 'player':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
@@ -43,7 +43,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
 				}
 				return $bbPlayer->getDisplayName($showAlliance);
-			break;
+
 			case 'alliance':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
@@ -61,7 +61,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return create_link($container, $alliance->getAllianceDisplayName());
 				}
 				return $alliance->getAllianceDisplayName();
-			break;
+
 			case 'race':
 				$raceNameID = $default;
 				foreach (Smr\Race::getAllNames() as $raceID => $raceName) {
@@ -75,7 +75,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 						return AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID, $player, $linked);
 					}
 				}
-			break;
+				break;
+
 			case 'servertimetouser':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
@@ -85,7 +86,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					$time += $session->getAccount()->getOffset() * 3600;
 					return date($session->getAccount()->getDateTimeFormat(), $time);
 				}
-			break;
+				break;
+
 			case 'chess':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
@@ -93,7 +95,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$chessGameID = (int)$default;
 				$chessGame = Smr\Chess\ChessGame::getChessGame($chessGameID);
 				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
-			break;
 
 			case 'sector':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
@@ -109,9 +110,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					&& SmrSector::sectorExists($overrideGameID, $sectorID)) {
 					return '<a href="' . Globals::getPlotCourseHREF($session->getPlayer()->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
 				}
-
 				return $sectorTag;
-			break;
+
 			case 'join_alliance':
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
@@ -121,7 +121,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$container = Page::create('alliance_invite_accept_processing.php');
 				$container['alliance_id'] = $alliance->getAllianceID();
 				return '<div class="buttonA"><a class="buttonA" href="' . $container->href() . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
-			break;
 		}
 	} catch (Throwable) {
 		// If there's an error, we will silently display the original text
@@ -132,11 +131,11 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 	return htmlspecialchars($tagParams['_tag']) . $tagContent . htmlspecialchars($tagParams['_endtag']);
 }
 
-function inify(string $text) : string {
+function inify(string $text): string {
 	return str_replace(',', '', html_entity_decode($text));
 }
 
-function bbifyMessage(string $message, bool $noLinks = false) : string {
+function bbifyMessage(string $message, bool $noLinks = false): string {
 	static $bbParser;
 	if (!isset($bbParser)) {
 		$bbParser = new \Nbbc\BBCode();
@@ -146,14 +145,14 @@ function bbifyMessage(string $message, bool $noLinks = false) : string {
 		$bbParser->setURLTarget('_blank');
 		$bbParser->setURLTargetable('override');
 		$bbParser->setEscapeContent(false); // don't escape HTML, needed for News etc.
-		$smrRule = array(
+		$smrRule = [
 				'mode' => \Nbbc\BBCode::BBCODE_MODE_CALLBACK,
 				'method' => 'smrBBCode',
 				'class' => 'link',
-				'allow_in' => Array('listitem', 'block', 'columns', 'inline'),
+				'allow_in' => ['listitem', 'block', 'columns', 'inline'],
 				'end_tag' => \Nbbc\BBCode::BBCODE_PROHIBIT,
 				'content' => \Nbbc\BBCode::BBCODE_PROHIBIT,
-			);
+			];
 		$bbParser->addRule('combatlog', $smrRule);
 		$bbParser->addRule('player', $smrRule);
 		$bbParser->addRule('alliance', $smrRule);
@@ -175,7 +174,7 @@ function bbifyMessage(string $message, bool $noLinks = false) : string {
 	return $message;
 }
 
-function create_error(string $message) : never {
+function create_error(string $message): never {
 	$container = Page::create('skeleton.php', 'error.php');
 	$container['message'] = $message;
 	if (USING_AJAX) {
@@ -190,15 +189,15 @@ function create_error(string $message) : never {
 	$container->go();
 }
 
-function create_link(Page|string $container, string $text, string $class = null) : string {
+function create_link(Page|string $container, string $text, string $class = null): string {
 	return '<a' . ($class === null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($container) ? $container : $container->href()) . '">' . $text . '</a>';
 }
 
-function create_submit_link(Page $container, string $text) : string {
+function create_submit_link(Page $container, string $text): string {
 	return '<a href="' . $container->href() . '" class="submitStyle">' . $text . '</a>';
 }
 
-function get_colored_text_range(float $value, float $maxValue, string $text = null, float $minValue = 0, string $type = 'Game', string $return_type = 'Normal') : string {
+function get_colored_text_range(float $value, float $maxValue, string $text = null, float $minValue = 0, string $type = 'Game', string $return_type = 'Normal'): string {
 	if ($text === null) {
 		$text = number_format($value);
 	}
@@ -214,7 +213,7 @@ function get_colored_text_range(float $value, float $maxValue, string $text = nu
 			if (strlen($g_component) == 1) {
 				$g_component = '0' . $g_component;
 			}
-		} else if ($normalisedValue > 0) {
+		} elseif ($normalisedValue > 0) {
 			$g_component = 'ff';
 			$r_component = dechex(255 - $normalisedValue);
 			if (strlen($r_component) == 1) {
@@ -246,20 +245,20 @@ function get_colored_text_range(float $value, float $maxValue, string $text = nu
 	throw new Exception('Unknown type: ' . $type);
 }
 
-function get_colored_text(float $value, string $text = null, string $type = 'Game', string $return_type = 'Normal') : string {
+function get_colored_text(float $value, string $text = null, string $type = 'Game', string $return_type = 'Normal'): string {
 	return get_colored_text_range($value, 300, $text, -300, $type, $return_type);
 }
 
-function word_filter(string $string) : string {
+function word_filter(string $string): string {
 	static $words;
 
 	if (!is_array($words)) {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT word_value, word_replacement FROM word_filter');
-		$words = array();
+		$words = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$row = $dbRecord->getRow();
-			$words[] = array('word_value' => '/' . str_replace('/', '\/', $row['word_value']) . '/i', 'word_replacement'=> $row['word_replacement']);
+			$words[] = ['word_value' => '/' . str_replace('/', '\/', $row['word_value']) . '/i', 'word_replacement' => $row['word_replacement']];
 		}
 	}
 
@@ -271,7 +270,7 @@ function word_filter(string $string) : string {
 }
 
 // choose correct pluralization based on amount
-function pluralise(string $word, float $count = 0) : string {
+function pluralise(string $word, float $count = 0): string {
 	if ($count == 1) {
 		return $word;
 	}
@@ -286,7 +285,7 @@ function pluralise(string $word, float $count = 0) : string {
  * It is also responsible for setting most of the global variables
  * (see loader.php for the initialization of the globals).
  */
-function do_voodoo() : never {
+function do_voodoo(): never {
 	global $lock;
 
 	$session = Smr\Session::getInstance();
@@ -299,7 +298,7 @@ function do_voodoo() : never {
 	if (!AJAX_CONTAINER && USING_AJAX && $session->hasChangedSN()) {
 		exit;
 	}
-//	ob_clean();
+	//ob_clean();
 
 	// create account object
 	$account = $session->getAccount();
@@ -308,7 +307,7 @@ function do_voodoo() : never {
 
 	if ($session->hasGame()) {
 		if (SmrGame::getGame($session->getGameID())->hasEnded()) {
-			Page::create('game_leave_processing.php', 'game_play.php', array('errorMsg' => 'The game has ended.'))->go();
+			Page::create('game_leave_processing.php', 'game_play.php', ['errorMsg' => 'The game has ended.'])->go();
 		}
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
@@ -317,8 +316,8 @@ function do_voodoo() : never {
 
 		global $locksFailed;
 		if (!USING_AJAX //AJAX should never do anything that requires a lock.
-//			&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
-			) {
+			//&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
+		) {
 			if (!$lock && !isset($locksFailed[$sector_id])) {
 				if (!acquire_lock($sector_id)) {
 					throw new Smr\Exceptions\UserError('Failed to acquire sector lock');
@@ -421,7 +420,7 @@ function do_voodoo() : never {
 //xdebug_dump_function_profile(2);
 
 // This is hackish, but without row level locking it's the best we can do
-function acquire_lock(int $sector) : bool {
+function acquire_lock(int $sector): bool {
 	global $lock, $locksFailed;
 
 	if ($lock) {
@@ -444,8 +443,8 @@ function acquire_lock(int $sector) : bool {
 		}
 		// If there is someone else before us in the queue we sleep for a while
 		$dbResult = $db->read('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
-		$locksInQueue = -1;
-		if (($locksInQueue = $dbResult->record()->getInt('COUNT(*)')) > 0) {
+		$locksInQueue = $dbResult->record()->getInt('COUNT(*)');
+		if ($locksInQueue > 0) {
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
@@ -468,7 +467,7 @@ function acquire_lock(int $sector) : bool {
 	return false;
 }
 
-function release_lock() : void {
+function release_lock(): void {
 	global $lock;
 
 	if ($lock) {
@@ -479,10 +478,10 @@ function release_lock() : void {
 	$lock = false;
 }
 
-function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database $db) : void {
+function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database $db): void {
 	//any ticker news?
 	if ($player->hasTickers()) {
-		$ticker = array();
+		$ticker = [];
 		$max = Smr\Epoch::time() - 60;
 		$dateFormat = $player->getAccount()->getDateTimeFormat();
 		if ($player->hasTicker('NEWS')) {
@@ -501,7 +500,7 @@ function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database
 						AND game_id=' . $db->escapeNumber($player->getGameID()) . '
 						AND message_type_id=' . $db->escapeNumber(MSG_SCOUT) . '
 						AND send_time>=' . $db->escapeNumber($max) . '
-						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK') . ' AND expires > ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND receiver_delete = \'FALSE\'
+						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type=' . $db->escapeString('BLOCK') . ' AND expires > ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND receiver_delete = \'FALSE\'
 						ORDER BY send_time DESC
 						LIMIT 4');
 			foreach ($dbResult->records() as $dbRecord) {
@@ -515,7 +514,7 @@ function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database
 	}
 }
 
-function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
+function doSkeletonAssigns(Smr\Template $template, Smr\Database $db): void {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
 
@@ -526,7 +525,6 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 	$template->assign('timeDisplay', date($account->getDateTimeFormatSplit(), Smr\Epoch::time()));
 
 	$container = Page::create('skeleton.php');
-
 
 	if ($session->hasGame()) {
 		$player = $session->getPlayer();
@@ -595,13 +593,11 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 	$container['body'] = 'donation.php';
 	$template->assign('DonateLink', $container->href());
 
-
-
 	if ($session->hasGame()) {
 		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
 
 		if ($dbResult->hasRecord()) {
-			$messages = array();
+			$messages = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$messages[$dbRecord->getInt('message_type_id')] = $dbRecord->getInt('COUNT(*)');
 			}
@@ -704,13 +700,13 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
 	}
 
 	// ------- VOTING --------
-	$voteSites = array();
+	$voteSites = [];
 	foreach (Smr\VoteSite::getAllSites($account->getAccountID()) as $site) {
-		$voteSites[] = array(
+		$voteSites[] = [
 			'img' => $site->getLinkImg($session->getGameID()),
 			'url' => $site->getLinkUrl($session->getGameID()),
 			'sn' => $site->getSN($session->getGameID()),
-		);
+		];
 	}
 	$template->assign('VoteSites', $voteSites);
 
@@ -743,9 +739,9 @@ function doSkeletonAssigns(Smr\Template $template, Smr\Database $db) : void {
  * If seconds is zero, will return only "now".
  * If seconds is <60, will prefix "less than" or "<" (HTML-safe).
  */
-function format_time(int $seconds, bool $short = false) : string {
+function format_time(int $seconds, bool $short = false): string {
 	if ($seconds == 0) {
-		return "now";
+		return 'now';
 	}
 
 	if ($seconds < 0) {
@@ -792,7 +788,7 @@ function format_time(int $seconds, bool $short = false) : string {
 		$result = $parts[0];
 	} else {
 		// e.g. 5h, 10m and 30s
-		$result = join(', ', array_slice($parts, 0, -1)) . ' and ' . end($parts);
+		$result = implode(', ', array_slice($parts, 0, -1)) . ' and ' . end($parts);
 	}
 
 	if ($seconds < 60) {
@@ -805,18 +801,19 @@ function format_time(int $seconds, bool $short = false) : string {
 	return $result;
 }
 
-function number_colour_format(float $number, bool $justSign = false) : string {
+function number_colour_format(float $number, bool $justSign = false): string {
 	$formatted = '<span';
 	if ($number > 0) {
 		$formatted .= ' class="green">+';
-	} else if ($number < 0) {
+	} elseif ($number < 0) {
 		$formatted .= ' class="red">-';
 	} else {
 		$formatted .= '>';
 	}
 	if ($justSign === false) {
 		$decimalPlaces = 0;
-		if (($pos = strpos((string)$number, '.')) !== false) {
+		$pos = strpos((string)$number, '.');
+		if ($pos !== false) {
 			$decimalPlaces = strlen(substr((string)$number, $pos + 1));
 		}
 		$formatted .= number_format(abs($number), $decimalPlaces);
@@ -836,7 +833,7 @@ function number_colour_format(float $number, bool $justSign = false) : string {
  *    'C' => 6, // 60% chance
  * );
  */
-function getWeightedRandom(array $choices) : string|int {
+function getWeightedRandom(array $choices): string|int {
 	// Normalize the weights so that their sum is much larger than 1.
 	$maxWeight = max($choices);
 	foreach ($choices as $key => $weight) {

@@ -5,4 +5,5 @@ namespace Smr\Exceptions;
 /**
  * Exception thrown when a game cannot be found in the database
  */
-class GameNotFound extends \Exception {}
+class GameNotFound extends \Exception {
+}

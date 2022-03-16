@@ -46,12 +46,12 @@
 </table>
 
 <script><?php
-	$AvailableMoves = array_pad(array(), count($Board), array());
+	$AvailableMoves = array_pad([], count($Board), []);
 	if ($ChessGame->isCurrentTurn($ThisAccount->getAccountID())) {
 		$Colour = $ChessGame->getColourForAccountID($ThisAccount->getAccountID());
 		foreach ($Board as $Y => $Row) {
 			foreach ($Row as $X => $Cell) {
-				$AvailableMoves[$Y][$X] = array();
+				$AvailableMoves[$Y][$X] = [];
 				if ($Cell != null) {
 					$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $Colour);
 					foreach ($Moves as $Move) {

@@ -5,7 +5,7 @@ $var = Smr\Session::getInstance()->getCurrentVar();
 // Get the dates ("|" sets hr/min/sec to 0)
 $join = DateTime::createFromFormat('d/m/Y|', Smr\Request::get('game_join'));
 $start = empty(Smr\Request::get('game_start')) ? $join :
-         DateTime::createFromFormat('d/m/Y|', Smr\Request::get('game_start'));
+	DateTime::createFromFormat('d/m/Y|', Smr\Request::get('game_start'));
 $end = DateTime::createFromFormat('d/m/Y|', Smr\Request::get('game_end'));
 
 $game = SmrGame::getGame($var['game_id']);

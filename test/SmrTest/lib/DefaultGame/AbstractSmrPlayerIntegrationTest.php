@@ -3,6 +3,7 @@
 namespace SmrTest\lib\DefaultGame;
 
 use AbstractSmrPlayer;
+use Smr\Exceptions\UserError;
 use SmrTest\BaseIntegrationSpec;
 
 /**
@@ -10,7 +11,7 @@ use SmrTest\BaseIntegrationSpec;
  */
 class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 
-	public function test_createPlayer() : void {
+	public function test_createPlayer(): void {
 		// Test arbitrary input
 		$accountID = 2;
 		$gameID = 42;
@@ -31,15 +32,15 @@ class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame(1, $player->getPlayerID());
 	}
 
-	public function test_createPlayer_duplicate_name() : void {
+	public function test_createPlayer_duplicate_name(): void {
 		$name = 'test';
 		AbstractSmrPlayer::createPlayer(1, 1, $name, RACE_HUMAN, false);
-		$this->expectException(\Smr\Exceptions\UserError::class);
+		$this->expectException(UserError::class);
 		$this->expectExceptionMessage('That player name already exists.');
 		AbstractSmrPlayer::createPlayer(2, 1, $name, RACE_HUMAN, false);
 	}
 
-	public function test_createPlayer_increment_playerid() : void {
+	public function test_createPlayer_increment_playerid(): void {
 		AbstractSmrPlayer::createPlayer(1, 1, 'test1', RACE_HUMAN, false);
 		$player = AbstractSmrPlayer::createPlayer(2, 1, 'test2', RACE_HUMAN, false);
 		$this->assertSame(2, $player->getPlayerID());

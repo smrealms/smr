@@ -3,7 +3,7 @@
 /**
  * @param resource $fp
  */
-function check_for_registration($fp, string $nick, string $channel, callable $callback, bool $validationMessages = true) : AbstractSmrPlayer|false {
+function check_for_registration($fp, string $nick, string $channel, callable $callback, bool $validationMessages = true): AbstractSmrPlayer|false {
 	//Force $validationMessages to always be boolean.
 	$validationMessages = $validationMessages === true;
 
@@ -16,8 +16,8 @@ function check_for_registration($fp, string $nick, string $channel, callable $ca
 		global $actions;
 
 		// execute a whois and continue here on whois
-		fputs($fp, 'WHOIS ' . $nick . EOL);
-		array_push($actions, array('MSG_318', $channel, $nick, $callback, time(), $validationMessages));
+		fwrite($fp, 'WHOIS ' . $nick . EOL);
+		array_push($actions, ['MSG_318', $channel, $nick, $callback, time(), $validationMessages]);
 
 		return false;
 	}
@@ -29,7 +29,7 @@ function check_for_registration($fp, string $nick, string $channel, callable $ca
 		$alliance = SmrAlliance::getAllianceByIrcChannel($channel, true);
 	} catch (Smr\Exceptions\AllianceNotFound) {
 		if ($validationMessages === true) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
 		}
 		return false;
 	}
@@ -42,7 +42,7 @@ function check_for_registration($fp, string $nick, string $channel, callable $ca
 			$account = SmrAccount::getAccountByIrcNick($registeredNick, true);
 		} catch (Smr\Exceptions\AccountNotFound) {
 			if ($validationMessages === true) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
+				fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
 			}
 			return false;
 		}
@@ -53,7 +53,7 @@ function check_for_registration($fp, string $nick, string $channel, callable $ca
 		$player = SmrPlayer::getPlayer($account->getAccountID(), $alliance->getGameID(), true);
 	} catch (Smr\Exceptions\PlayerNotFound) {
 		if ($validationMessages === true) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
 		}
 		return false;
 	}
@@ -61,7 +61,7 @@ function check_for_registration($fp, string $nick, string $channel, callable $ca
 	// is the user part of this alliance? (no need to check for 0, cannot happen at this point in code)
 	if ($player->getAllianceID() != $alliance->getAllianceID()) {
 		if ($validationMessages === true) {
-			fputs($fp, 'KICK ' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
+			fwrite($fp, 'KICK ' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
 		}
 		return false;
 	}
@@ -72,8 +72,7 @@ function check_for_registration($fp, string $nick, string $channel, callable $ca
 /**
  * @param resource $fp
  */
-function channel_msg_with_registration($fp, string $rdata) : bool
-{
+function channel_msg_with_registration($fp, string $rdata): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd)\s/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -83,14 +82,15 @@ function channel_msg_with_registration($fp, string $rdata) : bool
 
 		// check if the query is in public channel
 		if ($channel == '#smr' || $channel == '#smr-bar') {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', that command can only be used in an alliance controlled channel.' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', that command can only be used in an alliance controlled channel.' . EOL);
 			return true;
 		}
 
-		$callback = function() use($fp, $rdata) : bool {
+		$callback = function() use($fp, $rdata): bool {
 			return channel_msg_with_registration($fp, $rdata);
 		};
-		if (($player = check_for_registration($fp, $nick, $channel, $callback)) === false) {
+		$player = check_for_registration($fp, $nick, $channel, $callback);
+		if ($player === false) {
 			return true;
 		}
 
@@ -148,8 +148,7 @@ function channel_msg_with_registration($fp, string $rdata) : bool
 /**
  * @param resource $fp
  */
-function channel_msg_seen($fp, string $rdata) : bool
-{
+function channel_msg_seen($fp, string $rdata): bool {
 
 	// <Caretaker> MrSpock, Azool (Azool@smrealms.rulez) was last seen quitting #smr
 	// 2 days 10 hours 43 minutes ago (05.10. 05:04) stating 'Some people follow their dreams,
@@ -171,7 +170,7 @@ function channel_msg_seen($fp, string $rdata) : bool
 
 		// if the user asks for himself
 		if ($nick == $seennick) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', do I look like a mirror?' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', do I look like a mirror?' . EOL);
 			return true;
 		}
 
@@ -204,15 +203,15 @@ function channel_msg_seen($fp, string $rdata) : bool
 								seen_by = ' . $db->escapeString($nick) . '
 							WHERE seen_id = ' . $seen_id);
 
-				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', ' . $seennick . ' (' . $seenuser . '@' . $seenhost . ') was last seen quitting ' . $channel . ' ' . format_time(time() - $signed_off) . ' ago after spending ' . format_time($signed_off - $signed_on) . ' there.' . EOL);
+				fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', ' . $seennick . ' (' . $seenuser . '@' . $seenhost . ') was last seen quitting ' . $channel . ' ' . format_time(time() - $signed_off) . ' ago after spending ' . format_time($signed_off - $signed_on) . ' there.' . EOL);
 			} else {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please look a bit closer at the memberlist of this channel.' . EOL);
+				fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please look a bit closer at the memberlist of this channel.' . EOL);
 			}
 
 			return true;
 		}
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', I don\'t remember seeing ' . $seennick . '.' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', I don\'t remember seeing ' . $seennick . '.' . EOL);
 		return true;
 	}
 
@@ -222,8 +221,7 @@ function channel_msg_seen($fp, string $rdata) : bool
 /**
  * @param resource $fp
  */
-function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player) : bool
-{
+function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!money\s$/i', $rdata, $msg)) {
 
@@ -237,7 +235,7 @@ function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player) : bool
 		$result = shared_channel_msg_money($player);
 
 		foreach ($result as $line) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
@@ -249,8 +247,7 @@ function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player) : bool
 /**
  * @param resource $fp
  */
-function channel_msg_timer($fp, string $rdata) : bool
-{
+function channel_msg_timer($fp, string $rdata): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (.*) :!timer(\s\d+)?(\s.+)?\s$/i', $rdata, $msg)) {
 
@@ -264,32 +261,31 @@ function channel_msg_timer($fp, string $rdata) : bool
 		// no countdown means we give a list of active timers
 		if (!isset($msg[5])) {
 
-			fputs($fp, 'PRIVMSG ' . $channel . ' :The following timers have been defined for this channel:' . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :The following timers have been defined for this channel:' . EOL);
 			foreach ($events as $event) {
 				if ($event[2] == $channel) {
-					fputs($fp, 'PRIVMSG ' . $channel . ' :' . $event[1] . ' in ' . format_time($event[0] - time()) . EOL);
+					fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $event[1] . ' in ' . format_time($event[0] - time()) . EOL);
 				}
 			}
 
 			return true;
 		}
 
-		if (!is_numeric($msg[5])) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :I need to know in how many minutes the timer needs to go off. Example: !timer 25 message to channel' . EOL);
+		$countdown = $msg[5];
+		if (!is_numeric($countdown)) {
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :I need to know in how many minutes the timer needs to go off. Example: !timer 25 message to channel' . EOL);
 		}
 
-		$countdown = intval($msg[5]);
 		$message = 'ALERT! ALERT! ALERT!';
-
 		if (isset($msg[6])) {
 			$message .= ' ' . $msg[6];
 		}
 
 		echo_r('[TIMER] ' . $nick . ' started a timer with ' . $countdown . ' minute(s) (' . $message . ') in ' . $channel);
 
-		array_push($events, array(time() + $countdown * 60, $message, $channel));
+		array_push($events, [time() + $countdown * 60, $message, $channel]);
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :The timer has been started and will go off in ' . $countdown . ' minute(s).' . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :The timer has been started and will go off in ' . $countdown . ' minute(s).' . EOL);
 
 		return true;
 	}
@@ -300,8 +296,7 @@ function channel_msg_timer($fp, string $rdata) : bool
 /**
  * @param resource $fp
  */
-function channel_msg_8ball($fp, string $rdata) : bool
-{
+function channel_msg_8ball($fp, string $rdata): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!8ball (.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -312,7 +307,7 @@ function channel_msg_8ball($fp, string $rdata) : bool
 
 		echo_r('[8BALL] by ' . $nick . ' in ' . $channel . '. Question: ' . $question);
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . shared_channel_msg_8ball() . EOL);
+		fwrite($fp, 'PRIVMSG ' . $channel . ' :' . shared_channel_msg_8ball() . EOL);
 
 		return true;
 	}
@@ -323,8 +318,7 @@ function channel_msg_8ball($fp, string $rdata) : bool
 /**
  * @param resource $fp
  */
-function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player) : bool
-{
+function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!forces(.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -337,7 +331,7 @@ function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player) : boo
 
 		$result = shared_channel_msg_forces($player, $galaxy);
 		foreach ($result as $line) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
@@ -349,8 +343,7 @@ function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player) : boo
 /**
  * @param resource $fp
  */
-function channel_msg_help($fp, string $rdata) : bool
-{
+function channel_msg_help($fp, string $rdata): bool {
 
 	// global help?
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!help\s$/i', $rdata, $msg)) {
@@ -362,21 +355,21 @@ function channel_msg_help($fp, string $rdata) : bool
 
 		echo_r('[HELP] ' . $nick . '!' . $user . '@' . $host . ' ' . $channel);
 
-		fputs($fp, 'NOTICE ' . $nick . ' :--- HELP ---' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :' . IRC_BOT_NICK . ' is the official SMR bot' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :If you want his services in your channel please invite him using \'/invite ' . IRC_BOT_NICK . ' #channel\'' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' : ' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :Available public commands commands:' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !seen <nickname>         Displays the last time <nickname> was seen' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !timer <mins> <msg>      Starts a countdown which will send a notice to the channel with the <msg> in <mins> minutes' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !8ball <question>        Display one of the famous 8ball answers to your <question>' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :Available alliance commands commands:' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !seedlist                Manages the seedlist' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !seed                    Displays a list of sectors you have not yet seeded' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !op                      Command to manage OPs' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !sd                      Command to manage supply/demands for ports' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !money                   Displays the funds the alliance owns' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !forces [Galaxy]         Will tell you when forces will expire. Can be used without parameters.' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :--- HELP ---' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :' . IRC_BOT_NICK . ' is the official SMR bot' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :If you want his services in your channel please invite him using \'/invite ' . IRC_BOT_NICK . ' #channel\'' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' : ' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :Available public commands commands:' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :  !seen <nickname>         Displays the last time <nickname> was seen' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :  !timer <mins> <msg>      Starts a countdown which will send a notice to the channel with the <msg> in <mins> minutes' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :  !8ball <question>        Display one of the famous 8ball answers to your <question>' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :Available alliance commands commands:' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :  !seedlist                Manages the seedlist' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :  !seed                    Displays a list of sectors you have not yet seeded' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :  !op                      Command to manage OPs' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :  !sd                      Command to manage supply/demands for ports' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :  !money                   Displays the funds the alliance owns' . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :  !forces [Galaxy]         Will tell you when forces will expire. Can be used without parameters.' . EOL);
 
 		return true;
 
@@ -392,10 +385,10 @@ function channel_msg_help($fp, string $rdata) : bool
 		echo_r('[HELP' . $topic . '] ' . $nick . '!' . $user . '@' . $host . ' ' . $channel);
 
 		if ($topic == 'seen') {
-			fputs($fp, 'NOTICE ' . $nick . ' :Syntax !seen <nickname>' . EOL);
-			fputs($fp, 'NOTICE ' . $nick . ' :   Displays the last time <nickname> was seen' . EOL);
+			fwrite($fp, 'NOTICE ' . $nick . ' :Syntax !seen <nickname>' . EOL);
+			fwrite($fp, 'NOTICE ' . $nick . ' :   Displays the last time <nickname> was seen' . EOL);
 		} else {
-			fputs($fp, 'NOTICE ' . $nick . ' :There is no help available for this command! Try !help' . EOL);
+			fwrite($fp, 'NOTICE ' . $nick . ' :There is no help available for this command! Try !help' . EOL);
 		}
 
 		return true;

@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-if (Smr\Request::get('action') == "Resend Validation Code") {
+if (Smr\Request::get('action') == 'Resend Validation Code') {
 	$account->changeEmail($account->getEmail());
 } else {
 	$account->changeEmail(Smr\Request::get('email'));

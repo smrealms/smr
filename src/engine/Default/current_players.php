@@ -54,9 +54,9 @@ $summary .= '<br />The traders listed in <span class="italic">italics</span> are
 
 $template->assign('Summary', $summary);
 
-$allRows = array();
+$allRows = [];
 foreach ($dbResult->records() as $dbRecord) {
-	$row = array();
+	$row = [];
 
 	$curr_player = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 	$row['player'] = $curr_player;

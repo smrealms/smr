@@ -2,14 +2,16 @@
 
 namespace Smr\Blackjack;
 
+use Exception;
+
 /**
  * Deck of Blackjack cards to be drawn from.
  */
 class Deck {
 
 	// We can have multiple decks of cards
-	const NUM_DECKS = 1;
-	const MAX_CARDS = 52 * self::NUM_DECKS;
+	public const NUM_DECKS = 1;
+	public const MAX_CARDS = 52 * self::NUM_DECKS;
 
 	private array $cardIDs = [];
 
@@ -23,9 +25,9 @@ class Deck {
 	/**
 	 * Draw a random card from this deck.
 	 */
-	public function drawCard() : Card {
+	public function drawCard(): Card {
 		if (empty($this->cardIDs)) {
-			throw new \Exception('No cards left to draw from this deck!');
+			throw new Exception('No cards left to draw from this deck!');
 		}
 		// since the cards are already shuffled, pop off the next one
 		$cardID = array_pop($this->cardIDs);

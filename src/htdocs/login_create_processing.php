@@ -104,7 +104,7 @@ try {
 	}
 
 	// get user and host for the provided address
-	list($user, $host) = explode('@', $email);
+	[$user, $host] = explode('@', $email);
 
 	// check if the host got a MX or at least an A entry
 	if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
@@ -152,8 +152,10 @@ try {
 	}
 	$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give $2 worth of "reward" credits for joining.
 	if ($socialLogin) {
-		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),
-		                        $_SESSION['socialLogin']->getUserID());
+		$account->addAuthMethod(
+			$_SESSION['socialLogin']->getLoginType(),
+			$_SESSION['socialLogin']->getUserID()
+		);
 		if ($validatedBySocial) {
 			$account->setValidated(true);
 			$account->update();

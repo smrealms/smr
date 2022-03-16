@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
-function notice_nickserv_registered_user($fp, string $rdata) : bool
-{
+function notice_nickserv_registered_user($fp, string $rdata): bool {
 
 	// :NickServ!services@coldfront.net NOTICE Caretaker
 	if (preg_match('/^:NickServ!services@theairlock.net NOTICE ' . IRC_BOT_NICK . ' :([^ ]+) is ([^.]+)\s$/i', $rdata, $msg)) {
@@ -40,8 +39,7 @@ function notice_nickserv_registered_user($fp, string $rdata) : bool
 	return false;
 }
 
-function notice_nickserv_unknown_user($fp, string $rdata) : bool
-{
+function notice_nickserv_unknown_user($fp, string $rdata): bool {
 
 	// :NickServ!services@coldfront.net NOTICE Caretaker :Nickname Slevin isn't registered.
 	if (preg_match('/^:NickServ!services@theairlock.net NOTICE ' . IRC_BOT_NICK . ' :Nickname .(.*). isn\'t registered\.\s$/i', $rdata, $msg)) {
@@ -59,7 +57,7 @@ function notice_nickserv_unknown_user($fp, string $rdata) : bool
 				unset($actions[$key]);
 
 				if ($action[5] === true) {
-					fputs($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
+					fwrite($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
 				}
 
 			}

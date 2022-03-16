@@ -6,4 +6,4 @@ $player = $session->getPlayer();
 
 $rewardText = $player->claimMissionReward($var['MissionID']);
 
-Page::create('skeleton.php', 'current_sector.php', array('MissionMessage' => $rewardText))->go();
+Page::create('skeleton.php', 'current_sector.php', ['MissionMessage' => $rewardText])->go();

@@ -29,11 +29,11 @@ class RaceDetails {
 		RACE_NIJARIN => 'The Nijarin are a race of six-limbed reptilian creatures. They have existed just as long if not longer than the other races, but have only recently come out of hiding. As a naturally aggressive race, the Nijarin have already become fearsome contenders in the war for resources. Their focus is on offensive power, which has driven the creation of ships that are overloaded with destructive weaponry. To support such a heavy offensive payload, these ships have suffered defensively due to a reduction in shields and armour. The Nijarin use a technology called the Drone Communications Scrambler to bolster their defenses against enemy drones. The Nijarin fleet cannot be held back from taking dominion over this universe of war.',
 	];
 
-	public static function getShortDescription(int $raceID) : string {
+	public static function getShortDescription(int $raceID): string {
 		return self::SHORT_DESCRIPTION[$raceID];
 	}
 
-	public static function getLongDescription(int $raceID) : string {
+	public static function getLongDescription(int $raceID): string {
 		return self::LONG_DESCRIPTION[$raceID];
 	}
 

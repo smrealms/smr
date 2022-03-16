@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function shared_channel_msg_op_list(SmrPlayer $player) : array {
+function shared_channel_msg_op_list(SmrPlayer $player): array {
 	// get the op info from db
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT 1
@@ -8,12 +8,14 @@ function shared_channel_msg_op_list(SmrPlayer $player) : array {
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	if (!$dbResult->hasRecord()) {
-		return array('Your leader has not scheduled an op.');
+		return ['Your leader has not scheduled an op.'];
 	}
 
-	$yes = array();
-	$no = array();
-	$maybe = array();
+	$responses = [
+		'YES' => [],
+		'NO' => [],
+		'MAYBE' => [],
+	];
 	$dbResult = $db->read('SELECT account_id, response
 				FROM alliance_has_op_response
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
@@ -24,43 +26,21 @@ function shared_channel_msg_op_list(SmrPlayer $player) : array {
 		if (!$player->sameAlliance($respondingPlayer)) {
 			continue;
 		}
-		switch ($dbRecord->getField('response')) {
-			case 'YES':
-				$yes[] = $respondingPlayer;
-			break;
-			case 'NO':
-				$no[] = $respondingPlayer;
-			break;
-			case 'MAYBE':
-				$maybe[] = $respondingPlayer;
-			break;
+		$responses[$dbRecord->getField('response')][] = $respondingPlayer;
+	}
+
+	$results = [];
+	foreach ($responses as $response => $responders) {
+		if (count($responders) > 0) {
+			$results[] = $response . ' (' . count($responders) . '):';
+			foreach ($responders as $responder) {
+				$results[] = ' * ' . $responder->getPlayerName();
+			}
 		}
 	}
 
-	if ((count($yes) + count($no) + count($maybe)) == 0) {
-		return array('No one has signed up for the upcoming op.');
-	}
-
-	$results = array();
-	if (count($yes) > 0) {
-		$results[] = 'YES (' . count($yes) . '):';
-		foreach ($yes as $attendee) {
-			$results[] = ' * ' . $attendee->getPlayerName();
-		}
-	}
-
-	if (count($maybe) > 0) {
-		$results[] = 'MAYBE (' . count($maybe) . '):';
-		foreach ($maybe as $attendee) {
-			$results[] = ' * ' . $attendee->getPlayerName();
-		}
-	}
-
-	if (count($no) > 0) {
-		$results[] = 'NO (' . count($no) . '):';
-		foreach ($no as $attendee) {
-			$results[] = ' * ' . $attendee->getPlayerName();
-		}
+	if (!$results) {
+		return ['No one has responded to the upcoming op.'];
 	}
 
 	return $results;

@@ -31,8 +31,11 @@ if ($editSector->hasPort()) {
 $template->assign('SelectedPortLevel', $selectedPortLevel);
 $template->assign('SelectedPortRaceID', $selectedPortRaceID);
 
-$sectorLocationIDs = array_pad(array_keys($editSector->getLocations()),
-                               UNI_GEN_LOCATION_SLOTS, 0);
+$sectorLocationIDs = array_pad(
+	array_keys($editSector->getLocations()),
+	UNI_GEN_LOCATION_SLOTS,
+	0
+);
 $template->assign('SectorLocationIDs', $sectorLocationIDs);
 
 if ($editSector->hasWarp()) {

@@ -11,7 +11,7 @@ $skipUnusedAccs = true;
 $skipClosedAccs = false;
 $skipExceptions = false;
 
-$used = array();
+$used = [];
 
 //check the db and get the info we need
 $db = Smr\Database::getInstance();
@@ -88,12 +88,12 @@ foreach ($dbResult->records() as $dbRecord) {
 				$exception = '';
 			}
 
-			$used[$currLinkAccId] = TRUE;
+			$used[$currLinkAccId] = true;
 
 			$rows[] = [
 				'name' => $currLinkAccLogin . ' (' . $currLinkAccId . ')',
 				'account_id' => $currLinkAccId,
-				'associated_ids' => join('-', $accountIDs),
+				'associated_ids' => implode('-', $accountIDs),
 				'style' => $style,
 				'color' => $isDisabled ? 'red' : '',
 				'common_ip' => $common_ip,

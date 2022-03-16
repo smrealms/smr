@@ -10,14 +10,14 @@ if (!isset($var['box_type_id'])) {
 	$template->assign('PageTopic', 'Viewing Message Boxes');
 
 	$container = Page::create('skeleton.php', 'admin/box_view.php');
-	$boxes = array();
+	$boxes = [];
 	foreach (Smr\Messages::getAdminBoxNames() as $boxTypeID => $boxName) {
 		$container['box_type_id'] = $boxTypeID;
-		$boxes[$boxTypeID] = array(
+		$boxes[$boxTypeID] = [
 			'ViewHREF' => $container->href(),
 			'BoxName' => $boxName,
 			'TotalMessages' => 0,
-		);
+		];
 	}
 	$dbResult = $db->read('SELECT count(message_id), box_type_id
 				FROM message_boxes
@@ -32,7 +32,7 @@ if (!isset($var['box_type_id'])) {
 
 	$template->assign('BackHREF', Page::create('skeleton.php', 'admin/box_view.php')->href());
 	$dbResult = $db->read('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($var['box_type_id']) . ' ORDER BY send_time DESC');
-	$messages = array();
+	$messages = [];
 	if ($dbResult->hasRecord()) {
 		$container = Page::create('admin/box_delete_processing.php');
 		$container->addVar('box_type_id');
@@ -41,9 +41,9 @@ if (!isset($var['box_type_id'])) {
 			$gameID = $dbRecord->getInt('game_id');
 			$validGame = $gameID > 0 && SmrGame::gameExists($gameID);
 			$messageID = $dbRecord->getInt('message_id');
-			$messages[$messageID] = array(
-				'ID' => $messageID
-			);
+			$messages[$messageID] = [
+				'ID' => $messageID,
+			];
 
 			$senderID = $dbRecord->getInt('sender_id');
 			if ($senderID == 0) {

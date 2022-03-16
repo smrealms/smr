@@ -18,7 +18,7 @@ $template->assign('SelfHREF', $container->href());
 // Default page has no category (action) selected yet
 $action = $session->getRequestVar('action', '');
 if (!empty($action)) {
-	list($sql, $from, $dis) = match($action) {
+	[$sql, $from, $dis] = match ($action) {
 		'Top Mined Sectors' => ['mines', 'sector', 'Mines'],
 		'Sectors with most Forces' => ['mines + combat + scouts', 'sector', 'Forces'],
 		'Top Killing Sectors' => ['kills', 'sector', 'Kills'],

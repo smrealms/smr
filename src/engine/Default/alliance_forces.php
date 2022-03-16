@@ -24,8 +24,8 @@ AND expire_time >= ' . $db->escapeNumber(Smr\Epoch::time()));
 
 $hardwareTypes = Globals::getHardwareTypes();
 
-$total = array();
-$totalCost = array();
+$total = [];
+$totalCost = [];
 if ($dbResult->hasRecord()) {
 	$dbRecord = $dbResult->record();
 	// Get total number of forces
@@ -49,7 +49,7 @@ AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 AND expire_time >= ' . $db->escapeNumber(Smr\Epoch::time()) . '
 ORDER BY sector_id ASC');
 
-$forces = array();
+$forces = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$forces[] = SmrForce::getForce($player->getGameID(), $dbRecord->getInt('sector_id'), $dbRecord->getInt('owner_id'), false, $dbRecord);
 }

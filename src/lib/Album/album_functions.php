@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function main_page() : void {
+function main_page(): void {
 	$db = Smr\Database::getInstance();
 	$session = Smr\Session::getInstance();
 
@@ -58,7 +58,7 @@ function main_page() : void {
 	echo('</p>');
 }
 
-function album_entry(int $album_id) : void {
+function album_entry(int $album_id): void {
 	$db = Smr\Database::getInstance();
 	$session = Smr\Session::getInstance();
 
@@ -68,13 +68,13 @@ function album_entry(int $album_id) : void {
 	if ($session->hasAccount() && $album_id != $session->getAccountID()) {
 		$db->write('UPDATE album
 				SET page_views = page_views + 1
-				WHERE account_id = '.$db->escapeNumber($album_id) . ' AND
+				WHERE account_id = ' . $db->escapeNumber($album_id) . ' AND
 					approved = \'YES\'');
 	}
 
 	$dbResult = $db->read('SELECT *
 				FROM album
-				WHERE account_id = '.$db->escapeNumber($album_id) . ' AND
+				WHERE account_id = ' . $db->escapeNumber($album_id) . ' AND
 					approved = \'YES\'');
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
@@ -197,7 +197,7 @@ function album_entry(int $album_id) : void {
 	$dateFormat = $session->hasAccount() ? $session->getAccount()->getDateTimeFormat() : DEFAULT_DATE_TIME_FORMAT;
 	$dbResult = $db->read('SELECT *
 				FROM album_has_comments
-				WHERE album_id = '.$db->escapeNumber($album_id));
+				WHERE album_id = ' . $db->escapeNumber($album_id));
 	foreach ($dbResult->records() as $dbRecord) {
 		$time = $dbRecord->getInt('time');
 		$postee = get_album_nick($dbRecord->getInt('post_id'));
@@ -216,8 +216,8 @@ function album_entry(int $album_id) : void {
 		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" value="Send"></td>');
 		$dbResult = $db->read('SELECT 1
 					FROM account_has_permission
-					WHERE account_id = '.$db->escapeNumber($session->getAccountID()) . ' AND
-						permission_id = '.$db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
+					WHERE account_id = ' . $db->escapeNumber($session->getAccountID()) . ' AND
+						permission_id = ' . $db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
 		if ($dbResult->hasRecord()) {
 			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate"></td>');
 		}
@@ -235,7 +235,7 @@ function album_entry(int $album_id) : void {
 
 }
 
-function search_result(array $album_ids) : void {
+function search_result(array $album_ids): void {
 
 	// list of all first letter nicks
 	create_link_list();
@@ -262,7 +262,7 @@ function search_result(array $album_ids) : void {
 	echo('</table>');
 }
 
-function create_link_list() : void {
+function create_link_list(): void {
 	echo('<div class="center" style="font-size:80%;">[ ');
 	echo('<a href="?nick=%">All</a> | ');
 	echo('<a href="?nick=A">A</a> | ');
@@ -296,7 +296,7 @@ function create_link_list() : void {
 
 
 
-function get_album_nick(int $album_id) : string {
+function get_album_nick(int $album_id): string {
 	if ($album_id == 0) {
 		return 'System';
 	}

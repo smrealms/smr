@@ -3,7 +3,7 @@
 /**
  * @param resource $fp
  */
-function invite($fp, string $rdata) : void {
+function invite($fp, string $rdata): void {
 
 	// :MrSpock!mrspock@coldfront-425DB813.dip.t-dialin.net INVITE Caretaker :#fe
 	if (preg_match('/^:(.*)!(.*)@(.*) INVITE ' . IRC_BOT_NICK . ' :(.*)\s$/i', $rdata, $msg)) {
@@ -16,9 +16,9 @@ function invite($fp, string $rdata) : void {
 		echo_r('[INVITE] by ' . $nick . ' for ' . $channel);
 
 		// join channel where they want us
-		fputs($fp, 'JOIN ' . $channel . EOL);
+		fwrite($fp, 'JOIN ' . $channel . EOL);
 		sleep(1);
-		fputs($fp, 'WHO ' . $channel . EOL);
+		fwrite($fp, 'WHO ' . $channel . EOL);
 
 	}
 

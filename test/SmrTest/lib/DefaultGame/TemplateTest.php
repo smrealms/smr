@@ -2,6 +2,8 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Template;
 use SmrTest\TestUtils;
@@ -9,15 +11,15 @@ use SmrTest\TestUtils;
 /**
  * @covers Smr\Template
  */
-class TemplateTest extends \PHPUnit\Framework\TestCase {
+class TemplateTest extends TestCase {
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		// Start each test with a fresh container (and Template instance).
 		// This ensures the independence of each test.
 		DiContainer::initialize(false);
 	}
 
-	public function test_assign_unassign() : void {
+	public function test_assign_unassign(): void {
 		$template = Template::getInstance();
 		$template->assign('foo', 'bar');
 		$this->assertTrue($template->hasTemplateVar('foo'));
@@ -25,10 +27,10 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 		$this->assertFalse($template->hasTemplateVar('foo'));
 	}
 
-	public function test_assign_same_variable_twice_throws() : void {
+	public function test_assign_same_variable_twice_throws(): void {
 		$template = Template::getInstance();
 		$template->assign('foo', 'bar');
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Cannot re-assign template variable \'foo\'!');
 		try {
 			$template->assign('foo', 'barbar');
@@ -38,7 +40,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 		}
 	}
 
-	public function test_doAn() : void {
+	public function test_doAn(): void {
 		$template = Template::getInstance();
 		$method = TestUtils::getPrivateMethod($template, 'doAn');
 
@@ -52,13 +54,13 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider checkDisableAJAX_provider
 	 */
-	public function test_checkDisableAJAX(string $html, bool $expected) : void {
+	public function test_checkDisableAJAX(string $html, bool $expected): void {
 		$template = Template::getInstance();
 		$method = TestUtils::getPrivateMethod($template, 'checkDisableAJAX');
 		$this->assertSame($expected, $method->invoke($template, $html));
 	}
 
-	public function checkDisableAJAX_provider() : array {
+	public function checkDisableAJAX_provider(): array {
 		return [
 			// Special input types that do not disable ajax
 			['<input type="submit">', false],
@@ -75,7 +77,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider convertHtmlToAjaxXml_provider
 	 */
-	public function test_convertHtmlToAjaxXml(string $html, string $expected, bool $ignoreMiddle = false) : void {
+	public function test_convertHtmlToAjaxXml(string $html, string $expected, bool $ignoreMiddle = false): void {
 		$template = Template::getInstance();
 		if ($ignoreMiddle) {
 			$template->ignoreMiddle();
@@ -84,7 +86,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 		$this->assertSame($expected, $method->invoke($template, $html, true));
 	}
 
-	public function convertHtmlToAjaxXml_provider() : array {
+	public function convertHtmlToAjaxXml_provider(): array {
 		return [
 			// Span with an id
 			['<span id="foo">Test</span>', '<foo>Test</foo>'],
@@ -106,11 +108,11 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 			// Empty string
 			['', ''],
 			// Ajax-enabled elements both outside and inside middle panel
-			['<span id="foo">Test</span><div id="middle_panel">Foo</div>', '<foo>Test</foo><middle_panel>Foo</middle_panel>']
+			['<span id="foo">Test</span><div id="middle_panel">Foo</div>', '<foo>Test</foo><middle_panel>Foo</middle_panel>'],
 		];
 	}
 
-	public function test_addJavascriptForAjax() : void {
+	public function test_addJavascriptForAjax(): void {
 		$template = Template::getInstance();
 
 		// Make sure the added JS data is properly json-encoded
@@ -124,11 +126,11 @@ class TemplateTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame('<JS><test>{"a":1,"b":2}</test></JS>', $result);
 	}
 
-	public function test_addJavascriptForAjax_duplicate() : void {
+	public function test_addJavascriptForAjax_duplicate(): void {
 		$template = Template::getInstance();
 		// Call once successfully
 		$template->addJavascriptForAjax('test', '');
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Trying to set javascript val twice: test');
 		$template->addJavascriptForAjax('test', '');
 	}

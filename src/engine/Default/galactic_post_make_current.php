@@ -8,7 +8,7 @@ $player = $session->getPlayer();
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT 1 FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($var['id']));
 if ($dbResult->hasRecord()) {
-	create_error("Cannot publish a paper that has previously been published!");
+	create_error('Cannot publish a paper that has previously been published!');
 }
 
 // Update the online_since column

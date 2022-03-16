@@ -21,7 +21,7 @@ $showRoles = $varAction == 'Show Alliance Roles';
 $template->assign('ShowRoles', $showRoles);
 if ($showRoles) {
 	// initialize with text
-	$roles = array();
+	$roles = [];
 
 	// get all roles from db for faster access later
 	$dbResult = $db->read('SELECT role_id, role
@@ -48,8 +48,7 @@ $dbResult = $db->read('SELECT
 	FROM player
 	WHERE alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 	AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
-	GROUP BY alliance_id'
-);
+	GROUP BY alliance_id');
 $dbRecord = $dbResult->record();
 
 $template->assign('AllianceExp', $dbRecord->getInt('alliance_xp'));

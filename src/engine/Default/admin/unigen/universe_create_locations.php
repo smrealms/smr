@@ -14,7 +14,7 @@ $template->assign('JumpGalaxyHREF', $container->href());
 $locations = SmrLocation::getAllLocations();
 
 // Initialize all location counts to zero
-$totalLocs = array();
+$totalLocs = [];
 foreach ($locations as $location) {
 	$totalLocs[$location->getTypeID()] = 0;
 }
@@ -37,9 +37,10 @@ $template->assign('Galaxy', $galaxy);
 // but it will identify all other categories that it is in.
 // If multi-category locations becomes common, this code should be modified.
 class Categories {
+
 	public array $locTypes = [];
 	private array $locAdded = []; // list of locs added to a category
-	public function addLoc(int $locID, string $category) : string {
+	public function addLoc(int $locID, string $category): string {
 		if (!$this->added($locID)) {
 			$this->locTypes[$category][] = $locID;
 			$this->locAdded[] = $locID;
@@ -48,9 +49,10 @@ class Categories {
 			return "<b>Also in $category</b><br />";
 		}
 	}
-	public function added(int $locID) : bool {
+	public function added(int $locID): bool {
 		return in_array($locID, $this->locAdded);
 	}
+
 }
 
 // Remove any linked locations, as they will be added automatically
@@ -62,7 +64,7 @@ foreach ($locations as $location) {
 }
 
 // Set any extra information to be displayed with each location
-$locText = array();
+$locText = [];
 $categories = new Categories();
 foreach ($locations as $location) {
 	$extra = '<span class="small"><br />';
@@ -108,8 +110,11 @@ $template->assign('LocText', $locText);
 $template->assign('LocTypes', $categories->locTypes);
 
 // Form to make location changes
-$container = Page::create('admin/unigen/universe_create_save_processing.php',
-                          'admin/unigen/universe_create_sectors.php', $var);
+$container = Page::create(
+	'admin/unigen/universe_create_save_processing.php',
+	'admin/unigen/universe_create_sectors.php',
+	$var
+);
 $template->assign('CreateLocationsFormHREF', $container->href());
 
 // HREF to cancel and return to the previous page

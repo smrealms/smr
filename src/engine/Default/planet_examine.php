@@ -28,8 +28,7 @@ if (!$planetLand) {
 		AND (alliance_id_2 = ' . $db->escapeNumber($ownerAllianceID) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 		AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 		AND planet_land = 1
-		AND official = ' . $db->escapeBoolean(true)
-	);
+		AND official = ' . $db->escapeBoolean(true));
 	$planetLand = $dbResult->hasRecord();
 }
 $template->assign('PlanetLand', $planetLand);

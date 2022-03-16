@@ -12,11 +12,11 @@ $alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
-$mbWrite = TRUE;
-$in_alliance = TRUE;
+$mbWrite = true;
+$in_alliance = true;
 if ($alliance->getAllianceID() != $player->getAllianceID()) {
 	if (!in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-		$in_alliance = FALSE;
+		$in_alliance = false;
 	}
 	$dbResult = $db->read('SELECT 1 FROM alliance_treaties
 				WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
@@ -39,14 +39,14 @@ if (!$in_alliance) {
 }
 $query .= ' GROUP BY thread_id ORDER BY sendtime DESC';
 $dbResult = $db->read($query);
-$threads = array();
+$threads = [];
 if ($dbResult->hasRecord()) {
 
 	$container = Page::create('alliance_message_delete_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 
 	$i = 0;
-	$alliance_eyes = array();
+	$alliance_eyes = [];
 	$thread_ids = [];
 	$thread_topics = [];
 	$thread_replies = [];

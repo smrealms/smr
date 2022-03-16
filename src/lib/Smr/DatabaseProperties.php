@@ -5,10 +5,11 @@ namespace Smr;
 use Dotenv\Dotenv;
 
 class DatabaseProperties {
-	private const CONFIG_HOST = "MYSQL_HOST";
-	private const CONFIG_USER = "MYSQL_USER";
-	private const CONFIG_PASSWORD = "MYSQL_PASSWORD";
-	private const CONFIG_DATABASE = "MYSQL_DATABASE";
+
+	private const CONFIG_HOST = 'MYSQL_HOST';
+	private const CONFIG_USER = 'MYSQL_USER';
+	private const CONFIG_PASSWORD = 'MYSQL_PASSWORD';
+	private const CONFIG_DATABASE = 'MYSQL_DATABASE';
 	private string $host;
 	private string $user;
 	private string $password;
@@ -25,7 +26,7 @@ class DatabaseProperties {
 		] = $array;
 	}
 
-	private static function validateConfig(Dotenv $config) : void {
+	private static function validateConfig(Dotenv $config): void {
 		$config->required([
 			self::CONFIG_HOST,
 			self::CONFIG_USER,
@@ -34,19 +35,20 @@ class DatabaseProperties {
 		])->notEmpty();
 	}
 
-	public function getHost() : string {
+	public function getHost(): string {
 		return $this->host;
 	}
 
-	public function getUser() : string {
+	public function getUser(): string {
 		return $this->user;
 	}
 
-	public function getPassword() : string {
+	public function getPassword(): string {
 		return $this->password;
 	}
 
-	public function getDatabaseName() : string {
+	public function getDatabaseName(): string {
 		return $this->databaseName;
 	}
+
 }

@@ -2,7 +2,8 @@
 
 namespace Smr\Login;
 
-use Smr;
+use Smr\Database;
+use Smr\Session;
 use SmrAccount;
 
 /**
@@ -10,7 +11,7 @@ use SmrAccount;
  */
 class Redirect {
 
-	public static function redirectIfDisabled(SmrAccount $account) : array|false {
+	public static function redirectIfDisabled(SmrAccount $account): array|false {
 		// We skip the redirect for specific disabled reasons, because they are
 		// handled elsewhere.
 		$skipReasons = [
@@ -33,7 +34,7 @@ class Redirect {
 		$msg .= '.<br />Please contact an admin for further information.';
 
 		// Destroy the Smr\Session, since there is no way to "log off" from the login page
-		Smr\Session::getInstance()->destroy();
+		Session::getInstance()->destroy();
 
 		// Store the message in a session to avoid URL length restrictions
 		if (session_status() === PHP_SESSION_NONE) {
@@ -45,9 +46,9 @@ class Redirect {
 		exit;
 	}
 
-	public static function redirectIfOffline(SmrAccount $account) : void {
+	public static function redirectIfOffline(SmrAccount $account): void {
 		// Check if the game is offline
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT reason FROM game_disable');
 		$offline = $dbResult->hasRecord();
 
@@ -58,7 +59,7 @@ class Redirect {
 
 		// We need to destroy the session so that the login page doesn't
 		// redirect to the in-game loader (bypassing the server closure).
-		Smr\Session::getInstance()->destroy();
+		Session::getInstance()->destroy();
 
 		// Store the message in a session to avoid URL length restrictions
 		if (session_status() === PHP_SESSION_NONE) {

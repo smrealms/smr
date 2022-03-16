@@ -2,6 +2,9 @@
 
 namespace Smr\SocialLogin;
 
+use Exception;
+use Smr\Exceptions\SocialLoginInvalidType;
+
 /**
  * Defines the methods to be implemented by each social login platform.
  */
@@ -14,12 +17,12 @@ abstract class SocialLogin {
 	/**
 	 * Provides the canonical name of the platform to use in string comparison.
 	 */
-	abstract public static function getLoginType() : string;
+	abstract public static function getLoginType(): string;
 
 	/**
 	 * Returns a SocialLogin class of the given derived type.
 	 */
-	public static function get(string $loginType) : SocialLogin {
+	public static function get(string $loginType): self {
 		if ($loginType === Facebook::getLoginType()) {
 			return new Facebook();
 		} elseif ($loginType === Twitter::getLoginType()) {
@@ -27,7 +30,7 @@ abstract class SocialLogin {
 		} elseif ($loginType === Google::getLoginType()) {
 			return new Google();
 		} else {
-			throw new \Smr\Exceptions\SocialLoginInvalidType('Unknown social login type: ' . $loginType);
+			throw new SocialLoginInvalidType('Unknown social login type: ' . $loginType);
 		}
 	}
 
@@ -35,7 +38,7 @@ abstract class SocialLogin {
 		// All social logins use a session for authentication
 		if (session_status() === PHP_SESSION_NONE) {
 			if (!session_start()) {
-				throw new \Exception('Failed to start social login session');
+				throw new Exception('Failed to start social login session');
 			}
 		}
 	}
@@ -43,7 +46,7 @@ abstract class SocialLogin {
 	/**
 	 * After a successful authentication, set credentials.
 	 */
-	protected function setCredentials(?string $userID, ?string $email) : void {
+	protected function setCredentials(?string $userID, ?string $email): void {
 		$this->userID = $userID;
 		$this->email = $email;
 		$this->valid = !empty($userID);
@@ -53,32 +56,32 @@ abstract class SocialLogin {
 	 * Returns the URL that the social platform will redirect to
 	 * after authentication.
 	 */
-	protected function getRedirectUrl() : string {
+	protected function getRedirectUrl(): string {
 		return URL . '/login_processing.php?loginType=' . $this->getLoginType();
 	}
 
 	/**
 	 * Returns the URL to authenticate with the social platform.
 	 */
-	abstract public function getLoginUrl() : string;
+	abstract public function getLoginUrl(): string;
 
 	/**
 	 * Authenticates with the social platform.
 	 */
-	abstract public function login() : SocialLogin;
+	abstract public function login(): self;
 
 	/**
 	 * Returns true if the authentication was successful.
 	 */
-	public function isValid() : bool {
+	public function isValid(): bool {
 		return $this->valid;
 	}
 
-	public function getUserID() : ?string {
+	public function getUserID(): ?string {
 		return $this->userID;
 	}
 
-	public function getEmail() : ?string {
+	public function getEmail(): ?string {
 		return $this->email;
 	}
 

@@ -20,26 +20,26 @@ $template->assign('PageTopic', 'Feature Requests - ' . $var['category']);
 // Feature Requests show up as new for this many days
 const NEW_REQUEST_DAYS = 30;
 
-$requestCategories = array(
+$requestCategories = [
 	'New' => 'Open requests active within the past ' . NEW_REQUEST_DAYS . ' days',
 	'All Open' => 'All requests that remain open for voting',
 	'Accepted' => 'Features planned for future implementation',
 	'Implemented' => 'Features that have already been implemented',
 	'Rejected' => 'Features that are not planned for implementation',
-);
+];
 
-$categoryTable = array();
+$categoryTable = [];
 foreach ($requestCategories as $category => $description) {
 	$status = statusFromCategory($category);
 
 	$container = Page::copy($var);
 	$container['category'] = $category;
-	$categoryTable[$category] = array(
+	$categoryTable[$category] = [
 		'Selected' => $category == $var['category'],
 		'HREF' => $container->href(),
 		'Count' => getFeaturesCount($status, ($category == 'New') ? NEW_REQUEST_DAYS : false),
-		'Description' => $description
-	);
+		'Description' => $description,
+	];
 }
 $template->assign('CategoryTable', $categoryTable);
 
@@ -48,7 +48,7 @@ $canVote = $thisStatus == 'Opened';
 $template->assign('CanVote', $canVote);
 
 if ($canVote) {
-	$featureVotes = array();
+	$featureVotes = [];
 	$dbResult = $db->read('SELECT * FROM account_votes_for_feature WHERE account_id = ' . $account->getAccountID());
 	foreach ($dbResult->records() as $dbRecord) {
 		$featureVotes[$dbRecord->getInt('feature_request_id')] = $dbRecord->getField('vote_type');
@@ -68,7 +68,7 @@ if ($dbResult->hasRecord()) {
 
 	$commentsContainer = Page::copy($var);
 	$commentsContainer['body'] = 'feature_request_comments.php';
-	$featureRequests = array();
+	$featureRequests = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$featureRequestID = $dbRecord->getInt('feature_request_id');
 		$featureRequests[$featureRequestID] = [
@@ -108,11 +108,11 @@ if ($dbResult->hasRecord()) {
 
 $template->assign('FeatureRequestFormHREF', Page::create('feature_request_processing.php', '')->href());
 
-function statusFromCategory(string $category) : string {
+function statusFromCategory(string $category): string {
 	return ($category == 'New' || $category == 'All Open') ? 'Opened' : $category;
 }
 
-function getFeaturesCount(string $status, int|false $daysNew = false) : int {
+function getFeaturesCount(string $status, int|false $daysNew = false): int {
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('
 		SELECT COUNT(*) AS count
@@ -120,7 +120,6 @@ function getFeaturesCount(string $status, int|false $daysNew = false) : int {
 		JOIN feature_request_comments super USING(feature_request_id)
 		WHERE comment_id = 1
 		AND status = ' . $db->escapeString($status) .
-		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Smr\Epoch::time() - $daysNew * 86400) . ')' : '')
-	);
+		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Smr\Epoch::time() - $daysNew * 86400) . ')' : ''));
 	return $dbResult->record()->getInt('count');
 }

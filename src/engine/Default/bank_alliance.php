@@ -28,7 +28,7 @@ $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT * FROM alliance_treaties WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND (alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 			AND aa_access = 1 AND official = \'TRUE\'');
-$alliedAllianceBanks = array();
+$alliedAllianceBanks = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$alliedAllianceBanks[$dbRecord->getInt('alliance_id_2')] = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id_2'), $alliance->getGameID());
 	$alliedAllianceBanks[$dbRecord->getInt('alliance_id_1')] = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id_1'), $alliance->getGameID());
@@ -38,7 +38,7 @@ $template->assign('AlliedAllianceBanks', $alliedAllianceBanks);
 $dbResult = $db->read('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
 			WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
 			GROUP BY transaction');
-$playerTrans = array('Deposit' => 0, 'Payment' => 0);
+$playerTrans = ['Deposit' => 0, 'Payment' => 0];
 foreach ($dbResult->records() as $dbRecord) {
 	$playerTrans[$dbRecord->getField('transaction')] = $dbRecord->getInt('total');
 }
@@ -104,17 +104,17 @@ $dbResult = $db->read($query);
 
 // only if we have at least one result
 if ($dbResult->hasRecord()) {
-	$bankTransactions = array();
+	$bankTransactions = [];
 	foreach ($dbResult->records() as $dbRecord) {
-		$bankTransactions[$dbRecord->getInt('transaction_id')] = array(
+		$bankTransactions[$dbRecord->getInt('transaction_id')] = [
 			'Time' => $dbRecord->getInt('time'),
 			'Player' => SmrPlayer::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
 			'Reason' => $dbRecord->getField('reason'),
 			'TransactionType' => $dbRecord->getField('transaction'),
 			'Withdrawal' => $dbRecord->getField('transaction') == 'Payment' ? $dbRecord->getInt('amount') : '',
 			'Deposit' => $dbRecord->getField('transaction') == 'Deposit' ? $dbRecord->getInt('amount') : '',
-			'Exempt' => $dbRecord->getInt('exempt') == 1
-		);
+			'Exempt' => $dbRecord->getInt('exempt') == 1,
+		];
 	}
 	$template->assign('BankTransactions', $bankTransactions);
 

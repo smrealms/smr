@@ -21,7 +21,7 @@ if (isset($game_id)) {
 	$template->assign('PageTopic', $hofName . '\'s All Time Personal Hall of Fame');
 }
 
-$allowedVisibities = array(HOF_PUBLIC);
+$allowedVisibities = [HOF_PUBLIC];
 if ($account->getAccountID() == $account_id) {
 	$allowedVisibities[] = HOF_ALLIANCE;
 	$allowedVisibities[] = HOF_PRIVATE;
@@ -33,13 +33,13 @@ $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') ORDER BY type');
 const DONATION_NAME = 'Money Donated To SMR';
 const USER_SCORE_NAME = 'User Score';
-$hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
+$hofTypes = [DONATION_NAME => true, USER_SCORE_NAME => true];
 foreach ($dbResult->records() as $dbRecord) {
 	$hof =& $hofTypes;
 	$typeList = explode(':', $dbRecord->getString('type'));
 	foreach ($typeList as $type) {
 		if (!isset($hof[$type])) {
-			$hof[$type] = array();
+			$hof[$type] = [];
 		}
 		$hof =& $hof[$type];
 	}

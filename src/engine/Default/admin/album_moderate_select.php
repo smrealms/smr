@@ -12,7 +12,7 @@ $template->assign('ModerateHREF', $moderateHREF);
 // Get all accounts that are eligible for moderation
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT account_id FROM album WHERE Approved = \'YES\'');
-$approved = array();
+$approved = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$accountId = $dbRecord->getInt('account_id');
 	$approved[$accountId] = get_album_nick($accountId);

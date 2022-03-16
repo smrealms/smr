@@ -111,7 +111,7 @@
 			<a href="<?php echo WIKI_URL; ?>/game-guide/technologies" target="_blank">
 				<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Technologies"/>
 			</a>
-			<br /><?php echo join('<br />', $Hardware); ?><br /><br />
+			<br /><?php echo implode('<br />', $Hardware); ?><br /><br />
 
 			<a href="level_requirements.php" target="levelRequirements">
 				<span class="yellow bold">Next Level</span>

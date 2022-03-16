@@ -2,18 +2,20 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Smr\Database;
 use Smr\DatabaseResult;
 
 /**
  * @covers \Smr\DatabaseResult
  */
-class DatabaseResultTest extends \PHPUnit\Framework\TestCase {
+class DatabaseResultTest extends TestCase {
 
 	/**
 	 * Create and run a trivial query that returns $num rows
 	 */
-	private function runQuery(int $num) : DatabaseResult {
+	private function runQuery(int $num): DatabaseResult {
 		$db = Database::getInstance();
 		// This query will look like (for increasing $num):
 		//    SELECT 1 LIMIT 0
@@ -31,42 +33,42 @@ class DatabaseResultTest extends \PHPUnit\Framework\TestCase {
 		return $db->read($query);
 	}
 
-	public function test_record_one_row() : void {
+	public function test_record_one_row(): void {
 		self::assertSame([1 => '1'], $this->runQuery(1)->record()->getRow());
 	}
 
-	public function test_record_too_many_rows() : void {
+	public function test_record_too_many_rows(): void {
 		$result = $this->runQuery(2);
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('One record required, but found 2');
 		$result->record();
 	}
 
-	public function test_record_too_few_rows() : void {
+	public function test_record_too_few_rows(): void {
 		$result = $this->runQuery(0);
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('One record required, but found 0');
 		$result->record();
 	}
 
-	public function test_hasRecord_no_rows() : void {
+	public function test_hasRecord_no_rows(): void {
 		$result = $this->runQuery(0);
 		self::assertFalse($result->hasRecord());
 	}
 
-	public function test_hasRecord_with_rows() : void {
+	public function test_hasRecord_with_rows(): void {
 		$result = $this->runQuery(1);
 		self::assertTrue($result->hasRecord());
 	}
 
-	public function test_getNumRecords() : void {
+	public function test_getNumRecords(): void {
 		foreach ([0, 1, 2] as $numRecords) {
 			$result = $this->runQuery($numRecords);
 			self::assertSame($numRecords, $result->getNumRecords());
 		}
 	}
 
-	public function test_records() : void {
+	public function test_records(): void {
 		$numRecords = 0;
 		$result = $this->runQuery(3);
 		foreach ($result->records() as $index => $record) {
@@ -77,7 +79,7 @@ class DatabaseResultTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(3, $numRecords);
 	}
 
-	public function test_records_no_rows() : void {
+	public function test_records_no_rows(): void {
 		$result = $this->runQuery(0);
 		self::assertSame([], iterator_to_array($result->records()));
 	}

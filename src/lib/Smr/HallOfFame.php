@@ -12,7 +12,7 @@ use SmrPlayer;
  */
 class HallOfFame {
 
-	public static function getHofCategories(array $hofTypes, ?int $game_id, int $account_id) : array {
+	public static function getHofCategories(array $hofTypes, ?int $game_id, int $account_id): array {
 		$var = Session::getInstance()->getCurrentVar();
 		$categories = [];
 		foreach ($hofTypes as $type => $value) {
@@ -20,14 +20,14 @@ class HallOfFame {
 			$container = Page::copy($var);
 			$container['view'] = $type;
 			if (!isset($var['type'])) {
-				$container['type'] = array();
+				$container['type'] = [];
 			}
 			$link = create_link($container, $type);
 
 			// Make the subcategory buttons
 			$container = Page::copy($var);
 			if (!isset($var['type'])) {
-				$container['type'] = array();
+				$container['type'] = [];
 			}
 			$container['type'][] = $type;
 			$subcategories = [];
@@ -50,7 +50,7 @@ class HallOfFame {
 
 			$categories[] = [
 				'link' => $link,
-				'subcategories' => join('&#32;', $subcategories),
+				'subcategories' => implode('&#32;', $subcategories),
 			];
 		}
 		return $categories;
@@ -63,30 +63,29 @@ class HallOfFame {
 	 * - alliance stats in live games for players not in your alliance
 	 * - private stats for players who are not the current player
 	 */
-	public static function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $accountID) : string|float {
+	public static function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $accountID): string|float {
 		$session = Session::getInstance();
 		$account = $session->getAccount();
 		if (($vis == HOF_PRIVATE && $account->getAccountID() != $accountID) ||
 		    ($vis == HOF_ALLIANCE && isset($gameID) &&
 		     !SmrGame::getGame($gameID)->hasEnded() &&
-		     !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer())))
-		{
+		     !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer()))) {
 			return '-';
 		} else {
 			return $amount;
 		}
 	}
 
-	public static function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID) : array {
+	public static function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID): array {
 		$db = Database::getInstance();
 		// If no game specified, show total amount from completed games only
 		$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
 
 		$vis = HOF_PUBLIC;
-		$rank = array('Amount'=>0, 'Rank'=>0);
+		$rank = ['Amount' => 0, 'Rank' => 0];
 		if ($view == DONATION_NAME) {
 			$dbResult = $db->read('SELECT SUM(amount) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID) . ' GROUP BY account_id LIMIT 1');
-		} else if ($view == USER_SCORE_NAME) {
+		} elseif ($view == USER_SCORE_NAME) {
 			$statements = SmrAccount::getUserScoreCaseStatement($db);
 			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x ORDER BY amount DESC');
 		} else {
@@ -106,7 +105,7 @@ class HallOfFame {
 
 		if ($view == DONATION_NAME) {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');
-		} else if ($view == USER_SCORE_NAME) {
+		} elseif ($view == USER_SCORE_NAME) {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . '>' . $db->escapeNumber($rank['Amount']) . ') x');
 		} else {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
@@ -117,7 +116,7 @@ class HallOfFame {
 		return $rank;
 	}
 
-	public static function displayHOFRow(int $rank, int $accountID, float|string $amount) : string {
+	public static function displayHOFRow(int $rank, int $accountID, float|string $amount): string {
 		$var = Session::getInstance()->getCurrentVar();
 
 		$account = Session::getInstance()->getAccount();
@@ -146,7 +145,7 @@ class HallOfFame {
 
 		if (isset($hofPlayer) && is_object($hofPlayer)) {
 			$return .= ('<td ' . $bold . '>' . create_link($container, htmlentities($hofPlayer->getPlayerName())) . '</td>');
-		} else if (isset($hofAccount) && is_object($hofAccount)) {
+		} elseif (isset($hofAccount) && is_object($hofAccount)) {
 			$return .= ('<td ' . $bold . '>' . create_link($container, $hofAccount->getHofDisplayName()) . '</td>');
 		} else {
 			$return .= ('<td ' . $bold . '>Unknown</td>');
@@ -156,7 +155,7 @@ class HallOfFame {
 		return $return;
 	}
 
-	public static function buildBreadcrumb(Page $var, array &$hofTypes, string $hofName) : string {
+	public static function buildBreadcrumb(Page $var, array &$hofTypes, string $hofName): string {
 		$container = Page::copy($var);
 		if (isset($container['type'])) {
 			unset($container['type']);
@@ -165,7 +164,7 @@ class HallOfFame {
 			unset($container['view']);
 		}
 		$viewing = '<span class="bold">Currently viewing: </span>' . create_link($container, $hofName);
-		$typeList = array();
+		$typeList = [];
 		if (isset($var['type'])) {
 			foreach ($var['type'] as $type) {
 				if (!is_array($hofTypes[$type])) {

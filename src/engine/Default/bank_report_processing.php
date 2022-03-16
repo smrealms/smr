@@ -44,5 +44,5 @@ if ($dbResult->hasRecord()) {
 
 $container = Page::create('skeleton.php', 'bank_report.php');
 $container->addVar('alliance_id');
-$container['sent_report'] = True;
+$container['sent_report'] = true;
 $container->go();

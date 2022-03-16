@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 require_once(__DIR__ . '/../../bootstrap.php');
-require_once(TOOLS . 'discord/GameLink.class.php');
+require_once(TOOLS . 'discord/GameLink.php');
 require_once(TOOLS . 'discord/mysql_cleanup.php');
 require_once(CONFIG . 'discord/config.specific.php');
 
 error_reporting(E_ALL);
 
-function getCommandPrefix() : string {
+function getCommandPrefix(): string {
 	return defined('COMMAND_PREFIX') ? COMMAND_PREFIX : '.';
 }
 

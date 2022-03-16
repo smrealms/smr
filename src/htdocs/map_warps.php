@@ -55,7 +55,7 @@ try {
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?php echo PAGE_TITLE . ": " . SmrGame::getGame($gameID)->getName(); ?></title>
+		<title><?php echo PAGE_TITLE . ': ' . SmrGame::getGame($gameID)->getName(); ?></title>
 		<meta charset="utf-8">
 		<style>
 		body { background-image: url("images/stars2.png"); }

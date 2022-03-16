@@ -8,15 +8,15 @@ class AdminPermissions {
 	// in the `account_has_permission` database table.
 	// Info is [Permission Name, Page to Link, Category].
 	private const PERMISSION_TABLE = [
-		1  => ['Manage Admin Permissions', 'admin/permission_manage.php', 3],
-		2  => ['Database Cleanup', 'admin/db_cleanup.php', 3],
-		3  => ['Server Open/Close', 'admin/game_status.php', 3],
-		4  => ['Delete Game', 'admin/game_delete.php', 5],
-		5  => ['Create Announcement', 'admin/announcement_create.php', 3],
-		6  => ['Send Message', 'admin/admin_message_send_select.php', 3],
-		7  => ['View Reported Messages', 'admin/notify_view.php', 1],
-		8  => ['Edit Account', 'admin/account_edit_search.php', 1],
-		9  => ['Multi Tools', 'admin/ip_view.php', 1],
+		1 => ['Manage Admin Permissions', 'admin/permission_manage.php', 3],
+		2 => ['Database Cleanup', 'admin/db_cleanup.php', 3],
+		3 => ['Server Open/Close', 'admin/game_status.php', 3],
+		4 => ['Delete Game', 'admin/game_delete.php', 5],
+		5 => ['Create Announcement', 'admin/announcement_create.php', 3],
+		6 => ['Send Message', 'admin/admin_message_send_select.php', 3],
+		7 => ['View Reported Messages', 'admin/notify_view.php', 1],
+		8 => ['Edit Account', 'admin/account_edit_search.php', 1],
+		9 => ['Multi Tools', 'admin/ip_view.php', 1],
 		12 => ['Cheating Ship Check', 'admin/ship_check.php', 1],
 		16 => ['Log Console', 'admin/log_console.php', 1],
 		17 => ['Send Newsletter', 'admin/newsletter_send.php', 3],
@@ -52,7 +52,7 @@ class AdminPermissions {
 	/**
 	 * Returns the info for the admin permission with the given ID.
 	 */
-	public static function getPermissionInfo(int $permissionID) : array {
+	public static function getPermissionInfo(int $permissionID): array {
 		return self::PERMISSION_TABLE[$permissionID];
 	}
 
@@ -60,7 +60,7 @@ class AdminPermissions {
 	 * Returns a list of all permissions with ID keys and name values,
 	 * grouped by the category ID of the permission.
 	 */
-	public static function getPermissionsByCategory() : array {
+	public static function getPermissionsByCategory(): array {
 		$result = [];
 		foreach (self::PERMISSION_TABLE as $permissionID => $info) {
 			$categoryID = $info[2];
@@ -69,7 +69,7 @@ class AdminPermissions {
 		return $result;
 	}
 
-	public static function getCategoryName(int $categoryID) : string {
+	public static function getCategoryName(int $categoryID): string {
 		return self::PERMISSION_CATEGORIES[$categoryID];
 	}
 

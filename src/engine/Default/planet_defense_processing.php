@@ -71,8 +71,9 @@ if ($action == 'Ship') {
 	}
 
 } elseif ($action == 'Planet') {
-	// does the user wants to transfer shields?
 	if ($type_id == HARDWARE_SHIELDS) {
+		// does the user wants to transfer shields?
+
 		// do we want transfer more than we have?
 		if ($amount > $ship->getShields()) {
 			create_error('You can\'t transfer more shields than you carry!');
@@ -87,8 +88,9 @@ if ($action == 'Ship') {
 		$planet->increaseShields($amount);
 		$ship->decreaseShields($amount);
 		$player->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' shields on planet.');
-	// does the user wants to transfer drones?
 	} elseif ($type_id == HARDWARE_COMBAT) {
+		// does the user wants to transfer drones?
+
 		// do we want transfer more than we have?
 		if ($amount > $ship->getCDs()) {
 			create_error('You can\'t transfer more combat drones than you carry!');
@@ -103,9 +105,9 @@ if ($action == 'Ship') {
 		$planet->increaseCDs($amount);
 		$ship->decreaseCDs($amount);
 		$player->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' drones on planet.');
-	}
-	// does the user wish to transfare armour?
-	elseif ($type_id == HARDWARE_ARMOUR) {
+	} elseif ($type_id == HARDWARE_ARMOUR) {
+		// does the user wish to transfare armour?
+
 		// do we want transfer more than we have?
 		if ($amount >= $ship->getArmour()) {
 			create_error('You can\'t transfer more armour than what you carry minus one!');

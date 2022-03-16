@@ -99,7 +99,7 @@
 							<td class="armour_damage"><?php echo $weapon['armour_damage']; ?></td>
 							<td class="accuracy"><?php echo $weapon['accuracy']; ?></td>
 							<td class="level"><?php echo $weapon['power_level']; ?></td>
-							<td class="restriction"><?php echo join('', $weapon['restriction']); ?></td>
+							<td class="restriction"><?php echo implode('', $weapon['restriction']); ?></td>
 							<td class="locs"><?php
 								foreach ($weapon['locs'] as $loc) { ?>
 									<div><?php echo $loc; ?></div><?php

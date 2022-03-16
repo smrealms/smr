@@ -29,13 +29,13 @@ if ($type == 'comp_share') {
 
 	//we are listing ALL IPs
 	$dbResult = $db->read('SELECT * FROM account_has_ip GROUP BY ip, account_id ORDER BY ip');
-	$ip_array = array();
+	$ip_array = [];
 	//make sure we have enough but not too mant to reduce lag
 	foreach ($dbResult->records() as $dbRecord) {
 		$id = $dbRecord->getInt('account_id');
 		$ip = $dbRecord->getField('ip');
 		$host = $dbRecord->getField('host');
-		$ip_array[] = array('ip' => $ip, 'id' => $id, 'host' => $host);
+		$ip_array[] = ['ip' => $ip, 'id' => $id, 'host' => $host];
 	}
 
 	$rows = [];
@@ -142,7 +142,7 @@ if ($type == 'comp_share') {
 		//=========================================================
 		// List all IPs for a specific alliance
 		//=========================================================
-		list ($allianceID, $gameID) = preg_split('/[\/]/', $variable);
+		[$allianceID, $gameID] = preg_split('/[\/]/', $variable);
 		if (!is_numeric($gameID) || !is_numeric($allianceID)) {
 			create_error('Incorrect format used.');
 		}
@@ -218,7 +218,7 @@ if ($type == 'comp_share') {
 		$disabled = $acc->isDisabled();
 		$close_reason = $disabled ? $disabled['Reason'] : '';
 		$dbResult2 = $db->read('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($id));
-		$names = array();
+		$names = [];
 		foreach ($dbResult2->records() as $dbRecord2) {
 			$names[] = $dbRecord2->getString('player_name');
 		}

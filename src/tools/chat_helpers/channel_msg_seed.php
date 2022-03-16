@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function get_seed_message(SmrPlayer $player) : string {
+function get_seed_message(SmrPlayer $player): string {
 	// get a list of seedlist sectors that the player hasn't seeded
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT sector_id
@@ -14,7 +14,7 @@ function get_seed_message(SmrPlayer $player) : string {
 					AND owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
 			)');
 
-	$missingSeeds = array();
+	$missingSeeds = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$missingSeeds[] = $dbRecord->getInt('sector_id');
 	}
@@ -22,11 +22,11 @@ function get_seed_message(SmrPlayer $player) : string {
 	if (count($missingSeeds) == 0) {
 		return $player->getPlayerName() . ' has seeded all sectors.';
 	} else {
-		return $player->getPlayerName() . ' (' . count($missingSeeds) . ' missing) : ' . join(' ', $missingSeeds);
+		return $player->getPlayerName() . ' (' . count($missingSeeds) . ' missing) : ' . implode(' ', $missingSeeds);
 	}
 }
 
-function shared_channel_msg_seed(SmrPlayer $player) : array {
+function shared_channel_msg_seed(SmrPlayer $player): array {
 	// Check to see how many sectors are in the seedlist
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT count(*)
@@ -36,7 +36,7 @@ function shared_channel_msg_seed(SmrPlayer $player) : array {
 	$numSectors = $dbResult->record()->getInt('count(*)');
 
 	if ($numSectors == 0) {
-		return array('Your alliance has not set up a seedlist yet.');
+		return ['Your alliance has not set up a seedlist yet.'];
 	}
 
 	// Get seed status for each player we have access to
@@ -45,5 +45,5 @@ function shared_channel_msg_seed(SmrPlayer $player) : array {
 	// Prepend the total number of sectors to seed
 	array_unshift($result, "There are $numSectors sectors in the seedlist.");
 
-  return $result;
+	return $result;
 }

@@ -20,8 +20,7 @@ $db->lockTable('changelog');
 
 $dbResult = $db->read('SELECT MAX(changelog_id)
 			FROM changelog
-			WHERE version_id = ' . $db->escapeNumber($var['version_id'])
-		   );
+			WHERE version_id = ' . $db->escapeNumber($var['version_id']));
 if ($dbResult->hasRecord()) {
 	$changelog_id = $dbResult->record()->getInt('MAX(changelog_id)') + 1;
 } else {

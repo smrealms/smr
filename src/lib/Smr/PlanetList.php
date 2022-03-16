@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Exception;
 use SmrAlliance;
 
 /**
@@ -13,14 +14,14 @@ class PlanetList {
 	 * The engine files for planet lists have a lot in common, so do
 	 * most of the work here.
 	 */
-	public static function common(int $allianceId, bool $getPlanets) : void {
+	public static function common(int $allianceId, bool $getPlanets): void {
 		$template = Template::getInstance();
 		$player = Session::getInstance()->getPlayer();
 
 		$playerOnly = $allianceId == 0;
 		if ($playerOnly && $player->hasAlliance()) {
 			// This page doesn't support this combination
-			throw new \Exception('Sanity check failed!');
+			throw new Exception('Sanity check failed!');
 		}
 		$template->assign('PlayerOnly', $playerOnly);
 
@@ -43,7 +44,7 @@ class PlanetList {
 			}
 
 			// Get full list of planets
-			$allPlanets = array();
+			$allPlanets = [];
 			if (!$playerOnly) {
 				$allPlanets = $alliance->getPlanets();
 			} elseif ($playerPlanet !== false) {

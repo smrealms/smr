@@ -123,7 +123,7 @@ if ($submit == 'Create Galaxies') {
 	$totalPorts = array_sum($numLevelPorts);
 
 	$totalRaceDist = 0;
-	$numRacePorts = array();
+	$numRacePorts = [];
 	foreach (Smr\Race::getAllIDs() as $raceID) {
 		$racePercent = Smr\Request::getInt('race' . $raceID);
 		if (!empty($racePercent)) {
@@ -217,7 +217,7 @@ if ($submit == 'Create Galaxies') {
 	}
 
 	//update locations
-	$locationsToAdd = array();
+	$locationsToAdd = [];
 	for ($x = 0; $x < UNI_GEN_LOCATION_SLOTS; $x++) {
 		if (Smr\Request::getInt('loc_type' . $x) != 0) {
 			$locationTypeID = Smr\Request::getInt('loc_type' . $x);
@@ -259,7 +259,7 @@ $container['url'] = 'skeleton.php';
 $container->go();
 
 
-function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) : bool {
+function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location): bool {
 	if ($location->isHQ()) {
 		// Only add HQs to empty sectors
 		return !$sector->hasLocation();
@@ -271,7 +271,7 @@ function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location) : bo
 	return count($sector->getLocations()) < 4 && !$sector->offersFederalProtection() && !$sector->hasLocation($location->getTypeID());
 }
 
-function addLocationToSector(SmrLocation $location, SmrSector $sector) : void {
+function addLocationToSector(SmrLocation $location, SmrSector $sector): void {
 	$sector->addLocation($location); //insert the location
 	if ($location->isHQ()) {
 		//only playable races have extra locations to add
@@ -289,10 +289,10 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector) : void {
 		if (!$sector->offersFederalProtection()) {
 			$sector->addLocation($fedBeacon); //add beacon to this sector
 		}
-		$visitedSectors = array();
-		$links = array('Up', 'Right', 'Down', 'Left');
-		$fedSectors = array($sector);
-		$tempFedSectors = array();
+		$visitedSectors = [];
+		$links = ['Up', 'Right', 'Down', 'Left'];
+		$fedSectors = [$sector];
+		$tempFedSectors = [];
 		for ($i = 0; $i < DEFAULT_FED_RADIUS; $i++) {
 			foreach ($fedSectors as $fedSector) {
 				foreach ($links as $link) {
@@ -307,7 +307,7 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector) : void {
 				}
 			}
 			$fedSectors = $tempFedSectors;
-			$tempFedSectors = array();
+			$tempFedSectors = [];
 		}
 	}
 }

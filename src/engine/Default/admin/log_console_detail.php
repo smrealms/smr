@@ -30,8 +30,7 @@ if ($action == 'Delete') {
 	// *********************************
 	// * C o l o r   L e g e n d
 	// *********************************
-	$avail_colors = array('#FFFFFF', '#00FF00', '#FF3377', '#0099FF',
-	                      '#FF0000', '#0000FF');
+	$avail_colors = ['#FFFFFF', '#00FF00', '#FF3377', '#0099FF', '#FF0000', '#0000FF'];
 
 	// now assign each account id a color
 	$colors = [];
@@ -63,7 +62,7 @@ if ($action == 'Delete') {
 	}
 	$template->assign('LogTypes', $logTypes);
 
-	$log_type_id_list = array(0);
+	$log_type_id_list = [0];
 	foreach ($logTypes as $id => $entry) {
 		if (isset($log_type_ids[$id])) {
 			$log_type_id_list[] = $id;
@@ -80,7 +79,7 @@ if ($action == 'Delete') {
 	$template->assign('SaveHREF', $container->href());
 
 	// get notes from db
-	$log_notes = array();
+	$log_notes = [];
 	$dbResult = $db->read('SELECT * FROM log_has_notes WHERE account_id IN (' . $account_list . ')');
 	foreach ($dbResult->records() as $dbRecord) {
 		$log_notes[] = $dbRecord->getField('notes');
@@ -90,7 +89,7 @@ if ($action == 'Delete') {
 	$log_notes = array_unique($log_notes);
 
 	// flattens array
-	$flat_notes = join(EOL, $log_notes);
+	$flat_notes = implode(EOL, $log_notes);
 	$template->assign('FlatNotes', $flat_notes);
 
 	// *********************************
@@ -105,7 +104,7 @@ if ($action == 'Delete') {
 		$log_type_id = $dbRecord->getInt('log_type_id');
 		$sector_id = $dbRecord->getInt('sector_id');
 
-		$date = DateTime::createFromFormat("U.u", $microtime)->format('Y-m-d H:i:s.u');
+		$date = DateTime::createFromFormat('U.u', $microtime)->format('Y-m-d H:i:s.u');
 
 		$logs[] = [
 			'date' => $date,

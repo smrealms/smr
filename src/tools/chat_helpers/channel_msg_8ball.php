@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-function shared_channel_msg_8ball() : string {
-	static $answers = array(
+function shared_channel_msg_8ball(): string {
+	static $answers = [
 		'Signs point to yes.',
 		'Yes.',
 		'Reply hazy, try again.',
@@ -21,8 +21,8 @@ function shared_channel_msg_8ball() : string {
 		'Ask again later.',
 		'My reply is no.',
 		'Outlook good.',
-		'Don\'t count on it.'
-	);
+		'Don\'t count on it.',
+	];
 
 	return $answers[rand(0, count($answers) - 1)];
 }

@@ -20,7 +20,7 @@ if (!isset($var['action'])) {
 }
 $action = $var['action'];
 
-$query = match($action) {
+$query = match ($action) {
 	COMBAT_LOG_PERSONAL, COMBAT_LOG_ALLIANCE => 'type=\'PLAYER\'',
 	COMBAT_LOG_PORT => 'type=\'PORT\'',
 	COMBAT_LOG_PLANET => 'type=\'PLANET\'',
@@ -40,17 +40,15 @@ if ($action != COMBAT_LOG_PERSONAL && $player->hasAlliance()) {
 } else {
 	$query .= ' AND (attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ') ';
 }
-$page = 0;
-if (isset($var['page'])) {
-	$page = $var['page'];
-}
+
+$page = $var['page'] ?? 0;
 $dbResult = $db->read('SELECT count(*) as count FROM combat_logs c WHERE ' . $query . ' LIMIT 1');
 $totalLogs = $dbResult->record()->getInt('count'); // count always returns a record
 $template->assign('TotalLogs', $totalLogs);
 
 $dbResult = $db->read('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
 
-$getParticipantName = function($accountID, $sectorID) use ($player) : string {
+$getParticipantName = function($accountID, $sectorID) use ($player): string {
 	if ($accountID == ACCOUNT_ID_PORT) {
 		return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">Port <span class="sectorColour">#' . $sectorID . '</span></a>';
 	}
@@ -61,7 +59,7 @@ $getParticipantName = function($accountID, $sectorID) use ($player) : string {
 };
 
 // For display purposes, describe the type of log
-$type = match($action) {
+$type = match ($action) {
 	COMBAT_LOG_PERSONAL => 'personal',
 	COMBAT_LOG_ALLIANCE => 'alliance',
 	COMBAT_LOG_PORT => 'port',
@@ -72,7 +70,7 @@ $type = match($action) {
 $template->assign('LogType', $type);
 
 // Construct the list of logs of this type
-$logs = array();
+$logs = [];
 if ($dbResult->hasRecord()) {
 	// 'View' and 'Save' share the same form, so we use 'old_action' as a
 	// way to return to this page when we only want to save the logs.
@@ -96,12 +94,12 @@ if ($dbResult->hasRecord()) {
 
 	foreach ($dbResult->records() as $dbRecord) {
 		$sectorID = $dbRecord->getInt('sector_id');
-		$logs[$dbRecord->getInt('log_id')] = array(
+		$logs[$dbRecord->getInt('log_id')] = [
 			'Attacker' => $getParticipantName($dbRecord->getInt('attacker_id'), $sectorID),
 			'Defender' => $getParticipantName($dbRecord->getInt('defender_id'), $sectorID),
 			'Time' => $dbRecord->getInt('timestamp'),
-			'Sector' => $sectorID
-		);
+			'Sector' => $sectorID,
+		];
 	}
 }
 $template->assign('Logs', $logs);

@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Exception;
 use Smr\Container\DiContainer;
 
 /**
@@ -24,11 +25,11 @@ class Epoch {
 		$this->time = IFloor($this->microtime);
 	}
 
-	public function getMicrotime() : float {
+	public function getMicrotime(): float {
 		return $this->microtime;
 	}
 
-	public function getTime() : int {
+	public function getTime(): int {
 		return $this->time;
 	}
 
@@ -37,7 +38,7 @@ class Epoch {
 	 * The first time this is called, it will populate the DI container,
 	 * and this will be the time associated with the page request.
 	 */
-	private static function getInstance() : self {
+	private static function getInstance(): self {
 		return DiContainer::get(self::class);
 	}
 
@@ -45,7 +46,7 @@ class Epoch {
 	 * Return the time (in seconds, with microsecond-level precision)
 	 * associated with a page request (i.e. stored in the DI container).
 	 */
-	public static function microtime() : float {
+	public static function microtime(): float {
 		return self::getInstance()->getMicrotime();
 	}
 
@@ -53,7 +54,7 @@ class Epoch {
 	 * Return the time (in seconds) associated with a page request
 	 * (i.e. stored in the DI container).
 	 */
-	public static function time() : int {
+	public static function time(): int {
 		return self::getInstance()->getTime();
 	}
 
@@ -64,9 +65,9 @@ class Epoch {
 	 * NOTE: This should never be called by normal page requests, and should
 	 * only be used by the CLI programs that run continuously.
 	 */
-	public static function update() : void {
+	public static function update(): void {
 		if (!defined('NPC_SCRIPT')) {
-			throw new \Exception('Only call this function from CLI programs!');
+			throw new Exception('Only call this function from CLI programs!');
 		}
 		DiContainer::getContainer()->set(self::class, new self());
 	}

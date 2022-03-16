@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function checkShipLogo(string $filename) : void {
+function checkShipLogo(string $filename): void {
 	// check if we have an image
 	if ($_FILES['photo']['error'] != UPLOAD_ERR_OK) {
 		create_error('Error while uploading');
@@ -36,14 +36,14 @@ function checkShipLogo(string $filename) : void {
 	}
 }
 
-function checkTextShipName(string $name, int $max_len) : void {
+function checkTextShipName(string $name, int $max_len): void {
 	if (empty($name)) {
 		create_error('Please enter a ship name!');
 	}
 
 	// disallow certain ascii chars
 	for ($i = 0; $i < strlen($name); $i++) {
-		if (ord($name[$i]) < 32 || ord($name[$i]) > 127 || in_array(ord($name[$i]), array(37, 39, 59, 92, 63, 42))) {
+		if (ord($name[$i]) < 32 || ord($name[$i]) > 127 || in_array(ord($name[$i]), [37, 39, 59, 92, 63, 42])) {
 			create_error('The ship name contains invalid characters! ' . chr(ord($name[$i])));
 		}
 	}
@@ -53,12 +53,12 @@ function checkTextShipName(string $name, int $max_len) : void {
 	}
 }
 
-function checkHtmlShipName(string $name) : void {
+function checkHtmlShipName(string $name): void {
 	//check for some bad html
 	if (preg_match('/(\<span[^\>]*id\s*=)|(class\s*=\s*"[^"]*ajax)/i', $name) > 0) {
 		create_error('You have used html that is not allowed.');
 	}
-	$bad = array('<form', '<applet', '<a ', '<bgsound', '<body', '<meta', '<dd', '<dir', '<dl', '<!doctype', '<dt', '<embed', '<frame', '<head', '<hr', '<iframe', '<ilayer', '<img', '<input', '<isindex', '<layer', '<li', '<link', '<map', '<menu', '<nobr', '<no', '<object', '<ol', '<opt', '<p', '<script', '<select', '<sound', '<td', '<text', '<t', '<ul', '<h', '<br', '<marquee', 'size', 'width', 'height', '<div', 'width=');
+	$bad = ['<form', '<applet', '<a ', '<bgsound', '<body', '<meta', '<dd', '<dir', '<dl', '<!doctype', '<dt', '<embed', '<frame', '<head', '<hr', '<iframe', '<ilayer', '<img', '<input', '<isindex', '<layer', '<li', '<link', '<map', '<menu', '<nobr', '<no', '<object', '<ol', '<opt', '<p', '<script', '<select', '<sound', '<td', '<text', '<t', '<ul', '<h', '<br', '<marquee', 'size', 'width', 'height', '<div', 'width='];
 	foreach ($bad as $check) {
 		if (stristr($name, $check)) {
 			$check .= '*>';

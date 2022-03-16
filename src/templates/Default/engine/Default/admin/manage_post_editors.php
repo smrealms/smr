@@ -1,7 +1,7 @@
 <?php
 
 if (empty($ActiveGames)) {
-	echo "<p>There are no active games at this time!</p>";
+	echo '<p>There are no active games at this time!</p>';
 } else { ?>
 
 	<p>Specify the Game and Player ID to assign or remove a Galactic Post editor.</p>
@@ -35,7 +35,7 @@ if (empty($ActiveGames)) {
 
 	<?php
 	if (empty($CurrentEditors)) {
-		echo "No current editors for this game!";
+		echo 'No current editors for this game!';
 	} else { ?>
 		Current Editors:
 		<ul><?php

@@ -22,7 +22,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$container['offended'] = $dbRecord->getInt('to_id');
 	$container['game_id'] = $gameID;
 
-	$getName = function(SmrPlayer|string $messagePlayer) use ($container, $account) : string {
+	$getName = function(SmrPlayer|string $messagePlayer) use ($container, $account): string {
 		$name = $messagePlayer;
 		if ($messagePlayer instanceof SmrPlayer) {
 			$name = $messagePlayer->getAccount()->getLogin();

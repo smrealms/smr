@@ -99,5 +99,5 @@ if (isset($Msg)) {
 </table>
 <p><a href="<?php echo $LaunchLink; ?>" class="submitStyle">Launch</a></p>
 <?php
-$this->includeTemplate('includes/SectorPlayers.inc.php', array('PlayersContainer'=>$ThisPlanet));
+$this->includeTemplate('includes/SectorPlayers.inc.php', ['PlayersContainer' => $ThisPlanet]);
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-function DisplayResult(array $Links, SmrPlayer $Player) : void { ?>
+function DisplayResult(array $Links, SmrPlayer $Player): void { ?>
 	<table class="standard" width="88%">
 		<tr>
 			<th>Name</th>
@@ -70,8 +70,8 @@ function DisplayResult(array $Links, SmrPlayer $Player) : void { ?>
 }
 
 if (isset($ResultPlayerLinks)) {
-	DisplayResult(array($ResultPlayerLinks), $Player);
-	echo "<br /><br />";
+	DisplayResult([$ResultPlayerLinks], $Player);
+	echo '<br /><br />';
 }
 if (isset($SimilarPlayersLinks)) {
 	DisplayResult($SimilarPlayersLinks, $Player);

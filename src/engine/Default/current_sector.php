@@ -25,19 +25,19 @@ Menu::navigation($player);
 // *******************************************
 
 // Sector links
-$links = array();
-$links['Up'] = array('ID'=>$sector->getLinkUp());
-$links['Right'] = array('ID'=>$sector->getLinkRight());
-$links['Down'] = array('ID'=>$sector->getLinkDown());
-$links['Left'] = array('ID'=>$sector->getLinkLeft());
-$links['Warp'] = array('ID'=>$sector->getWarp());
+$links = [];
+$links['Up'] = ['ID' => $sector->getLinkUp()];
+$links['Right'] = ['ID' => $sector->getLinkRight()];
+$links['Down'] = ['ID' => $sector->getLinkDown()];
+$links['Left'] = ['ID' => $sector->getLinkLeft()];
+$links['Warp'] = ['ID' => $sector->getWarp()];
 
-$unvisited = array();
+$unvisited = [];
 
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND ' . $player->getSQL());
 foreach ($dbResult->records() as $dbRecord) {
-	$unvisited[$dbRecord->getInt('sector_id')] = TRUE;
+	$unvisited[$dbRecord->getInt('sector_id')] = true;
 }
 
 foreach ($links as $key => $linkArray) {
@@ -71,7 +71,7 @@ $game = SmrGame::getGame($player->getGameID());
 if (!$game->hasStarted()) {
 	$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - Smr\Epoch::time()) . '!';
 } else {
-	$turnsMessage = match($player->getTurnsLevel()) {
+	$turnsMessage = match ($player->getTurnsLevel()) {
 		'NONE' => '<span class="red">WARNING</span>: You have run out of turns!',
 		'LOW' => '<span class="red">WARNING</span>: You are almost out of turns!',
 		'MEDIUM' => '<span class="yellow">WARNING</span>: You are running out of turns!',
@@ -144,7 +144,7 @@ if ($sector->hasPort()) {
 	$template->assign('PortIsAtWar', $player->getRelation($port->getRaceID()) < RELATIONS_WAR);
 }
 
-function checkForForceRefreshMessage(string &$msg) : void {
+function checkForForceRefreshMessage(string &$msg): void {
 	$contains = 0;
 	$msg = str_replace('[Force Check]', '', $msg, $contains);
 	if ($contains > 0) {
@@ -167,7 +167,7 @@ function checkForForceRefreshMessage(string &$msg) : void {
 	}
 }
 
-function checkForAttackMessage(string &$msg) : void {
+function checkForAttackMessage(string &$msg): void {
 	$contains = 0;
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {

@@ -6,7 +6,7 @@ $var = $session->getCurrentVar();
 
 $template->assign('PageTopic', 'Database Cleanup');
 
-function bytesToMB(int $bytes) : string {
+function bytesToMB(int $bytes): string {
 	return round($bytes / (1024 * 1024), 1) . ' MB';
 }
 

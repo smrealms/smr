@@ -2,16 +2,17 @@
 
 namespace Smr\SocialLogin;
 
+use Exception;
 use League\OAuth2\Client\Provider\Google as GoogleProvider;
 use Smr\Request;
 
 class Google extends SocialLogin {
 
-	public static function getLoginType() : string {
+	public static function getLoginType(): string {
 		return 'Google';
 	}
 
-	private function getGoogleObj() : GoogleProvider {
+	private function getGoogleObj(): GoogleProvider {
 		return new GoogleProvider([
 			'clientId' => GOOGLE_CLIENT_ID,
 			'clientSecret' => GOOGLE_CLIENT_SECRET,
@@ -19,7 +20,7 @@ class Google extends SocialLogin {
 		]);
 	}
 
-	public function getLoginUrl() : string {
+	public function getLoginUrl(): string {
 		if (empty(GOOGLE_CLIENT_ID)) {
 			// No google api specified. Continuing would throw an exception.
 			return URL;
@@ -32,9 +33,9 @@ class Google extends SocialLogin {
 		return $authUrl;
 	}
 
-	public function login() : SocialLogin {
+	public function login(): SocialLogin {
 		if ($_SESSION['GoogleToken'] != Request::get('state')) {
-			throw new \Exception('Unexpected token received from Google');
+			throw new Exception('Unexpected token received from Google');
 		}
 		$provider = $this->getGoogleObj();
 		$accessToken = $provider->getAccessToken(

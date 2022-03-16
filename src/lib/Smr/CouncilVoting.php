@@ -10,7 +10,7 @@ use SmrSector;
  */
 class CouncilVoting {
 
-	public static function modifyRelations(int $race_id_1, int $gameID) : void {
+	public static function modifyRelations(int $race_id_1, int $gameID): void {
 
 		// Process any votes that ended prior to the start of today
 		$endtime = strtotime(date('Y-m-d'));
@@ -18,9 +18,9 @@ class CouncilVoting {
 		$db = Database::getInstance();
 
 		$dbResult = $db->read('SELECT * FROM player_votes_relation
-				WHERE time < '.$db->escapeNumber($endtime) . '
-					AND game_id = '.$db->escapeNumber($gameID) . '
-					AND race_id_1 = '.$db->escapeNumber($race_id_1));
+				WHERE time < ' . $db->escapeNumber($endtime) . '
+					AND game_id = ' . $db->escapeNumber($gameID) . '
+					AND race_id_1 = ' . $db->escapeNumber($race_id_1));
 		foreach ($dbResult->records() as $dbRecord) {
 			$account_id = $dbRecord->getInt('account_id');
 			$race_id_2 = $dbRecord->getInt('race_id_2');
@@ -46,13 +46,13 @@ class CouncilVoting {
 
 			$db->write('UPDATE race_has_relation
 					SET relation = ' . $db->escapeNumber($relation) . '
-					WHERE game_id = '.$db->escapeNumber($gameID) . '
+					WHERE game_id = ' . $db->escapeNumber($gameID) . '
 						AND (
-								race_id_1 = '.$db->escapeNumber($race_id_1) . '
-								AND race_id_2 = '.$db->escapeNumber($race_id_2) . '
+								race_id_1 = ' . $db->escapeNumber($race_id_1) . '
+								AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
 							OR
-								race_id_1 = '.$db->escapeNumber($race_id_2) . '
-								AND race_id_2 = '.$db->escapeNumber($race_id_1) . '
+								race_id_1 = ' . $db->escapeNumber($race_id_2) . '
+								AND race_id_2 = ' . $db->escapeNumber($race_id_1) . '
 						)');
 
 			$db->write('DELETE FROM player_votes_relation
@@ -61,7 +61,7 @@ class CouncilVoting {
 		}
 	}
 
-	public static function checkPacts(int $race_id_1, int $gameID) : void {
+	public static function checkPacts(int $race_id_1, int $gameID): void {
 
 		$db = Database::getInstance();
 
@@ -89,17 +89,16 @@ class CouncilVoting {
 						AND vote = \'NO\'');
 			$no_votes = $dbResult2->getNumRecords();
 
-
 			// more yes than no?
 			if ($yes_votes > $no_votes) {
 				if ($type == 'WAR') {
-					$currentlyParkedAccountIDs = array();
-					$raceFedSectors = array(
+					$currentlyParkedAccountIDs = [];
+					$raceFedSectors = [
 						$race_id_1 => SmrSector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
-						$race_id_2 => SmrSector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_2)
-					);
+						$race_id_2 => SmrSector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_2),
+					];
 					foreach ($raceFedSectors as $raceID => $fedSectors) {
-						$currentlyParkedAccountIDs[$raceID] = array(); //initialize
+						$currentlyParkedAccountIDs[$raceID] = []; //initialize
 						$otherRaceID = $raceID == $race_id_1 ? $race_id_2 : $race_id_1;
 						foreach ($fedSectors as $fedSector) {
 							$sectorPlayers = $fedSector->getPlayers();

@@ -10,8 +10,8 @@ if ($var['action'] == 'Enable') {
 		create_error('You do not have enough turns to cloak.');
 	}
 	$player->takeTurns(TURNS_TO_CLOAK);
-	$player->increaseHOF(TURNS_TO_CLOAK, array('Movement', 'Cloaking', 'Turns Used'), HOF_ALLIANCE);
-	$player->increaseHOF(1, array('Movement', 'Cloaking', 'Times'), HOF_ALLIANCE);
+	$player->increaseHOF(TURNS_TO_CLOAK, ['Movement', 'Cloaking', 'Turns Used'], HOF_ALLIANCE);
+	$player->increaseHOF(1, ['Movement', 'Cloaking', 'Times'], HOF_ALLIANCE);
 	$ship->enableCloak();
 } elseif ($var['action'] == 'Disable') {
 	$ship->decloak();

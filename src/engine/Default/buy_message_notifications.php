@@ -14,11 +14,11 @@ $template->assign('PageTopic', 'Message Notifications');
 $container = Page::create('buy_message_notifications_processing.php');
 
 // Presently only player messages are eligible for notifications
-$notifyTypeIDs = array(MSG_PLAYER);
+$notifyTypeIDs = [MSG_PLAYER];
 
-$messageBoxes = array();
+$messageBoxes = [];
 foreach ($notifyTypeIDs as $messageTypeID) {
-	$messageBox = array();
+	$messageBox = [];
 	$messageBox['Name'] = Smr\Messages::getMessageTypeNames($messageTypeID);
 
 	$messageBox['MessagesRemaining'] = $account->getMessageNotifications($messageTypeID);

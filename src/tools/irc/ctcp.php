@@ -3,8 +3,7 @@
 /**
  * @param resource $fp
  */
-function ctcp_version($fp, string $rdata) : bool
-{
+function ctcp_version($fp, string $rdata): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'VERSION' . chr(1) . '\s$/i', $rdata, $msg)) {
 
@@ -15,7 +14,7 @@ function ctcp_version($fp, string $rdata) : bool
 
 		echo_r('[CTCP_VERSION] by ' . $nick);
 
-		fputs($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'VERSION SMR BOT Version 1.0!' . chr(1) . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'VERSION SMR BOT Version 1.0!' . chr(1) . EOL);
 		return true;
 	}
 
@@ -25,8 +24,7 @@ function ctcp_version($fp, string $rdata) : bool
 /**
  * @param resource $fp
  */
-function ctcp_finger($fp, string $rdata) : bool
-{
+function ctcp_finger($fp, string $rdata): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'FINGER' . chr(1) . '\s$/i', $rdata, $msg)) {
 
@@ -37,7 +35,7 @@ function ctcp_finger($fp, string $rdata) : bool
 
 		echo_r('[CTCP_FINGER] by ' . $nick);
 
-		fputs($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'FINGER Go finger yourself!' . chr(1) . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'FINGER Go finger yourself!' . chr(1) . EOL);
 		return true;
 	}
 
@@ -47,8 +45,7 @@ function ctcp_finger($fp, string $rdata) : bool
 /**
  * @param resource $fp
  */
-function ctcp_time($fp, string $rdata) : bool
-{
+function ctcp_time($fp, string $rdata): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'TIME' . chr(1) . '\s$/i', $rdata, $msg)) {
 
@@ -59,7 +56,7 @@ function ctcp_time($fp, string $rdata) : bool
 
 		echo_r('[CTCP_TIME] by ' . $nick);
 
-		fputs($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'TIME You don\'t know what time it is? Me neither!' . chr(1) . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'TIME You don\'t know what time it is? Me neither!' . chr(1) . EOL);
 		return true;
 	}
 
@@ -69,8 +66,7 @@ function ctcp_time($fp, string $rdata) : bool
 /**
  * @param resource $fp
  */
-function ctcp_ping($fp, string $rdata) : bool
-{
+function ctcp_ping($fp, string $rdata): bool {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'PING\s(.*)' . chr(1) . '\s$/i', $rdata, $msg)) {
 
@@ -82,7 +78,7 @@ function ctcp_ping($fp, string $rdata) : bool
 
 		echo_r('[CTCP_PING] by ' . $nick . ' at ' . $their_time);
 
-		fputs($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'PING ' . time() . chr(1) . EOL);
+		fwrite($fp, 'NOTICE ' . $nick . ' :' . chr(1) . 'PING ' . time() . chr(1) . EOL);
 		return true;
 	}
 

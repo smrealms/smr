@@ -18,7 +18,7 @@ WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 ORDER BY role_id
 ');
-$allianceRoles = array();
+$allianceRoles = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$roleID = $dbRecord->getInt('role_id');
 	$allianceRoles[$roleID]['RoleID'] = $roleID;
@@ -51,7 +51,7 @@ $template->assign('AllianceRoles', $allianceRoles);
 $container = Page::create('alliance_roles_processing.php');
 $container['alliance_id'] = $alliance->getAllianceID();
 
-$template->assign('CreateRole', array(
+$template->assign('CreateRole', [
 	'HREF' => $container->href(),
 	'RoleID' => '',
 	'Name' => '',
@@ -69,4 +69,4 @@ $template->assign('CreateRole', array(
 	'ExemptWithdrawals' => false,
 	'SendAllianceMessage' => false,
 	'OpLeader' => false,
-	'ViewBondsInPlanetList' => false));
+	'ViewBondsInPlanetList' => false]);

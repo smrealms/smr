@@ -39,18 +39,20 @@ $container = Page::create('skeleton.php', 'alliance_message_view.php', $var);
 
 if (isset($var['thread_ids'][$thread_index - 1])) {
 	$container['thread_index'] = $thread_index - 1;
-	$template->assign('PrevThread', array('Topic' => $var['thread_topics'][$thread_index - 1], 'Href' => $container->href()));
+	$template->assign('PrevThread', ['Topic' => $var['thread_topics'][$thread_index - 1], 'Href' => $container->href()]);
 }
 if (isset($var['thread_ids'][$thread_index + 1])) {
 	$container['thread_index'] = $thread_index + 1;
-	$template->assign('NextThread', array('Topic' => $var['thread_topics'][$thread_index + 1], 'Href' => $container->href()));
+	$template->assign('NextThread', ['Topic' => $var['thread_topics'][$thread_index + 1], 'Href' => $container->href()]);
 }
 
-$thread = array();
+$thread = [];
 $thread['AllianceEyesOnly'] = is_array($var['alliance_eyes']) && $var['alliance_eyes'][$thread_index];
 //for report type (system sent) messages
-$players[ACCOUNT_ID_PLANET] = 'Planet Reporter';
-$players[ACCOUNT_ID_BANK_REPORTER] = 'Bank Reporter';
+$players = [
+	ACCOUNT_ID_PLANET => 'Planet Reporter',
+	ACCOUNT_ID_BANK_REPORTER => 'Bank Reporter',
+];
 $dbResult = $db->read('SELECT player.*
 			FROM player
 			JOIN alliance_thread USING (game_id)
@@ -72,11 +74,11 @@ AND thread_id=' . $db->escapeNumber($thread_id) . '
 ORDER BY reply_id LIMIT ' . $var['thread_replies'][$thread_index]);
 
 $thread['CanDelete'] = $dbResult->getNumRecords() > 1 && $thread['CanDelete'];
-$thread['Replies'] = array();
+$thread['Replies'] = [];
 $container = Page::create('alliance_message_delete_processing.php', '', $var);
 $container['thread_id'] = $thread_id;
 foreach ($dbResult->records() as $dbRecord) {
-	$thread['Replies'][$dbRecord->getInt('reply_id')] = array('Sender' => $players[$dbRecord->getInt('sender_id')], 'Message' => $dbRecord->getField('text'), 'SendTime' => $dbRecord->getInt('time'));
+	$thread['Replies'][$dbRecord->getInt('reply_id')] = ['Sender' => $players[$dbRecord->getInt('sender_id')], 'Message' => $dbRecord->getField('text'), 'SendTime' => $dbRecord->getInt('time')];
 	if ($thread['CanDelete']) {
 		$container['reply_id'] = $dbRecord->getInt('reply_id');
 		$thread['Replies'][$dbRecord->getInt('reply_id')]['DeleteHref'] = $container->href();

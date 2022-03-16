@@ -2,25 +2,29 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Error;
 use mysqli;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\DatabaseProperties;
+use TypeError;
 
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest since we are not writing any data.
+ *
  * @covers \Smr\Database
  */
 class DatabaseIntegrationTest extends TestCase {
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		// Start each test with a fresh container (and mysqli connection).
 		// This ensures the independence of each test.
 		DiContainer::initialize(false);
 	}
 
-	public function test_mysqli_factory() : void {
+	public function test_mysqli_factory(): void {
 		// Given database properties are retrieved from the container
 		$dbProperties = DiContainer::get(DatabaseProperties::class);
 		// When using the factory to retrieve a mysqli instance
@@ -29,12 +33,12 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertNotNull($mysql->server_info);
 	}
 
-	public function test__construct_happy_path() : void {
+	public function test__construct_happy_path(): void {
 		$db = DiContainer::get(Database::class);
 		$this->assertNotNull($db);
 	}
 
-	public function test_getInstance_always_returns_same_instance() : void {
+	public function test_getInstance_always_returns_same_instance(): void {
 		// Given a Database object
 		$original = Database::getInstance();
 		// When calling getInstance again
@@ -42,18 +46,18 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame($original, $second);
 	}
 
-	public function test_performing_operations_on_closed_database_throws_error() : void {
+	public function test_performing_operations_on_closed_database_throws_error(): void {
 		// Given a Database instance
 		$db = Database::getInstance();
 		// And disconnect is called
 		$db->close();
 		// When calling database methods
-		$this->expectException(\Error::class);
+		$this->expectException(Error::class);
 		$this->expectExceptionMessage('Typed property Smr\Database::$dbConn must not be accessed before initialization');
-		$db->read("foo query");
+		$db->read('foo query');
 	}
 
-	public function test_getDbBytes() : void {
+	public function test_getDbBytes(): void {
 		$db = Database::getInstance();
 		$bytes = $db->getDbBytes();
 		// This value will need to change whenever database migrations are
@@ -63,7 +67,7 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame($bytes, 729944);
 	}
 
-	public function test_closing_database_returns_boolean() : void {
+	public function test_closing_database_returns_boolean(): void {
 		$db = Database::getInstance();
 		// Returns true when closing an open database connection
 		self::assertTrue($db->close());
@@ -71,7 +75,7 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertFalse($db->close());
 	}
 
-	public function test_reconnect_after_connection_closed() : void {
+	public function test_reconnect_after_connection_closed(): void {
 		// Given an original mysql connection
 		$originalMysql = DiContainer::get(mysqli::class);
 		// And a Database instance
@@ -80,12 +84,12 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->close();
 		// And Database is usable again after reconnecting
 		$db->reconnect();
-		$db->read("SELECT 1");
+		$db->read('SELECT 1');
 		// Then new mysqli instance is not the same as the initial mock
 		self::assertNotSame($originalMysql, DiContainer::get(mysqli::class));
 	}
 
-	public function test_reconnect_when_connection_not_closed() : void {
+	public function test_reconnect_when_connection_not_closed(): void {
 		// Given an original mysql connection
 		$originalMysql = DiContainer::get(mysqli::class);
 		// And a Database instance
@@ -96,22 +100,22 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame($originalMysql, DiContainer::get(mysqli::class));
 	}
 
-	public function test_escapeMicrotime() : void {
+	public function test_escapeMicrotime(): void {
 		$db = Database::getInstance();
 		// The current microtime must not throw an exception
 		$db->escapeMicrotime(microtime(true));
 		// Check that the formatting preserves all digits
-		self::assertSame("1608455259123456", $db->escapeMicrotime(1608455259.123456));
+		self::assertSame('1608455259123456', $db->escapeMicrotime(1608455259.123456));
 	}
 
-	public function test_escapeBoolean() : void {
+	public function test_escapeBoolean(): void {
 		$db = Database::getInstance();
 		// Test both boolean values
 		self::assertSame("'TRUE'", $db->escapeBoolean(true));
 		self::assertSame("'FALSE'", $db->escapeBoolean(false));
 	}
 
-	public function test_escapeString() : void {
+	public function test_escapeString(): void {
 		$db = Database::getInstance();
 		// Test the empty string
 		self::assertSame("''", $db->escapeString(''));
@@ -123,13 +127,13 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame("'bla'", $db->escapeString('bla', true)); // nullable
 	}
 
-	public function test_escapeString_null_throws() : void {
+	public function test_escapeString_null_throws(): void {
 		$db = Database::getInstance();
-		$this->expectException(\TypeError::class);
+		$this->expectException(TypeError::class);
 		$db->escapeString(null);
 	}
 
-	public function test_escapeArray() : void {
+	public function test_escapeArray(): void {
 		$db = Database::getInstance();
 		// Test a mixed array
 		self::assertSame("'a',2,'c'", $db->escapeArray(['a', 2, 'c']));
@@ -142,7 +146,7 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame("'a','x',9,2", $db->escapeArray(['a', ['x', 9], 2], ',', true));
 	}
 
-	public function test_escapeArray_nested_array_throws() : void {
+	public function test_escapeArray_nested_array_throws(): void {
 		// Warning: It is dangerous to use nested arrays with escapeIndividually=false
 		$db = Database::getInstance();
 		$this->expectWarning();
@@ -150,7 +154,7 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->escapeArray(['a', ['x', 9, 'y'], 2, 'c'], ':', false);
 	}
 
-	public function test_escapeNumber() : void {
+	public function test_escapeNumber(): void {
 		// No escaping is done of numeric types
 		$db = Database::getInstance();
 		// Test int
@@ -161,14 +165,14 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame('42', $db->escapeNumber('42'));
 	}
 
-	public function test_escapeNumber_nonnumeric_throws() : void {
+	public function test_escapeNumber_nonnumeric_throws(): void {
 		$db = Database::getInstance();
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Not a number');
 		$db->escapeNumber('bla');
 	}
 
-	public function test_escapeObject() : void {
+	public function test_escapeObject(): void {
 		$db = Database::getInstance();
 		// Test null
 		self::assertSame('NULL', $db->escapeObject(null, false, true));
@@ -180,18 +184,18 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame("'i:0;'", $db->escapeObject(0));
 	}
 
-	public function test_write_throws_on_wrong_query_type() : void {
+	public function test_write_throws_on_wrong_query_type(): void {
 		// Queries that return a result should not use the 'write' method
 		$db = Database::getInstance();
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Wrong query type');
 		$db->write('SELECT 1');
 	}
 
-	public function test_lockTable_throws_if_read_other_table() : void {
+	public function test_lockTable_throws_if_read_other_table(): void {
 		$db = Database::getInstance();
 		$db->lockTable('player');
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage("Table 'account' was not locked with LOCK TABLES");
 		try {
 			$db->read('SELECT 1 FROM account LIMIT 1');
@@ -202,7 +206,7 @@ class DatabaseIntegrationTest extends TestCase {
 		}
 	}
 
-	public function test_lockTable_allows_read() : void {
+	public function test_lockTable_allows_read(): void {
 		$db = Database::getInstance();
 		$db->lockTable('good');
 
@@ -215,7 +219,7 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->read('SELECT 1 FROM account LIMIT 1');
 	}
 
-	public function test_inversion_of_escape_and_get() : void {
+	public function test_inversion_of_escape_and_get(): void {
 		$db = Database::getInstance();
 		// [value, escape function, getter, comparator, extra args]
 		$params = [
@@ -235,13 +239,13 @@ class DatabaseIntegrationTest extends TestCase {
 			// Microtime takes a float and returns a string because of DateTime::createFromFormat
 			[microtime(true), 'escapeMicrotime', 'getMicrotime', 'assertEquals', []],
 		];
-		foreach ($params as list($value, $escaper, $getter, $cmp, $args)) {
+		foreach ($params as [$value, $escaper, $getter, $cmp, $args]) {
 			$result = $db->read('SELECT ' . $db->$escaper($value, ...$args) . ' AS val');
 			self::$cmp($value, $result->record()->$getter('val', ...$args));
 		}
 	}
 
-	public function test_insert() : void {
+	public function test_insert(): void {
 		$db = Database::getInstance();
 
 		// Zero insert ID when table does not have an auto-increment column

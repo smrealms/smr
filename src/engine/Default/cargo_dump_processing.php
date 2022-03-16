@@ -46,10 +46,12 @@ if ($player->getExperience() > 0) {
 	$good_distance = max(1, $good_distance);
 
 	// Don't lose more exp than you have
-	$lost_xp = min($player->getExperience(),
-	               IRound(SmrPort::getBaseExperience($amount, $good_distance)));
+	$lost_xp = min(
+		$player->getExperience(),
+		IRound(SmrPort::getBaseExperience($amount, $good_distance))
+	);
 	$player->decreaseExperience($lost_xp);
-	$player->increaseHOF($lost_xp, array('Trade', 'Experience', 'Jettisoned'), HOF_PUBLIC);
+	$player->increaseHOF($lost_xp, ['Trade', 'Experience', 'Jettisoned'], HOF_PUBLIC);
 
 	$container['msg'] = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise('unit', $amount) . ' of ' . $good_name . ' and have lost <span class="exp">' . $lost_xp . '</span> experience.';
 	// log action
@@ -74,6 +76,6 @@ if ($player->getExperience() > 0) {
 $player->takeTurns(TURNS_TO_DUMP_CARGO, TURNS_TO_DUMP_CARGO);
 
 $ship->decreaseCargo($good_id, $amount);
-$player->increaseHOF($amount, array('Trade', 'Goods', 'Jettisoned'), HOF_ALLIANCE);
+$player->increaseHOF($amount, ['Trade', 'Goods', 'Jettisoned'], HOF_ALLIANCE);
 
 $container->go();

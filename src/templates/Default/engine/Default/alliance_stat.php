@@ -15,7 +15,7 @@ if ($CanChangePassword) { ?>
 	</tr>
 	<tr id="password-display" <?php if ($HidePassword) { ?> class="hide" <?php } ?>>
 		<td class="top">Password:&nbsp;</td>
-		<td><input required id="password-input" name="password" size="30" placeholder=" Enter password here" value="<?php echo htmlspecialchars($Alliance->getPassword()); ?>" <?php if ($HidePassword) { echo "disabled"; } ?>></td>
+		<td><input required id="password-input" name="password" size="30" placeholder=" Enter password here" value="<?php echo htmlspecialchars($Alliance->getPassword()); ?>" <?php if ($HidePassword) { echo 'disabled'; } ?>></td>
 	</tr><?php
 }
 

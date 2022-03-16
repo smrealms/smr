@@ -1,7 +1,7 @@
 <?php
 
 if (empty($ActiveGames)) {
-	echo "<p>There are no active Draft games at this time!</p>";
+	echo '<p>There are no active Draft games at this time!</p>';
 } else { ?>
 
 	<p>Specify the Game and Player ID to assign or remove a Draft Leader.</p>
@@ -44,7 +44,7 @@ if (empty($ActiveGames)) {
 	}
 
 	if (empty($CurrentLeaders)) {
-		echo "<p>No current Draft Leaders for this game!</p>";
+		echo '<p>No current Draft Leaders for this game!</p>';
 	} else { ?>
 		<br />
 		Current Draft Leaders:

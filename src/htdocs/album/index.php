@@ -43,14 +43,14 @@ try {
 
 		$dbResult = $db->read('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
-					WHERE hof_name LIKE '.$db->escapeString($query . '%') . ' AND
+					WHERE hof_name LIKE ' . $db->escapeString($query . '%') . ' AND
 						  approved = \'YES\'
 					ORDER BY hof_name');
 
 		if ($dbResult->getNumRecords() > 1) {
 			$dbResult2 = $db->read('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
-					WHERE hof_name = '.$db->escapeString($query) . ' AND
+					WHERE hof_name = ' . $db->escapeString($query) . ' AND
 						  approved = \'YES\'
 					ORDER BY hof_name');
 
@@ -58,7 +58,7 @@ try {
 				album_entry($dbResult2->record()->getInt('album_id'));
 			} else {
 				// get all id's and build array
-				$album_ids = array();
+				$album_ids = [];
 
 				foreach ($dbResult->records() as $dbRecord) {
 					$album_ids[] = $dbRecord->getInt('album_id');

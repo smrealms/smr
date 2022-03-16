@@ -5,7 +5,7 @@ Current database size: <?php echo $DbSizeMB; ?>
 if (isset($Results)) { ?>
 	<h2>Results (<?php echo $Action; ?>)</h2>
 	<p>Size of data deleted: <?php echo $DiffMB; ?></p>
-	<p>Ended games: <?php echo join(', ', $EndedGames); ?></p>
+	<p>Ended games: <?php echo implode(', ', $EndedGames); ?></p>
 	<table class="standard">
 		<tr>
 			<th>Table Name</th>

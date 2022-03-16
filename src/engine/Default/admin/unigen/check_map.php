@@ -22,8 +22,10 @@ foreach ($galaxies as $galaxy) {
 		}
 	}
 }
-$missingLocs = array_diff(array_keys(SmrLocation::getAllLocations()),
-                          array_keys($existingLocs));
+$missingLocs = array_diff(
+	array_keys(SmrLocation::getAllLocations()),
+	array_keys($existingLocs)
+);
 $missingLocNames = [];
 foreach ($missingLocs as $locID) {
 	$missingLocNames[] = SmrLocation::getLocation($locID)->getName();

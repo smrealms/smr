@@ -6,9 +6,9 @@ $var = $session->getCurrentVar();
 $account = $session->getAccount();
 $player = $session->getPlayer();
 
-function error_on_page(string $error) : never {
+function error_on_page(string $error): never {
 	$message = '<span class="bold red">ERROR:</span> ' . $error;
-	Page::create('skeleton.php', 'alliance_set_op.php', array('message' => $message))->go();
+	Page::create('skeleton.php', 'alliance_set_op.php', ['message' => $message])->go();
 }
 
 if (!empty($var['cancel'])) {

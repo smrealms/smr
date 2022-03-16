@@ -18,7 +18,7 @@ if (!$chessGame->hasEnded()) {
 		if ($board[$y][$x] != null) {
 			$colour = $chessGame->getColourForAccountID($player->getAccountID());
 			$result = $chessGame->tryMove($x, $y, $toX, $toY, $colour, Smr\Chess\ChessPiece::QUEEN);
-			$container['MoveMessage'] = match($result) {
+			$container['MoveMessage'] = match ($result) {
 				0 => '', // valid move, no message
 				1 => 'You have just checkmated your opponent, congratulations!',
 				2 => 'There is no piece in that square.',

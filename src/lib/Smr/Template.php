@@ -6,12 +6,10 @@ use DOMDocument;
 use DOMNode;
 use DOMXPath;
 use Exception;
-use Globals;
 use Smr\Container\DiContainer;
-use Smr\Session;
-use SmrAccount;
 
 class Template {
+
 	private array $data = [];
 	private bool $ignoreMiddle = false;
 	private int $nestedIncludes = 0;
@@ -26,21 +24,21 @@ class Template {
 	 * If one does not exist yet, it will be created.
 	 * This is the intended way to construct this class.
 	 */
-	public static function getInstance() : self {
+	public static function getInstance(): self {
 		return DiContainer::get(self::class);
 	}
 
 	public function __destruct() {
 		if (!$this->displayCalled && !empty($this->data)) {
-			error_log('Template destroyed before displaying the following assigned keys: ' . join(', ', array_keys($this->data)));
+			error_log('Template destroyed before displaying the following assigned keys: ' . implode(', ', array_keys($this->data)));
 		}
 	}
 
-	public function hasTemplateVar(string $var) : bool {
+	public function hasTemplateVar(string $var): bool {
 		return isset($this->data[$var]);
 	}
 
-	public function assign(string $var, mixed $value) : void {
+	public function assign(string $var, mixed $value): void {
 		if (!isset($this->data[$var])) {
 			$this->data[$var] = $value;
 		} else {
@@ -49,7 +47,7 @@ class Template {
 		}
 	}
 
-	public function unassign(string $var) : void {
+	public function unassign(string $var): void {
 		unset($this->data[$var]);
 	}
 
@@ -57,7 +55,7 @@ class Template {
 	 * Displays the template HTML. Stores any ajax-enabled elements for future
 	 * comparison, and outputs modified elements in XML for ajax if requested.
 	 */
-	public function display(string $templateName, bool $outputXml = false) : void {
+	public function display(string $templateName, bool $outputXml = false): void {
 		// If we already started output buffering before calling `display`,
 		// we may have unwanted content in the buffer that we need to remove
 		// before we send the Content-Type headers below.
@@ -95,7 +93,7 @@ class Template {
 	}
 
 
-	protected function getTemplateLocation(string $templateName) : string {
+	protected function getTemplateLocation(string $templateName): string {
 		if (isset($this->data['ThisAccount'])) {
 			$templateDir = $this->data['ThisAccount']->getTemplate() . '/';
 		} else {
@@ -121,7 +119,7 @@ class Template {
 		throw new Exception('No template found for ' . $templateName);
 	}
 
-	protected function includeTemplate(string $templateName, array $assignVars = null) : void {
+	protected function includeTemplate(string $templateName, array $assignVars = null): void {
 		if ($this->nestedIncludes > 15) {
 			throw new Exception('Nested more than 15 template includes, is something wrong?');
 		}
@@ -143,11 +141,11 @@ class Template {
 	 * input data (i.e. we don't want to AJAX update a form that they may
 	 * have already started filling out).
 	 */
-	protected function checkDisableAJAX(string $html) : bool {
+	protected function checkDisableAJAX(string $html): bool {
 		return preg_match('/<input (?![^>]*(submit|hidden|image))/i', $html) != 0;
 	}
 
-	protected function doDamageTypeReductionDisplay(int &$damageTypes) : void {
+	protected function doDamageTypeReductionDisplay(int &$damageTypes): void {
 		if ($damageTypes == 3) {
 			echo ', ';
 		} elseif ($damageTypes == 2) {
@@ -156,7 +154,7 @@ class Template {
 		$damageTypes--;
 	}
 
-	protected function doAn(string $wordAfter) : string {
+	protected function doAn(string $wordAfter): string {
 		$char = strtoupper($wordAfter[0]);
 		if (str_contains('AEIOU', $char)) {
 			return 'an';
@@ -168,14 +166,14 @@ class Template {
 	/**
 	 * Sets a listjs_include.js function to call at the end of the HTML body.
 	 */
-	public function setListjsInclude(string $func) : void {
+	public function setListjsInclude(string $func): void {
 		$this->listjsInclude = $func;
 	}
 
 	/*
 	 * EVAL is special (well, will be when needed and implemented in the javascript).
 	 */
-	public function addJavascriptForAjax(string $varName, mixed $obj) : string {
+	public function addJavascriptForAjax(string $varName, mixed $obj): string {
 		if ($varName == 'EVAL') {
 			if (!isset($this->ajaxJS['EVAL'])) {
 				return $this->ajaxJS['EVAL'] = $obj;
@@ -189,7 +187,7 @@ class Template {
 		return $this->ajaxJS[$varName] = json_encode($obj);
 	}
 
-	protected function addJavascriptAlert(string $string) : void {
+	protected function addJavascriptAlert(string $string): void {
 		$session = Session::getInstance();
 		if (!$session->addAjaxReturns('ALERT:' . $string, $string)) {
 			$this->jsAlerts[] = $string;
@@ -199,18 +197,18 @@ class Template {
 	/**
 	 * Registers a JS target for inclusion at the end of the HTML body.
 	 */
-	protected function addJavascriptSource(string $src) : void {
+	protected function addJavascriptSource(string $src): void {
 		array_push($this->jsSources, $src);
 	}
 
-	protected function convertHtmlToAjaxXml(string $str, bool $returnXml) : string {
+	protected function convertHtmlToAjaxXml(string $str, bool $returnXml): string {
 		if (empty($str)) {
 			return '';
 		}
 
 		$session = Session::getInstance();
 
-		$getInnerHTML = function(DOMNode $node) : string {
+		$getInnerHTML = function(DOMNode $node): string {
 			$innerHTML = '';
 			foreach ($node->childNodes as $child) {
 				$innerHTML .= $child->ownerDocument->saveHTML($child);
@@ -220,7 +218,7 @@ class Template {
 
 		// Helper function to canonicalize making an XML element,
 		// with its inner content properly escaped.
-		$xmlify = function(string $id, string $str) : string {
+		$xmlify = function(string $id, string $str): string {
 			return '<' . $id . '>' . htmlspecialchars($str, ENT_XML1, 'utf-8') . '</' . $id . '>';
 		};
 
@@ -231,7 +229,7 @@ class Template {
 
 		// Use relative xpath selectors so that they can be reused when we
 		// pass the middle panel as the xpath query's context node.
-		$ajaxSelectors = array('.//span[@id]', './/*[contains(@class,"ajax")]');
+		$ajaxSelectors = ['.//span[@id]', './/*[contains(@class,"ajax")]'];
 
 		foreach ($ajaxSelectors as $selector) {
 			$matchNodes = $xpath->query($selector);
@@ -287,7 +285,8 @@ class Template {
 		return $xml;
 	}
 
-	public function ignoreMiddle() : void {
+	public function ignoreMiddle(): void {
 		$this->ignoreMiddle = true;
 	}
+
 }

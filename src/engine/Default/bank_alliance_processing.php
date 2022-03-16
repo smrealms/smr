@@ -51,7 +51,7 @@ if ($action == 'Deposit') {
 		$dbResult = $db->read('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
 			WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
 			GROUP BY transaction');
-		$playerTrans = array('Deposit' => 0, 'Payment' => 0);
+		$playerTrans = ['Deposit' => 0, 'Payment' => 0];
 		foreach ($dbResult->records() as $dbRecord) {
 			$playerTrans[$dbRecord->getField('transaction')] = $dbRecord->getInt('total');
 		}

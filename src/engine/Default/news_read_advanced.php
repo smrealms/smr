@@ -11,10 +11,10 @@ $dbResult = $db->read('SELECT alliance_id, alliance_name
 			FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($gameID));
 
-$newsAlliances = array();
-$newsAlliances[0] = array('ID' => 0, 'Name' => 'None');
+$newsAlliances = [];
+$newsAlliances[0] = ['ID' => 0, 'Name' => 'None'];
 foreach ($dbResult->records() as $dbRecord) {
-	$newsAlliances[$dbRecord->getInt('alliance_id')] = array('ID' => $dbRecord->getInt('alliance_id'), 'Name' => htmlentities($dbRecord->getString('alliance_name')));
+	$newsAlliances[$dbRecord->getInt('alliance_id')] = ['ID' => $dbRecord->getInt('alliance_id'), 'Name' => htmlentities($dbRecord->getString('alliance_name'))];
 }
 $template->assign('NewsAlliances', $newsAlliances);
 
@@ -27,7 +27,7 @@ if ($submit_value == 'Search For Player') {
 	$p_name = $session->getRequestVar('playerName');
 	$template->assign('ResultsFor', $p_name);
 	$dbResult = $db->read('SELECT account_id FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $p_name . '%') . ' AND game_id = ' . $db->escapeNumber($gameID));
-	$IDs = array(0);
+	$IDs = [0];
 	foreach ($dbResult->records() as $dbRecord) {
 		$IDs[] = $dbRecord->getInt('account_id');
 	}
@@ -41,7 +41,7 @@ if ($submit_value == 'Search For Player') {
 	$player2 = $session->getRequestVar('player2');
 	$template->assign('ResultsFor', $player1 . ' vs. ' . $player2);
 	$dbResult = $db->read('SELECT account_id FROM player WHERE (player_name LIKE ' . $db->escapeString('%' . $player1 . '%') . ' OR player_name LIKE ' . $db->escapeString('%' . $player2 . '%') . ') AND game_id = ' . $db->escapeNumber($gameID));
-	$IDs = array(0);
+	$IDs = [0];
 	foreach ($dbResult->records() as $dbRecord) {
 		$IDs[] = $dbRecord->getInt('account_id');
 	}

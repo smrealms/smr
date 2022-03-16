@@ -9,7 +9,7 @@ $fn_seed = function($message) {
 	}
 
 	$result = shared_channel_msg_seed($link->player);
-	$message->reply(join(EOL, $result))
+	$message->reply(implode(EOL, $result))
 		->done(null, 'logException');
 };
 

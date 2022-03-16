@@ -3,8 +3,8 @@
 namespace SmrTest\lib\DefaultGame;
 
 use Globals;
-use SmrGame;
 use Smr\Race;
+use SmrGame;
 use SmrTest\BaseIntegrationSpec;
 
 /**
@@ -12,12 +12,12 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SmrGameIntegrationTest extends BaseIntegrationSpec {
 
-	protected function tearDown() : void {
+	protected function tearDown(): void {
 		SmrGame::clearCache();
 		parent::tearDown();
 	}
 
-	public function test_gameExists() : void {
+	public function test_gameExists(): void {
 		// Test that the game does not exist beforehand
 		$gameID = 42;
 		self::assertFalse(SmrGame::gameExists($gameID));
@@ -27,7 +27,7 @@ class SmrGameIntegrationTest extends BaseIntegrationSpec {
 		self::assertTrue(SmrGame::gameExists($gameID));
 	}
 
-	public function test_save_and_reload_required_properties() : void {
+	public function test_save_and_reload_required_properties(): void {
 		// First create a new game
 		$gameID = 3;
 		$game1 = SmrGame::createGame($gameID);
@@ -73,7 +73,7 @@ class SmrGameIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame(3000, $game2->getStartingCredits());
 	}
 
-	public function test_setStartingRelations() : void {
+	public function test_setStartingRelations(): void {
 		// Set the starting relations
 		$game = SmrGame::createGame(1);
 		$game->setStartingRelations(-123);

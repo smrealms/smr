@@ -2,22 +2,22 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Smr\Exceptions\AllianceNotFound;
+use Smr\Exceptions\UserError;
 use SmrAlliance;
 use SmrTest\BaseIntegrationSpec;
-use Smr\Exceptions\UserError;
-use Smr\Exceptions\AllianceNotFound;
 
 /**
  * @covers SmrAlliance
  */
 class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		// Start each test with an empty alliance cache
 		SmrAlliance::clearCache();
 	}
 
-	public function test_getAllianceByIrcChannel() : void {
+	public function test_getAllianceByIrcChannel(): void {
 		// Create an Alliance and set its IRC channel
 		$gameID = 1;
 		$channel = '#ircrules';
@@ -35,7 +35,7 @@ class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 		SmrAlliance::getAllianceByIrcChannel('#notircrules');
 	}
 
-	public function test_getAllianceByName() : void {
+	public function test_getAllianceByName(): void {
 		// Create an Alliance with a specific name
 		$gameID = 3;
 		$name = 'test';
@@ -51,7 +51,7 @@ class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 		SmrAlliance::getAllianceByName('not' . $name, $gameID);
 	}
 
-	public function test_createAlliance() : void {
+	public function test_createAlliance(): void {
 		// Test arbitrary input
 		$gameID = 42;
 		$name = 'test';
@@ -63,7 +63,7 @@ class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 		$this->assertSame(1, $alliance->getAllianceID());
 	}
 
-	public function test_createAlliance_duplicate_name() : void {
+	public function test_createAlliance_duplicate_name(): void {
 		$name = 'test';
 		SmrAlliance::createAlliance(1, $name);
 		$this->expectException(UserError::class);
@@ -71,19 +71,19 @@ class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 		SmrAlliance::createAlliance(1, $name);
 	}
 
-	public function test_createAlliance_with_NHA_name() : void {
+	public function test_createAlliance_with_NHA_name(): void {
 		$this->expectException(UserError::class);
 		$this->expectExceptionMessage('That alliance name is reserved.');
 		SmrAlliance::createAlliance(1, NHA_ALLIANCE_NAME);
 	}
 
-	public function test_createAlliance_increment_allianceID() : void {
+	public function test_createAlliance_increment_allianceID(): void {
 		SmrAlliance::createAlliance(1, 'test1');
 		$alliance = SmrAlliance::createAlliance(1, 'test2');
 		$this->assertSame(2, $alliance->getAllianceID());
 	}
 
-	public function test_isNHA() : void {
+	public function test_isNHA(): void {
 		// Create an alliance that is not the NHA
 		$alliance = SmrAlliance::createAlliance(1, 'Vet Help Alliance', true);
 		self::assertFalse($alliance->isNHA());

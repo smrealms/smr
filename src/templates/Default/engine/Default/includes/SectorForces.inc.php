@@ -28,7 +28,7 @@
 							if ($SharedForceAlliance && !$ThisShip->hasMaxMines() && $Force->hasMines()) {
 								?><a href="<?php echo $Force->getTakeMineHREF() ?>">[-]</a><?php
 							}
-							echo$Force->getMines();
+							echo $Force->getMines();
 							if ($SharedForceAlliance && $ThisShip->hasMines() && !$Force->hasMaxMines()) {
 								?><a href="<?php echo $Force->getDropMineHREF() ?>">[+]</a><?php
 							} ?>

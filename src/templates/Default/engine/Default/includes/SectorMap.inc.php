@@ -2,7 +2,7 @@
 	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;
 	$UniGen = $UniGen ?? false;
 	$MapPlayer = $UniGen ? null : $ThisPlayer;
-	$MovementTypes = array('Up', 'Left', 'Right', 'Down');
+	$MovementTypes = ['Up', 'Left', 'Right', 'Down'];
 	foreach ($MapSectors as $MapSector) { ?>
 		<tr><?php
 			foreach ($MapSector as $Sector) {

@@ -21,7 +21,7 @@ if ($ship->hasIllusion()) {
 	$container['action'] = 'Set Illusion';
 	$template->assign('SetIllusionFormHREF', $container->href());
 
-	$ships = array();
+	$ships = [];
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
 	foreach ($dbResult->records() as $dbRecord) {

@@ -2,20 +2,21 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use Smr\AdminPermissions;
 
 /**
  * @covers Smr\AdminPermissions
  */
-class AdminPermissionsTest extends \PHPUnit\Framework\TestCase {
+class AdminPermissionsTest extends TestCase {
 
-	public function test_getPermissionInfo() : void {
+	public function test_getPermissionInfo(): void {
 		// Spot check one of the permissions
 		$expected = ['Enable Games', 'admin/enable_game.php', 5];
 		self::assertSame($expected, AdminPermissions::getPermissionInfo(33));
 	}
 
-	public function test_getPermissionByCategory() : void {
+	public function test_getPermissionByCategory(): void {
 		// Spot check one of the categories
 		$expected = [
 			19 => 'Approve Photo Album',
@@ -26,7 +27,7 @@ class AdminPermissionsTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame($expected, AdminPermissions::getPermissionsByCategory()[2]);
 	}
 
-	public function test_getCategoryName() : void {
+	public function test_getCategoryName(): void {
 		// Spot check one of the categories
 		self::assertSame('Administrative', AdminPermissions::getCategoryName(3));
 	}

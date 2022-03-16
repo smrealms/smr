@@ -24,19 +24,19 @@ if (!$player->canFight()) {
 
 $targetPlayer = SmrPlayer::getPlayer($var['target'], $player->getGameID());
 
-	if ($player->traderNAPAlliance($targetPlayer)) {
-		create_error('Your alliance does not allow you to attack this trader.');
-	} elseif ($targetPlayer->isDead()) {
-		create_error('Target is already dead.');
-	} elseif ($targetPlayer->getSectorID() != $player->getSectorID()) {
-		create_error('Target is no longer in this sector.');
-	} elseif ($targetPlayer->hasNewbieTurns()) {
-		create_error('Target is under newbie protection.');
-	} elseif ($targetPlayer->isLandedOnPlanet()) {
-		create_error('Target is protected by planetary shields.');
-	} elseif ($targetPlayer->hasFederalProtection()) {
-		create_error('Target is under federal protection.');
-	}
+if ($player->traderNAPAlliance($targetPlayer)) {
+	create_error('Your alliance does not allow you to attack this trader.');
+} elseif ($targetPlayer->isDead()) {
+	create_error('Target is already dead.');
+} elseif ($targetPlayer->getSectorID() != $player->getSectorID()) {
+	create_error('Target is no longer in this sector.');
+} elseif ($targetPlayer->hasNewbieTurns()) {
+	create_error('Target is under newbie protection.');
+} elseif ($targetPlayer->isLandedOnPlanet()) {
+	create_error('Target is protected by planetary shields.');
+} elseif ($targetPlayer->hasFederalProtection()) {
+	create_error('Target is under federal protection.');
+}
 
 $fightingPlayers = $sector->getFightingTraders($player, $targetPlayer);
 
@@ -51,7 +51,7 @@ foreach ($fightingPlayers as $teamPlayers) {
 $player->takeTurns(TURNS_TO_SHOOT_SHIP);
 $player->update();
 
-function teamAttack(array $fightingPlayers, string $attack, string $defend) : array {
+function teamAttack(array $fightingPlayers, string $attack, string $defend): array {
 	$results = ['Traders' => [], 'TotalDamage' => 0];
 	foreach ($fightingPlayers[$attack] as $accountID => $teamPlayer) {
 		$playerResults = $teamPlayer->shootPlayers($fightingPlayers[$defend]);
@@ -105,7 +105,7 @@ if (!$targetPlayer->isDead()) {
 
 // If they died on the shot they get to see the results
 if ($player->isDead()) {
-	$container['override_death'] = TRUE;
+	$container['override_death'] = true;
 	$container['target'] = 0;
 }
 

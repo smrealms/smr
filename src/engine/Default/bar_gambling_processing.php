@@ -7,7 +7,7 @@ $player = $session->getPlayer();
 // blackjack
 $message = '';
 
-function create_card(Smr\Blackjack\Card $card, bool $show) : string {
+function create_card(Smr\Blackjack\Card $card, bool $show): string {
 	//only display what the card really is if they want to
 	$card_height = 100;
 	$card_width = 125;
@@ -33,7 +33,7 @@ function create_card(Smr\Blackjack\Card $card, bool $show) : string {
 	return $return;
 }
 
-function check_for_win(Smr\Blackjack\Hand $dealerHand, Smr\Blackjack\Hand $playerHand) : string {
+function check_for_win(Smr\Blackjack\Hand $dealerHand, Smr\Blackjack\Hand $playerHand): string {
 	$comp = $dealerHand->getValue();
 	$play = $playerHand->getValue();
 
@@ -110,7 +110,7 @@ if ($do != 'STAY' && $playerHand->getValue() != 21) {
 			if ($i == 4 || $i == 7 || $i == 10) {
 				$message .= ('</tr><tr>');
 			}
-			$message .= create_card($card, TRUE);
+			$message .= create_card($card, true);
 			//get curr val of this card...for the at least part
 			$ai_val = $card->getValue();
 		} else {
@@ -120,9 +120,9 @@ if ($do != 'STAY' && $playerHand->getValue() != 21) {
 				$message .= ('</tr><tr>');
 			}
 			if ($dealerHand->getValue() == 21 || $playerHand->getValue() >= 21) {
-				$message .= create_card($card, TRUE);
+				$message .= create_card($card, true);
 			} else {
-				$message .= create_card($card, FALSE);
+				$message .= create_card($card, false);
 			}
 		}
 		$i++;
@@ -162,7 +162,7 @@ if ($do == 'STAY' || $playerHand->getValue() == 21) {
 		if ($i == 4 || $i == 7 || $i == 10) {
 			$message .= ('</tr><tr>');
 		}
-		$message .= create_card($card, TRUE);
+		$message .= create_card($card, true);
 		$i++;
 	}
 	$message .= ('</tr></table><div class="center">');
@@ -183,7 +183,7 @@ foreach ($playerHand->getCards() as $key => $card) {
 	if ($i == 4 || $i == 7 || $i == 10) {
 		$message .= ('</tr><tr>');
 	}
-	$message .= create_card($card, TRUE);
+	$message .= create_card($card, true);
 	$i++;
 }
 $message .= ('</tr></table>');
@@ -206,8 +206,8 @@ $container['bet'] = $bet;
 $message .= ('<div class="center">');
 if ($playerHand->getValue() > 21) {
 	$message .= ('You have <span class="red"><b>BUSTED</b></span>');
-	$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
-	$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
+	$player->increaseHOF($bet, ['Blackjack', 'Money', 'Lost'], HOF_PUBLIC);
+	$player->increaseHOF(1, ['Blackjack', 'Results', 'Lost'], HOF_PUBLIC);
 	$message .= '<p><a class="submitStyle" href="' . $container->href() . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');
 } elseif (!isset($win) && $playerHand->getValue() < 21) {
@@ -228,23 +228,23 @@ if ($playerHand->getValue() > 21) {
 		$winnings = IFloor($bet * 2.5);
 		$player->increaseCredits($winnings);
 		$stat = $winnings - $bet;
-		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Won'), HOF_PUBLIC);
-		$player->increaseHOF(1, array('Blackjack', 'Results', 'Won'), HOF_PUBLIC);
+		$player->increaseHOF($stat, ['Blackjack', 'Money', 'Won'], HOF_PUBLIC);
+		$player->increaseHOF(1, ['Blackjack', 'Results', 'Won'], HOF_PUBLIC);
 		$message .= ('You have won $' . number_format($winnings) . ' credits!');
 	} elseif ($win == 'yes') {
 		$winnings = $bet * 2;
 		$player->increaseCredits($winnings);
 		$stat = $winnings - $bet;
-		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Won'), HOF_PUBLIC);
-		$player->increaseHOF(1, array('Blackjack', 'Results', 'Won'), HOF_PUBLIC);
+		$player->increaseHOF($stat, ['Blackjack', 'Money', 'Won'], HOF_PUBLIC);
+		$player->increaseHOF(1, ['Blackjack', 'Results', 'Won'], HOF_PUBLIC);
 		$message .= ('You have won $' . number_format($winnings) . ' credits!');
 	} elseif ($win == 'tie') {
 		$player->increaseCredits($bet);
-		$player->increaseHOF(1, array('Blackjack', 'Results', 'Draw'), HOF_PUBLIC);
+		$player->increaseHOF(1, ['Blackjack', 'Results', 'Draw'], HOF_PUBLIC);
 		$message .= ('You have won back your $' . number_format($bet) . ' credits.');
 	} else {
-		$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
-		$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
+		$player->increaseHOF($bet, ['Blackjack', 'Money', 'Lost'], HOF_PUBLIC);
+		$player->increaseHOF(1, ['Blackjack', 'Results', 'Lost'], HOF_PUBLIC);
 	}
 	$message .= '<p><a class="submitStyle" href="' . $container->href() . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');
@@ -258,20 +258,20 @@ if ($playerHand->getValue() > 21) {
 		$winnings = IFloor($bet * $multiplier);
 		$player->increaseCredits($winnings);
 		$stat = $winnings - $bet;
-		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Win'), HOF_PUBLIC);
-		$player->increaseHOF(1, array('Blackjack', 'Results', 'Win'), HOF_PUBLIC);
+		$player->increaseHOF($stat, ['Blackjack', 'Money', 'Win'], HOF_PUBLIC);
+		$player->increaseHOF(1, ['Blackjack', 'Results', 'Win'], HOF_PUBLIC);
 		$message .= ('You have won $' . number_format($winnings) . ' credits!');
 	} elseif ($dealerHand->getNumCards() > 2) {
 		$winnings = $bet;
 		$player->increaseCredits($winnings);
 		$stat = $winnings - $bet;
-		$player->increaseHOF($stat, array('Blackjack', 'Money', 'Win'), HOF_PUBLIC);
-		$player->increaseHOF(1, array('Blackjack', 'Results', 'Win'), HOF_PUBLIC);
+		$player->increaseHOF($stat, ['Blackjack', 'Money', 'Win'], HOF_PUBLIC);
+		$player->increaseHOF(1, ['Blackjack', 'Results', 'Win'], HOF_PUBLIC);
 		$message .= ('You have won back your $' . number_format($winnings) . ' credits!');
 	} else {
 		//AI has BJ already...sorry
-		$player->increaseHOF($bet, array('Blackjack', 'Money', 'Lost'), HOF_PUBLIC);
-		$player->increaseHOF(1, array('Blackjack', 'Results', 'Lost'), HOF_PUBLIC);
+		$player->increaseHOF($bet, ['Blackjack', 'Money', 'Lost'], HOF_PUBLIC);
+		$player->increaseHOF(1, ['Blackjack', 'Results', 'Lost'], HOF_PUBLIC);
 	}
 	$message .= '<p><a class="submitStyle" href="' . $container->href() . '">Play Some More ($' . $bet . ')</a></p>';
 	$message .= ('</div>');

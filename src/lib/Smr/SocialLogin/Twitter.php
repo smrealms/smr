@@ -2,16 +2,18 @@
 
 namespace Smr\SocialLogin;
 
+use Abraham\TwitterOAuth\TwitterOAuth;
+use Exception;
 use Smr\Request;
 
 class Twitter extends SocialLogin {
 
-	public static function getLoginType() : string {
+	public static function getLoginType(): string {
 		return 'Twitter';
 	}
 
-	private static function getTwitterObj(?array $token = null) : \Abraham\TwitterOAuth\TwitterOAuth {
-		return new \Abraham\TwitterOAuth\TwitterOAuth(
+	private static function getTwitterObj(?array $token = null): TwitterOAuth {
+		return new TwitterOAuth(
 			TWITTER_CONSUMER_KEY,
 			TWITTER_CONSUMER_SECRET,
 			$token['oauth_token'] ?? null,
@@ -19,7 +21,7 @@ class Twitter extends SocialLogin {
 		);
 	}
 
-	public function getLoginUrl() : string {
+	public function getLoginUrl(): string {
 		if (empty(TWITTER_CONSUMER_KEY)) {
 			// No twitter app specified. Continuing would throw an exception.
 			return URL;
@@ -31,13 +33,15 @@ class Twitter extends SocialLogin {
 		return $auth->url('oauth/authenticate', $_SESSION['TwitterToken']);
 	}
 
-	public function login() : SocialLogin {
+	public function login(): SocialLogin {
 		if ($_SESSION['TwitterToken']['oauth_token'] != Request::get('oauth_token')) {
-			throw new \Exception('Unexpected token received from Twitter');
+			throw new Exception('Unexpected token received from Twitter');
 		}
 		$helper = self::getTwitterObj($_SESSION['TwitterToken']);
-		$accessToken = $helper->oauth('oauth/access_token',
-		                              ['oauth_verifier' => Request::get('oauth_verifier')]);
+		$accessToken = $helper->oauth(
+			'oauth/access_token',
+			['oauth_verifier' => Request::get('oauth_verifier')]
+		);
 		$auth = self::getTwitterObj($accessToken);
 		$userInfo = $auth->get('account/verify_credentials', ['include_email' => 'true']);
 		if ($auth->getLastHttpCode() == 200) {

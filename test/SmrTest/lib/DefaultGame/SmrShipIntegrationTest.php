@@ -2,10 +2,10 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use SmrShip;
 use AbstractSmrPlayer;
-use SmrWeapon;
+use SmrShip;
 use SmrTest\BaseIntegrationSpec;
+use SmrWeapon;
 
 /**
  * @covers SmrShip
@@ -14,7 +14,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 
 	private \PHPUnit\Framework\MockObject\MockObject $player;
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		// Start each test with an empty ship cache
 		SmrShip::clearCache();
 
@@ -33,7 +33,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_getShip() : void {
+	public function test_getShip(): void {
 		// Get the ship associated with this player
 		$original = SmrShip::getShip($this->player);
 		self::assertSame($this->player->getAccountID(), $original->getAccountID());
@@ -54,7 +54,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_updateHardware() : void {
+	public function test_updateHardware(): void {
 		$original = SmrShip::getShip($this->player);
 
 		// Add hardware
@@ -87,7 +87,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_updateWeapons() : void {
+	public function test_updateWeapons(): void {
 		$original = SmrShip::getShip($this->player);
 
 		// Add a couple weapons
@@ -121,7 +121,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_updateCargo() : void {
+	public function test_updateCargo(): void {
 		$original = SmrShip::getShip($this->player);
 		$original->setHardwareToMax();
 
@@ -157,7 +157,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_updateCloak() : void {
+	public function test_updateCloak(): void {
 		$original = SmrShip::getShip($this->player);
 		$original->setHardwareToMax();
 
@@ -181,7 +181,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	}
 
 
-	public function test_updateIllusion() : void {
+	public function test_updateIllusion(): void {
 		$original = SmrShip::getShip($this->player);
 		$original->setHardwareToMax();
 

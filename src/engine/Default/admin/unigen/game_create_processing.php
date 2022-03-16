@@ -21,7 +21,7 @@ if ($join === false) {
 	create_error('Join Date is not valid!');
 }
 $start = empty(Smr\Request::get('game_start')) ? $join :
-         DateTime::createFromFormat('d/m/Y|', Smr\Request::get('game_start'));
+	DateTime::createFromFormat('d/m/Y|', Smr\Request::get('game_start'));
 if ($start === false) {
 	create_error('Start Date is not valid!');
 }

@@ -32,7 +32,7 @@ if (isset($var['process'])) {
 		create_error('You already have maps of this galaxy!');
 	}
 
-	$player->increaseHOF(1, array('Bar', 'Maps Bought'), HOF_PUBLIC);
+	$player->increaseHOF(1, ['Bar', 'Maps Bought'], HOF_PUBLIC);
 	//take money
 	$account->decreaseTotalSmrCredits(CREDITS_PER_GAL_MAP);
 	//now give maps

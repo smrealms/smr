@@ -130,7 +130,7 @@ $container = Page::create('skeleton.php', 'album_edit.php');
 $container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
 $container->go();
 
-function php_link_check(string $url) : string|false {
+function php_link_check(string $url): string|false {
 	/*	Purpose: Check HTTP Links
 	*	Usage:	$var = phpLinkCheck(absoluteURI)
 	*					$var['Status-Code'] will return the HTTP status code
@@ -170,9 +170,9 @@ function php_link_check(string $url) : string|false {
 	} else {
 		$head = '';
 		$httpRequest = 'HEAD ' . $url['path'] . ' HTTP/1.1' . EOL
-								.'Host: ' . $url['host'] . EOL
-								.'Connection: close' . EOL . EOL;
-		fputs($fp, $httpRequest);
+								. 'Host: ' . $url['host'] . EOL
+								. 'Connection: close' . EOL . EOL;
+		fwrite($fp, $httpRequest);
 		while (!feof($fp)) {
 			$head .= fgets($fp, 1024);
 		}

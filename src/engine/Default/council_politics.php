@@ -14,9 +14,9 @@ Menu::council($raceID);
 
 $raceRelations = Globals::getRaceRelations($player->getGameID(), $raceID);
 
-$peaceRaces = array();
-$neutralRaces = array();
-$warRaces = array();
+$peaceRaces = [];
+$neutralRaces = [];
+$warRaces = [];
 foreach (Smr\Race::getPlayableIDs() as $otherRaceID) {
 	if ($raceID != $otherRaceID) {
 		if ($raceRelations[$otherRaceID] >= RELATIONS_PEACE) {

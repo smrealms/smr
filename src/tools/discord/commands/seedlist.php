@@ -10,7 +10,7 @@ $fn_seedlist = function($message) {
 
 	// print the entire seedlist
 	$results = shared_channel_msg_seedlist($link->player);
-	$message->reply(join(EOL, $results))
+	$message->reply(implode(EOL, $results))
 		->done(null, 'logException');
 };
 
@@ -22,7 +22,7 @@ $fn_seedlist_add = function($message, $sectors) {
 
 	// add sectors to the seedlist
 	$results = shared_channel_msg_seedlist_add($link->player, $sectors);
-	$message->reply(join(EOL, $results))
+	$message->reply(implode(EOL, $results))
 		->done(null, 'logException');
 };
 
@@ -34,18 +34,20 @@ $fn_seedlist_del = function($message, $sectors) {
 
 	// delete sectors from the seedlist
 	$results = shared_channel_msg_seedlist_del($link->player, $sectors);
-	$message->reply(join(EOL, $results))
+	$message->reply(implode(EOL, $results))
 		->done(null, 'logException');
 };
 
 $cmd_seedlist = $discord->registerCommand('seedlist', mysql_cleanup($fn_seedlist), ['description' => 'Print the entire seedlist']);
 
 $cmd_seedlist->registerSubCommand('add', mysql_cleanup($fn_seedlist_add),
-	['description' => 'Add space-delimited list of sectors to the seedlist',
-	 'usage' => '[sectors]',
+	[
+		'description' => 'Add space-delimited list of sectors to the seedlist',
+		'usage' => '[sectors]',
 	]);
 
 $cmd_seedlist->registerSubCommand('del', mysql_cleanup($fn_seedlist_del),
-	['description' => 'Delete space-delimited list of sectors (or all sectors) from the seedlist',
-	 'usage' => '[sectors|all]',
+	[
+		'description' => 'Delete space-delimited list of sectors (or all sectors) from the seedlist',
+		'usage' => '[sectors|all]',
 	]);

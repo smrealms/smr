@@ -2,7 +2,7 @@
 
 use Smr\Container\DiContainer;
 
-function logException(Throwable $e) : void {
+function logException(Throwable $e): void {
 	$message = '';
 	$delim = "\n\n-----------\n\n";
 
@@ -52,7 +52,7 @@ function logException(Throwable $e) : void {
 
 	if (ENABLE_DEBUG) {
 		// Display error message on the page (redundant with error_log for CLI)
-		if (php_sapi_name() !== 'cli') {
+		if (PHP_SAPI !== 'cli') {
 			echo nl2br($message);
 		}
 		// Skip remaining log methods (too disruptive during development)
@@ -93,7 +93,7 @@ function logException(Throwable $e) : void {
  * If the error is just informational (e.g. the user input an invalid value),
  * then the message is displayed on the page without being logged.
  */
-function handleException(Throwable $e) : void {
+function handleException(Throwable $e): void {
 	// The real error message may display sensitive information, so we
 	// need to catch any exceptions that are thrown while logging the error.
 	try {
@@ -118,14 +118,14 @@ function handleException(Throwable $e) : void {
 /**
  * Can be used to convert any type of notice into an exception.
  */
-function exception_error_handler($errno, $errstr, $errfile, $errline) : bool {
+function exception_error_handler($errno, $errstr, $errfile, $errline): bool {
 	if (!(error_reporting() & $errno)) {
 		return false; // error is suppressed
 	}
 	throw new ErrorException($errstr, $errno, E_ERROR, $errfile, $errline);
 }
 
-function setupMailer() : \PHPMailer\PHPMailer\PHPMailer {
+function setupMailer(): \PHPMailer\PHPMailer\PHPMailer {
 	$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 	if (!empty(SMTP_HOSTNAME)) {
 		$mail->isSMTP();
@@ -134,7 +134,7 @@ function setupMailer() : \PHPMailer\PHPMailer\PHPMailer {
 	return $mail;
 }
 
-function getIpAddress() : string {
+function getIpAddress(): string {
 	foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'] as $key) {
 		if (array_key_exists($key, $_SERVER) === true) {
 			foreach (explode(',', $_SERVER[$key]) as $ip) {
@@ -150,28 +150,28 @@ function getIpAddress() : string {
 /**
  * Wrapper around the floor() builtin for returning an integer type.
  */
-function IFloor(float $val) : int {
+function IFloor(float $val): int {
 	return (int)floor($val);
 }
 
 /**
  * Wrapper around the ceil() builtin for returning an integer type.
  */
-function ICeil(float $val) : int {
+function ICeil(float $val): int {
 	return (int)ceil($val);
 }
 
 /**
  * Wrapper around the round() builtin for returning an integer type.
  */
-function IRound(float $val) : int {
+function IRound(float $val): int {
 	return (int)round($val);
 }
 
 /**
  * Convert a numeric string to an int with input validation.
  */
-function str2int(string $val) : int {
+function str2int(string $val): int {
 	$result = filter_var($val, FILTER_VALIDATE_INT);
 	if ($result === false) {
 		throw new Exception('Input value is not an integer: ' . $val);
@@ -183,7 +183,7 @@ function str2int(string $val) : int {
  * Generate a cryptographically strong random hexadecimal string.
  * The requested length must be a multiple of 2.
  */
-function random_string(int $length) : string {
+function random_string(int $length): string {
 	if ($length % 2 != 0) {
 		throw new Exception('Length must be a multiple of 2!');
 	}
@@ -194,7 +194,7 @@ function random_string(int $length) : string {
  * Generate a (non-cryptographic) random alphabetic string.
  * This is slower for longer strings.
  */
-function random_alphabetic_string(int $length) : string {
+function random_alphabetic_string(int $length): string {
 	$result = '';
 	for ($i = 0; $i < $length; ++$i) {
 		$result .= chr(rand(ord('a'), ord('z')));
@@ -205,7 +205,7 @@ function random_alphabetic_string(int $length) : string {
 /**
  * Return the value of a random key from an array.
  */
-function array_rand_value(array $arr) : mixed {
+function array_rand_value(array $arr): mixed {
 	if (empty($arr)) {
 		throw new Exception('Cannot pick random value from empty array!');
 	}
@@ -224,4 +224,4 @@ spl_autoload_register('get_class_loc');
 require_once(LIB . 'Default/smr.inc.php');
 
 // Set up dependency injection container
-DiContainer::initialize(getenv('DISABLE_PHPDI_COMPILATION') !== "true");
+DiContainer::initialize(getenv('DISABLE_PHPDI_COMPILATION') !== 'true');

@@ -3,8 +3,7 @@
 /**
  * @param resource $fp
  */
-function query_command($fp, string $rdata) : bool
-{
+function query_command($fp, string $rdata): bool {
 
 	// :MrSpock!mrspock@coldfront-120CBD34.dip.t-dialin.net PRIVMSG Caretaker :Test
 	if (preg_match('/^:(MrSpock!mrspock|Page!Page)@.*\sPRIVMSG\s' . IRC_BOT_NICK . '\s:(.*)\s$/i', $rdata, $msg)) {
@@ -15,7 +14,7 @@ function query_command($fp, string $rdata) : bool
 		echo_r('[QUERY] by ' . $nick . ': ' . $text);
 
 		// relay msg as our own
-		fputs($fp, $text . EOL);
+		fwrite($fp, $text . EOL);
 
 		return true;
 	}

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function create_error_offline(string $msg) : void {
+function create_error_offline(string $msg): void {
 	header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
 }

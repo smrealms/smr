@@ -16,7 +16,7 @@
 
 // Print bond properties if the planet is claimed
 if (!$ThisPlanet->hasOwner()) {
-	echo "This planet must be claimed before you can bond funds here.<br /><br />";
+	echo 'This planet must be claimed before you can bond funds here.<br /><br />';
 } else { ?>
 	You are able to transfer these credits into a planetary bond.<br />
 	The credits will remain bonded for <?php echo format_time($ThisPlanet->getBondTime()); ?> and will gain <?php echo $ThisPlanet->getInterestRate() * 100; ?>% interest.<br /><br /><?php

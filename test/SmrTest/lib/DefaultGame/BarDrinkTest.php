@@ -2,14 +2,15 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use PHPUnit\Framework\TestCase;
 use Smr\BarDrink;
 
 /**
  * @covers Smr\BarDrink
  */
-class BarDrinkTest extends \PHPUnit\Framework\TestCase {
+class BarDrinkTest extends TestCase {
 
-	public function test_getAll() : void {
+	public function test_getAll(): void {
 		// all drinks are either special or common
 		$all = BarDrink::getAll();
 		$joined = array_merge(BarDrink::getCommon(), BarDrink::getSpecial());
@@ -18,21 +19,21 @@ class BarDrinkTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame($all, $joined);
 	}
 
-	public function test_getSpecial() : void {
+	public function test_getSpecial(): void {
 		// all special drinks must be in the list of all drinks
 		foreach (BarDrink::getSpecial() as $drink) {
 			self::assertContains($drink, BarDrink::getAll());
 		}
 	}
 
-	public function test_getCommon() : void {
+	public function test_getCommon(): void {
 		// all common drinks must be in the list of all drinks
 		foreach (BarDrink::getCommon() as $drink) {
 			self::assertContains($drink, BarDrink::getAll());
 		}
 	}
 
-	public function test_isSpecial() : void {
+	public function test_isSpecial(): void {
 		// special drinks are special
 		foreach (BarDrink::getSpecial() as $drink) {
 			self::assertTrue(BarDrink::isSpecial($drink));
@@ -43,7 +44,7 @@ class BarDrinkTest extends \PHPUnit\Framework\TestCase {
 		}
 	}
 
-	public function test_getSpecialMessage() : void {
+	public function test_getSpecialMessage(): void {
 		// every special drink has a special message
 		foreach (BarDrink::getSpecial() as $drink) {
 			self::assertIsString(BarDrink::getSpecialMessage($drink));

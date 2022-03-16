@@ -17,7 +17,7 @@ Menu::history_games(0);
 $db = Smr\Database::getInstance();
 $db->switchDatabases($var['HistoryDatabase']);
 $dbResult = $db->read('SELECT start_date, type, end_date, game_name, speed, game_id ' .
-           'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
+	'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
 $dbRecord = $dbResult->record();
 $template->assign('GameName', $game_name);
 $template->assign('Start', date($account->getDateFormat(), $dbRecord->getInt('start_date')));
@@ -72,7 +72,7 @@ $container['selected_index'] = 0;
 $allianceExp = [];
 $dbResult = $db->read('SELECT SUM(experience) as exp, alliance_name, alliance_id
 			FROM player JOIN alliance USING (game_id, alliance_id)
-			WHERE game_id = '.$db->escapeNumber($game_id) . ' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
+			WHERE game_id = ' . $db->escapeNumber($game_id) . ' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
 foreach ($dbResult->records() as $dbRecord) {
 	$alliance = htmlentities($dbRecord->getString('alliance_name'));
 	$id = $dbRecord->getInt('alliance_id');

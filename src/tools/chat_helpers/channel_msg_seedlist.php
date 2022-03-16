@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-function get_seedlist(SmrPlayer $player) : array {
+function get_seedlist(SmrPlayer $player): array {
 	// Return the seedlist
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT sector_id FROM alliance_has_seedlist
 						WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 							AND game_id = ' . $db->escapeNumber($player->getGameID()));
-	$seedlist = array();
+	$seedlist = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$seedlist[] = $dbRecord->getInt('sector_id');
 	}
@@ -14,37 +14,37 @@ function get_seedlist(SmrPlayer $player) : array {
 }
 
 
-function shared_channel_msg_seedlist(SmrPlayer $player) : array {
+function shared_channel_msg_seedlist(SmrPlayer $player): array {
 	// get the seedlist
 	$seedlist = get_seedlist($player);
 
 	if (count($seedlist) == 0) {
-		return array('Your alliance has not set up a seedlist yet.');
+		return ['Your alliance has not set up a seedlist yet.'];
 	} else {
-		$result = array('Your alliance has a ' . count($seedlist) . ' sector seedlist:');
-		$result[] = join(' ', $seedlist);
+		$result = ['Your alliance has a ' . count($seedlist) . ' sector seedlist:'];
+		$result[] = implode(' ', $seedlist);
 		return $result;
 	}
 }
 
-function shared_channel_msg_seedlist_add(SmrPlayer $player, ?array $sectors) : array {
+function shared_channel_msg_seedlist_add(SmrPlayer $player, ?array $sectors): array {
 	// check if $nick is leader
 	if (!$player->isAllianceLeader(true)) {
-		return array('Only the leader of the alliance manages the seedlist.');
+		return ['Only the leader of the alliance manages the seedlist.'];
 	}
 
 	if (empty($sectors)) {
-		return array('You must specify sectors to add.');
+		return ['You must specify sectors to add.'];
 	}
 
 	// see if the sectors are numeric
 	foreach ($sectors as $sector) {
 		if (!is_numeric($sector)) {
-			return array("The specified sector '$sector' is not numeric.");
+			return ["The specified sector '$sector' is not numeric."];
 		}
 	}
 
-	$result = array();
+	$result = [];
 
 	// Get the initial seedlist
 	$currentSeedlist = get_seedlist($player);
@@ -56,8 +56,7 @@ function shared_channel_msg_seedlist_add(SmrPlayer $player, ?array $sectors) : a
 		$dbResult = $db->read('SELECT 1
 					FROM sector
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND  sector_id = ' . $db->escapeNumber($sector)
-		);
+						AND  sector_id = ' . $db->escapeNumber($sector));
 		if (!$dbResult->hasRecord()) {
 			$result[] = "WARNING: The sector '$sector' does not exist in the current game.";
 			continue;
@@ -87,24 +86,24 @@ function shared_channel_msg_seedlist_add(SmrPlayer $player, ?array $sectors) : a
 }
 
 
-function shared_channel_msg_seedlist_del(SmrPlayer $player, ?array $sectors) : array {
+function shared_channel_msg_seedlist_del(SmrPlayer $player, ?array $sectors): array {
 	// check if $nick is leader
 	if (!$player->isAllianceLeader(true)) {
-		return array('Only the leader of the alliance manages the seedlist.');
+		return ['Only the leader of the alliance manages the seedlist.'];
 	}
 
 	if (empty($sectors)) {
-		return array('You must specify sectors to delete.');
+		return ['You must specify sectors to delete.'];
 	}
 
-	if (count($sectors) === 1 && $sectors[0] === "all") {
+	if (count($sectors) === 1 && $sectors[0] === 'all') {
 		$sectors = get_seedlist($player);
 	}
 
 	// see if the sectors are numeric
 	foreach ($sectors as $sector) {
 		if (!is_numeric($sector)) {
-			return array("The specified sector '$sector' is not numeric.");
+			return ["The specified sector '$sector' is not numeric."];
 		}
 	}
 
@@ -113,8 +112,7 @@ function shared_channel_msg_seedlist_del(SmrPlayer $player, ?array $sectors) : a
 	$db->write('DELETE FROM alliance_has_seedlist
 				WHERE alliance_id = ' . $player->getAllianceID() . '
 					AND game_id = ' . $player->getGameID() . '
-					AND sector_id IN (' . $db->escapeArray($sectors) . ')'
-	);
+					AND sector_id IN (' . $db->escapeArray($sectors) . ')');
 
-	return array('The following sectors have been removed from the seedlist:' . implode(' ', $sectors));
+	return ['The following sectors have been removed from the seedlist:' . implode(' ', $sectors)];
 }

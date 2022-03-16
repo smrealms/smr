@@ -15,7 +15,7 @@ $ini_str = file_get_contents($_FILES['smr_file']['tmp_name']);
 //
 // NOTE: these special characters are allowed in the ini-values, but only if
 // we use the "raw" scanner. We need this because of the "Location=" values.
-$ini_substr = strstr($ini_str, "[Metadata]");
+$ini_substr = strstr($ini_str, '[Metadata]');
 if ($ini_substr === false) {
 	create_error('Could not find [Metadata] section in SMR file');
 }
@@ -28,7 +28,7 @@ if ($version !== SMR_FILE_VERSION) {
 
 // Create the galaxies
 foreach ($data['Galaxies'] as $galID => $details) {
-	list($width, $height, $type, $name, $maxForceTime) = explode(',', $details);
+	[$width, $height, $type, $name, $maxForceTime] = explode(',', $details);
 	$galaxy = SmrGalaxy::createGalaxy($var['game_id'], $galID);
 	$galaxy->setWidth(str2int($width));
 	$galaxy->setHeight(str2int($height));

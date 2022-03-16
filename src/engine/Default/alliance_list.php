@@ -27,10 +27,9 @@ JOIN alliance USING (game_id, alliance_id)
 WHERE leader_id > 0
 AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 GROUP BY alliance_id
-ORDER BY alliance_name ASC'
-);
+ORDER BY alliance_name ASC');
 
-$alliances = array();
+$alliances = [];
 foreach ($dbResult->records() as $dbRecord) {
 	if ($dbRecord->getInt('alliance_id') != $player->getAllianceID()) {
 		$container['body'] = 'alliance_roster.php';
@@ -40,12 +39,12 @@ foreach ($dbResult->records() as $dbRecord) {
 	$allianceID = $dbRecord->getInt('alliance_id');
 	$container['alliance_id'] = $allianceID;
 
-	$alliances[$allianceID] = array(
+	$alliances[$allianceID] = [
 		'ViewHREF' => $container->href(),
 		'Name' => htmlentities($dbRecord->getString('alliance_name')),
 		'TotalExperience' => $dbRecord->getInt('alliance_xp'),
 		'AverageExperience' => $dbRecord->getInt('alliance_avg'),
 		'Members' => $dbRecord->getInt('alliance_member_count'),
-	);
+	];
 }
 $template->assign('Alliances', $alliances);

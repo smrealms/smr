@@ -9,7 +9,7 @@ Menu::messages();
 
 $template->assign('PageTopic', 'View Messages');
 
-$messageBoxes = array();
+$messageBoxes = [];
 foreach (Smr\Messages::getMessageTypeNames() as $message_type_id => $message_type_name) {
 	$messageBox = [];
 	$messageBox['Name'] = $message_type_name;

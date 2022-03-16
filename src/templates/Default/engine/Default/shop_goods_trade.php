@@ -20,7 +20,7 @@ Note: In order to maximize your experience you have to bargain with the port own
 	<input type="number" name="bargain_price" value="<?php echo $BargainPrice; ?>" class="center" style="width:75;vertical-align:middle;" autofocus>&nbsp;
 	<!-- all needed information to calculate the ideal price -->
 	<!-- Trade.Amount:Good.BasePrice:Good.Distance:Port.Good.Amount:Port.Good.Max:Relations -->
-	<!-- (<?php echo join(':', $TradeCalcInfo); ?>)-->
+	<!-- (<?php echo implode(':', $TradeCalcInfo); ?>)-->
 	<input type="submit" name="action" value="Bargain (1)" />
 </form>
 

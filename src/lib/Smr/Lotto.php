@@ -10,7 +10,7 @@ use SmrPlayer;
  */
 class Lotto {
 
-	public static function checkForLottoWinner(int $gameID) : void {
+	public static function checkForLottoWinner(int $gameID): void {
 
 		// No more lotto winners after the game has ended
 		if (SmrGame::getGame($gameID)->hasEnded()) {
@@ -50,8 +50,8 @@ class Lotto {
 
 		// create news msg
 		$winner = SmrPlayer::getPlayer($winner_id, $gameID);
-		$winner->increaseHOF($lottoInfo['Prize'], array('Bar', 'Lotto', 'Money', 'Winnings'), HOF_PUBLIC);
-		$winner->increaseHOF(1, array('Bar', 'Lotto', 'Results', 'Wins'), HOF_PUBLIC);
+		$winner->increaseHOF($lottoInfo['Prize'], ['Bar', 'Lotto', 'Money', 'Winnings'], HOF_PUBLIC);
+		$winner->increaseHOF(1, ['Bar', 'Lotto', 'Results', 'Wins'], HOF_PUBLIC);
 		$news_message = $winner->getBBLink() . ' has won the lotto! The jackpot was ' . number_format($lottoInfo['Prize']) . '. ' . $winner->getBBLink() . ' can report to any bar to claim their prize before the next drawing!';
 		// insert the news entry
 		$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($gameID));
@@ -65,20 +65,20 @@ class Lotto {
 		]);
 	}
 
-	public static function getLottoInfo(int $gameID) : array {
+	public static function getLottoInfo(int $gameID): array {
 		$amount = 1000000;
 		$firstBuy = Epoch::time();
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT count(*) as num, min(time) as time FROM player_has_ticket
-				WHERE game_id = '.$db->escapeNumber($gameID) . ' AND time > 0');
+				WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > 0');
 		$dbRecord = $dbResult->record();
 		if ($dbRecord->getInt('num') > 0) {
 			$amount += $dbRecord->getInt('num') * 1000000 * .9;
 			$firstBuy = $dbRecord->getInt('time');
 		}
 		//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
-		return array('Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - Epoch::time());
+		return ['Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - Epoch::time()];
 	}
 
 }

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-const MISSION_ACTIONS = array(
+const MISSION_ACTIONS = [
 	'LeaveSector',
 	'EnterSector',
 	'WalkSector',
@@ -9,8 +9,8 @@ const MISSION_ACTIONS = array(
 	'DisbandAlliance',
 	'KickPlayer',
 	'PlayerKicked',
-	'BuyDrink'
-);
+	'BuyDrink',
+];
 
 //REQUIREMENTS
 //if you use an array as a requirement and the requirement name represents an array, it will check every value and all must pass
@@ -47,79 +47,79 @@ Replacements:
 */
 
 // NOTE: Array keys are the mission ID and should not be changed!
-const MISSIONS = array(
-	0 => array(
+const MISSIONS = [
+	0 => [
 		'Name' => 'Drunk Guy',
 		'Offerer' => 'Drunk',
 		'Time Limit' => 0,
-		'HasX' => array(
+		'HasX' => [
 			'Type' => 'Locations',
-			'X' => 'Bar'
-		),
-		'Steps' => array(
-			array(
+			'X' => 'Bar',
+		],
+		'Steps' => [
+			[
 				'Step' => 'EnterSector',
-				'PickSector' => array(
+				'PickSector' => [
 					'Type' => 'Locations',
-					'X' => RACE_SALVENE + LOCATION_GROUP_RACIAL_HQS
-				),
-				'Detail' => array(
-					'SectorID' => '<Sector>'
-				),
+					'X' => RACE_SALVENE + LOCATION_GROUP_RACIAL_HQS,
+				],
+				'Detail' => [
+					'SectorID' => '<Sector>',
+				],
 				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' in this bar is awful! Go to the Sal...*Hiccup*...the Salvene HQ, they\'ll know a good bar.',
-				'Task' => 'Go to the Salvene HQ at [sector=<Sector>]'
-			),
-			array(
+				'Task' => 'Go to the Salvene HQ at [sector=<Sector>]',
+			],
+			[
 				'Step' => 'EnterSector',
-				'PickSector' => array(
+				'PickSector' => [
 					'Type' => 'Locations',
-					'X' => 'Bar'
-				),
-				'Detail' => array(
-					'SectorID' => '<Sector>'
-				),
+					'X' => 'Bar',
+				],
+				'Detail' => [
+					'SectorID' => '<Sector>',
+				],
 				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in [sector=<Sector>] does the best ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' around!',
-				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.'
-			),
-			array(
+				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.',
+			],
+			[
 				'Step' => 'BuyDrink',
-				'Detail' => array(
+				'Detail' => [
 					'SectorID' => '<Sector>',
 					'Drink' => Smr\BarDrink::SALVENE_SWAMP_SODA,
-				),
+				],
 				'Text' => 'Here we are! Now let\'s get this ' . Smr\BarDrink::SALVENE_SWAMP_SODA . '.',
-				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.'
-			),
-			array(
+				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.',
+			],
+			[
 				'Step' => 'EnterSector',
-				'Detail' => array(
-					'SectorID' => '<Starting Sector>'
-				),
+				'Detail' => [
+					'SectorID' => '<Starting Sector>',
+				],
 				'Text' => 'Finally! A true ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ', let\'s return to that drunk!',
-				'Task' => 'Return to [sector=<Starting Sector>] to claim your reward.'
-			),
-			array(
+				'Task' => 'Return to [sector=<Starting Sector>] to claim your reward.',
+			],
+			[
 				'Step' => 'Claim',
-				'Rewards' => array(
+				'Rewards' => [
 					'Credits' => 500000,
 					'Experience' => 1000,
-					'Text' => '*Hiccup* For your...service *Hiccup* to me, take these *Hiccup* 500,000 credits and 1,000 experience *Hiccup*!'
-				),
-				'Detail' => array(
-					'SectorID' => '<Starting Sector>'
-				),
-				'Text' => 'You hand the ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' to the drunk!'
-			)
-		)
-	)
-);
+					'Text' => '*Hiccup* For your...service *Hiccup* to me, take these *Hiccup* 500,000 credits and 1,000 experience *Hiccup*!',
+				],
+				'Detail' => [
+					'SectorID' => '<Starting Sector>',
+				],
+				'Text' => 'You hand the ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' to the drunk!',
+			],
+		],
+	],
+];
 
 /**
  * Callback for array_walk_recursive in SmrPlayer::rebuildMission.
  * Searches for placeholders in template and replaces them with values
  * derived from the supplied data.
  */
-function replaceMissionTemplate(string|int &$template, string $key, array $data) : void {
+function replaceMissionTemplate(string|int &$template, string $key, array $data): void {
 	if (!is_string($template)) {
 		return;
 	}
@@ -128,7 +128,7 @@ function replaceMissionTemplate(string|int &$template, string $key, array $data)
 	$template = str_replace($search, $replace, $template);
 }
 
-function checkMissionRequirements(array $values, array $requirements) : bool {
+function checkMissionRequirements(array $values, array $requirements): bool {
 	foreach ($requirements as $reqName => $reqValue) {
 		if ($values[$reqName] != $reqValue) {
 			return false;

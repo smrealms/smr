@@ -8,9 +8,9 @@ $template->assign('EditDummysLink', Page::create('skeleton.php', 'admin/edit_dum
 $template->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 
 $duplicates = false;
-$usedNames = array();
-$realAttackers = array();
-$attackers = array();
+$usedNames = [];
+$realAttackers = [];
+$attackers = [];
 $i = 1;
 if (Smr\Request::has('attackers')) {
 	foreach (Smr\Request::getArray('attackers') as $attackerName) {
@@ -34,8 +34,8 @@ for (;$i <= 10; ++$i) {
 $template->assign('Attackers', $attackers);
 
 $i = 1;
-$realDefenders = array();
-$defenders = array();
+$realDefenders = [];
+$defenders = [];
 if (Smr\Request::has('defenders')) {
 	foreach (Smr\Request::getArray('defenders') as $defenderName) {
 		if ($defenderName == 'none') {
@@ -84,9 +84,9 @@ if (!empty($realAttackers) && !empty($realDefenders)) {
 	}
 }
 
-function runAnAttack(array $realAttackers, array $realDefenders) : array {
-	$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0),
-					'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
+function runAnAttack(array $realAttackers, array $realDefenders): array {
+	$results = ['Attackers' => ['Traders' => [], 'TotalDamage' => 0],
+					'Defenders' => ['Traders' => [], 'TotalDamage' => 0]];
 	foreach ($realAttackers as $accountID => $teamPlayer) {
 		$playerResults = $teamPlayer->shootPlayers($realDefenders);
 		$results['Attackers']['Traders'][] = $playerResults;

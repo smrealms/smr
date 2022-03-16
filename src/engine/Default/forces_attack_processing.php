@@ -26,7 +26,7 @@ if ($player->forceNAPAlliance($forceOwner)) {
 
 // The attack is processed slightly differently if the attacker bumped into mines
 // when moving into sector
-$bump = match($var['action']) {
+$bump = match ($var['action']) {
 	'attack' => false,
 	'bump' => true,
 };
@@ -67,9 +67,9 @@ $sendMessage = $forces->hasSDs();
 // *
 // ********************************
 
-$results = array('Attackers' => array('TotalDamage' => 0),
-				'Forces' => array(),
-				'Forced' => $bump);
+$results = ['Attackers' => ['TotalDamage' => 0],
+				'Forces' => [],
+				'Forced' => $bump];
 
 $attackers = $player->getSector()->getFightingTradersAgainstForces($player, $bump);
 
@@ -86,7 +86,7 @@ if ($bump) {
 	$results['Forces'] = $forces->shootPlayers($attackers, $bump);
 }
 
-$results['Attackers'] = array('TotalDamage' => 0);
+$results['Attackers'] = ['TotalDamage' => 0];
 foreach ($attackers as $attacker) {
 	$playerResults = $attacker->shootForces($forces);
 	$results['Attackers']['Traders'][$attacker->getAccountID()] = $playerResults;
@@ -128,7 +128,7 @@ if ($forces->exists()) {
 
 // If they died on the shot they get to see the results
 if ($player->isDead()) {
-	$container['override_death'] = TRUE;
+	$container['override_death'] = true;
 	$container['owner_id'] = 0;
 }
 

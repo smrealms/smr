@@ -40,7 +40,7 @@ foreach ($dbResult->records() as $dbRecord) {
 
 	$dbResult2 = $db->read('SELECT *
 				FROM changelog
-				WHERE version_id = '.$db->escapeNumber($version_id) . '
+				WHERE version_id = ' . $db->escapeNumber($version_id) . '
 				ORDER BY changelog_id');
 	$changes = [];
 	foreach ($dbResult2->records() as $dbRecord2) {

@@ -2,18 +2,21 @@
 
 namespace SmrTest\lib\DefaultGame;
 
+use Exception;
 use Page;
+use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Session;
 
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest
  * since we are not (or should not be!) writing any data.
+ *
  * @covers Page
  */
-class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
+class PageIntegrationTest extends TestCase {
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		// Reset the DI container for each test to ensure independence.
 		DiContainer::initialize(false);
 	}
@@ -22,7 +25,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 	 * Insert a mock Session into the DI container to return the input $var
 	 * when getCurrentVar is called on it.
 	 */
-	private function setVar(array $var) : void {
+	private function setVar(array $var): void {
 		$page = new Page($var);
 		$session = $this->createMock(Session::class);
 		$session
@@ -33,7 +36,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 
 	//------------------------------------------------------------------------
 
-	public function test_create() : void {
+	public function test_create(): void {
 		// Test create with $extra as array
 		$page = Page::create('file', 'body', ['extra' => 'data']);
 		// Check that the expected keys of the ArrayObject are set
@@ -56,7 +59,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame(2, $page3['RemainingPageLoads']);
 	}
 
-	public function test_copy() : void {
+	public function test_copy(): void {
 		// Create an arbitrary Page
 		$page = Page::create('file');
 		// The copy should be equal, but not the same
@@ -65,7 +68,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertEquals($page, $copy);
 	}
 
-	public function test_href() : void {
+	public function test_href(): void {
 		// Create an arbitrary Page
 		$page = Page::create('file');
 
@@ -83,7 +86,7 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertSame($expected, $page->getArrayCopy());
 	}
 
-	public function test_addVar() : void {
+	public function test_addVar(): void {
 		$page = Page::create('file');
 
 		// Mock the current global $var
@@ -99,17 +102,16 @@ class PageIntegrationTest extends \PHPUnit\Framework\TestCase {
 		self::assertFalse(isset($page['index2']));
 	}
 
-	public function test_addVar_missing_source_raises() : void {
+	public function test_addVar_missing_source_raises(): void {
 		// Create an arbitrary Page
 		$page = Page::create('file');
 
 		// Mock an empty global $var
 		$this->setVar([]);
 
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Could not find "does_not_exist" in var!');
 		$page->addVar('does_not_exist');
 	}
-
 
 }

@@ -54,7 +54,7 @@ if ($player->getLastSectorID() != $var['target_sector']) {
 
 // log action
 $targetSector = SmrSector::getSector($player->getGameID(), $var['target_sector']);
-$player->actionTaken('WalkSector', array('Sector' => $targetSector));
+$player->actionTaken('WalkSector', ['Sector' => $targetSector]);
 
 // send scout msg
 $sector->leavingSector($player, MOVEMENT_WALK);
@@ -77,8 +77,8 @@ $sector = $player->getSector();
 //add that the player explored here if it hasnt been explored...for HoF
 if (!$sector->isVisited($player)) {
 	$player->increaseExperience(EXPLORATION_EXPERIENCE);
-	$player->increaseHOF(EXPLORATION_EXPERIENCE, array('Movement', 'Exploration Experience Gained'), HOF_ALLIANCE);
-	$player->increaseHOF(1, array('Movement', 'Sectors Explored'), HOF_ALLIANCE);
+	$player->increaseHOF(EXPLORATION_EXPERIENCE, ['Movement', 'Exploration Experience Gained'], HOF_ALLIANCE);
+	$player->increaseHOF(1, ['Movement', 'Sectors Explored'], HOF_ALLIANCE);
 }
 // make current sector visible to him
 $sector->markVisited($player);

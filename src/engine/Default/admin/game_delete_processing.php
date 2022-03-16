@@ -4,8 +4,8 @@ create_error('Deleting games is disabled!');
 
 $db = Smr\Database::getInstance();
 
-$smr_db_sql = array();
-$history_db_sql = array();
+$smr_db_sql = [];
+$history_db_sql = [];
 
 $action = Smr\Request::get('action');
 if (Smr\Request::get('save') == 'Yes') {
@@ -27,15 +27,15 @@ if ($action == 'Yes') {
 			//we need info for forces
 			//populate alliance list
 			$dbResult2 = $db->read('SELECT * FROM player
-						WHERE alliance_id = '.$db->escapeNumber($id) . '
-							AND game_id = '.$db->escapeNumber($game_id));
-			$list = array(0);
+						WHERE alliance_id = ' . $db->escapeNumber($id) . '
+							AND game_id = ' . $db->escapeNumber($game_id));
+			$list = [0];
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$list[] = $dbRecord2->getInt('account_id');
 			}
 			$dbResult2 = $db->read('SELECT sum(mines) as sum_m, sum(combat_drones) as cds, sum(scout_drones) as sds
 						FROM sector_has_forces
-						WHERE owner_id IN ('.$db->escapeArray($list) . ') AND game_id = ' . $db->escapeNumber($game_id));
+						WHERE owner_id IN (' . $db->escapeArray($list) . ') AND game_id = ' . $db->escapeNumber($game_id));
 			if ($dbResult2->hasRecord()) {
 				$dbRecord2 = $dbResult2->record();
 				$mines = $dbRecord2->getInt('sum_m');

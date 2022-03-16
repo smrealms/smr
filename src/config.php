@@ -19,7 +19,7 @@ require_once(CONFIG . 'config.specific.php');
 if (ENABLE_BETA && !ENABLE_DEBUG) {
 	// Everything raises an exception in beta mode (for e-mail notifications).
 	// However, in debug mode, we prefer to use xdebug's handler.
-	set_error_handler("exception_error_handler");
+	set_error_handler('exception_error_handler');
 }
 
 // Change the browser title based on the server config
@@ -319,15 +319,15 @@ const MESSAGES_PER_PAGE = 50;
 /*
  * Credit features
  */
-const MESSAGES_PER_CREDIT = array(
+const MESSAGES_PER_CREDIT = [
 	MSG_GLOBAL => 20,
 	MSG_PLAYER => 20,
 	MSG_PLANET => 10,
 	MSG_SCOUT => 25,
 	MSG_POLITICAL => 20,
 	MSG_ALLIANCE => 20,
-	MSG_ADMIN => 50
-);
+	MSG_ADMIN => 50,
+];
 
 const CREDITS_PER_GAL_MAP = 20;
 const CREDITS_PER_NAME_CHANGE = 10;
@@ -475,21 +475,21 @@ const EOL = "\n";
 
 // These CSS URLs must be hard-coded here so that grunt-cache-bust
 // can replace them with the hashed filenames.
-const CSS_URLS = array(
+const CSS_URLS = [
 	'Default' => 'css/Default.css',
 	'Freon22' => 'css/Freon22.css',
-);
-const CSS_COLOUR_URLS = array(
-	'Default' => array(
+];
+const CSS_COLOUR_URLS = [
+	'Default' => [
 		'Default' => 'css/Default/Default.css',
-	),
-	'Freon22' => array(
-		'Rust'         => 'css/Freon22/Rust.css',
-		'Blue'         => 'css/Freon22/Blue.css',
+	],
+	'Freon22' => [
+		'Rust' => 'css/Freon22/Rust.css',
+		'Blue' => 'css/Freon22/Blue.css',
 		'ClassicGreen' => 'css/Freon22/ClassicGreen.css',
-		'None'         => 'css/Freon22/None.css',
-	),
-);
+		'None' => 'css/Freon22/None.css',
+	],
+];
 
 const DEFAULT_CSS = CSS_URLS['Default'];
 const DEFAULT_CSS_COLOUR = CSS_COLOUR_URLS['Default']['Default'];

@@ -9,15 +9,15 @@ try {
 	debug('Script started');
 	define('NPC_SCRIPT', true);
 
-	$descriptorSpec = array(
-		0 => array("pipe", "r"), // stdin is a pipe that the child will read from
-		1 => array("pipe", "w")  // stdout is a pipe that the child will write to
-	);
+	$descriptorSpec = [
+		0 => ['pipe', 'r'], // stdin is a pipe that the child will read from
+		1 => ['pipe', 'w'], // stdout is a pipe that the child will write to
+	];
 	$engine = proc_open(UCI_CHESS_ENGINE, $descriptorSpec, $pipes);
 	$toEngine =& $pipes[0];
 	$fromEngine =& $pipes[1];
 
-	function readFromEngine(bool $block = true) : void {
+	function readFromEngine(bool $block = true): void {
 		global $fromEngine;
 		stream_set_blocking($fromEngine, $block);
 		while (($s = fgets($fromEngine)) !== false) {
@@ -25,10 +25,10 @@ try {
 			stream_set_blocking($fromEngine, 0);
 		}
 	}
-	function writeToEngine(string $s, bool $block = true, bool $read = true) : void {
+	function writeToEngine(string $s, bool $block = true, bool $read = true): void {
 		global $toEngine;
 		debug('--> ' . $s);
-		fputs($toEngine, $s . EOL);
+		fwrite($toEngine, $s . EOL);
 		if ($read === true) {
 			readFromEngine($block);
 		}

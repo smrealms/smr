@@ -6,8 +6,7 @@
  *
  * @param resource $fp
  */
-function server_ping($fp, string $rdata) : bool
-{
+function server_ping($fp, string $rdata): bool {
 	global $last_ping;
 
 	if (preg_match('/^PING\s:(.*)\s/i', $rdata, $msg)) {
@@ -22,7 +21,7 @@ function server_ping($fp, string $rdata) : bool
 			echo_r('[PING] from ' . $server);
 		}
 
-		fputs($fp, 'PONG ' . $server . EOL);
+		fwrite($fp, 'PONG ' . $server . EOL);
 		return true;
 	}
 
@@ -34,8 +33,7 @@ function server_ping($fp, string $rdata) : bool
  *
  * @param resource $fp
  */
-function server_msg_307($fp, string $rdata) : bool
-{
+function server_msg_307($fp, string $rdata): bool {
 
 	// :alpha.theairlock.net 307 Caretaker MrSpock :is identified for this nick
 	if (preg_match('/^:(.*) 307 ' . IRC_BOT_NICK . ' (.*) :is identified for this nick\s/i', $rdata, $msg)) {
@@ -66,8 +64,7 @@ function server_msg_307($fp, string $rdata) : bool
  *
  * @param resource $fp
  */
-function server_msg_318($fp, string $rdata) : bool
-{
+function server_msg_318($fp, string $rdata): bool {
 
 	// :ice.coldfront.net 318 Caretaker MrSpock :End of /WHOIS list.
 	if (preg_match('/^:(.*) 318 ' . IRC_BOT_NICK . ' (.*) :End of \/WHOIS list\.\s/i', $rdata, $msg)) {
@@ -88,7 +85,6 @@ function server_msg_318($fp, string $rdata) : bool
 						'WHERE seen_id = ' . $seen_id);
 		}
 
-
 		global $actions;
 		foreach ($actions as $key => $action) {
 
@@ -104,9 +100,9 @@ function server_msg_318($fp, string $rdata) : bool
 					$action[0] = 'NICKSERV_INFO';
 					$action[4] = time();
 					array_push($actions, $action);
-					fputs($fp, 'NICKSERV INFO ' . $nick . EOL);
+					fwrite($fp, 'NICKSERV INFO ' . $nick . EOL);
 				} elseif ($action[5] === true) {
-					fputs($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
+					fwrite($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
 				}
 
 			}
@@ -124,8 +120,7 @@ function server_msg_318($fp, string $rdata) : bool
  *
  * @param resource $fp
  */
-function server_msg_352($fp, string $rdata) : bool
-{
+function server_msg_352($fp, string $rdata): bool {
 
 	// :ice.coldfront.net 352 Caretaker #KMFDM caretaker coldfront-425DB813.dip.t-dialin.net ice.coldfront.net Caretaker Hr :0 Official SMR bot
 	if (preg_match('/^:(.*?) 352 ' . IRC_BOT_NICK . ' (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?)$/i', $rdata, $msg)) {
@@ -177,8 +172,7 @@ function server_msg_352($fp, string $rdata) : bool
  *
  * @param resource $fp
  */
-function server_msg_401($fp, string $rdata) : bool
-{
+function server_msg_401($fp, string $rdata): bool {
 
 	// :ice.coldfront.net 401 Caretaker MrSpock :No such nick/channel
 	if (preg_match('/^:(.*) 401 ' . IRC_BOT_NICK . ' (.*) :No such nick\/channel\s/i', $rdata, $msg)) {

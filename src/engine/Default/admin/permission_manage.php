@@ -31,7 +31,7 @@ if (empty($admin_id)) {
 	$validatedAccounts = [];
 	$dbResult = $db->read('SELECT account_id, login
 				FROM account
-				WHERE validated = '.$db->escapeBoolean(true) . '
+				WHERE validated = ' . $db->escapeBoolean(true) . '
 				ORDER BY login');
 	foreach ($dbResult->records() as $dbRecord) {
 		$accountID = $dbRecord->getInt('account_id');
@@ -50,6 +50,5 @@ if (empty($admin_id)) {
 	$processingHREF = $container->href();
 	$template->assign('ProcessingHREF', $processingHREF);
 
-	$template->assign('PermissionCategories',
-	                  Smr\AdminPermissions::getPermissionsByCategory());
+	$template->assign('PermissionCategories', Smr\AdminPermissions::getPermissionsByCategory());
 }

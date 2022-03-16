@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function shared_channel_msg_op_turns(SmrPlayer $player) : array {
+function shared_channel_msg_op_turns(SmrPlayer $player): array {
 	// get the op from db
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT 1
@@ -8,10 +8,10 @@ function shared_channel_msg_op_turns(SmrPlayer $player) : array {
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	if (!$dbResult->hasRecord()) {
-		return array('There is no op scheduled.');
+		return ['There is no op scheduled.'];
 	}
 
-	$oppers = array();
+	$oppers = [];
 	$dbResult = $db->read('SELECT account_id
 				FROM alliance_has_op_response
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
@@ -23,20 +23,22 @@ function shared_channel_msg_op_turns(SmrPlayer $player) : array {
 		if (!$player->sameAlliance($attendeePlayer)) {
 			continue;
 		}
-		$turns = min($attendeePlayer->getTurns() + $attendeePlayer->getTurnsGained(time(), true),
-		             $attendeePlayer->getMaxTurns());
+		$turns = min(
+			$attendeePlayer->getTurns() + $attendeePlayer->getTurnsGained(time(), true),
+			$attendeePlayer->getMaxTurns()
+		);
 		$oppers[$attendeePlayer->getPlayerName()] = $turns;
 	}
 
 	if (empty($oppers)) {
-		return array('There are no op participants.');
+		return ['There are no op participants.'];
 	}
 
 	// sort by turns
 	arsort($oppers);
 
 	// return result to channel
-	$output = array();
+	$output = [];
 	foreach ($oppers as $opper => $turns) {
 		$output[] = "$turns : $opper";
 	}

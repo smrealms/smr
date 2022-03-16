@@ -27,7 +27,7 @@ $template->assign('TotalAlliances', $dbResult->record()->getInt('num_alliance'))
 
 $dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $gameID . ' ORDER BY experience DESC LIMIT 10');
 if ($dbResult->hasRecord()) {
-	$expRankings = array();
+	$expRankings = [];
 	foreach ($dbResult->records() as $index => $dbRecord) {
 		$expRankings[$index + 1] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $gameID, false, $dbRecord);
 	}
@@ -37,14 +37,14 @@ if ($dbResult->hasRecord()) {
 
 $dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $gameID . ' ORDER BY kills DESC LIMIT 10');
 if ($dbResult->hasRecord()) {
-	$killRankings = array();
+	$killRankings = [];
 	foreach ($dbResult->records() as $index => $dbRecord) {
 		$killRankings[$index + 1] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $gameID, false, $dbRecord);
 	}
 	$template->assign('KillRankings', $killRankings);
 }
 
-function allianceTopTen(int $gameID, string $field) : array {
+function allianceTopTen(int $gameID, string $field): array {
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT alliance_id, SUM(' . $field . ') amount
 				FROM alliance
@@ -53,7 +53,7 @@ function allianceTopTen(int $gameID, string $field) : array {
 				GROUP BY alliance_id, alliance_name
 				ORDER BY amount DESC, alliance_name
 				LIMIT 10');
-	$rankings = array();
+	$rankings = [];
 	foreach ($dbResult->records() as $index => $dbRecord) {
 		$rankings[$index + 1]['Alliance'] = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id'), $gameID);
 		$rankings[$index + 1]['Amount'] = $dbRecord->getInt('amount');
