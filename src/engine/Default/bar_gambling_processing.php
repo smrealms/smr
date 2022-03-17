@@ -4,10 +4,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-// blackjack
-$message = '';
-
-function create_card(Smr\Blackjack\Card $card, bool $show): string {
+function display_card(Smr\Blackjack\Card $card, bool $show): string {
 	//only display what the card really is if they want to
 	$card_height = 100;
 	$card_width = 125;
@@ -33,22 +30,30 @@ function create_card(Smr\Blackjack\Card $card, bool $show): string {
 	return $return;
 }
 
-function check_for_win(Smr\Blackjack\Hand $dealerHand, Smr\Blackjack\Hand $playerHand): string {
-	$comp = $dealerHand->getValue();
-	$play = $playerHand->getValue();
-
-	//does the player win
-	if ($playerHand->hasBlackjack()) {
-		return 'bj';
-	} elseif ($play > $comp && $comp <= 21 && $play <= 21) {
-		return 'yes';
-	} elseif ($play == $comp && $comp <= 21) {
-		return 'tie';
-	} elseif ($comp > 21) {
-		return 'yes';
-	} else {
-		return 'no';
+function display_hand(Smr\Blackjack\Hand $hand, bool $revealHand): string {
+	$html = '<table class="center"><tr>';
+	foreach ($hand->getCards() as $key => $card) {
+		//do we need a new row?
+		if ($key > 0 && $key % 3 == 0) {
+			$html .= '</tr><tr>';
+		}
+		$showCard = ($key == 0 || $revealHand === true);
+		$html .= display_card($card, $showCard);
 	}
+	$html .= '</tr></table>';
+	return $html;
+}
+
+function check_for_win(Smr\Blackjack\Hand $dealerHand, Smr\Blackjack\Hand $playerHand): string {
+	//does the player win
+	return match (true) {
+		$playerHand->hasBusted() => 'no',
+		$playerHand->hasBlackjack() => 'bj',
+		$playerHand->getValue() == $dealerHand->getValue() => 'tie',
+		$playerHand->getValue() > $dealerHand->getValue() => 'yes',
+		$dealerHand->hasBusted() => 'yes',
+		default => 'no',
+	};
 }
 
 $deck = $var['deck'] ?? new Smr\Blackjack\Deck();
@@ -91,191 +96,112 @@ if (isset($var['bet'])) {
 	$bet = $var['bet'];
 }
 
+// Add cards to the player's hand
 if ($do == 'HIT') {
 	$playerHand->addCard($deck->drawCard());
 }
 
-//only display if we wont display later..
-if ($do != 'STAY' && $playerHand->getValue() != 21) {
-	//heres the AIs cards
-	$i = 1;
-	if ($dealerHand->hasBlackjack() ||
-	    ($playerHand->getValue() > 21 && $dealerHand->getValue() <= 21)) {
-		$message .= ('<h1 class="red center">Bank Wins</h1>');
-	}
-	$message .= ('<div class="center">Bank\'s Cards are</div><br /><table class="center"><tr>');
-	foreach ($dealerHand->getCards() as $key => $card) {
-		if ($key == 0) {
-			//do we need a new row?
-			if ($i == 4 || $i == 7 || $i == 10) {
-				$message .= ('</tr><tr>');
-			}
-			$message .= create_card($card, true);
-			//get curr val of this card...for the at least part
-			$ai_val = $card->getValue();
-		} else {
-			//lets try and echo cards
-			//new row?
-			if ($i == 4 || $i == 7 || $i == 10) {
-				$message .= ('</tr><tr>');
-			}
-			if ($dealerHand->getValue() == 21 || $playerHand->getValue() >= 21) {
-				$message .= create_card($card, true);
-			} else {
-				$message .= create_card($card, false);
-			}
-		}
-		$i++;
-	}
+// Check if the game has ended
+$gameEnded = ($do == 'STAY' || $playerHand->getValue() >= 21 || $dealerHand->getValue() >= 21);
 
-	$message .= ('</tr></table>');
-	if ($dealerHand->hasBlackjack()) {
-		$message .= ('<div class="center">Bank has BLACKJACK!</div><br />');
-		$win = 'no';
-	} elseif ($playerHand->getValue() >= 21) {
-		$message .= ('<div class="center">Bank has ' . $dealerHand->getValue() . '</div><br />');
-	} else {
-		$message .= ('<div class="center">Bank has at least ' . $ai_val . '</div><br />');
-	}
-}
-
-if ($do == 'STAY' || $playerHand->getValue() == 21) {
-	//heres the Banks cards
-	$i = 1;
-
-	if (!$playerHand->hasBlackjack()) {
+$resultMsg = '';
+$winningsMsg = '';
+if ($gameEnded) {
+	// Add cards to the dealer's hand (if necessary)
+	if (!$playerHand->hasBusted() && !$playerHand->hasBlackjack()) {
 		while ($dealerHand->getValue() < 17) {
 			$dealerHand->addCard($deck->drawCard());
 		}
 	}
+
+	// Construct the result message
 	$win = check_for_win($dealerHand, $playerHand);
 	if ($win == 'yes' || $win == 'bj') {
-		$message .= ('<h1 class="green center">You Win</h1>');
+		$resultMsg = '<h1 class="green">You Win</h1>';
 	} elseif ($win == 'tie') {
-		$message .= ('<h1 class="yellow center">TIE Game</h1>');
+		$resultMsg = '<h1 class="yellow">TIE Game</h1>';
 	} else {
-		$message .= ('<h1 class="red center">Bank Wins</h1>');
+		$resultMsg = '<h1 class="red">Bank Wins</h1>';
 	}
-	$message .= ('<div class="center">Bank\'s Cards are</div><br /><table class="center"><tr>');
-	foreach ($dealerHand->getCards() as $key => $card) {
-		//now row?
-		if ($i == 4 || $i == 7 || $i == 10) {
-			$message .= ('</tr><tr>');
-		}
-		$message .= create_card($card, true);
-		$i++;
-	}
-	$message .= ('</tr></table><div class="center">');
-	if ($dealerHand->getValue() > 21) {
-		$message .= ('Bank <span class="red"><b>BUSTED</b></span><br /><br />');
+
+	// Process winnings and HoF stats
+	if ($win == 'bj' || $win == 'yes') {
+		$multiplier = $win == 'bj' ? 2.5 : 2;
+		$winnings = IFloor($bet * $multiplier);
+		$player->increaseCredits($winnings);
+		$stat = $winnings - $bet;
+		$player->increaseHOF($stat, ['Blackjack', 'Money', 'Won'], HOF_PUBLIC);
+		$player->increaseHOF(1, ['Blackjack', 'Results', 'Won'], HOF_PUBLIC);
+		$winningsMsg = 'You have won $' . number_format($winnings) . ' credits!';
+	} elseif ($win == 'tie') {
+		$player->increaseCredits($bet);
+		$player->increaseHOF(1, ['Blackjack', 'Results', 'Draw'], HOF_PUBLIC);
+		$winningsMsg = 'You have won back your $' . number_format($bet) . ' credits.';
 	} else {
-		$message .= ('Bank has ' . $dealerHand->getValue() . '<br /><br />');
+		$player->increaseHOF($bet, ['Blackjack', 'Money', 'Lost'], HOF_PUBLIC);
+		$player->increaseHOF(1, ['Blackjack', 'Results', 'Lost'], HOF_PUBLIC);
 	}
-	$message .= ('</div>');
 }
-$message .= ('<hr style="border:1px solid green;width:50%" noshade>');
-$i = 1;
 
-$val1 = $playerHand->getValue();
+// Construct display message
+$message = '<div class="center">';
+$message .= $resultMsg;
 
-$message .= ('<div class="center">Your Cards are</div><br /><table class="center"><tr>');
-foreach ($playerHand->getCards() as $key => $card) {
-	if ($i == 4 || $i == 7 || $i == 10) {
-		$message .= ('</tr><tr>');
-	}
-	$message .= create_card($card, true);
-	$i++;
-}
-$message .= ('</tr></table>');
+// Display the bank side
+$message .= '<div>Bank\'s Cards are</div><br />';
+$message .= display_hand($dealerHand, $gameEnded);
 
-if ($playerHand->hasBlackjack()) {
-	$message .= '<div class="center">You have BLACKJACK!</div><br />';
+$result = [];
+if ($gameEnded) {
+	$result[] = 'Bank has a total of ' . $dealerHand->getValue();
 } else {
-	$message .= ('<div class="center">You have a total of ' . $playerHand->getValue() . ' </div><br />');
+	// Only the bank's first card is visible to the player
+	$result[] = 'Bank has at least ' . $dealerHand->getCards()[0]->getValue();
 }
-
-//check for win
-if ($do == 'STAY') {
-	$win = check_for_win($dealerHand, $playerHand);
+if ($dealerHand->hasBlackjack()) {
+	$result[] = 'Bank has BLACKJACK!';
+} elseif ($dealerHand->hasBusted()) {
+	$result[] = 'Bank <span class="red"><b>BUSTED</b></span>';
 }
+$message .= '<div>' . implode('<br />', $result) . '</div><br />';
 
+// Separator
+$message .= '<hr style="border:1px solid green;width:50%" noshade>';
+
+// Display the player side
+$message .= '<div>Your Cards are</div><br />';
+$message .= display_hand($playerHand, true);
+
+$result = ['You have a total of ' . $playerHand->getValue()];
+if ($playerHand->hasBlackjack()) {
+	$result[] = 'You have BLACKJACK!';
+} elseif ($playerHand->hasBusted()) {
+	$result[] = 'You have <span class="red"><b>BUSTED</b></span>';
+}
+$message .= '<div>' . implode('<br />', $result) . '</div><br />';
+$message .= $winningsMsg;
+
+// Create action buttons
 $container = Page::create('bar_gambling_processing.php');
 $container->addVar('LocationID');
 $container['bet'] = $bet;
 
-$message .= ('<div class="center">');
-if ($playerHand->getValue() > 21) {
-	$message .= ('You have <span class="red"><b>BUSTED</b></span>');
-	$player->increaseHOF($bet, ['Blackjack', 'Money', 'Lost'], HOF_PUBLIC);
-	$player->increaseHOF(1, ['Blackjack', 'Results', 'Lost'], HOF_PUBLIC);
+if ($gameEnded) {
 	$message .= '<p><a class="submitStyle" href="' . $container->href() . '">Play Some More ($' . $bet . ')</a></p>';
-	$message .= ('</div>');
-} elseif (!isset($win) && $playerHand->getValue() < 21) {
+} else {
 	$container['deck'] = $deck;
 	$container['player_hand'] = $playerHand;
 	$container['player_does'] = 'HIT';
 	$container['dealer_hand'] = $dealerHand;
 	$message .= '<form method="POST" action="' . $container->href() . '">';
 	$message .= '<input type="submit" name="action" value="HIT" />';
-	$message .= ('<br /><small><br /></small></form>');
+	$message .= '<br /><small><br /></small></form>';
 	$container['player_does'] = 'STAY';
 	$message .= '<form method="POST" action="' . $container->href() . '">';
 	$message .= '<input type="submit" name="action" value="STAY" />';
-	$message .= ('</form></div>');
-} elseif (isset($win)) {
-	//we have a winner...but who!
-	if ($win == 'bj') {
-		$winnings = IFloor($bet * 2.5);
-		$player->increaseCredits($winnings);
-		$stat = $winnings - $bet;
-		$player->increaseHOF($stat, ['Blackjack', 'Money', 'Won'], HOF_PUBLIC);
-		$player->increaseHOF(1, ['Blackjack', 'Results', 'Won'], HOF_PUBLIC);
-		$message .= ('You have won $' . number_format($winnings) . ' credits!');
-	} elseif ($win == 'yes') {
-		$winnings = $bet * 2;
-		$player->increaseCredits($winnings);
-		$stat = $winnings - $bet;
-		$player->increaseHOF($stat, ['Blackjack', 'Money', 'Won'], HOF_PUBLIC);
-		$player->increaseHOF(1, ['Blackjack', 'Results', 'Won'], HOF_PUBLIC);
-		$message .= ('You have won $' . number_format($winnings) . ' credits!');
-	} elseif ($win == 'tie') {
-		$player->increaseCredits($bet);
-		$player->increaseHOF(1, ['Blackjack', 'Results', 'Draw'], HOF_PUBLIC);
-		$message .= ('You have won back your $' . number_format($bet) . ' credits.');
-	} else {
-		$player->increaseHOF($bet, ['Blackjack', 'Money', 'Lost'], HOF_PUBLIC);
-		$player->increaseHOF(1, ['Blackjack', 'Results', 'Lost'], HOF_PUBLIC);
-	}
-	$message .= '<p><a class="submitStyle" href="' . $container->href() . '">Play Some More ($' . $bet . ')</a></p>';
-	$message .= ('</div>');
-} elseif ($playerHand->getValue() == 21) {
-	if ($dealerHand->getValue() != 21) {
-		if ($playerHand->getNumCards() == 2) {
-			$multiplier = 2.5;
-		} else {
-			$multiplier = 2;
-		}
-		$winnings = IFloor($bet * $multiplier);
-		$player->increaseCredits($winnings);
-		$stat = $winnings - $bet;
-		$player->increaseHOF($stat, ['Blackjack', 'Money', 'Win'], HOF_PUBLIC);
-		$player->increaseHOF(1, ['Blackjack', 'Results', 'Win'], HOF_PUBLIC);
-		$message .= ('You have won $' . number_format($winnings) . ' credits!');
-	} elseif ($dealerHand->getNumCards() > 2) {
-		$winnings = $bet;
-		$player->increaseCredits($winnings);
-		$stat = $winnings - $bet;
-		$player->increaseHOF($stat, ['Blackjack', 'Money', 'Win'], HOF_PUBLIC);
-		$player->increaseHOF(1, ['Blackjack', 'Results', 'Win'], HOF_PUBLIC);
-		$message .= ('You have won back your $' . number_format($winnings) . ' credits!');
-	} else {
-		//AI has BJ already...sorry
-		$player->increaseHOF($bet, ['Blackjack', 'Money', 'Lost'], HOF_PUBLIC);
-		$player->increaseHOF(1, ['Blackjack', 'Results', 'Lost'], HOF_PUBLIC);
-	}
-	$message .= '<p><a class="submitStyle" href="' . $container->href() . '">Play Some More ($' . $bet . ')</a></p>';
-	$message .= ('</div>');
+	$message .= '</form>';
 }
+$message .= '</div>';
 
 $player->update();
 $container = Page::create('skeleton.php', 'bar_gambling_bet.php');

@@ -36,6 +36,13 @@ class Hand {
 	}
 
 	/**
+	 * Has this hand busted?
+	 */
+	public function hasBusted(): bool {
+		return $this->getValue() > 21;
+	}
+
+	/**
 	 * Add a card to this hand.
 	 */
 	public function addCard(Card $card): void {
