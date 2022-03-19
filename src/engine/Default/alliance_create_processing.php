@@ -14,10 +14,8 @@ if (empty($name)) {
 }
 
 // disallow certain ascii chars
-for ($i = 0; $i < strlen($name); $i++) {
-	if (ord($name[$i]) < 32 || ord($name[$i]) > 127) {
-		create_error('The alliance name contains invalid characters!');
-	}
+if (!ctype_print($name)) {
+	create_error('The alliance name contains invalid characters!');
 }
 
 $password = trim(Smr\Request::get('password', ''));
