@@ -392,7 +392,7 @@ class AbstractSmrPort {
 			throw new Exception('Cannot upgrade a cached port!');
 		}
 		$upgrades = 0;
-		while ($this->upgrade >= $this->getUpgradeRequirement() && $this->level < 9) {
+		while ($this->upgrade >= $this->getUpgradeRequirement() && $this->level < $this->getMaxLevel()) {
 			++$upgrades;
 			$this->decreaseUpgrade($this->getUpgradeRequirement());
 			$this->decreaseCredits($this->getUpgradeRequirement());
