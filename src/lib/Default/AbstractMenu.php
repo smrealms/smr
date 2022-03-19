@@ -33,7 +33,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function planet_list(int $alliance_id, int $selected_index): void {
+	public static function planetList(int $alliance_id, int $selected_index): void {
 		$menuItems = [];
 		$menuItems[] = ['Link' => Globals::getPlanetListHREF($alliance_id), 'Text' => 'Defense'];
 		$menuItems[] = ['Link' => Globals::getPlanetListFinancialHREF($alliance_id), 'Text' => 'Financial'];
@@ -104,7 +104,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function galactic_post(): void {
+	public static function galacticPost(): void {
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$menuItems = [];
@@ -119,7 +119,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function history_games(int $selected_index): void {
+	public static function historyGames(int $selected_index): void {
 		$menuItems = [];
 		$container = Page::create('skeleton.php', 'history_games.php');
 		$container->addVar('HistoryDatabase');
@@ -167,7 +167,7 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function combat_log(): void {
+	public static function combatLog(): void {
 		$container = Page::create('skeleton.php', 'combat_log_list.php');
 		$menuItems = [];
 

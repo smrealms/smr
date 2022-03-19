@@ -7,7 +7,7 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Combat Logs');
-Menu::combat_log();
+Menu::combatLog();
 
 // Do we have a message from the processing page?
 if (isset($var['message'])) {

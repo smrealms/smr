@@ -6,7 +6,7 @@ $var = $session->getCurrentVar();
 
 $game_id = $var['view_game_id'];
 $template->assign('PageTopic', 'Extended Stats : ' . $var['game_name']);
-Menu::history_games(1);
+Menu::historyGames(1);
 
 $container = Page::copy($var);
 $container['body'] = 'history_games_detail.php';

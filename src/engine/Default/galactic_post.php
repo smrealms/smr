@@ -9,7 +9,7 @@ if (!$player->isGPEditor()) {
 }
 
 $template->assign('PageTopic', 'Galactic Post');
-Menu::galactic_post();
+Menu::galacticPost();
 
 $db = Smr\Database::getInstance();
 
