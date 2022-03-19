@@ -81,8 +81,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
-				$timeString = $default;
-				if ($timeString != '' && ($time = strtotime($timeString)) !== false) {
+				$time = strtotime($default);
+				if ($time !== false) {
 					$time += $session->getAccount()->getOffset() * 3600;
 					return date($session->getAccount()->getDateTimeFormat(), $time);
 				}
