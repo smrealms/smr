@@ -45,9 +45,14 @@ if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 	<table class="standard fullwidth"><?php
 		if (isset($MessageBox['Messages'])) {
 			foreach ($MessageBox['Messages'] as $Message) {
-				if ($MessageBox['Type'] == MSG_SCOUT) { ?>
+				if ($MessageBox['Type'] == MSG_SCOUT) {
+					if (isset($MessageBox['GroupedMessages'])) {
+						$InputName = 'group_id[]';
+					} else {
+						$InputName = 'message_id[]';
+					} ?>
 					<tr>
-						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>" /><?php if ($Message['Unread']) { ?>*<?php } ?></td>
+						<td width="10"><input type="checkbox" name="<?php echo $InputName; ?>" value="<?php echo $Message['ID']; ?>" /><?php if ($Message['Unread']) { ?>*<?php } ?></td>
 						<td><?php echo bbifyMessage($Message['Text']); ?></td>
 						<td class="noWrap"><?php echo $Message['SendTime']; ?></td>
 					</tr><?php
