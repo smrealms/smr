@@ -1,8 +1,5 @@
 <?php declare(strict_types=1);
 
-class TimeoutException extends Exception {
-}
-
 function echo_r(string $message): void {
 	echo date('Y-m-d H:i:s => ') . $message . EOL;
 }
@@ -137,7 +134,7 @@ while ($running) {
 		}
 		fclose($fp); // close socket
 
-	} catch (TimeoutException) {
+	} catch (Smr\Irc\Exceptions\Timeout) {
 		// Ignore the timeout exception, we'll loop round and reconnect.
 	}
 } // end of while running
@@ -156,7 +153,7 @@ function readFromStream($fp): bool {
 	if ($last_ping < time() - 300) {
 		echo_r('TIMEOUT detected!');
 		fclose($fp); // close socket
-		throw new TimeoutException();
+		throw new Smr\Irc\Exceptions\Timeout();
 	}
 
 	// we simply do some poll stuff here
