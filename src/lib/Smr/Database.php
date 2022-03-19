@@ -141,6 +141,7 @@ class Database {
 	/**
 	 * INSERT a row into $table.
 	 *
+	 * @param string $table
 	 * @param array<string, mixed> $fields
 	 * @return int Insert ID of auto-incrementing column, if applicable
 	 */
