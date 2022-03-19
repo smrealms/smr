@@ -438,7 +438,7 @@ class AbstractSmrPort {
 		shuffle($GOODS);
 		foreach ($GOODS as $good) {
 			if (!$this->hasGood($good['ID']) && $good['Class'] == $goodClass) {
-				$transactionType = rand(1, 2) == 1 ? TRADER_BUYS : TRADER_SELLS;
+				$transactionType = array_rand([TRADER_BUYS, TRADER_SELLS]);
 				$this->addPortGood($good['ID'], $transactionType);
 				return $good;
 			}
