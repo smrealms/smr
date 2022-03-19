@@ -1,4 +1,4 @@
-<p>The plotted course is <?php echo $Path->getLength() . ' ' . pluralise('sector', $Path->getLength()); ?> long and costs <?php echo $Path->getTurns() . ' ' . pluralise('turn', $Path->getTurns()); ?> to traverse.</p>
+<p>The plotted course is <?php echo pluralise($Path->getLength(), 'sector'); ?> long and costs <?php echo pluralise($Path->getTurns(), 'turn'); ?> to traverse.</p>
 
 <br />
 <h2>Plotted Course</h2>

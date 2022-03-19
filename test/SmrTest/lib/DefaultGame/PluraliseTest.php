@@ -12,20 +12,19 @@ class PluraliseTest extends TestCase {
 	/**
 	 * @dataProvider pluralise_provider
 	 */
-	public function test_pluralise(string $in, mixed $count, string $expect): void {
-		$result = pluralise($in, $count);
+	public function test_pluralise(float|int $amount, bool $includeAmount, string $expect): void {
+		$result = pluralise($amount, 'test', $includeAmount);
 		$this->assertSame($expect, $result);
 	}
 
 	public function pluralise_provider(): array {
 		return [
-			['test', 3, 'tests'],
-			['test', 1, 'test'],
-			['is', 3, 'are'],
-			['Is', 3, 'are'],
-			['is', 1, 'is'],
-			['test', 0, 'tests'],
-			['test', 0.5, 'tests'],
+			[3, true, '3 tests'],
+			[1, true, '1 test'],
+			[0, true, '0 tests'],
+			[0.5, true, '0.5 tests'],
+			[3, false, 'tests'],
+			[1, false, 'test'],
 		];
 	}
 

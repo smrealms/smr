@@ -9,8 +9,8 @@ if ($ThisPlayer->hasPlottedCourse()) {
 			<td class="top left">
 				<h2>Plotted Course</h2><br />
 				<?php echo implode(' - ', $PlottedCourse->getPath()); ?><br />
-				(<?php $s = $PlottedCourse->getLength(); echo $s . ' ' . pluralise('sector', $s); ?>,
-				<?php $t = $PlottedCourse->getTurns(); echo $t . ' ' . pluralise('turn', $t); ?>)
+				(<?php echo pluralise($PlottedCourse->getLength(), 'sector'); ?>,
+				<?php echo pluralise($PlottedCourse->getTurns(), 'turn'); ?>)
 			</td>
 			<td class="top right"><?php
 				if ($ThisSector->isLinked($NextSector->getSectorID())) { ?>

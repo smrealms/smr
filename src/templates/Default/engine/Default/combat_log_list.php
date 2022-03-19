@@ -6,7 +6,7 @@ if (isset($Message)) {?>
 <div class="center"><?php
 	$NumLogs = count($Logs);
 	if ($NumLogs > 0) { ?>
-		There <span id="total-logs"><?php echo pluralise('is', $TotalLogs), ' ', $TotalLogs, ' ', $LogType, pluralise(' log', $NumLogs); ?></span> available for viewing of which <?php echo $NumLogs, ' ', pluralise('is', $NumLogs); ?> being shown.<br /><br />
+		You have <span id="total-logs"><?php echo pluralise($TotalLogs, $LogType . ' log'); ?></span> available for viewing (<?php echo $NumLogs; ?> shown).<br /><br />
 		<form class="standard" method="POST" action="<?php echo $LogFormHREF; ?>">
 			<table class="fullwidth center">
 				<tr>

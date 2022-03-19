@@ -47,7 +47,7 @@ if ($count_last_active == 0) {
 	} else {
 		$summary .= 'A few ';
 	}
-	$summary .= 'of them were moving so your ship computer was able to intercept ' . $count_last_active . ' ' . pluralise('transmission', $count_last_active) . '.';
+	$summary .= 'of them were moving so your ship computer was able to intercept ' . pluralise($count_last_active, 'transmission') . '.';
 }
 
 $summary .= '<br />The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.';

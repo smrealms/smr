@@ -16,7 +16,7 @@
 		}
 	} else {
 		if (!$PlayerOnly) { ?>
-			<?php echo $Alliance->getAllianceDisplayName(true); ?> currently has <span id="numplanets"><?php echo count($AllPlanets); ?></span> <?php echo pluralise('planet', count($AllPlanets)); ?> in the universe!<br /><br /><?php
+			<?php echo $Alliance->getAllianceDisplayName(true); ?> currently has <span id="numplanets"><?php echo pluralise(count($AllPlanets), 'planet'); ?></span> in the universe!<br /><br /><?php
 		}
 		$this->includeTemplate($ExtraInclude, ['Planets' => $AllPlanets]);
 	} ?>
