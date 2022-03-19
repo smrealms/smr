@@ -97,18 +97,18 @@ class SmrShipType {
 		}
 
 		$this->baseManeuverability = IRound(
-								700 -
-								(
-									(
-										$this->maxHardware[HARDWARE_SHIELDS]
-										+ $this->maxHardware[HARDWARE_ARMOUR]
-										+ $this->maxHardware[HARDWARE_COMBAT] * CD_ARMOUR
-									) / 25
-									+ $this->maxHardware[HARDWARE_CARGO] / 100
-									- $this->speed * 5
-									+ $this->hardpoints * 5
-									+ $this->maxHardware[HARDWARE_COMBAT] / 5
-								)
+			700 -
+			(
+				(
+					$this->maxHardware[HARDWARE_SHIELDS]
+					+ $this->maxHardware[HARDWARE_ARMOUR]
+					+ $this->maxHardware[HARDWARE_COMBAT] * CD_ARMOUR
+				) / 25
+				+ $this->maxHardware[HARDWARE_CARGO] / 100
+				- $this->speed * 5
+				+ $this->hardpoints * 5
+				+ $this->maxHardware[HARDWARE_COMBAT] / 5
+			)
 		);
 	}
 
