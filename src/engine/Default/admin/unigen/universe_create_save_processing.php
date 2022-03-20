@@ -104,7 +104,7 @@ if ($submit == 'Create Galaxies') {
 		}
 	}
 
-	foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $planetTypeID) {
+	foreach (array_keys(Smr\PlanetTypes\PlanetType::PLANET_TYPES) as $planetTypeID) {
 		$numberOfPlanets = Smr\Request::getInt('type' . $planetTypeID);
 		for ($i = 1; $i <= $numberOfPlanets; $i++) {
 			$galSector = array_rand_value($galSectors);
