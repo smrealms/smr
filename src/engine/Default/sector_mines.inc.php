@@ -21,7 +21,7 @@ if ($mine_owner_id) {
 		} else {
 			$flavor = 'Your ship was sufficiently agile to evade them';
 		}
-		$container['msg'] = 'You have just flown past a sprinkle of mines.<br />' . $flavor . ',<br />but it has cost you <span class="red">' . $turns . ' ' . pluralise('turn', $turns) . '</span> to navigate the minefield safely.';
+		$container['msg'] = 'You have just flown past a sprinkle of mines.<br />' . $flavor . ',<br />but it has cost you <span class="red">' . pluralise($turns, 'turn') . '</span> to navigate the minefield safely.';
 		$container->go();
 	} else {
 		$container = Page::create('forces_attack_processing.php');

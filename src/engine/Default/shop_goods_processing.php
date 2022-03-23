@@ -165,9 +165,9 @@ if ($transaction === TRADER_STEALS ||
 	$player->increaseExperience($gained_exp);
 
 	//will use these variables in current sector and port after successful trade
-	$tradeMessage = 'You have just ' . $msg_transaction . ' <span class="yellow">' . $amount . '</span> ' . pluralise('unit', $amount) . ' of <span class="yellow">' . $good_name . '</span>';
+	$tradeMessage = 'You have just ' . $msg_transaction . ' <span class="yellow">' . $amount . '</span> ' . pluralise($amount, 'unit', false) . ' of <span class="yellow">' . $good_name . '</span>';
 	if ($bargain_price > 0) {
-		$tradeMessage .= ' for <span class="creds">' . $bargain_price . '</span> ' . pluralise('credit', $bargain_price) . '.';
+		$tradeMessage .= ' for <span class="creds">' . $bargain_price . '</span> ' . pluralise($bargain_price, 'credit', false) . '.';
 	}
 
 	if ($gained_exp > 0) {
@@ -185,7 +185,7 @@ if ($transaction === TRADER_STEALS ||
 			$qualifier = 'peerless';
 		}
 		$skill = $transaction === TRADER_STEALS ? 'thievery' : 'trading';
-		$tradeMessage .= '<br />Your ' . $qualifier . ' ' . $skill . ' skills have earned you <span class="exp">' . $gained_exp . ' </span> experience ' . pluralise('point', $gained_exp) . '!';
+		$tradeMessage .= '<br />Your ' . $qualifier . ' ' . $skill . ' skills have earned you <span class="exp">' . $gained_exp . ' </span> ' . pluralise($gained_exp, 'experience point', false) . '!';
 	}
 
 	$container['trade_msg'] = $tradeMessage;

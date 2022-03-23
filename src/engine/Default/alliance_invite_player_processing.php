@@ -21,7 +21,7 @@ if ($dbResult->hasRecord() || $account->isMailBanned()) {
 
 // Construct the mail to send to the receiver
 $msg = 'You have been invited to join an alliance!
-This invitation will remain open for ' . $expireDays . ' ' . pluralise('day', $expireDays) . ' or until you join another alliance.
+This invitation will remain open for ' . pluralise($expireDays, 'day') . ' or until you join another alliance.
 If you are currently in an alliance, you will leave it if you accept this invitation.
 
 [join_alliance=' . $player->getAllianceID() . ']

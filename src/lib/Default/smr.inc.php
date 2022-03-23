@@ -270,14 +270,15 @@ function word_filter(string $string): string {
 }
 
 // choose correct pluralization based on amount
-function pluralise(string $word, float $count = 0): string {
-	if ($count == 1) {
-		return $word;
+function pluralise(int|float $amount, string $word, bool $includeAmount = true): string {
+	$result = $word;
+	if ($amount != 1) {
+		$result .= 's';
 	}
-	if (strtolower($word) == 'is') {
-		return 'are';
+	if ($includeAmount) {
+		$result = $amount . ' ' . $result;
 	}
-	return $word . 's';
+	return $result;
 }
 
 /**
@@ -779,7 +780,7 @@ function format_time(int $seconds, bool $short = false): string {
 			if ($short) {
 				$parts[] = $amount . $unit[0];
 			} else {
-				$parts[] = $amount . ' ' . pluralise($unit, $amount);
+				$parts[] = pluralise($amount, $unit);
 			}
 		}
 	}

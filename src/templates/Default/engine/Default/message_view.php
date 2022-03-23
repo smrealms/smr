@@ -29,7 +29,7 @@ if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 					<option>Marked Messages</option>
 					<option>All Messages</option>
 				</select>
-				<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> <?php echo pluralise('message', $MessageBox['TotalMessages']); if ($MessageBox['TotalMessages'] != $MessageBox['NumberMessages']) { ?> of which <span class="yellow"><?php echo $MessageBox['NumberMessages']; ?></span> <?php echo pluralise('is', $MessageBox['NumberMessages']); ?> being displayed<?php } ?>.</p>
+				<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> <?php echo pluralise($MessageBox['TotalMessages'], 'message', false); if ($MessageBox['TotalMessages'] != $MessageBox['NumberMessages']) { ?> (<?php echo $MessageBox['NumberMessages']; ?> displayed)<?php } ?>.</p>
 			</td>
 			<td style="width: 30%" valign="middle"><?php
 				if (isset($NextPageHREF)) {

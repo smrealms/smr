@@ -110,7 +110,7 @@ function displayScouts(array &$messageBox, SmrPlayer $player): void {
 	foreach ($dbResult->records() as $dbRecord) {
 		$sender = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 		$totalUnread = $dbRecord->getInt('total_unread');
-		$message = 'Your forces have spotted ' . $sender->getBBLink() . ' passing your forces ' . $dbRecord->getInt('number') . ' ' . pluralise('time', $dbRecord->getInt('number'));
+		$message = 'Your forces have spotted ' . $sender->getBBLink() . ' passing your forces ' . pluralise($dbRecord->getInt('number'), 'time');
 		$message .= ($totalUnread > 0) ? ' (' . $totalUnread . ' unread).' : '.';
 		$messageBox['Messages'][] = displayGrouped($sender, $message, $dbRecord->getInt('first'), $dbRecord->getInt('last'), $totalUnread > 0, $player->getAccount());
 	}

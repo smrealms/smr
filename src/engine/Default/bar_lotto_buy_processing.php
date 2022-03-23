@@ -30,7 +30,7 @@ $player->increaseHOF(1, ['Bar', 'Lotto', 'Tickets Bought'], HOF_PUBLIC);
 $dbResult = $db->read('SELECT count(*) as num FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time > 0 GROUP BY account_id');
 $num = $dbResult->record()->getInt('num');
 $message = ('<div class="center">Thanks for your purchase and good luck!  You currently');
-$message .= (' own ' . $num . ' ' . pluralise('ticket', $num) . '!</div><br />');
+$message .= (' own ' . pluralise($num, 'ticket') . '!</div><br />');
 
 $container = Page::create('skeleton.php', 'bar_main.php');
 $container->addVar('LocationID');
