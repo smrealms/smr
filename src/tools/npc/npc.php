@@ -653,49 +653,49 @@ function findRoutes(SmrPlayer $player): array {
 		$routes = $dbResult->record()->getObject('routes', true);
 		debug('Using Cached Routes: #' . count($routes));
 		return $routes;
-	} else {
-		debug('Generating Routes');
-		$allSectors = [];
-		foreach (SmrGalaxy::getGameGalaxies($player->getGameID()) as $galaxy) {
-			$allSectors += $galaxy->getSectors(); //Merge arrays
-		}
-
-		$distances = Plotter::calculatePortToPortDistances($allSectors, $maxDistance, $startSectorID, $endSectorID);
-
-		if ($maxNumberOfPorts == 1) {
-			$allRoutes = \Routes\RouteGenerator::generateOneWayRoutes($allSectors, $distances, $tradeGoods, $tradeRaces, $routesForPort);
-		} else {
-			$allRoutes = \Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
-		}
-
-		unset($distances);
-
-		$routesMerged = [];
-		foreach ($allRoutes[\Routes\RouteGenerator::MONEY_ROUTE] as $multi => $routesByMulti) {
-			$routesMerged += $routesByMulti; //Merge arrays
-		}
-
-		unset($allSectors);
-		SmrPort::clearCache();
-		SmrSector::clearCache();
-
-		if (count($routesMerged) == 0) {
-			debug('Could not find any routes! Try another NPC.');
-			throw new FinalActionException();
-		}
-
-		$db->insert('route_cache', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'max_ports' => $db->escapeNumber($maxNumberOfPorts),
-			'goods_allowed' => $db->escapeObject($tradeGoods),
-			'races_allowed' => $db->escapeObject($tradeRaces),
-			'start_sector_id' => $db->escapeNumber($startSectorID),
-			'end_sector_id' => $db->escapeNumber($endSectorID),
-			'routes_for_port' => $db->escapeNumber($routesForPort),
-			'max_distance' => $db->escapeNumber($maxDistance),
-			'routes' => $db->escapeObject($routesMerged, true),
-		]);
-		debug('Found Routes: #' . count($routesMerged));
-		return $routesMerged;
 	}
+
+	debug('Generating Routes');
+	$allSectors = [];
+	foreach (SmrGalaxy::getGameGalaxies($player->getGameID()) as $galaxy) {
+		$allSectors += $galaxy->getSectors(); //Merge arrays
+	}
+
+	$distances = Plotter::calculatePortToPortDistances($allSectors, $maxDistance, $startSectorID, $endSectorID);
+
+	if ($maxNumberOfPorts == 1) {
+		$allRoutes = \Routes\RouteGenerator::generateOneWayRoutes($allSectors, $distances, $tradeGoods, $tradeRaces, $routesForPort);
+	} else {
+		$allRoutes = \Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+	}
+
+	unset($distances);
+
+	$routesMerged = [];
+	foreach ($allRoutes[\Routes\RouteGenerator::MONEY_ROUTE] as $multi => $routesByMulti) {
+		$routesMerged += $routesByMulti; //Merge arrays
+	}
+
+	unset($allSectors);
+	SmrPort::clearCache();
+	SmrSector::clearCache();
+
+	if (count($routesMerged) == 0) {
+		debug('Could not find any routes! Try another NPC.');
+		throw new FinalActionException();
+	}
+
+	$db->insert('route_cache', [
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'max_ports' => $db->escapeNumber($maxNumberOfPorts),
+		'goods_allowed' => $db->escapeObject($tradeGoods),
+		'races_allowed' => $db->escapeObject($tradeRaces),
+		'start_sector_id' => $db->escapeNumber($startSectorID),
+		'end_sector_id' => $db->escapeNumber($endSectorID),
+		'routes_for_port' => $db->escapeNumber($routesForPort),
+		'max_distance' => $db->escapeNumber($maxDistance),
+		'routes' => $db->escapeObject($routesMerged, true),
+	]);
+	debug('Found Routes: #' . count($routesMerged));
+	return $routesMerged;
 }

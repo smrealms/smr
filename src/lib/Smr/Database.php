@@ -217,11 +217,7 @@ class Database {
 
 	public function escapeBoolean(bool $bool): string {
 		// We store booleans as an enum
-		if ($bool) {
-			return '\'TRUE\'';
-		} else {
-			return '\'FALSE\'';
-		}
+		return $bool ? '\'TRUE\'' : '\'FALSE\'';
 	}
 
 	public function escapeObject(mixed $object, bool $compress = false, bool $nullable = false): string {

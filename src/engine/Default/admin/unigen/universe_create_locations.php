@@ -41,13 +41,12 @@ class Categories {
 	public array $locTypes = [];
 	private array $locAdded = []; // list of locs added to a category
 	public function addLoc(int $locID, string $category): string {
-		if (!$this->added($locID)) {
-			$this->locTypes[$category][] = $locID;
-			$this->locAdded[] = $locID;
-			return '';
-		} else {
+		if ($this->added($locID)) {
 			return "<b>Also in $category</b><br />";
 		}
+		$this->locTypes[$category][] = $locID;
+		$this->locAdded[] = $locID;
+		return '';
 	}
 	public function added(int $locID): bool {
 		return in_array($locID, $this->locAdded);

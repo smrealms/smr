@@ -71,9 +71,8 @@ class HallOfFame {
 		     !SmrGame::getGame($gameID)->hasEnded() &&
 		     !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer()))) {
 			return '-';
-		} else {
-			return $amount;
 		}
+		return $amount;
 	}
 
 	public static function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID): array {
@@ -171,9 +170,8 @@ class HallOfFame {
 					$var['type'] = $typeList;
 					$var['view'] = $type;
 					break;
-				} else {
-					$typeList[] = $type;
 				}
+				$typeList[] = $type;
 				$viewing .= ' &rarr; ';
 				$container = Page::copy($var);
 				$container['type'] = $typeList;

@@ -23,15 +23,12 @@ abstract class SocialLogin {
 	 * Returns a SocialLogin class of the given derived type.
 	 */
 	public static function get(string $loginType): self {
-		if ($loginType === Facebook::getLoginType()) {
-			return new Facebook();
-		} elseif ($loginType === Twitter::getLoginType()) {
-			return new Twitter();
-		} elseif ($loginType === Google::getLoginType()) {
-			return new Google();
-		} else {
-			throw new SocialLoginInvalidType('Unknown social login type: ' . $loginType);
-		}
+		return match ($loginType) {
+			Facebook::getLoginType() => new Facebook(),
+			Twitter::getLoginType() => new Twitter(),
+			Google::getLoginType() => new Google(),
+			default => throw new SocialLoginInvalidType('Unknown social login type: ' . $loginType),
+		};
 	}
 
 	public function __construct() {

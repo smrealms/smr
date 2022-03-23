@@ -21,9 +21,8 @@ function get_seed_message(SmrPlayer $player): string {
 
 	if (count($missingSeeds) == 0) {
 		return $player->getPlayerName() . ' has seeded all sectors.';
-	} else {
-		return $player->getPlayerName() . ' (' . count($missingSeeds) . ' missing) : ' . implode(' ', $missingSeeds);
 	}
+	return $player->getPlayerName() . ' (' . count($missingSeeds) . ' missing) : ' . implode(' ', $missingSeeds);
 }
 
 function shared_channel_msg_seed(SmrPlayer $player): array {

@@ -203,9 +203,8 @@ function get_colored_text_range(float $value, float $maxValue, string $text = nu
 	}
 	if ($maxValue - $minValue == 0) {
 		return $text;
-	} else {
-		$normalisedValue = IRound(510 * max(0, min($maxValue, $value) - $minValue) / ($maxValue - $minValue)) - 255;
 	}
+	$normalisedValue = IRound(510 * max(0, min($maxValue, $value) - $minValue) / ($maxValue - $minValue)) - 255;
 	if ($type == 'Game') {
 		if ($normalisedValue < 0) {
 			$r_component = 'ff';
@@ -442,25 +441,23 @@ function acquire_lock(int $sector): bool {
 		if (time() - Smr\Epoch::time() >= LOCK_DURATION - LOCK_BUFFER) {
 			break;
 		}
+
 		// If there is someone else before us in the queue we sleep for a while
 		$dbResult = $db->read('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
 		$locksInQueue = $dbResult->record()->getInt('COUNT(*)');
-		if ($locksInQueue > 0) {
-			//usleep(100000 + mt_rand(0,50000));
-
-			// We can only have one lock in the queue, anything more means someone is screwing around
-			$dbResult = $db->read('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber($session->getAccountID()) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
-			if ($dbResult->record()->getInt('COUNT(*)') > 1) {
-				release_lock();
-				$locksFailed[$sector] = true;
-				throw new Smr\Exceptions\UserError('Multiple actions cannot be performed at the same time!');
-			}
-
-			usleep(25000 * $locksInQueue);
-			continue;
-		} else {
+		if ($locksInQueue == 0) {
 			return true;
 		}
+
+		// We can only have one lock in the queue, anything more means someone is screwing around
+		$dbResult = $db->read('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber($session->getAccountID()) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
+		if ($dbResult->record()->getInt('COUNT(*)') > 1) {
+			release_lock();
+			$locksFailed[$sector] = true;
+			throw new Smr\Exceptions\UserError('Multiple actions cannot be performed at the same time!');
+		}
+
+		usleep(25000 * $locksInQueue);
 	}
 
 	release_lock();

@@ -164,28 +164,27 @@ function php_link_check(string $url): string|false {
 	}
 
 	$fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
-
 	if ($fp === false) {
 		return false;
-	} else {
-		$head = '';
-		$httpRequest = 'HEAD ' . $url['path'] . ' HTTP/1.1' . EOL
-								. 'Host: ' . $url['host'] . EOL
-								. 'Connection: close' . EOL . EOL;
-		fwrite($fp, $httpRequest);
-		while (!feof($fp)) {
-			$head .= fgets($fp, 1024);
-		}
-		fclose($fp);
-
-		preg_match('=^(HTTP/\d+\.\d+) (\d{3}) ([^\r\n]*)=', $head, $matches);
-		$http = [
-			'Status-Line' => $matches[0],
-			'HTTP-Version' => $matches[1],
-			'Status-Code' => $matches[2],
-			'Reason-Phrase' => $matches[3],
-		];
-
-		return $http['Status-Code'];
 	}
+
+	$head = '';
+	$httpRequest = 'HEAD ' . $url['path'] . ' HTTP/1.1' . EOL
+							. 'Host: ' . $url['host'] . EOL
+							. 'Connection: close' . EOL . EOL;
+	fwrite($fp, $httpRequest);
+	while (!feof($fp)) {
+		$head .= fgets($fp, 1024);
+	}
+	fclose($fp);
+
+	preg_match('=^(HTTP/\d+\.\d+) (\d{3}) ([^\r\n]*)=', $head, $matches);
+	$http = [
+		'Status-Line' => $matches[0],
+		'HTTP-Version' => $matches[1],
+		'Status-Code' => $matches[2],
+		'Reason-Phrase' => $matches[3],
+	];
+
+	return $http['Status-Code'];
 }
