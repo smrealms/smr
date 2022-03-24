@@ -1675,8 +1675,7 @@ abstract class AbstractSmrPlayer {
 			throw new Smr\Exceptions\UserError('The saved sector must be in the box!');
 		}
 
-		$storedDestinations =& $this->getStoredDestinations();
-		foreach ($storedDestinations as &$sd) {
+		foreach ($this->getStoredDestinations() as &$sd) {
 			if ($sd['SectorID'] == $sectorID) {
 				$sd['OffsetTop'] = $offsetTop;
 				$sd['OffsetLeft'] = $offsetLeft;

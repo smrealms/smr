@@ -40,8 +40,9 @@ class RouteGenerator {
 	private static function startRoutesToContinue(int $maxNumPorts, int $startSectorId, array $forwardRoutes, array $routeLists): void {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentStepBuySector = $currentStepRoute->getBuySectorId();
+			$currentGoodIsNothing = $currentStepRoute->getGoodID() === GOODS_NOTHING;
 			if ($currentStepBuySector > $startSectorId) { // Not already checked
-				self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $currentStepRoute, $routeLists[$currentStepBuySector], $routeLists, $currentStepRoute->getGoodID() === GOODS_NOTHING);
+				self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $currentStepRoute, $routeLists[$currentStepBuySector], $routeLists, $currentGoodIsNothing);
 			}
 		}
 	}
@@ -49,7 +50,8 @@ class RouteGenerator {
 	private static function getContinueRoutes(int $maxNumPorts, int $startSectorId, Route $routeToContinue, array $forwardRoutes, array $routeLists, bool $lastGoodIsNothing): void {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentStepBuySector = $currentStepRoute->getBuySectorId();
-			if ($lastGoodIsNothing && ($lastGoodIsNothing = $currentStepRoute->getGoodID() === GOODS_NOTHING)) {
+			$currentGoodIsNothing = $currentStepRoute->getGoodID() === GOODS_NOTHING;
+			if ($lastGoodIsNothing && $currentGoodIsNothing) {
 				continue; // Don't do two nothings in a row
 			}
 			if ($currentStepBuySector >= $startSectorId) { // Not already checked or back to start
@@ -59,7 +61,7 @@ class RouteGenerator {
 					self::addMoneyRoute($mpr);
 				} elseif ($maxNumPorts > 1 && !$routeToContinue->containsPort($currentStepBuySector)) {
 					$mpr = new MultiplePortRoute($routeToContinue, $currentStepRoute);
-					self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $mpr, $routeLists[$currentStepBuySector], $routeLists, $lastGoodIsNothing);
+					self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $mpr, $routeLists[$currentStepBuySector], $routeLists, $currentGoodIsNothing);
 				}
 			}
 		}

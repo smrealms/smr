@@ -12,7 +12,7 @@ if (!isset($var['game_name']) || !isset($var['view_game_id'])) {
 $game_name = $var['game_name'];
 $game_id = $var['view_game_id'];
 $template->assign('PageTopic', 'Old SMR Game : ' . $game_name);
-Menu::history_games(0);
+Menu::historyGames(0);
 
 $db = Smr\Database::getInstance();
 $db->switchDatabases($var['HistoryDatabase']);

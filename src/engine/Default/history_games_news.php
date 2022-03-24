@@ -6,7 +6,7 @@ $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
 $template->assign('PageTopic', 'Game News : ' . $var['game_name']);
-Menu::history_games(3);
+Menu::historyGames(3);
 
 $min = Smr\Request::getInt('min', 1);
 $max = Smr\Request::getInt('max', 50);

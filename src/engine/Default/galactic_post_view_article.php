@@ -7,7 +7,7 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Viewing Articles');
-Menu::galactic_post();
+Menu::galacticPost();
 
 if (isset($var['news'])) {
 	$db->insert('news', [

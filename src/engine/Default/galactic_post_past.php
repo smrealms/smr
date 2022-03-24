@@ -5,7 +5,7 @@ $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
-Menu::galactic_post();
+Menu::galacticPost();
 
 $container = Page::create('skeleton.php', 'galactic_post_past.php');
 $template->assign('SelectGameHREF', $container->href());

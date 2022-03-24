@@ -5,7 +5,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-Menu::galactic_post();
+Menu::galacticPost();
 $container = Page::create('galactic_post_write_article_processing.php');
 
 if (isset($var['id'])) {

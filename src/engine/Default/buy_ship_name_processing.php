@@ -42,9 +42,9 @@ function checkTextShipName(string $name, int $max_len): void {
 	}
 
 	// disallow certain ascii chars
-	for ($i = 0; $i < strlen($name); $i++) {
-		if (ord($name[$i]) < 32 || ord($name[$i]) > 127 || in_array(ord($name[$i]), [37, 39, 59, 92, 63, 42])) {
-			create_error('The ship name contains invalid characters! ' . chr(ord($name[$i])));
+	foreach (str_split($name) as $char) {
+		if (!ctype_print($char) || in_array(ord($char), [37, 39, 59, 92, 63, 42])) {
+			create_error('The ship name contains invalid characters! ' . $char);
 		}
 	}
 

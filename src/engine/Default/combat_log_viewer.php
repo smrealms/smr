@@ -38,4 +38,4 @@ if ($var['current_log'] < count($container['log_ids']) - 1) {
 }
 
 $template->assign('PageTopic', 'Combat Logs');
-Menu::combat_log();
+Menu::combatLog();

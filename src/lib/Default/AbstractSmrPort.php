@@ -392,7 +392,7 @@ class AbstractSmrPort {
 			throw new Exception('Cannot upgrade a cached port!');
 		}
 		$upgrades = 0;
-		while ($this->upgrade >= $this->getUpgradeRequirement() && $this->level < 9) {
+		while ($this->upgrade >= $this->getUpgradeRequirement() && $this->level < $this->getMaxLevel()) {
 			++$upgrades;
 			$this->decreaseUpgrade($this->getUpgradeRequirement());
 			$this->decreaseCredits($this->getUpgradeRequirement());
@@ -438,7 +438,7 @@ class AbstractSmrPort {
 		shuffle($GOODS);
 		foreach ($GOODS as $good) {
 			if (!$this->hasGood($good['ID']) && $good['Class'] == $goodClass) {
-				$transactionType = rand(1, 2) == 1 ? TRADER_BUYS : TRADER_SELLS;
+				$transactionType = array_rand([TRADER_BUYS, TRADER_SELLS]);
 				$this->addPortGood($good['ID'], $transactionType);
 				return $good;
 			}

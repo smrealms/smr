@@ -6,7 +6,7 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'Edit Paper');
-Menu::galactic_post();
+Menu::galacticPost();
 
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE paper_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));

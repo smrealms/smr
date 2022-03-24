@@ -4,7 +4,7 @@ $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
-Menu::galactic_post();
+Menu::galacticPost();
 
 if (!empty($var['paper_id'])) {
 	if (!isset($var['game_id'])) {

@@ -5,7 +5,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-Menu::history_games($var['selected_index']);
+Menu::historyGames($var['selected_index']);
 
 //offer a back button
 $container = Page::copy($var);

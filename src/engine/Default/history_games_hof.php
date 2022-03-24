@@ -11,7 +11,7 @@ $db = Smr\Database::getInstance();
 $db->switchDatabases($var['HistoryDatabase']);
 
 $template->assign('PageTopic', 'Hall of Fame : ' . $var['game_name']);
-Menu::history_games(2);
+Menu::historyGames(2);
 
 if (!isset($var['stat'])) {
 	// Display a list of stats available to view

@@ -81,8 +81,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
 					return true;
 				}
-				$timeString = $default;
-				if ($timeString != '' && ($time = strtotime($timeString)) !== false) {
+				$time = strtotime($default);
+				if ($time !== false) {
 					$time += $session->getAccount()->getOffset() * 3600;
 					return date($session->getAccount()->getDateTimeFormat(), $time);
 				}
@@ -197,7 +197,7 @@ function create_submit_link(Page $container, string $text): string {
 	return '<a href="' . $container->href() . '" class="submitStyle">' . $text . '</a>';
 }
 
-function get_colored_text_range(float $value, float $maxValue, string $text = null, float $minValue = 0, string $type = 'Game', string $return_type = 'Normal'): string {
+function get_colored_text_range(float $value, float $maxValue, string $text = null, float $minValue = 0): string {
 	if ($text === null) {
 		$text = number_format($value);
 	}
@@ -205,47 +205,28 @@ function get_colored_text_range(float $value, float $maxValue, string $text = nu
 		return $text;
 	}
 	$normalisedValue = IRound(510 * max(0, min($maxValue, $value) - $minValue) / ($maxValue - $minValue)) - 255;
-	if ($type == 'Game') {
-		if ($normalisedValue < 0) {
-			$r_component = 'ff';
-			$g_component = dechex(255 + $normalisedValue);
-			if (strlen($g_component) == 1) {
-				$g_component = '0' . $g_component;
-			}
-		} elseif ($normalisedValue > 0) {
-			$g_component = 'ff';
-			$r_component = dechex(255 - $normalisedValue);
-			if (strlen($r_component) == 1) {
-				$r_component = '0' . $r_component;
-			}
-		} else {
-			$r_component = 'ff';
-			$g_component = 'ff';
+	if ($normalisedValue < 0) {
+		$r_component = 'ff';
+		$g_component = dechex(255 + $normalisedValue);
+		if (strlen($g_component) == 1) {
+			$g_component = '0' . $g_component;
 		}
-		$colour = $r_component . $g_component . '00';
-		if ($return_type == 'Colour') {
-			return $colour;
+	} elseif ($normalisedValue > 0) {
+		$g_component = 'ff';
+		$r_component = dechex(255 - $normalisedValue);
+		if (strlen($r_component) == 1) {
+			$r_component = '0' . $r_component;
 		}
-		return '<span style="color:#' . $colour . '">' . $text . '</span>';
-	} elseif ($type == 'IRC') {
-		//IRC color codes
-		if ($normalisedValue == 255) {
-			$colour = '[k03]';
-		} elseif ($normalisedValue == -255) {
-			$colour = '[k04]';
-		} else {
-			$colour = '[k08]';
-		}
-		if ($return_type == 'Colour') {
-			return $colour;
-		}
-		return $colour . $text;
+	} else {
+		$r_component = 'ff';
+		$g_component = 'ff';
 	}
-	throw new Exception('Unknown type: ' . $type);
+	$colour = $r_component . $g_component . '00';
+	return '<span style="color:#' . $colour . '">' . $text . '</span>';
 }
 
-function get_colored_text(float $value, string $text = null, string $type = 'Game', string $return_type = 'Normal'): string {
-	return get_colored_text_range($value, 300, $text, -300, $type, $return_type);
+function get_colored_text(float $value, string $text = null): string {
+	return get_colored_text_range($value, 300, $text, -300);
 }
 
 function word_filter(string $string): string {
