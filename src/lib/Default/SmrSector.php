@@ -454,7 +454,11 @@ class SmrSector {
 	 * Cannot be used for Warps
 	 */
 	public function enableLink(string $dir): void {
-		$this->setLinkSector($dir, $this->getNeighbourSector($dir));
+		$linkSector  = $this->getNeighbourSector($dir);
+		// Handle single width/height galaxies (don't link sector to itself)
+		if (!$this->equals($linkSector)) {
+			$this->setLinkSector($dir, $linkSector);
+		}
 	}
 
 	/**
