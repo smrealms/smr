@@ -150,7 +150,7 @@ services:
 
     phpcs:
         <<: *smr-test
-        command: vendor/bin/phpcs
+        command: vendor/bin/phpcs --report-code --report-source
 
     pma:
         image: phpmyadmin/phpmyadmin
