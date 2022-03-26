@@ -42,8 +42,8 @@ try {
 		}
 	}
 
-	$login = trim(Smr\Request::get('login'));
-	$password = trim(Smr\Request::get('password'));
+	$login = Smr\Request::get('login');
+	$password = Smr\Request::get('password');
 	if (strstr($login, '\'')) {
 		$msg = 'Illegal character in login detected! Don\'t use the apostrophe.';
 		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -84,7 +84,7 @@ try {
 	// 2. social account creation without an associated e-mail
 	// In these two cases, we still need to validate the input address.
 	if (!$socialLogin || empty($_SESSION['socialLogin']->getEmail())) {
-		$email = trim(Smr\Request::get('email'));
+		$email = Smr\Request::get('email');
 		$validatedBySocial = false;
 	} else {
 		$email = $_SESSION['socialLogin']->getEmail();

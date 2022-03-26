@@ -4,8 +4,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-// trim input now
-$player_name = trim(Smr\Request::get('player_name'));
+$player_name = Smr\Request::get('player_name');
 
 Smr\DisplayNameValidator::validate($player_name);
 

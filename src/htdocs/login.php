@@ -24,7 +24,7 @@ try {
 
 	$template = Smr\Template::getInstance();
 	if (Smr\Request::has('msg')) {
-		$template->assign('Message', htmlentities(trim(Smr\Request::get('msg')), ENT_COMPAT, 'utf-8'));
+		$template->assign('Message', htmlentities(Smr\Request::get('msg'), ENT_COMPAT, 'utf-8'));
 	} elseif (Smr\Request::has('status')) {
 		session_start();
 		if (isset($_SESSION['login_msg'])) {

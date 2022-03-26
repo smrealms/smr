@@ -4,9 +4,9 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-$offenderReply = trim(Smr\Request::get('offenderReply'));
+$offenderReply = Smr\Request::get('offenderReply');
 $offenderBanPoints = Smr\Request::getInt('offenderBanPoints');
-$offendedReply = trim(Smr\Request::get('offendedReply'));
+$offendedReply = Smr\Request::get('offendedReply');
 $offendedBanPoints = Smr\Request::getInt('offendedBanPoints');
 if (Smr\Request::get('action') == 'Preview messages') {
 	$container = Page::create('skeleton.php', 'admin/notify_reply.php');

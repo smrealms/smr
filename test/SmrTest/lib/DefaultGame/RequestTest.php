@@ -15,13 +15,15 @@ use Smr\Session;
 class RequestTest extends TestCase {
 
 	public static function setUpBeforeClass(): void {
+		// All request variables are stored by PHP as strings
 		$_REQUEST = [
-			'int' => 2,
-			'float' => 3.14,
+			'int' => '2',
+			'float' => '3.14',
 			'str' => 'ing',
+			'str_padded' => '   ing ',
 			'array_empty' => [],
 			'array_str' => ['a', 'b', 'c'],
-			'array_int' => [1, 2, 3],
+			'array_int' => ['1', '2', '3'],
 		];
 	}
 
@@ -131,6 +133,8 @@ class RequestTest extends TestCase {
 		$this->assertSame('ing', Request::get('str', 'foo'));
 		// An index that exists, no default
 		$this->assertSame('ing', Request::get('str'));
+		// An index that exists, with whitespace padding that gets trimmed
+		$this->assertSame('ing', Request::get('str_padded'));
 		// An index that doesn't exist, with default
 		$this->assertSame('foo', Request::get('noexist', 'foo'));
 	}

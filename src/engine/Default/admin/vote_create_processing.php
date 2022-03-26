@@ -16,14 +16,14 @@ if ($action == 'Preview Option') {
 
 $db = Smr\Database::getInstance();
 if ($action == 'Create Vote') {
-	$question = trim(Smr\Request::get('question'));
+	$question = Smr\Request::get('question');
 	$end = Smr\Epoch::time() + 86400 * Smr\Request::getInt('days');
 	$db->insert('voting', [
 		'question' => $db->escapeString($question),
 		'end' => $db->escapeNumber($end),
 	]);
 } elseif ($action == 'Add Option') {
-	$option = trim(Smr\Request::get('option'));
+	$option = Smr\Request::get('option');
 	$voteID = Smr\Request::getInt('vote');
 	$db->insert('voting_options', [
 		'vote_id' => $db->escapeNumber($voteID),

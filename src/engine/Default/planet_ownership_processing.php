@@ -26,7 +26,7 @@ if ($action == 'Take Ownership') {
 	$planet->removePassword();
 	$player->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.');
 } elseif ($action == 'Rename') {
-	$name = trim(Smr\Request::get('name'));
+	$name = Smr\Request::get('name');
 	if (empty($name)) {
 		create_error('You cannot leave your planet nameless!');
 	}

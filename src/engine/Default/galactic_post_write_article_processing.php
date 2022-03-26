@@ -4,8 +4,8 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$title = trim(Smr\Request::get('title'));
-$message = trim(Smr\Request::get('message'));
+$title = Smr\Request::get('title');
+$message = Smr\Request::get('message');
 if (!$player->isGPEditor()) {
 	$title = htmlentities($title, ENT_COMPAT, 'utf-8');
 	$message = htmlentities($message, ENT_COMPAT, 'utf-8');

@@ -72,11 +72,11 @@ class Request {
 	}
 
 	/**
-	 * Returns index value as a string.
+	 * Returns index value as a (trimmed) string.
 	 */
 	public static function get(string $index, string $default = null): string {
 		if (self::has($index)) {
-			return $_REQUEST[$index];
+			return trim($_REQUEST[$index]);
 		} elseif ($default !== null) {
 			return $default;
 		}
