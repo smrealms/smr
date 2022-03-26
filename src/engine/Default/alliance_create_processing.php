@@ -7,8 +7,7 @@ if ($player->getAllianceJoinable() > Smr\Epoch::time()) {
 	create_error('You cannot create an alliance for another ' . format_time($player->getAllianceJoinable() - Smr\Epoch::time()) . '.');
 }
 
-// trim input first
-$name = trim(Smr\Request::get('name'));
+$name = Smr\Request::get('name');
 if (empty($name)) {
 	throw new Exception('No alliance name entered');
 }
@@ -18,7 +17,7 @@ if (!ctype_print($name)) {
 	create_error('The alliance name contains invalid characters!');
 }
 
-$password = trim(Smr\Request::get('password', ''));
+$password = Smr\Request::get('password', '');
 $description = Smr\Request::get('description');
 $recruitType = Smr\Request::get('recruit_type');
 $perms = Smr\Request::get('Perms');

@@ -8,7 +8,7 @@ $sectorId = Smr\Request::getInt('sectorId');
 
 switch ($type) {
 	case 'add':
-		$label = trim(Smr\Request::get('label'));
+		$label = Smr\Request::get('label');
 		$player->addDestinationButton($sectorId, $label);
 		break;
 

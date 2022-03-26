@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-$word = strtoupper(trim(Smr\Request::get('Word')));
-$word_replacement = strtoupper(trim(Smr\Request::get('WordReplacement')));
+$word = strtoupper(Smr\Request::get('Word'));
+$word_replacement = strtoupper(Smr\Request::get('WordReplacement'));
 
 $container = Page::create('skeleton.php', 'admin/word_filter.php');
 

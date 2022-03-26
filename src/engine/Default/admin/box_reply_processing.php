@@ -4,7 +4,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-$message = trim(Smr\Request::get('message'));
+$message = Smr\Request::get('message');
 $banPoints = Smr\Request::getInt('BanPoints');
 $rewardCredits = Smr\Request::getInt('RewardCredits');
 if (Smr\Request::get('action') == 'Preview message') {

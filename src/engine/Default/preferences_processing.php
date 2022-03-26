@@ -45,7 +45,7 @@ if ($action == 'Save and resend validation code') {
 	$account->setPassword($new_password);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your password.';
 } elseif ($action == 'Change Name') {
-	$HoF_name = trim(Smr\Request::get('HoF_name'));
+	$HoF_name = Smr\Request::get('HoF_name');
 
 	Smr\DisplayNameValidator::validate($HoF_name);
 
@@ -59,7 +59,7 @@ if ($action == 'Save and resend validation code') {
 	$account->setHofName($HoF_name);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your hall of fame name.';
 } elseif ($action == 'Change Discord ID') {
-	$discordId = trim(Smr\Request::get('discord_id'));
+	$discordId = Smr\Request::get('discord_id');
 
 	if (empty($discordId)) {
 		$account->setDiscordId(null);
@@ -79,7 +79,7 @@ if ($action == 'Save and resend validation code') {
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your Discord User ID.';
 	}
 } elseif ($action == 'Change IRC Nick') {
-	$ircNick = trim(Smr\Request::get('irc_nick'));
+	$ircNick = Smr\Request::get('irc_nick');
 
 	// here you can delete your registered irc nick
 	if (empty($ircNick)) {
@@ -166,8 +166,7 @@ if ($action == 'Save and resend validation code') {
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
 } elseif ($action == 'change_name') {
-	// trim input now
-	$player_name = trim(Smr\Request::get('PlayerName'));
+	$player_name = Smr\Request::get('PlayerName');
 
 	if ($player->getPlayerName() == $player_name) {
 		create_error('Your player already has that name!');

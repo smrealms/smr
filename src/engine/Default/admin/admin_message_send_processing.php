@@ -3,7 +3,7 @@
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 const ALL_GAMES_ID = 20000;
-$message = trim(Smr\Request::get('message'));
+$message = Smr\Request::get('message');
 $expire = Smr\Request::getFloat('expire');
 $game_id = $var['SendGameID'];
 if ($game_id != ALL_GAMES_ID) {

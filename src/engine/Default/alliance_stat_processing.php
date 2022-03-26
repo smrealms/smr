@@ -6,22 +6,22 @@ $player = $session->getPlayer();
 
 $alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
 if (Smr\Request::has('description')) {
-	$description = trim(Smr\Request::get('description'));
+	$description = Smr\Request::get('description');
 }
 if (Smr\Request::has('discord_server')) {
-	$discordServer = trim(Smr\Request::get('discord_server'));
+	$discordServer = Smr\Request::get('discord_server');
 }
 if (Smr\Request::has('discord_channel')) {
-	$discordChannel = trim(Smr\Request::get('discord_channel'));
+	$discordChannel = Smr\Request::get('discord_channel');
 }
 if (Smr\Request::has('irc')) {
-	$irc = trim(Smr\Request::get('irc'));
+	$irc = Smr\Request::get('irc');
 }
 if (Smr\Request::has('mod')) {
-	$mod = trim(Smr\Request::get('mod'));
+	$mod = Smr\Request::get('mod');
 }
 if (Smr\Request::has('url')) {
-	$url = trim(Smr\Request::get('url'));
+	$url = Smr\Request::get('url');
 }
 
 // Prevent XSS attacks

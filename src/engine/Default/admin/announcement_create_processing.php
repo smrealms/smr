@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$message = trim(Smr\Request::get('message'));
+$message = Smr\Request::get('message');
 if (Smr\Request::get('action') == 'Preview announcement') {
 	$container = Page::create('skeleton.php', 'admin/announcement_create.php');
 	$container['preview'] = $message;

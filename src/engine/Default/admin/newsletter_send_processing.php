@@ -72,7 +72,7 @@ if (Smr\Request::get('to_email') == '*') {
 		$to_name = $dbRecord->getField('login');
 
 		// Reset the message body with personalized salutation, if requested
-		$salutation = trim(Smr\Request::get('salutation'));
+		$salutation = Smr\Request::get('salutation');
 		if (!empty($salutation)) {
 			$salutation .= ' ' . $to_name . ',';
 			set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text'], $salutation);

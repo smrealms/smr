@@ -4,7 +4,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$message = htmlentities(trim(Smr\Request::get('message')), ENT_COMPAT, 'utf-8');
+$message = htmlentities(Smr\Request::get('message'), ENT_COMPAT, 'utf-8');
 
 if (empty($message)) {
 	create_error('You have to enter text to send a message!');
