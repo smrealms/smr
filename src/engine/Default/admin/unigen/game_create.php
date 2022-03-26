@@ -12,8 +12,8 @@ $template->assign('CreateGalaxiesHREF', $container->href());
 $container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
 $template->assign('EditGameHREF', $container->href());
 
-$canEditStartedGames = $account->hasPermission(PERMISSION_EDIT_STARTED_GAMES);
-$template->assign('CanEditStartedGames', $canEditStartedGames);
+$canEditEnabledGames = $account->hasPermission(PERMISSION_EDIT_ENABLED_GAMES);
+$template->assign('CanEditEnabledGames', $canEditEnabledGames);
 
 $defaultGame = [
 	'name' => '',
@@ -37,10 +37,10 @@ $template->assign('Game', $defaultGame);
 $template->assign('SubmitValue', 'Create Game');
 
 $games = [];
-if ($canEditStartedGames) {
-	$dbResult = $db->read('SELECT game_id FROM game ORDER BY end_time DESC');
+if ($canEditEnabledGames) {
+	$dbResult = $db->read('SELECT game_id FROM game ORDER BY game_id DESC');
 } else {
-	$dbResult = $db->read('SELECT game_id FROM game WHERE join_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY end_time DESC');
+	$dbResult = $db->read('SELECT game_id FROM game WHERE enabled=' . $db->escapeBoolean(false) . ' ORDER BY game_id DESC');
 }
 foreach ($dbResult->records() as $dbRecord) {
 	$games[] = SmrGame::getGame($dbRecord->getInt('game_id'));

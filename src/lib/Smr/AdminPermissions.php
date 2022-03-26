@@ -33,7 +33,7 @@ class AdminPermissions {
 		28 => ['Can Edit Alliance Descriptions', '', 1],
 		30 => ['Universe Generator', 'admin/unigen/game_create.php', 5],
 		31 => ['Create Vote', 'admin/vote_create.php', 3],
-		32 => ['Can Edit Started Games', '', 5],
+		32 => ['Can Edit Enabled Games', '', 5],
 		33 => ['Enable Games', 'admin/enable_game.php', 5],
 		34 => ['Manage Galactic Post Editors', 'admin/manage_post_editors.php', 5],
 		35 => ['Manage Draft Leaders', 'admin/manage_draft_leaders.php', 5],

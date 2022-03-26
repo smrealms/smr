@@ -2,10 +2,7 @@
 <h1>Edit Existing Games</h1>
 <?php
 if (count($EditGames) == 0) { ?>
-	There are no games for you to edit.<?php
-	if (!$CanEditStartedGames) { ?>
-		<br />NOTE: You do not have permission to edit games that have already started.<?php
-	}
+	There are no games for you to edit.<br /><?php
 } else { ?>
 	<form method="POST" action="<?php echo $EditGameHREF; ?>">
 		<table class="standard">
@@ -23,6 +20,10 @@ if (count($EditGames) == 0) { ?>
 			</tr>
 		</table>
 	</form><?php
+}
+
+if (!$CanEditEnabledGames) { ?>
+	<b>NOTE</b>: You do not have permission to edit games that have already been enabled.<?php
 } ?>
 
 <br /><br />
