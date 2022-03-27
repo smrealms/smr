@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-// This file defines more than just one class, which is not handled by
-// the autoloader. So we must include it explicitly.
-require_once('SmrPlanetType.php');
+use Smr\PlanetTypes\PlanetType;
 
 class SmrPlanet {
 
@@ -35,7 +33,7 @@ class SmrPlanet {
 	protected array $currentlyBuilding;
 	protected array $mountedWeapons;
 	protected int $typeID;
-	protected SmrPlanetType $typeInfo;
+	protected PlanetType $typeInfo;
 
 	protected bool $hasChanged = false;
 	protected bool $hasChangedFinancial = false; // for credits, bond, maturity
@@ -142,7 +140,7 @@ class SmrPlanet {
 			$this->inhabitableTime = $dbRecord->getInt('inhabitable_time');
 			$this->typeID = $dbRecord->getInt('planet_type_id');
 
-			$this->typeInfo = SmrPlanetType::getTypeInfo($this->getTypeID());
+			$this->typeInfo = PlanetType::getTypeInfo($this->getTypeID());
 			$this->checkBondMaturity();
 		}
 	}
@@ -710,7 +708,7 @@ class SmrPlanet {
 		}
 		$this->typeID = $num;
 		$this->db->write('UPDATE planet SET planet_type_id = ' . $this->db->escapeNumber($num) . ' WHERE ' . $this->SQL);
-		$this->typeInfo = SmrPlanetType::getTypeInfo($this->getTypeID());
+		$this->typeInfo = PlanetType::getTypeInfo($this->getTypeID());
 
 		//trim buildings first
 		foreach ($this->getBuildings() as $id => $amt) {

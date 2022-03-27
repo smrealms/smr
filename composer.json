@@ -19,7 +19,9 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Smr\\": "src/lib/Smr/"
+			"Smr\\": "src/lib/Smr/",
+			"Smr\\Irc\\": "src/tools/irc/",
+			"Smr\\Npc\\": "src/tools/npc/"
 		}
 	},
 	"scripts": {

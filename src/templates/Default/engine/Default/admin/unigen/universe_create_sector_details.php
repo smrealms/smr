@@ -4,8 +4,8 @@
 	<b>Type: </b>
 	<select name="plan_type">
 		<option value="0">No Planet</option><?php
-		foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $type) { ?>
-			<option value="<?php echo $type; ?>" <?php echo ($type == $SelectedPlanetType ? 'selected' : ''); ?>><?php echo SmrPlanetType::getTypeInfo($type)->name(); ?></option><?php
+		foreach (array_keys(Smr\PlanetTypes\PlanetType::PLANET_TYPES) as $type) { ?>
+			<option value="<?php echo $type; ?>" <?php echo ($type == $SelectedPlanetType ? 'selected' : ''); ?>><?php echo Smr\PlanetTypes\PlanetType::getTypeInfo($type)->name(); ?></option><?php
 		} ?>
 	</select><br /><?php
 	if ($SelectedPlanetType) { ?>

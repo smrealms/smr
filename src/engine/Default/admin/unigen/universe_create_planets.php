@@ -13,8 +13,8 @@ $template->assign('JumpGalaxyHREF', $container->href());
 
 // Get a list of all available planet types
 $allowedTypes = [];
-foreach (array_keys(SmrPlanetType::PLANET_TYPES) as $PlanetTypeID) {
-	$allowedTypes[$PlanetTypeID] = SmrPlanetType::getTypeInfo($PlanetTypeID)->name();
+foreach (array_keys(Smr\PlanetTypes\PlanetType::PLANET_TYPES) as $PlanetTypeID) {
+	$allowedTypes[$PlanetTypeID] = Smr\PlanetTypes\PlanetType::getTypeInfo($PlanetTypeID)->name();
 }
 $template->assign('AllowedTypes', $allowedTypes);
 
