@@ -31,14 +31,18 @@ function get_game_dir(): string {
  * Includes the correct game-specific version of a class file.
  * Try to avoid calling this before `$overrideGameID` is set!
  */
-function get_class_loc(string $className): void {
+function get_class_loc(string $className): bool {
 	$className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
-	$classFile = LIB . get_game_dir() . $className . '.php';
-	if (!is_file($classFile)) {
-		// Fallback to Default directory
-		$classFile = LIB . 'Default/' . $className . '.php';
+	// Fallback to Default directory
+	$dirs = array_unique([get_game_dir(), 'Default/']);
+	foreach ($dirs as $dir) {
+		$classFile = LIB . $dir . $className . '.php';
+		if (is_file($classFile)) {
+			require($classFile);
+			return true;
+		}
 	}
-	require($classFile);
+	return false;
 }
 
 /**

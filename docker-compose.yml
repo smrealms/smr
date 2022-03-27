@@ -141,7 +141,6 @@ services:
     smr-integration-test:
         <<: *smr-test
         entrypoint: vendor/bin/phpunit --colors=always
-        command: test
         environment:
             - XDEBUG_MODE=coverage
 
