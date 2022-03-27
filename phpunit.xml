@@ -5,6 +5,7 @@
 	beStrictAboutTodoAnnotatedTests="true"
 	bootstrap="src/bootstrap.php"
 	cacheResultFile=".phpunit.cache/test-results"
+	colors="true"
 	convertDeprecationsToExceptions="true"
 	executionOrder="depends,defects"
 	failOnRisky="true"
