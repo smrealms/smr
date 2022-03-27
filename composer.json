@@ -45,10 +45,13 @@
 			"docker-compose --env-file test/env run --rm flyway-integration-test"
 		],
 		"test": [
-			"docker-compose --env-file test/env run --rm smr-integration-test"
+			"docker-compose --env-file test/env run --rm smr-integration-test --"
+		],
+		"phpcs": [
+			"docker-compose --env-file test/env run --rm phpcs --"
 		],
 		"phpstan": [
-			"docker-compose --env-file test/env run --rm phpstan"
+			"docker-compose --env-file test/env run --rm phpstan --"
 		],
 		"stop": [
 			"docker-compose stop",

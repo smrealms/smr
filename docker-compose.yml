@@ -140,17 +140,18 @@ services:
 
     smr-integration-test:
         <<: *smr-test
-        command: vendor/bin/phpunit --colors=always test
+        entrypoint: vendor/bin/phpunit --colors=always
+        command: test
         environment:
             - XDEBUG_MODE=coverage
 
     phpstan:
         <<: *smr-test
-        command: vendor/bin/phpstan --memory-limit=4G --ansi analyse
+        entrypoint: vendor/bin/phpstan --memory-limit=4G --ansi analyse
 
     phpcs:
         <<: *smr-test
-        command: vendor/bin/phpcs --report-code --report-source
+        entrypoint: vendor/bin/phpcs --report-code --report-source
 
     pma:
         image: phpmyadmin/phpmyadmin
