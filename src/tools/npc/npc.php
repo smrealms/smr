@@ -268,10 +268,9 @@ function NPCStuff(): void {
 			}
 			/*
 			else { //Otherwise let's run around at random.
-				$links = $player->getSector()->getLinks();
-				$moveTo = $links[array_rand($links)];
-				debug('Random Wanderings: '.$moveTo);
-				processContainer(moveToSector($player,$moveTo));
+				$moveTo = array_rand_value($player->getSector()->getLinks());
+				debug('Random Wanderings: ' . $moveTo);
+				processContainer(moveToSector($player, $moveTo));
 			}
 			*/
 			throw new Exception('NPC failed to perform any action');

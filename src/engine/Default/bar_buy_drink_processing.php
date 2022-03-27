@@ -36,7 +36,7 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 	} else {
 		$drinkList = Smr\BarDrink::getCommon();
 	}
-	$drinkName = $drinkList[array_rand($drinkList)];
+	$drinkName = array_rand_value($drinkList);
 
 	$curr_drink_id++;
 	$db->insert('player_has_drinks', [
