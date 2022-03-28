@@ -8,10 +8,14 @@ $var = $session->getCurrentVar();
 $targetSectorID = Smr\Request::getInt('TargetSectorID');
 $origSectorID = Smr\Request::getInt('OrigSectorID');
 $origPlanet = SmrPlanet::getPlanet($var['game_id'], $origSectorID);
+$targetSector = SmrSector::getSector($var['game_id'], $targetSectorID);
 
-// Create first so that if there is an error the planet doesn't disappear
-SmrPlanet::createPlanet($var['game_id'], $targetSectorID, $origPlanet->getTypeID(), $origPlanet->getInhabitableTime());
-SmrPlanet::removePlanet($var['game_id'], $origSectorID);
+// Skip if target sector already has a planet
+if (!$targetSector->hasPlanet()) {
+	// Create first so that if there is an error the planet doesn't disappear
+	SmrPlanet::createPlanet($var['game_id'], $targetSectorID, $origPlanet->getTypeID(), $origPlanet->getInhabitableTime());
+	SmrPlanet::removePlanet($var['game_id'], $origSectorID);
+}
 
 $container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
 $container->addVar('game_id');
