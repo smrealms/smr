@@ -564,7 +564,8 @@ function setupShip(AbstractSmrPlayer $player): void {
 		$ship->enableCloak();
 	}
 	if ($ship->hasIllusion()) {
-		$ship->setIllusion(array_rand(SHIP_UPGRADE_PATH[$player->getRaceID()]), rand(8, 25), rand(6, 20));
+		$illusionShipID = array_rand_value(SHIP_UPGRADE_PATH[$player->getRaceID()]);
+		$ship->setIllusion($illusionShipID, rand(8, 25), rand(6, 20));
 	}
 
 	// Update database (not essential to have a lock here)
