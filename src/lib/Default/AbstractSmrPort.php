@@ -525,7 +525,14 @@ class AbstractSmrPort {
 
 		$this->goodAmounts[$goodID] = Globals::getGood($goodID)['Max'];
 		$this->cacheIsValid = false;
-		$this->db->write('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount, last_update) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($this->getGoodAmount($goodID)) . ',' . $this->db->escapeNumber(Smr\Epoch::time()) . ')');
+		$this->db->replace('port_has_goods', [
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'sector_id' => $this->db->escapeNumber($this->getSectorID()),
+			'good_id' => $this->db->escapeNumber($goodID),
+			'transaction_type' => $this->db->escapeString($type),
+			'amount' => $this->db->escapeNumber($this->getGoodAmount($goodID)),
+			'last_update' => $this->db->escapeNumber(Smr\Epoch::time()),
+		]);
 		$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
 
@@ -616,8 +623,13 @@ class AbstractSmrPort {
 		$trigger->increaseHOF(1, ['Combat', 'Port', 'Number Of Triggers'], HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, ['Combat', 'Port', 'Number Of Attacks'], HOF_PUBLIC);
-			$this->db->write('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES
-							(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
+			$this->db->replace('player_attacks_port', [
+				'game_id' => $this->db->escapeNumber($this->getGameID()),
+				'account_id' => $this->db->escapeNumber($attacker->getAccountID()),
+				'sector_id' => $this->db->escapeNumber($this->getSectorID()),
+				'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+				'level' => $this->db->escapeNumber($this->getLevel()),
+			]);
 		}
 		if (!$this->isUnderAttack()) {
 

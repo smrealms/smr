@@ -205,8 +205,12 @@ function channel_msg_op_response($fp, string $rdata, AbstractSmrPlayer $player):
 			return true;
 		}
 
-		$db->write('REPLACE INTO alliance_has_op_response (alliance_id, game_id, account_id, response)
-					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $player->getAccountID() . ', ' . $db->escapeString($response) . ')');
+		$db->replace('alliance_has_op_response', [
+			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'account_id' => $db->escapeNumber($player->getAccountID()),
+			'response' => $db->escapeString($response),
+		]);
 
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the ' . $response . ' list.' . EOL);
 

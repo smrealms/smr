@@ -9,6 +9,10 @@ if ($account->getAccountID() == ACCOUNT_ID_NHL) {
 }
 
 $db = Smr\Database::getInstance();
-$db->write('REPLACE INTO voting_results (account_id, vote_id, option_id) VALUES (' . $db->escapeNumber($account->getAccountID()) . ',' . $db->escapeNumber($var['vote_id']) . ',' . $db->escapeNumber(Smr\Request::getInt('vote')) . ')');
+$db->replace('voting_results', [
+	'account_id' => $db->escapeNumber($account->getAccountID()),
+	'vote_id' => $db->escapeNumber($var['vote_id']),
+	'option_id' => $db->escapeNumber(Smr\Request::getInt('vote')),
+]);
 $var['url'] = 'skeleton.php';
 Page::copy($var)->go();

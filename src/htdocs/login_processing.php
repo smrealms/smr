@@ -174,7 +174,11 @@ try {
 			$new .= '-' . $accID;
 		}
 	}
-	$db->write('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeString($new) . ', ' . $db->escapeString($use) . ')');
+	$db->replace('multi_checking_cookie', [
+		'account_id' => $db->escapeNumber($account->getAccountID()),
+		'array' => $db->escapeString($new),
+		'`use`' => $db->escapeString($use),
+	]);
 	//now we update their cookie with the newest info
 	setcookie('Session_Info', $new, Smr\Epoch::time() + 157680000);
 

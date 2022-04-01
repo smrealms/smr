@@ -95,7 +95,11 @@ $logId = $db->insert('combat_logs', [
 $sectorMessage = '[ATTACK_RESULTS]' . $logId;
 foreach ($attackers as $attacker) {
 	if (!$player->equals($attacker)) {
-		$db->write('REPLACE INTO sector_message VALUES(' . $db->escapeNumber($attacker->getAccountID()) . ',' . $db->escapeNumber($attacker->getGameID()) . ',' . $db->escapeString($sectorMessage) . ')');
+		$db->replace('sector_message', [
+			'account_id' => $db->escapeNumber($attacker->getAccountID()),
+			'game_id' => $db->escapeNumber($attacker->getGameID()),
+			'message' => $db->escapeString($sectorMessage),
+		]);
 	}
 }
 

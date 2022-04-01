@@ -792,8 +792,12 @@ class SmrPlanet {
 			// write stockpile info
 			foreach ($this->getStockpile() as $id => $amount) {
 				if ($amount != 0) {
-					$this->db->write('REPLACE INTO planet_has_cargo (game_id, sector_id, good_id, amount) ' .
-										 'VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber($id) . ', ' . $this->db->escapeNumber($amount) . ')');
+					$this->db->replace('planet_has_cargo', [
+						'game_id' => $this->db->escapeNumber($this->getGameID()),
+						'sector_id' => $this->db->escapeNumber($this->getSectorID()),
+						'good_id' => $this->db->escapeNumber($id),
+						'amount' => $this->db->escapeNumber($amount),
+					]);
 				} else {
 					$this->db->write('DELETE FROM planet_has_cargo WHERE ' . $this->SQL . '
 										AND good_id = ' . $this->db->escapeNumber($id));
@@ -804,7 +808,14 @@ class SmrPlanet {
 		if (count($this->hasChangedWeapons) > 0) {
 			foreach (array_keys($this->hasChangedWeapons) as $orderID) {
 				if (isset($this->mountedWeapons[$orderID])) {
-					$this->db->write('REPLACE INTO planet_has_weapon (game_id, sector_id, order_id, weapon_type_id, bonus_accuracy, bonus_damage) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($orderID) . ',' . $this->db->escapeNumber($this->mountedWeapons[$orderID]->getWeaponTypeID()) . ',' . $this->db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusAccuracy()) . ',' . $this->db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusDamage()) . ')');
+					$this->db->replace('planet_has_weapon', [
+						'game_id' => $this->db->escapeNumber($this->getGameID()),
+						'sector_id' => $this->db->escapeNumber($this->getSectorID()),
+						'order_id' => $this->db->escapeNumber($orderID),
+						'weapon_type_id' => $this->db->escapeNumber($this->mountedWeapons[$orderID]->getWeaponTypeID()),
+						'bonus_accuracy' => $this->db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusAccuracy()),
+						'bonus_damage' => $this->db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusDamage()),
+					]);
 				} else {
 					$this->db->write('DELETE FROM planet_has_weapon WHERE ' . $this->SQL . ' AND order_id=' . $this->db->escapeNumber($orderID));
 				}
@@ -821,8 +832,12 @@ class SmrPlanet {
 		foreach ($this->hasChangedBuildings as $id => $hasChanged) {
 			if ($hasChanged === true) {
 				if ($this->hasBuilding($id)) {
-					$this->db->write('REPLACE INTO planet_has_building (game_id, sector_id, construction_id, amount) ' .
-										'VALUES(' . $this->db->escapeNumber($this->gameID) . ', ' . $this->db->escapeNumber($this->sectorID) . ', ' . $this->db->escapeNumber($id) . ', ' . $this->db->escapeNumber($this->getBuilding($id)) . ')');
+					$this->db->replace('planet_has_building', [
+						'game_id' => $this->db->escapeNumber($this->gameID),
+						'sector_id' => $this->db->escapeNumber($this->sectorID),
+						'construction_id' => $this->db->escapeNumber($id),
+						'amount' => $this->db->escapeNumber($this->getBuilding($id)),
+					]);
 				} else {
 					$this->db->write('DELETE FROM planet_has_building WHERE ' . $this->SQL . '
 										AND construction_id = ' . $this->db->escapeNumber($id));
@@ -1042,8 +1057,13 @@ class SmrPlanet {
 		$trigger->increaseHOF(1, ['Combat', 'Planet', 'Number Of Triggers'], HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, ['Combat', 'Planet', 'Number Of Attacks'], HOF_PUBLIC);
-			$this->db->write('REPLACE INTO player_attacks_planet (game_id, account_id, sector_id, time, level) VALUES ' .
-					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
+			$this->db->replace('player_attacks_planet', [
+				'game_id' => $this->db->escapeNumber($this->getGameID()),
+				'account_id' => $this->db->escapeNumber($attacker->getAccountID()),
+				'sector_id' => $this->db->escapeNumber($this->getSectorID()),
+				'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+				'level' => $this->db->escapeNumber($this->getLevel()),
+			]);
 		}
 
 		// Add each unique attack to news unless it was already added recently.

@@ -20,13 +20,22 @@ if ($action == 'INCREASE') {
 $race_id = $var['race_id'];
 
 if ($action == 'INC' || $action == 'DEC') {
-	$db->write('REPLACE INTO player_votes_relation
-				(account_id, game_id, race_id_1, race_id_2, action, time)
-				VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getRaceID()) . ', ' . $db->escapeNumber($race_id) . ', ' . $db->escapeString($action) . ', ' . $db->escapeNumber(Smr\Epoch::time()) . ')');
+	$db->replace('player_votes_relation', [
+		'account_id' => $db->escapeNumber($player->getAccountID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'race_id_1' => $db->escapeNumber($player->getRaceID()),
+		'race_id_2' => $db->escapeNumber($race_id),
+		'action' => $db->escapeString($action),
+		'time' => $db->escapeNumber(Smr\Epoch::time()),
+	]);
 } elseif ($action == 'YES' || $action == 'NO') {
-	$db->write('REPLACE INTO player_votes_pact
-			(account_id, game_id, race_id_1, race_id_2, vote)
-			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getRaceID()) . ', ' . $db->escapeNumber($race_id) . ', ' . $db->escapeString($action) . ')');
+	$db->replace('player_votes_pact', [
+		'account_id' => $db->escapeNumber($player->getAccountID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'race_id_1' => $db->escapeNumber($player->getRaceID()),
+		'race_id_2' => $db->escapeNumber($race_id),
+		'vote' => $db->escapeString($action),
+	]);
 } elseif ($action == 'VETO') {
 	// try to cancel both votings
 	$db->write('DELETE FROM race_has_voting ' .

@@ -29,15 +29,23 @@ if ($type == 'PEACE') {
 }
 
 // Create the vote for the player's race
-$db->write('REPLACE INTO race_has_voting
-			(game_id, race_id_1, race_id_2, type, end_time)
-			VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getRaceID()) . ', ' . $db->escapeNumber($race_id) . ', ' . $db->escapeString($type) . ', ' . $db->escapeNumber($time) . ')');
+$db->replace('race_has_voting', [
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'race_id_1' => $db->escapeNumber($player->getRaceID()),
+	'race_id_2' => $db->escapeNumber($race_id),
+	'type' => $db->escapeString($type),
+	'end_time' => $db->escapeNumber($time),
+]);
 
 // If voting for peace, the other race also has to vote
 if ($type == 'PEACE') {
-	$db->write('REPLACE INTO race_has_voting
-				(game_id, race_id_1, race_id_2, type, end_time)
-				VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $race_id . ', ' . $db->escapeNumber($player->getRaceID()) . ', ' . $db->escapeString($type) . ', ' . $time . ')');
+	$db->replace('race_has_voting', [
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'race_id_1' => $db->escapeNumber($race_id),
+		'race_id_2' => $db->escapeNumber($player->getRaceID()),
+		'type' => $db->escapeString($type),
+		'end_time' => $db->escapeNumber($time),
+	]);
 }
 
 

@@ -45,9 +45,11 @@ class DummyPlayer extends AbstractSmrPlayer {
 	public function cacheDummyPlayer(): void {
 		$this->getShip()->cacheDummyShip();
 		$db = Smr\Database::getInstance();
-		$db->write('REPLACE INTO cached_dummys ' .
-					'(type, id, info) ' .
-					'VALUES (\'DummyPlayer\', ' . $db->escapeString($this->getPlayerName()) . ', ' . $db->escapeObject($this) . ')');
+		$db->replace('cached_dummys', [
+			'type' => $db->escapeString('DummyPlayer'),
+			'id' => $db->escapeString($this->getPlayerName()),
+			'info' => $db->escapeObject($this),
+		]);
 	}
 
 	public static function getCachedDummyPlayer(string $name): self {

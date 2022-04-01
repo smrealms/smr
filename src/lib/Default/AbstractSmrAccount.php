@@ -340,7 +340,12 @@ abstract class AbstractSmrAccount {
 		}
 
 		// save...first make sure there isn't one for these keys (someone could double click and get error)
-		$this->db->write('REPLACE INTO account_has_ip (account_id, time, ip, host) VALUES (' . $this->db->escapeNumber($this->account_id) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ', ' . $this->db->escapeString($curr_ip) . ', ' . $this->db->escapeString($host) . ')');
+		$this->db->replace('account_has_ip', [
+			'account_id' => $this->db->escapeNumber($this->account_id),
+			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'ip' => $this->db->escapeString($curr_ip),
+			'host' => $this->db->escapeString($host),
+		]);
 	}
 
 	public function updateLastLogin(): void {
@@ -538,7 +543,11 @@ abstract class AbstractSmrAccount {
 			$rewardCredits = 0;
 		}
 		if ($this->credits == 0 && $this->rewardCredits == 0) {
-			$this->db->write('REPLACE INTO account_has_credits (account_id, credits_left, reward_credits) VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($credits) . ',' . $this->db->escapeNumber($rewardCredits) . ')');
+			$this->db->replace('account_has_credits', [
+				'account_id' => $this->db->escapeNumber($this->getAccountID()),
+				'credits_left' => $this->db->escapeNumber($credits),
+				'reward_credits' => $this->db->escapeNumber($rewardCredits),
+			]);
 		} else {
 			$this->db->write('UPDATE account_has_credits SET credits_left=' . $this->db->escapeNumber($credits) . ', reward_credits=' . $this->db->escapeNumber($rewardCredits) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 		}
@@ -561,7 +570,10 @@ abstract class AbstractSmrAccount {
 			return;
 		}
 		if ($this->credits == 0 && $this->rewardCredits == 0) {
-			$this->db->write('REPLACE INTO account_has_credits (account_id, credits_left) VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($credits) . ')');
+			$this->db->replace('account_has_credits', [
+				'account_id' => $this->db->escapeNumber($this->getAccountID()),
+				'credits_left' => $this->db->escapeNumber($credits),
+			]);
 		} else {
 			$this->db->write('UPDATE account_has_credits SET credits_left=' . $this->db->escapeNumber($credits) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 		}
@@ -596,7 +608,10 @@ abstract class AbstractSmrAccount {
 			return;
 		}
 		if ($this->credits == 0 && $this->rewardCredits == 0) {
-			$this->db->write('REPLACE INTO account_has_credits (account_id, reward_credits) VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($credits) . ')');
+			$this->db->replace('account_has_credits', [
+				'account_id' => $this->db->escapeNumber($this->getAccountID()),
+				'reward_credits' => $this->db->escapeNumber($credits),
+			]);
 		} else {
 			$this->db->write('UPDATE account_has_credits SET reward_credits=' . $this->db->escapeNumber($credits) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 		}
@@ -697,8 +712,11 @@ abstract class AbstractSmrAccount {
 
 	public function sendValidationEmail(): void {
 		// remember when we sent validation code
-		$this->db->write('REPLACE INTO notification (notification_type, account_id, time)
-				VALUES(\'validation_code\', ' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(Smr\Epoch::time()) . ')');
+		$this->db->replace('notification', [
+			'notification_type' => $this->db->escapeString('validation_code'),
+			'account_id' => $this->db->escapeNumber($this->getAccountID()),
+			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+		]);
 
 		$emailMessage =
 			'Your validation code is: ' . $this->getValidationCode() . EOL . EOL .
@@ -1220,9 +1238,12 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function banAccount(int $expireTime, SmrAccount $admin, int $reasonID, string $suspicion, bool $removeExceptions = false): void {
-		$this->db->write('REPLACE INTO account_is_closed
-					(account_id, reason_id, suspicion, expires)
-					VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($reasonID) . ', ' . $this->db->escapeString($suspicion) . ', ' . $this->db->escapeNumber($expireTime) . ')');
+		$this->db->replace('account_is_closed', [
+			'account_id' => $this->db->escapeNumber($this->getAccountID()),
+			'reason_id' => $this->db->escapeNumber($reasonID),
+			'suspicion' => $this->db->escapeString($suspicion),
+			'expires' => $this->db->escapeNumber($expireTime),
+		]);
 		$this->db->lockTable('active_session');
 		$this->db->write('DELETE FROM active_session WHERE ' . $this->SQL . ' LIMIT 1');
 		$this->db->unlock();
@@ -1271,8 +1292,10 @@ abstract class AbstractSmrAccount {
 			$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account automatically reopened.');
 		}
 		if ($currException !== null) {
-			$this->db->write('REPLACE INTO account_exceptions (account_id, reason)
-							VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeString($currException) . ')');
+			$this->db->replace('account_exceptions', [
+				'account_id' => $this->db->escapeNumber($this->getAccountID()),
+				'reason' => $this->db->escapeString($currException),
+			]);
 		}
 	}
 

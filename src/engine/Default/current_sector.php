@@ -158,7 +158,11 @@ function checkForForceRefreshMessage(string &$msg): void {
 			if ($dbResult->hasRecord()) {
 				$remainingTime = $dbResult->record()->getInt('refresh_at') - Smr\Epoch::time();
 				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
-				$db->write('REPLACE INTO sector_message (game_id, account_id, message) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', \'[Force Check]\')');
+				$db->replace('sector_message', [
+					'game_id' => $db->escapeNumber($player->getGameID()),
+					'account_id' => $db->escapeNumber($player->getAccountID()),
+					'message' => $db->escapeString('[Force Check]'),
+				]);
 			} else {
 				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
 			}
