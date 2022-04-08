@@ -54,6 +54,7 @@ $template->assign('AllianceVs', $alliance_vs);
 
 $alliance_vs_table = [];
 foreach ($alliance_vs_ids as $curr_id) {
+	$curr_alliance = SmrAlliance::getAlliance($curr_id, $player->getGameID());
 	foreach ($alliance_vs_ids as $id) {
 		$row_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
 		$showRed = (!$curr_alliance->isNone() && $curr_alliance->hasDisbanded()) ||
