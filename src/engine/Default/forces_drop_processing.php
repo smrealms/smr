@@ -154,23 +154,15 @@ if ($change_mines != 0) {
 if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isForceDropMessages()) {
 	$mines_message = '';
 	if ($change_mines > 0) {
-		$mines_message = 'added ' . $change_mines . ' mine';
+		$mines_message = 'added ' . pluralise($change_mines, 'mine');
 	} elseif ($change_mines < 0) {
-		$mines_message = 'removed ' . abs($change_mines) . ' mine';
-	}
-	//add s to mine if necesary
-	if (abs($change_mines) > 1) {
-		$mines_message .= 's';
+		$mines_message = 'removed ' . pluralise(abs($change_mines), 'mine');
 	}
 
 	if ($change_combat_drones > 0) {
-		$combat_drones_message = ($change_mines <= 0 ? 'added ' : '') . $change_combat_drones . ' combat drone';
+		$combat_drones_message = ($change_mines <= 0 ? 'added ' : '') . pluralise($change_combat_drones, 'combat drone');
 	} elseif ($change_combat_drones < 0) {
-		$combat_drones_message = ($change_mines >= 0 ? 'removed ' : '') . abs($change_combat_drones) . ' combat drone';
-	}
-	//add s to drone if necesary
-	if (abs($change_combat_drones) > 1) {
-		$combat_drones_message .= 's';
+		$combat_drones_message = ($change_mines >= 0 ? 'removed ' : '') . pluralise(abs($change_combat_drones), 'combat drone');
 	}
 
 	if ($change_scout_drones > 0) {
@@ -178,17 +170,13 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 		if ((isset($combat_drones_message) && $change_combat_drones < 0) || (!isset($combat_drones_message) && $change_mines <= 0)) {
 			$scout_drones_message = 'added ';
 		}
-		$scout_drones_message .= $change_scout_drones . ' scout drone';
+		$scout_drones_message .= pluralise($change_scout_drones, 'scout drone');
 	} elseif ($change_scout_drones < 0) {
 		$scout_drones_message = '';
 		if ((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines >= 0)) {
 			$scout_drones_message = 'removed ';
 		}
-		$scout_drones_message .= abs($change_scout_drones) . ' scout drone';
-	}
-	//add s to drone if necesary
-	if (abs($change_scout_drones) > 1) {
-		$scout_drones_message .= 's';
+		$scout_drones_message .= pluralise(abs($change_scout_drones), 'scout drone');
 	}
 
 	// now compile it together
