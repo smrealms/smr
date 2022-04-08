@@ -2272,7 +2272,7 @@ abstract class AbstractSmrPlayer {
 			// If the podded players alignment makes them deputy or member then set bounty
 			if ($this->getAlignment() >= 100) {
 				$return['BountyGained']['Type'] = 'HQ';
-			} elseif ($this->getAlignment() <= 100) {
+			} elseif ($this->getAlignment() <= -100) {
 				$return['BountyGained']['Type'] = 'UG';
 			}
 
