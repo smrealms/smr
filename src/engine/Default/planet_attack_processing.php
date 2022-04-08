@@ -118,7 +118,11 @@ if ($planetOwner->hasAlliance()) {
 // Update sector messages for attackers
 foreach ($attackers as $attacker) {
 	if (!$player->equals($attacker)) {
-		$db->write('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ',' . $db->escapeString('[ATTACK_RESULTS]' . $logId) . ')');
+		$db->replace('sector_message', [
+			'account_id' => $db->escapeNumber($attacker->getAccountID()),
+			'game_id' => $db->escapeNumber($attacker->getGameID()),
+			'message' => $db->escapeString('[ATTACK_RESULTS]' . $logId),
+		]);
 	}
 }
 

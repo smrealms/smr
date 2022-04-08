@@ -456,8 +456,11 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setCustomShipName(string $name): void {
-		$this->db->write('REPLACE INTO ship_has_name (game_id, account_id, ship_name)
-			VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeString($name) . ')');
+		$this->db->replace('ship_has_name', [
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'account_id' => $this->db->escapeNumber($this->getAccountID()),
+			'ship_name' => $this->db->escapeString($name),
+		]);
 	}
 
 	/**
@@ -648,8 +651,11 @@ abstract class AbstractSmrPlayer {
 
 		if ($unread === true) {
 			// give him the message icon
-			$db->write('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
-						(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($receiverID) . ', ' . $db->escapeNumber($messageTypeID) . ')');
+			$db->replace('player_has_unread_messages', [
+				'game_id' => $db->escapeNumber($gameID),
+				'account_id' => $db->escapeNumber($receiverID),
+				'message_type_id' => $db->escapeNumber($messageTypeID),
+			]);
 		}
 
 		switch ($messageTypeID) {
@@ -1539,7 +1545,12 @@ abstract class AbstractSmrPlayer {
 		$relationsDiff = IRound($relations - $this->personalRelations[$raceID]);
 		$this->personalRelations[$raceID] = $relations;
 		$this->relations[$raceID] += $relationsDiff;
-		$this->db->write('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID) . ',' . $this->db->escapeNumber($this->personalRelations[$raceID]) . ')');
+		$this->db->replace('player_has_relation', [
+			'account_id' => $this->db->escapeNumber($this->getAccountID()),
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'race_id' => $this->db->escapeNumber($raceID),
+			'relation' => $this->db->escapeNumber($this->personalRelations[$raceID]),
+		]);
 	}
 
 	/**
@@ -1615,9 +1626,11 @@ abstract class AbstractSmrPlayer {
 
 	public function setPlottedCourse(Smr\Path $plottedCourse): void {
 		$this->plottedCourse = $plottedCourse;
-		$this->db->write('REPLACE INTO player_plotted_course
-			(account_id, game_id, course)
-			VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeObject($this->plottedCourse) . ')');
+		$this->db->replace('player_plotted_course', [
+			'account_id' => $this->db->escapeNumber($this->getAccountID()),
+			'game_id' => $this->db->escapeNumber($this->getGameID()),
+			'course' => $this->db->escapeObject($this->plottedCourse),
+		]);
 	}
 
 	public function hasPlottedCourse(): bool {
@@ -2770,9 +2783,17 @@ abstract class AbstractSmrPlayer {
 		$this->setupMissionStep($missionID);
 		$this->rebuildMission($missionID);
 
-		$this->db->write('
-			REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,unread,starting_sector,mission_sector,step_fails)
-			VALUES (' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($missionID) . ',' . $this->db->escapeNumber($mission['On Step']) . ',' . $this->db->escapeNumber($mission['Progress']) . ',' . $this->db->escapeBoolean($mission['Unread']) . ',' . $this->db->escapeNumber($mission['Starting Sector']) . ',' . $this->db->escapeNumber($mission['Sector']) . ',' . $this->db->escapeNumber($mission['Expires']) . ')');
+		$this->db->replace('player_has_mission', [
+			'game_id' => $this->db->escapeNumber($this->gameID),
+			'account_id' => $this->db->escapeNumber($this->accountID),
+			'mission_id' => $this->db->escapeNumber($missionID),
+			'on_step' => $this->db->escapeNumber($mission['On Step']),
+			'progress' => $this->db->escapeNumber($mission['Progress']),
+			'unread' => $this->db->escapeBoolean($mission['Unread']),
+			'starting_sector' => $this->db->escapeNumber($mission['Starting Sector']),
+			'mission_sector' => $this->db->escapeNumber($mission['Sector']),
+			'step_fails' => $this->db->escapeNumber($mission['Expires']),
+		]);
 	}
 
 	private function rebuildMission(int $missionID): void {

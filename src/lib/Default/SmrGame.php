@@ -409,8 +409,12 @@ class SmrGame {
 				} else {
 					$amount = $relations;
 				}
-				$this->db->write('REPLACE INTO race_has_relation (game_id, race_id_1, race_id_2, relation)
-				                  VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID1) . ',' . $this->db->escapeNumber($raceID2) . ',' . $this->db->escapeNumber($amount) . ')');
+				$this->db->replace('race_has_relation', [
+					'game_id' => $this->db->escapeNumber($this->getGameID()),
+					'race_id_1' => $this->db->escapeNumber($raceID1),
+					'race_id_2' => $this->db->escapeNumber($raceID2),
+					'relation' => $this->db->escapeNumber($amount),
+				]);
 			}
 		}
 	}

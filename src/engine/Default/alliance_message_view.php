@@ -21,9 +21,13 @@ $template->assign('PageTopic', $var['thread_topics'][$thread_index]);
 Menu::alliance($alliance->getAllianceID());
 
 $db = Smr\Database::getInstance();
-$db->write('REPLACE INTO player_read_thread
-			(account_id, game_id, alliance_id, thread_id, time)
-			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance->getAllianceID()) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(Smr\Epoch::time() + 2) . ')');
+$db->replace('player_read_thread', [
+	'account_id' => $db->escapeNumber($player->getAccountID()),
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+	'thread_id' => $db->escapeNumber($thread_id),
+	'time' => $db->escapeNumber(Smr\Epoch::time() + 2),
+]);
 
 $mbWrite = true;
 if ($alliance->getAllianceID() != $player->getAllianceID()) {

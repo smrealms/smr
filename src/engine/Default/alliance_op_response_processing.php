@@ -6,6 +6,11 @@ $player = $session->getPlayer();
 $response = strtoupper(Smr\Request::get('op_response'));
 
 $db = Smr\Database::getInstance();
-$db->write('REPLACE INTO alliance_has_op_response (alliance_id, game_id, account_id, response) VALUES (' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($response) . ')');
+$db->replace('alliance_has_op_response', [
+	'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'account_id' => $db->escapeNumber($player->getAccountID()),
+	'response' => $db->escapeString($response),
+]);
 
 Page::create('skeleton.php', 'alliance_mod.php')->go();

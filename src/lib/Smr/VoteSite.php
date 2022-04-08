@@ -139,7 +139,12 @@ class VoteSite {
 		// We assume that the site is eligible for free turns.
 		// Don't start the timeout until the vote actually goes through.
 		$db = Database::getInstance();
-		$db->write('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($this->accountID) . ',' . $db->escapeNumber($this->linkID) . ',' . $db->escapeNumber(0) . ',' . $db->escapeBoolean(false) . ')');
+		$db->replace('vote_links', [
+			'account_id' => $db->escapeNumber($this->accountID),
+			'link_id' => $db->escapeNumber($this->linkID),
+			'timeout' => $db->escapeNumber(0),
+			'turns_claimed' => $db->escapeBoolean(false),
+		]);
 	}
 
 	/**
@@ -158,7 +163,12 @@ class VoteSite {
 	 */
 	public function setFreeTurnsAwarded(): void {
 		$db = Database::getInstance();
-		$db->write('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($this->accountID) . ',' . $db->escapeNumber($this->linkID) . ',' . $db->escapeNumber(Epoch::time()) . ',' . $db->escapeBoolean(true) . ')');
+		$db->replace('vote_links', [
+			'account_id' => $db->escapeNumber($this->accountID),
+			'link_id' => $db->escapeNumber($this->linkID),
+			'timeout' => $db->escapeNumber(Epoch::time()),
+			'turns_claimed' => $db->escapeBoolean(true),
+		]);
 	}
 
 	/**

@@ -16,7 +16,12 @@ if ($ticker !== false) {
 $expires += 5 * 86400;
 
 $db = Smr\Database::getInstance();
-$db->write('REPLACE INTO player_has_ticker (game_id, account_id, type, expires) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($type) . ', ' . $db->escapeNumber($expires) . ')');
+$db->replace('player_has_ticker', [
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'account_id' => $db->escapeNumber($player->getAccountID()),
+	'type' => $db->escapeString($type),
+	'expires' => $db->escapeNumber($expires),
+]);
 
 //take credits
 $account->decreaseTotalSmrCredits(CREDITS_PER_TICKER);

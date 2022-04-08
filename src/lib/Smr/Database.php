@@ -152,6 +152,20 @@ class Database {
 		return $this->getInsertID();
 	}
 
+	/**
+	 * REPLACE a row into $table.
+	 *
+	 * @param string $table
+	 * @param array<string, mixed> $fields
+	 * @return int Insert ID of auto-incrementing column, if applicable
+	 */
+	public function replace(string $table, array $fields): int {
+		$query = 'REPLACE INTO ' . $table . ' (' . implode(', ', array_keys($fields))
+			. ') VALUES (' . implode(', ', array_values($fields)) . ')';
+		$this->write($query);
+		return $this->getInsertID();
+	}
+
 	public function lockTable(string $table): void {
 		$this->write('LOCK TABLES ' . $table . ' WRITE');
 	}

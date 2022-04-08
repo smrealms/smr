@@ -17,7 +17,11 @@ if ($action == 'Vote') {
 		$db->write(substr($query, 0, -1));
 	}
 	if (Smr\Request::has('favourite')) {
-		$db->write('REPLACE INTO account_votes_for_feature VALUES(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber(Smr\Request::getInt('favourite')) . ',\'FAVOURITE\')');
+		$db->replace('account_votes_for_feature', [
+			'account_id' => $db->escapeNumber($account->getAccountID()),
+			'feature_request_id' => $db->escapeNumber(Smr\Request::getInt('favourite')),
+			'vote_type' => $db->escapeString('FAVOURITE'),
+		]);
 	}
 
 	Page::create('skeleton.php', 'feature_request.php')->go();

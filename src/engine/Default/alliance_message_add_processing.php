@@ -95,9 +95,13 @@ $db->insert('alliance_thread', [
 	'sender_id' => $db->escapeNumber($player->getAccountID()),
 	'time' => $db->escapeNumber(Smr\Epoch::time()),
 ]);
-$db->write('REPLACE INTO player_read_thread
-			(account_id, game_id, alliance_id, thread_id, time)
-			VALUES(' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeNumber(Smr\Epoch::time() + 2) . ')');
+$db->replace('player_read_thread', [
+	'account_id' => $db->escapeNumber($player->getAccountID()),
+	'game_id' => $db->escapeNumber($player->getGameID()),
+	'alliance_id' => $db->escapeNumber($alliance_id),
+	'thread_id' => $db->escapeNumber($thread_id),
+	'time' => $db->escapeNumber(Smr\Epoch::time() + 2),
+]);
 
 $container = Page::create('skeleton.php');
 $container['alliance_id'] = $alliance_id;

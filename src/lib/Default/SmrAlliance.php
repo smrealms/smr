@@ -248,7 +248,11 @@ class SmrAlliance {
 				throw new Smr\Exceptions\UserError('Please enter a valid irc channel for your alliance.');
 			}
 
-			$this->db->write('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($ircChannel) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ');');
+			$this->db->replace('irc_alliance_has_channel', [
+				'channel' => $this->db->escapeString($ircChannel),
+				'alliance_id' => $this->db->escapeNumber($this->getAllianceID()),
+				'game_id' => $this->db->escapeNumber($this->getGameID()),
+			]);
 		} else {
 			$this->db->write('DELETE FROM irc_alliance_has_channel WHERE ' . $this->SQL);
 		}

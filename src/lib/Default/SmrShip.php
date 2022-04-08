@@ -116,7 +116,12 @@ class SmrShip extends AbstractSmrShip {
 		$db = Smr\Database::getInstance();
 		foreach ($this->getCargo() as $id => $amount) {
 			if ($amount > 0) {
-				$db->write('REPLACE INTO ship_has_cargo (account_id, game_id, good_id, amount) VALUES(' . $db->escapeNumber($this->getAccountID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber($id) . ', ' . $db->escapeNumber($amount) . ')');
+				$db->replace('ship_has_cargo', [
+					'account_id' => $db->escapeNumber($this->getAccountID()),
+					'game_id' => $db->escapeNumber($this->getGameID()),
+					'good_id' => $db->escapeNumber($id),
+					'amount' => $db->escapeNumber($amount),
+				]);
 			} else {
 				$db->write('DELETE FROM ship_has_cargo WHERE ' . $this->SQL . ' AND good_id = ' . $db->escapeNumber($id) . ' LIMIT 1');
 				// Unset now to omit displaying this good with 0 amount
@@ -136,7 +141,12 @@ class SmrShip extends AbstractSmrShip {
 			}
 			$amount = $this->getHardware($hardwareTypeID);
 			if ($amount > 0) {
-				$db->write('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount) VALUES(' . $db->escapeNumber($this->getAccountID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber($hardwareTypeID) . ', ' . $db->escapeNumber($amount) . ')');
+				$db->replace('ship_has_hardware', [
+					'account_id' => $db->escapeNumber($this->getAccountID()),
+					'game_id' => $db->escapeNumber($this->getGameID()),
+					'hardware_type_id' => $db->escapeNumber($hardwareTypeID),
+					'amount' => $db->escapeNumber($amount),
+				]);
 			} else {
 				$db->write('DELETE FROM ship_has_hardware WHERE ' . $this->SQL . ' AND hardware_type_id = ' . $db->escapeNumber($hardwareTypeID));
 			}
@@ -215,7 +225,13 @@ class SmrShip extends AbstractSmrShip {
 		if ($this->illusionShip === false) {
 			$db->write('DELETE FROM ship_has_illusion WHERE ' . $this->SQL . ' LIMIT 1');
 		} else {
-			$db->write('REPLACE INTO ship_has_illusion VALUES(' . $db->escapeNumber($this->getAccountID()) . ', ' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber($this->illusionShip['ID']) . ', ' . $db->escapeNumber($this->illusionShip['Attack']) . ', ' . $db->escapeNumber($this->illusionShip['Defense']) . ')');
+			$db->replace('ship_has_illusion', [
+				'account_id' => $db->escapeNumber($this->getAccountID()),
+				'game_id' => $db->escapeNumber($this->getGameID()),
+				'ship_type_id' => $db->escapeNumber($this->illusionShip['ID']),
+				'attack' => $db->escapeNumber($this->illusionShip['Attack']),
+				'defense' => $db->escapeNumber($this->illusionShip['Defense']),
+			]);
 		}
 		$this->hasChangedIllusion = false;
 	}
