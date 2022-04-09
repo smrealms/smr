@@ -42,7 +42,8 @@ if ($submit == 'Create Galaxies') {
 	}
 	foreach (SmrLocation::getAllLocations() as $location) {
 		if (Smr\Request::has('loc' . $location->getTypeID())) {
-			for ($i = 0; $i < Smr\Request::getInt('loc' . $location->getTypeID()); $i++) {
+			$numLoc = Smr\Request::getInt('loc' . $location->getTypeID());
+			for ($i = 0; $i < $numLoc; $i++) {
 				$randSector = array_rand_value($galSectors); //get random sector from start of gal to end of gal
 				//4 per sector max locs and no locations inside fed
 
