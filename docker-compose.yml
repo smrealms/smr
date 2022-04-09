@@ -152,6 +152,10 @@ services:
         <<: *smr-test
         entrypoint: vendor/bin/phpcs --report-code --report-source
 
+    phpcbf:
+        <<: *smr-test
+        entrypoint: vendor/bin/phpcbf
+
     pma:
         image: phpmyadmin/phpmyadmin
         networks:
