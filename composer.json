@@ -50,6 +50,9 @@
 		"phpcs": [
 			"docker-compose --env-file test/env run --rm phpcs"
 		],
+		"phpcbf": [
+			"docker-compose --env-file test/env run --rm phpcbf"
+		],
 		"phpstan": [
 			"docker-compose --env-file test/env run --rm phpstan"
 		],
