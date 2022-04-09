@@ -15,8 +15,11 @@ $fn_forces = function($message, $params) {
 		->done(null, 'logException');
 };
 
-$discord->registerCommand('forces', mysql_cleanup($fn_forces),
+$discord->registerCommand(
+	'forces',
+	mysql_cleanup($fn_forces),
 	[
 		'description' => 'Print time until next expiring force. Arguments optional.',
 		'usage' => '[galaxy name | seedlist]',
-	]);
+	]
+);

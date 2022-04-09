@@ -11,8 +11,11 @@ $fn_8ball = function($message, $params) {
 	$message->reply($response)->done(null, 'logException');
 };
 
-$discord->registerCommand('8ball', mysql_cleanup($fn_8ball),
+$discord->registerCommand(
+	'8ball',
+	mysql_cleanup($fn_8ball),
 	[
 		'description' => 'Ask a question, get a magic 8-ball answer.',
 		'usage' => '[question]',
-	]);
+	]
+);
