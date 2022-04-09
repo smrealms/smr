@@ -63,7 +63,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 				} ?>
 				<tr id="player-<?php echo $AlliancePlayer->getPlayerID(); ?>" class="ajax<?php echo $Class; ?>">
 					<td><?php
-						if ($AlliancePlayer->getAccountID() == $Alliance->getLeaderID()) { ?>*<?php }
+						if ($AlliancePlayer->isAllianceLeader()) { ?>*<?php }
 						echo $Count++; ?>
 					</td>
 					<td class="sort_name left" data-name="<?php echo htmlentities($AlliancePlayer->getPlayerName()); ?>"><?php
@@ -78,7 +78,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 					if ($ShowRoles) { ?>
 						<td class="sort_role"><?php
 							$PlayerRole = $AlliancePlayer->getAllianceRole();
-							if ($CanChangeRoles && $AlliancePlayer->getAccountID() != $Alliance->getLeaderID()) { ?>
+							if ($CanChangeRoles && !$AlliancePlayer->isAllianceLeader()) { ?>
 								<select name="role[<?php echo $AlliancePlayer->getAccountID(); ?>]"><?php
 									foreach ($Roles as $RoleID => $Role) { ?>
 										<option value="<?php echo $RoleID; ?>"<?php
@@ -94,11 +94,11 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 							} ?>
 						</td><?php
 					}
-					if ($ThisPlayer->getAllianceID() == $Alliance->getAllianceID()) { ?>
+					if (isset($ActiveIDs)) { ?>
 						<td class="sort_status center"><?php
 							if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
 								<span class="green">Online</span><?php
-							} elseif ($ThisPlayer->getAccountID() == $Alliance->getLeaderID() && $Disabled = SmrAccount::getAccount($AlliancePlayer->getAccountID())->isDisabled()) { ?>
+							} elseif ($ThisPlayer->isAllianceLeader() && $Disabled = $AlliancePlayer->getAccount()->isDisabled()) { ?>
 								<span class="red">Banned Until:<br/><?php echo date($ThisAccount->getDateTimeFormatSplit(), $Disabled['Time']); ?></span><?php
 							} else { ?>
 								<span class="red">Offline</span><?php
