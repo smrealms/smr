@@ -69,9 +69,7 @@ class DiContainer {
 			// during its lifecycle (first request)
 			$builder->enableCompilation('/tmp');
 		}
-		// TODO: deprecation warnings suppressed until PHP 8.1 supported!
-		// See https://github.com/PHP-DI/PHP-DI/pull/794.
-		return @$builder->build();
+		return $builder->build();
 	}
 
 	/**
