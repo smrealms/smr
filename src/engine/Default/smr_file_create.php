@@ -2,7 +2,7 @@
 
 // We can release the sector lock now because we know that the following
 // code is read-only. This will help reduce sector lag and possible abuse.
-release_lock();
+Smr\SectorLock::getInstance()->release();
 
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();

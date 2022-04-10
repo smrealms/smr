@@ -32,7 +32,8 @@ try {
 
 	// Lock the sector to ensure the player gets the turns
 	// Refresh player after lock is acquired in case any values are stale
-	acquire_lock($player->getSectorID());
+	$lock = Smr\SectorLock::getInstance();
+	$lock->acquireForPlayer($player);
 	$player = SmrPlayer::getPlayer($accountId, $gameId, true);
 
 	// Now that we are locked, check the database again to make sure turns
@@ -48,7 +49,7 @@ try {
 	//Give turns via added time, no rounding errors.
 	$player->setLastTurnUpdate($player->getLastTurnUpdate() - VOTE_BONUS_TURNS_TIME);
 	$player->save();
-	release_lock();
+	$lock->release();
 
 } catch (Throwable $e) {
 	handleException($e);

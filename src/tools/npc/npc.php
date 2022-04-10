@@ -292,8 +292,8 @@ function NPCStuff(): void {
 		}
 
 		// Save any changes that we made during this action
-		global $lock;
-		if ($lock) { //only save if we have the lock.
+		$lock = Smr\SectorLock::getInstance();
+		if ($lock->isActive()) { //only save if we have the lock.
 			SmrSector::saveSectors();
 			SmrShip::saveShips();
 			SmrPlayer::savePlayers();
@@ -302,15 +302,13 @@ function NPCStuff(): void {
 			if (class_exists('WeightedRandom', false)) {
 				WeightedRandom::saveWeightedRandoms();
 			}
-			release_lock();
+			$lock->release();
 		}
 
 		//Clean up the caches as the data may get changed by other players
 		clearCaches();
 
 		//Clear up some global vars to avoid contaminating subsequent pages
-		global $locksFailed;
-		$locksFailed = [];
 		$_REQUEST = [];
 
 		//Have a sleep between actions
@@ -369,7 +367,9 @@ function processContainer(Page $container): never {
 	// The next "page request" must occur at an updated time.
 	Smr\Epoch::update();
 	$session->setCurrentVar($container);
-	acquire_lock($player->getSectorID()); // Lock now to skip var update in do_voodoo
+
+	// Lock now to skip var update in do_voodoo
+	Smr\SectorLock::getInstance()->acquireForPlayer($player);
 	do_voodoo();
 }
 
@@ -392,12 +392,14 @@ function releaseNPC(): void {
 	} else {
 		debug('Failed to release NPC: ' . $login);
 	}
+
+	// Delete sector lock associated with this NPC
+	Smr\SectorLock::resetInstance();
 }
 
 function exitNPC(): void {
 	debug('Exiting NPC script.');
 	releaseNPC();
-	release_lock();
 	exit;
 }
 
