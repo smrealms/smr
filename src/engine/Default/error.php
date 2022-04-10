@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
-if (empty($var['message']) || $var['message'] == '') {
+if (empty($var['message'])) {
 	throw new Exception('Error is missing a player message!');
 }
 
