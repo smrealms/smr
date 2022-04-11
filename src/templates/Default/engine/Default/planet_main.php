@@ -78,7 +78,7 @@ if (isset($Msg)) {
 				<tr>
 					<td><img src="images/turrets.png"  width="16" height="16" alt="" title="Turret"/>&nbsp;Turrets</td>
 					<td class="center"><span id="planetTurrets2"><?php echo $ThisPlanet->getBuilding(PLANET_TURRET); ?></span> / <?php echo $ThisPlanet->getMaxBuildings(PLANET_TURRET); ?></td>
-					<td class="center"><span id="planetAcc"><?php echo number_format($ThisPlanet->accuracy(), 2); ?></span> %</td>
+					<td class="center"><span id="planetAcc"><?php echo number_format($ThisPlanet->getTurretAccuracy(), 2); ?></span> %</td>
 				</tr>
 				<?php }	if ($ThisPlanet->hasBuilding(PLANET_WEAPON_MOUNT)) { ?>
 				<tr>
