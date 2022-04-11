@@ -57,34 +57,22 @@ class SmrShipType {
 		$this->restriction = $dbRecord->getInt('buyer_restriction');
 		$this->levelNeeded = $dbRecord->getInt('lvl_needed');
 
-		$maxPower = 0;
-		switch ($this->hardpoints) {
-			default:
-				$maxPower += 1 * $this->hardpoints - 10;
-			case 10:
-				$maxPower += 2;
-			case 9:
-				$maxPower += 2;
-			case 8:
-				$maxPower += 2;
-			case 7:
-				$maxPower += 2;
-			case 6:
-				$maxPower += 3;
-			case 5:
-				$maxPower += 3;
-			case 4:
-				$maxPower += 3;
-			case 3:
-				$maxPower += 4;
-			case 2:
-				$maxPower += 4;
-			case 1:
-				$maxPower += 5;
-			case 0:
-				$maxPower += 0;
-		}
-		$this->maxPower = $maxPower;
+		// Power is calculated by summing the allotment for each hardpoint.
+		// P5x1, P4x2, P3x3, P2x4, P1x(infinity)
+		$this->maxPower = match ($this->hardpoints) {
+			0 => 0,
+			1 => 5,
+			2 => 9, // 5+4
+			3 => 13, // 5+4+4
+			4 => 16, // 5+4+4+3
+			5 => 19, // 5+4+4+3+3
+			6 => 22, // 5+4+4+3+3+3
+			7 => 24, // 5+4+4+3+3+3+2
+			8 => 26, // 5+4+4+3+3+3+2+2
+			9 => 28, // 5+4+4+3+3+3+2+2+2
+			10 => 30, // 5+4+4+3+3+3+2+2+2+2
+			default => 30 + ($this->hardpoints - 10),
+		};
 
 		// get supported hardware from db
 		$db = Smr\Database::getInstance();
