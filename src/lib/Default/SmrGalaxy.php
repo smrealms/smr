@@ -276,7 +276,8 @@ class SmrGalaxy {
 
 	public function generateSectors(): void {
 		$sectorID = $this->getStartSector();
-		for ($i = 0; $i < $this->getSize(); $i++) {
+		$galSize = $this->getSize();
+		for ($i = 0; $i < $galSize; $i++) {
 			$sector = SmrSector::createSector($this->gameID, $sectorID);
 			$sector->setGalaxyID($this->getGalaxyID());
 			$sector->update(); //Have to save sectors after creating them

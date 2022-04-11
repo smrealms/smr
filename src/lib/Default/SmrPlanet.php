@@ -1143,10 +1143,11 @@ class SmrPlanet {
 
 	public function getWeapons(): array {
 		$weapons = $this->getMountedWeapons();
-		for ($i = 0; $i < $this->getBuilding(PLANET_TURRET); ++$i) {
-			$weapons[] = SmrWeapon::getWeapon(WEAPON_PLANET_TURRET);
-		}
-		return $weapons;
+		return array_pad(
+			$weapons,
+			count($weapons) + $this->getBuilding(PLANET_TURRET),
+			SmrWeapon::getWeapon(WEAPON_PLANET_TURRET)
+		);
 	}
 
 	public function hasWeapons(): bool {
