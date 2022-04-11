@@ -891,11 +891,8 @@ class AbstractSmrPort {
 	}
 
 	public function getWeapons(): array {
-		$weapons = [];
-		for ($i = 0; $i < $this->getNumWeapons(); ++$i) {
-			$weapons[$i] = SmrWeapon::getWeapon(WEAPON_PORT_TURRET);
-		}
-		return $weapons;
+		$portTurret = SmrWeapon::getWeapon(WEAPON_PORT_TURRET);
+		return array_fill(0, $this->getNumWeapons(), $portTurret);
 	}
 
 	public function getUpgradePercent(): float {
