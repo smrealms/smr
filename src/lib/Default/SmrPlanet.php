@@ -855,12 +855,12 @@ class SmrPlanet {
 		return array_sum($this->getMaxBuildings()) / 3;
 	}
 
-	public function accuracy(): float {
-		if ($this->hasWeapons()) {
-			$weapons = $this->getWeapons();
-			return $weapons[0]->getModifiedPlanetAccuracy($this);
-		}
-		return 0;
+	/**
+	 * Returns the modified accuracy of turrets on this planet.
+	 * Only used for display purposes.
+	 */
+	public function getTurretAccuracy(): float {
+		return SmrWeapon::getWeapon(WEAPON_PLANET_TURRET)->getModifiedPlanetAccuracy($this);
 	}
 
 	/**
