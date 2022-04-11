@@ -66,7 +66,7 @@ class Epoch {
 	 * only be used by the CLI programs that run continuously.
 	 */
 	public static function update(): void {
-		if (!defined('NPC_SCRIPT')) {
+		if (DiContainer::get('NPC_SCRIPT') === false) {
 			throw new Exception('Only call this function from CLI programs!');
 		}
 		DiContainer::getContainer()->set(self::class, new self());

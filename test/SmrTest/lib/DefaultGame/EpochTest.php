@@ -4,6 +4,7 @@ namespace SmrTest\lib\DefaultGame;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Smr\Container\DiContainer;
 use Smr\Epoch;
 
 /**
@@ -11,15 +12,17 @@ use Smr\Epoch;
  */
 class EpochTest extends TestCase {
 
+	protected function tearDown(): void {
+		// Reset the DI container to avoid contaminating other tests
+		DiContainer::initialize(false);
+	}
+
 	/**
 	 * Test that the `update` function works properly when NPC_SCRIPT is set.
-	 * We run in a separate process so that the constant doesn't propagate into
-	 * other tests.
-	 * @runInSeparateProcess
 	 */
 	public function test_update_cli(): void {
 		// Set the NPC_SCRIPT variable as if this were a CLI program
-		define('NPC_SCRIPT', true);
+		DiContainer::getContainer()->set('NPC_SCRIPT', true);
 
 		$time = Epoch::time();
 		$microtime = Epoch::microtime();
@@ -34,7 +37,7 @@ class EpochTest extends TestCase {
 	}
 
 	/**
-	 * update should throw if called without NPC_SCRIPT defined.
+	 * update should throw if NPC_SCRIPT is false (its default value).
 	 */
 	public function test_update(): void {
 		$this->expectException(Exception::class);

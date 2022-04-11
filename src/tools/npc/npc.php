@@ -15,13 +15,13 @@ function overrideForward(Page $container): never {
 }
 const OVERRIDE_FORWARD = true;
 
-// Must be defined before anything that might throw an exception
-const NPC_SCRIPT = true;
-
 // global config
 require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
 // bot config
 require_once(CONFIG . 'npc/config.specific.php');
+
+// Enable NPC-specific conditions
+Smr\Container\DiContainer::getContainer()->set('NPC_SCRIPT', true);
 
 // Raise exceptions for all types of errors for improved error reporting
 // and to attempt to shut down the NPCs cleanly on errors.
