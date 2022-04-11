@@ -47,6 +47,7 @@ class DiContainer {
 			'DatabaseName' => function(DatabaseProperties $dbProperties): string {
 				return $dbProperties->getDatabaseName();
 			},
+			'NPC_SCRIPT' => false,
 			// Explicitly name all classes that are autowired, so we can take advantage of
 			// the compiled container feature for a performance boost
 			Epoch::class => autowire(),

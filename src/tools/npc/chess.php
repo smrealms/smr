@@ -7,7 +7,9 @@ try {
 	require_once(CONFIG . 'npc/config.specific.php');
 
 	debug('Script started');
-	define('NPC_SCRIPT', true);
+
+	// Enable NPC-specific conditions
+	Smr\Container\DiContainer::getContainer()->set('NPC_SCRIPT', true);
 
 	$descriptorSpec = [
 		0 => ['pipe', 'r'], // stdin is a pipe that the child will read from
