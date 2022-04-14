@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+$lock = Smr\SectorLock::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
@@ -7,7 +8,7 @@ if (empty($var['message'])) {
 	throw new Exception('Error is missing a player message!');
 }
 
-if ($session->hasGame() && $lock) {
+if ($session->hasGame() && $lock->isActive()) {
 	$container = Page::create('skeleton.php', 'current_sector.php');
 	$errorMsg = '<span class="red bold">ERROR:</span> ' . $var['message'];
 	$container['errorMsg'] = $errorMsg;

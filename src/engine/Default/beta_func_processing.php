@@ -46,6 +46,11 @@ if ($var['func'] == 'Map') {
 	}
 	$player->setSectorID($sector_to);
 	$player->setLandedOnPlanet(false);
+	// Update sector lock
+	$player->update();
+	$lock = Smr\SectorLock::getInstance();
+	$lock->release();
+	$lock->acquireForPlayer($player);
 } elseif ($var['func'] == 'Turns') {
 	$player->setTurns(Smr\Request::getInt('turns'));
 } elseif ($var['func'] == 'Exp') {

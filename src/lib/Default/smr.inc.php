@@ -267,8 +267,6 @@ function pluralise(int|float $amount, string $word, bool $includeAmount = true):
  * (see loader.php for the initialization of the globals).
  */
 function do_voodoo(): never {
-	global $lock;
-
 	$session = Smr\Session::getInstance();
 	$var = $session->getCurrentVar();
 
@@ -285,25 +283,24 @@ function do_voodoo(): never {
 	$account = $session->getAccount();
 
 	$db = Smr\Database::getInstance();
+	$lock = Smr\SectorLock::getInstance();
 
 	if ($session->hasGame()) {
 		if (SmrGame::getGame($session->getGameID())->hasEnded()) {
 			Page::create('game_leave_processing.php', 'game_play.php', ['errorMsg' => 'The game has ended.'])->go();
 		}
-		// We need to acquire locks BEFORE getting the player information
-		// Otherwise we could be working on stale information
-		$dbResult = $db->read('SELECT sector_id FROM player WHERE account_id=' . $db->escapeNumber($account->getAccountID()) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' LIMIT 1');
-		$sector_id = $dbResult->record()->getInt('sector_id');
 
-		global $locksFailed;
+		// Get the nominal player information (this may change after locking).
+		// We don't force a reload here in case we don't need to lock.
+		$player = $session->getPlayer();
+		$sectorID = $player->getSectorID();
+
 		if (!USING_AJAX //AJAX should never do anything that requires a lock.
 			//&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
 		) {
-			if (!$lock && !isset($locksFailed[$sector_id])) {
-				if (!acquire_lock($sector_id)) {
-					throw new Smr\Exceptions\UserError('Failed to acquire sector lock');
-				}
-				//Refetch var info in case it changed between grabbing lock.
+			// We skip locking if we've already failed to display error page
+			if (!$lock->hasFailed() && $lock->acquireForPlayer($player)) {
+				// Reload var info in case it changed between grabbing lock.
 				$session->fetchVarInfo();
 				if ($session->hasCurrentVar() === false) {
 					if (ENABLE_DEBUG) {
@@ -317,11 +314,16 @@ function do_voodoo(): never {
 					throw new Smr\Exceptions\UserError('Please do not spam click!');
 				}
 				$var = $session->getCurrentVar();
+
+				// Reload player now that we have a lock.
+				$player = $session->getPlayer(true);
+				if ($player->getSectorID() != $sectorID) {
+					// Player sector changed after reloading! Release lock and try again.
+					$lock->release();
+					do_voodoo();
+				}
 			}
 		}
-
-		// Now that they've acquire a lock we can move on
-		$player = $session->getPlayer();
 
 		if ($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death'])) {
 			Page::create('death_processing.php')->go();
@@ -347,7 +349,7 @@ function do_voodoo(): never {
 		$template->assign('UnderAttack', $player->removeUnderAttack());
 	}
 
-	if ($lock) { //Only save if we have the lock.
+	if ($lock->isActive()) { //Only save if we have the lock.
 		SmrSector::saveSectors();
 		SmrShip::saveShips();
 		SmrPlayer::savePlayers();
@@ -359,7 +361,7 @@ function do_voodoo(): never {
 		}
 		//Update session here to make sure current page $var is up to date before releasing lock.
 		$session->update();
-		release_lock();
+		$lock->release();
 	}
 
 	//Nothing below this point should require the lock.
@@ -398,64 +400,6 @@ function do_voodoo(): never {
 	exit;
 }
 
-//xdebug_dump_function_profile(2);
-
-// This is hackish, but without row level locking it's the best we can do
-function acquire_lock(int $sector): bool {
-	global $lock, $locksFailed;
-
-	if ($lock) {
-		return true;
-	}
-
-	// Insert ourselves into the queue.
-	$session = Smr\Session::getInstance();
-	$db = Smr\Database::getInstance();
-	$lock = $db->insert('locks_queue', [
-		'game_id' => $db->escapeNumber($session->getGameID()),
-		'account_id' => $db->escapeNumber($session->getAccountID()),
-		'sector_id' => $db->escapeNumber($sector),
-		'timestamp' => $db->escapeNumber(Smr\Epoch::time()),
-	]);
-
-	for ($i = 0; $i < 250; ++$i) {
-		if (time() - Smr\Epoch::time() >= LOCK_DURATION - LOCK_BUFFER) {
-			break;
-		}
-
-		// If there is someone else before us in the queue we sleep for a while
-		$dbResult = $db->read('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber($session->getGameID()) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
-		$locksInQueue = $dbResult->record()->getInt('COUNT(*)');
-		if ($locksInQueue == 0) {
-			return true;
-		}
-
-		// We can only have one lock in the queue, anything more means someone is screwing around
-		$dbResult = $db->read('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber($session->getAccountID()) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
-		if ($dbResult->record()->getInt('COUNT(*)') > 1) {
-			release_lock();
-			$locksFailed[$sector] = true;
-			throw new Smr\Exceptions\UserError('Multiple actions cannot be performed at the same time!');
-		}
-
-		usleep(25000 * $locksInQueue);
-	}
-
-	release_lock();
-	$locksFailed[$sector] = true;
-	return false;
-}
-
-function release_lock(): void {
-	global $lock;
-
-	if ($lock) {
-		$db = Smr\Database::getInstance();
-		$db->write('DELETE from locks_queue WHERE lock_id=' . $db->escapeNumber($lock) . ' OR timestamp<' . $db->escapeNumber(Smr\Epoch::time() - LOCK_DURATION));
-	}
-
-	$lock = false;
-}
 
 function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database $db): void {
 	//any ticker news?

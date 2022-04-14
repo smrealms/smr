@@ -90,10 +90,11 @@ $player->log(LOG_TYPE_MOVEMENT, 'Jumps to sector: ' . $target . ' but hits: ' . 
 $player->update();
 
 // We need to release the lock on our old sector
-release_lock();
+$lock = Smr\SectorLock::getInstance();
+$lock->release();
 
 // We need a lock on the new sector so that more than one person isn't hitting the same mines
-acquire_lock($player->getSectorID());
+$lock->acquireForPlayer($player);
 
 // get new sector object
 $sector = $player->getSector();

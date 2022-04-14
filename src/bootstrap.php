@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Container\DiContainer;
+use Smr\SectorLock;
 
 function logException(Throwable $e): void {
 	$message = '';
@@ -33,14 +34,15 @@ function logException(Throwable $e): void {
 		'USING_AJAX: ' . (defined('USING_AJAX') ? var_export(USING_AJAX, true) : 'undefined') . "\n" .
 		'URL: ' . (defined('URL') ? URL : 'undefined');
 
-	try {
-		if (function_exists('release_lock')) {
-			release_lock(); //Try to release lock so they can carry on normally
-		}
-	} catch (Throwable $ee) {
-		$message .= $delim .
+	// Try to release lock so they can carry on normally
+	if (class_exists(SectorLock::class, false)) {
+		try {
+			SectorLock::getInstance()->release();
+		} catch (Throwable $ee) {
+			$message .= $delim .
 					'Releasing Lock Failed' . "\n" .
 					'Message: ' . $ee . "\n";
+		}
 	}
 
 	if (defined('SCRIPT_ID')) {

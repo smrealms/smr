@@ -8,7 +8,9 @@ $account = $session->getAccount();
 $session->updateGame($var['game_id']);
 
 $player = SmrPlayer::getPlayer($account->getAccountID(), $var['game_id']);
-acquire_lock($player->getSectorID()); // skip var update in do_voodoo
+
+// skip var update in do_voodoo
+Smr\SectorLock::getInstance()->acquireForPlayer($player);
 
 $player->updateLastCPLAction();
 
