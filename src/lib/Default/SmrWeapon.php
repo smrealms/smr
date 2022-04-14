@@ -146,13 +146,12 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	 * Given $weaponAccuracy as a percent, decide if the weapon hits.
 	 */
 	protected function checkHit(AbstractSmrPlayer $player, float $weaponAccuracy): bool {
-		// Skip weighting factor for absolute hits/misses.
-		if ($weaponAccuracy >= 100) {
-			return true;
-		} elseif ($weaponAccuracy <= 0) {
-			return false;
-		}
-		return $this->getWeightedRandomForPlayer($player)->flipWeightedCoin($weaponAccuracy);
+		// Skip weighting factor for guaranteed hits/misses.
+		return match (true) {
+			$weaponAccuracy >= 100 => true,
+			$weaponAccuracy <= 0 => false,
+			default => $this->getWeightedRandomForPlayer($player)->flipWeightedCoin($weaponAccuracy),
+		};
 	}
 
 	public static function getPlayerLevelAccuracyMod(AbstractSmrPlayer $player): float {
