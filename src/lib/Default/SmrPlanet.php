@@ -1150,10 +1150,6 @@ class SmrPlanet {
 		);
 	}
 
-	public function hasWeapons(): bool {
-		return count($this->getWeapons()) > 0;
-	}
-
 	public function shootPlayers(array $targetPlayers): array {
 		$results = ['Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => []];
 		foreach ($targetPlayers as $targetPlayer) {
