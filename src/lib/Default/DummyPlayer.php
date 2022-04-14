@@ -59,9 +59,8 @@ class DummyPlayer extends AbstractSmrPlayer {
 						AND id = ' . $db->escapeString($name) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			return $dbResult->record()->getObject('info');
-		} else {
-			return new self($name);
 		}
+		return new self($name);
 	}
 
 	public static function getDummyPlayerNames(): array {
