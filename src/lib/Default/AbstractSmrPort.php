@@ -1012,12 +1012,11 @@ class AbstractSmrPort {
 		$relations = min(1000, $relations); // no effect for higher relations
 		$relationsEffect = (2 * $relations + 8000) / 10000; // [0.75-1]
 
-		if ($transactionType === TRADER_BUYS) {
-			$relationsEffect = 2 - $relationsEffect;
-			return max($idealPrice, IFloor($idealPrice * $relationsEffect));
-		} else {
-			return min($idealPrice, ICeil($idealPrice * $relationsEffect));
-		}
+		return match ($transactionType) {
+			TRADER_BUYS => max($idealPrice, IFloor($idealPrice * (2 - $relationsEffect))),
+			TRADER_SELLS => min($idealPrice, ICeil($idealPrice * $relationsEffect)),
+			default => throw new Exception('Unknown transaction type'),
+		};
 	}
 
 	/**
