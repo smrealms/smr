@@ -140,10 +140,7 @@ function NPCStuff(): void {
 
 			// Are we starting with a new NPC?
 			if ($actions == 0) {
-				if ($player->getTurns() <= rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
-					debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
-					throw new Smr\Npc\Exceptions\FinalAction();
-				}
+				checkStartConditions($player);
 
 				// Ensure the NPC doesn't think it's under attack at startup,
 				// since this could cause it to get stuck in a loop in Fed.
@@ -162,10 +159,13 @@ function NPCStuff(): void {
 
 			if ($player->isDead()) {
 				debug('Some evil person killed us, let\'s move on now.');
+				$player->setDead(false); // see death_processing.php
+				$player->setNewbieWarning(false); // undo SmrPlayer::killPlayer setting this to true
+				checkStartConditions($player);
+
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
 				setupShip($player); // reship before continuing
 				$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
-				processContainer(Page::create('death_processing.php'));
 			}
 
 			// Do we have a plot that ends in Fed?
@@ -347,6 +347,17 @@ function debug(string $message, mixed $debugObject = null): void {
 			define('SCRIPT_ID', $logID);
 			$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
 		}
+	}
+}
+
+/**
+ * Determines if a player has enough turns to start taking actions
+ */
+function checkStartConditions(SmrPlayer $player): void {
+	$minTurnsThreshold = rand($player->getMaxTurns() / 2, $player->getMaxTurns());
+	if ($player->getTurns() < $minTurnsThreshold && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
+		debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
+		throw new Smr\Npc\Exceptions\FinalAction();
 	}
 }
 
