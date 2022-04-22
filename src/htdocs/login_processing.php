@@ -14,7 +14,7 @@ try {
 		if (Smr\Request::has('loginType')) {
 			$socialLogin = Smr\SocialLogin\SocialLogin::get(Smr\Request::get('loginType'))->login();
 			if (!$socialLogin->isValid()) {
-				$msg = 'Error validating login.';
+				$msg = 'Error validating ' . $socialLogin->getLoginType() . ' login. Please try logging in again.';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
 			}
