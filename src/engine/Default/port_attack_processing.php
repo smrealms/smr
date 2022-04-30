@@ -103,12 +103,7 @@ foreach ($attackers as $attacker) {
 	}
 }
 
-$container = Page::create('skeleton.php', 'port_attack.php');
-
 // If they died on the shot they get to see the results
-if ($player->isDead()) {
-	$container['override_death'] = true;
-}
-
+$container = Page::create('skeleton.php', 'port_attack.php', skipRedirect: $player->isDead());
 $container['results'] = $results;
 $container->go();

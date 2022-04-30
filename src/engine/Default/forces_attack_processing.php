@@ -117,19 +117,14 @@ if ($sendMessage) {
 	$forces->ping($message, $player, true);
 }
 
-$container = Page::create('skeleton.php', 'forces_attack.php');
-
-// If their target is dead there is no continue attack button
-if ($forces->exists()) {
-	$container['owner_id'] = $forces->getOwnerID();
-} else {
-	$container['owner_id'] = 0;
-}
-
 // If they died on the shot they get to see the results
-if ($player->isDead()) {
-	$container['override_death'] = true;
+$container = Page::create('skeleton.php', 'forces_attack.php', skipRedirect: $player->isDead());
+
+// If player or target is dead there is no continue attack button
+if ($player->isDead() || !$forces->exists()) {
 	$container['owner_id'] = 0;
+} else {
+	$container['owner_id'] = $forces->getOwnerID();
 }
 
 $container['results'] = $results;

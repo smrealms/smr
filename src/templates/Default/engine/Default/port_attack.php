@@ -9,7 +9,7 @@
 		<span class="red">You have been destroyed.</span>
 		<br /><br />
 		<div class="buttonA">
-			<a href="<?php echo Globals::getPodScreenHREF() ?>" class="buttonA">Let there be pod</a>
+			<a href="<?php echo Globals::getCurrentSectorHREF() ?>" class="buttonA">Let there be pod</a>
 		</div><?php
 	} elseif ($CreditedAttacker) { ?>
 		<span class="yellow">You have breached the port defenses.</span>

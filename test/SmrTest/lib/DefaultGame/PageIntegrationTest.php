@@ -114,4 +114,16 @@ class PageIntegrationTest extends TestCase {
 		$page->addVar('does_not_exist');
 	}
 
+	public function test_skipRedirect(): void {
+		// Create an arbitrary Page with skipRedirect turned on
+		$page = Page::create('file', skipRedirect: true);
+		// Then skipRedirect should be on
+		self::assertTrue($page->skipRedirect());
+
+		// Create a new Page inheriting from the Page with skipRedirect
+		$page2 = Page::create('file', extra: $page);
+		// Then skipRedirect should NOT be inherited (false by default)
+		self::assertFalse($page2->skipRedirect());
+	}
+
 }

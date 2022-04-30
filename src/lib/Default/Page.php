@@ -10,6 +10,7 @@
 class Page extends ArrayObject {
 
 	private const ALWAYS_AVAILABLE = 999999;
+	private const SKIP_REDIRECT = '_skip_redirect'; // special page var name
 
 	// Defines the number of pages that can be loaded after
 	// this page before the links on this page become invalid
@@ -119,7 +120,7 @@ class Page extends ArrayObject {
 	 * This is the standard method to package linked pages and the data to
 	 * accompany them.
 	 */
-	public static function create(string $file, string $body = '', Page|array $extra = [], int $remainingPageLoads = null): self {
+	public static function create(string $file, string $body = '', Page|array $extra = [], int $remainingPageLoads = null, bool $skipRedirect = false): self {
 		if ($extra instanceof Page) {
 			// to avoid making $container a reference to $extra
 			$extra = $extra->getArrayCopy();
@@ -130,6 +131,14 @@ class Page extends ArrayObject {
 		if ($remainingPageLoads !== null) {
 			$container['RemainingPageLoads'] = $remainingPageLoads;
 		}
+
+		// Skips the redirect hooks at the beginning of page processing
+		if ($skipRedirect) {
+			$container[self::SKIP_REDIRECT] = true;
+		} else {
+			unset($container[self::SKIP_REDIRECT]);
+		}
+
 		return $container;
 	}
 
@@ -140,6 +149,13 @@ class Page extends ArrayObject {
 	 */
 	public static function copy(Page $other): self {
 		return clone $other;
+	}
+
+	/**
+	 * Will this page skip the redirect hooks at the beginning of page processing?
+	 */
+	public function skipRedirect(): bool {
+		return $this[self::SKIP_REDIRECT] ?? false;
 	}
 
 	/**

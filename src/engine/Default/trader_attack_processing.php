@@ -94,19 +94,14 @@ $db->insert('combat_logs', [
 	'result' => $db->escapeObject($results, true),
 ]);
 
-$container = Page::create('skeleton.php', 'trader_attack.php');
-
-// If their target is dead there is no continue attack button
-if (!$targetPlayer->isDead()) {
-	$container->addVar('target');
-} else {
-	$container['target'] = 0;
-}
-
 // If they died on the shot they get to see the results
-if ($player->isDead()) {
-	$container['override_death'] = true;
+$container = Page::create('skeleton.php', 'trader_attack.php', skipRedirect: $player->isDead());
+
+// If player or target is dead there is no continue attack button
+if ($player->isDead() || $targetPlayer->isDead()) {
 	$container['target'] = 0;
+} else {
+	$container->addVar('target');
 }
 
 $container['results'] = $results;

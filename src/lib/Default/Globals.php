@@ -202,10 +202,6 @@ class Globals {
 		return self::$AVAILABLE_LINKS['AttackTrader'] = $container->href();
 	}
 
-	public static function getPodScreenHREF(): string {
-		return Page::create('death_processing.php')->href();
-	}
-
 	public static function getBetaFunctionsHREF(): string { //BETA
 		return Page::create('skeleton.php', 'beta_functions.php')->href();
 	}
