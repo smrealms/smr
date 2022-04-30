@@ -9,6 +9,10 @@ $editSector = SmrSector::getSector($var['game_id'], $editSectorID);
 $template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')');
 $template->assign('EditSector', $editSector);
 
+$galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
+$lastSector = end($galaxies)->getEndSector();
+$template->assign('LastSector', $lastSector);
+
 $container = Page::copy($var);
 $container['url'] = 'admin/unigen/universe_create_save_processing.php';
 $container['body'] = 'admin/unigen/universe_create_sector_details.php';
