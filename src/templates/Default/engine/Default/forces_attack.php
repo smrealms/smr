@@ -14,7 +14,7 @@
 		<br /><br />
 		<div class="buttonA"><?php
 		if ($OverrideDeath) {
-			?><a href="<?php echo Globals::getPodScreenHREF() ?>" class="buttonA">Let there be pod</a><?php
+			?><a href="<?php echo Globals::getCurrentSectorHREF() ?>" class="buttonA">Let there be pod</a><?php
 		} else {
 			?><a href="<?php echo Globals::getCurrentSectorHREF() ?>" class="buttonA">Current Sector</a><?php
 		} ?>

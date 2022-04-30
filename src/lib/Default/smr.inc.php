@@ -286,10 +286,6 @@ function do_voodoo(): never {
 	$lock = Smr\SectorLock::getInstance();
 
 	if ($session->hasGame()) {
-		if (SmrGame::getGame($session->getGameID())->hasEnded()) {
-			Page::create('game_leave_processing.php', 'game_play.php', ['errorMsg' => 'The game has ended.'])->go();
-		}
-
 		// Get the nominal player information (this may change after locking).
 		// We don't force a reload here in case we don't need to lock.
 		$player = $session->getPlayer();
@@ -325,17 +321,20 @@ function do_voodoo(): never {
 			}
 		}
 
-		if ($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death'])) {
-			Page::create('death_processing.php')->go();
-		}
-
 		// update turns on that player
 		$player->updateTurns();
 
-		if (!$player->isDead() && $player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT &&
-			$player->getNewbieWarning() &&
-			$var['url'] != 'newbie_warning_processing.php') {
-			Page::create('newbie_warning_processing.php')->go();
+		// Check if we need to redirect to a different page
+		if (!$var->skipRedirect() && !USING_AJAX) {
+			if ($player->getGame()->hasEnded()) {
+				Page::create('game_leave_processing.php', 'game_play.php', ['errorMsg' => 'The game has ended.'], skipRedirect: true)->go();
+			}
+			if ($player->isDead()) {
+				Page::create('death_processing.php', skipRedirect: true)->go();
+			}
+			if ($player->getNewbieWarning() && $player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT) {
+				Page::create('newbie_warning_processing.php', skipRedirect: true)->go();
+			}
 		}
 	}
 
