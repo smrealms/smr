@@ -1340,7 +1340,7 @@ abstract class AbstractSmrPlayer {
 
 	public function leaveAlliance(AbstractSmrPlayer $kickedBy = null): void {
 		$alliance = $this->getAlliance();
-		if ($kickedBy != null) {
+		if ($kickedBy !== null) {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
 			$this->actionTaken('PlayerKicked', ['Alliance' => $alliance, 'Player' => $kickedBy]);
 			$kickedBy->actionTaken('KickPlayer', ['Alliance' => $alliance, 'Player' => $this]);
@@ -1361,6 +1361,9 @@ abstract class AbstractSmrPlayer {
 
 		$this->setAllianceID(0);
 		$this->db->write('DELETE FROM player_has_alliance_role WHERE ' . $this->SQL);
+
+		// Update the alliance cache
+		unset(self::$CACHE_ALLIANCE_PLAYERS[$this->gameID][$alliance->getAllianceID()][$this->accountID]);
 	}
 
 	/**
