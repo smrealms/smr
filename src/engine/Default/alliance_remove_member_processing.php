@@ -23,6 +23,7 @@ foreach ($accountIDs as $accountID) {
 		throw new Exception('Cannot kick someone from another alliance!');
 	}
 	$currPlayer->leaveAlliance($player);
+	$currPlayer->update(); // we need better locking here
 }
 
 Page::create('skeleton.php', 'alliance_roster.php')->go();
