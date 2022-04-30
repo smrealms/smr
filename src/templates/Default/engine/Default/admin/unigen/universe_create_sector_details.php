@@ -81,7 +81,7 @@
 
 			<td class="center">
 				Warp Sector:<br />
-				<input type="number" size="5" class="center" name="warp" value="<?php echo $WarpSectorID; ?>" />
+				<input type="number" min="0" max="<?php echo $LastSector; ?>" class="center" name="warp" value="<?php echo $WarpSectorID; ?>" style="width:140px" />
 				<br /><?php echo $WarpGal; ?>
 			</td>
 		</tr>
