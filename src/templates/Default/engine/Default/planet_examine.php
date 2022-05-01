@@ -1,7 +1,7 @@
 <table>
 	<tr>
 		<td class="bold">Planet Name:</td>
-		<td><?php echo $ThisPlanet->getDisplayName(); ?></td>
+		<td><span id="planet_name"><?php echo $ThisPlanet->getDisplayName(); ?></span></td>
 	</tr>
 	<tr>
 		<td class="bold">Planet Type:</td>
@@ -17,22 +17,26 @@
 	</tr>
 	<tr>
 		<td class="bold">Owner:</td>
-		<td><?php
-			if ($ThisPlanet->hasOwner()) {
-				echo $ThisPlanet->getOwner()->getLinkedDisplayName(false);
-			} else { ?>
-				Unclaimed<?php
-			} ?>
+		<td>
+			<span id="planet_owner"><?php
+				if ($ThisPlanet->hasOwner()) {
+					echo $ThisPlanet->getOwner()->getLinkedDisplayName(false);
+				} else { ?>
+					Unclaimed<?php
+				} ?>
+			</span>
 		</td>
 	</tr>
 	<tr>
 		<td class="bold">Alliance:</td>
-		<td><?php
-			if ($ThisPlanet->hasOwner()) {
-				echo $ThisPlanet->getOwner()->getAllianceDisplayName(true);
-			} else { ?>
-				none<?php
-			} ?>
+		<td>
+			<span id="planet_alliance"><?php
+				if ($ThisPlanet->hasOwner()) {
+					echo $ThisPlanet->getOwner()->getAllianceDisplayName(true);
+				} else { ?>
+					none<?php
+				} ?>
+			</span>
 		</td>
 	</tr>
 	<tr>
@@ -52,7 +56,12 @@
 </table>
 
 <br />
-<div class="center"><?php
+
+<?php
+$this->includeTemplate('includes/SectorPlayers.inc.php');
+?>
+
+<div class="center ajax"><?php
 	if (!$PlanetLand) { ?>
 		<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getAttackHREF(); ?>">Attack Planet (<?php echo TURNS_TO_SHOOT_PLANET; ?>)</a></div><?php
 	} elseif ($ThisPlanet->isInhabitable()) { ?>

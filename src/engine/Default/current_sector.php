@@ -144,6 +144,26 @@ if ($sector->hasPort()) {
 	$template->assign('PortIsAtWar', $player->getRelation($port->getRaceID()) < RELATIONS_WAR);
 }
 
+// *******************************************
+// *
+// * Ships
+// *
+// *******************************************
+$otherPlayers = $sector->getOtherTraders($player);
+$visiblePlayers = [];
+$cloakedPlayers = [];
+foreach ($otherPlayers as $accountID => $otherPlayer) {
+	if ($player->canSee($otherPlayer)) {
+		$visiblePlayers[$accountID] = $otherPlayer;
+	} else {
+		$cloakedPlayers[$accountID] = $otherPlayer;
+	}
+}
+$template->assign('VisiblePlayers', $visiblePlayers);
+$template->assign('CloakedPlayers', $cloakedPlayers);
+$template->assign('SectorPlayersLabel', 'Ships');
+
+
 function checkForForceRefreshMessage(string &$msg): void {
 	$contains = 0;
 	$msg = str_replace('[Force Check]', '', $msg, $contains);

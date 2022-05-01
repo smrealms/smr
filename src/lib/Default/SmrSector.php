@@ -851,7 +851,7 @@ class SmrSector {
 		return [$attackingPlayer];
 	}
 
-	public function getFightingTradersAgainstPort(AbstractSmrPlayer $attackingPlayer, SmrPort $defendingPort): array {
+	public function getFightingTradersAgainstPort(AbstractSmrPlayer $attackingPlayer, SmrPort $defendingPort, bool $allEligible = false): array {
 		$fightingPlayers = [];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		foreach ($alliancePlayers as $accountID => $player) {
@@ -861,10 +861,13 @@ class SmrSector {
 				}
 			}
 		}
+		if ($allEligible) {
+			return $fightingPlayers;
+		}
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, MAXIMUM_PORT_FLEET_SIZE);
 	}
 
-	public function getFightingTradersAgainstPlanet(AbstractSmrPlayer $attackingPlayer, SmrPlanet $defendingPlanet): array {
+	public function getFightingTradersAgainstPlanet(AbstractSmrPlayer $attackingPlayer, SmrPlanet $defendingPlanet, bool $allEligible = false): array {
 		$fightingPlayers = [];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		if (count($alliancePlayers) > 0) {
@@ -876,6 +879,9 @@ class SmrSector {
 					}
 				}
 			}
+		}
+		if ($allEligible) {
+			return $fightingPlayers;
 		}
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, min($defendingPlanet->getMaxAttackers(), MAXIMUM_PLANET_FLEET_SIZE));
 	}
