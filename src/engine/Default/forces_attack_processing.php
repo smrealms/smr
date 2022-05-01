@@ -117,6 +117,13 @@ if ($sendMessage) {
 	$forces->ping($message, $player, true);
 }
 
+// If player died they are now in another sector, and thus locks need reset
+if ($player->isDead()) {
+	saveAllAndReleaseLock(updateSession: false);
+	// Grab the lock in the new sector to avoid reloading session
+	Smr\SectorLock::getInstance()->acquireForPlayer($player);
+}
+
 // If they died on the shot they get to see the results
 $container = Page::create('skeleton.php', 'forces_attack.php', skipRedirect: $player->isDead());
 

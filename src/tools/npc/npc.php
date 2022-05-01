@@ -292,18 +292,7 @@ function NPCStuff(): void {
 		}
 
 		// Save any changes that we made during this action
-		$lock = Smr\SectorLock::getInstance();
-		if ($lock->isActive()) { //only save if we have the lock.
-			SmrSector::saveSectors();
-			SmrShip::saveShips();
-			SmrPlayer::savePlayers();
-			SmrForce::saveForces();
-			SmrPort::savePorts();
-			if (class_exists('WeightedRandom', false)) {
-				WeightedRandom::saveWeightedRandoms();
-			}
-			$lock->release();
-		}
+		saveAllAndReleaseLock(updateSession: false);
 
 		//Clean up the caches as the data may get changed by other players
 		clearCaches();
