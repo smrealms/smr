@@ -458,7 +458,7 @@ function changeNPCLogin(): void {
 	$session->updateGame($npc['game_id']);
 
 	$db->write('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($account->getLogin()));
-	debug('Chosen NPC: ' . $account->getLogin() . ' (game ' . $session->getGameID() . ')');
+	debug('Chosen NPC: login = ' . $account->getLogin() . ', game = ' . $session->getGameID() . ', player = ' . $session->getPlayer()->getPlayerName());
 }
 
 function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page {
