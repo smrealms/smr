@@ -282,8 +282,6 @@ function do_voodoo(): never {
 	// create account object
 	$account = $session->getAccount();
 
-	$db = Smr\Database::getInstance();
-	$lock = Smr\SectorLock::getInstance();
 
 	if ($session->hasGame()) {
 		// Get the nominal player information (this may change after locking).
@@ -295,11 +293,13 @@ function do_voodoo(): never {
 			//&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
 		) {
 			// We skip locking if we've already failed to display error page
+			$lock = Smr\SectorLock::getInstance();
 			if (!$lock->hasFailed() && $lock->acquireForPlayer($player)) {
 				// Reload var info in case it changed between grabbing lock.
 				$session->fetchVarInfo();
 				if ($session->hasCurrentVar() === false) {
 					if (ENABLE_DEBUG) {
+						$db = Smr\Database::getInstance();
 						$db->insert('debug', [
 							'debug_type' => $db->escapeString('SPAM'),
 							'account_id' => $db->escapeNumber($account->getAccountID()),
@@ -348,22 +348,8 @@ function do_voodoo(): never {
 		$template->assign('UnderAttack', $player->removeUnderAttack());
 	}
 
-	if ($lock->isActive()) { //Only save if we have the lock.
-		SmrSector::saveSectors();
-		SmrShip::saveShips();
-		SmrPlayer::savePlayers();
-		SmrForce::saveForces();
-		SmrPort::savePorts();
-		SmrPlanet::savePlanets();
-		if (class_exists('WeightedRandom', false)) {
-			WeightedRandom::saveWeightedRandoms();
-		}
-		//Update session here to make sure current page $var is up to date before releasing lock.
-		$session->update();
-		$lock->release();
-	}
-
 	//Nothing below this point should require the lock.
+	saveAllAndReleaseLock();
 
 	$template->assign('TemplateBody', $var['body']);
 	if ($session->hasGame()) {
@@ -375,7 +361,7 @@ function do_voodoo(): never {
 	if ($account->getCssLink() != null) {
 		$template->assign('ExtraCSSLink', $account->getCssLink());
 	}
-	doSkeletonAssigns($template, $db);
+	doSkeletonAssigns($template);
 
 	// Set ajax refresh time
 	$ajaxRefresh = $var['AllowAjax'] ?? true; // hack for bar_gambling_processing.php
@@ -399,6 +385,33 @@ function do_voodoo(): never {
 	exit;
 }
 
+function saveAllAndReleaseLock($updateSession = true): void {
+	// Only save if we have a lock.
+	$lock = Smr\SectorLock::getInstance();
+	if ($lock->isActive()) {
+		SmrSector::saveSectors();
+		SmrShip::saveShips();
+		SmrPlayer::savePlayers();
+		// Skip any caching classes that haven't even been loaded yet
+		if (class_exists(SmrForce::class, false)) {
+			SmrForce::saveForces();
+		}
+		if (class_exists(SmrPort::class, false)) {
+			SmrPort::savePorts();
+		}
+		if (class_exists(SmrPlanet::class, false)) {
+			SmrPlanet::savePlanets();
+		}
+		if (class_exists(WeightedRandom::class, false)) {
+			WeightedRandom::saveWeightedRandoms();
+		}
+		if ($updateSession) {
+			//Update session here to make sure current page $var is up to date before releasing lock.
+			Smr\Session::getInstance()->update();
+		}
+		$lock->release();
+	}
+}
 
 function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database $db): void {
 	//any ticker news?
@@ -436,9 +449,10 @@ function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database
 	}
 }
 
-function doSkeletonAssigns(Smr\Template $template, Smr\Database $db): void {
+function doSkeletonAssigns(Smr\Template $template): void {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
+	$db = Smr\Database::getInstance();
 
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
