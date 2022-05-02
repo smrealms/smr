@@ -930,7 +930,7 @@ class SmrSector {
 	}
 
 	public function getPotentialFightingTraders(AbstractSmrPlayer $attackingPlayer): array {
-		$fightingPlayers = [];
+		$fightingPlayers = ['Attackers' => [], 'Defenders' => []];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		foreach ($alliancePlayers as $accountID => $player) {
 			if ($player->canFight()) {
