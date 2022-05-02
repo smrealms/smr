@@ -4,9 +4,24 @@ try {
 
 	$template = Smr\Template::getInstance();
 
+	// Get a list of all the shops that sell each ship
+	$shipLocs = [];
+	$db = Smr\Database::getInstance();
+	$dbResult = $db->read('SELECT ship_type_id, location_type.* FROM location_sells_ships JOIN ship_type USING (ship_type_id) JOIN location_type USING (location_type_id) WHERE location_type_id NOT IN (' . $db->escapeArray([RACE_WARS_SHIPS, LOCATION_TYPE_TEST_SHIPYARD]) . ')');
+	foreach ($dbResult->records() as $dbRecord) {
+		$shipTypeID = $dbRecord->getInt('ship_type_id');
+		$locTypeID = $dbRecord->getInt('location_type_id');
+		$shipLocs[$shipTypeID][] = SmrLocation::getLocation($locTypeID, false, $dbRecord)->getName();
+	}
+
+	// Get a list of all locations that sell ships
+	$allLocs = array_unique(array_merge(...$shipLocs));
+	sort($allLocs);
+	$template->assign('AllLocs', $allLocs);
+
 	$shipArray = [];
 	foreach (SmrShipType::getAll() as $shipType) {
-		$shipArray[] = buildShipStats($shipType);
+		$shipArray[] = buildShipStats($shipType, $shipLocs[$shipType->getTypeID()] ?? []);
 	}
 	$template->assign('shipArray', $shipArray);
 
@@ -26,7 +41,7 @@ try {
 	handleException($e);
 }
 
-function buildShipStats(SmrShipType $ship): array {
+function buildShipStats(SmrShipType $ship, array $shipLocs): array {
 	//we want to put them all in an array so we dont have to have 15 td rows
 	$restriction = match ($ship->getRestriction()) {
 		BUYER_RESTRICTION_NONE => '',
@@ -55,6 +70,7 @@ function buildShipStats(SmrShipType $ship): array {
 		'illusion' => $ship->canHaveIllusion() ? 'Yes' : '',
 		'jump' => $ship->canHaveJump() ? 'Yes' : '',
 		'scrambler' => $ship->canHaveDCS() ? 'Yes' : '',
+		'locs' => implode('', array_map(fn(string $name): string => '<div>' . $name . '</div>', $shipLocs)),
 	];
 	return $stat;
 }

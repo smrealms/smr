@@ -93,6 +93,15 @@
 								</select>
 							</th><?php
 						} ?>
+						<th>
+							Locations<br />
+							<select onchange="filterSelect(this)">
+								<option>All</option><?php
+								foreach ($AllLocs as $Loc) { ?>
+									<option><?php echo $Loc; ?></option><?php
+								} ?>
+							</select>
+						</th>
 					</tr>
 				</thead>
 				<tbody class="list"><?php
