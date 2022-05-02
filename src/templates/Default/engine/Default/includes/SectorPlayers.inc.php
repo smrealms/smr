@@ -81,6 +81,6 @@ function getPlayerOptionClass($player, $other) {
 		</table><?php
 	}
 	if (isset($CloakedPlayers) && count($CloakedPlayers) > 0) {
-		?><span class="red bold">WARNING:</span> Sensors have detected the presence of cloaked vessels in this sector<?php
+		?><p><span class="red bold">WARNING:</span> Sensors have detected the presence of cloaked vessels in this sector</p><?php
 	} ?>
 </div><br />
