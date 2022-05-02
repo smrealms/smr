@@ -11,7 +11,6 @@ use Smr\Container\DiContainer;
 class Template {
 
 	private array $data = [];
-	private bool $ignoreMiddle = false;
 	private int $nestedIncludes = 0;
 	private array $ajaxJS = [];
 	protected array $jsAlerts = [];
@@ -238,30 +237,28 @@ class Template {
 			}
 		}
 
-		if (!$this->ignoreMiddle) {
-			$mid = $dom->getElementById('middle_panel');
-
-			$doAjaxMiddle = true;
-			if ($mid === null) {
-				// Skip if there is no middle_panel.
-				$doAjaxMiddle = false;
-			} else {
-				// Skip if middle_panel has ajax-enabled children.
-				foreach ($ajaxSelectors as $selector) {
-					if (count($xpath->query($selector, $mid)) > 0) {
-						$doAjaxMiddle = false;
-						break;
-					}
+		// Determine if we should do ajax updates on the middle panel div
+		$mid = $dom->getElementById('middle_panel');
+		$doAjaxMiddle = true;
+		if ($mid === null) {
+			// Skip if there is no middle_panel.
+			$doAjaxMiddle = false;
+		} else {
+			// Skip if middle_panel has ajax-enabled children.
+			foreach ($ajaxSelectors as $selector) {
+				if (count($xpath->query($selector, $mid)) > 0) {
+					$doAjaxMiddle = false;
+					break;
 				}
 			}
+		}
 
-			if ($doAjaxMiddle) {
-				$inner = $getInnerHTML($mid);
-				if (!$this->checkDisableAJAX($inner)) {
-					$id = $mid->getAttribute('id');
-					if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
-						$xml .= $xmlify($id, $inner);
-					}
+		if ($doAjaxMiddle) {
+			$inner = $getInnerHTML($mid);
+			if (!$this->checkDisableAJAX($inner)) {
+				$id = $mid->getAttribute('id');
+				if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
+					$xml .= $xmlify($id, $inner);
 				}
 			}
 		}
@@ -279,10 +276,6 @@ class Template {
 			$xml .= '<JS>' . $js . '</JS>';
 		}
 		return $xml;
-	}
-
-	public function ignoreMiddle(): void {
-		$this->ignoreMiddle = true;
 	}
 
 }

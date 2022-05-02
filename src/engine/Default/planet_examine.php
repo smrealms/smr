@@ -32,3 +32,11 @@ if (!$planetLand) {
 	$planetLand = $dbResult->hasRecord();
 }
 $template->assign('PlanetLand', $planetLand);
+
+if ($planetLand) {
+	$eligibleAttackers = []; // no option to attack if we can land
+} else {
+	$eligibleAttackers = $player->getSector()->getFightingTradersAgainstPlanet($player, $planet, allEligible: true);
+}
+$template->assign('VisiblePlayers', $eligibleAttackers);
+$template->assign('SectorPlayersLabel', 'Attackers');

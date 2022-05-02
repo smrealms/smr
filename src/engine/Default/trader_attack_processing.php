@@ -40,6 +40,10 @@ if ($player->traderNAPAlliance($targetPlayer)) {
 
 $fightingPlayers = $sector->getFightingTraders($player, $targetPlayer);
 
+// Randomize players so that the attack order is always different
+shuffle($fightingPlayers['Attackers']);
+shuffle($fightingPlayers['Defenders']);
+
 //decloak all fighters
 foreach ($fightingPlayers as $teamPlayers) {
 	foreach ($teamPlayers as $teamPlayer) {

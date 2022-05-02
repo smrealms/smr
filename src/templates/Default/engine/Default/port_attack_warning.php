@@ -34,6 +34,11 @@ if ($ThisShip->hasScanner()) { ?>
 	<br /><?php
 } ?>
 
+<br />
+<?php
+$this->includeTemplate('includes/SectorPlayers.inc.php');
+?>
+
 Are you sure you want to attack this port?<br /><br />
 
 <div class="buttonA">

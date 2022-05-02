@@ -44,6 +44,6 @@
 $this->includeTemplate('includes/SectorPlanet.inc.php');
 $this->includeTemplate('includes/SectorPort.inc.php');
 $this->includeTemplate('includes/SectorLocations.inc.php');
-$this->includeTemplate('includes/SectorPlayers.inc.php', ['PlayersContainer' => $ThisSector]);
+$this->includeTemplate('includes/SectorPlayers.inc.php');
 $this->includeTemplate('includes/SectorForces.inc.php'); ?>
 <br />

@@ -4,6 +4,7 @@ $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
+$planet = $player->getSectorPlanet();
 
 require('planet.inc.php');
 
@@ -19,3 +20,7 @@ $db = Smr\Database::getInstance();
 doTickerAssigns($template, $player, $db);
 
 $template->assign('LaunchLink', Page::create('planet_launch_processing.php', '')->href());
+
+// Cloaked ships are visible on planets
+$template->assign('VisiblePlayers', $planet->getOtherTraders($player));
+$template->assign('SectorPlayersLabel', 'Ships');

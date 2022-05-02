@@ -851,7 +851,7 @@ class SmrSector {
 		return [$attackingPlayer];
 	}
 
-	public function getFightingTradersAgainstPort(AbstractSmrPlayer $attackingPlayer, SmrPort $defendingPort): array {
+	public function getFightingTradersAgainstPort(AbstractSmrPlayer $attackingPlayer, SmrPort $defendingPort, bool $allEligible = false): array {
 		$fightingPlayers = [];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		foreach ($alliancePlayers as $accountID => $player) {
@@ -861,10 +861,13 @@ class SmrSector {
 				}
 			}
 		}
+		if ($allEligible) {
+			return $fightingPlayers;
+		}
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, MAXIMUM_PORT_FLEET_SIZE);
 	}
 
-	public function getFightingTradersAgainstPlanet(AbstractSmrPlayer $attackingPlayer, SmrPlanet $defendingPlanet): array {
+	public function getFightingTradersAgainstPlanet(AbstractSmrPlayer $attackingPlayer, SmrPlanet $defendingPlanet, bool $allEligible = false): array {
 		$fightingPlayers = [];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		if (count($alliancePlayers) > 0) {
@@ -877,36 +880,32 @@ class SmrSector {
 				}
 			}
 		}
+		if ($allEligible) {
+			return $fightingPlayers;
+		}
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, min($defendingPlanet->getMaxAttackers(), MAXIMUM_PLANET_FLEET_SIZE));
 	}
 
-	public function getFightingTraders(AbstractSmrPlayer $attackingPlayer, AbstractSmrPlayer $defendingPlayer, bool $checkForCloak = false): array {
+	public function getFightingTraders(AbstractSmrPlayer $attackingPlayer, AbstractSmrPlayer $defendingPlayer, bool $checkForCloak = false, bool $allEligible = false): array {
 		if ($attackingPlayer->traderNAPAlliance($defendingPlayer)) {
 			throw new Exception('These traders are NAPed.');
 		}
 		$fightingPlayers = ['Attackers' => [], 'Defenders' => []];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()]);
-		$attackers = [];
-		$defenders = [];
 		foreach ($alliancePlayers as $accountID => $player) {
 			if ($player->canFight()) {
 				if ($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player)) {
-					$attackers[] = $alliancePlayers[$accountID];
+					$fightingPlayers['Attackers'][$accountID] = $player;
 				} elseif ($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player) && ($checkForCloak === false || $attackingPlayer->canSee($player))) {
-					$defenders[] = $alliancePlayers[$accountID];
+					$fightingPlayers['Defenders'][$accountID] = $player;
 				}
 			}
 		}
-		$attackers = self::limitFightingTraders($attackers, $attackingPlayer, MAXIMUM_PVP_FLEET_SIZE);
-		shuffle($attackers);
-		foreach ($attackers as $attacker) {
-			$fightingPlayers['Attackers'][$attacker->getAccountID()] = $attacker;
+		if ($allEligible) {
+			return $fightingPlayers;
 		}
-		$defenders = self::limitFightingTraders($defenders, $defendingPlayer, MAXIMUM_PVP_FLEET_SIZE);
-		shuffle($defenders);
-		foreach ($defenders as $defender) {
-			$fightingPlayers['Defenders'][$defender->getAccountID()] = $defender;
-		}
+		$fightingPlayers['Attackers'] = self::limitFightingTraders($fightingPlayers['Attackers'], $attackingPlayer, MAXIMUM_PVP_FLEET_SIZE);
+		$fightingPlayers['Defenders'] = self::limitFightingTraders($fightingPlayers['Defenders'], $defendingPlayer, MAXIMUM_PVP_FLEET_SIZE);
 		return $fightingPlayers;
 	}
 
@@ -926,7 +925,7 @@ class SmrSector {
 	}
 
 	public function getPotentialFightingTraders(AbstractSmrPlayer $attackingPlayer): array {
-		$fightingPlayers = [];
+		$fightingPlayers = ['Attackers' => [], 'Defenders' => []];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		foreach ($alliancePlayers as $accountID => $player) {
 			if ($player->canFight()) {

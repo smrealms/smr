@@ -77,11 +77,8 @@ class TemplateTest extends TestCase {
 	/**
 	 * @dataProvider convertHtmlToAjaxXml_provider
 	 */
-	public function test_convertHtmlToAjaxXml(string $html, string $expected, bool $ignoreMiddle = false): void {
+	public function test_convertHtmlToAjaxXml(string $html, string $expected): void {
 		$template = Template::getInstance();
-		if ($ignoreMiddle) {
-			$template->ignoreMiddle();
-		}
 		$method = TestUtils::getPrivateMethod($template, 'convertHtmlToAjaxXml');
 		$this->assertSame($expected, $method->invoke($template, $html, true));
 	}
@@ -103,8 +100,6 @@ class TemplateTest extends TestCase {
 			['<div id="middle_panel"><span id="foo">Test</span></div>', '<foo>Test</foo>'],
 			// Middle panel with ajax disabled by the ajax class
 			['<div id="middle_panel"><div id="bar" class="ajax">Hello</div></div>', '<bar>Hello</bar>'],
-			// Middle panel disabled by ignoreMiddle
-			['<div id="middle_panel">Foo</div>', '', true],
 			// Empty string
 			['', ''],
 			// Ajax-enabled elements both outside and inside middle panel

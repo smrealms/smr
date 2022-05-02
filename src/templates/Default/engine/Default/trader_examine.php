@@ -19,7 +19,7 @@ if ($ThisPlayer->hasNewbieTurns()) {
 	?><p class="big red">Your target has cloaked!</p><?php
 } else {
 	$canAttack = true;
-	$fightingPlayers = $ThisSector->getFightingTraders($ThisPlayer, $TargetPlayer, true);
+	$fightingPlayers = $ThisSector->getFightingTraders($ThisPlayer, $TargetPlayer, true, allEligible: true);
 	if (count($fightingPlayers['Defenders']) > 0) {
 		?><p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (<?php echo TURNS_TO_SHOOT_SHIP; ?>)</a></p><?php
 	} else {
@@ -29,11 +29,14 @@ if ($ThisPlayer->hasNewbieTurns()) {
 if (!$canAttack) {
 	$fightingPlayers = $ThisSector->getPotentialFightingTraders($ThisPlayer);
 }
-$fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] = $ThisPlayer;
 ?>
 
 <table class="standard centered inset">
-	<tr><th width="50%">Attacker</th><th width="50%">Defender</th></tr>
+	<tr><?php
+		foreach ($fightingPlayers as $label => $fleet) { ?>
+			<th width="50%"><?php echo $label; ?> (<?php echo count($fleet); ?>)</th><?php
+		} ?>
+	</tr>
 	<tr><?php
 		foreach ($fightingPlayers as $fleet) {
 			?><td class="top"><?php
@@ -60,9 +63,6 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] = $ThisPlayer;
 				?>&nbsp;<?php
 			} ?>
 			</td><?php
-		}
-		if (!$canAttack) {
-			?><td>&nbsp;</td><?php
 		} ?>
 	</tr>
 </table>
