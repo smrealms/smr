@@ -886,31 +886,26 @@ class SmrSector {
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, min($defendingPlanet->getMaxAttackers(), MAXIMUM_PLANET_FLEET_SIZE));
 	}
 
-	public function getFightingTraders(AbstractSmrPlayer $attackingPlayer, AbstractSmrPlayer $defendingPlayer, bool $checkForCloak = false): array {
+	public function getFightingTraders(AbstractSmrPlayer $attackingPlayer, AbstractSmrPlayer $defendingPlayer, bool $checkForCloak = false, bool $allEligible = false): array {
 		if ($attackingPlayer->traderNAPAlliance($defendingPlayer)) {
 			throw new Exception('These traders are NAPed.');
 		}
 		$fightingPlayers = ['Attackers' => [], 'Defenders' => []];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()]);
-		$attackers = [];
-		$defenders = [];
 		foreach ($alliancePlayers as $accountID => $player) {
 			if ($player->canFight()) {
 				if ($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player)) {
-					$attackers[] = $alliancePlayers[$accountID];
+					$fightingPlayers['Attackers'][$accountID] = $player;
 				} elseif ($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player) && ($checkForCloak === false || $attackingPlayer->canSee($player))) {
-					$defenders[] = $alliancePlayers[$accountID];
+					$fightingPlayers['Defenders'][$accountID] = $player;
 				}
 			}
 		}
-		$attackers = self::limitFightingTraders($attackers, $attackingPlayer, MAXIMUM_PVP_FLEET_SIZE);
-		foreach ($attackers as $attacker) {
-			$fightingPlayers['Attackers'][$attacker->getAccountID()] = $attacker;
+		if ($allEligible) {
+			return $fightingPlayers;
 		}
-		$defenders = self::limitFightingTraders($defenders, $defendingPlayer, MAXIMUM_PVP_FLEET_SIZE);
-		foreach ($defenders as $defender) {
-			$fightingPlayers['Defenders'][$defender->getAccountID()] = $defender;
-		}
+		$fightingPlayers['Attackers'] = self::limitFightingTraders($fightingPlayers['Attackers'], $attackingPlayer, MAXIMUM_PVP_FLEET_SIZE);
+		$fightingPlayers['Defenders'] = self::limitFightingTraders($fightingPlayers['Defenders'], $defendingPlayer, MAXIMUM_PVP_FLEET_SIZE);
 		return $fightingPlayers;
 	}
 

@@ -19,7 +19,7 @@ if ($ThisPlayer->hasNewbieTurns()) {
 	?><p class="big red">Your target has cloaked!</p><?php
 } else {
 	$canAttack = true;
-	$fightingPlayers = $ThisSector->getFightingTraders($ThisPlayer, $TargetPlayer, true);
+	$fightingPlayers = $ThisSector->getFightingTraders($ThisPlayer, $TargetPlayer, true, allEligible: true);
 	if (count($fightingPlayers['Defenders']) > 0) {
 		?><p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (<?php echo TURNS_TO_SHOOT_SHIP; ?>)</a></p><?php
 	} else {
