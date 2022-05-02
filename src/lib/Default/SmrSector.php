@@ -904,12 +904,10 @@ class SmrSector {
 			}
 		}
 		$attackers = self::limitFightingTraders($attackers, $attackingPlayer, MAXIMUM_PVP_FLEET_SIZE);
-		shuffle($attackers);
 		foreach ($attackers as $attacker) {
 			$fightingPlayers['Attackers'][$attacker->getAccountID()] = $attacker;
 		}
 		$defenders = self::limitFightingTraders($defenders, $defendingPlayer, MAXIMUM_PVP_FLEET_SIZE);
-		shuffle($defenders);
 		foreach ($defenders as $defender) {
 			$fightingPlayers['Defenders'][$defender->getAccountID()] = $defender;
 		}
