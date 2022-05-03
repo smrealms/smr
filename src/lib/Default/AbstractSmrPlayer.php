@@ -1891,11 +1891,6 @@ abstract class AbstractSmrPlayer {
 		return isset($bounties[$bountyID]);
 	}
 
-	protected function getBountyAmount(int $bountyID): int {
-		$bounty = $this->getBounty($bountyID);
-		return $bounty['Amount'];
-	}
-
 	protected function createBounty(string $type): array {
 		$bounty = [
 			'Amount' => 0,
@@ -1920,12 +1915,6 @@ abstract class AbstractSmrPlayer {
 	protected function setBounty(array $bounty): void {
 		$this->bounties[$bounty['ID']] = $bounty;
 		$this->hasBountyChanged[$bounty['ID']] = true;
-	}
-
-	protected function setBountyAmount(int $bountyID, int $amount): void {
-		$bounty = $this->getBounty($bountyID);
-		$bounty['Amount'] = $amount;
-		$this->setBounty($bounty);
 	}
 
 	public function getCurrentBounty(string $type): array {
