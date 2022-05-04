@@ -207,13 +207,13 @@ function album_entry(int $album_id): void {
 	}
 
 	if ($session->hasAccount()) {
-		echo('<form action="album_comment.php">');
+		echo('<form action="album_comment_processing.php">');
 		echo('<input type="hidden" name="album_id" value="' . $album_id . '">');
 		echo('<table>');
 		echo('<tr>');
 		echo('<td style="color:green; font-size:70%;">Nick:<br /><input type="text" size="10" name="nick" value="' . htmlspecialchars(get_album_nick($session->getAccountID())) . '" readonly></td>');
-		echo('<td style="color:green; font-size:70%;">Comment:<br /><input type="text" size="50" name="comment"></td>');
-		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" value="Send"></td>');
+		echo('<td style="color:green; font-size:70%;">Comment:<br /><input type="text" size="50" name="comment" required></td>');
+		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Send"></td>');
 		$dbResult = $db->read('SELECT 1
 					FROM account_has_permission
 					WHERE account_id = ' . $db->escapeNumber($session->getAccountID()) . ' AND

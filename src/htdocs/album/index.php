@@ -38,8 +38,8 @@ try {
 	<tr>
 	<td valign="top">
 	<?php
-	if (!empty($_GET['nick'])) {
-		$query = urldecode($_GET['nick']);
+	if (Smr\Request::has('nick')) {
+		$query = urldecode(Smr\Request::get('nick'));
 
 		$dbResult = $db->read('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
