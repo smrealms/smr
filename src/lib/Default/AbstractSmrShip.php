@@ -34,6 +34,7 @@ class AbstractSmrShip {
 	protected array $hardware = [];
 	protected bool $isCloaked = false;
 	protected array|false $illusionShip = false;
+	protected bool $ambush = false;
 
 	protected bool $hasChangedWeapons = false;
 	protected bool $hasChangedCargo = false;
@@ -366,6 +367,27 @@ class AbstractSmrShip {
 
 	public function getIllusionDefense(): int {
 		return $this->getIllusionShip()['Defense'];
+	}
+	
+	/**
+	 *  returns whether or not an ambush bonus is active
+	 */
+	public function getAmbush() : bool {
+		return $ambush;
+	}
+	
+	/**
+	 *  sets ambush bonus firing out of cloak
+	 */
+	public function setAmbush() : void {
+		$ambush = true;
+	}
+
+	/**
+	 *  clears ambush bonus after shot out of cloak
+	 */
+	public function clearAmbush() : void {
+		$ambush = false;
 	}
 
 	public function getPlayer(): AbstractSmrPlayer {
