@@ -783,6 +783,7 @@ class AbstractSmrShip {
 			$results['Drones'] = $thisCDs->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
+		$thisPlayer->getShip()->clearAmbush;
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
 		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Player', 'Damage Done'], HOF_PUBLIC);
 		$thisPlayer->increaseHOF(1, ['Combat', 'Player', 'Shots'], HOF_PUBLIC);
