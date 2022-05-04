@@ -12,25 +12,18 @@ try {
 	$session = Smr\Session::getInstance();
 
 	if (!$session->hasAccount()) {
-		create_error_offline('You need to logged in to post comments!');
+		create_error_offline('You need to be logged in to post comments!');
 	}
 
-	if (!isset($_GET['album_id']) || empty($_GET['album_id'])) {
-		create_error_offline('Which picture do you want comment?');
-	}
-	$album_id = $_GET['album_id'];
-
-	if (!is_numeric($album_id)) {
-		create_error_offline('Picture ID has to be numeric!');
-	}
-
-	if ($album_id < 1) {
-		create_error_offline('Picture ID has to be positive!');
+	$album_id = Smr\Request::getInt('album_id', 0);
+	if ($album_id <= 0) {
+		create_error_offline('Whose album do you want to comment on?');
 	}
 
 	$account = $session->getAccount();
 
-	if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {
+	$action = Smr\Request::get('action');
+	if ($action == 'Moderate') {
 		if (!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM)) {
 			create_error_offline('You do not have permission to do that!');
 		}
@@ -46,10 +39,10 @@ try {
 
 	$db = Smr\Database::getInstance();
 
-	if (!isset($_GET['comment']) || empty($_GET['comment'])) {
+	$comment = Smr\Request::get('comment');
+	if (empty($comment)) {
 		create_error_offline('Please enter a comment.');
 	}
-	$comment = $_GET['comment'];
 
 	// get current time
 	$curr_time = Smr\Epoch::time();
@@ -77,7 +70,6 @@ try {
 	$db->unlock();
 
 	header('Location: /album/?nick=' . urlencode(get_album_nick($album_id)));
-	exit;
 } catch (Throwable $e) {
 	handleException($e);
 }
