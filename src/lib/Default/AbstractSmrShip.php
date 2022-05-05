@@ -373,7 +373,7 @@ class AbstractSmrShip {
 	 *  returns whether or not an ambush bonus is active
 	 */
 	public function getAmbush() : bool {
-		return $ambush;
+		return $this->$ambush;
 	}
 	
 	/**
