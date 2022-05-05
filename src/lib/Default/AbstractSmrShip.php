@@ -380,14 +380,14 @@ class AbstractSmrShip {
 	 *  sets ambush bonus firing out of cloak
 	 */
 	public function setAmbush() : void {
-		$ambush = true;
+		$this->ambush = true;
 	}
 
 	/**
 	 *  clears ambush bonus after shot out of cloak
 	 */
 	public function clearAmbush() : void {
-		$ambush = false;
+		$this->ambush = false;
 	}
 
 	public function getPlayer(): AbstractSmrPlayer {
