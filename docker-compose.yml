@@ -41,7 +41,7 @@ x-smr-cli: &smr-cli
     volumes:
         - ./config:/smr/config:ro
         # Mount the source code instead of copying it.
-        - ./src:/smr/src
+        - ./src:/smr/src:ro
 
 # Base configuration for SMR testing tools
 x-smr-test: &smr-test
@@ -53,12 +53,12 @@ x-smr-test: &smr-test
     volumes:
         - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
         - ./test/env:/smr/config/env:ro
-        - ./phpunit.xml:/smr/phpunit.xml
-        - ./phpstan.neon.dist:/smr/phpstan.neon.dist
-        - ./phpcs.xml:/smr/phpcs.xml
+        - ./phpunit.xml:/smr/phpunit.xml:ro
+        - ./phpstan.neon.dist:/smr/phpstan.neon.dist:ro
+        - ./phpcs.xml:/smr/phpcs.xml:ro
         # Mount the source code instead of copying it.
-        - ./src:/smr/src
-        - ./test:/smr/test
+        - ./src:/smr/src:rw
+        - ./test:/smr/test:rw
     depends_on:
         - mysql-integration-test
 
@@ -85,7 +85,7 @@ services:
     smr:
         <<: *smr-common
         volumes:
-            - ./vol_upload:/smr/src/htdocs/upload
+            - ./vol_upload:/smr/src/htdocs/upload:rw
             - ./config:/smr/config:ro
         environment:
             - XDEBUG_MODE
@@ -93,12 +93,12 @@ services:
     smr-dev:
         <<: *smr-common
         volumes:
-            - ./vol_upload:/smr/src/htdocs/upload
+            - ./vol_upload:/smr/src/htdocs/upload:rw
             - ./config:/smr/config:ro
             # Mount the source code instead of copying it.
-            - ./src:/smr/src
+            - ./src:/smr/src:ro
             # Directory for Xdebug profiler output
-            - ./vol_xdebug:/tmp/xdebug
+            - ./vol_xdebug:/tmp/xdebug:rw
         environment:
             - XDEBUG_MODE
             - DISABLE_PHPDI_COMPILATION=true
@@ -111,7 +111,7 @@ services:
             - POSTFIX_myhostname=hostname.local
             - OPENDKIM_DOMAINS=smrealms.de=key1
         volumes:
-            - ./opendkim:/etc/opendkim/keys/smrealms.de
+            - ./opendkim:/etc/opendkim/keys/smrealms.de:ro
 
     flyway: &flyway-common
         image: flyway/flyway:latest-alpine
@@ -132,7 +132,7 @@ services:
     mysql:
         <<: *mysql-common
         volumes:
-            - ./vol_db:/var/lib/mysql
+            - ./vol_db:/var/lib/mysql:rw
 
     # MySQL container with no volumes mounted for testing
     mysql-integration-test:
@@ -188,8 +188,8 @@ services:
         networks:
             - frontend
         volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - ./traefik:/etc/traefik
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./traefik:/etc/traefik:ro
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.traefik.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
@@ -223,8 +223,8 @@ services:
             - "traefik.http.services.portainer.loadbalancer.server.port=9000"
         command: -H unix:///var/run/docker.sock
         volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - ./vol_portainer:/data
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./vol_portainer:/data:rw
 
     # Web interface to display Xdebug profiler results
     webgrind:
@@ -237,6 +237,6 @@ services:
             - "traefik.http.routers.webgrind.middlewares=slash-then-strip@file"
         volumes:
             # Webgrind looks for Xdebug profiler files in /tmp by default
-            - ./vol_xdebug:/tmp
+            - ./vol_xdebug:/tmp:rw
             # Files mapped under /host will be available for code lookup
             - ./src:/host/smr/src:ro
