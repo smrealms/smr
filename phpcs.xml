@@ -46,6 +46,13 @@
         <exclude name="Squiz.WhiteSpace.MemberVarSpacing" />
     </rule>
 
+    <!-- Use more compact arrow functions, "fn()" instead of "fn ()". -->
+    <rule ref="SlevomatCodingStandard.Functions.ArrowFunctionDeclaration">
+        <properties>
+            <property name="spacesCountAfterKeyword" value="0" />
+        </properties>
+    </rule>
+
     <!-- PHP/HTML intermixing in templates breaks indentation depth calculation. -->
     <rule ref="Generic.WhiteSpace.ScopeIndent">
         <exclude-pattern>src/templates/*</exclude-pattern>
