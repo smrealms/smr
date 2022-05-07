@@ -95,7 +95,7 @@ abstract class AbstractSmrAccount {
 		return self::$CACHE_ACCOUNTS[$accountID];
 	}
 
-	public static function getAccountByName(string $login, bool $forceUpdate = false): SmrAccount {
+	public static function getAccountByLogin(string $login, bool $forceUpdate = false): SmrAccount {
 		if (!empty($login)) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login) . ' LIMIT 1');
@@ -105,6 +105,18 @@ abstract class AbstractSmrAccount {
 			}
 		}
 		throw new Smr\Exceptions\AccountNotFound('Account login not found.');
+	}
+
+	public static function getAccountByHofName(string $hofName, bool $forceUpdate = false): SmrAccount {
+		if (!empty($hofName)) {
+			$db = Smr\Database::getInstance();
+			$dbResult = $db->read('SELECT account_id FROM account WHERE hof_name = ' . $db->escapeString($hofName) . ' LIMIT 1');
+			if ($dbResult->hasRecord()) {
+				$accountID = $dbResult->record()->getInt('account_id');
+				return self::getAccount($accountID, $forceUpdate);
+			}
+		}
+		throw new Smr\Exceptions\AccountNotFound('Account HoF name not found.');
 	}
 
 	public static function getAccountByEmail(?string $email, bool $forceUpdate = false): SmrAccount {
@@ -175,7 +187,7 @@ abstract class AbstractSmrAccount {
 			'hof_name' => $db->escapeString($login),
 			'hotkeys' => $db->escapeObject([]),
 		]);
-		return self::getAccountByName($login);
+		return self::getAccountByLogin($login);
 	}
 
 	public static function getUserScoreCaseStatement(Smr\Database $db): array {

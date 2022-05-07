@@ -63,27 +63,50 @@ class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 		AbstractSmrAccount::getAccount(123);
 	}
 
-	public function test_get_account_by_name_happy_path(): void {
+	public function test_get_account_by_login_happy_path(): void {
 		// Given the database has been set up with a user
 		$original = AbstractSmrAccount::createAccount('test', 'test', 'test@test.com', 9, 0);
-		// When retrieving account by name
-		$account = AbstractSmrAccount::getAccountByName($original->getLogin());
+		// When retrieving account by login
+		$account = AbstractSmrAccount::getAccountByLogin($original->getLogin());
 		// Then the record is found
 		$this->assertSame($original, $account);
 	}
 
-	public function test_get_account_by_name_throws_when_no_account_name_provided(): void {
-		// When retrieving account by empty string name, exception is thrown
+	public function test_get_account_by_login_throws_when_no_login_provided(): void {
+		// When retrieving account by empty string login, exception is thrown
 		$this->expectException(AccountNotFound::class);
 		$this->expectExceptionMessage('Account login not found');
-		AbstractSmrAccount::getAccountByName('');
+		AbstractSmrAccount::getAccountByLogin('');
 	}
 
-	public function test_get_account_by_name_throws_when_no_record_found(): void {
-		// When retrieving account by name, exception is thrown if no record exists
+	public function test_get_account_by_login_throws_when_no_record_found(): void {
+		// When retrieving account by login, exception is thrown if no record exists
 		$this->expectException(AccountNotFound::class);
 		$this->expectExceptionMessage('Account login not found');
-		AbstractSmrAccount::getAccountByName('does_not_exist');
+		AbstractSmrAccount::getAccountByLogin('does_not_exist');
+	}
+
+	public function test_get_account_by_hof_name_happy_path(): void {
+		// Given the database has been set up with a user
+		$original = AbstractSmrAccount::createAccount('test', 'test', 'test@test.com', 9, 0);
+		// When retrieving account by HoF name
+		$account = AbstractSmrAccount::getAccountByLogin($original->getHofName());
+		// Then the record is found
+		$this->assertSame($original, $account);
+	}
+
+	public function test_get_account_by_hof_name_throws_when_no_hof_name_provided(): void {
+		// When retrieving account by empty string HoF name, exception is thrown
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account HoF name not found');
+		AbstractSmrAccount::getAccountByHofName('');
+	}
+
+	public function test_get_account_by_hof_name_throws_when_no_record_found(): void {
+		// When retrieving account by HoF name, exception is thrown if no record exists
+		$this->expectException(AccountNotFound::class);
+		$this->expectExceptionMessage('Account HoF name not found');
+		AbstractSmrAccount::getAccountByHofName('does_not_exist');
 	}
 
 	public function test_get_account_by_email_happy_path(): void {

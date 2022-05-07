@@ -85,8 +85,8 @@ try {
 	}
 
 	try {
-		SmrAccount::getAccountByName($login);
-		create_error('This user name is already registered.');
+		SmrAccount::getAccountByLogin($login);
+		create_error('This login name is already registered.');
 	} catch (Smr\Exceptions\AccountNotFound) {
 		// Proceed, login is not yet registered
 	}

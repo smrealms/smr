@@ -50,14 +50,18 @@ if ($action == 'Save and resend validation code') {
 	Smr\DisplayNameValidator::validate($HoF_name);
 
 	//no duplicates
-	$dbResult = $db->read('SELECT 1 FROM account WHERE hof_name = ' . $db->escapeString($HoF_name) . ' AND account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
-	if ($dbResult->hasRecord()) {
-		create_error('Someone is already using that name!');
+	try {
+		$other = SmrAccount::getAccountByHofName($HoF_name);
+		if ($account->getAccountID() != $other->getAccountID()) {
+			create_error('Someone is already using that Hall of Fame name!');
+		}
+	} catch (Smr\Exceptions\AccountNotFound) {
+		// Proceed, this Hall of Fame name is not in use
 	}
 
 	// set the HoF name in account stat
 	$account->setHofName($HoF_name);
-	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your hall of fame name.';
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your Hall of Fame name.';
 } elseif ($action == 'Change Discord ID') {
 	$discordId = Smr\Request::get('discord_id');
 
