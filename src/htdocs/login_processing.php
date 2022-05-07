@@ -44,7 +44,7 @@ try {
 
 			try {
 				// Throw an exception if account isn't found or password is wrong
-				$account = SmrAccount::getAccountByName($login);
+				$account = SmrAccount::getAccountByLogin($login);
 				if (!$account->checkPassword($password)) {
 					throw new Smr\Exceptions\AccountNotFound('Wrong password');
 				}
