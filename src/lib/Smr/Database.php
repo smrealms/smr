@@ -209,7 +209,7 @@ class Database {
 	 */
 	public function escapeArray(array $array, string $delimiter = ',', bool $escapeIndividually = true): string {
 		if ($escapeIndividually) {
-			$string = implode($delimiter, array_map(function($item) { return $this->escape($item); }, $array));
+			$string = implode($delimiter, array_map(fn($item) => $this->escape($item), $array));
 		} else {
 			$string = $this->escape(implode($delimiter, $array));
 		}

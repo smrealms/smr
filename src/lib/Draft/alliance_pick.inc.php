@@ -28,7 +28,7 @@ function get_draft_teams(int $gameId): array {
 	}
 
 	// Determine the smallest team alliance size.
-	$minSize = min(array_map(function($i) { return $i['Size']; }, $teams));
+	$minSize = min(array_map(fn(array $i): int => $i['Size'], $teams));
 
 	// Teams can pick only if their size is not larger than the smallest team.
 	foreach ($teams as &$team) {
