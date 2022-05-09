@@ -10,10 +10,8 @@ class SmrGalaxy {
 	public const TYPES = [self::TYPE_RACIAL, self::TYPE_NEUTRAL, self::TYPE_PLANET];
 
 	protected Smr\Database $db;
-	protected string $SQL;
+	protected readonly string $SQL;
 
-	protected int $gameID;
-	protected int $galaxyID;
 	protected string $name;
 	protected int $width;
 	protected int $height;
@@ -23,7 +21,7 @@ class SmrGalaxy {
 	protected int $startSector;
 
 	protected bool $hasChanged = false;
-	protected bool $isNew = false;
+	protected bool $isNew;
 
 	public static function clearCache(): void {
 		self::$CACHE_GALAXIES = [];
@@ -68,7 +66,12 @@ class SmrGalaxy {
 		return self::$CACHE_GALAXIES[$gameID][$galaxyID];
 	}
 
-	protected function __construct(int $gameID, int $galaxyID, bool $create = false, Smr\DatabaseRecord $dbRecord = null) {
+	protected function __construct(
+		protected readonly int $gameID,
+		protected readonly int $galaxyID,
+		bool $create = false,
+		Smr\DatabaseRecord $dbRecord = null
+	) {
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND galaxy_id = ' . $this->db->escapeNumber($galaxyID);
@@ -81,8 +84,6 @@ class SmrGalaxy {
 		}
 		$this->isNew = $dbRecord === null;
 
-		$this->gameID = $gameID;
-		$this->galaxyID = $galaxyID;
 		if (!$this->isNew) {
 			$this->name = $dbRecord->getField('galaxy_name');
 			$this->width = $dbRecord->getInt('width');

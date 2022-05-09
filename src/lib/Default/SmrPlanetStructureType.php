@@ -6,8 +6,8 @@
 class SmrPlanetStructureType {
 
 	public function __construct(
-		private int $ID,
-		private array $planetTypeInfo,
+		private readonly int $ID,
+		private readonly array $planetTypeInfo,
 	) {}
 
 	/**

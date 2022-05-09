@@ -19,10 +19,8 @@ abstract class AbstractSmrPlayer {
 	protected static array $CACHE_PLAYERS = [];
 
 	protected Smr\Database $db;
-	protected string $SQL;
+	protected readonly string $SQL;
 
-	protected int $accountID;
-	protected int $gameID;
 	protected string $playerName;
 	protected int $playerID;
 	protected int $sectorID;
@@ -199,7 +197,11 @@ abstract class AbstractSmrPlayer {
 		throw new Smr\Exceptions\PlayerNotFound('Player Name not found.');
 	}
 
-	protected function __construct(int $gameID, int $accountID, Smr\DatabaseRecord $dbRecord = null) {
+	protected function __construct(
+		protected readonly int $gameID,
+		protected readonly int $accountID,
+		Smr\DatabaseRecord $dbRecord = null
+	) {
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
@@ -213,8 +215,6 @@ abstract class AbstractSmrPlayer {
 			throw new Smr\Exceptions\PlayerNotFound('Invalid accountID: ' . $accountID . ' OR gameID: ' . $gameID);
 		}
 
-		$this->accountID = $accountID;
-		$this->gameID = $gameID;
 		$this->playerName = $dbRecord->getField('player_name');
 		$this->playerID = $dbRecord->getInt('player_id');
 		$this->sectorID = $dbRecord->getInt('sector_id');

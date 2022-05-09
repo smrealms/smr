@@ -9,18 +9,18 @@ class SmrShipType {
 
 	private static array $CACHE_SHIP_TYPES = [];
 
-	private string $name;
-	private int $typeID;
-	private int $classID;
-	private int $hardpoints;
-	private int $speed;
-	private int $cost;
-	private int $restriction;
-	private int $levelNeeded;
+	private readonly string $name;
+	private readonly int $typeID;
+	private readonly int $classID;
+	private readonly int $hardpoints;
+	private readonly int $speed;
+	private readonly int $cost;
+	private readonly int $restriction;
+	private readonly int $levelNeeded;
 
-	private int $maxPower = 0;
-	private array $maxHardware = [];
-	private int $baseManeuverability;
+	private readonly int $maxPower;
+	private readonly array $maxHardware;
+	private readonly int $baseManeuverability;
 
 	public static function clearCache(): void {
 		self::$CACHE_SHIP_TYPES = [];
@@ -83,10 +83,12 @@ class SmrShipType {
 		$dbResult = $db->read('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
 			'WHERE ship_type_id = ' . $db->escapeNumber($this->typeID) . ' ORDER BY hardware_type_id');
 
+		$maxHardware = [];
 		foreach ($dbResult->records() as $dbRecord2) {
 			// adding hardware to array
-			$this->maxHardware[$dbRecord2->getInt('hardware_type_id')] = $dbRecord2->getInt('max_amount');
+			$maxHardware[$dbRecord2->getInt('hardware_type_id')] = $dbRecord2->getInt('max_amount');
 		}
+		$this->maxHardware = $maxHardware;
 
 		$this->baseManeuverability = IRound(
 			700 -

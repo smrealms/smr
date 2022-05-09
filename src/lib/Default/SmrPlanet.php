@@ -13,11 +13,9 @@ class SmrPlanet {
 	public const MAX_STOCKPILE = 600;
 
 	protected Smr\Database $db;
-	protected string $SQL;
+	protected readonly string $SQL;
 
 	protected bool $exists;
-	protected int $sectorID;
-	protected int $gameID;
 	protected string $planetName;
 	protected int $ownerID;
 	protected string $password;
@@ -113,7 +111,11 @@ class SmrPlanet {
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
 
-	protected function __construct(int $gameID, int $sectorID, Smr\DatabaseRecord $dbRecord = null) {
+	protected function __construct(
+		protected readonly int $gameID,
+		protected readonly int $sectorID,
+		Smr\DatabaseRecord $dbRecord = null
+	) {
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
@@ -126,8 +128,6 @@ class SmrPlanet {
 		$this->exists = $dbRecord !== null;
 
 		if ($this->exists) {
-			$this->gameID = $gameID;
-			$this->sectorID = $sectorID;
 			$this->planetName = $dbRecord->getString('planet_name');
 			$this->ownerID = $dbRecord->getInt('owner_id');
 			$this->password = $dbRecord->getField('password');

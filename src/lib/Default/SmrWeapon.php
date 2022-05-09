@@ -12,8 +12,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 
 	protected const HIGHEST_POWER_LEVEL = 5; // must track the highest power level in db
 
-	protected int $weaponTypeID;
-	protected SmrWeaponType $weaponType;
+	protected readonly SmrWeaponType $weaponType;
 	protected bool $bonusAccuracy = false; // default
 	protected bool $bonusDamage = false; // default
 	protected bool $damageRollover = false; // fixed for all SmrWeapons
@@ -22,9 +21,11 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return new self($weaponTypeID, $dbRecord);
 	}
 
-	protected function __construct(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null) {
+	protected function __construct(
+		protected readonly int $weaponTypeID,
+		Smr\DatabaseRecord $dbRecord = null
+	) {
 		$this->weaponType = SmrWeaponType::getWeaponType($weaponTypeID, $dbRecord);
-		$this->weaponTypeID = $weaponTypeID;
 		$this->raceID = $this->weaponType->getRaceID();
 	}
 

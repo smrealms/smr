@@ -8,11 +8,7 @@ class SmrEnhancedWeaponEvent {
 	protected const GRACE_PERIOD = 3600; // 1 hour
 	protected const DURATION = 21600; // 6 hours
 
-	protected int $gameID;
-	protected int $sectorID;
-	protected int $locationTypeID;
-	protected int $expires;
-	protected SmrWeapon $weapon;
+	protected readonly SmrWeapon $weapon;
 
 	/**
 	 * Return all the valid events for the given location in a sector.
@@ -114,12 +110,15 @@ class SmrEnhancedWeaponEvent {
 		);
 	}
 
-	protected function __construct(int $gameID, int $weaponTypeID, int $locationTypeID, int $sectorID, int $expires, bool $bonusAccuracy, bool $bonusDamage) {
-		$this->gameID = $gameID;
-		$this->locationTypeID = $locationTypeID;
-		$this->sectorID = $sectorID;
-		$this->expires = $expires;
-
+	protected function __construct(
+		protected readonly int $gameID,
+		protected readonly int $weaponTypeID,
+		protected readonly int $locationTypeID,
+		protected readonly int $sectorID,
+		protected readonly int $expires,
+		bool $bonusAccuracy,
+		bool $bonusDamage
+	) {
 		$this->weapon = SmrWeapon::getWeapon($weaponTypeID);
 		$this->weapon->setBonusDamage($bonusDamage);
 		$this->weapon->setBonusAccuracy($bonusAccuracy);

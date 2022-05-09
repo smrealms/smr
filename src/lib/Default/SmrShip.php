@@ -8,7 +8,7 @@ class SmrShip extends AbstractSmrShip {
 
 	protected static array $CACHE_SHIPS = [];
 
-	protected string $SQL;
+	protected readonly string $SQL;
 
 	public static function clearCache(): void {
 		self::$CACHE_SHIPS = [];

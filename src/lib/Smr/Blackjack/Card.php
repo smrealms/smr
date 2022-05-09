@@ -15,14 +15,14 @@ class Card {
 
 	private const SUITS = ['hearts', 'clubs', 'diamonds', 'spades'];
 
-	private int $cardID; // unique ID in all the decks (0-indexed)
-	private int $rank; // non-unique rank of the card (1-indexed)
+	private readonly int $rank; // non-unique rank of the card (1-indexed)
 
 	/**
 	 * Create a specific card in the deck.
 	 */
-	public function __construct(int $cardID) {
-		$this->cardID = $cardID;
+	public function __construct(
+		private readonly int $cardID // unique ID in all the decks (0-indexed)
+	) {
 		// 52 cards per deck, 13 cards per suit
 		$this->rank = ($this->cardID % 52) % 13 + 1;
 	}

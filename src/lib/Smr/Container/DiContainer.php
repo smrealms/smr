@@ -21,7 +21,7 @@ use function DI\autowire;
 class DiContainer {
 
 	private static DiContainer $instance;
-	private Container $container;
+	private readonly Container $container;
 
 	private function __construct(bool $enableCompilation) {
 		$this->container = $this->buildContainer($enableCompilation);

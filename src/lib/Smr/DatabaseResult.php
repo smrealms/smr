@@ -12,7 +12,7 @@ use RuntimeException;
 class DatabaseResult {
 
 	public function __construct(
-		private mysqli_result $dbResult
+		private readonly mysqli_result $dbResult
 	) {}
 
 	/**

@@ -13,7 +13,7 @@ class Deck {
 	public const NUM_DECKS = 1;
 	public const MAX_CARDS = 52 * self::NUM_DECKS;
 
-	private array $cardIDs = [];
+	private array $cardIDs;
 
 	public function __construct() {
 		$this->cardIDs = range(0, self::MAX_CARDS - 1);

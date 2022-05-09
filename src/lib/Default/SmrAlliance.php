@@ -5,10 +5,8 @@ class SmrAlliance {
 	protected static array $CACHE_ALLIANCES = [];
 
 	protected Smr\Database $db;
-	protected string $SQL;
+	protected readonly string $SQL;
 
-	protected int $gameID;
-	protected int $allianceID;
 	protected string $allianceName;
 	protected ?string $description;
 	protected string $password;
@@ -73,11 +71,11 @@ class SmrAlliance {
 		throw new Smr\Exceptions\AllianceNotFound('Alliance name not found');
 	}
 
-	protected function __construct(int $allianceID, int $gameID) {
+	protected function __construct(
+		protected readonly int $allianceID,
+		protected readonly int $gameID
+	) {
 		$this->db = Smr\Database::getInstance();
-
-		$this->allianceID = $allianceID;
-		$this->gameID = $gameID;
 		$this->SQL = 'alliance_id=' . $this->db->escapeNumber($allianceID) . ' AND game_id=' . $this->db->escapeNumber($gameID);
 
 		if ($allianceID != 0) {

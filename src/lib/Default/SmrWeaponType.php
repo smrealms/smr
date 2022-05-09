@@ -9,14 +9,13 @@ class SmrWeaponType {
 
 	protected static array $CACHE_WEAPON_TYPES = [];
 
-	protected int $weaponTypeID;
-	protected string $name;
-	protected int $cost;
-	protected int $shieldDamage;
-	protected int $armourDamage;
-	protected int $accuracy;
-	protected int $powerLevel;
-	protected int $buyerRestriction;
+	protected readonly string $name;
+	protected readonly int $cost;
+	protected readonly int $shieldDamage;
+	protected readonly int $armourDamage;
+	protected readonly int $accuracy;
+	protected readonly int $powerLevel;
+	protected readonly int $buyerRestriction;
 
 	public static function getWeaponType(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_WEAPON_TYPES[$weaponTypeID])) {
@@ -56,8 +55,10 @@ class SmrWeaponType {
 		return $weapons;
 	}
 
-	protected function __construct(int $weaponTypeID, Smr\DatabaseRecord $dbRecord) {
-		$this->weaponTypeID = $weaponTypeID;
+	protected function __construct(
+		protected readonly int $weaponTypeID,
+		Smr\DatabaseRecord $dbRecord
+	) {
 		$this->name = $dbRecord->getField('weapon_name');
 		$this->raceID = $dbRecord->getInt('race_id');
 		$this->cost = $dbRecord->getInt('cost');

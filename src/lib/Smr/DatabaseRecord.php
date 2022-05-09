@@ -8,7 +8,7 @@ class DatabaseRecord {
 	 * @param array $dbRecord A record from a DatabaseResult.
 	 */
 	public function __construct(
-		private array $dbRecord
+		private readonly array $dbRecord
 	) {}
 
 	public function hasField(string $name): bool {
