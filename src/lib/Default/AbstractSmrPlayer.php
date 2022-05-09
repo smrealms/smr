@@ -210,7 +210,7 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 		if ($dbRecord === null) {
-			throw new Smr\Exceptions\PlayerNotFound('Invalid accountID: ' . $accountID . ' OR gameID:' . $gameID);
+			throw new Smr\Exceptions\PlayerNotFound('Invalid accountID: ' . $accountID . ' OR gameID: ' . $gameID);
 		}
 
 		$this->accountID = $accountID;

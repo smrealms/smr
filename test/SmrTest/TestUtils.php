@@ -2,6 +2,7 @@
 
 namespace SmrTest;
 
+use ReflectionClass;
 use ReflectionMethod;
 
 class TestUtils {
@@ -24,6 +25,25 @@ class TestUtils {
 		$method = new ReflectionMethod($obj, $name);
 		$method->setAccessible(true);
 		return $method;
+	}
+
+	/**
+	 * Construct an instance of a class with a protected constructor for test
+	 * purposes. Note that this function should only beused as a last resort!
+	 * Its use indicates that the input class is a candidate for refactoring.
+	 *
+	 * @template T of object
+	 * @param class-string<T> $name The name of the class to construct
+	 * @param mixed ...$args The arguments to pass to the constructor
+	 * @return T
+	 */
+	public static function constructPrivateClass(string $name, ...$args): object {
+		$class = new ReflectionClass($name);
+		$constructor = $class->getConstructor();
+		$constructor->setAccessible(true);
+		$object = $class->newInstanceWithoutConstructor();
+		$constructor->invoke($object, ...$args);
+		return $object;
 	}
 
 }

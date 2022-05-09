@@ -3,6 +3,7 @@
 namespace SmrTest\lib\DefaultGame;
 
 use AbstractSmrPlayer;
+use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
 use SmrTest\BaseIntegrationSpec;
 
@@ -12,6 +13,10 @@ use SmrTest\BaseIntegrationSpec;
 class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 
 	protected array $tablesToTruncate = ['player'];
+
+	protected function tearDown(): void {
+		AbstractSmrPlayer::clearCache();
+	}
 
 	public function test_createPlayer(): void {
 		// Test arbitrary input
@@ -46,6 +51,27 @@ class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 		AbstractSmrPlayer::createPlayer(1, 1, 'test1', RACE_HUMAN, false);
 		$player = AbstractSmrPlayer::createPlayer(2, 1, 'test2', RACE_HUMAN, false);
 		$this->assertSame(2, $player->getPlayerID());
+	}
+
+	public function test_getPlayer_returns_created_player(): void {
+		// Given a player that is created
+		$player1 = AbstractSmrPlayer::createPlayer(1, 2, 'test1', RACE_HUMAN, false);
+		// When we get the same player
+		$player2 = AbstractSmrPlayer::getPlayer(1, 2);
+		// Then they should be the same object
+		self::assertSame($player1, $player2);
+
+		// When we get the same player forcing a re-query from the database
+		$player3 = AbstractSmrPlayer::getPlayer(1, 2, true);
+		// Then they are not the same, but they are equal
+		self::assertNotSame($player1, $player3);
+		self::assertTrue($player1->equals($player3));
+	}
+
+	public function test_getPlayer_throws_when_no_record_found(): void {
+		$this->expectException(PlayerNotFound::class);
+		$this->expectExceptionMessage('Invalid accountID: 123 OR gameID: 321');
+		AbstractSmrPlayer::getPlayer(123, 321);
 	}
 
 }
