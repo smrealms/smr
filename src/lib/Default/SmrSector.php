@@ -175,42 +175,6 @@ class SmrSector {
 		$this->visited[$player->getAccountID()] = true;
 	}
 
-	public function hasWeaponShop(): bool {
-		foreach ($this->getLocations() as $location) {
-			if ($location->isWeaponSold()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public function hasHQ(): bool {
-		foreach ($this->getLocations() as $location) {
-			if ($location->isHQ()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public function hasUG(): bool {
-		foreach ($this->getLocations() as $location) {
-			if ($location->isUG()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public function hasShipShop(): bool {
-		foreach ($this->getLocations() as $location) {
-			if ($location->isShipSold()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public function offersFederalProtection(): bool {
 		foreach ($this->getLocations() as $location) {
 			if ($location->isFed()) {
@@ -228,33 +192,6 @@ class SmrSector {
 			}
 		}
 		return $raceIDs;
-	}
-
-	public function hasBar(): bool {
-		foreach ($this->getLocations() as $location) {
-			if ($location->isBar()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public function hasHardwareShop(): bool {
-		foreach ($this->getLocations() as $location) {
-			if ($location->isHardwareSold()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public function hasBank(): bool {
-		foreach ($this->getLocations() as $location) {
-			if ($location->isBank()) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public function enteringSector(AbstractSmrPlayer $player, int $movementType): void {

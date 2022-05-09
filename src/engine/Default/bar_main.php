@@ -5,11 +5,6 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-//first check if there is a bar here
-if (!$player->getSector()->hasBar()) {
-	create_error('So two guys walk into this bar...');
-}
-
 //get bar name
 $location = SmrLocation::getLocation($var['LocationID']);
 $template->assign('PageTopic', 'Welcome to ' . $location->getName());
