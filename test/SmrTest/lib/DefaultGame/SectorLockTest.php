@@ -3,23 +3,19 @@
 namespace SmrTest\lib\DefaultGame;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
-use Smr\Database;
 use Smr\Exceptions\UserError;
 use Smr\SectorLock;
+use SmrTest\BaseIntegrationSpec;
 
 /**
  * @covers Smr\SectorLock
  */
-class SectorLockTest extends TestCase {
+class SectorLockTest extends BaseIntegrationSpec {
+
+	protected array $tablesToTruncate = ['locks_queue'];
 
 	protected function tearDown(): void {
-		// We only write to one table, so clear it after each test instead of
-		// using the more heavy-handed BaseIntegrationSpec.
-		$db = Database::getInstance();
-		$db->write('TRUNCATE TABLE locks_queue');
-
 		// Reset the DI container to avoid contaminating other tests
 		DiContainer::initialize(false);
 	}
