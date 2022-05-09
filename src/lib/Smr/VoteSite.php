@@ -86,9 +86,9 @@ class VoteSite {
 	}
 
 	private function __construct(
-		private int $linkID,
-		private int $accountID,
-		private array $data) {}
+		private readonly int $linkID,
+		private readonly int $accountID,
+		private readonly array $data) {}
 
 	/**
 	 * Does this VoteSite have a voting callback that can be used

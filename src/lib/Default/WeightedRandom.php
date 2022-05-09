@@ -18,10 +18,6 @@ class WeightedRandom {
 
 	protected Smr\Database $db;
 
-	protected int $gameID;
-	protected int $accountID;
-	protected string $type;
-	protected int $typeID;
 	protected float $weighting;
 
 	protected bool $hasChanged = false;
@@ -49,12 +45,12 @@ class WeightedRandom {
 		}
 	}
 
-	protected function __construct(int $gameID, int $accountID, string $type, int $typeID) {
-		$this->gameID = $gameID;
-		$this->accountID = $accountID;
-		$this->type = $type;
-		$this->typeID = $typeID;
-
+	protected function __construct(
+		protected readonly int $gameID,
+		protected readonly int $accountID,
+		protected readonly string $type,
+		protected readonly int $typeID
+	) {
 		$this->db = Smr\Database::getInstance();
 		$dbResult = $this->db->read('SELECT weighting FROM weighted_random WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND account_id = ' . $this->db->escapeNumber($accountID) . ' AND type = ' . $this->db->escapeString($type) . ' AND type_id = ' . $this->db->escapeNumber($typeID) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {

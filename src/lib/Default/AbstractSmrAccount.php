@@ -33,8 +33,8 @@ abstract class AbstractSmrAccount {
 	];
 
 	protected Smr\Database $db;
+	protected readonly string $SQL;
 
-	protected int $account_id;
 	protected string $login;
 	protected string $passwordHash;
 	protected string $email;
@@ -74,7 +74,6 @@ abstract class AbstractSmrAccount {
 	protected string $friendlyColour;
 	protected string $neutralColour;
 	protected string $enemyColour;
-	protected string $SQL;
 
 	protected bool $npc;
 
@@ -202,14 +201,13 @@ abstract class AbstractSmrAccount {
 		return ['CASE' => $case, 'IN' => implode(',', $userRankingTypes)];
 	}
 
-	protected function __construct(int $accountID) {
+	protected function __construct(protected readonly int $accountID) {
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID);
 		$dbResult = $this->db->read('SELECT * FROM account WHERE ' . $this->SQL . ' LIMIT 1');
 
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			$this->account_id = $dbRecord->getInt('account_id');
 
 			$this->login = $dbRecord->getField('login');
 			$this->passwordHash = $dbRecord->getField('password');
@@ -353,7 +351,7 @@ abstract class AbstractSmrAccount {
 
 		// save...first make sure there isn't one for these keys (someone could double click and get error)
 		$this->db->replace('account_has_ip', [
-			'account_id' => $this->db->escapeNumber($this->account_id),
+			'account_id' => $this->db->escapeNumber($this->accountID),
 			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
 			'ip' => $this->db->escapeString($curr_ip),
 			'host' => $this->db->escapeString($host),
@@ -510,7 +508,7 @@ abstract class AbstractSmrAccount {
 	public function log(int $log_type_id, string $msg, int $sector_id = 0): void {
 		if ($this->isLoggingEnabled()) {
 			$this->db->insert('account_has_logs', [
-				'account_id' => $this->db->escapeNumber($this->account_id),
+				'account_id' => $this->db->escapeNumber($this->accountID),
 				'microtime' => $this->db->escapeMicrotime(Smr\Epoch::microtime()),
 				'log_type_id' => $this->db->escapeNumber($log_type_id),
 				'message' => $this->db->escapeString($msg),
@@ -661,7 +659,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function getAccountID(): int {
-		return $this->account_id;
+		return $this->accountID;
 	}
 
 	/**

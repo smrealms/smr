@@ -19,13 +19,12 @@ class ChessGame {
 
 	private Smr\Database $db;
 
-	private int $chessGameID;
-	private int $gameID;
-	private int $startDate;
+	private readonly int $whiteID;
+	private readonly int $blackID;
+	private readonly int $gameID;
+	private readonly int $startDate;
 	private int $endDate;
 	private int $winner;
-	private int $whiteID;
-	private int $blackID;
 
 	private array $hasMoved;
 	private array $board;
@@ -77,7 +76,7 @@ class ChessGame {
 		return self::$CACHE_CHESS_GAMES[$chessGameID];
 	}
 
-	public function __construct(int $chessGameID) {
+	public function __construct(private readonly int $chessGameID) {
 		$this->db = Database::getInstance();
 		$dbResult = $this->db->read('SELECT *
 						FROM chess_game
@@ -86,7 +85,6 @@ class ChessGame {
 			throw new Exception('Chess game not found: ' . $chessGameID);
 		}
 		$dbRecord = $dbResult->record();
-		$this->chessGameID = $chessGameID;
 		$this->gameID = $dbRecord->getInt('game_id');
 		$this->startDate = $dbRecord->getInt('start_time');
 		$this->endDate = $dbRecord->getInt('end_time');

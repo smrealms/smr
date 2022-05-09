@@ -12,7 +12,7 @@ class ChessPiece {
 	public const PAWN = 6;
 
 	public function __construct(
-		public string $colour,
+		public readonly string $colour,
 		public int $pieceID,
 		public int $x,
 		public int $y,

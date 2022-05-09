@@ -15,14 +15,14 @@ class OneWayRoute extends Route {
 	 * NOTE: Transactions are from the perspective of the player (not the port).
 	 */
 	public function __construct(
-		private int $buySectorId,
-		private int $sellSectorId,
-		private int $buyPortRace,
-		private int $sellPortRace,
-		private int $buyDi,
-		private int $sellDi,
-		private Path $path,
-		private int $goodId,
+		private readonly int $buySectorId,
+		private readonly int $sellSectorId,
+		private readonly int $buyPortRace,
+		private readonly int $sellPortRace,
+		private readonly int $buyDi,
+		private readonly int $sellDi,
+		private readonly Path $path,
+		private readonly int $goodId,
 	) {}
 
 	public function getSellSectorId(): int {

@@ -5,12 +5,12 @@
  */
 class SmrInvitation {
 
-	private int $allianceID;
-	private int $gameID;
-	private int $receiverAccountID;
-	private int $senderAccountID;
-	private int $messageID;
-	private int $expires;
+	private readonly int $allianceID;
+	private readonly int $gameID;
+	private readonly int $receiverAccountID;
+	private readonly int $senderAccountID;
+	private readonly int $messageID;
+	private readonly int $expires;
 
 	public static function send(int $allianceID, int $gameID, int $receiverAccountID, int $senderAccountID, int $messageID, int $expires): void {
 		$db = Smr\Database::getInstance();

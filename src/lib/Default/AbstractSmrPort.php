@@ -30,9 +30,8 @@ class AbstractSmrPort {
 	public const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
 
 	protected Smr\Database $db;
+	protected readonly string $SQL;
 
-	protected int $gameID;
-	protected int $sectorID;
 	protected int $shields;
 	protected int $combatDrones;
 	protected int $armour;
@@ -52,8 +51,6 @@ class AbstractSmrPort {
 	protected bool $cachedVersion = false;
 	protected int $cachedTime;
 	protected bool $cacheIsValid = true;
-
-	protected string $SQL;
 
 	protected bool $hasChanged = false;
 	protected bool $isNew = false;
@@ -119,7 +116,11 @@ class AbstractSmrPort {
 		return ($cargo / 13) * $distance;
 	}
 
-	protected function __construct(int $gameID, int $sectorID, Smr\DatabaseRecord $dbRecord = null) {
+	protected function __construct(
+		protected readonly int $gameID,
+		protected readonly int $sectorID,
+		Smr\DatabaseRecord $dbRecord = null
+	) {
 		$this->cachedTime = Smr\Epoch::time();
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
@@ -132,8 +133,6 @@ class AbstractSmrPort {
 		}
 		$this->isNew = $dbRecord === null;
 
-		$this->gameID = $gameID;
-		$this->sectorID = $sectorID;
 		if (!$this->isNew) {
 			$this->shields = $dbRecord->getInt('shields');
 			$this->combatDrones = $dbRecord->getInt('combat_drones');

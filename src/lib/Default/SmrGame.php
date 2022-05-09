@@ -6,7 +6,6 @@ class SmrGame {
 
 	protected Smr\Database $db;
 
-	protected int $gameID;
 	protected string $name;
 	protected string $description;
 	protected int $joinTime;
@@ -81,13 +80,15 @@ class SmrGame {
 		return self::$CACHE_GAMES[$gameID];
 	}
 
-	protected function __construct(int $gameID, bool $create = false) {
+	protected function __construct(
+		protected readonly int $gameID,
+		bool $create = false
+	) {
 		$this->db = Smr\Database::getInstance();
 
 		$dbResult = $this->db->read('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			$this->gameID = $dbRecord->getInt('game_id');
 			$this->name = $dbRecord->getField('game_name');
 			$this->description = $dbRecord->getField('game_description');
 			$this->joinTime = $dbRecord->getInt('join_time');
@@ -105,9 +106,7 @@ class SmrGame {
 			$this->allianceMaxVets = $dbRecord->getInt('alliance_max_vets');
 			$this->startingCredits = $dbRecord->getInt('starting_credits');
 		} elseif ($create === true) {
-			$this->gameID = $gameID;
 			$this->isNew = true;
-			return;
 		} else {
 			throw new Smr\Exceptions\GameNotFound('No such game: ' . $gameID);
 		}

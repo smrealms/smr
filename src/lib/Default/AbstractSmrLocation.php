@@ -7,9 +7,8 @@ class AbstractSmrLocation {
 	protected static array $CACHE_SECTOR_LOCATIONS = [];
 
 	protected Smr\Database $db;
-	protected string $SQL;
+	protected readonly string $SQL;
 
-	protected int $typeID;
 	protected string $name;
 	protected ?string $processor;
 	protected string $image;
@@ -114,9 +113,12 @@ class AbstractSmrLocation {
 		return self::$CACHE_LOCATIONS[$locationTypeID];
 	}
 
-	protected function __construct(int $locationTypeID, Smr\DatabaseRecord $dbRecord = null) {
+	protected function __construct(
+		protected readonly int $typeID,
+		Smr\DatabaseRecord $dbRecord = null
+	) {
 		$this->db = Smr\Database::getInstance();
-		$this->SQL = 'location_type_id = ' . $this->db->escapeNumber($locationTypeID);
+		$this->SQL = 'location_type_id = ' . $this->db->escapeNumber($typeID);
 
 		if ($dbRecord === null) {
 			$dbResult = $this->db->read('SELECT * FROM location_type WHERE ' . $this->SQL . ' LIMIT 1');
@@ -127,12 +129,11 @@ class AbstractSmrLocation {
 		$locationExists = $dbRecord !== null;
 
 		if ($locationExists) {
-			$this->typeID = $dbRecord->getInt('location_type_id');
 			$this->name = $dbRecord->getField('location_name');
 			$this->processor = $dbRecord->getField('location_processor');
 			$this->image = $dbRecord->getField('location_image');
 		} else {
-			throw new Exception('Cannot find location: ' . $locationTypeID);
+			throw new Exception('Cannot find location: ' . $typeID);
 		}
 	}
 

@@ -7,10 +7,8 @@ class SmrSector {
 	protected static array $CACHE_LOCATION_SECTORS = [];
 
 	protected Smr\Database $db;
-	protected string $SQL;
+	protected readonly string $SQL;
 
-	protected int $gameID;
-	protected int $sectorID;
 	protected int $battles;
 	protected int $galaxyID;
 	protected array $visited = [];
@@ -100,7 +98,12 @@ class SmrSector {
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
 
-	protected function __construct(int $gameID, int $sectorID, bool $create = false, Smr\DatabaseRecord $dbRecord = null) {
+	protected function __construct(
+		protected readonly int $gameID,
+		protected readonly int $sectorID,
+		bool $create = false,
+		Smr\DatabaseRecord $dbRecord = null
+	) {
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
@@ -112,9 +115,6 @@ class SmrSector {
 			}
 		}
 		$sectorExists = $dbRecord !== null;
-
-		$this->gameID = $gameID;
-		$this->sectorID = $sectorID;
 
 		if ($sectorExists) {
 			$this->galaxyID = $dbRecord->getInt('galaxy_id');

@@ -17,8 +17,8 @@ use Smr\Container\DiContainer;
  */
 class Epoch {
 
-	private float $microtime;
-	private int $time;
+	private readonly float $microtime;
+	private readonly int $time;
 
 	public function __construct() {
 		$this->microtime = microtime(true);

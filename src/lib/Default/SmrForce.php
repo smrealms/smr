@@ -18,11 +18,8 @@ class SmrForce {
 	public const MAX_SDS = 5;
 
 	protected Smr\Database $db;
-	protected string $SQL;
+	protected readonly string $SQL;
 
-	protected int $ownerID;
-	protected int $sectorID;
-	protected int $gameID;
 	protected int $combatDrones = 0;
 	protected int $scoutDrones = 0;
 	protected int $mines = 0;
@@ -103,7 +100,12 @@ class SmrForce {
 		}
 	}
 
-	protected function __construct(int $gameID, int $sectorID, int $ownerID, Smr\DatabaseRecord $dbRecord = null) {
+	protected function __construct(
+		protected readonly int $gameID,
+		protected readonly int $sectorID,
+		protected readonly int $ownerID,
+		Smr\DatabaseRecord $dbRecord = null
+	) {
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND sector_id = ' . $this->db->escapeNumber($sectorID) . '
@@ -117,9 +119,6 @@ class SmrForce {
 		}
 		$this->isNew = $dbRecord === null;
 
-		$this->gameID = $gameID;
-		$this->ownerID = $ownerID;
-		$this->sectorID = $sectorID;
 		if (!$this->isNew) {
 			$this->combatDrones = $dbRecord->getInt('combat_drones');
 			$this->scoutDrones = $dbRecord->getInt('scout_drones');
