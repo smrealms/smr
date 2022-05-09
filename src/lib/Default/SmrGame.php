@@ -434,7 +434,7 @@ class SmrGame {
 				ORDER BY location_type_id');
 			$this->playableRaceIDs = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$this->playableRaceIDs[] = $dbRecord->getInt('location_type_id') - 101;
+				$this->playableRaceIDs[] = $dbRecord->getInt('location_type_id') - GOVERNMENT;
 			}
 		}
 		return $this->playableRaceIDs;
