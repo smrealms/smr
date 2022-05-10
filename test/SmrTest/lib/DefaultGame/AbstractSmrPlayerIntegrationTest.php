@@ -11,6 +11,8 @@ use SmrTest\BaseIntegrationSpec;
  */
 class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 
+	protected array $tablesToTruncate = ['player'];
+
 	public function test_createPlayer(): void {
 		// Test arbitrary input
 		$accountID = 2;

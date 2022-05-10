@@ -13,6 +13,8 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SessionIntegrationTest extends BaseIntegrationSpec {
 
+	protected array $tablesToTruncate = ['debug'];
+
 	private Session $session;
 
 	protected function setUp(): void {
@@ -23,7 +25,6 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	protected function tearDown(): void {
-		parent::tearDown();
 		// Clear superglobals to avoid impacting other tests
 		$_REQUEST = [];
 		$_COOKIE = [];

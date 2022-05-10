@@ -12,6 +12,8 @@ use SmrWeapon;
  */
 class SmrShipIntegrationTest extends BaseIntegrationSpec {
 
+	protected array $tablesToTruncate = ['ship_has_hardware'];
+
 	private \PHPUnit\Framework\MockObject\MockObject $player;
 
 	protected function setUp(): void {

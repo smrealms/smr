@@ -11,9 +11,10 @@ use SmrTest\BaseIntegrationSpec;
  */
 class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 
+	protected array $tablesToTruncate = ['vote_links'];
+
 	protected function tearDown(): void {
 		VoteSite::clearCache();
-		parent::tearDown();
 	}
 
 	public function test_getTimeUntilFreeTurns_invalid(): void {
