@@ -282,7 +282,6 @@ function do_voodoo(): never {
 	// create account object
 	$account = $session->getAccount();
 
-
 	if ($session->hasGame()) {
 		// Get the nominal player information (this may change after locking).
 		// We don't force a reload here in case we don't need to lock.
