@@ -47,7 +47,8 @@ if (Smr\Request::has('create_npc_player')) {
 // Add a new NPC account
 if (Smr\Request::has('add_npc_account')) {
 	$login = Smr\Request::get('npc_login');
-	$npcAccount = SmrAccount::createAccount($login, '', 'NPC@smrealms.de', 0, 0);
+	$email = $login . '@smrealms.de';
+	$npcAccount = SmrAccount::createAccount($login, '', $email, 0, 0);
 	$npcAccount->setValidated(true);
 	$npcAccount->update();
 	$db->insert('npc_logins', [
