@@ -65,7 +65,12 @@ try {
 		$template->assign('CheckboxFormHREF', ''); // Submit to same page
 	}
 
-	if (!isset($galaxyID) && !isset($sectorID)) {
+	// Get the last sector in the last galaxy for form validation
+	$galaxies = SmrGalaxy::getGameGalaxies($session->getGameID());
+	$template->assign('GameGalaxies', $galaxies);
+	$template->assign('LastSector', end($galaxies)->getEndSector());
+
+	if (!isset($galaxy)) {
 		$galaxy = SmrGalaxy::getGalaxyContaining($player->getGameID(), $player->getSectorID());
 		if ($account->isCenterGalaxyMapOnPlayer()) {
 			$sectorID = $player->getSectorID();
@@ -96,7 +101,6 @@ try {
 	$template->assign('FontSize', $account->getFontSize() - 20);
 	$template->assign('ThisGalaxy', $galaxy);
 	$template->assign('ThisAccount', $account);
-	$template->assign('GameGalaxies', SmrGalaxy::getGameGalaxies($player->getGameID()));
 	$template->assign('ThisSector', $player->getSector());
 	$template->assign('MapSectors', $mapSectors);
 	$template->assign('ThisShip', $player->getShip());
