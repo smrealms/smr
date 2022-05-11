@@ -474,6 +474,8 @@ const CDS_REFUND_PERCENT = .5;
 
 const EOL = "\n";
 
+const LOADER_URI = '/loader.php';
+
 // These CSS URLs must be hard-coded here so that grunt-cache-bust
 // can replace them with the hashed filenames.
 const CSS_URLS = [

@@ -4,23 +4,17 @@ try {
 
 	$password = Smr\Request::get('password');
 	if (empty($password)) {
-		$msg = 'Password is missing!';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('Password is missing!');
 	}
 
 	$pass_verify = Smr\Request::get('pass_verify');
 	if ($password != $pass_verify) {
-		$msg = 'The passwords you entered do not match.';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('The passwords you entered do not match.');
 	}
 
 	$login = Smr\Request::get('login');
 	if ($login == $password) {
-		$msg = 'Your password cannot be the same as your login!';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('Your password cannot be the same as your login!');
 	}
 
 	$passwordReset = Smr\Request::get('password_reset');
@@ -30,8 +24,7 @@ try {
 			throw new Smr\Exceptions\AccountNotFound('Wrong password reset code');
 		}
 	} catch (Smr\Exceptions\AccountNotFound) {
-		header('Location: /error.php?msg=' . rawurlencode('User does not exist or reset password code is incorrect.'));
-		exit;
+		create_error('User does not exist or reset password code is incorrect.');
 	}
 
 	$account->setPassword($password);

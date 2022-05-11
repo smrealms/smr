@@ -1,10 +1,5 @@
 <?php declare(strict_types=1);
 
-function create_error_offline(string $msg): void {
-	header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-	exit;
-}
-
 try {
 	require_once('../../bootstrap.php');
 	require_once(LIB . 'Album/album_functions.php');
@@ -12,12 +7,12 @@ try {
 	$session = Smr\Session::getInstance();
 
 	if (!$session->hasAccount()) {
-		create_error_offline('You need to be logged in to post comments!');
+		create_error('You need to be logged in to post comments!');
 	}
 
 	$album_id = Smr\Request::getInt('album_id', 0);
 	if ($album_id <= 0) {
-		create_error_offline('Whose album do you want to comment on?');
+		create_error('Whose album do you want to comment on?');
 	}
 
 	$account = $session->getAccount();
@@ -25,7 +20,7 @@ try {
 	$action = Smr\Request::get('action');
 	if ($action == 'Moderate') {
 		if (!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM)) {
-			create_error_offline('You do not have permission to do that!');
+			create_error('You do not have permission to do that!');
 		}
 		$container = Page::create('skeleton.php', 'album_moderate.php');
 		$container['account_id'] = $album_id;
@@ -41,7 +36,7 @@ try {
 
 	$comment = Smr\Request::get('comment');
 	if (empty($comment)) {
-		create_error_offline('Please enter a comment.');
+		create_error('Please enter a comment.');
 	}
 
 	// get current time

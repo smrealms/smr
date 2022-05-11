@@ -12,8 +12,7 @@ try {
 
 	$account = $session->getAccount();
 	if (!SmrGame::getGame($gameID)->isEnabled() && !$account->hasPermission(PERMISSION_UNI_GEN)) {
-		header('location: /error.php?msg=You do not have permission to view this map!');
-		exit;
+		create_error('You do not have permission to view this map!');
 	}
 
 	$nodes = [];

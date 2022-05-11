@@ -214,10 +214,11 @@ class Page extends ArrayObject {
 		$copy['CommonID'] = $this->getCommonID();
 		$sn = Smr\Session::getInstance()->addLink($copy);
 
-		if ($forceFullURL === true || stripos($_SERVER['REQUEST_URI'], 'loader.php') === false) {
-			return '/loader.php?sn=' . $sn;
+		$href = '?sn=' . $sn;
+		if ($forceFullURL === true || $_SERVER['REQUEST_URI'] !== LOADER_URI) {
+			return LOADER_URI . $href;
 		}
-		return '?sn=' . $sn;
+		return $href;
 	}
 
 	/**
