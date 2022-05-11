@@ -34,7 +34,7 @@ try {
 		$galaxyID = Smr\Request::getInt('galaxy_id');
 		try {
 			$galaxy = SmrGalaxy::getGalaxy($session->getGameID(), $galaxyID);
-		} catch (Exception) {
+		} catch (Smr\Exceptions\GalaxyNotFound) {
 			header('location: /error.php?msg=Invalid galaxy ID');
 			exit;
 		}
