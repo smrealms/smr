@@ -533,7 +533,6 @@ class AbstractSmrPort {
 			'amount' => $this->db->escapeNumber($this->getGoodAmount($goodID)),
 			'last_update' => $this->db->escapeNumber(Smr\Epoch::time()),
 		]);
-		$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
 
 	/**
@@ -561,7 +560,6 @@ class AbstractSmrPort {
 
 		$this->cacheIsValid = false;
 		$this->db->write('DELETE FROM port_has_goods WHERE ' . $this->SQL . ' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
-		$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
 
 	/**
@@ -837,8 +835,6 @@ class AbstractSmrPort {
 		$this->raceID = $raceID;
 		$this->hasChanged = true;
 		$this->cacheIsValid = false;
-		// route_cache tells NPC's where they can trade
-		$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
 
 	public function getLevel(): int {
@@ -1175,6 +1171,8 @@ class AbstractSmrPort {
 		// If any cached members (see `__sleep`) changed, update the cached port
 		if (!$this->cacheIsValid) {
 			$this->updateSectorPlayersCache();
+			// route_cache tells NPC's where they can trade
+			$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 		}
 
 		// If any fields in the `port` table have changed, update table
