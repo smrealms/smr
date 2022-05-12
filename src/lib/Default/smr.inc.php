@@ -175,6 +175,10 @@ function bbifyMessage(string $message, bool $noLinks = false): string {
 }
 
 function create_error(string $message): never {
+	if ($_SERVER['REQUEST_URI'] !== LOADER_URI) {
+		header('Location: /error.php?msg=' . urlencode($message));
+		exit;
+	}
 	$container = Page::create('skeleton.php', 'error.php');
 	$container['message'] = $message;
 	if (USING_AJAX) {

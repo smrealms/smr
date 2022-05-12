@@ -3,8 +3,7 @@ try {
 	require_once('../bootstrap.php');
 
 	if (empty(Smr\Request::get('email'))) {
-		header('Location: /error.php?msg=' . rawurlencode('You must specify an e-mail address!'));
-		exit;
+		create_error('You must specify an e-mail address!');
 	}
 
 	// get this user from db
@@ -12,8 +11,7 @@ try {
 		$account = SmrAccount::getAccountByEmail(Smr\Request::get('email'));
 	} catch (Smr\Exceptions\AccountNotFound) {
 		// unknown user
-		header('Location: /error.php?msg=' . rawurlencode('The specified e-mail address is not registered!'));
-		exit;
+		create_error('The specified e-mail address is not registered!');
 	}
 
 	$account->generatePasswordReset();

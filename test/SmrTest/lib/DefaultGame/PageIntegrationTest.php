@@ -21,6 +21,11 @@ class PageIntegrationTest extends TestCase {
 		DiContainer::initialize(false);
 	}
 
+	protected function tearDown(): void {
+		// Clear superglobals to avoid impacting other tests
+		$_SERVER = [];
+	}
+
 	/**
 	 * Insert a mock Session into the DI container to return the input $var
 	 * when getCurrentVar is called on it.
@@ -80,7 +85,7 @@ class PageIntegrationTest extends TestCase {
 		// The Page should not be modified when href() is called
 		$expected = $page->getArrayCopy();
 		srand(0); // for a deterministic SN
-		$_SERVER['REQUEST_URI'] = 'loader.php'; // prevent "Undefined array key"
+		$_SERVER['REQUEST_URI'] = LOADER_URI; // prevent "Undefined array key"
 		$href = $page->href();
 		self::assertSame('?sn=qpbqzr', $href);
 		self::assertSame($expected, $page->getArrayCopy());

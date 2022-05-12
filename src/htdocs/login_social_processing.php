@@ -15,7 +15,7 @@ try {
 		try {
 			header('Location: ' . Smr\SocialLogin\SocialLogin::get($type)->getLoginUrl());
 		} catch (Smr\Exceptions\SocialLoginInvalidType) {
-			header('location: /error.php?msg=' . urlencode('Unknown social login type'));
+			create_error('Unknown social login type');
 		}
 	}
 

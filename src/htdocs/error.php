@@ -1,54 +1,13 @@
 <?php declare(strict_types=1);
-require_once('../bootstrap.php');
-?>
-<!DOCTYPE html>
 
-<html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS; ?>">
-		<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS_COLOUR; ?>">
-		<title>Error</title>
-		<meta http-equiv='pragma' content='no-cache'>
-	</head>
+try {
+	require_once('../bootstrap.php');
 
-	<body>
+	$template = Smr\Template::getInstance();
+	$template->assign('Body', 'login/error.php');
+	$template->assign('ErrorMessage', Smr\Request::get('msg', 'No error message found!'));
+	$template->display('login/skeleton.php');
 
-		<table cellspacing='0' cellpadding='0' border='0' width='100%' height='100%'>
-			<tr>
-				<td></td>
-				<td colspan='3' height='1' bgcolor='#0B8D35'></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td valign='top' width='135'>&nbsp;</td>
-				<td width='1' bgcolor='#0B8D35'></td>
-				<td valign='top' width='600' bgcolor='#06240E'>
-					<table width='100%' height='100%' border='0' cellspacing='5' cellpadding='5'>
-					<tr>
-						<td style='vertical-align:top;'>
-
-							<h1>ERROR</h1>
-
-							<p class="big bold"><?php echo (addslashes(htmlentities(Smr\Request::get('msg', ''), ENT_NOQUOTES, 'utf-8'))); ?>
-							</p>
-							<br /><br /><br />
-							<p><small>If the error was caused by something you entered, press back and try again.</small></p>
-							<p><small>If it was a DB Error, press back and try again, or logoff and log back on.</small></p>
-							<p><small>If the error was unrecognizable, please notify the administrators.</small></p>
-
-						</td>
-					</tr>
-					</table>
-				</td>
-				<td width='1' bgcolor='#0B8D35'></td>
-				<td valign='top' width='135'>&nbsp;</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td colspan='3' height='1' bgcolor='#0b8d35'></td>
-				<td></td>
-			</tr>
-		</table>
-
-	</body>
-</html>
+} catch (Throwable $e) {
+	handleException($e);
+}

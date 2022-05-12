@@ -82,7 +82,7 @@ class SmrGalaxy {
 			$this->galaxyType = $dbRecord->getField('galaxy_type');
 			$this->maxForceTime = $dbRecord->getInt('max_force_time');
 		} elseif ($create === false) {
-			throw new Exception('No such galaxy: ' . $gameID . '-' . $galaxyID);
+			throw new Smr\Exceptions\GalaxyNotFound('No such galaxy: ' . $gameID . '-' . $galaxyID);
 		}
 	}
 

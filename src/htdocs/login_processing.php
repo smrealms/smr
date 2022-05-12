@@ -69,9 +69,7 @@ try {
 	if (Smr\Request::has('social')) {
 		session_start();
 		if (!isset($_SESSION['socialLogin'])) {
-			$msg = 'Tried a social login link without having a social session.';
-			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
+			create_error('Tried a social login link without having a social session.');
 		}
 		$account->addAuthMethod(
 			$_SESSION['socialLogin']->getLoginType(),

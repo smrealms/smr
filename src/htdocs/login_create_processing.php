@@ -6,77 +6,50 @@ try {
 	$session = Smr\Session::getInstance();
 
 	if ($session->hasAccount()) {
-		$msg = 'You\'re already logged in! Creating multis is against the rules!';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('You\'re already logged in! Creating multis is against the rules!');
 	}
 	$socialLogin = Smr\Request::has('socialReg');
 	if ($socialLogin) {
 		session_start();
 		if (!$_SESSION['socialLogin']) {
-			$msg = 'Tried a social registration without having a social session.';
-			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
+			create_error('Tried a social registration without having a social session.');
 		}
 	}
 
 	//Check the captcha if it's a standard registration.
 	if (!$socialLogin && !empty(RECAPTCHA_PRIVATE)) {
-		if (!Smr\Request::has('g-recaptcha-response')) {
-			$msg = 'Please make sure to complete the recaptcha!';
-			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
-
 		$reCaptcha = new \ReCaptcha\ReCaptcha(RECAPTCHA_PRIVATE);
 		// Was there a reCAPTCHA response?
 		$resp = $reCaptcha->verify(
-			Smr\Request::get('g-recaptcha-response'),
+			Smr\Request::get('g-recaptcha-response', ''),
 			$_SERVER['REMOTE_ADDR']
 		);
 
 		if (!$resp->isSuccess()) {
-			$msg = 'Invalid captcha!';
-			header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
+			create_error('Please make sure to complete the recaptcha!');
 		}
 	}
 
 	$login = Smr\Request::get('login');
 	$password = Smr\Request::get('password');
 	if (strstr($login, '\'')) {
-		$msg = 'Illegal character in login detected! Don\'t use the apostrophe.';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('Illegal character in login detected! Don\'t use the apostrophe.');
 	}
 	if (stripos($login, 'NPC') === 0) {
-		$msg = 'Login names cannot begin with "NPC".';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
-	}
-	if (!Smr\Request::has('agreement') || empty(Smr\Request::get('agreement'))) {
-		$msg = 'You must accept the agreement!';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('Login names cannot begin with "NPC".');
 	}
 
 	if (empty($login)) {
-		$msg = 'Login name is missing!';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('Login name is missing!');
 	}
 
 	if (!$socialLogin && empty($password)) {
-		$msg = 'Password is missing!';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('Password is missing!');
 	}
 
 	$pass_verify = Smr\Request::get('pass_verify');
 	if ($password != $pass_verify) {
-		$msg = 'The passwords you entered do not match.';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('The passwords you entered do not match.');
 	}
 
 	// The user inputs an e-mail address in two scenarios:
@@ -92,15 +65,11 @@ try {
 	}
 
 	if (empty($email)) {
-		$msg = 'Email address is missing!';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('Email address is missing!');
 	}
 
 	if (strstr($email, ' ')) {
-		$msg = 'The email is invalid! It cannot contain any spaces.';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('The email is invalid! It cannot contain any spaces.');
 	}
 
 	// get user and host for the provided address
@@ -108,31 +77,23 @@ try {
 
 	// check if the host got a MX or at least an A entry
 	if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
-		$msg = 'This is not a valid email address! The domain ' . $host . ' does not exist.';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('This is not a valid email address! The domain ' . $host . ' does not exist.');
 	}
 
 	if ($login == $password) {
-		$msg = 'Your login and password cannot be the same!';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('Your login and password cannot be the same!');
 	}
 
 	try {
 		SmrAccount::getAccountByName($login);
-		$msg = 'This user name is already registered.';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('This user name is already registered.');
 	} catch (Smr\Exceptions\AccountNotFound) {
 		// Proceed, login is not yet registered
 	}
 
 	try {
 		SmrAccount::getAccountByEmail($email);
-		$msg = 'This email address is already registered.';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('This email address is already registered.');
 	} catch (Smr\Exceptions\AccountNotFound) {
 		// Proceed, email is not yet registered
 	}
@@ -146,9 +107,7 @@ try {
 	try {
 		$account = SmrAccount::createAccount($login, $password, $email, $timez, $referral);
 	} catch (Smr\Exceptions\AccountNotFound) {
-		$msg = 'Invalid referral account ID!';
-		header('Location: /error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		create_error('Invalid referral account ID!');
 	}
 	$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give $2 worth of "reward" credits for joining.
 	if ($socialLogin) {

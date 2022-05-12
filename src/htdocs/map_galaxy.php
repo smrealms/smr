@@ -27,16 +27,14 @@ try {
 		try {
 			$galaxy = SmrGalaxy::getGalaxyContaining($session->getGameID(), $sectorID);
 		} catch (Smr\Exceptions\SectorNotFound) {
-			header('location: /error.php?msg=Invalid sector ID');
-			exit;
+			create_error('Invalid sector ID');
 		}
 	} elseif (Smr\Request::has('galaxy_id')) {
 		$galaxyID = Smr\Request::getInt('galaxy_id');
 		try {
 			$galaxy = SmrGalaxy::getGalaxy($session->getGameID(), $galaxyID);
-		} catch (Exception) {
-			header('location: /error.php?msg=Invalid galaxy ID');
-			exit;
+		} catch (Smr\Exceptions\GalaxyNotFound) {
+			create_error('Invalid galaxy ID');
 		}
 	}
 
@@ -65,7 +63,12 @@ try {
 		$template->assign('CheckboxFormHREF', ''); // Submit to same page
 	}
 
-	if (!isset($galaxyID) && !isset($sectorID)) {
+	// Get the last sector in the last galaxy for form validation
+	$galaxies = SmrGalaxy::getGameGalaxies($session->getGameID());
+	$template->assign('GameGalaxies', $galaxies);
+	$template->assign('LastSector', end($galaxies)->getEndSector());
+
+	if (!isset($galaxy)) {
 		$galaxy = SmrGalaxy::getGalaxyContaining($player->getGameID(), $player->getSectorID());
 		if ($account->isCenterGalaxyMapOnPlayer()) {
 			$sectorID = $player->getSectorID();
@@ -96,7 +99,6 @@ try {
 	$template->assign('FontSize', $account->getFontSize() - 20);
 	$template->assign('ThisGalaxy', $galaxy);
 	$template->assign('ThisAccount', $account);
-	$template->assign('GameGalaxies', SmrGalaxy::getGameGalaxies($player->getGameID()));
 	$template->assign('ThisSector', $player->getSector());
 	$template->assign('MapSectors', $mapSectors);
 	$template->assign('ThisShip', $player->getShip());

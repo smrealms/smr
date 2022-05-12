@@ -15,6 +15,8 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 
 	protected function tearDown(): void {
 		VoteSite::clearCache();
+		// Clear superglobals to avoid impacting other tests
+		$_SERVER = [];
 	}
 
 	public function test_getTimeUntilFreeTurns_invalid(): void {
@@ -56,6 +58,7 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		$gameID = 42;
 
 		// Set expected results when free turns are available
+		$_SERVER['REQUEST_URI'] = LOADER_URI; // prevent "Undefined array key"
 		$expected = [
 			VoteSite::LINK_ID_TWG => [
 				'img' => 'twg_vote.png',
