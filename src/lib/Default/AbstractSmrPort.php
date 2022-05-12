@@ -154,7 +154,7 @@ class AbstractSmrPort {
 			$this->armour = 0;
 			$this->reinforceTime = 0;
 			$this->attackStarted = 0;
-			$this->raceID = 1;
+			$this->raceID = RACE_NEUTRAL;
 			$this->level = 0;
 			$this->credits = 0;
 			$this->upgrade = 0;
