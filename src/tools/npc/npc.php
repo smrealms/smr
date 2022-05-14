@@ -193,7 +193,7 @@ function NPCStuff(): void {
 					debug('Low Turns:' . $player->getTurns());
 				}
 				processContainer(plotToFed($player));
-			} elseif ($tradeRoute instanceof \Routes\Route) {
+			} elseif ($tradeRoute instanceof Smr\Routes\Route) {
 				debug('Trade Route');
 				$forwardRoute = $tradeRoute->getForwardRoute();
 				$returnRoute = $tradeRoute->getReturnRoute();
@@ -575,7 +575,7 @@ function setupShip(AbstractSmrPlayer $player): void {
 	$ship->update();
 }
 
-function changeRoute(array &$tradeRoutes, Routes\Route $routeToAvoid = null): ?Routes\Route {
+function changeRoute(array &$tradeRoutes, Smr\Routes\Route $routeToAvoid = null): ?Smr\Routes\Route {
 	// Remove any route from the pool of available routes if it contains
 	// either of the sectors in the $routeToAvoid (i.e. we died on it,
 	// so don't go back!).
@@ -658,15 +658,15 @@ function findRoutes(SmrPlayer $player): array {
 	$distances = Plotter::calculatePortToPortDistances($allSectors, $maxDistance, $startSectorID, $endSectorID);
 
 	if ($maxNumberOfPorts == 1) {
-		$allRoutes = \Routes\RouteGenerator::generateOneWayRoutes($allSectors, $distances, $tradeGoods, $tradeRaces, $routesForPort);
+		$allRoutes = Smr\Routes\RouteGenerator::generateOneWayRoutes($allSectors, $distances, $tradeGoods, $tradeRaces, $routesForPort);
 	} else {
-		$allRoutes = \Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+		$allRoutes = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 	}
 
 	unset($distances);
 
 	$routesMerged = [];
-	foreach ($allRoutes[\Routes\RouteGenerator::MONEY_ROUTE] as $multi => $routesByMulti) {
+	foreach ($allRoutes[Smr\Routes\RouteGenerator::MONEY_ROUTE] as $multi => $routesByMulti) {
 		$routesMerged += $routesByMulti; //Merge arrays
 	}
 

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Routes;
+namespace Smr\Routes;
 
 abstract class Route {
 

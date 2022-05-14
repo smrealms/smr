@@ -51,13 +51,13 @@ $allGalaxyRoutes = [];
 foreach (SmrGalaxy::getGameGalaxies($var['game_id']) as $galaxy) {
 	$galaxy->getPorts(); // Efficiently construct the port cache
 	$distances = Plotter::calculatePortToPortDistances($galaxy->getSectors(), $maxDistance, $galaxy->getStartSector(), $galaxy->getEndSector());
-	$allGalaxyRoutes[$galaxy->getDisplayName()] = \Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $galaxy->getSectors(), $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+	$allGalaxyRoutes[$galaxy->getDisplayName()] = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $galaxy->getSectors(), $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 }
 $template->assign('AllGalaxyRoutes', $allGalaxyRoutes);
 
 $routeTypes = [
-	\Routes\RouteGenerator::EXP_ROUTE => 'Experience',
-	\Routes\RouteGenerator::MONEY_ROUTE => 'Profit',
+	Smr\Routes\RouteGenerator::EXP_ROUTE => 'Experience',
+	Smr\Routes\RouteGenerator::MONEY_ROUTE => 'Profit',
 ];
 $template->assign('RouteTypes', $routeTypes);
 
