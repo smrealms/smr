@@ -62,6 +62,9 @@ class OneWayRoute extends Route {
 	}
 
 	public function getMoneyMultiplierSum(): int {
+		if ($this->goodId === GOODS_NOTHING) {
+			return 0;
+		}
 		$numGoods = 1;
 		$relations = 1000; // assume max relations
 		$supply = Globals::getGood($this->goodId)['Max']; // assume max supply
@@ -96,7 +99,10 @@ class OneWayRoute extends Route {
 	}
 
 	public function getRouteString(): string {
-		return $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->path->getDistance() . ($this->path->getNumWarps() > 0 ? ' + ' . $this->path->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
+		$buy = $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . Globals::getGoodName($this->goodId) . ' for ' . $this->buyDi . 'x';
+		$sell = ' to sell at ' . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') for ' . $this->sellDi . 'x';
+		$distance = ' (Distance: ' . $this->path->getDistance() . ($this->path->getNumWarps() > 0 ? ' + ' . $this->path->getNumWarps() . ' warps) ' : ')');
+		return $buy . $sell . $distance;
 	}
 
 }
