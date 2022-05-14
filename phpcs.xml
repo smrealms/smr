@@ -9,6 +9,9 @@
     <file>test/</file>
 
     <rule ref="vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml">
+        <!-- Do not require trait names to end in "Trait". -->
+        <exclude name="PSR2R.Classes.TraitName" />
+
         <!-- We do not expect every method/class to have a docstring. -->
         <exclude name="PSR2R.Commenting.DocBlock" />
 
