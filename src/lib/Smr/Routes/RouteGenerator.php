@@ -86,7 +86,7 @@ class RouteGenerator {
 				}
 
 				if ($goods[GOODS_NOTHING] === true) {
-					$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $targetPort->getPort()->getRaceID(), 0, 0, $distance, GOODS_NOTHING);
+					$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $targetPort->getRaceID(), 0, 0, $distance, GOODS_NOTHING);
 				}
 
 				foreach (Globals::getGoods() as $goodId => $value) {
