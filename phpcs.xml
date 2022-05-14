@@ -84,6 +84,13 @@
         <severity>0</severity>
     </rule>
 
+    <!-- This suppression allows "assignment by reference" to be written so as
+      to clearly indicate that it is not "assignment of a reference", i.e. to
+      allow "$a =& $b" instead of "$a = &$b". -->
+    <rule ref="PSR2R.WhiteSpace.UnaryOperatorSpacing.WrongSpace">
+        <severity>0</severity>
+    </rule>
+
     <!-- PHPUnit convention is snake_case for test methods. -->
     <rule ref="PSR1.Methods.CamelCapsMethodName">
         <exclude-pattern>test/*</exclude-pattern>
