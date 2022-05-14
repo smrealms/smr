@@ -29,12 +29,12 @@ abstract class Route {
 		return ($route != null && $route->containsPort($sectorID)) || (($route = $this->getForwardRoute()) != null && $route->containsPort($sectorID));
 	}
 
-	abstract public function getForwardRoute(): ?OneWayRoute;
+	abstract public function getForwardRoute(): ?Route;
 
 	abstract public function getReturnRoute(): ?OneWayRoute;
 
 	public function getRouteString(): string {
-		return $this->getForwardRoute()->getRouteString() . "\r\n" . $this->getReturnRoute()->getRouteString();
+		return $this->getForwardRoute()->getRouteString() . "\n" . $this->getReturnRoute()->getRouteString();
 	}
 
 }
