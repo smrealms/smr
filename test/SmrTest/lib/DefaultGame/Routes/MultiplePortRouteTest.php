@@ -17,16 +17,16 @@ class MultiplePortRouteTest extends TestCase {
 		// Create a 3-port route from 1->2, 2->4, 4->1
 		$path1 = new Path(1);
 		$path1->addLink(2);
-		$route1 = new OneWayRoute(2, 1, RACE_NEUTRAL, RACE_HUMAN, 1, 1, $path1, GOODS_WOOD);
+		$route1 = new OneWayRoute(1, 2, RACE_NEUTRAL, RACE_HUMAN, 1, 1, $path1, GOODS_WOOD);
 		$path2 = new Path(2);
 		$path2->addLink(3);
 		$path2->addLink(4);
-		$route2 = new OneWayRoute(4, 2, RACE_HUMAN, RACE_THEVIAN, 0, 0, $path2, GOODS_NOTHING);
+		$route2 = new OneWayRoute(2, 4, RACE_HUMAN, RACE_THEVIAN, 0, 0, $path2, GOODS_NOTHING);
 		$path3 = new Path(4);
 		$path3->addLink(3);
 		$path3->addLink(2);
 		$path3->addLink(1);
-		$route3 = new OneWayRoute(1, 4, RACE_THEVIAN, RACE_NEUTRAL, 2, 3, $path3, GOODS_ORE);
+		$route3 = new OneWayRoute(4, 1, RACE_THEVIAN, RACE_NEUTRAL, 3, 2, $path3, GOODS_ORE);
 		$mpr1 = new MultiplePortRoute($route1, $route2);
 		$mpr = new MultiplePortRoute($mpr1, $route3);
 

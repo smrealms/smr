@@ -21,7 +21,7 @@ class OneWayRouteTest extends TestCase {
 	}
 
 	public function test_trivial_getters(): void {
-		$route = new OneWayRoute(3, 1, RACE_NEUTRAL, RACE_HUMAN, 2, 1, $this->path, GOODS_ORE);
+		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 1, 2, $this->path, GOODS_ORE);
 		self::assertSame(1, $route->getBuySectorId());
 		self::assertSame(3, $route->getSellSectorId());
 		self::assertSame(RACE_HUMAN, $route->getBuyPortRace());
@@ -32,7 +32,7 @@ class OneWayRouteTest extends TestCase {
 	}
 
 	public function test_getExpMultiplierSum(): void {
-		$route = new OneWayRoute(3, 1, RACE_NEUTRAL, RACE_HUMAN, 2, 1, $this->path, GOODS_ORE);
+		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 1, 2, $this->path, GOODS_ORE);
 		self::assertSame(3, $route->getExpMultiplierSum());
 	}
 
@@ -40,7 +40,7 @@ class OneWayRouteTest extends TestCase {
 	 * @dataProvider dataProvider_getMoneyMultiplierSum
 	 */
 	public function test_getMoneyMultiplierSum(int $goodID, int $expected): void {
-		$route = new OneWayRoute(3, 1, RACE_NEUTRAL, RACE_HUMAN, 2, 1, $this->path, $goodID);
+		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 1, 2, $this->path, $goodID);
 		self::assertSame($expected, $route->getMoneyMultiplierSum());
 	}
 
@@ -55,7 +55,7 @@ class OneWayRouteTest extends TestCase {
 	 * @dataProvider dataProvider_getTurnsForRoute
 	 */
 	public function test_getTurnsForRoute(int $goodID, int $expected): void {
-		$route = new OneWayRoute(3, 1, RACE_NEUTRAL, RACE_HUMAN, 0, 0, $this->path, $goodID);
+		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 0, 0, $this->path, $goodID);
 		self::assertSame($this->path->getTurns() + $expected, $route->getTurnsForRoute());
 	}
 
@@ -67,7 +67,7 @@ class OneWayRouteTest extends TestCase {
 	}
 
 	public function test_containsPort(): void {
-		$route = new OneWayRoute(3, 1, RACE_NEUTRAL, RACE_HUMAN, 2, 1, $this->path, GOODS_ORE);
+		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 1, 2, $this->path, GOODS_ORE);
 		// Only the endpoints of the route should return True
 		self::assertTrue($route->containsPort(1));
 		self::assertFalse($route->containsPort(2));
@@ -76,13 +76,13 @@ class OneWayRouteTest extends TestCase {
 	}
 
 	public function test_getRoutes(): void {
-		$route = new OneWayRoute(3, 1, RACE_NEUTRAL, RACE_HUMAN, 2, 1, $this->path, GOODS_ORE);
+		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 1, 2, $this->path, GOODS_ORE);
 		self::assertNull($route->getForwardRoute());
 		self::assertNull($route->getReturnRoute());
 	}
 
 	public function test_getRouteString(): void {
-		$route = new OneWayRoute(3, 1, RACE_NEUTRAL, RACE_HUMAN, 2, 1, $this->path, GOODS_ORE);
+		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 1, 2, $this->path, GOODS_ORE);
 		$expected = '1 (Human) buy Ore for 1x to sell at 3 (Neutral) for 2x (Distance: 2)';
 		self::assertSame($expected, $route->getRouteString());
 	}
