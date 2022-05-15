@@ -657,11 +657,7 @@ function findRoutes(SmrPlayer $player): array {
 
 	$distances = Plotter::calculatePortToPortDistances($allSectors, $maxDistance, $startSectorID, $endSectorID);
 
-	if ($maxNumberOfPorts == 1) {
-		$allRoutes = Smr\Routes\RouteGenerator::generateOneWayRoutes($allSectors, $distances, $tradeGoods, $tradeRaces, $routesForPort);
-	} else {
-		$allRoutes = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
-	}
+	$allRoutes = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 
 	unset($distances);
 

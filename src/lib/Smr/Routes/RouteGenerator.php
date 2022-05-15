@@ -51,6 +51,9 @@ class RouteGenerator {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentSellSectorId = $currentStepRoute->getSellSectorId();
 			$currentGoodIsNothing = $currentStepRoute->getGoodID() === GOODS_NOTHING;
+			if ($maxNumPorts == 0 && !$lastGoodIsNothing && !$currentGoodIsNothing) {
+				continue; // We can only add empty one-way routes at this point
+			}
 			if ($lastGoodIsNothing && $currentGoodIsNothing) {
 				continue; // Don't do two nothings in a row
 			}
@@ -100,42 +103,6 @@ class RouteGenerator {
 			$routes[$sectors[$currentSectorId]->getSectorID()] = $rl;
 		}
 		return $routes;
-	}
-
-	public static function generateOneWayRoutes(array $sectors, array $distances, array $goods, array $races, int $routesForPort): array {
-		self::initialize();
-		foreach ($distances as $currentSectorId => $d) {
-			$currentPort = $sectors[$currentSectorId]->getPort();
-			if ($races[$currentPort->getRaceID()] === false) {
-				continue;
-			}
-			foreach ($d as $targetSectorId => $distance) {
-				$targetPort = $sectors[$targetSectorId]->getPort();
-				if ($races[$targetPort->getRaceID()] === false) {
-					continue;
-				}
-				if ($routesForPort !== -1 && $currentSectorId !== $routesForPort && $targetSectorId !== $routesForPort) {
-					continue;
-				}
-
-				foreach (Globals::getGoods() as $goodId => $value) {
-					if ($goods[$goodId] === true) {
-						if ($currentPort->hasGood($goodId, TRADER_BUYS) && $targetPort->hasGood($goodId, TRADER_SELLS)) {
-							$owr = new OneWayRoute($currentSectorId, $targetSectorId, $currentPort->getRaceID(), $targetPort->getRaceID(), $currentPort->getGoodDistance($goodId), $targetPort->getGoodDistance($goodId), $distance, $goodId);
-							$fakeReturn = new OneWayRoute($targetSectorId, $currentSectorId, $targetPort->getRaceID(), $currentPort->getRaceID(), 0, 0, $distance, GOODS_NOTHING);
-							$mpr = new MultiplePortRoute($owr, $fakeReturn);
-							self::addExpRoute($mpr);
-							self::addMoneyRoute($mpr);
-						}
-					}
-				}
-			}
-		}
-		$allRoutes = [
-			self::EXP_ROUTE => self::$expRoutes,
-			self::MONEY_ROUTE => self::$moneyRoutes,
-		];
-		return $allRoutes;
 	}
 
 	private static function addExpRoute(Route $r): void {

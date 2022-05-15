@@ -33,7 +33,7 @@ foreach ($missingLocs as $locID) {
 $template->assign('MissingLocNames', $missingLocNames);
 
 // Calculate the best trade routes for each galaxy
-$tradeGoods = [GOODS_NOTHING => false];
+$tradeGoods = [GOODS_NOTHING => true];
 foreach (array_keys(Globals::getGoods()) as $goodID) {
 	$tradeGoods[$goodID] = true;
 }
