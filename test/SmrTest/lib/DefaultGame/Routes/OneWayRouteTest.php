@@ -66,6 +66,11 @@ class OneWayRouteTest extends TestCase {
 		];
 	}
 
+	public function test_getPortSectorIDs(): void {
+		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 1, 2, $this->path, GOODS_ORE);
+		self::assertSame([1, 3], $route->getPortSectorIDs());
+	}
+
 	public function test_containsPort(): void {
 		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 1, 2, $this->path, GOODS_ORE);
 		// Only the endpoints of the route should return True

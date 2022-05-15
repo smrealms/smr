@@ -580,12 +580,7 @@ function changeRoute(array &$tradeRoutes, Smr\Routes\Route $routeToAvoid = null)
 	// either of the sectors in the $routeToAvoid (i.e. we died on it,
 	// so don't go back!).
 	if ($routeToAvoid !== null) {
-		$avoidSectorIDs = array_unique([
-			$routeToAvoid->getForwardRoute()->getSellSectorId(),
-			$routeToAvoid->getForwardRoute()->getBuySectorId(),
-			$routeToAvoid->getReturnRoute()->getSellSectorId(),
-			$routeToAvoid->getReturnRoute()->getBuySectorId(),
-		]);
+		$avoidSectorIDs = $routeToAvoid->getPortSectorIDs();
 		foreach ($tradeRoutes as $key => $route) {
 			foreach ($avoidSectorIDs as $avoidSectorID) {
 				if ($route->containsPort($avoidSectorID)) {

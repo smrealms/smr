@@ -86,6 +86,10 @@ class OneWayRoute extends Route {
 		return $this->path->getTurns() + $tradeTurns;
 	}
 
+	public function getPortSectorIDs(): array {
+		return [$this->buySectorId, $this->sellSectorId];
+	}
+
 	public function containsPort(int $sectorID): bool {
 		return $this->sellSectorId == $sectorID || $this->buySectorId == $sectorID;
 	}

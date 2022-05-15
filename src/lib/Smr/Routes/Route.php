@@ -18,6 +18,13 @@ abstract class Route {
 
 	abstract public function getExpMultiplierSum(): int;
 
+	/**
+	 * Provides a list of sector IDs for all ports in the Route.
+	 *
+	 * @return array<int>
+	 */
+	abstract public function getPortSectorIDs(): array;
+
 	abstract public function containsPort(int $sectorID): bool;
 
 	abstract public function getForwardRoute(): ?Route;

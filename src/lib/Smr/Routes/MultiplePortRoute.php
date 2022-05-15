@@ -21,6 +21,10 @@ class MultiplePortRoute extends Route {
 		return ($this->forwardRoute->containsPort($sectorID) || $this->returnRoute->containsPort($sectorID));
 	}
 
+	public function getPortSectorIDs(): array {
+		return array_unique(array_merge($this->forwardRoute->getPortSectorIDs(), $this->returnRoute->getPortSectorIDs()));
+	}
+
 	public function getTurnsForRoute(): int {
 		return $this->forwardRoute->getTurnsForRoute() + $this->returnRoute->getTurnsForRoute();
 	}

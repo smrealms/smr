@@ -36,6 +36,7 @@ class MultiplePortRouteTest extends TestCase {
 		self::assertFalse($mpr->containsPort(3));
 		self::assertTrue($mpr->containsPort(4));
 		self::assertFalse($mpr->containsPort(5));
+		self::assertSame([1, 2, 4], $mpr->getPortSectorIDs());
 
 		// Make sure the forward and return routes are correct
 		self::assertSame($mpr1, $mpr->getForwardRoute());
