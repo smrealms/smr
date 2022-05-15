@@ -30,6 +30,10 @@ class MultiplePortRouteTest extends TestCase {
 		$mpr1 = new MultiplePortRoute($route1, $route2);
 		$mpr = new MultiplePortRoute($mpr1, $route3);
 
+		// Check the ordered list of OneWayRoute constituents
+		$expected = [$route1, $route2, $route3];
+		self::assertSame($expected, $mpr->getOneWayRoutes());
+
 		// Make sure it only contains the ports in the route
 		self::assertTrue($mpr->containsPort(1));
 		self::assertTrue($mpr->containsPort(2));

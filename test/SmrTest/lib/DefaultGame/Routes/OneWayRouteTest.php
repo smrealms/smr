@@ -84,6 +84,7 @@ class OneWayRouteTest extends TestCase {
 		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 1, 2, $this->path, GOODS_ORE);
 		self::assertNull($route->getForwardRoute());
 		self::assertNull($route->getReturnRoute());
+		self::assertSame([$route], $route->getOneWayRoutes());
 	}
 
 	public function test_getRouteString(): void {

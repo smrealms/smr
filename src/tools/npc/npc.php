@@ -193,77 +193,59 @@ function NPCStuff(): void {
 					debug('Low Turns:' . $player->getTurns());
 				}
 				processContainer(plotToFed($player));
-			} elseif ($tradeRoute instanceof Smr\Routes\Route) {
+
+			} elseif ($tradeRoute instanceof Smr\Routes\MultiplePortRoute) {
 				debug('Trade Route');
-				$forwardRoute = $tradeRoute->getForwardRoute();
-				$returnRoute = $tradeRoute->getReturnRoute();
-				if ($forwardRoute->getBuySectorId() == $player->getSectorID() || $returnRoute->getBuySectorId() == $player->getSectorID()) {
-					if ($forwardRoute->getBuySectorId() == $player->getSectorID()) {
-						$buyRoute = $forwardRoute;
-						$sellRoute = $returnRoute;
-					} elseif ($returnRoute->getBuySectorId() == $player->getSectorID()) {
-						$buyRoute = $returnRoute;
-						$sellRoute = $forwardRoute;
-					}
+				if (!$tradeRoute->containsPort($player->getSectorID())) {
+					// We're not at a port in this trade route yet, let's plot to it.
+					// It doesn't matter where in the route we start, so we choose the return route for convenience.
+					$plotSectorID = $tradeRoute->getReturnRoute()->getBuySectorId();
+					debug('Plot To Buy: ' . $plotSectorID);
+					processContainer(plotToSector($player, $plotSectorID));
+				}
 
-					$ship = $player->getShip();
-					if ($ship->getUsedHolds() > 0) {
-						if ($ship->hasCargo($sellRoute->getGoodID())) { //Sell goods
-							$goodID = $sellRoute->getGoodID();
+				$port = $player->getSector()->getPort();
+				$tradeRestriction = $port->getTradeRestriction($player);
+				if ($tradeRestriction !== false) {
+					// We can't trade at this port, let's try another route
+					$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
+					throw new Smr\Npc\Exceptions\Forward();
+				}
 
-							$port = $player->getSector()->getPort();
-							$tradeRestriction = $port->getTradeRestriction($player);
-
-							if ($tradeRestriction === false && $port->getGoodAmount($goodID) >= $ship->getCargo($sellRoute->getGoodID())) { //TODO: Sell what we can rather than forcing sell all at once?
-								//Sell goods
-								debug('Sell Goods');
-								processContainer(tradeGoods($goodID, $player, $port));
-							} else {
-								//Move to next route or fed.
-								$tradeRoute = changeRoute($allTradeRoutes);
-								if ($tradeRoute === null) {
-									debug('Changing Route Failed');
-									processContainer(plotToFed($player));
-								} else {
-									debug('Route Changed');
-									throw new Smr\Npc\Exceptions\Forward();
-								}
-							}
-						} elseif ($ship->hasCargo($buyRoute->getGoodID()) === true) { //We've bought goods, plot to sell
-							debug('Plot To Sell: ' . $buyRoute->getSellSectorId());
-							processContainer(plotToSector($player, $buyRoute->getSellSectorId()));
-						} else {
-							//Dump goods
-							debug('Dump Goods');
-							processContainer(dumpCargo($player));
+				// Find which part of the route we're on and act accordingly
+				$ship = $player->getShip();
+				foreach ($tradeRoute->getOneWayRoutes() as $route) {
+					$goodID = $route->getGoodID();
+					if ($route->getSellSectorId() == $player->getSectorID()) {
+						if ($ship->hasCargo($goodID) && ($port->getGoodAmount($goodID) >= $ship->getCargo($goodID))) {
+							debug('Sell Goods');
+							processContainer(tradeGoods($goodID, $player, $port));
 						}
-					} else { //Buy goods
-						$goodID = $buyRoute->getGoodID();
-
-						$port = $player->getSector()->getPort();
-						$tradeRestriction = $port->getTradeRestriction($player);
-
-						if ($tradeRestriction === false && $port->getGoodAmount($goodID) >= $ship->getEmptyHolds()) { //Buy goods
+					} elseif ($route->getBuySectorId() == $player->getSectorID()) {
+						if ($ship->hasCargo($goodID)) {
+							// We just bought goods here, plot to sell
+							$plotSectorID = $route->getSellSectorId();
+							debug('Plot To Sell: ' . $plotSectorID);
+							processContainer(plotToSector($player, $plotSectorID));
+						} elseif (!$ship->hasCargo() && ($port->getGoodAmount($goodID) >= $ship->getEmptyHolds())) {
 							debug('Buy Goods');
 							processContainer(tradeGoods($goodID, $player, $port));
-						} else {
-							//Move to next route or fed.
-							$tradeRoute = changeRoute($allTradeRoutes);
-							if ($tradeRoute === null) {
-								debug('Changing Route Failed');
-								processContainer(plotToFed($player));
-							} else {
-								debug('Route Changed');
-								throw new Smr\Npc\Exceptions\Forward();
-							}
 						}
 					}
-				} else {
-					debug('Plot To Buy: ' . $forwardRoute->getBuySectorId());
-					processContainer(plotToSector($player, $forwardRoute->getBuySectorId()));
 				}
-			} else { //Something weird is going on.. Let's fed and wait.
-				debug('No actual action? Wtf?');
+
+				// If we still have cargo, we need to dump it
+				if ($ship->hasCargo()) {
+					debug('Dump Goods');
+					processContainer(dumpCargo($player));
+				}
+
+				// We can't do anything with this trade route, let's pick another
+				$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
+				throw new Smr\Npc\Exceptions\Forward();
+
+			} else {
+				debug('No valid actions to take');
 				processContainer(plotToFed($player));
 			}
 			/*
@@ -575,7 +557,7 @@ function setupShip(AbstractSmrPlayer $player): void {
 	$ship->update();
 }
 
-function changeRoute(array &$tradeRoutes, Smr\Routes\Route $routeToAvoid = null): ?Smr\Routes\Route {
+function changeRoute(array &$tradeRoutes, Smr\Routes\Route $routeToAvoid = null): ?Smr\Routes\MultiplePortRoute {
 	// Remove any route from the pool of available routes if it contains
 	// either of the sectors in the $routeToAvoid (i.e. we died on it,
 	// so don't go back!).

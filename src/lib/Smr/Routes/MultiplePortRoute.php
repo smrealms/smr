@@ -17,6 +17,10 @@ class MultiplePortRoute extends Route {
 		return $this->returnRoute;
 	}
 
+	public function getOneWayRoutes(): array {
+		return array_merge($this->forwardRoute->getOneWayRoutes(), $this->returnRoute->getOneWayRoutes());
+	}
+
 	public function containsPort(int $sectorID): bool {
 		return ($this->forwardRoute->containsPort($sectorID) || $this->returnRoute->containsPort($sectorID));
 	}

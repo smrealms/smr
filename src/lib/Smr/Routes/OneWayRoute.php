@@ -94,6 +94,10 @@ class OneWayRoute extends Route {
 		return $this->sellSectorId == $sectorID || $this->buySectorId == $sectorID;
 	}
 
+	public function getOneWayRoutes(): array {
+		return [$this];
+	}
+
 	public function getForwardRoute(): ?OneWayRoute {
 		return null;
 	}

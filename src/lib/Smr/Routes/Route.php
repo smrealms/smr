@@ -31,6 +31,13 @@ abstract class Route {
 
 	abstract public function getReturnRoute(): ?OneWayRoute;
 
+	/**
+	 * Recurse through the Route tree to get an ordered list.
+	 *
+	 * @return array<OneWayRoute>
+	 */
+	abstract public function getOneWayRoutes(): array;
+
 	abstract public function getRouteString(): string;
 
 }
