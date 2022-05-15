@@ -64,7 +64,7 @@ abstract class AbstractSmrPlayer {
 	protected bool $forceDropMessages;
 	protected string $groupScoutMessages;
 	protected bool $ignoreGlobals;
-	protected Smr\Path|false $plottedCourse;
+	protected ?Smr\Path $plottedCourse;
 	protected bool $nameChanged;
 	protected bool $raceChanged;
 	protected bool $combatDronesKamikazeOnMines;
@@ -1596,7 +1596,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getPlottedCourse(): Smr\Path|false {
+	public function getPlottedCourse(): ?Smr\Path {
 		if (!isset($this->plottedCourse)) {
 			// check if we have a course plotted
 			$dbResult = $this->db->read('SELECT course FROM player_plotted_course WHERE ' . $this->SQL . ' LIMIT 1');
@@ -1605,12 +1605,12 @@ abstract class AbstractSmrPlayer {
 				// get the course back
 				$this->plottedCourse = $dbResult->record()->getObject('course');
 			} else {
-				$this->plottedCourse = false;
+				$this->plottedCourse = null;
 			}
 		}
 
 		// Update the plotted course if we have moved since the last query
-		if ($this->plottedCourse !== false && $this->plottedCourse->getStartSectorID() != $this->getSectorID()) {
+		if ($this->plottedCourse !== null && $this->plottedCourse->getStartSectorID() != $this->getSectorID()) {
 			if ($this->plottedCourse->getEndSectorID() == $this->getSectorID()) {
 				// We have reached our destination
 				$this->deletePlottedCourse();
@@ -1637,18 +1637,15 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function hasPlottedCourse(): bool {
-		return $this->getPlottedCourse() !== false;
+		return $this->getPlottedCourse() !== null;
 	}
 
 	public function isPartOfCourse(SmrSector $sector): bool {
-		if (!$this->hasPlottedCourse()) {
-			return false;
-		}
-		return $this->getPlottedCourse()->isInPath($sector->getSectorID());
+		return $this->getPlottedCourse()?->isInPath($sector->getSectorID()) === true;
 	}
 
 	public function deletePlottedCourse(): void {
-		$this->plottedCourse = false;
+		$this->plottedCourse = null;
 		$this->db->write('DELETE FROM player_plotted_course WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
