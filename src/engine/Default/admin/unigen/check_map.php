@@ -49,9 +49,10 @@ $maxDistance = 999;
 
 $allGalaxyRoutes = [];
 foreach (SmrGalaxy::getGameGalaxies($var['game_id']) as $galaxy) {
-	$galaxy->getPorts(); // Efficiently construct the port cache
-	$distances = Plotter::calculatePortToPortDistances($galaxy->getSectors(), $maxDistance, $galaxy->getStartSector(), $galaxy->getEndSector());
-	$allGalaxyRoutes[$galaxy->getDisplayName()] = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $galaxy->getSectors(), $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+	$galaxy->getSectors(); // Efficiently construct the sector cache
+	$ports = $galaxy->getPorts();
+	$distances = Plotter::calculatePortToPortDistances($ports, $maxDistance, $galaxy->getStartSector(), $galaxy->getEndSector());
+	$allGalaxyRoutes[$galaxy->getDisplayName()] = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $ports, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 }
 $template->assign('AllGalaxyRoutes', $allGalaxyRoutes);
 

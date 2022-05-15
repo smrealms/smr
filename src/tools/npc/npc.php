@@ -627,14 +627,11 @@ function findRoutes(SmrPlayer $player): array {
 	}
 
 	debug('Generating Routes');
-	$allSectors = [];
-	foreach (SmrGalaxy::getGameGalaxies($player->getGameID()) as $galaxy) {
-		$allSectors += $galaxy->getSectors(); //Merge arrays
-	}
+	$ports = $galaxy->getPorts();
 
-	$distances = Plotter::calculatePortToPortDistances($allSectors, $maxDistance, $startSectorID, $endSectorID);
+	$distances = Plotter::calculatePortToPortDistances($ports, $maxDistance, $startSectorID, $endSectorID);
 
-	$allRoutes = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+	$allRoutes = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $ports, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 
 	unset($distances);
 
@@ -643,7 +640,6 @@ function findRoutes(SmrPlayer $player): array {
 		$routesMerged += $routesByMulti; //Merge arrays
 	}
 
-	unset($allSectors);
 	SmrPort::clearCache();
 	SmrSector::clearCache();
 

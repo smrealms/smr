@@ -18,9 +18,12 @@ class RouteGenerator {
 		self::$dontAddWorseThan = [0, 0];
 	}
 
-	public static function generateMultiPortRoutes(int $maxNumPorts, array $sectors, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes): array {
+	/**
+	 * @param array<int, \SmrPort> $ports
+	 */
+	public static function generateMultiPortRoutes(int $maxNumPorts, array $ports, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes): array {
 		self::initialize();
-		$routeLists = self::findOneWayRoutes($sectors, $distances, $routesForPort, $goods, $races);
+		$routeLists = self::findOneWayRoutes($ports, $distances, $routesForPort, $goods, $races);
 		$totalTasks = 0;
 		foreach ($routeLists as $startSectorId => $forwardRoutes) {
 			self::startRoutesToContinue($maxNumPorts, $startSectorId, $forwardRoutes, $routeLists);
@@ -70,17 +73,20 @@ class RouteGenerator {
 		}
 	}
 
-	private static function findOneWayRoutes(array $sectors, array $distances, int $routesForPort, array $goods, array $races): array {
+	/**
+	 * @param array<int, \SmrPort> $ports
+	 */
+	private static function findOneWayRoutes(array $ports, array $distances, int $routesForPort, array $goods, array $races): array {
 		$routes = [];
 		foreach ($distances as $currentSectorId => $d) {
-			$currentPort = $sectors[$currentSectorId]->getPort();
+			$currentPort = $ports[$currentSectorId];
 			$raceID = $currentPort->getRaceID();
 			if ($races[$raceID] === false) {
 				continue;
 			}
 			$rl = [];
 			foreach ($d as $targetSectorId => $distance) {
-				$targetPort = $sectors[$targetSectorId]->getPort();
+				$targetPort = $ports[$targetSectorId];
 				if (!$races[$targetPort->getRaceID()]) {
 					continue;
 				}
@@ -100,7 +106,7 @@ class RouteGenerator {
 					}
 				}
 			}
-			$routes[$sectors[$currentSectorId]->getSectorID()] = $rl;
+			$routes[$currentSectorId] = $rl;
 		}
 		return $routes;
 	}
