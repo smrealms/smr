@@ -46,6 +46,7 @@ class AbstractSmrPort {
 	protected array $goodIDs = ['All' => [], TRADER_SELLS => [], TRADER_BUYS => []];
 	protected array $goodAmounts;
 	protected array $goodAmountsChanged = [];
+	protected array $goodExistenceChanged = [];
 	protected array $goodDistances;
 
 	protected bool $cachedVersion = false;
@@ -154,7 +155,7 @@ class AbstractSmrPort {
 			$this->armour = 0;
 			$this->reinforceTime = 0;
 			$this->attackStarted = 0;
-			$this->raceID = 1;
+			$this->raceID = RACE_NEUTRAL;
 			$this->level = 0;
 			$this->credits = 0;
 			$this->upgrade = 0;
@@ -524,16 +525,10 @@ class AbstractSmrPort {
 		sort($this->goodIDs[$type]);
 
 		$this->goodAmounts[$goodID] = Globals::getGood($goodID)['Max'];
+
+		// Flag for update
 		$this->cacheIsValid = false;
-		$this->db->replace('port_has_goods', [
-			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'sector_id' => $this->db->escapeNumber($this->getSectorID()),
-			'good_id' => $this->db->escapeNumber($goodID),
-			'transaction_type' => $this->db->escapeString($type),
-			'amount' => $this->db->escapeNumber($this->getGoodAmount($goodID)),
-			'last_update' => $this->db->escapeNumber(Smr\Epoch::time()),
-		]);
-		$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
+		$this->goodExistenceChanged[$goodID] = true; // true => added
 	}
 
 	/**
@@ -559,9 +554,9 @@ class AbstractSmrPort {
 			array_splice($this->goodIDs[TRADER_SELLS], $key, 1);
 		}
 
+		// Flag for update
 		$this->cacheIsValid = false;
-		$this->db->write('DELETE FROM port_has_goods WHERE ' . $this->SQL . ' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
-		$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
+		$this->goodExistenceChanged[$goodID] = false; // false => removed
 	}
 
 	/**
@@ -837,8 +832,6 @@ class AbstractSmrPort {
 		$this->raceID = $raceID;
 		$this->hasChanged = true;
 		$this->cacheIsValid = false;
-		// route_cache tells NPC's where they can trade
-		$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 	}
 
 	public function getLevel(): int {
@@ -1175,6 +1168,8 @@ class AbstractSmrPort {
 		// If any cached members (see `__sleep`) changed, update the cached port
 		if (!$this->cacheIsValid) {
 			$this->updateSectorPlayersCache();
+			// route_cache tells NPC's where they can trade
+			$this->db->write('DELETE FROM route_cache WHERE game_id=' . $this->db->escapeNumber($this->getGameID()));
 		}
 
 		// If any fields in the `port` table have changed, update table
@@ -1219,7 +1214,28 @@ class AbstractSmrPort {
 			}
 			$amount = $this->getGoodAmount($goodID);
 			$this->db->write('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
+			unset($this->goodAmountsChanged[$goodID]);
 		}
+
+		// Handle any goods that were added or removed
+		foreach ($this->goodExistenceChanged as $goodID => $status) {
+			if ($status === true) {
+				// add the good
+				$this->db->replace('port_has_goods', [
+					'game_id' => $this->db->escapeNumber($this->getGameID()),
+					'sector_id' => $this->db->escapeNumber($this->getSectorID()),
+					'good_id' => $this->db->escapeNumber($goodID),
+					'transaction_type' => $this->db->escapeString($this->getGoodTransaction($goodID)),
+					'amount' => $this->db->escapeNumber($this->getGoodAmount($goodID)),
+					'last_update' => $this->db->escapeNumber(Smr\Epoch::time()),
+				]);
+			} else {
+				// remove the good
+				$this->db->write('DELETE FROM port_has_goods WHERE ' . $this->SQL . ' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
+			}
+			unset($this->goodExistenceChanged[$goodID]);
+		}
+
 	}
 
 	public function shootPlayers(array $targetPlayers): array {
