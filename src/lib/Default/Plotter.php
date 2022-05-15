@@ -174,12 +174,13 @@ class Plotter {
 
 	/**
 	 * @param array<int, \SmrPort> $ports
+	 * @param array<int, bool> $races
 	 */
-	public static function calculatePortToPortDistances(array $ports, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array {
+	public static function calculatePortToPortDistances(array $ports, array $races, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array {
 		$distances = [];
 		foreach ($ports as $port) {
 			$sectorID = $port->getSectorID();
-			if ($sectorID >= $lowLimit && $sectorID <= $highLimit) {
+			if ($races[$port->getRaceID()] && $sectorID >= $lowLimit && $sectorID <= $highLimit) {
 				$distances[$sectorID] = self::findDistanceToOtherPorts($port->getSector(), $distanceLimit, $lowLimit, $highLimit);
 			}
 		}

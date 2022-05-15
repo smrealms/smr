@@ -629,7 +629,7 @@ function findRoutes(SmrPlayer $player): array {
 	debug('Generating Routes');
 	$ports = $galaxy->getPorts();
 
-	$distances = Plotter::calculatePortToPortDistances($ports, $maxDistance, $startSectorID, $endSectorID);
+	$distances = Plotter::calculatePortToPortDistances($ports, $tradeRaces, $maxDistance, $startSectorID, $endSectorID);
 
 	$allRoutes = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $ports, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 
