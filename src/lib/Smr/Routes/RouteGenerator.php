@@ -17,7 +17,12 @@ class RouteGenerator {
 	}
 
 	/**
+	 * @param int $maxNumPorts
 	 * @param array<int, \SmrPort> $ports
+	 * @param array<int, bool> $goods
+	 * @param array<int, bool> $races
+	 * @param array<int, array<int, \Smr\Path>> $distances
+	 * @return array<int, array<string, array<Route>>>
 	 */
 	public static function generateMultiPortRoutes(int $maxNumPorts, array $ports, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes): array {
 		self::initialize();
@@ -38,6 +43,12 @@ class RouteGenerator {
 		return $allRoutes;
 	}
 
+	/**
+	 * @param int $maxNumPorts
+	 * @param int $startSectorId
+	 * @param array<OneWayRoute> $forwardRoutes
+	 * @param array<int, array<OneWayRoute>> $routeLists
+	 */
 	private static function startRoutesToContinue(int $maxNumPorts, int $startSectorId, array $forwardRoutes, array $routeLists): void {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentSellSectorId = $currentStepRoute->getSellSectorId();
@@ -48,6 +59,13 @@ class RouteGenerator {
 		}
 	}
 
+	/**
+	 * @param int $maxNumPorts
+	 * @param int $startSectorId
+	 * @param \Smr\Routes\Route $routeToContinue
+	 * @param array<OneWayRoute> $forwardRoutes
+	 * @param array<int, array<OneWayRoute>> $routeLists
+	 */
 	private static function getContinueRoutes(int $maxNumPorts, int $startSectorId, Route $routeToContinue, array $forwardRoutes, array $routeLists, bool $lastGoodIsNothing): void {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentSellSectorId = $currentStepRoute->getSellSectorId();
@@ -73,6 +91,11 @@ class RouteGenerator {
 
 	/**
 	 * @param array<int, \SmrPort> $ports
+	 * @param array<int, array<int, \Smr\Path>> $distances
+	 * @param int $routesForPort
+	 * @param array<int, bool> $goods
+	 * @param array<int, bool> $races
+	 * @return array<int, array<OneWayRoute>>
 	 */
 	private static function findOneWayRoutes(array $ports, array $distances, int $routesForPort, array $goods, array $races): array {
 		$routes = [];
