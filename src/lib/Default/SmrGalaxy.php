@@ -171,9 +171,9 @@ class SmrGalaxy {
 	public function getStartSector(): int {
 		if (!isset($this->startSector)) {
 			$this->startSector = 1;
-			if ($this->getGalaxyID() != 1) {
-				$galaxies = self::getGameGalaxies($this->getGameID());
-				for ($i = 1; $i < $this->getGalaxyID(); $i++) {
+			if ($this->galaxyID != 1) {
+				$galaxies = self::getGameGalaxies($this->gameID);
+				for ($i = 1; $i < $this->galaxyID; $i++) {
 					$this->startSector += $galaxies[$i]->getSize();
 				}
 			}
@@ -227,22 +227,24 @@ class SmrGalaxy {
 		} else {
 			$topLeft = SmrSector::getSector($this->getGameID(), $centerSectorID);
 			// go left then up
-			for ($i = 0; ($dist === null || $i < $dist) && $i < floor($this->getWidth() / 2); $i++) {
+			$halfWidth = floor($this->width / 2);
+			for ($i = 0; ($dist === null || $i < $dist) && $i < $halfWidth; $i++) {
 				$topLeft = $topLeft->getNeighbourSector('Left');
 			}
-			for ($i = 0; ($dist === null || $i < $dist) && $i < floor($this->getHeight() / 2); $i++) {
+			$halfHeight = floor($this->height / 2);
+			for ($i = 0; ($dist === null || $i < $dist) && $i < $halfHeight; $i++) {
 				$topLeft = $topLeft->getNeighbourSector('Up');
 			}
 		}
 
 		$mapSectors = [];
-		for ($i = 0; ($dist === null || $i < 2 * $dist + 1) && $i < $this->getHeight(); $i++) {
+		for ($i = 0; ($dist === null || $i < 2 * $dist + 1) && $i < $this->height; $i++) {
 			$mapSectors[$i] = [];
 			// get left most sector for this row
 			$rowLeft = $i == 0 ? $topLeft : $rowLeft->getNeighbourSector('Down');
 
 			// iterate through the columns
-			for ($j = 0; ($dist === null || $j < 2 * $dist + 1) && $j < $this->getWidth(); $j++) {
+			for ($j = 0; ($dist === null || $j < 2 * $dist + 1) && $j < $this->width; $j++) {
 				$nextSec = $j == 0 ? $rowLeft : $nextSec->getNeighbourSector('Right');
 				$mapSectors[$i][$j] = $nextSec;
 			}

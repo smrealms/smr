@@ -9,6 +9,9 @@
     <file>test/</file>
 
     <rule ref="vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml">
+        <!-- Do not require trait names to end in "Trait". -->
+        <exclude name="PSR2R.Classes.TraitName" />
+
         <!-- We do not expect every method/class to have a docstring. -->
         <exclude name="PSR2R.Commenting.DocBlock" />
 
@@ -81,6 +84,13 @@
 
     <!-- Temporary until all classes are migrated to the PSR-4 autoloader. -->
     <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <severity>0</severity>
+    </rule>
+
+    <!-- This suppression allows "assignment by reference" to be written so as
+      to clearly indicate that it is not "assignment of a reference", i.e. to
+      allow "$a =& $b" instead of "$a = &$b". -->
+    <rule ref="PSR2R.WhiteSpace.UnaryOperatorSpacing.WrongSpace">
         <severity>0</severity>
     </rule>
 
