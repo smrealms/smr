@@ -12,29 +12,18 @@ abstract class Route {
 		return $this->getMoneyMultiplierSum() / $this->getTurnsForRoute();
 	}
 
-	public function getTurnsForRoute(): int {
-		return $this->getForwardRoute()->getTurnsForRoute() + $this->getReturnRoute()->getTurnsForRoute();
-	}
+	abstract public function getTurnsForRoute(): int;
 
-	public function getMoneyMultiplierSum(): int {
-		return $this->getForwardRoute()->getMoneyMultiplierSum() + $this->getReturnRoute()->getMoneyMultiplierSum();
-	}
+	abstract public function getMoneyMultiplierSum(): int;
 
-	public function getExpMultiplierSum(): int {
-		return $this->getForwardRoute()->getExpMultiplierSum() + $this->getReturnRoute()->getExpMultiplierSum();
-	}
+	abstract public function getExpMultiplierSum(): int;
 
-	public function containsPort(int $sectorID): bool {
-		$route = $this->getReturnRoute();
-		return ($route != null && $route->containsPort($sectorID)) || (($route = $this->getForwardRoute()) != null && $route->containsPort($sectorID));
-	}
+	abstract public function containsPort(int $sectorID): bool;
 
 	abstract public function getForwardRoute(): ?Route;
 
 	abstract public function getReturnRoute(): ?OneWayRoute;
 
-	public function getRouteString(): string {
-		return $this->getForwardRoute()->getRouteString() . "\n" . $this->getReturnRoute()->getRouteString();
-	}
+	abstract public function getRouteString(): string;
 
 }
