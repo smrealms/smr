@@ -98,14 +98,6 @@ class OneWayRoute extends Route {
 		return [$this];
 	}
 
-	public function getForwardRoute(): ?OneWayRoute {
-		return null;
-	}
-
-	public function getReturnRoute(): ?OneWayRoute {
-		return null;
-	}
-
 	public function getRouteString(): string {
 		$buy = $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . Globals::getGoodName($this->goodId) . ' for ' . $this->buyDi . 'x';
 		$sell = ' to sell at ' . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') for ' . $this->sellDi . 'x';

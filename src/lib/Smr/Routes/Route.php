@@ -27,10 +27,6 @@ abstract class Route {
 
 	abstract public function containsPort(int $sectorID): bool;
 
-	abstract public function getForwardRoute(): ?Route;
-
-	abstract public function getReturnRoute(): ?OneWayRoute;
-
 	/**
 	 * Recurse through the Route tree to get an ordered list.
 	 *
