@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Routes;
+namespace Smr\Routes;
 
 use Globals;
 use Smr\Path;
@@ -15,12 +15,12 @@ class OneWayRoute extends Route {
 	 * NOTE: Transactions are from the perspective of the player (not the port).
 	 */
 	public function __construct(
-		private int $sellSectorId,
 		private int $buySectorId,
-		private int $sellPortRace,
+		private int $sellSectorId,
 		private int $buyPortRace,
-		private int $sellDi,
+		private int $sellPortRace,
 		private int $buyDi,
+		private int $sellDi,
 		private Path $path,
 		private int $goodId,
 	) {}
@@ -62,6 +62,9 @@ class OneWayRoute extends Route {
 	}
 
 	public function getMoneyMultiplierSum(): int {
+		if ($this->goodId === GOODS_NOTHING) {
+			return 0;
+		}
 		$numGoods = 1;
 		$relations = 1000; // assume max relations
 		$supply = Globals::getGood($this->goodId)['Max']; // assume max supply
@@ -83,20 +86,23 @@ class OneWayRoute extends Route {
 		return $this->path->getTurns() + $tradeTurns;
 	}
 
+	public function getPortSectorIDs(): array {
+		return [$this->buySectorId, $this->sellSectorId];
+	}
+
 	public function containsPort(int $sectorID): bool {
 		return $this->sellSectorId == $sectorID || $this->buySectorId == $sectorID;
 	}
 
-	public function getForwardRoute(): ?OneWayRoute {
-		return null;
-	}
-
-	public function getReturnRoute(): ?OneWayRoute {
-		return null;
+	public function getOneWayRoutes(): array {
+		return [$this];
 	}
 
 	public function getRouteString(): string {
-		return $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . Globals::getGoodName($this->goodId) . ' at ' . $this->buyDi . 'x to sell at (Distance: ' . $this->path->getDistance() . ($this->path->getNumWarps() > 0 ? ' + ' . $this->path->getNumWarps() . ' warps) ' : ') ') . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') at ' . $this->sellDi . 'x';
+		$buy = $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . Globals::getGoodName($this->goodId) . ' for ' . $this->buyDi . 'x';
+		$sell = ' to sell at ' . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') for ' . $this->sellDi . 'x';
+		$distance = ' (Distance: ' . $this->path->getDistance() . ($this->path->getNumWarps() > 0 ? ' + ' . $this->path->getNumWarps() . ' warps) ' : ')');
+		return $buy . $sell . $distance;
 	}
 
 }

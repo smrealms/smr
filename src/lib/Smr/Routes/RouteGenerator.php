@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Routes;
-
-use Globals;
+namespace Smr\Routes;
 
 class RouteGenerator {
 
@@ -18,12 +16,20 @@ class RouteGenerator {
 		self::$dontAddWorseThan = [0, 0];
 	}
 
-	public static function generateMultiPortRoutes(int $maxNumPorts, array $sectors, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes): array {
+	/**
+	 * @param int $maxNumPorts
+	 * @param array<int, \SmrPort> $ports
+	 * @param array<int, bool> $goods
+	 * @param array<int, bool> $races
+	 * @param array<int, array<int, \Smr\Path>> $distances
+	 * @return array<int, array<string, array<Route>>>
+	 */
+	public static function generateMultiPortRoutes(int $maxNumPorts, array $ports, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes): array {
 		self::initialize();
-		$routeLists = self::findOneWayRoutes($sectors, $distances, $routesForPort, $goods, $races);
+		$routeLists = self::findOneWayRoutes($ports, $distances, $routesForPort, $goods, $races);
 		$totalTasks = 0;
-		foreach ($routeLists as $key => $value) {
-			self::startRoutesToContinue($maxNumPorts, $key, $value, $routeLists);
+		foreach ($routeLists as $startSectorId => $forwardRoutes) {
+			self::startRoutesToContinue($maxNumPorts, $startSectorId, $forwardRoutes, $routeLists);
 			if ($totalTasks % 10 === 0 && $totalTasks > $numberOfRoutes) {
 				self::trimRoutes($numberOfRoutes);
 			}
@@ -37,47 +43,71 @@ class RouteGenerator {
 		return $allRoutes;
 	}
 
+	/**
+	 * @param int $maxNumPorts
+	 * @param int $startSectorId
+	 * @param array<OneWayRoute> $forwardRoutes
+	 * @param array<int, array<OneWayRoute>> $routeLists
+	 */
 	private static function startRoutesToContinue(int $maxNumPorts, int $startSectorId, array $forwardRoutes, array $routeLists): void {
 		foreach ($forwardRoutes as $currentStepRoute) {
-			$currentStepBuySector = $currentStepRoute->getBuySectorId();
+			$currentSellSectorId = $currentStepRoute->getSellSectorId();
 			$currentGoodIsNothing = $currentStepRoute->getGoodID() === GOODS_NOTHING;
-			if ($currentStepBuySector > $startSectorId) { // Not already checked
-				self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $currentStepRoute, $routeLists[$currentStepBuySector], $routeLists, $currentGoodIsNothing);
+			if ($currentSellSectorId > $startSectorId) { // Not already checked
+				self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $currentStepRoute, $routeLists[$currentSellSectorId], $routeLists, $currentGoodIsNothing);
 			}
 		}
 	}
 
+	/**
+	 * @param int $maxNumPorts
+	 * @param int $startSectorId
+	 * @param \Smr\Routes\Route $routeToContinue
+	 * @param array<OneWayRoute> $forwardRoutes
+	 * @param array<int, array<OneWayRoute>> $routeLists
+	 */
 	private static function getContinueRoutes(int $maxNumPorts, int $startSectorId, Route $routeToContinue, array $forwardRoutes, array $routeLists, bool $lastGoodIsNothing): void {
 		foreach ($forwardRoutes as $currentStepRoute) {
-			$currentStepBuySector = $currentStepRoute->getBuySectorId();
+			$currentSellSectorId = $currentStepRoute->getSellSectorId();
 			$currentGoodIsNothing = $currentStepRoute->getGoodID() === GOODS_NOTHING;
+			if ($maxNumPorts == 0 && !$lastGoodIsNothing && !$currentGoodIsNothing) {
+				continue; // We can only add empty one-way routes at this point
+			}
 			if ($lastGoodIsNothing && $currentGoodIsNothing) {
 				continue; // Don't do two nothings in a row
 			}
-			if ($currentStepBuySector >= $startSectorId) { // Not already checked or back to start
-				if ($currentStepBuySector === $startSectorId) { // Route returns to start
+			if ($currentSellSectorId >= $startSectorId) { // Not already checked or back to start
+				if ($currentSellSectorId === $startSectorId) { // Route returns to start
 					$mpr = new MultiplePortRoute($routeToContinue, $currentStepRoute);
 					self::addExpRoute($mpr);
 					self::addMoneyRoute($mpr);
-				} elseif ($maxNumPorts > 1 && !$routeToContinue->containsPort($currentStepBuySector)) {
+				} elseif ($maxNumPorts > 1 && !$routeToContinue->containsPort($currentSellSectorId)) {
 					$mpr = new MultiplePortRoute($routeToContinue, $currentStepRoute);
-					self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $mpr, $routeLists[$currentStepBuySector], $routeLists, $currentGoodIsNothing);
+					self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $mpr, $routeLists[$currentSellSectorId], $routeLists, $currentGoodIsNothing);
 				}
 			}
 		}
 	}
 
-	private static function findOneWayRoutes(array $sectors, array $distances, int $routesForPort, array $goods, array $races): array {
+	/**
+	 * @param array<int, \SmrPort> $ports
+	 * @param array<int, array<int, \Smr\Path>> $distances
+	 * @param int $routesForPort
+	 * @param array<int, bool> $goods
+	 * @param array<int, bool> $races
+	 * @return array<int, array<OneWayRoute>>
+	 */
+	private static function findOneWayRoutes(array $ports, array $distances, int $routesForPort, array $goods, array $races): array {
 		$routes = [];
 		foreach ($distances as $currentSectorId => $d) {
-			$currentPort = $sectors[$currentSectorId]->getPort();
+			$currentPort = $ports[$currentSectorId];
 			$raceID = $currentPort->getRaceID();
 			if ($races[$raceID] === false) {
 				continue;
 			}
 			$rl = [];
 			foreach ($d as $targetSectorId => $distance) {
-				$targetPort = $sectors[$targetSectorId]->getPort();
+				$targetPort = $ports[$targetSectorId];
 				if (!$races[$targetPort->getRaceID()]) {
 					continue;
 				}
@@ -85,57 +115,19 @@ class RouteGenerator {
 					continue;
 				}
 
-				if ($goods[GOODS_NOTHING] === true) {
-					$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $targetPort->getPort()->getRaceID(), 0, 0, $distance, GOODS_NOTHING);
-				}
-
-				foreach (Globals::getGoods() as $goodId => $value) {
-					if ($goods[$goodId] === true) {
-						if ($currentPort->hasGood($goodId, TRADER_SELLS) && $targetPort->hasGood($goodId, TRADER_BUYS)) {
+				foreach ($goods as $goodId => $useGood) {
+					if ($useGood === true) {
+						if ($goodId === GOODS_NOTHING) {
+							$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $targetPort->getRaceID(), 0, 0, $distance, GOODS_NOTHING);
+						} elseif ($currentPort->hasGood($goodId, TRADER_BUYS) && $targetPort->hasGood($goodId, TRADER_SELLS)) {
 							$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $targetPort->getRaceID(), $currentPort->getGoodDistance($goodId), $targetPort->getGoodDistance($goodId), $distance, $goodId);
 						}
 					}
 				}
 			}
-			$routes[$sectors[$currentSectorId]->getSectorID()] = $rl;
+			$routes[$currentSectorId] = $rl;
 		}
 		return $routes;
-	}
-
-	public static function generateOneWayRoutes(array $sectors, array $distances, array $goods, array $races, int $routesForPort): array {
-		self::initialize();
-		foreach ($distances as $currentSectorId => $d) {
-			$currentPort = $sectors[$currentSectorId]->getPort();
-			if ($races[$currentPort->getRaceID()] === false) {
-				continue;
-			}
-			foreach ($d as $targetSectorId => $distance) {
-				$targetPort = $sectors[$targetSectorId]->getPort();
-				if ($races[$targetPort->getRaceID()] === false) {
-					continue;
-				}
-				if ($routesForPort !== -1 && $currentSectorId !== $routesForPort && $targetSectorId !== $routesForPort) {
-					continue;
-				}
-
-				foreach (Globals::getGoods() as $goodId => $value) {
-					if ($goods[$goodId] === true) {
-						if ($currentPort->hasGood($goodId, TRADER_SELLS) && $targetPort->hasGood($goodId, TRADER_BUYS)) {
-							$owr = new OneWayRoute($currentSectorId, $targetSectorId, $currentPort->getRaceID(), $targetPort->getRaceID(), $currentPort->getGoodDistance($goodId), $targetPort->getGoodDistance($goodId), $distance, $goodId);
-							$fakeReturn = new OneWayRoute($targetSectorId, $currentSectorId, $targetPort->getRaceID(), $currentPort->getRaceID(), 0, 0, $distance, GOODS_NOTHING);
-							$mpr = new MultiplePortRoute($owr, $fakeReturn);
-							self::addExpRoute($mpr);
-							self::addMoneyRoute($mpr);
-						}
-					}
-				}
-			}
-		}
-		$allRoutes = [
-			self::EXP_ROUTE => self::$expRoutes,
-			self::MONEY_ROUTE => self::$moneyRoutes,
-		];
-		return $allRoutes;
 	}
 
 	private static function addExpRoute(Route $r): void {
