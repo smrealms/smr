@@ -608,15 +608,27 @@ function findRoutes(SmrPlayer $player): array {
 	$tradeRaces[$player->getRaceID()] = true;
 	$tradeRaces[RACE_NEUTRAL] = true;
 
-	$galaxy = $player->getSector()->getGalaxy();
+	// Trade in all Racial/Neutral galaxies up until the first Planet galaxy
+	$galaxies = [];
+	foreach ($player->getGame()->getGalaxies() as $galaxy) {
+		if ($galaxy->getGalaxyType() == SmrGalaxy::TYPE_PLANET) {
+			break;
+		}
+		$galaxies[] = $galaxy;
+	}
+	// Fallback to current galaxy in case this has selected no galaxies
+	if (count($galaxies) == 0) {
+		$galaxies[] = $player->getSector()->getGalaxy();
+	}
+
+	// Determine the trade area (start of first galaxy to end of last)
+	$startSectorID = reset($galaxies)->getStartSector();
+	$endSectorID = end($galaxies)->getEndSector();
 
 	$maxNumberOfPorts = 2;
 	$routesForPort = -1;
 	$numberOfRoutes = 100;
 	$maxDistance = 15;
-
-	$startSectorID = $galaxy->getStartSector();
-	$endSectorID = $galaxy->getEndSector();
 
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT routes FROM route_cache WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND max_ports=' . $db->escapeNumber($maxNumberOfPorts) . ' AND goods_allowed=' . $db->escapeObject($tradeGoods) . ' AND races_allowed=' . $db->escapeObject($tradeRaces) . ' AND start_sector_id=' . $db->escapeNumber($startSectorID) . ' AND end_sector_id=' . $db->escapeNumber($endSectorID) . ' AND routes_for_port=' . $db->escapeNumber($routesForPort) . ' AND max_distance=' . $db->escapeNumber($maxDistance));
@@ -627,7 +639,10 @@ function findRoutes(SmrPlayer $player): array {
 	}
 
 	debug('Generating Routes');
-	$ports = $galaxy->getPorts();
+	$ports = [];
+	foreach ($galaxies as $galaxy) {
+		$ports += $galaxy->getPorts(); // Merge arrays
+	}
 
 	$distances = Plotter::calculatePortToPortDistances($ports, $tradeRaces, $maxDistance, $startSectorID, $endSectorID);
 
