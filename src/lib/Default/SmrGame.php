@@ -379,8 +379,15 @@ class SmrGame {
 		return $this->totalPlayers;
 	}
 
+	/**
+	 * @return array<int, \SmrGalaxy>
+	 */
+	public function getGalaxies(): array {
+		return SmrGalaxy::getGameGalaxies($this->gameID);
+	}
+
 	public function getNumberOfGalaxies(): int {
-		return count(SmrGalaxy::getGameGalaxies($this->getGameID()));
+		return count($this->getGalaxies());
 	}
 
 	public function equals(self $otherGame): bool {

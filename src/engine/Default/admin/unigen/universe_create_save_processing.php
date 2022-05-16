@@ -15,6 +15,7 @@ if ($submit == 'Create Galaxies') {
 		$galaxy->setGalaxyType(Smr\Request::get('type' . $i));
 		$galaxy->setMaxForceTime(IFloor(Smr\Request::getFloat('forces' . $i) * 3600));
 	}
+	// Workaround for SmrGalaxy::getStartSector depending on all other galaxies
 	SmrGalaxy::saveGalaxies();
 	$galaxies = SmrGalaxy::getGameGalaxies($var['game_id'], true);
 	foreach ($galaxies as $galaxy) {

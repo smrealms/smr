@@ -11,7 +11,7 @@ $container->addVar('game_id');
 $container->addVar('gal_on');
 $template->assign('BackHREF', $container->href());
 
-$galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
+$galaxies = $game->getGalaxies();
 
 // Check if any locations are missing
 $existingLocs = [];
@@ -48,7 +48,7 @@ $numberOfRoutes = 1;
 $maxDistance = 999;
 
 $allGalaxyRoutes = [];
-foreach (SmrGalaxy::getGameGalaxies($var['game_id']) as $galaxy) {
+foreach ($galaxies as $galaxy) {
 	$galaxy->getSectors(); // Efficiently construct the sector cache
 	$ports = $galaxy->getPorts();
 	$distances = Plotter::calculatePortToPortDistances($ports, $tradeRaces, $maxDistance, $galaxy->getStartSector(), $galaxy->getEndSector());
@@ -64,7 +64,7 @@ $template->assign('RouteTypes', $routeTypes);
 
 // Largest port sell multipliers per galaxy
 $maxSellMultipliers = [];
-foreach (SmrGalaxy::getGameGalaxies($var['game_id']) as $galaxy) {
+foreach ($galaxies as $galaxy) {
 	$max = [];
 	foreach ($galaxy->getPorts() as $port) {
 		foreach ($port->getSoldGoodIDs() as $goodID) {

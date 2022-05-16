@@ -4,7 +4,8 @@ $db = Smr\Database::getInstance();
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 $gameID = $var['game_id'];
-$galaxies = SmrGalaxy::getGameGalaxies($gameID);
+$game = SmrGame::getGame($gameID);
+$galaxies = $game->getGalaxies();
 
 // Prepare our forwarding container
 $container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
@@ -25,7 +26,7 @@ foreach ($galaxies as $i => $galaxy) {
 	$galaxy->setName(Smr\Request::get('gal' . $i));
 	$galaxy->setGalaxyType(Smr\Request::get('type' . $i));
 	$galaxy->setMaxForceTime(IFloor(Smr\Request::getFloat('forces' . $i) * 3600));
-	if (!SmrGame::getGame($gameID)->isEnabled()) {
+	if (!$game->isEnabled()) {
 		$galaxy->setWidth(Smr\Request::getInt('width' . $i));
 		$galaxy->setHeight(Smr\Request::getInt('height' . $i));
 	}

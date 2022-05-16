@@ -74,8 +74,7 @@ if (isset($XType)) { ?>
 					}
 					break;
 				case 'Galaxies':
-					$Galaxies = SmrGalaxy::getGameGalaxies($ThisPlayer->getGameID());
-					foreach ($Galaxies as $Galaxy) {
+					foreach ($ThisPlayer->getGame()->getGalaxies() as $Galaxy) {
 						?><option value="<?php echo $Galaxy->getGalaxyID(); ?>"><?php echo $Galaxy->getDisplayName(); ?></option><?php
 					}
 					break;
