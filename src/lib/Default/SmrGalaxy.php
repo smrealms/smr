@@ -4,7 +4,10 @@ class SmrGalaxy {
 	protected static array $CACHE_GALAXIES = [];
 	protected static array $CACHE_GAME_GALAXIES = [];
 
-	public const TYPES = ['Racial', 'Neutral', 'Planet'];
+	public const TYPE_RACIAL = 'Racial';
+	public const TYPE_NEUTRAL = 'Neutral';
+	public const TYPE_PLANET = 'Planet';
+	public const TYPES = [self::TYPE_RACIAL, self::TYPE_NEUTRAL, self::TYPE_PLANET];
 
 	protected Smr\Database $db;
 	protected string $SQL;

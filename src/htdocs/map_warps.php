@@ -9,9 +9,10 @@ try {
 		header('Location: /login.php');
 		exit;
 	}
-
+	$game = SmrGame::getGame($gameID);
 	$account = $session->getAccount();
-	if (!SmrGame::getGame($gameID)->isEnabled() && !$account->hasPermission(PERMISSION_UNI_GEN)) {
+
+	if (!$game->isEnabled() && !$account->hasPermission(PERMISSION_UNI_GEN)) {
 		create_error('You do not have permission to view this map!');
 	}
 
@@ -19,7 +20,7 @@ try {
 	$links = [];
 
 	// The d3 graph nodes are the galaxies
-	foreach (SmrGalaxy::getGameGalaxies($gameID) as $galaxy) {
+	foreach ($game->getGalaxies() as $galaxy) {
 		$nodes[] = [
 			'name' => $galaxy->getName(),
 			'id' => $galaxy->getGalaxyID(),
@@ -54,7 +55,7 @@ try {
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?php echo PAGE_TITLE . ': ' . SmrGame::getGame($gameID)->getName(); ?></title>
+		<title><?php echo PAGE_TITLE . ': ' . $game->getName(); ?></title>
 		<meta charset="utf-8">
 		<style>
 		body { background-image: url("images/stars2.png"); }

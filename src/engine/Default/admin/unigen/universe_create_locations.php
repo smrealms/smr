@@ -19,17 +19,16 @@ foreach ($locations as $location) {
 	$totalLocs[$location->getTypeID()] = 0;
 }
 
+$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
+$template->assign('Galaxy', $galaxy);
+
 // Determine the current amount of each location
-$galSectors = SmrSector::getGalaxySectors($var['game_id'], $var['gal_on']);
-foreach ($galSectors as $galSector) {
+foreach ($galaxy->getSectors() as $galSector) {
 	foreach ($galSector->getLocations() as $sectorLocation) {
 		$totalLocs[$sectorLocation->getTypeID()]++;
 	}
 }
 $template->assign('TotalLocs', $totalLocs);
-
-$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
-$template->assign('Galaxy', $galaxy);
 
 // Though we expect a location to be only in one category, it is possible to
 // edit a location in the Admin Tools so that it is in two or more categories.

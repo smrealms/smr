@@ -106,13 +106,14 @@ foreach (SmrLocation::getAllLocations() as $location) {
 }
 
 // Everything below here must be valid INI syntax (safe to parse)
+$game = SmrGame::getGame($gameID);
 $file .= '[Metadata]
 FileVersion=' . SMR_FILE_VERSION . '
 [Game]
-Name=' . inify(SmrGame::getGame($gameID)->getName()) . '
+Name=' . inify($game->getName()) . '
 [Galaxies]
 ';
-$galaxies = SmrGalaxy::getGameGalaxies($gameID);
+$galaxies = $game->getGalaxies();
 foreach ($galaxies as $galaxy) {
 	$file .= $galaxy->getGalaxyID() . '=' . $galaxy->getWidth() . ',' . $galaxy->getHeight() . ',' . $galaxy->getGalaxyType() . ',' . inify($galaxy->getName()) . ',' . $galaxy->getMaxForceTime() . EOL;
 }
@@ -185,7 +186,7 @@ header('Expires: 0');
 header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header('Cache-Control: private', false);
 header('Content-Type: application/force-download');
-header('Content-Disposition: attachment; filename="' . SmrGame::getGame($gameID)->getName() . '.smr"');
+header('Content-Disposition: attachment; filename="' . $game->getName() . '.smr"');
 header('Content-Transfer-Encoding: binary');
 header('Content-Length: ' . $size);
 

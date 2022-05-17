@@ -40,7 +40,7 @@ for ($i = 1; $i <= $numGals; ++$i) {
 		'Name' => $defaultNames[$i] ?? 'Unknown',
 		'Width' => 10,
 		'Height' => 10,
-		'Type' => $isRacial ? 'Racial' : 'Neutral',
+		'Type' => $isRacial ? SmrGalaxy::TYPE_RACIAL : SmrGalaxy::TYPE_NEUTRAL,
 		'ForceMaxHours' => $isRacial ? 12 : 60,
 	];
 }
