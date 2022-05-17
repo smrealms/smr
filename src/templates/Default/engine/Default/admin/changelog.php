@@ -4,7 +4,7 @@ if (empty($Versions)) { ?>
 	return;
 }
 
-$this->includeTemplate('admin/changelog_view.php', ['Versions' => [$FirstVersion]]); ?>
+$this->includeTemplate('changelog_view.php', ['Versions' => [$FirstVersion]]); ?>
 
 <ul>
 	<li>
@@ -37,4 +37,4 @@ $this->includeTemplate('admin/changelog_view.php', ['Versions' => [$FirstVersion
 </ul>
 
 <?php
-$this->includeTemplate('admin/changelog_view.php'); ?>
+$this->includeTemplate('changelog_view.php'); ?>
