@@ -14,8 +14,10 @@ if ($var['target_sector'] == $player->getSectorID()) {
 }
 
 if ($sector->getWarp() == $var['target_sector']) {
+	$movement = MOVEMENT_WARP;
 	$turns = TURNS_PER_WARP;
 } else {
+	$movement = MOVEMENT_WALK;
 	$turns = TURNS_PER_SECTOR;
 }
 
@@ -57,7 +59,7 @@ $targetSector = SmrSector::getSector($player->getGameID(), $var['target_sector']
 $player->actionTaken('WalkSector', ['Sector' => $targetSector]);
 
 // send scout msg
-$sector->leavingSector($player, MOVEMENT_WALK);
+$sector->leavingSector($player, $movement);
 
 // Move the user around
 // TODO: (Must be done while holding both sector locks)
@@ -85,7 +87,7 @@ if (!$sector->isVisited($player)) {
 $sector->markVisited($player);
 
 // send scout msgs
-$sector->enteringSector($player, MOVEMENT_WALK);
+$sector->enteringSector($player, $movement);
 
 // If you bump into mines while entering the target sector...
 require('sector_mines.inc.php');
