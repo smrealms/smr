@@ -215,7 +215,7 @@ class Page extends ArrayObject {
 		$sn = Smr\Session::getInstance()->addLink($copy);
 
 		$href = '?sn=' . $sn;
-		if ($forceFullURL === true || $_SERVER['REQUEST_URI'] !== LOADER_URI) {
+		if ($forceFullURL === true || $_SERVER['SCRIPT_NAME'] !== LOADER_URI) {
 			return LOADER_URI . $href;
 		}
 		return $href;

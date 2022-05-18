@@ -175,7 +175,7 @@ function bbifyMessage(string $message, bool $noLinks = false): string {
 }
 
 function create_error(string $message): never {
-	if ($_SERVER['REQUEST_URI'] !== LOADER_URI) {
+	if ($_SERVER['SCRIPT_NAME'] !== LOADER_URI) {
 		header('Location: /error.php?msg=' . urlencode($message));
 		exit;
 	}

@@ -15,8 +15,6 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 
 	protected function tearDown(): void {
 		VoteSite::clearCache();
-		// Clear superglobals to avoid impacting other tests
-		$_SERVER = [];
 	}
 
 	public function test_getTimeUntilFreeTurns_invalid(): void {
@@ -58,17 +56,16 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		$gameID = 42;
 
 		// Set expected results when free turns are available
-		$_SERVER['REQUEST_URI'] = LOADER_URI; // prevent "Undefined array key"
 		$expected = [
 			VoteSite::LINK_ID_TWG => [
 				'img' => 'twg_vote.png',
 				'url' => 'http://topwebgames.com/in.aspx?ID=136&account=7&game=42&link=3&alwaysreward=1',
-				'sn' => '?sn=gbuyay',
+				'sn' => LOADER_URI . '?sn=gbuyay',
 			],
 			VoteSite::LINK_ID_DOG => [
 				'img' => 'dog_vote.png',
 				'url' => 'http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315&votedef=7,42,4',
-				'sn' => '?sn=wnpclr',
+				'sn' => LOADER_URI . '?sn=wnpclr',
 			],
 			VoteSite::LINK_ID_PBBG => [
 				'img' => 'pbbg.png',
