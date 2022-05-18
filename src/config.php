@@ -45,7 +45,7 @@ const ACCOUNT_ID_NHL = 36;
  * Special durations
  */
 const TIME_FOR_RAIDER_UNLOCK = 1209600; // 2 weeks
-const TIME_FOR_RACE_CHANGE = 172800; // 2 days
+const TIME_FOR_RACE_CHANGE = 259200; // 3 days
 const TIME_BETWEEN_VOTING = 84600; //23 1/2 hours
 const TIME_BEFORE_INACTIVE = 259200; // 3 days
 const TIME_BEFORE_NEWBIE_TIME = 3600; //1 hour
