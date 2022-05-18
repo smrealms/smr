@@ -217,9 +217,7 @@ if ($action == 'Save and resend validation code') {
 	// Modify the player
 	$oldRaceID = $player->getRaceID();
 	$player->setRaceID($newRaceID);
-	$player->setSectorID($player->getHome());
 	$player->setLandedOnPlanet(false);
-	$player->getSector()->markVisited($player);
 	$player->getShip()->getPod($player->hasNewbieStatus()); // just to reset
 	$player->getShip()->giveStarterShip();
 	$player->setNewbieTurns(max(1, $player->getNewbieTurns()));
@@ -229,6 +227,14 @@ if ($action == 'Save and resend validation code') {
 	// Reset relations
 	$db->write('DELETE FROM player_has_relation WHERE ' . $player->getSQL());
 	$player->giveStartingRelations();
+
+	// Move them to their new race HQ and reset sector lock
+	$player->setSectorID($player->getHome());
+	$player->getSector()->markVisited($player);
+	$player->update();
+	$lock = Smr\SectorLock::getInstance();
+	$lock->release();
+	$lock->acquireForPlayer($player);
 
 	$news = 'Please be advised that ' . $player->getBBLink() . ' has changed their race from [race=' . $oldRaceID . '] to [race=' . $player->getRaceID() . ']';
 	$db->insert('news', [
