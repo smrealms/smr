@@ -116,8 +116,8 @@ if (isset($Voting)) {
 			foreach ($Games['Previous'] as $Game) { ?>
 				<tr>
 					<td width="35%"><?php if (isset($Game['PreviousGameLink'])) { ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if (isset($Game['PreviousGameLink'])) { ?></a><?php } ?></td>
-					<td><?php echo $Game['StartDate'] ?></td>
-					<td><?php echo $Game['EndDate'] ?></td>
+					<td class="noWrap"><?php echo $Game['StartDate'] ?></td>
+					<td class="noWrap"><?php echo $Game['EndDate'] ?></td>
 					<td class="center"><?php echo $Game['Type']; ?></td>
 					<td class="center"><?php echo $Game['Speed']; ?></td>
 					<td class="center"><a href="<?php echo $Game['PreviousGameHOFLink']; ?>">Hall Of Fame</a></td>
