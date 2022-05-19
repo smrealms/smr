@@ -30,7 +30,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		'player_name' => $dbRecord->getString('player_name'),
 		'experience' => number_format($dbRecord->getInt('experience')),
 		'alignment' => number_format($dbRecord->getInt('alignment')),
-		'race' => number_format($dbRecord->getInt('race')),
+		'race' => Smr\Race::getName($dbRecord->getInt('race')),
 		'kills' => number_format($dbRecord->getInt('kills')),
 		'deaths' => number_format($dbRecord->getInt('deaths')),
 		'bounty' => number_format($dbRecord->getInt('bounty')),
