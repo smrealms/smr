@@ -2,7 +2,6 @@
 
 namespace SmrTest;
 
-use ReflectionClass;
 use ReflectionMethod;
 
 class TestUtils {
@@ -22,8 +21,7 @@ class TestUtils {
 	 * @return \ReflectionMethod The method you want to test
 	 */
 	public static function getPrivateMethod(object $obj, string $name): ReflectionMethod {
-		$class = new ReflectionClass($obj);
-		$method = $class->getMethod($name);
+		$method = new ReflectionMethod($obj, $name);
 		$method->setAccessible(true);
 		return $method;
 	}
