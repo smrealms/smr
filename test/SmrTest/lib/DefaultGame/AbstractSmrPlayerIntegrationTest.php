@@ -12,7 +12,9 @@ use SmrTest\BaseIntegrationSpec;
  */
 class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = ['player'];
+	protected function tablesToTruncate(): array {
+		return ['player'];
+	}
 
 	protected function tearDown(): void {
 		AbstractSmrPlayer::clearCache();

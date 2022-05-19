@@ -12,7 +12,9 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = ['planet'];
+	protected function tablesToTruncate(): array {
+		return ['planet'];
+	}
 
 	protected function tearDown(): void {
 		SmrPlanet::clearCache();

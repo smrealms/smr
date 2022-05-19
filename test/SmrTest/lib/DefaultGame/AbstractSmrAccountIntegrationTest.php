@@ -12,7 +12,9 @@ use SmrTest\BaseIntegrationSpec;
  */
 class AbstractSmrAccountIntegrationTest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = ['account', 'account_auth'];
+	protected function tablesToTruncate(): array {
+		return ['account', 'account_auth'];
+	}
 
 	protected function setUp(): void {
 		AbstractSmrAccount::clearCache();

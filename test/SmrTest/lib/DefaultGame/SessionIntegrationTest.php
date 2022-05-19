@@ -13,9 +13,11 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SessionIntegrationTest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = ['debug'];
-
 	private Session $session;
+
+	protected function tablesToTruncate(): array {
+		return ['debug'];
+	}
 
 	protected function setUp(): void {
 		// Start each test with a fresh container (and Smr\Session).

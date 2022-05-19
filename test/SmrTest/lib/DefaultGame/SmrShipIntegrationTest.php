@@ -12,9 +12,11 @@ use SmrWeapon;
  */
 class SmrShipIntegrationTest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = ['ship_has_hardware'];
-
 	private \PHPUnit\Framework\MockObject\MockObject $player;
+
+	protected function tablesToTruncate(): array {
+		return ['ship_has_hardware'];
+	}
 
 	protected function setUp(): void {
 		// Start each test with an empty ship cache

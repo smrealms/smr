@@ -12,12 +12,14 @@ require_once(LIB . 'Default/nha.inc.php');
  */
 class CreateNHATest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = [
-		'alliance',
-		'alliance_has_roles',
-		'alliance_thread',
-		'alliance_thread_topic',
-	];
+	protected function tablesToTruncate(): array {
+		return [
+			'alliance',
+			'alliance_has_roles',
+			'alliance_thread',
+			'alliance_thread_topic',
+		];
+	}
 
 	public function test_createNHA(): void {
 		// Create the NHA

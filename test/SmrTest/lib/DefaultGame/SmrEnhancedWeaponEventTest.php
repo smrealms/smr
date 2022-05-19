@@ -14,7 +14,9 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SmrEnhancedWeaponEventTest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = ['location_sells_special', 'location'];
+	protected function tablesToTruncate(): array {
+		return ['location_sells_special', 'location'];
+	}
 
 	public function test_integration(): void {
 		// Get protected constant from class for more robust validation

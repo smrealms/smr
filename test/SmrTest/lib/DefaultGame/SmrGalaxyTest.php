@@ -12,7 +12,9 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SmrGalaxyTest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = ['game_galaxy'];
+	protected function tablesToTruncate(): array {
+		return ['game_galaxy'];
+	}
 
 	protected function setUp(): void {
 		// Start each test with an empty galaxy cache
