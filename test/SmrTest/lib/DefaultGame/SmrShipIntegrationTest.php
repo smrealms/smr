@@ -12,7 +12,7 @@ use SmrWeapon;
  */
 class SmrShipIntegrationTest extends BaseIntegrationSpec {
 
-	private \PHPUnit\Framework\MockObject\MockObject $player;
+	private AbstractSmrPlayer $player; // will be mocked
 
 	protected function tablesToTruncate(): array {
 		return ['ship_has_hardware'];

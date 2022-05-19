@@ -15,7 +15,7 @@ use Smr\ShipClass;
  */
 class AbstractSmrShipTest extends TestCase {
 
-	private \PHPUnit\Framework\MockObject\MockObject $player;
+	private AbstractSmrPlayer $player; // will be mocked
 
 	protected function setUp(): void {
 		// Create mock player that will be needed to create any ship
