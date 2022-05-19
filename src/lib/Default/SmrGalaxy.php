@@ -25,6 +25,11 @@ class SmrGalaxy {
 	protected bool $hasChanged = false;
 	protected bool $isNew = false;
 
+	public static function clearCache(): void {
+		self::$CACHE_GALAXIES = [];
+		self::$CACHE_GAME_GALAXIES = [];
+	}
+
 	public static function getGameGalaxies(int $gameID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
 			$db = Smr\Database::getInstance();
