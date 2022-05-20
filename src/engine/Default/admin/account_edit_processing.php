@@ -17,7 +17,7 @@ $reason_pre_select = Smr\Request::getInt('reason_pre_select');
 $reason_msg = Smr\Request::get('reason_msg');
 $veteran_status = Smr\Request::get('veteran_status') == 'TRUE';
 $logging_status = Smr\Request::get('logging_status') == 'TRUE';
-$except = Smr\Request::get('exception_add');
+$except = Smr\Request::get('exception_add', ''); // missing if account already has an exception
 $points = Smr\Request::getInt('points');
 $names = Smr\Request::getArray('player_name', []); // missing when no games joined
 $delete = Smr\Request::getArray('delete', []); // missing when no games joined
@@ -116,7 +116,7 @@ if ($logging_status != $curr_account->isLoggingEnabled()) {
 	$actions[] = 'set the logging status to ' . $logging_status;
 }
 
-if ($except != 'Add An Exception' && $except != '') {
+if ($except != '') {
 	$db->insert('account_exceptions', [
 		'account_id' => $db->escapeNumber($account_id),
 		'reason' => $db->escapeString($except),
