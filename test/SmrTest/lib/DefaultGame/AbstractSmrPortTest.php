@@ -51,14 +51,14 @@ class AbstractSmrPortTest extends TestCase {
 	/**
 	 * @dataProvider provider_getGoodTransaction
 	 */
-	public function test_getGoodTransaction($transaction): void {
+	public function test_getGoodTransaction(string $transaction): void {
 		$port = AbstractSmrPort::createPort(1, 1);
 		$port->addPortGood(GOODS_ORE, $transaction);
 		self::assertSame($transaction, $port->getGoodTransaction(GOODS_ORE));
 	}
 
 	/**
-	 * @return array<string>
+	 * @return array<array<string>>
 	 */
 	public function provider_getGoodTransaction(): array {
 		return [[TRADER_BUYS], [TRADER_SELLS]];

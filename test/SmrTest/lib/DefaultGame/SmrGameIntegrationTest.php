@@ -12,7 +12,9 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SmrGameIntegrationTest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = ['game', 'race_has_relation'];
+	protected function tablesToTruncate(): array {
+		return ['game', 'race_has_relation'];
+	}
 
 	protected function tearDown(): void {
 		SmrGame::clearCache();

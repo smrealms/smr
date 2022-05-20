@@ -13,7 +13,9 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SectorLockTest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = ['locks_queue'];
+	protected function tablesToTruncate(): array {
+		return ['locks_queue'];
+	}
 
 	protected function tearDown(): void {
 		// Reset the DI container to avoid contaminating other tests

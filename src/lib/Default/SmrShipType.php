@@ -22,6 +22,10 @@ class SmrShipType {
 	private array $maxHardware = [];
 	private int $baseManeuverability;
 
+	public static function clearCache(): void {
+		self::$CACHE_SHIP_TYPES = [];
+	}
+
 	public static function get(int $shipTypeID, Smr\DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_SHIP_TYPES[$shipTypeID])) {
 			if ($dbRecord === null) {

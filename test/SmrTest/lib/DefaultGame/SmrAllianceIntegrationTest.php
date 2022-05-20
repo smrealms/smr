@@ -12,7 +12,9 @@ use SmrTest\BaseIntegrationSpec;
  */
 class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 
-	protected array $tablesToTruncate = ['alliance', 'irc_alliance_has_channel'];
+	protected function tablesToTruncate(): array {
+		return ['alliance', 'irc_alliance_has_channel'];
+	}
 
 	protected function setUp(): void {
 		// Start each test with an empty alliance cache

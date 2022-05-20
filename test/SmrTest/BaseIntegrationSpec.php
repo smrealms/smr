@@ -10,9 +10,12 @@ use Smr\Container\DiContainer;
 /**
  * Any test that modifies the database should inherit from this class.
  */
-class BaseIntegrationSpec extends TestCase {
+abstract class BaseIntegrationSpec extends TestCase {
 
-	protected array $tablesToTruncate;
+	/**
+	 * @return array<string>
+	 */
+	abstract protected function tablesToTruncate(): array;
 
 	private static mysqli $conn;
 	private static array $checksums;
@@ -31,13 +34,13 @@ class BaseIntegrationSpec extends TestCase {
 
 	/**
 	 * Any table that is modified during a test class should be declared in the
-	 * `tablesToTruncate` attribute, and those tables will be reset after each
+	 * `tablesToTruncate()` method, and those tables will be reset after each
 	 * test method.
 	 *
 	 * @after
 	 */
 	final protected function truncateTables(): void {
-		foreach ($this->tablesToTruncate as $name) {
+		foreach ($this->tablesToTruncate() as $name) {
 			// Include hard-coded test database name as a safety precaution
 			self::$conn->query('TRUNCATE TABLE smr_live_test.`' . $name . '`');
 		}

@@ -84,7 +84,9 @@ class SmrEnhancedWeaponEvent {
 			$bonusDamage = true;
 		}
 
-		$db->insert('location_sells_special', [
+		// We replace instead of insert in the very unlikely case that we have
+		// selected the same configuration twice in a row.
+		$db->replace('location_sells_special', [
 			'game_id' => $db->escapeNumber($gameID),
 			'sector_id' => $db->escapeNumber($sectorID),
 			'location_type_id' => $db->escapeNumber($locationTypeID),
