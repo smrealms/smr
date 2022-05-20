@@ -11,6 +11,11 @@ use SmrShipType;
  */
 class SmrShipTypeTest extends TestCase {
 
+	public static function setUpBeforeClass(): void {
+		// Ensure the cache has not been populated yet
+		SmrShipType::clearCache();
+	}
+
 	public function test_one_ship_properties(): void {
 		// Test all properties of one particular ship (Fed Ult)
 		$shipType = SmrShipType::get(SHIP_TYPE_FEDERAL_ULTIMATUM);
