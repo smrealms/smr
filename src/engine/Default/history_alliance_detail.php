@@ -8,8 +8,12 @@ $account = $session->getAccount();
 Menu::historyGames($var['selected_index']);
 
 //offer a back button
-$container = Page::copy($var);
-$container['body'] = 'history_games.php';
+if (isset($var['previous_page'])) {
+	$container = $var['previous_page'];
+} else {
+	$container = Page::copy($var);
+	$container['body'] = 'history_games.php';
+}
 $template->assign('BackHREF', $container->href());
 
 $game_id = $var['view_game_id'];
