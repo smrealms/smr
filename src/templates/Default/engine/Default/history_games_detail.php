@@ -2,11 +2,11 @@
 	if (empty($Rankings)) { ?>
 		Click a link to view those stats.<br /><br />
 		<form method="POST" action="<?php echo $SelfHREF; ?>">
-			<input type="submit" name="action" value="Most Dangerous Sectors" /><br />
-			<input type="submit" name="action" value="Top Mined Sectors" /><br />
-			<input type="submit" name="action" value="Top Planets" /><br />
-			<input type="submit" name="action" value="Top Alliance Kills" /><br />
-			<input type="submit" name="action" value="Top Alliance Deaths" /><br />
+			<p><input type="submit" name="action" value="Most Dangerous Sectors" /></p>
+			<p><input type="submit" name="action" value="Top Mined Sectors" /></p>
+			<p><input type="submit" name="action" value="Top Planets" /></p>
+			<p><input type="submit" name="action" value="Top Alliance Kills" /></p>
+			<p><input type="submit" name="action" value="Top Alliance Deaths" /></p>
 		</form><?php
 	} else { ?>
 		<a href="<?php echo $SelfHREF; ?>"><b>&lt;&lt;Back</b></a>
