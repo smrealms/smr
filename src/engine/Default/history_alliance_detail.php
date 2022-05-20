@@ -20,7 +20,7 @@ $db->switchDatabases($var['HistoryDatabase']);
 $dbResult = $db->read('SELECT alliance_name, leader_id FROM alliance WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id));
 $dbRecord = $dbResult->record();
 $leaderID = $dbRecord->getInt('leader_id');
-$template->assign('PageTopic', 'Alliance Roster - ' . htmlentities($dbRecord->getString('alliance_name')));
+$template->assign('PageTopic', 'Alliance Roster: ' . htmlentities($dbRecord->getString('alliance_name')));
 
 //get alliance members
 $oldAccountID = $account->getOldAccountID($var['HistoryDatabase']);
@@ -31,7 +31,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$players[] = [
 		'leader' => $memberAccountID == $leaderID ? '*' : '',
 		'bold' => $memberAccountID == $oldAccountID ? 'class="bold"' : '',
-		'player_name' => $dbRecord->getString('player_name'),
+		'player_name' => htmlentities($dbRecord->getString('player_name')),
 		'experience' => number_format($dbRecord->getInt('experience')),
 		'alignment' => number_format($dbRecord->getInt('alignment')),
 		'race' => Smr\Race::getName($dbRecord->getInt('race')),

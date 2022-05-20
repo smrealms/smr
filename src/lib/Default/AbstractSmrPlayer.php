@@ -1934,7 +1934,7 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	protected function getCurrentBountyAmount(string $type): int {
+	public function getCurrentBountyAmount(string $type): int {
 		$bounty = $this->getCurrentBounty($type);
 		return $bounty['Amount'];
 	}
