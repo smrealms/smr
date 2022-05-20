@@ -141,7 +141,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$container['body'] = 'news_read.php';
 	$games['Previous'][$game_id]['PreviousGameNewsLink'] = $container->href();
 	$container['body'] = 'game_stats.php';
-	$games['Previous'][$game_id]['PreviousGameStatsLink'] = $container->href();
+	$games['Previous'][$game_id]['PreviousGameLink'] = $container->href();
 }
 
 foreach (Globals::getHistoryDatabases() as $databaseName => $oldColumn) {

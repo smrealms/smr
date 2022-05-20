@@ -122,7 +122,7 @@ if (isset($Voting)) {
 					<td class="center"><?php echo $Game['Speed']; ?></td>
 					<td class="center"><a href="<?php echo $Game['PreviousGameHOFLink']; ?>">Hall Of Fame</a></td>
 					<td class="center"><a href="<?php echo $Game['PreviousGameNewsLink']; ?>">Game News</a></td>
-					<td class="center"><?php if (isset($Game['PreviousGameStatsLink'])) { ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Game Stats</a><?php } ?></td>
+					<td class="center"><?php if (isset($Game['PreviousGameStatsLink'])) { ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Extended Stats</a><?php } ?></td>
 				</tr>
 			<?php } ?>
 		</table><?php
