@@ -36,12 +36,12 @@ foreach ($dbResult->records() as $dbRecord) {
 		'leader' => $memberAccountID == $leaderID ? '*' : '',
 		'bold' => $memberAccountID == $oldAccountID ? 'class="bold"' : '',
 		'player_name' => htmlentities($dbRecord->getString('player_name')),
-		'experience' => number_format($dbRecord->getInt('experience')),
-		'alignment' => number_format($dbRecord->getInt('alignment')),
+		'experience' => $dbRecord->getInt('experience'),
+		'alignment' => $dbRecord->getInt('alignment'),
 		'race' => Smr\Race::getName($dbRecord->getInt('race')),
-		'kills' => number_format($dbRecord->getInt('kills')),
-		'deaths' => number_format($dbRecord->getInt('deaths')),
-		'bounty' => number_format($dbRecord->getInt('bounty')),
+		'kills' => $dbRecord->getInt('kills'),
+		'deaths' => $dbRecord->getInt('deaths'),
+		'bounty' => $dbRecord->getInt('bounty'),
 	];
 }
 $template->assign('Players', $players);

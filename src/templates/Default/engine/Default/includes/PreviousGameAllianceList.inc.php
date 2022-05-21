@@ -16,12 +16,12 @@
 			<tr <?php echo $player['bold']; ?>>
 				<td><?php echo ($i + 1) . $player['leader']; ?></td>
 				<td><?php echo $player['player_name']; ?></td>
-				<td><?php echo $player['experience']; ?></td>
-				<td><?php echo $player['alignment']; ?></td>
+				<td><?php echo number_format($player['experience']); ?></td>
+				<td><?php echo number_format($player['alignment']); ?></td>
 				<td><?php echo $player['race']; ?></td>
-				<td><?php echo $player['kills']; ?></td>
-				<td><?php echo $player['deaths']; ?></td>
-				<td><?php echo $player['bounty']; ?></td>
+				<td><?php echo number_format($player['kills']); ?></td>
+				<td><?php echo number_format($player['deaths']); ?></td>
+				<td><?php echo number_format($player['bounty']); ?></td>
 			</tr><?php
 		} ?>
 	</table>
