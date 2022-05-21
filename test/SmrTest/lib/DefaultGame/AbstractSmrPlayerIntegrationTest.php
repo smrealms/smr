@@ -76,4 +76,51 @@ class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 		AbstractSmrPlayer::getPlayer(123, 321);
 	}
 
+	public function test_changePlayerName_throws_when_name_unchanged(): void {
+		// Try changing name to the same name
+		$name = 'test';
+		$player = AbstractSmrPlayer::createPlayer(1, 2, $name, RACE_HUMAN, false);
+		$this->expectException(UserError::class);
+		$this->expectExceptionMessage('Your player already has that name!');
+		$player->changePlayerName($name);
+	}
+
+	public function test_changePlayerName_throws_when_name_is_in_use(): void {
+		// Try changing name to a name that is already taken
+		$name1 = 'test1';
+		$player1 = AbstractSmrPlayer::createPlayer(1, 2, $name1, RACE_HUMAN, false);
+		$player2 = AbstractSmrPlayer::createPlayer(2, 2, 'test2', RACE_HUMAN, false);
+		$this->expectException(UserError::class);
+		$this->expectExceptionMessage('That name is already being used in this game!');
+		$player2->changePlayerName($name1);
+	}
+
+	public function test_changePlayerName_allows_case_change(): void {
+		// Try changing name from 'test' to 'TEST'
+		$name = 'test';
+		$player = AbstractSmrPlayer::createPlayer(1, 2, $name, RACE_HUMAN, false);
+		$newName = strtoupper($name);
+		self::assertNotEquals($name, $newName); // sanity check
+		$player->changePlayerName($newName);
+		self::assertSame($newName, $player->getPlayerName());
+	}
+
+	public function test_changePlayerName(): void {
+		// Try changing name from 'test' to 'Wall-E' (as an admin)
+		$player = AbstractSmrPlayer::createPlayer(1, 2, 'test', RACE_HUMAN, false);
+		$player->changePlayerName('Wall-E');
+		self::assertSame('Wall-E', $player->getPlayerName());
+		// Make sure we have NOT used the name change token
+		self::assertFalse($player->isNameChanged());
+	}
+
+	public function test_changePlayerNameByPlayer(): void {
+		// Try changing name from 'test' to 'Wall-E' (as a player)
+		$player = AbstractSmrPlayer::createPlayer(1, 2, 'test', RACE_HUMAN, false);
+		$player->changePlayerNameByPlayer('Wall-E');
+		self::assertSame('Wall-E', $player->getPlayerName());
+		// Make sure we *have* used the name change token
+		self::assertTrue($player->isNameChanged());
+	}
+
 }

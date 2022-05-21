@@ -124,33 +124,32 @@ if ($except != '') {
 	$actions[] = 'added the exception ' . $except;
 }
 
-if (!empty($names)) {
-	foreach ($names as $game_id => $new_name) {
-		if (!empty($new_name)) {
-			$dbResult = $db->read('SELECT account_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND player_name = ' . $db->escapeString($new_name));
-			if (!$dbResult->hasRecord()) {
-				$editPlayer = SmrPlayer::getPlayer($account_id, $game_id);
-				$editPlayer->setPlayerName($new_name);
-				$editPlayer->update();
-
-				$actions[] = 'changed player name to ' . $editPlayer->getDisplayName();
-
-				//insert news message
-				$news = 'Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
-
-				$db->insert('news', [
-					'time' => $db->escapeNumber(Smr\Epoch::time()),
-					'news_message' => $db->escapeString($news),
-					'game_id' => $db->escapeNumber($game_id),
-					'type' => $db->escapeString('admin'),
-					'killer_id' => $db->escapeNumber($account_id),
-				]);
-			} elseif ($dbResult->record()->getInt('account_id') != $account_id) {
-				$actions[] = 'have NOT changed player name to ' . htmlentities($new_name) . ' (already taken)';
-			}
-		}
-
+foreach ($names as $game_id => $new_name) {
+	if (empty($new_name)) {
+		continue;
 	}
+	$editPlayer = SmrPlayer::getPlayer($account_id, $game_id);
+
+	try {
+		$editPlayer->changePlayerName($new_name);
+	} catch (Smr\Exceptions\UserError $err) {
+		$actions[] = 'have NOT changed player name to ' . htmlentities($new_name) . ' ( ' . $err->getMessage() . ')';
+		continue;
+	}
+	$editPlayer->update();
+
+	$actions[] = 'changed player name to ' . $editPlayer->getDisplayName();
+
+	//insert news message
+	$news = 'Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
+
+	$db->insert('news', [
+		'time' => $db->escapeNumber(Smr\Epoch::time()),
+		'news_message' => $db->escapeString($news),
+		'game_id' => $db->escapeNumber($game_id),
+		'type' => $db->escapeString('admin'),
+		'killer_id' => $db->escapeNumber($account_id),
+	]);
 }
 
 if (!empty($delete)) {

@@ -1230,11 +1230,43 @@ abstract class AbstractSmrPlayer {
 	}
 
 	/**
+	 * Change a player's name, with name validation.
+	 *
+	 * @throws Smr\Exceptions\UserError When the new name is not permitted.
+	 */
+	public function changePlayerName(string $name): void {
+		// Check if the player already has this name (case-sensitive)
+		if ($this->getPlayerName() == $name) {
+			throw new Smr\Exceptions\UserError('Your player already has that name!');
+		}
+
+		// Make sure the name passes some basic character requirements
+		Smr\DisplayNameValidator::validate($name);
+
+		// Check if name is in use by any other player.
+		try {
+			$other = self::getPlayerByPlayerName($name, $this->getGameID());
+			// The player_name field has case-insensitive collation, so if we
+			// find our own player, then it is because the new name has a
+			// different case (since we did a case-sensitive identity check
+			// above), and we allow it to be changed.
+			if ($this->equals($other)) {
+				throw new Smr\Exceptions\PlayerNotFound();
+			}
+			throw new Smr\Exceptions\UserError('That name is already being used in this game!');
+		} catch (Smr\Exceptions\PlayerNotFound) {
+			// Name is not in use, continue.
+		}
+
+		$this->setPlayerName($name);
+	}
+
+	/**
 	 * Use this method when the player is changing their own name.
 	 * This will flag the player as having used their free name change.
 	 */
-	public function setPlayerNameByPlayer(string $playerName): void {
-		$this->setPlayerName($playerName);
+	public function changePlayerNameByPlayer(string $playerName): void {
+		$this->changePlayerName($playerName);
 		$this->setNameChanged(true);
 	}
 

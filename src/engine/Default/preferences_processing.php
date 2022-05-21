@@ -166,32 +166,17 @@ if ($action == 'Save and resend validation code') {
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
 } elseif ($action == 'change_name') {
+	$old_name = $player->getDisplayName();
 	$player_name = Smr\Request::get('PlayerName');
 
-	if ($player->getPlayerName() == $player_name) {
-		create_error('Your player already has that name!');
+	// Check that the player can afford the name change
+	$smrCreditCost = $player->isNameChanged() ? CREDITS_PER_NAME_CHANGE : 0;
+	if ($account->getTotalSmrCredits() < $smrCreditCost) {
+		create_error('You do not have enough credits to change your name.');
 	}
 
-	Smr\DisplayNameValidator::validate($player_name);
-
-	// Check if name is in use.
-	// The player_name field has case-insensitive collation, so check against ID
-	// to allow player to change the case of their name.
-	$dbResult = $db->read('SELECT 1 FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND player_name=' . $db->escapeString($player_name) . ' AND player_id != ' . $db->escapeNumber($player->getPlayerID()) . ' LIMIT 1');
-	if ($dbResult->hasRecord()) {
-		create_error('Name is already being used in this game!');
-	}
-
-	if ($player->isNameChanged()) {
-		if ($account->getTotalSmrCredits() < CREDITS_PER_NAME_CHANGE) {
-			create_error('You do not have enough credits to change your name.');
-		}
-		$account->decreaseTotalSmrCredits(CREDITS_PER_NAME_CHANGE);
-	}
-
-	$old_name = $player->getDisplayName();
-
-	$player->setPlayerNameByPlayer($player_name);
+	$player->changePlayerNameByPlayer($player_name);
+	$account->decreaseTotalSmrCredits($smrCreditCost);
 
 	$news = 'Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink();
 	$db->insert('news', [
@@ -202,6 +187,7 @@ if ($action == 'Save and resend validation code') {
 		'killer_id' => $db->escapeNumber($player->getAccountID()),
 	]);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
+
 } elseif ($action == 'change_race') {
 	if (!$player->canChangeRace()) {
 		throw new Exception('Player is not allowed to change their race!');
