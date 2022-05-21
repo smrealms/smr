@@ -225,7 +225,7 @@
 				if (isset($Exception)) {
 					echo $Exception;
 				} else { ?>
-					This account is not listed.<br /><input type="text" name="exception_add" value="Add An Exception"><?php
+					This account is not listed.<br /><input type="text" name="exception_add" placeholder="Add An Exception"><?php
 				} ?>
 			</td>
 		</tr>

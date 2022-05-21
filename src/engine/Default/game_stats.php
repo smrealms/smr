@@ -44,7 +44,8 @@ if ($dbResult->hasRecord()) {
 	$template->assign('KillRankings', $killRankings);
 }
 
-function allianceTopTen(int $gameID, string $field): array {
+function allianceTopTen(SmrGame $game, string $field): array {
+	$gameID = $game->getGameID();
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT alliance_id, SUM(' . $field . ') amount
 				FROM alliance
@@ -55,11 +56,19 @@ function allianceTopTen(int $gameID, string $field): array {
 				LIMIT 10');
 	$rankings = [];
 	foreach ($dbResult->records() as $index => $dbRecord) {
-		$rankings[$index + 1]['Alliance'] = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id'), $gameID);
+		$alliance = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id'), $gameID);
 		$rankings[$index + 1]['Amount'] = $dbRecord->getInt('amount');
+		if ($game->hasEnded()) {
+			// If game has ended, offer a link to alliance roster details
+			$data = ['game_id' => $gameID, 'alliance_id' => $alliance->getAllianceID()];
+			$href = Page::create('skeleton.php', 'previous_game_alliance_detail.php', $data)->href();
+			$rankings[$index + 1]['AllianceName'] = create_link($href, $alliance->getAllianceDisplayName());
+		} else {
+			$rankings[$index + 1]['AllianceName'] = $alliance->getAllianceDisplayName();
+		}
 	}
 	return $rankings;
 }
 
-$template->assign('AllianceExpRankings', allianceTopTen($gameID, 'experience'));
-$template->assign('AllianceKillRankings', allianceTopTen($gameID, 'kills'));
+$template->assign('AllianceExpRankings', allianceTopTen($statsGame, 'experience'));
+$template->assign('AllianceKillRankings', allianceTopTen($statsGame, 'kills'));
