@@ -52,7 +52,7 @@ if ($action == 'Save and resend validation code') {
 	//no duplicates
 	try {
 		$other = SmrAccount::getAccountByHofName($HoF_name);
-		if ($account->getAccountID() != $other->getAccountID()) {
+		if (!$account->equals($other)) {
 			create_error('Someone is already using that Hall of Fame name!');
 		}
 	} catch (Smr\Exceptions\AccountNotFound) {
@@ -72,7 +72,7 @@ if ($action == 'Save and resend validation code') {
 		// no duplicates
 		try {
 			$other = SmrAccount::getAccountByDiscordId($discordId);
-			if ($account->getAccountID() != $other->getAccountID()) {
+			if (!$account->equals($other)) {
 				create_error('Someone is already using that Discord User ID!');
 			}
 		} catch (Smr\Exceptions\AccountNotFound) {
@@ -98,7 +98,7 @@ if ($action == 'Save and resend validation code') {
 		// no duplicates
 		try {
 			$other = SmrAccount::getAccountByIrcNick($ircNick);
-			if ($account->getAccountID() != $other->getAccountID()) {
+			if (!$account->equals($other)) {
 				create_error('Someone is already using that IRC nick!');
 			}
 		} catch (Smr\Exceptions\AccountNotFound) {

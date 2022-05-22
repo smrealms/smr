@@ -656,6 +656,10 @@ abstract class AbstractSmrAccount {
 		]);
 	}
 
+	public function equals(self $other): bool {
+		return $this->getAccountID() == $other->getAccountID();
+	}
+
 	public function getAccountID(): int {
 		return $this->account_id;
 	}
@@ -701,7 +705,7 @@ abstract class AbstractSmrAccount {
 
 		try {
 			$other = self::getAccountByEmail($email);
-			if ($this->getAccountID() != $other->getAccountID()) {
+			if (!$this->equals($other)) {
 				throw new Smr\Exceptions\UserError('This email address is already registered.');
 			}
 		} catch (Smr\Exceptions\AccountNotFound) {
