@@ -1,6 +1,6 @@
 # Distributed PHPStan config
 parameters:
-    level: 0
+    level: 1
     paths:
         - src
         - test
@@ -13,3 +13,15 @@ parameters:
     checkFunctionNameCase: true
     checkInternalClassCaseSensitivity: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
+
+    #----------------------------------------------
+    # Warning suppression (to be fixed eventually!)
+    #----------------------------------------------
+
+    ignoreErrors:
+        # Template files currently emit many undefined variable errors because
+        # we source them inside Template::includeTemplate. This will require a
+        # full redesign of the Template class to fix. (Level 1)
+        -
+            message: '#Variable .* might not be defined#'
+            path: src/template
