@@ -17,10 +17,10 @@
 					<th><?php echo $Header; ?></th><?php
 				} ?>
 			</tr><?php
-			foreach ($Rankings as $index => $values) { ?>
-				<tr>
+			foreach ($Rankings as $index => $row) { ?>
+				<tr <?php echo $row['bold']; ?>>
 					<td><?php echo $index + 1; ?></td><?php
-					foreach ($values as $value) { ?>
+					foreach ($row['data'] as $value) { ?>
 						<td><?php echo $value; ?></td><?php
 					} ?>
 				</tr><?php
