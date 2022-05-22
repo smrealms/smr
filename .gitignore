@@ -13,9 +13,6 @@
 # /config/
 /config/env
 /config/config.specific.php
-/config/discord/config.specific.php
-/config/irc/config.specific.php
-/config/npc/config.specific.php
 
 # /htdocs/
 /src/htdocs/upload
