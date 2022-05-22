@@ -57,10 +57,6 @@ class OneWayRoute extends Route {
 		return $this->goodId;
 	}
 
-	public function getOverallExpMultiplier(): float {
-		return ($this->buyDi + $this->sellDi) / $this->getTurnsForRoute();
-	}
-
 	public function getMoneyMultiplierSum(): int {
 		if ($this->goodId === GOODS_NOTHING) {
 			return 0;
