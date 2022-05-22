@@ -59,7 +59,7 @@ class VoteSite {
 		self::$CACHE_TIMEOUTS = null;
 	}
 
-	public static function getSite(int $linkID, int $accountID) {
+	public static function getSite(int $linkID, int $accountID): self {
 		return new self($linkID, $accountID, self::getSiteData($linkID));
 	}
 
