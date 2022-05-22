@@ -88,7 +88,7 @@ class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 	public function test_changePlayerName_throws_when_name_is_in_use(): void {
 		// Try changing name to a name that is already taken
 		$name1 = 'test1';
-		$player1 = AbstractSmrPlayer::createPlayer(1, 2, $name1, RACE_HUMAN, false);
+		AbstractSmrPlayer::createPlayer(1, 2, $name1, RACE_HUMAN, false);
 		$player2 = AbstractSmrPlayer::createPlayer(2, 2, 'test2', RACE_HUMAN, false);
 		$this->expectException(UserError::class);
 		$this->expectExceptionMessage('That name is already being used in this game!');
