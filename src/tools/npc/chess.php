@@ -3,8 +3,6 @@ try {
 	echo '<pre>';
 	// global config
 	require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
-	// bot config
-	require_once(CONFIG . 'npc/config.specific.php');
 
 	debug('Script started');
 

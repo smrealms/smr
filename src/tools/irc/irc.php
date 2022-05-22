@@ -13,8 +13,6 @@ function write_log_message(string $msg): void {
 
 // config file
 require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
-// bot config
-require_once(CONFIG . 'irc/config.specific.php');
 
 // timer events
 $events = [];

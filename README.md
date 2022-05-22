@@ -20,13 +20,6 @@ will need to create installation-specific copies of the following files:
 * `config/env.sample` &rarr; `config/env`
 * `config/config.specific.sample.php` &rarr; `config/config.specific.php`
 
-For "Caretaker" (IRC) or "Autopilot" (Discord) functionality:
-* `config/irc/config.specific.sample.php` &rarr; `config/irc/config.specific.php`
-* `config/discord/config.specific.sample.php` &rarr; `config/discord/config.specific.php`
-
-For NPC's:
-* `config/npc/config.specific.sample.php` &rarr; `config/npc/config.specific.php`
-
 The sample versions have sensible defaults, but update the copies as necessary.
 The options must be consistent between the various configuration files.
 

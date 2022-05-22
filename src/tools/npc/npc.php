@@ -20,8 +20,6 @@ const OVERRIDE_FORWARD = true;
 
 // global config
 require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
-// bot config
-require_once(CONFIG . 'npc/config.specific.php');
 
 // Enable NPC-specific conditions
 Smr\Container\DiContainer::getContainer()->set('NPC_SCRIPT', true);
