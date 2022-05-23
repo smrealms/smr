@@ -79,7 +79,7 @@ class DiContainer {
 	 * Create a new DI\Container instance.
 	 * This needs to be done once during a bootstrapping script, like bootstrap.php
 	 */
-	public static function initialize($enableCompilation): void {
+	public static function initialize(bool $enableCompilation): void {
 		self::$instance = new self($enableCompilation);
 	}
 
