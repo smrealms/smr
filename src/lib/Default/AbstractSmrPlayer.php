@@ -400,8 +400,8 @@ abstract class AbstractSmrPlayer {
 		return $this->gameID;
 	}
 
-	public function getGame(): SmrGame {
-		return SmrGame::getGame($this->gameID);
+	public function getGame(bool $forceUpdate = false): SmrGame {
+		return SmrGame::getGame($this->gameID, $forceUpdate);
 	}
 
 	public function getNewbieTurns(): int {
