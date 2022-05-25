@@ -2,30 +2,34 @@
 
 use Smr\Container\DiContainer;
 use Smr\SectorLock;
+use Smr\Session;
 
 function logException(Throwable $e): void {
 	$message = '';
 	$delim = "\n\n-----------\n\n";
 
-	$session = Smr\Session::getInstance();
-
-	if ($session->hasAccount()) {
-		$account = $session->getAccount();
-		$message .= 'Login: ' . $account->getLogin() . "\n" .
-			'E-Mail: ' . $account->getEmail() . "\n" .
-			'Account ID: ' . $account->getAccountID() . "\n" .
-			'Game ID: ' . $session->getGameID() . $delim;
-	}
 	$message .= 'Error Message: ' . $e . $delim;
 
-	$var = $session->hasCurrentVar() ? $session->getCurrentVar() : null;
-	$message .= '$var: ' . print_r($var, true);
+	if (DiContainer::initialized(Session::class)) {
+		$session = Session::getInstance();
+
+		if ($session->hasAccount()) {
+			$account = $session->getAccount();
+			$message .= 'Login: ' . $account->getLogin() . "\n" .
+				'E-Mail: ' . $account->getEmail() . "\n" .
+				'Account ID: ' . $account->getAccountID() . "\n" .
+				'Game ID: ' . $session->getGameID() . $delim;
+		}
+
+		$var = $session->hasCurrentVar() ? $session->getCurrentVar() : null;
+		$message .= '$var: ' . print_r($var, true) . $delim;
+	}
 
 	// Don't display passwords input by users in the log message!
 	if (isset($_REQUEST['password'])) {
 		$_REQUEST['password'] = '*****';
 	}
-	$message .= "\n\n" . '$_REQUEST: ' . var_export($_REQUEST, true);
+	$message .= '$_REQUEST: ' . var_export($_REQUEST, true);
 	$message .= $delim;
 
 	$message .=
@@ -35,7 +39,7 @@ function logException(Throwable $e): void {
 		'URL: ' . (defined('URL') ? URL : 'undefined');
 
 	// Try to release lock so they can carry on normally
-	if (class_exists(SectorLock::class, false)) {
+	if (DiContainer::initialized(SectorLock::class)) {
 		try {
 			SectorLock::getInstance()->release();
 		} catch (Throwable $ee) {
@@ -62,9 +66,9 @@ function logException(Throwable $e): void {
 	}
 
 	// Send error message to the in-game auto bugs mailbox
-	if ($session->hasGame()) {
+	if (isset($session) && $session->hasGame()) {
 		$session->getPlayer()->sendMessageToBox(BOX_BUGS_AUTO, $message);
-	} elseif ($session->hasAccount()) {
+	} elseif (isset($session) && $session->hasAccount()) {
 		// Will be logged without a game_id
 		$session->getAccount()->sendMessageToBox(BOX_BUGS_AUTO, $message);
 	} else {
