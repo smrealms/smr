@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Npc\Exceptions\TradeRouteDrained;
+use Smr\Routes\RouteIterator;
+
 function overrideForward(Page $container): never {
 	global $forwardedContainer;
 	$forwardedContainer = $container;
@@ -123,12 +126,10 @@ function NPCStuff(): void {
 
 		try {
 			// Avoid infinite loops by restricting the number of actions
-			if ($actions > NPC_MAX_ACTIONS) {
+			if ($actions >= NPC_MAX_ACTIONS) {
 				debug('Reached maximum number of actions: ' . NPC_MAX_ACTIONS);
 				throw new Smr\Npc\Exceptions\FinalAction();
 			}
-
-			debug('Action #' . $actions);
 
 			//We have to reload player on each loop
 			$player = $session->getPlayer(true);
@@ -148,6 +149,7 @@ function NPCStuff(): void {
 
 				// Initialize the trade route for this NPC
 				$allTradeRoutes = findRoutes($player);
+				shuffle($allTradeRoutes); // randomize
 				$tradeRoute = changeRoute($allTradeRoutes);
 
 				// Upgrade ship if possible, reset hardware to max, etc.
@@ -167,6 +169,10 @@ function NPCStuff(): void {
 				setupShip($player); // reship before continuing
 				$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
 			}
+
+			// Start the action sequence
+			$actions++;
+			debug('Action #' . $actions);
 
 			// Do we have a plot that ends in Fed?
 			$hasPlotToFed = $player->hasPlottedCourse() && SmrSector::getSector($player->getGameID(), $player->getPlottedCourse()->getEndSectorID())->offersFederalProtection();
@@ -194,55 +200,36 @@ function NPCStuff(): void {
 				}
 				processContainer(plotToFed($player));
 
-			} elseif ($tradeRoute instanceof Smr\Routes\MultiplePortRoute) {
+			} elseif ($tradeRoute instanceof RouteIterator) {
 				debug('Trade Route');
-				if (!$tradeRoute->containsPort($player->getSectorID())) {
-					// We're not at a port in this trade route yet, let's plot to it.
-					// It doesn't matter where in the route we start, so we choose the return route for convenience.
-					$plotSectorID = $tradeRoute->getReturnRoute()->getBuySectorId();
-					debug('Plot To Buy: ' . $plotSectorID);
-					processContainer(plotToSector($player, $plotSectorID));
+
+				$currentRoute = $tradeRoute->getCurrentRoute();
+				$transaction = $tradeRoute->getCurrentTransaction();
+				$targetSectorID = $tradeRoute->getCurrentSectorID();
+
+				if ($targetSectorID != $player->getSectorID()) {
+					// We're not at the right port yet, let's plot to it.
+					debug('Plot To ' . $transaction . ': ' . $targetSectorID);
+					processContainer(plotToSector($player, $targetSectorID));
 				}
 
 				$port = $player->getSector()->getPort();
 				$tradeRestriction = $port->getTradeRestriction($player);
 				if ($tradeRestriction !== false) {
-					// We can't trade at this port, let's try another route
+					debug('We cannot trade at this port: ' . $tradeRestriction);
 					$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
 					throw new Smr\Npc\Exceptions\Forward();
 				}
 
-				// Find which part of the route we're on and act accordingly
-				$ship = $player->getShip();
-				foreach ($tradeRoute->getOneWayRoutes() as $route) {
-					$goodID = $route->getGoodID();
-					if ($route->getSellSectorId() == $player->getSectorID()) {
-						if ($ship->hasCargo($goodID) && ($port->getGoodAmount($goodID) >= $ship->getCargo($goodID))) {
-							debug('Sell Goods');
-							processContainer(tradeGoods($goodID, $player, $port));
-						}
-					} elseif ($route->getBuySectorId() == $player->getSectorID()) {
-						if ($ship->hasCargo($goodID)) {
-							// We just bought goods here, plot to sell
-							$plotSectorID = $route->getSellSectorId();
-							debug('Plot To Sell: ' . $plotSectorID);
-							processContainer(plotToSector($player, $plotSectorID));
-						} elseif (!$ship->hasCargo() && ($port->getGoodAmount($goodID) >= $ship->getEmptyHolds())) {
-							debug('Buy Goods');
-							processContainer(tradeGoods($goodID, $player, $port));
-						}
-					}
-				}
-
-				// If we still have cargo, we need to dump it
-				if ($ship->hasCargo()) {
+				if ($transaction == TRADER_BUYS && $player->getShip()->hasCargo()) {
+					// We're here to buy, but we have cargo already
 					debug('Dump Goods');
 					processContainer(dumpCargo($player));
 				}
 
-				// We can't do anything with this trade route, let's pick another
-				$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
-				throw new Smr\Npc\Exceptions\Forward();
+				// Advance the route iterator for next action
+				$tradeRoute->next();
+				processContainer(tradeGoods($currentRoute->getGoodID(), $player, $port));
 
 			} else {
 				debug('No valid actions to take');
@@ -256,8 +243,11 @@ function NPCStuff(): void {
 			}
 			*/
 			throw new Exception('NPC failed to perform any action');
+		} catch (TradeRouteDrained) {
+			debug('Trade route is drained');
+			$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
 		} catch (Smr\Npc\Exceptions\Forward) {
-			$actions++; // we took an action
+			// we took an action
 		} catch (Smr\Npc\Exceptions\FinalAction) {
 			if ($player->getSector()->offersFederalProtection() && !$player->hasFederalProtection()) {
 				debug('Disarming so we can get Fed protection');
@@ -440,9 +430,15 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page
 	$transaction = $port->getGoodTransaction($goodID);
 
 	if ($transaction === TRADER_BUYS) {
+		debug('Buy Goods');
 		$amount = $ship->getEmptyHolds();
 	} else {
+		debug('Sell Goods');
 		$amount = $ship->getCargo($goodID);
+	}
+
+	if ($port->getGoodAmount($goodID) < $amount) {
+		throw new TradeRouteDrained();
 	}
 
 	$idealPrice = $port->getIdealPrice($goodID, $transaction, $amount, $relations);
@@ -557,12 +553,12 @@ function setupShip(AbstractSmrPlayer $player): void {
 	$ship->update();
 }
 
-function changeRoute(array &$tradeRoutes, Smr\Routes\Route $routeToAvoid = null): ?Smr\Routes\MultiplePortRoute {
+function changeRoute(array &$tradeRoutes, ?RouteIterator $routeToAvoid = null): ?RouteIterator {
 	// Remove any route from the pool of available routes if it contains
-	// either of the sectors in the $routeToAvoid (i.e. we died on it,
+	// either of the sectors in the $routeToAvoid (e.g. we died on it,
 	// so don't go back!).
 	if ($routeToAvoid !== null) {
-		$avoidSectorIDs = $routeToAvoid->getPortSectorIDs();
+		$avoidSectorIDs = $routeToAvoid->getEntireRoute()->getPortSectorIDs();
 		foreach ($tradeRoutes as $key => $route) {
 			foreach ($avoidSectorIDs as $avoidSectorID) {
 				if ($route->containsPort($avoidSectorID)) {
@@ -577,15 +573,11 @@ function changeRoute(array &$tradeRoutes, Smr\Routes\Route $routeToAvoid = null)
 		return null;
 	}
 
-	// Pick a random route
-	$routeKey = array_rand($tradeRoutes);
-	$tradeRoute = $tradeRoutes[$routeKey];
-
-	// Remove the route we chose so that we don't pick it again later.
-	unset($tradeRoutes[$routeKey]);
+	// Remove the picked route we chose so that we don't pick it again later.
+	$tradeRoute = array_pop($tradeRoutes);
 
 	debug('Switched route', $tradeRoute);
-	return $tradeRoute;
+	return new RouteIterator($tradeRoute);
 }
 
 function findRoutes(SmrPlayer $player): array {
