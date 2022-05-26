@@ -2,7 +2,6 @@
 
 namespace Smr\Container;
 
-use DI\Container;
 use DI\ContainerBuilder;
 use Dotenv\Dotenv;
 use mysqli;
@@ -21,7 +20,7 @@ use function DI\autowire;
 class DiContainer {
 
 	private static DiContainer $instance;
-	private readonly Container $container;
+	private readonly ResettableContainer|ResettableCompiledContainer $container;
 
 	private function __construct(bool $enableCompilation) {
 		$this->container = $this->buildContainer($enableCompilation);
@@ -64,8 +63,8 @@ class DiContainer {
 		];
 	}
 
-	private function buildContainer(bool $enableCompilation): Container {
-		$builder = new ContainerBuilder();
+	private function buildContainer(bool $enableCompilation): ResettableContainer|ResettableCompiledContainer {
+		$builder = new ContainerBuilder(ResettableContainer::class);
 		$builder
 			->addDefinitions($this->getDefinitions())
 			->useAnnotations(false)
@@ -73,7 +72,7 @@ class DiContainer {
 		if ($enableCompilation) {
 			// The CompiledContainer.php will be saved to the /tmp directory on the Docker container once
 			// during its lifecycle (first request)
-			$builder->enableCompilation('/tmp');
+			$builder->enableCompilation('/tmp', containerParentClass: ResettableCompiledContainer::class);
 		}
 		return $builder->build();
 	}
@@ -108,10 +107,18 @@ class DiContainer {
 	}
 
 	/**
+	 * Check if a managed instance of $className has been created.
+	 * If the container itself has not been initialized yet, will always return false.
+	 */
+	public static function initialized(string $className): bool {
+		return isset(self::$instance) && self::$instance->container->initialized($className);
+	}
+
+	/**
 	 * Return the raw dependency injection Container instance for more robust
 	 * container management operations.
 	 */
-	public static function getContainer(): Container {
+	public static function getContainer(): ResettableContainer|ResettableCompiledContainer {
 		return self::$instance->container;
 	}
 
