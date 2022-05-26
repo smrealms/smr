@@ -172,6 +172,7 @@ services:
             - mysql
 
     discord:
+        init: true
         command: php src/tools/discord/bot.php
         <<: *smr-cli
 
