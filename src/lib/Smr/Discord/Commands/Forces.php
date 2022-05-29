@@ -22,8 +22,7 @@ class Forces extends DatabaseCommand {
 
 	public function databaseResponse(string ...$args): array {
 		// print the next expiring forces
-		$option = $args[0] ?? null;
-		return shared_channel_msg_forces($this->player, $option);
+		return shared_channel_msg_forces($this->player, ...$args);
 	}
 
 }
