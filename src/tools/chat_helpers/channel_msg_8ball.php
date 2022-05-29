@@ -24,5 +24,5 @@ function shared_channel_msg_8ball(): string {
 		'Don\'t count on it.',
 	];
 
-	return $answers[rand(0, count($answers) - 1)];
+	return array_rand_value($answers);
 }
