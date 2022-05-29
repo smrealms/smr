@@ -113,5 +113,5 @@ function shared_channel_msg_seedlist_del(SmrPlayer $player, ?array $sectors): ar
 					AND game_id = ' . $player->getGameID() . '
 					AND sector_id IN (' . $db->escapeArray($sectors) . ')');
 
-	return ['The following sectors have been removed from the seedlist:' . implode(' ', $sectors)];
+	return ['The following sectors have been removed from the seedlist: ' . implode(' ', $sectors)];
 }
