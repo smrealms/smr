@@ -2,10 +2,21 @@
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Smr\Discord\Commands\Forces;
+use Smr\Discord\Commands\Game;
+use Smr\Discord\Commands\Invite;
+use Smr\Discord\Commands\MagicEightBall;
+use Smr\Discord\Commands\Money;
+use Smr\Discord\Commands\Op;
+use Smr\Discord\Commands\OpList;
+use Smr\Discord\Commands\OpTurns;
+use Smr\Discord\Commands\Seed;
+use Smr\Discord\Commands\Seedlist;
+use Smr\Discord\Commands\SeedlistAdd;
+use Smr\Discord\Commands\SeedlistDel;
+use Smr\Discord\Commands\Turns;
 
 require_once(__DIR__ . '/../../bootstrap.php');
-require_once(TOOLS . 'discord/GameLink.php');
-require_once(TOOLS . 'discord/mysql_cleanup.php');
 
 error_reporting(E_ALL);
 
@@ -32,19 +43,22 @@ $discord->on('ready', function($discord) {
 });
 
 // Register commands
-require_once('commands/money.php');
-require_once('commands/game.php');
-require_once('commands/turns.php');
-require_once('commands/invite.php');
-require_once('commands/op.php');
-require_once('commands/seed.php');
-require_once('commands/seedlist.php');
-require_once('commands/forces.php');
-require_once('commands/8ball.php');
+(new Forces())->register($discord);
+(new Game())->register($discord);
+(new Invite($discord))->register($discord);
+(new MagicEightBall())->register($discord);
+(new Money())->register($discord);
+$opCmd = (new Op())->register($discord);
+(new OpList())->register($opCmd);
+(new OpTurns())->register($opCmd);
+(new Seed())->register($discord);
+$seedlistCmd = (new Seedlist())->register($discord);
+(new SeedlistAdd())->register($seedlistCmd);
+(new SeedlistDel())->register($seedlistCmd);
+(new Turns())->register($discord);
 
 // Close the connection we may have opened during startup
 // to avoid a mysql timeout.
-$db = Smr\Database::getInstance();
-$db->close();
+Smr\Database::getInstance()->close();
 
 $discord->run();
