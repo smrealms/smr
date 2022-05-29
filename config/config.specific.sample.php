@@ -40,9 +40,8 @@ const BUG_REPORT_TO_ADDRESSES = [];
 //-------------------
 
 const DISCORD_TOKEN = 'YOUR_TOKEN_HERE';
-
-//const COMMAND_PREFIX = '.';
-//const LOGGER_LEVEL = 'INFO';
+const DISCORD_COMMAND_PREFIX = '.';
+const DISCORD_LOGGER_LEVEL = 'INFO';
 
 //-------------------
 // IRC
@@ -60,12 +59,11 @@ const IRC_BOT_VERBOSE_PING = false;
 //-------------------
 
 const NPC_LOG_TO_DATABASE = true; // insert debug messages into db
-
 const NPC_MAX_ACTIONS = 2500; // About a half hour worth of actions
 const NPC_LOW_TURNS = 75;
-const MINIMUM_RESERVE_CREDITS = 100000;
-const MIN_SLEEP_TIME = 800000;
-const MAX_SLEEP_TIME = 1100000;
+const NPC_MINIMUM_RESERVE_CREDITS = 100000;
+const NPC_MIN_SLEEP_TIME = 800000;
+const NPC_MAX_SLEEP_TIME = 1100000;
 
 //-------------------
 // NPC Chess

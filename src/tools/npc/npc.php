@@ -344,7 +344,7 @@ function processContainer(Page $container): never {
 }
 
 function sleepNPC(): void {
-	usleep(rand(MIN_SLEEP_TIME, MAX_SLEEP_TIME)); //Sleep for a random time
+	usleep(rand(NPC_MIN_SLEEP_TIME, NPC_MAX_SLEEP_TIME)); //Sleep for a random time
 }
 
 // Releases an NPC when it is done working
@@ -504,7 +504,7 @@ function checkForShipUpgrade(AbstractSmrPlayer $player): void {
 		}
 		$cost = $player->getShip()->getCostToUpgrade($upgradeShipID);
 		$balance = $player->getCredits() - $cost;
-		if ($balance > MINIMUM_RESERVE_CREDITS) {
+		if ($balance > NPC_MINIMUM_RESERVE_CREDITS) {
 			debug('Upgrading to ship type: ' . $upgradeShipID);
 			$player->setCredits($balance);
 			$player->getShip()->setTypeID($upgradeShipID);

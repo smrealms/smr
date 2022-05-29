@@ -9,17 +9,12 @@ require_once(TOOLS . 'discord/mysql_cleanup.php');
 
 error_reporting(E_ALL);
 
-function getCommandPrefix(): string {
-	return defined('COMMAND_PREFIX') ? COMMAND_PREFIX : '.';
-}
-
-$loggerLevel = defined('LOGGER_LEVEL') ? LOGGER_LEVEL : 'INFO';
 $logger = new Logger('discord');
-$logger->pushHandler(new StreamHandler('php://stdout', $loggerLevel));
+$logger->pushHandler(new StreamHandler('php://stdout', DISCORD_LOGGER_LEVEL));
 
 $discord = new Discord\DiscordCommandClient([
 	'token' => DISCORD_TOKEN,
-	'prefix' => getCommandPrefix(),
+	'prefix' => DISCORD_COMMAND_PREFIX,
 	'description' => 'Your automated co-pilot in the Space Merchant Realms universe. Made with DiscordPHP ' . Discord\Discord::VERSION . '.',
 	'caseInsensitiveCommands' => true,
 	'discordOptions' => [
@@ -30,7 +25,7 @@ $discord = new Discord\DiscordCommandClient([
 // Set bot presence to "Listening to <help command>"
 $discord->on('ready', function($discord) {
 	$activity = $discord->factory(Discord\Parts\User\Activity::class, [
-		'name' => getCommandPrefix() . 'help',
+		'name' => DISCORD_COMMAND_PREFIX . 'help',
 		'type' => Discord\Parts\User\Activity::TYPE_LISTENING,
 	]);
 	$discord->updatePresence($activity);
