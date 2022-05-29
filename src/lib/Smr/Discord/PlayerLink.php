@@ -6,9 +6,11 @@ use Discord\Parts\Channel\Message;
 use Smr\Database;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\AllianceNotFound;
+use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
 use SmrAccount;
 use SmrAlliance;
+use SmrGame;
 use SmrPlayer;
 
 /**
@@ -40,12 +42,8 @@ class PlayerLink {
 				throw new UserError('Could not find any games!');
 			}
 			$game_id = $dbResult->record()->getInt('MAX(game_id)');
-
-			$this->player = SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
 		} else {
-			// Only perform sensitive queries in approved public channels
-
-			// Get the approved channel
+			// Find the alliance associated with this public channel
 			// force update in case the ID has been changed in-game
 			$channel_id = $message->channel->id;
 			try {
@@ -53,14 +51,23 @@ class PlayerLink {
 			} catch (AllianceNotFound) {
 				throw new UserError("There is no SMR alliance associated with this Discord Channel ID. To set this up (you must have permission to set this for your alliance), go to `Change Alliance Stats` and set `$channel_id` as your `Discord Channel ID`.\n\n-- If this Discord Channel is public, you probably want to choose a different channel for your alliance.\n-- If you are not in an alliance (or if your alliance doesn't want a channel), send your command again in a direct message to me.");
 			}
+			$game_id = $alliance->getGameID();
+		}
 
-			$this->player = SmrPlayer::getPlayer($account->getAccountID(), $alliance->getGameID(), true);
-			if ($this->player->getAllianceID() != $alliance->getAllianceID()) {
-				throw new UserError('Player `' . $this->player->getPlayerName() . '` is not a member of alliance `' . $alliance->getAllianceName() . '`');
-			}
+		// Get their player associated with this game
+		try {
+			$player = SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
+		} catch (PlayerNotFound) {
+			throw new UserError('You have not joined game `' . SmrGame::getGame($game_id)->getName() . '` yet!');
+		}
+
+		// Prevent players from leaking sensitive data in other alliance channels
+		if (isset($alliance) && $player->getAllianceID() != $alliance->getAllianceID()) {
+			throw new UserError('Player `' . $player->getPlayerName() . '` is not a member of alliance `' . $alliance->getAllianceName() . '`');
 		}
 
 		// If here, we did not trigger one of the error messages
+		$this->player = $player;
 		$this->valid = true;
 	}
 
