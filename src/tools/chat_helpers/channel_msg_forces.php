@@ -32,7 +32,7 @@ function shared_channel_msg_forces(SmrPlayer $player, ?string $option): array {
 			ORDER BY expire_time ASC LIMIT 1');
 	} else {
 		// did we get a galaxy name?
-		$dbResult = $db->read('SELECT galaxy_id FROM game_galaxy WHERE galaxy_name = ' . $db->escapeString($option));
+		$dbResult = $db->read('SELECT galaxy_id FROM game_galaxy WHERE galaxy_name = ' . $db->escapeString($option) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 		if (!$dbResult->hasRecord()) {
 			return ["Could not find a galaxy named '$option'."];
 		}
