@@ -347,7 +347,7 @@ function do_voodoo(): never {
 
 	// Populate the template
 	$template = Smr\Template::getInstance();
-	if ($session->hasGame()) {
+	if (isset($player)) {
 		$template->assign('UnderAttack', $player->removeUnderAttack());
 	}
 
@@ -355,7 +355,7 @@ function do_voodoo(): never {
 	saveAllAndReleaseLock();
 
 	$template->assign('TemplateBody', $var['body']);
-	if ($session->hasGame()) {
+	if (isset($player)) {
 		$template->assign('ThisSector', $player->getSector());
 		$template->assign('ThisPlayer', $player);
 		$template->assign('ThisShip', $player->getShip());
@@ -373,7 +373,7 @@ function do_voodoo(): never {
 	}
 	if ($ajaxRefresh) {
 		// If we can refresh, specify the refresh interval in millisecs
-		if ($session->hasGame() && $player->canFight()) {
+		if (isset($player) && $player->canFight()) {
 			$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
 		} else {
 			$ajaxRefresh = AJAX_DEFAULT_REFRESH_TIME;
@@ -463,6 +463,35 @@ function doSkeletonAssigns(Smr\Template $template): void {
 	$template->assign('FontSize', $account->getFontSize() - 20);
 	$template->assign('timeDisplay', date($account->getDateTimeFormatSplit(), Smr\Epoch::time()));
 
+	$container = Page::create('skeleton.php', 'hall_of_fame_new.php');
+	$template->assign('HallOfFameLink', $container->href());
+
+	$template->assign('AccountID', $account->getAccountID());
+	$template->assign('PlayGameLink', Page::create('game_leave_processing.php', 'game_play.php')->href());
+
+	$template->assign('LogoutLink', Page::create('logoff.php')->href());
+
+	$container = Page::create('game_leave_processing.php', 'admin/admin_tools.php');
+	$template->assign('AdminToolsLink', $container->href());
+
+	$container = Page::create('skeleton.php', 'preferences.php');
+	$template->assign('PreferencesLink', $container->href());
+
+	$container['body'] = 'album_edit.php';
+	$template->assign('EditPhotoLink', $container->href());
+
+	$container['body'] = 'bug_report.php';
+	$template->assign('ReportABugLink', $container->href());
+
+	$container['body'] = 'contact.php';
+	$template->assign('ContactFormLink', $container->href());
+
+	$container['body'] = 'chat_rules.php';
+	$template->assign('IRCLink', $container->href());
+
+	$container['body'] = 'donation.php';
+	$template->assign('DonateLink', $container->href());
+
 	$container = Page::create('skeleton.php');
 
 	if ($session->hasGame()) {
@@ -501,38 +530,7 @@ function doSkeletonAssigns(Smr\Template $template): void {
 		$container['body'] = 'hall_of_fame_new.php';
 		$container['game_id'] = $player->getGameID();
 		$template->assign('CurrentHallOfFameLink', $container->href());
-	}
 
-	$container = Page::create('skeleton.php', 'hall_of_fame_new.php');
-	$template->assign('HallOfFameLink', $container->href());
-
-	$template->assign('AccountID', $account->getAccountID());
-	$template->assign('PlayGameLink', Page::create('game_leave_processing.php', 'game_play.php')->href());
-
-	$template->assign('LogoutLink', Page::create('logoff.php')->href());
-
-	$container = Page::create('game_leave_processing.php', 'admin/admin_tools.php');
-	$template->assign('AdminToolsLink', $container->href());
-
-	$container = Page::create('skeleton.php', 'preferences.php');
-	$template->assign('PreferencesLink', $container->href());
-
-	$container['body'] = 'album_edit.php';
-	$template->assign('EditPhotoLink', $container->href());
-
-	$container['body'] = 'bug_report.php';
-	$template->assign('ReportABugLink', $container->href());
-
-	$container['body'] = 'contact.php';
-	$template->assign('ContactFormLink', $container->href());
-
-	$container['body'] = 'chat_rules.php';
-	$template->assign('IRCLink', $container->href());
-
-	$container['body'] = 'donation.php';
-	$template->assign('DonateLink', $container->href());
-
-	if ($session->hasGame()) {
 		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
 
 		if ($dbResult->hasRecord()) {
@@ -602,7 +600,6 @@ function doSkeletonAssigns(Smr\Template $template): void {
 
 		// ******* Hardware *******
 		$container = Page::create('skeleton.php', 'configure_hardware.php');
-
 		$template->assign('HardwareLink', $container->href());
 
 		// ******* Forces *******
