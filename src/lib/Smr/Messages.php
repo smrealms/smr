@@ -24,6 +24,19 @@ class Messages {
 		return $typeID === null ? $typeNames : $typeNames[$typeID];
 	}
 
+	public static function getMessageTypeImage(int $typeID): string {
+		return match ($typeID) {
+			MSG_PLAYER => 'images/personal_msg.png',
+			MSG_PLANET => 'images/planet_msg.png',
+			MSG_SCOUT => 'images/scout_msg.png',
+			MSG_ALLIANCE => 'images/alliance_msg.png',
+			MSG_POLITICAL => 'images/council_msg.png',
+			MSG_GLOBAL => 'images/global_msg.png',
+			MSG_ADMIN => 'images/admin_msg.png',
+			MSG_CASINO => 'images/casino_msg.png',
+		};
+	}
+
 	public static function getAdminBoxNames(): array {
 		return [
 			BOX_BUGS_AUTO => 'Automatic Bug Reports',

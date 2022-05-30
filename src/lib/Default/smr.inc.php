@@ -531,64 +531,20 @@ function doSkeletonAssigns(Smr\Template $template): void {
 		$container['game_id'] = $player->getGameID();
 		$template->assign('CurrentHallOfFameLink', $container->href());
 
+		$unreadMessages = [];
 		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
-
-		if ($dbResult->hasRecord()) {
-			$messages = [];
-			foreach ($dbResult->records() as $dbRecord) {
-				$messages[$dbRecord->getInt('message_type_id')] = $dbRecord->getInt('COUNT(*)');
-			}
-
-			$container = Page::create('skeleton.php', 'message_view.php');
-
-			if (isset($messages[MSG_GLOBAL])) {
-				$container['folder_id'] = MSG_GLOBAL;
-				$template->assign('MessageGlobalLink', $container->href());
-				$template->assign('MessageGlobalNum', $messages[MSG_GLOBAL]);
-			}
-
-			if (isset($messages[MSG_PLAYER])) {
-				$container['folder_id'] = MSG_PLAYER;
-				$template->assign('MessagePersonalLink', $container->href());
-				$template->assign('MessagePersonalNum', $messages[MSG_PLAYER]);
-			}
-
-			if (isset($messages[MSG_SCOUT])) {
-				$container['folder_id'] = MSG_SCOUT;
-				$template->assign('MessageScoutLink', $container->href());
-				$template->assign('MessageScoutNum', $messages[MSG_SCOUT]);
-			}
-
-			if (isset($messages[MSG_POLITICAL])) {
-				$container['folder_id'] = MSG_POLITICAL;
-				$template->assign('MessagePoliticalLink', $container->href());
-				$template->assign('MessagePoliticalNum', $messages[MSG_POLITICAL]);
-			}
-
-			if (isset($messages[MSG_ALLIANCE])) {
-				$container['folder_id'] = MSG_ALLIANCE;
-				$template->assign('MessageAllianceLink', $container->href());
-				$template->assign('MessageAllianceNum', $messages[MSG_ALLIANCE]);
-			}
-
-			if (isset($messages[MSG_ADMIN])) {
-				$container['folder_id'] = MSG_ADMIN;
-				$template->assign('MessageAdminLink', $container->href());
-				$template->assign('MessageAdminNum', $messages[MSG_ADMIN]);
-			}
-
-			if (isset($messages[MSG_CASINO])) {
-				$container['folder_id'] = MSG_CASINO;
-				$template->assign('MessageCasinoLink', $container->href());
-				$template->assign('MessageCasinoNum', $messages[MSG_CASINO]);
-			}
-
-			if (isset($messages[MSG_PLANET])) {
-				$container = Page::create('planet_msg_processing.php');
-				$template->assign('MessagePlanetLink', $container->href());
-				$template->assign('MessagePlanetNum', $messages[MSG_PLANET]);
-			}
+		$container = Page::create('skeleton.php', 'message_view.php');
+		foreach ($dbResult->records() as $dbRecord) {
+			$messageTypeID = $dbRecord->getInt('message_type_id');
+			$container['folder_id'] = $messageTypeID;
+			$unreadMessages[] = [
+				'href' => $container->href(),
+				'num' => $dbRecord->getInt('COUNT(*)'),
+				'alt' => Smr\Messages::getMessageTypeNames($messageTypeID),
+				'img' => Smr\Messages::getMessageTypeImage($messageTypeID),
+			];
 		}
+		$template->assign('UnreadMessages', $unreadMessages);
 
 		$container = Page::create('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $player->getPlayerID();
