@@ -204,16 +204,11 @@ class Database {
 	}
 
 	/**
-	 * Warning: If escaping a nested array, use escapeIndividually=true,
-	 * but beware that the escaped array is flattened!
+	 * Warning: If escaping a nested array, beware that the escaped array is
+	 * flattened!
 	 */
-	public function escapeArray(array $array, string $delimiter = ',', bool $escapeIndividually = true): string {
-		if ($escapeIndividually) {
-			$string = implode($delimiter, array_map(fn($item) => $this->escape($item), $array));
-		} else {
-			$string = $this->escape(implode($delimiter, $array));
-		}
-		return $string;
+	public function escapeArray(array $array): string {
+		return implode(',', array_map(fn($item) => $this->escape($item), $array));
 	}
 
 	public function escapeNumber(mixed $num): mixed {

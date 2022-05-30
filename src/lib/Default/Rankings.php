@@ -152,7 +152,7 @@ class Rankings {
 	public static function playerStatsFromHOF(array $category, int $gameID): array {
 		$db = Smr\Database::getInstance();
 		$playerStats = [];
-		$dbResult = $db->read('SELECT p.*, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $db->escapeArray($category, ':', false) . ' WHERE p.game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, player_name');
+		$dbResult = $db->read('SELECT p.*, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $db->escapeString(implode(':', $category)) . ' WHERE p.game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, player_name');
 		foreach ($dbResult->records() as $dbRecord) {
 			$playerStats[$dbRecord->getInt('player_id')] = $dbRecord;
 		}

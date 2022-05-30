@@ -3234,14 +3234,14 @@ abstract class AbstractSmrPlayer {
 						$this->db->insert('player_hof', [
 							'account_id' => $this->db->escapeNumber($this->getAccountID()),
 							'game_id' => $this->db->escapeNumber($this->getGameID()),
-							'type' => $this->db->escapeArray($tempTypeList, ':', false),
+							'type' => $this->db->escapeString(implode(':', $tempTypeList)),
 							'amount' => $this->db->escapeNumber($amount),
 						]);
 					}
 				} elseif ($hofChanged == self::HOF_CHANGED) {
 					$this->db->write('UPDATE player_hof
 						SET amount=' . $this->db->escapeNumber($amount) . '
-						WHERE ' . $this->SQL . ' AND type = ' . $this->db->escapeArray($tempTypeList, ':', false) . ' LIMIT 1');
+						WHERE ' . $this->SQL . ' AND type = ' . $this->db->escapeString(implode(':', $tempTypeList)) . ' LIMIT 1');
 				}
 			}
 		}

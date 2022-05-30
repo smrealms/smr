@@ -47,8 +47,11 @@ if (!isset($var['view'])) {
 	$vis = HOF_PUBLIC;
 	$rank = 1;
 	$foundMe = false;
+
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];
+	$viewType = implode(':', $viewType);
+
 	if ($var['view'] == DONATION_NAME) {
 		$dbResult = $db->read('SELECT account_id, SUM(amount) as amount FROM account_donated
 					GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
@@ -57,11 +60,11 @@ if (!isset($var['view'])) {
 		$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 		$dbResult = $db->read($query);
 	} else {
-		$dbResult = $db->read('SELECT visibility FROM hof_visibility WHERE type = ' . $db->escapeArray($viewType, ':', false) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT visibility FROM hof_visibility WHERE type = ' . $db->escapeString($viewType) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			$vis = $dbResult->record()->getString('visibility');
 		}
-		$dbResult = $db->read('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
+		$dbResult = $db->read('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeString($viewType) . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 	}
 	$rows = [];
 	foreach ($dbResult->records() as $dbRecord) {

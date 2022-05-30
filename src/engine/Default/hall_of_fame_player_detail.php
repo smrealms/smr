@@ -54,6 +54,7 @@ if (!isset($var['view'])) {
 	// Category rankings page
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];
+	$viewType = implode(':', $viewType);
 
 	$hofRank = Smr\HallOfFame::getHofRank($var['view'], $viewType, $account_id, $game_id);
 	$rows = [Smr\HallOfFame::displayHOFRow($hofRank['Rank'], $account_id, $hofRank['Amount'])];

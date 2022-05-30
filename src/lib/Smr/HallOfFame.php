@@ -36,6 +36,7 @@ class HallOfFame {
 					$container['view'] = $subType;
 					$rankType = $container['type'];
 					$rankType[] = $subType;
+					$rankType = implode(':', $rankType);
 					$rank = self::getHofRank($subType, $rankType, $account_id, $game_id);
 					$rankMsg = '';
 					if ($rank['Rank'] != 0) {
@@ -44,7 +45,7 @@ class HallOfFame {
 					$subcategories[] = create_submit_link($container, $subType . $rankMsg);
 				}
 			} else {
-				$rank = self::getHofRank($type, $container['type'], $account_id, $game_id);
+				$rank = self::getHofRank($type, implode(':', $container['type']), $account_id, $game_id);
 				$subcategories[] = create_submit_link($container, 'View (#' . $rank['Rank'] . ')');
 			}
 
@@ -75,7 +76,7 @@ class HallOfFame {
 		return $amount;
 	}
 
-	public static function getHofRank(string $view, array $viewType, int $accountID, ?int $gameID): array {
+	public static function getHofRank(string $view, string $viewType, int $accountID, ?int $gameID): array {
 		$db = Database::getInstance();
 		// If no game specified, show total amount from completed games only
 		$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
@@ -88,12 +89,12 @@ class HallOfFame {
 			$statements = SmrAccount::getUserScoreCaseStatement($db);
 			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x ORDER BY amount DESC');
 		} else {
-			$dbResult = $db->read('SELECT visibility FROM hof_visibility WHERE type=' . $db->escapeArray($viewType, ':', false) . ' LIMIT 1');
+			$dbResult = $db->read('SELECT visibility FROM hof_visibility WHERE type=' . $db->escapeString($viewType) . ' LIMIT 1');
 			if (!$dbResult->hasRecord()) {
 				return $rank;
 			}
 			$vis = $dbResult->record()->getString('visibility');
-			$dbResult = $db->read('SELECT SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . ' AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id LIMIT 1');
+			$dbResult = $db->read('SELECT SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeString($viewType) . ' AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id LIMIT 1');
 		}
 
 		$realAmount = 0;
@@ -107,7 +108,7 @@ class HallOfFame {
 		} elseif ($view == USER_SCORE_NAME) {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . '>' . $db->escapeNumber($rank['Amount']) . ') x');
 		} else {
-			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeArray($viewType, ':', false) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
+			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeString($viewType) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
 		}
 		if ($dbResult->hasRecord()) {
 			$rank['Rank'] = $dbResult->record()->getInt('rank') + 1;

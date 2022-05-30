@@ -137,21 +137,9 @@ class DatabaseIntegrationTest extends TestCase {
 		$db = Database::getInstance();
 		// Test a mixed array
 		self::assertSame("'a',2,'c'", $db->escapeArray(['a', 2, 'c']));
-		// Test a different implodeString
-		self::assertSame("'a':2:'c'", $db->escapeArray(['a', 2, 'c'], ':'));
-		// Test escapeIndividually=false
-		self::assertSame("'a,2,c'", $db->escapeArray(['a', 2, 'c'], ',', false));
 		// Test nested arrays
 		// Warning: The array is flattened, which may be unexpected!
-		self::assertSame("'a','x',9,2", $db->escapeArray(['a', ['x', 9], 2], ',', true));
-	}
-
-	public function test_escapeArray_nested_array_throws(): void {
-		// Warning: It is dangerous to use nested arrays with escapeIndividually=false
-		$db = Database::getInstance();
-		$this->expectWarning();
-		$this->expectWarningMessage('Array to string conversion');
-		$db->escapeArray(['a', ['x', 9, 'y'], 2, 'c'], ':', false);
+		self::assertSame("'a','x',9,2", $db->escapeArray(['a', ['x', 9], 2]));
 	}
 
 	public function test_escapeNumber(): void {
