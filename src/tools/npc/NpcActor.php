@@ -108,8 +108,8 @@ class NpcActor {
 		}
 		if ($player->getTurns() < NPC_LOW_TURNS) {
 			// We're low on turns or have been under attack and need to plot course to fed
-			if ($player->hasFederalProtection()) {
-				debug('We are in fed, time to switch to another NPC.');
+			if (!$player->canFight()) {
+				debug('We are protected, time to switch to another NPC.');
 				throw new FinalAction();
 			}
 			if ($player->getTurns() < NPC_LOW_TURNS) {

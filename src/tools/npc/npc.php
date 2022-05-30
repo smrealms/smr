@@ -184,7 +184,7 @@ function debug(string $message, mixed $debugObject = null): void {
  */
 function checkStartConditions(SmrPlayer $player): void {
 	$minTurnsThreshold = rand($player->getMaxTurns() / 2, $player->getMaxTurns());
-	if ($player->getTurns() < $minTurnsThreshold && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
+	if ($player->getTurns() < $minTurnsThreshold && !$player->canFight()) {
 		debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
 		throw new FinalAction();
 	}
@@ -196,7 +196,7 @@ function processContainer(Page $container): never {
 	$player = $session->getPlayer();
 	if ($container == $previousContainer && $forwardedContainer->file != 'forces_attack.php') {
 		debug('We are executing the same container twice?', ['ForwardedContainer' => $forwardedContainer, 'Container' => $container]);
-		if ($player->hasNewbieTurns() || $player->hasFederalProtection()) {
+		if (!$player->canFight()) {
 			// Only throw the exception if we have protection, otherwise let's hope that the NPC will be able to find its way to safety rather than dying in the open.
 			throw new Exception('We are executing the same container twice?');
 		}
