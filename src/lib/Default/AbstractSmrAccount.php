@@ -53,6 +53,7 @@ abstract class AbstractSmrAccount {
 	protected int $points;
 	protected bool $useAJAX;
 	protected int $mailBanned;
+	/** @var array<string, float> */
 	protected array $HOF;
 	protected array $individualScores;
 	protected int $score;
@@ -407,35 +408,14 @@ abstract class AbstractSmrAccount {
 			$dbResult = $this->db->read('SELECT type,sum(amount) as amount FROM player_hof WHERE ' . $this->SQL . ' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = \'FALSE\') GROUP BY type');
 			$this->HOF = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$hof =& $this->HOF;
-				$typeList = explode(':', $dbRecord->getString('type'));
-				foreach ($typeList as $type) {
-					if (!isset($hof[$type])) {
-						$hof[$type] = [];
-					}
-					$hof =& $hof[$type];
-				}
-				$hof = $dbRecord->getFloat('amount');
+				$this->HOF[$dbRecord->getString('type')] = $dbRecord->getFloat('amount');
 			}
 		}
 	}
 
-	/**
-	 * Returns either the entire HOF array or the value for the given typeList.
-	 */
-	public function getHOF(array $typeList = null): array|float {
+	public function getHOF(array $typeList): float {
 		$this->getHOFData();
-		if ($typeList == null) {
-			return $this->HOF;
-		}
-		$hof = $this->HOF;
-		foreach ($typeList as $type) {
-			if (!isset($hof[$type])) {
-				return 0;
-			}
-			$hof = $hof[$type];
-		}
-		return $hof;
+		return $this->HOF[implode(':', $typeList)] ?? 0;
 	}
 
 	public function getRankName(): string {

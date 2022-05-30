@@ -27,6 +27,9 @@
         <!-- Personal preference for parentheses around require/echo. -->
         <exclude name="PSR2R.WhiteSpace.LanguageConstructSpacing" />
 
+        <!-- Allow more compact property doc comments. -->
+        <exclude name="SlevomatCodingStandard.Commenting.DisallowOneLinePropertyDocComment" />
+
         <!-- Jump statements on a single line can help keep code compact. -->
         <exclude name="SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing" />
 
@@ -53,6 +56,13 @@
     <rule ref="SlevomatCodingStandard.Functions.ArrowFunctionDeclaration">
         <properties>
             <property name="spacesCountAfterKeyword" value="0" />
+        </properties>
+    </rule>
+
+    <!-- Allow more compact property doc comments. -->
+    <rule ref="SlevomatCodingStandard.Classes.PropertySpacing">
+        <properties>
+            <property name="minLinesCountBeforeWithComment" value="0" />
         </properties>
     </rule>
 

@@ -78,11 +78,15 @@ abstract class AbstractSmrPlayer {
 
 	protected bool $draftLeader;
 	protected string|false $gpWriter;
+	/** @var array<string, float> */
 	protected array $HOF;
+	/** @var array<string, string> */
 	protected static array $HOFVis;
 
 	protected bool $hasChanged = false;
+	/** @var array<string, int> */
 	protected array $hasHOFChanged = [];
+	/** @var array<string, int> */
 	protected static array $hasHOFVisChanged = [];
 	protected array $hasBountyChanged = [];
 
@@ -2037,45 +2041,34 @@ abstract class AbstractSmrPlayer {
 			$dbResult = $this->db->read('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
 			$this->HOF = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$hof =& $this->HOF;
-				$typeList = explode(':', $dbRecord->getString('type'));
-				foreach ($typeList as $type) {
-					if (!isset($hof[$type])) {
-						$hof[$type] = [];
-					}
-					$hof =& $hof[$type];
-				}
-				$hof = $dbRecord->getFloat('amount');
+				$this->HOF[$dbRecord->getString('type')] = $dbRecord->getFloat('amount');
 			}
 			self::getHOFVis();
 		}
 	}
 
-	public static function getHOFVis(): void {
+	/**
+	 * @return array<string, string>
+	 */
+	public static function getHOFVis(): array {
 		if (!isset(self::$HOFVis)) {
 			//Get Player HOF Vis
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT type,visibility FROM hof_visibility');
 			self::$HOFVis = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				self::$HOFVis[$dbRecord->getField('type')] = $dbRecord->getField('visibility');
+				self::$HOFVis[$dbRecord->getString('type')] = $dbRecord->getString('visibility');
 			}
+			// Add non-database types
+			self::$HOFVis[HOF_TYPE_DONATION] = HOF_PUBLIC;
+			self::$HOFVis[HOF_TYPE_USER_SCORE] = HOF_PUBLIC;
 		}
+		return self::$HOFVis;
 	}
 
-	public function getHOF(array $typeList = null): array|float {
+	public function getHOF(array $typeList): float {
 		$this->getHOFData();
-		if ($typeList == null) {
-			return $this->HOF;
-		}
-		$hof = $this->HOF;
-		foreach ($typeList as $type) {
-			if (!isset($hof[$type])) {
-				return 0;
-			}
-			$hof = $hof[$type];
-		}
-		return $hof;
+		return $this->HOF[implode(':', $typeList)] ?? 0;
 	}
 
 	public function increaseHOF(float $amount, array $typeList, string $visibility): void {
@@ -2099,20 +2092,16 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setHOF(float $amount, array $typeList, string $visibility): void {
-		if (is_array($this->getHOF($typeList))) {
-			throw new Exception('Trying to overwrite a HOF type: ' . implode(':', $typeList));
-		}
 		if ($this->isNPC()) {
 			// Don't store HOF for NPCs.
-			return;
-		}
-		if ($this->getHOF($typeList) == $amount) {
 			return;
 		}
 		if ($amount < 0) {
 			$amount = 0;
 		}
-		$this->getHOF();
+		if ($this->getHOF($typeList) == $amount) {
+			return;
+		}
 
 		$hofType = implode(':', $typeList);
 		if (!isset(self::$HOFVis[$hofType])) {
@@ -2122,27 +2111,12 @@ abstract class AbstractSmrPlayer {
 		}
 		self::$HOFVis[$hofType] = $visibility;
 
-		$hof =& $this->HOF;
-		$hofChanged =& $this->hasHOFChanged;
-		$new = false;
-		foreach ($typeList as $type) {
-			if (!isset($hofChanged[$type])) {
-				$hofChanged[$type] = [];
-			}
-			if (!isset($hof[$type])) {
-				$hof[$type] = [];
-				$new = true;
-			}
-			$hof =& $hof[$type];
-			$hofChanged =& $hofChanged[$type];
+		if (!isset($this->HOF[$hofType])) {
+			$this->hasHOFChanged[$hofType] = self::HOF_NEW;
+		} else {
+			$this->hasHOFChanged[$hofType] = self::HOF_CHANGED;
 		}
-		if ($hofChanged == null) {
-			$hofChanged = self::HOF_CHANGED;
-			if ($new) {
-				$hofChanged = self::HOF_NEW;
-			}
-		}
-		$hof = $amount;
+		$this->HOF[$hofType] = $amount;
 	}
 
 	public function isUnderAttack(): bool {
@@ -3198,52 +3172,35 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function saveHOF(): void {
-		if (count($this->hasHOFChanged) > 0) {
-			$this->doHOFSave($this->hasHOFChanged);
-			$this->hasHOFChanged = [];
-		}
-		if (!empty(self::$hasHOFVisChanged)) {
-			foreach (self::$hasHOFVisChanged as $hofType => $changeType) {
-				if ($changeType == self::HOF_NEW) {
-					$this->db->insert('hof_visibility', [
-						'type' => $this->db->escapeString($hofType),
-						'visibility' => $this->db->escapeString(self::$HOFVis[$hofType]),
-					]);
-				} else {
-					$this->db->write('UPDATE hof_visibility SET visibility = ' . $this->db->escapeString(self::$HOFVis[$hofType]) . ' WHERE type = ' . $this->db->escapeString($hofType) . ' LIMIT 1');
-				}
-				unset(self::$hasHOFVisChanged[$hofType]);
-			}
-		}
-	}
-
-	/**
-	 * This should only be called by `saveHOF` (and recursively) to
-	 * ensure that the `hasHOFChanged` attribute is properly cleared.
-	 */
-	protected function doHOFSave(array $hasChangedList, array $typeList = []) {
-		foreach ($hasChangedList as $type => $hofChanged) {
-			$tempTypeList = $typeList;
-			$tempTypeList[] = $type;
-			if (is_array($hofChanged)) {
-				$this->doHOFSave($hofChanged, $tempTypeList);
+		foreach (self::$hasHOFVisChanged as $hofType => $changeType) {
+			if ($changeType == self::HOF_NEW) {
+				$this->db->insert('hof_visibility', [
+					'type' => $this->db->escapeString($hofType),
+					'visibility' => $this->db->escapeString(self::$HOFVis[$hofType]),
+				]);
 			} else {
-				$amount = $this->getHOF($tempTypeList);
-				if ($hofChanged == self::HOF_NEW) {
-					if ($amount > 0) {
-						$this->db->insert('player_hof', [
-							'account_id' => $this->db->escapeNumber($this->getAccountID()),
-							'game_id' => $this->db->escapeNumber($this->getGameID()),
-							'type' => $this->db->escapeString(implode(':', $tempTypeList)),
-							'amount' => $this->db->escapeNumber($amount),
-						]);
-					}
-				} elseif ($hofChanged == self::HOF_CHANGED) {
-					$this->db->write('UPDATE player_hof
-						SET amount=' . $this->db->escapeNumber($amount) . '
-						WHERE ' . $this->SQL . ' AND type = ' . $this->db->escapeString(implode(':', $tempTypeList)) . ' LIMIT 1');
-				}
+				$this->db->write('UPDATE hof_visibility SET visibility = ' . $this->db->escapeString(self::$HOFVis[$hofType]) . ' WHERE type = ' . $this->db->escapeString($hofType) . ' LIMIT 1');
 			}
+			unset(self::$hasHOFVisChanged[$hofType]);
+		}
+
+		foreach ($this->hasHOFChanged as $hofType => $changeType) {
+			$amount = $this->HOF[$hofType];
+			if ($changeType === self::HOF_NEW) {
+				if ($amount > 0) {
+					$this->db->insert('player_hof', [
+						'account_id' => $this->db->escapeNumber($this->getAccountID()),
+						'game_id' => $this->db->escapeNumber($this->getGameID()),
+						'type' => $this->db->escapeString($hofType),
+						'amount' => $this->db->escapeNumber($amount),
+					]);
+				}
+			} elseif ($changeType === self::HOF_CHANGED) {
+				$this->db->write('UPDATE player_hof
+					SET amount=' . $this->db->escapeNumber($amount) . '
+					WHERE ' . $this->SQL . ' AND type = ' . $this->db->escapeString($hofType));
+			}
+			unset($this->hasHOFChanged[$hofType]);
 		}
 	}
 

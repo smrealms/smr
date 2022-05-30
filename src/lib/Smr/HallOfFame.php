@@ -12,49 +12,74 @@ use SmrPlayer;
  */
 class HallOfFame {
 
-	public static function getHofCategories(array $hofTypes, ?int $game_id, int $account_id): array {
+	/**
+	 * @param array<string> $allowedVis
+	 * @return array<array<string, string>>
+	 */
+	public static function getHofCategories(array $allowedVis, ?int $game_id, int $account_id): array {
+		// Get the HOF type that we're currently viewing
 		$var = Session::getInstance()->getCurrentVar();
-		$categories = [];
-		foreach ($hofTypes as $type => $value) {
-			// Make each category a link to view the subcategory page
-			$container = Page::copy($var);
-			$container['view'] = $type;
-			if (!isset($var['type'])) {
-				$container['type'] = [];
-			}
-			$link = create_link($container, $type);
+		if (isset($var['viewType'])) {
+			$viewType = $var['viewType'];
+			$viewTypeList = explode(':', $viewType);
+		} else {
+			$viewType = '';
+			$viewTypeList = [];
+		}
 
-			// Make the subcategory buttons
-			$container = Page::copy($var);
-			if (!isset($var['type'])) {
-				$container['type'] = [];
+		$categories = [];
+		$subcategories = [];
+		foreach (SmrPlayer::getHOFVis() as $hofType => $hofVis) {
+			if (!in_array($hofVis, $allowedVis)) {
+				// Not allowed to view
+				continue;
 			}
-			$container['type'][] = $type;
-			$subcategories = [];
-			if (is_array($value)) {
-				foreach ($value as $subType => $subTypeValue) {
-					$container['view'] = $subType;
-					$rankType = $container['type'];
-					$rankType[] = $subType;
-					$rankType = implode(':', $rankType);
-					$rank = self::getHofRank($subType, $rankType, $account_id, $game_id);
-					$rankMsg = '';
+			if (!str_starts_with($hofType, $viewType)) {
+				// Isn't a subtype of the current type
+				continue;
+			}
+
+			$typeList = explode(':', $hofType);
+			$extra = array_values(array_diff($typeList, $viewTypeList));
+
+			// Make each category a link to view the subcategory page
+			$category = $extra[0];
+			if (!isset($categories[$category])) {
+				$container = Page::copy($var);
+				$container['viewType'] = implode(':', array_merge($viewTypeList, [$category]));
+				$categories[$category] = create_link($container, $category);
+
+				// Prepare subcategories
+				//$subcategories[$category] = [];
+			}
+
+			// Register all subcategories
+			$subcategory = $extra[1] ?? 'View';
+			if (!isset($subcategories[$category][$subcategory])) {
+				$container = Page::copy($var);
+				$rankMsg = '';
+				if (count($extra) <= 2) {
+					// Subcategory is a complete HOF type
+					$rank = self::getHofRank($hofType, $account_id, $game_id);
 					if ($rank['Rank'] != 0) {
 						$rankMsg = ' (#' . $rank['Rank'] . ')';
 					}
-					$subcategories[] = create_submit_link($container, $subType . $rankMsg);
+					$container['viewType'] = $hofType;
+				} else {
+					$container['viewType'] = implode(':', array_merge($viewTypeList, [$category, $subcategory]));
 				}
-			} else {
-				$rank = self::getHofRank($type, implode(':', $container['type']), $account_id, $game_id);
-				$subcategories[] = create_submit_link($container, 'View (#' . $rank['Rank'] . ')');
+				$subcategories[$category][$subcategory] = create_submit_link($container, $subcategory . $rankMsg);
 			}
+		}
 
-			$categories[] = [
+		$output = [];
+		foreach ($categories as $category => $link) {
+			$output[] = [
 				'link' => $link,
-				'subcategories' => implode('&#32;', $subcategories),
+				'subcategories' => implode('&#32;', array_values($subcategories[$category])),
 			];
 		}
-		return $categories;
+		return $output;
 	}
 
 	/**
@@ -76,24 +101,25 @@ class HallOfFame {
 		return $amount;
 	}
 
-	public static function getHofRank(string $view, string $viewType, int $accountID, ?int $gameID): array {
+	public static function getHofRank(string $viewType, int $accountID, ?int $gameID): array {
 		$db = Database::getInstance();
 		// If no game specified, show total amount from completed games only
 		$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
 
-		$vis = HOF_PUBLIC;
+		$viewTypeList = explode(':', $viewType);
+		$view = end($viewTypeList);
+
 		$rank = ['Amount' => 0, 'Rank' => 0];
-		if ($view == DONATION_NAME) {
+		if ($view == HOF_TYPE_DONATION) {
 			$dbResult = $db->read('SELECT SUM(amount) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID) . ' GROUP BY account_id LIMIT 1');
-		} elseif ($view == USER_SCORE_NAME) {
+		} elseif ($view == HOF_TYPE_USER_SCORE) {
 			$statements = SmrAccount::getUserScoreCaseStatement($db);
 			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x ORDER BY amount DESC');
 		} else {
-			$dbResult = $db->read('SELECT visibility FROM hof_visibility WHERE type=' . $db->escapeString($viewType) . ' LIMIT 1');
-			if (!$dbResult->hasRecord()) {
+			$hofVis = SmrPlayer::getHOFVis();
+			if (!isset($hofVis[$viewType])) {
 				return $rank;
 			}
-			$vis = $dbResult->record()->getString('visibility');
 			$dbResult = $db->read('SELECT SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeString($viewType) . ' AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id LIMIT 1');
 		}
 
@@ -101,11 +127,12 @@ class HallOfFame {
 		if ($dbResult->hasRecord()) {
 			$realAmount = $dbResult->record()->getFloat('amount');
 		}
+		$vis = SmrPlayer::getHOFVis()[$viewType];
 		$rank['Amount'] = self::applyHofVisibilityMask($realAmount, $vis, $gameID, $accountID);
 
-		if ($view == DONATION_NAME) {
+		if ($view == HOF_TYPE_DONATION) {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');
-		} elseif ($view == USER_SCORE_NAME) {
+		} elseif ($view == HOF_TYPE_USER_SCORE) {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . '>' . $db->escapeNumber($rank['Amount']) . ') x');
 		} else {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeString($viewType) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
@@ -155,48 +182,21 @@ class HallOfFame {
 		return $return;
 	}
 
-	public static function buildBreadcrumb(Page $var, array &$hofTypes, string $hofName): string {
+	public static function buildBreadcrumb(Page $var, string $hofName): string {
 		$container = Page::copy($var);
-		if (isset($container['type'])) {
-			unset($container['type']);
-		}
-		if (isset($container['view'])) {
-			unset($container['view']);
-		}
+		unset($container['viewType']);
 		$viewing = '<span class="bold">Currently viewing: </span>' . create_link($container, $hofName);
-		$typeList = [];
-		if (isset($var['type'])) {
-			foreach ($var['type'] as $type) {
-				if (!is_array($hofTypes[$type])) {
-					$var['type'] = $typeList;
-					$var['view'] = $type;
-					break;
-				}
-				$typeList[] = $type;
-				$viewing .= ' &rarr; ';
-				$container = Page::copy($var);
-				$container['type'] = $typeList;
-				if (isset($container['view'])) {
-					unset($container['view']);
-				}
-				$viewing .= create_link($container, $type);
 
-				$hofTypes = $hofTypes[$type];
-			}
+		if (isset($var['viewType'])) {
+			$typeList = explode(':', $var['viewType']);
+		} else {
+			$typeList = [];
 		}
-		if (isset($var['view'])) {
-			$viewing .= ' &rarr; ';
-			if (is_array($hofTypes[$var['view']])) {
-				$typeList[] = $var['view'];
-				$var['type'] = $typeList;
-			}
-			$container = Page::copy($var);
-			$viewing .= create_link($container, $var['view']);
-
-			if (is_array($hofTypes[$var['view']])) {
-				$hofTypes = $hofTypes[$var['view']];
-				unset($var['view']);
-			}
+		$breadcrumbTypeList = [];
+		foreach ($typeList as $hofType) {
+			$breadcrumbTypeList[] = $hofType;
+			$container['viewType'] = implode(':', $breadcrumbTypeList);
+			$viewing .= ' &rarr; ' . create_link($container, $hofType);
 		}
 		$viewing .= '<br /><br />';
 		return $viewing;

@@ -291,6 +291,9 @@ const HOF_PUBLIC = 'PUBLIC';
 const HOF_ALLIANCE = 'ALLIANCE';
 const HOF_PRIVATE = 'PRIVATE';
 
+const HOF_TYPE_DONATION = 'Money Donated To SMR';
+const HOF_TYPE_USER_SCORE = 'User Score';
+
 /*
  * Messaging system
  */
