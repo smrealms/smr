@@ -544,13 +544,18 @@ class AbstractSmrPort {
 		if (!$this->hasGood($goodID)) {
 			return;
 		}
-		if (($key = array_search($goodID, $this->goodIDs['All'])) !== false) {
-			array_splice($this->goodIDs['All'], $key, 1);
-		}
-		if (($key = array_search($goodID, $this->goodIDs[TRADER_BUYS])) !== false) {
-			array_splice($this->goodIDs[TRADER_BUYS], $key, 1);
-		} elseif (($key = array_search($goodID, $this->goodIDs[TRADER_SELLS])) !== false) {
-			array_splice($this->goodIDs[TRADER_SELLS], $key, 1);
+
+		$removeGoodID = function(string $transaction) use ($goodID): bool {
+			$key = array_search($goodID, $this->goodIDs[$transaction]);
+			if ($key !== false) {
+				array_splice($this->goodIDs[$transaction], $key, 1);
+				return true;
+			}
+			return false;
+		};
+		$removeGoodID('All');
+		if (!$removeGoodID(TRADER_BUYS)) {
+			$removeGoodID(TRADER_SELLS);
 		}
 
 		// Flag for update

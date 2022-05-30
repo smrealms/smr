@@ -49,6 +49,38 @@ class AbstractSmrPortTest extends TestCase {
 	}
 
 	/**
+	 * @dataProvider provider_removePortGood
+	 */
+	public function test_removePortGood(array $removeGoodIDs, array $sellRemain, array $buyRemain): void {
+		// Set up a port with a couple goods
+		$port = AbstractSmrPort::createPort(1, 1);
+		$port->addPortGood(GOODS_WOOD, TRADER_SELLS);
+		$port->addPortGood(GOODS_ORE, TRADER_BUYS);
+		foreach ($removeGoodIDs as $goodID) {
+			$port->removePortGood($goodID);
+		}
+		self::assertSame($sellRemain, $port->getSoldGoodIDs());
+		self::assertSame($buyRemain, $port->getBoughtGoodIDs());
+		self::assertSame(array_merge($sellRemain, $buyRemain), $port->getAllGoodIDs());
+	}
+
+	/**
+	 * @return array<array<array<int>>>
+	 */
+	public function provider_removePortGood(): array {
+		return [
+			// Remove a good that the port doesn't have
+			[[GOODS_CIRCUITRY], [GOODS_WOOD], [GOODS_ORE]],
+			// Remove a buyable good
+			[[GOODS_WOOD], [], [GOODS_ORE]],
+			// Remove a sellable good
+			[[GOODS_ORE], [GOODS_WOOD], []],
+			// Remove both goods
+			[[GOODS_WOOD, GOODS_ORE], [], []],
+		];
+	}
+
+	/**
 	 * @dataProvider provider_getGoodTransaction
 	 */
 	public function test_getGoodTransaction(string $transaction): void {
