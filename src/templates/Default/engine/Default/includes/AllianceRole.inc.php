@@ -2,7 +2,7 @@
 	<table class="standard">
 		<tr>
 			<td>Name</td>
-			<td><input type="text" name="role" value="<?php echo htmlspecialchars($Role['Name']); ?>" maxlength="32"<?php if (!$Role['EditingRole']) { ?> disabled="disabled"<?php } ?>>
+			<td><input type="text" name="role" required value="<?php echo htmlspecialchars($Role['Name']); ?>" maxlength="32"<?php if (!$Role['EditingRole']) { ?> disabled="disabled"<?php } ?>>
 		</tr><?php
 		if ($Role['EditingRole']) { ?>
 			<tr>

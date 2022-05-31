@@ -37,7 +37,7 @@ if ($withPerDay == ALLIANCE_BANK_UNLIMITED && $positiveBalance) {
 if (!isset($var['role_id'])) {
 	// role empty too? that doesn't make sence
 	if (empty(Smr\Request::get('role'))) {
-		create_error('You must enter a role name if you want to create a new one.');
+		throw new Exception('Empty role name is not allowed');
 	}
 
 	$db->lockTable('alliance_has_roles');
