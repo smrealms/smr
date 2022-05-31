@@ -6,11 +6,10 @@ $var = $session->getCurrentVar();
 
 $template->assign('PageTopic', 'Preferences');
 
-if (isset($var['reason'])) {
-	$template->assign('Reason', $var['reason']);
+if ($session->hasGame()) {
+	$template->assign('PlayerPreferencesFormHREF', Page::create('preferences_player_processing.php')->href());
 }
-
-$template->assign('PreferencesFormHREF', Page::create('preferences_processing.php', '')->href());
+$template->assign('AccountPreferencesFormHREF', Page::create('preferences_account_processing.php')->href());
 
 $template->assign('PreferencesConfirmFormHREF', Page::create('skeleton.php', 'preferences_confirm.php')->href());
 
