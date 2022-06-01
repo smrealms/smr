@@ -27,9 +27,8 @@ if ($var['accept']) {
 						FROM alliance_has_roles
 						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 							AND alliance_id = ' . $db->escapeNumber($alliance_id_A));
-			if ($dbResult->hasRecord()) {
-				$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
-			}
+			$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
+
 			$allianceName = SmrAlliance::getAlliance($alliance_id_B, $player->getGameID())->getAllianceName();
 			$db->insert('alliance_has_roles', [
 				'alliance_id' => $db->escapeNumber($alliance_id_A),
