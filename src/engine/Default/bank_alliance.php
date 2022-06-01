@@ -60,11 +60,9 @@ if ($dbRecord->getBoolean('positive_balance')) {
 } elseif ($withdrawalPerDay == ALLIANCE_BANK_UNLIMITED) {
 	$template->assign('UnlimitedWithdrawal', true);
 } else {
-	$dbResult = $db->read('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
+	$dbResult = $db->read('SELECT IFNULL(sum(amount), 0) as total FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
 				AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . $db->escapeNumber(Smr\Epoch::time() - 86400));
-	if ($dbResult->hasRecord()) {
-		$totalWithdrawn = $dbResult->record()->getInt('total');
-	}
+	$totalWithdrawn = $dbResult->record()->getInt('total');
 	$template->assign('WithdrawalPerDay', $withdrawalPerDay);
 	$template->assign('RemainingWithdrawal', $withdrawalPerDay - $totalWithdrawn);
 	$template->assign('TotalWithdrawn', $totalWithdrawn);
@@ -74,12 +72,10 @@ $maxValue = $session->getRequestVarInt('maxValue', 0);
 $minValue = $session->getRequestVarInt('minValue', 0);
 
 if ($maxValue <= 0) {
-	$dbResult = $db->read('SELECT MAX(transaction_id) FROM alliance_bank_transactions
+	$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) as max_transaction_id FROM alliance_bank_transactions
 				WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 				AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()));
-	if ($dbResult->hasRecord()) {
-		$maxValue = $dbResult->record()->getInt('MAX(transaction_id)');
-	}
+	$maxValue = $dbResult->record()->getInt('max_transaction_id');
 }
 
 if ($minValue <= 0 || $minValue > $maxValue) {

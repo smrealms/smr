@@ -32,7 +32,7 @@ foreach ($dbResult->records() as $dbRecord) {
 
 	$dbResult2 = $db->read('SELECT MAX(time) FROM anon_bank_transactions
 				WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
-				AND anon_id=' . $db->escapeNumber($dbRecord->getInt('anon_id')) . ' LIMIT 1');
+				AND anon_id=' . $db->escapeNumber($dbRecord->getInt('anon_id')) . ' GROUP BY anon_id');
 	if ($dbResult2->hasRecord()) {
 		$anon['last_transaction'] = date($account->getDateTimeFormat(), $dbResult2->record()->getInt('MAX(time)'));
 	} else {

@@ -111,22 +111,19 @@ class HallOfFame {
 
 		$rank = ['Amount' => 0, 'Rank' => 0];
 		if ($view == HOF_TYPE_DONATION) {
-			$dbResult = $db->read('SELECT SUM(amount) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID) . ' GROUP BY account_id LIMIT 1');
+			$dbResult = $db->read('SELECT IFNULL(SUM(amount), 0) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID));
 		} elseif ($view == HOF_TYPE_USER_SCORE) {
 			$statements = SmrAccount::getUserScoreCaseStatement($db);
-			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x ORDER BY amount DESC');
+			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x');
 		} else {
 			$hofVis = SmrPlayer::getHOFVis();
 			if (!isset($hofVis[$viewType])) {
 				return $rank;
 			}
-			$dbResult = $db->read('SELECT SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeString($viewType) . ' AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id LIMIT 1');
+			$dbResult = $db->read('SELECT IFNULL(SUM(amount), 0) amount FROM player_hof WHERE type=' . $db->escapeString($viewType) . ' AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql);
 		}
 
-		$realAmount = 0;
-		if ($dbResult->hasRecord()) {
-			$realAmount = $dbResult->record()->getFloat('amount');
-		}
+		$realAmount = $dbResult->record()->getFloat('amount');
 		$vis = SmrPlayer::getHOFVis()[$viewType];
 		$rank['Amount'] = self::applyHofVisibilityMask($realAmount, $vis, $gameID, $accountID);
 

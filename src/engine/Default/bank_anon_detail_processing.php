@@ -18,12 +18,8 @@ if ($amount <= 0) {
 
 // Get the next transaction ID for this anon bank
 $db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT transaction_id FROM anon_bank_transactions WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num) . ' ORDER BY transaction_id DESC LIMIT 1');
-if ($dbResult->hasRecord()) {
-	$trans_id = $dbResult->record()->getInt('transaction_id') + 1;
-} else {
-	$trans_id = 1;
-}
+$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) AS max_id FROM anon_bank_transactions WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
+$trans_id = $dbResult->record()->getInt('max_id') + 1;
 
 // Update the credit amounts for the player and the bank
 if ($action == 'Deposit') {

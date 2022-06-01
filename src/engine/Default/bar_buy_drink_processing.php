@@ -12,12 +12,8 @@ if ($player->getCredits() < 10) {
 }
 $player->decreaseCredits(10);
 
-$dbResult = $db->read('SELECT drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER by drink_id DESC LIMIT 1');
-if ($dbResult->hasRecord()) {
-	$curr_drink_id = $dbResult->record()->getInt('drink_id');
-} else {
-	$curr_drink_id = 0;
-}
+$dbResult = $db->read('SELECT IFNULL(MAX(drink_id), 0) AS max_drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
+$curr_drink_id = $dbResult->record()->getInt('max_drink_id');
 
 if (isset($var['action']) && $var['action'] != 'drink') {
 	$drinkName = 'water';

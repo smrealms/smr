@@ -12,12 +12,8 @@ if ($action == 'tell') {
 	$gossip = Smr\Request::get('gossip_tell');
 	if (!empty($gossip)) {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT message_id FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY message_id DESC LIMIT 1');
-		if ($dbResult->hasRecord()) {
-			$messageID = $dbResult->record()->getInt('message_id') + 1;
-		} else {
-			$messageID = 1;
-		}
+		$dbResult = $db->read('SELECT IFNULL(MAX(message_id)+1, 0) AS next_message_id FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
+		$messageID = $dbResult->record()->getInt('next_message_id');
 
 		$db->insert('bar_tender', [
 			'game_id' => $db->escapeNumber($player->getGameID()),

@@ -109,12 +109,8 @@ if (!empty($comment)) {
 	// check if we have comments for this album already
 	$db->lockTable('album_has_comments');
 
-	$dbResult = $db->read('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
-	if ($dbResult->hasRecord()) {
-		$comment_id = $dbResult->record()->getInt('MAX(comment_id)') + 1;
-	} else {
-		$comment_id = 1;
-	}
+	$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) AS next_comment_id FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
+	$comment_id = $dbResult->record()->getInt('next_comment_id');
 
 	$db->insert('album_has_comments', [
 		'album_id' => $db->escapeNumber($account->getAccountID()),

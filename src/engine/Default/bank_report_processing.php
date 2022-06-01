@@ -19,12 +19,8 @@ if ($dbResult->hasRecord()) {
 	$db->write('DELETE FROM player_read_thread WHERE thread_id = ' . $db->escapeNumber($thread_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($alliance_id));
 } else {
 	// There is no "Bank Statement" thread yet
-	$dbResult = $db->read('SELECT thread_id FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($alliance_id) . ' ORDER BY thread_id DESC LIMIT 1');
-	if ($dbResult->hasRecord()) {
-		$thread_id = $dbResult->record()->getInt('thread_id') + 1;
-	} else {
-		$thread_id = 1;
-	}
+	$dbResult = $db->read('SELECT IFNULL(MAX(thread_id)+1, 0) AS next_id FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($alliance_id));
+	$thread_id = $dbResult->record()->getInt('next_id');
 	$db->insert('alliance_thread_topic', [
 		'game_id' => $db->escapeNumber($player->getGameID()),
 		'alliance_id' => $db->escapeNumber($alliance_id),

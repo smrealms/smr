@@ -12,7 +12,7 @@ $template->assign('StatsGame', $statsGame);
 $template->assign('PageTopic', 'Game Stats: ' . $statsGame->getName() . ' (' . $gameID . ')');
 
 $db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT count(*) total_players, MAX(experience) max_exp, MAX(alignment) max_align, MIN(alignment) min_alignment, MAX(kills) max_kills FROM player WHERE game_id = ' . $gameID . ' ORDER BY experience DESC');
+$dbResult = $db->read('SELECT count(*) total_players, IFNULL(MAX(experience),0) max_exp, IFNULL(MAX(alignment),0) max_align, IFNULL(MIN(alignment),0) min_alignment, IFNULL(MAX(kills),0) max_kills FROM player WHERE game_id = ' . $gameID . ' ORDER BY experience DESC');
 if ($dbResult->hasRecord()) {
 	$dbRecord = $dbResult->record();
 	$template->assign('TotalPlayers', $dbRecord->getInt('total_players'));

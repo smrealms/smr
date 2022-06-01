@@ -35,19 +35,16 @@ $template->assign('Balance', $balance);
 if ($var['maxValue'] > 0) {
 	$maxValue = $var['maxValue'];
 } else {
-	$dbResult = $db->read('SELECT MAX(transaction_id) FROM anon_bank_transactions
+	$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 5) as max_transaction_id FROM anon_bank_transactions
 				WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
 				AND anon_id=' . $db->escapeNumber($account_num));
-	if ($dbResult->hasRecord()) {
-		$maxValue = $dbResult->record()->getInt('MAX(transaction_id)');
-	} else {
-		$maxValue = 5;
-	}
-	$minValue = max(1, $maxValue - 5);
+	$maxValue = $dbResult->record()->getInt('max_transaction_id');
 }
 
 if ($var['minValue'] <= $maxValue && $var['minValue'] > 0) {
 	$minValue = $var['minValue'];
+} else {
+	$minValue = max(1, $maxValue - 5);
 }
 
 $query = 'SELECT *

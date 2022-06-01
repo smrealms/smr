@@ -49,7 +49,6 @@ if ($dbResult->hasRecord()) {
 	$alliance_eyes = [];
 	$thread_ids = [];
 	$thread_topics = [];
-	$thread_replies = [];
 
 	foreach ($dbResult->records() as $dbRecord) {
 		$threadID = $dbRecord->getInt('thread_id');
@@ -94,7 +93,6 @@ if ($dbResult->hasRecord()) {
 			$threads[$i]['DeleteHref'] = $container->href();
 		}
 		$threads[$i]['Replies'] = $dbRecord->getInt('num_replies');
-		$thread_replies[$i] = $dbRecord->getInt('num_replies');
 		$threads[$i]['SendTime'] = $dbRecord->getInt('sendtime');
 		++$i;
 	}
@@ -103,7 +101,6 @@ if ($dbResult->hasRecord()) {
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$container['thread_ids'] = $thread_ids;
 	$container['thread_topics'] = $thread_topics;
-	$container['thread_replies'] = $thread_replies;
 	$container['alliance_eyes'] = $alliance_eyes;
 	for ($j = 0; $j < $i; $j++) {
 		$container['thread_index'] = $j;

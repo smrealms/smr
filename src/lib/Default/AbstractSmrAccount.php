@@ -192,13 +192,13 @@ abstract class AbstractSmrAccount {
 
 	public static function getUserScoreCaseStatement(Smr\Database $db): array {
 		$userRankingTypes = [];
-		$case = 'FLOOR(SUM(CASE type ';
+		$case = 'IFNULL(FLOOR(SUM(CASE type ';
 		foreach (self::USER_RANKINGS_SCORE as $userRankingScore) {
 			$userRankingType = $db->escapeString(implode(':', $userRankingScore[0]));
 			$userRankingTypes[] = $userRankingType;
 			$case .= ' WHEN ' . $userRankingType . ' THEN POW(amount*' . $userRankingScore[1] . ',' . SmrAccount::USER_RANKINGS_EACH_STAT_POW . ')*' . $userRankingScore[2];
 		}
-		$case .= ' END))';
+		$case .= ' END)), 0)';
 		return ['CASE' => $case, 'IN' => implode(',', $userRankingTypes)];
 	}
 

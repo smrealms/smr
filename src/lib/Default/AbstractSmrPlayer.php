@@ -277,13 +277,9 @@ abstract class AbstractSmrPlayer {
 			// Player name does not yet exist, we may proceed
 		}
 
-		// get last registered player id in that game and increase by one.
-		$dbResult = $db->read('SELECT MAX(player_id) FROM player WHERE game_id = ' . $db->escapeNumber($gameID));
-		if ($dbResult->hasRecord()) {
-			$playerID = $dbResult->record()->getInt('MAX(player_id)') + 1;
-		} else {
-			$playerID = 1;
-		}
+		// Get the next available player ID (start at 1 if no players yet)
+		$dbResult = $db->read('SELECT IFNULL(MAX(player_id), 0) AS player_id FROM player WHERE game_id = ' . $db->escapeNumber($gameID));
+		$playerID = $dbResult->record()->getInt('player_id') + 1;
 
 		$startSectorID = 0; // Temporarily put player into non-existent sector
 		$db->insert('player', [
