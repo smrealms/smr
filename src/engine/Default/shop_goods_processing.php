@@ -154,6 +154,8 @@ if ($transaction === TRADER_STEALS ||
 		$player->increaseHOF($amount, ['Trade', 'Goods', 'Stolen'], HOF_ALLIANCE);
 		$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Stealing'], HOF_PUBLIC);
 		$port->stealGoods($portGood, $amount);
+	} else {
+		throw new Exception('Unknown transaction: ' . $transaction);
 	}
 
 	$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Total'], HOF_PUBLIC);
