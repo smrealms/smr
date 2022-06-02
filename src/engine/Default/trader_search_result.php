@@ -19,15 +19,13 @@ if (!empty($player_id)) {
 		// No player found, we'll return an empty result
 	}
 } else {
-	$db = Smr\Database::getInstance();
-	$dbResult = $db->read('SELECT * FROM player
-				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND player_name = ' . $db->escapeString($player_name) . ' LIMIT 1');
-	if ($dbResult->hasRecord()) {
-		$dbRecord = $dbResult->record();
-		$resultPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+	try {
+		$resultPlayer = SmrPlayer::getPlayerByPlayerName($player_name, $player->getGameID());
+	} catch (Smr\Exceptions\PlayerNotFound) {
+		// No exact match, but that's okay
 	}
 
+	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT * FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND player_name LIKE ' . $db->escapeString('%' . $player_name . '%') . '
