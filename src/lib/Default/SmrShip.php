@@ -123,7 +123,7 @@ class SmrShip extends AbstractSmrShip {
 					'amount' => $db->escapeNumber($amount),
 				]);
 			} else {
-				$db->write('DELETE FROM ship_has_cargo WHERE ' . $this->SQL . ' AND good_id = ' . $db->escapeNumber($id) . ' LIMIT 1');
+				$db->write('DELETE FROM ship_has_cargo WHERE ' . $this->SQL . ' AND good_id = ' . $db->escapeNumber($id));
 				// Unset now to omit displaying this good with 0 amount
 				// before the next page is loaded.
 				unset($this->cargo[$id]);
@@ -180,7 +180,7 @@ class SmrShip extends AbstractSmrShip {
 			return;
 		}
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM ship_is_cloaked WHERE ' . $this->SQL . ' LIMIT 1');
+		$dbResult = $db->read('SELECT 1 FROM ship_is_cloaked WHERE ' . $this->SQL);
 		$this->isCloaked = $dbResult->hasRecord();
 	}
 
@@ -190,7 +190,7 @@ class SmrShip extends AbstractSmrShip {
 		}
 		$db = Smr\Database::getInstance();
 		if ($this->isCloaked === false) {
-			$db->write('DELETE FROM ship_is_cloaked WHERE ' . $this->SQL . ' LIMIT 1');
+			$db->write('DELETE FROM ship_is_cloaked WHERE ' . $this->SQL);
 		} else {
 			$db->insert('ship_is_cloaked', [
 				'account_id' => $db->escapeNumber($this->getAccountID()),
@@ -206,7 +206,7 @@ class SmrShip extends AbstractSmrShip {
 			return;
 		}
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM ship_has_illusion WHERE ' . $this->SQL . ' LIMIT 1');
+		$dbResult = $db->read('SELECT * FROM ship_has_illusion WHERE ' . $this->SQL);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$this->illusionShip = [
@@ -223,7 +223,7 @@ class SmrShip extends AbstractSmrShip {
 		}
 		$db = Smr\Database::getInstance();
 		if ($this->illusionShip === false) {
-			$db->write('DELETE FROM ship_has_illusion WHERE ' . $this->SQL . ' LIMIT 1');
+			$db->write('DELETE FROM ship_has_illusion WHERE ' . $this->SQL);
 		} else {
 			$db->replace('ship_has_illusion', [
 				'account_id' => $db->escapeNumber($this->getAccountID()),

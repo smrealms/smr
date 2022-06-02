@@ -86,7 +86,7 @@ class SmrGame {
 	) {
 		$this->db = Smr\Database::getInstance();
 
-		$dbResult = $this->db->read('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
+		$dbResult = $this->db->read('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$this->name = $dbRecord->getField('game_name');
@@ -150,7 +150,7 @@ class SmrGame {
 										', alliance_max_players = ' . $this->db->escapeNumber($this->getAllianceMaxPlayers()) .
 										', alliance_max_vets = ' . $this->db->escapeNumber($this->getAllianceMaxVets()) .
 										', starting_credits = ' . $this->db->escapeNumber($this->getStartingCredits()) .
-									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
+									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		}
 		$this->isNew = false;
 		$this->hasChanged = false;

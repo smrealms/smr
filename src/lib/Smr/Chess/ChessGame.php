@@ -80,7 +80,7 @@ class ChessGame {
 		$this->db = Database::getInstance();
 		$dbResult = $this->db->read('SELECT *
 						FROM chess_game
-						WHERE chess_game_id=' . $this->db->escapeNumber($chessGameID) . ' LIMIT 1;');
+						WHERE chess_game_id=' . $this->db->escapeNumber($chessGameID));
 		if (!$dbResult->hasRecord()) {
 			throw new Exception('Chess game not found: ' . $chessGameID);
 		}

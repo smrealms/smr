@@ -79,7 +79,7 @@ if ($dbResult->hasRecord()) {
 					last_changed = ' . $db->escapeNumber(Smr\Epoch::time()) . ',
 					approved = \'TBC\',
 					disabled = \'FALSE\'
-				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
+				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 } else {
 	// if he didn't upload a picture before
 	// we kick him out here

@@ -3,7 +3,7 @@
 $db = Smr\Database::getInstance();
 
 //first create the game
-$dbResult = $db->read('SELECT 1 FROM game WHERE game_name=' . $db->escapeString(Smr\Request::get('game_name')) . ' LIMIT 1');
+$dbResult = $db->read('SELECT 1 FROM game WHERE game_name=' . $db->escapeString(Smr\Request::get('game_name')));
 if ($dbResult->hasRecord()) {
 	create_error('That game name is already taken.');
 }

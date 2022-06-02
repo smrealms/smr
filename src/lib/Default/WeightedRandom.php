@@ -52,7 +52,7 @@ class WeightedRandom {
 		protected readonly int $typeID
 	) {
 		$this->db = Smr\Database::getInstance();
-		$dbResult = $this->db->read('SELECT weighting FROM weighted_random WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND account_id = ' . $this->db->escapeNumber($accountID) . ' AND type = ' . $this->db->escapeString($type) . ' AND type_id = ' . $this->db->escapeNumber($typeID) . ' LIMIT 1');
+		$dbResult = $this->db->read('SELECT weighting FROM weighted_random WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND account_id = ' . $this->db->escapeNumber($accountID) . ' AND type = ' . $this->db->escapeString($type) . ' AND type_id = ' . $this->db->escapeNumber($typeID));
 		if ($dbResult->hasRecord()) {
 			$this->weighting = $dbResult->record()->getInt('weighting');
 		} else {

@@ -42,7 +42,7 @@ if ($action != COMBAT_LOG_PERSONAL && $player->hasAlliance()) {
 }
 
 $page = $var['page'] ?? 0;
-$dbResult = $db->read('SELECT count(*) as count FROM combat_logs c WHERE ' . $query . ' LIMIT 1');
+$dbResult = $db->read('SELECT count(*) as count FROM combat_logs c WHERE ' . $query);
 $totalLogs = $dbResult->record()->getInt('count'); // count always returns a record
 $template->assign('TotalLogs', $totalLogs);
 

@@ -126,7 +126,7 @@ class AbstractSmrPort {
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
 		if ($dbRecord === null) {
-			$dbResult = $this->db->read('SELECT * FROM port WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT * FROM port WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -1184,7 +1184,7 @@ class AbstractSmrPort {
 								', reinforce_time = ' . $this->db->escapeNumber($this->getReinforceTime()) .
 								', attack_started = ' . $this->db->escapeNumber($this->getAttackStarted()) .
 								', race_id = ' . $this->db->escapeNumber($this->getRaceID()) . '
-								WHERE ' . $this->SQL . ' LIMIT 1');
+								WHERE ' . $this->SQL);
 			} else {
 				$this->db->insert('port', [
 					'game_id' => $this->db->escapeNumber($this->getGameID()),
@@ -1212,7 +1212,7 @@ class AbstractSmrPort {
 				continue;
 			}
 			$amount = $this->getGoodAmount($goodID);
-			$this->db->write('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
+			$this->db->write('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID));
 			unset($this->goodAmountsChanged[$goodID]);
 		}
 

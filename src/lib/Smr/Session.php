@@ -66,7 +66,7 @@ class Session {
 			// create a new session id
 			do {
 				$this->sessionID = random_string($idLength);
-				$dbResult = $this->db->read('SELECT 1 FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
+				$dbResult = $this->db->read('SELECT 1 FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID));
 			} while ($dbResult->hasRecord()); //Make sure we haven't somehow clashed with someone else's session.
 
 			// This is a minor hack to make sure that setcookie is not called
@@ -105,7 +105,7 @@ class Session {
 	}
 
 	public function fetchVarInfo(): void {
-		$dbResult = $this->db->read('SELECT * FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
+		$dbResult = $this->db->read('SELECT * FROM active_session WHERE session_id = ' . $this->db->escapeString($this->sessionID));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$this->generate = false;
@@ -158,7 +158,7 @@ class Session {
 		if (!$this->generate) {
 			$this->db->write('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!USING_AJAX ? ',last_accessed=' . $this->db->escapeNumber(Epoch::time()) : '') . ',session_var=' . $this->db->escapeObject($this->var, true) .
 					',last_sn=' . $this->db->escapeString($this->SN) .
-					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . (USING_AJAX ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : '') . ' LIMIT 1');
+					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . (USING_AJAX ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : ''));
 		} else {
 			$this->db->write('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID));
 			$this->db->insert('active_session', [
@@ -352,7 +352,7 @@ class Session {
 			return;
 		}
 		$this->db->write('UPDATE active_session SET ajax_returns=' . $this->db->escapeObject($this->ajaxReturns, true) .
-				' WHERE session_id=' . $this->db->escapeString($this->sessionID) . ' LIMIT 1');
+				' WHERE session_id=' . $this->db->escapeString($this->sessionID));
 	}
 
 }

@@ -63,7 +63,7 @@ class SmrAlliance {
 
 	public static function getAllianceByName(string $name, int $gameID, bool $forceUpdate = false): self {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return self::getAlliance($dbRecord->getInt('alliance_id'), $gameID, $forceUpdate);

@@ -14,7 +14,7 @@ $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT *
 			FROM anon_bank
 			WHERE anon_id=' . $db->escapeNumber($account_num) . '
-			AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
+			AND game_id=' . $db->escapeNumber($player->getGameID()));
 
 if (!$dbResult->hasRecord()) {
 	create_error('This anonymous account does not exist!');

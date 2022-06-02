@@ -121,7 +121,7 @@ class AbstractSmrLocation {
 		$this->SQL = 'location_type_id = ' . $this->db->escapeNumber($typeID);
 
 		if ($dbRecord === null) {
-			$dbResult = $this->db->read('SELECT * FROM location_type WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT * FROM location_type WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -161,7 +161,7 @@ class AbstractSmrLocation {
 			return;
 		}
 		$this->name = $name;
-		$this->db->write('UPDATE location_type SET location_name=' . $this->db->escapeString($this->name) . ' WHERE ' . $this->SQL . ' LIMIT 1');
+		$this->db->write('UPDATE location_type SET location_name=' . $this->db->escapeString($this->name) . ' WHERE ' . $this->SQL);
 	}
 
 	public function hasAction(): bool {
@@ -178,7 +178,7 @@ class AbstractSmrLocation {
 
 	public function isFed(): bool {
 		if (!isset($this->fed)) {
-			$dbResult = $this->db->read('SELECT 1 FROM location_is_fed WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT 1 FROM location_is_fed WHERE ' . $this->SQL);
 			$this->fed = $dbResult->hasRecord();
 		}
 		return $this->fed;
@@ -191,14 +191,14 @@ class AbstractSmrLocation {
 		if ($bool) {
 			$this->db->write('INSERT IGNORE INTO location_is_fed (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 		} else {
-			$this->db->write('DELETE FROM location_is_fed WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->write('DELETE FROM location_is_fed WHERE ' . $this->SQL);
 		}
 		$this->fed = $bool;
 	}
 
 	public function isBank(): bool {
 		if (!isset($this->bank)) {
-			$dbResult = $this->db->read('SELECT 1 FROM location_is_bank WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT 1 FROM location_is_bank WHERE ' . $this->SQL);
 			$this->bank = $dbResult->hasRecord();
 		}
 		return $this->bank;
@@ -213,14 +213,14 @@ class AbstractSmrLocation {
 				'location_type_id' => $this->db->escapeNumber($this->getTypeID()),
 			]);
 		} else {
-			$this->db->write('DELETE FROM location_is_bank WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->write('DELETE FROM location_is_bank WHERE ' . $this->SQL);
 		}
 		$this->bank = $bool;
 	}
 
 	public function isBar(): bool {
 		if (!isset($this->bar)) {
-			$dbResult = $this->db->read('SELECT 1 FROM location_is_bar WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT 1 FROM location_is_bar WHERE ' . $this->SQL);
 			$this->bar = $dbResult->hasRecord();
 		}
 		return $this->bar;
@@ -233,14 +233,14 @@ class AbstractSmrLocation {
 		if ($bool) {
 			$this->db->write('INSERT IGNORE INTO location_is_bar (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 		} else {
-			$this->db->write('DELETE FROM location_is_bar WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->write('DELETE FROM location_is_bar WHERE ' . $this->SQL);
 		}
 		$this->bar = $bool;
 	}
 
 	public function isHQ(): bool {
 		if (!isset($this->HQ)) {
-			$dbResult = $this->db->read('SELECT * FROM location_is_hq WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT * FROM location_is_hq WHERE ' . $this->SQL);
 			$this->HQ = $dbResult->hasRecord();
 		}
 		return $this->HQ;
@@ -253,14 +253,14 @@ class AbstractSmrLocation {
 		if ($bool) {
 			$this->db->write('INSERT IGNORE INTO location_is_hq (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 		} else {
-			$this->db->write('DELETE FROM location_is_hq WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->write('DELETE FROM location_is_hq WHERE ' . $this->SQL);
 		}
 		$this->HQ = $bool;
 	}
 
 	public function isUG(): bool {
 		if (!isset($this->UG)) {
-			$dbResult = $this->db->read('SELECT * FROM location_is_ug WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT * FROM location_is_ug WHERE ' . $this->SQL);
 			$this->UG = $dbResult->hasRecord();
 		}
 		return $this->UG;
@@ -275,7 +275,7 @@ class AbstractSmrLocation {
 				'location_type_id' => $this->db->escapeNumber($this->getTypeID()),
 			]);
 		} else {
-			$this->db->write('DELETE FROM location_is_ug WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->write('DELETE FROM location_is_ug WHERE ' . $this->SQL);
 		}
 		$this->UG = $bool;
 	}
@@ -303,7 +303,7 @@ class AbstractSmrLocation {
 		if ($this->isHardwareSold($hardwareTypeID)) {
 			return;
 		}
-		$dbResult = $this->db->read('SELECT 1 FROM hardware_type WHERE hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID) . ' LIMIT 1');
+		$dbResult = $this->db->read('SELECT 1 FROM hardware_type WHERE hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID));
 		if (!$dbResult->hasRecord()) {
 			throw new Exception('Invalid hardware type id given');
 		}
@@ -318,7 +318,7 @@ class AbstractSmrLocation {
 		if (!$this->isHardwareSold($hardwareTypeID)) {
 			return;
 		}
-		$this->db->write('DELETE FROM location_sells_hardware WHERE ' . $this->SQL . ' AND hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID) . ' LIMIT 1');
+		$this->db->write('DELETE FROM location_sells_hardware WHERE ' . $this->SQL . ' AND hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID));
 		unset($this->hardwareSold[$hardwareTypeID]);
 	}
 
@@ -358,7 +358,7 @@ class AbstractSmrLocation {
 		if (!$this->isShipSold($shipTypeID)) {
 			return;
 		}
-		$this->db->write('DELETE FROM location_sells_ships WHERE ' . $this->SQL . ' AND ship_type_id = ' . $this->db->escapeNumber($shipTypeID) . ' LIMIT 1');
+		$this->db->write('DELETE FROM location_sells_ships WHERE ' . $this->SQL . ' AND ship_type_id = ' . $this->db->escapeNumber($shipTypeID));
 		unset($this->shipsSold[$shipTypeID]);
 	}
 
@@ -398,7 +398,7 @@ class AbstractSmrLocation {
 		if (!$this->isWeaponSold($weaponTypeID)) {
 			return;
 		}
-		$this->db->write('DELETE FROM location_sells_weapons WHERE ' . $this->SQL . ' AND weapon_type_id = ' . $this->db->escapeNumber($weaponTypeID) . ' LIMIT 1');
+		$this->db->write('DELETE FROM location_sells_weapons WHERE ' . $this->SQL . ' AND weapon_type_id = ' . $this->db->escapeNumber($weaponTypeID));
 		unset($this->weaponsSold[$weaponTypeID]);
 	}
 

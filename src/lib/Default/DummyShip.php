@@ -25,7 +25,7 @@ class DummyShip extends AbstractSmrShip {
 			// Load weapons from the dummy database cache, if available
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT info FROM cached_dummys WHERE type = \'DummyShip\'
-						AND id = ' . $db->escapeString($player->getPlayerName()) . ' LIMIT 1');
+						AND id = ' . $db->escapeString($player->getPlayerName()));
 			if ($dbResult->hasRecord()) {
 				$cachedShip = $dbResult->record()->getObject('info');
 				foreach ($cachedShip->getWeapons() as $weapon) {
