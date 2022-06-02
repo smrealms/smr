@@ -22,5 +22,5 @@ if ($sector->hasX($realX, $player)) {
 
 $path = Plotter::findReversiblePathToX($realX, $sector, true, $player, $player);
 
-// common processing
-require('course_plot_processing.inc.php');
+require_once(LIB . 'Default/course_plot.inc.php');
+course_plot_forward($player, $path);
