@@ -87,8 +87,8 @@ class Session {
 			$var = $this->var[$this->SN];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
 			$loadDelay = self::URL_LOAD_DELAY[$currentPage] ?? 0;
-			$initialTimeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
-			while (($timeBetweenLoads = microtime(true) - $var['PreviousRequestTime']) < $loadDelay) {
+			$timeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
+			if ($timeBetweenLoads < $loadDelay) {
 				$sleepTime = IRound(($loadDelay - $timeBetweenLoads) * 1000000);
 				//echo 'Sleeping for: ' . $sleepTime . 'us';
 				usleep($sleepTime);
@@ -97,8 +97,7 @@ class Session {
 				$this->db->insert('debug', [
 					'debug_type' => $this->db->escapeString('Delay: ' . $currentPage),
 					'account_id' => $this->db->escapeNumber($this->accountID),
-					'value' => $this->db->escapeNumber($initialTimeBetweenLoads),
-					'value_2' => $this->db->escapeNumber($timeBetweenLoads),
+					'value' => $this->db->escapeNumber($timeBetweenLoads),
 				]);
 			}
 		}
