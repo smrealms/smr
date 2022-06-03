@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
+require_once(LIB . 'Default/planet.inc.php');
+planet_common();
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 $planet = $player->getSectorPlanet();
-
-require('planet.inc.php');
 
 //echo the dump cargo message or other message.
 if (isset($var['errorMsg'])) {

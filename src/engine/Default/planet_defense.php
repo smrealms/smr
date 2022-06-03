@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-$template = Smr\Template::getInstance();
+require_once(LIB . 'Default/planet.inc.php');
+planet_common();
 
-require('planet.inc.php');
+$template = Smr\Template::getInstance();
 
 $container = Page::create('planet_defense_processing.php');
 $container['type_id'] = HARDWARE_SHIELDS;
