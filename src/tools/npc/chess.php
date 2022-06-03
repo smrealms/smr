@@ -49,9 +49,11 @@ try {
 			writeToEngine('position fen ' . $chessGame->getFENString(), false);
 			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() == Smr\Chess\ChessGame::PLAYER_WHITE ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);
 			stream_set_blocking($fromEngine, 1);
-			while (stripos($move = trim(fgets($fromEngine)), 'bestmove') !== 0) {
+			$move = '';
+			while (!str_starts_with($move, 'bestmove')) {
+				$move = trim(fgets($fromEngine));
 				debug('<-- ' . $move);
-				if (stripos($move, 'Seg') === 0) {
+				if (str_starts_with($move, 'Seg')) {
 					// Segfault
 					debug('UCI engine segfaulted?');
 					exit;
