@@ -140,9 +140,6 @@ function npcDriver(): bool {
 
 			//Clean up the caches as the data may get changed by other players
 			clearCaches();
-
-			//Clear up some global vars to avoid contaminating subsequent pages
-			$_REQUEST = [];
 		}
 
 		//Have a sleep between actions
@@ -315,8 +312,14 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page
 	$idealPrice = $port->getIdealPrice($goodID, $transaction, $amount, $relations);
 	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
 
-	$_REQUEST = ['action' => $transaction];
-	return Page::create('shop_goods_processing.php', '', ['offered_price' => $offeredPrice, 'ideal_price' => $idealPrice, 'amount' => $amount, 'good_id' => $goodID, 'bargain_price' => $offeredPrice]);
+	return Page::create('shop_goods_processing.php', '', [
+		'action' => $transaction,
+		'offered_price' => $offeredPrice,
+		'ideal_price' => $idealPrice,
+		'amount' => $amount,
+		'good_id' => $goodID,
+		'bargain_price' => $offeredPrice,
+	]);
 }
 
 function dumpCargo(SmrPlayer $player): Page {
