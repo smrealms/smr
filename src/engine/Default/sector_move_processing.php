@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+require_once(LIB . 'Default/sector_mines.inc.php');
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -51,7 +53,7 @@ if (!$sector->isLinked($var['target_sector'])) {
 if ($player->getLastSectorID() != $var['target_sector']) {
 	// Update the "green sector"
 	$player->setLastSectorID($var['target_sector']);
-	require('sector_mines.inc.php');
+	hit_sector_mines($player);
 }
 
 // log action
@@ -90,7 +92,7 @@ $sector->markVisited($player);
 $sector->enteringSector($player, $movement);
 
 // If you bump into mines while entering the target sector...
-require('sector_mines.inc.php');
+hit_sector_mines($player);
 
 // otherwise
 Page::create('skeleton.php', $var['target_page'])->go();
