@@ -677,7 +677,7 @@ abstract class AbstractSmrAccount {
 			throw new Smr\Exceptions\UserError('This is not a valid email address! The domain ' . $host . ' does not exist.');
 		}
 
-		if (strstr($email, ' ')) {
+		if (str_contains($email, ' ')) {
 			throw new Smr\Exceptions\UserError('The email is invalid! It cannot contain any spaces.');
 		}
 
@@ -923,7 +923,7 @@ abstract class AbstractSmrAccount {
 		// New (safe) password hashes will start with a $, but accounts logging
 		// in for the first time since the transition from md5 will still have
 		// hex-only hashes.
-		if (strpos($this->passwordHash, '$') === 0) {
+		if (str_starts_with($this->passwordHash, '$')) {
 			$result = password_verify($password, $this->passwordHash);
 		} else {
 			$result = $this->passwordHash === md5($password);

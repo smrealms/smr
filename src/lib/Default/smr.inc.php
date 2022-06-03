@@ -166,7 +166,7 @@ function bbifyMessage(string $message, bool $noLinks = false): string {
 	global $disableBBLinks;
 	$disableBBLinks = $noLinks;
 
-	if (strpos($message, '[') !== false) { //We have BBCode so let's do a full parse.
+	if (str_contains($message, '[')) { //We have BBCode so let's do a full parse.
 		$message = $bbParser->parse($message);
 	} else { //Otherwise just convert newlines
 		$message = nl2br($message, true);

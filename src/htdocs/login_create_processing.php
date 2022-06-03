@@ -32,7 +32,7 @@ try {
 
 	$login = Smr\Request::get('login');
 	$password = Smr\Request::get('password');
-	if (strstr($login, '\'')) {
+	if (str_contains($login, '\'')) {
 		create_error('Illegal character in login detected! Don\'t use the apostrophe.');
 	}
 	if (stripos($login, 'NPC') === 0) {
@@ -68,7 +68,7 @@ try {
 		create_error('Email address is missing!');
 	}
 
-	if (strstr($email, ' ')) {
+	if (str_contains($email, ' ')) {
 		create_error('The email is invalid! It cannot contain any spaces.');
 	}
 
