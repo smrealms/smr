@@ -666,9 +666,17 @@ abstract class AbstractSmrAccount {
 	}
 
 	/**
-	 * Change e-mail address, unvalidate the account, and resend validation code
+	 * Perform basic sanity checks on the usability of an email address.
 	 */
-	public function changeEmail(string $email): void {
+	public static function checkEmail(string $email, self $owner = null): void {
+		if (empty($email)) {
+			throw new Smr\Exceptions\UserError('Email address is missing!');
+		}
+
+		if (str_contains($email, ' ')) {
+			throw new Smr\Exceptions\UserError('The email is invalid! It cannot contain any spaces.');
+		}
+
 		// get user and host for the provided address
 		[$user, $host] = explode('@', $email);
 
@@ -677,18 +685,22 @@ abstract class AbstractSmrAccount {
 			throw new Smr\Exceptions\UserError('This is not a valid email address! The domain ' . $host . ' does not exist.');
 		}
 
-		if (str_contains($email, ' ')) {
-			throw new Smr\Exceptions\UserError('The email is invalid! It cannot contain any spaces.');
-		}
-
 		try {
 			$other = self::getAccountByEmail($email);
-			if (!$this->equals($other)) {
+			if ($owner === null || !$owner->equals($other)) {
 				throw new Smr\Exceptions\UserError('This email address is already registered.');
 			}
 		} catch (Smr\Exceptions\AccountNotFound) {
 			// Proceed, this email is not yet in use
 		}
+	}
+
+	/**
+	 * Change e-mail address, unvalidate the account, and resend validation code
+	 */
+	public function changeEmail(string $email): void {
+		// Throw an error if this email is not usable
+		self::checkEmail($email, $this);
 
 		$this->setEmail($email);
 		$this->setValidationCode(random_string(10));

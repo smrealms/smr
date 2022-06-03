@@ -64,21 +64,8 @@ try {
 		$validatedBySocial = true;
 	}
 
-	if (empty($email)) {
-		create_error('Email address is missing!');
-	}
-
-	if (str_contains($email, ' ')) {
-		create_error('The email is invalid! It cannot contain any spaces.');
-	}
-
-	// get user and host for the provided address
-	[$user, $host] = explode('@', $email);
-
-	// check if the host got a MX or at least an A entry
-	if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
-		create_error('This is not a valid email address! The domain ' . $host . ' does not exist.');
-	}
+	// Sanity check email address
+	SmrAccount::checkEmail($email);
 
 	if ($login == $password) {
 		create_error('Your login and password cannot be the same!');
@@ -91,16 +78,8 @@ try {
 		// Proceed, login is not yet registered
 	}
 
-	try {
-		SmrAccount::getAccountByEmail($email);
-		create_error('This email address is already registered.');
-	} catch (Smr\Exceptions\AccountNotFound) {
-		// Proceed, email is not yet registered
-	}
-
 	$referral = Smr\Request::getInt('referral_id');
 
-	// create account
 	$timez = Smr\Request::getInt('timez');
 
 	// creates a new user account object
