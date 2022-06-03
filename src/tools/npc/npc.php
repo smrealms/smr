@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Npc\Exceptions\FinalAction;
+use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
-use Smr\Routes\RouteIterator;
+use Smr\Npc\NpcActor;
 
 function overrideForward(Page $container): never {
 	global $forwardedContainer;
@@ -14,7 +16,7 @@ function overrideForward(Page $container): never {
 	}
 	// We have to throw the exception to get back up the stack,
 	// otherwise we quickly hit problems of overflowing the stack.
-	throw new Smr\Npc\Exceptions\Forward();
+	throw new ForwardAction();
 }
 const OVERRIDE_FORWARD = true;
 
@@ -89,192 +91,63 @@ const SHIP_UPGRADE_PATH = [
 
 
 try {
-	NPCStuff();
+	while (npcDriver() === false) {
+		// No actions taken, try another NPC
+	}
 } catch (Throwable $e) {
 	logException($e);
-	// Try to shut down cleanly
-	exitNPC();
 }
+// Try to shut down cleanly
+exitNPC();
 
 
-function NPCStuff(): void {
+/**
+ * @return bool If the NPC performed any actions
+ */
+function npcDriver(): bool {
 	global $previousContainer;
 
 	$session = Smr\Session::getInstance();
 	$session->setCurrentVar(new Page()); // initialize empty var
 
-	debug('Script started');
-
 	// Load the first available NPC
-	$changeNPC = true;
+	changeNPCLogin();
 
+	// We chose a new NPC, we don't care what we were doing beforehand.
+	$previousContainer = null;
+
+	try {
+		$actor = new NpcActor($session->getGameID(), $session->getAccountID());
+	} catch (FinalAction) {
+		// Startup conditions not satisfied, try another NPC
+		return false;
+	}
+
+	// Loop over actions for this NPC
 	while (true) {
-		if ($changeNPC) {
-			changeNPCLogin();
-
-			// Reset tracking variables
-			$changeNPC = false;
-			$allTradeRoutes = [];
-			$tradeRoute = null;
-			$actions = 0;
-
-			// We chose a new NPC, we don't care what we were doing beforehand.
-			$previousContainer = null;
-		}
-
 		try {
-			// Avoid infinite loops by restricting the number of actions
-			if ($actions >= NPC_MAX_ACTIONS) {
-				debug('Reached maximum number of actions: ' . NPC_MAX_ACTIONS);
-				throw new Smr\Npc\Exceptions\FinalAction();
-			}
-
-			//We have to reload player on each loop
-			$player = $session->getPlayer(true);
-			// Sanity check to be certain we actually have an NPC
-			if (!$player->isNPC()) {
-				throw new Exception('Player is not an NPC!');
-			}
-			$player->updateTurns();
-
-			// Are we starting with a new NPC?
-			if ($actions == 0) {
-				checkStartConditions($player);
-
-				// Ensure the NPC doesn't think it's under attack at startup,
-				// since this could cause it to get stuck in a loop in Fed.
-				$player->setUnderAttack(false);
-
-				// Initialize the trade route for this NPC
-				$allTradeRoutes = findRoutes($player);
-				shuffle($allTradeRoutes); // randomize
-				$tradeRoute = changeRoute($allTradeRoutes);
-
-				// Upgrade ship if possible, reset hardware to max, etc.
-				setupShip($player);
-
-				// Update database (not essential to have a lock here)
-				$player->update();
-			}
-
-			if ($player->isDead()) {
-				debug('Some evil person killed us, let\'s move on now.');
-				$player->setDead(false); // see death_processing.php
-				$player->setNewbieWarning(false); // undo SmrPlayer::killPlayer setting this to true
-				checkStartConditions($player);
-
-				$previousContainer = null; //We died, we don't care what we were doing beforehand.
-				setupShip($player); // reship before continuing
-				$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
-			}
-
-			// Start the action sequence
-			$actions++;
-			debug('Action #' . $actions);
-
-			// Do we have a plot that ends in Fed?
-			$hasPlotToFed = $player->hasPlottedCourse() && SmrSector::getSector($player->getGameID(), $player->getPlottedCourse()->getEndSectorID())->offersFederalProtection();
-
-			if ($player->isUnderAttack() && !$hasPlotToFed) {
-				// We're under attack and need to plot course to fed.
-				debug('Under Attack');
-				processContainer(plotToFed($player));
-			} elseif ($hasPlotToFed) {
-				// We have a route to fed to follow
-				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
-				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif ($player->hasPlottedCourse()) {
-				// We have a route to follow
-				debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
-				processContainer(moveToSector($player, $player->getPlottedCourse()->getNextOnPath()));
-			} elseif ($player->getTurns() < NPC_LOW_TURNS) {
-				// We're low on turns or have been under attack and need to plot course to fed
-				if ($player->hasFederalProtection()) {
-					debug('We are in fed, time to switch to another NPC.');
-					throw new Smr\Npc\Exceptions\FinalAction();
-				}
-				if ($player->getTurns() < NPC_LOW_TURNS) {
-					debug('Low Turns:' . $player->getTurns());
-				}
-				processContainer(plotToFed($player));
-
-			} elseif ($tradeRoute instanceof RouteIterator) {
-				debug('Trade Route');
-
-				$currentRoute = $tradeRoute->getCurrentRoute();
-				$transaction = $tradeRoute->getCurrentTransaction();
-				$targetSectorID = $tradeRoute->getCurrentSectorID();
-
-				if ($targetSectorID != $player->getSectorID()) {
-					// We're not at the right port yet, let's plot to it.
-					debug('Plot To ' . $transaction . ': ' . $targetSectorID);
-					processContainer(plotToSector($player, $targetSectorID));
-				}
-
-				$port = $player->getSector()->getPort();
-				$tradeRestriction = $port->getTradeRestriction($player);
-				if ($tradeRestriction !== false) {
-					debug('We cannot trade at this port: ' . $tradeRestriction);
-					$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
-					throw new Smr\Npc\Exceptions\Forward();
-				}
-
-				if ($transaction == TRADER_BUYS && $player->getShip()->hasCargo()) {
-					// We're here to buy, but we have cargo already
-					debug('Dump Goods');
-					processContainer(dumpCargo($player));
-				}
-
-				// Advance the route iterator for next action
-				$tradeRoute->next();
-				processContainer(tradeGoods($currentRoute->getGoodID(), $player, $port));
-
-			} else {
-				debug('No valid actions to take');
-				processContainer(plotToFed($player));
-			}
-			/*
-			else { //Otherwise let's run around at random.
-				$moveTo = array_rand_value($player->getSector()->getLinks());
-				debug('Random Wanderings: ' . $moveTo);
-				processContainer(moveToSector($player, $moveTo));
-			}
-			*/
-			throw new Exception('NPC failed to perform any action');
-		} catch (TradeRouteDrained) {
-			debug('Trade route is drained');
-			$tradeRoute = changeRoute($allTradeRoutes, $tradeRoute);
-		} catch (Smr\Npc\Exceptions\Forward) {
+			$container = $actor->getNextAction();
+			processContainer($container);
+		} catch (ForwardAction) {
 			// we took an action
-		} catch (Smr\Npc\Exceptions\FinalAction) {
-			if ($player->getSector()->offersFederalProtection() && !$player->hasFederalProtection()) {
-				debug('Disarming so we can get Fed protection');
-				$player->getShip()->setCDs(0);
-				$player->getShip()->removeAllWeapons();
-				$player->getShip()->update();
-			}
+		} catch (FinalAction) {
+			$actor->shutdown();
 			// switch to a new NPC if we haven't taken any actions yet
-			if ($actions > 0) {
-				debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage());
-				exitNPC();
-			}
-			$changeNPC = true;
+			return $actor->getNumActions() > 0;
+		} finally {
+			// Save any changes that we made during this action
+			saveAllAndReleaseLock(updateSession: false);
+
+			//Clean up the caches as the data may get changed by other players
+			clearCaches();
+
+			//Clear up some global vars to avoid contaminating subsequent pages
+			$_REQUEST = [];
 		}
-
-		// Save any changes that we made during this action
-		saveAllAndReleaseLock(updateSession: false);
-
-		//Clean up the caches as the data may get changed by other players
-		clearCaches();
-
-		//Clear up some global vars to avoid contaminating subsequent pages
-		$_REQUEST = [];
 
 		//Have a sleep between actions
 		sleepNPC();
 	}
-	debug('Actions Finished.');
-	exitNPC();
 }
 
 function clearCaches(): void {
@@ -316,7 +189,7 @@ function checkStartConditions(SmrPlayer $player): void {
 	$minTurnsThreshold = rand($player->getMaxTurns() / 2, $player->getMaxTurns());
 	if ($player->getTurns() < $minTurnsThreshold && ($player->hasNewbieTurns() || $player->hasFederalProtection())) {
 		debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
-		throw new Smr\Npc\Exceptions\FinalAction();
+		throw new FinalAction();
 	}
 }
 
@@ -340,7 +213,7 @@ function processContainer(Page $container): never {
 
 	// Lock now to skip var update in do_voodoo
 	Smr\SectorLock::getInstance()->acquireForPlayer($player);
-	do_voodoo();
+	do_voodoo();  // TODO: replace with $container->process() w/ Exception if it returns?
 }
 
 function sleepNPC(): void {
@@ -475,7 +348,7 @@ function plotToFed(SmrPlayer $player): Page {
 	$container = plotToNearest($player, SmrLocation::getLocation($fedLocID));
 	if ($container === false) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
-		throw new Smr\Npc\Exceptions\FinalAction();
+		throw new FinalAction();
 	}
 	return $container;
 }
@@ -551,33 +424,6 @@ function setupShip(AbstractSmrPlayer $player): void {
 	$ship->update();
 }
 
-function changeRoute(array &$tradeRoutes, ?RouteIterator $routeToAvoid = null): ?RouteIterator {
-	// Remove any route from the pool of available routes if it contains
-	// either of the sectors in the $routeToAvoid (e.g. we died on it,
-	// so don't go back!).
-	if ($routeToAvoid !== null) {
-		$avoidSectorIDs = $routeToAvoid->getEntireRoute()->getPortSectorIDs();
-		foreach ($tradeRoutes as $key => $route) {
-			foreach ($avoidSectorIDs as $avoidSectorID) {
-				if ($route->containsPort($avoidSectorID)) {
-					unset($tradeRoutes[$key]);
-					break;
-				}
-			}
-		}
-	}
-
-	if (count($tradeRoutes) == 0) {
-		return null;
-	}
-
-	// Remove the picked route we chose so that we don't pick it again later.
-	$tradeRoute = array_pop($tradeRoutes);
-
-	debug('Switched route', $tradeRoute);
-	return new RouteIterator($tradeRoute);
-}
-
 function findRoutes(SmrPlayer $player): array {
 	debug('Finding Routes');
 
@@ -650,7 +496,7 @@ function findRoutes(SmrPlayer $player): array {
 
 	if (count($routesMerged) == 0) {
 		debug('Could not find any routes! Try another NPC.');
-		throw new Smr\Npc\Exceptions\FinalAction();
+		throw new FinalAction();
 	}
 
 	$db->insert('route_cache', [
