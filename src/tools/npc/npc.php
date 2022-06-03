@@ -208,9 +208,9 @@ function processContainer(Page $container): never {
 	Smr\Epoch::update();
 	$session->setCurrentVar($container);
 
-	// Lock now to skip var update in do_voodoo
 	Smr\SectorLock::getInstance()->acquireForPlayer($player);
-	do_voodoo();  // TODO: replace with $container->process() w/ Exception if it returns?
+	$container->process();
+	throw new Exception('Container did not forward as expected!');
 }
 
 function sleepNPC(): void {
