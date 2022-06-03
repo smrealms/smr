@@ -5,13 +5,13 @@ $template = Smr\Template::getInstance();
 require('planet.inc.php');
 
 $container = Page::create('planet_defense_processing.php');
-$container['type_id'] = 1;
+$container['type_id'] = HARDWARE_SHIELDS;
 $template->assign('TransferShieldsHref', $container->href());
 
-$container['type_id'] = 4;
+$container['type_id'] = HARDWARE_COMBAT;
 $template->assign('TransferCDsHref', $container->href());
 
-$container['type_id'] = 2;
+$container['type_id'] = HARDWARE_ARMOUR;
 $template->assign('TransferArmourHref', $container->href());
 
 $container = Page::create('planet_defense_weapon_processing.php');
