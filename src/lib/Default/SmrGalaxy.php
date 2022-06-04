@@ -247,15 +247,21 @@ class SmrGalaxy {
 		}
 
 		$mapSectors = [];
+		$rowLeft = $topLeft;
 		for ($i = 0; ($dist === null || $i < 2 * $dist + 1) && $i < $this->height; $i++) {
 			$mapSectors[$i] = [];
 			// get left most sector for this row
-			$rowLeft = $i == 0 ? $topLeft : $rowLeft->getNeighbourSector('Down');
+			if ($i > 0) {
+				$rowLeft = $rowLeft->getNeighbourSector('Down');
+			}
 
 			// iterate through the columns
+			$nextSector = $rowLeft;
 			for ($j = 0; ($dist === null || $j < 2 * $dist + 1) && $j < $this->width; $j++) {
-				$nextSec = $j == 0 ? $rowLeft : $nextSec->getNeighbourSector('Right');
-				$mapSectors[$i][$j] = $nextSec;
+				if ($j > 0) {
+					$nextSector = $nextSector->getNeighbourSector('Right');
+				}
+				$mapSectors[$i][$j] = $nextSector;
 			}
 		}
 		return $mapSectors;
