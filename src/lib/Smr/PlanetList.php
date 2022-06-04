@@ -38,7 +38,7 @@ class PlanetList {
 			// Get this player's planet if no alliance or viewing own alliance
 			if ($playerOnly || $player->getAllianceID() == $allianceId) {
 				$playerPlanet = $player->getPlanet();
-				if ($playerPlanet !== false) {
+				if ($playerPlanet !== null) {
 					$template->assign('PlayerPlanet', $playerPlanet);
 				}
 			}

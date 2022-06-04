@@ -465,15 +465,15 @@ abstract class AbstractSmrPlayer {
 
 	/**
 	 * Get planet owned by this player.
-	 * Returns false if this player does not own a planet.
+	 * Returns null if this player does not own a planet.
 	 */
-	public function getPlanet(): SmrPlanet|false {
+	public function getPlanet(): ?SmrPlanet {
 		$dbResult = $this->db->read('SELECT * FROM planet WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . ' AND owner_id=' . $this->db->escapeNumber($this->getAccountID()));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return SmrPlanet::getPlanet($this->getGameID(), $dbRecord->getInt('sector_id'), false, $dbRecord);
 		}
-		return false;
+		return null;
 	}
 
 	public function getSectorPlanet(): SmrPlanet {

@@ -15,6 +15,6 @@ $template->assign('Player', $player);
 
 // Check if this player already owns a planet
 $playerPlanet = $player->getPlanet();
-if ($playerPlanet !== false) {
+if ($playerPlanet !== null) {
 	$template->assign('PlayerPlanet', $playerPlanet->getSectorID());
 }
