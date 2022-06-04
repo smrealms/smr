@@ -10,18 +10,17 @@ if (empty($password)) {
 }
 
 $db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT MAX(anon_id) FROM anon_bank WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-if ($dbResult->hasRecord()) {
-	$new_acc = $dbResult->record()->getInt('MAX(anon_id)') + 1;
-}
+$dbResult = $db->read('SELECT IFNULL(MAX(anon_id), 0) as max_id FROM anon_bank WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
+$nextID = $dbResult->record()->getInt('max_id') + 1;
+
 $db->insert('anon_bank', [
 	'game_id' => $db->escapeNumber($player->getGameID()),
-	'anon_id' => $db->escapeNumber($new_acc),
+	'anon_id' => $db->escapeNumber($nextID),
 	'owner_id' => $db->escapeNumber($player->getAccountID()),
 	'password' => $db->escapeString($password),
 	'amount' => 0,
 ]);
 
 $container = Page::create('skeleton.php', 'bank_anon.php');
-$container['message'] = '<p>Account #' . $new_acc . ' has been opened for you.</p>';
+$container['message'] = '<p>Account #' . $nextID . ' has been opened for you.</p>';
 $container->go();

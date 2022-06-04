@@ -1,9 +1,12 @@
 <?php declare(strict_types=1);
 
-require('planet.inc.php');
+require_once(LIB . 'Default/planet.inc.php');
+planet_common();
 
 $session = Smr\Session::getInstance();
-$ship = $session->getPlayer()->getShip();
+$player = $session->getPlayer();
+$planet = $player->getSectorPlanet();
+$ship = $player->getShip();
 
 $goodInfo = [];
 foreach (Globals::getGoods() as $goodID => $good) {

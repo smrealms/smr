@@ -18,14 +18,10 @@ if (Smr\Request::get('action') == 'Preview') {
 $db = Smr\Database::getInstance();
 $db->lockTable('changelog');
 
-$dbResult = $db->read('SELECT MAX(changelog_id)
+$dbResult = $db->read('SELECT IFNULL(MAX(changelog_id)+1, 0) AS next_changelog_id
 			FROM changelog
 			WHERE version_id = ' . $db->escapeNumber($var['version_id']));
-if ($dbResult->hasRecord()) {
-	$changelog_id = $dbResult->record()->getInt('MAX(changelog_id)') + 1;
-} else {
-	$changelog_id = 1;
-}
+$changelog_id = $dbResult->record()->getInt('next_changelog_id');
 
 $db->insert('changelog', [
 	'version_id' => $db->escapeNumber($var['version_id']),

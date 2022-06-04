@@ -106,6 +106,7 @@ $sector->markVisited($player);
 $sector->enteringSector($player, MOVEMENT_JUMP);
 
 // If the new sector has mines...
-require('sector_mines.inc.php');
+require_once(LIB . 'Default/sector_mines.inc.php');
+hit_sector_mines($player);
 
 Page::create('skeleton.php', $var['target_page'])->go();

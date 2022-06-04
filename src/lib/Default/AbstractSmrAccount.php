@@ -53,6 +53,7 @@ abstract class AbstractSmrAccount {
 	protected int $points;
 	protected bool $useAJAX;
 	protected int $mailBanned;
+	/** @var array<string, float> */
 	protected array $HOF;
 	protected array $individualScores;
 	protected int $score;
@@ -97,7 +98,7 @@ abstract class AbstractSmrAccount {
 	public static function getAccountByLogin(string $login, bool $forceUpdate = false): SmrAccount {
 		if (!empty($login)) {
 			$db = Smr\Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login) . ' LIMIT 1');
+			$dbResult = $db->read('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -109,7 +110,7 @@ abstract class AbstractSmrAccount {
 	public static function getAccountByHofName(string $hofName, bool $forceUpdate = false): SmrAccount {
 		if (!empty($hofName)) {
 			$db = Smr\Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE hof_name = ' . $db->escapeString($hofName) . ' LIMIT 1');
+			$dbResult = $db->read('SELECT account_id FROM account WHERE hof_name = ' . $db->escapeString($hofName));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -121,7 +122,7 @@ abstract class AbstractSmrAccount {
 	public static function getAccountByEmail(?string $email, bool $forceUpdate = false): SmrAccount {
 		if (!empty($email)) {
 			$db = Smr\Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE email = ' . $db->escapeString($email) . ' LIMIT 1');
+			$dbResult = $db->read('SELECT account_id FROM account WHERE email = ' . $db->escapeString($email));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -133,7 +134,7 @@ abstract class AbstractSmrAccount {
 	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false): SmrAccount {
 		if (!empty($id)) {
 			$db = Smr\Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account where discord_id = ' . $db->escapeString($id) . ' LIMIT 1');
+			$dbResult = $db->read('SELECT account_id FROM account where discord_id = ' . $db->escapeString($id));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -145,7 +146,7 @@ abstract class AbstractSmrAccount {
 	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false): SmrAccount {
 		if (!empty($nick)) {
 			$db = Smr\Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE irc_nick = ' . $db->escapeString($nick) . ' LIMIT 1');
+			$dbResult = $db->read('SELECT account_id FROM account WHERE irc_nick = ' . $db->escapeString($nick));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -159,7 +160,7 @@ abstract class AbstractSmrAccount {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account JOIN account_auth USING(account_id)
 				WHERE login_type = ' . $db->escapeString($social->getLoginType()) . '
-				AND auth_key = ' . $db->escapeString($social->getUserID()) . ' LIMIT 1');
+				AND auth_key = ' . $db->escapeString($social->getUserID()));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -191,20 +192,20 @@ abstract class AbstractSmrAccount {
 
 	public static function getUserScoreCaseStatement(Smr\Database $db): array {
 		$userRankingTypes = [];
-		$case = 'FLOOR(SUM(CASE type ';
+		$case = 'IFNULL(FLOOR(SUM(CASE type ';
 		foreach (self::USER_RANKINGS_SCORE as $userRankingScore) {
-			$userRankingType = $db->escapeArray($userRankingScore[0], ':', false);
+			$userRankingType = $db->escapeString(implode(':', $userRankingScore[0]));
 			$userRankingTypes[] = $userRankingType;
 			$case .= ' WHEN ' . $userRankingType . ' THEN POW(amount*' . $userRankingScore[1] . ',' . SmrAccount::USER_RANKINGS_EACH_STAT_POW . ')*' . $userRankingScore[2];
 		}
-		$case .= ' END))';
+		$case .= ' END)), 0)';
 		return ['CASE' => $case, 'IN' => implode(',', $userRankingTypes)];
 	}
 
 	protected function __construct(protected readonly int $accountID) {
 		$this->db = Smr\Database::getInstance();
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID);
-		$dbResult = $this->db->read('SELECT * FROM account WHERE ' . $this->SQL . ' LIMIT 1');
+		$dbResult = $this->db->read('SELECT * FROM account WHERE ' . $this->SQL);
 
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -271,7 +272,7 @@ abstract class AbstractSmrAccount {
 	 * Check if the account is disabled.
 	 */
 	public function isDisabled(): array|false {
-		$dbResult = $this->db->read('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE ' . $this->SQL . ' LIMIT 1');
+		$dbResult = $this->db->read('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE ' . $this->SQL);
 		if (!$dbResult->hasRecord()) {
 			return false;
 		}
@@ -320,7 +321,7 @@ abstract class AbstractSmrAccount {
 			', friendly_colour = ' . $this->db->escapeString($this->friendlyColour, true) .
 			', neutral_colour = ' . $this->db->escapeString($this->neutralColour, true) .
 			', enemy_colour = ' . $this->db->escapeString($this->enemyColour, true) .
-			' WHERE ' . $this->SQL . ' LIMIT 1');
+			' WHERE ' . $this->SQL);
 		$this->hasChanged = false;
 	}
 
@@ -395,7 +396,7 @@ abstract class AbstractSmrAccount {
 
 	public function isNPC(): bool {
 		if (!isset($this->npc)) {
-			$dbResult = $this->db->read('SELECT 1 FROM npc_logins WHERE login = ' . $this->db->escapeString($this->getLogin()) . ' LIMIT 1;');
+			$dbResult = $this->db->read('SELECT 1 FROM npc_logins WHERE login = ' . $this->db->escapeString($this->getLogin()));
 			$this->npc = $dbResult->hasRecord();
 		}
 		return $this->npc;
@@ -407,35 +408,14 @@ abstract class AbstractSmrAccount {
 			$dbResult = $this->db->read('SELECT type,sum(amount) as amount FROM player_hof WHERE ' . $this->SQL . ' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = \'FALSE\') GROUP BY type');
 			$this->HOF = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$hof =& $this->HOF;
-				$typeList = explode(':', $dbRecord->getString('type'));
-				foreach ($typeList as $type) {
-					if (!isset($hof[$type])) {
-						$hof[$type] = [];
-					}
-					$hof =& $hof[$type];
-				}
-				$hof = $dbRecord->getFloat('amount');
+				$this->HOF[$dbRecord->getString('type')] = $dbRecord->getFloat('amount');
 			}
 		}
 	}
 
-	/**
-	 * Returns either the entire HOF array or the value for the given typeList.
-	 */
-	public function getHOF(array $typeList = null): array|float {
+	public function getHOF(array $typeList): float {
 		$this->getHOFData();
-		if ($typeList == null) {
-			return $this->HOF;
-		}
-		$hof = $this->HOF;
-		foreach ($typeList as $type) {
-			if (!isset($hof[$type])) {
-				return 0;
-			}
-			$hof = $hof[$type];
-		}
-		return $hof;
+		return $this->HOF[implode(':', $typeList)] ?? 0;
 	}
 
 	public function getRankName(): string {
@@ -521,7 +501,7 @@ abstract class AbstractSmrAccount {
 		if (!isset($this->credits) || !isset($this->rewardCredits)) {
 			$this->credits = 0;
 			$this->rewardCredits = 0;
-			$dbResult = $this->db->read('SELECT * FROM account_has_credits WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT * FROM account_has_credits WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 				$this->credits = $dbRecord->getInt('credits_left');
@@ -559,7 +539,7 @@ abstract class AbstractSmrAccount {
 				'reward_credits' => $this->db->escapeNumber($rewardCredits),
 			]);
 		} else {
-			$this->db->write('UPDATE account_has_credits SET credits_left=' . $this->db->escapeNumber($credits) . ', reward_credits=' . $this->db->escapeNumber($rewardCredits) . ' WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->write('UPDATE account_has_credits SET credits_left=' . $this->db->escapeNumber($credits) . ', reward_credits=' . $this->db->escapeNumber($rewardCredits) . ' WHERE ' . $this->SQL);
 		}
 		$this->credits = $credits;
 		$this->rewardCredits = $rewardCredits;
@@ -585,7 +565,7 @@ abstract class AbstractSmrAccount {
 				'credits_left' => $this->db->escapeNumber($credits),
 			]);
 		} else {
-			$this->db->write('UPDATE account_has_credits SET credits_left=' . $this->db->escapeNumber($credits) . ' WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->write('UPDATE account_has_credits SET credits_left=' . $this->db->escapeNumber($credits) . ' WHERE ' . $this->SQL);
 		}
 		$this->credits = $credits;
 	}
@@ -623,7 +603,7 @@ abstract class AbstractSmrAccount {
 				'reward_credits' => $this->db->escapeNumber($credits),
 			]);
 		} else {
-			$this->db->write('UPDATE account_has_credits SET reward_credits=' . $this->db->escapeNumber($credits) . ' WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->write('UPDATE account_has_credits SET reward_credits=' . $this->db->escapeNumber($credits) . ' WHERE ' . $this->SQL);
 		}
 		$this->rewardCredits = $credits;
 	}
@@ -686,9 +666,17 @@ abstract class AbstractSmrAccount {
 	}
 
 	/**
-	 * Change e-mail address, unvalidate the account, and resend validation code
+	 * Perform basic sanity checks on the usability of an email address.
 	 */
-	public function changeEmail(string $email): void {
+	public static function checkEmail(string $email, self $owner = null): void {
+		if (empty($email)) {
+			throw new Smr\Exceptions\UserError('Email address is missing!');
+		}
+
+		if (str_contains($email, ' ')) {
+			throw new Smr\Exceptions\UserError('The email is invalid! It cannot contain any spaces.');
+		}
+
 		// get user and host for the provided address
 		[$user, $host] = explode('@', $email);
 
@@ -697,18 +685,22 @@ abstract class AbstractSmrAccount {
 			throw new Smr\Exceptions\UserError('This is not a valid email address! The domain ' . $host . ' does not exist.');
 		}
 
-		if (strstr($email, ' ')) {
-			throw new Smr\Exceptions\UserError('The email is invalid! It cannot contain any spaces.');
-		}
-
 		try {
 			$other = self::getAccountByEmail($email);
-			if (!$this->equals($other)) {
+			if ($owner === null || !$owner->equals($other)) {
 				throw new Smr\Exceptions\UserError('This email address is already registered.');
 			}
 		} catch (Smr\Exceptions\AccountNotFound) {
 			// Proceed, this email is not yet in use
 		}
+	}
+
+	/**
+	 * Change e-mail address, unvalidate the account, and resend validation code
+	 */
+	public function changeEmail(string $email): void {
+		// Throw an error if this email is not usable
+		self::checkEmail($email, $this);
 
 		$this->setEmail($email);
 		$this->setValidationCode(random_string(10));
@@ -943,7 +935,7 @@ abstract class AbstractSmrAccount {
 		// New (safe) password hashes will start with a $, but accounts logging
 		// in for the first time since the transition from md5 will still have
 		// hex-only hashes.
-		if (strpos($this->passwordHash, '$') === 0) {
+		if (str_starts_with($this->passwordHash, '$')) {
 			$result = password_verify($password, $this->passwordHash);
 		} else {
 			$result = $this->passwordHash === md5($password);
@@ -1146,7 +1138,7 @@ abstract class AbstractSmrAccount {
 		if (!isset($this->points)) {
 			$this->points = 0;
 			$this->db->lockTable('account_has_points');
-			$dbResult = $this->db->read('SELECT * FROM account_has_points WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT * FROM account_has_points WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 				$this->points = $dbRecord->getInt('points');
@@ -1178,9 +1170,9 @@ abstract class AbstractSmrAccount {
 				'last_update' => $this->db->escapeNumber($lastUpdate ?? Smr\Epoch::time()),
 			]);
 		} elseif ($numPoints <= 0) {
-			$this->db->write('DELETE FROM account_has_points WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->write('DELETE FROM account_has_points WHERE ' . $this->SQL);
 		} else {
-			$this->db->write('UPDATE account_has_points SET points = ' . $this->db->escapeNumber($numPoints) . (isset($lastUpdate) ? ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) : '') . ' WHERE ' . $this->SQL . ' LIMIT 1');
+			$this->db->write('UPDATE account_has_points SET points = ' . $this->db->escapeNumber($numPoints) . (isset($lastUpdate) ? ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) : '') . ' WHERE ' . $this->SQL);
 		}
 		$this->points = $numPoints;
 	}
@@ -1292,7 +1284,7 @@ abstract class AbstractSmrAccount {
 		if ($admin !== null) {
 			$adminID = $admin->getAccountID();
 		}
-		$this->db->write('DELETE FROM account_is_closed WHERE ' . $this->SQL . ' LIMIT 1');
+		$this->db->write('DELETE FROM account_is_closed WHERE ' . $this->SQL);
 		$this->db->insert('account_has_closing_history', [
 			'account_id' => $this->db->escapeNumber($this->getAccountID()),
 			'time' => $this->db->escapeNumber(Smr\Epoch::time()),

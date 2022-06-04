@@ -15,7 +15,7 @@ if ($dbResult->hasRecord()) {
 	$player->increaseHOF($prize, ['Bar', 'Lotto', 'Money', 'Claimed'], HOF_PUBLIC);
 	$player->increaseHOF(1, ['Bar', 'Lotto', 'Results', 'Claims'], HOF_PUBLIC);
 	$message .= '<div class="center">You have claimed <span class="red">$' . number_format($prize) . '</span>!<br /></div><br />';
-	$db->write('DELETE FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND prize = ' . $db->escapeNumber($prize) . ' AND time = 0 LIMIT 1');
+	$db->write('DELETE FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND prize = ' . $db->escapeNumber($prize) . ' AND time = 0');
 	$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 }
 //offer another drink and such

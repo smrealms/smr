@@ -18,12 +18,12 @@ Menu::alliance($alliance->getAllianceID());
 // Check to see if an alliance op is scheduled
 // Display it for 1 hour past start time (late arrivals, etc.)
 $db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND time > ' . $db->escapeNumber(Smr\Epoch::time() - 3600) . ' LIMIT 1');
+$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND time > ' . $db->escapeNumber(Smr\Epoch::time() - 3600));
 if ($dbResult->hasRecord()) {
 	$template->assign('OpTime', $dbResult->record()->getInt('time'));
 
 	// Has player responded yet?
-	$dbResult2 = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL() . ' LIMIT 1');
+	$dbResult2 = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());
 
 	$response = $dbResult2->hasRecord() ? $dbResult2->record()->getField('response') : null;
 	$responseHREF = Page::create('alliance_op_response_processing.php')->href();

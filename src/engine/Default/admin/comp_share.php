@@ -38,7 +38,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	}
 
 	if ($rows > 1) {
-		$dbResult2 = $db->read('SELECT login FROM account WHERE account_id =' . $db->escapeNumber($currTabAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - 86400 * 30) : '') . ' LIMIT 1');
+		$dbResult2 = $db->read('SELECT login FROM account WHERE account_id =' . $db->escapeNumber($currTabAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - 86400 * 30) : ''));
 		if (!$dbResult2->hasRecord()) {
 			continue;
 		}

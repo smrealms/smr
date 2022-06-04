@@ -13,10 +13,6 @@ $alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $thread_index = $var['thread_index'];
 $thread_id = $var['thread_ids'][$thread_index];
 
-if (empty($thread_id)) {
-	create_error('Unable to find thread id.');
-}
-
 $template->assign('PageTopic', $var['thread_topics'][$thread_index]);
 Menu::alliance($alliance->getAllianceID());
 
@@ -75,7 +71,7 @@ FROM alliance_thread
 WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
 AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 AND thread_id=' . $db->escapeNumber($thread_id) . '
-ORDER BY reply_id LIMIT ' . $var['thread_replies'][$thread_index]);
+ORDER BY reply_id');
 
 $thread['CanDelete'] = $dbResult->getNumRecords() > 1 && $thread['CanDelete'];
 $thread['Replies'] = [];

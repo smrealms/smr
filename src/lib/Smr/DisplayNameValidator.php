@@ -16,7 +16,7 @@ class DisplayNameValidator {
 		}
 
 		// Prevent any attempts to imitate NPCs
-		if (strpos($name, '[NPC]') !== false) {
+		if (str_contains($name, '[NPC]')) {
 			throw new UserError('Names cannot contain "[NPC]".');
 		}
 

@@ -83,14 +83,14 @@ if ($ideal_price == 0 || $offered_price == 0) {
 	create_error('Port calculation error...buy more goods.');
 }
 
-if (Smr\Request::get('action') === TRADER_STEALS) {
+if (Smr\Request::getVar('action') === TRADER_STEALS) {
 	if (!$ship->isUnderground()) {
 		throw new Exception('Player tried to steal in a non-underground ship!');
 	}
 	if ($transaction !== TRADER_BUYS) {
 		throw new Exception('Player tried to steal a good the port does not sell!');
 	}
-	$transaction = Smr\Request::get('action');
+	$transaction = TRADER_STEALS;
 
 	// Small chance to get caught stealing
 	$catchChancePercent = $port->getMaxLevel() - $port->getLevel() + 1;
@@ -154,6 +154,8 @@ if ($transaction === TRADER_STEALS ||
 		$player->increaseHOF($amount, ['Trade', 'Goods', 'Stolen'], HOF_ALLIANCE);
 		$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Stealing'], HOF_PUBLIC);
 		$port->stealGoods($portGood, $amount);
+	} else {
+		throw new Exception('Unknown transaction: ' . $transaction);
 	}
 
 	$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Total'], HOF_PUBLIC);

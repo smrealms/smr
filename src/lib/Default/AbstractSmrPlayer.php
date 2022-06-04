@@ -78,11 +78,15 @@ abstract class AbstractSmrPlayer {
 
 	protected bool $draftLeader;
 	protected string|false $gpWriter;
+	/** @var array<string, float> */
 	protected array $HOF;
+	/** @var array<string, string> */
 	protected static array $HOFVis;
 
 	protected bool $hasChanged = false;
+	/** @var array<string, int> */
 	protected array $hasHOFChanged = [];
+	/** @var array<string, int> */
 	protected static array $hasHOFVisChanged = [];
 	protected array $hasBountyChanged = [];
 
@@ -179,7 +183,7 @@ abstract class AbstractSmrPlayer {
 
 	public static function getPlayerByPlayerID(int $playerID, int $gameID, bool $forceUpdate = false): self {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_id = ' . $db->escapeNumber($playerID) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_id = ' . $db->escapeNumber($playerID));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return self::getPlayer($dbRecord->getInt('account_id'), $gameID, $forceUpdate, $dbRecord);
@@ -189,7 +193,7 @@ abstract class AbstractSmrPlayer {
 
 	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false): self {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return self::getPlayer($dbRecord->getInt('account_id'), $gameID, $forceUpdate, $dbRecord);
@@ -206,7 +210,7 @@ abstract class AbstractSmrPlayer {
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
 		if ($dbRecord === null) {
-			$dbResult = $this->db->read('SELECT * FROM player WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT * FROM player WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -273,13 +277,9 @@ abstract class AbstractSmrPlayer {
 			// Player name does not yet exist, we may proceed
 		}
 
-		// get last registered player id in that game and increase by one.
-		$dbResult = $db->read('SELECT MAX(player_id) FROM player WHERE game_id = ' . $db->escapeNumber($gameID));
-		if ($dbResult->hasRecord()) {
-			$playerID = $dbResult->record()->getInt('MAX(player_id)') + 1;
-		} else {
-			$playerID = 1;
-		}
+		// Get the next available player ID (start at 1 if no players yet)
+		$dbResult = $db->read('SELECT IFNULL(MAX(player_id), 0) AS player_id FROM player WHERE game_id = ' . $db->escapeNumber($gameID));
+		$playerID = $dbResult->record()->getInt('player_id') + 1;
 
 		$startSectorID = 0; // Temporarily put player into non-existent sector
 		$db->insert('player', [
@@ -445,7 +445,7 @@ abstract class AbstractSmrPlayer {
 
 	public function getCustomShipName(): string|false {
 		if (!isset($this->customShipName)) {
-			$dbResult = $this->db->read('SELECT * FROM ship_has_name WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT * FROM ship_has_name WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$this->customShipName = $dbResult->record()->getField('ship_name');
 			} else {
@@ -465,15 +465,15 @@ abstract class AbstractSmrPlayer {
 
 	/**
 	 * Get planet owned by this player.
-	 * Returns false if this player does not own a planet.
+	 * Returns null if this player does not own a planet.
 	 */
-	public function getPlanet(): SmrPlanet|false {
+	public function getPlanet(): ?SmrPlanet {
 		$dbResult = $this->db->read('SELECT * FROM planet WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . ' AND owner_id=' . $this->db->escapeNumber($this->getAccountID()));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return SmrPlanet::getPlanet($this->getGameID(), $dbRecord->getInt('sector_id'), false, $dbRecord);
 		}
-		return false;
+		return null;
 	}
 
 	public function getSectorPlanet(): SmrPlanet {
@@ -578,7 +578,7 @@ abstract class AbstractSmrPlayer {
 
 	public function isDraftLeader(): bool {
 		if (!isset($this->draftLeader)) {
-			$dbResult = $this->db->read('SELECT 1 FROM draft_leaders WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT 1 FROM draft_leaders WHERE ' . $this->SQL);
 			$this->draftLeader = $dbResult->hasRecord();
 		}
 		return $this->draftLeader;
@@ -1361,8 +1361,7 @@ abstract class AbstractSmrPlayer {
 			$dbResult = $this->db->read('SELECT role_id
 						FROM player_has_alliance_role
 						WHERE ' . $this->SQL . '
-						AND alliance_id=' . $this->db->escapeNumber($allianceID) . '
-						LIMIT 1');
+						AND alliance_id=' . $this->db->escapeNumber($allianceID));
 			if ($dbResult->hasRecord()) {
 				$this->allianceRoles[$allianceID] = $dbResult->record()->getInt('role_id');
 			}
@@ -1631,7 +1630,7 @@ abstract class AbstractSmrPlayer {
 	public function getPlottedCourse(): ?Smr\Path {
 		if (!isset($this->plottedCourse)) {
 			// check if we have a course plotted
-			$dbResult = $this->db->read('SELECT course FROM player_plotted_course WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT course FROM player_plotted_course WHERE ' . $this->SQL);
 
 			if ($dbResult->hasRecord()) {
 				// get the course back
@@ -1678,7 +1677,7 @@ abstract class AbstractSmrPlayer {
 
 	public function deletePlottedCourse(): void {
 		$this->plottedCourse = null;
-		$this->db->write('DELETE FROM player_plotted_course WHERE ' . $this->SQL . ' LIMIT 1');
+		$this->db->write('DELETE FROM player_plotted_course WHERE ' . $this->SQL);
 	}
 
 	// Computes the turn cost and max misjump between current and target sector
@@ -2037,45 +2036,34 @@ abstract class AbstractSmrPlayer {
 			$dbResult = $this->db->read('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
 			$this->HOF = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$hof =& $this->HOF;
-				$typeList = explode(':', $dbRecord->getString('type'));
-				foreach ($typeList as $type) {
-					if (!isset($hof[$type])) {
-						$hof[$type] = [];
-					}
-					$hof =& $hof[$type];
-				}
-				$hof = $dbRecord->getFloat('amount');
+				$this->HOF[$dbRecord->getString('type')] = $dbRecord->getFloat('amount');
 			}
 			self::getHOFVis();
 		}
 	}
 
-	public static function getHOFVis(): void {
+	/**
+	 * @return array<string, string>
+	 */
+	public static function getHOFVis(): array {
 		if (!isset(self::$HOFVis)) {
 			//Get Player HOF Vis
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT type,visibility FROM hof_visibility');
 			self::$HOFVis = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				self::$HOFVis[$dbRecord->getField('type')] = $dbRecord->getField('visibility');
+				self::$HOFVis[$dbRecord->getString('type')] = $dbRecord->getString('visibility');
 			}
+			// Add non-database types
+			self::$HOFVis[HOF_TYPE_DONATION] = HOF_PUBLIC;
+			self::$HOFVis[HOF_TYPE_USER_SCORE] = HOF_PUBLIC;
 		}
+		return self::$HOFVis;
 	}
 
-	public function getHOF(array $typeList = null): array|float {
+	public function getHOF(array $typeList): float {
 		$this->getHOFData();
-		if ($typeList == null) {
-			return $this->HOF;
-		}
-		$hof = $this->HOF;
-		foreach ($typeList as $type) {
-			if (!isset($hof[$type])) {
-				return 0;
-			}
-			$hof = $hof[$type];
-		}
-		return $hof;
+		return $this->HOF[implode(':', $typeList)] ?? 0;
 	}
 
 	public function increaseHOF(float $amount, array $typeList, string $visibility): void {
@@ -2099,20 +2087,16 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function setHOF(float $amount, array $typeList, string $visibility): void {
-		if (is_array($this->getHOF($typeList))) {
-			throw new Exception('Trying to overwrite a HOF type: ' . implode(':', $typeList));
-		}
 		if ($this->isNPC()) {
 			// Don't store HOF for NPCs.
-			return;
-		}
-		if ($this->getHOF($typeList) == $amount) {
 			return;
 		}
 		if ($amount < 0) {
 			$amount = 0;
 		}
-		$this->getHOF();
+		if ($this->getHOF($typeList) == $amount) {
+			return;
+		}
 
 		$hofType = implode(':', $typeList);
 		if (!isset(self::$HOFVis[$hofType])) {
@@ -2122,27 +2106,12 @@ abstract class AbstractSmrPlayer {
 		}
 		self::$HOFVis[$hofType] = $visibility;
 
-		$hof =& $this->HOF;
-		$hofChanged =& $this->hasHOFChanged;
-		$new = false;
-		foreach ($typeList as $type) {
-			if (!isset($hofChanged[$type])) {
-				$hofChanged[$type] = [];
-			}
-			if (!isset($hof[$type])) {
-				$hof[$type] = [];
-				$new = true;
-			}
-			$hof =& $hof[$type];
-			$hofChanged =& $hofChanged[$type];
+		if (!isset($this->HOF[$hofType])) {
+			$this->hasHOFChanged[$hofType] = self::HOF_NEW;
+		} else {
+			$this->hasHOFChanged[$hofType] = self::HOF_CHANGED;
 		}
-		if ($hofChanged == null) {
-			$hofChanged = self::HOF_CHANGED;
-			if ($new) {
-				$hofChanged = self::HOF_NEW;
-			}
-		}
-		$hof = $amount;
+		$this->HOF[$hofType] = $amount;
 	}
 
 	public function isUnderAttack(): bool {
@@ -2182,7 +2151,7 @@ abstract class AbstractSmrPlayer {
 		// if we are in an alliance we increase their deaths
 		if ($this->hasAlliance()) {
 			$this->db->write('UPDATE alliance SET alliance_deaths = alliance_deaths + 1
-							WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND alliance_id = ' . $this->db->escapeNumber($this->getAllianceID()) . ' LIMIT 1');
+							WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND alliance_id = ' . $this->db->escapeNumber($this->getAllianceID()));
 		}
 
 		// record death stat
@@ -2347,7 +2316,7 @@ abstract class AbstractSmrPlayer {
 				$killer->increaseHOF(1, ['Killing', 'Kills'], HOF_PUBLIC);
 
 				if ($killer->hasAlliance()) {
-					$this->db->write('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($killer->getGameID()) . ' LIMIT 1');
+					$this->db->write('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($killer->getGameID()));
 				}
 
 				// alliance vs. alliance stats
@@ -2747,7 +2716,7 @@ abstract class AbstractSmrPlayer {
 					starting_sector = ' . $this->db->escapeNumber($mission['Starting Sector']) . ',
 					mission_sector = ' . $this->db->escapeNumber($mission['Sector']) . ',
 					step_fails = ' . $this->db->escapeNumber($mission['Expires']) . '
-				WHERE ' . $this->SQL . ' AND mission_id = ' . $this->db->escapeNumber($missionID) . ' LIMIT 1');
+				WHERE ' . $this->SQL . ' AND mission_id = ' . $this->db->escapeNumber($missionID));
 			return true;
 		}
 		return false;
@@ -2836,7 +2805,7 @@ abstract class AbstractSmrPlayer {
 		$this->getMissions();
 		if (isset($this->missions[$missionID])) {
 			unset($this->missions[$missionID]);
-			$this->db->write('DELETE FROM player_has_mission WHERE ' . $this->SQL . ' AND mission_id = ' . $this->db->escapeNumber($missionID) . ' LIMIT 1');
+			$this->db->write('DELETE FROM player_has_mission WHERE ' . $this->SQL . ' AND mission_id = ' . $this->db->escapeNumber($missionID));
 			return;
 		}
 		throw new Exception('Mission with ID not found: ' . $missionID);
@@ -3160,7 +3129,7 @@ abstract class AbstractSmrPlayer {
 				', race_changed = ' . $this->db->escapeBoolean($this->raceChanged) .
 				', combat_drones_kamikaze_on_mines = ' . $this->db->escapeBoolean($this->combatDronesKamikazeOnMines) .
 				', under_attack = ' . $this->db->escapeBoolean($this->underAttack) .
-				' WHERE ' . $this->SQL . ' LIMIT 1');
+				' WHERE ' . $this->SQL);
 			$this->hasChanged = false;
 		}
 		foreach ($this->hasBountyChanged as $key => &$bountyChanged) {
@@ -3187,9 +3156,9 @@ abstract class AbstractSmrPlayer {
 							type=' . $this->db->escapeString($bounty['Type']) . ',
 							claimer_id=' . $this->db->escapeNumber($bounty['Claimer']) . ',
 							time=' . $this->db->escapeNumber($bounty['Time']) . '
-							WHERE bounty_id=' . $this->db->escapeNumber($bounty['ID']) . ' AND ' . $this->SQL . ' LIMIT 1');
+							WHERE bounty_id=' . $this->db->escapeNumber($bounty['ID']) . ' AND ' . $this->SQL);
 					} else {
-						$this->db->write('DELETE FROM bounty WHERE bounty_id=' . $this->db->escapeNumber($bounty['ID']) . ' AND ' . $this->SQL . ' LIMIT 1');
+						$this->db->write('DELETE FROM bounty WHERE bounty_id=' . $this->db->escapeNumber($bounty['ID']) . ' AND ' . $this->SQL);
 					}
 				}
 			}
@@ -3198,52 +3167,35 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function saveHOF(): void {
-		if (count($this->hasHOFChanged) > 0) {
-			$this->doHOFSave($this->hasHOFChanged);
-			$this->hasHOFChanged = [];
-		}
-		if (!empty(self::$hasHOFVisChanged)) {
-			foreach (self::$hasHOFVisChanged as $hofType => $changeType) {
-				if ($changeType == self::HOF_NEW) {
-					$this->db->insert('hof_visibility', [
-						'type' => $this->db->escapeString($hofType),
-						'visibility' => $this->db->escapeString(self::$HOFVis[$hofType]),
-					]);
-				} else {
-					$this->db->write('UPDATE hof_visibility SET visibility = ' . $this->db->escapeString(self::$HOFVis[$hofType]) . ' WHERE type = ' . $this->db->escapeString($hofType) . ' LIMIT 1');
-				}
-				unset(self::$hasHOFVisChanged[$hofType]);
-			}
-		}
-	}
-
-	/**
-	 * This should only be called by `saveHOF` (and recursively) to
-	 * ensure that the `hasHOFChanged` attribute is properly cleared.
-	 */
-	protected function doHOFSave(array $hasChangedList, array $typeList = []) {
-		foreach ($hasChangedList as $type => $hofChanged) {
-			$tempTypeList = $typeList;
-			$tempTypeList[] = $type;
-			if (is_array($hofChanged)) {
-				$this->doHOFSave($hofChanged, $tempTypeList);
+		foreach (self::$hasHOFVisChanged as $hofType => $changeType) {
+			if ($changeType == self::HOF_NEW) {
+				$this->db->insert('hof_visibility', [
+					'type' => $this->db->escapeString($hofType),
+					'visibility' => $this->db->escapeString(self::$HOFVis[$hofType]),
+				]);
 			} else {
-				$amount = $this->getHOF($tempTypeList);
-				if ($hofChanged == self::HOF_NEW) {
-					if ($amount > 0) {
-						$this->db->insert('player_hof', [
-							'account_id' => $this->db->escapeNumber($this->getAccountID()),
-							'game_id' => $this->db->escapeNumber($this->getGameID()),
-							'type' => $this->db->escapeArray($tempTypeList, ':', false),
-							'amount' => $this->db->escapeNumber($amount),
-						]);
-					}
-				} elseif ($hofChanged == self::HOF_CHANGED) {
-					$this->db->write('UPDATE player_hof
-						SET amount=' . $this->db->escapeNumber($amount) . '
-						WHERE ' . $this->SQL . ' AND type = ' . $this->db->escapeArray($tempTypeList, ':', false) . ' LIMIT 1');
-				}
+				$this->db->write('UPDATE hof_visibility SET visibility = ' . $this->db->escapeString(self::$HOFVis[$hofType]) . ' WHERE type = ' . $this->db->escapeString($hofType));
 			}
+			unset(self::$hasHOFVisChanged[$hofType]);
+		}
+
+		foreach ($this->hasHOFChanged as $hofType => $changeType) {
+			$amount = $this->HOF[$hofType];
+			if ($changeType === self::HOF_NEW) {
+				if ($amount > 0) {
+					$this->db->insert('player_hof', [
+						'account_id' => $this->db->escapeNumber($this->getAccountID()),
+						'game_id' => $this->db->escapeNumber($this->getGameID()),
+						'type' => $this->db->escapeString($hofType),
+						'amount' => $this->db->escapeNumber($amount),
+					]);
+				}
+			} elseif ($changeType === self::HOF_CHANGED) {
+				$this->db->write('UPDATE player_hof
+					SET amount=' . $this->db->escapeNumber($amount) . '
+					WHERE ' . $this->SQL . ' AND type = ' . $this->db->escapeString($hofType));
+			}
+			unset($this->hasHOFChanged[$hofType]);
 		}
 	}
 

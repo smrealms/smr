@@ -18,12 +18,8 @@ $player = $session->getPlayer();
 
 // get next id
 $db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT max(notify_id) FROM message_notify WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY notify_id DESC');
-if ($dbResult->hasRecord()) {
-	$notify_id = $dbResult->record()->getInt('max(notify_id)') + 1;
-} else {
-	$notify_id = 1;
-}
+$dbResult = $db->read('SELECT IFNULL(max(notify_id)+1, 0) as next_notify_id FROM message_notify WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY notify_id DESC');
+$notify_id = $dbResult->record()->getInt('next_notify_id');
 
 // get message form db
 $dbResult = $db->read('SELECT account_id, sender_id, message_text

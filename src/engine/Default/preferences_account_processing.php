@@ -7,7 +7,6 @@ $account = $session->getAccount();
 $container = Page::create('skeleton.php');
 if ($session->hasGame()) {
 	$container['body'] = 'current_sector.php';
-	$player = $session->getPlayer();
 } else {
 	$container['body'] = 'game_play.php';
 }
@@ -21,6 +20,7 @@ if ($action == 'Save and resend validation code') {
 	// overwrite container
 	$container['body'] = 'validate.php';
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
+
 } elseif ($action == 'Change Password') {
 	$new_password = Smr\Request::get('new_password');
 	$old_password = Smr\Request::get('old_password');
@@ -44,6 +44,7 @@ if ($action == 'Save and resend validation code') {
 
 	$account->setPassword($new_password);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your password.';
+
 } elseif ($action == 'Change Name') {
 	$HoF_name = Smr\Request::get('HoF_name');
 
@@ -62,6 +63,7 @@ if ($action == 'Save and resend validation code') {
 	// set the HoF name in account stat
 	$account->setHofName($HoF_name);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your Hall of Fame name.';
+
 } elseif ($action == 'Change Discord ID') {
 	$discordId = Smr\Request::get('discord_id');
 
@@ -82,6 +84,7 @@ if ($action == 'Save and resend validation code') {
 		$account->setDiscordId($discordId);
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your Discord User ID.';
 	}
+
 } elseif ($action == 'Change IRC Nick') {
 	$ircNick = Smr\Request::get('irc_nick');
 
@@ -108,10 +111,10 @@ if ($action == 'Save and resend validation code') {
 		// save irc nick in db and set message
 		$account->setIrcNick($ircNick);
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your irc nick.';
-
 	}
 
 } elseif ($action == 'Yes') {
+	// Confirmed SMR Credit transfer
 	$var = $session->getCurrentVar();
 	$account_id = $var['account_id'];
 	$amount = $var['amount'];
@@ -124,21 +127,26 @@ if ($action == 'Save and resend validation code') {
 	// add to him
 	$his_account->increaseSmrCredits($amount);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have sent SMR credits.';
+
 } elseif ($action == 'Change Timezone') {
 	$timez = Smr\Request::getInt('timez');
 
 	$db->write('UPDATE account SET offset = ' . $db->escapeNumber($timez) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
+
 } elseif ($action == 'Change Date Formats') {
 	$account->setDateFormat(Smr\Request::get('dateformat'));
 	$account->setTimeFormat(Smr\Request::get('timeformat'));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your date formats.';
+
 } elseif ($action == 'Change Images') {
 	$account->setDisplayShipImages(Smr\Request::get('images') == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
+
 } elseif ($action == 'Change Centering') {
 	$account->setCenterGalaxyMapOnPlayer(Smr\Request::get('centergalmap') == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
+
 } elseif ($action == 'Change Size') {
 	$fontsize = Smr\Request::getInt('fontsize');
 	if ($fontsize < 50) {
@@ -146,6 +154,7 @@ if ($action == 'Save and resend validation code') {
 	}
 	$account->setFontSize($fontsize);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your font size.';
+
 } elseif ($action == 'Change CSS Options') {
 	$account->setCssLink(Smr\Request::get('csslink'));
 	$cssTemplateAndColor = Smr\Request::get('template');
@@ -158,83 +167,13 @@ if ($action == 'Save and resend validation code') {
 		$account->setColourScheme($cssColourScheme);
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
-} elseif ($action == 'Change Kamikaze Setting') {
-	$player->setCombatDronesKamikazeOnMines(Smr\Request::get('kamikaze') == 'Yes');
-	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
-} elseif ($action == 'Change Message Setting') {
-	$player->setForceDropMessages(Smr\Request::get('forceDropMessages') == 'Yes');
-	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your message options.';
+
 } elseif ($action == 'Save Hotkeys') {
 	foreach (AbstractSmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
 		$account->setHotkey($hotkey, explode(' ', Smr\Request::get($hotkey)));
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
-} elseif ($action == 'change_name') {
-	$old_name = $player->getDisplayName();
-	$player_name = Smr\Request::get('PlayerName');
 
-	// Check that the player can afford the name change
-	$smrCreditCost = $player->isNameChanged() ? CREDITS_PER_NAME_CHANGE : 0;
-	if ($account->getTotalSmrCredits() < $smrCreditCost) {
-		create_error('You do not have enough credits to change your name.');
-	}
-
-	$player->changePlayerNameByPlayer($player_name);
-	$account->decreaseTotalSmrCredits($smrCreditCost);
-
-	$news = 'Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink();
-	$db->insert('news', [
-		'time' => $db->escapeNumber(Smr\Epoch::time()),
-		'news_message' => $db->escapeString($news),
-		'game_id' => $db->escapeNumber($player->getGameID()),
-		'type' => $db->escapeString('admin'),
-		'killer_id' => $db->escapeNumber($player->getAccountID()),
-	]);
-	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
-
-} elseif ($action == 'change_race') {
-	if (!$player->canChangeRace()) {
-		throw new Exception('Player is not allowed to change their race!');
-	}
-	$newRaceID = Smr\Request::getInt('race_id');
-	if (!in_array($newRaceID, $player->getGame()->getPlayableRaceIDs())) {
-		throw new Exception('Invalid race ID selected!');
-	}
-	if ($newRaceID == $player->getRaceID()) {
-		create_error('You are already the ' . $player->getRaceName() . ' race!');
-	}
-
-	// Modify the player
-	$oldRaceID = $player->getRaceID();
-	$player->setRaceID($newRaceID);
-	$player->setLandedOnPlanet(false);
-	$player->getShip()->getPod($player->hasNewbieStatus()); // just to reset
-	$player->getShip()->giveStarterShip();
-	$player->setNewbieTurns(max(1, $player->getNewbieTurns()));
-	$player->setExperience(0);
-	$player->setRaceChanged(true);
-
-	// Reset relations
-	$db->write('DELETE FROM player_has_relation WHERE ' . $player->getSQL());
-	$player->giveStartingRelations();
-
-	// Move them to their new race HQ and reset sector lock
-	$player->setSectorID($player->getHome());
-	$player->getSector()->markVisited($player);
-	$player->update();
-	$lock = Smr\SectorLock::getInstance();
-	$lock->release();
-	$lock->acquireForPlayer($player);
-
-	$news = 'Please be advised that ' . $player->getBBLink() . ' has changed their race from [race=' . $oldRaceID . '] to [race=' . $player->getRaceID() . ']';
-	$db->insert('news', [
-		'time' => $db->escapeNumber(Smr\Epoch::time()),
-		'news_message' => $db->escapeString($news),
-		'game_id' => $db->escapeNumber($player->getGameID()),
-		'type' => $db->escapeString('admin'),
-		'killer_id' => $db->escapeNumber($player->getAccountID()),
-	]);
-	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player race.';
 } elseif ($action == 'Update Colours') {
 	$friendlyColour = Smr\Request::get('friendly_color');
 	$neutralColour = Smr\Request::get('neutral_color');

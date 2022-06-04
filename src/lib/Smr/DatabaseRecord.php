@@ -2,6 +2,8 @@
 
 namespace Smr;
 
+use Exception;
+
 class DatabaseRecord {
 
 	/**
@@ -35,11 +37,19 @@ class DatabaseRecord {
 	}
 
 	public function getInt(string $name): int {
-		return (int)$this->dbRecord[$name];
+		$result = filter_var($this->dbRecord[$name], FILTER_VALIDATE_INT);
+		if ($result === false) {
+			throw new Exception('Failed to convert ' . var_export($this->dbRecord[$name], true) . ' to int');
+		}
+		return $result;
 	}
 
 	public function getFloat(string $name): float {
-		return (float)$this->dbRecord[$name];
+		$result = filter_var($this->dbRecord[$name], FILTER_VALIDATE_FLOAT);
+		if ($result === false) {
+			throw new Exception('Failed to convert ' . var_export($this->dbRecord[$name], true) . ' to float');
+		}
+		return $result;
 	}
 
 	public function getMicrotime(string $name): string {

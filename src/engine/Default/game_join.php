@@ -24,15 +24,6 @@ if ($game->hasEnded()) {
 	create_error('You want to join a game that is already over?');
 }
 
-$template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
-$template->assign('Game', $game);
-
-if (Smr\Epoch::time() >= $game->getJoinTime()) {
-	$container = Page::create('game_join_processing.php');
-	$container->addVar('game_id');
-	$template->assign('JoinGameFormHref', $container->href());
-}
-
 $races = [];
 $db = Smr\Database::getInstance();
 foreach ($game->getPlayableRaceIDs() as $raceID) {
@@ -49,6 +40,15 @@ foreach ($game->getPlayableRaceIDs() as $raceID) {
 }
 if (empty($races)) {
 	create_error('This game has no races assigned yet!');
+}
+
+$template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
+$template->assign('Game', $game);
+
+if (Smr\Epoch::time() >= $game->getJoinTime()) {
+	$container = Page::create('game_join_processing.php');
+	$container->addVar('game_id');
+	$template->assign('JoinGameFormHref', $container->href());
 }
 
 // Pick an initial race to display (prefer *not* Alskant)

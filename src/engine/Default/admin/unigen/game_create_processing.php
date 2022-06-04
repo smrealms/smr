@@ -3,17 +3,13 @@
 $db = Smr\Database::getInstance();
 
 //first create the game
-$dbResult = $db->read('SELECT 1 FROM game WHERE game_name=' . $db->escapeString(Smr\Request::get('game_name')) . ' LIMIT 1');
+$dbResult = $db->read('SELECT 1 FROM game WHERE game_name=' . $db->escapeString(Smr\Request::get('game_name')));
 if ($dbResult->hasRecord()) {
 	create_error('That game name is already taken.');
 }
 
-$dbResult = $db->read('SELECT game_id FROM game ORDER BY game_id DESC LIMIT 1');
-if ($dbResult->hasRecord()) {
-	$newID = $dbResult->record()->getInt('game_id') + 1;
-} else {
-	$newID = 1;
-}
+$dbResult = $db->read('SELECT IFNULL(MAX(game_id), 0) AS max_game_id FROM game');
+$newID = $dbResult->record()->getInt('max_game_id') + 1;
 
 // Get the dates ("|" sets hr/min/sec to 0)
 $join = DateTime::createFromFormat('d/m/Y|', Smr\Request::get('game_join'));

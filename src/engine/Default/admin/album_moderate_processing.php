@@ -12,12 +12,8 @@ if ($var['task'] == 'reset_image') {
 	$db->write('UPDATE album SET disabled = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account_id));
 
 	$db->lockTable('album_has_comments');
-	$dbResult = $db->read('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account_id));
-	if ($dbResult->hasRecord()) {
-		$comment_id = $dbResult->record()->getInt('MAX(comment_id)') + 1;
-	} else {
-		$comment_id = 1;
-	}
+	$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) as next_comment_id FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account_id));
+	$comment_id = $dbResult->record()->getInt('next_comment_id');
 
 	$db->insert('album_has_comments', [
 		'album_id' => $db->escapeNumber($account_id),

@@ -1,16 +1,21 @@
 <?php declare(strict_types=1);
 
-$sectorForces = $sector->getForces();
-Sorter::sortByNumMethod($sectorForces, 'getMines', true);
-$mine_owner_id = false;
-foreach ($sectorForces as $forces) {
-	if (!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
-		$mine_owner_id = $forces->getOwnerID();
-		break;
-	}
-}
+function hit_sector_mines(SmrPlayer $player): void {
 
-if ($mine_owner_id) {
+	$sectorForces = $player->getSector()->getForces();
+	Sorter::sortByNumMethod($sectorForces, 'getMines', true);
+	$mine_owner_id = null;
+	foreach ($sectorForces as $forces) {
+		if ($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
+			$mine_owner_id = $forces->getOwnerID();
+			break;
+		}
+	}
+
+	if ($mine_owner_id === null) {
+		return;
+	}
+
 	$ship = $player->getShip();
 	if ($player->hasNewbieTurns() || $ship->getClassID() === Smr\ShipClass::SCOUT) {
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
@@ -29,4 +34,5 @@ if ($mine_owner_id) {
 		$container['owner_id'] = $mine_owner_id;
 		$container->go();
 	}
+
 }

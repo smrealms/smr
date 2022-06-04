@@ -16,11 +16,12 @@ $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT * FROM player_votes_relation
 			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
-$votedForRace = -1;
+$votedForRace = null;
+$votedFor = null;
 if ($dbResult->hasRecord()) {
 	$dbRecord = $dbResult->record();
 	$votedForRace = $dbRecord->getInt('race_id_2');
-	$votedFor = $dbRecord->getField('action');
+	$votedFor = $dbRecord->getString('action');
 }
 
 $voteRelations = [];
@@ -32,8 +33,8 @@ foreach (Smr\Race::getPlayableIDs() as $raceID) {
 	$container = Page::create('council_vote_processing.php', '', ['race_id' => $raceID]);
 	$voteRelations[$raceID] = [
 		'HREF' => $container->href(),
-		'Increased' => $votedForRace == $raceID && $votedFor == 'INC',
-		'Decreased' => $votedForRace == $raceID && $votedFor == 'DEC',
+		'Increased' => $votedForRace === $raceID && $votedFor === 'INC',
+		'Decreased' => $votedForRace === $raceID && $votedFor === 'DEC',
 		'Relations' => $raceRelations[$raceID],
 	];
 }

@@ -166,7 +166,7 @@ function bbifyMessage(string $message, bool $noLinks = false): string {
 	global $disableBBLinks;
 	$disableBBLinks = $noLinks;
 
-	if (strpos($message, '[') !== false) { //We have BBCode so let's do a full parse.
+	if (str_contains($message, '[')) { //We have BBCode so let's do a full parse.
 		$message = $bbParser->parse($message);
 	} else { //Otherwise just convert newlines
 		$message = nl2br($message, true);
@@ -347,7 +347,7 @@ function do_voodoo(): never {
 
 	// Populate the template
 	$template = Smr\Template::getInstance();
-	if ($session->hasGame()) {
+	if (isset($player)) {
 		$template->assign('UnderAttack', $player->removeUnderAttack());
 	}
 
@@ -355,7 +355,7 @@ function do_voodoo(): never {
 	saveAllAndReleaseLock();
 
 	$template->assign('TemplateBody', $var['body']);
-	if ($session->hasGame()) {
+	if (isset($player)) {
 		$template->assign('ThisSector', $player->getSector());
 		$template->assign('ThisPlayer', $player);
 		$template->assign('ThisShip', $player->getShip());
@@ -373,7 +373,7 @@ function do_voodoo(): never {
 	}
 	if ($ajaxRefresh) {
 		// If we can refresh, specify the refresh interval in millisecs
-		if ($session->hasGame() && $player->canFight()) {
+		if (isset($player) && $player->canFight()) {
 			$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
 		} else {
 			$ajaxRefresh = AJAX_DEFAULT_REFRESH_TIME;
@@ -463,6 +463,35 @@ function doSkeletonAssigns(Smr\Template $template): void {
 	$template->assign('FontSize', $account->getFontSize() - 20);
 	$template->assign('timeDisplay', date($account->getDateTimeFormatSplit(), Smr\Epoch::time()));
 
+	$container = Page::create('skeleton.php', 'hall_of_fame_new.php');
+	$template->assign('HallOfFameLink', $container->href());
+
+	$template->assign('AccountID', $account->getAccountID());
+	$template->assign('PlayGameLink', Page::create('game_leave_processing.php', 'game_play.php')->href());
+
+	$template->assign('LogoutLink', Page::create('logoff.php')->href());
+
+	$container = Page::create('game_leave_processing.php', 'admin/admin_tools.php');
+	$template->assign('AdminToolsLink', $container->href());
+
+	$container = Page::create('skeleton.php', 'preferences.php');
+	$template->assign('PreferencesLink', $container->href());
+
+	$container['body'] = 'album_edit.php';
+	$template->assign('EditPhotoLink', $container->href());
+
+	$container['body'] = 'bug_report.php';
+	$template->assign('ReportABugLink', $container->href());
+
+	$container['body'] = 'contact.php';
+	$template->assign('ContactFormLink', $container->href());
+
+	$container['body'] = 'chat_rules.php';
+	$template->assign('IRCLink', $container->href());
+
+	$container['body'] = 'donation.php';
+	$template->assign('DonateLink', $container->href());
+
 	$container = Page::create('skeleton.php');
 
 	if ($session->hasGame()) {
@@ -501,96 +530,21 @@ function doSkeletonAssigns(Smr\Template $template): void {
 		$container['body'] = 'hall_of_fame_new.php';
 		$container['game_id'] = $player->getGameID();
 		$template->assign('CurrentHallOfFameLink', $container->href());
-	}
 
-	$container = Page::create('skeleton.php', 'hall_of_fame_new.php');
-	$template->assign('HallOfFameLink', $container->href());
-
-	$template->assign('AccountID', $account->getAccountID());
-	$template->assign('PlayGameLink', Page::create('game_leave_processing.php', 'game_play.php')->href());
-
-	$template->assign('LogoutLink', Page::create('logoff.php')->href());
-
-	$container = Page::create('game_leave_processing.php', 'admin/admin_tools.php');
-	$template->assign('AdminToolsLink', $container->href());
-
-	$container = Page::create('skeleton.php', 'preferences.php');
-	$template->assign('PreferencesLink', $container->href());
-
-	$container['body'] = 'album_edit.php';
-	$template->assign('EditPhotoLink', $container->href());
-
-	$container['body'] = 'bug_report.php';
-	$template->assign('ReportABugLink', $container->href());
-
-	$container['body'] = 'contact.php';
-	$template->assign('ContactFormLink', $container->href());
-
-	$container['body'] = 'chat_rules.php';
-	$template->assign('IRCLink', $container->href());
-
-	$container['body'] = 'donation.php';
-	$template->assign('DonateLink', $container->href());
-
-	if ($session->hasGame()) {
+		$unreadMessages = [];
 		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
-
-		if ($dbResult->hasRecord()) {
-			$messages = [];
-			foreach ($dbResult->records() as $dbRecord) {
-				$messages[$dbRecord->getInt('message_type_id')] = $dbRecord->getInt('COUNT(*)');
-			}
-
-			$container = Page::create('skeleton.php', 'message_view.php');
-
-			if (isset($messages[MSG_GLOBAL])) {
-				$container['folder_id'] = MSG_GLOBAL;
-				$template->assign('MessageGlobalLink', $container->href());
-				$template->assign('MessageGlobalNum', $messages[MSG_GLOBAL]);
-			}
-
-			if (isset($messages[MSG_PLAYER])) {
-				$container['folder_id'] = MSG_PLAYER;
-				$template->assign('MessagePersonalLink', $container->href());
-				$template->assign('MessagePersonalNum', $messages[MSG_PLAYER]);
-			}
-
-			if (isset($messages[MSG_SCOUT])) {
-				$container['folder_id'] = MSG_SCOUT;
-				$template->assign('MessageScoutLink', $container->href());
-				$template->assign('MessageScoutNum', $messages[MSG_SCOUT]);
-			}
-
-			if (isset($messages[MSG_POLITICAL])) {
-				$container['folder_id'] = MSG_POLITICAL;
-				$template->assign('MessagePoliticalLink', $container->href());
-				$template->assign('MessagePoliticalNum', $messages[MSG_POLITICAL]);
-			}
-
-			if (isset($messages[MSG_ALLIANCE])) {
-				$container['folder_id'] = MSG_ALLIANCE;
-				$template->assign('MessageAllianceLink', $container->href());
-				$template->assign('MessageAllianceNum', $messages[MSG_ALLIANCE]);
-			}
-
-			if (isset($messages[MSG_ADMIN])) {
-				$container['folder_id'] = MSG_ADMIN;
-				$template->assign('MessageAdminLink', $container->href());
-				$template->assign('MessageAdminNum', $messages[MSG_ADMIN]);
-			}
-
-			if (isset($messages[MSG_CASINO])) {
-				$container['folder_id'] = MSG_CASINO;
-				$template->assign('MessageCasinoLink', $container->href());
-				$template->assign('MessageCasinoNum', $messages[MSG_CASINO]);
-			}
-
-			if (isset($messages[MSG_PLANET])) {
-				$container = Page::create('planet_msg_processing.php');
-				$template->assign('MessagePlanetLink', $container->href());
-				$template->assign('MessagePlanetNum', $messages[MSG_PLANET]);
-			}
+		$container = Page::create('skeleton.php', 'message_view.php');
+		foreach ($dbResult->records() as $dbRecord) {
+			$messageTypeID = $dbRecord->getInt('message_type_id');
+			$container['folder_id'] = $messageTypeID;
+			$unreadMessages[] = [
+				'href' => $container->href(),
+				'num' => $dbRecord->getInt('COUNT(*)'),
+				'alt' => Smr\Messages::getMessageTypeNames($messageTypeID),
+				'img' => Smr\Messages::getMessageTypeImage($messageTypeID),
+			];
 		}
+		$template->assign('UnreadMessages', $unreadMessages);
 
 		$container = Page::create('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $player->getPlayerID();
@@ -602,7 +556,6 @@ function doSkeletonAssigns(Smr\Template $template): void {
 
 		// ******* Hardware *******
 		$container = Page::create('skeleton.php', 'configure_hardware.php');
-
 		$template->assign('HardwareLink', $container->href());
 
 		// ******* Forces *******

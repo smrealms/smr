@@ -4,7 +4,7 @@ if (isset($Reason)) {
 }
 
 if (isset($GameID)) { ?>
-	<form class="standard" id="GamePreferencesForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
+	<form class="standard" id="PlayerPreferencesForm" method="POST" action="<?php echo $PlayerPreferencesFormHREF; ?>">
 		<table>
 			<tr>
 				<th colspan="2">Player Preferences (For Current Game)</th>
@@ -96,7 +96,7 @@ if (isset($GameID)) { ?>
 	</form>
 	<br /><?php
 } ?>
-<form id="AccountPreferencesForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
+<form id="AccountPreferencesForm" method="POST" action="<?php echo $AccountPreferencesFormHREF; ?>">
 	<table>
 		<tr>
 			<th colspan="2">Account Preferences</th>
@@ -365,7 +365,7 @@ if (isset($GameID)) { ?>
 	</table>
 </form><br />
 
-<form id="HotkeyPreferencesForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
+<form id="HotkeyPreferencesForm" method="POST" action="<?php echo $AccountPreferencesFormHREF; ?>">
 	<table>
 		<tr>
 			<th colspan="2">Hotkeys (Use space to separate multiple hotkeys)</th>

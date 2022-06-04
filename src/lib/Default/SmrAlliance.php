@@ -63,7 +63,7 @@ class SmrAlliance {
 
 	public static function getAllianceByName(string $name, int $gameID, bool $forceUpdate = false): self {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return self::getAlliance($dbRecord->getInt('alliance_id'), $gameID, $forceUpdate);
@@ -119,9 +119,9 @@ class SmrAlliance {
 			throw new Smr\Exceptions\UserError('That alliance name is reserved.');
 		}
 
-		// get the next alliance id (ignoring reserved ID's)
-		$dbResult = $db->read('SELECT max(alliance_id) FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID));
-		$allianceID = $dbResult->record()->getInt('max(alliance_id)') + 1;
+		// get the next alliance id (start at 1 if there are no alliances yet)
+		$dbResult = $db->read('SELECT IFNULL(max(alliance_id), 0) AS alliance_id FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID));
+		$allianceID = $dbResult->record()->getInt('alliance_id') + 1;
 
 		// actually create the alliance here
 		$db->insert('alliance', [

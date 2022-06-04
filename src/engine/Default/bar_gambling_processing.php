@@ -60,14 +60,10 @@ $deck = $var['deck'] ?? new Smr\Blackjack\Deck();
 $playerHand = $var['player_hand'] ?? new Smr\Blackjack\Hand();
 $dealerHand = $var['dealer_hand'] ?? new Smr\Blackjack\Hand();
 
-if (isset($var['player_does'])) {
-	$do = $var['player_does'];
-} else {
-	$do = 'nothing';
-}
-//new game if $do == nothing
-if ($do == 'nothing') {
-	$bet = Smr\Request::getVarInt('bet');
+$do = $var['player_does'] ?? 'new game';
+$bet = Smr\Request::getVarInt('bet');
+
+if ($do == 'new game') {
 	if ($player->getCredits() < $bet) {
 		create_error('Not even enough to play BlackJack...you need to trade!');
 	}
@@ -90,10 +86,6 @@ if ($do == 'nothing') {
 	$dealerHand->addCard($deck->drawCard());
 	$playerHand->addCard($deck->drawCard());
 	$dealerHand->addCard($deck->drawCard());
-}
-
-if (isset($var['bet'])) {
-	$bet = $var['bet'];
 }
 
 // Add cards to the player's hand

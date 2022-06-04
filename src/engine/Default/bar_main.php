@@ -20,7 +20,7 @@ if (isset($var['message'])) {
 $winningTicket = false;
 //check for winner
 $db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT prize FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0 LIMIT 1');
+$dbResult = $db->read('SELECT prize FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
 if ($dbResult->hasRecord()) {
 	$winningTicket = $dbResult->record()->getInt('prize');
 

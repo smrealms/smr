@@ -21,7 +21,7 @@ if ($OwnedAnon) { ?>
 	<br /><h2>Your accounts</h2><br />
 	<table class="standard inset center">
 		<tr>
-			<th>ID</th>
+			<th>Account Number</th>
 			<th>Password</th>
 			<th>Last Transaction</th>
 			<th>Balance</th>

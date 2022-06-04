@@ -33,10 +33,8 @@ class Lotto {
 		$winner_id = $dbResult->record()->getInt('account_id');
 
 		// Any unclaimed prizes get merged into this prize
-		$dbResult = $db->read('SELECT SUM(prize) FROM player_has_ticket WHERE time = 0 AND game_id = ' . $db->escapeNumber($gameID));
-		if ($dbResult->hasRecord()) {
-			$lottoInfo['Prize'] += $dbResult->record()->getInt('SUM(prize)');
-		}
+		$dbResult = $db->read('SELECT IFNULL(SUM(prize), 0) AS total_prize FROM player_has_ticket WHERE time = 0 AND game_id = ' . $db->escapeNumber($gameID));
+		$lottoInfo['Prize'] += $dbResult->record()->getInt('total_prize');
 
 		// Delete all tickets and re-insert the winning ticket
 		$db->write('DELETE FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($gameID));

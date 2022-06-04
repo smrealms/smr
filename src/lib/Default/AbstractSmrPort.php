@@ -126,7 +126,7 @@ class AbstractSmrPort {
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
 		if ($dbRecord === null) {
-			$dbResult = $this->db->read('SELECT * FROM port WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT * FROM port WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -544,13 +544,18 @@ class AbstractSmrPort {
 		if (!$this->hasGood($goodID)) {
 			return;
 		}
-		if (($key = array_search($goodID, $this->goodIDs['All'])) !== false) {
-			array_splice($this->goodIDs['All'], $key, 1);
-		}
-		if (($key = array_search($goodID, $this->goodIDs[TRADER_BUYS])) !== false) {
-			array_splice($this->goodIDs[TRADER_BUYS], $key, 1);
-		} elseif (($key = array_search($goodID, $this->goodIDs[TRADER_SELLS])) !== false) {
-			array_splice($this->goodIDs[TRADER_SELLS], $key, 1);
+
+		$removeGoodID = function(string $transaction) use ($goodID): bool {
+			$key = array_search($goodID, $this->goodIDs[$transaction]);
+			if ($key !== false) {
+				array_splice($this->goodIDs[$transaction], $key, 1);
+				return true;
+			}
+			return false;
+		};
+		$removeGoodID('All');
+		if (!$removeGoodID(TRADER_BUYS)) {
+			$removeGoodID(TRADER_SELLS);
 		}
 
 		// Flag for update
@@ -1184,7 +1189,7 @@ class AbstractSmrPort {
 								', reinforce_time = ' . $this->db->escapeNumber($this->getReinforceTime()) .
 								', attack_started = ' . $this->db->escapeNumber($this->getAttackStarted()) .
 								', race_id = ' . $this->db->escapeNumber($this->getRaceID()) . '
-								WHERE ' . $this->SQL . ' LIMIT 1');
+								WHERE ' . $this->SQL);
 			} else {
 				$this->db->insert('port', [
 					'game_id' => $this->db->escapeNumber($this->getGameID()),
@@ -1212,7 +1217,7 @@ class AbstractSmrPort {
 				continue;
 			}
 			$amount = $this->getGoodAmount($goodID);
-			$this->db->write('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
+			$this->db->write('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID));
 			unset($this->goodAmountsChanged[$goodID]);
 		}
 

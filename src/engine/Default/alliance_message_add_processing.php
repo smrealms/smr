@@ -37,28 +37,23 @@ if (empty($body)) {
 // if we don't have a thread id
 if (!isset($var['thread_index'])) {
 	// get one
-	$dbResult = $db->read('SELECT max(thread_id) FROM alliance_thread
+	$dbResult = $db->read('SELECT IFNULL(max(thread_id)+1, 0) AS next_thread_id FROM alliance_thread
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_id = ' . $db->escapeNumber($alliance_id));
-	if ($dbResult->hasRecord()) {
-		$thread_id = $dbResult->record()->getInt('max(thread_id)') + 1;
-	}
+	$thread_id = $dbResult->record()->getInt('next_thread_id');
 } else {
-	$thread_index = $var['thread_index'];
-	$thread_id = $var['thread_ids'][$thread_index];
+	$thread_id = $var['thread_ids'][$var['thread_index']];
 }
 
 // now get the next reply id
-$dbResult = $db->read('SELECT max(reply_id) FROM alliance_thread
+$dbResult = $db->read('SELECT IFNULL(max(reply_id)+1, 0) AS next_reply_id FROM alliance_thread
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
 			AND thread_id = ' . $db->escapeNumber($thread_id));
-if ($dbResult->hasRecord()) {
-	$reply_id = $dbResult->record()->getInt('max(reply_id)') + 1;
-}
+$reply_id = $dbResult->record()->getInt('next_reply_id');
 
 // only add the topic if it's the first reply
-if ($reply_id == 1) {
+if ($reply_id == 0) {
 	if (empty($topic)) {
 		create_error('You must enter a topic!');
 	}
@@ -73,7 +68,7 @@ if ($reply_id == 1) {
 				AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
 				AND topic = ' . $db->escapeString($topic));
 	if ($dbResult->hasRecord()) {
-		create_error('This topic exist already!');
+		create_error('This topic exists already!');
 	}
 
 	$db->insert('alliance_thread_topic', [
@@ -110,11 +105,9 @@ if (isset($var['alliance_eyes'])) {
 }
 if (isset($var['thread_index'])) {
 	$container['body'] = 'alliance_message_view.php';
-	$container['thread_index'] = $thread_index;
+	$container->addVar('thread_index');
 	$container->addVar('thread_ids');
 	$container->addVar('thread_topics');
-	++$var['thread_replies'][$thread_index];
-	$container->addVar('thread_replies');
 } else {
 	$container['body'] = 'alliance_message.php';
 }

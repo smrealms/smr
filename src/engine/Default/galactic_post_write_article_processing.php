@@ -35,8 +35,8 @@ if (isset($var['id'])) {
 		}
 	}
 
-	$dbResult = $db->read('SELECT MAX(article_id) article_id FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
-	$num = $dbResult->record()->getInt('article_id') + 1;
+	$dbResult = $db->read('SELECT IFNULL(MAX(article_id)+1, 0) AS next_article_id FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
+	$num = $dbResult->record()->getInt('next_article_id');
 
 	$db->insert('galactic_post_article', [
 		'game_id' => $db->escapeNumber($player->getGameID()),

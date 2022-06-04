@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 try {
 	require_once('../bootstrap.php');
 
@@ -47,27 +48,10 @@ try {
 		'links' => $links,
 	]);
 
+	$template = Smr\Template::getInstance();
+	$template->assign('GameName', $game->getName());
+	$template->assign('GraphData', $data);
+	$template->display('map_warps.php');
 } catch (Throwable $e) {
 	handleException($e);
 }
-?>
-
-<!DOCTYPE html>
-<html>
-	<head>
-		<title><?php echo PAGE_TITLE . ': ' . $game->getName(); ?></title>
-		<meta charset="utf-8">
-		<style>
-		body { background-image: url("images/stars2.png"); }
-		</style>
-	</head>
-
-	<body>
-		<script src="https://d3js.org/d3.v7.min.js"></script>
-		<script src="<?php echo JQUERY_URL; ?>"></script>
-		<script>
-			const graph = <?php echo $data; ?>;
-		</script>
-		<script src="/js/map_warps.js"></script>
-	</body>
-</html>

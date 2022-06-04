@@ -56,7 +56,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT info FROM cached_dummys
 					WHERE type = \'DummyPlayer\'
-						AND id = ' . $db->escapeString($name) . ' LIMIT 1');
+						AND id = ' . $db->escapeString($name));
 		if ($dbResult->hasRecord()) {
 			return $dbResult->record()->getObject('info');
 		}

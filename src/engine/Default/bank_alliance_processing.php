@@ -60,7 +60,7 @@ if ($action == 'Deposit') {
 			create_error('Your alliance won\'t allow you to take so much with how little you\'ve given!');
 		}
 	} elseif ($withdrawalPerDay >= 0) {
-		$dbResult = $db->read('SELECT sum(amount) as total FROM alliance_bank_transactions
+		$dbResult = $db->read('SELECT IFNULL(sum(amount), 0) as total FROM alliance_bank_transactions
 					WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
@@ -68,9 +68,7 @@ if ($action == 'Deposit') {
 						AND exempt = 0
 						AND time > ' . $db->escapeNumber(Smr\Epoch::time() - 86400));
 		$total = 0;
-		if ($dbResult->hasRecord()) {
-			$total = $dbResult->record()->getInt('total');
-		}
+		$total = $dbResult->record()->getInt('total');
 		if ($total + $amount > $withdrawalPerDay) {
 			create_error('Your alliance doesn\'t allow you to take that much cash this often!');
 		}
@@ -84,12 +82,10 @@ if ($action == 'Deposit') {
 $player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for alliance account of ' . $alliance->getAllianceName());
 
 // get next transaction id
-$dbResult = $db->read('SELECT MAX(transaction_id) as next_id FROM alliance_bank_transactions
+$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) as max_id FROM alliance_bank_transactions
 			WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
-if ($dbResult->hasRecord()) {
-	$next_id = $dbResult->record()->getInt('next_id') + 1;
-}
+$next_id = $dbResult->record()->getInt('max_id') + 1;
 
 // save log
 $requestExempt = Smr\Request::has('requestExempt') ? 1 : 0;

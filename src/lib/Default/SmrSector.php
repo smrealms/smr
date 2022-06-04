@@ -109,7 +109,7 @@ class SmrSector {
 
 		// Do we already have a database record for this sector?
 		if ($dbRecord === null) {
-			$dbResult = $this->db->read('SELECT * FROM sector WHERE ' . $this->SQL . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT * FROM sector WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -156,7 +156,7 @@ class SmrSector {
 									', link_down=' . $this->db->escapeNumber($this->getLinkDown()) .
 									', link_left=' . $this->db->escapeNumber($this->getLinkLeft()) .
 									', warp=' . $this->db->escapeNumber($this->getWarp()) .
-								' WHERE ' . $this->SQL . ' LIMIT 1');
+								' WHERE ' . $this->SQL);
 		}
 		$this->isNew = false;
 		$this->hasChanged = false;
@@ -170,7 +170,7 @@ class SmrSector {
 		//now delete the entry from visited
 		if (!$this->isVisited($player)) {
 			$this->db->write('DELETE FROM player_visited_sector WHERE ' . $this->SQL . '
-								 AND account_id = ' . $this->db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
+								 AND account_id = ' . $this->db->escapeNumber($player->getAccountID()));
 		}
 		$this->visited[$player->getAccountID()] = true;
 	}
@@ -907,7 +907,7 @@ class SmrSector {
 			return true;
 		}
 		if (!isset($this->visited[$player->getAccountID()])) {
-			$dbResult = $this->db->read('SELECT 1 FROM player_visited_sector WHERE ' . $this->SQL . ' AND account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
+			$dbResult = $this->db->read('SELECT 1 FROM player_visited_sector WHERE ' . $this->SQL . ' AND account_id=' . $this->db->escapeNumber($player->getAccountID()));
 			$this->visited[$player->getAccountID()] = !$dbResult->hasRecord();
 		}
 		return $this->visited[$player->getAccountID()];

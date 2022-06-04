@@ -37,19 +37,17 @@ if ($withPerDay == ALLIANCE_BANK_UNLIMITED && $positiveBalance) {
 if (!isset($var['role_id'])) {
 	// role empty too? that doesn't make sence
 	if (empty(Smr\Request::get('role'))) {
-		create_error('You must enter a role name if you want to create a new one.');
+		throw new Exception('Empty role name is not allowed');
 	}
 
 	$db->lockTable('alliance_has_roles');
 
-	// get last id
+	// get last id (always has one, since some roles are auto-bestowed)
 	$dbResult = $db->read('SELECT MAX(role_id)
 				FROM alliance_has_roles
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND alliance_id = ' . $db->escapeNumber($alliance_id));
-	if ($dbResult->hasRecord()) {
-		$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
-	}
+	$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
 
 	$db->insert('alliance_has_roles', [
 		'alliance_id' => $db->escapeNumber($alliance_id),

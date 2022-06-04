@@ -6,9 +6,6 @@ const ALL_GAMES_ID = 20000;
 $message = Smr\Request::get('message');
 $expire = Smr\Request::getFloat('expire');
 $game_id = $var['SendGameID'];
-if ($game_id != ALL_GAMES_ID) {
-	$account_id = Smr\Request::getInt('account_id');
-}
 
 if (Smr\Request::get('action') == 'Preview message') {
 	$container = Page::create('skeleton.php', 'admin/admin_message_send.php');
@@ -16,7 +13,7 @@ if (Smr\Request::get('action') == 'Preview message') {
 	$container['preview'] = $message;
 	$container['expire'] = $expire;
 	if ($game_id != ALL_GAMES_ID) {
-		$container['account_id'] = $account_id;
+		$container['account_id'] = Smr\Request::getInt('account_id');
 	}
 	$container->go();
 }
@@ -31,6 +28,7 @@ $db = Smr\Database::getInstance();
 
 $receivers = [];
 if ($game_id != ALL_GAMES_ID) {
+	$account_id = Smr\Request::getInt('account_id');
 	if ($account_id == 0) {
 		// Send to all players in the requested game
 		$dbResult = $db->read('SELECT account_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id));

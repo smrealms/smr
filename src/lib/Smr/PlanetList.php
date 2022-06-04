@@ -38,16 +38,16 @@ class PlanetList {
 			// Get this player's planet if no alliance or viewing own alliance
 			if ($playerOnly || $player->getAllianceID() == $allianceId) {
 				$playerPlanet = $player->getPlanet();
-				if ($playerPlanet !== false) {
+				if ($playerPlanet !== null) {
 					$template->assign('PlayerPlanet', $playerPlanet);
 				}
 			}
 
 			// Get full list of planets
 			$allPlanets = [];
-			if (!$playerOnly) {
+			if (isset($alliance)) {
 				$allPlanets = $alliance->getPlanets();
-			} elseif ($playerPlanet !== false) {
+			} elseif (isset($playerPlanet)) {
 				$allPlanets[] = $playerPlanet;
 			}
 			$template->assign('AllPlanets', $allPlanets);
