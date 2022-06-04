@@ -45,9 +45,9 @@ class PlanetList {
 
 			// Get full list of planets
 			$allPlanets = [];
-			if (!$playerOnly) {
+			if (isset($alliance)) {
 				$allPlanets = $alliance->getPlanets();
-			} elseif ($playerPlanet !== false) {
+			} elseif (isset($playerPlanet)) {
 				$allPlanets[] = $playerPlanet;
 			}
 			$template->assign('AllPlanets', $allPlanets);
