@@ -480,7 +480,7 @@ abstract class AbstractSmrPlayer {
 		return SmrPlanet::getPlanet($this->getGameID(), $this->getSectorID());
 	}
 
-	public function getSectorPort(): SmrPort {
+	public function getSectorPort(): AbstractSmrPort {
 		return SmrPort::getPort($this->getGameID(), $this->getSectorID());
 	}
 
