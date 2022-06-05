@@ -14,6 +14,21 @@ parameters:
     checkInternalClassCaseSensitivity: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
 
+    dynamicConstantNames:
+        - BUG_REPORT_TO_ADDRESSES
+        - ENABLE_BETA
+        - ENABLE_DEBUG
+        - ENABLE_NPCS_CHESS
+        - FACEBOOK_APP_ID
+        - GOOGLE_ANALYTICS_ID
+        - GOOGLE_CLIENT_ID
+        - IRC_BOT_VERBOSE_PING
+        - NPC_LOG_TO_DATABASE
+        - RECAPTCHA_PRIVATE
+        - SMTP_HOSTNAME
+        - TWITTER_CONSUMER_KEY
+        - USING_AJAX
+
     #----------------------------------------------
     # Warning suppression (to be fixed eventually!)
     #----------------------------------------------
