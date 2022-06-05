@@ -1,6 +1,6 @@
 # Distributed PHPStan config
 parameters:
-    level: 3
+    level: 4
     paths:
         - src
         - test
