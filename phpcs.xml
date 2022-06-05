@@ -108,6 +108,11 @@
         <severity>0</severity>
     </rule>
 
+    <!-- Ignore unknown docstring types. -->
+    <rule ref="Spryker.Commenting.DocBlockParamAllowDefaultValue.Typehint">
+        <severity>0</severity>
+    </rule>
+
     <!-- This suppression allows "assignment by reference" to be written so as
       to clearly indicate that it is not "assignment of a reference", i.e. to
       allow "$a =& $b" instead of "$a = &$b". -->
