@@ -18,7 +18,7 @@ if ($bargain_price < 0) {
 	create_error('Negative prices are not allowed!');
 }
 
-// get good name, id, ...
+/** @var int $good_id */
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
 

@@ -545,6 +545,9 @@ class SmrPlanet {
 		return $this->exists;
 	}
 
+	/**
+	 * @return ($goodID is null ? array<int, int> : int)
+	 */
 	public function getStockpile(int $goodID = null): int|array {
 		if (!isset($this->stockpile)) {
 			// initialize cargo array
@@ -687,6 +690,9 @@ class SmrPlanet {
 		return $this->currentlyBuilding;
 	}
 
+	/**
+	 * @return ($buildingTypeID is null ? array<int, int> : int)
+	 */
 	public function getMaxBuildings(int $buildingTypeID = null): int|array {
 		if ($buildingTypeID === null) {
 			$structs = $this->typeInfo::STRUCTURES;
