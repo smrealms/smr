@@ -42,6 +42,7 @@ class Google extends SocialLogin {
 			'authorization_code',
 			['code' => Request::get('code')],
 		);
+		/** @var \League\OAuth2\Client\Provider\GoogleUser $userInfo */
 		$userInfo = $provider->getResourceOwner($accessToken);
 		$this->setCredentials($userInfo->getId(), $userInfo->getEmail());
 		return $this;
