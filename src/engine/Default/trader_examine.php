@@ -9,7 +9,7 @@ $player = $session->getPlayer();
 $targetPlayer = SmrPlayer::getPlayer($var['target'], $player->getGameID());
 
 if ($targetPlayer->isDead()) {
-	$container = Page::create('skeleton.php', 'current_sector.php');
+	$container = Page::create('current_sector.php');
 	$container['msg'] = '<span class="red bold">ERROR:</span> Target already dead.';
 	$container->go();
 }

@@ -56,7 +56,7 @@ $db->insert('anon_bank_transactions', [
 // Log the player action
 $player->log(LOG_TYPE_BANK, $action . ' of ' . $amount . ' credits in anonymous account #' . $account_num);
 
-$container = Page::create('skeleton.php', 'bank_anon_detail.php');
+$container = Page::create('bank_anon_detail.php');
 $container['account_num'] = $account_num;
 $container['allowed'] = 'yes';
 $container->go();

@@ -103,7 +103,7 @@ if (Smr\Request::getVar('action') === TRADER_STEALS) {
 		$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 
 		$fineMessage = '<span class="red">A Federation patrol caught you loading stolen goods onto your ship!<br />The stolen goods have been confiscated and you have been fined ' . number_format($fine) . ' credits.</span>';
-		$container = Page::create('skeleton.php', 'shop_goods.php');
+		$container = Page::create('shop_goods.php');
 		$container['trade_msg'] = $fineMessage;
 		$container->go();
 	}
@@ -114,11 +114,6 @@ if ($transaction === TRADER_STEALS ||
 	(!empty($bargain_price) &&
 	 (($transaction === TRADER_BUYS && $bargain_price >= $ideal_price) ||
 	  ($transaction === TRADER_SELLS && $bargain_price <= $ideal_price)))) {
-
-	// the url we going to
-	$container = Page::create('skeleton.php');
-	$container->addVar('ideal_price');
-	$container->addVar('offered_price');
 
 	// base xp is the amount you would get for a perfect trade.
 	// this is the absolut max. the real xp can only be smaller.
@@ -190,17 +185,19 @@ if ($transaction === TRADER_STEALS ||
 		$tradeMessage .= '<br />Your ' . $qualifier . ' ' . $skill . ' skills have earned you <span class="exp">' . $gained_exp . ' </span> ' . pluralise($gained_exp, 'experience point', false) . '!';
 	}
 
-	$container['trade_msg'] = $tradeMessage;
 
 	if ($ship->getEmptyHolds() == 0) {
-		$container['body'] = 'current_sector.php';
+		$container = Page::create('current_sector.php');
 	} else {
-		$container['body'] = 'shop_goods.php';
+		$container = Page::create('shop_goods.php');
 	}
+	$container->addVar('ideal_price');
+	$container->addVar('offered_price');
+	$container['trade_msg'] = $tradeMessage;
 
 } else {
 	// does the trader try to outsmart us?
-	$container = Page::create('skeleton.php', 'shop_goods_trade.php');
+	$container = Page::create('shop_goods_trade.php');
 	$container->addVar('ideal_price');
 	$container->addVar('offered_price');
 

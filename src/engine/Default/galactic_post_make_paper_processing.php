@@ -17,5 +17,5 @@ $db->insert('galactic_post_paper', [
 	'title' => $db->escapeString($title),
 ]);
 //send em back
-$container = Page::create('skeleton.php', 'galactic_post_view_article.php');
+$container = Page::create('galactic_post_view_article.php');
 $container->go();

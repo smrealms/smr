@@ -22,7 +22,7 @@ try {
 		if (!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM)) {
 			create_error('You do not have permission to do that!');
 		}
-		$container = Page::create('skeleton.php', 'album_moderate.php');
+		$container = Page::create('album_moderate.php');
 		$container['account_id'] = $album_id;
 
 		$href = $container->href(true);

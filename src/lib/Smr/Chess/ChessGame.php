@@ -888,11 +888,11 @@ class ChessGame {
 	}
 
 	public function getPlayGameHREF(): string {
-		return Page::create('skeleton.php', 'chess_play.php', ['ChessGameID' => $this->chessGameID])->href();
+		return Page::create('chess_play.php', ['ChessGameID' => $this->chessGameID])->href();
 	}
 
 	public function getResignHREF(): string {
-		return Page::create('chess_resign_processing.php', '', ['ChessGameID' => $this->chessGameID])->href();
+		return Page::create('chess_resign_processing.php', ['ChessGameID' => $this->chessGameID])->href();
 	}
 
 }

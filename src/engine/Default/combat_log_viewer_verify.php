@@ -23,7 +23,7 @@ if (!$dbResult->hasRecord()) {
 }
 
 // Player has permission, so go to the display page!
-$container = Page::create('skeleton.php', 'combat_log_viewer.php');
+$container = Page::create('combat_log_viewer.php');
 $container['log_ids'] = [$var['log_id']];
 $container['current_log'] = 0;
 $container->go();

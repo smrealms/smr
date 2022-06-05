@@ -80,7 +80,7 @@ class Globals {
 	public static function getColouredRaceName(int $raceID, int $relations, bool $linked = true): string {
 		$raceName = get_colored_text($relations, Smr\Race::getName($raceID));
 		if ($linked === true) {
-			$container = Page::create('skeleton.php', 'council_list.php', ['race_id' => $raceID]);
+			$container = Page::create('council_list.php', ['race_id' => $raceID]);
 			$raceName = create_link($container, $raceName);
 		}
 		return $raceName;
@@ -177,23 +177,23 @@ class Globals {
 	}
 
 	public static function getFeatureRequestHREF(): string {
-		return Page::create('skeleton.php', 'feature_request.php')->href();
+		return Page::create('feature_request.php')->href();
 	}
 
 	public static function getCurrentSectorHREF(): string {
-		return self::$AVAILABLE_LINKS['CurrentSector'] = Page::create('skeleton.php', 'current_sector.php')->href();
+		return self::$AVAILABLE_LINKS['CurrentSector'] = Page::create('current_sector.php')->href();
 	}
 
 	public static function getLocalMapHREF(): string {
-		return self::$AVAILABLE_LINKS['LocalMap'] = Page::create('skeleton.php', 'map_local.php')->href();
+		return self::$AVAILABLE_LINKS['LocalMap'] = Page::create('map_local.php')->href();
 	}
 
 	public static function getCurrentPlayersHREF(): string {
-		return self::$AVAILABLE_LINKS['CurrentPlayers'] = Page::create('skeleton.php', 'current_players.php')->href();
+		return self::$AVAILABLE_LINKS['CurrentPlayers'] = Page::create('current_players.php')->href();
 	}
 
 	public static function getTradeHREF(): string {
-		return self::$AVAILABLE_LINKS['EnterPort'] = Page::create('skeleton.php', 'shop_goods.php')->href();
+		return self::$AVAILABLE_LINKS['EnterPort'] = Page::create('shop_goods.php')->href();
 	}
 
 	public static function getAttackTraderHREF(int $accountID): string {
@@ -203,7 +203,7 @@ class Globals {
 	}
 
 	public static function getBetaFunctionsHREF(): string { //BETA
-		return Page::create('skeleton.php', 'beta_functions.php')->href();
+		return Page::create('beta_functions.php')->href();
 	}
 
 	public static function getBugReportProcessingHREF(): string {
@@ -217,7 +217,7 @@ class Globals {
 	}
 
 	public static function getSmrFileCreateHREF(int $adminCreateGameID = null): string {
-		$container = Page::create('skeleton.php', 'smr_file_create.php');
+		$container = Page::create('smr_file_create.php');
 		$container['AdminCreateGameID'] = $adminCreateGameID;
 		return $container->href();
 	}
@@ -234,40 +234,40 @@ class Globals {
 	}
 
 	public static function getSectorScanHREF(AbstractSmrPlayer $player, int $toSector): string {
-		$container = Page::create('skeleton.php', 'sector_scan.php');
+		$container = Page::create('sector_scan.php');
 		$container['target_sector'] = $toSector;
 		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = $container->href();
 	}
 
 	public static function getPlotCourseHREF(int $fromSector = null, int $toSector = null): string {
 		if ($fromSector === null && $toSector === null) {
-			return self::$AVAILABLE_LINKS['PlotCourse'] = Page::create('skeleton.php', 'course_plot.php')->href();
+			return self::$AVAILABLE_LINKS['PlotCourse'] = Page::create('course_plot.php')->href();
 		}
-		return Page::create('course_plot_processing.php', '', ['from' => $fromSector, 'to' => $toSector])->href();
+		return Page::create('course_plot_processing.php', ['from' => $fromSector, 'to' => $toSector])->href();
 	}
 
 	public static function getPlanetMainHREF(): string {
-		return Page::create('skeleton.php', 'planet_main.php')->href();
+		return Page::create('planet_main.php')->href();
 	}
 
 	public static function getPlanetConstructionHREF(): string {
-		return Page::create('skeleton.php', 'planet_construction.php')->href();
+		return Page::create('planet_construction.php')->href();
 	}
 
 	public static function getPlanetDefensesHREF(): string {
-		return Page::create('skeleton.php', 'planet_defense.php')->href();
+		return Page::create('planet_defense.php')->href();
 	}
 
 	public static function getPlanetOwnershipHREF(): string {
-		return Page::create('skeleton.php', 'planet_ownership.php')->href();
+		return Page::create('planet_ownership.php')->href();
 	}
 
 	public static function getPlanetStockpileHREF(): string {
-		return Page::create('skeleton.php', 'planet_stockpile.php')->href();
+		return Page::create('planet_stockpile.php')->href();
 	}
 
 	public static function getPlanetFinancesHREF(): string {
-		return Page::create('skeleton.php', 'planet_financial.php')->href();
+		return Page::create('planet_financial.php')->href();
 	}
 
 	public static function getAllianceHREF(int $allianceID = null): string {
@@ -278,100 +278,100 @@ class Globals {
 	}
 
 	public static function getAllianceBankHREF(int $allianceID = null): string {
-		$container = Page::create('skeleton.php', 'bank_alliance.php');
+		$container = Page::create('bank_alliance.php');
 		$container['alliance_id'] = $allianceID;
 		return $container->href();
 	}
 
 	public static function getAllianceRosterHREF(int $allianceID = null): string {
-		$container = Page::create('skeleton.php', 'alliance_roster.php');
+		$container = Page::create('alliance_roster.php');
 		$container['alliance_id'] = $allianceID;
 		return $container->href();
 	}
 
 	public static function getAllianceListHREF(): string {
-		return Page::create('skeleton.php', 'alliance_list.php')->href();
+		return Page::create('alliance_list.php')->href();
 	}
 
 	public static function getAllianceNewsHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'news_read_advanced.php', ['allianceID' => $allianceID, 'submit' => 'Search For Alliance'])->href();
+		return Page::create('news_read_advanced.php', ['allianceID' => $allianceID, 'submit' => 'Search For Alliance'])->href();
 	}
 
 	public static function getAllianceMotdHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'alliance_mod.php', ['alliance_id' => $allianceID])->href();
+		return Page::create('alliance_mod.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getAllianceMessageHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'alliance_broadcast.php', ['alliance_id' => $allianceID])->href();
+		return Page::create('alliance_broadcast.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getAllianceMessageBoardHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'alliance_message.php', ['alliance_id' => $allianceID])->href();
+		return Page::create('alliance_message.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getAllianceForcesHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'alliance_forces.php', ['alliance_id' => $allianceID])->href();
+		return Page::create('alliance_forces.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getAllianceOptionsHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'alliance_option.php', ['alliance_id' => $allianceID])->href();
+		return Page::create('alliance_option.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getPlanetListHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'planet_list.php', ['alliance_id' => $allianceID])->href();
+		return Page::create('planet_list.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getPlanetListFinancialHREF(int $allianceID): string {
-		return Page::create('skeleton.php', 'planet_list_financial.php', ['alliance_id' => $allianceID])->href();
+		return Page::create('planet_list_financial.php', ['alliance_id' => $allianceID])->href();
 	}
 
 	public static function getViewMessageBoxesHREF(): string {
-		return Page::create('skeleton.php', 'message_box.php')->href();
+		return Page::create('message_box.php')->href();
 	}
 
 	public static function getSendGlobalMessageHREF(): string {
-		return Page::create('skeleton.php', 'message_send.php')->href();
+		return Page::create('message_send.php')->href();
 	}
 
 	public static function getManageBlacklistHREF(): string {
-		return Page::create('skeleton.php', 'message_blacklist.php')->href();
+		return Page::create('message_blacklist.php')->href();
 	}
 
 	public static function getSendCouncilMessageHREF(int $raceID): string {
-		$container = Page::create('skeleton.php', 'council_send_message.php');
+		$container = Page::create('council_send_message.php');
 		$container['race_id'] = $raceID;
 		$container['folder_id'] = MSG_POLITICAL;
 		return $container->href();
 	}
 
 	public static function getTraderStatusHREF(): string {
-		return Page::create('skeleton.php', 'trader_status.php')->href();
+		return Page::create('trader_status.php')->href();
 	}
 
 	public static function getCouncilHREF(int $raceID = null): string {
-		$container = Page::create('skeleton.php', 'council_list.php');
+		$container = Page::create('council_list.php');
 		$container['race_id'] = $raceID;
 		return $container->href();
 	}
 
 	public static function getTraderRelationsHREF(): string {
-		return Page::create('skeleton.php', 'trader_relations.php')->href();
+		return Page::create('trader_relations.php')->href();
 	}
 
 	public static function getTraderBountiesHREF(): string {
-		return Page::create('skeleton.php', 'trader_bounties.php')->href();
+		return Page::create('trader_bounties.php')->href();
 	}
 
 	public static function getPoliticsHREF(): string {
-		return Page::create('skeleton.php', 'council_list.php')->href();
+		return Page::create('council_list.php')->href();
 	}
 
 	public static function getCasinoHREF(): string {
-		return Page::create('skeleton.php', 'chess.php')->href();
+		return Page::create('chess.php')->href();
 	}
 
 	public static function getChessHREF(): string {
-		return Page::create('skeleton.php', 'chess.php')->href();
+		return Page::create('chess.php')->href();
 	}
 
 	public static function getChessCreateHREF(): string {
@@ -379,29 +379,29 @@ class Globals {
 	}
 
 	public static function getBarMainHREF(): string {
-		$container = Page::create('skeleton.php', 'bar_main.php');
+		$container = Page::create('bar_main.php');
 		$container->addVar('LocationID');
 		return $container->href();
 	}
 
 	public static function getBarLottoPlayHREF(): string {
-		$container = Page::create('skeleton.php', 'bar_lotto_buy.php');
+		$container = Page::create('bar_lotto_buy.php');
 		$container->addVar('LocationID');
 		return $container->href();
 	}
 
 	public static function getBarBlackjackHREF(): string {
-		$container = Page::create('skeleton.php', 'bar_gambling_bet.php');
+		$container = Page::create('bar_gambling_bet.php');
 		$container->addVar('LocationID');
 		return $container->href();
 	}
 
 	public static function getBuyMessageNotificationsHREF(): string {
-		return Page::create('skeleton.php', 'buy_message_notifications.php')->href();
+		return Page::create('buy_message_notifications.php')->href();
 	}
 
 	public static function getBuyShipNameHREF(): string {
-		return Page::create('skeleton.php', 'buy_ship_name.php')->href();
+		return Page::create('buy_ship_name.php')->href();
 	}
 
 	public static function getBuyShipNameCosts(): array {

@@ -107,6 +107,6 @@ $player->update();
 // save money for alliance
 $alliance->update();
 
-$container = Page::create('skeleton.php', 'bank_alliance.php');
+$container = Page::create('bank_alliance.php');
 $container['alliance_id'] = $alliance_id;
 $container->go();

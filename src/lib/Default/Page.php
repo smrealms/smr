@@ -10,7 +10,6 @@
 class Page extends ArrayObject {
 
 	private const ALWAYS_AVAILABLE = 999999;
-	private const SKIP_REDIRECT = '_skip_redirect'; // special page var name
 
 	// Defines the number of pages that can be loaded after
 	// this page before the links on this page become invalid
@@ -115,31 +114,28 @@ class Page extends ArrayObject {
 			'admin/unigen/universe_create_warps.php' => self::ALWAYS_AVAILABLE,
 		];
 
+	public int $remainingPageLoads;
+
+	protected function __construct(
+		public readonly string $file,
+		array $data,
+		public readonly bool $skipRedirect // to skip redirect hooks at beginning of page processing
+	) {
+		parent::__construct($data);
+		$this->remainingPageLoads = self::URL_DEFAULT_REMAINING_PAGE_LOADS[$file] ?? 1; // Allow refreshing
+	}
+
 	/**
 	 * Create a new Page object.
 	 * This is the standard method to package linked pages and the data to
 	 * accompany them.
 	 */
-	public static function create(string $file, string $body = '', Page|array $extra = [], int $remainingPageLoads = null, bool $skipRedirect = false): self {
-		if ($extra instanceof Page) {
-			// to avoid making $container a reference to $extra
-			$extra = $extra->getArrayCopy();
+	public static function create(string $file, array|self $data = [], bool $skipRedirect = false): self {
+		if ($data instanceof self) {
+			// Extract the data from the input Page
+			$data = $data->getArrayCopy();
 		}
-		$container = new self($extra);
-		$container['url'] = $file;
-		$container['body'] = $body;
-		if ($remainingPageLoads !== null) {
-			$container['RemainingPageLoads'] = $remainingPageLoads;
-		}
-
-		// Skips the redirect hooks at the beginning of page processing
-		if ($skipRedirect) {
-			$container[self::SKIP_REDIRECT] = true;
-		} else {
-			unset($container[self::SKIP_REDIRECT]);
-		}
-
-		return $container;
+		return new self($file, $data, $skipRedirect);
 	}
 
 	/**
@@ -149,13 +145,6 @@ class Page extends ArrayObject {
 	 */
 	public static function copy(Page $other): self {
 		return clone $other;
-	}
-
-	/**
-	 * Will this page skip the redirect hooks at the beginning of page processing?
-	 */
-	public function skipRedirect(): bool {
-		return $this[self::SKIP_REDIRECT] ?? false;
 	}
 
 	/**
@@ -193,26 +182,11 @@ class Page extends ArrayObject {
 	 */
 	public function href(bool $forceFullURL = false): string {
 
-		// We need to make a clone of this object for two reasons:
-		// 1. The object saved in the session is not modified if we use this
-		//    object to create more links.
-		// 2. Any additional links we create using this object do not inherit
-		//    the metadata properties that we add here, which would falsely
-		//    represent some other page.
-		// Ideally this would not be necessary, but the usage of this method
-		// would need to change globally first (no Page re-use).
-		$copy = self::copy($this);
-
-		if (!isset($copy['RemainingPageLoads'])) {
-			$pageURL = $copy['url'] == 'skeleton.php' ? $copy['body'] : $copy['url'];
-			$copy['RemainingPageLoads'] = self::URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] ?? 1; // Allow refreshing
-		}
-
-		// 'CommonID' MUST be unique to a specific action. If there will
-		// be two different outcomes from containers given the same ID then
-		// problems will likely arise.
-		$copy['CommonID'] = $this->getCommonID();
-		$sn = Smr\Session::getInstance()->addLink($copy);
+		// We need to make a clone because the instance saved in the Session
+		// must not be modified if we re-use this instance to create more
+		// links. Ideally this would not be necessary, but the usage of this
+		// method would need to change globally first (no Page re-use).
+		$sn = Smr\Session::getInstance()->addLink(self::copy($this));
 
 		$href = '?sn=' . $sn;
 		if ($forceFullURL === true || $_SERVER['SCRIPT_NAME'] !== LOADER_URI) {
@@ -225,29 +199,23 @@ class Page extends ArrayObject {
 	 * Returns a hash of the contents of the container to identify when two
 	 * containers are equivalent (apart from page-load tracking metadata, which
 	 * we strip out to prevent false differences).
+	 *
+	 * CommonID MUST be unique to a specific action. If there will be different
+	 * outcomes from containers given the same ID then problems will arise.
 	 */
-	private function getCommonID(): string {
+	public function getCommonID(): string {
 		$commonContainer = $this->getArrayCopy();
-		unset($commonContainer['RemainingPageLoads']);
-		unset($commonContainer['PreviousRequestTime']);
-		unset($commonContainer['CommonID']);
+		$commonContainer['_FILE'] = $this->file; // must include file in ID
 		// NOTE: This ID will change if the order of elements in the container
 		// changes. If this causes unnecessary SN changes, sort the container!
 		return md5(serialize($commonContainer));
 	}
 
 	/**
-	 * Process this page by executing the 'url' and 'body' files.
-	 * Global variables are included here for convenience (and should be
-	 * synchronized with `do_voodoo`).
+	 * Process this page by executing the associated file.
 	 */
 	public function process(): void {
-		if ($this['url'] != 'skeleton.php') {
-			require(get_file_loc($this['url']));
-		}
-		if ($this['body']) {
-			require(get_file_loc($this['body']));
-		}
+		require(get_file_loc($this->file));
 	}
 
 }

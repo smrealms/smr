@@ -12,7 +12,7 @@ if (!$player->isGPEditor()) {
 }
 
 if (Smr\Request::get('action') == 'Preview article') {
-	$container = Page::create('skeleton.php', 'galactic_post_write_article.php');
+	$container = Page::create('galactic_post_write_article.php');
 	$container['PreviewTitle'] = $title;
 	$container['Preview'] = $message;
 	if (isset($var['id'])) {
@@ -25,7 +25,7 @@ $db = Smr\Database::getInstance();
 if (isset($var['id'])) {
 	// Editing an article
 	$db->write('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(Smr\Epoch::time()) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
-	Page::create('skeleton.php', 'galactic_post_view_article.php')->go();
+	Page::create('galactic_post_view_article.php')->go();
 } else {
 	// Adding a new article
 	$message = 'Dear Galactic Post editors,<br /><br />[player=' . $player->getPlayerID() . '] has just submitted an article to the Galactic Post!';
@@ -47,5 +47,5 @@ if (isset($var['id'])) {
 		'last_modified' => $db->escapeNumber(Smr\Epoch::time()),
 	]);
 	$db->write('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(Smr\Epoch::time()) . ' WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
-	Page::create('skeleton.php', 'galactic_post_read.php')->go();
+	Page::create('galactic_post_read.php')->go();
 }

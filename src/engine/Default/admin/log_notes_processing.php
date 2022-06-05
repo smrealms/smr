@@ -14,7 +14,7 @@ foreach ($var['account_ids'] as $account_id) {
 	}
 }
 
-$container = Page::create('skeleton.php', 'admin/log_console_detail.php');
+$container = Page::create('admin/log_console_detail.php');
 $container->addVar('account_ids');
 $container->addVar('log_type_ids');
 

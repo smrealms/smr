@@ -60,7 +60,7 @@ foreach ($dbResult->records() as $dbRecord) {
 
 	// create a container that will hold next url and additional variables.
 
-	$container_game = Page::create('skeleton.php', 'game_stats.php');
+	$container_game = Page::create('game_stats.php');
 	$container_game['game_id'] = $game_id;
 	$games['Play'][$game_id]['GameStatsLink'] = $container_game->href();
 	$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
@@ -108,7 +108,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		'Credits' => $game->getCreditsNeeded(),
 	];
 	// create a container that will hold next url and additional variables.
-	$container = Page::create('skeleton.php', 'game_join.php');
+	$container = Page::create('game_join.php');
 	$container['game_id'] = $game_id;
 
 	$games['Join'][$game_id]['JoinGameLink'] = $container->href();
@@ -132,15 +132,16 @@ foreach ($dbResult->records() as $dbRecord) {
 	$games['Previous'][$game_id]['Type'] = SmrGame::GAME_TYPES[$dbRecord->getInt('game_type')];
 	$games['Previous'][$game_id]['Speed'] = $dbRecord->getFloat('game_speed');
 	// create a container that will hold next url and additional variables.
-	$container = Page::create('skeleton.php');
-	$container['game_id'] = $container['GameID'] = $game_id;
-	$container['game_name'] = $games['Previous'][$game_id]['Name'];
-
-	$container['body'] = 'hall_of_fame_new.php';
+	$data = [
+		'game_id' => $game_id,
+		'GameID' => $game_id,
+		'game_name' => $games['Previous'][$game_id]['Name'],
+	];
+	$container = Page::create('hall_of_fame_new.php', $data);
 	$games['Previous'][$game_id]['PreviousGameHOFLink'] = $container->href();
-	$container['body'] = 'news_read.php';
+	$container = Page::create('news_read.php', $data);
 	$games['Previous'][$game_id]['PreviousGameNewsLink'] = $container->href();
-	$container['body'] = 'game_stats.php';
+	$container = Page::create('game_stats.php', $data);
 	$games['Previous'][$game_id]['PreviousGameLink'] = $container->href();
 }
 
@@ -159,18 +160,18 @@ foreach (Globals::getHistoryDatabases() as $databaseName => $oldColumn) {
 		$games['Previous'][$index]['Type'] = $dbRecord->getField('type');
 		$games['Previous'][$index]['Speed'] = $dbRecord->getFloat('speed');
 		// create a container that will hold next url and additional variables.
-		$container = Page::create('skeleton.php');
-		$container['view_game_id'] = $game_id;
-		$container['HistoryDatabase'] = $databaseName;
-		$container['game_name'] = $games['Previous'][$index]['Name'];
-
-		$container['body'] = 'history_games.php';
+		$data = [
+			'view_game_id' => $game_id,
+			'HistoryDatabase' => $databaseName,
+			'game_name' => $games['Previous'][$index]['Name'],
+		];
+		$container = Page::create('history_games.php', $data);
 		$games['Previous'][$index]['PreviousGameLink'] = $container->href();
-		$container['body'] = 'history_games_hof.php';
+		$container = Page::create('history_games_hof.php', $data);
 		$games['Previous'][$index]['PreviousGameHOFLink'] = $container->href();
-		$container['body'] = 'history_games_news.php';
+		$container = Page::create('history_games_news.php', $data);
 		$games['Previous'][$index]['PreviousGameNewsLink'] = $container->href();
-		$container['body'] = 'history_games_detail.php';
+		$container = Page::create('history_games_detail.php', $data);
 		$games['Previous'][$index]['PreviousGameStatsLink'] = $container->href();
 	}
 }
@@ -181,7 +182,7 @@ $template->assign('Games', $games);
 // ***************************************
 // ** Voting
 // ***************************************
-$container = Page::create('skeleton.php', 'vote.php');
+$container = Page::create('vote.php');
 $template->assign('VotingHref', $container->href());
 
 $dbResult = $db->read('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY end DESC');
@@ -195,7 +196,7 @@ if ($dbResult->hasRecord()) {
 	foreach ($dbResult->records() as $dbRecord) {
 		$voteID = $dbRecord->getInt('vote_id');
 		$voting[$voteID]['ID'] = $voteID;
-		$container = Page::create('vote_processing.php', 'game_play.php');
+		$container = Page::create('vote_processing.php', ['forward_to' => 'game_play.php']);
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = $container->href();
 		$voting[$voteID]['Question'] = $dbRecord->getField('question');
@@ -215,6 +216,6 @@ if ($dbResult->hasRecord()) {
 // ***************************************
 // ** Announcements View
 // ***************************************
-$container = Page::create('skeleton.php', 'announcements.php');
+$container = Page::create('announcements.php');
 $container['view_all'] = 'yes';
 $template->assign('OldAnnouncementsLink', $container->href());

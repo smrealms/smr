@@ -11,7 +11,7 @@ if ($dbResult->hasRecord()) {
 	$paper_id = null;
 }
 
-$container = Page::create('skeleton.php', 'galactic_post_read.php');
+$container = Page::create('galactic_post_read.php');
 $container['paper_id'] = $paper_id;
 $container['game_id'] = $player->getGameID();
 $container->go();

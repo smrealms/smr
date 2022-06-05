@@ -21,7 +21,7 @@ Menu::news($gameID);
 Smr\News::doBreakingNewsAssign($gameID);
 Smr\News::doLottoNewsAssign($gameID);
 
-$template->assign('ViewNewsFormHref', Page::create('skeleton.php', 'news_read.php', ['GameID' => $gameID])->href());
+$template->assign('ViewNewsFormHref', Page::create('news_read.php', ['GameID' => $gameID])->href());
 
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type != \'lotto\' ORDER BY news_id DESC LIMIT ' . ($min_news - 1) . ', ' . ($max_news - $min_news + 1));

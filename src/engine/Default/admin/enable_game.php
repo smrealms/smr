@@ -22,5 +22,5 @@ krsort($disabledGames);
 $template->assign('DisabledGames', $disabledGames);
 
 // Create the link to the processing file
-$linkContainer = Page::create('admin/enable_game_processing.php', '');
+$linkContainer = Page::create('admin/enable_game_processing.php');
 $template->assign('EnableGameHREF', $linkContainer->href());

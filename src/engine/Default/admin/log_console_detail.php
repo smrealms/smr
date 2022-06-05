@@ -51,7 +51,7 @@ if ($action == 'Delete') {
 	// *********************************
 	// * L o g   T y p e s
 	// *********************************
-	$container = Page::create('skeleton.php', 'admin/log_console_detail.php');
+	$container = Page::create('admin/log_console_detail.php');
 	$container['account_ids'] = $account_ids;
 	$template->assign('UpdateHREF', $container->href());
 
@@ -73,7 +73,7 @@ if ($action == 'Delete') {
 	// *********************************
 	// * N o t e s
 	// *********************************
-	$container = Page::create('admin/log_notes_processing.php', '');
+	$container = Page::create('admin/log_notes_processing.php');
 	$container['account_ids'] = $account_ids;
 	$container['log_type_ids'] = $log_type_ids;
 	$template->assign('SaveHREF', $container->href());
@@ -117,6 +117,6 @@ if ($action == 'Delete') {
 	$template->assign('Logs', $logs);
 }
 
-$container = Page::create('skeleton.php', 'admin/log_console.php');
+$container = Page::create('admin/log_console.php');
 $container['account_ids'] = $account_ids;
 $template->assign('BackHREF', $container->href());

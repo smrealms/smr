@@ -4,7 +4,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$container = Page::create('skeleton.php', 'message_blacklist.php');
+$container = Page::create('message_blacklist.php');
 
 if (isset($var['account_id'])) {
 	$blacklisted = SmrPlayer::getPlayer($var['account_id'], $player->getGameID());

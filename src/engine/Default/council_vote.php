@@ -30,7 +30,7 @@ foreach (Smr\Race::getPlayableIDs() as $raceID) {
 	if ($raceID == $player->getRaceID()) {
 		continue;
 	}
-	$container = Page::create('council_vote_processing.php', '', ['race_id' => $raceID]);
+	$container = Page::create('council_vote_processing.php', ['race_id' => $raceID]);
 	$voteRelations[$raceID] = [
 		'HREF' => $container->href(),
 		'Increased' => $votedForRace === $raceID && $votedFor === 'INC',
@@ -48,7 +48,7 @@ $dbResult = $db->read('SELECT * FROM race_has_voting
 
 foreach ($dbResult->records() as $dbRecord) {
 	$otherRaceID = $dbRecord->getInt('race_id_2');
-	$container = Page::create('council_vote_processing.php', '', ['race_id' => $otherRaceID]);
+	$container = Page::create('council_vote_processing.php', ['race_id' => $otherRaceID]);
 
 	// get 'yes' votes
 	$dbResult2 = $db->read('SELECT count(*) FROM player_votes_pact

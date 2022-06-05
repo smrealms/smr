@@ -15,6 +15,6 @@ $credits = match ($var['PayoutType']) {
 };
 $player->log(LOG_TYPE_TRADING, 'Player Triggers Payout: ' . $var['PayoutType']);
 $port->update();
-$container = Page::create('skeleton.php', 'current_sector.php');
+$container = Page::create('current_sector.php');
 $container['msg'] = 'You have taken <span class="creds">' . number_format($credits) . '</span> from the port.';
 $container->go();

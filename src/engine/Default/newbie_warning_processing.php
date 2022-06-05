@@ -4,4 +4,4 @@ $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 $player->setNewbieWarning(false);
-Page::create('skeleton.php', 'newbie_warning.php')->go();
+Page::create('newbie_warning.php')->go();

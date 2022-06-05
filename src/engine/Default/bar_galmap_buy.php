@@ -46,7 +46,7 @@ if (isset($var['process'])) {
 		$port->addCachePort($player->getAccountID());
 	}
 
-	$container = Page::create('skeleton.php', 'bar_main.php');
+	$container = Page::create('bar_main.php');
 	$container->addVar('LocationID');
 	$container['message'] = '<div class="center">Galaxy maps have been added. Enjoy!</div><br />';
 	$container->go();
@@ -56,7 +56,7 @@ if (isset($var['process'])) {
 	Menu::bar();
 
 	//find what gal they want
-	$container = Page::create('skeleton.php', 'bar_galmap_buy.php');
+	$container = Page::create('bar_galmap_buy.php');
 	$container->addVar('LocationID');
 	$container['process'] = true;
 	$template->assign('BuyHREF', $container->href());

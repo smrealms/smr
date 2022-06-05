@@ -19,7 +19,5 @@ $db->insert('feature_request_comments', [
 	'text' => $db->escapeString(word_filter($comment)),
 ]);
 
-$container = Page::copy($var);
-$container['url'] = 'skeleton.php';
-$container['body'] = 'feature_request_comments.php';
+$container = Page::create('feature_request_comments.php', $var);
 $container->go();

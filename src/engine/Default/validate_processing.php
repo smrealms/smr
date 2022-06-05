@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$container = Page::create('skeleton.php', 'validate.php');
+$container = Page::create('validate.php');
 
 if (Smr\Request::get('action') == 'resend') {
 	$account->sendValidationEmail();

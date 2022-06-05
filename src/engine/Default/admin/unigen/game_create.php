@@ -9,7 +9,7 @@ $account = $session->getAccount();
 $container = Page::create('admin/unigen/game_create_processing.php');
 $template->assign('CreateGalaxiesHREF', $container->href());
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
+$container = Page::create('admin/unigen/universe_create_sectors.php');
 $template->assign('EditGameHREF', $container->href());
 
 $canEditEnabledGames = $account->hasPermission(PERMISSION_EDIT_ENABLED_GAMES);

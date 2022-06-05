@@ -27,7 +27,7 @@ $db->replace('player_has_ticker', [
 $account->decreaseTotalSmrCredits(CREDITS_PER_TICKER);
 
 //offer another drink and such
-$container = Page::create('skeleton.php', 'bar_main.php');
+$container = Page::create('bar_main.php');
 $container->addVar('LocationID');
 $container['message'] = '<div class="center">Your system has been added.  Enjoy!</div><br />';
 $container->go();

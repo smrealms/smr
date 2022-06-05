@@ -42,7 +42,7 @@ $role_id = $player->getAllianceRole($alliance->getAllianceID());
 $dbResult = $db->read('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 $dbRecord = $dbResult->record();
 if ($dbRecord->getBoolean('change_mod') || $dbRecord->getBoolean('change_pass')) {
-	$container = Page::create('skeleton.php', 'alliance_stat.php');
+	$container = Page::create('alliance_stat.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$template->assign('EditHREF', $container->href());
 }

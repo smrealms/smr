@@ -75,7 +75,7 @@ if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['T
 	// get rid of all old scout messages (>48h)
 	$db->write('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
 
-	$dispContainer = Page::create('skeleton.php', 'message_view.php');
+	$dispContainer = Page::create('message_view.php');
 	$dispContainer['folder_id'] = MSG_SCOUT;
 	$dispContainer['show_all'] = true;
 	$messageBox['ShowAllHref'] = $dispContainer->href();
@@ -166,23 +166,23 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 		$sender = Smr\Messages::getMessagePlayer($sender_id, $game_id, $type);
 		if ($sender instanceof SmrPlayer) {
 			$message['Sender'] = $sender;
-			$container = Page::create('skeleton.php', 'trader_search_result.php');
+			$container = Page::create('trader_search_result.php');
 			$container['player_id'] = $sender->getPlayerID();
 			$message['SenderDisplayName'] = create_link($container, $sender->getDisplayName());
 
 			// Add actions that we can take on messages sent by other players.
 			if ($type != MSG_SENT) {
-				$container = Page::create('skeleton.php', 'message_notify_confirm.php');
+				$container = Page::create('message_notify_confirm.php');
 				$container['message_id'] = $message_id;
 				$container['sent_time'] = $send_time;
 				$container['folder_id'] = $type;
 				$message['ReportHref'] = $container->href();
 
-				$container = Page::create('skeleton.php', 'message_blacklist_add.php');
+				$container = Page::create('message_blacklist_add.php');
 				$container['account_id'] = $sender_id;
 				$message['BlacklistHref'] = $container->href();
 
-				$container = Page::create('skeleton.php', 'message_send.php');
+				$container = Page::create('message_send.php');
 				$container['receiver'] = $sender->getAccountID();
 				$message['ReplyHref'] = $container->href();
 			}
@@ -193,7 +193,7 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 
 	if ($type == MSG_SENT) {
 		$receiver = SmrPlayer::getPlayer($receiver_id, $game_id);
-		$container = Page::create('skeleton.php', 'trader_search_result.php');
+		$container = Page::create('trader_search_result.php');
 		$container['player_id'] = $receiver->getPlayerID();
 		$message['ReceiverDisplayName'] = create_link($container, $receiver->getDisplayName());
 	}

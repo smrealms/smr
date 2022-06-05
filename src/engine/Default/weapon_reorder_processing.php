@@ -16,4 +16,4 @@ if (isset($var['Form'])) {
 	$ship->setWeaponLocations(Smr\Request::getIntArray('weapon_reorder'));
 }
 
-Page::create('skeleton.php', 'weapon_reorder.php')->go();
+Page::create('weapon_reorder.php')->go();

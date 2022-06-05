@@ -55,7 +55,7 @@ $template->assign('AllianceExp', $dbRecord->getInt('alliance_xp'));
 $template->assign('AllianceAverageExp', $dbRecord->getInt('alliance_avg'));
 
 if ($account->getAccountID() == $alliance->getLeaderID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
-	$container = Page::create('skeleton.php', 'alliance_stat.php');
+	$container = Page::create('alliance_stat.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$template->assign('EditAllianceDescriptionHREF', $container->href());
 }
@@ -71,7 +71,7 @@ $template->assign('AlliancePlayers', $alliancePlayers);
 if ($alliance->getAllianceID() == $player->getAllianceID()) {
 	// Alliance members get to see active/inactive status of members
 	$template->assign('ActiveIDs', $alliance->getActiveIDs());
-	$container = Page::create('skeleton.php', 'alliance_roster.php');
+	$container = Page::create('alliance_roster.php');
 	if ($showRoles) {
 		$container['action'] = 'Hide Alliance Roles';
 	} else {

@@ -256,9 +256,7 @@ if ($submit == 'Create Galaxies') {
 	SmrSector::saveSectors();
 }
 
-$container = Page::copy($var);
-$container['url'] = 'skeleton.php';
-$container->go();
+Page::create($var['forward_to'], $var)->go();
 
 
 function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location): bool {

@@ -17,10 +17,9 @@ if (Smr\Request::has('exempt')) {
 				AND transaction_id IN (' . $db->escapeArray($trans_ids) . ')');
 }
 
-$container = Page::create('skeleton.php');
 if (isset($var['minVal'])) {
-	$container['body'] = 'bank_alliance.php';
+	$container = Page::create('bank_alliance.php');
 } else {
-	$container['body'] = 'alliance_exempt_authorize.php';
+	$container = Page::create('alliance_exempt_authorize.php');
 }
 $container->go();

@@ -27,7 +27,7 @@ $dbResult = $db->read('SELECT * FROM galactic_post_article WHERE article_id NOT 
 foreach ($dbResult->records() as $dbRecord) {
 	$title = $dbRecord->getString('title');
 	$writer = SmrPlayer::getPlayer($dbRecord->getInt('writer_id'), $player->getGameID());
-	$container = Page::create('skeleton.php', 'galactic_post_view_article.php');
+	$container = Page::create('galactic_post_view_article.php');
 	$container['id'] = $dbRecord->getInt('article_id');
 	$articles[] = [
 		'title' => $title,
@@ -42,11 +42,11 @@ if (isset($var['id'])) {
 	$dbResult = $db->read('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
 	$dbRecord = $dbResult->record();
 
-	$container = Page::create('skeleton.php', 'galactic_post_write_article.php');
+	$container = Page::create('galactic_post_write_article.php');
 	$container->addVar('id');
 	$editHREF = $container->href();
 
-	$container = Page::create('skeleton.php', 'galactic_post_delete_confirm.php');
+	$container = Page::create('galactic_post_delete_confirm.php');
 	$container['article'] = 'yes';
 	$container->addVar('id');
 	$deleteHREF = $container->href();
@@ -73,14 +73,14 @@ if (isset($var['id'])) {
 	$template->assign('Papers', $papers);
 
 	if (empty($papers)) {
-		$container = Page::create('skeleton.php', 'galactic_post_make_paper.php');
+		$container = Page::create('galactic_post_make_paper.php');
 		$template->assign('MakePaperHREF', $container->href());
 	}
 
 	// breaking news options
 	$template->assign('AddedToNews', $var['added_to_breaking_news'] ?? false);
 	if (empty($var['added_to_breaking_news'])) {
-		$container = Page::create('skeleton.php', 'galactic_post_view_article.php');
+		$container = Page::create('galactic_post_view_article.php');
 		$container['news'] = $selectedArticle['text'];
 		$container->addVar('id');
 		$template->assign('AddToNewsHREF', $container->href());

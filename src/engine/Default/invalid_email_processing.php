@@ -9,4 +9,4 @@ if (Smr\Request::get('action') == 'Resend Validation Code') {
 	$account->changeEmail(Smr\Request::get('email'));
 }
 $account->update();
-Page::create('skeleton.php', 'validate.php')->go();
+Page::create('validate.php')->go();

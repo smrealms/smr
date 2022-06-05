@@ -16,6 +16,6 @@ foreach ($councilMembers as $accountID) {
 	$player->sendMessage($accountID, MSG_POLITICAL, $message, true, $player->getAccountID() != $accountID);
 }
 
-$container = Page::create('skeleton.php', 'current_sector.php');
+$container = Page::create('current_sector.php');
 $container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
 $container->go();

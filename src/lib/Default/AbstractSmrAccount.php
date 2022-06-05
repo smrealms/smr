@@ -1307,15 +1307,15 @@ abstract class AbstractSmrAccount {
 
 	public function getToggleAJAXHREF(): string {
 		$var = Smr\Session::getInstance()->getCurrentVar();
-		return Page::create('toggle_processing.php', '', ['toggle' => 'AJAX', 'referrer' => $var['body']])->href();
+		return Page::create('toggle_processing.php', ['toggle' => 'AJAX', 'referrer' => $var->file])->href();
 	}
 
 	public function getUserRankingHREF(): string {
-		return Page::create('skeleton.php', 'rankings_view.php')->href();
+		return Page::create('rankings_view.php')->href();
 	}
 
 	public function getPersonalHofHREF(): string {
-		return Page::create('skeleton.php', 'hall_of_fame_player_detail.php', ['account_id' => $this->getAccountID()])->href();
+		return Page::create('hall_of_fame_player_detail.php', ['account_id' => $this->getAccountID()])->href();
 	}
 
 }

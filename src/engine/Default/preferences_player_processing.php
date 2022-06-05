@@ -5,7 +5,7 @@ $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 $player = $session->getPlayer();
 
-$container = Page::create('skeleton.php', 'current_sector.php');
+$container = Page::create('current_sector.php');
 
 $action = Smr\Request::get('action');
 

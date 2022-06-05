@@ -24,6 +24,6 @@ foreach ($player->getTickers() as $ticker) {
 }
 $template->assign('Tickers', $tickers);
 
-$container = Page::create('skeleton.php', 'bar_ticker_buy_processing.php');
+$container = Page::create('bar_ticker_buy_processing.php');
 $container->addVar('LocationID');
 $template->assign('BuyHREF', $container->href());

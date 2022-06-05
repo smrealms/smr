@@ -15,7 +15,7 @@ $template->assign('Alliance', $alliance);
 $template->assign('PageTopic', 'Alliance Roster: ' . $alliance->getAllianceDisplayName(false, true));
 
 // Offer a back button
-$container = Page::create('skeleton.php', 'game_stats.php', ['game_id' => $gameID]);
+$container = Page::create('game_stats.php', ['game_id' => $gameID]);
 $template->assign('BackHREF', $container->href());
 
 $players = [];

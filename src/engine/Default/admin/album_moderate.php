@@ -46,7 +46,7 @@ $entry = [
 ];
 $template->assign('Entry', $entry);
 
-$template->assign('BackHREF', Page::create('skeleton.php', 'admin/album_moderate_select.php')->href());
+$template->assign('BackHREF', Page::create('admin/album_moderate_select.php')->href());
 
 $container = Page::create('admin/album_moderate_processing.php');
 $container['account_id'] = $account_id;

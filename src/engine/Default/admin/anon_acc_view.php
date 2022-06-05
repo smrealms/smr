@@ -6,7 +6,7 @@ $session = Smr\Session::getInstance();
 //view anon acct activity.
 $template->assign('PageTopic', 'View Anonymous Account Info');
 
-$container = Page::create('skeleton.php', 'admin/anon_acc_view_select.php');
+$container = Page::create('admin/anon_acc_view_select.php');
 $template->assign('BackHREF', $container->href());
 
 $anonID = $session->getRequestVarInt('anon_account');

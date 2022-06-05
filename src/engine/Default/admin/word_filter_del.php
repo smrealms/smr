@@ -5,5 +5,5 @@ if (Smr\Request::has('word_ids')) {
 	$db->write('DELETE FROM word_filter WHERE word_id IN (' . $db->escapeArray(Smr\Request::getIntArray('word_ids')) . ')');
 }
 
-$container = Page::create('skeleton.php', 'admin/word_filter.php');
+$container = Page::create('admin/word_filter.php');
 $container->go();

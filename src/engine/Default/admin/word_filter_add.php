@@ -3,7 +3,7 @@
 $word = strtoupper(Smr\Request::get('Word'));
 $word_replacement = strtoupper(Smr\Request::get('WordReplacement'));
 
-$container = Page::create('skeleton.php', 'admin/word_filter.php');
+$container = Page::create('admin/word_filter.php');
 
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT 1 FROM word_filter WHERE word_value=' . $db->escapeString($word) . ' LIMIT 1');

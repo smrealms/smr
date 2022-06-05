@@ -11,4 +11,4 @@ if (!empty($note_ids)) {
 					AND note_id IN (' . $db->escapeArray($note_ids) . ')');
 }
 
-Page::create('skeleton.php', 'trader_status.php')->go();
+Page::create('trader_status.php')->go();

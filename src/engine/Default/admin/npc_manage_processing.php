@@ -58,6 +58,6 @@ if (Smr\Request::has('add_npc_account')) {
 	]);
 }
 
-$container = Page::create('skeleton.php', 'admin/npc_manage.php');
+$container = Page::create('admin/npc_manage.php');
 $container->addVar('selected_game_id');
 $container->go();

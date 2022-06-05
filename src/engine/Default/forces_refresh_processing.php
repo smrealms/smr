@@ -8,4 +8,4 @@ $forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var[
 
 $forces->updateExpire();
 
-Page::create('skeleton.php', 'current_sector.php')->go();
+Page::create('current_sector.php')->go();

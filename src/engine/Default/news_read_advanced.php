@@ -18,7 +18,7 @@ foreach ($dbResult->records() as $dbRecord) {
 }
 $template->assign('NewsAlliances', $newsAlliances);
 
-$template->assign('AdvancedNewsFormHref', Page::create('skeleton.php', 'news_read_advanced.php', ['GameID' => $gameID])->href());
+$template->assign('AdvancedNewsFormHref', Page::create('news_read_advanced.php', ['GameID' => $gameID])->href());
 
 // No submit value when first navigating to the page
 $submit_value = $session->getRequestVar('submit', '');

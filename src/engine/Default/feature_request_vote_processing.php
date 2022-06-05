@@ -24,7 +24,7 @@ if ($action == 'Vote') {
 		]);
 	}
 
-	Page::create('skeleton.php', 'feature_request.php')->go();
+	Page::create('feature_request.php')->go();
 } elseif ($action == 'Set Status') {
 	if (!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST)) {
 		create_error('You do not have permission to do that');
@@ -68,5 +68,5 @@ if ($action == 'Vote') {
 		]);
 	}
 
-	Page::create('skeleton.php', 'feature_request.php')->go();
+	Page::create('feature_request.php')->go();
 }

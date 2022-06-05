@@ -10,8 +10,7 @@ $account = $session->getAccount();
 
 $template->assign('PageTopic', 'Feature Request Comments');
 
-$container = Page::copy($var);
-$container['body'] = 'feature_request.php';
+$container = Page::create('feature_request.php', $var);
 $template->assign('BackHref', $container->href());
 
 $db = Smr\Database::getInstance();
@@ -46,7 +45,5 @@ if ($dbResult->hasRecord()) {
 	$template->assign('Comments', $featureRequestComments);
 }
 
-$container = Page::copy($var);
-$container['url'] = 'feature_request_comment_processing.php';
-unset($container['body']);
+$container = Page::create('feature_request_comment_processing.php', $var);
 $template->assign('FeatureRequestCommentFormHREF', $container->href());

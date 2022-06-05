@@ -9,7 +9,7 @@ $type = $session->getRequestVar('type');
 
 $db = Smr\Database::getInstance();
 
-$container = Page::create('skeleton.php', 'admin/ip_view.php');
+$container = Page::create('admin/ip_view.php');
 $template->assign('BackHREF', $container->href());
 
 $container = Page::create('admin/account_close.php');

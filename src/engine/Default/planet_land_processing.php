@@ -37,4 +37,4 @@ if ($player->hasAlliance()) {
 $player->setLandedOnPlanet(true);
 $player->takeTurns(TURNS_TO_LAND);
 $player->log(LOG_TYPE_MOVEMENT, 'Player lands at planet');
-Page::create('skeleton.php', 'planet_main.php')->go();
+Page::create('planet_main.php')->go();

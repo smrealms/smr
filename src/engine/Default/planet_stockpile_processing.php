@@ -53,4 +53,4 @@ if ($action == 'Ship') {
 	$ship->decreaseCargo($var['good_id'], $amount);
 }
 
-Page::create('skeleton.php', 'planet_stockpile.php')->go();
+Page::create('planet_stockpile.php')->go();

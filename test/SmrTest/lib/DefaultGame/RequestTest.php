@@ -37,7 +37,7 @@ class RequestTest extends TestCase {
 	 * when getCurrentVar is called on it.
 	 */
 	private function setVar(array $var): void {
-		$page = new Page($var); // just an ArrayObject
+		$page = Page::create('test', $var); // just an ArrayObject
 		$session = $this->createMock(Session::class);
 		$session
 			->method('getCurrentVar')

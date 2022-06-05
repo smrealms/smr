@@ -45,7 +45,7 @@ $rowsDeleted['npc_logs'] = $db->getChangedRows();
 // Get difference in storage size
 $diffBytes = $initialBytes - $db->getDbBytes();
 
-$container = Page::create('skeleton.php', 'admin/db_cleanup.php');
+$container = Page::create('admin/db_cleanup.php');
 $container['results'] = $rowsDeleted;
 $container['diffBytes'] = $diffBytes;
 $container['endedGames'] = $endedGameIDs;

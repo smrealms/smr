@@ -21,7 +21,7 @@ if (!isset($var['Message'])) {
 }
 $template->assign('Message', bbifyMessage($var['Message']));
 
-$container = Page::create('skeleton.php', 'bar_talk_bartender.php');
+$container = Page::create('bar_talk_bartender.php');
 $container->addVar('LocationID');
 $template->assign('ListenHREF', $container->href());
 

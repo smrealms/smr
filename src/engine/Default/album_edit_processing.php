@@ -122,7 +122,7 @@ if (!empty($comment)) {
 	$db->unlock();
 }
 
-$container = Page::create('skeleton.php', 'album_edit.php');
+$container = Page::create('album_edit.php');
 $container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
 $container->go();
 

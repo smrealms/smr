@@ -60,6 +60,6 @@ if ($action == 'Buy') {
 
 $player->log(LOG_TYPE_HARDWARE, 'Player ' . $action . 's ' . $amount . ' ' . $hardware_name);
 
-$container = Page::create('skeleton.php', 'shop_hardware.php');
+$container = Page::create('shop_hardware.php');
 $container->addVar('LocationID');
 $container->go();

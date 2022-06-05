@@ -4,11 +4,10 @@ $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$container = Page::create('skeleton.php');
 if ($session->hasGame()) {
-	$container['body'] = 'current_sector.php';
+	$container = Page::create('current_sector.php');
 } else {
-	$container['body'] = 'game_play.php';
+	$container = Page::create('game_play.php');
 }
 $action = Smr\Request::get('action');
 
@@ -18,7 +17,7 @@ if ($action == 'Save and resend validation code') {
 	$account->changeEmail($email);
 
 	// overwrite container
-	$container['body'] = 'validate.php';
+	$container = Page::create('validate.php');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
 
 } elseif ($action == 'Change Password') {

@@ -31,5 +31,5 @@ if (isset($var['preview'])) {
 	$template->assign('Preview', $var['preview']);
 }
 
-$container = Page::create('skeleton.php', 'admin/admin_message_send_select.php');
+$container = Page::create('admin/admin_message_send_select.php');
 $template->assign('BackHREF', $container->href());

@@ -21,5 +21,5 @@ if ($var['action'] == 'Enable') {
 	$ship->disableIllusion();
 }
 
-$container = Page::create('skeleton.php', 'current_sector.php');
+$container = Page::create('current_sector.php');
 $container->go();

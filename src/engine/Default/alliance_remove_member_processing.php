@@ -26,4 +26,4 @@ foreach ($accountIDs as $accountID) {
 	$currPlayer->update(); // we need better locking here
 }
 
-Page::create('skeleton.php', 'alliance_roster.php')->go();
+Page::create('alliance_roster.php')->go();

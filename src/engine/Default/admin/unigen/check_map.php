@@ -6,7 +6,7 @@ $var = Smr\Session::getInstance()->getCurrentVar();
 $game = SmrGame::getGame($var['game_id']);
 $template->assign('PageTopic', 'Check Map : ' . $game->getDisplayName());
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
+$container = Page::create('admin/unigen/universe_create_sectors.php');
 $container->addVar('game_id');
 $container->addVar('gal_on');
 $template->assign('BackHREF', $container->href());

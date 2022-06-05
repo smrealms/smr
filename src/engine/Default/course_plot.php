@@ -9,9 +9,9 @@ $template->assign('PageTopic', 'Plot A Course');
 Menu::navigation($player);
 
 $container = Page::create('course_plot_processing.php');
-
 $template->assign('PlotCourseFormLink', $container->href());
-$container['url'] = 'course_plot_nearest_processing.php';
+
+$container = Page::create('course_plot_nearest_processing.php');
 $template->assign('PlotNearestFormLink', $container->href());
 
 if ($player->getShip()->hasJump()) {
@@ -20,7 +20,7 @@ if ($player->getShip()->hasJump()) {
 	$template->assign('JumpDriveFormLink', $container->href());
 }
 
-$container = Page::create('skeleton.php', 'course_plot.php');
+$container = Page::create('course_plot.php');
 $template->assign('PlotToNearestHREF', $container->href());
 
 $xtype = $session->getRequestVar('xtype', 'Technology');

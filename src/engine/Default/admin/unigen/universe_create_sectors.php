@@ -12,7 +12,7 @@ $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 if (empty($galaxies)) {
 	// Game was created, but no galaxies exist, so go back to
 	// the galaxy generation page
-	$container = Page::create('skeleton.php', 'admin/unigen/universe_create_galaxies.php');
+	$container = Page::create('admin/unigen/universe_create_galaxies.php');
 	$container->addVar('game_id');
 	$container->go();
 }
@@ -48,14 +48,16 @@ if (isset($var['message'])) {
 	unset($var['message']); // Only show message once
 }
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
+$container = Page::create('admin/unigen/universe_create_sectors.php');
 $container->addVar('game_id');
 $template->assign('JumpGalaxyHREF', $container->href());
 
 $container->addVar('gal_on');
 $template->assign('RecenterHREF', $container->href());
 
-$container['url'] = 'admin/unigen/universe_create_save_processing.php';
+$container = Page::create('admin/unigen/universe_create_save_processing.php');
+$container->addVar('game_id');
+$container->addVar('gal_on');
 $template->assign('SubmitChangesHREF', $container->href());
 
 $container['submit'] = 'Toggle Link';
@@ -80,47 +82,36 @@ $container->addVar('gal_on');
 $container['AJAX'] = true;
 $template->assign('DragWarpHREF', $container->href());
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sector_details.php');
+$container = Page::create('admin/unigen/universe_create_sector_details.php');
 $container->addVar('game_id');
 $container->addVar('gal_on');
 $template->assign('UniGen', $container);
 
-$container = Page::create('skeleton.php');
-$container->addVar('game_id');
-$container->addVar('gal_on');
-$container['body'] = 'admin/unigen/universe_create_locations.php';
+$container = Page::create('admin/unigen/universe_create_locations.php', $container);
 $template->assign('ModifyLocationsHREF', $container->href());
 
-$container['body'] = 'admin/unigen/universe_create_planets.php';
+$container = Page::create('admin/unigen/universe_create_planets.php', $container);
 $template->assign('ModifyPlanetsHREF', $container->href());
 
-$container['body'] = 'admin/unigen/universe_create_ports.php';
+$container = Page::create('admin/unigen/universe_create_ports.php', $container);
 $template->assign('ModifyPortsHREF', $container->href());
 
-$container['body'] = 'admin/unigen/universe_create_warps.php';
+$container = Page::create('admin/unigen/universe_create_warps.php', $container);
 $template->assign('ModifyWarpsHREF', $container->href());
 
-$container['body'] = 'admin/unigen/universe_create_sector_details.php';
+$container = Page::create('admin/unigen/universe_create_sector_details.php', $container);
 $template->assign('ModifySectorHREF', $container->href());
 
 $template->assign('SMRFileHREF', Globals::getSmrFileCreateHREF($var['game_id']));
 
-$container = Page::create('skeleton.php', 'admin/unigen/game_edit.php');
-$container->addVar('game_id');
-$container->addVar('gal_on');
+$container = Page::create('admin/unigen/game_edit.php', $container);
 $template->assign('EditGameDetailsHREF', $container->href());
 
-$container = Page::create('skeleton.php', 'admin/unigen/check_map.php');
-$container->addVar('game_id');
-$container->addVar('gal_on');
+$container = Page::create('admin/unigen/check_map.php', $container);
 $template->assign('CheckMapHREF', $container->href());
 
-$container = Page::create('skeleton.php', 'admin/unigen/galaxies_edit.php');
-$container->addVar('game_id');
-$container->addVar('gal_on');
+$container = Page::create('admin/unigen/galaxies_edit.php', $container);
 $template->assign('EditGalaxyDetailsHREF', $container->href());
 
-$container = Page::create('admin/unigen/galaxy_reset_processing.php');
-$container->addVar('game_id');
-$container->addVar('gal_on');
+$container = Page::create('admin/unigen/galaxy_reset_processing.php', $container);
 $template->assign('ResetGalaxyHREF', $container->href());

@@ -31,7 +31,7 @@ if ($sector->offersFederalProtection()) {
 	create_error('You can\'t dump cargo in a Federal Sector!');
 }
 
-$container = Page::create('skeleton.php', 'current_sector.php');
+$container = Page::create('current_sector.php');
 
 $container['msg'] = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise($amount, 'unit', false) . ' of ' . $good_name;
 

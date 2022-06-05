@@ -16,7 +16,7 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$player->setSectorID($target);
 	$player->update();
 	$sector->markVisited($player);
-	Page::create('skeleton.php', 'current_sector.php')->go();
+	Page::create('current_sector.php')->go();
 }
 
 // you can't move while on planet
@@ -39,7 +39,7 @@ if (!SmrSector::sectorExists($player->getGameID(), $target)) {
 
 // If the Calculate Turn Cost button was pressed
 if (Smr\Request::get('action', '') == 'Calculate Turn Cost') {
-	$container = Page::create('skeleton.php', 'sector_jump_calculate.php');
+	$container = Page::create('sector_jump_calculate.php');
 	$container['target'] = $target;
 	$container->go();
 }
@@ -109,4 +109,4 @@ $sector->enteringSector($player, MOVEMENT_JUMP);
 require_once(LIB . 'Default/sector_mines.inc.php');
 hit_sector_mines($player);
 
-Page::create('skeleton.php', $var['target_page'])->go();
+Page::create($var['target_page'])->go();

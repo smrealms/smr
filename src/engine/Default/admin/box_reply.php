@@ -19,6 +19,6 @@ if (isset($var['Preview'])) {
 $template->assign('BanPoints', $var['BanPoints'] ?? 0);
 $template->assign('RewardCredits', $var['RewardCredits'] ?? 0);
 
-$container = Page::create('skeleton.php', 'admin/box_view.php');
+$container = Page::create('admin/box_view.php');
 $container->addVar('box_type_id');
 $template->assign('BackHREF', $container->href());

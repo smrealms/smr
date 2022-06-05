@@ -34,6 +34,6 @@ $leader2 = $alliance2->getLeaderID();
 $message = 'An ambassador from ' . $alliance1->getAllianceBBLink() . ' has arrived with a treaty offer.';
 
 SmrPlayer::sendMessageFromAllianceAmbassador($player->getGameID(), $leader2, $message);
-$container = Page::create('skeleton.php', 'alliance_treaties.php');
+$container = Page::create('alliance_treaties.php');
 $container['message'] = 'The treaty offer has been sent.';
 $container->go();

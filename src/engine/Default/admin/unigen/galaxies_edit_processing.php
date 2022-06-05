@@ -8,7 +8,7 @@ $game = SmrGame::getGame($gameID);
 $galaxies = $game->getGalaxies();
 
 // Prepare our forwarding container
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
+$container = Page::create('admin/unigen/universe_create_sectors.php');
 $container->addVar('gal_on');
 $container->addVar('game_id');
 

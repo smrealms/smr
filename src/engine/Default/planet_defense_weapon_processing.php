@@ -35,4 +35,4 @@ if (Smr\Request::has('transfer')) {
 	$planet->moveMountedWeaponDown(Smr\Request::getInt('move_down'));
 }
 
-Page::create('skeleton.php', 'planet_defense.php')->go();
+Page::create('planet_defense.php')->go();

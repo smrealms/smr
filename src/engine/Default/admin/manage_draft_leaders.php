@@ -6,7 +6,7 @@ $var = $session->getCurrentVar();
 
 $template->assign('PageTopic', 'Manage Draft Leaders');
 
-$container = Page::create('skeleton.php', 'admin/manage_draft_leaders.php');
+$container = Page::create('admin/manage_draft_leaders.php');
 $template->assign('SelectGameHREF', $container->href());
 
 // Get the list of active Draft games ordered by reverse start date
@@ -52,5 +52,5 @@ if (isset($var['processing_msg'])) {
 
 // Create the link to the processing file
 // Pass entire $var so the processing file knows the selected game
-$linkContainer = Page::create('admin/manage_draft_leaders_processing.php', '', $var);
+$linkContainer = Page::create('admin/manage_draft_leaders_processing.php', $var);
 $template->assign('ProcessingHREF', $linkContainer->href());

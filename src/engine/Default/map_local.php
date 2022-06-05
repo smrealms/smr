@@ -40,7 +40,7 @@ if (isset($var['ZoomDir'])) {
 	unset($var['ZoomDir']);
 }
 
-$container = Page::create('skeleton.php', 'map_local.php');
+$container = Page::create('map_local.php');
 $container['ZoomDir'] = 'Expand';
 $template->assign('MapExpandHREF', $container->href());
 $container['ZoomDir'] = 'Shrink';

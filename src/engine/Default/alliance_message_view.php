@@ -35,7 +35,7 @@ if ($alliance->getAllianceID() != $player->getAllianceID()) {
 	$mbWrite = $dbResult->hasRecord();
 }
 
-$container = Page::create('skeleton.php', 'alliance_message_view.php', $var);
+$container = Page::create('alliance_message_view.php', $var);
 
 if (isset($var['thread_ids'][$thread_index - 1])) {
 	$container['thread_index'] = $thread_index - 1;
@@ -75,7 +75,7 @@ ORDER BY reply_id');
 
 $thread['CanDelete'] = $dbResult->getNumRecords() > 1 && $thread['CanDelete'];
 $thread['Replies'] = [];
-$container = Page::create('alliance_message_delete_processing.php', '', $var);
+$container = Page::create('alliance_message_delete_processing.php', $var);
 $container['thread_id'] = $thread_id;
 foreach ($dbResult->records() as $dbRecord) {
 	$thread['Replies'][$dbRecord->getInt('reply_id')] = ['Sender' => $players[$dbRecord->getInt('sender_id')], 'Message' => $dbRecord->getField('text'), 'SendTime' => $dbRecord->getInt('time')];
@@ -86,7 +86,7 @@ foreach ($dbResult->records() as $dbRecord) {
 }
 
 if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-	$container = Page::create('alliance_message_add_processing.php', '', $var);
+	$container = Page::create('alliance_message_add_processing.php', $var);
 	$container['thread_index'] = $thread_index;
 	$thread['CreateThreadReplyFormHref'] = $container->href();
 }

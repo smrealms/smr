@@ -8,7 +8,7 @@ $player = $session->getPlayer();
 $chessGame = Smr\Chess\ChessGame::getChessGame($var['ChessGameID']);
 $result = $chessGame->resign($player->getAccountID());
 
-$container = Page::create('skeleton.php', 'current_sector.php');
+$container = Page::create('current_sector.php');
 
 $container['msg'] = match ($result) {
 	0 => '[color=green]Success:[/color] You have resigned from [chess=' . $var['ChessGameID'] . '].',

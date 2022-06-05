@@ -26,7 +26,7 @@ foreach ($shipsSold as $shipTypeID => $shipType) {
 $template->assign('ShipsUnavailable', $shipsUnavailable);
 $template->assign('ShipsSold', $shipsSold);
 
-$container = Page::create('skeleton.php', 'shop_ship.php');
+$container = Page::create('shop_ship.php');
 $container->addVar('LocationID');
 $shipsSoldHREF = [];
 foreach (array_keys($shipsSold) as $shipTypeID) {

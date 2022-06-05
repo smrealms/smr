@@ -6,11 +6,9 @@ $account = $session->getAccount();
 // update last login time
 $account->updateLastLogin();
 
-$container = Page::create('skeleton.php');
 if ($session->hasGame()) {
-	$container['body'] = 'current_sector.php';
+	$body = 'current_sector.php';
 } else {
-	$container['body'] = 'game_play.php';
+	$body = 'game_play.php';
 }
-
-$container->go();
+Page::create($body)->go();

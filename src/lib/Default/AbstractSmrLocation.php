@@ -419,13 +419,13 @@ class AbstractSmrLocation {
 	}
 
 	public function getExamineHREF(): string {
-		$container = Page::create('skeleton.php', $this->getAction());
+		$container = Page::create($this->getAction());
 		$container['LocationID'] = $this->getTypeID();
 		return $container->href();
 	}
 
 	public function getEditHREF(): string {
-		$container = Page::create('skeleton.php', 'location_edit.php');
+		$container = Page::create('location_edit.php');
 		$container['location_type_id'] = $this->getTypeID();
 		return $container->href();
 	}

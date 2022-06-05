@@ -18,4 +18,4 @@ $db->insert('player_has_notes', [
 	'note' => $db->escapeBinary(gzcompress($note)),
 ]);
 
-Page::create('skeleton.php', 'trader_status.php')->go();
+Page::create('trader_status.php')->go();

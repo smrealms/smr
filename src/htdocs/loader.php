@@ -69,14 +69,14 @@ try {
 				// The user has attempted to re-validate their e-mail
 				Page::create('invalid_email_processing.php')->go();
 			} else {
-				Page::create('skeleton.php', 'invalid_email.php')->go();
+				Page::create('invalid_email.php')->go();
 			}
 		} elseif ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
 			if (isset($var['do_reopen_account'])) {
 				// The user has requested to reopen their account
 				$account->unbanAccount($account);
 			} else {
-				Page::create('skeleton.php', 'reopen_account.php')->go();
+				Page::create('reopen_account.php')->go();
 			}
 		} else {
 			throw new Exception('Unexpected disabled reason');

@@ -75,7 +75,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$row['tr_class'] = $class;
 
 	// What should the player name be displayed as?
-	$container = Page::create('skeleton.php', 'trader_search_result.php');
+	$container = Page::create('trader_search_result.php');
 	$container['player_id'] = $curr_player->getPlayerID();
 	$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
 	$dbResult2 = $db->read('SELECT * FROM cpl_tag WHERE account_id = ' . $db->escapeNumber($curr_player->getAccountID()) . ' ORDER BY custom DESC');

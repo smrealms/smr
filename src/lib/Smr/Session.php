@@ -36,7 +36,7 @@ class Session {
 	private string $SN;
 	private string $lastSN;
 	private int $accountID;
-	private int $lastAccessed;
+	private float $lastAccessed;
 
 	protected ?array $previousAjaxReturns;
 	protected array $ajaxReturns = [];
@@ -85,9 +85,8 @@ class Session {
 
 		if (!USING_AJAX && !empty($this->SN) && !empty($this->var[$this->SN])) {
 			$var = $this->var[$this->SN];
-			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
-			$loadDelay = self::URL_LOAD_DELAY[$currentPage] ?? 0;
-			$timeBetweenLoads = microtime(true) - $var['PreviousRequestTime'];
+			$loadDelay = self::URL_LOAD_DELAY[$var->file] ?? 0;
+			$timeBetweenLoads = microtime(true) - $this->lastAccessed;
 			if ($timeBetweenLoads < $loadDelay) {
 				$sleepTime = IRound(($loadDelay - $timeBetweenLoads) * 1000000);
 				//echo 'Sleeping for: ' . $sleepTime . 'us';
@@ -95,7 +94,7 @@ class Session {
 			}
 			if (ENABLE_DEBUG) {
 				$this->db->insert('debug', [
-					'debug_type' => $this->db->escapeString('Delay: ' . $currentPage),
+					'debug_type' => $this->db->escapeString('Delay: ' . $var->file),
 					'account_id' => $this->db->escapeNumber($this->accountID),
 					'value' => $this->db->escapeNumber($timeBetweenLoads),
 				]);
@@ -111,17 +110,17 @@ class Session {
 			$this->sessionID = $dbRecord->getField('session_id');
 			$this->accountID = $dbRecord->getInt('account_id');
 			$this->gameID = $dbRecord->getInt('game_id');
-			$this->lastAccessed = $dbRecord->getInt('last_accessed');
+			$this->lastAccessed = $dbRecord->getFloat('last_accessed');
 			$this->lastSN = $dbRecord->getField('last_sn');
 			// We may not have ajax_returns if ajax was disabled
 			$this->previousAjaxReturns = $dbRecord->getObject('ajax_returns', true, true);
 
 			$this->var = $dbRecord->getObject('session_var', true);
 
-			foreach ($this->var as $key => $value) {
-				if ($value['RemainingPageLoads'] < 0) {
+			foreach ($this->var as $sn => $var) {
+				if ($var->remainingPageLoads < 0) {
 					//This link is no longer valid
-					unset($this->var[$key]);
+					unset($this->var[$sn]);
 				} else {
 					// The following is skipped for the current SN, because:
 					// a) If we decremented RemainingPageLoads, we wouldn't be
@@ -131,11 +130,9 @@ class Session {
 					//    "current var"), the CommonID is not updated. Then any
 					//    var with the same data as the original will wrongly
 					//    share its CommonID.
-					if ($key !== $this->SN) {
-						$this->var[$key]['RemainingPageLoads'] -= 1;
-						if (isset($value['CommonID'])) {
-							$this->commonIDs[$value['CommonID']] = $key;
-						}
+					if ($sn !== $this->SN) {
+						$var->remainingPageLoads -= 1;
+						$this->commonIDs[$var->getCommonID()] = $sn;
 					}
 				}
 			}
@@ -148,14 +145,14 @@ class Session {
 	}
 
 	public function update(): void {
-		foreach ($this->var as $key => $value) {
-			if ($value['RemainingPageLoads'] <= 0) {
+		foreach ($this->var as $sn => $var) {
+			if ($var->remainingPageLoads <= 0) {
 				//This link was valid this load but will not be in the future, removing it now saves database space and data transfer.
-				unset($this->var[$key]);
+				unset($this->var[$sn]);
 			}
 		}
 		if (!$this->generate) {
-			$this->db->write('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!USING_AJAX ? ',last_accessed=' . $this->db->escapeNumber(Epoch::time()) : '') . ',session_var=' . $this->db->escapeObject($this->var, true) .
+			$this->db->write('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!USING_AJAX ? ',last_accessed=' . $this->db->escapeNumber(Epoch::microtime()) : '') . ',session_var=' . $this->db->escapeObject($this->var, true) .
 					',last_sn=' . $this->db->escapeString($this->SN) .
 					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . (USING_AJAX ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : ''));
 		} else {
@@ -164,7 +161,7 @@ class Session {
 				'session_id' => $this->db->escapeString($this->sessionID),
 				'account_id' => $this->db->escapeNumber($this->accountID),
 				'game_id' => $this->db->escapeNumber($this->gameID),
-				'last_accessed' => $this->db->escapeNumber(Epoch::time()),
+				'last_accessed' => $this->db->escapeNumber(Epoch::microtime()),
 				'session_var' => $this->db->escapeObject($this->var, true),
 			]);
 			$this->generate = false;
@@ -249,7 +246,7 @@ class Session {
 		unset($this->gameID);
 	}
 
-	public function getLastAccessed(): int {
+	public function getLastAccessed(): float {
 		return $this->lastAccessed;
 	}
 
@@ -298,19 +295,10 @@ class Session {
 	 * Replace the global $var with the given $container.
 	 */
 	public function setCurrentVar(Page $container): void {
-		$var = $this->hasCurrentVar() ? $this->getCurrentVar() : null;
-
 		//Do not allow sharing SN, useful for forwarding.
-		if (isset($var['CommonID'])) {
-			unset($this->commonIDs[$var['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
-		}
-		if (!isset($container['RemainingPageLoads'])) {
-			$container['RemainingPageLoads'] = 1; // Allow refreshing
-		}
-		if (!isset($container['PreviousRequestTime'])) {
-			if (isset($var['PreviousRequestTime'])) {
-				$container['PreviousRequestTime'] = $var['PreviousRequestTime']; // Copy across the previous request time if not explicitly set.
-			}
+		if ($this->hasCurrentVar()) {
+			$var = $this->getCurrentVar();
+			unset($this->commonIDs[$var->getCommonID()]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		}
 
 		$this->var[$this->SN] = $container;
@@ -328,16 +316,15 @@ class Session {
 	}
 
 	protected function generateSN(Page $container): string {
-		if (isset($this->commonIDs[$container['CommonID']])) {
-			$sn = $this->commonIDs[$container['CommonID']];
-			$container['PreviousRequestTime'] = isset($this->var[$sn]) ? $this->var[$sn]['PreviousRequestTime'] : Epoch::microtime();
+		$commonID = $container->getCommonID();
+		if (isset($this->commonIDs[$commonID])) {
+			$sn = $this->commonIDs[$commonID];
 		} else {
 			do {
 				$sn = random_alphabetic_string(6);
 			} while (isset($this->var[$sn]));
-			$container['PreviousRequestTime'] = Epoch::microtime();
+			$this->commonIDs[$commonID] = $sn;
 		}
-		$this->commonIDs[$container['CommonID']] = $sn;
 		return $sn;
 	}
 

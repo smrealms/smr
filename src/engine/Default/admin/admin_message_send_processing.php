@@ -8,7 +8,7 @@ $expire = Smr\Request::getFloat('expire');
 $game_id = $var['SendGameID'];
 
 if (Smr\Request::get('action') == 'Preview message') {
-	$container = Page::create('skeleton.php', 'admin/admin_message_send.php');
+	$container = Page::create('admin/admin_message_send.php');
 	$container->addVar('SendGameID');
 	$container['preview'] = $message;
 	$container['expire'] = $expire;
@@ -51,6 +51,6 @@ foreach ($receivers as $receiver) {
 }
 $msg = '<span class="green">SUCCESS: </span>Your message has been sent.';
 
-$container = Page::create('skeleton.php', 'admin/admin_tools.php');
+$container = Page::create('admin/admin_tools.php');
 $container['msg'] = $msg;
 $container->go();

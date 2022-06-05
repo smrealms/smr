@@ -302,4 +302,4 @@ if ($action == 'Yes') {
 
 }
 $db = Smr\Database::getInstance();
-Page::create('skeleton.php', 'admin/admin_tools.php')->go();
+Page::create('admin/admin_tools.php')->go();

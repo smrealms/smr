@@ -11,8 +11,7 @@ Menu::historyGames($var['selected_index']);
 if (isset($var['previous_page'])) {
 	$container = $var['previous_page'];
 } else {
-	$container = Page::copy($var);
-	$container['body'] = 'history_games.php';
+	$container = Page::create('history_games.php', $var);
 }
 $template->assign('BackHREF', $container->href());
 

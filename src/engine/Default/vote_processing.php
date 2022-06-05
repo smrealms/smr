@@ -14,5 +14,4 @@ $db->replace('voting_results', [
 	'vote_id' => $db->escapeNumber($var['vote_id']),
 	'option_id' => $db->escapeNumber(Smr\Request::getInt('vote')),
 ]);
-$var['url'] = 'skeleton.php';
-Page::copy($var)->go();
+Page::create($var['forward_to'], $var)->go();

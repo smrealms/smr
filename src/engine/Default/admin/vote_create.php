@@ -6,7 +6,7 @@ $var = $session->getCurrentVar();
 
 $template->assign('PageTopic', 'Create Vote');
 
-$template->assign('VoteFormHREF', Page::create('admin/vote_create_processing.php', '')->href());
+$template->assign('VoteFormHREF', Page::create('admin/vote_create_processing.php')->href());
 
 $voting = [];
 $db = Smr\Database::getInstance();

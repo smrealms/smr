@@ -43,7 +43,7 @@ foreach (Smr\Messages::getMessageTypeNames() as $message_type_id => $message_typ
 	}
 	$messageBox['MessageCount'] = $dbResult->record()->getInt('message_count');
 
-	$container = Page::create('skeleton.php', 'message_view.php');
+	$container = Page::create('message_view.php');
 	$container['folder_id'] = $message_type_id;
 	$messageBox['ViewHref'] = $container->href();
 

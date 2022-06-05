@@ -48,6 +48,6 @@ $game->setStartingRelations(Smr\Request::getInt('relations'));
 $game->setEnabled(false);
 $game->save();
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_galaxies.php');
+$container = Page::create('admin/unigen/universe_create_galaxies.php');
 $container['game_id'] = $game->getGameID();
 $container->go();

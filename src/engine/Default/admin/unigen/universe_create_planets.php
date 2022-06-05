@@ -7,7 +7,7 @@ $var = $session->getCurrentVar();
 $session->getRequestVarInt('gal_on');
 $template->assign('Galaxies', SmrGalaxy::getGameGalaxies($var['game_id']));
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_planets.php');
+$container = Page::create('admin/unigen/universe_create_planets.php');
 $container->addVar('game_id');
 $template->assign('JumpGalaxyHREF', $container->href());
 
@@ -36,13 +36,10 @@ $template->assign('Galaxy', $galaxy);
 $template->assign('NumberOfPlanets', $numberOfPlanets);
 
 // Form to make planet changes
-$container = Page::create(
-	'admin/unigen/universe_create_save_processing.php',
-	'admin/unigen/universe_create_sectors.php',
-	$var
-);
+$container = Page::create('admin/unigen/universe_create_save_processing.php', $var);
+$container['forward_to'] = 'admin/unigen/universe_create_sectors.php';
 $template->assign('CreatePlanetsFormHREF', $container->href());
 
 // HREF to cancel and return to the previous page
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php', $var);
+$container = Page::create('admin/unigen/universe_create_sectors.php', $var);
 $template->assign('CancelHREF', $container->href());

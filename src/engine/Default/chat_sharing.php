@@ -57,4 +57,4 @@ foreach ($dbResult->records() as $dbRecord) {
 $template->assign('ShareFrom', $shareFrom);
 $template->assign('ShareTo', $shareTo);
 
-$template->assign('ProcessingHREF', Page::create('chat_sharing_processing.php', '', ['share_to_ids' => array_keys($shareTo)])->href());
+$template->assign('ProcessingHREF', Page::create('chat_sharing_processing.php', ['share_to_ids' => array_keys($shareTo)])->href());

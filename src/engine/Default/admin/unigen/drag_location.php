@@ -15,7 +15,7 @@ if (!$targetSector->hasLocation($locationTypeID)) {
 	SmrLocation::moveSectorLocation($var['game_id'], $origSectorID, $targetSectorID, $location);
 }
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
+$container = Page::create('admin/unigen/universe_create_sectors.php');
 $container->addVar('game_id');
 $container->addVar('gal_on');
 $container->go();

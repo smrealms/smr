@@ -16,5 +16,5 @@ $db->insert('galactic_post_paper_content', [
 	'article_id' => $db->escapeNumber($var['id']),
 ]);
 //we now have that article in the paper
-$container = Page::create('skeleton.php', 'galactic_post_view_article.php');
+$container = Page::create('galactic_post_view_article.php');
 $container->go();

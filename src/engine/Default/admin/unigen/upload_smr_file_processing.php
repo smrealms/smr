@@ -116,6 +116,6 @@ foreach ($data as $key => $vals) {
 SmrSector::saveSectors();
 SmrPort::savePorts();
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
+$container = Page::create('admin/unigen/universe_create_sectors.php');
 $container->addVar('game_id');
 $container->go();

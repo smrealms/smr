@@ -14,6 +14,6 @@ foreach (Smr\Request::getIntArray('role', []) as $accountID => $roleID) {
 	]);
 }
 
-$container = Page::create('skeleton.php', 'alliance_roster.php');
+$container = Page::create('alliance_roster.php');
 $container['action'] = 'Show Alliance Roles';
 $container->go();

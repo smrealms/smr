@@ -10,8 +10,7 @@ Menu::historyGames(1);
 
 $oldAccountID = $session->getAccount()->getOldAccountID($var['HistoryDatabase']);
 
-$container = Page::copy($var);
-$container['body'] = 'history_games_detail.php';
+$container = Page::create('history_games_detail.php', $var);
 if (isset($container['action'])) {
 	unset($container['action']);
 }
@@ -49,8 +48,7 @@ if (!empty($action)) {
 		$oldAllianceID = $dbResult->hasRecord() ? $dbResult->record()->getInt('alliance_id') : 0;
 		// Get the top 25 alliance ordered by the requested stat
 		$dbResult = $db->read('SELECT alliance_name, alliance_id, ' . $sql . ' as val FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25');
-		$container = Page::copy($var);
-		$container['body'] = 'history_alliance_detail.php';
+		$container = Page::create('history_alliance_detail.php', $var);
 		$container['selected_index'] = 1;
 		$container['previous_page'] = Page::copy($var);
 		foreach ($dbResult->records() as $dbRecord) {
@@ -68,8 +66,7 @@ if (!empty($action)) {
 		$headers = ['Alliance', $header];
 	} elseif ($action == 'Top Planets') {
 		$dbResult = $db->read('SELECT sector_id, owner_id, IFNULL(player_name, \'Unclaimed\') as player_name, IFNULL(alliance_name, \'None\') as alliance_name, IFNULL(player.alliance_id, 0) as alliance_id, ROUND((turrets + hangers + generators) / 3, 2) as level FROM planet LEFT JOIN player ON planet.owner_id = player.account_id AND planet.game_id = player.game_id LEFT JOIN alliance ON player.alliance_id = alliance.alliance_id AND planet.game_id = alliance.game_id WHERE planet.game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY level DESC LIMIT 25');
-		$container = Page::copy($var);
-		$container['body'] = 'history_alliance_detail.php';
+		$container = Page::create('history_alliance_detail.php', $var);
 		$container['selected_index'] = 1;
 		$container['previous_page'] = Page::copy($var);
 		foreach ($dbResult->records() as $dbRecord) {

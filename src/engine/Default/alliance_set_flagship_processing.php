@@ -9,4 +9,4 @@ $flagshipID = Smr\Request::getInt('flagship_id');
 $alliance->setFlagshipID($flagshipID);
 $alliance->update();
 
-Page::create('skeleton.php', 'alliance_set_op.php')->go();
+Page::create('alliance_set_op.php')->go();

@@ -61,7 +61,7 @@ function allianceTopTen(SmrGame $game, string $field): array {
 		if ($game->hasEnded()) {
 			// If game has ended, offer a link to alliance roster details
 			$data = ['game_id' => $gameID, 'alliance_id' => $alliance->getAllianceID()];
-			$href = Page::create('skeleton.php', 'previous_game_alliance_detail.php', $data)->href();
+			$href = Page::create('previous_game_alliance_detail.php', $data)->href();
 			$rankings[$index + 1]['AllianceName'] = create_link($href, $alliance->getAllianceDisplayName());
 		} else {
 			$rankings[$index + 1]['AllianceName'] = $alliance->getAllianceDisplayName();

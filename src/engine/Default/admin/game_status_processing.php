@@ -2,7 +2,7 @@
 
 $db = Smr\Database::getInstance();
 
-$container = Page::create('skeleton.php', 'admin/admin_tools.php');
+$container = Page::create('admin/admin_tools.php');
 
 $action = Smr\Request::get('action');
 if ($action == 'Close') {

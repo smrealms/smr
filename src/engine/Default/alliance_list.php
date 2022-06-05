@@ -7,12 +7,9 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'List Of Alliances');
 
 if (!$player->hasAlliance()) {
-	$container = Page::create('skeleton.php', 'alliance_create.php');
+	$container = Page::create('alliance_create.php');
 	$template->assign('CreateAllianceHREF', $container->href());
 }
-
-
-$container = Page::create('skeleton.php');
 
 // get list of alliances
 $db = Smr\Database::getInstance();
@@ -32,9 +29,9 @@ ORDER BY alliance_name ASC');
 $alliances = [];
 foreach ($dbResult->records() as $dbRecord) {
 	if ($dbRecord->getInt('alliance_id') != $player->getAllianceID()) {
-		$container['body'] = 'alliance_roster.php';
+		$container = Page::create('alliance_roster.php');
 	} else {
-		$container['body'] = 'alliance_mod.php';
+		$container = Page::create('alliance_mod.php');
 	}
 	$allianceID = $dbRecord->getInt('alliance_id');
 	$container['alliance_id'] = $allianceID;

@@ -78,7 +78,7 @@ if ($dbResult->hasRecord()) {
 	$time_passed = Smr\Epoch::time() - $last_changed;
 	$template->assign('TimePassed', $time_passed);
 
-	$container = Page::create('admin/album_approve_processing.php', '');
+	$container = Page::create('admin/album_approve_processing.php');
 	$container['album_id'] = $album_id;
 	$container['approved'] = true;
 	$template->assign('ApproveHREF', $container->href());

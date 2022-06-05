@@ -29,10 +29,10 @@ $dbResult = $db->read('SELECT account_id FROM account WHERE account_id = ' . $db
 									   'hof_name LIKE ' . $db->escapeString(Smr\Request::get('hofname')) . ' OR ' .
 									   'validation_code LIKE ' . $db->escapeString(Smr\Request::get('val_code')) . ' LIMIT 1');
 if ($dbResult->hasRecord()) {
-	$container = Page::create('skeleton.php', 'admin/account_edit.php');
+	$container = Page::create('admin/account_edit.php');
 	$container['account_id'] = $dbResult->record()->getInt('account_id');
 } else {
-	$container = Page::create('skeleton.php', 'admin/account_edit_search.php');
+	$container = Page::create('admin/account_edit_search.php');
 	$container['errorMsg'] = 'No matching accounts were found!';
 }
 $container->go();

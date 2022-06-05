@@ -14,11 +14,10 @@ if (Smr\Request::get('action') == 'Yes') {
 				WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
 }
 
-$container = Page::create('skeleton.php');
 if ($session->hasGame()) {
-	$container['body'] = 'current_sector.php';
+	$container = Page::create('current_sector.php');
 } else {
-	$container['body'] = 'game_play.php';
+	$container = Page::create('game_play.php');
 }
 
 $container->go();

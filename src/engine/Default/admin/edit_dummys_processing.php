@@ -14,4 +14,4 @@ foreach (Smr\Request::getIntArray('weapons', []) as $weaponTypeID) {
 }
 $dummyPlayer->cacheDummyPlayer();
 
-Page::create('skeleton.php', 'admin/edit_dummys.php')->go();
+Page::create('admin/edit_dummys.php')->go();

@@ -7,7 +7,7 @@ $var = $session->getCurrentVar();
 $session->getRequestVarInt('gal_on');
 $template->assign('Galaxies', SmrGalaxy::getGameGalaxies($var['game_id']));
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_ports.php');
+$container = Page::create('admin/unigen/universe_create_ports.php');
 $container->addVar('game_id');
 $template->assign('JumpGalaxyHREF', $container->href());
 
@@ -35,9 +35,8 @@ if ($total > 0) {
 $template->assign('RacePercents', $racePercents);
 $template->assign('TotalPercent', array_sum($racePercents));
 
-$container = Page::copy($var);
-$container['url'] = 'admin/unigen/universe_create_save_processing.php';
-$container['body'] = 'admin/unigen/universe_create_sectors.php';
+$container = Page::create('admin/unigen/universe_create_save_processing.php', $var);
+$container['forward_to'] = 'admin/unigen/universe_create_sectors.php';
 $template->assign('CreateHREF', $container->href());
 
 $template->assign('TotalPorts', $totalPorts);

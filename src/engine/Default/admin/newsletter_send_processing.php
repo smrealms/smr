@@ -114,4 +114,4 @@ if (Smr\Request::get('to_email') == '*') {
 	}
 }
 
-Page::create('skeleton.php', 'admin/newsletter_send.php')->go();
+Page::create('admin/newsletter_send.php')->go();

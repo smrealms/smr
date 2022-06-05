@@ -10,12 +10,12 @@ function course_plot_forward(SmrPlayer $player, Smr\Path $path): never {
 
 		if (!$player->isLandedOnPlanet()) {
 			// If the course can immediately be followed, display it on the current sector page
-			$container = Page::create('skeleton.php', 'current_sector.php');
+			$container = Page::create('current_sector.php');
 			$container->go();
 		}
 	}
 
-	$container = Page::create('skeleton.php', 'course_plot_result.php');
+	$container = Page::create('course_plot_result.php');
 	$container['Path'] = $path;
 	$container->go();
 

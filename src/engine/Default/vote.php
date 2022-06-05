@@ -19,7 +19,8 @@ if ($dbResult->hasRecord()) {
 	foreach ($dbResult->records() as $dbRecord) {
 		$voteID = $dbRecord->getInt('vote_id');
 		$voting[$voteID]['ID'] = $voteID;
-		$container = Page::create('vote.php', 'vote_processing.php');
+		$container = Page::create('vote_processing.php');
+		$container['forward_to'] = 'vote.php';
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = $container->href();
 		$voting[$voteID]['Question'] = $dbRecord->getField('question');

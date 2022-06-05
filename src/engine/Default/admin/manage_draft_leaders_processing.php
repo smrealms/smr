@@ -13,7 +13,7 @@ $homeSectorID = Smr\Request::getInt('home_sector_id');
 $action = Smr\Request::get('submit');
 
 // Pass entire $var so that the selected game remains selected
-$container = Page::create('skeleton.php', 'admin/manage_draft_leaders.php', $var);
+$container = Page::create('admin/manage_draft_leaders.php', $var);
 
 try {
 	$selectedPlayer = SmrPlayer::getPlayerByPlayerID($playerId, $gameId);

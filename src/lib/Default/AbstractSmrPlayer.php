@@ -3037,7 +3037,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getExamineTraderHREF(): string {
-		$container = Page::create('skeleton.php', 'trader_examine.php');
+		$container = Page::create('trader_examine.php');
 		$container['target'] = $this->getAccountID();
 		return $container->href();
 	}
@@ -3047,13 +3047,13 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getPlanetKickHREF(): string {
-		$container = Page::create('planet_kick_processing.php', 'trader_attack_processing.php');
+		$container = Page::create('planet_kick_processing.php');
 		$container['account_id'] = $this->getAccountID();
 		return $container->href();
 	}
 
 	public function getTraderSearchHREF(): string {
-		$container = Page::create('skeleton.php', 'trader_search_result.php');
+		$container = Page::create('trader_search_result.php');
 		$container['player_id'] = $this->getPlayerID();
 		return $container->href();
 	}

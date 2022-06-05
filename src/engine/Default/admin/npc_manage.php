@@ -7,7 +7,7 @@ $template->assign('PageTopic', 'Manage NPCs');
 
 $selectedGameID = $session->getRequestVarInt('selected_game_id', 0);
 
-$container = Page::create('skeleton.php', 'admin/npc_manage.php');
+$container = Page::create('admin/npc_manage.php');
 $template->assign('SelectGameHREF', $container->href());
 
 $games = [];

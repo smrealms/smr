@@ -57,4 +57,4 @@ if ($action == 'INC' || $action == 'DEC') {
 
 }
 
-Page::create('skeleton.php', 'council_vote.php')->go();
+Page::create('council_vote.php')->go();
