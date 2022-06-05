@@ -19,6 +19,59 @@ function findValidSector(array $sectors, callable $condition): SmrSector {
 	return $sector;
 }
 
+function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location): bool {
+	if ($location->isHQ()) {
+		// Only add HQs to empty sectors
+		return !$sector->hasLocation();
+	}
+	// Otherwise, sector must meet these conditions:
+	// 1. Does not already have this location
+	// 2. Has fewer than 4 other locations
+	// 3. Does not offer Fed protection
+	return count($sector->getLocations()) < 4 && !$sector->offersFederalProtection() && !$sector->hasLocation($location->getTypeID());
+}
+
+function addLocationToSector(SmrLocation $location, SmrSector $sector): void {
+	$sector->addLocation($location); //insert the location
+	if ($location->isHQ()) {
+		//only playable races have extra locations to add
+		//Racial/Fed
+		foreach ($location->getLinkedLocations() as $linkedLocation) {
+			if (!$sector->hasLocation($linkedLocation->getTypeID())) {
+				$sector->addLocation($linkedLocation);
+			}
+			if ($linkedLocation->isFed()) {
+				$fedBeacon = $linkedLocation;
+			}
+		}
+
+		//add Beacons to all surrounding areas (up to 2 sectors out)
+		if (!$sector->offersFederalProtection()) {
+			$sector->addLocation($fedBeacon); //add beacon to this sector
+		}
+		$visitedSectors = [];
+		$links = ['Up', 'Right', 'Down', 'Left'];
+		$fedSectors = [$sector];
+		$tempFedSectors = [];
+		for ($i = 0; $i < DEFAULT_FED_RADIUS; $i++) {
+			foreach ($fedSectors as $fedSector) {
+				foreach ($links as $link) {
+					if ($fedSector->hasLink($link) && !isset($visitedSectors[$fedSector->getLink($link)])) {
+						$linkSector = $sector->getLinkSector($link);
+						if (!$linkSector->offersFederalProtection()) {
+							$linkSector->addLocation($fedBeacon); //add beacon to this sector
+						}
+						$tempFedSectors[] = $linkSector;
+						$visitedSectors[$fedSector->getLink($link)] = true;
+					}
+				}
+			}
+			$fedSectors = $tempFedSectors;
+			$tempFedSectors = [];
+		}
+	}
+}
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
@@ -272,57 +325,3 @@ if ($submit == 'Create Galaxies') {
 }
 
 Page::create($var['forward_to'], $var)->go();
-
-
-function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location): bool {
-	if ($location->isHQ()) {
-		// Only add HQs to empty sectors
-		return !$sector->hasLocation();
-	}
-	// Otherwise, sector must meet these conditions:
-	// 1. Does not already have this location
-	// 2. Has fewer than 4 other locations
-	// 3. Does not offer Fed protection
-	return count($sector->getLocations()) < 4 && !$sector->offersFederalProtection() && !$sector->hasLocation($location->getTypeID());
-}
-
-function addLocationToSector(SmrLocation $location, SmrSector $sector): void {
-	$sector->addLocation($location); //insert the location
-	if ($location->isHQ()) {
-		//only playable races have extra locations to add
-		//Racial/Fed
-		foreach ($location->getLinkedLocations() as $linkedLocation) {
-			if (!$sector->hasLocation($linkedLocation->getTypeID())) {
-				$sector->addLocation($linkedLocation);
-			}
-			if ($linkedLocation->isFed()) {
-				$fedBeacon = $linkedLocation;
-			}
-		}
-
-		//add Beacons to all surrounding areas (up to 2 sectors out)
-		if (!$sector->offersFederalProtection()) {
-			$sector->addLocation($fedBeacon); //add beacon to this sector
-		}
-		$visitedSectors = [];
-		$links = ['Up', 'Right', 'Down', 'Left'];
-		$fedSectors = [$sector];
-		$tempFedSectors = [];
-		for ($i = 0; $i < DEFAULT_FED_RADIUS; $i++) {
-			foreach ($fedSectors as $fedSector) {
-				foreach ($links as $link) {
-					if ($fedSector->hasLink($link) && !isset($visitedSectors[$fedSector->getLink($link)])) {
-						$linkSector = $sector->getLinkSector($link);
-						if (!$linkSector->offersFederalProtection()) {
-							$linkSector->addLocation($fedBeacon); //add beacon to this sector
-						}
-						$tempFedSectors[] = $linkSector;
-						$visitedSectors[$fedSector->getLink($link)] = true;
-					}
-				}
-			}
-			$fedSectors = $tempFedSectors;
-			$tempFedSectors = [];
-		}
-	}
-}

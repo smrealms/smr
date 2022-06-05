@@ -1,4 +1,24 @@
 <?php declare(strict_types=1);
+
+function debug($message, $debugObject = null) {
+	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
+	$db = Smr\Database::getInstance();
+	$logID = $db->insert('npc_logs', [
+		'script_id' => defined('SCRIPT_ID') ? SCRIPT_ID : 0,
+		'npc_id' => 0,
+		'time' => 'NOW()',
+		'message' => $db->escapeString($message),
+		'debug_info' => $db->escapeString(var_export($debugObject, true)),
+		'var' => $db->escapeString(''),
+	]);
+
+	// On the first call to debug, we need to update the script_id retroactively
+	if (!defined('SCRIPT_ID')) {
+		define('SCRIPT_ID', $logID);
+		$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
+	}
+}
+
 try {
 	echo '<pre>';
 	// global config
@@ -75,24 +95,4 @@ try {
 	proc_close($engine);
 } catch (Throwable $e) {
 	logException($e);
-	exit;
-}
-
-function debug($message, $debugObject = null) {
-	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
-	$db = Smr\Database::getInstance();
-	$logID = $db->insert('npc_logs', [
-		'script_id' => defined('SCRIPT_ID') ? SCRIPT_ID : 0,
-		'npc_id' => 0,
-		'time' => 'NOW()',
-		'message' => $db->escapeString($message),
-		'debug_info' => $db->escapeString(var_export($debugObject, true)),
-		'var' => $db->escapeString(''),
-	]);
-
-	// On the first call to debug, we need to update the script_id retroactively
-	if (!defined('SCRIPT_ID')) {
-		define('SCRIPT_ID', $logID);
-		$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
-	}
 }
