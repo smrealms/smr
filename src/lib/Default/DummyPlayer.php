@@ -2,10 +2,16 @@
 
 class DummyPlayer extends AbstractSmrPlayer {
 
+	protected readonly int $accountID;
+	protected readonly int $gameID;
+
 	public function __construct(string $playerName, int $experience = 1000, int $shipTypeID = 60) {
+		$this->accountID = 0;
+		$this->gameID = 0;
 		$this->playerName = $playerName;
 		$this->experience = $experience;
 		$this->shipID = $shipTypeID;
+		$this->dead = false;
 		$this->setConstantProperties();
 	}
 
@@ -14,17 +20,15 @@ class DummyPlayer extends AbstractSmrPlayer {
 	 * be stored in the database.
 	 */
 	protected function setConstantProperties(): void {
-		$this->gameID = 0;
-		$this->accountID = 0;
 		$this->playerID = 0;
+		$this->turns = 0;
 		$this->alignment = 0;
 		$this->underAttack = false;
 		$this->npc = true;
-		$this->dead = false;
 	}
 
 	public function __sleep() {
-		return ['playerName', 'experience', 'shipID'];
+		return ['playerName', 'experience', 'shipID', 'dead', 'accountID', 'gameID'];
 	}
 
 	public function __wakeup() {
@@ -39,39 +43,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 	}
 
 	public function getShip(bool $forceUpdate = false): DummyShip {
-		return DummyShip::getCachedDummyShip($this);
-	}
-
-	public function cacheDummyPlayer(): void {
-		$this->getShip()->cacheDummyShip();
-		$db = Smr\Database::getInstance();
-		$db->replace('cached_dummys', [
-			'type' => $db->escapeString('DummyPlayer'),
-			'id' => $db->escapeString($this->getPlayerName()),
-			'info' => $db->escapeObject($this),
-		]);
-	}
-
-	public static function getCachedDummyPlayer(string $name): self {
-		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT info FROM cached_dummys
-					WHERE type = \'DummyPlayer\'
-						AND id = ' . $db->escapeString($name));
-		if ($dbResult->hasRecord()) {
-			return $dbResult->record()->getObject('info');
-		}
-		return new self($name);
-	}
-
-	public static function getDummyPlayerNames(): array {
-		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT id FROM cached_dummys
-					WHERE type = \'DummyPlayer\'');
-		$dummyNames = [];
-		foreach ($dbResult->records() as $dbRecord) {
-			$dummyNames[] = $dbRecord->getField('id');
-		}
-		return $dummyNames;
+		return DummyShip::getCachedDummyShip($this->playerName);
 	}
 
 }

@@ -4,6 +4,12 @@ class DummyShip extends AbstractSmrShip {
 
 	protected static array $CACHED_DUMMY_SHIPS;
 
+	public static function saveDummyShips(): void {
+		foreach (self::$CACHED_DUMMY_SHIPS as $ship) {
+			$ship->cacheDummyShip();
+		}
+	}
+
 	public function __construct(AbstractSmrPlayer $player) {
 		parent::__construct($player);
 		$this->setHardwareToMax();
@@ -18,29 +24,26 @@ class DummyShip extends AbstractSmrShip {
 		]);
 	}
 
-	public static function getCachedDummyShip(AbstractSmrPlayer $player): self {
-		if (!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()])) {
-			$ship = new self($player);
-
-			// Load weapons from the dummy database cache, if available
+	public static function getCachedDummyShip(string $dummyName): self {
+		if (!isset(self::$CACHED_DUMMY_SHIPS[$dummyName])) {
+			// Load ship from the dummy database cache, if available
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT info FROM cached_dummys WHERE type = \'DummyShip\'
-						AND id = ' . $db->escapeString($player->getPlayerName()));
+						AND id = ' . $db->escapeString($dummyName));
 			if ($dbResult->hasRecord()) {
-				$cachedShip = $dbResult->record()->getObject('info');
-				foreach ($cachedShip->getWeapons() as $weapon) {
-					$ship->addWeapon($weapon);
-				}
+				$ship = $dbResult->record()->getObject('info');
+			} else {
+				$player = new DummyPlayer($dummyName);
+				$ship = new self($player);
 			}
-
-			self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] = $ship;
+			self::$CACHED_DUMMY_SHIPS[$dummyName] = $ship;
 		}
-		return self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()];
+		return self::$CACHED_DUMMY_SHIPS[$dummyName];
 	}
 
-	public static function getDummyShipNames(): array {
+	public static function getDummyNames(): array {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT id FROM cached_dummys WHERE type = \'DummyShip\'');
+		$dbResult = $db->read('SELECT id FROM cached_dummys');
 		$dummyNames = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$dummyNames[] = $dbRecord->getField('id');
@@ -49,7 +52,7 @@ class DummyShip extends AbstractSmrShip {
 	}
 
 	public function __sleep() {
-		return ['weapons'];
+		return ['weapons', 'hardware', 'shipType', 'player'];
 	}
 
 }
