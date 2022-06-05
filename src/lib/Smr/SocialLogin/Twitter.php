@@ -43,6 +43,7 @@ class Twitter extends SocialLogin {
 			['oauth_verifier' => Request::get('oauth_verifier')]
 		);
 		$auth = self::getTwitterObj($accessToken);
+		/** @var \stdClass $userInfo */
 		$userInfo = $auth->get('account/verify_credentials', ['include_email' => 'true']);
 		if ($auth->getLastHttpCode() == 200) {
 			$this->setCredentials($userInfo->id_str, $userInfo->email);
