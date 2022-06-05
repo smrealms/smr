@@ -972,4 +972,8 @@ class AbstractSmrShip {
 		));
 	}
 
+	public function update(): void {
+		throw new Exception('Can only call update on SmrShip objects');
+	}
+
 }

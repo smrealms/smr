@@ -38,7 +38,7 @@ class DummyPlayer extends AbstractSmrPlayer {
 		return ['DeadExp' => 0, 'KillerCredits' => 0, 'KillerExp' => 0];
 	}
 
-	public function getShip(bool $forceUpdate = false): AbstractSmrShip {
+	public function getShip(bool $forceUpdate = false): DummyShip {
 		return DummyShip::getCachedDummyShip($this);
 	}
 
