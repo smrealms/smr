@@ -244,6 +244,8 @@ class AbstractSmrPort {
 
 	/**
 	 * Get IDs of goods that can be sold by $player to the port
+	 *
+	 * @return array<int>
 	 */
 	public function getVisibleGoodsSold(AbstractSmrPlayer $player = null): array {
 		return $this->getVisibleGoods(TRADER_SELLS, $player);
