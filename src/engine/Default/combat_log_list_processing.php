@@ -35,7 +35,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 							: '') . '
 						)
 					LIMIT ' . count($logIDs));
-	} elseif ($submitAction == 'Delete') {
+	} else { // $submitAction == 'Delete'
 		$db->write('DELETE FROM player_saved_combat_logs
 					WHERE log_id IN (' . $db->escapeArray($logIDs) . ')
 						AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
