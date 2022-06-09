@@ -52,12 +52,6 @@ class DatabaseRecord {
 		return $result;
 	}
 
-	public function getMicrotime(string $name): string {
-		// All digits of precision are stored in a MySQL bigint
-		$data = $this->dbRecord[$name];
-		return sprintf('%f', $data / 1E6);
-	}
-
 	public function getObject(string $name, bool $compressed = false, bool $nullable = false): mixed {
 		$object = $this->getField($name);
 		if ($nullable === true && $object === null) {

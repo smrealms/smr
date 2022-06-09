@@ -489,7 +489,7 @@ abstract class AbstractSmrAccount {
 		if ($this->isLoggingEnabled()) {
 			$this->db->insert('account_has_logs', [
 				'account_id' => $this->db->escapeNumber($this->accountID),
-				'microtime' => $this->db->escapeMicrotime(Smr\Epoch::microtime()),
+				'microtime' => $this->db->escapeNumber(Smr\Epoch::microtime()),
 				'log_type_id' => $this->db->escapeNumber($log_type_id),
 				'message' => $this->db->escapeString($msg),
 				'sector_id' => $this->db->escapeNumber($sector_id),
