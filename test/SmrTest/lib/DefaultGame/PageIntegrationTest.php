@@ -156,7 +156,7 @@ class PageIntegrationTest extends TestCase {
 		// Create a page with the same file but different data
 		$page3 = Page::create('test1', ['different' => 'data']);
 		// Check that the common ID changes
-		self::assertNotEquals($page1->getCommonID(), $page2->getCommonID());
+		self::assertNotEquals($page1->getCommonID(), $page3->getCommonID());
 	}
 
 }
