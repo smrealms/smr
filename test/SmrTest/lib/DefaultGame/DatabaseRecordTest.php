@@ -124,12 +124,6 @@ class DatabaseRecordTest extends TestCase {
 
 	//------------------------------------------------------------------------
 
-	public function test_getMicrotime(): void {
-		// Construct a record with a numeric string
-		$record = new DatabaseRecord(['name' => '123456789']);
-		self::assertSame('123.456789', $record->getMicrotime('name'));
-	}
-
 	public function test_getObject(): void {
 		// Construct a record with various types of objects
 		$record = new DatabaseRecord([

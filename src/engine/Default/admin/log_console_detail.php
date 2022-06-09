@@ -99,12 +99,14 @@ if ($action == 'Delete') {
 	$dbResult = $db->read('SELECT * FROM account_has_logs WHERE account_id IN (' . $account_list . ') AND log_type_id IN (' . $db->escapeArray($log_type_id_list) . ') ORDER BY microtime DESC');
 	foreach ($dbResult->records() as $dbRecord) {
 		$account_id = $dbRecord->getInt('account_id');
-		$microtime = $dbRecord->getMicrotime('microtime');
+		$microtime = $dbRecord->getFloat('microtime');
 		$message = $dbRecord->getString('message');
 		$log_type_id = $dbRecord->getInt('log_type_id');
 		$sector_id = $dbRecord->getInt('sector_id');
 
-		$date = DateTime::createFromFormat('U.u', $microtime)->format('Y-m-d H:i:s.u');
+		// DateTime only takes strings, and we need an explicit precision
+		$millitime = sprintf('%.3f', $microtime);
+		$date = DateTime::createFromFormat('U.v', $millitime)->format('Y-m-d H:i:s.v');
 
 		$logs[] = [
 			'date' => $date,

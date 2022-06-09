@@ -220,11 +220,6 @@ class Database {
 		return $num;
 	}
 
-	public function escapeMicrotime(float $microtime): string {
-		// Retain all digits of precision for storing in a MySQL bigint
-		return sprintf('%d', $microtime * 1E6);
-	}
-
 	public function escapeBoolean(bool $bool): string {
 		// We store booleans as an enum
 		return $bool ? '\'TRUE\'' : '\'FALSE\'';

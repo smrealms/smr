@@ -100,14 +100,6 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame($originalMysql, DiContainer::get(mysqli::class));
 	}
 
-	public function test_escapeMicrotime(): void {
-		$db = Database::getInstance();
-		// The current microtime must not throw an exception
-		$db->escapeMicrotime(microtime(true));
-		// Check that the formatting preserves all digits
-		self::assertSame('1608455259123456', $db->escapeMicrotime(1608455259.123456));
-	}
-
 	public function test_escapeBoolean(): void {
 		$db = Database::getInstance();
 		// Test both boolean values
@@ -224,8 +216,6 @@ class DatabaseIntegrationTest extends TestCase {
 			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', [true]],
 			// Test object without compression
 			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', []],
-			// Microtime takes a float and returns a string because of DateTime::createFromFormat
-			[microtime(true), 'escapeMicrotime', 'getMicrotime', 'assertEquals', []],
 		];
 		foreach ($params as [$value, $escaper, $getter, $cmp, $args]) {
 			$result = $db->read('SELECT ' . $db->$escaper($value, ...$args) . ' AS val');
