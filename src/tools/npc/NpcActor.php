@@ -13,7 +13,7 @@ use SmrSector;
 
 class NpcActor {
 
-	/** @var array<MultiplePortRoute> */
+	/** @var array<\Smr\Routes\MultiplePortRoute> */
 	private array $allTradeRoutes;
 	private ?RouteIterator $tradeRoute = null;
 	private int $actions = 0;

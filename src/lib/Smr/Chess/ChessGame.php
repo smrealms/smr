@@ -594,22 +594,32 @@ class ChessGame {
 		}
 	}
 
+	/**
+	 * @param string $move Algebraic notation like "b2b4"
+	 */
 	public function tryAlgebraicMove(string $move): int {
 		if (strlen($move) != 4 && strlen($move) != 5) {
 			throw new Exception('Move of length "' . strlen($move) . '" is not valid, full move: ' . $move);
 		}
+		$file = $move[0];
+		/** @var numeric-string $rank */
+		$rank = $move[1];
+		$toFile = $move[2];
+		/** @var numeric-string $toRank */
+		$toRank = $move[3];
+
 		$aVal = ord('a');
-		$hVal = ord('h');
-		if (ord($move[0]) < $aVal || ord($move[2]) < $aVal
-				|| ord($move[0]) > $hVal || ord($move[2]) > $hVal
-				|| $move[1] < 1 || $move[3] < 1
-				|| $move[1] > 8 || $move[3] > 8) {
+		$x = ord($file) - $aVal;
+		$toX = ord($toFile) - $aVal;
+		$y = $rank - 1;
+		$toY = $toRank - 1;
+		if ($x < 0 || $x > 7
+			|| $y < 0 || $y > 7
+			|| $toX < 0 || $toX > 7
+			|| $toY < 0 || $toY > 7
+		) {
 			throw new Exception('Invalid move: ' . $move);
 		}
-		$x = ord($move[0]) - $aVal;
-		$y = 8 - $move[1];
-		$toX = ord($move[2]) - $aVal;
-		$toY = 8 - $move[3];
 		$pawnPromotionPiece = ChessPiece::QUEEN;
 		if (isset($move[4])) {
 			$pawnPromotionPiece = ChessPiece::getPieceForLetter($move[4]);

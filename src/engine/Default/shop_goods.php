@@ -116,15 +116,15 @@ foreach ($port->getVisibleGoodsBought($player) as $goodID) {
 $soldGoods = [];
 foreach ($port->getVisibleGoodsSold($player) as $goodID) {
 	$good = Globals::getGood($goodID);
-	$container['good_id'] = $good['ID'];
+	$container['good_id'] = $goodID;
 	$good['HREF'] = $container->href();
 
 	$amount = $port->getGoodAmount($goodID);
 	$good['PortAmount'] = $amount;
-	if ($amount < $ship->getCargo($good['ID'])) {
+	if ($amount < $ship->getCargo($goodID)) {
 		$good['Amount'] = $amount;
 	} else {
-		$good['Amount'] = $ship->getCargo($good['ID']);
+		$good['Amount'] = $ship->getCargo($goodID);
 	}
 	$soldGoods[$goodID] = $good;
 }

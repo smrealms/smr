@@ -322,4 +322,39 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame(0, $planet->getArmour());
 	}
 
+	/**
+	 * @dataProvider provider_getMaxBuildings
+	 *
+	 * @param int $planetType
+	 * @param array<int, int> $expected
+	 */
+	public function test_getMaxBuildings(int $planetType, array $expected): void {
+		$planet = SmrPlanet::createPlanet(1, 1, $planetType, 1);
+		self::assertSame($expected, $planet->getMaxBuildings());
+	}
+
+	/**
+	 * @return array<array{int, array<int, int>}>
+	 */
+	public function provider_getMaxBuildings(): array {
+		return [
+			[
+				1,
+				[
+					PLANET_GENERATOR => 25,
+					PLANET_HANGAR => 100,
+					PLANET_TURRET => 10,
+				],
+			],
+			[
+				2,
+				[
+					PLANET_GENERATOR => 25,
+					PLANET_BUNKER => 25,
+					PLANET_TURRET => 15,
+				],
+			],
+		];
+	}
+
 }

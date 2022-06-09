@@ -18,6 +18,12 @@
         <!-- We do not expect every docstring to document all params. -->
         <exclude name="PSR2R.Commenting.DocBlockParam" />
 
+        <!-- Allow more compact docstrings (i.e. single line @var). -->
+        <exclude name="PSR2R.Commenting.DocComment" />
+
+        <!-- Temporary until advanced PHPStan typehints are supported. -->
+        <exclude name="PSR2R.Commenting.FullyQualifiedClassNameInDocBlock" />
+
         <!-- Erroneous sniff. Static and self are not interchangeable. -->
         <exclude name="PSR2R.PHP.PreferStaticOverSelf" />
 
@@ -94,6 +100,16 @@
 
     <!-- Temporary until all classes are migrated to the PSR-4 autoloader. -->
     <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Ignore unknown docstring tags. -->
+    <rule ref="PSR2R.Commenting.DocBlockTagTypes.Unknown">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Ignore unknown docstring types. -->
+    <rule ref="Spryker.Commenting.DocBlockParamAllowDefaultValue.Typehint">
         <severity>0</severity>
     </rule>
 

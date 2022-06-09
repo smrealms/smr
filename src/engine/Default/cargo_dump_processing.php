@@ -6,6 +6,7 @@ $player = $session->getPlayer();
 $ship = $player->getShip();
 $sector = $player->getSector();
 
+/** @var int $good_id */
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
 $amount = Smr\Request::getVarInt('amount');

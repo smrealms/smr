@@ -460,6 +460,9 @@ class AbstractSmrShip {
 		return $this->shipType->getSpeed() * $this->getGame()->getGameSpeed();
 	}
 
+	/**
+	 * @return ($hardwareTypeID is null ? array<int, int> : int)
+	 */
 	public function getHardware(int $hardwareTypeID = null): array|int {
 		if ($hardwareTypeID === null) {
 			return $this->hardware;
@@ -635,6 +638,9 @@ class AbstractSmrShip {
 		$this->setHardware(HARDWARE_CARGO, $amount);
 	}
 
+	/**
+	 * @return ($goodID is null ? array<int, int> : int)
+	 */
 	public function getCargo(int $goodID = null): int|array {
 		if ($goodID === null) {
 			return $this->cargo;
@@ -970,6 +976,10 @@ class AbstractSmrShip {
 				)
 			)
 		));
+	}
+
+	public function update(): void {
+		throw new Exception('Can only call update on SmrShip objects');
 	}
 
 }
