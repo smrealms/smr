@@ -6,7 +6,7 @@ $change_title = Smr\Request::get('change_title');
 $change_message = Smr\Request::get('change_message');
 $affected_db = Smr\Request::get('affected_db');
 
-$container = Page::create('skeleton.php', 'admin/changelog.php');
+$container = Page::create('admin/changelog.php');
 
 if (Smr\Request::get('action') == 'Preview') {
 	$container['change_title'] = $change_title;

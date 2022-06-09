@@ -35,12 +35,10 @@ if (!empty(BUG_REPORT_TO_ADDRESSES)) {
 	$mail->send();
 }
 
-$container = Page::create('skeleton.php');
-$container['msg'] = '<span class="admin">ADMIN</span>: Bug report submitted. Thank you for helping to improve the game!';
 if ($session->hasGame()) {
-	$container['body'] = 'current_sector.php';
+	$container = Page::create('current_sector.php');
 } else {
-	$container['body'] = 'game_play.php';
+	$container = Page::create('game_play.php');
 }
-
+$container['msg'] = '<span class="admin">ADMIN</span>: Bug report submitted. Thank you for helping to improve the game!';
 $container->go();

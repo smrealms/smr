@@ -1036,7 +1036,7 @@ class AbstractSmrPort {
 	}
 
 	public function getRaidWarningHREF(): string {
-		return Page::create('skeleton.php', 'port_attack_warning.php')->href();
+		return Page::create('port_attack_warning.php')->href();
 	}
 
 	public function getAttackHREF(): string {
@@ -1062,7 +1062,7 @@ class AbstractSmrPort {
 			$container = Page::create('port_payout_processing.php');
 			$container['PayoutType'] = 'Loot';
 		} else {
-			$container = Page::create('skeleton.php', 'current_sector.php');
+			$container = Page::create('current_sector.php');
 			$container['msg'] = 'This port has already been looted.';
 		}
 		return $justContainer === false ? $container->href() : $container;

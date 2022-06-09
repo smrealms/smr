@@ -116,7 +116,7 @@ if ($dbResult->hasRecord()) {
 
 	$template->assign('MinValue', $minValue);
 	$template->assign('MaxValue', $maxValue);
-	$container = Page::create('skeleton.php', 'bank_alliance.php');
+	$container = Page::create('bank_alliance.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$template->assign('FilterTransactionsFormHREF', $container->href());
 
@@ -128,7 +128,7 @@ if ($dbResult->hasRecord()) {
 	$template->assign('Alliance', $alliance);
 }
 
-$container = Page::create('skeleton.php', 'bank_report.php');
+$container = Page::create('bank_report.php');
 $container['alliance_id'] = $alliance->getAllianceID();
 $template->assign('BankReportHREF', $container->href());
 

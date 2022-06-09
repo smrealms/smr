@@ -8,7 +8,7 @@ $message = Smr\Request::get('message');
 $banPoints = Smr\Request::getInt('BanPoints');
 $rewardCredits = Smr\Request::getInt('RewardCredits');
 if (Smr\Request::get('action') == 'Preview message') {
-	$container = Page::create('skeleton.php', 'admin/box_reply.php');
+	$container = Page::create('admin/box_reply.php');
 	$container['BanPoints'] = $banPoints;
 	$container['RewardCredits'] = $rewardCredits;
 	$container->addVar('game_id');
@@ -29,4 +29,4 @@ if ($banPoints > 0) {
 	$senderAccount->addPoints($banPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 }
 
-Page::create('skeleton.php', 'admin/box_view.php')->go();
+Page::create('admin/box_view.php')->go();

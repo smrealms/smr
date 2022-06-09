@@ -9,6 +9,6 @@ if (Smr\Request::has('ignore_globals')) {
 	$player->setGroupScoutMessages(strtoupper(Smr\Request::get('group_scouts')));
 }
 
-$container = Page::create('skeleton.php', 'message_view.php');
+$container = Page::create('message_view.php');
 $container->addVar('folder_id');
 $container->go();

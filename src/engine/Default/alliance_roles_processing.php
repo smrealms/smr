@@ -103,6 +103,6 @@ if (!isset($var['role_id'])) {
 	}
 
 }
-$container = Page::create('skeleton.php', 'alliance_roles.php');
+$container = Page::create('alliance_roles.php');
 $container['alliance_id'] = $alliance_id;
 $container->go();

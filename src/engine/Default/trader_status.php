@@ -9,25 +9,24 @@ $template->assign('PageTopic', 'Trader Status');
 Menu::trader();
 
 if ($player->hasNewbieTurns()) {
-	$container = Page::create('skeleton.php', 'leave_newbie.php');
+	$container = Page::create('leave_newbie.php');
 	$template->assign('LeaveNewbieHREF', $container->href());
 }
 
-$container = Page::create('skeleton.php');
-$container['body'] = 'trader_relations.php';
+$container = Page::create('trader_relations.php');
 $template->assign('RelationsHREF', $container->href());
 
-$container['body'] = 'trader_savings.php';
+$container = Page::create('trader_savings.php');
 $template->assign('SavingsHREF', $container->href());
 
 // Bounties
-$container['body'] = 'trader_bounties.php';
+$container = Page::create('trader_bounties.php');
 $template->assign('BountiesHREF', $container->href());
 
 $template->assign('BountiesClaimable', count($player->getClaimableBounties()));
 
 // Ship
-$container['body'] = 'configure_hardware.php';
+$container = Page::create('configure_hardware.php');
 $template->assign('HardwareHREF', $container->href());
 
 $hardware = [];
@@ -54,7 +53,7 @@ $template->assign('Hardware', $hardware);
 
 $template->assign('NextLevelName', $player->getNextLevel()['Name']);
 
-$container['body'] = 'rankings_view.php';
+$container = Page::create('rankings_view.php');
 $template->assign('UserRankingsHREF', $container->href());
 
 $container = Page::create('note_delete_processing.php');

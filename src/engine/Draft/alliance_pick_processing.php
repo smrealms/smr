@@ -47,4 +47,4 @@ $db->insert('draft_history', [
 	'time' => $db->escapeNumber(Smr\Epoch::time()),
 ]);
 
-Page::create('skeleton.php', 'alliance_pick.php')->go();
+Page::create('alliance_pick.php')->go();

@@ -11,12 +11,13 @@ $template->assign('PageTopic', 'Create Galaxies : ' . $game->getDisplayName());
 $template->assign('GameEnabled', $game->isEnabled());
 
 // Link for updating the number of galaxies
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_galaxies.php');
+$container = Page::create('admin/unigen/universe_create_galaxies.php');
 $container->addVar('game_id');
 $template->assign('UpdateNumGalsHREF', $container->href());
 
 // Link for creating galaxies
-$container = Page::create('admin/unigen/universe_create_save_processing.php', 'admin/unigen/universe_create_sectors.php');
+$container = Page::create('admin/unigen/universe_create_save_processing.php');
+$container['forward_to'] = 'admin/unigen/universe_create_sectors.php';
 $container->addVar('game_id');
 $container->addVar('num_gals');
 $submit = [
@@ -26,7 +27,8 @@ $submit = [
 $template->assign('Submit', $submit);
 
 // Link for creating universe from SMR file
-$container['url'] = 'admin/unigen/upload_smr_file_processing.php';
+$container = Page::create('admin/unigen/upload_smr_file_processing.php');
+$container->addVar('game_id');
 $template->assign('UploadSmrFileHREF', $container->href());
 
 //Galaxy Creation area

@@ -59,6 +59,6 @@ $msg = 'You have disabled ' . $amount . ' accounts.';
 if ($amount > 20) {
 	$msg .= '  How do you sleep at night ;)';
 }
-$container = Page::create('skeleton.php', 'admin/admin_tools.php');
+$container = Page::create('admin/admin_tools.php');
 $container['msg'] = $msg;
 $container->go();

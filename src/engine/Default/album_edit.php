@@ -42,8 +42,8 @@ if ($dbResult->hasRecord()) {
 	$template->assign('AlbumEntry', $albumEntry);
 }
 
-$template->assign('AlbumEditHref', Page::create('album_edit_processing.php', '')->href());
-$template->assign('AlbumDeleteHref', Page::create('skeleton.php', 'album_delete_confirmation.php')->href());
+$template->assign('AlbumEditHref', Page::create('album_edit_processing.php')->href());
+$template->assign('AlbumDeleteHref', Page::create('album_delete_confirmation.php')->href());
 
 if (isset($var['SuccessMsg'])) {
 	$template->assign('SuccessMsg', $var['SuccessMsg']);

@@ -22,7 +22,7 @@ $ourRank = Rankings::ourRank($rankedStats, $player->getSectorID());
 $totalSectors = count($rankedStats);
 [$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $totalSectors);
 
-$container = Page::create('skeleton.php', 'rankings_sector_kill.php');
+$container = Page::create('rankings_sector_kill.php');
 $template->assign('SubmitHREF', $container->href());
 
 $template->assign('TopCustom', Rankings::collectSectorRankings($rankedStats, $player, $minRank, $maxRank));

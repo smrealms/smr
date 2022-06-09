@@ -51,13 +51,12 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$allianceID = (int)$default;
 				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
 				if ($disableBBLinks === false && $overrideGameID == $session->getGameID()) {
-					$container = Page::create('skeleton.php');
-					$container['alliance_id'] = $alliance->getAllianceID();
 					if ($session->hasGame() && $alliance->getAllianceID() == $session->getPlayer()->getAllianceID()) {
-						$container['body'] = 'alliance_mod.php';
+						$container = Page::create('alliance_mod.php');
 					} else {
-						$container['body'] = 'alliance_roster.php';
+						$container = Page::create('alliance_roster.php');
 					}
+					$container['alliance_id'] = $alliance->getAllianceID();
 					return create_link($container, $alliance->getAllianceDisplayName());
 				}
 				return $alliance->getAllianceDisplayName();
@@ -179,7 +178,7 @@ function create_error(string $message): never {
 		header('Location: /error.php?msg=' . urlencode($message));
 		exit;
 	}
-	$container = Page::create('skeleton.php', 'error.php');
+	$container = Page::create('error.php');
 	$container['message'] = $message;
 	if (USING_AJAX) {
 		// To avoid the page just not refreshing when an error is encountered
@@ -293,7 +292,7 @@ function do_voodoo(): never {
 		$sectorID = $player->getSectorID();
 
 		if (!USING_AJAX //AJAX should never do anything that requires a lock.
-			//&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
+			//&& ($var->file == 'current_sector.php' || $var->file == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
 		) {
 			// We skip locking if we've already failed to display error page
 			$lock = Smr\SectorLock::getInstance();
@@ -328,9 +327,9 @@ function do_voodoo(): never {
 		$player->updateTurns();
 
 		// Check if we need to redirect to a different page
-		if (!$var->skipRedirect() && !USING_AJAX) {
+		if (!$var->skipRedirect && !USING_AJAX) {
 			if ($player->getGame()->hasEnded()) {
-				Page::create('game_leave_processing.php', 'game_play.php', ['errorMsg' => 'The game has ended.'], skipRedirect: true)->go();
+				Page::create('game_leave_processing.php', ['forward_to' => 'game_play.php', 'errorMsg' => 'The game has ended.'], skipRedirect: true)->go();
 			}
 			if ($player->isDead()) {
 				Page::create('death_processing.php', skipRedirect: true)->go();
@@ -354,7 +353,7 @@ function do_voodoo(): never {
 	//Nothing below this point should require the lock.
 	saveAllAndReleaseLock();
 
-	$template->assign('TemplateBody', $var['body']);
+	$template->assign('TemplateBody', $var->file);
 	if (isset($player)) {
 		$template->assign('ThisSector', $player->getSector());
 		$template->assign('ThisPlayer', $player);
@@ -381,7 +380,7 @@ function do_voodoo(): never {
 	}
 	$template->assign('AJAX_ENABLE_REFRESH', $ajaxRefresh);
 
-	$template->display($var['url'], USING_AJAX || AJAX_CONTAINER);
+	$template->display('skeleton.php', USING_AJAX || AJAX_CONTAINER);
 
 	$session->update();
 
@@ -463,36 +462,34 @@ function doSkeletonAssigns(Smr\Template $template): void {
 	$template->assign('FontSize', $account->getFontSize() - 20);
 	$template->assign('timeDisplay', date($account->getDateTimeFormatSplit(), Smr\Epoch::time()));
 
-	$container = Page::create('skeleton.php', 'hall_of_fame_new.php');
+	$container = Page::create('hall_of_fame_new.php');
 	$template->assign('HallOfFameLink', $container->href());
 
 	$template->assign('AccountID', $account->getAccountID());
-	$template->assign('PlayGameLink', Page::create('game_leave_processing.php', 'game_play.php')->href());
+	$template->assign('PlayGameLink', Page::create('game_leave_processing.php', ['forward_to' => 'game_play.php'])->href());
 
 	$template->assign('LogoutLink', Page::create('logoff.php')->href());
 
-	$container = Page::create('game_leave_processing.php', 'admin/admin_tools.php');
+	$container = Page::create('game_leave_processing.php', ['forward_to' => 'admin/admin_tools.php']);
 	$template->assign('AdminToolsLink', $container->href());
 
-	$container = Page::create('skeleton.php', 'preferences.php');
+	$container = Page::create('preferences.php');
 	$template->assign('PreferencesLink', $container->href());
 
-	$container['body'] = 'album_edit.php';
+	$container = Page::create('album_edit.php');
 	$template->assign('EditPhotoLink', $container->href());
 
-	$container['body'] = 'bug_report.php';
+	$container = Page::create('bug_report.php');
 	$template->assign('ReportABugLink', $container->href());
 
-	$container['body'] = 'contact.php';
+	$container = Page::create('contact.php');
 	$template->assign('ContactFormLink', $container->href());
 
-	$container['body'] = 'chat_rules.php';
+	$container = Page::create('chat_rules.php');
 	$template->assign('IRCLink', $container->href());
 
-	$container['body'] = 'donation.php';
+	$container = Page::create('donation.php');
 	$template->assign('DonateLink', $container->href());
-
-	$container = Page::create('skeleton.php');
 
 	if ($session->hasGame()) {
 		$player = $session->getPlayer();
@@ -505,35 +502,35 @@ function doSkeletonAssigns(Smr\Template $template): void {
 
 		$template->assign('PoliticsLink', Globals::getPoliticsHREF());
 
-		$container['body'] = 'combat_log_list.php';
+		$container = Page::create('combat_log_list.php');
 		$template->assign('CombatLogsLink', $container->href());
 
 		$template->assign('PlanetLink', Globals::getPlanetListHREF($player->getAllianceID()));
 
-		$container['body'] = 'forces_list.php';
+		$container = Page::create('forces_list.php');
 		$template->assign('ForcesLink', $container->href());
 
 		$template->assign('MessagesLink', Globals::getViewMessageBoxesHREF());
 
-		$container['body'] = 'news_read_current.php';
+		$container = Page::create('news_read_current.php');
 		$template->assign('ReadNewsLink', $container->href());
 
-		$container['body'] = 'galactic_post_current.php';
+		$container = Page::create('galactic_post_current.php');
 		$template->assign('GalacticPostLink', $container->href());
 
-		$container['body'] = 'trader_search.php';
+		$container = Page::create('trader_search.php');
 		$template->assign('SearchForTraderLink', $container->href());
 
-		$container['body'] = 'rankings_player_experience.php';
+		$container = Page::create('rankings_player_experience.php');
 		$template->assign('RankingsLink', $container->href());
 
-		$container['body'] = 'hall_of_fame_new.php';
+		$container = Page::create('hall_of_fame_new.php');
 		$container['game_id'] = $player->getGameID();
 		$template->assign('CurrentHallOfFameLink', $container->href());
 
 		$unreadMessages = [];
 		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
-		$container = Page::create('skeleton.php', 'message_view.php');
+		$container = Page::create('message_view.php');
 		foreach ($dbResult->records() as $dbRecord) {
 			$messageTypeID = $dbRecord->getInt('message_type_id');
 			$container['folder_id'] = $messageTypeID;
@@ -546,7 +543,7 @@ function doSkeletonAssigns(Smr\Template $template): void {
 		}
 		$template->assign('UnreadMessages', $unreadMessages);
 
-		$container = Page::create('skeleton.php', 'trader_search_result.php');
+		$container = Page::create('trader_search_result.php');
 		$container['player_id'] = $player->getPlayerID();
 		$template->assign('PlayerNameLink', $container->href());
 
@@ -555,25 +552,26 @@ function doSkeletonAssigns(Smr\Template $template): void {
 		}
 
 		// ******* Hardware *******
-		$container = Page::create('skeleton.php', 'configure_hardware.php');
+		$container = Page::create('configure_hardware.php');
 		$template->assign('HardwareLink', $container->href());
 
 		// ******* Forces *******
-		$template->assign('ForceDropLink', Page::create('skeleton.php', 'forces_drop.php')->href());
+		$template->assign('ForceDropLink', Page::create('forces_drop.php')->href());
 
 		$ship = $player->getShip();
+		$var = Smr\Session::getInstance()->getCurrentVar();
 		if ($ship->hasMines()) {
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_mines'] = 1;
-			$container->addVar('body', 'referrer');
+			$container['referrer'] = $var->file;
 			$template->assign('DropMineLink', $container->href());
 		}
 		if ($ship->hasCDs()) {
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_combat_drones'] = 1;
-			$container->addVar('body', 'referrer');
+			$container['referrer'] = $var->file;
 			$template->assign('DropCDLink', $container->href());
 		}
 
@@ -581,13 +579,13 @@ function doSkeletonAssigns(Smr\Template $template): void {
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_scout_drones'] = 1;
-			$container->addVar('body', 'referrer');
+			$container['referrer'] = $var->file;
 			$template->assign('DropSDLink', $container->href());
 		}
 
-		$template->assign('CargoJettisonLink', Page::create('skeleton.php', 'cargo_dump.php')->href());
+		$template->assign('CargoJettisonLink', Page::create('cargo_dump.php')->href());
 
-		$template->assign('WeaponReorderLink', Page::create('skeleton.php', 'weapon_reorder.php')->href());
+		$template->assign('WeaponReorderLink', Page::create('weapon_reorder.php')->href());
 
 	}
 
@@ -615,7 +613,7 @@ function doSkeletonAssigns(Smr\Template $template): void {
 	$version = '';
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
-		$container = Page::create('skeleton.php', 'changelog_view.php');
+		$container = Page::create('changelog_view.php');
 		$version = create_link($container, 'v' . $dbRecord->getInt('major_version') . '.' . $dbRecord->getInt('minor_version') . '.' . $dbRecord->getInt('patch_level'));
 	}
 

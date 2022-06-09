@@ -7,12 +7,11 @@ $player = $session->getPlayer();
 $message = htmlentities(Smr\Request::get('message'), ENT_COMPAT, 'utf-8');
 
 if (Smr\Request::get('action') == 'Preview message') {
-	$container = Page::create('skeleton.php');
 	if (isset($var['alliance_id'])) {
-		$container['body'] = 'alliance_broadcast.php';
+		$container = Page::create('alliance_broadcast.php');
 		$container->addVar('alliance_id');
 	} else {
-		$container['body'] = 'message_send.php';
+		$container = Page::create('message_send.php');
 		if (isset($var['receiver'])) {
 			$container->addVar('receiver');
 		}
@@ -41,12 +40,11 @@ if (isset($var['alliance_id'])) {
 	$player->sendGlobalMessage($message);
 }
 
-$container = Page::create('skeleton.php');
 if (isset($var['alliance_id'])) {
-	$container['body'] = 'alliance_roster.php';
+	$container = Page::create('alliance_roster.php');
 	$container->addVar('alliance_id');
 } else {
-	$container['body'] = 'current_sector.php';
+	$container = Page::create('current_sector.php');
 }
 $container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
 $container->go();

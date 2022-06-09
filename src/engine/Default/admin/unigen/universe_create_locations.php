@@ -7,7 +7,7 @@ $var = $session->getCurrentVar();
 $session->getRequestVarInt('gal_on');
 $template->assign('Galaxies', SmrGalaxy::getGameGalaxies($var['game_id']));
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_locations.php');
+$container = Page::create('admin/unigen/universe_create_locations.php');
 $container->addVar('game_id');
 $template->assign('JumpGalaxyHREF', $container->href());
 
@@ -108,13 +108,10 @@ $template->assign('LocText', $locText);
 $template->assign('LocTypes', $categories->locTypes);
 
 // Form to make location changes
-$container = Page::create(
-	'admin/unigen/universe_create_save_processing.php',
-	'admin/unigen/universe_create_sectors.php',
-	$var
-);
+$container = Page::create('admin/unigen/universe_create_save_processing.php', $var);
+$container['forward_to'] = 'admin/unigen/universe_create_sectors.php';
 $template->assign('CreateLocationsFormHREF', $container->href());
 
 // HREF to cancel and return to the previous page
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php', $var);
+$container = Page::create('admin/unigen/universe_create_sectors.php', $var);
 $template->assign('CancelHREF', $container->href());

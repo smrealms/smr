@@ -39,6 +39,6 @@ if (count($loggedAccounts) > 0) {
 	}
 	$template->assign('LogTypes', $logTypes);
 
-	$template->assign('LogConsoleFormHREF', Page::create('skeleton.php', 'admin/log_console_detail.php')->href());
-	$template->assign('AnonAccessHREF', Page::create('skeleton.php', 'admin/log_anonymous_account.php')->href());
+	$template->assign('LogConsoleFormHREF', Page::create('admin/log_console_detail.php')->href());
+	$template->assign('AnonAccessHREF', Page::create('admin/log_anonymous_account.php')->href());
 }

@@ -11,14 +11,13 @@ if (!$player->getSector()->hasLocation($var['LocationID'])) {
 }
 
 $location = SmrLocation::getLocation($var['LocationID']);
-$container = Page::create('skeleton.php');
-$container->addVar('LocationID');
 
 [$type, $body] = match (true) {
 	$location->isHQ() => ['HQ', 'government.php'],
 	$location->isUG() => ['UG', 'underground.php'],
 };
-$container['body'] = $body;
+$container = Page::create($body);
+$container->addVar('LocationID');
 
 // if we don't have a yes we leave immediatly
 if (Smr\Request::get('action') != 'Yes') {

@@ -49,8 +49,8 @@ $template->assign('Good', $portGood);
 $template->assign('Amount', $var['amount']);
 $template->assign('Port', $port);
 
-$container = Page::create('skeleton.php', 'shop_goods.php');
+$container = Page::create('shop_goods.php');
 $template->assign('ShopHREF', $container->href());
 
-$container = Page::create('skeleton.php', 'current_sector.php');
+$container = Page::create('current_sector.php');
 $template->assign('LeaveHREF', $container->href());

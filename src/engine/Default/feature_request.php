@@ -64,10 +64,9 @@ $dbResult = $db->read('SELECT * ' .
 if ($dbResult->hasRecord()) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$template->assign('FeatureModerator', $featureModerator);
-	$template->assign('FeatureRequestVoteFormHREF', Page::create('feature_request_vote_processing.php', '')->href());
+	$template->assign('FeatureRequestVoteFormHREF', Page::create('feature_request_vote_processing.php')->href());
 
-	$commentsContainer = Page::copy($var);
-	$commentsContainer['body'] = 'feature_request_comments.php';
+	$commentsContainer = Page::create('feature_request_comments.php', $var);
 	$featureRequests = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$featureRequestID = $dbRecord->getInt('feature_request_id');
@@ -106,7 +105,7 @@ if ($dbResult->hasRecord()) {
 	$template->assign('FeatureRequests', $featureRequests);
 }
 
-$template->assign('FeatureRequestFormHREF', Page::create('feature_request_processing.php', '')->href());
+$template->assign('FeatureRequestFormHREF', Page::create('feature_request_processing.php')->href());
 
 function statusFromCategory(string $category): string {
 	return ($category == 'New' || $category == 'All Open') ? 'Opened' : $category;

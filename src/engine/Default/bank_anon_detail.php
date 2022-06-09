@@ -67,7 +67,7 @@ $dbResult = $db->read($query);
 if ($dbResult->hasRecord()) {
 	$template->assign('MinValue', $minValue);
 	$template->assign('MaxValue', $maxValue);
-	$container = Page::create('skeleton.php', 'bank_anon_detail.php');
+	$container = Page::create('bank_anon_detail.php');
 	$container['allowed'] = 'yes';
 	$container['account_num'] = $account_num;
 	$template->assign('ShowHREF', $container->href());

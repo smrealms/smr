@@ -6,4 +6,4 @@ $player = $session->getPlayer();
 $player->setDead(false);
 
 $player->log(LOG_TYPE_TRADER_COMBAT, 'Player sees death screen');
-Page::create('skeleton.php', 'death.php')->go();
+Page::create('death.php')->go();

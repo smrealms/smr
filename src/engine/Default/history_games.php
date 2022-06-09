@@ -64,8 +64,7 @@ foreach ($dbResult->records() as $dbRecord) {
 }
 $template->assign('PlayerKills', $playerKills);
 
-$container = Page::copy($var);
-$container['body'] = 'history_alliance_detail.php';
+$container = Page::create('history_alliance_detail.php', $var);
 $container['selected_index'] = 0;
 
 //now for the alliance stuff

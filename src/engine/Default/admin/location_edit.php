@@ -4,7 +4,7 @@ $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
-$template->assign('ViewAllLocationsLink', Page::create('skeleton.php', 'admin/location_edit.php')->href());
+$template->assign('ViewAllLocationsLink', Page::create('admin/location_edit.php')->href());
 
 if (isset($var['location_type_id'])) {
 	$location = SmrLocation::getLocation($var['location_type_id']);

@@ -23,7 +23,7 @@ if (!$dbResult->hasRecord()) {
 
 $template->assign('MessageText', $dbResult->record()->getField('message_text'));
 
-$container = Page::create('message_notify_processing.php', '');
+$container = Page::create('message_notify_processing.php');
 $container->addVar('folder_id');
 $container->addVar('message_id');
 $container->addVar('sent_time');

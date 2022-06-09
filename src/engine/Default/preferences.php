@@ -11,9 +11,9 @@ if ($session->hasGame()) {
 }
 $template->assign('AccountPreferencesFormHREF', Page::create('preferences_account_processing.php')->href());
 
-$template->assign('PreferencesConfirmFormHREF', Page::create('skeleton.php', 'preferences_confirm.php')->href());
+$template->assign('PreferencesConfirmFormHREF', Page::create('preferences_confirm.php')->href());
 
-$template->assign('ChatSharingHREF', Page::create('skeleton.php', 'chat_sharing.php')->href());
+$template->assign('ChatSharingHREF', Page::create('chat_sharing.php')->href());
 
 $transferAccounts = [];
 $db = Smr\Database::getInstance();

@@ -12,4 +12,4 @@ $account->decreaseTotalSmrCredits(1);
 $account->increaseMessageNotifications($var['MessageTypeID'], MESSAGES_PER_CREDIT[$var['MessageTypeID']]);
 $account->update();
 
-Page::create('skeleton.php', 'buy_message_notifications.php', ['Message' => '<span class="green">SUCCESS</span>: You have purchased ' . MESSAGES_PER_CREDIT[$var['MessageTypeID']] . ' message notifications.'])->go();
+Page::create('buy_message_notifications.php', ['Message' => '<span class="green">SUCCESS</span>: You have purchased ' . MESSAGES_PER_CREDIT[$var['MessageTypeID']] . ' message notifications.'])->go();

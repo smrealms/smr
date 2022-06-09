@@ -18,11 +18,9 @@ $mail->Body =
 $mail->addAddress($receiver);
 $mail->send();
 
-$container = Page::create('skeleton.php');
 if ($session->hasGame()) {
-	$container['body'] = 'current_sector.php';
+	$body = 'current_sector.php';
 } else {
-	$container['body'] = 'game_play.php';
+	$body = 'game_play.php';
 }
-
-$container->go();
+Page::create($body)->go();

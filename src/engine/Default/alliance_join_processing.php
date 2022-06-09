@@ -19,4 +19,4 @@ if (Smr\Request::get('password') != $alliance->getPassword()) {
 $player->joinAlliance($alliance->getAllianceID());
 $player->update();
 
-Page::create('skeleton.php', 'alliance_roster.php')->go();
+Page::create('alliance_roster.php')->go();

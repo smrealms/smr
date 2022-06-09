@@ -13,7 +13,7 @@ if (!$account->isValidated()) {
 $template->assign('PageTopic', 'Anonymous Account');
 Menu::bank();
 
-$container = Page::create('skeleton.php', 'bank_anon_detail.php');
+$container = Page::create('bank_anon_detail.php');
 $template->assign('AccessHREF', $container->href());
 
 $template->assign('Message', $var['message'] ?? '');
@@ -47,5 +47,5 @@ foreach ($dbResult->records() as $dbRecord) {
 }
 $template->assign('OwnedAnon', $ownedAnon);
 
-$container = Page::create('skeleton.php', 'bank_anon_create.php');
+$container = Page::create('bank_anon_create.php');
 $template->assign('CreateHREF', $container->href());

@@ -67,6 +67,6 @@ if (!isset($var['OrderID'])) {
 
 	$player->log(LOG_TYPE_HARDWARE, 'Player Sells a ' . $weapon->getName());
 }
-$container = Page::create('skeleton.php', 'shop_weapon.php');
+$container = Page::create('shop_weapon.php');
 $container->addVar('LocationID');
 $container->go();

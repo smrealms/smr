@@ -10,7 +10,7 @@ $sector = $session->getPlayer()->getSector();
 $template->assign('PageTopic', 'Beta Functions');
 
 // container for all links
-$container = Page::create('beta_func_processing.php', 'beta_functions.php');
+$container = Page::create('beta_func_processing.php');
 
 // let them map all
 $container['func'] = 'Map';

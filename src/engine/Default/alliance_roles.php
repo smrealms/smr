@@ -41,7 +41,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		$allianceRoles[$roleID]['OpLeader'] = $dbRecord->getBoolean('op_leader');
 		$allianceRoles[$roleID]['ViewBondsInPlanetList'] = $dbRecord->getBoolean('view_bonds');
 	} else {
-		$container = Page::create('skeleton.php', 'alliance_roles.php');
+		$container = Page::create('alliance_roles.php');
 	}
 	$container['role_id'] = $roleID;
 	$container['alliance_id'] = $alliance->getAllianceID();

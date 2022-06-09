@@ -98,5 +98,5 @@ if ($var['func'] == 'Map') {
 	}
 }
 
-$container = Page::create('skeleton.php', $var['body']);
+$container = Page::create('beta_functions.php');
 $container->go();

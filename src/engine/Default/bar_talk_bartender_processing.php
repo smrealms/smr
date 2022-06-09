@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$container = Page::create('skeleton.php', 'bar_talk_bartender.php');
+$container = Page::create('bar_talk_bartender.php');
 $container->addVar('LocationID');
 
 $action = Smr\Request::get('action');

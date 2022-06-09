@@ -32,5 +32,5 @@ if (!empty($addMessage)) {
 
 $player->sendAllianceInvitation($receiverID, $msg, $expires);
 
-$container = Page::create('skeleton.php', 'alliance_invite_player.php');
+$container = Page::create('alliance_invite_player.php');
 $container->go();

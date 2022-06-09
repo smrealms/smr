@@ -4,7 +4,7 @@ $template = Smr\Template::getInstance();
 
 $template->assign('PageTopic', 'Combat Simulator');
 
-$template->assign('EditDummysLink', Page::create('skeleton.php', 'admin/edit_dummys.php')->href());
+$template->assign('EditDummysLink', Page::create('admin/edit_dummys.php')->href());
 $template->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 
 $duplicates = false;
@@ -59,7 +59,7 @@ $template->assign('Defenders', $defenders);
 
 $template->assign('Duplicates', $duplicates);
 
-$template->assign('CombatSimHREF', Page::create('skeleton.php', 'admin/combat_simulator.php')->href());
+$template->assign('CombatSimHREF', Page::create('admin/combat_simulator.php')->href());
 
 if (!empty($realAttackers) && !empty($realDefenders)) {
 	if (Smr\Request::has('run')) {

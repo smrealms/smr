@@ -39,6 +39,6 @@ foreach (Smr\Request::getArray('group_id', []) as $groupID) {
 				AND receiver_delete = ' . $db->escapeBoolean(false));
 }
 
-$container = Page::create('skeleton.php', 'message_view.php');
+$container = Page::create('message_view.php');
 $container->addVar('folder_id');
 $container->go();

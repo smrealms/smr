@@ -14,7 +14,7 @@ if (empty($game_id)) {
 }
 $template->assign('PageTopic', $topic);
 
-$container = Page::create('skeleton.php', 'hall_of_fame_player_detail.php');
+$container = Page::create('hall_of_fame_player_detail.php');
 if (isset($game_id)) {
 	$container['game_id'] = $game_id;
 }

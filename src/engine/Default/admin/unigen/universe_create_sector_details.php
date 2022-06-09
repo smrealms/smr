@@ -13,9 +13,8 @@ $galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 $lastSector = end($galaxies)->getEndSector();
 $template->assign('LastSector', $lastSector);
 
-$container = Page::copy($var);
-$container['url'] = 'admin/unigen/universe_create_save_processing.php';
-$container['body'] = 'admin/unigen/universe_create_sector_details.php';
+$container = Page::create('admin/unigen/universe_create_save_processing.php', $var);
+$container['forward_to'] = 'admin/unigen/universe_create_sector_details.php';
 $template->assign('EditHREF', $container->href());
 
 $selectedPlanetType = 0;
@@ -53,8 +52,7 @@ if ($editSector->hasWarp()) {
 $template->assign('WarpGal', $warpGal);
 $template->assign('WarpSectorID', $warpSectorID);
 
-$container = Page::copy($var);
-$container['body'] = 'admin/unigen/universe_create_sectors.php';
+$container = Page::create('admin/unigen/universe_create_sectors.php', $var);
 $template->assign('CancelHREF', $container->href());
 
 if (isset($var['message'])) {

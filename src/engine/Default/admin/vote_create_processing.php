@@ -2,13 +2,13 @@
 
 $action = Smr\Request::get('action');
 if ($action == 'Preview Vote') {
-	$container = Page::create('skeleton.php', 'admin/vote_create.php');
+	$container = Page::create('admin/vote_create.php');
 	$container['PreviewVote'] = Smr\Request::get('question');
 	$container['Days'] = Smr\Request::getInt('days');
 	$container->go();
 }
 if ($action == 'Preview Option') {
-	$container = Page::create('skeleton.php', 'admin/vote_create.php');
+	$container = Page::create('admin/vote_create.php');
 	$container['PreviewOption'] = Smr\Request::get('option');
 	$container['VoteID'] = Smr\Request::getInt('vote');
 	$container->go();
@@ -30,4 +30,4 @@ if ($action == 'Create Vote') {
 		'text' => $db->escapeString($option),
 	]);
 }
-Page::create('skeleton.php', 'admin/vote_create.php')->go();
+Page::create('admin/vote_create.php')->go();

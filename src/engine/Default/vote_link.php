@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
-$container = Page::create('skeleton.php', 'current_sector.php');
+$container = Page::create('current_sector.php');
 
 $player = $session->getPlayer();
 if ($player->getGame()->hasStarted()) {

@@ -17,7 +17,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$sender = Smr\Messages::getMessagePlayer($dbRecord->getInt('from_id'), $gameID);
 	$receiver = Smr\Messages::getMessagePlayer($dbRecord->getInt('to_id'), $gameID);
 
-	$container = Page::create('skeleton.php', 'admin/notify_reply.php');
+	$container = Page::create('admin/notify_reply.php');
 	$container['offender'] = $dbRecord->getInt('from_id');
 	$container['offended'] = $dbRecord->getInt('to_id');
 	$container['game_id'] = $gameID;

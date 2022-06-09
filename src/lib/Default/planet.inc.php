@@ -14,7 +14,7 @@ function planet_common(): void {
 		if (USING_AJAX) {
 			// Auto-click current sector with javascript to avoid issues with ajax
 			// updates when the display page changes.
-			$container = Page::create('skeleton.php', 'current_sector.php');
+			$container = Page::create('current_sector.php');
 			$container['msg'] = '<span class="yellow">WARNING</span>: You have been ejected from the planet!';
 			$currentSectorHREF = $container->href();
 			// json_encode the HREF as a safety precaution

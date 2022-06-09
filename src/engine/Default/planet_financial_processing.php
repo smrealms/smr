@@ -40,4 +40,4 @@ if ($action == 'Deposit' || $action == 'Withdraw') {
 	$player->log(LOG_TYPE_BANK, 'Player bonds ' . $planet->getBonds() . ' credits at planet.');
 }
 
-Page::create('skeleton.php', 'planet_financial.php')->go();
+Page::create('planet_financial.php')->go();

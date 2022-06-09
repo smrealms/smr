@@ -31,5 +31,5 @@ $player->log(LOG_TYPE_TRADING, 'Player Loots ' . $amount . ' ' . Globals::getGoo
 $ship->increaseCargo($good_id, $amount);
 $port->decreaseGoodAmount($good_id, $amount);
 
-$container = Page::create('skeleton.php', 'port_loot.php');
+$container = Page::create('port_loot.php');
 $container->go();

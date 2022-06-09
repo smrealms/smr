@@ -20,7 +20,7 @@ function hit_sector_mines(SmrPlayer $player): void {
 	if ($player->hasNewbieTurns() || $ship->getClassID() === Smr\ShipClass::SCOUT) {
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
 		$player->takeTurns($turns, $turns);
-		$container = Page::create('skeleton.php', 'current_sector.php');
+		$container = Page::create('current_sector.php');
 		if ($player->hasNewbieTurns()) {
 			$flavor = 'Because of your newbie status you have been spared from the harsh reality of the forces';
 		} else {

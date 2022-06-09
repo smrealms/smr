@@ -4,7 +4,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$container = Page::create('skeleton.php', 'chess_play.php');
+$container = Page::create('chess_play.php');
 $container->addVar('ChessGameID');
 
 $chessGame = Smr\Chess\ChessGame::getChessGame($var['ChessGameID']);

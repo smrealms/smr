@@ -10,7 +10,7 @@ if (!$sector->hasPort()) {
 $port = $sector->getPort();
 
 if ($port->isDestroyed()) {
-	Page::create('skeleton.php', 'port_attack.php')->go();
+	Page::create('port_attack.php')->go();
 }
 
 $template = Smr\Template::getInstance();

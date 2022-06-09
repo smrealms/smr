@@ -21,6 +21,6 @@ $db->insert('anon_bank', [
 	'amount' => 0,
 ]);
 
-$container = Page::create('skeleton.php', 'bank_anon.php');
+$container = Page::create('bank_anon.php');
 $container['message'] = '<p>Account #' . $nextID . ' has been opened for you.</p>';
 $container->go();

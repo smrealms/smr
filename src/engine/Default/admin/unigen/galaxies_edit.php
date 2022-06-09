@@ -28,7 +28,7 @@ foreach ($game->getGalaxies() as $galaxy) {
 }
 $template->assign('Galaxies', $galaxies);
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
+$container = Page::create('admin/unigen/universe_create_sectors.php');
 $container->addVar('game_id');
 $container->addVar('gal_on');
 $template->assign('BackHREF', $container->href());

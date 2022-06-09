@@ -29,4 +29,4 @@ $db->insert('account_votes_for_feature', [
 	'vote_type' => $db->escapeString('YES'),
 ]);
 
-Page::create('skeleton.php', 'feature_request.php')->go();
+Page::create('feature_request.php')->go();

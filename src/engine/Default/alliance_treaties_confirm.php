@@ -10,7 +10,7 @@ $alliance_id_2 = Smr\Request::getInt('proposedAlliance');
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT 1 FROM alliance_treaties WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_1 = ' . $alliance_id_2 . ') AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($dbResult->hasRecord()) {
-	$container = Page::create('skeleton.php', 'alliance_treaties.php');
+	$container = Page::create('alliance_treaties.php');
 	$container['message'] = '<span class="red bold">ERROR:</span> There is already an outstanding treaty with that alliance.';
 	$container->go();
 }
@@ -42,5 +42,5 @@ foreach ($terms as $term => $value) {
 }
 $template->assign('YesHREF', $container->href());
 
-$container = Page::create('skeleton.php', 'alliance_treaties.php');
+$container = Page::create('alliance_treaties.php');
 $template->assign('NoHREF', $container->href());

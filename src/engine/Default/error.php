@@ -9,7 +9,7 @@ if (empty($var['message'])) {
 }
 
 if ($session->hasGame() && $lock->isActive()) {
-	$container = Page::create('skeleton.php', 'current_sector.php');
+	$container = Page::create('current_sector.php');
 	$errorMsg = '<span class="red bold">ERROR:</span> ' . $var['message'];
 	$container['errorMsg'] = $errorMsg;
 	$container->go();

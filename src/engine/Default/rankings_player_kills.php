@@ -19,6 +19,6 @@ $template->assign('Rankings', Rankings::collectRankings($rankedStats, $player));
 $totalPlayers = count($rankedStats);
 [$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
 
-$template->assign('FilterRankingsHREF', Page::create('skeleton.php', 'rankings_player_kills.php')->href());
+$template->assign('FilterRankingsHREF', Page::create('rankings_player_kills.php')->href());
 
 $template->assign('FilteredRankings', Rankings::collectRankings($rankedStats, $player, $minRank, $maxRank));

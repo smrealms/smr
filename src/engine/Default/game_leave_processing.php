@@ -12,4 +12,4 @@ if ($session->hasGame()) {
 
 $session->clearLinks();
 
-Page::create('skeleton.php', $var['body'], $var)->go();
+Page::create($var['forward_to'], $var)->go();

@@ -125,7 +125,7 @@ if ($player->isDead()) {
 }
 
 // If they died on the shot they get to see the results
-$container = Page::create('skeleton.php', 'forces_attack.php', skipRedirect: $player->isDead());
+$container = Page::create('forces_attack.php', skipRedirect: $player->isDead());
 
 // If player or target is dead there is no continue attack button
 if ($player->isDead() || !$forces->exists()) {

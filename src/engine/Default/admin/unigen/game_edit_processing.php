@@ -29,7 +29,7 @@ if (!$game->hasStarted()) {
 }
 $game->save();
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
+$container = Page::create('admin/unigen/universe_create_sectors.php');
 $container['message'] = '<span class="green">SUCCESS: edited game details</span>';
 $container->addVar('game_id');
 $container->addVar('gal_on');

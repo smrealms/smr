@@ -5,7 +5,7 @@ require(ENGINE . 'Default/alliance_option.php');
 $player = Smr\Session::getInstance()->getPlayer();
 
 if ($player->isDraftLeader()) {
-	$container['body'] = 'alliance_pick.php';
+	$container = Page::create('alliance_pick.php');
 	$links[] = [
 		'link' => create_link($container, 'Pick Members'),
 		'text' => 'Draft players into your alliance.',

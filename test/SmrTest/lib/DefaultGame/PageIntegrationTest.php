@@ -26,7 +26,7 @@ class PageIntegrationTest extends TestCase {
 	 * when getCurrentVar is called on it.
 	 */
 	private function setVar(array $var): void {
-		$page = new Page($var);
+		$page = Page::create('test', $var);
 		$session = $this->createMock(Session::class);
 		$session
 			->method('getCurrentVar')
@@ -37,26 +37,31 @@ class PageIntegrationTest extends TestCase {
 	//------------------------------------------------------------------------
 
 	public function test_create(): void {
-		// Test create with $extra as array
-		$page = Page::create('file', 'body', ['extra' => 'data']);
-		// Check that the expected keys of the ArrayObject are set
-		$expected = ['extra' => 'data', 'url' => 'file', 'body' => 'body'];
-		self::assertSame($expected, $page->getArrayCopy());
+		// Test create with only a file argument
+		$page = Page::create('test_file');
+		self::assertSame('test_file', $page->file);
+		self::assertSame([], $page->getArrayCopy());
+	}
 
-		// Test create with $extra as a Page object
-		$page2 = Page::create('file2', extra: $page);
+	public function test_create_with_data(): void {
+		// Test create with data as an array
+		$data = ['extra' => 'data'];
+		$page1 = Page::create('file1', $data);
 		// Check that the expected keys of the ArrayObject are set
-		$expected2 = ['extra' => 'data', 'url' => 'file2', 'body' => ''];
-		self::assertSame($expected2, $page2->getArrayCopy());
+		self::assertSame($data, $page1->getArrayCopy());
+
+		// Test create with data as a Page object
+		$page2 = Page::create('file2', $page1);
+		// Check that the expected keys of the ArrayObject are set
+		self::assertSame($data, $page2->getArrayCopy());
+		// Check that the file argument supercedes the file in $page1
+		self::assertSame('file2', $page2->file);
 
 		// Make sure they are not references to the same underlying object
-		self::assertNotSame($page, $page2);
+		self::assertNotSame($page1, $page2);
 		// Make sure passing $page to create didn't modify the original
-		self::assertSame($expected, $page->getArrayCopy());
-
-		// Test create when setting $remainingPageLoads
-		$page3 = Page::create('file', remainingPageLoads: 2);
-		self::assertSame(2, $page3['RemainingPageLoads']);
+		self::assertSame($data, $page1->getArrayCopy());
+		self::assertSame('file1', $page1->file);
 	}
 
 	public function test_copy(): void {
@@ -66,6 +71,16 @@ class PageIntegrationTest extends TestCase {
 		$copy = Page::copy($page);
 		self::assertNotSame($page, $copy);
 		self::assertEquals($page, $copy);
+	}
+
+	public function test_remainingPageLoads(): void {
+		// Create a Page that does not use the default page loads
+		$page = Page::create('current_sector.php');
+		self::assertSame(999999, $page->remainingPageLoads);
+
+		// Create a Page that does use the default page loads
+		$page = Page::create('test');
+		self::assertSame(1, $page->remainingPageLoads);
 	}
 
 	public function test_href(): void {
@@ -117,12 +132,31 @@ class PageIntegrationTest extends TestCase {
 		// Create an arbitrary Page with skipRedirect turned on
 		$page = Page::create('file', skipRedirect: true);
 		// Then skipRedirect should be on
-		self::assertTrue($page->skipRedirect());
+		self::assertTrue($page->skipRedirect);
 
 		// Create a new Page inheriting from the Page with skipRedirect
-		$page2 = Page::create('file', extra: $page);
+		$page2 = Page::create('file', $page);
 		// Then skipRedirect should NOT be inherited (false by default)
-		self::assertFalse($page2->skipRedirect());
+		self::assertFalse($page2->skipRedirect);
+	}
+
+	public function test_getCommonID(): void {
+		// Create an arbitrary Page with data
+		$data = ['some' => 'data'];
+		$page1 = Page::create('test1', $data);
+		// Check the value of the common ID
+		$expected = 'b5cce3676aa819381ad18dc1a5f41710';
+		self::assertSame($expected, $page1->getCommonID());
+
+		// Create a page with the same data but a different file
+		$page2 = Page::create('test2', $page1);
+		// Check that the common ID changes
+		self::assertNotEquals($page1->getCommonID(), $page2->getCommonID());
+
+		// Create a page with the same file but different data
+		$page3 = Page::create('test1', ['different' => 'data']);
+		// Check that the common ID changes
+		self::assertNotEquals($page1->getCommonID(), $page3->getCommonID());
 	}
 
 }

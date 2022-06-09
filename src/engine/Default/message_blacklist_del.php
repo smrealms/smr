@@ -3,7 +3,7 @@
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$container = Page::create('skeleton.php', 'message_blacklist.php');
+$container = Page::create('message_blacklist.php');
 
 $entry_ids = Smr\Request::getIntArray('entry_ids', []);
 if (empty($entry_ids)) {

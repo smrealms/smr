@@ -4,7 +4,7 @@ $template = Smr\Template::getInstance();
 
 $template->assign('PageTopic', 'Deleting A Game');
 
-$container = Page::create('skeleton.php', 'admin/game_delete_confirm.php');
+$container = Page::create('admin/game_delete_confirm.php');
 $template->assign('ConfirmHREF', $container->href());
 
 $db = Smr\Database::getInstance();

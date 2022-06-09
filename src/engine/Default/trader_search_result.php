@@ -40,29 +40,29 @@ if (!empty($player_id)) {
 function playerLinks(SmrPlayer $linkPlayer): array {
 	$result = ['Player' => $linkPlayer];
 
-	$container = Page::create('skeleton.php', 'trader_search_result.php');
+	$container = Page::create('trader_search_result.php');
 	$container['player_id'] = $linkPlayer->getPlayerID();
 	$result['SearchHREF'] = $container->href();
 
-	$container = Page::create('skeleton.php', 'council_list.php');
+	$container = Page::create('council_list.php');
 	$container['race_id'] = $linkPlayer->getRaceID();
 	$result['RaceHREF'] = $container->href();
 
-	$container = Page::create('skeleton.php', 'message_send.php');
+	$container = Page::create('message_send.php');
 	$container['receiver'] = $linkPlayer->getAccountID();
 	$result['MessageHREF'] = $container->href();
 
-	$container = Page::create('skeleton.php', 'bounty_view.php');
+	$container = Page::create('bounty_view.php');
 	$container['id'] = $linkPlayer->getAccountID();
 	$result['BountyHREF'] = $container->href();
 
-	$container = Page::create('skeleton.php', 'hall_of_fame_player_detail.php');
+	$container = Page::create('hall_of_fame_player_detail.php');
 	$container['account_id'] = $linkPlayer->getAccountID();
 	$container['game_id'] = $linkPlayer->getGameID();
 	$container['sending_page'] = 'search';
 	$result['HofHREF'] = $container->href();
 
-	$container = Page::create('skeleton.php', 'news_read_advanced.php');
+	$container = Page::create('news_read_advanced.php');
 	$container['submit'] = 'Search For Player';
 	$container['playerName'] = $linkPlayer->getPlayerName();
 	$result['NewsHREF'] = $container->href();
@@ -78,7 +78,7 @@ function playerLinks(SmrPlayer $linkPlayer): array {
 }
 
 if (empty($resultPlayer) && empty($similarPlayers)) {
-	$container = Page::create('skeleton.php', 'trader_search.php');
+	$container = Page::create('trader_search.php');
 	$container['empty_result'] = true;
 	$container->go();
 }

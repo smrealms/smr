@@ -8,7 +8,7 @@ use Smr\Npc\NpcActor;
 function overrideForward(Page $container): never {
 	global $forwardedContainer;
 	$forwardedContainer = $container;
-	if ($container['body'] == 'error.php') {
+	if ($container->file == 'error.php') {
 		// We hit a create_error - this shouldn't happen for an NPC often,
 		// for now we want to throw an exception for it for testing.
 		debug('Hit an error');
@@ -108,7 +108,7 @@ function npcDriver(): bool {
 	global $previousContainer;
 
 	$session = Smr\Session::getInstance();
-	$session->setCurrentVar(new Page()); // initialize empty var
+	$session->setCurrentVar(Page::create('NPC_SCRIPT')); // initialize fake var
 
 	// Load the first available NPC
 	changeNPCLogin();
@@ -194,7 +194,7 @@ function processContainer(Page $container): never {
 	global $forwardedContainer, $previousContainer;
 	$session = Smr\Session::getInstance();
 	$player = $session->getPlayer();
-	if ($container == $previousContainer && $forwardedContainer['body'] != 'forces_attack.php') {
+	if ($container == $previousContainer && $forwardedContainer->file != 'forces_attack.php') {
 		debug('We are executing the same container twice?', ['ForwardedContainer' => $forwardedContainer, 'Container' => $container]);
 		if ($player->hasNewbieTurns() || $player->hasFederalProtection()) {
 			// Only throw the exception if we have protection, otherwise let's hope that the NPC will be able to find its way to safety rather than dying in the open.
@@ -312,7 +312,7 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page
 	$idealPrice = $port->getIdealPrice($goodID, $transaction, $amount, $relations);
 	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
 
-	return Page::create('shop_goods_processing.php', '', [
+	return Page::create('shop_goods_processing.php', [
 		'action' => $transaction,
 		'offered_price' => $offeredPrice,
 		'ideal_price' => $idealPrice,
@@ -328,14 +328,14 @@ function dumpCargo(SmrPlayer $player): Page {
 	debug('Ship Cargo', $cargo);
 	foreach ($cargo as $goodID => $amount) {
 		if ($amount > 0) {
-			return Page::create('cargo_dump_processing.php', '', ['good_id' => $goodID, 'amount' => $amount]);
+			return Page::create('cargo_dump_processing.php', ['good_id' => $goodID, 'amount' => $amount]);
 		}
 	}
 	throw new Exception('Called dumpCargo without any cargo!');
 }
 
 function plotToSector(SmrPlayer $player, int $sectorID): Page {
-	return Page::create('course_plot_processing.php', '', ['from' => $player->getSectorID(), 'to' => $sectorID]);
+	return Page::create('course_plot_processing.php', ['from' => $player->getSectorID(), 'to' => $sectorID]);
 }
 
 function plotToFed(SmrPlayer $player): Page {
@@ -364,12 +364,12 @@ function plotToNearest(AbstractSmrPlayer $player, mixed $realX): Page|false {
 		return false;
 	}
 
-	return Page::create('course_plot_nearest_processing.php', '', ['RealX' => $realX]);
+	return Page::create('course_plot_nearest_processing.php', ['RealX' => $realX]);
 }
 
 function moveToSector(SmrPlayer $player, int $targetSector): Page {
 	debug('Moving from #' . $player->getSectorID() . ' to #' . $targetSector);
-	return Page::create('sector_move_processing.php', '', ['target_sector' => $targetSector, 'target_page' => '']);
+	return Page::create('sector_move_processing.php', ['target_sector' => $targetSector, 'target_page' => '']);
 }
 
 function checkForShipUpgrade(AbstractSmrPlayer $player): void {

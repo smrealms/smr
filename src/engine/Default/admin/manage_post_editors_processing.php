@@ -12,7 +12,7 @@ $player_id = Smr\Request::getInt('player_id');
 $action = Smr\Request::get('submit');
 
 // Pass entire $var so that the selected game remains selected
-$container = Page::create('skeleton.php', 'admin/manage_post_editors.php', $var);
+$container = Page::create('admin/manage_post_editors.php', $var);
 
 try {
 	$selected_player = SmrPlayer::getPlayerByPlayerID($player_id, $game_id);

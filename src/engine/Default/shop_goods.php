@@ -132,5 +132,5 @@ foreach ($port->getVisibleGoodsSold($player) as $goodID) {
 $template->assign('BoughtGoods', $boughtGoods);
 $template->assign('SoldGoods', $soldGoods);
 
-$container = Page::create('skeleton.php', 'current_sector.php');
+$container = Page::create('current_sector.php');
 $template->assign('LeavePortHREF', $container->href());

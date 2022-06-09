@@ -33,7 +33,7 @@ if ($ship->hasIllusion()) {
 }
 
 if ($ship->hasJump()) {
-	$container = Page::create('sector_jump_processing.php', '');
+	$container = Page::create('sector_jump_processing.php');
 	$container['target_page'] = 'current_sector.php';
 	$template->assign('JumpDriveFormLink', $container->href());
 }

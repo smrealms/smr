@@ -1020,7 +1020,7 @@ class SmrPlanet {
 	}
 
 	public function getExamineHREF(): string {
-		return Page::create('skeleton.php', 'planet_examine.php')->href();
+		return Page::create('planet_examine.php')->href();
 	}
 
 	public function getLandHREF(): string {
@@ -1050,7 +1050,7 @@ class SmrPlanet {
 	}
 
 	public function getBondConfirmationHREF(): string {
-		return Page::create('skeleton.php', 'planet_bond_confirmation.php')->href();
+		return Page::create('planet_bond_confirmation.php')->href();
 	}
 
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers): void {

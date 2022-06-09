@@ -31,5 +31,5 @@ foreach ($dbResult->records() as $dbRecord) {
 }
 $template->assign('AnonLogs', $anon_logs);
 
-$container = Page::create('skeleton.php', 'admin/log_console.php');
+$container = Page::create('admin/log_console.php');
 $template->assign('BackHREF', $container->href());

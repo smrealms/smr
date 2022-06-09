@@ -11,11 +11,10 @@ $allEyesOnly = Smr\Request::has('allEyesOnly'); // only present for Create Threa
 
 $action = Smr\Request::get('action');
 if ($action == 'Preview Thread' || $action == 'Preview Reply') {
-	$container = Page::create('skeleton.php', '', $var);
 	if (!isset($var['thread_index'])) {
-		$container['body'] = 'alliance_message.php';
+		$container = Page::create('alliance_message.php', $var);
 	} else {
-		$container['body'] = 'alliance_message_view.php';
+		$container = Page::create('alliance_message_view.php', $var);
 	}
 	$container['preview'] = $body;
 	$container['topic'] = $topic;
@@ -98,18 +97,17 @@ $db->replace('player_read_thread', [
 	'time' => $db->escapeNumber(Smr\Epoch::time() + 2),
 ]);
 
-$container = Page::create('skeleton.php');
-$container['alliance_id'] = $alliance_id;
-if (isset($var['alliance_eyes'])) {
-	$container->addVar('alliance_eyes');
-}
 if (isset($var['thread_index'])) {
-	$container['body'] = 'alliance_message_view.php';
+	$container = Page::create('alliance_message_view.php');
 	$container->addVar('thread_index');
 	$container->addVar('thread_ids');
 	$container->addVar('thread_topics');
 } else {
-	$container['body'] = 'alliance_message.php';
+	$container = Page::create('alliance_message.php');
 }
+if (isset($var['alliance_eyes'])) {
+	$container->addVar('alliance_eyes');
+}
+$container['alliance_id'] = $alliance_id;
 
 $container->go();

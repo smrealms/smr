@@ -161,7 +161,7 @@ class HallOfFame {
 		$return = ('<tr>');
 		$return .= ('<td ' . $bold . '>' . $rank . '</td>');
 
-		$container = Page::create('skeleton.php', 'hall_of_fame_player_detail.php');
+		$container = Page::create('hall_of_fame_player_detail.php');
 		$container['account_id'] = $accountID;
 
 		if (isset($var['game_id'])) {

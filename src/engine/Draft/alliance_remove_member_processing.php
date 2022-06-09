@@ -28,4 +28,4 @@ foreach ($accountIDs as $accountID) {
 	$currPlayer->setLandedOnPlanet(false);
 }
 
-Page::create('skeleton.php', 'alliance_roster.php')->go();
+Page::create('alliance_roster.php')->go();

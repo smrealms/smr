@@ -196,7 +196,7 @@ if ($gameEnded) {
 $message .= '</div>';
 
 $player->update();
-$container = Page::create('skeleton.php', 'bar_gambling_bet.php');
+$container = Page::create('bar_gambling_bet.php');
 $container->addVar('LocationID');
 $container['message'] = $message;
 $container['AllowAjax'] = false;

@@ -9,4 +9,4 @@ $db->write('UPDATE album
 			SET approved = ' . $db->escapeString($approved) . '
 			WHERE account_id = ' . $db->escapeNumber($var['album_id']));
 
-Page::create('skeleton.php', 'admin/album_approve.php')->go();
+Page::create('admin/album_approve.php')->go();

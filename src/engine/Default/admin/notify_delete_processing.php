@@ -6,4 +6,4 @@ if (!Smr\Request::has('notify_id')) {
 $db = Smr\Database::getInstance();
 $db->write('DELETE FROM message_notify WHERE notify_id IN (' . $db->escapeArray(Smr\Request::getIntArray('notify_id')) . ')');
 
-Page::create('skeleton.php', 'admin/notify_view.php')->go();
+Page::create('admin/notify_view.php')->go();

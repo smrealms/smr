@@ -13,4 +13,4 @@ $db->replace('alliance_has_op_response', [
 	'response' => $db->escapeString($response),
 ]);
 
-Page::create('skeleton.php', 'alliance_mod.php')->go();
+Page::create('alliance_mod.php')->go();

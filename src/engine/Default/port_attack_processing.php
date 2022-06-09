@@ -33,7 +33,7 @@ if (!$port->exists()) {
 
 
 if ($port->isDestroyed()) {
-	Page::create('skeleton.php', 'port_attack.php')->go();
+	Page::create('port_attack.php')->go();
 }
 
 
@@ -111,6 +111,6 @@ if ($player->isDead()) {
 }
 
 // If they died on the shot they get to see the results
-$container = Page::create('skeleton.php', 'port_attack.php', skipRedirect: $player->isDead());
+$container = Page::create('port_attack.php', skipRedirect: $player->isDead());
 $container['results'] = $results;
 $container->go();

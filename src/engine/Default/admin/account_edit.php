@@ -10,8 +10,8 @@ $account_id = $var['account_id'];
 $curr_account = SmrAccount::getAccount($account_id);
 
 $template->assign('EditingAccount', $curr_account);
-$template->assign('EditFormHREF', Page::create('admin/account_edit_processing.php', '', ['account_id' => $curr_account->getAccountID()])->href());
-$template->assign('ResetFormHREF', Page::create('skeleton.php', 'admin/account_edit_search.php')->href());
+$template->assign('EditFormHREF', Page::create('admin/account_edit_processing.php', ['account_id' => $curr_account->getAccountID()])->href());
+$template->assign('ResetFormHREF', Page::create('admin/account_edit_search.php')->href());
 
 $editingPlayers = [];
 $dbResult = $db->read('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY game_id ASC');

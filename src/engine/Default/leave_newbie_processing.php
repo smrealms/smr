@@ -10,4 +10,4 @@ if ($action == 'Yes!') {
 }
 
 $player->log(LOG_TYPE_MOVEMENT, 'Player drops newbie turns.');
-Page::create('skeleton.php', 'current_sector.php')->go();
+Page::create('current_sector.php')->go();

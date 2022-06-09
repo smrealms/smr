@@ -33,7 +33,7 @@ $template->assign('WinningTicket', $winningTicket);
 //get rid of drinks older than 30 mins
 $db->write('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(Smr\Epoch::time() - 1800));
 
-$container = Page::create('skeleton.php', 'bar_talk_bartender.php');
+$container = Page::create('bar_talk_bartender.php');
 $container->addVar('LocationID');
 $template->assign('GossipHREF', $container->href());
 
@@ -44,10 +44,10 @@ $template->assign('BuyDrinkHREF', $container->href());
 $container['action'] = 'water';
 $template->assign('BuyWaterHREF', $container->href());
 
-$container = Page::create('skeleton.php', 'bar_ticker_buy.php');
+$container = Page::create('bar_ticker_buy.php');
 $container->addVar('LocationID');
 $template->assign('BuySystemHREF', $container->href());
 
-$container = Page::create('skeleton.php', 'bar_galmap_buy.php');
+$container = Page::create('bar_galmap_buy.php');
 $container->addVar('LocationID');
 $template->assign('BuyGalMapHREF', $container->href());

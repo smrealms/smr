@@ -109,20 +109,16 @@ This is the coding style that should be used for any new code, although currentl
 ## File inclusion
 Classes should be added to `src/lib/Smr` to take advantage of the PSR-4 autoloader.
 Engine files and their associated templates should be placed in `src/engine` and
-`src/templates` respectively (see `Page::create` for how they will be included).
+`src/templates` respectively (see `Page::process` for how they will be included).
 
 ## Links
 If possible use a function from `Globals` or a relevant object to generate links (e.g. `Globals::getCurrentSectorHREF()` or `$otherPlayer->getExamineTraderHREF()`).
 This is usually clearer and allows hooking into the hotkey system.
-To create a link you first create a "container" using the `Page::create()` function declared as
+To create a link you first create a "container" using the `Page` class:
 
 ```php
-Page::create($file, $body = '', array $extra = array(), $remainingPageLoads = null)
+$container = Page::create($file);
 ```
-There are two common usages of this:
-- `$container = Page::create('skeleton.php', $displayOnlyPage)` with `$displayOnlyPage` being something such as 'current_sector.php'.
-- `$container = Page::create($processingPage)` with `$processingPage` being something such as 'sector_move_processing.php'.
-
 You can then call `$container->href()` to get a HREF, which will load the given page or `Smr\Session::generateSN($container)` to get just the sn.
 Along with this you can also assign extra values to `$container` which will be available on the next page under `$var`.
 

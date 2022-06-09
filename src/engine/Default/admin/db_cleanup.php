@@ -19,7 +19,7 @@ if (isset($var['results'])) {
 	$template->assign('DiffMB', bytesToMB($var['diffBytes']));
 	$template->assign('Action', $var['action']);
 	$template->assign('EndedGames', $var['endedGames']);
-	$container = Page::create('skeleton.php', 'admin/db_cleanup.php');
+	$container = Page::create('admin/db_cleanup.php');
 	$template->assign('BackHREF', $container->href());
 } else {
 	// Create processing links

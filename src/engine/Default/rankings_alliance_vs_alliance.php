@@ -9,7 +9,7 @@ $template->assign('PageTopic', 'Alliance VS Alliance Rankings');
 
 Menu::rankings(1, 4);
 $db = Smr\Database::getInstance();
-$container = Page::create('skeleton.php', 'rankings_alliance_vs_alliance.php');
+$container = Page::create('rankings_alliance_vs_alliance.php');
 $template->assign('SubmitHREF', $container->href());
 
 $alliancer = $session->getRequestVarIntArray('alliancer', []);

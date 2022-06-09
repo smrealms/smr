@@ -20,7 +20,7 @@ if (isset($var['msg'])) {
 $db = Smr\Database::getInstance();
 doTickerAssigns($template, $player, $db);
 
-$template->assign('LaunchLink', Page::create('planet_launch_processing.php', '')->href());
+$template->assign('LaunchLink', Page::create('planet_launch_processing.php')->href());
 
 // Cloaked ships are visible on planets
 $template->assign('VisiblePlayers', $planet->getOtherTraders($player));

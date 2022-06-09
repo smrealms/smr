@@ -7,7 +7,7 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
 Menu::galacticPost();
 
-$container = Page::create('skeleton.php', 'galactic_post_past.php');
+$container = Page::create('galactic_post_past.php');
 $template->assign('SelectGameHREF', $container->href());
 
 // View past editions of current game by default
@@ -31,7 +31,7 @@ $template->assign('PublishedGames', $publishedGames);
 $dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id=' . $db->escapeNumber($selectedGameID));
 $pastEditions = [];
 foreach ($dbResult->records() as $dbRecord) {
-	$container = Page::create('skeleton.php', 'galactic_post_read.php');
+	$container = Page::create('galactic_post_read.php');
 	$container['paper_id'] = $dbRecord->getInt('paper_id');
 	$container['game_id'] = $selectedGameID;
 	$container['back'] = true;

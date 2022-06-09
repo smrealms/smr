@@ -382,7 +382,7 @@ class SmrForce {
 	}
 
 	public function getExamineDropForcesHREF(): string {
-		$container = Page::create('skeleton.php', 'forces_drop.php');
+		$container = Page::create('forces_drop.php');
 		$container['owner_id'] = $this->getOwnerID();
 		return $container->href();
 	}

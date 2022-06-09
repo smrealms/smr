@@ -16,7 +16,7 @@ $adminPermissions = [];
 foreach (array_keys($account->getPermissions()) as $permissionID) {
 	[$name, $link, $categoryID] = Smr\AdminPermissions::getPermissionInfo($permissionID);
 	$adminPermissions[$categoryID][] = [
-		'Link' => empty($link) ? false : Page::create('skeleton.php', $link)->href(),
+		'Link' => empty($link) ? false : Page::create($link)->href(),
 		'Name' => $name,
 	];
 }

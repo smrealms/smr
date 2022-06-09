@@ -42,7 +42,7 @@ foreach ($dbResult->records() as $dbRecord) {
 }
 
 // Get links to other pages
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_warps.php');
+$container = Page::create('admin/unigen/universe_create_warps.php');
 $container->addVar('game_id');
 $galLinks = [];
 foreach ($galaxies as $gal) {
@@ -51,13 +51,11 @@ foreach ($galaxies as $gal) {
 }
 $template->assign('GalLinks', $galLinks);
 
-$container = Page::copy($var);
-$container['url'] = 'admin/unigen/universe_create_save_processing.php';
-$container['body'] = 'admin/unigen/universe_create_warps.php';
+$container = Page::create('admin/unigen/universe_create_save_processing.php', $var);
+$container['forward_to'] = 'admin/unigen/universe_create_warps.php';
 $template->assign('SubmitHREF', $container->href());
 
-$container = Page::copy($var);
-$container['body'] = 'admin/unigen/universe_create_sectors.php';
+$container = Page::create('admin/unigen/universe_create_sectors.php', $var);
 $template->assign('CancelHREF', $container->href());
 
 $template->assign('Galaxy', $galaxy);

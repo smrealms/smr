@@ -9,7 +9,7 @@ $account = $session->getAccount();
 if (!isset($var['box_type_id'])) {
 	$template->assign('PageTopic', 'Viewing Message Boxes');
 
-	$container = Page::create('skeleton.php', 'admin/box_view.php');
+	$container = Page::create('admin/box_view.php');
 	$boxes = [];
 	foreach (Smr\Messages::getAdminBoxNames() as $boxTypeID => $boxName) {
 		$container['box_type_id'] = $boxTypeID;
@@ -30,7 +30,7 @@ if (!isset($var['box_type_id'])) {
 	$boxName = Smr\Messages::getAdminBoxNames()[$var['box_type_id']];
 	$template->assign('PageTopic', 'Viewing ' . $boxName);
 
-	$template->assign('BackHREF', Page::create('skeleton.php', 'admin/box_view.php')->href());
+	$template->assign('BackHREF', Page::create('admin/box_view.php')->href());
 	$dbResult = $db->read('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($var['box_type_id']) . ' ORDER BY send_time DESC');
 	$messages = [];
 	if ($dbResult->hasRecord()) {
@@ -55,7 +55,7 @@ if (!isset($var['box_type_id'])) {
 					$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
 					$senderName .= ' a.k.a ' . $senderPlayer->getDisplayName();
 					if ($account->hasPermission(PERMISSION_SEND_ADMIN_MESSAGE)) {
-						$container = Page::create('skeleton.php', 'admin/box_reply.php');
+						$container = Page::create('admin/box_reply.php');
 						$container['sender_id'] = $senderID;
 						$container['game_id'] = $gameID;
 						$container->addVar('box_type_id');

@@ -28,6 +28,6 @@ switch ($type) {
 		create_error('42 would be the right answer !!!');
 }
 
-$container = Page::create('skeleton.php', 'course_plot.php');
+$container = Page::create('course_plot.php');
 
 $container->go();

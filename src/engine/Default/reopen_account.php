@@ -20,6 +20,6 @@ $template->assign('PageTopic', 'Re-Open Account?');
 // It doesn't really matter what page we link to -- the closing
 // conditional will be triggered in the loader since the account
 // is still banned, so we do the unbanning there.
-$container = Page::create('skeleton.php', 'game_play.php');
+$container = Page::create('game_play.php');
 $container['do_reopen_account'] = true;
 $template->assign('ReopenLink', $container->href());

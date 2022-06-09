@@ -9,7 +9,7 @@ $offenderBanPoints = Smr\Request::getInt('offenderBanPoints');
 $offendedReply = Smr\Request::get('offendedReply');
 $offendedBanPoints = Smr\Request::getInt('offendedBanPoints');
 if (Smr\Request::get('action') == 'Preview messages') {
-	$container = Page::create('skeleton.php', 'admin/notify_reply.php');
+	$container = Page::create('admin/notify_reply.php');
 	$container->addVar('offender');
 	$container->addVar('offended');
 	$container->addVar('game_id');
@@ -44,4 +44,4 @@ if ($offendedReply != '') {
 		$offenderAccount->addPoints($offendedBanPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 	}
 }
-Page::create('skeleton.php', 'admin/notify_view.php')->go();
+Page::create('admin/notify_view.php')->go();

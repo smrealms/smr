@@ -13,7 +13,7 @@ if (isset($var['reply_id'])) {
 				AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
 				AND thread_id = ' . $db->escapeNumber($var['thread_id']) . '
 				AND reply_id = ' . $db->escapeNumber($var['reply_id']));
-	Page::create('skeleton.php', 'alliance_message_view.php', $var)->go();
+	Page::create('alliance_message_view.php', $var)->go();
 } else {
 	$db->write('DELETE FROM alliance_thread
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
@@ -23,5 +23,5 @@ if (isset($var['reply_id'])) {
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
 				AND thread_id = ' . $db->escapeNumber($var['thread_id']));
-	Page::create('skeleton.php', 'alliance_message.php', ['alliance_id' => $alliance_id])->go();
+	Page::create('alliance_message.php', ['alliance_id' => $alliance_id])->go();
 }

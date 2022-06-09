@@ -37,4 +37,4 @@ if (Smr\Request::get('action') == 'Change') {
 	}
 }
 
-Page::create('skeleton.php', 'admin/permission_manage.php')->go();
+Page::create('admin/permission_manage.php')->go();

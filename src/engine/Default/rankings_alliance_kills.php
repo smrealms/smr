@@ -22,4 +22,4 @@ $numAlliances = count($rankedStats);
 
 $template->assign('FilteredRankings', Rankings::collectAllianceRankings($rankedStats, $player, $minRank, $maxRank));
 
-$template->assign('FilterRankingsHREF', Page::create('skeleton.php', 'rankings_alliance_kills.php')->href());
+$template->assign('FilterRankingsHREF', Page::create('rankings_alliance_kills.php')->href());

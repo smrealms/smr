@@ -37,4 +37,4 @@ foreach ($dbResult->records() as $dbRecord) {
 	$cachedPort->addCachePorts($alliance_ids);
 }
 
-Page::create('skeleton.php', 'alliance_roster.php')->go();
+Page::create('alliance_roster.php')->go();

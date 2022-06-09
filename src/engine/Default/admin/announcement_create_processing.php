@@ -5,7 +5,7 @@ $account = $session->getAccount();
 
 $message = Smr\Request::get('message');
 if (Smr\Request::get('action') == 'Preview announcement') {
-	$container = Page::create('skeleton.php', 'admin/announcement_create.php');
+	$container = Page::create('admin/announcement_create.php');
 	$container['preview'] = $message;
 	$container->go();
 }
@@ -18,4 +18,4 @@ $db->insert('announcement', [
 	'msg' => $db->escapeString($message),
 ]);
 
-Page::create('skeleton.php', 'admin/admin_tools.php')->go();
+Page::create('admin/admin_tools.php')->go();

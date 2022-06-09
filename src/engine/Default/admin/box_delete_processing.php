@@ -19,4 +19,4 @@ if ($action == 'Marked Messages') {
 	$db->write('DELETE FROM message_boxes WHERE box_type_id = ' . $db->escapeNumber($var['box_type_id']));
 }
 
-Page::create('skeleton.php', 'admin/box_view.php')->go();
+Page::create('admin/box_view.php')->go();

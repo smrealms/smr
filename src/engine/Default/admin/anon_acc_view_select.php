@@ -7,7 +7,7 @@ $var = $session->getCurrentVar();
 //view anon acct activity.
 $template->assign('PageTopic', 'View Anonymous Account Info');
 
-$container = Page::create('skeleton.php', 'admin/anon_acc_view.php');
+$container = Page::create('admin/anon_acc_view.php');
 $template->assign('AnonViewHREF', $container->href());
 
 if (isset($var['message'])) {

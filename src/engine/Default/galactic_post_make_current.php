@@ -15,5 +15,5 @@ if ($dbResult->hasRecord()) {
 $db->write('UPDATE galactic_post_paper SET online_since=' . $db->escapeNumber(Smr\Epoch::time()) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($var['id']));
 
 //all done lets send back to the main GP page.
-$container = Page::create('skeleton.php', 'galactic_post.php');
+$container = Page::create('galactic_post.php');
 $container->go();

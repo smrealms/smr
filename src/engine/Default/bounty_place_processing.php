@@ -19,7 +19,7 @@ if ($amount <= 0 && $smrCredits <= 0) {
 	create_error('You must enter an amount greater than 0!');
 }
 
-$container = Page::create('skeleton.php', 'bounty_place_confirm.php');
+$container = Page::create('bounty_place_confirm.php');
 $container['amount'] = $amount;
 $container['SmrCredits'] = $smrCredits;
 $container['player_id'] = Smr\Request::getInt('player_id');

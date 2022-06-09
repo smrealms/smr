@@ -37,7 +37,7 @@ $container->addVar('gal_on');
 $template->assign('ProcessingHREF', $container->href());
 $template->assign('SubmitValue', 'Modify Game');
 
-$container = Page::create('skeleton.php', 'admin/unigen/universe_create_sectors.php');
+$container = Page::create('admin/unigen/universe_create_sectors.php');
 $container->addVar('game_id');
 $container->addVar('gal_on');
 $template->assign('CancelHREF', $container->href());

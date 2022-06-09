@@ -32,7 +32,7 @@ $num = $dbResult->record()->getInt('num');
 $message = ('<div class="center">Thanks for your purchase and good luck!  You currently');
 $message .= (' own ' . pluralise($num, 'ticket') . '!</div><br />');
 
-$container = Page::create('skeleton.php', 'bar_main.php');
+$container = Page::create('bar_main.php');
 $container->addVar('LocationID');
 $container['message'] = $message;
 $container->go();

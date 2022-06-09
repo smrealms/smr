@@ -7,7 +7,7 @@ $admin_id = $session->getRequestVarInt('admin_id', 0);
 
 $template->assign('PageTopic', 'Manage Admin Permissions');
 
-$container = Page::create('skeleton.php', 'admin/permission_manage.php');
+$container = Page::create('admin/permission_manage.php');
 $selectAdminHREF = $container->href();
 $template->assign('SelectAdminHREF', $selectAdminHREF);
 

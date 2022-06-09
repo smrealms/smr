@@ -97,7 +97,7 @@ if ($dbResult->hasRecord()) {
 		++$i;
 	}
 
-	$container = Page::create('skeleton.php', 'alliance_message_view.php');
+	$container = Page::create('alliance_message_view.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$container['thread_ids'] = $thread_ids;
 	$container['thread_topics'] = $thread_topics;
