@@ -14,30 +14,30 @@ Menu::alliance($alliance->getAllianceID());
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('
 SELECT
-sum(mines) as tot_mines,
-sum(combat_drones) as tot_cds,
-sum(scout_drones) as tot_sds
+	IFNULL(sum(mines), 0) as tot_mines,
+	IFNULL(sum(combat_drones), 0) as tot_cds,
+	IFNULL(sum(scout_drones), 0) as tot_sds
 FROM sector_has_forces JOIN player ON player.game_id=sector_has_forces.game_id AND sector_has_forces.owner_id=player.account_id
 WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-AND expire_time >= ' . $db->escapeNumber(Smr\Epoch::time()));
+	AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
+	AND expire_time >= ' . $db->escapeNumber(Smr\Epoch::time()));
+$dbRecord = $dbResult->record();
 
-$hardwareTypes = Globals::getHardwareTypes();
-
-$total = [];
-$totalCost = [];
-if ($dbResult->hasRecord()) {
-	$dbRecord = $dbResult->record();
-	// Get total number of forces
-	$total['Mines'] = $dbRecord->getInt('tot_mines');
-	$total['CDs'] = $dbRecord->getInt('tot_cds');
-	$total['SDs'] = $dbRecord->getInt('tot_sds');
-	// Get total cost of forces
-	$totalCost['Mines'] = $total['Mines'] * $hardwareTypes[HARDWARE_MINE]['Cost'];
-	$totalCost['CDs'] = $total['CDs'] * $hardwareTypes[HARDWARE_COMBAT]['Cost'];
-	$totalCost['SDs'] = $total['SDs'] * $hardwareTypes[HARDWARE_SCOUT]['Cost'];
-}
+// Get total number of forces
+$total = [
+	'Mines' => $dbRecord->getInt('tot_mines'),
+	'CDs' => $dbRecord->getInt('tot_cds'),
+	'SDs' => $dbRecord->getInt('tot_sds'),
+];
 $template->assign('Total', $total);
+
+	// Get total cost of forces
+$hardwareTypes = Globals::getHardwareTypes();
+$totalCost = [
+	'Mines' => $total['Mines'] * $hardwareTypes[HARDWARE_MINE]['Cost'],
+	'CDs' => $total['CDs'] * $hardwareTypes[HARDWARE_COMBAT]['Cost'],
+	'SDs' => $total['SDs'] * $hardwareTypes[HARDWARE_SCOUT]['Cost'],
+];
 $template->assign('TotalCost', $totalCost);
 
 $dbResult = $db->read('
