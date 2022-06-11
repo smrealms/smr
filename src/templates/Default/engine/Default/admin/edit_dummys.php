@@ -55,7 +55,7 @@
 				<br />Level: <?php echo $DummyPlayer->getLevelID(); ?><br />
 				Ship: <?php echo $DummyShip->getName(); ?> (<?php echo $DummyShip->getAttackRating() ?>/<?php echo $DummyShip->getDefenseRating(); ?>)<br />
 				DCS: <?php if ($DummyShip->hasDCS()) { ?>Yes<?php } else { ?>No<?php } ?><br />
-				Weapons: <?php foreach ($DummyShip->getWeapons() as $ShipWeapon) { ?>* <?php echo $ShipWeapon->getName(); ?><br /><?php } ?>
+				Weapons:<br /><?php foreach ($DummyShip->getWeapons() as $ShipWeapon) { ?>* <?php echo $ShipWeapon->getName(); ?><br /><?php } ?>
 		</td>
 	</tr>
 </table>

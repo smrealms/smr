@@ -2,7 +2,7 @@
 	foreach ($Team as $OrderID => $Dummy) { ?>
 	<tr class="top">
 		<td>
-			<span class="underline"><?php echo $MemberDescription; ?> <?php echo $OrderID; ?></span><br /><br />
+			<span class="bold"><?php echo $OrderID; ?>.</span>
 		</td>
 		<td>
 			<select name="<?php echo $MemberInputName; ?>[]">
@@ -12,16 +12,18 @@
 				} ?>
 			</select><br />
 		</td>
-		<td>
-			<span class="underline">Current Details</span><?php
-				if ($Dummy) {
-					$Ship = $Dummy->getShip();
-					$ShipWeapons = $Ship->getWeapons(); ?>
-					<br />Level: <?php echo $Dummy->getLevelID(); ?><br />
-					Ship: <?php echo $Ship->getName(); ?> (<?php echo $Ship->getAttackRating(); ?>/<?php echo $Ship->getDefenseRating(); ?>)<br />
-					DCS: <?php if ($Ship->hasDCS()) { ?>Yes<?php } else { ?>No<?php } ?><br />
-					Weapons: <?php foreach ($ShipWeapons as $ShipWeapon) { ?>* <?php echo $ShipWeapon->getName(); ?><br /><?php }
-				} else { ?> No Dummy<?php } ?>
+		<td><?php
+			if ($Dummy) { ?>
+				<span class="underline">Current Details</span><br /><?php
+				$Ship = $Dummy->getShip();
+				$ShipWeapons = $Ship->getWeapons(); ?>
+				<span <?php if ($Dummy->isDead()) { ?>class="red"<?php } ?>>
+					<?php echo $Ship->getName(); ?> (<?php echo $Ship->getAttackRating(); ?>/<?php echo $Ship->getDefenseRating(); ?>)<br />
+				</span>
+				Level: <?php echo $Dummy->getLevelID(); ?><br />
+				DCS: <?php if ($Ship->hasDCS()) { ?>Yes<?php } else { ?>No<?php } ?><br />
+				Weapons:<br /><?php foreach ($ShipWeapons as $ShipWeapon) { ?>* <?php echo $ShipWeapon->getName(); ?><br /><?php }
+			} ?>
 		</td>
 	</tr><?php
 	} ?>

@@ -2,6 +2,7 @@
 
 namespace Smr\Discord;
 
+use AbstractSmrPlayer;
 use Discord\Parts\Channel\Message;
 use Smr\Database;
 use Smr\Exceptions\AccountNotFound;
@@ -11,7 +12,6 @@ use Smr\Exceptions\UserError;
 use SmrAccount;
 use SmrAlliance;
 use SmrGame;
-use SmrPlayer;
 
 /**
  * Holds information linking the received message and the game data
@@ -22,7 +22,7 @@ class PlayerLink {
 	 * Identifies if the message is linked to game data
 	 */
 	public bool $valid = false;
-	public SmrPlayer $player;
+	public AbstractSmrPlayer $player;
 
 	public function __construct(Message $message) {
 		// force update in case the ID has been changed in-game
@@ -56,7 +56,7 @@ class PlayerLink {
 
 		// Get their player associated with this game
 		try {
-			$player = SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
+			$player = AbstractSmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
 		} catch (PlayerNotFound) {
 			throw new UserError('You have not joined game `' . SmrGame::getGame($game_id)->getName() . '` yet!');
 		}

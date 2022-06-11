@@ -546,11 +546,11 @@ class SmrSector {
 		return $this->getPort()->exists();
 	}
 
-	public function getPort(): SmrPort {
+	public function getPort(): AbstractSmrPort {
 		return SmrPort::getPort($this->getGameID(), $this->getSectorID());
 	}
 
-	public function createPort(): SmrPort {
+	public function createPort(): AbstractSmrPort {
 		return SmrPort::createPort($this->getGameID(), $this->getSectorID());
 	}
 

@@ -51,8 +51,8 @@ if ($submit_value == 'Search For Player') {
 						killer_id IN (' . $db->escapeArray($IDs) . ') AND dead_id IN (' . $db->escapeArray($IDs) . ')
 					) ORDER BY news_id DESC');
 } elseif ($submit_value == 'Search For Alliances') {
-	$allianceID1 = $session->getRequestVar('alliance1');
-	$allianceID2 = $session->getRequestVar('alliance2');
+	$allianceID1 = $session->getRequestVarInt('alliance1');
+	$allianceID2 = $session->getRequestVarInt('alliance2');
 	$template->assign('ResultsFor', $newsAlliances[$allianceID1]['Name'] . ' vs. ' . $newsAlliances[$allianceID2]['Name']);
 	$dbResult = $db->read('SELECT * FROM news
 				WHERE game_id = ' . $db->escapeNumber($gameID) . '

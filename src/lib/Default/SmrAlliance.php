@@ -197,7 +197,7 @@ class SmrAlliance {
 		return $this->leaderID;
 	}
 
-	public function getLeader(): SmrPlayer {
+	public function getLeader(): AbstractSmrPlayer {
 		return SmrPlayer::getPlayer($this->getLeaderID(), $this->getGameID());
 	}
 

@@ -70,11 +70,11 @@ class SmrInvitation {
 		$db->write('DELETE FROM message WHERE message_id=' . $db->escapeNumber($this->messageID));
 	}
 
-	public function getSender(): SmrPlayer {
+	public function getSender(): AbstractSmrPlayer {
 		return SmrPlayer::getPlayer($this->senderAccountID, $this->gameID);
 	}
 
-	public function getReceiver(): SmrPlayer {
+	public function getReceiver(): AbstractSmrPlayer {
 		return SmrPlayer::getPlayer($this->receiverAccountID, $this->gameID);
 	}
 

@@ -12,12 +12,11 @@ $template->assign('SelectDummysLink', Page::create('admin/edit_dummys.php')->hre
 $template->assign('EditDummysLink', Page::create('admin/edit_dummys_processing.php')->href());
 
 $name = Smr\Request::get('dummy_name', 'New Dummy');
-$dummyPlayer = DummyPlayer::getCachedDummyPlayer($name);
-$dummyShip = $dummyPlayer->getShip();
+$dummyShip = DummyShip::getCachedDummyShip($name);
 
-$template->assign('DummyPlayer', $dummyPlayer);
+$template->assign('DummyPlayer', $dummyShip->getPlayer());
 $template->assign('DummyShip', $dummyShip);
 $template->assign('ShipWeapons', $dummyShip->getWeapons());
 $template->assign('Levels', Globals::getLevelRequirements());
 
-$template->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
+$template->assign('DummyNames', DummyShip::getDummyNames());

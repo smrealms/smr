@@ -2,13 +2,13 @@
 
 namespace Smr\Npc;
 
+use AbstractSmrPlayer;
 use Exception;
 use Page;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Routes\RouteIterator;
-use SmrPlayer;
 use SmrSector;
 
 class NpcActor {
@@ -47,8 +47,8 @@ class NpcActor {
 		$player->update();
 	}
 
-	private function refreshPlayer(): SmrPlayer {
-		return SmrPlayer::getPlayer($this->accountID, $this->gameID, true);
+	private function refreshPlayer(): AbstractSmrPlayer {
+		return AbstractSmrPlayer::getPlayer($this->accountID, $this->gameID, true);
 	}
 
 	public function getNumActions(): int {

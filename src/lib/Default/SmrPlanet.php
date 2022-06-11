@@ -233,7 +233,7 @@ class SmrPlanet {
 		$this->hasChanged = true;
 	}
 
-	public function getOwner(): SmrPlayer {
+	public function getOwner(): AbstractSmrPlayer {
 		return SmrPlayer::getPlayer($this->getOwnerID(), $this->getGameID());
 	}
 
