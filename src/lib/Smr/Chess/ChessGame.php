@@ -642,113 +642,119 @@ class ChessGame {
 		}
 
 		$moves = $p->getPossibleMoves($this->board, $this->getHasMoved(), $forColour);
+		$moveIsLegal = false;
 		foreach ($moves as $move) {
 			if ($move[0] == $toX && $move[1] == $toY) {
-				$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
-				$currentPlayer = $this->getCurrentTurnPlayer();
-
-				$moveInfo = self::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY, $pawnPromotionPiece);
-
-				//We have taken the move, we should refresh $p
-				$p = $this->board[$toY][$toX];
-
-				$pieceTakenID = null;
-				if ($moveInfo['PieceTaken'] != null) {
-					$pieceTakenID = $moveInfo['PieceTaken']->pieceID;
-					if ($moveInfo['PieceTaken']->pieceID == ChessPiece::KING) {
-						throw new Exception('King was taken.');
-					}
-				}
-
-				$pieceID = $p->pieceID;
-				$pieceNo = $p->pieceNo;
-				$promotionPieceID = null;
-				if ($moveInfo['PawnPromotion'] !== false) {
-					$p->pieceID = $moveInfo['PawnPromotion']['PieceID'];
-					$p->pieceNo = $moveInfo['PawnPromotion']['PieceNo'];
-					$promotionPieceID = $p->pieceID;
-				}
-
-				$checking = null;
-				if ($p->isAttacking($this->board, $this->getHasMoved(), true)) {
-					$checking = 'CHECK';
-				}
-				if ($this->isCheckmated(self::getOtherColour($p->colour))) {
-					$checking = 'MATE';
-				}
-
-				$castlingType = $moveInfo['Castling'] === false ? null : $moveInfo['Castling']['Type'];
-
-				$this->getMoves(); // make sure $this->moves is initialized
-				$this->moves[] = $this->createMove($pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $castlingType, $moveInfo['EnPassant'], $promotionPieceID);
-				if (self::isPlayerChecked($this->board, $this->getHasMoved(), $p->colour)) {
-					return 3;
-				}
-
-				$otherPlayer = $this->getCurrentTurnPlayer();
-				if ($moveInfo['PawnPromotion'] !== false) {
-					$piecePromotedSymbol = $p->getPieceSymbol();
-					$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Own Pawns Promoted', 'Total'], HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Opponent Pawns Promoted', 'Total'], HOF_PUBLIC);
-					$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Own Pawns Promoted', $piecePromotedSymbol], HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Opponent Pawns Promoted', $piecePromotedSymbol], HOF_PUBLIC);
-				}
-
-				$this->db->insert('chess_game_moves', [
-					'chess_game_id' => $this->db->escapeNumber($this->chessGameID),
-					'piece_id' => $this->db->escapeNumber($pieceID),
-					'start_x' => $this->db->escapeNumber($x),
-					'start_y' => $this->db->escapeNumber($y),
-					'end_x' => $this->db->escapeNumber($toX),
-					'end_y' => $this->db->escapeNumber($toY),
-					'checked' => $this->db->escapeString($checking, true),
-					'piece_taken' => $moveInfo['PieceTaken'] === null ? 'NULL' : $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID),
-					'castling' => $this->db->escapeString($castlingType, true),
-					'en_passant' => $this->db->escapeBoolean($moveInfo['EnPassant']),
-					'promote_piece_id' => $moveInfo['PawnPromotion'] == false ? 'NULL' : $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID']),
-				]);
-
-				$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Total Taken'], HOF_PUBLIC);
-				if ($moveInfo['PieceTaken'] != null) {
-					// Get the owner of the taken piece
-					$this->db->write('DELETE FROM chess_game_pieces
-									WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($moveInfo['PieceTaken']->colour) . ' AND piece_id=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID) . ' AND piece_no=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceNo) . ';');
-
-					$pieceTakenSymbol = $moveInfo['PieceTaken']->getPieceSymbol();
-					$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Opponent Pieces Taken', 'Total'], HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Own Pieces Taken', 'Total'], HOF_PUBLIC);
-					$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Opponent Pieces Taken', $pieceTakenSymbol], HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Own Pieces Taken', $pieceTakenSymbol], HOF_PUBLIC);
-				}
-
-				$this->db->write('UPDATE chess_game_pieces
-							SET x=' . $this->db->escapeNumber($toX) . ', y=' . $this->db->escapeNumber($toY) .
-								($moveInfo['PawnPromotion'] !== false ? ', piece_id=' . $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID']) . ', piece_no=' . $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceNo']) : '') . '
-							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour) . ' AND piece_id=' . $this->db->escapeNumber($pieceID) . ' AND piece_no=' . $this->db->escapeNumber($pieceNo) . ';');
-				if ($moveInfo['Castling'] !== false) {
-					$this->db->write('UPDATE chess_game_pieces
-								SET x=' . $this->db->escapeNumber($moveInfo['Castling']['ToX']) . '
-								WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour) . ' AND x = ' . $this->db->escapeNumber($moveInfo['Castling']['X']) . ' AND y = ' . $this->db->escapeNumber($y) . ';');
-				}
-				$return = 0;
-				if ($checking == 'MATE') {
-					$this->setWinner($this->getColourID($forColour));
-					$return = 1;
-					SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
-				} else {
-					SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
-					if ($checking == 'CHECK') {
-						$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Given'], HOF_PUBLIC);
-						$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Received'], HOF_PUBLIC);
-					}
-				}
-				$currentPlayer->saveHOF();
-				$otherPlayer->saveHOF();
-				return $return;
+				$moveIsLegal = true;
+				break;
 			}
 		}
-		// Invalid move was attempted
-		return 6;
+		if (!$moveIsLegal) {
+			// Invalid move was attempted
+			return 6;
+		}
+
+		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
+		$currentPlayer = $this->getCurrentTurnPlayer();
+
+		$moveInfo = self::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY, $pawnPromotionPiece);
+
+		//We have taken the move, we should refresh $p
+		$p = $this->board[$toY][$toX];
+
+		$pieceTakenID = null;
+		if ($moveInfo['PieceTaken'] != null) {
+			$pieceTakenID = $moveInfo['PieceTaken']->pieceID;
+			if ($moveInfo['PieceTaken']->pieceID == ChessPiece::KING) {
+				throw new Exception('King was taken.');
+			}
+		}
+
+		$pieceID = $p->pieceID;
+		$pieceNo = $p->pieceNo;
+		$promotionPieceID = null;
+		if ($moveInfo['PawnPromotion'] !== false) {
+			$p->pieceID = $moveInfo['PawnPromotion']['PieceID'];
+			$p->pieceNo = $moveInfo['PawnPromotion']['PieceNo'];
+			$promotionPieceID = $p->pieceID;
+		}
+
+		$checking = null;
+		if ($p->isAttacking($this->board, $this->getHasMoved(), true)) {
+			$checking = 'CHECK';
+		}
+		if ($this->isCheckmated(self::getOtherColour($p->colour))) {
+			$checking = 'MATE';
+		}
+
+		$castlingType = $moveInfo['Castling'] === false ? null : $moveInfo['Castling']['Type'];
+
+		$this->getMoves(); // make sure $this->moves is initialized
+		$this->moves[] = $this->createMove($pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $castlingType, $moveInfo['EnPassant'], $promotionPieceID);
+		if (self::isPlayerChecked($this->board, $this->getHasMoved(), $p->colour)) {
+			return 3;
+		}
+
+		$otherPlayer = $this->getCurrentTurnPlayer();
+		if ($moveInfo['PawnPromotion'] !== false) {
+			$piecePromotedSymbol = $p->getPieceSymbol();
+			$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Own Pawns Promoted', 'Total'], HOF_PUBLIC);
+			$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Opponent Pawns Promoted', 'Total'], HOF_PUBLIC);
+			$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Own Pawns Promoted', $piecePromotedSymbol], HOF_PUBLIC);
+			$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Opponent Pawns Promoted', $piecePromotedSymbol], HOF_PUBLIC);
+		}
+
+		$this->db->insert('chess_game_moves', [
+			'chess_game_id' => $this->db->escapeNumber($this->chessGameID),
+			'piece_id' => $this->db->escapeNumber($pieceID),
+			'start_x' => $this->db->escapeNumber($x),
+			'start_y' => $this->db->escapeNumber($y),
+			'end_x' => $this->db->escapeNumber($toX),
+			'end_y' => $this->db->escapeNumber($toY),
+			'checked' => $this->db->escapeString($checking, true),
+			'piece_taken' => $moveInfo['PieceTaken'] === null ? 'NULL' : $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID),
+			'castling' => $this->db->escapeString($castlingType, true),
+			'en_passant' => $this->db->escapeBoolean($moveInfo['EnPassant']),
+			'promote_piece_id' => $moveInfo['PawnPromotion'] == false ? 'NULL' : $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID']),
+		]);
+
+		$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Total Taken'], HOF_PUBLIC);
+		if ($moveInfo['PieceTaken'] != null) {
+			// Get the owner of the taken piece
+			$this->db->write('DELETE FROM chess_game_pieces
+							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($moveInfo['PieceTaken']->colour) . ' AND piece_id=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID) . ' AND piece_no=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceNo) . ';');
+
+			$pieceTakenSymbol = $moveInfo['PieceTaken']->getPieceSymbol();
+			$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Opponent Pieces Taken', 'Total'], HOF_PUBLIC);
+			$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Own Pieces Taken', 'Total'], HOF_PUBLIC);
+			$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Opponent Pieces Taken', $pieceTakenSymbol], HOF_PUBLIC);
+			$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Own Pieces Taken', $pieceTakenSymbol], HOF_PUBLIC);
+		}
+
+		$this->db->write('UPDATE chess_game_pieces
+					SET x=' . $this->db->escapeNumber($toX) . ', y=' . $this->db->escapeNumber($toY) .
+						($moveInfo['PawnPromotion'] !== false ? ', piece_id=' . $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID']) . ', piece_no=' . $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceNo']) : '') . '
+					WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour) . ' AND piece_id=' . $this->db->escapeNumber($pieceID) . ' AND piece_no=' . $this->db->escapeNumber($pieceNo) . ';');
+		if ($moveInfo['Castling'] !== false) {
+			$this->db->write('UPDATE chess_game_pieces
+						SET x=' . $this->db->escapeNumber($moveInfo['Castling']['ToX']) . '
+						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour) . ' AND x = ' . $this->db->escapeNumber($moveInfo['Castling']['X']) . ' AND y = ' . $this->db->escapeNumber($y) . ';');
+		}
+		$return = 0;
+		if ($checking == 'MATE') {
+			$this->setWinner($this->getColourID($forColour));
+			$return = 1;
+			SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
+		} else {
+			SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
+			if ($checking == 'CHECK') {
+				$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Given'], HOF_PUBLIC);
+				$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Received'], HOF_PUBLIC);
+			}
+		}
+		$currentPlayer->saveHOF();
+		$otherPlayer->saveHOF();
+		return $return;
 	}
 
 	public function getChessGameID(): int {
