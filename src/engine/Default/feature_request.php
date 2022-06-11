@@ -51,7 +51,7 @@ if ($canVote) {
 	$featureVotes = [];
 	$dbResult = $db->read('SELECT * FROM account_votes_for_feature WHERE account_id = ' . $account->getAccountID());
 	foreach ($dbResult->records() as $dbRecord) {
-		$featureVotes[$dbRecord->getInt('feature_request_id')] = $dbRecord->getField('vote_type');
+		$featureVotes[$dbRecord->getInt('feature_request_id')] = $dbRecord->getString('vote_type');
 	}
 }
 $dbResult = $db->read('SELECT * ' .
@@ -72,7 +72,7 @@ if ($dbResult->hasRecord()) {
 		$featureRequestID = $dbRecord->getInt('feature_request_id');
 		$featureRequests[$featureRequestID] = [
 			'RequestID' => $featureRequestID,
-			'Message' => $dbRecord->getField('text'),
+			'Message' => $dbRecord->getString('text'),
 			'Votes' => [
 				'FAVOURITE' => $dbRecord->getInt('fav'),
 				'YES' => $dbRecord->getInt('yes'),
@@ -90,7 +90,7 @@ if ($dbResult->hasRecord()) {
 						WHERE feature_request_id=' . $db->escapeNumber($featureRequestID) . '
 						GROUP BY vote_type');
 			foreach ($dbResult2->records() as $dbRecord2) {
-				$featureRequests[$featureRequestID]['Votes'][$dbRecord2->getField('vote_type')] = $dbRecord2->getInt('COUNT(*)');
+				$featureRequests[$featureRequestID]['Votes'][$dbRecord2->getString('vote_type')] = $dbRecord2->getInt('COUNT(*)');
 			}
 		}
 		$dbResult2 = $db->read('SELECT COUNT(*)

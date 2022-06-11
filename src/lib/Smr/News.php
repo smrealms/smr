@@ -17,7 +17,7 @@ class News {
 		$newsItems = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$message = bbifyMessage($dbRecord->getString('news_message'));
-			if ($dbRecord->getField('type') == 'admin') {
+			if ($dbRecord->getString('type') == 'admin') {
 				$message = '<span class="admin">ADMIN </span>' . $message;
 			}
 			$newsItems[] = [

@@ -82,17 +82,17 @@ class SmrAlliance {
 			$dbResult = $this->db->read('SELECT * FROM alliance WHERE ' . $this->SQL);
 			$dbRecord = $dbResult->record();
 			$this->allianceName = $dbRecord->getString('alliance_name');
-			$this->password = $dbRecord->getField('alliance_password');
+			$this->password = $dbRecord->getString('alliance_password');
 			$this->recruiting = $dbRecord->getBoolean('recruiting');
-			$this->description = $dbRecord->getField('alliance_description');
+			$this->description = $dbRecord->getNullableString('alliance_description');
 			$this->leaderID = $dbRecord->getInt('leader_id');
 			$this->bank = $dbRecord->getInt('alliance_account');
 			$this->kills = $dbRecord->getInt('alliance_kills');
 			$this->deaths = $dbRecord->getInt('alliance_deaths');
-			$this->motd = $dbRecord->getField('mod');
-			$this->imgSrc = $dbRecord->getField('img_src');
-			$this->discordServer = $dbRecord->getField('discord_server');
-			$this->discordChannel = $dbRecord->getField('discord_channel');
+			$this->motd = $dbRecord->getString('mod');
+			$this->imgSrc = $dbRecord->getString('img_src');
+			$this->discordServer = $dbRecord->getNullableString('discord_server');
+			$this->discordChannel = $dbRecord->getNullableString('discord_channel');
 			$this->flagshipID = $dbRecord->getInt('flagship_id');
 		}
 	}
@@ -225,7 +225,7 @@ class SmrAlliance {
 		if (!isset($this->ircChannel)) {
 			$dbResult = $this->db->read('SELECT channel FROM irc_alliance_has_channel WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
-				$this->ircChannel = $dbResult->record()->getField('channel');
+				$this->ircChannel = $dbResult->record()->getString('channel');
 			} else {
 				$this->ircChannel = '';
 			}
@@ -439,7 +439,7 @@ class SmrAlliance {
 			}
 			$dbResult = $this->db->read('SELECT status FROM player_joined_alliance WHERE account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' AND ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
-				if ($dbResult->record()->getField('status') == 'NEWBIE') {
+				if ($dbResult->record()->getString('status') == 'NEWBIE') {
 					return false;
 				}
 			}

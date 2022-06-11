@@ -25,7 +25,7 @@ if ($dbResult->hasRecord()) {
 	// Has player responded yet?
 	$dbResult2 = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());
 
-	$response = $dbResult2->hasRecord() ? $dbResult2->record()->getField('response') : null;
+	$response = $dbResult2->hasRecord() ? $dbResult2->record()->getString('response') : null;
 	$responseHREF = Page::create('alliance_op_response_processing.php')->href();
 	$template->assign('OpResponseHREF', $responseHREF);
 

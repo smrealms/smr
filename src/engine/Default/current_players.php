@@ -80,11 +80,13 @@ foreach ($dbResult->records() as $dbRecord) {
 	$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
 	$dbResult2 = $db->read('SELECT * FROM cpl_tag WHERE account_id = ' . $db->escapeNumber($curr_player->getAccountID()) . ' ORDER BY custom DESC');
 	foreach ($dbResult2->records() as $dbRecord2) {
-		if (!empty($dbRecord2->getField('custom_rank'))) {
-			$name = $dbRecord2->getField('custom_rank') . ' ' . $curr_player->getDisplayName();
+		$customRank = $dbRecord2->getString('custom_rank');
+		$tag = $dbRecord2->getString('tag');
+		if (!empty($customRank)) {
+			$name = $customRank . ' ' . $curr_player->getDisplayName();
 		}
-		if (!empty($dbRecord2->getField('tag'))) {
-			$name .= ' ' . $dbRecord2->getField('tag');
+		if (!empty($tag)) {
+			$name .= ' ' . $tag;
 		}
 	}
 	$row['name_link'] = create_link($container, $name);

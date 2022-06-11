@@ -48,7 +48,7 @@ if ($action == 'Yes') {
 			}
 
 			// get info we want
-			$name = $dbRecord->getField('alliance_name');
+			$name = $dbRecord->getString('alliance_name');
 			$leader = $dbRecord->getInt('leader_id');
 			$kills = $dbRecord->getInt('alliance_kills');
 			$deaths = $dbRecord->getInt('alliance_deaths');
@@ -119,7 +119,7 @@ if ($action == 'Yes') {
 
 			// get info we want
 			$time = $dbRecord->getInt('time');
-			$msg = $dbRecord->getField('news_message');
+			$msg = $dbRecord->getString('news_message');
 
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO news (game_id, news_id, time, message) VALUES (' . $game_id . ', ' . $id . ', ' . $time . ', ' . $db->escapeString($msg) . ')';
@@ -203,7 +203,7 @@ if ($action == 'Yes') {
 
 			$dbResult2 = $db->read('SELECT * FROM ship_has_name WHERE game_id = ' . $game_id . ' AND account_id = ' . $acc_id);
 			if ($dbResult2->hasRecord()) {
-				$ship_name = $dbResult2->record()->getField('ship_name');
+				$ship_name = $dbResult2->record()->getString('ship_name');
 			} else {
 				$ship_name = 'None';
 			}

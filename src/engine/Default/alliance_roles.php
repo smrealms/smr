@@ -22,7 +22,7 @@ $allianceRoles = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$roleID = $dbRecord->getInt('role_id');
 	$allianceRoles[$roleID]['RoleID'] = $roleID;
-	$allianceRoles[$roleID]['Name'] = $dbRecord->getField('role');
+	$allianceRoles[$roleID]['Name'] = $dbRecord->getString('role');
 	$allianceRoles[$roleID]['EditingRole'] = isset($var['role_id']) && $var['role_id'] == $roleID;
 	$allianceRoles[$roleID]['CreatingRole'] = false;
 	if ($allianceRoles[$roleID]['EditingRole']) {

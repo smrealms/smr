@@ -24,7 +24,7 @@ class CouncilVoting {
 		foreach ($dbResult->records() as $dbRecord) {
 			$account_id = $dbRecord->getInt('account_id');
 			$race_id_2 = $dbRecord->getInt('race_id_2');
-			$action = $dbRecord->getField('action');
+			$action = $dbRecord->getString('action');
 
 			if ($action == 'INC') {
 				$relation_modifier = RELATIONS_VOTE_CHANGE;
@@ -71,7 +71,7 @@ class CouncilVoting {
 					AND race_id_1 = ' . $db->escapeNumber($race_id_1));
 		foreach ($dbResult->records() as $dbRecord) {
 			$race_id_2 = $dbRecord->getInt('race_id_2');
-			$type = $dbRecord->getField('type');
+			$type = $dbRecord->getString('type');
 
 			// get 'yes' votes
 			$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact

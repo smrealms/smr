@@ -220,7 +220,7 @@ class AbstractSmrPort {
 			$dbResult = $this->db->read('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC');
 			foreach ($dbResult->records() as $dbRecord) {
 				$goodID = $dbRecord->getInt('good_id');
-				$transactionType = $dbRecord->getField('transaction_type');
+				$transactionType = $dbRecord->getString('transaction_type');
 				$this->goodAmounts[$goodID] = $dbRecord->getInt('amount');
 				$this->goodIDs[$transactionType][] = $goodID;
 				$this->goodIDs['All'][] = $goodID;

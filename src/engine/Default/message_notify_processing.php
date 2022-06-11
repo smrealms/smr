@@ -36,7 +36,7 @@ $db->insert('message_notify', [
 	'game_id' => $db->escapeNumber($player->getGameID()),
 	'from_id' => $dbRecord->getInt('sender_id'),
 	'to_id' => $dbRecord->getInt('account_id'),
-	'text' => $db->escapeString($dbRecord->getField('message_text')),
+	'text' => $db->escapeString($dbRecord->getString('message_text')),
 	'sent_time' => $db->escapeNumber($var['sent_time']),
 	'notify_time' => $db->escapeNumber($var['notified_time']),
 ]);

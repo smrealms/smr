@@ -24,7 +24,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$excessHardware[] = [
 		'player' => htmlentities($dbRecord->getString('player_name')),
 		'game_id' => $dbRecord->getInt('game_id'),
-		'hardware' => $dbRecord->getField('hardware_name'),
+		'hardware' => $dbRecord->getString('hardware_name'),
 		'amount' => $dbRecord->getInt('amount'),
 		'max_amount' => $dbRecord->getInt('max_amount'),
 		'fixHREF' => $container->href(),

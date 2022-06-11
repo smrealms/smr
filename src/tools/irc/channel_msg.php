@@ -187,9 +187,9 @@ function channel_msg_seen($fp, string $rdata): bool {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 
-			$seennick = $dbRecord->getField('nick');
-			$seenuser = $dbRecord->getField('user');
-			$seenhost = $dbRecord->getField('host');
+			$seennick = $dbRecord->getString('nick');
+			$seenuser = $dbRecord->getString('user');
+			$seenhost = $dbRecord->getString('host');
 			$signed_on = $dbRecord->getInt('signed_on');
 			$signed_off = $dbRecord->getInt('signed_off');
 

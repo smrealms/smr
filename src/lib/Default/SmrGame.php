@@ -89,8 +89,8 @@ class SmrGame {
 		$dbResult = $this->db->read('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			$this->name = $dbRecord->getField('game_name');
-			$this->description = $dbRecord->getField('game_description');
+			$this->name = $dbRecord->getString('game_name');
+			$this->description = $dbRecord->getString('game_description');
 			$this->joinTime = $dbRecord->getInt('join_time');
 			$this->startTime = $dbRecord->getInt('start_time');
 			$this->endTime = $dbRecord->getInt('end_time');

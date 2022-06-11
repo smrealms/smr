@@ -208,9 +208,9 @@ class DatabaseIntegrationTest extends TestCase {
 			[3, 'escapeNumber', 'getInt', 'assertSame', []],
 			[3.14, 'escapeNumber', 'getFloat', 'assertSame', []],
 			['hello', 'escapeString', 'getString', 'assertSame', []],
-			['hello', 'escapeString', 'getField', 'assertSame', []],
+			['hello', 'escapeString', 'getNullableString', 'assertSame', []],
 			// Test nullable objects
-			[null, 'escapeString', 'getField', 'assertSame', [true]],
+			[null, 'escapeString', 'getNullableString', 'assertSame', [true]],
 			[null, 'escapeObject', 'getObject', 'assertSame', [false, true]],
 			// Test object with compression
 			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', [true]],

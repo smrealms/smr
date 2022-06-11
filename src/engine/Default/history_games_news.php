@@ -22,7 +22,7 @@ $rows = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$rows[] = [
 		'time' => date($account->getDateTimeFormat(), $dbRecord->getInt('time')),
-		'news' => $dbRecord->getField('message'),
+		'news' => $dbRecord->getString('message'),
 	];
 }
 $template->assign('Rows', $rows);

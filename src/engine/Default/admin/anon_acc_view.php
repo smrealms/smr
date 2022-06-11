@@ -22,8 +22,8 @@ $dbResult = $db->read('SELECT *
 $rows = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$rows[] = [
-		'player_name' => $dbRecord->getField('player_name'),
-		'transaction' => $dbRecord->getField('transaction'),
+		'player_name' => $dbRecord->getString('player_name'),
+		'transaction' => $dbRecord->getString('transaction'),
 		'amount' => $dbRecord->getInt('amount'),
 	];
 }

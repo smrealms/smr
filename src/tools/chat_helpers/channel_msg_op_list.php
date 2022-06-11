@@ -26,7 +26,7 @@ function shared_channel_msg_op_list(SmrPlayer $player): array {
 		if (!$player->sameAlliance($respondingPlayer)) {
 			continue;
 		}
-		$responses[$dbRecord->getField('response')][] = $respondingPlayer;
+		$responses[$dbRecord->getString('response')][] = $respondingPlayer;
 	}
 
 	$results = [];

@@ -17,7 +17,7 @@ if (!$dbResult->hasRecord()) {
 }
 $trans = [];
 foreach ($dbResult->records() as $dbRecord) {
-	$transType = ($dbRecord->getField('transaction') == 'Payment') ? WITHDRAW : DEPOSIT;
+	$transType = ($dbRecord->getString('transaction') == 'Payment') ? WITHDRAW : DEPOSIT;
 	$payeeId = ($dbRecord->getInt('exempt')) ? 0 : $dbRecord->getInt('payee_id');
 	// initialize payee if necessary
 	if (!isset($trans[$payeeId])) {

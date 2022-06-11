@@ -73,12 +73,12 @@ foreach ($dbResult->records() as $dbRecord) {
 					AND race_id_2 = ' . $db->escapeNumber($otherRaceID));
 	$votedFor = '';
 	if ($dbResult2->hasRecord()) {
-		$votedFor = $dbResult2->record()->getField('vote');
+		$votedFor = $dbResult2->record()->getString('vote'); // this should be a boolean
 	}
 
 	$voteTreaties[$otherRaceID] = [
 		'HREF' => $container->href(),
-		'Type' => $dbRecord->getField('type'),
+		'Type' => $dbRecord->getString('type'),
 		'EndTime' => $dbRecord->getInt('end_time'),
 		'For' => $votedFor == 'YES',
 		'Against' => $votedFor == 'NO',

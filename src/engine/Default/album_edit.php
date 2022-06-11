@@ -15,15 +15,15 @@ if ($dbResult->hasRecord()) {
 	$month = $dbRecord->getInt('month');
 	$year = $dbRecord->getInt('year');
 	$albumEntry = [
-		'Location' => $dbRecord->getField('location'),
-		'Email' => $dbRecord->getField('email'),
-		'Website' => $dbRecord->getField('website'),
+		'Location' => $dbRecord->getNullableString('location'),
+		'Email' => $dbRecord->getNullableString('email'),
+		'Website' => $dbRecord->getNullableString('website'),
 		'Day' => $day > 0 ? $day : '',
 		'Month' => $month > 0 ? $month : '',
 		'Year' => $year > 0 ? $year : '',
-		'Other' => $dbRecord->getField('other'),
+		'Other' => $dbRecord->getString('other'),
 	];
-	$approved = $dbRecord->getField('approved');
+	$approved = $dbRecord->getString('approved');
 
 	if ($approved == 'TBC') {
 		$albumEntry['Status'] = ('<span style="color:orange;">Waiting approval</span>');

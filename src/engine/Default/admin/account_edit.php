@@ -45,7 +45,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	}
 	$closingHistory[] = [
 		'Time' => $dbRecord->getInt('time'),
-		'Action' => $dbRecord->getField('action'),
+		'Action' => $dbRecord->getString('action'),
 		'AdminName' => $admin,
 	];
 }
@@ -53,16 +53,16 @@ $template->assign('ClosingHistory', $closingHistory);
 
 $dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $curr_account->getAccountID());
 if ($dbResult->hasRecord()) {
-	$template->assign('Exception', $dbResult->record()->getField('reason'));
+	$template->assign('Exception', $dbResult->record()->getString('reason'));
 }
 
 $recentIPs = [];
 $dbResult = $db->read('SELECT ip, time, host FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY time DESC');
 foreach ($dbResult->records() as $dbRecord) {
 	$recentIPs[] = [
-		'IP' => $dbRecord->getField('ip'),
-		'Time' => $dbRecord->getField('time'),
-		'Host' => $dbRecord->getField('host'),
+		'IP' => $dbRecord->getString('ip'),
+		'Time' => $dbRecord->getInt('time'),
+		'Host' => $dbRecord->getString('host'),
 	];
 }
 $template->assign('RecentIPs', $recentIPs);

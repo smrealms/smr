@@ -14,7 +14,7 @@ $dbResult = $db->read('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(Sm
 foreach ($dbResult->records() as $dbRecord) {
 	$voteID = $dbRecord->getInt('vote_id');
 	$voting[$voteID]['ID'] = $voteID;
-	$voting[$voteID]['Question'] = $dbRecord->getField('question');
+	$voting[$voteID]['Question'] = $dbRecord->getString('question');
 }
 $template->assign('CurrentVotes', $voting);
 if (isset($var['PreviewVote'])) {

@@ -34,7 +34,7 @@ if ($dbResult->hasRecord()) {
 		$commentID = $dbRecord->getInt('comment_id');
 		$featureRequestComments[$commentID] = [
 								'CommentID' => $commentID,
-								'Message' => $dbRecord->getField('text'),
+								'Message' => $dbRecord->getString('text'),
 								'Time' => date($account->getDateTimeFormat(), $dbRecord->getInt('posting_time')),
 								'Anonymous' => $dbRecord->getBoolean('anonymous'),
 		];

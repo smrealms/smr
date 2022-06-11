@@ -21,7 +21,7 @@ $dbRecord = $dbResult->record();
 $template->assign('CombatLogSector', $dbRecord->getInt('sector_id'));
 $template->assign('CombatLogTimestamp', date($account->getDateTimeFormat(), $dbRecord->getInt('timestamp')));
 $results = $dbRecord->getObject('result', true);
-$template->assign('CombatResultsType', $dbRecord->getField('type'));
+$template->assign('CombatResultsType', $dbRecord->getString('type'));
 $template->assign('CombatResults', $results);
 
 // Create a container for the next/previous log.

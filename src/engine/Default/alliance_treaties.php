@@ -33,7 +33,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$otherAllianceID = $dbRecord->getInt('alliance_id_1');
 	$container = Page::create('alliance_treaties_processing.php');
 	$container['alliance_id_1'] = $otherAllianceID;
-	$container['aa_access'] = $dbRecord->getField('aa_access');
+	$container['aa_access'] = $dbRecord->getBoolean('aa_access');
 	$container['accept'] = true;
 	$acceptHREF = $container->href();
 	$container['accept'] = false;

@@ -46,7 +46,7 @@ class DummyShip extends AbstractSmrShip {
 		$dbResult = $db->read('SELECT id FROM cached_dummys');
 		$dummyNames = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$dummyNames[] = $dbRecord->getField('id');
+			$dummyNames[] = $dbRecord->getString('id');
 		}
 		return $dummyNames;
 	}

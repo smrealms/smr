@@ -22,9 +22,9 @@ $dbResult = $db->read('SELECT *
 if ($dbResult->hasRecord()) {
 	$dbRecord = $dbResult->record();
 	$album_id = $dbRecord->getInt('account_id');
-	$location = $dbRecord->getField('location');
-	$email = $dbRecord->getField('email');
-	$website = $dbRecord->getField('website');
+	$location = $dbRecord->getNullableString('location');
+	$email = $dbRecord->getNullableString('email');
+	$website = $dbRecord->getNullableString('website');
 	$day = $dbRecord->getInt('day');
 	$month = $dbRecord->getInt('month');
 	$year = $dbRecord->getInt('year');

@@ -66,7 +66,7 @@ if (isset($var['id'])) {
 	foreach ($dbResult->records() as $dbRecord) {
 		$container['paper_id'] = $dbRecord->getInt('paper_id');
 		$papers[] = [
-			'title' => $dbRecord->getField('title'),
+			'title' => $dbRecord->getString('title'),
 			'addHREF' => $container->href(),
 		];
 	}

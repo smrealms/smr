@@ -22,7 +22,7 @@ $anon_logs = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$transaction = strtolower($dbRecord->getString('transaction'));
 	$anon_logs[$dbRecord->getInt('game_id')][$dbRecord->getInt('anon_id')][] = [
-		'login' => $dbRecord->getField('login'),
+		'login' => $dbRecord->getString('login'),
 		'amount' => number_format($dbRecord->getInt('amount')),
 		'date' => date($account->getDateTimeFormat(), $dbRecord->getInt('time')),
 		'type' => $transaction,

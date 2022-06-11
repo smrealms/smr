@@ -33,7 +33,7 @@ if (!empty($action)) {
 				'bold' => '',
 				'data' => [
 					$dbRecord->getInt('sector_id'),
-					$dbRecord->getField('val'),
+					$dbRecord->getInt('val'),
 				],
 			];
 		}
@@ -59,7 +59,7 @@ if (!empty($action)) {
 				'bold' => $oldAllianceID == $allianceID ? 'class="bold"' : '',
 				'data' => [
 					create_link($container, $name),
-					$dbRecord->getField('val'),
+					$dbRecord->getInt('val'),
 				],
 			];
 		}
@@ -80,7 +80,7 @@ if (!empty($action)) {
 			$rankings[] = [
 				'bold' => $ownerID > 0 && $oldAccountID == $ownerID ? 'class="bold"' : '',
 				'data' => [
-					$dbRecord->getField('level'),
+					$dbRecord->getFloat('level'),
 					$dbRecord->getString('player_name'),
 					$allianceName,
 					$dbRecord->getInt('sector_id'),

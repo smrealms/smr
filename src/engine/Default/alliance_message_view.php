@@ -78,7 +78,7 @@ $thread['Replies'] = [];
 $container = Page::create('alliance_message_delete_processing.php', $var);
 $container['thread_id'] = $thread_id;
 foreach ($dbResult->records() as $dbRecord) {
-	$thread['Replies'][$dbRecord->getInt('reply_id')] = ['Sender' => $players[$dbRecord->getInt('sender_id')], 'Message' => $dbRecord->getField('text'), 'SendTime' => $dbRecord->getInt('time')];
+	$thread['Replies'][$dbRecord->getInt('reply_id')] = ['Sender' => $players[$dbRecord->getInt('sender_id')], 'Message' => $dbRecord->getString('text'), 'SendTime' => $dbRecord->getInt('time')];
 	if ($thread['CanDelete']) {
 		$container['reply_id'] = $dbRecord->getInt('reply_id');
 		$thread['Replies'][$dbRecord->getInt('reply_id')]['DeleteHref'] = $container->href();

@@ -210,28 +210,28 @@ abstract class AbstractSmrAccount {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 
-			$this->login = $dbRecord->getField('login');
-			$this->passwordHash = $dbRecord->getField('password');
-			$this->email = $dbRecord->getField('email');
+			$this->login = $dbRecord->getString('login');
+			$this->passwordHash = $dbRecord->getString('password');
+			$this->email = $dbRecord->getString('email');
 			$this->validated = $dbRecord->getBoolean('validated');
 
 			$this->last_login = $dbRecord->getInt('last_login');
-			$this->validation_code = $dbRecord->getField('validation_code');
+			$this->validation_code = $dbRecord->getString('validation_code');
 			$this->veteranForced = $dbRecord->getBoolean('veteran');
 			$this->logging = $dbRecord->getBoolean('logging');
 			$this->offset = $dbRecord->getInt('offset');
 			$this->images = $dbRecord->getBoolean('images');
 			$this->fontSize = $dbRecord->getInt('fontsize');
 
-			$this->passwordReset = $dbRecord->getField('password_reset');
+			$this->passwordReset = $dbRecord->getString('password_reset');
 			$this->useAJAX = $dbRecord->getBoolean('use_ajax');
 			$this->mailBanned = $dbRecord->getInt('mail_banned');
 
-			$this->friendlyColour = $dbRecord->getField('friendly_colour');
-			$this->neutralColour = $dbRecord->getField('neutral_colour');
-			$this->enemyColour = $dbRecord->getField('enemy_colour');
+			$this->friendlyColour = $dbRecord->getString('friendly_colour');
+			$this->neutralColour = $dbRecord->getString('neutral_colour');
+			$this->enemyColour = $dbRecord->getString('enemy_colour');
 
-			$this->cssLink = $dbRecord->getField('css_link');
+			$this->cssLink = $dbRecord->getNullableString('css_link');
 			$this->defaultCSSEnabled = $dbRecord->getBoolean('default_css_enabled');
 			$this->centerGalaxyMapOnPlayer = $dbRecord->getBoolean('center_galaxy_map_on_player');
 
@@ -250,15 +250,15 @@ abstract class AbstractSmrAccount {
 			$this->referrerID = $dbRecord->getInt('referral_id');
 			$this->maxRankAchieved = $dbRecord->getInt('max_rank_achieved');
 
-			$this->hofName = $dbRecord->getField('hof_name');
-			$this->discordId = $dbRecord->getField('discord_id');
-			$this->ircNick = $dbRecord->getField('irc_nick');
+			$this->hofName = $dbRecord->getString('hof_name');
+			$this->discordId = $dbRecord->getNullableString('discord_id');
+			$this->ircNick = $dbRecord->getNullableString('irc_nick');
 
-			$this->dateFormat = $dbRecord->getField('date_format');
-			$this->timeFormat = $dbRecord->getField('time_format');
+			$this->dateFormat = $dbRecord->getString('date_format');
+			$this->timeFormat = $dbRecord->getString('time_format');
 
-			$this->template = $dbRecord->getField('template');
-			$this->colourScheme = $dbRecord->getField('colour_scheme');
+			$this->template = $dbRecord->getString('template');
+			$this->colourScheme = $dbRecord->getString('colour_scheme');
 
 			if (empty($this->hofName)) {
 				$this->hofName = $this->login;
@@ -288,7 +288,7 @@ abstract class AbstractSmrAccount {
 		}
 		return [
 			'Time' => $expireTime,
-			'Reason' => $dbRecord->getField('reason'),
+			'Reason' => $dbRecord->getString('reason'),
 			'ReasonID' => $dbRecord->getInt('reason_id'),
 		];
 	}
@@ -335,7 +335,7 @@ abstract class AbstractSmrAccount {
 		if ($dbResult->getNumRecords() > 50) {
 			$dbRecord = $dbResult->records()->current();
 			$delete_time = $dbRecord->getInt('time');
-			$delete_ip = $dbRecord->getField('ip');
+			$delete_ip = $dbRecord->getString('ip');
 
 			$this->db->write('DELETE FROM account_has_ip
 				WHERE ' . $this->SQL . ' AND

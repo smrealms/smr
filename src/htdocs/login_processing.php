@@ -119,7 +119,7 @@ try {
 		$dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE account_id = ' . $account->getAccountID());
 		if ($dbResult->hasRecord()) {
 			//convert to array
-			$old = explode('-', $dbResult->record()->getField('array'));
+			$old = explode('-', $dbResult->record()->getString('array'));
 			//get rid of old version cookie since it isn't optimal.
 			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) {
 				$old = [];
@@ -149,7 +149,7 @@ try {
 		$dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE account_id = ' . $account->getAccountID());
 		if ($dbResult->hasRecord()) {
 			//convert to array
-			$old = explode('-', $dbResult->record()->getField('array'));
+			$old = explode('-', $dbResult->record()->getString('array'));
 			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) {
 				$old = [];
 			}

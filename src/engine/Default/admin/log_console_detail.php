@@ -41,7 +41,7 @@ if ($action == 'Delete') {
 		$dbResult = $db->read('SELECT login FROM account WHERE account_id = ' . $db->escapeNumber($id));
 		if ($dbResult->hasRecord()) {
 			$colors[$id] = [
-				'name' => $dbResult->record()->getField('login'),
+				'name' => $dbResult->record()->getString('login'),
 				'color' => $color,
 			];
 		}
@@ -58,7 +58,7 @@ if ($action == 'Delete') {
 	$logTypes = [];
 	$dbResult = $db->read('SELECT * FROM log_type');
 	foreach ($dbResult->records() as $dbRecord) {
-		$logTypes[$dbRecord->getInt('log_type_id')] = $dbRecord->getField('log_type_entry');
+		$logTypes[$dbRecord->getInt('log_type_id')] = $dbRecord->getString('log_type_entry');
 	}
 	$template->assign('LogTypes', $logTypes);
 
@@ -82,7 +82,7 @@ if ($action == 'Delete') {
 	$log_notes = [];
 	$dbResult = $db->read('SELECT * FROM log_has_notes WHERE account_id IN (' . $account_list . ')');
 	foreach ($dbResult->records() as $dbRecord) {
-		$log_notes[] = $dbRecord->getField('notes');
+		$log_notes[] = $dbRecord->getString('notes');
 	}
 
 	// get rid of double values

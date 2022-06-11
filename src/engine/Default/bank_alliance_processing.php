@@ -53,7 +53,7 @@ if ($action == 'Deposit') {
 			GROUP BY transaction');
 		$playerTrans = ['Deposit' => 0, 'Payment' => 0];
 		foreach ($dbResult->records() as $dbRecord) {
-			$playerTrans[$dbRecord->getField('transaction')] = $dbRecord->getInt('total');
+			$playerTrans[$dbRecord->getString('transaction')] = $dbRecord->getInt('total');
 		}
 		$allowedWithdrawal = $withdrawalPerDay + $playerTrans['Deposit'] - $playerTrans['Payment'];
 		if ($allowedWithdrawal - $amount < 0) {

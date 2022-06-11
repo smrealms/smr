@@ -22,7 +22,7 @@ $dbRecord = $dbResult->record();
 $template->assign('GameName', $game_name);
 $template->assign('Start', date($account->getDateFormat(), $dbRecord->getInt('start_date')));
 $template->assign('End', date($account->getDateFormat(), $dbRecord->getInt('end_date')));
-$template->assign('Type', $dbRecord->getField('type'));
+$template->assign('Type', $dbRecord->getString('type'));
 $template->assign('Speed', $dbRecord->getFloat('speed'));
 
 $dbResult = $db->read('SELECT count(*), max(experience), max(alignment), min(alignment), max(kills) FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
@@ -48,7 +48,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$playerExp[] = [
 		'bold' => $dbRecord->getInt('account_id') == $oldAccountID ? 'class="bold"' : '',
 		'exp' => $dbRecord->getInt('experience'),
-		'name' => $dbRecord->getField('player_name'),
+		'name' => $dbRecord->getString('player_name'),
 	];
 }
 $template->assign('PlayerExp', $playerExp);
@@ -59,7 +59,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$playerKills[] = [
 		'bold' => $dbRecord->getInt('account_id') == $oldAccountID ? 'class="bold"' : '',
 		'kills' => $dbRecord->getInt('kills'),
-		'name' => $dbRecord->getField('player_name'),
+		'name' => $dbRecord->getString('player_name'),
 	];
 }
 $template->assign('PlayerKills', $playerKills);

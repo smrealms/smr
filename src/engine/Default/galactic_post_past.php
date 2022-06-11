@@ -21,7 +21,7 @@ $dbResult = $db->read('SELECT game_name, game_id FROM game WHERE game_id IN (SEL
 $publishedGames = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$publishedGames[] = [
-		'game_name' => $dbRecord->getField('game_name'),
+		'game_name' => $dbRecord->getString('game_name'),
 		'game_id' => $dbRecord->getInt('game_id'),
 	];
 }
@@ -37,7 +37,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$container['back'] = true;
 
 	$pastEditions[] = [
-		'title' => $dbRecord->getField('title'),
+		'title' => $dbRecord->getString('title'),
 		'online_since' => $dbRecord->getInt('online_since'),
 		'href' => $container->href(),
 	];

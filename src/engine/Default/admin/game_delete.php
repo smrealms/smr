@@ -11,7 +11,7 @@ $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT game_id, game_name FROM game ORDER BY game_id DESC');
 $games = [];
 foreach ($dbResult->records() as $dbRecord) {
-	$name = $dbRecord->getField('game_name');
+	$name = $dbRecord->getString('game_name');
 	$game_id = $dbRecord->getInt('game_id');
 	$games[] = [
 		'game_id' => $game_id,
