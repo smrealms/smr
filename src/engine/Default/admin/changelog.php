@@ -45,8 +45,8 @@ foreach ($dbResult->records() as $dbRecord) {
 	$changes = [];
 	foreach ($dbResult2->records() as $dbRecord2) {
 		$changes[] = [
-			'title' => $dbRecord2->getField('change_title'),
-			'message' => $dbRecord2->getField('change_message'),
+			'title' => $dbRecord2->getString('change_title'),
+			'message' => $dbRecord2->getString('change_message'),
 		];
 	}
 

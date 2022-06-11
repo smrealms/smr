@@ -23,9 +23,9 @@ if ($dbResult->hasRecord()) {
 	$players = $alliance->getMembers();
 	foreach ($dbResult->records() as $dbRecord) {
 		$transactions[] = [
-			'type' => $dbRecord->getField('transaction') == 'Payment' ? 'Withdraw' : 'Deposit',
+			'type' => $dbRecord->getString('transaction') == 'Payment' ? 'Withdraw' : 'Deposit',
 			'player' => $players[$dbRecord->getInt('payee_id')]->getDisplayName(),
-			'reason' => $dbRecord->getField('reason'),
+			'reason' => $dbRecord->getString('reason'),
 			'amount' => number_format($dbRecord->getInt('amount')),
 			'transactionID' => $dbRecord->getInt('transaction_id'),
 		];

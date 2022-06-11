@@ -65,7 +65,7 @@ class Redirect {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
-		$_SESSION['login_msg'] = '<span class="red">Space Merchant Realms is temporarily offline.<br />' . $dbResult->record()->getField('reason') . '</span>';
+		$_SESSION['login_msg'] = '<span class="red">Space Merchant Realms is temporarily offline.<br />' . $dbResult->record()->getString('reason') . '</span>';
 
 		header('location: /login.php?status=offline');
 		exit;

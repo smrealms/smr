@@ -130,7 +130,7 @@ class SmrPlanet {
 		if ($this->exists) {
 			$this->planetName = $dbRecord->getString('planet_name');
 			$this->ownerID = $dbRecord->getInt('owner_id');
-			$this->password = $dbRecord->getField('password');
+			$this->password = $dbRecord->getString('password');
 			$this->shields = $dbRecord->getInt('shields');
 			$this->armour = $dbRecord->getInt('armour');
 			$this->drones = $dbRecord->getInt('drones');

@@ -34,7 +34,7 @@ $dbResult = $db->read('SELECT end_time, game_id, game_name, game_speed, game_typ
 foreach ($dbResult->records() as $dbRecord) {
 	$game_id = $dbRecord->getInt('game_id');
 	$games['Play'][$game_id]['ID'] = $game_id;
-	$games['Play'][$game_id]['Name'] = $dbRecord->getField('game_name');
+	$games['Play'][$game_id]['Name'] = $dbRecord->getString('game_name');
 	$games['Play'][$game_id]['Type'] = SmrGame::GAME_TYPES[$dbRecord->getInt('game_type')];
 	$games['Play'][$game_id]['EndDate'] = date($account->getDateTimeFormatSplit(), $dbRecord->getInt('end_time'));
 	$games['Play'][$game_id]['Speed'] = $dbRecord->getFloat('game_speed');
@@ -126,7 +126,7 @@ $dbResult = $db->read('SELECT start_time, end_time, game_name, game_type, game_s
 foreach ($dbResult->records() as $dbRecord) {
 	$game_id = $dbRecord->getInt('game_id');
 	$games['Previous'][$game_id]['ID'] = $game_id;
-	$games['Previous'][$game_id]['Name'] = $dbRecord->getField('game_name');
+	$games['Previous'][$game_id]['Name'] = $dbRecord->getString('game_name');
 	$games['Previous'][$game_id]['StartDate'] = date($account->getDateFormat(), $dbRecord->getInt('start_time'));
 	$games['Previous'][$game_id]['EndDate'] = date($account->getDateFormat(), $dbRecord->getInt('end_time'));
 	$games['Previous'][$game_id]['Type'] = SmrGame::GAME_TYPES[$dbRecord->getInt('game_type')];
@@ -154,10 +154,10 @@ foreach (Globals::getHistoryDatabases() as $databaseName => $oldColumn) {
 		$game_id = $dbRecord->getInt('game_id');
 		$index = $databaseName . $game_id;
 		$games['Previous'][$index]['ID'] = $game_id;
-		$games['Previous'][$index]['Name'] = $dbRecord->getField('game_name');
+		$games['Previous'][$index]['Name'] = $dbRecord->getString('game_name');
 		$games['Previous'][$index]['StartDate'] = date($account->getDateFormat(), $dbRecord->getInt('start_date'));
 		$games['Previous'][$index]['EndDate'] = date($account->getDateFormat(), $dbRecord->getInt('end_date'));
-		$games['Previous'][$index]['Type'] = $dbRecord->getField('type');
+		$games['Previous'][$index]['Type'] = $dbRecord->getString('type');
 		$games['Previous'][$index]['Speed'] = $dbRecord->getFloat('speed');
 		// create a container that will hold next url and additional variables.
 		$data = [
@@ -199,13 +199,13 @@ if ($dbResult->hasRecord()) {
 		$container = Page::create('vote_processing.php', ['forward_to' => 'game_play.php']);
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = $container->href();
-		$voting[$voteID]['Question'] = $dbRecord->getField('question');
+		$voting[$voteID]['Question'] = $dbRecord->getString('question');
 		$voting[$voteID]['TimeRemaining'] = format_time($dbRecord->getInt('end') - Smr\Epoch::time(), true);
 		$voting[$voteID]['Options'] = [];
 		$dbResult2 = $db->read('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db->escapeNumber($dbRecord->getInt('vote_id')) . ' GROUP BY option_id');
 		foreach ($dbResult2->records() as $dbRecord2) {
 			$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['ID'] = $dbRecord2->getInt('option_id');
-			$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Text'] = $dbRecord2->getField('text');
+			$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Text'] = $dbRecord2->getString('text');
 			$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Chosen'] = isset($votedFor[$dbRecord->getInt('vote_id')]) && $votedFor[$voteID] == $dbRecord2->getInt('option_id');
 			$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Votes'] = $dbRecord2->getInt('count(account_id)');
 		}

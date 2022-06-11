@@ -16,7 +16,7 @@ $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT game_name, game_id FROM game WHERE enabled=' . $db->escapeBoolean(false));
 $disabledGames = [];
 foreach ($dbResult->records() as $dbRecord) {
-	$disabledGames[$dbRecord->getInt('game_id')] = $dbRecord->getField('game_name');
+	$disabledGames[$dbRecord->getInt('game_id')] = $dbRecord->getString('game_name');
 }
 krsort($disabledGames);
 $template->assign('DisabledGames', $disabledGames);

@@ -85,10 +85,10 @@ class SmrGalaxy {
 		$this->isNew = $dbRecord === null;
 
 		if (!$this->isNew) {
-			$this->name = $dbRecord->getField('galaxy_name');
+			$this->name = $dbRecord->getString('galaxy_name');
 			$this->width = $dbRecord->getInt('width');
 			$this->height = $dbRecord->getInt('height');
-			$this->galaxyType = $dbRecord->getField('galaxy_type');
+			$this->galaxyType = $dbRecord->getString('galaxy_type');
 			$this->maxForceTime = $dbRecord->getInt('max_force_time');
 		} elseif ($create === false) {
 			throw new Smr\Exceptions\GalaxyNotFound('No such galaxy: ' . $gameID . '-' . $galaxyID);

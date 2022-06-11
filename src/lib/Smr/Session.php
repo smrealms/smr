@@ -107,11 +107,11 @@ class Session {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$this->generate = false;
-			$this->sessionID = $dbRecord->getField('session_id');
+			$this->sessionID = $dbRecord->getString('session_id');
 			$this->accountID = $dbRecord->getInt('account_id');
 			$this->gameID = $dbRecord->getInt('game_id');
 			$this->lastAccessed = $dbRecord->getFloat('last_accessed');
-			$this->lastSN = $dbRecord->getField('last_sn');
+			$this->lastSN = $dbRecord->getString('last_sn');
 			// We may not have ajax_returns if ajax was disabled
 			$this->previousAjaxReturns = $dbRecord->getObject('ajax_returns', true, true);
 

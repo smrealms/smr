@@ -35,7 +35,7 @@ $npcs = [];
 $dbResult = $db->read('SELECT * FROM npc_logins JOIN account USING(login)');
 foreach ($dbResult->records() as $dbRecord) {
 	$accountID = $dbRecord->getInt('account_id');
-	$login = $dbRecord->getField('login');
+	$login = $dbRecord->getString('login');
 
 	$container['login'] = $login;
 	$container['accountID'] = $accountID;

@@ -20,7 +20,7 @@ function shared_channel_msg_op_info(SmrPlayer $player): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());
 		if ($dbResult->hasRecord()) {
-			$msg = $player->getPlayerName() . ' is on the ' . $dbResult->record()->getField('response') . ' list.';
+			$msg = $player->getPlayerName() . ' is on the ' . $dbResult->record()->getString('response') . ' list.';
 		} else {
 			$msg = $player->getPlayerName() . ' has not signed up for this one.';
 		}

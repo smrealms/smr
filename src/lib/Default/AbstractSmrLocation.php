@@ -129,9 +129,9 @@ class AbstractSmrLocation {
 		$locationExists = $dbRecord !== null;
 
 		if ($locationExists) {
-			$this->name = $dbRecord->getField('location_name');
-			$this->processor = $dbRecord->getField('location_processor');
-			$this->image = $dbRecord->getField('location_image');
+			$this->name = $dbRecord->getString('location_name');
+			$this->processor = $dbRecord->getNullableString('location_processor');
+			$this->image = $dbRecord->getString('location_image');
 		} else {
 			throw new Exception('Cannot find location: ' . $typeID);
 		}

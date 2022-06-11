@@ -17,7 +17,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$accountID = $dbRecord->getInt('account_id');
 	$loggedAccounts[$accountID] = [
 		'AccountID' => $accountID,
-		'Login' => $dbRecord->getField('login'),
+		'Login' => $dbRecord->getString('login'),
 		'TotalEntries' => $dbRecord->getInt('number_of_entries'),
 		'Checked' => isset($var['account_ids']) && in_array($accountID, $var['account_ids']),
 		'Notes' => '',

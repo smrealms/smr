@@ -16,9 +16,9 @@ $dbResult = $db->read('SELECT * FROM album WHERE account_id = ' . $db->escapeNum
 $dbRecord = $dbResult->record();
 
 $disabled = $dbRecord->getBoolean('disabled');
-$location = $dbRecord->getField('location');
-$email = $dbRecord->getField('email');
-$website = $dbRecord->getField('website');
+$location = $dbRecord->getNullableString('location');
+$email = $dbRecord->getNullableString('email');
+$website = $dbRecord->getNullableString('website');
 $day = $dbRecord->getInt('day');
 $month = $dbRecord->getInt('month');
 $year = $dbRecord->getInt('year');

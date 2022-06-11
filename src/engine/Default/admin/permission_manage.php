@@ -21,7 +21,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$container['admin_id'] = $accountID;
 	$adminLinks[$accountID] = [
 		'href' => $container->href(),
-		'name' => $dbRecord->getField('login'),
+		'name' => $dbRecord->getString('login'),
 	];
 }
 $template->assign('AdminLinks', $adminLinks);
@@ -36,7 +36,7 @@ if (empty($admin_id)) {
 	foreach ($dbResult->records() as $dbRecord) {
 		$accountID = $dbRecord->getInt('account_id');
 		if (!array_key_exists($accountID, $adminLinks)) {
-			$validatedAccounts[$accountID] = $dbRecord->getField('login');
+			$validatedAccounts[$accountID] = $dbRecord->getString('login');
 		}
 	}
 	$template->assign('ValidatedAccounts', $validatedAccounts);

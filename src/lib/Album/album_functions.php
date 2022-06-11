@@ -78,9 +78,9 @@ function album_entry(int $album_id): void {
 					approved = \'YES\'');
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
-		$location = $dbRecord->getField('location');
-		$email = $dbRecord->getField('email');
-		$website = $dbRecord->getField('website');
+		$location = $dbRecord->getNullableString('location');
+		$email = $dbRecord->getNullableString('email');
+		$website = $dbRecord->getNullableString('website');
 		$day = $dbRecord->getInt('day');
 		$month = $dbRecord->getInt('month');
 		$year = $dbRecord->getInt('year');

@@ -14,25 +14,16 @@ use UnhandledMatchError;
  */
 class DatabaseRecordTest extends TestCase {
 
-	public function test_hasField(): void {
-		// Construct a record that has the field 'foo', but not 'bla'
-		$record = new DatabaseRecord(['name' => 'value']);
-		self::assertTrue($record->hasField('name'));
-		self::assertFalse($record->hasField('does_not_exist'));
-	}
-
-	//------------------------------------------------------------------------
-
-	public function test_getField(): void {
+	public function test_getNullableString(): void {
 		// Construct a record with a string value
 		$record = new DatabaseRecord(['name' => 'value_string']);
-		self::assertSame('value_string', $record->getField('name'));
+		self::assertSame('value_string', $record->getNullableString('name'));
 	}
 
-	public function test_getField_with_null_value(): void {
+	public function test_getNullableString_with_null_value(): void {
 		// Construct a record with a null value
 		$record = new DatabaseRecord(['name' => null]);
-		self::assertSame(null, $record->getField('name'));
+		self::assertSame(null, $record->getNullableString('name'));
 	}
 
 	//------------------------------------------------------------------------
@@ -65,6 +56,20 @@ class DatabaseRecordTest extends TestCase {
 		$record = new DatabaseRecord(['name' => 'NONBOOLEAN']);
 		$this->expectException(UnhandledMatchError::class);
 		$record->getBoolean('name');
+	}
+
+	//------------------------------------------------------------------------
+
+	public function test_getNullableInt(): void {
+		// Construct a record with an int value
+		$record = new DatabaseRecord(['name' => '3']);
+		self::assertSame(3, $record->getNullableInt('name'));
+	}
+
+	public function test_getNullableInt_with_null_value(): void {
+		// Construct a record with a null value
+		$record = new DatabaseRecord(['name' => null]);
+		self::assertSame(null, $record->getNullableInt('name'));
 	}
 
 	//------------------------------------------------------------------------
@@ -137,6 +142,8 @@ class DatabaseRecordTest extends TestCase {
 		self::assertSame(null, $record->getObject('name_null', nullable: true));
 		self::assertSame(['c', 'd'], $record->getObject('name_compressed', compressed: true));
 	}
+
+	//------------------------------------------------------------------------
 
 	public function test_getRow(): void {
 		// getRow returns the entire record

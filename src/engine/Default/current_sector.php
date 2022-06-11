@@ -214,7 +214,7 @@ function checkForAttackMessage(string &$msg): void {
 				$player = $session->getPlayer();
 				if ($player->getSectorID() == $dbRecord->getInt('sector_id')) {
 					$results = $dbRecord->getObject('result', true);
-					$template->assign('AttackResultsType', $dbRecord->getField('type'));
+					$template->assign('AttackResultsType', $dbRecord->getString('type'));
 					$template->assign('AttackResults', $results);
 					$template->assign('AttackLogLink', linkCombatLog($logID));
 				}

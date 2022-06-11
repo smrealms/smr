@@ -30,7 +30,7 @@ if ($showRoles) {
 				AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 				ORDER BY role_id');
 	foreach ($dbResult->records() as $dbRecord) {
-		$roles[$dbRecord->getInt('role_id')] = $dbRecord->getField('role');
+		$roles[$dbRecord->getInt('role_id')] = $dbRecord->getString('role');
 	}
 	$template->assign('Roles', $roles);
 

@@ -27,7 +27,7 @@ $ownedAnon = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$anon = [];
 	$anon['anon_id'] = $dbRecord->getInt('anon_id');
-	$anon['password'] = $dbRecord->getField('password');
+	$anon['password'] = $dbRecord->getString('password');
 	$anon['amount'] = $dbRecord->getInt('amount');
 
 	$dbResult2 = $db->read('SELECT MAX(time) FROM anon_bank_transactions

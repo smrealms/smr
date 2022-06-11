@@ -15,7 +15,7 @@ $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT game_id, game_name FROM game WHERE game_type=' . $db->escapeNumber(SmrGame::GAME_TYPE_DRAFT) . ' AND join_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY start_time DESC');
 foreach ($dbResult->records() as $dbRecord) {
 	$activeGames[] = [
-		'game_name' => $dbRecord->getField('game_name'),
+		'game_name' => $dbRecord->getString('game_name'),
 		'game_id' => $dbRecord->getInt('game_id'),
 	];
 }

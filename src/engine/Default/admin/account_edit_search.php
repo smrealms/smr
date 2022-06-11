@@ -11,7 +11,7 @@ $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT game_id, game_name FROM game WHERE enabled = \'TRUE\' ORDER BY game_id DESC');
 foreach ($dbResult->records() as $dbRecord) {
 	$gameID = $dbRecord->getInt('game_id');
-	$games[$gameID] = $dbRecord->getField('game_name') . ' (' . $gameID . ')';
+	$games[$gameID] = $dbRecord->getString('game_name') . ' (' . $gameID . ')';
 }
 $template->assign('Games', $games);
 $template->assign('SearchHREF', Page::create('admin/account_edit_search_processing.php')->href());

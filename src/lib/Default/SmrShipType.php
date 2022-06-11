@@ -51,7 +51,7 @@ class SmrShipType {
 	}
 
 	protected function __construct(Smr\DatabaseRecord $dbRecord) {
-		$this->name = $dbRecord->getField('ship_name');
+		$this->name = $dbRecord->getString('ship_name');
 		$this->typeID = $dbRecord->getInt('ship_type_id');
 		$this->classID = $dbRecord->getInt('ship_class_id');
 		$this->raceID = $dbRecord->getInt('race_id');

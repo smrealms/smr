@@ -64,7 +64,7 @@ class Globals {
 			$dbResult = self::$db->read('SELECT * FROM level ORDER BY level_id ASC');
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$LEVEL_REQUIREMENTS[$dbRecord->getInt('level_id')] = [
-					'Name' => $dbRecord->getField('level_name'),
+					'Name' => $dbRecord->getString('level_name'),
 					'Requirement' => $dbRecord->getInt('requirement'),
 				];
 			}
@@ -97,7 +97,7 @@ class Globals {
 				self::$GOODS[$dbRecord->getInt('good_id')] = [
 					'Type' => 'Good',
 					'ID' => $dbRecord->getInt('good_id'),
-					'Name' => $dbRecord->getField('good_name'),
+					'Name' => $dbRecord->getString('good_name'),
 					'Max' => $dbRecord->getInt('max_amount'),
 					'BasePrice' => $dbRecord->getInt('base_price'),
 					'Class' => $dbRecord->getInt('good_class'),
@@ -131,7 +131,7 @@ class Globals {
 				self::$HARDWARE_TYPES[$dbRecord->getInt('hardware_type_id')] = [
 					'Type' => 'Hardware',
 					'ID' => $dbRecord->getInt('hardware_type_id'),
-					'Name' => $dbRecord->getField('hardware_name'),
+					'Name' => $dbRecord->getString('hardware_name'),
 					'Cost' => $dbRecord->getInt('cost'),
 				];
 			}

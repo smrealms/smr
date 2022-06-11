@@ -427,7 +427,7 @@ function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database
 			foreach ($dbResult->records() as $dbRecord) {
 				$ticker[] = [
 					'Time' => date($dateFormat, $dbRecord->getInt('time')),
-					'Message' => $dbRecord->getField('news_message'),
+					'Message' => $dbRecord->getString('news_message'),
 				];
 			}
 		}
@@ -443,7 +443,7 @@ function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database
 			foreach ($dbResult->records() as $dbRecord) {
 				$ticker[] = [
 					'Time' => date($dateFormat, $dbRecord->getInt('send_time')),
-					'Message' => $dbRecord->getField('message_text'),
+					'Message' => $dbRecord->getString('message_text'),
 				];
 			}
 		}

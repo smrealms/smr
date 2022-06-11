@@ -13,18 +13,10 @@ class DatabaseRecord {
 		private readonly array $dbRecord
 	) {}
 
-	public function hasField(string $name): bool {
-		return isset($this->dbRecord[$name]);
-	}
-
-	public function getField(string $name): ?string {
+	public function getNullableString(string $name): ?string {
 		return $this->dbRecord[$name];
 	}
 
-	/**
-	 * Get a string-only field from the database record.
-	 * If the field can be null, use `getField` instead.
-	 */
 	public function getString(string $name): string {
 		return $this->dbRecord[$name];
 	}
@@ -34,6 +26,13 @@ class DatabaseRecord {
 			'TRUE' => true,
 			'FALSE' => false,
 		};
+	}
+
+	public function getNullableInt(string $name): ?int {
+		if ($this->dbRecord[$name] === null) {
+			return null;
+		}
+		return $this->getInt($name);
 	}
 
 	public function getInt(string $name): int {
@@ -53,7 +52,7 @@ class DatabaseRecord {
 	}
 
 	public function getObject(string $name, bool $compressed = false, bool $nullable = false): mixed {
-		$object = $this->getField($name);
+		$object = $this->dbRecord[$name];
 		if ($nullable === true && $object === null) {
 			return null;
 		}

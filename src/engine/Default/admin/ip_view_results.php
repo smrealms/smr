@@ -34,8 +34,8 @@ if ($type == 'list') {
 	//make sure we have enough but not too mant to reduce lag
 	foreach ($dbResult->records() as $dbRecord) {
 		$id = $dbRecord->getInt('account_id');
-		$ip = $dbRecord->getField('ip');
-		$host = $dbRecord->getField('host');
+		$ip = $dbRecord->getString('ip');
+		$host = $dbRecord->getString('host');
 		$ip_array[] = ['ip' => $ip, 'id' => $id, 'host' => $host];
 	}
 
@@ -69,7 +69,7 @@ if ($type == 'list') {
 		if ($matches) {
 			$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($account_id));
 			if ($dbResult2->hasRecord()) {
-				$ex = $dbResult2->record()->getField('reason');
+				$ex = $dbResult2->record()->getString('reason');
 			} else {
 				$ex = '';
 			}
@@ -106,7 +106,7 @@ if ($type == 'list') {
 	$template->assign('Summary', $summary);
 	$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($variable));
 	if ($dbResult->hasRecord()) {
-		$ex = $dbResult->record()->getField('reason');
+		$ex = $dbResult->record()->getString('reason');
 		$template->assign('Exception', $ex);
 	}
 	$viewAccount = SmrAccount::getAccount($accountID);
@@ -118,9 +118,9 @@ if ($type == 'list') {
 	$dbResult = $db->read('SELECT * FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($variable) . ' ORDER BY time');
 	foreach ($dbResult->records() as $dbRecord) {
 		$rows[] = [
-			'ip' => $dbRecord->getField('ip'),
+			'ip' => $dbRecord->getString('ip'),
 			'date' => date($account->getDateTimeFormat(), $dbRecord->getInt('time')),
-			'host' => $dbRecord->getField('host'),
+			'host' => $dbRecord->getString('host'),
 		];
 	}
 	$template->assign('Rows', $rows);
@@ -209,8 +209,8 @@ if ($type == 'list') {
 	foreach ($dbResult->records() as $dbRecord) {
 		$id = $dbRecord->getInt('account_id');
 		$time = $dbRecord->getInt('time');
-		$ip = $dbRecord->getField('ip');
-		$host = $dbRecord->getField('host');
+		$ip = $dbRecord->getString('ip');
+		$host = $dbRecord->getString('host');
 
 		if ($id === $last_id && $ip === $last_ip) {
 			continue;
@@ -225,7 +225,7 @@ if ($type == 'list') {
 		}
 		$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($id));
 		if ($dbResult2->hasRecord()) {
-			$ex = $dbResult2->record()->getField('reason');
+			$ex = $dbResult2->record()->getString('reason');
 		} else {
 			$ex = '';
 		}

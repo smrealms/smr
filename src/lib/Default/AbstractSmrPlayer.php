@@ -219,7 +219,7 @@ abstract class AbstractSmrPlayer {
 			throw new Smr\Exceptions\PlayerNotFound('Invalid accountID: ' . $accountID . ' OR gameID: ' . $gameID);
 		}
 
-		$this->playerName = $dbRecord->getField('player_name');
+		$this->playerName = $dbRecord->getString('player_name');
 		$this->playerID = $dbRecord->getInt('player_id');
 		$this->sectorID = $dbRecord->getInt('sector_id');
 		$this->lastSectorID = $dbRecord->getInt('last_sector_id');
@@ -227,7 +227,7 @@ abstract class AbstractSmrPlayer {
 		$this->lastTurnUpdate = $dbRecord->getInt('last_turn_update');
 		$this->newbieTurns = $dbRecord->getInt('newbie_turns');
 		$this->lastNewsUpdate = $dbRecord->getInt('last_news_update');
-		$this->attackColour = $dbRecord->getField('attack_warning');
+		$this->attackColour = $dbRecord->getString('attack_warning');
 		$this->dead = $dbRecord->getBoolean('dead');
 		$this->npc = $dbRecord->getBoolean('npc');
 		$this->newbieStatus = $dbRecord->getBoolean('newbie_status');
@@ -251,7 +251,7 @@ abstract class AbstractSmrPlayer {
 		$this->displayMissions = $dbRecord->getBoolean('display_missions');
 		$this->displayWeapons = $dbRecord->getBoolean('display_weapons');
 		$this->forceDropMessages = $dbRecord->getBoolean('force_drop_messages');
-		$this->groupScoutMessages = $dbRecord->getField('group_scout_messages');
+		$this->groupScoutMessages = $dbRecord->getString('group_scout_messages');
 		$this->ignoreGlobals = $dbRecord->getBoolean('ignore_globals');
 		$this->newbieWarning = $dbRecord->getBoolean('newbie_warning');
 		$this->nameChanged = $dbRecord->getBoolean('name_changed');
@@ -447,7 +447,7 @@ abstract class AbstractSmrPlayer {
 		if (!isset($this->customShipName)) {
 			$dbResult = $this->db->read('SELECT * FROM ship_has_name WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
-				$this->customShipName = $dbResult->record()->getField('ship_name');
+				$this->customShipName = $dbResult->record()->getString('ship_name');
 			} else {
 				$this->customShipName = false;
 			}
@@ -589,7 +589,7 @@ abstract class AbstractSmrPlayer {
 			$this->gpWriter = false;
 			$dbResult = $this->db->read('SELECT position FROM galactic_post_writer WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
-				$this->gpWriter = $dbResult->record()->getField('position');
+				$this->gpWriter = $dbResult->record()->getString('position');
 			}
 		}
 		return $this->gpWriter;
@@ -1703,7 +1703,7 @@ abstract class AbstractSmrPlayer {
 			$dbResult = $this->db->read('SELECT * FROM player_stored_sector WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->storedDestinations[] = [
-					'Label' => $dbRecord->getField('label'),
+					'Label' => $dbRecord->getString('label'),
 					'SectorID' => $dbRecord->getInt('sector_id'),
 					'OffsetTop' => $dbRecord->getInt('offset_top'),
 					'OffsetLeft' => $dbRecord->getInt('offset_left'),
@@ -1785,11 +1785,11 @@ abstract class AbstractSmrPlayer {
 			//get ticker info
 			$dbResult = $this->db->read('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL . ' AND expires > ' . $this->db->escapeNumber(Smr\Epoch::time()));
 			foreach ($dbResult->records() as $dbRecord) {
-				$this->tickers[$dbRecord->getField('type')] = [
-					'Type' => $dbRecord->getField('type'),
+				$this->tickers[$dbRecord->getString('type')] = [
+					'Type' => $dbRecord->getString('type'),
 					'Time' => $dbRecord->getInt('time'),
 					'Expires' => $dbRecord->getInt('expires'),
-					'Recent' => $dbRecord->getField('recent'),
+					'Recent' => $dbRecord->getString('recent'),
 				];
 			}
 		}
@@ -1866,7 +1866,7 @@ abstract class AbstractSmrPlayer {
 				$this->bounties[$dbRecord->getInt('bounty_id')] = [
 							'Amount' => $dbRecord->getInt('amount'),
 							'SmrCredits' => $dbRecord->getInt('smr_credits'),
-							'Type' => $dbRecord->getField('type'),
+							'Type' => $dbRecord->getString('type'),
 							'Claimer' => $dbRecord->getInt('claimer_id'),
 							'Time' => $dbRecord->getInt('time'),
 							'ID' => $dbRecord->getInt('bounty_id'),

@@ -40,7 +40,7 @@ $dbResult = $db->read('SELECT transaction, sum(amount) as total FROM alliance_ba
 			GROUP BY transaction');
 $playerTrans = ['Deposit' => 0, 'Payment' => 0];
 foreach ($dbResult->records() as $dbRecord) {
-	$playerTrans[$dbRecord->getField('transaction')] = $dbRecord->getInt('total');
+	$playerTrans[$dbRecord->getString('transaction')] = $dbRecord->getInt('total');
 }
 
 if ($alliance->getAllianceID() == $player->getAllianceID()) {
@@ -105,10 +105,10 @@ if ($dbResult->hasRecord()) {
 		$bankTransactions[$dbRecord->getInt('transaction_id')] = [
 			'Time' => $dbRecord->getInt('time'),
 			'Player' => SmrPlayer::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
-			'Reason' => $dbRecord->getField('reason'),
-			'TransactionType' => $dbRecord->getField('transaction'),
-			'Withdrawal' => $dbRecord->getField('transaction') == 'Payment' ? $dbRecord->getInt('amount') : '',
-			'Deposit' => $dbRecord->getField('transaction') == 'Deposit' ? $dbRecord->getInt('amount') : '',
+			'Reason' => $dbRecord->getString('reason'),
+			'TransactionType' => $dbRecord->getString('transaction'),
+			'Withdrawal' => $dbRecord->getString('transaction') == 'Payment' ? $dbRecord->getInt('amount') : '',
+			'Deposit' => $dbRecord->getString('transaction') == 'Deposit' ? $dbRecord->getInt('amount') : '',
 			'Exempt' => $dbRecord->getInt('exempt') == 1,
 		];
 	}

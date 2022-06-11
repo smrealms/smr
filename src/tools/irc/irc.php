@@ -112,7 +112,7 @@ while ($running) {
 						WHERE join_time < ' . time() . '
 							AND end_time > ' . time());
 			foreach ($dbResult->records() as $dbRecord) {
-				$joinChannels[] = $dbRecord->getField('channel');
+				$joinChannels[] = $dbRecord->getString('channel');
 			}
 
 			// now do the actual joining

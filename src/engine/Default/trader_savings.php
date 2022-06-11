@@ -14,7 +14,7 @@ $dbResult = $db->read('SELECT * FROM anon_bank WHERE owner_id = ' . $db->escapeN
 foreach ($dbResult->records() as $dbRecord) {
 	$anonAccounts[] = [
 		'ID' => $dbRecord->getInt('anon_id'),
-		'Password' => $dbRecord->getField('password'),
+		'Password' => $dbRecord->getString('password'),
 	];
 }
 $template->assign('AnonAccounts', $anonAccounts);

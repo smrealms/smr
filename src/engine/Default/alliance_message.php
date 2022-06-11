@@ -56,9 +56,9 @@ if ($dbResult->hasRecord()) {
 		$threads[$i]['ThreadID'] = $threadID;
 
 		$thread_ids[$i] = $threadID;
-		$thread_topics[$i] = $dbRecord->getField('topic');
+		$thread_topics[$i] = $dbRecord->getString('topic');
 
-		$threads[$i]['Topic'] = $dbRecord->getField('topic');
+		$threads[$i]['Topic'] = $dbRecord->getString('topic');
 
 		$dbResult2 = $db->read('SELECT time
 					FROM player_read_thread

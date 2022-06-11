@@ -25,7 +25,7 @@ function channel_join($fp, string $rdata): bool {
 			$seen_id = $dbRecord->getInt('seen_id');
 
 			$seen_count = $dbRecord->getInt('seen_count');
-			$seen_by = $dbRecord->getField('seen_by');
+			$seen_by = $dbRecord->getNullableString('seen_by');
 
 			if ($seen_count > 1) {
 				fwrite($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_count . ' players were looking for you, the last one being ' . $seen_by . EOL);

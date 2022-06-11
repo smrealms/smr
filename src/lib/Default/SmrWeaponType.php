@@ -59,7 +59,7 @@ class SmrWeaponType {
 		protected readonly int $weaponTypeID,
 		Smr\DatabaseRecord $dbRecord
 	) {
-		$this->name = $dbRecord->getField('weapon_name');
+		$this->name = $dbRecord->getString('weapon_name');
 		$this->raceID = $dbRecord->getInt('race_id');
 		$this->cost = $dbRecord->getInt('cost');
 		$this->shieldDamage = $dbRecord->getInt('shield_damage');

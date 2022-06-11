@@ -68,8 +68,8 @@ if (Smr\Request::get('to_email') == '*') {
 	foreach ($dbResult->records() as $dbRecord) {
 		// get account data
 		$account_id = $dbRecord->getInt('account_id');
-		$to_email = $dbRecord->getField('email');
-		$to_name = $dbRecord->getField('login');
+		$to_email = $dbRecord->getString('email');
+		$to_name = $dbRecord->getString('login');
 
 		// Reset the message body with personalized salutation, if requested
 		$salutation = Smr\Request::get('salutation');

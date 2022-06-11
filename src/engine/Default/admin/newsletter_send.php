@@ -20,10 +20,10 @@ if ($dbResult->hasRecord()) {
 	$template->assign('DefaultSubject', 'Space Merchant Realms Newsletter #' . $id);
 
 	// Give both the template and processing container access to the message
-	$processingContainer['newsletter_html'] = $dbRecord->getField('newsletter_html');
-	$processingContainer['newsletter_text'] = $dbRecord->getField('newsletter_text');
-	$template->assign('NewsletterHtml', $dbRecord->getField('newsletter_html'));
-	$template->assign('NewsletterText', $dbRecord->getField('newsletter_text'));
+	$processingContainer['newsletter_html'] = $dbRecord->getString('newsletter_html');
+	$processingContainer['newsletter_text'] = $dbRecord->getString('newsletter_text');
+	$template->assign('NewsletterHtml', $dbRecord->getString('newsletter_html'));
+	$template->assign('NewsletterText', $dbRecord->getString('newsletter_text'));
 }
 
 // Create the form for the populated processing container

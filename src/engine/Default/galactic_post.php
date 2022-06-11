@@ -22,7 +22,7 @@ $template->assign('MakePaperHREF', $container->href());
 $dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 $papers = [];
 foreach ($dbResult->records() as $dbRecord) {
-	$paper_name = $dbRecord->getField('title');
+	$paper_name = $dbRecord->getString('title');
 	$paper_id = $dbRecord->getInt('paper_id');
 	$published = $dbRecord->getInt('online_since');
 
@@ -31,7 +31,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$hasEnoughArticles = $numArticles > 2 && $numArticles < 9;
 
 	$paper = [
-		'title' => $dbRecord->getField('title'),
+		'title' => $dbRecord->getString('title'),
 		'num_articles' => $numArticles,
 		'color' => $hasEnoughArticles ? 'green' : 'red',
 		'published' => !empty($published) && $published > 0,

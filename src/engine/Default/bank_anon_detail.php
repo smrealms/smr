@@ -24,7 +24,7 @@ $dbRecord = $dbResult->record();
 // if they didn't come from the creation screen we need to check if the pw is correct
 if (!isset($var['allowed']) || $var['allowed'] != 'yes') {
 	$session->getRequestVar('password');
-	if ($dbRecord->getField('password') != $var['password']) {
+	if ($dbRecord->getString('password') != $var['password']) {
 		create_error('Invalid password!');
 	}
 }
@@ -75,7 +75,7 @@ if ($dbResult->hasRecord()) {
 	$transactions = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$transactionPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
-		$transaction = $dbRecord->getField('transaction');
+		$transaction = $dbRecord->getString('transaction');
 		$amount = number_format($dbRecord->getInt('amount'));
 		$transactions[$dbRecord->getInt('transaction_id')] = [
 			'date' => date($account->getDateTimeFormatSplit(), $dbRecord->getInt('time')),

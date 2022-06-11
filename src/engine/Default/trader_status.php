@@ -63,7 +63,7 @@ $notes = [];
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT * FROM player_has_notes WHERE ' . $player->getSQL() . ' ORDER BY note_id DESC');
 foreach ($dbResult->records() as $dbRecord) {
-	$notes[$dbRecord->getInt('note_id')] = $dbRecord->getField('note');
+	$notes[$dbRecord->getInt('note_id')] = $dbRecord->getString('note');
 }
 $template->assign('Notes', $notes);
 

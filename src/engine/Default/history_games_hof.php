@@ -18,7 +18,7 @@ if (!isset($var['stat'])) {
 	$links = [];
 	$dbResult = $db->read('SHOW COLUMNS FROM player_has_stats');
 	foreach ($dbResult->records() as $dbRecord) {
-		$stat = $dbRecord->getField('Field');
+		$stat = $dbRecord->getString('Field');
 		if ($stat == 'account_id' || $stat == 'game_id') {
 			continue;
 		}
@@ -45,7 +45,7 @@ if (!isset($var['stat'])) {
 	foreach ($dbResult->records() as $dbRecord) {
 		$rankings[] = [
 			'bold' => $dbRecord->getInt('account_id') == $oldAccountId ? 'class="bold"' : '',
-			'name' => $dbRecord->getField('player_name'),
+			'name' => $dbRecord->getString('player_name'),
 			'stat' => $dbRecord->getInt($var['stat']),
 		];
 	}

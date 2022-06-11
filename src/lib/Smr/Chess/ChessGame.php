@@ -23,7 +23,7 @@ class ChessGame {
 	private readonly int $blackID;
 	private readonly int $gameID;
 	private readonly int $startDate;
-	private int $endDate;
+	private ?int $endDate;
 	private int $winner;
 
 	private array $hasMoved;
@@ -87,7 +87,7 @@ class ChessGame {
 		$dbRecord = $dbResult->record();
 		$this->gameID = $dbRecord->getInt('game_id');
 		$this->startDate = $dbRecord->getInt('start_time');
-		$this->endDate = $dbRecord->getInt('end_time');
+		$this->endDate = $dbRecord->getNullableInt('end_time');
 		$this->whiteID = $dbRecord->getInt('white_id');
 		$this->blackID = $dbRecord->getInt('black_id');
 		$this->winner = $dbRecord->getInt('winner_id');
@@ -216,16 +216,22 @@ class ChessGame {
 			$this->moves = [];
 			$mate = false;
 			foreach ($dbResult->records() as $dbRecord) {
-				$pieceTakenID = null;
-				if ($dbRecord->hasField('piece_taken')) {
-					$pieceTakenID = $dbRecord->getInt('piece_taken');
-				}
-				$promotionPieceID = null;
-				if ($dbRecord->hasField('promote_piece_id')) {
-					$promotionPieceID = $dbRecord->getInt('promote_piece_id');
-				}
-				$this->moves[] = $this->createMove($dbRecord->getInt('piece_id'), $dbRecord->getInt('start_x'), $dbRecord->getInt('start_y'), $dbRecord->getInt('end_x'), $dbRecord->getInt('end_y'), $pieceTakenID, $dbRecord->getField('checked'), $dbRecord->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK, $dbRecord->getField('castling'), $dbRecord->getBoolean('en_passant'), $promotionPieceID);
-				$mate = $dbRecord->getField('checked') == 'MATE';
+				$pieceTakenID = $dbRecord->getNullableInt('piece_taken');
+				$promotionPieceID = $dbRecord->getNullableInt('promote_piece_id');
+				$this->moves[] = $this->createMove(
+					$dbRecord->getInt('piece_id'),
+					$dbRecord->getInt('start_x'),
+					$dbRecord->getInt('start_y'),
+					$dbRecord->getInt('end_x'),
+					$dbRecord->getInt('end_y'),
+					$pieceTakenID,
+					$dbRecord->getNullableString('checked'),
+					$dbRecord->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK,
+					$dbRecord->getNullableString('castling'),
+					$dbRecord->getBoolean('en_passant'),
+					$promotionPieceID
+				);
+				$mate = $dbRecord->getNullableString('checked') == 'MATE';
 			}
 			if (!$mate && $this->hasEnded()) {
 				if ($this->getWinner() != 0) {
@@ -810,12 +816,8 @@ class ChessGame {
 		return $accountID === $this->getWhiteID() || $accountID === $this->getBlackID();
 	}
 
-	public function getEndDate(): ?int {
-		return $this->endDate;
-	}
-
 	public function hasEnded(): bool {
-		return $this->endDate != 0 && $this->endDate <= Epoch::time();
+		return $this->endDate !== null && $this->endDate <= Epoch::time();
 	}
 
 	public function getWinner(): int {

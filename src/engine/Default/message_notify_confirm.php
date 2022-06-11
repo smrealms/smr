@@ -21,7 +21,7 @@ if (!$dbResult->hasRecord()) {
 	create_error('Could not find the message you selected!');
 }
 
-$template->assign('MessageText', $dbResult->record()->getField('message_text'));
+$template->assign('MessageText', $dbResult->record()->getString('message_text'));
 
 $container = Page::create('message_notify_processing.php');
 $container->addVar('folder_id');

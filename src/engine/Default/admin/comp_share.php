@@ -42,7 +42,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		if (!$dbResult2->hasRecord()) {
 			continue;
 		}
-		$currTabAccLogin = $dbResult2->record()->getField('login');
+		$currTabAccLogin = $dbResult2->record()->getString('login');
 
 		if ($skipClosedAccs) {
 			$dbResult2 = $db->read('SELECT 1 FROM account_is_closed WHERE account_id = ' . $db->escapeNumber($currTabAccId));
@@ -65,25 +65,25 @@ foreach ($dbResult->records() as $dbRecord) {
 				continue;
 			}
 			$dbRecord2 = $dbResult2->record();
-			$currLinkAccLogin = $dbRecord2->getField('login');
+			$currLinkAccLogin = $dbRecord2->getString('login');
 
 			$style = $dbRecord2->getBoolean('validated') ? '' : 'text-decoration:line-through;';
-			$email = $dbRecord2->getField('email');
+			$email = $dbRecord2->getString('email');
 			$valid = $dbRecord2->getBoolean('validated') ? 'Valid' : 'Invalid';
-			$common_ip = $dbRecord2->getField('common_ip');
+			$common_ip = $dbRecord2->getString('common_ip');
 			$last_login = date($account->getDateTimeFormat(), $dbRecord2->getInt('last_login'));
 
 			$dbResult2 = $db->read('SELECT * FROM account_is_closed WHERE account_id = ' . $db->escapeNumber($currLinkAccId));
 			$isDisabled = $dbResult2->hasRecord();
 			if ($isDisabled) {
-				$suspicion = $dbResult2->record()->getField('suspicion');
+				$suspicion = $dbResult2->record()->getString('suspicion');
 			} else {
 				$suspicion = '';
 			}
 
 			$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($currLinkAccId));
 			if ($dbResult2->hasRecord()) {
-				$exception = $dbResult2->record()->getField('reason');
+				$exception = $dbResult2->record()->getString('reason');
 			} else {
 				$exception = '';
 			}
