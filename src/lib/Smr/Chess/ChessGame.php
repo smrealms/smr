@@ -277,20 +277,14 @@ class ChessGame {
 
 		// Castling
 		$castling = '';
-		if ($this->hasMoved[self::PLAYER_WHITE][ChessPiece::KING] !== true) {
-			if ($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['King'] !== true) {
-				$castling .= 'K';
-			}
-			if ($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['Queen'] !== true) {
-				$castling .= 'Q';
-			}
-		}
-		if ($this->hasMoved[self::PLAYER_BLACK][ChessPiece::KING] !== true) {
-			if ($this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['King'] !== true) {
-				$castling .= 'k';
-			}
-			if ($this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['Queen'] !== true) {
-				$castling .= 'q';
+		foreach ([self::PLAYER_WHITE, self::PLAYER_BLACK] as $colour) {
+			if ($this->hasMoved[$colour][ChessPiece::KING] !== true) {
+				if ($this->hasMoved[$colour][ChessPiece::ROOK]['King'] !== true) {
+					$castling .= ChessPiece::getLetterForPiece(ChessPiece::KING, $colour);
+				}
+				if ($this->hasMoved[$colour][ChessPiece::ROOK]['Queen'] !== true) {
+					$castling .= ChessPiece::getLetterForPiece(ChessPiece::QUEEN, $colour);
+				}
 			}
 		}
 		if ($castling == '') {
