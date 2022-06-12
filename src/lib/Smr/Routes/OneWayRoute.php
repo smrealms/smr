@@ -5,6 +5,7 @@ namespace Smr\Routes;
 use Globals;
 use Smr\Path;
 use Smr\Race;
+use Smr\TransactionType;
 use SmrPort;
 
 class OneWayRoute extends Route {
@@ -64,8 +65,8 @@ class OneWayRoute extends Route {
 		$numGoods = 1;
 		$relations = 1000; // assume max relations
 		$supply = Globals::getGood($this->goodId)['Max']; // assume max supply
-		$buyPrice = SmrPort::idealPrice($this->goodId, TRADER_BUYS, $numGoods, $relations, $supply, $this->buyDi);
-		$sellPrice = SmrPort::idealPrice($this->goodId, TRADER_SELLS, $numGoods, $relations, $supply, $this->sellDi);
+		$buyPrice = SmrPort::idealPrice($this->goodId, TransactionType::Buy, $numGoods, $relations, $supply, $this->buyDi);
+		$sellPrice = SmrPort::idealPrice($this->goodId, TransactionType::Sell, $numGoods, $relations, $supply, $this->sellDi);
 		return $sellPrice - $buyPrice;
 	}
 

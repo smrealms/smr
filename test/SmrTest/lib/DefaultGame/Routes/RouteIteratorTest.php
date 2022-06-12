@@ -7,6 +7,7 @@ use Smr\Path;
 use Smr\Routes\MultiplePortRoute;
 use Smr\Routes\OneWayRoute;
 use Smr\Routes\RouteIterator;
+use Smr\TransactionType;
 
 /**
  * @covers Smr\Routes\RouteIterator
@@ -30,11 +31,11 @@ class RouteIteratorTest extends TestCase {
 
 		// Check each state of the iterator until it rewinds
 		$expectedStates = [
-			[$route1, $route1->getBuySectorId(), TRADER_BUYS], // initial state
-			[$route1, $route1->getSellSectorId(), TRADER_SELLS],
-			[$route2, $route2->getBuySectorId(), TRADER_BUYS],
-			[$route2, $route2->getSellSectorId(), TRADER_SELLS],
-			[$route1, $route1->getBuySectorId(), TRADER_BUYS], // return to initial
+			[$route1, $route1->getBuySectorId(), TransactionType::Buy], // initial state
+			[$route1, $route1->getSellSectorId(), TransactionType::Sell],
+			[$route2, $route2->getBuySectorId(), TransactionType::Buy],
+			[$route2, $route2->getSellSectorId(), TransactionType::Sell],
+			[$route1, $route1->getBuySectorId(), TransactionType::Buy], // return to initial
 		];
 
 		foreach ($expectedStates as [$route, $sectorID, $transaction]) {

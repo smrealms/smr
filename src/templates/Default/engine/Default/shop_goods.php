@@ -41,9 +41,9 @@ if ($BoughtGoods) { ?>
 				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 				<td>
 					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
-						<input type="submit" name="action" value="Buy"><?php
+						<input type="submit" name="action" value="<?php echo Smr\TransactionType::Buy->value; ?>"><?php
 						if ($ThisShip->isUnderground()) { ?>
-							<input type="submit" name="action" value="Steal"><?php
+							<input type="submit" name="action" value="<?php echo Smr\TransactionType::STEAL; ?>"><?php
 						} ?>
 					</form>
 				</td>
@@ -73,7 +73,7 @@ if ($SoldGoods) { ?>
 				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 				<td>
 					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
-						<input type="submit" name="action" value="Sell">
+						<input type="submit" name="action" value="<?php echo Smr\TransactionType::Sell->value; ?>">
 					</form>
 				</td>
 			</tr><?php

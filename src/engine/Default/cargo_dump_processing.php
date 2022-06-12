@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\TransactionType;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -41,7 +43,7 @@ if ($player->getExperience() > 0) {
 
 	// get the distance
 	$x = Globals::getGood($good_id);
-	$x['TransactionType'] = TRADER_SELLS;
+	$x['TransactionType'] = TransactionType::Sell;
 	$good_distance = Plotter::findDistanceToX($x, $sector, true);
 	if (is_object($good_distance)) {
 		$good_distance = $good_distance->getDistance();

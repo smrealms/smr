@@ -4,6 +4,7 @@ use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Npc\NpcActor;
+use Smr\TransactionType;
 
 function overrideForward(Page $container): never {
 	global $forwardedContainer;
@@ -297,7 +298,7 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page
 
 	$transaction = $port->getGoodTransaction($goodID);
 
-	if ($transaction === TRADER_BUYS) {
+	if ($transaction === TransactionType::Buy) {
 		debug('Buy Goods');
 		$amount = $ship->getEmptyHolds();
 	} else {

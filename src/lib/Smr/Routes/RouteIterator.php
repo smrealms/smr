@@ -4,6 +4,7 @@ namespace Smr\Routes;
 
 use ArrayIterator;
 use InfiniteIterator;
+use Smr\TransactionType;
 
 /**
  * Cyclically iterate over actions on a trade route
@@ -11,7 +12,8 @@ use InfiniteIterator;
 class RouteIterator {
 
 	private InfiniteIterator $routeIterator;
-	private string $transaction = TRADER_BUYS;
+
+	private TransactionType $transaction = TransactionType::Buy;
 
 	public function __construct(
 		private MultiplePortRoute $route
@@ -32,14 +34,14 @@ class RouteIterator {
 		return $this->routeIterator->current();
 	}
 
-	public function getCurrentTransaction(): string {
+	public function getCurrentTransaction(): TransactionType {
 		return $this->transaction;
 	}
 
 	public function getCurrentSectorID(): int {
 		return match ($this->transaction) {
-			TRADER_BUYS => $this->getCurrentRoute()->getBuySectorId(),
-			TRADER_SELLS => $this->getCurrentRoute()->getSellSectorId(),
+			TransactionType::Buy => $this->getCurrentRoute()->getBuySectorId(),
+			TransactionType::Sell => $this->getCurrentRoute()->getSellSectorId(),
 		};
 	}
 
@@ -47,13 +49,10 @@ class RouteIterator {
 	 * Advance to the next action on the route
 	 */
 	public function next(): void {
-		if ($this->transaction == TRADER_SELLS) {
+		if ($this->transaction == TransactionType::Sell) {
 			$this->routeIterator->next();
 		}
-		$this->transaction = match ($this->transaction) {
-			TRADER_SELLS => TRADER_BUYS,
-			TRADER_BUYS => TRADER_SELLS,
-		};
+		$this->transaction = $this->transaction->opposite();
 	}
 
 }

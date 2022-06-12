@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\TransactionType;
+
 class Plotter {
 
 	public static function getX(string $xType, int|string $X, int $gameID, SmrPlayer $player = null): mixed {
@@ -20,7 +22,7 @@ class Plotter {
 			if (isset($player) && !$player->meetsAlignmentRestriction($good['AlignRestriction'])) {
 				throw new Exception('Player trying to access alignment-restricted good!');
 			}
-			$good['TransactionType'] = explode(' ', $xType)[0]; // use 'Buy' or 'Sell'
+			$good['TransactionType'] = TransactionType::from(explode(' ', $xType)[0]);
 			return $good;
 		};
 

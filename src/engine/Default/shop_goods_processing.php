@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\TransactionType;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -51,17 +53,17 @@ if ($port->getGoodAmount($good_id) < $amount) {
 $transaction = $port->getGoodTransaction($good_id);
 
 // does we have what we are going to sell?
-if ($transaction === TRADER_SELLS && $amount > $ship->getCargo($good_id)) {
+if ($transaction === TransactionType::Sell && $amount > $ship->getCargo($good_id)) {
 	create_error('Scanning your ship indicates you don\'t have ' . $amount . ' pcs. of ' . $good_name . '!');
 }
 
 // check if we have enough room for the thing we are going to buy
-if ($transaction === TRADER_BUYS && $amount > $ship->getEmptyHolds()) {
+if ($transaction === TransactionType::Buy && $amount > $ship->getEmptyHolds()) {
 	create_error('Scanning your ship indicates you don\'t have enough free cargo bays!');
 }
 
 // check if the guy has enough money
-if ($transaction === TRADER_BUYS && $player->getCredits() < $bargain_price) {
+if ($transaction === TransactionType::Buy && $player->getCredits() < $bargain_price) {
 	create_error('You don\'t have enough credits!');
 }
 
@@ -83,14 +85,15 @@ if ($ideal_price == 0 || $offered_price == 0) {
 	create_error('Port calculation error...buy more goods.');
 }
 
-if (Smr\Request::getVar('action') === TRADER_STEALS) {
+$stealing = false;
+if (Smr\Request::getVar('action') === TransactionType::STEAL) {
+	$stealing = true;
 	if (!$ship->isUnderground()) {
 		throw new Exception('Player tried to steal in a non-underground ship!');
 	}
-	if ($transaction !== TRADER_BUYS) {
+	if ($transaction !== TransactionType::Buy) {
 		throw new Exception('Player tried to steal a good the port does not sell!');
 	}
-	$transaction = TRADER_STEALS;
 
 	// Small chance to get caught stealing
 	$catchChancePercent = $port->getMaxLevel() - $port->getLevel() + 1;
@@ -110,20 +113,31 @@ if (Smr\Request::getVar('action') === TRADER_STEALS) {
 }
 
 // can we accept the current price?
-if ($transaction === TRADER_STEALS ||
+if ($stealing ||
 	(!empty($bargain_price) &&
-	 (($transaction === TRADER_BUYS && $bargain_price >= $ideal_price) ||
-	  ($transaction === TRADER_SELLS && $bargain_price <= $ideal_price)))) {
+	 (($transaction === TransactionType::Buy && $bargain_price >= $ideal_price) ||
+	  ($transaction === TransactionType::Sell && $bargain_price <= $ideal_price)))) {
 
 	// base xp is the amount you would get for a perfect trade.
 	// this is the absolut max. the real xp can only be smaller.
 	$base_xp = SmrPort::getBaseExperience($amount, $port->getGoodDistance($good_id));
 
 	// if offered equals ideal we get a problem (division by zero)
-	$gained_exp = IRound($port->calculateExperiencePercent($ideal_price, $bargain_price, $transaction) * $base_xp);
+	if ($stealing) {
+		$expPercent = 1; // stealing gives full exp
+	} else {
+		$expPercent = $port->calculateExperiencePercent($ideal_price, $bargain_price, $transaction);
+	}
+	$gained_exp = IRound($expPercent * $base_xp);
 
 	$portGood = Globals::getGood($good_id);
-	if ($transaction === TRADER_BUYS) {
+	if ($stealing) {
+		$msg_transaction = 'stolen';
+		$ship->increaseCargo($good_id, $amount);
+		$player->increaseHOF($amount, ['Trade', 'Goods', 'Stolen'], HOF_ALLIANCE);
+		$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Stealing'], HOF_PUBLIC);
+		$port->stealGoods($portGood, $amount);
+	} elseif ($transaction === TransactionType::Buy) {
 		$msg_transaction = 'bought';
 		$ship->increaseCargo($good_id, $amount);
 		$player->decreaseCredits($bargain_price);
@@ -133,7 +147,7 @@ if ($transaction === TRADER_STEALS ||
 		$player->increaseHOF($bargain_price, ['Trade', 'Money', 'Buying'], HOF_PUBLIC);
 		$port->buyGoods($portGood, $amount, $ideal_price, $bargain_price, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
-	} elseif ($transaction === TRADER_SELLS) {
+	} else { // $transaction === TransactionType::Sell
 		$msg_transaction = 'sold';
 		$ship->decreaseCargo($good_id, $amount);
 		$player->increaseCredits($bargain_price);
@@ -143,21 +157,14 @@ if ($transaction === TRADER_STEALS ||
 		$player->increaseHOF($bargain_price, ['Trade', 'Money', 'Selling'], HOF_PUBLIC);
 		$port->sellGoods($portGood, $amount, $gained_exp);
 		$player->increaseRelationsByTrade($amount, $port->getRaceID());
-	} elseif ($transaction === TRADER_STEALS) {
-		$msg_transaction = 'stolen';
-		$ship->increaseCargo($good_id, $amount);
-		$player->increaseHOF($amount, ['Trade', 'Goods', 'Stolen'], HOF_ALLIANCE);
-		$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Stealing'], HOF_PUBLIC);
-		$port->stealGoods($portGood, $amount);
-	} else {
-		throw new Exception('Unknown transaction: ' . $transaction);
 	}
 
 	$player->increaseHOF($gained_exp, ['Trade', 'Experience', 'Total'], HOF_PUBLIC);
 	$player->increaseHOF(1, ['Trade', 'Results', 'Success'], HOF_PUBLIC);
 
 	// log action
-	$player->log(LOG_TYPE_TRADING, $transaction . 's ' . $amount . ' ' . $good_name . ' for ' . $bargain_price . ' credits and ' . $gained_exp . ' experience');
+	$logAction = $stealing ? TransactionType::STEAL : $transaction->value;
+	$player->log(LOG_TYPE_TRADING, $logAction . 's ' . $amount . ' ' . $good_name . ' for ' . $bargain_price . ' credits and ' . $gained_exp . ' experience');
 
 	$player->increaseExperience($gained_exp);
 
@@ -168,7 +175,7 @@ if ($transaction === TRADER_STEALS ||
 	}
 
 	if ($gained_exp > 0) {
-		if ($transaction === TRADER_STEALS) {
+		if ($stealing) {
 			$qualifier = 'cunning';
 		} elseif ($gained_exp < $base_xp * 0.25) {
 			$qualifier = 'novice';
@@ -181,7 +188,7 @@ if ($transaction === TRADER_STEALS ||
 		} else {
 			$qualifier = 'peerless';
 		}
-		$skill = $transaction === TRADER_STEALS ? 'thievery' : 'trading';
+		$skill = $stealing ? 'thievery' : 'trading';
 		$tradeMessage .= '<br />Your ' . $qualifier . ' ' . $skill . ' skills have earned you <span class="exp">' . $gained_exp . ' </span> ' . pluralise($gained_exp, 'experience point', false) . '!';
 	}
 

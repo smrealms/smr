@@ -146,12 +146,11 @@ foreach ($galaxies as $galaxy) {
 			}
 			$file .= 'Port Level=' . $port->getLevel() . EOL;
 			$file .= 'Port Race=' . $port->getRaceID() . EOL;
-			if (!empty($port->getSoldGoodIDs())) {
-				$file .= 'Buys=' . implode(',', $port->getSoldGoodIDs()) . EOL;
+			if (!empty($port->getSellGoodIDs())) {
+				$file .= 'Buys=' . implode(',', $port->getSellGoodIDs()) . EOL;
 			}
-
-			if (!empty($port->getBoughtGoodIDs())) {
-				$file .= 'Sells=' . implode(',', $port->getBoughtGoodIDs()) . EOL;
+			if (!empty($port->getBuyGoodIDs())) {
+				$file .= 'Sells=' . implode(',', $port->getBuyGoodIDs()) . EOL;
 			}
 		}
 		if ($sector->hasPlanet()) {

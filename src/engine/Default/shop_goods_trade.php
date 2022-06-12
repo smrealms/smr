@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\TransactionType;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -17,21 +19,15 @@ $transaction = $port->getGoodTransaction($good_id);
 // Has the player failed a bargain?
 if ($var['bargain_price'] > 0) {
 	$bargain_price = $var['bargain_price'];
-
-	if ($transaction === TRADER_SELLS) {
-		$template->assign('OfferToo', 'high');
-	} elseif ($transaction === TRADER_BUYS) {
-		$template->assign('OfferToo', 'low');
-	}
+	$template->assign('OfferToo', match ($transaction) {
+		TransactionType::Sell => 'high',
+		TransactionType::Buy => 'low',
+	});
 } else {
 	$bargain_price = $var['offered_price'];
 }
 
-if ($transaction === TRADER_SELLS) {
-	$template->assign('PortAction', 'buy');
-} elseif ($transaction === TRADER_BUYS) {
-	$template->assign('PortAction', 'offer you');
-}
+$template->assign('PortAction', strtolower($transaction->opposite()->value));
 
 $container = Page::create('shop_goods_processing.php');
 $container->addVar('amount');

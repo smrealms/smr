@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\TransactionType;
+
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 if ($_FILES['smr_file']['error'] !== UPLOAD_ERR_OK) {
@@ -70,12 +72,12 @@ foreach ($data as $key => $vals) {
 		// but SmrPort::addPortGood uses the player action.
 		if (isset($vals['Buys'])) {
 			foreach (explode(',', $vals['Buys']) as $goodID) {
-				$port->addPortGood(str2int($goodID), TRADER_SELLS);
+				$port->addPortGood(str2int($goodID), TransactionType::Sell);
 			}
 		}
 		if (isset($vals['Sells'])) {
 			foreach (explode(',', $vals['Sells']) as $goodID) {
-				$port->addPortGood(str2int($goodID), TRADER_BUYS);
+				$port->addPortGood(str2int($goodID), TransactionType::Buy);
 			}
 		}
 	}
