@@ -785,6 +785,9 @@ class ChessGame {
 		return $this->blackID;
 	}
 
+	/**
+	 * @param self::PLAYER_* $colour
+	 */
 	public function getColourID(string $colour): int {
 		return match ($colour) {
 			self::PLAYER_WHITE => $this->getWhiteID(),
@@ -792,6 +795,9 @@ class ChessGame {
 		};
 	}
 
+	/**
+	 * @param self::PLAYER_* $colour
+	 */
 	public function getColourPlayer(string $colour): AbstractSmrPlayer {
 		return SmrPlayer::getPlayer($this->getColourID($colour), $this->getGameID());
 	}
@@ -837,6 +843,9 @@ class ChessGame {
 		return $this->hasMoved;
 	}
 
+	/**
+	 * @return self::PLAYER_*
+	 */
 	public function getCurrentTurnColour(): string {
 		return count($this->getMoves()) % 2 == 0 ? self::PLAYER_WHITE : self::PLAYER_BLACK;
 	}
@@ -869,6 +878,9 @@ class ChessGame {
 		return $this->getWhiteAccount()->isNPC() || $this->getBlackAccount()->isNPC();
 	}
 
+	/**
+	 * @param self::PLAYER_* $colour
+	 */
 	public static function getOtherColour(string $colour): string {
 		return match ($colour) {
 			self::PLAYER_WHITE => self::PLAYER_BLACK,
