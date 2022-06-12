@@ -83,7 +83,7 @@ try {
 			$move = explode(' ', $move);
 
 			debug('Taking move: ', $move[1]);
-			debug('Tried move: ' . $chessGame->tryAlgebraicMove($move[1]));
+			$chessGame->tryAlgebraicMove($move[1]);
 			writeToEngine('ucinewgame', false);
 		}
 		// Always sleep for a while to make sure that PHP can't run at 100%.

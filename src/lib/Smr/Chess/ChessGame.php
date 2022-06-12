@@ -8,6 +8,7 @@ use Page;
 use Smr;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Exceptions\UserError;
 use SmrAccount;
 use SmrPlayer;
 
@@ -597,7 +598,7 @@ class ChessGame {
 	/**
 	 * @param string $move Algebraic notation like "b2b4"
 	 */
-	public function tryAlgebraicMove(string $move): int {
+	public function tryAlgebraicMove(string $move): void {
 		if (strlen($move) != 4 && strlen($move) != 5) {
 			throw new Exception('Move of length "' . strlen($move) . '" is not valid, full move: ' . $move);
 		}
@@ -613,32 +614,26 @@ class ChessGame {
 		$toX = ord($toFile) - $aVal;
 		$y = $rank - 1;
 		$toY = $toRank - 1;
-		if ($x < 0 || $x > 7
-			|| $y < 0 || $y > 7
-			|| $toX < 0 || $toX > 7
-			|| $toY < 0 || $toY > 7
-		) {
-			throw new Exception('Invalid move: ' . $move);
-		}
+
 		$pawnPromotionPiece = ChessPiece::QUEEN;
 		if (isset($move[4])) {
 			$pawnPromotionPiece = ChessPiece::getPieceForLetter($move[4]);
 		}
-		return $this->tryMove($x, $y, $toX, $toY, $this->getCurrentTurnColour(), $pawnPromotionPiece);
+		$this->tryMove($x, $y, $toX, $toY, $this->getCurrentTurnColour(), $pawnPromotionPiece);
 	}
 
-	public function tryMove(int $x, int $y, int $toX, int $toY, string $forColour, int $pawnPromotionPiece): int {
+	public function tryMove(int $x, int $y, int $toX, int $toY, string $forColour, int $pawnPromotionPiece): string {
 		if ($this->hasEnded()) {
-			return 5;
+			throw new UserError('This game is already over');
 		}
 		if ($this->getCurrentTurnColour() != $forColour) {
-			return 4;
+			throw new UserError('It is not your turn to move');
 		}
 		$lastTurnPlayer = $this->getCurrentTurnPlayer();
 		$this->getBoard();
 		$p = $this->board[$y][$x];
 		if ($p === null || $p->colour != $forColour) {
-			return 2;
+			throw new UserError('There is no piece on that square');
 		}
 
 		$moves = $p->getPossibleMoves($this->board, $this->getHasMoved(), $forColour);
@@ -650,8 +645,7 @@ class ChessGame {
 			}
 		}
 		if (!$moveIsLegal) {
-			// Invalid move was attempted
-			return 6;
+			throw new UserError('That move is not legal');
 		}
 
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
@@ -692,7 +686,7 @@ class ChessGame {
 		$this->getMoves(); // make sure $this->moves is initialized
 		$this->moves[] = $this->createMove($pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $castlingType, $moveInfo['EnPassant'], $promotionPieceID);
 		if (self::isPlayerChecked($this->board, $this->getHasMoved(), $p->colour)) {
-			return 3;
+			throw new UserError('You cannot end your turn in check');
 		}
 
 		$otherPlayer = $this->getCurrentTurnPlayer();
@@ -740,12 +734,13 @@ class ChessGame {
 						SET x=' . $this->db->escapeNumber($moveInfo['Castling']['ToX']) . '
 						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour) . ' AND x = ' . $this->db->escapeNumber($moveInfo['Castling']['X']) . ' AND y = ' . $this->db->escapeNumber($y) . ';');
 		}
-		$return = 0;
+
 		if ($checking == 'MATE') {
+			$message = 'You have checkmated your opponent, congratulations!';
 			$this->setWinner($this->getColourID($forColour));
-			$return = 1;
 			SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 		} else {
+			$message = ''; // non-mating valid move, no message
 			SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 			if ($checking == 'CHECK') {
 				$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Given'], HOF_PUBLIC);
@@ -754,7 +749,7 @@ class ChessGame {
 		}
 		$currentPlayer->saveHOF();
 		$otherPlayer->saveHOF();
-		return $return;
+		return $message;
 	}
 
 	public function getChessGameID(): int {
