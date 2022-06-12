@@ -590,18 +590,19 @@ function doSkeletonAssigns(Smr\Template $template): void {
 	}
 
 	// ------- VOTING --------
-	$voteSites = [];
-	foreach (Smr\VoteSite::getAllSites($account->getAccountID()) as $site) {
-		$voteSites[] = [
-			'img' => $site->getLinkImg($session->getGameID()),
-			'url' => $site->getLinkUrl($session->getGameID()),
-			'sn' => $site->getSN($session->getGameID()),
+	$voteLinks = [];
+	foreach (Smr\VoteSite::cases() as $site) {
+		$link = new Smr\VoteLink($site, $account->getAccountID(), $session->getGameID());
+		$voteLinks[] = [
+			'img' => $link->getImg(),
+			'url' => $link->getUrl(),
+			'sn' => $link->getSN(),
 		];
 	}
-	$template->assign('VoteSites', $voteSites);
+	$template->assign('VoteLinks', $voteLinks);
 
 	// Determine the minimum time until the next vote across all sites
-	$minVoteWait = Smr\VoteSite::getMinTimeUntilFreeTurns($account->getAccountID());
+	$minVoteWait = Smr\VoteLink::getMinTimeUntilFreeTurns($account->getAccountID(), $session->getGameID());
 	if ($minVoteWait <= 0) {
 		$template->assign('TimeToNextVote', 'now');
 	} else {
