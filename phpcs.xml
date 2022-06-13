@@ -3,6 +3,7 @@
     <arg value="ps" />
     <arg name="basepath" value="." />
     <arg name="colors" />
+    <arg name="parallel" value="32" />
     <config name="memory_limit" value="4G" />
 
     <file>src/</file>
