@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\BuyerRestriction;
+
 /**
  * Defines a concrete realization of a weapon type for ships/planets.
  */
@@ -128,7 +130,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $this->weaponType->getPowerLevel();
 	}
 
-	public function getBuyerRestriction(): int {
+	public function getBuyerRestriction(): BuyerRestriction {
 		return $this->weaponType->getBuyerRestriction();
 	}
 

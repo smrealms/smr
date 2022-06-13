@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\BuyerRestriction;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -35,12 +37,15 @@ if (!isset($var['OrderID'])) {
 		create_error('You can\'t buy any more weapons!');
 	}
 
-	if ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_EVIL && $player->getAlignment() > ALIGNMENT_EVIL) {
-		create_error('You can\'t buy evil weapons!');
-	} elseif ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_GOOD && $player->getAlignment() < ALIGNMENT_GOOD) {
-		create_error('You can\'t buy good weapons!');
-	} elseif ($weapon->getBuyerRestriction() == BUYER_RESTRICTION_NEWBIE && !$player->hasNewbieStatus()) {
-		create_error('You can\'t buy newbie weapons!');
+	$restriction = $weapon->getBuyerRestriction();
+	if (!$restriction->passes($player)) {
+		$message = match ($restriction) {
+			BuyerRestriction::Evil => 'Only members of the Underground can purchase this weapon!',
+			BuyerRestriction::Good => 'Only Federal deputies can purchase this weapon!',
+			BuyerRestriction::Newbie => 'Only newbie players can purchase this weapon!',
+			default => 'You are not allowed to purchase this weapon!',
+		};
+		create_error($message);
 	}
 
 	if ($weapon->isUniqueType()) {

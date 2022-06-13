@@ -3,6 +3,7 @@
 namespace SmrTest\lib\DefaultGame;
 
 use PHPUnit\Framework\TestCase;
+use Smr\BuyerRestriction;
 use Smr\ShipClass;
 use SmrShipType;
 
@@ -24,7 +25,7 @@ class SmrShipTypeTest extends TestCase {
 		$this->assertSame(ShipClass::RAIDER, $shipType->getClassID());
 		$this->assertSame('Federal Ultimatum', $shipType->getName());
 		$this->assertSame(38675738, $shipType->getCost());
-		$this->assertSame(BUYER_RESTRICTION_GOOD, $shipType->getRestriction());
+		$this->assertSame(BuyerRestriction::Good, $shipType->getRestriction());
 		$this->assertSame(8, $shipType->getSpeed());
 		$this->assertSame(7, $shipType->getHardpoints());
 		$this->assertSame(24, $shipType->getMaxPower());

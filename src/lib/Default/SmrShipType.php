@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\BuyerRestriction;
+
 /**
  * Defines the base ship types
  */
@@ -15,7 +17,7 @@ class SmrShipType {
 	private readonly int $hardpoints;
 	private readonly int $speed;
 	private readonly int $cost;
-	private readonly int $restriction;
+	private readonly BuyerRestriction $restriction;
 	private readonly int $levelNeeded;
 
 	private readonly int $maxPower;
@@ -58,7 +60,7 @@ class SmrShipType {
 		$this->hardpoints = $dbRecord->getInt('hardpoint');
 		$this->speed = $dbRecord->getInt('speed');
 		$this->cost = $dbRecord->getInt('cost');
-		$this->restriction = $dbRecord->getInt('buyer_restriction');
+		$this->restriction = BuyerRestriction::from($dbRecord->getInt('buyer_restriction'));
 		$this->levelNeeded = $dbRecord->getInt('lvl_needed');
 
 		// Power is calculated by summing the allotment for each hardpoint.
@@ -122,7 +124,7 @@ class SmrShipType {
 		return $this->cost;
 	}
 
-	public function getRestriction(): int {
+	public function getRestriction(): BuyerRestriction {
 		return $this->restriction;
 	}
 
