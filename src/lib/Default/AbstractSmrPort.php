@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\PortPayoutType;
 use Smr\TransactionType;
 
 class AbstractSmrPort {
@@ -1040,14 +1041,14 @@ class AbstractSmrPort {
 
 	public function getRazeHREF(bool $justContainer = false): string|Page {
 		$container = Page::create('port_payout_processing.php');
-		$container['PayoutType'] = 'Raze';
+		$container['PayoutType'] = PortPayoutType::Raze;
 		return $justContainer === false ? $container->href() : $container;
 	}
 
 	public function getLootHREF(bool $justContainer = false): string|Page {
 		if ($this->getCredits() > 0) {
 			$container = Page::create('port_payout_processing.php');
-			$container['PayoutType'] = 'Loot';
+			$container['PayoutType'] = PortPayoutType::Loot;
 		} else {
 			$container = Page::create('current_sector.php');
 			$container['msg'] = 'This port has already been looted.';
