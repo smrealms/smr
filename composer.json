@@ -75,6 +75,6 @@
 		"phpstan/phpstan": "1.7.13",
 		"phpunit/phpunit": "9.5.20",
 		"phpunit/php-code-coverage": "9.2.15",
-		"squizlabs/php_codesniffer": "3.6.2"
+		"squizlabs/php_codesniffer": "3.7.0"
 	}
 }
