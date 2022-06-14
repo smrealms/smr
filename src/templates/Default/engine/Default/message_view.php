@@ -8,10 +8,11 @@ if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 	</form><?php
 } elseif ($MessageBox['Type'] == MSG_SCOUT) { ?>
 	<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
-		<div class="center">Group scout messages?&nbsp;&nbsp;
-			<input type="submit" name="group_scouts" value="Never" <?php if ($ThisPlayer->getGroupScoutMessages() == 'NEVER') { ?> style="background-color:green;" <?php } ?> />&nbsp;
-			<input type="submit" name="group_scouts" value="Auto" <?php if ($ThisPlayer->getGroupScoutMessages() == 'AUTO') { ?> style="background-color:green;" <?php } ?> />&nbsp;
-			<input type="submit" name="group_scouts" value="Always" <?php if ($ThisPlayer->getGroupScoutMessages() == 'ALWAYS') { ?> style="background-color:green;" <?php } ?> />
+		<div class="center">
+			Group scout messages?&nbsp;&nbsp;<?php
+			foreach (Smr\ScoutMessageGroupType::cases() as $groupType) { ?>
+				<button type="submit" name="group_scouts" value="<?php echo $groupType->value; ?>" <?php if ($ThisPlayer->getScoutMessageGroupType() === $groupType) { ?> style="background-color:green;" <?php } ?>><?php echo $groupType->name; ?></button>&nbsp;<?php
+			} ?>
 		</div>
 	</form><?php
 } ?>

@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 require_once('missions.inc.php');
 
+use Smr\ScoutMessageGroupType;
+
 abstract class AbstractSmrPlayer {
 
 	use Traits\RaceID;
@@ -60,7 +62,7 @@ abstract class AbstractSmrPlayer {
 	protected bool $displayMissions;
 	protected bool $displayWeapons;
 	protected bool $forceDropMessages;
-	protected string $groupScoutMessages;
+	protected ScoutMessageGroupType $scoutMessageGroupType;
 	protected bool $ignoreGlobals;
 	protected ?Smr\Path $plottedCourse;
 	protected bool $nameChanged;
@@ -251,7 +253,7 @@ abstract class AbstractSmrPlayer {
 		$this->displayMissions = $dbRecord->getBoolean('display_missions');
 		$this->displayWeapons = $dbRecord->getBoolean('display_weapons');
 		$this->forceDropMessages = $dbRecord->getBoolean('force_drop_messages');
-		$this->groupScoutMessages = $dbRecord->getString('group_scout_messages');
+		$this->scoutMessageGroupType = ScoutMessageGroupType::from($dbRecord->getString('group_scout_messages'));
 		$this->ignoreGlobals = $dbRecord->getBoolean('ignore_globals');
 		$this->newbieWarning = $dbRecord->getBoolean('newbie_warning');
 		$this->nameChanged = $dbRecord->getBoolean('name_changed');
@@ -612,22 +614,22 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getScoutMessageGroupLimit(): int {
-		return match ($this->groupScoutMessages) {
-			'ALWAYS' => 0,
-			'AUTO' => MESSAGES_PER_PAGE,
-			'NEVER' => PHP_INT_MAX,
+		return match ($this->scoutMessageGroupType) {
+			ScoutMessageGroupType::Always => 0,
+			ScoutMessageGroupType::Auto => MESSAGES_PER_PAGE,
+			ScoutMessageGroupType::Never => PHP_INT_MAX,
 		};
 	}
 
-	public function getGroupScoutMessages(): string {
-		return $this->groupScoutMessages;
+	public function getScoutMessageGroupType(): ScoutMessageGroupType {
+		return $this->scoutMessageGroupType;
 	}
 
-	public function setGroupScoutMessages(string $setting): void {
-		if ($this->groupScoutMessages == $setting) {
+	public function setScoutMessageGroupType(ScoutMessageGroupType $setting): void {
+		if ($this->scoutMessageGroupType === $setting) {
 			return;
 		}
-		$this->groupScoutMessages = $setting;
+		$this->scoutMessageGroupType = $setting;
 		$this->hasChanged = true;
 	}
 
@@ -3122,7 +3124,7 @@ abstract class AbstractSmrPlayer {
 				', zoom=' . $this->db->escapeNumber($this->zoom) .
 				', display_missions=' . $this->db->escapeBoolean($this->displayMissions) .
 				', force_drop_messages=' . $this->db->escapeBoolean($this->forceDropMessages) .
-				', group_scout_messages=' . $this->db->escapeString($this->groupScoutMessages) .
+				', group_scout_messages=' . $this->db->escapeString($this->scoutMessageGroupType->value) .
 				', ignore_globals=' . $this->db->escapeBoolean($this->ignoreGlobals) .
 				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning) .
 				', name_changed = ' . $this->db->escapeBoolean($this->nameChanged) .
