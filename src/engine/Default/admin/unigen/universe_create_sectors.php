@@ -56,6 +56,7 @@ $container->addVar('gal_on');
 $template->assign('RecenterHREF', $container->href());
 
 $container = Page::create('admin/unigen/universe_create_save_processing.php');
+$container['forward_to'] = 'admin/unigen/universe_create_sectors.php';
 $container->addVar('game_id');
 $container->addVar('gal_on');
 $template->assign('SubmitChangesHREF', $container->href());
