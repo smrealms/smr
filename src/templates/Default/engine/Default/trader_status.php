@@ -86,10 +86,10 @@
 			<br />You can claim <span class="yellow"><?php echo $BountiesClaimable; ?></span> bounties.
 
 			<?php
-			if ($ThisPlayer->hasCurrentBounty('HQ')) { ?>
+			if ($ThisPlayer->hasCurrentBounty(Smr\BountyType::HQ)) { ?>
 				<br />You are <span class="red">wanted</span> by the <span class="green">Federal Government</span>!<?php
 			}
-			if ($ThisPlayer->hasCurrentBounty('UG')) { ?>
+			if ($ThisPlayer->hasCurrentBounty(Smr\BountyType::UG)) { ?>
 				<br />You are <span class="red">wanted</span> by the <span class="red">Underground</span>!<?php
 			} ?>
 

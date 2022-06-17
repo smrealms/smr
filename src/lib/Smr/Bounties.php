@@ -12,10 +12,10 @@ class Bounties {
 	/**
 	 * Returns a list of all active (not claimable) bounties for given location $type.
 	 */
-	public static function getMostWanted(string $type): array {
+	public static function getMostWanted(BountyType $type): array {
 		$db = Database::getInstance();
 		$session = Session::getInstance();
-		$dbResult = $db->read('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' AND type =' . $db->escapeString($type) . ' AND claimer_id = 0 ORDER BY amount DESC');
+		$dbResult = $db->read('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($session->getGameID()) . ' AND type =' . $db->escapeString($type->value) . ' AND claimer_id = 0 ORDER BY amount DESC');
 		$bounties = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$bounties[] = [

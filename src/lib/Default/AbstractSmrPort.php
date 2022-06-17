@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\BountyType;
 use Smr\PortPayoutType;
 use Smr\TransactionType;
 
@@ -1396,7 +1397,7 @@ class AbstractSmrPort {
 
 		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
-		$killer->increaseCurrentBountyAmount('HQ', $return['KillerBounty']);
+		$killer->increaseCurrentBountyAmount(BountyType::HQ, $return['KillerBounty']);
 		$killer->increaseHOF($return['KillerBounty'], ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
 
 		$return['KillerRelations'] = 45;

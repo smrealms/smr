@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 require_once('missions.inc.php');
 
+use Smr\BountyType;
 use Smr\ScoutMessageGroupType;
 
 abstract class AbstractSmrPlayer {
@@ -1868,7 +1869,7 @@ abstract class AbstractSmrPlayer {
 				$this->bounties[$dbRecord->getInt('bounty_id')] = [
 							'Amount' => $dbRecord->getInt('amount'),
 							'SmrCredits' => $dbRecord->getInt('smr_credits'),
-							'Type' => $dbRecord->getString('type'),
+							'Type' => BountyType::from($dbRecord->getString('type')),
 							'Claimer' => $dbRecord->getInt('claimer_id'),
 							'Time' => $dbRecord->getInt('time'),
 							'ID' => $dbRecord->getInt('bounty_id'),
@@ -1879,14 +1880,13 @@ abstract class AbstractSmrPlayer {
 
 	/**
 	 * Get bounties that can be claimed by this player.
-	 * If specified, $type must be 'HQ' or 'UG'.
 	 */
-	public function getClaimableBounties(string $type = null): array {
+	public function getClaimableBounties(?BountyType $type = null): array {
 		$bounties = [];
 		$query = 'SELECT * FROM bounty WHERE claimer_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID());
 		$query .= match ($type) {
-			'HQ', 'UG' => ' AND type=' . $this->db->escapeString($type),
 			null => '',
+			default => ' AND type=' . $this->db->escapeString($type->value),
 		};
 		$dbResult = $this->db->read($query);
 		foreach ($dbResult->records() as $dbRecord) {
@@ -1921,7 +1921,7 @@ abstract class AbstractSmrPlayer {
 		return isset($bounties[$bountyID]);
 	}
 
-	protected function createBounty(string $type): array {
+	protected function createBounty(BountyType $type): array {
 		$bounty = [
 			'Amount' => 0,
 			'SmrCredits' => 0,
@@ -1947,7 +1947,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasBountyChanged[$bounty['ID']] = true;
 	}
 
-	public function getCurrentBounty(string $type): array {
+	public function getCurrentBounty(BountyType $type): array {
 		$bounties = $this->getBounties();
 		foreach ($bounties as $bounty) {
 			if ($bounty['Claimer'] == 0 && $bounty['Type'] == $type) {
@@ -1957,7 +1957,7 @@ abstract class AbstractSmrPlayer {
 		return $this->createBounty($type);
 	}
 
-	public function hasCurrentBounty(string $type): bool {
+	public function hasCurrentBounty(BountyType $type): bool {
 		$bounties = $this->getBounties();
 		foreach ($bounties as $bounty) {
 			if ($bounty['Claimer'] == 0 && $bounty['Type'] == $type) {
@@ -1967,12 +1967,12 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	public function getCurrentBountyAmount(string $type): int {
+	public function getCurrentBountyAmount(BountyType $type): int {
 		$bounty = $this->getCurrentBounty($type);
 		return $bounty['Amount'];
 	}
 
-	protected function setCurrentBountyAmount(string $type, int $amount): void {
+	protected function setCurrentBountyAmount(BountyType $type, int $amount): void {
 		$bounty = $this->getCurrentBounty($type);
 		if ($bounty['Amount'] == $amount) {
 			return;
@@ -1981,26 +1981,26 @@ abstract class AbstractSmrPlayer {
 		$this->setBounty($bounty);
 	}
 
-	public function increaseCurrentBountyAmount(string $type, int $amount): void {
+	public function increaseCurrentBountyAmount(BountyType $type, int $amount): void {
 		if ($amount < 0) {
 			throw new Exception('Trying to increase negative current bounty.');
 		}
 		$this->setCurrentBountyAmount($type, $this->getCurrentBountyAmount($type) + $amount);
 	}
 
-	public function decreaseCurrentBountyAmount(string $type, int $amount): void {
+	public function decreaseCurrentBountyAmount(BountyType $type, int $amount): void {
 		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative current bounty.');
 		}
 		$this->setCurrentBountyAmount($type, $this->getCurrentBountyAmount($type) - $amount);
 	}
 
-	protected function getCurrentBountySmrCredits(string $type): int {
+	protected function getCurrentBountySmrCredits(BountyType $type): int {
 		$bounty = $this->getCurrentBounty($type);
 		return $bounty['SmrCredits'];
 	}
 
-	protected function setCurrentBountySmrCredits(string $type, int $credits): void {
+	protected function setCurrentBountySmrCredits(BountyType $type, int $credits): void {
 		$bounty = $this->getCurrentBounty($type);
 		if ($bounty['SmrCredits'] == $credits) {
 			return;
@@ -2009,14 +2009,14 @@ abstract class AbstractSmrPlayer {
 		$this->setBounty($bounty);
 	}
 
-	public function increaseCurrentBountySmrCredits(string $type, int $credits): void {
+	public function increaseCurrentBountySmrCredits(BountyType $type, int $credits): void {
 		if ($credits < 0) {
 			throw new Exception('Trying to increase negative current bounty.');
 		}
 		$this->setCurrentBountySmrCredits($type, $this->getCurrentBountySmrCredits($type) + $credits);
 	}
 
-	public function decreaseCurrentBountySmrCredits(string $type, int $credits): void {
+	public function decreaseCurrentBountySmrCredits(BountyType $type, int $credits): void {
 		if ($credits < 0) {
 			throw new Exception('Trying to decrease negative current bounty.');
 		}
@@ -2248,7 +2248,7 @@ abstract class AbstractSmrPlayer {
 		$dbResult = $this->db->read($query);
 		if ($dbResult->hasRecord()) {
 			$bounty = IFloor(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
-			$this->increaseCurrentBountyAmount('HQ', $bounty);
+			$this->increaseCurrentBountyAmount(BountyType::HQ, $bounty);
 		}
 
 		// Killer get marked as claimer of podded player's bounties even if they don't exist
@@ -2263,9 +2263,9 @@ abstract class AbstractSmrPlayer {
 		if ($alignmentDiff >= 200) {
 			// If the podded players alignment makes them deputy or member then set bounty
 			if ($this->getAlignment() >= 100) {
-				$return['BountyGained']['Type'] = 'HQ';
+				$return['BountyGained']['Type'] = BountyType::HQ;
 			} elseif ($this->getAlignment() <= -100) {
-				$return['BountyGained']['Type'] = 'UG';
+				$return['BountyGained']['Type'] = BountyType::UG;
 			}
 
 			if ($return['BountyGained']['Type'] != 'None') {
@@ -3143,7 +3143,7 @@ abstract class AbstractSmrPlayer {
 						$this->db->insert('bounty', [
 							'account_id' => $this->db->escapeNumber($this->getAccountID()),
 							'game_id' => $this->db->escapeNumber($this->getGameID()),
-							'type' => $this->db->escapeString($bounty['Type']),
+							'type' => $this->db->escapeString($bounty['Type']->value),
 							'amount' => $this->db->escapeNumber($bounty['Amount']),
 							'smr_credits' => $this->db->escapeNumber($bounty['SmrCredits']),
 							'claimer_id' => $this->db->escapeNumber($bounty['Claimer']),
@@ -3155,7 +3155,7 @@ abstract class AbstractSmrPlayer {
 						$this->db->write('UPDATE bounty
 							SET amount=' . $this->db->escapeNumber($bounty['Amount']) . ',
 							smr_credits=' . $this->db->escapeNumber($bounty['SmrCredits']) . ',
-							type=' . $this->db->escapeString($bounty['Type']) . ',
+							type=' . $this->db->escapeString($bounty['Type']->value) . ',
 							claimer_id=' . $this->db->escapeNumber($bounty['Claimer']) . ',
 							time=' . $this->db->escapeNumber($bounty['Time']) . '
 							WHERE bounty_id=' . $this->db->escapeNumber($bounty['ID']) . ' AND ' . $this->SQL);
