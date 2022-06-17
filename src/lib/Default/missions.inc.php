@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\PlotGroup;
+
 const MISSION_ACTIONS = [
 	'LeaveSector',
 	'EnterSector',
@@ -53,14 +55,14 @@ const MISSIONS = [
 		'Offerer' => 'Drunk',
 		'Time Limit' => 0,
 		'HasX' => [
-			'Type' => 'Locations',
+			'Type' => PlotGroup::Locations,
 			'X' => 'Bar',
 		],
 		'Steps' => [
 			[
 				'Step' => 'EnterSector',
 				'PickSector' => [
-					'Type' => 'Locations',
+					'Type' => PlotGroup::Locations,
 					'X' => RACE_SALVENE + LOCATION_GROUP_RACIAL_HQS,
 				],
 				'Detail' => [
@@ -72,7 +74,7 @@ const MISSIONS = [
 			[
 				'Step' => 'EnterSector',
 				'PickSector' => [
-					'Type' => 'Locations',
+					'Type' => PlotGroup::Locations,
 					'X' => 'Bar',
 				],
 				'Detail' => [
@@ -119,7 +121,7 @@ const MISSIONS = [
  * Searches for placeholders in template and replaces them with values
  * derived from the supplied data.
  */
-function replaceMissionTemplate(string|int &$template, string $key, array $data): void {
+function replaceMissionTemplate(string|int|PlotGroup &$template, string $key, array $data): void {
 	if (!is_string($template)) {
 		return;
 	}

@@ -21,37 +21,37 @@ $this->includeTemplate('includes/JumpDrive.inc.php'); ?>
 <form class="standard" id="SelectXTypeForm" method="POST" action="<?php echo $PlotToNearestHREF; ?>">
 	<select name="xtype" onchange="this.form.submit()"><?php
 	foreach ($AllXTypes as $EachXType) {
-		?><option value="<?php echo $EachXType; ?>"<?php if (isset($XType) && $EachXType == $XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType; ?></option><?php
+		?><option value="<?php echo $EachXType->value; ?>"<?php if (isset($XType) && $EachXType == $XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType->value; ?></option><?php
 	} ?>
 	</select>&nbsp;
 	<input type="submit" value="Select" />
 </form><?php
 if (isset($XType)) { ?>
 	<form class="standard" id="PlotNearestForm" method="POST" action="<?php echo $PlotNearestFormLink; ?>">
-		<input type="hidden" name="xtype" value="<?php echo $XType; ?>" /><br />
+		<input type="hidden" name="xtype" value="<?php echo $XType->value; ?>" /><br />
 		<select name="X" onchange="this.form.submit()"><?php
 			switch ($XType) {
-				case 'Technology':
+				case Smr\PlotGroup::Technology:
 					$Hardwares = Globals::getHardwareTypes();
 					foreach ($Hardwares as $Hardware) {
 						?><option value="<?php echo $Hardware['ID']; ?>"><?php echo $Hardware['Name']; ?></option><?php
 					}
 					break;
-				case 'Ships':
+				case Smr\PlotGroup::Ships:
 					$Ships = SmrShipType::getAll();
 					Sorter::sortByNumMethod($Ships, 'getName');
 					foreach ($Ships as $Ship) {
 						?><option value="<?php echo $Ship->getTypeID(); ?>"><?php echo $Ship->getName(); ?></option><?php
 					}
 					break;
-				case 'Weapons':
+				case Smr\PlotGroup::Weapons:
 					$Weapons = SmrWeaponType::getAllSoldWeaponTypes($ThisPlayer->getGameID());
 					Sorter::sortByNumMethod($Weapons, 'getName');
 					foreach ($Weapons as $Weapon) {
 						?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?></option><?php
 					}
 					break;
-				case 'Locations':
+				case Smr\PlotGroup::Locations:
 					?><option value="Bank">Any Bank</option>
 					<option value="Bar">Any Bar</option>
 					<option value="SafeFed">Any Safe Fed</option>
@@ -66,14 +66,14 @@ if (isset($XType)) { ?>
 						?><option value="<?php echo $Location->getTypeID(); ?>"><?php echo $Location->getName(); ?></option><?php
 					}
 					break;
-				case 'Sell Goods':
-				case 'Buy Goods':
+				case Smr\PlotGroup::SellGoods:
+				case Smr\PlotGroup::BuyGoods:
 					$Goods = $ThisPlayer->getVisibleGoods();
 					foreach ($Goods as $Good) {
 						?><option value="<?php echo $Good['ID']; ?>"><?php echo $Good['Name']; ?></option><?php
 					}
 					break;
-				case 'Galaxies':
+				case Smr\PlotGroup::Galaxies:
 					foreach ($ThisPlayer->getGame()->getGalaxies() as $Galaxy) {
 						?><option value="<?php echo $Galaxy->getGalaxyID(); ?>"><?php echo $Galaxy->getDisplayName(); ?></option><?php
 					}
