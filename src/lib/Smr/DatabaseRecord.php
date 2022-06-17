@@ -25,6 +25,7 @@ class DatabaseRecord {
 		return match ($this->dbRecord[$name]) {
 			'TRUE' => true,
 			'FALSE' => false,
+			default => throw new Exception('Unexpected boolean record: ' . $this->dbRecord[$name]),
 		};
 	}
 

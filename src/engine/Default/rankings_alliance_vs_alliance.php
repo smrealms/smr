@@ -108,6 +108,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		$id == ALLIANCE_VS_FORCES => '<span class="yellow">Forces</span>',
 		$id == ALLIANCE_VS_PLANETS => '<span class="yellow">Planets</span>',
 		$id == ALLIANCE_VS_PORTS => '<span class="yellow">Ports</span>',
+		default => throw new Exception('Unknown alliance ID: ' . $id),
 	};
 
 	$kills[] = [
@@ -129,6 +130,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		$id == ALLIANCE_VS_FORCES => '<span class="yellow">Forces</span>',
 		$id == ALLIANCE_VS_PLANETS => '<span class="yellow">Planets</span>',
 		$id == ALLIANCE_VS_PORTS => '<span class="yellow">Ports</span>',
+		default => throw new Exception('Unknown alliance ID: ' . $id),
 	};
 
 	$deaths[] = [

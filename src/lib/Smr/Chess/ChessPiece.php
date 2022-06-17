@@ -2,6 +2,8 @@
 
 namespace Smr\Chess;
 
+use Exception;
+
 class ChessPiece {
 
 	public const KING = 1;
@@ -238,6 +240,7 @@ class ChessPiece {
 			'b' => self::BISHOP,
 			'n' => self::KNIGHT,
 			'p' => self::PAWN,
+			default => throw new Exception('Invalid chess piece letter: ' . $letter),
 		};
 	}
 

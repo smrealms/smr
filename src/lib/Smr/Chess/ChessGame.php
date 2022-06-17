@@ -293,11 +293,14 @@ class ChessGame {
 		}
 		$fen .= $castling . ' ';
 
-		if ($this->hasMoved[ChessPiece::PAWN][0] != -1) {
-			$fen .= chr(ord('a') + $this->hasMoved[ChessPiece::PAWN][0]);
-			$fen .= match ($this->hasMoved[ChessPiece::PAWN][1]) {
+		// En passant
+		[$pawnX, $pawnY] = $this->hasMoved[ChessPiece::PAWN];
+		if ($pawnX != -1) {
+			$fen .= chr(ord('a') + $pawnX);
+			$fen .= match ($pawnY) {
 				3 => '6',
 				4 => '3',
+				default => throw new Exception('Invalid en passant rank: ' . $pawnY),
 			};
 		} else {
 			$fen .= '-';
@@ -801,6 +804,7 @@ class ChessGame {
 		return match ($accountID) {
 			$this->getWhiteID() => self::PLAYER_WHITE,
 			$this->getBlackID() => self::PLAYER_BLACK,
+			default => throw new Exception('Account ID is not in this chess game: ' . $accountID),
 		};
 	}
 
