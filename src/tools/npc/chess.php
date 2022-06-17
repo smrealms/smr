@@ -20,7 +20,6 @@ function debug($message, $debugObject = null) {
 }
 
 try {
-	echo '<pre>';
 	// global config
 	require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
 
@@ -90,9 +89,6 @@ try {
 		usleep(UCI_SLEEP_BETWEEN_CYCLES_US);
 	}
 
-	fclose($toEngine);
-	fclose($fromEngine);
-	proc_close($engine);
 } catch (Throwable $e) {
 	logException($e);
 }
