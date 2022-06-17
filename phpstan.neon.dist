@@ -34,9 +34,28 @@ parameters:
     #----------------------------------------------
 
     ignoreErrors:
-        # Template files currently emit many undefined variable errors because
-        # we source them inside Template::includeTemplate. This will require a
-        # full redesign of the Template class to fix. (Level 1)
         -
+            # Template files currently emit many undefined variable errors
+            # because we source them inside Template::includeTemplate. This
+            # will require a redesign of the Template class to fix. (Level 1)
             message: '#Variable .* might not be defined#'
             path: src/template
+        -
+            # This while loop is needed to reconnect the IRC bot after server
+            # timeouts. It could be replaced with Docker daemonization if we
+            # modify the delayed callback actions. (Level 4)
+            message: '#While loop condition is always true.#'
+            path: src/tools/irc/irc.php
+            count: 1
+        -
+            # The `$targetPlayer` has impure functions called on it, which
+            # should reset its method return value cache, but PHPStan cannot
+            # detect that this is happening. (Level 4)
+            message: '#Right side of || is always false.#'
+            path: src/engine/Default/trader_attack_processing.php
+            count: 1
+        -
+            # Caused by temporary use of `markTestSkipped`. (Level 4)
+            message: '#Unreachable statement - code above always terminates.#'
+            path: test/SmrTest/lib/DefaultGame/Discord/CommandTest.php
+            count: 1
