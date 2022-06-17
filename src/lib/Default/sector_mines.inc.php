@@ -30,7 +30,7 @@ function hit_sector_mines(SmrPlayer $player): void {
 		$container->go();
 	} else {
 		$container = Page::create('forces_attack_processing.php');
-		$container['action'] = 'bump';
+		$container['bump'] = true;
 		$container['owner_id'] = $mine_owner_id;
 		$container->go();
 	}

@@ -389,7 +389,7 @@ class SmrForce {
 
 	public function getAttackForcesHREF(): string {
 		$container = Page::create('forces_attack_processing.php');
-		$container['action'] = 'attack';
+		$container['bump'] = false;
 		$container['owner_id'] = $this->getOwnerID();
 		return $container->href();
 	}
