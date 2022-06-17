@@ -16,6 +16,10 @@ class ChessGame {
 
 	public const PLAYER_BLACK = 'Black';
 	public const PLAYER_WHITE = 'White';
+
+	public const END_RESIGN = 0;
+	public const END_CANCEL = 1;
+
 	protected static array $CACHE_CHESS_GAMES = [];
 
 	private Smr\Database $db;
@@ -887,6 +891,9 @@ class ChessGame {
 		};
 	}
 
+	/**
+	 * @return self::END_*
+	 */
 	public function resign(int $accountID): int {
 		if ($this->hasEnded() || !$this->isPlayer($accountID)) {
 			throw new Exception('Invalid resign conditions');
@@ -898,7 +905,7 @@ class ChessGame {
 			$this->db->write('UPDATE chess_game
 							SET end_time=' . $this->db->escapeNumber(Epoch::time()) . '
 							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
-			return 1;
+			return self::END_CANCEL;
 		}
 
 		$loserColour = $this->getColourForAccountID($accountID);
@@ -907,7 +914,7 @@ class ChessGame {
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 		$results['Loser']->increaseHOF(1, [$chessType, 'Games', 'Resigned'], HOF_PUBLIC);
 		SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getPlayerID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
-		return 0;
+		return self::END_RESIGN;
 	}
 
 	public function getPlayGameHREF(): string {
