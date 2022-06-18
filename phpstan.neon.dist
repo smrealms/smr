@@ -61,3 +61,8 @@ parameters:
             message: '#Unreachable statement - code above always terminates.#'
             path: test/SmrTest/lib/DefaultGame/Discord/CommandTest.php
             count: 1
+        -
+            # This Admin Tool is temporarily(?) disabled. (Level 4)
+            message: '#Unreachable statement - code above always terminates.#'
+            path: src/engine/Default/admin/game_delete_processing.php
+            count: 1
