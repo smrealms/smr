@@ -6,7 +6,7 @@ class SmrForce {
 	protected static array $CACHE_SECTOR_FORCES = [];
 	protected static array $TIDIED_UP = [];
 
-	protected const LOWEST_MAX_EXPIRE_SCOUTS_ONLY = 432000; // 5 days
+	public const LOWEST_MAX_EXPIRE_SCOUTS_ONLY = 432000; // 5 days
 	protected const TIME_PER_SCOUT_ONLY = 86400; // 1 = 1 day
 	protected const TIME_PERCENT_PER_SCOUT = 0.02; // 1/50th
 	protected const TIME_PERCENT_PER_COMBAT = 0.02; // 1/50th
@@ -281,7 +281,7 @@ class SmrForce {
 		if ($this->hasCDs() || $this->hasMines()) {
 			return $this->getMaxGalaxyExpireTime();
 		}
-		if (!$this->hasCDs() && !$this->hasMines() && $this->hasSDs()) {
+		if ($this->hasSDs()) {
 			return max(self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY, $this->getMaxGalaxyExpireTime());
 		}
 		return 0;
