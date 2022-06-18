@@ -60,6 +60,7 @@ foreach ($dbResult->records() as $dbRecord) {
 
 		$rows = [];
 		foreach ($accountIDs as $currLinkAccId) {
+			$currLinkAccId = (int)$currLinkAccId;
 			$dbResult2 = $db->read('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db->escapeNumber($currLinkAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - 86400 * 30) : ''));
 			if (!$dbResult2->hasRecord()) {
 				continue;
