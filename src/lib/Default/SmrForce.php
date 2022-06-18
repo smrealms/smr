@@ -458,6 +458,7 @@ class SmrForce {
 		if ($this->hasMines()) {
 			$thisMines = new SmrMines($this->getMines());
 			$results['Results']['Mines'] = $thisMines->shootPlayerAsForce($this, array_rand_value($targetPlayers), $minesAreAttacker);
+			$this->setMines($thisMines->getAmount()); // kamikaze
 			$results['TotalDamage'] += $results['Results']['Mines']['ActualDamage']['TotalDamage'];
 		}
 
@@ -471,6 +472,7 @@ class SmrForce {
 			if ($this->hasSDs()) {
 				$thisSDs = new SmrScoutDrones($this->getSDs());
 				$results['Results']['Scouts'] = $thisSDs->shootPlayerAsForce($this, array_rand_value($targetPlayers));
+				$this->setSDs($thisSDs->getAmount()); // kamikaze
 				$results['TotalDamage'] += $results['Results']['Scouts']['ActualDamage']['TotalDamage'];
 			}
 		}
