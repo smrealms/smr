@@ -3,6 +3,7 @@ require_once('missions.inc.php');
 
 use Smr\BountyType;
 use Smr\ScoutMessageGroupType;
+use Smr\TurnsLevel;
 
 abstract class AbstractSmrPlayer {
 
@@ -2479,27 +2480,12 @@ abstract class AbstractSmrPlayer {
 		$this->db->write('INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) VALUES (' . $this->db->escapeArray($values) . ') ON DUPLICATE KEY UPDATE kills = kills + 1');
 	}
 
-	public function getTurnsLevel(): string {
-		if (!$this->hasTurns()) {
-			return 'NONE';
-		}
-		if ($this->getTurns() <= 25) {
-			return 'LOW';
-		}
-		if ($this->getTurns() <= 75) {
-			return 'MEDIUM';
-		}
-		return 'HIGH';
-	}
-
-	/**
-	 * Returns the CSS class color to use when displaying the player's turns
-	 */
-	public function getTurnsColor(): string {
-		return match ($this->getTurnsLevel()) {
-			'NONE', 'LOW' => 'red',
-			'MEDIUM' => 'yellow',
-			'HIGH' => 'green',
+	public function getTurnsLevel(): TurnsLevel {
+		return match (true) {
+			$this->getTurns() === 0 => TurnsLevel::None,
+			$this->getTurns() <= 25 => TurnsLevel::Low,
+			$this->getTurns() <= 75 => TurnsLevel::Medium,
+			default => TurnsLevel::High,
 		};
 	}
 
