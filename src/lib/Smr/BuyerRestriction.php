@@ -23,8 +23,8 @@ enum BuyerRestriction: int {
 	public function passes(AbstractSmrPlayer $player): bool {
 		return match ($this) {
 			self::None => true, // no restriction, all players pass
-			self::Good => $player->getAlignment() >= ALIGNMENT_GOOD,
-			self::Evil => $player->getAlignment() <= ALIGNMENT_EVIL,
+			self::Good => $player->hasGoodAlignment(),
+			self::Evil => $player->hasEvilAlignment(),
 			self::Newbie => $player->hasNewbieStatus(),
 			self::Port => false, // player is not a port
 			self::Planet => false, // player is not a planet

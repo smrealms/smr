@@ -7,7 +7,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-if ($player->getAlignment() >= ALIGNMENT_GOOD) {
+if ($player->hasGoodAlignment()) {
 	create_error('You are not allowed to come in here!');
 }
 
@@ -26,7 +26,7 @@ Menu::headquarters($var['LocationID']);
 $template->assign('AllBounties', Smr\Bounties::getMostWanted(BountyType::UG));
 $template->assign('MyBounties', $player->getClaimableBounties(BountyType::UG));
 
-if ($player->getAlignment() < ALIGNMENT_GOOD && $player->getAlignment() >= ALIGNMENT_EVIL) {
+if ($player->hasNeutralAlignment()) {
 	$container = Page::create('government_processing.php');
 	$container->addVar('LocationID');
 	$template->assign('JoinHREF', $container->href());

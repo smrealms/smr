@@ -8,7 +8,7 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 // check if our alignment is high enough
-if ($player->getAlignment() <= ALIGNMENT_EVIL) {
+if ($player->hasEvilAlignment()) {
 	create_error('You are not allowed to enter our Government HQ!');
 }
 if (!$player->getSector()->hasLocation($var['LocationID'])) {
@@ -44,7 +44,7 @@ $template->assign('WarRaces', $warRaces);
 $template->assign('AllBounties', Smr\Bounties::getMostWanted(BountyType::HQ));
 $template->assign('MyBounties', $player->getClaimableBounties(BountyType::HQ));
 
-if ($player->getAlignment() > ALIGNMENT_EVIL && $player->getAlignment() <= ALIGNMENT_GOOD) {
+if ($player->hasNeutralAlignment()) {
 	$container = Page::create('government_processing.php');
 	$container->addVar('LocationID');
 	$template->assign('JoinHREF', $container->href());
