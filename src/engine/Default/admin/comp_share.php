@@ -6,10 +6,6 @@ $account = $session->getAccount();
 
 $template->assign('PageTopic', 'Computer Sharing');
 
-//future features
-$skipClosedAccs = false;
-$skipExceptions = false;
-
 $unusedAfter = 86400 * 365; // 1 year
 
 $used = [];
@@ -44,20 +40,6 @@ foreach ($dbResult->records() as $dbRecord) {
 			continue;
 		}
 		$currTabAccLogin = $dbResult2->record()->getString('login');
-
-		if ($skipClosedAccs) {
-			$dbResult2 = $db->read('SELECT 1 FROM account_is_closed WHERE account_id = ' . $db->escapeNumber($currTabAccId));
-			if ($dbResult2->hasRecord()) {
-				continue;
-			}
-		}
-
-		if ($skipExceptions) {
-			$dbResult2 = $db->read('SELECT 1 FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($currTabAccId));
-			if ($dbResult2->hasRecord()) {
-				continue;
-			}
-		}
 
 		$rows = [];
 		foreach ($accountIDs as $currLinkAccId) {
