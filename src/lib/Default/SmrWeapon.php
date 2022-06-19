@@ -255,9 +255,8 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer): array {
-		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		return $return;
+	public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer): never {
+		throw new Exception('This weapon should not be used in this context');
 	}
 
 	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array {
@@ -327,9 +326,8 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $return;
 	}
 
-	public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer): array {
-		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false];
-		return $return;
+	public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer): never {
+		throw new Exception('This weapon should not be used in this context');
 	}
 
 	public function shootPlayerAsPort(SmrPort $port, AbstractSmrPlayer $targetPlayer): array {

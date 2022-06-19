@@ -44,34 +44,28 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array {
-		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		return $return;
+	public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): never {
+		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port): array {
-		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		return $return;
+	public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port): never {
+		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet): array {
-		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		return $return;
+	public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet): never {
+		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array {
-		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		return $return;
+	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): never {
+		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer): array {
-		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		return $return;
+	public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer): never {
+		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): array {
-		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		return $return;
+	public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): never {
+		throw new Exception('This weapon should not be used in this context');
 	}
 
 	public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false): array {
@@ -95,14 +89,12 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array {
-		$return = ['Weapon' => $this, 'TargetForces' => $forces];
-		return $return;
+	public function shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): never {
+		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array {
-		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false];
-		return $return;
+	public function shootPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): never {
+		throw new Exception('This weapon should not be used in this context');
 	}
 
 	public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false): array {
