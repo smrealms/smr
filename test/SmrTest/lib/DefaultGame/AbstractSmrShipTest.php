@@ -211,7 +211,6 @@ class AbstractSmrShipTest extends TestCase {
 				[
 					'Shield' => 1000,
 					'Armour' => 1000,
-					'MaxDamage' => 1000,
 					'Rollover' => true,
 				],
 				[
@@ -231,7 +230,6 @@ class AbstractSmrShipTest extends TestCase {
 				[
 					'Shield' => 230,
 					'Armour' => 230,
-					'MaxDamage' => 230,
 					'Rollover' => true,
 				],
 				[
@@ -251,7 +249,6 @@ class AbstractSmrShipTest extends TestCase {
 				[
 					'Shield' => 0,
 					'Armour' => 100,
-					'MaxDamage' => 100,
 					'Rollover' => false,
 				],
 				[
@@ -267,11 +264,29 @@ class AbstractSmrShipTest extends TestCase {
 				100, 10, 100,
 			],
 			[
+				'Do NOT do damage to armour behind shields (e.g. armour-only weapon)',
+				[
+					'Shield' => 0,
+					'Armour' => 100,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Shield' => 0,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => false,
+					'Armour' => 0,
+					'TotalDamage' => 0,
+				],
+				100, 0, 100,
+			],
+			[
 				'Overkill shield damage only (e.g. shield/armour weapon)',
 				[
 					'Shield' => 150,
 					'Armour' => 150,
-					'MaxDamage' => 150,
 					'Rollover' => false,
 				],
 				[
@@ -291,7 +306,6 @@ class AbstractSmrShipTest extends TestCase {
 				[
 					'Shield' => 150,
 					'Armour' => 150,
-					'MaxDamage' => 150,
 					'Rollover' => false,
 				],
 				[
@@ -311,7 +325,6 @@ class AbstractSmrShipTest extends TestCase {
 				[
 					'Shield' => 150,
 					'Armour' => 150,
-					'MaxDamage' => 150,
 					'Rollover' => false,
 				],
 				[
@@ -331,7 +344,6 @@ class AbstractSmrShipTest extends TestCase {
 				[
 					'Shield' => 100,
 					'Armour' => 100,
-					'MaxDamage' => 100,
 					'Rollover' => true,
 				],
 				[
@@ -365,7 +377,6 @@ class AbstractSmrShipTest extends TestCase {
 		$damage = [
 			'Shield' => $damage,
 			'Armour' => $damage,
-			'MaxDamage' => $damage,
 			'Rollover' => true, // mine damage is always rollover
 		];
 		$result = $ship->takeDamageFromMines($damage);

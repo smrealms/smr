@@ -134,7 +134,6 @@ class SmrForceTest extends TestCase {
 				[
 					'Shield' => 1000,
 					'Armour' => 1000,
-					'MaxDamage' => 1000,
 					'Rollover' => true,
 				],
 				[
@@ -158,7 +157,6 @@ class SmrForceTest extends TestCase {
 				[
 					'Shield' => 330,
 					'Armour' => 330,
-					'MaxDamage' => 330,
 					'Rollover' => true,
 				],
 				[
@@ -182,7 +180,6 @@ class SmrForceTest extends TestCase {
 				[
 					'Shield' => 100,
 					'Armour' => 0,
-					'MaxDamage' => 100,
 					'Rollover' => false,
 				],
 				[
@@ -206,7 +203,6 @@ class SmrForceTest extends TestCase {
 				[
 					'Shield' => 0,
 					'Armour' => 1000,
-					'MaxDamage' => 1000,
 					'Rollover' => false,
 				],
 				[
@@ -230,7 +226,6 @@ class SmrForceTest extends TestCase {
 				[
 					'Shield' => 0,
 					'Armour' => 1000,
-					'MaxDamage' => 1000,
 					'Rollover' => false,
 				],
 				[
@@ -254,7 +249,6 @@ class SmrForceTest extends TestCase {
 				[
 					'Shield' => 0,
 					'Armour' => 1000,
-					'MaxDamage' => 1000,
 					'Rollover' => false,
 				],
 				[
@@ -278,7 +272,6 @@ class SmrForceTest extends TestCase {
 				[
 					'Shield' => 0,
 					'Armour' => 1000,
-					'MaxDamage' => 1000,
 					'Rollover' => true,
 				],
 				[

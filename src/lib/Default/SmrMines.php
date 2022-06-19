@@ -45,54 +45,51 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	}
 
 	public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array {
-		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
+		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
 	public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port): array {
-		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
+		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
 	public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet): array {
-		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
+		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
 	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array {
-		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
+		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
 	public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer): array {
-		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
+		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
 	public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): array {
-		$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
+		$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		return $return;
 	}
 
 	public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			$return = ['MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
+			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 			return $return;
 		}
 		$damage = $this->getDamage();
 		if ($targetPlayer->getShip()->isFederal()) { // do less damage to fed ships
-			$damage['MaxDamage'] = IRound($damage['MaxDamage'] * self::FED_SHIP_DAMAGE_MODIFIER);
 			$damage['Shield'] = IRound($damage['Shield'] * self::FED_SHIP_DAMAGE_MODIFIER);
 			$damage['Armour'] = IRound($damage['Armour'] * self::FED_SHIP_DAMAGE_MODIFIER);
 		}
 
 		if ($targetPlayer->getShip()->hasDCS()) { // do less damage to DCS (Drone Scrambler)
-			$damage['MaxDamage'] = IRound($damage['MaxDamage'] * self::DCS_DAMAGE_MODIFIER);
 			$damage['Shield'] = IRound($damage['Shield'] * self::DCS_DAMAGE_MODIFIER);
 			$damage['Armour'] = IRound($damage['Armour'] * self::DCS_DAMAGE_MODIFIER);
 		}
 		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer, $minesAreAttacker) / 100);
-		$damage['MaxDamage'] = ICeil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
 		return $damage;
@@ -118,7 +115,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	protected function doForceDamageToPlayer(array $return, SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false): array {
 		$return['WeaponDamage'] = $this->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer, $minesAreAttacker);
 		$return['ActualDamage'] = $targetPlayer->getShip()->takeDamageFromMines($return['WeaponDamage']);
-		$return['ActualDamage']['Launched'] = ICeil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['MaxDamage']);
+		$return['ActualDamage']['Launched'] = ICeil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['ShieldDamage']); // assumes mines do the same shield/armour damage
 
 		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] = $targetPlayer->killPlayerByForces($forces);

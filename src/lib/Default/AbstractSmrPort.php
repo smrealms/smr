@@ -1282,19 +1282,17 @@ class AbstractSmrPort {
 		$cdDamage = 0;
 		$armourDamage = 0;
 		if (!$alreadyDead) {
-			if ($damage['Shield'] || !$this->hasShields()) {
-				$shieldDamage = $this->takeDamageToShields(min($damage['MaxDamage'], $damage['Shield']));
-				$damage['MaxDamage'] -= $shieldDamage;
-				if (!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover'])) {
-					$cdDamage = $this->takeDamageToCDs(min($damage['MaxDamage'], $damage['Armour']));
-					$damage['Armour'] -= $cdDamage;
-					$damage['MaxDamage'] -= $cdDamage;
-					if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
-						$armourDamage = $this->takeDamageToArmour(min($damage['MaxDamage'], $damage['Armour']));
-					}
+			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
+			if ($shieldDamage == 0 || $damage['Rollover']) {
+				$cdMaxDamage = $damage['Armour'] - $shieldDamage;
+				if ($shieldDamage == 0 && $this->hasShields()) {
+					$cdMaxDamage = IFloor($cdMaxDamage * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT);
 				}
-			} else { //hit drones behind shields
-				$cdDamage = $this->takeDamageToCDs(IFloor(min($damage['MaxDamage'], $damage['Armour']) * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
+				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
+				if (!$this->hasShields() && ($cdDamage == 0 || $damage['Rollover'])) {
+					$armourMaxDamage = $damage['Armour'] - $shieldDamage - $cdDamage;
+					$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
+				}
 			}
 		}
 

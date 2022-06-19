@@ -885,14 +885,13 @@ class AbstractSmrShip {
 			// player, so alert them that they're under attack.
 			$this->getPlayer()->setUnderAttack(true);
 
-			$shieldDamage = $this->takeDamageToShields(min($damage['MaxDamage'], $damage['Shield']));
-			$damage['MaxDamage'] -= $shieldDamage;
+			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
 			if (!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover'])) {
-				$cdDamage = $this->takeDamageToCDs(min($damage['MaxDamage'], $damage['Armour']));
-				$damage['Armour'] -= $cdDamage;
-				$damage['MaxDamage'] -= $cdDamage;
+				$cdMaxDamage = $damage['Armour'] - $shieldDamage;
+				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
 				if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
-					$armourDamage = $this->takeDamageToArmour(min($damage['MaxDamage'], $damage['Armour']));
+					$armourMaxDamage = $damage['Armour'] - $shieldDamage - $cdDamage;
+					$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 				}
 			}
 		}
@@ -914,10 +913,10 @@ class AbstractSmrShip {
 		$cdDamage = 0;
 		$shieldDamage = 0;
 		if (!$alreadyDead) {
-			$shieldDamage = $this->takeDamageToShields(min($damage['MaxDamage'], $damage['Shield']));
-			$damage['MaxDamage'] -= $shieldDamage;
+			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
 			if (!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover'])) { //skip CDs if it's mines
-				$armourDamage = $this->takeDamageToArmour(min($damage['MaxDamage'], $damage['Armour']));
+				$armourMaxDamage = $damage['Armour'] - $shieldDamage;
+				$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 			}
 		}
 		return [
