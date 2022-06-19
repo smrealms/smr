@@ -9,13 +9,6 @@ abstract class AbstractSmrCombatWeapon {
 
 	protected bool $damageRollover;
 
-	/**
-	 * Return the max weapon damage possible in a single round.
-	 */
-	public function getMaxDamage(): int {
-		return max($this->getShieldDamage(), $this->getArmourDamage());
-	}
-
 	abstract public function getBaseAccuracy(): int;
 	abstract public function getName(): string;
 	abstract public function getShieldDamage(): int;
@@ -42,7 +35,7 @@ abstract class AbstractSmrCombatWeapon {
 	}
 
 	public function getDamage(): array {
-		return ['MaxDamage' => $this->getMaxDamage(), 'Shield' => $this->getShieldDamage(), 'Armour' => $this->getArmourDamage(), 'Rollover' => $this->isDamageRollover()];
+		return ['Shield' => $this->getShieldDamage(), 'Armour' => $this->getArmourDamage(), 'Rollover' => $this->isDamageRollover()];
 	}
 
 	abstract public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array;

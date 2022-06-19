@@ -104,4 +104,223 @@ class AbstractSmrPortTest extends TestCase {
 		$port->getGoodTransaction(GOODS_ORE);
 	}
 
+	public function test_shields(): void {
+		$port = AbstractSmrPort::createPort(1, 1);
+		// newly created ports start with no shields
+		self::assertSame(0, $port->getShields());
+		self::assertFalse($port->hasShields());
+
+		// Test setting shields explicitly
+		$port->setShields(100);
+		self::assertSame(100, $port->getShields());
+		self::assertTrue($port->hasShields());
+
+		// Test decreasing shields
+		$port->decreaseShields(2);
+		self::assertSame(98, $port->getShields());
+	}
+
+	public function test_cds(): void {
+		$port = AbstractSmrPort::createPort(1, 1);
+		// newly created ports start with no CDs
+		self::assertSame(0, $port->getCDs());
+		self::assertFalse($port->hasCDs());
+
+		// Test setting CDs explicitly
+		$port->setCDs(100);
+		self::assertSame(100, $port->getCDs());
+		self::assertTrue($port->hasCDs());
+
+		// Test decreasing CDs
+		$port->decreaseCDs(2);
+		self::assertSame(98, $port->getCDs());
+	}
+
+	public function test_armour(): void {
+		$port = AbstractSmrPort::createPort(1, 1);
+		// newly created ports start with no armour
+		self::assertSame(0, $port->getArmour());
+		self::assertFalse($port->hasArmour());
+
+		// Test setting shields explicitly
+		$port->setArmour(100);
+		self::assertSame(100, $port->getArmour());
+		self::assertTrue($port->hasArmour());
+
+		// Test decreasing shields
+		$port->decreaseArmour(2);
+		self::assertSame(98, $port->getArmour());
+	}
+
+	/**
+	 * @dataProvider dataProvider_takeDamage
+	 */
+	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
+		// Set up a port with a fixed amount of defenses
+		$port = AbstractSmrPort::createPort(1, 1);
+		$port->setShields($shields);
+		$port->setCDs($cds);
+		$port->setArmour($armour);
+		// Test taking damage
+		$result = $port->takeDamage($damage);
+		self::assertSame($expected, $result, $case);
+	}
+
+	public function dataProvider_takeDamage(): array {
+		return [
+			[
+				'Do overkill damage (e.g. 1000 drone damage)',
+				[
+					'Shield' => 1000,
+					'Armour' => 1000,
+					'Rollover' => true,
+				],
+				[
+					'KillingShot' => true,
+					'TargetAlreadyDead' => false,
+					'Shield' => 100,
+					'CDs' => 30,
+					'NumCDs' => 10,
+					'HasCDs' => false,
+					'Armour' => 100,
+					'TotalDamage' => 230,
+				],
+				100, 10, 100,
+			],
+			[
+				'Do exactly lethal damage (e.g. 230 drone damage)',
+				[
+					'Shield' => 230,
+					'Armour' => 230,
+					'Rollover' => true,
+				],
+				[
+					'KillingShot' => true,
+					'TargetAlreadyDead' => false,
+					'Shield' => 100,
+					'CDs' => 30,
+					'NumCDs' => 10,
+					'HasCDs' => false,
+					'Armour' => 100,
+					'TotalDamage' => 230,
+				],
+				100, 10, 100,
+			],
+			[
+				'Do damage to drones behind shields (e.g. armour-only weapon)',
+				[
+					'Shield' => 0,
+					'Armour' => 100,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Shield' => 0,
+					'CDs' => 18,
+					'NumCDs' => 6,
+					'HasCDs' => true,
+					'Armour' => 0,
+					'TotalDamage' => 18,
+				],
+				100, 10, 100,
+			],
+			[
+				'Do NOT do damage to armour behind shields (e.g. armour-only weapon)',
+				[
+					'Shield' => 0,
+					'Armour' => 100,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Shield' => 0,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => false,
+					'Armour' => 0,
+					'TotalDamage' => 0,
+				],
+				100, 0, 100,
+			],
+			[
+				'Overkill shield damage only (e.g. shield/armour weapon)',
+				[
+					'Shield' => 150,
+					'Armour' => 150,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Shield' => 100,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => true,
+					'Armour' => 0,
+					'TotalDamage' => 100,
+				],
+				100, 10, 100,
+			],
+			[
+				'Overkill CD damage only (e.g. shield/armour weapon)',
+				[
+					'Shield' => 150,
+					'Armour' => 150,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Shield' => 0,
+					'CDs' => 30,
+					'NumCDs' => 10,
+					'HasCDs' => false,
+					'Armour' => 0,
+					'TotalDamage' => 30,
+				],
+				0, 10, 100,
+			],
+			[
+				'Overkill armour damage only (e.g. shield/armour weapon)',
+				[
+					'Shield' => 150,
+					'Armour' => 150,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => true,
+					'TargetAlreadyDead' => false,
+					'Shield' => 0,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => false,
+					'Armour' => 100,
+					'TotalDamage' => 100,
+				],
+				0, 0, 100,
+			],
+			[
+				'Target is already dead',
+				[
+					'Shield' => 100,
+					'Armour' => 100,
+					'Rollover' => true,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => true,
+					'Shield' => 0,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => false,
+					'Armour' => 0,
+					'TotalDamage' => 0,
+				],
+				0, 0, 0,
+			],
+		];
+	}
+
 }

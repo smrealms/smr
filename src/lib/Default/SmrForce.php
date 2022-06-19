@@ -485,15 +485,13 @@ class SmrForce {
 		$cdDamage = 0;
 		$sdDamage = 0;
 		if (!$alreadyDead) {
-			$minesDamage = $this->takeDamageToMines(min($damage['MaxDamage'], $damage['Armour']));
-			$damage['Armour'] -= $minesDamage;
-			$damage['MaxDamage'] -= $minesDamage;
+			$minesDamage = $this->takeDamageToMines($damage['Armour']);
 			if (!$this->hasMines() && ($minesDamage == 0 || $damage['Rollover'])) {
-				$cdDamage = $this->takeDamageToCDs(min($damage['MaxDamage'], $damage['Armour']));
-				$damage['Armour'] -= $cdDamage;
-				$damage['MaxDamage'] -= $cdDamage;
+				$cdMaxDamage = $damage['Armour'] - $minesDamage;
+				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
 				if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
-					$sdDamage = $this->takeDamageToSDs(min($damage['MaxDamage'], $damage['Armour']));
+					$sdMaxDamage = $damage['Armour'] - $minesDamage - $cdDamage;
+					$sdDamage = $this->takeDamageToSDs($sdMaxDamage);
 				}
 			}
 		}

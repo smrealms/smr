@@ -112,4 +112,185 @@ class SmrForceTest extends TestCase {
 		self::assertFalse($this->force->hasMaxMines());
 	}
 
+	/**
+	 * @dataProvider dataProvider_takeDamage
+	 */
+	public function test_takeDamage(string $case, array $damage, array $expected, int $mines, int $cds, int $sds): void {
+		// Set up an unexpired stack with a specific number of forces
+		$force = $this->createPartialMock($this->force::class, ['hasExpired']);
+		$force->method('hasExpired')->willReturn(false);
+		$force->setMines($mines);
+		$force->setCDs($cds);
+		$force->setSDs($sds);
+		// Test taking damage
+		$result = $force->takeDamage($damage);
+		self::assertSame($expected, $result, $case);
+	}
+
+	public function dataProvider_takeDamage(): array {
+		return [
+			[
+				'Do overkill damage (e.g. 1000 drone damage)',
+				[
+					'Shield' => 1000,
+					'Armour' => 1000,
+					'Rollover' => true,
+				],
+				[
+					'KillingShot' => true,
+					'TargetAlreadyDead' => false,
+					'Mines' => 200,
+					'NumMines' => 10,
+					'HasMines' => false,
+					'CDs' => 30,
+					'NumCDs' => 10,
+					'HasCDs' => false,
+					'SDs' => 100,
+					'NumSDs' => 5,
+					'HasSDs' => false,
+					'TotalDamage' => 330,
+				],
+				10, 10, 5,
+			],
+			[
+				'Do exactly lethal damage (e.g. 330 drone damage)',
+				[
+					'Shield' => 330,
+					'Armour' => 330,
+					'Rollover' => true,
+				],
+				[
+					'KillingShot' => true,
+					'TargetAlreadyDead' => false,
+					'Mines' => 200,
+					'NumMines' => 10,
+					'HasMines' => false,
+					'CDs' => 30,
+					'NumCDs' => 10,
+					'HasCDs' => false,
+					'SDs' => 100,
+					'NumSDs' => 5,
+					'HasSDs' => false,
+					'TotalDamage' => 330,
+				],
+				10, 10, 5,
+			],
+			[
+				'Shield damage does nothing to forces',
+				[
+					'Shield' => 100,
+					'Armour' => 0,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Mines' => 0,
+					'NumMines' => 0,
+					'HasMines' => true,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => true,
+					'SDs' => 0,
+					'NumSDs' => 0,
+					'HasSDs' => true,
+					'TotalDamage' => 0,
+				],
+				10, 10, 5,
+			],
+			[
+				'Overkill damage to mines only (e.g. armour weapon)',
+				[
+					'Shield' => 0,
+					'Armour' => 1000,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Mines' => 200,
+					'NumMines' => 10,
+					'HasMines' => false,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => true,
+					'SDs' => 0,
+					'NumSDs' => 0,
+					'HasSDs' => true,
+					'TotalDamage' => 200,
+				],
+				10, 10, 5,
+			],
+			[
+				'Overkill damage to CDs only (e.g. armour weapon)',
+				[
+					'Shield' => 0,
+					'Armour' => 1000,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Mines' => 0,
+					'NumMines' => 0,
+					'HasMines' => false,
+					'CDs' => 30,
+					'NumCDs' => 10,
+					'HasCDs' => false,
+					'SDs' => 0,
+					'NumSDs' => 0,
+					'HasSDs' => true,
+					'TotalDamage' => 30,
+				],
+				0, 10, 5,
+			],
+			[
+				'Overkill damage to SDs only (e.g. armour weapon)',
+				[
+					'Shield' => 0,
+					'Armour' => 1000,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => true,
+					'TargetAlreadyDead' => false,
+					'Mines' => 0,
+					'NumMines' => 0,
+					'HasMines' => false,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => false,
+					'SDs' => 100,
+					'NumSDs' => 5,
+					'HasSDs' => false,
+					'TotalDamage' => 100,
+				],
+				0, 0, 5,
+			],
+			[
+				'Target is already dead',
+				[
+					'Shield' => 0,
+					'Armour' => 1000,
+					'Rollover' => true,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => true,
+					'Mines' => 0,
+					'NumMines' => 0,
+					'HasMines' => false,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => false,
+					'SDs' => 0,
+					'NumSDs' => 0,
+					'HasSDs' => false,
+					'TotalDamage' => 0,
+				],
+				0, 0, 0,
+			],
+		];
+	}
+
 }
