@@ -1249,8 +1249,6 @@ class SmrPlanet {
 			'KillingShot' => !$alreadyDead && $this->isDestroyed(),
 			'TargetAlreadyDead' => $alreadyDead,
 			'Shield' => $shieldDamage,
-			'HasShields' => $this->hasShields(),
-			'HasArmour' => $this->hasArmour(),
 			'CDs' => $cdDamage,
 			'NumCDs' => $cdDamage / CD_ARMOUR,
 			'HasCDs' => $this->hasCDs(),

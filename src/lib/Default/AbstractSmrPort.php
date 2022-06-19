@@ -1302,7 +1302,6 @@ class AbstractSmrPort {
 						'KillingShot' => !$alreadyDead && $this->isDestroyed(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Shield' => $shieldDamage,
-						'HasShields' => $this->hasShields(),
 						'CDs' => $cdDamage,
 						'NumCDs' => $cdDamage / CD_ARMOUR,
 						'HasCDs' => $this->hasCDs(),
