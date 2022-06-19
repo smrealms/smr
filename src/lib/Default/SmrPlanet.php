@@ -1249,12 +1249,12 @@ class SmrPlanet {
 			'KillingShot' => !$alreadyDead && $this->isDestroyed(),
 			'TargetAlreadyDead' => $alreadyDead,
 			'Shield' => $shieldDamage,
-			'Armour' => $armourDamage,
 			'HasShields' => $this->hasShields(),
 			'HasArmour' => $this->hasArmour(),
 			'CDs' => $cdDamage,
 			'NumCDs' => $cdDamage / CD_ARMOUR,
 			'HasCDs' => $this->hasCDs(),
+			'Armour' => $armourDamage,
 			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 		return $return;

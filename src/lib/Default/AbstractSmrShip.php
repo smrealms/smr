@@ -902,8 +902,8 @@ class AbstractSmrShip {
 						'Shield' => $shieldDamage,
 						'CDs' => $cdDamage,
 						'NumCDs' => $cdDamage / CD_ARMOUR,
-						'Armour' => $armourDamage,
 						'HasCDs' => $this->hasCDs(),
+						'Armour' => $armourDamage,
 						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 	}
@@ -926,8 +926,8 @@ class AbstractSmrShip {
 						'Shield' => $shieldDamage,
 						'CDs' => $cdDamage,
 						'NumCDs' => $cdDamage / CD_ARMOUR,
-						'Armour' => $armourDamage,
 						'HasCDs' => $this->hasCDs(),
+						'Armour' => $armourDamage,
 						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 	}

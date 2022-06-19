@@ -357,4 +357,180 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		];
 	}
 
+	/**
+	 * @dataProvider dataProvider_takeDamage
+	 */
+	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
+		// Set up a port with a fixed amount of defenses
+		$planet = SmrPlanet::createPlanet(1, 1, 4, 1);
+		$planet->setBuilding(PLANET_GENERATOR, 1);
+		$planet->setBuilding(PLANET_HANGAR, 2);
+		$planet->setBuilding(PLANET_BUNKER, 1);
+		$planet->setShields($shields);
+		$planet->setCDs($cds);
+		$planet->setArmour($armour);
+		// Test taking damage
+		$result = $planet->takeDamage($damage);
+		self::assertSame($expected, $result, $case);
+	}
+
+	public function dataProvider_takeDamage(): array {
+		return [
+			[
+				'Do overkill damage (e.g. 1000 drone damage)',
+				[
+					'Shield' => 1000,
+					'Armour' => 1000,
+					'MaxDamage' => 1000,
+					'Rollover' => true,
+				],
+				[
+					'KillingShot' => true,
+					'TargetAlreadyDead' => false,
+					'Shield' => 100,
+					'HasShields' => false,
+					'HasArmour' => false,
+					'CDs' => 30,
+					'NumCDs' => 10,
+					'HasCDs' => false,
+					'Armour' => 100,
+					'TotalDamage' => 230,
+				],
+				100, 10, 100,
+			],
+			[
+				'Do exactly lethal damage (e.g. 230 drone damage)',
+				[
+					'Shield' => 230,
+					'Armour' => 230,
+					'MaxDamage' => 230,
+					'Rollover' => true,
+				],
+				[
+					'KillingShot' => true,
+					'TargetAlreadyDead' => false,
+					'Shield' => 100,
+					'HasShields' => false,
+					'HasArmour' => false,
+					'CDs' => 30,
+					'NumCDs' => 10,
+					'HasCDs' => false,
+					'Armour' => 100,
+					'TotalDamage' => 230,
+				],
+				100, 10, 100,
+			],
+			[
+				'Do damage to drones behind shields (e.g. armour-only weapon)',
+				[
+					'Shield' => 0,
+					'Armour' => 100,
+					'MaxDamage' => 100,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Shield' => 0,
+					'HasShields' => true,
+					'HasArmour' => true,
+					'CDs' => 18,
+					'NumCDs' => 6,
+					'HasCDs' => true,
+					'Armour' => 0,
+					'TotalDamage' => 18,
+				],
+				100, 10, 100,
+			],
+			[
+				'Overkill shield damage only (e.g. shield/armour weapon)',
+				[
+					'Shield' => 150,
+					'Armour' => 150,
+					'MaxDamage' => 150,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Shield' => 100,
+					'HasShields' => false,
+					'HasArmour' => true,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => true,
+					'Armour' => 0,
+					'TotalDamage' => 100,
+				],
+				100, 10, 100,
+			],
+			[
+				'Overkill CD damage only (e.g. shield/armour weapon)',
+				[
+					'Shield' => 150,
+					'Armour' => 150,
+					'MaxDamage' => 150,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => false,
+					'Shield' => 0,
+					'HasShields' => false,
+					'HasArmour' => true,
+					'CDs' => 30,
+					'NumCDs' => 10,
+					'HasCDs' => false,
+					'Armour' => 0,
+					'TotalDamage' => 30,
+				],
+				0, 10, 100,
+			],
+			[
+				'Overkill armour damage only (e.g. shield/armour weapon)',
+				[
+					'Shield' => 150,
+					'Armour' => 150,
+					'MaxDamage' => 150,
+					'Rollover' => false,
+				],
+				[
+					'KillingShot' => true,
+					'TargetAlreadyDead' => false,
+					'Shield' => 0,
+					'HasShields' => false,
+					'HasArmour' => false,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => false,
+					'Armour' => 100,
+					'TotalDamage' => 100,
+				],
+				0, 0, 100,
+			],
+			[
+				'Target is already dead',
+				[
+					'Shield' => 100,
+					'Armour' => 100,
+					'MaxDamage' => 100,
+					'Rollover' => true,
+				],
+				[
+					'KillingShot' => false,
+					'TargetAlreadyDead' => true,
+					'Shield' => 0,
+					'HasShields' => false,
+					'HasArmour' => false,
+					'CDs' => 0,
+					'NumCDs' => 0,
+					'HasCDs' => false,
+					'Armour' => 0,
+					'TotalDamage' => 0,
+				],
+				0, 0, 0,
+			],
+		];
+	}
+
 }

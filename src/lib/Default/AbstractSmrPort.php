@@ -942,7 +942,7 @@ class AbstractSmrPort {
 	}
 
 	public function isDestroyed(): bool {
-		return ($this->getArmour() < 1 && $this->isUnderAttack());
+		return $this->getArmour() < 1;
 	}
 
 	public function exists(): bool {
