@@ -56,13 +56,13 @@ class VoteLink {
 	 * Time until the account can get free turns from voting at this site.
 	 * If the time is 0, this site is eligible for free turns.
 	 */
-	public function getTimeUntilFreeTurns(): int {
+	public function getTimeUntilFreeTurns(bool $forceUpdate = false): int {
 		if (!$this->givesFreeTurns()) {
 			throw new Exception('This vote site cannot award free turns!');
 		}
 
 		// Populate timeout cache from the database
-		if (!isset(self::$CACHE_TIMEOUTS)) {
+		if ($forceUpdate || !isset(self::$CACHE_TIMEOUTS)) {
 			self::$CACHE_TIMEOUTS = []; // ensure this is set
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($this->accountID));
@@ -83,46 +83,43 @@ class VoteLink {
 	 * that voting is done through an authenticated SMR session.
 	 */
 	public function setClicked(): void {
-		// We assume that the site is eligible for free turns.
-		// Don't start the timeout until the vote actually goes through.
 		$db = Database::getInstance();
-		$db->replace('vote_links', [
-			'account_id' => $db->escapeNumber($this->accountID),
-			'link_id' => $db->escapeNumber($this->site->value),
-			'timeout' => $db->escapeNumber(0),
-			'turns_claimed' => $db->escapeBoolean(false),
-		]);
-	}
+		$db->lockTable('vote_links');
+		try {
+			if (!$this->freeTurnsReady(true)) {
+				// Player has clicked a free turns link after already getting
+				// free turns. This should not occur naturally.
+				throw new Exception('Account ID ' . $this->accountID . ' attempted vote link abuse');
+			}
 
-	/**
-	 * Checks if setLinkClicked has been called since the last time
-	 * free turns were awarded.
-	 */
-	public function isClicked(): bool {
-		// This is intentionally not cached so that we can re-check as needed.
-		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM vote_links WHERE account_id = ' . $db->escapeNumber($this->accountID) . ' AND link_id = ' . $db->escapeNumber($this->site->value) . ' AND timeout = 0 AND turns_claimed = ' . $db->escapeBoolean(false));
-		return $dbResult->hasRecord();
+			// Don't start the timeout until the vote actually goes through.
+			$db->replace('vote_links', [
+				'account_id' => $db->escapeNumber($this->accountID),
+				'link_id' => $db->escapeNumber($this->site->value),
+				'timeout' => $db->escapeNumber(0),
+				'turns_claimed' => $db->escapeBoolean(false),
+			]);
+		} finally {
+			$db->unlock();
+		}
 	}
 
 	/**
 	 * Register that the player has been awarded their free turns.
+	 *
+	 * @return bool True if account was eligible for free turns (i.e. in the setClicked state).
 	 */
-	public function setFreeTurnsAwarded(): void {
+	public function setFreeTurnsAwarded(): bool {
 		$db = Database::getInstance();
-		$db->replace('vote_links', [
-			'account_id' => $db->escapeNumber($this->accountID),
-			'link_id' => $db->escapeNumber($this->site->value),
-			'timeout' => $db->escapeNumber(Epoch::time()),
-			'turns_claimed' => $db->escapeBoolean(true),
-		]);
+		$db->write('UPDATE vote_links SET timeout = ' . Epoch::time() . ', turns_claimed = ' . $db->escapeBoolean(true) . ' WHERE account_id = ' . $db->escapeNumber($this->accountID) . ' AND link_id = ' . $db->escapeNumber($this->site->value) . ' AND timeout = 0 AND turns_claimed = ' . $db->escapeBoolean(false));
+		return $db->getChangedRows() === 1;
 	}
 
 	/**
 	 * Returns true if account can currently receive free turns at this site.
 	 */
-	private function freeTurnsReady(): bool {
-		return $this->givesFreeTurns() && $this->gameID != 0 && $this->getTimeUntilFreeTurns() <= 0;
+	public function freeTurnsReady(bool $forceUpdate = false): bool {
+		return $this->givesFreeTurns() && $this->gameID != 0 && $this->getTimeUntilFreeTurns($forceUpdate) <= 0;
 	}
 
 	/**
