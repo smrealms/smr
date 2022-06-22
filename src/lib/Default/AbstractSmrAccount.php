@@ -1250,9 +1250,7 @@ abstract class AbstractSmrAccount {
 			'suspicion' => $this->db->escapeString($suspicion),
 			'expires' => $this->db->escapeNumber($expireTime),
 		]);
-		$this->db->lockTable('active_session');
 		$this->db->write('DELETE FROM active_session WHERE ' . $this->SQL . ' LIMIT 1');
-		$this->db->unlock();
 
 		$this->db->insert('account_has_closing_history', [
 			'account_id' => $this->db->escapeNumber($this->getAccountID()),
