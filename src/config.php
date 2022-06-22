@@ -213,16 +213,6 @@ const WEAPON_PORT_TURRET = 10000;
 const WEAPON_PLANET_TURRET = 10001;
 
 /*
- * Combat log pages
- */
-const COMBAT_LOG_PERSONAL = 0;
-const COMBAT_LOG_ALLIANCE = 1;
-const COMBAT_LOG_FORCE = 2;
-const COMBAT_LOG_PORT = 3;
-const COMBAT_LOG_PLANET = 4;
-const COMBAT_LOG_SAVED = 5;
-
-/*
  * Combat system
  */
 const MAX_ATTACK_RATING_NEWBIE = 4;

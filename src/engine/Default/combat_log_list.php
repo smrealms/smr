@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\CombatLogType;
+
 $template = Smr\Template::getInstance();
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
@@ -16,26 +18,27 @@ if (isset($var['message'])) {
 
 // $var['action'] is the page log type
 if (!isset($var['action'])) {
-	$var['action'] = COMBAT_LOG_PERSONAL;
+	$var['action'] = CombatLogType::Personal;
 }
+/** @var CombatLogType $action */
 $action = $var['action'];
 
 $query = match ($action) {
-	COMBAT_LOG_PERSONAL, COMBAT_LOG_ALLIANCE => 'type=\'PLAYER\'',
-	COMBAT_LOG_PORT => 'type=\'PORT\'',
-	COMBAT_LOG_PLANET => 'type=\'PLANET\'',
-	COMBAT_LOG_SAVED => 'EXISTS(
+	CombatLogType::Personal, CombatLogType::Alliance => 'type=\'PLAYER\'',
+	CombatLogType::Port => 'type=\'PORT\'',
+	CombatLogType::Planet => 'type=\'PLANET\'',
+	CombatLogType::Saved => 'EXISTS(
 					SELECT 1
 					FROM player_saved_combat_logs
 					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND log_id = c.log_id
 				)',
-	COMBAT_LOG_FORCE => 'type=\'FORCE\'',
+	CombatLogType::Force => 'type=\'FORCE\'',
 };
 
 $query .= ' AND game_id=' . $db->escapeNumber($player->getGameID());
-if ($action != COMBAT_LOG_PERSONAL && $player->hasAlliance()) {
+if ($action != CombatLogType::Personal && $player->hasAlliance()) {
 	$query .= ' AND (attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ') ';
 } else {
 	$query .= ' AND (attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ') ';
@@ -59,15 +62,7 @@ $getParticipantName = function($accountID, $sectorID) use ($player): string {
 };
 
 // For display purposes, describe the type of log
-$type = match ($action) {
-	COMBAT_LOG_PERSONAL => 'personal',
-	COMBAT_LOG_ALLIANCE => 'alliance',
-	COMBAT_LOG_PORT => 'port',
-	COMBAT_LOG_PLANET => 'planet',
-	COMBAT_LOG_SAVED => 'saved',
-	COMBAT_LOG_FORCE => 'force',
-};
-$template->assign('LogType', $type);
+$template->assign('LogType', strtolower($action->name));
 
 // Construct the list of logs of this type
 $logs = [];
@@ -89,8 +84,8 @@ if ($dbResult->hasRecord()) {
 		$template->assign('NextPage', $container->href());
 	}
 	// Saved logs
-	$template->assign('CanDelete', $action == COMBAT_LOG_SAVED);
-	$template->assign('CanSave', $action != COMBAT_LOG_SAVED);
+	$template->assign('CanDelete', $action == CombatLogType::Saved);
+	$template->assign('CanSave', $action != CombatLogType::Saved);
 
 	foreach ($dbResult->records() as $dbRecord) {
 		$sectorID = $dbRecord->getInt('sector_id');

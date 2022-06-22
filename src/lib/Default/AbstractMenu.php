@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\CombatLogType;
+
 /**
  * Creates menu navigation bars.
  */
@@ -169,18 +171,10 @@ class AbstractMenu {
 		$container = Page::create('combat_log_list.php');
 		$menuItems = [];
 
-		$container['action'] = COMBAT_LOG_PERSONAL;
-		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Personal'];
-		$container['action'] = COMBAT_LOG_ALLIANCE;
-		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Alliance'];
-		$container['action'] = COMBAT_LOG_FORCE;
-		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Force'];
-		$container['action'] = COMBAT_LOG_PORT;
-		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Port'];
-		$container['action'] = COMBAT_LOG_PLANET;
-		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Planet'];
-		$container['action'] = COMBAT_LOG_SAVED;
-		$menuItems[] = ['Link' => $container->href(), 'Text' => 'Saved'];
+		foreach (CombatLogType::cases() as $type) {
+			$container['action'] = $type;
+			$menuItems[] = ['Link' => $container->href(), 'Text' => $type->name];
+		}
 
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', $menuItems);
