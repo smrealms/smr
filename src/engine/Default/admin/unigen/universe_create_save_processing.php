@@ -46,9 +46,6 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector): void {
 		}
 
 		//add Beacons to all surrounding areas (up to 2 sectors out)
-		if (!$sector->offersFederalProtection()) {
-			$sector->addLocation($fedBeacon); //add beacon to this sector
-		}
 		$visitedSectors = [];
 		$links = ['Up', 'Right', 'Down', 'Left'];
 		$fedSectors = [$sector];
@@ -58,7 +55,7 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector): void {
 				foreach ($links as $link) {
 					if ($fedSector->hasLink($link) && !isset($visitedSectors[$fedSector->getLink($link)])) {
 						$linkSector = $sector->getLinkSector($link);
-						if (!$linkSector->offersFederalProtection()) {
+						if (isset($fedBeacon) && !$linkSector->hasLocation($fedBeacon->getTypeID())) {
 							$linkSector->addLocation($fedBeacon); //add beacon to this sector
 						}
 						$tempFedSectors[] = $linkSector;
