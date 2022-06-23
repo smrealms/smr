@@ -431,10 +431,11 @@ class AbstractSmrPort {
 		if ($level === null) {
 			$level = $this->getLevel();
 		}
-		return match (true) {
-			$level <= 2 => 1,
-			$level <= 6 => 2,
-			$level >= 7 => 3,
+		return match ($level) {
+			1, 2 => 1,
+			3, 4, 5, 6 => 2,
+			7, 8, 9 => 3,
+			default => throw new Exception('No good class for level ' . $level),
 		};
 	}
 
