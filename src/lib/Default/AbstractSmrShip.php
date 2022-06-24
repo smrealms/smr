@@ -953,28 +953,7 @@ class AbstractSmrShip {
 	 * Returns the maneuverability rating for this ship.
 	 */
 	public function getMR(): int {
-		//700 - [ (ship hit points / 25) + (ship stat factors) ]
-		//Minimum value of 0 because negative values cause issues with calculations calling this routine
-		return max(0, IRound(
-			700 -
-			(
-				(
-					$this->getShields()
-					+ $this->getArmour()
-					+ $this->getCDs() * CD_ARMOUR
-				) / 25
-				+ (
-					$this->getCargoHolds() / 100
-					- $this->shipType->getSpeed() * 5
-					+ ($this->getHardpoints()/*+$ship['Increases']['Ship Power']*/) * 5
-					/*+(
-						$ship['Increases']['Mines']
-						+$ship['Increases']['Scout Drones']
-					)/12*/
-					+ $this->getCDs() / 5
-				)
-			)
-		));
+		return $this->shipType->getBaseManeuverability();
 	}
 
 	public function update(): void {

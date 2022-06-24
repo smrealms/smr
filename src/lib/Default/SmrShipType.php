@@ -92,7 +92,8 @@ class SmrShipType {
 		}
 		$this->maxHardware = $maxHardware;
 
-		$this->baseManeuverability = IRound(
+		// Minimum value of 0 because negative values cause issues with accuracy calculations
+		$this->baseManeuverability = max(0, IRound(
 			700 -
 			(
 				(
@@ -105,7 +106,7 @@ class SmrShipType {
 				+ $this->hardpoints * 5
 				+ $this->maxHardware[HARDWARE_COMBAT] / 5
 			)
-		);
+		));
 	}
 
 	public function getTypeID(): int {
@@ -137,6 +138,10 @@ class SmrShipType {
 
 	public function getHardpoints(): int {
 		return $this->hardpoints;
+	}
+
+	public function getBaseManeuverability(): int {
+		return $this->baseManeuverability;
 	}
 
 	/**
