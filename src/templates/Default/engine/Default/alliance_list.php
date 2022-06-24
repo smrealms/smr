@@ -34,7 +34,7 @@ if (count($Alliances) > 0) { ?>
 	</table>
 	<p class="center">Click column table to reorder!</p>
 
-	<?php $this->setListjsInclude('alliance_list');
+	<?php $this->listjsInclude = 'alliance_list';
 } else { ?>
 	<p class="center">Currently there are no alliances.</p><?php
 } ?>

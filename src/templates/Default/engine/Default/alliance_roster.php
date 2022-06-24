@@ -111,7 +111,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 	</table>
 </div><?php
 
-$this->setListjsInclude('alliance_roster');
+$this->listjsInclude = 'alliance_roster';
 
 if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 	<br /><h2>Options</h2><br />

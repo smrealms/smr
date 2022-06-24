@@ -55,7 +55,7 @@
 				} ?>
 			</tbody>
 		</table><?php
-		$this->setListjsInclude('council_list');
+		$this->listjsInclude = 'council_list';
 	} else { ?>
 		This council doesn't have any members!<?php
 	} ?>
