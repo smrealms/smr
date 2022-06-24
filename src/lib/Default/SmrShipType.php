@@ -18,7 +18,6 @@ class SmrShipType {
 	private readonly int $speed;
 	private readonly int $cost;
 	private readonly BuyerRestriction $restriction;
-	private readonly int $levelNeeded;
 
 	private readonly int $maxPower;
 	private readonly array $maxHardware;
@@ -61,7 +60,6 @@ class SmrShipType {
 		$this->speed = $dbRecord->getInt('speed');
 		$this->cost = $dbRecord->getInt('cost');
 		$this->restriction = BuyerRestriction::from($dbRecord->getInt('buyer_restriction'));
-		$this->levelNeeded = $dbRecord->getInt('lvl_needed');
 
 		// Power is calculated by summing the allotment for each hardpoint.
 		// P5x1, P4x2, P3x3, P2x4, P1x(infinity)
