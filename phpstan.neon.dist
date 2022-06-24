@@ -66,3 +66,9 @@ parameters:
             message: '#Unreachable statement - code above always terminates.#'
             path: src/engine/Default/admin/game_delete_processing.php
             count: 1
+        -
+            # https://github.com/phpstan/phpstan/issues/7520
+            message: '#Expression in empty\(\) is always falsy.#'
+            paths:
+                - src/bootstrap.php
+                - src/engine/Default/bug_report_processing.php
