@@ -66,6 +66,9 @@ class AbstractSmrPort {
 		self::$CACHE_CACHED_PORTS = [];
 	}
 
+	/**
+	 * @return array<int, SmrPort>
+	 */
 	public static function getGalaxyPorts(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Smr\Database::getInstance();
 		// Use a left join so that we populate the cache for every sector
@@ -82,7 +85,7 @@ class AbstractSmrPort {
 		return $galaxyPorts;
 	}
 
-	public static function getPort(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
+	public static function getPort(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): SmrPort {
 		if ($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID, $sectorID, $dbRecord);
 		}
@@ -102,7 +105,7 @@ class AbstractSmrPort {
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
 
-	public static function createPort(int $gameID, int $sectorID): self {
+	public static function createPort(int $gameID, int $sectorID): SmrPort {
 		if (!isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			$p = new SmrPort($gameID, $sectorID);
 			self::$CACHE_PORTS[$gameID][$sectorID] = $p;
@@ -1116,7 +1119,7 @@ class AbstractSmrPort {
 		return false;
 	}
 
-	public static function getCachedPort(int $gameID, int $sectorID, int $accountID, bool $forceUpdate = false): self|false {
+	public static function getCachedPort(int $gameID, int $sectorID, int $accountID, bool $forceUpdate = false): SmrPort|false {
 		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID])) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT visited, port_info
