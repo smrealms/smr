@@ -419,15 +419,13 @@ class SmrSector {
 		}
 	}
 
-	/**
-	 * @param key-of<self::LINK_DIR_MAPPING> $dir
-	 */
 	public static function oppositeDir(string $dir): string {
 		return match ($dir) {
 			'Up' => 'Down',
 			'Down' => 'Up',
 			'Left' => 'Right',
 			'Right' => 'Left',
+			default => throw new Exception('Invalid direction: ' . $dir),
 		};
 	}
 
